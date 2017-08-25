@@ -22,6 +22,6 @@ set(SOURCE_FILES
         utils/hashtable.h
         utils/utf8_string.c
         utils/utf8_string.h
-        test.c jvm/garbage.h jvm/garbage.c jvm/jvm_util.c jvm/jvm_util.h jvm/os_linux.c jvm/os_win.c jvm/global.c)
+        test.c jvm/garbage.h jvm/garbage.c jvm/jvm_util.c jvm/jvm_util.h jvm/os_linux.c jvm/os_win.c jvm/global.c utils/pairlist.h utils/pairlist.c jvm/global.h)
 
 add_executable(mini_jvm ${SOURCE_FILES})

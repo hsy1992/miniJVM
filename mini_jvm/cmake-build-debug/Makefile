@@ -48,10 +48,10 @@ RM = /cygdrive/c/Users/gust/.CLion2017.2/system/cygwin_cmake/bin/cmake.exe -E re
 EQUALS = =
 
 # The top-level source directory on which CMake was run.
-CMAKE_SOURCE_DIR = /cygdrive/d/cSrc/mini_jvm
+CMAKE_SOURCE_DIR = /cygdrive/d/githome/mini_jvm/mini_jvm
 
 # The top-level build directory on which CMake was run.
-CMAKE_BINARY_DIR = /cygdrive/d/cSrc/mini_jvm/cmake-build-debug
+CMAKE_BINARY_DIR = /cygdrive/d/githome/mini_jvm/mini_jvm/cmake-build-debug
 
 #=============================================================================
 # Targets provided globally by CMake.
@@ -80,9 +80,9 @@ edit_cache/fast: edit_cache
 
 # The main all target
 all: cmake_check_build_system
-	$(CMAKE_COMMAND) -E cmake_progress_start /cygdrive/d/cSrc/mini_jvm/cmake-build-debug/CMakeFiles /cygdrive/d/cSrc/mini_jvm/cmake-build-debug/CMakeFiles/progress.marks
+	$(CMAKE_COMMAND) -E cmake_progress_start /cygdrive/d/githome/mini_jvm/mini_jvm/cmake-build-debug/CMakeFiles /cygdrive/d/githome/mini_jvm/mini_jvm/cmake-build-debug/CMakeFiles/progress.marks
 	$(MAKE) -f CMakeFiles/Makefile2 all
-	$(CMAKE_COMMAND) -E cmake_progress_start /cygdrive/d/cSrc/mini_jvm/cmake-build-debug/CMakeFiles 0
+	$(CMAKE_COMMAND) -E cmake_progress_start /cygdrive/d/githome/mini_jvm/mini_jvm/cmake-build-debug/CMakeFiles 0
 .PHONY : all
 
 # The main clean target
@@ -609,6 +609,33 @@ utils/hashtable.c.s:
 	$(MAKE) -f CMakeFiles/mini_jvm.dir/build.make CMakeFiles/mini_jvm.dir/utils/hashtable.c.s
 .PHONY : utils/hashtable.c.s
 
+utils/pairlist.o: utils/pairlist.c.o
+
+.PHONY : utils/pairlist.o
+
+# target to build an object file
+utils/pairlist.c.o:
+	$(MAKE) -f CMakeFiles/mini_jvm.dir/build.make CMakeFiles/mini_jvm.dir/utils/pairlist.c.o
+.PHONY : utils/pairlist.c.o
+
+utils/pairlist.i: utils/pairlist.c.i
+
+.PHONY : utils/pairlist.i
+
+# target to preprocess a source file
+utils/pairlist.c.i:
+	$(MAKE) -f CMakeFiles/mini_jvm.dir/build.make CMakeFiles/mini_jvm.dir/utils/pairlist.c.i
+.PHONY : utils/pairlist.c.i
+
+utils/pairlist.s: utils/pairlist.c.s
+
+.PHONY : utils/pairlist.s
+
+# target to generate assembly for a file
+utils/pairlist.c.s:
+	$(MAKE) -f CMakeFiles/mini_jvm.dir/build.make CMakeFiles/mini_jvm.dir/utils/pairlist.c.s
+.PHONY : utils/pairlist.c.s
+
 utils/utf8_string.o: utils/utf8_string.c.o
 
 .PHONY : utils/utf8_string.o
@@ -699,6 +726,9 @@ help:
 	@echo "... utils/hashtable.o"
 	@echo "... utils/hashtable.i"
 	@echo "... utils/hashtable.s"
+	@echo "... utils/pairlist.o"
+	@echo "... utils/pairlist.i"
+	@echo "... utils/pairlist.s"
 	@echo "... utils/utf8_string.o"
 	@echo "... utils/utf8_string.i"
 	@echo "... utils/utf8_string.s"
