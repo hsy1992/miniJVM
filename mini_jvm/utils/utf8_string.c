@@ -43,6 +43,7 @@ Utf8String *utf8_create_c(char *str) {
     utf8_append_c(uni_str, str);
     return uni_str;
 }
+
 Utf8String *utf8_create_copy(Utf8String *str) {
     Utf8String *uni_str = utf8_create();
     utf8_append_part(uni_str, str, 0, str->length);
@@ -75,7 +76,7 @@ void utf8_clear(Utf8String *ustr) {
     /* To clear the list, simply set the arr_length to zero */
 
     ustr->length = 0;
-    ustr->hash=0;
+    ustr->hash = 0;
 }
 
 void utf8_append(Utf8String *a1, Utf8String *a2) {
@@ -238,6 +239,7 @@ void utf8_replace_c(Utf8String *a1, char *a2, char *a3) {
 int utf8_equals(Utf8String *a1, Utf8String *a2) {
     if (a1 == NULL && a2 == NULL)return 0;
     if (a1 == NULL || a2 == NULL)return -2;
+    if (_utf8_hashCode(a1) != _utf8_hashCode(a2))return -4;
     if (a1->length != a2->length)return -3;
     else if (a1->length < a2->length)return -1;
     int i = 0;
@@ -267,7 +269,7 @@ int _UNI_STR_HashtableEquals(HashtableValue value1, HashtableValue value2) {
 }
 
 unsigned long _UNI_STR_HashtableHash(HashtableKey kmer) {
-    return  _utf8_hashCode(kmer);
+    return _utf8_hashCode(kmer);
 }
 
 
@@ -337,7 +339,7 @@ int utf8_insert(Utf8String *ustr, int index, utf8_char data) {
 
     ustr->data1[index] = data;
     ++ustr->length;
-    ustr->hash=0;
+    ustr->hash = 0;
     return 1;
 }
 
@@ -365,7 +367,7 @@ void utf8_remove_range(Utf8String *ustr, int index, int length) {
     /* Decrease the counter */
 
     ustr->length -= length;
-    ustr->hash=0;
+    ustr->hash = 0;
 }
 
 void utf8_remove(Utf8String *ustr, int index) {

@@ -455,7 +455,6 @@ void jarray_set_field(Instance *arr, s32 index, Long2Double *l2d, s32 bytes) {
         if (ref) { //把老索引关闭
             garbage_derefer((__refer) ref, arr);
         }
-
         if (l2d->r) {//建立新索引
             garbage_refer((__refer) l2d->r, arr);
         }

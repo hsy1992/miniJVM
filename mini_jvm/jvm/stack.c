@@ -10,7 +10,6 @@
 /* Stack Initialization */
 StackFrame *stack_init(s32 entry_size) {
     StackFrame *stack = jvm_alloc(sizeof(StackFrame));
-    memset(stack, 0, sizeof(StackFrame));
     stack->store = (StackEntry *) jvm_alloc(sizeof(StackEntry) * entry_size);
     stack->size = 0;
     stack->max_size = entry_size;

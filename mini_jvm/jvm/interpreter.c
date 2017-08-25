@@ -1,17 +1,17 @@
 
 
-#include "../utils/utf8_string.h"
-#include "../utils/arraylist.h"
 #include "jvm.h"
 #include "java_native.h"
 #include "garbage.h"
 #include "jvm_util.h"
+#include "../utils/utf8_string.h"
+#include "../utils/arraylist.h"
 
 
 /* ==================================opcode implementation =============================*/
 
 
-static s32 op_nop(u8 **opCode, Runtime *runtime, Class *clazz) {
+s32 op_nop(u8 **opCode, Runtime *runtime, Class *clazz) {
 
 #if _JVM_DEBUG
     printf("nop\n");
@@ -21,9 +21,9 @@ static s32 op_nop(u8 **opCode, Runtime *runtime, Class *clazz) {
 }
 
 
-inline static s32 op_aload_n(u8 **opCode, Runtime *runtime, Class *clazz, s32 i) {
+static inline s32 op_aload_n(u8 **opCode, Runtime *runtime, Class *clazz, s32 i) {
     StackFrame *stack = runtime->stack;
-    __refer value = runtime->localVariables.item[i].refer;
+    __refer value = (runtime->localVariables + i)->refer;
     push_ref(stack, value);
 #if _JVM_DEBUG
     printf("aload_%d push localvar [%llx] into stack\n", i, (s64) value);
@@ -32,23 +32,23 @@ inline static s32 op_aload_n(u8 **opCode, Runtime *runtime, Class *clazz, s32 i)
     return 0;
 }
 
-static s32 op_aload_0(u8 **opCode, Runtime *runtime, Class *clazz) {
+s32 op_aload_0(u8 **opCode, Runtime *runtime, Class *clazz) {
     return op_aload_n(opCode, runtime, clazz, 0);
 }
 
-static s32 op_aload_1(u8 **opCode, Runtime *runtime, Class *clazz) {
+s32 op_aload_1(u8 **opCode, Runtime *runtime, Class *clazz) {
     return op_aload_n(opCode, runtime, clazz, 1);
 }
 
-static s32 op_aload_2(u8 **opCode, Runtime *runtime, Class *clazz) {
+s32 op_aload_2(u8 **opCode, Runtime *runtime, Class *clazz) {
     return op_aload_n(opCode, runtime, clazz, 2);
 }
 
-static s32 op_aload_3(u8 **opCode, Runtime *runtime, Class *clazz) {
+s32 op_aload_3(u8 **opCode, Runtime *runtime, Class *clazz) {
     return op_aload_n(opCode, runtime, clazz, 3);
 }
 
-static s32 op_xaload(u8 **opCode, Runtime *runtime, Class *clazz) {
+s32 op_xaload(u8 **opCode, Runtime *runtime, Class *clazz) {
     StackFrame *stack = runtime->stack;
 
     s32 index = pop_int(stack);
@@ -73,35 +73,35 @@ static s32 op_xaload(u8 **opCode, Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-static s32 op_iaload(u8 **opCode, Runtime *runtime, Class *clazz) {
+s32 op_iaload(u8 **opCode, Runtime *runtime, Class *clazz) {
     return op_xaload(opCode, runtime, clazz);
 }
 
-static s32 op_faload(u8 **opCode, Runtime *runtime, Class *clazz) {
+s32 op_faload(u8 **opCode, Runtime *runtime, Class *clazz) {
     return op_xaload(opCode, runtime, clazz);
 }
 
-static s32 op_laload(u8 **opCode, Runtime *runtime, Class *clazz) {
+s32 op_laload(u8 **opCode, Runtime *runtime, Class *clazz) {
     return op_xaload(opCode, runtime, clazz);
 }
 
-static s32 op_daload(u8 **opCode, Runtime *runtime, Class *clazz) {
+s32 op_daload(u8 **opCode, Runtime *runtime, Class *clazz) {
     return op_xaload(opCode, runtime, clazz);
 }
 
-static s32 op_caload(u8 **opCode, Runtime *runtime, Class *clazz) {
+s32 op_caload(u8 **opCode, Runtime *runtime, Class *clazz) {
     return op_xaload(opCode, runtime, clazz);
 }
 
-static s32 op_saload(u8 **opCode, Runtime *runtime, Class *clazz) {
+s32 op_saload(u8 **opCode, Runtime *runtime, Class *clazz) {
     return op_xaload(opCode, runtime, clazz);
 }
 
-static s32 op_baload(u8 **opCode, Runtime *runtime, Class *clazz) {
+s32 op_baload(u8 **opCode, Runtime *runtime, Class *clazz) {
     return op_xaload(opCode, runtime, clazz);
 }
 
-static s32 op_aaload(u8 **opCode, Runtime *runtime, Class *clazz) {
+s32 op_aaload(u8 **opCode, Runtime *runtime, Class *clazz) {
     StackFrame *stack = runtime->stack;
 
     s32 index = pop_int(stack);
@@ -125,7 +125,7 @@ static s32 op_aaload(u8 **opCode, Runtime *runtime, Class *clazz) {
 
 
 /* bipush */
-static s32 op_bipush(u8 **opCode, Runtime *runtime, Class *clazz) {
+s32 op_bipush(u8 **opCode, Runtime *runtime, Class *clazz) {
     StackFrame *stack = runtime->stack;
 
     s32 value = (c8) opCode[0][1];
@@ -138,7 +138,7 @@ static s32 op_bipush(u8 **opCode, Runtime *runtime, Class *clazz) {
 }
 
 /* dup */
-static s32 op_dup(u8 **opCode, Runtime *runtime, Class *clazz) {
+s32 op_dup(u8 **opCode, Runtime *runtime, Class *clazz) {
     StackFrame *stack = runtime->stack;
 
     StackEntry entry;
@@ -154,7 +154,7 @@ static s32 op_dup(u8 **opCode, Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-static s32 op_dup_x1(u8 **opCode, Runtime *runtime, Class *clazz) {
+s32 op_dup_x1(u8 **opCode, Runtime *runtime, Class *clazz) {
     StackFrame *stack = runtime->stack;
 
     StackEntry entry1;
@@ -173,7 +173,7 @@ static s32 op_dup_x1(u8 **opCode, Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-static s32 op_dup_x2(u8 **opCode, Runtime *runtime, Class *clazz) {
+s32 op_dup_x2(u8 **opCode, Runtime *runtime, Class *clazz) {
     StackFrame *stack = runtime->stack;
 
     StackEntry entry1;
@@ -195,7 +195,7 @@ static s32 op_dup_x2(u8 **opCode, Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-static s32 op_dup2(u8 **opCode, Runtime *runtime, Class *clazz) {
+s32 op_dup2(u8 **opCode, Runtime *runtime, Class *clazz) {
     StackFrame *stack = runtime->stack;
 
     StackEntry entry1;
@@ -216,7 +216,7 @@ static s32 op_dup2(u8 **opCode, Runtime *runtime, Class *clazz) {
 }
 
 
-static s32 op_dup2_x1(u8 **opCode, Runtime *runtime, Class *clazz) {
+s32 op_dup2_x1(u8 **opCode, Runtime *runtime, Class *clazz) {
     StackFrame *stack = runtime->stack;
 
     StackEntry entry1;
@@ -239,7 +239,7 @@ static s32 op_dup2_x1(u8 **opCode, Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-static s32 op_dup2_x2(u8 **opCode, Runtime *runtime, Class *clazz) {
+s32 op_dup2_x2(u8 **opCode, Runtime *runtime, Class *clazz) {
     StackFrame *stack = runtime->stack;
 
     StackEntry entry1;
@@ -265,7 +265,7 @@ static s32 op_dup2_x2(u8 **opCode, Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-static s32 op_swap(u8 **opCode, Runtime *runtime, Class *clazz) {
+s32 op_swap(u8 **opCode, Runtime *runtime, Class *clazz) {
     StackFrame *stack = runtime->stack;
 
     StackEntry entry1;
@@ -285,7 +285,7 @@ static s32 op_swap(u8 **opCode, Runtime *runtime, Class *clazz) {
 }
 
 
-static s32 op_pop(u8 **opCode, Runtime *runtime, Class *clazz) {
+s32 op_pop(u8 **opCode, Runtime *runtime, Class *clazz) {
     StackFrame *stack = runtime->stack;
     pop_int(stack);
 #if _JVM_DEBUG
@@ -296,7 +296,7 @@ static s32 op_pop(u8 **opCode, Runtime *runtime, Class *clazz) {
 }
 
 
-static s32 op_pop2(u8 **opCode, Runtime *runtime, Class *clazz) {
+s32 op_pop2(u8 **opCode, Runtime *runtime, Class *clazz) {
     StackFrame *stack = runtime->stack;
     pop_int(stack);
     pop_int(stack);
@@ -309,7 +309,7 @@ static s32 op_pop2(u8 **opCode, Runtime *runtime, Class *clazz) {
 
 
 /* iadd */
-static s32 op_iadd(u8 **opCode, Runtime *runtime, Class *clazz) {
+s32 op_iadd(u8 **opCode, Runtime *runtime, Class *clazz) {
     StackFrame *stack = runtime->stack;
 
     s32 value1 = pop_int(stack);
@@ -323,7 +323,7 @@ static s32 op_iadd(u8 **opCode, Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-static s32 op_iconst_n(u8 **opCode, Runtime *runtime, Class *clazz, s32 i) {
+s32 op_iconst_n(u8 **opCode, Runtime *runtime, Class *clazz, s32 i) {
     StackFrame *stack = runtime->stack;
 
     push_int(stack, i);
@@ -334,45 +334,45 @@ static s32 op_iconst_n(u8 **opCode, Runtime *runtime, Class *clazz, s32 i) {
     return 0;
 }
 
-static s32 op_aconst_null(u8 **opCode, Runtime *runtime, Class *clazz) {
+s32 op_aconst_null(u8 **opCode, Runtime *runtime, Class *clazz) {
     return op_iconst_n(opCode, runtime, clazz, 0);
 }
 
-static s32 op_iconst_m1(u8 **opCode, Runtime *runtime, Class *clazz) {
+s32 op_iconst_m1(u8 **opCode, Runtime *runtime, Class *clazz) {
     return op_iconst_n(opCode, runtime, clazz, -1);
 }
 
 /* iconst_0 */
-static s32 op_iconst_0(u8 **opCode, Runtime *runtime, Class *clazz) {
+s32 op_iconst_0(u8 **opCode, Runtime *runtime, Class *clazz) {
     return op_iconst_n(opCode, runtime, clazz, 0);
 }
 
 /* iconst_1 */
-static s32 op_iconst_1(u8 **opCode, Runtime *runtime, Class *clazz) {
+s32 op_iconst_1(u8 **opCode, Runtime *runtime, Class *clazz) {
     return op_iconst_n(opCode, runtime, clazz, 1);
 }
 
 /* iconst_2 */
-static s32 op_iconst_2(u8 **opCode, Runtime *runtime, Class *clazz) {
+s32 op_iconst_2(u8 **opCode, Runtime *runtime, Class *clazz) {
     return op_iconst_n(opCode, runtime, clazz, 2);
 }
 
 /* iconst_3 */
-static s32 op_iconst_3(u8 **opCode, Runtime *runtime, Class *clazz) {
+s32 op_iconst_3(u8 **opCode, Runtime *runtime, Class *clazz) {
     return op_iconst_n(opCode, runtime, clazz, 3);
 }
 
 /* iconst_4 */
-static s32 op_iconst_4(u8 **opCode, Runtime *runtime, Class *clazz) {
+s32 op_iconst_4(u8 **opCode, Runtime *runtime, Class *clazz) {
     return op_iconst_n(opCode, runtime, clazz, 4);
 }
 
 /* iconst_5 */
-static s32 op_iconst_5(u8 **opCode, Runtime *runtime, Class *clazz) {
+s32 op_iconst_5(u8 **opCode, Runtime *runtime, Class *clazz) {
     return op_iconst_n(opCode, runtime, clazz, 5);
 }
 
-static s32 op_lconst_n(u8 **opCode, Runtime *runtime, Class *clazz, s64 i) {
+s32 op_lconst_n(u8 **opCode, Runtime *runtime, Class *clazz, s64 i) {
     StackFrame *stack = runtime->stack;
 
     push_long(stack, i);
@@ -383,15 +383,15 @@ static s32 op_lconst_n(u8 **opCode, Runtime *runtime, Class *clazz, s64 i) {
     return 0;
 }
 
-static s32 op_lconst_0(u8 **opCode, Runtime *runtime, Class *clazz) {
+s32 op_lconst_0(u8 **opCode, Runtime *runtime, Class *clazz) {
     return op_lconst_n(opCode, runtime, clazz, 0);
 }
 
-static s32 op_lconst_1(u8 **opCode, Runtime *runtime, Class *clazz) {
+s32 op_lconst_1(u8 **opCode, Runtime *runtime, Class *clazz) {
     return op_lconst_n(opCode, runtime, clazz, 1);
 }
 
-static s32 op_fconst_n(u8 **opCode, Runtime *runtime, Class *clazz, f32 f) {
+s32 op_fconst_n(u8 **opCode, Runtime *runtime, Class *clazz, f32 f) {
     StackFrame *stack = runtime->stack;
     push_float(stack, f);
 
@@ -402,20 +402,20 @@ static s32 op_fconst_n(u8 **opCode, Runtime *runtime, Class *clazz, f32 f) {
     return 0;
 }
 
-static s32 op_fconst_0(u8 **opCode, Runtime *runtime, Class *clazz) {
+s32 op_fconst_0(u8 **opCode, Runtime *runtime, Class *clazz) {
     return op_fconst_n(opCode, runtime, clazz, 0.0f);
 }
 
-static s32 op_fconst_1(u8 **opCode, Runtime *runtime, Class *clazz) {
+s32 op_fconst_1(u8 **opCode, Runtime *runtime, Class *clazz) {
     return op_fconst_n(opCode, runtime, clazz, 1.0f);
 }
 
-static s32 op_fconst_2(u8 **opCode, Runtime *runtime, Class *clazz) {
+s32 op_fconst_2(u8 **opCode, Runtime *runtime, Class *clazz) {
     return op_fconst_n(opCode, runtime, clazz, 2.0f);
 }
 
 
-static s32 op_dconst_n(u8 **opCode, Runtime *runtime, Class *clazz, f64 d) {
+s32 op_dconst_n(u8 **opCode, Runtime *runtime, Class *clazz, f64 d) {
     StackFrame *stack = runtime->stack;
     push_double(stack, d);
 
@@ -426,16 +426,16 @@ static s32 op_dconst_n(u8 **opCode, Runtime *runtime, Class *clazz, f64 d) {
     return 0;
 }
 
-static s32 op_dconst_0(u8 **opCode, Runtime *runtime, Class *clazz) {
+s32 op_dconst_0(u8 **opCode, Runtime *runtime, Class *clazz) {
     return op_dconst_n(opCode, runtime, clazz, 0.0f);
 }
 
 /* 0x0F dconst_1 */
-static s32 op_dconst_1(u8 **opCode, Runtime *runtime, Class *clazz) {
+s32 op_dconst_1(u8 **opCode, Runtime *runtime, Class *clazz) {
     return op_dconst_n(opCode, runtime, clazz, 1.0f);
 }
 
-static s32 op_idiv(u8 **opCode, Runtime *runtime, Class *clazz) {
+s32 op_idiv(u8 **opCode, Runtime *runtime, Class *clazz) {
     StackFrame *stack = runtime->stack;
 
     s32 value2 = pop_int(stack);
@@ -450,7 +450,7 @@ static s32 op_idiv(u8 **opCode, Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-static s32 op_ldiv(u8 **opCode, Runtime *runtime, Class *clazz) {
+s32 op_ldiv(u8 **opCode, Runtime *runtime, Class *clazz) {
     StackFrame *stack = runtime->stack;
     s64 value1 = pop_long(stack);
     s64 value2 = pop_long(stack);
@@ -464,7 +464,7 @@ static s32 op_ldiv(u8 **opCode, Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-static s32 op_ddiv(u8 **opCode, Runtime *runtime, Class *clazz) {
+s32 op_ddiv(u8 **opCode, Runtime *runtime, Class *clazz) {
     StackFrame *stack = runtime->stack;
     f64 value1 = pop_double(stack);
     f64 value2 = pop_double(stack);
@@ -478,7 +478,7 @@ static s32 op_ddiv(u8 **opCode, Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-static s32 op_fdiv(u8 **opCode, Runtime *runtime, Class *clazz) {
+s32 op_fdiv(u8 **opCode, Runtime *runtime, Class *clazz) {
     StackFrame *stack = runtime->stack;
     f32 value1 = pop_float(stack);
     f32 value2 = pop_float(stack);
@@ -492,7 +492,7 @@ static s32 op_fdiv(u8 **opCode, Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-static s32 op_fadd(u8 **opCode, Runtime *runtime, Class *clazz) {
+s32 op_fadd(u8 **opCode, Runtime *runtime, Class *clazz) {
     StackFrame *stack = runtime->stack;
     f32 value1 = pop_float(stack);
     f32 value2 = pop_float(stack);
@@ -506,7 +506,7 @@ static s32 op_fadd(u8 **opCode, Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-static s32 op_ladd(u8 **opCode, Runtime *runtime, Class *clazz) {
+s32 op_ladd(u8 **opCode, Runtime *runtime, Class *clazz) {
     StackFrame *stack = runtime->stack;
     s64 value1 = pop_long(stack);
     s64 value2 = pop_long(stack);
@@ -520,7 +520,7 @@ static s32 op_ladd(u8 **opCode, Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-static s32 op_lsub(u8 **opCode, Runtime *runtime, Class *clazz) {
+s32 op_lsub(u8 **opCode, Runtime *runtime, Class *clazz) {
     StackFrame *stack = runtime->stack;
     s64 value1 = pop_long(stack);
     s64 value2 = pop_long(stack);
@@ -534,7 +534,7 @@ static s32 op_lsub(u8 **opCode, Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-static s32 op_fsub(u8 **opCode, Runtime *runtime, Class *clazz) {
+s32 op_fsub(u8 **opCode, Runtime *runtime, Class *clazz) {
     StackFrame *stack = runtime->stack;
     f32 value1 = pop_float(stack);
     f32 value2 = pop_float(stack);
@@ -549,7 +549,7 @@ static s32 op_fsub(u8 **opCode, Runtime *runtime, Class *clazz) {
 }
 
 
-static s32 op_dsub(u8 **opCode, Runtime *runtime, Class *clazz) {
+s32 op_dsub(u8 **opCode, Runtime *runtime, Class *clazz) {
     StackFrame *stack = runtime->stack;
     f64 value1 = pop_double(stack);
     f64 value2 = pop_double(stack);
@@ -563,7 +563,7 @@ static s32 op_dsub(u8 **opCode, Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-static s32 op_lmul(u8 **opCode, Runtime *runtime, Class *clazz) {
+s32 op_lmul(u8 **opCode, Runtime *runtime, Class *clazz) {
     StackFrame *stack = runtime->stack;
     s64 value1 = pop_long(stack);
     s64 value2 = pop_long(stack);
@@ -578,7 +578,7 @@ static s32 op_lmul(u8 **opCode, Runtime *runtime, Class *clazz) {
 }
 
 
-static s32 op_iload(u8 **opCode, Runtime *runtime, Class *clazz) {
+s32 op_iload(u8 **opCode, Runtime *runtime, Class *clazz) {
     StackFrame *stack = runtime->stack;
     Short2Char s2c;
     if (runtime->wideMode) {
@@ -591,7 +591,7 @@ static s32 op_iload(u8 **opCode, Runtime *runtime, Class *clazz) {
     }
     runtime->wideMode = 0;
 
-    s32 value = runtime->localVariables.item[s2c.s].integer;
+    s32 value = (runtime->localVariables+s2c.s)->integer;
 #if _JVM_DEBUG
     printf("i(fa)load: push localvar(%d)= [%x]/%d  \n", s2c.s, value, value);
 #endif
@@ -600,11 +600,11 @@ static s32 op_iload(u8 **opCode, Runtime *runtime, Class *clazz) {
 }
 
 
-static s32 op_fload(u8 **opCode, Runtime *runtime, Class *clazz) {
+s32 op_fload(u8 **opCode, Runtime *runtime, Class *clazz) {
     return op_iload(opCode, runtime, clazz);
 }
 
-static s32 op_aload(u8 **opCode, Runtime *runtime, Class *clazz) {
+s32 op_aload(u8 **opCode, Runtime *runtime, Class *clazz) {
     StackFrame *stack = runtime->stack;
     Short2Char s2c;
     if (runtime->wideMode) {
@@ -617,7 +617,7 @@ static s32 op_aload(u8 **opCode, Runtime *runtime, Class *clazz) {
     }
     runtime->wideMode = 0;
 
-    __refer value = runtime->localVariables.item[s2c.s].refer;
+    __refer value = (runtime->localVariables + s2c.s)->refer;
 #if _JVM_DEBUG
     printf("i(fa)load: push localvar(%d)= [%x]/%d  \n", s2c.s, value, value);
 #endif
@@ -625,7 +625,7 @@ static s32 op_aload(u8 **opCode, Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-static s32 op_lload(u8 **opCode, Runtime *runtime, Class *clazz) {
+s32 op_lload(u8 **opCode, Runtime *runtime, Class *clazz) {
     StackFrame *stack = runtime->stack;
     Short2Char s2c;
     if (runtime->wideMode) {
@@ -639,8 +639,8 @@ static s32 op_lload(u8 **opCode, Runtime *runtime, Class *clazz) {
     runtime->wideMode = 0;
 
     Long2Double l2d;
-    l2d.i2l.i1 = runtime->localVariables.item[s2c.s].integer;
-    l2d.i2l.i0 = runtime->localVariables.item[s2c.s + 1].integer;
+    l2d.i2l.i1 = (runtime->localVariables+s2c.s)->integer;
+    l2d.i2l.i0 = (runtime->localVariables+s2c.s + 1)->integer;
 #if _JVM_DEBUG
     printf("l(d)load: push localvar(%d) [%llx]/%lf into stack \n", s2c.s, l2d.l, l2d.d);
 #endif
@@ -648,15 +648,15 @@ static s32 op_lload(u8 **opCode, Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-static s32 op_dload(u8 **opCode, Runtime *runtime, Class *clazz) {
+s32 op_dload(u8 **opCode, Runtime *runtime, Class *clazz) {
     return op_lload(opCode, runtime, clazz);
 }
 
 
-static s32 op_ifload_n(u8 **opCode, Runtime *runtime, Class *clazz, s32 i) {
+static inline s32 op_ifload_n(u8 **opCode, Runtime *runtime, Class *clazz, s32 i) {
     StackFrame *stack = runtime->stack;
     Int2Float i2f;
-    i2f.i = runtime->localVariables.item[i].integer;
+    i2f.i = (runtime->localVariables+i)->integer;
 #if _JVM_DEBUG
     printf("i(f)load_%d: push localvar(%d)= [%x]/%d/%f  \n", i, i, i2f.i, i2f.i, i2f.f);
 #endif
@@ -666,46 +666,46 @@ static s32 op_ifload_n(u8 **opCode, Runtime *runtime, Class *clazz, s32 i) {
 }
 
 /* iload_0 */
-static s32 op_iload_0(u8 **opCode, Runtime *runtime, Class *clazz) {
+s32 op_iload_0(u8 **opCode, Runtime *runtime, Class *clazz) {
     return op_ifload_n(opCode, runtime, clazz, 0);
 }
 
 /* iload_1 */
-static s32 op_iload_1(u8 **opCode, Runtime *runtime, Class *clazz) {
+s32 op_iload_1(u8 **opCode, Runtime *runtime, Class *clazz) {
     return op_ifload_n(opCode, runtime, clazz, 1);
 }
 
 /* iload_2 */
-static s32 op_iload_2(u8 **opCode, Runtime *runtime, Class *clazz) {
+s32 op_iload_2(u8 **opCode, Runtime *runtime, Class *clazz) {
     return op_ifload_n(opCode, runtime, clazz, 2);
 }
 
 /* iload_3 */
-static s32 op_iload_3(u8 **opCode, Runtime *runtime, Class *clazz) {
+s32 op_iload_3(u8 **opCode, Runtime *runtime, Class *clazz) {
     return op_ifload_n(opCode, runtime, clazz, 3);
 }
 
-static s32 op_fload_0(u8 **opCode, Runtime *runtime, Class *clazz) {
+s32 op_fload_0(u8 **opCode, Runtime *runtime, Class *clazz) {
     return op_ifload_n(opCode, runtime, clazz, 0);
 }
 
-static s32 op_fload_1(u8 **opCode, Runtime *runtime, Class *clazz) {
+s32 op_fload_1(u8 **opCode, Runtime *runtime, Class *clazz) {
     return op_ifload_n(opCode, runtime, clazz, 1);
 }
 
-static s32 op_fload_2(u8 **opCode, Runtime *runtime, Class *clazz) {
+s32 op_fload_2(u8 **opCode, Runtime *runtime, Class *clazz) {
     return op_ifload_n(opCode, runtime, clazz, 2);
 }
 
-static s32 op_fload_3(u8 **opCode, Runtime *runtime, Class *clazz) {
+s32 op_fload_3(u8 **opCode, Runtime *runtime, Class *clazz) {
     return op_ifload_n(opCode, runtime, clazz, 3);
 }
 
-static s32 op_lload_n(u8 **opCode, Runtime *runtime, Class *clazz, s32 index) {
+s32 op_lload_n(u8 **opCode, Runtime *runtime, Class *clazz, s32 index) {
     StackFrame *stack = runtime->stack;
     Long2Double l2d;
-    l2d.i2l.i1 = runtime->localVariables.item[index].integer;
-    l2d.i2l.i0 = runtime->localVariables.item[index + 1].integer;
+    l2d.i2l.i1 = (runtime->localVariables+index)->integer;
+    l2d.i2l.i0 = (runtime->localVariables+index + 1)->integer;
     s64 value = l2d.l;
 
 #if _JVM_DEBUG
@@ -716,40 +716,40 @@ static s32 op_lload_n(u8 **opCode, Runtime *runtime, Class *clazz, s32 index) {
     return 0;
 }
 
-static s32 op_lload_0(u8 **opCode, Runtime *runtime, Class *clazz) {
+s32 op_lload_0(u8 **opCode, Runtime *runtime, Class *clazz) {
     return op_lload_n(opCode, runtime, clazz, 0);
 }
 
-static s32 op_lload_1(u8 **opCode, Runtime *runtime, Class *clazz) {
+s32 op_lload_1(u8 **opCode, Runtime *runtime, Class *clazz) {
     return op_lload_n(opCode, runtime, clazz, 1);
 }
 
-static s32 op_lload_2(u8 **opCode, Runtime *runtime, Class *clazz) {
+s32 op_lload_2(u8 **opCode, Runtime *runtime, Class *clazz) {
     return op_lload_n(opCode, runtime, clazz, 2);
 }
 
-static s32 op_lload_3(u8 **opCode, Runtime *runtime, Class *clazz) {
+s32 op_lload_3(u8 **opCode, Runtime *runtime, Class *clazz) {
     return op_lload_n(opCode, runtime, clazz, 3);
 }
 
-static s32 op_dload_0(u8 **opCode, Runtime *runtime, Class *clazz) {
+s32 op_dload_0(u8 **opCode, Runtime *runtime, Class *clazz) {
     return op_lload_n(opCode, runtime, clazz, 0);
 }
 
-static s32 op_dload_1(u8 **opCode, Runtime *runtime, Class *clazz) {
+s32 op_dload_1(u8 **opCode, Runtime *runtime, Class *clazz) {
     return op_lload_n(opCode, runtime, clazz, 1);
 }
 
-static s32 op_dload_2(u8 **opCode, Runtime *runtime, Class *clazz) {
+s32 op_dload_2(u8 **opCode, Runtime *runtime, Class *clazz) {
     return op_lload_n(opCode, runtime, clazz, 2);
 }
 
-static s32 op_dload_3(u8 **opCode, Runtime *runtime, Class *clazz) {
+s32 op_dload_3(u8 **opCode, Runtime *runtime, Class *clazz) {
     return op_lload_n(opCode, runtime, clazz, 3);
 }
 
 /* imul */
-static s32 op_imul(u8 **opCode, Runtime *runtime, Class *clazz) {
+s32 op_imul(u8 **opCode, Runtime *runtime, Class *clazz) {
     StackFrame *stack = runtime->stack;
 
     s32 value1 = pop_int(stack);
@@ -765,7 +765,7 @@ static s32 op_imul(u8 **opCode, Runtime *runtime, Class *clazz) {
 }
 
 /* 0x63 dadd */
-static s32 op_dadd(u8 **opCode, Runtime *runtime, Class *clazz) {
+s32 op_dadd(u8 **opCode, Runtime *runtime, Class *clazz) {
     StackFrame *stack = runtime->stack;
 
     f64 value1 = pop_double(stack);
@@ -781,7 +781,7 @@ static s32 op_dadd(u8 **opCode, Runtime *runtime, Class *clazz) {
 }
 
 /* 0x6B dmul */
-static s32 op_dmul(u8 **opCode, Runtime *runtime, Class *clazz) {
+s32 op_dmul(u8 **opCode, Runtime *runtime, Class *clazz) {
     StackFrame *stack = runtime->stack;
     f64 value1 = pop_double(stack);
     f64 value2 = pop_double(stack);
@@ -795,7 +795,7 @@ static s32 op_dmul(u8 **opCode, Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-static s32 op_fmul(u8 **opCode, Runtime *runtime, Class *clazz) {
+s32 op_fmul(u8 **opCode, Runtime *runtime, Class *clazz) {
     StackFrame *stack = runtime->stack;
     f32 value1 = pop_float(stack);
     f32 value2 = pop_float(stack);
@@ -810,7 +810,7 @@ static s32 op_fmul(u8 **opCode, Runtime *runtime, Class *clazz) {
 }
 
 
-static s32 op_l2i(u8 **opCode, Runtime *runtime, Class *clazz) {
+s32 op_l2i(u8 **opCode, Runtime *runtime, Class *clazz) {
     StackFrame *stack = runtime->stack;
     s64 value = pop_long(stack);
 
@@ -822,7 +822,7 @@ static s32 op_l2i(u8 **opCode, Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-static s32 op_l2f(u8 **opCode, Runtime *runtime, Class *clazz) {
+s32 op_l2f(u8 **opCode, Runtime *runtime, Class *clazz) {
     StackFrame *stack = runtime->stack;
     s64 value = pop_long(stack);
 
@@ -834,7 +834,7 @@ static s32 op_l2f(u8 **opCode, Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-static s32 op_l2d(u8 **opCode, Runtime *runtime, Class *clazz) {
+s32 op_l2d(u8 **opCode, Runtime *runtime, Class *clazz) {
     StackFrame *stack = runtime->stack;
     s64 value = pop_long(stack);
 
@@ -846,7 +846,7 @@ static s32 op_l2d(u8 **opCode, Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-static s32 op_i2l(u8 **opCode, Runtime *runtime, Class *clazz) {
+s32 op_i2l(u8 **opCode, Runtime *runtime, Class *clazz) {
     StackFrame *stack = runtime->stack;
     s32 value = pop_int(stack);
 
@@ -859,7 +859,7 @@ static s32 op_i2l(u8 **opCode, Runtime *runtime, Class *clazz) {
 }
 
 
-static s32 op_i2c(u8 **opCode, Runtime *runtime, Class *clazz) {
+s32 op_i2c(u8 **opCode, Runtime *runtime, Class *clazz) {
     StackFrame *stack = runtime->stack;
     s32 value = pop_int(stack);
 
@@ -871,11 +871,11 @@ static s32 op_i2c(u8 **opCode, Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-static s32 op_i2s(u8 **opCode, Runtime *runtime, Class *clazz) {
+s32 op_i2s(u8 **opCode, Runtime *runtime, Class *clazz) {
     return op_i2c(opCode, runtime, clazz);
 }
 
-static s32 op_i2b(u8 **opCode, Runtime *runtime, Class *clazz) {
+s32 op_i2b(u8 **opCode, Runtime *runtime, Class *clazz) {
     StackFrame *stack = runtime->stack;
     s32 value = pop_int(stack);
 
@@ -888,7 +888,7 @@ static s32 op_i2b(u8 **opCode, Runtime *runtime, Class *clazz) {
 }
 
 
-static s32 op_i2f(u8 **opCode, Runtime *runtime, Class *clazz) {
+s32 op_i2f(u8 **opCode, Runtime *runtime, Class *clazz) {
     StackFrame *stack = runtime->stack;
     s32 value = pop_int(stack);
     f32 result = value;
@@ -900,7 +900,7 @@ static s32 op_i2f(u8 **opCode, Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-static s32 op_i2d(u8 **opCode, Runtime *runtime, Class *clazz) {
+s32 op_i2d(u8 **opCode, Runtime *runtime, Class *clazz) {
     StackFrame *stack = runtime->stack;
     s32 value = pop_int(stack);
     f64 result = value;
@@ -912,7 +912,7 @@ static s32 op_i2d(u8 **opCode, Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-static s32 op_d2i(u8 **opCode, Runtime *runtime, Class *clazz) {
+s32 op_d2i(u8 **opCode, Runtime *runtime, Class *clazz) {
     StackFrame *stack = runtime->stack;
     f64 value1 = pop_double(stack);
     s32 result = 0;
@@ -925,7 +925,7 @@ static s32 op_d2i(u8 **opCode, Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-static s32 op_d2l(u8 **opCode, Runtime *runtime, Class *clazz) {
+s32 op_d2l(u8 **opCode, Runtime *runtime, Class *clazz) {
     StackFrame *stack = runtime->stack;
     f64 value1 = pop_double(stack);
     s64 result = 0;
@@ -938,7 +938,7 @@ static s32 op_d2l(u8 **opCode, Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-static s32 op_d2f(u8 **opCode, Runtime *runtime, Class *clazz) {
+s32 op_d2f(u8 **opCode, Runtime *runtime, Class *clazz) {
     StackFrame *stack = runtime->stack;
     f64 value1 = pop_double(stack);
     f32 result = 0;
@@ -951,7 +951,7 @@ static s32 op_d2f(u8 **opCode, Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-static s32 op_f2i(u8 **opCode, Runtime *runtime, Class *clazz) {
+s32 op_f2i(u8 **opCode, Runtime *runtime, Class *clazz) {
     StackFrame *stack = runtime->stack;
     f32 value1 = pop_float(stack);
     s32 result = 0;
@@ -964,7 +964,7 @@ static s32 op_f2i(u8 **opCode, Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-static s32 op_f2l(u8 **opCode, Runtime *runtime, Class *clazz) {
+s32 op_f2l(u8 **opCode, Runtime *runtime, Class *clazz) {
     StackFrame *stack = runtime->stack;
     f32 value1 = pop_float(stack);
     s64 result = 0;
@@ -977,7 +977,7 @@ static s32 op_f2l(u8 **opCode, Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-static s32 op_f2d(u8 **opCode, Runtime *runtime, Class *clazz) {
+s32 op_f2d(u8 **opCode, Runtime *runtime, Class *clazz) {
     StackFrame *stack = runtime->stack;
     f32 value1 = pop_float(stack);
     f64 result = 0;
@@ -991,7 +991,7 @@ static s32 op_f2d(u8 **opCode, Runtime *runtime, Class *clazz) {
 }
 
 
-static s32 op_irem(u8 **opCode, Runtime *runtime, Class *clazz) {
+s32 op_irem(u8 **opCode, Runtime *runtime, Class *clazz) {
     StackFrame *stack = runtime->stack;
     s32 value1 = pop_int(stack);
     s32 value2 = pop_int(stack);
@@ -1005,7 +1005,7 @@ static s32 op_irem(u8 **opCode, Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-static s32 op_frem(u8 **opCode, Runtime *runtime, Class *clazz) {
+s32 op_frem(u8 **opCode, Runtime *runtime, Class *clazz) {
     StackFrame *stack = runtime->stack;
     f32 value1 = pop_float(stack);
     f32 value2 = pop_float(stack);
@@ -1019,7 +1019,7 @@ static s32 op_frem(u8 **opCode, Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-static s32 op_lrem(u8 **opCode, Runtime *runtime, Class *clazz) {
+s32 op_lrem(u8 **opCode, Runtime *runtime, Class *clazz) {
     StackFrame *stack = runtime->stack;
     s64 value1 = pop_long(stack);
     s64 value2 = pop_long(stack);
@@ -1033,7 +1033,7 @@ static s32 op_lrem(u8 **opCode, Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-static s32 op_drem(u8 **opCode, Runtime *runtime, Class *clazz) {
+s32 op_drem(u8 **opCode, Runtime *runtime, Class *clazz) {
     StackFrame *stack = runtime->stack;
     f64 value1 = pop_double(stack);
     f64 value2 = pop_double(stack);
@@ -1047,7 +1047,7 @@ static s32 op_drem(u8 **opCode, Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-static s32 op_ineg(u8 **opCode, Runtime *runtime, Class *clazz) {
+s32 op_ineg(u8 **opCode, Runtime *runtime, Class *clazz) {
     StackFrame *stack = runtime->stack;
     s32 value1 = pop_int(stack);
 
@@ -1059,7 +1059,7 @@ static s32 op_ineg(u8 **opCode, Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-static s32 op_lneg(u8 **opCode, Runtime *runtime, Class *clazz) {
+s32 op_lneg(u8 **opCode, Runtime *runtime, Class *clazz) {
     StackFrame *stack = runtime->stack;
     s64 value1 = pop_long(stack);
 
@@ -1072,7 +1072,7 @@ static s32 op_lneg(u8 **opCode, Runtime *runtime, Class *clazz) {
 }
 
 
-static s32 op_fneg(u8 **opCode, Runtime *runtime, Class *clazz) {
+s32 op_fneg(u8 **opCode, Runtime *runtime, Class *clazz) {
     StackFrame *stack = runtime->stack;
     f32 value1 = pop_float(stack);
 
@@ -1085,7 +1085,7 @@ static s32 op_fneg(u8 **opCode, Runtime *runtime, Class *clazz) {
 }
 
 
-static s32 op_dneg(u8 **opCode, Runtime *runtime, Class *clazz) {
+s32 op_dneg(u8 **opCode, Runtime *runtime, Class *clazz) {
     StackFrame *stack = runtime->stack;
     f64 value1 = pop_double(stack);
 
@@ -1097,7 +1097,7 @@ static s32 op_dneg(u8 **opCode, Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-static s32 op_ishl(u8 **opCode, Runtime *runtime, Class *clazz) {
+s32 op_ishl(u8 **opCode, Runtime *runtime, Class *clazz) {
     StackFrame *stack = runtime->stack;
     s32 value1 = pop_int(stack);
     s32 value2 = pop_int(stack);
@@ -1110,7 +1110,7 @@ static s32 op_ishl(u8 **opCode, Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-static s32 op_lshl(u8 **opCode, Runtime *runtime, Class *clazz) {
+s32 op_lshl(u8 **opCode, Runtime *runtime, Class *clazz) {
     StackFrame *stack = runtime->stack;
     s32 value1 = pop_int(stack);
     s64 value2 = pop_long(stack);
@@ -1123,7 +1123,7 @@ static s32 op_lshl(u8 **opCode, Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-static s32 op_ishr(u8 **opCode, Runtime *runtime, Class *clazz) {
+s32 op_ishr(u8 **opCode, Runtime *runtime, Class *clazz) {
     StackFrame *stack = runtime->stack;
     s32 value1 = pop_int(stack);
     s32 value2 = pop_int(stack);
@@ -1136,7 +1136,7 @@ static s32 op_ishr(u8 **opCode, Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-static s32 op_lshr(u8 **opCode, Runtime *runtime, Class *clazz) {
+s32 op_lshr(u8 **opCode, Runtime *runtime, Class *clazz) {
     StackFrame *stack = runtime->stack;
     s32 value1 = pop_int(stack);
     s64 value2 = pop_long(stack);
@@ -1149,7 +1149,7 @@ static s32 op_lshr(u8 **opCode, Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-static s32 op_iushr(u8 **opCode, Runtime *runtime, Class *clazz) {
+s32 op_iushr(u8 **opCode, Runtime *runtime, Class *clazz) {
     StackFrame *stack = runtime->stack;
     s32 value1 = pop_int(stack);
     u32 value2 = pop_int(stack);
@@ -1162,7 +1162,7 @@ static s32 op_iushr(u8 **opCode, Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-static s32 op_lushr(u8 **opCode, Runtime *runtime, Class *clazz) {
+s32 op_lushr(u8 **opCode, Runtime *runtime, Class *clazz) {
     StackFrame *stack = runtime->stack;
     s32 value1 = pop_int(stack);
     u64 value2 = pop_long(stack);
@@ -1175,7 +1175,7 @@ static s32 op_lushr(u8 **opCode, Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-static s32 op_iand(u8 **opCode, Runtime *runtime, Class *clazz) {
+s32 op_iand(u8 **opCode, Runtime *runtime, Class *clazz) {
     StackFrame *stack = runtime->stack;
     u32 value1 = pop_int(stack);
     u32 value2 = pop_int(stack);
@@ -1188,7 +1188,7 @@ static s32 op_iand(u8 **opCode, Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-static s32 op_land(u8 **opCode, Runtime *runtime, Class *clazz) {
+s32 op_land(u8 **opCode, Runtime *runtime, Class *clazz) {
     StackFrame *stack = runtime->stack;
     u64 value1 = pop_long(stack);
     u64 value2 = pop_long(stack);
@@ -1202,7 +1202,7 @@ static s32 op_land(u8 **opCode, Runtime *runtime, Class *clazz) {
 }
 
 
-static s32 op_ior(u8 **opCode, Runtime *runtime, Class *clazz) {
+s32 op_ior(u8 **opCode, Runtime *runtime, Class *clazz) {
     StackFrame *stack = runtime->stack;
     u32 value1 = pop_int(stack);
     u32 value2 = pop_int(stack);
@@ -1215,7 +1215,7 @@ static s32 op_ior(u8 **opCode, Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-static s32 op_lor(u8 **opCode, Runtime *runtime, Class *clazz) {
+s32 op_lor(u8 **opCode, Runtime *runtime, Class *clazz) {
     StackFrame *stack = runtime->stack;
     u64 value1 = pop_long(stack);
     u64 value2 = pop_long(stack);
@@ -1229,7 +1229,7 @@ static s32 op_lor(u8 **opCode, Runtime *runtime, Class *clazz) {
 }
 
 
-static s32 op_ixor(u8 **opCode, Runtime *runtime, Class *clazz) {
+s32 op_ixor(u8 **opCode, Runtime *runtime, Class *clazz) {
     StackFrame *stack = runtime->stack;
     u32 value1 = pop_int(stack);
     u32 value2 = pop_int(stack);
@@ -1242,7 +1242,7 @@ static s32 op_ixor(u8 **opCode, Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-static s32 op_lxor(u8 **opCode, Runtime *runtime, Class *clazz) {
+s32 op_lxor(u8 **opCode, Runtime *runtime, Class *clazz) {
     StackFrame *stack = runtime->stack;
     u64 value1 = pop_long(stack);
     u64 value2 = pop_long(stack);
@@ -1255,7 +1255,7 @@ static s32 op_lxor(u8 **opCode, Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-static s32 op_iinc(u8 **opCode, Runtime *runtime, Class *clazz) {
+s32 op_iinc(u8 **opCode, Runtime *runtime, Class *clazz) {
     Short2Char s2c1, s2c2;
 
     if (runtime->wideMode) {
@@ -1271,8 +1271,8 @@ static s32 op_iinc(u8 **opCode, Runtime *runtime, Class *clazz) {
     }
     runtime->wideMode = 0;
 
-    s32 oldv = runtime->localVariables.item[s2c1.s].integer;
-    runtime->localVariables.item[s2c1.s].integer = oldv + s2c2.s;
+    s32 oldv = (runtime->localVariables+s2c1.s)->integer;
+    (runtime->localVariables+s2c1.s)->integer = oldv + s2c2.s;
 #if _JVM_DEBUG
     printf("iinc: localvar(%d) = %d + %d\n", s2c1.s, oldv, s2c2.s);
 #endif
@@ -1280,7 +1280,7 @@ static s32 op_iinc(u8 **opCode, Runtime *runtime, Class *clazz) {
 }
 
 /* istore */
-static s32 op_istore(u8 **opCode, Runtime *runtime, Class *clazz) {
+s32 op_istore(u8 **opCode, Runtime *runtime, Class *clazz) {
     StackFrame *stack = runtime->stack;
     Short2Char s2c;
     if (runtime->wideMode) {
@@ -1297,16 +1297,16 @@ static s32 op_istore(u8 **opCode, Runtime *runtime, Class *clazz) {
 #if _JVM_DEBUG
     printf("i(fa)store: save  localvar(%d) [%x]/%d \n", s2c.s, value, value);
 #endif
-    runtime->localVariables.item[s2c.s].integer = value;
+    (runtime->localVariables+s2c.s)->integer = value;
 
     return 0;
 }
 
-static s32 op_fstore(u8 **opCode, Runtime *runtime, Class *clazz) {
+s32 op_fstore(u8 **opCode, Runtime *runtime, Class *clazz) {
     return op_istore(opCode, runtime, clazz);
 }
 
-static s32 op_astore(u8 **opCode, Runtime *runtime, Class *clazz) {
+s32 op_astore(u8 **opCode, Runtime *runtime, Class *clazz) {
     StackFrame *stack = runtime->stack;
     Short2Char s2c;
     if (runtime->wideMode) {
@@ -1323,12 +1323,12 @@ static s32 op_astore(u8 **opCode, Runtime *runtime, Class *clazz) {
 #if _JVM_DEBUG
     printf("i(fa)store: save  localvar(%d) [%x]/%d \n", s2c.s, value, value);
 #endif
-    runtime->localVariables.item[s2c.s].refer = value;
+    (runtime->localVariables+s2c.s)->refer = value;
 
     return 0;
 }
 
-static s32 op_lstore(u8 **opCode, Runtime *runtime, Class *clazz) {
+s32 op_lstore(u8 **opCode, Runtime *runtime, Class *clazz) {
     StackFrame *stack = runtime->stack;
 
     Short2Char s2c;
@@ -1348,63 +1348,63 @@ static s32 op_lstore(u8 **opCode, Runtime *runtime, Class *clazz) {
 #if _JVM_DEBUG
     printf("l(d)store: save localvar(%d) %llx/%lld/%lf  \n", s2c.s, l2d.l, l2d.l, l2d.d);
 #endif
-    runtime->localVariables.item[s2c.s].integer = l2d.i2l.i1;
-    runtime->localVariables.item[s2c.s + 1].integer = l2d.i2l.i0;
+    (runtime->localVariables+s2c.s)->integer = l2d.i2l.i1;
+    (runtime->localVariables+s2c.s + 1)->integer = l2d.i2l.i0;
     return 0;
 }
 
-static s32 op_dstore(u8 **opCode, Runtime *runtime, Class *clazz) {
+s32 op_dstore(u8 **opCode, Runtime *runtime, Class *clazz) {
     return op_lstore(opCode, runtime, clazz);
 }
 
-static s32 op_istore_n(u8 **opCode, Runtime *runtime, Class *clazz, s32 i) {
+s32 op_istore_n(u8 **opCode, Runtime *runtime, Class *clazz, s32 i) {
     StackFrame *stack = runtime->stack;
     s32 value = pop_int(stack);
 #if _JVM_DEBUG
     printf("istore_%d: save %x/%d into localvar(%d)\n", i, value, value, i);
 #endif
-    runtime->localVariables.item[i].integer = value;
+    (runtime->localVariables+i)->integer = value;
     *opCode = *opCode + 1;
     return 0;
 }
 
-static s32 op_istore_0(u8 **opCode, Runtime *runtime, Class *clazz) {
+s32 op_istore_0(u8 **opCode, Runtime *runtime, Class *clazz) {
     return op_istore_n(opCode, runtime, clazz, 0);
 }
 
 /* istore_1 */
-static s32 op_istore_1(u8 **opCode, Runtime *runtime, Class *clazz) {
+s32 op_istore_1(u8 **opCode, Runtime *runtime, Class *clazz) {
     return op_istore_n(opCode, runtime, clazz, 1);
 }
 
 /* istore_2 */
-static s32 op_istore_2(u8 **opCode, Runtime *runtime, Class *clazz) {
+s32 op_istore_2(u8 **opCode, Runtime *runtime, Class *clazz) {
     return op_istore_n(opCode, runtime, clazz, 2);
 }
 
 /* istore_3 */
-static s32 op_istore_3(u8 **opCode, Runtime *runtime, Class *clazz) {
+s32 op_istore_3(u8 **opCode, Runtime *runtime, Class *clazz) {
     return op_istore_n(opCode, runtime, clazz, 3);
 }
 
 
-static s32 op_fstore_0(u8 **opCode, Runtime *runtime, Class *clazz) {
+s32 op_fstore_0(u8 **opCode, Runtime *runtime, Class *clazz) {
     return op_istore_n(opCode, runtime, clazz, 0);
 }
 
-static s32 op_fstore_1(u8 **opCode, Runtime *runtime, Class *clazz) {
+s32 op_fstore_1(u8 **opCode, Runtime *runtime, Class *clazz) {
     return op_istore_n(opCode, runtime, clazz, 1);
 }
 
-static s32 op_fstore_2(u8 **opCode, Runtime *runtime, Class *clazz) {
+s32 op_fstore_2(u8 **opCode, Runtime *runtime, Class *clazz) {
     return op_istore_n(opCode, runtime, clazz, 2);
 }
 
-static s32 op_fstore_3(u8 **opCode, Runtime *runtime, Class *clazz) {
+s32 op_fstore_3(u8 **opCode, Runtime *runtime, Class *clazz) {
     return op_istore_n(opCode, runtime, clazz, 3);
 }
 
-static s32 op_lstore_n(u8 **opCode, Runtime *runtime, Class *clazz, s32 i) {
+s32 op_lstore_n(u8 **opCode, Runtime *runtime, Class *clazz, s32 i) {
     StackFrame *stack = runtime->stack;
     Long2Double l2d;
     l2d.l = pop_long(stack);
@@ -1413,74 +1413,74 @@ static s32 op_lstore_n(u8 **opCode, Runtime *runtime, Class *clazz, s32 i) {
 
     printf("l(d)store_%d: save localvar(%d) [%llx]/%lld/%lf  \n", i, i, l2d.l, l2d.l, l2d.d);
 #endif
-    runtime->localVariables.item[i].integer = l2d.i2l.i1;
-    runtime->localVariables.item[i + 1].integer = l2d.i2l.i0;
+    (runtime->localVariables+i)->integer = l2d.i2l.i1;
+    (runtime->localVariables+i + 1)->integer = l2d.i2l.i0;
     *opCode = *opCode + 1;
     return 0;
 }
 
-static s32 op_lstore_0(u8 **opCode, Runtime *runtime, Class *clazz) {
+s32 op_lstore_0(u8 **opCode, Runtime *runtime, Class *clazz) {
     return op_lstore_n(opCode, runtime, clazz, 0);
 }
 
-static s32 op_lstore_1(u8 **opCode, Runtime *runtime, Class *clazz) {
+s32 op_lstore_1(u8 **opCode, Runtime *runtime, Class *clazz) {
     return op_lstore_n(opCode, runtime, clazz, 1);
 }
 
-static s32 op_lstore_2(u8 **opCode, Runtime *runtime, Class *clazz) {
+s32 op_lstore_2(u8 **opCode, Runtime *runtime, Class *clazz) {
     return op_lstore_n(opCode, runtime, clazz, 2);
 }
 
-static s32 op_lstore_3(u8 **opCode, Runtime *runtime, Class *clazz) {
+s32 op_lstore_3(u8 **opCode, Runtime *runtime, Class *clazz) {
     return op_lstore_n(opCode, runtime, clazz, 3);
 }
 
 
-static s32 op_dstore_0(u8 **opCode, Runtime *runtime, Class *clazz) {
+s32 op_dstore_0(u8 **opCode, Runtime *runtime, Class *clazz) {
     return op_lstore_n(opCode, runtime, clazz, 0);
 }
 
-static s32 op_dstore_1(u8 **opCode, Runtime *runtime, Class *clazz) {
+s32 op_dstore_1(u8 **opCode, Runtime *runtime, Class *clazz) {
     return op_lstore_n(opCode, runtime, clazz, 1);
 }
 
-static s32 op_dstore_2(u8 **opCode, Runtime *runtime, Class *clazz) {
+s32 op_dstore_2(u8 **opCode, Runtime *runtime, Class *clazz) {
     return op_lstore_n(opCode, runtime, clazz, 2);
 }
 
-static s32 op_dstore_3(u8 **opCode, Runtime *runtime, Class *clazz) {
+s32 op_dstore_3(u8 **opCode, Runtime *runtime, Class *clazz) {
     return op_lstore_n(opCode, runtime, clazz, 3);
 }
 
-static s32 op_astore_n(u8 **opCode, Runtime *runtime, Class *clazz, s32 i) {
+s32 op_astore_n(u8 **opCode, Runtime *runtime, Class *clazz, s32 i) {
     StackFrame *stack = runtime->stack;
     __refer value = pop_ref(stack);
 #if _JVM_DEBUG
     printf("astore_%d:  [%x]\n", i, value);
 #endif
-    runtime->localVariables.item[i].refer = value;
+    (runtime->localVariables+i)->refer = value;
     *opCode = *opCode + 1;
     return 0;
 }
 
-static s32 op_astore_0(u8 **opCode, Runtime *runtime, Class *clazz) {
+s32 op_astore_0(u8 **opCode, Runtime *runtime, Class *clazz) {
     return op_astore_n(opCode, runtime, clazz, 0);
 }
 
-static s32 op_astore_1(u8 **opCode, Runtime *runtime, Class *clazz) {
+s32 op_astore_1(u8 **opCode, Runtime *runtime, Class *clazz) {
     return op_astore_n(opCode, runtime, clazz, 1);
 }
 
-static s32 op_astore_2(u8 **opCode, Runtime *runtime, Class *clazz) {
+s32 op_astore_2(u8 **opCode, Runtime *runtime, Class *clazz) {
     return op_astore_n(opCode, runtime, clazz, 2);
 }
 
-static s32 op_astore_3(u8 **opCode, Runtime *runtime, Class *clazz) {
+s32 op_astore_3(u8 **opCode, Runtime *runtime, Class *clazz) {
     return op_astore_n(opCode, runtime, clazz, 3);
 }
 
 
-static s32 op_xastore_impl(u8 **opCode, Runtime *runtime, Class *clazz, u8 isReference) {
+s32 op_xastore_impl(u8 **opCode, Runtime *runtime, Class *clazz, u8 isReference) {
     StackFrame *stack = runtime->stack;
     StackEntry entry;
     pop_entry(stack, &entry);
@@ -1508,42 +1508,42 @@ static s32 op_xastore_impl(u8 **opCode, Runtime *runtime, Class *clazz, u8 isRef
     return 0;
 }
 
-static s32 op_iastore(u8 **opCode, Runtime *runtime, Class *clazz) {
+s32 op_iastore(u8 **opCode, Runtime *runtime, Class *clazz) {
     return op_xastore_impl(opCode, runtime, clazz, 0);
 }
 
-static s32 op_fastore(u8 **opCode, Runtime *runtime, Class *clazz) {
+s32 op_fastore(u8 **opCode, Runtime *runtime, Class *clazz) {
     return op_xastore_impl(opCode, runtime, clazz, 0);
 }
 
-static s32 op_castore(u8 **opCode, Runtime *runtime, Class *clazz) {
+s32 op_castore(u8 **opCode, Runtime *runtime, Class *clazz) {
     return op_xastore_impl(opCode, runtime, clazz, 0);
 }
 
-static s32 op_sastore(u8 **opCode, Runtime *runtime, Class *clazz) {
+s32 op_sastore(u8 **opCode, Runtime *runtime, Class *clazz) {
     return op_xastore_impl(opCode, runtime, clazz, 0);
 }
 
-static s32 op_aastore(u8 **opCode, Runtime *runtime, Class *clazz) {
+s32 op_aastore(u8 **opCode, Runtime *runtime, Class *clazz) {
     return op_xastore_impl(opCode, runtime, clazz, 1);
 }
 
-static s32 op_bastore(u8 **opCode, Runtime *runtime, Class *clazz) {
+s32 op_bastore(u8 **opCode, Runtime *runtime, Class *clazz) {
     return op_xastore_impl(opCode, runtime, clazz, 0);
 }
 
 
-static s32 op_lastore(u8 **opCode, Runtime *runtime, Class *clazz) {
+s32 op_lastore(u8 **opCode, Runtime *runtime, Class *clazz) {
     return op_xastore_impl(opCode, runtime, clazz, 0);
 }
 
-static s32 op_dastore(u8 **opCode, Runtime *runtime, Class *clazz) {
+s32 op_dastore(u8 **opCode, Runtime *runtime, Class *clazz) {
     return op_xastore_impl(opCode, runtime, clazz, 0);
 }
 
 
 /* isub */
-static s32 op_isub(u8 **opCode, Runtime *runtime, Class *clazz) {
+s32 op_isub(u8 **opCode, Runtime *runtime, Class *clazz) {
     StackFrame *stack = runtime->stack;
     s32 value2 = pop_int(stack);
     s32 value1 = pop_int(stack);
@@ -1558,30 +1558,34 @@ static s32 op_isub(u8 **opCode, Runtime *runtime, Class *clazz) {
 }
 
 /* invokevirtual */
-static s32 op_invokevirtual(u8 **opCode, Runtime *runtime, Class *clazz) {
+s32 op_invokevirtual(u8 **opCode, Runtime *runtime, Class *clazz) {
     Short2Char s2c;
     s2c.c1 = opCode[0][1];
     s2c.c0 = opCode[0][2];
     u16 object_ref = s2c.s;
 
     s32 ret = 0;
-    ConstantMethodRef *cmr = find_constant_method_ref(clazz, object_ref);
+    ConstantMethodRef *cmr = find_constant_method_ref(clazz, object_ref);//此cmr所描述的方法，对于不同的实例，有不同的method
 //    if (utf8_equals_c(clazz->name, "java/lang/Thread") == 0) {
 //        int debug = 1;
 //    }
     Instance *ins = getInstanceInStack(clazz, cmr, runtime->stack);
     MethodInfo *method = NULL;
+
     if (ins->type == MEM_TYPE_CLASS || ins->type == MEM_TYPE_ARR) {
         method = cmr->methodInfo;
     } else {
-        method = find_instance_methodInfo_by_name(ins, cmr->name, cmr->descriptor);
+        method = (MethodInfo *) pairlist_get(cmr->virtual_methods, ins->obj_of_clazz);
+        if (method == NULL) {
+            method = find_instance_methodInfo_by_name(ins, cmr->name, cmr->descriptor);
+            pairlist_put(cmr->virtual_methods, ins->obj_of_clazz, method);//放入缓存，以便下次直接调用
+        }
     }
 
 #if _JVM_DEBUG
     printf("invokevirtual    %s.%s%s  \n", utf8_cstr(method->_this_class->name),
            utf8_cstr(method->name), utf8_cstr(method->descriptor));
 #endif
-
 
     if (method) {
         ret = execute_method(method, runtime, method->_this_class, METHOD_INVOKE_VIRTUAL);
@@ -1593,7 +1597,7 @@ static s32 op_invokevirtual(u8 **opCode, Runtime *runtime, Class *clazz) {
 
 
 /* invokespecial */
-static s32 op_invokespecial(u8 **opCode, Runtime *runtime, Class *clazz) {
+s32 op_invokespecial(u8 **opCode, Runtime *runtime, Class *clazz) {
     Short2Char s2c;
     s2c.c1 = opCode[0][1];
     s2c.c0 = opCode[0][2];
@@ -1615,7 +1619,7 @@ static s32 op_invokespecial(u8 **opCode, Runtime *runtime, Class *clazz) {
 
 
 /* 0xb8 invokestatic */
-static s32 op_invokestatic(u8 **opCode, Runtime *runtime, Class *clazz) {
+s32 op_invokestatic(u8 **opCode, Runtime *runtime, Class *clazz) {
 
     Short2Char s2c;
     s2c.c1 = opCode[0][1];
@@ -1638,7 +1642,7 @@ static s32 op_invokestatic(u8 **opCode, Runtime *runtime, Class *clazz) {
 
 
 /* 0xb8 invokestatic */
-static s32 op_invokeinterface(u8 **opCode, Runtime *runtime, Class *clazz) {
+s32 op_invokeinterface(u8 **opCode, Runtime *runtime, Class *clazz) {
 
     Short2Char s2c;
     s2c.c1 = opCode[0][1];
@@ -1670,7 +1674,7 @@ static s32 op_invokeinterface(u8 **opCode, Runtime *runtime, Class *clazz) {
 }
 
 /* 0xb8 invokestatic */
-static s32 op_invokedynamic(u8 **opCode, Runtime *runtime, Class *clazz) {
+s32 op_invokedynamic(u8 **opCode, Runtime *runtime, Class *clazz) {
     Short2Char s2c;
     s2c.c1 = opCode[0][1];
     s2c.c0 = opCode[0][2];
@@ -1692,7 +1696,7 @@ static s32 op_invokedynamic(u8 **opCode, Runtime *runtime, Class *clazz) {
 
 
 /* ldc */
-static s32 op_ldc_impl(u8 **opCode, Runtime *runtime, Class *clazz, s32 index) {
+s32 op_ldc_impl(u8 **opCode, Runtime *runtime, Class *clazz, s32 index) {
     StackFrame *stack = runtime->stack;
 
     ConstantItem *item = find_constant_item(clazz, index);
@@ -1720,13 +1724,13 @@ static s32 op_ldc_impl(u8 **opCode, Runtime *runtime, Class *clazz, s32 index) {
     return 0;
 }
 
-static s32 op_ldc(u8 **opCode, Runtime *runtime, Class *clazz) {
+s32 op_ldc(u8 **opCode, Runtime *runtime, Class *clazz) {
     s32 index = opCode[0][1];
     *opCode = *opCode + 2;
     return op_ldc_impl(opCode, runtime, clazz, index);
 }
 
-static s32 op_ldc_w(u8 **opCode, Runtime *runtime, Class *clazz) {
+s32 op_ldc_w(u8 **opCode, Runtime *runtime, Class *clazz) {
     Short2Char s2c;
     s2c.c1 = opCode[0][1];
     s2c.c0 = opCode[0][2];
@@ -1736,7 +1740,7 @@ static s32 op_ldc_w(u8 **opCode, Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-static s32 op_ldc2_w(u8 **opCode, Runtime *runtime, Class *clazz) {
+s32 op_ldc2_w(u8 **opCode, Runtime *runtime, Class *clazz) {
     StackFrame *stack = runtime->stack;
     Short2Char s2c;
     s2c.c1 = opCode[0][1];
@@ -1754,7 +1758,7 @@ static s32 op_ldc2_w(u8 **opCode, Runtime *runtime, Class *clazz) {
 }
 
 /* 0x11 op_sipush */
-static s32 op_sipush(u8 **opCode, Runtime *runtime, Class *clazz) {
+s32 op_sipush(u8 **opCode, Runtime *runtime, Class *clazz) {
     StackFrame *stack = runtime->stack;
     Short2Char s2c;
     s2c.c1 = opCode[0][1];
@@ -1768,7 +1772,7 @@ static s32 op_sipush(u8 **opCode, Runtime *runtime, Class *clazz) {
 }
 
 
-static s32 op_putfield_impl(u8 **opCode, Runtime *runtime, Class *clazz, s32 isStatic) {
+s32 op_putfield_impl(u8 **opCode, Runtime *runtime, Class *clazz, s32 isStatic) {
     StackFrame *stack = runtime->stack;
     Short2Char s2c;
     s2c.c1 = opCode[0][1];
@@ -1845,15 +1849,15 @@ static s32 op_putfield_impl(u8 **opCode, Runtime *runtime, Class *clazz, s32 isS
     return 0;
 }
 
-static s32 op_putfield(u8 **opCode, Runtime *runtime, Class *clazz) {
+s32 op_putfield(u8 **opCode, Runtime *runtime, Class *clazz) {
     return op_putfield_impl(opCode, runtime, clazz, 0);
 }
 
-static s32 op_putstatic(u8 **opCode, Runtime *runtime, Class *clazz) {
+s32 op_putstatic(u8 **opCode, Runtime *runtime, Class *clazz) {
     return op_putfield_impl(opCode, runtime, clazz, 1);
 }
 
-static s32 op_getfield_impl(u8 **opCode, Runtime *runtime, Class *clazz, s32 isStatic) {
+s32 op_getfield_impl(u8 **opCode, Runtime *runtime, Class *clazz, s32 isStatic) {
     StackFrame *stack = runtime->stack;
     Short2Char s2c;
     s2c.c1 = opCode[0][1];
@@ -1874,59 +1878,56 @@ static s32 op_getfield_impl(u8 **opCode, Runtime *runtime, Class *clazz, s32 isS
         ins = (Instance *) pop_ref(stack);
         ptr = getInstanceFieldPtr(ins, fi);
     }
+    Long2Double l2d;
     if (isReference(ch)) {
-        __refer ref = getFieldRefer(ptr);
-        push_ref(stack, ref);
+       l2d.r = getFieldRefer(ptr);
+        push_ref(stack, l2d.r);
     } else {
-        s32 value = 0;
-        s64 valuelong = 0;
         switch (data_bytes) {
             case 8: {
-                valuelong = getFieldLong(ptr);
-                push_long(stack, valuelong);
+                l2d.l = getFieldLong(ptr);
+                push_long(stack, l2d.l);
                 break;
             }
             case 4: {
-                value = getFieldInt(ptr);
-                push_int(stack, value);
+                l2d.i2l.i1 = getFieldInt(ptr);
+                push_int(stack, l2d.i2l.i1);
                 break;
             }
             case 2: {
-                value = getFieldShort(ptr);
-                push_int(stack, value);
+                l2d.i2l.i1 = getFieldShort(ptr);
+                push_int(stack, l2d.i2l.i1);
                 break;
             }
             case 1: {
-                value = getFieldByte(ptr);
-                push_int(stack, value);
+                l2d.i2l.i1 = getFieldByte(ptr);
+                push_int(stack, l2d.i2l.i1);
                 break;
             }
         }
     }
 #if _JVM_DEBUG
-    StackEntry entry;
-    peekEntry(stack, &entry, stack->size - 1);
     printf("%s: push %s[%llx].%s[%x]=[%llx]\n",
            isStatic ? "getstatic" : "getfield", utf8_cstr(clazz->name),
            isStatic ? (s64) clazz : (s64) ins, utf8_cstr(fi->name),
-           ptr, entry_2_long(&entry));
+           ptr, l2d.l);
 #endif
     *opCode = *opCode + 3;
     return 0;
 
 }
 
-static s32 op_getfield(u8 **opCode, Runtime *runtime, Class *clazz) {
+s32 op_getfield(u8 **opCode, Runtime *runtime, Class *clazz) {
     return op_getfield_impl(opCode, runtime, clazz, 0);
 }
 
-static s32 op_getstatic(u8 **opCode, Runtime *runtime, Class *clazz) {
+s32 op_getstatic(u8 **opCode, Runtime *runtime, Class *clazz) {
     return op_getfield_impl(opCode, runtime, clazz, 1);
 }
 
 
 /* op_new */
-static s32 op_new(u8 **opCode, Runtime *runtime, Class *clazz) {
+s32 op_new(u8 **opCode, Runtime *runtime, Class *clazz) {
     StackFrame *stack = runtime->stack;
     Short2Char s2c;
     s2c.c1 = opCode[0][1];
@@ -1950,7 +1951,7 @@ static s32 op_new(u8 **opCode, Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-static s32 op_newarray_impl(Runtime *runtime, s32 count, s32 typeIdx) {
+s32 op_newarray_impl(Runtime *runtime, s32 count, s32 typeIdx) {
     StackFrame *stack = runtime->stack;
     Instance *arr = jarray_create(count, typeIdx);
 
@@ -1970,7 +1971,7 @@ static s32 op_newarray_impl(Runtime *runtime, s32 count, s32 typeIdx) {
 }
 
 /* op_newarray */
-static s32 op_newarray(u8 **opCode, Runtime *runtime, Class *clazz) {
+s32 op_newarray(u8 **opCode, Runtime *runtime, Class *clazz) {
     StackFrame *stack = runtime->stack;
     s32 typeIdx = opCode[0][1];
 
@@ -1979,7 +1980,7 @@ static s32 op_newarray(u8 **opCode, Runtime *runtime, Class *clazz) {
     return op_newarray_impl(runtime, count, typeIdx);
 }
 
-static s32 op_anewarray(u8 **opCode, Runtime *runtime, Class *clazz) {
+s32 op_anewarray(u8 **opCode, Runtime *runtime, Class *clazz) {
     StackFrame *stack = runtime->stack;
     Short2Char s2c;
     s2c.c1 = opCode[0][1];
@@ -1993,7 +1994,7 @@ static s32 op_anewarray(u8 **opCode, Runtime *runtime, Class *clazz) {
     return op_newarray_impl(runtime, count, typeIdx);
 }
 
-static s32 op_multianewarray(u8 **opCode, Runtime *runtime, Class *clazz) {
+s32 op_multianewarray(u8 **opCode, Runtime *runtime, Class *clazz) {
     StackFrame *stack = runtime->stack;
     //data type index
     Short2Char s2c;
@@ -2025,7 +2026,7 @@ static s32 op_multianewarray(u8 **opCode, Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-static s32 op_arraylength(u8 **opCode, Runtime *runtime, Class *clazz) {
+s32 op_arraylength(u8 **opCode, Runtime *runtime, Class *clazz) {
     StackFrame *stack = runtime->stack;
     Instance *arr_ref = (Instance *) pop_ref(stack);
 
@@ -2038,7 +2039,7 @@ static s32 op_arraylength(u8 **opCode, Runtime *runtime, Class *clazz) {
 }
 
 
-static s32 op_athrow(u8 **opCode, Runtime *runtime, Class *clazz) {
+s32 op_athrow(u8 **opCode, Runtime *runtime, Class *clazz) {
     StackFrame *stack = runtime->stack;
     Instance *ins = (Instance *) pop_ref(stack);
     push_ref(stack, (__refer) ins);
@@ -2050,7 +2051,7 @@ static s32 op_athrow(u8 **opCode, Runtime *runtime, Class *clazz) {
     return RUNTIME_STATUS_EXCEPTION;
 }
 
-static s32 op_checkcast(u8 **opCode, Runtime *runtime, Class *clazz) {
+s32 op_checkcast(u8 **opCode, Runtime *runtime, Class *clazz) {
     StackFrame *stack = runtime->stack;
     Instance *ins = (Instance *) pop_ref(stack);
     Short2Char s2c;
@@ -2086,7 +2087,7 @@ static s32 op_checkcast(u8 **opCode, Runtime *runtime, Class *clazz) {
 }
 
 
-static s32 op_instanceof(u8 **opCode, Runtime *runtime, Class *clazz) {
+s32 op_instanceof(u8 **opCode, Runtime *runtime, Class *clazz) {
     StackFrame *stack = runtime->stack;
     Instance *ins = (Instance *) pop_ref(stack);
     Short2Char s2c;
@@ -2114,7 +2115,7 @@ static s32 op_instanceof(u8 **opCode, Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-static s32 op_monitorenter(u8 **opCode, Runtime *runtime, Class *clazz) {
+s32 op_monitorenter(u8 **opCode, Runtime *runtime, Class *clazz) {
     StackFrame *stack = runtime->stack;
     Instance *ins = (Instance *) pop_ref(stack);
     jthread_lock(ins, runtime);
@@ -2125,7 +2126,7 @@ static s32 op_monitorenter(u8 **opCode, Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-static s32 op_monitorexit(u8 **opCode, Runtime *runtime, Class *clazz) {
+s32 op_monitorexit(u8 **opCode, Runtime *runtime, Class *clazz) {
     StackFrame *stack = runtime->stack;
     Instance *ins = (Instance *) pop_ref(stack);
     jthread_unlock(ins, runtime);
@@ -2136,7 +2137,7 @@ static s32 op_monitorexit(u8 **opCode, Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-static s32 op_wide(u8 **opCode, Runtime *runtime, Class *clazz) {
+s32 op_wide(u8 **opCode, Runtime *runtime, Class *clazz) {
     StackFrame *stack = runtime->stack;
 
 #if _JVM_DEBUG
@@ -2148,7 +2149,7 @@ static s32 op_wide(u8 **opCode, Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-static s32 op_breakpoint(u8 **opCode, Runtime *runtime, Class *clazz) {
+s32 op_breakpoint(u8 **opCode, Runtime *runtime, Class *clazz) {
     StackFrame *stack = runtime->stack;
 
 
@@ -2160,7 +2161,7 @@ static s32 op_breakpoint(u8 **opCode, Runtime *runtime, Class *clazz) {
 }
 
 /* return */
-static s32 op_return(u8 **opCode, Runtime *runtime, Class *clazz) {
+s32 op_return(u8 **opCode, Runtime *runtime, Class *clazz) {
 #if _JVM_DEBUG
     printf("return: \n");
 #endif
@@ -2169,7 +2170,7 @@ static s32 op_return(u8 **opCode, Runtime *runtime, Class *clazz) {
 }
 
 
-static s32 op_ireturn(u8 **opCode, Runtime *runtime, Class *clazz) {
+s32 op_ireturn(u8 **opCode, Runtime *runtime, Class *clazz) {
     StackFrame *stack = runtime->stack;
 
 #if _JVM_DEBUG
@@ -2181,7 +2182,7 @@ static s32 op_ireturn(u8 **opCode, Runtime *runtime, Class *clazz) {
     return RUNTIME_STATUS_RETURN;
 }
 
-static s32 op_if_cmp_ia(u8 **opCode, Runtime *runtime, Class *clazz, s32 type) {
+s32 op_if_cmp_ia(u8 **opCode, Runtime *runtime, Class *clazz, s32 type) {
     StackFrame *stack = runtime->stack;
 
     Short2Char s2c;
@@ -2243,40 +2244,40 @@ static s32 op_if_cmp_ia(u8 **opCode, Runtime *runtime, Class *clazz, s32 type) {
     return 0;
 }
 
-static s32 op_if_acmpeq(u8 **opCode, Runtime *runtime, Class *clazz) {
+s32 op_if_acmpeq(u8 **opCode, Runtime *runtime, Class *clazz) {
     return op_if_cmp_ia(opCode, runtime, clazz, TYPE_IF_ACMPEQ);
 }
 
-static s32 op_if_acmpne(u8 **opCode, Runtime *runtime, Class *clazz) {
+s32 op_if_acmpne(u8 **opCode, Runtime *runtime, Class *clazz) {
     return op_if_cmp_ia(opCode, runtime, clazz, TYPE_IF_ACMPNE);
 }
 
-static s32 op_if_icmpeq(u8 **opCode, Runtime *runtime, Class *clazz) {
+s32 op_if_icmpeq(u8 **opCode, Runtime *runtime, Class *clazz) {
     return op_if_cmp_ia(opCode, runtime, clazz, TYPE_IF_ICMPEQ);
 }
 
-static s32 op_if_icmpne(u8 **opCode, Runtime *runtime, Class *clazz) {
+s32 op_if_icmpne(u8 **opCode, Runtime *runtime, Class *clazz) {
     return op_if_cmp_ia(opCode, runtime, clazz, TYPE_IF_ICMPNE);
 }
 
-static s32 op_if_icmple(u8 **opCode, Runtime *runtime, Class *clazz) {
+s32 op_if_icmple(u8 **opCode, Runtime *runtime, Class *clazz) {
     return op_if_cmp_ia(opCode, runtime, clazz, TYPE_IF_ICMPLE);
 }
 
-static s32 op_if_icmpge(u8 **opCode, Runtime *runtime, Class *clazz) {
+s32 op_if_icmpge(u8 **opCode, Runtime *runtime, Class *clazz) {
     return op_if_cmp_ia(opCode, runtime, clazz, TYPE_IF_ICMPGE);
 }
 
-static s32 op_if_icmplt(u8 **opCode, Runtime *runtime, Class *clazz) {
+s32 op_if_icmplt(u8 **opCode, Runtime *runtime, Class *clazz) {
     return op_if_cmp_ia(opCode, runtime, clazz, TYPE_IF_ICMPLT);
 }
 
-static s32 op_if_icmpgt(u8 **opCode, Runtime *runtime, Class *clazz) {
+s32 op_if_icmpgt(u8 **opCode, Runtime *runtime, Class *clazz) {
     return op_if_cmp_ia(opCode, runtime, clazz, TYPE_IF_ICMPGT);
 }
 
 
-static s32 op_lcmp(u8 **opCode, Runtime *runtime, Class *clazz) {
+s32 op_lcmp(u8 **opCode, Runtime *runtime, Class *clazz) {
     StackFrame *stack = runtime->stack;
     s64 value1 = pop_long(stack);
     s64 value2 = pop_long(stack);
@@ -2292,7 +2293,7 @@ static s32 op_lcmp(u8 **opCode, Runtime *runtime, Class *clazz) {
 }
 
 
-static s32 op_fcmpl(u8 **opCode, Runtime *runtime, Class *clazz) {
+s32 op_fcmpl(u8 **opCode, Runtime *runtime, Class *clazz) {
     StackFrame *stack = runtime->stack;
     f32 value1 = pop_float(stack);
     f32 value2 = pop_float(stack);
@@ -2307,7 +2308,7 @@ static s32 op_fcmpl(u8 **opCode, Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-static s32 op_fcmpg(u8 **opCode, Runtime *runtime, Class *clazz) {
+s32 op_fcmpg(u8 **opCode, Runtime *runtime, Class *clazz) {
     StackFrame *stack = runtime->stack;
     f32 value1 = pop_float(stack);
     f32 value2 = pop_float(stack);
@@ -2322,7 +2323,7 @@ static s32 op_fcmpg(u8 **opCode, Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-static s32 op_dcmpl(u8 **opCode, Runtime *runtime, Class *clazz) {
+s32 op_dcmpl(u8 **opCode, Runtime *runtime, Class *clazz) {
     StackFrame *stack = runtime->stack;
     f64 value1 = pop_double(stack);
     f64 value2 = pop_double(stack);
@@ -2337,7 +2338,7 @@ static s32 op_dcmpl(u8 **opCode, Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-static s32 op_dcmpg(u8 **opCode, Runtime *runtime, Class *clazz) {
+s32 op_dcmpg(u8 **opCode, Runtime *runtime, Class *clazz) {
     StackFrame *stack = runtime->stack;
     f64 value1 = pop_double(stack);
     f64 value2 = pop_double(stack);
@@ -2353,7 +2354,7 @@ static s32 op_dcmpg(u8 **opCode, Runtime *runtime, Class *clazz) {
 }
 
 
-static s32 op_if_0(u8 **opCode, Runtime *runtime, Class *clazz, s32 type) {
+s32 op_if_0(u8 **opCode, Runtime *runtime, Class *clazz, s32 type) {
     StackFrame *stack = runtime->stack;
     Short2Char s2c;
     s2c.c1 = opCode[0][1];
@@ -2418,40 +2419,40 @@ static s32 op_if_0(u8 **opCode, Runtime *runtime, Class *clazz, s32 type) {
 }
 
 
-static s32 op_ifnonnull(u8 **opCode, Runtime *runtime, Class *clazz) {
+s32 op_ifnonnull(u8 **opCode, Runtime *runtime, Class *clazz) {
     return op_if_0(opCode, runtime, clazz, TYPE_IFNONNULL);
 }
 
-static s32 op_ifnull(u8 **opCode, Runtime *runtime, Class *clazz) {
+s32 op_ifnull(u8 **opCode, Runtime *runtime, Class *clazz) {
     return op_if_0(opCode, runtime, clazz, TYPE_IFNULL);
 }
 
-static s32 op_iflt(u8 **opCode, Runtime *runtime, Class *clazz) {
+s32 op_iflt(u8 **opCode, Runtime *runtime, Class *clazz) {
     return op_if_0(opCode, runtime, clazz, TYPE_IFLT);
 }
 
-static s32 op_ifgt(u8 **opCode, Runtime *runtime, Class *clazz) {
+s32 op_ifgt(u8 **opCode, Runtime *runtime, Class *clazz) {
     return op_if_0(opCode, runtime, clazz, TYPE_IFGT);
 }
 
-static s32 op_ifle(u8 **opCode, Runtime *runtime, Class *clazz) {
+s32 op_ifle(u8 **opCode, Runtime *runtime, Class *clazz) {
     return op_if_0(opCode, runtime, clazz, TYPE_IFLE);
 }
 
-static s32 op_ifge(u8 **opCode, Runtime *runtime, Class *clazz) {
+s32 op_ifge(u8 **opCode, Runtime *runtime, Class *clazz) {
     return op_if_0(opCode, runtime, clazz, TYPE_IFGE);
 }
 
-static s32 op_ifeq(u8 **opCode, Runtime *runtime, Class *clazz) {
+s32 op_ifeq(u8 **opCode, Runtime *runtime, Class *clazz) {
     return op_if_0(opCode, runtime, clazz, TYPE_IFEQ);
 }
 
-static s32 op_ifne(u8 **opCode, Runtime *runtime, Class *clazz) {
+s32 op_ifne(u8 **opCode, Runtime *runtime, Class *clazz) {
     return op_if_0(opCode, runtime, clazz, TYPE_IFNE);
 }
 
 
-static s32 op_goto(u8 **opCode, Runtime *runtime, Class *clazz) {
+s32 op_goto(u8 **opCode, Runtime *runtime, Class *clazz) {
     Short2Char s2c;
     s2c.c1 = opCode[0][1];
     s2c.c0 = opCode[0][2];
@@ -2466,7 +2467,7 @@ static s32 op_goto(u8 **opCode, Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-static s32 op_jsr(u8 **opCode, Runtime *runtime, Class *clazz) {
+s32 op_jsr(u8 **opCode, Runtime *runtime, Class *clazz) {
     StackFrame *stack = runtime->stack;
     Short2Char s2c;
     s2c.c1 = opCode[0][1];
@@ -2482,7 +2483,7 @@ static s32 op_jsr(u8 **opCode, Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-static s32 op_ret(u8 **opCode, Runtime *runtime, Class *clazz) {
+s32 op_ret(u8 **opCode, Runtime *runtime, Class *clazz) {
     Short2Char s2c;
     if (runtime->wideMode) {
         s2c.c1 = opCode[0][1];
@@ -2492,7 +2493,7 @@ static s32 op_ret(u8 **opCode, Runtime *runtime, Class *clazz) {
     }
     runtime->wideMode = 0;
 
-    __refer addr = runtime->localVariables.item[s2c.s].refer;
+    __refer addr = (runtime->localVariables+s2c.s)->refer;
 
 #if _JVM_DEBUG
     printf("ret: %d\n", addr);
@@ -2503,7 +2504,7 @@ static s32 op_ret(u8 **opCode, Runtime *runtime, Class *clazz) {
 }
 
 
-static s32 op_tableswitch(u8 **opCode, Runtime *runtime, Class *clazz) {
+s32 op_tableswitch(u8 **opCode, Runtime *runtime, Class *clazz) {
     s32 pos = 0;
     pos = 4 - ((((u64) *opCode) - (u64) (runtime->codeAttr->code)) % 4);//4 byte对齐
 
@@ -2545,7 +2546,7 @@ static s32 op_tableswitch(u8 **opCode, Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-static s32 op_lookupswitch(u8 **opCode, Runtime *runtime, Class *clazz) {
+s32 op_lookupswitch(u8 **opCode, Runtime *runtime, Class *clazz) {
     s32 pos = 0;
     pos = 4 - ((((u64) *opCode) - (u64) (runtime->codeAttr->code)) % 4);//4 byte对齐
     Int2Float i2c;
@@ -2588,7 +2589,7 @@ static s32 op_lookupswitch(u8 **opCode, Runtime *runtime, Class *clazz) {
 
 }
 
-static s32 op_notsupport(u8 **opCode, Runtime *runtime, Class *clazz) {
+s32 op_notsupport(u8 **opCode, Runtime *runtime, Class *clazz) {
     printf("not support instruct [%x]\n", opCode[0][0]);
     exit(-3);
     return 0;
@@ -2797,9 +2798,9 @@ static Instruction instructionSet[] = {
         {"ifnonnull",       0xC7, 3, op_ifnonnull},
         {"breakpoint",      0xCA, 1, op_breakpoint},
 };
-static size_t byteCode_size = sizeof(instructionSet) / sizeof(Instruction);
 
 Instruction **createInstructIndexies() {
+    size_t byteCode_size = sizeof(instructionSet) / sizeof(Instruction);
     Instruction **indexies = jvm_alloc(0xff * sizeof(Instruction *));
     s32 i;
     for (i = 0; i < byteCode_size; i++) {
@@ -2832,7 +2833,7 @@ static InstructFunc find_instruct_func(u8 op) {
     return i->func;
 }
 
-static s32 find_instruct_offset(u8 op) {
+s32 find_instruct_offset(u8 op) {
     return instructionsIndexies[op]->offset;
 }
 
@@ -2853,7 +2854,7 @@ static ExceptionTable *find_exception_handler(Runtime *runtime, CodeAttribute *c
     return NULL;
 }
 
-static s32 convert_to_code_attribute(CodeAttribute *ca, AttributeInfo *attr) {
+s32 convert_to_code_attribute(CodeAttribute *ca, AttributeInfo *attr) {
     s32 info_p = 0;
 
     ca->attribute_name_index = attr->attribute_name_index;
@@ -2921,11 +2922,6 @@ static void printCodeAttribute(CodeAttribute *ca, Class *p) {
  * @param son
  */
 void stack2localvar(MethodInfo *method, Runtime *father, Runtime *son) {
-    if (!method->paraType) {//首次执行
-        // eg:  (Ljava/lang/Object;IBLjava/lang/String;[[[ILjava/lang/Object;)Ljava/lang/String;Z
-        method->paraType = utf8_create();
-        parseMethodPara(method->descriptor, method->paraType);
-    }
 
     Utf8String *paraType = method->paraType;
     s32 i;
@@ -2937,7 +2933,7 @@ void stack2localvar(MethodInfo *method, Runtime *father, Runtime *son) {
     s32 stack_pointer = stack_size - paraLen;
     if (!(method->access_flags & ACC_STATIC)) {//非静态方法需要把局部变量位置0设为this
         peekEntry(father->stack, &entry, stack_pointer - 1);
-        son->localVariables.item[i_local++].refer = entry_2_refer(&entry);
+        (son->localVariables+i_local++)->refer = entry_2_refer(&entry);
         ins_this = 1;
     }
     for (i = 0; i < paraType->length; i++) {
@@ -2945,19 +2941,19 @@ void stack2localvar(MethodInfo *method, Runtime *father, Runtime *son) {
         peekEntry(father->stack, &entry, stack_pointer++);
         switch (type) {
             case 'R': {
-                son->localVariables.item[i_local++].refer = entry_2_refer(&entry);
+                (son->localVariables+i_local++)->refer = entry_2_refer(&entry);
                 break;
             }
             case '8': {
                 //把双字类型拆成两个单元放入本地变量
                 Long2Double l2d;
                 l2d.l = entry_2_long(&entry);
-                son->localVariables.item[i_local++].integer = l2d.i2l.i1;
-                son->localVariables.item[i_local++].integer = l2d.i2l.i0;
+                (son->localVariables+i_local++)->integer = l2d.i2l.i1;
+                (son->localVariables+i_local++)->integer = l2d.i2l.i0;
                 break;
             }
             case '4': {
-                son->localVariables.item[i_local++].integer = entry_2_int(&entry);
+                (son->localVariables+i_local++)->integer = entry_2_int(&entry);
                 break;
             }
         }
@@ -2978,21 +2974,32 @@ s32 execute_method(MethodInfo *method, Runtime *pruntime, Class *clazz, s32 invo
     runtime.stack = pruntime->stack;
     runtime.thread = pruntime->thread;
 
-    stack2localvar(method, pruntime, &runtime);
-    s32 stackSize = pruntime->stack->size;
 
     runtime.methodInfo = method;
     runtime.clazz = clazz;
 
     if (method->access_flags & ACC_NATIVE) {//本地方法
-        ret = invoke_native_method(&runtime, clazz, utf8_cstr(clazz->name), utf8_cstr(method->name),
-                                   utf8_cstr(method->descriptor));
+        runtime.localVariables = jvm_alloc(sizeof(LocalVarItem) * (method->paraType->length + 1));
+//        __refer  p=(runtime.localVariables+1);
+//        (runtime.localVariables+1)->refer=p;
+        stack2localvar(method, pruntime, &runtime);
+        s32 stackSize = pruntime->stack->size;
+        if (!method->native_func) { //把本地方法找出来缓存
+            method->native_func = find_native_method(utf8_cstr(clazz->name), utf8_cstr(method->name),
+                                                     utf8_cstr(method->descriptor))->func_pointer;
+        }
+        method->native_func(&runtime, clazz);
+//        ret = invoke_native_method(&runtime, clazz, utf8_cstr(clazz->name), utf8_cstr(method->name),
+//                                   utf8_cstr(method->descriptor));
     } else {
 
         for (j = 0; j < method->attributes_count; j++) {
             if (utf8_equals_c(get_utf8_string(clazz, method->attributes[j].attribute_name_index), "Code") != 0)
                 continue;
             convert_to_code_attribute(&ca, &method->attributes[j]);
+            runtime.localVariables = jvm_alloc(sizeof(LocalVarItem) * ca.max_locals);
+            stack2localvar(method, pruntime, &runtime);
+            s32 stackSize = pruntime->stack->size;
 
 #if _JVM_DEBUG_BYTECODE_DUMP
             printf("---------------------------------\n");
@@ -3011,7 +3018,20 @@ s32 execute_method(MethodInfo *method, Runtime *pruntime, Class *clazz, s32 invo
             do {
                 InstructFunc func = find_instruct_func(pc[0]);
                 if (func != 0) {
+#if _JVM_DEBUG_PROFILE
+                    u8 instruct_code = pc[0];
+                    s64 start_at = nanoTime();
+#endif
                     i = func(&pc, &runtime, clazz);
+#if _JVM_DEBUG_PROFILE
+                    s64 spent = nanoTime() - start_at;
+                    HashtableValue v = hashtable_get(instruct_profile, (HashtableKey) instruct_code);
+                    if (v == NULL) {
+                        hashtable_put(instruct_profile, (HashtableKey) instruct_code, (HashtableKey) (spent));
+                    } else {
+                        hashtable_put(instruct_profile, (HashtableKey) instruct_code, (HashtableKey) (v + spent));
+                    }
+#endif
                 }
                 if (i == RUNTIME_STATUS_RETURN) break;
                 else if (i == RUNTIME_STATUS_EXCEPTION) {
@@ -3048,6 +3068,7 @@ s32 execute_method(MethodInfo *method, Runtime *pruntime, Class *clazz, s32 invo
                 }
             }
 #endif
+            jvm_free(runtime.localVariables);
         }
     }
     jvm_free(ca.exception_table);

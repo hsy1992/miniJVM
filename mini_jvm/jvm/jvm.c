@@ -12,7 +12,11 @@ void destoryAllClasses(hmap_t classes) {
     hashtable_destory(classes);
 }
 
-s32 execute(c8 *p_classpath, c8 *p_mainclass) {
+s32 execute(c8 *p_classpath, c8 *p_mainclass, s32 argc, c8 **argv) {
+
+#if _JVM_DEBUG_PROFILE
+    instruct_profile = hashtable_create(_DEFAULT_HashtableHash, _DEFAULT_HashtableEquals);
+#endif
     //为指令创建索引
     instructionsIndexies = createInstructIndexies();
     //创建类容器
@@ -81,12 +85,35 @@ s32 execute(c8 *p_classpath, c8 *p_mainclass) {
             thread_create_reg(main_thread, &pthread);
             runtime.thread = main_thread;
             instance_init(main_thread, &runtime);//必须放在最好，初始化时需要用到前面的赋值
-            s64 start=currentTimeMillis();
+            s64 start = currentTimeMillis();
+            //准备参数
+            runtime.localVariables = jvm_alloc(sizeof(LocalVarItem) * (main->paraType->length + 1));
+            s32 count = argc;
+            Long2Double l2d;
+            s32 bytes = data_type_bytes[ARRAY_REFERENCE_TYPE];
+            Instance *arr = jarray_create(count, ARRAY_REFERENCE_TYPE);
+            int i;
+            for (i = 0; i < argc; i++) {
+                Utf8String *utfs = utf8_create_c(argv[i]);
+                Instance *jstr = jstring_create(utfs, &runtime);
+                l2d.r = jstr;
+                jarray_set_field(arr, i, &l2d, bytes);
+            }
+            push_ref(runtime.stack, arr);
             printf("\n\n\n\n\n\n================================= main start ================================\n");
             //调用主方法
             ret = execute_method(main, &runtime, clazz, METHOD_INVOKE_STATIC);
             printf("================================= main  end  ================================\n");
-            printf("spent %lld\n",(currentTimeMillis()-start));
+            printf("spent %lld\n", (currentTimeMillis() - start));
+
+#if _JVM_DEBUG_PROFILE
+            hashtable_iterate(instruct_profile, &hti);
+            for (; hashtable_iter_has_more(&hti);) {
+                u8 instruct_code = (u8)hashtable_iter_next_key(&hti);
+                HashtableValue sum_v = hashtable_get(instruct_profile, (HashtableKey)instruct_code);
+                printf("%2x \t %lld\n", instruct_code, (s64) sum_v);
+            }
+#endif
             garbage_collect();
         }
         utf8_destory(methodName);

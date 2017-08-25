@@ -149,7 +149,7 @@ void t4(){
 
 int main(int argc, char **argv) {
 
-    return execute("../java/build/classes/", "com/egls/test/Foo1");
+    return execute("../java/build/classes/", "com/egls/test/Foo1",argc,argv);
 //    t4();
 //    return 0;
 }

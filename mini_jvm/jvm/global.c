@@ -20,3 +20,8 @@ s64 MAX_HEAP_SIZE = 20 * 1024 * 1024;
 s64 heap_size = 0; //当前已经分配的内存总数
 
 Instruction **instructionsIndexies;
+
+
+#if _JVM_DEBUG_PROFILE
+Hashtable* instruct_profile;
+#endif

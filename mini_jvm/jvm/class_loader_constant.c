@@ -193,6 +193,7 @@ static void *parseCPField(Class *_this, FILE *fp, s32 index) {
 static void *parseCPMethod(Class *_this, FILE *fp, s32 index) {
     u8 short_tmp[2];
     ConstantMethodRef *ptr = jvm_alloc(sizeof(ConstantMethodRef));
+    ptr->virtual_methods=pairlist_create(0);
     ptr->methodParaCount = -1;
 
     ptr->tag = CONSTANT_METHOD_REF;

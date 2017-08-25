@@ -24,7 +24,13 @@ find_constant_methodref_by_name(Utf8String *clsName, Utf8String *methodName, Utf
     return NULL;
 }
 
-
+/**
+ * 查找实例的方法， invokevirtual
+ * @param ins
+ * @param methodName
+ * @param methodType
+ * @return
+ */
 MethodInfo *find_instance_methodInfo_by_name(Instance *ins, Utf8String *methodName, Utf8String *methodType) {
     if (!ins)return NULL;
     return find_methodInfo_by_name(ins->obj_of_clazz->name, methodName, methodType);

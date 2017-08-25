@@ -143,7 +143,11 @@ void class_optmize(Class *clazz) {
         MethodInfo *ptr = &clazz->methodPool.method[i];
         ptr->name = get_utf8_string(clazz, ptr->name_index);
         ptr->descriptor = get_utf8_string(clazz, ptr->descriptor_index);
-
+        if (!ptr->paraType) {//首次执行
+            // eg:  (Ljava/lang/Object;IBLjava/lang/String;[[[ILjava/lang/Object;)Ljava/lang/String;Z
+            ptr->paraType = utf8_create();
+            parseMethodPara(ptr->descriptor, ptr->paraType);
+        }
     }
     for (i = 0; i < clazz->constantPool.methodRef->length; i++) {
         ConstantMethodRef *cmr = (ConstantMethodRef *) arraylist_get_value(clazz->constantPool.methodRef, i);

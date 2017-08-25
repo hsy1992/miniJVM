@@ -8,15 +8,18 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include "../jvm/global.h"
 #include "../utils/hashtable.h"
 #include "../utils/utf8_string.h"
 #include "../utils/arraylist.h"
+#include "../utils/pairlist.h"
 
 
 //=======================  micro define  =============================
 #define _JVM_DEBUG 0
 #define _JVM_DEBUG_BYTECODE_DUMP 0
 #define _JVM_DEBUG_GARBAGE_DUMP 0
+#define _JVM_DEBUG_PROFILE 01
 
 // x86   x64 ...
 #define __JVM_LITTLE_ENDIAN__ 1
@@ -53,18 +56,6 @@
 #define CONSTANT_INTERFACE_REF  11
 #define CONSTANT_NAME_AND_TYPE  12
 //=======================  typedef  =============================
-
-typedef unsigned char u8;
-typedef char c8;
-typedef unsigned short int u16;
-typedef signed short int s16;
-typedef unsigned int u32;
-typedef signed int s32;
-typedef float f32;
-typedef double f64;
-typedef unsigned long long u64;
-typedef signed long long s64;
-typedef void *__refer;
 
 #if __JVM_LITTLE_ENDIAN__
 typedef union _Short2Char {
@@ -158,6 +149,9 @@ typedef struct _MethodInfo MethodInfo;
 typedef struct _Instruction Instruction;
 typedef struct _ConstantNameAndType ConstantNameAndType;
 typedef struct _JavaThreadLock JavaThreadLock;
+typedef struct _Runtime Runtime;
+
+typedef s32 (*java_native_fun)(Runtime *runtime, Class *p);
 
 enum {
     JVM_ERROR_OUTOFMEMORY,
@@ -303,6 +297,10 @@ extern s64 heap_size; //当前已经分配的内存总数
 
 Instruction **instructionsIndexies;
 
+#if _JVM_DEBUG_PROFILE
+extern Hashtable *instruct_profile;
+#endif
+
 //======================= class file =============================
 /* Java Class File */
 typedef struct _ClassFileFormat {
@@ -407,6 +405,7 @@ typedef struct _ConstantMethodRef {
     ConstantNameAndType *nameAndType;
     Utf8String *name;
     Utf8String *descriptor;
+    Pairlist *virtual_methods;
 } ConstantMethodRef;
 
 typedef struct _ConstantInterfaceMethodRef {
@@ -544,7 +543,7 @@ typedef struct _MethodInfo {
     Utf8String *descriptor;
     Utf8String *paraType;
     Class *_this_class;
-
+    java_native_fun native_func;
 } MethodInfo;
 
 /*  Method Pool */
@@ -579,15 +578,15 @@ typedef union _LocalVarItem {
     __refer refer;
 } LocalVarItem;
 /* local variable */
-typedef struct _LocalVariables {
-    LocalVarItem item[METHOD_MAX_PARA_LENGHT];
-} LocalVariables;
+//typedef struct _LocalVariables {
+//    LocalVarItem **item;
+//} LocalVariables;
 
 
 typedef struct _Runtime {
     u8 type;//type of array or object or runtime
     StackFrame *stack;
-    LocalVariables localVariables;
+    LocalVarItem *localVariables;
     MethodInfo *methodInfo;
     Class *clazz;
     CodeAttribute *codeAttr;
@@ -814,7 +813,7 @@ Class *getClassByConstantClassRef(Class *clazz, s32 index);
 
 //======================= execute =============================
 
-s32 execute(c8 *p_classpath, c8 *mainclass);
+s32 execute(c8 *p_classpath, c8 *mainclass,s32 argc, c8** argv);
 
 s32 execute_method(MethodInfo *method, Runtime *runtime, Class *clazz, s32 invokeType);
 
@@ -863,8 +862,6 @@ void stack2localvar(MethodInfo *method, Runtime *father, Runtime *son);
 static s32 op_notsupport(u8 **opCode, Runtime *runtime, Class *clazz);
 
 void peekEntry(StackFrame *stack, StackEntry *entry, int index);
-
-
 
 
 #endif
