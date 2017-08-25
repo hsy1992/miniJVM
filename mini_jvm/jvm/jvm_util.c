@@ -267,7 +267,6 @@ Class *getClass(c8 *pclassName, Runtime *runtime) {
 void runtime_create(Runtime *runtime) {
     memset(runtime, 0, sizeof(Runtime));
     runtime->stack = stack_init(STACK_LENGHT);
-    runtime->method_para_stack = stack_init(METHOD_MAX_PARA_LENGHT);
 }
 
 //===============================    java 线程  ==================================

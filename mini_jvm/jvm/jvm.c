@@ -81,10 +81,12 @@ s32 execute(c8 *p_classpath, c8 *p_mainclass) {
             thread_create_reg(main_thread, &pthread);
             runtime.thread = main_thread;
             instance_init(main_thread, &runtime);//必须放在最好，初始化时需要用到前面的赋值
+            s64 start=currentTimeMillis();
             printf("\n\n\n\n\n\n================================= main start ================================\n");
             //调用主方法
             ret = execute_method(main, &runtime, clazz, METHOD_INVOKE_STATIC);
             printf("================================= main  end  ================================\n");
+            printf("spent %lld\n",(currentTimeMillis()-start));
             garbage_collect();
         }
         utf8_destory(methodName);
@@ -98,7 +100,6 @@ s32 execute(c8 *p_classpath, c8 *p_mainclass) {
 //#endif
 //    }
     stack_destory(runtime.stack);
-    stack_destory(runtime.method_para_stack);
 
     utf8_destory(classpath);
     utf8_destory(jstring_class);

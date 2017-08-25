@@ -587,7 +587,6 @@ typedef struct _LocalVariables {
 typedef struct _Runtime {
     u8 type;//type of array or object or runtime
     StackFrame *stack;
-    StackFrame *method_para_stack;//java方法调用时，中转stack中的参数到localVariables中
     LocalVariables localVariables;
     MethodInfo *methodInfo;
     Class *clazz;

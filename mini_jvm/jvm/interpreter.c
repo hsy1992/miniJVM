@@ -1566,9 +1566,9 @@ static s32 op_invokevirtual(u8 **opCode, Runtime *runtime, Class *clazz) {
 
     s32 ret = 0;
     ConstantMethodRef *cmr = find_constant_method_ref(clazz, object_ref);
-    if (utf8_equals_c(clazz->name, "java/lang/Thread") == 0) {
-        int debug = 1;
-    }
+//    if (utf8_equals_c(clazz->name, "java/lang/Thread") == 0) {
+//        int debug = 1;
+//    }
     Instance *ins = getInstanceInStack(clazz, cmr, runtime->stack);
     MethodInfo *method = NULL;
     if (ins->type == MEM_TYPE_CLASS || ins->type == MEM_TYPE_ARR) {
@@ -2193,9 +2193,9 @@ static s32 op_if_cmp_ia(u8 **opCode, Runtime *runtime, Class *clazz, s32 type) {
 
     s32 v2 = pop_int(stack);
     s32 v1 = pop_int(stack);
-    if (v1 == 74) {
-        int debug = 1;
-    }
+//    if (v1 == 74) {
+//        int debug = 1;
+//    }
     c8 *syb;
     s32 con = 0;
     switch (type) {
@@ -2362,45 +2362,52 @@ static s32 op_if_0(u8 **opCode, Runtime *runtime, Class *clazz, s32 type) {
     s32 branchoffset = s2c.s;
 
     c8 *syb;
-    s32 v = pop_int(stack);
+    StackEntry entry;
+    pop_entry(stack, &entry);
     s32 con = 0;
+    Long2Double l2d;
+    if (entry.type == STACK_ENTRY_REF) {
+        l2d.r = entry_2_refer(&entry);
+    } else {
+        l2d.i2l.i1 = entry_2_int(&entry);
+    }
     switch (type) {
         case TYPE_IFEQ:
-            con = v == 0;
+            con = l2d.i2l.i1 == 0;
             syb = "==";
             break;
         case TYPE_IFNE:
-            con = v != 0;
+            con = l2d.i2l.i1 != 0;
             syb = "!=";
             break;
         case TYPE_IFLT:
-            con = v < 0;
+            con = l2d.i2l.i1 < 0;
             syb = "<";
             break;
         case TYPE_IFGT:
-            con = v > 0;
+            con = l2d.i2l.i1 > 0;
             syb = ">";
             break;
         case TYPE_IFLE:
-            con = v <= 0;
+            con = l2d.i2l.i1 <= 0;
             syb = "<";
             break;
         case TYPE_IFGE:
-            con = v >= 0;
+            con = l2d.i2l.i1 >= 0;
             syb = ">=";
             break;
         case TYPE_IFNONNULL:
-            con = v != 0;
+            con = l2d.r != 0;
             syb = "!= NULL";
             break;
         case TYPE_IFNULL:
-            con = v == 0;
+            con = l2d.r == 0;
             syb = "== NULL";
             break;
     }
 
 #if _JVM_DEBUG
-    printf("if_0: %d %s 0  then %d \n", v, syb, branchoffset);
+    printf("if_0: %d/%llx %s 0  then %d \n", l2d.i2l.i1, l2d.r, syb, branchoffset);
 #endif
     if (con) {
         *opCode = *opCode + branchoffset;
@@ -2914,8 +2921,6 @@ static void printCodeAttribute(CodeAttribute *ca, Class *p) {
  * @param son
  */
 void stack2localvar(MethodInfo *method, Runtime *father, Runtime *son) {
-    StackFrame *method_para_stack = father->method_para_stack;
-
     if (!method->paraType) {//首次执行
         // eg:  (Ljava/lang/Object;IBLjava/lang/String;[[[ILjava/lang/Object;)Ljava/lang/String;Z
         method->paraType = utf8_create();
@@ -2923,45 +2928,41 @@ void stack2localvar(MethodInfo *method, Runtime *father, Runtime *son) {
     }
 
     Utf8String *paraType = method->paraType;
-    s32 i = 0;
-    for (; i < paraType->length; i++) {
-        char type = utf8_char_at(paraType, paraType->length - 1 - i);
+    s32 i;
+    StackEntry entry;
+    s32 i_local = 0;
+    s32 paraLen = paraType->length;
+    s32 ins_this = 0;
+    s32 stack_size = father->stack->size;
+    s32 stack_pointer = stack_size - paraLen;
+    if (!(method->access_flags & ACC_STATIC)) {//非静态方法需要把局部变量位置0设为this
+        peekEntry(father->stack, &entry, stack_pointer - 1);
+        son->localVariables.item[i_local++].refer = entry_2_refer(&entry);
+        ins_this = 1;
+    }
+    for (i = 0; i < paraType->length; i++) {
+        char type = utf8_char_at(paraType, i);
+        peekEntry(father->stack, &entry, stack_pointer++);
         switch (type) {
             case 'R': {
-                __refer r = pop_ref(father->stack);
-                push_ref(method_para_stack, r);
+                son->localVariables.item[i_local++].refer = entry_2_refer(&entry);
                 break;
             }
             case '8': {
                 //把双字类型拆成两个单元放入本地变量
                 Long2Double l2d;
-                l2d.l = pop_long(father->stack);
-                push_int(method_para_stack, l2d.i2l.i0);
-                push_int(method_para_stack, l2d.i2l.i1);
+                l2d.l = entry_2_long(&entry);
+                son->localVariables.item[i_local++].integer = l2d.i2l.i1;
+                son->localVariables.item[i_local++].integer = l2d.i2l.i0;
                 break;
             }
             case '4': {
-                s32 v = pop_int(father->stack);
-                push_int(method_para_stack, v);
+                son->localVariables.item[i_local++].integer = entry_2_int(&entry);
                 break;
             }
         }
     }
-
-    if (!(method->access_flags & ACC_STATIC)) {//非静态方法需要把局部变量位置0设为this
-        __refer ins = pop_ref(father->stack);
-        push_ref(method_para_stack, ins);
-    }
-    s32 i_local = 0;
-    while (method_para_stack->size) {
-        StackEntry entry;
-        pop_entry(method_para_stack, &entry);
-        if (entry.type == STACK_ENTRY_REF) {
-            son->localVariables.item[i_local++].refer = entry_2_refer(&entry);
-        } else {
-            son->localVariables.item[i_local++].integer = entry_2_int(&entry);
-        }
-    }
+    father->stack->size -= paraLen + ins_this;
 }
 
 
@@ -2976,7 +2977,6 @@ s32 execute_method(MethodInfo *method, Runtime *pruntime, Class *clazz, s32 invo
     runtime.type = MEM_TYPE_RUNTIME;
     runtime.stack = pruntime->stack;
     runtime.thread = pruntime->thread;
-    runtime.method_para_stack = pruntime->method_para_stack;
 
     stack2localvar(method, pruntime, &runtime);
     s32 stackSize = pruntime->stack->size;
