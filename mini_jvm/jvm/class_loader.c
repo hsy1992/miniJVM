@@ -4,6 +4,7 @@
 #include <string.h>
 #include "jvm.h"
 #include "jvm_util.h"
+#include "garbage.h"
 
 
 /* Get Major Version String */
@@ -148,6 +149,18 @@ void class_optmize(Class *clazz) {
             ptr->paraType = utf8_create();
             parseMethodPara(ptr->descriptor, ptr->paraType);
         }
+        s32 j;
+
+        //转attribute为CdoeAttribute
+        for (j = 0; j < ptr->attributes_count; j++) {
+            if (utf8_equals_c(get_utf8_string(clazz, ptr->attributes[j].attribute_name_index), "Code") == 0) {
+                CodeAttribute *ca = jvm_alloc(sizeof(CodeAttribute));
+                convert_to_code_attribute(ca, &ptr->attributes[j]);
+                jvm_free(ptr->attributes[j].info);//无用删除
+                ptr->attributes[j].info = NULL;
+                ptr->attributes[j].converted_attribute = ca;
+            }
+        }
     }
     for (i = 0; i < clazz->constantPool.methodRef->length; i++) {
         ConstantMethodRef *cmr = (ConstantMethodRef *) arraylist_get_value(clazz->constantPool.methodRef, i);
@@ -172,6 +185,42 @@ void class_optmize(Class *clazz) {
         ConstantInterfaceMethodRef *cir = (ConstantInterfaceMethodRef *) arraylist_get_value(
                 clazz->constantPool.interfaceRef, i);
         cir->name = get_utf8_string(clazz, find_constant_name_and_type(clazz, cir->nameAndTypeIndex)->nameIndex);
+    }
+
+}
+
+
+s32 convert_to_code_attribute(CodeAttribute *ca, AttributeInfo *attr) {
+    s32 info_p = 0;
+
+    ca->attribute_name_index = attr->attribute_name_index;
+    ca->attribute_length = attr->attribute_length;
+    Short2Char s2c;
+    s2c.c1 = attr->info[info_p++];
+    s2c.c0 = attr->info[info_p++];
+    ca->max_stack = s2c.s;
+    s2c.c1 = attr->info[info_p++];
+    s2c.c0 = attr->info[info_p++];
+    ca->max_locals = s2c.s;
+    Int2Float i2c;
+    i2c.c3 = attr->info[info_p++];
+    i2c.c2 = attr->info[info_p++];
+    i2c.c1 = attr->info[info_p++];
+    i2c.c0 = attr->info[info_p++];
+    ca->code_length = i2c.i;
+    ca->code = (u8 *) jvm_alloc(sizeof(u8) * ca->code_length);
+    memcpy(ca->code, attr->info + info_p, ca->code_length);
+    info_p += ca->code_length;
+    s2c.c1 = attr->info[info_p++];
+    s2c.c0 = attr->info[info_p++];
+    ca->exception_table_length = s2c.s;
+    s32 bytelen = sizeof(ExceptionTable) * ca->exception_table_length;
+    ca->exception_table = jvm_alloc(bytelen);
+    int i;
+    for (i = 0; i < 4 * ca->exception_table_length; i++) {
+        s2c.c1 = attr->info[info_p++];
+        s2c.c0 = attr->info[info_p++];
+        ((u16 *) ca->exception_table)[i] = s2c.s;
     }
 
 }

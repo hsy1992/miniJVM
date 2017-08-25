@@ -96,7 +96,7 @@ static void *parseCPLong(Class *_this, FILE *fp, s32 index) {
     l2d.c2 = tmp[5];
     l2d.c1 = tmp[6];
     l2d.c0 = tmp[7];
-    ptr->value=l2d.l;
+    ptr->value = l2d.l;
 
     arraylist_append(_this->constantPool.longCP, ptr);
     return ptr;
@@ -121,7 +121,7 @@ static void *parseCPDouble(Class *_this, FILE *fp, s32 index) {
     l2d.c2 = tmp[5];
     l2d.c1 = tmp[6];
     l2d.c0 = tmp[7];
-    ptr->value=l2d.d;
+    ptr->value = l2d.d;
 
     arraylist_append(_this->constantPool.doubleCP, ptr);
     return ptr;
@@ -193,7 +193,7 @@ static void *parseCPField(Class *_this, FILE *fp, s32 index) {
 static void *parseCPMethod(Class *_this, FILE *fp, s32 index) {
     u8 short_tmp[2];
     ConstantMethodRef *ptr = jvm_alloc(sizeof(ConstantMethodRef));
-    ptr->virtual_methods=pairlist_create(0);
+    ptr->virtual_methods = pairlist_create(0);
     ptr->methodParaCount = -1;
 
     ptr->tag = CONSTANT_METHOD_REF;
@@ -552,4 +552,55 @@ void printConstantPool(Class *clazz) {
             }
         }
     }
+}
+
+s32 _class_constant_pool_destory(Class *clazz) {
+    int i;
+    for (i = 0; i < clazz->constantPool.fieldRef->length; i++) {
+        __refer ptr = arraylist_get_value(clazz->constantPool.fieldRef, i);
+        jvm_free(ptr);
+    }
+    for (i = 0; i < clazz->constantPool.methodRef->length; i++) {
+        ConstantMethodRef *ptr = (ConstantMethodRef *) arraylist_get_value(clazz->constantPool.methodRef, i);
+        jvm_free(ptr->virtual_methods);
+        jvm_free(ptr);
+    }
+    for (i = 0; i < clazz->constantPool.interfaceRef->length; i++) {
+        __refer ptr = arraylist_get_value(clazz->constantPool.interfaceRef, i);
+        jvm_free(ptr);
+    }
+    for (i = 0; i < clazz->constantPool.doubleCP->length; i++) {
+        __refer ptr = arraylist_get_value(clazz->constantPool.doubleCP, i);
+        jvm_free(ptr);
+    }
+    for (i = 0; i < clazz->constantPool.floatCP->length; i++) {
+        __refer ptr = arraylist_get_value(clazz->constantPool.floatCP, i);
+        jvm_free(ptr);
+    }
+    for (i = 0; i < clazz->constantPool.integerCP->length; i++) {
+        __refer ptr = arraylist_get_value(clazz->constantPool.integerCP, i);
+        jvm_free(ptr);
+    }
+    for (i = 0; i < clazz->constantPool.classRef->length; i++) {
+        __refer ptr = arraylist_get_value(clazz->constantPool.classRef, i);
+        jvm_free(ptr);
+    }
+    for (i = 0; i < clazz->constantPool.stringRef->length; i++) {
+        __refer ptr = arraylist_get_value(clazz->constantPool.stringRef, i);
+        jvm_free(ptr);
+    }
+    for (i = 0; i < clazz->constantPool.longCP->length; i++) {
+        __refer ptr = arraylist_get_value(clazz->constantPool.longCP, i);
+        jvm_free(ptr);
+    }
+    for (i = 0; i < clazz->constantPool.utf8CP->length; i++) {
+        ConstantUTF8 *ptr = (ConstantUTF8 *) arraylist_get_value(clazz->constantPool.utf8CP, i);
+        utf8_destory(ptr->ptr);
+        jvm_free(ptr);
+    }
+    for (i = 0; i < clazz->constantPool.name_and_type->length; i++) {
+        __refer ptr = arraylist_get_value(clazz->constantPool.name_and_type, i);
+        jvm_free(ptr);
+    }
+    return 0;
 }

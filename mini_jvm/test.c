@@ -16,6 +16,7 @@
 #include "utils/hashtable.h"
 #include "utils/utf8_string.h"
 #include "jvm/jvm.h"
+#include "jvm/jvm_util.h"
 
 
 typedef struct SA {
@@ -135,22 +136,45 @@ void t3() {
     printf("%s", buf);
 }
 
-void t4(){
-    printf("pointer size:%d\n",sizeof(void*));
-    printf("jint size:%d\n",sizeof(s32));
-    printf("jlong size:%d\n",sizeof(s64));
-    printf("jshort size:%d\n",sizeof(s16));
-    printf("jbyte size:%d\n",sizeof(c8));
-    printf("jdouble size:%d\n",sizeof(f64));
-    printf("jfloat size:%d\n",sizeof(f32));
+void t4() {
+    printf("pointer size:%d\n", sizeof(void *));
+    printf("jint size:%d\n", sizeof(s32));
+    printf("jlong size:%d\n", sizeof(s64));
+    printf("jshort size:%d\n", sizeof(s16));
+    printf("jbyte size:%d\n", sizeof(c8));
+    printf("jdouble size:%d\n", sizeof(f64));
+    printf("jfloat size:%d\n", sizeof(f32));
 
-    printf("long size:%d\n",sizeof(long));
+    printf("long size:%d\n", sizeof(long));
+}
+
+void t5() {
+    s64 start, spent;
+    s32 max = 200000000;
+    s32 i, v;
+    Long2Double l2d;
+    v = 0;
+    start = currentTimeMillis();
+    for (i = 0; i < max; i++) {
+        v = i;
+    }
+    spent = currentTimeMillis() - start;
+    printf("v=%lld, spent %lld\n", v, spent);
+    v = 0;
+    start = currentTimeMillis();
+    for (i = 0; i < max; i++) {
+        //memcpy(&v, &i, sizeof(s32));
+        l2d.i2l.i1 = i;
+    }
+    spent = currentTimeMillis() - start;
+
+    printf("v=%lld, spent %lld\n", l2d.i2l.i1, spent);
 }
 
 int main(int argc, char **argv) {
 
-    return execute("../java/build/classes/", "com/egls/test/Foo1",argc,argv);
-//    t4();
+    return execute("../java/build/classes/", "com/egls/test/Foo1", argc, argv);
+//    t5();
 //    return 0;
 }
 

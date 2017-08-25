@@ -19,7 +19,7 @@
 #define _JVM_DEBUG 0
 #define _JVM_DEBUG_BYTECODE_DUMP 0
 #define _JVM_DEBUG_GARBAGE_DUMP 0
-#define _JVM_DEBUG_PROFILE 01
+#define _JVM_DEBUG_PROFILE 0
 
 // x86   x64 ...
 #define __JVM_LITTLE_ENDIAN__ 1
@@ -487,6 +487,8 @@ typedef struct _AttributeInfo {
     u16 attribute_name_index;
     s32 attribute_length;
     u8 *info;
+    //
+    u8 *converted_attribute;
 } AttributeInfo;
 
 typedef struct _ExceptionTable {
@@ -648,6 +650,8 @@ s32 _LOAD_FROM_FILE(Class *_this, c8 *file);
 
 s32 class_link(Class *clazz);
 
+s32 convert_to_code_attribute(CodeAttribute *ca, AttributeInfo *attr);
+
 void class_optmize(Class *clazz);
 
 void class_clinit(Class *clazz, Runtime *runtime);
@@ -689,6 +693,9 @@ void printClassFileFormat(ClassFileFormat *cff);
 /* Method Pool Parser */
 s32 _parse_method_pool(Class *_this, FILE *fp, s32 count);
 
+s32 _class_method_info_destory(Class *clazz);
+
+
 void printMethodPool(Class *p, MethodPool *fp);
 
 void printMethodAttributes(Class *p, MethodInfo *method);
@@ -696,15 +703,21 @@ void printMethodAttributes(Class *p, MethodInfo *method);
 /* Interface Pool Parser */
 s32 _parse_interface_pool(Class *_this, FILE *fp, s32 count);
 
+s32 _class_interface_pool_destory(Class *clazz);
+
 void printInterfacePool(Class *clazz, InterfacePool *ip);
 
 /* constant pool parser */
 s32 _parse_constant_pool(Class *_this, FILE *fp, s32 count);
 
+s32 _class_constant_pool_destory(Class *clazz);
+
 void printConstantPool(Class *clazz);
 
 /* Field Pool Parser */
 s32 _parse_field_pool(Class *_this, FILE *fp, s32 count);
+
+s32 _class_field_info_destory(Class *clazz);
 
 void printFieldPool(Class *clazz, FieldPool *fp);
 
@@ -813,7 +826,7 @@ Class *getClassByConstantClassRef(Class *clazz, s32 index);
 
 //======================= execute =============================
 
-s32 execute(c8 *p_classpath, c8 *mainclass,s32 argc, c8** argv);
+s32 execute(c8 *p_classpath, c8 *mainclass, s32 argc, c8 **argv);
 
 s32 execute_method(MethodInfo *method, Runtime *runtime, Class *clazz, s32 invokeType);
 

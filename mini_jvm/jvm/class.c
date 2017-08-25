@@ -36,22 +36,16 @@ s32 class_destory(Class *clazz) {
 }
 
 s32 _DESTORY_CLASS(Class *_this) {
-    s32 i, j;
-    MethodInfo *method = 0;
-    AttributeInfo *attr = 0;
-    for (i = 0; i < _this->methodPool.method_used; i++) {
-        method = &(_this->methodPool).method[i];
-        for (j = 0; j < method->attributes_count; j++) {
-            attr = &method->attributes[j];
-            jvm_free(attr->info);
-            memset(attr, 0, sizeof(AttributeInfo));
-        }
-        jvm_free(method->attributes);
-        memset(method, 0, sizeof(MethodInfo));
-    }
+    _class_method_info_destory(_this);
+    _class_interface_pool_destory(_this);
+    _class_field_info_destory(_this);
+    _class_constant_pool_destory(_this);
     jvm_free(_this->field_static);
+    _this->field_static = NULL;
     jvm_free(_this->field_instance_template);
+    _this->field_instance_template = NULL;
     jvm_free(_this->constant_item_ptr);
+    _this->constant_item_ptr = NULL;
     constant_list_destory(_this);
     jthreadlock_destory(_this->thread_lock);
 }

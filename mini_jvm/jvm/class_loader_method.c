@@ -72,6 +72,8 @@ MethodInfo *find_methodInfo_by_name(Utf8String *clsName, Utf8String *methodName,
 }
 
 //=================================     load         ======================================
+
+
 static s32 parseMethodAttr(MethodInfo *ptr, FILE *fp) {
     s32 i;
     AttributeInfo *tmp = 0;
@@ -96,6 +98,7 @@ static s32 parseMethodAttr(MethodInfo *ptr, FILE *fp) {
         fread(tmp->info, tmp->attribute_length, 1, fp);
     }
 }
+
 
 /* parse Method Pool */
 static s32 parseMP(Class *_this, FILE *fp) {
@@ -219,5 +222,24 @@ s32 _parse_method_pool(Class *_this, FILE *fp, s32 count) {
     s32 i;
     for (i = 0; i < count; i++)
         parseMP(_this, fp);
+    return 0;
+}
+
+s32 _class_method_info_destory(Class *clazz) {
+    s32 i, j;
+    for (i = 0; i < clazz->methodPool.method_used; i++) {
+        MethodInfo *mi = &clazz->methodPool.method[i];
+        for (j = 0; j < mi->attributes_count; j++) {
+            AttributeInfo *attr = &mi->attributes[j];
+            jvm_free(attr->info);//某些没有转
+            attr->info = NULL;
+            jvm_free(attr->converted_attribute);//info已被转换为converted_attribute
+            attr->converted_attribute = NULL;
+        }
+        jvm_free(mi->attributes);
+        mi->attributes = NULL;
+    }
+    jvm_free(clazz->methodPool.method);
+    clazz->methodPool.method = NULL;
     return 0;
 }

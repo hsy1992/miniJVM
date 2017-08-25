@@ -50,11 +50,11 @@ FieldInfo *find_fieldInfo_by_name(Utf8String *clsName, Utf8String *fieldName, Ut
         FieldPool *fp = &(other->fieldPool);
         s32 i = 0;
         for (; i < fp->field_used; i++) {
-            FieldInfo* tmp=&fp->field[i];
+            FieldInfo *tmp = &fp->field[i];
             if (utf8_equals(fieldName, tmp->name) == 0
                 && utf8_equals(fieldType, tmp->descriptor) == 0
                     ) {
-                fi =tmp;
+                fi = tmp;
                 fi->_this_class = other;
                 break;
             }
@@ -110,26 +110,26 @@ static s32 parseFP(Class *_this, FILE *fp) {
     Short2Char s2c;
     s2c.c1 = short_tmp[0];
     s2c.c0 = short_tmp[1];
-    ptr->access_flags =  s2c.s;
+    ptr->access_flags = s2c.s;
 
     /* name index */
     fread(short_tmp, 2, 1, fp);
     s2c.c1 = short_tmp[0];
     s2c.c0 = short_tmp[1];
-    ptr->name_index =  s2c.s;
+    ptr->name_index = s2c.s;
 
 
     /* descriptor index */
     fread(short_tmp, 2, 1, fp);
     s2c.c1 = short_tmp[0];
     s2c.c0 = short_tmp[1];
-    ptr->descriptor_index =  s2c.s;
+    ptr->descriptor_index = s2c.s;
 
     /* attributes count */
     fread(short_tmp, 2, 1, fp);
     s2c.c1 = short_tmp[0];
     s2c.c0 = short_tmp[1];
-    ptr->attributes_count =  s2c.s;
+    ptr->attributes_count = s2c.s;
 
     if (ptr->attributes_count > 0) {
         ptr->attributes = (AttributeInfo *) jvm_alloc(sizeof(AttributeInfo) * ptr->attributes_count);
@@ -168,5 +168,23 @@ s32 _parse_field_pool(Class *_this, FILE *fp, s32 count) {
     s32 i;
     for (i = 0; i < count; i++)
         parseFP(_this, fp);
+    return 0;
+}
+
+
+s32 _class_field_info_destory(Class *clazz) {
+    s32 i, j;
+    for (i = 0; i < clazz->fieldPool.field_used; i++) {
+        FieldPool *fi = &clazz->fieldPool.field[i];
+        for (j = 0; j < fi->field[i].attributes_count; j++) {
+            AttributeInfo *attr = &fi->field[i].attributes[j];
+            jvm_free(attr->info);//info已被转换为converted_attribute
+            attr->info = NULL;
+        }
+        jvm_free(fi->field->attributes);
+        fi->field->attributes = NULL;
+    }
+    jvm_free(clazz->fieldPool.field);
+    clazz->fieldPool.field = NULL;
     return 0;
 }

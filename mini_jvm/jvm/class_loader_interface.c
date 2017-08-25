@@ -55,3 +55,9 @@ s32 _parse_interface_pool(Class *_this, FILE *fp, s32 count) {
         parseIPClass(_this, fp, 1);
     return 0;
 }
+
+s32 _class_interface_pool_destory(Class *clazz) {
+    jvm_free(clazz->interfacePool.clasz);
+    clazz->interfacePool.clasz=NULL;
+    return 0;
+}
