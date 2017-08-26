@@ -2508,7 +2508,7 @@ s32 op_ret(u8 **opCode, Runtime *runtime, Class *clazz) {
 
 s32 op_tableswitch(u8 **opCode, Runtime *runtime, Class *clazz) {
     s32 pos = 0;
-    pos = 4 - ((((u64) *opCode) - (u64) (runtime->codeAttr->code)) % 4);//4 byte对齐
+    pos = 4 - ((((u64) (long) *opCode) - (u64) (long) (runtime->codeAttr->code)) % 4);//4 byte对齐
 
     Int2Float i2c;
     i2c.c3 = opCode[0][pos++];
@@ -2550,7 +2550,7 @@ s32 op_tableswitch(u8 **opCode, Runtime *runtime, Class *clazz) {
 
 s32 op_lookupswitch(u8 **opCode, Runtime *runtime, Class *clazz) {
     s32 pos = 0;
-    pos = 4 - ((((u64) *opCode) - (u64) (runtime->codeAttr->code)) % 4);//4 byte对齐
+    pos = 4 - ((((u64) (long) *opCode) - (u64) (long) (runtime->codeAttr->code)) % 4);//4 byte对齐
     Int2Float i2c;
     i2c.c3 = opCode[0][pos++];
     i2c.c2 = opCode[0][pos++];
