@@ -2,16 +2,48 @@
 #include "jvm.h"
 #include "garbage.h"
 #include "../utils/arraylist.h"
+#include "jvm_util.h"
+
+s64 GARBAGE_PERIOD_MS = 1000;
 
 s32 garbage_collector_create() {
     son_2_father = hashtable_create(_DEFAULT_HashtableHash, _DEFAULT_HashtableEquals);
     father_2_son = hashtable_create(_DEFAULT_HashtableHash, _DEFAULT_HashtableEquals);
+    _garbage_thread = jvm_alloc(sizeof(pthread_t));
+
+    pthread_mutexattr_init(&_garbage_attr);
+    pthread_mutexattr_settype(&_garbage_attr, PTHREAD_MUTEX_RECURSIVE);
+    pthread_mutex_init(&_garbage_lock, &_garbage_attr);
+    pthread_create(_garbage_thread, NULL, collect_thread_run, NULL);
     return 0;
 }
 
 void garbage_collector_destory() {
     hashtable_destory(son_2_father);
     hashtable_destory(father_2_son);
+}
+
+void *collect_thread_run(void *para) {
+    while (!_garbage_thread_stop) {
+        s64 freepre = MAX_HEAP_SIZE - heap_size;
+        garbage_collect();
+        printf("garbage collected , from %lld to %lld\n", freepre, MAX_HEAP_SIZE - heap_size);
+        threadWait(GARBAGE_PERIOD_MS);
+    }
+    return NULL;
+}
+
+
+void garbage_thread_lock() {
+    pthread_mutex_lock(&_garbage_lock);
+}
+
+void garbage_thread_unlock() {
+    pthread_mutex_unlock(&_garbage_lock);
+}
+
+void garbage_thread_stop() {
+    _garbage_thread_stop = 1;
 }
 
 /**
@@ -22,13 +54,14 @@ void garbage_collector_destory() {
  * @return
  */
 s32 garbage_collect() {
+    garbage_thread_lock();
 #if _JVM_DEBUG_GARBAGE_DUMP
     dump_refer();
 #endif
     HashtableIterator hti;
     hashtable_iterate(son_2_father, &hti);
     //printf("hmap_t:%d\n", hashtable_num_entries(son_2_father));
-    s32 repeat = 0;
+
     for (; hashtable_iter_has_more(&hti);) {
 
         HashtableKey k = hashtable_iter_next_key(&hti);
@@ -37,19 +70,20 @@ s32 garbage_collect() {
         if (v != HASH_TABLE_NULL) {
             if (v->length == 0) {
                 garbage_derefer_all(k);
-                Instance *ins = (Instance *) k;
 #if _JVM_DEBUG_GARBAGE_DUMP
+                Instance *ins = (Instance *) k;
                 printf("garbage collect instance [%x] of %s\n", k,
                        ins->type == MEM_TYPE_OBJ ? utf8_cstr(ins->obj_of_clazz->name) : "ARRAY");
 #endif
                 hashtable_remove(son_2_father, k, 0);
                 arraylist_destory(v);
                 instance_destory(k);
-                repeat = 1;
+
             }
         }
     }
-    if (repeat)garbage_collect();//递归回收
+    garbage_thread_unlock();
+
     return 0;
 }
 
@@ -160,6 +194,7 @@ void *garbage_refer(__refer sonPtr, __refer parentPtr) {
            parentPtr);
     utf8_destory(us);
 #endif
+    garbage_thread_lock();
     //放入子引父
     ArrayListValue list = hashtable_get(son_2_father, sonPtr);
     if (list == HASH_TABLE_NULL) {
@@ -175,7 +210,7 @@ void *garbage_refer(__refer sonPtr, __refer parentPtr) {
         hashtable_put(father_2_son, parentPtr, list);
     }
     arraylist_append(list, sonPtr);
-
+    garbage_thread_unlock();
     return sonPtr;
 }
 
@@ -186,6 +221,7 @@ void garbage_derefer(__refer sonPtr, __refer parentPtr) {
            parentPtr);
     utf8_destory(us);
 #endif
+    garbage_thread_lock();
     ArrayList *list;
     if (sonPtr && parentPtr) {
         //移除子引父
@@ -201,6 +237,7 @@ void garbage_derefer(__refer sonPtr, __refer parentPtr) {
             arraylist_remove_at(list, arraylist_index_of(list, arraylist_compare_int, sonPtr));
         }
     }
+    garbage_thread_unlock();
 }
 
 void garbage_derefer_all(__refer parentPtr) {
@@ -209,6 +246,7 @@ void garbage_derefer_all(__refer parentPtr) {
     printf("X:  %s[%x]\n", utf8_cstr(us), parentPtr);
     utf8_destory(us);
 #endif
+    garbage_thread_lock();
     ArrayList *list;
     //移除父引用的所有子
     list = hashtable_get(father_2_son, parentPtr);
@@ -221,6 +259,7 @@ void garbage_derefer_all(__refer parentPtr) {
         arraylist_destory(list);
     }
     hashtable_remove(father_2_son, parentPtr, 0);
+    garbage_thread_unlock();
 }
 
 /**

@@ -163,8 +163,11 @@ class Foo2 {
 
     void t7() {
         T7class t7 = new T7class();
-        t7_1(t7);
+        for (int i = 0; i < 1000000; i++) {
+            t7_1(t7);
+        }
     }
+
     void t8() throws RuntimeException {
         int i = 0;
         try {
@@ -202,10 +205,10 @@ class Foo2 {
             default:
                 v = 90;
         }
-        System.out.println("v="+v);
+        System.out.println("v=" + v);
     }
-    
-     void t10() {
+
+    void t10() {
         int ch = 1000;
         int v = 66;
         switch (ch) {
@@ -221,27 +224,29 @@ class Foo2 {
             default:
                 v = 90;
         }
-        System.out.println("v="+v);
+        System.out.println("v=" + v);
     }
+
     void t11() {
         int[][][] a3 = new int[2][2][];
-        a3[1][1]=new int[3];
-        a3[1][1][2]=9;
-        System.out.println("arr print:"+a3[1][1][2]);
+        a3[1][1] = new int[3];
+        a3[1][1][2] = 9;
+        System.out.println("arr print:" + a3[1][1][2]);
     }
 
     public static void main(String args[]) {
         Foo2 obj = new Foo2();
-        obj.t1();
-        obj.t2();
-        obj.t3();
-        obj.t4();
-        obj.t5();
-        obj.t6();
+//        obj.t1();
+//        obj.t2();
+//        obj.t3();
+//        obj.t4();
+//        obj.t5();
+//        obj.t6();
         obj.t7();
         //obj.t8();
-        obj.t9();
-        obj.t10();
-        obj.t11();
+//        obj.t9();
+//        obj.t10();
+//        obj.t11();
+
     }
 }

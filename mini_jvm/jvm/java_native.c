@@ -26,11 +26,11 @@ s32 java_lang_Class_forName(Runtime *runtime, Class *clazz) {
         Instance *arr = jstring_get_value_array(jstr);
         unicode_2_utf8(ustr, (u16 *) arr->arr_body, arr->arr_length);
         utf8_replace_c(ustr, ".", "/");
-        cl = hashtable_get(classes, ustr);
+        cl = classes_get( ustr);
 
         if (!cl) {
             load_class(classpath, ustr, classes);
-            cl = hashtable_get(classes, ustr);
+            cl = classes_get( ustr);
             class_link(cl);
             class_clinit(cl, runtime);
         }

@@ -18,6 +18,30 @@ public class Foo1 {
 
     FInterface fi;
 
+    interface FInterface {
+
+        void print();
+    }
+
+    class P implements FInterface {
+
+        @Override
+        public void print() {
+            System.out.println("P.print()");
+        }
+
+        public void x1() {
+            System.out.println("P.x1()");
+        }
+    }
+
+    class Q extends P {
+
+        public void print() {
+            System.out.println("Q.print()");
+        }
+    }
+
     void t1() {
         fi = new Q();
         fi.print();
@@ -190,32 +214,8 @@ public class Foo1 {
 //        f.t7();
 //        f.t8();
 //        f.t9();
-        BpDeepTest.main(agrs);
-//        Foo2.main(agrs);
+//        BpDeepTest.main(agrs);
+        Foo2.main(agrs);
 //        Foo3.main(agrs);
-    }
-}
-
-interface FInterface {
-
-    void print();
-}
-
-class P implements FInterface {
-
-    @Override
-    public void print() {
-        System.out.println("P.print()");
-    }
-
-    public void x1() {
-        System.out.println("P.x1()");
-    }
-}
-
-class Q extends P {
-
-    public void print() {
-        System.out.println("Q.print()");
     }
 }

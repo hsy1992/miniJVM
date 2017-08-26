@@ -38,7 +38,7 @@ void printInterfacePool(Class *clazz, InterfacePool *ip) {
                    ip->clasz[i].stringIndex);
             if (ptr != 0) {
                 printf(" ");
-                printf(" %s\n",utf8_cstr(ptr->ptr));
+                printf(" %s\n",utf8_cstr(ptr->utfstr));
             } else {
                 printf("\n");
             }

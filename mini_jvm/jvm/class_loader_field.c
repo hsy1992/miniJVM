@@ -23,7 +23,7 @@ FieldInfo *find_fieldInfo_by_fieldref(Class *clazz, s32 field_ref) {
     Utf8String *clsName = get_utf8_string(clazz, find_constant_classref(clazz, cfr->classIndex)->stringIndex);
     Utf8String *fieldName = get_utf8_string(clazz, nat->nameIndex);
     Utf8String *type = get_utf8_string(clazz, nat->typeIndex);
-    Class *other = hashtable_get(classes, clsName);
+    Class *other = classes_get( clsName);
 
     while (fi == NULL && other) {
         FieldPool *fp = &(other->fieldPool);
@@ -44,7 +44,7 @@ FieldInfo *find_fieldInfo_by_fieldref(Class *clazz, s32 field_ref) {
 
 FieldInfo *find_fieldInfo_by_name(Utf8String *clsName, Utf8String *fieldName, Utf8String *fieldType) {
     FieldInfo *fi = NULL;
-    Class *other = hashtable_get(classes, clsName);
+    Class *other = classes_get( clsName);
 
     while (fi == NULL && other) {
         FieldPool *fp = &(other->fieldPool);
@@ -153,7 +153,7 @@ void printFieldPool(Class *clazz, FieldPool *fp) {
                    i, fp->field[i].attributes_count,
                    fp->field[i].name_index);
             if (ptr != 0) {
-                printf(" %s\n", utf8_cstr(ptr->ptr));
+                printf(" %s\n", utf8_cstr(ptr->utfstr));
             } else {
                 printf("\n");
             }

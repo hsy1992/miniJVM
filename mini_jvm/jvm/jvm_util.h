@@ -12,6 +12,7 @@ static s64 NANO_START = 0;
 typedef unsigned short uni_char;
 
 //======================= utils =============================
+
 s32 utf8_2_unicode(Utf8String *ustr, u16 *arr);
 
 int unicode_2_utf8(Utf8String *ustr, u16 *jchar_arr, s32 totalSize);
@@ -68,6 +69,7 @@ __refer jthread_get_threadq_value(Instance *ins);
 void jthread_set_threadq_value(Instance *ins, void *val);
 
 JavaThreadLock *jthreadlock_create();
+
 void jthreadlock_destory(JavaThreadLock *jtl);
 
 s32 jthread_lock(Instance *ins, Runtime *runtime);

@@ -164,9 +164,6 @@ void class_optmize(Class *clazz) {
     }
     for (i = 0; i < clazz->constantPool.methodRef->length; i++) {
         ConstantMethodRef *cmr = (ConstantMethodRef *) arraylist_get_value(clazz->constantPool.methodRef, i);
-//        if (utf8_equals_c(clazz->name, "com/sun/cldc/i18n/Helper") == 0 && cmr->index == 78) {
-//            int debug = 1;
-//        }
         cmr->nameAndType = find_constant_name_and_type(clazz, cmr->nameAndTypeIndex);
         cmr->name = get_utf8_string(clazz, cmr->nameAndType->nameIndex);
         cmr->descriptor = get_utf8_string(clazz, cmr->nameAndType->typeIndex);
@@ -235,11 +232,11 @@ void load_related_class(Utf8String *classpath, Class *clazz, hmap_t classes) {
             ConstantClassRef *ccr = (ConstantClassRef *) arraylist_get_value(p->classRef, i);
             Utf8String *tmpname = utf8_create();
             ConstantUTF8 *utfptr = find_constant_utf8(clazz, ccr->stringIndex);
-            utf8_append(tmpname, utfptr->ptr);
+            utf8_append(tmpname, utfptr->utfstr);
             s32 classid = ccr->index;
 
             //printf("debug= %s\n", utf8_cstr(tmpname));
-            Class *tmpclazz = hashtable_get(classes, tmpname);
+            Class *tmpclazz = classes_get(tmpname);
             if (classid != clazz->cff.this_class && 0 == tmpclazz && utf8_indexof_c(tmpname, "[") != 0) {
 
                 Utf8String *fullpath = utf8_create_part(classpath, 0, classpath->length);
@@ -250,15 +247,15 @@ void load_related_class(Utf8String *classpath, Class *clazz, hmap_t classes) {
                 tmpclazz = class_create();
                 s32 rec = tmpclazz->_load_from_file(tmpclazz, utf8_cstr(fullpath));
                 if (0 == rec) {
+#if _JVM_DEBUG
                     printf("load class:%s \n", utf8_cstr(fullpath));
-                    hashtable_put(classes, tmpname, tmpclazz);
+#endif
+                    classes_put(tmpclazz);
                     load_related_class(classpath, tmpclazz, classes); //递归调用载入类
                 }
                 utf8_destory(fullpath);
-            } else {
-                utf8_destory(tmpname);
             }
-
+            utf8_destory(tmpname);
         }
     }
 }
@@ -267,8 +264,7 @@ void load_class(Utf8String *pClassPath, Utf8String *pClassName, hmap_t classes) 
     if (!pClassName)return;
     if (utf8_last_indexof_c(pClassPath, "/") != pClassPath->length - 1)utf8_append_c(pClassPath, "/");
 
-    Utf8String *clsName = utf8_create();
-    utf8_append(clsName, pClassName);
+    Utf8String *clsName = utf8_create_copy(pClassName);
     utf8_replace_c(clsName, ".", "/");
 
     classpath = utf8_create_copy(pClassPath);
@@ -276,7 +272,7 @@ void load_class(Utf8String *pClassPath, Utf8String *pClassName, hmap_t classes) 
     Utf8String *tmppath = utf8_create_part(pClassPath, 0, pClassPath->length);
     utf8_append(tmppath, clsName);
     utf8_append_c(tmppath, ".class");
-    Class *tmpclazz = hashtable_get(classes, pClassName);
+    Class *tmpclazz = classes_get(pClassName);
     if (tmpclazz) {
         return;
     }
@@ -286,9 +282,11 @@ void load_class(Utf8String *pClassPath, Utf8String *pClassName, hmap_t classes) 
         printf(" main class not found : %s", utf8_cstr(pClassName));
         exit(1);
     }
-
+#if _JVM_DEBUG
     printf("load main class:  %s \n", utf8_cstr(tmppath));
-    hashtable_put(classes, clsName, clazz);
+#endif
+    classes_put(clazz);
     utf8_destory(tmppath);
+    utf8_destory(clsName);
     load_related_class(pClassPath, clazz, classes);
 }

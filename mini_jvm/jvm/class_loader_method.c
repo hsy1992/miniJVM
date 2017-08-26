@@ -10,7 +10,7 @@
 ConstantMethodRef *
 find_constant_methodref_by_name(Utf8String *clsName, Utf8String *methodName, Utf8String *methodType) {
     ConstantMethodRef *cmr = NULL;
-    Class *clazz = hashtable_get(classes, clsName);
+    Class *clazz = classes_get( clsName);
     ArrayList *mrarr = clazz->constantPool.methodRef;
     s32 i;
     for (; i < mrarr->length; i++) {
@@ -49,7 +49,7 @@ MethodInfo *find_methodInfo_by_methodref(Class *clazz, s32 method_ref) {
 
 MethodInfo *find_methodInfo_by_name(Utf8String *clsName, Utf8String *methodName, Utf8String *methodType) {
     MethodInfo *mi = NULL;
-    Class *other = hashtable_get(classes, clsName);
+    Class *other = classes_get( clsName);
 
     while (mi == NULL && other) {
         MethodPool *fp = &(other->methodPool);
@@ -165,7 +165,7 @@ void printMethodPool(Class *p, MethodPool *mp) {
                    i, mp->method[i].attributes_count,
                    mp->method[i].name_index);
             if (ptr != 0) {
-                printf(" %s", utf8_cstr(ptr->ptr));
+                printf(" %s", utf8_cstr(ptr->utfstr));
             }
 #if 0
                 else if (mRefPtr != 0) {
@@ -207,7 +207,7 @@ void printMethodPool(Class *p, MethodPool *mp) {
             }
             if (ptr2 != 0) {
                 printf("");
-                printf("%s\n", utf8_cstr(ptr2->ptr));
+                printf("%s\n", utf8_cstr(ptr2->utfstr));
             }
             printMethodAttributes(p, &mp->method[i]);
         }

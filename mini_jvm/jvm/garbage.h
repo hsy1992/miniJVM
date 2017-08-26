@@ -5,9 +5,24 @@
 
 #include "../utils/hashtable.h"
 #include "jvm.h"
+#include <pthread.h>
 
+//回收线程
+extern s64 GARBAGE_PERIOD_MS;//
+pthread_t *_garbage_thread;//垃圾回收线程
+pthread_mutexattr_t _garbage_attr;//
+pthread_mutex_t _garbage_lock; //重入锁
+static s32 _garbage_thread_stop = 0;
 
+void *collect_thread_run(void *para);
 
+void garbage_thread_lock();
+
+void garbage_thread_unlock();
+
+void garbage_thread_stop();
+
+//其他函数
 
 void *jvm_alloc(u32 size);
 

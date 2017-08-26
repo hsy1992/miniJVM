@@ -23,12 +23,12 @@ static void *parseCPString(Class *_this, FILE *fp, s32 index) {
     ptr->string_size = s2c.s;
     ptr->additional_byte_size = tag_additional_byte_size[CONSTANT_UTF8] + ptr->string_size;
 
-    ptr->ptr = utf8_create();
+    ptr->utfstr = utf8_create();
     s32 i = 0;
     for (; i < ptr->string_size; i++) {
         u8 ch = 0;
         fread(&ch, 1, 1, fp);
-        utf8_append_part_c(ptr->ptr, &ch, 0, 1);
+        utf8_append_part_c(ptr->utfstr, &ch, 0, 1);
     }
     arraylist_append(_this->constantPool.utf8CP, ptr);
     return ptr;
@@ -341,7 +341,7 @@ ConstantClassRef *find_constant_classref(Class *clazz, s32 index) {
 
 Class *getClassByConstantClassRef(Class *clazz, s32 index) {
     ConstantClassRef *ccr = find_constant_classref(clazz, index);
-    return hashtable_get(classes, ccr->name);
+    return classes_get(ccr->name);
 }
 
 ConstantFieldRef *find_constant_fieldref(Class *clazz, s32 index) {
@@ -402,7 +402,7 @@ f64 get_double_from_constant_pool(Class *clazz, s32 index) {
 
 
 Utf8String *get_utf8_string(Class *clazz, s32 index) {
-    return ((ConstantUTF8 *) (clazz->constant_item_ptr[index]))->ptr;
+    return ((ConstantUTF8 *) (clazz->constant_item_ptr[index]))->utfstr;
 }
 
 /* print constant pool table */
@@ -416,7 +416,7 @@ void printConstantPool(Class *clazz) {
         printf("cp_index[%d], utf8[%d], tag = %d, size = %d, ",
                cutf->index, i, cutf->tag,
                cutf->string_size);
-        printf("%s\n", utf8_cstr(cutf->ptr));
+        printf("%s\n", utf8_cstr(cutf->utfstr));
     }
     printf("p->integer_used = %d\n", p->integerCP->length);
     if (p->integerCP->length > 0) {
@@ -465,7 +465,7 @@ void printConstantPool(Class *clazz) {
             );
             if (ptr != 0) {
                 printf(" ");
-                printf(" %s\n", utf8_cstr(ptr->ptr));
+                printf(" %s\n", utf8_cstr(ptr->utfstr));
             } else {
                 printf("\n");
             }
@@ -484,7 +484,7 @@ void printConstantPool(Class *clazz) {
                    csr->stringIndex);
             if (ptr != 0) {
                 printf(" ");
-                printf(" %s\n", utf8_cstr(ptr->ptr));
+                printf(" %s\n", utf8_cstr(ptr->utfstr));
             } else {
                 printf("\n");
             }
@@ -506,17 +506,17 @@ void printConstantPool(Class *clazz) {
             if (ptr != 0) {
                 ConstantUTF8 *name = find_constant_utf8(clazz, ptr->stringIndex);
                 if (name != 0) {
-                    printf(" %s", utf8_cstr(name->ptr));
+                    printf(" %s", utf8_cstr(name->utfstr));
                 }
             }
             if (ptr2 != 0) {
                 ConstantUTF8 *name = find_constant_utf8(clazz, ptr2->nameIndex);
                 ConstantUTF8 *type = find_constant_utf8(clazz, ptr2->typeIndex);
                 if (name != 0) {
-                    printf(".%s", utf8_cstr(name->ptr));
+                    printf(".%s", utf8_cstr(name->utfstr));
                 }
                 if (type != 0) {
-                    printf(":%s\n", utf8_cstr(type->ptr));
+                    printf(":%s\n", utf8_cstr(type->utfstr));
                 }
             }
         }
@@ -537,17 +537,17 @@ void printConstantPool(Class *clazz) {
             if (ptr != 0) {
                 ConstantUTF8 *name = find_constant_utf8(clazz, ptr->stringIndex);
                 if (name != 0) {
-                    printf(" %s", utf8_cstr(name->ptr));
+                    printf(" %s", utf8_cstr(name->utfstr));
                 }
             }
             if (ptr2 != 0) {
                 ConstantUTF8 *name = find_constant_utf8(clazz, ptr2->nameIndex);
                 ConstantUTF8 *type = find_constant_utf8(clazz, ptr2->typeIndex);
                 if (name != 0) {
-                    printf(".%s", utf8_cstr(name->ptr));
+                    printf(".%s", utf8_cstr(name->utfstr));
                 }
                 if (type != 0) {
-                    printf("%s\n", utf8_cstr(type->ptr));
+                    printf("%s\n", utf8_cstr(type->utfstr));
                 }
             }
         }
@@ -595,7 +595,7 @@ s32 _class_constant_pool_destory(Class *clazz) {
     }
     for (i = 0; i < clazz->constantPool.utf8CP->length; i++) {
         ConstantUTF8 *ptr = (ConstantUTF8 *) arraylist_get_value(clazz->constantPool.utf8CP, i);
-        utf8_destory(ptr->ptr);
+        utf8_destory(ptr->utfstr);
         jvm_free(ptr);
     }
     for (i = 0; i < clazz->constantPool.name_and_type->length; i++) {

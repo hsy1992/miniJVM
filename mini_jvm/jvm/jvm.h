@@ -334,7 +334,7 @@ typedef struct _ConstantUTF8 {
     s32 additional_byte_size;
     u16 string_size;
     //
-    Utf8String *ptr;
+    Utf8String *utfstr;
 } ConstantUTF8;
 
 typedef struct _ConstantInteger {
@@ -736,6 +736,11 @@ Instance *jstring_create(Utf8String *src, Runtime *runtime);
 Instance *exception_create(s32 exception_type, Runtime *runtime);
 
 c8 *getFieldPtr_byName(Instance *instance, c8 *pclassName, c8 *pfieldName, c8 *pfieldType);
+
+
+Class *classes_get(Utf8String *clsName);
+
+s32 classes_put(Class *clazz);
 
 //======================= instance =============================
 

@@ -38,6 +38,14 @@ Utf8String *utf8_create() {
     return uni_str;
 }
 
+void utf8_destory(Utf8String *uni_str) {
+    if (uni_str != NULL) {
+        jvm_free(uni_str->data1);
+        jvm_free(uni_str);
+    }
+}
+
+
 Utf8String *utf8_create_c(char *str) {
     Utf8String *uni_str = utf8_create();
     utf8_append_c(uni_str, str);
@@ -65,12 +73,6 @@ Utf8String *utf8_create_part_c(char *str, int start, int len) {
     return uni_str;
 }
 
-void utf8_destory(Utf8String *uni_str) {
-    if (uni_str != NULL) {
-        jvm_free(uni_str->data1);
-        jvm_free(uni_str);
-    }
-}
 
 void utf8_clear(Utf8String *ustr) {
     /* To clear the list, simply set the arr_length to zero */

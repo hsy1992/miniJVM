@@ -1939,7 +1939,7 @@ s32 op_new(u8 **opCode, Runtime *runtime, Class *clazz) {
 
     ConstantClassRef *ccf = find_constant_classref(clazz, object_ref);
     Utf8String *clsName = get_utf8_string(clazz, ccf->stringIndex);
-    Class *other = hashtable_get(classes, clsName);
+    Class *other = classes_get( clsName);
     Instance *ins = NULL;
     if (other) {
         ins = instance_create(other);
@@ -2812,11 +2812,13 @@ Instruction **createInstructIndexies() {
         }
         indexies[opCode] = &(instructionSet[i]);
     }
+#if _JVM_DEBUG
     for (i = 0; i < 256; i++) {
         if (!indexies[i]) {
             printf("[%x] ", i);
         }
     }
+#endif
     return indexies;
 }
 

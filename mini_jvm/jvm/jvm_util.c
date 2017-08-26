@@ -8,6 +8,23 @@
 #include "garbage.h"
 
 //==================================================================================
+
+Class *classes_get(Utf8String *clsName) {
+    if (clsName) {
+        return hashtable_get(classes, clsName);
+    }
+    return NULL;
+}
+
+s32 classes_put(Class *clazz) {
+    if (clazz) {
+        hashtable_put(classes, clazz->name, clazz);
+        garbage_refer(clazz, classes);
+        return 0;
+    }
+    return 1;
+}
+
 /**
  * 把utf字符串转为 java unicode 双字节串
  * @param ustr
@@ -244,7 +261,7 @@ void printDumpOfClasses() {
     hashtable_iterate(classes, &hti);
     for (; hashtable_iter_has_more(&hti);) {
         Utf8String *k = hashtable_iter_next_key(&hti);
-        Class *clazz = hashtable_get(classes, k);
+        Class *clazz = classes_get(k);
         printf("classes entry : hash( %x )%s,%d\n", k->hash, utf8_cstr(k), clazz);
     }
 }
@@ -253,11 +270,11 @@ Class *getClass(c8 *pclassName, Runtime *runtime) {
     Utf8String *ustr = utf8_create_c(pclassName);
     Class *cl;
     utf8_replace_c(ustr, ".", "/");
-    cl = hashtable_get(classes, ustr);
+    cl = classes_get(ustr);
 
     if (!cl) {
         load_class(classpath, ustr, classes);
-        cl = hashtable_get(classes, ustr);
+        cl = classes_get(ustr);
         class_link(cl);
         class_clinit(cl, runtime);
     }
@@ -395,7 +412,7 @@ Instance *jarray_create(s32 count, s32 typeIdx) {
     Instance *arr = jvm_alloc(sizeof(Instance));
     arr->type = MEM_TYPE_ARR;
     Utf8String *clsName = utf8_create_c("java/lang/Object");
-    arr->obj_of_clazz = hashtable_get(classes, clsName);
+    arr->obj_of_clazz = classes_get(clsName);
     utf8_destory(clsName);
     arr->arr_length = count;
     arr->arr_data_type = typeIdx;
@@ -427,7 +444,7 @@ s32 jarray_destory(Instance *arr) {
  * @return
  */
 Instance *jarray_multi_create(ArrayList *dim, Utf8String *desc, s32 deep) {
-    s32 len = (s32) (long)arraylist_get_value(dim, dim->length - 1 - deep);
+    s32 len = (s32) (long) arraylist_get_value(dim, dim->length - 1 - deep);
     if (len == -1)return NULL;
     c8 ch = utf8_char_at(desc, deep + 1);
     s32 typeIdx = getDataTypeIndex(ch);
@@ -539,7 +556,7 @@ s32 instance_destory(Instance *ins) {
 //===============================    实例化字符串  ==================================
 Instance *jstring_create(Utf8String *src, Runtime *runtime) {
     Utf8String *clsName = utf8_create_c("java/lang/String");
-    Class *jstr_clazz = hashtable_get(classes, clsName);
+    Class *jstr_clazz = classes_get(clsName);
     Instance *jstring = instance_create(jstr_clazz);
     jstring->obj_of_clazz = jstr_clazz;
     instance_init(jstring, runtime);
@@ -566,10 +583,10 @@ Instance *exception_create(s32 exception_type, Runtime *runtime) {
     printf("create exception : %s", exception_class_name[exception_type]);
 #endif
     Utf8String *clsName = utf8_create_c(exception_class_name[exception_type]);
-    Class *clazz = hashtable_get(classes, clsName);
+    Class *clazz = classes_get(clsName);
     if (!clazz) {
         load_class(classpath, clsName, classes);
-        clazz = hashtable_get(classes, clsName);
+        clazz = classes_get(clsName);
     }
     Instance *ins = instance_create(clazz);
     ins->obj_of_clazz = clazz;
@@ -740,7 +757,7 @@ Class *getSuperClass(Class *clazz) {
     ConstantClassRef *ccf = find_constant_classref(clazz, superid);
     if (ccf) {
         Utf8String *clsName_u = get_utf8_string(clazz, ccf->stringIndex);
-        Class *other = hashtable_get(classes, clsName_u);
+        Class *other = classes_get(clsName_u);
         return other;
     }
     return NULL;
@@ -749,7 +766,7 @@ Class *getSuperClass(Class *clazz) {
 
 c8 *getFieldPtr_byName(Instance *instance, c8 *pclassName, c8 *pfieldName, c8 *pfieldType) {
     Utf8String *clsName = utf8_create_c(pclassName);
-    Class *clazz = hashtable_get(classes, clsName);
+    Class *clazz = classes_get(clsName);
 
     //set value
     Utf8String *fieldName = utf8_create_c(pfieldName);
