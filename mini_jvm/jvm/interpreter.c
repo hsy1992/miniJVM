@@ -1566,9 +1566,6 @@ s32 op_invokevirtual(u8 **opCode, Runtime *runtime, Class *clazz) {
 
     s32 ret = 0;
     ConstantMethodRef *cmr = find_constant_method_ref(clazz, object_ref);//此cmr所描述的方法，对于不同的实例，有不同的method
-//    if (utf8_equals_c(clazz->name, "java/lang/Thread") == 0) {
-//        int debug = 1;
-//    }
     Instance *ins = getInstanceInStack(clazz, cmr, runtime->stack);
     MethodInfo *method = NULL;
 
@@ -1588,7 +1585,7 @@ s32 op_invokevirtual(u8 **opCode, Runtime *runtime, Class *clazz) {
 #endif
 
     if (method) {
-        ret = execute_method(method, runtime, method->_this_class, METHOD_INVOKE_VIRTUAL);
+        ret = execute_method(method, runtime, method->_this_class);
     }
 
     *opCode = *opCode + 3;
@@ -1610,7 +1607,7 @@ s32 op_invokespecial(u8 **opCode, Runtime *runtime, Class *clazz) {
            utf8_cstr(method->name), utf8_cstr(method->descriptor));
 #endif
     if (method) {
-        ret = execute_method(method, runtime, method->_this_class, METHOD_INVOKE_SPECIAL);
+        ret = execute_method(method, runtime, method->_this_class);
     }
 
     *opCode = *opCode + 3;
@@ -1627,13 +1624,14 @@ s32 op_invokestatic(u8 **opCode, Runtime *runtime, Class *clazz) {
     u16 object_ref = s2c.s;
 
     s32 ret = 0;
-    MethodInfo *method = find_constant_method_ref(clazz, object_ref)->methodInfo;
+    MethodInfo *method = //find_constant_method_ref(clazz, object_ref)->methodInfo;
+            ((ConstantMethodRef *) (clazz->constant_item_ptr[object_ref]))->methodInfo;
 #if _JVM_DEBUG
     printf("invokestatic   | %s.%s%s \n", utf8_cstr(method->_this_class->name),
            utf8_cstr(method->name), utf8_cstr(method->descriptor));
 #endif
     if (method) {
-        ret = execute_method(method, runtime, method->_this_class, METHOD_INVOKE_STATIC);
+        ret = execute_method(method, runtime, method->_this_class);
     }
 
     *opCode = *opCode + 3;
@@ -1658,7 +1656,11 @@ s32 op_invokeinterface(u8 **opCode, Runtime *runtime, Class *clazz) {
     if (ins->type == MEM_TYPE_CLASS) {
         method = cmr->methodInfo;
     } else {
-        method = find_instance_methodInfo_by_name(ins, cmr->name, cmr->descriptor);
+        method = (MethodInfo *) pairlist_get(cmr->virtual_methods, ins->obj_of_clazz);
+        if (method == NULL) {
+            method = find_instance_methodInfo_by_name(ins, cmr->name, cmr->descriptor);
+            pairlist_put(cmr->virtual_methods, ins->obj_of_clazz, method);//放入缓存，以便下次直接调用
+        }
     }
 
 #if _JVM_DEBUG
@@ -1666,7 +1668,7 @@ s32 op_invokeinterface(u8 **opCode, Runtime *runtime, Class *clazz) {
            utf8_cstr(method->name), utf8_cstr(method->descriptor));
 #endif
     if (method) {
-        ret = execute_method(method, runtime, method->_this_class, METHOD_INVOKE_INTERFACE);
+        ret = execute_method(method, runtime, method->_this_class);
     }
 
     *opCode = *opCode + 5;
@@ -1687,7 +1689,7 @@ s32 op_invokedynamic(u8 **opCode, Runtime *runtime, Class *clazz) {
            utf8_cstr(method->name), utf8_cstr(method->descriptor));
 #endif
     if (method) {
-        ret = execute_method(method, runtime, method->_this_class, METHOD_INVOKE_DYNAMIC);
+        ret = execute_method(method, runtime, method->_this_class);
     }
 
     *opCode = *opCode + 3;
@@ -2007,7 +2009,7 @@ s32 op_multianewarray(u8 **opCode, Runtime *runtime, Class *clazz) {
     ArrayList *dim = arraylist_create(count);
     int i;
     for (i = 0; i < count; i++)
-        arraylist_append(dim, (ArrayListValue) pop_int(stack));
+        arraylist_append(dim, (ArrayListValue) (long) pop_int(stack));
 
     Instance *arr = jarray_multi_create(dim, desc, 0);
     arraylist_destory(dim);
@@ -2897,13 +2899,13 @@ void stack2localvar(MethodInfo *method, Runtime *father, Runtime *son) {
     s32 stack_size = father->stack->size;
     s32 stack_pointer = stack_size - paraLen;
     if (!(method->access_flags & ACC_STATIC)) {//非静态方法需要把局部变量位置0设为this
-        peekEntry(father->stack, &entry, stack_pointer - 1);
+        peek_entry(father->stack, &entry, stack_pointer - 1);
         (son->localVariables + i_local++)->refer = entry_2_refer(&entry);
         ins_this = 1;
     }
     for (i = 0; i < paraType->length; i++) {
         char type = utf8_char_at(paraType, i);
-        peekEntry(father->stack, &entry, stack_pointer++);
+        peek_entry(father->stack, &entry, stack_pointer++);
         switch (type) {
             case 'R': {
                 (son->localVariables + i_local++)->refer = entry_2_refer(&entry);
@@ -2927,11 +2929,8 @@ void stack2localvar(MethodInfo *method, Runtime *father, Runtime *son) {
 }
 
 
-s32 execute_method(MethodInfo *method, Runtime *pruntime, Class *clazz, s32 invokeType) {
+s32 execute_method(MethodInfo *method, Runtime *pruntime, Class *clazz) {
     s32 j = 0, ret = 0;
-
-    CodeAttribute *ca;
-//    memset(&ca, 0, sizeof(CodeAttribute));
 
     Runtime runtime;
     memset(&(runtime), 0, sizeof(runtime));
@@ -2946,7 +2945,6 @@ s32 execute_method(MethodInfo *method, Runtime *pruntime, Class *clazz, s32 invo
     if (method->access_flags & ACC_NATIVE) {//本地方法
         runtime.localVariables = jvm_alloc(sizeof(LocalVarItem) * (method->paraType->length + 1));
         stack2localvar(method, pruntime, &runtime);
-        s32 stackSize = pruntime->stack->size;
         //缓存调用本地方法
         if (!method->native_func) { //把本地方法找出来缓存
             method->native_func = find_native_method(utf8_cstr(clazz->name), utf8_cstr(method->name),
@@ -2956,12 +2954,10 @@ s32 execute_method(MethodInfo *method, Runtime *pruntime, Class *clazz, s32 invo
     } else {
 
         for (j = 0; j < method->attributes_count; j++) {
-            if (utf8_equals_c(get_utf8_string(clazz, method->attributes[j].attribute_name_index), "Code") != 0)
-                continue;
-            ca = (CodeAttribute *) method->attributes[j].converted_attribute;
+            if (!method->attributes[j].converted_attribute)continue;
+            CodeAttribute *ca = (CodeAttribute *) method->attributes[j].converted_attribute;
             runtime.localVariables = jvm_alloc(sizeof(LocalVarItem) * ca->max_locals);
             stack2localvar(method, pruntime, &runtime);
-            s32 stackSize = pruntime->stack->size;
 
 #if _JVM_DEBUG_BYTECODE_DUMP
             printf("---------------------------------\n");
@@ -2970,11 +2966,12 @@ s32 execute_method(MethodInfo *method, Runtime *pruntime, Class *clazz, s32 invo
             printf("---------------------------------\n");
 #endif
 #if _JVM_DEBUG
+            s32 stackSize = pruntime->stack->size;
             printf("------------------------------------------------  %s.%s  start \n", utf8_cstr(clazz->name),
                    utf8_cstr(method->name));
 #endif
             u8 *pc = ca->code;
-            runtime.codeAttr = &ca;
+            runtime.codeAttr = ca;
             s32 i = 0;
             do {
                 InstructFunc func = find_instruct_func(pc[0]);
@@ -2986,12 +2983,13 @@ s32 execute_method(MethodInfo *method, Runtime *pruntime, Class *clazz, s32 invo
                     i = func(&pc, &runtime, clazz);
 #if _JVM_DEBUG_PROFILE
                     s64 spent = nanoTime() - start_at;
-                    spent=1;
-                    HashtableValue v = hashtable_get(instruct_profile, (HashtableKey) instruct_code);
+                    //spent = 1;
+                    HashtableValue v = hashtable_get(instruct_profile, (HashtableKey) (long) instruct_code);
                     if (v == NULL) {
-                        hashtable_put(instruct_profile, (HashtableKey) instruct_code, (HashtableKey) (spent));
+                        hashtable_put(instruct_profile, (HashtableKey) (long) instruct_code, (HashtableKey) (spent));
                     } else {
-                        hashtable_put(instruct_profile, (HashtableKey) instruct_code, (HashtableKey) (v + spent));
+                        hashtable_put(instruct_profile, (HashtableKey) (long) instruct_code,
+                                      (HashtableKey) (v + spent));
                     }
 #endif
                 }
@@ -3002,7 +3000,7 @@ s32 execute_method(MethodInfo *method, Runtime *pruntime, Class *clazz, s32 invo
                     printf("   at %s.%s(%s.java )\n",
                            utf8_cstr(clazz->name), utf8_cstr(method->name), utf8_cstr(clazz->name)
                     );
-                    ExceptionTable *et = find_exception_handler(&runtime, &ca, pc - ca->code, ref);
+                    ExceptionTable *et = find_exception_handler(&runtime, ca, pc - ca->code, ref);
                     if (et == NULL) {
                         push_ref(runtime.stack, ref);
                         ret = RUNTIME_STATUS_EXCEPTION;
@@ -3030,14 +3028,14 @@ s32 execute_method(MethodInfo *method, Runtime *pruntime, Class *clazz, s32 invo
                 }
             }
 #endif
-            jvm_free(runtime.localVariables);
         }
     }
+    jvm_free(runtime.localVariables);
     //返回的引用需要关联父runtime
     if (ret != RUNTIME_STATUS_EXCEPTION) {
         if (utf8_indexof_c(method->descriptor, ")L") >= 0) {//返回是一个引用，则需要把此对象和父runtime进行关联，防止回收
             StackEntry entry;
-            peekEntry(pruntime->stack, &entry, pruntime->stack->size - 1);
+            peek_entry(pruntime->stack, &entry, pruntime->stack->size - 1);
             Instance *ins = (Instance *) entry_2_refer(&entry);
             garbage_refer(ins, pruntime);
         }

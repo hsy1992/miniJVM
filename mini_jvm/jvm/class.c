@@ -167,7 +167,7 @@ void class_clinit(Class *clazz, Runtime *runtime) {
 #if _JVM_DEBUG
             printf("%s <clinit>\n", utf8_cstr(clazz->name));
 #endif
-            execute_method(&(p->method[i]), runtime, clazz, METHOD_INVOKE_SPECIAL);
+            execute_method(&(p->method[i]), runtime, clazz);
         }
     }
     clazz->status = CLASS_STATUS_CLINITED;

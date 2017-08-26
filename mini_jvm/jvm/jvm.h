@@ -579,10 +579,6 @@ typedef union _LocalVarItem {
     s32 integer;
     __refer refer;
 } LocalVarItem;
-/* local variable */
-//typedef struct _LocalVariables {
-//    LocalVarItem **item;
-//} LocalVariables;
 
 
 typedef struct _Runtime {
@@ -828,7 +824,7 @@ Class *getClassByConstantClassRef(Class *clazz, s32 index);
 
 s32 execute(c8 *p_classpath, c8 *mainclass, s32 argc, c8 **argv);
 
-s32 execute_method(MethodInfo *method, Runtime *runtime, Class *clazz, s32 invokeType);
+s32 execute_method(MethodInfo *method, Runtime *runtime, Class *clazz);
 
 Instruction **createInstructIndexies();
 
@@ -874,7 +870,7 @@ void stack2localvar(MethodInfo *method, Runtime *father, Runtime *son);
 
 static s32 op_notsupport(u8 **opCode, Runtime *runtime, Class *clazz);
 
-void peekEntry(StackFrame *stack, StackEntry *entry, int index);
+void peek_entry(StackFrame *stack, StackEntry *entry, int index);
 
 
 #endif

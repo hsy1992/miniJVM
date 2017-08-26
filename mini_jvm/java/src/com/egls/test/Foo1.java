@@ -191,6 +191,8 @@ public class Foo1 {
 //        f.t8();
 //        f.t9();
         BpDeepTest.main(agrs);
+//        Foo2.main(agrs);
+//        Foo3.main(agrs);
     }
 }
 

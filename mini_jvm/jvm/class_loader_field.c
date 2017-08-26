@@ -175,7 +175,7 @@ s32 _parse_field_pool(Class *_this, FILE *fp, s32 count) {
 s32 _class_field_info_destory(Class *clazz) {
     s32 i, j;
     for (i = 0; i < clazz->fieldPool.field_used; i++) {
-        FieldPool *fi = &clazz->fieldPool.field[i];
+        FieldPool *fi =( FieldPool *) &clazz->fieldPool.field[i];
         for (j = 0; j < fi->field[i].attributes_count; j++) {
             AttributeInfo *attr = &fi->field[i].attributes[j];
             jvm_free(attr->info);//info已被转换为converted_attribute

@@ -158,7 +158,7 @@ void class_optmize(Class *clazz) {
                 convert_to_code_attribute(ca, &ptr->attributes[j]);
                 jvm_free(ptr->attributes[j].info);//无用删除
                 ptr->attributes[j].info = NULL;
-                ptr->attributes[j].converted_attribute = ca;
+                ptr->attributes[j].converted_attribute = (u8 *) ca;
             }
         }
     }

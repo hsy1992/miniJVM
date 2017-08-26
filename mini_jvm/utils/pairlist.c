@@ -19,22 +19,22 @@ Pairlist *pairlist_create(s32 len) {
 
 s32 pairlist_put(Pairlist *list, __refer left, __refer right) {
     if (list->count >= list->_alloced) {//空间不足
-        void *p = jvm_realloc(list->ptr, list->_alloced * 2 * sizeof(__refer) * 2);
+        void *p = jvm_realloc(list->ptr, (list->_alloced << 1) * (sizeof(__refer) << 1));
         list->ptr = p;
     }
-    (list->ptr)[list->count] = left;
-    (list->ptr)[list->count + 1] = right;
+    (list->ptr)[(list->count << 1)] = left;
+    (list->ptr)[(list->count << 1) + 1] = right;
+    list->count++;
 };
 
 __refer pairlist_get(Pairlist *list, __refer left) {
-    __refer right = NULL;
     s32 i;
     for (i = 0; i < list->count; i++) {
-        if ((list->ptr)[list->count] == left) {
-            return (list->ptr)[list->count + 1];
+        if ((list->ptr)[(i << 1)] == left) {
+            return (list->ptr)[(i << 1) + 1];
         }
     }
-    return right;
+    return NULL;
 };
 
 void pairlist_destory(Pairlist *list) {

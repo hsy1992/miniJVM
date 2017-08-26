@@ -22,7 +22,7 @@ void stack_destory(StackFrame *stack) {
 }
 
 void push_entry(StackFrame *stack, StackEntry *entry) {
-    memset(&stack->store[stack->size], 0, sizeof(StackEntry));
+    //memset(&stack->store[stack->size], 0, sizeof(StackEntry));
     u8 *tmp = stack->store[stack->size].entry;
     memcpy(tmp, entry, sizeof(StackEntry));
     stack->size++;
@@ -30,7 +30,7 @@ void push_entry(StackFrame *stack, StackEntry *entry) {
 
 /* push Integer */
 void push_int(StackFrame *stack, s32 value) {
-    memset(&stack->store[stack->size], 0, sizeof(StackEntry));
+    //memset(&stack->store[stack->size], 0, sizeof(StackEntry));
     u8 *tmp = stack->store[stack->size].entry;
     memcpy(tmp, &value, sizeof(s32));
     stack->store[stack->size].type = STACK_ENTRY_INT;
@@ -43,7 +43,7 @@ void push_int(StackFrame *stack, s32 value) {
 
 /* push Double */
 void push_double(StackFrame *stack, f64 value) {
-    memset(&stack->store[stack->size], 0, sizeof(StackEntry));
+    //memset(&stack->store[stack->size], 0, sizeof(StackEntry));
     u8 *tmp = stack->store[stack->size].entry;
     memcpy(tmp, &value, sizeof(f64));
     stack->store[stack->size].type = STACK_ENTRY_DOUBLE;
@@ -52,7 +52,7 @@ void push_double(StackFrame *stack, f64 value) {
 
 /* push Float */
 void push_float(StackFrame *stack, f32 value) {
-    memset(&stack->store[stack->size], 0, sizeof(StackEntry));
+    //memset(&stack->store[stack->size], 0, sizeof(StackEntry));
     u8 *tmp = stack->store[stack->size].entry;
     memcpy(tmp, &value, sizeof(f32));
     stack->store[stack->size].type = STACK_ENTRY_FLOAT;
@@ -71,7 +71,7 @@ s32 pop_int(StackFrame *stack) {
 }
 /* push Long */
 void push_long(StackFrame *stack, s64 value) {
-    memset(&stack->store[stack->size], 0, sizeof(StackEntry));
+    //memset(&stack->store[stack->size], 0, sizeof(StackEntry));
     u8 *tmp = stack->store[stack->size].entry;
     memcpy(tmp, &value, sizeof(s64));
     stack->store[stack->size].type = STACK_ENTRY_LONG;
@@ -88,7 +88,7 @@ s64 pop_long(StackFrame *stack) {
 }
 /* push Ref */
 void push_ref(StackFrame *stack, __refer value) {
-    memset(&stack->store[stack->size], 0, sizeof(StackEntry));
+    //memset(&stack->store[stack->size], 0, sizeof(StackEntry));
     u8 *tmp = stack->store[stack->size].entry;
     memcpy(tmp, &value, sizeof(__refer));
     stack->store[stack->size].type = STACK_ENTRY_REF;
@@ -155,6 +155,6 @@ s32 is_ref_entry(StackFrame *stack) {
     return 0;
 }
 
-void peekEntry(StackFrame* stack,StackEntry* entry,int index){
+void peek_entry(StackFrame *stack, StackEntry *entry, int index){
     memcpy(entry, stack->store[index].entry, sizeof(StackEntry));
 }

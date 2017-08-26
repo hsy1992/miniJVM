@@ -190,7 +190,7 @@ s32 isReference(c8 c) {
 Instance *getInstanceInStack(Class *clazz, ConstantMethodRef *cmr, StackFrame *stack) {
 
     StackEntry entry;
-    peekEntry(stack, &entry, stack->size - 1 - cmr->methodParaCount);
+    peek_entry(stack, &entry, stack->size - 1 - cmr->methodParaCount);
     Instance *ins = (Instance *) entry_2_refer(&entry);
     return ins;
 }
@@ -292,7 +292,7 @@ void *therad_loader(void *pthread_para) {
         arraylist_append(thread_list, jthread);
         push_ref(runtime.stack, (__refer) jthread);
         //printf("Thread [%x] run...\n",jthread);
-        ret = execute_method(method, &runtime, method->_this_class, METHOD_INVOKE_VIRTUAL);
+        ret = execute_method(method, &runtime, method->_this_class);
         arraylist_remove(thread_list, jthread);
     }
     return (void *) jthread;
@@ -427,7 +427,7 @@ s32 jarray_destory(Instance *arr) {
  * @return
  */
 Instance *jarray_multi_create(ArrayList *dim, Utf8String *desc, s32 deep) {
-    s32 len = (s32) arraylist_get_value(dim, dim->length - 1 - deep);
+    s32 len = (s32) (long)arraylist_get_value(dim, dim->length - 1 - deep);
     if (len == -1)return NULL;
     c8 ch = utf8_char_at(desc, deep + 1);
     s32 typeIdx = getDataTypeIndex(ch);
@@ -517,7 +517,7 @@ void instance_init(Instance *ins, Runtime *runtime) {
         Utf8String *methodType = utf8_create_c("()V");
         MethodInfo *mi = find_methodInfo_by_name(ins->obj_of_clazz->name, methodName, methodType);
         push_ref(runtime->stack, (__refer) ins);
-        execute_method(mi, runtime, ins->obj_of_clazz, METHOD_INVOKE_SPECIAL);
+        execute_method(mi, runtime, ins->obj_of_clazz);
         utf8_destory(methodName);
         utf8_destory(methodType);
     }

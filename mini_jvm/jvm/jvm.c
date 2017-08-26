@@ -102,7 +102,7 @@ s32 execute(c8 *p_classpath, c8 *p_mainclass, s32 argc, c8 **argv) {
             push_ref(runtime.stack, arr);
             printf("\n\n\n\n\n\n================================= main start ================================\n");
             //调用主方法
-            ret = execute_method(main, &runtime, clazz, METHOD_INVOKE_STATIC);
+            ret = execute_method(main, &runtime, clazz);
             printf("================================= main  end  ================================\n");
             printf("spent %lld\n", (currentTimeMillis() - start));
 
