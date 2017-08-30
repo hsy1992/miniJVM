@@ -28,6 +28,7 @@ Class *classes_load_get(c8 *pclassName, Runtime *runtime) {
         class_link(cl);
         class_clinit(cl, runtime);
     }
+    utf8_destory(ustr);
     return cl;
 }
 
@@ -296,7 +297,8 @@ void *therad_loader(void *para) {
     Utf8String *methodType = utf8_create_c("()V");
     MethodInfo *method = NULL;
     method = find_instance_methodInfo_by_name(jthread, methodName, methodType);
-
+    utf8_destory(methodName);
+    utf8_destory(methodType);
 #if _JVM_DEBUG
     printf("therad_loader    %s.%s%s  \n", utf8_cstr(method->_this_class->name),
            utf8_cstr(method->name), utf8_cstr(method->descriptor));

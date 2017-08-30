@@ -37,8 +37,6 @@ s32 execute(c8 *p_classpath, c8 *p_mainclass, s32 argc, c8 **argv) {
     Utf8String *classpath = utf8_create_c(p_classpath);
     Utf8String *mainclass = utf8_create_c(p_mainclass);
     load_class(classpath, mainclass, classes);
-    Utf8String *jstring_class = utf8_create_c("java/lang/String");
-    load_class(classpath, jstring_class, classes);
 
     HashtableIterator hti;
     hashtable_iterate(classes, &hti);
@@ -60,7 +58,7 @@ s32 execute(c8 *p_classpath, c8 *p_mainclass, s32 argc, c8 **argv) {
         if (clazz->status != CLASS_STATUS_CLINITED)class_clinit(clazz, &runtime);//初始化
     }
 
-    Class *clazz = hashtable_get(classes, mainclass);
+    Class *clazz = classes_get(mainclass);
 
     s32 ret = 0;
     if (clazz) {
@@ -105,6 +103,7 @@ s32 execute(c8 *p_classpath, c8 *p_mainclass, s32 argc, c8 **argv) {
                 Instance *jstr = jstring_create(utfs, &runtime);
                 l2d.r = jstr;
                 jarray_set_field(arr, i, &l2d, bytes);
+                utf8_destory(utfs);
             }
             push_ref(runtime.stack, arr);
             printf("\n\n\n\n\n\n================================= main start ================================\n");
@@ -137,12 +136,11 @@ s32 execute(c8 *p_classpath, c8 *p_mainclass, s32 argc, c8 **argv) {
     stack_destory(runtime.stack);
 
     utf8_destory(classpath);
-    utf8_destory(jstring_class);
+
     utf8_destory(mainclass);
     destoryAllClasses(classes);
     utf8_destory(JVM_CLASS->name);
     class_destory(JVM_CLASS);
     printf("over\n");
-    //getchar();
     return ret;
 }

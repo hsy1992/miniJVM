@@ -163,10 +163,9 @@ class Foo2 {
 
     void t7() {
         for (int i = 0; i < 1000000; i++) {
-//            T7class t7 = 
-                    new T7class();
-                    new T7class();
-//            t7_1(t7);
+            T7class t7= new T7class();
+            new T7class();
+            t7_1(t7);
         }
     }
 
@@ -185,7 +184,7 @@ class Foo2 {
 
         i = 3;
         if (true) {
-            throw new RuntimeException();
+            //throw new RuntimeException();
         }
 
         System.out.println("i=" + i);
@@ -238,17 +237,17 @@ class Foo2 {
 
     public static void main(String args[]) {
         Foo2 obj = new Foo2();
-//        obj.t1();
-//        obj.t2();
-//        obj.t3();
-//        obj.t4();
-//        obj.t5();
-//        obj.t6();
+        obj.t1();
+        obj.t2();
+        obj.t3();
+        obj.t4();
+        obj.t5();
+        obj.t6();
         obj.t7();
-        //obj.t8();
-//        obj.t9();
-//        obj.t10();
-//        obj.t11();
+        obj.t8();
+        obj.t9();
+        obj.t10();
+        obj.t11();
 
     }
 }

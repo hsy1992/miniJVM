@@ -188,6 +188,7 @@ void class_optmize(Class *clazz) {
             Utf8String *tmps = utf8_create();
             parseMethodPara(cmr->descriptor, tmps);
             cmr->methodParaCount = tmps->length;
+            utf8_destory(tmps);
         }
     }
 

@@ -172,9 +172,9 @@ public class Foo1 {
         t.start();
         //
         int i = 0;
-        while (true) {
+        while (i++<10) {
             try {
-                Thread.sleep(1000);
+                Thread.sleep(300);
                 System.out.println("total mem:" + Runtime.getRuntime().totalMemory()
                         + "   free: " + Runtime.getRuntime().freeMemory());
 
@@ -211,7 +211,7 @@ public class Foo1 {
         f.t4();
         f.t5();
         f.t6();
-//        f.t7();
+        f.t7();
         f.t8();
         f.t9();
         BpDeepTest.main(agrs);
