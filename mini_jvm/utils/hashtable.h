@@ -50,221 +50,223 @@ extern "C" {
 #endif
 
 
+/**
+ * A hash table structure.
+ */
 
-    /** 
-     * A hash table structure.
-     */
+typedef struct _Hashtable Hashtable;
 
-    typedef struct _Hashtable Hashtable;
+typedef Hashtable *hmap_t;
+/**
+ * Structure used to iterate over a hash table.
+ */
 
-    typedef Hashtable* hmap_t;
-    /**
-     * Structure used to iterate over a hash table.
-     */
+typedef struct _HashtableIterator HashtableIterator;
 
-    typedef struct _HashtableIterator HashtableIterator;
+/**
+ * Internal structure representing an entry in a hash table.
+ */
 
-    /**
-     * Internal structure representing an entry in a hash table.
-     */
+typedef struct _HashtableEntry HashtableEntry;
 
-    typedef struct _HashtableEntry HashtableEntry;
+/**
+ * A key to look up a value in a @ref Hashtable.
+ */
 
-    /**
-     * A key to look up a value in a @ref Hashtable.
-     */
+typedef void *HashtableKey;
 
-    typedef void *HashtableKey;
+/**
+ * A value stored in a @ref Hashtable.
+ */
 
-    /**
-     * A value stored in a @ref Hashtable.
-     */
+typedef void *HashtableValue;
 
-    typedef void *HashtableValue;
+/**
+ * Definition of a @ref HashtableIterator.
+ */
 
-    /**
-     * Definition of a @ref HashtableIterator.
-     */
+struct _HashtableIterator {
+    Hashtable *hash_table;
+    HashtableEntry *next_entry;
+    int next_chain;
+};
 
-    struct _HashtableIterator {
-        Hashtable *hash_table;
-        HashtableEntry *next_entry;
-        int next_chain;
-    };
+/**
+ * A null @ref HashtableValue.
+ */
+#ifndef HASH_NULL
+#define HASH_NULL ((void *) 0)
+#endif
 
-    /**
-     * A null @ref HashtableValue.
-     */
+/**
+ * Hash function used to generate hash values for keys used in a hash
+ * table.
+ *
+ * @param value  The value to generate a hash value for.
+ * @return       The hash value.
+ */
 
-#define HASH_TABLE_NULL ((void *) 0)
+typedef unsigned long (*HashtableHashFunc)(HashtableKey value);
 
-    /**
-     * Hash function used to generate hash values for keys used in a hash
-     * table.
-     *
-     * @param value  The value to generate a hash value for.
-     * @return       The hash value.
-     */
+/**
+ * Function used to compare two keys for equality.
+ *
+ * @return   Non-zero if the two keys are equal, zero if the keys are
+ *           not equal.
+ */
 
-    typedef unsigned long (*HashtableHashFunc)(HashtableKey value);
+typedef int (*HashtableEqualFunc)(HashtableKey value1, HashtableKey value2);
 
-    /**
-     * Function used to compare two keys for equality.
-     *
-     * @return   Non-zero if the two keys are equal, zero if the keys are 
-     *           not equal.
-     */
+/**
+ * Type of function used to free keys when entries are removed from a
+ * hash table.
+ */
 
-    typedef int (*HashtableEqualFunc)(HashtableKey value1, HashtableKey value2);
+typedef void (*HashtableKeyFreeFunc)(HashtableKey value);
 
-    /**
-     * Type of function used to free keys when entries are removed from a 
-     * hash table.
-     */
+/**
+ * Type of function used to free values when entries are removed from a
+ * hash table.
+ */
 
-    typedef void (*HashtableKeyFreeFunc)(HashtableKey value);
+typedef void (*HashtableValueFreeFunc)(HashtableValue value);
 
-    /**
-     * Type of function used to free values when entries are removed from a 
-     * hash table.
-     */
+/**
+ * Create a new hash table.
+ *
+ * @param hash_func            Function used to generate hash keys for the
+ *                             keys used in the table.
+ * @param equal_func           Function used to test keys used in the table
+ *                             for equality.
+ * @return                     A new hash table structure, or NULL if it
+ *                             was not possible to allocate the new hash
+ *                             table.
+ */
 
-    typedef void (*HashtableValueFreeFunc)(HashtableValue value);
-
-    /**
-     * Create a new hash table.
-     *
-     * @param hash_func            Function used to generate hash keys for the 
-     *                             keys used in the table.
-     * @param equal_func           Function used to test keys used in the table 
-     *                             for equality.
-     * @return                     A new hash table structure, or NULL if it 
-     *                             was not possible to allocate the new hash
-     *                             table.
-     */
-
-    Hashtable *hashtable_create(HashtableHashFunc hash_func,
-                                HashtableEqualFunc equal_func);
+Hashtable *hashtable_create(HashtableHashFunc hash_func,
+                            HashtableEqualFunc equal_func);
 
 
-    unsigned long _DEFAULT_HashtableHash(HashtableKey kmer);
-    int _DEFAULT_HashtableEquals(HashtableValue value1, HashtableValue value2);
-    /**
-     * Destroy a hash table.
-     *
-     * @param hash_table           The hash table to destroy.
-     */
+unsigned long DEFAULT_HASH_FUNC(HashtableKey kmer);
 
-    void hashtable_destory(Hashtable *hash_table);
+int DEFAULT_HASH_EQUALS_FUNC(HashtableValue value1, HashtableValue value2);
 
-    /**
-     * Register functions used to free the key and value when an entry is
-     * removed from a hash table.
-     *
-     * @param hash_table           The hash table.
-     * @param key_free_func        Function used to free keys.
-     * @param value_free_func      Function used to free values.
-     */
+/**
+ * Destroy a hash table.
+ *
+ * @param hash_table           The hash table to destroy.
+ */
 
-    void hashtable_register_free_functions(Hashtable *hash_table,
-                                           HashtableKeyFreeFunc key_free_func,
-                                           HashtableValueFreeFunc value_free_func);
+void hashtable_destory(Hashtable *hash_table);
 
-    /**
-     * Insert a value into a hash table, overwriting any existing entry 
-     * using the same key.
-     *
-     * @param hash_table           The hash table.
-     * @param key                  The key for the new value.
-     * @param value                The value to insert.
-     * @return                     Non-zero if the value was added successfully,
-     *                             or zero if it was not possible to allocate
-     *                             memory for the new entry.
-     */
+/**
+ * Register functions used to free the key and value when an entry is
+ * removed from a hash table.
+ *
+ * @param hash_table           The hash table.
+ * @param key_free_func        Function used to free keys.
+ * @param value_free_func      Function used to free values.
+ */
 
-    int hashtable_put(Hashtable *hash_table,
-                      HashtableKey key,
-                      HashtableValue value);
+void hashtable_register_free_functions(Hashtable *hash_table,
+                                       HashtableKeyFreeFunc key_free_func,
+                                       HashtableValueFreeFunc value_free_func);
 
-    /**
-     * Look up a value in a hash table by key.
-     *
-     * @param hash_table          The hash table.
-     * @param key                 The key of the value to look up.
-     * @return                    The value, or @ref HASH_TABLE_NULL if there 
-     *                            is no value with that key in the hash table.
-     */
+/**
+ * Insert a value into a hash table, overwriting any existing entry
+ * using the same key.
+ *
+ * @param hash_table           The hash table.
+ * @param key                  The key for the new value.
+ * @param value                The value to insert.
+ * @return                     Non-zero if the value was added successfully,
+ *                             or zero if it was not possible to allocate
+ *                             memory for the new entry.
+ */
 
-    HashtableValue hashtable_get(Hashtable *hash_table,
-                                 HashtableKey key);
+int hashtable_put(Hashtable *hash_table,
+                  HashtableKey key,
+                  HashtableValue value);
 
-    /**
-     * Remove a value from a hash table.
-     *
-     * @param hash_table          The hash table.
-     * @param key                 The key of the value to remove.
-     * @return                    Non-zero if a key was removed, or zero if the
-     *                            specified key was not found in the hash table.
-     */
+/**
+ * Look up a value in a hash table by key.
+ *
+ * @param hash_table          The hash table.
+ * @param key                 The key of the value to look up.
+ * @return                    The value, or @ref HASH_TABLE_NULL if there
+ *                            is no value with that key in the hash table.
+ */
 
-    int hashtable_remove(Hashtable *hash_table, HashtableKey key, int resize);
+HashtableValue hashtable_get(Hashtable *hash_table,
+                             HashtableKey key);
 
-    /** 
-     * Retrieve the number of entries in a hash table.
-     *
-     * @param hash_table          The hash table.
-     * @return                    The number of entries in the hash table.
-     */
+/**
+ * Remove a value from a hash table.
+ *
+ * @param hash_table          The hash table.
+ * @param key                 The key of the value to remove.
+ * @return                    Non-zero if a key was removed, or zero if the
+ *                            specified key was not found in the hash table.
+ */
 
-    unsigned long long int hashtable_num_entries(Hashtable *hash_table);
+int hashtable_remove(Hashtable *hash_table, HashtableKey key, int resize);
 
-    /**
-     * Initialise a @ref HashtableIterator to iterate over a hash table.
-     *
-     * @param hash_table          The hash table.
-     * @param iter                Pointer to an iterator structure to 
-     *                            initialise.
-     */
+/**
+ * Retrieve the number of entries in a hash table.
+ *
+ * @param hash_table          The hash table.
+ * @return                    The number of entries in the hash table.
+ */
 
-    void hashtable_iterate(Hashtable *hash_table, HashtableIterator *iter);
+unsigned long long int hashtable_num_entries(Hashtable *hash_table);
 
-    /**
-     * Determine if there are more keys in the hash table to iterate
-     * over. 
-     *
-     * @param iterator            The hash table iterator.
-     * @return                    Zero if there are no more values to iterate
-     *                            over, non-zero if there are more values to 
-     *                            iterate over.
-     */
+/**
+ * Initialise a @ref HashtableIterator to iterate over a hash table.
+ *
+ * @param hash_table          The hash table.
+ * @param iter                Pointer to an iterator structure to
+ *                            initialise.
+ */
 
-    int hashtable_iter_has_more(HashtableIterator *iterator);
+void hashtable_iterate(Hashtable *hash_table, HashtableIterator *iter);
 
-    /**
-     * Using a hash table iterator, retrieve the next key.
-     *
-     * @param iterator            The hash table iterator.
-     * @return                    The next key from the hash table, or 
-     *                            @ref HASH_TABLE_NULL if there are no more 
-     *                            keys to iterate over.
-     */
+/**
+ * Determine if there are more keys in the hash table to iterate
+ * over.
+ *
+ * @param iterator            The hash table iterator.
+ * @return                    Zero if there are no more values to iterate
+ *                            over, non-zero if there are more values to
+ *                            iterate over.
+ */
 
-    HashtableValue hashtable_iter_next(HashtableIterator *iterator);
+int hashtable_iter_has_more(HashtableIterator *iterator);
 
-    /**
-     * (EXTENSION!)
-     * 
-     * Using a hash table iterator, retrieve the next key.
-     * 
-     * @param iterator            The hash table iterator.
-     * @return                    The next key from the hash table, or 
-     *                            @ref HASH_TABLE_NULL if there are no more 
-     *                            keys to iterate over.
-     */
+/**
+ * Using a hash table iterator, retrieve the next key.
+ *
+ * @param iterator            The hash table iterator.
+ * @return                    The next key from the hash table, or
+ *                            @ref HASH_TABLE_NULL if there are no more
+ *                            keys to iterate over.
+ */
 
-    HashtableKey hashtable_iter_next_key(HashtableIterator *iterator);
+HashtableValue hashtable_iter_next(HashtableIterator *iterator);
 
-    int hashtable_resize(Hashtable *hash_table);
+/**
+ * (EXTENSION!)
+ *
+ * Using a hash table iterator, retrieve the next key.
+ *
+ * @param iterator            The hash table iterator.
+ * @return                    The next key from the hash table, or
+ *                            @ref HASH_TABLE_NULL if there are no more
+ *                            keys to iterate over.
+ */
+
+HashtableKey hashtable_iter_next_key(HashtableIterator *iterator);
+
+int hashtable_resize(Hashtable *hash_table);
 
 #ifdef __cplusplus
 }

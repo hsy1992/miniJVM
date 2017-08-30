@@ -16,10 +16,25 @@ Class *classes_get(Utf8String *clsName) {
     return NULL;
 }
 
+Class *classes_load_get(c8 *pclassName, Runtime *runtime) {
+    Utf8String *ustr = utf8_create_c(pclassName);
+    Class *cl;
+    utf8_replace_c(ustr, ".", "/");
+    cl = classes_get(ustr);
+
+    if (!cl) {
+        load_class(classpath, ustr, classes);
+        cl = classes_get(ustr);
+        class_link(cl);
+        class_clinit(cl, runtime);
+    }
+    return cl;
+}
+
 s32 classes_put(Class *clazz) {
     if (clazz) {
         hashtable_put(classes, clazz->name, clazz);
-        garbage_refer(clazz, classes);
+        garbage_refer(clazz, JVM_CLASS);
         return 0;
     }
     return 1;
@@ -266,35 +281,17 @@ void printDumpOfClasses() {
     }
 }
 
-Class *getClass(c8 *pclassName, Runtime *runtime) {
-    Utf8String *ustr = utf8_create_c(pclassName);
-    Class *cl;
-    utf8_replace_c(ustr, ".", "/");
-    cl = classes_get(ustr);
-
-    if (!cl) {
-        load_class(classpath, ustr, classes);
-        cl = classes_get(ustr);
-        class_link(cl);
-        class_clinit(cl, runtime);
-    }
-    return cl;
-}
-
-void runtime_create(Runtime *runtime) {
-    memset(runtime, 0, sizeof(Runtime));
-    runtime->stack = stack_init(STACK_LENGHT);
-}
 
 //===============================    java 线程  ==================================
-void *therad_loader(void *pthread_para) {
-    Instance *jthread = (Instance *) pthread_para;
+void *therad_loader(void *para) {
+    Instance *jthread = (Instance *) para;
     s32 ret = 0;
     Runtime runtime;
     runtime_create(&runtime);
+    localvar_init(&runtime, 1);
 
     runtime.clazz = jthread->obj_of_clazz;
-    runtime.thread = jthread;
+    runtime.threadInfo->jthread = jthread;
     Utf8String *methodName = utf8_create_c("run");
     Utf8String *methodType = utf8_create_c("()V");
     MethodInfo *method = NULL;
@@ -306,7 +303,8 @@ void *therad_loader(void *pthread_para) {
 #endif
 
     if (method) {
-        arraylist_append(thread_list, jthread);
+        jthread_set_threadq_value(jthread, &runtime);
+        arraylist_append(thread_list, &runtime);
         push_ref(runtime.stack, (__refer) jthread);
         //printf("Thread [%x] run...\n",jthread);
         ret = execute_method(method, &runtime, method->_this_class);
@@ -322,8 +320,6 @@ pthread_t *thread_create_reg(Instance *ins, pthread_t *pthread) {//
     } else {
         pthread_create(pt, NULL, therad_loader, ins);
     }
-    jthread_set_threadq_value(ins, pt);
-
     return pt;
 }
 
@@ -344,33 +340,42 @@ JavaThreadLock *jthreadlock_create() {
 }
 
 void jthreadlock_destory(JavaThreadLock *jtl) {
-    pthread_mutex_destroy(&jtl->f_lock);
-    jvm_free(jtl);
+    if (jtl) {
+        pthread_mutex_destroy(&jtl->f_lock);
+        jvm_free(jtl);
+    }
 }
 
 s32 jthread_lock(Instance *ins, Runtime *runtime) { //可能会重入，同一个线程多次锁同一对象
     if (ins == NULL)return -1;
+    if (!ins->thread_lock) {
+        ins->thread_lock = jthreadlock_create();
+    }
     JavaThreadLock *jtl = ins->thread_lock;
     if (jtl->jthread_holder == NULL) {//没人锁
         pthread_mutex_lock(&jtl->f_lock);
-        jtl->jthread_holder = runtime->thread;
+        jtl->jthread_holder = runtime->threadInfo->jthread;
         jtl->hold_count++;
-    } else if (jtl->jthread_holder == runtime->thread) { //重入
+    } else if (jtl->jthread_holder == runtime->threadInfo->jthread) { //重入
         jtl->hold_count++;
     } else {
         pthread_mutex_lock(&jtl->f_lock);
-        jtl->jthread_holder = runtime->thread;
+        jtl->jthread_holder = runtime->threadInfo->jthread;
         jtl->hold_count++;
     }
 #if _JVM_DEBUG
-    printf("  lock: %llx   lock holder: %llx, count: %d \n",(s64)(runtime->thread),(s64)(jtl->jthread_holder),jtl->hold_count);
+    printf("  lock: %llx   lock holder: %llx, count: %d \n", (s64) (long) (runtime->threadInfo->jthread),
+           (s64) (long) (jtl->jthread_holder), jtl->hold_count);
 #endif
 }
 
 s32 jthread_unlock(Instance *ins, Runtime *runtime) {
     if (ins == NULL)return -1;
+    if (!ins->thread_lock) {
+        ins->thread_lock = jthreadlock_create();
+    }
     JavaThreadLock *jtl = ins->thread_lock;
-    if (jtl->jthread_holder == runtime->thread) {
+    if (jtl->jthread_holder == runtime->threadInfo->jthread) {
         jtl->hold_count--;
         if (jtl->hold_count == 0) {//must change holder first, and unlock later
             jtl->jthread_holder = NULL;
@@ -378,7 +383,8 @@ s32 jthread_unlock(Instance *ins, Runtime *runtime) {
         }
     }
 #if _JVM_DEBUG
-    printf("unlock: %llx   lock holder: %llx, count: %d \n",(s64)(runtime->thread),(s64)(jtl->jthread_holder),jtl->hold_count);
+    printf("unlock: %llx   lock holder: %llx, count: %d \n", (s64) (long) (runtime->threadInfo->jthread),
+           (s64) (long) (jtl->jthread_holder), jtl->hold_count);
 #endif
 }
 
@@ -411,13 +417,13 @@ Instance *jarray_create(s32 count, s32 typeIdx) {
     s32 width = data_type_bytes[typeIdx];
     Instance *arr = jvm_alloc(sizeof(Instance));
     arr->type = MEM_TYPE_ARR;
+    arr->garbage_mark = GARBAGE_MARK_UNDEF;
     Utf8String *clsName = utf8_create_c("java/lang/Object");
     arr->obj_of_clazz = classes_get(clsName);
     utf8_destory(clsName);
     arr->arr_length = count;
     arr->arr_data_type = typeIdx;
     arr->arr_body = jvm_alloc(width * count);
-    arr->thread_lock = jthreadlock_create();
     return arr;
 }
 
@@ -518,9 +524,9 @@ void jarray_get_field(Instance *arr, s32 index, Long2Double *l2d, s32 bytes) {
 //===============================    实例化对象  ==================================
 Instance *instance_create(Class *clazz) {
     Instance *instance = jvm_alloc(sizeof(Instance));
-    instance->type = MEM_TYPE_OBJ;
+    instance->type = MEM_TYPE_INS;
+    instance->garbage_mark = GARBAGE_MARK_UNDEF;
     instance->obj_of_clazz = clazz;
-    instance->thread_lock = jthreadlock_create();
 
     instance->obj_fields = jvm_alloc(instance->obj_of_clazz->field_instance_len);
     memcpy(instance->obj_fields, instance->obj_of_clazz->field_instance_template,
@@ -542,7 +548,7 @@ void instance_init(Instance *ins, Runtime *runtime) {
 
 
 s32 instance_destory(Instance *ins) {
-    if (ins->type == MEM_TYPE_OBJ) {
+    if (ins->type == MEM_TYPE_INS) {
         jthreadlock_destory(ins->thread_lock);
         jvm_free(ins->obj_fields);
         jvm_free(ins);

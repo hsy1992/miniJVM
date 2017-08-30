@@ -564,7 +564,7 @@ s32 java_lang_System_getProperty0(Runtime *runtime, Class *clazz) {
 
 s32 java_lang_Thread_currentThread(Runtime *runtime, Class *clazz) {
     StackFrame *stack = runtime->stack;
-    push_ref(stack, (__refer) runtime->thread);
+    push_ref(stack, (__refer) runtime->threadInfo->jthread);
 #if _JVM_DEBUG
     printf("java_lang_Thread_currentThread \n");
 #endif
@@ -772,7 +772,7 @@ s32 invoke_native_method(Runtime *runtime, Class *p,
     java_native_method *method = find_native_method(cls_name, method_name, method_type);
     if (method != 0) {
 #if _JVM_DEBUG
-        printf("invoke native %s/%s %s\n", method->clzname, method->methodname, type);
+        printf("invoke native %s/%s %s\n", method->clzname, method->methodname, method_type);
 #endif
         method->func_pointer(runtime, p);
         return 1;

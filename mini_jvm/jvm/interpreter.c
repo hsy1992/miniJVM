@@ -26,7 +26,7 @@ static inline s32 op_aload_n(u8 **opCode, Runtime *runtime, Class *clazz, s32 i)
     __refer value = (runtime->localVariables + i)->refer;
     push_ref(stack, value);
 #if _JVM_DEBUG
-    printf("aload_%d push localvar [%llx] into stack\n", i, (s64) value);
+    printf("aload_%d push localvar [%llx] into stack\n", i, (s64) (long) value);
 #endif
     *opCode = *opCode + 1;
     return 0;
@@ -65,9 +65,9 @@ static inline s32 op_xaload(u8 **opCode, Runtime *runtime, Class *clazz) {
     }
 
 #if _JVM_DEBUG
-    printf("(icbdlfs)aload push arr[%llx]{%d bytes}.(%d)=%x:%d:%lld:%lf into stack\n", (u64) arr, bytes, index,
+    printf("(icbdlfs)aload push arr[%llx]{%d bytes}.(%d)=%x:%d:%lld:%lf into stack\n", (u64) (long) arr, bytes, index,
            l2d.i2l.i1,
-           l2d.i2l.i1, l2d.l, l2d.l);
+           l2d.i2l.i1, l2d.l, l2d.d);
 #endif
     *opCode = *opCode + 1;
     return 0;
@@ -115,9 +115,9 @@ s32 op_aaload(u8 **opCode, Runtime *runtime, Class *clazz) {
 
 
 #if _JVM_DEBUG
-    printf("aaload push arr[%llx]{%d bytes}.(%d)=%x:%d:%lld:%lf into stack\n", (s64) arr, bytes, index,
+    printf("aaload push arr[%llx]{%d bytes}.(%d)=%x:%d:%llx:%lf into stack\n", (s64) (long) arr, bytes, index,
            l2d.i2l.i1,
-           l2d.i2l.i1, l2d.l, l2d.l);
+           l2d.i2l.i1, l2d.l, l2d.d);
 #endif
     *opCode = *opCode + 1;
     return 0;
@@ -420,7 +420,7 @@ s32 op_dconst_n(u8 **opCode, Runtime *runtime, Class *clazz, f64 d) {
     push_double(stack, d);
 
 #if _JVM_DEBUG
-    printf("iconst_%d: push %f into stack\n", (d), d);
+    printf("dconst_%d: push %f into stack\n", (d), d);
 #endif
     *opCode = *opCode + 1;
     return 0;
@@ -1566,6 +1566,11 @@ s32 op_invokevirtual(u8 **opCode, Runtime *runtime, Class *clazz) {
 
     s32 ret = 0;
     ConstantMethodRef *cmr = find_constant_method_ref(clazz, object_ref);//此cmr所描述的方法，对于不同的实例，有不同的method
+
+//    if (utf8_equals_c(clazz->name, "com/sun/cldc/i18n/mini/ISO8859_1_Writer") == 0) {
+//        int debug = 1;
+//    }
+
     Instance *ins = getInstanceInStack(clazz, cmr, runtime->stack);
     MethodInfo *method = NULL;
 
@@ -1717,7 +1722,7 @@ static inline s32 op_ldc_impl(u8 **opCode, Runtime *runtime, Class *clazz, s32 i
             Instance *jstr = jstring_create(ptr, runtime);
             push_ref(stack, (__refer) jstr);
 #if _JVM_DEBUG
-            printf("ldc: [%llx] =\"%s\"\n", (s64) jstr, utf8_cstr(ptr));
+            printf("ldc: [%llx] =\"%s\"\n", (s64) (long) jstr, utf8_cstr(ptr));
 #endif
             break;
         }
@@ -1794,6 +1799,9 @@ static inline s32 op_putfield_impl(u8 **opCode, Runtime *runtime, Class *clazz, 
     Instance *ins = NULL;
     c8 *ptr;
     if (isStatic) {
+        if (clazz->status <= CLASS_STATUS_CLINITED) {
+            class_clinit(clazz, runtime);
+        }
         ptr = getStaticFieldPtr(fi);
     } else {
         ins = (Instance *) pop_ref(stack);
@@ -1802,8 +1810,8 @@ static inline s32 op_putfield_impl(u8 **opCode, Runtime *runtime, Class *clazz, 
 #if _JVM_DEBUG
     printf("%s  save:%s[%llx].%s[%llx]=[%llx]  \n",
            isStatic ? "putstatic" : "putfield", utf8_cstr(clazz->name),
-           isStatic ? (s64) clazz : (s64) ins, utf8_cstr(fi->name),
-           (s64) ptr, entry_2_long(&entry));
+           isStatic ? (s64) (long) clazz : (s64) (long) ins, utf8_cstr(fi->name),
+           (s64) (long) ptr, entry_2_long(&entry));
 #endif
 
     if (isReference(ch)) {//垃圾回收标识
@@ -1875,6 +1883,9 @@ static inline s32 op_getfield_impl(u8 **opCode, Runtime *runtime, Class *clazz, 
     Instance *ins = NULL;
     c8 *ptr;
     if (isStatic) {
+        if (clazz->status <= CLASS_STATUS_CLINITED) {
+            class_clinit(clazz, runtime);
+        }
         ptr = getStaticFieldPtr(fi);
     } else {
         ins = (Instance *) pop_ref(stack);
@@ -1909,10 +1920,10 @@ static inline s32 op_getfield_impl(u8 **opCode, Runtime *runtime, Class *clazz, 
         }
     }
 #if _JVM_DEBUG
-    printf("%s: push %s[%llx].%s[%x]=[%llx]\n",
+    printf("%s: push %s[%llx].%s[%llx]=[%llx]\n",
            isStatic ? "getstatic" : "getfield", utf8_cstr(clazz->name),
-           isStatic ? (s64) clazz : (s64) ins, utf8_cstr(fi->name),
-           ptr, l2d.l);
+           isStatic ? (s64) (long) clazz : (s64) (long) ins, utf8_cstr(fi->name),
+           (s64) (long) ptr, l2d.l);
 #endif
     *opCode = *opCode + 3;
     return 0;
@@ -1939,11 +1950,11 @@ s32 op_new(u8 **opCode, Runtime *runtime, Class *clazz) {
 
     ConstantClassRef *ccf = find_constant_classref(clazz, object_ref);
     Utf8String *clsName = get_utf8_string(clazz, ccf->stringIndex);
-    Class *other = classes_get( clsName);
+    Class *other = classes_get(clsName);
     Instance *ins = NULL;
     if (other) {
         ins = instance_create(other);
-        garbage_refer(ins, runtime);
+        garbage_refer(ins, NULL);
     }
     push_ref(stack, (__refer) ins);
 #if _JVM_DEBUG
@@ -1958,11 +1969,11 @@ static inline s32 op_newarray_impl(Runtime *runtime, s32 count, s32 typeIdx) {
     Instance *arr = jarray_create(count, typeIdx);
 
 #if _JVM_DEBUG
-    printf("(a)newarray  [%llx] type:%d , count:%d  \n", (s64) arr, typeIdx, count);
+    printf("(a)newarray  [%llx] type:%d , count:%d  \n", (s64) (long) arr, typeIdx, count);
 #endif
     if (arr) {
         push_ref(stack, (__refer) arr);
-        garbage_refer(arr, runtime);
+        garbage_refer(arr, NULL);
     } else {
         Instance *exception = exception_create(JVM_EXCEPTION_NULLPOINTER, runtime);
         push_ref(stack, (__refer) exception);
@@ -2062,7 +2073,7 @@ s32 op_checkcast(u8 **opCode, Runtime *runtime, Class *clazz) {
 
     s32 typeIdx = s2c.s;
     s32 checkok = 0;
-    if (ins->type == MEM_TYPE_OBJ) {
+    if (ins->type == MEM_TYPE_INS) {
 
         Class *cl = getClassByConstantClassRef(clazz, typeIdx);
         if (instance_of(cl, ins)) {
@@ -2099,7 +2110,7 @@ s32 op_instanceof(u8 **opCode, Runtime *runtime, Class *clazz) {
     s32 typeIdx = s2c.s;
 
     s32 checkok = 0;
-    if (ins->type == MEM_TYPE_OBJ) {
+    if (ins->type == MEM_TYPE_INS) {
         if (instance_of(getClassByConstantClassRef(clazz, typeIdx), ins)) {
             checkok = 1;
         }
@@ -2177,7 +2188,7 @@ s32 op_ireturn(u8 **opCode, Runtime *runtime, Class *clazz) {
 
 #if _JVM_DEBUG
     StackEntry entry;
-    peekEntry(stack, &entry, stack->size - 1);
+    peek_entry(stack, &entry, stack->size - 1);
     printf("i(lfda)return [%x]/%d/[%llx]\n", entry_2_int(&entry), entry_2_int(&entry), entry_2_long(&entry));
 #endif
     *opCode = *opCode + 1;
@@ -2196,9 +2207,6 @@ s32 op_if_cmp_ia(u8 **opCode, Runtime *runtime, Class *clazz, s32 type) {
 
     s32 v2 = pop_int(stack);
     s32 v1 = pop_int(stack);
-//    if (v1 == 74) {
-//        int debug = 1;
-//    }
     c8 *syb;
     s32 con = 0;
     switch (type) {
@@ -2410,7 +2418,7 @@ s32 op_if_0(u8 **opCode, Runtime *runtime, Class *clazz, s32 type) {
     }
 
 #if _JVM_DEBUG
-    printf("if_0: %d/%llx %s 0  then %d \n", l2d.i2l.i1, l2d.r, syb, branchoffset);
+    printf("if_0: %d/%llx %s 0  then %d \n", l2d.i2l.i1, (s64) (long) l2d.r, syb, branchoffset);
 #endif
     if (con) {
         *opCode = *opCode + branchoffset;
@@ -2938,14 +2946,15 @@ s32 execute_method(MethodInfo *method, Runtime *pruntime, Class *clazz) {
     memset(&(runtime), 0, sizeof(runtime));
     runtime.type = MEM_TYPE_RUNTIME;
     runtime.stack = pruntime->stack;
-    runtime.thread = pruntime->thread;
+    runtime.threadInfo = pruntime->threadInfo;
 
+    pruntime->son = &runtime;
 
     runtime.methodInfo = method;
     runtime.clazz = clazz;
 
     if (method->access_flags & ACC_NATIVE) {//本地方法
-        runtime.localVariables = jvm_alloc(sizeof(LocalVarItem) * (method->paraType->length + 1));
+        localvar_init(&runtime, method->paraType->length + 1);//可能有非静态本地方法调用，因此+1
         stack2localvar(method, pruntime, &runtime);
         //缓存调用本地方法
         if (!method->native_func) { //把本地方法找出来缓存
@@ -2956,9 +2965,9 @@ s32 execute_method(MethodInfo *method, Runtime *pruntime, Class *clazz) {
     } else {
 
         for (j = 0; j < method->attributes_count; j++) {
-            if (!method->attributes[j].converted_attribute)continue;
-            CodeAttribute *ca = (CodeAttribute *) method->attributes[j].converted_attribute;
-            runtime.localVariables = jvm_alloc(sizeof(LocalVarItem) * ca->max_locals);
+            if (!method->attributes[j].converted_code)continue;
+            CodeAttribute *ca = (CodeAttribute *) method->attributes[j].converted_code;
+            localvar_init(&runtime, ca->max_locals + 1);
             stack2localvar(method, pruntime, &runtime);
 
 #if _JVM_DEBUG_BYTECODE_DUMP
@@ -2983,6 +2992,10 @@ s32 execute_method(MethodInfo *method, Runtime *pruntime, Class *clazz) {
                     s64 start_at = nanoTime();
 #endif
                     i = func(&pc, &runtime, clazz);
+                    if (runtime.threadInfo->garbage_collect_mark_task) {
+                        garbage_mark_refered_obj(runtime.threadInfo->top_runtime);
+                        runtime.threadInfo->garbage_collect_mark_task = 0;
+                    }
 #if _JVM_DEBUG_PROFILE
                     s64 spent = nanoTime() - start_at;
                     //spent = 1;
@@ -3033,16 +3046,6 @@ s32 execute_method(MethodInfo *method, Runtime *pruntime, Class *clazz) {
         }
     }
     jvm_free(runtime.localVariables);
-    //返回的引用需要关联父runtime
-    if (ret != RUNTIME_STATUS_EXCEPTION) {
-        if (utf8_indexof_c(method->descriptor, ")L") >= 0) {//返回是一个引用，则需要把此对象和父runtime进行关联，防止回收
-            StackEntry entry;
-            peek_entry(pruntime->stack, &entry, pruntime->stack->size - 1);
-            Instance *ins = (Instance *) entry_2_refer(&entry);
-            garbage_refer(ins, pruntime);
-        }
-    }
-    //把关联到此runtime的所有对象解除关系
-    garbage_derefer_all(&runtime);
+    pruntime->son = NULL;
     return ret;
 }

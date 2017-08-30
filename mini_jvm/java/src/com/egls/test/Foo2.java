@@ -162,9 +162,11 @@ class Foo2 {
     }
 
     void t7() {
-        T7class t7 = new T7class();
         for (int i = 0; i < 1000000; i++) {
-            t7_1(t7);
+//            T7class t7 = 
+                    new T7class();
+                    new T7class();
+//            t7_1(t7);
         }
     }
 

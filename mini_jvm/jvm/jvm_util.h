@@ -51,11 +51,17 @@ Instance *getInstanceInStack(Class *clazz, ConstantMethodRef *cmr, StackFrame *s
 
 void printDumpOfClasses();
 
-Class *getClass(c8 *pclassName, Runtime *runtime);
+
 
 void runtime_create(Runtime *runtime);
 
 ////======================= thread =============================
+typedef struct _JavaThreadInfo {
+    Instance* jthread;
+    Runtime* top_runtime;
+    volatile u8 garbage_collect_mark_task;
+}JavaThreadInfo;
+
 typedef struct _JavaThreadLock {
     pthread_mutex_t f_lock; //互斥锁
     Instance *jthread_holder;

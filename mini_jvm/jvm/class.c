@@ -15,6 +15,7 @@ Class *class_create() {
     Class *clazz = jvm_alloc(sizeof(Class));
     clazz->_this = clazz;
     clazz->type = MEM_TYPE_CLASS;
+    clazz->garbage_mark = GARBAGE_MARK_UNDEF;
     clazz->field_instance_len = 0;
     clazz->field_static = NULL;
     clazz->field_instance_template = NULL;
@@ -100,9 +101,6 @@ s32 class_link(Class *clazz) {
     }
     for (i = 0; i < clazz->constantPool.methodRef->length; i++) {
         ConstantMethodRef *cmr = (ConstantMethodRef *) arraylist_get_value(clazz->constantPool.methodRef, i);
-//        if (utf8_equals_c(clazz->name, "com/sun/cldc/i18n/Helper") == 0 && cmr->index == 78) {
-//            int debug = 1;
-//        }
         cmr->methodInfo = find_methodInfo_by_methodref(clazz, cmr->index);
     }
 
@@ -125,6 +123,9 @@ s32 class_link(Class *clazz) {
     clazz->field_static_len = static_len;
     clazz->field_static = jvm_alloc(clazz->field_static_len);
 
+//    if (utf8_equals_c(clazz->name, "com/sun/cldc/i18n/mini/ISO8859_1_Writer") == 0) {
+//        int debug = 1;
+//    }
     //生成实例变量模板
     Class *superclass = getSuperClass(clazz);
     if (superclass) {
@@ -135,7 +136,7 @@ s32 class_link(Class *clazz) {
         clazz->field_instance_len = clazz->field_instance_start + instance_len;
         clazz->field_instance_template = jvm_alloc(clazz->field_instance_len);
         //实例变量区前面是继承的父类变量，后面是自己的变量
-        memcpy(&(clazz->field_instance_template), &(superclass->field_instance_template), clazz->field_instance_start);
+        //memcpy((clazz->field_instance_template), (superclass->field_instance_template), clazz->field_instance_start);
     } else {
         clazz->field_instance_start = 0;
         //实例变量区前面是继承的父类变量，后面是自己的变量
@@ -153,6 +154,8 @@ s32 class_link(Class *clazz) {
  * @param runtime
  */
 void class_clinit(Class *clazz, Runtime *runtime) {
+    if (clazz->status >= CLASS_STATUS_CLINITING)return;
+    clazz->status = CLASS_STATUS_CLINITING;
     //优先初始化基类
     Class *superclass = getSuperClass(clazz);
     if (superclass && superclass->status < CLASS_STATUS_CLINITED) {

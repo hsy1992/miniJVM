@@ -149,6 +149,7 @@ typedef struct _MethodInfo MethodInfo;
 typedef struct _Instruction Instruction;
 typedef struct _ConstantNameAndType ConstantNameAndType;
 typedef struct _JavaThreadLock JavaThreadLock;
+typedef struct _JavaThreadInfo JavaThreadInfo;
 typedef struct _Runtime Runtime;
 
 typedef s32 (*java_native_fun)(Runtime *runtime, Class *p);
@@ -194,13 +195,11 @@ enum {
     MEM_TYPE_NODEF,
     MEM_TYPE_CLASS,
     MEM_TYPE_RUNTIME,
-    MEM_TYPE_OBJ,
+    MEM_TYPE_INS,
     MEM_TYPE_ARR
 };
 
-typedef struct _MemoryBlock {
-    u8 type;//type of array or object runtime,class
-} MemoryBlock;
+
 /*
 boolean   4
 char  5
@@ -247,10 +246,13 @@ static const u16 ACC_ABSTRACT = 0x0400;
 static const u16 ACC_STRICT = 0x0800;
 
 //类状态
-static const c8 CLASS_STATUS_RAW = 0;
-static const c8 CLASS_STATUS_LOADED = 1;
-static const c8 CLASS_STATUS_PREPARED = 2;
-static const c8 CLASS_STATUS_CLINITED = 3;
+enum {
+    CLASS_STATUS_RAW,
+    CLASS_STATUS_LOADED,
+    CLASS_STATUS_PREPARED,
+    CLASS_STATUS_CLINITING,
+    CLASS_STATUS_CLINITED,
+};
 
 //指令指行返回状态
 static const c8 RUNTIME_STATUS_NORMAL = 0;
@@ -277,8 +279,16 @@ enum {
     TYPE_IFNONNULL,
     TYPE_IFNULL
 };
+enum {
+    GARBAGE_MARK_UNDEF,
+    GARBAGE_MARK_NO_REFERED,
+    GARBAGE_MARK_REFERED,
+};
+
 
 //======================= global var =============================
+
+extern Class *JVM_CLASS;
 /**
  * key =  package+classname
  * value =  class_ptr
@@ -294,6 +304,8 @@ extern Hashtable *son_2_father; //key=mem_ptr, value=我被别人引用的列表
 extern Hashtable *father_2_son; //key=mem_ptr, value=别人被我引用的列表
 extern s64 MAX_HEAP_SIZE;
 extern s64 heap_size; //当前已经分配的内存总数
+extern Instance *main_thread;
+
 
 Instruction **instructionsIndexies;
 
@@ -301,7 +313,16 @@ Instruction **instructionsIndexies;
 extern Hashtable *instruct_profile;
 #endif
 
+//======================= MEM_OBJ =============================
+
+typedef struct _MemoryBlock {
+    u8 type;//type of array or object runtime,class
+    u8 garbage_mark;
+    Class *obj_of_clazz;
+} MemoryBlock;
 //======================= class file =============================
+
+
 /* Java Class File */
 typedef struct _ClassFileFormat {
     u8 magic_number[4];
@@ -405,6 +426,7 @@ typedef struct _ConstantMethodRef {
     ConstantNameAndType *nameAndType;
     Utf8String *name;
     Utf8String *descriptor;
+    Utf8String *clsName;
     Pairlist *virtual_methods;
 } ConstantMethodRef;
 
@@ -488,7 +510,8 @@ typedef struct _AttributeInfo {
     s32 attribute_length;
     u8 *info;
     //
-    u8 *converted_attribute;
+    u8 *converted_code;
+    u8 *converted_exception;
 } AttributeInfo;
 
 typedef struct _ExceptionTable {
@@ -575,7 +598,7 @@ typedef struct _StackFrame {
 } StackFrame;
 
 //解决引用类型可能为4字节或8字节的不同情况
-typedef union _LocalVarItem {
+typedef struct _LocalVarItem {
     s32 integer;
     __refer refer;
 } LocalVarItem;
@@ -585,11 +608,14 @@ typedef struct _Runtime {
     u8 type;//type of array or object or runtime
     StackFrame *stack;
     LocalVarItem *localVariables;
+    s32 localvar_count;
     MethodInfo *methodInfo;
     Class *clazz;
     CodeAttribute *codeAttr;
     u8 wideMode;
-    Instance *thread;
+//    Instance *thread;
+    JavaThreadInfo *threadInfo;
+    Runtime *son;//sub method's runtime
 } Runtime;
 //======================= class =============================
 
@@ -598,6 +624,8 @@ typedef struct _Runtime {
  */
 typedef struct _ClassType {
     u8 type;//type of array or object runtime,class
+    u8 garbage_mark;
+    struct _ClassType *_this;
     Utf8String *name;
 
     ClassFileFormat cff;
@@ -615,7 +643,6 @@ typedef struct _ClassType {
     s32 field_static_len; //静态变量内存长度
     c8 *field_static; //静态变量内存地址
 
-    struct _ClassType *_this;
 
     //public:
     s32 (*_load_from_file)(struct _ClassType *_this, c8 *file);
@@ -742,18 +769,21 @@ Class *classes_get(Utf8String *clsName);
 
 s32 classes_put(Class *clazz);
 
+Class *classes_load_get(c8 *pclassName, Runtime *runtime);
+
 //======================= instance =============================
 
 
 typedef struct _InstanceType {
     u8 type;//type of array or object
+    u8 garbage_mark;
     Class *obj_of_clazz;
     union {
         c8 *obj_fields; //object fieldRef body
         c8 *arr_body;//array body
     };
     u8 arr_data_type;
-    Utf8String *arr_type;
+//    Utf8String *arr_type;
     s32 arr_length;
 
     JavaThreadLock *thread_lock;
@@ -876,6 +906,9 @@ void stack2localvar(MethodInfo *method, Runtime *father, Runtime *son);
 static s32 op_notsupport(u8 **opCode, Runtime *runtime, Class *clazz);
 
 void peek_entry(StackFrame *stack, StackEntry *entry, int index);
+
+//======================= localvar =============================
+s32 localvar_init(Runtime *runtime, s32 count);
 
 
 #endif

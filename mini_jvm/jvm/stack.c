@@ -5,6 +5,7 @@
 #include <string.h>
 #include "jvm.h"
 #include "garbage.h"
+#include "jvm_util.h"
 
 
 /* Stack Initialization */
@@ -38,9 +39,6 @@ void push_int(StackFrame *stack, s32 value) {
 }
 
 
-
-
-
 /* push Double */
 void push_double(StackFrame *stack, f64 value) {
     //memset(&stack->store[stack->size], 0, sizeof(StackEntry));
@@ -69,6 +67,7 @@ s32 pop_int(StackFrame *stack) {
     memset(&stack->store[stack->size], 0, sizeof(StackEntry));
     return value;
 }
+
 /* push Long */
 void push_long(StackFrame *stack, s64 value) {
     //memset(&stack->store[stack->size], 0, sizeof(StackEntry));
@@ -77,6 +76,7 @@ void push_long(StackFrame *stack, s64 value) {
     stack->store[stack->size].type = STACK_ENTRY_LONG;
     stack->size++;
 }
+
 /* pop Long */
 s64 pop_long(StackFrame *stack) {
     stack->size--;
@@ -86,6 +86,7 @@ s64 pop_long(StackFrame *stack) {
     memset(&stack->store[stack->size], 0, sizeof(StackEntry));
     return value;
 }
+
 /* push Ref */
 void push_ref(StackFrame *stack, __refer value) {
     //memset(&stack->store[stack->size], 0, sizeof(StackEntry));
@@ -103,6 +104,7 @@ __refer pop_ref(StackFrame *stack) {
     memset(&stack->store[stack->size], 0, sizeof(StackEntry));
     return value;
 }
+
 /* pop Double */
 f64 pop_double(StackFrame *stack) {
     stack->size--;
@@ -124,7 +126,7 @@ f32 pop_float(StackFrame *stack) {
 }
 
 /* Pop Stack Entry */
-void pop_entry(StackFrame *stack,StackEntry * entry) {
+void pop_entry(StackFrame *stack, StackEntry *entry) {
     stack->size--;
     memcpy(entry, stack->store[stack->size].entry, sizeof(StackEntry));
     memset(&stack->store[stack->size], 0, sizeof(StackEntry));
@@ -136,6 +138,7 @@ s32 entry_2_int(StackEntry *entry) {
     memcpy(&value, entry->entry, sizeof(s32));
     return value;
 }
+
 s64 entry_2_long(StackEntry *entry) {
     s64 value = 0;
     memcpy(&value, entry->entry, sizeof(s64));
@@ -155,6 +158,29 @@ s32 is_ref_entry(StackFrame *stack) {
     return 0;
 }
 
-void peek_entry(StackFrame *stack, StackEntry *entry, int index){
+void peek_entry(StackFrame *stack, StackEntry *entry, int index) {
     memcpy(entry, stack->store[index].entry, sizeof(StackEntry));
+}
+
+//======================= localvar =============================
+void runtime_create(Runtime *runtime) {
+    memset(runtime, 0, sizeof(Runtime));
+    runtime->stack = stack_init(STACK_LENGHT);
+    runtime->threadInfo = jvm_alloc(sizeof(JavaThreadInfo));
+    runtime->threadInfo->top_runtime = runtime;
+}
+
+
+s32 localvar_init(Runtime *runtime, s32 count) {
+    runtime->localVariables = jvm_alloc(sizeof(LocalVarItem) * count);
+    runtime->localvar_count = count;
+    return 0;
+}
+
+void localvar_setInt(s32 index, s32 val, Runtime *runtime) {
+    (runtime->localVariables + index)->integer = val;
+}
+
+void localvar_setRefer(s32 index, __refer val, Runtime *runtime) {
+    (runtime->localVariables + index)->refer = val;
 }

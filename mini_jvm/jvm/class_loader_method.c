@@ -233,8 +233,8 @@ s32 _class_method_info_destory(Class *clazz) {
             AttributeInfo *attr = &mi->attributes[j];
             jvm_free(attr->info);//某些没有转
             attr->info = NULL;
-            jvm_free(attr->converted_attribute);//info已被转换为converted_attribute
-            attr->converted_attribute = NULL;
+            jvm_free(attr->converted_code);//info已被转换为converted_attribute
+            attr->converted_code = NULL;
         }
         jvm_free(mi->attributes);
         mi->attributes = NULL;

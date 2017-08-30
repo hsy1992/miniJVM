@@ -208,7 +208,7 @@ int arraylist_index_of(ArrayList *arraylist,
 
 ArrayListValue arraylist_get_value(ArrayList *arraylist, int index);
 
-ArrayListValue arraylist_pop_end(ArrayList *arraylist);
+ArrayListValue arraylist_pop_back(ArrayList *arraylist);
 
 ArrayListValue arraylist_pop_front(ArrayList *arraylist);
 

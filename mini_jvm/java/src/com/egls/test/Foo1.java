@@ -204,18 +204,18 @@ public class Foo1 {
     }
 
     public static void main(String[] agrs) {
-//        Foo1 f = new Foo1();
-//        f.t1();
-//        f.t2();
-//        f.t3();
-//        f.t4();
-//        f.t5();
-//        f.t6();
+        Foo1 f = new Foo1();
+        f.t1();
+        f.t2();
+        f.t3();
+        f.t4();
+        f.t5();
+        f.t6();
 //        f.t7();
-//        f.t8();
-//        f.t9();
-//        BpDeepTest.main(agrs);
+        f.t8();
+        f.t9();
+        BpDeepTest.main(agrs);
         Foo2.main(agrs);
-//        Foo3.main(agrs);
+        Foo3.main(agrs);
     }
 }

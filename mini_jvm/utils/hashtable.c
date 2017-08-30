@@ -54,7 +54,7 @@ struct _Hashtable {
  */
 
 static const unsigned long long int hash_table_primes[] = {
-        193UL, 389UL, 769UL, 1543UL, 3079UL, 6151UL, 12289UL, 24593UL, 49157UL, 98317UL,
+        16UL, 32UL, 64UL, 128UL, 256UL, 193UL, 389UL, 769UL, 1543UL, 3079UL, 6151UL, 12289UL, 24593UL, 49157UL, 98317UL,
         196613UL, 393241UL, 786433UL, 1572869UL, 3145739UL, 6291469UL,
         12582917UL, 25165843UL, 50331653UL, 100663319UL, 201326611UL,
         402653189UL, 805306457UL, 1610612741UL, 3221225479UL, 6442450967UL,
@@ -129,11 +129,11 @@ static void hash_table_free_entry(Hashtable *hash_table, HashtableEntry *entry) 
     jvm_free(entry);
 }
 
-unsigned long _DEFAULT_HashtableHash(HashtableKey kmer) {
+unsigned long DEFAULT_HASH_FUNC(HashtableKey kmer) {
     return (unsigned long) kmer;
 }
 
-int _DEFAULT_HashtableEquals(HashtableValue value1, HashtableValue value2) {
+int DEFAULT_HASH_EQUALS_FUNC(HashtableValue value1, HashtableValue value2) {
     return (value1 == value2);
 }
 
@@ -308,7 +308,7 @@ HashtableValue hashtable_get(Hashtable *hash_table, HashtableKey key) {
 
     /* Not found */
 
-    return HASH_TABLE_NULL;
+    return HASH_NULL;
 }
 
 int hashtable_remove(Hashtable *hash_table, HashtableKey key, int resize) {
@@ -418,7 +418,7 @@ HashtableValue hashtable_iter_next(HashtableIterator *iterator) {
     /* No more entries? */
 
     if (iterator->next_entry == NULL) {
-        return HASH_TABLE_NULL;
+        return HASH_NULL;
     }
 
     /* Result is immediately available */
@@ -475,7 +475,7 @@ HashtableKey hashtable_iter_next_key(HashtableIterator *iterator) {
     /* No more entries? */
 
     if (iterator->next_entry == NULL) {
-        return HASH_TABLE_NULL;
+        return HASH_NULL;
     }
 
     /* Result is immediately available */

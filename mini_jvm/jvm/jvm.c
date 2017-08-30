@@ -21,6 +21,9 @@ s32 execute(c8 *p_classpath, c8 *p_mainclass, s32 argc, c8 **argv) {
     instructionsIndexies = createInstructIndexies();
     //创建类容器
     classes = hashtable_create(_UNI_STR_HashtableHash, _UNI_STR_HashtableEquals);
+
+    JVM_CLASS = class_create();
+    JVM_CLASS->name = utf8_create_c("MINI_JVM");
     //创建垃圾收集器
     garbage_collector_create();
     //创建线程容器
@@ -78,16 +81,20 @@ s32 execute(c8 *p_classpath, c8 *p_mainclass, s32 argc, c8 **argv) {
 
         MethodInfo *main = find_methodInfo_by_name(mainclass, methodName, methodType);
         if (main) {
-            Class *thread_clazz = getClass("java/lang/Thread", &runtime);
+            Class *thread_clazz = classes_load_get("java/lang/Thread", &runtime);
             //为主线程创建Thread实例
             Instance *main_thread = instance_create(thread_clazz);
             pthread_t pthread = pthread_self();
             thread_create_reg(main_thread, &pthread);
-            runtime.thread = main_thread;
+            runtime.threadInfo->jthread = main_thread;
             instance_init(main_thread, &runtime);//必须放在最好，初始化时需要用到前面的赋值
             s64 start = currentTimeMillis();
+            arraylist_append(thread_list, &runtime);
+            jthread_set_threadq_value(main_thread, &runtime);
+
+            _garbage_thread_pause = 0;
             //准备参数
-            runtime.localVariables = jvm_alloc(sizeof(LocalVarItem) * (main->paraType->length + 1));
+            localvar_init(&runtime, main->paraType->length + 1);
             s32 count = argc;
             Long2Double l2d;
             s32 bytes = data_type_bytes[ARRAY_REFERENCE_TYPE];
@@ -133,6 +140,8 @@ s32 execute(c8 *p_classpath, c8 *p_mainclass, s32 argc, c8 **argv) {
     utf8_destory(jstring_class);
     utf8_destory(mainclass);
     destoryAllClasses(classes);
+    utf8_destory(JVM_CLASS->name);
+    class_destory(JVM_CLASS);
     printf("over\n");
     //getchar();
     return ret;

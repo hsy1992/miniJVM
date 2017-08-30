@@ -196,7 +196,7 @@ ArrayListValue arraylist_pop_front(ArrayList *arraylist) {
     return v;
 }
 
-ArrayListValue arraylist_pop_end(ArrayList *arraylist) {
+ArrayListValue arraylist_pop_back(ArrayList *arraylist) {
     ArrayListValue v = NULL;
     if (arraylist->length > 0) {
         v = arraylist->data[arraylist->length - 1];

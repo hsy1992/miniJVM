@@ -155,22 +155,17 @@ void class_optmize(Class *clazz) {
         for (j = 0; j < ptr->attributes_count; j++) {
             if (utf8_equals_c(get_utf8_string(clazz, ptr->attributes[j].attribute_name_index), "Code") == 0) {
                 CodeAttribute *ca = jvm_alloc(sizeof(CodeAttribute));
+//                if (utf8_equals_c(clazz->name, "com/sun/cldc/i18n/Helper") == 0 &&
+//                    0==utf8_equals_c(ptr->descriptor, "(Ljava/io/OutputStream;)Ljava/io/Writer;")) {
+//                    int debug = 1;
+//                }
                 convert_to_code_attribute(ca, &ptr->attributes[j]);
                 jvm_free(ptr->attributes[j].info);//无用删除
                 ptr->attributes[j].info = NULL;
-                ptr->attributes[j].converted_attribute = (u8 *) ca;
+                ptr->attributes[j].converted_code = (u8 *) ca;
+            }else if (utf8_equals_c(get_utf8_string(clazz, ptr->attributes[j].attribute_name_index), "Exceptions") == 0) {
+
             }
-        }
-    }
-    for (i = 0; i < clazz->constantPool.methodRef->length; i++) {
-        ConstantMethodRef *cmr = (ConstantMethodRef *) arraylist_get_value(clazz->constantPool.methodRef, i);
-        cmr->nameAndType = find_constant_name_and_type(clazz, cmr->nameAndTypeIndex);
-        cmr->name = get_utf8_string(clazz, cmr->nameAndType->nameIndex);
-        cmr->descriptor = get_utf8_string(clazz, cmr->nameAndType->typeIndex);
-        if (cmr->methodParaCount == -1) {
-            Utf8String *tmps = utf8_create();
-            parseMethodPara(cmr->descriptor, tmps);
-            cmr->methodParaCount = tmps->length;
         }
     }
 
@@ -182,6 +177,18 @@ void class_optmize(Class *clazz) {
         ConstantInterfaceMethodRef *cir = (ConstantInterfaceMethodRef *) arraylist_get_value(
                 clazz->constantPool.interfaceRef, i);
         cir->name = get_utf8_string(clazz, find_constant_name_and_type(clazz, cir->nameAndTypeIndex)->nameIndex);
+    }
+    for (i = 0; i < clazz->constantPool.methodRef->length; i++) {
+        ConstantMethodRef *cmr = (ConstantMethodRef *) arraylist_get_value(clazz->constantPool.methodRef, i);
+        cmr->nameAndType = find_constant_name_and_type(clazz, cmr->nameAndTypeIndex);
+        cmr->name = get_utf8_string(clazz, cmr->nameAndType->nameIndex);
+        cmr->descriptor = get_utf8_string(clazz, cmr->nameAndType->typeIndex);
+        cmr->clsName = find_constant_classref(clazz, cmr->classIndex)->name;
+        if (cmr->methodParaCount == -1) {
+            Utf8String *tmps = utf8_create();
+            parseMethodPara(cmr->descriptor, tmps);
+            cmr->methodParaCount = tmps->length;
+        }
     }
 
 }
