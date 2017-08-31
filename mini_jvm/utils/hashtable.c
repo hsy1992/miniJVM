@@ -26,6 +26,7 @@ CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 #include "math.h"
 #include "../jvm/garbage.h"
 
+static s32 HASH_TABLE_DEFAULT_SIZE = 16;
 
 struct _HashtableEntry {
     HashtableKey key;
@@ -41,70 +42,23 @@ struct _Hashtable {
     HashtableKeyFreeFunc key_free_func;
     HashtableValueFreeFunc value_free_func;
     unsigned long long int entries;
-    int prime_index;
 };
-
-/* This is a set of good hash table prime numbers, from:
- *   http://planetmath.org/encyclopedia/GoodHashtablePrimes.html
- * Each prime is roughly double the previous value, and as far as
- * possible from the nearest powers of two.
- *
- * Note: Primes after 1610612741 are added by finding the nearest prime to
- *       previous prime multiplied by 2.
- */
-
-static const unsigned long long int hash_table_primes[] = {
-        16UL, 32UL, 64UL, 128UL, 256UL, 193UL, 389UL, 769UL, 1543UL, 3079UL, 6151UL, 12289UL, 24593UL, 49157UL, 98317UL,
-        196613UL, 393241UL, 786433UL, 1572869UL, 3145739UL, 6291469UL,
-        12582917UL, 25165843UL, 50331653UL, 100663319UL, 201326611UL,
-        402653189UL, 805306457UL, 1610612741UL, 3221225479UL, 6442450967UL,
-        12884901947UL, 25769803897UL, 51539607793UL, 103079215583UL, 206158431161UL,
-};
-
-static const int hash_table_num_primes
-        = sizeof(hash_table_primes) / sizeof(unsigned long long int);
-
-unsigned long long int getHashtableSizeWithIncrement(Hashtable *hash_table, int increment) {
-    unsigned long long int size = hash_table_primes[0];
-
-    // Target size is within range:
-    if (hash_table->prime_index + increment < hash_table_num_primes) {
-        size = hash_table_primes[hash_table->prime_index + increment];
-    }        // Target size not in range:
-    else {
-        // Current in range, target not in range:
-        if (hash_table->prime_index < hash_table_num_primes) {
-            int diff = hash_table->prime_index + increment - (hash_table_num_primes - 1);
-
-            size = hash_table_primes[hash_table_num_primes - 1];
-            size = size * pow(2, diff);
-        }            // Current is outside, target is outside; current < target:
-        else if (hash_table->prime_index < hash_table->prime_index + increment) {
-            size = size * pow(2, increment);
-        }            // Current is outside, target is outside; current > target:
-        else if (hash_table->prime_index > hash_table->prime_index + increment) {
-            size = size / pow(2, increment);
-        }
-    }
-
-    return size;
-}
 
 /* Internal function used to allocate the table on hash table creation
  * and when enlarging the table */
 
 static int hash_table_allocate_table(Hashtable *hash_table, int increment) {
-    unsigned long long int new_table_size = getHashtableSizeWithIncrement(hash_table, increment);
+    //unsigned long long int new_table_size = getHashtableSizeWithIncrement(hash_table, increment);
+    unsigned long long int size;
+    if (hash_table->table_size <= hash_table->entries + increment) {
+        // Update:
+        hash_table->table_size = (hash_table->table_size + increment);
 
-    // Update:
-    hash_table->table_size = new_table_size;
-    hash_table->prime_index = hash_table->prime_index + increment;
+        /* Allocate the table and initialise to NULL for all entries */
 
-    /* Allocate the table and initialise to NULL for all entries */
-
-    hash_table->table = jvm_alloc(hash_table->table_size *
-                                  sizeof(HashtableEntry *));
-
+        hash_table->table = jvm_alloc(hash_table->table_size *
+                                      sizeof(HashtableEntry *));
+    }
     return hash_table->table != NULL;
 }
 
@@ -154,11 +108,10 @@ Hashtable *hashtable_create(HashtableHashFunc hash_func,
     hash_table->key_free_func = NULL;
     hash_table->value_free_func = NULL;
     hash_table->entries = 0;
-    hash_table->prime_index = 0;
 
     /* Allocate the table */
 
-    if (!hash_table_allocate_table(hash_table, 0)) {
+    if (!hash_table_allocate_table(hash_table, HASH_TABLE_DEFAULT_SIZE)) {
         jvm_free(hash_table);
 
         return NULL;
@@ -190,6 +143,30 @@ void hashtable_destory(Hashtable *hash_table) {
     /* Free the hash table structure */
 
     jvm_free(hash_table);
+}
+
+
+void hashtable_clear(Hashtable *hash_table) {
+    HashtableEntry *rover;
+    HashtableEntry *next;
+    unsigned long long int i;
+
+    for (i = 0; i < hash_table->table_size; ++i) {
+        rover = hash_table->table[i];
+        while (rover != NULL) {
+            next = rover->next;
+            hash_table_free_entry(hash_table, rover);
+            rover = next;
+        }
+    }
+    hash_table->entries = 0;
+    if (hash_table->table_size > HASH_TABLE_DEFAULT_SIZE) {
+        jvm_free(hash_table->table);
+        hash_table->table = NULL;
+        if (!hash_table_allocate_table(hash_table, HASH_TABLE_DEFAULT_SIZE)) {
+            jvm_free(hash_table);
+        }
+    }
 }
 
 void hashtable_register_free_functions(Hashtable *hash_table,
@@ -532,32 +509,12 @@ int hashtable_resize(Hashtable *hash_table) {
 
     int increment = 0;
 
-    // GROW
-    if ((hash_table->entries * 2) / hash_table->table_size > 0) {
-        do {
-            /* Table is more than 1/2 full */
-            increment++;
-
-        } while ((hash_table->entries * 2) / getHashtableSizeWithIncrement(hash_table, increment) > 0);
-    }
-        // SHRINK
-    else if ((hash_table->entries * 8) / hash_table->table_size == 0) {
-        do {
-            // Are we already as small as possible?
-            if (getHashtableSizeWithIncrement(hash_table, increment) <= hash_table_primes[0]) {
-                break;
-            }
-
-            /* Table is less than 1/8 full */
-            increment--;
-        } while ((hash_table->entries * 8) / getHashtableSizeWithIncrement(hash_table, increment) <= 0);
-    }
+    increment = hash_table->table_size << 1;
 
     if (increment != 0) {
         /* Store a copy of the old table */
         old_table = hash_table->table;
         old_table_size = hash_table->table_size;
-        old_prime_index = hash_table->prime_index;
 
         if (!hash_table_allocate_table(hash_table, increment)) {
 
@@ -567,7 +524,6 @@ int hashtable_resize(Hashtable *hash_table) {
 
             hash_table->table = old_table;
             hash_table->table_size = old_table_size;
-            hash_table->prime_index = old_prime_index;
 
             return 0;
         }

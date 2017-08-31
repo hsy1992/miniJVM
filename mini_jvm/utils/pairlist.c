@@ -5,7 +5,7 @@
 
 Pairlist *pairlist_create(s32 len) {
     if (len <= 0) {
-        len = 8;
+        len = 4;
     }
     Pairlist *list = (Pairlist *) jvm_alloc(sizeof(Pairlist));//每个位置放两个指针
     if (list) {

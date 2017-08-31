@@ -562,7 +562,7 @@ s32 _class_constant_pool_destory(Class *clazz) {
     }
     for (i = 0; i < clazz->constantPool.methodRef->length; i++) {
         ConstantMethodRef *ptr = (ConstantMethodRef *) arraylist_get_value(clazz->constantPool.methodRef, i);
-        jvm_free(ptr->virtual_methods);
+        pairlist_destory(ptr->virtual_methods);
         jvm_free(ptr);
     }
     for (i = 0; i < clazz->constantPool.interfaceRef->length; i++) {

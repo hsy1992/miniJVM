@@ -472,6 +472,9 @@ s32 garbage_is_refer_by(__refer sonPtr, __refer parentPtr) {
  */
 void *jvm_alloc(u32 size) {
     if (!size)return NULL;
+    if (size > 5000) {
+        int debug = 1;
+    }
     size += 4;
     void *ptr = malloc(size);
     if (ptr) {

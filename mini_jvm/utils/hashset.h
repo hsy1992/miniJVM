@@ -67,7 +67,6 @@ struct _Hashset {
 //    HashtableEqualFunc equal_func;
 //    HashtableKeyFreeFunc key_free_func;
     unsigned long long int entries;
-    int prime_index;
 };
 /**
  * Create a new hash table.

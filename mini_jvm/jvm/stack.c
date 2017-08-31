@@ -170,6 +170,11 @@ void runtime_create(Runtime *runtime) {
     runtime->threadInfo->top_runtime = runtime;
 }
 
+void runtime_destory(Runtime *runtime) {
+    jvm_free(runtime->threadInfo);
+    stack_destory(runtime->stack);
+}
+
 
 s32 localvar_init(Runtime *runtime, s32 count) {
     runtime->localVariables = jvm_alloc(sizeof(LocalVarItem) * count);

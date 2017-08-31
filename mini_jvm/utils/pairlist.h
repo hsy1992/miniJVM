@@ -17,6 +17,8 @@ typedef struct _Pairlist {
 
 Pairlist *pairlist_create(s32 len);
 
+void pairlist_destory(Pairlist *list);
+
 s32 pairlist_put(Pairlist *list, __refer left, __refer right);
 
 __refer pairlist_get(Pairlist *list, __refer left);

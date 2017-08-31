@@ -314,21 +314,17 @@ void *jtherad_loader(void *para) {
         arraylist_append(thread_list, &runtime);
         runtime.threadInfo->thread_running = 1;
         push_ref(runtime.stack, (__refer) jthread);
-        //printf("Thread [%x] run...\n",jthread);
         ret = execute_method(method, &runtime, method->_this_class);
         runtime.threadInfo->thread_running = 0;
         arraylist_remove(thread_list, jthread);
     }
-    return (void *) jthread;
+    runtime_destory(&runtime);
+    return (void *) (long) ret;
 }
 
-pthread_t *jthread_create_reg(Instance *ins, pthread_t *pthread) {//
-    pthread_t *pt = jvm_alloc(sizeof(pthread_t));
-    if (pthread) {
-        memcpy(pt, pthread, sizeof(pthread_t));
-    } else {
-        pthread_create(pt, NULL, jtherad_loader, ins);
-    }
+pthread_t jthread_create_and_start(Instance *ins) {//
+    pthread_t pt;
+    pthread_create(&pt, NULL, jtherad_loader, ins);
     return pt;
 }
 
@@ -354,8 +350,10 @@ JavaThreadLock *jthreadlock_create() {
 void jthreadlock_destory(JavaThreadLock *jtl) {
     if (jtl) {
         pthread_cond_destroy(&jtl->thread_cond);
+        pthread_mutexattr_destroy(&jtl->lock_attr);
         pthread_mutex_destroy(&jtl->mutex_lock);
         jtl->jthread_holder = NULL;
+        jtl->hold_count = 0;
         jvm_free(jtl);
     }
 }
@@ -628,7 +626,7 @@ Instance *jstring_create(Utf8String *src, Runtime *runtime) {
         s32 len = utf8_2_unicode(src, buf);
         Instance *arr = jarray_create(len, DATATYPE_JCHAR);//u16 type is 5
         memcpy(arr->arr_body, buf, len * data_type_bytes[DATATYPE_JCHAR]);
-
+        jvm_free(buf);
         __refer oldarr = getFieldRefer(ptr);//调用了String.init之后，已经有值了
         if (oldarr) {
             garbage_derefer(oldarr, jstring);

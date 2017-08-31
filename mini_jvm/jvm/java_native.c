@@ -607,7 +607,7 @@ s32 java_lang_Thread_sleep(Runtime *runtime, Class *clazz) {
 s32 java_lang_Thread_start(Runtime *runtime, Class *clazz) {
     StackFrame *stack = runtime->stack;
     Instance *ins = (Instance *) (runtime->localVariables + 0)->refer;
-    jthread_create_reg(ins, NULL);
+    jthread_create_and_start(ins);
 
 #if _JVM_DEBUG
     printf("java_lang_Thread_start \n");

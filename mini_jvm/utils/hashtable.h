@@ -159,6 +159,8 @@ int DEFAULT_HASH_EQUALS_FUNC(HashtableValue value1, HashtableValue value2);
 
 void hashtable_destory(Hashtable *hash_table);
 
+void hashtable_clear(Hashtable *hash_table);
+
 /**
  * Register functions used to free the key and value when an entry is
  * removed from a hash table.

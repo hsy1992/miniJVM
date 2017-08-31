@@ -7,73 +7,28 @@
 #include "../jvm/garbage.h"
 #include "hashset.h"
 
-
-/* This is a set of good hash table prime numbers, from:
- *   http://planetmath.org/encyclopedia/GoodHashsetPrimes.html
- * Each prime is roughly double the previous value, and as far as
- * possible from the nearest powers of two.
- *
- * Note: Primes after 1610612741 are added by finding the nearest prime to
- *       previous prime multiplied by 2.
- */
-
-static const unsigned long long int hashset_primes[] = {
-        4UL, 8UL, 16UL, 32UL, 64UL, 128UL, 256UL, 389UL, 769UL, 1543UL, 3079UL, 6151UL, 12289UL,
-        24593UL, 49157UL, 98317UL, 196613UL, 393241UL, 786433UL, 1572869UL, 3145739UL,
-        6291469UL, 12582917UL, 25165843UL, 50331653UL, 100663319UL, 201326611UL,
-        402653189UL, 805306457UL, 1610612741UL, 3221225479UL, 6442450967UL,
-        12884901947UL, 25769803897UL, 51539607793UL, 103079215583UL, 206158431161UL,
-};
-
-static const int hash_table_num_primes
-        = sizeof(hashset_primes) / sizeof(unsigned long long int);
-
-unsigned long long int getHashsetSizeWithIncrement(Hashset *set, int increment) {
-    unsigned long long int size = hashset_primes[0];
-
-    // Target size is within range:
-    if (set->prime_index + increment < hash_table_num_primes) {
-        size = hashset_primes[set->prime_index + increment];
-    }        // Target size not in range:
-    else {
-        // Current in range, target not in range:
-        if (set->prime_index < hash_table_num_primes) {
-            int diff = set->prime_index + increment - (hash_table_num_primes - 1);
-
-            size = hashset_primes[hash_table_num_primes - 1];
-            size = size * pow(2, diff);
-        }            // Current is outside, target is outside; current < target:
-        else if (set->prime_index < set->prime_index + increment) {
-            size = size * pow(2, increment);
-        }            // Current is outside, target is outside; current > target:
-        else if (set->prime_index > set->prime_index + increment) {
-            size = size / pow(2, increment);
-        }
-    }
-
-    return size;
-}
+static s32 HASH_SET_DEFAULT_SIZE = 4;
 
 /* Internal function used to allocate the table on hash table creation
  * and when enlarging the table */
 
-static int hash_table_allocate_table(Hashset *set, int increment) {
-    unsigned long long int new_table_size = getHashsetSizeWithIncrement(set, increment);
+static int hashset_allocate_table(Hashset *set, int increment) {
+    unsigned long long int size;
+    if (set->table_size <= set->entries + increment) {
+        // Update:
+        set->table_size = (set->table_size + increment);
 
-    // Update:
-    set->table_size = new_table_size;
-    set->prime_index = set->prime_index + increment;
+        /* Allocate the table and initialise to NULL for all entries */
 
-    /* Allocate the table and initialise to NULL for all entries */
-    set->table = jvm_alloc(set->table_size *
-                           sizeof(HashsetEntry *));
-
+        set->table = jvm_alloc(set->table_size *
+                               sizeof(HashtableEntry *));
+    }
     return set->table != NULL;
 }
 
 /* Free an entry, calling the free functions if there are any registered */
 
-static void hash_table_free_entry(Hashset *set, HashsetEntry *entry) {
+static void hashset_free_entry(Hashset *set, HashsetEntry *entry) {
     /* If there is a function registered for freeing keys, use it to free
      * the key */
 
@@ -108,11 +63,10 @@ Hashset *hashset_create() {
 //    set->equal_func = equal_func;
 //    set->key_free_func = NULL;
     set->entries = 0;
-    set->prime_index = 0;
 
     /* Allocate the table */
 
-    if (!hash_table_allocate_table(set, 0)) {
+    if (!hashset_allocate_table(set, HASH_SET_DEFAULT_SIZE)) {
         jvm_free(set);
 
         return NULL;
@@ -132,7 +86,7 @@ void hashset_destory(Hashset *set) {
         rover = set->table[i];
         while (rover != NULL) {
             next = rover->next;
-            hash_table_free_entry(set, rover);
+            hashset_free_entry(set, rover);
             rover = next;
         }
     }
@@ -156,15 +110,15 @@ void hashset_clear(Hashset *set) {
         rover = set->table[i];
         while (rover != NULL) {
             next = rover->next;
-            hash_table_free_entry(set, rover);
+            hashset_free_entry(set, rover);
             rover = next;
         }
     }
     set->entries = 0;
-    set->prime_index = 0;
-    if (set->table_size > hashset_primes[set->prime_index]) {
+    if (set->table_size > HASH_SET_DEFAULT_SIZE) {
         jvm_free(set->table);
-        if (!hash_table_allocate_table(set, 0)) {
+        set->table = NULL;
+        if (!hashset_allocate_table(set, HASH_SET_DEFAULT_SIZE)) {
             jvm_free(set);
         }
     }
@@ -325,7 +279,7 @@ int hashset_remove(Hashset *set, HashsetKey key, int resize) {
 
             /* Destroy the entry structure */
 
-            hash_table_free_entry(set, entry);
+            hashset_free_entry(set, entry);
 
             /* Track count of entries */
 
@@ -442,34 +396,14 @@ int hashset_resize(Hashset *set) {
 
     int increment = 0;
 
-    // GROW
-    if ((set->entries * 2) / set->table_size > 0) {
-        do {
-            /* Table is more than 1/2 full */
-            increment++;
-
-        } while ((set->entries * 2) / getHashsetSizeWithIncrement(set, increment) > 0);
-    }
-        // SHRINK
-    else if ((set->entries * 8) / set->table_size == 0) {
-        do {
-            // Are we already as small as possible?
-            if (getHashsetSizeWithIncrement(set, increment) <= hashset_primes[0]) {
-                break;
-            }
-
-            /* Table is less than 1/8 full */
-            increment--;
-        } while ((set->entries * 8) / getHashsetSizeWithIncrement(set, increment) <= 0);
-    }
+    increment = set->table_size << 1;
 
     if (increment != 0) {
         /* Store a copy of the old table */
         old_table = set->table;
         old_table_size = set->table_size;
-        old_prime_index = set->prime_index;
 
-        if (!hash_table_allocate_table(set, increment)) {
+        if (!hashset_allocate_table(set, increment)) {
 
             /* Failed to allocate the new table */
 
@@ -477,7 +411,6 @@ int hashset_resize(Hashset *set) {
 
             set->table = old_table;
             set->table_size = old_table_size;
-            set->prime_index = old_prime_index;
 
             return 0;
         }

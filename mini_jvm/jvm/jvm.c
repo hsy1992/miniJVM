@@ -82,8 +82,7 @@ s32 execute(c8 *p_classpath, c8 *p_mainclass, s32 argc, c8 **argv) {
             Class *thread_clazz = classes_load_get("java/lang/Thread", &runtime);
             //为主线程创建Thread实例
             Instance *main_thread = instance_create(thread_clazz);
-            pthread_t pthread = pthread_self();
-            jthread_create_reg(main_thread, &pthread);
+            //pthread_t pthread = pthread_self();
             runtime.threadInfo->jthread = main_thread;
             runtime.threadInfo->thread_running=1;
             instance_init(main_thread, &runtime);//必须放在最好，初始化时需要用到前面的赋值
@@ -135,7 +134,6 @@ s32 execute(c8 *p_classpath, c8 *p_mainclass, s32 argc, c8 **argv) {
 //        printClassFileFormat(&(obj_of_clazz->cff));
 //#endif
 //    }
-    stack_destory(runtime.stack);
 
     utf8_destory(classpath);
 
@@ -143,6 +141,7 @@ s32 execute(c8 *p_classpath, c8 *p_mainclass, s32 argc, c8 **argv) {
     destoryAllClasses(classes);
     utf8_destory(JVM_CLASS->name);
     class_destory(JVM_CLASS);
+    runtime_destory(&runtime);
     printf("over\n");
     return ret;
 }

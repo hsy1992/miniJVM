@@ -47,8 +47,8 @@ s32 _DESTORY_CLASS(Class *_this) {
     _this->field_instance_template = NULL;
     jvm_free(_this->constant_item_ptr);
     _this->constant_item_ptr = NULL;
-    constant_list_destory(_this);
     jthreadlock_destory(_this->thread_lock);
+    constant_list_destory(_this);
 }
 
 void constant_list_create(Class *clazz) {

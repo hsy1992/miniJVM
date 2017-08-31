@@ -56,6 +56,8 @@ void printDumpOfClasses();
 
 void runtime_create(Runtime *runtime);
 
+void runtime_destory(Runtime *runtime);
+
 ////======================= thread =============================
 typedef struct _JavaThreadInfo {
     Instance *jthread;
@@ -72,7 +74,7 @@ typedef struct _JavaThreadLock {
     s32 hold_count;
 } JavaThreadLock;
 
-pthread_t *jthread_create_reg(Instance *ins, pthread_t *pthread);
+pthread_t jthread_create_and_start(Instance *ins);
 
 __refer jthread_get_threadq_value(Instance *ins);
 
