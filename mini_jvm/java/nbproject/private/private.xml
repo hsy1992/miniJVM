@@ -2,6 +2,21 @@
 <project-private xmlns="http://www.netbeans.org/ns/project-private/1">
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
-        <group/>
+        <group>
+            <file>file:/D:/githome/mini_jvm/mini_jvm/java/src/com/sun/cldc/i18n/StreamWriter.java</file>
+            <file>file:/D:/githome/mini_jvm/mini_jvm/java/src/java/lang/Thread.java</file>
+            <file>file:/D:/githome/mini_jvm/mini_jvm/java/src/com/egls/test/Foo1.java</file>
+            <file>file:/D:/githome/mini_jvm/mini_jvm/java/src/com/egls/test/BpDeep.java</file>
+            <file>file:/D:/githome/mini_jvm/mini_jvm/java/src/com/sun/cldc/io/ConsoleOutputStream.java</file>
+            <file>file:/D:/githome/mini_jvm/mini_jvm/java/src/java/lang/System.java</file>
+            <file>file:/D:/githome/mini_jvm/mini_jvm/java/src/java/lang/Class.java</file>
+            <file>file:/D:/githome/mini_jvm/mini_jvm/java/src/javax/microedition/io/HttpConnection.java</file>
+            <file>file:/D:/githome/mini_jvm/mini_jvm/java/src/java/io/Writer.java</file>
+            <file>file:/D:/githome/mini_jvm/mini_jvm/java/src/java/io/PrintStream.java</file>
+            <file>file:/D:/githome/mini_jvm/mini_jvm/java/src/java/io/OutputStreamWriter.java</file>
+            <file>file:/D:/githome/mini_jvm/mini_jvm/java/src/com/sun/cldc/i18n/Helper.java</file>
+            <file>file:/D:/githome/mini_jvm/mini_jvm/java/src/com/egls/test/Foo2.java</file>
+            <file>file:/D:/githome/mini_jvm/mini_jvm/java/src/java/io/OutputStream.java</file>
+        </group>
     </open-files>
 </project-private>
