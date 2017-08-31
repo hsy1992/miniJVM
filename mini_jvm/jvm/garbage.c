@@ -35,7 +35,7 @@ void *collect_thread_run(void *para) {
         if (!_garbage_thread_pause) {
             garbage_collect();
         }
-        threadWait(GARBAGE_PERIOD_MS);
+        threadSleep(GARBAGE_PERIOD_MS);
     }
     return NULL;
 }
@@ -77,18 +77,25 @@ Hashset *_garbage_get_set() {
  * @param set
  */
 void _garbage_put_set(Hashset *set) {
-    //no cache
-//    hashset_destory(set);
-
-    //cache limited hashset
-//    if (_garbage_refer_set_pool->length > 100000) {
-//        hashset_destory(set);
-//        return;
-//    }
-
-    //it would be big mem use
-    hashset_clear(set);
-    arraylist_append(_garbage_refer_set_pool, set);
+    s32 mode = 0;
+    switch (mode) {
+        case 0:
+            //no cache
+            hashset_destory(set);
+            break;
+        case 1:
+            //cache limited hashset
+            if (_garbage_refer_set_pool->length > 100000) {
+                hashset_destory(set);
+                return;
+            }
+            break;
+        case 2:
+            //it would be big mem use
+            hashset_clear(set);
+            arraylist_append(_garbage_refer_set_pool, set);
+            break;
+    }
 }
 
 //===================================================================
@@ -175,9 +182,13 @@ s32 garbage_check_by_all_thread() {
     //printf("thread set size:%d\n", thread_list->length);
     for (i = 0; i < thread_list->length; i++) {
         Runtime *runtime = (Runtime *) arraylist_get_value(thread_list, i);
-        runtime->threadInfo->garbage_collect_mark_task = 1;
-        //printf("thread wait\n");
-        garbage_thread_wait();//等待处理完成
+        if (runtime->threadInfo->thread_running) {//让线程自己来标注
+            runtime->threadInfo->garbage_collect_mark_task = 1;
+            //printf("thread wait\n");
+            garbage_thread_wait();//等待处理完成
+        }else{//线程没有run的时候（wait sleep），自己来做，但线程恢复run时，会试图获取锁，此进正在做下面的操作
+            garbage_mark_refered_obj(runtime);
+        }
         //printf("thread marked refered , [%llx]\n", (s64) (long) runtime->threadInfo->jthread);
     }
     return 0;

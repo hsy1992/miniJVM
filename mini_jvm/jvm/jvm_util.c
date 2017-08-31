@@ -346,7 +346,9 @@ JavaThreadLock *jthreadlock_create() {
 
 void jthreadlock_destory(JavaThreadLock *jtl) {
     if (jtl) {
+        pthread_mutex_destroy(&jtl->thread_cond);
         pthread_mutex_destroy(&jtl->mutex_lock);
+        jtl->jthread_holder = NULL;
         jvm_free(jtl);
     }
 }

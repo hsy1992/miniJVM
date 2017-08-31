@@ -27,7 +27,7 @@ s64 currentTimeMillis();
 
 s64 nanoTime();
 
-s32 threadWait(s64 ms);
+s32 threadSleep(s64 ms);
 
 //s32 threadSleep(s64 ms);
 
@@ -59,6 +59,7 @@ typedef struct _JavaThreadInfo {
     Instance *jthread;
     Runtime *top_runtime;
     volatile u8 garbage_collect_mark_task;
+    volatile u8 thread_running;
 } JavaThreadInfo;
 
 typedef struct _JavaThreadLock {

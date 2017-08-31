@@ -3022,7 +3022,7 @@ s32 execute_method(MethodInfo *method, Runtime *pruntime, Class *clazz) {
                         break;
                     } else {
                         printf("Exception : %s\n ", utf8_cstr(ins->obj_of_clazz->name));
-                        pc = (u8 *) (ca->code + et->handler_pc);
+                        pc = (ca->code + et->handler_pc);
                     }
                 }
             } while (1);
