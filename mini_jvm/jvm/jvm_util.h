@@ -52,18 +52,19 @@ Instance *getInstanceInStack(Class *clazz, ConstantMethodRef *cmr, StackFrame *s
 void printDumpOfClasses();
 
 
-
 void runtime_create(Runtime *runtime);
 
 ////======================= thread =============================
 typedef struct _JavaThreadInfo {
-    Instance* jthread;
-    Runtime* top_runtime;
+    Instance *jthread;
+    Runtime *top_runtime;
     volatile u8 garbage_collect_mark_task;
-}JavaThreadInfo;
+} JavaThreadInfo;
 
 typedef struct _JavaThreadLock {
-    pthread_mutex_t f_lock; //互斥锁
+    pthread_cond_t thread_cond;
+    pthread_mutexattr_t lock_attr;
+    pthread_mutex_t mutex_lock; //互斥锁
     Instance *jthread_holder;
     s32 hold_count;
 } JavaThreadLock;
@@ -81,5 +82,13 @@ void jthreadlock_destory(JavaThreadLock *jtl);
 s32 jthread_lock(Instance *ins, Runtime *runtime);
 
 s32 jthread_unlock(Instance *ins, Runtime *runtime);
+
+s32 jthread_notify(Instance *ins, Runtime *runtime);
+
+s32 jthread_notifyAll(Instance *ins, Runtime *runtime);
+
+s32 jthread_wait(Instance *ins, Runtime *runtime);
+
+s32 jthread_waitTime(Instance *ins, Runtime *runtime, long waitms);
 
 #endif //MINI_JVM_UTIL_H

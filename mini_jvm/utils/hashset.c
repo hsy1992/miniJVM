@@ -77,9 +77,9 @@ static void hash_table_free_entry(Hashset *set, HashsetEntry *entry) {
     /* If there is a function registered for freeing keys, use it to free
      * the key */
 
-    if (set->key_free_func != NULL) {
-        set->key_free_func(entry->key);
-    }
+//    if (set->key_free_func != NULL) {
+//        set->key_free_func(entry->key);
+//    }
 
     /* Free the data structure */
 
@@ -91,8 +91,9 @@ unsigned long _DEFAULT_HashsetHash(HashsetKey kmer) {
 }
 
 
-Hashset *hashset_create(HashtableHashFunc hash_func,
-                        HashtableEqualFunc equal_func) {
+//Hashset *hashset_create(HashtableHashFunc hash_func,
+//                        HashtableEqualFunc equal_func) {
+Hashset *hashset_create() {
     Hashset *set;
 
     /* Allocate a new hash table structure */
@@ -103,9 +104,9 @@ Hashset *hashset_create(HashtableHashFunc hash_func,
         return NULL;
     }
 
-    set->hash_func = hash_func;
-    set->equal_func = equal_func;
-    set->key_free_func = NULL;
+//    set->hash_func = hash_func;
+//    set->equal_func = equal_func;
+//    set->key_free_func = NULL;
     set->entries = 0;
     set->prime_index = 0;
 
@@ -168,11 +169,11 @@ void hashset_clear(Hashset *set) {
         }
     }
 }
-
-void hashset_register_free_functions(Hashset *set,
-                                     HashtableKeyFreeFunc key_free_func) {
-    set->key_free_func = key_free_func;
-}
+//
+//void hashset_register_free_functions(Hashset *set,
+//                                     HashtableKeyFreeFunc key_free_func) {
+//    set->key_free_func = key_free_func;
+//}
 
 int hashset_put(Hashset *set, HashsetKey key) {
     HashsetEntry *rover;
@@ -197,7 +198,7 @@ int hashset_put(Hashset *set, HashsetKey key) {
 
     /* Generate the hash of the key and hence the index into the table */
 
-    index = set->hash_func(key) % set->table_size;
+    index = DEFAULT_HASH_FUNC(key) % set->table_size;
 
     /* Traverse the chain at this location and look for an existing
      * entry with the same key */
@@ -205,15 +206,15 @@ int hashset_put(Hashset *set, HashsetKey key) {
     rover = set->table[index];
 
     while (rover != NULL) {
-        if (set->equal_func(rover->key, key) != 0) {
+        if (DEFAULT_HASH_EQUALS_FUNC(rover->key, key) != 0) {
 
             /* Same key: overwrite this entry with new data */
             /* Same with the key: use the new key value and free 
              * the old one */
 
-            if (set->key_free_func != NULL) {
-                set->key_free_func(rover->key);
-            }
+//            if (set->key_free_func != NULL) {
+//                set->key_free_func(rover->key);
+//            }
 
             rover->key = key;
 
@@ -254,7 +255,7 @@ HashsetKey hashset_get(Hashset *set, HashsetKey key) {
 
     /* Generate the hash of the key and hence the index into the table */
 
-    index = set->hash_func(key) % set->table_size;
+    index = DEFAULT_HASH_FUNC(key) % set->table_size;
 
     /* Walk the chain at this index until the corresponding entry is
      * found */
@@ -262,7 +263,7 @@ HashsetKey hashset_get(Hashset *set, HashsetKey key) {
     rover = set->table[index];
 
     while (rover != NULL) {
-        if (set->equal_func(key, rover->key) != 0) {
+        if (DEFAULT_HASH_EQUALS_FUNC(key, rover->key) != 0) {
 
             /* Found the entry.  Return the data. */
 
@@ -300,7 +301,7 @@ int hashset_remove(Hashset *set, HashsetKey key, int resize) {
 
     /* Generate the hash of the key and hence the index into the table */
 
-    index = set->hash_func(key) % set->table_size;
+    index = DEFAULT_HASH_FUNC(key) % set->table_size;
 
     /* Rover points at the pointer which points at the current entry
      * in the chain being inspected.  ie. the entry in the table, or
@@ -312,7 +313,7 @@ int hashset_remove(Hashset *set, HashsetKey key, int resize) {
 
     while (*rover != NULL) {
 
-        if (set->equal_func(key, (*rover)->key) != 0) {
+        if (DEFAULT_HASH_EQUALS_FUNC(key, (*rover)->key) != 0) {
 
             /* This is the entry to remove */
 
@@ -491,7 +492,7 @@ int hashset_resize(Hashset *set) {
 
                 /* Find the index into the new table */
 
-                index = set->hash_func(rover->key) % set->table_size;
+                index = DEFAULT_HASH_FUNC(rover->key) % set->table_size;
 
                 /* Link this entry into the chain */
 

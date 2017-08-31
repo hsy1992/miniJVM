@@ -66,13 +66,27 @@ void garbage_thread_notify() {
 
 Hashset *_garbage_get_set() {
     if (!_garbage_refer_set_pool->length) {
-        Hashset *set = hashset_create(DEFAULT_HASH_FUNC, DEFAULT_HASH_EQUALS_FUNC);
+        Hashset *set = hashset_create();
         return set;
     }
     return arraylist_pop_back(_garbage_refer_set_pool);
 }
 
+/**
+ * 3 mode to mem or perfomence
+ * @param set
+ */
 void _garbage_put_set(Hashset *set) {
+    //no cache
+//    hashset_destory(set);
+
+    //cache limited hashset
+//    if (_garbage_refer_set_pool->length > 100000) {
+//        hashset_destory(set);
+//        return;
+//    }
+
+    //it would be big mem use
     hashset_clear(set);
     arraylist_append(_garbage_refer_set_pool, set);
 }
@@ -122,7 +136,8 @@ s32 garbage_collect() {
             }
         }
     }
-    printf("garbage cllected OBJ: %lld -> %lld    MEM : %lld -> %lld\n", obj_count, hashtable_num_entries(son_2_father),mem1, heap_size);
+    printf("garbage cllected OBJ: %lld -> %lld    MEM : %lld -> %lld\n", obj_count, hashtable_num_entries(son_2_father),
+           mem1, heap_size);
 
     garbage_thread_unlock();
 

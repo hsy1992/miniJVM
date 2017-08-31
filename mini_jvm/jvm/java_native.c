@@ -26,11 +26,11 @@ s32 java_lang_Class_forName(Runtime *runtime, Class *clazz) {
         Instance *arr = jstring_get_value_array(jstr);
         unicode_2_utf8(ustr, (u16 *) arr->arr_body, arr->arr_length);
         utf8_replace_c(ustr, ".", "/");
-        cl = classes_get( ustr);
+        cl = classes_get(ustr);
 
         if (!cl) {
             load_class(classpath, ustr, classes);
-            cl = classes_get( ustr);
+            cl = classes_get(ustr);
             class_link(cl);
             class_clinit(cl, runtime);
         }
@@ -315,9 +315,7 @@ s32 java_lang_Object_getClass(Runtime *runtime, Class *clazz) {
 s32 java_lang_Object_hashCode(Runtime *runtime, Class *clazz) {
     StackFrame *stack = runtime->stack;
     Instance *ins = (Instance *) (runtime->localVariables + 0)->refer;
-    Long2Double l2d;
-    l2d.r = ins;
-    push_int(stack, l2d.i2l.i1);
+    push_int(stack, (s32) (long) ins);
 #if _JVM_DEBUG
     printf("java_lang_Object_hashCode %llx\n", l2d.l);
 #endif
@@ -328,6 +326,7 @@ s32 java_lang_Object_notify(Runtime *runtime, Class *clazz) {
     StackFrame *stack = runtime->stack;
     Instance *ins = (Instance *) (runtime->localVariables + 0)->refer;
 
+    jthread_notify(ins, runtime);
 #if _JVM_DEBUG
     printf("java_lang_Object_notify %d\n", ins);
 #endif
@@ -337,7 +336,7 @@ s32 java_lang_Object_notify(Runtime *runtime, Class *clazz) {
 s32 java_lang_Object_notifyAll(Runtime *runtime, Class *clazz) {
     StackFrame *stack = runtime->stack;
     Instance *ins = (Instance *) (runtime->localVariables + 0)->refer;
-
+    jthread_notifyAll(ins, runtime);
 #if _JVM_DEBUG
     printf("java_lang_Object_notifyAll %d\n", ins);
 #endif
@@ -350,7 +349,7 @@ s32 java_lang_Object_wait(Runtime *runtime, Class *clazz) {
     Long2Double l2d;
     l2d.i2l.i1 = (runtime->localVariables + 1)->integer;
     l2d.i2l.i0 = (runtime->localVariables + 2)->integer;
-    threadWait(l2d.l);
+    jthread_waitTime(ins, runtime, l2d.l);
 #if _JVM_DEBUG
     printf("java_lang_Object_wait %d\n", ins);
 #endif

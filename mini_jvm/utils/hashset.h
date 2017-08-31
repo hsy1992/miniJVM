@@ -63,9 +63,9 @@ struct _HashsetEntry {
 struct _Hashset {
     HashsetEntry **table;
     unsigned long long int table_size;
-    HashtableHashFunc hash_func;
-    HashtableEqualFunc equal_func;
-    HashtableKeyFreeFunc key_free_func;
+//    HashtableHashFunc hash_func;
+//    HashtableEqualFunc equal_func;
+//    HashtableKeyFreeFunc key_free_func;
     unsigned long long int entries;
     int prime_index;
 };
@@ -81,8 +81,10 @@ struct _Hashset {
  *                             table.
  */
 
-Hashset *hashset_create(HashtableHashFunc hash_func,
-                            HashtableEqualFunc equal_func);
+Hashset *hashset_create();
+//
+//Hashset *hashset_create(HashtableHashFunc hash_func,
+//                            HashtableEqualFunc equal_func);
 
 /**
  * Destroy a hash table.
@@ -103,8 +105,8 @@ void hashset_clear(Hashset *hash_table);
  * @param value_free_func      Function used to free values.
  */
 
-void hashset_register_free_functions(Hashset *hash_table,
-                                       HashtableKeyFreeFunc key_free_func);
+//void hashset_register_free_functions(Hashset *hash_table,
+//                                       HashtableKeyFreeFunc key_free_func);
 
 /**
  * Insert a value into a hash table, overwriting any existing entry

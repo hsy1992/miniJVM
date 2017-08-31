@@ -337,13 +337,16 @@ void jthread_set_threadq_value(Instance *ins, void *val) {
 
 JavaThreadLock *jthreadlock_create() {
     JavaThreadLock *jtl = jvm_alloc(sizeof(JavaThreadLock));
-    pthread_mutex_init(&jtl->f_lock, NULL);
+    pthread_cond_init(&jtl->thread_cond, NULL);
+    pthread_mutexattr_init(&jtl->lock_attr);
+    pthread_mutexattr_settype(&jtl->lock_attr, PTHREAD_MUTEX_RECURSIVE);
+    pthread_mutex_init(&jtl->mutex_lock, &jtl->lock_attr);
     return jtl;
 }
 
 void jthreadlock_destory(JavaThreadLock *jtl) {
     if (jtl) {
-        pthread_mutex_destroy(&jtl->f_lock);
+        pthread_mutex_destroy(&jtl->mutex_lock);
         jvm_free(jtl);
     }
 }
@@ -355,13 +358,13 @@ s32 jthread_lock(Instance *ins, Runtime *runtime) { //可能会重入，同一�
     }
     JavaThreadLock *jtl = ins->thread_lock;
     if (jtl->jthread_holder == NULL) {//没人锁
-        pthread_mutex_lock(&jtl->f_lock);
+        pthread_mutex_lock(&jtl->mutex_lock);
         jtl->jthread_holder = runtime->threadInfo->jthread;
         jtl->hold_count++;
     } else if (jtl->jthread_holder == runtime->threadInfo->jthread) { //重入
         jtl->hold_count++;
     } else {
-        pthread_mutex_lock(&jtl->f_lock);
+        pthread_mutex_lock(&jtl->mutex_lock);
         jtl->jthread_holder = runtime->threadInfo->jthread;
         jtl->hold_count++;
     }
@@ -381,15 +384,54 @@ s32 jthread_unlock(Instance *ins, Runtime *runtime) {
         jtl->hold_count--;
         if (jtl->hold_count == 0) {//must change holder first, and unlock later
             jtl->jthread_holder = NULL;
-            pthread_mutex_unlock(&jtl->f_lock);
+            pthread_mutex_unlock(&jtl->mutex_lock);
         }
     }
+    return 0;
 #if _JVM_DEBUG
     printf("unlock: %llx   lock holder: %llx, count: %d \n", (s64) (long) (runtime->threadInfo->jthread),
            (s64) (long) (jtl->jthread_holder), jtl->hold_count);
 #endif
 }
 
+s32 jthread_notify(Instance *ins, Runtime *runtime) {
+    if (ins == NULL)return -1;
+    if (!ins->thread_lock) {
+        ins->thread_lock = jthreadlock_create();
+    }
+    pthread_cond_signal(&ins->thread_lock->thread_cond);
+    return 0;
+}
+
+s32 jthread_notifyAll(Instance *ins, Runtime *runtime) {
+    if (ins == NULL)return -1;
+    if (!ins->thread_lock) {
+        ins->thread_lock = jthreadlock_create();
+    }
+    pthread_cond_broadcast(&ins->thread_lock->thread_cond);
+    return 0;
+}
+
+s32 jthread_wait(Instance *ins, Runtime *runtime) {
+    if (ins == NULL)return -1;
+    if (!ins->thread_lock) {
+        ins->thread_lock = jthreadlock_create();
+    }
+    pthread_cond_wait(&ins->thread_lock->thread_cond, &ins->thread_lock->mutex_lock);
+    return 0;
+}
+
+s32 jthread_waitTime(Instance *ins, Runtime *runtime, long waitms) {
+    if (ins == NULL)return -1;
+    if (!ins->thread_lock) {
+        ins->thread_lock = jthreadlock_create();
+    }
+    struct timespec t;
+    t.tv_sec = waitms / 1000;
+    t.tv_nsec = (waitms % 1000) * 1000000;
+    pthread_cond_timedwait(&ins->thread_lock->thread_cond, &ins->thread_lock->mutex_lock, &t);
+    return 0;
+}
 //===============================    实例化相关  ==================================
 
 u8 instance_of(Class *clazz, Instance *ins) {
