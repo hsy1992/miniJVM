@@ -152,6 +152,10 @@ s32 garbage_collect() {
     printf("garbage cllected OBJ: %lld -> %lld    MEM : %lld -> %lld\n", obj_count, hashtable_num_entries(son_2_father),
            mem1, heap_size);
 
+    if (_garbage_count++ % 5 == 0) {//每n秒resize一次
+        hashtable_remove(son_2_father, NULL, 1);
+        hashtable_remove(father_2_son, NULL, 1);
+    }
     garbage_thread_unlock();
 
     return 0;

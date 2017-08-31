@@ -12,17 +12,13 @@ static s32 HASH_SET_DEFAULT_SIZE = 4;
 /* Internal function used to allocate the table on hash table creation
  * and when enlarging the table */
 
-static int hashset_allocate_table(Hashset *set, int increment) {
-    unsigned long long int size;
-    if (set->table_size <= set->entries + increment) {
-        // Update:
-        set->table_size = (set->table_size + increment);
-
-        /* Allocate the table and initialise to NULL for all entries */
-
-        set->table = jvm_alloc(set->table_size *
+static int hashset_allocate_table(Hashset *set, int size) {
+    if (size) {
+        set->table = jvm_alloc(size *
                                sizeof(HashtableEntry *));
+        if (set->table)set->table_size = size;
     }
+
     return set->table != NULL;
 }
 
@@ -118,6 +114,7 @@ void hashset_clear(Hashset *set) {
     if (set->table_size > HASH_SET_DEFAULT_SIZE) {
         jvm_free(set->table);
         set->table = NULL;
+        set->table_size = 0;
         if (!hashset_allocate_table(set, HASH_SET_DEFAULT_SIZE)) {
             jvm_free(set);
         }
@@ -138,11 +135,11 @@ int hashset_put(Hashset *set, HashsetKey key) {
      * size, the number of hash collisions increases and performance
      * decreases. Enlarge the table size to prevent this happening */
 
-    if ((set->entries * 2) / set->table_size > 0) {
+    if ((set->entries << 1) >= set->table_size) {
 
         /* Table is more than 1/2 full */
 
-        if (!hashset_resize(set)) {
+        if (!hashset_resize(set, set->table_size << 1)) {
 
             /* Failed to enlarge the table */
 
@@ -241,11 +238,11 @@ int hashset_remove(Hashset *set, HashsetKey key, int resize) {
      * size, the table is taking up too much space. 
      * Shrink table to improve space efficiency. */
 
-    if (resize && (set->entries * 8) / set->table_size <= 0) {
+    if (resize && (set->entries << 3) < set->table_size) {
 
         /* Table is less than 1/8 full */
 
-        if (!hashset_resize(set)) {
+        if (!hashset_resize(set, set->table_size >> 1)) {
 
             /* Failed to enlarge the table */
 
@@ -385,7 +382,7 @@ HashsetKey hashset_iter_next_key(HashsetIterator *iterator) {
     return result;
 }
 
-int hashset_resize(Hashset *set) {
+int hashset_resize(Hashset *set, int size) {
     HashsetEntry **old_table;
     unsigned long long int old_table_size;
     int old_prime_index;
@@ -394,16 +391,12 @@ int hashset_resize(Hashset *set) {
     unsigned long long int index;
     unsigned long long int i;
 
-    int increment = 0;
-
-    increment = set->table_size << 1;
-
-    if (increment != 0) {
+    if (size != 0) {
         /* Store a copy of the old table */
         old_table = set->table;
         old_table_size = set->table_size;
 
-        if (!hashset_allocate_table(set, increment)) {
+        if (!hashset_allocate_table(set, size)) {
 
             /* Failed to allocate the new table */
 

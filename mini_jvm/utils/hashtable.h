@@ -268,7 +268,7 @@ HashtableValue hashtable_iter_next(HashtableIterator *iterator);
 
 HashtableKey hashtable_iter_next_key(HashtableIterator *iterator);
 
-int hashtable_resize(Hashtable *hash_table);
+int hashtable_resize(Hashtable *hash_table,unsigned long long int  size);
 
 #ifdef __cplusplus
 }

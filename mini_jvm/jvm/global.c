@@ -4,7 +4,7 @@
 #include "jvm.h"
 //======================= global var =============================
 
-Class* JVM_CLASS;
+Class *JVM_CLASS;
 Utf8String *classpath;
 Hashtable *classes;  //key =  package+classname value =  class_ptr
 ArrayList *thread_list; //all thread
@@ -15,7 +15,8 @@ c8 *data_type_str = "    ZCFDBSIJL[";
 s32 _garbage_thread_stop = 0;
 s32 _garbage_thread_pause = 1;
 s64 GARBAGE_PERIOD_MS = 1000;
-ArrayList* _garbage_refer_set_pool;
+ArrayList *_garbage_refer_set_pool;
+s64 _garbage_count = 0;
 
 Hashtable *son_2_father; //key=mem_ptr, value=我被别人引用的列表
 Hashtable *father_2_son; //key=mem_ptr, value=别人被我引用的列表

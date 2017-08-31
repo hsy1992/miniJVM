@@ -17,6 +17,7 @@ extern s32 _garbage_thread_stop;
 extern s32 _garbage_thread_pause;
 pthread_cond_t _garbageCond;
 extern ArrayList* _garbage_refer_set_pool;
+extern s64 _garbage_count;
 
 
 void *collect_thread_run(void *para);

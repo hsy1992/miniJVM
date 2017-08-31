@@ -47,18 +47,16 @@ struct _Hashtable {
 /* Internal function used to allocate the table on hash table creation
  * and when enlarging the table */
 
-static int hash_table_allocate_table(Hashtable *hash_table, int increment) {
+static int hash_table_allocate_table(Hashtable *hash_table, unsigned long long int size) {
     //unsigned long long int new_table_size = getHashtableSizeWithIncrement(hash_table, increment);
-    unsigned long long int size;
-    if (hash_table->table_size <= hash_table->entries + increment) {
-        // Update:
-        hash_table->table_size = (hash_table->table_size + increment);
 
-        /* Allocate the table and initialise to NULL for all entries */
-
-        hash_table->table = jvm_alloc(hash_table->table_size *
+    /* Allocate the table and initialise to NULL for all entries */
+    if (size) {
+        hash_table->table = jvm_alloc(size *
                                       sizeof(HashtableEntry *));
+        if (hash_table->table)hash_table->table_size = size;
     }
+
     return hash_table->table != NULL;
 }
 
@@ -163,6 +161,7 @@ void hashtable_clear(Hashtable *hash_table) {
     if (hash_table->table_size > HASH_TABLE_DEFAULT_SIZE) {
         jvm_free(hash_table->table);
         hash_table->table = NULL;
+        hash_table->table_size = 0;
         if (!hash_table_allocate_table(hash_table, HASH_TABLE_DEFAULT_SIZE)) {
             jvm_free(hash_table);
         }
@@ -185,14 +184,11 @@ int hashtable_put(Hashtable *hash_table, HashtableKey key, HashtableValue value)
      * size, the number of hash collisions increases and performance
      * decreases. Enlarge the table size to prevent this happening */
 
-    if ((hash_table->entries * 2) / hash_table->table_size > 0) {
-
+    if ((hash_table->entries << 1) >= hash_table->table_size) {
         /* Table is more than 1/2 full */
-
-        if (!hashtable_resize(hash_table)) {
+        if (!hashtable_resize(hash_table, hash_table->table_size << 1)) {
 
             /* Failed to enlarge the table */
-
             return 0;
         }
     }
@@ -298,14 +294,10 @@ int hashtable_remove(Hashtable *hash_table, HashtableKey key, int resize) {
      * size, the table is taking up too much space. 
      * Shrink table to improve space efficiency. */
 
-    if (resize && (hash_table->entries * 8) / hash_table->table_size <= 0) {
-
-        /* Table is less than 1/8 full */
-
-        if (!hashtable_resize(hash_table)) {
-
+    if (resize && (hash_table->entries << 3) < hash_table->table_size) {
+        /* Table is less than 1/4 full */
+        if (!hashtable_resize(hash_table, hash_table->table_size >> 1)) {
             /* Failed to enlarge the table */
-
             return 0;
         }
     }
@@ -498,7 +490,7 @@ HashtableKey hashtable_iter_next_key(HashtableIterator *iterator) {
     return result;
 }
 
-int hashtable_resize(Hashtable *hash_table) {
+int hashtable_resize(Hashtable *hash_table, unsigned long long int size) {
     HashtableEntry **old_table;
     unsigned long long int old_table_size;
     int old_prime_index;
@@ -507,16 +499,13 @@ int hashtable_resize(Hashtable *hash_table) {
     unsigned long long int index;
     unsigned long long int i;
 
-    int increment = 0;
 
-    increment = hash_table->table_size << 1;
-
-    if (increment != 0) {
+    if (size) {
         /* Store a copy of the old table */
         old_table = hash_table->table;
         old_table_size = hash_table->table_size;
 
-        if (!hash_table_allocate_table(hash_table, increment)) {
+        if (!hash_table_allocate_table(hash_table, size)) {
 
             /* Failed to allocate the new table */
 

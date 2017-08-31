@@ -10,7 +10,6 @@ extern "C" {
 #endif
 
 
-
 /**
  * A hash table structure.
  */
@@ -34,7 +33,6 @@ typedef struct _HashsetEntry HashsetEntry;
  */
 
 typedef void *HashsetKey;
-
 
 
 /**
@@ -62,12 +60,13 @@ struct _HashsetEntry {
 
 struct _Hashset {
     HashsetEntry **table;
-    unsigned long long int table_size;
+    unsigned int table_size;
 //    HashtableHashFunc hash_func;
 //    HashtableEqualFunc equal_func;
 //    HashtableKeyFreeFunc key_free_func;
-    unsigned long long int entries;
+    unsigned int entries;
 };
+
 /**
  * Create a new hash table.
  *
@@ -120,7 +119,7 @@ void hashset_clear(Hashset *hash_table);
  */
 
 int hashset_put(Hashset *hash_table,
-                  HashsetKey key);
+                HashsetKey key);
 
 /**
  * Look up a value in a hash table by key.
@@ -132,7 +131,7 @@ int hashset_put(Hashset *hash_table,
  */
 
 HashsetKey hashset_get(Hashset *hash_table,
-                             HashsetKey key);
+                       HashsetKey key);
 
 /**
  * Remove a value from a hash table.
@@ -190,7 +189,7 @@ int hashset_iter_has_more(HashsetIterator *iterator);
 
 HashsetKey hashset_iter_next_key(HashsetIterator *iterator);
 
-int hashset_resize(Hashset *hash_table);
+int hashset_resize(Hashset *hash_table,int size);
 
 #ifdef __cplusplus
 }
