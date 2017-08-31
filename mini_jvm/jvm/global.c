@@ -9,7 +9,7 @@ Utf8String *classpath;
 Hashtable *classes;  //key =  package+classname value =  class_ptr
 ArrayList *thread_list; //all thread
 s32 STACK_LENGHT = 10240;
-
+c8 *data_type_str = "    ZCFDBSIJL[";
 
 //extern const s32 METHOD_MAX_PARA_LENGHT = 32;
 s32 _garbage_thread_stop = 0;

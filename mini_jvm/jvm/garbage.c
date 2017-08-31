@@ -136,6 +136,12 @@ s32 garbage_collect() {
         HashtableKey k = hashtable_iter_next_key(&hti);
         MemoryBlock *mb = (MemoryBlock *) k;
         Hashset *v = (Hashset *) hashtable_get(son_2_father, k);
+//        Utf8String *str = utf8_create();
+//        getMemBlockName((void*)k, str);
+//        if (utf8_equals_c(str, "Array{C}") == 0 && v->entries == 1) {
+//            int debug = 1;
+//        }
+//        utf8_destory(str);
         if (v != HASH_NULL) {
             if (v->entries == 0 && mb->garbage_mark == GARBAGE_MARK_NO_REFERED) {
                 garbage_collect_memobj(k);
@@ -186,7 +192,7 @@ s32 garbage_check_by_all_thread() {
             runtime->threadInfo->garbage_collect_mark_task = 1;
             //printf("thread wait\n");
             garbage_thread_wait();//等待处理完成
-        }else{//线程没有run的时候（wait sleep），自己来做，但线程恢复run时，会试图获取锁，此进正在做下面的操作
+        } else {//线程没有run的时候（wait sleep），自己来做，但线程恢复run时，会试图获取锁，此进正在做下面的操作
             garbage_mark_refered_obj(runtime);
         }
         //printf("thread marked refered , [%llx]\n", (s64) (long) runtime->threadInfo->jthread);
@@ -240,8 +246,8 @@ s32 garbage_mark_refered_obj(Runtime *pruntime) {
 }
 
 
-Utf8String *getMemBlockName(void *memblock) {
-    Utf8String *name = utf8_create();
+void getMemBlockName(void *memblock, Utf8String *name) {
+
     MemoryBlock *mb = (MemoryBlock *) memblock;
     if (!mb) {
         utf8_append_c(name, "NULL");
@@ -269,9 +275,10 @@ Utf8String *getMemBlockName(void *memblock) {
             }
             case MEM_TYPE_ARR: {
                 Instance *arr = (Instance *) mb;
-                printf("Array{%d}", data_type_bytes[arr->arr_data_type]);
+                //printf("Array{%d}", data_type_bytes[arr->arr_data_type]);
                 utf8_append_c(name, "Array{");
-                utf8_insert(name, name->length, '0' + data_type_bytes[arr->arr_data_type]);
+                utf8_insert(name, name->length,
+                            getDataTypeFlag(arr->arr_data_type));//'0' + data_type_bytes[arr->arr_data_type]);
                 utf8_append_c(name, "}");
                 break;
 
@@ -280,7 +287,6 @@ Utf8String *getMemBlockName(void *memblock) {
                 utf8_append_c(name, "ERROR");
         }
     }
-    return name;
 }
 
 /**
@@ -294,7 +300,10 @@ void dump_refer() {
     for (; hashtable_iter_has_more(&hti);) {
 
         HashtableKey k = hashtable_iter_next_key(&hti);
-        printf("%s[%x] <-{", utf8_cstr(((Instance *) k)->obj_of_clazz->name), k);
+        Utf8String *name = utf8_create();
+        getMemBlockName(k, name);
+        printf("%s[%llx] <-{", utf8_cstr(name), (s64) (long) k);
+        utf8_destory(name);
         Hashset *set = (Hashset *) hashtable_get(son_2_father, k);
         if (set != HASH_NULL) {
             HashsetIterator hti;
@@ -303,10 +312,11 @@ void dump_refer() {
             for (; hashset_iter_has_more(&hti);) {
                 HashsetKey key = hashset_iter_next_key(&hti);
                 if (key) {
-                    MemoryBlock *parent = (MemoryBlock *) k;
-                    Utf8String *us = getMemBlockName(parent);
-                    printf("%s[%x]; ", utf8_cstr(us), parent);
-                    utf8_destory(us);
+                    MemoryBlock *parent = (MemoryBlock *) key;
+                    Utf8String *name = utf8_create();
+                    getMemBlockName(parent, name);
+                    printf("%s[%llx]; ", utf8_cstr(name), (s64) (long) parent);
+                    utf8_destory(name);
                 }
             }
         }
@@ -318,10 +328,11 @@ void dump_refer() {
     for (; hashtable_iter_has_more(&hti);) {
 
         HashtableKey k = hashtable_iter_next_key(&hti);
-        Utf8String *us = getMemBlockName(k);
-        printf("%s[%x] ->{", utf8_cstr(us), k);
-        utf8_destory(us);
-        Hashset *set = (Hashset *) hashtable_get(son_2_father, k);
+        Utf8String *name = utf8_create();
+        getMemBlockName(k, name);
+        printf("%s[%llx] ->{", utf8_cstr(name), (s64) (long) k);
+        utf8_destory(name);
+        Hashset *set = (Hashset *) hashtable_get(father_2_son, k);
         if (set != HASH_NULL) {
             HashsetIterator hti;
             hashset_iterate(set, &hti);
@@ -329,8 +340,11 @@ void dump_refer() {
             for (; hashset_iter_has_more(&hti);) {
                 HashsetKey key = hashset_iter_next_key(&hti);
                 if (key) {
-                    Instance *son = (Instance *) k;
-                    printf("%s[%x]; ", utf8_cstr(son->obj_of_clazz->name), son);
+                    Instance *son = (Instance *) key;
+                    Utf8String *name = utf8_create();
+                    getMemBlockName(son, name);
+                    printf("%s[%llx]; ", utf8_cstr(name), (s64) (long) son);
+                    utf8_destory(name);
                 }
             }
         }
@@ -352,6 +366,9 @@ void dump_refer() {
 
 void *garbage_refer(__refer sonPtr, __refer parentPtr) {
     if (sonPtr == NULL)return sonPtr;
+    if (sonPtr == parentPtr) {
+        return sonPtr;
+    }
 #if _JVM_DEBUG_GARBAGE_DUMP
     Utf8String *us = getMemBlockName(parentPtr);
     printf("+: L%s[%x] <- %s[%x]\n", utf8_cstr(((Instance *) sonPtr)->obj_of_clazz->name), sonPtr, utf8_cstr(us),

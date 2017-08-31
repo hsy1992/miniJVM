@@ -207,6 +207,11 @@ s32 getDataTypeIndex(c8 ch) {
     }
 }
 
+
+u8 getDataTypeFlag(s32 index) {
+    return data_type_str[index];
+}
+
 s32 isReference(c8 c) {
     if (c == 'L' || c == '[') {
         return 1;
@@ -284,7 +289,7 @@ void printDumpOfClasses() {
 
 
 //===============================    java 线程  ==================================
-void *therad_loader(void *para) {
+void *jtherad_loader(void *para) {
     Instance *jthread = (Instance *) para;
     s32 ret = 0;
     Runtime runtime;
@@ -307,20 +312,22 @@ void *therad_loader(void *para) {
     if (method) {
         jthread_set_threadq_value(jthread, &runtime);
         arraylist_append(thread_list, &runtime);
+        runtime.threadInfo->thread_running = 1;
         push_ref(runtime.stack, (__refer) jthread);
         //printf("Thread [%x] run...\n",jthread);
         ret = execute_method(method, &runtime, method->_this_class);
+        runtime.threadInfo->thread_running = 0;
         arraylist_remove(thread_list, jthread);
     }
     return (void *) jthread;
 }
 
-pthread_t *thread_create_reg(Instance *ins, pthread_t *pthread) {//
+pthread_t *jthread_create_reg(Instance *ins, pthread_t *pthread) {//
     pthread_t *pt = jvm_alloc(sizeof(pthread_t));
     if (pthread) {
         memcpy(pt, pthread, sizeof(pthread_t));
     } else {
-        pthread_create(pt, NULL, therad_loader, ins);
+        pthread_create(pt, NULL, jtherad_loader, ins);
     }
     return pt;
 }
@@ -346,7 +353,7 @@ JavaThreadLock *jthreadlock_create() {
 
 void jthreadlock_destory(JavaThreadLock *jtl) {
     if (jtl) {
-        pthread_mutex_destroy(&jtl->thread_cond);
+        pthread_cond_destroy(&jtl->thread_cond);
         pthread_mutex_destroy(&jtl->mutex_lock);
         jtl->jthread_holder = NULL;
         jvm_free(jtl);
@@ -475,16 +482,18 @@ Instance *jarray_create(s32 count, s32 typeIdx) {
 
 s32 jarray_destory(Instance *arr) {
     if (arr && arr->type == MEM_TYPE_ARR) {
-        if (arr->arr_data_type == ARRAY_REFERENCE_TYPE) {
+        if (arr->arr_data_type == DATATYPE_REFERENCE) {
             s32 i;
             Long2Double l2d;
             l2d.l = 0;
             for (i = 0; i < arr->arr_length; i++) {//把所有引用去除，否则不会垃圾回收
-                jarray_set_field(arr, i, &l2d, data_type_bytes[ARRAY_REFERENCE_TYPE]);
+                jarray_set_field(arr, i, &l2d, data_type_bytes[DATATYPE_REFERENCE]);
             }
         }
         jthreadlock_destory(arr->thread_lock);
+        arr->thread_lock = NULL;
         jvm_free(arr->arr_body);
+        arr->arr_body = NULL;
         jvm_free(arr);
     }
 }
@@ -519,7 +528,7 @@ Instance *jarray_multi_create(ArrayList *dim, Utf8String *desc, s32 deep) {
 
 
 void jarray_set_field(Instance *arr, s32 index, Long2Double *l2d, s32 bytes) {
-    if (arr->arr_data_type == ARRAY_REFERENCE_TYPE) {
+    if (arr->arr_data_type == DATATYPE_REFERENCE) {
         __refer ref = (__refer) getFieldRefer(arr->arr_body + index * bytes);
         if (ref) { //把老索引关闭
             garbage_derefer((__refer) ref, arr);
@@ -547,7 +556,7 @@ void jarray_set_field(Instance *arr, s32 index, Long2Double *l2d, s32 bytes) {
 }
 
 void jarray_get_field(Instance *arr, s32 index, Long2Double *l2d, s32 bytes) {
-    if (arr->arr_data_type == ARRAY_REFERENCE_TYPE) {
+    if (arr->arr_data_type == DATATYPE_REFERENCE) {
         l2d->r = getFieldRefer(arr->arr_body + index * bytes);
     } else {
         switch (bytes) {
@@ -575,8 +584,8 @@ Instance *instance_create(Class *clazz) {
     instance->obj_of_clazz = clazz;
 
     instance->obj_fields = jvm_alloc(instance->obj_of_clazz->field_instance_len);
-    memcpy(instance->obj_fields, instance->obj_of_clazz->field_instance_template,
-           instance->obj_of_clazz->field_instance_len);
+//    memcpy(instance->obj_fields, instance->obj_of_clazz->field_instance_template,
+//           instance->obj_of_clazz->field_instance_len);
     return instance;
 }
 
@@ -615,13 +624,18 @@ Instance *jstring_create(Utf8String *src, Runtime *runtime) {
 
     c8 *ptr = jstring_get_value_ptr(jstring);
     if (src->length) {
-        u16 *buf = jvm_alloc(src->length * data_type_bytes[ARRAY_CHAR_TYPE]);
+        u16 *buf = jvm_alloc(src->length * data_type_bytes[DATATYPE_JCHAR]);
         s32 len = utf8_2_unicode(src, buf);
-        Instance *arr = jarray_create(len, ARRAY_CHAR_TYPE);//c8 type is 5
-        memcpy(arr->arr_body, buf, len * data_type_bytes[ARRAY_CHAR_TYPE]);
+        Instance *arr = jarray_create(len, DATATYPE_JCHAR);//u16 type is 5
+        memcpy(arr->arr_body, buf, len * data_type_bytes[DATATYPE_JCHAR]);
+
+        __refer oldarr = getFieldRefer(ptr);//调用了String.init之后，已经有值了
+        if (oldarr) {
+            garbage_derefer(oldarr, jstring);
+        }
         setFieldRefer(ptr, (__refer) arr);//设置数组
-        jstring_set_count(jstring, len);//设置长度
         garbage_refer(arr, jstring);
+        jstring_set_count(jstring, len);//设置长度
     } else {
         setFieldRefer(ptr, 0);
     }

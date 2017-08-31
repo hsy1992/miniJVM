@@ -83,8 +83,9 @@ s32 execute(c8 *p_classpath, c8 *p_mainclass, s32 argc, c8 **argv) {
             //为主线程创建Thread实例
             Instance *main_thread = instance_create(thread_clazz);
             pthread_t pthread = pthread_self();
-            thread_create_reg(main_thread, &pthread);
+            jthread_create_reg(main_thread, &pthread);
             runtime.threadInfo->jthread = main_thread;
+            runtime.threadInfo->thread_running=1;
             instance_init(main_thread, &runtime);//必须放在最好，初始化时需要用到前面的赋值
             s64 start = currentTimeMillis();
             arraylist_append(thread_list, &runtime);
@@ -95,8 +96,8 @@ s32 execute(c8 *p_classpath, c8 *p_mainclass, s32 argc, c8 **argv) {
             localvar_init(&runtime, main->paraType->length + 1);
             s32 count = argc;
             Long2Double l2d;
-            s32 bytes = data_type_bytes[ARRAY_REFERENCE_TYPE];
-            Instance *arr = jarray_create(count, ARRAY_REFERENCE_TYPE);
+            s32 bytes = data_type_bytes[DATATYPE_REFERENCE];
+            Instance *arr = jarray_create(count, DATATYPE_REFERENCE);
             int i;
             for (i = 0; i < argc; i++) {
                 Utf8String *utfs = utf8_create_c(argv[i]);
@@ -112,6 +113,7 @@ s32 execute(c8 *p_classpath, c8 *p_mainclass, s32 argc, c8 **argv) {
             printf("================================= main  end  ================================\n");
             printf("spent %lld\n", (currentTimeMillis() - start));
 
+            dump_refer();
 #if _JVM_DEBUG_PROFILE
             hashtable_iterate(instruct_profile, &hti);
             for (; hashtable_iter_has_more(&hti);) {

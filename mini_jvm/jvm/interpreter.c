@@ -328,7 +328,7 @@ s32 op_iconst_n(u8 **opCode, Runtime *runtime, Class *clazz, s32 i) {
 
     push_int(stack, i);
 #if _JVM_DEBUG
-    printf("iconst_%d: push [%x]/%d into stack\n", i, i, i);
+    printf("iconst_%d: push %d into stack\n", i, i);
 #endif
     *opCode = *opCode + 1;
     return 0;
@@ -377,7 +377,7 @@ s32 op_lconst_n(u8 **opCode, Runtime *runtime, Class *clazz, s64 i) {
 
     push_long(stack, i);
 #if _JVM_DEBUG
-    printf("lconst_%d: push [%lx]/%ld into stack\n", i, i, i);
+    printf("lconst_%lld: push %lld into stack\n", i, i);
 #endif
     *opCode = *opCode + 1;
     return 0;
@@ -420,7 +420,7 @@ s32 op_dconst_n(u8 **opCode, Runtime *runtime, Class *clazz, f64 d) {
     push_double(stack, d);
 
 #if _JVM_DEBUG
-    printf("dconst_%d: push %f into stack\n", (d), d);
+    printf("dconst_%d: push %lf into stack\n", (s32) (d), d);
 #endif
     *opCode = *opCode + 1;
     return 0;
@@ -499,7 +499,7 @@ s32 op_fadd(u8 **opCode, Runtime *runtime, Class *clazz) {
     f32 result = value2 + value1;
 
 #if _JVM_DEBUG
-    printf("ddiv: %f + %f = %f\n", value2, value1, result);
+    printf("ddiv: %lf + %lf = %lf\n", value2, value1, result);
 #endif
     push_float(stack, result);
     *opCode = *opCode + 1;
@@ -556,7 +556,7 @@ s32 op_dsub(u8 **opCode, Runtime *runtime, Class *clazz) {
     f64 result = value2 - value1;
 
 #if _JVM_DEBUG
-    printf("dsub: %f - %f = %f\n", value2, value1, result);
+    printf("dsub: %lf - %lf = %lf\n", value2, value1, result);
 #endif
     push_double(stack, result);
     *opCode = *opCode + 1;
@@ -619,7 +619,7 @@ s32 op_aload(u8 **opCode, Runtime *runtime, Class *clazz) {
 
     __refer value = (runtime->localVariables + s2c.s)->refer;
 #if _JVM_DEBUG
-    printf("i(fa)load: push localvar(%d)= [%x]/%d  \n", s2c.s, value, value);
+    printf("i(fa)load: push localvar(%d)= [%llx]  \n", s2c.s, (s64) (long) value);
 #endif
     push_ref(stack, value);
     return 0;
@@ -773,7 +773,7 @@ s32 op_dadd(u8 **opCode, Runtime *runtime, Class *clazz) {
     f64 result = 0;
     result = value1 + value2;
 #if _JVM_DEBUG
-    printf("dadd: %f + %f = %f\n", value1, value2, result);
+    printf("dadd: %lf + %lf = %lf\n", value1, value2, result);
 #endif
     push_double(stack, result);
     *opCode = *opCode + 1;
@@ -788,7 +788,7 @@ s32 op_dmul(u8 **opCode, Runtime *runtime, Class *clazz) {
     f64 result = 0;
     result = value1 * value2;
 #if _JVM_DEBUG
-    printf("dmul: %f * %f = %f\n", value1, value2, result);
+    printf("dmul: %lf * %lf = %lf\n", value1, value2, result);
 #endif
     push_double(stack, result);
     *opCode = *opCode + 1;
@@ -839,7 +839,7 @@ s32 op_l2d(u8 **opCode, Runtime *runtime, Class *clazz) {
     s64 value = pop_long(stack);
 
 #if _JVM_DEBUG
-    printf("l2d: %f <-- %lld\n", (f64) value, value);
+    printf("l2d: %lf <-- %lld\n", (f64) value, value);
 #endif
     push_double(stack, (f64) value);
     *opCode = *opCode + 1;
@@ -851,7 +851,7 @@ s32 op_i2l(u8 **opCode, Runtime *runtime, Class *clazz) {
     s32 value = pop_int(stack);
 
 #if _JVM_DEBUG
-    printf("i2l: %d --> %lld\n", (s32) value, value);
+    printf("i2l: %d --> %lld\n", (s32) value, (s64) value);
 #endif
     push_long(stack, (s64) value);
     *opCode = *opCode + 1;
@@ -983,7 +983,7 @@ s32 op_f2d(u8 **opCode, Runtime *runtime, Class *clazz) {
     f64 result = 0;
     result = value1;
 #if _JVM_DEBUG
-    printf("f2l: %f <-- %f\n", result, value1);
+    printf("f2d: %f <-- %f\n", result, value1);
 #endif
     push_double(stack, result);
     *opCode = *opCode + 1;
@@ -1040,7 +1040,7 @@ s32 op_drem(u8 **opCode, Runtime *runtime, Class *clazz) {
     f64 result = value2 - ((s64) (value2 / value1) * value1);;
 
 #if _JVM_DEBUG
-    printf("drem: %f mod %f = %f\n", value2, value1, result);
+    printf("drem: %lf mod %lf = %lf\n", value2, value1, result);
 #endif
     push_double(stack, result);
     *opCode = *opCode + 1;
@@ -1090,7 +1090,7 @@ s32 op_dneg(u8 **opCode, Runtime *runtime, Class *clazz) {
     f64 value1 = pop_double(stack);
 
 #if _JVM_DEBUG
-    printf("dneg: -(%f) = %f\n", value1, -value1);
+    printf("dneg: -(%lf) = %lf\n", value1, -value1);
 #endif
     push_double(stack, -value1);
     *opCode = *opCode + 1;
@@ -1321,7 +1321,7 @@ s32 op_astore(u8 **opCode, Runtime *runtime, Class *clazz) {
 
     __refer value = pop_ref(stack);
 #if _JVM_DEBUG
-    printf("i(fa)store: save  localvar(%d) [%x]/%d \n", s2c.s, value, value);
+    printf("i(fa)store: save  localvar(%d) [%llx] \n", s2c.s, (s64) (long) value);
 #endif
     (runtime->localVariables + s2c.s)->refer = value;
 
@@ -1456,7 +1456,7 @@ s32 op_astore_n(u8 **opCode, Runtime *runtime, Class *clazz, s32 i) {
     StackFrame *stack = runtime->stack;
     __refer value = pop_ref(stack);
 #if _JVM_DEBUG
-    printf("astore_%d:  [%x]\n", i, value);
+    printf("astore_%d:  [%llx]\n", i, (s64) (long) value);
 #endif
     (runtime->localVariables + i)->refer = value;
     *opCode = *opCode + 1;
@@ -1489,7 +1489,7 @@ static inline s32 op_xastore_impl(u8 **opCode, Runtime *runtime, Class *clazz, u
     s32 bytes = data_type_bytes[ins->arr_data_type];
     Long2Double l2d;
     l2d.l = 0;
-    if (ins->arr_data_type == ARRAY_REFERENCE_TYPE) {
+    if (ins->arr_data_type == DATATYPE_REFERENCE) {
         l2d.r = entry_2_refer(&entry);
     } else {
         if (bytes > 4) {
@@ -1500,7 +1500,9 @@ static inline s32 op_xastore_impl(u8 **opCode, Runtime *runtime, Class *clazz, u
     }
     jarray_set_field(ins, index, &l2d, bytes);
 #if _JVM_DEBUG
-    printf("(icbfald)astore: save array[%x]{%d bytes}.(%d)=%d:%lld:%lf)\n", ins, bytes, index, l2d.i2l.i1, l2d.l,
+    printf("(icbfald)astore: save array[%llx]{%d bytes}.(%d)=%d:%llx:%lf)\n",
+           (s64) (long) ins, bytes, index,
+           l2d.i2l.i1, (s64) (long) l2d.r,
            l2d.d);
 #endif
 
@@ -1721,6 +1723,7 @@ static inline s32 op_ldc_impl(u8 **opCode, Runtime *runtime, Class *clazz, s32 i
             Utf8String *ptr = get_utf8_string(clazz, find_constant_stringref(clazz, index)->stringIndex);
             Instance *jstr = jstring_create(ptr, runtime);
             push_ref(stack, (__refer) jstr);
+            garbage_refer(jstr, NULL);
 #if _JVM_DEBUG
             printf("ldc: [%llx] =\"%s\"\n", (s64) (long) jstr, utf8_cstr(ptr));
 #endif
@@ -1958,7 +1961,7 @@ s32 op_new(u8 **opCode, Runtime *runtime, Class *clazz) {
     }
     push_ref(stack, (__refer) ins);
 #if _JVM_DEBUG
-    printf("new %s [%x]\n", utf8_cstr(clsName), ins);
+    printf("new %s [%llx]\n", utf8_cstr(clsName), (s64) (long) ins);
 #endif
     *opCode = *opCode + 3;
     return 0;
@@ -1969,7 +1972,7 @@ static inline s32 op_newarray_impl(Runtime *runtime, s32 count, s32 typeIdx) {
     Instance *arr = jarray_create(count, typeIdx);
 
 #if _JVM_DEBUG
-    printf("(a)newarray  [%llx] type:%d , count:%d  \n", (s64) (long) arr, typeIdx, count);
+    printf("(a)newarray  [%llx] type:%c , count:%d  \n", (s64) (long) arr, getDataTypeFlag(typeIdx), count);
 #endif
     if (arr) {
         push_ref(stack, (__refer) arr);
@@ -2000,7 +2003,7 @@ s32 op_anewarray(u8 **opCode, Runtime *runtime, Class *clazz) {
     s2c.c0 = opCode[0][2];
 
     s32 typeIdx = s2c.s;
-    typeIdx = ARRAY_REFERENCE_TYPE;
+    typeIdx = DATATYPE_REFERENCE;
 
     s32 count = pop_int(stack);
     *opCode = *opCode + 3;
@@ -2024,9 +2027,9 @@ s32 op_multianewarray(u8 **opCode, Runtime *runtime, Class *clazz) {
 
     Instance *arr = jarray_multi_create(dim, desc, 0);
     arraylist_destory(dim);
-
+    garbage_refer(arr, NULL);
 #if _JVM_DEBUG
-    printf("multianewarray  [%x] type:%s , count:%d  \n", arr, utf8_cstr(desc), count);
+    printf("multianewarray  [%llx] type:%s , count:%d  \n", (s64) (long) arr, utf8_cstr(desc), count);
 #endif
     if (arr) {
         push_ref(stack, (__refer) arr);
@@ -2044,7 +2047,8 @@ s32 op_arraylength(u8 **opCode, Runtime *runtime, Class *clazz) {
     Instance *arr_ref = (Instance *) pop_ref(stack);
 
 #if _JVM_DEBUG
-    printf("arraylength  [%x].arr_body[%x] len:%d  \n", arr_ref, arr_ref->arr_body, arr_ref->arr_length);
+    printf("arraylength  [%llx].arr_body[%llx] len:%d  \n",
+           (s64) (long) arr_ref, (s64) (long) arr_ref->arr_body, arr_ref->arr_length);
 #endif
     push_int(stack, arr_ref->arr_length);
     *opCode = *opCode + 1;
@@ -2058,7 +2062,7 @@ s32 op_athrow(u8 **opCode, Runtime *runtime, Class *clazz) {
     push_ref(stack, (__refer) ins);
 
 #if _JVM_DEBUG
-    printf("athrow  [%x].exception throws  \n", ins);
+    printf("athrow  [%llx].exception throws  \n", (s64) (long) ins);
 #endif
     //*opCode = *opCode + 1;
     return RUNTIME_STATUS_EXCEPTION;
@@ -2092,7 +2096,8 @@ s32 op_checkcast(u8 **opCode, Runtime *runtime, Class *clazz) {
         push_ref(stack, (__refer) ins);
 
 #if _JVM_DEBUG
-    printf("checkcast  [%x] instancof %s is:%d \n", ins, utf8_cstr(find_constant_classref(clazz, typeIdx)->name),
+    printf("checkcast  [%llx] instancof %s is:%d \n", (s64) (long) ins,
+           utf8_cstr(find_constant_classref(clazz, typeIdx)->name),
            checkok);
 #endif
     *opCode = *opCode + 3;
@@ -2122,7 +2127,8 @@ s32 op_instanceof(u8 **opCode, Runtime *runtime, Class *clazz) {
     push_int(stack, checkok);
 
 #if _JVM_DEBUG
-    printf("instanceof  [%x] instancof %s  \n", ins, utf8_cstr(find_constant_classref(clazz, typeIdx)->name));
+    printf("instanceof  [%llx] instancof %s  \n", (s64) (long) ins,
+           utf8_cstr(find_constant_classref(clazz, typeIdx)->name));
 #endif
     *opCode = *opCode + 3;
     return 0;
@@ -2133,7 +2139,7 @@ s32 op_monitorenter(u8 **opCode, Runtime *runtime, Class *clazz) {
     Instance *ins = (Instance *) pop_ref(stack);
     jthread_lock(ins, runtime);
 #if _JVM_DEBUG
-    printf("monitorenter  [%x] %s  \n", ins, ins ? utf8_cstr(ins->obj_of_clazz->name) : "null");
+    printf("monitorenter  [%llx] %s  \n", (s64) (long) ins, ins ? utf8_cstr(ins->obj_of_clazz->name) : "null");
 #endif
     *opCode = *opCode + 1;
     return 0;
@@ -2144,7 +2150,7 @@ s32 op_monitorexit(u8 **opCode, Runtime *runtime, Class *clazz) {
     Instance *ins = (Instance *) pop_ref(stack);
     jthread_unlock(ins, runtime);
 #if _JVM_DEBUG
-    printf("monitorexit  [%x] %s  \n", ins, ins ? utf8_cstr(ins->obj_of_clazz->name) : "null");
+    printf("monitorexit  [%llx] %s  \n", (s64) (long) ins, ins ? utf8_cstr(ins->obj_of_clazz->name) : "null");
 #endif
     *opCode = *opCode + 1;
     return 0;
@@ -2506,7 +2512,7 @@ s32 op_ret(u8 **opCode, Runtime *runtime, Class *clazz) {
     __refer addr = (runtime->localVariables + s2c.s)->refer;
 
 #if _JVM_DEBUG
-    printf("ret: %d\n", addr);
+    printf("ret: %x\n", (s64) (long) addr);
 #endif
     *opCode = (u8 *) addr;
 

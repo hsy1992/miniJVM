@@ -211,7 +211,8 @@ int  10
 long  11
   reference 12
  */
-static const s32 data_type_bytes[13] = {0, 0, 0, 0,
+extern c8 *data_type_str ;
+static const s32 data_type_bytes[14] = {0, 0, 0, 0,
                                         sizeof(c8),
                                         sizeof(u16),
                                         sizeof(f32),
@@ -220,10 +221,12 @@ static const s32 data_type_bytes[13] = {0, 0, 0, 0,
                                         sizeof(s16),
                                         sizeof(s32),
                                         sizeof(s64),
-                                        sizeof(__refer)
+                                        sizeof(__refer),
+                                        sizeof(__refer),
 };
-static const s32 ARRAY_CHAR_TYPE = 5;
-static const s32 ARRAY_REFERENCE_TYPE = 12;
+static const s32 DATATYPE_JCHAR = 5;
+static const s32 DATATYPE_REFERENCE = 12;
+static const s32 DATATYPE_ARRAY = 13;
 
 static const c8 tag_additional_byte_size[13] = {
         0, 2, 0, 4, 4,

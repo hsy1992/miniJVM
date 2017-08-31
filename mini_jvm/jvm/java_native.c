@@ -317,7 +317,7 @@ s32 java_lang_Object_hashCode(Runtime *runtime, Class *clazz) {
     Instance *ins = (Instance *) (runtime->localVariables + 0)->refer;
     push_int(stack, (s32) (long) ins);
 #if _JVM_DEBUG
-    printf("java_lang_Object_hashCode %llx\n", l2d.l);
+    printf("java_lang_Object_hashCode %llx\n", (s32) (long) ins);
 #endif
     return 0;
 }
@@ -391,7 +391,9 @@ s32 java_lang_Runtime_totalMemory(Runtime *runtime, Class *clazz) {
 }
 
 s32 java_lang_Runtime_gc(Runtime *runtime, Class *clazz) {
+    runtime->threadInfo->thread_running=0;
     garbage_collect();
+    runtime->threadInfo->thread_running=1;
 #if _JVM_DEBUG
     printf("java_lang_Runtime_gc \n");
 #endif
@@ -605,7 +607,7 @@ s32 java_lang_Thread_sleep(Runtime *runtime, Class *clazz) {
 s32 java_lang_Thread_start(Runtime *runtime, Class *clazz) {
     StackFrame *stack = runtime->stack;
     Instance *ins = (Instance *) (runtime->localVariables + 0)->refer;
-    thread_create_reg(ins, NULL);
+    jthread_create_reg(ins, NULL);
 
 #if _JVM_DEBUG
     printf("java_lang_Thread_start \n");

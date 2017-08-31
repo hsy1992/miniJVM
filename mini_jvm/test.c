@@ -17,6 +17,7 @@
 #include "utils/utf8_string.h"
 #include "jvm/jvm.h"
 #include "jvm/jvm_util.h"
+#include "jvm/garbage.h"
 
 
 typedef struct SA {
@@ -172,8 +173,9 @@ void t5() {
 }
 
 int main(int argc, char **argv) {
+    s32 ret=execute("../java/build/classes/", "com/egls/test/Foo1", argc, argv);
 
-    return execute("../java/build/classes/", "com/egls/test/Foo1", argc, argv);
+    return ret;
 //    t5();
 //    return 0;
 }

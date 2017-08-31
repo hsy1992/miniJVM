@@ -23,6 +23,8 @@ s32 getDataTypeIndex(c8 ch);
 
 s32 isReference(c8 c);
 
+u8 getDataTypeFlag(s32 index);
+
 s64 currentTimeMillis();
 
 s64 nanoTime();
@@ -70,7 +72,7 @@ typedef struct _JavaThreadLock {
     s32 hold_count;
 } JavaThreadLock;
 
-pthread_t *thread_create_reg(Instance *ins, pthread_t *pthread);
+pthread_t *jthread_create_reg(Instance *ins, pthread_t *pthread);
 
 __refer jthread_get_threadq_value(Instance *ins);
 
