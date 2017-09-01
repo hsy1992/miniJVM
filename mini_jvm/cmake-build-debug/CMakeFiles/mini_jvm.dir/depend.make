@@ -3,139 +3,218 @@
 
 CMakeFiles/mini_jvm.dir/jvm/class.c.o: ../jvm/class.c
 CMakeFiles/mini_jvm.dir/jvm/class.c.o: ../jvm/garbage.h
+CMakeFiles/mini_jvm.dir/jvm/class.c.o: ../jvm/global.h
 CMakeFiles/mini_jvm.dir/jvm/class.c.o: ../jvm/jvm.h
 CMakeFiles/mini_jvm.dir/jvm/class.c.o: ../jvm/jvm_util.h
 CMakeFiles/mini_jvm.dir/jvm/class.c.o: ../utils/arraylist.h
+CMakeFiles/mini_jvm.dir/jvm/class.c.o: ../utils/hashset.h
 CMakeFiles/mini_jvm.dir/jvm/class.c.o: ../utils/hashtable.h
+CMakeFiles/mini_jvm.dir/jvm/class.c.o: ../utils/pairlist.h
 CMakeFiles/mini_jvm.dir/jvm/class.c.o: ../utils/utf8_string.h
 
 CMakeFiles/mini_jvm.dir/jvm/class_loader.c.o: ../jvm/class_loader.c
+CMakeFiles/mini_jvm.dir/jvm/class_loader.c.o: ../jvm/garbage.h
+CMakeFiles/mini_jvm.dir/jvm/class_loader.c.o: ../jvm/global.h
 CMakeFiles/mini_jvm.dir/jvm/class_loader.c.o: ../jvm/jvm.h
 CMakeFiles/mini_jvm.dir/jvm/class_loader.c.o: ../jvm/jvm_util.h
 CMakeFiles/mini_jvm.dir/jvm/class_loader.c.o: ../utils/arraylist.h
+CMakeFiles/mini_jvm.dir/jvm/class_loader.c.o: ../utils/hashset.h
 CMakeFiles/mini_jvm.dir/jvm/class_loader.c.o: ../utils/hashtable.h
+CMakeFiles/mini_jvm.dir/jvm/class_loader.c.o: ../utils/pairlist.h
 CMakeFiles/mini_jvm.dir/jvm/class_loader.c.o: ../utils/utf8_string.h
 
 CMakeFiles/mini_jvm.dir/jvm/class_loader_constant.c.o: ../jvm/class_loader_constant.c
 CMakeFiles/mini_jvm.dir/jvm/class_loader_constant.c.o: ../jvm/garbage.h
+CMakeFiles/mini_jvm.dir/jvm/class_loader_constant.c.o: ../jvm/global.h
 CMakeFiles/mini_jvm.dir/jvm/class_loader_constant.c.o: ../jvm/jvm.h
 CMakeFiles/mini_jvm.dir/jvm/class_loader_constant.c.o: ../jvm/jvm_util.h
 CMakeFiles/mini_jvm.dir/jvm/class_loader_constant.c.o: ../utils/arraylist.h
+CMakeFiles/mini_jvm.dir/jvm/class_loader_constant.c.o: ../utils/hashset.h
 CMakeFiles/mini_jvm.dir/jvm/class_loader_constant.c.o: ../utils/hashtable.h
+CMakeFiles/mini_jvm.dir/jvm/class_loader_constant.c.o: ../utils/pairlist.h
 CMakeFiles/mini_jvm.dir/jvm/class_loader_constant.c.o: ../utils/utf8_string.h
 
 CMakeFiles/mini_jvm.dir/jvm/class_loader_field.c.o: ../jvm/class_loader_field.c
 CMakeFiles/mini_jvm.dir/jvm/class_loader_field.c.o: ../jvm/garbage.h
+CMakeFiles/mini_jvm.dir/jvm/class_loader_field.c.o: ../jvm/global.h
 CMakeFiles/mini_jvm.dir/jvm/class_loader_field.c.o: ../jvm/jvm.h
 CMakeFiles/mini_jvm.dir/jvm/class_loader_field.c.o: ../utils/arraylist.h
+CMakeFiles/mini_jvm.dir/jvm/class_loader_field.c.o: ../utils/hashset.h
 CMakeFiles/mini_jvm.dir/jvm/class_loader_field.c.o: ../utils/hashtable.h
+CMakeFiles/mini_jvm.dir/jvm/class_loader_field.c.o: ../utils/pairlist.h
 CMakeFiles/mini_jvm.dir/jvm/class_loader_field.c.o: ../utils/utf8_string.h
 
 CMakeFiles/mini_jvm.dir/jvm/class_loader_interface.c.o: ../jvm/class_loader_interface.c
 CMakeFiles/mini_jvm.dir/jvm/class_loader_interface.c.o: ../jvm/garbage.h
+CMakeFiles/mini_jvm.dir/jvm/class_loader_interface.c.o: ../jvm/global.h
 CMakeFiles/mini_jvm.dir/jvm/class_loader_interface.c.o: ../jvm/jvm.h
 CMakeFiles/mini_jvm.dir/jvm/class_loader_interface.c.o: ../utils/arraylist.h
+CMakeFiles/mini_jvm.dir/jvm/class_loader_interface.c.o: ../utils/hashset.h
 CMakeFiles/mini_jvm.dir/jvm/class_loader_interface.c.o: ../utils/hashtable.h
+CMakeFiles/mini_jvm.dir/jvm/class_loader_interface.c.o: ../utils/pairlist.h
 CMakeFiles/mini_jvm.dir/jvm/class_loader_interface.c.o: ../utils/utf8_string.h
 
 CMakeFiles/mini_jvm.dir/jvm/class_loader_method.c.o: ../jvm/class_loader_method.c
 CMakeFiles/mini_jvm.dir/jvm/class_loader_method.c.o: ../jvm/garbage.h
+CMakeFiles/mini_jvm.dir/jvm/class_loader_method.c.o: ../jvm/global.h
 CMakeFiles/mini_jvm.dir/jvm/class_loader_method.c.o: ../jvm/jvm.h
 CMakeFiles/mini_jvm.dir/jvm/class_loader_method.c.o: ../utils/arraylist.h
+CMakeFiles/mini_jvm.dir/jvm/class_loader_method.c.o: ../utils/hashset.h
 CMakeFiles/mini_jvm.dir/jvm/class_loader_method.c.o: ../utils/hashtable.h
+CMakeFiles/mini_jvm.dir/jvm/class_loader_method.c.o: ../utils/pairlist.h
 CMakeFiles/mini_jvm.dir/jvm/class_loader_method.c.o: ../utils/utf8_string.h
 
 CMakeFiles/mini_jvm.dir/jvm/garbage.c.o: ../jvm/garbage.c
 CMakeFiles/mini_jvm.dir/jvm/garbage.c.o: ../jvm/garbage.h
+CMakeFiles/mini_jvm.dir/jvm/garbage.c.o: ../jvm/global.h
 CMakeFiles/mini_jvm.dir/jvm/garbage.c.o: ../jvm/jvm.h
+CMakeFiles/mini_jvm.dir/jvm/garbage.c.o: ../jvm/jvm_util.h
 CMakeFiles/mini_jvm.dir/jvm/garbage.c.o: ../utils/arraylist.h
+CMakeFiles/mini_jvm.dir/jvm/garbage.c.o: ../utils/hashset.h
 CMakeFiles/mini_jvm.dir/jvm/garbage.c.o: ../utils/hashtable.h
+CMakeFiles/mini_jvm.dir/jvm/garbage.c.o: ../utils/pairlist.h
 CMakeFiles/mini_jvm.dir/jvm/garbage.c.o: ../utils/utf8_string.h
 
 CMakeFiles/mini_jvm.dir/jvm/global.c.o: ../jvm/global.c
+CMakeFiles/mini_jvm.dir/jvm/global.c.o: ../jvm/global.h
 CMakeFiles/mini_jvm.dir/jvm/global.c.o: ../jvm/jvm.h
 CMakeFiles/mini_jvm.dir/jvm/global.c.o: ../utils/arraylist.h
 CMakeFiles/mini_jvm.dir/jvm/global.c.o: ../utils/hashtable.h
+CMakeFiles/mini_jvm.dir/jvm/global.c.o: ../utils/pairlist.h
 CMakeFiles/mini_jvm.dir/jvm/global.c.o: ../utils/utf8_string.h
 
 CMakeFiles/mini_jvm.dir/jvm/interpreter.c.o: ../jvm/garbage.h
+CMakeFiles/mini_jvm.dir/jvm/interpreter.c.o: ../jvm/global.h
 CMakeFiles/mini_jvm.dir/jvm/interpreter.c.o: ../jvm/interpreter.c
 CMakeFiles/mini_jvm.dir/jvm/interpreter.c.o: ../jvm/java_native.h
 CMakeFiles/mini_jvm.dir/jvm/interpreter.c.o: ../jvm/jvm.h
 CMakeFiles/mini_jvm.dir/jvm/interpreter.c.o: ../jvm/jvm_util.h
 CMakeFiles/mini_jvm.dir/jvm/interpreter.c.o: ../utils/arraylist.h
+CMakeFiles/mini_jvm.dir/jvm/interpreter.c.o: ../utils/hashset.h
 CMakeFiles/mini_jvm.dir/jvm/interpreter.c.o: ../utils/hashtable.h
+CMakeFiles/mini_jvm.dir/jvm/interpreter.c.o: ../utils/pairlist.h
 CMakeFiles/mini_jvm.dir/jvm/interpreter.c.o: ../utils/utf8_string.h
 
 CMakeFiles/mini_jvm.dir/jvm/java_native.c.o: ../jvm/garbage.h
+CMakeFiles/mini_jvm.dir/jvm/java_native.c.o: ../jvm/global.h
 CMakeFiles/mini_jvm.dir/jvm/java_native.c.o: ../jvm/java_native.c
 CMakeFiles/mini_jvm.dir/jvm/java_native.c.o: ../jvm/java_native.h
 CMakeFiles/mini_jvm.dir/jvm/java_native.c.o: ../jvm/jvm.h
 CMakeFiles/mini_jvm.dir/jvm/java_native.c.o: ../jvm/jvm_util.h
 CMakeFiles/mini_jvm.dir/jvm/java_native.c.o: ../utils/arraylist.h
+CMakeFiles/mini_jvm.dir/jvm/java_native.c.o: ../utils/hashset.h
 CMakeFiles/mini_jvm.dir/jvm/java_native.c.o: ../utils/hashtable.h
+CMakeFiles/mini_jvm.dir/jvm/java_native.c.o: ../utils/pairlist.h
 CMakeFiles/mini_jvm.dir/jvm/java_native.c.o: ../utils/utf8_string.h
 
 CMakeFiles/mini_jvm.dir/jvm/jvm.c.o: ../jvm/garbage.h
+CMakeFiles/mini_jvm.dir/jvm/jvm.c.o: ../jvm/global.h
 CMakeFiles/mini_jvm.dir/jvm/jvm.c.o: ../jvm/jvm.c
 CMakeFiles/mini_jvm.dir/jvm/jvm.c.o: ../jvm/jvm.h
 CMakeFiles/mini_jvm.dir/jvm/jvm.c.o: ../jvm/jvm_util.h
 CMakeFiles/mini_jvm.dir/jvm/jvm.c.o: ../utils/arraylist.h
+CMakeFiles/mini_jvm.dir/jvm/jvm.c.o: ../utils/hashset.h
 CMakeFiles/mini_jvm.dir/jvm/jvm.c.o: ../utils/hashtable.h
+CMakeFiles/mini_jvm.dir/jvm/jvm.c.o: ../utils/pairlist.h
 CMakeFiles/mini_jvm.dir/jvm/jvm.c.o: ../utils/utf8_string.h
 
 CMakeFiles/mini_jvm.dir/jvm/jvm_util.c.o: ../jvm/garbage.h
+CMakeFiles/mini_jvm.dir/jvm/jvm_util.c.o: ../jvm/global.h
 CMakeFiles/mini_jvm.dir/jvm/jvm_util.c.o: ../jvm/jvm.h
 CMakeFiles/mini_jvm.dir/jvm/jvm_util.c.o: ../jvm/jvm_util.c
 CMakeFiles/mini_jvm.dir/jvm/jvm_util.c.o: ../jvm/jvm_util.h
 CMakeFiles/mini_jvm.dir/jvm/jvm_util.c.o: ../utils/arraylist.h
+CMakeFiles/mini_jvm.dir/jvm/jvm_util.c.o: ../utils/hashset.h
 CMakeFiles/mini_jvm.dir/jvm/jvm_util.c.o: ../utils/hashtable.h
+CMakeFiles/mini_jvm.dir/jvm/jvm_util.c.o: ../utils/pairlist.h
 CMakeFiles/mini_jvm.dir/jvm/jvm_util.c.o: ../utils/utf8_string.h
 
+CMakeFiles/mini_jvm.dir/jvm/os_linux.c.o: ../jvm/global.h
 CMakeFiles/mini_jvm.dir/jvm/os_linux.c.o: ../jvm/jvm.h
 CMakeFiles/mini_jvm.dir/jvm/os_linux.c.o: ../jvm/jvm_util.h
 CMakeFiles/mini_jvm.dir/jvm/os_linux.c.o: ../jvm/os_linux.c
 CMakeFiles/mini_jvm.dir/jvm/os_linux.c.o: ../utils/arraylist.h
 CMakeFiles/mini_jvm.dir/jvm/os_linux.c.o: ../utils/hashtable.h
+CMakeFiles/mini_jvm.dir/jvm/os_linux.c.o: ../utils/pairlist.h
 CMakeFiles/mini_jvm.dir/jvm/os_linux.c.o: ../utils/utf8_string.h
 
+CMakeFiles/mini_jvm.dir/jvm/os_win.c.o: ../jvm/global.h
 CMakeFiles/mini_jvm.dir/jvm/os_win.c.o: ../jvm/jvm.h
 CMakeFiles/mini_jvm.dir/jvm/os_win.c.o: ../jvm/os_win.c
 CMakeFiles/mini_jvm.dir/jvm/os_win.c.o: ../utils/arraylist.h
 CMakeFiles/mini_jvm.dir/jvm/os_win.c.o: ../utils/hashtable.h
+CMakeFiles/mini_jvm.dir/jvm/os_win.c.o: ../utils/pairlist.h
 CMakeFiles/mini_jvm.dir/jvm/os_win.c.o: ../utils/utf8_string.h
 
 CMakeFiles/mini_jvm.dir/jvm/stack.c.o: ../jvm/garbage.h
+CMakeFiles/mini_jvm.dir/jvm/stack.c.o: ../jvm/global.h
 CMakeFiles/mini_jvm.dir/jvm/stack.c.o: ../jvm/jvm.h
+CMakeFiles/mini_jvm.dir/jvm/stack.c.o: ../jvm/jvm_util.h
 CMakeFiles/mini_jvm.dir/jvm/stack.c.o: ../jvm/stack.c
 CMakeFiles/mini_jvm.dir/jvm/stack.c.o: ../utils/arraylist.h
+CMakeFiles/mini_jvm.dir/jvm/stack.c.o: ../utils/hashset.h
 CMakeFiles/mini_jvm.dir/jvm/stack.c.o: ../utils/hashtable.h
+CMakeFiles/mini_jvm.dir/jvm/stack.c.o: ../utils/pairlist.h
 CMakeFiles/mini_jvm.dir/jvm/stack.c.o: ../utils/utf8_string.h
 
+CMakeFiles/mini_jvm.dir/test.c.o: ../jvm/garbage.h
+CMakeFiles/mini_jvm.dir/test.c.o: ../jvm/global.h
 CMakeFiles/mini_jvm.dir/test.c.o: ../jvm/jvm.h
+CMakeFiles/mini_jvm.dir/test.c.o: ../jvm/jvm_util.h
 CMakeFiles/mini_jvm.dir/test.c.o: ../test.c
 CMakeFiles/mini_jvm.dir/test.c.o: ../utils/arraylist.h
+CMakeFiles/mini_jvm.dir/test.c.o: ../utils/hashset.h
 CMakeFiles/mini_jvm.dir/test.c.o: ../utils/hashtable.h
+CMakeFiles/mini_jvm.dir/test.c.o: ../utils/pairlist.h
 CMakeFiles/mini_jvm.dir/test.c.o: ../utils/utf8_string.h
 
 CMakeFiles/mini_jvm.dir/utils/arraylist.c.o: ../jvm/garbage.h
+CMakeFiles/mini_jvm.dir/utils/arraylist.c.o: ../jvm/global.h
 CMakeFiles/mini_jvm.dir/utils/arraylist.c.o: ../jvm/jvm.h
 CMakeFiles/mini_jvm.dir/utils/arraylist.c.o: ../utils/arraylist.c
 CMakeFiles/mini_jvm.dir/utils/arraylist.c.o: ../utils/arraylist.h
+CMakeFiles/mini_jvm.dir/utils/arraylist.c.o: ../utils/hashset.h
 CMakeFiles/mini_jvm.dir/utils/arraylist.c.o: ../utils/hashtable.h
+CMakeFiles/mini_jvm.dir/utils/arraylist.c.o: ../utils/pairlist.h
 CMakeFiles/mini_jvm.dir/utils/arraylist.c.o: ../utils/utf8_string.h
 
+CMakeFiles/mini_jvm.dir/utils/hashset.c.o: ../jvm/garbage.h
+CMakeFiles/mini_jvm.dir/utils/hashset.c.o: ../jvm/global.h
+CMakeFiles/mini_jvm.dir/utils/hashset.c.o: ../jvm/jvm.h
+CMakeFiles/mini_jvm.dir/utils/hashset.c.o: ../utils/arraylist.h
+CMakeFiles/mini_jvm.dir/utils/hashset.c.o: ../utils/hashset.c
+CMakeFiles/mini_jvm.dir/utils/hashset.c.o: ../utils/hashset.h
+CMakeFiles/mini_jvm.dir/utils/hashset.c.o: ../utils/hashtable.h
+CMakeFiles/mini_jvm.dir/utils/hashset.c.o: ../utils/pairlist.h
+CMakeFiles/mini_jvm.dir/utils/hashset.c.o: ../utils/utf8_string.h
+
 CMakeFiles/mini_jvm.dir/utils/hashtable.c.o: ../jvm/garbage.h
+CMakeFiles/mini_jvm.dir/utils/hashtable.c.o: ../jvm/global.h
 CMakeFiles/mini_jvm.dir/utils/hashtable.c.o: ../jvm/jvm.h
 CMakeFiles/mini_jvm.dir/utils/hashtable.c.o: ../utils/arraylist.h
+CMakeFiles/mini_jvm.dir/utils/hashtable.c.o: ../utils/hashset.h
 CMakeFiles/mini_jvm.dir/utils/hashtable.c.o: ../utils/hashtable.c
 CMakeFiles/mini_jvm.dir/utils/hashtable.c.o: ../utils/hashtable.h
+CMakeFiles/mini_jvm.dir/utils/hashtable.c.o: ../utils/pairlist.h
 CMakeFiles/mini_jvm.dir/utils/hashtable.c.o: ../utils/utf8_string.h
 
+CMakeFiles/mini_jvm.dir/utils/pairlist.c.o: ../jvm/garbage.h
+CMakeFiles/mini_jvm.dir/utils/pairlist.c.o: ../jvm/global.h
+CMakeFiles/mini_jvm.dir/utils/pairlist.c.o: ../jvm/jvm.h
+CMakeFiles/mini_jvm.dir/utils/pairlist.c.o: ../utils/arraylist.h
+CMakeFiles/mini_jvm.dir/utils/pairlist.c.o: ../utils/hashset.h
+CMakeFiles/mini_jvm.dir/utils/pairlist.c.o: ../utils/hashtable.h
+CMakeFiles/mini_jvm.dir/utils/pairlist.c.o: ../utils/pairlist.c
+CMakeFiles/mini_jvm.dir/utils/pairlist.c.o: ../utils/pairlist.h
+CMakeFiles/mini_jvm.dir/utils/pairlist.c.o: ../utils/utf8_string.h
+
 CMakeFiles/mini_jvm.dir/utils/utf8_string.c.o: ../jvm/garbage.h
+CMakeFiles/mini_jvm.dir/utils/utf8_string.c.o: ../jvm/global.h
 CMakeFiles/mini_jvm.dir/utils/utf8_string.c.o: ../jvm/jvm.h
 CMakeFiles/mini_jvm.dir/utils/utf8_string.c.o: ../utils/arraylist.h
+CMakeFiles/mini_jvm.dir/utils/utf8_string.c.o: ../utils/hashset.h
 CMakeFiles/mini_jvm.dir/utils/utf8_string.c.o: ../utils/hashtable.h
+CMakeFiles/mini_jvm.dir/utils/utf8_string.c.o: ../utils/pairlist.h
 CMakeFiles/mini_jvm.dir/utils/utf8_string.c.o: ../utils/utf8_string.c
 CMakeFiles/mini_jvm.dir/utils/utf8_string.c.o: ../utils/utf8_string.h
 

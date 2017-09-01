@@ -582,6 +582,33 @@ utils/arraylist.c.s:
 	$(MAKE) -f CMakeFiles/mini_jvm.dir/build.make CMakeFiles/mini_jvm.dir/utils/arraylist.c.s
 .PHONY : utils/arraylist.c.s
 
+utils/hashset.o: utils/hashset.c.o
+
+.PHONY : utils/hashset.o
+
+# target to build an object file
+utils/hashset.c.o:
+	$(MAKE) -f CMakeFiles/mini_jvm.dir/build.make CMakeFiles/mini_jvm.dir/utils/hashset.c.o
+.PHONY : utils/hashset.c.o
+
+utils/hashset.i: utils/hashset.c.i
+
+.PHONY : utils/hashset.i
+
+# target to preprocess a source file
+utils/hashset.c.i:
+	$(MAKE) -f CMakeFiles/mini_jvm.dir/build.make CMakeFiles/mini_jvm.dir/utils/hashset.c.i
+.PHONY : utils/hashset.c.i
+
+utils/hashset.s: utils/hashset.c.s
+
+.PHONY : utils/hashset.s
+
+# target to generate assembly for a file
+utils/hashset.c.s:
+	$(MAKE) -f CMakeFiles/mini_jvm.dir/build.make CMakeFiles/mini_jvm.dir/utils/hashset.c.s
+.PHONY : utils/hashset.c.s
+
 utils/hashtable.o: utils/hashtable.c.o
 
 .PHONY : utils/hashtable.o
@@ -723,6 +750,9 @@ help:
 	@echo "... utils/arraylist.o"
 	@echo "... utils/arraylist.i"
 	@echo "... utils/arraylist.s"
+	@echo "... utils/hashset.o"
+	@echo "... utils/hashset.i"
+	@echo "... utils/hashset.s"
 	@echo "... utils/hashtable.o"
 	@echo "... utils/hashtable.i"
 	@echo "... utils/hashtable.s"

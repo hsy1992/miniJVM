@@ -6,15 +6,15 @@
 
 #IncludeRegexTransform: 
 
-/cygdrive/d/cSrc/mini_jvm/jvm/class.c
+/cygdrive/d/githome/mini_jvm/mini_jvm/jvm/class.c
 jvm.h
-/cygdrive/d/cSrc/mini_jvm/jvm/jvm.h
+/cygdrive/d/githome/mini_jvm/mini_jvm/jvm/jvm.h
 jvm_util.h
-/cygdrive/d/cSrc/mini_jvm/jvm/jvm_util.h
+/cygdrive/d/githome/mini_jvm/mini_jvm/jvm/jvm_util.h
 garbage.h
-/cygdrive/d/cSrc/mini_jvm/jvm/garbage.h
+/cygdrive/d/githome/mini_jvm/mini_jvm/jvm/garbage.h
 
-/cygdrive/d/cSrc/mini_jvm/jvm/class_loader.c
+/cygdrive/d/githome/mini_jvm/mini_jvm/jvm/class_loader.c
 stdio.h
 -
 stdlib.h
@@ -22,11 +22,13 @@ stdlib.h
 string.h
 -
 jvm.h
-/cygdrive/d/cSrc/mini_jvm/jvm/jvm.h
+/cygdrive/d/githome/mini_jvm/mini_jvm/jvm/jvm.h
 jvm_util.h
-/cygdrive/d/cSrc/mini_jvm/jvm/jvm_util.h
+/cygdrive/d/githome/mini_jvm/mini_jvm/jvm/jvm_util.h
+garbage.h
+/cygdrive/d/githome/mini_jvm/mini_jvm/jvm/garbage.h
 
-/cygdrive/d/cSrc/mini_jvm/jvm/class_loader_constant.c
+/cygdrive/d/githome/mini_jvm/mini_jvm/jvm/class_loader_constant.c
 stdio.h
 -
 stdlib.h
@@ -34,15 +36,15 @@ stdlib.h
 string.h
 -
 jvm.h
-/cygdrive/d/cSrc/mini_jvm/jvm/jvm.h
+/cygdrive/d/githome/mini_jvm/mini_jvm/jvm/jvm.h
 ../utils/utf8_string.h
-/cygdrive/d/cSrc/mini_jvm/utils/utf8_string.h
+/cygdrive/d/githome/mini_jvm/mini_jvm/utils/utf8_string.h
 garbage.h
-/cygdrive/d/cSrc/mini_jvm/jvm/garbage.h
+/cygdrive/d/githome/mini_jvm/mini_jvm/jvm/garbage.h
 jvm_util.h
-/cygdrive/d/cSrc/mini_jvm/jvm/jvm_util.h
+/cygdrive/d/githome/mini_jvm/mini_jvm/jvm/jvm_util.h
 
-/cygdrive/d/cSrc/mini_jvm/jvm/class_loader_field.c
+/cygdrive/d/githome/mini_jvm/mini_jvm/jvm/class_loader_field.c
 stdio.h
 -
 stdlib.h
@@ -50,11 +52,11 @@ stdlib.h
 string.h
 -
 jvm.h
-/cygdrive/d/cSrc/mini_jvm/jvm/jvm.h
+/cygdrive/d/githome/mini_jvm/mini_jvm/jvm/jvm.h
 garbage.h
-/cygdrive/d/cSrc/mini_jvm/jvm/garbage.h
+/cygdrive/d/githome/mini_jvm/mini_jvm/jvm/garbage.h
 
-/cygdrive/d/cSrc/mini_jvm/jvm/class_loader_interface.c
+/cygdrive/d/githome/mini_jvm/mini_jvm/jvm/class_loader_interface.c
 stdio.h
 -
 stdlib.h
@@ -62,11 +64,11 @@ stdlib.h
 string.h
 -
 jvm.h
-/cygdrive/d/cSrc/mini_jvm/jvm/jvm.h
+/cygdrive/d/githome/mini_jvm/mini_jvm/jvm/jvm.h
 garbage.h
-/cygdrive/d/cSrc/mini_jvm/jvm/garbage.h
+/cygdrive/d/githome/mini_jvm/mini_jvm/jvm/garbage.h
 
-/cygdrive/d/cSrc/mini_jvm/jvm/class_loader_method.c
+/cygdrive/d/githome/mini_jvm/mini_jvm/jvm/class_loader_method.c
 stdio.h
 -
 stdlib.h
@@ -74,59 +76,65 @@ stdlib.h
 string.h
 -
 jvm.h
-/cygdrive/d/cSrc/mini_jvm/jvm/jvm.h
+/cygdrive/d/githome/mini_jvm/mini_jvm/jvm/jvm.h
 garbage.h
-/cygdrive/d/cSrc/mini_jvm/jvm/garbage.h
+/cygdrive/d/githome/mini_jvm/mini_jvm/jvm/garbage.h
 
-/cygdrive/d/cSrc/mini_jvm/jvm/garbage.c
+/cygdrive/d/githome/mini_jvm/mini_jvm/jvm/garbage.c
 jvm.h
-/cygdrive/d/cSrc/mini_jvm/jvm/jvm.h
+/cygdrive/d/githome/mini_jvm/mini_jvm/jvm/jvm.h
 garbage.h
-/cygdrive/d/cSrc/mini_jvm/jvm/garbage.h
-../utils/arraylist.h
-/cygdrive/d/cSrc/mini_jvm/utils/arraylist.h
+/cygdrive/d/githome/mini_jvm/mini_jvm/jvm/garbage.h
+jvm_util.h
+/cygdrive/d/githome/mini_jvm/mini_jvm/jvm/jvm_util.h
 
-/cygdrive/d/cSrc/mini_jvm/jvm/garbage.h
+/cygdrive/d/githome/mini_jvm/mini_jvm/jvm/garbage.h
 ../utils/hashtable.h
-/cygdrive/d/cSrc/mini_jvm/utils/hashtable.h
+/cygdrive/d/githome/mini_jvm/mini_jvm/utils/hashtable.h
+../utils/hashset.h
+/cygdrive/d/githome/mini_jvm/mini_jvm/utils/hashset.h
 jvm.h
-/cygdrive/d/cSrc/mini_jvm/jvm/jvm.h
+/cygdrive/d/githome/mini_jvm/mini_jvm/jvm/jvm.h
+pthread.h
+-
 
-/cygdrive/d/cSrc/mini_jvm/jvm/global.c
+/cygdrive/d/githome/mini_jvm/mini_jvm/jvm/global.c
 jvm.h
-/cygdrive/d/cSrc/mini_jvm/jvm/jvm.h
+/cygdrive/d/githome/mini_jvm/mini_jvm/jvm/jvm.h
 
-/cygdrive/d/cSrc/mini_jvm/jvm/interpreter.c
-../utils/utf8_string.h
-/cygdrive/d/cSrc/mini_jvm/utils/utf8_string.h
-../utils/arraylist.h
-/cygdrive/d/cSrc/mini_jvm/utils/arraylist.h
+/cygdrive/d/githome/mini_jvm/mini_jvm/jvm/global.h
+
+/cygdrive/d/githome/mini_jvm/mini_jvm/jvm/interpreter.c
 jvm.h
-/cygdrive/d/cSrc/mini_jvm/jvm/jvm.h
+/cygdrive/d/githome/mini_jvm/mini_jvm/jvm/jvm.h
 java_native.h
-/cygdrive/d/cSrc/mini_jvm/jvm/java_native.h
+/cygdrive/d/githome/mini_jvm/mini_jvm/jvm/java_native.h
 garbage.h
-/cygdrive/d/cSrc/mini_jvm/jvm/garbage.h
+/cygdrive/d/githome/mini_jvm/mini_jvm/jvm/garbage.h
 jvm_util.h
-/cygdrive/d/cSrc/mini_jvm/jvm/jvm_util.h
+/cygdrive/d/githome/mini_jvm/mini_jvm/jvm/jvm_util.h
+../utils/utf8_string.h
+/cygdrive/d/githome/mini_jvm/mini_jvm/utils/utf8_string.h
+../utils/arraylist.h
+/cygdrive/d/githome/mini_jvm/mini_jvm/utils/arraylist.h
 
-/cygdrive/d/cSrc/mini_jvm/jvm/java_native.c
+/cygdrive/d/githome/mini_jvm/mini_jvm/jvm/java_native.c
 time.h
 -
 java_native.h
-/cygdrive/d/cSrc/mini_jvm/jvm/java_native.h
+/cygdrive/d/githome/mini_jvm/mini_jvm/jvm/java_native.h
 garbage.h
-/cygdrive/d/cSrc/mini_jvm/jvm/garbage.h
+/cygdrive/d/githome/mini_jvm/mini_jvm/jvm/garbage.h
 jvm_util.h
-/cygdrive/d/cSrc/mini_jvm/jvm/jvm_util.h
+/cygdrive/d/githome/mini_jvm/mini_jvm/jvm/jvm_util.h
 math.h
 -
 
-/cygdrive/d/cSrc/mini_jvm/jvm/java_native.h
+/cygdrive/d/githome/mini_jvm/mini_jvm/jvm/java_native.h
 jvm.h
-/cygdrive/d/cSrc/mini_jvm/jvm/jvm.h
+/cygdrive/d/githome/mini_jvm/mini_jvm/jvm/jvm.h
 
-/cygdrive/d/cSrc/mini_jvm/jvm/jvm.c
+/cygdrive/d/githome/mini_jvm/mini_jvm/jvm/jvm.c
 stdio.h
 -
 stdlib.h
@@ -134,15 +142,15 @@ stdlib.h
 string.h
 -
 jvm.h
-/cygdrive/d/cSrc/mini_jvm/jvm/jvm.h
+/cygdrive/d/githome/mini_jvm/mini_jvm/jvm/jvm.h
 ../utils/utf8_string.h
-/cygdrive/d/cSrc/mini_jvm/utils/utf8_string.h
+/cygdrive/d/githome/mini_jvm/mini_jvm/utils/utf8_string.h
 garbage.h
-/cygdrive/d/cSrc/mini_jvm/jvm/garbage.h
+/cygdrive/d/githome/mini_jvm/mini_jvm/jvm/garbage.h
 jvm_util.h
-/cygdrive/d/cSrc/mini_jvm/jvm/jvm_util.h
+/cygdrive/d/githome/mini_jvm/mini_jvm/jvm/jvm_util.h
 
-/cygdrive/d/cSrc/mini_jvm/jvm/jvm.h
+/cygdrive/d/githome/mini_jvm/mini_jvm/jvm/jvm.h
 sys/types.h
 -
 stdio.h
@@ -151,42 +159,46 @@ stdlib.h
 -
 string.h
 -
+../jvm/global.h
+/cygdrive/d/githome/mini_jvm/mini_jvm/jvm/global.h
 ../utils/hashtable.h
-/cygdrive/d/cSrc/mini_jvm/utils/hashtable.h
+/cygdrive/d/githome/mini_jvm/mini_jvm/utils/hashtable.h
 ../utils/utf8_string.h
-/cygdrive/d/cSrc/mini_jvm/utils/utf8_string.h
+/cygdrive/d/githome/mini_jvm/mini_jvm/utils/utf8_string.h
 ../utils/arraylist.h
-/cygdrive/d/cSrc/mini_jvm/utils/arraylist.h
+/cygdrive/d/githome/mini_jvm/mini_jvm/utils/arraylist.h
+../utils/pairlist.h
+/cygdrive/d/githome/mini_jvm/mini_jvm/utils/pairlist.h
 
-/cygdrive/d/cSrc/mini_jvm/jvm/jvm_util.c
+/cygdrive/d/githome/mini_jvm/mini_jvm/jvm/jvm_util.c
 jvm.h
-/cygdrive/d/cSrc/mini_jvm/jvm/jvm.h
+/cygdrive/d/githome/mini_jvm/mini_jvm/jvm/jvm.h
 jvm_util.h
-/cygdrive/d/cSrc/mini_jvm/jvm/jvm_util.h
+/cygdrive/d/githome/mini_jvm/mini_jvm/jvm/jvm_util.h
 garbage.h
-/cygdrive/d/cSrc/mini_jvm/jvm/garbage.h
+/cygdrive/d/githome/mini_jvm/mini_jvm/jvm/garbage.h
 
-/cygdrive/d/cSrc/mini_jvm/jvm/jvm_util.h
+/cygdrive/d/githome/mini_jvm/mini_jvm/jvm/jvm_util.h
 jvm.h
-/cygdrive/d/cSrc/mini_jvm/jvm/jvm.h
+/cygdrive/d/githome/mini_jvm/mini_jvm/jvm/jvm.h
 pthread.h
 -
 
-/cygdrive/d/cSrc/mini_jvm/jvm/os_linux.c
+/cygdrive/d/githome/mini_jvm/mini_jvm/jvm/os_linux.c
 jvm.h
-/cygdrive/d/cSrc/mini_jvm/jvm/jvm.h
+/cygdrive/d/githome/mini_jvm/mini_jvm/jvm/jvm.h
 sys/time.h
 -
 jvm_util.h
-/cygdrive/d/cSrc/mini_jvm/jvm/jvm_util.h
+/cygdrive/d/githome/mini_jvm/mini_jvm/jvm/jvm_util.h
 afxres.h
 -
 
-/cygdrive/d/cSrc/mini_jvm/jvm/os_win.c
+/cygdrive/d/githome/mini_jvm/mini_jvm/jvm/os_win.c
 jvm.h
-/cygdrive/d/cSrc/mini_jvm/jvm/jvm.h
+/cygdrive/d/githome/mini_jvm/mini_jvm/jvm/jvm.h
 
-/cygdrive/d/cSrc/mini_jvm/jvm/stack.c
+/cygdrive/d/githome/mini_jvm/mini_jvm/jvm/stack.c
 stdio.h
 -
 stdlib.h
@@ -194,61 +206,89 @@ stdlib.h
 string.h
 -
 jvm.h
-/cygdrive/d/cSrc/mini_jvm/jvm/jvm.h
+/cygdrive/d/githome/mini_jvm/mini_jvm/jvm/jvm.h
 garbage.h
-/cygdrive/d/cSrc/mini_jvm/jvm/garbage.h
+/cygdrive/d/githome/mini_jvm/mini_jvm/jvm/garbage.h
+jvm_util.h
+/cygdrive/d/githome/mini_jvm/mini_jvm/jvm/jvm_util.h
 
-/cygdrive/d/cSrc/mini_jvm/test.c
+/cygdrive/d/githome/mini_jvm/mini_jvm/test.c
 stdio.h
 -
 stdlib.h
 -
 utils/hashtable.h
-/cygdrive/d/cSrc/mini_jvm/utils/hashtable.h
+/cygdrive/d/githome/mini_jvm/mini_jvm/utils/hashtable.h
 utils/utf8_string.h
-/cygdrive/d/cSrc/mini_jvm/utils/utf8_string.h
+/cygdrive/d/githome/mini_jvm/mini_jvm/utils/utf8_string.h
 jvm/jvm.h
-/cygdrive/d/cSrc/mini_jvm/jvm/jvm.h
+/cygdrive/d/githome/mini_jvm/mini_jvm/jvm/jvm.h
+jvm/jvm_util.h
+/cygdrive/d/githome/mini_jvm/mini_jvm/jvm/jvm_util.h
+jvm/garbage.h
+/cygdrive/d/githome/mini_jvm/mini_jvm/jvm/garbage.h
 
-/cygdrive/d/cSrc/mini_jvm/utils/arraylist.c
+/cygdrive/d/githome/mini_jvm/mini_jvm/utils/arraylist.c
 stdlib.h
 -
 string.h
 -
 arraylist.h
-/cygdrive/d/cSrc/mini_jvm/utils/arraylist.h
+/cygdrive/d/githome/mini_jvm/mini_jvm/utils/arraylist.h
 ../jvm/garbage.h
-/cygdrive/d/cSrc/mini_jvm/jvm/garbage.h
+/cygdrive/d/githome/mini_jvm/mini_jvm/jvm/garbage.h
 alloc-testing.h
-/cygdrive/d/cSrc/mini_jvm/utils/alloc-testing.h
+/cygdrive/d/githome/mini_jvm/mini_jvm/utils/alloc-testing.h
 
-/cygdrive/d/cSrc/mini_jvm/utils/arraylist.h
+/cygdrive/d/githome/mini_jvm/mini_jvm/utils/arraylist.h
 
-/cygdrive/d/cSrc/mini_jvm/utils/hashtable.c
+/cygdrive/d/githome/mini_jvm/mini_jvm/utils/hashset.c
+stdlib.h
+-
+stdio.h
+-
+math.h
+/cygdrive/d/githome/mini_jvm/mini_jvm/utils/math.h
+../jvm/garbage.h
+/cygdrive/d/githome/mini_jvm/mini_jvm/jvm/garbage.h
+hashset.h
+/cygdrive/d/githome/mini_jvm/mini_jvm/utils/hashset.h
+
+/cygdrive/d/githome/mini_jvm/mini_jvm/utils/hashset.h
+
+/cygdrive/d/githome/mini_jvm/mini_jvm/utils/hashtable.c
 stdlib.h
 -
 stdio.h
 -
 hashtable.h
-/cygdrive/d/cSrc/mini_jvm/utils/hashtable.h
+/cygdrive/d/githome/mini_jvm/mini_jvm/utils/hashtable.h
 math.h
-/cygdrive/d/cSrc/mini_jvm/utils/math.h
+/cygdrive/d/githome/mini_jvm/mini_jvm/utils/math.h
 ../jvm/garbage.h
-/cygdrive/d/cSrc/mini_jvm/jvm/garbage.h
+/cygdrive/d/githome/mini_jvm/mini_jvm/jvm/garbage.h
 
-/cygdrive/d/cSrc/mini_jvm/utils/hashtable.h
+/cygdrive/d/githome/mini_jvm/mini_jvm/utils/hashtable.h
 
-/cygdrive/d/cSrc/mini_jvm/utils/utf8_string.c
+/cygdrive/d/githome/mini_jvm/mini_jvm/utils/pairlist.c
+../jvm/garbage.h
+/cygdrive/d/githome/mini_jvm/mini_jvm/jvm/garbage.h
+
+/cygdrive/d/githome/mini_jvm/mini_jvm/utils/pairlist.h
+../jvm/global.h
+/cygdrive/d/githome/mini_jvm/mini_jvm/jvm/global.h
+
+/cygdrive/d/githome/mini_jvm/mini_jvm/utils/utf8_string.c
 stdlib.h
 -
 string.h
 -
 utf8_string.h
-/cygdrive/d/cSrc/mini_jvm/utils/utf8_string.h
+/cygdrive/d/githome/mini_jvm/mini_jvm/utils/utf8_string.h
 ../jvm/garbage.h
-/cygdrive/d/cSrc/mini_jvm/jvm/garbage.h
+/cygdrive/d/githome/mini_jvm/mini_jvm/jvm/garbage.h
 
-/cygdrive/d/cSrc/mini_jvm/utils/utf8_string.h
+/cygdrive/d/githome/mini_jvm/mini_jvm/utils/utf8_string.h
 hashtable.h
-/cygdrive/d/cSrc/mini_jvm/utils/hashtable.h
+/cygdrive/d/githome/mini_jvm/mini_jvm/utils/hashtable.h
 

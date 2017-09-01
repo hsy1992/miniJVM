@@ -18,6 +18,8 @@ file(REMOVE_RECURSE
   "CMakeFiles/mini_jvm.dir/jvm/os_linux.c.o"
   "CMakeFiles/mini_jvm.dir/jvm/os_win.c.o"
   "CMakeFiles/mini_jvm.dir/jvm/global.c.o"
+  "CMakeFiles/mini_jvm.dir/utils/pairlist.c.o"
+  "CMakeFiles/mini_jvm.dir/utils/hashset.c.o"
   "mini_jvm.pdb"
   "mini_jvm.exe"
   "libmini_jvm.dll.a"
