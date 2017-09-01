@@ -174,7 +174,7 @@ void t5() {
 
 int main(int argc, char **argv) {
     s32 ret=execute("../java/build/classes/", "com/egls/test/Foo1", argc, argv);
-
+    dump_refer();
     return ret;
 //    t5();
 //    return 0;
