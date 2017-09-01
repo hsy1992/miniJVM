@@ -172,7 +172,7 @@ public class Foo1 {
         t.start();
         //
         int i = 0;
-        while (i++<10) {
+        while (i++ < 10) {
             try {
                 Thread.sleep(300);
                 System.out.println("total mem:" + Runtime.getRuntime().totalMemory()
@@ -203,19 +203,35 @@ public class Foo1 {
 
     }
 
-    public static void main(String[] agrs) {
+    void t10() {
+        for (int i = 0; i < 1000; i++) {
+            String a = "abc";
+            a = "def";
+        }
+        
+    }
+
+    public static void main() {
         Foo1 f = new Foo1();
-        f.t1();
-        f.t2();
-        f.t3();
-        f.t4();
-        f.t5();
-        f.t6();
-        f.t7();
-        f.t8();
-        f.t9();
-        BpDeepTest.main(agrs);
-        Foo2.main(agrs);
-        Foo3.main(agrs);
+//        f.t1();
+//        f.t2();
+//        f.t3();
+//        f.t4();
+//        f.t5();
+//        f.t6();
+//        f.t7();
+//        f.t8();
+//        f.t9();
+        f.t10();
+        System.gc();
+        System.gc();
+    }
+
+    public static void main(String[] agrs) {
+//        BpDeepTest.main(agrs);
+        Foo1.main();
+//        Foo2.main(agrs);
+//        Foo3.main(agrs);
+
     }
 }
