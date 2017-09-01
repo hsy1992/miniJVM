@@ -204,11 +204,13 @@ public class Foo1 {
     }
 
     void t10() {
-        for (int i = 0; i < 1000; i++) {
+        String c = null;
+        for (int i = 0; i < 1000000; i++) {
             String a = "abc";
-            a = "def";
+            String b = "def";
+            c = a + b;
         }
-        
+        System.out.println("c=\"" + c + "\"");
     }
 
     public static void main() {

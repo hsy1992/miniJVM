@@ -804,7 +804,7 @@ s32 instance_destory(Instance *instance);
 //======================= bytecode =============================
 
 
-typedef s32 (*InstructFunc)(u8 **opCode, Runtime *runtime, Class *clazz);
+typedef s32 (*InstructFunc)(u8 **opCode, Runtime *runtime);
 
 typedef struct _Instruction {
     c8 *name;
@@ -907,7 +907,7 @@ s32 is_ref_entry(StackFrame *stack);
 
 void stack2localvar(MethodInfo *method, Runtime *father, Runtime *son);
 
-static s32 op_notsupport(u8 **opCode, Runtime *runtime, Class *clazz);
+static s32 op_notsupport(u8 **opCode, Runtime *runtime);
 
 void peek_entry(StackFrame *stack, StackEntry *entry, int index);
 
