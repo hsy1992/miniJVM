@@ -173,6 +173,7 @@ void class_clinit(Class *clazz, Runtime *runtime) {
             execute_method(&(p->method[i]), runtime, clazz);
         }
     }
+
     clazz->status = CLASS_STATUS_CLINITED;
 }
 

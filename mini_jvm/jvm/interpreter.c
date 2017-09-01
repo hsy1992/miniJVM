@@ -1720,10 +1720,15 @@ static inline s32 op_ldc_impl(u8 **opCode, Runtime *runtime, Class *clazz, s32 i
             break;
         }
         case CONSTANT_STRING_REF: {
-            Utf8String *ptr = get_utf8_string(clazz, find_constant_stringref(clazz, index)->stringIndex);
-            Instance *jstr = jstring_create(ptr, runtime);
-            push_ref(stack, (__refer) jstr);
-            garbage_refer(jstr, NULL);
+            ConstantUTF8 *cutf = find_constant_utf8(clazz, find_constant_stringref(clazz, index)->stringIndex);
+            if (!cutf->jstr) {//缓存字符串
+                Instance *jstr = jstring_create(cutf->utfstr, runtime);
+                garbage_refer(jstr, clazz);
+                cutf->jstr = jstr;
+            }
+            push_ref(stack, (__refer) cutf->jstr);
+            //garbage_refer(cutf->jstr, NULL);
+
 #if _JVM_DEBUG
             printf("ldc: [%llx] =\"%s\"\n", (s64) (long) jstr, utf8_cstr(ptr));
 #endif

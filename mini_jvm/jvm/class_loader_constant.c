@@ -596,6 +596,7 @@ s32 _class_constant_pool_destory(Class *clazz) {
     for (i = 0; i < clazz->constantPool.utf8CP->length; i++) {
         ConstantUTF8 *ptr = (ConstantUTF8 *) arraylist_get_value(clazz->constantPool.utf8CP, i);
         utf8_destory(ptr->utfstr);
+        instance_destory(ptr->jstr);
         jvm_free(ptr);
     }
     for (i = 0; i < clazz->constantPool.name_and_type->length; i++) {
