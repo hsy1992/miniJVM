@@ -6,6 +6,7 @@
 #include "../utils/utf8_string.h"
 #include "garbage.h"
 #include "jvm_util.h"
+#include "java_native.h"
 
 
 void destoryAllClasses(hmap_t classes) {
@@ -28,6 +29,9 @@ s32 execute(c8 *p_classpath, c8 *p_mainclass, s32 argc, c8 **argv) {
     garbage_collector_create();
     //创建线程容器
     thread_list = arraylist_create(0);
+    //本地方法库
+    native_libs = arraylist_create(0);
+    reg_std_native_lib();
 
     //创建运行时栈
     Runtime runtime;
@@ -84,7 +88,7 @@ s32 execute(c8 *p_classpath, c8 *p_mainclass, s32 argc, c8 **argv) {
             Instance *main_thread = instance_create(thread_clazz);
             //pthread_t pthread = pthread_self();
             runtime.threadInfo->jthread = main_thread;
-            runtime.threadInfo->thread_running=1;
+            runtime.threadInfo->thread_running = 1;
             instance_init(main_thread, &runtime);//必须放在最好，初始化时需要用到前面的赋值
             s64 start = currentTimeMillis();
             arraylist_append(thread_list, &runtime);

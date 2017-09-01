@@ -7,6 +7,7 @@
 Class *JVM_CLASS;
 Utf8String *classpath;
 Hashtable *classes;  //key =  package+classname value =  class_ptr
+ArrayList *native_libs;
 ArrayList *thread_list; //all thread
 s32 STACK_LENGHT = 10240;
 c8 *data_type_str = "    ZCFDBSIJL[";

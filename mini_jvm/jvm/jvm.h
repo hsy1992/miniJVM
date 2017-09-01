@@ -300,6 +300,7 @@ extern Class *JVM_CLASS;
 extern Utf8String *classpath;
 extern Hashtable *classes;
 extern ArrayList *thread_list;
+extern ArrayList *native_libs;
 extern s32 STACK_LENGHT;
 
 

@@ -391,9 +391,9 @@ s32 java_lang_Runtime_totalMemory(Runtime *runtime, Class *clazz) {
 }
 
 s32 java_lang_Runtime_gc(Runtime *runtime, Class *clazz) {
-    runtime->threadInfo->thread_running=0;
+    runtime->threadInfo->thread_running = 0;
     garbage_collect();
-    runtime->threadInfo->thread_running=1;
+    runtime->threadInfo->thread_running = 1;
 #if _JVM_DEBUG
     printf("java_lang_Runtime_gc \n");
 #endif
@@ -764,14 +764,17 @@ static java_native_method method_table[] = {
         {"java/io/Throwable",                   "printStackTrace0",  java_io_Throwable_printStackTrace0},
 };
 
-static s32 java_lang_method_size = sizeof(method_table) / sizeof(java_native_method);
 
 java_native_method *find_native_method(c8 *cls_name, c8 *method_name, c8 *method_type) {
-    s32 i;
-    for (i = 0; i < java_lang_method_size; i++)
-        if (strcmp(cls_name, method_table[i].clzname) == 0 &&
-            strcmp(method_name, method_table[i].methodname) == 0)
-            return &method_table[i];
+    s32 i, j;
+    for (j = 0; j < native_libs->length; j++) {
+        JavaNativeLib *lib = arraylist_get_value(native_libs, j);
+        java_native_method *methods = lib->methods;
+        for (i = 0; i < lib->methods_count; i++)
+            if (strcmp(cls_name, (methods + i)->clzname) == 0 &&
+                strcmp(method_name, (methods + i)->methodname) == 0)
+                return (methods + i);
+    }
     return 0;
 }
 
@@ -785,5 +788,23 @@ s32 invoke_native_method(Runtime *runtime, Class *p,
         method->func_pointer(runtime, p);
         return 1;
     }
+    return 0;
+}
+
+void reg_std_native_lib() {
+    s32 method_size = sizeof(method_table) / sizeof(java_native_method);
+    JavaNativeLib *lib = jvm_alloc(sizeof(JavaNativeLib));
+    lib->methods_count = method_size;
+    lib->methods = &(method_table[0]);
+    native_reg_lib(lib);
+}
+
+s32 native_reg_lib(JavaNativeLib *lib) {
+    arraylist_append(native_libs, lib);
+    return 0;
+}
+
+s32 native_remove_lib(JavaNativeLib *lib) {
+    arraylist_remove(native_libs, lib);
     return 0;
 }

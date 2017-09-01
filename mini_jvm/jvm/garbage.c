@@ -89,6 +89,8 @@ void _garbage_put_set(Hashset *set) {
                 hashset_destory(set);
                 return;
             }
+            hashset_clear(set);
+            arraylist_append(_garbage_refer_set_pool, set);
             break;
         case 2:
             //it would be big mem use
