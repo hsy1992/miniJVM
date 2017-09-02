@@ -244,6 +244,7 @@ public class Foo1 {
             while (true) {
                 try {
                     Socket cltsock = srvsock.accept();
+                    cltsock.setOption(Socket.OP_TYPE_NON_BLOCK, Socket.OP_VAL_NON_BLOCK);
                     System.out.println("accepted client socket:" + cltsock);
                     byte[] buf = new byte[256];
                     StringBuffer tmps = new StringBuffer();
@@ -257,7 +258,7 @@ public class Foo1 {
                         }
                     }
                     System.out.println("RECV: " + tmps.toString());
-                    String sbuf = "HTTP/1.0 200 OK\r\nContent-Type: text/html\r\n\r\nFor mini_jvm test. ( EGLS Beijing co.,ltd)"+Calendar.getInstance().getTime();
+                    String sbuf = "HTTP/1.0 200 OK\r\nContent-Type: text/html\r\n\r\nFor mini_jvm test. ( EGLS Beijing co.,ltd)"+System.currentTimeMillis();//+Calendar.getInstance().getTime();
                     int wlen = 0;
                     while ((wlen += cltsock.write(sbuf.getBytes(), wlen, sbuf.length() - wlen)) < sbuf.length()) {
 
@@ -282,6 +283,7 @@ public class Foo1 {
         //client
         try {
             Socket conn = (Socket) Connector.open("socket://baidu.com:80");
+            conn.setOption(Socket.OP_TYPE_NON_BLOCK, Socket.OP_VAL_NON_BLOCK);
             String request = "GET / HTTP/1.1\r\n\r\n";
             conn.write(request.getBytes(), 0, request.length());
             byte[] rcvbuf = new byte[256];
