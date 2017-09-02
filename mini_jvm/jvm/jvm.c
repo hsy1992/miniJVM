@@ -32,6 +32,7 @@ s32 execute(c8 *p_classpath, c8 *p_mainclass, s32 argc, c8 **argv) {
     //本地方法库
     native_libs = arraylist_create(0);
     reg_std_native_lib();
+    reg_net_native_lib();
 
     //创建运行时栈
     Runtime runtime;
@@ -83,7 +84,7 @@ s32 execute(c8 *p_classpath, c8 *p_mainclass, s32 argc, c8 **argv) {
 
         MethodInfo *main = find_methodInfo_by_name(mainclass, methodName, methodType);
         if (main) {
-            Class *thread_clazz = classes_load_get("java/lang/Thread", &runtime);
+            Class *thread_clazz = classes_load_get_c("java/lang/Thread", &runtime);
             //为主线程创建Thread实例
             Instance *main_thread = instance_create(thread_clazz);
             //pthread_t pthread = pthread_self();

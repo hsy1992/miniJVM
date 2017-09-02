@@ -10,13 +10,13 @@
 ConstantMethodRef *
 find_constant_methodref_by_name(Utf8String *clsName, Utf8String *methodName, Utf8String *methodType) {
     ConstantMethodRef *cmr = NULL;
-    Class *clazz = classes_get( clsName);
+    Class *clazz = classes_get(clsName);
     ArrayList *mrarr = clazz->constantPool.methodRef;
     s32 i;
     for (; i < mrarr->length; i++) {
         cmr = arraylist_get_value(mrarr, i);
-        if (utf8_equals(methodName, cmr->methodInfo->name) == 0
-            && utf8_equals(methodType, cmr->methodInfo->descriptor) == 0
+        if (utf8_equals(methodName, cmr->methodInfo->name) == 1
+            && utf8_equals(methodType, cmr->methodInfo->descriptor) == 1
                 ) {
             return cmr;
         }
@@ -49,15 +49,15 @@ MethodInfo *find_methodInfo_by_methodref(Class *clazz, s32 method_ref) {
 
 MethodInfo *find_methodInfo_by_name(Utf8String *clsName, Utf8String *methodName, Utf8String *methodType) {
     MethodInfo *mi = NULL;
-    Class *other = classes_get( clsName);
+    Class *other = classes_get(clsName);
 
     while (mi == NULL && other) {
         MethodPool *fp = &(other->methodPool);
         s32 i = 0;
         for (; i < fp->method_used; i++) {
             MethodInfo *tmp = &fp->method[i];
-            if (utf8_equals(methodName, tmp->name) == 0
-                && utf8_equals(methodType, tmp->descriptor) == 0
+            if (utf8_equals(methodName, tmp->name) == 1
+                && utf8_equals(methodType, tmp->descriptor) == 1
                     ) {
                 mi = tmp;
                 if (!mi->_this_class)
@@ -218,11 +218,19 @@ s32 _parse_method_pool(Class *_this, FILE *fp, s32 count) {
 
     s32 size = sizeof(MethodInfo) * count;
     _this->methodPool.method = jvm_alloc(size);
-    memset(_this->methodPool.method, 0, size);
     s32 i;
     for (i = 0; i < count; i++)
         parseMP(_this, fp);
     return 0;
+}
+
+void lineNumTable_destory(ArrayList *list) {
+    s32 i, j;
+    for (i = 0; i < list->length; i++) {
+        LineNumberTable *table = arraylist_get_value(list, i);
+        jvm_free(table->table);
+        jvm_free(table);
+    }
 }
 
 s32 _class_method_info_destory(Class *clazz) {
@@ -233,10 +241,16 @@ s32 _class_method_info_destory(Class *clazz) {
             AttributeInfo *attr = &mi->attributes[j];
             jvm_free(attr->info);//某些没有转
             attr->info = NULL;
-            jvm_free(((CodeAttribute*)attr->converted_code)->code);//info已被转换为converted_attribute
-            jvm_free(((CodeAttribute*)attr->converted_code)->exception_table);//info已被转换为converted_attribute
+            if (attr->converted_code) {
+                CodeAttribute *ca = (CodeAttribute *) attr->converted_code;
+                jvm_free(ca->code);//info已被转换为converted_attribute
+                jvm_free(ca->exception_table);//info已被转换为converted_attribute
+                attr->converted_code = NULL;
+                if (ca->line_num_table) {
+                    lineNumTable_destory(ca->line_num_table);
+                }
+            }
             jvm_free(attr->converted_code);
-            attr->converted_code = NULL;
         }
         jvm_free(mi->attributes);
         mi->attributes = NULL;

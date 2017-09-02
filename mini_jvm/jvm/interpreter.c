@@ -1732,7 +1732,7 @@ static inline s32 op_ldc_impl(u8 **opCode, Runtime *runtime, s32 index) {
             //garbage_refer(cutf->jstr, NULL);
 
 #if _JVM_DEBUG
-            printf("ldc: [%llx] =\"%s\"\n", (s64) (long) jstr, utf8_cstr(ptr));
+            printf("ldc: [%llx] =\"%s\"\n", (s64) (long) cutf->jstr, utf8_cstr(cutf->utfstr));
 #endif
             break;
         }
@@ -1963,7 +1963,7 @@ s32 op_new(u8 **opCode, Runtime *runtime) {
 
     ConstantClassRef *ccf = find_constant_classref(clazz, object_ref);
     Utf8String *clsName = get_utf8_string(clazz, ccf->stringIndex);
-    Class *other = classes_get(clsName);
+    Class *other = classes_load_get(clsName, runtime);
     Instance *ins = NULL;
     if (other) {
         ins = instance_create(other);
@@ -2107,7 +2107,7 @@ s32 op_checkcast(u8 **opCode, Runtime *runtime) {
 
 #if _JVM_DEBUG
     printf("checkcast  [%llx] instancof %s is:%d \n", (s64) (long) ins,
-           utf8_cstr(find_constant_classref(clazz, typeIdx)->name),
+           utf8_cstr(find_constant_classref(runtime->clazz, typeIdx)->name),
            checkok);
 #endif
     *opCode = *opCode + 3;
@@ -2138,7 +2138,7 @@ s32 op_instanceof(u8 **opCode, Runtime *runtime) {
 
 #if _JVM_DEBUG
     printf("instanceof  [%llx] instancof %s  \n", (s64) (long) ins,
-           utf8_cstr(find_constant_classref(clazz, typeIdx)->name));
+           utf8_cstr(find_constant_classref(runtime->clazz, typeIdx)->name));
 #endif
     *opCode = *opCode + 3;
     return 0;
@@ -2865,6 +2865,7 @@ s32 find_instruct_offset(u8 op) {
     return instructionsIndexies[op]->offset;
 }
 
+
 static ExceptionTable *find_exception_handler(Runtime *runtime, CodeAttribute *ca, s32 offset, __refer exception_ref) {
     Instance *ins = (Instance *) exception_ref;
 
@@ -2875,11 +2876,35 @@ static ExceptionTable *find_exception_handler(Runtime *runtime, CodeAttribute *c
         if (offset >= (e + i)->start_pc
             && offset < (e + i)->end_pc) {
             ConstantClassRef *ccr = find_constant_classref(runtime->clazz, (e + i)->catch_type);
-            if (utf8_equals(ccr->name, runtime->clazz->name))
+            if (0 == utf8_equals(ccr->name, runtime->clazz->name))
                 return e + i;
         }
     }
     return NULL;
+}
+
+static s32 find_line_num(CodeAttribute *ca, s32 offset) {
+    s32 i, j;
+    for (i = 0; i < ca->line_num_table->length; i++) {
+        LineNumberTable *lineTable = arraylist_get_value(ca->line_num_table, i);
+        for (j = 0; j < lineTable->line_number_table_length; j++) {
+            line_number *node = (line_number *) (lineTable->table + (j * 4));
+            if (offset > node->start_pc) {
+                if (j + 1 < lineTable->line_number_table_length) {
+                    line_number *next_node = (line_number *) (lineTable->table + ((j + 1) * 4));
+
+                    if (offset < next_node->start_pc) {
+                        return node->line_number;
+                    }
+                } else {
+                    if (i + 1 == ca->line_num_table->length) {//最后一组了
+                        return node->line_number;
+                    }
+                }
+            }
+        }
+    }
+    return -1;
 }
 
 static void printCodeAttribute(CodeAttribute *ca, Class *p) {
@@ -2977,7 +3002,7 @@ s32 execute_method(MethodInfo *method, Runtime *pruntime, Class *clazz) {
             method->native_func = find_native_method(utf8_cstr(clazz->name), utf8_cstr(method->name),
                                                      utf8_cstr(method->descriptor))->func_pointer;
         }
-        method->native_func(&runtime, clazz);
+        ret = method->native_func(&runtime, clazz);
     } else {
 
         for (j = 0; j < method->attributes_count; j++) {
@@ -3028,8 +3053,11 @@ s32 execute_method(MethodInfo *method, Runtime *pruntime, Class *clazz) {
                 else if (i == RUNTIME_STATUS_EXCEPTION) {
                     __refer ref = pop_ref(runtime.stack);
                     Instance *ins = (Instance *) ref;
-                    printf("   at %s.%s(%s.java )\n",
-                           utf8_cstr(clazz->name), utf8_cstr(method->name), utf8_cstr(clazz->name)
+                    s32 lineNum = find_line_num(ca, pc - ca->code);
+                    printf("   at %s.%s(%s.java:%d)\n",
+                           utf8_cstr(clazz->name), utf8_cstr(method->name),
+                           utf8_cstr(clazz->name),
+                           lineNum
                     );
                     ExceptionTable *et = find_exception_handler(&runtime, ca, pc - ca->code, ref);
                     if (et == NULL) {
@@ -3037,7 +3065,7 @@ s32 execute_method(MethodInfo *method, Runtime *pruntime, Class *clazz) {
                         ret = RUNTIME_STATUS_EXCEPTION;
                         break;
                     } else {
-                        printf("Exception : %s\n ", utf8_cstr(ins->obj_of_clazz->name));
+                        printf("Exception : %s\n", utf8_cstr(ins->obj_of_clazz->name));
                         pc = (ca->code + et->handler_pc);
                     }
                 }

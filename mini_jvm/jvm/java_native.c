@@ -26,14 +26,7 @@ s32 java_lang_Class_forName(Runtime *runtime, Class *clazz) {
         Instance *arr = jstring_get_value_array(jstr);
         unicode_2_utf8(ustr, (u16 *) arr->arr_body, arr->arr_length);
         utf8_replace_c(ustr, ".", "/");
-        cl = classes_get(ustr);
-
-        if (!cl) {
-            load_class(classpath, ustr, classes);
-            cl = classes_get(ustr);
-            class_link(cl);
-            class_clinit(cl, runtime);
-        }
+        cl = classes_load_get(ustr, runtime);
         if (!cl) {
             Instance *exception = exception_create(JVM_EXCEPTION_CLASSNOTFOUND, runtime);
             push_ref(stack, (__refer) exception);
@@ -47,7 +40,7 @@ s32 java_lang_Class_forName(Runtime *runtime, Class *clazz) {
         ret = RUNTIME_STATUS_EXCEPTION;
     }
 #if _JVM_DEBUG
-    printf("java_lang_Class_forName [%x]\n", cl);
+    printf("java_lang_Class_forName [%llx]\n", (s64) (long) cl);
 #endif
     return ret;
 }
@@ -62,7 +55,7 @@ s32 java_lang_Class_newInstance(Runtime *runtime, Class *clazz) {
     }
     push_ref(stack, (__refer) ins);
 #if _JVM_DEBUG
-    printf("java_lang_Class_newInstance  class:[%x] ins:[%x]\n", cl, ins);
+    printf("java_lang_Class_newInstance  class:[%llx] ins:[%llx]\n", (s64) (long) cl, (s64) (long) ins);
 #endif
     return 0;
 }
@@ -350,7 +343,7 @@ s32 java_lang_Object_wait(Runtime *runtime, Class *clazz) {
     l2d.i2l.i1 = (runtime->localVariables + 1)->integer;
     l2d.i2l.i0 = (runtime->localVariables + 2)->integer;
 #if _JVM_DEBUG
-    printf("java_lang_Object_wait %llx  wait %lld\n", (s64)(long)ins,l2d.l);
+    printf("java_lang_Object_wait %llx  wait %lld\n", (s64) (long) ins, l2d.l);
 #endif
     runtime->threadInfo->thread_running = 0;
     jthread_waitTime(ins, runtime, l2d.l);
@@ -480,13 +473,15 @@ s32 java_lang_System_arraycopy(Runtime *runtime, Class *clazz) {
     Instance *dest = (Instance *) (runtime->localVariables + 2)->refer;
     s32 src_start = (runtime->localVariables + 1)->integer;
     Instance *src = (Instance *) (runtime->localVariables + 0)->refer;
-    //根据元素宽
-    src_start *= data_type_bytes[src->arr_data_type];
-    count *= data_type_bytes[src->arr_data_type];
-    dest_start *= data_type_bytes[src->arr_data_type];
-    if (src && dest && src->arr_body && dest->arr_body && count > 0)
-        memcpy(&(dest->arr_body[dest_start]), &(src->arr_body[src_start]), count);
-
+    if (src == NULL || dest == NULL) {
+    } else {
+        //根据元素宽
+        src_start *= data_type_bytes[src->arr_data_type];
+        count *= data_type_bytes[src->arr_data_type];
+        dest_start *= data_type_bytes[src->arr_data_type];
+        if (src && dest && src->arr_body && dest->arr_body && count > 0)
+            memcpy(&(dest->arr_body[dest_start]), &(src->arr_body[src_start]), count);
+    }
 #if _JVM_DEBUG
     printf("java_lang_System_arraycopy\n");
 #endif
@@ -792,14 +787,13 @@ s32 invoke_native_method(Runtime *runtime, Class *p,
 }
 
 void reg_std_native_lib() {
-    s32 method_size = sizeof(method_table) / sizeof(java_native_method);
-    JavaNativeLib *lib = jvm_alloc(sizeof(JavaNativeLib));
-    lib->methods_count = method_size;
-    lib->methods = &(method_table[0]);
-    native_reg_lib(lib);
+    native_reg_lib(&(method_table[0]), sizeof(method_table) / sizeof(java_native_method));
 }
 
-s32 native_reg_lib(JavaNativeLib *lib) {
+s32 native_reg_lib(java_native_method *methods, s32 method_size) {
+    JavaNativeLib *lib = jvm_alloc(sizeof(JavaNativeLib));
+    lib->methods_count = method_size;
+    lib->methods = methods;
     arraylist_append(native_libs, lib);
     return 0;
 }

@@ -153,18 +153,16 @@ void class_optmize(Class *clazz) {
 
         //转attribute为CdoeAttribute
         for (j = 0; j < ptr->attributes_count; j++) {
-            if (utf8_equals_c(get_utf8_string(clazz, ptr->attributes[j].attribute_name_index), "Code") == 0) {
+            if (utf8_equals_c(get_utf8_string(clazz, ptr->attributes[j].attribute_name_index), "Code") == 1) {
                 CodeAttribute *ca = jvm_alloc(sizeof(CodeAttribute));
 //                if (utf8_equals_c(clazz->name, "com/sun/cldc/i18n/Helper") == 0 &&
-//                    0==utf8_equals_c(ptr->descriptor, "(Ljava/io/OutputStream;)Ljava/io/Writer;")) {
+//                    1==utf8_equals_c(ptr->descriptor, "(Ljava/io/OutputStream;)Ljava/io/Writer;")) {
 //                    int debug = 1;
 //                }
-                convert_to_code_attribute(ca, &ptr->attributes[j]);
+                convert_to_code_attribute(ca, &ptr->attributes[j], clazz);
                 jvm_free(ptr->attributes[j].info);//无用删除
                 ptr->attributes[j].info = NULL;
                 ptr->attributes[j].converted_code = (u8 *) ca;
-            }else if (utf8_equals_c(get_utf8_string(clazz, ptr->attributes[j].attribute_name_index), "Exceptions") == 0) {
-
             }
         }
     }
@@ -194,8 +192,7 @@ void class_optmize(Class *clazz) {
 
 }
 
-
-s32 convert_to_code_attribute(CodeAttribute *ca, AttributeInfo *attr) {
+s32 convert_to_code_attribute(CodeAttribute *ca, AttributeInfo *attr, Class *clazz) {
     s32 info_p = 0;
 
     ca->attribute_name_index = attr->attribute_name_index;
@@ -227,7 +224,43 @@ s32 convert_to_code_attribute(CodeAttribute *ca, AttributeInfo *attr) {
         s2c.c0 = attr->info[info_p++];
         ((u16 *) ca->exception_table)[i] = s2c.s;
     }
-
+    ca->line_num_table = arraylist_create(0);
+    s2c.c1 = attr->info[info_p++];
+    s2c.c0 = attr->info[info_p++];
+    s32 attr_count = (u16) s2c.s;
+    for (i = 0; i < attr_count; i++) {
+        s2c.c1 = attr->info[info_p++];
+        s2c.c0 = attr->info[info_p++];
+        s32 attribute_name_index = (u16) s2c.s;
+        i2c.c3 = attr->info[info_p++];
+        i2c.c2 = attr->info[info_p++];
+        i2c.c1 = attr->info[info_p++];
+        i2c.c0 = attr->info[info_p++];
+        s32 attribute_lenth = (u32) i2c.i;
+        //转行号表
+        if (utf8_equals_c(get_utf8_string(clazz, attribute_name_index), "LineNumberTable")) {
+            LineNumberTable *lineTable = jvm_alloc(sizeof(LineNumberTable));
+            arraylist_append(ca->line_num_table, lineTable);
+            lineTable->attribute_name_index = attribute_name_index;
+            lineTable->attribute_length = attribute_lenth;
+            s2c.c1 = attr->info[info_p++];
+            s2c.c0 = attr->info[info_p++];
+            lineTable->line_number_table_length = (u16) s2c.s;
+            lineTable->table = jvm_alloc(sizeof(u32) * lineTable->line_number_table_length);
+            s32 j;
+            for (j = 0; j < lineTable->line_number_table_length; j++) {
+                s2c.c1 = attr->info[info_p++];
+                s2c.c0 = attr->info[info_p++];
+                setFieldShort(lineTable->table + (j * sizeof(u32)), s2c.s);
+                s2c.c1 = attr->info[info_p++];
+                s2c.c0 = attr->info[info_p++];
+                setFieldShort(lineTable->table + (j * sizeof(u32) + 2), s2c.s);
+            }
+        } else {
+            info_p += attribute_lenth;
+        }
+    }
+    return 0;
 }
 
 
@@ -238,33 +271,12 @@ void load_related_class(Utf8String *classpath, Class *clazz, hmap_t classes) {
         s32 i, j;
         for (i = 0; i < p->classRef->length; i++) {
             ConstantClassRef *ccr = (ConstantClassRef *) arraylist_get_value(p->classRef, i);
-            Utf8String *tmpname = utf8_create();
-            ConstantUTF8 *utfptr = find_constant_utf8(clazz, ccr->stringIndex);
-            utf8_append(tmpname, utfptr->utfstr);
-            s32 classid = ccr->index;
-
-            //printf("debug= %s\n", utf8_cstr(tmpname));
-            Class *tmpclazz = classes_get(tmpname);
-            if (classid != clazz->cff.this_class && 0 == tmpclazz && utf8_indexof_c(tmpname, "[") != 0) {
-
-                Utf8String *fullpath = utf8_create_part(classpath, 0, classpath->length);
-                utf8_cstr(tmpname);
-                utf8_append(fullpath, tmpname);
-                utf8_append_c(fullpath, ".class");
-
-                tmpclazz = class_create();
-                s32 rec = tmpclazz->_load_from_file(tmpclazz, utf8_cstr(fullpath));
-                if (0 == rec) {
-#if _JVM_DEBUG
-                    printf("load class:%s \n", utf8_cstr(fullpath));
-#endif
-                    classes_put(tmpclazz);
-                    load_related_class(classpath, tmpclazz, classes); //递归调用载入类
-                }
-                utf8_destory(fullpath);
-            }
-            utf8_destory(tmpname);
+            load_class(classpath, find_constant_utf8(clazz, ccr->stringIndex)->utfstr, classes);
         }
+//        for (i = 0; i < clazz->interfacePool.clasz_used; i++) {
+//            ConstantClassRef *ccr = (clazz->interfacePool.clasz + i);
+//            load_class(classpath, find_constant_utf8(clazz, ccr->stringIndex)->utfstr, classes);
+//        }
     }
 }
 
@@ -277,21 +289,24 @@ void load_class(Utf8String *pClassPath, Utf8String *pClassName, hmap_t classes) 
 
     classpath = utf8_create_copy(pClassPath);
 
-    Utf8String *tmppath = utf8_create_part(pClassPath, 0, pClassPath->length);
+    Utf8String *tmppath = utf8_create_copy(pClassPath);
     utf8_append(tmppath, clsName);
     utf8_append_c(tmppath, ".class");
     Class *tmpclazz = classes_get(pClassName);
     if (tmpclazz) {
         return;
     }
+    if (utf8_indexof_c(tmppath, "[") >= 0) {
+        return;
+    }
     Class *clazz = class_create();
     s32 iret = clazz->_load_from_file(clazz, utf8_cstr(tmppath));
     if (iret != 0) {
-        printf(" main class not found : %s", utf8_cstr(pClassName));
+        printf(" class not found : %s", utf8_cstr(pClassName));
         exit(1);
     }
 #if _JVM_DEBUG
-    printf("load main class:  %s \n", utf8_cstr(tmppath));
+    printf("load class:  %s \n", utf8_cstr(tmppath));
 #endif
     classes_put(clazz);
     utf8_destory(tmppath);

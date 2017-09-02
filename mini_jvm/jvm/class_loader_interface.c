@@ -48,11 +48,11 @@ void printInterfacePool(Class *clazz, InterfacePool *ip) {
 
 s32 _parse_interface_pool(Class *_this, FILE *fp, s32 count) {
 
-    s32 size = sizeof(ConstantInterfaceMethodRef) * count;
+    s32 size = sizeof(ConstantClassRef) * count;
     _this->interfacePool.clasz = jvm_alloc(size);
     s32 i;
     for (i = 0; i < count; i++)
-        parseIPClass(_this, fp, 1);
+        parseIPClass(_this, fp, i);
     return 0;
 }
 

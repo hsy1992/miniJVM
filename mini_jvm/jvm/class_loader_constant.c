@@ -358,8 +358,8 @@ s32 find_constant_fieldref_index(Class *clazz, Utf8String *fieldName, Utf8String
     for (; i < cp->length; i++) {
         ConstantFieldRef *cfr = ((ConstantFieldRef *) arraylist_get_value(cp, i));
         ConstantNameAndType *nat = find_constant_name_and_type(clazz, cfr->nameAndTypeIndex);
-        if (utf8_equals(fieldName, get_utf8_string(clazz, nat->nameIndex)) == 0 &&
-            utf8_equals(type, get_utf8_string(clazz, nat->typeIndex)) == 0) {
+        if (utf8_equals(fieldName, get_utf8_string(clazz, nat->nameIndex)) == 1 &&
+            utf8_equals(type, get_utf8_string(clazz, nat->typeIndex)) == 1) {
             return cfr->index;
         }
     }

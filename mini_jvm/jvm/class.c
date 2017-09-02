@@ -166,7 +166,7 @@ void class_clinit(Class *clazz, Runtime *runtime) {
     s32 i;
     for (i = 0; i < p->method_used; i++) {
         //printf("%s,%s\n", utf8_cstr(p->methodRef[i].name), utf8_cstr(p->methodRef[i].descriptor));
-        if (utf8_equals_c(p->method[i].name, "<clinit>") == 0) {
+        if (utf8_equals_c(p->method[i].name, "<clinit>") == 1) {
 #if _JVM_DEBUG
             printf("%s <clinit>\n", utf8_cstr(clazz->name));
 #endif
@@ -176,4 +176,54 @@ void class_clinit(Class *clazz, Runtime *runtime) {
 
     clazz->status = CLASS_STATUS_CLINITED;
 }
+//===============================    实例化相关  ==================================
 
+u8 instance_of(Class *clazz, Instance *ins) {
+    Class *ins_of_class = ins->obj_of_clazz;
+    while (ins_of_class) {
+        if (ins_of_class == clazz) {
+            return 1;
+        }
+        ins_of_class = getSuperClass(ins_of_class);
+    }
+
+    return isSonOfInterface(clazz, ins->obj_of_clazz);
+//    return 0;
+}
+
+u8 isSonOfInterface(Class *clazz, Class *son) {
+    s32 i;
+    for (i = 0; i < son->interfacePool.clasz_used; i++) {
+        ConstantClassRef *ccr = (son->interfacePool.clasz + i);
+        Class *other = classes_get(find_constant_utf8(son, ccr->stringIndex)->utfstr);
+        if (clazz == other) {
+            return 1;
+        } else {
+            u8 sure = isSonOfInterface(clazz, other);
+            if (sure)return 1;
+        }
+    }
+    return 0;
+}
+
+u8 assignable_from(Class *clazzSon, Class *clazzSuper) {
+
+    while (clazzSuper) {
+        if (clazzSon == clazzSuper) {
+            return 1;
+        }
+        clazzSuper = getSuperClass(clazzSuper);
+    }
+    return 0;
+}
+
+Class *getSuperClass(Class *clazz) {
+    s32 superid = clazz->cff.super_class;
+    ConstantClassRef *ccf = find_constant_classref(clazz, superid);
+    if (ccf) {
+        Utf8String *clsName_u = get_utf8_string(clazz, ccf->stringIndex);
+        Class *other = classes_get(clsName_u);
+        return other;
+    }
+    return NULL;
+}

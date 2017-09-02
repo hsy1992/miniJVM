@@ -239,20 +239,20 @@ void utf8_replace_c(Utf8String *a1, char *a2, char *a3) {
 }
 
 int utf8_equals(Utf8String *a1, Utf8String *a2) {
-    if (a1 == NULL && a2 == NULL)return 0;
-    if (a1 == NULL || a2 == NULL)return -2;
-    if (_utf8_hashCode(a1) != _utf8_hashCode(a2))return -4;
-    if (a1->length != a2->length)return -3;
-    else if (a1->length < a2->length)return -1;
+    if (a1 == NULL && a2 == NULL)return 1;
+    if (a1 == NULL || a2 == NULL)return 0;
+    if (_utf8_hashCode(a1) != _utf8_hashCode(a2))return 0;
+    if (a1->length != a2->length)return 0;
+
     int i = 0;
     for (; i < a1->length && i < a2->length; i++) {
         if (a1->data1[i] > a2->data1[i]) {
-            return 1;
+            return 0;
         } else if (a1->data1[i] < a2->data1[i]) {
-            return -1;
+            return 0;
         }
     }
-    return 0;
+    return 1;
 }
 
 int utf8_equals_c(Utf8String *a1, char *a2) {
@@ -267,7 +267,7 @@ utf8_char utf8_char_at(Utf8String *a1, int pos) {
 }
 
 int _UNI_STR_HashtableEquals(HashtableValue value1, HashtableValue value2) {
-    return utf8_equals(value1, value2) == 0;
+    return utf8_equals(value1, value2) == 1;
 }
 
 unsigned long _UNI_STR_HashtableHash(HashtableKey kmer) {

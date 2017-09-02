@@ -21,6 +21,10 @@
 #define _JVM_DEBUG_GARBAGE_DUMP 0
 #define _JVM_DEBUG_PROFILE 0
 
+#ifndef LINUX
+#define LINUX 1
+#endif
+
 // x86   x64 ...
 #define __JVM_LITTLE_ENDIAN__ 1
 // arm
@@ -211,7 +215,7 @@ int  10
 long  11
   reference 12
  */
-extern c8 *data_type_str ;
+extern c8 *data_type_str;
 static const s32 data_type_bytes[14] = {0, 0, 0, 0,
                                         sizeof(c8),
                                         sizeof(u16),
@@ -360,7 +364,7 @@ typedef struct _ConstantUTF8 {
     u16 string_size;
     //
     Utf8String *utfstr;
-    Instance* jstr;
+    Instance *jstr;
 } ConstantUTF8;
 
 typedef struct _ConstantInteger {
@@ -519,6 +523,17 @@ typedef struct _AttributeInfo {
     u8 *converted_exception;
 } AttributeInfo;
 
+
+typedef struct _line_number {
+    u16 start_pc;
+    u16 line_number;
+} line_number;
+typedef struct _LineNumberTable {
+    u16 attribute_name_index;
+    u32 attribute_length;
+    u16 line_number_table_length;
+    u8 *table;
+} LineNumberTable;
 typedef struct _ExceptionTable {
     u16 start_pc;
     u16 end_pc;
@@ -535,6 +550,8 @@ typedef struct _CodeAttribute {
     u8 *code; // [code_length];
     u16 exception_table_length;
     ExceptionTable *exception_table; //[exception_table_length];
+    ArrayList *line_num_table;
+
 #if 0
     u16 attributes_count;
     attribute_info* attributes; //[attributes_count];
@@ -568,12 +585,14 @@ typedef struct _MethodInfo {
     u16 descriptor_index;
     u16 attributes_count;
     AttributeInfo *attributes;
+
     //link
     Utf8String *name;
     Utf8String *descriptor;
     Utf8String *paraType;
     Class *_this_class;
     java_native_fun native_func;
+
 } MethodInfo;
 
 /*  Method Pool */
@@ -678,7 +697,7 @@ s32 _LOAD_FROM_FILE(Class *_this, c8 *file);
 
 s32 class_link(Class *clazz);
 
-s32 convert_to_code_attribute(CodeAttribute *ca, AttributeInfo *attr);
+s32 convert_to_code_attribute(CodeAttribute *ca, AttributeInfo *attr,Class *clazz);
 
 void class_optmize(Class *clazz);
 
@@ -751,6 +770,8 @@ void printFieldPool(Class *clazz, FieldPool *fp);
 
 u8 instance_of(Class *clazz, Instance *ins);
 
+u8 isSonOfInterface(Class *clazz, Class *son);
+
 u8 assignable_from(Class *clazzSon, Class *clazzSuper);
 
 Instance *jarray_create(s32 count, s32 typeIdx);
@@ -772,9 +793,11 @@ c8 *getFieldPtr_byName(Instance *instance, c8 *pclassName, c8 *pfieldName, c8 *p
 
 Class *classes_get(Utf8String *clsName);
 
+Class *classes_load_get_c(c8 *pclassName, Runtime *runtime);
+
 s32 classes_put(Class *clazz);
 
-Class *classes_load_get(c8 *pclassName, Runtime *runtime);
+Class *classes_load_get(Utf8String *pclassName, Runtime *runtime);
 
 //======================= instance =============================
 

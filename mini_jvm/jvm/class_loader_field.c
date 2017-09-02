@@ -29,8 +29,8 @@ FieldInfo *find_fieldInfo_by_fieldref(Class *clazz, s32 field_ref) {
         FieldPool *fp = &(other->fieldPool);
         s32 i = 0;
         for (; i < fp->field_used; i++) {
-            if (utf8_equals(fieldName, fp->field[i].name) == 0
-                && utf8_equals(type, fp->field[i].descriptor) == 0) {
+            if (utf8_equals(fieldName, fp->field[i].name) == 1
+                && utf8_equals(type, fp->field[i].descriptor) == 1) {
                 fi = &(other->fieldPool.field[i]);
                 fi->_this_class = other;//把类引用赋值
                 break;
@@ -51,8 +51,8 @@ FieldInfo *find_fieldInfo_by_name(Utf8String *clsName, Utf8String *fieldName, Ut
         s32 i = 0;
         for (; i < fp->field_used; i++) {
             FieldInfo *tmp = &fp->field[i];
-            if (utf8_equals(fieldName, tmp->name) == 0
-                && utf8_equals(fieldType, tmp->descriptor) == 0
+            if (utf8_equals(fieldName, tmp->name) == 1
+                && utf8_equals(fieldType, tmp->descriptor) == 1
                     ) {
                 fi = tmp;
                 fi->_this_class = other;

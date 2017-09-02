@@ -16,8 +16,14 @@ Class *classes_get(Utf8String *clsName) {
     return NULL;
 }
 
-Class *classes_load_get(c8 *pclassName, Runtime *runtime) {
+Class *classes_load_get_c(c8 *pclassName, Runtime *runtime) {
     Utf8String *ustr = utf8_create_c(pclassName);
+    Class *clazz = classes_load_get(ustr, runtime);
+    utf8_destory(ustr);
+    return clazz;
+}
+
+Class *classes_load_get(Utf8String *ustr, Runtime *runtime) {
     Class *cl;
     utf8_replace_c(ustr, ".", "/");
     cl = classes_get(ustr);
@@ -28,7 +34,6 @@ Class *classes_load_get(c8 *pclassName, Runtime *runtime) {
         class_link(cl);
         class_clinit(cl, runtime);
     }
-    utf8_destory(ustr);
     return cl;
 }
 
@@ -439,29 +444,6 @@ s32 jthread_waitTime(Instance *ins, Runtime *runtime, long waitms) {
     pthread_cond_timedwait(&ins->thread_lock->thread_cond, &ins->thread_lock->mutex_lock, &t);
     return 0;
 }
-//===============================    实例化相关  ==================================
-
-u8 instance_of(Class *clazz, Instance *ins) {
-    Class *ins_of_class = ins->obj_of_clazz;
-    while (ins_of_class) {
-        if (ins_of_class == clazz) {
-            return 1;
-        }
-        ins_of_class = getSuperClass(ins_of_class);
-    }
-    return 0;
-}
-
-u8 assignable_from(Class *clazzSon, Class *clazzSuper) {
-
-    while (clazzSuper) {
-        if (clazzSon == clazzSuper) {
-            return 1;
-        }
-        clazzSuper = getSuperClass(clazzSuper);
-    }
-    return 0;
-}
 
 //===============================    实例化数组  ==================================
 Instance *jarray_create(s32 count, s32 typeIdx) {
@@ -644,17 +626,13 @@ Instance *jstring_create(Utf8String *src, Runtime *runtime) {
 
 Instance *exception_create(s32 exception_type, Runtime *runtime) {
 #if _JVM_DEBUG
-    printf("create exception : %s", exception_class_name[exception_type]);
+    printf("create exception : %s\n", exception_class_name[exception_type]);
 #endif
     Utf8String *clsName = utf8_create_c(exception_class_name[exception_type]);
-    Class *clazz = classes_get(clsName);
-    if (!clazz) {
-        load_class(classpath, clsName, classes);
-        clazz = classes_get(clsName);
-    }
+    Class *clazz = classes_load_get(clsName, runtime);
     Instance *ins = instance_create(clazz);
-    ins->obj_of_clazz = clazz;
     instance_init(ins, runtime);
+    garbage_refer(ins, NULL);
     utf8_destory(clsName);
     return ins;
 }
@@ -816,16 +794,6 @@ f32 getFieldDouble(c8 *ptr) {
     return v;
 }
 
-Class *getSuperClass(Class *clazz) {
-    s32 superid = clazz->cff.super_class;
-    ConstantClassRef *ccf = find_constant_classref(clazz, superid);
-    if (ccf) {
-        Utf8String *clsName_u = get_utf8_string(clazz, ccf->stringIndex);
-        Class *other = classes_get(clsName_u);
-        return other;
-    }
-    return NULL;
-}
 
 
 c8 *getFieldPtr_byName(Instance *instance, c8 *pclassName, c8 *pfieldName, c8 *pfieldType) {
