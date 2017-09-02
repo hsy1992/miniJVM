@@ -11,7 +11,8 @@
 
 Class *classes_get(Utf8String *clsName) {
     if (clsName) {
-        return hashtable_get(classes, clsName);
+        Class *cl = hashtable_get(classes, clsName);
+        return cl;
     }
     return NULL;
 }
@@ -31,7 +32,11 @@ Class *classes_load_get(Utf8String *ustr, Runtime *runtime) {
     if (!cl) {
         load_class(classpath, ustr, classes);
         cl = classes_get(ustr);
+    }
+    if (cl->status < CLASS_STATUS_LINKED) {
         class_link(cl);
+    }
+    if (cl->status < CLASS_STATUS_CLINITED) {
         class_clinit(cl, runtime);
     }
     return cl;
@@ -334,12 +339,12 @@ pthread_t jthread_create_and_start(Instance *ins) {//
 }
 
 __refer jthread_get_threadq_value(Instance *ins) {
-    c8 *ptr = getFieldPtr_byName(ins, "java/lang/Thread", "threadQ", "Ljava/lang/Thread;");
+    c8 *ptr = getFieldPtr_byName(ins, STR_CLASS_JAVA_LANG_THREAD, STR_FIELD_THREADQ, "Ljava/lang/Thread;");
     return getFieldRefer(ptr);
 }
 
 void jthread_set_threadq_value(Instance *ins, void *val) {
-    c8 *ptr = getFieldPtr_byName(ins, "java/lang/Thread", "threadQ", "Ljava/lang/Thread;");
+    c8 *ptr = getFieldPtr_byName(ins, STR_CLASS_JAVA_LANG_THREAD, STR_FIELD_THREADQ, "Ljava/lang/Thread;");
     setFieldRefer(ptr, (__refer) val);
 }
 
@@ -451,7 +456,7 @@ Instance *jarray_create(s32 count, s32 typeIdx) {
     Instance *arr = jvm_alloc(sizeof(Instance));
     arr->type = MEM_TYPE_ARR;
     arr->garbage_mark = GARBAGE_MARK_UNDEF;
-    Utf8String *clsName = utf8_create_c("java/lang/Object");
+    Utf8String *clsName = utf8_create_c(STR_CLASS_JAVA_LANG_OBJECT);
     arr->obj_of_clazz = classes_get(clsName);
     utf8_destory(clsName);
     arr->arr_length = count;
@@ -596,7 +601,7 @@ s32 instance_destory(Instance *ins) {
 
 //===============================    实例化字符串  ==================================
 Instance *jstring_create(Utf8String *src, Runtime *runtime) {
-    Utf8String *clsName = utf8_create_c("java/lang/String");
+    Utf8String *clsName = utf8_create_c(STR_CLASS_JAVA_LANG_STRING);
     Class *jstr_clazz = classes_get(clsName);
     Instance *jstring = instance_create(jstr_clazz);
     jstring->obj_of_clazz = jstr_clazz;
@@ -638,16 +643,19 @@ Instance *exception_create(s32 exception_type, Runtime *runtime) {
 }
 
 s32 jstring_get_count(Instance *jstr) {
-    return getFieldInt(getFieldPtr_byName(jstr, "java/lang/String", "count", "I"));
+    return getFieldInt(getFieldPtr_byName(jstr, STR_CLASS_JAVA_LANG_STRING, STR_FIELD_COUNT, "I"));
 }
 
 void jstring_set_count(Instance *jstr, s32 count) {
-    setFieldInt(getFieldPtr_byName(jstr, "java/lang/String", "count", "I"), count);
+    setFieldInt(getFieldPtr_byName(jstr, STR_CLASS_JAVA_LANG_STRING, STR_FIELD_COUNT, "I"), count);
 }
 
+s32 jstring_get_offset(Instance *jstr) {
+    return getFieldInt(getFieldPtr_byName(jstr, STR_CLASS_JAVA_LANG_STRING, STR_FIELD_OFFSET, "I"));
+}
 
 u8 *jstring_get_value_ptr(Instance *jstr) {
-    return getFieldPtr_byName(jstr, "java/lang/String", "value", "[C");
+    return getFieldPtr_byName(jstr, STR_CLASS_JAVA_LANG_STRING, STR_FIELD_VALUE, "[C");
 }
 
 Instance *jstring_get_value_array(Instance *jstr) {
@@ -658,9 +666,10 @@ Instance *jstring_get_value_array(Instance *jstr) {
 
 s16 jstring_char_at(Instance *jstr, s32 index) {
     Instance *ptr = jstring_get_value_array(jstr);
+    s32 offset = jstring_get_offset(jstr);
     if (ptr && ptr->arr_body) {
         u16 *jchar_arr = (u16 *) ptr->arr_body;
-        return jchar_arr[index];
+        return jchar_arr[offset + index];
     }
     return -1;
 }
@@ -671,9 +680,10 @@ s32 jstring_index_of(Instance *jstr, uni_char ch, s32 startAt) {
     Instance *ptr = (Instance *) getFieldRefer(fieldPtr);//char[]数组实例
     if (ptr && ptr->arr_body) {
         u16 *jchar_arr = (u16 *) ptr->arr_body;
+        s32 count = jstring_get_count(jstr);
         s32 i;
-        for (i = startAt; i < ptr->arr_length; i++) {
-            if (jchar_arr[i] == ch) {
+        for (i = 0; i < count; i++) {
+            if (jchar_arr[i + startAt] == ch) {
                 return i;
             }
         }
@@ -793,7 +803,6 @@ f32 getFieldDouble(c8 *ptr) {
     memcpy((c8 *) &v, ptr, sizeof(f64));
     return v;
 }
-
 
 
 c8 *getFieldPtr_byName(Instance *instance, c8 *pclassName, c8 *pfieldName, c8 *pfieldType) {

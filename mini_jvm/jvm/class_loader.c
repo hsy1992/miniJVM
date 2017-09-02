@@ -132,7 +132,9 @@ s32 _LOAD_FROM_FILE(Class *_this, c8 *file) {
  */
 void class_optmize(Class *clazz) {
     clazz->name = get_utf8_string(clazz, find_constant_classref(clazz, clazz->cff.this_class)->stringIndex);
-
+//    if (utf8_equals_c(clazz->name, "javax/mini/eio/socket/PrivateOutputStream")) {
+//        int debug = 1;
+//    }
     s32 i;
     for (i = 0; i < clazz->fieldPool.field_used; i++) {
         FieldInfo *ptr = &clazz->fieldPool.field[i];

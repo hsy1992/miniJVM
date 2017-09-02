@@ -421,7 +421,8 @@ s32 java_lang_String_indexOf(Runtime *runtime, Class *clazz) {
     StackFrame *stack = runtime->stack;
     Instance *jstr = (Instance *) (runtime->localVariables + 0)->refer;
     u16 ch = (runtime->localVariables + 1)->integer;
-    s32 r = jstring_index_of(jstr, ch, 0);
+    s32 offset = jstring_get_offset(jstr);
+    s32 r = jstring_index_of(jstr, ch, offset);
 #if _JVM_DEBUG
     printf("java_lang_String_indexOf r = %f\n", r);
 #endif
@@ -671,7 +672,7 @@ s32 java_io_PrintStream_printImpl(Runtime *runtime, Class *clazz) {
     tmps = (Instance *) (runtime->localVariables + 0)->refer;
     if (tmps) {
 
-        c8 *fieldPtr = getFieldPtr_byName(tmps, "java/lang/String", "value", "[C");
+        c8 *fieldPtr = jstring_get_value_ptr(tmps);
         Instance *ptr = (Instance *) getFieldRefer(fieldPtr);
         //printf("printImpl [%x]\n", arr_body);
         if (ptr && ptr->arr_body) {

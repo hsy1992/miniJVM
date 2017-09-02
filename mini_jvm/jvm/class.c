@@ -95,6 +95,9 @@ s32 class_link(Class *clazz) {
  * 把ConstantFieldRef.index 指向具体的 FieldInfo 内存
  * @param clazz
  */
+//    if (utf8_equals_c(clazz->name, "javax/mini/eio/socket/PrivateOutputStream")) {
+//        int debug = 1;
+//    }
     for (i = 0; i < clazz->constantPool.fieldRef->length; i++) {
         ConstantFieldRef *cfr = (ConstantFieldRef *) arraylist_get_value(clazz->constantPool.fieldRef, i);
         cfr->fieldInfo = find_fieldInfo_by_fieldref(clazz, cfr->index);
@@ -129,7 +132,7 @@ s32 class_link(Class *clazz) {
     //生成实例变量模板
     Class *superclass = getSuperClass(clazz);
     if (superclass) {
-        if (superclass->status != CLASS_STATUS_PREPARED) {
+        if (superclass->status != CLASS_STATUS_LINKED) {
             class_link(superclass);
         }
         clazz->field_instance_start = superclass->field_instance_len;
@@ -144,7 +147,7 @@ s32 class_link(Class *clazz) {
         clazz->field_instance_template = jvm_alloc(clazz->field_instance_len);
     }
 
-    clazz->status = CLASS_STATUS_PREPARED;
+    clazz->status = CLASS_STATUS_LINKED;
     return 0;
 }
 

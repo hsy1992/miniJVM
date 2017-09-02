@@ -185,6 +185,15 @@ static char *exception_class_name[] = {
         "java.lang.ClassCastException",
         "java.lang.ArrayIndexOutOfBoundsException",
 };
+
+static char *STR_CLASS_JAVA_LANG_STRING="java/lang/String";
+static char *STR_CLASS_JAVA_LANG_OBJECT="java/lang/Object";
+static char *STR_CLASS_JAVA_LANG_THREAD="java/lang/Thread";
+static char *STR_FIELD_THREADQ="threadQ";
+static char *STR_FIELD_VALUE="value";
+static char *STR_FIELD_COUNT="count";
+static char *STR_FIELD_OFFSET="offset";
+
 enum {
     METHOD_INVOKE_DYNAMIC,
     METHOD_INVOKE_INTERFACE,
@@ -256,7 +265,7 @@ static const u16 ACC_STRICT = 0x0800;
 enum {
     CLASS_STATUS_RAW,
     CLASS_STATUS_LOADED,
-    CLASS_STATUS_PREPARED,
+    CLASS_STATUS_LINKED,
     CLASS_STATUS_CLINITING,
     CLASS_STATUS_CLINITED,
 };

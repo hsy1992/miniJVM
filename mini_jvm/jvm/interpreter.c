@@ -1797,7 +1797,9 @@ static inline s32 op_putfield_impl(u8 **opCode, Runtime *runtime, s32 isStatic) 
     s2c.c0 = opCode[0][2];
 
     u16 field_ref = s2c.s;
-
+    if (utf8_equals_c(clazz->name, "javax/mini/eio/socket/PrivateOutputStream")) {
+        int debug = 1;
+    }
     // check variable type to determain long/s32/f64/f32
     FieldInfo *fi = find_constant_fieldref(clazz, field_ref)->fieldInfo;
 

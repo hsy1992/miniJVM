@@ -37,6 +37,8 @@ void jstring_set_count(Instance *jstr, s32 count);
 
 s32 jstring_get_count(Instance *jstr);
 
+s32 jstring_get_offset(Instance *jstr);
+
 u8 *jstring_get_value_ptr(Instance *jstr);
 
 Instance *jstring_get_value_array(Instance *jstr);
