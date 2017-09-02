@@ -8,6 +8,7 @@
 package javax.mini.eio.protocol.serversocket;
 
 import com.sun.cldc.io.ConnectionBaseInterface;
+import com.sun.cldc.io.Waiter;
 import java.io.IOException;
 import java.io.InterruptedIOException;
 import javax.cldc.io.Connection;
@@ -72,25 +73,10 @@ public class Protocol implements ConnectionBaseInterface,ServerSocket {
             throw new IOException( /* #ifdef VERBOSE_EXCEPTIONS */ /// skipped                       "connection failed: error = " + errorCode
                     /* #endif */);
         }
+        this.connectionOpen=true;
         return this;
     }
-    /**
-     * Opens a port to listen on.
-     *
-     * @param port TCP to listen on
-     *
-     * @exception IOException if some other kind of I/O error occurs
-     */
-//    public void open(String ip, int port) throws IOException {
-//        this.ip = ip;
-//        this.port = port;
-//        this.handle =open0(ip.getBytes(), port > 0 ? port : 0);
-//        connectionOpen = true;
-//
-//        port = getLocalPort();
-//
-//        registerCleanup(this.handle);
-//    }
+
 
     /**
      * Checks if the connection is open.
@@ -102,20 +88,6 @@ public class Protocol implements ConnectionBaseInterface,ServerSocket {
             throw new IOException("Connection closed");
         }
     }
-
-    /**
-     * Opens a native socket and put its handle in the handle field.
-     * <p>
-     * Called by socket Protocol class after it parses a given URL and finds no
-     * host.
-     *
-     * @param port TCP port to listen for connections on
-     * @param storage name of current suite storage
-     *
-     * @exception IOException if some other kind of I/O error occurs or if
-     * reserved by another suite
-     */
-    public native int open0(byte[] ip, int port) throws IOException;
 
     /**
      * Returns a connection that represents a server side socket connection.
@@ -145,7 +117,7 @@ public class Protocol implements ConnectionBaseInterface,ServerSocket {
             }
 
             /* Wait a while for I/O to become ready */
-            //GeneralBase.iowait(); 
+            //Waiter.waitForIO(); 
         }
 
         return con;
@@ -197,7 +169,27 @@ public class Protocol implements ConnectionBaseInterface,ServerSocket {
         }
     }
 
-    private native int listen0(int handle) throws IOException;
+    /**
+     * Opens a native socket and put its handle in the handle field.
+     * <p>
+     * Called by socket Protocol class after it parses a given URL and finds no
+     * host.
+     *
+     * @param port TCP port to listen for connections on
+     * @param storage name of current suite storage
+     *
+     * @exception IOException if some other kind of I/O error occurs or if
+     * reserved by another suite
+     */
+    static public native int open0(byte[] ip, int port) throws IOException;
+
+    /**
+     * 
+     * @param handle
+     * @return
+     * @throws IOException 
+     */
+    static private native int listen0(int handle) throws IOException;
 
     /**
      * Accepts a TCP connection socket handle to a client, accesses the handle
@@ -207,24 +199,24 @@ public class Protocol implements ConnectionBaseInterface,ServerSocket {
      *
      * @exception IOException If some other kind of I/O error occurs.
      */
-    private native int accept0(int handle) throws IOException;
+    static private native int accept0(int handle) throws IOException;
 
     /**
      * Closes the connection, accesses the handle field.
      *
      * @exception IOException if an I/O error occurs when closing the connection
      */
-    public native void close0(int handle) throws IOException;
+    static public native void close0(int handle) throws IOException;
 
     /**
      * Registers with the native cleanup code, accesses the handle field.
      */
-    private native void registerCleanup(int handle);
+    static private native void registerCleanup(int handle);
 
     /**
      * Native finalizer
      */
-    private native void finalize(int handle);
+    static private native void finalize(int handle);
 
     @Override
     public void listen() throws IOException {

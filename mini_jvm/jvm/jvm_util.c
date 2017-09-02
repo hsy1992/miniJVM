@@ -107,11 +107,6 @@ s32 utf8_2_unicode(Utf8String *ustr, u16 *arr) {
         tmp++;
         outputSize += 1;
     }
-
-    *tmp = 0;
-    tmp++;
-    *tmp = 0;
-
     return outputSize;
 }
 
@@ -455,7 +450,7 @@ Instance *jarray_create(s32 count, s32 typeIdx) {
     s32 width = data_type_bytes[typeIdx];
     Instance *arr = jvm_alloc(sizeof(Instance));
     arr->type = MEM_TYPE_ARR;
-    arr->garbage_mark = GARBAGE_MARK_UNDEF;
+    arr->garbage_mark = GARBAGE_MARK_UNDEF;//防止在上次回收过程中，此对象刚被放入池子就被回收
     Utf8String *clsName = utf8_create_c(STR_CLASS_JAVA_LANG_OBJECT);
     arr->obj_of_clazz = classes_get(clsName);
     utf8_destory(clsName);

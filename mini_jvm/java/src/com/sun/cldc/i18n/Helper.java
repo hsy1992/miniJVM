@@ -100,7 +100,7 @@ public class Helper {
             String className;
 
             /* Get the reader class name */
-            className = "com.sun.cldc.i18n.j2me" + '.' + name + "_Reader";
+            className = "com.sun.cldc.i18n.mini" + '.' + name + "_Reader";
 
             /* Using the decoder names lookup a class to implement the reader */
             Class clazz = Class.forName(className);

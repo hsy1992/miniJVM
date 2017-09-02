@@ -5,8 +5,8 @@
 #include "jvm.h"
 #include "java_native.h"
 
-#ifndef USE_BSD_SOCKET
-#define USE_BSD_SOCKET 1
+#ifndef __WIN32__
+#define __WIN32__ 1
 #endif
 #define   err printf
 
@@ -20,9 +20,7 @@ extern "C" {
 #include <sys/stat.h>
 #include <sys/time.h>
 #include <errno.h>
-#include <sys/socket.h>
-#include <netinet/in.h>
-#include <netdb.h>
+
 #include <fcntl.h>
 
 #include <errno.h>
@@ -36,6 +34,8 @@ extern "C" {
 #define SHUT_WR SD_SEND
 #else
 
+#include <netinet/in.h>
+#include <netdb.h>
 #include <sys/types.h>
 #include <sys/socket.h>
 
@@ -84,7 +84,7 @@ s32 setOption(s32 sockfd, s32 opType, s32 opValue) {
                     ul = 0;
                 }
                 s32 ret = ioctlsocket(sockfd, FIONBIO, (unsigned long*) &ul);
-                if (ret == SOCKET_ERROR)throw connect_exception("set socket non_block error.");
+                if (ret == SOCKET_ERROR)err("set socket non_block error.");
 #else
             if (opValue) {
                 fcntl(sockfd, F_SETFL, O_NONBLOCK);
@@ -436,6 +436,34 @@ s32 javax_mini_eio_socket_Protocol_setOption0(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
+
+s32 javax_mini_eio_serversocket_Protocol_open0(Runtime *runtime, Class *clazz) {
+    Instance *jbyte_arr = (runtime->localVariables + 0)->refer;
+    s32 port = (runtime->localVariables + 1)->integer;
+    Utf8String *ip = utf8_create_part_c(jbyte_arr->arr_body, 0, jbyte_arr->arr_length);
+    s32 ret = 0;
+    ret = srv_bind(ip, port);
+    push_int(runtime->stack,ret);
+#if _JVM_DEBUG
+    printf("javax_mini_eio_serversocket_Protocol_open0  \n");
+#endif
+    return 0;
+}
+
+s32 javax_mini_eio_serversocket_Protocol_listen0(Runtime *runtime, Class *clazz) {
+    s32 sockfd = (runtime->localVariables + 0)->integer;
+    s32 ret = 0;
+    if (sockfd) {
+        ret = srv_listen(sockfd);
+    }
+    push_int(runtime->stack, ret);
+#if _JVM_DEBUG
+    printf("javax_mini_eio_serversocket_Protocol_listen0  \n");
+#endif
+    return 0;
+}
+
+
 s32 javax_mini_eio_serversocket_Protocol_accept0(Runtime *runtime, Class *clazz) {
     s32 sockfd = (runtime->localVariables + 0)->integer;
     s32 ret = 0;
@@ -462,19 +490,6 @@ s32 javax_mini_eio_serversocket_Protocol_close0(Runtime *runtime, Class *clazz) 
     return 0;
 }
 
-s32 javax_mini_eio_serversocket_Protocol_listen0(Runtime *runtime, Class *clazz) {
-    s32 sockfd = (runtime->localVariables + 0)->integer;
-    s32 ret = 0;
-    if (sockfd) {
-        ret = srv_listen(sockfd);
-    }
-    push_int(runtime->stack, ret);
-#if _JVM_DEBUG
-    printf("javax_mini_eio_serversocket_Protocol_listen0  \n");
-#endif
-    return 0;
-}
-
 s32 javax_mini_eio_serversocket_Protocol_registerCleanup(Runtime *runtime, Class *clazz) {
     s32 sockfd = (runtime->localVariables + 0)->integer;
     s32 ret = 0;
@@ -497,19 +512,6 @@ s32 javax_mini_eio_serversocket_Protocol_finalize(Runtime *runtime, Class *clazz
 
 #if _JVM_DEBUG
     printf("javax_mini_eio_serversocket_Protocol_finalize  \n");
-#endif
-    return 0;
-}
-
-s32 javax_mini_eio_serversocket_Protocol_open0(Runtime *runtime, Class *clazz) {
-    Instance *jbyte_arr = (runtime->localVariables + 0)->refer;
-    s32 port = (runtime->localVariables + 1)->integer;
-    Utf8String *ip = utf8_create_part_c(jbyte_arr->arr_body, 0, jbyte_arr->arr_length);
-    s32 ret = 0;
-    ret = srv_bind(ip, port);
-
-#if _JVM_DEBUG
-    printf("javax_mini_eio_serversocket_Protocol_open0  \n");
 #endif
     return 0;
 }

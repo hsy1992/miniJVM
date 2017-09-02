@@ -151,7 +151,7 @@ public abstract class TimeZone {
     public static synchronized TimeZone getDefault() {
         if ( defaultZone == null ) {
             try {
-                Class clazz = Class.forName("com.sun.cldc.util.j2me.TimeZoneImpl");
+                Class clazz = Class.forName("com.sun.cldc.util.mini.TimeZoneImpl");
 
                 // Construct a new TimeZoneImpl instance
                 defaultZone = (TimeZoneImpl)clazz.newInstance();

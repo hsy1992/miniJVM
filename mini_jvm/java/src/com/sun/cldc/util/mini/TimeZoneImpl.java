@@ -311,7 +311,7 @@ public class TimeZoneImpl extends TimeZone {
     public synchronized TimeZone getInstance(String ID) {
         if (ID == null) {
             if (HOME_ID == null) {
-                HOME_ID = System.getProperty("com.sun.cldc.util.j2me.TimeZoneImpl.timezone");
+                HOME_ID = System.getProperty("com.sun.cldc.util.mini.TimeZoneImpl.timezone");
                 if (HOME_ID == null)
                     HOME_ID = "UTC";
             }

@@ -8,6 +8,7 @@ package com.egls.test;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.lang.System;
+import java.util.Calendar;
 import java.util.Enumeration;
 import java.util.Hashtable;
 import java.util.Vector;
@@ -233,48 +234,54 @@ public class Foo1 {
 
     void t12() {
 
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
+//        new Thread(new Runnable() {
+//            @Override
+//            public void run() {
+        try {
+            ServerSocket srvsock = (ServerSocket) Connector.open("serversocket://:80");
+            System.out.println("server socket listen...");
+            srvsock.listen();
+            while (true) {
                 try {
-                    ServerSocket srvsock = (ServerSocket) Connector.open("serversocket://:80");
-                    System.out.println("server socket listen...");
-                    srvsock.listen();
-                    while (true) {
-                        try {
-                            Socket cltsock = srvsock.accept();
-                            System.out.println("accepted client socket:\n");
-                            byte[] buf = new byte[256];
-                            StringBuffer tmps = new StringBuffer();
-                            int len;
-                            while ((len = cltsock.read(buf, 0, 256)) != -1) {
-                                String s = new String(buf, 0, len);
-                                tmps.append(s);
-                                if (s.indexOf('\n') >= 0) {
-                                    break;
-                                }
-                            }
-                            System.out.println("RECV: " + tmps.toString());
-                            String sbuf = "HTTP/1.0 200 OK\r\nContent-Type: text/html\r\n\r\nFor cmwap/cmnet detect. ( EGLS Beijing co.,ltd)";
-                            cltsock.write(sbuf.getBytes(), 0, sbuf.length());
-                            cltsock.close();
-                            if (false) {
-                                break;
-                            }
-                        } catch (Exception e) {
-                            System.out.println("e");
+                    Socket cltsock = srvsock.accept();
+                    System.out.println("accepted client socket:" + cltsock);
+                    byte[] buf = new byte[256];
+                    StringBuffer tmps = new StringBuffer();
+                    int len;
+                    while ((len = cltsock.read(buf, 0, 256)) != -1) {
+                        String s = new String(buf, 0, len);
+                        tmps.append(s);
+                        String s1 = tmps.toString();
+                        if (s1.indexOf("\n\n") >= 0 || s1.indexOf("\r\n\r\n") >= 0) {
+                            break;
                         }
                     }
-                    srvsock.close();
+                    System.out.println("RECV: " + tmps.toString());
+                    String sbuf = "HTTP/1.0 200 OK\r\nContent-Type: text/html\r\n\r\nFor mini_jvm test. ( EGLS Beijing co.,ltd)"+Calendar.getInstance().getTime();
+                    int wlen = 0;
+                    while ((wlen += cltsock.write(sbuf.getBytes(), wlen, sbuf.length() - wlen)) < sbuf.length()) {
+
+                    }
+                    cltsock.close();
+                    if (false) {
+                        break;
+                    }
                 } catch (Exception e) {
                     System.out.println("e");
                 }
             }
-        }).start();
-        
+            srvsock.close();
+        } catch (Exception e) {
+            System.out.println("e");
+        }
+//            }
+//        }).start();
+    }
+
+    void t12_1() {
         //client
         try {
-            Socket conn = (Socket) Connector.open("socket://127.0.0.1:80");
+            Socket conn = (Socket) Connector.open("socket://baidu.com:80");
             String request = "GET / HTTP/1.1\r\n\r\n";
             conn.write(request.getBytes(), 0, request.length());
             byte[] rcvbuf = new byte[256];
