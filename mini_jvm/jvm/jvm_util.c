@@ -321,7 +321,7 @@ void *jtherad_loader(void *para) {
         push_ref(runtime.stack, (__refer) jthread);
         ret = execute_method(method, &runtime, method->_this_class);
         runtime.threadInfo->thread_running = 0;
-        arraylist_remove(thread_list, jthread);
+        arraylist_remove(thread_list, &runtime);
     }
     runtime_destory(&runtime);
     return (void *) (long) ret;

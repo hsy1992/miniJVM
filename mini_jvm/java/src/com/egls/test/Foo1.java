@@ -233,10 +233,7 @@ public class Foo1 {
     }
 
     void t12() {
-
-//        new Thread(new Runnable() {
-//            @Override
-//            public void run() {
+        t12_1();
         try {
             ServerSocket srvsock = (ServerSocket) Connector.open("serversocket://:80");
             System.out.println("server socket listen...");
@@ -258,7 +255,7 @@ public class Foo1 {
                         }
                     }
                     System.out.println("RECV: " + tmps.toString());
-                    String sbuf = "HTTP/1.0 200 OK\r\nContent-Type: text/html\r\n\r\nFor mini_jvm test. ( EGLS Beijing co.,ltd)"+System.currentTimeMillis();//+Calendar.getInstance().getTime();
+                    String sbuf = "HTTP/1.0 200 OK\r\nContent-Type: text/html\r\n\r\nFor mini_jvm test. ( EGLS Beijing co.,ltd)" + System.currentTimeMillis();//+Calendar.getInstance().getTime();
                     int wlen = 0;
                     while ((wlen += cltsock.write(sbuf.getBytes(), wlen, sbuf.length() - wlen)) < sbuf.length()) {
 
@@ -275,30 +272,36 @@ public class Foo1 {
         } catch (Exception e) {
             System.out.println("e");
         }
-//            }
-//        }).start();
+
     }
 
     void t12_1() {
-        //client
-        try {
-            Socket conn = (Socket) Connector.open("socket://baidu.com:80");
-            conn.setOption(Socket.OP_TYPE_NON_BLOCK, Socket.OP_VAL_NON_BLOCK);
-            String request = "GET / HTTP/1.1\r\n\r\n";
-            conn.write(request.getBytes(), 0, request.length());
-            byte[] rcvbuf = new byte[256];
-            int len = 0;
-            while (len != -1) {
-                len = conn.read(rcvbuf, 0, 256);
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
 
-                for (int i = 0; i < len; i++) {
-                    System.out.print((char) rcvbuf[i]);
+                //client
+                try {
+                    Socket conn = (Socket) Connector.open("socket://baidu.com:80");
+                    conn.setOption(Socket.OP_TYPE_NON_BLOCK, Socket.OP_VAL_NON_BLOCK);
+                    String request = "GET / HTTP/1.1\r\n\r\n";
+                    conn.write(request.getBytes(), 0, request.length());
+                    byte[] rcvbuf = new byte[256];
+                    int len = 0;
+                    while (len != -1) {
+                        len = conn.read(rcvbuf, 0, 256);
+
+                        for (int i = 0; i < len; i++) {
+                            System.out.print((char) rcvbuf[i]);
+                        }
+                        System.out.print("\n");
+                    };
+                } catch (Exception e) {
+
                 }
-                System.out.print("\n");
-            };
-        } catch (Exception e) {
+            }
+        }).start();
 
-        }
     }
 
     void t13() {
