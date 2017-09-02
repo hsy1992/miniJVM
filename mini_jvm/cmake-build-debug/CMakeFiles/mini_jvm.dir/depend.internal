@@ -107,9 +107,19 @@ CMakeFiles/mini_jvm.dir/jvm/java_native.c.o
  /cygdrive/d/githome/mini_jvm/mini_jvm/utils/hashtable.h
  /cygdrive/d/githome/mini_jvm/mini_jvm/utils/pairlist.h
  /cygdrive/d/githome/mini_jvm/mini_jvm/utils/utf8_string.h
+CMakeFiles/mini_jvm.dir/jvm/java_native_net.c.o
+ /cygdrive/d/githome/mini_jvm/mini_jvm/jvm/global.h
+ /cygdrive/d/githome/mini_jvm/mini_jvm/jvm/java_native.h
+ /cygdrive/d/githome/mini_jvm/mini_jvm/jvm/java_native_net.c
+ /cygdrive/d/githome/mini_jvm/mini_jvm/jvm/jvm.h
+ /cygdrive/d/githome/mini_jvm/mini_jvm/utils/arraylist.h
+ /cygdrive/d/githome/mini_jvm/mini_jvm/utils/hashtable.h
+ /cygdrive/d/githome/mini_jvm/mini_jvm/utils/pairlist.h
+ /cygdrive/d/githome/mini_jvm/mini_jvm/utils/utf8_string.h
 CMakeFiles/mini_jvm.dir/jvm/jvm.c.o
  /cygdrive/d/githome/mini_jvm/mini_jvm/jvm/garbage.h
  /cygdrive/d/githome/mini_jvm/mini_jvm/jvm/global.h
+ /cygdrive/d/githome/mini_jvm/mini_jvm/jvm/java_native.h
  /cygdrive/d/githome/mini_jvm/mini_jvm/jvm/jvm.c
  /cygdrive/d/githome/mini_jvm/mini_jvm/jvm/jvm.h
  /cygdrive/d/githome/mini_jvm/mini_jvm/jvm/jvm_util.h

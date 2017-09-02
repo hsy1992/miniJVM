@@ -14,6 +14,7 @@ set(CMAKE_DEPENDS_CHECK_C
   "/cygdrive/d/githome/mini_jvm/mini_jvm/jvm/global.c" "/cygdrive/d/githome/mini_jvm/mini_jvm/cmake-build-debug/CMakeFiles/mini_jvm.dir/jvm/global.c.o"
   "/cygdrive/d/githome/mini_jvm/mini_jvm/jvm/interpreter.c" "/cygdrive/d/githome/mini_jvm/mini_jvm/cmake-build-debug/CMakeFiles/mini_jvm.dir/jvm/interpreter.c.o"
   "/cygdrive/d/githome/mini_jvm/mini_jvm/jvm/java_native.c" "/cygdrive/d/githome/mini_jvm/mini_jvm/cmake-build-debug/CMakeFiles/mini_jvm.dir/jvm/java_native.c.o"
+  "/cygdrive/d/githome/mini_jvm/mini_jvm/jvm/java_native_net.c" "/cygdrive/d/githome/mini_jvm/mini_jvm/cmake-build-debug/CMakeFiles/mini_jvm.dir/jvm/java_native_net.c.o"
   "/cygdrive/d/githome/mini_jvm/mini_jvm/jvm/jvm.c" "/cygdrive/d/githome/mini_jvm/mini_jvm/cmake-build-debug/CMakeFiles/mini_jvm.dir/jvm/jvm.c.o"
   "/cygdrive/d/githome/mini_jvm/mini_jvm/jvm/jvm_util.c" "/cygdrive/d/githome/mini_jvm/mini_jvm/cmake-build-debug/CMakeFiles/mini_jvm.dir/jvm/jvm_util.c.o"
   "/cygdrive/d/githome/mini_jvm/mini_jvm/jvm/os_linux.c" "/cygdrive/d/githome/mini_jvm/mini_jvm/cmake-build-debug/CMakeFiles/mini_jvm.dir/jvm/os_linux.c.o"

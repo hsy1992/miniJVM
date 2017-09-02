@@ -5,7 +5,7 @@
 
 package com.sun.cldc.io;
 
-import javax.mini.io.Connection;
+import javax.cldc.io.Connection;
 import java.io.*;
 
 /**

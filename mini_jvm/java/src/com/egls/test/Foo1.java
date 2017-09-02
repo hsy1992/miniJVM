@@ -5,10 +5,16 @@
  */
 package com.egls.test;
 
+import java.io.DataInputStream;
+import java.io.DataOutputStream;
 import java.lang.System;
 import java.util.Enumeration;
 import java.util.Hashtable;
 import java.util.Vector;
+import javax.cldc.io.Connector;
+import javax.cldc.io.StreamConnection;
+import javax.mini.eio.ServerSocket;
+import javax.mini.eio.Socket;
 
 /**
  *
@@ -23,7 +29,11 @@ public class Foo1 {
         void print();
     }
 
-    class P implements FInterface {
+    interface SubInterface extends FInterface {
+
+    }
+
+    class P implements SubInterface {
 
         @Override
         public void print() {
@@ -213,6 +223,81 @@ public class Foo1 {
         System.out.println("c=\"" + c + "\"");
     }
 
+    void t11() {
+        String a = "abc";
+        String b = a;
+        a = a + "def";
+        System.out.println("a=" + a);
+        System.out.println("b=" + b);
+    }
+
+    void t12() {
+
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    ServerSocket srvsock = (ServerSocket) Connector.open("serversocket://:80");
+                    System.out.println("server socket listen...");
+                    srvsock.listen();
+                    while (true) {
+                        try {
+                            Socket cltsock = srvsock.accept();
+                            System.out.println("accepted client socket:\n");
+                            byte[] buf = new byte[256];
+                            StringBuffer tmps = new StringBuffer();
+                            int len;
+                            while ((len = cltsock.read(buf, 0, 256)) != -1) {
+                                String s = new String(buf, 0, len);
+                                tmps.append(s);
+                                if (s.indexOf('\n') >= 0) {
+                                    break;
+                                }
+                            }
+                            System.out.println("RECV: " + tmps.toString());
+                            String sbuf = "HTTP/1.0 200 OK\r\nContent-Type: text/html\r\n\r\nFor cmwap/cmnet detect. ( EGLS Beijing co.,ltd)";
+                            cltsock.write(sbuf.getBytes(), 0, sbuf.length());
+                            cltsock.close();
+                            if (false) {
+                                break;
+                            }
+                        } catch (Exception e) {
+                            System.out.println("e");
+                        }
+                    }
+                    srvsock.close();
+                } catch (Exception e) {
+                    System.out.println("e");
+                }
+            }
+        }).start();
+        
+        //client
+        try {
+            Socket conn = (Socket) Connector.open("socket://127.0.0.1:80");
+            String request = "GET / HTTP/1.1\r\n\r\n";
+            conn.write(request.getBytes(), 0, request.length());
+            byte[] rcvbuf = new byte[256];
+            int len = 0;
+            while (len != -1) {
+                len = conn.read(rcvbuf, 0, 256);
+
+                for (int i = 0; i < len; i++) {
+                    System.out.print((char) rcvbuf[i]);
+                }
+                System.out.print("\n");
+            };
+        } catch (Exception e) {
+
+        }
+    }
+
+    void t13() {
+        String s = "//baidu.com:80";
+        String s1 = s.substring(s.indexOf(':') + 1);
+        System.out.println("s1=" + s1);
+    }
+
     public static void main() {
         Foo1 f = new Foo1();
 //        f.t1();
@@ -224,7 +309,9 @@ public class Foo1 {
 //        f.t7();
 //        f.t8();
 //        f.t9();
-        f.t10();
+//        f.t10();
+//        f.t11();
+        f.t12();
         System.gc();
         System.gc();
     }

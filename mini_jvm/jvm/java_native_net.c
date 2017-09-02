@@ -74,6 +74,7 @@ extern "C" {
 void _on_sock_sig(s32 signo) {
 }
 
+//=================================  socket  ====================================
 s32 setOption(s32 sockfd, s32 opType, s32 opValue) {
     switch (opType) {
         case SOCK_OP_TYPE_NON_BLOCK: {//阻塞设置
@@ -238,7 +239,86 @@ s32 sock_open(Utf8String *ip, s32 port) {
 
 
 
-//============================================================================
+//=================================  serversocket  ====================================
+
+s32 srv_bind(Utf8String *ip, u16 port) {
+
+    struct sockaddr_in server_addr;
+    s32 listenfd;
+#ifdef WIN32
+    WSADATA wsadata;
+            if (WSAStartup(MAKEWORD(1, 1), &wsadata) == SOCKET_ERROR) {
+                err("Error creating serversocket.");
+            }
+#endif
+
+    if ((listenfd = socket(AF_INET, SOCK_STREAM, 0)) < 0) {
+        err("Error opening serversocket.");
+    }
+
+    struct hostent *host;
+
+    memset((char *) &server_addr, 0, sizeof(server_addr));//清0
+    server_addr.sin_family = AF_INET;
+    server_addr.sin_port = htons(port);
+    if (ip->length != 0) {//如果指定了ip
+        if ((host = gethostbyname(utf8_cstr(ip))) == NULL) { /* get the host info */
+            err("get host by name error");
+//exit(1);
+        }
+#ifdef __WIN32__
+        server_addr.sin_addr = *((struct in_addr *) host->h_addr);
+#else
+        server_addr.sin_addr.s_addr = htonl(*((u32 *) (host->h_addr))); //htonl(hosttmp); //
+#endif
+    } else {
+        server_addr.sin_addr.s_addr = htonl(INADDR_ANY);
+    }
+
+    s32 on = 1;
+    setsockopt(listenfd, SOL_SOCKET, SO_REUSEADDR, (char *) &on, sizeof(on));
+    if ((bind(listenfd, (struct sockaddr *) &server_addr, sizeof(server_addr))) < 0) {
+        err("Error binding serversocket.");
+    }
+    return listenfd;
+}
+
+
+s32 srv_listen(s32 listenfd) {
+    u16 MAX_LISTEN = 64;
+    if ((listen(listenfd, MAX_LISTEN)) < 0) {
+        err("Error listening on serversocket.");
+    }
+}
+
+s32 srv_accept(s32 listenfd) {
+    struct sockaddr_in clt_addr;
+    memset(&clt_addr, 0, sizeof(clt_addr)); //清0
+    s32 clt_addr_length = sizeof(clt_addr);
+    s32 clt_socket_fd = accept(listenfd, (struct sockaddr *) &clt_addr, (s32 *) &clt_addr_length);
+    if (clt_socket_fd == -1) {
+        if (errno != EINTR) {
+            err("Error accepting on serversocket.");
+        }
+    }
+
+    return clt_socket_fd;
+}
+
+s32 srv_close(s32 listenfd) {
+    if (listenfd) {
+        closesocket(listenfd);
+        listenfd = 0;
+        //#ifdef WIN32
+        //            WSACancelBlockingCall();
+        //            WSACleanup();
+        //#endif
+    }
+
+}
+
+
+//=================================  native  ====================================
 
 
 
@@ -356,15 +436,102 @@ s32 javax_mini_eio_socket_Protocol_setOption0(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
+s32 javax_mini_eio_serversocket_Protocol_accept0(Runtime *runtime, Class *clazz) {
+    s32 sockfd = (runtime->localVariables + 0)->integer;
+    s32 ret = 0;
+    if (sockfd) {
+        ret = srv_accept(sockfd);
+    }
+    push_int(runtime->stack, ret);
+#if _JVM_DEBUG
+    printf("javax_mini_eio_serversocket_Protocol_accept0  \n");
+#endif
+    return 0;
+}
+
+s32 javax_mini_eio_serversocket_Protocol_close0(Runtime *runtime, Class *clazz) {
+    s32 sockfd = (runtime->localVariables + 0)->integer;
+    s32 ret = 0;
+    if (sockfd) {
+        ret = srv_close(sockfd);
+    }
+    push_int(runtime->stack, ret);
+#if _JVM_DEBUG
+    printf("javax_mini_eio_serversocket_Protocol_close0  \n");
+#endif
+    return 0;
+}
+
+s32 javax_mini_eio_serversocket_Protocol_listen0(Runtime *runtime, Class *clazz) {
+    s32 sockfd = (runtime->localVariables + 0)->integer;
+    s32 ret = 0;
+    if (sockfd) {
+        ret = srv_listen(sockfd);
+    }
+    push_int(runtime->stack, ret);
+#if _JVM_DEBUG
+    printf("javax_mini_eio_serversocket_Protocol_listen0  \n");
+#endif
+    return 0;
+}
+
+s32 javax_mini_eio_serversocket_Protocol_registerCleanup(Runtime *runtime, Class *clazz) {
+    s32 sockfd = (runtime->localVariables + 0)->integer;
+    s32 ret = 0;
+    if (sockfd) {
+
+    }
+
+#if _JVM_DEBUG
+    printf("javax_mini_eio_serversocket_Protocol_registerCleanup  \n");
+#endif
+    return 0;
+}
+
+s32 javax_mini_eio_serversocket_Protocol_finalize(Runtime *runtime, Class *clazz) {
+    s32 sockfd = (runtime->localVariables + 0)->integer;
+    s32 ret = 0;
+    if (sockfd) {
+
+    }
+
+#if _JVM_DEBUG
+    printf("javax_mini_eio_serversocket_Protocol_finalize  \n");
+#endif
+    return 0;
+}
+
+s32 javax_mini_eio_serversocket_Protocol_open0(Runtime *runtime, Class *clazz) {
+    Instance *jbyte_arr = (runtime->localVariables + 0)->refer;
+    s32 port = (runtime->localVariables + 1)->integer;
+    Utf8String *ip = utf8_create_part_c(jbyte_arr->arr_body, 0, jbyte_arr->arr_length);
+    s32 ret = 0;
+    ret = srv_bind(ip, port);
+
+#if _JVM_DEBUG
+    printf("javax_mini_eio_serversocket_Protocol_open0  \n");
+#endif
+    return 0;
+}
+
+//static char *STR_CLASS_JAVAX_MINI_EIO_PROTOCOL_SOCKET_PROTOCOL="javax/mini/eio/protocol/socket/Protocol";
+//static char *STR_CLASS_JAVAX_MINI_EIO_PROTOCOL_SERVERSOCKETSOCKET_PROTOCOL="javax/mini/eio/protocol/serversocket/Protocol";
+
 static java_native_method method_net_table[] = {
-        {"javax/mini/eio/protocol/socket/Protocol", "open0",      javax_mini_eio_socket_Protocol_open0},
-        {"javax/mini/eio/protocol/socket/Protocol", "readBuf",    javax_mini_eio_socket_Protocol_readBuf},
-        {"javax/mini/eio/protocol/socket/Protocol", "readByte",   javax_mini_eio_socket_Protocol_readByte},
-        {"javax/mini/eio/protocol/socket/Protocol", "writeBuf",   javax_mini_eio_socket_Protocol_writeBuf},
-        {"javax/mini/eio/protocol/socket/Protocol", "writeByte",  javax_mini_eio_socket_Protocol_writeByte},
-        {"javax/mini/eio/protocol/socket/Protocol", "available0", javax_mini_eio_socket_Protocol_available0},
-        {"javax/mini/eio/protocol/socket/Protocol", "close0",     javax_mini_eio_socket_Protocol_close0},
-        {"javax/mini/eio/protocol/socket/Protocol", "setOption0", javax_mini_eio_socket_Protocol_setOption0},
+        {"javax/mini/eio/protocol/socket/Protocol",       "open0",           javax_mini_eio_socket_Protocol_open0},
+        {"javax/mini/eio/protocol/socket/Protocol",       "readBuf",         javax_mini_eio_socket_Protocol_readBuf},
+        {"javax/mini/eio/protocol/socket/Protocol",       "readByte",        javax_mini_eio_socket_Protocol_readByte},
+        {"javax/mini/eio/protocol/socket/Protocol",       "writeBuf",        javax_mini_eio_socket_Protocol_writeBuf},
+        {"javax/mini/eio/protocol/socket/Protocol",       "writeByte",       javax_mini_eio_socket_Protocol_writeByte},
+        {"javax/mini/eio/protocol/socket/Protocol",       "available0",      javax_mini_eio_socket_Protocol_available0},
+        {"javax/mini/eio/protocol/socket/Protocol",       "close0",          javax_mini_eio_socket_Protocol_close0},
+        {"javax/mini/eio/protocol/socket/Protocol",       "setOption0",      javax_mini_eio_socket_Protocol_setOption0},
+        {"javax/mini/eio/protocol/serversocket/Protocol", "accept0",         javax_mini_eio_serversocket_Protocol_accept0},
+        {"javax/mini/eio/protocol/serversocket/Protocol", "close0",          javax_mini_eio_serversocket_Protocol_close0},
+        {"javax/mini/eio/protocol/serversocket/Protocol", "listen0",         javax_mini_eio_serversocket_Protocol_listen0},
+        {"javax/mini/eio/protocol/serversocket/Protocol", "open0",           javax_mini_eio_serversocket_Protocol_open0},
+        {"javax/mini/eio/protocol/serversocket/Protocol", "registerCleanup", javax_mini_eio_serversocket_Protocol_registerCleanup},
+        {"javax/mini/eio/protocol/serversocket/Protocol", "finalize",        javax_mini_eio_serversocket_Protocol_finalize},
 
 };
 

@@ -107,8 +107,18 @@ CMakeFiles/mini_jvm.dir/jvm/java_native.c.o: ../utils/hashtable.h
 CMakeFiles/mini_jvm.dir/jvm/java_native.c.o: ../utils/pairlist.h
 CMakeFiles/mini_jvm.dir/jvm/java_native.c.o: ../utils/utf8_string.h
 
+CMakeFiles/mini_jvm.dir/jvm/java_native_net.c.o: ../jvm/global.h
+CMakeFiles/mini_jvm.dir/jvm/java_native_net.c.o: ../jvm/java_native.h
+CMakeFiles/mini_jvm.dir/jvm/java_native_net.c.o: ../jvm/java_native_net.c
+CMakeFiles/mini_jvm.dir/jvm/java_native_net.c.o: ../jvm/jvm.h
+CMakeFiles/mini_jvm.dir/jvm/java_native_net.c.o: ../utils/arraylist.h
+CMakeFiles/mini_jvm.dir/jvm/java_native_net.c.o: ../utils/hashtable.h
+CMakeFiles/mini_jvm.dir/jvm/java_native_net.c.o: ../utils/pairlist.h
+CMakeFiles/mini_jvm.dir/jvm/java_native_net.c.o: ../utils/utf8_string.h
+
 CMakeFiles/mini_jvm.dir/jvm/jvm.c.o: ../jvm/garbage.h
 CMakeFiles/mini_jvm.dir/jvm/jvm.c.o: ../jvm/global.h
+CMakeFiles/mini_jvm.dir/jvm/jvm.c.o: ../jvm/java_native.h
 CMakeFiles/mini_jvm.dir/jvm/jvm.c.o: ../jvm/jvm.c
 CMakeFiles/mini_jvm.dir/jvm/jvm.c.o: ../jvm/jvm.h
 CMakeFiles/mini_jvm.dir/jvm/jvm.c.o: ../jvm/jvm_util.h

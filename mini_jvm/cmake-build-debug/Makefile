@@ -393,6 +393,33 @@ jvm/java_native.c.s:
 	$(MAKE) -f CMakeFiles/mini_jvm.dir/build.make CMakeFiles/mini_jvm.dir/jvm/java_native.c.s
 .PHONY : jvm/java_native.c.s
 
+jvm/java_native_net.o: jvm/java_native_net.c.o
+
+.PHONY : jvm/java_native_net.o
+
+# target to build an object file
+jvm/java_native_net.c.o:
+	$(MAKE) -f CMakeFiles/mini_jvm.dir/build.make CMakeFiles/mini_jvm.dir/jvm/java_native_net.c.o
+.PHONY : jvm/java_native_net.c.o
+
+jvm/java_native_net.i: jvm/java_native_net.c.i
+
+.PHONY : jvm/java_native_net.i
+
+# target to preprocess a source file
+jvm/java_native_net.c.i:
+	$(MAKE) -f CMakeFiles/mini_jvm.dir/build.make CMakeFiles/mini_jvm.dir/jvm/java_native_net.c.i
+.PHONY : jvm/java_native_net.c.i
+
+jvm/java_native_net.s: jvm/java_native_net.c.s
+
+.PHONY : jvm/java_native_net.s
+
+# target to generate assembly for a file
+jvm/java_native_net.c.s:
+	$(MAKE) -f CMakeFiles/mini_jvm.dir/build.make CMakeFiles/mini_jvm.dir/jvm/java_native_net.c.s
+.PHONY : jvm/java_native_net.c.s
+
 jvm/jvm.o: jvm/jvm.c.o
 
 .PHONY : jvm/jvm.o
@@ -729,6 +756,9 @@ help:
 	@echo "... jvm/java_native.o"
 	@echo "... jvm/java_native.i"
 	@echo "... jvm/java_native.s"
+	@echo "... jvm/java_native_net.o"
+	@echo "... jvm/java_native_net.i"
+	@echo "... jvm/java_native_net.s"
 	@echo "... jvm/jvm.o"
 	@echo "... jvm/jvm.i"
 	@echo "... jvm/jvm.s"

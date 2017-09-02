@@ -34,6 +34,6 @@ set(SOURCE_FILES
         jvm/global.h
         utils/hashset.c
         utils/hashset.h
-        )
+        jvm/java_native_net.c)
 
 add_executable(mini_jvm ${SOURCE_FILES})

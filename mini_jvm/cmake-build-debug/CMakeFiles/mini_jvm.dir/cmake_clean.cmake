@@ -20,6 +20,7 @@ file(REMOVE_RECURSE
   "CMakeFiles/mini_jvm.dir/jvm/global.c.o"
   "CMakeFiles/mini_jvm.dir/utils/pairlist.c.o"
   "CMakeFiles/mini_jvm.dir/utils/hashset.c.o"
+  "CMakeFiles/mini_jvm.dir/jvm/java_native_net.c.o"
   "mini_jvm.pdb"
   "mini_jvm.exe"
   "libmini_jvm.dll.a"
