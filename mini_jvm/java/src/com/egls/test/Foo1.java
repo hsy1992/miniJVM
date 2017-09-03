@@ -255,7 +255,7 @@ public class Foo1 {
                         }
                     }
                     System.out.println("RECV: " + tmps.toString());
-                    String sbuf = "HTTP/1.0 200 OK\r\nContent-Type: text/html\r\n\r\nFor mini_jvm test. ( EGLS Beijing co.,ltd)" + System.currentTimeMillis();//+Calendar.getInstance().getTime();
+                    String sbuf = "HTTP/1.0 200 OK\r\nContent-Type: text/html\r\n\r\nFor mini_jvm test. ( EGLS Beijing co.,ltd)" + Calendar.getInstance().getTime().toString();
                     int wlen = 0;
                     while ((wlen += cltsock.write(sbuf.getBytes(), wlen, sbuf.length() - wlen)) < sbuf.length()) {
 
@@ -310,6 +310,12 @@ public class Foo1 {
         System.out.println("s1=" + s1);
     }
 
+    void t14() {
+        String sbuf = "HTTP/1.0 200 OK\r\nContent-Type: text/html\r\n\r\nFor mini_jvm test. ( EGLS Beijing co.,ltd)" + Calendar.getInstance().getTime().toString();
+//        String sbuf = Calendar.getInstance().getTime().toString();
+        System.out.println("s=" + sbuf);
+    }
+
     public static void main() {
         Foo1 f = new Foo1();
 //        f.t1();
@@ -324,6 +330,8 @@ public class Foo1 {
 //        f.t10();
 //        f.t11();
         f.t12();
+//        f.t13();
+//        f.t14();
         System.gc();
         System.gc();
     }

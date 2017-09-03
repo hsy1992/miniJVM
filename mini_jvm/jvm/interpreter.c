@@ -298,10 +298,14 @@ s32 op_pop(u8 **opCode, Runtime *runtime) {
 
 s32 op_pop2(u8 **opCode, Runtime *runtime) {
     StackFrame *stack = runtime->stack;
-    pop_int(stack);
-    pop_int(stack);
+    StackEntry entry;
+    pop_entry(stack, &entry);
+    if (entry.type == STACK_ENTRY_LONG || entry.type == STACK_ENTRY_DOUBLE) {
+    } else {
+        pop_int(stack);
+    }
 #if _JVM_DEBUG
-    printf("pop\n");
+    printf("pop2\n");
 #endif
     *opCode = *opCode + 1;
     return 0;
@@ -1570,10 +1574,6 @@ s32 op_invokevirtual(u8 **opCode, Runtime *runtime) {
     s32 ret = 0;
     ConstantMethodRef *cmr = find_constant_method_ref(clazz, object_ref);//此cmr所描述的方法，对于不同的实例，有不同的method
 
-//    if (utf8_equals_c(clazz->name, "com/sun/cldc/i18n/mini/ISO8859_1_Writer") == 0) {
-//        int debug = 1;
-//    }
-
     Instance *ins = getInstanceInStack(clazz, cmr, runtime->stack);
     MethodInfo *method = NULL;
 
@@ -1585,6 +1585,12 @@ s32 op_invokevirtual(u8 **opCode, Runtime *runtime) {
             method = find_instance_methodInfo_by_name(ins, cmr->name, cmr->descriptor);
             pairlist_put(cmr->virtual_methods, ins->obj_of_clazz, method);//放入缓存，以便下次直接调用
         }
+    }
+
+    if (
+            utf8_equals_c(method->_this_class->name, "java/util/Calendar") &&
+            utf8_equals_c(method->name, "get")) {
+        int debug = 1;
     }
 
 #if _JVM_DEBUG
@@ -1797,9 +1803,9 @@ static inline s32 op_putfield_impl(u8 **opCode, Runtime *runtime, s32 isStatic) 
     s2c.c0 = opCode[0][2];
 
     u16 field_ref = s2c.s;
-    if (utf8_equals_c(clazz->name, "javax/mini/eio/socket/PrivateOutputStream")) {
-        int debug = 1;
-    }
+//    if (utf8_equals_c(clazz->name, "javax/mini/eio/socket/PrivateOutputStream")) {
+//        int debug = 1;
+//    }
     // check variable type to determain long/s32/f64/f32
     FieldInfo *fi = find_constant_fieldref(clazz, field_ref)->fieldInfo;
 
@@ -2996,6 +3002,7 @@ s32 execute_method(MethodInfo *method, Runtime *pruntime, Class *clazz) {
     runtime.methodInfo = method;
     runtime.clazz = clazz;
 
+
     if (method->access_flags & ACC_NATIVE) {//本地方法
         localvar_init(&runtime, method->paraType->length + 1);//可能有非静态本地方法调用，因此+1
         stack2localvar(method, pruntime, &runtime);
@@ -3041,10 +3048,10 @@ s32 execute_method(MethodInfo *method, Runtime *pruntime, Class *clazz) {
                     }
 #if _JVM_DEBUG_PROFILE
                     s64 spent = nanoTime() - start_at;
-                    //spent = 1;
+                    spent = 1;
                     HashtableValue v = hashtable_get(instruct_profile, (HashtableKey) (long) instruct_code);
                     if (v == NULL) {
-                        hashtable_put(instruct_profile, (HashtableKey) (long) instruct_code, (HashtableKey) (spent));
+                        hashtable_put(instruct_profile, (HashtableKey) (long) instruct_code, (HashtableKey)(long) (spent));
                     } else {
                         hashtable_put(instruct_profile, (HashtableKey) (long) instruct_code,
                                       (HashtableKey) (v + spent));

@@ -16,7 +16,7 @@ void destoryAllClasses(hmap_t classes) {
 s32 execute(c8 *p_classpath, c8 *p_mainclass, s32 argc, c8 **argv) {
 
 #if _JVM_DEBUG_PROFILE
-    instruct_profile = hashtable_create(_DEFAULT_HashtableHash, _DEFAULT_HashtableEquals);
+    instruct_profile = hashtable_create(DEFAULT_HASH_FUNC, DEFAULT_HASH_EQUALS_FUNC);
 #endif
     //为指令创建索引
     instructionsIndexies = createInstructIndexies();
@@ -121,9 +121,9 @@ s32 execute(c8 *p_classpath, c8 *p_mainclass, s32 argc, c8 **argv) {
 #if _JVM_DEBUG_PROFILE
             hashtable_iterate(instruct_profile, &hti);
             for (; hashtable_iter_has_more(&hti);) {
-                u8 instruct_code = (u8)hashtable_iter_next_key(&hti);
-                HashtableValue sum_v = hashtable_get(instruct_profile, (HashtableKey)instruct_code);
-                printf("%2x \t %lld\n", instruct_code, (s64) sum_v);
+                u8 instruct_code = (u8) (long) hashtable_iter_next_key(&hti);
+                HashtableValue sum_v = hashtable_get(instruct_profile, (HashtableKey) (long) instruct_code);
+                printf("%2x \t %lld\n", instruct_code, (s64) (long) sum_v);
             }
 #endif
             garbage_thread_stop();
