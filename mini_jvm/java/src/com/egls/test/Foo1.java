@@ -245,9 +245,9 @@ public class Foo1 {
                     System.out.println("accepted client socket:" + cltsock);
                     byte[] buf = new byte[256];
                     StringBuffer tmps = new StringBuffer();
-                    int len;
-                    while ((len = cltsock.read(buf, 0, 256)) != -1) {
-                        String s = new String(buf, 0, len);
+                    int rlen;
+                    while ((rlen = cltsock.read(buf, 0, 256)) != -1) {
+                        String s = new String(buf, 0, rlen);
                         tmps.append(s);
                         String s1 = tmps.toString();
                         if (s1.indexOf("\n\n") >= 0 || s1.indexOf("\r\n\r\n") >= 0) {
@@ -256,9 +256,13 @@ public class Foo1 {
                     }
                     System.out.println("RECV: " + tmps.toString());
                     String sbuf = "HTTP/1.0 200 OK\r\nContent-Type: text/html\r\n\r\nFor mini_jvm test. ( EGLS Beijing co.,ltd)" + Calendar.getInstance().getTime().toString();
-                    int wlen = 0;
-                    while ((wlen += cltsock.write(sbuf.getBytes(), wlen, sbuf.length() - wlen)) < sbuf.length()) {
-
+                    int sent = 0;
+                    while ((sent) < sbuf.length()) {
+                        int wlen = cltsock.write(sbuf.getBytes(), sent, sbuf.length() - sent);
+                        if (wlen == -1) {
+                            break;
+                        }
+                        sent += wlen;
                     }
                     cltsock.close();
                     if (false) {
