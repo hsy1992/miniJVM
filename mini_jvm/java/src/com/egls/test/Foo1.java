@@ -233,7 +233,6 @@ public class Foo1 {
     }
 
     void t12() {
-        t12_1();
         try {
             ServerSocket srvsock = (ServerSocket) Connector.open("serversocket://:80");
             System.out.println("server socket listen...");
@@ -279,39 +278,28 @@ public class Foo1 {
 
     }
 
-    void t12_1() {
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-
-                //client
-                try {
-                    Socket conn = (Socket) Connector.open("socket://baidu.com:80");
-                    conn.setOption(Socket.OP_TYPE_NON_BLOCK, Socket.OP_VAL_NON_BLOCK);
-                    String request = "GET / HTTP/1.1\r\n\r\n";
-                    conn.write(request.getBytes(), 0, request.length());
-                    byte[] rcvbuf = new byte[256];
-                    int len = 0;
-                    while (len != -1) {
-                        len = conn.read(rcvbuf, 0, 256);
-
-                        for (int i = 0; i < len; i++) {
-                            System.out.print((char) rcvbuf[i]);
-                        }
-                        System.out.print("\n");
-                    };
-                } catch (Exception e) {
-
-                }
-            }
-        }).start();
-
-    }
-
     void t13() {
-        String s = "//baidu.com:80";
-        String s1 = s.substring(s.indexOf(':') + 1);
-        System.out.println("s1=" + s1);
+
+        //client
+        try {
+            Socket conn = (Socket) Connector.open("socket://baidu.com:80");
+            conn.setOption(Socket.OP_TYPE_NON_BLOCK, Socket.OP_VAL_NON_BLOCK);
+            String request = "GET / HTTP/1.1\r\n\r\n";
+            conn.write(request.getBytes(), 0, request.length());
+            byte[] rcvbuf = new byte[256];
+            int len = 0;
+            while (len != -1) {
+                len = conn.read(rcvbuf, 0, 256);
+
+                for (int i = 0; i < len; i++) {
+                    System.out.print((char) rcvbuf[i]);
+                }
+                System.out.print("\n");
+            };
+        } catch (Exception e) {
+
+        }
+
     }
 
     void t14() {
