@@ -156,7 +156,6 @@ s32 op_dup(u8 **opCode, Runtime *runtime) {
 
 s32 op_dup_x1(u8 **opCode, Runtime *runtime) {
     StackFrame *stack = runtime->stack;
-
     StackEntry entry1;
     pop_entry(stack, &entry1);
     StackEntry entry2;
@@ -175,19 +174,30 @@ s32 op_dup_x1(u8 **opCode, Runtime *runtime) {
 
 s32 op_dup_x2(u8 **opCode, Runtime *runtime) {
     StackFrame *stack = runtime->stack;
+    StackEntry entry;
+    peek_entry(stack, &entry, stack->size - 2);
+    if (is_cat2(&entry)) {
+        StackEntry entry1;
+        pop_entry(stack, &entry1);
+        StackEntry entry2;
+        pop_entry(stack, &entry2);
 
-    StackEntry entry1;
-    pop_entry(stack, &entry1);
-    StackEntry entry2;
-    pop_entry(stack, &entry2);
-    StackEntry entry3;
-    pop_entry(stack, &entry3);
+        push_entry(stack, &entry1);
+        push_entry(stack, &entry2);
+        push_entry(stack, &entry1);
+    } else {
+        StackEntry entry1;
+        pop_entry(stack, &entry1);
+        StackEntry entry2;
+        pop_entry(stack, &entry2);
+        StackEntry entry3;
+        pop_entry(stack, &entry3);
 
-    push_entry(stack, &entry1);
-    push_entry(stack, &entry3);
-    push_entry(stack, &entry2);
-    push_entry(stack, &entry1);
-
+        push_entry(stack, &entry1);
+        push_entry(stack, &entry3);
+        push_entry(stack, &entry2);
+        push_entry(stack, &entry1);
+    }
 #if _JVM_DEBUG
     printf("dup_x2 \n");
 #endif
@@ -197,17 +207,20 @@ s32 op_dup_x2(u8 **opCode, Runtime *runtime) {
 
 s32 op_dup2(u8 **opCode, Runtime *runtime) {
     StackFrame *stack = runtime->stack;
+    StackEntry entry;
+    peek_entry(stack, &entry, stack->size - 1);
+    if (is_cat2(&entry)) {
+        StackEntry entry1;
+        push_entry(stack, &entry1);
+    } else {
+        StackEntry entry1;
+        peek_entry(stack, &entry1, stack->size - 1);
+        StackEntry entry2;
+        peek_entry(stack, &entry2, stack->size - 2);
 
-    StackEntry entry1;
-    pop_entry(stack, &entry1);
-    StackEntry entry2;
-    pop_entry(stack, &entry2);
-
-    push_entry(stack, &entry2);
-    push_entry(stack, &entry1);
-    push_entry(stack, &entry2);
-    push_entry(stack, &entry1);
-
+        push_entry(stack, &entry2);
+        push_entry(stack, &entry1);
+    }
 #if _JVM_DEBUG
     printf("op_dup2\n");
 #endif
@@ -218,20 +231,31 @@ s32 op_dup2(u8 **opCode, Runtime *runtime) {
 
 s32 op_dup2_x1(u8 **opCode, Runtime *runtime) {
     StackFrame *stack = runtime->stack;
+    StackEntry entry;
+    peek_entry(stack, &entry, stack->size - 1);
+    if (is_cat2(&entry)) {
+        StackEntry entry1;
+        pop_entry(stack, &entry1);
+        StackEntry entry2;
+        pop_entry(stack, &entry2);
 
-    StackEntry entry1;
-    pop_entry(stack, &entry1);
-    StackEntry entry2;
-    pop_entry(stack, &entry2);
-    StackEntry entry3;
-    pop_entry(stack, &entry3);
+        push_entry(stack, &entry1);
+        push_entry(stack, &entry2);
+        push_entry(stack, &entry1);
+    } else {
+        StackEntry entry1;
+        pop_entry(stack, &entry1);
+        StackEntry entry2;
+        pop_entry(stack, &entry2);
+        StackEntry entry3;
+        pop_entry(stack, &entry3);
 
-    push_entry(stack, &entry2);
-    push_entry(stack, &entry1);
-    push_entry(stack, &entry3);
-    push_entry(stack, &entry2);
-    push_entry(stack, &entry1);
-
+        push_entry(stack, &entry2);
+        push_entry(stack, &entry1);
+        push_entry(stack, &entry3);
+        push_entry(stack, &entry2);
+        push_entry(stack, &entry1);
+    }
 #if _JVM_DEBUG
     printf("dup2_x1\n");
 #endif
@@ -243,20 +267,53 @@ s32 op_dup2_x2(u8 **opCode, Runtime *runtime) {
     StackFrame *stack = runtime->stack;
 
     StackEntry entry1;
-    pop_entry(stack, &entry1);
+    peek_entry(stack, &entry1, stack->size - 1);
     StackEntry entry2;
-    pop_entry(stack, &entry2);
-    StackEntry entry3;
-    pop_entry(stack, &entry3);
-    StackEntry entry4;
-    pop_entry(stack, &entry4);
+    peek_entry(stack, &entry1, stack->size - 2);
 
-    push_entry(stack, &entry2);
-    push_entry(stack, &entry1);
-    push_entry(stack, &entry4);
-    push_entry(stack, &entry3);
-    push_entry(stack, &entry2);
-    push_entry(stack, &entry1);
+    //都是64位，不包括64位指针
+    if (is_cat2(&entry1) && is_cat2(&entry2)) {
+        pop_int(stack);
+        pop_int(stack);
+        push_entry(stack, &entry1);
+        push_entry(stack, &entry2);
+        push_entry(stack, &entry1);
+    } else {
+        StackEntry entry3;
+        peek_entry(stack, &entry1, stack->size - 3);
+        if (is_cat1(&entry1) && is_cat1(&entry2) && is_cat2(&entry3)) {
+            pop_int(stack);
+            pop_int(stack);
+            pop_int(stack);
+            push_entry(stack, &entry2);
+            push_entry(stack, &entry1);
+            push_entry(stack, &entry3);
+            push_entry(stack, &entry2);
+            push_entry(stack, &entry1);
+        } else if (is_cat2(&entry1) && is_cat1(&entry2) && is_cat1(&entry3)) {
+            pop_int(stack);
+            pop_int(stack);
+            pop_int(stack);
+            push_entry(stack, &entry1);
+            push_entry(stack, &entry3);
+            push_entry(stack, &entry2);
+            push_entry(stack, &entry1);
+        } else {
+            StackEntry entry4;
+            peek_entry(stack, &entry1, stack->size - 4);
+            pop_int(stack);
+            pop_int(stack);
+            pop_int(stack);
+            pop_int(stack);
+
+            push_entry(stack, &entry2);
+            push_entry(stack, &entry1);
+            push_entry(stack, &entry4);
+            push_entry(stack, &entry3);
+            push_entry(stack, &entry2);
+            push_entry(stack, &entry1);
+        }
+    }
 
 #if _JVM_DEBUG
     printf("dup2_x2\n");
@@ -298,11 +355,14 @@ s32 op_pop(u8 **opCode, Runtime *runtime) {
 
 s32 op_pop2(u8 **opCode, Runtime *runtime) {
     StackFrame *stack = runtime->stack;
+
     StackEntry entry;
-    pop_entry(stack, &entry);
-    if (entry.type == STACK_ENTRY_LONG || entry.type == STACK_ENTRY_DOUBLE) {
+    peek_entry(stack, &entry, stack->size - 1);
+    if (is_cat2(&entry)) {
+        pop_entry(stack, &entry);
     } else {
-        pop_int(stack);
+        pop_entry(stack, &entry);
+        pop_entry(stack, &entry);
     }
 #if _JVM_DEBUG
     printf("pop2\n");
@@ -1587,11 +1647,11 @@ s32 op_invokevirtual(u8 **opCode, Runtime *runtime) {
         }
     }
 
-    if (
-            utf8_equals_c(method->_this_class->name, "java/util/Calendar") &&
-            utf8_equals_c(method->name, "get")) {
-        int debug = 1;
-    }
+//    if (
+//            utf8_equals_c(method->_this_class->name, "java/util/Calendar") &&
+//            utf8_equals_c(method->name, "get")) {
+//        int debug = 1;
+//    }
 
 #if _JVM_DEBUG
     printf("invokevirtual    %s.%s%s  \n", utf8_cstr(method->_this_class->name),
@@ -2401,7 +2461,7 @@ s32 op_if_0(u8 **opCode, Runtime *runtime, s32 type) {
     pop_entry(stack, &entry);
     s32 con = 0;
     Long2Double l2d;
-    if (entry.type == STACK_ENTRY_REF) {
+    if (is_ref(&entry)) {
         l2d.r = entry_2_refer(&entry);
     } else {
         l2d.i2l.i1 = entry_2_int(&entry);

@@ -151,9 +151,22 @@ __refer entry_2_refer(StackEntry *entry) {
     return value;
 }
 
+s32 is_cat1(StackEntry *entry) {
+    if (entry->type & STACK_ENTRY_INT || entry->type & STACK_ENTRY_FLOAT || entry->type & STACK_ENTRY_REF) {
+        return 1;
+    }
+    return 0;
+}
 
-s32 is_ref_entry(StackFrame *stack) {
-    if (stack->store[stack->size - 1].type == STACK_ENTRY_REF)
+s32 is_cat2(StackEntry *entry) {
+    if (entry->type & STACK_ENTRY_LONG || entry->type & STACK_ENTRY_DOUBLE) {
+        return 1;
+    }
+    return 0;
+}
+
+s32 is_ref(StackEntry *entry) {
+    if (entry->type & STACK_ENTRY_REF)
         return 1;
     return 0;
 }

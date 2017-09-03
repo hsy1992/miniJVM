@@ -186,13 +186,13 @@ static char *exception_class_name[] = {
         "java.lang.ArrayIndexOutOfBoundsException",
 };
 
-static char *STR_CLASS_JAVA_LANG_STRING="java/lang/String";
-static char *STR_CLASS_JAVA_LANG_OBJECT="java/lang/Object";
-static char *STR_CLASS_JAVA_LANG_THREAD="java/lang/Thread";
-static char *STR_FIELD_THREADQ="threadQ";
-static char *STR_FIELD_VALUE="value";
-static char *STR_FIELD_COUNT="count";
-static char *STR_FIELD_OFFSET="offset";
+static char *STR_CLASS_JAVA_LANG_STRING = "java/lang/String";
+static char *STR_CLASS_JAVA_LANG_OBJECT = "java/lang/Object";
+static char *STR_CLASS_JAVA_LANG_THREAD = "java/lang/Thread";
+static char *STR_FIELD_THREADQ = "threadQ";
+static char *STR_FIELD_VALUE = "value";
+static char *STR_FIELD_COUNT = "count";
+static char *STR_FIELD_OFFSET = "offset";
 
 enum {
     METHOD_INVOKE_DYNAMIC,
@@ -614,10 +614,10 @@ typedef struct _MethodPool {
 /* Stack Frame */
 #define STACK_ENTRY_NONE        0
 #define STACK_ENTRY_INT         1
-#define STACK_ENTRY_REF         2
-#define STACK_ENTRY_LONG        3
-#define STACK_ENTRY_DOUBLE      4
-#define STACK_ENTRY_FLOAT       5
+#define STACK_ENTRY_FLOAT       2
+#define STACK_ENTRY_LONG        4
+#define STACK_ENTRY_DOUBLE      8
+#define STACK_ENTRY_REF         16
 
 typedef struct _StackEntry {
     u8 entry[8];
@@ -706,7 +706,7 @@ s32 _LOAD_FROM_FILE(Class *_this, c8 *file);
 
 s32 class_link(Class *clazz);
 
-s32 convert_to_code_attribute(CodeAttribute *ca, AttributeInfo *attr,Class *clazz);
+s32 convert_to_code_attribute(CodeAttribute *ca, AttributeInfo *attr, Class *clazz);
 
 void class_optmize(Class *clazz);
 
@@ -936,7 +936,11 @@ s64 entry_2_long(StackEntry *entry);
 
 __refer entry_2_refer(StackEntry *entry);
 
-s32 is_ref_entry(StackFrame *stack);
+s32 is_cat2(StackEntry *entry);
+
+s32 is_cat1(StackEntry *entry);
+
+s32 is_ref(StackEntry *entry);
 
 void stack2localvar(MethodInfo *method, Runtime *father, Runtime *son);
 

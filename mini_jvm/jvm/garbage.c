@@ -227,7 +227,7 @@ s32 garbage_mark_refered_obj(Runtime *pruntime) {
     StackFrame *stack = runtime->stack;
     for (i = 0; i < stack->size; i++) {
         peek_entry(stack, &entry, i);
-        if (entry.type == STACK_ENTRY_REF) {
+        if (is_ref(&entry)) {
             __refer ref = entry_2_refer(&entry);
             if (ref) {
                 //printf("mark:[%llx]   ",(s64)(long)ref);
