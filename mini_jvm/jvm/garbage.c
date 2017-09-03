@@ -276,7 +276,7 @@ void getMemBlockName(void *memblock, Utf8String *name) {
             case MEM_TYPE_INS: {
                 Instance *ins = (Instance *) mb;
                 utf8_append_c(name, "L");
-                utf8_append(name, ins->obj_of_clazz->name);
+                utf8_append(name, ins->mb.obj_of_clazz->name);
                 break;
             }
             case MEM_TYPE_ARR: {

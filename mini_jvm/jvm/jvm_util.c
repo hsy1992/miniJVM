@@ -301,7 +301,7 @@ void *jtherad_loader(void *para) {
     runtime_create(&runtime);
     localvar_init(&runtime, 1);
 
-    runtime.clazz = jthread->obj_of_clazz;
+    runtime.clazz = jthread->mb.obj_of_clazz;
     runtime.threadInfo->jthread = jthread;
     Utf8String *methodName = utf8_create_c("run");
     Utf8String *methodType = utf8_create_c("()V");
@@ -363,7 +363,7 @@ void jthreadlock_destory(JavaThreadLock *jtl) {
     }
 }
 
-s32 jthread_lock(Instance *ins, Runtime *runtime) { //可能会重入，同一个线程多次锁同一对象
+s32 jthread_lock(MemoryBlock *ins, Runtime *runtime) { //可能会重入，同一个线程多次锁同一对象
     if (ins == NULL)return -1;
     if (!ins->thread_lock) {
         ins->thread_lock = jthreadlock_create();
@@ -386,7 +386,7 @@ s32 jthread_lock(Instance *ins, Runtime *runtime) { //可能会重入，同一�
 #endif
 }
 
-s32 jthread_unlock(Instance *ins, Runtime *runtime) {
+s32 jthread_unlock(MemoryBlock *ins, Runtime *runtime) {
     if (ins == NULL)return -1;
     if (!ins->thread_lock) {
         ins->thread_lock = jthreadlock_create();
@@ -406,7 +406,7 @@ s32 jthread_unlock(Instance *ins, Runtime *runtime) {
 #endif
 }
 
-s32 jthread_notify(Instance *ins, Runtime *runtime) {
+s32 jthread_notify(MemoryBlock *ins, Runtime *runtime) {
     if (ins == NULL)return -1;
     if (!ins->thread_lock) {
         ins->thread_lock = jthreadlock_create();
@@ -415,7 +415,7 @@ s32 jthread_notify(Instance *ins, Runtime *runtime) {
     return 0;
 }
 
-s32 jthread_notifyAll(Instance *ins, Runtime *runtime) {
+s32 jthread_notifyAll(MemoryBlock *ins, Runtime *runtime) {
     if (ins == NULL)return -1;
     if (!ins->thread_lock) {
         ins->thread_lock = jthreadlock_create();
@@ -424,7 +424,7 @@ s32 jthread_notifyAll(Instance *ins, Runtime *runtime) {
     return 0;
 }
 
-s32 jthread_wait(Instance *ins, Runtime *runtime) {
+s32 jthread_wait(MemoryBlock *ins, Runtime *runtime) {
     if (ins == NULL)return -1;
     if (!ins->thread_lock) {
         ins->thread_lock = jthreadlock_create();
@@ -433,7 +433,7 @@ s32 jthread_wait(Instance *ins, Runtime *runtime) {
     return 0;
 }
 
-s32 jthread_waitTime(Instance *ins, Runtime *runtime, long waitms) {
+s32 jthread_waitTime(MemoryBlock *ins, Runtime *runtime, long waitms) {
     if (ins == NULL)return -1;
     if (!ins->thread_lock) {
         ins->thread_lock = jthreadlock_create();
@@ -449,10 +449,10 @@ s32 jthread_waitTime(Instance *ins, Runtime *runtime, long waitms) {
 Instance *jarray_create(s32 count, s32 typeIdx) {
     s32 width = data_type_bytes[typeIdx];
     Instance *arr = jvm_alloc(sizeof(Instance));
-    arr->type = MEM_TYPE_ARR;
-    arr->garbage_mark = GARBAGE_MARK_UNDEF;//防止在上次回收过程中，此对象刚被放入池子就被回收
+    arr->mb.type = MEM_TYPE_ARR;
+    arr->mb.garbage_mark = GARBAGE_MARK_UNDEF;//防止在上次回收过程中，此对象刚被放入池子就被回收
     Utf8String *clsName = utf8_create_c(STR_CLASS_JAVA_LANG_OBJECT);
-    arr->obj_of_clazz = classes_get(clsName);
+    arr->mb.obj_of_clazz = classes_get(clsName);
     utf8_destory(clsName);
     arr->arr_length = count;
     arr->arr_data_type = typeIdx;
@@ -461,7 +461,7 @@ Instance *jarray_create(s32 count, s32 typeIdx) {
 }
 
 s32 jarray_destory(Instance *arr) {
-    if (arr && arr->type == MEM_TYPE_ARR) {
+    if (arr && arr->mb.type == MEM_TYPE_ARR) {
         if (arr->arr_data_type == DATATYPE_REFERENCE) {
             s32 i;
             Long2Double l2d;
@@ -470,8 +470,8 @@ s32 jarray_destory(Instance *arr) {
                 jarray_set_field(arr, i, &l2d, data_type_bytes[DATATYPE_REFERENCE]);
             }
         }
-        jthreadlock_destory(arr->thread_lock);
-        arr->thread_lock = NULL;
+        jthreadlock_destory(arr->mb.thread_lock);
+        arr->mb.thread_lock = NULL;
         jvm_free(arr->arr_body);
         arr->arr_body = NULL;
         jvm_free(arr);
@@ -559,11 +559,11 @@ void jarray_get_field(Instance *arr, s32 index, Long2Double *l2d, s32 bytes) {
 //===============================    实例化对象  ==================================
 Instance *instance_create(Class *clazz) {
     Instance *instance = jvm_alloc(sizeof(Instance));
-    instance->type = MEM_TYPE_INS;
-    instance->garbage_mark = GARBAGE_MARK_UNDEF;
-    instance->obj_of_clazz = clazz;
+    instance->mb.type = MEM_TYPE_INS;
+    instance->mb.garbage_mark = GARBAGE_MARK_UNDEF;
+    instance->mb.obj_of_clazz = clazz;
 
-    instance->obj_fields = jvm_alloc(instance->obj_of_clazz->field_instance_len);
+    instance->obj_fields = jvm_alloc(instance->mb.obj_of_clazz->field_instance_len);
 //    memcpy(instance->obj_fields, instance->obj_of_clazz->field_instance_template,
 //           instance->obj_of_clazz->field_instance_len);
     return instance;
@@ -573,9 +573,9 @@ void instance_init(Instance *ins, Runtime *runtime) {
     if (ins) {
         Utf8String *methodName = utf8_create_c("<init>");
         Utf8String *methodType = utf8_create_c("()V");
-        MethodInfo *mi = find_methodInfo_by_name(ins->obj_of_clazz->name, methodName, methodType);
+        MethodInfo *mi = find_methodInfo_by_name(ins->mb.obj_of_clazz->name, methodName, methodType);
         push_ref(runtime->stack, (__refer) ins);
-        execute_method(mi, runtime, ins->obj_of_clazz);
+        execute_method(mi, runtime, ins->mb.obj_of_clazz);
         utf8_destory(methodName);
         utf8_destory(methodType);
     }
@@ -583,13 +583,13 @@ void instance_init(Instance *ins, Runtime *runtime) {
 
 
 s32 instance_destory(Instance *ins) {
-    if (ins->type == MEM_TYPE_INS) {
-        jthreadlock_destory(ins->thread_lock);
+    if (ins->mb.type == MEM_TYPE_INS) {
+        jthreadlock_destory(ins->mb.thread_lock);
         jvm_free(ins->obj_fields);
         jvm_free(ins);
-    } else if (ins->type == MEM_TYPE_ARR) {
+    } else if (ins->mb.type == MEM_TYPE_ARR) {
         jarray_destory(ins);
-    } else if (ins->type == MEM_TYPE_CLASS) {
+    } else if (ins->mb.type == MEM_TYPE_CLASS) {
         class_destory((Class *) ins);
     }
 }
@@ -599,7 +599,7 @@ Instance *jstring_create(Utf8String *src, Runtime *runtime) {
     Utf8String *clsName = utf8_create_c(STR_CLASS_JAVA_LANG_STRING);
     Class *jstr_clazz = classes_get(clsName);
     Instance *jstring = instance_create(jstr_clazz);
-    jstring->obj_of_clazz = jstr_clazz;
+    jstring->mb.obj_of_clazz = jstr_clazz;
     instance_init(jstring, runtime);
 
     c8 *ptr = jstring_get_value_ptr(jstring);

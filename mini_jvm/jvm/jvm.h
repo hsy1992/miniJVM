@@ -336,6 +336,7 @@ typedef struct _MemoryBlock {
     u8 type;//type of array or object runtime,class
     u8 garbage_mark;
     Class *obj_of_clazz;
+    JavaThreadLock *thread_lock;
 } MemoryBlock;
 //======================= class file =============================
 
@@ -656,9 +657,9 @@ typedef struct _Runtime {
  Gust 20170719 add Class define
  */
 typedef struct _ClassType {
-    u8 type;//type of array or object runtime,class
-    u8 garbage_mark;
-    struct _ClassType *_this;
+    MemoryBlock mb;
+
+    //
     Utf8String *name;
 
     ClassFileFormat cff;
@@ -680,8 +681,7 @@ typedef struct _ClassType {
     //public:
     s32 (*_load_from_file)(struct _ClassType *_this, c8 *file);
 
-    //private:
-    JavaThreadLock *thread_lock; //互斥锁
+
 } Class;
 
 void _INIT_CLASS(Class *_this);
@@ -812,9 +812,8 @@ Class *classes_load_get(Utf8String *pclassName, Runtime *runtime);
 
 
 typedef struct _InstanceType {
-    u8 type;//type of array or object
-    u8 garbage_mark;
-    Class *obj_of_clazz;
+    MemoryBlock mb;
+    //
     union {
         c8 *obj_fields; //object fieldRef body
         c8 *arr_body;//array body
@@ -823,7 +822,7 @@ typedef struct _InstanceType {
 //    Utf8String *arr_type;
     s32 arr_length;
 
-    JavaThreadLock *thread_lock;
+
 } Instance;
 
 

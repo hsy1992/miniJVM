@@ -33,7 +33,7 @@ find_constant_methodref_by_name(Utf8String *clsName, Utf8String *methodName, Utf
  */
 MethodInfo *find_instance_methodInfo_by_name(Instance *ins, Utf8String *methodName, Utf8String *methodType) {
     if (!ins)return NULL;
-    return find_methodInfo_by_name(ins->obj_of_clazz->name, methodName, methodType);
+    return find_methodInfo_by_name(ins->mb.obj_of_clazz->name, methodName, methodType);
 }
 
 MethodInfo *find_methodInfo_by_methodref(Class *clazz, s32 method_ref) {

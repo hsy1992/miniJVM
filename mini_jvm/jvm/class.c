@@ -13,9 +13,9 @@
 
 Class *class_create() {
     Class *clazz = jvm_alloc(sizeof(Class));
-    clazz->_this = clazz;
-    clazz->type = MEM_TYPE_CLASS;
-    clazz->garbage_mark = GARBAGE_MARK_UNDEF;
+    clazz->mb.obj_of_clazz = clazz;
+    clazz->mb.type = MEM_TYPE_CLASS;
+    clazz->mb.garbage_mark = GARBAGE_MARK_UNDEF;
     clazz->field_instance_len = 0;
     clazz->field_static = NULL;
     clazz->field_instance_template = NULL;
@@ -28,7 +28,7 @@ Class *class_create() {
 }
 
 void _INIT_CLASS(Class *_this) {
-    _this->thread_lock = jthreadlock_create();
+    _this->mb.thread_lock = jthreadlock_create();
 }
 
 s32 class_destory(Class *clazz) {
@@ -47,7 +47,7 @@ s32 _DESTORY_CLASS(Class *_this) {
     _this->field_instance_template = NULL;
     jvm_free(_this->constant_item_ptr);
     _this->constant_item_ptr = NULL;
-    jthreadlock_destory(_this->thread_lock);
+    jthreadlock_destory(_this->mb.thread_lock);
     constant_list_destory(_this);
 }
 
@@ -182,7 +182,7 @@ void class_clinit(Class *clazz, Runtime *runtime) {
 //===============================    实例化相关  ==================================
 
 u8 instance_of(Class *clazz, Instance *ins) {
-    Class *ins_of_class = ins->obj_of_clazz;
+    Class *ins_of_class = ins->mb.obj_of_clazz;
     while (ins_of_class) {
         if (ins_of_class == clazz) {
             return 1;
@@ -190,7 +190,7 @@ u8 instance_of(Class *clazz, Instance *ins) {
         ins_of_class = getSuperClass(ins_of_class);
     }
 
-    return isSonOfInterface(clazz, ins->obj_of_clazz);
+    return isSonOfInterface(clazz, ins->mb.obj_of_clazz);
 //    return 0;
 }
 

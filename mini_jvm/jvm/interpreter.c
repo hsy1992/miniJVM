@@ -1637,13 +1637,13 @@ s32 op_invokevirtual(u8 **opCode, Runtime *runtime) {
     Instance *ins = getInstanceInStack(clazz, cmr, runtime->stack);
     MethodInfo *method = NULL;
 
-    if (ins->type == MEM_TYPE_CLASS || ins->type == MEM_TYPE_ARR) {
+    if (ins->mb.type == MEM_TYPE_CLASS || ins->mb.type == MEM_TYPE_ARR) {
         method = cmr->methodInfo;
     } else {
-        method = (MethodInfo *) pairlist_get(cmr->virtual_methods, ins->obj_of_clazz);
+        method = (MethodInfo *) pairlist_get(cmr->virtual_methods, ins->mb.obj_of_clazz);
         if (method == NULL) {
             method = find_instance_methodInfo_by_name(ins, cmr->name, cmr->descriptor);
-            pairlist_put(cmr->virtual_methods, ins->obj_of_clazz, method);//放入缓存，以便下次直接调用
+            pairlist_put(cmr->virtual_methods, ins->mb.obj_of_clazz, method);//放入缓存，以便下次直接调用
         }
     }
 
@@ -1727,13 +1727,13 @@ s32 op_invokeinterface(u8 **opCode, Runtime *runtime) {
     ConstantMethodRef *cmr = find_constant_method_ref(clazz, object_ref);
     Instance *ins = getInstanceInStack(clazz, cmr, runtime->stack);
     MethodInfo *method = NULL;
-    if (ins->type == MEM_TYPE_CLASS) {
+    if (ins->mb.type == MEM_TYPE_CLASS) {
         method = cmr->methodInfo;
     } else {
-        method = (MethodInfo *) pairlist_get(cmr->virtual_methods, ins->obj_of_clazz);
+        method = (MethodInfo *) pairlist_get(cmr->virtual_methods, ins->mb.obj_of_clazz);
         if (method == NULL) {
             method = find_instance_methodInfo_by_name(ins, cmr->name, cmr->descriptor);
-            pairlist_put(cmr->virtual_methods, ins->obj_of_clazz, method);//放入缓存，以便下次直接调用
+            pairlist_put(cmr->virtual_methods, ins->mb.obj_of_clazz, method);//放入缓存，以便下次直接调用
         }
     }
 
@@ -2155,7 +2155,7 @@ s32 op_checkcast(u8 **opCode, Runtime *runtime) {
 
     s32 typeIdx = s2c.s;
     s32 checkok = 0;
-    if (ins->type == MEM_TYPE_INS) {
+    if (ins->mb.type == MEM_TYPE_INS) {
 
         Class *cl = getClassByConstantClassRef(runtime->clazz, typeIdx);
         if (instance_of(cl, ins)) {
@@ -2193,7 +2193,7 @@ s32 op_instanceof(u8 **opCode, Runtime *runtime) {
     s32 typeIdx = s2c.s;
 
     s32 checkok = 0;
-    if (ins->type == MEM_TYPE_INS) {
+    if (ins->mb.type == MEM_TYPE_INS) {
         if (instance_of(getClassByConstantClassRef(runtime->clazz, typeIdx), ins)) {
             checkok = 1;
         }
@@ -2215,9 +2215,9 @@ s32 op_instanceof(u8 **opCode, Runtime *runtime) {
 s32 op_monitorenter(u8 **opCode, Runtime *runtime) {
     StackFrame *stack = runtime->stack;
     Instance *ins = (Instance *) pop_ref(stack);
-    jthread_lock(ins, runtime);
+    jthread_lock(&ins->mb, runtime);
 #if _JVM_DEBUG
-    printf("monitorenter  [%llx] %s  \n", (s64) (long) ins, ins ? utf8_cstr(ins->obj_of_clazz->name) : "null");
+    printf("monitorenter  [%llx] %s  \n", (s64) (long) ins, ins ? utf8_cstr(ins->mb.obj_of_clazz->name) : "null");
 #endif
     *opCode = *opCode + 1;
     return 0;
@@ -2226,9 +2226,9 @@ s32 op_monitorenter(u8 **opCode, Runtime *runtime) {
 s32 op_monitorexit(u8 **opCode, Runtime *runtime) {
     StackFrame *stack = runtime->stack;
     Instance *ins = (Instance *) pop_ref(stack);
-    jthread_unlock(ins, runtime);
+    jthread_unlock(&ins->mb, runtime);
 #if _JVM_DEBUG
-    printf("monitorexit  [%llx] %s  \n", (s64) (long) ins, ins ? utf8_cstr(ins->obj_of_clazz->name) : "null");
+    printf("monitorexit  [%llx] %s  \n", (s64) (long) ins, ins ? utf8_cstr(ins->mb.obj_of_clazz->name) : "null");
 #endif
     *opCode = *opCode + 1;
     return 0;
@@ -3047,6 +3047,27 @@ void stack2localvar(MethodInfo *method, Runtime *father, Runtime *son) {
     father->stack->size -= paraLen + ins_this;
 }
 
+s32 synchronized_lock_method(MethodInfo *method, Runtime *runtime) {
+    //synchronized process
+    if (method->access_flags & ACC_SYNCHRONIZED) {
+        if (method->access_flags & ACC_STATIC) {
+            jthread_lock((MemoryBlock*)runtime->clazz, runtime);
+        } else {
+            jthread_lock(&((Instance*)runtime->localVariables->refer)->mb, runtime);
+        }
+    }
+}
+
+s32 synchronized_unlock_method(MethodInfo *method, Runtime *runtime) {
+    //synchronized process
+    if (method->access_flags & ACC_SYNCHRONIZED) {
+        if (method->access_flags & ACC_STATIC) {
+            jthread_unlock(&runtime->clazz->mb, runtime);
+        } else {
+            jthread_unlock(&((Instance*)runtime->localVariables->refer)->mb, runtime);
+        }
+    }
+}
 
 s32 execute_method(MethodInfo *method, Runtime *pruntime, Class *clazz) {
     s32 j = 0, ret = 0;
@@ -3071,7 +3092,9 @@ s32 execute_method(MethodInfo *method, Runtime *pruntime, Class *clazz) {
             method->native_func = find_native_method(utf8_cstr(clazz->name), utf8_cstr(method->name),
                                                      utf8_cstr(method->descriptor))->func_pointer;
         }
+        synchronized_lock_method(method, &runtime);
         ret = method->native_func(&runtime, clazz);
+        synchronized_unlock_method(method, &runtime);
     } else {
 
         for (j = 0; j < method->attributes_count; j++) {
@@ -3079,7 +3102,7 @@ s32 execute_method(MethodInfo *method, Runtime *pruntime, Class *clazz) {
             CodeAttribute *ca = (CodeAttribute *) method->attributes[j].converted_code;
             localvar_init(&runtime, ca->max_locals + 1);
             stack2localvar(method, pruntime, &runtime);
-
+            synchronized_lock_method(method, &runtime);
 #if _JVM_DEBUG_BYTECODE_DUMP
             printf("---------------------------------\n");
             printf("code dump\n");
@@ -3134,11 +3157,12 @@ s32 execute_method(MethodInfo *method, Runtime *pruntime, Class *clazz) {
                         ret = RUNTIME_STATUS_EXCEPTION;
                         break;
                     } else {
-                        printf("Exception : %s\n", utf8_cstr(ins->obj_of_clazz->name));
+                        printf("Exception : %s\n", utf8_cstr(ins->mb.obj_of_clazz->name));
                         pc = (ca->code + et->handler_pc);
                     }
                 }
             } while (1);
+            synchronized_unlock_method(method, &runtime);
 #if _JVM_DEBUG
             printf("------------------------------------------------  %s.%s   end \n", utf8_cstr(clazz->name),
                    utf8_cstr(method->name));

@@ -298,7 +298,7 @@ s32 java_lang_Math_floor(Runtime *runtime, Class *clazz) {
 s32 java_lang_Object_getClass(Runtime *runtime, Class *clazz) {
     StackFrame *stack = runtime->stack;
     Instance *ins = (Instance *) (runtime->localVariables + 0)->refer;
-    push_ref(stack, (__refer) ins->obj_of_clazz);
+    push_ref(stack, (__refer) ins->mb.obj_of_clazz);
 #if _JVM_DEBUG
     printf("java_lang_Object_getClass %d\n", ins);
 #endif
@@ -694,7 +694,7 @@ s32 java_io_Throwable_printStackTrace0(Runtime *runtime, Class *clazz) {
 #if _JVM_DEBUG
     printf("java_io_Throwable_printStackTrace0 \n");
 #endif
-    printf("java_io_Throwable_printStackTrace0 %s \n", utf8_cstr(tmps->obj_of_clazz->name));
+    printf("java_io_Throwable_printStackTrace0 %s \n", utf8_cstr(tmps->mb.obj_of_clazz->name));
     return 0;
 }
 

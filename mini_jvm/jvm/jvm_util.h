@@ -86,16 +86,16 @@ JavaThreadLock *jthreadlock_create();
 
 void jthreadlock_destory(JavaThreadLock *jtl);
 
-s32 jthread_lock(Instance *ins, Runtime *runtime);
+s32 jthread_lock(MemoryBlock *ins, Runtime *runtime);
 
-s32 jthread_unlock(Instance *ins, Runtime *runtime);
+s32 jthread_unlock(MemoryBlock *ins, Runtime *runtime);
 
-s32 jthread_notify(Instance *ins, Runtime *runtime);
+s32 jthread_notify(MemoryBlock *ins, Runtime *runtime);
 
-s32 jthread_notifyAll(Instance *ins, Runtime *runtime);
+s32 jthread_notifyAll(MemoryBlock *ins, Runtime *runtime);
 
-s32 jthread_wait(Instance *ins, Runtime *runtime);
+s32 jthread_wait(MemoryBlock *ins, Runtime *runtime);
 
-s32 jthread_waitTime(Instance *ins, Runtime *runtime, long waitms);
+s32 jthread_waitTime(MemoryBlock *ins, Runtime *runtime, long waitms);
 
 #endif //MINI_JVM_UTIL_H
