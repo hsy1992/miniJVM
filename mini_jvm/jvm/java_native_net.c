@@ -5,8 +5,10 @@
 #include "jvm.h"
 #include "java_native.h"
 
+#ifndef _CYGWIN_CONFIG_H
 #ifndef __WIN32__
-#define __WIN32__ 1
+#define __WIN32__
+#endif
 #endif
 #define   err printf
 
@@ -15,17 +17,8 @@ extern "C" {
 #endif
 
 
-#include <unistd.h>
-#include <sys/types.h>
-#include <sys/stat.h>
-#include <sys/time.h>
-#include <errno.h>
-
-#include <fcntl.h>
-
 #include <errno.h>
 #include <signal.h>
-
 #ifdef __WIN32__
 #include <winsock2.h>
 #include <fcntl.h>
@@ -33,14 +26,13 @@ extern "C" {
 #define SHUT_RD SD_RECEIVE
 #define SHUT_WR SD_SEND
 #else
-
-#include <netinet/in.h>
 #include <netdb.h>
-#include <sys/types.h>
+#include <fcntl.h>
+#include <unistd.h>
 #include <sys/socket.h>
-
 #define closesocket close
 #endif
+
 #ifdef __IPHONE_NA
 #include <netdb.h>
 #include <fcntl.h>

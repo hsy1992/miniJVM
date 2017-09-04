@@ -5,6 +5,8 @@
 #ifndef MINI_JVM_GLOBAL_H
 #define MINI_JVM_GLOBAL_H
 
+#include <sys/types.h>
+
 typedef unsigned char u8;
 typedef char c8;
 typedef unsigned short int u16;

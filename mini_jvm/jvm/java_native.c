@@ -319,7 +319,7 @@ s32 java_lang_Object_notify(Runtime *runtime, Class *clazz) {
     StackFrame *stack = runtime->stack;
     Instance *ins = (Instance *) (runtime->localVariables + 0)->refer;
 
-    jthread_notify(ins, runtime);
+    jthread_notify(&ins->mb, runtime);
 #if _JVM_DEBUG
     printf("java_lang_Object_notify %d\n", ins);
 #endif
@@ -329,7 +329,7 @@ s32 java_lang_Object_notify(Runtime *runtime, Class *clazz) {
 s32 java_lang_Object_notifyAll(Runtime *runtime, Class *clazz) {
     StackFrame *stack = runtime->stack;
     Instance *ins = (Instance *) (runtime->localVariables + 0)->refer;
-    jthread_notifyAll(ins, runtime);
+    jthread_notifyAll(&ins->mb, runtime);
 #if _JVM_DEBUG
     printf("java_lang_Object_notifyAll %d\n", ins);
 #endif
@@ -346,7 +346,7 @@ s32 java_lang_Object_wait(Runtime *runtime, Class *clazz) {
     printf("java_lang_Object_wait %llx  wait %lld\n", (s64) (long) ins, l2d.l);
 #endif
     runtime->threadInfo->thread_running = 0;
-    jthread_waitTime(ins, runtime, l2d.l);
+    jthread_waitTime(&ins->mb, runtime, l2d.l);
     garbage_thread_lock();//may be garbage is collecting this time
     runtime->threadInfo->thread_running = 1;
     garbage_thread_unlock();

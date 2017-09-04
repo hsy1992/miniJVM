@@ -3,7 +3,7 @@
 #define PUP_JVM_H
 #define HAVE_STRUCT_TIMESPEC
 
-#include <sys/types.h>
+
 //
 #include <stdio.h>
 #include <stdlib.h>
@@ -33,7 +33,7 @@
 #define __JVM_OS_LINUX__ 1
 #define __JVM_OS_WIN__  0
 
-
+//libary option : -lpthread -lws2_32
 /*
  *  TAG
  *  1 UTF-8 String

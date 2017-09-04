@@ -28,7 +28,7 @@ import javax.mini.eio.*;
  * @author Nik Shaylor
  * @version 1.0 10/08/99
  */
-public class Protocol implements ConnectionBaseInterface,ServerSocket {
+public class Protocol implements ConnectionBaseInterface, ServerSocket {
 
     /**
      * Socket object used by native code, for now must be the first field.
@@ -43,6 +43,7 @@ public class Protocol implements ConnectionBaseInterface,ServerSocket {
     int port;
 
     String ip;
+
     @Override
     public Connection openPrim(String name, int mode, boolean timeouts) throws IOException {
         if (!name.startsWith("//")) {
@@ -69,14 +70,13 @@ public class Protocol implements ConnectionBaseInterface,ServerSocket {
             cstring[n] = (byte) (hostname.charAt(n));
         }
         if ((this.handle = open0(cstring, port)) < 0) {
-            int errorCode = this.handle & 0x7fffffff;
+            if (this.handle < 0);
             throw new IOException( /* #ifdef VERBOSE_EXCEPTIONS */ /// skipped                       "connection failed: error = " + errorCode
                     /* #endif */);
         }
-        this.connectionOpen=true;
+        this.connectionOpen = true;
         return this;
     }
-
 
     /**
      * Checks if the connection is open.
@@ -184,10 +184,10 @@ public class Protocol implements ConnectionBaseInterface,ServerSocket {
     static public native int open0(byte[] ip, int port) throws IOException;
 
     /**
-     * 
+     *
      * @param handle
      * @return
-     * @throws IOException 
+     * @throws IOException
      */
     static private native int listen0(int handle) throws IOException;
 
@@ -222,6 +222,5 @@ public class Protocol implements ConnectionBaseInterface,ServerSocket {
     public void listen() throws IOException {
         listen0(handle);
     }
-
 
 }
