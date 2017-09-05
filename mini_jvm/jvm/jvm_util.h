@@ -15,7 +15,7 @@ typedef unsigned short uni_char;
 
 s32 utf8_2_unicode(Utf8String *ustr, u16 *arr);
 
-int unicode_2_utf8(Utf8String *ustr, u16 *jchar_arr, s32 totalSize);
+int unicode_2_utf8(u16 *jchar_arr, Utf8String *ustr, s32 totalSize);
 
 void swap_endian_little_big(u8 *ptr, s32 size);
 
@@ -30,6 +30,8 @@ s64 currentTimeMillis();
 s64 nanoTime();
 
 s32 threadSleep(s64 ms);
+
+s32 loadSysProperties(Utf8String* path);
 
 //s32 threadSleep(s64 ms);
 

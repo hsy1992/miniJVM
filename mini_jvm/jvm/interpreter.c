@@ -1,7 +1,7 @@
 
 
 #include "jvm.h"
-#include "java_native.h"
+#include "java_native_std.h"
 #include "garbage.h"
 #include "jvm_util.h"
 #include "../utils/utf8_string.h"
@@ -930,7 +930,7 @@ s32 op_i2c(u8 **opCode, Runtime *runtime) {
 #if _JVM_DEBUG
     printf("i2s(c): %d --> %d\n", (s16) value, value);
 #endif
-    push_long(stack, (s16) value);
+    push_int(stack, (u16) value);
     *opCode = *opCode + 1;
     return 0;
 }
@@ -946,7 +946,7 @@ s32 op_i2b(u8 **opCode, Runtime *runtime) {
 #if _JVM_DEBUG
     printf("i2b: %d --> %d\n", (c8) value, value);
 #endif
-    push_long(stack, (c8) value);
+    push_int(stack, (c8) value);
     *opCode = *opCode + 1;
     return 0;
 }

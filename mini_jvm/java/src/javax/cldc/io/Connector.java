@@ -135,7 +135,7 @@ public class Connector {
         /* This may vary from one CLDC implementation to another */
         classRoot = System.getProperty("javax.microedition.io.Connector.protocolpath");
         if (classRoot == null) {
-            classRoot = "javax.mini.eio.protocol";
+            classRoot = "javax.mini.net.protocol";
         }
     }
 

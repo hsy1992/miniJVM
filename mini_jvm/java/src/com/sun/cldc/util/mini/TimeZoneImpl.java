@@ -764,9 +764,7 @@ public class TimeZoneImpl extends TimeZone {
      * NOTE: as in this example, most implementations will only include
      * a handful of timezones
      * look for the closing comment which has a string of '*' asterisks
-     *************
-
-    ////////////////////////////////////////////////////////////
+     *************////////////////////////////////////////////////////////////
     // America
     //----------------------------------------------------------
     new TimeZoneImpl(-10*ONE_HOUR, "America/Adak",
@@ -2141,7 +2139,7 @@ public class TimeZoneImpl extends TimeZone {
     //----------------------------------------------------------
     new TimeZoneImpl(14*ONE_HOUR, "Pacific/Kiritimati"),
     // Pacific/Kiritimati   Kiribati(KI)    14:00   -   LINT
-    ************/
+    /************/
     };
 }
 

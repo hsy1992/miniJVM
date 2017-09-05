@@ -23,14 +23,14 @@
  * Clara, CA 95054 or visit www.sun.com if you need additional
  * information or have any questions.
  */
-package javax.mini.eio.protocol.socket;
+package javax.mini.net.protocol.socket;
 
 import javax.cldc.io.Connector;
 import javax.cldc.io.StreamConnection;
 import javax.cldc.io.Connection;
 import java.io.*;
 import com.sun.cldc.io.*;
-import javax.mini.eio.Socket;
+import javax.mini.net.Socket;
 
 /**
  * Connection to the J2ME socket API.

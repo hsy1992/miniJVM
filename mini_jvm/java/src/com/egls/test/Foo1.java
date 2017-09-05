@@ -5,17 +5,18 @@
  */
 package com.egls.test;
 
-import java.io.DataInputStream;
-import java.io.DataOutputStream;
+import com.sun.cldc.i18n.StreamWriter;
+import com.sun.cldc.i18n.mini.UTF_8_Writer;
+import java.io.IOException;
 import java.lang.System;
 import java.util.Calendar;
 import java.util.Enumeration;
 import java.util.Hashtable;
 import java.util.Vector;
 import javax.cldc.io.Connector;
-import javax.cldc.io.StreamConnection;
-import javax.mini.eio.ServerSocket;
-import javax.mini.eio.Socket;
+import javax.mini.io.File;
+import javax.mini.net.ServerSocket;
+import javax.mini.net.Socket;
 
 /**
  *
@@ -268,19 +269,17 @@ public class Foo1 {
                         break;
                     }
                 } catch (Exception e) {
-                    System.out.println("e");
+                    System.out.println(e);
                 }
             }
             srvsock.close();
         } catch (Exception e) {
-            System.out.println("e");
+            System.out.println(e);
         }
 
     }
 
     void t13() {
-
-        //client
         try {
             Socket conn = (Socket) Connector.open("socket://baidu.com:80");
             conn.setOption(Socket.OP_TYPE_NON_BLOCK, Socket.OP_VAL_NON_BLOCK);
@@ -290,7 +289,6 @@ public class Foo1 {
             int len = 0;
             while (len != -1) {
                 len = conn.read(rcvbuf, 0, 256);
-
                 for (int i = 0; i < len; i++) {
                     System.out.print((char) rcvbuf[i]);
                 }
@@ -299,7 +297,6 @@ public class Foo1 {
         } catch (Exception e) {
 
         }
-
     }
 
     void t14() {
@@ -307,6 +304,43 @@ public class Foo1 {
 //        String sbuf = Calendar.getInstance().getTime().toString();
         System.out.println("s=" + sbuf);
     }
+
+    void t15() {
+
+        try {
+            String s = "这是一个测试";
+            byte[] b = s.getBytes("utf-8");
+            for (int i = 0; i < b.length; i++) {
+                System.out.print(" " + Integer.toHexString((int) (b[i] & 0xff)));
+            }
+            System.out.println();
+            for (int i = 0; i < s.length(); i++) {
+                System.out.print(" " + Integer.toString((int) (s.charAt(i) & 0xffff)));
+            }
+            System.out.println();
+            File test = new File("./a.txt");
+            char c = '这';//36825
+            System.out.println("c=" + c);
+            //DataInputStream dis = new DataInputStream(test.getInputStream());
+            StreamWriter writer = new UTF_8_Writer();
+            writer.open(test.getOutputStream(), "utf-8");
+            writer.write(s);
+            writer.close();
+        } catch (IOException ex) {
+            System.out.println(ex.getMessage());
+        }
+        File file = new File(".");
+        System.out.println("isDir:" + file.isDirectory());
+        String[] files = file.list();
+        for (int i = 0; i < files.length; i++) {
+            System.out.println(files[i]);
+        }
+
+    }
+     void t16() {
+          char c = '这';//36825
+            System.out.println("c=" + (int)c);
+     }
 
     public static void main() {
         Foo1 f = new Foo1();
@@ -321,9 +355,10 @@ public class Foo1 {
 //        f.t9();
 //        f.t10();
 //        f.t11();
-        f.t12();
+//        f.t12();
 //        f.t13();
 //        f.t14();
+        f.t16();
         System.gc();
         System.gc();
     }

@@ -266,11 +266,11 @@ utf8_char utf8_char_at(Utf8String *a1, int pos) {
     return a1->data1[pos];
 }
 
-int _UNI_STR_HashtableEquals(HashtableValue value1, HashtableValue value2) {
+int UNICODE_STR_EQUALS_FUNC(HashtableValue value1, HashtableValue value2) {
     return utf8_equals(value1, value2) == 1;
 }
 
-unsigned long _UNI_STR_HashtableHash(HashtableKey kmer) {
+unsigned long UNICODE_STR_HASH_FUNC(HashtableKey kmer) {
     return _utf8_hashCode(kmer);
 }
 

@@ -315,6 +315,7 @@ extern Hashtable *classes;
 extern ArrayList *thread_list;
 extern ArrayList *native_libs;
 extern s32 STACK_LENGHT;
+extern Hashtable *sys_prop;
 
 
 extern Hashtable *son_2_father; //key=mem_ptr, value=我被别人引用的列表

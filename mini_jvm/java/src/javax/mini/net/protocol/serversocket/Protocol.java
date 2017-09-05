@@ -5,8 +5,9 @@
  * PROPRIETARY/CONFIDENTIAL
  * Use is subject to license terms.
  */
-package javax.mini.eio.protocol.serversocket;
+package javax.mini.net.protocol.serversocket;
 
+import javax.mini.net.ServerSocket;
 import com.sun.cldc.io.ConnectionBaseInterface;
 import com.sun.cldc.io.Waiter;
 import java.io.IOException;
@@ -14,7 +15,6 @@ import java.io.InterruptedIOException;
 import javax.cldc.io.Connection;
 import javax.cldc.io.Connector;
 
-import javax.mini.eio.*;
 
 /*
  * Note: Since this class references the TCP socket protocol class that
@@ -101,17 +101,17 @@ public class Protocol implements ConnectionBaseInterface, ServerSocket {
      * @exception IOException if an I/O error occurs when creating the input
      * stream
      */
-    synchronized public javax.mini.eio.Socket accept()
+    synchronized public javax.mini.net.Socket accept()
             throws IOException {
 
-        javax.mini.eio.protocol.socket.Protocol con;
+        javax.mini.net.protocol.socket.Protocol con;
 
         ensureOpen();
 
         while (true) {
             int clt_handle = accept0(this.handle);
             if (clt_handle >= 0) {
-                con = new javax.mini.eio.protocol.socket.Protocol();
+                con = new javax.mini.net.protocol.socket.Protocol();
                 con.open(clt_handle, Connector.READ_WRITE);
                 break;
             }

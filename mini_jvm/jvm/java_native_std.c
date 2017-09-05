@@ -1,7 +1,7 @@
 
 
 #include <time.h>
-#include "java_native.h"
+#include "java_native_std.h"
 #include "garbage.h"
 #include "jvm_util.h"
 #include <math.h>
@@ -24,7 +24,7 @@ s32 java_lang_Class_forName(Runtime *runtime, Class *clazz) {
     if (jstr) {
         Utf8String *ustr = utf8_create();
         Instance *arr = jstring_get_value_array(jstr);
-        unicode_2_utf8(ustr, (u16 *) arr->arr_body, arr->arr_length);
+        unicode_2_utf8((u16 *) arr->arr_body, ustr, arr->arr_length);
         utf8_replace_c(ustr, ".", "/");
         cl = classes_load_get(ustr, runtime);
         if (!cl) {
@@ -551,15 +551,24 @@ s32 java_lang_System_identityHashCode(Runtime *runtime, Class *clazz) {
 
 s32 java_lang_System_getProperty0(Runtime *runtime, Class *clazz) {
     StackFrame *stack = runtime->stack;
+
     Instance *tmps = (Instance *) (runtime->localVariables + 0)->refer;
-    Utf8String *ustr = utf8_create_c("UTF-8");
-    Instance *jstr = jstring_create(ustr, runtime);
-    push_int(stack, (s32) 0);
-    utf8_destory(ustr);
+    Instance *jchar_arr = jstring_get_value_array(tmps);
+    Utf8String *key = utf8_create();
+    unicode_2_utf8((u16 *) jchar_arr->arr_body, key, jchar_arr->arr_length);
+    Utf8String *val = (Utf8String *) hashtable_get(sys_prop, key);
+    if (val) {
+        Instance *jstr = jstring_create(val, runtime);
+        push_ref(stack, jstr);
+        garbage_refer(jstr, NULL);
+    } else {
+        push_ref(stack, (__refer) (long) NULL);
+    }
+    utf8_destory(key);
+
 #if _JVM_DEBUG
     printf("java_lang_System_getProperty0 \n");
 #endif
-
     return 0;
 }
 

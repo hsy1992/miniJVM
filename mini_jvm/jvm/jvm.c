@@ -6,7 +6,7 @@
 #include "../utils/utf8_string.h"
 #include "garbage.h"
 #include "jvm_util.h"
-#include "java_native.h"
+#include "java_native_std.h"
 
 
 void destoryAllClasses(hmap_t classes) {
@@ -18,10 +18,11 @@ s32 execute(c8 *p_classpath, c8 *p_mainclass, s32 argc, c8 **argv) {
 #if _JVM_DEBUG_PROFILE
     instruct_profile = hashtable_create(DEFAULT_HASH_FUNC, DEFAULT_HASH_EQUALS_FUNC);
 #endif
+
     //为指令创建索引
     instructionsIndexies = createInstructIndexies();
     //创建类容器
-    classes = hashtable_create(_UNI_STR_HashtableHash, _UNI_STR_HashtableEquals);
+    classes = hashtable_create(UNICODE_STR_HASH_FUNC, UNICODE_STR_EQUALS_FUNC);
 
     JVM_CLASS = class_create();
     JVM_CLASS->name = utf8_create_c("MINI_JVM");
@@ -41,6 +42,10 @@ s32 execute(c8 *p_classpath, c8 *p_mainclass, s32 argc, c8 **argv) {
     //开始装载类
     Utf8String *classpath = utf8_create_c(p_classpath);
     Utf8String *mainclass = utf8_create_c(p_mainclass);
+
+    //装入系统属性
+    loadSysProperties(classpath);
+
     load_class(classpath, mainclass, classes);
 
     HashtableIterator hti;

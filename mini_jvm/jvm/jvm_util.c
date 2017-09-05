@@ -62,7 +62,6 @@ s32 utf8_2_unicode(Utf8String *ustr, u16 *arr) {
     int outputSize = 0; //记录转换后的Unicode字符串的字节数
 
     char *tmp = (c8 *) arr; //临时变量，用于遍历输出字符串
-
     while (*pInput) {
         if (*pInput > 0x00 && *pInput <= 0x7F) //处理单字节UTF8字符（英文字母、数字）
         {
@@ -110,7 +109,7 @@ s32 utf8_2_unicode(Utf8String *ustr, u16 *arr) {
     return outputSize;
 }
 
-int unicode_2_utf8(Utf8String *ustr, u16 *jchar_arr, s32 totalSize) {
+int unicode_2_utf8(u16 *jchar_arr, Utf8String *ustr, s32 totalSize) {
     s32 i;
     s32 utf_len;
     for (i = 0; i < totalSize; i++) {
@@ -292,6 +291,58 @@ void printDumpOfClasses() {
     }
 }
 
+s32 loadSysProperties(Utf8String *path) {
+    sys_prop = hashtable_create(UNICODE_STR_HASH_FUNC, UNICODE_STR_EQUALS_FUNC);
+
+    FILE *fp = 0;
+    Utf8String *filepath = utf8_create_copy(path);
+    utf8_append_c(filepath, "sys.properties");
+    fp = fopen(utf8_cstr(filepath), "rb");
+    utf8_destory(filepath);
+    if (fp == 0) {
+        printf("Open file properties failed\n");
+        return -1;
+    }
+    Utf8String *ustr = utf8_create();
+    c8 buf[256];
+    while (1) {
+        u32 len = fread(buf, 1, 256, fp);
+        utf8_append_part_c(ustr, buf, 0, len);
+        if (feof(fp)) {
+            break;
+        }
+    }
+    fclose(fp);
+
+    //parse
+    utf8_replace_c(ustr, "\r\n", "\n");
+    utf8_replace_c(ustr, "\r", "\n");
+    Utf8String *line = utf8_create();
+    Utf8String *key = utf8_create();
+    Utf8String *val = utf8_create();
+    while (ustr->length > 0) {
+        s32 lineEndAt = utf8_indexof_c(ustr, "\n");
+        utf8_clear(line);
+        if (lineEndAt >= 0) {
+            utf8_append_part(line, ustr, 0, lineEndAt);
+            utf8_substring(ustr, lineEndAt + 1, ustr->length);
+        } else {
+            utf8_append_part(line, ustr, 0, ustr->length);
+            utf8_substring(ustr, ustr->length, ustr->length);
+        }
+        s32 eqAt = utf8_indexof_c(line, "=");
+        if (eqAt > 0) {
+            utf8_clear(key);
+            utf8_clear(val);
+            utf8_append_part(key, line, 0, eqAt);
+            utf8_append_part(val, line, eqAt + 1, line->length - (eqAt + 1));
+            hashtable_put(sys_prop, key, val);
+        }
+    }
+    utf8_destory(line);
+    utf8_destory(ustr);
+    return 0;
+}
 
 //===============================    java 线程  ==================================
 void *jtherad_loader(void *para) {
@@ -545,6 +596,9 @@ void jarray_get_field(Instance *arr, s32 index, Long2Double *l2d, s32 bytes) {
                 break;
             case 2:
                 l2d->i2l.i1 = getFieldShort(arr->arr_body + index * bytes);
+                if (arr->arr_data_type == DATATYPE_JCHAR) {
+                    l2d->i2l.i1 = (u16) l2d->i2l.i1;
+                }
                 break;
             case 4:
                 l2d->i2l.i1 = getFieldInt(arr->arr_body + index * bytes);
