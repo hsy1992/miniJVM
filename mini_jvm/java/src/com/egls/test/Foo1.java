@@ -5,8 +5,12 @@
  */
 package com.egls.test;
 
+import com.sun.cldc.i18n.StreamReader;
 import com.sun.cldc.i18n.StreamWriter;
+import com.sun.cldc.i18n.mini.UTF_8_Reader;
 import com.sun.cldc.i18n.mini.UTF_8_Writer;
+import java.io.DataInputStream;
+import java.io.DataOutputStream;
 import java.io.IOException;
 import java.lang.System;
 import java.util.Calendar;
@@ -309,23 +313,39 @@ public class Foo1 {
 
         try {
             String s = "这是一个测试";
-            byte[] b = s.getBytes("utf-8");
-            for (int i = 0; i < b.length; i++) {
-                System.out.print(" " + Integer.toHexString((int) (b[i] & 0xff)));
+            byte[] barr = s.getBytes("utf-8");
+            for (int i = 0; i < barr.length; i++) {
+                System.out.print(" " + Integer.toHexString((int) (barr[i] & 0xff)));
             }
-            System.out.println();
+            System.out.println("=============");
             for (int i = 0; i < s.length(); i++) {
                 System.out.print(" " + Integer.toString((int) (s.charAt(i) & 0xffff)));
             }
             System.out.println();
             File test = new File("./a.txt");
-            char c = '这';//36825
-            System.out.println("c=" + c);
-            //DataInputStream dis = new DataInputStream(test.getInputStream());
             StreamWriter writer = new UTF_8_Writer();
             writer.open(test.getOutputStream(), "utf-8");
             writer.write(s);
             writer.close();
+            
+            StreamReader reader = new UTF_8_Reader();
+            reader.open(test.getInputStream(), "utf-8");
+            char[] buf=new char[100];
+            int len=reader.read(buf, 0, 100);
+            reader.close();
+            String r=new String(buf,0,len);
+            for (int i = 0; i < r.length(); i++) {
+                System.out.print(" " + Integer.toString((int) (r.charAt(i) & 0xffff)));
+            }
+            System.out.println("==============");
+            File b = new File("./b.txt");
+            DataInputStream dis = new DataInputStream(test.getInputStream());
+            DataOutputStream dos= new DataOutputStream(b.getOutputStream());
+            dos.writeChars(r);
+            dos.close();
+            
+            
+            
         } catch (IOException ex) {
             System.out.println(ex.getMessage());
         }
@@ -358,7 +378,7 @@ public class Foo1 {
 //        f.t12();
 //        f.t13();
 //        f.t14();
-        f.t16();
+        f.t15();
         System.gc();
         System.gc();
     }
