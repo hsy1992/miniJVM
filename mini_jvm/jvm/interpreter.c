@@ -3085,7 +3085,7 @@ s32 execute_method(MethodInfo *method, Runtime *pruntime, Class *clazz) {
 
 
     if (method->access_flags & ACC_NATIVE) {//本地方法
-        localvar_init(&runtime, method->paraType->length + 1);//可能有非静态本地方法调用，因此+1
+        localvar_init(&runtime, method->para_count + 1);//可能有非静态本地方法调用，因此+1
         stack2localvar(method, pruntime, &runtime);
         //缓存调用本地方法
         if (!method->native_func) { //把本地方法找出来缓存

@@ -149,7 +149,7 @@ void class_optmize(Class *clazz) {
         if (!ptr->paraType) {//首次执行
             // eg:  (Ljava/lang/Object;IBLjava/lang/String;[[[ILjava/lang/Object;)Ljava/lang/String;Z
             ptr->paraType = utf8_create();
-            parseMethodPara(ptr->descriptor, ptr->paraType);
+            ptr->para_count = parseMethodPara(ptr->descriptor, ptr->paraType);
         }
         s32 j;
 

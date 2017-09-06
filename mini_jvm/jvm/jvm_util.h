@@ -51,7 +51,7 @@ s32 jstring_index_of(Instance *jstr, uni_char ch, s32 startAt);
 
 s32 jstring_equals(Instance *jstr1, Instance *jstr2);
 
-void parseMethodPara(Utf8String *methodType, Utf8String *out);
+s32 parseMethodPara(Utf8String *methodType, Utf8String *out);
 
 Instance *getInstanceInStack(Class *clazz, ConstantMethodRef *cmr, StackFrame *stack);
 

@@ -496,9 +496,9 @@ s32 jvm_free(void *ptr) {
     if (ptr) {
         s32 size = getFieldInt(ptr - 4);
         heap_size -= size;
-        if (size == 176) {
-            int debug = 1;
-        }
+//        if (size == 176) {
+//            int debug = 1;
+//        }
         free(ptr - 4);
         return size;
     }

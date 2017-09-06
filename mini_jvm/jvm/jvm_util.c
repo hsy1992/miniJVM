@@ -237,7 +237,8 @@ Instance *getInstanceInStack(Class *clazz, ConstantMethodRef *cmr, StackFrame *s
     return ins;
 }
 
-void parseMethodPara(Utf8String *methodType, Utf8String *out) {
+s32 parseMethodPara(Utf8String *methodType, Utf8String *out) {
+    s32 count = 0;
     Utf8String *para = utf8_create_copy(methodType);
     utf8_substring(para, utf8_indexof_c(para, "(") + 1, utf8_last_indexof_c(para, ")"));
     //从后往前拆分方法参数，从栈中弹出放入本地变量
@@ -253,16 +254,19 @@ void parseMethodPara(Utf8String *methodType, Utf8String *out) {
             case 'Z':
                 utf8_substring(para, 1, para->length);
                 utf8_append_c(out, "4");
+                count++;
                 break;
             case 'D':
             case 'J': {
                 utf8_substring(para, 1, para->length);
                 utf8_append_c(out, "8");
+                count += 2;
                 break;
             }
             case 'L':
                 utf8_substring(para, utf8_indexof_c(para, ";") + 1, para->length);
                 utf8_append_c(out, "R");
+                count += (sizeof(__refer) / 4);
                 break;
             case '[':
                 while (utf8_char_at(para, 1) == '[') {
@@ -274,11 +278,13 @@ void parseMethodPara(Utf8String *methodType, Utf8String *out) {
                     utf8_substring(para, 2, para->length);
                 }
                 utf8_append_c(out, "R");
+                count += (sizeof(__refer) / 4);
                 break;
         }
         i++;
     }
     utf8_destory(para);
+    return count;
 }
 
 void printDumpOfClasses() {
@@ -742,22 +748,23 @@ s32 jstring_index_of(Instance *jstr, uni_char ch, s32 startAt) {
 
 s32 jstring_equals(Instance *jstr1, Instance *jstr2) {
     if (!jstr1 && !jstr2) {
-        return 0;
-    } else if (!jstr1) {
-        return -1;
-    } else if (!jstr2) {
         return 1;
+    } else if (!jstr1) {
+        return 0;
+    } else if (!jstr2) {
+        return 0;
     }
     Instance *arr1 = jstring_get_value_array(jstr1);//取得 String[] value
     Instance *arr2 = jstring_get_value_array(jstr2);//取得 String[] value
-    if (arr1 && arr1->arr_body && arr2 && arr2->arr_body) {
+    if (arr1 && arr2 && arr1->arr_body && arr2->arr_body) {
+        if (arr1->arr_length != arr2->arr_length) {
+            return 0;
+        }
         u16 *jchar_arr1 = (u16 *) arr1->arr_body;
         u16 *jchar_arr2 = (u16 *) arr2->arr_body;
         s32 i;
         for (i = 0; i < arr1->arr_length; i++) {
-            if (jchar_arr1[i] > jchar_arr2[i]) {
-                return 0;
-            } else if (jchar_arr1[i] < jchar_arr2[i]) {
+            if (jchar_arr1[i] != jchar_arr2[i]) {
                 return 0;
             }
         }
