@@ -18,16 +18,10 @@ public class File {
     FileDescriptor fd;
     long filePointer;
     String path;
-    boolean append;
+    String mode;
 
     public File(String path) {
-        this(path, false);
-
-    }
-
-    public File(String path, boolean append) {
         this.path = path;
-        this.append = append;
         fd = new FileDescriptor();
         int ret = loadFD(path.getBytes(), fd);
         if (ret < 0) {
@@ -35,6 +29,9 @@ public class File {
         } else {
             fd.exists = true;
         }
+    }
+
+    protected File() {
     }
 
     public boolean isFile() {
@@ -57,22 +54,21 @@ public class File {
         return listDir(path.getBytes());
     }
 
-    public OutputStream getOutputStream() throws IOException {
-        if (filePointer == 0) {
-            open();
+    public OutputStream getOutputStream(boolean append) throws IOException {
+        if (filePointer != 0) {
+            closeFile(filePointer);
         }
+        filePointer = openFile(path.getBytes(), append ? "a+b".getBytes() : "w+b".getBytes());;
+
         return new FileOutputStream(filePointer);
     }
 
     public InputStream getInputStream() throws IOException {
-        if (filePointer == 0) {
-            open();
+        if (filePointer != 0) {
+            closeFile(filePointer);
         }
+        filePointer = openFile(path.getBytes(), "rb".getBytes());
         return new FileInputStream(filePointer);
-    }
-
-    void open() throws IOException {
-        filePointer = openFile(path.getBytes(), append ? "wb+".getBytes() : "wb".getBytes());
     }
 
     public class FileInputStream extends InputStream {
@@ -85,16 +81,13 @@ public class File {
 
         @Override
         public int read() throws IOException {
-            int ret = read0(fileHandle);
-            if (ret < 0) {
-                throw new IOException("read file error: " + path);
-            }
-            return ret;
+            return read0(fileHandle);
         }
 
         @Override
-        public void close() {
+        public void close() throws IOException {
             closeFile(fileHandle);
+            fileHandle = 0;
         }
 
     }
@@ -115,6 +108,11 @@ public class File {
             }
         }
 
+        @Override
+        public void close() throws IOException {
+            closeFile(fileHandle);
+            fileHandle = 0;
+        }
     }
 
     static native int loadFD(byte[] filePath, FileDescriptor fd);

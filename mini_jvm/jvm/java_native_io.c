@@ -609,15 +609,12 @@ s32 javax_mini_io_File_readbuf(Runtime *runtime, Class *clazz) {
     s32 len = (runtime->localVariables + pos++)->integer;
     s32 ret = -1;
     if (fd && bytes_arr) {
-        ret = fread(bytes_arr->arr_body + offset, len, 1, fd);
-        if (ret != len) {
-            push_int(runtime->stack, -1);
-        } else {
-            push_int(runtime->stack, ret);
-        }
-    } else {
-        push_int(runtime->stack, ret);
+        ret = fread(bytes_arr->arr_body + offset, 1, len, fd);
     }
+    if (ret == 0) {
+        ret = -1;
+    }
+    push_int(runtime->stack, ret);
 
 #if _JVM_DEBUG
     printf("javax_mini_io_File_readbuf  \n");
@@ -717,7 +714,7 @@ s32 javax_mini_io_File_loadFD(Runtime *runtime, Class *clazz) {
         Utf8String *filepath = utf8_create_part_c(name_arr->arr_body, 0, name_arr->arr_length);
         struct stat buf;
         ret = stat(utf8_cstr(filepath), &buf);
-        s32 a=S_ISDIR(buf.st_mode);
+        s32 a = S_ISDIR(buf.st_mode);
         if (ret == 0) {
             c8 *className = "javax/mini/io/FileDescriptor";
             u8 *ptr;

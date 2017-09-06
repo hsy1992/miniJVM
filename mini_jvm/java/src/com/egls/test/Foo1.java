@@ -19,6 +19,7 @@ import java.util.Hashtable;
 import java.util.Vector;
 import javax.cldc.io.Connector;
 import javax.mini.io.File;
+import javax.mini.io.RandomAccessFile;
 import javax.mini.net.ServerSocket;
 import javax.mini.net.Socket;
 
@@ -309,43 +310,45 @@ public class Foo1 {
         System.out.println("s=" + sbuf);
     }
 
-    void t15() {
+    void printString(String s) {
+        for (int i = 0; i < s.length(); i++) {
+            System.out.print(" " + Integer.toString((int) (s.charAt(i) & 0xffff)));
+        }
+        System.out.println();
+    }
 
+    void printBytes(String s) {
         try {
-            String s = "这是一个测试";
             byte[] barr = s.getBytes("utf-8");
             for (int i = 0; i < barr.length; i++) {
                 System.out.print(" " + Integer.toHexString((int) (barr[i] & 0xff)));
             }
-            System.out.println("=============");
-            for (int i = 0; i < s.length(); i++) {
-                System.out.print(" " + Integer.toString((int) (s.charAt(i) & 0xffff)));
-            }
             System.out.println();
+        } catch (Exception ex) {
+            System.out.println(ex.getMessage());
+        }
+    }
+
+    void t15() {
+
+        try {
+            String s = "这是一个测试";
+            printBytes(s);
+            printString(s);
             File test = new File("./a.txt");
             StreamWriter writer = new UTF_8_Writer();
-            writer.open(test.getOutputStream(), "utf-8");
+            writer.open(test.getOutputStream(false), "utf-8");
             writer.write(s);
             writer.close();
-            
+
             StreamReader reader = new UTF_8_Reader();
             reader.open(test.getInputStream(), "utf-8");
-            char[] buf=new char[100];
-            int len=reader.read(buf, 0, 100);
+            char[] buf = new char[100];
+            int len = reader.read(buf, 0, 100);
             reader.close();
-            String r=new String(buf,0,len);
-            for (int i = 0; i < r.length(); i++) {
-                System.out.print(" " + Integer.toString((int) (r.charAt(i) & 0xffff)));
-            }
-            System.out.println("==============");
-            File b = new File("./b.txt");
-            DataInputStream dis = new DataInputStream(test.getInputStream());
-            DataOutputStream dos= new DataOutputStream(b.getOutputStream());
-            dos.writeChars(r);
-            dos.close();
-            
-            
-            
+            String r = new String(buf, 0, len);
+            printString(r);
+
         } catch (IOException ex) {
             System.out.println(ex.getMessage());
         }
@@ -357,10 +360,53 @@ public class Foo1 {
         }
 
     }
-     void t16() {
-          char c = '这';//36825
-            System.out.println("c=" + (int)c);
-     }
+
+    void t16() {
+        try {
+            File b = new File("./b.txt");
+            String r = "这是一个测试";
+            printBytes(r);
+            printString(r);
+            DataOutputStream dos = new DataOutputStream(b.getOutputStream(true));
+            dos.writeUTF(r);
+            dos.close();
+            DataInputStream dis = new DataInputStream(b.getInputStream());
+            String s = dis.readUTF();
+            s = dis.readUTF();
+            printBytes(s);
+            printString(s);
+            dis.close();
+        } catch (IOException ex) {
+            System.out.println(ex.getMessage());
+        }
+    }
+
+    void t17() {
+        try {
+            RandomAccessFile c = new RandomAccessFile("./c.txt", "rw");
+            c.seek(0);
+            String r = "这是一个测试";
+            printBytes(r);
+            printString(r);
+            byte[] carr = r.getBytes("utf-8");
+            c.write(carr, 0, carr.length);
+            c.close();
+            RandomAccessFile c1 = new RandomAccessFile("./c.txt", "r");
+            c1.seek(0);
+            byte[] barr = new byte[256];
+            int len;
+            len = c1.read(barr, 0, 256);
+            System.out.println("len=" + len);
+//            len = c1.read(barr, 0, 256);
+//            System.out.println("len=" + len);
+            c1.close();
+            String s = new String(barr, 0, len, "utf-8");
+            printBytes(s);
+            printString(s);
+        } catch (IOException ex) {
+            System.out.println(ex.getMessage());
+        }
+    }
 
     public static void main() {
         Foo1 f = new Foo1();
@@ -378,7 +424,9 @@ public class Foo1 {
 //        f.t12();
 //        f.t13();
 //        f.t14();
-        f.t15();
+//        f.t15();
+//        f.t16();
+        f.t17();
         System.gc();
         System.gc();
     }

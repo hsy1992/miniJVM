@@ -255,6 +255,7 @@ class DataInputStream extends InputStream implements DataInput {
         if ((ch1 | ch2) < 0) {
              throw new EOFException();
         }
+        System.out.println("ch1="+ch1+"   ch2="+ch2);
         return (ch1 << 8) + (ch2 << 0);
     }
 
