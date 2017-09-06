@@ -37,6 +37,8 @@ extern "C" {
 #include <fcntl.h>
 #include <unistd.h>
 #include <sys/socket.h>
+#include <dirent.h>
+
 #define closesocket close
 #endif
 

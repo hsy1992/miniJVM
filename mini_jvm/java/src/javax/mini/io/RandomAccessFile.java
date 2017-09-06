@@ -25,12 +25,12 @@ public class RandomAccessFile extends File {
         if ("r".equals(pmode)) {
             this.mode = "rb";
         } else if ("rw".equals(pmode)) {
-            this.mode = "r+b";
+            this.mode = "w+b";
         } else if ("rws".equals(pmode)) {
-            this.mode = "r+b";
+            this.mode = "w+b";
             flush = true;
         } else if ("rwd".equals(pmode)) {
-            this.mode = "r+b";
+            this.mode = "w+b";
             flush = true;
         } else {
             this.mode = "rb";
