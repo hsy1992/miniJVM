@@ -35,7 +35,6 @@ public class RandomAccessFile extends File {
         } else {
             this.mode = "rb";
         }
-        System.out.println("mode:"+mode);
         filePointer = openFile(path.getBytes(), mode.getBytes());
     }
 
