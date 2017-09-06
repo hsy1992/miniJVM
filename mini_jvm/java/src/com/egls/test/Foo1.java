@@ -9,6 +9,7 @@ import com.sun.cldc.i18n.StreamReader;
 import com.sun.cldc.i18n.StreamWriter;
 import com.sun.cldc.i18n.mini.UTF_8_Reader;
 import com.sun.cldc.i18n.mini.UTF_8_Writer;
+import java.io.ByteArrayOutputStream;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
@@ -18,8 +19,10 @@ import java.util.Enumeration;
 import java.util.Hashtable;
 import java.util.Vector;
 import javax.cldc.io.Connector;
+import javax.cldc.io.ContentConnection;
 import javax.mini.io.File;
 import javax.mini.io.RandomAccessFile;
+import javax.mini.net.HttpConnection;
 import javax.mini.net.ServerSocket;
 import javax.mini.net.Socket;
 
@@ -231,11 +234,13 @@ public class Foo1 {
     }
 
     void t11() {
-        String a = "abc";
+        String a = "0123456789";
         String b = a;
-        a = a + "def";
-        System.out.println("a=" + a);
-        System.out.println("b=" + b);
+        a=a.substring(a.indexOf('2'),a.indexOf('7'));
+//        a = a + "0123456789";
+        System.out.println("" + a);
+        System.out.println("" + a.charAt(1));
+        System.out.println("" + a.indexOf('4', 1));
     }
 
     void t12() {
@@ -408,6 +413,48 @@ public class Foo1 {
         }
     }
 
+    byte[] getViaContentConnection(String url) throws IOException {
+        ContentConnection c = null;
+        DataInputStream dis = null;
+        byte[] data;
+        try {
+            c = (ContentConnection) Connector.open(url);
+            int len = (int) c.getLength();
+            dis = c.openDataInputStream();
+            if (len > 0) {
+                data = new byte[len];
+                dis.readFully(data);
+            } else {
+                ByteArrayOutputStream baos = new ByteArrayOutputStream();
+                int ch;
+                while ((ch = dis.read()) != -1) {
+
+                    baos.write(ch);
+                }
+                data = baos.toByteArray();
+            }
+        } finally {
+            if (dis != null) {
+                dis.close();
+            }
+            if (c != null) {
+                c.close();
+            }
+        }
+        return data;
+    }
+
+    void t18() {
+        try {
+            byte[] data = getViaContentConnection("http://baidu.com/");
+            for (int i = 0; i < data.length; i++) {
+                System.out.println((char) data[i]);
+            }
+        } catch (IOException ex) {
+//            System.out.println(ex.getMessage());
+        }
+    }
+
     public static void main() {
         Foo1 f = new Foo1();
 //        f.t1();
@@ -426,7 +473,8 @@ public class Foo1 {
 //        f.t14();
 //        f.t15();
 //        f.t16();
-        f.t17();
+//        f.t17();
+        f.t18();
         System.gc();
         System.gc();
     }

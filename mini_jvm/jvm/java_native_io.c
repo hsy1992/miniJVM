@@ -33,6 +33,7 @@ extern "C" {
 #define SHUT_RD SD_RECEIVE
 #define SHUT_WR SD_SEND
 #else
+
 #include <netdb.h>
 #include <fcntl.h>
 #include <unistd.h>
@@ -794,31 +795,31 @@ s32 javax_mini_io_File_listDir(Runtime *runtime, Class *clazz) {
 }
 
 static java_native_method method_net_table[] = {
-        {"javax/mini/net/protocol/socket/Protocol",       "open0",           javax_mini_net_socket_Protocol_open0},
-        {"javax/mini/net/protocol/socket/Protocol",       "readBuf",         javax_mini_net_socket_Protocol_readBuf},
-        {"javax/mini/net/protocol/socket/Protocol",       "readByte",        javax_mini_net_socket_Protocol_readByte},
-        {"javax/mini/net/protocol/socket/Protocol",       "writeBuf",        javax_mini_net_socket_Protocol_writeBuf},
-        {"javax/mini/net/protocol/socket/Protocol",       "writeByte",       javax_mini_net_socket_Protocol_writeByte},
-        {"javax/mini/net/protocol/socket/Protocol",       "available0",      javax_mini_net_socket_Protocol_available0},
-        {"javax/mini/net/protocol/socket/Protocol",       "close0",          javax_mini_net_socket_Protocol_close0},
-        {"javax/mini/net/protocol/socket/Protocol",       "setOption0",      javax_mini_net_socket_Protocol_setOption0},
-        {"javax/mini/net/protocol/serversocket/Protocol", "accept0",         javax_mini_net_serversocket_Protocol_accept0},
-        {"javax/mini/net/protocol/serversocket/Protocol", "close0",          javax_mini_net_serversocket_Protocol_close0},
-        {"javax/mini/net/protocol/serversocket/Protocol", "listen0",         javax_mini_net_serversocket_Protocol_listen0},
-        {"javax/mini/net/protocol/serversocket/Protocol", "open0",           javax_mini_net_serversocket_Protocol_open0},
-        {"javax/mini/net/protocol/serversocket/Protocol", "registerCleanup", javax_mini_net_serversocket_Protocol_registerCleanup},
-        {"javax/mini/net/protocol/serversocket/Protocol", "finalize",        javax_mini_net_serversocket_Protocol_finalize},
-        {"javax/mini/io/File",                            "openFile",        javax_mini_io_File_openFile},
-        {"javax/mini/io/File",                            "closeFile",       javax_mini_io_File_closeFile},
-        {"javax/mini/io/File",                            "read0",           javax_mini_io_File_read0},
-        {"javax/mini/io/File",                            "write0",          javax_mini_io_File_write0},
-        {"javax/mini/io/File",                            "readbuf",         javax_mini_io_File_readbuf},
-        {"javax/mini/io/File",                            "writebuf",        javax_mini_io_File_writebuf},
-        {"javax/mini/io/File",                            "seek0",           javax_mini_io_File_seek0},
-        {"javax/mini/io/File",                            "setLength0",      javax_mini_io_File_setLength0},
-        {"javax/mini/io/File",                            "flush0",          javax_mini_io_File_flush0},
-        {"javax/mini/io/File",                            "loadFD",          javax_mini_io_File_loadFD},
-        {"javax/mini/io/File",                            "listDir",         javax_mini_io_File_listDir},
+        {"javax/mini/net/protocol/socket/Protocol",       "open0",           "([BII)I",                             javax_mini_net_socket_Protocol_open0},
+        {"javax/mini/net/protocol/socket/Protocol",       "readBuf",         "(I[BII)I",                            javax_mini_net_socket_Protocol_readBuf},
+        {"javax/mini/net/protocol/socket/Protocol",       "readByte",        "(I)I",                                javax_mini_net_socket_Protocol_readByte},
+        {"javax/mini/net/protocol/socket/Protocol",       "writeBuf",        "(I[BII)I",                            javax_mini_net_socket_Protocol_writeBuf},
+        {"javax/mini/net/protocol/socket/Protocol",       "writeByte",       "(II)I",                               javax_mini_net_socket_Protocol_writeByte},
+        {"javax/mini/net/protocol/socket/Protocol",       "available0",      "(I)I",                                javax_mini_net_socket_Protocol_available0},
+        {"javax/mini/net/protocol/socket/Protocol",       "close0",          "(I)V",                                javax_mini_net_socket_Protocol_close0},
+        {"javax/mini/net/protocol/socket/Protocol",       "setOption0",      "(III)I",                              javax_mini_net_socket_Protocol_setOption0},
+        {"javax/mini/net/protocol/serversocket/Protocol", "accept0",         "(I)I",                                javax_mini_net_serversocket_Protocol_accept0},
+        {"javax/mini/net/protocol/serversocket/Protocol", "close0",          "(I)V",                                javax_mini_net_serversocket_Protocol_close0},
+        {"javax/mini/net/protocol/serversocket/Protocol", "listen0",         "(I)I",                                javax_mini_net_serversocket_Protocol_listen0},
+        {"javax/mini/net/protocol/serversocket/Protocol", "open0",           "([BI)I",                              javax_mini_net_serversocket_Protocol_open0},
+        {"javax/mini/net/protocol/serversocket/Protocol", "registerCleanup", "",                                    javax_mini_net_serversocket_Protocol_registerCleanup},
+        {"javax/mini/net/protocol/serversocket/Protocol", "finalize",        "",                                    javax_mini_net_serversocket_Protocol_finalize},
+        {"javax/mini/io/File",                            "openFile",        "([B[B)J",                             javax_mini_io_File_openFile},
+        {"javax/mini/io/File",                            "closeFile",       "(J)I",                                javax_mini_io_File_closeFile},
+        {"javax/mini/io/File",                            "read0",           "(J)I",                                javax_mini_io_File_read0},
+        {"javax/mini/io/File",                            "write0",          "(JI)I",                               javax_mini_io_File_write0},
+        {"javax/mini/io/File",                            "readbuf",         "(J[BII)I",                            javax_mini_io_File_readbuf},
+        {"javax/mini/io/File",                            "writebuf",        "(J[BII)I",                            javax_mini_io_File_writebuf},
+        {"javax/mini/io/File",                            "seek0",           "(JJ)I",                               javax_mini_io_File_seek0},
+        {"javax/mini/io/File",                            "setLength0",      "(JJ)I",                               javax_mini_io_File_setLength0},
+        {"javax/mini/io/File",                            "flush0",          "(J)I",                                javax_mini_io_File_flush0},
+        {"javax/mini/io/File",                            "loadFD",          "([BLjavax/mini/io/FileDescriptor;)I", javax_mini_io_File_loadFD},
+        {"javax/mini/io/File",                            "listDir",         "([B)[Ljava/lang/String;",             javax_mini_io_File_listDir},
 
 };
 

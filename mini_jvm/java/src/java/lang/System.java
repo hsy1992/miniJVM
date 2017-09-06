@@ -71,6 +71,7 @@ public static native String doubleToString(double val);
      *          time and midnight, January 1, 1970 UTC.
      */
     public static native long currentTimeMillis();
+    public static native long nanoTime();
 
     /**
      * Copies an array from the specified source array, beginning at the

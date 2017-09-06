@@ -246,8 +246,8 @@ s32 _class_method_info_destory(Class *clazz) {
                 jvm_free(ca->code);//info已被转换为converted_attribute
                 jvm_free(ca->exception_table);//info已被转换为converted_attribute
                 attr->converted_code = NULL;
-                if (ca->line_num_table) {
-                    lineNumTable_destory(ca->line_num_table);
+                if (ca->line_num_list) {
+                    lineNumTable_destory(ca->line_num_list);
                 }
             }
             jvm_free(attr->converted_code);

@@ -9,6 +9,7 @@
 typedef struct _java_native_method {
     c8 *clzname;
     c8 *methodname;
+    c8 *methodtype;
     java_native_fun func_pointer;
 } java_native_method;
 

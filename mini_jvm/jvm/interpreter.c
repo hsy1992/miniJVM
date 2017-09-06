@@ -398,10 +398,6 @@ s32 op_iconst_n(u8 **opCode, Runtime *runtime, s32 i) {
     return 0;
 }
 
-s32 op_aconst_null(u8 **opCode, Runtime *runtime) {
-    return op_iconst_n(opCode, runtime, 0);
-}
-
 s32 op_iconst_m1(u8 **opCode, Runtime *runtime) {
     return op_iconst_n(opCode, runtime, -1);
 }
@@ -434,6 +430,17 @@ s32 op_iconst_4(u8 **opCode, Runtime *runtime) {
 /* iconst_5 */
 s32 op_iconst_5(u8 **opCode, Runtime *runtime) {
     return op_iconst_n(opCode, runtime, 5);
+}
+
+s32 op_aconst_null(u8 **opCode, Runtime *runtime) {
+    StackFrame *stack = runtime->stack;
+
+    push_ref(stack, NULL);
+#if _JVM_DEBUG
+    printf("aconst_null: push %d into stack\n", 0);
+#endif
+    *opCode = *opCode + 1;
+    return 0;
 }
 
 s32 op_lconst_n(u8 **opCode, Runtime *runtime, s64 i) {
@@ -2944,7 +2951,7 @@ static ExceptionTable *find_exception_handler(Runtime *runtime, CodeAttribute *c
         if (offset >= (e + i)->start_pc
             && offset < (e + i)->end_pc) {
             ConstantClassRef *ccr = find_constant_classref(runtime->clazz, (e + i)->catch_type);
-            if (0 == utf8_equals(ccr->name, runtime->clazz->name))
+            if ((!(e + i)->catch_type) || utf8_equals(ccr->name, runtime->clazz->name))
                 return e + i;
         }
     }
@@ -2953,11 +2960,11 @@ static ExceptionTable *find_exception_handler(Runtime *runtime, CodeAttribute *c
 
 static s32 find_line_num(CodeAttribute *ca, s32 offset) {
     s32 i, j;
-    for (i = 0; i < ca->line_num_table->length; i++) {
-        LineNumberTable *lineTable = arraylist_get_value(ca->line_num_table, i);
+    for (i = 0; i < ca->line_num_list->length; i++) {
+        LineNumberTable *lineTable = arraylist_get_value(ca->line_num_list, i);
         for (j = 0; j < lineTable->line_number_table_length; j++) {
             line_number *node = (line_number *) (lineTable->table + (j * 4));
-            if (offset > node->start_pc) {
+            if (offset >= node->start_pc) {
                 if (j + 1 < lineTable->line_number_table_length) {
                     line_number *next_node = (line_number *) (lineTable->table + ((j + 1) * 4));
 
@@ -2965,7 +2972,7 @@ static s32 find_line_num(CodeAttribute *ca, s32 offset) {
                         return node->line_number;
                     }
                 } else {
-                    if (i + 1 == ca->line_num_table->length) {//最后一组了
+                    if (i + 1 == ca->line_num_list->length) {//最后一组了
                         return node->line_number;
                     }
                 }
@@ -3051,9 +3058,9 @@ s32 synchronized_lock_method(MethodInfo *method, Runtime *runtime) {
     //synchronized process
     if (method->access_flags & ACC_SYNCHRONIZED) {
         if (method->access_flags & ACC_STATIC) {
-            jthread_lock((MemoryBlock*)runtime->clazz, runtime);
+            jthread_lock((MemoryBlock *) runtime->clazz, runtime);
         } else {
-            jthread_lock(&((Instance*)runtime->localVariables->refer)->mb, runtime);
+            jthread_lock(&((Instance *) runtime->localVariables->refer)->mb, runtime);
         }
     }
 }
@@ -3064,7 +3071,7 @@ s32 synchronized_unlock_method(MethodInfo *method, Runtime *runtime) {
         if (method->access_flags & ACC_STATIC) {
             jthread_unlock(&runtime->clazz->mb, runtime);
         } else {
-            jthread_unlock(&((Instance*)runtime->localVariables->refer)->mb, runtime);
+            jthread_unlock(&((Instance *) runtime->localVariables->refer)->mb, runtime);
         }
     }
 }
@@ -3082,11 +3089,14 @@ s32 execute_method(MethodInfo *method, Runtime *pruntime, Class *clazz) {
 
     runtime.methodInfo = method;
     runtime.clazz = clazz;
-
-
+    s32 stackSize;
+//    if (utf8_equals_c(method->name, "sendRequest")) {
+//        int debug = 1;
+//    }
     if (method->access_flags & ACC_NATIVE) {//本地方法
         localvar_init(&runtime, method->para_count + 1);//可能有非静态本地方法调用，因此+1
         stack2localvar(method, pruntime, &runtime);
+        stackSize = pruntime->stack->size;
         //缓存调用本地方法
         if (!method->native_func) { //把本地方法找出来缓存
             method->native_func = find_native_method(utf8_cstr(clazz->name), utf8_cstr(method->name),
@@ -3102,7 +3112,9 @@ s32 execute_method(MethodInfo *method, Runtime *pruntime, Class *clazz) {
             CodeAttribute *ca = (CodeAttribute *) method->attributes[j].converted_code;
             localvar_init(&runtime, ca->max_locals + 1);
             stack2localvar(method, pruntime, &runtime);
+            stackSize = pruntime->stack->size;
             synchronized_lock_method(method, &runtime);
+
 #if _JVM_DEBUG_BYTECODE_DUMP
             printf("---------------------------------\n");
             printf("code dump\n");
@@ -3110,7 +3122,6 @@ s32 execute_method(MethodInfo *method, Runtime *pruntime, Class *clazz) {
             printf("---------------------------------\n");
 #endif
 #if _JVM_DEBUG
-            s32 stackSize = pruntime->stack->size;
             printf("------------------------------------------------  %s.%s  start \n", utf8_cstr(clazz->name),
                    utf8_cstr(method->name));
 #endif
@@ -3144,6 +3155,11 @@ s32 execute_method(MethodInfo *method, Runtime *pruntime, Class *clazz) {
                 if (i == RUNTIME_STATUS_RETURN) break;
                 else if (i == RUNTIME_STATUS_EXCEPTION) {
                     __refer ref = pop_ref(runtime.stack);
+                    //printf("stack size:%d , enter size:%d", runtime.stack->size, stackSize);
+                    if (runtime.stack->size < stackSize) {
+                        int debug = 1;
+                    }
+                    runtime.stack->size = stackSize;//恢复堆栈大小
                     Instance *ins = (Instance *) ref;
                     s32 lineNum = find_line_num(ca, pc - ca->code);
                     printf("   at %s.%s(%s.java:%d)\n",
@@ -3159,6 +3175,10 @@ s32 execute_method(MethodInfo *method, Runtime *pruntime, Class *clazz) {
                     } else {
                         printf("Exception : %s\n", utf8_cstr(ins->mb.obj_of_clazz->name));
                         pc = (ca->code + et->handler_pc);
+                        ret = RUNTIME_STATUS_NORMAL;
+                        if (et->catch_type == 0) {
+                            push_ref(runtime.stack, ref);
+                        }
                     }
                 }
             } while (1);

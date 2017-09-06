@@ -266,8 +266,14 @@ public final class String {
      * @exception IndexOutOfBoundsException if the <code>index</code> argument
      * is negative or not less than the length of this string.
      */
-    public native char charAt(int index);
+    public char charAt(int index){
+        if((index < 0) || (index >= count)){
+            throw new ArrayIndexOutOfBoundsException();
+        }
+        return charAt0(index);
+    }
 
+    public native char charAt0(int index);
     /**
      * ****
      * public char charAt(int index) { if ((index < 0) || (index >= count)) {

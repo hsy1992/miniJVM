@@ -101,6 +101,7 @@ public class Protocol implements ConnectionBaseInterface, StreamConnection, Sock
         String hostname = name.substring(2, i);
         int port;
         try {
+            System.out.println(name+","+i+","+name.substring(i + 1));
             port = Integer.parseInt(name.substring(i + 1));
         } catch (NumberFormatException e) {
             throw new IOException( /* #ifdef VERBOSE_EXCEPTIONS */ /// skipped                       "bad socket connection name: bad port"

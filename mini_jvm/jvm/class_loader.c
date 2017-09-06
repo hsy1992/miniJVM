@@ -226,7 +226,7 @@ s32 convert_to_code_attribute(CodeAttribute *ca, AttributeInfo *attr, Class *cla
         s2c.c0 = attr->info[info_p++];
         ((u16 *) ca->exception_table)[i] = s2c.s;
     }
-    ca->line_num_table = arraylist_create(0);
+    ca->line_num_list = arraylist_create(0);
     s2c.c1 = attr->info[info_p++];
     s2c.c0 = attr->info[info_p++];
     s32 attr_count = (u16) s2c.s;
@@ -242,7 +242,7 @@ s32 convert_to_code_attribute(CodeAttribute *ca, AttributeInfo *attr, Class *cla
         //转行号表
         if (utf8_equals_c(get_utf8_string(clazz, attribute_name_index), "LineNumberTable")) {
             LineNumberTable *lineTable = jvm_alloc(sizeof(LineNumberTable));
-            arraylist_append(ca->line_num_table, lineTable);
+            arraylist_append(ca->line_num_list, lineTable);
             lineTable->attribute_name_index = attribute_name_index;
             lineTable->attribute_length = attribute_lenth;
             s2c.c1 = attr->info[info_p++];
@@ -250,7 +250,7 @@ s32 convert_to_code_attribute(CodeAttribute *ca, AttributeInfo *attr, Class *cla
             lineTable->line_number_table_length = (u16) s2c.s;
             lineTable->table = jvm_alloc(sizeof(u32) * lineTable->line_number_table_length);
             s32 j;
-            for (j = 0; j < lineTable->line_number_table_length; j++) {
+            for (j = 0; j < lineTable->line_number_table_length ; j++) {
                 s2c.c1 = attr->info[info_p++];
                 s2c.c0 = attr->info[info_p++];
                 setFieldShort(lineTable->table + (j * sizeof(u32)), s2c.s);

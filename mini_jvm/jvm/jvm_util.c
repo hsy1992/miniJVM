@@ -684,19 +684,6 @@ Instance *jstring_create(Utf8String *src, Runtime *runtime) {
     return jstring;
 }
 
-Instance *exception_create(s32 exception_type, Runtime *runtime) {
-#if _JVM_DEBUG
-    printf("create exception : %s\n", exception_class_name[exception_type]);
-#endif
-    Utf8String *clsName = utf8_create_c(exception_class_name[exception_type]);
-    Class *clazz = classes_load_get(clsName, runtime);
-    Instance *ins = instance_create(clazz);
-    instance_init(ins, runtime);
-    garbage_refer(ins, NULL);
-    utf8_destory(clsName);
-    return ins;
-}
-
 s32 jstring_get_count(Instance *jstr) {
     return getFieldInt(getFieldPtr_byName(jstr, STR_CLASS_JAVA_LANG_STRING, STR_FIELD_COUNT, "I"));
 }
@@ -722,6 +709,10 @@ Instance *jstring_get_value_array(Instance *jstr) {
 s16 jstring_char_at(Instance *jstr, s32 index) {
     Instance *ptr = jstring_get_value_array(jstr);
     s32 offset = jstring_get_offset(jstr);
+    s32 count = jstring_get_count(jstr);
+    if (index >= count) {
+        return -1;
+    }
     if (ptr && ptr->arr_body) {
         u16 *jchar_arr = (u16 *) ptr->arr_body;
         return jchar_arr[offset + index];
@@ -736,10 +727,11 @@ s32 jstring_index_of(Instance *jstr, uni_char ch, s32 startAt) {
     if (ptr && ptr->arr_body) {
         u16 *jchar_arr = (u16 *) ptr->arr_body;
         s32 count = jstring_get_count(jstr);
+        s32 offset = jstring_get_offset(jstr);
         s32 i;
         for (i = 0; i < count; i++) {
-            if (jchar_arr[i + startAt] == ch) {
-                return i;
+            if (jchar_arr[i + offset + startAt] == ch) {
+                return i + startAt;
             }
         }
     }
@@ -757,20 +749,38 @@ s32 jstring_equals(Instance *jstr1, Instance *jstr2) {
     Instance *arr1 = jstring_get_value_array(jstr1);//取得 String[] value
     Instance *arr2 = jstring_get_value_array(jstr2);//取得 String[] value
     if (arr1 && arr2 && arr1->arr_body && arr2->arr_body) {
-        if (arr1->arr_length != arr2->arr_length) {
+        s32 count1 = jstring_get_count(jstr1);
+        s32 offset1 = jstring_get_offset(jstr1);
+        s32 count2 = jstring_get_count(jstr2);
+        s32 offset2 = jstring_get_offset(jstr2);
+        if (count1 != count2) {
             return 0;
         }
         u16 *jchar_arr1 = (u16 *) arr1->arr_body;
         u16 *jchar_arr2 = (u16 *) arr2->arr_body;
         s32 i;
-        for (i = 0; i < arr1->arr_length; i++) {
-            if (jchar_arr1[i] != jchar_arr2[i]) {
+        for (i = 0; i < count1; i++) {
+            if (jchar_arr1[i + offset1] != jchar_arr2[i + offset2]) {
                 return 0;
             }
         }
         return 1;
     }
     return 0;
+}
+//===============================    例外  ==================================
+
+Instance *exception_create(s32 exception_type, Runtime *runtime) {
+#if _JVM_DEBUG
+    printf("create exception : %s\n", exception_class_name[exception_type]);
+#endif
+    Utf8String *clsName = utf8_create_c(exception_class_name[exception_type]);
+    Class *clazz = classes_load_get(clsName, runtime);
+    Instance *ins = instance_create(clazz);
+    instance_init(ins, runtime);
+    garbage_refer(ins, NULL);
+    utf8_destory(clsName);
+    return ins;
 }
 
 //===============================    实例操作  ==================================

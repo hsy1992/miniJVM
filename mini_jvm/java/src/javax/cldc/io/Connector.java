@@ -279,8 +279,7 @@ public class Connector {
                               "." + protocol + ".Protocol");
 
             /* Construct a new instance of the protocol */
-            ConnectionBaseInterface uc =
-                (ConnectionBaseInterface)clazz.newInstance();
+            ConnectionBaseInterface uc =(ConnectionBaseInterface)clazz.newInstance();
 
             /* Open the connection, and return it */
             return uc.openPrim(name, mode, timeouts);

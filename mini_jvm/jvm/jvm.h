@@ -169,7 +169,7 @@ enum {
     JVM_EXCEPTION_NULLPOINTER,
     JVM_EXCEPTION_ILLEGALARGUMENT,
     JVM_EXCEPTION_CLASSCASTEXCEPTION,
-    JVM_EXCEPTION_ARRAYINDEXOUTOFBOUNDS,
+    JVM_EXCEPTION_INSTANTIATIONEXCEPTION,
 };
 
 static char *exception_class_name[] = {
@@ -184,6 +184,7 @@ static char *exception_class_name[] = {
         "java.lang.IllegalArgumentException",
         "java.lang.ClassCastException",
         "java.lang.ArrayIndexOutOfBoundsException",
+        "java.lang.InstantiationException",
 };
 
 static char *STR_CLASS_JAVA_LANG_STRING = "java/lang/String";
@@ -561,7 +562,7 @@ typedef struct _CodeAttribute {
     u8 *code; // [code_length];
     u16 exception_table_length;
     ExceptionTable *exception_table; //[exception_table_length];
-    ArrayList *line_num_table;
+    ArrayList *line_num_list;
 
 #if 0
     u16 attributes_count;

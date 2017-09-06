@@ -184,14 +184,13 @@ void class_clinit(Class *clazz, Runtime *runtime) {
 u8 instance_of(Class *clazz, Instance *ins) {
     Class *ins_of_class = ins->mb.obj_of_clazz;
     while (ins_of_class) {
-        if (ins_of_class == clazz) {
+        if (ins_of_class == clazz||isSonOfInterface(clazz, ins_of_class->mb.obj_of_clazz)) {
             return 1;
         }
         ins_of_class = getSuperClass(ins_of_class);
     }
 
-    return isSonOfInterface(clazz, ins->mb.obj_of_clazz);
-//    return 0;
+    return 0;
 }
 
 u8 isSonOfInterface(Class *clazz, Class *son) {
