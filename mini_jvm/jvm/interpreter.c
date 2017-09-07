@@ -2163,13 +2163,14 @@ s32 op_checkcast(u8 **opCode, Runtime *runtime) {
     s32 typeIdx = s2c.s;
     s32 checkok = 0;
     if (ins->mb.type == MEM_TYPE_INS) {
-
         Class *cl = getClassByConstantClassRef(runtime->clazz, typeIdx);
         if (instance_of(cl, ins)) {
             checkok = 1;
         }
-    } else {
-        if (data_type_bytes[ins->arr_data_type] == 4) {
+    } else if (ins->mb.type == MEM_TYPE_ARR) {
+        Utf8String *utf = find_constant_classref(runtime->clazz, typeIdx)->name;
+        u8 ch = utf8_char_at(utf, 1);
+        if (ch == getDataTypeFlag(ins->arr_data_type)) {
             checkok = 1;
         }
     }
@@ -3162,11 +3163,11 @@ s32 execute_method(MethodInfo *method, Runtime *pruntime, Class *clazz) {
 
                     Instance *ins = (Instance *) ref;
                     s32 lineNum = find_line_num(ca, pc - ca->code);
-//                    printf("   at %s.%s(%s.java:%d)\n",
-//                           utf8_cstr(clazz->name), utf8_cstr(method->name),
-//                           utf8_cstr(clazz->name),
-//                           lineNum
-//                    );
+                    printf("   at %s.%s(%s.java:%d)\n",
+                           utf8_cstr(clazz->name), utf8_cstr(method->name),
+                           utf8_cstr(clazz->name),
+                           lineNum
+                    );
                     ExceptionTable *et = find_exception_handler(&runtime, ins, ca, pc - ca->code, ref);
                     if (et == NULL) {
                         ret = RUNTIME_STATUS_EXCEPTION;

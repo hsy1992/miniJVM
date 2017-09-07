@@ -127,11 +127,13 @@ s32 setOption(s32 sockfd, s32 opType, s32 opValue) {
 
 s32 sock_recv(s32 sockfd, c8 *buf, s32 count) {
 
+
     s32 len = recv(sockfd, buf, count, 0);
 
     if (len == 0) {//如果是正常断开，返回-1
         len = -1;
     } else if (len == -1) {//如果发生错误
+        len = -1;
 #ifdef __WIN32__
         if (WSAEWOULDBLOCK == WSAGetLastError()) {//但是如果是非阻塞端口，说明连接仍正常
             //printf("sc send error client time = %f ;\n", (f64)clock());
@@ -146,7 +148,6 @@ s32 sock_recv(s32 sockfd, c8 *buf, s32 count) {
         //            LOGE("recv error no: %x\n", errno);
 //            __android_log_write(ANDROID_LOG_ERROR, "socket errno", strerror(errno));
 #endif
-        len = -1;
     }
     return len;
 }
