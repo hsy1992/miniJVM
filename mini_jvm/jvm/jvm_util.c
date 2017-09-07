@@ -749,6 +749,7 @@ s32 jstring_equals(Instance *jstr1, Instance *jstr2) {
     Instance *arr1 = jstring_get_value_array(jstr1);//取得 String[] value
     Instance *arr2 = jstring_get_value_array(jstr2);//取得 String[] value
     s32 count1 = 0, offset1 = 0, count2 = 0, offset2 = 0;
+    //0长度字符串可能value[] 是空值，也可能不是空值但count是0
     if (arr1) {
         count1 = jstring_get_count(jstr1);
         offset1 = jstring_get_offset(jstr1);
