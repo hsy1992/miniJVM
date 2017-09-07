@@ -22,9 +22,13 @@ import javax.cldc.io.Connector;
 import javax.cldc.io.ContentConnection;
 import javax.mini.io.File;
 import javax.mini.io.RandomAccessFile;
-import javax.mini.net.HttpConnection;
 import javax.mini.net.ServerSocket;
 import javax.mini.net.Socket;
+import javax.mini.util.ArrayList;
+import javax.mini.util.HashMap;
+import javax.mini.util.Iterator;
+import javax.mini.util.List;
+import javax.mini.util.Map;
 
 /**
  *
@@ -236,13 +240,13 @@ public class Foo1 {
     void t11() {
         String a = "0123456789";
         String b = a;
-        a=a.substring(a.indexOf('2'),a.indexOf('7'));
+        a = a.substring(a.indexOf('2'), a.indexOf('7'));
 //        a = a + "0123456789";
         System.out.println("" + a);
         System.out.println("" + a.charAt(1));
         System.out.println("" + a.indexOf('4', 1));
-        String s1="";
-        String s2="";
+        String s1 = "";
+        String s2 = "";
         System.out.println(s1.equals(s2));
     }
 
@@ -459,6 +463,25 @@ public class Foo1 {
         System.out.println();
     }
 
+    void t19() {
+        List list = new ArrayList();
+        list.add(1);
+        list.add("str");
+        for (Iterator it = list.iterator(); it.hasNext();) {
+            Object o = it.next();
+            System.out.println("list[i]=" + o);
+        }
+
+        Map map = new HashMap();
+        map.put(3L, "Long");
+        map.put(4.5f, "Float");
+        for (Iterator it = map.keySet().iterator(); it.hasNext();) {
+            Object key = it.next();
+            Object val = map.get(key);
+            System.out.println(key + ":" + val);
+        }
+    }
+
     public static void main() {
         Foo1 f = new Foo1();
 //        f.t1();
@@ -478,7 +501,8 @@ public class Foo1 {
 //        f.t15();
 //        f.t16();
 //        f.t17();
-        f.t18();
+//        f.t18();
+        f.t19();
         System.gc();
         System.gc();
     }
