@@ -2089,7 +2089,6 @@ public class Protocol extends ConnectionBaseAdapter
         for (;;) {
             try {
                 line = readLine(in);
-                System.out.println("recv: \""+line+"\"");
             } catch (IOException ioe) {
                 throw new IOException(ioe.getMessage());
             }

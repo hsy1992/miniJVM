@@ -739,7 +739,7 @@ s32 jstring_index_of(Instance *jstr, uni_char ch, s32 startAt) {
 }
 
 s32 jstring_equals(Instance *jstr1, Instance *jstr2) {
-    if (!jstr1 && !jstr2) {
+    if (!jstr1 && !jstr2) { //两个都是null
         return 1;
     } else if (!jstr1) {
         return 0;
@@ -748,11 +748,21 @@ s32 jstring_equals(Instance *jstr1, Instance *jstr2) {
     }
     Instance *arr1 = jstring_get_value_array(jstr1);//取得 String[] value
     Instance *arr2 = jstring_get_value_array(jstr2);//取得 String[] value
+    s32 count1 = 0, offset1 = 0, count2 = 0, offset2 = 0;
+    if (arr1) {
+        count1 = jstring_get_count(jstr1);
+        offset1 = jstring_get_offset(jstr1);
+    }
+    if (arr2) {
+        count2 = jstring_get_count(jstr2);
+        offset2 = jstring_get_offset(jstr2);
+    }
+    if (count1 != count2) {
+        return 0;
+    } else if (count1 == 0 && count2 == 0) {
+        return 1;
+    }
     if (arr1 && arr2 && arr1->arr_body && arr2->arr_body) {
-        s32 count1 = jstring_get_count(jstr1);
-        s32 offset1 = jstring_get_offset(jstr1);
-        s32 count2 = jstring_get_count(jstr2);
-        s32 offset2 = jstring_get_offset(jstr2);
         if (count1 != count2) {
             return 0;
         }

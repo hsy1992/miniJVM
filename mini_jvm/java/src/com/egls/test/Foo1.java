@@ -241,6 +241,9 @@ public class Foo1 {
         System.out.println("" + a);
         System.out.println("" + a.charAt(1));
         System.out.println("" + a.indexOf('4', 1));
+        String s1="";
+        String s2="";
+        System.out.println(s1.equals(s2));
     }
 
     void t12() {
@@ -448,11 +451,12 @@ public class Foo1 {
         try {
             byte[] data = getViaContentConnection("http://baidu.com/");
             for (int i = 0; i < data.length; i++) {
-                System.out.println((char) data[i]);
+                System.out.print((char) data[i]);
             }
         } catch (IOException ex) {
 //            System.out.println(ex.getMessage());
         }
+        System.out.println();
     }
 
     public static void main() {
