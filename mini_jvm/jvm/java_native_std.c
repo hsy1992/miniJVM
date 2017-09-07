@@ -604,9 +604,9 @@ s32 java_lang_Thread_sleep(Runtime *runtime, Class *clazz) {
     Long2Double l2d;
     l2d.i2l.i1 = (runtime->localVariables + 0)->integer;
     l2d.i2l.i0 = (runtime->localVariables + 1)->integer;
-//#if _JVM_DEBUG
+#if _JVM_DEBUG
     printf("java_lang_Thread_sleep %lld\n", l2d.l);
-//#endif
+#endif
     runtime->threadInfo->thread_running = 0;
     threadSleep(l2d.l);
     garbage_thread_lock();//may be garbage is collecting this time

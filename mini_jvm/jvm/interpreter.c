@@ -2941,7 +2941,8 @@ s32 find_instruct_offset(u8 op) {
 }
 
 
-static ExceptionTable *find_exception_handler(Runtime *runtime, CodeAttribute *ca, s32 offset, __refer exception_ref) {
+static ExceptionTable *
+find_exception_handler(Runtime *runtime, Instance *exception, CodeAttribute *ca, s32 offset, __refer exception_ref) {
     Instance *ins = (Instance *) exception_ref;
 
     s32 i;
@@ -2951,7 +2952,7 @@ static ExceptionTable *find_exception_handler(Runtime *runtime, CodeAttribute *c
         if (offset >= (e + i)->start_pc
             && offset < (e + i)->end_pc) {
             ConstantClassRef *ccr = find_constant_classref(runtime->clazz, (e + i)->catch_type);
-            if ((!(e + i)->catch_type) || utf8_equals(ccr->name, runtime->clazz->name))
+            if ((!(e + i)->catch_type) || utf8_equals(ccr->name, exception->mb.obj_of_clazz->name))
                 return e + i;
         }
     }
@@ -3155,30 +3156,25 @@ s32 execute_method(MethodInfo *method, Runtime *pruntime, Class *clazz) {
                 if (i == RUNTIME_STATUS_RETURN) break;
                 else if (i == RUNTIME_STATUS_EXCEPTION) {
                     __refer ref = pop_ref(runtime.stack);
-                    //printf("stack size:%d , enter size:%d", runtime.stack->size, stackSize);
-                    if (runtime.stack->size < stackSize) {
-                        int debug = 1;
-                    }
+                    //printf("stack size:%d , enter size:%d\n", runtime.stack->size, stackSize);
                     runtime.stack->size = stackSize;//恢复堆栈大小
+                    push_ref(runtime.stack, ref);
+
                     Instance *ins = (Instance *) ref;
                     s32 lineNum = find_line_num(ca, pc - ca->code);
-                    printf("   at %s.%s(%s.java:%d)\n",
-                           utf8_cstr(clazz->name), utf8_cstr(method->name),
-                           utf8_cstr(clazz->name),
-                           lineNum
-                    );
-                    ExceptionTable *et = find_exception_handler(&runtime, ca, pc - ca->code, ref);
+//                    printf("   at %s.%s(%s.java:%d)\n",
+//                           utf8_cstr(clazz->name), utf8_cstr(method->name),
+//                           utf8_cstr(clazz->name),
+//                           lineNum
+//                    );
+                    ExceptionTable *et = find_exception_handler(&runtime, ins, ca, pc - ca->code, ref);
                     if (et == NULL) {
-                        push_ref(runtime.stack, ref);
                         ret = RUNTIME_STATUS_EXCEPTION;
                         break;
                     } else {
-                        printf("Exception : %s\n", utf8_cstr(ins->mb.obj_of_clazz->name));
+                        //printf("Exception : %s\n", utf8_cstr(ins->mb.obj_of_clazz->name));
                         pc = (ca->code + et->handler_pc);
                         ret = RUNTIME_STATUS_NORMAL;
-                        if (et->catch_type == 0) {
-                            push_ref(runtime.stack, ref);
-                        }
                     }
                 }
             } while (1);

@@ -13,6 +13,42 @@ void destoryAllClasses(hmap_t classes) {
     hashtable_destory(classes);
 }
 
+void constructMainThread(Runtime *runtime) {
+
+    Class *thread_clazz = classes_load_get_c("java/lang/Thread", runtime);
+    //为主线程创建Thread实例
+    Instance *main_thread = instance_create(thread_clazz);
+    //pthread_t pthread = pthread_self();
+    runtime->threadInfo->jthread = main_thread;
+    runtime->threadInfo->thread_running = 1;
+    instance_init(main_thread, runtime);//必须放在最好，初始化时需要用到前面的赋值
+
+    arraylist_append(thread_list, runtime);
+    jthread_set_threadq_value(main_thread, runtime);
+}
+
+void startJdwp(Runtime *runtime) {
+    Utf8String *clsName = utf8_create_c("javax/mini/jdwp/JdwpManager");
+    Utf8String *methodName = utf8_create_c("startJdwp");
+    Utf8String *methodType = utf8_create_c("()Ljavax/mini/jdwp/DebugServer;");
+
+    Class *jdwp = classes_load_get(clsName, runtime);
+    if (jdwp) {
+        MethodInfo *method = find_methodInfo_by_name(clsName, methodName, methodType);
+        if (method) {
+            localvar_init(runtime, method->para_count + 1);
+            execute_method(method, runtime, jdwp);
+            //返回值留在栈中，防止被垃圾回收
+            StackEntry entry;
+            peek_entry(runtime->stack, &entry, runtime->stack->size - 1);
+            jdwp_jthread = (Instance *) entry_2_refer(&entry);
+        }
+    }
+    utf8_destory(clsName);
+    utf8_destory(methodName);
+    utf8_destory(methodType);
+}
+
 s32 execute(c8 *p_classpath, c8 *p_mainclass, s32 argc, c8 **argv) {
 
 #if _JVM_DEBUG_PROFILE
@@ -68,6 +104,7 @@ s32 execute(c8 *p_classpath, c8 *p_mainclass, s32 argc, c8 **argv) {
         if (clazz->status != CLASS_STATUS_CLINITED)class_clinit(clazz, &runtime);//初始化
     }
 
+
     Class *clazz = classes_get(mainclass);
 
     s32 ret = 0;
@@ -83,26 +120,20 @@ s32 execute(c8 *p_classpath, c8 *p_mainclass, s32 argc, c8 **argv) {
 
         Utf8String *methodName = utf8_create_c("main");
         Utf8String *methodType = utf8_create_c("([Ljava/lang/String;)V");
-        Instance arr;
-        memset(&arr, 0, sizeof(Instance));
-        push_ref(runtime.stack, (__refer) &arr);//main(String[])参数
+//        Instance arr;
+//        memset(&arr, 0, sizeof(Instance));
+//        push_ref(runtime.stack, (__refer) &arr);//main(String[])参数
 
         MethodInfo *main = find_methodInfo_by_name(mainclass, methodName, methodType);
         if (main) {
-            Class *thread_clazz = classes_load_get_c("java/lang/Thread", &runtime);
-            //为主线程创建Thread实例
-            Instance *main_thread = instance_create(thread_clazz);
-            //pthread_t pthread = pthread_self();
-            runtime.threadInfo->jthread = main_thread;
-            runtime.threadInfo->thread_running = 1;
-            instance_init(main_thread, &runtime);//必须放在最好，初始化时需要用到前面的赋值
-            s64 start = currentTimeMillis();
-            arraylist_append(thread_list, &runtime);
-            jthread_set_threadq_value(main_thread, &runtime);
-
+            constructMainThread(&runtime);
+            //启动调试器
+            startJdwp(&runtime);
+            //启动垃圾回收
             _garbage_thread_pause = 0;
+
             //准备参数
-            localvar_init(&runtime, main->paraType->length + 1);
+            localvar_init(&runtime, main->para_count + 1);
             s32 count = argc;
             Long2Double l2d;
             s32 bytes = data_type_bytes[DATATYPE_REFERENCE];
@@ -116,6 +147,7 @@ s32 execute(c8 *p_classpath, c8 *p_mainclass, s32 argc, c8 **argv) {
                 utf8_destory(utfs);
             }
             push_ref(runtime.stack, arr);
+            s64 start = currentTimeMillis();
             printf("\n\n\n\n\n\n================================= main start ================================\n");
             //调用主方法
             ret = execute_method(main, &runtime, clazz);

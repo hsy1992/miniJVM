@@ -490,6 +490,15 @@ s32 jthread_wait(MemoryBlock *ins, Runtime *runtime) {
     return 0;
 }
 
+
+s32 jthread_suspent(MemoryBlock *ins, Runtime *pruntime) {
+//    if (ins == NULL)return -1;
+//    __refer ref=jthread_get_threadq_value(ins);
+//    Runtime * runtime=(Runtime*)ref;
+//    pthread_suspend(runtime->threadInfo->);
+    return 0;
+}
+
 s32 jthread_waitTime(MemoryBlock *ins, Runtime *runtime, long waitms) {
     if (ins == NULL)return -1;
     if (!ins->thread_lock) {

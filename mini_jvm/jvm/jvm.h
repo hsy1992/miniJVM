@@ -306,6 +306,7 @@ enum {
 //======================= global var =============================
 
 extern Class *JVM_CLASS;
+extern Instance *jdwp_jthread;
 /**
  * key =  package+classname
  * value =  class_ptr
