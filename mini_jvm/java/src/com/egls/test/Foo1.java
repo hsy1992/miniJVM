@@ -18,6 +18,8 @@ import java.util.Calendar;
 import java.util.Enumeration;
 import java.util.Hashtable;
 import java.util.Vector;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.cldc.io.Connector;
 import javax.cldc.io.ContentConnection;
 import javax.mini.io.File;
@@ -479,6 +481,10 @@ public class Foo1 {
             Object key = it.next();
             Object val = map.get(key);
             System.out.println(key + ":" + val);
+        }
+        try {
+            Thread.sleep(100000);
+        } catch (InterruptedException ex) {
         }
     }
 
