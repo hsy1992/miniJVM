@@ -65,8 +65,11 @@ public class DebugServer {
                     for (Enumeration e = clients.elements(); e.hasMoreElements();) {
                         DebugClient dc = (DebugClient) e.nextElement();
                         dc.process();
-                        clients.removeElement(dc);
+                        if (dc.isClosed()) {
+                            clients.removeElement(dc);
+                        }
                     }
+                    Thread.sleep(1000);
                 } catch (Exception e) {
                     System.out.println(e);
                 }

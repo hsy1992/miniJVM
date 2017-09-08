@@ -56,7 +56,7 @@ public class Session {
     static final int PKG_BYTESSIZE_LEN = 4;// 包 长度定义 为几个字节
     byte[] tmpRbuf = new byte[256];
 
-    int lenNeed = 0;
+    int lengthNeed = 0;
     byte[] lengthBuf = new byte[4];
     int rcvNeed = 0;
     ByteArrayOutputStream rcvBuf = new ByteArrayOutputStream();
@@ -65,25 +65,26 @@ public class Session {
 
         while (true) {// 循环接收多个数据包
             if (rcvNeed == 0) {
-                if (lenNeed == 0) {
-                    lenNeed = PKG_BYTESSIZE_LEN;
+                if (lengthNeed == 0) {
+                    lengthNeed = PKG_BYTESSIZE_LEN;
                 }
                 // 取长度
-                int r = conn.read(lengthBuf, PKG_BYTESSIZE_LEN - lenNeed, lenNeed);
+                int r = conn.read(lengthBuf, PKG_BYTESSIZE_LEN - lengthNeed, lengthNeed);
                 if (r < 0) {
                     throw new IOException("read pkg len error");
                 } else if (r == 0) {
                     return;
                 } else {
-                    lenNeed -= r;
-                    if (lenNeed == 0) {
+                    lengthNeed -= r;
+                    if (lengthNeed == 0) {
                         rcvNeed = ((lengthBuf[0] & 0xff) << 24) | ((lengthBuf[1] & 0xff) << 16) | ((lengthBuf[2] & 0xff) << 8) | (lengthBuf[3] & 0xff);
                         rcvBuf.reset();
                     }
                 }
             }
             if (rcvNeed > 0) {
-                int r = conn.read(tmpRbuf, 0, rcvNeed);
+                int copy = rcvNeed < tmpRbuf.length ? rcvNeed : tmpRbuf.length;
+                int r = conn.read(tmpRbuf, 0, copy);
                 if (r < 0) {
                     throw new IOException("read pkg error");
                 } else if (r == 0) {
@@ -97,6 +98,7 @@ public class Session {
                         if (firstRead) {
                             if (handshake.equals(new String(b))) {
                                 putPkg(b);
+                                System.out.println("handshake");
                                 firstRead = false;
                             } else {
                                 throw new IOException("none jdwp connection.");
@@ -125,6 +127,7 @@ public class Session {
                 synchronized (spool) {
                     if (!spool.isEmpty()) {
                         sndBuf = (byte[]) spool.removeFirst();
+                        print(sndBuf);
                     } else {
                         break;
                     }
@@ -138,7 +141,7 @@ public class Session {
                     break;
                 } else {
                     sent += w;
-                    if (sent == 0) {
+                    if (sent == sndBuf.length) {
                         sndBuf = null;
                     }
                 }

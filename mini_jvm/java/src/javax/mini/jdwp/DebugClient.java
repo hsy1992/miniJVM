@@ -20,6 +20,7 @@ public class DebugClient {
 
     public DebugClient(Socket psock) {
         sock = psock;
+        sock.setOption(Socket.OP_TYPE_NON_BLOCK, Socket.OP_VAL_NON_BLOCK);
         session = new Session(sock);
     }
 
@@ -30,6 +31,7 @@ public class DebugClient {
             while ((data = session.getPkg()) != null) {
                 Session.print(data);
             }
+            System.out.println("client process.");
         } catch (Exception e) {
             closed = true;
             System.out.println(e);
