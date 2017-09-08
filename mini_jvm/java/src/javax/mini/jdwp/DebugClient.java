@@ -31,7 +31,7 @@ public class DebugClient {
             while ((data = session.getPkg()) != null) {
                 Session.print(data);
             }
-            System.out.println("client process.");
+            //System.out.println("client process.");
         } catch (Exception e) {
             closed = true;
             System.out.println(e);

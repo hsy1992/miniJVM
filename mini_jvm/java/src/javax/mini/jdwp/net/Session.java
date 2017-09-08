@@ -78,7 +78,9 @@ public class Session {
                     lengthNeed -= r;
                     if (lengthNeed == 0) {
                         rcvNeed = ((lengthBuf[0] & 0xff) << 24) | ((lengthBuf[1] & 0xff) << 16) | ((lengthBuf[2] & 0xff) << 8) | (lengthBuf[3] & 0xff);
+                        rcvNeed -= 4;
                         rcvBuf.reset();
+                        rcvBuf.write(lengthBuf);
                     }
                 }
             }
@@ -94,11 +96,9 @@ public class Session {
                     rcvNeed -= r;
                     if (rcvNeed == 0) {
                         byte[] b = rcvBuf.toByteArray();
-                        print(b);
                         if (firstRead) {
                             if (handshake.equals(new String(b))) {
                                 putPkg(b);
-                                System.out.println("handshake");
                                 firstRead = false;
                             } else {
                                 throw new IOException("none jdwp connection.");
@@ -127,7 +127,6 @@ public class Session {
                 synchronized (spool) {
                     if (!spool.isEmpty()) {
                         sndBuf = (byte[]) spool.removeFirst();
-                        print(sndBuf);
                     } else {
                         break;
                     }
