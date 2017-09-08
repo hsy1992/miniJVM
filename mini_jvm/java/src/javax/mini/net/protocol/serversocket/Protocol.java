@@ -114,8 +114,9 @@ public class Protocol implements ConnectionBaseInterface, ServerSocket {
                 con = new javax.mini.net.protocol.socket.Protocol();
                 con.open(clt_handle, Connector.READ_WRITE);
                 break;
+            }else{
+                throw new IOException("accept error, maybe listen() before accept()");
             }
-
             /* Wait a while for I/O to become ready */
             //Waiter.waitForIO(); 
         }

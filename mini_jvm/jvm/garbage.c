@@ -194,7 +194,7 @@ s32 garbage_check_by_all_thread() {
     //printf("thread set size:%d\n", thread_list->length);
     for (i = 0; i < thread_list->length; i++) {
         Runtime *runtime = (Runtime *) arraylist_get_value(thread_list, i);
-        if (runtime->threadInfo->thread_running & 0) {//让线程自己来标注，有的线程在等IO，等不起
+        if (runtime->threadInfo->thread_running ) {//让线程自己来标注，有的线程在等IO，等不起
             runtime->threadInfo->garbage_collect_mark_task = 1;
             //printf("thread wait\n");
             garbage_thread_wait();//等待处理完成

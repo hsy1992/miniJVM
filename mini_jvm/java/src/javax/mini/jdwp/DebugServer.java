@@ -5,12 +5,12 @@
  */
 package javax.mini.jdwp;
 
+import java.util.Enumeration;
+import java.util.Vector;
 import javax.cldc.io.Connector;
 import javax.mini.net.ServerSocket;
 import javax.mini.net.Socket;
-import javax.mini.util.ArrayList;
 import javax.mini.util.Iterator;
-import javax.mini.util.List;
 
 /**
  *
@@ -19,7 +19,7 @@ import javax.mini.util.List;
 public class DebugServer {
 
     static int SERVER_PORT = 8000;
-    List clients = new ArrayList();
+    Vector clients = new Vector();
     Listener listener;
     Dispacher dispacher;
     boolean exit = false;
@@ -37,20 +37,23 @@ public class DebugServer {
         public void run() {
             try {
                 servSock = (ServerSocket) Connector.open("serversocket://:" + SERVER_PORT, Connector.READ_WRITE);
+                servSock.listen();
                 System.out.println("jdwp listening in " + SERVER_PORT);
             } catch (Exception e) {
+                exit = true;
                 System.out.println(e);
             }
             while (!exit) {
                 try {
                     Socket sock = servSock.accept();
                     DebugClient dc = new DebugClient(sock);
-                    clients.add(dc);
+                    clients.addElement(dc);
                 } catch (Exception e) {
-                    exit=true;
+                    exit = true;
                     System.out.println(e);
                 }
             }
+            System.out.println("jdwp server closed.");
         }
     }
 
@@ -59,12 +62,10 @@ public class DebugServer {
         public void run() {
             while (!exit) {
                 try {
-                    for (Iterator it = clients.iterator(); it.hasNext();) {
-                        DebugClient dc = (DebugClient) it.next();
+                    for (Enumeration e = clients.elements(); e.hasMoreElements();) {
+                        DebugClient dc = (DebugClient) e.nextElement();
                         dc.process();
-                        if (dc.isClosed()) {
-                            it.remove();
-                        }
+                        clients.removeElement(dc);
                     }
                 } catch (Exception e) {
                     System.out.println(e);

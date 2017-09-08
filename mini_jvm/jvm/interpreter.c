@@ -1642,17 +1642,22 @@ s32 op_invokevirtual(u8 **opCode, Runtime *runtime) {
     ConstantMethodRef *cmr = find_constant_method_ref(clazz, object_ref);//此cmr所描述的方法，对于不同的实例，有不同的method
 
     Instance *ins = getInstanceInStack(clazz, cmr, runtime->stack);
-    MethodInfo *method = NULL;
+    if(ins==NULL){
+        Instance *exception = exception_create(JVM_EXCEPTION_NULLPOINTER, runtime);
+        push_ref(runtime->stack, (__refer) exception);
+        ret= RUNTIME_STATUS_EXCEPTION;
+    }else {
+        MethodInfo *method = NULL;
 
-    if (ins->mb.type == MEM_TYPE_CLASS || ins->mb.type == MEM_TYPE_ARR) {
-        method = cmr->methodInfo;
-    } else {
-        method = (MethodInfo *) pairlist_get(cmr->virtual_methods, ins->mb.obj_of_clazz);
-        if (method == NULL) {
-            method = find_instance_methodInfo_by_name(ins, cmr->name, cmr->descriptor);
-            pairlist_put(cmr->virtual_methods, ins->mb.obj_of_clazz, method);//放入缓存，以便下次直接调用
+        if (ins->mb.type == MEM_TYPE_CLASS || ins->mb.type == MEM_TYPE_ARR) {
+            method = cmr->methodInfo;
+        } else {
+            method = (MethodInfo *) pairlist_get(cmr->virtual_methods, ins->mb.obj_of_clazz);
+            if (method == NULL) {
+                method = find_instance_methodInfo_by_name(ins, cmr->name, cmr->descriptor);
+                pairlist_put(cmr->virtual_methods, ins->mb.obj_of_clazz, method);//放入缓存，以便下次直接调用
+            }
         }
-    }
 
 //    if (
 //            utf8_equals_c(method->_this_class->name, "java/util/Calendar") &&
@@ -1661,14 +1666,14 @@ s32 op_invokevirtual(u8 **opCode, Runtime *runtime) {
 //    }
 
 #if _JVM_DEBUG
-    printf("invokevirtual    %s.%s%s  \n", utf8_cstr(method->_this_class->name),
-           utf8_cstr(method->name), utf8_cstr(method->descriptor));
+        printf("invokevirtual    %s.%s%s  \n", utf8_cstr(method->_this_class->name),
+               utf8_cstr(method->name), utf8_cstr(method->descriptor));
 #endif
 
-    if (method) {
-        ret = execute_method(method, runtime, method->_this_class);
+        if (method) {
+            ret = execute_method(method, runtime, method->_this_class);
+        }
     }
-
     *opCode = *opCode + 3;
     return ret;
 }
@@ -1733,25 +1738,30 @@ s32 op_invokeinterface(u8 **opCode, Runtime *runtime) {
     s32 ret = 0;
     ConstantMethodRef *cmr = find_constant_method_ref(clazz, object_ref);
     Instance *ins = getInstanceInStack(clazz, cmr, runtime->stack);
-    MethodInfo *method = NULL;
-    if (ins->mb.type == MEM_TYPE_CLASS) {
-        method = cmr->methodInfo;
-    } else {
-        method = (MethodInfo *) pairlist_get(cmr->virtual_methods, ins->mb.obj_of_clazz);
-        if (method == NULL) {
-            method = find_instance_methodInfo_by_name(ins, cmr->name, cmr->descriptor);
-            pairlist_put(cmr->virtual_methods, ins->mb.obj_of_clazz, method);//放入缓存，以便下次直接调用
+    if(ins==NULL){
+        Instance *exception = exception_create(JVM_EXCEPTION_NULLPOINTER, runtime);
+        push_ref(runtime->stack, (__refer) exception);
+        ret= RUNTIME_STATUS_EXCEPTION;
+    }else {
+        MethodInfo *method = NULL;
+        if (ins->mb.type == MEM_TYPE_CLASS) {
+            method = cmr->methodInfo;
+        } else {
+            method = (MethodInfo *) pairlist_get(cmr->virtual_methods, ins->mb.obj_of_clazz);
+            if (method == NULL) {
+                method = find_instance_methodInfo_by_name(ins, cmr->name, cmr->descriptor);
+                pairlist_put(cmr->virtual_methods, ins->mb.obj_of_clazz, method);//放入缓存，以便下次直接调用
+            }
         }
-    }
 
 #if _JVM_DEBUG
-    printf("invokeinterface   | %s.%s%s \n", utf8_cstr(method->_this_class->name),
-           utf8_cstr(method->name), utf8_cstr(method->descriptor));
+        printf("invokeinterface   | %s.%s%s \n", utf8_cstr(method->_this_class->name),
+               utf8_cstr(method->name), utf8_cstr(method->descriptor));
 #endif
-    if (method) {
-        ret = execute_method(method, runtime, method->_this_class);
+        if (method) {
+            ret = execute_method(method, runtime, method->_this_class);
+        }
     }
-
     *opCode = *opCode + 5;
     return ret;
 }
@@ -2953,7 +2963,8 @@ find_exception_handler(Runtime *runtime, Instance *exception, CodeAttribute *ca,
         if (offset >= (e + i)->start_pc
             && offset < (e + i)->end_pc) {
             ConstantClassRef *ccr = find_constant_classref(runtime->clazz, (e + i)->catch_type);
-            if ((!(e + i)->catch_type) || utf8_equals(ccr->name, exception->mb.obj_of_clazz->name))
+            Class *catchClass=classes_load_get(ccr->name,runtime);
+            if ((!(e + i)->catch_type) || instance_of(catchClass,exception))
                 return e + i;
         }
     }

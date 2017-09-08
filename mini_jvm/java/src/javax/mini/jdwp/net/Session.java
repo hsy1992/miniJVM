@@ -17,8 +17,8 @@ import javax.mini.util.LinkedList;
 public class Session {
 
     Socket conn;
-    LinkedList rpool;
-    LinkedList spool;
+    LinkedList rpool = new LinkedList();
+    LinkedList spool = new LinkedList();
     String handshake = "JDWP-Handshake";
     boolean firstRead;
 
@@ -31,18 +31,22 @@ public class Session {
         rcvNeed = handshake.length();
     }
 
-    public void action() throws IOException{
+    public void action() throws IOException {
         rcvAndDecode();
         sndAndEncode();
     }
 
-    public synchronized void putPkg(byte[] data) {
-        spool.add(data);
+    public void putPkg(byte[] data) {
+        synchronized (spool) {
+            spool.add(data);
+        }
     }
 
-    public synchronized byte[] getPkg() {
-        if (!rpool.isEmpty()) {
-            return (byte[])rpool.removeFirst();
+    public byte[] getPkg() {
+        synchronized (rpool) {
+            if (!rpool.isEmpty()) {
+                return (byte[]) rpool.removeFirst();
+            }
         }
         return null;
     }
@@ -79,7 +83,7 @@ public class Session {
                 }
             }
             if (rcvNeed > 0) {
-                int r = conn.read(tmpRbuf, tmpRbuf.length - rcvNeed, rcvNeed);
+                int r = conn.read(tmpRbuf, 0, rcvNeed);
                 if (r < 0) {
                     throw new IOException("read pkg error");
                 } else if (r == 0) {
@@ -89,6 +93,7 @@ public class Session {
                     rcvNeed -= r;
                     if (rcvNeed == 0) {
                         byte[] b = rcvBuf.toByteArray();
+                        print(b);
                         if (firstRead) {
                             if (handshake.equals(new String(b))) {
                                 putPkg(b);
@@ -97,7 +102,9 @@ public class Session {
                                 throw new IOException("none jdwp connection.");
                             }
                         } else {
-                            rpool.add(b);
+                            synchronized (rpool) {
+                                rpool.add(b);
+                            }
                         }
                     }
                 }
@@ -115,10 +122,12 @@ public class Session {
 
         while (true) {// 循环接收多个数据包
             if (sndBuf == null) {
-                if (!spool.isEmpty()) {
-                    sndBuf = (byte[])spool.removeFirst();
-                } else {
-                    break;
+                synchronized (spool) {
+                    if (!spool.isEmpty()) {
+                        sndBuf = (byte[]) spool.removeFirst();
+                    } else {
+                        break;
+                    }
                 }
             }
             if (sndBuf != null) {
