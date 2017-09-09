@@ -5,6 +5,14 @@
  */
 package javax.mini.jdwp;
 
+import java.io.ByteArrayInputStream;
+import java.io.DataInputStream;
+import java.io.IOException;
+import javax.mini.jdwp.analyzer.AnalyzerManager;
+import javax.mini.jdwp.net.Packet;
+import javax.mini.jdwp.analyzer.PacketAnalyzer;
+import javax.mini.jdwp.net.Request;
+import javax.mini.jdwp.net.Response;
 import javax.mini.jdwp.net.Session;
 import javax.mini.net.Socket;
 
@@ -30,11 +38,28 @@ public class DebugClient {
             byte[] data;
             while ((data = session.getPkg()) != null) {
                 Session.print(data);
+                processPacket(data);
             }
             //System.out.println("client process.");
         } catch (Exception e) {
             closed = true;
             System.out.println(e);
+        }
+    }
+
+    public void processPacket(byte[] data) throws IOException {
+        DataInputStream dis = new DataInputStream(new ByteArrayInputStream(data));
+        Packet packet = Packet.readPacket(dis, true);
+        PacketAnalyzer packetAnalyzer = AnalyzerManager.createPacketAnalyzer(packet);
+
+        if (packet instanceof Request) {
+            packetAnalyzer.updateInternalDataModel(packet);
+        }
+        if (packet instanceof Response) {
+            Response resp = (Response) packet;
+            if (!resp.isError()) {
+                packetAnalyzer.updateInternalDataModel(packet);
+            }
         }
     }
 

@@ -360,6 +360,7 @@ void *jtherad_loader(void *para) {
 
     runtime.clazz = jthread->mb.obj_of_clazz;
     runtime.threadInfo->jthread = jthread;
+    runtime.threadInfo->pthread = pthread_self();
     Utf8String *methodName = utf8_create_c("run");
     Utf8String *methodType = utf8_create_c("()V");
     MethodInfo *method = NULL;
@@ -374,10 +375,10 @@ void *jtherad_loader(void *para) {
     if (method) {
         jthread_set_threadq_value(jthread, &runtime);
         arraylist_append(thread_list, &runtime);
-        runtime.threadInfo->thread_running = 1;
+        jthread_flag_resume(&runtime);
         push_ref(runtime.stack, (__refer) jthread);
         ret = execute_method(method, &runtime, method->_this_class);
-        runtime.threadInfo->thread_running = 0;
+        jthread_flag_suspend(&runtime);
         arraylist_remove(thread_list, &runtime);
     }
     runtime_destory(&runtime);
@@ -490,14 +491,28 @@ s32 jthread_wait(MemoryBlock *ins, Runtime *runtime) {
     return 0;
 }
 
+//
+//s32 jthread_suspend(MemoryBlock *ins, Runtime *pruntime) {
+//    if (pruntime == NULL)return -1;
+//    return pthread_suspend(pruntime->threadInfo->pthread);
+//}
+//
+//s32 jthread_resume(MemoryBlock *ins, Runtime *pruntime) {
+//    if (pruntime == NULL)return -1;
+//    return pthread_continue(pruntime->threadInfo->pthread);
+//}
 
-s32 jthread_suspent(MemoryBlock *ins, Runtime *pruntime) {
-//    if (ins == NULL)return -1;
-//    __refer ref=jthread_get_threadq_value(ins);
-//    Runtime * runtime=(Runtime*)ref;
-//    pthread_suspend(runtime->threadInfo->);
-    return 0;
+s32 jthread_flag_suspend(Runtime *runtime){
+    runtime->threadInfo->thread_running = 0;
 }
+s32 jthread_flag_resume(Runtime *runtime){
+    garbage_thread_lock();
+    while (runtime->threadInfo->garbage_collect_mark_task == 1)
+        garbage_thread_wait();//等待处理完成
+    runtime->threadInfo->thread_running = 1;
+    garbage_thread_unlock();
+}
+
 
 s32 jthread_waitTime(MemoryBlock *ins, Runtime *runtime, long waitms) {
     if (ins == NULL)return -1;

@@ -151,8 +151,8 @@ s32 garbage_collect() {
             }
         }
     }
-//    printf("garbage cllected OBJ: %lld -> %lld    MEM : %lld -> %lld\n", obj_count, hashtable_num_entries(son_2_father),
-//           mem1, heap_size);
+    printf("garbage cllected OBJ: %lld -> %lld    MEM : %lld -> %lld\n", obj_count, hashtable_num_entries(son_2_father),
+           mem1, heap_size);
 
     if (_garbage_count++ % 5 == 0) {//每n秒resize一次
         hashtable_remove(son_2_father, NULL, 1);
@@ -194,12 +194,24 @@ s32 garbage_check_by_all_thread() {
     //printf("thread set size:%d\n", thread_list->length);
     for (i = 0; i < thread_list->length; i++) {
         Runtime *runtime = (Runtime *) arraylist_get_value(thread_list, i);
-        if (runtime->threadInfo->thread_running ) {//让线程自己来标注，有的线程在等IO，等不起
+        /**
+         * 此处有两种方式：
+         * 一种是 回收线程 进行收集，收集完之后通知java工作线程
+         * 第二是 java线程 进行收集，收集完之后通知回收线程
+         *
+         * 第一种方式主要是因为，在某些时候，java线程处于blocking io 状态，或在sleep,
+         * 此时如果垃圾回收线程等待其自己回收是一件不确定的事情
+         *
+         */
+
+        if (runtime->threadInfo->thread_running) {//让线程自己来标注，有的线程在等IO，等不起
             runtime->threadInfo->garbage_collect_mark_task = 1;
             //printf("thread wait\n");
-            garbage_thread_wait();//等待处理完成
+            while (runtime->threadInfo->garbage_collect_mark_task == 1)
+                garbage_thread_wait();//等待处理完成
         } else {//线程没有run的时候（wait sleep），自己来做，但线程恢复run时，会试图获取锁，此进正在做下面的操作
             garbage_mark_refered_obj(runtime);
+            garbage_thread_notify();
         }
         //printf("thread marked refered , [%llx]\n", (s64) (long) runtime->threadInfo->jthread);
     }

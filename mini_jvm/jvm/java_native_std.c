@@ -352,10 +352,10 @@ s32 java_lang_Object_wait(Runtime *runtime, Class *clazz) {
 #if _JVM_DEBUG
     printf("java_lang_Object_wait %llx  wait %lld\n", (s64) (long) ins, l2d.l);
 #endif
-    runtime->threadInfo->thread_running = 0;
+//    runtime->threadInfo->thread_running = 0;
     jthread_waitTime(&ins->mb, runtime, l2d.l);
-    garbage_thread_lock();//may be garbage is collecting this time
-    runtime->threadInfo->thread_running = 1;
+//    garbage_thread_lock();//may be garbage is collecting this time
+//    runtime->threadInfo->thread_running = 1;
     garbage_thread_unlock();
     return 0;
 }
@@ -391,9 +391,9 @@ s32 java_lang_Runtime_totalMemory(Runtime *runtime, Class *clazz) {
 }
 
 s32 java_lang_Runtime_gc(Runtime *runtime, Class *clazz) {
-    runtime->threadInfo->thread_running = 0;
+//    runtime->threadInfo->thread_running = 0;
     garbage_collect();
-    runtime->threadInfo->thread_running = 1;
+//    runtime->threadInfo->thread_running = 1;
 #if _JVM_DEBUG
     printf("java_lang_Runtime_gc \n");
 #endif
@@ -607,11 +607,11 @@ s32 java_lang_Thread_sleep(Runtime *runtime, Class *clazz) {
 #if _JVM_DEBUG
     printf("java_lang_Thread_sleep %lld\n", l2d.l);
 #endif
-    runtime->threadInfo->thread_running = 0;
+//    runtime->threadInfo->thread_running = 0;
     threadSleep(l2d.l);
-    garbage_thread_lock();//may be garbage is collecting this time
-    runtime->threadInfo->thread_running = 1;
-    garbage_thread_unlock();
+//    garbage_thread_lock();//may be garbage is collecting this time
+//    runtime->threadInfo->thread_running = 1;
+//    garbage_thread_unlock();
     return 0;
 }
 

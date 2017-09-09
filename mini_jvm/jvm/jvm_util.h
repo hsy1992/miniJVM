@@ -31,7 +31,7 @@ s64 nanoTime();
 
 s32 threadSleep(s64 ms);
 
-s32 loadSysProperties(Utf8String* path);
+s32 loadSysProperties(Utf8String *path);
 
 //s32 threadSleep(s64 ms);
 
@@ -68,6 +68,7 @@ typedef struct _JavaThreadInfo {
     Runtime *top_runtime;
     volatile u8 garbage_collect_mark_task;
     volatile u8 thread_running;
+    pthread_t pthread;
 } JavaThreadInfo;
 
 typedef struct _JavaThreadLock {
@@ -99,5 +100,9 @@ s32 jthread_notifyAll(MemoryBlock *ins, Runtime *runtime);
 s32 jthread_wait(MemoryBlock *ins, Runtime *runtime);
 
 s32 jthread_waitTime(MemoryBlock *ins, Runtime *runtime, long waitms);
+
+s32 jthread_flag_resume(Runtime *runtime);
+
+s32 jthread_flag_suspend(Runtime *runtime);
 
 #endif //MINI_JVM_UTIL_H

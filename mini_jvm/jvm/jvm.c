@@ -20,7 +20,7 @@ void constructMainThread(Runtime *runtime) {
     Instance *main_thread = instance_create(thread_clazz);
     //pthread_t pthread = pthread_self();
     runtime->threadInfo->jthread = main_thread;
-    runtime->threadInfo->thread_running = 1;
+    jthread_flag_resume(runtime);
     instance_init(main_thread, runtime);//必须放在最好，初始化时需要用到前面的赋值
 
     arraylist_append(thread_list, runtime);

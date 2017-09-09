@@ -3116,7 +3116,9 @@ s32 execute_method(MethodInfo *method, Runtime *pruntime, Class *clazz) {
                                                      utf8_cstr(method->descriptor))->func_pointer;
         }
         synchronized_lock_method(method, &runtime);
+        jthread_flag_suspend(&runtime);
         ret = method->native_func(&runtime, clazz);
+        jthread_flag_resume(&runtime);
         synchronized_unlock_method(method, &runtime);
     } else {
 
