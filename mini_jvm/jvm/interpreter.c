@@ -1642,11 +1642,11 @@ s32 op_invokevirtual(u8 **opCode, Runtime *runtime) {
     ConstantMethodRef *cmr = find_constant_method_ref(clazz, object_ref);//此cmr所描述的方法，对于不同的实例，有不同的method
 
     Instance *ins = getInstanceInStack(clazz, cmr, runtime->stack);
-    if(ins==NULL){
+    if (ins == NULL) {
         Instance *exception = exception_create(JVM_EXCEPTION_NULLPOINTER, runtime);
         push_ref(runtime->stack, (__refer) exception);
-        ret= RUNTIME_STATUS_EXCEPTION;
-    }else {
+        ret = RUNTIME_STATUS_EXCEPTION;
+    } else {
         MethodInfo *method = NULL;
 
         if (ins->mb.type == MEM_TYPE_CLASS || ins->mb.type == MEM_TYPE_ARR) {
@@ -1738,11 +1738,11 @@ s32 op_invokeinterface(u8 **opCode, Runtime *runtime) {
     s32 ret = 0;
     ConstantMethodRef *cmr = find_constant_method_ref(clazz, object_ref);
     Instance *ins = getInstanceInStack(clazz, cmr, runtime->stack);
-    if(ins==NULL){
+    if (ins == NULL) {
         Instance *exception = exception_create(JVM_EXCEPTION_NULLPOINTER, runtime);
         push_ref(runtime->stack, (__refer) exception);
-        ret= RUNTIME_STATUS_EXCEPTION;
-    }else {
+        ret = RUNTIME_STATUS_EXCEPTION;
+    } else {
         MethodInfo *method = NULL;
         if (ins->mb.type == MEM_TYPE_CLASS) {
             method = cmr->methodInfo;
@@ -1885,7 +1885,10 @@ static inline s32 op_putfield_impl(u8 **opCode, Runtime *runtime, s32 isStatic) 
 //    }
     // check variable type to determain long/s32/f64/f32
     FieldInfo *fi = find_constant_fieldref(clazz, field_ref)->fieldInfo;
-
+    if (fi == NULL) {
+        fi = find_fieldInfo_by_fieldref(clazz, field_ref);
+        find_constant_fieldref(clazz, field_ref)->fieldInfo = fi;
+    }
     c8 ch = utf8_char_at(fi->descriptor, 0);
     s32 data_bytes = data_type_bytes[getDataTypeIndex(ch)];
     StackEntry entry;
@@ -1895,7 +1898,7 @@ static inline s32 op_putfield_impl(u8 **opCode, Runtime *runtime, s32 isStatic) 
     Instance *ins = NULL;
     c8 *ptr;
     if (isStatic) {
-        if (clazz->status <= CLASS_STATUS_CLINITED) {
+        if (clazz->status < CLASS_STATUS_CLINITED) {
             class_clinit(clazz, runtime);
         }
         ptr = getStaticFieldPtr(fi);
@@ -1974,6 +1977,10 @@ static inline s32 op_getfield_impl(u8 **opCode, Runtime *runtime, s32 isStatic) 
 
     // check variable type to determain long/s32/f64/f32
     FieldInfo *fi = find_constant_fieldref(clazz, field_ref)->fieldInfo;
+    if (fi == NULL) {
+        fi = find_fieldInfo_by_fieldref(clazz, field_ref);
+        find_constant_fieldref(clazz, field_ref)->fieldInfo = fi;
+    }
     c8 ch = utf8_char_at(fi->descriptor, 0);
     s32 data_bytes = data_type_bytes[getDataTypeIndex(ch)];
 
@@ -2963,8 +2970,8 @@ find_exception_handler(Runtime *runtime, Instance *exception, CodeAttribute *ca,
         if (offset >= (e + i)->start_pc
             && offset < (e + i)->end_pc) {
             ConstantClassRef *ccr = find_constant_classref(runtime->clazz, (e + i)->catch_type);
-            Class *catchClass=classes_load_get(ccr->name,runtime);
-            if ((!(e + i)->catch_type) || instance_of(catchClass,exception))
+            Class *catchClass = classes_load_get(ccr->name, runtime);
+            if ((!(e + i)->catch_type) || instance_of(catchClass, exception))
                 return e + i;
         }
     }

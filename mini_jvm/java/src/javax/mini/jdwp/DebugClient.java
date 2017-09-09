@@ -61,7 +61,7 @@ public class DebugClient {
                 packetAnalyzer.updateInternalDataModel(packet);
             }
         }
-        System.out.println("packet :"+packetAnalyzer.getPacketInfo(packet));
+        System.out.println("packet :"+packetAnalyzer);
     }
 
     public boolean isClosed() {

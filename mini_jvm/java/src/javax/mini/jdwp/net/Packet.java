@@ -51,7 +51,7 @@ public class Packet {
         Packet packet;
         byte header[] = new byte[11];
         is.readFully(header);
-
+        System.out.println("data length :"+getDataLenght(header));
         byte[] data = new byte[getDataLenght(header)];
         is.readFully(data);
 

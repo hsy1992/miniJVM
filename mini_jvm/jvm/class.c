@@ -87,6 +87,8 @@ void constant_list_destory(Class *clazz) {
  * @return
  */
 s32 class_link(Class *clazz) {
+    if (clazz->status == CLASS_STATUS_LINKING)return 0;
+    clazz->status = CLASS_STATUS_LINKING;
     int i;
 
 /**
@@ -157,6 +159,9 @@ s32 class_link(Class *clazz) {
  * @param runtime
  */
 void class_clinit(Class *clazz, Runtime *runtime) {
+    if (clazz->status < CLASS_STATUS_LINKED) {
+        class_link(clazz);
+    }
     if (clazz->status >= CLASS_STATUS_CLINITING)return;
     clazz->status = CLASS_STATUS_CLINITING;
     //优先初始化基类
@@ -184,7 +189,7 @@ void class_clinit(Class *clazz, Runtime *runtime) {
 u8 instance_of(Class *clazz, Instance *ins) {
     Class *ins_of_class = ins->mb.obj_of_clazz;
     while (ins_of_class) {
-        if (ins_of_class == clazz||isSonOfInterface(clazz, ins_of_class->mb.obj_of_clazz)) {
+        if (ins_of_class == clazz || isSonOfInterface(clazz, ins_of_class->mb.obj_of_clazz)) {
             return 1;
         }
         ins_of_class = getSuperClass(ins_of_class);
