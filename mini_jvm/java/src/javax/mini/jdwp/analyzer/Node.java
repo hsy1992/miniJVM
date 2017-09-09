@@ -18,8 +18,8 @@
  */
 package javax.mini.jdwp.analyzer;
 
-import java.util.ArrayList;
 import javax.mini.jdwp.reflect.Type;
+import javax.mini.util.ArrayList;
 
 /**
  * @author karel herink

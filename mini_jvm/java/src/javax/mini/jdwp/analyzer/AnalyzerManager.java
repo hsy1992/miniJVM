@@ -19,10 +19,10 @@
 
 package javax.mini.jdwp.analyzer;
 
-import java.util.HashMap;
 import javax.mini.jdwp.net.Packet;
 import javax.mini.jdwp.net.Request;
 import javax.mini.jdwp.net.Response;
+import javax.mini.util.HashMap;
 
 /**
  * @author  karel herink
@@ -46,7 +46,7 @@ public class AnalyzerManager {
             Key key = new Key(cmdSet, cmd);
             if ((packetAnalyzer = (PacketAnalyzer) requestAnalyzers.get(key)) != null)
                 return packetAnalyzer;
-            analyzerClassName = "com.karelherink.jdwpanalyzer.request.Analyzer_" + cmdSet + "_" + cmd;
+            analyzerClassName = "javax.mini.jdwp.analyzer.Request_" + cmdSet + "_" + cmd;
             packetAnalyzer = loadInstance(analyzerClassName);
             requestAnalyzers.put(key, packetAnalyzer);
             return packetAnalyzer;
@@ -58,7 +58,7 @@ public class AnalyzerManager {
         Key key = new Key(cmdSet, cmd);
         if ((packetAnalyzer = (PacketAnalyzer) responseAnalyzers.get(key)) != null)
             return packetAnalyzer;
-        analyzerClassName = "com.karelherink.jdwpanalyzer.response.Analyzer_" + cmdSet + "_" + cmd;
+        analyzerClassName = "javax.mini.jdwp.analyzer.Response_" + cmdSet + "_" + cmd;
         packetAnalyzer = loadInstance(analyzerClassName);
         responseAnalyzers.put(key, packetAnalyzer);
         return packetAnalyzer;

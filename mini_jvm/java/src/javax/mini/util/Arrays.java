@@ -2226,7 +2226,6 @@ public class Arrays {
      * @serial include
      */
     private static class ArrayList extends AbstractList
-    				   implements java.io.Serializable
     {
         private static final long serialVersionUID = -2764017481108945198L;
 	private Object[] a;

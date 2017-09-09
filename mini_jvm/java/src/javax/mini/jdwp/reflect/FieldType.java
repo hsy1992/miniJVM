@@ -18,10 +18,11 @@
  */
 package javax.mini.jdwp.reflect;
 
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.Map;
+
 import javax.mini.jdwp.analyzer.PacketAnalyzer;
+import javax.mini.util.Collections;
+import javax.mini.util.HashMap;
+import javax.mini.util.Map;
 
 /**
  * @author karel herink
