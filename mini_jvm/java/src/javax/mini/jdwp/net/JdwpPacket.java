@@ -15,6 +15,9 @@ import javax.mini.util.Map;
  */
 public class JdwpPacket {
 
+    public static final int REQUEST = 0;
+    public static final int RESPONSE = 0x80;
+
     static String DELIMITER = "|";
 
     /**
@@ -24,6 +27,7 @@ public class JdwpPacket {
     /**
      * 当前位置指针
      */
+    public static final int DATA_START_POS = 11;
     int readPos;
     int writePos;
     StringBuffer log;// log记录
@@ -44,8 +48,8 @@ public class JdwpPacket {
      */
     public JdwpPacket(byte[] dataPkg) {
         data = dataPkg;
-        writePos = 4;
-        readPos = 4;
+        writePos = DATA_START_POS;
+        readPos = DATA_START_POS;
 
     }
 
@@ -75,6 +79,27 @@ public class JdwpPacket {
         return len;
     }
 
+    public void setId(int id) {
+        int pos = 4;
+        data[pos++] = (byte) (id >>> 24);
+        data[pos++] = (byte) (id >>> 16);
+        data[pos++] = (byte) (id >>> 8);
+        data[pos++] = (byte) (id);
+    }
+
+    public void setFlag(int flag) {
+        int pos = 8;
+        data[pos] = (byte) (flag);
+    }
+
+    public void setLength(int len) {
+        int pos = 0;
+        data[pos++] = (byte) (len >>> 24);
+        data[pos++] = (byte) (len >>> 16);
+        data[pos++] = (byte) (len >>> 8);
+        data[pos++] = (byte) (len);
+    }
+
     /**
      *
      * @return
@@ -102,8 +127,10 @@ public class JdwpPacket {
      * @return
      */
     public final byte[] toByteArray() {
-
-        return data;
+        setLength(writePos);
+        byte[] b = new byte[writePos];
+        System.arraycopy(data, 0, b, 0, writePos);
+        return b;
     }
 
     // ***********************************
@@ -428,7 +455,7 @@ public class JdwpPacket {
         return sb.toString();
     }
 
-    private class Statistics implements Comparable<Statistics> {
+    private class Statistics implements javax.mini.util.Comparable {
 
         final int cmd;
         long pkg;
@@ -441,7 +468,8 @@ public class JdwpPacket {
         /**
          *
          */
-        public int compareTo(Statistics o) {
+        public int compareTo(Object po) {
+            Statistics o = (Statistics) po;
             if (this.pkg > o.pkg) {
                 return -1;
             } else if (this.pkg == o.pkg) {

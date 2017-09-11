@@ -23,6 +23,7 @@ typedef struct _JavaNativeLib {
     java_native_method *methods;
     s32 methods_count;
 } JavaNativeLib;
+
 void reg_std_native_lib();
 
 s32 native_reg_lib(java_native_method *methods, s32 method_size);
@@ -30,4 +31,7 @@ s32 native_reg_lib(java_native_method *methods, s32 method_size);
 s32 native_remove_lib(JavaNativeLib *lib);
 
 void reg_net_native_lib();
+
+void reg_jdwp_native_lib();
+
 #endif

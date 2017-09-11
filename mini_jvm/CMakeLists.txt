@@ -10,8 +10,6 @@ set(SOURCE_FILES
         jvm/class_loader_constant.c
         jvm/class_loader_field.c
         jvm/class_loader_interface.c
-        jvm/java_native.c
-        jvm/java_native.h
         jvm/jvm.c
         jvm/class_loader_method.c
         jvm/jvm.h
@@ -34,6 +32,10 @@ set(SOURCE_FILES
         jvm/global.h
         utils/hashset.c
         utils/hashset.h
-        jvm/java_native_net.c)
+        jvm/java_native_std.h
+        jvm/java_native_io.c
+        jvm/java_native_std.c
+        jvm/java_native_jdwp.c
+        )
 
 add_executable(mini_jvm ${SOURCE_FILES})

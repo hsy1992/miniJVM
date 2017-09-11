@@ -11,7 +11,26 @@ package javax.mini.jdwp.net;
  */
 public class ResponsePacket extends JdwpPacket {
 
+    public ResponsePacket() {
+        super();
+        setFlag(RESPONSE);
+    }
+
+    public ResponsePacket(byte[] data) {
+        super(data);
+    }
+
     public short getErrorCode() {
         return (short) getVal(10, 2);
+    }
+
+    public void setErrorCode(int code) {
+        int pos = 9;
+        data[pos++] = (byte) (code >>> 8);
+        data[pos++] = (byte) (code);
+    }
+    
+    public String toString(){
+        return "RES["+getId()+"]"+getErrorCode()+DELIMITER+getLength();
     }
 }

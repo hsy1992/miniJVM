@@ -10,5 +10,5 @@ package javax.mini.jdwp.reflect;
  * @author gust
  */
 public class JdwpNative {
-    static native int referenceTyepSize();
+    public static native int referenceTyepSize();
 }

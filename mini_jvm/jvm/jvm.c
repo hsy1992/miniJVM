@@ -70,6 +70,7 @@ s32 execute(c8 *p_classpath, c8 *p_mainclass, s32 argc, c8 **argv) {
     native_libs = arraylist_create(0);
     reg_std_native_lib();
     reg_net_native_lib();
+    reg_jdwp_native_lib();
 
     //创建运行时栈
     Runtime runtime;

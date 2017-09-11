@@ -5,15 +5,15 @@
  */
 package javax.mini.jdwp;
 
-import java.io.ByteArrayInputStream;
-import java.io.DataInputStream;
 import java.io.IOException;
-import javax.mini.jdwp.analyzer.AnalyzerManager;
-import javax.mini.jdwp.net.Packet;
-import javax.mini.jdwp.analyzer.PacketAnalyzer;
-import javax.mini.jdwp.net.Request;
-import javax.mini.jdwp.net.Response;
+import javax.mini.jdwp.constant.Command;
+import javax.mini.jdwp.constant.CommandSet;
+import javax.mini.jdwp.constant.Error;
+import javax.mini.jdwp.net.JdwpPacket;
+import javax.mini.jdwp.net.RequestPacket;
+import javax.mini.jdwp.net.ResponsePacket;
 import javax.mini.jdwp.net.Session;
+import javax.mini.jdwp.reflect.JdwpNative;
 import javax.mini.net.Socket;
 
 /**
@@ -48,20 +48,54 @@ public class DebugClient {
     }
 
     public void processPacket(byte[] data) throws IOException {
-        DataInputStream dis = new DataInputStream(new ByteArrayInputStream(data));
-        Packet packet = Packet.readPacket(dis, true);
-        PacketAnalyzer packetAnalyzer = AnalyzerManager.createPacketAnalyzer(packet);
-
-        if (packet instanceof Request) {
-            packetAnalyzer.updateInternalDataModel(packet);
-        }
-        if (packet instanceof Response) {
-            Response resp = (Response) packet;
-            if (!resp.isError()) {
-                packetAnalyzer.updateInternalDataModel(packet);
+//        DataInputStream dis = new DataInputStream(new ByteArrayInputStream(data));
+//        Packet packet = Packet.readPacket(dis, true);
+//        PacketAnalyzer packetAnalyzer = AnalyzerManager.createPacketAnalyzer(packet);
+//
+//        if (packet instanceof Request) {
+//            packetAnalyzer.updateInternalDataModel(packet);
+//        }
+//        if (packet instanceof Response) {
+//            Response resp = (Response) packet;
+//            if (!resp.isError()) {
+//                packetAnalyzer.updateInternalDataModel(packet);
+//            }
+//        }
+//        System.out.println("packet :"+packetAnalyzer);
+        JdwpPacket packet = new JdwpPacket(data);
+        if (packet.getFlag() == JdwpPacket.REQUEST) {
+            RequestPacket req = new RequestPacket(data);
+            System.out.println(req);
+            switch (req.getCommandSet()) {
+                case CommandSet.VirtualMachine: {
+                    
+                    switch (req.getCommand()) {
+                        case Command.VirtualMachine_IDSizes: {
+                            ResponsePacket res = new ResponsePacket();
+                            res.setErrorCode(Error.NONE);
+                            res.setId(req.getId());
+                            res.writeInt(JdwpNative.referenceTyepSize());
+                            res.writeInt(JdwpNative.referenceTyepSize());
+                            res.writeInt(JdwpNative.referenceTyepSize());
+                            res.writeInt(JdwpNative.referenceTyepSize());
+                            res.writeInt(JdwpNative.referenceTyepSize());
+                            session.putPkg(res.toByteArray());
+                            Session.print(res.toByteArray());
+                            System.out.println(res);
+                            break;
+                        }
+                    }
+                    break;
+                }
+            }
+        } else {
+            ResponsePacket res = new ResponsePacket(data);
+            switch (res.getErrorCode()) {
+                case javax.mini.jdwp.constant.Error.VM_DEAD: {
+                    break;
+                }
             }
         }
-        System.out.println("packet :"+packetAnalyzer);
     }
 
     public boolean isClosed() {
