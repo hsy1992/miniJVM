@@ -175,9 +175,9 @@ void class_clinit(Class *clazz, Runtime *runtime) {
     for (i = 0; i < p->method_used; i++) {
         //printf("%s,%s\n", utf8_cstr(p->methodRef[i].name), utf8_cstr(p->methodRef[i].descriptor));
         if (utf8_equals_c(p->method[i].name, "<clinit>") == 1) {
-//#if _JVM_DEBUG
+#if _JVM_DEBUG
             printf("%s <clinit>\n", utf8_cstr(clazz->name));
-//#endif
+#endif
             execute_method(&(p->method[i]), runtime, clazz);
         }
     }

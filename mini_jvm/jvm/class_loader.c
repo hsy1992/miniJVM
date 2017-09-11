@@ -303,7 +303,7 @@ s32 load_class(Utf8String *pClassPath, Utf8String *pClassName, hmap_t classes) {
     Class *clazz = class_create();
     s32 iret = clazz->_load_from_file(clazz, utf8_cstr(tmppath));
     if (iret != 0) {
-        printf(" class not found : %s", utf8_cstr(pClassName));
+        printf(" class not found : %s\n", utf8_cstr(pClassName));
         return -1;
     }
 #if _JVM_DEBUG

@@ -266,14 +266,15 @@ public final class String {
      * @exception IndexOutOfBoundsException if the <code>index</code> argument
      * is negative or not less than the length of this string.
      */
-    public char charAt(int index){
-        if((index < 0) || (index >= count)){
+    public char charAt(int index) {
+        if ((index < 0) || (index >= count)) {
             throw new ArrayIndexOutOfBoundsException();
         }
         return charAt0(index);
     }
 
     public native char charAt0(int index);
+
     /**
      * ****
      * public char charAt(int index) { if ((index < 0) || (index >= count)) {
@@ -1016,6 +1017,10 @@ public final class String {
             }
         }
         return this;
+    }
+
+    public String replaceAll(String src, String dst) {
+        return replace(src, dst);
     }
 
     public String replace(String src, String dst) {
