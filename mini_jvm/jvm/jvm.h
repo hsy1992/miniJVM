@@ -703,9 +703,9 @@ void constant_list_destory(Class *clazz);
 
 s32 class_destory(Class *clazz);
 
-void load_class(Utf8String *pClassPath, Utf8String *pClassName, hmap_t classes);
+s32 load_class(Utf8String *pClassPath, Utf8String *pClassName, hmap_t classes);
 
-void load_related_class(Utf8String *classpath, Class *clazz, hmap_t classes);
+s32 load_related_class(Utf8String *classpath, Class *clazz, hmap_t classes);
 
 s32 _LOAD_FROM_FILE(Class *_this, c8 *file);
 

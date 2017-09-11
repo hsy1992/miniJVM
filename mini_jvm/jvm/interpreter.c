@@ -1637,11 +1637,15 @@ s32 op_invokevirtual(u8 **opCode, Runtime *runtime) {
     s2c.c1 = opCode[0][1];
     s2c.c0 = opCode[0][2];
     u16 object_ref = s2c.s;
-
+    if (runtime->clazz->status < CLASS_STATUS_CLINITED) {
+        class_clinit(runtime->clazz, runtime);
+    }
     s32 ret = 0;
     ConstantMethodRef *cmr = find_constant_method_ref(clazz, object_ref);//此cmr所描述的方法，对于不同的实例，有不同的method
 
     Instance *ins = getInstanceInStack(clazz, cmr, runtime->stack);
+//    if (ins == 7)
+//        ins = getInstanceInStack(clazz, cmr, runtime->stack);
     if (ins == NULL) {
         Instance *exception = exception_create(JVM_EXCEPTION_NULLPOINTER, runtime);
         push_ref(runtime->stack, (__refer) exception);
@@ -1685,7 +1689,9 @@ s32 op_invokespecial(u8 **opCode, Runtime *runtime) {
     s2c.c1 = opCode[0][1];
     s2c.c0 = opCode[0][2];
     u16 object_ref = s2c.s;
-
+    if (runtime->clazz->status < CLASS_STATUS_CLINITED) {
+        class_clinit(runtime->clazz, runtime);
+    }
     s32 ret = 0;
     MethodInfo *method = find_constant_method_ref(runtime->clazz, object_ref)->methodInfo;
 #if _JVM_DEBUG
@@ -1708,6 +1714,10 @@ s32 op_invokestatic(u8 **opCode, Runtime *runtime) {
     s2c.c1 = opCode[0][1];
     s2c.c0 = opCode[0][2];
     u16 object_ref = s2c.s;
+
+    if (runtime->clazz->status < CLASS_STATUS_CLINITED) {
+        class_clinit(runtime->clazz, runtime);
+    }
 
     s32 ret = 0;
     MethodInfo *method = //find_constant_method_ref(clazz, object_ref)->methodInfo;
@@ -1880,9 +1890,12 @@ static inline s32 op_putfield_impl(u8 **opCode, Runtime *runtime, s32 isStatic) 
     s2c.c0 = opCode[0][2];
 
     u16 field_ref = s2c.s;
-//    if (utf8_equals_c(clazz->name, "javax/mini/eio/socket/PrivateOutputStream")) {
-//        int debug = 1;
-//    }
+    if (utf8_equals_c(clazz->name, "javax/mini/jdwp/analyzer/AnalyzerManager")) {
+        int debug = 1;
+    }
+    if (clazz->status < CLASS_STATUS_CLINITED) {
+        class_clinit(clazz, runtime);
+    }
     // check variable type to determain long/s32/f64/f32
     FieldInfo *fi = find_constant_fieldref(clazz, field_ref)->fieldInfo;
     if (fi == NULL) {
@@ -1898,9 +1911,6 @@ static inline s32 op_putfield_impl(u8 **opCode, Runtime *runtime, s32 isStatic) 
     Instance *ins = NULL;
     c8 *ptr;
     if (isStatic) {
-        if (clazz->status < CLASS_STATUS_CLINITED) {
-            class_clinit(clazz, runtime);
-        }
         ptr = getStaticFieldPtr(fi);
     } else {
         ins = (Instance *) pop_ref(stack);
@@ -1974,6 +1984,9 @@ static inline s32 op_getfield_impl(u8 **opCode, Runtime *runtime, s32 isStatic) 
     s2c.c0 = opCode[0][2];
 
     u16 field_ref = s2c.s;
+    if (clazz->status <= CLASS_STATUS_CLINITED) {
+        class_clinit(clazz, runtime);
+    }
 
     // check variable type to determain long/s32/f64/f32
     FieldInfo *fi = find_constant_fieldref(clazz, field_ref)->fieldInfo;
@@ -1987,9 +2000,6 @@ static inline s32 op_getfield_impl(u8 **opCode, Runtime *runtime, s32 isStatic) 
     Instance *ins = NULL;
     c8 *ptr;
     if (isStatic) {
-        if (clazz->status <= CLASS_STATUS_CLINITED) {
-            class_clinit(clazz, runtime);
-        }
         ptr = getStaticFieldPtr(fi);
     } else {
         ins = (Instance *) pop_ref(stack);
@@ -2179,17 +2189,21 @@ s32 op_checkcast(u8 **opCode, Runtime *runtime) {
 
     s32 typeIdx = s2c.s;
     s32 checkok = 0;
-    if (ins->mb.type == MEM_TYPE_INS) {
-        Class *cl = getClassByConstantClassRef(runtime->clazz, typeIdx);
-        if (instance_of(cl, ins)) {
-            checkok = 1;
+    if (ins != NULL) {
+        if (ins->mb.type == MEM_TYPE_INS) {
+            Class *cl = getClassByConstantClassRef(runtime->clazz, typeIdx);
+            if (instance_of(cl, ins)) {
+                checkok = 1;
+            }
+        } else if (ins->mb.type == MEM_TYPE_ARR) {
+            Utf8String *utf = find_constant_classref(runtime->clazz, typeIdx)->name;
+            u8 ch = utf8_char_at(utf, 1);
+            if (ch == getDataTypeFlag(ins->arr_data_type)) {
+                checkok = 1;
+            }
         }
-    } else if (ins->mb.type == MEM_TYPE_ARR) {
-        Utf8String *utf = find_constant_classref(runtime->clazz, typeIdx)->name;
-        u8 ch = utf8_char_at(utf, 1);
-        if (ch == getDataTypeFlag(ins->arr_data_type)) {
-            checkok = 1;
-        }
+    } else {
+        checkok = 1;
     }
     if (!checkok) {
         Instance *exception = exception_create(JVM_EXCEPTION_CLASSCASTEXCEPTION, runtime);
@@ -3110,7 +3124,7 @@ s32 execute_method(MethodInfo *method, Runtime *pruntime, Class *clazz) {
     runtime.methodInfo = method;
     runtime.clazz = clazz;
     s32 stackSize;
-//    if (utf8_equals_c(method->name, "sendRequest")) {
+//    if (utf8_equals_c(method->name, "createPacketAnalyzer")) {
 //        int debug = 1;
 //    }
     if (method->access_flags & ACC_NATIVE) {//本地方法

@@ -250,7 +250,7 @@ s32 convert_to_code_attribute(CodeAttribute *ca, AttributeInfo *attr, Class *cla
             lineTable->line_number_table_length = (u16) s2c.s;
             lineTable->table = jvm_alloc(sizeof(u32) * lineTable->line_number_table_length);
             s32 j;
-            for (j = 0; j < lineTable->line_number_table_length ; j++) {
+            for (j = 0; j < lineTable->line_number_table_length; j++) {
                 s2c.c1 = attr->info[info_p++];
                 s2c.c0 = attr->info[info_p++];
                 setFieldShort(lineTable->table + (j * sizeof(u32)), s2c.s);
@@ -266,24 +266,23 @@ s32 convert_to_code_attribute(CodeAttribute *ca, AttributeInfo *attr, Class *cla
 }
 
 
-void load_related_class(Utf8String *classpath, Class *clazz, hmap_t classes) {
-    s32 classid = -1;
+s32 load_related_class(Utf8String *classpath, Class *clazz, hmap_t classes) {
     ConstantPool *p = &(clazz->constantPool);
     if (p->classRef->length > 0) {
-        s32 i, j;
+        s32 i;
         for (i = 0; i < p->classRef->length; i++) {
             ConstantClassRef *ccr = (ConstantClassRef *) arraylist_get_value(p->classRef, i);
-            load_class(classpath, find_constant_utf8(clazz, ccr->stringIndex)->utfstr, classes);
+            s32 ret = load_class(classpath, find_constant_utf8(clazz, ccr->stringIndex)->utfstr, classes);
+            if (ret != 0) {
+                return ret;
+            }
         }
-//        for (i = 0; i < clazz->interfacePool.clasz_used; i++) {
-//            ConstantClassRef *ccr = (clazz->interfacePool.clasz + i);
-//            load_class(classpath, find_constant_utf8(clazz, ccr->stringIndex)->utfstr, classes);
-//        }
     }
+    return 0;
 }
 
-void load_class(Utf8String *pClassPath, Utf8String *pClassName, hmap_t classes) {
-    if (!pClassName)return;
+s32 load_class(Utf8String *pClassPath, Utf8String *pClassName, hmap_t classes) {
+    if (!pClassName)return 0;
     if (utf8_last_indexof_c(pClassPath, "/") != pClassPath->length - 1)utf8_append_c(pClassPath, "/");
 
     Utf8String *clsName = utf8_create_copy(pClassName);
@@ -296,16 +295,16 @@ void load_class(Utf8String *pClassPath, Utf8String *pClassName, hmap_t classes) 
     utf8_append_c(tmppath, ".class");
     Class *tmpclazz = classes_get(pClassName);
     if (tmpclazz) {
-        return;
+        return 0;
     }
     if (utf8_indexof_c(tmppath, "[") >= 0) {
-        return;
+        return 0;
     }
     Class *clazz = class_create();
     s32 iret = clazz->_load_from_file(clazz, utf8_cstr(tmppath));
     if (iret != 0) {
         printf(" class not found : %s", utf8_cstr(pClassName));
-        exit(1);
+        return -1;
     }
 #if _JVM_DEBUG
     printf("load class:  %s \n", utf8_cstr(tmppath));
@@ -313,5 +312,5 @@ void load_class(Utf8String *pClassPath, Utf8String *pClassName, hmap_t classes) 
     classes_put(clazz);
     utf8_destory(tmppath);
     utf8_destory(clsName);
-    load_related_class(pClassPath, clazz, classes);
+    return load_related_class(pClassPath, clazz, classes);
 }

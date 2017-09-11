@@ -33,10 +33,7 @@ Class *classes_load_get(Utf8String *ustr, Runtime *runtime) {
         load_class(classpath, ustr, classes);
         cl = classes_get(ustr);
     }
-    if (cl->status < CLASS_STATUS_LINKED) {
-        class_link(cl);
-    }
-    if (cl->status < CLASS_STATUS_CLINITED) {
+    if (cl){
         class_clinit(cl, runtime);
     }
     return cl;
