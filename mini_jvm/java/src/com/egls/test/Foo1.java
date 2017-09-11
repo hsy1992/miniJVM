@@ -482,9 +482,11 @@ public class Foo1 {
             Object val = map.get(key);
             System.out.println(key + ":" + val);
         }
-        try {
-            Thread.sleep(100000);
-        } catch (InterruptedException ex) {
+        while(true){
+            try{
+                Thread.sleep(1000);
+                System.out.println("sleep 1000");
+            }catch(Exception e){}
         }
     }
 

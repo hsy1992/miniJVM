@@ -40,7 +40,7 @@ public class DebugClient {
                 Session.print(data);
                 processPacket(data);
             }
-            //System.out.println("client process.");
+            System.out.println("client process.");
         } catch (Exception e) {
             closed = true;
             System.out.println(e);
@@ -65,7 +65,7 @@ public class DebugClient {
         JdwpPacket packet = new JdwpPacket(data);
         if (packet.getFlag() == JdwpPacket.REQUEST) {
             RequestPacket req = new RequestPacket(data);
-            System.out.println(req);
+//            System.out.println(req);
             switch (req.getCommandSet()) {
                 case CommandSet.VirtualMachine: {
                     
@@ -80,7 +80,7 @@ public class DebugClient {
                             res.writeInt(JdwpNative.referenceTyepSize());
                             res.writeInt(JdwpNative.referenceTyepSize());
                             session.putPkg(res.toByteArray());
-                            Session.print(res.toByteArray());
+//                            Session.print(res.toByteArray());
                             System.out.println(res);
                             break;
                         }

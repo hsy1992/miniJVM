@@ -61,7 +61,7 @@ public class Session {
     int rcvNeed = 0;
     ByteArrayOutputStream rcvBuf = new ByteArrayOutputStream();
 
-    public void rcvAndDecode() throws IOException {
+    void rcvAndDecode() throws IOException {
 
         while (true) {// 循环接收多个数据包
             if (rcvNeed == 0) {
@@ -120,7 +120,7 @@ public class Session {
     int sent;
     private byte[] sndBuf;
 
-    public void sndAndEncode() throws IOException {
+    void sndAndEncode() throws IOException {
 
         while (true) {// 循环接收多个数据包
             if (sndBuf == null) {
@@ -142,6 +142,7 @@ public class Session {
                     sent += w;
                     if (sent == sndBuf.length) {
                         sndBuf = null;
+                        sent = 0;
                     }
                 }
 
