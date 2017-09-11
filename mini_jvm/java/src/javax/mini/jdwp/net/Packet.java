@@ -35,7 +35,7 @@ public class Packet {
 
     protected byte[] header;
     protected byte[] data;
-
+    
     /**
      * Creates a new instance of PacketParser
      */

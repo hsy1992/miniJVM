@@ -485,7 +485,7 @@ public class Foo1 {
         while(true){
             try{
                 Thread.sleep(1000);
-                System.out.println("sleep 1000");
+                //System.out.println("sleep 1000");
             }catch(Exception e){}
         }
     }

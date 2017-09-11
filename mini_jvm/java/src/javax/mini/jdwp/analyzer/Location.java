@@ -3,14 +3,16 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package javax.mini.jdwp.reflect;
+package javax.mini.jdwp.analyzer;
 
 /**
  *
  * @author gust
  */
-public class JdwpNative {
+public class Location {
 
-    public static native int referenceTyepSize();
-
+    public byte typeTag;
+    public long classID;
+    public long methodID;
+    public long execIndex;
 }

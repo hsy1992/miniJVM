@@ -31,6 +31,7 @@ public class JdwpPacket {
     int readPos;
     int writePos;
     StringBuffer log;// log记录
+    static private int referBytes = 4;//引用类型字节数
 
     /**
      * Create a new Cmd
@@ -98,6 +99,36 @@ public class JdwpPacket {
         data[pos++] = (byte) (len >>> 16);
         data[pos++] = (byte) (len >>> 8);
         data[pos++] = (byte) (len);
+    }
+
+    /**
+     * @return the referBytes
+     */
+    static public int getReferBytes() {
+        return referBytes;
+    }
+
+    /**
+     * @param referBytes the referBytes to set
+     */
+    static public void setReferBytes(int preferBytes) {
+        referBytes = preferBytes;
+    }
+
+    public long readRefer() {
+        if (referBytes == 4) {
+            return readInt();
+        } else {
+            return readLong();
+        }
+    }
+
+    public void writeRefer(long refer) {
+        if (referBytes == 4) {
+            writeInt((int) refer);
+        } else {
+            writeLong(refer);
+        }
     }
 
     /**
@@ -203,8 +234,8 @@ public class JdwpPacket {
         return temp;
     }
 
-    public String readUTF() {
-        int utflen = readUnsignedShort();
+    public String readUTF() {//4byte length for jdwp string
+        int utflen = readInt();//readUnsignedShort();
         if (utflen == -1) {
             System.err.println("Error!! ByteArray: readUTF()");
             return "ERROR";
@@ -402,8 +433,10 @@ public class JdwpPacket {
             }
         }
 
-        byte[] bytearr = new byte[utflen + 2];
+        byte[] bytearr = new byte[utflen + 4];//4byte length for jdwp string
 
+        bytearr[count++] = (byte) ((utflen >>> 24) & 0xFF);
+        bytearr[count++] = (byte) ((utflen >>> 16) & 0xFF);
         bytearr[count++] = (byte) ((utflen >>> 8) & 0xFF);
         bytearr[count++] = (byte) ((utflen >>> 0) & 0xFF);
 

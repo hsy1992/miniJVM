@@ -36,13 +36,13 @@ public class Session {
         sndAndEncode();
     }
 
-    public void putPkg(byte[] data) {
+    public void send(byte[] data) {
         synchronized (spool) {
             spool.add(data);
         }
     }
 
-    public byte[] getPkg() {
+    public byte[] receive() {
         synchronized (rpool) {
             if (!rpool.isEmpty()) {
                 return (byte[]) rpool.removeFirst();
@@ -98,7 +98,7 @@ public class Session {
                         byte[] b = rcvBuf.toByteArray();
                         if (firstRead) {
                             if (handshake.equals(new String(b))) {
-                                putPkg(b);
+                                send(b);
                                 firstRead = false;
                             } else {
                                 throw new IOException("none jdwp connection.");
