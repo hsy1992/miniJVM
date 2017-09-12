@@ -208,7 +208,6 @@ enum {
 enum {
     MEM_TYPE_NODEF,
     MEM_TYPE_CLASS,
-    MEM_TYPE_RUNTIME,
     MEM_TYPE_INS,
     MEM_TYPE_ARR
 };
@@ -652,19 +651,16 @@ typedef struct _LocalVarItem {
 
 
 typedef struct _Runtime {
-    u8 type;//type of array or object or runtime
+    MethodInfo *methodInfo;
+    Class *clazz;
+    u8 *pc;
+    u8 *bytecode;//method bytecode
+    JavaThreadInfo *threadInfo;
+    Runtime *son;//sub method's runtime
     StackFrame *stack;
     LocalVarItem *localVariables;
     s32 localvar_count;
-    MethodInfo *methodInfo;
-    Class *clazz;
-    //method bytecode
-    u8 *pc;
-    CodeAttribute *codeAttr;
     u8 wideMode;
-//    Instance *thread;
-    JavaThreadInfo *threadInfo;
-    Runtime *son;//sub method's runtime
 } Runtime;
 //======================= class =============================
 

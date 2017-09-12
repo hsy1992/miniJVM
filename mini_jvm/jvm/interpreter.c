@@ -2639,7 +2639,7 @@ s32 op_ret(u8 **opCode, Runtime *runtime) {
 
 s32 op_tableswitch(u8 **opCode, Runtime *runtime) {
     s32 pos = 0;
-    pos = 4 - ((((u64) (long) *opCode) - (u64) (long) (runtime->codeAttr->code)) % 4);//4 byte对齐
+    pos = 4 - ((((u64) (long) *opCode) - (u64) (long) (runtime->bytecode)) % 4);//4 byte对齐
 
     Int2Float i2c;
     i2c.c3 = opCode[0][pos++];
@@ -2681,7 +2681,7 @@ s32 op_tableswitch(u8 **opCode, Runtime *runtime) {
 
 s32 op_lookupswitch(u8 **opCode, Runtime *runtime) {
     s32 pos = 0;
-    pos = 4 - ((((u64) (long) *opCode) - (u64) (long) (runtime->codeAttr->code)) % 4);//4 byte对齐
+    pos = 4 - ((((u64) (long) *opCode) - (u64) (long) (runtime->bytecode)) % 4);//4 byte对齐
     Int2Float i2c;
     i2c.c3 = opCode[0][pos++];
     i2c.c2 = opCode[0][pos++];
@@ -3115,7 +3115,6 @@ s32 execute_method(MethodInfo *method, Runtime *pruntime, Class *clazz) {
 
     Runtime runtime;
     memset(&(runtime), 0, sizeof(runtime));
-    runtime.type = MEM_TYPE_RUNTIME;
     runtime.stack = pruntime->stack;
     runtime.threadInfo = pruntime->threadInfo;
 
@@ -3162,7 +3161,7 @@ s32 execute_method(MethodInfo *method, Runtime *pruntime, Class *clazz) {
                    utf8_cstr(method->name));
 #endif
             runtime.pc = ca->code;
-            runtime.codeAttr = ca;
+            runtime.bytecode = ca->code;
             s32 i = 0;
             do {
                 InstructFunc func = find_instruct_func(runtime.pc[0]);
@@ -3177,7 +3176,7 @@ s32 execute_method(MethodInfo *method, Runtime *pruntime, Class *clazz) {
                         garbage_mark_refered_obj(runtime.threadInfo->top_runtime);
                         runtime.threadInfo->garbage_collect_mark_task = 0;
                     }
-                    //process jdwp
+                    //process jdwp suspend
                     while (runtime.threadInfo->suspend_count) {
                         threadSleep(20);
                     }

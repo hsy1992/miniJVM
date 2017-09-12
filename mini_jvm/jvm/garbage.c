@@ -146,7 +146,7 @@ s32 garbage_collect() {
 //        utf8_destory(str);
         if (v != HASH_NULL) {
             if (v->entries == 0 && mb->garbage_mark == GARBAGE_MARK_NO_REFERED) {
-                garbage_collect_memobj(k);
+                //garbage_collect_memobj(k);
                 i++;
             }
         }
@@ -274,15 +274,6 @@ void getMemBlockName(void *memblock, Utf8String *name) {
             case MEM_TYPE_CLASS: {
                 Class *clazz = (Class *) mb;
                 utf8_append(name, clazz->name);
-                break;
-            }
-            case MEM_TYPE_RUNTIME: {
-                Runtime *runtime = (Runtime *) mb;
-                utf8_append_c(name, "Runtime ");
-                utf8_append(name, runtime->clazz->name);
-                utf8_append_c(name, ".");
-                utf8_append(name, runtime->methodInfo->name);
-                //utf8_append(name, runtime->methodInfo->descriptor);
                 break;
             }
             case MEM_TYPE_INS: {

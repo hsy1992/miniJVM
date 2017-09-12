@@ -5,6 +5,8 @@
  */
 package javax.mini.jdwp.analyzer;
 
+import javax.mini.jdwp.net.ResponsePacket;
+
 /**
  *
  * @author gust
@@ -15,4 +17,12 @@ public class Location {
     public long classID;
     public long methodID;
     public long execIndex;
+    
+    public void writeLocation(ResponsePacket res){
+        res.writeByte(typeTag);
+        res.writeRefer(classID);
+        res.writeRefer(methodID);
+        res.writeLong(execIndex);
+        
+    }
 }
