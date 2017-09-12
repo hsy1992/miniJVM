@@ -125,14 +125,14 @@ public class DebugClient {
                             res.setErrorCode(Error.NONE);
                             res.setId(req.getId());
                             Thread[] threads = JvmThreads.getThreads();
-                            res.writeInt(threads.length - 1);
+                            res.writeInt(threads.length - 2);
                             for (Thread t : threads) {
-                                if (t == Thread.currentThread()) {
+                                if (t == JdwpManager.getServer().getDispacher()
+                                        || t == JdwpManager.getServer().getListener()) {//不发jdwp线程
                                     continue;
                                 }
                                 long tid = JdwpNative.referenceId(t);
                                 res.writeRefer(tid);
-                                System.out.println("thread id:" + Long.toString(tid, 16));
                             }
                             session.send(res.toByteArray());
                             System.out.println(res);
@@ -169,6 +169,10 @@ public class DebugClient {
                         case Command.VirtualMachine_Suspend: {//8
                             Thread[] threads = JvmThreads.getThreads();
                             for (Thread t : threads) {
+                                if (t == JdwpManager.getServer().getDispacher()
+                                        || t == JdwpManager.getServer().getListener()) {//不发jdwp线程
+                                    continue;
+                                }
                                 JvmThreads.suspendThread(t);
                             }
                             ResponsePacket res = new ResponsePacket();
@@ -180,6 +184,10 @@ public class DebugClient {
                         case Command.VirtualMachine_Resume: {//9
                             Thread[] threads = JvmThreads.getThreads();
                             for (Thread t : threads) {
+                                if (t == JdwpManager.getServer().getDispacher()
+                                        || t == JdwpManager.getServer().getListener()) {//不发jdwp线程
+                                    continue;
+                                }
                                 JvmThreads.resumeThread(t);
                             }
                             ResponsePacket res = new ResponsePacket();
@@ -374,9 +382,9 @@ public class DebugClient {
                 }
                 case CommandSet.ThreadReference: {//set 11
                     switch (req.getCommand()) {
-                        case Command.ThreadReference_Name: {//1
+                        case Command.ThreadReference_Name: {//11.1
                             long thread = req.readRefer();
-                            System.out.println("ThreadReference_Name:" + Long.toString(thread, 16));
+                            //System.out.println("ThreadReference_Name:" + Long.toString(thread, 16));
                             Thread t = (Thread) JdwpNative.referenceObj(thread);
                             ResponsePacket res = new ResponsePacket();
                             res.setId(req.getId());
@@ -385,7 +393,7 @@ public class DebugClient {
                             session.send(res.toByteArray());
                             break;
                         }
-                        case Command.ThreadReference_Suspend: {//2
+                        case Command.ThreadReference_Suspend: {//11.2
                             long thread = req.readRefer();
                             Thread t = (Thread) JdwpNative.referenceObj(thread);
                             JvmThreads.suspendThread(t);
@@ -395,7 +403,7 @@ public class DebugClient {
                             session.send(res.toByteArray());
                             break;
                         }
-                        case Command.ThreadReference_Resume: {//3
+                        case Command.ThreadReference_Resume: {//11.3
                             long thread = req.readRefer();
                             Thread t = (Thread) JdwpNative.referenceObj(thread);
                             JvmThreads.resumeThread(t);
@@ -405,7 +413,7 @@ public class DebugClient {
                             session.send(res.toByteArray());
                             break;
                         }
-                        case Command.ThreadReference_Status: {//4
+                        case Command.ThreadReference_Status: {//11.4
                             long thread = req.readRefer();
                             Thread t = (Thread) JdwpNative.referenceObj(thread);
                             ResponsePacket res = new ResponsePacket();
@@ -417,7 +425,7 @@ public class DebugClient {
                             break;
                         }
 
-                        case Command.ThreadReference_ThreadGroup: {//5
+                        case Command.ThreadReference_ThreadGroup: {//11.5
                             long thread = req.readRefer();
                             Thread t = (Thread) JdwpNative.referenceObj(thread);
                             ResponsePacket res = new ResponsePacket();
@@ -427,7 +435,7 @@ public class DebugClient {
                             session.send(res.toByteArray());
                             break;
                         }
-                        case Command.ThreadReference_Frames: {//6
+                        case Command.ThreadReference_Frames: {//11.6
                             long thread = req.readRefer();
                             int startFrame = req.readInt();
                             int length = req.readInt();
@@ -449,14 +457,14 @@ public class DebugClient {
                                     runtime = null;
                                 } else {
                                     runtime = new MemRuntime(son);
-                                    System.out.println(
-                                            "method=" + Long.toString(runtime.method_refer, 16)
-                                            + ",class=" + Long.toString(runtime.clazz_refer, 16)
-                                            + ",pc=" + Long.toString(runtime.pc_refer, 16)
-                                            + ",ca=" + Long.toString(runtime.code_refer, 16)
-                                            + ",son=" + Long.toString(runtime.son_refer, 16)
-                                            + ",idx=" + Long.toString(runtime.pc_refer - runtime.code_refer, 16)
-                                    );
+//                                    System.out.println(
+//                                            "method=" + Long.toString(runtime.method_refer, 16)
+//                                            + ",class=" + Long.toString(runtime.clazz_refer, 16)
+//                                            + ",pc=" + Long.toString(runtime.pc_refer, 16)
+//                                            + ",ca=" + Long.toString(runtime.code_refer, 16)
+//                                            + ",son=" + Long.toString(runtime.son_refer, 16)
+//                                            + ",idx=" + Long.toString(runtime.pc_refer - runtime.code_refer, 16)
+//                                    );
                                     Location loc = new Location();
                                     loc.typeTag = TypeTag.CLASS;
                                     loc.classID = runtime.clazz_refer;
@@ -478,7 +486,7 @@ public class DebugClient {
                             JvmThreads.resumeThread(t);
                             break;
                         }
-                        case Command.ThreadReference_FrameCount: {//7
+                        case Command.ThreadReference_FrameCount: {//11.7
                             long thread = req.readRefer();
                             Thread t = (Thread) JdwpNative.referenceObj(thread);
                             ResponsePacket res = new ResponsePacket();
@@ -488,7 +496,7 @@ public class DebugClient {
                             session.send(res.toByteArray());
                             break;
                         }
-                        case Command.ThreadReference_OwnedMonitors: {//8
+                        case Command.ThreadReference_OwnedMonitors: {//11.8
                             long thread = req.readRefer();
                             Thread t = (Thread) JdwpNative.referenceObj(thread);
                             ResponsePacket res = new ResponsePacket();
@@ -498,7 +506,7 @@ public class DebugClient {
                             session.send(res.toByteArray());
                             break;
                         }
-                        case Command.ThreadReference_CurrentContendedMonitor: {//9
+                        case Command.ThreadReference_CurrentContendedMonitor: {//11.9
                             long thread = req.readRefer();
                             Thread t = (Thread) JdwpNative.referenceObj(thread);
                             ResponsePacket res = new ResponsePacket();
@@ -508,7 +516,7 @@ public class DebugClient {
                             session.send(res.toByteArray());
                             break;
                         }
-                        case Command.ThreadReference_Stop: {//10
+                        case Command.ThreadReference_Stop: {//11.10
                             long thread = req.readRefer();
                             Thread t = (Thread) JdwpNative.referenceObj(thread);
                             long objid = req.readRefer();
@@ -519,7 +527,7 @@ public class DebugClient {
                             session.send(res.toByteArray());
                             break;
                         }
-                        case Command.ThreadReference_Interrupt: {//11
+                        case Command.ThreadReference_Interrupt: {//11.11
                             long thread = req.readRefer();
                             Thread t = (Thread) JdwpNative.referenceObj(thread);
                             t.interrupt();
@@ -529,7 +537,7 @@ public class DebugClient {
                             session.send(res.toByteArray());
                             break;
                         }
-                        case Command.ThreadReference_SuspendCount: {//12
+                        case Command.ThreadReference_SuspendCount: {//11.12
                             long thread = req.readRefer();
                             Thread t = (Thread) JdwpNative.referenceObj(thread);
                             ResponsePacket res = new ResponsePacket();
@@ -544,13 +552,13 @@ public class DebugClient {
                 }
                 case CommandSet.ThreadGroupReference: {//set 12
                     switch (req.getCommand()) {
-                        case Command.ThreadGroupReference_Name: {
+                        case Command.ThreadGroupReference_Name: {//12.1
                             break;
                         }
-                        case Command.ThreadGroupReference_Parent: {
+                        case Command.ThreadGroupReference_Parent: {//12.2
                             break;
                         }
-                        case Command.ThreadGroupReference_Children: {
+                        case Command.ThreadGroupReference_Children: {//12.3
                             break;
                         }
                     }
@@ -589,7 +597,7 @@ public class DebugClient {
                             //System.out.println("eventKind=" + eventKind);
                             for (int i = 0; i < numModifiers; i++) {
                                 int mod = req.readByte();
-                                System.out.println("15_1:" + mod);
+//                                System.out.println("15_1:" + mod);
                                 switch (mod) {
                                     case 1: {
                                         int count = req.readInt();

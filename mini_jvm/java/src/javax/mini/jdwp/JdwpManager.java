@@ -10,9 +10,18 @@ package javax.mini.jdwp;
  * @author gust
  */
 public class JdwpManager {
+    private static DebugServer server;
+    
     static public DebugServer startJdwp(){
-        DebugServer server=new DebugServer();
+        server=new DebugServer();
         server.startServer();
+        return server;
+    }
+
+    /**
+     * @return the server
+     */
+    public static DebugServer getServer() {
         return server;
     }
 }

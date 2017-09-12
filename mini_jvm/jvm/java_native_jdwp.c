@@ -224,7 +224,7 @@ s32 javax_mini_jdwp_vm_JvmThreads_getFrameCount(Runtime *runtime, Class *clazz) 
         i++;
         trun = trun->son;
     }
-    push_int(runtime->stack, i);
+    push_int(runtime->stack, 200);
 #if _JVM_DEBUG
     printf("com_egls_jvm_JvmThreads_getFrameCount\n");
 #endif

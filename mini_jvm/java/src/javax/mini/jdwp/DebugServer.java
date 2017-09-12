@@ -20,8 +20,8 @@ public class DebugServer {
 
     static int SERVER_PORT = 8000;
     Vector clients = new Vector();
-    Listener listener;
-    Dispacher dispacher;
+    private Listener listener;
+    private Dispacher dispacher;
     boolean exit = false;
     ServerSocket servSock;
 
@@ -75,5 +75,19 @@ public class DebugServer {
                 }
             }
         }
+    }
+
+    /**
+     * @return the listener
+     */
+    public Listener getListener() {
+        return listener;
+    }
+
+    /**
+     * @return the dispacher
+     */
+    public Dispacher getDispacher() {
+        return dispacher;
     }
 }
