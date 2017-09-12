@@ -5,6 +5,7 @@
  */
 package com.egls.test;
 
+import javax.mini.jdwp.vm.JvmThreads;
 import com.sun.cldc.i18n.StreamReader;
 import com.sun.cldc.i18n.StreamWriter;
 import com.sun.cldc.i18n.mini.UTF_8_Reader;
@@ -24,6 +25,7 @@ import javax.cldc.io.Connector;
 import javax.cldc.io.ContentConnection;
 import javax.mini.io.File;
 import javax.mini.io.RandomAccessFile;
+import javax.mini.jdwp.vm.JdwpNative;
 import javax.mini.net.ServerSocket;
 import javax.mini.net.Socket;
 import javax.mini.util.ArrayList;
@@ -482,13 +484,18 @@ public class Foo1 {
             Object val = map.get(key);
             System.out.println(key + ":" + val);
         }
-        Class cl = "".getClass();
+        Class cla = "".getClass();
         try {
             System.out.println(new Long(0).getClass().toString());
-            String s = (String) cl.newInstance();
+            String s = (String) cla.newInstance();
             System.out.println(s);
         } catch (InstantiationException ex) {
         } catch (IllegalAccessException ex) {
+        }
+
+        Class[] classes = JdwpNative.getClasses();
+        for (Class cl : classes) {
+            //System.out.println("class:" + cl.getName()+" id:"+JdwpNative.referenceId(cl));
         }
         while (true) {
             try {

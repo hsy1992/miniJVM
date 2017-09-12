@@ -149,7 +149,6 @@ class Thread implements Runnable {
         this.target = target;
         this.name  = name.toCharArray();
         this.priority = parent.getPriority();
-        com.egls.jvm.JvmThreads.addThread(this);
         setPriority0(priority);
     }
 

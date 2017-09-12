@@ -131,6 +131,22 @@ typedef void (*HashtableKeyFreeFunc)(HashtableKey value);
 
 typedef void (*HashtableValueFreeFunc)(HashtableValue value);
 
+struct _HashtableEntry {
+    HashtableKey key;
+    HashtableValue value;
+    HashtableEntry *next;
+};
+
+struct _Hashtable {
+    HashtableEntry **table;
+    unsigned long long int table_size;
+    HashtableHashFunc hash_func;
+    HashtableEqualFunc equal_func;
+    HashtableKeyFreeFunc key_free_func;
+    HashtableValueFreeFunc value_free_func;
+    unsigned long long int entries;
+};
+
 /**
  * Create a new hash table.
  *
@@ -268,7 +284,7 @@ HashtableValue hashtable_iter_next(HashtableIterator *iterator);
 
 HashtableKey hashtable_iter_next_key(HashtableIterator *iterator);
 
-int hashtable_resize(Hashtable *hash_table,unsigned long long int  size);
+int hashtable_resize(Hashtable *hash_table, unsigned long long int size);
 
 #ifdef __cplusplus
 }

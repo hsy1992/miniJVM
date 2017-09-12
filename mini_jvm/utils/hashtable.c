@@ -28,22 +28,6 @@ CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 
 static s32 HASH_TABLE_DEFAULT_SIZE = 16;
 
-struct _HashtableEntry {
-    HashtableKey key;
-    HashtableValue value;
-    HashtableEntry *next;
-};
-
-struct _Hashtable {
-    HashtableEntry **table;
-    unsigned long long int table_size;
-    HashtableHashFunc hash_func;
-    HashtableEqualFunc equal_func;
-    HashtableKeyFreeFunc key_free_func;
-    HashtableValueFreeFunc value_free_func;
-    unsigned long long int entries;
-};
-
 /* Internal function used to allocate the table on hash table creation
  * and when enlarging the table */
 
