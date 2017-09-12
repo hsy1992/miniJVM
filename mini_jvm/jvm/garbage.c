@@ -204,7 +204,7 @@ s32 garbage_check_by_all_thread() {
          *
          */
 
-        if (runtime->threadInfo->thread_running) {//让线程自己来标注，有的线程在等IO，等不起
+        if (runtime->threadInfo->thread_status==THREAD_STATUS_RUNNING) {//让线程自己来标注，有的线程在等IO，等不起
             runtime->threadInfo->garbage_collect_mark_task = 1;
             //printf("thread wait\n");
             while (runtime->threadInfo->garbage_collect_mark_task == 1)

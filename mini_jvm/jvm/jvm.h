@@ -266,10 +266,18 @@ static const u16 ACC_STRICT = 0x0800;
 enum {
     CLASS_STATUS_RAW,
     CLASS_STATUS_LOADED,
-    CLASS_STATUS_LINKING,
-    CLASS_STATUS_LINKED,
+    CLASS_STATUS_PREPARING,
+    CLASS_STATUS_PREPARED,
     CLASS_STATUS_CLINITING,
     CLASS_STATUS_CLINITED,
+};
+//线程
+enum {
+    THREAD_STATUS_ZOMBIE,
+    THREAD_STATUS_RUNNING,
+    THREAD_STATUS_SLEEPING,
+    THREAD_STATUS_MONITOR,
+    THREAD_STATUS_WAIT,
 };
 
 //指令指行返回状态
@@ -650,6 +658,8 @@ typedef struct _Runtime {
     s32 localvar_count;
     MethodInfo *methodInfo;
     Class *clazz;
+    //method bytecode
+    u8 *pc;
     CodeAttribute *codeAttr;
     u8 wideMode;
 //    Instance *thread;
@@ -709,11 +719,11 @@ s32 load_related_class(Utf8String *classpath, Class *clazz, hmap_t classes);
 
 s32 _LOAD_FROM_FILE(Class *_this, c8 *file);
 
-s32 class_link(Class *clazz);
+s32 class_prepar(Class *clazz);
 
 s32 convert_to_code_attribute(CodeAttribute *ca, AttributeInfo *attr, Class *clazz);
 
-void class_optmize(Class *clazz);
+void class_link(Class *clazz);
 
 void class_clinit(Class *clazz, Runtime *runtime);
 

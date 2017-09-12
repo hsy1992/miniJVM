@@ -482,11 +482,20 @@ public class Foo1 {
             Object val = map.get(key);
             System.out.println(key + ":" + val);
         }
-        while(true){
-            try{
+        Class cl = "".getClass();
+        try {
+            System.out.println(new Long(0).getClass().toString());
+            String s = (String) cl.newInstance();
+            System.out.println(s);
+        } catch (InstantiationException ex) {
+        } catch (IllegalAccessException ex) {
+        }
+        while (true) {
+            try {
                 Thread.sleep(1000);
                 //System.out.println("sleep 1000");
-            }catch(Exception e){}
+            } catch (Exception e) {
+            }
         }
     }
 

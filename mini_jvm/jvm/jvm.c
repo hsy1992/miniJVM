@@ -96,7 +96,7 @@ s32 execute(c8 *p_classpath, c8 *p_mainclass, s32 argc, c8 **argv) {
 #if _JVM_DEBUG
         printf("classes entry : %s,%d\n", utf8_cstr(k), clazz);
 #endif
-        if (clazz->status != CLASS_STATUS_LINKED)class_link(clazz);
+        if (clazz->status != CLASS_STATUS_PREPARED)class_prepar(clazz);
     }
     hashtable_iterate(classes, &hti);
     for (; hashtable_iter_has_more(&hti);) {

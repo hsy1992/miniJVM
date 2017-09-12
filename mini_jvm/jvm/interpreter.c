@@ -3161,20 +3161,25 @@ s32 execute_method(MethodInfo *method, Runtime *pruntime, Class *clazz) {
             printf("------------------------------------------------  %s.%s  start \n", utf8_cstr(clazz->name),
                    utf8_cstr(method->name));
 #endif
-            u8 *pc = ca->code;
+            runtime.pc = ca->code;
             runtime.codeAttr = ca;
             s32 i = 0;
             do {
-                InstructFunc func = find_instruct_func(pc[0]);
+                InstructFunc func = find_instruct_func(runtime.pc[0]);
                 if (func != 0) {
 #if _JVM_DEBUG_PROFILE
                     u8 instruct_code = pc[0];
                     s64 start_at = nanoTime();
 #endif
-                    i = func(&pc, &runtime);
+                    i = func(&runtime.pc, &runtime);
+                    //process garbage collection
                     if (runtime.threadInfo->garbage_collect_mark_task) {
                         garbage_mark_refered_obj(runtime.threadInfo->top_runtime);
                         runtime.threadInfo->garbage_collect_mark_task = 0;
+                    }
+                    //process jdwp
+                    while (runtime.threadInfo->suspend_count) {
+                        threadSleep(20);
                     }
 #if _JVM_DEBUG_PROFILE
                     s64 spent = nanoTime() - start_at;
@@ -3196,19 +3201,19 @@ s32 execute_method(MethodInfo *method, Runtime *pruntime, Class *clazz) {
                     push_ref(runtime.stack, ref);
 
                     Instance *ins = (Instance *) ref;
-                    s32 lineNum = find_line_num(ca, pc - ca->code);
+                    s32 lineNum = find_line_num(ca, runtime.pc - ca->code);
                     printf("   at %s.%s(%s.java:%d)\n",
                            utf8_cstr(clazz->name), utf8_cstr(method->name),
                            utf8_cstr(clazz->name),
                            lineNum
                     );
-                    ExceptionTable *et = find_exception_handler(&runtime, ins, ca, pc - ca->code, ref);
+                    ExceptionTable *et = find_exception_handler(&runtime, ins, ca, runtime.pc - ca->code, ref);
                     if (et == NULL) {
                         ret = RUNTIME_STATUS_EXCEPTION;
                         break;
                     } else {
                         //printf("Exception : %s\n", utf8_cstr(ins->mb.obj_of_clazz->name));
-                        pc = (ca->code + et->handler_pc);
+                        runtime.pc = (ca->code + et->handler_pc);
                         ret = RUNTIME_STATUS_NORMAL;
                     }
                 }

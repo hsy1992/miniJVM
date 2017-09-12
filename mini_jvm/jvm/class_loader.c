@@ -120,7 +120,7 @@ s32 _LOAD_FROM_FILE(Class *_this, c8 *file) {
     _parse_method_pool(_this, fp, cff->methods_count);
     fclose(fp);
 
-    class_optmize(_this);
+    class_link(_this);
 
     _this->status = CLASS_STATUS_LOADED;
     return 0;
@@ -130,7 +130,7 @@ s32 _LOAD_FROM_FILE(Class *_this, c8 *file) {
  * 把各个索引转为直接地址引用，加快处理速度
  * @param clazz
  */
-void class_optmize(Class *clazz) {
+void class_link(Class *clazz) {
     clazz->name = get_utf8_string(clazz, find_constant_classref(clazz, clazz->cff.this_class)->stringIndex);
 //    if (utf8_equals_c(clazz->name, "javax/mini/eio/socket/PrivateOutputStream")) {
 //        int debug = 1;

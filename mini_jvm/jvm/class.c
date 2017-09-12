@@ -86,9 +86,9 @@ void constant_list_destory(Class *clazz) {
  * @param clazz
  * @return
  */
-s32 class_link(Class *clazz) {
-    if (clazz->status >= CLASS_STATUS_LINKING)return 0;
-    clazz->status = CLASS_STATUS_LINKING;
+s32 class_prepar(Class *clazz) {
+    if (clazz->status >= CLASS_STATUS_PREPARING)return 0;
+    clazz->status = CLASS_STATUS_PREPARING;
     int i;
 
 /**
@@ -134,8 +134,8 @@ s32 class_link(Class *clazz) {
     //生成实例变量模板
     Class *superclass = getSuperClass(clazz);
     if (superclass) {
-        if (superclass->status != CLASS_STATUS_LINKED) {
-            class_link(superclass);
+        if (superclass->status != CLASS_STATUS_PREPARED) {
+            class_prepar(superclass);
         }
         clazz->field_instance_start = superclass->field_instance_len;
         clazz->field_instance_len = clazz->field_instance_start + instance_len;
@@ -149,7 +149,7 @@ s32 class_link(Class *clazz) {
         clazz->field_instance_template = jvm_alloc(clazz->field_instance_len);
     }
 
-    clazz->status = CLASS_STATUS_LINKED;
+    clazz->status = CLASS_STATUS_PREPARED;
     return 0;
 }
 
@@ -159,8 +159,8 @@ s32 class_link(Class *clazz) {
  * @param runtime
  */
 void class_clinit(Class *clazz, Runtime *runtime) {
-    if (clazz->status < CLASS_STATUS_LINKED) {
-        class_link(clazz);
+    if (clazz->status < CLASS_STATUS_PREPARED) {
+        class_prepar(clazz);
     }
     if (clazz->status >= CLASS_STATUS_CLINITING)return;
     clazz->status = CLASS_STATUS_CLINITING;

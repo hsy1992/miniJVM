@@ -33,7 +33,7 @@ Class *classes_load_get(Utf8String *ustr, Runtime *runtime) {
         load_class(classpath, ustr, classes);
         cl = classes_get(ustr);
     }
-    if (cl){
+    if (cl) {
         class_clinit(cl, runtime);
     }
     return cl;
@@ -377,7 +377,9 @@ void *jtherad_loader(void *para) {
         ret = execute_method(method, &runtime, method->_this_class);
         jthread_flag_suspend(&runtime);
         arraylist_remove(thread_list, &runtime);
+        runtime.threadInfo->thread_status = THREAD_STATUS_ZOMBIE;
     }
+    jthread_set_threadq_value(jthread, NULL);
     runtime_destory(&runtime);
     return (void *) (long) ret;
 }
@@ -426,12 +428,14 @@ s32 jthread_lock(MemoryBlock *ins, Runtime *runtime) { //可能会重入，同�
     JavaThreadLock *jtl = ins->thread_lock;
     if (jtl->jthread_holder == NULL) {//没人锁
         pthread_mutex_lock(&jtl->mutex_lock);
+        hashset_put(runtime->threadInfo->hold_locks, ins);
         jtl->jthread_holder = runtime->threadInfo->jthread;
         jtl->hold_count++;
     } else if (jtl->jthread_holder == runtime->threadInfo->jthread) { //重入
         jtl->hold_count++;
     } else {
         pthread_mutex_lock(&jtl->mutex_lock);
+        hashset_put(runtime->threadInfo->hold_locks, ins);
         jtl->jthread_holder = runtime->threadInfo->jthread;
         jtl->hold_count++;
     }
@@ -452,6 +456,7 @@ s32 jthread_unlock(MemoryBlock *ins, Runtime *runtime) {
         if (jtl->hold_count == 0) {//must change holder first, and unlock later
             jtl->jthread_holder = NULL;
             pthread_mutex_unlock(&jtl->mutex_lock);
+            hashset_remove(runtime->threadInfo->hold_locks, ins, 0);
         }
     }
     return 0;
@@ -479,34 +484,20 @@ s32 jthread_notifyAll(MemoryBlock *ins, Runtime *runtime) {
     return 0;
 }
 
-s32 jthread_wait(MemoryBlock *ins, Runtime *runtime) {
-    if (ins == NULL)return -1;
-    if (!ins->thread_lock) {
-        ins->thread_lock = jthreadlock_create();
-    }
-    pthread_cond_wait(&ins->thread_lock->thread_cond, &ins->thread_lock->mutex_lock);
-    return 0;
+s32 jthread_yield(Runtime *runtime) {
+    sched_yield();
 }
 
-//
-//s32 jthread_suspend(MemoryBlock *ins, Runtime *pruntime) {
-//    if (pruntime == NULL)return -1;
-//    return pthread_suspend(pruntime->threadInfo->pthread);
-//}
-//
-//s32 jthread_resume(MemoryBlock *ins, Runtime *pruntime) {
-//    if (pruntime == NULL)return -1;
-//    return pthread_continue(pruntime->threadInfo->pthread);
-//}
 
-s32 jthread_flag_suspend(Runtime *runtime){
-    runtime->threadInfo->thread_running = 0;
+s32 jthread_flag_suspend(Runtime *runtime) {
+    runtime->threadInfo->thread_status = THREAD_STATUS_SLEEPING;
 }
-s32 jthread_flag_resume(Runtime *runtime){
+
+s32 jthread_flag_resume(Runtime *runtime) {
     garbage_thread_lock();
     while (runtime->threadInfo->garbage_collect_mark_task == 1)
         garbage_thread_wait();//等待处理完成
-    runtime->threadInfo->thread_running = 1;
+    runtime->threadInfo->thread_status = THREAD_STATUS_RUNNING;
     garbage_thread_unlock();
 }
 
@@ -519,7 +510,9 @@ s32 jthread_waitTime(MemoryBlock *ins, Runtime *runtime, long waitms) {
     struct timespec t;
     t.tv_sec = waitms / 1000;
     t.tv_nsec = (waitms % 1000) * 1000000;
+    runtime->threadInfo->thread_status = THREAD_STATUS_WAIT;
     pthread_cond_timedwait(&ins->thread_lock->thread_cond, &ins->thread_lock->mutex_lock, &t);
+    runtime->threadInfo->thread_status = THREAD_STATUS_RUNNING;
     return 0;
 }
 
