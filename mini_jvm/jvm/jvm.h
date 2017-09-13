@@ -155,6 +155,7 @@ typedef struct _ConstantNameAndType ConstantNameAndType;
 typedef struct _JavaThreadLock JavaThreadLock;
 typedef struct _JavaThreadInfo JavaThreadInfo;
 typedef struct _Runtime Runtime;
+typedef struct _CodeAttribute CodeAttribute;
 
 typedef s32 (*java_native_fun)(Runtime *runtime, Class *p);
 
@@ -240,6 +241,7 @@ static const s32 data_type_bytes[14] = {0, 0, 0, 0,
 static const s32 DATATYPE_JCHAR = 5;
 static const s32 DATATYPE_REFERENCE = 12;
 static const s32 DATATYPE_ARRAY = 13;
+static const s32 DATATYPE_SHORT = 9;
 
 static const c8 tag_additional_byte_size[13] = {
         0, 2, 0, 4, 4,
@@ -540,8 +542,7 @@ typedef struct _AttributeInfo {
     s32 attribute_length;
     u8 *info;
     //
-    u8 *converted_code;
-    u8 *converted_exception;
+    CodeAttribute *converted_code;
 } AttributeInfo;
 
 
@@ -549,12 +550,7 @@ typedef struct _line_number {
     u16 start_pc;
     u16 line_number;
 } line_number;
-typedef struct _LineNumberTable {
-    u16 attribute_name_index;
-    u32 attribute_length;
-    u16 line_number_table_length;
-    u8 *table;
-} LineNumberTable;
+
 typedef struct _ExceptionTable {
     u16 start_pc;
     u16 end_pc;
@@ -571,7 +567,8 @@ typedef struct _CodeAttribute {
     u8 *code; // [code_length];
     u16 exception_table_length;
     ExceptionTable *exception_table; //[exception_table_length];
-    ArrayList *line_num_list;
+    u16 line_number_table_length;
+    line_number *line_number_table;
 
 #if 0
     u16 attributes_count;
@@ -622,6 +619,11 @@ typedef struct _MethodPool {
     MethodInfo *method;
     s32 method_used;
 } MethodPool;
+
+typedef struct _AttributePool {
+    AttributeInfo *attribute;
+    s32 attribute_used;
+} AttributePool;
 //======================= runtime =============================
 
 /* Stack Frame */
@@ -678,6 +680,7 @@ typedef struct _ClassType {
     InterfacePool interfacePool;
     FieldPool fieldPool;
     MethodPool methodPool;
+    AttributePool attributePool;
 
     __refer *constant_item_ptr;//存放常量池项目地址
     c8 status;
@@ -692,7 +695,7 @@ typedef struct _ClassType {
     //public:
     s32 (*_load_from_file)(struct _ClassType *_this, c8 *file);
 
-
+    Utf8String* source;
 } Class;
 
 void _INIT_CLASS(Class *_this);

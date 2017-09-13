@@ -5,15 +5,21 @@
  */
 package javax.mini.jdwp;
 
+import java.util.Hashtable;
+import javax.mini.jdwp.reflect.Reference;
+
 /**
  *
  * @author gust
  */
 public class JdwpManager {
+
     private static DebugServer server;
-    
-    static public DebugServer startJdwp(){
-        server=new DebugServer();
+    //存放虚拟机内存中的一些对象
+    static Hashtable reflectCache = new Hashtable();
+
+    static public DebugServer startJdwp() {
+        server = new DebugServer();
         server.startServer();
         return server;
     }
@@ -23,5 +29,14 @@ public class JdwpManager {
      */
     public static DebugServer getServer() {
         return server;
+    }
+
+    public static Reference getReference(long refid) {
+        Reference ref = (Reference) reflectCache.get(refid);
+        if (ref == null) {
+            ref = new Reference(refid);
+            reflectCache.put(ref.classId, ref);
+        }
+        return ref;
     }
 }

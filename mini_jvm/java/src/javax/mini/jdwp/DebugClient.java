@@ -21,9 +21,10 @@ import javax.mini.jdwp.net.JdwpPacket;
 import javax.mini.jdwp.net.RequestPacket;
 import javax.mini.jdwp.net.ResponsePacket;
 import javax.mini.jdwp.net.Session;
+import javax.mini.jdwp.reflect.Method;
+import javax.mini.jdwp.reflect.Reference;
 import javax.mini.jdwp.vm.MemRuntime;
 import javax.mini.net.Socket;
-import javax.mini.util.ArrayList;
 import javax.mini.util.LinkedList;
 
 /**
@@ -82,7 +83,7 @@ public class DebugClient {
 
                     switch (req.getCommand()) {
 
-                        case Command.VirtualMachine_Version: {//1
+                        case Command.VirtualMachine_Version: {//1.1
                             ResponsePacket res = new ResponsePacket();
                             res.setErrorCode(Error.NONE);
                             res.setId(req.getId());
@@ -95,7 +96,7 @@ public class DebugClient {
 //                            System.out.println(res);
                             break;
                         }
-                        case Command.VirtualMachine_ClassesBySignature: {//2
+                        case Command.VirtualMachine_ClassesBySignature: {//1.2
                             String signature = req.readUTF();
                             System.out.println("VirtualMachine_ClassesBySignature:" + signature);
                             ResponsePacket res = new ResponsePacket();
@@ -105,7 +106,7 @@ public class DebugClient {
                             session.send(res.toByteArray());
                             break;
                         }
-                        case Command.VirtualMachine_AllClasses: {//3
+                        case Command.VirtualMachine_AllClasses: {//1.3
                             Class[] classes = JdwpNative.getClasses();
                             ResponsePacket res = new ResponsePacket();
                             res.setErrorCode(Error.NONE);
@@ -120,7 +121,7 @@ public class DebugClient {
                             session.send(res.toByteArray());
                             break;
                         }
-                        case Command.VirtualMachine_AllThreads: {//4
+                        case Command.VirtualMachine_AllThreads: {//1.4
                             ResponsePacket res = new ResponsePacket();
                             res.setErrorCode(Error.NONE);
                             res.setId(req.getId());
@@ -138,7 +139,7 @@ public class DebugClient {
                             System.out.println(res);
                             break;
                         }
-                        case Command.VirtualMachine_TopLevelThreadGroups: {//5
+                        case Command.VirtualMachine_TopLevelThreadGroups: {//1.5
                             ResponsePacket res = new ResponsePacket();
                             res.setErrorCode(Error.NONE);
                             res.setId(req.getId());
@@ -146,14 +147,14 @@ public class DebugClient {
                             session.send(res.toByteArray());
                             break;
                         }
-                        case Command.VirtualMachine_Dispose: {//6
+                        case Command.VirtualMachine_Dispose: {//1.6
                             ResponsePacket res = new ResponsePacket();
                             res.setErrorCode(Error.NONE);
                             res.setId(req.getId());
                             session.send(res.toByteArray());
                             break;
                         }
-                        case Command.VirtualMachine_IDSizes: {//7
+                        case Command.VirtualMachine_IDSizes: {//1.7
                             ResponsePacket res = new ResponsePacket();
                             res.setErrorCode(Error.NONE);
                             res.setId(req.getId());
@@ -166,7 +167,7 @@ public class DebugClient {
                             System.out.println(res);
                             break;
                         }
-                        case Command.VirtualMachine_Suspend: {//8
+                        case Command.VirtualMachine_Suspend: {//1.8
                             Thread[] threads = JvmThreads.getThreads();
                             for (Thread t : threads) {
                                 if (t == JdwpManager.getServer().getDispacher()
@@ -181,7 +182,7 @@ public class DebugClient {
                             session.send(res.toByteArray());
                             break;
                         }
-                        case Command.VirtualMachine_Resume: {//9
+                        case Command.VirtualMachine_Resume: {//1.9
                             Thread[] threads = JvmThreads.getThreads();
                             for (Thread t : threads) {
                                 if (t == JdwpManager.getServer().getDispacher()
@@ -196,37 +197,58 @@ public class DebugClient {
                             session.send(res.toByteArray());
                             break;
                         }
-                        case Command.VirtualMachine_Exit: {//10
+                        case Command.VirtualMachine_Exit: {//1.10
+                            System.out.println(req + " not support");
                             break;
                         }
-                        case Command.VirtualMachine_CreateString: {//11
+                        case Command.VirtualMachine_CreateString: {//1.11
+                            System.out.println(req + " not support");
                             break;
                         }
-                        case Command.VirtualMachine_Capabilities: {//12
+                        case Command.VirtualMachine_Capabilities: {//1.12
+                            ResponsePacket res = new ResponsePacket();
+                            res.setErrorCode(Error.NONE);
+                            res.setId(req.getId());
+                            res.writeBoolean(false);//canWatchFieldModification
+                            res.writeBoolean(false);//canWatchFieldAccess
+                            res.writeBoolean(false);//canGetBytecodes
+                            res.writeBoolean(false);//canGetSyntheticAttribute
+                            res.writeBoolean(false);//canGetOwnedMonitorInfo
+                            res.writeBoolean(false);//canGetCurrentContendedMonitor
+                            res.writeBoolean(false);//canGetMonitorInfo
+                            session.send(res.toByteArray());
                             break;
                         }
-                        case Command.VirtualMachine_ClassPaths: {//13
+                        case Command.VirtualMachine_ClassPaths: {//1.13
+                            System.out.println(req + " not support");
                             break;
                         }
-                        case Command.VirtualMachine_DisposeObjects: {//14
+                        case Command.VirtualMachine_DisposeObjects: {//1.14
+                            System.out.println(req + " not support");
                             break;
                         }
-                        case Command.VirtualMachine_HoldEvents: {//15
+                        case Command.VirtualMachine_HoldEvents: {//1.15
+                            System.out.println(req + " not support");
                             break;
                         }
-                        case Command.VirtualMachine_ReleaseEvents: {//16
+                        case Command.VirtualMachine_ReleaseEvents: {//1.16
+                            System.out.println(req + " not support");
                             break;
                         }
-                        case Command.VirtualMachine_CapabilitiesNew: {//17
+                        case Command.VirtualMachine_CapabilitiesNew: {//1.17
+                            System.out.println(req + " not support");
                             break;
                         }
-                        case Command.VirtualMachine_RedefineClasses: {//18
+                        case Command.VirtualMachine_RedefineClasses: {//1.18
+                            System.out.println(req + " not support");
                             break;
                         }
-                        case Command.VirtualMachine_SetDefaultStratum: {//19
+                        case Command.VirtualMachine_SetDefaultStratum: {//1.19
+                            System.out.println(req + " not support");
                             break;
                         }
-                        case Command.VirtualMachine_AllClassesWithGeneric: {//20
+                        case Command.VirtualMachine_AllClassesWithGeneric: {//1.20
+                            System.out.println(req + " not support");
                             break;
                         }
 
@@ -236,49 +258,90 @@ public class DebugClient {
 
                 case CommandSet.ReferenceType: {//set 2
                     switch (req.getCommand()) {
-                        case Command.ReferenceType_Signature: {
+                        case Command.ReferenceType_Signature: {//2.1
+                            long refType = req.readRefer();
+                            Object obj = JdwpNative.referenceObj(refType);
+                            ResponsePacket res = new ResponsePacket();
+                            res.setErrorCode(Error.NONE);
+                            res.setId(req.getId());
+                            String str = "L" + obj.getClass().getName() + ";";
+                            //System.out.println("ReferenceType_Signature:"+Long.toString(refType,16)+","+str);
+                            res.writeUTF(str);
+                            session.send(res.toByteArray());
+
                             break;
                         }
-                        case Command.ReferenceType_ClassLoader: {
+                        case Command.ReferenceType_ClassLoader: {//2.2
+                            System.out.println(req + " not support");
                             break;
                         }
-                        case Command.ReferenceType_Modifiers: {
+                        case Command.ReferenceType_Modifiers: {//2.3
+                            System.out.println(req + " not support");
                             break;
                         }
-                        case Command.ReferenceType_Fields: {
+                        case Command.ReferenceType_Fields: {//2.4
+                            System.out.println(req + " not support");
                             break;
                         }
-                        case Command.ReferenceType_Methods: {
+                        case Command.ReferenceType_Methods: {//2.5
+                            long refType = req.readRefer();
+                            Reference ref = JdwpManager.getReference(refType);
+                            ResponsePacket res = new ResponsePacket();
+                            res.setErrorCode(Error.NONE);
+                            res.setId(req.getId());
+                            res.writeInt(ref.methodCount);
+                            for (int i = 0; i < ref.methodCount; i++) {
+                                res.writeRefer(ref.methods[i].methodId);
+                                res.writeUTF(ref.methods[i].methodName);
+                                res.writeUTF(ref.methods[i].signature);
+                                res.writeInt(ref.methods[i].accessFlags);
+                            }
+                            session.send(res.toByteArray());
                             break;
                         }
-                        case Command.ReferenceType_GetValues: {
+                        case Command.ReferenceType_GetValues: {//2.6
+                            System.out.println(req + " not support");
                             break;
                         }
-                        case Command.ReferenceType_SourceFile: {
+                        case Command.ReferenceType_SourceFile: {//2.7
+                            long refType = req.readRefer();
+                            Reference ref = (Reference) JdwpManager.getReference(refType);
+                            ResponsePacket res = new ResponsePacket();
+                            res.setErrorCode(Error.NONE);
+                            res.setId(req.getId());
+                            res.writeUTF(ref.source);
                             break;
                         }
-                        case Command.ReferenceType_NestedTypes: {
+                        case Command.ReferenceType_NestedTypes: {//2.8
+                            System.out.println(req + " not support");
                             break;
                         }
-                        case Command.ReferenceType_Status: {
+                        case Command.ReferenceType_Status: {//2.9
+                            System.out.println(req + " not support");
                             break;
                         }
-                        case Command.ReferenceType_Interfaces: {
+                        case Command.ReferenceType_Interfaces: {//2.10
+                            System.out.println(req + " not support");
                             break;
                         }
-                        case Command.ReferenceType_ClassObject: {
+                        case Command.ReferenceType_ClassObject: {//2.11
+                            System.out.println(req + " not support");
                             break;
                         }
-                        case Command.ReferenceType_SourceDebugExtension: {
+                        case Command.ReferenceType_SourceDebugExtension: {//2.12
+                            System.out.println(req + " not support");
                             break;
                         }
-                        case Command.ReferenceType_SignatureWithGeneric: {
+                        case Command.ReferenceType_SignatureWithGeneric: {//2.13
+                            System.out.println(req + " not support");
                             break;
                         }
-                        case Command.ReferenceType_FieldsWithGeneric: {
+                        case Command.ReferenceType_FieldsWithGeneric: {//2.14
+                            System.out.println(req + " not support");
                             break;
                         }
-                        case Command.ReferenceType_MethodsWithGeneric: {
+                        case Command.ReferenceType_MethodsWithGeneric: {//2.15
+                            System.out.println(req + " not support");
                             break;
                         }
                     }
@@ -287,15 +350,19 @@ public class DebugClient {
                 case CommandSet.ClassType: {//set 3
                     switch (req.getCommand()) {
                         case Command.ClassType_Superclass: {
+                            System.out.println(req + " not support");
                             break;
                         }
                         case Command.ClassType_SetValues: {
+                            System.out.println(req + " not support");
                             break;
                         }
                         case Command.ClassType_InvokeMethod: {
+                            System.out.println(req + " not support");
                             break;
                         }
                         case Command.ClassType_NewInstance: {
+                            System.out.println(req + " not support");
                             break;
                         }
                     }
@@ -304,29 +371,50 @@ public class DebugClient {
                 case CommandSet.ArrayType: {//set 4
                     switch (req.getCommand()) {
                         case Command.ArrayType_NewInstance: {
+                            System.out.println(req + " not support");
                             break;
                         }
                     }
                     break;
                 }
                 case CommandSet.InterfaceType: {//set 5
+                    System.out.println(req + " not support");
                     break;
                 }
                 case CommandSet.Method: {//set 6
                     switch (req.getCommand()) {
-                        case Command.Method_LineTable: {
+                        case Command.Method_LineTable: {//6.1
+                            long refType = req.readRefer();
+                            Reference ref = (Reference) JdwpManager.getReference(refType);
+                            long methodID = req.readRefer();
+                            Method method = ref.getMethod(methodID);
+                            ResponsePacket res = new ResponsePacket();
+                            res.setId(req.getId());
+                            res.setErrorCode(Error.NONE);
+                            res.writeLong(method.codeStart);
+                            res.writeLong(method.codeEnd);
+                            res.writeInt(method.lines);
+                            for (int i = 0; i < method.lines; i++) {
+                                res.writeLong(method.lineNum[i * 2]);
+                                res.writeInt(method.lineNum[i * 2 + 1]);
+                            }
+                            session.send(res.toByteArray());
                             break;
                         }
-                        case Command.Method_VariableTable: {
+                        case Command.Method_VariableTable: {//6.2
+                            System.out.println(req + " not support");
                             break;
                         }
-                        case Command.Method_Bytecodes: {
+                        case Command.Method_Bytecodes: {//6.3
+                            System.out.println(req + " not support");
                             break;
                         }
-                        case Command.Method_IsObsolete: {
+                        case Command.Method_IsObsolete: {//6.4
+                            System.out.println(req + " not support");
                             break;
                         }
-                        case Command.Method_VariableTableWithGeneric: {
+                        case Command.Method_VariableTableWithGeneric: {//6.5
+                            System.out.println(req + " not support");
                             break;
                         }
                     }
@@ -349,24 +437,31 @@ public class DebugClient {
                             break;
                         }
                         case Command.ObjectReference_GetValues: {
+                            System.out.println(req + " not support");
                             break;
                         }
                         case Command.ObjectReference_SetValues: {
+                            System.out.println(req + " not support");
                             break;
                         }
                         case Command.ObjectReference_MonitorInfo: {
+                            System.out.println(req + " not support");
                             break;
                         }
                         case Command.ObjectReference_InvokeMethod: {
+                            System.out.println(req + " not support");
                             break;
                         }
                         case Command.ObjectReference_DisableCollection: {
+                            System.out.println(req + " not support");
                             break;
                         }
                         case Command.ObjectReference_EnableCollection: {
+                            System.out.println(req + " not support");
                             break;
                         }
                         case Command.ObjectReference_IsCollected: {
+                            System.out.println(req + " not support");
                             break;
                         }
                     }
@@ -375,6 +470,7 @@ public class DebugClient {
                 case CommandSet.StringReference: {//set 10
                     switch (req.getCommand()) {
                         case Command.StringReference_Value: {
+                            System.out.println(req + " not support");
                             break;
                         }
                     }
@@ -553,12 +649,15 @@ public class DebugClient {
                 case CommandSet.ThreadGroupReference: {//set 12
                     switch (req.getCommand()) {
                         case Command.ThreadGroupReference_Name: {//12.1
+                            System.out.println(req + " not support");
                             break;
                         }
                         case Command.ThreadGroupReference_Parent: {//12.2
+                            System.out.println(req + " not support");
                             break;
                         }
                         case Command.ThreadGroupReference_Children: {//12.3
+                            System.out.println(req + " not support");
                             break;
                         }
                     }
@@ -567,12 +666,15 @@ public class DebugClient {
                 case CommandSet.ArrayReference: {//set 13
                     switch (req.getCommand()) {
                         case Command.ArrayReference_Length: {
+                            System.out.println(req + " not support");
                             break;
                         }
                         case Command.ArrayReference_GetValues: {
+                            System.out.println(req + " not support");
                             break;
                         }
                         case Command.ArrayReference_SetValues: {
+                            System.out.println(req + " not support");
                             break;
                         }
                     }
@@ -581,6 +683,7 @@ public class DebugClient {
                 case CommandSet.ClassLoaderReference: {//set 14
                     switch (req.getCommand()) {
                         case Command.ClassLoaderReference_VisibleClasses: {
+                            System.out.println(req + " not support");
                             break;
                         }
 
@@ -671,9 +774,11 @@ public class DebugClient {
                             break;
                         }//
                         case Command.EventRequest_Clear: {
+                            System.out.println(req + " not support");
                             break;
                         }
                         case Command.EventRequest_ClearAllBreakpoints: {
+                            System.out.println(req + " not support");
                             break;
                         }
                     }
@@ -682,15 +787,19 @@ public class DebugClient {
                 case CommandSet.StackFrame: {//set 16
                     switch (req.getCommand()) {
                         case Command.StackFrame_GetValues: {
+                            System.out.println(req + " not support");
                             break;
                         }
                         case Command.StackFrame_SetValues: {
+                            System.out.println(req + " not support");
                             break;
                         }
                         case Command.StackFrame_ThisObject: {
+                            System.out.println(req + " not support");
                             break;
                         }
                         case Command.StackFrame_PopFrames: {
+                            System.out.println(req + " not support");
                             break;
                         }
                     }
@@ -699,6 +808,7 @@ public class DebugClient {
                 case CommandSet.ClassObjectReference: {//set 17
                     switch (req.getCommand()) {
                         case Command.ClassObjectReference_ReflectedType: {
+                            System.out.println(req + " not support");
                             break;
                         }
 
@@ -708,6 +818,7 @@ public class DebugClient {
                 case CommandSet.Event: {//set 64
                     switch (req.getCommand()) {
                         case Command.Event_Composite: {
+                            System.out.println(req + " not support");
                             break;
                         }
 

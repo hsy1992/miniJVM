@@ -2994,22 +2994,18 @@ find_exception_handler(Runtime *runtime, Instance *exception, CodeAttribute *ca,
 
 static s32 find_line_num(CodeAttribute *ca, s32 offset) {
     s32 i, j;
-    for (i = 0; i < ca->line_num_list->length; i++) {
-        LineNumberTable *lineTable = arraylist_get_value(ca->line_num_list, i);
-        for (j = 0; j < lineTable->line_number_table_length; j++) {
-            line_number *node = (line_number *) (lineTable->table + (j * 4));
-            if (offset >= node->start_pc) {
-                if (j + 1 < lineTable->line_number_table_length) {
-                    line_number *next_node = (line_number *) (lineTable->table + ((j + 1) * 4));
 
-                    if (offset < next_node->start_pc) {
-                        return node->line_number;
-                    }
-                } else {
-                    if (i + 1 == ca->line_num_list->length) {//最后一组了
-                        return node->line_number;
-                    }
+    for (j = 0; j < ca->line_number_table_length; j++) {
+        line_number *node = &(ca->line_number_table[j]);
+        if (offset >= node->start_pc) {
+            if (j + 1 < ca->line_number_table_length) {
+                line_number *next_node = &(ca->line_number_table[j + 1]);
+
+                if (offset < next_node->start_pc) {
+                    return node->line_number;
                 }
+            } else {
+                return node->line_number;
             }
         }
     }
@@ -3144,7 +3140,7 @@ s32 execute_method(MethodInfo *method, Runtime *pruntime, Class *clazz) {
 
         for (j = 0; j < method->attributes_count; j++) {
             if (!method->attributes[j].converted_code)continue;
-            CodeAttribute *ca = (CodeAttribute *) method->attributes[j].converted_code;
+            CodeAttribute *ca = method->attributes[j].converted_code;
             localvar_init(&runtime, ca->max_locals + 1);
             stack2localvar(method, pruntime, &runtime);
             stackSize = pruntime->stack->size;

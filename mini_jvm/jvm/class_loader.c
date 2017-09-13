@@ -16,6 +16,38 @@ static c8 *getMajorVersionString(u16 major_number) {
     return "NONE";
 }
 
+s32 _parse_attribute_pool(Class *_this, FILE *fp, s32 count) {
+
+    s32 size = sizeof(AttributeInfo) * count;
+    _this->attributePool.attribute = jvm_alloc(size);
+    _this->attributePool.attribute_used = count;
+    s32 i;
+    u8 short_tmp[2];
+    u8 integer_tmp[4];
+    for (i = 0; i < count; i++) {
+        AttributeInfo *ptr = &(_this->attributePool.attribute[i]);
+
+        /* access flag */
+        fread(short_tmp, 2, 1, fp);
+        Short2Char s2c;
+        s2c.c1 = short_tmp[0];
+        s2c.c0 = short_tmp[1];
+        ptr->attribute_name_index = s2c.s;
+
+        fread(integer_tmp, 4, 1, fp);
+        Int2Float i2c;
+        i2c.c3 = integer_tmp[0];
+        i2c.c2 = integer_tmp[1];
+        i2c.c1 = integer_tmp[2];
+        i2c.c0 = integer_tmp[3];
+        ptr->attribute_length = i2c.i;
+        //
+        ptr->info = jvm_alloc(ptr->attribute_length);
+        fread(ptr->info, ptr->attribute_length, 1, fp);
+    }
+    return 0;
+}
+
 /* Print Class File Format */
 void printClassFileFormat(ClassFileFormat *cff) {
     s32 i;
@@ -118,6 +150,14 @@ s32 _LOAD_FROM_FILE(Class *_this, c8 *file) {
 
     /* methodRef pool table */
     _parse_method_pool(_this, fp, cff->methods_count);
+
+    //attribute
+    fread(short_tmp, 2, 1, fp);
+    s2c.c1 = short_tmp[0];
+    s2c.c0 = short_tmp[1];
+    cff->attributes_count = s2c.s;
+    _parse_attribute_pool(_this, fp, cff->attributes_count);
+
     fclose(fp);
 
     class_link(_this);
@@ -157,15 +197,21 @@ void class_link(Class *clazz) {
         for (j = 0; j < ptr->attributes_count; j++) {
             if (utf8_equals_c(get_utf8_string(clazz, ptr->attributes[j].attribute_name_index), "Code") == 1) {
                 CodeAttribute *ca = jvm_alloc(sizeof(CodeAttribute));
-//                if (utf8_equals_c(clazz->name, "com/sun/cldc/i18n/Helper") == 0 &&
-//                    1==utf8_equals_c(ptr->descriptor, "(Ljava/io/OutputStream;)Ljava/io/Writer;")) {
-//                    int debug = 1;
-//                }
                 convert_to_code_attribute(ca, &ptr->attributes[j], clazz);
                 jvm_free(ptr->attributes[j].info);//无用删除
                 ptr->attributes[j].info = NULL;
-                ptr->attributes[j].converted_code = (u8 *) ca;
+                ptr->attributes[j].converted_code = ca;
             }
+        }
+    }
+    for (i = 0; i < clazz->attributePool.attribute_used; i++) {
+        AttributeInfo *ptr = &clazz->attributePool.attribute[i];
+        Utf8String *name = get_utf8_string(clazz, ptr->attribute_name_index);
+        if (utf8_equals_c(name, "SourceFile")) {
+            Short2Char s2c;
+            s2c.c1 = ptr->info[0];
+            s2c.c0 = ptr->info[1];
+            clazz->source = get_utf8_string(clazz, s2c.s);
         }
     }
 
@@ -226,7 +272,7 @@ s32 convert_to_code_attribute(CodeAttribute *ca, AttributeInfo *attr, Class *cla
         s2c.c0 = attr->info[info_p++];
         ((u16 *) ca->exception_table)[i] = s2c.s;
     }
-    ca->line_num_list = arraylist_create(0);
+    //line number
     s2c.c1 = attr->info[info_p++];
     s2c.c0 = attr->info[info_p++];
     s32 attr_count = (u16) s2c.s;
@@ -241,22 +287,20 @@ s32 convert_to_code_attribute(CodeAttribute *ca, AttributeInfo *attr, Class *cla
         s32 attribute_lenth = (u32) i2c.i;
         //转行号表
         if (utf8_equals_c(get_utf8_string(clazz, attribute_name_index), "LineNumberTable")) {
-            LineNumberTable *lineTable = jvm_alloc(sizeof(LineNumberTable));
-            arraylist_append(ca->line_num_list, lineTable);
-            lineTable->attribute_name_index = attribute_name_index;
-            lineTable->attribute_length = attribute_lenth;
             s2c.c1 = attr->info[info_p++];
             s2c.c0 = attr->info[info_p++];
-            lineTable->line_number_table_length = (u16) s2c.s;
-            lineTable->table = jvm_alloc(sizeof(u32) * lineTable->line_number_table_length);
+            ca->line_number_table_length = (u16) s2c.s;
+            ca->line_number_table = jvm_alloc(sizeof(u32) * ca->line_number_table_length);
             s32 j;
-            for (j = 0; j < lineTable->line_number_table_length; j++) {
+            for (j = 0; j < ca->line_number_table_length; j++) {
                 s2c.c1 = attr->info[info_p++];
                 s2c.c0 = attr->info[info_p++];
-                setFieldShort(lineTable->table + (j * sizeof(u32)), s2c.s);
+                //setFieldShort(ca->line_number_table[j].start_pc, s2c.s);
+                ca->line_number_table[j].start_pc = s2c.s;
                 s2c.c1 = attr->info[info_p++];
                 s2c.c0 = attr->info[info_p++];
-                setFieldShort(lineTable->table + (j * sizeof(u32) + 2), s2c.s);
+                //setFieldShort(ca->line_number_table[j].line_number, s2c.s);
+                ca->line_number_table[j].line_number = s2c.s;
             }
         } else {
             info_p += attribute_lenth;

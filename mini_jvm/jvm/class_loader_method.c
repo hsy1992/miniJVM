@@ -224,14 +224,6 @@ s32 _parse_method_pool(Class *_this, FILE *fp, s32 count) {
     return 0;
 }
 
-void lineNumTable_destory(ArrayList *list) {
-    s32 i, j;
-    for (i = 0; i < list->length; i++) {
-        LineNumberTable *table = arraylist_get_value(list, i);
-        jvm_free(table->table);
-        jvm_free(table);
-    }
-}
 
 s32 _class_method_info_destory(Class *clazz) {
     s32 i, j;
@@ -246,9 +238,7 @@ s32 _class_method_info_destory(Class *clazz) {
                 jvm_free(ca->code);//info已被转换为converted_attribute
                 jvm_free(ca->exception_table);//info已被转换为converted_attribute
                 attr->converted_code = NULL;
-                if (ca->line_num_list) {
-                    lineNumTable_destory(ca->line_num_list);
-                }
+                jvm_free(ca->line_number_table);
             }
             jvm_free(attr->converted_code);
         }
