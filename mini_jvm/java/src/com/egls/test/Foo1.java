@@ -5,7 +5,7 @@
  */
 package com.egls.test;
 
-import javax.mini.jdwp.vm.JvmThreads;
+import javax.mini.jdwp.vm.JdwpThreads;
 import com.sun.cldc.i18n.StreamReader;
 import com.sun.cldc.i18n.StreamWriter;
 import com.sun.cldc.i18n.mini.UTF_8_Reader;

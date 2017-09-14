@@ -3136,6 +3136,7 @@ s32 execute_method(MethodInfo *method, Runtime *pruntime, Class *clazz) {
         ret = method->native_func(&runtime, clazz);
         jthread_flag_resume(&runtime);
         synchronized_unlock_method(method, &runtime);
+
     } else {
 
         for (j = 0; j < method->attributes_count; j++) {
@@ -3171,10 +3172,6 @@ s32 execute_method(MethodInfo *method, Runtime *pruntime, Class *clazz) {
                     if (runtime.threadInfo->garbage_collect_mark_task) {
                         garbage_mark_refered_obj(runtime.threadInfo->top_runtime);
                         runtime.threadInfo->garbage_collect_mark_task = 0;
-                    }
-                    //process jdwp suspend
-                    while (runtime.threadInfo->suspend_count) {
-                        threadSleep(20);
                     }
 #if _JVM_DEBUG_PROFILE
                     s64 spent = nanoTime() - start_at;
@@ -3232,6 +3229,10 @@ s32 execute_method(MethodInfo *method, Runtime *pruntime, Class *clazz) {
             }
 #endif
         }
+    }
+    //process jdwp suspend
+    while (runtime.threadInfo->suspend_count) {
+        threadSleep(20);
     }
     jvm_free(runtime.localVariables);
     pruntime->son = NULL;

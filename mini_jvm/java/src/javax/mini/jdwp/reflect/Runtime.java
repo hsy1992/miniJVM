@@ -20,6 +20,7 @@ public class Runtime {
 
     public Runtime son;
     public Runtime parent;
+    Method method;
 
     public Runtime(long rid) {
         this(rid, null);
@@ -29,9 +30,10 @@ public class Runtime {
         this.runtimeId = rid;
         this.parent = parent;
         mapRuntime(runtimeId);
+        method = new Method(methodId);
+        System.out.println(this);
         if (sonId != 0) {
             son = new Runtime(sonId, this);
-            System.out.println("parent:" + runtimeId + ", son:" + sonId);
         }
     }
 
@@ -48,6 +50,17 @@ public class Runtime {
         }
         deep--;//顶层
         return deep;
+    }
+
+    public String toString() {
+        return "Runtime:"
+                + "|" + Long.toString(runtimeId, 16)
+                + "|class:" + Long.toString(classId, 16)
+                + "|son:" + Long.toString(sonId, 16)
+                + "|pc:" + Long.toString(pc, 16)
+                + "|" + Long.toString(byteCode, 16)
+                + "|pos:" + (pc - byteCode)
+                + "|" + method.methodName;
     }
 
     native void mapRuntime(long runtimeId);

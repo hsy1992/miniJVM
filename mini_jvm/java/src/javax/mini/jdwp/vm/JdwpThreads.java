@@ -12,7 +12,7 @@ import java.util.Vector;
  *
  * @author gust
  */
-public class JvmThreads {
+public class JdwpThreads {
 
     static public native Thread[] getThreads();
     static public native int getStatus(Thread t);

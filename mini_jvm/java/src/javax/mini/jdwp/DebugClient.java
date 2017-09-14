@@ -6,8 +6,9 @@
 package javax.mini.jdwp;
 
 import javax.mini.jdwp.vm.JdwpNative;
-import javax.mini.jdwp.vm.JvmThreads;
+import javax.mini.jdwp.vm.JdwpThreads;
 import java.io.IOException;
+import java.util.Hashtable;
 import java.util.Random;
 import javax.mini.jdwp.analyzer.Location;
 import javax.mini.jdwp.constant.ClassStatus;
@@ -16,15 +17,14 @@ import javax.mini.jdwp.constant.CommandSet;
 import javax.mini.jdwp.constant.Error;
 import javax.mini.jdwp.constant.Tag;
 import javax.mini.jdwp.constant.TypeTag;
+import javax.mini.jdwp.events.EventManager;
 import javax.mini.jdwp.net.JdwpPacket;
 import javax.mini.jdwp.net.RequestPacket;
 import javax.mini.jdwp.net.ResponsePacket;
 import javax.mini.jdwp.net.Session;
 import javax.mini.jdwp.reflect.Method;
 import javax.mini.jdwp.reflect.Reference;
-import javax.mini.jdwp.vm.MemRuntime;
 import javax.mini.net.Socket;
-import javax.mini.util.LinkedList;
 
 /**
  *
@@ -97,11 +97,26 @@ public class DebugClient {
                         }
                         case Command.VirtualMachine_ClassesBySignature: {//1.2
                             String signature = req.readUTF();
-                            System.out.println("VirtualMachine_ClassesBySignature:" + signature);
                             ResponsePacket res = new ResponsePacket();
                             res.setErrorCode(Error.NONE);
                             res.setId(req.getId());
-                            res.writeInt(0);
+                            if (signature.startsWith("L")) {
+                                signature = signature.substring(1);
+                            }
+                            if (signature.endsWith(";")) {
+                                signature = signature.substring(0, signature.length() - 1);
+                            }
+                            Class cl = null;
+                            try {
+                                cl = Class.forName(signature);
+                            } catch (ClassNotFoundException ex) {
+                            }
+                            if (cl == null) {
+                                res.writeInt(0);
+                            } else {
+                                res.writeInt(ClassStatus.INITIALIZED);
+                            }
+                            System.out.println("VirtualMachine_ClassesBySignature:" + signature + "," + cl);
                             session.send(res.toByteArray());
                             break;
                         }
@@ -124,7 +139,7 @@ public class DebugClient {
                             ResponsePacket res = new ResponsePacket();
                             res.setErrorCode(Error.NONE);
                             res.setId(req.getId());
-                            Thread[] threads = JvmThreads.getThreads();
+                            Thread[] threads = JdwpThreads.getThreads();
                             res.writeInt(threads.length - 2);
                             for (Thread t : threads) {
                                 if (t == JdwpManager.getServer().getDispacher()
@@ -168,14 +183,14 @@ public class DebugClient {
                             break;
                         }
                         case Command.VirtualMachine_Suspend: {//1.8
-                            Thread[] threads = JvmThreads.getThreads();
+                            Thread[] threads = JdwpThreads.getThreads();
                             for (Thread t : threads) {
                                 if (t == JdwpManager.getServer().getDispacher()
                                         || t == JdwpManager.getServer().getListener()) {//不发jdwp线程
                                     continue;
                                 }
                                 System.out.println("VirtualMachine_Suspend:" + t.getName());
-                                JvmThreads.suspendThread(t);
+                                JdwpThreads.suspendThread(t);
                             }
                             ResponsePacket res = new ResponsePacket();
                             res.setErrorCode(Error.NONE);
@@ -184,13 +199,13 @@ public class DebugClient {
                             break;
                         }
                         case Command.VirtualMachine_Resume: {//1.9
-                            Thread[] threads = JvmThreads.getThreads();
+                            Thread[] threads = JdwpThreads.getThreads();
                             for (Thread t : threads) {
                                 if (t == JdwpManager.getServer().getDispacher()
                                         || t == JdwpManager.getServer().getListener()) {//不发jdwp线程
                                     continue;
                                 }
-                                JvmThreads.resumeThread(t);
+                                JdwpThreads.resumeThread(t);
                                 System.out.println("VirtualMachine_Resume:" + t.getName());
                             }
                             ResponsePacket res = new ResponsePacket();
@@ -497,7 +512,7 @@ public class DebugClient {
                         case Command.ThreadReference_Suspend: {//11.2
                             long thread = req.readRefer();
                             Thread t = (Thread) JdwpNative.referenceObj(thread);
-                            JvmThreads.suspendThread(t);
+                            JdwpThreads.suspendThread(t);
                             ResponsePacket res = new ResponsePacket();
                             res.setId(req.getId());
                             res.setErrorCode(Error.NONE);
@@ -507,7 +522,7 @@ public class DebugClient {
                         case Command.ThreadReference_Resume: {//11.3
                             long thread = req.readRefer();
                             Thread t = (Thread) JdwpNative.referenceObj(thread);
-                            JvmThreads.resumeThread(t);
+                            JdwpThreads.resumeThread(t);
                             ResponsePacket res = new ResponsePacket();
                             res.setId(req.getId());
                             res.setErrorCode(Error.NONE);
@@ -520,9 +535,9 @@ public class DebugClient {
                             ResponsePacket res = new ResponsePacket();
                             res.setId(req.getId());
                             res.setErrorCode(Error.NONE);
-                            res.writeInt(JvmThreads.getStatus(t));
+                            res.writeInt(JdwpThreads.getStatus(t));
                             res.writeInt(0);
-                            System.out.println("ThreadReference_Status:" + t.getName() + "," + JvmThreads.getStatus(t));
+                            System.out.println("ThreadReference_Status:" + t.getName() + "," + JdwpThreads.getStatus(t));
                             session.send(res.toByteArray());
                             break;
                         }
@@ -547,7 +562,7 @@ public class DebugClient {
                             res.setErrorCode(Error.NONE);
 
                             Thread t = (Thread) JdwpNative.referenceObj(thread);
-                            long rid = JvmThreads.getTopRuntime(t);
+                            long rid = JdwpThreads.getTopRuntime(t);
                             javax.mini.jdwp.reflect.Runtime runtime = new javax.mini.jdwp.reflect.Runtime(rid);
                             int deepth = runtime.getDeepth();
                             if (length == -1) {//等于-1返回所有剩下的
@@ -581,8 +596,8 @@ public class DebugClient {
                             ResponsePacket res = new ResponsePacket();
                             res.setId(req.getId());
                             res.setErrorCode(Error.NONE);
-                            res.writeInt(JvmThreads.getFrameCount(t));
-                            System.out.println("ThreadReference_FrameCount:" + JvmThreads.getFrameCount(t));
+                            res.writeInt(JdwpThreads.getFrameCount(t));
+                            System.out.println("ThreadReference_FrameCount:" + JdwpThreads.getFrameCount(t));
                             session.send(res.toByteArray());
                             break;
                         }
@@ -610,7 +625,7 @@ public class DebugClient {
                             long thread = req.readRefer();
                             Thread t = (Thread) JdwpNative.referenceObj(thread);
                             long objid = req.readRefer();
-                            JvmThreads.stopThread(t, objid);
+                            JdwpThreads.stopThread(t, objid);
                             ResponsePacket res = new ResponsePacket();
                             res.setId(req.getId());
                             res.setErrorCode(Error.NONE);
@@ -633,8 +648,8 @@ public class DebugClient {
                             ResponsePacket res = new ResponsePacket();
                             res.setId(req.getId());
                             res.setErrorCode(Error.NONE);
-                            res.writeInt(JvmThreads.getSuspendCount(t));
-                            System.out.println("ThreadReference_SuspendCount:" + t.getName() + "," + JvmThreads.getSuspendCount(t));
+                            res.writeInt(JdwpThreads.getSuspendCount(t));
+                            System.out.println("ThreadReference_SuspendCount:" + t.getName() + "," + JdwpThreads.getSuspendCount(t));
                             session.send(res.toByteArray());
                             break;
                         }
@@ -692,10 +707,10 @@ public class DebugClient {
                             byte eventKind = req.readByte();
                             byte suspendPolicy = req.readByte();
                             int modifiers = req.readInt();
-                            //System.out.println("eventKind=" + eventKind);
                             for (int i = 0; i < modifiers; i++) {
                                 int mod = req.readByte();
-//                                System.out.println("15_1:" + mod);
+                                
+                                System.out.println("EventRequest_Set: eventKind=" + eventKind + ", suspend=" + suspendPolicy + " ,modifiers=" + modifiers + ", mod=" + mod);
                                 switch (mod) {
                                     case 1: {
                                         int count = req.readInt();
@@ -762,15 +777,15 @@ public class DebugClient {
 
                             ResponsePacket res = new ResponsePacket();
                             res.setId(req.getId());
-                            Random r = new Random();
                             res.setErrorCode(Error.NONE);
-                            res.writeInt(req.getId());
+                            res.writeInt(EventManager.getRequestId());
                             session.send(res.toByteArray());
                             break;
                         }//
                         case Command.EventRequest_Clear: {//15.2
                             byte eventKind = req.readByte();
                             int requestID = req.readInt();
+                            System.out.println("EventRequest_Clear:eventKind=" + eventKind + ", requestID=" + requestID);
                             ResponsePacket res = new ResponsePacket();
                             res.setId(req.getId());
                             Random r = new Random();
@@ -844,4 +859,6 @@ public class DebugClient {
     public boolean isClosed() {
         return closed;
     }
+
+
 }

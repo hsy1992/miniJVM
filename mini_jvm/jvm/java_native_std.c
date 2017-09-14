@@ -23,8 +23,7 @@ s32 java_lang_Class_forName(Runtime *runtime, Class *clazz) {
     s32 ret = RUNTIME_STATUS_NORMAL;
     if (jstr) {
         Utf8String *ustr = utf8_create();
-        Instance *arr = jstring_get_value_array(jstr);
-        unicode_2_utf8((u16 *) arr->arr_body, ustr, arr->arr_length);
+        jstring_2_utf8(jstr, ustr);
         utf8_replace_c(ustr, ".", "/");
         cl = classes_load_get(ustr, runtime);
         if (!cl) {
@@ -558,10 +557,9 @@ s32 java_lang_System_identityHashCode(Runtime *runtime, Class *clazz) {
 s32 java_lang_System_getProperty0(Runtime *runtime, Class *clazz) {
     StackFrame *stack = runtime->stack;
 
-    Instance *tmps = (Instance *) (runtime->localVariables + 0)->refer;
-    Instance *jchar_arr = jstring_get_value_array(tmps);
+    Instance *jstr1 = (Instance *) (runtime->localVariables + 0)->refer;
     Utf8String *key = utf8_create();
-    unicode_2_utf8((u16 *) jchar_arr->arr_body, key, jchar_arr->arr_length);
+    jstring_2_utf8(jstr1, key);
     Utf8String *val = (Utf8String *) hashtable_get(sys_prop, key);
     if (val) {
         Instance *jstr = jstring_create(val, runtime);

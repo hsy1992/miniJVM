@@ -29,8 +29,8 @@ public class Location {
     public String toString() {
         return "Location:"
                 + "|" + typeTag
-                + "|" + Long.toString(classID)
-                + "|" + Long.toString(methodID)
+                + "|" + Long.toString(classID, 16)
+                + "|" + Long.toString(methodID, 16)
                 + "|" + Long.toString(execIndex);
     }
 }

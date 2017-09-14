@@ -793,6 +793,14 @@ s32 jstring_equals(Instance *jstr1, Instance *jstr2) {
     }
     return 0;
 }
+
+s32 jstring_2_utf8(Instance *jstr, Utf8String *utf8) {
+    Instance *arr = jstring_get_value_array(jstr);
+    s32 offset = jstring_get_offset(jstr);
+    s32 count = jstring_get_count(jstr);
+    unicode_2_utf8(((u16 *) arr->arr_body) + offset, utf8, count);
+    return 0;
+}
 //===============================    例外  ==================================
 
 Instance *exception_create(s32 exception_type, Runtime *runtime) {

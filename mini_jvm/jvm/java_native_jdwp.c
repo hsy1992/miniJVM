@@ -141,7 +141,7 @@ s32 javax_mini_jdwp_vm_MemObject_readRefer0(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-s32 javax_mini_jdwp_vm_JvmThreads_getThreads(Runtime *runtime, Class *clazz) {
+s32 javax_mini_jdwp_vm_JdwpThreads_getThreads(Runtime *runtime, Class *clazz) {
     Instance *jarr = jarray_create(thread_list->length, DATATYPE_REFERENCE);
     s32 i = 0;
     Long2Double l2d;
@@ -156,12 +156,12 @@ s32 javax_mini_jdwp_vm_JvmThreads_getThreads(Runtime *runtime, Class *clazz) {
     garbage_refer(jarr, NULL);
 
 #if _JVM_DEBUG
-    printf("javax_mini_jdwp_vm_JvmThreads_getThreads\n");
+    printf("javax_mini_jdwp_vm_JdwpThreads_getThreads\n");
 #endif
     return 0;
 }
 
-s32 javax_mini_jdwp_vm_JvmThreads_getStatus(Runtime *runtime, Class *clazz) {
+s32 javax_mini_jdwp_vm_JdwpThreads_getStatus(Runtime *runtime, Class *clazz) {
     Instance *thread = (Instance *) (runtime->localVariables + 0)->refer;
     Runtime *trun = (Runtime *) jthread_get_threadq_value(thread);//线程结束之后会清除掉runtime,因为其是一个栈变量，不可再用
     if (trun)
@@ -169,12 +169,12 @@ s32 javax_mini_jdwp_vm_JvmThreads_getStatus(Runtime *runtime, Class *clazz) {
     else
         push_int(runtime->stack, THREAD_STATUS_ZOMBIE);
 #if _JVM_DEBUG
-    printf("com_egls_jvm_JvmThreads_getStatus\n");
+    printf("com_egls_jvm_JdwpThreads_getStatus\n");
 #endif
     return 0;
 }
 
-s32 javax_mini_jdwp_vm_JvmThreads_suspendThread(Runtime *runtime, Class *clazz) {
+s32 javax_mini_jdwp_vm_JdwpThreads_suspendThread(Runtime *runtime, Class *clazz) {
     Instance *thread = (Instance *) (runtime->localVariables + 0)->refer;
     Runtime *trun = (Runtime *) jthread_get_threadq_value(thread);//线程结束之后会清除掉runtime,因为其是一个栈变量，不可再用
     if (trun) {
@@ -183,12 +183,12 @@ s32 javax_mini_jdwp_vm_JvmThreads_suspendThread(Runtime *runtime, Class *clazz) 
     } else
         push_int(runtime->stack, 1);
 #if _JVM_DEBUG
-    printf("com_egls_jvm_JvmThreads_suspendThread\n");
+    printf("com_egls_jvm_JdwpThreads_suspendThread\n");
 #endif
     return 0;
 }
 
-s32 javax_mini_jdwp_vm_JvmThreads_resumeThread(Runtime *runtime, Class *clazz) {
+s32 javax_mini_jdwp_vm_JdwpThreads_resumeThread(Runtime *runtime, Class *clazz) {
     Instance *thread = (Instance *) (runtime->localVariables + 0)->refer;
     Runtime *trun = (Runtime *) jthread_get_threadq_value(thread);//线程结束之后会清除掉runtime,因为其是一个栈变量，不可再用
     if (trun) {
@@ -197,13 +197,13 @@ s32 javax_mini_jdwp_vm_JvmThreads_resumeThread(Runtime *runtime, Class *clazz) {
     } else
         push_int(runtime->stack, 1);
 #if _JVM_DEBUG
-    printf("com_egls_jvm_JvmThreads_resumeThread\n");
+    printf("com_egls_jvm_JdwpThreads_resumeThread\n");
 #endif
     return 0;
 }
 
 
-s32 javax_mini_jdwp_vm_JvmThreads_getSuspendCount(Runtime *runtime, Class *clazz) {
+s32 javax_mini_jdwp_vm_JdwpThreads_getSuspendCount(Runtime *runtime, Class *clazz) {
     Instance *thread = (Instance *) (runtime->localVariables + 0)->refer;
     Runtime *trun = (Runtime *) jthread_get_threadq_value(thread);//线程结束之后会清除掉runtime,因为其是一个栈变量，不可再用
     if (trun) {
@@ -211,12 +211,12 @@ s32 javax_mini_jdwp_vm_JvmThreads_getSuspendCount(Runtime *runtime, Class *clazz
     } else
         push_int(runtime->stack, 0);
 #if _JVM_DEBUG
-    printf("com_egls_jvm_JvmThreads_getSuspendCount\n");
+    printf("com_egls_jvm_JdwpThreads_getSuspendCount\n");
 #endif
     return 0;
 }
 
-s32 javax_mini_jdwp_vm_JvmThreads_getFrameCount(Runtime *runtime, Class *clazz) {
+s32 javax_mini_jdwp_vm_JdwpThreads_getFrameCount(Runtime *runtime, Class *clazz) {
     Instance *thread = (Instance *) (runtime->localVariables + 0)->refer;
     Runtime *trun = (Runtime *) jthread_get_threadq_value(thread);//线程结束之后会清除掉runtime,因为其是一个栈变量，不可再用
     int i = 0;
@@ -229,7 +229,7 @@ s32 javax_mini_jdwp_vm_JvmThreads_getFrameCount(Runtime *runtime, Class *clazz) 
     return 0;
 }
 
-s32 javax_mini_jdwp_vm_JvmThreads_stopThread(Runtime *runtime, Class *clazz) {
+s32 javax_mini_jdwp_vm_JdwpThreads_stopThread(Runtime *runtime, Class *clazz) {
     Instance *thread = (Instance *) (runtime->localVariables + 0)->refer;
     Long2Double l2d;
     l2d.i2l.i1 = (runtime->localVariables + 1)->integer;
@@ -241,13 +241,13 @@ s32 javax_mini_jdwp_vm_JvmThreads_stopThread(Runtime *runtime, Class *clazz) {
     } else
         push_int(runtime->stack, 0);
 #if _JVM_DEBUG
-    printf("com_egls_jvm_JvmThreads_stopThread\n");
+    printf("com_egls_jvm_JdwpThreads_stopThread\n");
 #endif
     return 0;
 }
 
 
-s32 javax_mini_jdwp_vm_JvmThreads_getTopRuntime(Runtime *runtime, Class *clazz) {
+s32 javax_mini_jdwp_vm_JdwpThreads_getTopRuntime(Runtime *runtime, Class *clazz) {
     Instance *thread = (Instance *) (runtime->localVariables + 0)->refer;
     Runtime *trun = (Runtime *) jthread_get_threadq_value(thread);//线程结束之后会清除掉runtime,因为其是一个栈变量，不可再用
     if (trun)
@@ -255,7 +255,7 @@ s32 javax_mini_jdwp_vm_JvmThreads_getTopRuntime(Runtime *runtime, Class *clazz) 
     else
         push_int(runtime->stack, 0);
 #if _JVM_DEBUG
-    printf("javax_mini_jdwp_vm_JvmThreads_getTopRuntime\n");
+    printf("javax_mini_jdwp_vm_JdwpThreads_getTopRuntime\n");
 #endif
     return 0;
 }
@@ -431,14 +431,14 @@ static java_native_method method_jdwp_table[] = {
         {"javax/mini/jdwp/vm/MemObject",      "readInt0",          "(JI)I",                  javax_mini_jdwp_vm_MemObject_readInt0},
         {"javax/mini/jdwp/vm/MemObject",      "readLong0",         "(JI)J",                  javax_mini_jdwp_vm_MemObject_readLong0},
         {"javax/mini/jdwp/vm/MemObject",      "readRefer0",        "(JI)J",                  javax_mini_jdwp_vm_MemObject_readRefer0},
-        {"javax/mini/jdwp/vm/JvmThreads",     "getThreads",        "()[Ljava/lang/Thread;",  javax_mini_jdwp_vm_JvmThreads_getThreads},
-        {"javax/mini/jdwp/vm/JvmThreads",     "getStatus",         "(Ljava/lang/Thread;)I",  javax_mini_jdwp_vm_JvmThreads_getStatus},
-        {"javax/mini/jdwp/vm/JvmThreads",     "suspendThread",     "(Ljava/lang/Thread;)I",  javax_mini_jdwp_vm_JvmThreads_suspendThread},
-        {"javax/mini/jdwp/vm/JvmThreads",     "resumeThread",      "(Ljava/lang/Thread;)I",  javax_mini_jdwp_vm_JvmThreads_resumeThread},
-        {"javax/mini/jdwp/vm/JvmThreads",     "getSuspendCount",   "(Ljava/lang/Thread;)I",  javax_mini_jdwp_vm_JvmThreads_getSuspendCount},
-        {"javax/mini/jdwp/vm/JvmThreads",     "getFrameCount",     "(Ljava/lang/Thread;)I",  javax_mini_jdwp_vm_JvmThreads_getFrameCount},
-        {"javax/mini/jdwp/vm/JvmThreads",     "stopThread",        "(Ljava/lang/Thread;J)I", javax_mini_jdwp_vm_JvmThreads_stopThread},
-        {"javax/mini/jdwp/vm/JvmThreads",     "getTopRuntime",     "(Ljava/lang/Thread;)J",  javax_mini_jdwp_vm_JvmThreads_getTopRuntime},
+        {"javax/mini/jdwp/vm/JdwpThreads",    "getThreads",        "()[Ljava/lang/Thread;",  javax_mini_jdwp_vm_JdwpThreads_getThreads},
+        {"javax/mini/jdwp/vm/JdwpThreads",    "getStatus",         "(Ljava/lang/Thread;)I",  javax_mini_jdwp_vm_JdwpThreads_getStatus},
+        {"javax/mini/jdwp/vm/JdwpThreads",    "suspendThread",     "(Ljava/lang/Thread;)I",  javax_mini_jdwp_vm_JdwpThreads_suspendThread},
+        {"javax/mini/jdwp/vm/JdwpThreads",    "resumeThread",      "(Ljava/lang/Thread;)I",  javax_mini_jdwp_vm_JdwpThreads_resumeThread},
+        {"javax/mini/jdwp/vm/JdwpThreads",    "getSuspendCount",   "(Ljava/lang/Thread;)I",  javax_mini_jdwp_vm_JdwpThreads_getSuspendCount},
+        {"javax/mini/jdwp/vm/JdwpThreads",    "getFrameCount",     "(Ljava/lang/Thread;)I",  javax_mini_jdwp_vm_JdwpThreads_getFrameCount},
+        {"javax/mini/jdwp/vm/JdwpThreads",    "stopThread",        "(Ljava/lang/Thread;J)I", javax_mini_jdwp_vm_JdwpThreads_stopThread},
+        {"javax/mini/jdwp/vm/JdwpThreads",    "getTopRuntime",     "(Ljava/lang/Thread;)J",  javax_mini_jdwp_vm_JdwpThreads_getTopRuntime},
         {"javax/mini/jdwp/reflect/Reference", "mapReference",      "(J)V",                   javax_mini_jdwp_reflect_Reference_mapReference},
         {"javax/mini/jdwp/reflect/Field",     "mapField",          "(J)V",                   javax_mini_jdwp_reflect_Field_mapField},
         {"javax/mini/jdwp/reflect/Method",    "mapMethod",         "(J)V",                   javax_mini_jdwp_reflect_Method_mapMethod},
