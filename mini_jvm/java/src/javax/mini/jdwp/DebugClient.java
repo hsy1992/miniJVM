@@ -18,6 +18,7 @@ import javax.mini.jdwp.constant.Error;
 import javax.mini.jdwp.constant.Tag;
 import javax.mini.jdwp.constant.TypeTag;
 import javax.mini.jdwp.events.EventManager;
+import javax.mini.jdwp.events.ReqEvent;
 import javax.mini.jdwp.net.JdwpPacket;
 import javax.mini.jdwp.net.RequestPacket;
 import javax.mini.jdwp.net.ResponsePacket;
@@ -167,6 +168,7 @@ public class DebugClient {
                             res.setErrorCode(Error.NONE);
                             res.setId(req.getId());
                             session.send(res.toByteArray());
+                            closed = true;
                             break;
                         }
                         case Command.VirtualMachine_IDSizes: {//1.7
@@ -703,82 +705,12 @@ public class DebugClient {
                 case CommandSet.EventRequest: {//set 15
                     switch (req.getCommand()) {
                         case Command.EventRequest_Set: {//15.1
-
-                            byte eventKind = req.readByte();
-                            byte suspendPolicy = req.readByte();
-                            int modifiers = req.readInt();
-                            for (int i = 0; i < modifiers; i++) {
-                                int mod = req.readByte();
-                                
-                                System.out.println("EventRequest_Set: eventKind=" + eventKind + ", suspend=" + suspendPolicy + " ,modifiers=" + modifiers + ", mod=" + mod);
-                                switch (mod) {
-                                    case 1: {
-                                        int count = req.readInt();
-                                        break;
-                                    }
-                                    case 2: {
-                                        int exprId = req.readInt();
-                                        break;
-                                    }
-                                    case 3: {
-                                        long threadID = req.readRefer();
-                                        break;
-                                    }
-                                    case 4: {
-                                        long clazz = req.readRefer();
-                                        break;
-                                    }
-                                    case 5: {
-                                        String classPattern = req.readUTF();
-                                        break;
-                                    }
-                                    case 6: {
-                                        String classPattern = req.readUTF();
-                                        break;
-                                    }
-                                    case 7: {
-                                        Location location = new Location();
-                                        location.typeTag = req.readByte();
-                                        location.classID = req.readRefer();
-                                        location.methodID = req.readRefer();
-                                        location.execIndex = req.readRefer();
-                                        break;
-                                    }
-                                    case 8: {
-                                        long referenceTypeID = req.readRefer();
-                                        boolean caught = req.readBoolean();
-                                        boolean uncaught = req.readBoolean();
-                                        break;
-                                    }
-                                    case 9: {
-                                        long referenceTypeID = req.readRefer();
-                                        long fieldID = req.readRefer();
-                                        break;
-                                    }
-                                    case 10: {
-                                        long threadId = req.readRefer();
-                                        int size = req.readInt();
-                                        int depth = req.readInt();
-                                        break;
-                                    }
-                                    case 11: {
-                                        long instance = req.readRefer();
-                                        break;
-                                    }
-                                    case 12: {
-                                        String sourceNamePattern = req.readUTF();
-                                        break;
-                                    }
-                                    default: {
-                                        break;
-                                    }
-                                }
-                            }
-
+                            ReqEvent event = new ReqEvent(req);
+                            EventManager.putEvent(event);
                             ResponsePacket res = new ResponsePacket();
                             res.setId(req.getId());
                             res.setErrorCode(Error.NONE);
-                            res.writeInt(EventManager.getRequestId());
+                            res.writeInt(event.getRequestId());
                             session.send(res.toByteArray());
                             break;
                         }//
@@ -859,6 +791,5 @@ public class DebugClient {
     public boolean isClosed() {
         return closed;
     }
-
 
 }
