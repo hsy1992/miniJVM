@@ -17,9 +17,9 @@ public class Reference {
     public long classId;
     public String className;
     public short accessFlags;
-    public int fieldCount;
-    public int methodCount;
     public String source;
+    long fieldIds[];
+    long methodIds[];
 
     public Field[] fields;
     public Method[] methods;
@@ -27,22 +27,18 @@ public class Reference {
     public Reference(long classId) {
         this.classId = classId;
         mapReference(classId);
-        fields = new Field[fieldCount];
-        for (int i = 0; i < fieldCount; i++) {
-            Field field = new Field();
-            mapField(field, classId, i);
-            fields[i] = (field);
+        fields = new Field[fieldIds.length];
+        for (int i = 0; i < fieldIds.length; i++) {
+            fields[i] = new Field(fieldIds[i]);
         }
-        methods = new Method[methodCount];
-        for (int i = 0; i < methodCount; i++) {
-            Method method = new Method();
-            mapMethod(method, classId, i);
-            methods[i] = (method);
+        methods = new Method[methodIds.length];
+        for (int i = 0; i < methodIds.length; i++) {
+            methods[i] = new Method(methodIds[i]);
         }
     }
 
     public Method getMethod(long methodId) {
-        for (int i = 0; i < methodCount; i++) {
+        for (int i = 0; i < methodIds.length; i++) {
             if (methods[i].methodId == methodId) {
                 return methods[i];
             }
@@ -51,7 +47,7 @@ public class Reference {
     }
 
     public Field getField(long fieldId) {
-        for (int i = 0; i < fieldCount; i++) {
+        for (int i = 0; i < fieldIds.length; i++) {
             if (fields[i].fieldId == fieldId) {
                 return fields[i];
             }
@@ -61,7 +57,4 @@ public class Reference {
 
     native void mapReference(long classId);
 
-    static native void mapField(Field field, long classId, int index);
-
-    static native void mapMethod(Method field, long classId, int index);
 }

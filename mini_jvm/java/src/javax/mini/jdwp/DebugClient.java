@@ -14,7 +14,6 @@ import javax.mini.jdwp.constant.ClassStatus;
 import javax.mini.jdwp.constant.Command;
 import javax.mini.jdwp.constant.CommandSet;
 import javax.mini.jdwp.constant.Error;
-import javax.mini.jdwp.constant.SuspendStatus;
 import javax.mini.jdwp.constant.Tag;
 import javax.mini.jdwp.constant.TypeTag;
 import javax.mini.jdwp.net.JdwpPacket;
@@ -133,6 +132,7 @@ public class DebugClient {
                                     continue;
                                 }
                                 long tid = JdwpNative.referenceId(t);
+                                System.out.println("VirtualMachine_AllThreads:" + t.getName());
                                 res.writeRefer(tid);
                             }
                             session.send(res.toByteArray());
@@ -174,6 +174,7 @@ public class DebugClient {
                                         || t == JdwpManager.getServer().getListener()) {//不发jdwp线程
                                     continue;
                                 }
+                                System.out.println("VirtualMachine_Suspend:" + t.getName());
                                 JvmThreads.suspendThread(t);
                             }
                             ResponsePacket res = new ResponsePacket();
@@ -190,6 +191,7 @@ public class DebugClient {
                                     continue;
                                 }
                                 JvmThreads.resumeThread(t);
+                                System.out.println("VirtualMachine_Resume:" + t.getName());
                             }
                             ResponsePacket res = new ResponsePacket();
                             res.setErrorCode(Error.NONE);
@@ -265,7 +267,7 @@ public class DebugClient {
                             res.setErrorCode(Error.NONE);
                             res.setId(req.getId());
                             String str = "L" + obj.getClass().getName() + ";";
-                            //System.out.println("ReferenceType_Signature:"+Long.toString(refType,16)+","+str);
+                            System.out.println("ReferenceType_Signature:" + Long.toString(refType, 16) + "," + str);
                             res.writeUTF(str);
                             session.send(res.toByteArray());
 
@@ -289,8 +291,9 @@ public class DebugClient {
                             ResponsePacket res = new ResponsePacket();
                             res.setErrorCode(Error.NONE);
                             res.setId(req.getId());
-                            res.writeInt(ref.methodCount);
-                            for (int i = 0; i < ref.methodCount; i++) {
+                            res.writeInt(ref.methods.length);
+                            for (int i = 0; i < ref.methods.length; i++) {
+                                //System.out.println("method[" + i + "]" + ref.methods[i]);
                                 res.writeRefer(ref.methods[i].methodId);
                                 res.writeUTF(ref.methods[i].methodName);
                                 res.writeUTF(ref.methods[i].signature);
@@ -310,6 +313,7 @@ public class DebugClient {
                             res.setErrorCode(Error.NONE);
                             res.setId(req.getId());
                             res.writeUTF(ref.source);
+                            System.out.println("ReferenceType_SourceFile:" + ref.source);
                             break;
                         }
                         case Command.ReferenceType_NestedTypes: {//2.8
@@ -349,19 +353,19 @@ public class DebugClient {
                 }
                 case CommandSet.ClassType: {//set 3
                     switch (req.getCommand()) {
-                        case Command.ClassType_Superclass: {
+                        case Command.ClassType_Superclass: {//3.1
                             System.out.println(req + " not support");
                             break;
                         }
-                        case Command.ClassType_SetValues: {
+                        case Command.ClassType_SetValues: {//3.2
                             System.out.println(req + " not support");
                             break;
                         }
-                        case Command.ClassType_InvokeMethod: {
+                        case Command.ClassType_InvokeMethod: {//3.3
                             System.out.println(req + " not support");
                             break;
                         }
-                        case Command.ClassType_NewInstance: {
+                        case Command.ClassType_NewInstance: {//3.4
                             System.out.println(req + " not support");
                             break;
                         }
@@ -370,7 +374,7 @@ public class DebugClient {
                 }
                 case CommandSet.ArrayType: {//set 4
                     switch (req.getCommand()) {
-                        case Command.ArrayType_NewInstance: {
+                        case Command.ArrayType_NewInstance: {//4.1
                             System.out.println(req + " not support");
                             break;
                         }
@@ -394,6 +398,7 @@ public class DebugClient {
                             res.writeLong(method.codeStart);
                             res.writeLong(method.codeEnd);
                             res.writeInt(method.lines);
+                            System.out.println("Method_LineTable:" + method.codeStart + "," + method.codeEnd + "," + method.lines + " ,arrlen=" + method.lineNum.length);
                             for (int i = 0; i < method.lines; i++) {
                                 res.writeLong(method.lineNum[i * 2]);
                                 res.writeInt(method.lineNum[i * 2 + 1]);
@@ -425,7 +430,7 @@ public class DebugClient {
                 }
                 case CommandSet.ObjectReference: {//set 9
                     switch (req.getCommand()) {
-                        case Command.ObjectReference_ReferenceType: {
+                        case Command.ObjectReference_ReferenceType: {//9.1
                             long objid = req.readRefer();
                             Object obj = JdwpNative.referenceObj(objid);
                             ResponsePacket res = new ResponsePacket();
@@ -436,31 +441,31 @@ public class DebugClient {
                             session.send(res.toByteArray());
                             break;
                         }
-                        case Command.ObjectReference_GetValues: {
+                        case Command.ObjectReference_GetValues: {//9.2
                             System.out.println(req + " not support");
                             break;
                         }
-                        case Command.ObjectReference_SetValues: {
+                        case Command.ObjectReference_SetValues: {//9.3
                             System.out.println(req + " not support");
                             break;
                         }
-                        case Command.ObjectReference_MonitorInfo: {
+                        case Command.ObjectReference_MonitorInfo: {//9.5
                             System.out.println(req + " not support");
                             break;
                         }
-                        case Command.ObjectReference_InvokeMethod: {
+                        case Command.ObjectReference_InvokeMethod: {//9.6
                             System.out.println(req + " not support");
                             break;
                         }
-                        case Command.ObjectReference_DisableCollection: {
+                        case Command.ObjectReference_DisableCollection: {//9.7
                             System.out.println(req + " not support");
                             break;
                         }
-                        case Command.ObjectReference_EnableCollection: {
+                        case Command.ObjectReference_EnableCollection: {//9.8
                             System.out.println(req + " not support");
                             break;
                         }
-                        case Command.ObjectReference_IsCollected: {
+                        case Command.ObjectReference_IsCollected: {//9.9
                             System.out.println(req + " not support");
                             break;
                         }
@@ -469,7 +474,7 @@ public class DebugClient {
                 }
                 case CommandSet.StringReference: {//set 10
                     switch (req.getCommand()) {
-                        case Command.StringReference_Value: {
+                        case Command.StringReference_Value: {//10.1
                             System.out.println(req + " not support");
                             break;
                         }
@@ -480,12 +485,12 @@ public class DebugClient {
                     switch (req.getCommand()) {
                         case Command.ThreadReference_Name: {//11.1
                             long thread = req.readRefer();
-                            //System.out.println("ThreadReference_Name:" + Long.toString(thread, 16));
                             Thread t = (Thread) JdwpNative.referenceObj(thread);
                             ResponsePacket res = new ResponsePacket();
                             res.setId(req.getId());
                             res.setErrorCode(Error.NONE);
                             res.writeUTF(t.getName());
+                            System.out.println("ThreadReference_Name:" + t.getName());
                             session.send(res.toByteArray());
                             break;
                         }
@@ -516,7 +521,8 @@ public class DebugClient {
                             res.setId(req.getId());
                             res.setErrorCode(Error.NONE);
                             res.writeInt(JvmThreads.getStatus(t));
-                            res.writeInt(SuspendStatus.SUSPEND_STATUS_SUSPENDED);
+                            res.writeInt(0);
+                            System.out.println("ThreadReference_Status:" + t.getName() + "," + JvmThreads.getStatus(t));
                             session.send(res.toByteArray());
                             break;
                         }
@@ -535,51 +541,38 @@ public class DebugClient {
                             long thread = req.readRefer();
                             int startFrame = req.readInt();
                             int length = req.readInt();
+                            System.out.println("ThreadReference_Frames: startFrame=" + startFrame + ", len=" + length);
                             ResponsePacket res = new ResponsePacket();
                             res.setId(req.getId());
                             res.setErrorCode(Error.NONE);
 
                             Thread t = (Thread) JdwpNative.referenceObj(thread);
-                            JvmThreads.suspendThread(t);
                             long rid = JvmThreads.getTopRuntime(t);
-                            MemRuntime runtime = new MemRuntime(rid);
-                            int i = 0;
-                            LinkedList list = new LinkedList();
-                            LinkedList frameid = new LinkedList();
-                            while (runtime != null) {
-                                long son = runtime.son_refer;
-                                i++;
-                                if (son == 0) {
-                                    runtime = null;
-                                } else {
-                                    runtime = new MemRuntime(son);
-//                                    System.out.println(
-//                                            "method=" + Long.toString(runtime.method_refer, 16)
-//                                            + ",class=" + Long.toString(runtime.clazz_refer, 16)
-//                                            + ",pc=" + Long.toString(runtime.pc_refer, 16)
-//                                            + ",ca=" + Long.toString(runtime.code_refer, 16)
-//                                            + ",son=" + Long.toString(runtime.son_refer, 16)
-//                                            + ",idx=" + Long.toString(runtime.pc_refer - runtime.code_refer, 16)
-//                                    );
+                            javax.mini.jdwp.reflect.Runtime runtime = new javax.mini.jdwp.reflect.Runtime(rid);
+                            int deepth = runtime.getDeepth();
+                            if (length == -1) {//等于-1返回所有剩下的
+                                length = deepth - startFrame;
+                            }
+                            res.writeInt(length);
+                            javax.mini.jdwp.reflect.Runtime r = runtime.getLastSon();
+                            System.out.println("deepth:" + runtime.getDeepth());
+                            for (int i = 0; i < deepth; i++) {
+                                if (i >= startFrame && i < startFrame + length) {//返回指定层级的runtimeframe
+                                    res.writeRefer(r.runtimeId);
                                     Location loc = new Location();
                                     loc.typeTag = TypeTag.CLASS;
-                                    loc.classID = runtime.clazz_refer;
-                                    loc.methodID = runtime.method_refer;
-                                    loc.execIndex = runtime.pc_refer - runtime.code_refer;
-                                    list.add(loc);
-                                    frameid.add(runtime.pc_refer);
-                                    //System.out.println("ThreadReference_Frames:" + runtime + ", " + loc.execIndex);
+                                    loc.classID = r.classId;
+                                    loc.methodID = r.methodId;
+                                    loc.execIndex = r.pc - r.byteCode;
+                                    loc.writeLocation(res);
+                                    System.out.println(loc);
+                                }
+                                r = r.parent;
+                                if (r == null) {
+                                    break;
                                 }
                             }
-                            res.writeInt(list.size());
-                            while (!list.isEmpty()) {
-                                Long fid = (Long) frameid.removeLast();
-                                res.writeInt((int) fid.longValue());
-                                Location loc = (Location) list.removeLast();
-                                loc.writeLocation(res);
-                            }
                             session.send(res.toByteArray());
-                            JvmThreads.resumeThread(t);
                             break;
                         }
                         case Command.ThreadReference_FrameCount: {//11.7
@@ -589,6 +582,7 @@ public class DebugClient {
                             res.setId(req.getId());
                             res.setErrorCode(Error.NONE);
                             res.writeInt(JvmThreads.getFrameCount(t));
+                            System.out.println("ThreadReference_FrameCount:" + JvmThreads.getFrameCount(t));
                             session.send(res.toByteArray());
                             break;
                         }
@@ -640,6 +634,7 @@ public class DebugClient {
                             res.setId(req.getId());
                             res.setErrorCode(Error.NONE);
                             res.writeInt(JvmThreads.getSuspendCount(t));
+                            System.out.println("ThreadReference_SuspendCount:" + t.getName() + "," + JvmThreads.getSuspendCount(t));
                             session.send(res.toByteArray());
                             break;
                         }
@@ -692,13 +687,13 @@ public class DebugClient {
                 }
                 case CommandSet.EventRequest: {//set 15
                     switch (req.getCommand()) {
-                        case Command.EventRequest_Set: {
+                        case Command.EventRequest_Set: {//15.1
 
                             byte eventKind = req.readByte();
-                            byte suspend = req.readByte();
-                            int numModifiers = req.readInt();
+                            byte suspendPolicy = req.readByte();
+                            int modifiers = req.readInt();
                             //System.out.println("eventKind=" + eventKind);
-                            for (int i = 0; i < numModifiers; i++) {
+                            for (int i = 0; i < modifiers; i++) {
                                 int mod = req.readByte();
 //                                System.out.println("15_1:" + mod);
                                 switch (mod) {
@@ -769,16 +764,26 @@ public class DebugClient {
                             res.setId(req.getId());
                             Random r = new Random();
                             res.setErrorCode(Error.NONE);
-                            res.writeInt(Math.abs(r.nextInt()));
+                            res.writeInt(req.getId());
                             session.send(res.toByteArray());
                             break;
                         }//
-                        case Command.EventRequest_Clear: {
-                            System.out.println(req + " not support");
+                        case Command.EventRequest_Clear: {//15.2
+                            byte eventKind = req.readByte();
+                            int requestID = req.readInt();
+                            ResponsePacket res = new ResponsePacket();
+                            res.setId(req.getId());
+                            Random r = new Random();
+                            res.setErrorCode(Error.NONE);
+                            session.send(res.toByteArray());
                             break;
                         }
-                        case Command.EventRequest_ClearAllBreakpoints: {
-                            System.out.println(req + " not support");
+                        case Command.EventRequest_ClearAllBreakpoints: {//15.3`
+                            ResponsePacket res = new ResponsePacket();
+                            res.setId(req.getId());
+                            Random r = new Random();
+                            res.setErrorCode(Error.NONE);
+                            session.send(res.toByteArray());
                             break;
                         }
                     }

@@ -10,12 +10,47 @@ package javax.mini.jdwp.reflect;
  * @author gust
  */
 public class Runtime {
+
     public long runtimeId;
     public long classId;
     public long sonId;
     public long pc;
     public long byteCode;
-    
+    public long methodId;
+
+    public Runtime son;
+    public Runtime parent;
+
+    public Runtime(long rid) {
+        this(rid, null);
+    }
+
+    public Runtime(long rid, Runtime parent) {
+        this.runtimeId = rid;
+        this.parent = parent;
+        mapRuntime(runtimeId);
+        if (sonId != 0) {
+            son = new Runtime(sonId, this);
+            System.out.println("parent:" + runtimeId + ", son:" + sonId);
+        }
+    }
+
+    public Runtime getLastSon() {
+        return son == null ? this : son.getLastSon();
+    }
+
+    public int getDeepth() {
+        int deep = 0;
+        Runtime r = this;
+        while (r != null) {
+            r = r.son;
+            deep++;
+        }
+        deep--;//顶层
+        return deep;
+    }
+
+    native void mapRuntime(long runtimeId);
 }
 //typedef struct _Runtime {
 //    MethodInfo *methodInfo;

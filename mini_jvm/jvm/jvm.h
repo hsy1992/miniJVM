@@ -242,6 +242,7 @@ static const s32 DATATYPE_JCHAR = 5;
 static const s32 DATATYPE_REFERENCE = 12;
 static const s32 DATATYPE_ARRAY = 13;
 static const s32 DATATYPE_SHORT = 9;
+static const s32 DATATYPE_LONG = 11;
 
 static const c8 tag_additional_byte_size[13] = {
         0, 2, 0, 4, 4,

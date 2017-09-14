@@ -11,11 +11,23 @@ package javax.mini.jdwp.reflect;
  */
 public class Field {
 
+    //不可随意改动字段类型及名字，要和native一起改
     public long fieldId;
     public String fieldName;
     public String signature;
     public short accessFlags;
 
-    public Field() {
+    public Field(long fid) {
+        this.fieldId = fid;
+        mapField(fieldId);
     }
+
+    public String toString() {
+        return Long.toString(fieldId, 16) + "|"
+                + fieldName + "|"
+                + signature + "|access:"
+                + Integer.toHexString(accessFlags) + "|";
+    }
+
+    native void mapField(long fid);
 }

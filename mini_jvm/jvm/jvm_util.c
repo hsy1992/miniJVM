@@ -428,14 +428,14 @@ s32 jthread_lock(MemoryBlock *ins, Runtime *runtime) { //可能会重入，同�
     JavaThreadLock *jtl = ins->thread_lock;
     if (jtl->jthread_holder == NULL) {//没人锁
         pthread_mutex_lock(&jtl->mutex_lock);
-        hashset_put(runtime->threadInfo->hold_locks, ins);
+//        hashset_put(runtime->threadInfo->hold_locks, ins);
         jtl->jthread_holder = runtime->threadInfo->jthread;
         jtl->hold_count++;
     } else if (jtl->jthread_holder == runtime->threadInfo->jthread) { //重入
         jtl->hold_count++;
     } else {
         pthread_mutex_lock(&jtl->mutex_lock);
-        hashset_put(runtime->threadInfo->hold_locks, ins);
+//        hashset_put(runtime->threadInfo->hold_locks, ins);
         jtl->jthread_holder = runtime->threadInfo->jthread;
         jtl->hold_count++;
     }
@@ -456,7 +456,7 @@ s32 jthread_unlock(MemoryBlock *ins, Runtime *runtime) {
         if (jtl->hold_count == 0) {//must change holder first, and unlock later
             jtl->jthread_holder = NULL;
             pthread_mutex_unlock(&jtl->mutex_lock);
-            hashset_remove(runtime->threadInfo->hold_locks, ins, 0);
+//            hashset_remove(runtime->threadInfo->hold_locks, ins, 0);
         }
     }
     return 0;
@@ -688,8 +688,8 @@ Instance *jstring_create(Utf8String *src, Runtime *runtime) {
             garbage_derefer(oldarr, jstring);
         }
         setFieldRefer(ptr, (__refer) arr);//设置数组
-        garbage_refer(arr, jstring);
         jstring_set_count(jstring, len);//设置长度
+        garbage_refer(arr, jstring);
     } else {
         setFieldRefer(ptr, 0);
     }

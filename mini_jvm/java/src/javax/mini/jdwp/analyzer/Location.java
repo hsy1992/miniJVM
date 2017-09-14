@@ -17,12 +17,20 @@ public class Location {
     public long classID;
     public long methodID;
     public long execIndex;
-    
-    public void writeLocation(ResponsePacket res){
+
+    public void writeLocation(ResponsePacket res) {
         res.writeByte(typeTag);
         res.writeRefer(classID);
         res.writeRefer(methodID);
         res.writeLong(execIndex);
-        
+
+    }
+
+    public String toString() {
+        return "Location:"
+                + "|" + typeTag
+                + "|" + Long.toString(classID)
+                + "|" + Long.toString(methodID)
+                + "|" + Long.toString(execIndex);
     }
 }
