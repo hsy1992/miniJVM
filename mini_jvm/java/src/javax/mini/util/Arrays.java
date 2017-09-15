@@ -2345,7 +2345,7 @@ public class Arrays {
      * @serial include
      */
     private static class ArrayList<E> extends AbstractList<E>
-	implements RandomAccess, java.io.Serializable
+	implements RandomAccess
     {
         private static final long serialVersionUID = -2764017481108945198L;
 	private Object[] a;

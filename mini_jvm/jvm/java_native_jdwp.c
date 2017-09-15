@@ -16,7 +16,7 @@ extern "C" {
 s32 javax_mini_jdwp_vm_JdwpNative_referenceTyepSize(Runtime *runtime, Class *clazz) {
     push_int(runtime->stack, sizeof(__refer));
 
-#if _JVM_DEBUG
+#if _JVM_DEBUG>5
     jvm_printf("javax_mini_jdwp_vm_JdwpNative_referenceTyepSize\n");
 #endif
     return 0;
@@ -28,7 +28,7 @@ s32 javax_mini_jdwp_vm_JdwpNative_referenceId(Runtime *runtime, Class *clazz) {
     l2d.l = (u64) (long) ins;
     push_long(runtime->stack, l2d.l);
 
-#if _JVM_DEBUG
+#if _JVM_DEBUG>5
     jvm_printf("javax_mini_jdwp_vm_JdwpNative_referenceId\n");
 #endif
     return 0;
@@ -41,7 +41,7 @@ s32 javax_mini_jdwp_vm_JdwpNative_referenceObj(Runtime *runtime, Class *clazz) {
     __refer r = (__refer) (long) l2d.l;//这里不能直接转化，可能在外部发生了数据精度丢失，只能从低位强转
     push_ref(runtime->stack, r);
 
-#if _JVM_DEBUG
+#if _JVM_DEBUG>5
     jvm_printf("javax_mini_jdwp_JdwpNative_referenceObj\n");
 #endif
     return 0;
@@ -66,7 +66,7 @@ s32 javax_mini_jdwp_vm_JdwpNative_getClasses(Runtime *runtime, Class *clazz) {
     push_ref(runtime->stack, jarr);//先放入栈，再关联回收器，防止多线程回收
     garbage_refer(jarr, NULL);
 
-#if _JVM_DEBUG
+#if _JVM_DEBUG>5
     jvm_printf("javax_mini_jdwp_vm_JdwpNative_getClasses\n");
 #endif
     return 0;
@@ -81,7 +81,7 @@ s32 javax_mini_jdwp_vm_MemObject_readByte0(Runtime *runtime, Class *clazz) {
     s32 offset = (runtime->localVariables + 2)->integer;
     u8 val = getFieldByte(((c8 *) r) + offset);
     push_int(runtime->stack, val);
-#if _JVM_DEBUG
+#if _JVM_DEBUG>5
     jvm_printf("javax_mini_jdwp_vm_MemObject_readByte0\n");
 #endif
     return 0;
@@ -95,7 +95,7 @@ s32 javax_mini_jdwp_vm_MemObject_readShort0(Runtime *runtime, Class *clazz) {
     s32 offset = (runtime->localVariables + 2)->integer;
     u16 val = getFieldShort(((c8 *) r) + offset);
     push_int(runtime->stack, val);
-#if _JVM_DEBUG
+#if _JVM_DEBUG>5
     jvm_printf("javax_mini_jdwp_vm_MemObject_readShort0\n");
 #endif
     return 0;
@@ -109,7 +109,7 @@ s32 javax_mini_jdwp_vm_MemObject_readInt0(Runtime *runtime, Class *clazz) {
     s32 offset = (runtime->localVariables + 2)->integer;
     s32 val = getFieldInt(((c8 *) r) + offset);
     push_int(runtime->stack, val);
-#if _JVM_DEBUG
+#if _JVM_DEBUG>5
     jvm_printf("javax_mini_jdwp_vm_MemObject_readInt0\n");
 #endif
     return 0;
@@ -123,7 +123,7 @@ s32 javax_mini_jdwp_vm_MemObject_readLong0(Runtime *runtime, Class *clazz) {
     s32 offset = (runtime->localVariables + 2)->integer;
     s64 val = getFieldLong(((c8 *) r) + offset);
     push_long(runtime->stack, val);
-#if _JVM_DEBUG
+#if _JVM_DEBUG>5
     jvm_printf("javax_mini_jdwp_vm_MemObject_readLong0\n");
 #endif
     return 0;
@@ -137,7 +137,7 @@ s32 javax_mini_jdwp_vm_MemObject_readRefer0(Runtime *runtime, Class *clazz) {
     s32 offset = (runtime->localVariables + 2)->integer;
     __refer val = getFieldRefer(((c8 *) r) + offset);
     push_long(runtime->stack, (u64) (long) val);
-#if _JVM_DEBUG
+#if _JVM_DEBUG>5
     jvm_printf("javax_mini_jdwp_vm_MemObject_readRefer0\n");
 #endif
     return 0;
@@ -158,7 +158,7 @@ s32 javax_mini_jdwp_vm_JdwpThreads_getThreads(Runtime *runtime, Class *clazz) {
     push_ref(runtime->stack, jarr);//先放入栈，再关联回收器，防止多线程回收
     garbage_refer(jarr, NULL);
 
-#if _JVM_DEBUG
+#if _JVM_DEBUG>5
     jvm_printf("javax_mini_jdwp_vm_JdwpThreads_getThreads\n");
 #endif
     return 0;
@@ -171,7 +171,7 @@ s32 javax_mini_jdwp_vm_JdwpThreads_getStatus(Runtime *runtime, Class *clazz) {
         push_int(runtime->stack, trun->threadInfo->thread_status);
     else
         push_int(runtime->stack, THREAD_STATUS_ZOMBIE);
-#if _JVM_DEBUG
+#if _JVM_DEBUG>5
     jvm_printf("com_egls_jvm_JdwpThreads_getStatus\n");
 #endif
     return 0;
@@ -185,7 +185,7 @@ s32 javax_mini_jdwp_vm_JdwpThreads_suspendThread(Runtime *runtime, Class *clazz)
         push_int(runtime->stack, 0);
     } else
         push_int(runtime->stack, 1);
-#if _JVM_DEBUG
+#if _JVM_DEBUG>5
     jvm_printf("com_egls_jvm_JdwpThreads_suspendThread\n");
 #endif
     return 0;
@@ -199,7 +199,7 @@ s32 javax_mini_jdwp_vm_JdwpThreads_resumeThread(Runtime *runtime, Class *clazz) 
         push_int(runtime->stack, 0);
     } else
         push_int(runtime->stack, 1);
-#if _JVM_DEBUG
+#if _JVM_DEBUG>5
     jvm_printf("com_egls_jvm_JdwpThreads_resumeThread\n");
 #endif
     return 0;
@@ -213,7 +213,7 @@ s32 javax_mini_jdwp_vm_JdwpThreads_getSuspendCount(Runtime *runtime, Class *claz
         push_int(runtime->stack, trun->threadInfo->suspend_count);
     } else
         push_int(runtime->stack, 0);
-#if _JVM_DEBUG
+#if _JVM_DEBUG>5
     jvm_printf("com_egls_jvm_JdwpThreads_getSuspendCount\n");
 #endif
     return 0;
@@ -243,7 +243,7 @@ s32 javax_mini_jdwp_vm_JdwpThreads_stopThread(Runtime *runtime, Class *clazz) {
         push_int(runtime->stack, 0);
     } else
         push_int(runtime->stack, 0);
-#if _JVM_DEBUG
+#if _JVM_DEBUG>5
     jvm_printf("com_egls_jvm_JdwpThreads_stopThread\n");
 #endif
     return 0;
@@ -257,7 +257,7 @@ s32 javax_mini_jdwp_vm_JdwpThreads_getTopRuntime(Runtime *runtime, Class *clazz)
         push_long(runtime->stack, (u64) (long) trun);
     else
         push_int(runtime->stack, 0);
-#if _JVM_DEBUG
+#if _JVM_DEBUG>5
     jvm_printf("javax_mini_jdwp_vm_JdwpThreads_getTopRuntime\n");
 #endif
     return 0;

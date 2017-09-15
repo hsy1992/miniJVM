@@ -349,6 +349,7 @@ s32 loadSysProperties(Utf8String *path) {
 }
 
 FILE *logfile = NULL;
+s64 last_flush = 0;
 
 void open_log() {
 #if _JVM_DEBUG_PRINT_FILE
@@ -367,18 +368,48 @@ void close_log() {
 }
 
 int jvm_printf(const char *format, ...) {
+    garbage_thread_lock();
     va_list vp;
     va_start(vp, format);
     int result = 0;
 #if _JVM_DEBUG_PRINT_FILE
     if (logfile) {
+
         result = vfprintf(logfile, format, vp);
+        if (currentTimeMillis() - last_flush > 1000) {
+            fflush(logfile);
+            last_flush = currentTimeMillis();
+        }
     }
 #else
-    result = vprintf(format, vp);
+        result = vprintf(format, vp);
 #endif
     va_end(vp);
+    garbage_thread_unlock();
     return result;
+}
+
+void invoke_deepth(Runtime *runtime) {
+    garbage_thread_lock();
+    int i = 0;
+    while (runtime) {
+        i++;
+        runtime = runtime->parent;
+    }
+    s32 len = i;
+
+#if _JVM_DEBUG_PRINT_FILE
+    fprintf(logfile, "%lx", (s64) (long) pthread_self().p);
+    for (i = 0; i < len; i++) {
+        fprintf(logfile, "    ");
+    }
+#else
+    printf("%lx", (s64) (long) pthread_self().p);
+for (i = 0; i < len; i++) {
+    printf("    ");
+}
+#endif
+    garbage_thread_unlock();
 }
 
 //===============================    java 线程  ==================================
@@ -398,7 +429,7 @@ void *jtherad_loader(void *para) {
     method = find_instance_methodInfo_by_name(jthread, methodName, methodType);
     utf8_destory(methodName);
     utf8_destory(methodType);
-#if _JVM_DEBUG
+#if _JVM_DEBUG > 5
     jvm_printf("therad_loader    %s.%s%s  \n", utf8_cstr(method->_this_class->name),
            utf8_cstr(method->name), utf8_cstr(method->descriptor));
 #endif
@@ -473,7 +504,7 @@ s32 jthread_lock(MemoryBlock *ins, Runtime *runtime) { //可能会重入，同�
         jtl->jthread_holder = runtime->threadInfo->jthread;
         jtl->hold_count++;
     }
-#if _JVM_DEBUG
+#if _JVM_DEBUG > 5
     jvm_printf("  lock: %llx   lock holder: %llx, count: %d \n", (s64) (long) (runtime->threadInfo->jthread),
            (s64) (long) (jtl->jthread_holder), jtl->hold_count);
 #endif
@@ -494,7 +525,7 @@ s32 jthread_unlock(MemoryBlock *ins, Runtime *runtime) {
         }
     }
     return 0;
-#if _JVM_DEBUG
+#if _JVM_DEBUG > 5
     jvm_printf("unlock: %llx   lock holder: %llx, count: %d \n", (s64) (long) (runtime->threadInfo->jthread),
            (s64) (long) (jtl->jthread_holder), jtl->hold_count);
 #endif
@@ -599,7 +630,7 @@ Instance *jarray_multi_create(ArrayList *dim, Utf8String *desc, s32 deep) {
     c8 ch = utf8_char_at(desc, deep + 1);
     s32 typeIdx = getDataTypeIndex(ch);
     Instance *arr = jarray_create(len, typeIdx, NULL);
-#if _JVM_DEBUG
+#if _JVM_DEBUG > 5
     jvm_printf("multi arr deep :%d  type(%c) arr[%x] size:%d\n", deep, ch, arr, len);
 #endif
     if (ch == '[') {
@@ -718,7 +749,7 @@ Instance *jstring_create(Utf8String *src, Runtime *runtime) {
     if (src->length) {
         u16 *buf = jvm_alloc(src->length * data_type_bytes[DATATYPE_JCHAR]);
         s32 len = utf8_2_unicode(src, buf);
-        Instance *arr = jarray_create(len, DATATYPE_JCHAR,NULL);//u16 type is 5
+        Instance *arr = jarray_create(len, DATATYPE_JCHAR, NULL);//u16 type is 5
         memcpy(arr->arr_body, buf, len * data_type_bytes[DATATYPE_JCHAR]);
         jvm_free(buf);
         __refer oldarr = getFieldRefer(ptr);//调用了String.init之后，已经有值了
@@ -842,7 +873,7 @@ s32 jstring_2_utf8(Instance *jstr, Utf8String *utf8) {
 //===============================    例外  ==================================
 
 Instance *exception_create(s32 exception_type, Runtime *runtime) {
-#if _JVM_DEBUG
+#if _JVM_DEBUG > 5
     jvm_printf("create exception : %s\n", exception_class_name[exception_type]);
 #endif
     Utf8String *clsName = utf8_create_c(exception_class_name[exception_type]);

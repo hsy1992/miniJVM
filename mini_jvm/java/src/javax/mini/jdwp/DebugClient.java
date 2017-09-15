@@ -52,7 +52,7 @@ public class DebugClient {
 //                Session.print(data);
                 processPacket(data);
             }
-//            System.out.println("client process.");
+            System.out.println("client process.");
         } catch (Exception e) {
             closed = true;
             System.out.println(e);

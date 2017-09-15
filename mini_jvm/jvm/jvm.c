@@ -86,13 +86,13 @@ s32 execute(c8 *p_classpath, c8 *p_mainclass, s32 argc, c8 **argv) {
 
     HashtableIterator hti;
     hashtable_iterate(classes, &hti);
-#if _JVM_DEBUG
+#if _JVM_DEBUG>5
     jvm_printf("classes size:%d\n", hashtable_num_entries(classes));
 #endif
     for (; hashtable_iter_has_more(&hti);) {
         Utf8String *k = hashtable_iter_next_key(&hti);
         Class *clazz = classes_get(k);
-#if _JVM_DEBUG
+#if _JVM_DEBUG>5
         jvm_printf("classes entry : %s,%d\n", utf8_cstr(k), clazz);
 #endif
         if (clazz->status != CLASS_STATUS_PREPARED)class_prepar(clazz);
@@ -111,7 +111,7 @@ s32 execute(c8 *p_classpath, c8 *p_mainclass, s32 argc, c8 **argv) {
     if (clazz) {
         //jvm_printf("class: %s : %d\n", utf8_cstr(mname), obj_of_clazz);
 
-#if _JVM_DEBUG
+#if _JVM_DEBUG>5
         printConstantPool(clazz);
         printMethodPool(clazz, &(clazz->methodPool));
         printFieldPool(clazz, &(clazz->fieldPool));
@@ -170,7 +170,7 @@ s32 execute(c8 *p_classpath, c8 *p_mainclass, s32 argc, c8 **argv) {
     }
 
 //    if (clazz) {
-//#if _JVM_DEBUG
+//#if _JVM_DEBUG>5
 //        printConstantPool(&(obj_of_clazz->constantPool));
 //        printMethodPool(&(obj_of_clazz->constantPool), &(obj_of_clazz->methodPool));
 //        printClassFileFormat(&(obj_of_clazz->cff));

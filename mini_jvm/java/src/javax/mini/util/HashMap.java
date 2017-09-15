@@ -100,7 +100,7 @@ import  java.io.*;
 
 public class HashMap<K,V>
     extends AbstractMap<K,V>
-    implements Map<K,V>, Cloneable, Serializable
+    implements Map<K,V>
 {
 
     /**

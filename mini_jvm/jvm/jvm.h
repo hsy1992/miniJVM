@@ -15,8 +15,8 @@
 #include "../utils/pairlist.h"
 
 //=======================  micro define  =============================
-#define _JVM_DEBUG 0
-#define _JVM_DEBUG_PRINT_FILE 0
+#define _JVM_DEBUG 4
+#define _JVM_DEBUG_PRINT_FILE 01
 #define _JVM_DEBUG_BYTECODE_DUMP 0
 #define _JVM_DEBUG_GARBAGE_DUMP 0
 #define _JVM_DEBUG_PROFILE 0
@@ -663,6 +663,7 @@ typedef struct _Runtime {
     u8 *bytecode;//method bytecode
     JavaThreadInfo *threadInfo;
     Runtime *son;//sub method's runtime
+    Runtime *parent;//father method's runtime
     StackFrame *stack;
     LocalVarItem *localVariables;
     s32 localvar_count;
@@ -965,10 +966,13 @@ void peek_entry(StackFrame *stack, StackEntry *entry, int index);
 //======================= localvar =============================
 s32 localvar_init(Runtime *runtime, s32 count);
 
+//======================= other =============================
 void open_log();
 
 void close_log();
 
 int jvm_printf(const char *, ...);
+
+void invoke_deepth(Runtime *runtime);
 
 #endif

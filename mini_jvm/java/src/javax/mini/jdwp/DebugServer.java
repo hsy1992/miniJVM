@@ -46,8 +46,10 @@ public class DebugServer {
             while (!exit) {
                 try {
                     Socket sock = servSock.accept();
+                    System.out.println("accepted sock.");
                     DebugClient dc = new DebugClient(sock);
                     clients.addElement(dc);
+                    System.out.println("added to clients");
                 } catch (Exception e) {
                     exit = true;
                     System.out.println(e);
@@ -69,7 +71,7 @@ public class DebugServer {
                             clients.removeElement(dc);
                         }
                     }
-                    Thread.sleep(10);
+                    Thread.sleep(500);
                 } catch (Exception e) {
                     System.out.println(e);
                 }
