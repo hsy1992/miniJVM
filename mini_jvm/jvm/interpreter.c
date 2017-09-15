@@ -3177,8 +3177,10 @@ s32 execute_method(MethodInfo *method, Runtime *pruntime, Class *clazz) {
             jvm_printf("---------------------------------\n");
 #endif
 #if _JVM_DEBUG > 3
-            invoke_deepth(&runtime);
-            jvm_printf("%s.%s()  {\n", utf8_cstr(clazz->name), utf8_cstr(method->name));
+            if(utf8_char_at(clazz->name,3)!='/'&&utf8_char_at(clazz->name,4)!='s') {
+                invoke_deepth(&runtime);
+                jvm_printf("%s.%s()  {\n", utf8_cstr(clazz->name), utf8_cstr(method->name));
+            }
 #endif
             runtime.pc = ca->code;
             runtime.bytecode = ca->code;
@@ -3235,8 +3237,12 @@ s32 execute_method(MethodInfo *method, Runtime *pruntime, Class *clazz) {
             } while (1);
             synchronized_unlock_method(method, &runtime);
 #if _JVM_DEBUG > 3
-            invoke_deepth(&runtime);
-            jvm_printf("}\n");
+            if(utf8_char_at(clazz->name,3)!='/'&&utf8_char_at(clazz->name,4)!='s') {//   that com/sun
+                invoke_deepth(&runtime);
+                jvm_printf("}\n");
+            }else{
+                int debug=1;
+            }
             //jvm_printf("}  %s.%s  \n", utf8_cstr(clazz->name), utf8_cstr(method->name));
             Utf8String *ustr = method->descriptor;
             //jvm_printf("stack size in:%d out:%d  topof stack:\n", stackSize, pruntime->stack->size);

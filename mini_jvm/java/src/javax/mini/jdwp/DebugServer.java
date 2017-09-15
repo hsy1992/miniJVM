@@ -10,7 +10,6 @@ import java.util.Vector;
 import javax.cldc.io.Connector;
 import javax.mini.net.ServerSocket;
 import javax.mini.net.Socket;
-import javax.mini.util.Iterator;
 
 /**
  *
@@ -19,7 +18,7 @@ import javax.mini.util.Iterator;
 public class DebugServer {
 
     static int SERVER_PORT = 8000;
-    Vector clients = new Vector();
+    Vector<DebugClient> clients = new Vector();
     private Listener listener;
     private Dispacher dispacher;
     boolean exit = false;
@@ -64,8 +63,8 @@ public class DebugServer {
         public void run() {
             while (!exit) {
                 try {
-                    for (Enumeration e = clients.elements(); e.hasMoreElements();) {
-                        DebugClient dc = (DebugClient) e.nextElement();
+                    for (Enumeration<DebugClient> e = clients.elements(); e.hasMoreElements();) {
+                        DebugClient dc = e.nextElement();
                         dc.process();
                         if (dc.isClosed()) {
                             clients.removeElement(dc);

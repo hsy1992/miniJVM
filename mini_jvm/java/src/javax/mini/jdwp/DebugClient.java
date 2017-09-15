@@ -18,7 +18,7 @@ import javax.mini.jdwp.constant.Error;
 import javax.mini.jdwp.constant.Tag;
 import javax.mini.jdwp.constant.TypeTag;
 import javax.mini.jdwp.events.EventManager;
-import javax.mini.jdwp.events.ReqEvent;
+import javax.mini.jdwp.events.EventSet;
 import javax.mini.jdwp.net.JdwpPacket;
 import javax.mini.jdwp.net.RequestPacket;
 import javax.mini.jdwp.net.ResponsePacket;
@@ -52,7 +52,7 @@ public class DebugClient {
 //                Session.print(data);
                 processPacket(data);
             }
-            System.out.println("client process.");
+            //System.out.println("client process.");
         } catch (Exception e) {
             closed = true;
             System.out.println(e);
@@ -115,7 +115,7 @@ public class DebugClient {
                             if (cl == null) {
                                 res.writeInt(0);
                             } else {
-                                res.writeInt(ClassStatus.INITIALIZED);
+                                res.writeInt(0);
                             }
                             System.out.println("VirtualMachine_ClassesBySignature:" + signature + "," + cl);
                             session.send(res.toByteArray());
@@ -705,12 +705,13 @@ public class DebugClient {
                 case CommandSet.EventRequest: {//set 15
                     switch (req.getCommand()) {
                         case Command.EventRequest_Set: {//15.1
-                            ReqEvent event = new ReqEvent(req);
-                            EventManager.putEventSet(event);
+                            EventSet eventSet = new EventSet(req);
+                            EventManager.putEventSet(eventSet);
                             ResponsePacket res = new ResponsePacket();
                             res.setId(req.getId());
                             res.setErrorCode(Error.NONE);
-                            res.writeInt(event.getRequestId());
+                            System.out.println("EventRequest_Set:"+eventSet.getRequestId());
+                            res.writeInt(eventSet.getRequestId());
                             session.send(res.toByteArray());
                             break;
                         }//
@@ -720,7 +721,6 @@ public class DebugClient {
                             System.out.println("EventRequest_Clear:eventKind=" + eventKind + ", requestID=" + requestID);
                             ResponsePacket res = new ResponsePacket();
                             res.setId(req.getId());
-                            Random r = new Random();
                             res.setErrorCode(Error.NONE);
                             session.send(res.toByteArray());
                             break;

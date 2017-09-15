@@ -24,7 +24,7 @@ package java.util;
  * @version 12/17/01 (CLDC 1.1)
  * @since JDK1.0, CLDC 1.0
  */
-public class Vector {
+public class Vector<E> {
 
     /**
      * The array buffer into which the components of the vector are stored. The
@@ -32,7 +32,7 @@ public class Vector {
      *
      * @since JDK1.0
      */
-    protected Object elementData[];
+    protected E elementData[];
 
     /**
      * The number of valid components in the vector.
@@ -67,7 +67,7 @@ public class Vector {
             throw new IllegalArgumentException("Illegal Capacity: "
                     + initialCapacity);
         }
-        this.elementData = new Object[initialCapacity];
+        this.elementData = (E[])new Object[initialCapacity];
         this.capacityIncrement = capacityIncrement;
     }
 
@@ -97,7 +97,7 @@ public class Vector {
      * @param anArray the array into which the components get copied.
      * @since JDK1.0
      */
-    public synchronized void copyInto(Object anArray[]) {
+    public synchronized void copyInto(E anArray[]) {
         int i = elementCount;
         while (i-- > 0) {
             anArray[i] = elementData[i];
@@ -114,7 +114,7 @@ public class Vector {
         int oldCapacity = elementData.length;
         if (elementCount < oldCapacity) {
             Object oldData[] = elementData;
-            elementData = new Object[elementCount];
+            elementData = (E[])new Object[elementCount];
             System.arraycopy(oldData, 0, elementData, 0, elementCount);
         }
     }
@@ -148,7 +148,7 @@ public class Vector {
         if (newCapacity < minCapacity) {
             newCapacity = minCapacity;
         }
-        elementData = new Object[newCapacity];
+        elementData = (E[])new Object[newCapacity];
         System.arraycopy(oldData, 0, elementData, 0, elementCount);
     }
 
@@ -223,7 +223,7 @@ public class Vector {
      * vector; <code>false</code> otherwise.
      * @since JDK1.0
      */
-    public boolean contains(Object elem) {
+    public boolean contains(E elem) {
         return indexOf(elem, 0) >= 0;
     }
 
@@ -237,7 +237,7 @@ public class Vector {
      * @see java.lang.Object#equals(java.lang.Object)
      * @since JDK1.0
      */
-    public int indexOf(Object elem) {
+    public int indexOf(E elem) {
         return indexOf(elem, 0);
     }
 
@@ -254,7 +254,7 @@ public class Vector {
      * @see java.lang.Object#equals(java.lang.Object)
      * @since JDK1.0
      */
-    public synchronized int indexOf(Object elem, int index) {
+    public synchronized int indexOf(E elem, int index) {
         if (elem == null) {
             for (int i = index; i < elementCount; i++) {
                 if (elementData[i] == null) {
@@ -280,7 +280,7 @@ public class Vector {
      * vector; returns <code>-1</code> if the object is not found.
      * @since JDK1.0
      */
-    public int lastIndexOf(Object elem) {
+    public int lastIndexOf(E elem) {
         return lastIndexOf(elem, elementCount - 1);
     }
 
@@ -297,7 +297,7 @@ public class Vector {
      * equal to the current size of this vector.
      * @since JDK1.0
      */
-    public synchronized int lastIndexOf(Object elem, int index) {
+    public synchronized int lastIndexOf(E elem, int index) {
         if (index >= elementCount) {
             throw new IndexOutOfBoundsException(index + " >= " + elementCount);
         }
@@ -326,7 +326,7 @@ public class Vector {
      * @exception ArrayIndexOutOfBoundsException if an invalid index was given.
      * @since JDK1.0
      */
-    public synchronized Object elementAt(int index) {
+    public synchronized E elementAt(int index) {
         if (index >= elementCount) {
             throw new ArrayIndexOutOfBoundsException(index + " >= " + elementCount);
         }
@@ -349,7 +349,7 @@ public class Vector {
      * @exception NoSuchElementException if this vector has no components.
      * @since JDK1.0
      */
-    public synchronized Object firstElement() {
+    public synchronized E firstElement() {
         if (elementCount == 0) {
             throw new NoSuchElementException();
         }
@@ -364,7 +364,7 @@ public class Vector {
      * @exception NoSuchElementException if this vector is empty.
      * @since JDK1.0
      */
-    public synchronized Object lastElement() {
+    public synchronized E lastElement() {
         if (elementCount == 0) {
             throw new NoSuchElementException();
         }
@@ -385,7 +385,7 @@ public class Vector {
      * @see java.util.Vector#size()
      * @since JDK1.0
      */
-    public synchronized void setElementAt(Object obj, int index) {
+    public synchronized void setElementAt(E obj, int index) {
         if (index >= elementCount) {
             throw new ArrayIndexOutOfBoundsException(index + " >= "
                     + elementCount);
@@ -438,7 +438,7 @@ public class Vector {
      * @see java.util.Vector#size()
      * @since JDK1.0
      */
-    public synchronized void insertElementAt(Object obj, int index) {
+    public synchronized void insertElementAt(E obj, int index) {
         int newcount = elementCount + 1;
         if (index >= newcount) {
             throw new ArrayIndexOutOfBoundsException(index
@@ -460,7 +460,7 @@ public class Vector {
      * @param obj the component to be added.
      * @since JDK1.0
      */
-    public synchronized void addElement(Object obj) {
+    public synchronized void addElement(E obj) {
         int newcount = elementCount + 1;
         if (newcount > elementData.length) {
             ensureCapacityHelper(newcount);
@@ -468,7 +468,7 @@ public class Vector {
         elementData[elementCount++] = obj;
     }
 
-    public void add(Object obj) {
+    public void add(E obj) {
         addElement(obj);
     }
 
@@ -483,7 +483,7 @@ public class Vector {
      * <code>false</code> otherwise.
      * @since JDK1.0
      */
-    public synchronized boolean removeElement(Object obj) {
+    public synchronized boolean removeElement(E obj) {
         int i = indexOf(obj);
         if (i >= 0) {
             removeElementAt(i);
@@ -492,7 +492,7 @@ public class Vector {
         return false;
     }
 
-    public synchronized boolean remove(Object obj) {
+    public synchronized boolean remove(E obj) {
         return removeElement(obj);
     }
 
@@ -531,9 +531,9 @@ public class Vector {
     }
 }
 
-final class VectorEnumerator implements Enumeration {
+final class VectorEnumerator<E> implements Enumeration {
 
-    Vector vector;
+    Vector<E> vector;
     int count;
 
     VectorEnumerator(Vector v) {
@@ -545,7 +545,7 @@ final class VectorEnumerator implements Enumeration {
         return count < vector.elementCount;
     }
 
-    public Object nextElement() {
+    public E nextElement() {
         synchronized (vector) {
             if (count < vector.elementCount) {
                 return vector.elementData[count++];
