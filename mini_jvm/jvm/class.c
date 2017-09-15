@@ -13,7 +13,7 @@
 
 Class *class_create() {
     Class *clazz = jvm_alloc(sizeof(Class));
-    clazz->mb.obj_of_clazz = clazz;
+    clazz->mb.clazz = clazz;
     clazz->mb.type = MEM_TYPE_CLASS;
     clazz->mb.garbage_mark = GARBAGE_MARK_UNDEF;
     clazz->field_instance_len = 0;
@@ -173,10 +173,10 @@ void class_clinit(Class *clazz, Runtime *runtime) {
     MethodPool *p = &(clazz->methodPool);
     s32 i;
     for (i = 0; i < p->method_used; i++) {
-        //printf("%s,%s\n", utf8_cstr(p->methodRef[i].name), utf8_cstr(p->methodRef[i].descriptor));
+        //jvm_printf("%s,%s\n", utf8_cstr(p->methodRef[i].name), utf8_cstr(p->methodRef[i].descriptor));
         if (utf8_equals_c(p->method[i].name, "<clinit>") == 1) {
 #if _JVM_DEBUG
-            printf("%s <clinit>\n", utf8_cstr(clazz->name));
+            jvm_printf("%s <clinit>\n", utf8_cstr(clazz->name));
 #endif
             execute_method(&(p->method[i]), runtime, clazz);
         }
@@ -187,9 +187,9 @@ void class_clinit(Class *clazz, Runtime *runtime) {
 //===============================    实例化相关  ==================================
 
 u8 instance_of(Class *clazz, Instance *ins) {
-    Class *ins_of_class = ins->mb.obj_of_clazz;
+    Class *ins_of_class = ins->mb.clazz;
     while (ins_of_class) {
-        if (ins_of_class == clazz || isSonOfInterface(clazz, ins_of_class->mb.obj_of_clazz)) {
+        if (ins_of_class == clazz || isSonOfInterface(clazz, ins_of_class->mb.clazz)) {
             return 1;
         }
         ins_of_class = getSuperClass(ins_of_class);

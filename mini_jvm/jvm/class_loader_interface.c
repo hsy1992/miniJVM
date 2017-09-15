@@ -29,18 +29,18 @@ void printInterfacePool(Class *clazz, InterfacePool *ip) {
     s32 i, j;
 
     if (ip->clasz_used > 0) {
-        printf("Interface Class Pool= \n");
+        jvm_printf("Interface Class Pool= \n");
         for (i = 0; i < ip->clasz_used; i++) {
             ConstantUTF8 *ptr = find_constant_utf8(clazz, ip->clasz[i].stringIndex);
-            printf(" ip_index[%d], class[%d], tag = %d, size = %d, %d",
+            jvm_printf(" ip_index[%d], class[%d], tag = %d, size = %d, %d",
                    ip->clasz[i].index, i, ip->clasz[i].tag,
                    ip->clasz[i].additional_byte_size,
                    ip->clasz[i].stringIndex);
             if (ptr != 0) {
-                printf(" ");
-                printf(" %s\n",utf8_cstr(ptr->utfstr));
+                jvm_printf(" ");
+                jvm_printf(" %s\n",utf8_cstr(ptr->utfstr));
             } else {
-                printf("\n");
+                jvm_printf("\n");
             }
         }
     }

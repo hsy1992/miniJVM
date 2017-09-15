@@ -1,28 +1,50 @@
 /*
- * @(#)ListIterator.java	1.16 00/02/02
+ * @(#)ListIterator.java	1.23 03/12/19
  *
- * Copyright 1997-2000 Sun Microsystems, Inc. All Rights Reserved.
- * 
- * This software is the proprietary information of Sun Microsystems, Inc.  
- * Use is subject to license terms.
- * 
+ * Copyright 2004 Sun Microsystems, Inc. All rights reserved.
+ * SUN PROPRIETARY/CONFIDENTIAL. Use is subject to license terms.
  */
 
 package javax.mini.util;
 
 /**
- * An iterator for lists that allows the programmer to traverse the
- * list in either direction and modify the list during iteration.
+ * 
+ * An iterator for lists that allows the programmer 
+ * to traverse the list in either direction, modify 
+ * the list during iteration, and obtain the iterator's 
+ * current position in the list. A <TT>ListIterator</TT> 
+ * has no current element; its <I>cursor position</I> always 
+ * lies between the element that would be returned by a call 
+ * to <TT>previous()</TT> and the element that would be 
+ * returned by a call to <TT>next()</TT>. In a list of 
+ * length <TT>n</TT>, there are <TT>n+1</TT> valid 
+ * index values, from <TT>0</TT> to <TT>n</TT>, inclusive. 
+ * <PRE>
+ *
+ *          Element(0)   Element(1)   Element(2)   ... Element(n)   
+ *        ^            ^            ^            ^               ^
+ * Index: 0            1            2            3               n+1
+ *
+ * </PRE>
+ * <P>
+ * Note that the {@link #remove} and {@link #set(Object)} methods are
+ * <i>not</i> defined in terms of the cursor position;  they are defined to
+ * operate on the last element returned by a call to {@link #next} or {@link
+ * #previous()}.
+ * <P>
+ * This interface is a member of the 
+ * <a href="{@docRoot}/../guide/collections/index.html">
+ * Java Collections Framework</a>.
  *
  * @author  Josh Bloch
- * @version 1.16, 02/02/00
+ * @version 1.23, 12/19/03
  * @see Collection
  * @see List
  * @see Iterator
  * @see Enumeration
  * @since   1.2
  */
-public interface ListIterator extends Iterator {
+public interface ListIterator<E> extends Iterator<E> {
     // Query Operations
 
     /**
@@ -46,7 +68,7 @@ public interface ListIterator extends Iterator {
      * @return the next element in the list.
      * @exception NoSuchElementException if the iteration has no next element.
      */
-    Object next();
+    E next();
 
     /**
      * Returns <tt>true</tt> if this list iterator has more elements when
@@ -71,7 +93,7 @@ public interface ListIterator extends Iterator {
      * @exception NoSuchElementException if the iteration has no previous
      *            element.
      */
-    Object previous();
+    E previous();
 
     /**
      * Returns the index of the element that would be returned by a subsequent
@@ -134,7 +156,7 @@ public interface ListIterator extends Iterator {
      *		  <tt>add</tt> have been called after the last call to
      * 		  <tt>next</tt> or <tt>previous</tt>.
      */
-    void set(Object o);
+    void set(E o);
 
     /**
      * Inserts the specified element into the list (optional operation).  The
@@ -153,10 +175,10 @@ public interface ListIterator extends Iterator {
      * 		  not supported by this list iterator.
      * 
      * @exception ClassCastException if the class of the specified element
-     * 		  prevents it from being added to this Set.
+     * 		  prevents it from being added to this list.
      * 
      * @exception IllegalArgumentException if some aspect of this element
-     *            prevents it from being added to this Collection.
+     *            prevents it from being added to this list.
      */
-    void add(Object o);
+    void add(E o);
 }

@@ -17,7 +17,7 @@ s32 javax_mini_jdwp_vm_JdwpNative_referenceTyepSize(Runtime *runtime, Class *cla
     push_int(runtime->stack, sizeof(__refer));
 
 #if _JVM_DEBUG
-    printf("javax_mini_jdwp_vm_JdwpNative_referenceTyepSize\n");
+    jvm_printf("javax_mini_jdwp_vm_JdwpNative_referenceTyepSize\n");
 #endif
     return 0;
 }
@@ -29,7 +29,7 @@ s32 javax_mini_jdwp_vm_JdwpNative_referenceId(Runtime *runtime, Class *clazz) {
     push_long(runtime->stack, l2d.l);
 
 #if _JVM_DEBUG
-    printf("javax_mini_jdwp_vm_JdwpNative_referenceId\n");
+    jvm_printf("javax_mini_jdwp_vm_JdwpNative_referenceId\n");
 #endif
     return 0;
 }
@@ -42,14 +42,16 @@ s32 javax_mini_jdwp_vm_JdwpNative_referenceObj(Runtime *runtime, Class *clazz) {
     push_ref(runtime->stack, r);
 
 #if _JVM_DEBUG
-    printf("javax_mini_jdwp_JdwpNative_referenceObj\n");
+    jvm_printf("javax_mini_jdwp_JdwpNative_referenceObj\n");
 #endif
     return 0;
 }
 
 s32 javax_mini_jdwp_vm_JdwpNative_getClasses(Runtime *runtime, Class *clazz) {
     s32 size = classes->entries;
-    Instance *jarr = jarray_create(size, DATATYPE_REFERENCE);
+
+    Class *cl = classes_load_get_c(STR_CLASS_JAVA_LANG_CLASS, runtime);
+    Instance *jarr = jarray_create(size, DATATYPE_REFERENCE, cl);
     s32 i = 0;
     Long2Double l2d;
     HashtableIterator hti;
@@ -65,7 +67,7 @@ s32 javax_mini_jdwp_vm_JdwpNative_getClasses(Runtime *runtime, Class *clazz) {
     garbage_refer(jarr, NULL);
 
 #if _JVM_DEBUG
-    printf("javax_mini_jdwp_vm_JdwpNative_getClasses\n");
+    jvm_printf("javax_mini_jdwp_vm_JdwpNative_getClasses\n");
 #endif
     return 0;
 }
@@ -80,7 +82,7 @@ s32 javax_mini_jdwp_vm_MemObject_readByte0(Runtime *runtime, Class *clazz) {
     u8 val = getFieldByte(((c8 *) r) + offset);
     push_int(runtime->stack, val);
 #if _JVM_DEBUG
-    printf("javax_mini_jdwp_vm_MemObject_readByte0\n");
+    jvm_printf("javax_mini_jdwp_vm_MemObject_readByte0\n");
 #endif
     return 0;
 }
@@ -94,7 +96,7 @@ s32 javax_mini_jdwp_vm_MemObject_readShort0(Runtime *runtime, Class *clazz) {
     u16 val = getFieldShort(((c8 *) r) + offset);
     push_int(runtime->stack, val);
 #if _JVM_DEBUG
-    printf("javax_mini_jdwp_vm_MemObject_readShort0\n");
+    jvm_printf("javax_mini_jdwp_vm_MemObject_readShort0\n");
 #endif
     return 0;
 }
@@ -108,7 +110,7 @@ s32 javax_mini_jdwp_vm_MemObject_readInt0(Runtime *runtime, Class *clazz) {
     s32 val = getFieldInt(((c8 *) r) + offset);
     push_int(runtime->stack, val);
 #if _JVM_DEBUG
-    printf("javax_mini_jdwp_vm_MemObject_readInt0\n");
+    jvm_printf("javax_mini_jdwp_vm_MemObject_readInt0\n");
 #endif
     return 0;
 }
@@ -122,7 +124,7 @@ s32 javax_mini_jdwp_vm_MemObject_readLong0(Runtime *runtime, Class *clazz) {
     s64 val = getFieldLong(((c8 *) r) + offset);
     push_long(runtime->stack, val);
 #if _JVM_DEBUG
-    printf("javax_mini_jdwp_vm_MemObject_readLong0\n");
+    jvm_printf("javax_mini_jdwp_vm_MemObject_readLong0\n");
 #endif
     return 0;
 }
@@ -136,13 +138,14 @@ s32 javax_mini_jdwp_vm_MemObject_readRefer0(Runtime *runtime, Class *clazz) {
     __refer val = getFieldRefer(((c8 *) r) + offset);
     push_long(runtime->stack, (u64) (long) val);
 #if _JVM_DEBUG
-    printf("javax_mini_jdwp_vm_MemObject_readRefer0\n");
+    jvm_printf("javax_mini_jdwp_vm_MemObject_readRefer0\n");
 #endif
     return 0;
 }
 
 s32 javax_mini_jdwp_vm_JdwpThreads_getThreads(Runtime *runtime, Class *clazz) {
-    Instance *jarr = jarray_create(thread_list->length, DATATYPE_REFERENCE);
+    Class *cl = classes_load_get_c(STR_CLASS_JAVA_LANG_THREAD, runtime);
+    Instance *jarr = jarray_create(thread_list->length, DATATYPE_REFERENCE, cl);
     s32 i = 0;
     Long2Double l2d;
 
@@ -156,7 +159,7 @@ s32 javax_mini_jdwp_vm_JdwpThreads_getThreads(Runtime *runtime, Class *clazz) {
     garbage_refer(jarr, NULL);
 
 #if _JVM_DEBUG
-    printf("javax_mini_jdwp_vm_JdwpThreads_getThreads\n");
+    jvm_printf("javax_mini_jdwp_vm_JdwpThreads_getThreads\n");
 #endif
     return 0;
 }
@@ -169,7 +172,7 @@ s32 javax_mini_jdwp_vm_JdwpThreads_getStatus(Runtime *runtime, Class *clazz) {
     else
         push_int(runtime->stack, THREAD_STATUS_ZOMBIE);
 #if _JVM_DEBUG
-    printf("com_egls_jvm_JdwpThreads_getStatus\n");
+    jvm_printf("com_egls_jvm_JdwpThreads_getStatus\n");
 #endif
     return 0;
 }
@@ -183,7 +186,7 @@ s32 javax_mini_jdwp_vm_JdwpThreads_suspendThread(Runtime *runtime, Class *clazz)
     } else
         push_int(runtime->stack, 1);
 #if _JVM_DEBUG
-    printf("com_egls_jvm_JdwpThreads_suspendThread\n");
+    jvm_printf("com_egls_jvm_JdwpThreads_suspendThread\n");
 #endif
     return 0;
 }
@@ -197,7 +200,7 @@ s32 javax_mini_jdwp_vm_JdwpThreads_resumeThread(Runtime *runtime, Class *clazz) 
     } else
         push_int(runtime->stack, 1);
 #if _JVM_DEBUG
-    printf("com_egls_jvm_JdwpThreads_resumeThread\n");
+    jvm_printf("com_egls_jvm_JdwpThreads_resumeThread\n");
 #endif
     return 0;
 }
@@ -211,7 +214,7 @@ s32 javax_mini_jdwp_vm_JdwpThreads_getSuspendCount(Runtime *runtime, Class *claz
     } else
         push_int(runtime->stack, 0);
 #if _JVM_DEBUG
-    printf("com_egls_jvm_JdwpThreads_getSuspendCount\n");
+    jvm_printf("com_egls_jvm_JdwpThreads_getSuspendCount\n");
 #endif
     return 0;
 }
@@ -241,7 +244,7 @@ s32 javax_mini_jdwp_vm_JdwpThreads_stopThread(Runtime *runtime, Class *clazz) {
     } else
         push_int(runtime->stack, 0);
 #if _JVM_DEBUG
-    printf("com_egls_jvm_JdwpThreads_stopThread\n");
+    jvm_printf("com_egls_jvm_JdwpThreads_stopThread\n");
 #endif
     return 0;
 }
@@ -255,7 +258,7 @@ s32 javax_mini_jdwp_vm_JdwpThreads_getTopRuntime(Runtime *runtime, Class *clazz)
     else
         push_int(runtime->stack, 0);
 #if _JVM_DEBUG
-    printf("javax_mini_jdwp_vm_JdwpThreads_getTopRuntime\n");
+    jvm_printf("javax_mini_jdwp_vm_JdwpThreads_getTopRuntime\n");
 #endif
     return 0;
 }
@@ -290,7 +293,7 @@ s32 javax_mini_jdwp_reflect_Reference_mapReference(Runtime *runtime, Class *claz
         s32 i;
         {
             ptr = getFieldPtr_byName(ins, JDWP_REFERENCE, "fieldIds", "[J");
-            Instance *jarr = jarray_create(target->fieldPool.field_used, DATATYPE_LONG);
+            Instance *jarr = jarray_create(target->fieldPool.field_used, DATATYPE_LONG, NULL);
             for (i = 0; i < target->fieldPool.field_used; i++) {
                 setFieldLong(&(jarr->arr_body[i * data_type_bytes[DATATYPE_LONG]]),
                              (u64) (long) &target->fieldPool.field[i]);
@@ -301,7 +304,7 @@ s32 javax_mini_jdwp_reflect_Reference_mapReference(Runtime *runtime, Class *claz
         //
         {
             ptr = getFieldPtr_byName(ins, JDWP_REFERENCE, "methodIds", "[J");
-            Instance *jarr = jarray_create(target->methodPool.method_used, DATATYPE_LONG);
+            Instance *jarr = jarray_create(target->methodPool.method_used, DATATYPE_LONG, NULL);
             for (i = 0; i < target->methodPool.method_used; i++) {
                 setFieldLong(&(jarr->arr_body[i * data_type_bytes[DATATYPE_LONG]]),
                              (u64) (long) &target->methodPool.method[i]);
@@ -381,7 +384,7 @@ s32 javax_mini_jdwp_reflect_Method_mapMethod(Runtime *runtime, Class *clazz) {
         //
         if (att) {
             ptr = getFieldPtr_byName(ins, JDWP_METHOD, "lineNum", "[S");
-            Instance *jarr = jarray_create(att->converted_code->line_number_table_length * 2, DATATYPE_SHORT);
+            Instance *jarr = jarray_create(att->converted_code->line_number_table_length * 2, DATATYPE_SHORT, NULL);
             memcpy(jarr->arr_body, att->converted_code->line_number_table,
                    att->converted_code->line_number_table_length * 4);
             if (ptr)setFieldRefer(ptr, jarr);
@@ -451,6 +454,14 @@ void reg_jdwp_native_lib() {
     native_reg_lib(&(method_jdwp_table[0]), sizeof(method_jdwp_table) / sizeof(java_native_method));
 }
 
+//=========================================================================
+//                      Event
+//=========================================================================
+
+
+void event_class_prepar(Runtime *runtime, Class *clazz) {
+
+}
 
 #ifdef __cplusplus
 }

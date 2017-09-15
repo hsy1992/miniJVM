@@ -33,16 +33,15 @@ find_constant_methodref_by_name(Utf8String *clsName, Utf8String *methodName, Utf
  */
 MethodInfo *find_instance_methodInfo_by_name(Instance *ins, Utf8String *methodName, Utf8String *methodType) {
     if (!ins)return NULL;
-    return find_methodInfo_by_name(ins->mb.obj_of_clazz->name, methodName, methodType);
+    return find_methodInfo_by_name(ins->mb.clazz->name, methodName, methodType);
 }
 
 MethodInfo *find_methodInfo_by_methodref(Class *clazz, s32 method_ref) {
     MethodInfo *mi = NULL;
-    ConstantMethodRef *cfr = find_constant_method_ref(clazz, method_ref);
-    ConstantNameAndType *nat = find_constant_name_and_type(clazz, cfr->nameAndTypeIndex);
-    Utf8String *clsName = get_utf8_string(clazz, find_constant_classref(clazz, cfr->classIndex)->stringIndex);
-    Utf8String *methodName = get_utf8_string(clazz, nat->nameIndex);
-    Utf8String *methodType = get_utf8_string(clazz, nat->typeIndex);
+    ConstantMethodRef *cmr = find_constant_method_ref(clazz, method_ref);
+    Utf8String *clsName = cmr->clsName;
+    Utf8String *methodName = cmr->name;
+    Utf8String *methodType = cmr->descriptor;
     return find_methodInfo_by_name(clsName, methodName, methodType);
 }
 
@@ -148,24 +147,24 @@ void printMethodAttributes(Class *p, MethodInfo *method) {
     for (i = 0; i < method->attributes_count; i++) {
         attr = &method->attributes[i];
 
-        printf("attribute name = %s\n", utf8_cstr(get_utf8_string(p, attr->attribute_name_index)));
+        jvm_printf("attribute name = %s\n", utf8_cstr(get_utf8_string(p, attr->attribute_name_index)));
     }
 }
 
 /* Print Method Pool */
 void printMethodPool(Class *p, MethodPool *mp) {
     s32 i, j;
-    printf("Method Pool===================== \n");
+    jvm_printf("Method Pool===================== \n");
     if (mp->method_used > 0) {
         for (i = 0; i < mp->method_used; i++) {
             ConstantUTF8 *ptr = find_constant_utf8(p, mp->method[i].name_index);
             ConstantUTF8 *ptr2 = find_constant_utf8(p, mp->method[i].descriptor_index);
             ConstantMethodRef *mRefPtr = find_constant_method_ref(p, mp->method[i].name_index);
-            printf("methodRef[%d], attr_count = %d, %d",
-                   i, mp->method[i].attributes_count,
-                   mp->method[i].name_index);
+            jvm_printf("methodRef[%d], attr_count = %d, %d",
+                       i, mp->method[i].attributes_count,
+                       mp->method[i].name_index);
             if (ptr != 0) {
-                printf(" %s", utf8_cstr(ptr->utfstr));
+                jvm_printf(" %s", utf8_cstr(ptr->utfstr));
             }
 #if 0
                 else if (mRefPtr != 0) {
@@ -173,10 +172,10 @@ void printMethodPool(Class *p, MethodPool *mp) {
                     if (obj_of_clazz != 0) {
                         ConstantUTF8 *name = find_utf8(p, obj_of_clazz->stringIndex);
                         if (name != 0) {
-                            printf(" ");
+                            jvm_printf(" ");
                             for (j = 0; j < name->string_size; j++)
-                                printf("%c", name->arr_body[j]);
-                            printf(" ");
+                                jvm_printf("%c", name->arr_body[j]);
+                            jvm_printf(" ");
 
                         }
                     }
@@ -186,28 +185,28 @@ void printMethodPool(Class *p, MethodPool *mp) {
                         ConstantUTF8 *type = find_utf8(p, nameAndType->typeIndex);
 
                         if (name != 0) {
-                            printf(" ");
+                            jvm_printf(" ");
                             for (j = 0; j < name->string_size; j++)
-                                printf("%c", name->arr_body[j]);
-                            printf(" ");
+                                jvm_printf("%c", name->arr_body[j]);
+                            jvm_printf(" ");
                         }
                         if (type != 0) {
-                            printf(" ");
+                            jvm_printf(" ");
                             for (j = 0; j < type->string_size; j++)
-                                printf("%c", type->arr_body[j]);
-                            printf(" ");
+                                jvm_printf("%c", type->arr_body[j]);
+                            jvm_printf(" ");
                         }
                     }
-                    printf("\n");
+                    jvm_printf("\n");
                 }
 #endif
             else {
-                printf("\n");
+                jvm_printf("\n");
                 continue;
             }
             if (ptr2 != 0) {
-                printf("");
-                printf("%s\n", utf8_cstr(ptr2->utfstr));
+                jvm_printf("");
+                jvm_printf("%s\n", utf8_cstr(ptr2->utfstr));
             }
             printMethodAttributes(p, &mp->method[i]);
         }

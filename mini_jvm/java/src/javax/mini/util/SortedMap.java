@@ -1,11 +1,8 @@
 /*
- * @(#)SortedMap.java	1.12 00/02/02
+ * @(#)SortedMap.java	1.21 04/06/28
  *
- * Copyright 1998-2000 Sun Microsystems, Inc. All Rights Reserved.
- * 
- * This software is the proprietary information of Sun Microsystems, Inc.  
- * Use is subject to license terms.
- * 
+ * Copyright 2004 Sun Microsystems, Inc. All rights reserved.
+ * SUN PROPRIETARY/CONFIDENTIAL. Use is subject to license terms.
  */
 
 package javax.mini.util;
@@ -53,11 +50,15 @@ package javax.mini.util;
  * constructor with a single argument of type sorted map, which creates a new
  * sorted map with the same key-value mappings and the same ordering as the
  * input sorted map.  There is no way to enforce this recommendation (as
- * interfaces cannot contain constructors) but the SDK implementation
- * (TreeMap) complies.
+ * interfaces cannot contain constructors) but the JDK implementation
+ * (TreeMap) complies.<p>
+ *
+ * This interface is a member of the 
+ * <a href="{@docRoot}/../guide/collections/index.html">
+ * Java Collections Framework</a>.
  *
  * @author  Josh Bloch
- * @version 1.12, 02/02/00
+ * @version 1.21, 06/28/04
  * @see Map
  * @see TreeMap
  * @see SortedSet
@@ -68,7 +69,7 @@ package javax.mini.util;
  * @since 1.2
  */
 
-public interface SortedMap extends Map {
+public interface SortedMap<K,V> extends Map<K,V> {
     /**
      * Returns the comparator associated with this sorted map, or
      * <tt>null</tt> if it uses its keys' natural ordering.
@@ -76,7 +77,7 @@ public interface SortedMap extends Map {
      * @return the comparator associated with this sorted map, or
      * 	       <tt>null</tt> if it uses its keys' natural ordering.
      */
-    Comparator comparator();
+    Comparator<? super K> comparator();
 
     /**
      * Returns a view of the portion of this sorted map whose keys range from
@@ -128,7 +129,7 @@ public interface SortedMap extends Map {
      *	       <tt>null</tt> and this sorted map does not tolerate
      *	       <tt>null</tt> keys.
      */
-    SortedMap subMap(Object fromKey, Object toKey);
+    SortedMap<K,V> subMap(K fromKey, K toKey);
 
     /**
      * Returns a view of the portion of this sorted map whose keys are
@@ -165,7 +166,7 @@ public interface SortedMap extends Map {
      * @throws NullPointerException if <tt>toKey</tt> is <tt>null</tt> and
      *	       this sorted map does not tolerate <tt>null</tt> keys.
      */
-    SortedMap headMap(Object toKey);
+    SortedMap<K,V> headMap(K toKey);
 
     /**
      * Returns a view of the portion of this sorted map whose keys are greater
@@ -203,7 +204,7 @@ public interface SortedMap extends Map {
      * @throws NullPointerException if <tt>fromKey</tt> is <tt>null</tt> and
      *	       this sorted map does not tolerate <tt>null</tt> keys.
      */
-    SortedMap tailMap(Object fromKey);
+    SortedMap<K,V> tailMap(K fromKey);
 
     /**
      * Returns the first (lowest) key currently in this sorted map.
@@ -211,7 +212,7 @@ public interface SortedMap extends Map {
      * @return the first (lowest) key currently in this sorted map.
      * @throws    NoSuchElementException if this map is empty.
      */
-    Object firstKey();
+    K firstKey();
 
     /**
      * Returns the last (highest) key currently in this sorted map.
@@ -219,5 +220,5 @@ public interface SortedMap extends Map {
      * @return the last (highest) key currently in this sorted map.
      * @throws     NoSuchElementException if this map is empty.
      */
-    Object lastKey();
+    K lastKey();
 }

@@ -8,7 +8,7 @@
  * 
  */
 
-package javax.mini.util;
+package java.lang;
 
 /**
  * A class implements the <code>Cloneable</code> interface to 

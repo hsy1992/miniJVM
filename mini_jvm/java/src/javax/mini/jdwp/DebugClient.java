@@ -706,7 +706,7 @@ public class DebugClient {
                     switch (req.getCommand()) {
                         case Command.EventRequest_Set: {//15.1
                             ReqEvent event = new ReqEvent(req);
-                            EventManager.putEvent(event);
+                            EventManager.putEventSet(event);
                             ResponsePacket res = new ResponsePacket();
                             res.setId(req.getId());
                             res.setErrorCode(Error.NONE);

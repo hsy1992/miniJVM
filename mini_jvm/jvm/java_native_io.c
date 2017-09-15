@@ -12,7 +12,7 @@
 #define __WIN32__
 #endif
 #endif
-#define   err printf
+#define   err jvm_printf
 
 #ifdef __cplusplus
 extern "C" {
@@ -136,7 +136,7 @@ s32 sock_recv(s32 sockfd, c8 *buf, s32 count) {
         len = -1;
 #ifdef __WIN32__
         if (WSAEWOULDBLOCK == WSAGetLastError()) {//但是如果是非阻塞端口，说明连接仍正常
-            //printf("sc send error client time = %f ;\n", (f64)clock());
+            //jvm_printf("sc send error client time = %f ;\n", (f64)clock());
             len = 0;
         }
 #else
@@ -161,7 +161,7 @@ s32 sock_send(s32 sockfd, c8 *buf, s32 count) {
     } else if (len == -1) {//如果发生错误
 #ifdef __WIN32__
         if (WSAEWOULDBLOCK == WSAGetLastError()) {//但是如果是非阻塞端口，说明连接仍正常
-            //printf("sc send error server time = %f ;\n", (f64)clock());
+            //jvm_printf("sc send error server time = %f ;\n", (f64)clock());
             len = 0;
         }
 #else
@@ -334,7 +334,7 @@ s32 javax_mini_net_socket_Protocol_open0(Runtime *runtime, Class *clazz) {
 
     s32 sockfd = sock_open(ip, port);
 #if _JVM_DEBUG
-    printf("javax_mini_net_socket_Protocol_open0  \n");
+    jvm_printf("javax_mini_net_socket_Protocol_open0  \n");
 #endif
     push_int(stack, sockfd);
     return 0;
@@ -349,7 +349,7 @@ s32 javax_mini_net_socket_Protocol_readBuf(Runtime *runtime, Class *clazz) {
     s32 len = sock_recv(sockfd, jbyte_arr->arr_body + offset, count);
     push_int(runtime->stack, len);
 #if _JVM_DEBUG
-    printf("javax_mini_net_socket_Protocol_readBuf  \n");
+    jvm_printf("javax_mini_net_socket_Protocol_readBuf  \n");
 #endif
     return 0;
 }
@@ -366,7 +366,7 @@ s32 javax_mini_net_socket_Protocol_readByte(Runtime *runtime, Class *clazz) {
     }
 
 #if _JVM_DEBUG
-    printf("javax_mini_net_socket_Protocol_readByte  \n");
+    jvm_printf("javax_mini_net_socket_Protocol_readByte  \n");
 #endif
     return 0;
 }
@@ -382,7 +382,7 @@ s32 javax_mini_net_socket_Protocol_writeBuf(Runtime *runtime, Class *clazz) {
 
     push_int(runtime->stack, len);
 #if _JVM_DEBUG
-    printf("javax_mini_net_socket_Protocol_writeBuf  \n");
+    jvm_printf("javax_mini_net_socket_Protocol_writeBuf  \n");
 #endif
     return 0;
 }
@@ -393,7 +393,7 @@ s32 javax_mini_net_socket_Protocol_writeByte(Runtime *runtime, Class *clazz) {
     u8 b = (u8) val;
     s32 len = sock_send(sockfd, &b, 1);
 #if _JVM_DEBUG
-    printf("javax_mini_net_socket_Protocol_writeByte  \n");
+    jvm_printf("javax_mini_net_socket_Protocol_writeByte  \n");
 #endif
     push_int(runtime->stack, len);
     return 0;
@@ -402,7 +402,7 @@ s32 javax_mini_net_socket_Protocol_writeByte(Runtime *runtime, Class *clazz) {
 s32 javax_mini_net_socket_Protocol_available0(Runtime *runtime, Class *clazz) {
 //    Instance *tmps = (Instance *) (runtime->localVariables + 0)->refer;
 #if _JVM_DEBUG
-    printf("javax_mini_net_socket_Protocol_available0  \n");
+    jvm_printf("javax_mini_net_socket_Protocol_available0  \n");
 #endif
     push_int(runtime->stack, 0);
     return 0;
@@ -419,7 +419,7 @@ s32 javax_mini_net_socket_Protocol_close0(Runtime *runtime, Class *clazz) {
         sockfd = 0;
     }
 #if _JVM_DEBUG
-    printf("javax_mini_net_socket_Protocol_close0  \n");
+    jvm_printf("javax_mini_net_socket_Protocol_close0  \n");
 #endif
     return 0;
 }
@@ -434,7 +434,7 @@ s32 javax_mini_net_socket_Protocol_setOption0(Runtime *runtime, Class *clazz) {
     }
     push_int(runtime->stack, ret);
 #if _JVM_DEBUG
-    printf("javax_mini_net_socket_Protocol_setOption0  \n");
+    jvm_printf("javax_mini_net_socket_Protocol_setOption0  \n");
 #endif
     return 0;
 }
@@ -448,7 +448,7 @@ s32 javax_mini_net_serversocket_Protocol_open0(Runtime *runtime, Class *clazz) {
     ret = srv_bind(ip, port);
     push_int(runtime->stack, ret);
 #if _JVM_DEBUG
-    printf("javax_mini_net_serversocket_Protocol_open0  \n");
+    jvm_printf("javax_mini_net_serversocket_Protocol_open0  \n");
 #endif
     return 0;
 }
@@ -461,7 +461,7 @@ s32 javax_mini_net_serversocket_Protocol_listen0(Runtime *runtime, Class *clazz)
     }
     push_int(runtime->stack, ret);
 #if _JVM_DEBUG
-    printf("javax_mini_net_serversocket_Protocol_listen0  \n");
+    jvm_printf("javax_mini_net_serversocket_Protocol_listen0  \n");
 #endif
     return 0;
 }
@@ -475,7 +475,7 @@ s32 javax_mini_net_serversocket_Protocol_accept0(Runtime *runtime, Class *clazz)
     }
     push_int(runtime->stack, ret);
 #if _JVM_DEBUG
-    printf("javax_mini_net_serversocket_Protocol_accept0  \n");
+    jvm_printf("javax_mini_net_serversocket_Protocol_accept0  \n");
 #endif
     return 0;
 }
@@ -488,7 +488,7 @@ s32 javax_mini_net_serversocket_Protocol_close0(Runtime *runtime, Class *clazz) 
     }
     push_int(runtime->stack, ret);
 #if _JVM_DEBUG
-    printf("javax_mini_net_serversocket_Protocol_close0  \n");
+    jvm_printf("javax_mini_net_serversocket_Protocol_close0  \n");
 #endif
     return 0;
 }
@@ -501,7 +501,7 @@ s32 javax_mini_net_serversocket_Protocol_registerCleanup(Runtime *runtime, Class
     }
 
 #if _JVM_DEBUG
-    printf("javax_mini_net_serversocket_Protocol_registerCleanup  \n");
+    jvm_printf("javax_mini_net_serversocket_Protocol_registerCleanup  \n");
 #endif
     return 0;
 }
@@ -514,7 +514,7 @@ s32 javax_mini_net_serversocket_Protocol_finalize(Runtime *runtime, Class *clazz
     }
 
 #if _JVM_DEBUG
-    printf("javax_mini_net_serversocket_Protocol_finalize  \n");
+    jvm_printf("javax_mini_net_serversocket_Protocol_finalize  \n");
 #endif
     return 0;
 }
@@ -534,7 +534,7 @@ s32 javax_mini_io_File_openFile(Runtime *runtime, Class *clazz) {
     }
 
 #if _JVM_DEBUG
-    printf("javax_mini_io_File_openFile  \n");
+    jvm_printf("javax_mini_io_File_openFile  \n");
 #endif
     return 0;
 }
@@ -550,7 +550,7 @@ s32 javax_mini_io_File_closeFile(Runtime *runtime, Class *clazz) {
     }
     push_int(runtime->stack, ret);
 #if _JVM_DEBUG
-    printf("javax_mini_io_File_closeFile  \n");
+    jvm_printf("javax_mini_io_File_closeFile  \n");
 #endif
     return 0;
 }
@@ -573,7 +573,7 @@ s32 javax_mini_io_File_read0(Runtime *runtime, Class *clazz) {
     }
 
 #if _JVM_DEBUG
-    printf("javax_mini_io_File_read0  \n");
+    jvm_printf("javax_mini_io_File_read0  \n");
 #endif
     return 0;
 }
@@ -597,7 +597,7 @@ s32 javax_mini_io_File_write0(Runtime *runtime, Class *clazz) {
     }
 
 #if _JVM_DEBUG
-    printf("javax_mini_io_File_write0  \n");
+    jvm_printf("javax_mini_io_File_write0  \n");
 #endif
     return 0;
 }
@@ -621,7 +621,7 @@ s32 javax_mini_io_File_readbuf(Runtime *runtime, Class *clazz) {
     push_int(runtime->stack, ret);
 
 #if _JVM_DEBUG
-    printf("javax_mini_io_File_readbuf  \n");
+    jvm_printf("javax_mini_io_File_readbuf  \n");
 #endif
     return 0;
 }
@@ -648,7 +648,7 @@ s32 javax_mini_io_File_writebuf(Runtime *runtime, Class *clazz) {
     }
 
 #if _JVM_DEBUG
-    printf("javax_mini_io_File_writebuf  \n");
+    jvm_printf("javax_mini_io_File_writebuf  \n");
 #endif
     return 0;
 }
@@ -668,7 +668,7 @@ s32 javax_mini_io_File_seek0(Runtime *runtime, Class *clazz) {
     }
     push_int(runtime->stack, ret);
 #if _JVM_DEBUG
-    printf("javax_mini_io_File_seek0  \n");
+    jvm_printf("javax_mini_io_File_seek0  \n");
 #endif
     return 0;
 }
@@ -688,7 +688,7 @@ s32 javax_mini_io_File_setLength0(Runtime *runtime, Class *clazz) {
     }
     push_int(runtime->stack, ret);
 #if _JVM_DEBUG
-    printf("javax_mini_io_File_setLength0  \n");
+    jvm_printf("javax_mini_io_File_setLength0  \n");
 #endif
     return 0;
 }
@@ -705,7 +705,7 @@ s32 javax_mini_io_File_flush0(Runtime *runtime, Class *clazz) {
     }
     push_int(runtime->stack, ret);
 #if _JVM_DEBUG
-    printf("javax_mini_io_File_flush0  \n");
+    jvm_printf("javax_mini_io_File_flush0  \n");
 #endif
     return 0;
 }
@@ -749,7 +749,7 @@ s32 javax_mini_io_File_loadFD(Runtime *runtime, Class *clazz) {
     }
     push_long(runtime->stack, ret);
 #if _JVM_DEBUG
-    printf("javax_mini_io_File_loadFD  \n");
+    jvm_printf("javax_mini_io_File_loadFD  \n");
 #endif
     return 0;
 }
@@ -774,7 +774,8 @@ s32 javax_mini_io_File_listDir(Runtime *runtime, Class *clazz) {
 
             s32 i;
             Long2Double l2d;
-            Instance *jarr = jarray_create(files->length, DATATYPE_REFERENCE);
+            Class *cl = classes_load_get_c(STR_CLASS_JAVA_LANG_STRING, runtime);
+            Instance *jarr = jarray_create(files->length, DATATYPE_REFERENCE, cl);
             garbage_refer(jarr, NULL);
             for (i = 0; i < files->length; i++) {
                 l2d.r = arraylist_get_value(files, i);
@@ -790,7 +791,7 @@ s32 javax_mini_io_File_listDir(Runtime *runtime, Class *clazz) {
         push_ref(runtime->stack, NULL);
     }
 #if _JVM_DEBUG
-    printf("javax_mini_io_File_listDir  \n");
+    jvm_printf("javax_mini_io_File_listDir  \n");
 #endif
     return 0;
 }

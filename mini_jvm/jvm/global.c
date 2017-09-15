@@ -19,7 +19,9 @@ s64 GARBAGE_PERIOD_MS = 1000;
 ArrayList *_garbage_refer_set_pool;
 s64 _garbage_count = 0;
 Hashtable *sys_prop;
-Instance *jdwp_jthread;;
+//
+Instance *jdwp_jthread;
+volatile u8 java_debug =1;
 
 Hashtable *son_2_father; //key=mem_ptr, value=我被别人引用的列表
 Hashtable *father_2_son; //key=mem_ptr, value=别人被我引用的列表

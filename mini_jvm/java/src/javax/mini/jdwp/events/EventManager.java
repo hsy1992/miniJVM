@@ -7,7 +7,7 @@ package javax.mini.jdwp.events;
 
 import java.util.Enumeration;
 import java.util.Hashtable;
-import javax.mini.util.Iterator;
+import javax.mini.util.LinkedList;
 
 /**
  *
@@ -15,12 +15,13 @@ import javax.mini.util.Iterator;
  */
 public class EventManager {
 
-    static Hashtable events = new Hashtable();
+    static Hashtable eventSet = new Hashtable();
     static int requestId = 100;
     static int commandId = 0;
+    static LinkedList events = new LinkedList();
 
     public static void action() {
-        for (Enumeration e = events.elements(); e.hasMoreElements();) {
+        for (Enumeration e = eventSet.elements(); e.hasMoreElements();) {
             ReqEvent event = (ReqEvent) e.nextElement();
             event.process();
         }
@@ -34,11 +35,25 @@ public class EventManager {
         return commandId++;
     }
 
-    static public void putEvent(ReqEvent event) {
-        events.put(event.getRequestId(), event);
+    static public void putEventSet(ReqEvent event) {
+        eventSet.put(event.getRequestId(), event);
     }
 
-    static public ReqEvent getEvent(int reqId) {
-        return (ReqEvent) events.get(reqId);
+    static public ReqEvent getEventSet(int eventKind) {
+        return (ReqEvent) events.get(eventKind);
+    }
+
+    static public void putEvent(Event e) {
+        synchronized (events) {
+            events.add(e);
+        }
+    }
+
+    static public Event getEvent() {
+        Event e;
+        synchronized (events) {
+            e = (Event) events.removeFirst();
+        }
+        return e;
     }
 }

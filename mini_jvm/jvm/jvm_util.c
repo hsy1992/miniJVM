@@ -3,6 +3,7 @@
 //
 
 
+#include <stdarg.h>
 #include "jvm.h"
 #include "jvm_util.h"
 #include "garbage.h"
@@ -204,7 +205,7 @@ s32 getDataTypeIndex(c8 ch) {
         case 'Z':
             return 4;
         default:
-            printf("datatype not found %c\n", ch);
+            jvm_printf("datatype not found %c\n", ch);
     }
 }
 
@@ -290,7 +291,7 @@ void printDumpOfClasses() {
     for (; hashtable_iter_has_more(&hti);) {
         Utf8String *k = hashtable_iter_next_key(&hti);
         Class *clazz = classes_get(k);
-        printf("classes entry : hash( %x )%s,%d\n", k->hash, utf8_cstr(k), clazz);
+        jvm_printf("classes entry : hash( %x )%s,%d\n", k->hash, utf8_cstr(k), clazz);
     }
 }
 
@@ -303,7 +304,7 @@ s32 loadSysProperties(Utf8String *path) {
     fp = fopen(utf8_cstr(filepath), "rb");
     utf8_destory(filepath);
     if (fp == 0) {
-        printf("Open file properties failed\n");
+        jvm_printf("Open file properties failed\n");
         return -1;
     }
     Utf8String *ustr = utf8_create();
@@ -347,6 +348,39 @@ s32 loadSysProperties(Utf8String *path) {
     return 0;
 }
 
+FILE *logfile = NULL;
+
+void open_log() {
+#if _JVM_DEBUG_PRINT_FILE
+    if (!logfile) {
+        logfile = fopen("./jvmlog.txt", "wb+");
+    }
+#endif
+}
+
+void close_log() {
+#if _JVM_DEBUG_PRINT_FILE
+    if (!logfile) {
+        fclose(logfile);
+    }
+#endif
+}
+
+int jvm_printf(const char *format, ...) {
+    va_list vp;
+    va_start(vp, format);
+    int result = 0;
+#if _JVM_DEBUG_PRINT_FILE
+    if (logfile) {
+        result = vfprintf(logfile, format, vp);
+    }
+#else
+    result = vprintf(format, vp);
+#endif
+    va_end(vp);
+    return result;
+}
+
 //===============================    java 线程  ==================================
 void *jtherad_loader(void *para) {
     Instance *jthread = (Instance *) para;
@@ -355,7 +389,7 @@ void *jtherad_loader(void *para) {
     runtime_create(&runtime);
     localvar_init(&runtime, 1);
 
-    runtime.clazz = jthread->mb.obj_of_clazz;
+    runtime.clazz = jthread->mb.clazz;
     runtime.threadInfo->jthread = jthread;
     runtime.threadInfo->pthread = pthread_self();
     Utf8String *methodName = utf8_create_c("run");
@@ -365,7 +399,7 @@ void *jtherad_loader(void *para) {
     utf8_destory(methodName);
     utf8_destory(methodType);
 #if _JVM_DEBUG
-    printf("therad_loader    %s.%s%s  \n", utf8_cstr(method->_this_class->name),
+    jvm_printf("therad_loader    %s.%s%s  \n", utf8_cstr(method->_this_class->name),
            utf8_cstr(method->name), utf8_cstr(method->descriptor));
 #endif
 
@@ -440,7 +474,7 @@ s32 jthread_lock(MemoryBlock *ins, Runtime *runtime) { //可能会重入，同�
         jtl->hold_count++;
     }
 #if _JVM_DEBUG
-    printf("  lock: %llx   lock holder: %llx, count: %d \n", (s64) (long) (runtime->threadInfo->jthread),
+    jvm_printf("  lock: %llx   lock holder: %llx, count: %d \n", (s64) (long) (runtime->threadInfo->jthread),
            (s64) (long) (jtl->jthread_holder), jtl->hold_count);
 #endif
 }
@@ -461,7 +495,7 @@ s32 jthread_unlock(MemoryBlock *ins, Runtime *runtime) {
     }
     return 0;
 #if _JVM_DEBUG
-    printf("unlock: %llx   lock holder: %llx, count: %d \n", (s64) (long) (runtime->threadInfo->jthread),
+    jvm_printf("unlock: %llx   lock holder: %llx, count: %d \n", (s64) (long) (runtime->threadInfo->jthread),
            (s64) (long) (jtl->jthread_holder), jtl->hold_count);
 #endif
 }
@@ -517,14 +551,18 @@ s32 jthread_waitTime(MemoryBlock *ins, Runtime *runtime, long waitms) {
 }
 
 //===============================    实例化数组  ==================================
-Instance *jarray_create(s32 count, s32 typeIdx) {
+Instance *jarray_create(s32 count, s32 typeIdx, Class *type) {
     s32 width = data_type_bytes[typeIdx];
     Instance *arr = jvm_alloc(sizeof(Instance));
     arr->mb.type = MEM_TYPE_ARR;
     arr->mb.garbage_mark = GARBAGE_MARK_UNDEF;//防止在上次回收过程中，此对象刚被放入池子就被回收
-    Utf8String *clsName = utf8_create_c(STR_CLASS_JAVA_LANG_OBJECT);
-    arr->mb.obj_of_clazz = classes_get(clsName);
-    utf8_destory(clsName);
+    if (type) {
+        arr->mb.clazz = type;
+    } else {
+        Utf8String *clsName = utf8_create_c(STR_CLASS_JAVA_LANG_OBJECT);
+        arr->mb.clazz = classes_get(clsName);
+        utf8_destory(clsName);
+    }
     arr->arr_length = count;
     arr->arr_data_type = typeIdx;
     arr->arr_body = jvm_alloc(width * count);
@@ -560,9 +598,9 @@ Instance *jarray_multi_create(ArrayList *dim, Utf8String *desc, s32 deep) {
     if (len == -1)return NULL;
     c8 ch = utf8_char_at(desc, deep + 1);
     s32 typeIdx = getDataTypeIndex(ch);
-    Instance *arr = jarray_create(len, typeIdx);
+    Instance *arr = jarray_create(len, typeIdx, NULL);
 #if _JVM_DEBUG
-    printf("multi arr deep :%d  type(%c) arr[%x] size:%d\n", deep, ch, arr, len);
+    jvm_printf("multi arr deep :%d  type(%c) arr[%x] size:%d\n", deep, ch, arr, len);
 #endif
     if (ch == '[') {
         int i;
@@ -635,9 +673,9 @@ Instance *instance_create(Class *clazz) {
     Instance *instance = jvm_alloc(sizeof(Instance));
     instance->mb.type = MEM_TYPE_INS;
     instance->mb.garbage_mark = GARBAGE_MARK_UNDEF;
-    instance->mb.obj_of_clazz = clazz;
+    instance->mb.clazz = clazz;
 
-    instance->obj_fields = jvm_alloc(instance->mb.obj_of_clazz->field_instance_len);
+    instance->obj_fields = jvm_alloc(instance->mb.clazz->field_instance_len);
 //    memcpy(instance->obj_fields, instance->obj_of_clazz->field_instance_template,
 //           instance->obj_of_clazz->field_instance_len);
     return instance;
@@ -647,9 +685,9 @@ void instance_init(Instance *ins, Runtime *runtime) {
     if (ins) {
         Utf8String *methodName = utf8_create_c("<init>");
         Utf8String *methodType = utf8_create_c("()V");
-        MethodInfo *mi = find_methodInfo_by_name(ins->mb.obj_of_clazz->name, methodName, methodType);
+        MethodInfo *mi = find_methodInfo_by_name(ins->mb.clazz->name, methodName, methodType);
         push_ref(runtime->stack, (__refer) ins);
-        execute_method(mi, runtime, ins->mb.obj_of_clazz);
+        execute_method(mi, runtime, ins->mb.clazz);
         utf8_destory(methodName);
         utf8_destory(methodType);
     }
@@ -673,14 +711,14 @@ Instance *jstring_create(Utf8String *src, Runtime *runtime) {
     Utf8String *clsName = utf8_create_c(STR_CLASS_JAVA_LANG_STRING);
     Class *jstr_clazz = classes_get(clsName);
     Instance *jstring = instance_create(jstr_clazz);
-    jstring->mb.obj_of_clazz = jstr_clazz;
+    jstring->mb.clazz = jstr_clazz;
     instance_init(jstring, runtime);
 
     c8 *ptr = jstring_get_value_ptr(jstring);
     if (src->length) {
         u16 *buf = jvm_alloc(src->length * data_type_bytes[DATATYPE_JCHAR]);
         s32 len = utf8_2_unicode(src, buf);
-        Instance *arr = jarray_create(len, DATATYPE_JCHAR);//u16 type is 5
+        Instance *arr = jarray_create(len, DATATYPE_JCHAR,NULL);//u16 type is 5
         memcpy(arr->arr_body, buf, len * data_type_bytes[DATATYPE_JCHAR]);
         jvm_free(buf);
         __refer oldarr = getFieldRefer(ptr);//调用了String.init之后，已经有值了
@@ -805,7 +843,7 @@ s32 jstring_2_utf8(Instance *jstr, Utf8String *utf8) {
 
 Instance *exception_create(s32 exception_type, Runtime *runtime) {
 #if _JVM_DEBUG
-    printf("create exception : %s\n", exception_class_name[exception_type]);
+    jvm_printf("create exception : %s\n", exception_class_name[exception_type]);
 #endif
     Utf8String *clsName = utf8_create_c(exception_class_name[exception_type]);
     Class *clazz = classes_load_get(clsName, runtime);

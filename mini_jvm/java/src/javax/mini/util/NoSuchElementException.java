@@ -1,11 +1,8 @@
 /*
- * @(#)NoSuchElementException.java	1.18 00/02/02
+ * @(#)NoSuchElementException.java	1.21 03/12/19
  *
- * Copyright 1994-2000 Sun Microsystems, Inc. All Rights Reserved.
- * 
- * This software is the proprietary information of Sun Microsystems, Inc.  
- * Use is subject to license terms.
- * 
+ * Copyright 2004 Sun Microsystems, Inc. All rights reserved.
+ * SUN PROPRIETARY/CONFIDENTIAL. Use is subject to license terms.
  */
 
 package javax.mini.util;
@@ -16,7 +13,7 @@ package javax.mini.util;
  * elements in the enumeration. 
  *
  * @author  unascribed
- * @version 1.18, 02/02/00
+ * @version 1.21, 12/19/03
  * @see     java.util.Enumeration
  * @see     java.util.Enumeration#nextElement()
  * @since   JDK1.0

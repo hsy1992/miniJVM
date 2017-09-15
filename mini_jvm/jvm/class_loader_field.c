@@ -23,7 +23,7 @@ FieldInfo *find_fieldInfo_by_fieldref(Class *clazz, s32 field_ref) {
     Utf8String *clsName = get_utf8_string(clazz, find_constant_classref(clazz, cfr->classIndex)->stringIndex);
     Utf8String *fieldName = get_utf8_string(clazz, nat->nameIndex);
     Utf8String *type = get_utf8_string(clazz, nat->typeIndex);
-    Class *other = classes_get( clsName);
+    Class *other = classes_get(clsName);
 
     while (fi == NULL && other) {
         FieldPool *fp = &(other->fieldPool);
@@ -44,7 +44,7 @@ FieldInfo *find_fieldInfo_by_fieldref(Class *clazz, s32 field_ref) {
 
 FieldInfo *find_fieldInfo_by_name(Utf8String *clsName, Utf8String *fieldName, Utf8String *fieldType) {
     FieldInfo *fi = NULL;
-    Class *other = classes_get( clsName);
+    Class *other = classes_get(clsName);
 
     while (fi == NULL && other) {
         FieldPool *fp = &(other->fieldPool);
@@ -72,7 +72,7 @@ static s32 parseAttr(FieldInfo *ptr, FILE *fp) {
     u8 short_tmp[2];
     u8 integer_tmp[4];
 #if 0
-    printf("fieldRef attributes_count = %d\n", arr_body->attributes_count);
+    jvm_printf("fieldRef attributes_count = %d\n", arr_body->attributes_count);
 #endif
     for (i = 0; i < ptr->attributes_count; i++) {
         tmp = &(ptr->attributes[i]);
@@ -145,17 +145,17 @@ static s32 parseFP(Class *_this, FILE *fp) {
 void printFieldPool(Class *clazz, FieldPool *fp) {
     s32 i, j;
 
-    printf("Field Pool==================== \n");
+    jvm_printf("Field Pool==================== \n");
     if (fp->field_used > 0) {
         for (i = 0; i < fp->field_used; i++) {
             ConstantUTF8 *ptr = find_constant_utf8(clazz, fp->field[i].name_index);
-            printf("fieldRef[%d], attr_count = %d, %d",
-                   i, fp->field[i].attributes_count,
-                   fp->field[i].name_index);
+            jvm_printf("fieldRef[%d], attr_count = %d, %d",
+                       i, fp->field[i].attributes_count,
+                       fp->field[i].name_index);
             if (ptr != 0) {
-                printf(" %s\n", utf8_cstr(ptr->utfstr));
+                jvm_printf(" %s\n", utf8_cstr(ptr->utfstr));
             } else {
-                printf("\n");
+                jvm_printf("\n");
             }
         }
     }
@@ -175,7 +175,7 @@ s32 _parse_field_pool(Class *_this, FILE *fp, s32 count) {
 s32 _class_field_info_destory(Class *clazz) {
     s32 i, j;
     for (i = 0; i < clazz->fieldPool.field_used; i++) {
-        FieldPool *fi =( FieldPool *) &clazz->fieldPool.field[i];
+        FieldPool *fi = (FieldPool *) &clazz->fieldPool.field[i];
         for (j = 0; j < fi->field[i].attributes_count; j++) {
             AttributeInfo *attr = &fi->field[i].attributes[j];
             jvm_free(attr->info);//info已被转换为converted_attribute

@@ -1,11 +1,8 @@
 /*
- * @(#)AbstractSequentialList.java	1.21 00/02/02
+ * @(#)AbstractSequentialList.java	1.33 04/02/19
  *
- * Copyright 1997-2000 Sun Microsystems, Inc. All Rights Reserved.
- * 
- * This software is the proprietary information of Sun Microsystems, Inc.  
- * Use is subject to license terms.
- * 
+ * Copyright 2004 Sun Microsystems, Inc. All rights reserved.
+ * SUN PROPRIETARY/CONFIDENTIAL. Use is subject to license terms.
  */
 
 package javax.mini.util;
@@ -37,10 +34,15 @@ package javax.mini.util;
  *
  * The programmer should generally provide a void (no argument) and collection
  * constructor, as per the recommendation in the <tt>Collection</tt> interface
- * specification.
+ * specification.<p>
+ *
+ * This class is a member of the 
+ * <a href="{@docRoot}/../guide/collections/index.html">
+ * Java Collections Framework</a>.
  *
  * @author  Josh Bloch
- * @version 1.21, 02/02/00
+ * @author  Neal Gafter
+ * @version 1.33, 02/19/04
  * @see Collection
  * @see List
  * @see AbstractList
@@ -48,7 +50,7 @@ package javax.mini.util;
  * @since 1.2
  */
 
-public abstract class AbstractSequentialList extends AbstractList {
+public abstract class AbstractSequentialList<E> extends AbstractList<E> {
     /**
      * Sole constructor.  (For invocation by subclass constructors, typically
      * implicit.)
@@ -62,14 +64,14 @@ public abstract class AbstractSequentialList extends AbstractList {
      * This implementation first gets a list iterator pointing to the indexed
      * element (with <tt>listIterator(index)</tt>).  Then, it gets the element
      * using <tt>ListIterator.next</tt> and returns it.
+     * @param index index of element to return.
      *
-     * @return the element at the specified position in this list.  * @param
-     * 		  index index of element to return.  * @throws
-     * 		  IndexOutOfBoundsException if the specified index is out of
-     * 		  range (<tt>index &lt; 0 || index &gt;= size()</tt>).
+     * @return the element at the specified position in this list.  
+     * @throws IndexOutOfBoundsException if the specified index is out of
+     *         range (<tt>index &lt; 0 || index &gt;= size()</tt>).
      */
-    public Object get(int index) {
-	ListIterator e = listIterator(index);
+    public E get(int index) {
+	ListIterator<E> e = listIterator(index);
 	try {
 	    return(e.next());
 	} catch(NoSuchElementException exc) {
@@ -105,10 +107,10 @@ public abstract class AbstractSequentialList extends AbstractList {
      *		  <tt>(index &lt; 0 || index &gt;= size()</tt>).
      * @throws    IllegalArgumentException fromIndex &gt; toIndex.
      */
-    public Object set(int index, Object element) {
-	ListIterator e = listIterator(index);
+    public E set(int index, E element) {
+	ListIterator<E> e = listIterator(index);
 	try {
-	    Object oldVal = e.next();
+	    E oldVal = e.next();
 	    e.set(element);
 	    return oldVal;
 	} catch(NoSuchElementException exc) {
@@ -143,8 +145,8 @@ public abstract class AbstractSequentialList extends AbstractList {
      * @throws IndexOutOfBoundsException if the specified index is out of
      *            range (<tt>index &lt; 0 || index &gt; size()</tt>).
      */
-    public void add(int index, Object element) {
-	ListIterator e = listIterator(index);
+    public void add(int index, E element) {
+	ListIterator<E> e = listIterator(index);
 	e.add(element);
     }
 
@@ -167,9 +169,9 @@ public abstract class AbstractSequentialList extends AbstractList {
      * @throws IndexOutOfBoundsException if the specified index is out of
      * 		  range (index &lt; 0 || index &gt;= size()).
      */
-    public Object remove(int index) {
-	ListIterator e = listIterator(index);
-	Object outCast;
+    public E remove(int index) {
+	ListIterator<E> e = listIterator(index);
+	E outCast;
 	try {
 	    outCast = e.next();
 	} catch(NoSuchElementException exc) {
@@ -183,7 +185,7 @@ public abstract class AbstractSequentialList extends AbstractList {
     // Bulk Operations
 
     /**
-     * Inserts all of the elements in in the specified collection into this
+     * Inserts all of the elements in the specified collection into this
      * list at the specified position.  Shifts the element currently at that
      * position (if any) and any subsequent elements to the right (increases
      * their indices).  The new elements will appear in the list in the order
@@ -220,11 +222,12 @@ public abstract class AbstractSequentialList extends AbstractList {
      *		  element prevents it from being added to this list.
      * @throws IndexOutOfBoundsException if the specified index is out of
      *            range (<tt>index &lt; 0 || index &gt; size()</tt>).
+     * @throws NullPointerException if the specified collection is null.
      */
-    public boolean addAll(int index, Collection c) {
+    public boolean addAll(int index, Collection<? extends E> c) {
 	boolean modified = false;
-	ListIterator e1 = listIterator(index);
-	Iterator e2 = c.iterator();
+	ListIterator<E> e1 = listIterator(index);
+	Iterator<? extends E> e2 = c.iterator();
 	while (e2.hasNext()) {
 	    e1.add(e2.next());
 	    modified = true;
@@ -243,7 +246,7 @@ public abstract class AbstractSequentialList extends AbstractList {
      *
      * @return an iterator over the elements in this list (in proper sequence).
      */
-    public Iterator iterator() {
+    public Iterator<E> iterator() {
         return listIterator();
     }
 
@@ -251,8 +254,10 @@ public abstract class AbstractSequentialList extends AbstractList {
      * Returns a list iterator over the elements in this list (in proper
      * sequence).
      *
+     * @param  index index of first element to be returned from the list 
+     *		iterator (by a call to the <code>next</code> method)
      * @return a list iterator over the elements in this list (in proper
      *      sequence).
      */
-    public abstract ListIterator listIterator(int index);
+    public abstract ListIterator<E> listIterator(int index);
 }

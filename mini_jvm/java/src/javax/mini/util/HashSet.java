@@ -1,11 +1,8 @@
 /*
- * @(#)HashSet.java	1.19 00/02/02
+ * @(#)HashSet.java	1.33 03/12/19
  *
- * Copyright 1997-2000 Sun Microsystems, Inc. All Rights Reserved.
- * 
- * This software is the proprietary information of Sun Microsystems, Inc.  
- * Use is subject to license terms.
- * 
+ * Copyright 2004 Sun Microsystems, Inc. All rights reserved.
+ * SUN PROPRIETARY/CONFIDENTIAL. Use is subject to license terms.
  */
 
 package javax.mini.util;
@@ -23,7 +20,7 @@ package javax.mini.util;
  * buckets.  Iterating over this set requires time proportional to the sum of
  * the <tt>HashSet</tt> instance's size (the number of elements) plus the
  * "capacity" of the backing <tt>HashMap</tt> instance (the number of
- * buckets).  Thus, it's very important not to set the intial capacity too
+ * buckets).  Thus, it's very important not to set the initial capacity too
  * high (or the load factor too low) if iteration performance is important.<p>
  *
  * <b>Note that this implementation is not synchronized.</b> If multiple
@@ -47,42 +44,59 @@ package javax.mini.util;
  * and cleanly, rather than risking arbitrary, non-deterministic behavior at
  * an undetermined time in the future.
  * 
+ * <p>Note that the fail-fast behavior of an iterator cannot be guaranteed
+ * as it is, generally speaking, impossible to make any hard guarantees in the
+ * presence of unsynchronized concurrent modification.  Fail-fast iterators
+ * throw <tt>ConcurrentModificationException</tt> on a best-effort basis. 
+ * Therefore, it would be wrong to write a program that depended on this
+ * exception for its correctness: <i>the fail-fast behavior of iterators
+ * should be used only to detect bugs.</i><p>
+ *
+ * This class is a member of the 
+ * <a href="{@docRoot}/../guide/collections/index.html">
+ * Java Collections Framework</a>.
+ *
  * @author  Josh Bloch
- * @version 1.19, 02/02/00
+ * @author  Neal Gafter
+ * @version 1.33, 12/19/03
  * @see	    Collection
  * @see	    Set
  * @see	    TreeSet
  * @see	    Collections#synchronizedSet(Set)
  * @see	    HashMap
- * @since 1.2
+ * @since   1.2
  */
 
-public class HashSet extends AbstractSet
-		     implements Set
+public class HashSet<E>
+    extends AbstractSet<E>
+    implements Set<E>, Cloneable, java.io.Serializable
 {
-    private transient HashMap map;
+    static final long serialVersionUID = -5024744406713321676L;
+
+    private transient HashMap<E,Object> map;
 
     // Dummy value to associate with an Object in the backing Map
     private static final Object PRESENT = new Object();
 
     /**
      * Constructs a new, empty set; the backing <tt>HashMap</tt> instance has
-     * default capacity and load factor, which is <tt>0.75</tt>.
+     * default initial capacity (16) and load factor (0.75).
      */
     public HashSet() {
-	map = new HashMap();
+	map = new HashMap<E,Object>();
     }
 
     /**
      * Constructs a new set containing the elements in the specified
-     * collection.  The capacity of the backing <tt>HashMap</tt> instance is
-     * twice the size of the specified collection or eleven (whichever is
-     * greater), and the default load factor (which is <tt>0.75</tt>) is used.
+     * collection.  The <tt>HashMap</tt> is created with default load factor
+     * (0.75) and an initial capacity sufficient to contain the elements in
+     * the specified collection.
      *
      * @param c the collection whose elements are to be placed into this set.
+     * @throws NullPointerException   if the specified collection is null.
      */
-    public HashSet(Collection c) {
-	map = new HashMap(Math.max(2*c.size(), 11));
+    public HashSet(Collection<? extends E> c) {
+	map = new HashMap<E,Object>(Math.max((int) (c.size()/.75f) + 1, 16));
 	addAll(c);
     }
 
@@ -96,7 +110,7 @@ public class HashSet extends AbstractSet
      *             than zero, or if the load factor is nonpositive.
      */
     public HashSet(int initialCapacity, float loadFactor) {
-	map = new HashMap(initialCapacity, loadFactor);
+	map = new HashMap<E,Object>(initialCapacity, loadFactor);
     }
 
     /**
@@ -109,7 +123,24 @@ public class HashSet extends AbstractSet
      *             than zero.
      */
     public HashSet(int initialCapacity) {
-	map = new HashMap(initialCapacity);
+	map = new HashMap<E,Object>(initialCapacity);
+    }
+
+    /**
+     * Constructs a new, empty linked hash set.  (This package private
+     * constructor is only used by LinkedHashSet.) The backing 
+     * HashMap instance is a LinkedHashMap with the specified initial
+     * capacity and the specified load factor.
+     *
+     * @param      initialCapacity   the initial capacity of the hash map.
+     * @param      loadFactor        the load factor of the hash map.
+     * @param      dummy             ignored (distinguishes this
+     *             constructor from other int, float constructor.)
+     * @throws     IllegalArgumentException if the initial capacity is less
+     *             than zero, or if the load factor is nonpositive.
+     */
+    HashSet(int initialCapacity, float loadFactor, boolean dummy) {
+	map = new LinkedHashMap<E,Object>(initialCapacity, loadFactor);
     }
 
     /**
@@ -119,7 +150,7 @@ public class HashSet extends AbstractSet
      * @return an Iterator over the elements in this set.
      * @see ConcurrentModificationException
      */
-    public Iterator iterator() {
+    public Iterator<E> iterator() {
 	return map.keySet().iterator();
     }
 
@@ -159,12 +190,12 @@ public class HashSet extends AbstractSet
      * @return <tt>true</tt> if the set did not already contain the specified
      * element.
      */
-    public boolean add(Object o) {
+    public boolean add(E o) {
 	return map.put(o, PRESENT)==null;
     }
 
     /**
-     * Removes the given element from this set if it is present.
+     * Removes the specified element from this set if it is present.
      *
      * @param o object to be removed from this set, if present.
      * @return <tt>true</tt> if the set contained the specified element.
@@ -188,10 +219,10 @@ public class HashSet extends AbstractSet
      */
 //    public Object clone() {
 //	try { 
-//	    HashSet newSet = (HashSet)super.clone();
-//	    newSet.map = (HashMap)map.clone();
+//	    HashSet<E> newSet = (HashSet<E>) super.clone();
+//	    newSet.map = (HashMap<E, Object>) map.clone();
 //	    return newSet;
-//	} catch (CloneNotSupportedException e) { 
+//	} catch (CloneNotSupportedException e) {
 //	    throw new InternalError();
 //	}
 //    }
@@ -206,7 +237,7 @@ public class HashSet extends AbstractSet
      *		   (int), followed by all of its elements (each an Object) in
      *             no particular order.
      */
-//    private synchronized void writeObject(java.io.ObjectOutputStream s)
+//    private void writeObject(java.io.ObjectOutputStream s)
 //        throws java.io.IOException {
 //	// Write out any hidden serialization magic
 //	s.defaultWriteObject();
@@ -227,7 +258,7 @@ public class HashSet extends AbstractSet
      * Reconstitute the <tt>HashSet</tt> instance from a stream (that is,
      * deserialize it).
      */
-//    private synchronized void readObject(java.io.ObjectInputStream s)
+//    private void readObject(java.io.ObjectInputStream s)
 //        throws java.io.IOException, ClassNotFoundException {
 //	// Read in any hidden serialization magic
 //	s.defaultReadObject();
@@ -235,14 +266,16 @@ public class HashSet extends AbstractSet
 //        // Read in HashMap capacity and load factor and create backing HashMap
 //        int capacity = s.readInt();
 //        float loadFactor = s.readFloat();
-//        map = new HashMap(capacity, loadFactor);
+//        map = (((HashSet)this) instanceof LinkedHashSet ?
+//               new LinkedHashMap<E,Object>(capacity, loadFactor) :
+//               new HashMap<E,Object>(capacity, loadFactor));
 //
 //        // Read in size
 //        int size = s.readInt();
 //
 //	// Read in all elements in the proper order.
 //	for (int i=0; i<size; i++) {
-//            Object e = s.readObject();
+//            E e = (E) s.readObject();
 //            map.put(e, PRESENT);
 //        }
 //    }

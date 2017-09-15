@@ -53,7 +53,7 @@ import java.io.*;
  * @since   JDK1.0, CLDC 1.0
  */
 public
-class Hashtable {
+class Hashtable<K,V> {
 
     /**
      * The hash table data.
@@ -135,8 +135,8 @@ class Hashtable {
      * @see     java.util.Hashtable#elements()
      * @since   JDK1.0
      */
-    public synchronized Enumeration keys() {
-        return new HashtableEnumerator(table, true);
+    public synchronized Enumeration<K> keys() {
+        return new HashtableKeyEnumerator(table);
     }
 
     /**
@@ -149,8 +149,8 @@ class Hashtable {
      * @see     java.util.Hashtable#keys()
      * @since   JDK1.0
      */
-    public synchronized Enumeration elements() {
-        return new HashtableEnumerator(table, false);
+    public synchronized Enumeration<V> elements() {
+        return new HashtableValueEnumerator(table);
     }
 
     /**
@@ -166,14 +166,14 @@ class Hashtable {
      * @see        java.util.Hashtable#containsKey(java.lang.Object)
      * @since      JDK1.0
      */
-    public synchronized boolean contains(Object value) {
+    public synchronized boolean contains(V value) {
         if (value == null) {
             throw new NullPointerException();
         }
 
-        HashtableEntry tab[] = table;
+        HashtableEntry<K,V> tab[] = table;
         for (int i = tab.length ; i-- > 0 ;) {
-            for (HashtableEntry e = tab[i] ; e != null ; e = e.next) {
+            for (HashtableEntry<K,V> e = tab[i] ; e != null ; e = e.next) {
                 if (e.value.equals(value)) {
                     return true;
                 }
@@ -191,7 +191,7 @@ class Hashtable {
      * @see     java.util.Hashtable#contains(java.lang.Object)
      * @since   JDK1.0
      */
-    public synchronized boolean containsKey(Object key) {
+    public synchronized boolean containsKey(K key) {
         HashtableEntry tab[] = table;
         int hash = key.hashCode();
         int index = (hash & 0x7FFFFFFF) % tab.length;
@@ -213,11 +213,11 @@ class Hashtable {
      * @see     java.util.Hashtable#put(java.lang.Object, java.lang.Object)
      * @since   JDK1.0
      */
-    public synchronized Object get(Object key) {
-        HashtableEntry tab[] = table;
+    public synchronized V get(K key) {
+        HashtableEntry<K,V> tab[] = table;
         int hash = key.hashCode();
         int index = (hash & 0x7FFFFFFF) % tab.length;
-        for (HashtableEntry e = tab[index] ; e != null ; e = e.next) {
+        for (HashtableEntry<K,V> e = tab[index] ; e != null ; e = e.next) {
             if ((e.hash == hash) && e.key.equals(key)) {
                 return e.value;
             }
@@ -273,19 +273,19 @@ class Hashtable {
      * @see     java.util.Hashtable#get(java.lang.Object)
      * @since   JDK1.0
      */
-    public synchronized Object put(Object key, Object value) {
+    public synchronized V put(K key, V value) {
         // Make sure the value is not null
         if (value == null) {
             throw new NullPointerException();
         }
 
         // Makes sure the key is not already in the hashtable.
-        HashtableEntry tab[] = table;
+        HashtableEntry<K,V> tab[] = table;
         int hash = key.hashCode();
         int index = (hash & 0x7FFFFFFF) % tab.length;
-        for (HashtableEntry e = tab[index] ; e != null ; e = e.next) {
+        for (HashtableEntry<K,V> e = tab[index] ; e != null ; e = e.next) {
             if ((e.hash == hash) && e.key.equals(key)) {
-                Object old = e.value;
+                V old = e.value;
                 e.value = value;
                 return old;
             }
@@ -317,11 +317,11 @@ class Hashtable {
      *          or <code>null</code> if the key did not have a mapping.
      * @since   JDK1.0
      */
-    public synchronized Object remove(Object key) {
-        HashtableEntry tab[] = table;
+    public synchronized V remove(K key) {
+        HashtableEntry<K,V> tab[] = table;
         int hash = key.hashCode();
         int index = (hash & 0x7FFFFFFF) % tab.length;
-        for (HashtableEntry e = tab[index], prev = null ; e != null ; prev = e, e = e.next) {
+        for (HashtableEntry<K,V> e = tab[index], prev = null ; e != null ; prev = e, e = e.next) {
             if ((e.hash == hash) && e.key.equals(key)) {
                 if (prev != null) {
                     prev.next = e.next;
@@ -376,15 +376,13 @@ class Hashtable {
      * A hashtable enumerator class.  This class should remain opaque
      * to the client. It will use the Enumeration interface.
      */
-    class HashtableEnumerator implements Enumeration {
-        boolean keys;
+    class HashtableValueEnumerator implements Enumeration {
         int index;
-        HashtableEntry table[];
-        HashtableEntry entry;
+        HashtableEntry<K,V> table[];
+        HashtableEntry<K,V> entry;
 
-        HashtableEnumerator(HashtableEntry table[], boolean keys) {
+        HashtableValueEnumerator(HashtableEntry table[]) {
             this.table = table;
-            this.keys = keys;
             this.index = table.length;
         }
 
@@ -400,27 +398,64 @@ class Hashtable {
             return false;
         }
 
-        public Object nextElement() {
+        public V nextElement() {
             if (entry == null) {
                 while ((index-- > 0) && ((entry = table[index]) == null));
             }
             if (entry != null) {
-                HashtableEntry e = entry;
+                HashtableEntry<K,V> e = entry;
                 entry = e.next;
-                return keys ? e.key : e.value;
+                return  e.value;
             }
             throw new NoSuchElementException("HashtableEnumerator");
         }
     }
+    
+    class HashtableKeyEnumerator implements Enumeration {
+        int index;
+        HashtableEntry<K,V> table[];
+        HashtableEntry<K,V> entry;
+
+        HashtableKeyEnumerator(HashtableEntry table[]) {
+            this.table = table;
+            this.index = table.length;
+        }
+
+        public boolean hasMoreElements() {
+            if (entry != null) {
+                return true;
+            }
+            while (index-- > 0) {
+                if ((entry = table[index]) != null) {
+                    return true;
+                }
+            }
+            return false;
+        }
+
+        public K nextElement() {
+            if (entry == null) {
+                while ((index-- > 0) && ((entry = table[index]) == null));
+            }
+            if (entry != null) {
+                HashtableEntry<K,V> e = entry;
+                entry = e.next;
+                return e.key;
+            }
+            throw new NoSuchElementException("HashtableEnumerator");
+        }
+    }
+    
 }
+
 
 /**
  * Hashtable collision list.
  */
-class HashtableEntry {
+class HashtableEntry<K,V> {
     int hash;
-    Object key;
-    Object value;
-    HashtableEntry next;
+    K key;
+    V value;
+    HashtableEntry<K,V> next;
 }
 

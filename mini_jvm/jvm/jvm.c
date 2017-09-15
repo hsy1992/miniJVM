@@ -50,11 +50,10 @@ void startJdwp(Runtime *runtime) {
 }
 
 s32 execute(c8 *p_classpath, c8 *p_mainclass, s32 argc, c8 **argv) {
-
+    open_log();
 #if _JVM_DEBUG_PROFILE
     instruct_profile = hashtable_create(DEFAULT_HASH_FUNC, DEFAULT_HASH_EQUALS_FUNC);
 #endif
-
     //为指令创建索引
     instructionsIndexies = createInstructIndexies();
     //创建类容器
@@ -88,13 +87,13 @@ s32 execute(c8 *p_classpath, c8 *p_mainclass, s32 argc, c8 **argv) {
     HashtableIterator hti;
     hashtable_iterate(classes, &hti);
 #if _JVM_DEBUG
-    printf("classes size:%d\n", hashtable_num_entries(classes));
+    jvm_printf("classes size:%d\n", hashtable_num_entries(classes));
 #endif
     for (; hashtable_iter_has_more(&hti);) {
         Utf8String *k = hashtable_iter_next_key(&hti);
         Class *clazz = classes_get(k);
 #if _JVM_DEBUG
-        printf("classes entry : %s,%d\n", utf8_cstr(k), clazz);
+        jvm_printf("classes entry : %s,%d\n", utf8_cstr(k), clazz);
 #endif
         if (clazz->status != CLASS_STATUS_PREPARED)class_prepar(clazz);
     }
@@ -110,7 +109,7 @@ s32 execute(c8 *p_classpath, c8 *p_mainclass, s32 argc, c8 **argv) {
 
     s32 ret = 0;
     if (clazz) {
-        //printf("class: %s : %d\n", utf8_cstr(mname), obj_of_clazz);
+        //jvm_printf("class: %s : %d\n", utf8_cstr(mname), obj_of_clazz);
 
 #if _JVM_DEBUG
         printConstantPool(clazz);
@@ -138,7 +137,7 @@ s32 execute(c8 *p_classpath, c8 *p_mainclass, s32 argc, c8 **argv) {
             s32 count = argc;
             Long2Double l2d;
             s32 bytes = data_type_bytes[DATATYPE_REFERENCE];
-            Instance *arr = jarray_create(count, DATATYPE_REFERENCE);
+            Instance *arr = jarray_create(count, DATATYPE_REFERENCE, NULL);
             int i;
             for (i = 0; i < argc; i++) {
                 Utf8String *utfs = utf8_create_c(argv[i]);
@@ -149,11 +148,11 @@ s32 execute(c8 *p_classpath, c8 *p_mainclass, s32 argc, c8 **argv) {
             }
             push_ref(runtime.stack, arr);
             s64 start = currentTimeMillis();
-            printf("\n\n\n\n\n\n================================= main start ================================\n");
+            jvm_printf("\n\n\n\n\n\n================================= main start ================================\n");
             //调用主方法
             ret = execute_method(main, &runtime, clazz);
-            printf("================================= main  end  ================================\n");
-            printf("spent %lld\n", (currentTimeMillis() - start));
+            jvm_printf("================================= main  end  ================================\n");
+            jvm_printf("spent %lld\n", (currentTimeMillis() - start));
 
             //dump_refer();
 #if _JVM_DEBUG_PROFILE
@@ -161,7 +160,7 @@ s32 execute(c8 *p_classpath, c8 *p_mainclass, s32 argc, c8 **argv) {
             for (; hashtable_iter_has_more(&hti);) {
                 u8 instruct_code = (u8) (long) hashtable_iter_next_key(&hti);
                 HashtableValue sum_v = hashtable_get(instruct_profile, (HashtableKey) (long) instruct_code);
-                printf("%2x \t %lld\n", instruct_code, (s64) (long) sum_v);
+                jvm_printf("%2x \t %lld\n", instruct_code, (s64) (long) sum_v);
             }
 #endif
             garbage_thread_stop();
@@ -185,6 +184,7 @@ s32 execute(c8 *p_classpath, c8 *p_mainclass, s32 argc, c8 **argv) {
     utf8_destory(JVM_CLASS->name);
     class_destory(JVM_CLASS);
     runtime_destory(&runtime);
-    printf("over\n");
+    close_log();
+    jvm_printf("over\n");
     return ret;
 }

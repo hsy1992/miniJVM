@@ -1,11 +1,8 @@
 /*
- * @(#)Set.java	1.23 00/02/02
+ * @(#)Set.java	1.35 04/02/19
  *
- * Copyright 1997-2000 Sun Microsystems, Inc. All Rights Reserved.
- * 
- * This software is the proprietary information of Sun Microsystems, Inc.  
- * Use is subject to license terms.
- * 
+ * Copyright 2004 Sun Microsystems, Inc. All rights reserved.
+ * SUN PROPRIETARY/CONFIDENTIAL. Use is subject to license terms.
  */
 
 package javax.mini.util;
@@ -34,8 +31,27 @@ package javax.mini.util;
  * an element in the set.  A special case of this prohibition is that it is
  * not permissible for a set to contain itself as an element.
  *
+ * <p>Some set implementations have restrictions on the elements that
+ * they may contain.  For example, some implementations prohibit null elements,
+ * and some have restrictions on the types of their elements.  Attempting to
+ * add an ineligible element throws an unchecked exception, typically
+ * <tt>NullPointerException</tt> or <tt>ClassCastException</tt>.  Attempting
+ * to query the presence of an ineligible element may throw an exception,
+ * or it may simply return false; some implementations will exhibit the former
+ * behavior and some will exhibit the latter.  More generally, attempting an
+ * operation on an ineligible element whose completion would not result in
+ * the insertion of an ineligible element into the set may throw an
+ * exception or it may succeed, at the option of the implementation.
+ * Such exceptions are marked as "optional" in the specification for this
+ * interface. 
+ *
+ * <p>This interface is a member of the 
+ * <a href="{@docRoot}/../guide/collections/index.html">
+ * Java Collections Framework</a>.
+ *
  * @author  Josh Bloch
- * @version 1.23, 02/02/00
+ * @author  Neal Gafter
+ * @version 1.35, 02/19/04
  * @see Collection
  * @see List
  * @see SortedSet
@@ -47,7 +63,7 @@ package javax.mini.util;
  * @since 1.2
  */
 
-public interface Set extends Collection {
+public interface Set<E> extends Collection<E> {
     // Query Operations
 
     /**
@@ -74,6 +90,10 @@ public interface Set extends Collection {
      *
      * @param o element whose presence in this set is to be tested.
      * @return <tt>true</tt> if this set contains the specified element.
+     * @throws ClassCastException if the type of the specified element
+     * 	       is incompatible with this set (optional).
+     * @throws NullPointerException if the specified element is null and this
+     *         set does not support null elements (optional).
      */
     boolean contains(Object o);
 
@@ -84,7 +104,7 @@ public interface Set extends Collection {
      *
      * @return an iterator over the elements in this set.
      */
-    Iterator iterator();
+    Iterator<E> iterator();
 
     /**
      * Returns an array containing all of the elements in this set.
@@ -95,18 +115,20 @@ public interface Set extends Collection {
     Object[] toArray();
 
     /**
-     * Returns an array containing all of the elements in this set whose
-     * runtime type is that of the specified array.  Obeys the general
-     * contract of the <tt>Collection.toArray(Object[])</tt> method.
+     * Returns an array containing all of the elements in this set; the 
+     * runtime type of the returned array is that of the specified array. 
+     * Obeys the general contract of the 
+     * <tt>Collection.toArray(Object[])</tt> method.
      *
      * @param a the array into which the elements of this set are to
      *		be stored, if it is big enough; otherwise, a new array of the
      * 		same runtime type is allocated for this purpose.
      * @return an array containing the elements of this set.
      * @throws    ArrayStoreException the runtime type of a is not a supertype
-     * of the runtime type of every element in this set.
+     *            of the runtime type of every element in this set.
+     * @throws NullPointerException if the specified array is <tt>null</tt>.
      */
-    Object[] toArray(Object a[]);
+    <T> T[] toArray(T[] a);
 
 
     // Modification Operations
@@ -125,7 +147,7 @@ public interface Set extends Collection {
      * elements; sets may refuse to add any particular element, including
      * <tt>null</tt>, and throwing an exception, as described in the
      * specification for <tt>Collection.add</tt>.  Individual set
-     * implementations should clearly document any restrictions on the the
+     * implementations should clearly document any restrictions on the
      * elements that they may contain.
      *
      * @param o element to be added to this set.
@@ -136,10 +158,12 @@ public interface Set extends Collection {
      * 	       supported by this set.
      * @throws ClassCastException if the class of the specified element
      * 	       prevents it from being added to this set.
-     * @throws IllegalArgumentException if some aspect of this element
+     * @throws NullPointerException if the specified element is null and this
+     *         set does not support null elements.
+     * @throws IllegalArgumentException if some aspect of the specified element
      *         prevents it from being added to this set.
      */
-    boolean add(Object o);
+    boolean add(E o);
 
 
     /**
@@ -153,6 +177,10 @@ public interface Set extends Collection {
      *
      * @param o object to be removed from this set, if present.
      * @return true if the set contained the specified element.
+     * @throws ClassCastException if the type of the specified element
+     * 	       is incompatible with this set (optional).
+     * @throws NullPointerException if the specified element is null and this
+     *         set does not support null elements (optional).
      * @throws UnsupportedOperationException if the <tt>remove</tt> method is
      *         not supported by this set.
      */
@@ -166,11 +194,20 @@ public interface Set extends Collection {
      * specified collection.  If the specified collection is also a set, this
      * method returns <tt>true</tt> if it is a <i>subset</i> of this set.
      *
-     * @param c collection to be checked for containment in this set.
+     * @param  c collection to be checked for containment in this set.
      * @return <tt>true</tt> if this set contains all of the elements of the
      * 	       specified collection.
+     * @throws ClassCastException if the types of one or more elements
+     *         in the specified collection are incompatible with this
+     *         set (optional).
+     * @throws NullPointerException if the specified collection contains one
+     *         or more null elements and this set does not support null
+     *         elements (optional).
+     * @throws NullPointerException if the specified collection is
+     *         <tt>null</tt>.
+     * @see    #contains(Object)
      */
-    boolean containsAll(Collection c);
+    boolean containsAll(Collection<?> c);
 
     /**
      * Adds all of the elements in the specified collection to this set if
@@ -188,12 +225,15 @@ public interface Set extends Collection {
      * @throws ClassCastException if the class of some element of the
      * 		  specified collection prevents it from being added to this
      * 		  set.
+     * @throws NullPointerException if the specified collection contains one
+     *           or more null elements and this set does not support null
+     *           elements, or if the specified collection is <tt>null</tt>.
      * @throws IllegalArgumentException if some aspect of some element of the
      *		  specified collection prevents it from being added to this
      *		  set.
      * @see #add(Object)
      */
-    boolean addAll(Collection c);
+    boolean addAll(Collection<? extends E> c);
 
     /**
      * Retains only the elements in this set that are contained in the
@@ -208,10 +248,17 @@ public interface Set extends Collection {
      *         call.
      * @throws UnsupportedOperationException if the <tt>retainAll</tt> method
      * 		  is not supported by this Collection.
-     * 
+     * @throws ClassCastException if the types of one or more elements in this
+     *            set are incompatible with the specified collection
+     *            (optional).
+     * @throws NullPointerException if this set contains a null element and
+     *            the specified collection does not support null elements
+     *            (optional). 
+     * @throws NullPointerException if the specified collection is
+     *           <tt>null</tt>.
      * @see #remove(Object)
      */
-    boolean retainAll(Collection c);
+    boolean retainAll(Collection<?> c);
 
 
     /**
@@ -221,15 +268,23 @@ public interface Set extends Collection {
      * set so that its value is the <i>asymmetric set difference</i> of
      * the two sets.
      *
-     * @param c collection that defines which elements will be removed from
-     *          this set.
+     * @param  c collection that defines which elements will be removed from
+     *           this set.
      * @return <tt>true</tt> if this set changed as a result of the call.
      * 
      * @throws UnsupportedOperationException if the <tt>removeAll</tt>
      * 		  method is not supported by this Collection.
-     * 
-     * @see #remove(Object) */
-    boolean removeAll(Collection c);
+     * @throws ClassCastException if the types of one or more elements in this
+     *            set are incompatible with the specified collection
+     *            (optional).
+     * @throws NullPointerException if this set contains a null element and
+     *            the specified collection does not support null elements
+     *            (optional). 
+     * @throws NullPointerException if the specified collection is
+     *           <tt>null</tt>.
+     * @see    #remove(Object)
+     */
+    boolean removeAll(Collection<?> c);
 
     /**
      * Removes all of the elements from this set (optional operation).

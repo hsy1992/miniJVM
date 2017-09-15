@@ -1,11 +1,8 @@
 /*
- * @(#)AbstractCollection.java	1.16 00/02/02
+ * @(#)AbstractCollection.java	1.31 03/12/19
  *
- * Copyright 1997-2000 Sun Microsystems, Inc. All Rights Reserved.
- * 
- * This software is the proprietary information of Sun Microsystems, Inc.  
- * Use is subject to license terms.
- * 
+ * Copyright 2004 Sun Microsystems, Inc. All rights reserved.
+ * SUN PROPRIETARY/CONFIDENTIAL. Use is subject to license terms.
  */
 
 package javax.mini.util;
@@ -31,15 +28,20 @@ package javax.mini.util;
  *
  * The documentation for each non-abstract methods in this class describes its
  * implementation in detail.  Each of these methods may be overridden if
- * the collection being implemented admits a more efficient implementation.
+ * the collection being implemented admits a more efficient implementation.<p>
+ *
+ * This class is a member of the 
+ * <a href="{@docRoot}/../guide/collections/index.html">
+ * Java Collections Framework</a>.
  *
  * @author  Josh Bloch
- * @version 1.16, 02/02/00
+ * @author  Neal Gafter
+ * @version 1.24, 01/18/03
  * @see Collection
  * @since 1.2
  */
 
-public abstract class AbstractCollection implements Collection {
+public abstract class AbstractCollection<E> implements Collection<E> {
     /**
      * Sole constructor.  (For invocation by subclass constructors, typically
      * implicit.)
@@ -54,7 +56,7 @@ public abstract class AbstractCollection implements Collection {
      *
      * @return an iterator over the elements contained in this collection.
      */
-    public abstract Iterator iterator();
+    public abstract Iterator<E> iterator();
 
     /**
      * Returns the number of elements in this collection.  If the collection
@@ -89,7 +91,7 @@ public abstract class AbstractCollection implements Collection {
      * @return <tt>true</tt> if this collection contains the specified element.
      */
     public boolean contains(Object o) {
-	Iterator e = iterator();
+	Iterator<E> e = iterator();
 	if (o==null) {
 	    while (e.hasNext())
 		if (e.next()==null)
@@ -119,16 +121,16 @@ public abstract class AbstractCollection implements Collection {
      */
     public Object[] toArray() {
 	Object[] result = new Object[size()];
-	Iterator e = iterator();
+	Iterator<E> e = iterator();
 	for (int i=0; e.hasNext(); i++)
 	    result[i] = e.next();
 	return result;
     }
 
     /**
-     * Returns an array with a runtime type is that of the specified array and
-     * that contains all of the elements in this collection.  If the
-     * collection fits in the specified array, it is returned therein.
+     * Returns an array containing all of the elements in this collection; 
+     * the runtime type of the returned array is that of the specified array.  
+     * If the collection fits in the specified array, it is returned therein.
      * Otherwise, a new array is allocated with the runtime type of the
      * specified array and the size of this collection.<p>
      *
@@ -162,20 +164,18 @@ public abstract class AbstractCollection implements Collection {
      *         is not a supertype of the runtime type of every element in this
      *         collection.
      */
-    public Object[] toArray(Object a[]) {
+    public <T> T[] toArray(T[] a) {
         int size = size();
         if (a.length < size)
-//            a = (Object[])java.lang.reflect.Array.newInstance(
-//                                  a.getClass().getComponentType(), size);
-            a=new Object[size];
-
-        Iterator it=iterator();
+//            a = (T[])java.lang.reflect.Array
+//		.newInstance(a.getClass().getComponentType(), size);
+            a=(T[])new Object[size];
+        Iterator<E> it=iterator();
+	Object[] result = a;
         for (int i=0; i<size; i++)
-            a[i] = it.next();
-
+            result[i] = it.next();
         if (a.length > size)
-            a[size] = null;
-
+	    a[size] = null;
         return a;
     }
 
@@ -212,7 +212,7 @@ public abstract class AbstractCollection implements Collection {
      * @throws IllegalArgumentException if some aspect of this element
      *            prevents it from being added to this collection.
      */
-    public boolean add(Object o) {
+    public boolean add(E o) {
 	throw new UnsupportedOperationException();
     }
 
@@ -232,17 +232,16 @@ public abstract class AbstractCollection implements Collection {
      * Note that this implementation throws an
      * <tt>UnsupportedOperationException</tt> if the iterator returned by this
      * collection's iterator method does not implement the <tt>remove</tt>
-     * method.
+     * method and this collection contains the specified object.
      *
      * @param o element to be removed from this collection, if present.
      * @return <tt>true</tt> if the collection contained the specified
      *         element.
-     * 
      * @throws UnsupportedOperationException if the <tt>remove</tt> method is
      * 		  not supported by this collection.
      */
     public boolean remove(Object o) {
-	Iterator e = iterator();
+	Iterator<E> e = iterator();
 	if (o==null) {
 	    while (e.hasNext()) {
 		if (e.next()==null) {
@@ -276,15 +275,15 @@ public abstract class AbstractCollection implements Collection {
      * @param c collection to be checked for containment in this collection.
      * @return <tt>true</tt> if this collection contains all of the elements
      * 	       in the specified collection.
+     * @throws NullPointerException if the specified collection is null.
      * 
      * @see #contains(Object)
      */
-    public boolean containsAll(Collection c) {
-	Iterator e = c.iterator();
+    public boolean containsAll(Collection<?> c) {
+	Iterator<?> e = c.iterator();
 	while (e.hasNext())
 	    if(!contains(e.next()))
 		return false;
-
 	return true;
     }
 
@@ -301,21 +300,22 @@ public abstract class AbstractCollection implements Collection {
      *
      * Note that this implementation will throw an
      * <tt>UnsupportedOperationException</tt> unless <tt>add</tt> is
-     * overridden.
+     * overridden (assuming the specified collection is non-empty).
      *
      * @param c collection whose elements are to be added to this collection.
      * @return <tt>true</tt> if this collection changed as a result of the
-     * call.
-     * @throws UnsupportedOperationException if the <tt>addAll</tt> method is
-     * 		  not supported by this collection.
+     *         call.
+     * @throws UnsupportedOperationException if this collection does not
+     *         support the <tt>addAll</tt> method.
+     * @throws NullPointerException if the specified collection is null.
      * 
      * @see #add(Object)
      */
-    public boolean addAll(Collection c) {
+    public boolean addAll(Collection<? extends E> c) {
 	boolean modified = false;
-	Iterator e = c.iterator();
+	Iterator<? extends E> e = c.iterator();
 	while (e.hasNext()) {
-	    if(add(e.next()))
+	    if (add(e.next()))
 		modified = true;
 	}
 	return modified;
@@ -332,23 +332,25 @@ public abstract class AbstractCollection implements Collection {
      *
      * Note that this implementation will throw an
      * <tt>UnsupportedOperationException</tt> if the iterator returned by the
-     * <tt>iterator</tt> method does not implement the <tt>remove</tt> method.
+     * <tt>iterator</tt> method does not implement the <tt>remove</tt> method
+     * and this collection contains one or more elements in common with the
+     * specified collection.
      *
      * @param c elements to be removed from this collection.
      * @return <tt>true</tt> if this collection changed as a result of the
-     * call.
-     * 
-     * @throws    UnsupportedOperationException removeAll is not supported
-     * 		  by this collection.
-     * 
+     *         call.
+     * @throws UnsupportedOperationException if the <tt>removeAll</tt> method
+     * 	       is not supported by this collection.
+     * @throws NullPointerException if the specified collection is null.
+     *
      * @see #remove(Object)
      * @see #contains(Object)
      */
-    public boolean removeAll(Collection c) {
+    public boolean removeAll(Collection<?> c) {
 	boolean modified = false;
-	Iterator e = iterator();
+	Iterator<?> e = iterator();
 	while (e.hasNext()) {
-	    if(c.contains(e.next())) {
+	    if (c.contains(e.next())) {
 		e.remove();
 		modified = true;
 	    }
@@ -369,23 +371,25 @@ public abstract class AbstractCollection implements Collection {
      *
      * Note that this implementation will throw an
      * <tt>UnsupportedOperationException</tt> if the iterator returned by the
-     * <tt>iterator</tt> method does not implement the remove method.
+     * <tt>iterator</tt> method does not implement the <tt>remove</tt> method
+     * and this collection contains one or more elements not present in the
+     * specified collection.
      *
      * @param c elements to be retained in this collection.
      * @return <tt>true</tt> if this collection changed as a result of the
      *         call.
-     * 
      * @throws UnsupportedOperationException if the <tt>retainAll</tt> method
-     * 		  is not supported by this collection.
-     * 
+     * 	       is not supported by this Collection.
+     * @throws NullPointerException if the specified collection is null.
+     *
      * @see #remove(Object)
      * @see #contains(Object)
      */
-    public boolean retainAll(Collection c) {
+    public boolean retainAll(Collection<?> c) {
 	boolean modified = false;
-	Iterator e = iterator();
+	Iterator<E> e = iterator();
 	while (e.hasNext()) {
-	    if(!c.contains(e.next())) {
+	    if (!c.contains(e.next())) {
 		e.remove();
 		modified = true;
 	    }
@@ -406,13 +410,13 @@ public abstract class AbstractCollection implements Collection {
      * Note that this implementation will throw an
      * <tt>UnsupportedOperationException</tt> if the iterator returned by this
      * collection's <tt>iterator</tt> method does not implement the
-     * <tt>remove</tt> method.
+     * <tt>remove</tt> method and this collection is non-empty.
      *
-     * @throws UnsupportedOperationException if the <tt>remove</tt> method is
+     * @throws UnsupportedOperationException if the <tt>clear</tt> method is
      * 		  not supported by this collection.
      */
     public void clear() {
-	Iterator e = iterator();
+	Iterator<E> e = iterator();
 	while (e.hasNext()) {
 	    e.next();
 	    e.remove();
@@ -441,15 +445,20 @@ public abstract class AbstractCollection implements Collection {
      */
     public String toString() {
 	StringBuffer buf = new StringBuffer();
-	Iterator e = iterator();
 	buf.append("[");
-	int maxIndex = size() - 1;
-	for (int i = 0; i <= maxIndex; i++) {
-	    buf.append(String.valueOf(e.next()));
-	    if (i < maxIndex)
-		buf.append(", ");
-	}
+
+        Iterator<E> i = iterator();
+        boolean hasNext = i.hasNext();
+        while (hasNext) {
+            E o = i.next();
+            buf.append(o == this ? "(this Collection)" : String.valueOf(o));
+            hasNext = i.hasNext();
+            if (hasNext)
+                buf.append(", ");
+        }
+
 	buf.append("]");
 	return buf.toString();
     }
+
 }

@@ -14,9 +14,9 @@
 #include "../utils/arraylist.h"
 #include "../utils/pairlist.h"
 
-
 //=======================  micro define  =============================
 #define _JVM_DEBUG 0
+#define _JVM_DEBUG_PRINT_FILE 0
 #define _JVM_DEBUG_BYTECODE_DUMP 0
 #define _JVM_DEBUG_GARBAGE_DUMP 0
 #define _JVM_DEBUG_PROFILE 0
@@ -191,6 +191,7 @@ static char *exception_class_name[] = {
 static char *STR_CLASS_JAVA_LANG_STRING = "java/lang/String";
 static char *STR_CLASS_JAVA_LANG_OBJECT = "java/lang/Object";
 static char *STR_CLASS_JAVA_LANG_THREAD = "java/lang/Thread";
+static char *STR_CLASS_JAVA_LANG_CLASS = "java/lang/Class";
 static char *STR_FIELD_THREADQ = "threadQ";
 static char *STR_FIELD_VALUE = "value";
 static char *STR_FIELD_COUNT = "count";
@@ -337,6 +338,8 @@ extern s64 MAX_HEAP_SIZE;
 extern s64 heap_size; //当前已经分配的内存总数
 extern Instance *main_thread;
 
+extern volatile u8 java_debug;
+
 
 Instruction **instructionsIndexies;
 
@@ -349,7 +352,7 @@ extern Hashtable *instruct_profile;
 typedef struct _MemoryBlock {
     u8 type;//type of array or object runtime,class
     u8 garbage_mark;
-    Class *obj_of_clazz;
+    Class *clazz;
     JavaThreadLock *thread_lock;
 } MemoryBlock;
 //======================= class file =============================
@@ -696,7 +699,7 @@ typedef struct _ClassType {
     //public:
     s32 (*_load_from_file)(struct _ClassType *_this, c8 *file);
 
-    Utf8String* source;
+    Utf8String *source;
 } Class;
 
 void _INIT_CLASS(Class *_this);
@@ -798,7 +801,7 @@ u8 isSonOfInterface(Class *clazz, Class *son);
 
 u8 assignable_from(Class *clazzSon, Class *clazzSuper);
 
-Instance *jarray_create(s32 count, s32 typeIdx);
+Instance *jarray_create(s32 count, s32 typeIdx, Class *type);
 
 s32 jarray_destory(Instance *arr);
 
@@ -834,10 +837,7 @@ typedef struct _InstanceType {
         c8 *arr_body;//array body
     };
     u8 arr_data_type;
-//    Utf8String *arr_type;
     s32 arr_length;
-
-
 } Instance;
 
 
@@ -965,5 +965,10 @@ void peek_entry(StackFrame *stack, StackEntry *entry, int index);
 //======================= localvar =============================
 s32 localvar_init(Runtime *runtime, s32 count);
 
+void open_log();
+
+void close_log();
+
+int jvm_printf(const char *, ...);
 
 #endif

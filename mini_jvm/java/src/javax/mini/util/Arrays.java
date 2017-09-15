@@ -1,33 +1,40 @@
 /*
- * @(#)Arrays.java	1.37 00/02/02
+ * @(#)Arrays.java	1.59 04/04/01
  *
- * Copyright 1997-2000 Sun Microsystems, Inc. All Rights Reserved.
- * 
- * This software is the proprietary information of Sun Microsystems, Inc.  
- * Use is subject to license terms.
- * 
+ * Copyright 2004 Sun Microsystems, Inc. All rights reserved.
+ * SUN PROPRIETARY/CONFIDENTIAL. Use is subject to license terms.
  */
 
 package javax.mini.util;
 
+
+
 /**
  * This class contains various methods for manipulating arrays (such as
- * sorting and searching).  It also contains a static factory that allows
- * arrays to be viewed as lists.<p>
+ * sorting and searching).  This class also contains a static factory 
+ * that allows arrays to be viewed as lists.
  *
- * The documentation for the sorting and searching methods contained in this
- * class includes briefs description of the <i>implementations</i>.  Such
- * descriptions should be regarded as <i>implementation notes</i>, rather than
- * parts of the <i>specification</i>.  Implementors should feel free to
- * substitute other algorithms, so long as the specification itself is adhered
- * to.  (For example, the algorithm used by <tt>sort(Object[])</tt> does not
- * have to be a mergesort, but it does have to be <i>stable</i>.)
+ * <p>The methods in this class all throw a <tt>NullPointerException</tt> if
+ * the specified array reference is null, except where noted.
+ *
+ * <p>The documentation for the methods contained in this class includes
+ * briefs description of the <i>implementations</i>.  Such descriptions should
+ * be regarded as <i>implementation notes</i>, rather than parts of the
+ * <i>specification</i>.  Implementors should feel free to substitute other
+ * algorithms, so long as the specification itself is adhered to.  (For
+ * example, the algorithm used by <tt>sort(Object[])</tt> does not have to be
+ * a mergesort, but it does have to be <i>stable</i>.)
+ *
+ * <p>This class is a member of the 
+ * <a href="{@docRoot}/../guide/collections/index.html">
+ * Java Collections Framework</a>.
  *
  * @author  Josh Bloch
- * @version 1.37, 02/02/00
- * @see Comparable
- * @see Comparator
- * @since 1.2
+ * @author  Neal Gafter
+ * @version 1.59, 04/01/04
+ * @see     Comparable
+ * @see     Comparator
+ * @since   1.2
  */
 
 public class Arrays {
@@ -234,6 +241,21 @@ public class Arrays {
 
     /**
      * Sorts the specified array of doubles into ascending numerical order.
+     * <p>
+     * The <code>&lt;</code> relation does not provide a total order on
+     * all floating-point values; although they are distinct numbers
+     * <code>-0.0 == 0.0</code> is <code>true</code> and a NaN value
+     * compares neither less than, greater than, nor equal to any
+     * floating-point value, even itself.  To allow the sort to
+     * proceed, instead of using the <code>&lt;</code> relation to
+     * determine ascending numerical order, this method uses the total
+     * order imposed by {@link Double#compareTo}.  This ordering
+     * differs from the <code>&lt;</code> relation in that
+     * <code>-0.0</code> is treated as less than <code>0.0</code> and
+     * NaN is considered greater than any other floating-point value.
+     * For the purposes of sorting, all NaN values are considered
+     * equivalent and equal.
+     * <p>
      * The sorting algorithm is a tuned quicksort, adapted from Jon
      * L. Bentley and M. Douglas McIlroy's "Engineering a Sort Function",
      * Software-Practice and Experience, Vol. 23(11) P. 1249-1265 (November
@@ -250,8 +272,22 @@ public class Arrays {
      * Sorts the specified range of the specified array of doubles into
      * ascending numerical order.  The range to be sorted extends from index
      * <tt>fromIndex</tt>, inclusive, to index <tt>toIndex</tt>, exclusive.
-     * (If <tt>fromIndex==toIndex</tt>, the range to be sorted is empty.)<p>
-     *
+     * (If <tt>fromIndex==toIndex</tt>, the range to be sorted is empty.)
+     * <p>
+     * The <code>&lt;</code> relation does not provide a total order on
+     * all floating-point values; although they are distinct numbers
+     * <code>-0.0 == 0.0</code> is <code>true</code> and a NaN value
+     * compares neither less than, greater than, nor equal to any
+     * floating-point value, even itself.  To allow the sort to
+     * proceed, instead of using the <code>&lt;</code> relation to
+     * determine ascending numerical order, this method uses the total
+     * order imposed by {@link Double#compareTo}.  This ordering
+     * differs from the <code>&lt;</code> relation in that
+     * <code>-0.0</code> is treated as less than <code>0.0</code> and
+     * NaN is considered greater than any other floating-point value.
+     * For the purposes of sorting, all NaN values are considered
+     * equivalent and equal.
+     * <p>
      * The sorting algorithm is a tuned quicksort, adapted from Jon
      * L. Bentley and M. Douglas McIlroy's "Engineering a Sort Function",
      * Software-Practice and Experience, Vol. 23(11) P. 1249-1265 (November
@@ -273,6 +309,21 @@ public class Arrays {
 
     /**
      * Sorts the specified array of floats into ascending numerical order.
+     * <p>
+     * The <code>&lt;</code> relation does not provide a total order on
+     * all floating-point values; although they are distinct numbers
+     * <code>-0.0f == 0.0f</code> is <code>true</code> and a NaN value
+     * compares neither less than, greater than, nor equal to any
+     * floating-point value, even itself.  To allow the sort to
+     * proceed, instead of using the <code>&lt;</code> relation to
+     * determine ascending numerical order, this method uses the total
+     * order imposed by {@link Float#compareTo}.  This ordering
+     * differs from the <code>&lt;</code> relation in that
+     * <code>-0.0f</code> is treated as less than <code>0.0f</code> and
+     * NaN is considered greater than any other floating-point value.
+     * For the purposes of sorting, all NaN values are considered
+     * equivalent and equal.
+     * <p>
      * The sorting algorithm is a tuned quicksort, adapted from Jon
      * L. Bentley and M. Douglas McIlroy's "Engineering a Sort Function",
      * Software-Practice and Experience, Vol. 23(11) P. 1249-1265 (November
@@ -289,8 +340,22 @@ public class Arrays {
      * Sorts the specified range of the specified array of floats into
      * ascending numerical order.  The range to be sorted extends from index
      * <tt>fromIndex</tt>, inclusive, to index <tt>toIndex</tt>, exclusive.
-     * (If <tt>fromIndex==toIndex</tt>, the range to be sorted is empty.)<p>
-     *
+     * (If <tt>fromIndex==toIndex</tt>, the range to be sorted is empty.)
+     * <p>
+     * The <code>&lt;</code> relation does not provide a total order on
+     * all floating-point values; although they are distinct numbers
+     * <code>-0.0f == 0.0f</code> is <code>true</code> and a NaN value
+     * compares neither less than, greater than, nor equal to any
+     * floating-point value, even itself.  To allow the sort to
+     * proceed, instead of using the <code>&lt;</code> relation to
+     * determine ascending numerical order, this method uses the total
+     * order imposed by {@link Float#compareTo}.  This ordering
+     * differs from the <code>&lt;</code> relation in that
+     * <code>-0.0f</code> is treated as less than <code>0.0f</code> and
+     * NaN is considered greater than any other floating-point value.
+     * For the purposes of sorting, all NaN values are considered
+     * equivalent and equal.
+     * <p>
      * The sorting algorithm is a tuned quicksort, adapted from Jon
      * L. Bentley and M. Douglas McIlroy's "Engineering a Sort Function",
      * Software-Practice and Experience, Vol. 23(11) P. 1249-1265 (November
@@ -325,8 +390,9 @@ public class Arrays {
         int i = fromIndex, n = toIndex;
         while(i < n) {
             if (a[i] != a[i]) {
+		double swap = a[i];
                 a[i] = a[--n];
-                a[n] = Double.NaN;
+                a[n] = swap;
             } else {
                 if (a[i]==0 && Double.doubleToLongBits(a[i])==NEG_ZERO_BITS) {
                     a[i] = 0.0d;
@@ -368,8 +434,9 @@ public class Arrays {
         int i = fromIndex, n = toIndex;
         while(i < n) {
             if (a[i] != a[i]) {
+		float swap = a[i];
                 a[i] = a[--n];
-                a[n] = Float.NaN;
+                a[n] = swap;
             } else {
                 if (a[i]==0 && Float.floatToIntBits(a[i])==NEG_ZERO_BITS) {
                     a[i] = 0.0f;
@@ -414,7 +481,7 @@ public class Arrays {
 	}
 
 	// Choose a partition element, v
-	int m = off + len/2;       // Small arrays, middle element
+	int m = off + (len >> 1);       // Small arrays, middle element
 	if (len > 7) {
 	    int l = off;
 	    int n = off + len - 1;
@@ -497,7 +564,7 @@ public class Arrays {
 	}
 
 	// Choose a partition element, v
-	int m = off + len/2;       // Small arrays, middle element
+	int m = off + (len >> 1);       // Small arrays, middle element
 	if (len > 7) {
 	    int l = off;
 	    int n = off + len - 1;
@@ -580,7 +647,7 @@ public class Arrays {
 	}
 
 	// Choose a partition element, v
-	int m = off + len/2;       // Small arrays, middle element
+	int m = off + (len >> 1);       // Small arrays, middle element
 	if (len > 7) {
 	    int l = off;
 	    int n = off + len - 1;
@@ -664,7 +731,7 @@ public class Arrays {
 	}
 
 	// Choose a partition element, v
-	int m = off + len/2;       // Small arrays, middle element
+	int m = off + (len >> 1);       // Small arrays, middle element
 	if (len > 7) {
 	    int l = off;
 	    int n = off + len - 1;
@@ -748,7 +815,7 @@ public class Arrays {
 	}
 
 	// Choose a partition element, v
-	int m = off + len/2;       // Small arrays, middle element
+	int m = off + (len >> 1);       // Small arrays, middle element
 	if (len > 7) {
 	    int l = off;
 	    int n = off + len - 1;
@@ -832,7 +899,7 @@ public class Arrays {
 	}
 
 	// Choose a partition element, v
-	int m = off + len/2;       // Small arrays, middle element
+	int m = off + (len >> 1);       // Small arrays, middle element
 	if (len > 7) {
 	    int l = off;
 	    int n = off + len - 1;
@@ -916,7 +983,7 @@ public class Arrays {
 	}
 
 	// Choose a partition element, v
-	int m = off + len/2;       // Small arrays, middle element
+	int m = off + (len >> 1);       // Small arrays, middle element
 	if (len > 7) {
 	    int l = off;
 	    int n = off + len - 1;
@@ -1001,8 +1068,7 @@ public class Arrays {
      * The sorting algorithm is a modified mergesort (in which the merge is
      * omitted if the highest element in the low sublist is less than the
      * lowest element in the high sublist).  This algorithm offers guaranteed
-     * n*log(n) performance, and can approach linear performance on nearly
-     * sorted lists.
+     * n*log(n) performance.
      * 
      * @param a the array to be sorted.
      * @throws  ClassCastException if the array contains elements that are not
@@ -1010,8 +1076,8 @@ public class Arrays {
      * @see Comparable
      */
     public static void sort(Object[] a) {
-        Object aux[] = (Object[])a.clone();
-        mergeSort(aux, a, 0, a.length);
+        Object[] aux = (Object[])a.clone();
+        mergeSort(aux, a, 0, a.length, 0);
     }
 
     /**
@@ -1032,8 +1098,7 @@ public class Arrays {
      * The sorting algorithm is a modified mergesort (in which the merge is
      * omitted if the highest element in the low sublist is less than the
      * lowest element in the high sublist).  This algorithm offers guaranteed
-     * n*log(n) performance, and can approach linear performance on nearly
-     * sorted lists.
+     * n*log(n) performance.
      * 
      * @param a the array to be sorted.
      * @param fromIndex the index of the first element (inclusive) to be
@@ -1049,38 +1114,69 @@ public class Arrays {
      */
     public static void sort(Object[] a, int fromIndex, int toIndex) {
         rangeCheck(a.length, fromIndex, toIndex);
-        Object aux[] = (Object[])a.clone();  // Optimization opportunity
-        mergeSort(aux, a, fromIndex, toIndex);
+	Object[] aux = cloneSubarray(a, fromIndex, toIndex);
+        mergeSort(aux, a, fromIndex, toIndex, -fromIndex);
     }
 
-    private static void mergeSort(Object src[], Object dest[],
-                                  int low, int high) {
+    /**
+     * Tuning parameter: list size at or below which insertion sort will be
+     * used in preference to mergesort or quicksort.
+     */
+    private static final int INSERTIONSORT_THRESHOLD = 7;
+
+    /**
+     * Clones an array within the specified bounds.
+     * This method assumes that a is an array.
+     */
+    private static <T> T[] cloneSubarray(T[] a, int from, int to) {
+        int n = to - from;
+	T[] result = (T[]) new Object[n];//(T[])Array.newInstance(a.getClass().getComponentType(), n);
+        System.arraycopy(a, from, result, 0, n);
+        return result;
+    }
+
+    /**
+     * Src is the source array that starts at index 0
+     * Dest is the (possibly larger) array destination with a possible offset
+     * low is the index in dest to start sorting
+     * high is the end index in dest to end sorting
+     * off is the offset to generate corresponding low, high in src
+     */
+    private static void mergeSort(Object[] src,
+				  Object[] dest,
+				  int low,
+				  int high,
+				  int off) {
 	int length = high - low;
 
 	// Insertion sort on smallest arrays
-	if (length < 7) {
-	    for (int i=low; i<high; i++)
-		for (int j=i; j>low &&
-                 ((Comparable)dest[j-1]).compareTo((Comparable)dest[j])>0; j--)
-		    swap(dest, j, j-1);
-	    return;
-	}
+        if (length < INSERTIONSORT_THRESHOLD) {
+            for (int i=low; i<high; i++)
+                for (int j=i; j>low &&
+			 ((Comparable) dest[j-1]).compareTo(dest[j])>0; j--)
+                    swap(dest, j, j-1);
+            return;
+        }
 
         // Recursively sort halves of dest into src
-        int mid = (low + high)/2;
-        mergeSort(dest, src, low, mid);
-        mergeSort(dest, src, mid, high);
+        int destLow  = low;
+        int destHigh = high;
+        low  += off;
+        high += off;
+        int mid = (low + high) >> 1;
+        mergeSort(dest, src, low, mid, -off);
+        mergeSort(dest, src, mid, high, -off);
 
         // If list is already sorted, just copy from src to dest.  This is an
         // optimization that results in faster sorts for nearly ordered lists.
-        if (((Comparable)src[mid-1]).compareTo((Comparable)src[mid]) <= 0) {
-           System.arraycopy(src, low, dest, low, length);
-           return;
+        if (((Comparable)src[mid-1]).compareTo(src[mid]) <= 0) {
+            System.arraycopy(src, low, dest, destLow, length);
+            return;
         }
 
         // Merge sorted halves (now in src) into dest
-        for(int i = low, p = low, q = mid; i < high; i++) {
-            if (q>=high || p<mid && ((Comparable)src[p]).compareTo(src[q])<=0)
+        for(int i = destLow, p = low, q = mid; i < destHigh; i++) {
+            if (q >= high || p < mid && ((Comparable)src[p]).compareTo(src[q])<=0)
                 dest[i] = src[p++];
             else
                 dest[i] = src[q++];
@@ -1090,7 +1186,7 @@ public class Arrays {
     /**
      * Swaps x[a] with x[b].
      */
-    private static void swap(Object x[], int a, int b) {
+    private static void swap(Object[] x, int a, int b) {
 	Object t = x[a];
 	x[a] = x[b];
 	x[b] = t;
@@ -1109,8 +1205,7 @@ public class Arrays {
      * The sorting algorithm is a modified mergesort (in which the merge is
      * omitted if the highest element in the low sublist is less than the
      * lowest element in the high sublist).  This algorithm offers guaranteed
-     * n*log(n) performance, and can approach linear performance on nearly
-     * sorted lists.
+     * n*log(n) performance. 
      *
      * @param a the array to be sorted.
      * @param c the comparator to determine the order of the array.  A
@@ -1120,12 +1215,12 @@ public class Arrays {
      *		not <i>mutually comparable</i> using the specified comparator.
      * @see Comparator
      */
-    public static void sort(Object[] a, Comparator c) {
-        Object aux[] = (Object[])a.clone();
+    public static <T> void sort(T[] a, Comparator<? super T> c) {
+	T[] aux = (T[])a.clone();
         if (c==null)
-            mergeSort(aux, a, 0, a.length);
+            mergeSort(aux, a, 0, a.length, 0);
         else
-            mergeSort(aux, a, 0, a.length, c);
+            mergeSort(aux, a, 0, a.length, 0, c);
     }
 
     /**
@@ -1144,8 +1239,7 @@ public class Arrays {
      * The sorting algorithm is a modified mergesort (in which the merge is
      * omitted if the highest element in the low sublist is less than the
      * lowest element in the high sublist).  This algorithm offers guaranteed
-     * n*log(n) performance, and can approach linear performance on nearly
-     * sorted lists.
+     * n*log(n) performance. 
      *
      * @param a the array to be sorted.
      * @param fromIndex the index of the first element (inclusive) to be
@@ -1161,22 +1255,31 @@ public class Arrays {
      *	       <tt>toIndex &gt; a.length</tt>
      * @see Comparator
      */
-    public static void sort(Object[] a, int fromIndex, int toIndex,
-                            Comparator c) {
+    public static <T> void sort(T[] a, int fromIndex, int toIndex,
+				Comparator<? super T> c) {
         rangeCheck(a.length, fromIndex, toIndex);
-        Object aux[] = (Object[])a.clone();
+	T[] aux = (T[])cloneSubarray(a, fromIndex, toIndex);
         if (c==null)
-            mergeSort(aux, a, fromIndex, toIndex);
+            mergeSort(aux, a, fromIndex, toIndex, -fromIndex);
         else
-            mergeSort(aux, a, fromIndex, toIndex, c);
+            mergeSort(aux, a, fromIndex, toIndex, -fromIndex, c);
     }
 
-    private static void mergeSort(Object src[], Object dest[],
-                                  int low, int high, Comparator c) {
+    /**
+     * Src is the source array that starts at index 0
+     * Dest is the (possibly larger) array destination with a possible offset
+     * low is the index in dest to start sorting
+     * high is the end index in dest to end sorting
+     * off is the offset into src corresponding to low in dest
+     */
+    private static void mergeSort(Object[] src,
+				  Object[] dest,
+				  int low, int high, int off,
+				  Comparator c) {
 	int length = high - low;
 
 	// Insertion sort on smallest arrays
-	if (length < 7) {
+	if (length < INSERTIONSORT_THRESHOLD) {
 	    for (int i=low; i<high; i++)
 		for (int j=i; j>low && c.compare(dest[j-1], dest[j])>0; j--)
 		    swap(dest, j, j-1);
@@ -1184,20 +1287,24 @@ public class Arrays {
 	}
 
         // Recursively sort halves of dest into src
-        int mid = (low + high)/2;
-        mergeSort(dest, src, low, mid, c);
-        mergeSort(dest, src, mid, high, c);
+        int destLow  = low;
+        int destHigh = high;
+        low  += off;
+        high += off;
+        int mid = (low + high) >> 1;
+        mergeSort(dest, src, low, mid, -off, c);
+        mergeSort(dest, src, mid, high, -off, c);
 
         // If list is already sorted, just copy from src to dest.  This is an
         // optimization that results in faster sorts for nearly ordered lists.
         if (c.compare(src[mid-1], src[mid]) <= 0) {
-           System.arraycopy(src, low, dest, low, length);
+           System.arraycopy(src, low, dest, destLow, length);
            return;
         }
 
         // Merge sorted halves (now in src) into dest
-        for(int i = low, p = low, q = mid; i < high; i++) {
-            if (q>=high || p<mid && c.compare(src[p], src[q]) <= 0)
+        for(int i = destLow, p = low, q = mid; i < destHigh; i++) {
+            if (q >= high || p < mid && c.compare(src[p], src[q]) <= 0)
                 dest[i] = src[p++];
             else
                 dest[i] = src[q++];
@@ -1245,7 +1352,7 @@ public class Arrays {
 	int high = a.length-1;
 
 	while (low <= high) {
-	    int mid =(low + high)/2;
+	    int mid = (low + high) >> 1;
 	    long midVal = a[mid];
 
 	    if (midVal < key)
@@ -1284,7 +1391,7 @@ public class Arrays {
 	int high = a.length-1;
 
 	while (low <= high) {
-	    int mid =(low + high)/2;
+	    int mid = (low + high) >> 1;
 	    int midVal = a[mid];
 
 	    if (midVal < key)
@@ -1322,7 +1429,7 @@ public class Arrays {
 	int high = a.length-1;
 
 	while (low <= high) {
-	    int mid =(low + high)/2;
+	    int mid = (low + high) >> 1;
 	    short midVal = a[mid];
 
 	    if (midVal < key)
@@ -1360,7 +1467,7 @@ public class Arrays {
 	int high = a.length-1;
 
 	while (low <= high) {
-	    int mid =(low + high)/2;
+	    int mid = (low + high) >> 1;
 	    char midVal = a[mid];
 
 	    if (midVal < key)
@@ -1398,7 +1505,7 @@ public class Arrays {
 	int high = a.length-1;
 
 	while (low <= high) {
-	    int mid =(low + high)/2;
+	    int mid = (low + high) >> 1;
 	    byte midVal = a[mid];
 
 	    if (midVal < key)
@@ -1417,7 +1524,8 @@ public class Arrays {
      * (as by the <tt>sort</tt> method, above) prior to making this call.  If
      * it is not sorted, the results are undefined.  If the array contains
      * multiple elements with the specified value, there is no guarantee which
-     * one will be found.
+     * one will be found.  This method considers all NaN values to be 
+     * equivalent and equal.
      *
      * @param a the array to be searched.
      * @param key the value to be searched for.
@@ -1437,7 +1545,7 @@ public class Arrays {
 
     private static int binarySearch(double[] a, double key, int low,int high) {
 	while (low <= high) {
-	    int mid =(low + high)/2;
+	    int mid = (low + high) >> 1;
 	    double midVal = a[mid];
 
             int cmp;
@@ -1469,7 +1577,8 @@ public class Arrays {
      * (as by the <tt>sort</tt> method, above) prior to making this call.  If
      * it is not sorted, the results are undefined.  If the array contains
      * multiple elements with the specified value, there is no guarantee which
-     * one will be found.
+     * one will be found.  This method considers all NaN values to be 
+     * equivalent and equal.
      *
      * @param a the array to be searched.
      * @param key the value to be searched for.
@@ -1489,7 +1598,7 @@ public class Arrays {
 
     private static int binarySearch(float[] a, float key, int low,int high) {
 	while (low <= high) {
-	    int mid =(low + high)/2;
+	    int mid = (low + high) >> 1;
 	    float midVal = a[mid];
 
             int cmp;
@@ -1521,7 +1630,11 @@ public class Arrays {
      * search algorithm.  The array must be sorted into ascending order
      * according to the <i>natural ordering</i> of its elements (as by
      * <tt>Sort(Object[]</tt>), above) prior to making this call.  If it is
-     * not sorted, the results are undefined.  If the array contains multiple
+     * not sorted, the results are undefined.
+     * (If the array contains elements that are not  mutually comparable (for
+     * example,strings and integers), it <i>cannot</i> be sorted according 
+     * to the natural order of its elements, hence results are undefined.)
+     *  If the array contains multiple
      * elements equal to the specified object, there is no guarantee which
      * one will be found.
      *
@@ -1535,10 +1648,8 @@ public class Arrays {
      *	       elements in the list are less than the specified key.  Note
      *	       that this guarantees that the return value will be &gt;= 0 if
      *	       and only if the key is found.
-     * @throws ClassCastException if the array contains elements that are not
-     *	       <i>mutually comparable</i> (for example, strings and integers),
-     *         or the search key in not mutually comparable with the elements
-     *         of the array.
+     * @throws ClassCastException if the search key in not comparable to the
+     *         elements of the array.
      * @see Comparable
      * @see #sort(Object[])
      */
@@ -1547,9 +1658,9 @@ public class Arrays {
 	int high = a.length-1;
 
 	while (low <= high) {
-	    int mid =(low + high)/2;
-	    Object midVal = a[mid];
-	    int cmp = ((Comparable)midVal).compareTo(key);
+	    int mid = (low + high) >> 1;
+	    Comparable midVal = (Comparable)a[mid];
+	    int cmp = midVal.compareTo(key);
 
 	    if (cmp < 0)
 		low = mid + 1;
@@ -1566,7 +1677,8 @@ public class Arrays {
      * search algorithm.  The array must be sorted into ascending order
      * according to the specified comparator (as by the <tt>Sort(Object[],
      * Comparator)</tt> method, above), prior to making this call.  If it is
-     * not sorted, the results are undefined.  If the array contains multiple
+     * not sorted, the results are undefined. 
+     * If the array contains multiple
      * elements equal to the specified object, there is no guarantee which one
      * will be found.
      *
@@ -1590,16 +1702,17 @@ public class Arrays {
      * @see Comparable
      * @see #sort(Object[], Comparator)
      */
-    public static int binarySearch(Object[] a, Object key, Comparator c) {
-        if (c==null)
+    public static <T> int binarySearch(T[] a, T key, Comparator<? super T> c) {
+        if (c==null) {
             return binarySearch(a, key);
+	}
 
 	int low = 0;
 	int high = a.length-1;
 
 	while (low <= high) {
-	    int mid =(low + high)/2;
-	    Object midVal = a[mid];
+	    int mid = (low + high) >> 1;
+	    T midVal = a[mid];
 	    int cmp = c.compare(midVal, key);
 
 	    if (cmp < 0)
@@ -1761,7 +1874,7 @@ public class Arrays {
     }
 
     /**
-     * Returns <tt>true</tt> if the two specified arrays of equals are
+     * Returns <tt>true</tt> if the two specified arrays of booleans are
      * <i>equal</i> to one another.  Two arrays are considered equal if both
      * arrays contain the same number of elements, and all corresponding pairs
      * of elements in the two arrays are equal.  In other words, two arrays
@@ -2178,7 +2291,7 @@ public class Arrays {
      * @param val the value to be stored in all elements of the array.
      */
     public static void fill(Object[] a, Object val) {
-        fill(a, 0, a.length, val);
+        Arrays.fill(a, 0, a.length, val);
     }
 
     /**
@@ -2198,7 +2311,7 @@ public class Arrays {
      * @throws ArrayIndexOutOfBoundsException if <tt>fromIndex &lt; 0</tt> or
      *	       <tt>toIndex &gt; a.length</tt>
      */
-    public static void fill(Object[] a, int fromIndex, int toIndex,Object val){
+    public static void fill(Object[] a, int fromIndex, int toIndex, Object val) {
         rangeCheck(a.length, fromIndex, toIndex);
         for (int i=fromIndex; i<toIndex; i++)
             a[i] = val;
@@ -2212,25 +2325,32 @@ public class Arrays {
      * the returned list "write through" to the array.)  This method acts
      * as bridge between array-based and collection-based APIs, in
      * combination with <tt>Collection.toArray</tt>.  The returned list is
-     * serializable.
+     * serializable and implements {@link RandomAccess}.
+     *
+     * <p>This method also provides a convenient way to create a fixed-size
+     * list initialized to contain several elements:
+     * <pre>
+     *     List<String> stooges = Arrays.asList("Larry", "Moe", "Curly");
+     * </pre>
      *
      * @param a the array by which the list will be backed.
      * @return a list view of the specified array.
      * @see Collection#toArray()
      */
-    public static List asList(Object[] a) {
-	return new ArrayList(a);
+    public static <T> List<T> asList(T... a) {
+	return new ArrayList<T>(a);
     }
 
     /**
      * @serial include
      */
-    private static class ArrayList extends AbstractList
+    private static class ArrayList<E> extends AbstractList<E>
+	implements RandomAccess, java.io.Serializable
     {
         private static final long serialVersionUID = -2764017481108945198L;
 	private Object[] a;
 
-	ArrayList(Object[] array) {
+	ArrayList(E[] array) {
             if (array==null)
                 throw new NullPointerException();
 	    a = array;
@@ -2241,17 +2361,17 @@ public class Arrays {
 	}
 
 	public Object[] toArray() {
-	    return (Object[]) a.clone();
+	    return (Object[])a.clone();
 	}
 
-	public Object get(int index) {
-	    return a[index];
+	public E get(int index) {
+	    return (E)a[index];
 	}
 
-	public Object set(int index, Object element) {
+	public E set(int index, E element) {
 	    Object oldValue = a[index];
 	    a[index] = element;
-	    return oldValue;
+	    return (E)oldValue;
 	}
 
         public int indexOf(Object o) {
@@ -2270,5 +2390,790 @@ public class Arrays {
         public boolean contains(Object o) {
             return indexOf(o) != -1;
         }
+    }
+
+    /**
+     * Returns a hash code based on the contents of the specified array.
+     * For any two <tt>long</tt> arrays <tt>a</tt> and <tt>b</tt>
+     * such that <tt>Arrays.equals(a, b)</tt>, it is also the case that
+     * <tt>Arrays.hashCode(a) == Arrays.hashCode(b)</tt>.
+     *
+     * <p>The value returned by this method is the same value that would be
+     * obtained by invoking the {@link List#hashCode() <tt>hashCode</tt>}
+     * method on a {@link List} containing a sequence of {@link Long}
+     * instances representing the elements of <tt>a</tt> in the same order.
+     * If <tt>a</tt> is <tt>null</tt>, this method returns 0.
+     *
+     * @param a the array whose hash value to compute
+     * @return a content-based hash code for <tt>a</tt>
+     * @since 1.5
+     */
+    public static int hashCode(long a[]) {
+        if (a == null)
+            return 0;
+ 
+        int result = 1;
+        for (long element : a) {
+            int elementHash = (int)(element ^ (element >>> 32));
+            result = 31 * result + elementHash;
+        }
+ 
+        return result;
+    }
+ 
+    /**
+     * Returns a hash code based on the contents of the specified array.
+     * For any two non-null <tt>int</tt> arrays <tt>a</tt> and <tt>b</tt>
+     * such that <tt>Arrays.equals(a, b)</tt>, it is also the case that
+     * <tt>Arrays.hashCode(a) == Arrays.hashCode(b)</tt>.
+     *
+     * <p>The value returned by this method is the same value that would be
+     * obtained by invoking the {@link List#hashCode() <tt>hashCode</tt>}
+     * method on a {@link List} containing a sequence of {@link Integer}
+     * instances representing the elements of <tt>a</tt> in the same order.
+     * If <tt>a</tt> is <tt>null</tt>, this method returns 0.
+     *
+     * @param a the array whose hash value to compute
+     * @return a content-based hash code for <tt>a</tt>
+     * @since 1.5
+     */
+    public static int hashCode(int a[]) {
+        if (a == null)
+            return 0;
+ 
+        int result = 1;
+        for (int element : a)
+            result = 31 * result + element;
+ 
+        return result;
+    }
+ 
+    /**
+     * Returns a hash code based on the contents of the specified array.
+     * For any two <tt>short</tt> arrays <tt>a</tt> and <tt>b</tt>
+     * such that <tt>Arrays.equals(a, b)</tt>, it is also the case that
+     * <tt>Arrays.hashCode(a) == Arrays.hashCode(b)</tt>.
+     *
+     * <p>The value returned by this method is the same value that would be
+     * obtained by invoking the {@link List#hashCode() <tt>hashCode</tt>}
+     * method on a {@link List} containing a sequence of {@link Short}
+     * instances representing the elements of <tt>a</tt> in the same order.
+     * If <tt>a</tt> is <tt>null</tt>, this method returns 0.
+     *
+     * @param a the array whose hash value to compute
+     * @return a content-based hash code for <tt>a</tt>
+     * @since 1.5
+     */
+    public static int hashCode(short a[]) {
+        if (a == null)
+            return 0;
+ 
+        int result = 1;
+        for (short element : a)
+            result = 31 * result + element;
+ 
+        return result;
+    }
+ 
+    /**
+     * Returns a hash code based on the contents of the specified array.
+     * For any two <tt>char</tt> arrays <tt>a</tt> and <tt>b</tt>
+     * such that <tt>Arrays.equals(a, b)</tt>, it is also the case that
+     * <tt>Arrays.hashCode(a) == Arrays.hashCode(b)</tt>.
+     *
+     * <p>The value returned by this method is the same value that would be
+     * obtained by invoking the {@link List#hashCode() <tt>hashCode</tt>}
+     * method on a {@link List} containing a sequence of {@link Character}
+     * instances representing the elements of <tt>a</tt> in the same order.
+     * If <tt>a</tt> is <tt>null</tt>, this method returns 0.
+     *
+     * @param a the array whose hash value to compute
+     * @return a content-based hash code for <tt>a</tt>
+     * @since 1.5
+     */
+    public static int hashCode(char a[]) {
+        if (a == null)
+            return 0;
+ 
+        int result = 1;
+        for (char element : a)
+            result = 31 * result + element;
+ 
+        return result;
+    }
+ 
+    /**
+     * Returns a hash code based on the contents of the specified array.
+     * For any two <tt>byte</tt> arrays <tt>a</tt> and <tt>b</tt>
+     * such that <tt>Arrays.equals(a, b)</tt>, it is also the case that
+     * <tt>Arrays.hashCode(a) == Arrays.hashCode(b)</tt>.
+     *
+     * <p>The value returned by this method is the same value that would be
+     * obtained by invoking the {@link List#hashCode() <tt>hashCode</tt>}
+     * method on a {@link List} containing a sequence of {@link Byte}
+     * instances representing the elements of <tt>a</tt> in the same order.
+     * If <tt>a</tt> is <tt>null</tt>, this method returns 0.
+     *
+     * @param a the array whose hash value to compute
+     * @return a content-based hash code for <tt>a</tt>
+     * @since 1.5
+     */
+    public static int hashCode(byte a[]) {
+        if (a == null)
+            return 0;
+ 
+        int result = 1;
+        for (byte element : a)
+            result = 31 * result + element;
+ 
+        return result;
+    }
+ 
+    /**
+     * Returns a hash code based on the contents of the specified array.
+     * For any two <tt>boolean</tt> arrays <tt>a</tt> and <tt>b</tt>
+     * such that <tt>Arrays.equals(a, b)</tt>, it is also the case that
+     * <tt>Arrays.hashCode(a) == Arrays.hashCode(b)</tt>.
+     *
+     * <p>The value returned by this method is the same value that would be
+     * obtained by invoking the {@link List#hashCode() <tt>hashCode</tt>}
+     * method on a {@link List} containing a sequence of {@link Boolean}
+     * instances representing the elements of <tt>a</tt> in the same order.
+     * If <tt>a</tt> is <tt>null</tt>, this method returns 0.
+     *
+     * @param a the array whose hash value to compute
+     * @return a content-based hash code for <tt>a</tt>
+     * @since 1.5
+     */
+    public static int hashCode(boolean a[]) {
+        if (a == null)
+            return 0;
+ 
+        int result = 1;
+        for (boolean element : a)
+            result = 31 * result + (element ? 1231 : 1237);
+ 
+        return result;
+    }
+ 
+    /**
+     * Returns a hash code based on the contents of the specified array.
+     * For any two <tt>float</tt> arrays <tt>a</tt> and <tt>b</tt>
+     * such that <tt>Arrays.equals(a, b)</tt>, it is also the case that
+     * <tt>Arrays.hashCode(a) == Arrays.hashCode(b)</tt>.
+     *
+     * <p>The value returned by this method is the same value that would be
+     * obtained by invoking the {@link List#hashCode() <tt>hashCode</tt>}
+     * method on a {@link List} containing a sequence of {@link Float}
+     * instances representing the elements of <tt>a</tt> in the same order.
+     * If <tt>a</tt> is <tt>null</tt>, this method returns 0.
+     *
+     * @param a the array whose hash value to compute
+     * @return a content-based hash code for <tt>a</tt>
+     * @since 1.5
+     */
+    public static int hashCode(float a[]) {
+        if (a == null)
+            return 0;
+ 
+        int result = 1;
+        for (float element : a)
+            result = 31 * result + Float.floatToIntBits(element);
+ 
+        return result;
+    }
+ 
+    /**
+     * Returns a hash code based on the contents of the specified array.
+     * For any two <tt>double</tt> arrays <tt>a</tt> and <tt>b</tt>
+     * such that <tt>Arrays.equals(a, b)</tt>, it is also the case that
+     * <tt>Arrays.hashCode(a) == Arrays.hashCode(b)</tt>.
+     *
+     * <p>The value returned by this method is the same value that would be
+     * obtained by invoking the {@link List#hashCode() <tt>hashCode</tt>}
+     * method on a {@link List} containing a sequence of {@link Double}
+     * instances representing the elements of <tt>a</tt> in the same order.
+     * If <tt>a</tt> is <tt>null</tt>, this method returns 0.
+     *
+     * @param a the array whose hash value to compute
+     * @return a content-based hash code for <tt>a</tt>
+     * @since 1.5
+     */
+    public static int hashCode(double a[]) {
+        if (a == null)
+            return 0;
+ 
+        int result = 1;
+        for (double element : a) {
+            long bits = Double.doubleToLongBits(element);
+            result = 31 * result + (int)(bits ^ (bits >>> 32));
+        }
+        return result;
+    }
+ 
+    /**
+     * Returns a hash code based on the contents of the specified array.  If
+     * the array contains other arrays as elements, the hash code is based on
+     * their identities rather than their contents.  It is therefore
+     * acceptable to invoke this method on an array that contains itself as an
+     * element,  either directly or indirectly through one or more levels of
+     * arrays.
+     *
+     * <p>For any two arrays <tt>a</tt> and <tt>b</tt> such that
+     * <tt>Arrays.equals(a, b)</tt>, it is also the case that
+     * <tt>Arrays.hashCode(a) == Arrays.hashCode(b)</tt>.
+     *
+     * <p>The value returned by this method is equal to the value that would
+     * be returned by <tt>Arrays.asList(a).hashCode()</tt>, unless <tt>a</tt>
+     * is <tt>null</tt>, in which case <tt>0</tt> is returned.
+     *
+     * @param a the array whose content-based hash code to compute
+     * @return a content-based hash code for <tt>a</tt>
+     * @see #deepHashCode(Object[])
+     * @since 1.5
+     */
+    public static int hashCode(Object a[]) {
+        if (a == null)
+            return 0;
+ 
+        int result = 1;
+ 
+        for (Object element : a)
+            result = 31 * result + (element == null ? 0 : element.hashCode());
+ 
+        return result;
+    }
+ 
+    /**
+     * Returns a hash code based on the "deep contents" of the specified
+     * array.  If the array contains other arrays as elements, the
+     * hash code is based on their contents and so on, ad infinitum.
+     * It is therefore unacceptable to invoke this method on an array that
+     * contains itself as an element, either directly or indirectly through
+     * one or more levels of arrays.  The behavior of such an invocation is
+     * undefined.
+     *
+     * <p>For any two arrays <tt>a</tt> and <tt>b</tt> such that
+     * <tt>Arrays.deepEquals(a, b)</tt>, it is also the case that
+     * <tt>Arrays.deepHashCode(a) == Arrays.deepHashCode(b)</tt>.
+     *
+     * <p>The computation of the value returned by this method is similar to
+     * that of the value returned by {@link List#hashCode()} on a list
+     * containing the same elements as <tt>a</tt> in the same order, with one
+     * difference: If an element <tt>e</tt> of <tt>a</tt> is itself an array,
+     * its hash code is computed not by calling <tt>e.hashCode()</tt>, but as
+     * by calling the appropriate overloading of <tt>Arrays.hashCode(e)</tt>
+     * if <tt>e</tt> is an array of a primitive type, or as by calling
+     * <tt>Arrays.deepHashCode(e)</tt> recursively if <tt>e</tt> is an array
+     * of a reference type.  If <tt>a</tt> is <tt>null</tt>, this method
+     * returns 0.
+     *
+     * @param a the array whose deep-content-based hash code to compute
+     * @return a deep-content-based hash code for <tt>a</tt>
+     * @see #hashCode(Object[])
+     * @since 1.5
+     */
+    public static int deepHashCode(Object a[]) {
+        if (a == null)
+            return 0;
+ 
+        int result = 1;
+ 
+        for (Object element : a) {
+            int elementHash = 0;
+            if (element instanceof Object[])
+                elementHash = deepHashCode((Object[]) element);
+            else if (element instanceof byte[])
+                elementHash = hashCode((byte[]) element);
+            else if (element instanceof short[])
+                elementHash = hashCode((short[]) element);
+            else if (element instanceof int[])
+                elementHash = hashCode((int[]) element);
+            else if (element instanceof long[])
+                elementHash = hashCode((long[]) element);
+            else if (element instanceof char[])
+                elementHash = hashCode((char[]) element);
+            else if (element instanceof float[])
+                elementHash = hashCode((float[]) element);
+            else if (element instanceof double[])
+                elementHash = hashCode((double[]) element);
+            else if (element instanceof boolean[])
+                elementHash = hashCode((boolean[]) element);
+            else if (element != null)
+                elementHash = element.hashCode();
+ 
+            result = 31 * result + elementHash;
+        }
+ 
+        return result;
+    }
+ 
+    /**
+     * Returns <tt>true</tt> if the two specified arrays are <i>deeply
+     * equal</i> to one another.  Unlike the @link{#equals{Object[],Object[])
+     * method, this method is appropriate for use with nested arrays of
+     * arbitrary depth.
+     *
+     * <p>Two array references are considered deeply equal if both
+     * are <tt>null</tt>, or if they refer to arrays that contain the same
+     * number of elements and all corresponding pairs of elements in the two
+     * arrays are deeply equal.
+     *
+     * <p>Two possibly <tt>null</tt> elements <tt>e1</tt> and <tt>e2</tt> are
+     * deeply equal if any of the following conditions hold:
+     * <ul>
+     *    <li> <tt>e1</tt> and <tt>e2</tt> are both arrays of object reference
+     *         types, and <tt>Arrays.deepEquals(e1, e2) would return true</tt>
+     *    <li> <tt>e1</tt> and <tt>e2</tt> are arrays of the same primitive
+     *         type, and the appropriate overloading of
+     *         <tt>Arrays.equals(e1, e2)</tt> would return true.
+     *    <li> <tt>e1 == e2</tt>
+     *    <li> <tt>e1.equals(e2)</tt> would return true.
+     * </ul>
+     * Note that this definition permits <tt>null</tt> elements at any depth.
+     *
+     * <p>If either of the specified arrays contain themselves as elements
+     * either directly or indirectly through one or more levels of arrays,
+     * the behavior of this method is undefined.
+     *
+     * @param a1 one array to be tested for equality
+     * @param a2 the other array to be tested for equality
+     * @return <tt>true</tt> if the two arrays are equal
+     * @see #equals(Object[],Object[])
+     * @since 1.5
+     */
+    public static boolean deepEquals(Object[] a1, Object[] a2) {
+        if (a1 == a2)
+            return true;
+        if (a1 == null || a2==null)
+            return false;
+        int length = a1.length;
+        if (a2.length != length)
+            return false;
+ 
+        for (int i = 0; i < length; i++) {
+            Object e1 = a1[i];
+            Object e2 = a2[i];
+ 
+            if (e1 == e2)
+                continue;
+            if (e1 == null)
+                return false;
+ 
+            // Figure out whether the two elements are equal
+            boolean eq;
+            if (e1 instanceof Object[] && e2 instanceof Object[])
+                eq = deepEquals ((Object[]) e1, (Object[]) e2);
+            else if (e1 instanceof byte[] && e2 instanceof byte[])
+                eq = equals((byte[]) e1, (byte[]) e2);
+            else if (e1 instanceof short[] && e2 instanceof short[])
+                eq = equals((short[]) e1, (short[]) e2);
+            else if (e1 instanceof int[] && e2 instanceof int[])
+                eq = equals((int[]) e1, (int[]) e2);
+            else if (e1 instanceof long[] && e2 instanceof long[])
+                eq = equals((long[]) e1, (long[]) e2);
+            else if (e1 instanceof char[] && e2 instanceof char[])
+                eq = equals((char[]) e1, (char[]) e2);
+            else if (e1 instanceof float[] && e2 instanceof float[])
+                eq = equals((float[]) e1, (float[]) e2);
+            else if (e1 instanceof double[] && e2 instanceof double[])
+                eq = equals((double[]) e1, (double[]) e2);
+            else if (e1 instanceof boolean[] && e2 instanceof boolean[])
+                eq = equals((boolean[]) e1, (boolean[]) e2);
+            else
+                eq = e1.equals(e2);
+ 
+            if (!eq)
+                return false;
+        }
+        return true;
+    }
+ 
+    /**
+     * Returns a string representation of the contents of the specified array.
+     * The string representation consists of a list of the array's elements,
+     * enclosed in square brackets (<tt>"[]"</tt>).  Adjacent elements are
+     * separated by the characters <tt>", "</tt> (a comma followed by a
+     * space).  Elements are converted to strings as by
+     * <tt>String.valueOf(long)</tt>.  Returns <tt>"null"</tt> if <tt>a</tt>
+     * is <tt>null</tt>.
+     *
+     * @param a the array whose string representation to return
+     * @return a string representation of <tt>a</tt>
+     * @since 1.5
+     */
+    public static String toString(long[] a) {
+        if (a == null)
+            return "null";
+        if (a.length == 0)
+            return "[]";
+ 
+        StringBuilder buf = new StringBuilder();
+        buf.append('[');
+        buf.append(a[0]);
+ 
+        for (int i = 1; i < a.length; i++) {
+            buf.append(", ");
+            buf.append(a[i]);
+        }
+ 
+        buf.append("]");
+        return buf.toString();
+    }
+ 
+    /**
+     * Returns a string representation of the contents of the specified array.
+     * The string representation consists of a list of the array's elements,
+     * enclosed in square brackets (<tt>"[]"</tt>).  Adjacent elements are
+     * separated by the characters <tt>", "</tt> (a comma followed by a
+     * space).  Elements are converted to strings as by
+     * <tt>String.valueOf(int)</tt>.  Returns <tt>"null"</tt> if <tt>a</tt> is
+     * <tt>null</tt>.
+     *
+     * @param a the array whose string representation to return
+     * @return a string representation of <tt>a</tt>
+     * @since 1.5
+     */
+    public static String toString(int[] a) {
+        if (a == null)
+            return "null";
+        if (a.length == 0)
+            return "[]";
+ 
+        StringBuilder buf = new StringBuilder();
+        buf.append('[');
+        buf.append(a[0]);
+ 
+        for (int i = 1; i < a.length; i++) {
+            buf.append(", ");
+            buf.append(a[i]);
+        }
+ 
+        buf.append("]");
+        return buf.toString();
+    }
+ 
+    /**
+     * Returns a string representation of the contents of the specified array.
+     * The string representation consists of a list of the array's elements,
+     * enclosed in square brackets (<tt>"[]"</tt>).  Adjacent elements are
+     * separated by the characters <tt>", "</tt> (a comma followed by a
+     * space).  Elements are converted to strings as by
+     * <tt>String.valueOf(short)</tt>.  Returns <tt>"null"</tt> if <tt>a</tt>
+     * is <tt>null</tt>.
+     *
+     * @param a the array whose string representation to return
+     * @return a string representation of <tt>a</tt>
+     * @since 1.5
+     */
+    public static String toString(short[] a) {
+        if (a == null)
+            return "null";
+        if (a.length == 0)
+            return "[]";
+ 
+        StringBuilder buf = new StringBuilder();
+        buf.append('[');
+        buf.append(a[0]);
+ 
+        for (int i = 1; i < a.length; i++) {
+            buf.append(", ");
+            buf.append(a[i]);
+        }
+ 
+        buf.append("]");
+        return buf.toString();
+    }
+ 
+    /**
+     * Returns a string representation of the contents of the specified array.
+     * The string representation consists of a list of the array's elements,
+     * enclosed in square brackets (<tt>"[]"</tt>).  Adjacent elements are
+     * separated by the characters <tt>", "</tt> (a comma followed by a
+     * space).  Elements are converted to strings as by
+     * <tt>String.valueOf(char)</tt>.  Returns <tt>"null"</tt> if <tt>a</tt>
+     * is <tt>null</tt>.
+     *
+     * @param a the array whose string representation to return
+     * @return a string representation of <tt>a</tt>
+     * @since 1.5
+     */
+    public static String toString(char[] a) {
+        if (a == null)
+            return "null";
+        if (a.length == 0)
+            return "[]";
+ 
+        StringBuilder buf = new StringBuilder();
+        buf.append('[');
+        buf.append(a[0]);
+ 
+        for (int i = 1; i < a.length; i++) {
+            buf.append(", ");
+            buf.append(a[i]);
+        }
+ 
+        buf.append("]");
+        return buf.toString();
+    }
+ 
+    /**
+     * Returns a string representation of the contents of the specified array.
+     * The string representation consists of a list of the array's elements,
+     * enclosed in square brackets (<tt>"[]"</tt>).  Adjacent elements
+     * are separated by the characters <tt>", "</tt> (a comma followed
+     * by a space).  Elements are converted to strings as by
+     * <tt>String.valueOf(byte)</tt>.  Returns <tt>"null"</tt> if
+     * <tt>a</tt> is <tt>null</tt>.
+     *
+     * @param a the array whose string representation to return
+     * @return a string representation of <tt>a</tt>
+     * @since 1.5
+     */
+    public static String toString(byte[] a) {
+        if (a == null)
+            return "null";
+        if (a.length == 0)
+            return "[]";
+ 
+        StringBuilder buf = new StringBuilder();
+        buf.append('[');
+        buf.append(a[0]);
+ 
+        for (int i = 1; i < a.length; i++) {
+            buf.append(", ");
+            buf.append(a[i]);
+        }
+ 
+        buf.append("]");
+        return buf.toString();
+    }
+ 
+    /**
+     * Returns a string representation of the contents of the specified array.
+     * The string representation consists of a list of the array's elements,
+     * enclosed in square brackets (<tt>"[]"</tt>).  Adjacent elements are
+     * separated by the characters <tt>", "</tt> (a comma followed by a
+     * space).  Elements are converted to strings as by
+     * <tt>String.valueOf(boolean)</tt>.  Returns <tt>"null"</tt> if
+     * <tt>a</tt> is <tt>null</tt>.
+     *
+     * @param a the array whose string representation to return
+     * @return a string representation of <tt>a</tt>
+     * @since 1.5
+     */
+    public static String toString(boolean[] a) {
+        if (a == null)
+            return "null";
+        if (a.length == 0)
+            return "[]";
+ 
+        StringBuilder buf = new StringBuilder();
+        buf.append('[');
+        buf.append(a[0]);
+ 
+        for (int i = 1; i < a.length; i++) {
+            buf.append(", ");
+            buf.append(a[i]);
+        }
+ 
+        buf.append("]");
+        return buf.toString();
+    }
+ 
+    /**
+     * Returns a string representation of the contents of the specified array.
+     * The string representation consists of a list of the array's elements,
+     * enclosed in square brackets (<tt>"[]"</tt>).  Adjacent elements are
+     * separated by the characters <tt>", "</tt> (a comma followed by a
+     * space).  Elements are converted to strings as by
+     * <tt>String.valueOf(float)</tt>.  Returns <tt>"null"</tt> if <tt>a</tt>
+     * is <tt>null</tt>.
+     *
+     * @param a the array whose string representation to return
+     * @return a string representation of <tt>a</tt>
+     * @since 1.5
+     */
+    public static String toString(float[] a) {
+        if (a == null)
+            return "null";
+        if (a.length == 0)
+            return "[]";
+ 
+        StringBuilder buf = new StringBuilder();
+        buf.append('[');
+        buf.append(a[0]);
+ 
+        for (int i = 1; i < a.length; i++) {
+            buf.append(", ");
+            buf.append(a[i]);
+        }
+ 
+        buf.append("]");
+        return buf.toString();
+    }
+ 
+    /**
+     * Returns a string representation of the contents of the specified array.
+     * The string representation consists of a list of the array's elements,
+     * enclosed in square brackets (<tt>"[]"</tt>).  Adjacent elements are
+     * separated by the characters <tt>", "</tt> (a comma followed by a
+     * space).  Elements are converted to strings as by
+     * <tt>String.valueOf(double)</tt>.  Returns <tt>"null"</tt> if <tt>a</tt>
+     * is <tt>null</tt>.
+     *
+     * @param a the array whose string representation to return
+     * @return a string representation of <tt>a</tt>
+     * @since 1.5
+     */
+    public static String toString(double[] a) {
+        if (a == null)
+            return "null";
+        if (a.length == 0)
+            return "[]";
+ 
+        StringBuilder buf = new StringBuilder();
+        buf.append('[');
+        buf.append(a[0]);
+ 
+        for (int i = 1; i < a.length; i++) {
+            buf.append(", ");
+            buf.append(a[i]);
+        }
+ 
+        buf.append("]");
+        return buf.toString();
+    }
+ 
+    /**
+     * Returns a string representation of the contents of the specified array.
+     * If the array contains other arrays as elements, they are converted to
+     * strings by the {@link Object#toString} method inherited from
+     * <tt>Object</tt>, which describes their <i>identities</i> rather than
+     * their contents.
+     *
+     * <p>The value returned by this method is equal to the value that would
+     * be returned by <tt>Arrays.asList(a).toString()</tt>, unless <tt>a</tt>
+     * is <tt>null</tt>, in which case <tt>"null"</tt> is returned.
+     *
+     * @param a the array whose string representation to return
+     * @return a string representation of <tt>a</tt>
+     * @see #deepToString(Object[])
+     * @since 1.5
+    */
+    public static String toString(Object[] a) {
+        if (a == null)
+            return "null";
+        if (a.length == 0)
+            return "[]";
+ 
+        StringBuilder buf = new StringBuilder();
+ 
+        for (int i = 0; i < a.length; i++) {
+            if (i == 0)
+                buf.append('[');
+            else
+                buf.append(", ");
+ 
+            buf.append(String.valueOf(a[i]));
+        }
+ 
+        buf.append("]");
+        return buf.toString();
+    }
+ 
+    /**
+     * Returns a string representation of the "deep contents" of the specified
+     * array.  If the array contains other arrays as elements, the string
+     * representation contains their contents and so on.  This method is
+     * designed for converting multidimensional arrays to strings.
+     *
+     * <p>The string representation consists of a list of the array's
+     * elements, enclosed in square brackets (<tt>"[]"</tt>).  Adjacent
+     * elements are separated by the characters <tt>", "</tt> (a comma
+     * followed  by a space).  Elements are converted to strings as by
+     * <tt>String.valueOf(Object)</tt>, unless they are themselves
+     * arrays.
+     *
+     * <p>If an element <tt>e</tt> is an array of a primitive type, it is
+     * converted to a string as by invoking the appropriate overloading of
+     * <tt>Arrays.toString(e)</tt>.  If an element <tt>e</tt> is an array of a
+     * reference type, it is converted to a string as by invoking
+     * this method recursively.
+     *
+     * <p>To avoid infinite recursion, if the specified array contains itself
+     * as an element, or contains an indirect reference to itself through one
+     * or more levels of arrays, the self-reference is converted to the string
+     * <tt>"[...]"</tt>.  For example, an array containing only a reference
+     * to itself would be rendered as <tt>"[[...]]"</tt>.
+     *
+     * <p>This method returns <tt>"null"</tt> if the specified array
+     * is <tt>null</tt>.
+     *
+     * @param a the array whose string representation to return
+     * @return a string representation of <tt>a</tt>
+     * @see #toString(Object[])
+     * @since 1.5
+     */
+    public static String deepToString(Object[] a) {
+        if (a == null)
+            return "null";
+
+        int bufLen = 20 * a.length;
+        if (a.length != 0 && bufLen <= 0)
+            bufLen = Integer.MAX_VALUE;
+        StringBuilder buf = new StringBuilder(bufLen);
+        deepToString(a, buf, new HashSet());
+        return buf.toString();
+    }
+
+    private static void deepToString(Object[] a, StringBuilder buf,
+                                     Set<Object[]> dejaVu) {
+        if (a == null) {
+            buf.append("null");
+            return;
+        }
+        dejaVu.add(a);
+        buf.append('[');
+        for (int i = 0; i < a.length; i++) {
+            if (i != 0)
+                buf.append(", ");
+
+            Object element = a[i];
+            if (element == null) {
+                buf.append("null");
+            } else {
+                Class eClass = element.getClass();
+
+                if (eClass.isArray()) {
+                    if (eClass == byte[].class)
+                        buf.append(toString((byte[]) element));
+                    else if (eClass == short[].class)
+                        buf.append(toString((short[]) element));
+                    else if (eClass == int[].class)
+                        buf.append(toString((int[]) element));
+                    else if (eClass == long[].class)
+                        buf.append(toString((long[]) element));
+                    else if (eClass == char[].class)
+                        buf.append(toString((char[]) element));
+                    else if (eClass == float[].class)
+                        buf.append(toString((float[]) element));
+                    else if (eClass == double[].class)
+                        buf.append(toString((double[]) element));
+                    else if (eClass == boolean[].class)
+                        buf.append(toString((boolean[]) element));
+                    else { // element is an array of object references
+                        if (dejaVu.contains(element))
+                            buf.append("[...]");
+                        else
+                            deepToString((Object[])element, buf, dejaVu);
+                    }
+                } else {  // element is non-null and not an array
+                    buf.append(element.toString());
+                }
+            }
+        }
+        buf.append("]");
+        dejaVu.remove(a);
     }
 }

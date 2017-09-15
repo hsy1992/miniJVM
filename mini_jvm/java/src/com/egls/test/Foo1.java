@@ -468,22 +468,28 @@ public class Foo1 {
     }
 
     void t19() {
-        List list = new ArrayList();
+        List<Integer> list = new ArrayList();
         list.add(1);
-        list.add("str");
+        list.add(999);
         for (Iterator it = list.iterator(); it.hasNext();) {
             Object o = it.next();
             System.out.println("list[i]=" + o);
         }
+        Integer[] iarr = list.toArray(new Integer[0]);
+        for (Integer i : iarr) {
+            System.out.println("i=" + i);
+        }
+        System.out.println("arr type:"+iarr.getClass());
 
-        Map map = new HashMap();
+        Map<Long, String> map = new HashMap();
         map.put(3L, "Long");
-        map.put(4.5f, "Float");
-        for (Iterator it = map.keySet().iterator(); it.hasNext();) {
-            Object key = it.next();
-            Object val = map.get(key);
+        map.put(4L, "Float");
+        for (Iterator<Long> it = map.keySet().iterator(); it.hasNext();) {
+            Long key = it.next();
+            String val = map.get(key);
             System.out.println(key + ":" + val);
         }
+
         Class cla = "".getClass();
         try {
             System.out.println(new Long(0).getClass().toString());

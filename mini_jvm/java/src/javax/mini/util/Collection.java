@@ -1,11 +1,8 @@
 /*
- * @(#)Collection.java	1.31 00/02/02
+ * @(#)Collection.java	1.49 04/06/28
  *
- * Copyright 1997-2000 Sun Microsystems, Inc. All Rights Reserved.
- * 
- * This software is the proprietary information of Sun Microsystems, Inc.  
- * Use is subject to license terms.
- * 
+ * Copyright 2004 Sun Microsystems, Inc. All rights reserved.
+ * SUN PROPRIETARY/CONFIDENTIAL. Use is subject to license terms.
  */
 
 package javax.mini.util;
@@ -14,16 +11,16 @@ package javax.mini.util;
  * The root interface in the <i>collection hierarchy</i>.  A collection
  * represents a group of objects, known as its <i>elements</i>.  Some
  * collections allow duplicate elements and others do not.  Some are ordered
- * and others unordered.  The SDK does not provide any <i>direct</i>
+ * and others unordered.  The JDK does not provide any <i>direct</i>
  * implementations of this interface: it provides implementations of more
  * specific subinterfaces like <tt>Set</tt> and <tt>List</tt>.  This interface
  * is typically used to pass collections around and manipulate them where
- * maximum generality is desired.<p>
+ * maximum generality is desired.
  *
- * <i>Bags</i> or <i>multisets</i> (unordered collections that may contain
- * duplicate elements) should implement this interface directly.<p>
+ * <p><i>Bags</i> or <i>multisets</i> (unordered collections that may contain
+ * duplicate elements) should implement this interface directly.
  *
- * All general-purpose <tt>Collection</tt> implementation classes (which
+ * <p>All general-purpose <tt>Collection</tt> implementation classes (which
  * typically implement <tt>Collection</tt> indirectly through one of its
  * subinterfaces) should provide two "standard" constructors: a void (no
  * arguments) constructor, which creates an empty collection, and a
@@ -33,10 +30,56 @@ package javax.mini.util;
  * producing an equivalent collection of the desired implementation type.
  * There is no way to enforce this convention (as interfaces cannot contain
  * constructors) but all of the general-purpose <tt>Collection</tt>
- * implementations in the SDK comply.<p>
+ * implementations in the Java platform libraries comply.
+ *
+ * <p>The "destructive" methods contained in this interface, that is, the
+ * methods that modify the collection on which they operate, are specified to
+ * throw <tt>UnsupportedOperationException</tt> if this collection does not
+ * support the operation.  If this is the case, these methods may, but are not
+ * required to, throw an <tt>UnsupportedOperationException</tt> if the
+ * invocation would have no effect on the collection.  For example, invoking
+ * the {@link #addAll(Collection)} method on an unmodifiable collection may,
+ * but is not required to, throw the exception if the collection to be added
+ * is empty.
+ *
+ * <p>Some collection implementations have restrictions on the elements that
+ * they may contain.  For example, some implementations prohibit null elements,
+ * and some have restrictions on the types of their elements.  Attempting to
+ * add an ineligible element throws an unchecked exception, typically
+ * <tt>NullPointerException</tt> or <tt>ClassCastException</tt>.  Attempting
+ * to query the presence of an ineligible element may throw an exception,
+ * or it may simply return false; some implementations will exhibit the former
+ * behavior and some will exhibit the latter.  More generally, attempting an
+ * operation on an ineligible element whose completion would not result in
+ * the insertion of an ineligible element into the collection may throw an
+ * exception or it may succeed, at the option of the implementation.
+ * Such exceptions are marked as "optional" in the specification for this
+ * interface. 
+ *
+ * <p>This interface is a member of the 
+ * <a href="{@docRoot}/../guide/collections/index.html">
+ * Java Collections Framework</a>.
+ *
+ * <p>Many methods in Collections Framework interfaces are defined in
+ * terms of the {@link Object#equals(Object) equals} method.  For example,
+ * the specification for the {@link #contains(Object) contains(Object o)}
+ * method says: "returns <tt>true</tt> if and only if this collection
+ * contains at least one element <tt>e</tt> such that
+ * <tt>(o==null ? e==null : o.equals(e))</tt>."  This specification should
+ * <i>not</i> be construed to imply that invoking <tt>Collection.contains</tt>
+ * with a non-null argument <tt>o</tt> will cause <tt>o.equals(e)</tt> to be
+ * invoked for any element <tt>e</tt>.  Implementations are free to implement
+ * optimizations whereby the <tt>equals</tt> invocation is avoided, for
+ * example, by first comparing the hash codes of the two elements.  (The
+ * {@link Object#hashCode()} specification guarantees that two objects with
+ * unequal hash codes cannot be equal.)  More generally, implementations of
+ * the various Collections Framework interfaces are free to take advantage of
+ * the specified behavior of underlying {@link Object} methods wherever the
+ * implementor deems it appropriate.
  *
  * @author  Josh Bloch
- * @version 1.31, 02/02/00
+ * @author  Neal Gafter
+ * @version 1.49, 06/28/04
  * @see	    Set
  * @see	    List
  * @see	    Map
@@ -50,10 +93,10 @@ package javax.mini.util;
  * @see     Collections
  * @see	    Arrays
  * @see	    AbstractCollection
- * @since   1.2
+ * @since 1.2
  */
 
-public interface Collection {
+public interface Collection<E> extends Iterable<E> {
     // Query Operations
 
     /**
@@ -81,6 +124,10 @@ public interface Collection {
      * @param o element whose presence in this collection is to be tested.
      * @return <tt>true</tt> if this collection contains the specified
      *         element
+     * @throws ClassCastException if the type of the specified element
+     * 	       is incompatible with this collection (optional).
+     * @throws NullPointerException if the specified element is null and this
+     *         collection does not support null elements (optional).
      */
     boolean contains(Object o);
 
@@ -92,7 +139,7 @@ public interface Collection {
      * 
      * @return an <tt>Iterator</tt> over the elements in this collection
      */
-    Iterator iterator();
+    Iterator<E> iterator();
 
     /**
      * Returns an array containing all of the elements in this collection.  If
@@ -113,11 +160,11 @@ public interface Collection {
     Object[] toArray();
 
     /**
-     * Returns an array containing all of the elements in this collection
-     * whose runtime type is that of the specified array.  If the collection
-     * fits in the specified array, it is returned therein.  Otherwise, a new
-     * array is allocated with the runtime type of the specified array and the
-     * size of this collection.<p>
+     * Returns an array containing all of the elements in this collection; 
+     * the runtime type of the returned array is that of the specified array.  
+     * If the collection fits in the specified array, it is returned therein.  
+     * Otherwise, a new array is allocated with the runtime type of the 
+     * specified array and the size of this collection.<p>
      *
      * If this collection fits in the specified array with room to spare
      * (i.e., the array has more elements than this collection), the element
@@ -154,9 +201,9 @@ public interface Collection {
      * @throws ArrayStoreException the runtime type of the specified array is
      *         not a supertype of the runtime type of every element in this
      *         collection.
+     * @throws NullPointerException if the specified array is <tt>null</tt>.
      */
-    
-    Object[] toArray(Object a[]);
+    <T> T[] toArray(T[] a);
 
     // Modification Operations
 
@@ -183,14 +230,16 @@ public interface Collection {
      * @return <tt>true</tt> if this collection changed as a result of the
      *         call
      * 
-     * @throws UnsupportedOperationException add is not supported by this
-     *         collection.
+     * @throws UnsupportedOperationException <tt>add</tt> is not supported by
+     *         this collection.
      * @throws ClassCastException class of the specified element prevents it
      *         from being added to this collection.
+     * @throws NullPointerException if the specified element is null and this
+     *         collection does not support null elements.
      * @throws IllegalArgumentException some aspect of this element prevents
-     *          it from being added to this collection.
+     *         it from being added to this collection.
      */
-    boolean add(Object o);
+    boolean add(E o);
 
     /**
      * Removes a single instance of the specified element from this
@@ -205,6 +254,10 @@ public interface Collection {
      * @return <tt>true</tt> if this collection changed as a result of the
      *         call
      * 
+     * @throws ClassCastException if the type of the specified element
+     * 	       is incompatible with this collection (optional).
+     * @throws NullPointerException if the specified element is null and this
+     *         collection does not support null elements (optional).
      * @throws UnsupportedOperationException remove is not supported by this
      *         collection.
      */
@@ -217,12 +270,20 @@ public interface Collection {
      * Returns <tt>true</tt> if this collection contains all of the elements
      * in the specified collection.
      *
-     * @param c collection to be checked for containment in this collection.
+     * @param  c collection to be checked for containment in this collection.
      * @return <tt>true</tt> if this collection contains all of the elements
      *	       in the specified collection
-     * @see #contains(Object)
+     * @throws ClassCastException if the types of one or more elements
+     *         in the specified collection are incompatible with this
+     *         collection (optional).
+     * @throws NullPointerException if the specified collection contains one
+     *         or more null elements and this collection does not support null
+     *         elements (optional).
+     * @throws NullPointerException if the specified collection is
+     *         <tt>null</tt>.
+     * @see    #contains(Object)
      */
-    boolean containsAll(Collection c);
+    boolean containsAll(Collection<?> c);
 
     /**
      * Adds all of the elements in the specified collection to this collection
@@ -240,13 +301,15 @@ public interface Collection {
      *         support the <tt>addAll</tt> method.
      * @throws ClassCastException if the class of an element of the specified
      * 	       collection prevents it from being added to this collection.
+     * @throws NullPointerException if the specified collection contains one
+     *         or more null elements and this collection does not support null
+     *         elements, or if the specified collection is <tt>null</tt>.
      * @throws IllegalArgumentException some aspect of an element of the
      *	       specified collection prevents it from being added to this
      *	       collection.
-     * 
      * @see #add(Object)
      */
-    boolean addAll(Collection c);
+    boolean addAll(Collection<? extends E> c);
 
     /**
      * 
@@ -261,11 +324,18 @@ public interface Collection {
      * 
      * @throws UnsupportedOperationException if the <tt>removeAll</tt> method
      * 	       is not supported by this collection.
-     * 
+     * @throws ClassCastException if the types of one or more elements
+     *         in this collection are incompatible with the specified
+     *         collection (optional).
+     * @throws NullPointerException if this collection contains one or more
+     *         null elements and the specified collection does not support
+     *         null elements (optional).
+     * @throws NullPointerException if the specified collection is
+     *         <tt>null</tt>.
      * @see #remove(Object)
      * @see #contains(Object)
      */
-    boolean removeAll(Collection c);
+    boolean removeAll(Collection<?> c);
 
     /**
      * Retains only the elements in this collection that are contained in the
@@ -279,11 +349,18 @@ public interface Collection {
      * 
      * @throws UnsupportedOperationException if the <tt>retainAll</tt> method
      * 	       is not supported by this Collection.
-     * 
+     * @throws ClassCastException if the types of one or more elements
+     *         in this collection are incompatible with the specified
+     *         collection (optional).
+     * @throws NullPointerException if this collection contains one or more
+     *         null elements and the specified collection does not support null 
+     *         elements (optional).
+     * @throws NullPointerException if the specified collection is
+     *         <tt>null</tt>.
      * @see #remove(Object)
      * @see #contains(Object)
      */
-    boolean retainAll(Collection c);
+    boolean retainAll(Collection<?> c);
 
     /**
      * Removes all of the elements from this collection (optional operation).
@@ -334,7 +411,6 @@ public interface Collection {
     boolean equals(Object o);
 
     /**
-     * 
      * Returns the hash code value for this collection.  While the
      * <tt>Collection</tt> interface adds no stipulations to the general
      * contract for the <tt>Object.hashCode</tt> method, programmers should

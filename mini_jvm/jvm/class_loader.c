@@ -51,27 +51,27 @@ s32 _parse_attribute_pool(Class *_this, FILE *fp, s32 count) {
 /* Print Class File Format */
 void printClassFileFormat(ClassFileFormat *cff) {
     s32 i;
-    printf("Magic Number = ");
+    jvm_printf("Magic Number = ");
     for (i = 0; i < 4; i++)
-        printf("0x%02X ", cff->magic_number[i]);
-    printf("\n");
-    printf("Minor Number = 0x(%02X) %d \n",
+        jvm_printf("0x%02X ", cff->magic_number[i]);
+    jvm_printf("\n");
+    jvm_printf("Minor Number = 0x(%02X) %d \n",
            cff->minor_version, cff->minor_version);
-    printf("Major Number(%s) = 0x(%02X) %d \n",
+    jvm_printf("Major Number(%s) = 0x(%02X) %d \n",
            getMajorVersionString(cff->major_version),
            cff->major_version, cff->major_version);
-    printf("Constant Pool Count = 0x(%02X) %d \n",
+    jvm_printf("Constant Pool Count = 0x(%02X) %d \n",
            cff->constant_pool_count, cff->constant_pool_count);
-    printf("access flag = 0x(%02X) %d \n", cff->access_flags, cff->access_flags);
-    printf("this class = 0x(%02X) %d \n",
+    jvm_printf("access flag = 0x(%02X) %d \n", cff->access_flags, cff->access_flags);
+    jvm_printf("this class = 0x(%02X) %d \n",
            cff->this_class, cff->this_class);
-    printf("super class = 0x(%02X) %d \n",
+    jvm_printf("super class = 0x(%02X) %d \n",
            cff->super_class, cff->super_class);
-    printf("interfaceRef count = 0x(%02X) %d \n",
+    jvm_printf("interfaceRef count = 0x(%02X) %d \n",
            cff->interface_count, cff->interface_count);
-    printf("fieldRef count = 0x(%02X) %d \n",
+    jvm_printf("fieldRef count = 0x(%02X) %d \n",
            cff->fields_count, cff->fields_count);
-    printf("methodRef count = 0x(%02X) %d \n",
+    jvm_printf("methodRef count = 0x(%02X) %d \n",
            cff->methods_count, cff->methods_count);
 }
 
@@ -82,7 +82,7 @@ s32 _LOAD_FROM_FILE(Class *_this, c8 *file) {
     u8 short_tmp[2];
     fp = fopen(file, "rb");
     if (fp == 0) {
-        printf("Open file %s failed\n", file);
+        jvm_printf("Open file %s failed\n", file);
         return -1;
     }
     /* magic number */
@@ -347,11 +347,11 @@ s32 load_class(Utf8String *pClassPath, Utf8String *pClassName, hmap_t classes) {
     Class *clazz = class_create();
     s32 iret = clazz->_load_from_file(clazz, utf8_cstr(tmppath));
     if (iret != 0) {
-        printf(" class not found : %s\n", utf8_cstr(pClassName));
+        jvm_printf(" class not found : %s\n", utf8_cstr(pClassName));
         return -1;
     }
 #if _JVM_DEBUG
-    printf("load class:  %s \n", utf8_cstr(tmppath));
+    jvm_printf("load class:  %s \n", utf8_cstr(tmppath));
 #endif
     classes_put(clazz);
     utf8_destory(tmppath);

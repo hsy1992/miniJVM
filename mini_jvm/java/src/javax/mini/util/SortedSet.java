@@ -1,11 +1,8 @@
 /*
- * @(#)SortedSet.java	1.15 00/02/02
+ * @(#)SortedSet.java	1.24 04/06/28
  *
- * Copyright 1998-2000 Sun Microsystems, Inc. All Rights Reserved.
- * 
- * This software is the proprietary information of Sun Microsystems, Inc.  
- * Use is subject to license terms.
- * 
+ * Copyright 2004 Sun Microsystems, Inc. All rights reserved.
+ * SUN PROPRIETARY/CONFIDENTIAL. Use is subject to license terms.
  */
 
 package javax.mini.util;
@@ -51,11 +48,15 @@ package javax.mini.util;
  * constructor with a single argument of type <tt>SortedSet</tt>, which
  * creates a new sorted set with the same elements and the same ordering as
  * the input sorted set.  There is no way to enforce this recommendation (as
- * interfaces cannot contain constructors) but the SDK implementation (the
- * <tt>TreeSet</tt> class) complies.
+ * interfaces cannot contain constructors) but the JDK implementation (the
+ * <tt>TreeSet</tt> class) complies.<p>
+ *
+ * This interface is a member of the 
+ * <a href="{@docRoot}/../guide/collections/index.html">
+ * Java Collections Framework</a>.
  *
  * @author  Josh Bloch
- * @version 1.15, 02/02/00
+ * @version 1.24, 06/28/04
  * @see Set
  * @see TreeSet
  * @see SortedMap
@@ -66,7 +67,7 @@ package javax.mini.util;
  * @since 1.2
  */
 
-public interface SortedSet extends Set {
+public interface SortedSet<E> extends Set<E> {
     /**
      * Returns the comparator associated with this sorted set, or
      * <tt>null</tt> if it uses its elements' natural ordering.
@@ -74,7 +75,7 @@ public interface SortedSet extends Set {
      * @return the comparator associated with this sorted set, or
      * 	       <tt>null</tt> if it uses its elements' natural ordering.
      */
-    Comparator comparator();
+    Comparator<? super E> comparator();
 
     /**
      * Returns a view of the portion of this sorted set whose elements range
@@ -128,7 +129,7 @@ public interface SortedSet extends Set {
      *	       <tt>toElement</tt> is <tt>null</tt> and this sorted set does
      *	       not tolerate <tt>null</tt> elements.
      */
-    SortedSet subSet(Object fromElement, Object toElement);
+    SortedSet<E> subSet(E fromElement, E toElement);
 
     /**
      * Returns a view of the portion of this sorted set whose elements are
@@ -165,7 +166,7 @@ public interface SortedSet extends Set {
      *         headSet, or tailSet, and <tt>toElement</tt> is not within the
      *         specified range of the subSet, headSet, or tailSet.
      */
-    SortedSet headSet(Object toElement);
+    SortedSet<E> headSet(E toElement);
 
     /**
      * Returns a view of the portion of this sorted set whose elements are
@@ -202,7 +203,7 @@ public interface SortedSet extends Set {
      *         headSet, or tailSet, and <tt>fromElement</tt> is not within the
      *         specified range of the subSet, headSet, or tailSet.
      */
-    SortedSet tailSet(Object fromElement);
+    SortedSet<E> tailSet(E fromElement);
 
     /**
      * Returns the first (lowest) element currently in this sorted set.
@@ -210,7 +211,7 @@ public interface SortedSet extends Set {
      * @return the first (lowest) element currently in this sorted set.
      * @throws    NoSuchElementException sorted set is empty.
      */
-    Object first();
+    E first();
 
     /**
      * Returns the last (highest) element currently in this sorted set.
@@ -218,5 +219,5 @@ public interface SortedSet extends Set {
      * @return the last (highest) element currently in this sorted set.
      * @throws    NoSuchElementException sorted set is empty.
      */
-    Object last();
+    E last();
 }

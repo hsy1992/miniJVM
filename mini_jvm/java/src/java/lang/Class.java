@@ -31,7 +31,7 @@ package java.lang;
  * @since   JDK1.0, CLDC 1.0
  */
 public final
-class Class {
+class Class<T> {
 
     /*
      * Constructor. Only the Java Virtual Machine creates Class
