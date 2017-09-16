@@ -34,8 +34,10 @@ public class EventSet {
         suspendPolicy = req.readByte();
         modifiers = req.readInt();
         mods = new Mod[modifiers];
+        System.out.println("EventRequest_Set:reqEventId:" + getRequestId() + ", kind=" + eventKind + ", susp=" + suspendPolicy);
         for (int i = 0; i < modifiers; i++) {
             byte modi = req.readByte();
+            System.out.println("EventRequest_Set:mod=" + modi);
             Mod mod = null;
             switch (modi) {
                 case 1:

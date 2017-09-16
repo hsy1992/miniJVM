@@ -706,7 +706,7 @@ public class DebugClient {
                             ResponsePacket res = new ResponsePacket();
                             res.setId(req.getId());
                             res.setErrorCode(Error.NONE);
-                            System.out.println("EventRequest_Set:" + eventSet.getRequestId());
+                            
                             res.writeInt(eventSet.getRequestId());
                             session.send(res.toByteArray());
                             break;
@@ -714,6 +714,7 @@ public class DebugClient {
                         case Command.EventRequest_Clear: {//15.2
                             byte eventKind = req.readByte();
                             int requestID = req.readInt();
+                            EventManager.removeEventSet(requestID);
                             System.out.println("EventRequest_Clear:eventKind=" + eventKind + ", requestID=" + requestID);
                             ResponsePacket res = new ResponsePacket();
                             res.setId(req.getId());

@@ -474,9 +474,15 @@ void reg_jdwp_native_lib() {
 //                      Event
 //=========================================================================
 
-
+static c8 *JDWP_EVENT = "javax/mini/jdwp/events/Event";
+static c8 *JDWP_EVENT = "javax/mini/jdwp/Location";
 void event_class_prepar(Runtime *runtime, Class *clazz) {
-
+    Class* cl=classes_load_get_c(JDWP_EVENT);
+    Instance * ins=instance_create(cl);
+    instance_init(ins,runtime);
+    //
+    ptr = getFieldPtr_byName(ins, JDWP_EVENT, "classId", "J");
+    if (ptr)setFieldLong(ptr, (u64) (long) target->clazz);
 }
 
 #ifdef __cplusplus

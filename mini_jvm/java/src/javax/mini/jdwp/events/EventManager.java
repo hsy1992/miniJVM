@@ -39,6 +39,10 @@ public class EventManager {
         eventSet.put(event.getRequestId(), event);
     }
 
+    static public void removeEventSet(int id) {
+        eventSet.remove(id);
+    }
+
     static public EventSet getEventSet(int eventKind) {
         return eventSet.get(eventKind);
     }
