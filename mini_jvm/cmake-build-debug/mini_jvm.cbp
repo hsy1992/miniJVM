@@ -8,175 +8,181 @@
 		<Option virtualFolders="CMake Files\;"/>
 		<Build>
 			<Target title="all">
-				<Option working_dir="/cygdrive/d/githome/mini_jvm/mini_jvm/cmake-build-debug"/>
+				<Option working_dir="D:/githome/mini_jvm/mini_jvm/cmake-build-debug"/>
 				<Option type="4"/>
 				<MakeCommands>
-					<Build command="/usr/bin/make.exe -j2 -f &quot;/cygdrive/d/githome/mini_jvm/mini_jvm/cmake-build-debug/Makefile&quot;  VERBOSE=1 all"/>
-					<CompileFile command="/usr/bin/make.exe -j2 -f &quot;/cygdrive/d/githome/mini_jvm/mini_jvm/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
-					<Clean command="/usr/bin/make.exe -j2 -f &quot;/cygdrive/d/githome/mini_jvm/mini_jvm/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
-					<DistClean command="/usr/bin/make.exe -j2 -f &quot;/cygdrive/d/githome/mini_jvm/mini_jvm/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
-				</MakeCommands>
-			</Target>
-			<Target title="rebuild_cache">
-				<Option working_dir="/cygdrive/d/githome/mini_jvm/mini_jvm/cmake-build-debug"/>
-				<Option type="4"/>
-				<MakeCommands>
-					<Build command="/usr/bin/make.exe -j2 -f &quot;/cygdrive/d/githome/mini_jvm/mini_jvm/cmake-build-debug/Makefile&quot;  VERBOSE=1 rebuild_cache"/>
-					<CompileFile command="/usr/bin/make.exe -j2 -f &quot;/cygdrive/d/githome/mini_jvm/mini_jvm/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
-					<Clean command="/usr/bin/make.exe -j2 -f &quot;/cygdrive/d/githome/mini_jvm/mini_jvm/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
-					<DistClean command="/usr/bin/make.exe -j2 -f &quot;/cygdrive/d/githome/mini_jvm/mini_jvm/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
-				</MakeCommands>
-			</Target>
-			<Target title="edit_cache">
-				<Option working_dir="/cygdrive/d/githome/mini_jvm/mini_jvm/cmake-build-debug"/>
-				<Option type="4"/>
-				<MakeCommands>
-					<Build command="/usr/bin/make.exe -j2 -f &quot;/cygdrive/d/githome/mini_jvm/mini_jvm/cmake-build-debug/Makefile&quot;  VERBOSE=1 edit_cache"/>
-					<CompileFile command="/usr/bin/make.exe -j2 -f &quot;/cygdrive/d/githome/mini_jvm/mini_jvm/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
-					<Clean command="/usr/bin/make.exe -j2 -f &quot;/cygdrive/d/githome/mini_jvm/mini_jvm/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
-					<DistClean command="/usr/bin/make.exe -j2 -f &quot;/cygdrive/d/githome/mini_jvm/mini_jvm/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<Build command="C:/MinGW/bin/mingw32-make.exe -f &quot;D:/githome/mini_jvm/mini_jvm/cmake-build-debug/Makefile&quot;  VERBOSE=1 all"/>
+					<CompileFile command="C:/MinGW/bin/mingw32-make.exe -f &quot;D:/githome/mini_jvm/mini_jvm/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="C:/MinGW/bin/mingw32-make.exe -f &quot;D:/githome/mini_jvm/mini_jvm/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="C:/MinGW/bin/mingw32-make.exe -f &quot;D:/githome/mini_jvm/mini_jvm/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
 				</MakeCommands>
 			</Target>
 			<Target title="mini_jvm">
-				<Option output="/cygdrive/d/githome/mini_jvm/mini_jvm/cmake-build-debug/mini_jvm.exe" prefix_auto="0" extension_auto="0"/>
-				<Option working_dir="/cygdrive/d/githome/mini_jvm/mini_jvm/cmake-build-debug"/>
+				<Option output="D:/githome/mini_jvm/mini_jvm/cmake-build-debug/mini_jvm.exe" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir="D:/githome/mini_jvm/mini_jvm/cmake-build-debug"/>
 				<Option object_output="./"/>
 				<Option type="1"/>
 				<Option compiler="gcc"/>
 				<Compiler>
-					<Add directory="/usr/lib/gcc/x86_64-pc-cygwin/5.4.0/include/c++"/>
-					<Add directory="/usr/lib/gcc/x86_64-pc-cygwin/5.4.0/include/c++/x86_64-pc-cygwin"/>
-					<Add directory="/usr/lib/gcc/x86_64-pc-cygwin/5.4.0/include/c++/backward"/>
-					<Add directory="/usr/lib/gcc/x86_64-pc-cygwin/5.4.0/include"/>
-					<Add directory="/usr/include"/>
-					<Add directory="/usr/lib/gcc/x86_64-pc-cygwin/5.4.0/../../../../lib/../include/w32api"/>
+					<Add directory="c:\mingw\bin\../lib/gcc/mingw32/6.3.0/include/c++"/>
+					<Add directory="c:\mingw\bin\../lib/gcc/mingw32/6.3.0/include/c++/mingw32"/>
+					<Add directory="c:\mingw\bin\../lib/gcc/mingw32/6.3.0/include/c++/backward"/>
+					<Add directory="c:\mingw\bin\../lib/gcc/mingw32/6.3.0/include"/>
+					<Add directory="c:\mingw\bin\../lib/gcc/mingw32/6.3.0/../../../../include"/>
+					<Add directory="c:\mingw\bin\../lib/gcc/mingw32/6.3.0/include-fixed"/>
 				</Compiler>
 				<MakeCommands>
-					<Build command="/usr/bin/make.exe -j2 -f &quot;/cygdrive/d/githome/mini_jvm/mini_jvm/cmake-build-debug/Makefile&quot;  VERBOSE=1 mini_jvm"/>
-					<CompileFile command="/usr/bin/make.exe -j2 -f &quot;/cygdrive/d/githome/mini_jvm/mini_jvm/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
-					<Clean command="/usr/bin/make.exe -j2 -f &quot;/cygdrive/d/githome/mini_jvm/mini_jvm/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
-					<DistClean command="/usr/bin/make.exe -j2 -f &quot;/cygdrive/d/githome/mini_jvm/mini_jvm/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<Build command="C:/MinGW/bin/mingw32-make.exe -f &quot;D:/githome/mini_jvm/mini_jvm/cmake-build-debug/Makefile&quot;  VERBOSE=1 mini_jvm"/>
+					<CompileFile command="C:/MinGW/bin/mingw32-make.exe -f &quot;D:/githome/mini_jvm/mini_jvm/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="C:/MinGW/bin/mingw32-make.exe -f &quot;D:/githome/mini_jvm/mini_jvm/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="C:/MinGW/bin/mingw32-make.exe -f &quot;D:/githome/mini_jvm/mini_jvm/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
 				</MakeCommands>
 			</Target>
 			<Target title="mini_jvm/fast">
-				<Option output="/cygdrive/d/githome/mini_jvm/mini_jvm/cmake-build-debug/mini_jvm.exe" prefix_auto="0" extension_auto="0"/>
-				<Option working_dir="/cygdrive/d/githome/mini_jvm/mini_jvm/cmake-build-debug"/>
+				<Option output="D:/githome/mini_jvm/mini_jvm/cmake-build-debug/mini_jvm.exe" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir="D:/githome/mini_jvm/mini_jvm/cmake-build-debug"/>
 				<Option object_output="./"/>
 				<Option type="1"/>
 				<Option compiler="gcc"/>
 				<Compiler>
-					<Add directory="/usr/lib/gcc/x86_64-pc-cygwin/5.4.0/include/c++"/>
-					<Add directory="/usr/lib/gcc/x86_64-pc-cygwin/5.4.0/include/c++/x86_64-pc-cygwin"/>
-					<Add directory="/usr/lib/gcc/x86_64-pc-cygwin/5.4.0/include/c++/backward"/>
-					<Add directory="/usr/lib/gcc/x86_64-pc-cygwin/5.4.0/include"/>
-					<Add directory="/usr/include"/>
-					<Add directory="/usr/lib/gcc/x86_64-pc-cygwin/5.4.0/../../../../lib/../include/w32api"/>
+					<Add directory="c:\mingw\bin\../lib/gcc/mingw32/6.3.0/include/c++"/>
+					<Add directory="c:\mingw\bin\../lib/gcc/mingw32/6.3.0/include/c++/mingw32"/>
+					<Add directory="c:\mingw\bin\../lib/gcc/mingw32/6.3.0/include/c++/backward"/>
+					<Add directory="c:\mingw\bin\../lib/gcc/mingw32/6.3.0/include"/>
+					<Add directory="c:\mingw\bin\../lib/gcc/mingw32/6.3.0/../../../../include"/>
+					<Add directory="c:\mingw\bin\../lib/gcc/mingw32/6.3.0/include-fixed"/>
 				</Compiler>
 				<MakeCommands>
-					<Build command="/usr/bin/make.exe -j2 -f &quot;/cygdrive/d/githome/mini_jvm/mini_jvm/cmake-build-debug/Makefile&quot;  VERBOSE=1 mini_jvm/fast"/>
-					<CompileFile command="/usr/bin/make.exe -j2 -f &quot;/cygdrive/d/githome/mini_jvm/mini_jvm/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
-					<Clean command="/usr/bin/make.exe -j2 -f &quot;/cygdrive/d/githome/mini_jvm/mini_jvm/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
-					<DistClean command="/usr/bin/make.exe -j2 -f &quot;/cygdrive/d/githome/mini_jvm/mini_jvm/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<Build command="C:/MinGW/bin/mingw32-make.exe -f &quot;D:/githome/mini_jvm/mini_jvm/cmake-build-debug/Makefile&quot;  VERBOSE=1 mini_jvm/fast"/>
+					<CompileFile command="C:/MinGW/bin/mingw32-make.exe -f &quot;D:/githome/mini_jvm/mini_jvm/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="C:/MinGW/bin/mingw32-make.exe -f &quot;D:/githome/mini_jvm/mini_jvm/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="C:/MinGW/bin/mingw32-make.exe -f &quot;D:/githome/mini_jvm/mini_jvm/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="edit_cache">
+				<Option working_dir="D:/githome/mini_jvm/mini_jvm/cmake-build-debug"/>
+				<Option type="4"/>
+				<MakeCommands>
+					<Build command="C:/MinGW/bin/mingw32-make.exe -f &quot;D:/githome/mini_jvm/mini_jvm/cmake-build-debug/Makefile&quot;  VERBOSE=1 edit_cache"/>
+					<CompileFile command="C:/MinGW/bin/mingw32-make.exe -f &quot;D:/githome/mini_jvm/mini_jvm/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="C:/MinGW/bin/mingw32-make.exe -f &quot;D:/githome/mini_jvm/mini_jvm/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="C:/MinGW/bin/mingw32-make.exe -f &quot;D:/githome/mini_jvm/mini_jvm/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="rebuild_cache">
+				<Option working_dir="D:/githome/mini_jvm/mini_jvm/cmake-build-debug"/>
+				<Option type="4"/>
+				<MakeCommands>
+					<Build command="C:/MinGW/bin/mingw32-make.exe -f &quot;D:/githome/mini_jvm/mini_jvm/cmake-build-debug/Makefile&quot;  VERBOSE=1 rebuild_cache"/>
+					<CompileFile command="C:/MinGW/bin/mingw32-make.exe -f &quot;D:/githome/mini_jvm/mini_jvm/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="C:/MinGW/bin/mingw32-make.exe -f &quot;D:/githome/mini_jvm/mini_jvm/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="C:/MinGW/bin/mingw32-make.exe -f &quot;D:/githome/mini_jvm/mini_jvm/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
 				</MakeCommands>
 			</Target>
 		</Build>
-		<Unit filename="/cygdrive/d/githome/mini_jvm/mini_jvm/jvm/class.c">
+		<Unit filename="D:/githome/mini_jvm/mini_jvm/jvm/class.c">
 			<Option target="mini_jvm"/>
 		</Unit>
-		<Unit filename="/cygdrive/d/githome/mini_jvm/mini_jvm/jvm/class_loader.c">
+		<Unit filename="D:/githome/mini_jvm/mini_jvm/jvm/class_loader.c">
 			<Option target="mini_jvm"/>
 		</Unit>
-		<Unit filename="/cygdrive/d/githome/mini_jvm/mini_jvm/jvm/class_loader_constant.c">
+		<Unit filename="D:/githome/mini_jvm/mini_jvm/jvm/class_loader_constant.c">
 			<Option target="mini_jvm"/>
 		</Unit>
-		<Unit filename="/cygdrive/d/githome/mini_jvm/mini_jvm/jvm/class_loader_field.c">
+		<Unit filename="D:/githome/mini_jvm/mini_jvm/jvm/class_loader_field.c">
 			<Option target="mini_jvm"/>
 		</Unit>
-		<Unit filename="/cygdrive/d/githome/mini_jvm/mini_jvm/jvm/class_loader_interface.c">
+		<Unit filename="D:/githome/mini_jvm/mini_jvm/jvm/class_loader_interface.c">
 			<Option target="mini_jvm"/>
 		</Unit>
-		<Unit filename="/cygdrive/d/githome/mini_jvm/mini_jvm/jvm/class_loader_method.c">
+		<Unit filename="D:/githome/mini_jvm/mini_jvm/jvm/class_loader_method.c">
 			<Option target="mini_jvm"/>
 		</Unit>
-		<Unit filename="/cygdrive/d/githome/mini_jvm/mini_jvm/jvm/garbage.c">
+		<Unit filename="D:/githome/mini_jvm/mini_jvm/jvm/garbage.c">
 			<Option target="mini_jvm"/>
 		</Unit>
-		<Unit filename="/cygdrive/d/githome/mini_jvm/mini_jvm/jvm/garbage.h">
+		<Unit filename="D:/githome/mini_jvm/mini_jvm/jvm/garbage.h">
 			<Option target="mini_jvm"/>
 		</Unit>
-		<Unit filename="/cygdrive/d/githome/mini_jvm/mini_jvm/jvm/global.c">
+		<Unit filename="D:/githome/mini_jvm/mini_jvm/jvm/global.c">
 			<Option target="mini_jvm"/>
 		</Unit>
-		<Unit filename="/cygdrive/d/githome/mini_jvm/mini_jvm/jvm/global.h">
+		<Unit filename="D:/githome/mini_jvm/mini_jvm/jvm/global.h">
 			<Option target="mini_jvm"/>
 		</Unit>
-		<Unit filename="/cygdrive/d/githome/mini_jvm/mini_jvm/jvm/interpreter.c">
+		<Unit filename="D:/githome/mini_jvm/mini_jvm/jvm/interpreter.c">
 			<Option target="mini_jvm"/>
 		</Unit>
-		<Unit filename="/cygdrive/d/githome/mini_jvm/mini_jvm/jvm/java_native.c">
+		<Unit filename="D:/githome/mini_jvm/mini_jvm/jvm/java_native_io.c">
 			<Option target="mini_jvm"/>
 		</Unit>
-		<Unit filename="/cygdrive/d/githome/mini_jvm/mini_jvm/jvm/java_native.h">
+		<Unit filename="D:/githome/mini_jvm/mini_jvm/jvm/java_native_jdwp.c">
 			<Option target="mini_jvm"/>
 		</Unit>
-		<Unit filename="/cygdrive/d/githome/mini_jvm/mini_jvm/jvm/java_native_net.c">
+		<Unit filename="D:/githome/mini_jvm/mini_jvm/jvm/java_native_jdwp.h">
 			<Option target="mini_jvm"/>
 		</Unit>
-		<Unit filename="/cygdrive/d/githome/mini_jvm/mini_jvm/jvm/jvm.c">
+		<Unit filename="D:/githome/mini_jvm/mini_jvm/jvm/java_native_std.c">
 			<Option target="mini_jvm"/>
 		</Unit>
-		<Unit filename="/cygdrive/d/githome/mini_jvm/mini_jvm/jvm/jvm.h">
+		<Unit filename="D:/githome/mini_jvm/mini_jvm/jvm/java_native_std.h">
 			<Option target="mini_jvm"/>
 		</Unit>
-		<Unit filename="/cygdrive/d/githome/mini_jvm/mini_jvm/jvm/jvm_util.c">
+		<Unit filename="D:/githome/mini_jvm/mini_jvm/jvm/jvm.c">
 			<Option target="mini_jvm"/>
 		</Unit>
-		<Unit filename="/cygdrive/d/githome/mini_jvm/mini_jvm/jvm/jvm_util.h">
+		<Unit filename="D:/githome/mini_jvm/mini_jvm/jvm/jvm.h">
 			<Option target="mini_jvm"/>
 		</Unit>
-		<Unit filename="/cygdrive/d/githome/mini_jvm/mini_jvm/jvm/os_linux.c">
+		<Unit filename="D:/githome/mini_jvm/mini_jvm/jvm/jvm_util.c">
 			<Option target="mini_jvm"/>
 		</Unit>
-		<Unit filename="/cygdrive/d/githome/mini_jvm/mini_jvm/jvm/os_win.c">
+		<Unit filename="D:/githome/mini_jvm/mini_jvm/jvm/jvm_util.h">
 			<Option target="mini_jvm"/>
 		</Unit>
-		<Unit filename="/cygdrive/d/githome/mini_jvm/mini_jvm/jvm/stack.c">
+		<Unit filename="D:/githome/mini_jvm/mini_jvm/jvm/os_linux.c">
 			<Option target="mini_jvm"/>
 		</Unit>
-		<Unit filename="/cygdrive/d/githome/mini_jvm/mini_jvm/test.c">
+		<Unit filename="D:/githome/mini_jvm/mini_jvm/jvm/os_win.c">
 			<Option target="mini_jvm"/>
 		</Unit>
-		<Unit filename="/cygdrive/d/githome/mini_jvm/mini_jvm/utils/arraylist.c">
+		<Unit filename="D:/githome/mini_jvm/mini_jvm/jvm/runtime.c">
 			<Option target="mini_jvm"/>
 		</Unit>
-		<Unit filename="/cygdrive/d/githome/mini_jvm/mini_jvm/utils/arraylist.h">
+		<Unit filename="D:/githome/mini_jvm/mini_jvm/test.c">
 			<Option target="mini_jvm"/>
 		</Unit>
-		<Unit filename="/cygdrive/d/githome/mini_jvm/mini_jvm/utils/hashset.c">
+		<Unit filename="D:/githome/mini_jvm/mini_jvm/utils/arraylist.c">
 			<Option target="mini_jvm"/>
 		</Unit>
-		<Unit filename="/cygdrive/d/githome/mini_jvm/mini_jvm/utils/hashset.h">
+		<Unit filename="D:/githome/mini_jvm/mini_jvm/utils/arraylist.h">
 			<Option target="mini_jvm"/>
 		</Unit>
-		<Unit filename="/cygdrive/d/githome/mini_jvm/mini_jvm/utils/hashtable.c">
+		<Unit filename="D:/githome/mini_jvm/mini_jvm/utils/hashset.c">
 			<Option target="mini_jvm"/>
 		</Unit>
-		<Unit filename="/cygdrive/d/githome/mini_jvm/mini_jvm/utils/hashtable.h">
+		<Unit filename="D:/githome/mini_jvm/mini_jvm/utils/hashset.h">
 			<Option target="mini_jvm"/>
 		</Unit>
-		<Unit filename="/cygdrive/d/githome/mini_jvm/mini_jvm/utils/pairlist.c">
+		<Unit filename="D:/githome/mini_jvm/mini_jvm/utils/hashtable.c">
 			<Option target="mini_jvm"/>
 		</Unit>
-		<Unit filename="/cygdrive/d/githome/mini_jvm/mini_jvm/utils/pairlist.h">
+		<Unit filename="D:/githome/mini_jvm/mini_jvm/utils/hashtable.h">
 			<Option target="mini_jvm"/>
 		</Unit>
-		<Unit filename="/cygdrive/d/githome/mini_jvm/mini_jvm/utils/utf8_string.c">
+		<Unit filename="D:/githome/mini_jvm/mini_jvm/utils/pairlist.c">
 			<Option target="mini_jvm"/>
 		</Unit>
-		<Unit filename="/cygdrive/d/githome/mini_jvm/mini_jvm/utils/utf8_string.h">
+		<Unit filename="D:/githome/mini_jvm/mini_jvm/utils/pairlist.h">
 			<Option target="mini_jvm"/>
 		</Unit>
-		<Unit filename="/cygdrive/d/githome/mini_jvm/mini_jvm/CMakeLists.txt">
+		<Unit filename="D:/githome/mini_jvm/mini_jvm/utils/utf8_string.c">
+			<Option target="mini_jvm"/>
+		</Unit>
+		<Unit filename="D:/githome/mini_jvm/mini_jvm/utils/utf8_string.h">
+			<Option target="mini_jvm"/>
+		</Unit>
+		<Unit filename="D:/githome/mini_jvm/mini_jvm/CMakeLists.txt">
 			<Option virtualFolder="CMake Files\"/>
 		</Unit>
 	</Project>

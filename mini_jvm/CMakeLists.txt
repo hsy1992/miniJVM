@@ -13,7 +13,7 @@ set(SOURCE_FILES
         jvm/jvm.c
         jvm/class_loader_method.c
         jvm/jvm.h
-        jvm/stack.c
+        jvm/runtime.c
         utils/arraylist.c
         utils/arraylist.h
         utils/hashtable.c
@@ -36,6 +36,6 @@ set(SOURCE_FILES
         jvm/java_native_io.c
         jvm/java_native_std.c
         jvm/java_native_jdwp.c
-        )
+        jvm/java_native_jdwp.h)
 
 add_executable(mini_jvm ${SOURCE_FILES})

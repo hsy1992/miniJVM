@@ -3,20 +3,19 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
-            <file>file:/D:/githome/mini_jvm/mini_jvm/java/src/com/sun/cldc/i18n/StreamWriter.java</file>
-            <file>file:/D:/githome/mini_jvm/mini_jvm/java/src/java/lang/Thread.java</file>
             <file>file:/D:/githome/mini_jvm/mini_jvm/java/src/com/egls/test/Foo1.java</file>
-            <file>file:/D:/githome/mini_jvm/mini_jvm/java/src/com/egls/test/BpDeep.java</file>
-            <file>file:/D:/githome/mini_jvm/mini_jvm/java/src/com/sun/cldc/io/ConsoleOutputStream.java</file>
-            <file>file:/D:/githome/mini_jvm/mini_jvm/java/src/java/lang/System.java</file>
-            <file>file:/D:/githome/mini_jvm/mini_jvm/java/src/java/lang/Class.java</file>
-            <file>file:/D:/githome/mini_jvm/mini_jvm/java/src/javax/microedition/io/HttpConnection.java</file>
-            <file>file:/D:/githome/mini_jvm/mini_jvm/java/src/java/io/Writer.java</file>
-            <file>file:/D:/githome/mini_jvm/mini_jvm/java/src/java/io/PrintStream.java</file>
-            <file>file:/D:/githome/mini_jvm/mini_jvm/java/src/java/io/OutputStreamWriter.java</file>
-            <file>file:/D:/githome/mini_jvm/mini_jvm/java/src/com/sun/cldc/i18n/Helper.java</file>
-            <file>file:/D:/githome/mini_jvm/mini_jvm/java/src/com/egls/test/Foo2.java</file>
-            <file>file:/D:/githome/mini_jvm/mini_jvm/java/src/java/io/OutputStream.java</file>
+            <file>file:/D:/githome/mini_jvm/mini_jvm/java/src/javax/mini/jdwp/analyzer/ClassRequest.java</file>
+            <file>file:/D:/githome/mini_jvm/mini_jvm/java/src/javax/mini/jdwp/DebugClient.java</file>
+            <file>file:/D:/githome/mini_jvm/mini_jvm/java/src/javax/mini/jdwp/events/ModPreperClass.java</file>
+            <file>file:/D:/githome/mini_jvm/mini_jvm/java/src/javax/mini/jdwp/analyzer/Location.java</file>
+            <file>file:/D:/githome/mini_jvm/mini_jvm/java/src/javax/mini/jdwp/events/ReqEvent.java</file>
+            <file>file:/D:/githome/mini_jvm/mini_jvm/java/src/javax/mini/jdwp/events/EventManager.java</file>
+            <file>file:/D:/githome/mini_jvm/mini_jvm/java/src/javax/mini/jdwp/reflect/Runtime.java</file>
+            <file>file:/D:/githome/mini_jvm/mini_jvm/java/src/javax/mini/jdwp/DebugServer.java</file>
+            <file>file:/D:/githome/mini_jvm/mini_jvm/java/src/javax/mini/jdwp/events/ModCaseCount.java</file>
+            <file>file:/D:/githome/mini_jvm/mini_jvm/java/src/javax/mini/jdwp/constant/CommandSet.java</file>
+            <file>file:/D:/githome/mini_jvm/mini_jvm/java/src/javax/mini/jdwp/vm/MemObject.java</file>
+            <file>file:/D:/githome/mini_jvm/mini_jvm/java/src/javax/mini/jdwp/constant/Command.java</file>
         </group>
     </open-files>
 </project-private>

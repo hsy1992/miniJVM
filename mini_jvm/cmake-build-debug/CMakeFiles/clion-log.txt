@@ -1,4 +1,4 @@
-C:\Users\gust\.CLion2017.2\system\cygwin_cmake\bin\cmake.exe -DCMAKE_BUILD_TYPE=Debug -G "CodeBlocks - Unix Makefiles" /cygdrive/d/githome/mini_jvm/mini_jvm
+"D:\JetBrains\CLion 2017.2\bin\cmake\bin\cmake.exe" -DCMAKE_BUILD_TYPE=Debug -G "CodeBlocks - MinGW Makefiles" D:\githome\mini_jvm\mini_jvm
 -- Configuring done
 -- Generating done
--- Build files have been written to: /cygdrive/d/githome/mini_jvm/mini_jvm/cmake-build-debug
+-- Build files have been written to: D:/githome/mini_jvm/mini_jvm/cmake-build-debug

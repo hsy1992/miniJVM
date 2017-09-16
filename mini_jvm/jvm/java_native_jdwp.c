@@ -739,7 +739,7 @@ void event_on_breakpoint(Runtime *breakpoint_runtime) {
     ptr = getFieldPtr_byName(ins, JDWP_CLASS_EVENT, "thread", "J");
     if (ptr)setFieldLong(ptr, (u64) (long) breakpoint_runtime->threadInfo->jthread);
     //
-    ptr = getFieldPtr_byName(ins, JDWP_CLASS_EVENT, "location", "J");
+    ptr = getFieldPtr_byName(ins, JDWP_CLASS_EVENT, "loc", "Ljavax/mini/jdwp/type/Location;");
     Instance *loc = jdwp_get_location(breakpoint_runtime);
     if (ptr)setFieldRefer(ptr, loc);
     garbage_refer(loc, ins);

@@ -30,6 +30,7 @@ public class EventManager {
                 EventSet set=e.nextElement();
                 if(set.eventKind==event.eventKind){
                     set.postEvent(event,session);
+                    System.out.println("send event composiet :"+event);
                 }
             }
         }
