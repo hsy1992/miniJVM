@@ -5,24 +5,16 @@
  */
 package javax.mini.jdwp.events;
 
-import javax.mini.jdwp.JdwpManager;
-import javax.mini.jdwp.constant.ClassStatus;
-import javax.mini.jdwp.constant.Command;
-import javax.mini.jdwp.constant.CommandSet;
-import javax.mini.jdwp.constant.EventKind;
-import javax.mini.jdwp.constant.TypeTag;
 import javax.mini.jdwp.net.RequestPacket;
-import javax.mini.jdwp.reflect.Reference;
-import javax.mini.jdwp.vm.JdwpNative;
+import javax.mini.jdwp.net.Session;
 
 /**
  *
  * @author gust
  */
-public class EventSet {
+abstract public class EventSet {
 
-    private int requestId = EventManager.getRequestId();
-    //private int eventId=EventManager.getCommandId();
+    int requestId = EventManager.getRequestId();
     byte eventKind;
     byte suspendPolicy;
     byte kindMod;
@@ -30,7 +22,6 @@ public class EventSet {
     Mod[] mods;
 
     public EventSet(RequestPacket req) {
-        eventKind = req.readByte();
         suspendPolicy = req.readByte();
         modifiers = req.readInt();
         mods = new Mod[modifiers];
@@ -88,86 +79,113 @@ public class EventSet {
         return requestId;
     }
 
-    public void process() {
-        for (Mod mod : mods) {
-            switch (eventKind) {
-                case EventKind.VM_DISCONNECTED: {
-                    break;
-                }
-                case EventKind.VM_START: {
-                    break;
-                }
-                case EventKind.THREAD_DEATH: {
-                    break;
-                }
-                case EventKind.SINGLE_STEP: {
-                    break;
-                }
-                case EventKind.BREAKPOINT: {
-                    break;
-                }
-                case EventKind.FRAME_POP: {
-                    break;
-                }
-                case EventKind.EXCEPTION: {
-                    break;
-                }
-                case EventKind.USER_DEFINED: {
-                    break;
-                }
-                case EventKind.THREAD_START: {
-                    break;
-                }
-                case EventKind.CLASS_PREPARE: {
-//                    Reference ref = JdwpManager.getReference(refId);
-//                    RequestPacket resEvent = new RequestPacket();
-//                    resEvent.setId(requestId);
-//                    resEvent.setCommandSet(CommandSet.Event);
-//                    resEvent.setCommand(Command.Event_Composite);
-//                    if (ref != null) {
-//                        resEvent.writeByte(0);
-//                        resEvent.writeInt(1);
-//                        resEvent.writeByte(eventKind);
-//                        resEvent.writeInt(requestId);
-//                        resEvent.writeRefer(JdwpNative.referenceId(Thread.currentThread()));
-//                        resEvent.writeByte(TypeTag.CLASS);
-//                        resEvent.writeRefer(ref.classId);
-//                        resEvent.writeUTF("L" + ref.className + ";");
-//                        resEvent.writeInt(ClassStatus.INITIALIZED);
+    /**
+     * 向debug客户端发送虚拟机的事件
+     *
+     * @param event
+     */
+    abstract public void postEvent(Event event, Session session);
+
+    /**
+     * 对jvm进行设置set
+     *
+     * @param event
+     */
+    abstract public short process();
+
+    /**
+     * 清除jvm set的内容
+     *
+     * @return
+     */
+    abstract public short clear();
+//    {
+//        for (Mod mod : mods) {
+//            switch (eventKind) {
+//                case EventKind.VM_DISCONNECTED: {
+//                    break;
+//                }
+//                case EventKind.VM_START: {
+//                    break;
+//                }
+//                case EventKind.THREAD_DEATH: {
+//                    break;
+//                }
+//                case EventKind.SINGLE_STEP: {
+//                    break;
+//                }
+//                case EventKind.BREAKPOINT: {
+//                    for (Mod m : mods) {
+//                        if (m instanceof ModLocationOnly) {
+//                            ModLocationOnly modLoc = (ModLocationOnly) m;
+//                            JdwpNative.setBreakPoint(modLoc.loc.typeTag, modLoc.loc.classID, modLoc.loc.methodID, modLoc.loc.execIndex);
+//                        }
 //                    }
-
-                    break;
-                }
-                case EventKind.CLASS_UNLOAD: {
-                    break;
-                }
-                case EventKind.CLASS_LOAD: {
-                    break;
-                }
-                case EventKind.FIELD_ACCESS: {
-                    break;
-                }
-                case EventKind.FIELD_MODIFICATION: {
-                    break;
-                }
-                case EventKind.EXCEPTION_CATCH: {
-                    break;
-                }
-                case EventKind.METHOD_ENTRY: {
-                    break;
-                }
-                case EventKind.METHOD_EXIT: {
-                    break;
-                }
-                case EventKind.VM_DEATH: {
-                    break;
-                }
-
-                default: {
-                    break;
-                }
-            }
-        }
-    }
+//                    break;
+//                }
+//                case EventKind.FRAME_POP: {
+//                    break;
+//                }
+//                case EventKind.EXCEPTION: {
+//                    break;
+//                }
+//                case EventKind.USER_DEFINED: {
+//                    break;
+//                }
+//                case EventKind.THREAD_START: {
+//                    break;
+//                }
+//                case EventKind.CLASS_PREPARE: {
+////                    Reference ref = JdwpManager.getReference(refId);
+////                    RequestPacket resEvent = new RequestPacket();
+////                    resEvent.setId(requestId);
+////                    resEvent.setCommandSet(CommandSet.Event);
+////                    resEvent.setCommand(Command.Event_Composite);
+////                    if (ref != null) {
+////                        resEvent.writeByte(0);
+////                        resEvent.writeInt(1);
+////                        resEvent.writeByte(eventKind);
+////                        resEvent.writeInt(requestId);
+////                        resEvent.writeRefer(JdwpNative.referenceId(Thread.currentThread()));
+////                        resEvent.writeByte(TypeTag.CLASS);
+////                        resEvent.writeRefer(ref.classId);
+////                        resEvent.writeUTF("L" + ref.className + ";");
+////                        resEvent.writeInt(ClassStatus.INITIALIZED);
+////                    }
+//
+//                    break;
+//                }
+//                case EventKind.CLASS_UNLOAD: {
+//                    break;
+//                }
+//                case EventKind.CLASS_LOAD: {
+//                    break;
+//                }
+//                case EventKind.FIELD_ACCESS: {
+//                    break;
+//                }
+//                case EventKind.FIELD_MODIFICATION: {
+//                    break;
+//                }
+//                case EventKind.EXCEPTION_CATCH: {
+//                    break;
+//                }
+//                case EventKind.METHOD_ENTRY: {
+//                    break;
+//                }
+//                case EventKind.METHOD_EXIT: {
+//                    break;
+//                }
+//                case EventKind.VM_DEATH: {
+//                    break;
+//                }
+//
+//                default: {
+//                    break;
+//                }
+//            }
+//        }
+//        return Error.NONE;
+//    }
 
 }

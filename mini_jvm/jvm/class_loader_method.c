@@ -244,6 +244,8 @@ s32 _class_method_info_destory(Class *clazz) {
         jvm_free(mi->attributes);
         mi->attributes = NULL;
         utf8_destory(mi->paraType);
+        jvm_free(mi->breakpoint);
+        mi->breakpoint = NULL;
     }
     jvm_free(clazz->methodPool.method);
     clazz->methodPool.method = NULL;

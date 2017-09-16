@@ -6,6 +6,7 @@
 #include "jvm_util.h"
 #include "../utils/utf8_string.h"
 #include "../utils/arraylist.h"
+#include "java_native_jdwp.h"
 
 
 /* ==================================opcode implementation =============================*/
@@ -1900,9 +1901,9 @@ static inline s32 op_putfield_impl(u8 **opCode, Runtime *runtime, s32 isStatic) 
     s2c.c0 = opCode[0][2];
 
     u16 field_ref = s2c.s;
-    if (utf8_equals_c(clazz->name, "javax/mini/jdwp/analyzer/AnalyzerManager")) {
-        int debug = 1;
-    }
+//    if (utf8_equals_c(clazz->name, "javax/mini/jdwp/analyzer/AnalyzerManager")) {
+//        int debug = 1;
+//    }
     if (clazz->status < CLASS_STATUS_CLINITED) {
         class_clinit(clazz, runtime);
     }
@@ -1924,6 +1925,11 @@ static inline s32 op_putfield_impl(u8 **opCode, Runtime *runtime, s32 isStatic) 
         ptr = getStaticFieldPtr(fi);
     } else {
         ins = (Instance *) pop_ref(stack);
+        if (!ins) {
+            Instance *exception = exception_create(JVM_EXCEPTION_NULLPOINTER, runtime);
+            push_ref(stack, (__refer) exception);
+            return RUNTIME_STATUS_EXCEPTION;
+        }
         ptr = getInstanceFieldPtr(ins, fi);
     }
 #if _JVM_DEBUG > 5
@@ -2013,6 +2019,11 @@ static inline s32 op_getfield_impl(u8 **opCode, Runtime *runtime, s32 isStatic) 
         ptr = getStaticFieldPtr(fi);
     } else {
         ins = (Instance *) pop_ref(stack);
+        if (!ins) {
+            Instance *exception = exception_create(JVM_EXCEPTION_NULLPOINTER, runtime);
+            push_ref(stack, (__refer) exception);
+            return RUNTIME_STATUS_EXCEPTION;
+        }
         ptr = getInstanceFieldPtr(ins, fi);
     }
     Long2Double l2d;
@@ -3155,6 +3166,12 @@ s32 execute_method(MethodInfo *method, Runtime *pruntime, Class *clazz) {
         ret = method->native_func(&runtime, clazz);
         jthread_flag_resume(&runtime);
         synchronized_unlock_method(method, &runtime);
+        if (java_debug) {
+            //process jdwp suspend
+            while (runtime.threadInfo->suspend_count) {
+                threadSleep(20);
+            }
+        }
 #if _JVM_DEBUG > 3
         invoke_deepth(&runtime);
         jvm_printf("}\n");
@@ -3186,6 +3203,16 @@ s32 execute_method(MethodInfo *method, Runtime *pruntime, Class *clazz) {
             runtime.bytecode = ca->code;
             s32 i = 0;
             do {
+                if (java_debug) {
+                    if ((runtime.pc[0] == JDWP_BREAK_POINT) && (!runtime.threadInfo->suspend_count)) {
+                        event_on_breakpoint(&runtime);//此句必须在前，后面还会用调用此处
+                        runtime.threadInfo->suspend_count++;
+                    }
+                    //process jdwp suspend
+                    while (runtime.threadInfo->suspend_count) {
+                        threadSleep(20);
+                    }
+                }
                 InstructFunc func = find_instruct_func(runtime.pc[0]);
                 if (func != 0) {
 #if _JVM_DEBUG_PROFILE
@@ -3219,10 +3246,10 @@ s32 execute_method(MethodInfo *method, Runtime *pruntime, Class *clazz) {
 
                     Instance *ins = (Instance *) ref;
                     s32 lineNum = find_line_num(ca, runtime.pc - ca->code);
-                    jvm_printf("   at %s.%s(%s.java:%d)\n",
-                               utf8_cstr(clazz->name), utf8_cstr(method->name),
-                               utf8_cstr(clazz->name),
-                               lineNum
+                    printf("   at %s.%s(%s.java:%d)\n",
+                           utf8_cstr(clazz->name), utf8_cstr(method->name),
+                           utf8_cstr(clazz->name),
+                           lineNum
                     );
                     ExceptionTable *et = find_exception_handler(&runtime, ins, ca, runtime.pc - ca->code, ref);
                     if (et == NULL) {
@@ -3260,11 +3287,6 @@ s32 execute_method(MethodInfo *method, Runtime *pruntime, Class *clazz) {
 #endif
         }
     }
-    //process jdwp suspend
-    if (java_debug)
-        while (runtime.threadInfo->suspend_count) {
-            threadSleep(20);
-        }
     jvm_free(runtime.localVariables);
     pruntime->son = NULL;
     return ret;

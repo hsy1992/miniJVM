@@ -10,7 +10,7 @@ import javax.mini.jdwp.vm.JdwpThreads;
 import java.io.IOException;
 import java.util.Hashtable;
 import java.util.Random;
-import javax.mini.jdwp.analyzer.Location;
+import javax.mini.jdwp.type.Location;
 import javax.mini.jdwp.constant.ClassStatus;
 import javax.mini.jdwp.constant.Command;
 import javax.mini.jdwp.constant.CommandSet;
@@ -47,6 +47,7 @@ public class DebugClient {
     public void process() {
         try {
             session.action();
+            EventManager.action(session);
             byte[] data;
             while ((data = session.receive()) != null) {
 //                Session.print(data);
@@ -60,20 +61,6 @@ public class DebugClient {
     }
 
     public void processPacket(byte[] data) throws IOException {
-//        DataInputStream dis = new DataInputStream(new ByteArrayInputStream(data));
-//        Packet packet = Packet.readPacket(dis, true);
-//        PacketAnalyzer packetAnalyzer = AnalyzerManager.createPacketAnalyzer(packet);
-//
-//        if (packet instanceof Request) {
-//            packetAnalyzer.updateInternalDataModel(packet);
-//        }
-//        if (packet instanceof Response) {
-//            Response resp = (Response) packet;
-//            if (!resp.isError()) {
-//                packetAnalyzer.updateInternalDataModel(packet);
-//            }
-//        }
-//        System.out.println("packet :"+packetAnalyzer);
         JdwpPacket packet = new JdwpPacket(data);
         if (packet.getFlag() == JdwpPacket.REQUEST) {
             RequestPacket req = new RequestPacket(data);
@@ -287,7 +274,13 @@ public class DebugClient {
                             break;
                         }
                         case Command.ReferenceType_ClassLoader: {//2.2
-                            System.out.println(req + " not support");
+                            long refType = req.readRefer();
+                            Object obj = JdwpNative.referenceObj(refType);
+                            ResponsePacket res = new ResponsePacket();
+                            res.setErrorCode(Error.NONE);
+                            res.setId(req.getId());
+                            res.writeRefer(0);
+                            session.send(res.toByteArray());
                             break;
                         }
                         case Command.ReferenceType_Modifiers: {//2.3
@@ -701,21 +694,30 @@ public class DebugClient {
                 case CommandSet.EventRequest: {//set 15
                     switch (req.getCommand()) {
                         case Command.EventRequest_Set: {//15.1
-                            EventSet eventSet = new EventSet(req);
+                            EventSet eventSet = EventManager.createEventSet(req);
                             EventManager.putEventSet(eventSet);
+                            System.out.println("EventRequest_Set: requestId=" + eventSet.getRequestId());
+                            short ret = eventSet.process();
                             ResponsePacket res = new ResponsePacket();
                             res.setId(req.getId());
-                            res.setErrorCode(Error.NONE);
-                            
-                            res.writeInt(eventSet.getRequestId());
+                            if (ret == Error.NONE) {
+                                res.setErrorCode(Error.NONE);
+                                res.writeInt(eventSet.getRequestId());
+                            } else {
+                                res.setErrorCode(ret);
+                            }
                             session.send(res.toByteArray());
                             break;
                         }//
                         case Command.EventRequest_Clear: {//15.2
                             byte eventKind = req.readByte();
                             int requestID = req.readInt();
-                            EventManager.removeEventSet(requestID);
                             System.out.println("EventRequest_Clear:eventKind=" + eventKind + ", requestID=" + requestID);
+                            EventSet set = EventManager.getEventSet(requestID);
+                            if (set != null) {
+                                set.clear();
+                                EventManager.removeEventSet(requestID);
+                            }
                             ResponsePacket res = new ResponsePacket();
                             res.setId(req.getId());
                             res.setErrorCode(Error.NONE);

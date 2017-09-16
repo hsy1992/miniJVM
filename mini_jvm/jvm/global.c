@@ -22,6 +22,7 @@ Hashtable *sys_prop;
 //
 Instance *jdwp_jthread;
 volatile u8 java_debug =1;
+u8 JDWP_BREAK_POINT=0xca;
 
 Hashtable *son_2_father; //key=mem_ptr, value=我被别人引用的列表
 Hashtable *father_2_son; //key=mem_ptr, value=别人被我引用的列表

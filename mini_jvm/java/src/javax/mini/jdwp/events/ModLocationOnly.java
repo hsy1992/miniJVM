@@ -5,7 +5,7 @@
  */
 package javax.mini.jdwp.events;
 
-import javax.mini.jdwp.analyzer.Location;
+import javax.mini.jdwp.type.Location;
 import javax.mini.jdwp.net.RequestPacket;
 
 /**
@@ -14,7 +14,7 @@ import javax.mini.jdwp.net.RequestPacket;
  */
 public class ModLocationOnly  extends Mod{
 
-    Location loc;
+    Location loc=new Location();
 
     public ModLocationOnly(RequestPacket req) {
         loc.typeTag = req.readByte();

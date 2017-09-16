@@ -70,7 +70,7 @@ public class DebugServer {
                             clients.removeElement(dc);
                         }
                     }
-                    Thread.sleep(500);
+                    Thread.sleep(100);
                 } catch (Exception e) {
                     System.out.println(e);
                 }

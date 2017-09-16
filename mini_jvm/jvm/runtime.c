@@ -191,6 +191,7 @@ void runtime_create(Runtime *runtime) {
 
 void runtime_destory(Runtime *runtime) {
 //    hashset_destory(runtime->threadInfo->hold_locks);
+
     jvm_free(runtime->threadInfo);
     stack_destory(runtime->stack);
 }

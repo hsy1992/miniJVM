@@ -41,6 +41,7 @@ public class EventKind {
     public static final byte EXCEPTION_CATCH = 30; //not used in JDWP
     public static final byte METHOD_ENTRY = 40;
     public static final byte METHOD_EXIT = 41;
+    public static final byte METHOD_EXIT_WITH_RETURN_VALUE = 42;
     public static final byte VM_INIT = VM_START;
     public static final byte VM_DEATH = 99;
 

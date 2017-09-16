@@ -11,12 +11,13 @@ import javax.mini.jdwp.net.RequestPacket;
  *
  * @author gust
  */
-public class ModClassMatch  extends Mod{
+public class ModClassMatch extends Mod {
 
     String classPattern;
 
     public ModClassMatch(RequestPacket req) {
         classPattern = req.readUTF();
+        System.out.println("ModClassMatch:" + classPattern);
     }
 
 }

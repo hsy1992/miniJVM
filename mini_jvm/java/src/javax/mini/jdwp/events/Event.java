@@ -5,7 +5,7 @@
  */
 package javax.mini.jdwp.events;
 
-import javax.mini.jdwp.analyzer.Location;
+import javax.mini.jdwp.type.Location;
 
 /**
  *

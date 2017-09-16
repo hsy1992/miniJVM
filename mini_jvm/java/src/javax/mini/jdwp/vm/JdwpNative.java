@@ -22,5 +22,7 @@ public class JdwpNative {
     public static native Class[] getClasses();
 
     public static native Class getClassByName(String className);
+    
+    public static native int setBreakPoint(int setOrClear,byte typeTag,long classID,long methodID,long execIndex);
 
 }

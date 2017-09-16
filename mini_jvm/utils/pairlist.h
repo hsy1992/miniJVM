@@ -23,4 +23,13 @@ s32 pairlist_put(Pairlist *list, __refer left, __refer right);
 
 __refer pairlist_get(Pairlist *list, __refer left);
 
+__refer pairlist_remove(Pairlist *list, __refer left);
+
+long pairlist_removel(Pairlist *list, long left);
+
+long pairlist_getl(Pairlist *list, long left);
+
+s32 pairlist_putl(Pairlist *list, long left, long right);
+
+
 #endif //MINI_JVM_PAIRLIST_H

@@ -15,7 +15,7 @@
 #include "../utils/pairlist.h"
 
 //=======================  micro define  =============================
-#define _JVM_DEBUG 4
+#define _JVM_DEBUG 0
 #define _JVM_DEBUG_PRINT_FILE 01
 #define _JVM_DEBUG_BYTECODE_DUMP 0
 #define _JVM_DEBUG_GARBAGE_DUMP 0
@@ -340,6 +340,7 @@ extern Instance *main_thread;
 
 extern volatile u8 java_debug;
 
+extern u8 JDWP_BREAK_POINT;
 
 Instruction **instructionsIndexies;
 
@@ -615,6 +616,7 @@ typedef struct _MethodInfo {
     s32 para_count;
     Class *_this_class;
     java_native_fun native_func;
+    Pairlist *breakpoint;
 
 } MethodInfo;
 

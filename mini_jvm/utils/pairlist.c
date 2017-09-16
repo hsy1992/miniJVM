@@ -17,6 +17,18 @@ Pairlist *pairlist_create(s32 len) {
     return NULL;
 };
 
+s32 pairlist_putl(Pairlist *list, long left, long right) {
+    return pairlist_put(list, (__refer) left, (__refer) right);
+}
+
+long pairlist_getl(Pairlist *list, long left) {
+    return (long) pairlist_get(list, (__refer) left);
+}
+
+long pairlist_removel(Pairlist *list, long left) {
+    return (long) pairlist_remove(list, (__refer) left);
+}
+
 s32 pairlist_put(Pairlist *list, __refer left, __refer right) {
     if (list->count >= list->_alloced) {//空间不足
         void *p = jvm_realloc(list->ptr, (list->_alloced << 1) * (sizeof(__refer) << 1));
@@ -35,6 +47,20 @@ __refer pairlist_get(Pairlist *list, __refer left) {
         }
     }
     return NULL;
+};
+
+__refer pairlist_remove(Pairlist *list, __refer left) {
+    s32 i;
+    __refer right = NULL;
+    for (i = 0; i < list->count; i++) {
+        if ((list->ptr)[(i << 1)] == left) {
+            right = (list->ptr)[(i << 1) + 1];
+            memmove(&((list->ptr)[(i << 1)]), &((list->ptr)[((i + 1) << 1)]), (list->count - 1 - i) * sizeof(__refer));
+            list->count--;
+            break;
+        }
+    }
+    return right;
 };
 
 void pairlist_destory(Pairlist *list) {

@@ -3,9 +3,12 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package javax.mini.jdwp.analyzer;
+package javax.mini.jdwp.type;
 
-import javax.mini.jdwp.net.ResponsePacket;
+import javax.mini.jdwp.net.JdwpPacket;
+
+
+
 
 /**
  *
@@ -18,12 +21,24 @@ public class Location {
     public long methodID;
     public long execIndex;
 
-    public void writeLocation(ResponsePacket res) {
+    public void writeLocation(JdwpPacket res) {
         res.writeByte(typeTag);
         res.writeRefer(classID);
         res.writeRefer(methodID);
         res.writeLong(execIndex);
 
+    }
+
+    public boolean equals(Location other) {
+        if (other == null) {
+            return false;
+        }
+        if (other.classID == classID
+                && other.methodID == methodID
+                && other.execIndex == execIndex) {
+            return true;
+        }
+        return false;
     }
 
     public String toString() {

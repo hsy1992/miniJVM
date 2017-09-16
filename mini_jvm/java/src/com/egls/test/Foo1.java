@@ -479,7 +479,7 @@ public class Foo1 {
         for (Integer i : iarr) {
             System.out.println("i=" + i);
         }
-        System.out.println("arr type:"+iarr.getClass());
+        System.out.println("arr type:" + iarr.getClass());
 
         Map<Long, String> map = new HashMap();
         map.put(3L, "Long");
@@ -506,6 +506,7 @@ public class Foo1 {
         while (true) {
             try {
                 Thread.sleep(1000);
+                int debug = 1;
                 //System.out.println("sleep 1000");
             } catch (Exception e) {
             }
