@@ -101,21 +101,17 @@ public class DebugClient {
                             ResponsePacket res = new ResponsePacket();
                             res.setErrorCode(Error.NONE);
                             res.setId(req.getId());
-                            if (signature.startsWith("L")) {
-                                signature = signature.substring(1);
-                            }
-                            if (signature.endsWith(";")) {
-                                signature = signature.substring(0, signature.length() - 1);
-                            }
-                            Class cl = null;
-                            try {
-                                cl = Class.forName(signature);
-                            } catch (ClassNotFoundException ex) {
-                            }
+                            String name = signatureToName(signature);
+                            Class cl = JdwpNative.getClassByName(name);
                             if (cl == null) {
                                 res.writeInt(0);
                             } else {
-                                res.writeInt(0);
+                                res.writeInt(1);
+                                res.writeByte(TypeTag.CLASS);
+                                long refid = JdwpNative.referenceId(cl);
+                                res.writeRefer(refid);
+                                Reference ref = new Reference(refid);
+                                res.writeInt(ref.status);
                             }
                             System.out.println("VirtualMachine_ClassesBySignature:" + signature + "," + cl);
                             session.send(res.toByteArray());
@@ -710,7 +706,7 @@ public class DebugClient {
                             ResponsePacket res = new ResponsePacket();
                             res.setId(req.getId());
                             res.setErrorCode(Error.NONE);
-                            System.out.println("EventRequest_Set:"+eventSet.getRequestId());
+                            System.out.println("EventRequest_Set:" + eventSet.getRequestId());
                             res.writeInt(eventSet.getRequestId());
                             session.send(res.toByteArray());
                             break;
@@ -792,4 +788,13 @@ public class DebugClient {
         return closed;
     }
 
+    public String signatureToName(String signature) {
+        if (signature.startsWith("L")) {
+            signature = signature.substring(1);
+        }
+        if (signature.endsWith(";")) {
+            signature = signature.substring(0, signature.length() - 1);
+        }
+        return signature;
+    }
 }

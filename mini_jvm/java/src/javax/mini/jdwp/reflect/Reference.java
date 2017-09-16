@@ -18,6 +18,7 @@ public class Reference {
     public String className;
     public short accessFlags;
     public String source;
+    public int status;
     long fieldIds[];
     long methodIds[];
 

@@ -9,11 +9,18 @@ package javax.mini.jdwp.vm;
  *
  * @author gust
  */
-public class JdwpNative {ClassLoader cl;
+public class JdwpNative {
+
+    ClassLoader cl;
 
     public static native int referenceTyepSize();
+
     public static native long referenceId(Object o);
+
     public static native Object referenceObj(long objId);
+
     public static native Class[] getClasses();
-    
+
+    public static native Class getClassByName(String className);
+
 }
