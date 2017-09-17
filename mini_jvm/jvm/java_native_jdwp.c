@@ -399,6 +399,7 @@ s32 javax_mini_jdwp_reflect_Reference_mapReference(Runtime *runtime, Class *claz
     l2d.i2l.i1 = (runtime->localVariables + pos++)->integer;
     l2d.i2l.i0 = (runtime->localVariables + pos++)->integer;
     Class *target = (__refer) (long) l2d.l;
+    s32 size = getFieldInt(target - 4);
     if (target) {
         u8 *ptr;
         ptr = getFieldPtr_byName(ins, JDWP_CLASS_REFERENCE, "className", "Ljava/lang/String;");
@@ -619,16 +620,17 @@ Instance *jdwp_get_location(Runtime *location_runtime) {
     //
     __refer ptr;
     //
-    ptr = getFieldPtr_byName(ins, JDWP_CLASS_EVENT, "typeTag", "B");
-    if (ptr)setFieldByte(ptr, JDWP_EVENT_CLASS_PREPARE);
+    ptr = getFieldPtr_byName(ins, JDWP_CLASS_LOCATION, "typeTag", "B");
+    //CLASS = 1;INTERFACE = 2;ARRAY = 3;
+    if (ptr)setFieldByte(ptr, 1);
     //
-    ptr = getFieldPtr_byName(ins, JDWP_CLASS_EVENT, "classID", "J");
+    ptr = getFieldPtr_byName(ins, JDWP_CLASS_LOCATION, "classID", "J");
     if (ptr)setFieldLong(ptr, (u64) (long) location_runtime->clazz);
     //
-    ptr = getFieldPtr_byName(ins, JDWP_CLASS_EVENT, "methodID", "J");
+    ptr = getFieldPtr_byName(ins, JDWP_CLASS_LOCATION, "methodID", "J");
     if (ptr)setFieldLong(ptr, (u64) (long) location_runtime->methodInfo);
     //
-    ptr = getFieldPtr_byName(ins, JDWP_CLASS_EVENT, "execIndex", "J");
+    ptr = getFieldPtr_byName(ins, JDWP_CLASS_LOCATION, "execIndex", "J");
     if (ptr)setFieldLong(ptr, ((u64) (long) location_runtime->pc) - ((u64) (long) location_runtime->bytecode));
     return ins;
 }

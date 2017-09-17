@@ -54,9 +54,14 @@ public class EventSet_BREAKPOINT extends EventSet {
     @Override
     public void postEvent(Event event, Session session) {
         for (Mod mod : mods) {
+            System.out.println("breakpoint1," + mod + " , mod instanceof ModLocationOnly=" + (mod instanceof ModLocationOnly));
             if (mod instanceof ModLocationOnly) {
                 ModLocationOnly m = (ModLocationOnly) mod;
+                System.out.println("breakpoint2," + m);
+                System.out.println("m.loc="+m.loc);
+                System.out.println("e.loc="+event.loc);
                 if (m.loc.equals(event.loc)) {
+                    System.out.println("breakpoint3," + event.loc);
                     RequestPacket req = new RequestPacket();
                     req.setId(EventManager.getCommandId());
                     req.setCommandSet(CommandSet.Event);
@@ -68,7 +73,6 @@ public class EventSet_BREAKPOINT extends EventSet {
                     req.writeInt(requestId);
 
                     req.writeRefer(event.thread);
-                    req.writeByte(TypeTag.CLASS);
                     event.loc.writeLocation(req);
                     session.send(req.toByteArray());
                     System.out.println("event breakpoint sent.");

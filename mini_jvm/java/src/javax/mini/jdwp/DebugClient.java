@@ -262,11 +262,11 @@ public class DebugClient {
                     switch (req.getCommand()) {
                         case Command.ReferenceType_Signature: {//2.1
                             long refType = req.readRefer();
-                            Object obj = JdwpNative.referenceObj(refType);
+                            Reference ref = JdwpManager.getReference(refType);
                             ResponsePacket res = new ResponsePacket();
                             res.setErrorCode(Error.NONE);
                             res.setId(req.getId());
-                            String str = "L" + obj.getClass().getName() + ";";
+                            String str = "L" + ref.className + ";";
                             System.out.println("ReferenceType_Signature:" + Long.toString(refType, 16) + "," + str);
                             res.writeUTF(str);
                             session.send(res.toByteArray());
@@ -275,7 +275,7 @@ public class DebugClient {
                         }
                         case Command.ReferenceType_ClassLoader: {//2.2
                             long refType = req.readRefer();
-                            Object obj = JdwpNative.referenceObj(refType);
+                            Reference ref = JdwpManager.getReference(refType);
                             ResponsePacket res = new ResponsePacket();
                             res.setErrorCode(Error.NONE);
                             res.setId(req.getId());
