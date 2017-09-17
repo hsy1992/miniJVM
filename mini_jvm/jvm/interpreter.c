@@ -3204,7 +3204,8 @@ s32 execute_method(MethodInfo *method, Runtime *pruntime, Class *clazz) {
             s32 i = 0;
             do {
                 if (java_debug) {
-                    if ((runtime.pc[0] == JDWP_BREAK_POINT) && (!runtime.threadInfo->suspend_count)) {
+                    u32 index = runtime.pc - ca->code;
+                    if ((method->breakpoint) && pairlist_getl(method->breakpoint, index)) {
                         event_on_breakpoint(&runtime);//此句必须在前，后面还会用调用此处
                         runtime.threadInfo->suspend_count++;
                     }

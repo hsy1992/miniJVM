@@ -92,14 +92,15 @@ s32 jdwp_set_breakpoint(s32 setOrClear, Class *clazz, MethodInfo *methodInfo, s6
     int i;
     for (i = 0; i < methodInfo->attributes_count; i++) {
         if (methodInfo->attributes[i].converted_code) {
-            u8 *code = methodInfo->attributes[i].converted_code->code;
             if (setOrClear) {
-                pairlist_putl(methodInfo->breakpoint, (long) execIndex, code[execIndex]);
-                code[execIndex] = JDWP_BREAK_POINT;//断点
+                pairlist_putl(methodInfo->breakpoint, (long) execIndex, 1);
                 return JDWP_ERROR_NONE;
             } else {
-                u8 v = (u8) pairlist_removel(methodInfo->breakpoint, (long) execIndex);
-                code[execIndex] = v;
+                pairlist_removel(methodInfo->breakpoint, (long) execIndex);
+                if (methodInfo->breakpoint->count == 0) {
+                    jvm_free(methodInfo->breakpoint);
+                    methodInfo->breakpoint = NULL;
+                }
                 return JDWP_ERROR_NONE;
             }
         }
