@@ -15,8 +15,8 @@ import javax.mini.jdwp.net.Session;
  */
 public class EventSet_MONITOR_WAIT extends EventSet {
 
-    public EventSet_MONITOR_WAIT(RequestPacket req) {
-        super(req);
+    public EventSet_MONITOR_WAIT(RequestPacket req, byte eventKind) {
+        super(req, eventKind);
     }
 
     public short process() {

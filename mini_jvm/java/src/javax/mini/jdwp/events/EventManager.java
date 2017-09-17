@@ -75,83 +75,83 @@ public class EventManager {
         EventSet eventSet = null;
         switch (eventKind) {
             case EventKind.VM_DISCONNECTED: {
-                eventSet = new EventSet_VM_DISCONNECTED(req);
+                eventSet = new EventSet_VM_DISCONNECTED(req, eventKind);
                 break;
             }
             case EventKind.VM_START: {
-                eventSet = new EventSet_VM_START(req);
+                eventSet = new EventSet_VM_START(req, eventKind);
                 break;
             }
             case EventKind.THREAD_DEATH: {
-                eventSet = new EventSet_THREAD_DEATH(req);
+                eventSet = new EventSet_THREAD_DEATH(req, eventKind);
                 break;
             }
             case EventKind.SINGLE_STEP: {
-                eventSet = new EventSet_SINGLE_STEP(req);
+                eventSet = new EventSet_SINGLE_STEP(req, eventKind);
                 break;
             }
             case EventKind.BREAKPOINT: {
-                eventSet = new EventSet_BREAKPOINT(req);
+                eventSet = new EventSet_BREAKPOINT(req, eventKind);
                 break;
             }
             case EventKind.FRAME_POP: {
-                eventSet = new EventSet_FRAME_POP(req);
+                eventSet = new EventSet_FRAME_POP(req, eventKind);
                 break;
             }
             case EventKind.EXCEPTION: {
-                eventSet = new EventSet_EXCEPTION(req);
+                eventSet = new EventSet_EXCEPTION(req, eventKind);
                 break;
             }
             case EventKind.USER_DEFINED: {
-                eventSet = new EventSet_USER_DEFINED(req);
+                eventSet = new EventSet_USER_DEFINED(req, eventKind);
                 break;
             }
             case EventKind.THREAD_START: {
-                eventSet = new EventSet_THREAD_START(req);
+                eventSet = new EventSet_THREAD_START(req, eventKind);
                 break;
             }
             case EventKind.CLASS_PREPARE: {
-                eventSet = new EventSet_CLASS_PREPARE(req);
+                eventSet = new EventSet_CLASS_PREPARE(req, eventKind);
                 break;
             }
             case EventKind.CLASS_UNLOAD: {
-                eventSet = new EventSet_CLASS_UNLOAD(req);
+                eventSet = new EventSet_CLASS_UNLOAD(req, eventKind);
                 break;
             }
             case EventKind.CLASS_LOAD: {
-                eventSet = new EventSet_CLASS_LOAD(req);
+                eventSet = new EventSet_CLASS_LOAD(req, eventKind);
                 break;
             }
             case EventKind.FIELD_ACCESS: {
-                eventSet = new EventSet_FIELD_ACCESS(req);
+                eventSet = new EventSet_FIELD_ACCESS(req, eventKind);
                 break;
             }
             case EventKind.FIELD_MODIFICATION: {
-                eventSet = new EventSet_FIELD_MODIFICATION(req);
+                eventSet = new EventSet_FIELD_MODIFICATION(req, eventKind);
                 break;
             }
             case EventKind.EXCEPTION_CATCH: {
-                eventSet = new EventSet_EXCEPTION_CATCH(req);
+                eventSet = new EventSet_EXCEPTION_CATCH(req, eventKind);
                 break;
             }
             case EventKind.METHOD_ENTRY: {
-                eventSet = new EventSet_METHOD_ENTRY(req);
+                eventSet = new EventSet_METHOD_ENTRY(req, eventKind);
                 break;
             }
             case EventKind.METHOD_EXIT: {
-                eventSet = new EventSet_METHOD_EXIT(req);
+                eventSet = new EventSet_METHOD_EXIT(req, eventKind);
                 break;
             }
             case EventKind.METHOD_EXIT_WITH_RETURN_VALUE: {
-                eventSet = new EventSet_METHOD_EXIT_WITH_RETURN_VALUE(req);
+                eventSet = new EventSet_METHOD_EXIT_WITH_RETURN_VALUE(req, eventKind);
                 break;
             }
             case EventKind.VM_DEATH: {
-                eventSet = new EventSet_VM_DEATH(req);
+                eventSet = new EventSet_VM_DEATH(req, eventKind);
                 break;
             }
             default: {
-                eventSet = new EventSet_UNKNOW(req);
+                eventSet = new EventSet_UNKNOW(req, eventKind);
                 break;
             }
         }

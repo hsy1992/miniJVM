@@ -696,7 +696,6 @@ public class DebugClient {
                         case Command.EventRequest_Set: {//15.1
                             EventSet eventSet = EventManager.createEventSet(req);
                             EventManager.putEventSet(eventSet);
-                            System.out.println("EventRequest_Set: requestId=" + eventSet.getRequestId());
                             short ret = eventSet.process();
                             ResponsePacket res = new ResponsePacket();
                             res.setId(req.getId());

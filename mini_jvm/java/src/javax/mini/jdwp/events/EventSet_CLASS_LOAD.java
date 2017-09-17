@@ -15,8 +15,8 @@ import javax.mini.jdwp.net.Session;
  */
 public class EventSet_CLASS_LOAD extends EventSet {
 
-    public EventSet_CLASS_LOAD(RequestPacket req) {
-        super(req);
+    public EventSet_CLASS_LOAD(RequestPacket req, byte eventKind) {
+        super(req, eventKind);
     }
 
     public short process() {

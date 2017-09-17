@@ -14,21 +14,22 @@ import javax.mini.jdwp.net.Session;
  */
 abstract public class EventSet {
 
-    int requestId = EventManager.getRequestId();
-    byte eventKind;
-    byte suspendPolicy;
-    byte kindMod;
-    int modifiers;
+    public int requestId = EventManager.getRequestId();
+    public byte eventKind;
+    public byte suspendPolicy;
+    public byte kindMod;
+    public int modifiers;
     Mod[] mods;
 
-    public EventSet(RequestPacket req) {
+    public EventSet(RequestPacket req, byte eventKind) {
+        this.eventKind = eventKind;
         suspendPolicy = req.readByte();
         modifiers = req.readInt();
         mods = new Mod[modifiers];
-        System.out.println("EventRequest_Set:reqEventId:" + getRequestId() + ", kind=" + eventKind + ", susp=" + suspendPolicy);
+        System.out.print("EventRequest_Set:reqEventId:" + getRequestId() + ", kind=" + eventKind + ", modifiers=" + modifiers);
         for (int i = 0; i < modifiers; i++) {
             byte modi = req.readByte();
-            System.out.println("EventRequest_Set:mod=" + modi);
+            System.out.println(",mod=" + modi + "\n");
             Mod mod = null;
             switch (modi) {
                 case 1:

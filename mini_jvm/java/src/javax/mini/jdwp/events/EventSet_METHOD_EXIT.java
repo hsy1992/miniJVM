@@ -15,8 +15,8 @@ import javax.mini.jdwp.net.Session;
  */
 public class EventSet_METHOD_EXIT extends EventSet {
 
-    public EventSet_METHOD_EXIT(RequestPacket req) {
-        super(req);
+    public EventSet_METHOD_EXIT(RequestPacket req, byte eventKind) {
+        super(req, eventKind);
     }
 
     public short process() {

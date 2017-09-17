@@ -15,8 +15,8 @@ import javax.mini.jdwp.net.Session;
  */
 public class EventSet_METHOD_EXIT_WITH_RETURN_VALUE extends EventSet {
 
-    public EventSet_METHOD_EXIT_WITH_RETURN_VALUE(RequestPacket req) {
-        super(req);
+    public EventSet_METHOD_EXIT_WITH_RETURN_VALUE(RequestPacket req, byte eventKind) {
+        super(req, eventKind);
     }
 
     public short process() {

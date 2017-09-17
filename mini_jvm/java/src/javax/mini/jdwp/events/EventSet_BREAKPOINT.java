@@ -25,8 +25,8 @@ public class EventSet_BREAKPOINT extends EventSet {
     static int SET = 1;
     static int CLEAR = 0;
 
-    public EventSet_BREAKPOINT(RequestPacket req) {
-        super(req);
+    public EventSet_BREAKPOINT(RequestPacket req, byte eventKind) {
+        super(req, eventKind);
     }
 
     public short process() {
@@ -66,7 +66,7 @@ public class EventSet_BREAKPOINT extends EventSet {
                     req.writeInt(1);
                     req.writeByte(eventKind);
                     req.writeInt(requestId);
-                    
+
                     req.writeRefer(event.thread);
                     req.writeByte(TypeTag.CLASS);
                     event.loc.writeLocation(req);

@@ -15,8 +15,8 @@ import javax.mini.jdwp.net.Session;
  */
 public class EventSet_THREAD_START extends EventSet {
 
-    public EventSet_THREAD_START(RequestPacket req) {
-        super(req);
+    public EventSet_THREAD_START(RequestPacket req, byte eventKind) {
+        super(req, eventKind);
     }
 
     public short process() {

@@ -15,8 +15,8 @@ import javax.mini.jdwp.net.Session;
  */
 public class EventSet_FRAME_POP extends EventSet {
 
-    public EventSet_FRAME_POP(RequestPacket req) {
-        super(req);
+    public EventSet_FRAME_POP(RequestPacket req, byte eventKind) {
+        super(req, eventKind);
     }
 
     public short process() {

@@ -15,8 +15,8 @@ import javax.mini.jdwp.net.Session;
  */
 public class EventSet_FIELD_ACCESS extends EventSet {
 
-    public EventSet_FIELD_ACCESS(RequestPacket req) {
-        super(req);
+    public EventSet_FIELD_ACCESS(RequestPacket req, byte eventKind) {
+        super(req, eventKind);
     }
 
     public short process() {

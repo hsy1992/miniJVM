@@ -15,8 +15,8 @@ import javax.mini.jdwp.net.Session;
  */
 public class EventSet_USER_DEFINED extends EventSet {
 
-    public EventSet_USER_DEFINED(RequestPacket req) {
-        super(req);
+    public EventSet_USER_DEFINED(RequestPacket req, byte eventKind) {
+        super(req, eventKind);
     }
 
     public short process() {

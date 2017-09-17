@@ -15,8 +15,8 @@ import javax.mini.jdwp.net.Session;
  */
 public class EventSet_THREAD_DEATH extends EventSet {
 
-    public EventSet_THREAD_DEATH(RequestPacket req) {
-        super(req);
+    public EventSet_THREAD_DEATH(RequestPacket req, byte eventKind) {
+        super(req, eventKind);
     }
 
     public short process() {

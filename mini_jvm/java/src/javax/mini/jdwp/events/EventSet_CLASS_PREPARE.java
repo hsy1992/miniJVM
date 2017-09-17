@@ -21,8 +21,8 @@ import javax.mini.jdwp.vm.JdwpNative;
  */
 public class EventSet_CLASS_PREPARE extends EventSet {
 
-    public EventSet_CLASS_PREPARE(RequestPacket req) {
-        super(req);
+    public EventSet_CLASS_PREPARE(RequestPacket req, byte eventKind) {
+        super(req, eventKind);
     }
 
     public short process() {

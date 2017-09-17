@@ -15,8 +15,8 @@ import javax.mini.jdwp.net.Session;
  */
 public class EventSet_MONITOR_CONTENDED_ENTER extends EventSet {
 
-    public EventSet_MONITOR_CONTENDED_ENTER(RequestPacket req) {
-        super(req);
+    public EventSet_MONITOR_CONTENDED_ENTER(RequestPacket req, byte eventKind) {
+        super(req, eventKind);
     }
 
     public short process() {

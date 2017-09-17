@@ -15,8 +15,8 @@ import javax.mini.jdwp.net.Session;
  */
 public class EventSet_EXCEPTION extends EventSet {
 
-    public EventSet_EXCEPTION(RequestPacket req) {
-        super(req);
+    public EventSet_EXCEPTION(RequestPacket req, byte eventKind) {
+        super(req, eventKind);
     }
 
     public short process() {

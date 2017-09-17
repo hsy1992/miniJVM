@@ -15,8 +15,8 @@ import javax.mini.jdwp.net.Session;
  */
 public class EventSet_CLASS_UNLOAD extends EventSet {
 
-    public EventSet_CLASS_UNLOAD(RequestPacket req) {
-        super(req);
+    public EventSet_CLASS_UNLOAD(RequestPacket req, byte eventKind) {
+        super(req, eventKind);
     }
 
     public short process() {

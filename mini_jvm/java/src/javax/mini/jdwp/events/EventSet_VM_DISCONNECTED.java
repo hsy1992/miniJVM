@@ -15,8 +15,8 @@ import javax.mini.jdwp.net.Session;
  */
 public class EventSet_VM_DISCONNECTED extends EventSet {
 
-    public EventSet_VM_DISCONNECTED(RequestPacket req) {
-        super(req);
+    public EventSet_VM_DISCONNECTED(RequestPacket req, byte eventKind) {
+        super(req, eventKind);
     }
 
     public short process() {

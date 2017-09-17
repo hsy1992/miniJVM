@@ -15,8 +15,8 @@ import javax.mini.jdwp.net.Session;
  */
 public class EventSet_SINGLE_STEP extends EventSet {
 
-    public EventSet_SINGLE_STEP(RequestPacket req) {
-        super(req);
+    public EventSet_SINGLE_STEP(RequestPacket req, byte eventKind) {
+        super(req, eventKind);
     }
 
     public short process() {
