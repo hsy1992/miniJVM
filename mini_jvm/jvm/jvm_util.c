@@ -7,6 +7,7 @@
 #include "jvm.h"
 #include "jvm_util.h"
 #include "garbage.h"
+#include "java_native_jdwp.h"
 
 //==================================================================================
 
@@ -33,6 +34,7 @@ Class *classes_load_get(Utf8String *ustr, Runtime *runtime) {
     if (!cl) {
         load_class(classpath, ustr, classes);
         cl = classes_get(ustr);
+        //if (java_debug)event_on_class_prepar(runtime, cl);
     }
     if (cl) {
         class_clinit(cl, runtime);

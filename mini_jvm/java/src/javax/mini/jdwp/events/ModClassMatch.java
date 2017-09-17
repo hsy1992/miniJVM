@@ -17,7 +17,7 @@ public class ModClassMatch extends Mod {
 
     public ModClassMatch(RequestPacket req) {
         classPattern = req.readUTF();
-        System.out.println("ModClassMatch:" + classPattern);
+        System.out.print(",ModClassMatch:" + classPattern);
     }
 
 }

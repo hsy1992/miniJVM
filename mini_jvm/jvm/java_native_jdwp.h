@@ -9,5 +9,5 @@
 #include "jvm.h"
 
 void event_on_breakpoint(Runtime *breakpoint_runtime);
-
+void event_on_class_prepar(Runtime *runtime, Class *clazz);
 #endif //MINI_JVM_JAVA_NATIVE_JDWP_H

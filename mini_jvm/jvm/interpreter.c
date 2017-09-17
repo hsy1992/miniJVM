@@ -3005,9 +3005,12 @@ find_exception_handler(Runtime *runtime, Instance *exception, CodeAttribute *ca,
 
         if (offset >= (e + i)->start_pc
             && offset < (e + i)->end_pc) {
+            if (!(e + i)->catch_type) {
+                return e + i;
+            }
             ConstantClassRef *ccr = find_constant_classref(runtime->clazz, (e + i)->catch_type);
             Class *catchClass = classes_load_get(ccr->name, runtime);
-            if ((!(e + i)->catch_type) || instance_of(catchClass, exception))
+            if (instance_of(catchClass, exception))
                 return e + i;
         }
     }

@@ -29,7 +29,7 @@ abstract public class EventSet {
         System.out.print("EventRequest_Set:reqEventId:" + getRequestId() + ", kind=" + eventKind + ", modifiers=" + modifiers);
         for (int i = 0; i < modifiers; i++) {
             byte modi = req.readByte();
-            System.out.println(",mod=" + modi + "\n");
+            System.out.print(",mod=" + modi );
             Mod mod = null;
             switch (modi) {
                 case 1:
@@ -71,6 +71,7 @@ abstract public class EventSet {
             }
             mods[i] = mod;
         }
+        System.out.println("");
     }
 
     /**

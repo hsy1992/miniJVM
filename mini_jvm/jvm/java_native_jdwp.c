@@ -634,7 +634,7 @@ Instance *jdwp_get_location(Runtime *location_runtime) {
 }
 
 //==================== jdwp event
-void event_on_class_prepar(Runtime *runtime, Class *clazz, Instance *jthread) {
+void event_on_class_prepar(Runtime *runtime, Class *clazz) {
     Class *e_cl = classes_load_get_c(JDWP_CLASS_EVENT, runtime);
     Instance *ins = instance_create(e_cl);
     instance_init(ins, runtime);
@@ -645,7 +645,7 @@ void event_on_class_prepar(Runtime *runtime, Class *clazz, Instance *jthread) {
     if (ptr)setFieldByte(ptr, 1);//CLASS=1;INTERFACE=2;ARRAY=3
     //
     ptr = getFieldPtr_byName(ins, JDWP_CLASS_EVENT, "thread", "J");
-    if (ptr)setFieldLong(ptr, (u64) (long) jthread);
+    if (ptr)setFieldLong(ptr, (u64) (long) runtime->threadInfo->jthread);
     //
     ptr = getFieldPtr_byName(ins, JDWP_CLASS_EVENT, "refTypeTag", "B");
     if (ptr)setFieldByte(ptr, 1);
