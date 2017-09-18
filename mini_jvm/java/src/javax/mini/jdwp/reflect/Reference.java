@@ -6,6 +6,8 @@
 package javax.mini.jdwp.reflect;
 
 import java.util.Vector;
+import javax.mini.jdwp.constant.TypeTag;
+import javax.mini.jdwp.vm.JdwpNative;
 
 /**
  *
@@ -54,6 +56,17 @@ public class Reference {
             }
         }
         return null;
+    }
+
+    public static byte getReferenceTypeTag(long classId) {
+        Class clazz = JdwpNative.referenceObj(classId).getClass();
+        if (clazz.isArray()) {
+            return TypeTag.ARRAY;
+        } else if (clazz.isInterface()) {
+            return TypeTag.INTERFACE;
+        } else {
+            return TypeTag.CLASS;
+        }
     }
 
     native void mapReference(long classId);

@@ -7,6 +7,8 @@
 Class *JVM_CLASS;
 Utf8String *classpath;
 Hashtable *classes;  //key =  package+classname value =  class_ptr
+Hashtable *array_classes;
+
 ArrayList *native_libs;
 ArrayList *thread_list; //all thread
 s32 STACK_LENGHT = 10240;

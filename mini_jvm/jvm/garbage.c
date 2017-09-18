@@ -287,7 +287,7 @@ void getMemBlockName(void *memblock, Utf8String *name) {
                 //jvm_printf("Array{%d}", data_type_bytes[arr->arr_data_type]);
                 utf8_append_c(name, "Array{");
                 utf8_insert(name, name->length,
-                            getDataTypeFlag(arr->arr_data_type));//'0' + data_type_bytes[arr->arr_data_type]);
+                            getDataTypeTag(arr->mb.clazz->arr_data_type));//'0' + data_type_bytes[arr->arr_data_type]);
                 utf8_append_c(name, "}");
                 break;
 

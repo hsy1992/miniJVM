@@ -22,9 +22,21 @@ void swap_endian_little_big(u8 *ptr, s32 size);
 
 s32 getDataTypeIndex(c8 ch);
 
-s32 isReference(c8 c);
+s32 isDataReferByTag(c8 c);
 
-u8 getDataTypeFlag(s32 index);
+s32 isDataReferByIndex(s32 index);
+
+u8 getDataTypeTag(s32 index);
+
+void array_classes_create();
+
+void array_classes_destory();
+
+Class *array_class_get(Utf8String *descript);
+
+//Class *array_class_get_by_index(int typeIndex);
+//
+//Class *array_class_get_by_flag(u8 flag);
 
 s64 currentTimeMillis();
 
@@ -52,7 +64,7 @@ s32 jstring_index_of(Instance *jstr, uni_char ch, s32 startAt);
 
 s32 jstring_equals(Instance *jstr1, Instance *jstr2);
 
-s32 jstring_2_utf8(Instance* jstr,Utf8String* utf8);
+s32 jstring_2_utf8(Instance *jstr, Utf8String *utf8);
 
 s32 parseMethodPara(Utf8String *methodType, Utf8String *out);
 
@@ -69,7 +81,7 @@ void runtime_destory(Runtime *runtime);
 typedef struct _JavaThreadInfo {
     Instance *jthread;
     Runtime *top_runtime;
-    Hashset* hold_locks;
+    Hashset *hold_locks;
     volatile u8 garbage_collect_mark_task;
     volatile u8 thread_status;
     volatile s32 suspend_count;//for jdwp suspend ,>0 suspend, ==0 resume

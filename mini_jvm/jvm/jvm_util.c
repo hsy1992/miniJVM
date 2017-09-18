@@ -212,12 +212,49 @@ s32 getDataTypeIndex(c8 ch) {
 }
 
 
-u8 getDataTypeFlag(s32 index) {
+void array_classes_create() {
+    if (!array_classes) {
+        array_classes = hashtable_create(UNICODE_STR_HASH_FUNC, UNICODE_STR_EQUALS_FUNC);
+    }
+
+}
+
+Class *array_class_get(Utf8String *descript) {
+    Class *clazz = hashtable_get(array_classes, descript);
+    if (!clazz) {
+        clazz = class_create();
+        clazz->arr_data_type = getDataTypeIndex(utf8_char_at(descript, 1));
+        clazz->name = utf8_create_copy(descript);
+        hashtable_put(array_classes, clazz->name, clazz);
+    }
+    return clazz;
+}
+
+void array_classes_destory() {
+    HashtableIterator hti;
+    hashtable_iterate(array_classes, &hti);
+    for (; hashtable_iter_has_more(&hti);) {
+        Utf8String *k = hashtable_iter_next_key(&hti);
+        Class *clazz = classes_get(k);
+        utf8_destory(clazz->name);
+        class_destory(clazz);
+    }
+    hashtable_destory(array_classes);
+}
+
+u8 getDataTypeTag(s32 index) {
     return data_type_str[index];
 }
 
-s32 isReference(c8 c) {
+s32 isDataReferByTag(c8 c) {
     if (c == 'L' || c == '[') {
+        return 1;
+    }
+    return 0;
+}
+
+s32 isDataReferByIndex(s32 index) {
+    if (index == DATATYPE_REFERENCE || index == DATATYPE_ARRAY) {
         return 1;
     }
     return 0;
@@ -584,27 +621,37 @@ s32 jthread_waitTime(MemoryBlock *ins, Runtime *runtime, long waitms) {
 }
 
 //===============================    实例化数组  ==================================
-Instance *jarray_create(s32 count, s32 typeIdx, Class *type) {
+Instance *jarray_create_des(s32 count, Utf8String *descript) {
+    u8 ch = utf8_char_at(descript, 1);
+    s32 typeIdx = getDataTypeIndex(ch);
     s32 width = data_type_bytes[typeIdx];
     Instance *arr = jvm_alloc(sizeof(Instance));
     arr->mb.type = MEM_TYPE_ARR;
     arr->mb.garbage_mark = GARBAGE_MARK_UNDEF;//防止在上次回收过程中，此对象刚被放入池子就被回收
-    if (type) {
-        arr->mb.clazz = type;
-    } else {
-        Utf8String *clsName = utf8_create_c(STR_CLASS_JAVA_LANG_OBJECT);
-        arr->mb.clazz = classes_get(clsName);
-        utf8_destory(clsName);
-    }
+    arr->mb.clazz = array_class_get(descript);
     arr->arr_length = count;
-    arr->arr_data_type = typeIdx;
     arr->arr_body = jvm_alloc(width * count);
+    return arr;
+}
+
+Instance *jarray_create(s32 count, s32 typeIdx, Utf8String *type) {
+    Utf8String *ustr = utf8_create_c("[");
+    if (type) {
+        if (!isDataReferByTag(utf8_char_at(type, 0)))utf8_append_c(ustr, "L");
+        utf8_append(ustr, type);
+        if (utf8_char_at(type, type->length - 1) != ';')
+            utf8_append_c(ustr, ";");
+    } else {
+        utf8_insert(ustr, ustr->length, getDataTypeTag(typeIdx));
+    }
+    Instance *arr = jarray_create_des(count, ustr);
+    utf8_destory(ustr);
     return arr;
 }
 
 s32 jarray_destory(Instance *arr) {
     if (arr && arr->mb.type == MEM_TYPE_ARR) {
-        if (arr->arr_data_type == DATATYPE_REFERENCE) {
+        if (isDataReferByIndex(arr->mb.clazz->arr_data_type)) {
             s32 i;
             Long2Double l2d;
             l2d.l = 0;
@@ -631,7 +678,8 @@ Instance *jarray_multi_create(ArrayList *dim, Utf8String *desc, s32 deep) {
     if (len == -1)return NULL;
     c8 ch = utf8_char_at(desc, deep + 1);
     s32 typeIdx = getDataTypeIndex(ch);
-    Instance *arr = jarray_create(len, typeIdx, NULL);
+    Instance *arr = jarray_create_des(len, desc);
+    utf8_substring(desc, 1, desc->length);
 #if _JVM_DEBUG > 5
     jvm_printf("multi arr deep :%d  type(%c) arr[%x] size:%d\n", deep, ch, arr, len);
 #endif
@@ -650,7 +698,7 @@ Instance *jarray_multi_create(ArrayList *dim, Utf8String *desc, s32 deep) {
 
 
 void jarray_set_field(Instance *arr, s32 index, Long2Double *l2d, s32 bytes) {
-    if (arr->arr_data_type == DATATYPE_REFERENCE) {
+    if (isDataReferByIndex(arr->mb.clazz->arr_data_type)) {
         __refer ref = (__refer) getFieldRefer(arr->arr_body + index * bytes);
         if (ref) { //把老索引关闭
             garbage_derefer((__refer) ref, arr);
@@ -678,7 +726,7 @@ void jarray_set_field(Instance *arr, s32 index, Long2Double *l2d, s32 bytes) {
 }
 
 void jarray_get_field(Instance *arr, s32 index, Long2Double *l2d, s32 bytes) {
-    if (arr->arr_data_type == DATATYPE_REFERENCE) {
+    if (isDataReferByIndex(arr->mb.clazz->arr_data_type)) {
         l2d->r = getFieldRefer(arr->arr_body + index * bytes);
     } else {
         switch (bytes) {
@@ -687,7 +735,7 @@ void jarray_get_field(Instance *arr, s32 index, Long2Double *l2d, s32 bytes) {
                 break;
             case 2:
                 l2d->i2l.i1 = getFieldShort(arr->arr_body + index * bytes);
-                if (arr->arr_data_type == DATATYPE_JCHAR) {
+                if (arr->mb.clazz->arr_data_type == DATATYPE_JCHAR) {
                     l2d->i2l.i1 = (u16) l2d->i2l.i1;
                 }
                 break;

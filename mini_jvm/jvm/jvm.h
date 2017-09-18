@@ -188,14 +188,18 @@ static char *exception_class_name[] = {
         "java.lang.InstantiationException",
 };
 
-static char *STR_CLASS_JAVA_LANG_STRING = "java/lang/String";
-static char *STR_CLASS_JAVA_LANG_OBJECT = "java/lang/Object";
-static char *STR_CLASS_JAVA_LANG_THREAD = "java/lang/Thread";
-static char *STR_CLASS_JAVA_LANG_CLASS = "java/lang/Class";
-static char *STR_FIELD_THREADQ = "threadQ";
-static char *STR_FIELD_VALUE = "value";
-static char *STR_FIELD_COUNT = "count";
-static char *STR_FIELD_OFFSET = "offset";
+static c8 *STR_CLASS_JAVA_LANG_STRING = "java/lang/String";
+static c8 *STR_CLASS_JAVA_LANG_OBJECT = "java/lang/Object";
+static c8 *STR_CLASS_JAVA_LANG_THREAD = "java/lang/Thread";
+static c8 *STR_CLASS_JAVA_LANG_CLASS = "java/lang/Class";
+static c8 *STR_FIELD_THREADQ = "threadQ";
+static c8 *STR_FIELD_VALUE = "value";
+static c8 *STR_FIELD_COUNT = "count";
+static c8 *STR_FIELD_OFFSET = "offset";
+
+static c8 *STR_INS_JAVA_LANG_STRING = "Ljava/lang/String;";
+static c8 *STR_INS_JAVA_LANG_THREAD = "Ljava/lang/Thread;";
+static c8 *STR_INS_JAVA_LANG_CLASS = "Ljava/lang/Class;";
 
 enum {
     METHOD_INVOKE_DYNAMIC,
@@ -210,6 +214,7 @@ enum {
 enum {
     MEM_TYPE_NODEF,
     MEM_TYPE_CLASS,
+    MEM_TYPE_ARR_CLASS,
     MEM_TYPE_INS,
     MEM_TYPE_ARR
 };
@@ -326,6 +331,8 @@ extern Instance *jdwp_jthread;
 #define METHOD_MAX_PARA_LENGHT 256
 extern Utf8String *classpath;
 extern Hashtable *classes;
+extern Hashtable *array_classes;
+
 extern ArrayList *thread_list;
 extern ArrayList *native_libs;
 extern s32 STACK_LENGHT;
@@ -630,6 +637,7 @@ typedef struct _AttributePool {
     AttributeInfo *attribute;
     s32 attribute_used;
 } AttributePool;
+
 //======================= runtime =============================
 
 /* Stack Frame */
@@ -698,11 +706,13 @@ typedef struct _ClassType {
     s32 field_static_len; //静态变量内存长度
     c8 *field_static; //静态变量内存地址
 
-
     //public:
     s32 (*_load_from_file)(struct _ClassType *_this, c8 *file);
 
     Utf8String *source;
+
+    //for array class
+    s32 arr_data_type;
 } Class;
 
 void _INIT_CLASS(Class *_this);
@@ -804,7 +814,9 @@ u8 isSonOfInterface(Class *clazz, Class *son);
 
 u8 assignable_from(Class *clazzSon, Class *clazzSuper);
 
-Instance *jarray_create(s32 count, s32 typeIdx, Class *type);
+Instance *jarray_create_des(s32 count, Utf8String *descript);
+
+Instance *jarray_create(s32 count, s32 typeIdx, Utf8String *type);
 
 s32 jarray_destory(Instance *arr);
 
@@ -839,7 +851,6 @@ typedef struct _InstanceType {
         c8 *obj_fields; //object fieldRef body
         c8 *arr_body;//array body
     };
-    u8 arr_data_type;
     s32 arr_length;
 } Instance;
 

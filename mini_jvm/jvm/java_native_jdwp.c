@@ -84,6 +84,15 @@ static u8 JDWP_EVENT_VM_START = 90;
 static u8 JDWP_EVENT_VM_INIT = 90;
 static u8 JDWP_EVENT_VM_DEATH = 99;
 static u8 JDWP_EVENT_VM_DISCONNECTED = 100; //Never sent by across JDWP
+
+
+static c8 *JDWP_CLASS_REFERENCE = "javax/mini/jdwp/reflect/Reference";
+static c8 *JDWP_CLASS_FIELD = "javax/mini/jdwp/reflect/Field";
+static c8 *JDWP_CLASS_METHOD = "javax/mini/jdwp/reflect/Method";
+static c8 *JDWP_CLASS_RUNTIME = "javax/mini/jdwp/reflect/Runtime";
+
+
+
 //==============   tool
 s32 jdwp_set_breakpoint(s32 setOrClear, Class *clazz, MethodInfo *methodInfo, s64 execIndex) {
     if (!methodInfo->breakpoint) {
@@ -146,8 +155,9 @@ s32 javax_mini_jdwp_vm_JdwpNative_referenceObj(Runtime *runtime, Class *clazz) {
 s32 javax_mini_jdwp_vm_JdwpNative_getClasses(Runtime *runtime, Class *clazz) {
     s32 size = classes->entries;
 
-    Class *cl = classes_load_get_c(STR_CLASS_JAVA_LANG_CLASS, runtime);
-    Instance *jarr = jarray_create(size, DATATYPE_REFERENCE, cl);
+    Utf8String *ustr = utf8_create_c(STR_INS_JAVA_LANG_CLASS);
+    Instance *jarr = jarray_create(size, DATATYPE_REFERENCE, ustr);
+    utf8_destory(ustr);
     s32 i = 0;
     Long2Double l2d;
     HashtableIterator hti;
@@ -268,8 +278,9 @@ s32 javax_mini_jdwp_vm_MemObject_readRefer0(Runtime *runtime, Class *clazz) {
 }
 
 s32 javax_mini_jdwp_vm_JdwpThreads_getThreads(Runtime *runtime, Class *clazz) {
-    Class *cl = classes_load_get_c(STR_CLASS_JAVA_LANG_THREAD, runtime);
-    Instance *jarr = jarray_create(thread_list->length, DATATYPE_REFERENCE, cl);
+    Utf8String *ustr = utf8_create_c(STR_INS_JAVA_LANG_THREAD);
+    Instance *jarr = jarray_create(thread_list->length, DATATYPE_REFERENCE, ustr);
+    utf8_destory(ustr);
     s32 i = 0;
     Long2Double l2d;
 
@@ -387,11 +398,6 @@ s32 javax_mini_jdwp_vm_JdwpThreads_getTopRuntime(Runtime *runtime, Class *clazz)
     return 0;
 }
 
-static c8 *JDWP_CLASS_REFERENCE = "javax/mini/jdwp/reflect/Reference";
-static c8 *JDWP_CLASS_FIELD = "javax/mini/jdwp/reflect/Field";
-static c8 *JDWP_CLASS_METHOD = "javax/mini/jdwp/reflect/Method";
-static c8 *JDWP_CLASS_RUNTIME = "javax/mini/jdwp/reflect/Runtime";
-
 s32 javax_mini_jdwp_reflect_Reference_mapReference(Runtime *runtime, Class *clazz) {
     int pos = 0;
     Instance *ins = (Instance *) (runtime->localVariables + pos++)->refer;
@@ -399,7 +405,6 @@ s32 javax_mini_jdwp_reflect_Reference_mapReference(Runtime *runtime, Class *claz
     l2d.i2l.i1 = (runtime->localVariables + pos++)->integer;
     l2d.i2l.i0 = (runtime->localVariables + pos++)->integer;
     Class *target = (__refer) (long) l2d.l;
-    s32 size = getFieldInt(target - 4);
     if (target) {
         u8 *ptr;
         ptr = getFieldPtr_byName(ins, JDWP_CLASS_REFERENCE, "className", "Ljava/lang/String;");

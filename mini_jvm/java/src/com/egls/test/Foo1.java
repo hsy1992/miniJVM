@@ -468,6 +468,16 @@ public class Foo1 {
     }
 
     void t19() {
+        Long[][] a = new Long[3][5];
+        System.out.println("arr a:" + a);
+        Object[][][] objs = new Object[4][][];
+        System.out.println("arr objs:" + objs);
+        objs[1] = new Object[2][];
+        System.out.println("arr objs[1]:" + objs[1]);
+        Short[] c=new Short[5];
+        System.out.println("arr c:" + c);
+        
+
         List<Integer> list = new ArrayList();
         list.add(1);
         list.add(999);

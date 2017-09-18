@@ -442,7 +442,8 @@ public class DebugClient {
                             ResponsePacket res = new ResponsePacket();
                             res.setId(req.getId());
                             res.setErrorCode(Error.NONE);
-                            res.writeByte(obj.getClass().isArray() ? (byte) Tag.ARRAY : Tag.CLASS_OBJECT);
+                            System.out.println("obj [" + Long.toString(objid, 16) + "].getClass()=" + obj.getClass());
+                            res.writeByte(obj.getClass().isArray() ? (byte) TypeTag.ARRAY : obj.getClass().isInterface()?TypeTag.INTERFACE:TypeTag.CLASS);
                             res.writeRefer(JdwpNative.referenceId(obj.getClass()));
                             session.send(res.toByteArray());
                             break;
@@ -566,7 +567,7 @@ public class DebugClient {
                                 if (i >= startFrame && i < startFrame + length) {//返回指定层级的runtimeframe
                                     res.writeRefer(r.runtimeId);
                                     Location loc = new Location();
-                                    loc.typeTag = TypeTag.CLASS;
+                                    loc.typeTag = Reference.getReferenceTypeTag(r.classId);
                                     loc.classID = r.classId;
                                     loc.methodID = r.methodId;
                                     loc.execIndex = r.pc - r.byteCode;

@@ -61,6 +61,9 @@ s32 execute(c8 *p_classpath, c8 *p_mainclass, s32 argc, c8 **argv) {
 
     JVM_CLASS = class_create();
     JVM_CLASS->name = utf8_create_c("MINI_JVM");
+
+    //创建数组类
+    array_classes_create();
     //创建垃圾收集器
     garbage_collector_create();
     //创建线程容器
@@ -86,13 +89,13 @@ s32 execute(c8 *p_classpath, c8 *p_mainclass, s32 argc, c8 **argv) {
 
     HashtableIterator hti;
     hashtable_iterate(classes, &hti);
-#if _JVM_DEBUG>5
+#if _JVM_DEBUG > 5
     jvm_printf("classes size:%d\n", hashtable_num_entries(classes));
 #endif
     for (; hashtable_iter_has_more(&hti);) {
         Utf8String *k = hashtable_iter_next_key(&hti);
         Class *clazz = classes_get(k);
-#if _JVM_DEBUG>5
+#if _JVM_DEBUG > 5
         jvm_printf("classes entry : %s,%d\n", utf8_cstr(k), clazz);
 #endif
         if (clazz->status != CLASS_STATUS_PREPARED)class_prepar(clazz);
@@ -111,7 +114,7 @@ s32 execute(c8 *p_classpath, c8 *p_mainclass, s32 argc, c8 **argv) {
     if (clazz) {
         //jvm_printf("class: %s : %d\n", utf8_cstr(mname), obj_of_clazz);
 
-#if _JVM_DEBUG>5
+#if _JVM_DEBUG > 5
         printConstantPool(clazz);
         printMethodPool(clazz, &(clazz->methodPool));
         printFieldPool(clazz, &(clazz->fieldPool));
@@ -180,6 +183,7 @@ s32 execute(c8 *p_classpath, c8 *p_mainclass, s32 argc, c8 **argv) {
     utf8_destory(classpath);
 
     utf8_destory(mainclass);
+    array_classes_destory();
     destoryAllClasses(classes);
     utf8_destory(JVM_CLASS->name);
     class_destory(JVM_CLASS);

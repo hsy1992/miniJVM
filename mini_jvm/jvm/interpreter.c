@@ -54,7 +54,7 @@ static inline s32 op_xaload(u8 **opCode, Runtime *runtime) {
 
     s32 index = pop_int(stack);
     Instance *arr = (Instance *) pop_ref(stack);
-    s32 bytes = data_type_bytes[arr->arr_data_type];
+    s32 bytes = data_type_bytes[arr->mb.clazz->arr_data_type];
 
     Long2Double l2d;
     jarray_get_field(arr, index, &l2d, bytes);
@@ -108,7 +108,7 @@ s32 op_aaload(u8 **opCode, Runtime *runtime) {
 
     s32 index = pop_int(stack);
     Instance *arr = (Instance *) pop_ref(stack);
-    s32 bytes = data_type_bytes[arr->arr_data_type];
+    s32 bytes = data_type_bytes[(arr->mb.clazz->arr_data_type)];
 
     Long2Double l2d;
     jarray_get_field(arr, index, &l2d, bytes);
@@ -1559,10 +1559,11 @@ static inline s32 op_xastore_impl(u8 **opCode, Runtime *runtime, u8 isReference)
     pop_entry(stack, &entry);
     s32 index = pop_int(stack);
     Instance *ins = (Instance *) pop_ref(stack);
-    s32 bytes = data_type_bytes[ins->arr_data_type];
+    s32 tidx = (ins->mb.clazz->arr_data_type);
+    s32 bytes = data_type_bytes[tidx];
     Long2Double l2d;
     l2d.l = 0;
-    if (ins->arr_data_type == DATATYPE_REFERENCE) {
+    if (tidx == DATATYPE_REFERENCE) {
         l2d.r = entry_2_refer(&entry);
     } else {
         if (bytes > 4) {
@@ -1939,7 +1940,7 @@ static inline s32 op_putfield_impl(u8 **opCode, Runtime *runtime, s32 isStatic) 
                (s64) (long) ptr, entry_2_long(&entry));
 #endif
 
-    if (isReference(ch)) {//垃圾回收标识
+    if (isDataReferByTag(ch)) {//垃圾回收标识
         __refer ref = getFieldRefer(ptr);
         if (ref) { //把老索引关闭
             if (isStatic) {
@@ -2027,7 +2028,7 @@ static inline s32 op_getfield_impl(u8 **opCode, Runtime *runtime, s32 isStatic) 
         ptr = getInstanceFieldPtr(ins, fi);
     }
     Long2Double l2d;
-    if (isReference(ch)) {
+    if (isDataReferByTag(ch)) {
         l2d.r = getFieldRefer(ptr);
         push_ref(stack, l2d.r);
     } else {
@@ -2100,7 +2101,7 @@ s32 op_new(u8 **opCode, Runtime *runtime) {
     return 0;
 }
 
-static inline s32 op_newarray_impl(Runtime *runtime, s32 count, s32 typeIdx, Class *type) {
+static inline s32 op_newarray_impl(Runtime *runtime, s32 count, s32 typeIdx, Utf8String *type) {
     StackFrame *stack = runtime->stack;
     Instance *arr = jarray_create(count, typeIdx, type);
 
@@ -2135,13 +2136,9 @@ s32 op_anewarray(u8 **opCode, Runtime *runtime) {
     s2c.c1 = opCode[0][1];
     s2c.c0 = opCode[0][2];
 
-    s32 typeIdx = s2c.s;
-    Class *cl = classes_load_get(get_utf8_string(runtime->clazz, typeIdx), runtime);
-    typeIdx = DATATYPE_REFERENCE;
-
     s32 count = pop_int(stack);
     *opCode = *opCode + 3;
-    return op_newarray_impl(runtime, count, typeIdx, cl);
+    return op_newarray_impl(runtime, count, 0, get_utf8_string(runtime->clazz, s2c.s));
 }
 
 s32 op_multianewarray(u8 **opCode, Runtime *runtime) {
@@ -2220,7 +2217,7 @@ s32 op_checkcast(u8 **opCode, Runtime *runtime) {
         } else if (ins->mb.type == MEM_TYPE_ARR) {
             Utf8String *utf = find_constant_classref(runtime->clazz, typeIdx)->name;
             u8 ch = utf8_char_at(utf, 1);
-            if (ch == getDataTypeFlag(ins->arr_data_type)) {
+            if (getDataTypeIndex(ch) == ins->mb.clazz->arr_data_type) {
                 checkok = 1;
             }
         }
@@ -2259,7 +2256,7 @@ s32 op_instanceof(u8 **opCode, Runtime *runtime) {
             checkok = 1;
         }
     } else {
-        if (data_type_bytes[ins->arr_data_type] == 4) {
+        if (utf8_equals(ins->mb.clazz->name, getClassByConstantClassRef(runtime->clazz, typeIdx)->name)) {//
             checkok = 1;
         }
     }
