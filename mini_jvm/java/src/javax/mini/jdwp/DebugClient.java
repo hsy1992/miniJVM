@@ -8,7 +8,6 @@ package javax.mini.jdwp;
 import javax.mini.jdwp.vm.JdwpNative;
 import javax.mini.jdwp.vm.JdwpThreads;
 import java.io.IOException;
-import java.util.Hashtable;
 import java.util.Random;
 import javax.mini.jdwp.type.Location;
 import javax.mini.jdwp.constant.ClassStatus;
@@ -24,7 +23,9 @@ import javax.mini.jdwp.net.RequestPacket;
 import javax.mini.jdwp.net.ResponsePacket;
 import javax.mini.jdwp.net.Session;
 import javax.mini.jdwp.reflect.Method;
+import javax.mini.jdwp.reflect.RConst;
 import javax.mini.jdwp.reflect.Reference;
+import javax.mini.jdwp.reflect.StackFrame;
 import javax.mini.net.Socket;
 
 /**
@@ -218,6 +219,7 @@ public class DebugClient {
                             res.writeBoolean(false);//canGetOwnedMonitorInfo
                             res.writeBoolean(false);//canGetCurrentContendedMonitor
                             res.writeBoolean(false);//canGetMonitorInfo
+                            System.out.println("VirtualMachine_Capabilities");
                             session.send(res.toByteArray());
                             break;
                         }
@@ -320,6 +322,7 @@ public class DebugClient {
                             res.setId(req.getId());
                             res.writeUTF(ref.source);
                             System.out.println("ReferenceType_SourceFile:" + ref.source);
+                            session.send(res.toByteArray());
                             break;
                         }
                         case Command.ReferenceType_NestedTypes: {//2.8
@@ -443,7 +446,7 @@ public class DebugClient {
                             res.setId(req.getId());
                             res.setErrorCode(Error.NONE);
                             System.out.println("obj [" + Long.toString(objid, 16) + "].getClass()=" + obj.getClass());
-                            res.writeByte(obj.getClass().isArray() ? (byte) TypeTag.ARRAY : obj.getClass().isInterface()?TypeTag.INTERFACE:TypeTag.CLASS);
+                            res.writeByte(obj.getClass().isArray() ? (byte) TypeTag.ARRAY : obj.getClass().isInterface() ? TypeTag.INTERFACE : TypeTag.CLASS);
                             res.writeRefer(JdwpNative.referenceId(obj.getClass()));
                             session.send(res.toByteArray());
                             break;
@@ -555,14 +558,14 @@ public class DebugClient {
 
                             Thread t = (Thread) JdwpNative.referenceObj(thread);
                             long rid = JdwpThreads.getTopRuntime(t);
-                            javax.mini.jdwp.reflect.Runtime runtime = new javax.mini.jdwp.reflect.Runtime(rid);
+                            javax.mini.jdwp.reflect.StackFrame runtime = new javax.mini.jdwp.reflect.StackFrame(rid);
                             int deepth = runtime.getDeepth();
                             if (length == -1) {//等于-1返回所有剩下的
                                 length = deepth - startFrame;
                             }
                             res.writeInt(length);
-                            javax.mini.jdwp.reflect.Runtime r = runtime.getLastSon();
-                            System.out.println("deepth:" + runtime.getDeepth());
+                            javax.mini.jdwp.reflect.StackFrame r = runtime.getLastSon();
+                            //System.out.println("deepth:" + runtime.getDeepth());
                             for (int i = 0; i < deepth; i++) {
                                 if (i >= startFrame && i < startFrame + length) {//返回指定层级的runtimeframe
                                     res.writeRefer(r.runtimeId);
@@ -572,7 +575,7 @@ public class DebugClient {
                                     loc.methodID = r.methodId;
                                     loc.execIndex = r.pc - r.byteCode;
                                     loc.writeLocation(res);
-                                    System.out.println(loc);
+                                    //System.out.println(loc);
                                 }
                                 r = r.parent;
                                 if (r == null) {
@@ -746,7 +749,16 @@ public class DebugClient {
                             break;
                         }
                         case Command.StackFrame_ThisObject: {
-                            System.out.println(req + " not support");
+                            long thread = req.readRefer();
+                            long frame = req.readRefer();
+                            StackFrame r = new StackFrame(JdwpThreads.getTopRuntime((Thread) JdwpNative.referenceObj(thread)));
+                            r = r.getFrameByIndex(frame);
+                            Method m = new Method(r.methodId);
+
+                            ResponsePacket res = new ResponsePacket();
+                            res.setId(req.getId());
+                            res.setErrorCode(Error.NONE);
+                            res.writeRefer(r.localThis);
                             break;
                         }
                         case Command.StackFrame_PopFrames: {

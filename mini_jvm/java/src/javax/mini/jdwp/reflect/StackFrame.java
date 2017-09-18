@@ -9,7 +9,7 @@ package javax.mini.jdwp.reflect;
  *
  * @author gust
  */
-public class Runtime {
+public class StackFrame {
 
     public long runtimeId;
     public long classId;
@@ -18,32 +18,48 @@ public class Runtime {
     public long byteCode;
     public long methodId;
 
-    public Runtime son;
-    public Runtime parent;
-    Method method;
+    public StackFrame son;
+    public StackFrame parent;
+    public Method method;
+    public long[] localVariables;
+    public long localThis;
 
-    public Runtime(long rid) {
+    public StackFrame(long rid) {
         this(rid, null);
     }
 
-    public Runtime(long rid, Runtime parent) {
+    public StackFrame(long rid, StackFrame parent) {
         this.runtimeId = rid;
         this.parent = parent;
         mapRuntime(runtimeId);
         method = new Method(methodId);
-        System.out.println(this);
+        //System.out.println(this);
         if (sonId != 0) {
-            son = new Runtime(sonId, this);
+            son = new StackFrame(sonId, this);
         }
     }
 
-    public Runtime getLastSon() {
+    public StackFrame getLastSon() {
         return son == null ? this : son.getLastSon();
+    }
+
+    /**
+     * 返回 lastson=0 起的第frameID个runtime
+     *
+     * @param frameID
+     * @return
+     */
+    public StackFrame getFrameByIndex(long frameID) {
+        StackFrame r = getLastSon();
+        for (int i = 0; i < frameID; i++) {
+            r = r.parent;
+        }
+        return r;
     }
 
     public int getDeepth() {
         int deep = 0;
-        Runtime r = this;
+        StackFrame r = this;
         while (r != null) {
             r = r.son;
             deep++;

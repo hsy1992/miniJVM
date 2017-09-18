@@ -89,8 +89,7 @@ static u8 JDWP_EVENT_VM_DISCONNECTED = 100; //Never sent by across JDWP
 static c8 *JDWP_CLASS_REFERENCE = "javax/mini/jdwp/reflect/Reference";
 static c8 *JDWP_CLASS_FIELD = "javax/mini/jdwp/reflect/Field";
 static c8 *JDWP_CLASS_METHOD = "javax/mini/jdwp/reflect/Method";
-static c8 *JDWP_CLASS_RUNTIME = "javax/mini/jdwp/reflect/Runtime";
-
+static c8 *JDWP_CLASS_RUNTIME = "javax/mini/jdwp/reflect/StackFrame";
 
 
 //==============   tool
@@ -526,11 +525,12 @@ s32 javax_mini_jdwp_reflect_Method_mapMethod(Runtime *runtime, Class *clazz) {
             if (ptr)setFieldRefer(ptr, jarr);
             garbage_refer(jarr, ins);
         }
+
     }
     return 0;
 }
 
-s32 javax_mini_jdwp_reflect_Runtime_mapRuntime(Runtime *runtime, Class *clazz) {
+s32 javax_mini_jdwp_reflect_StackFrame_mapRuntime(Runtime *runtime, Class *clazz) {
     int pos = 0;
     Instance *ins = (Instance *) (runtime->localVariables + pos++)->refer;
     Long2Double l2d;
@@ -539,6 +539,7 @@ s32 javax_mini_jdwp_reflect_Runtime_mapRuntime(Runtime *runtime, Class *clazz) {
     Runtime *target = (__refer) (long) l2d.l;
     if (ins && target) {
         u8 *ptr;
+        int i;
         //
         ptr = getFieldPtr_byName(ins, JDWP_CLASS_RUNTIME, "classId", "J");
         if (ptr)setFieldLong(ptr, (u64) (long) target->clazz);
@@ -555,35 +556,48 @@ s32 javax_mini_jdwp_reflect_Runtime_mapRuntime(Runtime *runtime, Class *clazz) {
         ptr = getFieldPtr_byName(ins, JDWP_CLASS_RUNTIME, "methodId", "J");
         if (ptr)setFieldLong(ptr, (u64) (long) target->methodInfo);
         //
+        if (target->methodInfo && !(target->methodInfo->access_flags & ACC_STATIC)) {//top runtime method is null
+            ptr = getFieldPtr_byName(ins, JDWP_CLASS_RUNTIME, "localThis", "J");
+            if (ptr)setFieldRefer(ptr, (&target->localVariables[i])->refer);
+        }
+        //
+
+//        ptr = getFieldPtr_byName(ins, JDWP_CLASS_METHOD, "localVariables", "[J");
+//        Instance *jarr = jarray_create(target->localvar_count, DATATYPE_LONG, NULL);
+//        for(i=0;i<target->localvar_count;i++){
+//            setFieldRefer(jarr->arr_body,(&target->localVariables[i])->refer);
+//        };
+//        if (ptr)setFieldRefer(ptr, jarr);
+//        garbage_refer(jarr, ins);
 
     }
     return 0;
 }
 
 static java_native_method method_jdwp_table[] = {
-        {"javax/mini/jdwp/vm/JdwpNative",     "referenceTyepSize", "()I",                                   javax_mini_jdwp_vm_JdwpNative_referenceTyepSize},
-        {"javax/mini/jdwp/vm/JdwpNative",     "referenceId",       "(Ljava/lang/Object;)J",                 javax_mini_jdwp_vm_JdwpNative_referenceId},
-        {"javax/mini/jdwp/vm/JdwpNative",     "referenceObj",      "(J)Ljava/lang/Object;",                 javax_mini_jdwp_vm_JdwpNative_referenceObj},
-        {"javax/mini/jdwp/vm/JdwpNative",     "getClasses",        "()[Ljava/lang/Class;",                  javax_mini_jdwp_vm_JdwpNative_getClasses},
-        {"javax/mini/jdwp/vm/JdwpNative",     "getClassByName",    "(Ljava/lang/String;)Ljava/lang/Class;", javax_mini_jdwp_vm_JdwpNative_getClassByName},
-        {"javax/mini/jdwp/vm/JdwpNative",     "setBreakPoint",     "(IBJJJ)I",                              javax_mini_jdwp_vm_JdwpNative_setBreakPoint},
-        {"javax/mini/jdwp/vm/MemObject",      "readByte0",         "(JI)B",                                 javax_mini_jdwp_vm_MemObject_readByte0},
-        {"javax/mini/jdwp/vm/MemObject",      "readShort0",        "(JI)S",                                 javax_mini_jdwp_vm_MemObject_readShort0},
-        {"javax/mini/jdwp/vm/MemObject",      "readInt0",          "(JI)I",                                 javax_mini_jdwp_vm_MemObject_readInt0},
-        {"javax/mini/jdwp/vm/MemObject",      "readLong0",         "(JI)J",                                 javax_mini_jdwp_vm_MemObject_readLong0},
-        {"javax/mini/jdwp/vm/MemObject",      "readRefer0",        "(JI)J",                                 javax_mini_jdwp_vm_MemObject_readRefer0},
-        {"javax/mini/jdwp/vm/JdwpThreads",    "getThreads",        "()[Ljava/lang/Thread;",                 javax_mini_jdwp_vm_JdwpThreads_getThreads},
-        {"javax/mini/jdwp/vm/JdwpThreads",    "getStatus",         "(Ljava/lang/Thread;)I",                 javax_mini_jdwp_vm_JdwpThreads_getStatus},
-        {"javax/mini/jdwp/vm/JdwpThreads",    "suspendThread",     "(Ljava/lang/Thread;)I",                 javax_mini_jdwp_vm_JdwpThreads_suspendThread},
-        {"javax/mini/jdwp/vm/JdwpThreads",    "resumeThread",      "(Ljava/lang/Thread;)I",                 javax_mini_jdwp_vm_JdwpThreads_resumeThread},
-        {"javax/mini/jdwp/vm/JdwpThreads",    "getSuspendCount",   "(Ljava/lang/Thread;)I",                 javax_mini_jdwp_vm_JdwpThreads_getSuspendCount},
-        {"javax/mini/jdwp/vm/JdwpThreads",    "getFrameCount",     "(Ljava/lang/Thread;)I",                 javax_mini_jdwp_vm_JdwpThreads_getFrameCount},
-        {"javax/mini/jdwp/vm/JdwpThreads",    "stopThread",        "(Ljava/lang/Thread;J)I",                javax_mini_jdwp_vm_JdwpThreads_stopThread},
-        {"javax/mini/jdwp/vm/JdwpThreads",    "getTopRuntime",     "(Ljava/lang/Thread;)J",                 javax_mini_jdwp_vm_JdwpThreads_getTopRuntime},
-        {"javax/mini/jdwp/reflect/Reference", "mapReference",      "(J)V",                                  javax_mini_jdwp_reflect_Reference_mapReference},
-        {"javax/mini/jdwp/reflect/Field",     "mapField",          "(J)V",                                  javax_mini_jdwp_reflect_Field_mapField},
-        {"javax/mini/jdwp/reflect/Method",    "mapMethod",         "(J)V",                                  javax_mini_jdwp_reflect_Method_mapMethod},
-        {"javax/mini/jdwp/reflect/Runtime",   "mapRuntime",        "(J)V",                                  javax_mini_jdwp_reflect_Runtime_mapRuntime},
+        {"javax/mini/jdwp/vm/JdwpNative",      "referenceTyepSize", "()I",                                   javax_mini_jdwp_vm_JdwpNative_referenceTyepSize},
+        {"javax/mini/jdwp/vm/JdwpNative",      "referenceId",       "(Ljava/lang/Object;)J",                 javax_mini_jdwp_vm_JdwpNative_referenceId},
+        {"javax/mini/jdwp/vm/JdwpNative",      "referenceObj",      "(J)Ljava/lang/Object;",                 javax_mini_jdwp_vm_JdwpNative_referenceObj},
+        {"javax/mini/jdwp/vm/JdwpNative",      "getClasses",        "()[Ljava/lang/Class;",                  javax_mini_jdwp_vm_JdwpNative_getClasses},
+        {"javax/mini/jdwp/vm/JdwpNative",      "getClassByName",    "(Ljava/lang/String;)Ljava/lang/Class;", javax_mini_jdwp_vm_JdwpNative_getClassByName},
+        {"javax/mini/jdwp/vm/JdwpNative",      "setBreakPoint",     "(IBJJJ)I",                              javax_mini_jdwp_vm_JdwpNative_setBreakPoint},
+        {"javax/mini/jdwp/vm/MemObject",       "readByte0",         "(JI)B",                                 javax_mini_jdwp_vm_MemObject_readByte0},
+        {"javax/mini/jdwp/vm/MemObject",       "readShort0",        "(JI)S",                                 javax_mini_jdwp_vm_MemObject_readShort0},
+        {"javax/mini/jdwp/vm/MemObject",       "readInt0",          "(JI)I",                                 javax_mini_jdwp_vm_MemObject_readInt0},
+        {"javax/mini/jdwp/vm/MemObject",       "readLong0",         "(JI)J",                                 javax_mini_jdwp_vm_MemObject_readLong0},
+        {"javax/mini/jdwp/vm/MemObject",       "readRefer0",        "(JI)J",                                 javax_mini_jdwp_vm_MemObject_readRefer0},
+        {"javax/mini/jdwp/vm/JdwpThreads",     "getThreads",        "()[Ljava/lang/Thread;",                 javax_mini_jdwp_vm_JdwpThreads_getThreads},
+        {"javax/mini/jdwp/vm/JdwpThreads",     "getStatus",         "(Ljava/lang/Thread;)I",                 javax_mini_jdwp_vm_JdwpThreads_getStatus},
+        {"javax/mini/jdwp/vm/JdwpThreads",     "suspendThread",     "(Ljava/lang/Thread;)I",                 javax_mini_jdwp_vm_JdwpThreads_suspendThread},
+        {"javax/mini/jdwp/vm/JdwpThreads",     "resumeThread",      "(Ljava/lang/Thread;)I",                 javax_mini_jdwp_vm_JdwpThreads_resumeThread},
+        {"javax/mini/jdwp/vm/JdwpThreads",     "getSuspendCount",   "(Ljava/lang/Thread;)I",                 javax_mini_jdwp_vm_JdwpThreads_getSuspendCount},
+        {"javax/mini/jdwp/vm/JdwpThreads",     "getFrameCount",     "(Ljava/lang/Thread;)I",                 javax_mini_jdwp_vm_JdwpThreads_getFrameCount},
+        {"javax/mini/jdwp/vm/JdwpThreads",     "stopThread",        "(Ljava/lang/Thread;J)I",                javax_mini_jdwp_vm_JdwpThreads_stopThread},
+        {"javax/mini/jdwp/vm/JdwpThreads",     "getTopRuntime",     "(Ljava/lang/Thread;)J",                 javax_mini_jdwp_vm_JdwpThreads_getTopRuntime},
+        {"javax/mini/jdwp/reflect/Reference",  "mapReference",      "(J)V",                                  javax_mini_jdwp_reflect_Reference_mapReference},
+        {"javax/mini/jdwp/reflect/Field",      "mapField",          "(J)V",                                  javax_mini_jdwp_reflect_Field_mapField},
+        {"javax/mini/jdwp/reflect/Method",     "mapMethod",         "(J)V",                                  javax_mini_jdwp_reflect_Method_mapMethod},
+        {"javax/mini/jdwp/reflect/StackFrame", "mapRuntime",        "(J)V",                                  javax_mini_jdwp_reflect_StackFrame_mapRuntime},
 
 };
 
