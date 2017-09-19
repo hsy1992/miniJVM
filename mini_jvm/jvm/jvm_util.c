@@ -495,12 +495,12 @@ pthread_t jthread_create_and_start(Instance *ins) {//
 }
 
 __refer jthread_get_threadq_value(Instance *ins) {
-    c8 *ptr = getFieldPtr_byName(ins, STR_CLASS_JAVA_LANG_THREAD, STR_FIELD_THREADQ, "Ljava/lang/Thread;");
+    c8 *ptr = getFieldPtr_byName_c(ins, STR_CLASS_JAVA_LANG_THREAD, STR_FIELD_THREADQ, "Ljava/lang/Thread;");
     return getFieldRefer(ptr);
 }
 
 void jthread_set_threadq_value(Instance *ins, void *val) {
-    c8 *ptr = getFieldPtr_byName(ins, STR_CLASS_JAVA_LANG_THREAD, STR_FIELD_THREADQ, "Ljava/lang/Thread;");
+    c8 *ptr = getFieldPtr_byName_c(ins, STR_CLASS_JAVA_LANG_THREAD, STR_FIELD_THREADQ, "Ljava/lang/Thread;");
     setFieldRefer(ptr, (__refer) val);
 }
 
@@ -818,19 +818,19 @@ Instance *jstring_create(Utf8String *src, Runtime *runtime) {
 }
 
 s32 jstring_get_count(Instance *jstr) {
-    return getFieldInt(getFieldPtr_byName(jstr, STR_CLASS_JAVA_LANG_STRING, STR_FIELD_COUNT, "I"));
+    return getFieldInt(getFieldPtr_byName_c(jstr, STR_CLASS_JAVA_LANG_STRING, STR_FIELD_COUNT, "I"));
 }
 
 void jstring_set_count(Instance *jstr, s32 count) {
-    setFieldInt(getFieldPtr_byName(jstr, STR_CLASS_JAVA_LANG_STRING, STR_FIELD_COUNT, "I"), count);
+    setFieldInt(getFieldPtr_byName_c(jstr, STR_CLASS_JAVA_LANG_STRING, STR_FIELD_COUNT, "I"), count);
 }
 
 s32 jstring_get_offset(Instance *jstr) {
-    return getFieldInt(getFieldPtr_byName(jstr, STR_CLASS_JAVA_LANG_STRING, STR_FIELD_OFFSET, "I"));
+    return getFieldInt(getFieldPtr_byName_c(jstr, STR_CLASS_JAVA_LANG_STRING, STR_FIELD_OFFSET, "I"));
 }
 
 u8 *jstring_get_value_ptr(Instance *jstr) {
-    return getFieldPtr_byName(jstr, STR_CLASS_JAVA_LANG_STRING, STR_FIELD_VALUE, "[C");
+    return getFieldPtr_byName_c(jstr, STR_CLASS_JAVA_LANG_STRING, STR_FIELD_VALUE, "[C");
 }
 
 Instance *jstring_get_value_array(Instance *jstr) {
@@ -1023,13 +1023,24 @@ f32 getFieldDouble(c8 *ptr) {
 }
 
 
-c8 *getFieldPtr_byName(Instance *instance, c8 *pclassName, c8 *pfieldName, c8 *pfieldType) {
+c8 *getFieldPtr_byName_c(Instance *instance, c8 *pclassName, c8 *pfieldName, c8 *pfieldType) {
     Utf8String *clsName = utf8_create_c(pclassName);
     Class *clazz = classes_get(clsName);
 
     //set value
     Utf8String *fieldName = utf8_create_c(pfieldName);
     Utf8String *fieldType = utf8_create_c(pfieldType);
+    c8 *ptr = getFieldPtr_byName(instance, clsName, fieldName, fieldType);
+    utf8_destory(clsName);
+    utf8_destory(fieldName);
+    utf8_destory(fieldType);
+    return ptr;
+}
+
+
+c8 *getFieldPtr_byName(Instance *instance, Utf8String *clsName, Utf8String *fieldName, Utf8String *fieldType) {
+    Class *clazz = classes_get(clsName);
+    //set value
     s32 fieldIdx = find_constant_fieldref_index(clazz, fieldName, fieldType);
     c8 *ptr = NULL;
     FieldInfo *fi = NULL;
@@ -1046,10 +1057,6 @@ c8 *getFieldPtr_byName(Instance *instance, c8 *pclassName, c8 *pfieldName, c8 *p
             ptr = getInstanceFieldPtr(instance, fi);
         }
     }
-    utf8_destory(clsName);
-    utf8_destory(fieldName);
-    utf8_destory(fieldType);
     return ptr;
 }
-
 

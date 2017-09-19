@@ -17,12 +17,14 @@ public class Reference {
 
     //不可随意改动字段类型及名字，要和native一起改
     public long classId;
+    public long superclass;
     public String className;
     public short accessFlags;
     public String source;
     public int status;
     long fieldIds[];
     long methodIds[];
+    public long interfaces[];
 
     public Field[] fields;
     public Method[] methods;

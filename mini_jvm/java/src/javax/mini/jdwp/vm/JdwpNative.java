@@ -30,4 +30,6 @@ public class JdwpNative {
     public static native int setLocalVal(long frame, int slot, byte type, long value, int bytes);
 
     public static native int getLocalVal(long frame, int slot, ValueType val);
+
+    public static native int getFieldVal(long objId, long fieldId, ValueType val);
 }

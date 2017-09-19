@@ -22,9 +22,9 @@ import javax.mini.jdwp.net.JdwpPacket;
 import javax.mini.jdwp.net.RequestPacket;
 import javax.mini.jdwp.net.ResponsePacket;
 import javax.mini.jdwp.net.Session;
+import javax.mini.jdwp.reflect.Field;
 import javax.mini.jdwp.reflect.LocalVarTable;
 import javax.mini.jdwp.reflect.Method;
-import javax.mini.jdwp.reflect.RConst;
 import javax.mini.jdwp.reflect.Reference;
 import javax.mini.jdwp.reflect.StackFrame;
 import javax.mini.jdwp.type.ValueType;
@@ -292,7 +292,20 @@ public class DebugClient {
                             break;
                         }
                         case Command.ReferenceType_Fields: {//2.4
-                            System.out.println(req + " not support");
+                            long refType = req.readRefer();
+                            Reference ref = JdwpManager.getReference(refType);
+                            ResponsePacket res = new ResponsePacket();
+                            res.setErrorCode(Error.NONE);
+                            res.setId(req.getId());
+                            res.writeInt(ref.fields.length);
+                            for (int i = 0; i < ref.fields.length; i++) {
+                                //System.out.println("method[" + i + "]" + ref.methods[i]);
+                                res.writeRefer(ref.fields[i].fieldId);
+                                res.writeUTF(ref.fields[i].fieldName);
+                                res.writeUTF(ref.fields[i].signature);
+                                res.writeInt(ref.fields[i].accessFlags);
+                            }
+                            session.send(res.toByteArray());
                             break;
                         }
                         case Command.ReferenceType_Methods: {//2.5
@@ -336,7 +349,17 @@ public class DebugClient {
                             break;
                         }
                         case Command.ReferenceType_Interfaces: {//2.10
-                            System.out.println(req + " not support");
+                            long refType = req.readRefer();
+                            Reference ref = (Reference) JdwpManager.getReference(refType);
+                            ResponsePacket res = new ResponsePacket();
+                            res.setErrorCode(Error.NONE);
+                            res.setId(req.getId());
+                            res.writeInt(ref.interfaces.length);
+                            for (int i = 0; i < ref.interfaces.length; i++) {
+                                res.writeRefer(ref.interfaces[i]);
+                            }
+                            System.out.println("ReferenceType_Interfaces:" + ref.className);
+                            session.send(res.toByteArray());
                             break;
                         }
                         case Command.ReferenceType_ClassObject: {//2.11
@@ -365,7 +388,14 @@ public class DebugClient {
                 case CommandSet.ClassType: {//set 3
                     switch (req.getCommand()) {
                         case Command.ClassType_Superclass: {//3.1
-                            System.out.println(req + " not support");
+                            long clazz = req.readRefer();
+                            Reference ref = (Reference) JdwpManager.getReference(clazz);
+                            ResponsePacket res = new ResponsePacket();
+                            res.setErrorCode(Error.NONE);
+                            res.setId(req.getId());
+                            res.writeRefer(ref.superclass);
+                            System.out.println("ReferenceType_Interfaces:" + ref.className);
+                            session.send(res.toByteArray());
                             break;
                         }
                         case Command.ClassType_SetValues: {//3.2
@@ -465,6 +495,7 @@ public class DebugClient {
                             ResponsePacket res = new ResponsePacket();
                             res.setId(req.getId());
                             res.setErrorCode(Error.NONE);
+                            System.out.println("obj [" + Long.toString(objid, 16) + "]" );
                             System.out.println("obj [" + Long.toString(objid, 16) + "].getClass()=" + obj.getClass());
                             res.writeByte(obj.getClass().isArray() ? (byte) TypeTag.ARRAY : obj.getClass().isInterface() ? TypeTag.INTERFACE : TypeTag.CLASS);
                             res.writeRefer(JdwpNative.referenceId(obj.getClass()));
@@ -472,7 +503,22 @@ public class DebugClient {
                             break;
                         }
                         case Command.ObjectReference_GetValues: {//9.2
-                            System.out.println(req + " not support");
+                            long objid = req.readRefer();
+                            int fields = req.readInt();
+                            ResponsePacket res = new ResponsePacket();
+                            res.setId(req.getId());
+                            res.setErrorCode(Error.NONE);
+                            res.writeInt(fields);
+                            for (int i = 0; i < fields; i++) {
+                                long fieldId = req.readRefer();
+                                Field f = new Field(fieldId);
+                                ValueType val = new ValueType((byte) f.signature.charAt(0));
+                                System.out.println("field:"+f.fieldName+" val:"+val);
+                                JdwpNative.getFieldVal(objid, fieldId, val);
+                                val.write(res);
+                            }
+                            System.out.println("ObjectReference_GetValues obj [" + Long.toString(objid, 16) + "]" );
+                            session.send(res.toByteArray());
                             break;
                         }
                         case Command.ObjectReference_SetValues: {//9.3
@@ -760,19 +806,19 @@ public class DebugClient {
                 }
                 case CommandSet.StackFrame: {//set 16
                     switch (req.getCommand()) {
-                        case Command.StackFrame_GetValues: {
+                        case Command.StackFrame_GetValues: {//16.1
                             long thread = req.readRefer();
                             long frame = req.readRefer();
                             StackFrame r = new StackFrame(frame);
                             ResponsePacket res = new ResponsePacket();
                             res.setId(req.getId());
                             res.setErrorCode(Error.NONE);
-                            
+
                             int slots = req.readInt();
                             res.writeInt(slots);
                             for (int i = 0; i < slots; i++) {
                                 int slot = req.readInt();
-                                byte type=req.readByte();
+                                byte type = req.readByte();
                                 ValueType val = new ValueType(type);
                                 JdwpNative.getLocalVal(frame, slot, val);
                                 val.write(res);
@@ -781,7 +827,7 @@ public class DebugClient {
                             session.send(res.toByteArray());
                             break;
                         }
-                        case Command.StackFrame_SetValues: {
+                        case Command.StackFrame_SetValues: {//16.2
                             long thread = req.readRefer();
                             long frame = req.readRefer();
                             StackFrame r = new StackFrame(frame);
@@ -798,7 +844,7 @@ public class DebugClient {
                             session.send(res.toByteArray());
                             break;
                         }
-                        case Command.StackFrame_ThisObject: {
+                        case Command.StackFrame_ThisObject: {//16.3
                             long thread = req.readRefer();
                             long frame = req.readRefer();
                             StackFrame r = new StackFrame(frame);
@@ -811,7 +857,7 @@ public class DebugClient {
                             session.send(res.toByteArray());
                             break;
                         }
-                        case Command.StackFrame_PopFrames: {
+                        case Command.StackFrame_PopFrames: {//16.4
                             System.out.println(req + " not support");
                             break;
                         }

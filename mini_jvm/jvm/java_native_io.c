@@ -722,27 +722,27 @@ s32 javax_mini_io_File_loadFD(Runtime *runtime, Class *clazz) {
         if (ret == 0) {
             c8 *className = "javax/mini/io/FileDescriptor";
             u8 *ptr;
-            ptr = getFieldPtr_byName(fd, className, "st_dev", "I");
+            ptr = getFieldPtr_byName_c(fd, className, "st_dev", "I");
             setFieldInt(ptr, buf.st_dev);
-            ptr = getFieldPtr_byName(fd, className, "st_ino", "S");
+            ptr = getFieldPtr_byName_c(fd, className, "st_ino", "S");
             setFieldShort(ptr, buf.st_ino);
-            ptr = getFieldPtr_byName(fd, className, "st_mode", "S");
+            ptr = getFieldPtr_byName_c(fd, className, "st_mode", "S");
             setFieldShort(ptr, buf.st_mode);
-            ptr = getFieldPtr_byName(fd, className, "st_nlink", "S");
+            ptr = getFieldPtr_byName_c(fd, className, "st_nlink", "S");
             setFieldShort(ptr, buf.st_nlink);
-            ptr = getFieldPtr_byName(fd, className, "st_uid", "S");
+            ptr = getFieldPtr_byName_c(fd, className, "st_uid", "S");
             setFieldShort(ptr, buf.st_uid);
-            ptr = getFieldPtr_byName(fd, className, "st_gid", "S");
+            ptr = getFieldPtr_byName_c(fd, className, "st_gid", "S");
             setFieldShort(ptr, buf.st_gid);
-            ptr = getFieldPtr_byName(fd, className, "st_rdev", "S");
+            ptr = getFieldPtr_byName_c(fd, className, "st_rdev", "S");
             setFieldShort(ptr, buf.st_rdev);
-            ptr = getFieldPtr_byName(fd, className, "st_size", "J");
+            ptr = getFieldPtr_byName_c(fd, className, "st_size", "J");
             setFieldLong(ptr, buf.st_size);
-            ptr = getFieldPtr_byName(fd, className, "st_atime", "J");
+            ptr = getFieldPtr_byName_c(fd, className, "st_atime", "J");
             setFieldLong(ptr, buf.st_atime);
-            ptr = getFieldPtr_byName(fd, className, "st_mtime", "J");
+            ptr = getFieldPtr_byName_c(fd, className, "st_mtime", "J");
             setFieldLong(ptr, buf.st_mtime);
-            ptr = getFieldPtr_byName(fd, className, "st_ctime", "J");
+            ptr = getFieldPtr_byName_c(fd, className, "st_ctime", "J");
             setFieldLong(ptr, buf.st_ctime);
         }
         utf8_destory(filepath);

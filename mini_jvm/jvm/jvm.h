@@ -836,8 +836,9 @@ Instance *jstring_create(Utf8String *src, Runtime *runtime);
 
 Instance *exception_create(s32 exception_type, Runtime *runtime);
 
-c8 *getFieldPtr_byName(Instance *instance, c8 *pclassName, c8 *pfieldName, c8 *pfieldType);
+c8 *getFieldPtr_byName_c(Instance *instance, c8 *pclassName, c8 *pfieldName, c8 *pfieldType);
 
+c8 *getFieldPtr_byName(Instance *instance, Utf8String *clsName, Utf8String *fieldName, Utf8String *fieldType);
 
 Class *classes_get(Utf8String *clsName);
 
