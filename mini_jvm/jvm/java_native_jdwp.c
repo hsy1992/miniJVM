@@ -90,6 +90,8 @@ static c8 *JDWP_CLASS_REFERENCE = "javax/mini/jdwp/reflect/Reference";
 static c8 *JDWP_CLASS_FIELD = "javax/mini/jdwp/reflect/Field";
 static c8 *JDWP_CLASS_METHOD = "javax/mini/jdwp/reflect/Method";
 static c8 *JDWP_CLASS_RUNTIME = "javax/mini/jdwp/reflect/StackFrame";
+static c8 *JDWP_CLASS_LOCALVARTABLE = "javax/mini/jdwp/reflect/LocalVarTable";
+static c8 *JDWP_CLASS_VALUETYPE = "javax/mini/jdwp/type/ValueType";
 
 
 //==============   tool
@@ -202,6 +204,78 @@ s32 javax_mini_jdwp_vm_JdwpNative_setBreakPoint(Runtime *runtime, Class *clazz) 
     u64 execIndex = l2d.l;
     jdwp_set_breakpoint(setOrClear, cl, method, execIndex);
     push_int(runtime->stack, 0);
+    return 0;
+}
+
+s32 javax_mini_jdwp_vm_JdwpNative_setLocalVal(Runtime *runtime, Class *clazz) {
+    int pos = 0;
+    Long2Double l2d;
+    l2d.i2l.i1 = (runtime->localVariables + pos++)->integer;
+    l2d.i2l.i0 = (runtime->localVariables + pos++)->integer;
+    Runtime *r = (Runtime *) (__refer) (long) l2d.l;
+    s32 slot = (runtime->localVariables + pos++)->integer;
+    u8 type = (u8) (runtime->localVariables + pos++)->integer;
+
+    l2d.i2l.i1 = (runtime->localVariables + pos++)->integer;
+    l2d.i2l.i0 = (runtime->localVariables + pos++)->integer;
+
+    s32 bytes = (runtime->localVariables + pos++)->integer;
+    if (slot < r->localvar_count) {
+        switch (bytes) {
+            case 'R':
+                r->localVariables[slot].refer = (__refer) (long) l2d.l;
+                break;
+            case '8':
+                r->localVariables[slot].integer = l2d.i2l.i0;
+                r->localVariables[slot + 1].integer = l2d.i2l.i1;
+                break;
+            case '4':
+            case '2':
+            case '1':
+                r->localVariables[slot].integer = (s32) l2d.l;
+                break;
+        }
+        push_int(runtime->stack, 0);
+    } else {
+        push_int(runtime->stack, 1);
+    }
+    return 0;
+}
+
+s32 javax_mini_jdwp_vm_JdwpNative_getLocalVal(Runtime *runtime, Class *clazz) {
+    int pos = 0;
+    Long2Double l2d;
+    l2d.i2l.i1 = (runtime->localVariables + pos++)->integer;
+    l2d.i2l.i0 = (runtime->localVariables + pos++)->integer;
+    Runtime *r = (Runtime *) (__refer) (long) l2d.l;
+    s32 slot = (runtime->localVariables + pos++)->integer;
+    Instance *valuetype = (runtime->localVariables + pos++)->refer;
+
+    u8 *ptr = getFieldPtr_byName(valuetype, JDWP_CLASS_VALUETYPE, "bytes", "C");
+    u16 bytes = (u16)getFieldShort(ptr);
+    ptr = getFieldPtr_byName(valuetype, JDWP_CLASS_VALUETYPE, "value", "J");
+    if (slot < r->localvar_count) {
+        switch (bytes) {
+            case 'R':
+                r->localVariables[slot].refer = (__refer) (long) l2d.l;
+                l2d.l = (s64) (long) r->localVariables[slot].refer;
+
+                break;
+            case '8':
+                l2d.i2l.i1 = r->localVariables[slot].integer;
+                l2d.i2l.i0 = r->localVariables[slot + 1].integer;
+                break;
+            case '4':
+            case '2':
+            case '1':
+                l2d.l = r->localVariables[slot].integer;
+                break;
+        }
+        setFieldLong(ptr, l2d.l);
+        push_int(runtime->stack, 0);
+    } else {
+        push_int(runtime->stack, 1);
+    }
     return 0;
 }
 
@@ -477,6 +551,32 @@ s32 javax_mini_jdwp_reflect_Field_mapField(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
+Instance *localVarTable2java(Class *clazz, LocalVarTable *lvt, Runtime *runtime) {
+    Class *cl = classes_load_get_c(JDWP_CLASS_LOCALVARTABLE, runtime);
+    Instance *ins = instance_create(cl);
+    instance_init(ins, runtime);
+    if (ins && lvt) {
+        u8 *ptr;
+        //
+        ptr = getFieldPtr_byName(ins, JDWP_CLASS_LOCALVARTABLE, "name", "Ljava/lang/String;");
+        Instance *name = jstring_create(get_utf8_string(clazz, lvt->name_index), runtime);
+        if (ptr)setFieldRefer(ptr, name);
+        garbage_refer(name, ins);
+        //
+        ptr = getFieldPtr_byName(ins, JDWP_CLASS_LOCALVARTABLE, "signature", "Ljava/lang/String;");
+        Instance *signature = jstring_create(get_utf8_string(clazz, lvt->descriptor_index), runtime);
+        if (ptr)setFieldRefer(ptr, signature);
+        garbage_refer(signature, ins);
+        //
+        ptr = getFieldPtr_byName(ins, JDWP_CLASS_LOCALVARTABLE, "codeIndex", "J");
+        if (ptr)setFieldLong(ptr, lvt->start_pc);
+        //
+        ptr = getFieldPtr_byName(ins, JDWP_CLASS_LOCALVARTABLE, "length", "I");
+        if (ptr)setFieldInt(ptr, lvt->length);
+    }
+    return ins;
+}
+
 s32 javax_mini_jdwp_reflect_Method_mapMethod(Runtime *runtime, Class *clazz) {
     int pos = 0;
     Instance *ins = (Instance *) (runtime->localVariables + pos++)->refer;
@@ -500,6 +600,9 @@ s32 javax_mini_jdwp_reflect_Method_mapMethod(Runtime *runtime, Class *clazz) {
         ptr = getFieldPtr_byName(ins, JDWP_CLASS_METHOD, "accessFlags", "S");
         if (ptr)setFieldShort(ptr, methodInfo->access_flags);
         //
+        ptr = getFieldPtr_byName(ins, JDWP_CLASS_METHOD, "argCnt", "I");
+        if (ptr)setFieldInt(ptr, methodInfo->para_count);
+        //
         s32 i;
         AttributeInfo *att = NULL;
         for (i = 0; i < methodInfo->attributes_count; i++) {
@@ -518,12 +621,31 @@ s32 javax_mini_jdwp_reflect_Method_mapMethod(Runtime *runtime, Class *clazz) {
         if (ptr)if (att)setFieldInt(ptr, att->converted_code->line_number_table_length); else setFieldInt(ptr, 0);
         //
         if (att) {
-            ptr = getFieldPtr_byName(ins, JDWP_CLASS_METHOD, "lineNum", "[S");
-            Instance *jarr = jarray_create(att->converted_code->line_number_table_length * 2, DATATYPE_SHORT, NULL);
-            memcpy(jarr->arr_body, att->converted_code->line_number_table,
-                   att->converted_code->line_number_table_length * 4);
-            if (ptr)setFieldRefer(ptr, jarr);
-            garbage_refer(jarr, ins);
+            {
+                ptr = getFieldPtr_byName(ins, JDWP_CLASS_METHOD, "lineNum", "[S");
+                Instance *jarr = jarray_create(att->converted_code->line_number_table_length * 2, DATATYPE_SHORT, NULL);
+                memcpy(jarr->arr_body, att->converted_code->line_number_table,
+                       att->converted_code->line_number_table_length * 4);
+                if (ptr)setFieldRefer(ptr, jarr);
+                garbage_refer(jarr, ins);
+            }
+            {
+                //
+                u8 *table_type = "[Ljavax/mini/jdwp/reflect/LocalVarTable;";
+                ptr = getFieldPtr_byName(ins, JDWP_CLASS_METHOD, "localVarTable", table_type);
+                Utf8String *ustr = utf8_create_c(table_type);
+                Instance *jarr = jarray_create(att->converted_code->local_var_table_length, DATATYPE_REFERENCE,
+                                               ustr);
+                utf8_destory(ustr);
+                for (i = 0; i < att->converted_code->local_var_table_length; i++) {
+                    LocalVarTable *lvt = &att->converted_code->local_var_table[i];
+                    Instance *jlocaltable = localVarTable2java(methodInfo->_this_class, lvt, runtime);
+                    setFieldRefer(&jarr->arr_body[i], jlocaltable);
+                    garbage_refer(jlocaltable, jarr);
+                }
+                if (ptr)setFieldRefer(ptr, jarr);
+                garbage_refer(jarr, ins);
+            }
         }
 
     }
@@ -581,6 +703,8 @@ static java_native_method method_jdwp_table[] = {
         {"javax/mini/jdwp/vm/JdwpNative",      "getClasses",        "()[Ljava/lang/Class;",                  javax_mini_jdwp_vm_JdwpNative_getClasses},
         {"javax/mini/jdwp/vm/JdwpNative",      "getClassByName",    "(Ljava/lang/String;)Ljava/lang/Class;", javax_mini_jdwp_vm_JdwpNative_getClassByName},
         {"javax/mini/jdwp/vm/JdwpNative",      "setBreakPoint",     "(IBJJJ)I",                              javax_mini_jdwp_vm_JdwpNative_setBreakPoint},
+        {"javax/mini/jdwp/vm/JdwpNative",      "setLocalVal",       "(JIBJI)I",                              javax_mini_jdwp_vm_JdwpNative_setLocalVal},
+        {"javax/mini/jdwp/vm/JdwpNative",      "getLocalVal",       "(JILjavax/mini/jdwp/type/ValueType;)I", javax_mini_jdwp_vm_JdwpNative_getLocalVal},
         {"javax/mini/jdwp/vm/MemObject",       "readByte0",         "(JI)B",                                 javax_mini_jdwp_vm_MemObject_readByte0},
         {"javax/mini/jdwp/vm/MemObject",       "readShort0",        "(JI)S",                                 javax_mini_jdwp_vm_MemObject_readShort0},
         {"javax/mini/jdwp/vm/MemObject",       "readInt0",          "(JI)I",                                 javax_mini_jdwp_vm_MemObject_readInt0},

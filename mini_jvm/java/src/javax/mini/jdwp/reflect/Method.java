@@ -21,6 +21,9 @@ public class Method {
     public long codeEnd;
     public int lines;
     public short[] lineNum;
+    
+    public int argCnt;//The number of words in the frame used by arguments. Eight-byte arguments use two words; all others use one. 
+    public LocalVarTable[] localVarTable;
 
     public Method(long mid) {
         this.methodId = mid;

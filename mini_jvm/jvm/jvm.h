@@ -561,7 +561,7 @@ typedef struct _AttributeInfo {
 typedef struct _line_number {
     u16 start_pc;
     u16 line_number;
-} line_number;
+} LineNumberTable;
 
 typedef struct _ExceptionTable {
     u16 start_pc;
@@ -569,7 +569,15 @@ typedef struct _ExceptionTable {
     u16 handler_pc;
     u16 catch_type;
 } ExceptionTable;
-/* Code Attributes */
+
+typedef struct _LocalVarTable {
+    u16 start_pc;
+    u16 length;
+    u16 name_index;
+    u16 descriptor_index;
+    u16 index;
+} LocalVarTable;
+
 typedef struct _CodeAttribute {
     u16 attribute_name_index;
     s32 attribute_length;
@@ -580,12 +588,10 @@ typedef struct _CodeAttribute {
     u16 exception_table_length;
     ExceptionTable *exception_table; //[exception_table_length];
     u16 line_number_table_length;
-    line_number *line_number_table;
+    LineNumberTable *line_number_table;
+    u16 local_var_table_length;
+    LocalVarTable *local_var_table;
 
-#if 0
-    u16 attributes_count;
-    attribute_info* attributes; //[attributes_count];
-#endif
 } CodeAttribute;
 
 /* Field Info */

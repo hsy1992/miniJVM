@@ -303,7 +303,7 @@ s32 parseMethodPara(Utf8String *methodType, Utf8String *out) {
             case 'L':
                 utf8_substring(para, utf8_indexof_c(para, ";") + 1, para->length);
                 utf8_append_c(out, "R");
-                count += (sizeof(__refer) / 4);
+                count += 1;
                 break;
             case '[':
                 while (utf8_char_at(para, 1) == '[') {
@@ -315,7 +315,7 @@ s32 parseMethodPara(Utf8String *methodType, Utf8String *out) {
                     utf8_substring(para, 2, para->length);
                 }
                 utf8_append_c(out, "R");
-                count += (sizeof(__refer) / 4);
+                count += 1;
                 break;
         }
         i++;

@@ -3018,10 +3018,10 @@ static s32 find_line_num(CodeAttribute *ca, s32 offset) {
     s32 i, j;
 
     for (j = 0; j < ca->line_number_table_length; j++) {
-        line_number *node = &(ca->line_number_table[j]);
+        LineNumberTable *node = &(ca->line_number_table[j]);
         if (offset >= node->start_pc) {
             if (j + 1 < ca->line_number_table_length) {
-                line_number *next_node = &(ca->line_number_table[j + 1]);
+                LineNumberTable *next_node = &(ca->line_number_table[j + 1]);
 
                 if (offset < next_node->start_pc) {
                     return node->line_number;

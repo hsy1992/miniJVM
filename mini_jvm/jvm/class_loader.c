@@ -56,23 +56,23 @@ void printClassFileFormat(ClassFileFormat *cff) {
         jvm_printf("0x%02X ", cff->magic_number[i]);
     jvm_printf("\n");
     jvm_printf("Minor Number = 0x(%02X) %d \n",
-           cff->minor_version, cff->minor_version);
+               cff->minor_version, cff->minor_version);
     jvm_printf("Major Number(%s) = 0x(%02X) %d \n",
-           getMajorVersionString(cff->major_version),
-           cff->major_version, cff->major_version);
+               getMajorVersionString(cff->major_version),
+               cff->major_version, cff->major_version);
     jvm_printf("Constant Pool Count = 0x(%02X) %d \n",
-           cff->constant_pool_count, cff->constant_pool_count);
+               cff->constant_pool_count, cff->constant_pool_count);
     jvm_printf("access flag = 0x(%02X) %d \n", cff->access_flags, cff->access_flags);
     jvm_printf("this class = 0x(%02X) %d \n",
-           cff->this_class, cff->this_class);
+               cff->this_class, cff->this_class);
     jvm_printf("super class = 0x(%02X) %d \n",
-           cff->super_class, cff->super_class);
+               cff->super_class, cff->super_class);
     jvm_printf("interfaceRef count = 0x(%02X) %d \n",
-           cff->interface_count, cff->interface_count);
+               cff->interface_count, cff->interface_count);
     jvm_printf("fieldRef count = 0x(%02X) %d \n",
-           cff->fields_count, cff->fields_count);
+               cff->fields_count, cff->fields_count);
     jvm_printf("methodRef count = 0x(%02X) %d \n",
-           cff->methods_count, cff->methods_count);
+               cff->methods_count, cff->methods_count);
 }
 
 /* Parse Class File */
@@ -186,10 +186,14 @@ void class_link(Class *clazz) {
         MethodInfo *ptr = &clazz->methodPool.method[i];
         ptr->name = get_utf8_string(clazz, ptr->name_index);
         ptr->descriptor = get_utf8_string(clazz, ptr->descriptor_index);
+        ptr->_this_class = clazz;
         if (!ptr->paraType) {//首次执行
             // eg:  (Ljava/lang/Object;IBLjava/lang/String;[[[ILjava/lang/Object;)Ljava/lang/String;Z
             ptr->paraType = utf8_create();
             ptr->para_count = parseMethodPara(ptr->descriptor, ptr->paraType);
+            if (!(ptr->access_flags & ACC_STATIC)) {
+                ptr->para_count++;//add instance
+            }
         }
         s32 j;
 
@@ -302,6 +306,29 @@ s32 convert_to_code_attribute(CodeAttribute *ca, AttributeInfo *attr, Class *cla
                 //setFieldShort(ca->line_number_table[j].line_number, s2c.s);
                 ca->line_number_table[j].line_number = s2c.s;
             }
+        } else if (utf8_equals_c(get_utf8_string(clazz, attribute_name_index), "LocalVariableTable")) {
+            s2c.c1 = attr->info[info_p++];
+            s2c.c0 = attr->info[info_p++];
+            ca->local_var_table_length = (u16) s2c.s;
+            ca->local_var_table = jvm_alloc(sizeof(LocalVarTable) * ca->local_var_table_length);
+            s32 j;
+            for (j = 0; j < ca->local_var_table_length; j++) {
+                s2c.c1 = attr->info[info_p++];
+                s2c.c0 = attr->info[info_p++];
+                ca->local_var_table[j].start_pc = s2c.s;
+                s2c.c1 = attr->info[info_p++];
+                s2c.c0 = attr->info[info_p++];
+                ca->local_var_table[j].length = s2c.s;
+                s2c.c1 = attr->info[info_p++];
+                s2c.c0 = attr->info[info_p++];
+                ca->local_var_table[j].name_index = s2c.s;
+                s2c.c1 = attr->info[info_p++];
+                s2c.c0 = attr->info[info_p++];
+                ca->local_var_table[j].descriptor_index = s2c.s;
+                s2c.c1 = attr->info[info_p++];
+                s2c.c0 = attr->info[info_p++];
+                ca->local_var_table[j].index = s2c.s;
+            }
         } else {
             info_p += attribute_lenth;
         }
@@ -350,7 +377,7 @@ s32 load_class(Utf8String *pClassPath, Utf8String *pClassName, hmap_t classes) {
         jvm_printf(" class not found : %s\n", utf8_cstr(pClassName));
         return -1;
     }
-#if _JVM_DEBUG>5
+#if _JVM_DEBUG > 5
     jvm_printf("load class:  %s \n", utf8_cstr(tmppath));
 #endif
     classes_put(clazz);

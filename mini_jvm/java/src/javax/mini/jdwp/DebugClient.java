@@ -22,10 +22,12 @@ import javax.mini.jdwp.net.JdwpPacket;
 import javax.mini.jdwp.net.RequestPacket;
 import javax.mini.jdwp.net.ResponsePacket;
 import javax.mini.jdwp.net.Session;
+import javax.mini.jdwp.reflect.LocalVarTable;
 import javax.mini.jdwp.reflect.Method;
 import javax.mini.jdwp.reflect.RConst;
 import javax.mini.jdwp.reflect.Reference;
 import javax.mini.jdwp.reflect.StackFrame;
+import javax.mini.jdwp.type.ValueType;
 import javax.mini.net.Socket;
 
 /**
@@ -416,7 +418,25 @@ public class DebugClient {
                             break;
                         }
                         case Command.Method_VariableTable: {//6.2
-                            System.out.println(req + " not support");
+                            long refType = req.readRefer();
+                            long methodID = req.readRefer();
+                            Method m = new Method(methodID);
+
+                            ResponsePacket res = new ResponsePacket();
+                            res.setId(req.getId());
+                            res.setErrorCode(Error.NONE);
+                            res.writeInt(m.argCnt);
+                            LocalVarTable[] tab = m.localVarTable;
+                            res.writeInt(tab.length);
+                            for (int i = 0; i < tab.length; i++) {
+                                res.writeLong(tab[i].codeIndex);
+                                res.writeUTF(tab[i].name);
+                                res.writeUTF(tab[i].signature);
+                                res.writeInt(tab[i].length);
+                                res.writeInt(tab[i].slot);
+                                System.out.println("Method_VariableTable:" + tab[i]);
+                            }
+                            session.send(res.toByteArray());
                             break;
                         }
                         case Command.Method_Bytecodes: {//6.3
@@ -741,24 +761,54 @@ public class DebugClient {
                 case CommandSet.StackFrame: {//set 16
                     switch (req.getCommand()) {
                         case Command.StackFrame_GetValues: {
-                            System.out.println(req + " not support");
+                            long thread = req.readRefer();
+                            long frame = req.readRefer();
+                            StackFrame r = new StackFrame(frame);
+                            ResponsePacket res = new ResponsePacket();
+                            res.setId(req.getId());
+                            res.setErrorCode(Error.NONE);
+                            
+                            int slots = req.readInt();
+                            res.writeInt(slots);
+                            for (int i = 0; i < slots; i++) {
+                                int slot = req.readInt();
+                                byte type=req.readByte();
+                                ValueType val = new ValueType(type);
+                                JdwpNative.getLocalVal(frame, slot, val);
+                                val.write(res);
+                                System.out.println("StackFrame_GetValues,thead=" + thread + " , frame=" + frame + ", val=" + val);
+                            }
+                            session.send(res.toByteArray());
                             break;
                         }
                         case Command.StackFrame_SetValues: {
-                            System.out.println(req + " not support");
+                            long thread = req.readRefer();
+                            long frame = req.readRefer();
+                            StackFrame r = new StackFrame(frame);
+                            int slotValues = req.readInt();
+                            for (int i = 0; i < slotValues; i++) {
+                                int slot = req.readInt();
+                                ValueType val = new ValueType(req);
+                                JdwpNative.setLocalVal(frame, slot, val.type, val.value, val.bytes);
+                                System.out.println("StackFrame_SetValues,thead=" + thread + " , frame=" + frame + ", val=" + val);
+                            }
+                            ResponsePacket res = new ResponsePacket();
+                            res.setId(req.getId());
+                            res.setErrorCode(Error.NONE);
+                            session.send(res.toByteArray());
                             break;
                         }
                         case Command.StackFrame_ThisObject: {
                             long thread = req.readRefer();
                             long frame = req.readRefer();
-                            StackFrame r = new StackFrame(JdwpThreads.getTopRuntime((Thread) JdwpNative.referenceObj(thread)));
-                            r = r.getFrameByIndex(frame);
-                            Method m = new Method(r.methodId);
+                            StackFrame r = new StackFrame(frame);
+                            System.out.println("StackFrame_ThisObject,thead=" + thread + " , frame=" + frame + ", this=" + r.localThis);
 
                             ResponsePacket res = new ResponsePacket();
                             res.setId(req.getId());
                             res.setErrorCode(Error.NONE);
                             res.writeRefer(r.localThis);
+                            session.send(res.toByteArray());
                             break;
                         }
                         case Command.StackFrame_PopFrames: {
