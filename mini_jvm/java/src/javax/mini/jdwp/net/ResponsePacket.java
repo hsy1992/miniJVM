@@ -21,7 +21,7 @@ public class ResponsePacket extends JdwpPacket {
     }
 
     public short getErrorCode() {
-        return (short) getVal(10, 2);
+        return (short) getVal(9, 2);
     }
 
     public void setErrorCode(int code) {

@@ -6,93 +6,12 @@
 #include "java_native_std.h"
 #include "garbage.h"
 #include "jvm_util.h"
+#include "jdwp.h"
 
 
 #ifdef __cplusplus
 extern "C" {
 #endif
-
-static u16 JDWP_ERROR_INVALID_TAG = 500; //object type id or class tag
-static u16 JDWP_ERROR_ALREADY_INVOKING = 502; //previous invoke not complete
-static u16 JDWP_ERROR_INVALID_INDEX = 503;
-static u16 JDWP_ERROR_INVALID_LENGTH = 504;
-static u16 JDWP_ERROR_INVALID_STRING = 506;
-static u16 JDWP_ERROR_INVALID_CLASS_LOADER = 507;
-static u16 JDWP_ERROR_INVALID_ARRAY = 508;
-static u16 JDWP_ERROR_TRANSPORT_LOAD = 509;
-static u16 JDWP_ERROR_TRANSPORT_INIT = 510;
-static u16 JDWP_ERROR_NATIVE_METHOD = 511;
-static u16 JDWP_ERROR_INVALID_COUNT = 512;
-static u16 JDWP_ERROR_NONE = 0;
-static u16 JDWP_ERROR_INVALID_THREAD = 10;
-static u16 JDWP_ERROR_INVALID_THREAD_GROUP = 11;
-static u16 JDWP_ERROR_INVALID_PRIORITY = 12;
-static u16 JDWP_ERROR_THREAD_NOT_SUSPENDED = 13;
-static u16 JDWP_ERROR_THREAD_SUSPENDED = 14;
-static u16 JDWP_ERROR_INVALID_OBJECT = 20;
-static u16 JDWP_ERROR_INVALID_CLASS = 21;
-static u16 JDWP_ERROR_CLASS_NOT_PREPARED = 22;
-static u16 JDWP_ERROR_INVALID_METHODID = 23;
-static u16 JDWP_ERROR_INVALID_LOCATION = 24;
-static u16 JDWP_ERROR_INVALID_FIELDID = 25;
-static u16 JDWP_ERROR_INVALID_FRAMEID = 30;
-static u16 JDWP_ERROR_NO_MORE_FRAMES = 31;
-static u16 JDWP_ERROR_OPAQUE_FRAME = 32;
-static u16 JDWP_ERROR_NOT_CURRENT_FRAME = 33;
-static u16 JDWP_ERROR_TYPE_MISMATCH = 34;
-static u16 JDWP_ERROR_INVALID_SLOT = 35;
-static u16 JDWP_ERROR_DUPLICATE = 40;
-static u16 JDWP_ERROR_NOT_FOUND = 41;
-static u16 JDWP_ERROR_INVALID_MONITOR = 50;
-static u16 JDWP_ERROR_NOT_MONITOR_OWNER = 51;
-static u16 JDWP_ERROR_INTERRUPT = 52;
-static u16 JDWP_ERROR_INVALID_CLASS_FORMAT = 60;
-static u16 JDWP_ERROR_CIRCULAR_CLASS_DEFINITION = 61;
-static u16 JDWP_ERROR_FAILS_VERIFICATION = 62;
-static u16 JDWP_ERROR_ADD_METHOD_NOT_IMPLEMENTED = 63;
-static u16 JDWP_ERROR_SCHEMA_CHANGE_NOT_IMPLEMENTED = 64;
-static u16 JDWP_ERROR_INVALID_TYPESTATE = 65;
-static u16 JDWP_ERROR_NOT_IMPLEMENTED = 99;
-static u16 JDWP_ERROR_NULL_POINTER = 100;
-static u16 JDWP_ERROR_ABSENT_INFORMATION = 101;
-static u16 JDWP_ERROR_INVALID_EVENT_TYPE = 102;
-static u16 JDWP_ERROR_ILLEGAL_ARGUMENT = 103;
-static u16 JDWP_ERROR_OUT_OF_MEMORY = 110;
-static u16 JDWP_ERROR_ACCESS_DENIED = 111;
-static u16 JDWP_ERROR_VM_DEAD = 112;
-static u16 JDWP_ERROR_INTERNAL = 113;
-static u16 JDWP_ERROR_UNATTACHED_THREAD = 115;
-
-/////
-static u8 JDWP_EVENT_SINGLE_STEP = 1;
-static u8 JDWP_EVENT_BREAKPOINT = 2;
-static u8 JDWP_EVENT_FRAME_POP = 3; //not used in JDWP
-static u8 JDWP_EVENT_EXCEPTION = 4;
-static u8 JDWP_EVENT_USER_DEFINED = 5; //not used in JDWP
-static u8 JDWP_EVENT_THREAD_START = 6;
-static u8 JDWP_EVENT_THREAD_DEATH = 7;
-static u8 JDWP_EVENT_THREAD_END = 7;
-static u8 JDWP_EVENT_CLASS_PREPARE = 8;
-static u8 JDWP_EVENT_CLASS_UNLOAD = 9;
-static u8 JDWP_EVENT_CLASS_LOAD = 10; //not used in JDWP
-static u8 JDWP_EVENT_FIELD_ACCESS = 20;
-static u8 JDWP_EVENT_FIELD_MODIFICATION = 21;
-static u8 JDWP_EVENT_EXCEPTION_CATCH = 30; //not used in JDWP
-static u8 JDWP_EVENT_METHOD_ENTRY = 40;
-static u8 JDWP_EVENT_METHOD_EXIT = 41;
-static u8 JDWP_EVENT_VM_START = 90;
-static u8 JDWP_EVENT_VM_INIT = 90;
-static u8 JDWP_EVENT_VM_DEATH = 99;
-static u8 JDWP_EVENT_VM_DISCONNECTED = 100; //Never sent by across JDWP
-
-
-static c8 *JDWP_CLASS_REFERENCE = "javax/mini/jdwp/reflect/Reference";
-static c8 *JDWP_CLASS_FIELD = "javax/mini/jdwp/reflect/Field";
-static c8 *JDWP_CLASS_METHOD = "javax/mini/jdwp/reflect/Method";
-static c8 *JDWP_CLASS_RUNTIME = "javax/mini/jdwp/reflect/StackFrame";
-static c8 *JDWP_CLASS_LOCALVARTABLE = "javax/mini/jdwp/reflect/LocalVarTable";
-static c8 *JDWP_CLASS_VALUETYPE = "javax/mini/jdwp/type/ValueType";
-
 
 //==============   tool
 s32 jdwp_set_breakpoint(s32 setOrClear, Class *clazz, MethodInfo *methodInfo, s64 execIndex) {

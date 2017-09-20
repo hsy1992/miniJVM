@@ -1,0 +1,303 @@
+//
+// Created by gust on 2017/9/20.
+//
+
+#ifndef MINI_JVM_JDWP_H
+#define MINI_JVM_JDWP_H
+
+
+#include "global.h"
+#include "../utils/utf8_string.h"
+#include "../utils/arraylist.h"
+#include "jvm.h"
+
+//=============================      error   ==============================================
+
+static u16 JDWP_ERROR_INVALID_TAG = 500; //object type id or class tag
+static u16 JDWP_ERROR_ALREADY_INVOKING = 502; //previous invoke not complete
+static u16 JDWP_ERROR_INVALID_INDEX = 503;
+static u16 JDWP_ERROR_INVALID_LENGTH = 504;
+static u16 JDWP_ERROR_INVALID_STRING = 506;
+static u16 JDWP_ERROR_INVALID_CLASS_LOADER = 507;
+static u16 JDWP_ERROR_INVALID_ARRAY = 508;
+static u16 JDWP_ERROR_TRANSPORT_LOAD = 509;
+static u16 JDWP_ERROR_TRANSPORT_INIT = 510;
+static u16 JDWP_ERROR_NATIVE_METHOD = 511;
+static u16 JDWP_ERROR_INVALID_COUNT = 512;
+static u16 JDWP_ERROR_NONE = 0;
+static u16 JDWP_ERROR_INVALID_THREAD = 10;
+static u16 JDWP_ERROR_INVALID_THREAD_GROUP = 11;
+static u16 JDWP_ERROR_INVALID_PRIORITY = 12;
+static u16 JDWP_ERROR_THREAD_NOT_SUSPENDED = 13;
+static u16 JDWP_ERROR_THREAD_SUSPENDED = 14;
+static u16 JDWP_ERROR_INVALID_OBJECT = 20;
+static u16 JDWP_ERROR_INVALID_CLASS = 21;
+static u16 JDWP_ERROR_CLASS_NOT_PREPARED = 22;
+static u16 JDWP_ERROR_INVALID_METHODID = 23;
+static u16 JDWP_ERROR_INVALID_LOCATION = 24;
+static u16 JDWP_ERROR_INVALID_FIELDID = 25;
+static u16 JDWP_ERROR_INVALID_FRAMEID = 30;
+static u16 JDWP_ERROR_NO_MORE_FRAMES = 31;
+static u16 JDWP_ERROR_OPAQUE_FRAME = 32;
+static u16 JDWP_ERROR_NOT_CURRENT_FRAME = 33;
+static u16 JDWP_ERROR_TYPE_MISMATCH = 34;
+static u16 JDWP_ERROR_INVALID_SLOT = 35;
+static u16 JDWP_ERROR_DUPLICATE = 40;
+static u16 JDWP_ERROR_NOT_FOUND = 41;
+static u16 JDWP_ERROR_INVALID_MONITOR = 50;
+static u16 JDWP_ERROR_NOT_MONITOR_OWNER = 51;
+static u16 JDWP_ERROR_INTERRUPT = 52;
+static u16 JDWP_ERROR_INVALID_CLASS_FORMAT = 60;
+static u16 JDWP_ERROR_CIRCULAR_CLASS_DEFINITION = 61;
+static u16 JDWP_ERROR_FAILS_VERIFICATION = 62;
+static u16 JDWP_ERROR_ADD_METHOD_NOT_IMPLEMENTED = 63;
+static u16 JDWP_ERROR_SCHEMA_CHANGE_NOT_IMPLEMENTED = 64;
+static u16 JDWP_ERROR_INVALID_TYPESTATE = 65;
+static u16 JDWP_ERROR_NOT_IMPLEMENTED = 99;
+static u16 JDWP_ERROR_NULL_POINTER = 100;
+static u16 JDWP_ERROR_ABSENT_INFORMATION = 101;
+static u16 JDWP_ERROR_INVALID_EVENT_TYPE = 102;
+static u16 JDWP_ERROR_ILLEGAL_ARGUMENT = 103;
+static u16 JDWP_ERROR_OUT_OF_MEMORY = 110;
+static u16 JDWP_ERROR_ACCESS_DENIED = 111;
+static u16 JDWP_ERROR_VM_DEAD = 112;
+static u16 JDWP_ERROR_INTERNAL = 113;
+static u16 JDWP_ERROR_UNATTACHED_THREAD = 115;
+
+//=============================      event   ==============================================
+
+static u8 JDWP_EVENT_SINGLE_STEP = 1;
+static u8 JDWP_EVENT_BREAKPOINT = 2;
+static u8 JDWP_EVENT_FRAME_POP = 3; //not used in JDWP
+static u8 JDWP_EVENT_EXCEPTION = 4;
+static u8 JDWP_EVENT_USER_DEFINED = 5; //not used in JDWP
+static u8 JDWP_EVENT_THREAD_START = 6;
+static u8 JDWP_EVENT_THREAD_DEATH = 7;
+static u8 JDWP_EVENT_THREAD_END = 7;
+static u8 JDWP_EVENT_CLASS_PREPARE = 8;
+static u8 JDWP_EVENT_CLASS_UNLOAD = 9;
+static u8 JDWP_EVENT_CLASS_LOAD = 10; //not used in JDWP
+static u8 JDWP_EVENT_FIELD_ACCESS = 20;
+static u8 JDWP_EVENT_FIELD_MODIFICATION = 21;
+static u8 JDWP_EVENT_EXCEPTION_CATCH = 30; //not used in JDWP
+static u8 JDWP_EVENT_METHOD_ENTRY = 40;
+static u8 JDWP_EVENT_METHOD_EXIT = 41;
+static u8 JDWP_EVENT_VM_START = 90;
+static u8 JDWP_EVENT_VM_INIT = 90;
+static u8 JDWP_EVENT_VM_DEATH = 99;
+static u8 JDWP_EVENT_VM_DISCONNECTED = 100; //Never sent by across JDWP
+//=============================      class status   ==============================================
+
+static u8 JDWP_CLASS_STATUS_VERIFIED = 1;
+static u8 JDWP_CLASS_STATUS_PREPARED = 2;
+static u8 JDWP_CLASS_STATUS_INITIALIZED = 4;
+static u8 JDWP_CLASS_STATUS_ERROR = 8;
+//=============================      typetag   ==============================================
+
+static u8 JDWP_TYPETAG_CLASS = 1; //ReferenceType is a class.
+static u8 JDWP_TYPETAG_INTERFACE = 2; //ReferenceType is an interface.
+static u8 JDWP_TYPETAG_ARRAY = 3; //ReferenceType is an array.
+//=============================      Thread status   ==============================================
+static c8 JDWP_THREAD_ZOMBIE = 0;
+static c8 JDWP_THREAD_RUNNING = 1;
+static c8 JDWP_THREAD_SLEEPING = 2;
+static c8 JDWP_THREAD_MONITOR = 3;
+static c8 JDWP_THREAD_WAIT = 4;
+//=============================      suspend   ==============================================
+
+static c8 JDWP_SUSPEND_STATUS_SUSPENDED = 0x1;
+//=============================      tag   ==============================================
+
+ #define JDWP_TAG_ARRAY  91   
+// '[' - an array object (objectID size).
+ #define JDWP_TAG_BYTE  66  
+// 'B' - a byte value (1 byte).
+ #define JDWP_TAG_CHAR  67  
+// 'C' - a character value (2 bytes).
+ #define JDWP_TAG_OBJECT  76  
+// 'L' - an object (objectID size).
+ #define JDWP_TAG_FLOAT  70  
+// 'F' - a float value (4 bytes).
+ #define JDWP_TAG_DOUBLE  68  
+// 'D' - a double value (8 bytes).
+ #define JDWP_TAG_INT  73  
+// 'I' - an int value (4 bytes).
+ #define JDWP_TAG_LONG  74  
+// 'J' - a long value (8 bytes).
+ #define JDWP_TAG_SHORT  83  
+// 'S' - a short value (2 bytes).
+ #define JDWP_TAG_VOID  86  
+// 'V' - a void value (no bytes).
+ #define JDWP_TAG_BOOLEAN  90  
+// 'Z' - a boolean value (1 byte).
+ #define JDWP_TAG_STRING  115  
+// 's' - a String object (objectID size).
+ #define JDWP_TAG_THREAD  116  
+// 't' - a Thread object (objectID size).
+ #define JDWP_TAG_THREAD_GROUP  103  
+// 'g' - a ThreadGroup object (objectID size).
+ #define JDWP_TAG_CLASS_LOADER  108  
+// 'l' - a ClassLoader object (objectID size).
+ #define JDWP_TAG_CLASS_OBJECT  99  
+// 'c' - a class object object (objectID size).
+
+//=============================      cmd   ==============================================
+
+
+//VirtualMachine Command Set (1)
+#define JDWP_CMD_VirtualMachine_Version   0x0101 
+#define JDWP_CMD_VirtualMachine_ClassesBySignature   0x0102 
+#define JDWP_CMD_VirtualMachine_AllClasses   0x0103 
+#define JDWP_CMD_VirtualMachine_AllThreads   0x0104 
+#define JDWP_CMD_VirtualMachine_TopLevelThreadGroups   0x0105 
+#define JDWP_CMD_VirtualMachine_Dispose   0x0106 
+#define JDWP_CMD_VirtualMachine_IDSizes   0x0107 
+#define JDWP_CMD_VirtualMachine_Suspend   0x0108 
+#define JDWP_CMD_VirtualMachine_Resume   0x0109 
+#define JDWP_CMD_VirtualMachine_Exit   0x010a 
+#define JDWP_CMD_VirtualMachine_CreateString   0x010b 
+#define JDWP_CMD_VirtualMachine_Capabilities   0x010c 
+#define JDWP_CMD_VirtualMachine_ClassPaths   0x010d 
+#define JDWP_CMD_VirtualMachine_DisposeObjects   0x010e 
+#define JDWP_CMD_VirtualMachine_HoldEvents   0x010f 
+#define JDWP_CMD_VirtualMachine_ReleaseEvents   0x0110 
+#define JDWP_CMD_VirtualMachine_CapabilitiesNew   0x0111 
+#define JDWP_CMD_VirtualMachine_RedefineClasses   0x0112 
+#define JDWP_CMD_VirtualMachine_SetDefaultStratum   0x0113 
+#define JDWP_CMD_VirtualMachine_AllClassesWithGeneric   0x0114 
+//ReferenceType Command Set (2)
+#define JDWP_CMD_ReferenceType_Signature   0x0201 
+#define JDWP_CMD_ReferenceType_ClassLoader   0x0202 
+#define JDWP_CMD_ReferenceType_Modifiers   0x0203 
+#define JDWP_CMD_ReferenceType_Fields   0x0204 
+#define JDWP_CMD_ReferenceType_Methods   0x0205 
+#define JDWP_CMD_ReferenceType_GetValues   0x0206 
+#define JDWP_CMD_ReferenceType_SourceFile   0x0207 
+#define JDWP_CMD_ReferenceType_NestedTypes   0x0208 
+#define JDWP_CMD_ReferenceType_Status   0x0209 
+#define JDWP_CMD_ReferenceType_Interfaces   0x020a 
+#define JDWP_CMD_ReferenceType_ClassObject   0x020b 
+#define JDWP_CMD_ReferenceType_SourceDebugExtension   0x020c 
+#define JDWP_CMD_ReferenceType_SignatureWithGeneric   0x020d 
+#define JDWP_CMD_ReferenceType_FieldsWithGeneric   0x020e 
+#define JDWP_CMD_ReferenceType_MethodsWithGeneric   0x020f 
+//ClassType Command Set (3)
+#define JDWP_CMD_ClassType_Superclass   0x0301 
+#define JDWP_CMD_ClassType_SetValues   0x0302 
+#define JDWP_CMD_ClassType_InvokeMethod   0x0303 
+#define JDWP_CMD_ClassType_NewInstance   0x0304 
+//ArrayType Command Set (4)
+#define JDWP_CMD_ArrayType_NewInstance   0x0401 
+//InterfaceType Command Set (5)
+//Method Command Set (6)
+#define JDWP_CMD_Method_LineTable   0x0601 
+#define JDWP_CMD_Method_VariableTable   0x0602 
+#define JDWP_CMD_Method_Bytecodes   0x0603 
+#define JDWP_CMD_Method_IsObsolete   0x0604 
+#define JDWP_CMD_Method_VariableTableWithGeneric   0x0605 
+//Field Command Set (8)
+//ObjectReference Command Set (9)
+#define JDWP_CMD_ObjectReference_ReferenceType   0x0901 
+#define JDWP_CMD_ObjectReference_GetValues   0x0902 
+#define JDWP_CMD_ObjectReference_SetValues   0x0903 
+#define JDWP_CMD_ObjectReference_MonitorInfo   0x0905 
+#define JDWP_CMD_ObjectReference_InvokeMethod   0x0906 
+#define JDWP_CMD_ObjectReference_DisableCollection   0x0907 
+#define JDWP_CMD_ObjectReference_EnableCollection   0x0908 
+#define JDWP_CMD_ObjectReference_IsCollected   0x0909 
+//StringReference Command Set (10)
+#define JDWP_CMD_StringReference_Value   0x0a01 
+//ThreadReference Command Set (11)
+#define JDWP_CMD_ThreadReference_Name   0x0b01 
+#define JDWP_CMD_ThreadReference_Suspend   0x0b02 
+#define JDWP_CMD_ThreadReference_Resume   0x0b03 
+#define JDWP_CMD_ThreadReference_Status   0x0b04 
+#define JDWP_CMD_ThreadReference_ThreadGroup   0x0b05 
+#define JDWP_CMD_ThreadReference_Frames   0x0b06 
+#define JDWP_CMD_ThreadReference_FrameCount   0x0b07 
+#define JDWP_CMD_ThreadReference_OwnedMonitors   0x0b08 
+#define JDWP_CMD_ThreadReference_CurrentContendedMonitor   0x0b09 
+#define JDWP_CMD_ThreadReference_Stop   0x0b0a 
+#define JDWP_CMD_ThreadReference_Interrupt   0x0b0b 
+#define JDWP_CMD_ThreadReference_SuspendCount   0x0b0c 
+//ThreadGroupReference Command Set (12)
+#define JDWP_CMD_ThreadGroupReference_Name   0x0c01 
+#define JDWP_CMD_ThreadGroupReference_Parent   0x0c02 
+#define JDWP_CMD_ThreadGroupReference_Children   0x0c03 
+//ArrayReference Command Set (13)
+#define JDWP_CMD_ArrayReference_Length   0x0d01 
+#define JDWP_CMD_ArrayReference_GetValues   0x0d02 
+#define JDWP_CMD_ArrayReference_SetValues   0x0d03 
+//ClassLoaderReference Command Set (14)
+#define JDWP_CMD_ClassLoaderReference_VisibleClasses   0x0e01 
+//EventRequest Command Set (15)
+#define JDWP_CMD_EventRequest_Set   0x0f01 
+#define JDWP_CMD_EventRequest_Clear   0x0f02 
+#define JDWP_CMD_EventRequest_ClearAllBreakpoints   0x0f03 
+//StackFrame Command Set (16)
+#define JDWP_CMD_StackFrame_GetValues   0x1001 
+#define JDWP_CMD_StackFrame_SetValues   0x1002 
+#define JDWP_CMD_StackFrame_ThisObject   0x1003 
+#define JDWP_CMD_StackFrame_PopFrames   0x1004 
+//ClassObjectReference Command Set (17)
+#define JDWP_CMD_ClassObjectReference_ReflectedType   0x1101 
+//Event Command Set (64)
+#define JDWP_CMD_Event_Composite   0x6400 
+
+
+//=============================      string   ==============================================
+
+
+static c8 *JDWP_CLASS_REFERENCE = "javax/mini/jdwp/reflect/Reference";
+static c8 *JDWP_CLASS_FIELD = "javax/mini/jdwp/reflect/Field";
+static c8 *JDWP_CLASS_METHOD = "javax/mini/jdwp/reflect/Method";
+static c8 *JDWP_CLASS_RUNTIME = "javax/mini/jdwp/reflect/StackFrame";
+static c8 *JDWP_CLASS_LOCALVARTABLE = "javax/mini/jdwp/reflect/LocalVarTable";
+static c8 *JDWP_CLASS_VALUETYPE = "javax/mini/jdwp/type/ValueType";
+
+static c8 *JDWP_HANDSHAKE = "JDWP-Handshake";
+
+u16 JDWP_PACKET_REQUEST = 0;
+u16 JDWP_PACKET_RESPONSE = 0x80;
+//=============================      typedef   ==============================================
+typedef struct _JdwpServer {
+    Utf8String *ip;
+    u16 port;
+    pthread_t pt_listener;
+    pthread_t pt_dispacher;
+    u8 exit;
+    s32 srvsock;
+    ArrayList *clients;
+} JdwpServer;
+
+typedef struct _JdwpClient {
+    s32 sockfd;
+    u8 closed;
+    u8 conn_first;
+} JdwpClient;
+
+typedef struct _JdwpConn {
+    s32 sockfd;
+    u8 closed;
+} JdwpConn;
+
+typedef struct _JdwpPacket {
+    c8 *data;
+    s32 data_len;
+    s32 readPos;
+    s32 writePos;
+} JdwpPacket;
+
+typedef struct _Location {
+     c8 typeTag;
+     __refer classID;
+     __refer methodID;
+     s64 execIndex;
+} Location;
+
+JdwpServer jdwpserver;
+
+s32 jdwp_client_process(JdwpClient *client,Runtime* runtime);
+
+#endif //MINI_JVM_JDWP_H
+
