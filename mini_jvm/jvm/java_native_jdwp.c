@@ -257,9 +257,7 @@ s32 javax_mini_jdwp_vm_JdwpNative_getLocalVal(Runtime *runtime, Class *clazz) {
     if (slot < r->localvar_count) {
         switch (bytes) {
             case 'R':
-                r->localVariables[slot].refer = (__refer) (long) l2d.l;
                 l2d.l = (s64) (long) r->localVariables[slot].refer;
-
                 break;
             case '8':
                 l2d.i2l.i1 = r->localVariables[slot].integer;
@@ -295,25 +293,26 @@ s32 javax_mini_jdwp_vm_JdwpNative_getFieldVal(Runtime *runtime, Class *clazz) {
     ptr = getFieldPtr_byName_c(valuetype, JDWP_CLASS_VALUETYPE, "value", "J");
     c8 *fptr;
     fptr = getFieldPtr_byName(ins, fi->_this_class->name, fi->name, fi->descriptor);
+    s64 val;
     switch (bytes) {
         case 'R':
-            l2d.l = (s64) (long) getFieldRefer(fptr);
+            val = (s64) (long) getFieldRefer(fptr);
 
             break;
         case '8':
-            l2d.l = getFieldLong(fptr);
+            val = getFieldLong(fptr);
             break;
         case '4':
-            l2d.l = getFieldInt(fptr);
+            val = getFieldInt(fptr);
             break;
         case '2':
-            l2d.l = getFieldShort(fptr);
+            val = getFieldShort(fptr);
             break;
         case '1':
-            l2d.l = getFieldByte(fptr);
+            val = getFieldByte(fptr);
             break;
     }
-    setFieldLong(ptr, l2d.l);
+    setFieldLong(ptr, val);
     push_int(runtime->stack, 0);
 
     return 0;
@@ -717,7 +716,6 @@ s32 javax_mini_jdwp_reflect_StackFrame_mapRuntime(Runtime *runtime, Class *clazz
     Runtime *target = (__refer) (long) l2d.l;
     if (ins && target) {
         u8 *ptr;
-        int i;
         //
         ptr = getFieldPtr_byName_c(ins, JDWP_CLASS_RUNTIME, "classId", "J");
         if (ptr)setFieldLong(ptr, (u64) (long) target->clazz);
@@ -736,7 +734,7 @@ s32 javax_mini_jdwp_reflect_StackFrame_mapRuntime(Runtime *runtime, Class *clazz
         //
         if (target->methodInfo && !(target->methodInfo->access_flags & ACC_STATIC)) {//top runtime method is null
             ptr = getFieldPtr_byName_c(ins, JDWP_CLASS_RUNTIME, "localThis", "J");
-            if (ptr)setFieldRefer(ptr, (&target->localVariables[i])->refer);
+            if (ptr)setFieldRefer(ptr, (&target->localVariables[0])->refer);
         }
         //
 

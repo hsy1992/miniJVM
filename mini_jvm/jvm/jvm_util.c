@@ -673,10 +673,11 @@ s32 jarray_destory(Instance *arr) {
  * @param desc
  * @return
  */
-Instance *jarray_multi_create(ArrayList *dim, Utf8String *desc, s32 deep) {
+Instance *jarray_multi_create(ArrayList *dim, Utf8String *pdesc, s32 deep) {
+    Utf8String* desc=utf8_create_copy(pdesc);
     s32 len = (s32) (long) arraylist_get_value(dim, dim->length - 1 - deep);
     if (len == -1)return NULL;
-    c8 ch = utf8_char_at(desc, deep + 1);
+    c8 ch = utf8_char_at(desc, 1);
     s32 typeIdx = getDataTypeIndex(ch);
     Instance *arr = jarray_create_des(len, desc);
     utf8_substring(desc, 1, desc->length);
@@ -693,6 +694,7 @@ Instance *jarray_multi_create(ArrayList *dim, Utf8String *desc, s32 deep) {
             jarray_set_field(arr, i, &l2d, bytes);
         }
     }
+    utf8_destory(desc);
     return arr;
 }
 

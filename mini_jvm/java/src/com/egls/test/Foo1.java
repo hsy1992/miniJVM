@@ -40,7 +40,7 @@ import javax.mini.util.Map;
  */
 public class Foo1 {
 
-    FInterface fi;
+    public FInterface fi;
 
     interface FInterface {
 
@@ -468,6 +468,7 @@ public class Foo1 {
     }
 
     void t19() {
+        System.out.println("fi="+fi);
         Long[][] a = new Long[3][5];
         System.out.println("arr a:" + a);
         Object[][][] objs = new Object[4][][];
@@ -476,7 +477,7 @@ public class Foo1 {
         System.out.println("arr objs[1]:" + objs[1]);
         Short[] c=new Short[5];
         System.out.println("arr c:" + c);
-        
+        System.out.println("fi="+fi);
 
         List<Integer> list = new ArrayList();
         list.add(1);
@@ -513,6 +514,7 @@ public class Foo1 {
         for (Class cl : classes) {
             //System.out.println("class:" + cl.getName()+" id:"+JdwpNative.referenceId(cl));
         }
+        System.out.println("fi="+fi);
         while (true) {
             try {
                 Thread.sleep(1000);

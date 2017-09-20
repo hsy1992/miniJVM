@@ -207,7 +207,14 @@ public class DebugClient {
                             break;
                         }
                         case Command.VirtualMachine_CreateString: {//1.11
-                            System.out.println(req + " not support");
+                            String str = req.readUTF();//防止回收此处需要
+                            JdwpManager.getObjCache().add(str);
+                            ResponsePacket res = new ResponsePacket();
+                            res.setErrorCode(Error.NONE);
+                            res.setId(req.getId());
+                            res.writeRefer(JdwpNative.referenceId(str));
+                            System.out.println("VirtualMachine_CreateString:" + str + ",rId:" + JdwpNative.referenceId(str));
+                            session.send(res.toByteArray());
                             break;
                         }
                         case Command.VirtualMachine_Capabilities: {//1.12
@@ -363,7 +370,14 @@ public class DebugClient {
                             break;
                         }
                         case Command.ReferenceType_ClassObject: {//2.11
-                            System.out.println(req + " not support");
+                            long refType = req.readRefer();
+                            Reference ref=JdwpManager.getReference(refType);
+                            ResponsePacket res = new ResponsePacket();
+                            res.setErrorCode(Error.NONE);
+                            res.setId(req.getId());
+                            res.writeRefer(refType);
+                            System.out.println("ReferenceType_ClassObject:" + ref.className);
+                            session.send(res.toByteArray());
                             break;
                         }
                         case Command.ReferenceType_SourceDebugExtension: {//2.12
@@ -495,7 +509,7 @@ public class DebugClient {
                             ResponsePacket res = new ResponsePacket();
                             res.setId(req.getId());
                             res.setErrorCode(Error.NONE);
-                            System.out.println("obj [" + Long.toString(objid, 16) + "]" );
+                            System.out.println("obj [" + Long.toString(objid, 16) + "]");
                             System.out.println("obj [" + Long.toString(objid, 16) + "].getClass()=" + obj.getClass());
                             res.writeByte(obj.getClass().isArray() ? (byte) TypeTag.ARRAY : obj.getClass().isInterface() ? TypeTag.INTERFACE : TypeTag.CLASS);
                             res.writeRefer(JdwpNative.referenceId(obj.getClass()));
@@ -504,6 +518,7 @@ public class DebugClient {
                         }
                         case Command.ObjectReference_GetValues: {//9.2
                             long objid = req.readRefer();
+                            System.out.println("fi=" + ((com.egls.test.Foo1) JdwpNative.referenceObj(objid)).fi);
                             int fields = req.readInt();
                             ResponsePacket res = new ResponsePacket();
                             res.setId(req.getId());
@@ -513,11 +528,11 @@ public class DebugClient {
                                 long fieldId = req.readRefer();
                                 Field f = new Field(fieldId);
                                 ValueType val = new ValueType((byte) f.signature.charAt(0));
-                                System.out.println("field:"+f.fieldName+" val:"+val);
+                                System.out.println("field:" + f.fieldName + " val:" + val);
                                 JdwpNative.getFieldVal(objid, fieldId, val);
                                 val.write(res);
                             }
-                            System.out.println("ObjectReference_GetValues obj [" + Long.toString(objid, 16) + "]" );
+                            System.out.println("ObjectReference_GetValues obj [" + Long.toString(objid, 16) + "]");
                             session.send(res.toByteArray());
                             break;
                         }
@@ -534,11 +549,24 @@ public class DebugClient {
                             break;
                         }
                         case Command.ObjectReference_DisableCollection: {//9.7
-                            System.out.println(req + " not support");
+                            long objref = req.readRefer();
+                            Object obj = JdwpNative.referenceObj(objref);
+                            ResponsePacket res = new ResponsePacket();
+                            res.setId(req.getId());
+                            res.setErrorCode(Error.NONE);
+                            System.out.println("ObjectReference_DisableCollection:" + obj);
+                            session.send(res.toByteArray());
                             break;
                         }
                         case Command.ObjectReference_EnableCollection: {//9.8
-                            System.out.println(req + " not support");
+                            long objref = req.readRefer();
+                            Object obj = JdwpNative.referenceObj(objref);
+                            JdwpManager.getObjCache().remove(obj);
+                            ResponsePacket res = new ResponsePacket();
+                            res.setId(req.getId());
+                            res.setErrorCode(Error.NONE);
+                            System.out.println("ObjectReference_EnableCollection:" + obj);
+                            session.send(res.toByteArray());
                             break;
                         }
                         case Command.ObjectReference_IsCollected: {//9.9

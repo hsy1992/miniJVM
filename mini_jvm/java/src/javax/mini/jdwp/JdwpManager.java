@@ -7,6 +7,8 @@ package javax.mini.jdwp;
 
 import java.util.Hashtable;
 import javax.mini.jdwp.reflect.Reference;
+import javax.mini.util.HashSet;
+import javax.mini.util.Set;
 
 /**
  *
@@ -17,6 +19,8 @@ public class JdwpManager {
     private static DebugServer server;
     //存放虚拟机内存中的一些对象
     static Hashtable reflectCache = new Hashtable();
+    
+    static HashSet tempJdwpObj=new HashSet();
 
     static public DebugServer startJdwp() {
         server = new DebugServer();
@@ -38,5 +42,9 @@ public class JdwpManager {
             reflectCache.put(ref.classId, ref);
         }
         return ref;
+    }
+    
+    static public Set getObjCache(){
+        return tempJdwpObj;
     }
 }
