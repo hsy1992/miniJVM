@@ -71,7 +71,7 @@ public class ValueType {
         }
     }
 
-    static char getBytes(byte type) {
+    public static char getBytes(byte type) {
         char bytes = '0';
         switch (type) {
             case Tag.BYTE:

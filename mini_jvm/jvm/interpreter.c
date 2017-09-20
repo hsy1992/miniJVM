@@ -3127,7 +3127,7 @@ s32 synchronized_unlock_method(MethodInfo *method, Runtime *runtime) {
         }
     }
 }
-
+static s32 breakpointed=0;
 s32 execute_method(MethodInfo *method, Runtime *pruntime, Class *clazz) {
     s32 j = 0, ret = 0;
 
@@ -3166,12 +3166,12 @@ s32 execute_method(MethodInfo *method, Runtime *pruntime, Class *clazz) {
         ret = method->native_func(&runtime, clazz);
         jthread_flag_resume(&runtime);
         synchronized_unlock_method(method, &runtime);
-        if (java_debug) {
-            //process jdwp suspend
-            while (runtime.threadInfo->suspend_count) {
-                threadSleep(20);
-            }
-        }
+//        if (java_debug) {
+//            //process jdwp suspend
+//            while (runtime.threadInfo->suspend_count) {
+//                threadSleep(20);
+//            }
+//        }
 #if _JVM_DEBUG > 3
         invoke_deepth(&runtime);
         jvm_printf("}\n");
@@ -3207,10 +3207,10 @@ s32 execute_method(MethodInfo *method, Runtime *pruntime, Class *clazz) {
                     u32 index = runtime.pc - ca->code;
                     if ((method->breakpoint) && pairlist_getl(method->breakpoint, index)) {
                         event_on_breakpoint(&runtime);//此句必须在前，后面还会用调用此处
-                        runtime.threadInfo->suspend_count++;
+                        breakpointed=1;
                     }
                     //process jdwp suspend
-                    while (runtime.threadInfo->suspend_count) {
+                    while (runtime.threadInfo->suspend_count||breakpointed) {
                         threadSleep(20);
                     }
                 }

@@ -140,7 +140,9 @@ s32 execute(c8 *p_classpath, c8 *p_mainclass, s32 argc, c8 **argv) {
             s32 count = argc;
             Long2Double l2d;
             s32 bytes = data_type_bytes[DATATYPE_REFERENCE];
-            Instance *arr = jarray_create(count, DATATYPE_REFERENCE, NULL);
+            Utf8String *ustr = utf8_create_c("[java/lang/String;");
+            Instance *arr = jarray_create(count, DATATYPE_REFERENCE, ustr);
+            utf8_destory(ustr);
             int i;
             for (i = 0; i < argc; i++) {
                 Utf8String *utfs = utf8_create_c(argv[i]);

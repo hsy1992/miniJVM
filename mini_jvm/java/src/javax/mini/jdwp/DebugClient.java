@@ -22,6 +22,7 @@ import javax.mini.jdwp.net.JdwpPacket;
 import javax.mini.jdwp.net.RequestPacket;
 import javax.mini.jdwp.net.ResponsePacket;
 import javax.mini.jdwp.net.Session;
+import javax.mini.jdwp.reflect.Array;
 import javax.mini.jdwp.reflect.Field;
 import javax.mini.jdwp.reflect.LocalVarTable;
 import javax.mini.jdwp.reflect.Method;
@@ -371,11 +372,11 @@ public class DebugClient {
                         }
                         case Command.ReferenceType_ClassObject: {//2.11
                             long refType = req.readRefer();
-                            Reference ref=JdwpManager.getReference(refType);
+                            Reference ref = JdwpManager.getReference(refType);
                             ResponsePacket res = new ResponsePacket();
                             res.setErrorCode(Error.NONE);
                             res.setId(req.getId());
-                            res.writeRefer(refType);
+                            res.writeRefer(ref.classObj);
                             System.out.println("ReferenceType_ClassObject:" + ref.className);
                             session.send(res.toByteArray());
                             break;
@@ -518,7 +519,6 @@ public class DebugClient {
                         }
                         case Command.ObjectReference_GetValues: {//9.2
                             long objid = req.readRefer();
-                            System.out.println("fi=" + ((com.egls.test.Foo1) JdwpNative.referenceObj(objid)).fi);
                             int fields = req.readInt();
                             ResponsePacket res = new ResponsePacket();
                             res.setId(req.getId());
@@ -765,11 +765,28 @@ public class DebugClient {
                 case CommandSet.ArrayReference: {//set 13
                     switch (req.getCommand()) {
                         case Command.ArrayReference_Length: {
-                            System.out.println(req + " not support");
+                            long arrayObject = req.readRefer();
+                            Array arr = new Array(arrayObject);
+                            ResponsePacket res = new ResponsePacket();
+                            res.setId(req.getId());
+                            res.setErrorCode(Error.NONE);
+                            res.writeInt(arr.length);
+                            System.out.println("ArrayReference_Length:" + arr.length);
+                            session.send(res.toByteArray());
                             break;
                         }
                         case Command.ArrayReference_GetValues: {
-                            System.out.println(req + " not support");
+                            long arrayObject = req.readRefer();
+                            int firstIndex = req.readInt();
+                            int length = req.readInt();
+                            Array arr = new Array(arrayObject);
+                            ResponsePacket res = new ResponsePacket();
+                            res.setId(req.getId());
+                            res.setErrorCode(Error.NONE);
+                            res.writeInt(arr.length);
+                            System.out.println("ArrayReference_GetValues:" + arr);
+                            arr.write(res, firstIndex, length);
+                            session.send(res.toByteArray());
                             break;
                         }
                         case Command.ArrayReference_SetValues: {
@@ -858,7 +875,6 @@ public class DebugClient {
                         case Command.StackFrame_SetValues: {//16.2
                             long thread = req.readRefer();
                             long frame = req.readRefer();
-                            StackFrame r = new StackFrame(frame);
                             int slotValues = req.readInt();
                             for (int i = 0; i < slotValues; i++) {
                                 int slot = req.readInt();
@@ -876,7 +892,7 @@ public class DebugClient {
                             long thread = req.readRefer();
                             long frame = req.readRefer();
                             StackFrame r = new StackFrame(frame);
-                            System.out.println("StackFrame_ThisObject,thead=" + thread + " , frame=" + frame + ", this=" + r.localThis);
+                            System.out.println("StackFrame_ThisObject,thead=" + thread + ", r=" + r);
 
                             ResponsePacket res = new ResponsePacket();
                             res.setId(req.getId());
@@ -894,8 +910,15 @@ public class DebugClient {
                 }
                 case CommandSet.ClassObjectReference: {//set 17
                     switch (req.getCommand()) {
-                        case Command.ClassObjectReference_ReflectedType: {
-                            System.out.println(req + " not support");
+                        case Command.ClassObjectReference_ReflectedType: {//17.1
+                            long classObject = req.readRefer();
+                            Object obj = JdwpNative.referenceObj(classObject);
+                            ResponsePacket res = new ResponsePacket();
+                            res.setErrorCode(Error.NONE);
+                            res.setId(req.getId());
+                            res.writeRefer(JdwpNative.referenceId(obj.getClass()));
+                            System.out.println("ClassObjectReference_ReflectedType:" + obj.getClass());
+                            session.send(res.toByteArray());
                             break;
                         }
 

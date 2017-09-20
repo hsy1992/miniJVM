@@ -25,6 +25,7 @@ public class Reference {
     long fieldIds[];
     long methodIds[];
     public long interfaces[];
+    public long classObj;//类对象
 
     public Field[] fields;
     public Method[] methods;

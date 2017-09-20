@@ -407,7 +407,7 @@ void close_log() {
 }
 
 int jvm_printf(const char *format, ...) {
-    garbage_thread_lock();
+    //garbage_thread_lock();
     va_list vp;
     va_start(vp, format);
     int result = 0;
@@ -474,14 +474,18 @@ void *jtherad_loader(void *para) {
 #endif
 
     if (method) {
+        if (java_debug)event_on_thread_start(&runtime, jthread);
         jthread_set_threadq_value(jthread, &runtime);
         arraylist_append(thread_list, &runtime);
         jthread_flag_resume(&runtime);
         push_ref(runtime.stack, (__refer) jthread);
+
         ret = execute_method(method, &runtime, method->_this_class);
+
         jthread_flag_suspend(&runtime);
         arraylist_remove(thread_list, &runtime);
         runtime.threadInfo->thread_status = THREAD_STATUS_ZOMBIE;
+        if (java_debug)event_on_thread_death(&runtime, jthread);
     }
     jthread_set_threadq_value(jthread, NULL);
     runtime_destory(&runtime);
@@ -674,7 +678,7 @@ s32 jarray_destory(Instance *arr) {
  * @return
  */
 Instance *jarray_multi_create(ArrayList *dim, Utf8String *pdesc, s32 deep) {
-    Utf8String* desc=utf8_create_copy(pdesc);
+    Utf8String *desc = utf8_create_copy(pdesc);
     s32 len = (s32) (long) arraylist_get_value(dim, dim->length - 1 - deep);
     if (len == -1)return NULL;
     c8 ch = utf8_char_at(desc, 1);
@@ -791,6 +795,7 @@ s32 instance_destory(Instance *ins) {
 
 //===============================    实例化字符串  ==================================
 Instance *jstring_create(Utf8String *src, Runtime *runtime) {
+    if (!src)return NULL;
     Utf8String *clsName = utf8_create_c(STR_CLASS_JAVA_LANG_STRING);
     Class *jstr_clazz = classes_get(clsName);
     Instance *jstring = instance_create(jstr_clazz);

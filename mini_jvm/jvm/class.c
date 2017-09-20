@@ -175,7 +175,7 @@ void class_clinit(Class *clazz, Runtime *runtime) {
     for (i = 0; i < p->method_used; i++) {
         //jvm_printf("%s,%s\n", utf8_cstr(p->methodRef[i].name), utf8_cstr(p->methodRef[i].descriptor));
         if (utf8_equals_c(p->method[i].name, "<clinit>") == 1) {
-#if _JVM_DEBUG>5
+#if _JVM_DEBUG > 5
             jvm_printf("%s <clinit>\n", utf8_cstr(clazz->name));
 #endif
             execute_method(&(p->method[i]), runtime, clazz);
@@ -226,6 +226,7 @@ u8 assignable_from(Class *clazzSon, Class *clazzSuper) {
 
 Class *getSuperClass(Class *clazz) {
     s32 superid = clazz->cff.super_class;
+    if (!superid)return NULL;
     ConstantClassRef *ccf = find_constant_classref(clazz, superid);
     if (ccf) {
         Utf8String *clsName_u = get_utf8_string(clazz, ccf->stringIndex);

@@ -76,6 +76,7 @@ public class StackFrame {
                 + "|pc:" + Long.toString(pc, 16)
                 + "|" + Long.toString(byteCode, 16)
                 + "|pos:" + (pc - byteCode)
+                + "|this:" + Long.toString(localThis, 16)
                 + "|" + method.methodName;
     }
 
