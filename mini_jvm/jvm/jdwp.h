@@ -66,6 +66,27 @@ static u16 JDWP_ERROR_UNATTACHED_THREAD = 115;
 
 //=============================      event   ==============================================
 
+#define JDWP_EVENTKIND_SINGLE_STEP  1
+#define JDWP_EVENTKIND_BREAKPOINT  2
+#define JDWP_EVENTKIND_FRAME_POP  3
+#define JDWP_EVENTKIND_EXCEPTION  4
+#define JDWP_EVENTKIND_USER_DEFINED  5
+#define JDWP_EVENTKIND_THREAD_START  6
+#define JDWP_EVENTKIND_THREAD_DEATH  7
+#define JDWP_EVENTKIND_CLASS_PREPARE  8
+#define JDWP_EVENTKIND_CLASS_UNLOAD  9
+#define JDWP_EVENTKIND_CLASS_LOAD  10
+#define JDWP_EVENTKIND_FIELD_ACCESS  20
+#define JDWP_EVENTKIND_FIELD_MODIFICATION  21
+#define JDWP_EVENTKIND_EXCEPTION_CATCH  30
+#define JDWP_EVENTKIND_METHOD_ENTRY  40
+#define JDWP_EVENTKIND_METHOD_EXIT  41
+#define JDWP_EVENTKIND_METHOD_EXIT_WITH_RETURN_VALUE  42
+#define JDWP_EVENTKIND_VM_START  90
+#define JDWP_EVENTKIND_VM_DEATH  99
+#define JDWP_EVENTKIND_VM_DISCONNECTED  100  //Never sent by across JDWP
+//=============================      event   ==============================================
+
 static u8 JDWP_EVENT_SINGLE_STEP = 1;
 static u8 JDWP_EVENT_BREAKPOINT = 2;
 static u8 JDWP_EVENT_FRAME_POP = 3; //not used in JDWP
@@ -257,8 +278,8 @@ static c8 *JDWP_CLASS_VALUETYPE = "javax/mini/jdwp/type/ValueType";
 
 static c8 *JDWP_HANDSHAKE = "JDWP-Handshake";
 
-u16 JDWP_PACKET_REQUEST = 0;
-u16 JDWP_PACKET_RESPONSE = 0x80;
+static u16 JDWP_PACKET_REQUEST = 0;
+static u16 JDWP_PACKET_RESPONSE = 0x80;
 //=============================      typedef   ==============================================
 typedef struct _JdwpServer {
     Utf8String *ip;
@@ -268,6 +289,8 @@ typedef struct _JdwpServer {
     u8 exit;
     s32 srvsock;
     ArrayList *clients;
+    ArrayList *events;
+    Hashtable* event_sets;
 } JdwpServer;
 
 typedef struct _JdwpClient {
@@ -295,9 +318,119 @@ typedef struct _Location {
      s64 execIndex;
 } Location;
 
+typedef struct _ValueType {
+    c8 type;
+    s64 value;
+} ValueType;
+
+
+typedef struct _EventSet {
+    s32 requestId ;
+    c8 eventKind;
+    c8 suspendPolicy;
+    c8 kindMod;
+    s32 modifiers;
+} EventSet;
+
+typedef struct _EventComposite {
+    s32 requestId;
+
+    u8 eventKind;
+
+    //VM_START
+    __refer thread;
+
+    //SINGLE_STEP
+    //__refer thread;
+    Location loc;
+
+    //BREAKPOINT
+    //__refer thread;
+    //Location loc;
+    //
+    //METHOD_ENTRY
+    //__refer thread;
+    //Location loc;
+    //
+    //METHOD_EXIT
+    //__refer thread;
+    //Location loc;
+    //
+    //METHOD_EXIT_WITH_RETURN_VALUE
+    //__refer thread;
+    //Location loc;
+    ValueType vt;
+
+    //MONITOR_CONTENDED_ENTER
+    //__refer thread;
+    __refer object;
+    //Location loc;
+
+    //MONITOR_CONTENDED_ENTERED
+    //__refer thread;
+    //__refer object;
+    //Location loc;
+    //
+    //MONITOR_WAIT
+    //__refer thread;
+    //__refer object;
+    //Location loc;
+    s64 timeout;
+
+    //MONITOR_WAITED
+    //__refer thread;
+    //__refer object;
+    //Location loc;
+    c8 timed_out;
+
+    //EXCEPTION
+    //__refer thread;
+    //__refer object;
+    //Location loc;
+    __refer exception;
+    Location catchLoc;
+
+    //THREAD_START
+    //__refer thread;
+    //
+    //THREAD_DEATH
+    //__refer thread;
+    //
+    //CLASS_PREPARE
+    //__refer thread;
+    u8 refTypeTag;
+    __refer typeID;
+    Utf8String * signature;
+    s32 status;
+
+    //CLASS_UNLOAD
+    // Utf8String * signature;
+    //
+    //FIELD_ACCESS
+    //__refer thread;
+    //Location loc;
+    //u8 refTypeTag;
+    //__refer typeID;
+    __refer fieldID;
+    //__refer object;
+    //
+    //FIELD_MODIFICATION
+    //__refer thread;
+    //Location loc;
+    //u8 refTypeTag;
+    //__refer typeID;
+    //__refer fieldID;
+    //__refer object;
+    //ValueType vt;
+    //
+    //VM_DEATH
+} EventComposite;
+
+static s32 jdwp_requestid=0;
+
 JdwpServer jdwpserver;
 
 s32 jdwp_client_process(JdwpClient *client,Runtime* runtime);
-
+s32 jdwp_start_server();
 #endif //MINI_JVM_JDWP_H
 

@@ -7,6 +7,7 @@
 #include "garbage.h"
 #include "jvm_util.h"
 #include "java_native_std.h"
+#include "jdwp.h"
 
 
 void destoryAllClasses(hmap_t classes) {
@@ -131,7 +132,8 @@ s32 execute(c8 *p_classpath, c8 *p_mainclass, s32 argc, c8 **argv) {
         if (main) {
             constructMainThread(&runtime);
             //启动调试器
-            startJdwp(&runtime);
+            //startJdwp(&runtime);
+            jdwp_start_server();
             //启动垃圾回收
             _garbage_thread_pause = 0;
 
