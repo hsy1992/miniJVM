@@ -249,6 +249,8 @@ jvm_util.h
 D:/githome/mini_jvm/mini_jvm/jvm/jvm_util.h
 garbage.h
 D:/githome/mini_jvm/mini_jvm/jvm/garbage.h
+java_native_jdwp.h
+D:/githome/mini_jvm/mini_jvm/jvm/java_native_jdwp.h
 
 D:/githome/mini_jvm/mini_jvm/jvm/jvm_util.h
 jvm.h

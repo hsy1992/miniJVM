@@ -145,6 +145,7 @@ CMakeFiles/mini_jvm.dir/jvm/jvm.c.obj: ../utils/utf8_string.h
 
 CMakeFiles/mini_jvm.dir/jvm/jvm_util.c.obj: ../jvm/garbage.h
 CMakeFiles/mini_jvm.dir/jvm/jvm_util.c.obj: ../jvm/global.h
+CMakeFiles/mini_jvm.dir/jvm/jvm_util.c.obj: ../jvm/java_native_jdwp.h
 CMakeFiles/mini_jvm.dir/jvm/jvm_util.c.obj: ../jvm/jvm.h
 CMakeFiles/mini_jvm.dir/jvm/jvm_util.c.obj: ../jvm/jvm_util.c
 CMakeFiles/mini_jvm.dir/jvm/jvm_util.c.obj: ../jvm/jvm_util.h

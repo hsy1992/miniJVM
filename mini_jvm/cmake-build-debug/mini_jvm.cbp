@@ -116,6 +116,9 @@
 		<Unit filename="D:/githome/mini_jvm/mini_jvm/jvm/java_native_io.c">
 			<Option target="mini_jvm"/>
 		</Unit>
+		<Unit filename="D:/githome/mini_jvm/mini_jvm/jvm/java_native_io.h">
+			<Option target="mini_jvm"/>
+		</Unit>
 		<Unit filename="D:/githome/mini_jvm/mini_jvm/jvm/java_native_jdwp.c">
 			<Option target="mini_jvm"/>
 		</Unit>
@@ -126,6 +129,12 @@
 			<Option target="mini_jvm"/>
 		</Unit>
 		<Unit filename="D:/githome/mini_jvm/mini_jvm/jvm/java_native_std.h">
+			<Option target="mini_jvm"/>
+		</Unit>
+		<Unit filename="D:/githome/mini_jvm/mini_jvm/jvm/jdwp.c">
+			<Option target="mini_jvm"/>
+		</Unit>
+		<Unit filename="D:/githome/mini_jvm/mini_jvm/jvm/jdwp.h">
 			<Option target="mini_jvm"/>
 		</Unit>
 		<Unit filename="D:/githome/mini_jvm/mini_jvm/jvm/jvm.c">

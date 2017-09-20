@@ -446,6 +446,33 @@ jvm/java_native_std.c.s:
 	$(MAKE) -f CMakeFiles\mini_jvm.dir\build.make CMakeFiles/mini_jvm.dir/jvm/java_native_std.c.s
 .PHONY : jvm/java_native_std.c.s
 
+jvm/jdwp.obj: jvm/jdwp.c.obj
+
+.PHONY : jvm/jdwp.obj
+
+# target to build an object file
+jvm/jdwp.c.obj:
+	$(MAKE) -f CMakeFiles\mini_jvm.dir\build.make CMakeFiles/mini_jvm.dir/jvm/jdwp.c.obj
+.PHONY : jvm/jdwp.c.obj
+
+jvm/jdwp.i: jvm/jdwp.c.i
+
+.PHONY : jvm/jdwp.i
+
+# target to preprocess a source file
+jvm/jdwp.c.i:
+	$(MAKE) -f CMakeFiles\mini_jvm.dir\build.make CMakeFiles/mini_jvm.dir/jvm/jdwp.c.i
+.PHONY : jvm/jdwp.c.i
+
+jvm/jdwp.s: jvm/jdwp.c.s
+
+.PHONY : jvm/jdwp.s
+
+# target to generate assembly for a file
+jvm/jdwp.c.s:
+	$(MAKE) -f CMakeFiles\mini_jvm.dir\build.make CMakeFiles/mini_jvm.dir/jvm/jdwp.c.s
+.PHONY : jvm/jdwp.c.s
+
 jvm/jvm.obj: jvm/jvm.c.obj
 
 .PHONY : jvm/jvm.obj
@@ -788,6 +815,9 @@ help:
 	@echo ... jvm/java_native_std.obj
 	@echo ... jvm/java_native_std.i
 	@echo ... jvm/java_native_std.s
+	@echo ... jvm/jdwp.obj
+	@echo ... jvm/jdwp.i
+	@echo ... jvm/jdwp.s
 	@echo ... jvm/jvm.obj
 	@echo ... jvm/jvm.i
 	@echo ... jvm/jvm.s

@@ -1,5 +1,3 @@
-Open file ../java/build/classes/java/lang/UnsupportedOperationException.class failed
- class not found : java/lang/UnsupportedOperationException
 
 
 
@@ -7,4 +5,3 @@ Open file ../java/build/classes/java/lang/UnsupportedOperationException.class fa
 
 
 ================================= main start ================================
-Open file ../java/build/classes/java/lang/UnsupportedOperationException.class failed

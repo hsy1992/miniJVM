@@ -146,6 +146,7 @@ CMakeFiles/mini_jvm.dir/jvm/jvm.c.obj
 CMakeFiles/mini_jvm.dir/jvm/jvm_util.c.obj
  D:/githome/mini_jvm/mini_jvm/jvm/garbage.h
  D:/githome/mini_jvm/mini_jvm/jvm/global.h
+ D:/githome/mini_jvm/mini_jvm/jvm/java_native_jdwp.h
  D:/githome/mini_jvm/mini_jvm/jvm/jvm.h
  D:/githome/mini_jvm/mini_jvm/jvm/jvm_util.c
  D:/githome/mini_jvm/mini_jvm/jvm/jvm_util.h

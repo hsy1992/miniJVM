@@ -16,6 +16,7 @@ set(CMAKE_DEPENDS_CHECK_C
   "D:/githome/mini_jvm/mini_jvm/jvm/java_native_io.c" "D:/githome/mini_jvm/mini_jvm/cmake-build-debug/CMakeFiles/mini_jvm.dir/jvm/java_native_io.c.obj"
   "D:/githome/mini_jvm/mini_jvm/jvm/java_native_jdwp.c" "D:/githome/mini_jvm/mini_jvm/cmake-build-debug/CMakeFiles/mini_jvm.dir/jvm/java_native_jdwp.c.obj"
   "D:/githome/mini_jvm/mini_jvm/jvm/java_native_std.c" "D:/githome/mini_jvm/mini_jvm/cmake-build-debug/CMakeFiles/mini_jvm.dir/jvm/java_native_std.c.obj"
+  "D:/githome/mini_jvm/mini_jvm/jvm/jdwp.c" "D:/githome/mini_jvm/mini_jvm/cmake-build-debug/CMakeFiles/mini_jvm.dir/jvm/jdwp.c.obj"
   "D:/githome/mini_jvm/mini_jvm/jvm/jvm.c" "D:/githome/mini_jvm/mini_jvm/cmake-build-debug/CMakeFiles/mini_jvm.dir/jvm/jvm.c.obj"
   "D:/githome/mini_jvm/mini_jvm/jvm/jvm_util.c" "D:/githome/mini_jvm/mini_jvm/cmake-build-debug/CMakeFiles/mini_jvm.dir/jvm/jvm_util.c.obj"
   "D:/githome/mini_jvm/mini_jvm/jvm/os_linux.c" "D:/githome/mini_jvm/mini_jvm/cmake-build-debug/CMakeFiles/mini_jvm.dir/jvm/os_linux.c.obj"
