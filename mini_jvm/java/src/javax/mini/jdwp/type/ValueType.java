@@ -66,8 +66,7 @@ public class ValueType {
             case 'R':
                 p.writeRefer(value);
                 break;
-            case Tag.VOID:
-                break;
+       
         }
     }
 
