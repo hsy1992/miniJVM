@@ -306,7 +306,7 @@ typedef struct _JdwpConn {
 
 typedef struct _JdwpPacket {
     c8 *data;
-    s32 data_len;
+    s32 alloc;
     s32 readPos;
     s32 writePos;
 } JdwpPacket;
