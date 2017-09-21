@@ -7,6 +7,7 @@
 #include "../utils/utf8_string.h"
 #include "../utils/arraylist.h"
 #include "java_native_jdwp.h"
+#include "jdwp.h"
 
 
 /* ==================================opcode implementation =============================*/

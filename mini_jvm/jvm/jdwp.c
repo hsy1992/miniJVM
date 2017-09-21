@@ -342,110 +342,8 @@ s32 jdwp_writepacket(JdwpClient *client, JdwpPacket *packet) {
     }
     return 0;
 }
-//==================================================    0    ==================================================
 
-
-EventSet *jdwp_create_eventset(JdwpPacket *req) {
-    EventSet *set = jvm_alloc(sizeof(EventSet));
-    set->requestId = jdwp_requestid++;
-    set->eventKind = jdwppacket_read_byte(req);
-    switch (set->eventKind) {
-        case JDWP_EVENTKIND_VM_DISCONNECTED: {
-            break;
-        }
-        case JDWP_EVENTKIND_VM_START: {
-            break;
-        }
-        case JDWP_EVENTKIND_THREAD_DEATH: {
-            break;
-        }
-        case JDWP_EVENTKIND_SINGLE_STEP: {
-            break;
-        }
-        case JDWP_EVENTKIND_BREAKPOINT: {
-            break;
-        }
-        case JDWP_EVENTKIND_FRAME_POP: {
-            break;
-        }
-        case JDWP_EVENTKIND_EXCEPTION: {
-            break;
-        }
-        case JDWP_EVENTKIND_USER_DEFINED: {
-            break;
-        }
-        case JDWP_EVENTKIND_THREAD_START: {
-            break;
-        }
-        case JDWP_EVENTKIND_CLASS_PREPARE: {
-            break;
-        }
-        case JDWP_EVENTKIND_CLASS_UNLOAD: {
-            break;
-        }
-        case JDWP_EVENTKIND_CLASS_LOAD: {
-            break;
-        }
-        case JDWP_EVENTKIND_FIELD_ACCESS: {
-            break;
-        }
-        case JDWP_EVENTKIND_FIELD_MODIFICATION: {
-            break;
-        }
-        case JDWP_EVENTKIND_EXCEPTION_CATCH: {
-            break;
-        }
-        case JDWP_EVENTKIND_METHOD_ENTRY: {
-            break;
-        }
-        case JDWP_EVENTKIND_METHOD_EXIT: {
-            break;
-        }
-        case JDWP_EVENTKIND_METHOD_EXIT_WITH_RETURN_VALUE: {
-            break;
-        }
-        case JDWP_EVENTKIND_VM_DEATH: {
-            break;
-        }
-        default: {
-            break;
-        }
-    }
-    return set;
-}
-
-void jdwp_eventset_put(EventSet *set) {
-    hashtable_put((jdwpserver.event_sets), (__refer) (long) set->requestId, set);
-}
-
-EventSet *jdwp_eventset_get(s32 id) {
-    return hashtable_get((jdwpserver.event_sets), (__refer) (long) id);
-}
-
-s16 jdwp_eventset_process(EventSet *set) {
-    if (set) {
-
-    }
-    return JDWP_ERROR_NONE;
-}
-
-void jdwp_eventset_clear(s32 id) {
-    EventSet *set = jdwp_eventset_get(id);
-    if (set) {
-
-    }
-    hashtable_remove(jdwpserver.event_sets, (__refer) (long) id, 0);
-}
-
-void jdwp_event_put(EventComposite *event) {
-    arraylist_append(jdwpserver.events, event);
-}
-
-EventComposite *jdwp_event_get() {
-    return arraylist_pop_front(jdwpserver.events);
-}
-
-//==================================================    1    ==================================================
+//==================================================    toolkit    ==================================================
 void signatureToName(Utf8String *signature) {
     if (utf8_char_at(signature, 0) == 'L') {
         utf8_substring(signature, 1, signature->length);
@@ -692,7 +590,303 @@ void jdwp_print_packet(JdwpPacket *packet) {
     }
     printf("\n------------------------------\n");
 }
-//==================================================    2    ==================================================
+
+//==================================================    event    ==================================================
+
+void jdwp_event_put(EventInfo *event) {
+    arraylist_append(jdwpserver.events, event);
+}
+
+EventInfo *jdwp_event_get() {
+    return arraylist_pop_front(jdwpserver.events);
+}
+
+void jdwp_eventset_put(EventSet *set) {
+    hashtable_put((jdwpserver.event_sets), (__refer) (long) set->requestId, set);
+}
+
+EventSet *jdwp_eventset_get(s32 id) {
+    return hashtable_get((jdwpserver.event_sets), (__refer) (long) id);
+}
+
+
+void event_on_class_prepar(Runtime *runtime, Class *clazz) {
+    EventInfo *ei = jvm_alloc(sizeof(EventInfo));
+    ei->eventKind = JDWP_EVENT_CLASS_PREPARE;
+    ei->thread = runtime->threadInfo->jthread;
+    ei->refTypeTag = getClassType(clazz);
+    ei->typeID = clazz;
+    ei->signature = clazz->name;
+    ei->status = getClassStatus(clazz);
+    jdwp_event_put(ei);
+}
+
+void event_on_class_unload(Runtime *runtime, Class *clazz) {
+    EventInfo *ei = jvm_alloc(sizeof(EventInfo));
+    ei->eventKind = JDWP_EVENT_CLASS_UNLOAD;
+    ei->signature = clazz->name;
+    jdwp_event_put(ei);
+}
+
+void event_on_thread_start(Runtime *runtime) {
+    EventInfo *ei = jvm_alloc(sizeof(EventInfo));
+    ei->eventKind = JDWP_EVENT_THREAD_START;
+    ei->thread = runtime->threadInfo->jthread;
+    jdwp_event_put(ei);
+}
+
+void event_on_thread_death(Runtime *runtime) {
+    EventInfo *ei = jvm_alloc(sizeof(EventInfo));
+    ei->eventKind = JDWP_EVENT_THREAD_DEATH;
+    ei->thread = runtime->threadInfo->jthread;
+    jdwp_event_put(ei);
+}
+
+void event_on_breakpoint(Runtime *breakpoint_runtime) {
+    EventInfo *ei = jvm_alloc(sizeof(EventInfo));
+    ei->eventKind = JDWP_EVENT_BREAKPOINT;
+    ei->thread = breakpoint_runtime->threadInfo->jthread;
+    ei->loc.typeTag = getClassType(breakpoint_runtime->clazz);
+    ei->loc.classID = breakpoint_runtime->clazz;
+    ei->loc.methodID = breakpoint_runtime->methodInfo;
+    ei->loc.execIndex = (u64) (long) breakpoint_runtime->pc - (u64) (long) breakpoint_runtime->bytecode;
+    jdwp_event_put(ei);
+}
+
+s32 jdwp_set_breakpoint(s32 setOrClear, Class *clazz, MethodInfo *methodInfo, s64 execIndex) {
+    if (!methodInfo->breakpoint) {
+        methodInfo->breakpoint = pairlist_create(4);
+    }
+    int i;
+    for (i = 0; i < methodInfo->attributes_count; i++) {
+        if (methodInfo->attributes[i].converted_code) {
+            if (setOrClear) {
+                pairlist_putl(methodInfo->breakpoint, (long) execIndex, 1);
+                return JDWP_ERROR_NONE;
+            } else {
+                pairlist_removel(methodInfo->breakpoint, (long) execIndex);
+                if (methodInfo->breakpoint->count == 0) {
+                    jvm_free(methodInfo->breakpoint);
+                    methodInfo->breakpoint = NULL;
+                }
+                return JDWP_ERROR_NONE;
+            }
+        }
+    }
+    return JDWP_ERROR_INVALID_LOCATION;
+}
+
+EventSet *jdwp_create_eventset(JdwpPacket *req) {
+    EventSet *set = jvm_alloc(sizeof(EventSet));
+    set->requestId = jdwp_requestid++;
+    set->eventKind = jdwppacket_read_byte(req);
+    set->modifiers = jdwppacket_read_int(req);
+    set->mods = jvm_alloc(set->modifiers * sizeof(EventSetMod));
+    s32 i;
+    for (i = 0; i < set->modifiers; i++) {
+        EventSetMod *mod = &set->mods[i];
+        u8 imod = jdwppacket_read_byte(req);
+        mod->mod_type = imod;
+        switch (imod) {
+            case 1:
+                mod->count = jdwppacket_read_int(req);
+                break;
+            case 2:
+                mod->exprID = jdwppacket_read_int(req);
+                break;
+            case 3:
+                mod->thread = jdwppacket_read_refer(req);
+                break;
+            case 4:
+                mod->clazz = jdwppacket_read_refer(req);
+                break;
+            case 5:
+            case 6:
+                mod->classPattern = jdwppacket_read_utf(req);
+                break;
+            case 7:
+                readLocation(req, &mod->loc);
+                break;
+            case 8:
+                mod->exceptionOrNull = jdwppacket_read_refer(req);
+                mod->caught = jdwppacket_read_byte(req);
+                mod->uncaught = jdwppacket_read_byte(req);
+                break;
+            case 9:
+                mod->declaring = jdwppacket_read_refer(req);
+                mod->fieldID = jdwppacket_read_refer(req);
+                break;
+            case 10:
+                mod->thread = jdwppacket_read_refer(req);
+                mod->size = jdwppacket_read_int(req);
+                mod->depth = jdwppacket_read_int(req);
+                break;
+            case 11:
+                mod->instance = jdwppacket_read_refer(req);
+                break;
+            case 12:
+                mod->sourceNamePattern = jdwppacket_read_utf(req);
+                break;
+        }
+    }
+    return set;
+}
+
+s16 jdwp_eventset_process(EventSet *set) {
+    if (set) {
+        switch (set->eventKind) {
+            case JDWP_EVENTKIND_VM_DISCONNECTED: {
+                break;
+            }
+            case JDWP_EVENTKIND_VM_START: {
+                break;
+            }
+            case JDWP_EVENTKIND_THREAD_DEATH: {
+                break;
+            }
+            case JDWP_EVENTKIND_SINGLE_STEP: {
+                break;
+            }
+            case JDWP_EVENTKIND_BREAKPOINT: {
+                s32 i;
+                for (i = 0; i < set->modifiers; i++) {
+                    EventSetMod *mod = &set->mods[i];
+                    if (mod->mod_type == 7) {
+                        jdwp_set_breakpoint(JDWP_BREAKPOINT_SET, mod->loc.classID, mod->loc.methodID,
+                                            mod->loc.execIndex);
+                    }
+                }
+                break;
+            }
+            case JDWP_EVENTKIND_FRAME_POP: {
+                break;
+            }
+            case JDWP_EVENTKIND_EXCEPTION: {
+                break;
+            }
+            case JDWP_EVENTKIND_USER_DEFINED: {
+                break;
+            }
+            case JDWP_EVENTKIND_THREAD_START: {
+                break;
+            }
+            case JDWP_EVENTKIND_CLASS_PREPARE: {
+                break;
+            }
+            case JDWP_EVENTKIND_CLASS_UNLOAD: {
+                break;
+            }
+            case JDWP_EVENTKIND_CLASS_LOAD: {
+                break;
+            }
+            case JDWP_EVENTKIND_FIELD_ACCESS: {
+                break;
+            }
+            case JDWP_EVENTKIND_FIELD_MODIFICATION: {
+                break;
+            }
+            case JDWP_EVENTKIND_EXCEPTION_CATCH: {
+                break;
+            }
+            case JDWP_EVENTKIND_METHOD_ENTRY: {
+                break;
+            }
+            case JDWP_EVENTKIND_METHOD_EXIT: {
+                break;
+            }
+            case JDWP_EVENTKIND_METHOD_EXIT_WITH_RETURN_VALUE: {
+                break;
+            }
+            case JDWP_EVENTKIND_VM_DEATH: {
+                break;
+            }
+            default: {
+                break;
+            }
+        }
+    }
+    return JDWP_ERROR_NONE;
+}
+
+s16 jdwp_eventset_clear(s32 id) {
+    EventSet *set = jdwp_eventset_get(id);
+    if (set) {
+        switch (set->eventKind) {
+            case JDWP_EVENTKIND_VM_DISCONNECTED: {
+                break;
+            }
+            case JDWP_EVENTKIND_VM_START: {
+                break;
+            }
+            case JDWP_EVENTKIND_THREAD_DEATH: {
+                break;
+            }
+            case JDWP_EVENTKIND_SINGLE_STEP: {
+                break;
+            }
+            case JDWP_EVENTKIND_BREAKPOINT: {
+                s32 i;
+                for (i = 0; i < set->modifiers; i++) {
+                    EventSetMod *mod = &set->mods[i];
+                    if (mod->mod_type == 7) {
+                        jdwp_set_breakpoint(JDWP_BREAKPOINT_CLEAR, mod->loc.classID, mod->loc.methodID,
+                                            mod->loc.execIndex);
+                    }
+                }
+                break;
+            }
+            case JDWP_EVENTKIND_FRAME_POP: {
+                break;
+            }
+            case JDWP_EVENTKIND_EXCEPTION: {
+                break;
+            }
+            case JDWP_EVENTKIND_USER_DEFINED: {
+                break;
+            }
+            case JDWP_EVENTKIND_THREAD_START: {
+                break;
+            }
+            case JDWP_EVENTKIND_CLASS_PREPARE: {
+                break;
+            }
+            case JDWP_EVENTKIND_CLASS_UNLOAD: {
+                break;
+            }
+            case JDWP_EVENTKIND_CLASS_LOAD: {
+                break;
+            }
+            case JDWP_EVENTKIND_FIELD_ACCESS: {
+                break;
+            }
+            case JDWP_EVENTKIND_FIELD_MODIFICATION: {
+                break;
+            }
+            case JDWP_EVENTKIND_EXCEPTION_CATCH: {
+                break;
+            }
+            case JDWP_EVENTKIND_METHOD_ENTRY: {
+                break;
+            }
+            case JDWP_EVENTKIND_METHOD_EXIT: {
+                break;
+            }
+            case JDWP_EVENTKIND_METHOD_EXIT_WITH_RETURN_VALUE: {
+                break;
+            }
+            case JDWP_EVENTKIND_VM_DEATH: {
+                break;
+            }
+            default: {
+                break;
+            }
+        }
+    }
+    hashtable_remove(jdwpserver.event_sets, (__refer) (long) id, 0);
+    return JDWP_ERROR_NONE;
+}
+
+//==================================================    process packet    ==================================================
 
 s32 jdwp_client_process(JdwpClient *client, Runtime *runtime) {
     JdwpPacket *req = jdwp_readpacket(client);

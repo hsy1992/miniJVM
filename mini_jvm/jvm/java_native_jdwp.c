@@ -13,30 +13,170 @@
 extern "C" {
 #endif
 
-//==============   tool
-s32 jdwp_set_breakpoint(s32 setOrClear, Class *clazz, MethodInfo *methodInfo, s64 execIndex) {
-    if (!methodInfo->breakpoint) {
-        methodInfo->breakpoint = pairlist_create(4);
+//=========================================================================
+//          Event  VM产生事件后，生成实例放入eventmanager的列表中
+//=========================================================================
+
+//
+static c8 *JDWP_CLASS_EVENTMANAGER = "javax/mini/jdwp/events/EventManager";
+static c8 *JDWP_CLASS_EVENT = "javax/mini/jdwp/events/Event";
+static c8 *JDWP_CLASS_LOCATION = "javax/mini/jdwp/type/Location";
+
+//===============jdwp tools
+void jdwp_add_event(Runtime *runtime, Instance *event) {
+    Utf8String *clsName = utf8_create_c(JDWP_CLASS_EVENTMANAGER);
+    Utf8String *methodName = utf8_create_c("putEvent");
+    Utf8String *methodType = utf8_create_c("(Ljavax/mini/jdwp/events/Event;)V");
+    Class *cl = classes_load_get(clsName, runtime);
+
+    MethodInfo *method = find_methodInfo_by_name(clsName, methodName, methodType);
+    if (method) {
+        push_ref(runtime->stack, event);
+        execute_method(method, runtime, cl);
     }
-    int i;
-    for (i = 0; i < methodInfo->attributes_count; i++) {
-        if (methodInfo->attributes[i].converted_code) {
-            if (setOrClear) {
-                pairlist_putl(methodInfo->breakpoint, (long) execIndex, 1);
-                return JDWP_ERROR_NONE;
-            } else {
-                pairlist_removel(methodInfo->breakpoint, (long) execIndex);
-                if (methodInfo->breakpoint->count == 0) {
-                    jvm_free(methodInfo->breakpoint);
-                    methodInfo->breakpoint = NULL;
-                }
-                return JDWP_ERROR_NONE;
-            }
-        }
-    }
-    return JDWP_ERROR_INVALID_LOCATION;
+    utf8_destory(clsName);
+    utf8_destory(methodName);
+    utf8_destory(methodType);
 }
-//========  native
+
+Instance *jdwp_get_location(Runtime *location_runtime) {
+    Class *e_cl = classes_load_get_c(JDWP_CLASS_LOCATION, location_runtime);
+    Instance *ins = instance_create(e_cl);
+    instance_init(ins, location_runtime);
+    //
+    __refer ptr;
+    //
+    ptr = getFieldPtr_byName_c(ins, JDWP_CLASS_LOCATION, "typeTag", "B");
+    //CLASS = 1;INTERFACE = 2;ARRAY = 3;
+    if (ptr)setFieldByte(ptr, 1);
+    //
+    ptr = getFieldPtr_byName_c(ins, JDWP_CLASS_LOCATION, "classID", "J");
+    if (ptr)setFieldLong(ptr, (u64) (long) location_runtime->clazz);
+    //
+    ptr = getFieldPtr_byName_c(ins, JDWP_CLASS_LOCATION, "methodID", "J");
+    if (ptr)setFieldLong(ptr, (u64) (long) location_runtime->methodInfo);
+    //
+    ptr = getFieldPtr_byName_c(ins, JDWP_CLASS_LOCATION, "execIndex", "J");
+    if (ptr)setFieldLong(ptr, ((u64) (long) location_runtime->pc) - ((u64) (long) location_runtime->bytecode));
+    return ins;
+}
+
+//==================== jdwp event
+void jni_event_on_class_prepar(Runtime *runtime, Class *clazz) {
+    Class *e_cl = classes_load_get_c(JDWP_CLASS_EVENT, runtime);
+    Instance *ins = instance_create(e_cl);
+    instance_init(ins, runtime);
+    //
+    __refer ptr;
+    //
+    ptr = getFieldPtr_byName_c(ins, JDWP_CLASS_EVENT, "eventKind", "B");
+    if (ptr)setFieldByte(ptr, 1);//CLASS=1;INTERFACE=2;ARRAY=3
+    //
+    ptr = getFieldPtr_byName_c(ins, JDWP_CLASS_EVENT, "thread", "J");
+    if (ptr)setFieldLong(ptr, (u64) (long) runtime->threadInfo->jthread);
+    //
+    ptr = getFieldPtr_byName_c(ins, JDWP_CLASS_EVENT, "refTypeTag", "B");
+    if (ptr)setFieldByte(ptr, 1);
+    //
+    ptr = getFieldPtr_byName_c(ins, JDWP_CLASS_EVENT, "typeID", "J");
+    if (ptr)setFieldLong(ptr, (u64) (long) clazz);
+    //
+    ptr = getFieldPtr_byName_c(ins, JDWP_CLASS_EVENT, "signature", "Ljava/lang/String;");
+    Utf8String *ustr = utf8_create_copy(clazz->name);
+    utf8_insert(ustr, 0, 'L');
+    utf8_append_c(ustr, ";");
+    Instance *signature = jstring_create(ustr, runtime);
+    utf8_destory(ustr);
+    if (ptr)setFieldRefer(ptr, signature);
+    garbage_refer(signature, ins);
+    //
+    ptr = getFieldPtr_byName_c(ins, JDWP_CLASS_EVENT, "status", "I");
+    //VERIFIED = 1;PREPARED = 2;INITIALIZED = 4;ERROR = 8;
+    if (ptr)
+        setFieldInt(ptr, clazz->status >= CLASS_STATUS_CLINITED ?
+                         7 : (clazz->status >= CLASS_STATUS_PREPARED ? 3 : 1));
+
+    //
+    jdwp_add_event(runtime, ins);
+}
+
+void jni_event_on_class_unload(Runtime *runtime, Class *clazz) {
+    Class *e_cl = classes_load_get_c(JDWP_CLASS_EVENT, runtime);
+    Instance *ins = instance_create(e_cl);
+    instance_init(ins, runtime);
+    //
+    __refer ptr;
+    //
+    ptr = getFieldPtr_byName_c(ins, JDWP_CLASS_EVENT, "eventKind", "B");
+    if (ptr)setFieldByte(ptr, JDWP_EVENT_CLASS_UNLOAD);
+    //
+    ptr = getFieldPtr_byName_c(ins, JDWP_CLASS_EVENT, "signature", "Ljava/lang/String;");
+    Utf8String *ustr = utf8_create_copy(clazz->name);
+    utf8_insert(ustr, 0, 'L');
+    utf8_append_c(ustr, ";");
+    Instance *signature = jstring_create(ustr, runtime);
+    utf8_destory(ustr);
+    if (ptr)setFieldRefer(ptr, signature);
+    garbage_refer(signature, ins);
+    //
+    jdwp_add_event(runtime, ins);
+}
+
+void jni_event_on_thread_start(Runtime *runtime, Instance *jthread) {
+    Class *e_cl = classes_load_get_c(JDWP_CLASS_EVENT, runtime);
+    Instance *ins = instance_create(e_cl);
+    instance_init(ins, runtime);
+    //
+    __refer ptr;
+    //
+    ptr = getFieldPtr_byName_c(ins, JDWP_CLASS_EVENT, "eventKind", "B");
+    if (ptr)setFieldByte(ptr, JDWP_EVENT_THREAD_START);
+    //
+    ptr = getFieldPtr_byName_c(ins, JDWP_CLASS_EVENT, "thread", "J");
+    if (ptr)setFieldLong(ptr, (u64) (long) jthread);
+    //
+    jdwp_add_event(runtime, ins);
+}
+
+void jni_event_on_thread_death(Runtime *runtime, Instance *jthread) {
+    Class *e_cl = classes_load_get_c(JDWP_CLASS_EVENT, runtime);
+    Instance *ins = instance_create(e_cl);
+    instance_init(ins, runtime);
+    //
+    __refer ptr;
+    //
+    ptr = getFieldPtr_byName_c(ins, JDWP_CLASS_EVENT, "eventKind", "B");
+    if (ptr)setFieldByte(ptr, JDWP_EVENT_THREAD_DEATH);
+    //
+    ptr = getFieldPtr_byName_c(ins, JDWP_CLASS_EVENT, "thread", "J");
+    if (ptr)setFieldLong(ptr, (u64) (long) jthread);
+    //
+    jdwp_add_event(runtime, ins);
+}
+
+
+void jni_event_on_breakpoint(Runtime *breakpoint_runtime) {
+    Class *e_cl = classes_load_get_c(JDWP_CLASS_EVENT, breakpoint_runtime);
+    Instance *ins = instance_create(e_cl);
+    instance_init(ins, breakpoint_runtime);
+    //
+    __refer ptr;
+    //
+    ptr = getFieldPtr_byName_c(ins, JDWP_CLASS_EVENT, "eventKind", "B");
+    if (ptr)setFieldByte(ptr, JDWP_EVENT_BREAKPOINT);
+    //
+    ptr = getFieldPtr_byName_c(ins, JDWP_CLASS_EVENT, "thread", "J");
+    if (ptr)setFieldLong(ptr, (u64) (long) breakpoint_runtime->threadInfo->jthread);
+    //
+    ptr = getFieldPtr_byName_c(ins, JDWP_CLASS_EVENT, "loc", "Ljavax/mini/jdwp/type/Location;");
+    Instance *loc = jdwp_get_location(breakpoint_runtime);
+    if (ptr)setFieldRefer(ptr, loc);
+    garbage_refer(loc, ins);
+    //
+    jdwp_add_event(breakpoint_runtime, ins);
+}
+
+//========  native============================================================================
 
 s32 javax_mini_jdwp_vm_JdwpNative_referenceTyepSize(Runtime *runtime, Class *clazz) {
     push_int(runtime->stack, sizeof(__refer));
@@ -717,169 +857,6 @@ static java_native_method method_jdwp_table[] = {
 
 void reg_jdwp_native_lib() {
     native_reg_lib(&(method_jdwp_table[0]), sizeof(method_jdwp_table) / sizeof(java_native_method));
-}
-
-//=========================================================================
-//          Event  VM产生事件后，生成实例放入eventmanager的列表中
-//=========================================================================
-
-//
-static c8 *JDWP_CLASS_EVENTMANAGER = "javax/mini/jdwp/events/EventManager";
-static c8 *JDWP_CLASS_EVENT = "javax/mini/jdwp/events/Event";
-static c8 *JDWP_CLASS_LOCATION = "javax/mini/jdwp/type/Location";
-
-//===============jdwp tools
-void jdwp_add_event(Runtime *runtime, Instance *event) {
-    Utf8String *clsName = utf8_create_c(JDWP_CLASS_EVENTMANAGER);
-    Utf8String *methodName = utf8_create_c("putEvent");
-    Utf8String *methodType = utf8_create_c("(Ljavax/mini/jdwp/events/Event;)V");
-    Class *cl = classes_load_get(clsName, runtime);
-
-    MethodInfo *method = find_methodInfo_by_name(clsName, methodName, methodType);
-    if (method) {
-        push_ref(runtime->stack, event);
-        execute_method(method, runtime, cl);
-    }
-    utf8_destory(clsName);
-    utf8_destory(methodName);
-    utf8_destory(methodType);
-}
-
-Instance *jdwp_get_location(Runtime *location_runtime) {
-    Class *e_cl = classes_load_get_c(JDWP_CLASS_LOCATION, location_runtime);
-    Instance *ins = instance_create(e_cl);
-    instance_init(ins, location_runtime);
-    //
-    __refer ptr;
-    //
-    ptr = getFieldPtr_byName_c(ins, JDWP_CLASS_LOCATION, "typeTag", "B");
-    //CLASS = 1;INTERFACE = 2;ARRAY = 3;
-    if (ptr)setFieldByte(ptr, 1);
-    //
-    ptr = getFieldPtr_byName_c(ins, JDWP_CLASS_LOCATION, "classID", "J");
-    if (ptr)setFieldLong(ptr, (u64) (long) location_runtime->clazz);
-    //
-    ptr = getFieldPtr_byName_c(ins, JDWP_CLASS_LOCATION, "methodID", "J");
-    if (ptr)setFieldLong(ptr, (u64) (long) location_runtime->methodInfo);
-    //
-    ptr = getFieldPtr_byName_c(ins, JDWP_CLASS_LOCATION, "execIndex", "J");
-    if (ptr)setFieldLong(ptr, ((u64) (long) location_runtime->pc) - ((u64) (long) location_runtime->bytecode));
-    return ins;
-}
-
-//==================== jdwp event
-void event_on_class_prepar(Runtime *runtime, Class *clazz) {
-    Class *e_cl = classes_load_get_c(JDWP_CLASS_EVENT, runtime);
-    Instance *ins = instance_create(e_cl);
-    instance_init(ins, runtime);
-    //
-    __refer ptr;
-    //
-    ptr = getFieldPtr_byName_c(ins, JDWP_CLASS_EVENT, "eventKind", "B");
-    if (ptr)setFieldByte(ptr, 1);//CLASS=1;INTERFACE=2;ARRAY=3
-    //
-    ptr = getFieldPtr_byName_c(ins, JDWP_CLASS_EVENT, "thread", "J");
-    if (ptr)setFieldLong(ptr, (u64) (long) runtime->threadInfo->jthread);
-    //
-    ptr = getFieldPtr_byName_c(ins, JDWP_CLASS_EVENT, "refTypeTag", "B");
-    if (ptr)setFieldByte(ptr, 1);
-    //
-    ptr = getFieldPtr_byName_c(ins, JDWP_CLASS_EVENT, "typeID", "J");
-    if (ptr)setFieldLong(ptr, (u64) (long) clazz);
-    //
-    ptr = getFieldPtr_byName_c(ins, JDWP_CLASS_EVENT, "signature", "Ljava/lang/String;");
-    Utf8String *ustr = utf8_create_copy(clazz->name);
-    utf8_insert(ustr, 0, 'L');
-    utf8_append_c(ustr, ";");
-    Instance *signature = jstring_create(ustr, runtime);
-    utf8_destory(ustr);
-    if (ptr)setFieldRefer(ptr, signature);
-    garbage_refer(signature, ins);
-    //
-    ptr = getFieldPtr_byName_c(ins, JDWP_CLASS_EVENT, "status", "I");
-    //VERIFIED = 1;PREPARED = 2;INITIALIZED = 4;ERROR = 8;
-    if (ptr)
-        setFieldInt(ptr, clazz->status >= CLASS_STATUS_CLINITED ?
-                         7 : (clazz->status >= CLASS_STATUS_PREPARED ? 3 : 1));
-
-    //
-    jdwp_add_event(runtime, ins);
-}
-
-void event_on_class_unload(Runtime *runtime, Class *clazz) {
-    Class *e_cl = classes_load_get_c(JDWP_CLASS_EVENT, runtime);
-    Instance *ins = instance_create(e_cl);
-    instance_init(ins, runtime);
-    //
-    __refer ptr;
-    //
-    ptr = getFieldPtr_byName_c(ins, JDWP_CLASS_EVENT, "eventKind", "B");
-    if (ptr)setFieldByte(ptr, JDWP_EVENT_CLASS_UNLOAD);
-    //
-    ptr = getFieldPtr_byName_c(ins, JDWP_CLASS_EVENT, "signature", "Ljava/lang/String;");
-    Utf8String *ustr = utf8_create_copy(clazz->name);
-    utf8_insert(ustr, 0, 'L');
-    utf8_append_c(ustr, ";");
-    Instance *signature = jstring_create(ustr, runtime);
-    utf8_destory(ustr);
-    if (ptr)setFieldRefer(ptr, signature);
-    garbage_refer(signature, ins);
-    //
-    jdwp_add_event(runtime, ins);
-}
-
-void event_on_thread_start(Runtime *runtime, Instance *jthread) {
-    Class *e_cl = classes_load_get_c(JDWP_CLASS_EVENT, runtime);
-    Instance *ins = instance_create(e_cl);
-    instance_init(ins, runtime);
-    //
-    __refer ptr;
-    //
-    ptr = getFieldPtr_byName_c(ins, JDWP_CLASS_EVENT, "eventKind", "B");
-    if (ptr)setFieldByte(ptr, JDWP_EVENT_THREAD_START);
-    //
-    ptr = getFieldPtr_byName_c(ins, JDWP_CLASS_EVENT, "thread", "J");
-    if (ptr)setFieldLong(ptr, (u64) (long) jthread);
-    //
-    jdwp_add_event(runtime, ins);
-}
-
-void event_on_thread_death(Runtime *runtime, Instance *jthread) {
-    Class *e_cl = classes_load_get_c(JDWP_CLASS_EVENT, runtime);
-    Instance *ins = instance_create(e_cl);
-    instance_init(ins, runtime);
-    //
-    __refer ptr;
-    //
-    ptr = getFieldPtr_byName_c(ins, JDWP_CLASS_EVENT, "eventKind", "B");
-    if (ptr)setFieldByte(ptr, JDWP_EVENT_THREAD_DEATH);
-    //
-    ptr = getFieldPtr_byName_c(ins, JDWP_CLASS_EVENT, "thread", "J");
-    if (ptr)setFieldLong(ptr, (u64) (long) jthread);
-    //
-    jdwp_add_event(runtime, ins);
-}
-
-
-void event_on_breakpoint(Runtime *breakpoint_runtime) {
-    Class *e_cl = classes_load_get_c(JDWP_CLASS_EVENT, breakpoint_runtime);
-    Instance *ins = instance_create(e_cl);
-    instance_init(ins, breakpoint_runtime);
-    //
-    __refer ptr;
-    //
-    ptr = getFieldPtr_byName_c(ins, JDWP_CLASS_EVENT, "eventKind", "B");
-    if (ptr)setFieldByte(ptr, JDWP_EVENT_BREAKPOINT);
-    //
-    ptr = getFieldPtr_byName_c(ins, JDWP_CLASS_EVENT, "thread", "J");
-    if (ptr)setFieldLong(ptr, (u64) (long) breakpoint_runtime->threadInfo->jthread);
-    //
-    ptr = getFieldPtr_byName_c(ins, JDWP_CLASS_EVENT, "loc", "Ljavax/mini/jdwp/type/Location;");
-    Instance *loc = jdwp_get_location(breakpoint_runtime);
-    if (ptr)setFieldRefer(ptr, loc);
-    garbage_refer(loc, ins);
-    //
-    jdwp_add_event(breakpoint_runtime, ins);
 }
 
 #ifdef __cplusplus

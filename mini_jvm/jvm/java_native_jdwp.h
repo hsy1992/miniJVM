@@ -8,12 +8,6 @@
 
 #include "jvm.h"
 
-void event_on_breakpoint(Runtime *breakpoint_runtime);
 
-void event_on_class_prepar(Runtime *runtime, Class *clazz);
-
-void event_on_thread_death(Runtime *runtime, Instance *jthread);
-
-void event_on_thread_start(Runtime *runtime, Instance *jthread);
 
 #endif //MINI_JVM_JAVA_NATIVE_JDWP_H
