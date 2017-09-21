@@ -10,7 +10,7 @@
 #include "../utils/utf8_string.h"
 #include "../utils/arraylist.h"
 #include "jvm.h"
-
+#include "pthread.h"
 //=============================      error   ==============================================
 
 static u16 JDWP_ERROR_INVALID_TAG = 500; //object type id or class tag
