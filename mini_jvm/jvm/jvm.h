@@ -16,7 +16,7 @@
 
 //=======================  micro define  =============================
 #define _JVM_DEBUG 0
-#define _JVM_DEBUG_PRINT_FILE 01
+#define _JVM_DEBUG_PRINT_FILE 0
 #define _JVM_DEBUG_BYTECODE_DUMP 0
 #define _JVM_DEBUG_GARBAGE_DUMP 0
 #define _JVM_DEBUG_PROFILE 0
@@ -193,6 +193,7 @@ static c8 *STR_CLASS_JAVA_LANG_OBJECT = "java/lang/Object";
 static c8 *STR_CLASS_JAVA_LANG_THREAD = "java/lang/Thread";
 static c8 *STR_CLASS_JAVA_LANG_CLASS = "java/lang/Class";
 static c8 *STR_FIELD_THREADQ = "threadQ";
+static c8 *STR_FIELD_NAME = "name";
 static c8 *STR_FIELD_VALUE = "value";
 static c8 *STR_FIELD_COUNT = "count";
 static c8 *STR_FIELD_OFFSET = "offset";
@@ -212,11 +213,11 @@ enum {
  * 内存中几个主要对象的类型，他们是不同的数据结构，但是每种类型的第一个字节都是用来标识此内存对象的类型
  */
 enum {
-    MEM_TYPE_NODEF,
-    MEM_TYPE_CLASS,
-    MEM_TYPE_ARR_CLASS,
-    MEM_TYPE_INS,
-    MEM_TYPE_ARR
+    MEM_TYPE_NODEF, //0
+    MEM_TYPE_CLASS, //1
+    MEM_TYPE_ARR_CLASS,  //2
+    MEM_TYPE_INS,   //3
+    MEM_TYPE_ARR    //4
 };
 
 

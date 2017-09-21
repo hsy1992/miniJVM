@@ -176,6 +176,10 @@ void class_link(Class *clazz) {
 //        int debug = 1;
 //    }
     s32 i;
+    for (i = 0; i < clazz->interfacePool.clasz_used; i++) {
+        ConstantClassRef *ptr = &clazz->interfacePool.clasz[i];
+        ptr->name = get_utf8_string(clazz,  find_constant_classref(clazz,ptr->stringIndex)->stringIndex);
+    }
     for (i = 0; i < clazz->fieldPool.field_used; i++) {
         FieldInfo *ptr = &clazz->fieldPool.field[i];
         ptr->name = get_utf8_string(clazz, ptr->name_index);

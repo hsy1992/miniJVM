@@ -27,6 +27,7 @@ Class *classes_load_get_c(c8 *pclassName, Runtime *runtime) {
 }
 
 Class *classes_load_get(Utf8String *ustr, Runtime *runtime) {
+    if (!ustr)return NULL;
     Class *cl;
     utf8_replace_c(ustr, ".", "/");
     cl = classes_get(ustr);
@@ -421,7 +422,7 @@ int jvm_printf(const char *format, ...) {
         }
     }
 #else
-        result = vprintf(format, vp);
+    result = vprintf(format, vp);
 #endif
     va_end(vp);
     garbage_thread_unlock();
@@ -444,9 +445,9 @@ void invoke_deepth(Runtime *runtime) {
     }
 #else
     printf("%lx", (s64) (long) pthread_self().p);
-for (i = 0; i < len; i++) {
-    printf("    ");
-}
+    for (i = 0; i < len; i++) {
+        printf("    ");
+    }
 #endif
     garbage_thread_unlock();
 }
@@ -498,6 +499,10 @@ pthread_t jthread_create_and_start(Instance *ins) {//
     return pt;
 }
 
+__refer jthread_get_name_value(Instance *ins) {
+    c8 *ptr = getFieldPtr_byName_c(ins, STR_CLASS_JAVA_LANG_THREAD, STR_FIELD_NAME, "[C");
+    return getFieldRefer(ptr);
+}
 __refer jthread_get_threadq_value(Instance *ins) {
     c8 *ptr = getFieldPtr_byName_c(ins, STR_CLASS_JAVA_LANG_THREAD, STR_FIELD_THREADQ, "Ljava/lang/Thread;");
     return getFieldRefer(ptr);

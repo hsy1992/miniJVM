@@ -10,7 +10,7 @@
 /* parse Interface Pool Class */
 static s32 parseIPClass(Class *_this, FILE *fp, s32 index) {
     u8 short_tmp[2];
-    ConstantClassRef *ptr = &(_this->interfacePool).clasz[_this->interfacePool.clasz_used];
+    ConstantClassRef *ptr = &_this->interfacePool.clasz[_this->interfacePool.clasz_used];
 
     ptr->tag = CONSTANT_CLASS;
     ptr->index = index;

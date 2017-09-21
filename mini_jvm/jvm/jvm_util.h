@@ -102,6 +102,8 @@ __refer jthread_get_threadq_value(Instance *ins);
 
 void jthread_set_threadq_value(Instance *ins, void *val);
 
+__refer jthread_get_name_value(Instance *ins);
+
 JavaThreadLock *jthreadlock_create();
 
 void jthreadlock_destory(JavaThreadLock *jtl);
