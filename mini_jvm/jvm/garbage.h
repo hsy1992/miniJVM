@@ -56,7 +56,7 @@ s32 garbage_is_refer_by(__refer sonPtr, __refer parentPtr);
 
 void garbage_collect_memobj(__refer k);
 
-s32 garbage_check_by_all_thread() ;
+s32 garbage_mark_all_thread() ;
 
 s32 garbage_mark_refered_obj(Runtime *pruntime) ;
 

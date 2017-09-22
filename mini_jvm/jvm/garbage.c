@@ -3,6 +3,7 @@
 #include "garbage.h"
 #include "jvm_util.h"
 
+void getMemBlockName(void *memblock, Utf8String *name);
 
 s32 garbage_collector_create() {
     son_2_father = hashtable_create(DEFAULT_HASH_FUNC, DEFAULT_HASH_EQUALS_FUNC);
@@ -111,7 +112,7 @@ void _garbage_put_set(Hashset *set) {
 s32 garbage_collect() {
     garbage_thread_lock();
 #if _JVM_DEBUG_GARBAGE_DUMP
-    dump_refer();
+    //dump_refer();
 #endif
 
     HashtableIterator hti;
@@ -128,7 +129,7 @@ s32 garbage_collect() {
     //轮询所有线程，这些对象是否被引用过了
     //in this sub proc ,in wait maybe other thread insert new obj into son_2_father ,
     // so new inserted obj must be garbage_mark==GARBAGE_MARK_UNDEF  ,otherwise new obj would be collected.
-    garbage_check_by_all_thread();
+    garbage_mark_all_thread();
 
     //真正删除
     s32 i = 0;
@@ -138,12 +139,7 @@ s32 garbage_collect() {
         HashtableKey k = hashtable_iter_next_key(&hti);
         MemoryBlock *mb = (MemoryBlock *) k;
         Hashset *v = (Hashset *) hashtable_get(son_2_father, k);
-//        Utf8String *str = utf8_create();
-//        getMemBlockName((void*)k, str);
-//        if (utf8_equals_c(str, "Array{C}") == 0 && v->entries == 1) {
-//            int debug = 1;
-//        }
-//        utf8_destory(str);
+
         if (v != HASH_NULL) {
             if (v->entries == 0 && mb->garbage_mark == GARBAGE_MARK_NO_REFERED) {
                 garbage_collect_memobj(k);
@@ -169,13 +165,12 @@ s32 garbage_collect() {
  */
 void garbage_collect_memobj(__refer k) {
     garbage_derefer_all(k);
-//    if (((MemoryBlock *) k)->type == MEM_TYPE_CLASS) {
-//        int debug = 1;
-//    }
+
 #if _JVM_DEBUG_GARBAGE_DUMP
-    Instance *ins = (Instance *) k;
-    jvm_printf("garbage collect instance [%x] of %s\n", k,
-           ins->mb.type == MEM_TYPE_INS ? utf8_cstr(ins->mb.clazz->name) : "ARRAY");
+    Utf8String *pus = utf8_create();
+    getMemBlockName(k, pus);
+    jvm_printf("garbage collect instance  %s [%x]\n", utf8_cstr(pus), k);
+    utf8_destory(pus);
 #endif
     Hashset *v = (Hashset *) hashtable_get(son_2_father, k);
     _garbage_put_set(v);
@@ -189,7 +184,7 @@ void garbage_collect_memobj(__refer k) {
  * @param son
  * @return
  */
-s32 garbage_check_by_all_thread() {
+s32 garbage_mark_all_thread() {
     s32 i;
     //jvm_printf("thread set size:%d\n", thread_list->length);
     for (i = 0; i < thread_list->length; i++) {
@@ -198,7 +193,7 @@ s32 garbage_check_by_all_thread() {
          *  回收线程 进行收集，先暂停线程，收集完之后恢复java工作线程
          *
          */
-        if (runtime->threadInfo->thread_status == THREAD_STATUS_RUNNING) {//让线程自己来标注，有的线程在等IO，等不起
+        if (runtime->threadInfo->thread_status != THREAD_STATUS_ZOMBIE) {
             jthread_suspend(runtime);
             garbage_mark_refered_obj(runtime);
             jthread_resume(runtime);
@@ -255,7 +250,6 @@ s32 garbage_mark_refered_obj(Runtime *pruntime) {
         runtime = runtime->son;
     }
     //jvm_printf("[%llx] notified\n", (s64) (long) pruntime->threadInfo->jthread);
-    garbage_thread_notify();
     garbage_thread_unlock();
     return 0;
 }
@@ -277,14 +271,14 @@ void getMemBlockName(void *memblock, Utf8String *name) {
                 Instance *ins = (Instance *) mb;
                 utf8_append_c(name, "L");
                 utf8_append(name, ins->mb.clazz->name);
+                utf8_append_c(name, ";");
                 break;
             }
             case MEM_TYPE_ARR: {
                 Instance *arr = (Instance *) mb;
                 //jvm_printf("Array{%d}", data_type_bytes[arr->arr_data_type]);
                 utf8_append_c(name, "Array{");
-                utf8_insert(name, name->length,
-                            getDataTypeTag(arr->mb.clazz->arr_data_type));//'0' + data_type_bytes[arr->arr_data_type]);
+                utf8_append(name, arr->mb.clazz->name);//'0' + data_type_bytes[arr->arr_data_type]);
                 utf8_append_c(name, "}");
                 break;
 
@@ -376,11 +370,14 @@ void *garbage_refer(__refer sonPtr, __refer parentPtr) {
         return sonPtr;
     }
 #if _JVM_DEBUG_GARBAGE_DUMP
-    Utf8String *us = utf8_create();
-    getMemBlockName(parentPtr, us);
-    jvm_printf("+: L%s[%x] <- %s[%x]\n", utf8_cstr(((Instance *) sonPtr)->mb.clazz->name), sonPtr, utf8_cstr(us),
-           parentPtr);
-    utf8_destory(us);
+    Utf8String *pus = utf8_create();
+    Utf8String *sus = utf8_create();
+    getMemBlockName(parentPtr, pus);
+    getMemBlockName(sonPtr, sus);
+    jvm_printf("+: %s[%x] <- %s[%x]\n", utf8_cstr(sus), sonPtr, utf8_cstr(pus),
+               parentPtr);
+    utf8_destory(pus);
+    utf8_destory(sus);
 #endif
     garbage_thread_lock();
     //放入子引父
@@ -406,11 +403,14 @@ void *garbage_refer(__refer sonPtr, __refer parentPtr) {
 void garbage_derefer(__refer sonPtr, __refer parentPtr) {
 
 #if _JVM_DEBUG_GARBAGE_DUMP
-    Utf8String *us = utf8_create();
-    getMemBlockName(parentPtr, us);
-    jvm_printf("-: L%s[%x] <- %s[%x]\n", utf8_cstr(((Instance *) sonPtr)->mb.clazz->name), sonPtr, utf8_cstr(us),
-           parentPtr);
-    utf8_destory(us);
+    Utf8String *pus = utf8_create();
+    Utf8String *sus = utf8_create();
+    getMemBlockName(parentPtr, pus);
+    getMemBlockName(sonPtr, sus);
+    jvm_printf("-: %s[%x] <- %s[%x]\n", utf8_cstr(((Instance *) sonPtr)->mb.clazz->name), sonPtr, utf8_cstr(pus),
+               parentPtr);
+    utf8_destory(sus);
+    utf8_destory(pus);
 #endif
     garbage_thread_lock();
     Hashset *set;
@@ -481,9 +481,9 @@ s32 garbage_is_refer_by(__refer sonPtr, __refer parentPtr) {
  */
 void *jvm_alloc(u32 size) {
     if (!size)return NULL;
-    if (size > 5000) {
-        int debug = 1;
-    }
+//    if (size > 5000) {
+//        int debug = 1;
+//    }
     size += 4;
     void *ptr = malloc(size);
     if (ptr) {
