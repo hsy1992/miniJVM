@@ -3163,9 +3163,7 @@ s32 execute_method(MethodInfo *method, Runtime *pruntime, Class *clazz) {
         jvm_printf("%s.%s()  {\n", native->clzname, native->methodname);
 #endif
         synchronized_lock_method(method, &runtime);
-        jthread_flag_suspend(&runtime);
         ret = method->native_func(&runtime, clazz);
-        jthread_flag_resume(&runtime);
         synchronized_unlock_method(method, &runtime);
 //        if (java_debug) {
 //            //process jdwp suspend
@@ -3215,10 +3213,10 @@ s32 execute_method(MethodInfo *method, Runtime *pruntime, Class *clazz) {
                         jdwp_check_debug_step(&runtime);
 
                     }
-                    //process jdwp suspend
-                    while (runtime.threadInfo->suspend_count) {
-                        threadSleep(20);
-                    }
+                }
+                //process thread suspend
+                while (runtime.threadInfo->suspend_count) {
+                    threadSleep(20);
                 }
                 InstructFunc func = find_instruct_func(runtime.pc[0]);
                 if (func != 0) {
@@ -3227,11 +3225,7 @@ s32 execute_method(MethodInfo *method, Runtime *pruntime, Class *clazz) {
                     s64 start_at = nanoTime();
 #endif
                     i = func(&runtime.pc, &runtime);
-                    //process garbage collection
-                    if (runtime.threadInfo->garbage_collect_mark_task) {
-                        garbage_mark_refered_obj(runtime.threadInfo->top_runtime);
-                        runtime.threadInfo->garbage_collect_mark_task = 0;
-                    }
+
 #if _JVM_DEBUG_PROFILE
                     s64 spent = nanoTime() - start_at;
                     spent = 1;

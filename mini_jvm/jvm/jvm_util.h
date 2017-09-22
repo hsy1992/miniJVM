@@ -84,7 +84,6 @@ typedef struct _JavaThreadInfo {
     Instance *jthread;
     Runtime *top_runtime;
     Hashset *hold_locks;
-    volatile u8 garbage_collect_mark_task;
     volatile u8 thread_status;
     volatile s32 suspend_count;//for jdwp suspend ,>0 suspend, ==0 resume
     pthread_t pthread;
@@ -122,10 +121,14 @@ s32 jthread_notifyAll(MemoryBlock *ins, Runtime *runtime);
 
 s32 jthread_waitTime(MemoryBlock *ins, Runtime *runtime, long waitms);
 
-s32 jthread_flag_resume(Runtime *runtime);
-
-s32 jthread_flag_suspend(Runtime *runtime);
+//s32 jthread_flag_resume(Runtime *runtime);
+//
+//s32 jthread_flag_suspend(Runtime *runtime);
 
 s32 jthread_yield(Runtime *runtime);
+
+s32 jthread_resume(Runtime *runtime);
+
+s32 jthread_suspend(Runtime *runtime);
 
 #endif //MINI_JVM_UTIL_H

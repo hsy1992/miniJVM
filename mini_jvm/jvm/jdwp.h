@@ -279,6 +279,7 @@ typedef struct _JdwpServer {
     ArrayList *clients;
     ArrayList *events;
     Hashtable *event_sets;
+    Runtime* runtime;
 } JdwpServer;
 
 typedef struct _JdwpClient {

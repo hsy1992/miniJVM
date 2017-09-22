@@ -479,12 +479,10 @@ void *jtherad_loader(void *para) {
         if (java_debug)event_on_thread_start(&runtime);
         jthread_set_threadq_value(jthread, &runtime);
         arraylist_append(thread_list, &runtime);
-        jthread_flag_resume(&runtime);
         push_ref(runtime.stack, (__refer) jthread);
 
         ret = execute_method(method, &runtime, method->_this_class);
 
-        jthread_flag_suspend(&runtime);
         arraylist_remove(thread_list, &runtime);
         runtime.threadInfo->thread_status = THREAD_STATUS_ZOMBIE;
         if (java_debug)event_on_thread_death(&runtime);
@@ -601,21 +599,16 @@ s32 jthread_notifyAll(MemoryBlock *ins, Runtime *runtime) {
 
 s32 jthread_yield(Runtime *runtime) {
     sched_yield();
+    return 0;
 }
 
-
-s32 jthread_flag_suspend(Runtime *runtime) {
-    runtime->threadInfo->thread_status = THREAD_STATUS_SLEEPING;
+s32 jthread_suspend(Runtime *runtime) {
+    runtime->threadInfo->suspend_count++;
 }
 
-s32 jthread_flag_resume(Runtime *runtime) {
-    garbage_thread_lock();
-    while (runtime->threadInfo->garbage_collect_mark_task == 1)
-        garbage_thread_wait();//等待处理完成
-    runtime->threadInfo->thread_status = THREAD_STATUS_RUNNING;
-    garbage_thread_unlock();
+s32 jthread_resume(Runtime *runtime) {
+    if (runtime->threadInfo->suspend_count > 0)runtime->threadInfo->suspend_count--;
 }
-
 
 s32 jthread_waitTime(MemoryBlock *ins, Runtime *runtime, long waitms) {
     if (ins == NULL)return -1;

@@ -146,7 +146,7 @@ s32 garbage_collect() {
 //        utf8_destory(str);
         if (v != HASH_NULL) {
             if (v->entries == 0 && mb->garbage_mark == GARBAGE_MARK_NO_REFERED) {
-                //garbage_collect_memobj(k);
+                garbage_collect_memobj(k);
                 i++;
             }
         }
@@ -175,7 +175,7 @@ void garbage_collect_memobj(__refer k) {
 #if _JVM_DEBUG_GARBAGE_DUMP
     Instance *ins = (Instance *) k;
     jvm_printf("garbage collect instance [%x] of %s\n", k,
-           ins->mb.type == MEM_TYPE_INS ? utf8_cstr(ins->mb.obj_of_clazz->name) : "ARRAY");
+           ins->mb.type == MEM_TYPE_INS ? utf8_cstr(ins->mb.clazz->name) : "ARRAY");
 #endif
     Hashset *v = (Hashset *) hashtable_get(son_2_father, k);
     _garbage_put_set(v);
@@ -195,25 +195,22 @@ s32 garbage_check_by_all_thread() {
     for (i = 0; i < thread_list->length; i++) {
         Runtime *runtime = (Runtime *) arraylist_get_value(thread_list, i);
         /**
-         * 此处有两种方式：
-         * 一种是 回收线程 进行收集，收集完之后通知java工作线程
-         * 第二是 java线程 进行收集，收集完之后通知回收线程
-         *
-         * 第一种方式主要是因为，在某些时候，java线程处于blocking io 状态，或在sleep,
-         * 此时如果垃圾回收线程等待其自己回收是一件不确定的事情
+         *  回收线程 进行收集，先暂停线程，收集完之后恢复java工作线程
          *
          */
-
         if (runtime->threadInfo->thread_status == THREAD_STATUS_RUNNING) {//让线程自己来标注，有的线程在等IO，等不起
-            runtime->threadInfo->garbage_collect_mark_task = 1;
-            //jvm_printf("thread wait\n");
-            while (runtime->threadInfo->garbage_collect_mark_task == 1)
-                garbage_thread_wait();//等待处理完成
-        } else {//线程没有run的时候（wait sleep），自己来做，但线程恢复run时，会试图获取锁，此进正在做下面的操作
+            jthread_suspend(runtime);
             garbage_mark_refered_obj(runtime);
-            garbage_thread_notify();
+            jthread_resume(runtime);
         }
         //jvm_printf("thread marked refered , [%llx]\n", (s64) (long) runtime->threadInfo->jthread);
+    }
+    //调试线程
+    if (java_debug) {
+        Runtime *runtime = jdwpserver.runtime;
+        jthread_suspend(runtime);
+        garbage_mark_refered_obj(runtime);
+        jthread_resume(runtime);
     }
     return 0;
 }
@@ -381,7 +378,7 @@ void *garbage_refer(__refer sonPtr, __refer parentPtr) {
 #if _JVM_DEBUG_GARBAGE_DUMP
     Utf8String *us = utf8_create();
     getMemBlockName(parentPtr, us);
-    jvm_printf("+: L%s[%x] <- %s[%x]\n", utf8_cstr(((Instance *) sonPtr)->mb.obj_of_clazz->name), sonPtr, utf8_cstr(us),
+    jvm_printf("+: L%s[%x] <- %s[%x]\n", utf8_cstr(((Instance *) sonPtr)->mb.clazz->name), sonPtr, utf8_cstr(us),
            parentPtr);
     utf8_destory(us);
 #endif
@@ -411,7 +408,7 @@ void garbage_derefer(__refer sonPtr, __refer parentPtr) {
 #if _JVM_DEBUG_GARBAGE_DUMP
     Utf8String *us = utf8_create();
     getMemBlockName(parentPtr, us);
-    jvm_printf("-: L%s[%x] <- %s[%x]\n", utf8_cstr(((Instance *) sonPtr)->mb.obj_of_clazz->name), sonPtr, utf8_cstr(us),
+    jvm_printf("-: L%s[%x] <- %s[%x]\n", utf8_cstr(((Instance *) sonPtr)->mb.clazz->name), sonPtr, utf8_cstr(us),
            parentPtr);
     utf8_destory(us);
 #endif

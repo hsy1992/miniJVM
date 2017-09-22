@@ -48,6 +48,7 @@ void *jdwp_thread_dispacher(void *para) {
     JdwpServer *srv = (JdwpServer *) para;
     Runtime runtime;
     runtime_create(&runtime);
+    srv->runtime = &runtime;
     s32 i;
     while (!srv->exit) {
         for (i = 0; i < srv->clients->length; i++) {
@@ -637,7 +638,7 @@ void jdwp_check_breakpoint(Runtime *runtime) {
     MethodInfo *method = runtime->methodInfo;
     if ((method->breakpoint) && pairlist_getl(method->breakpoint, index)) {
         event_on_breakpoint(runtime);//
-        runtime->threadInfo->suspend_count++;
+        jthread_suspend(runtime);
     }
 }
 
@@ -671,7 +672,7 @@ void jdwp_check_debug_step(Runtime *runtime) {
     }
     if (suspend) {
         event_on_debug_step(runtime);
-        runtime->threadInfo->suspend_count++;
+        jthread_suspend(runtime);
     }
 }
 //==================================================    event    ==================================================
@@ -1275,7 +1276,7 @@ s32 jdwp_client_process(JdwpClient *client, Runtime *runtime) {
                 s32 i;
                 for (i = 0; i < thread_list->length; i++) {
                     Runtime *t = (Runtime *) arraylist_get_value(thread_list, i);
-                    t->threadInfo->suspend_count++;
+                    jthread_suspend(t);
                     //jvm_printf("VirtualMachine_Suspend: %lld\n" + (s64) (long) t);
                 }
 
@@ -1288,7 +1289,7 @@ s32 jdwp_client_process(JdwpClient *client, Runtime *runtime) {
                 s32 i;
                 for (i = 0; i < thread_list->length; i++) {
                     Runtime *t = (Runtime *) arraylist_get_value(thread_list, i);
-                    if (t->threadInfo->suspend_count > 0)t->threadInfo->suspend_count--;
+                    if (t->threadInfo->suspend_count > 0)jthread_resume(t);
                     //jvm_printf("VirtualMachine_Resume: %llx\n", (s64) (long) t);
                 }
 
@@ -1729,7 +1730,7 @@ s32 jdwp_client_process(JdwpClient *client, Runtime *runtime) {
             case JDWP_CMD_ThreadReference_Suspend: {//11.2
                 Instance *jthread = jdwppacket_read_refer(req);
                 Runtime *r = jthread_get_threadq_value(jthread);
-                r->threadInfo->suspend_count++;
+                jthread_suspend(r);
                 jdwppacket_set_err(res, JDWP_ERROR_NONE);
                 jdwp_writepacket(client, res);
                 break;
@@ -1737,7 +1738,7 @@ s32 jdwp_client_process(JdwpClient *client, Runtime *runtime) {
             case JDWP_CMD_ThreadReference_Resume: {//11.3
                 Instance *jthread = jdwppacket_read_refer(req);
                 Runtime *r = jthread_get_threadq_value(jthread);
-                if (r->threadInfo->suspend_count > 0)r->threadInfo->suspend_count--;
+                if (r->threadInfo->suspend_count > 0)jthread_resume(r);;
 
                 jdwppacket_set_err(res, JDWP_ERROR_NONE);
                 jdwp_writepacket(client, res);

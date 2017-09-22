@@ -307,7 +307,7 @@ s32 javax_mini_reflect_vm_RefNative_suspendThread(Runtime *runtime, Class *clazz
     Instance *thread = (Instance *) (runtime->localVariables + 0)->refer;
     Runtime *trun = (Runtime *) jthread_get_threadq_value(thread);//线程结束之后会清除掉runtime,因为其是一个栈变量，不可再用
     if (trun) {
-        trun->threadInfo->suspend_count++;
+        jthread_suspend(trun);
         push_int(runtime->stack, 0);
     } else
         push_int(runtime->stack, 1);

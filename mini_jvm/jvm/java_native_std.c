@@ -349,10 +349,7 @@ s32 java_lang_Object_wait(Runtime *runtime, Class *clazz) {
 #if _JVM_DEBUG > 5
     jvm_printf("java_lang_Object_wait %llx  wait %lld\n", (s64) (long) ins, l2d.l);
 #endif
-//    runtime->threadInfo->thread_running = 0;
     jthread_waitTime(&ins->mb, runtime, l2d.l);
-//    garbage_thread_lock();//may be garbage is collecting this time
-//    runtime->threadInfo->thread_running = 1;
     garbage_thread_unlock();
     return 0;
 }
