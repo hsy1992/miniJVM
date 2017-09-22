@@ -18,6 +18,8 @@ void jdwp_eventset_post(JdwpClient *client, EventSet *set, EventInfo *event);
 void event_on_debug_step(Runtime *step_runtime);
 
 s32 getRuntimeDepth(Runtime *top);
+
+s32 getLineNumByIndex(CodeAttribute *ca, s32 offset);
 //==================================================    server    ==================================================
 
 void jdwp_put_client(ArrayList *clients, JdwpClient *client) {
@@ -649,11 +651,17 @@ void jdwp_check_debug_step(Runtime *runtime) {
             }
             break;
         case NEXT_TYPE_OVER:
-            if (runtime->ca)
-                if (getRuntimeDepth(runtime->threadInfo->top_runtime) == step->next_stop_runtime_depth)
-                    if (runtime->pc - runtime->ca->code >= step->next_stop_bytecode_index) {
+            if (runtime->ca) {
+                s32 depth = getRuntimeDepth(runtime->threadInfo->top_runtime);
+                if (depth == step->next_stop_runtime_depth) {
+                    if (getLineNumByIndex(runtime->ca, runtime->pc - runtime->ca->code) !=
+                        step->next_stop_bytecode_index) {
                         suspend = 1;
                     }
+                } else if (depth < step->next_stop_runtime_depth) {
+                    suspend = 1;
+                }
+            }
             break;
         case NEXT_TYPE_INTOOUT:
             if (getRuntimeDepth(runtime->threadInfo->top_runtime) == step->next_stop_runtime_depth) {
@@ -777,7 +785,7 @@ s32 jdwp_set_breakpoint(s32 setOrClear, Class *clazz, MethodInfo *methodInfo, s6
 }
 
 
-static s32 getNextLineStartPc(CodeAttribute *ca, s32 offset) {
+s32 getLineNumByIndex(CodeAttribute *ca, s32 offset) {
     s32 i, j;
 
     for (j = 0; j < ca->line_number_table_length; j++) {
@@ -787,7 +795,7 @@ static s32 getNextLineStartPc(CodeAttribute *ca, s32 offset) {
                 LineNumberTable *next_node = &(ca->line_number_table[j + 1]);
 
                 if (offset < next_node->start_pc) {
-                    return next_node->start_pc;
+                    return node->line_number;
                 }
             }
         }
@@ -812,15 +820,10 @@ s32 jdwp_set_debug_step(s32 setOrClear, Instance *jthread, s32 size, s32 depth) 
         } else {
             if (size == JDWP_STEPSIZE_LINE) {
                 Runtime *last = getLastSon(r);//当前runtime
-                s32 nextPc = getNextLineStartPc(last->ca, last->pc - last->ca->code);
-                if (nextPc >= 0) {
-                    step->next_type = NEXT_TYPE_OVER;
-                    step->next_stop_bytecode_index = nextPc;
-                    step->next_stop_runtime_depth = getRuntimeDepth(r->threadInfo->top_runtime);
-                } else {//最后一行了
-                    step->next_type = NEXT_TYPE_INTOOUT;
-                    step->next_stop_runtime_depth = getRuntimeDepth(r->threadInfo->top_runtime) - 1;
-                }
+                s32 nextPc = getLineNumByIndex(last->ca, last->pc - last->ca->code);
+                step->next_type = NEXT_TYPE_OVER;
+                step->next_stop_bytecode_index = nextPc;
+                step->next_stop_runtime_depth = getRuntimeDepth(r->threadInfo->top_runtime);
             } else {
                 step->next_type = NEXT_TYPE_SINGLE;
                 step->next_stop_bytecode_count = 1;
