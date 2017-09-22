@@ -8,6 +8,8 @@
 #include <sys/time.h>
 #include "jvm_util.h"
 #include <afxres.h>
+#include <time.h>
+#include <unistd.h>
 
 
 s64 currentTimeMillis() {
@@ -35,7 +37,6 @@ s32 threadSleep(s64 ms) {
     struct timespec rem;
     rem.tv_sec = 0;
     rem.tv_nsec = 0;
-
     nanosleep(&req, &rem);
     return rem.tv_sec * 1000 + rem.tv_nsec / 1000000;
 }

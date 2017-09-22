@@ -1,7 +1,10 @@
 cmake_minimum_required(VERSION 3.8)
 project(mini_jvm)
 
-set(CMAKE_CXX_STANDARD 11)
+#set(CMAKE_CXX_STANDARD 11)
+set(CMAKE_C_FLAGS "-std=c99")
+set(CMAKE_C_FLAGS "${CMAKE_ENABLE_C99}")
+
 
 set(SOURCE_FILES
         jvm/interpreter.c
@@ -36,6 +39,12 @@ set(SOURCE_FILES
         jvm/java_native_io.c
         jvm/java_native_std.c
         jvm/java_native_reflect.c
-        jvm/java_native_reflect.h jvm/jdwp.c jvm/jdwp.h jvm/java_native_io.h)
+        jvm/java_native_reflect.h
+        jvm/jdwp.c
+        jvm/jdwp.h
+        jvm/java_native_io.h)
 
 add_executable(mini_jvm ${SOURCE_FILES})
+
+#Set link library.
+TARGET_LINK_LIBRARIES(mini_jvm pthread ws2_32)

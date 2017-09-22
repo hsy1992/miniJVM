@@ -33,6 +33,9 @@
 #define __JVM_OS_LINUX__ 1
 #define __JVM_OS_WIN__  0
 
+
+//compile
+#define __C99
 //libary option : -lpthread -lws2_32
 /*
  *  TAG

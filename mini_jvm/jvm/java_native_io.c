@@ -676,7 +676,9 @@ s32 javax_mini_io_File_setLength0(Runtime *runtime, Class *clazz) {
     s64 filelen = l2d.l;
     s32 ret = 0;
     if (fd) {
+#ifndef __C99
         ret = ftruncate((s32) (long) fd, filelen);
+#endif
     }
     push_int(runtime->stack, ret);
 #if _JVM_DEBUG > 5

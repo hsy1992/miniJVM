@@ -317,6 +317,10 @@ jvm_util.h
 D:/githome/mini_jvm/mini_jvm/jvm/jvm_util.h
 afxres.h
 -
+time.h
+-
+unistd.h
+-
 
 D:/githome/mini_jvm/mini_jvm/jvm/os_win.c
 jvm.h

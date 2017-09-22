@@ -559,10 +559,11 @@ Runtime *getLastSon(Runtime *top) {
 
 
 void writeArrayRegion(JdwpPacket *res, Instance *arr, s32 firstIndex, s32 length) {
-    c8 type = utf8_char_at(arr->mb.clazz->name, 0);
-    jdwppacket_write_byte(res, type);
+    c8 arr_type = utf8_char_at(arr->mb.clazz->name, 1);
+    jdwppacket_write_byte(res, arr_type);
     jdwppacket_write_int(res, length);
-    c8 tag = getSimpleTag(type);
+    c8 elem_type = utf8_char_at(arr->mb.clazz->name, 1);
+    c8 tag = getSimpleTag(elem_type);
     s32 i;
     //原子类型不用写标志，非原子类型则需要是ValueType
     for (i = 0; i < length; i++) {
@@ -1294,7 +1295,7 @@ s32 jdwp_client_process(JdwpClient *client, Runtime *runtime) {
                 break;
             }
             case JDWP_CMD_VirtualMachine_Exit: {//1.10
-                //jvm_printf("%x not support\n", jdwppacket_get_cmd_err(req));
+                jvm_printf("%x not support\n", jdwppacket_get_cmd_err(req));
                 break;
             }
             case JDWP_CMD_VirtualMachine_CreateString: {//1.11
@@ -1322,35 +1323,35 @@ s32 jdwp_client_process(JdwpClient *client, Runtime *runtime) {
                 break;
             }
             case JDWP_CMD_VirtualMachine_ClassPaths: {//1.13
-                //jvm_printf("%x not support\n", jdwppacket_get_cmd_err(req));
+                jvm_printf("%x not support\n", jdwppacket_get_cmd_err(req));
                 break;
             }
             case JDWP_CMD_VirtualMachine_DisposeObjects: {//1.14
-                //jvm_printf("%x not support\n", jdwppacket_get_cmd_err(req));
+                jvm_printf("%x not support\n", jdwppacket_get_cmd_err(req));
                 break;
             }
             case JDWP_CMD_VirtualMachine_HoldEvents: {//1.15
-                //jvm_printf("%x not support\n", jdwppacket_get_cmd_err(req));
+                jvm_printf("%x not support\n", jdwppacket_get_cmd_err(req));
                 break;
             }
             case JDWP_CMD_VirtualMachine_ReleaseEvents: {//1.16
-                //jvm_printf("%x not support\n", jdwppacket_get_cmd_err(req));
+                jvm_printf("%x not support\n", jdwppacket_get_cmd_err(req));
                 break;
             }
             case JDWP_CMD_VirtualMachine_CapabilitiesNew: {//1.17
-                //jvm_printf("%x not support\n", jdwppacket_get_cmd_err(req));
+                jvm_printf("%x not support\n", jdwppacket_get_cmd_err(req));
                 break;
             }
             case JDWP_CMD_VirtualMachine_RedefineClasses: {//1.18
-                //jvm_printf("%x not support\n", jdwppacket_get_cmd_err(req));
+                jvm_printf("%x not support\n", jdwppacket_get_cmd_err(req));
                 break;
             }
             case JDWP_CMD_VirtualMachine_SetDefaultStratum: {//1.19
-                //jvm_printf("%x not support\n", jdwppacket_get_cmd_err(req));
+                jvm_printf("%x not support\n", jdwppacket_get_cmd_err(req));
                 break;
             }
             case JDWP_CMD_VirtualMachine_AllClassesWithGeneric: {//1.20
-                //jvm_printf("%x not support\n", jdwppacket_get_cmd_err(req));
+                jvm_printf("%x not support\n", jdwppacket_get_cmd_err(req));
                 break;
             }
 //set 2
@@ -1377,7 +1378,7 @@ s32 jdwp_client_process(JdwpClient *client, Runtime *runtime) {
                 break;
             }
             case JDWP_CMD_ReferenceType_Modifiers: {//2.3
-                //jvm_printf("%x not support\n", jdwppacket_get_cmd_err(req));
+                jvm_printf("%x not support\n", jdwppacket_get_cmd_err(req));
                 break;
             }
             case JDWP_CMD_ReferenceType_Fields: {//2.4
@@ -1440,11 +1441,11 @@ s32 jdwp_client_process(JdwpClient *client, Runtime *runtime) {
                 break;
             }
             case JDWP_CMD_ReferenceType_NestedTypes: {//2.8
-                //jvm_printf("%x not support\n", jdwppacket_get_cmd_err(req));
+                jvm_printf("%x not support\n", jdwppacket_get_cmd_err(req));
                 break;
             }
             case JDWP_CMD_ReferenceType_Status: {//2.9
-                //jvm_printf("%x not support\n", jdwppacket_get_cmd_err(req));
+                jvm_printf("%x not support\n", jdwppacket_get_cmd_err(req));
                 break;
             }
             case JDWP_CMD_ReferenceType_Interfaces: {//2.10
@@ -1472,19 +1473,19 @@ s32 jdwp_client_process(JdwpClient *client, Runtime *runtime) {
                 break;
             }
             case JDWP_CMD_ReferenceType_SourceDebugExtension: {//2.12
-                //jvm_printf("%x not support\n", jdwppacket_get_cmd_err(req));
+                jvm_printf("%x not support\n", jdwppacket_get_cmd_err(req));
                 break;
             }
             case JDWP_CMD_ReferenceType_SignatureWithGeneric: {//2.13
-                //jvm_printf("%x not support\n", jdwppacket_get_cmd_err(req));
+                jvm_printf("%x not support\n", jdwppacket_get_cmd_err(req));
                 break;
             }
             case JDWP_CMD_ReferenceType_FieldsWithGeneric: {//2.14
-                //jvm_printf("%x not support\n", jdwppacket_get_cmd_err(req));
+                jvm_printf("%x not support\n", jdwppacket_get_cmd_err(req));
                 break;
             }
             case JDWP_CMD_ReferenceType_MethodsWithGeneric: {//2.15
-                //jvm_printf("%x not support\n", jdwppacket_get_cmd_err(req));
+                jvm_printf("%x not support\n", jdwppacket_get_cmd_err(req));
                 break;
             }
 //set 3
@@ -1501,21 +1502,21 @@ s32 jdwp_client_process(JdwpClient *client, Runtime *runtime) {
                 break;
             }
             case JDWP_CMD_ClassType_SetValues: {//3.2
-                //jvm_printf("%x not support\n", jdwppacket_get_cmd_err(req));
+                jvm_printf("%x not support\n", jdwppacket_get_cmd_err(req));
                 break;
             }
             case JDWP_CMD_ClassType_InvokeMethod: {//3.3
-                //jvm_printf("%x not support\n", jdwppacket_get_cmd_err(req));
+                jvm_printf("%x not support\n", jdwppacket_get_cmd_err(req));
                 break;
             }
             case JDWP_CMD_ClassType_NewInstance: {//3.4
-                //jvm_printf("%x not support\n", jdwppacket_get_cmd_err(req));
+                jvm_printf("%x not support\n", jdwppacket_get_cmd_err(req));
                 break;
             }
 //set 4
 
             case JDWP_CMD_ArrayType_NewInstance: {//4.1
-                //jvm_printf("%x not support\n", jdwppacket_get_cmd_err(req));
+                jvm_printf("%x not support\n", jdwppacket_get_cmd_err(req));
                 break;
             }
 //set 5
@@ -1565,15 +1566,15 @@ s32 jdwp_client_process(JdwpClient *client, Runtime *runtime) {
                 break;
             }
             case JDWP_CMD_Method_Bytecodes: {//6.3
-                //jvm_printf("%x not support\n", jdwppacket_get_cmd_err(req));
+                jvm_printf("%x not support\n", jdwppacket_get_cmd_err(req));
                 break;
             }
             case JDWP_CMD_Method_IsObsolete: {//6.4
-                //jvm_printf("%x not support\n", jdwppacket_get_cmd_err(req));
+                jvm_printf("%x not support\n", jdwppacket_get_cmd_err(req));
                 break;
             }
             case JDWP_CMD_Method_VariableTableWithGeneric: {//6.5
-                //jvm_printf("%x not support\n", jdwppacket_get_cmd_err(req));
+                jvm_printf("%x not support\n", jdwppacket_get_cmd_err(req));
                 break;
             }
 //set 8
@@ -1610,45 +1611,101 @@ s32 jdwp_client_process(JdwpClient *client, Runtime *runtime) {
                 break;
             }
             case JDWP_CMD_ObjectReference_SetValues: {//9.3
-                //jvm_printf("%x not support\n", jdwppacket_get_cmd_err(req));
+                jvm_printf("%x not support\n", jdwppacket_get_cmd_err(req));
                 break;
             }
             case JDWP_CMD_ObjectReference_MonitorInfo: {//9.5
-                //jvm_printf("%x not support\n", jdwppacket_get_cmd_err(req));
+                jvm_printf("%x not support\n", jdwppacket_get_cmd_err(req));
                 break;
             }
             case JDWP_CMD_ObjectReference_InvokeMethod: {//9.6
-                //jvm_printf("%x not support\n", jdwppacket_get_cmd_err(req));
+                Instance *object = jdwppacket_read_refer(req);
+                Instance *thread = jdwppacket_read_refer(req);
+                Class *clazz = jdwppacket_read_refer(req);
+                MethodInfo *methodInfo = jdwppacket_read_refer(req);
+                s32 arguments = jdwppacket_read_int(req);
+
+                s32 stack_size = runtime->stack->size;
+                if (!(methodInfo->access_flags & ACC_STATIC)) {
+                    push_ref(runtime->stack, object);
+                }
+                runtime->clazz = clazz;
+                Long2Double l2d;
+                s32 i;
+                for (i = 0; i < arguments; i++) {
+                    ValueType vt;
+                    readValueType(req, &vt);
+
+                    switch (getSimpleTag(vt.type)) {
+                        case '8':
+                            push_long(runtime->stack, vt.value);
+                            break;
+                        case 'R':
+                            push_ref(runtime->stack, (__refer) (long) vt.value);
+                            break;
+                        default:
+                            push_int(runtime->stack, (s32) vt.value);
+                    }
+                }
+                execute_method(methodInfo, runtime, methodInfo->_this_class);
+
+                jdwppacket_set_err(res, JDWP_ERROR_NONE);
+
+                ValueType vt;
+                memset(&vt, 0, sizeof(ValueType));
+                if (runtime->stack->size > stack_size) {
+                    Utf8String *us = methodInfo->descriptor;
+                    vt.type = utf8_char_at(us, utf8_indexof_c(us, ")") + 1);
+                    switch (getSimpleTag(vt.type)) {
+                        case '8':
+                            vt.value = pop_long(runtime->stack);
+                            break;
+                        case 'R':
+                            vt.value = (s64) (long) pop_ref(runtime->stack);
+                            break;
+                        default:
+                            vt.value = pop_int(runtime->stack);
+                    }
+
+                }
+                writeValueType(res, &vt);
+                vt.type = 'L';
+                vt.value = 0;
+                writeValueType(res, &vt);
+                jdwp_writepacket(client, res);
                 break;
             }
             case JDWP_CMD_ObjectReference_DisableCollection: {//9.7
                 Instance *obj = (Instance *) jdwppacket_read_refer(req);
                 Class *ref = obj->mb.clazz;
-
-
                 jdwppacket_set_err(res, JDWP_ERROR_NONE);
-//                //jvm_printf("ObjectReference_DisableCollection:" + obj);
                 jdwp_writepacket(client, res);
+//                //jvm_printf("ObjectReference_DisableCollection:" + obj);
                 break;
             }
             case JDWP_CMD_ObjectReference_EnableCollection: {//9.8
                 Instance *obj = (Instance *) jdwppacket_read_refer(req);
                 Class *ref = obj->mb.clazz;
-
-
                 jdwppacket_set_err(res, JDWP_ERROR_NONE);
-//                //jvm_printf("ObjectReference_EnableCollection:" + obj);
                 jdwp_writepacket(client, res);
+//                //jvm_printf("ObjectReference_EnableCollection:" + obj);
                 break;
             }
             case JDWP_CMD_ObjectReference_IsCollected: {//9.9
-                //jvm_printf("%x not support\n", jdwppacket_get_cmd_err(req));
+                jvm_printf("%x not support\n", jdwppacket_get_cmd_err(req));
                 break;
             }
 //set 10
 
             case JDWP_CMD_StringReference_Value: {//10.1
-                //jvm_printf("%x not support\n", jdwppacket_get_cmd_err(req));
+                Instance *jstr = jdwppacket_read_refer(req);
+                Utf8String *ustr = utf8_create();
+                jstring_2_utf8(jstr, ustr);
+                jdwppacket_set_err(res, JDWP_ERROR_NONE);
+                jdwppacket_write_utf(res, ustr);
+                jdwp_writepacket(client, res);
+                //jvm_printf("ThreadReference_Name:%s\n", utf8_cstr(ustr));
+                utf8_destory(ustr);
                 break;
             }
 //set 11
@@ -1661,8 +1718,8 @@ s32 jdwp_client_process(JdwpClient *client, Runtime *runtime) {
 
                 jdwppacket_set_err(res, JDWP_ERROR_NONE);
                 jdwppacket_write_utf(res, ustr);
-                //jvm_printf("ThreadReference_Name:%s\n", utf8_cstr(ustr));
                 jdwp_writepacket(client, res);
+                //jvm_printf("ThreadReference_Name:%s\n", utf8_cstr(ustr));
                 utf8_destory(ustr);
                 break;
             }
@@ -1795,15 +1852,15 @@ s32 jdwp_client_process(JdwpClient *client, Runtime *runtime) {
                 //set 12
 
             case JDWP_CMD_ThreadGroupReference_Name: {//12.1
-                //jvm_printf("%x not support\n", jdwppacket_get_cmd_err(req));
+                jvm_printf("%x not support\n", jdwppacket_get_cmd_err(req));
                 break;
             }
             case JDWP_CMD_ThreadGroupReference_Parent: {//12.2
-                //jvm_printf("%x not support\n", jdwppacket_get_cmd_err(req));
+                jvm_printf("%x not support\n", jdwppacket_get_cmd_err(req));
                 break;
             }
             case JDWP_CMD_ThreadGroupReference_Children: {//12.3
-                //jvm_printf("%x not support\n", jdwppacket_get_cmd_err(req));
+                jvm_printf("%x not support\n", jdwppacket_get_cmd_err(req));
                 break;
             }
 //set 13
@@ -1823,19 +1880,18 @@ s32 jdwp_client_process(JdwpClient *client, Runtime *runtime) {
                 s32 length = jdwppacket_read_int(req);
 
                 jdwppacket_set_err(res, JDWP_ERROR_NONE);
-
-                //jvm_printf("ArrayReference_GetValues:%llx\n", arr);
                 writeArrayRegion(res, arr, firstIndex, length);
                 jdwp_writepacket(client, res);
+                //jvm_printf("ArrayReference_GetValues:%llx\n", arr);
                 break;
             }
             case JDWP_CMD_ArrayReference_SetValues: {//13.3
-                //jvm_printf("%x not support\n", jdwppacket_get_cmd_err(req));
+                jvm_printf("%x not support\n", jdwppacket_get_cmd_err(req));
                 break;
             }
 //set 14
             case JDWP_CMD_ClassLoaderReference_VisibleClasses: {//14.1
-                //jvm_printf("%x not support\n", jdwppacket_get_cmd_err(req));
+                jvm_printf("%x not support\n", jdwppacket_get_cmd_err(req));
                 break;
             }
 //set 15
@@ -1967,7 +2023,7 @@ s32 jdwp_client_process(JdwpClient *client, Runtime *runtime) {
                 break;
             }
             case JDWP_CMD_StackFrame_PopFrames: {//16.4
-                //jvm_printf("%x not support\n", jdwppacket_get_cmd_err(req));
+                jvm_printf("%x not support\n", jdwppacket_get_cmd_err(req));
                 break;
             }
 //set 17
@@ -1984,7 +2040,7 @@ s32 jdwp_client_process(JdwpClient *client, Runtime *runtime) {
             }
 //set 64
             case JDWP_CMD_Event_Composite: {
-                //jvm_printf("%x not support\n", jdwppacket_get_cmd_err(req));
+                jvm_printf("%x not support\n", jdwppacket_get_cmd_err(req));
                 break;
             }
         }

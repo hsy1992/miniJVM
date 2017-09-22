@@ -504,6 +504,7 @@ __refer jthread_get_name_value(Instance *ins) {
     c8 *ptr = getFieldPtr_byName_c(ins, STR_CLASS_JAVA_LANG_THREAD, STR_FIELD_NAME, "[C");
     return getFieldRefer(ptr);
 }
+
 __refer jthread_get_threadq_value(Instance *ins) {
     c8 *ptr = getFieldPtr_byName_c(ins, STR_CLASS_JAVA_LANG_THREAD, STR_FIELD_THREADQ, "Ljava/lang/Thread;");
     return getFieldRefer(ptr);
@@ -928,9 +929,11 @@ s32 jstring_equals(Instance *jstr1, Instance *jstr2) {
 
 s32 jstring_2_utf8(Instance *jstr, Utf8String *utf8) {
     Instance *arr = jstring_get_value_array(jstr);
-    s32 offset = jstring_get_offset(jstr);
-    s32 count = jstring_get_count(jstr);
-    unicode_2_utf8(((u16 *) arr->arr_body) + offset, utf8, count);
+    if (arr) {
+        s32 count = jstring_get_count(jstr);
+        s32 offset = jstring_get_offset(jstr);
+        unicode_2_utf8(((u16 *) arr->arr_body) + offset, utf8, count);
+    }
     return 0;
 }
 //===============================    例外  ==================================
