@@ -8,6 +8,7 @@
 #include "jvm_util.h"
 #include "garbage.h"
 #include "java_native_jdwp.h"
+#include "jdwp.h"
 
 //==================================================================================
 
@@ -475,7 +476,7 @@ void *jtherad_loader(void *para) {
 #endif
 
     if (method) {
-        if (java_debug)event_on_thread_start(&runtime, jthread);
+        if (java_debug)event_on_thread_start(&runtime);
         jthread_set_threadq_value(jthread, &runtime);
         arraylist_append(thread_list, &runtime);
         jthread_flag_resume(&runtime);
@@ -486,7 +487,7 @@ void *jtherad_loader(void *para) {
         jthread_flag_suspend(&runtime);
         arraylist_remove(thread_list, &runtime);
         runtime.threadInfo->thread_status = THREAD_STATUS_ZOMBIE;
-        if (java_debug)event_on_thread_death(&runtime, jthread);
+        if (java_debug)event_on_thread_death(&runtime);
     }
     jthread_set_threadq_value(jthread, NULL);
     runtime_destory(&runtime);

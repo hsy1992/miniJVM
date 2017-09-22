@@ -11,6 +11,7 @@
 #include "../utils/arraylist.h"
 #include "jvm.h"
 #include "pthread.h"
+#include "../utils/hashset.h"
 //=============================      error   ==============================================
 
 static u16 JDWP_ERROR_INVALID_TAG = 500; //object type id or class tag
@@ -86,27 +87,13 @@ static u16 JDWP_ERROR_UNATTACHED_THREAD = 115;
 #define JDWP_EVENTKIND_VM_DEATH  99
 #define JDWP_EVENTKIND_VM_DISCONNECTED  100  //Never sent by across JDWP
 //=============================      event   ==============================================
+static u8 JDWP_STEPDEPTH_INTO = 0;
+static u8 JDWP_STEPDEPTH_OVER = 1;
+static u8 JDWP_STEPDEPTH_OUT = 2;
 
-static u8 JDWP_EVENT_SINGLE_STEP = 1;
-static u8 JDWP_EVENT_BREAKPOINT = 2;
-static u8 JDWP_EVENT_FRAME_POP = 3; //not used in JDWP
-static u8 JDWP_EVENT_EXCEPTION = 4;
-static u8 JDWP_EVENT_USER_DEFINED = 5; //not used in JDWP
-static u8 JDWP_EVENT_THREAD_START = 6;
-static u8 JDWP_EVENT_THREAD_DEATH = 7;
-static u8 JDWP_EVENT_THREAD_END = 7;
-static u8 JDWP_EVENT_CLASS_PREPARE = 8;
-static u8 JDWP_EVENT_CLASS_UNLOAD = 9;
-static u8 JDWP_EVENT_CLASS_LOAD = 10; //not used in JDWP
-static u8 JDWP_EVENT_FIELD_ACCESS = 20;
-static u8 JDWP_EVENT_FIELD_MODIFICATION = 21;
-static u8 JDWP_EVENT_EXCEPTION_CATCH = 30; //not used in JDWP
-static u8 JDWP_EVENT_METHOD_ENTRY = 40;
-static u8 JDWP_EVENT_METHOD_EXIT = 41;
-static u8 JDWP_EVENT_VM_START = 90;
-static u8 JDWP_EVENT_VM_INIT = 90;
-static u8 JDWP_EVENT_VM_DEATH = 99;
-static u8 JDWP_EVENT_VM_DISCONNECTED = 100; //Never sent by across JDWP
+
+static u8 JDWP_STEPSIZE_MIN = 0;
+static u8 JDWP_STEPSIZE_LINE = 1;
 //=============================      class status   ==============================================
 
 static u8 JDWP_CLASS_STATUS_VERIFIED = 1;
@@ -269,14 +256,12 @@ static c8 JDWP_SUSPEND_STATUS_SUSPENDED = 0x1;
 //=============================      string   ==============================================
 
 
-static c8 *JDWP_CLASS_REFERENCE = "javax/mini/jdwp/reflect/Reference";
-static c8 *JDWP_CLASS_FIELD = "javax/mini/jdwp/reflect/Field";
-static c8 *JDWP_CLASS_METHOD = "javax/mini/jdwp/reflect/Method";
-static c8 *JDWP_CLASS_RUNTIME = "javax/mini/jdwp/reflect/StackFrame";
-static c8 *JDWP_CLASS_LOCALVARTABLE = "javax/mini/jdwp/reflect/LocalVarTable";
-static c8 *JDWP_CLASS_VALUETYPE = "javax/mini/jdwp/type/ValueType";
+//=============================      my define   ==============================================
 
 static c8 *JDWP_HANDSHAKE = "JDWP-Handshake";
+
+static c8 JDWP_EVENTSET_SET = 1;
+static c8 JDWP_EVENTSET_CLEAR = 0;
 
 static u16 JDWP_PACKET_REQUEST = 0;
 static u16 JDWP_PACKET_RESPONSE = 0x80;
@@ -312,7 +297,12 @@ typedef struct _JdwpPacket {
     s32 alloc;
     s32 readPos;
     s32 writePos;
+    //inner receive for nonblock rceive
+    s32 _rcv_len;
+    s32 _req_len;
+    u8 _4len;
 } JdwpPacket;
+
 
 typedef struct _Location {
     c8 typeTag;
@@ -325,9 +315,6 @@ typedef struct _ValueType {
     c8 type;
     s64 value;
 } ValueType;
-
-static c8 JDWP_BREAKPOINT_SET = 1;
-static c8 JDWP_BREAKPOINT_CLEAR = 0;
 
 typedef struct _EventSetMod {
     u8 mod_type;
@@ -460,6 +447,21 @@ typedef struct _EventInfo {
     //
     //VM_DEATH
 } EventInfo;
+enum {
+    NEXT_TYPE_INTOOUT,
+    NEXT_TYPE_OVER,
+    NEXT_TYPE_SINGLE,
+};
+typedef struct _JdwpStep {
+    u8 active;
+    u8 next_type;
+    s32 next_stop_runtime_depth;
+    union {
+        s32 next_stop_bytecode_count;
+        s32 next_stop_bytecode_index;
+    };
+    s32 bytecode_count;
+} JdwpStep;
 
 
 static s32 jdwp_eventset_requestid = 0;
@@ -481,6 +483,10 @@ void event_on_class_prepar(Runtime *runtime, Class *clazz);
 void event_on_thread_death(Runtime *runtime);
 
 void event_on_thread_start(Runtime *runtime);
+
+void jdwp_check_breakpoint(Runtime *runtime);
+
+void jdwp_check_debug_step(Runtime *runtime);
 
 #endif //MINI_JVM_JDWP_H
 

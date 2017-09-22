@@ -7,6 +7,7 @@
 
 #include "jvm.h"
 #include "../utils/hashset.h"
+#include "jdwp.h"
 #include <pthread.h>
 
 static s64 NANO_START = 0;
@@ -78,6 +79,7 @@ void runtime_create(Runtime *runtime);
 void runtime_destory(Runtime *runtime);
 
 ////======================= thread =============================
+
 typedef struct _JavaThreadInfo {
     Instance *jthread;
     Runtime *top_runtime;
@@ -86,6 +88,8 @@ typedef struct _JavaThreadInfo {
     volatile u8 thread_status;
     volatile s32 suspend_count;//for jdwp suspend ,>0 suspend, ==0 resume
     pthread_t pthread;
+    //调试器相关字段
+    JdwpStep jdwp_step;
 } JavaThreadInfo;
 
 typedef struct _JavaThreadLock {

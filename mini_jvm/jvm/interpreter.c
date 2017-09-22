@@ -2659,7 +2659,7 @@ s32 op_ret(u8 **opCode, Runtime *runtime) {
 
 s32 op_tableswitch(u8 **opCode, Runtime *runtime) {
     s32 pos = 0;
-    pos = 4 - ((((u64) (long) *opCode) - (u64) (long) (runtime->bytecode)) % 4);//4 byte对齐
+    pos = 4 - ((((u64) (long) *opCode) - (u64) (long) (runtime->ca->code)) % 4);//4 byte对齐
 
     Int2Float i2c;
     i2c.c3 = opCode[0][pos++];
@@ -2701,7 +2701,7 @@ s32 op_tableswitch(u8 **opCode, Runtime *runtime) {
 
 s32 op_lookupswitch(u8 **opCode, Runtime *runtime) {
     s32 pos = 0;
-    pos = 4 - ((((u64) (long) *opCode) - (u64) (long) (runtime->bytecode)) % 4);//4 byte对齐
+    pos = 4 - ((((u64) (long) *opCode) - (u64) (long) (runtime->ca->code)) % 4);//4 byte对齐
     Int2Float i2c;
     i2c.c3 = opCode[0][pos++];
     i2c.c2 = opCode[0][pos++];
@@ -3128,7 +3128,7 @@ s32 synchronized_unlock_method(MethodInfo *method, Runtime *runtime) {
         }
     }
 }
-static s32 breakpointed=0;
+
 s32 execute_method(MethodInfo *method, Runtime *pruntime, Class *clazz) {
     s32 j = 0, ret = 0;
 
@@ -3201,17 +3201,22 @@ s32 execute_method(MethodInfo *method, Runtime *pruntime, Class *clazz) {
             }
 #endif
             runtime.pc = ca->code;
-            runtime.bytecode = ca->code;
+            runtime.ca = ca;
             s32 i = 0;
             do {
                 if (java_debug) {
-                    u32 index = runtime.pc - ca->code;
-                    if ((method->breakpoint) && pairlist_getl(method->breakpoint, index)) {
-                        event_on_breakpoint(&runtime);//此句必须在前，后面还会用调用此处
-                        breakpointed=1;
+                    //breakpoint
+                    if (method->breakpoint) {
+                        jdwp_check_breakpoint(&runtime);
+                    }
+                    //debug step
+                    if (runtime.threadInfo->jdwp_step.active) {//单步状态
+                        runtime.threadInfo->jdwp_step.bytecode_count++;
+                        jdwp_check_debug_step(&runtime);
+
                     }
                     //process jdwp suspend
-                    while (runtime.threadInfo->suspend_count||breakpointed) {
+                    while (runtime.threadInfo->suspend_count) {
                         threadSleep(20);
                     }
                 }

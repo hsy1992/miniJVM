@@ -519,6 +519,12 @@ public class Foo1 {
             try {
                 Thread.sleep(1000);
                 int debug = 1;
+                debug++;
+                debug++;
+                debug++;
+                t1();
+                debug++;
+                debug++;
                 //System.out.println("sleep 1000");
             } catch (Exception e) {
             }

@@ -677,7 +677,7 @@ typedef struct _Runtime {
     MethodInfo *methodInfo;
     Class *clazz;
     u8 *pc;
-    u8 *bytecode;//method bytecode
+    CodeAttribute *ca;//method bytecode
     JavaThreadInfo *threadInfo;
     Runtime *son;//sub method's runtime
     Runtime *parent;//father method's runtime

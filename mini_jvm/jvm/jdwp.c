@@ -14,6 +14,10 @@
 void jdwp_post_events(JdwpClient *client);
 
 void jdwp_eventset_post(JdwpClient *client, EventSet *set, EventInfo *event);
+
+void event_on_debug_step(Runtime *step_runtime);
+
+s32 getRuntimeDepth(Runtime *top);
 //==================================================    server    ==================================================
 
 void jdwp_put_client(ArrayList *clients, JdwpClient *client) {
@@ -297,22 +301,38 @@ s32 jdwp_write_fully(JdwpClient *client, c8 *buf, s32 need) {
     return sent;
 }
 
+
+static JdwpPacket *rcvp = NULL;
+
 JdwpPacket *jdwp_readpacket(JdwpClient *client) {
     if (!client->conn_first) {
-        c8 buf[4];
-        s32 len = jdwp_read_fully(client, (c8 *) &buf, 4);
-        s32 pack_len =
-                ((buf[0] & 0xFF) << 24) | ((buf[1] & 0xFF) << 16) | ((buf[2] & 0xFF) << 8) | ((buf[3] & 0xFF) << 0);
-        JdwpPacket *p = jdwppacket_create();
-        jdwppacket_ensureCapacity(p, pack_len);
-        jdwppacket_set_length(p, pack_len);
-        len = jdwp_read_fully(client, &p->data[4], pack_len - 4);
-        p->writePos = pack_len;
-        if (len < 0) {
-            jdwppacket_destory(p);
-            client->closed = 1;
-        } else {
-            return p;
+        if (!rcvp) {//上个包已收完
+            rcvp = jdwppacket_create();
+            rcvp->_req_len = 4;
+            rcvp->_rcv_len = 0;
+            rcvp->_4len = 1;//标志先接收的是长度信息
+        }
+        if (rcvp) {//上个包收到一半，有两种情况，先收4字节，再收剩余部分
+            if (rcvp->_4len) {
+                s32 len = sock_recv(client->sockfd, rcvp->data + rcvp->_rcv_len, rcvp->_req_len - rcvp->_rcv_len);
+                if (len == -1)client->closed = 1;
+                rcvp->_rcv_len += len;
+                if (rcvp->_rcv_len == rcvp->_req_len) {
+                    rcvp->_4len = 0;
+                    rcvp->_req_len = jdwppacket_get_length(rcvp) - 4;//下次进入时直接收包体
+                    rcvp->_rcv_len = 0;
+                    jdwppacket_ensureCapacity(rcvp, rcvp->_req_len);
+                }
+            } else {
+                s32 len = sock_recv(client->sockfd, rcvp->data + 4 + rcvp->_rcv_len, rcvp->_req_len - rcvp->_rcv_len);
+                if (len == -1)client->closed = 1;
+                rcvp->_rcv_len += len;
+                if (rcvp->_rcv_len == rcvp->_req_len) {
+                    JdwpPacket *p = rcvp;
+                    rcvp = NULL;
+                    return p;
+                }
+            }
         }
     } else {//首次连接
         c8 buf[14];
@@ -519,7 +539,7 @@ s64 getPtrValue(u8 type, u8 *ptr) {
     return value;
 }
 
-s32 getRuntimeDeepth(Runtime *top) {
+s32 getRuntimeDepth(Runtime *top) {
     s32 deep = 0;
     while (top) {
         deep++;
@@ -609,6 +629,42 @@ void jdwp_print_packet(JdwpPacket *packet) {
     printf("\n------------------------------\n");
 }
 
+void jdwp_check_breakpoint(Runtime *runtime) {
+    u32 index = runtime->pc - runtime->ca->code;
+    MethodInfo *method = runtime->methodInfo;
+    if ((method->breakpoint) && pairlist_getl(method->breakpoint, index)) {
+        event_on_breakpoint(runtime);//
+        runtime->threadInfo->suspend_count++;
+    }
+}
+
+void jdwp_check_debug_step(Runtime *runtime) {
+    JdwpStep *step = &runtime->threadInfo->jdwp_step;
+    s32 suspend = 0;
+    switch (step->next_type) {
+        case NEXT_TYPE_SINGLE:
+            if (step->bytecode_count >= step->next_stop_bytecode_count) {
+                suspend = 1;
+            }
+            break;
+        case NEXT_TYPE_OVER:
+            if (runtime->ca)
+                if (getRuntimeDepth(runtime->threadInfo->top_runtime) == step->next_stop_runtime_depth)
+                    if (runtime->pc - runtime->ca->code >= step->next_stop_bytecode_index) {
+                        suspend = 1;
+                    }
+            break;
+        case NEXT_TYPE_INTOOUT:
+            if (getRuntimeDepth(runtime->threadInfo->top_runtime) == step->next_stop_runtime_depth) {
+                suspend = 1;
+            }
+            break;
+    }
+    if (suspend) {
+        event_on_debug_step(runtime);
+        runtime->threadInfo->suspend_count++;
+    }
+}
 //==================================================    event    ==================================================
 
 void jdwp_event_put(EventInfo *event) {
@@ -633,7 +689,6 @@ void jdwp_post_events(JdwpClient *client) {
         s32 i;
         HashtableIterator hti;
         hashtable_iterate(jdwpserver.event_sets, &hti);
-        s32 bytes = data_type_bytes[DATATYPE_REFERENCE];
         for (; hashtable_iter_has_more(&hti);) {
             __refer k = hashtable_iter_next_key(&hti);
             EventSet *set = hashtable_get(jdwpserver.event_sets, k);
@@ -645,7 +700,7 @@ void jdwp_post_events(JdwpClient *client) {
 
 void event_on_class_prepar(Runtime *runtime, Class *clazz) {
     EventInfo *ei = jvm_alloc(sizeof(EventInfo));
-    ei->eventKind = JDWP_EVENT_CLASS_PREPARE;
+    ei->eventKind = JDWP_EVENTKIND_CLASS_PREPARE;
     ei->thread = runtime->threadInfo->jthread;
     ei->refTypeTag = getClassType(clazz);
     ei->typeID = clazz;
@@ -656,33 +711,44 @@ void event_on_class_prepar(Runtime *runtime, Class *clazz) {
 
 void event_on_class_unload(Runtime *runtime, Class *clazz) {
     EventInfo *ei = jvm_alloc(sizeof(EventInfo));
-    ei->eventKind = JDWP_EVENT_CLASS_UNLOAD;
+    ei->eventKind = JDWP_EVENTKIND_CLASS_UNLOAD;
     ei->signature = clazz->name;
     jdwp_event_put(ei);
 }
 
 void event_on_thread_start(Runtime *runtime) {
     EventInfo *ei = jvm_alloc(sizeof(EventInfo));
-    ei->eventKind = JDWP_EVENT_THREAD_START;
+    ei->eventKind = JDWP_EVENTKIND_THREAD_START;
     ei->thread = runtime->threadInfo->jthread;
     jdwp_event_put(ei);
 }
 
 void event_on_thread_death(Runtime *runtime) {
     EventInfo *ei = jvm_alloc(sizeof(EventInfo));
-    ei->eventKind = JDWP_EVENT_THREAD_DEATH;
+    ei->eventKind = JDWP_EVENTKIND_THREAD_DEATH;
     ei->thread = runtime->threadInfo->jthread;
     jdwp_event_put(ei);
 }
 
 void event_on_breakpoint(Runtime *breakpoint_runtime) {
     EventInfo *ei = jvm_alloc(sizeof(EventInfo));
-    ei->eventKind = JDWP_EVENT_BREAKPOINT;
+    ei->eventKind = JDWP_EVENTKIND_BREAKPOINT;
     ei->thread = breakpoint_runtime->threadInfo->jthread;
     ei->loc.typeTag = getClassType(breakpoint_runtime->clazz);
     ei->loc.classID = breakpoint_runtime->clazz;
     ei->loc.methodID = breakpoint_runtime->methodInfo;
-    ei->loc.execIndex = (u64) (long) breakpoint_runtime->pc - (u64) (long) breakpoint_runtime->bytecode;
+    ei->loc.execIndex = (u64) (long) breakpoint_runtime->pc - (u64) (long) breakpoint_runtime->ca->code;
+    jdwp_event_put(ei);
+}
+
+void event_on_debug_step(Runtime *step_runtime) {
+    EventInfo *ei = jvm_alloc(sizeof(EventInfo));
+    ei->eventKind = JDWP_EVENTKIND_SINGLE_STEP;
+    ei->thread = step_runtime->threadInfo->jthread;
+    ei->loc.typeTag = getClassType(step_runtime->clazz);
+    ei->loc.classID = step_runtime->clazz;
+    ei->loc.methodID = step_runtime->methodInfo;
+    ei->loc.execIndex = (u64) (long) step_runtime->pc - (u64) (long) step_runtime->ca->code;
     jdwp_event_put(ei);
 }
 
@@ -707,6 +773,62 @@ s32 jdwp_set_breakpoint(s32 setOrClear, Class *clazz, MethodInfo *methodInfo, s6
         }
     }
     return JDWP_ERROR_INVALID_LOCATION;
+}
+
+
+static s32 getNextLineStartPc(CodeAttribute *ca, s32 offset) {
+    s32 i, j;
+
+    for (j = 0; j < ca->line_number_table_length; j++) {
+        LineNumberTable *node = &(ca->line_number_table[j]);
+        if (offset >= node->start_pc) {
+            if (j + 1 < ca->line_number_table_length) {
+                LineNumberTable *next_node = &(ca->line_number_table[j + 1]);
+
+                if (offset < next_node->start_pc) {
+                    return next_node->start_pc;
+                }
+            }
+        }
+    }
+    return -1;
+}
+
+s32 jdwp_set_debug_step(s32 setOrClear, Instance *jthread, s32 size, s32 depth) {
+    /**
+     * 由于方法调用层级不同，则runtime的son的层级不同，由此控制虚机方法step_into ,step_out
+     */
+    Runtime *r = jthread_get_threadq_value(jthread);
+    JdwpStep *step = &r->threadInfo->jdwp_step;
+    if (setOrClear) {
+        step->active = 1;
+        if (depth == JDWP_STEPDEPTH_INTO) {
+            step->next_type = NEXT_TYPE_INTOOUT;
+            step->next_stop_runtime_depth = getRuntimeDepth(r->threadInfo->top_runtime) + 1;
+        } else if (depth == JDWP_STEPDEPTH_OUT) {
+            step->next_type = NEXT_TYPE_INTOOUT;
+            step->next_stop_runtime_depth = getRuntimeDepth(r->threadInfo->top_runtime) - 1;
+        } else {
+            if (size == JDWP_STEPSIZE_LINE) {
+                Runtime *last = getLastSon(r);//当前runtime
+                s32 nextPc = getNextLineStartPc(last->ca, last->pc - last->ca->code);
+                if (nextPc >= 0) {
+                    step->next_type = NEXT_TYPE_OVER;
+                    step->next_stop_bytecode_index = nextPc;
+                    step->next_stop_runtime_depth = getRuntimeDepth(r->threadInfo->top_runtime);
+                } else {//最后一行了
+                    step->next_type = NEXT_TYPE_INTOOUT;
+                    step->next_stop_runtime_depth = getRuntimeDepth(r->threadInfo->top_runtime) - 1;
+                }
+            } else {
+                step->next_type = NEXT_TYPE_SINGLE;
+                step->next_stop_bytecode_count = 1;
+            }
+        }
+    } else {
+        step->active = 0;
+    }
+    return JDWP_ERROR_NONE;
 }
 
 EventSet *jdwp_create_eventset(JdwpPacket *req) {
@@ -766,7 +888,7 @@ EventSet *jdwp_create_eventset(JdwpPacket *req) {
     return set;
 }
 
-s16 jdwp_eventset_process(EventSet *set) {
+s16 jdwp_eventset_set(EventSet *set) {
     if (set) {
         switch (set->eventKind) {
             case JDWP_EVENTKIND_VM_DISCONNECTED: {
@@ -779,6 +901,14 @@ s16 jdwp_eventset_process(EventSet *set) {
                 break;
             }
             case JDWP_EVENTKIND_SINGLE_STEP: {
+                s32 i;
+                for (i = 0; i < set->modifiers; i++) {
+                    EventSetMod *mod = &set->mods[i];
+                    if (10 == mod->mod_type) {
+                        jdwp_set_debug_step(JDWP_EVENTSET_SET, mod->thread,
+                                            mod->size, mod->depth);
+                    }
+                }
                 break;
             }
             case JDWP_EVENTKIND_BREAKPOINT: {
@@ -786,7 +916,7 @@ s16 jdwp_eventset_process(EventSet *set) {
                 for (i = 0; i < set->modifiers; i++) {
                     EventSetMod *mod = &set->mods[i];
                     if (mod->mod_type == 7) {
-                        jdwp_set_breakpoint(JDWP_BREAKPOINT_SET, mod->loc.classID, mod->loc.methodID,
+                        jdwp_set_breakpoint(JDWP_EVENTSET_SET, mod->loc.classID, mod->loc.methodID,
                                             mod->loc.execIndex);
                     }
                 }
@@ -842,6 +972,93 @@ s16 jdwp_eventset_process(EventSet *set) {
     return JDWP_ERROR_NONE;
 }
 
+s16 jdwp_eventset_clear(s32 id) {
+    EventSet *set = jdwp_eventset_get(id);
+    if (set) {
+        switch (set->eventKind) {
+            case JDWP_EVENTKIND_VM_DISCONNECTED: {
+                break;
+            }
+            case JDWP_EVENTKIND_VM_START: {
+                break;
+            }
+            case JDWP_EVENTKIND_THREAD_DEATH: {
+                break;
+            }
+            case JDWP_EVENTKIND_SINGLE_STEP: {
+                s32 i;
+                for (i = 0; i < set->modifiers; i++) {
+                    EventSetMod *mod = &set->mods[i];
+                    if (10 == mod->mod_type) {
+                        jdwp_set_debug_step(JDWP_EVENTSET_CLEAR, mod->thread,
+                                            mod->size, mod->depth);
+                    }
+                }
+                break;
+            }
+            case JDWP_EVENTKIND_BREAKPOINT: {
+                s32 i;
+                for (i = 0; i < set->modifiers; i++) {
+                    EventSetMod *mod = &set->mods[i];
+                    if (7 == mod->mod_type) {
+                        jdwp_set_breakpoint(JDWP_EVENTSET_CLEAR, mod->loc.classID, mod->loc.methodID,
+                                            mod->loc.execIndex);
+                    }
+                }
+                break;
+            }
+            case JDWP_EVENTKIND_FRAME_POP: {
+                break;
+            }
+            case JDWP_EVENTKIND_EXCEPTION: {
+                break;
+            }
+            case JDWP_EVENTKIND_USER_DEFINED: {
+                break;
+            }
+            case JDWP_EVENTKIND_THREAD_START: {
+                break;
+            }
+            case JDWP_EVENTKIND_CLASS_PREPARE: {
+                break;
+            }
+            case JDWP_EVENTKIND_CLASS_UNLOAD: {
+                break;
+            }
+            case JDWP_EVENTKIND_CLASS_LOAD: {
+                break;
+            }
+            case JDWP_EVENTKIND_FIELD_ACCESS: {
+                break;
+            }
+            case JDWP_EVENTKIND_FIELD_MODIFICATION: {
+                break;
+            }
+            case JDWP_EVENTKIND_EXCEPTION_CATCH: {
+                break;
+            }
+            case JDWP_EVENTKIND_METHOD_ENTRY: {
+                break;
+            }
+            case JDWP_EVENTKIND_METHOD_EXIT: {
+                break;
+            }
+            case JDWP_EVENTKIND_METHOD_EXIT_WITH_RETURN_VALUE: {
+                break;
+            }
+            case JDWP_EVENTKIND_VM_DEATH: {
+                break;
+            }
+            default: {
+                break;
+            }
+        }
+    }
+    hashtable_remove(jdwpserver.event_sets, (__refer) (long) id, 0);
+    jdwp_eventset_destory(set);
+    return JDWP_ERROR_NONE;
+}
+
 void jdwp_eventset_post(JdwpClient *client, EventSet *set, EventInfo *event) {
     if (set) {
         switch (set->eventKind) {
@@ -855,13 +1072,29 @@ void jdwp_eventset_post(JdwpClient *client, EventSet *set, EventInfo *event) {
                 break;
             }
             case JDWP_EVENTKIND_SINGLE_STEP: {
+                s32 i;
+                for (i = 0; i < set->modifiers; i++) {
+                    EventSetMod *mod = &set->mods[i];
+                    if (10 == mod->mod_type) {
+                        JdwpPacket *req = jdwppacket_create();
+                        jdwppacket_set_id(req, jdwp_eventset_commandid++);
+                        jdwppacket_set_cmd(req, JDWP_CMD_Event_Composite);
+                        jdwppacket_write_byte(req, set->suspendPolicy);
+                        jdwppacket_write_int(req, 1);
+                        jdwppacket_write_byte(req, set->eventKind);
+                        jdwppacket_write_int(req, set->requestId);
+                        jdwppacket_write_refer(req, event->thread);
+                        writeLocation(req, &event->loc);
+                        jdwp_writepacket(client, req);
+                    }
+                }
                 break;
             }
             case JDWP_EVENTKIND_BREAKPOINT: {
                 s32 i;
                 for (i = 0; i < set->modifiers; i++) {
                     EventSetMod *mod = &set->mods[i];
-                    if (mod->mod_type = 7)
+                    if (7 == mod->mod_type)
                         if (location_equals(&mod->loc, &event->loc)) {
                             JdwpPacket *req = jdwppacket_create();
                             jdwppacket_set_id(req, jdwp_eventset_commandid++);
@@ -925,85 +1158,6 @@ void jdwp_eventset_post(JdwpClient *client, EventSet *set, EventInfo *event) {
         }
         printf("send event composiet :%x\n", event->requestId);
     }
-}
-
-s16 jdwp_eventset_clear(s32 id) {
-    EventSet *set = jdwp_eventset_get(id);
-    if (set) {
-        switch (set->eventKind) {
-            case JDWP_EVENTKIND_VM_DISCONNECTED: {
-                break;
-            }
-            case JDWP_EVENTKIND_VM_START: {
-                break;
-            }
-            case JDWP_EVENTKIND_THREAD_DEATH: {
-                break;
-            }
-            case JDWP_EVENTKIND_SINGLE_STEP: {
-                break;
-            }
-            case JDWP_EVENTKIND_BREAKPOINT: {
-                s32 i;
-                for (i = 0; i < set->modifiers; i++) {
-                    EventSetMod *mod = &set->mods[i];
-                    if (mod->mod_type == 7) {
-                        jdwp_set_breakpoint(JDWP_BREAKPOINT_CLEAR, mod->loc.classID, mod->loc.methodID,
-                                            mod->loc.execIndex);
-                    }
-                }
-                break;
-            }
-            case JDWP_EVENTKIND_FRAME_POP: {
-                break;
-            }
-            case JDWP_EVENTKIND_EXCEPTION: {
-                break;
-            }
-            case JDWP_EVENTKIND_USER_DEFINED: {
-                break;
-            }
-            case JDWP_EVENTKIND_THREAD_START: {
-                break;
-            }
-            case JDWP_EVENTKIND_CLASS_PREPARE: {
-                break;
-            }
-            case JDWP_EVENTKIND_CLASS_UNLOAD: {
-                break;
-            }
-            case JDWP_EVENTKIND_CLASS_LOAD: {
-                break;
-            }
-            case JDWP_EVENTKIND_FIELD_ACCESS: {
-                break;
-            }
-            case JDWP_EVENTKIND_FIELD_MODIFICATION: {
-                break;
-            }
-            case JDWP_EVENTKIND_EXCEPTION_CATCH: {
-                break;
-            }
-            case JDWP_EVENTKIND_METHOD_ENTRY: {
-                break;
-            }
-            case JDWP_EVENTKIND_METHOD_EXIT: {
-                break;
-            }
-            case JDWP_EVENTKIND_METHOD_EXIT_WITH_RETURN_VALUE: {
-                break;
-            }
-            case JDWP_EVENTKIND_VM_DEATH: {
-                break;
-            }
-            default: {
-                break;
-            }
-        }
-    }
-    hashtable_remove(jdwpserver.event_sets, (__refer) (long) id, 0);
-    jdwp_eventset_destory(set);
-    return JDWP_ERROR_NONE;
 }
 
 //==================================================    process packet    ==================================================
@@ -1563,7 +1717,7 @@ s32 jdwp_client_process(JdwpClient *client, Runtime *runtime) {
 
                 jdwppacket_set_err(res, JDWP_ERROR_NONE);
 
-                s32 deepth = getRuntimeDeepth(rt);
+                s32 deepth = getRuntimeDepth(rt);
                 if (length == -1) {//等于-1返回所有剩下的
                     length = deepth - startFrame;
                 }
@@ -1578,7 +1732,10 @@ s32 jdwp_client_process(JdwpClient *client, Runtime *runtime) {
                         loc.typeTag = getClassType(r->clazz);
                         loc.classID = r->clazz;
                         loc.methodID = r->methodInfo;
-                        loc.execIndex = (s64) (long) r->pc - (s64) (long) r->bytecode;
+                        if (r->ca)
+                            loc.execIndex = (s64) (long) r->pc - (s64) (long) r->ca->code;
+                        else
+                            loc.execIndex = 0;
                         writeLocation(res, &loc);
                     }
                     r = r->parent;
@@ -1593,8 +1750,8 @@ s32 jdwp_client_process(JdwpClient *client, Runtime *runtime) {
                 Instance *jthread = jdwppacket_read_refer(req);
                 Runtime *r = jthread_get_threadq_value(jthread);
                 jdwppacket_set_err(res, JDWP_ERROR_NONE);
-                jdwppacket_write_int(res, getRuntimeDeepth(r));
-                jvm_printf("ThreadReference_FrameCount:%d\n", getRuntimeDeepth(r));
+                jdwppacket_write_int(res, getRuntimeDepth(r));
+                jvm_printf("ThreadReference_FrameCount:%d\n", getRuntimeDepth(r));
                 jdwp_writepacket(client, res);
                 break;
             }
@@ -1693,7 +1850,7 @@ s32 jdwp_client_process(JdwpClient *client, Runtime *runtime) {
             case JDWP_CMD_EventRequest_Set: {//15.1
                 EventSet *eventSet = jdwp_create_eventset(req);
                 jdwp_eventset_put(eventSet);
-                s16 ret = jdwp_eventset_process(eventSet);
+                s16 ret = jdwp_eventset_set(eventSet);
 
 
                 if (ret == JDWP_ERROR_NONE) {

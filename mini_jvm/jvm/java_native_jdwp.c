@@ -7,6 +7,7 @@
 #include "garbage.h"
 #include "jvm_util.h"
 #include "jdwp.h"
+#include "java_native_jdwp.h"
 
 
 #ifdef __cplusplus
@@ -57,7 +58,7 @@ Instance *jdwp_get_location(Runtime *location_runtime) {
     if (ptr)setFieldLong(ptr, (u64) (long) location_runtime->methodInfo);
     //
     ptr = getFieldPtr_byName_c(ins, JDWP_CLASS_LOCATION, "execIndex", "J");
-    if (ptr)setFieldLong(ptr, ((u64) (long) location_runtime->pc) - ((u64) (long) location_runtime->bytecode));
+    if (ptr)setFieldLong(ptr, ((u64) (long) location_runtime->pc) - ((u64) (long) location_runtime->ca->code));
     return ins;
 }
 
@@ -108,7 +109,7 @@ void jni_event_on_class_unload(Runtime *runtime, Class *clazz) {
     __refer ptr;
     //
     ptr = getFieldPtr_byName_c(ins, JDWP_CLASS_EVENT, "eventKind", "B");
-    if (ptr)setFieldByte(ptr, JDWP_EVENT_CLASS_UNLOAD);
+    if (ptr)setFieldByte(ptr, JDWP_EVENTKIND_CLASS_UNLOAD);
     //
     ptr = getFieldPtr_byName_c(ins, JDWP_CLASS_EVENT, "signature", "Ljava/lang/String;");
     Utf8String *ustr = utf8_create_copy(clazz->name);
@@ -130,7 +131,7 @@ void jni_event_on_thread_start(Runtime *runtime, Instance *jthread) {
     __refer ptr;
     //
     ptr = getFieldPtr_byName_c(ins, JDWP_CLASS_EVENT, "eventKind", "B");
-    if (ptr)setFieldByte(ptr, JDWP_EVENT_THREAD_START);
+    if (ptr)setFieldByte(ptr, JDWP_EVENTKIND_THREAD_START);
     //
     ptr = getFieldPtr_byName_c(ins, JDWP_CLASS_EVENT, "thread", "J");
     if (ptr)setFieldLong(ptr, (u64) (long) jthread);
@@ -146,7 +147,7 @@ void jni_event_on_thread_death(Runtime *runtime, Instance *jthread) {
     __refer ptr;
     //
     ptr = getFieldPtr_byName_c(ins, JDWP_CLASS_EVENT, "eventKind", "B");
-    if (ptr)setFieldByte(ptr, JDWP_EVENT_THREAD_DEATH);
+    if (ptr)setFieldByte(ptr, JDWP_EVENTKIND_THREAD_DEATH);
     //
     ptr = getFieldPtr_byName_c(ins, JDWP_CLASS_EVENT, "thread", "J");
     if (ptr)setFieldLong(ptr, (u64) (long) jthread);
@@ -163,7 +164,7 @@ void jni_event_on_breakpoint(Runtime *breakpoint_runtime) {
     __refer ptr;
     //
     ptr = getFieldPtr_byName_c(ins, JDWP_CLASS_EVENT, "eventKind", "B");
-    if (ptr)setFieldByte(ptr, JDWP_EVENT_BREAKPOINT);
+    if (ptr)setFieldByte(ptr, JDWP_EVENTKIND_BREAKPOINT);
     //
     ptr = getFieldPtr_byName_c(ins, JDWP_CLASS_EVENT, "thread", "J");
     if (ptr)setFieldLong(ptr, (u64) (long) breakpoint_runtime->threadInfo->jthread);
@@ -786,7 +787,7 @@ s32 javax_mini_jdwp_reflect_StackFrame_mapRuntime(Runtime *runtime, Class *clazz
         if (ptr)setFieldLong(ptr, (u64) (long) target->pc);
         //
         ptr = getFieldPtr_byName_c(ins, JDWP_CLASS_RUNTIME, "byteCode", "J");
-        if (ptr)setFieldLong(ptr, (u64) (long) target->bytecode);
+        if (ptr)setFieldLong(ptr, (u64) (long) target->ca->code);
         //
         ptr = getFieldPtr_byName_c(ins, JDWP_CLASS_RUNTIME, "methodId", "J");
         if (ptr)setFieldLong(ptr, (u64) (long) target->methodInfo);
