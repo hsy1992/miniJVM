@@ -5,6 +5,7 @@
 #include "jvm.h"
 #include "java_native_std.h"
 #include "garbage.h"
+#include "java_native_io.h"
 #include <sys/stat.h>
 
 #ifndef _CYGWIN_CONFIG_H
@@ -63,21 +64,12 @@ extern "C" {
 //#define  LOGI(...)  __android_log_print(ANDROID_LOG_INFO,LOG_TAG,__VA_ARGS__)
 //#define  LOGE(...)  __android_log_print(ANDROID_LOG_ERROR,LOG_TAG,__VA_ARGS__)
 #endif
-#define  SOCK_OP_TYPE_NON_BLOCK   0
-#define  SOCK_OP_TYPE_REUSEADDR   1
-#define  SOCK_OP_TYPE_RCVBUF   2
-#define  SOCK_OP_TYPE_SNDBUF   3
-
-#define  SOCK_OP_VAL_NON_BLOCK   1
-#define  SOCK_OP_VAL_BLOCK   0
-#define  SOCK_OP_VAL_NON_REUSEADDR   1
-#define  SOCK_OP_VAL_REUSEADDR   0
 
 void _on_sock_sig(s32 signo) {
 }
 
 //=================================  socket  ====================================
-s32 setOption(s32 sockfd, s32 opType, s32 opValue) {
+s32 sock_option(s32 sockfd, s32 opType, s32 opValue) {
     switch (opType) {
         case SOCK_OP_TYPE_NON_BLOCK: {//阻塞设置
 #ifdef __WIN32__
@@ -430,7 +422,7 @@ s32 javax_mini_net_socket_Protocol_setOption0(Runtime *runtime, Class *clazz) {
     s32 val = (runtime->localVariables + 2)->integer;
     s32 ret = 0;
     if (sockfd) {
-        ret = setOption(sockfd, type, val);
+        ret = sock_option(sockfd, type, val);
     }
     push_int(runtime->stack, ret);
 #if _JVM_DEBUG > 5

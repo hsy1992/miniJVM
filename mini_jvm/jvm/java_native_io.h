@@ -8,6 +8,15 @@
 
 #include "../utils/utf8_string.h"
 #include "global.h"
+#define  SOCK_OP_TYPE_NON_BLOCK   0
+#define  SOCK_OP_TYPE_REUSEADDR   1
+#define  SOCK_OP_TYPE_RCVBUF   2
+#define  SOCK_OP_TYPE_SNDBUF   3
+
+#define  SOCK_OP_VAL_NON_BLOCK   1
+#define  SOCK_OP_VAL_BLOCK   0
+#define  SOCK_OP_VAL_NON_REUSEADDR   1
+#define  SOCK_OP_VAL_REUSEADDR   0
 
 s32 sock_open(Utf8String *ip, s32 port);
 
@@ -15,7 +24,7 @@ s32 sock_send(s32 sockfd, c8 *buf, s32 count);
 
 s32 sock_recv(s32 sockfd, c8 *buf, s32 count);
 
-s32 setOption(s32 sockfd, s32 opType, s32 opValue);
+s32 sock_option(s32 sockfd, s32 opType, s32 opValue);
 
 s32 srv_bind(Utf8String *ip, u16 port);
 

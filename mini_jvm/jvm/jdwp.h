@@ -263,7 +263,7 @@ static c8 JDWP_SUSPEND_STATUS_SUSPENDED = 0x1;
 //ClassObjectReference Command Set (17)
 #define JDWP_CMD_ClassObjectReference_ReflectedType   0x1101
 //Event Command Set (64)
-#define JDWP_CMD_Event_Composite   0x6400
+#define JDWP_CMD_Event_Composite   0x4064
 
 
 //=============================      string   ==============================================
@@ -462,7 +462,8 @@ typedef struct _EventInfo {
 } EventInfo;
 
 
-static s32 jdwp_requestid = 0;
+static s32 jdwp_eventset_requestid = 0;
+static s32 jdwp_eventset_commandid = 0;
 
 JdwpServer jdwpserver;
 
