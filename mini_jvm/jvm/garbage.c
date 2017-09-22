@@ -167,10 +167,10 @@ void garbage_collect_memobj(__refer k) {
     garbage_derefer_all(k);
 
 #if _JVM_DEBUG_GARBAGE_DUMP
-    Utf8String *pus = utf8_create();
-    getMemBlockName(k, pus);
-    jvm_printf("garbage collect instance  %s [%x]\n", utf8_cstr(pus), k);
-    utf8_destory(pus);
+//    Utf8String *pus = utf8_create();
+//    getMemBlockName(k, pus);
+//    jvm_printf("garbage collect instance  %s [%x]\n", utf8_cstr(pus), k);
+//    utf8_destory(pus);
 #endif
     Hashset *v = (Hashset *) hashtable_get(son_2_father, k);
     _garbage_put_set(v);
