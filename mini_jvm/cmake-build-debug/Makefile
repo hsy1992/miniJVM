@@ -392,32 +392,32 @@ jvm/java_native_io.c.s:
 	$(MAKE) -f CMakeFiles\mini_jvm.dir\build.make CMakeFiles/mini_jvm.dir/jvm/java_native_io.c.s
 .PHONY : jvm/java_native_io.c.s
 
-jvm/java_native_jdwp.obj: jvm/java_native_jdwp.c.obj
+jvm/java_native_reflect.obj: jvm/java_native_reflect.c.obj
 
-.PHONY : jvm/java_native_jdwp.obj
+.PHONY : jvm/java_native_reflect.obj
 
 # target to build an object file
-jvm/java_native_jdwp.c.obj:
-	$(MAKE) -f CMakeFiles\mini_jvm.dir\build.make CMakeFiles/mini_jvm.dir/jvm/java_native_jdwp.c.obj
-.PHONY : jvm/java_native_jdwp.c.obj
+jvm/java_native_reflect.c.obj:
+	$(MAKE) -f CMakeFiles\mini_jvm.dir\build.make CMakeFiles/mini_jvm.dir/jvm/java_native_reflect.c.obj
+.PHONY : jvm/java_native_reflect.c.obj
 
-jvm/java_native_jdwp.i: jvm/java_native_jdwp.c.i
+jvm/java_native_reflect.i: jvm/java_native_reflect.c.i
 
-.PHONY : jvm/java_native_jdwp.i
+.PHONY : jvm/java_native_reflect.i
 
 # target to preprocess a source file
-jvm/java_native_jdwp.c.i:
-	$(MAKE) -f CMakeFiles\mini_jvm.dir\build.make CMakeFiles/mini_jvm.dir/jvm/java_native_jdwp.c.i
-.PHONY : jvm/java_native_jdwp.c.i
+jvm/java_native_reflect.c.i:
+	$(MAKE) -f CMakeFiles\mini_jvm.dir\build.make CMakeFiles/mini_jvm.dir/jvm/java_native_reflect.c.i
+.PHONY : jvm/java_native_reflect.c.i
 
-jvm/java_native_jdwp.s: jvm/java_native_jdwp.c.s
+jvm/java_native_reflect.s: jvm/java_native_reflect.c.s
 
-.PHONY : jvm/java_native_jdwp.s
+.PHONY : jvm/java_native_reflect.s
 
 # target to generate assembly for a file
-jvm/java_native_jdwp.c.s:
-	$(MAKE) -f CMakeFiles\mini_jvm.dir\build.make CMakeFiles/mini_jvm.dir/jvm/java_native_jdwp.c.s
-.PHONY : jvm/java_native_jdwp.c.s
+jvm/java_native_reflect.c.s:
+	$(MAKE) -f CMakeFiles\mini_jvm.dir\build.make CMakeFiles/mini_jvm.dir/jvm/java_native_reflect.c.s
+.PHONY : jvm/java_native_reflect.c.s
 
 jvm/java_native_std.obj: jvm/java_native_std.c.obj
 
@@ -809,9 +809,9 @@ help:
 	@echo ... jvm/java_native_io.obj
 	@echo ... jvm/java_native_io.i
 	@echo ... jvm/java_native_io.s
-	@echo ... jvm/java_native_jdwp.obj
-	@echo ... jvm/java_native_jdwp.i
-	@echo ... jvm/java_native_jdwp.s
+	@echo ... jvm/java_native_reflect.obj
+	@echo ... jvm/java_native_reflect.i
+	@echo ... jvm/java_native_reflect.s
 	@echo ... jvm/java_native_std.obj
 	@echo ... jvm/java_native_std.i
 	@echo ... jvm/java_native_std.s

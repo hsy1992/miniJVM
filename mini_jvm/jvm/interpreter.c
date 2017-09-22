@@ -6,7 +6,7 @@
 #include "jvm_util.h"
 #include "../utils/utf8_string.h"
 #include "../utils/arraylist.h"
-#include "java_native_jdwp.h"
+#include "java_native_reflect.h"
 #include "jdwp.h"
 
 

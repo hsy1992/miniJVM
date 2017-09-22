@@ -35,7 +35,7 @@ set(SOURCE_FILES
         jvm/java_native_std.h
         jvm/java_native_io.c
         jvm/java_native_std.c
-        jvm/java_native_jdwp.c
-        jvm/java_native_jdwp.h jvm/jdwp.c jvm/jdwp.h jvm/java_native_io.h)
+        jvm/java_native_reflect.c
+        jvm/java_native_reflect.h jvm/jdwp.c jvm/jdwp.h jvm/java_native_io.h)
 
 add_executable(mini_jvm ${SOURCE_FILES})

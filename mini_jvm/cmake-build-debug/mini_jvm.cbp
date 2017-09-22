@@ -119,10 +119,10 @@
 		<Unit filename="D:/githome/mini_jvm/mini_jvm/jvm/java_native_io.h">
 			<Option target="mini_jvm"/>
 		</Unit>
-		<Unit filename="D:/githome/mini_jvm/mini_jvm/jvm/java_native_jdwp.c">
+		<Unit filename="D:/githome/mini_jvm/mini_jvm/jvm/java_native_reflect.c">
 			<Option target="mini_jvm"/>
 		</Unit>
-		<Unit filename="D:/githome/mini_jvm/mini_jvm/jvm/java_native_jdwp.h">
+		<Unit filename="D:/githome/mini_jvm/mini_jvm/jvm/java_native_reflect.h">
 			<Option target="mini_jvm"/>
 		</Unit>
 		<Unit filename="D:/githome/mini_jvm/mini_jvm/jvm/java_native_std.c">

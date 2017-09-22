@@ -119,8 +119,10 @@ D:/githome/mini_jvm/mini_jvm/jvm/jvm_util.h
 D:/githome/mini_jvm/mini_jvm/utils/utf8_string.h
 ../utils/arraylist.h
 D:/githome/mini_jvm/mini_jvm/utils/arraylist.h
-java_native_jdwp.h
-D:/githome/mini_jvm/mini_jvm/jvm/java_native_jdwp.h
+java_native_reflect.h
+D:/githome/mini_jvm/mini_jvm/jvm/java_native_reflect.h
+jdwp.h
+D:/githome/mini_jvm/mini_jvm/jvm/jdwp.h
 
 D:/githome/mini_jvm/mini_jvm/jvm/java_native_io.c
 jvm.h
@@ -129,6 +131,8 @@ java_native_std.h
 D:/githome/mini_jvm/mini_jvm/jvm/java_native_std.h
 garbage.h
 D:/githome/mini_jvm/mini_jvm/jvm/garbage.h
+java_native_io.h
+D:/githome/mini_jvm/mini_jvm/jvm/java_native_io.h
 sys/stat.h
 -
 errno.h
@@ -174,7 +178,13 @@ fcntl.h
 sys/errno.h
 -
 
-D:/githome/mini_jvm/mini_jvm/jvm/java_native_jdwp.c
+D:/githome/mini_jvm/mini_jvm/jvm/java_native_io.h
+../utils/utf8_string.h
+D:/githome/mini_jvm/mini_jvm/utils/utf8_string.h
+global.h
+D:/githome/mini_jvm/mini_jvm/jvm/global.h
+
+D:/githome/mini_jvm/mini_jvm/jvm/java_native_reflect.c
 jvm.h
 D:/githome/mini_jvm/mini_jvm/jvm/jvm.h
 java_native_std.h
@@ -183,8 +193,10 @@ garbage.h
 D:/githome/mini_jvm/mini_jvm/jvm/garbage.h
 jvm_util.h
 D:/githome/mini_jvm/mini_jvm/jvm/jvm_util.h
+java_native_reflect.h
+D:/githome/mini_jvm/mini_jvm/jvm/java_native_reflect.h
 
-D:/githome/mini_jvm/mini_jvm/jvm/java_native_jdwp.h
+D:/githome/mini_jvm/mini_jvm/jvm/java_native_reflect.h
 jvm.h
 D:/githome/mini_jvm/mini_jvm/jvm/jvm.h
 
@@ -204,6 +216,36 @@ D:/githome/mini_jvm/mini_jvm/jvm/java_native_std.h
 jvm.h
 D:/githome/mini_jvm/mini_jvm/jvm/jvm.h
 
+D:/githome/mini_jvm/mini_jvm/jvm/jdwp.c
+jdwp.h
+D:/githome/mini_jvm/mini_jvm/jvm/jdwp.h
+global.h
+D:/githome/mini_jvm/mini_jvm/jvm/global.h
+jvm.h
+D:/githome/mini_jvm/mini_jvm/jvm/jvm.h
+jvm_util.h
+D:/githome/mini_jvm/mini_jvm/jvm/jvm_util.h
+java_native_reflect.h
+D:/githome/mini_jvm/mini_jvm/jvm/java_native_reflect.h
+java_native_io.h
+D:/githome/mini_jvm/mini_jvm/jvm/java_native_io.h
+garbage.h
+D:/githome/mini_jvm/mini_jvm/jvm/garbage.h
+
+D:/githome/mini_jvm/mini_jvm/jvm/jdwp.h
+global.h
+D:/githome/mini_jvm/mini_jvm/jvm/global.h
+../utils/utf8_string.h
+D:/githome/mini_jvm/mini_jvm/utils/utf8_string.h
+../utils/arraylist.h
+D:/githome/mini_jvm/mini_jvm/utils/arraylist.h
+jvm.h
+D:/githome/mini_jvm/mini_jvm/jvm/jvm.h
+pthread.h
+D:/githome/mini_jvm/mini_jvm/jvm/pthread.h
+../utils/hashset.h
+D:/githome/mini_jvm/mini_jvm/utils/hashset.h
+
 D:/githome/mini_jvm/mini_jvm/jvm/jvm.c
 stdio.h
 -
@@ -221,6 +263,8 @@ jvm_util.h
 D:/githome/mini_jvm/mini_jvm/jvm/jvm_util.h
 java_native_std.h
 D:/githome/mini_jvm/mini_jvm/jvm/java_native_std.h
+jdwp.h
+D:/githome/mini_jvm/mini_jvm/jvm/jdwp.h
 
 D:/githome/mini_jvm/mini_jvm/jvm/jvm.h
 stdio.h
@@ -249,14 +293,18 @@ jvm_util.h
 D:/githome/mini_jvm/mini_jvm/jvm/jvm_util.h
 garbage.h
 D:/githome/mini_jvm/mini_jvm/jvm/garbage.h
-java_native_jdwp.h
-D:/githome/mini_jvm/mini_jvm/jvm/java_native_jdwp.h
+java_native_reflect.h
+D:/githome/mini_jvm/mini_jvm/jvm/java_native_reflect.h
+jdwp.h
+D:/githome/mini_jvm/mini_jvm/jvm/jdwp.h
 
 D:/githome/mini_jvm/mini_jvm/jvm/jvm_util.h
 jvm.h
 D:/githome/mini_jvm/mini_jvm/jvm/jvm.h
 ../utils/hashset.h
 D:/githome/mini_jvm/mini_jvm/utils/hashset.h
+jdwp.h
+D:/githome/mini_jvm/mini_jvm/jvm/jdwp.h
 pthread.h
 -
 

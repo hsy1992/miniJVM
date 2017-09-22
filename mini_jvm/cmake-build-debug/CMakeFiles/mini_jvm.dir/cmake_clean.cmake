@@ -21,7 +21,7 @@ file(REMOVE_RECURSE
   "CMakeFiles/mini_jvm.dir/utils/hashset.c.obj"
   "CMakeFiles/mini_jvm.dir/jvm/java_native_io.c.obj"
   "CMakeFiles/mini_jvm.dir/jvm/java_native_std.c.obj"
-  "CMakeFiles/mini_jvm.dir/jvm/java_native_jdwp.c.obj"
+  "CMakeFiles/mini_jvm.dir/jvm/java_native_reflect.c.obj"
   "CMakeFiles/mini_jvm.dir/jvm/jdwp.c.obj"
   "mini_jvm.pdb"
   "mini_jvm.exe"

@@ -584,28 +584,28 @@ CMakeFiles/mini_jvm.dir/jvm/java_native_std.c.obj.provides: CMakeFiles/mini_jvm.
 CMakeFiles/mini_jvm.dir/jvm/java_native_std.c.obj.provides.build: CMakeFiles/mini_jvm.dir/jvm/java_native_std.c.obj
 
 
-CMakeFiles/mini_jvm.dir/jvm/java_native_jdwp.c.obj: CMakeFiles/mini_jvm.dir/flags.make
-CMakeFiles/mini_jvm.dir/jvm/java_native_jdwp.c.obj: ../jvm/java_native_jdwp.c
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=D:\githome\mini_jvm\mini_jvm\cmake-build-debug\CMakeFiles --progress-num=$(CMAKE_PROGRESS_23) "Building C object CMakeFiles/mini_jvm.dir/jvm/java_native_jdwp.c.obj"
-	C:\MinGW\bin\gcc.exe $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -o CMakeFiles\mini_jvm.dir\jvm\java_native_jdwp.c.obj   -c D:\githome\mini_jvm\mini_jvm\jvm\java_native_jdwp.c
+CMakeFiles/mini_jvm.dir/jvm/java_native_reflect.c.obj: CMakeFiles/mini_jvm.dir/flags.make
+CMakeFiles/mini_jvm.dir/jvm/java_native_reflect.c.obj: ../jvm/java_native_reflect.c
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=D:\githome\mini_jvm\mini_jvm\cmake-build-debug\CMakeFiles --progress-num=$(CMAKE_PROGRESS_23) "Building C object CMakeFiles/mini_jvm.dir/jvm/java_native_reflect.c.obj"
+	C:\MinGW\bin\gcc.exe $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -o CMakeFiles\mini_jvm.dir\jvm\java_native_reflect.c.obj   -c D:\githome\mini_jvm\mini_jvm\jvm\java_native_reflect.c
 
-CMakeFiles/mini_jvm.dir/jvm/java_native_jdwp.c.i: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing C source to CMakeFiles/mini_jvm.dir/jvm/java_native_jdwp.c.i"
-	C:\MinGW\bin\gcc.exe $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -E D:\githome\mini_jvm\mini_jvm\jvm\java_native_jdwp.c > CMakeFiles\mini_jvm.dir\jvm\java_native_jdwp.c.i
+CMakeFiles/mini_jvm.dir/jvm/java_native_reflect.c.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing C source to CMakeFiles/mini_jvm.dir/jvm/java_native_reflect.c.i"
+	C:\MinGW\bin\gcc.exe $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -E D:\githome\mini_jvm\mini_jvm\jvm\java_native_reflect.c > CMakeFiles\mini_jvm.dir\jvm\java_native_reflect.c.i
 
-CMakeFiles/mini_jvm.dir/jvm/java_native_jdwp.c.s: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling C source to assembly CMakeFiles/mini_jvm.dir/jvm/java_native_jdwp.c.s"
-	C:\MinGW\bin\gcc.exe $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -S D:\githome\mini_jvm\mini_jvm\jvm\java_native_jdwp.c -o CMakeFiles\mini_jvm.dir\jvm\java_native_jdwp.c.s
+CMakeFiles/mini_jvm.dir/jvm/java_native_reflect.c.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling C source to assembly CMakeFiles/mini_jvm.dir/jvm/java_native_reflect.c.s"
+	C:\MinGW\bin\gcc.exe $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -S D:\githome\mini_jvm\mini_jvm\jvm\java_native_reflect.c -o CMakeFiles\mini_jvm.dir\jvm\java_native_reflect.c.s
 
-CMakeFiles/mini_jvm.dir/jvm/java_native_jdwp.c.obj.requires:
+CMakeFiles/mini_jvm.dir/jvm/java_native_reflect.c.obj.requires:
 
-.PHONY : CMakeFiles/mini_jvm.dir/jvm/java_native_jdwp.c.obj.requires
+.PHONY : CMakeFiles/mini_jvm.dir/jvm/java_native_reflect.c.obj.requires
 
-CMakeFiles/mini_jvm.dir/jvm/java_native_jdwp.c.obj.provides: CMakeFiles/mini_jvm.dir/jvm/java_native_jdwp.c.obj.requires
-	$(MAKE) -f CMakeFiles\mini_jvm.dir\build.make CMakeFiles/mini_jvm.dir/jvm/java_native_jdwp.c.obj.provides.build
-.PHONY : CMakeFiles/mini_jvm.dir/jvm/java_native_jdwp.c.obj.provides
+CMakeFiles/mini_jvm.dir/jvm/java_native_reflect.c.obj.provides: CMakeFiles/mini_jvm.dir/jvm/java_native_reflect.c.obj.requires
+	$(MAKE) -f CMakeFiles\mini_jvm.dir\build.make CMakeFiles/mini_jvm.dir/jvm/java_native_reflect.c.obj.provides.build
+.PHONY : CMakeFiles/mini_jvm.dir/jvm/java_native_reflect.c.obj.provides
 
-CMakeFiles/mini_jvm.dir/jvm/java_native_jdwp.c.obj.provides.build: CMakeFiles/mini_jvm.dir/jvm/java_native_jdwp.c.obj
+CMakeFiles/mini_jvm.dir/jvm/java_native_reflect.c.obj.provides.build: CMakeFiles/mini_jvm.dir/jvm/java_native_reflect.c.obj
 
 
 CMakeFiles/mini_jvm.dir/jvm/jdwp.c.obj: CMakeFiles/mini_jvm.dir/flags.make
@@ -656,7 +656,7 @@ mini_jvm_OBJECTS = \
 "CMakeFiles/mini_jvm.dir/utils/hashset.c.obj" \
 "CMakeFiles/mini_jvm.dir/jvm/java_native_io.c.obj" \
 "CMakeFiles/mini_jvm.dir/jvm/java_native_std.c.obj" \
-"CMakeFiles/mini_jvm.dir/jvm/java_native_jdwp.c.obj" \
+"CMakeFiles/mini_jvm.dir/jvm/java_native_reflect.c.obj" \
 "CMakeFiles/mini_jvm.dir/jvm/jdwp.c.obj"
 
 # External object files for target mini_jvm
@@ -684,7 +684,7 @@ mini_jvm.exe: CMakeFiles/mini_jvm.dir/utils/pairlist.c.obj
 mini_jvm.exe: CMakeFiles/mini_jvm.dir/utils/hashset.c.obj
 mini_jvm.exe: CMakeFiles/mini_jvm.dir/jvm/java_native_io.c.obj
 mini_jvm.exe: CMakeFiles/mini_jvm.dir/jvm/java_native_std.c.obj
-mini_jvm.exe: CMakeFiles/mini_jvm.dir/jvm/java_native_jdwp.c.obj
+mini_jvm.exe: CMakeFiles/mini_jvm.dir/jvm/java_native_reflect.c.obj
 mini_jvm.exe: CMakeFiles/mini_jvm.dir/jvm/jdwp.c.obj
 mini_jvm.exe: CMakeFiles/mini_jvm.dir/build.make
 mini_jvm.exe: CMakeFiles/mini_jvm.dir/linklibs.rsp
@@ -720,7 +720,7 @@ CMakeFiles/mini_jvm.dir/requires: CMakeFiles/mini_jvm.dir/utils/pairlist.c.obj.r
 CMakeFiles/mini_jvm.dir/requires: CMakeFiles/mini_jvm.dir/utils/hashset.c.obj.requires
 CMakeFiles/mini_jvm.dir/requires: CMakeFiles/mini_jvm.dir/jvm/java_native_io.c.obj.requires
 CMakeFiles/mini_jvm.dir/requires: CMakeFiles/mini_jvm.dir/jvm/java_native_std.c.obj.requires
-CMakeFiles/mini_jvm.dir/requires: CMakeFiles/mini_jvm.dir/jvm/java_native_jdwp.c.obj.requires
+CMakeFiles/mini_jvm.dir/requires: CMakeFiles/mini_jvm.dir/jvm/java_native_reflect.c.obj.requires
 CMakeFiles/mini_jvm.dir/requires: CMakeFiles/mini_jvm.dir/jvm/jdwp.c.obj.requires
 
 .PHONY : CMakeFiles/mini_jvm.dir/requires

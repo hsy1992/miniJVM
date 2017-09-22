@@ -4,6 +4,7 @@
 CMakeFiles/mini_jvm.dir/jvm/class.c.obj: ../jvm/class.c
 CMakeFiles/mini_jvm.dir/jvm/class.c.obj: ../jvm/garbage.h
 CMakeFiles/mini_jvm.dir/jvm/class.c.obj: ../jvm/global.h
+CMakeFiles/mini_jvm.dir/jvm/class.c.obj: ../jvm/jdwp.h
 CMakeFiles/mini_jvm.dir/jvm/class.c.obj: ../jvm/jvm.h
 CMakeFiles/mini_jvm.dir/jvm/class.c.obj: ../jvm/jvm_util.h
 CMakeFiles/mini_jvm.dir/jvm/class.c.obj: ../utils/arraylist.h
@@ -15,6 +16,7 @@ CMakeFiles/mini_jvm.dir/jvm/class.c.obj: ../utils/utf8_string.h
 CMakeFiles/mini_jvm.dir/jvm/class_loader.c.obj: ../jvm/class_loader.c
 CMakeFiles/mini_jvm.dir/jvm/class_loader.c.obj: ../jvm/garbage.h
 CMakeFiles/mini_jvm.dir/jvm/class_loader.c.obj: ../jvm/global.h
+CMakeFiles/mini_jvm.dir/jvm/class_loader.c.obj: ../jvm/jdwp.h
 CMakeFiles/mini_jvm.dir/jvm/class_loader.c.obj: ../jvm/jvm.h
 CMakeFiles/mini_jvm.dir/jvm/class_loader.c.obj: ../jvm/jvm_util.h
 CMakeFiles/mini_jvm.dir/jvm/class_loader.c.obj: ../utils/arraylist.h
@@ -26,6 +28,7 @@ CMakeFiles/mini_jvm.dir/jvm/class_loader.c.obj: ../utils/utf8_string.h
 CMakeFiles/mini_jvm.dir/jvm/class_loader_constant.c.obj: ../jvm/class_loader_constant.c
 CMakeFiles/mini_jvm.dir/jvm/class_loader_constant.c.obj: ../jvm/garbage.h
 CMakeFiles/mini_jvm.dir/jvm/class_loader_constant.c.obj: ../jvm/global.h
+CMakeFiles/mini_jvm.dir/jvm/class_loader_constant.c.obj: ../jvm/jdwp.h
 CMakeFiles/mini_jvm.dir/jvm/class_loader_constant.c.obj: ../jvm/jvm.h
 CMakeFiles/mini_jvm.dir/jvm/class_loader_constant.c.obj: ../jvm/jvm_util.h
 CMakeFiles/mini_jvm.dir/jvm/class_loader_constant.c.obj: ../utils/arraylist.h
@@ -67,6 +70,7 @@ CMakeFiles/mini_jvm.dir/jvm/class_loader_method.c.obj: ../utils/utf8_string.h
 CMakeFiles/mini_jvm.dir/jvm/garbage.c.obj: ../jvm/garbage.c
 CMakeFiles/mini_jvm.dir/jvm/garbage.c.obj: ../jvm/garbage.h
 CMakeFiles/mini_jvm.dir/jvm/garbage.c.obj: ../jvm/global.h
+CMakeFiles/mini_jvm.dir/jvm/garbage.c.obj: ../jvm/jdwp.h
 CMakeFiles/mini_jvm.dir/jvm/garbage.c.obj: ../jvm/jvm.h
 CMakeFiles/mini_jvm.dir/jvm/garbage.c.obj: ../jvm/jvm_util.h
 CMakeFiles/mini_jvm.dir/jvm/garbage.c.obj: ../utils/arraylist.h
@@ -86,8 +90,9 @@ CMakeFiles/mini_jvm.dir/jvm/global.c.obj: ../utils/utf8_string.h
 CMakeFiles/mini_jvm.dir/jvm/interpreter.c.obj: ../jvm/garbage.h
 CMakeFiles/mini_jvm.dir/jvm/interpreter.c.obj: ../jvm/global.h
 CMakeFiles/mini_jvm.dir/jvm/interpreter.c.obj: ../jvm/interpreter.c
-CMakeFiles/mini_jvm.dir/jvm/interpreter.c.obj: ../jvm/java_native_jdwp.h
+CMakeFiles/mini_jvm.dir/jvm/interpreter.c.obj: ../jvm/java_native_reflect.h
 CMakeFiles/mini_jvm.dir/jvm/interpreter.c.obj: ../jvm/java_native_std.h
+CMakeFiles/mini_jvm.dir/jvm/interpreter.c.obj: ../jvm/jdwp.h
 CMakeFiles/mini_jvm.dir/jvm/interpreter.c.obj: ../jvm/jvm.h
 CMakeFiles/mini_jvm.dir/jvm/interpreter.c.obj: ../jvm/jvm_util.h
 CMakeFiles/mini_jvm.dir/jvm/interpreter.c.obj: ../utils/arraylist.h
@@ -99,6 +104,7 @@ CMakeFiles/mini_jvm.dir/jvm/interpreter.c.obj: ../utils/utf8_string.h
 CMakeFiles/mini_jvm.dir/jvm/java_native_io.c.obj: ../jvm/garbage.h
 CMakeFiles/mini_jvm.dir/jvm/java_native_io.c.obj: ../jvm/global.h
 CMakeFiles/mini_jvm.dir/jvm/java_native_io.c.obj: ../jvm/java_native_io.c
+CMakeFiles/mini_jvm.dir/jvm/java_native_io.c.obj: ../jvm/java_native_io.h
 CMakeFiles/mini_jvm.dir/jvm/java_native_io.c.obj: ../jvm/java_native_std.h
 CMakeFiles/mini_jvm.dir/jvm/java_native_io.c.obj: ../jvm/jvm.h
 CMakeFiles/mini_jvm.dir/jvm/java_native_io.c.obj: ../utils/arraylist.h
@@ -107,22 +113,25 @@ CMakeFiles/mini_jvm.dir/jvm/java_native_io.c.obj: ../utils/hashtable.h
 CMakeFiles/mini_jvm.dir/jvm/java_native_io.c.obj: ../utils/pairlist.h
 CMakeFiles/mini_jvm.dir/jvm/java_native_io.c.obj: ../utils/utf8_string.h
 
-CMakeFiles/mini_jvm.dir/jvm/java_native_jdwp.c.obj: ../jvm/garbage.h
-CMakeFiles/mini_jvm.dir/jvm/java_native_jdwp.c.obj: ../jvm/global.h
-CMakeFiles/mini_jvm.dir/jvm/java_native_jdwp.c.obj: ../jvm/java_native_jdwp.c
-CMakeFiles/mini_jvm.dir/jvm/java_native_jdwp.c.obj: ../jvm/java_native_std.h
-CMakeFiles/mini_jvm.dir/jvm/java_native_jdwp.c.obj: ../jvm/jvm.h
-CMakeFiles/mini_jvm.dir/jvm/java_native_jdwp.c.obj: ../jvm/jvm_util.h
-CMakeFiles/mini_jvm.dir/jvm/java_native_jdwp.c.obj: ../utils/arraylist.h
-CMakeFiles/mini_jvm.dir/jvm/java_native_jdwp.c.obj: ../utils/hashset.h
-CMakeFiles/mini_jvm.dir/jvm/java_native_jdwp.c.obj: ../utils/hashtable.h
-CMakeFiles/mini_jvm.dir/jvm/java_native_jdwp.c.obj: ../utils/pairlist.h
-CMakeFiles/mini_jvm.dir/jvm/java_native_jdwp.c.obj: ../utils/utf8_string.h
+CMakeFiles/mini_jvm.dir/jvm/java_native_reflect.c.obj: ../jvm/garbage.h
+CMakeFiles/mini_jvm.dir/jvm/java_native_reflect.c.obj: ../jvm/global.h
+CMakeFiles/mini_jvm.dir/jvm/java_native_reflect.c.obj: ../jvm/java_native_reflect.c
+CMakeFiles/mini_jvm.dir/jvm/java_native_reflect.c.obj: ../jvm/java_native_reflect.h
+CMakeFiles/mini_jvm.dir/jvm/java_native_reflect.c.obj: ../jvm/java_native_std.h
+CMakeFiles/mini_jvm.dir/jvm/java_native_reflect.c.obj: ../jvm/jdwp.h
+CMakeFiles/mini_jvm.dir/jvm/java_native_reflect.c.obj: ../jvm/jvm.h
+CMakeFiles/mini_jvm.dir/jvm/java_native_reflect.c.obj: ../jvm/jvm_util.h
+CMakeFiles/mini_jvm.dir/jvm/java_native_reflect.c.obj: ../utils/arraylist.h
+CMakeFiles/mini_jvm.dir/jvm/java_native_reflect.c.obj: ../utils/hashset.h
+CMakeFiles/mini_jvm.dir/jvm/java_native_reflect.c.obj: ../utils/hashtable.h
+CMakeFiles/mini_jvm.dir/jvm/java_native_reflect.c.obj: ../utils/pairlist.h
+CMakeFiles/mini_jvm.dir/jvm/java_native_reflect.c.obj: ../utils/utf8_string.h
 
 CMakeFiles/mini_jvm.dir/jvm/java_native_std.c.obj: ../jvm/garbage.h
 CMakeFiles/mini_jvm.dir/jvm/java_native_std.c.obj: ../jvm/global.h
 CMakeFiles/mini_jvm.dir/jvm/java_native_std.c.obj: ../jvm/java_native_std.c
 CMakeFiles/mini_jvm.dir/jvm/java_native_std.c.obj: ../jvm/java_native_std.h
+CMakeFiles/mini_jvm.dir/jvm/java_native_std.c.obj: ../jvm/jdwp.h
 CMakeFiles/mini_jvm.dir/jvm/java_native_std.c.obj: ../jvm/jvm.h
 CMakeFiles/mini_jvm.dir/jvm/java_native_std.c.obj: ../jvm/jvm_util.h
 CMakeFiles/mini_jvm.dir/jvm/java_native_std.c.obj: ../utils/arraylist.h
@@ -131,9 +140,24 @@ CMakeFiles/mini_jvm.dir/jvm/java_native_std.c.obj: ../utils/hashtable.h
 CMakeFiles/mini_jvm.dir/jvm/java_native_std.c.obj: ../utils/pairlist.h
 CMakeFiles/mini_jvm.dir/jvm/java_native_std.c.obj: ../utils/utf8_string.h
 
+CMakeFiles/mini_jvm.dir/jvm/jdwp.c.obj: ../jvm/garbage.h
+CMakeFiles/mini_jvm.dir/jvm/jdwp.c.obj: ../jvm/global.h
+CMakeFiles/mini_jvm.dir/jvm/jdwp.c.obj: ../jvm/java_native_io.h
+CMakeFiles/mini_jvm.dir/jvm/jdwp.c.obj: ../jvm/java_native_reflect.h
+CMakeFiles/mini_jvm.dir/jvm/jdwp.c.obj: ../jvm/jdwp.c
+CMakeFiles/mini_jvm.dir/jvm/jdwp.c.obj: ../jvm/jdwp.h
+CMakeFiles/mini_jvm.dir/jvm/jdwp.c.obj: ../jvm/jvm.h
+CMakeFiles/mini_jvm.dir/jvm/jdwp.c.obj: ../jvm/jvm_util.h
+CMakeFiles/mini_jvm.dir/jvm/jdwp.c.obj: ../utils/arraylist.h
+CMakeFiles/mini_jvm.dir/jvm/jdwp.c.obj: ../utils/hashset.h
+CMakeFiles/mini_jvm.dir/jvm/jdwp.c.obj: ../utils/hashtable.h
+CMakeFiles/mini_jvm.dir/jvm/jdwp.c.obj: ../utils/pairlist.h
+CMakeFiles/mini_jvm.dir/jvm/jdwp.c.obj: ../utils/utf8_string.h
+
 CMakeFiles/mini_jvm.dir/jvm/jvm.c.obj: ../jvm/garbage.h
 CMakeFiles/mini_jvm.dir/jvm/jvm.c.obj: ../jvm/global.h
 CMakeFiles/mini_jvm.dir/jvm/jvm.c.obj: ../jvm/java_native_std.h
+CMakeFiles/mini_jvm.dir/jvm/jvm.c.obj: ../jvm/jdwp.h
 CMakeFiles/mini_jvm.dir/jvm/jvm.c.obj: ../jvm/jvm.c
 CMakeFiles/mini_jvm.dir/jvm/jvm.c.obj: ../jvm/jvm.h
 CMakeFiles/mini_jvm.dir/jvm/jvm.c.obj: ../jvm/jvm_util.h
@@ -145,7 +169,8 @@ CMakeFiles/mini_jvm.dir/jvm/jvm.c.obj: ../utils/utf8_string.h
 
 CMakeFiles/mini_jvm.dir/jvm/jvm_util.c.obj: ../jvm/garbage.h
 CMakeFiles/mini_jvm.dir/jvm/jvm_util.c.obj: ../jvm/global.h
-CMakeFiles/mini_jvm.dir/jvm/jvm_util.c.obj: ../jvm/java_native_jdwp.h
+CMakeFiles/mini_jvm.dir/jvm/jvm_util.c.obj: ../jvm/java_native_reflect.h
+CMakeFiles/mini_jvm.dir/jvm/jvm_util.c.obj: ../jvm/jdwp.h
 CMakeFiles/mini_jvm.dir/jvm/jvm_util.c.obj: ../jvm/jvm.h
 CMakeFiles/mini_jvm.dir/jvm/jvm_util.c.obj: ../jvm/jvm_util.c
 CMakeFiles/mini_jvm.dir/jvm/jvm_util.c.obj: ../jvm/jvm_util.h
@@ -156,6 +181,7 @@ CMakeFiles/mini_jvm.dir/jvm/jvm_util.c.obj: ../utils/pairlist.h
 CMakeFiles/mini_jvm.dir/jvm/jvm_util.c.obj: ../utils/utf8_string.h
 
 CMakeFiles/mini_jvm.dir/jvm/os_linux.c.obj: ../jvm/global.h
+CMakeFiles/mini_jvm.dir/jvm/os_linux.c.obj: ../jvm/jdwp.h
 CMakeFiles/mini_jvm.dir/jvm/os_linux.c.obj: ../jvm/jvm.h
 CMakeFiles/mini_jvm.dir/jvm/os_linux.c.obj: ../jvm/jvm_util.h
 CMakeFiles/mini_jvm.dir/jvm/os_linux.c.obj: ../jvm/os_linux.c
@@ -175,6 +201,7 @@ CMakeFiles/mini_jvm.dir/jvm/os_win.c.obj: ../utils/utf8_string.h
 
 CMakeFiles/mini_jvm.dir/jvm/runtime.c.obj: ../jvm/garbage.h
 CMakeFiles/mini_jvm.dir/jvm/runtime.c.obj: ../jvm/global.h
+CMakeFiles/mini_jvm.dir/jvm/runtime.c.obj: ../jvm/jdwp.h
 CMakeFiles/mini_jvm.dir/jvm/runtime.c.obj: ../jvm/jvm.h
 CMakeFiles/mini_jvm.dir/jvm/runtime.c.obj: ../jvm/jvm_util.h
 CMakeFiles/mini_jvm.dir/jvm/runtime.c.obj: ../jvm/runtime.c
@@ -186,6 +213,7 @@ CMakeFiles/mini_jvm.dir/jvm/runtime.c.obj: ../utils/utf8_string.h
 
 CMakeFiles/mini_jvm.dir/test.c.obj: ../jvm/garbage.h
 CMakeFiles/mini_jvm.dir/test.c.obj: ../jvm/global.h
+CMakeFiles/mini_jvm.dir/test.c.obj: ../jvm/jdwp.h
 CMakeFiles/mini_jvm.dir/test.c.obj: ../jvm/jvm.h
 CMakeFiles/mini_jvm.dir/test.c.obj: ../jvm/jvm_util.h
 CMakeFiles/mini_jvm.dir/test.c.obj: ../test.c

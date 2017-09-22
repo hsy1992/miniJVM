@@ -14,7 +14,7 @@ set(CMAKE_DEPENDS_CHECK_C
   "D:/githome/mini_jvm/mini_jvm/jvm/global.c" "D:/githome/mini_jvm/mini_jvm/cmake-build-debug/CMakeFiles/mini_jvm.dir/jvm/global.c.obj"
   "D:/githome/mini_jvm/mini_jvm/jvm/interpreter.c" "D:/githome/mini_jvm/mini_jvm/cmake-build-debug/CMakeFiles/mini_jvm.dir/jvm/interpreter.c.obj"
   "D:/githome/mini_jvm/mini_jvm/jvm/java_native_io.c" "D:/githome/mini_jvm/mini_jvm/cmake-build-debug/CMakeFiles/mini_jvm.dir/jvm/java_native_io.c.obj"
-  "D:/githome/mini_jvm/mini_jvm/jvm/java_native_jdwp.c" "D:/githome/mini_jvm/mini_jvm/cmake-build-debug/CMakeFiles/mini_jvm.dir/jvm/java_native_jdwp.c.obj"
+  "D:/githome/mini_jvm/mini_jvm/jvm/java_native_reflect.c" "D:/githome/mini_jvm/mini_jvm/cmake-build-debug/CMakeFiles/mini_jvm.dir/jvm/java_native_reflect.c.obj"
   "D:/githome/mini_jvm/mini_jvm/jvm/java_native_std.c" "D:/githome/mini_jvm/mini_jvm/cmake-build-debug/CMakeFiles/mini_jvm.dir/jvm/java_native_std.c.obj"
   "D:/githome/mini_jvm/mini_jvm/jvm/jdwp.c" "D:/githome/mini_jvm/mini_jvm/cmake-build-debug/CMakeFiles/mini_jvm.dir/jvm/jdwp.c.obj"
   "D:/githome/mini_jvm/mini_jvm/jvm/jvm.c" "D:/githome/mini_jvm/mini_jvm/cmake-build-debug/CMakeFiles/mini_jvm.dir/jvm/jvm.c.obj"

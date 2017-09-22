@@ -7,7 +7,7 @@
 #include "jvm.h"
 #include "jvm_util.h"
 #include "garbage.h"
-#include "java_native_jdwp.h"
+#include "java_native_reflect.h"
 #include "jdwp.h"
 
 //==================================================================================

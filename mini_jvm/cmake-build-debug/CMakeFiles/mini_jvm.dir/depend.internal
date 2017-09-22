@@ -5,6 +5,7 @@ CMakeFiles/mini_jvm.dir/jvm/class.c.obj
  D:/githome/mini_jvm/mini_jvm/jvm/class.c
  D:/githome/mini_jvm/mini_jvm/jvm/garbage.h
  D:/githome/mini_jvm/mini_jvm/jvm/global.h
+ D:/githome/mini_jvm/mini_jvm/jvm/jdwp.h
  D:/githome/mini_jvm/mini_jvm/jvm/jvm.h
  D:/githome/mini_jvm/mini_jvm/jvm/jvm_util.h
  D:/githome/mini_jvm/mini_jvm/utils/arraylist.h
@@ -16,6 +17,7 @@ CMakeFiles/mini_jvm.dir/jvm/class_loader.c.obj
  D:/githome/mini_jvm/mini_jvm/jvm/class_loader.c
  D:/githome/mini_jvm/mini_jvm/jvm/garbage.h
  D:/githome/mini_jvm/mini_jvm/jvm/global.h
+ D:/githome/mini_jvm/mini_jvm/jvm/jdwp.h
  D:/githome/mini_jvm/mini_jvm/jvm/jvm.h
  D:/githome/mini_jvm/mini_jvm/jvm/jvm_util.h
  D:/githome/mini_jvm/mini_jvm/utils/arraylist.h
@@ -27,6 +29,7 @@ CMakeFiles/mini_jvm.dir/jvm/class_loader_constant.c.obj
  D:/githome/mini_jvm/mini_jvm/jvm/class_loader_constant.c
  D:/githome/mini_jvm/mini_jvm/jvm/garbage.h
  D:/githome/mini_jvm/mini_jvm/jvm/global.h
+ D:/githome/mini_jvm/mini_jvm/jvm/jdwp.h
  D:/githome/mini_jvm/mini_jvm/jvm/jvm.h
  D:/githome/mini_jvm/mini_jvm/jvm/jvm_util.h
  D:/githome/mini_jvm/mini_jvm/utils/arraylist.h
@@ -68,6 +71,7 @@ CMakeFiles/mini_jvm.dir/jvm/garbage.c.obj
  D:/githome/mini_jvm/mini_jvm/jvm/garbage.c
  D:/githome/mini_jvm/mini_jvm/jvm/garbage.h
  D:/githome/mini_jvm/mini_jvm/jvm/global.h
+ D:/githome/mini_jvm/mini_jvm/jvm/jdwp.h
  D:/githome/mini_jvm/mini_jvm/jvm/jvm.h
  D:/githome/mini_jvm/mini_jvm/jvm/jvm_util.h
  D:/githome/mini_jvm/mini_jvm/utils/arraylist.h
@@ -87,8 +91,9 @@ CMakeFiles/mini_jvm.dir/jvm/interpreter.c.obj
  D:/githome/mini_jvm/mini_jvm/jvm/garbage.h
  D:/githome/mini_jvm/mini_jvm/jvm/global.h
  D:/githome/mini_jvm/mini_jvm/jvm/interpreter.c
- D:/githome/mini_jvm/mini_jvm/jvm/java_native_jdwp.h
+ D:/githome/mini_jvm/mini_jvm/jvm/java_native_reflect.h
  D:/githome/mini_jvm/mini_jvm/jvm/java_native_std.h
+ D:/githome/mini_jvm/mini_jvm/jvm/jdwp.h
  D:/githome/mini_jvm/mini_jvm/jvm/jvm.h
  D:/githome/mini_jvm/mini_jvm/jvm/jvm_util.h
  D:/githome/mini_jvm/mini_jvm/utils/arraylist.h
@@ -100,6 +105,7 @@ CMakeFiles/mini_jvm.dir/jvm/java_native_io.c.obj
  D:/githome/mini_jvm/mini_jvm/jvm/garbage.h
  D:/githome/mini_jvm/mini_jvm/jvm/global.h
  D:/githome/mini_jvm/mini_jvm/jvm/java_native_io.c
+ D:/githome/mini_jvm/mini_jvm/jvm/java_native_io.h
  D:/githome/mini_jvm/mini_jvm/jvm/java_native_std.h
  D:/githome/mini_jvm/mini_jvm/jvm/jvm.h
  D:/githome/mini_jvm/mini_jvm/utils/arraylist.h
@@ -107,11 +113,13 @@ CMakeFiles/mini_jvm.dir/jvm/java_native_io.c.obj
  D:/githome/mini_jvm/mini_jvm/utils/hashtable.h
  D:/githome/mini_jvm/mini_jvm/utils/pairlist.h
  D:/githome/mini_jvm/mini_jvm/utils/utf8_string.h
-CMakeFiles/mini_jvm.dir/jvm/java_native_jdwp.c.obj
+CMakeFiles/mini_jvm.dir/jvm/java_native_reflect.c.obj
  D:/githome/mini_jvm/mini_jvm/jvm/garbage.h
  D:/githome/mini_jvm/mini_jvm/jvm/global.h
- D:/githome/mini_jvm/mini_jvm/jvm/java_native_jdwp.c
+ D:/githome/mini_jvm/mini_jvm/jvm/java_native_reflect.c
+ D:/githome/mini_jvm/mini_jvm/jvm/java_native_reflect.h
  D:/githome/mini_jvm/mini_jvm/jvm/java_native_std.h
+ D:/githome/mini_jvm/mini_jvm/jvm/jdwp.h
  D:/githome/mini_jvm/mini_jvm/jvm/jvm.h
  D:/githome/mini_jvm/mini_jvm/jvm/jvm_util.h
  D:/githome/mini_jvm/mini_jvm/utils/arraylist.h
@@ -124,6 +132,21 @@ CMakeFiles/mini_jvm.dir/jvm/java_native_std.c.obj
  D:/githome/mini_jvm/mini_jvm/jvm/global.h
  D:/githome/mini_jvm/mini_jvm/jvm/java_native_std.c
  D:/githome/mini_jvm/mini_jvm/jvm/java_native_std.h
+ D:/githome/mini_jvm/mini_jvm/jvm/jdwp.h
+ D:/githome/mini_jvm/mini_jvm/jvm/jvm.h
+ D:/githome/mini_jvm/mini_jvm/jvm/jvm_util.h
+ D:/githome/mini_jvm/mini_jvm/utils/arraylist.h
+ D:/githome/mini_jvm/mini_jvm/utils/hashset.h
+ D:/githome/mini_jvm/mini_jvm/utils/hashtable.h
+ D:/githome/mini_jvm/mini_jvm/utils/pairlist.h
+ D:/githome/mini_jvm/mini_jvm/utils/utf8_string.h
+CMakeFiles/mini_jvm.dir/jvm/jdwp.c.obj
+ D:/githome/mini_jvm/mini_jvm/jvm/garbage.h
+ D:/githome/mini_jvm/mini_jvm/jvm/global.h
+ D:/githome/mini_jvm/mini_jvm/jvm/java_native_io.h
+ D:/githome/mini_jvm/mini_jvm/jvm/java_native_reflect.h
+ D:/githome/mini_jvm/mini_jvm/jvm/jdwp.c
+ D:/githome/mini_jvm/mini_jvm/jvm/jdwp.h
  D:/githome/mini_jvm/mini_jvm/jvm/jvm.h
  D:/githome/mini_jvm/mini_jvm/jvm/jvm_util.h
  D:/githome/mini_jvm/mini_jvm/utils/arraylist.h
@@ -135,6 +158,7 @@ CMakeFiles/mini_jvm.dir/jvm/jvm.c.obj
  D:/githome/mini_jvm/mini_jvm/jvm/garbage.h
  D:/githome/mini_jvm/mini_jvm/jvm/global.h
  D:/githome/mini_jvm/mini_jvm/jvm/java_native_std.h
+ D:/githome/mini_jvm/mini_jvm/jvm/jdwp.h
  D:/githome/mini_jvm/mini_jvm/jvm/jvm.c
  D:/githome/mini_jvm/mini_jvm/jvm/jvm.h
  D:/githome/mini_jvm/mini_jvm/jvm/jvm_util.h
@@ -146,7 +170,8 @@ CMakeFiles/mini_jvm.dir/jvm/jvm.c.obj
 CMakeFiles/mini_jvm.dir/jvm/jvm_util.c.obj
  D:/githome/mini_jvm/mini_jvm/jvm/garbage.h
  D:/githome/mini_jvm/mini_jvm/jvm/global.h
- D:/githome/mini_jvm/mini_jvm/jvm/java_native_jdwp.h
+ D:/githome/mini_jvm/mini_jvm/jvm/java_native_reflect.h
+ D:/githome/mini_jvm/mini_jvm/jvm/jdwp.h
  D:/githome/mini_jvm/mini_jvm/jvm/jvm.h
  D:/githome/mini_jvm/mini_jvm/jvm/jvm_util.c
  D:/githome/mini_jvm/mini_jvm/jvm/jvm_util.h
@@ -157,6 +182,7 @@ CMakeFiles/mini_jvm.dir/jvm/jvm_util.c.obj
  D:/githome/mini_jvm/mini_jvm/utils/utf8_string.h
 CMakeFiles/mini_jvm.dir/jvm/os_linux.c.obj
  D:/githome/mini_jvm/mini_jvm/jvm/global.h
+ D:/githome/mini_jvm/mini_jvm/jvm/jdwp.h
  D:/githome/mini_jvm/mini_jvm/jvm/jvm.h
  D:/githome/mini_jvm/mini_jvm/jvm/jvm_util.h
  D:/githome/mini_jvm/mini_jvm/jvm/os_linux.c
@@ -176,6 +202,7 @@ CMakeFiles/mini_jvm.dir/jvm/os_win.c.obj
 CMakeFiles/mini_jvm.dir/jvm/runtime.c.obj
  D:/githome/mini_jvm/mini_jvm/jvm/garbage.h
  D:/githome/mini_jvm/mini_jvm/jvm/global.h
+ D:/githome/mini_jvm/mini_jvm/jvm/jdwp.h
  D:/githome/mini_jvm/mini_jvm/jvm/jvm.h
  D:/githome/mini_jvm/mini_jvm/jvm/jvm_util.h
  D:/githome/mini_jvm/mini_jvm/jvm/runtime.c
@@ -187,6 +214,7 @@ CMakeFiles/mini_jvm.dir/jvm/runtime.c.obj
 CMakeFiles/mini_jvm.dir/test.c.obj
  D:/githome/mini_jvm/mini_jvm/jvm/garbage.h
  D:/githome/mini_jvm/mini_jvm/jvm/global.h
+ D:/githome/mini_jvm/mini_jvm/jvm/jdwp.h
  D:/githome/mini_jvm/mini_jvm/jvm/jvm.h
  D:/githome/mini_jvm/mini_jvm/jvm/jvm_util.h
  D:/githome/mini_jvm/mini_jvm/test.c
