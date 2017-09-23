@@ -181,22 +181,22 @@ public class Foo1 {
     }
 
     void t7() {
-        Thread t = new Thread(new Runnable() {
-            @Override
-            public void run() {
-                System.out.println("thread here.");
-                int j = 0;
-                while (true) {
-                    try {
-                        Thread.sleep(1000);
-                        System.out.println(this + "j=" + j++);
-
-                    } catch (InterruptedException ex) {
-                    }
-                }
-            }
-        });
-        t.start();
+//        Thread t = new Thread(new Runnable() {
+//            @Override
+//            public void run() {
+//                System.out.println("thread here.");
+//                int j = 0;
+//                while (true) {
+//                    try {
+//                        Thread.sleep(1000);
+//                        System.out.println(this + " j=" + j++);
+//
+//                    } catch (InterruptedException ex) {
+//                    }
+//                }
+//            }
+//        });
+//        t.start();
         //
         int i = 0;
         while (i++ < 10) {
@@ -536,24 +536,24 @@ public class Foo1 {
     public static void main() {
         Foo1 f = new Foo1();
 
-//        f.t1();
-//        f.t2();
-//        f.t3();
-//        f.t4();
-//        f.t5();
-//        f.t6();
-//        f.t7();
-//        f.t8();
-//        f.t9();
-//        f.t10();
-//        f.t11();
-//        f.t12();
-//        f.t13();
-//        f.t14();
-//        f.t15();
-//        f.t16();
-//        f.t17();
-//        f.t18();
+        f.t1();
+        f.t2();
+        f.t3();
+        f.t4();
+        f.t5();
+        f.t6();
+        f.t7();
+        f.t8();
+        f.t9();
+        f.t10();
+        f.t11();
+        f.t12();
+        f.t13();
+        f.t14();
+        f.t15();
+        f.t16();
+        f.t17();
+        f.t18();
         f.t19();
         System.gc();
         System.gc();

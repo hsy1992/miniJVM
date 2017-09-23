@@ -179,21 +179,22 @@ void peek_entry(StackFrame *stack, StackEntry *entry, int index) {
 
 
 
-void runtime_create(Runtime *runtime) {
+void runtime_init(Runtime *runtime) {
     memset(runtime, 0, sizeof(Runtime));
     runtime->stack = stack_init(STACK_LENGHT);
     runtime->threadInfo = jvm_alloc(sizeof(JavaThreadInfo));
 //    runtime->threadInfo->hold_locks=hashset_create(0);
     runtime->threadInfo->top_runtime = runtime;
+    recycle_bin_init(&runtime->threadInfo->reclcle_bin);
 }
 
 
-
-void runtime_destory(Runtime *runtime) {
+void runtime_free(Runtime *runtime) {
 //    hashset_destory(runtime->threadInfo->hold_locks);
-
+    recycle_bin_free(&runtime->threadInfo->reclcle_bin);
     jvm_free(runtime->threadInfo);
     stack_destory(runtime->stack);
+
 }
 
 

@@ -47,7 +47,7 @@ void *jdwp_thread_listener(void *para) {
 void *jdwp_thread_dispacher(void *para) {
     JdwpServer *srv = (JdwpServer *) para;
     Runtime runtime;
-    runtime_create(&runtime);
+    runtime_init(&runtime);
     srv->runtime = &runtime;
     s32 i;
     while (!srv->exit) {
@@ -61,7 +61,7 @@ void *jdwp_thread_dispacher(void *para) {
         }
         threadSleep(20);
     }
-    runtime_destory(&runtime);
+    runtime_free(&runtime);
     return srv;
 }
 

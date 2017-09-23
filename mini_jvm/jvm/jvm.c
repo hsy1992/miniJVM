@@ -76,7 +76,8 @@ s32 execute(c8 *p_classpath, c8 *p_mainclass, s32 argc, c8 **argv) {
 
     //创建运行时栈
     Runtime runtime;
-    runtime_create(&runtime);
+    runtime_init(&runtime);
+    main_runtime = &runtime;
 
     //开始装载类
     Utf8String *classpath = utf8_create_c(p_classpath);
@@ -149,7 +150,7 @@ s32 execute(c8 *p_classpath, c8 *p_mainclass, s32 argc, c8 **argv) {
                 Utf8String *utfs = utf8_create_c(argv[i]);
                 Instance *jstr = jstring_create(utfs, &runtime);
                 l2d.r = jstr;
-                jarray_set_field(arr, i, &l2d, bytes);
+                jarray_set_field(arr, i, &l2d, bytes, &runtime);
                 utf8_destory(utfs);
             }
             push_ref(runtime.stack, arr);
@@ -186,11 +187,11 @@ s32 execute(c8 *p_classpath, c8 *p_mainclass, s32 argc, c8 **argv) {
     utf8_destory(classpath);
 
     utf8_destory(mainclass);
-    array_classes_destory();
+    array_classes_destory(&runtime);
     destoryAllClasses(classes);
     utf8_destory(JVM_CLASS->name);
-    class_destory(JVM_CLASS);
-    runtime_destory(&runtime);
+    class_destory(JVM_CLASS, &runtime);
+    runtime_free(&runtime);
     close_log();
     jvm_printf("over\n");
     return ret;

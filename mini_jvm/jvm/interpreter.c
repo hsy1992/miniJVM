@@ -1573,7 +1573,7 @@ static inline s32 op_xastore_impl(u8 **opCode, Runtime *runtime, u8 isReference)
             l2d.i2l.i1 = entry_2_int(&entry);
         }
     }
-    jarray_set_field(ins, index, &l2d, bytes);
+    jarray_set_field(ins, index, &l2d, bytes, runtime);
 #if _JVM_DEBUG > 5
     jvm_printf("(icbfald)astore: save array[%llx]{%d bytes}.(%d)=%d:%llx:%lf)\n",
                (s64) (long) ins, bytes, index,
@@ -1831,7 +1831,7 @@ static inline s32 op_ldc_impl(u8 **opCode, Runtime *runtime, s32 index) {
             ConstantUTF8 *cutf = find_constant_utf8(clazz, find_constant_stringref(clazz, index)->stringIndex);
             if (!cutf->jstr) {//缓存字符串
                 Instance *jstr = jstring_create(cutf->utfstr, runtime);
-                garbage_refer(jstr, clazz);
+                garbage_refer(jstr, clazz, runtime);
                 cutf->jstr = jstr;
             }
             push_ref(stack, (__refer) cutf->jstr);
@@ -1945,16 +1945,16 @@ static inline s32 op_putfield_impl(u8 **opCode, Runtime *runtime, s32 isStatic) 
         __refer ref = getFieldRefer(ptr);
         if (ref) { //把老索引关闭
             if (isStatic) {
-                garbage_derefer(ref, fi->_this_class);
+                garbage_derefer(ref, fi->_this_class, runtime);
             } else {
-                garbage_derefer(ref, ins);
+                garbage_derefer(ref, ins, runtime);
             }
         }
         __refer newins = entry_2_refer(&entry);
         if (isStatic) { //建立新索引
-            garbage_refer(newins, fi->_this_class);
+            garbage_refer(newins, fi->_this_class, runtime);
         } else {
-            garbage_refer(newins, ins);
+            garbage_refer(newins, ins, runtime);
         }
         setFieldRefer(ptr, newins);
     } else {
@@ -2092,7 +2092,7 @@ s32 op_new(u8 **opCode, Runtime *runtime) {
     Instance *ins = NULL;
     if (other) {
         ins = instance_create(other);
-        garbage_refer(ins, NULL);
+        garbage_refer(ins, NULL, runtime);
     }
     push_ref(stack, (__refer) ins);
 #if _JVM_DEBUG > 5
@@ -2111,7 +2111,7 @@ static inline s32 op_newarray_impl(Runtime *runtime, s32 count, s32 typeIdx, Utf
 #endif
     if (arr) {
         push_ref(stack, (__refer) arr);
-        garbage_refer(arr, NULL);
+        garbage_refer(arr, NULL, runtime);
     } else {
         Instance *exception = exception_create(JVM_EXCEPTION_NULLPOINTER, runtime);
         push_ref(stack, (__refer) exception);
@@ -2157,9 +2157,9 @@ s32 op_multianewarray(u8 **opCode, Runtime *runtime) {
     for (i = 0; i < count; i++)
         arraylist_append(dim, (ArrayListValue) (long) pop_int(stack));
 
-    Instance *arr = jarray_multi_create(dim, desc, 0);
+    Instance *arr = jarray_multi_create(dim, desc, 0, runtime);
     arraylist_destory(dim);
-    garbage_refer(arr, NULL);
+    garbage_refer(arr, NULL, runtime);
 #if _JVM_DEBUG > 5
     jvm_printf("multianewarray  [%llx] type:%s , count:%d  \n", (s64) (long) arr, utf8_cstr(desc), count);
 #endif
