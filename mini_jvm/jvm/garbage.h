@@ -16,7 +16,7 @@ pthread_mutex_t _garbage_lock; //重入锁
 extern s32 _garbage_thread_stop;
 extern s32 _garbage_thread_pause;
 pthread_cond_t _garbageCond;
-extern ArrayList* _garbage_refer_set_pool;
+extern ArrayList *_garbage_refer_set_pool;
 extern s64 _garbage_count;
 
 
@@ -42,6 +42,8 @@ void *jvm_realloc(void *pPtr, u32 size);
 
 s32 garbage_collector_create();
 
+void garbage_collector_destory();
+
 s32 garbage_collect();
 
 void dump_refer();
@@ -54,10 +56,10 @@ void garbage_derefer_all(void *parentPtr);
 
 s32 garbage_is_refer_by(__refer sonPtr, __refer parentPtr);
 
-void garbage_collect_memobj(__refer k);
+void garbage_destory_memobj(__refer k);
 
-s32 garbage_mark_all_thread() ;
+s32 garbage_mark_by_threads();
 
-s32 garbage_mark_refered_obj(Runtime *pruntime) ;
+s32 garbage_mark_refered_obj(Runtime *pruntime);
 
 #endif //_GARBAGE_H
