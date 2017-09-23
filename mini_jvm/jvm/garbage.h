@@ -19,6 +19,11 @@ pthread_cond_t _garbageCond;
 extern ArrayList *_garbage_refer_set_pool;
 extern s64 _garbage_count;
 
+//每个线程一个回收站，线程多了就是灾难
+typedef struct _RecycleBin{
+    Hashtable *son_2_father; //key=mem_ptr, value=我被别人引用的列表
+    Hashtable *father_2_son; //key=mem_ptr, value=别人被我引用的列表
+}RecycleBin;
 
 void *collect_thread_run(void *para);
 

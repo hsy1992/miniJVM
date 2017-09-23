@@ -258,7 +258,6 @@ s32 garbage_mark_by_threads() {
 
 
 s32 garbage_mark_refered_obj(Runtime *pruntime) {
-    garbage_thread_lock();
     s32 i;
     StackEntry entry;
     Runtime *runtime = pruntime;
@@ -284,7 +283,6 @@ s32 garbage_mark_refered_obj(Runtime *pruntime) {
         runtime = runtime->son;
     }
     //jvm_printf("[%llx] notified\n", (s64) (long) pruntime->threadInfo->jthread);
-    garbage_thread_unlock();
     return 0;
 }
 
@@ -403,6 +401,7 @@ void *garbage_refer(__refer sonPtr, __refer parentPtr) {
     if (sonPtr == parentPtr) {
         return sonPtr;
     }
+    garbage_thread_lock();
 #if _JVM_DEBUG_GARBAGE_DUMP
     Utf8String *pus = utf8_create();
     Utf8String *sus = utf8_create();
@@ -413,7 +412,6 @@ void *garbage_refer(__refer sonPtr, __refer parentPtr) {
     utf8_destory(pus);
     utf8_destory(sus);
 #endif
-    garbage_thread_lock();
     //放入子引父
     Hashset *set = (Hashset *) hashtable_get(son_2_father, sonPtr);
     if (set == HASH_NULL) {
@@ -435,6 +433,7 @@ void *garbage_refer(__refer sonPtr, __refer parentPtr) {
 }
 
 void garbage_derefer(__refer sonPtr, __refer parentPtr) {
+    garbage_thread_lock();
 
 #if _JVM_DEBUG_GARBAGE_DUMP
     Utf8String *pus = utf8_create();
@@ -446,7 +445,6 @@ void garbage_derefer(__refer sonPtr, __refer parentPtr) {
     utf8_destory(sus);
     utf8_destory(pus);
 #endif
-    garbage_thread_lock();
     Hashset *set;
     if (sonPtr && parentPtr) {
         //移除子引父
@@ -466,13 +464,13 @@ void garbage_derefer(__refer sonPtr, __refer parentPtr) {
 }
 
 void garbage_derefer_all(__refer parentPtr) {
+    garbage_thread_lock();
 #if _JVM_DEBUG_GARBAGE_DUMP
     Utf8String *us = utf8_create();
     getMemBlockName(parentPtr, us);
     jvm_printf("X:  %s[%x]\n", utf8_cstr(us), parentPtr);
     utf8_destory(us);
 #endif
-    garbage_thread_lock();
     Hashset *set;
     //移除父引用的所有子
     set = hashtable_get(father_2_son, parentPtr);

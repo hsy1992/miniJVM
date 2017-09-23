@@ -84,8 +84,10 @@ typedef struct _JavaThreadInfo {
     Instance *jthread;
     Runtime *top_runtime;
     Hashset *hold_locks;
-    volatile u8 thread_status;
-    volatile s32 suspend_count;//for jdwp suspend ,>0 suspend, ==0 resume
+    u8 volatile thread_status;
+    s32 volatile suspend_count;//for jdwp suspend ,>0 suspend, ==0 resume
+    u8 volatile is_suspend;
+
     pthread_t pthread;
     //调试器相关字段
     JdwpStep jdwp_step;
@@ -107,19 +109,19 @@ void jthread_set_threadq_value(Instance *ins, void *val);
 
 __refer jthread_get_name_value(Instance *ins);
 
-JavaThreadLock *jthreadlock_create();
+void jthreadlock_create(MemoryBlock *mb);
 
 void jthreadlock_destory(JavaThreadLock *jtl);
 
-s32 jthread_lock(MemoryBlock *ins, Runtime *runtime);
+s32 jthread_lock(MemoryBlock *mb, Runtime *runtime);
 
-s32 jthread_unlock(MemoryBlock *ins, Runtime *runtime);
+s32 jthread_unlock(MemoryBlock *mb, Runtime *runtime);
 
-s32 jthread_notify(MemoryBlock *ins, Runtime *runtime);
+s32 jthread_notify(MemoryBlock *mb, Runtime *runtime);
 
-s32 jthread_notifyAll(MemoryBlock *ins, Runtime *runtime);
+s32 jthread_notifyAll(MemoryBlock *mb, Runtime *runtime);
 
-s32 jthread_waitTime(MemoryBlock *ins, Runtime *runtime, long waitms);
+s32 jthread_waitTime(MemoryBlock *mb, Runtime *runtime, long waitms);
 
 //s32 jthread_flag_resume(Runtime *runtime);
 //

@@ -237,7 +237,7 @@ void array_classes_destory() {
     hashtable_iterate(array_classes, &hti);
     for (; hashtable_iter_has_more(&hti);) {
         Utf8String *k = hashtable_iter_next_key(&hti);
-        Class *clazz = classes_get(k);
+        Class *clazz = hashtable_get(array_classes, k);
         utf8_destory(clazz->name);
         class_destory(clazz);
     }
@@ -513,13 +513,19 @@ void jthread_set_threadq_value(Instance *ins, void *val) {
     setFieldRefer(ptr, (__refer) val);
 }
 
-JavaThreadLock *jthreadlock_create() {
-    JavaThreadLock *jtl = jvm_alloc(sizeof(JavaThreadLock));
-    pthread_cond_init(&jtl->thread_cond, NULL);
-    pthread_mutexattr_init(&jtl->lock_attr);
-    pthread_mutexattr_settype(&jtl->lock_attr, PTHREAD_MUTEX_RECURSIVE);
-    pthread_mutex_init(&jtl->mutex_lock, &jtl->lock_attr);
-    return jtl;
+void jthreadlock_create(MemoryBlock *mb) {
+    if (!mb->thread_lock) {
+        JavaThreadLock *jtl = jvm_alloc(sizeof(JavaThreadLock));
+        pthread_cond_init(&jtl->thread_cond, NULL);
+        pthread_mutexattr_init(&jtl->lock_attr);
+        pthread_mutexattr_settype(&jtl->lock_attr, PTHREAD_MUTEX_RECURSIVE);
+        pthread_mutex_init(&jtl->mutex_lock, &jtl->lock_attr);
+
+        mb->thread_lock = jtl;
+        if (mb->thread_lock != jtl) {//recheck
+            jthreadlock_destory(jtl);
+        }
+    }
 }
 
 void jthreadlock_destory(JavaThreadLock *jtl) {
@@ -533,37 +539,29 @@ void jthreadlock_destory(JavaThreadLock *jtl) {
     }
 }
 
-s32 jthread_lock(MemoryBlock *ins, Runtime *runtime) { //可能会重入，同一个线程多次锁同一对象
-    if (ins == NULL)return -1;
-    if (!ins->thread_lock) {
-        ins->thread_lock = jthreadlock_create();
+s32 jthread_lock(MemoryBlock *mb, Runtime *runtime) { //可能会重入，同一个线程多次锁同一对象
+    if (mb == NULL)return -1;
+    if (!mb->thread_lock) {
+        jthreadlock_create(mb);
     }
-    JavaThreadLock *jtl = ins->thread_lock;
-    if (jtl->jthread_holder == NULL) {//没人锁
-        pthread_mutex_lock(&jtl->mutex_lock);
-//        hashset_put(runtime->threadInfo->hold_locks, ins);
-        jtl->jthread_holder = runtime->threadInfo->jthread;
-        jtl->hold_count++;
-    } else if (jtl->jthread_holder == runtime->threadInfo->jthread) { //重入
-        jtl->hold_count++;
-    } else {
-        pthread_mutex_lock(&jtl->mutex_lock);
-//        hashset_put(runtime->threadInfo->hold_locks, ins);
-        jtl->jthread_holder = runtime->threadInfo->jthread;
-        jtl->hold_count++;
-    }
+    JavaThreadLock *jtl = mb->thread_lock;
+
+    pthread_mutex_lock(&jtl->mutex_lock);
+    jtl->jthread_holder = runtime->threadInfo->jthread;
+    jtl->hold_count++;
+
 #if _JVM_DEBUG > 5
     jvm_printf("  lock: %llx   lock holder: %llx, count: %d \n", (s64) (long) (runtime->threadInfo->jthread),
            (s64) (long) (jtl->jthread_holder), jtl->hold_count);
 #endif
 }
 
-s32 jthread_unlock(MemoryBlock *ins, Runtime *runtime) {
-    if (ins == NULL)return -1;
-    if (!ins->thread_lock) {
-        ins->thread_lock = jthreadlock_create();
+s32 jthread_unlock(MemoryBlock *mb, Runtime *runtime) {
+    if (mb == NULL)return -1;
+    if (!mb->thread_lock) {
+        jthreadlock_create(mb);
     }
-    JavaThreadLock *jtl = ins->thread_lock;
+    JavaThreadLock *jtl = mb->thread_lock;
     if (jtl->jthread_holder == runtime->threadInfo->jthread) {
         jtl->hold_count--;
         if (jtl->hold_count == 0) {//must change holder first, and unlock later
@@ -579,21 +577,21 @@ s32 jthread_unlock(MemoryBlock *ins, Runtime *runtime) {
 #endif
 }
 
-s32 jthread_notify(MemoryBlock *ins, Runtime *runtime) {
-    if (ins == NULL)return -1;
-    if (!ins->thread_lock) {
-        ins->thread_lock = jthreadlock_create();
+s32 jthread_notify(MemoryBlock *mb, Runtime *runtime) {
+    if (mb == NULL)return -1;
+    if (!mb->thread_lock) {
+        jthreadlock_create(mb);
     }
-    pthread_cond_signal(&ins->thread_lock->thread_cond);
+    pthread_cond_signal(&mb->thread_lock->thread_cond);
     return 0;
 }
 
-s32 jthread_notifyAll(MemoryBlock *ins, Runtime *runtime) {
-    if (ins == NULL)return -1;
-    if (!ins->thread_lock) {
-        ins->thread_lock = jthreadlock_create();
+s32 jthread_notifyAll(MemoryBlock *mb, Runtime *runtime) {
+    if (mb == NULL)return -1;
+    if (!mb->thread_lock) {
+        jthreadlock_create(mb);
     }
-    pthread_cond_broadcast(&ins->thread_lock->thread_cond);
+    pthread_cond_broadcast(&mb->thread_lock->thread_cond);
     return 0;
 }
 
@@ -610,16 +608,16 @@ s32 jthread_resume(Runtime *runtime) {
     if (runtime->threadInfo->suspend_count > 0)runtime->threadInfo->suspend_count--;
 }
 
-s32 jthread_waitTime(MemoryBlock *ins, Runtime *runtime, long waitms) {
-    if (ins == NULL)return -1;
-    if (!ins->thread_lock) {
-        ins->thread_lock = jthreadlock_create();
+s32 jthread_waitTime(MemoryBlock *mb, Runtime *runtime, long waitms) {
+    if (mb == NULL)return -1;
+    if (!mb->thread_lock) {
+        jthreadlock_create(mb);
     }
     struct timespec t;
     t.tv_sec = waitms / 1000;
     t.tv_nsec = (waitms % 1000) * 1000000;
     runtime->threadInfo->thread_status = THREAD_STATUS_WAIT;
-    pthread_cond_timedwait(&ins->thread_lock->thread_cond, &ins->thread_lock->mutex_lock, &t);
+    pthread_cond_timedwait(&mb->thread_lock->thread_cond, &mb->thread_lock->mutex_lock, &t);
     runtime->threadInfo->thread_status = THREAD_STATUS_RUNNING;
     return 0;
 }

@@ -3113,7 +3113,7 @@ s32 synchronized_lock_method(MethodInfo *method, Runtime *runtime) {
         if (method->access_flags & ACC_STATIC) {
             jthread_lock((MemoryBlock *) runtime->clazz, runtime);
         } else {
-            jthread_lock(&((Instance *) runtime->localVariables->refer)->mb, runtime);
+            jthread_lock(&((Instance *) runtime->localVariables[0].refer)->mb, runtime);
         }
     }
 }
@@ -3124,7 +3124,7 @@ s32 synchronized_unlock_method(MethodInfo *method, Runtime *runtime) {
         if (method->access_flags & ACC_STATIC) {
             jthread_unlock(&runtime->clazz->mb, runtime);
         } else {
-            jthread_unlock(&((Instance *) runtime->localVariables->refer)->mb, runtime);
+            jthread_unlock(&((Instance *) runtime->localVariables[0].refer)->mb, runtime);
         }
     }
 }
@@ -3215,8 +3215,12 @@ s32 execute_method(MethodInfo *method, Runtime *pruntime, Class *clazz) {
                     }
                 }
                 //process thread suspend
-                while (runtime.threadInfo->suspend_count) {
-                    threadSleep(20);
+                if (runtime.threadInfo->suspend_count) {
+                    runtime.threadInfo->is_suspend = 1;
+                    while (runtime.threadInfo->suspend_count) {
+                        threadSleep(10);
+                    }
+                    runtime.threadInfo->is_suspend = 0;
                 }
                 InstructFunc func = find_instruct_func(runtime.pc[0]);
                 if (func != 0) {

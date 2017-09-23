@@ -28,7 +28,7 @@ Class *class_create() {
 }
 
 void _INIT_CLASS(Class *_this) {
-    _this->mb.thread_lock = jthreadlock_create();
+    jthreadlock_create(&_this->mb);
 }
 
 s32 class_destory(Class *clazz) {

@@ -16,9 +16,9 @@
 
 //=======================  micro define  =============================
 #define _JVM_DEBUG 0
-#define _JVM_DEBUG_PRINT_FILE 01
+#define _JVM_DEBUG_PRINT_FILE 0
 #define _JVM_DEBUG_BYTECODE_DUMP 0
-#define _JVM_DEBUG_GARBAGE_DUMP 01
+#define _JVM_DEBUG_GARBAGE_DUMP 0
 #define _JVM_DEBUG_PROFILE 0
 
 #ifndef LINUX
@@ -349,7 +349,7 @@ extern s64 MAX_HEAP_SIZE;
 extern s64 heap_size; //当前已经分配的内存总数
 extern Instance *main_thread;
 
-extern volatile u8 java_debug;
+extern  u8 volatile java_debug;
 
 extern u8 JDWP_BREAK_POINT;
 
@@ -365,7 +365,7 @@ typedef struct _MemoryBlock {
     u8 type;//type of array or object runtime,class
     u8 garbage_mark;
     Class *clazz;
-    JavaThreadLock *thread_lock;
+    JavaThreadLock *volatile thread_lock;
 } MemoryBlock;
 //======================= class file =============================
 
