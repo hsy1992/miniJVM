@@ -64,11 +64,11 @@ s32 javax_mini_reflect_vm_RefNative_getClasses(Runtime *runtime, Class *clazz) {
     for (; hashtable_iter_has_more(&hti);) {
         Utf8String *k = hashtable_iter_next_key(&hti);
         l2d.r = classes_get(k);
-        jarray_set_field(jarr, i, &l2d, bytes, runtime);
+        jarray_set_field(jarr, i, &l2d, bytes);
         i++;
     }
     push_ref(runtime->stack, jarr);//先放入栈，再关联回收器，防止多线程回收
-    garbage_refer(jarr, NULL, runtime);
+    garbage_refer(jarr, NULL);
 
 #if _JVM_DEBUG > 5
     jvm_printf("javax_mini_reflect_vm_RefNative_getClasses\n");
@@ -279,10 +279,10 @@ s32 javax_mini_reflect_vm_RefNative_getThreads(Runtime *runtime, Class *clazz) {
     for (i = 0; i < thread_list->length; i++) {
         Runtime *r = (Runtime *) arraylist_get_value(thread_list, i);
         l2d.r = r->threadInfo->jthread;
-        jarray_set_field(jarr, i, &l2d, bytes, runtime);
+        jarray_set_field(jarr, i, &l2d, bytes);
     }
     push_ref(runtime->stack, jarr);//先放入栈，再关联回收器，防止多线程回收
-    garbage_refer(jarr, NULL, runtime);
+    garbage_refer(jarr, NULL);
 
 #if _JVM_DEBUG > 5
     jvm_printf("javax_mini_reflect_vm_RefNative_getThreads\n");
@@ -401,7 +401,7 @@ s32 javax_mini_reflect_Reference_mapReference(Runtime *runtime, Class *clazz) {
         ptr = getFieldPtr_byName_c(ins, JDWP_CLASS_REFERENCE, "className", "Ljava/lang/String;");
         Instance *clsName = jstring_create(target->name, runtime);
         if (ptr)setFieldRefer(ptr, clsName);
-        garbage_refer(clsName, ins, runtime);
+        garbage_refer(clsName, ins);
         //
         ptr = getFieldPtr_byName_c(ins, JDWP_CLASS_REFERENCE, "superclass", "J");
         if (ptr)
@@ -419,7 +419,7 @@ s32 javax_mini_reflect_Reference_mapReference(Runtime *runtime, Class *clazz) {
         ptr = getFieldPtr_byName_c(ins, JDWP_CLASS_REFERENCE, "source", "Ljava/lang/String;");
         Instance *source = jstring_create(target->source, runtime);
         if (ptr)setFieldRefer(ptr, source);
-        garbage_refer(source, ins, runtime);
+        garbage_refer(source, ins);
         //
         s32 i;
         {
@@ -427,10 +427,10 @@ s32 javax_mini_reflect_Reference_mapReference(Runtime *runtime, Class *clazz) {
             Instance *jarr = jarray_create(target->fieldPool.field_used, DATATYPE_LONG, NULL);
             for (i = 0; i < target->fieldPool.field_used; i++) {
                 l2d.l = (u64) (long) &target->fieldPool.field[i];
-                jarray_set_field(jarr, i, &l2d, data_type_bytes[DATATYPE_LONG], runtime);
+                jarray_set_field(jarr, i, &l2d, data_type_bytes[DATATYPE_LONG]);
             }
             if (ptr)setFieldRefer(ptr, jarr);
-            garbage_refer(jarr, ins, runtime);
+            garbage_refer(jarr, ins);
         }
         //
         {
@@ -438,10 +438,10 @@ s32 javax_mini_reflect_Reference_mapReference(Runtime *runtime, Class *clazz) {
             Instance *jarr = jarray_create(target->methodPool.method_used, DATATYPE_LONG, NULL);
             for (i = 0; i < target->methodPool.method_used; i++) {
                 l2d.l = (u64) (long) &target->methodPool.method[i];
-                jarray_set_field(jarr, i, &l2d, data_type_bytes[DATATYPE_LONG], runtime);
+                jarray_set_field(jarr, i, &l2d, data_type_bytes[DATATYPE_LONG]);
             }
             if (ptr)setFieldRefer(ptr, jarr);
-            garbage_refer(jarr, ins, runtime);
+            garbage_refer(jarr, ins);
         }
         //
         {
@@ -450,10 +450,10 @@ s32 javax_mini_reflect_Reference_mapReference(Runtime *runtime, Class *clazz) {
             for (i = 0; i < target->interfacePool.clasz_used; i++) {
                 Class *cl = classes_load_get(target->interfacePool.clasz[i].name, runtime);
                 l2d.l = (u64) (long) cl;
-                jarray_set_field(jarr, i, &l2d, data_type_bytes[DATATYPE_LONG], runtime);
+                jarray_set_field(jarr, i, &l2d, data_type_bytes[DATATYPE_LONG]);
             }
             if (ptr)setFieldRefer(ptr, jarr);
-            garbage_refer(jarr, ins, runtime);
+            garbage_refer(jarr, ins);
         }
     }
     return 0;
@@ -472,7 +472,7 @@ s32 javax_mini_reflect_Field_mapField(Runtime *runtime, Class *clazz) {
         ptr = getFieldPtr_byName_c(ins, JDWP_CLASS_FIELD, "fieldName", "Ljava/lang/String;");
         Instance *fieldName = jstring_create(fieldInfo->name, runtime);
         if (ptr)setFieldRefer(ptr, fieldName);
-        garbage_refer(fieldName, ins, runtime);
+        garbage_refer(fieldName, ins);
         //
         ptr = getFieldPtr_byName_c(ins, JDWP_CLASS_FIELD, "accessFlags", "S");
         if (ptr)setFieldShort(ptr, fieldInfo->access_flags);
@@ -480,7 +480,7 @@ s32 javax_mini_reflect_Field_mapField(Runtime *runtime, Class *clazz) {
         ptr = getFieldPtr_byName_c(ins, JDWP_CLASS_FIELD, "signature", "Ljava/lang/String;");
         Instance *signature = jstring_create(fieldInfo->descriptor, runtime);
         if (ptr)setFieldRefer(ptr, signature);
-        garbage_refer(signature, ins, runtime);
+        garbage_refer(signature, ins);
     }
     return 0;
 }
@@ -495,12 +495,12 @@ Instance *localVarTable2java(Class *clazz, LocalVarTable *lvt, Runtime *runtime)
         ptr = getFieldPtr_byName_c(ins, JDWP_CLASS_LOCALVARTABLE, "name", "Ljava/lang/String;");
         Instance *name = jstring_create(get_utf8_string(clazz, lvt->name_index), runtime);
         if (ptr)setFieldRefer(ptr, name);
-        garbage_refer(name, ins, runtime);
+        garbage_refer(name, ins);
         //
         ptr = getFieldPtr_byName_c(ins, JDWP_CLASS_LOCALVARTABLE, "signature", "Ljava/lang/String;");
         Instance *signature = jstring_create(get_utf8_string(clazz, lvt->descriptor_index), runtime);
         if (ptr)setFieldRefer(ptr, signature);
-        garbage_refer(signature, ins, runtime);
+        garbage_refer(signature, ins);
         //
         ptr = getFieldPtr_byName_c(ins, JDWP_CLASS_LOCALVARTABLE, "codeIndex", "J");
         if (ptr)setFieldLong(ptr, lvt->start_pc);
@@ -525,12 +525,12 @@ s32 javax_mini_reflect_Method_mapMethod(Runtime *runtime, Class *clazz) {
         ptr = getFieldPtr_byName_c(ins, JDWP_CLASS_METHOD, "methodName", "Ljava/lang/String;");
         Instance *methodName = jstring_create(methodInfo->name, runtime);
         if (ptr)setFieldRefer(ptr, methodName);
-        garbage_refer(methodName, ins, runtime);
+        garbage_refer(methodName, ins);
         //
         ptr = getFieldPtr_byName_c(ins, JDWP_CLASS_METHOD, "signature", "Ljava/lang/String;");
         Instance *signature = jstring_create(methodInfo->descriptor, runtime);
         if (ptr)setFieldRefer(ptr, signature);
-        garbage_refer(signature, ins, runtime);
+        garbage_refer(signature, ins);
         //
         ptr = getFieldPtr_byName_c(ins, JDWP_CLASS_METHOD, "accessFlags", "S");
         if (ptr)setFieldShort(ptr, methodInfo->access_flags);
@@ -562,7 +562,7 @@ s32 javax_mini_reflect_Method_mapMethod(Runtime *runtime, Class *clazz) {
                 memcpy(jarr->arr_body, att->converted_code->line_number_table,
                        att->converted_code->line_number_table_length * 4);
                 if (ptr)setFieldRefer(ptr, jarr);
-                garbage_refer(jarr, ins, runtime);
+                garbage_refer(jarr, ins);
             }
             {
                 //
@@ -576,10 +576,10 @@ s32 javax_mini_reflect_Method_mapMethod(Runtime *runtime, Class *clazz) {
                 for (i = 0; i < att->converted_code->local_var_table_length; i++) {
                     LocalVarTable *lvt = &att->converted_code->local_var_table[i];
                     l2d.r = localVarTable2java(methodInfo->_this_class, lvt, runtime);
-                    jarray_set_field(jarr, i, &l2d, data_type_bytes[DATATYPE_REFERENCE], runtime);
+                    jarray_set_field(jarr, i, &l2d, data_type_bytes[DATATYPE_REFERENCE]);
                 }
                 if (ptr)setFieldRefer(ptr, jarr);
-                garbage_refer(jarr, ins, runtime);
+                garbage_refer(jarr, ins);
             }
         }
 

@@ -771,10 +771,10 @@ s32 javax_mini_io_File_listDir(Runtime *runtime, Class *clazz) {
             Utf8String *ustr = utf8_create_c(STR_INS_JAVA_LANG_STRING);
             Instance *jarr = jarray_create(files->length, 0, ustr);
             utf8_destory(ustr);
-            garbage_refer(jarr, NULL, runtime);
+            garbage_refer(jarr, NULL);
             for (i = 0; i < files->length; i++) {
                 l2d.r = arraylist_get_value(files, i);
-                jarray_set_field(jarr, i, &l2d, data_type_bytes[DATATYPE_REFERENCE], runtime);
+                jarray_set_field(jarr, i, &l2d, data_type_bytes[DATATYPE_REFERENCE]);
             }
             push_ref(runtime->stack, jarr);
         } else {

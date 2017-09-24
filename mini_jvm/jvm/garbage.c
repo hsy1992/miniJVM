@@ -3,16 +3,7 @@
 #include "garbage.h"
 #include "jvm_util.h"
 
-
 void getMemBlockName(void *memblock, Utf8String *name);
-
-void garbage_destory_memobj(Runtime *runtime, __refer k);
-
-s32 garbage_mark_refered_obj(Runtime *pruntime);
-
-void garbage_derefer_all(void *parentPtr, Runtime *runtime);
-
-s32 garbage_mark_by_threads(Runtime *runtime);
 
 /**
  * 创建垃圾收集线程，
@@ -50,6 +41,8 @@ s32 garbage_mark_by_threads(Runtime *runtime);
  * @return
  */
 s32 garbage_collector_create() {
+    son_2_father = hashtable_create(DEFAULT_HASH_FUNC, DEFAULT_HASH_EQUALS_FUNC);
+    father_2_son = hashtable_create(DEFAULT_HASH_FUNC, DEFAULT_HASH_EQUALS_FUNC);
 
     _garbage_refer_set_pool = arraylist_create(4);
     _garbage_thread_pause = 1;
@@ -68,18 +61,8 @@ void garbage_collector_destory() {
     jvm_free(_garbage_attr);
     jvm_free(_garbage_lock);
     jvm_free(_garbage_thread);
-}
-
-void recycle_bin_init(RecycleBin *bin) {
-    bin->son_2_father = hashtable_create(DEFAULT_HASH_FUNC, DEFAULT_HASH_EQUALS_FUNC);
-    bin->father_2_son = hashtable_create(DEFAULT_HASH_FUNC, DEFAULT_HASH_EQUALS_FUNC);
-
-}
-
-void recycle_bin_free(RecycleBin *bin) {
-    hashtable_destory(bin->son_2_father);
-    hashtable_destory(bin->father_2_son);
-
+    hashtable_destory(son_2_father);
+    hashtable_destory(father_2_son);
 }
 
 void *collect_thread_run(void *para) {
@@ -165,53 +148,45 @@ s32 garbage_collect() {
 #if _JVM_DEBUG_GARBAGE_DUMP
     //dump_refer();
 #endif
-    s32 x;
-    //jvm_printf("thread set size:%d\n", thread_list->length);
-    for (x = 0; x < thread_list->length; x++) {
-        Runtime *runtime = (Runtime *) arraylist_get_value(thread_list, x);
-        RecycleBin *bin = &runtime->threadInfo->reclcle_bin;
 
-        HashtableIterator hti;
-        hashtable_iterate(bin->son_2_father, &hti);
-        //jvm_printf("hmap_t:%d\n", hashtable_num_entries(son_2_father));
-        s64 obj_count = hashtable_num_entries(bin->son_2_father);
-        s64 mem1 = heap_size;
+    HashtableIterator hti;
+    hashtable_iterate(son_2_father, &hti);
+    //jvm_printf("hmap_t:%d\n", hashtable_num_entries(son_2_father));
+    s64 obj_count = hashtable_num_entries(son_2_father);
+    s64 mem1 = heap_size;
 
-        //把所有对象标记为可回收
-        for (; hashtable_iter_has_more(&hti);) {
-            MemoryBlock *mb = (MemoryBlock *) hashtable_iter_next_key(&hti);
-            mb->garbage_mark = GARBAGE_MARK_NO_REFERED;
-        }
-        //让线程标记，小于0表示标记失败，则不继续回收
-        //in this sub proc ,in wait maybe other thread insert new obj into son_2_father ,
-        // so new inserted obj must be garbage_mark==GARBAGE_MARK_UNDEF  ,otherwise new obj would be collected.
-        if (garbage_mark_by_threads(runtime) < 0) {
-            continue;
-        }
+    //把所有对象标记为可回收
+    for (; hashtable_iter_has_more(&hti);) {
+        MemoryBlock *mb = (MemoryBlock *) hashtable_iter_next_key(&hti);
+        mb->garbage_mark = GARBAGE_MARK_NO_REFERED;
+    }
+    //轮询所有线程，标记被引用的对象
+    //in this sub proc ,in wait maybe other thread insert new obj into son_2_father ,
+    // so new inserted obj must be garbage_mark==GARBAGE_MARK_UNDEF  ,otherwise new obj would be collected.
+    garbage_mark_by_threads();
 
-        //如果没被其他对象引用set->length==0，也没有被标记为引用，则回收掉
-        s32 i = 0;
-        hashtable_iterate(bin->son_2_father, &hti);
-        for (; hashtable_iter_has_more(&hti);) {
+    //如果没被其他对象引用set->length==0，也没有被标记为引用，则回收掉
+    s32 i = 0;
+    hashtable_iterate(son_2_father, &hti);
+    for (; hashtable_iter_has_more(&hti);) {
 
-            HashtableKey k = hashtable_iter_next_key(&hti);
-            MemoryBlock *mb = (MemoryBlock *) k;
-            Hashset *v = (Hashset *) hashtable_get(bin->son_2_father, k);
+        HashtableKey k = hashtable_iter_next_key(&hti);
+        MemoryBlock *mb = (MemoryBlock *) k;
+        Hashset *v = (Hashset *) hashtable_get(son_2_father, k);
 
-            if (v != HASH_NULL) {
-                if (v->entries == 0 && mb->garbage_mark == GARBAGE_MARK_NO_REFERED) {
-                    garbage_destory_memobj(runtime, k);
-                    i++;
-                }
+        if (v != HASH_NULL) {
+            if (v->entries == 0 && mb->garbage_mark == GARBAGE_MARK_NO_REFERED) {
+                garbage_destory_memobj(k);
+                i++;
             }
         }
+    }
 //    jvm_printf("garbage cllected OBJ: %lld -> %lld    MEM : %lld -> %lld\n",
 //           obj_count, hashtable_num_entries(son_2_father), mem1, heap_size);
 
-        if (_garbage_count++ % 5 == 0) {//每n秒resize一次
-            hashtable_remove(bin->son_2_father, NULL, 1);
-            hashtable_remove(bin->father_2_son, NULL, 1);
-        }
+    if (_garbage_count++ % 5 == 0) {//每n秒resize一次
+        hashtable_remove(son_2_father, NULL, 1);
+        hashtable_remove(father_2_son, NULL, 1);
     }
     garbage_thread_unlock();
 
@@ -222,20 +197,19 @@ s32 garbage_collect() {
  * destory a instance
  * @param k
  */
-void garbage_destory_memobj(Runtime *runtime, __refer k) {
-    RecycleBin *bin = &runtime->threadInfo->reclcle_bin;
-    garbage_derefer_all(k, runtime);
+void garbage_destory_memobj(__refer k) {
+    garbage_derefer_all(k);
 
 #if _JVM_DEBUG_GARBAGE_DUMP
-    //    Utf8String *pus = utf8_create();
-    //    getMemBlockName(k, pus);
-    //    jvm_printf("garbage collect instance  %s [%x]\n", utf8_cstr(pus), k);
-    //    utf8_destory(pus);
+//    Utf8String *pus = utf8_create();
+//    getMemBlockName(k, pus);
+//    jvm_printf("garbage collect instance  %s [%x]\n", utf8_cstr(pus), k);
+//    utf8_destory(pus);
 #endif
-    Hashset *v = (Hashset *) hashtable_get(bin->son_2_father, k);
+    Hashset *v = (Hashset *) hashtable_get(son_2_father, k);
     _garbage_put_set(v);
-    hashtable_remove(bin->son_2_father, k, 0);
-    instance_destory(k, runtime);
+    hashtable_remove(son_2_father, k, 0);
+    instance_destory(k);
 
 }
 
@@ -244,39 +218,29 @@ void garbage_destory_memobj(Runtime *runtime, __refer k) {
  * @param son
  * @return
  */
-s32 garbage_mark_by_threads(Runtime *runtime) {
-//    s32 i;
-//    //jvm_printf("thread set size:%d\n", thread_list->length);
-//    for (i = 0; i < thread_list->length; i++) {
-//        Runtime *runtime = (Runtime *) arraylist_get_value(thread_list, i);
-    /**
-     *  回收线程 进行收集，先暂停线程，收集完之后恢复java工作线程
-     *
-     */
-    if (runtime->threadInfo->thread_status != THREAD_STATUS_ZOMBIE) {
+s32 garbage_mark_by_threads() {
+    s32 i;
+    //jvm_printf("thread set size:%d\n", thread_list->length);
+    for (i = 0; i < thread_list->length; i++) {
+        Runtime *runtime = (Runtime *) arraylist_get_value(thread_list, i);
+        /**
+         *  回收线程 进行收集，先暂停线程，收集完之后恢复java工作线程
+         *
+         */
+        if (runtime->threadInfo->thread_status != THREAD_STATUS_ZOMBIE) {
+            jthread_suspend(runtime);
+            garbage_mark_refered_obj(runtime);
+            jthread_resume(runtime);
+        }
+        //jvm_printf("thread marked refered , [%llx]\n", (s64) (long) runtime->threadInfo->jthread);
+    }
+    //调试线程
+    if (java_debug) {
+        Runtime *runtime = jdwpserver.runtime;
         jthread_suspend(runtime);
-        //等一段时间，如果线程进入了暂停状态，则开始标记，如果没进入，则放弃本次回收
-        s64 start = currentTimeMillis();
-        while ((currentTimeMillis() - start) < 1000) {
-            if (runtime->threadInfo->is_suspend) {
-                break;
-            }
-        }
-        if (!runtime->threadInfo->is_suspend) {
-            return -1;
-        }
         garbage_mark_refered_obj(runtime);
         jthread_resume(runtime);
     }
-    //jvm_printf("thread marked refered , [%llx]\n", (s64) (long) runtime->threadInfo->jthread);
-//    }
-//    //调试线程
-//    if (java_debug) {
-//        Runtime *runtime = jdwpserver.runtime;
-//        jthread_suspend(runtime);
-//        garbage_mark_refered_obj(runtime);
-//        jthread_resume(runtime);
-//    }
     return 0;
 }
 
@@ -360,11 +324,11 @@ void getMemBlockName(void *memblock, Utf8String *name) {
 /**
  * 调试用，打印所有引用信息
  */
-void dump_refer(RecycleBin *bin) {
+void dump_refer() {
     //jvm_printf("%d\n",sizeof(struct _Hashtable));
     HashtableIterator hti;
-    hashtable_iterate(bin->son_2_father, &hti);
-    jvm_printf("=========================son <- father :%d\n", hashtable_num_entries(bin->son_2_father));
+    hashtable_iterate(son_2_father, &hti);
+    jvm_printf("=========================son <- father :%d\n", hashtable_num_entries(son_2_father));
     for (; hashtable_iter_has_more(&hti);) {
 
         HashtableKey k = hashtable_iter_next_key(&hti);
@@ -372,7 +336,7 @@ void dump_refer(RecycleBin *bin) {
         getMemBlockName(k, name);
         jvm_printf("%s[%llx] <-{", utf8_cstr(name), (s64) (long) k);
         utf8_destory(name);
-        Hashset *set = (Hashset *) hashtable_get(bin->son_2_father, k);
+        Hashset *set = (Hashset *) hashtable_get(son_2_father, k);
         if (set != HASH_NULL) {
             HashsetIterator hti;
             hashset_iterate(set, &hti);
@@ -391,8 +355,8 @@ void dump_refer(RecycleBin *bin) {
         jvm_printf("}\n");
     }
 
-    hashtable_iterate(bin->father_2_son, &hti);
-    jvm_printf("=========================father -> son :%d\n", hashtable_num_entries(bin->father_2_son));
+    hashtable_iterate(father_2_son, &hti);
+    jvm_printf("=========================father -> son :%d\n", hashtable_num_entries(father_2_son));
     for (; hashtable_iter_has_more(&hti);) {
 
         HashtableKey k = hashtable_iter_next_key(&hti);
@@ -400,7 +364,7 @@ void dump_refer(RecycleBin *bin) {
         getMemBlockName(k, name);
         jvm_printf("%s[%llx] ->{", utf8_cstr(name), (s64) (long) k);
         utf8_destory(name);
-        Hashset *set = (Hashset *) hashtable_get(bin->father_2_son, k);
+        Hashset *set = (Hashset *) hashtable_get(father_2_son, k);
         if (set != HASH_NULL) {
             HashsetIterator hti;
             hashset_iterate(set, &hti);
@@ -432,13 +396,12 @@ void dump_refer(RecycleBin *bin) {
  * @return
  */
 
-void *garbage_refer(__refer sonPtr, __refer parentPtr, Runtime *runtime) {
+void *garbage_refer(__refer sonPtr, __refer parentPtr) {
     if (sonPtr == NULL)return sonPtr;
     if (sonPtr == parentPtr) {
         return sonPtr;
     }
     garbage_thread_lock();
-    RecycleBin *bin = &runtime->threadInfo->reclcle_bin;
 #if _JVM_DEBUG_GARBAGE_DUMP
     Utf8String *pus = utf8_create();
     Utf8String *sus = utf8_create();
@@ -450,18 +413,18 @@ void *garbage_refer(__refer sonPtr, __refer parentPtr, Runtime *runtime) {
     utf8_destory(sus);
 #endif
     //放入子引父
-    Hashset *set = (Hashset *) hashtable_get(bin->son_2_father, sonPtr);
+    Hashset *set = (Hashset *) hashtable_get(son_2_father, sonPtr);
     if (set == HASH_NULL) {
         set = _garbage_get_set();
-        hashtable_put(bin->son_2_father, sonPtr, set);
+        hashtable_put(son_2_father, sonPtr, set);
     }
     if (parentPtr) {
         hashset_put(set, parentPtr);
         //放入父引子
-        set = hashtable_get(bin->father_2_son, parentPtr);
+        set = hashtable_get(father_2_son, parentPtr);
         if (set == HASH_NULL) {
             set = _garbage_get_set();
-            hashtable_put(bin->father_2_son, parentPtr, set);
+            hashtable_put(father_2_son, parentPtr, set);
         }
         hashset_put(set, sonPtr);
     }
@@ -469,9 +432,9 @@ void *garbage_refer(__refer sonPtr, __refer parentPtr, Runtime *runtime) {
     return sonPtr;
 }
 
-void garbage_derefer(__refer sonPtr, __refer parentPtr, Runtime *runtime) {
+void garbage_derefer(__refer sonPtr, __refer parentPtr) {
     garbage_thread_lock();
-    RecycleBin *bin = &runtime->threadInfo->reclcle_bin;
+
 #if _JVM_DEBUG_GARBAGE_DUMP
     Utf8String *pus = utf8_create();
     Utf8String *sus = utf8_create();
@@ -485,14 +448,14 @@ void garbage_derefer(__refer sonPtr, __refer parentPtr, Runtime *runtime) {
     Hashset *set;
     if (sonPtr && parentPtr) {
         //移除子引父
-        set = hashtable_get(bin->son_2_father, sonPtr);
+        set = hashtable_get(son_2_father, sonPtr);
         if (set != HASH_NULL) {
             hashset_remove(set, parentPtr, 0);
         }
 
 
         //移除父引子
-        set = hashtable_get(bin->father_2_son, parentPtr);
+        set = hashtable_get(father_2_son, parentPtr);
         if (set != HASH_NULL) {
             hashset_remove(set, sonPtr, 0);
         }
@@ -500,9 +463,8 @@ void garbage_derefer(__refer sonPtr, __refer parentPtr, Runtime *runtime) {
     garbage_thread_unlock();
 }
 
-void garbage_derefer_all(__refer parentPtr, Runtime *runtime) {
+void garbage_derefer_all(__refer parentPtr) {
     garbage_thread_lock();
-    RecycleBin *bin = &runtime->threadInfo->reclcle_bin;
 #if _JVM_DEBUG_GARBAGE_DUMP
     Utf8String *us = utf8_create();
     getMemBlockName(parentPtr, us);
@@ -511,7 +473,7 @@ void garbage_derefer_all(__refer parentPtr, Runtime *runtime) {
 #endif
     Hashset *set;
     //移除父引用的所有子
-    set = hashtable_get(bin->father_2_son, parentPtr);
+    set = hashtable_get(father_2_son, parentPtr);
     if (set) {
         HashsetIterator hti;
         hashset_iterate(set, &hti);
@@ -519,14 +481,29 @@ void garbage_derefer_all(__refer parentPtr, Runtime *runtime) {
         for (; hashset_iter_has_more(&hti);) {
             HashsetKey key = hashset_iter_next_key(&hti);
             if (key) {
-                garbage_derefer(key, parentPtr, runtime);
+                garbage_derefer(key, parentPtr);
             }
         }
         _garbage_put_set(set);
     }
-    hashtable_remove(bin->father_2_son, parentPtr, 0);
+    hashtable_remove(father_2_son, parentPtr, 0);
     garbage_thread_unlock();
 
+}
+
+s32 garbage_is_refer_by(__refer sonPtr, __refer parentPtr) {
+    garbage_thread_lock();
+    Hashset *set;
+    s32 ret = 0;
+    if (sonPtr && parentPtr) {
+        //移除子引父
+        set = hashtable_get(son_2_father, sonPtr);
+        if (set != HASH_NULL) {
+            ret = hashset_get(set, parentPtr) != HASH_NULL;
+        }
+    }
+    garbage_thread_unlock();
+    return ret;
 }
 
 /**

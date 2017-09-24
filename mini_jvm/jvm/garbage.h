@@ -20,14 +20,10 @@ extern ArrayList *_garbage_refer_set_pool;
 extern s64 _garbage_count;
 
 //每个线程一个回收站，线程多了就是灾难
-typedef struct _RecycleBin {
+typedef struct _RecycleBin{
     Hashtable *son_2_father; //key=mem_ptr, value=我被别人引用的列表
     Hashtable *father_2_son; //key=mem_ptr, value=别人被我引用的列表
-} RecycleBin;
-
-void recycle_bin_init(RecycleBin *bin);
-
-void recycle_bin_free(RecycleBin *bin);
+}RecycleBin;
 
 void *collect_thread_run(void *para);
 
@@ -53,10 +49,22 @@ s32 garbage_collector_create();
 
 void garbage_collector_destory();
 
-void *garbage_refer(void *sonPtr, void *parentPtr, Runtime *runtime);
-
-void garbage_derefer(void *sonPtr, void *parentPtr, Runtime *runtime);
-
 s32 garbage_collect();
+
+void dump_refer();
+
+void *garbage_refer(void *sonPtr, void *parentPtr);
+
+void garbage_derefer(void *sonPtr, void *parentPtr);
+
+void garbage_derefer_all(void *parentPtr);
+
+s32 garbage_is_refer_by(__refer sonPtr, __refer parentPtr);
+
+void garbage_destory_memobj(__refer k);
+
+s32 garbage_mark_by_threads();
+
+s32 garbage_mark_refered_obj(Runtime *pruntime);
 
 #endif //_GARBAGE_H

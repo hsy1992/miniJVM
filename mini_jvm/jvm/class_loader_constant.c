@@ -414,8 +414,8 @@ void printConstantPool(Class *clazz) {
     for (i = 0; i < p->utf8CP->length; i++) {
         ConstantUTF8 *cutf = arraylist_get_value(p->utf8CP, i);
         jvm_printf("cp_index[%d], utf8[%d], tag = %d, size = %d, ",
-                   cutf->index, i, cutf->tag,
-                   cutf->string_size);
+               cutf->index, i, cutf->tag,
+               cutf->string_size);
         jvm_printf("%s\n", utf8_cstr(cutf->utfstr));
     }
     jvm_printf("p->integer_used = %d\n", p->integerCP->length);
@@ -424,9 +424,9 @@ void printConstantPool(Class *clazz) {
         for (i = 0; i < p->integerCP->length; i++) {
             ConstantInteger *ci = arraylist_get_value(p->integerCP, i);
             jvm_printf(" cp_index[%d], integer[%d], tag = %d, size = %d, %d\n",
-                       ci->index, i, ci->tag,
-                       ci->additional_byte_size,
-                       ci->value);
+                   ci->index, i, ci->tag,
+                   ci->additional_byte_size,
+                   ci->value);
         }
     }
     jvm_printf("p->float_used = %d\n", p->floatCP->length);
@@ -435,9 +435,9 @@ void printConstantPool(Class *clazz) {
         for (i = 0; i < p->floatCP->length; i++) {
             ConstantFloat *cf = arraylist_get_value(p->floatCP, i);
             jvm_printf(" cp_index[%d], f32[%d], tag = %d, size = %d, %.4f\n",
-                       cf->index, i, cf->tag,
-                       cf->additional_byte_size,
-                       cf->value);
+                   cf->index, i, cf->tag,
+                   cf->additional_byte_size,
+                   cf->value);
         }
     }
     jvm_printf("p->double_used = %d\n", p->doubleCP->length);
@@ -446,9 +446,9 @@ void printConstantPool(Class *clazz) {
         for (i = 0; i < p->doubleCP->length; i++) {
             ConstantDouble *cd = arraylist_get_value(p->doubleCP, i);
             jvm_printf(" cp_index[%d], f64[%d], tag = %d, size = %d, %.5f\n",
-                       cd->index, i, cd->tag,
-                       cd->additional_byte_size,
-                       cd->value);
+                   cd->index, i, cd->tag,
+                   cd->additional_byte_size,
+                   cd->value);
         }
     }
 
@@ -459,9 +459,9 @@ void printConstantPool(Class *clazz) {
             ConstantClassRef *ccr = arraylist_get_value(p->classRef, i);
             ConstantUTF8 *ptr = find_constant_utf8(clazz, ccr->stringIndex);
             jvm_printf(" cp_index[%d], class[%d], tag = %d, size = %d, %d",
-                       ccr->index, i, ccr->tag,
-                       ccr->additional_byte_size,
-                       ccr->stringIndex
+                   ccr->index, i, ccr->tag,
+                   ccr->additional_byte_size,
+                   ccr->stringIndex
             );
             if (ptr != 0) {
                 jvm_printf(" ");
@@ -479,9 +479,9 @@ void printConstantPool(Class *clazz) {
             ConstantStringRef *csr = arraylist_get_value(p->stringRef, i);
             ConstantUTF8 *ptr = find_constant_utf8(clazz, csr->stringIndex);
             jvm_printf(" cp_index[%d], strRef[%d], tag = %d, size = %d, %d",
-                       csr->index, i, csr->tag,
-                       csr->additional_byte_size,
-                       csr->stringIndex);
+                   csr->index, i, csr->tag,
+                   csr->additional_byte_size,
+                   csr->stringIndex);
             if (ptr != 0) {
                 jvm_printf(" ");
                 jvm_printf(" %s\n", utf8_cstr(ptr->utfstr));
@@ -499,10 +499,10 @@ void printConstantPool(Class *clazz) {
             ConstantNameAndType *ptr2 = find_constant_name_and_type(clazz, cfr->nameAndTypeIndex);
 
             jvm_printf(" cp_index[%d], fieldRef[%d], tag = %d, size = %d, cls %d, nat= %d",
-                       cfr->index, i, cfr->tag,
-                       cfr->additional_byte_size,
-                       cfr->classIndex,
-                       cfr->nameAndTypeIndex);
+                   cfr->index, i, cfr->tag,
+                   cfr->additional_byte_size,
+                   cfr->classIndex,
+                   cfr->nameAndTypeIndex);
             if (ptr != 0) {
                 ConstantUTF8 *name = find_constant_utf8(clazz, ptr->stringIndex);
                 if (name != 0) {
@@ -530,10 +530,10 @@ void printConstantPool(Class *clazz) {
             ConstantNameAndType *ptr2 = find_constant_name_and_type(clazz, cmr->nameAndTypeIndex);
 
             jvm_printf(" cp_index[%d], methodRef[%d], tag = %d, size = %d, cls %d, nat= %d",
-                       cmr->index, i, cmr->tag,
-                       cmr->additional_byte_size,
-                       cmr->classIndex,
-                       cmr->nameAndTypeIndex);
+                   cmr->index, i, cmr->tag,
+                   cmr->additional_byte_size,
+                   cmr->classIndex,
+                   cmr->nameAndTypeIndex);
             if (ptr != 0) {
                 ConstantUTF8 *name = find_constant_utf8(clazz, ptr->stringIndex);
                 if (name != 0) {
@@ -554,7 +554,7 @@ void printConstantPool(Class *clazz) {
     }
 }
 
-s32 _class_constant_pool_destory(Class *clazz, Runtime *runtime) {
+s32 _class_constant_pool_destory(Class *clazz) {
     int i;
     for (i = 0; i < clazz->constantPool.fieldRef->length; i++) {
         __refer ptr = arraylist_get_value(clazz->constantPool.fieldRef, i);
@@ -596,7 +596,7 @@ s32 _class_constant_pool_destory(Class *clazz, Runtime *runtime) {
     for (i = 0; i < clazz->constantPool.utf8CP->length; i++) {
         ConstantUTF8 *ptr = (ConstantUTF8 *) arraylist_get_value(clazz->constantPool.utf8CP, i);
         utf8_destory(ptr->utfstr);
-        instance_destory(ptr->jstr, runtime);
+        instance_destory(ptr->jstr);
         jvm_free(ptr);
     }
     for (i = 0; i < clazz->constantPool.name_and_type->length; i++) {

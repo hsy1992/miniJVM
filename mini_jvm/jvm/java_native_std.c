@@ -385,7 +385,9 @@ s32 java_lang_Runtime_totalMemory(Runtime *runtime, Class *clazz) {
 }
 
 s32 java_lang_Runtime_gc(Runtime *runtime, Class *clazz) {
+//    runtime->threadInfo->thread_running = 0;
     garbage_collect();
+//    runtime->threadInfo->thread_running = 1;
 #if _JVM_DEBUG > 5
     jvm_printf("java_lang_Runtime_gc \n");
 #endif
@@ -557,7 +559,7 @@ s32 java_lang_System_getProperty0(Runtime *runtime, Class *clazz) {
     if (val) {
         Instance *jstr = jstring_create(val, runtime);
         push_ref(stack, jstr);
-        garbage_refer(jstr, NULL,runtime);
+        garbage_refer(jstr, NULL);
     } else {
         push_ref(stack, (__refer) (long) NULL);
     }

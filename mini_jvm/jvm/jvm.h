@@ -343,11 +343,13 @@ extern s32 STACK_LENGHT;
 extern Hashtable *sys_prop;
 
 
+extern Hashtable *son_2_father; //key=mem_ptr, value=我被别人引用的列表
+extern Hashtable *father_2_son; //key=mem_ptr, value=别人被我引用的列表
 extern s64 MAX_HEAP_SIZE;
 extern s64 heap_size; //当前已经分配的内存总数
-extern Runtime *main_runtime;
+extern Instance *main_thread;
 
-extern u8 volatile java_debug;
+extern  u8 volatile java_debug;
 
 extern u8 JDWP_BREAK_POINT;
 
@@ -725,7 +727,7 @@ typedef struct _ClassType {
 
 void _INIT_CLASS(Class *_this);
 
-s32 _DESTORY_CLASS(Class *_this, Runtime *runtime);
+s32 _DESTORY_CLASS(Class *_this);
 
 Class *class_create();
 
@@ -735,7 +737,7 @@ void constant_list_create(Class *clazz);
 
 void constant_list_destory(Class *clazz);
 
-s32 class_destory(Class *clazz, Runtime *runtime);
+s32 class_destory(Class *clazz);
 
 s32 load_class(Utf8String *pClassPath, Utf8String *pClassName, hmap_t classes);
 
@@ -805,7 +807,7 @@ void printInterfacePool(Class *clazz, InterfacePool *ip);
 /* constant pool parser */
 s32 _parse_constant_pool(Class *_this, FILE *fp, s32 count);
 
-s32 _class_constant_pool_destory(Class *clazz, Runtime *runtime);
+s32 _class_constant_pool_destory(Class *clazz);
 
 void printConstantPool(Class *clazz);
 
@@ -826,11 +828,11 @@ Instance *jarray_create_des(s32 count, Utf8String *descript);
 
 Instance *jarray_create(s32 count, s32 typeIdx, Utf8String *type);
 
-s32 jarray_destory(Instance *arr, Runtime *runtime);
+s32 jarray_destory(Instance *arr);
 
-Instance *jarray_multi_create(ArrayList *dim, Utf8String *desc, s32 deep, Runtime *runtime);
+Instance *jarray_multi_create(ArrayList *dim, Utf8String *desc, s32 deep);
 
-void jarray_set_field(Instance *arr, s32 index, Long2Double *l2d, s32 bytes, Runtime *runtime);
+void jarray_set_field(Instance *arr, s32 index, Long2Double *l2d, s32 bytes);
 
 void jarray_get_field(Instance *arr, s32 index, Long2Double *l2d, s32 bytes);
 
@@ -868,7 +870,7 @@ Instance *instance_create(Class *clazz);
 
 void instance_init(Instance *ins, Runtime *runtime);
 
-s32 instance_destory(Instance *ins, Runtime *runtime);
+s32 instance_destory(Instance *instance);
 
 
 //======================= bytecode =============================

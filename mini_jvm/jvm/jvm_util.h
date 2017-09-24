@@ -8,7 +8,6 @@
 #include "jvm.h"
 #include "../utils/hashset.h"
 #include "jdwp.h"
-#include "garbage.h"
 #include <pthread.h>
 
 static s64 NANO_START = 0;
@@ -32,7 +31,7 @@ u8 getDataTypeTag(s32 index);
 
 void array_classes_create();
 
-void array_classes_destory(Runtime* runtime);
+void array_classes_destory();
 
 Class *array_class_get(Utf8String *descript);
 
@@ -75,9 +74,9 @@ Instance *getInstanceInStack(Class *clazz, ConstantMethodRef *cmr, StackFrame *s
 void printDumpOfClasses();
 
 
-void runtime_init(Runtime *runtime);
+void runtime_create(Runtime *runtime);
 
-void runtime_free(Runtime *runtime);
+void runtime_destory(Runtime *runtime);
 
 ////======================= thread =============================
 
@@ -90,8 +89,6 @@ typedef struct _JavaThreadInfo {
     u8 volatile is_suspend;
 
     pthread_t pthread;
-    //回收站
-    RecycleBin reclcle_bin;
     //调试器相关字段
     JdwpStep jdwp_step;
 } JavaThreadInfo;

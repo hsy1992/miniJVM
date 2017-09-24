@@ -31,16 +31,16 @@ void _INIT_CLASS(Class *_this) {
     jthreadlock_create(&_this->mb);
 }
 
-s32 class_destory(Class *clazz,Runtime* runtime) {
-    _DESTORY_CLASS(clazz,runtime);
+s32 class_destory(Class *clazz) {
+    _DESTORY_CLASS(clazz);
     jvm_free(clazz);
 }
 
-s32 _DESTORY_CLASS(Class *_this,Runtime* runtime) {
+s32 _DESTORY_CLASS(Class *_this) {
     _class_method_info_destory(_this);
     _class_interface_pool_destory(_this);
     _class_field_info_destory(_this);
-    _class_constant_pool_destory(_this,runtime);
+    _class_constant_pool_destory(_this);
     jvm_free(_this->field_static);
     _this->field_static = NULL;
     jvm_free(_this->field_instance_template);
