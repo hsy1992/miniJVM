@@ -1749,7 +1749,7 @@ s32 jdwp_client_process(JdwpClient *client, Runtime *runtime) {
                 Runtime *r = jthread_get_threadq_value(jthread);
                 jdwppacket_set_err(res, JDWP_ERROR_NONE);
                 jdwppacket_write_int(res, r->threadInfo->thread_status);
-                jdwppacket_write_int(res, r->threadInfo->suspend_count ? JDWP_SUSPEND_STATUS_SUSPENDED : 0);
+                jdwppacket_write_int(res, r->threadInfo->is_suspend ? JDWP_SUSPEND_STATUS_SUSPENDED : 0);
                 jdwp_writepacket(client, res);
                 break;
             }

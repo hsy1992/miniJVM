@@ -25,7 +25,7 @@ extern "C" {
 typedef unsigned char utf8_char;
 
 typedef struct _utf8_string {
-    utf8_char *data1;
+    utf8_char *data;
 
     int length;
     int _alloced;

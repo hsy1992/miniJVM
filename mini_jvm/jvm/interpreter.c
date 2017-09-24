@@ -3216,11 +3216,15 @@ s32 execute_method(MethodInfo *method, Runtime *pruntime, Class *clazz) {
                 }
                 //process thread suspend
                 if (runtime.threadInfo->suspend_count) {
+                    garbage_thread_lock();
                     runtime.threadInfo->is_suspend = 1;
+                    garbage_thread_notify();
                     while (runtime.threadInfo->suspend_count) {
-                        threadSleep(10);
+                        garbage_thread_wait();
                     }
                     runtime.threadInfo->is_suspend = 0;
+                    garbage_thread_notify();
+                    garbage_thread_unlock();
                 }
                 InstructFunc func = find_instruct_func(runtime.pc[0]);
                 if (func != 0) {

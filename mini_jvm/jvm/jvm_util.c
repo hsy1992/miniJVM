@@ -489,12 +489,14 @@ void *jtherad_loader(void *para) {
     }
     jthread_set_threadq_value(jthread, NULL);
     runtime_destory(&runtime);
+    garbage_derefer(jthread, main_thread);
     return (void *) (long) ret;
 }
 
 pthread_t jthread_create_and_start(Instance *ins) {//
     pthread_t pt;
     pthread_create(&pt, NULL, jtherad_loader, ins);
+    garbage_refer(ins, main_thread);//防回收
     return pt;
 }
 
@@ -534,7 +536,6 @@ void jthreadlock_destory(JavaThreadLock *jtl) {
         pthread_mutexattr_destroy(&jtl->lock_attr);
         pthread_mutex_destroy(&jtl->mutex_lock);
         jtl->jthread_holder = NULL;
-        jtl->hold_count = 0;
         jvm_free(jtl);
     }
 }
@@ -545,10 +546,8 @@ s32 jthread_lock(MemoryBlock *mb, Runtime *runtime) { //可能会重入，同一
         jthreadlock_create(mb);
     }
     JavaThreadLock *jtl = mb->thread_lock;
-
     pthread_mutex_lock(&jtl->mutex_lock);
     jtl->jthread_holder = runtime->threadInfo->jthread;
-    jtl->hold_count++;
 
 #if _JVM_DEBUG > 5
     jvm_printf("  lock: %llx   lock holder: %llx, count: %d \n", (s64) (long) (runtime->threadInfo->jthread),
@@ -562,14 +561,8 @@ s32 jthread_unlock(MemoryBlock *mb, Runtime *runtime) {
         jthreadlock_create(mb);
     }
     JavaThreadLock *jtl = mb->thread_lock;
-    if (jtl->jthread_holder == runtime->threadInfo->jthread) {
-        jtl->hold_count--;
-        if (jtl->hold_count == 0) {//must change holder first, and unlock later
-            jtl->jthread_holder = NULL;
-            pthread_mutex_unlock(&jtl->mutex_lock);
-//            hashset_remove(runtime->threadInfo->hold_locks, ins, 0);
-        }
-    }
+    pthread_mutex_unlock(&jtl->mutex_lock);
+    jtl->jthread_holder = NULL;
     return 0;
 #if _JVM_DEBUG > 5
     jvm_printf("unlock: %llx   lock holder: %llx, count: %d \n", (s64) (long) (runtime->threadInfo->jthread),
@@ -606,6 +599,7 @@ s32 jthread_suspend(Runtime *runtime) {
 
 s32 jthread_resume(Runtime *runtime) {
     if (runtime->threadInfo->suspend_count > 0)runtime->threadInfo->suspend_count--;
+    garbage_thread_notify();
 }
 
 s32 jthread_waitTime(MemoryBlock *mb, Runtime *runtime, long waitms) {

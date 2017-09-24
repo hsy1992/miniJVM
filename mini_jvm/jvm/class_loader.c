@@ -178,7 +178,7 @@ void class_link(Class *clazz) {
     s32 i;
     for (i = 0; i < clazz->interfacePool.clasz_used; i++) {
         ConstantClassRef *ptr = &clazz->interfacePool.clasz[i];
-        ptr->name = get_utf8_string(clazz,  find_constant_classref(clazz,ptr->stringIndex)->stringIndex);
+        ptr->name = get_utf8_string(clazz, find_constant_classref(clazz, ptr->stringIndex)->stringIndex);
     }
     for (i = 0; i < clazz->fieldPool.field_used; i++) {
         FieldInfo *ptr = &clazz->fieldPool.field[i];
@@ -238,6 +238,10 @@ void class_link(Class *clazz) {
         cmr->name = get_utf8_string(clazz, cmr->nameAndType->nameIndex);
         cmr->descriptor = get_utf8_string(clazz, cmr->nameAndType->typeIndex);
         cmr->clsName = find_constant_classref(clazz, cmr->classIndex)->name;
+//        if (utf8_equals_c(clazz->name, "java/lang/String")) {
+//            printf("%s,%s\n", utf8_cstr(cmr->name), utf8_cstr(cmr->clsName));
+//            int debug = 1;
+//        }
         if (cmr->methodParaCount == -1) {
             Utf8String *tmps = utf8_create();
             parseMethodPara(cmr->descriptor, tmps);

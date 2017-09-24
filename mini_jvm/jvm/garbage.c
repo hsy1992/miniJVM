@@ -229,6 +229,9 @@ s32 garbage_mark_by_threads() {
          */
         if (runtime->threadInfo->thread_status != THREAD_STATUS_ZOMBIE) {
             jthread_suspend(runtime);
+            while(!runtime->threadInfo->is_suspend){
+                garbage_thread_wait();
+            }
             garbage_mark_refered_obj(runtime);
             jthread_resume(runtime);
         }

@@ -98,7 +98,6 @@ typedef struct _JavaThreadLock {
     pthread_mutexattr_t lock_attr;
     pthread_mutex_t mutex_lock; //互斥锁
     Instance *jthread_holder;
-    s32 hold_count;
 } JavaThreadLock;
 
 pthread_t jthread_create_and_start(Instance *ins);
@@ -122,10 +121,6 @@ s32 jthread_notify(MemoryBlock *mb, Runtime *runtime);
 s32 jthread_notifyAll(MemoryBlock *mb, Runtime *runtime);
 
 s32 jthread_waitTime(MemoryBlock *mb, Runtime *runtime, long waitms);
-
-//s32 jthread_flag_resume(Runtime *runtime);
-//
-//s32 jthread_flag_suspend(Runtime *runtime);
 
 s32 jthread_yield(Runtime *runtime);
 

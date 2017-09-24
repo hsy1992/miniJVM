@@ -29,9 +29,9 @@ Utf8String *utf8_create() {
 
     /* Allocate the data array */
 
-    uni_str->data1 = jvm_alloc(length * sizeof(utf8_char));
+    uni_str->data = jvm_alloc(length * sizeof(utf8_char));
 
-    if (uni_str->data1 == NULL) {
+    if (uni_str->data == NULL) {
         jvm_free(uni_str);
         return NULL;
     }
@@ -40,7 +40,7 @@ Utf8String *utf8_create() {
 
 void utf8_destory(Utf8String *uni_str) {
     if (uni_str != NULL) {
-        jvm_free(uni_str->data1);
+        jvm_free(uni_str->data);
         jvm_free(uni_str);
     }
 }
@@ -89,9 +89,12 @@ void utf8_append(Utf8String *a1, Utf8String *a2) {
 void utf8_append_part(Utf8String *a1, Utf8String *a2, int start, int len) {
     if (a1 == NULL || a2 == NULL)return;
     int i = 0;
-    for (i = start; (i < a2->length) && (i < start + len); i++) {
-        utf8_pushback(a1, a2->data1[i]);
-    }
+    _utf8_space_require(a1, len);
+    memcpy(a1->data + a1->length, a2->data + start * sizeof(utf8_char), len * sizeof(utf8_char));
+    a1->length += len;
+//    for (i = start; (i < a2->length) && (i < start + len); i++) {
+//        utf8_pushback(a1, a2->data[i]);
+//    }
 }
 
 void utf8_append_c(Utf8String *a1, char *a2) {
@@ -121,8 +124,8 @@ void utf8_substring(Utf8String *a1, int start, int end) {
 
 char *utf8_cstr(Utf8String *a1) {
     _utf8_space_require(a1, 1);
-    a1->data1[a1->length] = 0;
-    return (char *) &(a1->data1[0]);
+    a1->data[a1->length] = 0;
+    return (char *) &(a1->data[0]);
 }
 
 int utf8_indexof(Utf8String *a1, Utf8String *a2) {
@@ -135,14 +138,14 @@ int utf8_indexof_pos(Utf8String *a1, Utf8String *a2, int a1_pos) {
     if (a2->length == 0)return 0; //
     int i = 0;
     for (i = a1_pos; i < a1->length; i++) {
-        utf8_char ch = a1->data1[i];
-        if (ch == a2->data1[0]) {
+        utf8_char ch = a1->data[i];
+        if (ch == a2->data[0]) {
             int match = 1; //标识
             int j = 0;
             for (j = 1; j < a2->length; j++) {
                 if (i + j >= a1->length)return -1; //超界
 
-                if (a2->data1[j] != a1->data1[i + j]) {//不匹配
+                if (a2->data[j] != a1->data[i + j]) {//不匹配
                     match = 0;
                     break;
                 }
@@ -164,14 +167,14 @@ int utf8_last_indexof_pos(Utf8String *a1, Utf8String *a2, int a1_rightpos) {
     if (a2->length == 0)return a1->length; //
     int i = 0;
     for (i = a1_rightpos; i > -1; i--) {
-        utf8_char ch = a1->data1[i];
-        if (ch == a2->data1[0]) {
+        utf8_char ch = a1->data[i];
+        if (ch == a2->data[0]) {
             int match = 1; //标识
             int j = 1;
             for (j = 1; j < a2->length; j++) {
                 if (i + j >= a1->length)return -1; //超界
 
-                if (a2->data1[j] != a1->data1[i + j]) {//不匹配
+                if (a2->data[j] != a1->data[i + j]) {//不匹配
                     match = 0;
                     break;
                 }
@@ -246,9 +249,9 @@ int utf8_equals(Utf8String *a1, Utf8String *a2) {
 
     int i = 0;
     for (; i < a1->length && i < a2->length; i++) {
-        if (a1->data1[i] > a2->data1[i]) {
+        if (a1->data[i] > a2->data[i]) {
             return 0;
-        } else if (a1->data1[i] < a2->data1[i]) {
+        } else if (a1->data[i] < a2->data[i]) {
             return 0;
         }
     }
@@ -263,7 +266,7 @@ int utf8_equals_c(Utf8String *a1, char *a2) {
 }
 
 utf8_char utf8_char_at(Utf8String *a1, int pos) {
-    return a1->data1[pos];
+    return a1->data[pos];
 }
 
 int UNICODE_STR_EQUALS_FUNC(HashtableValue value1, HashtableValue value2) {
@@ -280,35 +283,35 @@ unsigned long _utf8_hashCode(Utf8String *ustr) {
     if (!ustr->hash) {//如果未有赋值，则需计算
         int i = 0;
         for (i; i < ustr->length; i++) {
-            ustr->hash = 31 * ustr->hash + ustr->data1[i];
+            ustr->hash = 31 * ustr->hash + ustr->data[i];
         }
     }
     return ustr->hash;
 }
 
-int _utf8_space_require(Utf8String *ustr, int size) {
-    if (ustr->length + size > ustr->_alloced) {
-        return _utf8_enlarge(ustr);
+int _utf8_space_require(Utf8String *ustr, int need) {
+    if (ustr->length + need <= ustr->_alloced) {
+        return 0;
     }
-    return 0;
-}
 
-int _utf8_enlarge(Utf8String *ustr) {
     utf8_char *data;
     int newsize;
 
     /* Double the allocated size */
 
-    newsize = ustr->_alloced * 2;
+    newsize = ustr->_alloced << 1;
+    while (newsize < need + ustr->length) {
+        newsize <<= 1;
+    }
 
     /* Reallocate the array to the new size */
 
-    data = jvm_realloc(ustr->data1, sizeof(utf8_char) * newsize);
+    data = jvm_realloc(ustr->data, sizeof(utf8_char) * newsize);
 
     if (data == NULL) {
         return 0;
     } else {
-        ustr->data1 = data;
+        ustr->data = data;
         ustr->_alloced = newsize;
 
         return 1;
@@ -325,7 +328,7 @@ int utf8_insert(Utf8String *ustr, int index, utf8_char data) {
     /* Increase the size if necessary */
 
     if (ustr->length + 1 > ustr->_alloced) {
-        if (!_utf8_enlarge(ustr)) {
+        if (!_utf8_space_require(ustr, 1)) {
             return 0;
         }
     }
@@ -333,13 +336,13 @@ int utf8_insert(Utf8String *ustr, int index, utf8_char data) {
     /* Move the contents of the array forward from the index
      * onwards */
 
-    memmove(&ustr->data1[index + 1],
-            &ustr->data1[index],
+    memmove(&ustr->data[index + 1],
+            &ustr->data[index],
             (ustr->length - index) * sizeof(utf8_char));
 
     /* Insert the new entry at the index */
 
-    ustr->data1[index] = data;
+    ustr->data[index] = data;
     ++ustr->length;
     ustr->hash = 0;
     return 1;
@@ -362,8 +365,8 @@ void utf8_remove_range(Utf8String *ustr, int index, int length) {
 
     /* Move back the entries following the range to be removed */
 
-    memmove(&ustr->data1[index],
-            &ustr->data1[index + length],
+    memmove(&ustr->data[index],
+            &ustr->data[index + length],
             (ustr->length - (index + length)) * sizeof(utf8_char));
 
     /* Decrease the counter */
@@ -380,7 +383,7 @@ int utf8_index_of(Utf8String *ustr, utf8_char data) {
     int i;
 
     for (i = 0; i < ustr->length; ++i) {
-        if (ustr->data1[i] == data)
+        if (ustr->data[i] == data)
             return i;
     }
 

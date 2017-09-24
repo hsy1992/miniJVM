@@ -201,7 +201,7 @@ public class Foo1 {
         int i = 0;
         while (i++ < 10) {
             try {
-                Thread.sleep(300);
+                Thread.sleep(100);
                 System.out.println("total mem:" + Runtime.getRuntime().totalMemory()
                         + "   free: " + Runtime.getRuntime().freeMemory());
 
@@ -542,10 +542,10 @@ public class Foo1 {
 //        f.t4();
 //        f.t5();
 //        f.t6();
-//        f.t7();
+        f.t7();
 //        f.t8();
 //        f.t9();
-//        f.t10();
+        f.t10();
 //        f.t11();
 //        f.t12();
 //        f.t13();

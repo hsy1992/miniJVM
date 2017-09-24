@@ -17,7 +17,7 @@ c8 *data_type_str = "    ZCFDBSIJL[";
 //extern const s32 METHOD_MAX_PARA_LENGHT = 32;
 s32 _garbage_thread_stop = 0;
 s32 _garbage_thread_pause = 1;
-s64 GARBAGE_PERIOD_MS = 1000;
+s64 GARBAGE_PERIOD_MS = 5000;
 ArrayList *_garbage_refer_set_pool;
 s64 _garbage_count = 0;
 Hashtable *sys_prop;
