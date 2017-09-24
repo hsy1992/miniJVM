@@ -1240,6 +1240,10 @@ s32 jdwp_client_process(JdwpClient *client, Runtime *runtime) {
                     Runtime *t = (Runtime *) arraylist_get_value(thread_list, i);
                     jdwppacket_write_refer(res, t->threadInfo->jthread);
                     //jvm_printf("VirtualMachine_AllThreads: %llx\n", (s64) (long) t);
+                    Instance *jarr_name = jthread_get_name_value(t->threadInfo->jthread);
+                    Utf8String *ustr = utf8_create();
+                    unicode_2_utf8((u16 *) jarr_name->arr_body, ustr, jarr_name->arr_length);
+                    printf("%s\n",utf8_cstr(ustr));
                 }
                 jdwp_writepacket(client, res);
                 break;

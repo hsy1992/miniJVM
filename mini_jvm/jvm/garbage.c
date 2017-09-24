@@ -151,7 +151,7 @@ s32 garbage_collect() {
 
     HashtableIterator hti;
     hashtable_iterate(son_2_father, &hti);
-    //jvm_printf("hmap_t:%d\n", hashtable_num_entries(son_2_father));
+    jvm_printf("hmap_t:%d\n", hashtable_num_entries(son_2_father));
     s64 obj_count = hashtable_num_entries(son_2_father);
     s64 mem1 = heap_size;
 
@@ -181,8 +181,8 @@ s32 garbage_collect() {
             }
         }
     }
-//    jvm_printf("garbage cllected OBJ: %lld -> %lld    MEM : %lld -> %lld\n",
-//           obj_count, hashtable_num_entries(son_2_father), mem1, heap_size);
+    jvm_printf("garbage cllected OBJ: %lld -> %lld    MEM : %lld -> %lld\n",
+               obj_count, hashtable_num_entries(son_2_father), mem1, heap_size);
 
     if (_garbage_count++ % 5 == 0) {//每n秒resize一次
         hashtable_remove(son_2_father, NULL, 1);
@@ -229,7 +229,7 @@ s32 garbage_mark_by_threads() {
          */
         if (runtime->threadInfo->thread_status != THREAD_STATUS_ZOMBIE) {
             jthread_suspend(runtime);
-            while(!runtime->threadInfo->is_suspend){
+            while (!runtime->threadInfo->is_suspend) {
                 garbage_thread_wait();
             }
             garbage_mark_refered_obj(runtime);
@@ -240,9 +240,11 @@ s32 garbage_mark_by_threads() {
     //调试线程
     if (java_debug) {
         Runtime *runtime = jdwpserver.runtime;
-        jthread_suspend(runtime);
-        garbage_mark_refered_obj(runtime);
-        jthread_resume(runtime);
+        if (runtime) {
+            jthread_suspend(runtime);
+            garbage_mark_refered_obj(runtime);
+            jthread_resume(runtime);
+        }
     }
     return 0;
 }
@@ -270,16 +272,16 @@ s32 garbage_mark_refered_obj(Runtime *pruntime) {
         if (is_ref(&entry)) {
             __refer ref = entry_2_refer(&entry);
             if (ref) {
-                //jvm_printf("mark:[%llx]   ",(s64)(long)ref);
+                //jvm_printf("mark:[%llx]   ", (s64) (long) ref);
                 ((MemoryBlock *) ref)->garbage_mark = GARBAGE_MARK_REFERED;
             }
         }
     }
     while (runtime) {
         for (i = 0; i < runtime->localvar_count; i++) {
-            __refer ref = (runtime->localVariables + i)->refer;
+            __refer ref = runtime->localVariables[i].refer;
             if (ref) {
-                //jvm_printf("mark:[%llx]   ",(s64)(long)ref);
+                //jvm_printf("mark:[%llx]   ", (s64) (long) ref);
                 ((MemoryBlock *) ref)->garbage_mark = GARBAGE_MARK_REFERED;
             }
         }

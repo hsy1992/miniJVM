@@ -11,6 +11,7 @@ s32 com_sun_cldc_io_ConsoleOutputStream_write(Runtime *runtime, Class *clazz) {
     s16 ch = (runtime->localVariables + 1)->integer;
     printf("%c", ch);
 #if _JVM_DEBUG > 5
+    invoke_deepth(runtime);
     jvm_printf("com_sun_cldc_io_ConsoleOutputStream_write\n");
 #endif
     return 0;
@@ -39,6 +40,7 @@ s32 java_lang_Class_forName(Runtime *runtime, Class *clazz) {
         ret = RUNTIME_STATUS_EXCEPTION;
     }
 #if _JVM_DEBUG > 5
+    invoke_deepth(runtime);
     jvm_printf("java_lang_Class_forName [%llx]\n", (s64) (long) cl);
 #endif
     return ret;
@@ -61,6 +63,7 @@ s32 java_lang_Class_newInstance(Runtime *runtime, Class *clazz) {
         ret = RUNTIME_STATUS_EXCEPTION;
     }
 #if _JVM_DEBUG > 5
+    invoke_deepth(runtime);
     jvm_printf("java_lang_Class_newInstance  class:[%llx] ins:[%llx]\n", (s64) (long) cl, (s64) (long) ins);
 #endif
     return ret;
@@ -76,6 +79,7 @@ s32 java_lang_Class_isInstance(Runtime *runtime, Class *clazz) {
         push_int(stack, 0);
     }
 #if _JVM_DEBUG > 5
+    invoke_deepth(runtime);
     jvm_printf("java_lang_Class_isInstance\n");
 #endif
     return 0;
@@ -92,6 +96,7 @@ s32 java_lang_Class_isAssignableFrom(Runtime *runtime, Class *clazz) {
         push_int(stack, 0);
     }
 #if _JVM_DEBUG > 5
+    invoke_deepth(runtime);
     jvm_printf("java_lang_Class_isAssignableFrom\n");
 #endif
     return 0;
@@ -107,6 +112,7 @@ s32 java_lang_Class_isInterface(Runtime *runtime, Class *clazz) {
         push_int(stack, 0);
     }
 #if _JVM_DEBUG > 5
+    invoke_deepth(runtime);
     jvm_printf("java_lang_Class_isAssignableFrom\n");
 #endif
     return 0;
@@ -121,6 +127,7 @@ s32 java_lang_Class_isArray(Runtime *runtime, Class *clazz) {
         push_int(stack, 0);
     }
 #if _JVM_DEBUG > 5
+    invoke_deepth(runtime);
     jvm_printf("java_lang_Class_isArray\n");
 #endif
     return 0;
@@ -136,6 +143,7 @@ s32 java_lang_Class_getName(Runtime *runtime, Class *clazz) {
         push_ref(stack, NULL);
     }
 #if _JVM_DEBUG > 5
+    invoke_deepth(runtime);
     jvm_printf("java_lang_Class_getName\n");
 #endif
     return 0;
@@ -147,6 +155,7 @@ s32 java_lang_Double_doubleToLongBits(Runtime *runtime, Class *clazz) {
     l2d.i2l.i1 = (runtime->localVariables + 0)->integer;
     l2d.i2l.i0 = (runtime->localVariables + 1)->integer;
 #if _JVM_DEBUG > 5
+    invoke_deepth(runtime);
     jvm_printf("java_lang_Double_doubleToLongBits %lf to %lld\n", l2d.d, l2d.l);
 #endif
     push_long(stack, l2d.l);
@@ -159,6 +168,7 @@ s32 java_lang_Double_longBitsToDouble(Runtime *runtime, Class *clazz) {
     l2d.i2l.i1 = (runtime->localVariables + 0)->integer;
     l2d.i2l.i0 = (runtime->localVariables + 1)->integer;
 #if _JVM_DEBUG > 5
+    invoke_deepth(runtime);
     jvm_printf("java_lang_Double_longBitsToDouble\n");
 #endif
     push_double(stack, l2d.d);
@@ -172,6 +182,7 @@ s32 java_lang_Float_intBitsToFloat(Runtime *runtime, Class *clazz) {
     i2f.i = (runtime->localVariables + 0)->integer;
 
 #if _JVM_DEBUG > 5
+    invoke_deepth(runtime);
     jvm_printf("java_lang_Float_intBitsToFloat r = %f\n", i2f.f);
 #endif
     push_float(stack, i2f.f);
@@ -184,6 +195,7 @@ s32 java_lang_Float_floatToIntBits(Runtime *runtime, Class *clazz) {
     i2f.i = (runtime->localVariables + 0)->integer;
 
 #if _JVM_DEBUG > 5
+    invoke_deepth(runtime);
     jvm_printf("java_lang_Float_floatToIntBits r = %f\n", i2f.i);
 #endif
     push_int(stack, i2f.i);
@@ -197,6 +209,7 @@ s32 java_lang_Math_exp(Runtime *runtime, Class *clazz) {
     l2d.i2l.i0 = (runtime->localVariables + 1)->integer;
     f64 r = exp(l2d.d);
 #if _JVM_DEBUG > 5
+    invoke_deepth(runtime);
     jvm_printf("java_lang_Math_sin r = %f\n", r);
 #endif
     push_double(stack, r);
@@ -213,6 +226,7 @@ s32 java_lang_Math_random(Runtime *runtime, Class *clazz) {
     for (i = 0; i < times; i++)
         r = ((f64) rand() / (f64) RAND_MAX);
 #if _JVM_DEBUG > 5
+    invoke_deepth(runtime);
     jvm_printf("java_lang_Math_random r = %f\n", r);
 #endif
     push_double(stack, r);
@@ -226,6 +240,7 @@ s32 java_lang_Math_sin(Runtime *runtime, Class *clazz) {
     l2d.i2l.i0 = (runtime->localVariables + 1)->integer;
     f64 r = sin(l2d.d);
 #if _JVM_DEBUG > 5
+    invoke_deepth(runtime);
     jvm_printf("java_lang_Math_sin r = %f\n", r);
 #endif
     push_double(stack, r);
@@ -240,6 +255,7 @@ s32 java_lang_Math_cos(Runtime *runtime, Class *clazz) {
     l2d.i2l.i0 = (runtime->localVariables + 1)->integer;
     f64 r = cos(l2d.d);
 #if _JVM_DEBUG > 5
+    invoke_deepth(runtime);
     jvm_printf("java_lang_Math_cos r = %f\n", r);
 #endif
     push_double(stack, r);
@@ -253,6 +269,7 @@ s32 java_lang_Math_tan(Runtime *runtime, Class *clazz) {
     l2d.i2l.i0 = (runtime->localVariables + 1)->integer;
     f64 r = tan(l2d.d);
 #if _JVM_DEBUG > 5
+    invoke_deepth(runtime);
     jvm_printf("java_lang_Math_tan r = %f\n", r);
 #endif
     push_double(stack, r);
@@ -266,6 +283,7 @@ s32 java_lang_Math_sqrt(Runtime *runtime, Class *clazz) {
     l2d.i2l.i0 = (runtime->localVariables + 1)->integer;
     f64 r = sqrt(l2d.d);
 #if _JVM_DEBUG > 5
+    invoke_deepth(runtime);
     jvm_printf("java_lang_Math_sqrt r = %f\n", r);
 #endif
     push_double(stack, r);
@@ -279,6 +297,7 @@ s32 java_lang_Math_ceil(Runtime *runtime, Class *clazz) {
     l2d.i2l.i0 = (runtime->localVariables + 1)->integer;
     f64 r = ceil(l2d.d);
 #if _JVM_DEBUG > 5
+    invoke_deepth(runtime);
     jvm_printf("java_lang_Math_ceil r = %f\n", r);
 #endif
     push_double(stack, r);
@@ -293,6 +312,7 @@ s32 java_lang_Math_floor(Runtime *runtime, Class *clazz) {
     l2d.i2l.i0 = (runtime->localVariables + 1)->integer;
     f64 r = floor(l2d.d);
 #if _JVM_DEBUG > 5
+    invoke_deepth(runtime);
     jvm_printf("java_lang_Math_floor r = %f\n", r);
 #endif
     push_double(stack, r);
@@ -304,6 +324,7 @@ s32 java_lang_Object_getClass(Runtime *runtime, Class *clazz) {
     Instance *ins = (Instance *) (runtime->localVariables + 0)->refer;
     push_ref(stack, (__refer) ins->mb.clazz);
 #if _JVM_DEBUG > 5
+    invoke_deepth(runtime);
     jvm_printf("java_lang_Object_getClass %d\n", ins);
 #endif
     return 0;
@@ -314,6 +335,7 @@ s32 java_lang_Object_hashCode(Runtime *runtime, Class *clazz) {
     Instance *ins = (Instance *) (runtime->localVariables + 0)->refer;
     push_int(stack, (s32) (long) ins);
 #if _JVM_DEBUG > 5
+    invoke_deepth(runtime);
     jvm_printf("java_lang_Object_hashCode %llx\n", (s32) (long) ins);
 #endif
     return 0;
@@ -325,6 +347,7 @@ s32 java_lang_Object_notify(Runtime *runtime, Class *clazz) {
 
     jthread_notify(&ins->mb, runtime);
 #if _JVM_DEBUG > 5
+    invoke_deepth(runtime);
     jvm_printf("java_lang_Object_notify %d\n", ins);
 #endif
     return 0;
@@ -335,6 +358,7 @@ s32 java_lang_Object_notifyAll(Runtime *runtime, Class *clazz) {
     Instance *ins = (Instance *) (runtime->localVariables + 0)->refer;
     jthread_notifyAll(&ins->mb, runtime);
 #if _JVM_DEBUG > 5
+    invoke_deepth(runtime);
     jvm_printf("java_lang_Object_notifyAll %d\n", ins);
 #endif
     return 0;
@@ -347,6 +371,7 @@ s32 java_lang_Object_wait(Runtime *runtime, Class *clazz) {
     l2d.i2l.i1 = (runtime->localVariables + 1)->integer;
     l2d.i2l.i0 = (runtime->localVariables + 2)->integer;
 #if _JVM_DEBUG > 5
+    invoke_deepth(runtime);
     jvm_printf("java_lang_Object_wait %llx  wait %lld\n", (s64) (long) ins, l2d.l);
 #endif
     jthread_waitTime(&ins->mb, runtime, l2d.l);
@@ -359,6 +384,7 @@ s32 java_lang_Runtime_exitInternal(Runtime *runtime, Class *clazz) {
     s32 status = (runtime->localVariables + 1)->integer;
     exit(status);
 #if _JVM_DEBUG > 5
+    invoke_deepth(runtime);
     jvm_printf("java_lang_Runtime_exitInternal %d\n", status);
 #endif
     return 0;
@@ -369,6 +395,7 @@ s32 java_lang_Runtime_freeMemory(Runtime *runtime, Class *clazz) {
 
     push_long(stack, MAX_HEAP_SIZE - heap_size);
 #if _JVM_DEBUG > 5
+    invoke_deepth(runtime);
     jvm_printf("java_lang_Runtime_freeMemory \n");
 #endif
     return 0;
@@ -379,16 +406,15 @@ s32 java_lang_Runtime_totalMemory(Runtime *runtime, Class *clazz) {
 
     push_long(stack, MAX_HEAP_SIZE);
 #if _JVM_DEBUG > 5
+    invoke_deepth(runtime);
     jvm_printf("java_lang_Runtime_totalMemory \n");
 #endif
     return 0;
 }
 
 s32 java_lang_Runtime_gc(Runtime *runtime, Class *clazz) {
-//    runtime->threadInfo->thread_running = 0;
-    garbage_collect();
-//    runtime->threadInfo->thread_running = 1;
 #if _JVM_DEBUG > 5
+    invoke_deepth(runtime);
     jvm_printf("java_lang_Runtime_gc \n");
 #endif
     return 0;
@@ -400,6 +426,7 @@ s32 java_lang_String_charAt0(Runtime *runtime, Class *clazz) {
     s32 index = (runtime->localVariables + 1)->integer;
     s16 ch = jstring_char_at(jstr, index);
 #if _JVM_DEBUG > 5
+    invoke_deepth(runtime);
     jvm_printf("java_lang_String_charAt ch = %d\n", ch);
 #endif
     push_int(stack, ch);
@@ -412,6 +439,7 @@ s32 java_lang_String_equals(Runtime *runtime, Class *clazz) {
     Instance *jstr2 = (Instance *) (runtime->localVariables + 1)->refer;
     s32 r = jstring_equals(jstr1, jstr2);
 #if _JVM_DEBUG > 5
+    invoke_deepth(runtime);
     jvm_printf("java_lang_String_equals r = %f\n", r);
 #endif
     push_int(stack, r);
@@ -424,6 +452,7 @@ s32 java_lang_String_indexOf(Runtime *runtime, Class *clazz) {
     u16 ch = (runtime->localVariables + 1)->integer;
     s32 r = jstring_index_of(jstr, ch, 0);
 #if _JVM_DEBUG > 5
+    invoke_deepth(runtime);
     jvm_printf("java_lang_String_indexOf r = %f\n", r);
 #endif
     push_int(stack, r);
@@ -437,6 +466,7 @@ s32 java_lang_String_indexOfFrom(Runtime *runtime, Class *clazz) {
     s32 startAt = (runtime->localVariables + 2)->integer;
     s32 r = jstring_index_of(jstr, ch, startAt);
 #if _JVM_DEBUG > 5
+    invoke_deepth(runtime);
     jvm_printf("java_lang_String_indexOfFrom r = %f\n", r);
 #endif
     push_int(stack, r);
@@ -448,6 +478,7 @@ s32 java_lang_String_intern(Runtime *runtime, Class *clazz) {
     Instance *jstr = (Instance *) (runtime->localVariables + 0)->refer;
 
 #if _JVM_DEBUG > 5
+    invoke_deepth(runtime);
     jvm_printf("java_lang_String_intern \n");
 #endif
     push_ref(stack, (__refer) jstr);
@@ -459,6 +490,7 @@ s32 java_lang_StringBuffer_append(Runtime *runtime, Class *clazz) {
     Instance *jstr = (Instance *) (runtime->localVariables + 0)->refer;
 
 #if _JVM_DEBUG > 5
+    invoke_deepth(runtime);
     jvm_printf("java_lang_StringBuffer_append \n");
 #endif
     push_ref(stack, (__refer) jstr);
@@ -484,6 +516,7 @@ s32 java_lang_System_arraycopy(Runtime *runtime, Class *clazz) {
             memcpy(&(dest->arr_body[dest_start]), &(src->arr_body[src_start]), count);
     }
 #if _JVM_DEBUG > 5
+    invoke_deepth(runtime);
     jvm_printf("java_lang_System_arraycopy\n");
 #endif
 
@@ -505,6 +538,7 @@ s32 java_lang_System_doubleToString(Runtime *runtime, Class *clazz) {
     utf8_destory(str);
 
 #if _JVM_DEBUG > 5
+    invoke_deepth(runtime);
     jvm_printf("java_lang_System_doubleToString\n");
 #endif
 
@@ -518,6 +552,7 @@ s32 java_lang_System_currentTimeMillis(Runtime *runtime, Class *clazz) {
     push_long(stack, curMs);
 
 #if _JVM_DEBUG > 5
+    invoke_deepth(runtime);
     jvm_printf("java_lang_System_currentTimeMillis\n");
 #endif
 
@@ -531,6 +566,7 @@ s32 java_lang_System_nanotime(Runtime *runtime, Class *clazz) {
     push_long(stack, nano);
 
 #if _JVM_DEBUG > 5
+    invoke_deepth(runtime);
     jvm_printf("java_lang_System_nanotime\n");
 #endif
 
@@ -543,6 +579,7 @@ s32 java_lang_System_identityHashCode(Runtime *runtime, Class *clazz) {
     push_ref(stack, (__refer) tmps);
 
 #if _JVM_DEBUG > 5
+    invoke_deepth(runtime);
     jvm_printf("java_lang_System_identityHashCode\n");
 #endif
 
@@ -566,6 +603,7 @@ s32 java_lang_System_getProperty0(Runtime *runtime, Class *clazz) {
     utf8_destory(key);
 
 #if _JVM_DEBUG > 5
+    invoke_deepth(runtime);
     jvm_printf("java_lang_System_getProperty0 \n");
 #endif
     return 0;
@@ -575,6 +613,7 @@ s32 java_lang_Thread_currentThread(Runtime *runtime, Class *clazz) {
     StackFrame *stack = runtime->stack;
     push_ref(stack, (__refer) runtime->threadInfo->jthread);
 #if _JVM_DEBUG > 5
+    invoke_deepth(runtime);
     jvm_printf("java_lang_Thread_currentThread \n");
 #endif
 
@@ -584,6 +623,7 @@ s32 java_lang_Thread_currentThread(Runtime *runtime, Class *clazz) {
 s32 java_lang_Thread_yield(Runtime *runtime, Class *clazz) {
     jthread_yield(runtime);
 #if _JVM_DEBUG > 5
+    invoke_deepth(runtime);
     jvm_printf("java_lang_Thread_yield \n");
 #endif
     return 0;
@@ -595,6 +635,7 @@ s32 java_lang_Thread_sleep(Runtime *runtime, Class *clazz) {
     l2d.i2l.i1 = (runtime->localVariables + 0)->integer;
     l2d.i2l.i0 = (runtime->localVariables + 1)->integer;
 #if _JVM_DEBUG > 5
+    invoke_deepth(runtime);
     jvm_printf("java_lang_Thread_sleep %lld\n", l2d.l);
 #endif
     runtime->threadInfo->thread_status = THREAD_STATUS_SLEEPING;
@@ -609,6 +650,7 @@ s32 java_lang_Thread_start(Runtime *runtime, Class *clazz) {
     jthread_create_and_start(ins);
 
 #if _JVM_DEBUG > 5
+    invoke_deepth(runtime);
     jvm_printf("java_lang_Thread_start \n");
 #endif
 
@@ -621,6 +663,7 @@ s32 java_lang_Thread_isAlive(Runtime *runtime, Class *clazz) {
 
     push_int(stack, runtime->threadInfo->thread_status != THREAD_STATUS_ZOMBIE);
 #if _JVM_DEBUG > 5
+    invoke_deepth(runtime);
     jvm_printf("java_lang_Thread_isAlive \n");
 #endif
 
@@ -632,6 +675,7 @@ s32 java_lang_Thread_activeCount(Runtime *runtime, Class *clazz) {
 
     push_int(stack, thread_list->length);
 #if _JVM_DEBUG > 5
+    invoke_deepth(runtime);
     jvm_printf("java_lang_Thread_activeCount \n");
 #endif
 
@@ -644,6 +688,7 @@ s32 java_lang_Thread_setPriority0(Runtime *runtime, Class *clazz) {
     Instance *ins = (Instance *) (runtime->localVariables + 0)->refer;
 
 #if _JVM_DEBUG > 5
+    invoke_deepth(runtime);
     jvm_printf("java_lang_Thread_setPriority0 \n");
 #endif
 
@@ -656,6 +701,7 @@ s32 java_lang_Thread_interrupt0(Runtime *runtime, Class *clazz) {
     Instance *ins = (Instance *) (runtime->localVariables + 0)->refer;
 
 #if _JVM_DEBUG > 5
+    invoke_deepth(runtime);
     jvm_printf("java_lang_Thread_interrupt0 \n");
 #endif
 
@@ -667,6 +713,7 @@ s32 java_io_PrintStream_printImpl(Runtime *runtime, Class *clazz) {
     StackFrame *stack = runtime->stack;
 
 #if _JVM_DEBUG > 5
+    invoke_deepth(runtime);
     jvm_printf("java_io_PrintStream_printImpl \n");
 #endif
 
@@ -694,8 +741,10 @@ s32 java_io_Throwable_printStackTrace0(Runtime *runtime, Class *clazz) {
     StackFrame *stack = runtime->stack;
     Instance *tmps = (Instance *) (runtime->localVariables + 0)->refer;
 #if _JVM_DEBUG > 5
+    invoke_deepth(runtime);
     jvm_printf("java_io_Throwable_printStackTrace0 \n");
 #endif
+    invoke_deepth(runtime);
     jvm_printf("java_io_Throwable_printStackTrace0 %s \n", utf8_cstr(tmps->mb.clazz->name));
     return 0;
 }
@@ -782,6 +831,7 @@ s32 invoke_native_method(Runtime *runtime, Class *p,
     java_native_method *method = find_native_method(cls_name, method_name, method_type);
     if (method != 0) {
 #if _JVM_DEBUG > 5
+        invoke_deepth(runtime);
         jvm_printf("invoke native %s/%s %s\n", method->clzname, method->methodname, method_type);
 #endif
         method->func_pointer(runtime, p);

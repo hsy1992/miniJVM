@@ -426,7 +426,7 @@ int jvm_printf(const char *format, ...) {
     result = vprintf(format, vp);
 #endif
     va_end(vp);
-    garbage_thread_unlock();
+    //garbage_thread_unlock();
     return result;
 }
 
@@ -550,8 +550,8 @@ s32 jthread_lock(MemoryBlock *mb, Runtime *runtime) { //可能会重入，同一
     jtl->jthread_holder = runtime->threadInfo->jthread;
 
 #if _JVM_DEBUG > 5
-    jvm_printf("  lock: %llx   lock holder: %llx, count: %d \n", (s64) (long) (runtime->threadInfo->jthread),
-           (s64) (long) (jtl->jthread_holder), jtl->hold_count);
+    jvm_printf("  lock: %llx   lock holder: %llx \n", (s64) (long) (runtime->threadInfo->jthread),
+           (s64) (long) (jtl->jthread_holder));
 #endif
 }
 
@@ -565,8 +565,8 @@ s32 jthread_unlock(MemoryBlock *mb, Runtime *runtime) {
     jtl->jthread_holder = NULL;
     return 0;
 #if _JVM_DEBUG > 5
-    jvm_printf("unlock: %llx   lock holder: %llx, count: %d \n", (s64) (long) (runtime->threadInfo->jthread),
-           (s64) (long) (jtl->jthread_holder), jtl->hold_count);
+    jvm_printf("unlock: %llx   lock holder: %llx, \n", (s64) (long) (runtime->threadInfo->jthread),
+           (s64) (long) (jtl->jthread_holder));
 #endif
 }
 

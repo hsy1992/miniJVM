@@ -189,8 +189,10 @@ public class Foo1 {
                 while (true) {
                     try {
                         Thread.sleep(1000);
-                        System.out.println(this + "j=" + j++);
-
+                        if (j % 10 == 0) {
+                            System.out.println(this + "j=" + j);
+                        }
+                        j++;
                     } catch (InterruptedException ex) {
                     }
                 }
@@ -254,48 +256,54 @@ public class Foo1 {
     }
 
     void t12() {
-        try {
-            ServerSocket srvsock = (ServerSocket) Connector.open("serversocket://:80");
-            System.out.println("server socket listen...");
-            srvsock.listen();
-            while (true) {
+        new Thread(new Runnable() {
+
+            @Override
+            public void run() {
                 try {
-                    Socket cltsock = srvsock.accept();
-                    cltsock.setOption(Socket.OP_TYPE_NON_BLOCK, Socket.OP_VAL_NON_BLOCK);
-                    System.out.println("accepted client socket:" + cltsock);
-                    byte[] buf = new byte[256];
-                    StringBuffer tmps = new StringBuffer();
-                    int rlen;
-                    while ((rlen = cltsock.read(buf, 0, 256)) != -1) {
-                        String s = new String(buf, 0, rlen);
-                        tmps.append(s);
-                        String s1 = tmps.toString();
-                        if (s1.indexOf("\n\n") >= 0 || s1.indexOf("\r\n\r\n") >= 0) {
-                            break;
+                    ServerSocket srvsock = (ServerSocket) Connector.open("serversocket://:80");
+                    System.out.println("server socket listen...");
+                    srvsock.listen();
+                    while (true) {
+                        try {
+                            Socket cltsock = srvsock.accept();
+                            cltsock.setOption(Socket.OP_TYPE_NON_BLOCK, Socket.OP_VAL_NON_BLOCK);
+                            System.out.println("accepted client socket:" + cltsock);
+                            byte[] buf = new byte[256];
+                            StringBuffer tmps = new StringBuffer();
+                            int rlen;
+                            while ((rlen = cltsock.read(buf, 0, 256)) != -1) {
+                                String s = new String(buf, 0, rlen);
+                                tmps.append(s);
+                                String s1 = tmps.toString();
+                                if (s1.indexOf("\n\n") >= 0 || s1.indexOf("\r\n\r\n") >= 0) {
+                                    break;
+                                }
+                            }
+                            //System.out.println("RECV: " + tmps.toString());
+                            String sbuf = "HTTP/1.0 200 OK\r\nContent-Type: text/html\r\n\r\nFor mini_jvm test. ( EGLS Beijing co.,ltd)" + Calendar.getInstance().getTime().toString();
+                            int sent = 0;
+                            while ((sent) < sbuf.length()) {
+                                int wlen = cltsock.write(sbuf.getBytes(), sent, sbuf.length() - sent);
+                                if (wlen == -1) {
+                                    break;
+                                }
+                                sent += wlen;
+                            }
+                            cltsock.close();
+                            if (false) {
+                                break;
+                            }
+                        } catch (Exception e) {
+                            System.out.println(e);
                         }
                     }
-                    System.out.println("RECV: " + tmps.toString());
-                    String sbuf = "HTTP/1.0 200 OK\r\nContent-Type: text/html\r\n\r\nFor mini_jvm test. ( EGLS Beijing co.,ltd)" + Calendar.getInstance().getTime().toString();
-                    int sent = 0;
-                    while ((sent) < sbuf.length()) {
-                        int wlen = cltsock.write(sbuf.getBytes(), sent, sbuf.length() - sent);
-                        if (wlen == -1) {
-                            break;
-                        }
-                        sent += wlen;
-                    }
-                    cltsock.close();
-                    if (false) {
-                        break;
-                    }
+                    srvsock.close();
                 } catch (Exception e) {
                     System.out.println(e);
                 }
             }
-            srvsock.close();
-        } catch (Exception e) {
-            System.out.println(e);
-        }
+        }).start();
 
     }
 
@@ -307,8 +315,15 @@ public class Foo1 {
             conn.write(request.getBytes(), 0, request.length());
             byte[] rcvbuf = new byte[256];
             int len = 0;
+            int zero = 0;
             while (len != -1) {
                 len = conn.read(rcvbuf, 0, 256);
+                if (len == 0) {
+                    zero++;
+                }
+                if (zero > 3) {
+                    break;
+                }
                 for (int i = 0; i < len; i++) {
                     System.out.print((char) rcvbuf[i]);
                 }
@@ -387,7 +402,6 @@ public class Foo1 {
             dos.close();
             DataInputStream dis = new DataInputStream(b.getInputStream());
             String s = dis.readUTF();
-            s = dis.readUTF();
             printBytes(s);
             printString(s);
             dis.close();
@@ -467,64 +481,64 @@ public class Foo1 {
     }
 
     void t19() {
-        System.out.println("fi=" + fi);
-        Long[][] a = new Long[3][5];
-        System.out.println("arr a:" + a);
-        Object[][][] objs = new Object[4][][];
-        System.out.println("arr objs:" + objs);
-        objs[1] = new Object[2][];
-        System.out.println("arr objs[1]:" + objs[1]);
-        Short[] c = new Short[5];
-        System.out.println("arr c:" + c);
-        System.out.println("fi=" + fi);
-
-        List<Integer> list = new ArrayList();
-        list.add(1);
-        list.add(999);
-        for (Iterator it = list.iterator(); it.hasNext();) {
-            Object o = it.next();
-            System.out.println("list[i]=" + o);
-        }
-        Integer[] iarr = list.toArray(new Integer[0]);
-        for (Integer i : iarr) {
-            System.out.println("i=" + i);
-        }
-        System.out.println("arr type:" + iarr.getClass());
-
-        Map<Long, String> map = new HashMap();
-        map.put(3L, "Long");
-        map.put(4L, "Float");
-        for (Iterator<Long> it = map.keySet().iterator(); it.hasNext();) {
-            Long key = it.next();
-            String val = map.get(key);
-            System.out.println(key + ":" + val);
-        }
-        List clist = Collections.synchronizedList(new ArrayList());
-
-        Class cla = "".getClass();
-        Reference ref = new Reference(RefNative.obj2id(cla));
-        System.out.println("ref.name=" + ref.className);
-        try {
-            System.out.println(new Long(0).getClass().toString());
-            String s = (String) cla.newInstance();
-            System.out.println(s);
-        } catch (InstantiationException ex) {
-        } catch (IllegalAccessException ex) {
-        }
-
-        Class[] classes = RefNative.getClasses();
-        for (Class cl : classes) {
-            //System.out.println("class:" + cl.getName()+" id:"+JdwpNative.referenceId(cl));
-        }
-        System.out.println("fi=" + fi);
-        while (true) {
+//        System.out.println("fi=" + fi);
+//        Long[][] a = new Long[3][5];
+//        System.out.println("arr a:" + a);
+//        Object[][][] objs = new Object[4][][];
+//        System.out.println("arr objs:" + objs);
+//        objs[1] = new Object[2][];
+//        System.out.println("arr objs[1]:" + objs[1]);
+//        Short[] c = new Short[5];
+//        System.out.println("arr c:" + c);
+//        System.out.println("fi=" + fi);
+//
+//        List<Integer> list = new ArrayList();
+//        list.add(1);
+//        list.add(999);
+//        for (Iterator it = list.iterator(); it.hasNext();) {
+//            Object o = it.next();
+//            System.out.println("list[i]=" + o);
+//        }
+//        Integer[] iarr = list.toArray(new Integer[0]);
+//        for (Integer i : iarr) {
+//            System.out.println("i=" + i);
+//        }
+//        System.out.println("arr type:" + iarr.getClass());
+//
+//        Map<Long, String> map = new HashMap();
+//        map.put(3L, "Long");
+//        map.put(4L, "Float");
+//        for (Iterator<Long> it = map.keySet().iterator(); it.hasNext();) {
+//            Long key = it.next();
+//            String val = map.get(key);
+//            System.out.println(key + ":" + val);
+//        }
+//        List clist = Collections.synchronizedList(new ArrayList());
+//
+//        Class cla = "".getClass();
+//        Reference ref = new Reference(RefNative.obj2id(cla));
+//        System.out.println("ref.name=" + ref.className);
+//        try {
+//            System.out.println(new Long(0).getClass().toString());
+//            String s = (String) cla.newInstance();
+//            System.out.println(s);
+//        } catch (InstantiationException ex) {
+//        } catch (IllegalAccessException ex) {
+//        }
+//
+//        Class[] classes = RefNative.getClasses();
+//        for (Class cl : classes) {
+//            //System.out.println("class:" + cl.getName()+" id:"+JdwpNative.referenceId(cl));
+//        }
+//        System.out.println("fi=" + fi);
+        int i = 0;
+        while (i++ < 1000) {
             try {
                 Thread.sleep(1000);
                 int debug = 1;
                 debug++;
                 debug++;
                 debug++;
-                t1();
                 debug++;
                 debug++;
                 //System.out.println("sleep 1000");
@@ -536,24 +550,24 @@ public class Foo1 {
     public static void main() {
         Foo1 f = new Foo1();
 
-//        f.t1();
-//        f.t2();
-//        f.t3();
-//        f.t4();
-//        f.t5();
-//        f.t6();
+        f.t1();
+        f.t2();
+        f.t3();
+        f.t4();
+        f.t5();
+        f.t6();
         f.t7();
-//        f.t8();
-//        f.t9();
-        f.t10();
-//        f.t11();
-//        f.t12();
-//        f.t13();
-//        f.t14();
-//        f.t15();
-//        f.t16();
-//        f.t17();
-//        f.t18();
+        f.t8();
+        f.t9();
+//        f.t10();
+        f.t11();
+        f.t12();
+        f.t13();
+        f.t14();
+        f.t15();
+        f.t16();
+        f.t17();
+        f.t18();
         f.t19();
         System.gc();
         System.gc();
