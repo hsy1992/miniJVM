@@ -478,6 +478,7 @@ void *jtherad_loader(void *para) {
     if (method) {
         if (java_debug)event_on_thread_start(&runtime);
         jthread_set_threadq_value(jthread, &runtime);
+        runtime.threadInfo->thread_status = THREAD_STATUS_RUNNING;
         arraylist_append(thread_list, &runtime);
         push_ref(runtime.stack, (__refer) jthread);
 
