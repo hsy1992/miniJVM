@@ -31,12 +31,22 @@ long pairlist_removel(Pairlist *list, long left) {
 
 s32 pairlist_put(Pairlist *list, __refer left, __refer right) {
     if (list->count >= list->_alloced) {//空间不足
-        void *p = jvm_realloc(list->ptr, (list->_alloced << 1) * (sizeof(__refer) << 1));
+        s32 newSize = list->_alloced << 1;
+        void *p = jvm_realloc(list->ptr, (newSize << 1) * (sizeof(__refer) << 1));
+        list->_alloced = newSize;
         list->ptr = p;
+    }
+    s32 i;
+    for (i = 0; i < list->count; i++) {
+        if ((list->ptr)[(i << 1)] == left) {
+            (list->ptr)[(i << 1) + 1] = right;
+            return 0;
+        }
     }
     (list->ptr)[(list->count << 1)] = left;
     (list->ptr)[(list->count << 1) + 1] = right;
     list->count++;
+    return 0;
 };
 
 __refer pairlist_get(Pairlist *list, __refer left) {
@@ -47,6 +57,13 @@ __refer pairlist_get(Pairlist *list, __refer left) {
         }
     }
     return NULL;
+};
+
+Pair pairlist_get_pair(Pairlist *list, s32 index) {
+    Pair p;
+    p.left = list->ptr[index << 1];
+    p.right = list->ptr[(index << 1) + 1];
+    return p;
 };
 
 __refer pairlist_remove(Pairlist *list, __refer left) {

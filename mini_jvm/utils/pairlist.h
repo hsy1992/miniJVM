@@ -8,6 +8,17 @@
 
 #include "../jvm/global.h"
 
+typedef struct _Pair {
+    union {
+        __refer left;
+        long leftl;
+    };
+    union {
+        __refer right;
+        long rightl;
+    };
+} Pair;
+
 typedef struct _Pairlist {
     __refer *ptr;
     s32 count;
@@ -24,6 +35,8 @@ s32 pairlist_put(Pairlist *list, __refer left, __refer right);
 __refer pairlist_get(Pairlist *list, __refer left);
 
 __refer pairlist_remove(Pairlist *list, __refer left);
+
+Pair pairlist_get_pair(Pairlist *list, s32 index);
 
 long pairlist_removel(Pairlist *list, long left);
 

@@ -544,6 +544,22 @@ public class Foo1 {
         }
     }
 
+    public void t20_1() {
+
+        String a = "abc";
+        String b = "def";
+        String c = a + b;
+
+    }
+
+    public void t20() {
+        int i = 0;
+        while (i++ < 1000000) {
+            t20_1();
+            int debug = 1;
+        }
+    }
+
     public static void main() {
         Foo1 f = new Foo1();
 
@@ -553,10 +569,10 @@ public class Foo1 {
 //        f.t4();
 //        f.t5();
 //        f.t6();
-        f.t7();
+//        f.t7();
 //        f.t8();
 //        f.t9();
-        f.t10();
+//        f.t10();
 //        f.t11();
 //        f.t12();
 //        f.t13();
@@ -566,8 +582,7 @@ public class Foo1 {
 //        f.t17();
 //        f.t18();
 //        f.t19();
-//        System.gc();
-//        System.gc();
+        f.t20();
     }
 
     public static void main(String[] agrs) {

@@ -1749,11 +1749,17 @@ s32 op_invokevirtual(u8 **opCode, Runtime *runtime) {
             }
         }
 
-//    if (
-//            utf8_equals_c(method->_this_class->name, "java/util/Calendar") &&
-//            utf8_equals_c(method->name, "get")) {
-//        int debug = 1;
-//    }
+        if (
+//            utf8_equals_c(method->name, "java/util/Calendar") &&
+                utf8_equals_c(method->name, "t20_1")) {
+            s32 count = pairlist_getl(cmr->virtual_methods, -1);
+            count++;
+            pairlist_putl(cmr->virtual_methods, -1, count);
+            if (count == 1000 || count == 1001) {
+                mem_mgr_print();
+                int debug = 1;
+            }
+        }
 
 #if _JVM_DEBUG > 5
         invoke_deepth(runtime);

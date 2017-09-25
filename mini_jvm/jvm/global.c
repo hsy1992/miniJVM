@@ -2,6 +2,7 @@
 // Created by Gust on 2017/8/20 0020.
 //
 #include "jvm.h"
+
 //======================= global var =============================
 
 Class *JVM_CLASS;
@@ -35,6 +36,24 @@ Instruction **instructionsIndexies;
 Instance *main_thread;//
 Runtime *main_runtime = NULL;
 
+//======================= memory manage =============================
+
+static s64 alloc_count = 0;
+static s64 free_count = 0;
+Pairlist *mem_size_2_count;
+
+void mem_mgr_init() {
+    if (!mem_size_2_count) {
+        mem_size_2_count = pairlist_create(0);
+    }
+}
+
+void mem_mgr_dispose() {
+    if (!mem_size_2_count) {
+        pairlist_destory(mem_size_2_count);
+        mem_size_2_count = NULL;
+    }
+}
 
 /**
  * 在分配的内存块前面加4个字节用于存放此块内存的长度
@@ -42,15 +61,28 @@ Runtime *main_runtime = NULL;
  * @return
  */
 void *jvm_alloc(u32 size) {
+
     if (!size)return NULL;
-//    if (size > 5000) {
-//        int debug = 1;
-//    }
     size += 4;
     void *ptr = malloc(size);
     if (ptr) {
         memset(ptr, 0, size);
         heap_size += size;
+        if (16 == size) {
+            int debug = 1;
+        }
+        if (20 == size) {
+            int debug = 1;
+        }
+        if (24 == size) {
+            int debug = 1;
+        }
+        alloc_count++;
+        if (mem_size_2_count) {
+            s32 count = pairlist_getl(mem_size_2_count, size);
+            count++;
+            pairlist_putl(mem_size_2_count, size, count);
+        }
         setFieldInt(ptr, size);
         return ptr + 4;
     }
@@ -61,6 +93,12 @@ s32 jvm_free(void *ptr) {
     if (ptr) {
         s32 size = getFieldInt(ptr - 4);
         heap_size -= size;
+        free_count++;
+        if (mem_size_2_count) {
+            s32 count = pairlist_getl(mem_size_2_count, size);
+            count--;
+            pairlist_putl(mem_size_2_count, size, count);
+        }
 //        if (size == 176) {
 //            int debug = 1;
 //        }
@@ -84,7 +122,15 @@ void *jvm_realloc(void *pPtr, u32 size) {
     return NULL;
 }
 
-
+void mem_mgr_print() {
+    jvm_printf("=============\n");
+    s32 i;
+    for (i = 0; i < mem_size_2_count->count; i++) {
+        Pair p = pairlist_get_pair(mem_size_2_count, i);
+        if (p.right)
+            jvm_printf("%8lld : %8lld\n", (s64) p.leftl, (s64) p.rightl);
+    }
+}
 
 #if _JVM_DEBUG_PROFILE
 Hashtable* instruct_profile;

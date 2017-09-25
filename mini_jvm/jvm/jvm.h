@@ -8,6 +8,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include "../utils/d_type.h"
 #include "../jvm/global.h"
 #include "../utils/hashtable.h"
 #include "../utils/utf8_string.h"
@@ -349,6 +350,7 @@ extern s64 MAX_HEAP_SIZE;
 extern s64 heap_size; //当前已经分配的内存总数
 extern Instance *main_thread;
 extern Runtime *main_runtime;
+extern Pairlist *mem_size_2_count;
 
 extern u8 volatile java_debug;
 

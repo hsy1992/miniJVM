@@ -55,6 +55,7 @@ s32 execute(c8 *p_classpath, c8 *p_mainclass, s32 argc, c8 **argv) {
 #if _JVM_DEBUG_PROFILE
     instruct_profile = hashtable_create(DEFAULT_HASH_FUNC, DEFAULT_HASH_EQUALS_FUNC);
 #endif
+    mem_mgr_init();
     //为指令创建索引
     instructionsIndexies = createInstructIndexies();
     //创建类容器
@@ -193,6 +194,7 @@ s32 execute(c8 *p_classpath, c8 *p_mainclass, s32 argc, c8 **argv) {
     utf8_destory(JVM_CLASS->name);
     class_destory(JVM_CLASS);
     runtime_dispose(&runtime);
+    mem_mgr_dispose();
     close_log();
     jvm_printf("over\n");
     return ret;
