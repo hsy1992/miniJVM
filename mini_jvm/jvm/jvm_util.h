@@ -74,9 +74,9 @@ Instance *getInstanceInStack(Class *clazz, ConstantMethodRef *cmr, StackFrame *s
 void printDumpOfClasses();
 
 
-void runtime_create(Runtime *runtime);
+void runtime_init(Runtime *runtime);
 
-void runtime_destory(Runtime *runtime);
+void runtime_dispose(Runtime *runtime);
 
 ////======================= thread =============================
 
@@ -128,6 +128,10 @@ s32 jthread_resume(Runtime *runtime);
 
 s32 jthread_suspend(Runtime *runtime);
 
-s32 check_suspend_and_pause(Runtime* runtime);
+s32 check_suspend_and_pause(Runtime *runtime);
+
+void thread_unlock(MemoryBlock *mb);
+
+void thread_lock(MemoryBlock *mb);
 
 #endif //MINI_JVM_UTIL_H

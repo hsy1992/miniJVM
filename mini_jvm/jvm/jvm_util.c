@@ -12,12 +12,22 @@
 
 //==================================================================================
 
+void thread_lock(MemoryBlock *mb) {
+    pthread_mutex_lock(&mb->thread_lock->mutex_lock);
+}
+
+void thread_unlock(MemoryBlock *mb) {
+    pthread_mutex_unlock(&mb->thread_lock->mutex_lock);
+}
+
 Class *classes_get(Utf8String *clsName) {
+    Class *cl = NULL;
+    thread_lock(&JVM_CLASS->mb);
     if (clsName) {
-        Class *cl = hashtable_get(classes, clsName);
-        return cl;
+        cl = hashtable_get(classes, clsName);
     }
-    return NULL;
+    thread_unlock(&JVM_CLASS->mb);
+    return cl;
 }
 
 Class *classes_load_get_c(c8 *pclassName, Runtime *runtime) {
@@ -29,6 +39,7 @@ Class *classes_load_get_c(c8 *pclassName, Runtime *runtime) {
 
 Class *classes_load_get(Utf8String *ustr, Runtime *runtime) {
     if (!ustr)return NULL;
+    thread_lock(&JVM_CLASS->mb);
     Class *cl;
     utf8_replace_c(ustr, ".", "/");
     cl = classes_get(ustr);
@@ -41,16 +52,39 @@ Class *classes_load_get(Utf8String *ustr, Runtime *runtime) {
     if (cl) {
         class_clinit(cl, runtime);
     }
+    thread_unlock(&JVM_CLASS->mb);
     return cl;
 }
 
 s32 classes_put(Class *clazz) {
     if (clazz) {
+        thread_lock(&JVM_CLASS->mb);
         hashtable_put(classes, clazz->name, clazz);
+        thread_unlock(&JVM_CLASS->mb);
         garbage_refer(clazz, JVM_CLASS);
         return 0;
     }
     return 1;
+}
+
+Runtime *threadlist_get(s32 i) {
+    Runtime *r = NULL;
+    thread_lock(&JVM_CLASS->mb);
+    r = (Runtime *) arraylist_get_value(thread_list, i);
+    thread_unlock(&JVM_CLASS->mb);
+    return r;
+}
+
+void threadlist_remove(Runtime *r) {
+    thread_lock(&JVM_CLASS->mb);
+    r = (Runtime *) arraylist_remove(thread_list, r);
+    thread_unlock(&JVM_CLASS->mb);
+}
+
+void threadlist_add(Runtime *r) {
+    thread_lock(&JVM_CLASS->mb);
+    r = (Runtime *) arraylist_append(thread_list, r);
+    thread_unlock(&JVM_CLASS->mb);
 }
 
 /**
@@ -222,6 +256,7 @@ void array_classes_create() {
 }
 
 Class *array_class_get(Utf8String *descript) {
+    thread_lock(&JVM_CLASS->mb);
     Class *clazz = hashtable_get(array_classes, descript);
     if (!clazz) {
         clazz = class_create();
@@ -229,6 +264,7 @@ Class *array_class_get(Utf8String *descript) {
         clazz->name = utf8_create_copy(descript);
         hashtable_put(array_classes, clazz->name, clazz);
     }
+    thread_unlock(&JVM_CLASS->mb);
     return clazz;
 }
 
@@ -458,7 +494,7 @@ void *jtherad_loader(void *para) {
     Instance *jthread = (Instance *) para;
     s32 ret = 0;
     Runtime runtime;
-    runtime_create(&runtime);
+    runtime_init(&runtime);
     localvar_init(&runtime, 1);
 
     runtime.clazz = jthread->mb.clazz;
@@ -479,17 +515,17 @@ void *jtherad_loader(void *para) {
         if (java_debug)event_on_thread_start(&runtime);
         jthread_set_threadq_value(jthread, &runtime);
         runtime.threadInfo->thread_status = THREAD_STATUS_RUNNING;
-        arraylist_append(thread_list, &runtime);
+        threadlist_add(&runtime);
         push_ref(runtime.stack, (__refer) jthread);
 
         ret = execute_method(method, &runtime, method->_this_class);
 
-        arraylist_remove(thread_list, &runtime);
+        threadlist_remove(&runtime);
         runtime.threadInfo->thread_status = THREAD_STATUS_ZOMBIE;
         if (java_debug)event_on_thread_death(&runtime);
     }
     jthread_set_threadq_value(jthread, NULL);
-    runtime_destory(&runtime);
+    runtime_dispose(&runtime);
     garbage_derefer(jthread, main_thread);
     return (void *) (long) ret;
 }
@@ -617,7 +653,7 @@ s32 jthread_waitTime(MemoryBlock *mb, Runtime *runtime, long waitms) {
     return 0;
 }
 
-s32 check_suspend_and_pause(Runtime* runtime){
+s32 check_suspend_and_pause(Runtime *runtime) {
     if (runtime->threadInfo->suspend_count) {
         garbage_thread_lock();
         runtime->threadInfo->is_suspend = 1;
@@ -631,6 +667,7 @@ s32 check_suspend_and_pause(Runtime* runtime){
     }
     return 0;
 }
+
 //===============================    实例化数组  ==================================
 Instance *jarray_create_des(s32 count, Utf8String *descript) {
     u8 ch = utf8_char_at(descript, 1);

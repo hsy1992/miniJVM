@@ -507,6 +507,8 @@ s32 java_lang_System_arraycopy(Runtime *runtime, Class *clazz) {
     s32 src_start = (runtime->localVariables + 1)->integer;
     Instance *src = (Instance *) (runtime->localVariables + 0)->refer;
     if (src == NULL || dest == NULL) {
+        Instance *exception = exception_create(JVM_EXCEPTION_NULLPOINTER, runtime);
+        push_ref(stack, (__refer) exception);
     } else {
         //根据元素宽
         src_start *= data_type_bytes[src->mb.clazz->arr_data_type];

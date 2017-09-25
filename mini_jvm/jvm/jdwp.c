@@ -39,6 +39,7 @@ void *jdwp_thread_listener(void *para) {
         client->closed = 0;
         client->conn_first = 1;
         client->sockfd = sockfd;
+        client->rcvp = NULL;
         jdwp_put_client(srv->clients, client);
     }
     return srv;
@@ -47,7 +48,7 @@ void *jdwp_thread_listener(void *para) {
 void *jdwp_thread_dispacher(void *para) {
     JdwpServer *srv = (JdwpServer *) para;
     Runtime runtime;
-    runtime_create(&runtime);
+    runtime_init(&runtime);
     srv->runtime = &runtime;
     s32 i;
     while (!srv->exit) {
@@ -62,7 +63,7 @@ void *jdwp_thread_dispacher(void *para) {
         check_suspend_and_pause(&runtime);
         threadSleep(20);
     }
-    runtime_destory(&runtime);
+    runtime_dispose(&runtime);
     return srv;
 }
 
@@ -305,35 +306,34 @@ s32 jdwp_write_fully(JdwpClient *client, c8 *buf, s32 need) {
     return sent;
 }
 
-
-static JdwpPacket *rcvp = NULL;
-
 JdwpPacket *jdwp_readpacket(JdwpClient *client) {
     if (!client->conn_first) {
-        if (!rcvp) {//上个包已收完
-            rcvp = jdwppacket_create();
-            rcvp->_req_len = 4;
-            rcvp->_rcv_len = 0;
-            rcvp->_4len = 1;//标志先接收的是长度信息
+        if (!client->rcvp) {//上个包已收完
+            client->rcvp = jdwppacket_create();
+            client->rcvp->_req_len = 4;
+            client->rcvp->_rcv_len = 0;
+            client->rcvp->_4len = 1;//标志先接收的是长度信息
         }
-        if (rcvp) {//上个包收到一半，有两种情况，先收4字节，再收剩余部分
-            if (rcvp->_4len) {
-                s32 len = sock_recv(client->sockfd, rcvp->data + rcvp->_rcv_len, rcvp->_req_len - rcvp->_rcv_len);
+        if (client->rcvp) {//上个包收到一半，有两种情况，先收4字节，再收剩余部分
+            if (client->rcvp->_4len) {
+                s32 len = sock_recv(client->sockfd, client->rcvp->data + client->rcvp->_rcv_len,
+                                    client->rcvp->_req_len - client->rcvp->_rcv_len);
                 if (len == -1)client->closed = 1;
-                rcvp->_rcv_len += len;
-                if (rcvp->_rcv_len == rcvp->_req_len) {
-                    rcvp->_4len = 0;
-                    rcvp->_req_len = jdwppacket_get_length(rcvp) - 4;//下次进入时直接收包体
-                    rcvp->_rcv_len = 0;
-                    jdwppacket_ensureCapacity(rcvp, rcvp->_req_len);
+                client->rcvp->_rcv_len += len;
+                if (client->rcvp->_rcv_len == client->rcvp->_req_len) {
+                    client->rcvp->_4len = 0;
+                    client->rcvp->_req_len = jdwppacket_get_length(client->rcvp) - 4;//下次进入时直接收包体
+                    client->rcvp->_rcv_len = 0;
+                    jdwppacket_ensureCapacity(client->rcvp, client->rcvp->_req_len);
                 }
             } else {
-                s32 len = sock_recv(client->sockfd, rcvp->data + 4 + rcvp->_rcv_len, rcvp->_req_len - rcvp->_rcv_len);
+                s32 len = sock_recv(client->sockfd, client->rcvp->data + 4 + client->rcvp->_rcv_len,
+                                    client->rcvp->_req_len - client->rcvp->_rcv_len);
                 if (len == -1)client->closed = 1;
-                rcvp->_rcv_len += len;
-                if (rcvp->_rcv_len == rcvp->_req_len) {
-                    JdwpPacket *p = rcvp;
-                    rcvp = NULL;
+                client->rcvp->_rcv_len += len;
+                if (client->rcvp->_rcv_len == client->rcvp->_req_len) {
+                    JdwpPacket *p = client->rcvp;
+                    client->rcvp = NULL;
                     return p;
                 }
             }
@@ -1238,13 +1238,13 @@ s32 jdwp_client_process(JdwpClient *client, Runtime *runtime) {
                 jdwppacket_write_int(res, thread_list->length);
                 s32 i;
                 for (i = 0; i < thread_list->length; i++) {
-                    Runtime *t = (Runtime *) arraylist_get_value(thread_list, i);
+                    Runtime *t = threadlist_get(i);
                     jdwppacket_write_refer(res, t->threadInfo->jthread);
                     //jvm_printf("VirtualMachine_AllThreads: %llx\n", (s64) (long) t);
                     Instance *jarr_name = jthread_get_name_value(t->threadInfo->jthread);
                     Utf8String *ustr = utf8_create();
                     unicode_2_utf8((u16 *) jarr_name->arr_body, ustr, jarr_name->arr_length);
-                    printf("%s\n",utf8_cstr(ustr));
+                    printf("%s\n", utf8_cstr(ustr));
                 }
                 jdwp_writepacket(client, res);
                 break;
@@ -1280,7 +1280,7 @@ s32 jdwp_client_process(JdwpClient *client, Runtime *runtime) {
             case JDWP_CMD_VirtualMachine_Suspend: {//1.8
                 s32 i;
                 for (i = 0; i < thread_list->length; i++) {
-                    Runtime *t = (Runtime *) arraylist_get_value(thread_list, i);
+                    Runtime *t = threadlist_get(i);
                     jthread_suspend(t);
                     //jvm_printf("VirtualMachine_Suspend: %lld\n" + (s64) (long) t);
                 }
@@ -1293,7 +1293,7 @@ s32 jdwp_client_process(JdwpClient *client, Runtime *runtime) {
             case JDWP_CMD_VirtualMachine_Resume: {//1.9
                 s32 i;
                 for (i = 0; i < thread_list->length; i++) {
-                    Runtime *t = (Runtime *) arraylist_get_value(thread_list, i);
+                    Runtime *t = threadlist_get(i);
                     if (t->threadInfo->suspend_count > 0)jthread_resume(t);
                     //jvm_printf("VirtualMachine_Resume: %llx\n", (s64) (long) t);
                 }

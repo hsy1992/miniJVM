@@ -21,10 +21,10 @@ void constructMainThread(Runtime *runtime) {
     Instance *main_thread = instance_create(thread_clazz);
     //pthread_t pthread = pthread_self();
     runtime->threadInfo->jthread = main_thread;
-    runtime->threadInfo->thread_status=THREAD_STATUS_RUNNING;
+    runtime->threadInfo->thread_status = THREAD_STATUS_RUNNING;
     instance_init(main_thread, runtime);//必须放在最好，初始化时需要用到前面的赋值
 
-    arraylist_append(thread_list, runtime);
+    threadlist_add(runtime);
     jthread_set_threadq_value(main_thread, runtime);
 }
 
@@ -77,7 +77,8 @@ s32 execute(c8 *p_classpath, c8 *p_mainclass, s32 argc, c8 **argv) {
 
     //创建运行时栈
     Runtime runtime;
-    runtime_create(&runtime);
+    runtime_init(&runtime);
+    main_runtime = &runtime;
 
     //开始装载类
     Utf8String *classpath = utf8_create_c(p_classpath);
@@ -191,7 +192,7 @@ s32 execute(c8 *p_classpath, c8 *p_mainclass, s32 argc, c8 **argv) {
     destoryAllClasses(classes);
     utf8_destory(JVM_CLASS->name);
     class_destory(JVM_CLASS);
-    runtime_destory(&runtime);
+    runtime_dispose(&runtime);
     close_log();
     jvm_printf("over\n");
     return ret;

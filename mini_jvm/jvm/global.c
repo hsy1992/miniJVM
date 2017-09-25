@@ -33,7 +33,7 @@ s64 heap_size = 0; //当前已经分配的内存总数
 
 Instruction **instructionsIndexies;
 Instance *main_thread;//
-
+Runtime *main_runtime = NULL;
 
 
 /**
@@ -83,6 +83,8 @@ void *jvm_realloc(void *pPtr, u32 size) {
     }
     return NULL;
 }
+
+
 
 #if _JVM_DEBUG_PROFILE
 Hashtable* instruct_profile;

@@ -348,8 +348,9 @@ extern Hashtable *father_2_son; //key=mem_ptr, value=别人被我引用的列表
 extern s64 MAX_HEAP_SIZE;
 extern s64 heap_size; //当前已经分配的内存总数
 extern Instance *main_thread;
+extern Runtime *main_runtime;
 
-extern  u8 volatile java_debug;
+extern u8 volatile java_debug;
 
 extern u8 JDWP_BREAK_POINT;
 
@@ -852,6 +853,11 @@ s32 classes_put(Class *clazz);
 
 Class *classes_load_get(Utf8String *pclassName, Runtime *runtime);
 
+void threadlist_add(Runtime *r);
+
+void threadlist_remove(Runtime *r);
+
+Runtime *threadlist_get(s32 i);
 //======================= instance =============================
 
 

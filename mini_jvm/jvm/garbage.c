@@ -158,7 +158,6 @@ s32 garbage_collect() {
 
     HashtableIterator hti;
     hashtable_iterate(son_2_father, &hti);
-    jvm_printf("hmap_t:%d\n", hashtable_num_entries(son_2_father));
     s64 obj_count = hashtable_num_entries(son_2_father);
     s64 mem1 = heap_size;
 
@@ -229,7 +228,7 @@ s32 garbage_mark_by_threads() {
     s32 i;
     //jvm_printf("thread set size:%d\n", thread_list->length);
     for (i = 0; i < thread_list->length; i++) {
-        Runtime *runtime = (Runtime *) arraylist_get_value(thread_list, i);
+        Runtime *runtime = threadlist_get(i);
         /**
          *  回收线程 进行收集，先暂停线程，收集完之后恢复java工作线程
          *
@@ -398,10 +397,10 @@ void dump_refer() {
 
 /**
  *    建立引用列表
- *    1.putfield 时需要创建引用，并把原来的引用从列表删除
- *    2. aastore 时需要创建引用，并把原来的引用从列表删除
- *    3. new 新对象时创建引用，其父为 Runtime 对象，因为此对象可能还在栈空间，Runtime 销毁时，删除对其的引用
- *    4. newarray 新数组创建引用，其父为 Runtime 对象，因为此对象可能还在栈空间，Runtime 销毁时，删除对其的引用
+ *    1.putfield 时需要创建引用，并把原对象的引用从列表删除
+ *    2. aastore 时需要创建引用，并把原对象的引用从列表删除
+ *    3. new 新对象时创建引用，其父为 NULL 空值， 此时这个对象在 栈或局部变量中
+ *    4. newarray 新数组创建引用，其父为 NULL 空值， 此时这个对象在 栈或局部变量中
  *
  * @param sonPtr
  * @param parentPtr

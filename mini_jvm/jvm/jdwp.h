@@ -268,6 +268,18 @@ static u16 JDWP_PACKET_RESPONSE = 0x80;
 
 //=============================      typedef   ==============================================
 
+typedef struct _JdwpPacket {
+    c8 *data;
+    s32 alloc;
+    s32 readPos;
+    s32 writePos;
+    //inner receive for nonblock rceive
+    s32 _rcv_len;
+    s32 _req_len;
+    u8 _4len;
+} JdwpPacket;
+
+
 
 typedef struct _JdwpServer {
     Utf8String *ip;
@@ -286,24 +298,13 @@ typedef struct _JdwpClient {
     s32 sockfd;
     u8 closed;
     u8 conn_first;
+    JdwpPacket *rcvp; //用于非阻塞接收，多次接收往同一个包内写入字节
 } JdwpClient;
 
 typedef struct _JdwpConn {
     s32 sockfd;
     u8 closed;
 } JdwpConn;
-
-typedef struct _JdwpPacket {
-    c8 *data;
-    s32 alloc;
-    s32 readPos;
-    s32 writePos;
-    //inner receive for nonblock rceive
-    s32 _rcv_len;
-    s32 _req_len;
-    u8 _4len;
-} JdwpPacket;
-
 
 typedef struct _Location {
     c8 typeTag;

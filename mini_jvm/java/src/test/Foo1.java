@@ -186,16 +186,13 @@ public class Foo1 {
             public void run() {
                 System.out.println("thread here.");
                 int j = 0;
-                while (true) {
-                    try {
-                        Thread.sleep(1000);
-                        if (j % 10 == 0) {
-                            System.out.println(this + "j=" + j);
-                        }
-                        j++;
-                    } catch (InterruptedException ex) {
-                    }
+                String c = null;
+                for (int i = 0; i < 1000000; i++) {
+                    String a = "abc";
+                    String b = "def";
+                    c = a + b;
                 }
+                System.out.println("thread c=\"" + c + "\"");
             }
         });
         t.start();

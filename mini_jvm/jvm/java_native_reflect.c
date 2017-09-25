@@ -277,7 +277,7 @@ s32 javax_mini_reflect_vm_RefNative_getThreads(Runtime *runtime, Class *clazz) {
 
     s32 bytes = data_type_bytes[DATATYPE_REFERENCE];
     for (i = 0; i < thread_list->length; i++) {
-        Runtime *r = (Runtime *) arraylist_get_value(thread_list, i);
+        Runtime *r = threadlist_get(i);
         l2d.r = r->threadInfo->jthread;
         jarray_set_field(jarr, i, &l2d, bytes);
     }
