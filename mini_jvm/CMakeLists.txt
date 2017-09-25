@@ -9,12 +9,7 @@ set(CMAKE_C_FLAGS "${CMAKE_ENABLE_C99}")
 set(SOURCE_FILES
         jvm/interpreter.c
         jvm/class.c
-        jvm/class_loader.c
-        jvm/class_loader_constant.c
-        jvm/class_loader_field.c
-        jvm/class_loader_interface.c
         jvm/jvm.c
-        jvm/class_loader_method.c
         jvm/jvm.h
         jvm/runtime.c
         utils/arraylist.c
@@ -42,7 +37,8 @@ set(SOURCE_FILES
         jvm/java_native_reflect.h
         jvm/jdwp.c
         jvm/jdwp.h
-        jvm/java_native_io.h)
+        jvm/java_native_io.h
+        jvm/class_load.c)
 
 add_executable(mini_jvm ${SOURCE_FILES})
 

@@ -17,7 +17,7 @@ c8 *data_type_str = "    ZCFDBSIJL[";
 //extern const s32 METHOD_MAX_PARA_LENGHT = 32;
 s32 _garbage_thread_stop = 0;
 s32 _garbage_thread_pause = 1;
-s64 GARBAGE_PERIOD_MS = 10000;
+s64 GARBAGE_PERIOD_MS = 1000;
 ArrayList *_garbage_refer_set_pool;
 s64 _garbage_count = 0;
 Hashtable *sys_prop;
@@ -35,6 +35,56 @@ Instruction **instructionsIndexies;
 Instance *main_thread;//
 
 
+
+/**
+ * 在分配的内存块前面加4个字节用于存放此块内存的长度
+ * @param size
+ * @return
+ */
+void *jvm_alloc(u32 size) {
+    if (!size)return NULL;
+//    if (size > 5000) {
+//        int debug = 1;
+//    }
+    size += 4;
+    void *ptr = malloc(size);
+    if (ptr) {
+        memset(ptr, 0, size);
+        heap_size += size;
+        setFieldInt(ptr, size);
+        return ptr + 4;
+    }
+    return NULL;
+}
+
+s32 jvm_free(void *ptr) {
+    if (ptr) {
+        s32 size = getFieldInt(ptr - 4);
+        heap_size -= size;
+//        if (size == 176) {
+//            int debug = 1;
+//        }
+        free(ptr - 4);
+        return size;
+    }
+    return 0;
+}
+
+void *jvm_realloc(void *pPtr, u32 size) {
+    if (!pPtr)return NULL;
+    if (!size)return NULL;
+    size += 4;
+    heap_size -= getFieldInt(pPtr - 4);
+    void *ptr = realloc(pPtr - 4, size);
+    if (ptr) {
+        heap_size += size;
+        setFieldInt(ptr, size);
+        return ptr + 4;
+    }
+    return NULL;
+}
+
 #if _JVM_DEBUG_PROFILE
 Hashtable* instruct_profile;
 #endif
+

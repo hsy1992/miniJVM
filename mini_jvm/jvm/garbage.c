@@ -96,6 +96,13 @@ void garbage_thread_wait() {
     pthread_cond_wait(&_garbageCond, &_garbage_lock);
 }
 
+void garbage_thread_timedwait(s64 ms) {
+    struct timespec t;
+    t.tv_sec = ms / 1000;
+    t.tv_nsec = (ms % 1000) * 1000000;
+    pthread_cond_timedwait(&_garbageCond, &_garbage_lock, &t);
+}
+
 void garbage_thread_notify() {
     pthread_cond_signal(&_garbageCond);
 }
@@ -201,10 +208,10 @@ void garbage_destory_memobj(__refer k) {
     garbage_derefer_all(k);
 
 #if _JVM_DEBUG_GARBAGE_DUMP
-//    Utf8String *pus = utf8_create();
-//    getMemBlockName(k, pus);
-//    jvm_printf("garbage collect instance  %s [%x]\n", utf8_cstr(pus), k);
-//    utf8_destory(pus);
+    //    Utf8String *pus = utf8_create();
+    //    getMemBlockName(k, pus);
+    //    jvm_printf("garbage collect instance  %s [%x]\n", utf8_cstr(pus), k);
+    //    utf8_destory(pus);
 #endif
     Hashset *v = (Hashset *) hashtable_get(son_2_father, k);
     _garbage_put_set(v);
@@ -214,7 +221,7 @@ void garbage_destory_memobj(__refer k) {
 }
 
 /**
- * 各个线程把自己还需要使用的对象从引用列表中移除，表示不能回收
+ * 各个线程把自己还需要使用的对象进行标注，表示不能回收
  * @param son
  * @return
  */
@@ -230,7 +237,7 @@ s32 garbage_mark_by_threads() {
         if (runtime->threadInfo->thread_status != THREAD_STATUS_ZOMBIE) {
             jthread_suspend(runtime);
             while (!runtime->threadInfo->is_suspend) {
-                garbage_thread_wait();
+                garbage_thread_timedwait(50);
             }
             garbage_mark_refered_obj(runtime);
             jthread_resume(runtime);
@@ -509,52 +516,4 @@ s32 garbage_is_refer_by(__refer sonPtr, __refer parentPtr) {
     }
     garbage_thread_unlock();
     return ret;
-}
-
-/**
- * 在分配的内存块前面加4个字节用于存放此块内存的长度
- * @param size
- * @return
- */
-void *jvm_alloc(u32 size) {
-    if (!size)return NULL;
-//    if (size > 5000) {
-//        int debug = 1;
-//    }
-    size += 4;
-    void *ptr = malloc(size);
-    if (ptr) {
-        memset(ptr, 0, size);
-        heap_size += size;
-        setFieldInt(ptr, size);
-        return ptr + 4;
-    }
-    return NULL;
-}
-
-s32 jvm_free(void *ptr) {
-    if (ptr) {
-        s32 size = getFieldInt(ptr - 4);
-        heap_size -= size;
-//        if (size == 176) {
-//            int debug = 1;
-//        }
-        free(ptr - 4);
-        return size;
-    }
-    return 0;
-}
-
-void *jvm_realloc(void *pPtr, u32 size) {
-    if (!pPtr)return NULL;
-    if (!size)return NULL;
-    size += 4;
-    heap_size -= getFieldInt(pPtr - 4);
-    void *ptr = realloc(pPtr - 4, size);
-    if (ptr) {
-        heap_size += size;
-        setFieldInt(ptr, size);
-        return ptr + 4;
-    }
-    return NULL;
 }

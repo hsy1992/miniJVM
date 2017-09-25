@@ -59,6 +59,7 @@ void *jdwp_thread_dispacher(void *para) {
                 arraylist_remove(srv->clients, client);
             }
         }
+        check_suspend_and_pause(&runtime);
         threadSleep(20);
     }
     runtime_destory(&runtime);

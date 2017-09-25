@@ -999,4 +999,6 @@ int jvm_printf(const char *, ...);
 
 void invoke_deepth(Runtime *runtime);
 
+c8 *getMajorVersionString(u16 major_number);
+
 #endif

@@ -19,4 +19,12 @@ typedef unsigned long long u64;
 typedef signed long long s64;
 typedef void *__refer;
 
+
+
+void *jvm_alloc(u32 size);
+
+s32 jvm_free(void *ptr);
+
+void *jvm_realloc(void *pPtr, u32 size);
+
 #endif //MINI_JVM_GLOBAL_H

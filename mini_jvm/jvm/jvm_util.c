@@ -617,6 +617,20 @@ s32 jthread_waitTime(MemoryBlock *mb, Runtime *runtime, long waitms) {
     return 0;
 }
 
+s32 check_suspend_and_pause(Runtime* runtime){
+    if (runtime->threadInfo->suspend_count) {
+        garbage_thread_lock();
+        runtime->threadInfo->is_suspend = 1;
+        garbage_thread_notify();
+        while (runtime->threadInfo->suspend_count) {
+            garbage_thread_wait();
+        }
+        runtime->threadInfo->is_suspend = 0;
+        garbage_thread_notify();
+        garbage_thread_unlock();
+    }
+    return 0;
+}
 //===============================    实例化数组  ==================================
 Instance *jarray_create_des(s32 count, Utf8String *descript) {
     u8 ch = utf8_char_at(descript, 1);

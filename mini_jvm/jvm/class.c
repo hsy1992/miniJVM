@@ -235,3 +235,223 @@ Class *getSuperClass(Class *clazz) {
     }
     return NULL;
 }
+
+//===============================    类数据访问  ==================================
+
+
+/* find UTF8 */
+ConstantUTF8 *find_constant_utf8(Class *clazz, s32 index) {
+    return (ConstantUTF8 *) (clazz->constant_item_ptr[index]);
+}
+
+/* Find Class Reference */
+ConstantStringRef *find_constant_stringref(Class *clazz, s32 index) {
+    return (ConstantStringRef *) (clazz->constant_item_ptr[index]);
+}
+
+
+/* Find Class Reference */
+ConstantClassRef *find_constant_classref(Class *clazz, s32 index) {
+    return (ConstantClassRef *) (clazz->constant_item_ptr[index]);
+}
+
+Class *getClassByConstantClassRef(Class *clazz, s32 index) {
+    ConstantClassRef *ccr = find_constant_classref(clazz, index);
+    return classes_get(ccr->name);
+}
+
+ConstantFieldRef *find_constant_fieldref(Class *clazz, s32 index) {
+    return (ConstantFieldRef *) (clazz->constant_item_ptr[index]);
+}
+
+ConstantItem *find_constant_item(Class *clazz, s32 index) {
+    return (ConstantItem *) (clazz->constant_item_ptr[index]);
+}
+
+s32 find_constant_fieldref_index(Class *clazz, Utf8String *fieldName, Utf8String *type) {
+    s32 i = 0;
+    ArrayList *cp = clazz->constantPool.fieldRef;
+    for (; i < cp->length; i++) {
+        ConstantFieldRef *cfr = ((ConstantFieldRef *) arraylist_get_value(cp, i));
+        ConstantNameAndType *nat = find_constant_name_and_type(clazz, cfr->nameAndTypeIndex);
+        if (utf8_equals(fieldName, get_utf8_string(clazz, nat->nameIndex)) == 1 &&
+            utf8_equals(type, get_utf8_string(clazz, nat->typeIndex)) == 1) {
+            return cfr->index;
+        }
+    }
+    return -1;
+}
+
+/* Find Method Reference */
+ConstantMethodRef *find_constant_method_ref(Class *clazz, s32 index) {
+    return (ConstantMethodRef *) (clazz->constant_item_ptr[index]);
+}
+
+ConstantInterfaceMethodRef *find_constant_interface_method_ref(Class *clazz, s32 index) {
+    return (ConstantInterfaceMethodRef *) (clazz->constant_item_ptr[index]);
+}
+
+/* Find Name and Type Reference */
+ConstantNameAndType *find_constant_name_and_type(Class *clazz, s32 index) {
+    return (ConstantNameAndType *) (clazz->constant_item_ptr[index]);
+}
+
+/* get integer from constant pool */
+s32 get_constant_integer(Class *clazz, s32 index) {
+    return ((ConstantInteger *) (clazz->constant_item_ptr[index]))->value;
+}
+
+/* get long from constant pool */
+s64 get_constant_long(Class *clazz, s32 index) {
+    return ((ConstantLong *) (clazz->constant_item_ptr[index]))->value;
+}
+
+/* get f32 from constant pool */
+f32 get_constant_float(Class *clazz, s32 index) {
+    return ((ConstantFloat *) (clazz->constant_item_ptr[index]))->value;
+}
+
+/* get f64 from constant pool */
+f64 get_double_from_constant_pool(Class *clazz, s32 index) {
+    return ((ConstantDouble *) (clazz->constant_item_ptr[index]))->value;
+}
+
+
+Utf8String *get_utf8_string(Class *clazz, s32 index) {
+    return ((ConstantUTF8 *) (clazz->constant_item_ptr[index]))->utfstr;
+}
+
+
+/**
+ * 取得类成员信息，成员信息存在以下几种情况
+ * ConstantFieldRef中：
+ * 父类的静态和实例成员 Fathar.x ，都会描述为  Son.x ,类名描述为本类
+ * 而调用其他类（非父类）的静态变量比如：  System.out ，会被描述为 System.out ，类名描述为其他类
+ *
+ * @param clazz
+ * @param field_ref
+ * @return
+ */
+FieldInfo *find_fieldInfo_by_fieldref(Class *clazz, s32 field_ref) {
+    FieldInfo *fi = NULL;
+    ConstantFieldRef *cfr = find_constant_fieldref(clazz, field_ref);
+    ConstantNameAndType *nat = find_constant_name_and_type(clazz, cfr->nameAndTypeIndex);
+    Utf8String *clsName = get_utf8_string(clazz, find_constant_classref(clazz, cfr->classIndex)->stringIndex);
+    Utf8String *fieldName = get_utf8_string(clazz, nat->nameIndex);
+    Utf8String *type = get_utf8_string(clazz, nat->typeIndex);
+    Class *other = classes_get(clsName);
+
+    while (fi == NULL && other) {
+        FieldPool *fp = &(other->fieldPool);
+        s32 i = 0;
+        for (; i < fp->field_used; i++) {
+            if (utf8_equals(fieldName, fp->field[i].name) == 1
+                && utf8_equals(type, fp->field[i].descriptor) == 1) {
+                fi = &(other->fieldPool.field[i]);
+                fi->_this_class = other;//把类引用赋值
+                break;
+            }
+        }
+        other = getSuperClass(other);
+    }
+
+    return fi;
+}
+
+FieldInfo *find_fieldInfo_by_name(Utf8String *clsName, Utf8String *fieldName, Utf8String *fieldType) {
+    FieldInfo *fi = NULL;
+    Class *other = classes_get(clsName);
+
+    while (fi == NULL && other) {
+        FieldPool *fp = &(other->fieldPool);
+        s32 i = 0;
+        for (; i < fp->field_used; i++) {
+            FieldInfo *tmp = &fp->field[i];
+            if (utf8_equals(fieldName, tmp->name) == 1
+                && utf8_equals(fieldType, tmp->descriptor) == 1
+                    ) {
+                fi = tmp;
+                fi->_this_class = other;
+                break;
+            }
+        }
+        other = getSuperClass(other);
+    }
+
+    return fi;
+}
+
+
+ConstantMethodRef *
+find_constant_methodref_by_name(Utf8String *clsName, Utf8String *methodName, Utf8String *methodType) {
+    ConstantMethodRef *cmr = NULL;
+    Class *clazz = classes_get(clsName);
+    ArrayList *mrarr = clazz->constantPool.methodRef;
+    s32 i;
+    for (; i < mrarr->length; i++) {
+        cmr = arraylist_get_value(mrarr, i);
+        if (utf8_equals(methodName, cmr->methodInfo->name) == 1
+            && utf8_equals(methodType, cmr->methodInfo->descriptor) == 1
+                ) {
+            return cmr;
+        }
+    }
+    return NULL;
+}
+
+/**
+ * 查找实例的方法， invokevirtual
+ * @param ins
+ * @param methodName
+ * @param methodType
+ * @return
+ */
+MethodInfo *find_instance_methodInfo_by_name(Instance *ins, Utf8String *methodName, Utf8String *methodType) {
+    if (!ins)return NULL;
+    return find_methodInfo_by_name(ins->mb.clazz->name, methodName, methodType);
+}
+
+MethodInfo *find_methodInfo_by_methodref(Class *clazz, s32 method_ref) {
+    MethodInfo *mi = NULL;
+    ConstantMethodRef *cmr = find_constant_method_ref(clazz, method_ref);
+    Utf8String *clsName = cmr->clsName;
+    Utf8String *methodName = cmr->name;
+    Utf8String *methodType = cmr->descriptor;
+    return find_methodInfo_by_name(clsName, methodName, methodType);
+}
+
+
+MethodInfo *find_methodInfo_by_name(Utf8String *clsName, Utf8String *methodName, Utf8String *methodType) {
+    MethodInfo *mi = NULL;
+    Class *other = classes_get(clsName);
+
+    while (mi == NULL && other) {
+        MethodPool *fp = &(other->methodPool);
+        s32 i = 0;
+        for (; i < fp->method_used; i++) {
+            MethodInfo *tmp = &fp->method[i];
+            if (utf8_equals(methodName, tmp->name) == 1
+                && utf8_equals(methodType, tmp->descriptor) == 1
+                    ) {
+                mi = tmp;
+                if (!mi->_this_class)
+                    mi->_this_class = other;
+                break;
+            }
+        }
+        other = getSuperClass(other);
+    }
+
+    return mi;
+}
+
+
+
+/* Get Major Version String */
+ c8 *getMajorVersionString(u16 major_number) {
+    if (major_number == 0x33)
+        return "J2SE 7";
+    if (major_number == 0x32)
+        return "J2SE 6.0";
+    return "NONE";
+}

@@ -128,4 +128,6 @@ s32 jthread_resume(Runtime *runtime);
 
 s32 jthread_suspend(Runtime *runtime);
 
+s32 check_suspend_and_pause(Runtime* runtime);
+
 #endif //MINI_JVM_UTIL_H

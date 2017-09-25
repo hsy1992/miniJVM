@@ -170,6 +170,7 @@ void t5() {
     spent = currentTimeMillis() - start;
 
     printf("v=%lld, spent %lld\n", l2d.i2l.i1, spent);
+
 }
 
 int main(int argc, char **argv) {
