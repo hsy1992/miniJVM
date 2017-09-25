@@ -63,11 +63,11 @@ s32 execute(c8 *p_classpath, c8 *p_mainclass, s32 argc, c8 **argv) {
 
     JVM_CLASS = class_create();
     JVM_CLASS->name = utf8_create_c("MINI_JVM");
+    //创建垃圾收集器
+    garbage_collector_create();
 
     //创建数组类
     array_classes_create();
-    //创建垃圾收集器
-    garbage_collector_create();
     //创建线程容器
     thread_list = arraylist_create(0);
     //本地方法库
@@ -137,7 +137,7 @@ s32 execute(c8 *p_classpath, c8 *p_mainclass, s32 argc, c8 **argv) {
             //startJdwp(&runtime);
             jdwp_start_server();
             //启动垃圾回收
-            _garbage_thread_pause = 0;
+            collector->_garbage_thread_pause = 0;
 
             //准备参数
             localvar_init(&runtime, main->para_count + 1);
@@ -194,6 +194,7 @@ s32 execute(c8 *p_classpath, c8 *p_mainclass, s32 argc, c8 **argv) {
     utf8_destory(JVM_CLASS->name);
     class_destory(JVM_CLASS);
     runtime_dispose(&runtime);
+    garbage_collector_destory();
     mem_mgr_dispose();
     close_log();
     jvm_printf("over\n");

@@ -34,6 +34,10 @@ void *jdwp_thread_listener(void *para) {
 
     while (!srv->exit) {
         s32 sockfd = srv_accept(srvsock);
+        if (sockfd == -1) {
+            srv->exit = 1;
+            java_debug = 0;
+        }
         sock_option(sockfd, SOCK_OP_TYPE_NON_BLOCK, SOCK_OP_VAL_NON_BLOCK);
         JdwpClient *client = jvm_alloc(sizeof(JdwpClient));
         client->closed = 0;

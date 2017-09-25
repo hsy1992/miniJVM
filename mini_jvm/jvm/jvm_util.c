@@ -77,13 +77,13 @@ Runtime *threadlist_get(s32 i) {
 
 void threadlist_remove(Runtime *r) {
     thread_lock(&JVM_CLASS->mb);
-    r = (Runtime *) arraylist_remove(thread_list, r);
+    arraylist_remove(thread_list, r);
     thread_unlock(&JVM_CLASS->mb);
 }
 
 void threadlist_add(Runtime *r) {
     thread_lock(&JVM_CLASS->mb);
-    r = (Runtime *) arraylist_append(thread_list, r);
+    arraylist_append(thread_list, r);
     thread_unlock(&JVM_CLASS->mb);
 }
 
@@ -481,7 +481,7 @@ void invoke_deepth(Runtime *runtime) {
         fprintf(logfile, "    ");
     }
 #else
-    printf("%lx", (s64) (long) pthread_self().p);
+    printf("%lx", (s64) (long) pthread_self());
     for (i = 0; i < len; i++) {
         printf("    ");
     }
@@ -644,6 +644,7 @@ s32 jthread_waitTime(MemoryBlock *mb, Runtime *runtime, long waitms) {
     if (!mb->thread_lock) {
         jthreadlock_create(mb);
     }
+    waitms += currentTimeMillis();
     struct timespec t;
     t.tv_sec = waitms / 1000;
     t.tv_nsec = (waitms % 1000) * 1000000;

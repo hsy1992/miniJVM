@@ -2,7 +2,8 @@
 // Created by Gust on 2017/8/20 0020.
 //
 #include "jvm.h"
-
+//#include "../cmem/CMemLeak.h"
+//#define _DEBUG
 //======================= global var =============================
 
 Class *JVM_CLASS;
@@ -12,29 +13,25 @@ Hashtable *array_classes;
 
 ArrayList *native_libs;
 ArrayList *thread_list; //all thread
-s32 STACK_LENGHT = 10240;
-c8 *data_type_str = "    ZCFDBSIJL[";
-
-//extern const s32 METHOD_MAX_PARA_LENGHT = 32;
-s32 _garbage_thread_stop = 0;
-s32 _garbage_thread_pause = 1;
-s64 GARBAGE_PERIOD_MS = 1000;
-ArrayList *_garbage_refer_set_pool;
-s64 _garbage_count = 0;
 Hashtable *sys_prop;
-//
-Instance *jdwp_jthread;
-u8 volatile java_debug = 1;
-u8 JDWP_BREAK_POINT = 0xca;
 
-Hashtable *son_2_father; //key=mem_ptr, value=我被别人引用的列表
-Hashtable *father_2_son; //key=mem_ptr, value=别人被我引用的列表
-s64 MAX_HEAP_SIZE = 20 * 1024 * 1024;
-s64 heap_size = 0; //当前已经分配的内存总数
+Collector* collector;
 
 Instruction **instructionsIndexies;
 Instance *main_thread;//
 Runtime *main_runtime = NULL;
+
+c8 *data_type_str = "    ZCFDBSIJL[";
+s32 STACK_LENGHT = 10240;
+s64 GARBAGE_PERIOD_MS = 1000;
+//
+//
+u8 volatile java_debug = 1;
+Instance *jdwp_jthread;
+u8 JDWP_BREAK_POINT = 0xca;
+
+s64 MAX_HEAP_SIZE = 20 * 1024 * 1024;
+s64 heap_size = 0; //当前已经分配的内存总数
 
 //======================= memory manage =============================
 

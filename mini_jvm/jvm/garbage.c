@@ -41,34 +41,36 @@ void getMemBlockName(void *memblock, Utf8String *name);
  * @return
  */
 s32 garbage_collector_create() {
-    son_2_father = hashtable_create(DEFAULT_HASH_FUNC, DEFAULT_HASH_EQUALS_FUNC);
-    father_2_son = hashtable_create(DEFAULT_HASH_FUNC, DEFAULT_HASH_EQUALS_FUNC);
+    collector = jvm_alloc(sizeof(Collector));
+    collector->son_2_father = hashtable_create(DEFAULT_HASH_FUNC, DEFAULT_HASH_EQUALS_FUNC);
+    collector->father_2_son = hashtable_create(DEFAULT_HASH_FUNC, DEFAULT_HASH_EQUALS_FUNC);
 
-    _garbage_refer_set_pool = arraylist_create(4);
-    _garbage_thread_pause = 1;
-    _garbage_thread = jvm_alloc(sizeof(pthread_t));
-    _garbageCond = PTHREAD_COND_INITIALIZER;
-    pthread_cond_init(&_garbageCond, NULL);
-    pthread_mutexattr_init(&_garbage_attr);
-    pthread_mutexattr_settype(&_garbage_attr, PTHREAD_MUTEX_RECURSIVE);
-    pthread_mutex_init(&_garbage_lock, &_garbage_attr);
-    pthread_create(_garbage_thread, NULL, collect_thread_run, NULL);
+    collector->_garbage_refer_set_pool = arraylist_create(4);
+    collector->_garbage_thread_pause = 1;
+    collector->_garbage_thread = jvm_alloc(sizeof(pthread_t));
+    collector->_garbageCond = PTHREAD_COND_INITIALIZER;
+    pthread_cond_init(&collector->_garbageCond, NULL);
+    pthread_mutexattr_init(&collector->_garbage_attr);
+    pthread_mutexattr_settype(&collector->_garbage_attr, PTHREAD_MUTEX_RECURSIVE);
+    pthread_mutex_init(&collector->_garbage_lock, &collector->_garbage_attr);
+    pthread_create(collector->_garbage_thread, NULL, collect_thread_run, NULL);
     return 0;
 }
 
 void garbage_collector_destory() {
-    pthread_exit(_garbage_thread);
-    jvm_free(_garbage_attr);
-    jvm_free(_garbage_lock);
-    jvm_free(_garbage_thread);
-    hashtable_destory(son_2_father);
-    hashtable_destory(father_2_son);
+    pthread_exit(collector->_garbage_thread);
+    jvm_free(collector->_garbage_attr);
+    jvm_free(collector->_garbage_lock);
+    jvm_free(collector->_garbage_thread);
+    hashtable_destory(collector->son_2_father);
+    hashtable_destory(collector->father_2_son);
+    jvm_free(collector);
 }
 
 void *collect_thread_run(void *para) {
-    while (!_garbage_thread_stop) {
+    while (!collector->_garbage_thread_stop) {
         //_garbage_thread_pause=1;
-        if (!_garbage_thread_pause) {
+        if (!collector->_garbage_thread_pause) {
             garbage_collect();
         }
         threadSleep(GARBAGE_PERIOD_MS);
@@ -77,42 +79,43 @@ void *collect_thread_run(void *para) {
 }
 
 s32 garbage_thread_trylock() {
-    return pthread_mutex_trylock(&_garbage_lock);
+    return pthread_mutex_trylock(&collector->_garbage_lock);
 }
 
 void garbage_thread_lock() {
-    pthread_mutex_lock(&_garbage_lock);
+    pthread_mutex_lock(&collector->_garbage_lock);
 }
 
 void garbage_thread_unlock() {
-    pthread_mutex_unlock(&_garbage_lock);
+    pthread_mutex_unlock(&collector->_garbage_lock);
 }
 
 void garbage_thread_stop() {
-    _garbage_thread_stop = 1;
+    collector->_garbage_thread_stop = 1;
 }
 
 void garbage_thread_wait() {
-    pthread_cond_wait(&_garbageCond, &_garbage_lock);
+    pthread_cond_wait(&collector->_garbageCond, &collector->_garbage_lock);
 }
 
 void garbage_thread_timedwait(s64 ms) {
+    ms+=currentTimeMillis();
     struct timespec t;
     t.tv_sec = ms / 1000;
     t.tv_nsec = (ms % 1000) * 1000000;
-    pthread_cond_timedwait(&_garbageCond, &_garbage_lock, &t);
+    pthread_cond_timedwait(&collector->_garbageCond, &collector->_garbage_lock, &t);
 }
 
 void garbage_thread_notify() {
-    pthread_cond_signal(&_garbageCond);
+    pthread_cond_signal(&collector->_garbageCond);
 }
 
 Hashset *_garbage_get_set() {
-    if (!_garbage_refer_set_pool->length) {
+    if (!collector->_garbage_refer_set_pool->length) {
         Hashset *set = hashset_create();
         return set;
     }
-    return arraylist_pop_back(_garbage_refer_set_pool);
+    return arraylist_pop_back(collector->_garbage_refer_set_pool);
 }
 
 /**
@@ -128,17 +131,17 @@ void _garbage_put_set(Hashset *set) {
             break;
         case 1:
             //cache limited hashset
-            if (_garbage_refer_set_pool->length > 100000) {
+            if (collector->_garbage_refer_set_pool->length > 100000) {
                 hashset_destory(set);
                 return;
             }
             hashset_clear(set);
-            arraylist_append(_garbage_refer_set_pool, set);
+            arraylist_append(collector->_garbage_refer_set_pool, set);
             break;
         case 2:
             //it would be big mem use
             hashset_clear(set);
-            arraylist_append(_garbage_refer_set_pool, set);
+            arraylist_append(collector->_garbage_refer_set_pool, set);
             break;
     }
 }
@@ -157,8 +160,8 @@ s32 garbage_collect() {
 #endif
 
     HashtableIterator hti;
-    hashtable_iterate(son_2_father, &hti);
-    s64 obj_count = hashtable_num_entries(son_2_father);
+    hashtable_iterate(collector->son_2_father, &hti);
+    s64 obj_count = hashtable_num_entries(collector->son_2_father);
     s64 mem1 = heap_size;
 
     //把所有对象标记为可回收
@@ -173,12 +176,12 @@ s32 garbage_collect() {
 
     //如果没被其他对象引用set->length==0，也没有被标记为引用，则回收掉
     s32 i = 0;
-    hashtable_iterate(son_2_father, &hti);
+    hashtable_iterate(collector->son_2_father, &hti);
     for (; hashtable_iter_has_more(&hti);) {
 
         HashtableKey k = hashtable_iter_next_key(&hti);
         MemoryBlock *mb = (MemoryBlock *) k;
-        Hashset *v = (Hashset *) hashtable_get(son_2_father, k);
+        Hashset *v = (Hashset *) hashtable_get(collector->son_2_father, k);
 
         if (v != HASH_NULL) {
             if (v->entries == 0 && mb->garbage_mark == GARBAGE_MARK_NO_REFERED) {
@@ -188,11 +191,11 @@ s32 garbage_collect() {
         }
     }
     jvm_printf("garbage cllected OBJ: %lld -> %lld    MEM : %lld -> %lld\n",
-               obj_count, hashtable_num_entries(son_2_father), mem1, heap_size);
+               obj_count, hashtable_num_entries(collector->son_2_father), mem1, heap_size);
 
-    if (_garbage_count++ % 5 == 0) {//每n秒resize一次
-        hashtable_remove(son_2_father, NULL, 1);
-        hashtable_remove(father_2_son, NULL, 1);
+    if (collector->_garbage_count++ % 5 == 0) {//每n秒resize一次
+        hashtable_remove(collector->son_2_father, NULL, 1);
+        hashtable_remove(collector->father_2_son, NULL, 1);
     }
     garbage_thread_unlock();
 
@@ -212,9 +215,9 @@ void garbage_destory_memobj(__refer k) {
     //    jvm_printf("garbage collect instance  %s [%x]\n", utf8_cstr(pus), k);
     //    utf8_destory(pus);
 #endif
-    Hashset *v = (Hashset *) hashtable_get(son_2_father, k);
+    Hashset *v = (Hashset *) hashtable_get(collector->son_2_father, k);
     _garbage_put_set(v);
-    hashtable_remove(son_2_father, k, 0);
+    hashtable_remove(collector->son_2_father, k, 0);
     instance_destory(k);
 
 }
@@ -338,8 +341,8 @@ void getMemBlockName(void *memblock, Utf8String *name) {
 void dump_refer() {
     //jvm_printf("%d\n",sizeof(struct _Hashtable));
     HashtableIterator hti;
-    hashtable_iterate(son_2_father, &hti);
-    jvm_printf("=========================son <- father :%d\n", hashtable_num_entries(son_2_father));
+    hashtable_iterate(collector->son_2_father, &hti);
+    jvm_printf("=========================son <- father :%d\n", hashtable_num_entries(collector->son_2_father));
     for (; hashtable_iter_has_more(&hti);) {
 
         HashtableKey k = hashtable_iter_next_key(&hti);
@@ -347,7 +350,7 @@ void dump_refer() {
         getMemBlockName(k, name);
         jvm_printf("%s[%llx] <-{", utf8_cstr(name), (s64) (long) k);
         utf8_destory(name);
-        Hashset *set = (Hashset *) hashtable_get(son_2_father, k);
+        Hashset *set = (Hashset *) hashtable_get(collector->son_2_father, k);
         if (set != HASH_NULL) {
             HashsetIterator hti;
             hashset_iterate(set, &hti);
@@ -366,8 +369,8 @@ void dump_refer() {
         jvm_printf("}\n");
     }
 
-    hashtable_iterate(father_2_son, &hti);
-    jvm_printf("=========================father -> son :%d\n", hashtable_num_entries(father_2_son));
+    hashtable_iterate(collector->father_2_son, &hti);
+    jvm_printf("=========================father -> son :%d\n", hashtable_num_entries(collector->father_2_son));
     for (; hashtable_iter_has_more(&hti);) {
 
         HashtableKey k = hashtable_iter_next_key(&hti);
@@ -375,7 +378,7 @@ void dump_refer() {
         getMemBlockName(k, name);
         jvm_printf("%s[%llx] ->{", utf8_cstr(name), (s64) (long) k);
         utf8_destory(name);
-        Hashset *set = (Hashset *) hashtable_get(father_2_son, k);
+        Hashset *set = (Hashset *) hashtable_get(collector->father_2_son, k);
         if (set != HASH_NULL) {
             HashsetIterator hti;
             hashset_iterate(set, &hti);
@@ -424,18 +427,18 @@ void *garbage_refer(__refer sonPtr, __refer parentPtr) {
     utf8_destory(sus);
 #endif
     //放入子引父
-    Hashset *set = (Hashset *) hashtable_get(son_2_father, sonPtr);
+    Hashset *set = (Hashset *) hashtable_get(collector->son_2_father, sonPtr);
     if (set == HASH_NULL) {
         set = _garbage_get_set();
-        hashtable_put(son_2_father, sonPtr, set);
+        hashtable_put(collector->son_2_father, sonPtr, set);
     }
     if (parentPtr) {
         hashset_put(set, parentPtr);
         //放入父引子
-        set = hashtable_get(father_2_son, parentPtr);
+        set = hashtable_get(collector->father_2_son, parentPtr);
         if (set == HASH_NULL) {
             set = _garbage_get_set();
-            hashtable_put(father_2_son, parentPtr, set);
+            hashtable_put(collector->father_2_son, parentPtr, set);
         }
         hashset_put(set, sonPtr);
     }
@@ -459,14 +462,14 @@ void garbage_derefer(__refer sonPtr, __refer parentPtr) {
     Hashset *set;
     if (sonPtr && parentPtr) {
         //移除子引父
-        set = hashtable_get(son_2_father, sonPtr);
+        set = hashtable_get(collector->son_2_father, sonPtr);
         if (set != HASH_NULL) {
             hashset_remove(set, parentPtr, 0);
         }
 
 
         //移除父引子
-        set = hashtable_get(father_2_son, parentPtr);
+        set = hashtable_get(collector->father_2_son, parentPtr);
         if (set != HASH_NULL) {
             hashset_remove(set, sonPtr, 0);
         }
@@ -484,7 +487,7 @@ void garbage_derefer_all(__refer parentPtr) {
 #endif
     Hashset *set;
     //移除父引用的所有子
-    set = hashtable_get(father_2_son, parentPtr);
+    set = hashtable_get(collector->father_2_son, parentPtr);
     if (set) {
         HashsetIterator hti;
         hashset_iterate(set, &hti);
@@ -497,7 +500,7 @@ void garbage_derefer_all(__refer parentPtr) {
         }
         _garbage_put_set(set);
     }
-    hashtable_remove(father_2_son, parentPtr, 0);
+    hashtable_remove(collector->father_2_son, parentPtr, 0);
     garbage_thread_unlock();
 
 }
@@ -508,7 +511,7 @@ s32 garbage_is_refer_by(__refer sonPtr, __refer parentPtr) {
     s32 ret = 0;
     if (sonPtr && parentPtr) {
         //移除子引父
-        set = hashtable_get(son_2_father, sonPtr);
+        set = hashtable_get(collector->son_2_father, sonPtr);
         if (set != HASH_NULL) {
             ret = hashset_get(set, parentPtr) != HASH_NULL;
         }

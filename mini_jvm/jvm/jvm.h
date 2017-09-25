@@ -160,8 +160,8 @@ typedef struct _JavaThreadLock JavaThreadLock;
 typedef struct _JavaThreadInfo JavaThreadInfo;
 typedef struct _Runtime Runtime;
 typedef struct _CodeAttribute CodeAttribute;
-
 typedef s32 (*java_native_fun)(Runtime *runtime, Class *p);
+typedef struct _Collector Collector;
 
 enum {
     JVM_ERROR_OUTOFMEMORY,
@@ -342,10 +342,7 @@ extern ArrayList *thread_list;
 extern ArrayList *native_libs;
 extern s32 STACK_LENGHT;
 extern Hashtable *sys_prop;
-
-
-extern Hashtable *son_2_father; //key=mem_ptr, value=我被别人引用的列表
-extern Hashtable *father_2_son; //key=mem_ptr, value=别人被我引用的列表
+//
 extern s64 MAX_HEAP_SIZE;
 extern s64 heap_size; //当前已经分配的内存总数
 extern Instance *main_thread;
