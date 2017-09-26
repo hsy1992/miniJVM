@@ -104,105 +104,9 @@ CMakeFiles/mini_jvm.dir/jvm/class.c.obj.provides: CMakeFiles/mini_jvm.dir/jvm/cl
 CMakeFiles/mini_jvm.dir/jvm/class.c.obj.provides.build: CMakeFiles/mini_jvm.dir/jvm/class.c.obj
 
 
-CMakeFiles/mini_jvm.dir/jvm/class_loader.c.obj: CMakeFiles/mini_jvm.dir/flags.make
-CMakeFiles/mini_jvm.dir/jvm/class_loader.c.obj: ../jvm/class_loader.c
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=D:\githome\mini_jvm\mini_jvm\cmake-build-debug\CMakeFiles --progress-num=$(CMAKE_PROGRESS_3) "Building C object CMakeFiles/mini_jvm.dir/jvm/class_loader.c.obj"
-	C:\MinGW\bin\gcc.exe $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -o CMakeFiles\mini_jvm.dir\jvm\class_loader.c.obj   -c D:\githome\mini_jvm\mini_jvm\jvm\class_loader.c
-
-CMakeFiles/mini_jvm.dir/jvm/class_loader.c.i: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing C source to CMakeFiles/mini_jvm.dir/jvm/class_loader.c.i"
-	C:\MinGW\bin\gcc.exe $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -E D:\githome\mini_jvm\mini_jvm\jvm\class_loader.c > CMakeFiles\mini_jvm.dir\jvm\class_loader.c.i
-
-CMakeFiles/mini_jvm.dir/jvm/class_loader.c.s: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling C source to assembly CMakeFiles/mini_jvm.dir/jvm/class_loader.c.s"
-	C:\MinGW\bin\gcc.exe $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -S D:\githome\mini_jvm\mini_jvm\jvm\class_loader.c -o CMakeFiles\mini_jvm.dir\jvm\class_loader.c.s
-
-CMakeFiles/mini_jvm.dir/jvm/class_loader.c.obj.requires:
-
-.PHONY : CMakeFiles/mini_jvm.dir/jvm/class_loader.c.obj.requires
-
-CMakeFiles/mini_jvm.dir/jvm/class_loader.c.obj.provides: CMakeFiles/mini_jvm.dir/jvm/class_loader.c.obj.requires
-	$(MAKE) -f CMakeFiles\mini_jvm.dir\build.make CMakeFiles/mini_jvm.dir/jvm/class_loader.c.obj.provides.build
-.PHONY : CMakeFiles/mini_jvm.dir/jvm/class_loader.c.obj.provides
-
-CMakeFiles/mini_jvm.dir/jvm/class_loader.c.obj.provides.build: CMakeFiles/mini_jvm.dir/jvm/class_loader.c.obj
-
-
-CMakeFiles/mini_jvm.dir/jvm/class_loader_constant.c.obj: CMakeFiles/mini_jvm.dir/flags.make
-CMakeFiles/mini_jvm.dir/jvm/class_loader_constant.c.obj: ../jvm/class_loader_constant.c
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=D:\githome\mini_jvm\mini_jvm\cmake-build-debug\CMakeFiles --progress-num=$(CMAKE_PROGRESS_4) "Building C object CMakeFiles/mini_jvm.dir/jvm/class_loader_constant.c.obj"
-	C:\MinGW\bin\gcc.exe $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -o CMakeFiles\mini_jvm.dir\jvm\class_loader_constant.c.obj   -c D:\githome\mini_jvm\mini_jvm\jvm\class_loader_constant.c
-
-CMakeFiles/mini_jvm.dir/jvm/class_loader_constant.c.i: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing C source to CMakeFiles/mini_jvm.dir/jvm/class_loader_constant.c.i"
-	C:\MinGW\bin\gcc.exe $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -E D:\githome\mini_jvm\mini_jvm\jvm\class_loader_constant.c > CMakeFiles\mini_jvm.dir\jvm\class_loader_constant.c.i
-
-CMakeFiles/mini_jvm.dir/jvm/class_loader_constant.c.s: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling C source to assembly CMakeFiles/mini_jvm.dir/jvm/class_loader_constant.c.s"
-	C:\MinGW\bin\gcc.exe $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -S D:\githome\mini_jvm\mini_jvm\jvm\class_loader_constant.c -o CMakeFiles\mini_jvm.dir\jvm\class_loader_constant.c.s
-
-CMakeFiles/mini_jvm.dir/jvm/class_loader_constant.c.obj.requires:
-
-.PHONY : CMakeFiles/mini_jvm.dir/jvm/class_loader_constant.c.obj.requires
-
-CMakeFiles/mini_jvm.dir/jvm/class_loader_constant.c.obj.provides: CMakeFiles/mini_jvm.dir/jvm/class_loader_constant.c.obj.requires
-	$(MAKE) -f CMakeFiles\mini_jvm.dir\build.make CMakeFiles/mini_jvm.dir/jvm/class_loader_constant.c.obj.provides.build
-.PHONY : CMakeFiles/mini_jvm.dir/jvm/class_loader_constant.c.obj.provides
-
-CMakeFiles/mini_jvm.dir/jvm/class_loader_constant.c.obj.provides.build: CMakeFiles/mini_jvm.dir/jvm/class_loader_constant.c.obj
-
-
-CMakeFiles/mini_jvm.dir/jvm/class_loader_field.c.obj: CMakeFiles/mini_jvm.dir/flags.make
-CMakeFiles/mini_jvm.dir/jvm/class_loader_field.c.obj: ../jvm/class_loader_field.c
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=D:\githome\mini_jvm\mini_jvm\cmake-build-debug\CMakeFiles --progress-num=$(CMAKE_PROGRESS_5) "Building C object CMakeFiles/mini_jvm.dir/jvm/class_loader_field.c.obj"
-	C:\MinGW\bin\gcc.exe $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -o CMakeFiles\mini_jvm.dir\jvm\class_loader_field.c.obj   -c D:\githome\mini_jvm\mini_jvm\jvm\class_loader_field.c
-
-CMakeFiles/mini_jvm.dir/jvm/class_loader_field.c.i: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing C source to CMakeFiles/mini_jvm.dir/jvm/class_loader_field.c.i"
-	C:\MinGW\bin\gcc.exe $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -E D:\githome\mini_jvm\mini_jvm\jvm\class_loader_field.c > CMakeFiles\mini_jvm.dir\jvm\class_loader_field.c.i
-
-CMakeFiles/mini_jvm.dir/jvm/class_loader_field.c.s: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling C source to assembly CMakeFiles/mini_jvm.dir/jvm/class_loader_field.c.s"
-	C:\MinGW\bin\gcc.exe $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -S D:\githome\mini_jvm\mini_jvm\jvm\class_loader_field.c -o CMakeFiles\mini_jvm.dir\jvm\class_loader_field.c.s
-
-CMakeFiles/mini_jvm.dir/jvm/class_loader_field.c.obj.requires:
-
-.PHONY : CMakeFiles/mini_jvm.dir/jvm/class_loader_field.c.obj.requires
-
-CMakeFiles/mini_jvm.dir/jvm/class_loader_field.c.obj.provides: CMakeFiles/mini_jvm.dir/jvm/class_loader_field.c.obj.requires
-	$(MAKE) -f CMakeFiles\mini_jvm.dir\build.make CMakeFiles/mini_jvm.dir/jvm/class_loader_field.c.obj.provides.build
-.PHONY : CMakeFiles/mini_jvm.dir/jvm/class_loader_field.c.obj.provides
-
-CMakeFiles/mini_jvm.dir/jvm/class_loader_field.c.obj.provides.build: CMakeFiles/mini_jvm.dir/jvm/class_loader_field.c.obj
-
-
-CMakeFiles/mini_jvm.dir/jvm/class_loader_interface.c.obj: CMakeFiles/mini_jvm.dir/flags.make
-CMakeFiles/mini_jvm.dir/jvm/class_loader_interface.c.obj: ../jvm/class_loader_interface.c
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=D:\githome\mini_jvm\mini_jvm\cmake-build-debug\CMakeFiles --progress-num=$(CMAKE_PROGRESS_6) "Building C object CMakeFiles/mini_jvm.dir/jvm/class_loader_interface.c.obj"
-	C:\MinGW\bin\gcc.exe $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -o CMakeFiles\mini_jvm.dir\jvm\class_loader_interface.c.obj   -c D:\githome\mini_jvm\mini_jvm\jvm\class_loader_interface.c
-
-CMakeFiles/mini_jvm.dir/jvm/class_loader_interface.c.i: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing C source to CMakeFiles/mini_jvm.dir/jvm/class_loader_interface.c.i"
-	C:\MinGW\bin\gcc.exe $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -E D:\githome\mini_jvm\mini_jvm\jvm\class_loader_interface.c > CMakeFiles\mini_jvm.dir\jvm\class_loader_interface.c.i
-
-CMakeFiles/mini_jvm.dir/jvm/class_loader_interface.c.s: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling C source to assembly CMakeFiles/mini_jvm.dir/jvm/class_loader_interface.c.s"
-	C:\MinGW\bin\gcc.exe $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -S D:\githome\mini_jvm\mini_jvm\jvm\class_loader_interface.c -o CMakeFiles\mini_jvm.dir\jvm\class_loader_interface.c.s
-
-CMakeFiles/mini_jvm.dir/jvm/class_loader_interface.c.obj.requires:
-
-.PHONY : CMakeFiles/mini_jvm.dir/jvm/class_loader_interface.c.obj.requires
-
-CMakeFiles/mini_jvm.dir/jvm/class_loader_interface.c.obj.provides: CMakeFiles/mini_jvm.dir/jvm/class_loader_interface.c.obj.requires
-	$(MAKE) -f CMakeFiles\mini_jvm.dir\build.make CMakeFiles/mini_jvm.dir/jvm/class_loader_interface.c.obj.provides.build
-.PHONY : CMakeFiles/mini_jvm.dir/jvm/class_loader_interface.c.obj.provides
-
-CMakeFiles/mini_jvm.dir/jvm/class_loader_interface.c.obj.provides.build: CMakeFiles/mini_jvm.dir/jvm/class_loader_interface.c.obj
-
-
 CMakeFiles/mini_jvm.dir/jvm/jvm.c.obj: CMakeFiles/mini_jvm.dir/flags.make
 CMakeFiles/mini_jvm.dir/jvm/jvm.c.obj: ../jvm/jvm.c
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=D:\githome\mini_jvm\mini_jvm\cmake-build-debug\CMakeFiles --progress-num=$(CMAKE_PROGRESS_7) "Building C object CMakeFiles/mini_jvm.dir/jvm/jvm.c.obj"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=D:\githome\mini_jvm\mini_jvm\cmake-build-debug\CMakeFiles --progress-num=$(CMAKE_PROGRESS_3) "Building C object CMakeFiles/mini_jvm.dir/jvm/jvm.c.obj"
 	C:\MinGW\bin\gcc.exe $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -o CMakeFiles\mini_jvm.dir\jvm\jvm.c.obj   -c D:\githome\mini_jvm\mini_jvm\jvm\jvm.c
 
 CMakeFiles/mini_jvm.dir/jvm/jvm.c.i: cmake_force
@@ -224,33 +128,9 @@ CMakeFiles/mini_jvm.dir/jvm/jvm.c.obj.provides: CMakeFiles/mini_jvm.dir/jvm/jvm.
 CMakeFiles/mini_jvm.dir/jvm/jvm.c.obj.provides.build: CMakeFiles/mini_jvm.dir/jvm/jvm.c.obj
 
 
-CMakeFiles/mini_jvm.dir/jvm/class_loader_method.c.obj: CMakeFiles/mini_jvm.dir/flags.make
-CMakeFiles/mini_jvm.dir/jvm/class_loader_method.c.obj: ../jvm/class_loader_method.c
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=D:\githome\mini_jvm\mini_jvm\cmake-build-debug\CMakeFiles --progress-num=$(CMAKE_PROGRESS_8) "Building C object CMakeFiles/mini_jvm.dir/jvm/class_loader_method.c.obj"
-	C:\MinGW\bin\gcc.exe $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -o CMakeFiles\mini_jvm.dir\jvm\class_loader_method.c.obj   -c D:\githome\mini_jvm\mini_jvm\jvm\class_loader_method.c
-
-CMakeFiles/mini_jvm.dir/jvm/class_loader_method.c.i: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing C source to CMakeFiles/mini_jvm.dir/jvm/class_loader_method.c.i"
-	C:\MinGW\bin\gcc.exe $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -E D:\githome\mini_jvm\mini_jvm\jvm\class_loader_method.c > CMakeFiles\mini_jvm.dir\jvm\class_loader_method.c.i
-
-CMakeFiles/mini_jvm.dir/jvm/class_loader_method.c.s: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling C source to assembly CMakeFiles/mini_jvm.dir/jvm/class_loader_method.c.s"
-	C:\MinGW\bin\gcc.exe $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -S D:\githome\mini_jvm\mini_jvm\jvm\class_loader_method.c -o CMakeFiles\mini_jvm.dir\jvm\class_loader_method.c.s
-
-CMakeFiles/mini_jvm.dir/jvm/class_loader_method.c.obj.requires:
-
-.PHONY : CMakeFiles/mini_jvm.dir/jvm/class_loader_method.c.obj.requires
-
-CMakeFiles/mini_jvm.dir/jvm/class_loader_method.c.obj.provides: CMakeFiles/mini_jvm.dir/jvm/class_loader_method.c.obj.requires
-	$(MAKE) -f CMakeFiles\mini_jvm.dir\build.make CMakeFiles/mini_jvm.dir/jvm/class_loader_method.c.obj.provides.build
-.PHONY : CMakeFiles/mini_jvm.dir/jvm/class_loader_method.c.obj.provides
-
-CMakeFiles/mini_jvm.dir/jvm/class_loader_method.c.obj.provides.build: CMakeFiles/mini_jvm.dir/jvm/class_loader_method.c.obj
-
-
 CMakeFiles/mini_jvm.dir/jvm/runtime.c.obj: CMakeFiles/mini_jvm.dir/flags.make
 CMakeFiles/mini_jvm.dir/jvm/runtime.c.obj: ../jvm/runtime.c
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=D:\githome\mini_jvm\mini_jvm\cmake-build-debug\CMakeFiles --progress-num=$(CMAKE_PROGRESS_9) "Building C object CMakeFiles/mini_jvm.dir/jvm/runtime.c.obj"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=D:\githome\mini_jvm\mini_jvm\cmake-build-debug\CMakeFiles --progress-num=$(CMAKE_PROGRESS_4) "Building C object CMakeFiles/mini_jvm.dir/jvm/runtime.c.obj"
 	C:\MinGW\bin\gcc.exe $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -o CMakeFiles\mini_jvm.dir\jvm\runtime.c.obj   -c D:\githome\mini_jvm\mini_jvm\jvm\runtime.c
 
 CMakeFiles/mini_jvm.dir/jvm/runtime.c.i: cmake_force
@@ -274,7 +154,7 @@ CMakeFiles/mini_jvm.dir/jvm/runtime.c.obj.provides.build: CMakeFiles/mini_jvm.di
 
 CMakeFiles/mini_jvm.dir/utils/arraylist.c.obj: CMakeFiles/mini_jvm.dir/flags.make
 CMakeFiles/mini_jvm.dir/utils/arraylist.c.obj: ../utils/arraylist.c
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=D:\githome\mini_jvm\mini_jvm\cmake-build-debug\CMakeFiles --progress-num=$(CMAKE_PROGRESS_10) "Building C object CMakeFiles/mini_jvm.dir/utils/arraylist.c.obj"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=D:\githome\mini_jvm\mini_jvm\cmake-build-debug\CMakeFiles --progress-num=$(CMAKE_PROGRESS_5) "Building C object CMakeFiles/mini_jvm.dir/utils/arraylist.c.obj"
 	C:\MinGW\bin\gcc.exe $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -o CMakeFiles\mini_jvm.dir\utils\arraylist.c.obj   -c D:\githome\mini_jvm\mini_jvm\utils\arraylist.c
 
 CMakeFiles/mini_jvm.dir/utils/arraylist.c.i: cmake_force
@@ -298,7 +178,7 @@ CMakeFiles/mini_jvm.dir/utils/arraylist.c.obj.provides.build: CMakeFiles/mini_jv
 
 CMakeFiles/mini_jvm.dir/utils/hashtable.c.obj: CMakeFiles/mini_jvm.dir/flags.make
 CMakeFiles/mini_jvm.dir/utils/hashtable.c.obj: ../utils/hashtable.c
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=D:\githome\mini_jvm\mini_jvm\cmake-build-debug\CMakeFiles --progress-num=$(CMAKE_PROGRESS_11) "Building C object CMakeFiles/mini_jvm.dir/utils/hashtable.c.obj"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=D:\githome\mini_jvm\mini_jvm\cmake-build-debug\CMakeFiles --progress-num=$(CMAKE_PROGRESS_6) "Building C object CMakeFiles/mini_jvm.dir/utils/hashtable.c.obj"
 	C:\MinGW\bin\gcc.exe $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -o CMakeFiles\mini_jvm.dir\utils\hashtable.c.obj   -c D:\githome\mini_jvm\mini_jvm\utils\hashtable.c
 
 CMakeFiles/mini_jvm.dir/utils/hashtable.c.i: cmake_force
@@ -322,7 +202,7 @@ CMakeFiles/mini_jvm.dir/utils/hashtable.c.obj.provides.build: CMakeFiles/mini_jv
 
 CMakeFiles/mini_jvm.dir/utils/utf8_string.c.obj: CMakeFiles/mini_jvm.dir/flags.make
 CMakeFiles/mini_jvm.dir/utils/utf8_string.c.obj: ../utils/utf8_string.c
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=D:\githome\mini_jvm\mini_jvm\cmake-build-debug\CMakeFiles --progress-num=$(CMAKE_PROGRESS_12) "Building C object CMakeFiles/mini_jvm.dir/utils/utf8_string.c.obj"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=D:\githome\mini_jvm\mini_jvm\cmake-build-debug\CMakeFiles --progress-num=$(CMAKE_PROGRESS_7) "Building C object CMakeFiles/mini_jvm.dir/utils/utf8_string.c.obj"
 	C:\MinGW\bin\gcc.exe $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -o CMakeFiles\mini_jvm.dir\utils\utf8_string.c.obj   -c D:\githome\mini_jvm\mini_jvm\utils\utf8_string.c
 
 CMakeFiles/mini_jvm.dir/utils/utf8_string.c.i: cmake_force
@@ -346,7 +226,7 @@ CMakeFiles/mini_jvm.dir/utils/utf8_string.c.obj.provides.build: CMakeFiles/mini_
 
 CMakeFiles/mini_jvm.dir/test.c.obj: CMakeFiles/mini_jvm.dir/flags.make
 CMakeFiles/mini_jvm.dir/test.c.obj: ../test.c
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=D:\githome\mini_jvm\mini_jvm\cmake-build-debug\CMakeFiles --progress-num=$(CMAKE_PROGRESS_13) "Building C object CMakeFiles/mini_jvm.dir/test.c.obj"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=D:\githome\mini_jvm\mini_jvm\cmake-build-debug\CMakeFiles --progress-num=$(CMAKE_PROGRESS_8) "Building C object CMakeFiles/mini_jvm.dir/test.c.obj"
 	C:\MinGW\bin\gcc.exe $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -o CMakeFiles\mini_jvm.dir\test.c.obj   -c D:\githome\mini_jvm\mini_jvm\test.c
 
 CMakeFiles/mini_jvm.dir/test.c.i: cmake_force
@@ -370,7 +250,7 @@ CMakeFiles/mini_jvm.dir/test.c.obj.provides.build: CMakeFiles/mini_jvm.dir/test.
 
 CMakeFiles/mini_jvm.dir/jvm/garbage.c.obj: CMakeFiles/mini_jvm.dir/flags.make
 CMakeFiles/mini_jvm.dir/jvm/garbage.c.obj: ../jvm/garbage.c
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=D:\githome\mini_jvm\mini_jvm\cmake-build-debug\CMakeFiles --progress-num=$(CMAKE_PROGRESS_14) "Building C object CMakeFiles/mini_jvm.dir/jvm/garbage.c.obj"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=D:\githome\mini_jvm\mini_jvm\cmake-build-debug\CMakeFiles --progress-num=$(CMAKE_PROGRESS_9) "Building C object CMakeFiles/mini_jvm.dir/jvm/garbage.c.obj"
 	C:\MinGW\bin\gcc.exe $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -o CMakeFiles\mini_jvm.dir\jvm\garbage.c.obj   -c D:\githome\mini_jvm\mini_jvm\jvm\garbage.c
 
 CMakeFiles/mini_jvm.dir/jvm/garbage.c.i: cmake_force
@@ -394,7 +274,7 @@ CMakeFiles/mini_jvm.dir/jvm/garbage.c.obj.provides.build: CMakeFiles/mini_jvm.di
 
 CMakeFiles/mini_jvm.dir/jvm/jvm_util.c.obj: CMakeFiles/mini_jvm.dir/flags.make
 CMakeFiles/mini_jvm.dir/jvm/jvm_util.c.obj: ../jvm/jvm_util.c
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=D:\githome\mini_jvm\mini_jvm\cmake-build-debug\CMakeFiles --progress-num=$(CMAKE_PROGRESS_15) "Building C object CMakeFiles/mini_jvm.dir/jvm/jvm_util.c.obj"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=D:\githome\mini_jvm\mini_jvm\cmake-build-debug\CMakeFiles --progress-num=$(CMAKE_PROGRESS_10) "Building C object CMakeFiles/mini_jvm.dir/jvm/jvm_util.c.obj"
 	C:\MinGW\bin\gcc.exe $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -o CMakeFiles\mini_jvm.dir\jvm\jvm_util.c.obj   -c D:\githome\mini_jvm\mini_jvm\jvm\jvm_util.c
 
 CMakeFiles/mini_jvm.dir/jvm/jvm_util.c.i: cmake_force
@@ -418,7 +298,7 @@ CMakeFiles/mini_jvm.dir/jvm/jvm_util.c.obj.provides.build: CMakeFiles/mini_jvm.d
 
 CMakeFiles/mini_jvm.dir/jvm/os_linux.c.obj: CMakeFiles/mini_jvm.dir/flags.make
 CMakeFiles/mini_jvm.dir/jvm/os_linux.c.obj: ../jvm/os_linux.c
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=D:\githome\mini_jvm\mini_jvm\cmake-build-debug\CMakeFiles --progress-num=$(CMAKE_PROGRESS_16) "Building C object CMakeFiles/mini_jvm.dir/jvm/os_linux.c.obj"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=D:\githome\mini_jvm\mini_jvm\cmake-build-debug\CMakeFiles --progress-num=$(CMAKE_PROGRESS_11) "Building C object CMakeFiles/mini_jvm.dir/jvm/os_linux.c.obj"
 	C:\MinGW\bin\gcc.exe $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -o CMakeFiles\mini_jvm.dir\jvm\os_linux.c.obj   -c D:\githome\mini_jvm\mini_jvm\jvm\os_linux.c
 
 CMakeFiles/mini_jvm.dir/jvm/os_linux.c.i: cmake_force
@@ -442,7 +322,7 @@ CMakeFiles/mini_jvm.dir/jvm/os_linux.c.obj.provides.build: CMakeFiles/mini_jvm.d
 
 CMakeFiles/mini_jvm.dir/jvm/os_win.c.obj: CMakeFiles/mini_jvm.dir/flags.make
 CMakeFiles/mini_jvm.dir/jvm/os_win.c.obj: ../jvm/os_win.c
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=D:\githome\mini_jvm\mini_jvm\cmake-build-debug\CMakeFiles --progress-num=$(CMAKE_PROGRESS_17) "Building C object CMakeFiles/mini_jvm.dir/jvm/os_win.c.obj"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=D:\githome\mini_jvm\mini_jvm\cmake-build-debug\CMakeFiles --progress-num=$(CMAKE_PROGRESS_12) "Building C object CMakeFiles/mini_jvm.dir/jvm/os_win.c.obj"
 	C:\MinGW\bin\gcc.exe $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -o CMakeFiles\mini_jvm.dir\jvm\os_win.c.obj   -c D:\githome\mini_jvm\mini_jvm\jvm\os_win.c
 
 CMakeFiles/mini_jvm.dir/jvm/os_win.c.i: cmake_force
@@ -466,7 +346,7 @@ CMakeFiles/mini_jvm.dir/jvm/os_win.c.obj.provides.build: CMakeFiles/mini_jvm.dir
 
 CMakeFiles/mini_jvm.dir/jvm/global.c.obj: CMakeFiles/mini_jvm.dir/flags.make
 CMakeFiles/mini_jvm.dir/jvm/global.c.obj: ../jvm/global.c
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=D:\githome\mini_jvm\mini_jvm\cmake-build-debug\CMakeFiles --progress-num=$(CMAKE_PROGRESS_18) "Building C object CMakeFiles/mini_jvm.dir/jvm/global.c.obj"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=D:\githome\mini_jvm\mini_jvm\cmake-build-debug\CMakeFiles --progress-num=$(CMAKE_PROGRESS_13) "Building C object CMakeFiles/mini_jvm.dir/jvm/global.c.obj"
 	C:\MinGW\bin\gcc.exe $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -o CMakeFiles\mini_jvm.dir\jvm\global.c.obj   -c D:\githome\mini_jvm\mini_jvm\jvm\global.c
 
 CMakeFiles/mini_jvm.dir/jvm/global.c.i: cmake_force
@@ -490,7 +370,7 @@ CMakeFiles/mini_jvm.dir/jvm/global.c.obj.provides.build: CMakeFiles/mini_jvm.dir
 
 CMakeFiles/mini_jvm.dir/utils/pairlist.c.obj: CMakeFiles/mini_jvm.dir/flags.make
 CMakeFiles/mini_jvm.dir/utils/pairlist.c.obj: ../utils/pairlist.c
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=D:\githome\mini_jvm\mini_jvm\cmake-build-debug\CMakeFiles --progress-num=$(CMAKE_PROGRESS_19) "Building C object CMakeFiles/mini_jvm.dir/utils/pairlist.c.obj"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=D:\githome\mini_jvm\mini_jvm\cmake-build-debug\CMakeFiles --progress-num=$(CMAKE_PROGRESS_14) "Building C object CMakeFiles/mini_jvm.dir/utils/pairlist.c.obj"
 	C:\MinGW\bin\gcc.exe $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -o CMakeFiles\mini_jvm.dir\utils\pairlist.c.obj   -c D:\githome\mini_jvm\mini_jvm\utils\pairlist.c
 
 CMakeFiles/mini_jvm.dir/utils/pairlist.c.i: cmake_force
@@ -514,7 +394,7 @@ CMakeFiles/mini_jvm.dir/utils/pairlist.c.obj.provides.build: CMakeFiles/mini_jvm
 
 CMakeFiles/mini_jvm.dir/utils/hashset.c.obj: CMakeFiles/mini_jvm.dir/flags.make
 CMakeFiles/mini_jvm.dir/utils/hashset.c.obj: ../utils/hashset.c
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=D:\githome\mini_jvm\mini_jvm\cmake-build-debug\CMakeFiles --progress-num=$(CMAKE_PROGRESS_20) "Building C object CMakeFiles/mini_jvm.dir/utils/hashset.c.obj"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=D:\githome\mini_jvm\mini_jvm\cmake-build-debug\CMakeFiles --progress-num=$(CMAKE_PROGRESS_15) "Building C object CMakeFiles/mini_jvm.dir/utils/hashset.c.obj"
 	C:\MinGW\bin\gcc.exe $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -o CMakeFiles\mini_jvm.dir\utils\hashset.c.obj   -c D:\githome\mini_jvm\mini_jvm\utils\hashset.c
 
 CMakeFiles/mini_jvm.dir/utils/hashset.c.i: cmake_force
@@ -538,7 +418,7 @@ CMakeFiles/mini_jvm.dir/utils/hashset.c.obj.provides.build: CMakeFiles/mini_jvm.
 
 CMakeFiles/mini_jvm.dir/jvm/java_native_io.c.obj: CMakeFiles/mini_jvm.dir/flags.make
 CMakeFiles/mini_jvm.dir/jvm/java_native_io.c.obj: ../jvm/java_native_io.c
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=D:\githome\mini_jvm\mini_jvm\cmake-build-debug\CMakeFiles --progress-num=$(CMAKE_PROGRESS_21) "Building C object CMakeFiles/mini_jvm.dir/jvm/java_native_io.c.obj"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=D:\githome\mini_jvm\mini_jvm\cmake-build-debug\CMakeFiles --progress-num=$(CMAKE_PROGRESS_16) "Building C object CMakeFiles/mini_jvm.dir/jvm/java_native_io.c.obj"
 	C:\MinGW\bin\gcc.exe $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -o CMakeFiles\mini_jvm.dir\jvm\java_native_io.c.obj   -c D:\githome\mini_jvm\mini_jvm\jvm\java_native_io.c
 
 CMakeFiles/mini_jvm.dir/jvm/java_native_io.c.i: cmake_force
@@ -562,7 +442,7 @@ CMakeFiles/mini_jvm.dir/jvm/java_native_io.c.obj.provides.build: CMakeFiles/mini
 
 CMakeFiles/mini_jvm.dir/jvm/java_native_std.c.obj: CMakeFiles/mini_jvm.dir/flags.make
 CMakeFiles/mini_jvm.dir/jvm/java_native_std.c.obj: ../jvm/java_native_std.c
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=D:\githome\mini_jvm\mini_jvm\cmake-build-debug\CMakeFiles --progress-num=$(CMAKE_PROGRESS_22) "Building C object CMakeFiles/mini_jvm.dir/jvm/java_native_std.c.obj"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=D:\githome\mini_jvm\mini_jvm\cmake-build-debug\CMakeFiles --progress-num=$(CMAKE_PROGRESS_17) "Building C object CMakeFiles/mini_jvm.dir/jvm/java_native_std.c.obj"
 	C:\MinGW\bin\gcc.exe $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -o CMakeFiles\mini_jvm.dir\jvm\java_native_std.c.obj   -c D:\githome\mini_jvm\mini_jvm\jvm\java_native_std.c
 
 CMakeFiles/mini_jvm.dir/jvm/java_native_std.c.i: cmake_force
@@ -586,7 +466,7 @@ CMakeFiles/mini_jvm.dir/jvm/java_native_std.c.obj.provides.build: CMakeFiles/min
 
 CMakeFiles/mini_jvm.dir/jvm/java_native_reflect.c.obj: CMakeFiles/mini_jvm.dir/flags.make
 CMakeFiles/mini_jvm.dir/jvm/java_native_reflect.c.obj: ../jvm/java_native_reflect.c
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=D:\githome\mini_jvm\mini_jvm\cmake-build-debug\CMakeFiles --progress-num=$(CMAKE_PROGRESS_23) "Building C object CMakeFiles/mini_jvm.dir/jvm/java_native_reflect.c.obj"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=D:\githome\mini_jvm\mini_jvm\cmake-build-debug\CMakeFiles --progress-num=$(CMAKE_PROGRESS_18) "Building C object CMakeFiles/mini_jvm.dir/jvm/java_native_reflect.c.obj"
 	C:\MinGW\bin\gcc.exe $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -o CMakeFiles\mini_jvm.dir\jvm\java_native_reflect.c.obj   -c D:\githome\mini_jvm\mini_jvm\jvm\java_native_reflect.c
 
 CMakeFiles/mini_jvm.dir/jvm/java_native_reflect.c.i: cmake_force
@@ -610,7 +490,7 @@ CMakeFiles/mini_jvm.dir/jvm/java_native_reflect.c.obj.provides.build: CMakeFiles
 
 CMakeFiles/mini_jvm.dir/jvm/jdwp.c.obj: CMakeFiles/mini_jvm.dir/flags.make
 CMakeFiles/mini_jvm.dir/jvm/jdwp.c.obj: ../jvm/jdwp.c
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=D:\githome\mini_jvm\mini_jvm\cmake-build-debug\CMakeFiles --progress-num=$(CMAKE_PROGRESS_24) "Building C object CMakeFiles/mini_jvm.dir/jvm/jdwp.c.obj"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=D:\githome\mini_jvm\mini_jvm\cmake-build-debug\CMakeFiles --progress-num=$(CMAKE_PROGRESS_19) "Building C object CMakeFiles/mini_jvm.dir/jvm/jdwp.c.obj"
 	C:\MinGW\bin\gcc.exe $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -o CMakeFiles\mini_jvm.dir\jvm\jdwp.c.obj   -c D:\githome\mini_jvm\mini_jvm\jvm\jdwp.c
 
 CMakeFiles/mini_jvm.dir/jvm/jdwp.c.i: cmake_force
@@ -632,16 +512,83 @@ CMakeFiles/mini_jvm.dir/jvm/jdwp.c.obj.provides: CMakeFiles/mini_jvm.dir/jvm/jdw
 CMakeFiles/mini_jvm.dir/jvm/jdwp.c.obj.provides.build: CMakeFiles/mini_jvm.dir/jvm/jdwp.c.obj
 
 
+CMakeFiles/mini_jvm.dir/jvm/class_load.c.obj: CMakeFiles/mini_jvm.dir/flags.make
+CMakeFiles/mini_jvm.dir/jvm/class_load.c.obj: ../jvm/class_load.c
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=D:\githome\mini_jvm\mini_jvm\cmake-build-debug\CMakeFiles --progress-num=$(CMAKE_PROGRESS_20) "Building C object CMakeFiles/mini_jvm.dir/jvm/class_load.c.obj"
+	C:\MinGW\bin\gcc.exe $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -o CMakeFiles\mini_jvm.dir\jvm\class_load.c.obj   -c D:\githome\mini_jvm\mini_jvm\jvm\class_load.c
+
+CMakeFiles/mini_jvm.dir/jvm/class_load.c.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing C source to CMakeFiles/mini_jvm.dir/jvm/class_load.c.i"
+	C:\MinGW\bin\gcc.exe $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -E D:\githome\mini_jvm\mini_jvm\jvm\class_load.c > CMakeFiles\mini_jvm.dir\jvm\class_load.c.i
+
+CMakeFiles/mini_jvm.dir/jvm/class_load.c.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling C source to assembly CMakeFiles/mini_jvm.dir/jvm/class_load.c.s"
+	C:\MinGW\bin\gcc.exe $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -S D:\githome\mini_jvm\mini_jvm\jvm\class_load.c -o CMakeFiles\mini_jvm.dir\jvm\class_load.c.s
+
+CMakeFiles/mini_jvm.dir/jvm/class_load.c.obj.requires:
+
+.PHONY : CMakeFiles/mini_jvm.dir/jvm/class_load.c.obj.requires
+
+CMakeFiles/mini_jvm.dir/jvm/class_load.c.obj.provides: CMakeFiles/mini_jvm.dir/jvm/class_load.c.obj.requires
+	$(MAKE) -f CMakeFiles\mini_jvm.dir\build.make CMakeFiles/mini_jvm.dir/jvm/class_load.c.obj.provides.build
+.PHONY : CMakeFiles/mini_jvm.dir/jvm/class_load.c.obj.provides
+
+CMakeFiles/mini_jvm.dir/jvm/class_load.c.obj.provides.build: CMakeFiles/mini_jvm.dir/jvm/class_load.c.obj
+
+
+CMakeFiles/mini_jvm.dir/cmem/memleak.c.obj: CMakeFiles/mini_jvm.dir/flags.make
+CMakeFiles/mini_jvm.dir/cmem/memleak.c.obj: ../cmem/memleak.c
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=D:\githome\mini_jvm\mini_jvm\cmake-build-debug\CMakeFiles --progress-num=$(CMAKE_PROGRESS_21) "Building C object CMakeFiles/mini_jvm.dir/cmem/memleak.c.obj"
+	C:\MinGW\bin\gcc.exe $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -o CMakeFiles\mini_jvm.dir\cmem\memleak.c.obj   -c D:\githome\mini_jvm\mini_jvm\cmem\memleak.c
+
+CMakeFiles/mini_jvm.dir/cmem/memleak.c.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing C source to CMakeFiles/mini_jvm.dir/cmem/memleak.c.i"
+	C:\MinGW\bin\gcc.exe $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -E D:\githome\mini_jvm\mini_jvm\cmem\memleak.c > CMakeFiles\mini_jvm.dir\cmem\memleak.c.i
+
+CMakeFiles/mini_jvm.dir/cmem/memleak.c.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling C source to assembly CMakeFiles/mini_jvm.dir/cmem/memleak.c.s"
+	C:\MinGW\bin\gcc.exe $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -S D:\githome\mini_jvm\mini_jvm\cmem\memleak.c -o CMakeFiles\mini_jvm.dir\cmem\memleak.c.s
+
+CMakeFiles/mini_jvm.dir/cmem/memleak.c.obj.requires:
+
+.PHONY : CMakeFiles/mini_jvm.dir/cmem/memleak.c.obj.requires
+
+CMakeFiles/mini_jvm.dir/cmem/memleak.c.obj.provides: CMakeFiles/mini_jvm.dir/cmem/memleak.c.obj.requires
+	$(MAKE) -f CMakeFiles\mini_jvm.dir\build.make CMakeFiles/mini_jvm.dir/cmem/memleak.c.obj.provides.build
+.PHONY : CMakeFiles/mini_jvm.dir/cmem/memleak.c.obj.provides
+
+CMakeFiles/mini_jvm.dir/cmem/memleak.c.obj.provides.build: CMakeFiles/mini_jvm.dir/cmem/memleak.c.obj
+
+
+CMakeFiles/mini_jvm.dir/cmem/example.c.obj: CMakeFiles/mini_jvm.dir/flags.make
+CMakeFiles/mini_jvm.dir/cmem/example.c.obj: ../cmem/example.c
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=D:\githome\mini_jvm\mini_jvm\cmake-build-debug\CMakeFiles --progress-num=$(CMAKE_PROGRESS_22) "Building C object CMakeFiles/mini_jvm.dir/cmem/example.c.obj"
+	C:\MinGW\bin\gcc.exe $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -o CMakeFiles\mini_jvm.dir\cmem\example.c.obj   -c D:\githome\mini_jvm\mini_jvm\cmem\example.c
+
+CMakeFiles/mini_jvm.dir/cmem/example.c.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing C source to CMakeFiles/mini_jvm.dir/cmem/example.c.i"
+	C:\MinGW\bin\gcc.exe $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -E D:\githome\mini_jvm\mini_jvm\cmem\example.c > CMakeFiles\mini_jvm.dir\cmem\example.c.i
+
+CMakeFiles/mini_jvm.dir/cmem/example.c.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling C source to assembly CMakeFiles/mini_jvm.dir/cmem/example.c.s"
+	C:\MinGW\bin\gcc.exe $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -S D:\githome\mini_jvm\mini_jvm\cmem\example.c -o CMakeFiles\mini_jvm.dir\cmem\example.c.s
+
+CMakeFiles/mini_jvm.dir/cmem/example.c.obj.requires:
+
+.PHONY : CMakeFiles/mini_jvm.dir/cmem/example.c.obj.requires
+
+CMakeFiles/mini_jvm.dir/cmem/example.c.obj.provides: CMakeFiles/mini_jvm.dir/cmem/example.c.obj.requires
+	$(MAKE) -f CMakeFiles\mini_jvm.dir\build.make CMakeFiles/mini_jvm.dir/cmem/example.c.obj.provides.build
+.PHONY : CMakeFiles/mini_jvm.dir/cmem/example.c.obj.provides
+
+CMakeFiles/mini_jvm.dir/cmem/example.c.obj.provides.build: CMakeFiles/mini_jvm.dir/cmem/example.c.obj
+
+
 # Object files for target mini_jvm
 mini_jvm_OBJECTS = \
 "CMakeFiles/mini_jvm.dir/jvm/interpreter.c.obj" \
 "CMakeFiles/mini_jvm.dir/jvm/class.c.obj" \
-"CMakeFiles/mini_jvm.dir/jvm/class_loader.c.obj" \
-"CMakeFiles/mini_jvm.dir/jvm/class_loader_constant.c.obj" \
-"CMakeFiles/mini_jvm.dir/jvm/class_loader_field.c.obj" \
-"CMakeFiles/mini_jvm.dir/jvm/class_loader_interface.c.obj" \
 "CMakeFiles/mini_jvm.dir/jvm/jvm.c.obj" \
-"CMakeFiles/mini_jvm.dir/jvm/class_loader_method.c.obj" \
 "CMakeFiles/mini_jvm.dir/jvm/runtime.c.obj" \
 "CMakeFiles/mini_jvm.dir/utils/arraylist.c.obj" \
 "CMakeFiles/mini_jvm.dir/utils/hashtable.c.obj" \
@@ -657,19 +604,17 @@ mini_jvm_OBJECTS = \
 "CMakeFiles/mini_jvm.dir/jvm/java_native_io.c.obj" \
 "CMakeFiles/mini_jvm.dir/jvm/java_native_std.c.obj" \
 "CMakeFiles/mini_jvm.dir/jvm/java_native_reflect.c.obj" \
-"CMakeFiles/mini_jvm.dir/jvm/jdwp.c.obj"
+"CMakeFiles/mini_jvm.dir/jvm/jdwp.c.obj" \
+"CMakeFiles/mini_jvm.dir/jvm/class_load.c.obj" \
+"CMakeFiles/mini_jvm.dir/cmem/memleak.c.obj" \
+"CMakeFiles/mini_jvm.dir/cmem/example.c.obj"
 
 # External object files for target mini_jvm
 mini_jvm_EXTERNAL_OBJECTS =
 
 mini_jvm.exe: CMakeFiles/mini_jvm.dir/jvm/interpreter.c.obj
 mini_jvm.exe: CMakeFiles/mini_jvm.dir/jvm/class.c.obj
-mini_jvm.exe: CMakeFiles/mini_jvm.dir/jvm/class_loader.c.obj
-mini_jvm.exe: CMakeFiles/mini_jvm.dir/jvm/class_loader_constant.c.obj
-mini_jvm.exe: CMakeFiles/mini_jvm.dir/jvm/class_loader_field.c.obj
-mini_jvm.exe: CMakeFiles/mini_jvm.dir/jvm/class_loader_interface.c.obj
 mini_jvm.exe: CMakeFiles/mini_jvm.dir/jvm/jvm.c.obj
-mini_jvm.exe: CMakeFiles/mini_jvm.dir/jvm/class_loader_method.c.obj
 mini_jvm.exe: CMakeFiles/mini_jvm.dir/jvm/runtime.c.obj
 mini_jvm.exe: CMakeFiles/mini_jvm.dir/utils/arraylist.c.obj
 mini_jvm.exe: CMakeFiles/mini_jvm.dir/utils/hashtable.c.obj
@@ -686,11 +631,14 @@ mini_jvm.exe: CMakeFiles/mini_jvm.dir/jvm/java_native_io.c.obj
 mini_jvm.exe: CMakeFiles/mini_jvm.dir/jvm/java_native_std.c.obj
 mini_jvm.exe: CMakeFiles/mini_jvm.dir/jvm/java_native_reflect.c.obj
 mini_jvm.exe: CMakeFiles/mini_jvm.dir/jvm/jdwp.c.obj
+mini_jvm.exe: CMakeFiles/mini_jvm.dir/jvm/class_load.c.obj
+mini_jvm.exe: CMakeFiles/mini_jvm.dir/cmem/memleak.c.obj
+mini_jvm.exe: CMakeFiles/mini_jvm.dir/cmem/example.c.obj
 mini_jvm.exe: CMakeFiles/mini_jvm.dir/build.make
 mini_jvm.exe: CMakeFiles/mini_jvm.dir/linklibs.rsp
 mini_jvm.exe: CMakeFiles/mini_jvm.dir/objects1.rsp
 mini_jvm.exe: CMakeFiles/mini_jvm.dir/link.txt
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --bold --progress-dir=D:\githome\mini_jvm\mini_jvm\cmake-build-debug\CMakeFiles --progress-num=$(CMAKE_PROGRESS_25) "Linking C executable mini_jvm.exe"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --bold --progress-dir=D:\githome\mini_jvm\mini_jvm\cmake-build-debug\CMakeFiles --progress-num=$(CMAKE_PROGRESS_23) "Linking C executable mini_jvm.exe"
 	$(CMAKE_COMMAND) -E cmake_link_script CMakeFiles\mini_jvm.dir\link.txt --verbose=$(VERBOSE)
 
 # Rule to build all files generated by this target.
@@ -700,12 +648,7 @@ CMakeFiles/mini_jvm.dir/build: mini_jvm.exe
 
 CMakeFiles/mini_jvm.dir/requires: CMakeFiles/mini_jvm.dir/jvm/interpreter.c.obj.requires
 CMakeFiles/mini_jvm.dir/requires: CMakeFiles/mini_jvm.dir/jvm/class.c.obj.requires
-CMakeFiles/mini_jvm.dir/requires: CMakeFiles/mini_jvm.dir/jvm/class_loader.c.obj.requires
-CMakeFiles/mini_jvm.dir/requires: CMakeFiles/mini_jvm.dir/jvm/class_loader_constant.c.obj.requires
-CMakeFiles/mini_jvm.dir/requires: CMakeFiles/mini_jvm.dir/jvm/class_loader_field.c.obj.requires
-CMakeFiles/mini_jvm.dir/requires: CMakeFiles/mini_jvm.dir/jvm/class_loader_interface.c.obj.requires
 CMakeFiles/mini_jvm.dir/requires: CMakeFiles/mini_jvm.dir/jvm/jvm.c.obj.requires
-CMakeFiles/mini_jvm.dir/requires: CMakeFiles/mini_jvm.dir/jvm/class_loader_method.c.obj.requires
 CMakeFiles/mini_jvm.dir/requires: CMakeFiles/mini_jvm.dir/jvm/runtime.c.obj.requires
 CMakeFiles/mini_jvm.dir/requires: CMakeFiles/mini_jvm.dir/utils/arraylist.c.obj.requires
 CMakeFiles/mini_jvm.dir/requires: CMakeFiles/mini_jvm.dir/utils/hashtable.c.obj.requires
@@ -722,6 +665,9 @@ CMakeFiles/mini_jvm.dir/requires: CMakeFiles/mini_jvm.dir/jvm/java_native_io.c.o
 CMakeFiles/mini_jvm.dir/requires: CMakeFiles/mini_jvm.dir/jvm/java_native_std.c.obj.requires
 CMakeFiles/mini_jvm.dir/requires: CMakeFiles/mini_jvm.dir/jvm/java_native_reflect.c.obj.requires
 CMakeFiles/mini_jvm.dir/requires: CMakeFiles/mini_jvm.dir/jvm/jdwp.c.obj.requires
+CMakeFiles/mini_jvm.dir/requires: CMakeFiles/mini_jvm.dir/jvm/class_load.c.obj.requires
+CMakeFiles/mini_jvm.dir/requires: CMakeFiles/mini_jvm.dir/cmem/memleak.c.obj.requires
+CMakeFiles/mini_jvm.dir/requires: CMakeFiles/mini_jvm.dir/cmem/example.c.obj.requires
 
 .PHONY : CMakeFiles/mini_jvm.dir/requires
 

@@ -9,28 +9,30 @@
 
 
 /* Stack Initialization */
-StackFrame *stack_init(s32 entry_size) {
-    StackFrame *stack = jvm_alloc(sizeof(StackFrame));
+RuntimeStack *stack_create(s32 entry_size) {
+    RuntimeStack *stack = jvm_alloc(sizeof(RuntimeStack));
     stack->store = (StackEntry *) jvm_alloc(sizeof(StackEntry) * entry_size);
     stack->size = 0;
     stack->max_size = entry_size;
+    return stack;
 }
 
-void stack_destory(StackFrame *stack) {
+void stack_destory(RuntimeStack *stack) {
     if (stack->store) {
         jvm_free(stack->store);
+        stack->store = NULL;
     }
+    jvm_free(stack);
 }
 
-void push_entry(StackFrame *stack, StackEntry *entry) {
-    //memset(&stack->store[stack->size], 0, sizeof(StackEntry));
+void push_entry(RuntimeStack *stack, StackEntry *entry) {
     u8 *tmp = stack->store[stack->size].entry;
     memcpy(tmp, entry, sizeof(StackEntry));
     stack->size++;
 }
 
 /* push Integer */
-void push_int(StackFrame *stack, s32 value) {
+void push_int(RuntimeStack *stack, s32 value) {
     //memset(&stack->store[stack->size], 0, sizeof(StackEntry));
     u8 *tmp = stack->store[stack->size].entry;
     memcpy(tmp, &value, sizeof(s32));
@@ -40,7 +42,7 @@ void push_int(StackFrame *stack, s32 value) {
 
 
 /* push Double */
-void push_double(StackFrame *stack, f64 value) {
+void push_double(RuntimeStack *stack, f64 value) {
     //memset(&stack->store[stack->size], 0, sizeof(StackEntry));
     u8 *tmp = stack->store[stack->size].entry;
     memcpy(tmp, &value, sizeof(f64));
@@ -49,7 +51,7 @@ void push_double(StackFrame *stack, f64 value) {
 }
 
 /* push Float */
-void push_float(StackFrame *stack, f32 value) {
+void push_float(RuntimeStack *stack, f32 value) {
     //memset(&stack->store[stack->size], 0, sizeof(StackEntry));
     u8 *tmp = stack->store[stack->size].entry;
     memcpy(tmp, &value, sizeof(f32));
@@ -59,7 +61,7 @@ void push_float(StackFrame *stack, f32 value) {
 
 
 /* pop Integer */
-s32 pop_int(StackFrame *stack) {
+s32 pop_int(RuntimeStack *stack) {
     stack->size--;
     u8 *tmp = stack->store[stack->size].entry;
     s32 value = 0;
@@ -69,7 +71,7 @@ s32 pop_int(StackFrame *stack) {
 }
 
 /* push Long */
-void push_long(StackFrame *stack, s64 value) {
+void push_long(RuntimeStack *stack, s64 value) {
     //memset(&stack->store[stack->size], 0, sizeof(StackEntry));
     u8 *tmp = stack->store[stack->size].entry;
     memcpy(tmp, &value, sizeof(s64));
@@ -78,7 +80,7 @@ void push_long(StackFrame *stack, s64 value) {
 }
 
 /* pop Long */
-s64 pop_long(StackFrame *stack) {
+s64 pop_long(RuntimeStack *stack) {
     stack->size--;
     s64 value = 0;
     u8 *tmp = stack->store[stack->size].entry;
@@ -88,7 +90,7 @@ s64 pop_long(StackFrame *stack) {
 }
 
 /* push Ref */
-void push_ref(StackFrame *stack, __refer value) {
+void push_ref(RuntimeStack *stack, __refer value) {
     //memset(&stack->store[stack->size], 0, sizeof(StackEntry));
     u8 *tmp = stack->store[stack->size].entry;
     memcpy(tmp, &value, sizeof(__refer));
@@ -96,7 +98,7 @@ void push_ref(StackFrame *stack, __refer value) {
     stack->size++;
 }
 
-__refer pop_ref(StackFrame *stack) {
+__refer pop_ref(RuntimeStack *stack) {
     stack->size--;
     __refer value = 0;
     u8 *tmp = stack->store[stack->size].entry;
@@ -106,7 +108,7 @@ __refer pop_ref(StackFrame *stack) {
 }
 
 /* pop Double */
-f64 pop_double(StackFrame *stack) {
+f64 pop_double(RuntimeStack *stack) {
     stack->size--;
     f64 value = 0;
     u8 *tmp = stack->store[stack->size].entry;
@@ -116,7 +118,7 @@ f64 pop_double(StackFrame *stack) {
 }
 
 /* pop Float */
-f32 pop_float(StackFrame *stack) {
+f32 pop_float(RuntimeStack *stack) {
     stack->size--;
     f32 value = 0;
     u8 *tmp = stack->store[stack->size].entry;
@@ -126,7 +128,7 @@ f32 pop_float(StackFrame *stack) {
 }
 
 /* Pop Stack Entry */
-void pop_entry(StackFrame *stack, StackEntry *entry) {
+void pop_entry(RuntimeStack *stack, StackEntry *entry) {
     stack->size--;
     memcpy(entry, stack->store[stack->size].entry, sizeof(StackEntry));
     memset(&stack->store[stack->size], 0, sizeof(StackEntry));
@@ -171,7 +173,7 @@ s32 is_ref(StackEntry *entry) {
     return 0;
 }
 
-void peek_entry(StackFrame *stack, StackEntry *entry, int index) {
+void peek_entry(RuntimeStack *stack, StackEntry *entry, int index) {
     memcpy(entry, stack->store[index].entry, sizeof(StackEntry));
 }
 
@@ -181,25 +183,28 @@ void peek_entry(StackFrame *stack, StackEntry *entry, int index) {
 
 void runtime_init(Runtime *runtime) {
     memset(runtime, 0, sizeof(Runtime));
-    runtime->stack = stack_init(STACK_LENGHT);
+    runtime->stack = stack_create(STACK_LENGHT);
     runtime->threadInfo = jvm_alloc(sizeof(JavaThreadInfo));
-//    runtime->threadInfo->hold_locks=hashset_create(0);
     runtime->threadInfo->top_runtime = runtime;
 }
 
 
-
 void runtime_dispose(Runtime *runtime) {
-//    hashset_destory(runtime->threadInfo->hold_locks);
-
     jvm_free(runtime->threadInfo);
     stack_destory(runtime->stack);
+    runtime->stack = NULL;
 }
 
 
 s32 localvar_init(Runtime *runtime, s32 count) {
     runtime->localVariables = jvm_alloc(sizeof(LocalVarItem) * count);
     runtime->localvar_count = count;
+    return 0;
+}
+
+s32 localvar_dispose(Runtime *runtime) {
+    jvm_free(runtime->localVariables);
+    runtime->localvar_count = 0;
     return 0;
 }
 

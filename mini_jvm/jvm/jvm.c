@@ -1,4 +1,5 @@
 
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -10,64 +11,82 @@
 #include "jdwp.h"
 
 
-void destoryAllClasses(hmap_t classes) {
+void classes_destory(hmap_t classes) {
+//    HashtableIterator hti;
+//    hashtable_iterate(classes, &hti);
+//    for (; hashtable_iter_has_more(&hti);) {
+//        Utf8String *k = hashtable_iter_next_key(&hti);
+//        Class *clazz = hashtable_get(classes, k);
+//        class_destory(clazz);
+//    }
     hashtable_destory(classes);
 }
 
-void constructMainThread(Runtime *runtime) {
+void main_thread_create(Runtime *runtime) {
 
     Class *thread_clazz = classes_load_get_c("java/lang/Thread", runtime);
     //为主线程创建Thread实例
-    Instance *main_thread = instance_create(thread_clazz);
+    main_thread = instance_create(thread_clazz);
     //pthread_t pthread = pthread_self();
     runtime->threadInfo->jthread = main_thread;
     runtime->threadInfo->thread_status = THREAD_STATUS_RUNNING;
     instance_init(main_thread, runtime);//必须放在最好，初始化时需要用到前面的赋值
-
     threadlist_add(runtime);
     jthread_set_threadq_value(main_thread, runtime);
 }
 
-void startJdwp(Runtime *runtime) {
-    Utf8String *clsName = utf8_create_c("javax/mini/jdwp/JdwpManager");
-    Utf8String *methodName = utf8_create_c("startJdwp");
-    Utf8String *methodType = utf8_create_c("()Ljavax/mini/jdwp/DebugServer;");
+void main_thread_destory() {
+    Runtime *r = jthread_get_threadq_value(main_thread);
+    threadlist_remove(r);
+    jthread_set_threadq_value(main_thread, NULL);
+    garbage_derefer_all(main_thread);
+    instance_destory(main_thread);
+}
 
-    Class *jdwp = classes_load_get(clsName, runtime);
-    if (jdwp) {
-        MethodInfo *method = find_methodInfo_by_name(clsName, methodName, methodType);
-        if (method) {
-            localvar_init(runtime, method->para_count + 1);
-            execute_method(method, runtime, jdwp);
-            //返回值留在栈中，防止被垃圾回收
-            StackEntry entry;
-            peek_entry(runtime->stack, &entry, runtime->stack->size - 1);
-            jdwp_jthread = (Instance *) entry_2_refer(&entry);
-        }
-    }
-    utf8_destory(clsName);
-    utf8_destory(methodName);
-    utf8_destory(methodType);
+ClassLoader *classloader_create(c8 *path) {
+    ClassLoader *class_loader = jvm_alloc(sizeof(ClassLoader));
+    class_loader->g_classpath = utf8_create_c(path);
+    //创建类容器
+    class_loader->classes = hashtable_create(UNICODE_STR_HASH_FUNC, UNICODE_STR_EQUALS_FUNC);
+    //创建引用类
+    class_loader->JVM_CLASS = class_create();
+    class_loader->JVM_CLASS->name = utf8_create_c("ClassLoader");
+    //创建数组类容器
+
+    return class_loader;
+}
+
+void classloader_destory(ClassLoader *class_loader) {
+    utf8_destory(class_loader->JVM_CLASS->name);
+    class_loader->JVM_CLASS->name = NULL;
+    garbage_derefer_all(class_loader->JVM_CLASS);
+    utf8_destory(class_loader->g_classpath);
+    classes_destory(class_loader->classes);
+    jvm_free(class_loader);
 }
 
 s32 execute(c8 *p_classpath, c8 *p_mainclass, s32 argc, c8 **argv) {
+#ifdef __MEM_LEAK_DETECT
+    dbg_init(10);
+    dbg_catch_sigsegv();
+#endif //__MEM_LEAK_DETECT
+    //
     open_log();
 #if _JVM_DEBUG_PROFILE
     instruct_profile = hashtable_create(DEFAULT_HASH_FUNC, DEFAULT_HASH_EQUALS_FUNC);
 #endif
-    mem_mgr_init();
+    mem_mgr_create();
     //为指令创建索引
-    instructionsIndexies = createInstructIndexies();
-    //创建类容器
-    classes = hashtable_create(UNICODE_STR_HASH_FUNC, UNICODE_STR_EQUALS_FUNC);
+    instructionsIndexies = instruct_indexies_create();
 
-    JVM_CLASS = class_create();
-    JVM_CLASS->name = utf8_create_c("MINI_JVM");
+    sys_classloader = classloader_create(p_classpath);
+
+    array_classloader = classloader_create("");
+
     //创建垃圾收集器
     garbage_collector_create();
 
-    //创建数组类
-    array_classes_create();
+
     //创建线程容器
     thread_list = arraylist_create(0);
     //本地方法库
@@ -82,57 +101,44 @@ s32 execute(c8 *p_classpath, c8 *p_mainclass, s32 argc, c8 **argv) {
     main_runtime = &runtime;
 
     //开始装载类
-    Utf8String *classpath = utf8_create_c(p_classpath);
-    Utf8String *mainclass = utf8_create_c(p_mainclass);
+
+    Utf8String *str_mainClsName = utf8_create_c(p_mainclass);
 
     //装入系统属性
-    loadSysProperties(classpath);
+    sys_properties_load(sys_classloader->g_classpath);
 
-    load_class(classpath, mainclass, classes);
+    load_class(sys_classloader->g_classpath, str_mainClsName, sys_classloader->classes);
 
     HashtableIterator hti;
-    hashtable_iterate(classes, &hti);
+    hashtable_iterate(sys_classloader->classes, &hti);
 #if _JVM_DEBUG > 5
     jvm_printf("classes size:%d\n", hashtable_num_entries(classes));
 #endif
     for (; hashtable_iter_has_more(&hti);) {
         Utf8String *k = hashtable_iter_next_key(&hti);
-        Class *clazz = classes_get(k);
+        Class *clazz = hashtable_get(sys_classloader->classes, k);
 #if _JVM_DEBUG > 5
         jvm_printf("classes entry : %s,%d\n", utf8_cstr(k), clazz);
 #endif
         if (clazz->status != CLASS_STATUS_PREPARED)class_prepar(clazz);
     }
-    hashtable_iterate(classes, &hti);
+    hashtable_iterate(sys_classloader->classes, &hti);
     for (; hashtable_iter_has_more(&hti);) {
         Utf8String *k = hashtable_iter_next_key(&hti);
-        Class *clazz = classes_get(k);
-        if (clazz->status != CLASS_STATUS_CLINITED)class_clinit(clazz, &runtime);//初始化
+        Class *clazz = hashtable_get(sys_classloader->classes, k);
+//        if (clazz->status != CLASS_STATUS_CLINITED)class_clinit(clazz, &runtime);//初始化
     }
 
-
-    Class *clazz = classes_get(mainclass);
+    Class *clazz = classes_get(str_mainClsName);
 
     s32 ret = 0;
     if (clazz) {
-        //jvm_printf("class: %s : %d\n", utf8_cstr(mname), obj_of_clazz);
-
-#if _JVM_DEBUG > 5
-        printConstantPool(clazz);
-        printMethodPool(clazz, &(clazz->methodPool));
-        printFieldPool(clazz, &(clazz->fieldPool));
-        printClassFileFormat(&(clazz->cff));
-#endif
-
         Utf8String *methodName = utf8_create_c("main");
         Utf8String *methodType = utf8_create_c("([Ljava/lang/String;)V");
-//        Instance arr;
-//        memset(&arr, 0, sizeof(Instance));
-//        push_ref(runtime.stack, (__refer) &arr);//main(String[])参数
 
-        MethodInfo *main = find_methodInfo_by_name(mainclass, methodName, methodType);
+        MethodInfo *main = find_methodInfo_by_name(str_mainClsName, methodName, methodType);
         if (main) {
-            constructMainThread(&runtime);
+            main_thread_create(&runtime);
             //启动调试器
             //startJdwp(&runtime);
             jdwp_start_server();
@@ -156,6 +162,7 @@ s32 execute(c8 *p_classpath, c8 *p_mainclass, s32 argc, c8 **argv) {
                 utf8_destory(utfs);
             }
             push_ref(runtime.stack, arr);
+            garbage_refer(arr, main_thread);
             s64 start = currentTimeMillis();
             jvm_printf("\n\n\n\n\n\n================================= main start ================================\n");
             //调用主方法
@@ -163,6 +170,7 @@ s32 execute(c8 *p_classpath, c8 *p_mainclass, s32 argc, c8 **argv) {
             jvm_printf("================================= main  end  ================================\n");
             jvm_printf("spent %lld\n", (currentTimeMillis() - start));
 
+            localvar_dispose(&runtime);
             //dump_refer();
 #if _JVM_DEBUG_PROFILE
             hashtable_iterate(instruct_profile, &hti);
@@ -172,31 +180,35 @@ s32 execute(c8 *p_classpath, c8 *p_mainclass, s32 argc, c8 **argv) {
                 jvm_printf("%2x \t %lld\n", instruct_code, (s64) (long) sum_v);
             }
 #endif
+            main_thread_destory();
             garbage_thread_stop();
+
         }
         utf8_destory(methodName);
         utf8_destory(methodType);
     }
-
-//    if (clazz) {
-//#if _JVM_DEBUG>5
-//        printConstantPool(&(obj_of_clazz->constantPool));
-//        printMethodPool(&(obj_of_clazz->constantPool), &(obj_of_clazz->methodPool));
-//        printClassFileFormat(&(obj_of_clazz->cff));
-//#endif
-//    }
-
-    utf8_destory(classpath);
-
-    utf8_destory(mainclass);
-    array_classes_destory();
-    destoryAllClasses(classes);
-    utf8_destory(JVM_CLASS->name);
-    class_destory(JVM_CLASS);
-    runtime_dispose(&runtime);
+    classloader_destory(sys_classloader);
+    sys_classloader = NULL;
+    classloader_destory(array_classloader);
+    array_classloader = NULL;
     garbage_collector_destory();
-    mem_mgr_dispose();
+    //
+    utf8_destory(str_mainClsName);
+    arraylist_destory(thread_list);
+    instruct_indexies_destory(instructionsIndexies);
+    instructionsIndexies = NULL;
+    native_lib_destory();
+    runtime_dispose(&runtime);
+    sys_properties_dispose();
+    mem_mgr_distory();
     close_log();
     jvm_printf("over\n");
+
+#ifdef __MEM_LEAK_DETECT
+    __refer a = jvm_alloc(156);
+    jvm_free(a);
+    dbg_heap_dump("");
+    dbg_mem_stat();
+#endif //__MEM_LEAK_DETECT
     return ret;
 }

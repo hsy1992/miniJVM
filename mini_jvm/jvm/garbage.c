@@ -5,6 +5,8 @@
 
 void getMemBlockName(void *memblock, Utf8String *name);
 
+void __garbage_clear();
+
 /**
  * 创建垃圾收集线程，
  *
@@ -44,28 +46,77 @@ s32 garbage_collector_create() {
     collector = jvm_alloc(sizeof(Collector));
     collector->son_2_father = hashtable_create(DEFAULT_HASH_FUNC, DEFAULT_HASH_EQUALS_FUNC);
     collector->father_2_son = hashtable_create(DEFAULT_HASH_FUNC, DEFAULT_HASH_EQUALS_FUNC);
-
     collector->_garbage_refer_set_pool = arraylist_create(4);
+
     collector->_garbage_thread_pause = 1;
-    collector->_garbage_thread = jvm_alloc(sizeof(pthread_t));
     collector->_garbageCond = PTHREAD_COND_INITIALIZER;
     pthread_cond_init(&collector->_garbageCond, NULL);
     pthread_mutexattr_init(&collector->_garbage_attr);
     pthread_mutexattr_settype(&collector->_garbage_attr, PTHREAD_MUTEX_RECURSIVE);
     pthread_mutex_init(&collector->_garbage_lock, &collector->_garbage_attr);
-    pthread_create(collector->_garbage_thread, NULL, collect_thread_run, NULL);
+    pthread_create(&collector->_garbage_thread, NULL, collect_thread_run, NULL);
     return 0;
 }
 
 void garbage_collector_destory() {
-    pthread_exit(collector->_garbage_thread);
-    jvm_free(collector->_garbage_attr);
-    jvm_free(collector->_garbage_lock);
-    jvm_free(collector->_garbage_thread);
+    __garbage_clear();
+//    pthread_exit(&collector->_garbage_thread);
+    pthread_mutexattr_destroy(&collector->_garbage_attr);
+    pthread_mutex_destroy(&collector->_garbage_lock);
+    pthread_cond_destroy(&collector->_garbageCond);
+
+    arraylist_destory(collector->_garbage_refer_set_pool);
+    collector->_garbage_refer_set_pool = NULL;
     hashtable_destory(collector->son_2_father);
+    collector->son_2_father = NULL;
     hashtable_destory(collector->father_2_son);
+    collector->father_2_son = NULL;
     jvm_free(collector);
+    collector = NULL;
 }
+
+void __garbage_clear() {
+    //
+    //
+    HashtableIterator hti;
+    //
+//    hashtable_iterate(sys_class_loader->classes, &hti);
+//    for (; hashtable_iter_has_more(&hti);) {
+//        HashtableKey k = hashtable_iter_next_key(&hti);
+//        Class *v = (Class *) hashtable_get(sys_class_loader->classes, k);
+//        if (v != HASH_NULL) {
+//            garbage_derefer_all(v);
+//        }
+//    }
+    //
+    jvm_printf("son_2_father.size: %lld , father_2_son.size:%lld\n",
+               collector->son_2_father->entries, collector->father_2_son->entries);
+    //解除所有引用关系后，回收全部对象
+    while (garbage_collect());
+
+    //
+    jvm_printf("son_2_father.size: %lld , father_2_son.size:%lld\n",
+               collector->son_2_father->entries, collector->father_2_son->entries);
+    //
+    hashtable_iterate(collector->son_2_father, &hti);
+    for (; hashtable_iter_has_more(&hti);) {
+        HashtableKey k = hashtable_iter_next_key(&hti);
+        Hashset *v = (Hashset *) hashtable_get(collector->son_2_father, k);
+        if (v != HASH_NULL) {
+            hashset_destory(v);
+        }
+    }
+    //
+    hashtable_iterate(collector->father_2_son, &hti);
+    for (; hashtable_iter_has_more(&hti);) {
+        HashtableKey k = hashtable_iter_next_key(&hti);
+        Hashset *v = (Hashset *) hashtable_get(collector->father_2_son, k);
+        if (v != HASH_NULL) {
+            hashset_destory(v);
+        }
+    }
+}
+
 
 void *collect_thread_run(void *para) {
     while (!collector->_garbage_thread_stop) {
@@ -99,7 +150,7 @@ void garbage_thread_wait() {
 }
 
 void garbage_thread_timedwait(s64 ms) {
-    ms+=currentTimeMillis();
+    ms += currentTimeMillis();
     struct timespec t;
     t.tv_sec = ms / 1000;
     t.tv_nsec = (ms % 1000) * 1000000;
@@ -199,7 +250,7 @@ s32 garbage_collect() {
     }
     garbage_thread_unlock();
 
-    return 0;
+    return i;
 }
 
 /**
@@ -238,9 +289,9 @@ s32 garbage_mark_by_threads() {
          */
         if (runtime->threadInfo->thread_status != THREAD_STATUS_ZOMBIE) {
             jthread_suspend(runtime);
-            while (!runtime->threadInfo->is_suspend) {
-                garbage_thread_timedwait(50);
-            }
+//            while (!runtime->threadInfo->is_suspend) {
+//                garbage_thread_timedwait(50);
+//            }
             garbage_mark_refered_obj(runtime);
             jthread_resume(runtime);
         }
@@ -275,7 +326,7 @@ s32 garbage_mark_refered_obj(Runtime *pruntime) {
     s32 i;
     StackEntry entry;
     Runtime *runtime = pruntime;
-    StackFrame *stack = runtime->stack;
+    RuntimeStack *stack = runtime->stack;
     for (i = 0; i < stack->size; i++) {
         peek_entry(stack, &entry, i);
         if (is_ref(&entry)) {
@@ -342,7 +393,7 @@ void dump_refer() {
     //jvm_printf("%d\n",sizeof(struct _Hashtable));
     HashtableIterator hti;
     hashtable_iterate(collector->son_2_father, &hti);
-    jvm_printf("=========================son <- father :%d\n", hashtable_num_entries(collector->son_2_father));
+    jvm_printf("=========================son <- father :%lld\n", (collector->son_2_father->entries));
     for (; hashtable_iter_has_more(&hti);) {
 
         HashtableKey k = hashtable_iter_next_key(&hti);
@@ -370,7 +421,7 @@ void dump_refer() {
     }
 
     hashtable_iterate(collector->father_2_son, &hti);
-    jvm_printf("=========================father -> son :%d\n", hashtable_num_entries(collector->father_2_son));
+    jvm_printf("=========================father -> son :%lld\n", (collector->father_2_son->entries));
     for (; hashtable_iter_has_more(&hti);) {
 
         HashtableKey k = hashtable_iter_next_key(&hti);

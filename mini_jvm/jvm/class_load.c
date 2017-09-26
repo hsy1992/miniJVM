@@ -194,7 +194,6 @@ void *parseCPField(Class *_this, FILE *fp, s32 index) {
 void *parseCPMethod(Class *_this, FILE *fp, s32 index) {
     u8 short_tmp[2];
     ConstantMethodRef *ptr = jvm_alloc(sizeof(ConstantMethodRef));
-    ptr->virtual_methods = pairlist_create(0);
     ptr->methodParaCount = -1;
 
     ptr->tag = CONSTANT_METHOD_REF;
@@ -515,7 +514,7 @@ s32 _class_constant_pool_destory(Class *clazz) {
     for (i = 0; i < clazz->constantPool.utf8CP->length; i++) {
         ConstantUTF8 *ptr = (ConstantUTF8 *) arraylist_get_value(clazz->constantPool.utf8CP, i);
         utf8_destory(ptr->utfstr);
-        instance_destory(ptr->jstr);
+        ptr->utfstr = NULL;
         jvm_free(ptr);
     }
     for (i = 0; i < clazz->constantPool.name_and_type->length; i++) {
@@ -634,16 +633,16 @@ s32 _parse_field_pool(Class *_this, FILE *fp, s32 count) {
 s32 _class_field_info_destory(Class *clazz) {
     s32 i, j;
     for (i = 0; i < clazz->fieldPool.field_used; i++) {
-        FieldPool *fi = (FieldPool *) &clazz->fieldPool.field[i];
-        for (j = 0; j < fi->field[i].attributes_count; j++) {
-            AttributeInfo *attr = &fi->field[i].attributes[j];
-            jvm_free(attr->info);//info已被转换为converted_attribute
+        FieldInfo *fi = &clazz->fieldPool.field[i];
+        for (j = 0; j < fi->attributes_count; j++) {
+            AttributeInfo *attr = &fi->attributes[j];
+            jvm_free(attr->info);
             attr->info = NULL;
         }
-        jvm_free(fi->field->attributes);
-        fi->field->attributes = NULL;
+        if (fi->attributes)jvm_free(fi->attributes);
+        fi->attributes = NULL;
     }
-    jvm_free(clazz->fieldPool.field);
+    if (clazz->fieldPool.field)jvm_free(clazz->fieldPool.field);
     clazz->fieldPool.field = NULL;
     return 0;
 }
@@ -699,7 +698,7 @@ s32 _parse_interface_pool(Class *_this, FILE *fp, s32 count) {
 }
 
 s32 _class_interface_pool_destory(Class *clazz) {
-    jvm_free(clazz->interfacePool.clasz);
+    if (clazz->interfacePool.clasz)jvm_free(clazz->interfacePool.clasz);
     clazz->interfacePool.clasz = NULL;
     return 0;
 }
@@ -865,24 +864,30 @@ s32 _class_method_info_destory(Class *clazz) {
         MethodInfo *mi = &clazz->methodPool.method[i];
         for (j = 0; j < mi->attributes_count; j++) {
             AttributeInfo *attr = &mi->attributes[j];
-            jvm_free(attr->info);//某些没有转
+            if (attr->info)jvm_free(attr->info);//某些没有转
             attr->info = NULL;
             if (attr->converted_code) {
                 CodeAttribute *ca = (CodeAttribute *) attr->converted_code;
                 jvm_free(ca->code);//info已被转换为converted_attribute
+                ca->code = NULL;
                 jvm_free(ca->exception_table);//info已被转换为converted_attribute
-                attr->converted_code = NULL;
+                ca->exception_table = NULL;
                 jvm_free(ca->line_number_table);
+                ca->line_number_table = NULL;
+                if (ca->local_var_table)jvm_free(ca->local_var_table);
+                ca->local_var_table = NULL;
+                //
+                jvm_free(attr->converted_code);
+                attr->converted_code = NULL;
             }
-            jvm_free(attr->converted_code);
         }
-        jvm_free(mi->attributes);
+        if (mi->attributes)jvm_free(mi->attributes);
         mi->attributes = NULL;
         utf8_destory(mi->paraType);
-        jvm_free(mi->breakpoint);
+        if (mi->breakpoint)jvm_free(mi->breakpoint);
         mi->breakpoint = NULL;
     }
-    jvm_free(clazz->methodPool.method);
+    if (clazz->methodPool.method)jvm_free(clazz->methodPool.method);
     clazz->methodPool.method = NULL;
     return 0;
 }
@@ -916,6 +921,19 @@ s32 _parse_attribute_pool(Class *_this, FILE *fp, s32 count) {
         ptr->info = jvm_alloc(ptr->attribute_length);
         fread(ptr->info, ptr->attribute_length, 1, fp);
     }
+    return 0;
+}
+
+s32 _class_attribute_info_destory(Class *clazz) {
+    s32 i;
+    for (i = 0; i < clazz->attributePool.attribute_used; i++) {
+        AttributeInfo *ptr = &(clazz->attributePool.attribute[i]);
+        if (ptr->info) {
+            jvm_free(ptr->info);
+            ptr->info = NULL;
+        }
+    }
+    if (clazz->attributePool.attribute)jvm_free(clazz->attributePool.attribute);
     return 0;
 }
 
@@ -1233,36 +1251,36 @@ s32 load_related_class(Utf8String *classpath, Class *clazz, hmap_t classes) {
 
 s32 load_class(Utf8String *pClassPath, Utf8String *pClassName, hmap_t classes) {
     if (!pClassName)return 0;
+    s32 iret = 0;
     if (utf8_last_indexof_c(pClassPath, "/") != pClassPath->length - 1)utf8_append_c(pClassPath, "/");
 
     Utf8String *clsName = utf8_create_copy(pClassName);
     utf8_replace_c(clsName, ".", "/");
 
-    classpath = utf8_create_copy(pClassPath);
-
     Utf8String *tmppath = utf8_create_copy(pClassPath);
     utf8_append(tmppath, clsName);
     utf8_append_c(tmppath, ".class");
-    Class *tmpclazz = classes_get(pClassName);
-    if (tmpclazz) {
-        return 0;
-    }
-    if (utf8_indexof_c(tmppath, "[") >= 0) {
-        return 0;
-    }
-    Class *clazz = class_create();
-    s32 iret = clazz->_load_from_file(clazz, utf8_cstr(tmppath));
-    if (iret != 0) {
-        jvm_printf(" class not found : %s\n", utf8_cstr(pClassName));
-        return -1;
-    }
+    Class *tmpclazz = classes_get(clsName);
+    if (!tmpclazz) {
+        if (utf8_indexof_c(tmppath, "[") < 0) {
+            Class *clazz = class_create();
+            iret = clazz->_load_from_file(clazz, utf8_cstr(tmppath));
+            //jvm_printf("load class :%llx , %llx\n", (long long) (long) tmppath, (long long) (long) clsName);
+            //回收
+            if (iret != 0) {
+                jvm_printf(" class not found : %s\n", utf8_cstr(pClassName));
+            } else {
 #if _JVM_DEBUG > 5
-    jvm_printf("load class:  %s \n", utf8_cstr(tmppath));
+                jvm_printf("load class:  %s \n", utf8_cstr(tmppath));
 #endif
-    classes_put(clazz);
+                classes_put(clazz);
+                load_related_class(pClassPath, clazz, classes);
+            }
+        }
+    }
     utf8_destory(tmppath);
     utf8_destory(clsName);
-    return load_related_class(pClassPath, clazz, classes);
+    return iret;
 }
 
 

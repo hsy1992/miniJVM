@@ -5,6 +5,7 @@
 
 #include <stdarg.h>
 #include "jvm.h"
+#include <pthread.h>
 #include "jvm_util.h"
 #include "garbage.h"
 #include "java_native_reflect.h"
@@ -22,11 +23,11 @@ void thread_unlock(MemoryBlock *mb) {
 
 Class *classes_get(Utf8String *clsName) {
     Class *cl = NULL;
-    thread_lock(&JVM_CLASS->mb);
+    thread_lock(&sys_classloader->JVM_CLASS->mb);
     if (clsName) {
-        cl = hashtable_get(classes, clsName);
+        cl = hashtable_get(sys_classloader->classes, clsName);
     }
-    thread_unlock(&JVM_CLASS->mb);
+    thread_unlock(&sys_classloader->JVM_CLASS->mb);
     return cl;
 }
 
@@ -39,52 +40,66 @@ Class *classes_load_get_c(c8 *pclassName, Runtime *runtime) {
 
 Class *classes_load_get(Utf8String *ustr, Runtime *runtime) {
     if (!ustr)return NULL;
-    thread_lock(&JVM_CLASS->mb);
+    thread_lock(&sys_classloader->JVM_CLASS->mb);
     Class *cl;
     utf8_replace_c(ustr, ".", "/");
     cl = classes_get(ustr);
 
     if (!cl) {
-        load_class(classpath, ustr, classes);
+        load_class(sys_classloader->g_classpath, ustr, sys_classloader->classes);
         cl = classes_get(ustr);
         //if (java_debug)event_on_class_prepar(runtime, cl);
     }
     if (cl) {
         class_clinit(cl, runtime);
     }
-    thread_unlock(&JVM_CLASS->mb);
+    thread_unlock(&sys_classloader->JVM_CLASS->mb);
     return cl;
 }
 
 s32 classes_put(Class *clazz) {
     if (clazz) {
-        thread_lock(&JVM_CLASS->mb);
-        hashtable_put(classes, clazz->name, clazz);
-        thread_unlock(&JVM_CLASS->mb);
-        garbage_refer(clazz, JVM_CLASS);
+        thread_lock(&sys_classloader->JVM_CLASS->mb);
+        hashtable_put(sys_classloader->classes, clazz->name, clazz);
+        thread_unlock(&sys_classloader->JVM_CLASS->mb);
+        garbage_refer(clazz, sys_classloader->JVM_CLASS);
         return 0;
     }
     return 1;
 }
 
+Class *array_class_get(Utf8String *descript) {
+    thread_lock(&array_classloader->JVM_CLASS->mb);
+    Class *clazz = hashtable_get(array_classloader->classes, descript);
+    if (!clazz) {
+        clazz = class_create();
+        clazz->arr_data_type = getDataTypeIndex(utf8_char_at(descript, 1));
+        clazz->name = utf8_create_copy(descript);
+        hashtable_put(array_classloader->classes, clazz->name, clazz);
+        garbage_refer(clazz, array_classloader->JVM_CLASS);
+    }
+    thread_unlock(&array_classloader->JVM_CLASS->mb);
+    return clazz;
+}
+
 Runtime *threadlist_get(s32 i) {
     Runtime *r = NULL;
-    thread_lock(&JVM_CLASS->mb);
+    thread_lock(&sys_classloader->JVM_CLASS->mb);
     r = (Runtime *) arraylist_get_value(thread_list, i);
-    thread_unlock(&JVM_CLASS->mb);
+    thread_unlock(&sys_classloader->JVM_CLASS->mb);
     return r;
 }
 
 void threadlist_remove(Runtime *r) {
-    thread_lock(&JVM_CLASS->mb);
+    thread_lock(&sys_classloader->JVM_CLASS->mb);
     arraylist_remove(thread_list, r);
-    thread_unlock(&JVM_CLASS->mb);
+    thread_unlock(&sys_classloader->JVM_CLASS->mb);
 }
 
 void threadlist_add(Runtime *r) {
-    thread_lock(&JVM_CLASS->mb);
+    thread_lock(&sys_classloader->JVM_CLASS->mb);
     arraylist_append(thread_list, r);
-    thread_unlock(&JVM_CLASS->mb);
+    thread_unlock(&sys_classloader->JVM_CLASS->mb);
 }
 
 /**
@@ -248,38 +263,6 @@ s32 getDataTypeIndex(c8 ch) {
 }
 
 
-void array_classes_create() {
-    if (!array_classes) {
-        array_classes = hashtable_create(UNICODE_STR_HASH_FUNC, UNICODE_STR_EQUALS_FUNC);
-    }
-
-}
-
-Class *array_class_get(Utf8String *descript) {
-    thread_lock(&JVM_CLASS->mb);
-    Class *clazz = hashtable_get(array_classes, descript);
-    if (!clazz) {
-        clazz = class_create();
-        clazz->arr_data_type = getDataTypeIndex(utf8_char_at(descript, 1));
-        clazz->name = utf8_create_copy(descript);
-        hashtable_put(array_classes, clazz->name, clazz);
-    }
-    thread_unlock(&JVM_CLASS->mb);
-    return clazz;
-}
-
-void array_classes_destory() {
-    HashtableIterator hti;
-    hashtable_iterate(array_classes, &hti);
-    for (; hashtable_iter_has_more(&hti);) {
-        Utf8String *k = hashtable_iter_next_key(&hti);
-        Class *clazz = hashtable_get(array_classes, k);
-        utf8_destory(clazz->name);
-        class_destory(clazz);
-    }
-    hashtable_destory(array_classes);
-}
-
 u8 getDataTypeTag(s32 index) {
     return data_type_str[index];
 }
@@ -304,7 +287,7 @@ s32 isDataReferByIndex(s32 index) {
  * @param stack
  * @return
  */
-Instance *getInstanceInStack(Class *clazz, ConstantMethodRef *cmr, StackFrame *stack) {
+Instance *getInstanceInStack(Class *clazz, ConstantMethodRef *cmr, RuntimeStack *stack) {
 
     StackEntry entry;
     peek_entry(stack, &entry, stack->size - 1 - cmr->methodParaCount);
@@ -364,7 +347,7 @@ s32 parseMethodPara(Utf8String *methodType, Utf8String *out) {
 
 void printDumpOfClasses() {
     HashtableIterator hti;
-    hashtable_iterate(classes, &hti);
+    hashtable_iterate(sys_classloader->classes, &hti);
     for (; hashtable_iter_has_more(&hti);) {
         Utf8String *k = hashtable_iter_next_key(&hti);
         Class *clazz = classes_get(k);
@@ -372,7 +355,7 @@ void printDumpOfClasses() {
     }
 }
 
-s32 loadSysProperties(Utf8String *path) {
+s32 sys_properties_load(Utf8String *path) {
     sys_prop = hashtable_create(UNICODE_STR_HASH_FUNC, UNICODE_STR_EQUALS_FUNC);
 
     FILE *fp = 0;
@@ -399,8 +382,6 @@ s32 loadSysProperties(Utf8String *path) {
     utf8_replace_c(ustr, "\r\n", "\n");
     utf8_replace_c(ustr, "\r", "\n");
     Utf8String *line = utf8_create();
-    Utf8String *key = utf8_create();
-    Utf8String *val = utf8_create();
     while (ustr->length > 0) {
         s32 lineEndAt = utf8_indexof_c(ustr, "\n");
         utf8_clear(line);
@@ -413,8 +394,8 @@ s32 loadSysProperties(Utf8String *path) {
         }
         s32 eqAt = utf8_indexof_c(line, "=");
         if (eqAt > 0) {
-            utf8_clear(key);
-            utf8_clear(val);
+            Utf8String *key = utf8_create();
+            Utf8String *val = utf8_create();
             utf8_append_part(key, line, 0, eqAt);
             utf8_append_part(val, line, eqAt + 1, line->length - (eqAt + 1));
             hashtable_put(sys_prop, key, val);
@@ -423,6 +404,18 @@ s32 loadSysProperties(Utf8String *path) {
     utf8_destory(line);
     utf8_destory(ustr);
     return 0;
+}
+
+void sys_properties_dispose() {
+    HashtableIterator hti;
+    hashtable_iterate(sys_prop, &hti);
+    for (; hashtable_iter_has_more(&hti);) {
+        Utf8String *k = hashtable_iter_next_key(&hti);
+        Utf8String *v = hashtable_get(sys_prop, k);
+        utf8_destory(k);
+        utf8_destory(v);
+    }
+    hashtable_destory(sys_prop);
 }
 
 FILE *logfile = NULL;
@@ -481,7 +474,7 @@ void invoke_deepth(Runtime *runtime) {
         fprintf(logfile, "    ");
     }
 #else
-    printf("%lx", (s64) (long) pthread_self());
+    printf("%lx", (s64) (long) pthread_self().p);
     for (i = 0; i < len; i++) {
         printf("    ");
     }
@@ -525,6 +518,7 @@ void *jtherad_loader(void *para) {
         if (java_debug)event_on_thread_death(&runtime);
     }
     jthread_set_threadq_value(jthread, NULL);
+    localvar_dispose(&runtime);
     runtime_dispose(&runtime);
     garbage_derefer(jthread, main_thread);
     return (void *) (long) ret;
@@ -827,6 +821,7 @@ void instance_init(Instance *ins, Runtime *runtime) {
 
 
 s32 instance_destory(Instance *ins) {
+    if (!ins)return -1;
     if (ins->mb.type == MEM_TYPE_INS) {
         jthreadlock_destory(ins->mb.thread_lock);
         jvm_free(ins->obj_fields);
@@ -836,6 +831,7 @@ s32 instance_destory(Instance *ins) {
     } else if (ins->mb.type == MEM_TYPE_CLASS) {
         class_destory((Class *) ins);
     }
+    return 0;
 }
 
 //===============================    实例化字符串  ==================================

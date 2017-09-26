@@ -80,22 +80,19 @@
 				</MakeCommands>
 			</Target>
 		</Build>
+		<Unit filename="D:/githome/mini_jvm/mini_jvm/cmem/example.c">
+			<Option target="mini_jvm"/>
+		</Unit>
+		<Unit filename="D:/githome/mini_jvm/mini_jvm/cmem/memleak.c">
+			<Option target="mini_jvm"/>
+		</Unit>
+		<Unit filename="D:/githome/mini_jvm/mini_jvm/cmem/memleak.h">
+			<Option target="mini_jvm"/>
+		</Unit>
 		<Unit filename="D:/githome/mini_jvm/mini_jvm/jvm/class.c">
 			<Option target="mini_jvm"/>
 		</Unit>
-		<Unit filename="D:/githome/mini_jvm/mini_jvm/jvm/class_loader.c">
-			<Option target="mini_jvm"/>
-		</Unit>
-		<Unit filename="D:/githome/mini_jvm/mini_jvm/jvm/class_loader_constant.c">
-			<Option target="mini_jvm"/>
-		</Unit>
-		<Unit filename="D:/githome/mini_jvm/mini_jvm/jvm/class_loader_field.c">
-			<Option target="mini_jvm"/>
-		</Unit>
-		<Unit filename="D:/githome/mini_jvm/mini_jvm/jvm/class_loader_interface.c">
-			<Option target="mini_jvm"/>
-		</Unit>
-		<Unit filename="D:/githome/mini_jvm/mini_jvm/jvm/class_loader_method.c">
+		<Unit filename="D:/githome/mini_jvm/mini_jvm/jvm/class_load.c">
 			<Option target="mini_jvm"/>
 		</Unit>
 		<Unit filename="D:/githome/mini_jvm/mini_jvm/jvm/garbage.c">
@@ -165,6 +162,9 @@
 			<Option target="mini_jvm"/>
 		</Unit>
 		<Unit filename="D:/githome/mini_jvm/mini_jvm/utils/arraylist.h">
+			<Option target="mini_jvm"/>
+		</Unit>
+		<Unit filename="D:/githome/mini_jvm/mini_jvm/utils/d_type.h">
 			<Option target="mini_jvm"/>
 		</Unit>
 		<Unit filename="D:/githome/mini_jvm/mini_jvm/utils/hashset.c">

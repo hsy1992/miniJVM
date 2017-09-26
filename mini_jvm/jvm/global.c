@@ -1,21 +1,18 @@
 //
 // Created by Gust on 2017/8/20 0020.
 //
+
 #include "jvm.h"
-//#include "../cmem/CMemLeak.h"
-//#define _DEBUG
 //======================= global var =============================
 
-Class *JVM_CLASS;
-Utf8String *classpath;
-Hashtable *classes;  //key =  package+classname value =  class_ptr
-Hashtable *array_classes;
+ClassLoader *sys_classloader;
+ClassLoader *array_classloader;
 
 ArrayList *native_libs;
 ArrayList *thread_list; //all thread
 Hashtable *sys_prop;
 
-Collector* collector;
+Collector *collector;
 
 Instruction **instructionsIndexies;
 Instance *main_thread;//
@@ -26,9 +23,8 @@ s32 STACK_LENGHT = 10240;
 s64 GARBAGE_PERIOD_MS = 1000;
 //
 //
-u8 volatile java_debug = 1;
+u8 volatile java_debug = 0;
 Instance *jdwp_jthread;
-u8 JDWP_BREAK_POINT = 0xca;
 
 s64 MAX_HEAP_SIZE = 20 * 1024 * 1024;
 s64 heap_size = 0; //当前已经分配的内存总数
@@ -39,18 +35,20 @@ static s64 alloc_count = 0;
 static s64 free_count = 0;
 Pairlist *mem_size_2_count;
 
-void mem_mgr_init() {
+void mem_mgr_create() {
     if (!mem_size_2_count) {
         mem_size_2_count = pairlist_create(0);
     }
 }
 
-void mem_mgr_dispose() {
-    if (!mem_size_2_count) {
+void mem_mgr_distory() {
+    if (mem_size_2_count) {
         pairlist_destory(mem_size_2_count);
         mem_size_2_count = NULL;
     }
 }
+
+#ifndef __MEM_LEAK_DETECT
 
 /**
  * 在分配的内存块前面加4个字节用于存放此块内存的长度
@@ -61,19 +59,9 @@ void *jvm_alloc(u32 size) {
 
     if (!size)return NULL;
     size += 4;
-    void *ptr = malloc(size);
+    void *ptr = calloc(size, 1);
     if (ptr) {
-        memset(ptr, 0, size);
         heap_size += size;
-        if (16 == size) {
-            int debug = 1;
-        }
-        if (20 == size) {
-            int debug = 1;
-        }
-        if (24 == size) {
-            int debug = 1;
-        }
         alloc_count++;
         if (mem_size_2_count) {
             s32 count = pairlist_getl(mem_size_2_count, size);
@@ -118,6 +106,8 @@ void *jvm_realloc(void *pPtr, u32 size) {
     }
     return NULL;
 }
+
+#endif //_DEBUG
 
 void mem_mgr_print() {
     jvm_printf("=============\n");

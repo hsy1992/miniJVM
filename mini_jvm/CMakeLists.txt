@@ -38,7 +38,12 @@ set(SOURCE_FILES
         jvm/jdwp.c
         jvm/jdwp.h
         jvm/java_native_io.h
-        jvm/class_load.c)
+        jvm/class_load.c
+        utils/d_type.h
+        cmem/memLeak.c
+        cmem/memLeak.h
+        cmem/example.c
+        )
 
 add_executable(mini_jvm ${SOURCE_FILES})
 

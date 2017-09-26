@@ -29,15 +29,7 @@ s32 isDataReferByIndex(s32 index);
 
 u8 getDataTypeTag(s32 index);
 
-void array_classes_create();
-
-void array_classes_destory();
-
 Class *array_class_get(Utf8String *descript);
-
-//Class *array_class_get_by_index(int typeIndex);
-//
-//Class *array_class_get_by_flag(u8 flag);
 
 s64 currentTimeMillis();
 
@@ -45,9 +37,9 @@ s64 nanoTime();
 
 s32 threadSleep(s64 ms);
 
-s32 loadSysProperties(Utf8String *path);
+s32 sys_properties_load(Utf8String *path);
 
-//s32 threadSleep(s64 ms);
+void sys_properties_dispose();
 
 void jstring_set_count(Instance *jstr, s32 count);
 
@@ -69,7 +61,7 @@ s32 jstring_2_utf8(Instance *jstr, Utf8String *utf8);
 
 s32 parseMethodPara(Utf8String *methodType, Utf8String *out);
 
-Instance *getInstanceInStack(Class *clazz, ConstantMethodRef *cmr, StackFrame *stack);
+Instance *getInstanceInStack(Class *clazz, ConstantMethodRef *cmr, RuntimeStack *stack);
 
 void printDumpOfClasses();
 

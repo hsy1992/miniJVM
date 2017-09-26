@@ -18,14 +18,15 @@ typedef struct _Collector {
     //
     Hashtable *son_2_father; //key=mem_ptr, value=我被别人引用的列表
     Hashtable *father_2_son; //key=mem_ptr, value=别人被我引用的列表
+    ArrayList *_garbage_refer_set_pool;
     //
-    pthread_t *_garbage_thread;//垃圾回收线程
+    pthread_t _garbage_thread;//垃圾回收线程
     pthread_mutexattr_t _garbage_attr;//
     pthread_mutex_t _garbage_lock; //重入锁
+    pthread_cond_t _garbageCond;
+
     s32 _garbage_thread_stop;
     s32 _garbage_thread_pause;
-    pthread_cond_t _garbageCond;
-    ArrayList *_garbage_refer_set_pool;
     s64 _garbage_count;
 } Collector;
 

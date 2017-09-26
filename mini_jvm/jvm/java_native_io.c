@@ -318,7 +318,7 @@ s32 srv_close(s32 listenfd) {
 
 
 s32 javax_mini_net_socket_Protocol_open0(Runtime *runtime, Class *clazz) {
-    StackFrame *stack = runtime->stack;
+    RuntimeStack *stack = runtime->stack;
     Instance *jbyte_arr = (Instance *) (runtime->localVariables + 0)->refer;
     s32 port = (runtime->localVariables + 1)->integer;
     s32 mode = (runtime->localVariables + 2)->integer;

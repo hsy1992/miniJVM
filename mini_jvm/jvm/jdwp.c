@@ -72,6 +72,7 @@ void *jdwp_thread_dispacher(void *para) {
 }
 
 s32 jdwp_start_server() {
+    if (!java_debug)return 0;
     jdwpserver.ip = utf8_create();
     jdwpserver.port = 8000;
     jdwpserver.exit = 0;
@@ -1221,13 +1222,13 @@ s32 jdwp_client_process(JdwpClient *client, Runtime *runtime) {
             }
             case JDWP_CMD_VirtualMachine_AllClasses: {//1.3
                 jdwppacket_set_err(res, JDWP_ERROR_NONE);
-                jdwppacket_write_int(res, classes->entries);
+                jdwppacket_write_int(res, sys_classloader->classes->entries);
 
                 HashtableIterator hti;
-                hashtable_iterate(classes, &hti);
+                hashtable_iterate(sys_classloader->classes, &hti);
                 for (; hashtable_iter_has_more(&hti);) {
                     Utf8String *k = hashtable_iter_next_key(&hti);
-                    Class *cl = hashtable_get(classes, k);
+                    Class *cl = hashtable_get(sys_classloader->classes, k);
 
                     jdwppacket_write_byte(res, JDWP_TYPETAG_CLASS);
                     jdwppacket_write_refer(res, cl);

@@ -18,7 +18,6 @@ Class *class_create() {
     clazz->mb.garbage_mark = GARBAGE_MARK_UNDEF;
     clazz->field_instance_len = 0;
     clazz->field_static = NULL;
-    clazz->field_instance_template = NULL;
     clazz->status = CLASS_STATUS_RAW;
     clazz->_load_from_file = _LOAD_FROM_FILE;
     //
@@ -32,6 +31,7 @@ void _INIT_CLASS(Class *_this) {
 }
 
 s32 class_destory(Class *clazz) {
+
     _DESTORY_CLASS(clazz);
     jvm_free(clazz);
 }
@@ -41,11 +41,10 @@ s32 _DESTORY_CLASS(Class *_this) {
     _class_interface_pool_destory(_this);
     _class_field_info_destory(_this);
     _class_constant_pool_destory(_this);
-    jvm_free(_this->field_static);
+    _class_attribute_info_destory(_this);
+    if (_this->field_static)jvm_free(_this->field_static);
     _this->field_static = NULL;
-    jvm_free(_this->field_instance_template);
-    _this->field_instance_template = NULL;
-    jvm_free(_this->constant_item_ptr);
+    if (_this->constant_item_ptr)jvm_free(_this->constant_item_ptr);
     _this->constant_item_ptr = NULL;
     jthreadlock_destory(_this->mb.thread_lock);
     constant_list_destory(_this);
@@ -107,6 +106,8 @@ s32 class_prepar(Class *clazz) {
     for (i = 0; i < clazz->constantPool.methodRef->length; i++) {
         ConstantMethodRef *cmr = (ConstantMethodRef *) arraylist_get_value(clazz->constantPool.methodRef, i);
         cmr->methodInfo = find_methodInfo_by_methodref(clazz, cmr->index);
+        cmr->virtual_methods = pairlist_create(0);
+        //jvm_printf("%s.%s %llx\n", utf8_cstr(clazz->name), utf8_cstr(cmr->name), (s64) (long) cmr->virtual_methods);
     }
 
 
@@ -139,14 +140,12 @@ s32 class_prepar(Class *clazz) {
         }
         clazz->field_instance_start = superclass->field_instance_len;
         clazz->field_instance_len = clazz->field_instance_start + instance_len;
-        clazz->field_instance_template = jvm_alloc(clazz->field_instance_len);
         //实例变量区前面是继承的父类变量，后面是自己的变量
         //memcpy((clazz->field_instance_template), (superclass->field_instance_template), clazz->field_instance_start);
     } else {
         clazz->field_instance_start = 0;
         //实例变量区前面是继承的父类变量，后面是自己的变量
         clazz->field_instance_len = clazz->field_instance_start + instance_len;
-        clazz->field_instance_template = jvm_alloc(clazz->field_instance_len);
     }
 
     clazz->status = CLASS_STATUS_PREPARED;
@@ -446,9 +445,8 @@ MethodInfo *find_methodInfo_by_name(Utf8String *clsName, Utf8String *methodName,
 }
 
 
-
 /* Get Major Version String */
- c8 *getMajorVersionString(u16 major_number) {
+c8 *getMajorVersionString(u16 major_number) {
     if (major_number == 0x33)
         return "J2SE 7";
     if (major_number == 0x32)

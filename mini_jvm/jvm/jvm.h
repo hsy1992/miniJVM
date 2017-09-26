@@ -2,7 +2,8 @@
 #ifndef PUP_JVM_H
 #define PUP_JVM_H
 #define HAVE_STRUCT_TIMESPEC
-
+#define _POSIX_C_SOURCE 200809L
+#define __MEM_LEAK_DETECT
 
 //
 #include <stdio.h>
@@ -14,6 +15,7 @@
 #include "../utils/utf8_string.h"
 #include "../utils/arraylist.h"
 #include "../utils/pairlist.h"
+#include "../cmem/memLeak.h"
 
 //=======================  micro define  =============================
 #define _JVM_DEBUG 0
@@ -149,6 +151,7 @@ typedef union _Long2Double {
 } Long2Double;
 #endif
 
+typedef struct _ClassLoader ClassLoader;
 typedef union _field_value FieldValue;
 typedef struct _ClassType Class;
 typedef struct _InstanceType Instance;
@@ -160,7 +163,9 @@ typedef struct _JavaThreadLock JavaThreadLock;
 typedef struct _JavaThreadInfo JavaThreadInfo;
 typedef struct _Runtime Runtime;
 typedef struct _CodeAttribute CodeAttribute;
+
 typedef s32 (*java_native_fun)(Runtime *runtime, Class *p);
+
 typedef struct _Collector Collector;
 
 enum {
@@ -219,7 +224,6 @@ enum {
 enum {
     MEM_TYPE_NODEF, //0
     MEM_TYPE_CLASS, //1
-    MEM_TYPE_ARR_CLASS,  //2
     MEM_TYPE_INS,   //3
     MEM_TYPE_ARR    //4
 };
@@ -326,34 +330,25 @@ enum {
 
 
 //======================= global var =============================
+extern Instance *main_thread;
+extern Runtime *main_runtime;
 
-extern Class *JVM_CLASS;
-extern Instance *jdwp_jthread;
-/**
- * key =  package+classname
- * value =  class_ptr
- */
-#define METHOD_MAX_PARA_LENGHT 256
-extern Utf8String *classpath;
-extern Hashtable *classes;
-extern Hashtable *array_classes;
+extern ClassLoader *sys_classloader;
+extern ClassLoader *array_classloader;
+
+Instruction **instructionsIndexies;
 
 extern ArrayList *thread_list;
 extern ArrayList *native_libs;
-extern s32 STACK_LENGHT;
 extern Hashtable *sys_prop;
 //
+extern s32 STACK_LENGHT;
 extern s64 MAX_HEAP_SIZE;
 extern s64 heap_size; //当前已经分配的内存总数
-extern Instance *main_thread;
-extern Runtime *main_runtime;
 extern Pairlist *mem_size_2_count;
 
 extern u8 volatile java_debug;
 
-extern u8 JDWP_BREAK_POINT;
-
-Instruction **instructionsIndexies;
 
 #if _JVM_DEBUG_PROFILE
 extern Hashtable *instruct_profile;
@@ -367,6 +362,12 @@ typedef struct _MemoryBlock {
     Class *clazz;
     JavaThreadLock *volatile thread_lock;
 } MemoryBlock;
+
+typedef struct _ClassLoader {
+    Utf8String *g_classpath;
+    Hashtable *classes;
+    Class *JVM_CLASS;
+} ClassLoader;
 //======================= class file =============================
 
 
@@ -667,7 +668,7 @@ typedef struct _StackFrame {
     s32 max_size;
     s32 size;
     StackEntry *store;
-} StackFrame;
+} RuntimeStack;
 
 //解决引用类型可能为4字节或8字节的不同情况
 typedef struct _LocalVarItem {
@@ -684,7 +685,7 @@ typedef struct _Runtime {
     JavaThreadInfo *threadInfo;
     Runtime *son;//sub method's runtime
     Runtime *parent;//father method's runtime
-    StackFrame *stack;
+    RuntimeStack *stack;
     LocalVarItem *localVariables;
     s32 localvar_count;
     u8 wideMode;
@@ -697,9 +698,7 @@ typedef struct _Runtime {
 typedef struct _ClassType {
     MemoryBlock mb;
 
-    //
     Utf8String *name;
-
     ClassFileFormat cff;
     ConstantPool constantPool;
     InterfacePool interfacePool;
@@ -712,7 +711,6 @@ typedef struct _ClassType {
     //类变量及实例变量的参数
     s32 field_instance_start;//实例变量模板起始起址，继承自父类的变量放在前面
     s32 field_instance_len; //非静态变量长度
-    c8 *field_instance_template;//实例变量模板
     s32 field_static_len; //静态变量内存长度
     c8 *field_static; //静态变量内存地址
 
@@ -792,6 +790,7 @@ s32 _parse_method_pool(Class *_this, FILE *fp, s32 count);
 
 s32 _class_method_info_destory(Class *clazz);
 
+s32 _class_attribute_info_destory(Class *clazz);
 
 void printMethodPool(Class *p, MethodPool *fp);
 
@@ -942,37 +941,34 @@ s32 execute(c8 *p_classpath, c8 *mainclass, s32 argc, c8 **argv);
 
 s32 execute_method(MethodInfo *method, Runtime *runtime, Class *clazz);
 
-Instruction **createInstructIndexies();
+Instruction **instruct_indexies_create();
 
+void instruct_indexies_destory(Instruction **instcts);
 //======================= stack =============================
 
-StackFrame *stack_init(s32 entry_size);
+void push_entry(RuntimeStack *stack, StackEntry *entry);
 
-void stack_destory(StackFrame *stack);
+void push_int(RuntimeStack *stack, s32 value);
 
-void push_entry(StackFrame *stack, StackEntry *entry);
+void push_long(RuntimeStack *stack, s64 value);
 
-void push_int(StackFrame *stack, s32 value);
+void push_double(RuntimeStack *stack, f64 value);
 
-void push_long(StackFrame *stack, s64 value);
+void push_float(RuntimeStack *stack, f32 value);
 
-void push_double(StackFrame *stack, f64 value);
+void push_ref(RuntimeStack *stack, __refer value);
 
-void push_float(StackFrame *stack, f32 value);
+__refer pop_ref(RuntimeStack *stack);
 
-void push_ref(StackFrame *stack, __refer value);
+s32 pop_int(RuntimeStack *stack);
 
-__refer pop_ref(StackFrame *stack);
+s64 pop_long(RuntimeStack *stack);
 
-s32 pop_int(StackFrame *stack);
+f64 pop_double(RuntimeStack *stack);
 
-s64 pop_long(StackFrame *stack);
+f32 pop_float(RuntimeStack *stack);
 
-f64 pop_double(StackFrame *stack);
-
-f32 pop_float(StackFrame *stack);
-
-void pop_entry(StackFrame *stack, StackEntry *entry);
+void pop_entry(RuntimeStack *stack, StackEntry *entry);
 
 s32 entry_2_int(StackEntry *entry);
 
@@ -990,10 +986,12 @@ void stack2localvar(MethodInfo *method, Runtime *father, Runtime *son);
 
 static s32 op_notsupport(u8 **opCode, Runtime *runtime);
 
-void peek_entry(StackFrame *stack, StackEntry *entry, int index);
+void peek_entry(RuntimeStack *stack, StackEntry *entry, int index);
 
 //======================= localvar =============================
 s32 localvar_init(Runtime *runtime, s32 count);
+
+s32 localvar_dispose(Runtime *runtime);
 
 //======================= other =============================
 void open_log();

@@ -554,10 +554,31 @@ public class Foo1 {
 
     public void t20() {
         int i = 0;
-        while (i++ < 1000000) {
+        while (i++ < 1000) {
             t20_1();
             int debug = 1;
         }
+    }
+
+    public void t21() {
+        class A {
+
+            Object v;
+        }
+        class B {
+
+            Object v;
+        }
+        class C {
+
+            Object v;
+        }
+        A a = new A();
+        B b = new B();
+        C c = new C();
+        a.v = b;
+        b.v = c;
+        c.v = a;
     }
 
     public static void main() {
@@ -582,7 +603,7 @@ public class Foo1 {
 //        f.t17();
 //        f.t18();
 //        f.t19();
-        f.t20();
+        f.t21();
     }
 
     public static void main(String[] agrs) {

@@ -122,6 +122,60 @@ mini_jvm/fast:
 	$(MAKE) -f CMakeFiles\mini_jvm.dir\build.make CMakeFiles/mini_jvm.dir/build
 .PHONY : mini_jvm/fast
 
+cmem/example.obj: cmem/example.c.obj
+
+.PHONY : cmem/example.obj
+
+# target to build an object file
+cmem/example.c.obj:
+	$(MAKE) -f CMakeFiles\mini_jvm.dir\build.make CMakeFiles/mini_jvm.dir/cmem/example.c.obj
+.PHONY : cmem/example.c.obj
+
+cmem/example.i: cmem/example.c.i
+
+.PHONY : cmem/example.i
+
+# target to preprocess a source file
+cmem/example.c.i:
+	$(MAKE) -f CMakeFiles\mini_jvm.dir\build.make CMakeFiles/mini_jvm.dir/cmem/example.c.i
+.PHONY : cmem/example.c.i
+
+cmem/example.s: cmem/example.c.s
+
+.PHONY : cmem/example.s
+
+# target to generate assembly for a file
+cmem/example.c.s:
+	$(MAKE) -f CMakeFiles\mini_jvm.dir\build.make CMakeFiles/mini_jvm.dir/cmem/example.c.s
+.PHONY : cmem/example.c.s
+
+cmem/memleak.obj: cmem/memleak.c.obj
+
+.PHONY : cmem/memleak.obj
+
+# target to build an object file
+cmem/memleak.c.obj:
+	$(MAKE) -f CMakeFiles\mini_jvm.dir\build.make CMakeFiles/mini_jvm.dir/cmem/memleak.c.obj
+.PHONY : cmem/memleak.c.obj
+
+cmem/memleak.i: cmem/memleak.c.i
+
+.PHONY : cmem/memleak.i
+
+# target to preprocess a source file
+cmem/memleak.c.i:
+	$(MAKE) -f CMakeFiles\mini_jvm.dir\build.make CMakeFiles/mini_jvm.dir/cmem/memleak.c.i
+.PHONY : cmem/memleak.c.i
+
+cmem/memleak.s: cmem/memleak.c.s
+
+.PHONY : cmem/memleak.s
+
+# target to generate assembly for a file
+cmem/memleak.c.s:
+	$(MAKE) -f CMakeFiles\mini_jvm.dir\build.make CMakeFiles/mini_jvm.dir/cmem/memleak.c.s
+.PHONY : cmem/memleak.c.s
+
 jvm/class.obj: jvm/class.c.obj
 
 .PHONY : jvm/class.obj
@@ -149,140 +203,32 @@ jvm/class.c.s:
 	$(MAKE) -f CMakeFiles\mini_jvm.dir\build.make CMakeFiles/mini_jvm.dir/jvm/class.c.s
 .PHONY : jvm/class.c.s
 
-jvm/class_loader.obj: jvm/class_loader.c.obj
+jvm/class_load.obj: jvm/class_load.c.obj
 
-.PHONY : jvm/class_loader.obj
-
-# target to build an object file
-jvm/class_loader.c.obj:
-	$(MAKE) -f CMakeFiles\mini_jvm.dir\build.make CMakeFiles/mini_jvm.dir/jvm/class_loader.c.obj
-.PHONY : jvm/class_loader.c.obj
-
-jvm/class_loader.i: jvm/class_loader.c.i
-
-.PHONY : jvm/class_loader.i
-
-# target to preprocess a source file
-jvm/class_loader.c.i:
-	$(MAKE) -f CMakeFiles\mini_jvm.dir\build.make CMakeFiles/mini_jvm.dir/jvm/class_loader.c.i
-.PHONY : jvm/class_loader.c.i
-
-jvm/class_loader.s: jvm/class_loader.c.s
-
-.PHONY : jvm/class_loader.s
-
-# target to generate assembly for a file
-jvm/class_loader.c.s:
-	$(MAKE) -f CMakeFiles\mini_jvm.dir\build.make CMakeFiles/mini_jvm.dir/jvm/class_loader.c.s
-.PHONY : jvm/class_loader.c.s
-
-jvm/class_loader_constant.obj: jvm/class_loader_constant.c.obj
-
-.PHONY : jvm/class_loader_constant.obj
+.PHONY : jvm/class_load.obj
 
 # target to build an object file
-jvm/class_loader_constant.c.obj:
-	$(MAKE) -f CMakeFiles\mini_jvm.dir\build.make CMakeFiles/mini_jvm.dir/jvm/class_loader_constant.c.obj
-.PHONY : jvm/class_loader_constant.c.obj
+jvm/class_load.c.obj:
+	$(MAKE) -f CMakeFiles\mini_jvm.dir\build.make CMakeFiles/mini_jvm.dir/jvm/class_load.c.obj
+.PHONY : jvm/class_load.c.obj
 
-jvm/class_loader_constant.i: jvm/class_loader_constant.c.i
+jvm/class_load.i: jvm/class_load.c.i
 
-.PHONY : jvm/class_loader_constant.i
-
-# target to preprocess a source file
-jvm/class_loader_constant.c.i:
-	$(MAKE) -f CMakeFiles\mini_jvm.dir\build.make CMakeFiles/mini_jvm.dir/jvm/class_loader_constant.c.i
-.PHONY : jvm/class_loader_constant.c.i
-
-jvm/class_loader_constant.s: jvm/class_loader_constant.c.s
-
-.PHONY : jvm/class_loader_constant.s
-
-# target to generate assembly for a file
-jvm/class_loader_constant.c.s:
-	$(MAKE) -f CMakeFiles\mini_jvm.dir\build.make CMakeFiles/mini_jvm.dir/jvm/class_loader_constant.c.s
-.PHONY : jvm/class_loader_constant.c.s
-
-jvm/class_loader_field.obj: jvm/class_loader_field.c.obj
-
-.PHONY : jvm/class_loader_field.obj
-
-# target to build an object file
-jvm/class_loader_field.c.obj:
-	$(MAKE) -f CMakeFiles\mini_jvm.dir\build.make CMakeFiles/mini_jvm.dir/jvm/class_loader_field.c.obj
-.PHONY : jvm/class_loader_field.c.obj
-
-jvm/class_loader_field.i: jvm/class_loader_field.c.i
-
-.PHONY : jvm/class_loader_field.i
+.PHONY : jvm/class_load.i
 
 # target to preprocess a source file
-jvm/class_loader_field.c.i:
-	$(MAKE) -f CMakeFiles\mini_jvm.dir\build.make CMakeFiles/mini_jvm.dir/jvm/class_loader_field.c.i
-.PHONY : jvm/class_loader_field.c.i
+jvm/class_load.c.i:
+	$(MAKE) -f CMakeFiles\mini_jvm.dir\build.make CMakeFiles/mini_jvm.dir/jvm/class_load.c.i
+.PHONY : jvm/class_load.c.i
 
-jvm/class_loader_field.s: jvm/class_loader_field.c.s
+jvm/class_load.s: jvm/class_load.c.s
 
-.PHONY : jvm/class_loader_field.s
-
-# target to generate assembly for a file
-jvm/class_loader_field.c.s:
-	$(MAKE) -f CMakeFiles\mini_jvm.dir\build.make CMakeFiles/mini_jvm.dir/jvm/class_loader_field.c.s
-.PHONY : jvm/class_loader_field.c.s
-
-jvm/class_loader_interface.obj: jvm/class_loader_interface.c.obj
-
-.PHONY : jvm/class_loader_interface.obj
-
-# target to build an object file
-jvm/class_loader_interface.c.obj:
-	$(MAKE) -f CMakeFiles\mini_jvm.dir\build.make CMakeFiles/mini_jvm.dir/jvm/class_loader_interface.c.obj
-.PHONY : jvm/class_loader_interface.c.obj
-
-jvm/class_loader_interface.i: jvm/class_loader_interface.c.i
-
-.PHONY : jvm/class_loader_interface.i
-
-# target to preprocess a source file
-jvm/class_loader_interface.c.i:
-	$(MAKE) -f CMakeFiles\mini_jvm.dir\build.make CMakeFiles/mini_jvm.dir/jvm/class_loader_interface.c.i
-.PHONY : jvm/class_loader_interface.c.i
-
-jvm/class_loader_interface.s: jvm/class_loader_interface.c.s
-
-.PHONY : jvm/class_loader_interface.s
+.PHONY : jvm/class_load.s
 
 # target to generate assembly for a file
-jvm/class_loader_interface.c.s:
-	$(MAKE) -f CMakeFiles\mini_jvm.dir\build.make CMakeFiles/mini_jvm.dir/jvm/class_loader_interface.c.s
-.PHONY : jvm/class_loader_interface.c.s
-
-jvm/class_loader_method.obj: jvm/class_loader_method.c.obj
-
-.PHONY : jvm/class_loader_method.obj
-
-# target to build an object file
-jvm/class_loader_method.c.obj:
-	$(MAKE) -f CMakeFiles\mini_jvm.dir\build.make CMakeFiles/mini_jvm.dir/jvm/class_loader_method.c.obj
-.PHONY : jvm/class_loader_method.c.obj
-
-jvm/class_loader_method.i: jvm/class_loader_method.c.i
-
-.PHONY : jvm/class_loader_method.i
-
-# target to preprocess a source file
-jvm/class_loader_method.c.i:
-	$(MAKE) -f CMakeFiles\mini_jvm.dir\build.make CMakeFiles/mini_jvm.dir/jvm/class_loader_method.c.i
-.PHONY : jvm/class_loader_method.c.i
-
-jvm/class_loader_method.s: jvm/class_loader_method.c.s
-
-.PHONY : jvm/class_loader_method.s
-
-# target to generate assembly for a file
-jvm/class_loader_method.c.s:
-	$(MAKE) -f CMakeFiles\mini_jvm.dir\build.make CMakeFiles/mini_jvm.dir/jvm/class_loader_method.c.s
-.PHONY : jvm/class_loader_method.c.s
+jvm/class_load.c.s:
+	$(MAKE) -f CMakeFiles\mini_jvm.dir\build.make CMakeFiles/mini_jvm.dir/jvm/class_load.c.s
+.PHONY : jvm/class_load.c.s
 
 jvm/garbage.obj: jvm/garbage.c.obj
 
@@ -779,24 +725,18 @@ help:
 	@echo ... mini_jvm
 	@echo ... edit_cache
 	@echo ... rebuild_cache
+	@echo ... cmem/example.obj
+	@echo ... cmem/example.i
+	@echo ... cmem/example.s
+	@echo ... cmem/memleak.obj
+	@echo ... cmem/memleak.i
+	@echo ... cmem/memleak.s
 	@echo ... jvm/class.obj
 	@echo ... jvm/class.i
 	@echo ... jvm/class.s
-	@echo ... jvm/class_loader.obj
-	@echo ... jvm/class_loader.i
-	@echo ... jvm/class_loader.s
-	@echo ... jvm/class_loader_constant.obj
-	@echo ... jvm/class_loader_constant.i
-	@echo ... jvm/class_loader_constant.s
-	@echo ... jvm/class_loader_field.obj
-	@echo ... jvm/class_loader_field.i
-	@echo ... jvm/class_loader_field.s
-	@echo ... jvm/class_loader_interface.obj
-	@echo ... jvm/class_loader_interface.i
-	@echo ... jvm/class_loader_interface.s
-	@echo ... jvm/class_loader_method.obj
-	@echo ... jvm/class_loader_method.i
-	@echo ... jvm/class_loader_method.s
+	@echo ... jvm/class_load.obj
+	@echo ... jvm/class_load.i
+	@echo ... jvm/class_load.s
 	@echo ... jvm/garbage.obj
 	@echo ... jvm/garbage.i
 	@echo ... jvm/garbage.s

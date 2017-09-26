@@ -51,7 +51,7 @@ s32 javax_mini_reflect_vm_RefNative_id2obj(Runtime *runtime, Class *clazz) {
 }
 
 s32 javax_mini_reflect_vm_RefNative_getClasses(Runtime *runtime, Class *clazz) {
-    s32 size = classes->entries;
+    s32 size = sys_classloader->classes->entries;
 
     Utf8String *ustr = utf8_create_c(STR_INS_JAVA_LANG_CLASS);
     Instance *jarr = jarray_create(size, DATATYPE_REFERENCE, ustr);
@@ -59,7 +59,7 @@ s32 javax_mini_reflect_vm_RefNative_getClasses(Runtime *runtime, Class *clazz) {
     s32 i = 0;
     Long2Double l2d;
     HashtableIterator hti;
-    hashtable_iterate(classes, &hti);
+    hashtable_iterate(sys_classloader->classes, &hti);
     s32 bytes = data_type_bytes[DATATYPE_REFERENCE];
     for (; hashtable_iter_has_more(&hti);) {
         Utf8String *k = hashtable_iter_next_key(&hti);

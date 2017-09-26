@@ -4,12 +4,10 @@ set(CMAKE_DEPENDS_LANGUAGES
   )
 # The set of files for implicit dependencies of each language:
 set(CMAKE_DEPENDS_CHECK_C
+  "D:/githome/mini_jvm/mini_jvm/cmem/example.c" "D:/githome/mini_jvm/mini_jvm/cmake-build-debug/CMakeFiles/mini_jvm.dir/cmem/example.c.obj"
+  "D:/githome/mini_jvm/mini_jvm/cmem/memleak.c" "D:/githome/mini_jvm/mini_jvm/cmake-build-debug/CMakeFiles/mini_jvm.dir/cmem/memleak.c.obj"
   "D:/githome/mini_jvm/mini_jvm/jvm/class.c" "D:/githome/mini_jvm/mini_jvm/cmake-build-debug/CMakeFiles/mini_jvm.dir/jvm/class.c.obj"
-  "D:/githome/mini_jvm/mini_jvm/jvm/class_loader.c" "D:/githome/mini_jvm/mini_jvm/cmake-build-debug/CMakeFiles/mini_jvm.dir/jvm/class_loader.c.obj"
-  "D:/githome/mini_jvm/mini_jvm/jvm/class_loader_constant.c" "D:/githome/mini_jvm/mini_jvm/cmake-build-debug/CMakeFiles/mini_jvm.dir/jvm/class_loader_constant.c.obj"
-  "D:/githome/mini_jvm/mini_jvm/jvm/class_loader_field.c" "D:/githome/mini_jvm/mini_jvm/cmake-build-debug/CMakeFiles/mini_jvm.dir/jvm/class_loader_field.c.obj"
-  "D:/githome/mini_jvm/mini_jvm/jvm/class_loader_interface.c" "D:/githome/mini_jvm/mini_jvm/cmake-build-debug/CMakeFiles/mini_jvm.dir/jvm/class_loader_interface.c.obj"
-  "D:/githome/mini_jvm/mini_jvm/jvm/class_loader_method.c" "D:/githome/mini_jvm/mini_jvm/cmake-build-debug/CMakeFiles/mini_jvm.dir/jvm/class_loader_method.c.obj"
+  "D:/githome/mini_jvm/mini_jvm/jvm/class_load.c" "D:/githome/mini_jvm/mini_jvm/cmake-build-debug/CMakeFiles/mini_jvm.dir/jvm/class_load.c.obj"
   "D:/githome/mini_jvm/mini_jvm/jvm/garbage.c" "D:/githome/mini_jvm/mini_jvm/cmake-build-debug/CMakeFiles/mini_jvm.dir/jvm/garbage.c.obj"
   "D:/githome/mini_jvm/mini_jvm/jvm/global.c" "D:/githome/mini_jvm/mini_jvm/cmake-build-debug/CMakeFiles/mini_jvm.dir/jvm/global.c.obj"
   "D:/githome/mini_jvm/mini_jvm/jvm/interpreter.c" "D:/githome/mini_jvm/mini_jvm/cmake-build-debug/CMakeFiles/mini_jvm.dir/jvm/interpreter.c.obj"

@@ -25,7 +25,7 @@ s32 op_nop(u8 **opCode, Runtime *runtime) {
 
 
 static inline s32 op_aload_n(u8 **opCode, Runtime *runtime, s32 i) {
-    StackFrame *stack = runtime->stack;
+    RuntimeStack *stack = runtime->stack;
     __refer value = (runtime->localVariables + i)->refer;
     push_ref(stack, value);
 #if _JVM_DEBUG > 5
@@ -53,7 +53,7 @@ s32 op_aload_3(u8 **opCode, Runtime *runtime) {
 }
 
 static inline s32 op_xaload(u8 **opCode, Runtime *runtime) {
-    StackFrame *stack = runtime->stack;
+    RuntimeStack *stack = runtime->stack;
 
     s32 index = pop_int(stack);
     Instance *arr = (Instance *) pop_ref(stack);
@@ -108,7 +108,7 @@ s32 op_baload(u8 **opCode, Runtime *runtime) {
 }
 
 s32 op_aaload(u8 **opCode, Runtime *runtime) {
-    StackFrame *stack = runtime->stack;
+    RuntimeStack *stack = runtime->stack;
 
     s32 index = pop_int(stack);
     Instance *arr = (Instance *) pop_ref(stack);
@@ -133,7 +133,7 @@ s32 op_aaload(u8 **opCode, Runtime *runtime) {
 
 /* bipush */
 s32 op_bipush(u8 **opCode, Runtime *runtime) {
-    StackFrame *stack = runtime->stack;
+    RuntimeStack *stack = runtime->stack;
 
     s32 value = (c8) opCode[0][1];
     push_int(stack, value);
@@ -147,7 +147,7 @@ s32 op_bipush(u8 **opCode, Runtime *runtime) {
 
 /* dup */
 s32 op_dup(u8 **opCode, Runtime *runtime) {
-    StackFrame *stack = runtime->stack;
+    RuntimeStack *stack = runtime->stack;
 
     StackEntry entry;
     pop_entry(stack, &entry);
@@ -164,7 +164,7 @@ s32 op_dup(u8 **opCode, Runtime *runtime) {
 }
 
 s32 op_dup_x1(u8 **opCode, Runtime *runtime) {
-    StackFrame *stack = runtime->stack;
+    RuntimeStack *stack = runtime->stack;
     StackEntry entry1;
     pop_entry(stack, &entry1);
     StackEntry entry2;
@@ -183,7 +183,7 @@ s32 op_dup_x1(u8 **opCode, Runtime *runtime) {
 }
 
 s32 op_dup_x2(u8 **opCode, Runtime *runtime) {
-    StackFrame *stack = runtime->stack;
+    RuntimeStack *stack = runtime->stack;
     StackEntry entry;
     peek_entry(stack, &entry, stack->size - 2);
     if (is_cat2(&entry)) {
@@ -217,7 +217,7 @@ s32 op_dup_x2(u8 **opCode, Runtime *runtime) {
 }
 
 s32 op_dup2(u8 **opCode, Runtime *runtime) {
-    StackFrame *stack = runtime->stack;
+    RuntimeStack *stack = runtime->stack;
     StackEntry entry;
     peek_entry(stack, &entry, stack->size - 1);
     if (is_cat2(&entry)) {
@@ -242,7 +242,7 @@ s32 op_dup2(u8 **opCode, Runtime *runtime) {
 
 
 s32 op_dup2_x1(u8 **opCode, Runtime *runtime) {
-    StackFrame *stack = runtime->stack;
+    RuntimeStack *stack = runtime->stack;
     StackEntry entry;
     peek_entry(stack, &entry, stack->size - 1);
     if (is_cat2(&entry)) {
@@ -277,7 +277,7 @@ s32 op_dup2_x1(u8 **opCode, Runtime *runtime) {
 }
 
 s32 op_dup2_x2(u8 **opCode, Runtime *runtime) {
-    StackFrame *stack = runtime->stack;
+    RuntimeStack *stack = runtime->stack;
 
     StackEntry entry1;
     peek_entry(stack, &entry1, stack->size - 1);
@@ -337,7 +337,7 @@ s32 op_dup2_x2(u8 **opCode, Runtime *runtime) {
 }
 
 s32 op_swap(u8 **opCode, Runtime *runtime) {
-    StackFrame *stack = runtime->stack;
+    RuntimeStack *stack = runtime->stack;
 
     StackEntry entry1;
     pop_entry(stack, &entry1);
@@ -358,7 +358,7 @@ s32 op_swap(u8 **opCode, Runtime *runtime) {
 
 
 s32 op_pop(u8 **opCode, Runtime *runtime) {
-    StackFrame *stack = runtime->stack;
+    RuntimeStack *stack = runtime->stack;
     pop_int(stack);
 #if _JVM_DEBUG > 5
     invoke_deepth(runtime);
@@ -370,7 +370,7 @@ s32 op_pop(u8 **opCode, Runtime *runtime) {
 
 
 s32 op_pop2(u8 **opCode, Runtime *runtime) {
-    StackFrame *stack = runtime->stack;
+    RuntimeStack *stack = runtime->stack;
 
     StackEntry entry;
     peek_entry(stack, &entry, stack->size - 1);
@@ -391,7 +391,7 @@ s32 op_pop2(u8 **opCode, Runtime *runtime) {
 
 /* iadd */
 s32 op_iadd(u8 **opCode, Runtime *runtime) {
-    StackFrame *stack = runtime->stack;
+    RuntimeStack *stack = runtime->stack;
 
     s32 value1 = pop_int(stack);
     s32 value2 = pop_int(stack);
@@ -406,7 +406,7 @@ s32 op_iadd(u8 **opCode, Runtime *runtime) {
 }
 
 s32 op_iconst_n(u8 **opCode, Runtime *runtime, s32 i) {
-    StackFrame *stack = runtime->stack;
+    RuntimeStack *stack = runtime->stack;
 
     push_int(stack, i);
 #if _JVM_DEBUG > 5
@@ -452,7 +452,7 @@ s32 op_iconst_5(u8 **opCode, Runtime *runtime) {
 }
 
 s32 op_aconst_null(u8 **opCode, Runtime *runtime) {
-    StackFrame *stack = runtime->stack;
+    RuntimeStack *stack = runtime->stack;
 
     push_ref(stack, NULL);
 #if _JVM_DEBUG > 5
@@ -464,7 +464,7 @@ s32 op_aconst_null(u8 **opCode, Runtime *runtime) {
 }
 
 s32 op_lconst_n(u8 **opCode, Runtime *runtime, s64 i) {
-    StackFrame *stack = runtime->stack;
+    RuntimeStack *stack = runtime->stack;
 
     push_long(stack, i);
 #if _JVM_DEBUG > 5
@@ -484,7 +484,7 @@ s32 op_lconst_1(u8 **opCode, Runtime *runtime) {
 }
 
 s32 op_fconst_n(u8 **opCode, Runtime *runtime, f32 f) {
-    StackFrame *stack = runtime->stack;
+    RuntimeStack *stack = runtime->stack;
     push_float(stack, f);
 
 #if _JVM_DEBUG > 5
@@ -509,7 +509,7 @@ s32 op_fconst_2(u8 **opCode, Runtime *runtime) {
 
 
 s32 op_dconst_n(u8 **opCode, Runtime *runtime, f64 d) {
-    StackFrame *stack = runtime->stack;
+    RuntimeStack *stack = runtime->stack;
     push_double(stack, d);
 
 #if _JVM_DEBUG > 5
@@ -530,7 +530,7 @@ s32 op_dconst_1(u8 **opCode, Runtime *runtime) {
 }
 
 s32 op_idiv(u8 **opCode, Runtime *runtime) {
-    StackFrame *stack = runtime->stack;
+    RuntimeStack *stack = runtime->stack;
 
     s32 value2 = pop_int(stack);
     s32 value1 = pop_int(stack);
@@ -546,7 +546,7 @@ s32 op_idiv(u8 **opCode, Runtime *runtime) {
 }
 
 s32 op_ldiv(u8 **opCode, Runtime *runtime) {
-    StackFrame *stack = runtime->stack;
+    RuntimeStack *stack = runtime->stack;
     s64 value1 = pop_long(stack);
     s64 value2 = pop_long(stack);
     s64 result = value2 / value1;
@@ -561,7 +561,7 @@ s32 op_ldiv(u8 **opCode, Runtime *runtime) {
 }
 
 s32 op_ddiv(u8 **opCode, Runtime *runtime) {
-    StackFrame *stack = runtime->stack;
+    RuntimeStack *stack = runtime->stack;
     f64 value1 = pop_double(stack);
     f64 value2 = pop_double(stack);
     f64 result = value2 / value1;
@@ -576,7 +576,7 @@ s32 op_ddiv(u8 **opCode, Runtime *runtime) {
 }
 
 s32 op_fdiv(u8 **opCode, Runtime *runtime) {
-    StackFrame *stack = runtime->stack;
+    RuntimeStack *stack = runtime->stack;
     f32 value1 = pop_float(stack);
     f32 value2 = pop_float(stack);
     f32 result = value2 / value1;
@@ -591,7 +591,7 @@ s32 op_fdiv(u8 **opCode, Runtime *runtime) {
 }
 
 s32 op_fadd(u8 **opCode, Runtime *runtime) {
-    StackFrame *stack = runtime->stack;
+    RuntimeStack *stack = runtime->stack;
     f32 value1 = pop_float(stack);
     f32 value2 = pop_float(stack);
     f32 result = value2 + value1;
@@ -606,7 +606,7 @@ s32 op_fadd(u8 **opCode, Runtime *runtime) {
 }
 
 s32 op_ladd(u8 **opCode, Runtime *runtime) {
-    StackFrame *stack = runtime->stack;
+    RuntimeStack *stack = runtime->stack;
     s64 value1 = pop_long(stack);
     s64 value2 = pop_long(stack);
     s64 result = value2 + value1;
@@ -621,7 +621,7 @@ s32 op_ladd(u8 **opCode, Runtime *runtime) {
 }
 
 s32 op_lsub(u8 **opCode, Runtime *runtime) {
-    StackFrame *stack = runtime->stack;
+    RuntimeStack *stack = runtime->stack;
     s64 value1 = pop_long(stack);
     s64 value2 = pop_long(stack);
     s64 result = value2 - value1;
@@ -636,7 +636,7 @@ s32 op_lsub(u8 **opCode, Runtime *runtime) {
 }
 
 s32 op_fsub(u8 **opCode, Runtime *runtime) {
-    StackFrame *stack = runtime->stack;
+    RuntimeStack *stack = runtime->stack;
     f32 value1 = pop_float(stack);
     f32 value2 = pop_float(stack);
     f32 result = value2 - value1;
@@ -652,7 +652,7 @@ s32 op_fsub(u8 **opCode, Runtime *runtime) {
 
 
 s32 op_dsub(u8 **opCode, Runtime *runtime) {
-    StackFrame *stack = runtime->stack;
+    RuntimeStack *stack = runtime->stack;
     f64 value1 = pop_double(stack);
     f64 value2 = pop_double(stack);
     f64 result = value2 - value1;
@@ -667,7 +667,7 @@ s32 op_dsub(u8 **opCode, Runtime *runtime) {
 }
 
 s32 op_lmul(u8 **opCode, Runtime *runtime) {
-    StackFrame *stack = runtime->stack;
+    RuntimeStack *stack = runtime->stack;
     s64 value1 = pop_long(stack);
     s64 value2 = pop_long(stack);
     s64 result = value2 * value1;
@@ -683,7 +683,7 @@ s32 op_lmul(u8 **opCode, Runtime *runtime) {
 
 
 s32 op_iload(u8 **opCode, Runtime *runtime) {
-    StackFrame *stack = runtime->stack;
+    RuntimeStack *stack = runtime->stack;
     Short2Char s2c;
     if (runtime->wideMode) {
         s2c.c1 = opCode[0][1];
@@ -710,7 +710,7 @@ s32 op_fload(u8 **opCode, Runtime *runtime) {
 }
 
 s32 op_aload(u8 **opCode, Runtime *runtime) {
-    StackFrame *stack = runtime->stack;
+    RuntimeStack *stack = runtime->stack;
     Short2Char s2c;
     if (runtime->wideMode) {
         s2c.c1 = opCode[0][1];
@@ -732,7 +732,7 @@ s32 op_aload(u8 **opCode, Runtime *runtime) {
 }
 
 s32 op_lload(u8 **opCode, Runtime *runtime) {
-    StackFrame *stack = runtime->stack;
+    RuntimeStack *stack = runtime->stack;
     Short2Char s2c;
     if (runtime->wideMode) {
         s2c.c1 = opCode[0][1];
@@ -761,7 +761,7 @@ s32 op_dload(u8 **opCode, Runtime *runtime) {
 
 
 static inline s32 op_ifload_n(u8 **opCode, Runtime *runtime, s32 i) {
-    StackFrame *stack = runtime->stack;
+    RuntimeStack *stack = runtime->stack;
     Int2Float i2f;
     i2f.i = (runtime->localVariables + i)->integer;
 #if _JVM_DEBUG > 5
@@ -810,7 +810,7 @@ s32 op_fload_3(u8 **opCode, Runtime *runtime) {
 }
 
 s32 op_lload_n(u8 **opCode, Runtime *runtime, s32 index) {
-    StackFrame *stack = runtime->stack;
+    RuntimeStack *stack = runtime->stack;
     Long2Double l2d;
     l2d.i2l.i1 = (runtime->localVariables + index)->integer;
     l2d.i2l.i0 = (runtime->localVariables + index + 1)->integer;
@@ -859,7 +859,7 @@ s32 op_dload_3(u8 **opCode, Runtime *runtime) {
 
 /* imul */
 s32 op_imul(u8 **opCode, Runtime *runtime) {
-    StackFrame *stack = runtime->stack;
+    RuntimeStack *stack = runtime->stack;
 
     s32 value1 = pop_int(stack);
     s32 value2 = pop_int(stack);
@@ -876,7 +876,7 @@ s32 op_imul(u8 **opCode, Runtime *runtime) {
 
 /* 0x63 dadd */
 s32 op_dadd(u8 **opCode, Runtime *runtime) {
-    StackFrame *stack = runtime->stack;
+    RuntimeStack *stack = runtime->stack;
 
     f64 value1 = pop_double(stack);
     f64 value2 = pop_double(stack);
@@ -893,7 +893,7 @@ s32 op_dadd(u8 **opCode, Runtime *runtime) {
 
 /* 0x6B dmul */
 s32 op_dmul(u8 **opCode, Runtime *runtime) {
-    StackFrame *stack = runtime->stack;
+    RuntimeStack *stack = runtime->stack;
     f64 value1 = pop_double(stack);
     f64 value2 = pop_double(stack);
     f64 result = 0;
@@ -908,7 +908,7 @@ s32 op_dmul(u8 **opCode, Runtime *runtime) {
 }
 
 s32 op_fmul(u8 **opCode, Runtime *runtime) {
-    StackFrame *stack = runtime->stack;
+    RuntimeStack *stack = runtime->stack;
     f32 value1 = pop_float(stack);
     f32 value2 = pop_float(stack);
     f32 result = 0;
@@ -924,7 +924,7 @@ s32 op_fmul(u8 **opCode, Runtime *runtime) {
 
 
 s32 op_l2i(u8 **opCode, Runtime *runtime) {
-    StackFrame *stack = runtime->stack;
+    RuntimeStack *stack = runtime->stack;
     s64 value = pop_long(stack);
 
 #if _JVM_DEBUG > 5
@@ -937,7 +937,7 @@ s32 op_l2i(u8 **opCode, Runtime *runtime) {
 }
 
 s32 op_l2f(u8 **opCode, Runtime *runtime) {
-    StackFrame *stack = runtime->stack;
+    RuntimeStack *stack = runtime->stack;
     s64 value = pop_long(stack);
 
 #if _JVM_DEBUG > 5
@@ -950,7 +950,7 @@ s32 op_l2f(u8 **opCode, Runtime *runtime) {
 }
 
 s32 op_l2d(u8 **opCode, Runtime *runtime) {
-    StackFrame *stack = runtime->stack;
+    RuntimeStack *stack = runtime->stack;
     s64 value = pop_long(stack);
 
 #if _JVM_DEBUG > 5
@@ -963,7 +963,7 @@ s32 op_l2d(u8 **opCode, Runtime *runtime) {
 }
 
 s32 op_i2l(u8 **opCode, Runtime *runtime) {
-    StackFrame *stack = runtime->stack;
+    RuntimeStack *stack = runtime->stack;
     s32 value = pop_int(stack);
 
 #if _JVM_DEBUG > 5
@@ -977,7 +977,7 @@ s32 op_i2l(u8 **opCode, Runtime *runtime) {
 
 
 s32 op_i2c(u8 **opCode, Runtime *runtime) {
-    StackFrame *stack = runtime->stack;
+    RuntimeStack *stack = runtime->stack;
     s32 value = pop_int(stack);
 
 #if _JVM_DEBUG > 5
@@ -994,7 +994,7 @@ s32 op_i2s(u8 **opCode, Runtime *runtime) {
 }
 
 s32 op_i2b(u8 **opCode, Runtime *runtime) {
-    StackFrame *stack = runtime->stack;
+    RuntimeStack *stack = runtime->stack;
     s32 value = pop_int(stack);
 
 #if _JVM_DEBUG > 5
@@ -1008,7 +1008,7 @@ s32 op_i2b(u8 **opCode, Runtime *runtime) {
 
 
 s32 op_i2f(u8 **opCode, Runtime *runtime) {
-    StackFrame *stack = runtime->stack;
+    RuntimeStack *stack = runtime->stack;
     s32 value = pop_int(stack);
     f32 result = value;
 #if _JVM_DEBUG > 5
@@ -1021,7 +1021,7 @@ s32 op_i2f(u8 **opCode, Runtime *runtime) {
 }
 
 s32 op_i2d(u8 **opCode, Runtime *runtime) {
-    StackFrame *stack = runtime->stack;
+    RuntimeStack *stack = runtime->stack;
     s32 value = pop_int(stack);
     f64 result = value;
 #if _JVM_DEBUG > 5
@@ -1034,7 +1034,7 @@ s32 op_i2d(u8 **opCode, Runtime *runtime) {
 }
 
 s32 op_d2i(u8 **opCode, Runtime *runtime) {
-    StackFrame *stack = runtime->stack;
+    RuntimeStack *stack = runtime->stack;
     f64 value1 = pop_double(stack);
     s32 result = 0;
     result = (s32) value1;
@@ -1048,7 +1048,7 @@ s32 op_d2i(u8 **opCode, Runtime *runtime) {
 }
 
 s32 op_d2l(u8 **opCode, Runtime *runtime) {
-    StackFrame *stack = runtime->stack;
+    RuntimeStack *stack = runtime->stack;
     f64 value1 = pop_double(stack);
     s64 result = 0;
     result = (s64) value1;
@@ -1062,7 +1062,7 @@ s32 op_d2l(u8 **opCode, Runtime *runtime) {
 }
 
 s32 op_d2f(u8 **opCode, Runtime *runtime) {
-    StackFrame *stack = runtime->stack;
+    RuntimeStack *stack = runtime->stack;
     f64 value1 = pop_double(stack);
     f32 result = 0;
     result = (f32) value1;
@@ -1076,7 +1076,7 @@ s32 op_d2f(u8 **opCode, Runtime *runtime) {
 }
 
 s32 op_f2i(u8 **opCode, Runtime *runtime) {
-    StackFrame *stack = runtime->stack;
+    RuntimeStack *stack = runtime->stack;
     f32 value1 = pop_float(stack);
     s32 result = 0;
     result = (s64) value1;
@@ -1090,7 +1090,7 @@ s32 op_f2i(u8 **opCode, Runtime *runtime) {
 }
 
 s32 op_f2l(u8 **opCode, Runtime *runtime) {
-    StackFrame *stack = runtime->stack;
+    RuntimeStack *stack = runtime->stack;
     f32 value1 = pop_float(stack);
     s64 result = 0;
     result = (s64) value1;
@@ -1104,7 +1104,7 @@ s32 op_f2l(u8 **opCode, Runtime *runtime) {
 }
 
 s32 op_f2d(u8 **opCode, Runtime *runtime) {
-    StackFrame *stack = runtime->stack;
+    RuntimeStack *stack = runtime->stack;
     f32 value1 = pop_float(stack);
     f64 result = 0;
     result = value1;
@@ -1119,7 +1119,7 @@ s32 op_f2d(u8 **opCode, Runtime *runtime) {
 
 
 s32 op_irem(u8 **opCode, Runtime *runtime) {
-    StackFrame *stack = runtime->stack;
+    RuntimeStack *stack = runtime->stack;
     s32 value1 = pop_int(stack);
     s32 value2 = pop_int(stack);
     s32 result = 0;
@@ -1134,7 +1134,7 @@ s32 op_irem(u8 **opCode, Runtime *runtime) {
 }
 
 s32 op_frem(u8 **opCode, Runtime *runtime) {
-    StackFrame *stack = runtime->stack;
+    RuntimeStack *stack = runtime->stack;
     f32 value1 = pop_float(stack);
     f32 value2 = pop_float(stack);
     f32 result = 0;
@@ -1149,7 +1149,7 @@ s32 op_frem(u8 **opCode, Runtime *runtime) {
 }
 
 s32 op_lrem(u8 **opCode, Runtime *runtime) {
-    StackFrame *stack = runtime->stack;
+    RuntimeStack *stack = runtime->stack;
     s64 value1 = pop_long(stack);
     s64 value2 = pop_long(stack);
     s64 result = value2 % value1;
@@ -1164,7 +1164,7 @@ s32 op_lrem(u8 **opCode, Runtime *runtime) {
 }
 
 s32 op_drem(u8 **opCode, Runtime *runtime) {
-    StackFrame *stack = runtime->stack;
+    RuntimeStack *stack = runtime->stack;
     f64 value1 = pop_double(stack);
     f64 value2 = pop_double(stack);
     f64 result = value2 - ((s64) (value2 / value1) * value1);;
@@ -1179,7 +1179,7 @@ s32 op_drem(u8 **opCode, Runtime *runtime) {
 }
 
 s32 op_ineg(u8 **opCode, Runtime *runtime) {
-    StackFrame *stack = runtime->stack;
+    RuntimeStack *stack = runtime->stack;
     s32 value1 = pop_int(stack);
 
 #if _JVM_DEBUG > 5
@@ -1192,7 +1192,7 @@ s32 op_ineg(u8 **opCode, Runtime *runtime) {
 }
 
 s32 op_lneg(u8 **opCode, Runtime *runtime) {
-    StackFrame *stack = runtime->stack;
+    RuntimeStack *stack = runtime->stack;
     s64 value1 = pop_long(stack);
 
 #if _JVM_DEBUG > 5
@@ -1206,7 +1206,7 @@ s32 op_lneg(u8 **opCode, Runtime *runtime) {
 
 
 s32 op_fneg(u8 **opCode, Runtime *runtime) {
-    StackFrame *stack = runtime->stack;
+    RuntimeStack *stack = runtime->stack;
     f32 value1 = pop_float(stack);
 
 #if _JVM_DEBUG > 5
@@ -1220,7 +1220,7 @@ s32 op_fneg(u8 **opCode, Runtime *runtime) {
 
 
 s32 op_dneg(u8 **opCode, Runtime *runtime) {
-    StackFrame *stack = runtime->stack;
+    RuntimeStack *stack = runtime->stack;
     f64 value1 = pop_double(stack);
 
 #if _JVM_DEBUG > 5
@@ -1233,7 +1233,7 @@ s32 op_dneg(u8 **opCode, Runtime *runtime) {
 }
 
 s32 op_ishl(u8 **opCode, Runtime *runtime) {
-    StackFrame *stack = runtime->stack;
+    RuntimeStack *stack = runtime->stack;
     s32 value1 = pop_int(stack);
     s32 value2 = pop_int(stack);
 
@@ -1247,7 +1247,7 @@ s32 op_ishl(u8 **opCode, Runtime *runtime) {
 }
 
 s32 op_lshl(u8 **opCode, Runtime *runtime) {
-    StackFrame *stack = runtime->stack;
+    RuntimeStack *stack = runtime->stack;
     s32 value1 = pop_int(stack);
     s64 value2 = pop_long(stack);
 
@@ -1261,7 +1261,7 @@ s32 op_lshl(u8 **opCode, Runtime *runtime) {
 }
 
 s32 op_ishr(u8 **opCode, Runtime *runtime) {
-    StackFrame *stack = runtime->stack;
+    RuntimeStack *stack = runtime->stack;
     s32 value1 = pop_int(stack);
     s32 value2 = pop_int(stack);
 
@@ -1275,7 +1275,7 @@ s32 op_ishr(u8 **opCode, Runtime *runtime) {
 }
 
 s32 op_lshr(u8 **opCode, Runtime *runtime) {
-    StackFrame *stack = runtime->stack;
+    RuntimeStack *stack = runtime->stack;
     s32 value1 = pop_int(stack);
     s64 value2 = pop_long(stack);
 
@@ -1289,7 +1289,7 @@ s32 op_lshr(u8 **opCode, Runtime *runtime) {
 }
 
 s32 op_iushr(u8 **opCode, Runtime *runtime) {
-    StackFrame *stack = runtime->stack;
+    RuntimeStack *stack = runtime->stack;
     s32 value1 = pop_int(stack);
     u32 value2 = pop_int(stack);
 
@@ -1303,7 +1303,7 @@ s32 op_iushr(u8 **opCode, Runtime *runtime) {
 }
 
 s32 op_lushr(u8 **opCode, Runtime *runtime) {
-    StackFrame *stack = runtime->stack;
+    RuntimeStack *stack = runtime->stack;
     s32 value1 = pop_int(stack);
     u64 value2 = pop_long(stack);
 
@@ -1317,7 +1317,7 @@ s32 op_lushr(u8 **opCode, Runtime *runtime) {
 }
 
 s32 op_iand(u8 **opCode, Runtime *runtime) {
-    StackFrame *stack = runtime->stack;
+    RuntimeStack *stack = runtime->stack;
     u32 value1 = pop_int(stack);
     u32 value2 = pop_int(stack);
 
@@ -1331,7 +1331,7 @@ s32 op_iand(u8 **opCode, Runtime *runtime) {
 }
 
 s32 op_land(u8 **opCode, Runtime *runtime) {
-    StackFrame *stack = runtime->stack;
+    RuntimeStack *stack = runtime->stack;
     u64 value1 = pop_long(stack);
     u64 value2 = pop_long(stack);
 
@@ -1346,7 +1346,7 @@ s32 op_land(u8 **opCode, Runtime *runtime) {
 
 
 s32 op_ior(u8 **opCode, Runtime *runtime) {
-    StackFrame *stack = runtime->stack;
+    RuntimeStack *stack = runtime->stack;
     u32 value1 = pop_int(stack);
     u32 value2 = pop_int(stack);
 
@@ -1360,7 +1360,7 @@ s32 op_ior(u8 **opCode, Runtime *runtime) {
 }
 
 s32 op_lor(u8 **opCode, Runtime *runtime) {
-    StackFrame *stack = runtime->stack;
+    RuntimeStack *stack = runtime->stack;
     u64 value1 = pop_long(stack);
     u64 value2 = pop_long(stack);
 
@@ -1375,7 +1375,7 @@ s32 op_lor(u8 **opCode, Runtime *runtime) {
 
 
 s32 op_ixor(u8 **opCode, Runtime *runtime) {
-    StackFrame *stack = runtime->stack;
+    RuntimeStack *stack = runtime->stack;
     u32 value1 = pop_int(stack);
     u32 value2 = pop_int(stack);
 
@@ -1389,7 +1389,7 @@ s32 op_ixor(u8 **opCode, Runtime *runtime) {
 }
 
 s32 op_lxor(u8 **opCode, Runtime *runtime) {
-    StackFrame *stack = runtime->stack;
+    RuntimeStack *stack = runtime->stack;
     u64 value1 = pop_long(stack);
     u64 value2 = pop_long(stack);
 
@@ -1429,7 +1429,7 @@ s32 op_iinc(u8 **opCode, Runtime *runtime) {
 
 /* istore */
 s32 op_istore(u8 **opCode, Runtime *runtime) {
-    StackFrame *stack = runtime->stack;
+    RuntimeStack *stack = runtime->stack;
     Short2Char s2c;
     if (runtime->wideMode) {
         s2c.c1 = opCode[0][1];
@@ -1456,7 +1456,7 @@ s32 op_fstore(u8 **opCode, Runtime *runtime) {
 }
 
 s32 op_astore(u8 **opCode, Runtime *runtime) {
-    StackFrame *stack = runtime->stack;
+    RuntimeStack *stack = runtime->stack;
     Short2Char s2c;
     if (runtime->wideMode) {
         s2c.c1 = opCode[0][1];
@@ -1479,7 +1479,7 @@ s32 op_astore(u8 **opCode, Runtime *runtime) {
 }
 
 s32 op_lstore(u8 **opCode, Runtime *runtime) {
-    StackFrame *stack = runtime->stack;
+    RuntimeStack *stack = runtime->stack;
 
     Short2Char s2c;
     if (runtime->wideMode) {
@@ -1509,7 +1509,7 @@ s32 op_dstore(u8 **opCode, Runtime *runtime) {
 }
 
 s32 op_istore_n(u8 **opCode, Runtime *runtime, s32 i) {
-    StackFrame *stack = runtime->stack;
+    RuntimeStack *stack = runtime->stack;
     s32 value = pop_int(stack);
 #if _JVM_DEBUG > 5
     invoke_deepth(runtime);
@@ -1557,7 +1557,7 @@ s32 op_fstore_3(u8 **opCode, Runtime *runtime) {
 }
 
 s32 op_lstore_n(u8 **opCode, Runtime *runtime, s32 i) {
-    StackFrame *stack = runtime->stack;
+    RuntimeStack *stack = runtime->stack;
     Long2Double l2d;
     l2d.l = pop_long(stack);
 
@@ -1606,7 +1606,7 @@ s32 op_dstore_3(u8 **opCode, Runtime *runtime) {
 }
 
 s32 op_astore_n(u8 **opCode, Runtime *runtime, s32 i) {
-    StackFrame *stack = runtime->stack;
+    RuntimeStack *stack = runtime->stack;
     __refer value = pop_ref(stack);
 #if _JVM_DEBUG > 5
     invoke_deepth(runtime);
@@ -1635,7 +1635,7 @@ s32 op_astore_3(u8 **opCode, Runtime *runtime) {
 
 
 static inline s32 op_xastore_impl(u8 **opCode, Runtime *runtime, u8 isReference) {
-    StackFrame *stack = runtime->stack;
+    RuntimeStack *stack = runtime->stack;
     StackEntry entry;
     pop_entry(stack, &entry);
     s32 index = pop_int(stack);
@@ -1702,7 +1702,7 @@ s32 op_dastore(u8 **opCode, Runtime *runtime) {
 
 /* isub */
 s32 op_isub(u8 **opCode, Runtime *runtime) {
-    StackFrame *stack = runtime->stack;
+    RuntimeStack *stack = runtime->stack;
     s32 value2 = pop_int(stack);
     s32 value1 = pop_int(stack);
     s32 result = 0;
@@ -1749,17 +1749,17 @@ s32 op_invokevirtual(u8 **opCode, Runtime *runtime) {
             }
         }
 
-        if (
+//        if (
 //            utf8_equals_c(method->name, "java/util/Calendar") &&
-                utf8_equals_c(method->name, "t20_1")) {
-            s32 count = pairlist_getl(cmr->virtual_methods, -1);
-            count++;
-            pairlist_putl(cmr->virtual_methods, -1, count);
-            if (count == 1000 || count == 1001) {
-                mem_mgr_print();
-                int debug = 1;
-            }
-        }
+//                utf8_equals_c(method->name, "t20_1")) {
+//            s32 count = pairlist_getl(cmr->virtual_methods, -1);
+//            count++;
+//            pairlist_putl(cmr->virtual_methods, -1, count);
+//            if (count == 1000 || count == 1001) {
+//                mem_mgr_print();
+//                int debug = 1;
+//            }
+//        }
 
 #if _JVM_DEBUG > 5
         invoke_deepth(runtime);
@@ -1906,7 +1906,7 @@ s32 op_invokedynamic(u8 **opCode, Runtime *runtime) {
 
 /* ldc */
 static inline s32 op_ldc_impl(u8 **opCode, Runtime *runtime, s32 index) {
-    StackFrame *stack = runtime->stack;
+    RuntimeStack *stack = runtime->stack;
     Class *clazz = runtime->clazz;
 
     ConstantItem *item = find_constant_item(clazz, index);
@@ -1959,7 +1959,7 @@ s32 op_ldc_w(u8 **opCode, Runtime *runtime) {
 }
 
 s32 op_ldc2_w(u8 **opCode, Runtime *runtime) {
-    StackFrame *stack = runtime->stack;
+    RuntimeStack *stack = runtime->stack;
     Short2Char s2c;
     s2c.c1 = opCode[0][1];
     s2c.c0 = opCode[0][2];
@@ -1978,7 +1978,7 @@ s32 op_ldc2_w(u8 **opCode, Runtime *runtime) {
 
 /* 0x11 op_sipush */
 s32 op_sipush(u8 **opCode, Runtime *runtime) {
-    StackFrame *stack = runtime->stack;
+    RuntimeStack *stack = runtime->stack;
     Short2Char s2c;
     s2c.c1 = opCode[0][1];
     s2c.c0 = opCode[0][2];
@@ -1993,7 +1993,7 @@ s32 op_sipush(u8 **opCode, Runtime *runtime) {
 
 
 static inline s32 op_putfield_impl(u8 **opCode, Runtime *runtime, s32 isStatic) {
-    StackFrame *stack = runtime->stack;
+    RuntimeStack *stack = runtime->stack;
     Class *clazz = runtime->clazz;
     Short2Char s2c;
     s2c.c1 = opCode[0][1];
@@ -2093,7 +2093,7 @@ s32 op_putstatic(u8 **opCode, Runtime *runtime) {
 }
 
 static inline s32 op_getfield_impl(u8 **opCode, Runtime *runtime, s32 isStatic) {
-    StackFrame *stack = runtime->stack;
+    RuntimeStack *stack = runtime->stack;
     Class *clazz = runtime->clazz;
     Short2Char s2c;
     s2c.c1 = opCode[0][1];
@@ -2177,7 +2177,7 @@ s32 op_getstatic(u8 **opCode, Runtime *runtime) {
 
 /* op_new */
 s32 op_new(u8 **opCode, Runtime *runtime) {
-    StackFrame *stack = runtime->stack;
+    RuntimeStack *stack = runtime->stack;
     Class *clazz = runtime->clazz;
     Short2Char s2c;
     s2c.c1 = opCode[0][1];
@@ -2203,7 +2203,7 @@ s32 op_new(u8 **opCode, Runtime *runtime) {
 }
 
 static inline s32 op_newarray_impl(Runtime *runtime, s32 count, s32 typeIdx, Utf8String *type) {
-    StackFrame *stack = runtime->stack;
+    RuntimeStack *stack = runtime->stack;
     Instance *arr = jarray_create(count, typeIdx, type);
 
 #if _JVM_DEBUG > 5
@@ -2224,7 +2224,7 @@ static inline s32 op_newarray_impl(Runtime *runtime, s32 count, s32 typeIdx, Utf
 
 /* op_newarray */
 s32 op_newarray(u8 **opCode, Runtime *runtime) {
-    StackFrame *stack = runtime->stack;
+    RuntimeStack *stack = runtime->stack;
     s32 typeIdx = opCode[0][1];
 
     s32 count = pop_int(stack);
@@ -2233,7 +2233,7 @@ s32 op_newarray(u8 **opCode, Runtime *runtime) {
 }
 
 s32 op_anewarray(u8 **opCode, Runtime *runtime) {
-    StackFrame *stack = runtime->stack;
+    RuntimeStack *stack = runtime->stack;
     Short2Char s2c;
     s2c.c1 = opCode[0][1];
     s2c.c0 = opCode[0][2];
@@ -2244,7 +2244,7 @@ s32 op_anewarray(u8 **opCode, Runtime *runtime) {
 }
 
 s32 op_multianewarray(u8 **opCode, Runtime *runtime) {
-    StackFrame *stack = runtime->stack;
+    RuntimeStack *stack = runtime->stack;
     //data type index
     Short2Char s2c;
     s2c.c1 = opCode[0][1];
@@ -2277,7 +2277,7 @@ s32 op_multianewarray(u8 **opCode, Runtime *runtime) {
 }
 
 s32 op_arraylength(u8 **opCode, Runtime *runtime) {
-    StackFrame *stack = runtime->stack;
+    RuntimeStack *stack = runtime->stack;
     Instance *arr_ref = (Instance *) pop_ref(stack);
 
 #if _JVM_DEBUG > 5
@@ -2292,7 +2292,7 @@ s32 op_arraylength(u8 **opCode, Runtime *runtime) {
 
 
 s32 op_athrow(u8 **opCode, Runtime *runtime) {
-    StackFrame *stack = runtime->stack;
+    RuntimeStack *stack = runtime->stack;
     Instance *ins = (Instance *) pop_ref(stack);
     push_ref(stack, (__refer) ins);
 
@@ -2305,7 +2305,7 @@ s32 op_athrow(u8 **opCode, Runtime *runtime) {
 }
 
 s32 op_checkcast(u8 **opCode, Runtime *runtime) {
-    StackFrame *stack = runtime->stack;
+    RuntimeStack *stack = runtime->stack;
     Instance *ins = (Instance *) pop_ref(stack);
     Short2Char s2c;
     s2c.c1 = opCode[0][1];
@@ -2348,7 +2348,7 @@ s32 op_checkcast(u8 **opCode, Runtime *runtime) {
 
 
 s32 op_instanceof(u8 **opCode, Runtime *runtime) {
-    StackFrame *stack = runtime->stack;
+    RuntimeStack *stack = runtime->stack;
     Instance *ins = (Instance *) pop_ref(stack);
     Short2Char s2c;
     s2c.c1 = opCode[0][1];
@@ -2378,7 +2378,7 @@ s32 op_instanceof(u8 **opCode, Runtime *runtime) {
 }
 
 s32 op_monitorenter(u8 **opCode, Runtime *runtime) {
-    StackFrame *stack = runtime->stack;
+    RuntimeStack *stack = runtime->stack;
     Instance *ins = (Instance *) pop_ref(stack);
     jthread_lock(&ins->mb, runtime);
 #if _JVM_DEBUG > 5
@@ -2390,7 +2390,7 @@ s32 op_monitorenter(u8 **opCode, Runtime *runtime) {
 }
 
 s32 op_monitorexit(u8 **opCode, Runtime *runtime) {
-    StackFrame *stack = runtime->stack;
+    RuntimeStack *stack = runtime->stack;
     Instance *ins = (Instance *) pop_ref(stack);
     jthread_unlock(&ins->mb, runtime);
 #if _JVM_DEBUG > 5
@@ -2402,7 +2402,7 @@ s32 op_monitorexit(u8 **opCode, Runtime *runtime) {
 }
 
 s32 op_wide(u8 **opCode, Runtime *runtime) {
-    StackFrame *stack = runtime->stack;
+    RuntimeStack *stack = runtime->stack;
 
 #if _JVM_DEBUG > 5
     invoke_deepth(runtime);
@@ -2415,7 +2415,7 @@ s32 op_wide(u8 **opCode, Runtime *runtime) {
 }
 
 s32 op_breakpoint(u8 **opCode, Runtime *runtime) {
-    StackFrame *stack = runtime->stack;
+    RuntimeStack *stack = runtime->stack;
 
 
 #if _JVM_DEBUG > 5
@@ -2438,7 +2438,7 @@ s32 op_return(u8 **opCode, Runtime *runtime) {
 
 
 s32 op_ireturn(u8 **opCode, Runtime *runtime) {
-    StackFrame *stack = runtime->stack;
+    RuntimeStack *stack = runtime->stack;
 
 #if _JVM_DEBUG > 5
     StackEntry entry;
@@ -2451,7 +2451,7 @@ s32 op_ireturn(u8 **opCode, Runtime *runtime) {
 }
 
 s32 op_if_cmp_ia(u8 **opCode, Runtime *runtime, s32 type) {
-    StackFrame *stack = runtime->stack;
+    RuntimeStack *stack = runtime->stack;
 
     Short2Char s2c;
     s2c.c1 = opCode[0][1];
@@ -2544,7 +2544,7 @@ s32 op_if_icmpgt(u8 **opCode, Runtime *runtime) {
 
 
 s32 op_lcmp(u8 **opCode, Runtime *runtime) {
-    StackFrame *stack = runtime->stack;
+    RuntimeStack *stack = runtime->stack;
     s64 value1 = pop_long(stack);
     s64 value2 = pop_long(stack);
     s32 result = value2 == value1 ? 0 : (value2 > value1 ? 1 : -1);
@@ -2561,7 +2561,7 @@ s32 op_lcmp(u8 **opCode, Runtime *runtime) {
 
 
 s32 op_fcmpl(u8 **opCode, Runtime *runtime) {
-    StackFrame *stack = runtime->stack;
+    RuntimeStack *stack = runtime->stack;
     f32 value1 = pop_float(stack);
     f32 value2 = pop_float(stack);
     s32 result = value2 == value1 ? 0 : (value2 > value1 ? 1 : -1);
@@ -2577,7 +2577,7 @@ s32 op_fcmpl(u8 **opCode, Runtime *runtime) {
 }
 
 s32 op_fcmpg(u8 **opCode, Runtime *runtime) {
-    StackFrame *stack = runtime->stack;
+    RuntimeStack *stack = runtime->stack;
     f32 value1 = pop_float(stack);
     f32 value2 = pop_float(stack);
     s32 result = value2 == value1 ? 0 : (value2 > value1 ? 1 : -1);
@@ -2593,7 +2593,7 @@ s32 op_fcmpg(u8 **opCode, Runtime *runtime) {
 }
 
 s32 op_dcmpl(u8 **opCode, Runtime *runtime) {
-    StackFrame *stack = runtime->stack;
+    RuntimeStack *stack = runtime->stack;
     f64 value1 = pop_double(stack);
     f64 value2 = pop_double(stack);
     s32 result = value2 == value1 ? 0 : (value2 > value1 ? 1 : -1);
@@ -2609,7 +2609,7 @@ s32 op_dcmpl(u8 **opCode, Runtime *runtime) {
 }
 
 s32 op_dcmpg(u8 **opCode, Runtime *runtime) {
-    StackFrame *stack = runtime->stack;
+    RuntimeStack *stack = runtime->stack;
     f64 value1 = pop_double(stack);
     f64 value2 = pop_double(stack);
     s32 result = value2 == value1 ? 0 : (value2 > value1 ? 1 : -1);
@@ -2626,7 +2626,7 @@ s32 op_dcmpg(u8 **opCode, Runtime *runtime) {
 
 
 s32 op_if_0(u8 **opCode, Runtime *runtime, s32 type) {
-    StackFrame *stack = runtime->stack;
+    RuntimeStack *stack = runtime->stack;
     Short2Char s2c;
     s2c.c1 = opCode[0][1];
     s2c.c0 = opCode[0][2];
@@ -2741,7 +2741,7 @@ s32 op_goto(u8 **opCode, Runtime *runtime) {
 }
 
 s32 op_jsr(u8 **opCode, Runtime *runtime) {
-    StackFrame *stack = runtime->stack;
+    RuntimeStack *stack = runtime->stack;
     Short2Char s2c;
     s2c.c1 = opCode[0][1];
     s2c.c0 = opCode[0][2];
@@ -3077,7 +3077,7 @@ static Instruction instructionSet[] = {
         {"breakpoint",      0xCA, 1, op_breakpoint},
 };
 
-Instruction **createInstructIndexies() {
+Instruction **instruct_indexies_create() {
     size_t byteCode_size = sizeof(instructionSet) / sizeof(Instruction);
     Instruction **indexies = jvm_alloc(0xff * sizeof(Instruction *));
     s32 i;
@@ -3096,6 +3096,10 @@ Instruction **createInstructIndexies() {
     }
 #endif
     return indexies;
+}
+
+void instruct_indexies_destory(Instruction **instcts) {
+    jvm_free(instcts);
 }
 
 
@@ -3290,6 +3294,7 @@ s32 execute_method(MethodInfo *method, Runtime *pruntime, Class *clazz) {
         synchronized_lock_method(method, &runtime);
         ret = method->native_func(&runtime, clazz);
         synchronized_unlock_method(method, &runtime);
+        localvar_dispose(&runtime);
 //        if (java_debug) {
 //            //process jdwp suspend
 //            while (runtime.threadInfo->suspend_count) {
@@ -3388,6 +3393,7 @@ s32 execute_method(MethodInfo *method, Runtime *pruntime, Class *clazz) {
                 }
             } while (1);
             synchronized_unlock_method(method, &runtime);
+            localvar_dispose(&runtime);
 #if _JVM_DEBUG > 3
             if (utf8_char_at(clazz->name, 3) != '/' && utf8_char_at(clazz->name, 4) != 's') {//   that com/sun
                 invoke_deepth(&runtime);
@@ -3412,7 +3418,6 @@ s32 execute_method(MethodInfo *method, Runtime *pruntime, Class *clazz) {
 #endif
         }
     }
-    jvm_free(runtime.localVariables);
     pruntime->son = NULL;
     return ret;
 }

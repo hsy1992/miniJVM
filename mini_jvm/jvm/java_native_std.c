@@ -18,7 +18,7 @@ s32 com_sun_cldc_io_ConsoleOutputStream_write(Runtime *runtime, Class *clazz) {
 }
 
 s32 java_lang_Class_forName(Runtime *runtime, Class *clazz) {
-    StackFrame *stack = runtime->stack;
+    RuntimeStack *stack = runtime->stack;
     Instance *jstr = (Instance *) (runtime->localVariables + 0)->refer;
     Class *cl = NULL;
     s32 ret = RUNTIME_STATUS_NORMAL;
@@ -47,7 +47,7 @@ s32 java_lang_Class_forName(Runtime *runtime, Class *clazz) {
 }
 
 s32 java_lang_Class_newInstance(Runtime *runtime, Class *clazz) {
-    StackFrame *stack = runtime->stack;
+    RuntimeStack *stack = runtime->stack;
     Class *cl = (Class *) (runtime->localVariables + 0)->refer;
     Instance *ins = NULL;
     s32 ret = 0;
@@ -70,7 +70,7 @@ s32 java_lang_Class_newInstance(Runtime *runtime, Class *clazz) {
 }
 
 s32 java_lang_Class_isInstance(Runtime *runtime, Class *clazz) {
-    StackFrame *stack = runtime->stack;
+    RuntimeStack *stack = runtime->stack;
     Class *cl = (Class *) (runtime->localVariables + 0)->refer;
     Instance *ins = (Instance *) (runtime->localVariables + 1)->refer;
     if (instance_of(cl, ins)) {
@@ -86,7 +86,7 @@ s32 java_lang_Class_isInstance(Runtime *runtime, Class *clazz) {
 }
 
 s32 java_lang_Class_isAssignableFrom(Runtime *runtime, Class *clazz) {
-    StackFrame *stack = runtime->stack;
+    RuntimeStack *stack = runtime->stack;
     Class *c0 = (Class *) (runtime->localVariables + 0)->refer;
     Class *c1 = (Class *) (runtime->localVariables + 1)->refer;
 
@@ -103,7 +103,7 @@ s32 java_lang_Class_isAssignableFrom(Runtime *runtime, Class *clazz) {
 }
 
 s32 java_lang_Class_isInterface(Runtime *runtime, Class *clazz) {
-    StackFrame *stack = runtime->stack;
+    RuntimeStack *stack = runtime->stack;
     Class *c0 = (Class *) (runtime->localVariables + 0)->refer;
 
     if (c0->cff.access_flags & ACC_INTERFACE) {//
@@ -119,7 +119,7 @@ s32 java_lang_Class_isInterface(Runtime *runtime, Class *clazz) {
 }
 
 s32 java_lang_Class_isArray(Runtime *runtime, Class *clazz) {
-    StackFrame *stack = runtime->stack;
+    RuntimeStack *stack = runtime->stack;
     Class *cl = (Class *) (runtime->localVariables + 0)->refer;
     if (cl->arr_data_type) {
         push_int(stack, 1);
@@ -134,7 +134,7 @@ s32 java_lang_Class_isArray(Runtime *runtime, Class *clazz) {
 }
 
 s32 java_lang_Class_getName(Runtime *runtime, Class *clazz) {
-    StackFrame *stack = runtime->stack;
+    RuntimeStack *stack = runtime->stack;
     Class *cl = (Class *) (runtime->localVariables + 0)->refer;
     if (cl) {
         Instance *ins = jstring_create(cl->name, runtime);
@@ -150,7 +150,7 @@ s32 java_lang_Class_getName(Runtime *runtime, Class *clazz) {
 }
 
 s32 java_lang_Double_doubleToLongBits(Runtime *runtime, Class *clazz) {
-    StackFrame *stack = runtime->stack;
+    RuntimeStack *stack = runtime->stack;
     Long2Double l2d;
     l2d.i2l.i1 = (runtime->localVariables + 0)->integer;
     l2d.i2l.i0 = (runtime->localVariables + 1)->integer;
@@ -163,7 +163,7 @@ s32 java_lang_Double_doubleToLongBits(Runtime *runtime, Class *clazz) {
 }
 
 s32 java_lang_Double_longBitsToDouble(Runtime *runtime, Class *clazz) {
-    StackFrame *stack = runtime->stack;
+    RuntimeStack *stack = runtime->stack;
     Long2Double l2d;
     l2d.i2l.i1 = (runtime->localVariables + 0)->integer;
     l2d.i2l.i0 = (runtime->localVariables + 1)->integer;
@@ -177,7 +177,7 @@ s32 java_lang_Double_longBitsToDouble(Runtime *runtime, Class *clazz) {
 
 
 s32 java_lang_Float_intBitsToFloat(Runtime *runtime, Class *clazz) {
-    StackFrame *stack = runtime->stack;
+    RuntimeStack *stack = runtime->stack;
     Int2Float i2f;
     i2f.i = (runtime->localVariables + 0)->integer;
 
@@ -190,7 +190,7 @@ s32 java_lang_Float_intBitsToFloat(Runtime *runtime, Class *clazz) {
 }
 
 s32 java_lang_Float_floatToIntBits(Runtime *runtime, Class *clazz) {
-    StackFrame *stack = runtime->stack;
+    RuntimeStack *stack = runtime->stack;
     Int2Float i2f;
     i2f.i = (runtime->localVariables + 0)->integer;
 
@@ -203,7 +203,7 @@ s32 java_lang_Float_floatToIntBits(Runtime *runtime, Class *clazz) {
 }
 
 s32 java_lang_Math_exp(Runtime *runtime, Class *clazz) {
-    StackFrame *stack = runtime->stack;
+    RuntimeStack *stack = runtime->stack;
     Long2Double l2d;
     l2d.i2l.i1 = (runtime->localVariables + 0)->integer;
     l2d.i2l.i0 = (runtime->localVariables + 1)->integer;
@@ -217,7 +217,7 @@ s32 java_lang_Math_exp(Runtime *runtime, Class *clazz) {
 }
 
 s32 java_lang_Math_random(Runtime *runtime, Class *clazz) {
-    StackFrame *stack = runtime->stack;
+    RuntimeStack *stack = runtime->stack;
     f64 r = 0.0f;
     s32 i;
     s32 times = 0;
@@ -234,7 +234,7 @@ s32 java_lang_Math_random(Runtime *runtime, Class *clazz) {
 }
 
 s32 java_lang_Math_sin(Runtime *runtime, Class *clazz) {
-    StackFrame *stack = runtime->stack;
+    RuntimeStack *stack = runtime->stack;
     Long2Double l2d;
     l2d.i2l.i1 = (runtime->localVariables + 0)->integer;
     l2d.i2l.i0 = (runtime->localVariables + 1)->integer;
@@ -249,7 +249,7 @@ s32 java_lang_Math_sin(Runtime *runtime, Class *clazz) {
 
 
 s32 java_lang_Math_cos(Runtime *runtime, Class *clazz) {
-    StackFrame *stack = runtime->stack;
+    RuntimeStack *stack = runtime->stack;
     Long2Double l2d;
     l2d.i2l.i1 = (runtime->localVariables + 0)->integer;
     l2d.i2l.i0 = (runtime->localVariables + 1)->integer;
@@ -263,7 +263,7 @@ s32 java_lang_Math_cos(Runtime *runtime, Class *clazz) {
 }
 
 s32 java_lang_Math_tan(Runtime *runtime, Class *clazz) {
-    StackFrame *stack = runtime->stack;
+    RuntimeStack *stack = runtime->stack;
     Long2Double l2d;
     l2d.i2l.i1 = (runtime->localVariables + 0)->integer;
     l2d.i2l.i0 = (runtime->localVariables + 1)->integer;
@@ -277,7 +277,7 @@ s32 java_lang_Math_tan(Runtime *runtime, Class *clazz) {
 }
 
 s32 java_lang_Math_sqrt(Runtime *runtime, Class *clazz) {
-    StackFrame *stack = runtime->stack;
+    RuntimeStack *stack = runtime->stack;
     Long2Double l2d;
     l2d.i2l.i1 = (runtime->localVariables + 0)->integer;
     l2d.i2l.i0 = (runtime->localVariables + 1)->integer;
@@ -291,7 +291,7 @@ s32 java_lang_Math_sqrt(Runtime *runtime, Class *clazz) {
 }
 
 s32 java_lang_Math_ceil(Runtime *runtime, Class *clazz) {
-    StackFrame *stack = runtime->stack;
+    RuntimeStack *stack = runtime->stack;
     Long2Double l2d;
     l2d.i2l.i1 = (runtime->localVariables + 0)->integer;
     l2d.i2l.i0 = (runtime->localVariables + 1)->integer;
@@ -306,7 +306,7 @@ s32 java_lang_Math_ceil(Runtime *runtime, Class *clazz) {
 
 
 s32 java_lang_Math_floor(Runtime *runtime, Class *clazz) {
-    StackFrame *stack = runtime->stack;
+    RuntimeStack *stack = runtime->stack;
     Long2Double l2d;
     l2d.i2l.i1 = (runtime->localVariables + 0)->integer;
     l2d.i2l.i0 = (runtime->localVariables + 1)->integer;
@@ -320,7 +320,7 @@ s32 java_lang_Math_floor(Runtime *runtime, Class *clazz) {
 }
 
 s32 java_lang_Object_getClass(Runtime *runtime, Class *clazz) {
-    StackFrame *stack = runtime->stack;
+    RuntimeStack *stack = runtime->stack;
     Instance *ins = (Instance *) (runtime->localVariables + 0)->refer;
     push_ref(stack, (__refer) ins->mb.clazz);
 #if _JVM_DEBUG > 5
@@ -331,7 +331,7 @@ s32 java_lang_Object_getClass(Runtime *runtime, Class *clazz) {
 }
 
 s32 java_lang_Object_hashCode(Runtime *runtime, Class *clazz) {
-    StackFrame *stack = runtime->stack;
+    RuntimeStack *stack = runtime->stack;
     Instance *ins = (Instance *) (runtime->localVariables + 0)->refer;
     push_int(stack, (s32) (long) ins);
 #if _JVM_DEBUG > 5
@@ -342,7 +342,7 @@ s32 java_lang_Object_hashCode(Runtime *runtime, Class *clazz) {
 }
 
 s32 java_lang_Object_notify(Runtime *runtime, Class *clazz) {
-    StackFrame *stack = runtime->stack;
+    RuntimeStack *stack = runtime->stack;
     Instance *ins = (Instance *) (runtime->localVariables + 0)->refer;
 
     jthread_notify(&ins->mb, runtime);
@@ -354,7 +354,7 @@ s32 java_lang_Object_notify(Runtime *runtime, Class *clazz) {
 }
 
 s32 java_lang_Object_notifyAll(Runtime *runtime, Class *clazz) {
-    StackFrame *stack = runtime->stack;
+    RuntimeStack *stack = runtime->stack;
     Instance *ins = (Instance *) (runtime->localVariables + 0)->refer;
     jthread_notifyAll(&ins->mb, runtime);
 #if _JVM_DEBUG > 5
@@ -365,7 +365,7 @@ s32 java_lang_Object_notifyAll(Runtime *runtime, Class *clazz) {
 }
 
 s32 java_lang_Object_wait(Runtime *runtime, Class *clazz) {
-    StackFrame *stack = runtime->stack;
+    RuntimeStack *stack = runtime->stack;
     Instance *ins = (Instance *) (runtime->localVariables + 0)->refer;
     Long2Double l2d;
     l2d.i2l.i1 = (runtime->localVariables + 1)->integer;
@@ -380,7 +380,7 @@ s32 java_lang_Object_wait(Runtime *runtime, Class *clazz) {
 }
 
 s32 java_lang_Runtime_exitInternal(Runtime *runtime, Class *clazz) {
-    StackFrame *stack = runtime->stack;
+    RuntimeStack *stack = runtime->stack;
     s32 status = (runtime->localVariables + 1)->integer;
     exit(status);
 #if _JVM_DEBUG > 5
@@ -391,7 +391,7 @@ s32 java_lang_Runtime_exitInternal(Runtime *runtime, Class *clazz) {
 }
 
 s32 java_lang_Runtime_freeMemory(Runtime *runtime, Class *clazz) {
-    StackFrame *stack = runtime->stack;
+    RuntimeStack *stack = runtime->stack;
 
     push_long(stack, MAX_HEAP_SIZE - heap_size);
 #if _JVM_DEBUG > 5
@@ -402,7 +402,7 @@ s32 java_lang_Runtime_freeMemory(Runtime *runtime, Class *clazz) {
 }
 
 s32 java_lang_Runtime_totalMemory(Runtime *runtime, Class *clazz) {
-    StackFrame *stack = runtime->stack;
+    RuntimeStack *stack = runtime->stack;
 
     push_long(stack, MAX_HEAP_SIZE);
 #if _JVM_DEBUG > 5
@@ -421,7 +421,7 @@ s32 java_lang_Runtime_gc(Runtime *runtime, Class *clazz) {
 }
 
 s32 java_lang_String_charAt0(Runtime *runtime, Class *clazz) {
-    StackFrame *stack = runtime->stack;
+    RuntimeStack *stack = runtime->stack;
     Instance *jstr = (Instance *) (runtime->localVariables + 0)->refer;
     s32 index = (runtime->localVariables + 1)->integer;
     s16 ch = jstring_char_at(jstr, index);
@@ -434,7 +434,7 @@ s32 java_lang_String_charAt0(Runtime *runtime, Class *clazz) {
 }
 
 s32 java_lang_String_equals(Runtime *runtime, Class *clazz) {
-    StackFrame *stack = runtime->stack;
+    RuntimeStack *stack = runtime->stack;
     Instance *jstr1 = (Instance *) (runtime->localVariables + 0)->refer;
     Instance *jstr2 = (Instance *) (runtime->localVariables + 1)->refer;
     s32 r = jstring_equals(jstr1, jstr2);
@@ -447,7 +447,7 @@ s32 java_lang_String_equals(Runtime *runtime, Class *clazz) {
 }
 
 s32 java_lang_String_indexOf(Runtime *runtime, Class *clazz) {
-    StackFrame *stack = runtime->stack;
+    RuntimeStack *stack = runtime->stack;
     Instance *jstr = (Instance *) (runtime->localVariables + 0)->refer;
     u16 ch = (runtime->localVariables + 1)->integer;
     s32 r = jstring_index_of(jstr, ch, 0);
@@ -460,7 +460,7 @@ s32 java_lang_String_indexOf(Runtime *runtime, Class *clazz) {
 }
 
 s32 java_lang_String_indexOfFrom(Runtime *runtime, Class *clazz) {
-    StackFrame *stack = runtime->stack;
+    RuntimeStack *stack = runtime->stack;
     Instance *jstr = (Instance *) (runtime->localVariables + 0)->refer;
     u16 ch = (runtime->localVariables + 1)->integer;
     s32 startAt = (runtime->localVariables + 2)->integer;
@@ -474,7 +474,7 @@ s32 java_lang_String_indexOfFrom(Runtime *runtime, Class *clazz) {
 }
 
 s32 java_lang_String_intern(Runtime *runtime, Class *clazz) {
-    StackFrame *stack = runtime->stack;
+    RuntimeStack *stack = runtime->stack;
     Instance *jstr = (Instance *) (runtime->localVariables + 0)->refer;
 
 #if _JVM_DEBUG > 5
@@ -486,7 +486,7 @@ s32 java_lang_String_intern(Runtime *runtime, Class *clazz) {
 }
 
 s32 java_lang_StringBuffer_append(Runtime *runtime, Class *clazz) {
-    StackFrame *stack = runtime->stack;
+    RuntimeStack *stack = runtime->stack;
     Instance *jstr = (Instance *) (runtime->localVariables + 0)->refer;
 
 #if _JVM_DEBUG > 5
@@ -499,7 +499,7 @@ s32 java_lang_StringBuffer_append(Runtime *runtime, Class *clazz) {
 
 
 s32 java_lang_System_arraycopy(Runtime *runtime, Class *clazz) {
-    StackFrame *stack = runtime->stack;
+    RuntimeStack *stack = runtime->stack;
 
     s32 count = (runtime->localVariables + 4)->integer;
     s32 dest_start = (runtime->localVariables + 3)->integer;
@@ -527,7 +527,7 @@ s32 java_lang_System_arraycopy(Runtime *runtime, Class *clazz) {
 
 
 s32 java_lang_System_doubleToString(Runtime *runtime, Class *clazz) {
-    StackFrame *stack = runtime->stack;
+    RuntimeStack *stack = runtime->stack;
 
     Long2Double l2d;
     l2d.i2l.i1 = (runtime->localVariables + 0)->integer;
@@ -548,7 +548,7 @@ s32 java_lang_System_doubleToString(Runtime *runtime, Class *clazz) {
 }
 
 s32 java_lang_System_currentTimeMillis(Runtime *runtime, Class *clazz) {
-    StackFrame *stack = runtime->stack;
+    RuntimeStack *stack = runtime->stack;
 
     s64 curMs = currentTimeMillis();
     push_long(stack, curMs);
@@ -562,7 +562,7 @@ s32 java_lang_System_currentTimeMillis(Runtime *runtime, Class *clazz) {
 }
 
 s32 java_lang_System_nanotime(Runtime *runtime, Class *clazz) {
-    StackFrame *stack = runtime->stack;
+    RuntimeStack *stack = runtime->stack;
 
     s64 nano = nanoTime();
     push_long(stack, nano);
@@ -576,7 +576,7 @@ s32 java_lang_System_nanotime(Runtime *runtime, Class *clazz) {
 }
 
 s32 java_lang_System_identityHashCode(Runtime *runtime, Class *clazz) {
-    StackFrame *stack = runtime->stack;
+    RuntimeStack *stack = runtime->stack;
     Instance *tmps = (Instance *) (runtime->localVariables + 0)->refer;
     push_ref(stack, (__refer) tmps);
 
@@ -589,7 +589,7 @@ s32 java_lang_System_identityHashCode(Runtime *runtime, Class *clazz) {
 }
 
 s32 java_lang_System_getProperty0(Runtime *runtime, Class *clazz) {
-    StackFrame *stack = runtime->stack;
+    RuntimeStack *stack = runtime->stack;
 
     Instance *jstr1 = (Instance *) (runtime->localVariables + 0)->refer;
     Utf8String *key = utf8_create();
@@ -612,7 +612,7 @@ s32 java_lang_System_getProperty0(Runtime *runtime, Class *clazz) {
 }
 
 s32 java_lang_Thread_currentThread(Runtime *runtime, Class *clazz) {
-    StackFrame *stack = runtime->stack;
+    RuntimeStack *stack = runtime->stack;
     push_ref(stack, (__refer) runtime->threadInfo->jthread);
 #if _JVM_DEBUG > 5
     invoke_deepth(runtime);
@@ -632,7 +632,7 @@ s32 java_lang_Thread_yield(Runtime *runtime, Class *clazz) {
 }
 
 s32 java_lang_Thread_sleep(Runtime *runtime, Class *clazz) {
-    StackFrame *stack = runtime->stack;
+    RuntimeStack *stack = runtime->stack;
     Long2Double l2d;
     l2d.i2l.i1 = (runtime->localVariables + 0)->integer;
     l2d.i2l.i0 = (runtime->localVariables + 1)->integer;
@@ -647,7 +647,7 @@ s32 java_lang_Thread_sleep(Runtime *runtime, Class *clazz) {
 }
 
 s32 java_lang_Thread_start(Runtime *runtime, Class *clazz) {
-    StackFrame *stack = runtime->stack;
+    RuntimeStack *stack = runtime->stack;
     Instance *ins = (Instance *) (runtime->localVariables + 0)->refer;
     jthread_create_and_start(ins);
 
@@ -660,7 +660,7 @@ s32 java_lang_Thread_start(Runtime *runtime, Class *clazz) {
 }
 
 s32 java_lang_Thread_isAlive(Runtime *runtime, Class *clazz) {
-    StackFrame *stack = runtime->stack;
+    RuntimeStack *stack = runtime->stack;
     Instance *ins = (Instance *) (runtime->localVariables + 0)->refer;
 
     push_int(stack, runtime->threadInfo->thread_status != THREAD_STATUS_ZOMBIE);
@@ -673,7 +673,7 @@ s32 java_lang_Thread_isAlive(Runtime *runtime, Class *clazz) {
 }
 
 s32 java_lang_Thread_activeCount(Runtime *runtime, Class *clazz) {
-    StackFrame *stack = runtime->stack;
+    RuntimeStack *stack = runtime->stack;
 
     push_int(stack, thread_list->length);
 #if _JVM_DEBUG > 5
@@ -686,7 +686,7 @@ s32 java_lang_Thread_activeCount(Runtime *runtime, Class *clazz) {
 
 
 s32 java_lang_Thread_setPriority0(Runtime *runtime, Class *clazz) {
-    StackFrame *stack = runtime->stack;
+    RuntimeStack *stack = runtime->stack;
     Instance *ins = (Instance *) (runtime->localVariables + 0)->refer;
 
 #if _JVM_DEBUG > 5
@@ -699,7 +699,7 @@ s32 java_lang_Thread_setPriority0(Runtime *runtime, Class *clazz) {
 
 
 s32 java_lang_Thread_interrupt0(Runtime *runtime, Class *clazz) {
-    StackFrame *stack = runtime->stack;
+    RuntimeStack *stack = runtime->stack;
     Instance *ins = (Instance *) (runtime->localVariables + 0)->refer;
 
 #if _JVM_DEBUG > 5
@@ -712,7 +712,7 @@ s32 java_lang_Thread_interrupt0(Runtime *runtime, Class *clazz) {
 
 
 s32 java_io_PrintStream_printImpl(Runtime *runtime, Class *clazz) {
-    StackFrame *stack = runtime->stack;
+    RuntimeStack *stack = runtime->stack;
 
 #if _JVM_DEBUG > 5
     invoke_deepth(runtime);
@@ -740,7 +740,7 @@ s32 java_io_PrintStream_printImpl(Runtime *runtime, Class *clazz) {
 }
 
 s32 java_io_Throwable_printStackTrace0(Runtime *runtime, Class *clazz) {
-    StackFrame *stack = runtime->stack;
+    RuntimeStack *stack = runtime->stack;
     Instance *tmps = (Instance *) (runtime->localVariables + 0)->refer;
 #if _JVM_DEBUG > 5
     invoke_deepth(runtime);
@@ -856,5 +856,15 @@ s32 native_reg_lib(java_native_method *methods, s32 method_size) {
 
 s32 native_remove_lib(JavaNativeLib *lib) {
     arraylist_remove(native_libs, lib);
+    return 0;
+}
+
+s32 native_lib_destory(){
+    s32 i;
+    for(i=0;i<native_libs->length;i++){
+        __refer lib=arraylist_get_value(native_libs,i);
+        jvm_free(lib);
+    }
+    arraylist_destory(native_libs);
     return 0;
 }
