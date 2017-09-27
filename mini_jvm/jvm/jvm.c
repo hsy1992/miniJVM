@@ -60,7 +60,7 @@ void classloader_destory(ClassLoader *class_loader) {
 s32 execute(c8 *p_classpath, c8 *p_mainclass, s32 argc, c8 **argv) {
 #ifdef __MEM_LEAK_DETECT
     dbg_init(10);
-    //dbg_catch_sigsegv();
+    dbg_catch_sigsegv();
 #endif //__MEM_LEAK_DETECT
     //
     open_log();
@@ -174,6 +174,7 @@ s32 execute(c8 *p_classpath, c8 *p_mainclass, s32 argc, c8 **argv) {
             }
 #endif
 
+            main_thread_destory();
         }
         utf8_destory(methodName);
         utf8_destory(methodType);
@@ -181,7 +182,6 @@ s32 execute(c8 *p_classpath, c8 *p_mainclass, s32 argc, c8 **argv) {
 
 
     //
-    main_thread_destory();
     classloader_destory(sys_classloader);
     sys_classloader = NULL;
     classloader_destory(array_classloader);

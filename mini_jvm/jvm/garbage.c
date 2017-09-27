@@ -7,6 +7,10 @@ void getMemBlockName(void *memblock, Utf8String *name);
 
 void __garbage_clear();
 
+Hashset *_garbage_get_set();
+
+void _garbage_put_set(Hashset *set);
+
 /**
  * 创建垃圾收集线程，
  *
@@ -66,18 +70,28 @@ void garbage_collector_destory() {
         garbage_thread_timedwait(50);
     }
     garbage_thread_unlock();
+    //
     __garbage_clear();
-//    pthread_exit(&collector->_garbage_thread);
-    pthread_mutexattr_destroy(&collector->_garbage_attr);
-    pthread_mutex_destroy(&collector->_garbage_lock);
-    pthread_cond_destroy(&collector->_garbageCond);
 
+    //
+    Hashset *set;
+    s32 i;
+    for (i = 0; i < collector->_garbage_refer_set_pool->length; i++) {
+        set = arraylist_get_value(collector->_garbage_refer_set_pool, i);
+        if (set)hashset_destory(set);
+    }
     arraylist_destory(collector->_garbage_refer_set_pool);
     collector->_garbage_refer_set_pool = NULL;
+    //
     hashtable_destory(collector->son_2_father);
     collector->son_2_father = NULL;
     hashtable_destory(collector->father_2_son);
     collector->father_2_son = NULL;
+    //
+//    pthread_exit(&collector->_garbage_thread);
+    pthread_mutexattr_destroy(&collector->_garbage_attr);
+    pthread_mutex_destroy(&collector->_garbage_lock);
+    pthread_cond_destroy(&collector->_garbageCond);
     jvm_free(collector);
     collector = NULL;
 }
