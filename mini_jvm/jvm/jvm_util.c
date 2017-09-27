@@ -13,21 +13,40 @@
 
 //==================================================================================
 
-void thread_lock(MemoryBlock *mb) {
-    pthread_mutex_lock(&mb->thread_lock->mutex_lock);
+void thread_lock_init(ThreadLock *lock) {
+    if (lock) {
+        pthread_cond_init(&lock->thread_cond, NULL);
+        pthread_mutexattr_init(&lock->lock_attr);
+        pthread_mutexattr_settype(&lock->lock_attr, PTHREAD_MUTEX_RECURSIVE);
+        pthread_mutex_init(&lock->mutex_lock, &lock->lock_attr);
+    }
 }
 
-void thread_unlock(MemoryBlock *mb) {
-    pthread_mutex_unlock(&mb->thread_lock->mutex_lock);
+void thread_lock_dispose(ThreadLock *lock) {
+    if (lock) {
+        pthread_cond_destroy(&lock->thread_cond);
+        pthread_mutexattr_destroy(&lock->lock_attr);
+        pthread_mutex_destroy(&lock->mutex_lock);
+        lock->jthread_holder = NULL;
+    }
+}
+
+void thread_lock(ThreadLock *lock) {
+    pthread_mutex_lock(&lock->mutex_lock);
+}
+
+void thread_unlock(ThreadLock *lock) {
+    pthread_mutex_unlock(&lock->mutex_lock);
 }
 
 Class *classes_get(Utf8String *clsName) {
     Class *cl = NULL;
-    thread_lock(&sys_classloader->JVM_CLASS->mb);
+    ThreadLock *tl = sys_classloader->JVM_CLASS->mb.thread_lock;
+    thread_lock(tl);
     if (clsName) {
         cl = hashtable_get(sys_classloader->classes, clsName);
     }
-    thread_unlock(&sys_classloader->JVM_CLASS->mb);
+    thread_unlock(tl);
     return cl;
 }
 
@@ -40,7 +59,8 @@ Class *classes_load_get_c(c8 *pclassName, Runtime *runtime) {
 
 Class *classes_load_get(Utf8String *ustr, Runtime *runtime) {
     if (!ustr)return NULL;
-    thread_lock(&sys_classloader->JVM_CLASS->mb);
+    ThreadLock *tl = sys_classloader->JVM_CLASS->mb.thread_lock;
+    thread_lock(tl);
     Class *cl;
     utf8_replace_c(ustr, ".", "/");
     cl = classes_get(ustr);
@@ -53,15 +73,16 @@ Class *classes_load_get(Utf8String *ustr, Runtime *runtime) {
     if (cl) {
         class_clinit(cl, runtime);
     }
-    thread_unlock(&sys_classloader->JVM_CLASS->mb);
+    thread_unlock(tl);
     return cl;
 }
 
 s32 classes_put(Class *clazz) {
     if (clazz) {
-        thread_lock(&sys_classloader->JVM_CLASS->mb);
+        ThreadLock *tl = sys_classloader->JVM_CLASS->mb.thread_lock;
+        thread_lock(tl);
         hashtable_put(sys_classloader->classes, clazz->name, clazz);
-        thread_unlock(&sys_classloader->JVM_CLASS->mb);
+        thread_unlock(tl);
         garbage_refer(clazz, sys_classloader->JVM_CLASS);
         return 0;
     }
@@ -69,7 +90,8 @@ s32 classes_put(Class *clazz) {
 }
 
 Class *array_class_get(Utf8String *descript) {
-    thread_lock(&array_classloader->JVM_CLASS->mb);
+    ThreadLock *tl = sys_classloader->JVM_CLASS->mb.thread_lock;
+    thread_lock(tl);
     Class *clazz = hashtable_get(array_classloader->classes, descript);
     if (!clazz) {
         clazz = class_create();
@@ -78,28 +100,28 @@ Class *array_class_get(Utf8String *descript) {
         hashtable_put(array_classloader->classes, clazz->name, clazz);
         garbage_refer(clazz, array_classloader->JVM_CLASS);
     }
-    thread_unlock(&array_classloader->JVM_CLASS->mb);
+    thread_unlock(tl);
     return clazz;
 }
 
 Runtime *threadlist_get(s32 i) {
     Runtime *r = NULL;
-    thread_lock(&sys_classloader->JVM_CLASS->mb);
+    thread_lock(&sys_lock);
     r = (Runtime *) arraylist_get_value(thread_list, i);
-    thread_unlock(&sys_classloader->JVM_CLASS->mb);
+    thread_unlock(&sys_lock);
     return r;
 }
 
 void threadlist_remove(Runtime *r) {
-    thread_lock(&sys_classloader->JVM_CLASS->mb);
+    thread_lock(&sys_lock);
     arraylist_remove(thread_list, r);
-    thread_unlock(&sys_classloader->JVM_CLASS->mb);
+    thread_unlock(&sys_lock);
 }
 
 void threadlist_add(Runtime *r) {
-    thread_lock(&sys_classloader->JVM_CLASS->mb);
+    thread_lock(&sys_lock);
     arraylist_append(thread_list, r);
-    thread_unlock(&sys_classloader->JVM_CLASS->mb);
+    thread_unlock(&sys_lock);
 }
 
 /**
@@ -546,28 +568,25 @@ void jthread_set_threadq_value(Instance *ins, void *val) {
     setFieldRefer(ptr, (__refer) val);
 }
 
+
 void jthreadlock_create(MemoryBlock *mb) {
     if (!mb->thread_lock) {
-        JavaThreadLock *jtl = jvm_alloc(sizeof(JavaThreadLock));
-        pthread_cond_init(&jtl->thread_cond, NULL);
-        pthread_mutexattr_init(&jtl->lock_attr);
-        pthread_mutexattr_settype(&jtl->lock_attr, PTHREAD_MUTEX_RECURSIVE);
-        pthread_mutex_init(&jtl->mutex_lock, &jtl->lock_attr);
+        ThreadLock *tl = jvm_alloc(sizeof(ThreadLock));
+        thread_lock_init(tl);
 
-        mb->thread_lock = jtl;
-        if (mb->thread_lock != jtl) {//recheck
-            jthreadlock_destory(jtl);
+        mb->thread_lock = tl;
+        if (mb->thread_lock != tl) {//recheck
+            thread_lock_dispose(tl);
+            jvm_free(tl);
         }
     }
 }
 
-void jthreadlock_destory(JavaThreadLock *jtl) {
-    if (jtl) {
-        pthread_cond_destroy(&jtl->thread_cond);
-        pthread_mutexattr_destroy(&jtl->lock_attr);
-        pthread_mutex_destroy(&jtl->mutex_lock);
-        jtl->jthread_holder = NULL;
-        jvm_free(jtl);
+void jthreadlock_destory(MemoryBlock *mb) {
+    thread_lock_dispose(mb->thread_lock);
+    if (mb->thread_lock) {
+        jvm_free(mb->thread_lock);
+        mb->thread_lock = NULL;
     }
 }
 
@@ -576,7 +595,7 @@ s32 jthread_lock(MemoryBlock *mb, Runtime *runtime) { //可能会重入，同一
     if (!mb->thread_lock) {
         jthreadlock_create(mb);
     }
-    JavaThreadLock *jtl = mb->thread_lock;
+    ThreadLock *jtl = mb->thread_lock;
     pthread_mutex_lock(&jtl->mutex_lock);
     jtl->jthread_holder = runtime->threadInfo->jthread;
 
@@ -591,7 +610,7 @@ s32 jthread_unlock(MemoryBlock *mb, Runtime *runtime) {
     if (!mb->thread_lock) {
         jthreadlock_create(mb);
     }
-    JavaThreadLock *jtl = mb->thread_lock;
+    ThreadLock *jtl = mb->thread_lock;
     pthread_mutex_unlock(&jtl->mutex_lock);
     jtl->jthread_holder = NULL;
     return 0;
@@ -702,7 +721,7 @@ s32 jarray_destory(Instance *arr) {
                 jarray_set_field(arr, i, &l2d, data_type_bytes[DATATYPE_REFERENCE]);
             }
         }
-        jthreadlock_destory(arr->mb.thread_lock);
+        jthreadlock_destory(&arr->mb);
         arr->mb.thread_lock = NULL;
         jvm_free(arr->arr_body);
         arr->arr_body = NULL;
@@ -823,7 +842,7 @@ void instance_init(Instance *ins, Runtime *runtime) {
 s32 instance_destory(Instance *ins) {
     if (!ins)return -1;
     if (ins->mb.type == MEM_TYPE_INS) {
-        jthreadlock_destory(ins->mb.thread_lock);
+        jthreadlock_destory(&ins->mb);
         jvm_free(ins->obj_fields);
         jvm_free(ins);
     } else if (ins->mb.type == MEM_TYPE_ARR) {

@@ -84,12 +84,12 @@ typedef struct _JavaThreadInfo {
     JdwpStep jdwp_step;
 } JavaThreadInfo;
 
-typedef struct _JavaThreadLock {
+typedef struct _ThreadLock {
     pthread_cond_t thread_cond;
     pthread_mutexattr_t lock_attr;
     pthread_mutex_t mutex_lock; //互斥锁
     Instance *jthread_holder;
-} JavaThreadLock;
+} ThreadLock;
 
 pthread_t jthread_create_and_start(Instance *ins);
 
@@ -101,7 +101,7 @@ __refer jthread_get_name_value(Instance *ins);
 
 void jthreadlock_create(MemoryBlock *mb);
 
-void jthreadlock_destory(JavaThreadLock *jtl);
+void jthreadlock_destory(MemoryBlock *mb);
 
 s32 jthread_lock(MemoryBlock *mb, Runtime *runtime);
 
@@ -121,8 +121,12 @@ s32 jthread_suspend(Runtime *runtime);
 
 s32 check_suspend_and_pause(Runtime *runtime);
 
-void thread_unlock(MemoryBlock *mb);
+void thread_unlock(ThreadLock *lock);
 
-void thread_lock(MemoryBlock *mb);
+void thread_lock(ThreadLock *lock);
+
+void thread_lock_dispose(ThreadLock *lock);
+
+void thread_lock_init(ThreadLock *lock);
 
 #endif //MINI_JVM_UTIL_H

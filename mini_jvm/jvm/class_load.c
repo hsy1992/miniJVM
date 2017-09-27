@@ -322,7 +322,7 @@ s32 _parse_constant_pool(Class *_this, FILE *fp, s32 count) {
 
     return 0;
 }
-
+#ifdef _JVM_DEBUG
 /* print constant pool table */
 void printConstantPool(Class *clazz) {
     ConstantPool *p = &(clazz->constantPool);
@@ -471,6 +471,7 @@ void printConstantPool(Class *clazz) {
         }
     }
 }
+#endif //_JVM_DEBUG
 
 s32 _class_constant_pool_destory(Class *clazz) {
     int i;
@@ -1060,7 +1061,8 @@ s32 _LOAD_FROM_FILE(Class *_this, c8 *file) {
  * @param clazz
  */
 void class_link(Class *clazz) {
-    clazz->name = get_utf8_string(clazz, find_constant_classref(clazz, clazz->cff.this_class)->stringIndex);
+    Utf8String* ustr=get_utf8_string(clazz, find_constant_classref(clazz, clazz->cff.this_class)->stringIndex);
+    clazz->name = utf8_create_copy(ustr);
 //    if (utf8_equals_c(clazz->name, "javax/mini/eio/socket/PrivateOutputStream")) {
 //        int debug = 1;
 //    }

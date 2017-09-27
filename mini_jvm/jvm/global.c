@@ -3,10 +3,13 @@
 //
 
 #include "jvm.h"
+#include "jvm_util.h"
 //======================= global var =============================
 
 ClassLoader *sys_classloader;
 ClassLoader *array_classloader;
+
+ThreadLock sys_lock;
 
 ArrayList *native_libs;
 ArrayList *thread_list; //all thread

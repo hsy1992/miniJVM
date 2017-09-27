@@ -84,22 +84,14 @@ void garbage_collector_destory() {
 
 void __garbage_clear() {
     //
-    //
     HashtableIterator hti;
-    //
-//    hashtable_iterate(sys_class_loader->classes, &hti);
-//    for (; hashtable_iter_has_more(&hti);) {
-//        HashtableKey k = hashtable_iter_next_key(&hti);
-//        Class *v = (Class *) hashtable_get(sys_class_loader->classes, k);
-//        if (v != HASH_NULL) {
-//            garbage_derefer_all(v);
-//        }
-//    }
     //
     jvm_printf("son_2_father.size: %lld , father_2_son.size:%lld\n",
                collector->son_2_father->entries, collector->father_2_son->entries);
     //解除所有引用关系后，回收全部对象
-    while (garbage_collect());
+    while (garbage_collect()) {
+        //jvm_printf("2\n");
+    }
 
     //
     jvm_printf("son_2_father.size: %lld , father_2_son.size:%lld\n",
@@ -303,7 +295,7 @@ s32 garbage_mark_by_threads() {
             jthread_suspend(runtime);
             while (!runtime->threadInfo->is_suspend) {
                 garbage_thread_timedwait(50);
-                if (collector->_garbage_thread_stop) {
+                if (collector->_garbage_thread_stop || collector->_garbage_thread_pause) {
                     return 1;
                 }
             }

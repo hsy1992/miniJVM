@@ -25,22 +25,10 @@ void main_thread_create(Runtime *runtime) {
 }
 
 void main_thread_destory() {
-    Runtime *r = jthread_get_threadq_value(main_thread);
-    threadlist_remove(r);
-    jthread_set_threadq_value(main_thread, NULL);
+    threadlist_remove(main_runtime);
+    main_runtime->threadInfo->is_suspend = 1;
     garbage_derefer_all(main_thread);
-    instance_destory(main_thread);
-}
-
-void classes_destory(hmap_t classes) {
-//    HashtableIterator hti;
-//    hashtable_iterate(classes, &hti);
-//    for (; hashtable_iter_has_more(&hti);) {
-//        Utf8String *k = hashtable_iter_next_key(&hti);
-//        Class *clazz = hashtable_get(classes, k);
-//        class_destory(clazz);
-//    }
-    hashtable_destory(classes);
+    garbage_refer(main_thread, NULL);//主线程实例被回收
 }
 
 ClassLoader *classloader_create(c8 *path) {
@@ -60,12 +48,12 @@ void classloader_destory(ClassLoader *class_loader) {
     utf8_destory(class_loader->JVM_CLASS->name);
     class_loader->JVM_CLASS->name = NULL;
     garbage_derefer_all(class_loader->JVM_CLASS);
-    class_destory(class_loader->JVM_CLASS);
+    garbage_refer(class_loader->JVM_CLASS, NULL);
+
     utf8_destory(class_loader->g_classpath);
     class_loader->g_classpath = NULL;
-    Hashtable *t = class_loader->classes;
+    hashtable_destory(class_loader->classes);
     class_loader->classes = NULL;
-    classes_destory(t);
     jvm_free(class_loader);
 }
 
@@ -79,6 +67,7 @@ s32 execute(c8 *p_classpath, c8 *p_mainclass, s32 argc, c8 **argv) {
 #if _JVM_DEBUG_PROFILE
     instruct_profile = hashtable_create(DEFAULT_HASH_FUNC, DEFAULT_HASH_EQUALS_FUNC);
 #endif
+    thread_lock_init(&sys_lock);
 
     //为指令创建索引
     instructionsIndexies = instruct_indexies_create();
@@ -170,7 +159,7 @@ s32 execute(c8 *p_classpath, c8 *p_mainclass, s32 argc, c8 **argv) {
             s64 start = currentTimeMillis();
             jvm_printf("\n\n\n\n\n\n================================= main start ================================\n");
             //调用主方法
-            ret = execute_method(main, &runtime, clazz);
+//            ret = execute_method(main, &runtime, clazz);
             jvm_printf("================================= main  end  ================================\n");
             jvm_printf("spent %lld\n", (currentTimeMillis() - start));
 
@@ -184,13 +173,15 @@ s32 execute(c8 *p_classpath, c8 *p_mainclass, s32 argc, c8 **argv) {
                 jvm_printf("%2x \t %lld\n", instruct_code, (s64) (long) sum_v);
             }
 #endif
-            main_thread_destory();
-            garbage_thread_stop();
 
         }
         utf8_destory(methodName);
         utf8_destory(methodType);
     }
+
+
+    //
+    main_thread_destory();
     classloader_destory(sys_classloader);
     sys_classloader = NULL;
     classloader_destory(array_classloader);
@@ -204,6 +195,7 @@ s32 execute(c8 *p_classpath, c8 *p_mainclass, s32 argc, c8 **argv) {
     native_lib_destory();
     runtime_dispose(&runtime);
     sys_properties_dispose();
+    thread_lock_dispose(&sys_lock);
     close_log();
     jvm_printf("over\n");
 

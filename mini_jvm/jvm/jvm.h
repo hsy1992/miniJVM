@@ -3,7 +3,7 @@
 #define PUP_JVM_H
 #define HAVE_STRUCT_TIMESPEC
 #define _POSIX_C_SOURCE 200809L
-//#define __MEM_LEAK_DETECT
+#define __MEM_LEAK_DETECT
 
 //
 #include <stdio.h>
@@ -159,7 +159,7 @@ typedef struct _FieldInfo FieldInfo;
 typedef struct _MethodInfo MethodInfo;
 typedef struct _Instruction Instruction;
 typedef struct _ConstantNameAndType ConstantNameAndType;
-typedef struct _JavaThreadLock JavaThreadLock;
+typedef struct _ThreadLock ThreadLock;
 typedef struct _JavaThreadInfo JavaThreadInfo;
 typedef struct _Runtime Runtime;
 typedef struct _CodeAttribute CodeAttribute;
@@ -332,6 +332,7 @@ enum {
 //======================= global var =============================
 extern Instance *main_thread;
 extern Runtime *main_runtime;
+extern ThreadLock sys_lock;
 
 extern ClassLoader *sys_classloader;
 extern ClassLoader *array_classloader;
@@ -360,7 +361,7 @@ typedef struct _MemoryBlock {
     u8 type;//type of array or object runtime,class
     u8 garbage_mark;
     Class *clazz;
-    JavaThreadLock *volatile thread_lock;
+    ThreadLock *volatile thread_lock;
 } MemoryBlock;
 
 typedef struct _ClassLoader {
@@ -807,8 +808,6 @@ void printInterfacePool(Class *clazz, InterfacePool *ip);
 s32 _parse_constant_pool(Class *_this, FILE *fp, s32 count);
 
 s32 _class_constant_pool_destory(Class *clazz);
-
-void printConstantPool(Class *clazz);
 
 /* Field Pool Parser */
 s32 _parse_field_pool(Class *_this, FILE *fp, s32 count);
