@@ -31,22 +31,6 @@ s64 heap_size = 0; //当前已经分配的内存总数
 
 //======================= memory manage =============================
 
-static s64 alloc_count = 0;
-static s64 free_count = 0;
-Pairlist *mem_size_2_count;
-
-void mem_mgr_create() {
-    if (!mem_size_2_count) {
-        mem_size_2_count = pairlist_create(0);
-    }
-}
-
-void mem_mgr_distory() {
-    if (mem_size_2_count) {
-        pairlist_destory(mem_size_2_count);
-        mem_size_2_count = NULL;
-    }
-}
 
 #ifndef __MEM_LEAK_DETECT
 
@@ -62,12 +46,6 @@ void *jvm_alloc(u32 size) {
     void *ptr = calloc(size, 1);
     if (ptr) {
         heap_size += size;
-        alloc_count++;
-        if (mem_size_2_count) {
-            s32 count = pairlist_getl(mem_size_2_count, size);
-            count++;
-            pairlist_putl(mem_size_2_count, size, count);
-        }
         setFieldInt(ptr, size);
         return ptr + 4;
     }
@@ -78,15 +56,6 @@ s32 jvm_free(void *ptr) {
     if (ptr) {
         s32 size = getFieldInt(ptr - 4);
         heap_size -= size;
-        free_count++;
-        if (mem_size_2_count) {
-            s32 count = pairlist_getl(mem_size_2_count, size);
-            count--;
-            pairlist_putl(mem_size_2_count, size, count);
-        }
-//        if (size == 176) {
-//            int debug = 1;
-//        }
         free(ptr - 4);
         return size;
     }
@@ -109,15 +78,7 @@ void *jvm_realloc(void *pPtr, u32 size) {
 
 #endif //_DEBUG
 
-void mem_mgr_print() {
-    jvm_printf("=============\n");
-    s32 i;
-    for (i = 0; i < mem_size_2_count->count; i++) {
-        Pair p = pairlist_get_pair(mem_size_2_count, i);
-        if (p.right)
-            jvm_printf("%8lld : %8lld\n", (s64) p.leftl, (s64) p.rightl);
-    }
-}
+
 
 #if _JVM_DEBUG_PROFILE
 Hashtable* instruct_profile;

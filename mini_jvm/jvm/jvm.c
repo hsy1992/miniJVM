@@ -11,17 +11,6 @@
 #include "jdwp.h"
 
 
-void classes_destory(hmap_t classes) {
-//    HashtableIterator hti;
-//    hashtable_iterate(classes, &hti);
-//    for (; hashtable_iter_has_more(&hti);) {
-//        Utf8String *k = hashtable_iter_next_key(&hti);
-//        Class *clazz = hashtable_get(classes, k);
-//        class_destory(clazz);
-//    }
-    hashtable_destory(classes);
-}
-
 void main_thread_create(Runtime *runtime) {
 
     Class *thread_clazz = classes_load_get_c("java/lang/Thread", runtime);
@@ -43,6 +32,17 @@ void main_thread_destory() {
     instance_destory(main_thread);
 }
 
+void classes_destory(hmap_t classes) {
+//    HashtableIterator hti;
+//    hashtable_iterate(classes, &hti);
+//    for (; hashtable_iter_has_more(&hti);) {
+//        Utf8String *k = hashtable_iter_next_key(&hti);
+//        Class *clazz = hashtable_get(classes, k);
+//        class_destory(clazz);
+//    }
+    hashtable_destory(classes);
+}
+
 ClassLoader *classloader_create(c8 *path) {
     ClassLoader *class_loader = jvm_alloc(sizeof(ClassLoader));
     class_loader->g_classpath = utf8_create_c(path);
@@ -60,22 +60,26 @@ void classloader_destory(ClassLoader *class_loader) {
     utf8_destory(class_loader->JVM_CLASS->name);
     class_loader->JVM_CLASS->name = NULL;
     garbage_derefer_all(class_loader->JVM_CLASS);
+    class_destory(class_loader->JVM_CLASS);
     utf8_destory(class_loader->g_classpath);
-    classes_destory(class_loader->classes);
+    class_loader->g_classpath = NULL;
+    Hashtable *t = class_loader->classes;
+    class_loader->classes = NULL;
+    classes_destory(t);
     jvm_free(class_loader);
 }
 
 s32 execute(c8 *p_classpath, c8 *p_mainclass, s32 argc, c8 **argv) {
 #ifdef __MEM_LEAK_DETECT
     dbg_init(10);
-    dbg_catch_sigsegv();
+    //dbg_catch_sigsegv();
 #endif //__MEM_LEAK_DETECT
     //
     open_log();
 #if _JVM_DEBUG_PROFILE
     instruct_profile = hashtable_create(DEFAULT_HASH_FUNC, DEFAULT_HASH_EQUALS_FUNC);
 #endif
-    mem_mgr_create();
+
     //为指令创建索引
     instructionsIndexies = instruct_indexies_create();
 
@@ -200,7 +204,6 @@ s32 execute(c8 *p_classpath, c8 *p_mainclass, s32 argc, c8 **argv) {
     native_lib_destory();
     runtime_dispose(&runtime);
     sys_properties_dispose();
-    mem_mgr_distory();
     close_log();
     jvm_printf("over\n");
 

@@ -75,7 +75,6 @@ void runtime_dispose(Runtime *runtime);
 typedef struct _JavaThreadInfo {
     Instance *jthread;
     Runtime *top_runtime;
-    Hashset *hold_locks;
     u8 volatile thread_status;
     s32 volatile suspend_count;//for jdwp suspend ,>0 suspend, ==0 resume
     u8 volatile is_suspend;

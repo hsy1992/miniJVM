@@ -26,6 +26,7 @@ typedef struct _Collector {
     pthread_cond_t _garbageCond;
 
     s32 _garbage_thread_stop;
+    s32 _garbage_thread_stoped;
     s32 _garbage_thread_pause;
     s64 _garbage_count;
 } Collector;

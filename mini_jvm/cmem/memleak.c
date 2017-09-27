@@ -93,12 +93,16 @@
    ====================================
    dumps history of malloc() - free() calls. keyword is the same as above.
 */
+#define HAVE_STRUCT_TIMESPEC
+#define _POSIX_C_SOURCE 200809L
 
+#include "sys/types.h"
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
 #include <signal.h>
 #include <limits.h>
+#include <pthread.h>
 
 #define die(msg) (perror(msg), abort())
 #define length(type) ((sizeof(type)*5)/2 + 1)
@@ -145,6 +149,36 @@ static struct head *first = NULL, *last = NULL;
 static struct head *hist_base = NULL, *histp = NULL;
 
 #define HLEN sizeof(struct head)
+
+
+/////////////////////////////////////////////////////////////////////////
+pthread_mutex_t mutex_lock;
+pthread_cond_t thread_cond;
+pthread_mutexattr_t lock_attr;
+int inited = 0;
+
+static inline void init_lock() {
+    if (!inited) {
+        thread_cond = PTHREAD_COND_INITIALIZER;
+        pthread_cond_init(&thread_cond, NULL);
+        pthread_mutexattr_init(&lock_attr);
+        pthread_mutexattr_settype(&lock_attr, PTHREAD_MUTEX_RECURSIVE);
+        pthread_mutex_init(&mutex_lock, &lock_attr);
+        inited = 1;
+    }
+}
+
+void lock() {
+    init_lock();
+    pthread_mutex_lock(&mutex_lock);
+}
+
+void unlock() {
+    init_lock();
+    pthread_mutex_unlock(&mutex_lock);
+}
+
+/////////////////////////////////////////////////////////////////////////
 
 static struct head *add(void *buf, size_t s) {
     struct head *p;
@@ -200,37 +234,6 @@ static void replace(struct head *p, void *buf, size_t s) {
     memory_cnt += s;
 }
 
-void *dbg_malloc(size_t s) {
-    void *buf;
-    malloc_cnt++;
-    buf = malloc(s);
-    if (buf) {
-        if (add(buf, s))
-            return buf;
-        else
-            free(buf);
-    }
-    fprintf(stderr, "%s:%lu: dbg_malloc: not enough memory\n", dbg_file_name, dbg_line_number);
-    return NULL;
-}
-
-void *dbg_calloc(size_t n, size_t s) {
-    void *buf;
-    s *= n;
-    calloc_cnt++;
-    buf = malloc(s);
-    if (buf) {
-        if (add(buf, s)) {
-            /* standard calloc() sets memory to zero */
-            memset(buf, 0, s);
-            return buf;
-        } else
-            free(buf);
-    }
-    fprintf(stderr, "%s:%lu: dbg_calloc: not enough memory\n", dbg_file_name, dbg_line_number);
-    return NULL;
-}
-
 static struct head *find_in_heap(void *addr) {
     struct head *p;
     /* start search from lately allocated blocks */
@@ -255,41 +258,6 @@ static struct head *find_in_hist(void *addr) {
             ADVANCE(p);
         }
     }
-    return NULL;
-}
-
-void dbg_free(void *buf) {
-    struct head *p;
-    free_cnt++;
-    if (buf)
-        if ((p = find_in_heap(buf))) {
-            del(p);
-            free(buf);
-        } else
-            dbg_check_addr("dbg_free", buf, CHK_FREED);
-    else
-        fprintf(stderr, "%s:%lu: dbg_free: NULL\n", dbg_file_name, dbg_line_number);
-}
-
-void *dbg_realloc(void *buf, size_t s) {
-    struct head *p;
-    realloc_cnt++;
-    if (buf) /* when buf is NULL do malloc. counted twice as r and m */
-        if (s)  /* when s = 0 realloc() acts like free(). counted twice: as r and f */
-            if ((p = find_in_heap(buf))) {
-                buf = realloc(buf, s);
-                if (buf) {
-                    replace(p, buf, s);
-                    return buf;
-                } else
-                    fprintf(stderr, "%s:%lu: dbg_realloc: not enough memory\n",
-                            dbg_file_name, dbg_line_number);
-            } else
-                dbg_check_addr("dbg_realloc", buf, CHK_FREED);
-        else
-            dbg_free(buf);
-    else
-        return dbg_malloc(s);
     return NULL;
 }
 
@@ -326,8 +294,8 @@ void dbg_heap_dump(char *key) {
     while (p) {
         buf = malloc(strlen(p->file) + 2 * length(long) + 20);
         sprintf(buf, "(alloc: %s:%lu size: %lu)\n", p->file, p->line, (unsigned long) p->size);
-        print_buf(p->addr, p->size);
-        fprintf(stderr,"%llx\n",(long long)(long)p->addr);
+        //print_buf(p->addr, p->size);
+        //fprintf(stderr,"%llx\n",(long long)(long)p->addr);
         p = p->in.list.next;
         if (strstr(buf, key)) fputs(buf, stderr);
         free(buf);
@@ -405,6 +373,90 @@ void print_buf(char *buf, size_t len) {
     }
     fprintf(stderr, "\n");
 }
+
+
+/////////////////////////////////////////////////////////////////////////
+
+void *dbg_malloc(size_t s) {
+    lock();
+    void *buf;
+    malloc_cnt++;
+    buf = malloc(s);
+    if (buf) {
+        if (add(buf, s)) {
+            unlock();
+            return buf;
+        } else
+            free(buf);
+    }
+    fprintf(stderr, "%s:%lu: dbg_malloc: not enough memory\n", dbg_file_name, dbg_line_number);
+    unlock();
+    return NULL;
+}
+
+void *dbg_calloc(size_t n, size_t s) {
+    lock();
+    void *buf;
+    s *= n;
+    calloc_cnt++;
+    buf = malloc(s);
+    if (buf) {
+        if (add(buf, s)) {
+            /* standard calloc() sets memory to zero */
+            memset(buf, 0, s);
+            unlock();
+            return buf;
+        } else
+            free(buf);
+    }
+    fprintf(stderr, "%s:%lu: dbg_calloc: not enough memory\n", dbg_file_name, dbg_line_number);
+    unlock();
+    return NULL;
+}
+
+void dbg_free(void *buf) {
+    lock();
+    struct head *p;
+    free_cnt++;
+    if (buf)
+        if ((p = find_in_heap(buf))) {
+            del(p);
+            free(buf);
+        } else
+            dbg_check_addr("dbg_free", buf, CHK_FREED);
+    else
+        fprintf(stderr, "%s:%lu: dbg_free: NULL\n", dbg_file_name, dbg_line_number);
+    unlock();
+}
+
+void *dbg_realloc(void *buf, size_t s) {
+    lock();
+    struct head *p;
+    realloc_cnt++;
+    if (buf) /* when buf is NULL do malloc. counted twice as r and m */
+        if (s)  /* when s = 0 realloc() acts like free(). counted twice: as r and f */
+            if ((p = find_in_heap(buf))) {
+                buf = realloc(buf, s);
+                if (buf) {
+                    replace(p, buf, s);
+                    unlock();
+                    return buf;
+                } else
+                    fprintf(stderr, "%s:%lu: dbg_realloc: not enough memory\n",
+                            dbg_file_name, dbg_line_number);
+            } else
+                dbg_check_addr("dbg_realloc", buf, CHK_FREED);
+        else
+            dbg_free(buf);
+    else {
+        unlock();
+        return dbg_malloc(s);
+    }
+    unlock();
+    return NULL;
+}
+
+
 
 #ifdef WITH_DBG_STRDUP
 /* Quick fix to support strdup() and strndup() calls.

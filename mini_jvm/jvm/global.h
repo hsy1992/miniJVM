@@ -16,10 +16,5 @@ s32 jvm_free(void *ptr);
 void *jvm_realloc(void *pPtr, u32 size);
 #endif //_DEBUG
 
-void mem_mgr_print();
-
-void mem_mgr_distory();
-
-void mem_mgr_create();
 
 #endif //MINI_JVM_GLOBAL_H

@@ -49,6 +49,7 @@ s32 garbage_collector_create() {
     collector->_garbage_refer_set_pool = arraylist_create(4);
 
     collector->_garbage_thread_pause = 1;
+    collector->_garbage_thread_stoped = 0;
     collector->_garbageCond = PTHREAD_COND_INITIALIZER;
     pthread_cond_init(&collector->_garbageCond, NULL);
     pthread_mutexattr_init(&collector->_garbage_attr);
@@ -59,6 +60,12 @@ s32 garbage_collector_create() {
 }
 
 void garbage_collector_destory() {
+    garbage_thread_lock();
+    collector->_garbage_thread_stop = 1;
+    while (!collector->_garbage_thread_stoped) {
+        garbage_thread_timedwait(50);
+    }
+    garbage_thread_unlock();
     __garbage_clear();
 //    pthread_exit(&collector->_garbage_thread);
     pthread_mutexattr_destroy(&collector->_garbage_attr);
@@ -104,6 +111,7 @@ void __garbage_clear() {
         Hashset *v = (Hashset *) hashtable_get(collector->son_2_father, k);
         if (v != HASH_NULL) {
             hashset_destory(v);
+            hashtable_put(collector->son_2_father, k, NULL);
         }
     }
     //
@@ -113,6 +121,7 @@ void __garbage_clear() {
         Hashset *v = (Hashset *) hashtable_get(collector->father_2_son, k);
         if (v != HASH_NULL) {
             hashset_destory(v);
+            hashtable_put(collector->father_2_son, k, NULL);
         }
     }
 }
@@ -126,6 +135,7 @@ void *collect_thread_run(void *para) {
         }
         threadSleep(GARBAGE_PERIOD_MS);
     }
+    collector->_garbage_thread_stoped = 1;
     return NULL;
 }
 
@@ -223,7 +233,9 @@ s32 garbage_collect() {
     //轮询所有线程，标记被引用的对象
     //in this sub proc ,in wait maybe other thread insert new obj into son_2_father ,
     // so new inserted obj must be garbage_mark==GARBAGE_MARK_UNDEF  ,otherwise new obj would be collected.
-    garbage_mark_by_threads();
+    if (garbage_mark_by_threads() != 0) {
+        return 1;
+    }
 
     //如果没被其他对象引用set->length==0，也没有被标记为引用，则回收掉
     s32 i = 0;
@@ -289,9 +301,12 @@ s32 garbage_mark_by_threads() {
          */
         if (runtime->threadInfo->thread_status != THREAD_STATUS_ZOMBIE) {
             jthread_suspend(runtime);
-//            while (!runtime->threadInfo->is_suspend) {
-//                garbage_thread_timedwait(50);
-//            }
+            while (!runtime->threadInfo->is_suspend) {
+                garbage_thread_timedwait(50);
+                if (collector->_garbage_thread_stop) {
+                    return 1;
+                }
+            }
             garbage_mark_refered_obj(runtime);
             jthread_resume(runtime);
         }
