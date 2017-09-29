@@ -11,7 +11,9 @@ Hashset *_garbage_get_set();
 
 void _garbage_put_set(Hashset *set);
 
-void garbage_mark_son(__refer obj);
+void garbage_mark_son(__refer r);
+
+s32 garbage_mark_by_classloader(ClassLoader *classLoader);
 
 /**
  * 创建垃圾收集线程，
@@ -243,6 +245,9 @@ s32 garbage_collect() {
         return 1;
     }
 
+    if (sys_classloader)garbage_mark_son(sys_classloader->JVM_CLASS);
+    if (array_classloader)garbage_mark_son(array_classloader->JVM_CLASS);
+
     //如果没有被标记为引用，则回收掉
     s32 i = 0;
     hashtable_iterate(collector->son_2_father, &hti);
@@ -277,12 +282,14 @@ s32 garbage_collect() {
  */
 void garbage_destory_memobj(__refer k) {
     garbage_derefer_all(k);
-#if _JVM_DEBUG_GARBAGE_DUMP
-    //    Utf8String *pus = utf8_create();
-    //    getMemBlockName(k, pus);
-    //    jvm_printf("garbage collect instance  %s [%x]\n", utf8_cstr(pus), k);
-    //    utf8_destory(pus);
-#endif
+//#if _JVM_DEBUG_GARBAGE_DUMP
+    if (((MemoryBlock *) k)->type == MEM_TYPE_CLASS) {
+        Utf8String *pus = utf8_create();
+        getMemBlockName(k, pus);
+        jvm_printf("garbage collect  %s [%x]\n", utf8_cstr(pus), k);
+        utf8_destory(pus);
+    }
+//#endif
     Hashset *v = (Hashset *) hashtable_get(collector->son_2_father, k);
     _garbage_put_set(v);
     hashtable_remove(collector->son_2_father, k, 0);
@@ -327,9 +334,13 @@ s32 garbage_mark_by_threads() {
         }
     }
     //所有的类
-    if (sys_classloader) {
+    return 0;
+}
+
+s32 garbage_mark_by_classloader(ClassLoader *classLoader) {
+    if (classLoader) {
         HashtableIterator hti;
-        hashtable_iterate(sys_classloader->classes, &hti);
+        hashtable_iterate(classLoader->classes, &hti);
         for (; hashtable_iter_has_more(&hti);) {
             Class *clazz = hashtable_iter_next(&hti);
             garbage_mark_son((__refer) clazz);
@@ -352,6 +363,7 @@ s32 garbage_mark_by_threads() {
 
 
 s32 garbage_mark_refered_obj(Runtime *pruntime) {
+    garbage_mark_son(pruntime->threadInfo->jthread);
     s32 i;
     StackEntry entry;
     Runtime *runtime = pruntime;
@@ -362,7 +374,8 @@ s32 garbage_mark_refered_obj(Runtime *pruntime) {
             __refer ref = entry_2_refer(&entry);
             if (ref) {
                 //jvm_printf("mark:[%llx]   ", (s64) (long) ref);
-                ((MemoryBlock *) ref)->garbage_mark = GARBAGE_MARK_REFERED;
+                garbage_mark_son(ref);
+                //((MemoryBlock *) ref)->garbage_mark = GARBAGE_MARK_REFERED;
             }
         }
     }
@@ -371,7 +384,8 @@ s32 garbage_mark_refered_obj(Runtime *pruntime) {
             __refer ref = runtime->localVariables[i].refer;
             if (ref) {
                 //jvm_printf("mark:[%llx]   ", (s64) (long) ref);
-                ((MemoryBlock *) ref)->garbage_mark = GARBAGE_MARK_REFERED;
+                garbage_mark_son(ref);
+                //((MemoryBlock *) ref)->garbage_mark = GARBAGE_MARK_REFERED;
             }
         }
         runtime = runtime->son;
@@ -384,18 +398,22 @@ s32 garbage_mark_refered_obj(Runtime *pruntime) {
  * 递归标注obj所有的子孙
  * @param obj
  */
-void garbage_mark_son(__refer obj) {
-    Hashset *set = hashtable_get(collector->father_2_son, obj);
-    if (set != HASH_NULL) {
-        HashsetIterator hti;
-        hashset_iterate(set, &hti);
+void garbage_mark_son(__refer r) {
+    MemoryBlock *obj = (MemoryBlock *) r;
+    if (obj && obj->garbage_mark != GARBAGE_MARK_REFERED) {
+        obj->garbage_mark = GARBAGE_MARK_REFERED;
+        Hashset *set = hashtable_get(collector->father_2_son, obj);
+        if (set != HASH_NULL) {
+            HashsetIterator hti;
+            hashset_iterate(set, &hti);
 
-        for (; hashset_iter_has_more(&hti);) {
-            HashsetKey key = hashset_iter_next_key(&hti);
-            if (key) {
-                MemoryBlock *son = (MemoryBlock *) key;
-                son->garbage_mark = GARBAGE_MARK_REFERED;
-                garbage_mark_son(son);
+            for (; hashset_iter_has_more(&hti);) {
+                HashsetKey key = hashset_iter_next_key(&hti);
+                if (key) {
+                    MemoryBlock *son = (MemoryBlock *) key;
+                    son->garbage_mark = GARBAGE_MARK_REFERED;
+                    garbage_mark_son(son);
+                }
             }
         }
     }

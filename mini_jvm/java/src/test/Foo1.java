@@ -22,16 +22,8 @@ import javax.cldc.io.Connector;
 import javax.cldc.io.ContentConnection;
 import javax.mini.io.File;
 import javax.mini.io.RandomAccessFile;
-import javax.mini.reflect.vm.RefNative;
 import javax.mini.net.ServerSocket;
 import javax.mini.net.Socket;
-import javax.mini.reflect.Reference;
-import javax.util.ArrayList;
-import javax.util.Collections;
-import javax.util.HashMap;
-import javax.util.Iterator;
-import javax.util.List;
-import javax.util.Map;
 
 /**
  *
@@ -191,6 +183,13 @@ public class Foo1 {
                     String a = "abc";
                     String b = "def";
                     c = a + b;
+//                    if (i % 1000 == 0) {
+//                        System.out.println("t7 i=" + i);
+//                    }
+                    try {
+                        Thread.sleep(500);
+                    } catch (InterruptedException ex) {
+                    }
                 }
                 System.out.println("thread c=\"" + c + "\"");
             }
@@ -200,9 +199,9 @@ public class Foo1 {
         int i = 0;
         while (i++ < 10) {
             try {
-                Thread.sleep(100);
-                System.out.println("total mem:" + Runtime.getRuntime().totalMemory()
-                        + "   free: " + Runtime.getRuntime().freeMemory());
+                Thread.sleep(1000);
+//                System.out.println("total mem:" + Runtime.getRuntime().totalMemory()
+//                        + "   free: " + Runtime.getRuntime().freeMemory());
 
             } catch (InterruptedException ex) {
             }
@@ -235,6 +234,9 @@ public class Foo1 {
             String a = "abc";
             String b = "def";
             c = a + b;
+            if (i % 1000 == 0) {
+                System.out.println("t10 i=" + i);
+            }
         }
         System.out.println("c=\"" + c + "\"");
     }
@@ -590,7 +592,7 @@ public class Foo1 {
 //        f.t4();
 //        f.t5();
 //        f.t6();
-//        f.t7();
+        f.t7();
 //        f.t8();
 //        f.t9();
 //        f.t10();
