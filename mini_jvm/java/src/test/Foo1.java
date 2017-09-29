@@ -18,6 +18,8 @@ import java.util.Calendar;
 import java.util.Enumeration;
 import java.util.Hashtable;
 import java.util.Vector;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.cldc.io.Connector;
 import javax.cldc.io.ContentConnection;
 import javax.mini.io.File;
@@ -188,9 +190,18 @@ public class Foo1 {
                 int j = 0;
                 String c = null;
                 for (int i = 0; i < 1000000; i++) {
-                    String a = "abc";
-                    String b = "def";
-                    c = a + b;
+//                    String a = "abc";
+//                    String b = "def";
+//                    c = a + b;
+                    Object a = new Object();
+                    Object b = new Object();
+                    if (a == b) {
+                        System.out.println("not imposible");
+                    }
+                    try {
+                        Thread.sleep(1000);
+                    } catch (InterruptedException ex) {
+                    }
                 }
                 System.out.println("thread c=\"" + c + "\"");
             }
@@ -198,11 +209,11 @@ public class Foo1 {
         t.start();
         //
         int i = 0;
-        while (i++ < 10) {
+        while (i++ < 10000) {
             try {
-                Thread.sleep(100);
-                System.out.println("total mem:" + Runtime.getRuntime().totalMemory()
-                        + "   free: " + Runtime.getRuntime().freeMemory());
+                Thread.sleep(1000);
+//                System.out.println("total mem:" + Runtime.getRuntime().totalMemory()
+//                        + "   free: " + Runtime.getRuntime().freeMemory());
 
             } catch (InterruptedException ex) {
             }
@@ -231,10 +242,13 @@ public class Foo1 {
 
     void t10() {
         String c = null;
-        for (int i = 0; i < 1000000; i++) {
+        for (int i = 0; i < 10000; i++) {
             String a = "abc";
             String b = "def";
             c = a + b;
+            if (i % 1000 == 0) {
+                System.out.println("t10 i=" + i);
+            }
         }
         System.out.println("c=\"" + c + "\"");
     }
@@ -593,7 +607,7 @@ public class Foo1 {
 //        f.t7();
 //        f.t8();
 //        f.t9();
-//        f.t10();
+        f.t10();
 //        f.t11();
 //        f.t12();
 //        f.t13();
