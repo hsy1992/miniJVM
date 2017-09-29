@@ -691,6 +691,7 @@ Instance *jarray_create_des(s32 count, Utf8String *descript) {
     arr->mb.type = MEM_TYPE_ARR;
     arr->mb.garbage_mark = GARBAGE_MARK_UNDEF;//防止在上次回收过程中，此对象刚被放入池子就被回收
     arr->mb.clazz = array_class_get(descript);
+    garbage_refer(arr->mb.clazz, arr);
     arr->arr_length = count;
     arr->arr_body = jvm_alloc(width * count);
     return arr;

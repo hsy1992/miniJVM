@@ -60,7 +60,7 @@ void classloader_destory(ClassLoader *class_loader) {
 s32 execute(c8 *p_classpath, c8 *p_mainclass, s32 argc, c8 **argv) {
 #ifdef __MEM_LEAK_DETECT
     dbg_init(10);
-    dbg_catch_sigsegv();
+    //dbg_catch_sigsegv();
 #endif //__MEM_LEAK_DETECT
     //
     open_log();
@@ -159,7 +159,7 @@ s32 execute(c8 *p_classpath, c8 *p_mainclass, s32 argc, c8 **argv) {
             s64 start = currentTimeMillis();
             jvm_printf("\n\n\n\n\n\n================================= main start ================================\n");
             //调用主方法
-//            ret = execute_method(main, &runtime, clazz);
+            ret = execute_method(main, &runtime, clazz);
             jvm_printf("================================= main  end  ================================\n");
             jvm_printf("spent %lld\n", (currentTimeMillis() - start));
 

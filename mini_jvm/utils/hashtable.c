@@ -61,7 +61,6 @@ static void hash_table_free_entry(Hashtable *hash_table, HashtableEntry *entry) 
     }
 
     /* Free the data structure */
-
     jvm_free(entry);
 }
 

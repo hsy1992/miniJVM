@@ -72,7 +72,6 @@ void garbage_collector_destory() {
     garbage_thread_unlock();
     //
     __garbage_clear();
-
     //
     Hashset *set;
     s32 i;
@@ -104,9 +103,8 @@ void __garbage_clear() {
                collector->son_2_father->entries, collector->father_2_son->entries);
     //解除所有引用关系后，回收全部对象
     while (garbage_collect()) {
-        //jvm_printf("2\n");
-    }
 
+    }
     //
     jvm_printf("son_2_father.size: %lld , father_2_son.size:%lld\n",
                collector->son_2_father->entries, collector->father_2_son->entries);
@@ -277,7 +275,6 @@ s32 garbage_collect() {
  */
 void garbage_destory_memobj(__refer k) {
     garbage_derefer_all(k);
-
 #if _JVM_DEBUG_GARBAGE_DUMP
     //    Utf8String *pus = utf8_create();
     //    getMemBlockName(k, pus);
@@ -388,7 +385,7 @@ void getMemBlockName(void *memblock, Utf8String *name) {
             case MEM_TYPE_INS: {
                 Instance *ins = (Instance *) mb;
                 utf8_append_c(name, "L");
-                utf8_append(name, ins->mb.clazz->name);
+                //utf8_append(name, ins->mb.clazz->name);
                 utf8_append_c(name, ";");
                 break;
             }
@@ -396,7 +393,7 @@ void getMemBlockName(void *memblock, Utf8String *name) {
                 Instance *arr = (Instance *) mb;
                 //jvm_printf("Array{%d}", data_type_bytes[arr->arr_data_type]);
                 utf8_append_c(name, "Array{");
-                utf8_append(name, arr->mb.clazz->name);//'0' + data_type_bytes[arr->arr_data_type]);
+                //utf8_append(name, arr->mb.clazz->name);//'0' + data_type_bytes[arr->arr_data_type]);
                 utf8_append_c(name, "}");
                 break;
 
