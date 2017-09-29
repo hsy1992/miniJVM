@@ -689,9 +689,9 @@ Instance *jarray_create_des(s32 count, Utf8String *descript) {
     s32 width = data_type_bytes[typeIdx];
     Instance *arr = jvm_alloc(sizeof(Instance));
     arr->mb.type = MEM_TYPE_ARR;
+    arr->mb.arr_type_idx=typeIdx;
     arr->mb.garbage_mark = GARBAGE_MARK_UNDEF;//防止在上次回收过程中，此对象刚被放入池子就被回收
     arr->mb.clazz = array_class_get(descript);
-    garbage_refer(arr->mb.clazz, arr);
     arr->arr_length = count;
     arr->arr_body = jvm_alloc(width * count);
     return arr;
@@ -714,7 +714,7 @@ Instance *jarray_create(s32 count, s32 typeIdx, Utf8String *type) {
 
 s32 jarray_destory(Instance *arr) {
     if (arr && arr->mb.type == MEM_TYPE_ARR) {
-        if (isDataReferByIndex(arr->mb.clazz->arr_data_type)) {
+        if (isDataReferByIndex(arr->mb.arr_type_idx)) {
             s32 i;
             Long2Double l2d;
             l2d.l = 0;

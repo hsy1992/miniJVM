@@ -18,6 +18,25 @@ int main1() {
 
     utf8_destory(utf);
 
+    Hashtable * map=hashtable_create(DEFAULT_HASH_FUNC,DEFAULT_HASH_EQUALS_FUNC);
+    int i;
+    for(i=0;i<100;i++){
+        hashtable_put(map,i,i);
+    }
+
+    HashtableIterator hti;
+    hashtable_iterate(map, &hti);
+    for (; hashtable_iter_has_more(&hti);) {
+
+        HashtableKey k = hashtable_iter_next_key(&hti);
+
+        HashtableValue v = hashtable_get(map, k);
+
+        if (v != HASH_NULL) {
+            hashtable_remove(map,k,0);
+        }
+    }
+
     dbg_mem_stat();
     dbg_heap_dump("");
     return 0;

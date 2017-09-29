@@ -11,6 +11,8 @@ Hashset *_garbage_get_set();
 
 void _garbage_put_set(Hashset *set);
 
+void garbage_mark_son(__refer obj);
+
 /**
  * 创建垃圾收集线程，
  *
@@ -241,7 +243,7 @@ s32 garbage_collect() {
         return 1;
     }
 
-    //如果没被其他对象引用set->length==0，也没有被标记为引用，则回收掉
+    //如果没有被标记为引用，则回收掉
     s32 i = 0;
     hashtable_iterate(collector->son_2_father, &hti);
     for (; hashtable_iter_has_more(&hti);) {
@@ -251,7 +253,7 @@ s32 garbage_collect() {
         Hashset *v = (Hashset *) hashtable_get(collector->son_2_father, k);
 
         if (v != HASH_NULL) {
-            if (v->entries == 0 && mb->garbage_mark == GARBAGE_MARK_NO_REFERED) {
+            if (mb->garbage_mark == GARBAGE_MARK_NO_REFERED) {
                 garbage_destory_memobj(k);
                 i++;
             }
@@ -324,6 +326,15 @@ s32 garbage_mark_by_threads() {
             jthread_resume(runtime);
         }
     }
+    //所有的类
+    if (sys_classloader) {
+        HashtableIterator hti;
+        hashtable_iterate(sys_classloader->classes, &hti);
+        for (; hashtable_iter_has_more(&hti);) {
+            Class *clazz = hashtable_iter_next(&hti);
+            garbage_mark_son((__refer) clazz);
+        }
+    }
     return 0;
 }
 
@@ -369,6 +380,27 @@ s32 garbage_mark_refered_obj(Runtime *pruntime) {
     return 0;
 }
 
+/**
+ * 递归标注obj所有的子孙
+ * @param obj
+ */
+void garbage_mark_son(__refer obj) {
+    Hashset *set = hashtable_get(collector->father_2_son, obj);
+    if (set != HASH_NULL) {
+        HashsetIterator hti;
+        hashset_iterate(set, &hti);
+
+        for (; hashset_iter_has_more(&hti);) {
+            HashsetKey key = hashset_iter_next_key(&hti);
+            if (key) {
+                MemoryBlock *son = (MemoryBlock *) key;
+                son->garbage_mark = GARBAGE_MARK_REFERED;
+                garbage_mark_son(son);
+            }
+        }
+    }
+}
+
 
 void getMemBlockName(void *memblock, Utf8String *name) {
 
@@ -385,7 +417,7 @@ void getMemBlockName(void *memblock, Utf8String *name) {
             case MEM_TYPE_INS: {
                 Instance *ins = (Instance *) mb;
                 utf8_append_c(name, "L");
-                //utf8_append(name, ins->mb.clazz->name);
+                utf8_append(name, ins->mb.clazz->name);
                 utf8_append_c(name, ";");
                 break;
             }
@@ -393,10 +425,9 @@ void getMemBlockName(void *memblock, Utf8String *name) {
                 Instance *arr = (Instance *) mb;
                 //jvm_printf("Array{%d}", data_type_bytes[arr->arr_data_type]);
                 utf8_append_c(name, "Array{");
-                //utf8_append(name, arr->mb.clazz->name);//'0' + data_type_bytes[arr->arr_data_type]);
+                utf8_append(name, arr->mb.clazz->name);//'0' + data_type_bytes[arr->arr_data_type]);
                 utf8_append_c(name, "}");
                 break;
-
             }
             default:
                 utf8_append_c(name, "ERROR");

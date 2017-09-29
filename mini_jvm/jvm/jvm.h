@@ -360,6 +360,7 @@ extern Hashtable *instruct_profile;
 typedef struct _MemoryBlock {
     u8 type;//type of array or object runtime,class
     u8 garbage_mark;
+    u8 arr_type_idx;
     Class *clazz;
     ThreadLock *volatile thread_lock;
 } MemoryBlock;
