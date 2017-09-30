@@ -200,8 +200,6 @@ s32 execute(c8 *p_classpath, c8 *p_mainclass, s32 argc, c8 **argv) {
     jvm_printf("over\n");
 
 #ifdef __MEM_LEAK_DETECT
-    __refer a = jvm_alloc(156);
-    jvm_free(a);
     dbg_heap_dump("");
     dbg_mem_stat();
 #endif //__MEM_LEAK_DETECT

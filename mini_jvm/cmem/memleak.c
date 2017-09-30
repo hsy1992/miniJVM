@@ -97,6 +97,7 @@
 #define _POSIX_C_SOURCE 200809L
 
 #include "sys/types.h"
+#include "phashtable.h"
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
@@ -145,8 +146,6 @@ void dbg_abort(char *msg);
 
 void print_buf(char *buf, size_t len);
 
-static struct head *first = NULL, *last = NULL;
-static struct head *hist_base = NULL, *histp = NULL;
 
 #define HLEN sizeof(struct head)
 
@@ -169,18 +168,29 @@ static inline void init_lock() {
 }
 
 void lock() {
-    init_lock();
     pthread_mutex_lock(&mutex_lock);
 }
 
 void unlock() {
-    init_lock();
     pthread_mutex_unlock(&mutex_lock);
 }
 
 /////////////////////////////////////////////////////////////////////////
+PHashtable *map = NULL;
+PHashtable *map_hist = NULL;
+
+void init_map() {
+    if (map == NULL) {
+        map = phashtable_create(P_DEFAULT_HASH_FUNC, P_DEFAULT_HASH_EQUALS_FUNC);
+        map_hist = phashtable_create(P_DEFAULT_HASH_FUNC, P_DEFAULT_HASH_EQUALS_FUNC);
+    }
+}
+
+
+/////////////////////////////////////////////////////////////////////////
 
 static struct head *add(void *buf, size_t s) {
+
     struct head *p;
     p = malloc(HLEN);
     if (p) {
@@ -188,77 +198,34 @@ static struct head *add(void *buf, size_t s) {
         p->size = s;
         p->file = dbg_file_name;
         p->line = dbg_line_number;
-        p->in.list.prev = last;
-        p->in.list.next = NULL;
-        if (last)
-            last->in.list.next = p;
-        else
-            first = p;
-        last = p;
+
+        phashtable_put(map, buf, p);
         memory_cnt += s;
     }
     return p;
 }
 
-#define ADVANCE(p) {if(++(p) >= hist_base + history_length) (p) = hist_base;}
-
 static void del(struct head *p) {
-    struct head *prev, *next;
-    prev = p->in.list.prev;
-    next = p->in.list.next;
-    if (prev)
-        prev->in.list.next = next;
-    else
-        first = next;
-    if (next)
-        next->in.list.prev = prev;
-    else
-        last = prev;
     memory_cnt -= p->size;
-    /* update history */
+    phashtable_remove(map, p->addr, 0);
     if (history_length) {
         p->in.free.file = dbg_file_name;
         p->in.free.line = dbg_line_number;
-        memcpy(histp, p, HLEN);
-        ADVANCE(histp);
-    }
-    free(p);
+        phashtable_put(map_hist, p->addr, p);
+    } else
+        free(p);
 }
 
-static void replace(struct head *p, void *buf, size_t s) {
-    memory_cnt -= p->size;
-    p->addr = buf;
-    p->size = s;
-    p->file = dbg_file_name;
-    p->line = dbg_line_number;
-    memory_cnt += s;
-}
 
 static struct head *find_in_heap(void *addr) {
     struct head *p;
     /* start search from lately allocated blocks */
-    for (p = last; p; p = p->in.list.prev)
-        if (p->addr == addr) return p;
-    return NULL;
+    p = phashtable_get(map, addr);
+    return p;
 }
 
 static struct head *find_in_hist(void *addr) {
-    struct head *p;
-    int cnt;
-    if (history_length) {
-        if (histp->addr) {
-            cnt = history_length;
-            p = histp;
-        } else {
-            cnt = histp - hist_base;
-            p = hist_base;
-        }
-        while (cnt--) {
-            if (p->addr == addr) return p;
-            ADVANCE(p);
-        }
-    }
-    return NULL;
+    return phashtable_get(map_hist, addr);
 }
 
 int dbg_check_addr(char *msg, void *addr, int opt) {
@@ -290,13 +257,15 @@ void dbg_heap_dump(char *key) {
     char *buf;
     struct head *p;
     fprintf(stderr, "***** %s:%lu: heap dump start\n", dbg_file_name, dbg_line_number);
-    p = first;
-    while (p) {
+    PHashtableIterator hti;
+    phashtable_iterate(map, &hti);
+    for (; phashtable_iter_has_more(&hti);) {
+        PHashtableKey k = phashtable_iter_next_key(&hti);
+        p = (void *) phashtable_get(map, k);
         buf = malloc(strlen(p->file) + 2 * length(long) + 20);
         sprintf(buf, "(alloc: %s:%lu size: %lu)\n", p->file, p->line, (unsigned long) p->size);
         //print_buf(p->addr, p->size);
         //fprintf(stderr,"%llx\n",(long long)(long)p->addr);
-        p = p->in.list.next;
         if (strstr(buf, key)) fputs(buf, stderr);
         free(buf);
     }
@@ -304,29 +273,28 @@ void dbg_heap_dump(char *key) {
 }
 
 void dbg_history_dump(char *key) {
-    int cnt;
+//    int cnt;
     char *buf;
     struct head *p;
     if (history_length) {
         fprintf(stderr, "***** %s:%lu: history dump start\n", dbg_file_name, dbg_line_number);
-        if (histp->addr) {
-            cnt = history_length;
-            p = histp;
-        } else {
-            cnt = histp - hist_base;
-            p = hist_base;
-        }
-        while (cnt--) {
+
+        PHashtableIterator hti;
+        phashtable_iterate(map_hist, &hti);
+        for (; phashtable_iter_has_more(&hti);) {
+            PHashtableKey k = phashtable_iter_next_key(&hti);
+            p = (void *) phashtable_get(map_hist, k);
             buf = malloc(strlen(p->file) + strlen(p->in.free.file) + 3 * length(long) + 30);
             sprintf(buf, "(alloc: %s:%lu size: %lu free: %s:%lu)\n",
                     p->file, p->line, (unsigned long) p->size, p->in.free.file, p->in.free.line);
             if (strstr(buf, key)) fputs(buf, stderr);
 
             free(buf);
-            ADVANCE(p);
         }
         fprintf(stderr, "***** %s:%lu: history dump end\n", dbg_file_name, dbg_line_number);
     }
+
+
 }
 
 void dbg_abort(char *msg) {
@@ -357,10 +325,8 @@ void dbg_catch_sigsegv(void) {
 
 void dbg_init(int hist_len) {
     history_length = hist_len;
-    if (history_length) {
-        histp = hist_base = calloc(history_length, HLEN);
-        if (hist_base == NULL) die("cannot allocate history buffer");
-    }
+    init_map();
+    init_lock();
 }
 
 void print_buf(char *buf, size_t len) {
@@ -405,6 +371,7 @@ void *dbg_calloc(size_t n, size_t s) {
             /* standard calloc() sets memory to zero */
             memset(buf, 0, s);
             unlock();
+            //printf("calloc %x\n", buf);
             return buf;
         } else
             free(buf);
@@ -422,6 +389,7 @@ void dbg_free(void *buf) {
         if ((p = find_in_heap(buf))) {
             del(p);
             free(buf);
+            //printf("free %x\n", buf);
         } else
             dbg_check_addr("dbg_free", buf, CHK_FREED);
     else
@@ -435,18 +403,22 @@ void *dbg_realloc(void *buf, size_t s) {
     realloc_cnt++;
     if (buf) /* when buf is NULL do malloc. counted twice as r and m */
         if (s)  /* when s = 0 realloc() acts like free(). counted twice: as r and f */
+        {
+            //printf("relloc %x\n", buf);
             if ((p = find_in_heap(buf))) {
                 buf = realloc(buf, s);
                 if (buf) {
-                    replace(p, buf, s);
+                    //replace(p, buf, s);
+                    del(p);
+                    add(buf, s);
                     unlock();
                     return buf;
                 } else
                     fprintf(stderr, "%s:%lu: dbg_realloc: not enough memory\n",
                             dbg_file_name, dbg_line_number);
             } else
-                dbg_check_addr("dbg_realloc", buf, CHK_FREED);
-        else
+                dbg_check_addr("dbg_realloc ", buf, CHK_FREED);
+        } else
             dbg_free(buf);
     else {
         unlock();
@@ -455,7 +427,6 @@ void *dbg_realloc(void *buf, size_t s) {
     unlock();
     return NULL;
 }
-
 
 
 #ifdef WITH_DBG_STRDUP

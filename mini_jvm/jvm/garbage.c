@@ -58,7 +58,6 @@ s32 garbage_collector_create() {
 
     collector->_garbage_thread_pause = 1;
     collector->_garbage_thread_stoped = 0;
-    collector->_garbageCond = PTHREAD_COND_INITIALIZER;
     pthread_cond_init(&collector->_garbageCond, NULL);
     pthread_mutexattr_init(&collector->_garbage_attr);
     pthread_mutexattr_settype(&collector->_garbage_attr, PTHREAD_MUTEX_RECURSIVE);
@@ -136,6 +135,8 @@ void __garbage_clear() {
 }
 
 
+//===============================   inner  ====================================
+
 void *collect_thread_run(void *para) {
     while (!collector->_garbage_thread_stop) {
         garbage_thread_lock();
@@ -176,7 +177,10 @@ void garbage_thread_timedwait(s64 ms) {
     struct timespec t;
     t.tv_sec = ms / 1000;
     t.tv_nsec = (ms % 1000) * 1000000;
-    pthread_cond_timedwait(&collector->_garbageCond, &collector->_garbage_lock, &t);
+    s32 ret = pthread_cond_timedwait(&collector->_garbageCond, &collector->_garbage_lock, &t);
+    if (ret == ETIMEDOUT) {
+        s32 debug = 1;
+    }
 }
 
 void garbage_thread_notify() {
@@ -219,7 +223,103 @@ void _garbage_put_set(Hashset *set) {
     }
 }
 
-//===================================================================
+void getMemBlockName(void *memblock, Utf8String *name) {
+
+    MemoryBlock *mb = (MemoryBlock *) memblock;
+    if (!mb) {
+        utf8_append_c(name, "NULL");
+    } else {
+        switch (mb->type) {
+            case MEM_TYPE_CLASS: {
+                Class *clazz = (Class *) mb;
+                utf8_append(name, clazz->name);
+                break;
+            }
+            case MEM_TYPE_INS: {
+                Instance *ins = (Instance *) mb;
+                utf8_append_c(name, "L");
+                utf8_append(name, ins->mb.clazz->name);
+                utf8_append_c(name, ";");
+                break;
+            }
+            case MEM_TYPE_ARR: {
+                Instance *arr = (Instance *) mb;
+                //jvm_printf("Array{%d}", data_type_bytes[arr->arr_data_type]);
+                utf8_append_c(name, "Array{");
+                utf8_append(name, arr->mb.clazz->name);//'0' + data_type_bytes[arr->arr_data_type]);
+                utf8_append_c(name, "}");
+                break;
+            }
+            default:
+                utf8_append_c(name, "ERROR");
+        }
+    }
+}
+
+/**
+ * 调试用，打印所有引用信息
+ */
+void dump_refer() {
+    //jvm_printf("%d\n",sizeof(struct _Hashtable));
+    HashtableIterator hti;
+    hashtable_iterate(collector->son_2_father, &hti);
+    jvm_printf("=========================son <- father :%lld\n", (collector->son_2_father->entries));
+    for (; hashtable_iter_has_more(&hti);) {
+
+        HashtableKey k = hashtable_iter_next_key(&hti);
+        Utf8String *name = utf8_create();
+        getMemBlockName(k, name);
+        jvm_printf("%s[%llx] <-{", utf8_cstr(name), (s64) (long) k);
+        utf8_destory(name);
+        Hashset *set = (Hashset *) hashtable_get(collector->son_2_father, k);
+        if (set != HASH_NULL) {
+            HashsetIterator hti;
+            hashset_iterate(set, &hti);
+
+            for (; hashset_iter_has_more(&hti);) {
+                HashsetKey key = hashset_iter_next_key(&hti);
+                if (key) {
+                    MemoryBlock *parent = (MemoryBlock *) key;
+                    Utf8String *name = utf8_create();
+                    getMemBlockName(parent, name);
+                    jvm_printf("%s[%llx]; ", utf8_cstr(name), (s64) (long) parent);
+                    utf8_destory(name);
+                }
+            }
+        }
+        jvm_printf("}\n");
+    }
+
+    hashtable_iterate(collector->father_2_son, &hti);
+    jvm_printf("=========================father -> son :%lld\n", (collector->father_2_son->entries));
+    for (; hashtable_iter_has_more(&hti);) {
+
+        HashtableKey k = hashtable_iter_next_key(&hti);
+        Utf8String *name = utf8_create();
+        getMemBlockName(k, name);
+        jvm_printf("%s[%llx] ->{", utf8_cstr(name), (s64) (long) k);
+        utf8_destory(name);
+        Hashset *set = (Hashset *) hashtable_get(collector->father_2_son, k);
+        if (set != HASH_NULL) {
+            HashsetIterator hti;
+            hashset_iterate(set, &hti);
+
+            for (; hashset_iter_has_more(&hti);) {
+                HashsetKey key = hashset_iter_next_key(&hti);
+                if (key) {
+                    Instance *son = (Instance *) key;
+                    Utf8String *name = utf8_create();
+                    getMemBlockName(son, name);
+                    jvm_printf("%s[%llx]; ", utf8_cstr(name), (s64) (long) son);
+                    utf8_destory(name);
+                }
+            }
+        }
+        jvm_printf("}\n");
+    }
+}
+
+//==============================   thre.run() =====================================
 /**
  * 查找所有实例，如果发现没有被引用 set->length==0 时，也不在运行时runtime的 stack 和 局部变量表中
  * 去除掉此对象对其他对象的引用，并销毁对象
@@ -293,27 +393,6 @@ s32 garbage_collect() {
 }
 
 /**
- * destory a instance
- * @param k
- */
-void garbage_destory_memobj(__refer k) {
-    garbage_derefer_all(k);
-#if _JVM_DEBUG_GARBAGE_DUMP
-    if (((MemoryBlock *) k)->type == MEM_TYPE_CLASS) {
-        Utf8String *pus = utf8_create();
-        getMemBlockName(k, pus);
-        jvm_printf("garbage collect  %s [%x]\n", utf8_cstr(pus), k);
-        utf8_destory(pus);
-    }
-#endif
-    Hashset *v = (Hashset *) hashtable_get(collector->son_2_father, k);
-    _garbage_put_set(v);
-    hashtable_remove(collector->son_2_father, k, 0);
-    instance_destory(k);
-
-}
-
-/**
  * 各个线程把自己还需要使用的对象进行标注，表示不能回收
  * @param son
  * @return
@@ -330,7 +409,8 @@ s32 garbage_mark_by_threads() {
         if (runtime->threadInfo->thread_status != THREAD_STATUS_ZOMBIE) {
             jthread_suspend(runtime);
             while (!runtime->threadInfo->is_suspend) {
-                garbage_thread_timedwait(50);
+                garbage_thread_timedwait(100);
+//                garbage_thread_wait();
                 if (collector->_garbage_thread_stop || collector->_garbage_thread_pause) {
                     return 1;
                 }
@@ -433,101 +513,29 @@ void garbage_mark_son(__refer r) {
 }
 
 
-void getMemBlockName(void *memblock, Utf8String *name) {
-
-    MemoryBlock *mb = (MemoryBlock *) memblock;
-    if (!mb) {
-        utf8_append_c(name, "NULL");
-    } else {
-        switch (mb->type) {
-            case MEM_TYPE_CLASS: {
-                Class *clazz = (Class *) mb;
-                utf8_append(name, clazz->name);
-                break;
-            }
-            case MEM_TYPE_INS: {
-                Instance *ins = (Instance *) mb;
-                utf8_append_c(name, "L");
-                utf8_append(name, ins->mb.clazz->name);
-                utf8_append_c(name, ";");
-                break;
-            }
-            case MEM_TYPE_ARR: {
-                Instance *arr = (Instance *) mb;
-                //jvm_printf("Array{%d}", data_type_bytes[arr->arr_data_type]);
-                utf8_append_c(name, "Array{");
-                utf8_append(name, arr->mb.clazz->name);//'0' + data_type_bytes[arr->arr_data_type]);
-                utf8_append_c(name, "}");
-                break;
-            }
-            default:
-                utf8_append_c(name, "ERROR");
-        }
-    }
-}
-
 /**
- * 调试用，打印所有引用信息
+ * destory a instance
+ * @param k
  */
-void dump_refer() {
-    //jvm_printf("%d\n",sizeof(struct _Hashtable));
-    HashtableIterator hti;
-    hashtable_iterate(collector->son_2_father, &hti);
-    jvm_printf("=========================son <- father :%lld\n", (collector->son_2_father->entries));
-    for (; hashtable_iter_has_more(&hti);) {
-
-        HashtableKey k = hashtable_iter_next_key(&hti);
-        Utf8String *name = utf8_create();
-        getMemBlockName(k, name);
-        jvm_printf("%s[%llx] <-{", utf8_cstr(name), (s64) (long) k);
-        utf8_destory(name);
-        Hashset *set = (Hashset *) hashtable_get(collector->son_2_father, k);
-        if (set != HASH_NULL) {
-            HashsetIterator hti;
-            hashset_iterate(set, &hti);
-
-            for (; hashset_iter_has_more(&hti);) {
-                HashsetKey key = hashset_iter_next_key(&hti);
-                if (key) {
-                    MemoryBlock *parent = (MemoryBlock *) key;
-                    Utf8String *name = utf8_create();
-                    getMemBlockName(parent, name);
-                    jvm_printf("%s[%llx]; ", utf8_cstr(name), (s64) (long) parent);
-                    utf8_destory(name);
-                }
-            }
-        }
-        jvm_printf("}\n");
+void garbage_destory_memobj(__refer k) {
+    garbage_derefer_all(k);
+#if _JVM_DEBUG_GARBAGE_DUMP
+    if (((MemoryBlock *) k)->type == MEM_TYPE_CLASS) {
+        Utf8String *pus = utf8_create();
+        getMemBlockName(k, pus);
+        jvm_printf("garbage collect  %s [%x]\n", utf8_cstr(pus), k);
+        utf8_destory(pus);
     }
+#endif
+    Hashset *v = (Hashset *) hashtable_get(collector->son_2_father, k);
+    _garbage_put_set(v);
+    hashtable_remove(collector->son_2_father, k, 0);
+    instance_destory(k);
 
-    hashtable_iterate(collector->father_2_son, &hti);
-    jvm_printf("=========================father -> son :%lld\n", (collector->father_2_son->entries));
-    for (; hashtable_iter_has_more(&hti);) {
-
-        HashtableKey k = hashtable_iter_next_key(&hti);
-        Utf8String *name = utf8_create();
-        getMemBlockName(k, name);
-        jvm_printf("%s[%llx] ->{", utf8_cstr(name), (s64) (long) k);
-        utf8_destory(name);
-        Hashset *set = (Hashset *) hashtable_get(collector->father_2_son, k);
-        if (set != HASH_NULL) {
-            HashsetIterator hti;
-            hashset_iterate(set, &hti);
-
-            for (; hashset_iter_has_more(&hti);) {
-                HashsetKey key = hashset_iter_next_key(&hti);
-                if (key) {
-                    Instance *son = (Instance *) key;
-                    Utf8String *name = utf8_create();
-                    getMemBlockName(son, name);
-                    jvm_printf("%s[%llx]; ", utf8_cstr(name), (s64) (long) son);
-                    utf8_destory(name);
-                }
-            }
-        }
-        jvm_printf("}\n");
-    }
 }
+
+//=================================  reg unreg ==================================
+
 
 /**
  *    建立引用列表

@@ -6,7 +6,7 @@
 #include "../utils/utf8_string.h"
 
 int main1() {
-    dbg_init(10);
+    dbg_init(0);
     dbg_catch_sigsegv();
 
     char *cs = "This is a test";

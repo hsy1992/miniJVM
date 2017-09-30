@@ -232,11 +232,11 @@ public class Foo1 {
 
     void t10() {
         String c = null;
-        for (int i = 0; i < 10000; i++) {
+        for (int i = 0; i < 100000; i++) {
             String a = "abc";
             String b = "def";
             c = a + b;
-            if (i % 1000 == 0) {
+            if (i % 10000 == 0) {
                 System.out.println("t10 i=" + i);
             }
         }

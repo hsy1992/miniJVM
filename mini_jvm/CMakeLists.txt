@@ -43,6 +43,8 @@ set(SOURCE_FILES
         cmem/memLeak.c
         cmem/memLeak.h
         cmem/example.c
+        cmem/phashtable.c
+        cmem/phashtable.h
         )
 
 add_executable(mini_jvm ${SOURCE_FILES})
