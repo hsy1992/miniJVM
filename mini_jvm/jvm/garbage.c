@@ -72,6 +72,7 @@ void garbage_collector_destory() {
     collector->_garbage_thread_stop = 1;
     while (!collector->_garbage_thread_stoped) {
         garbage_thread_timedwait(50);
+        garbage_thread_notify();
     }
     garbage_thread_unlock();
     //
@@ -137,12 +138,14 @@ void __garbage_clear() {
 
 void *collect_thread_run(void *para) {
     while (!collector->_garbage_thread_stop) {
+        garbage_thread_lock();
         //_garbage_thread_pause=1;
         if (!collector->_garbage_thread_pause) {
             //dump_refer();
             garbage_collect();
         }
-        threadSleep(GARBAGE_PERIOD_MS);
+        garbage_thread_timedwait(GARBAGE_PERIOD_MS);
+        garbage_thread_unlock();
     }
     collector->_garbage_thread_stoped = 1;
     return NULL;
@@ -271,13 +274,10 @@ s32 garbage_collect() {
 
         HashtableKey k = hashtable_iter_next_key(&hti);
         MemoryBlock *mb = (MemoryBlock *) k;
-        Hashset *v = (Hashset *) hashtable_get(collector->son_2_father, k);
 
-        if (v != HASH_NULL) {
-            if (mb->garbage_mark == GARBAGE_MARK_NO_REFERED) {
-                garbage_destory_memobj(k);
-                i++;
-            }
+        if (mb->garbage_mark == GARBAGE_MARK_NO_REFERED) {
+            garbage_destory_memobj(k);
+            i++;
         }
     }
     jvm_printf("garbage cllected OBJ: %lld -> %lld    MEM : %lld -> %lld\n",
@@ -298,14 +298,14 @@ s32 garbage_collect() {
  */
 void garbage_destory_memobj(__refer k) {
     garbage_derefer_all(k);
-//#if _JVM_DEBUG_GARBAGE_DUMP
+#if _JVM_DEBUG_GARBAGE_DUMP
     if (((MemoryBlock *) k)->type == MEM_TYPE_CLASS) {
         Utf8String *pus = utf8_create();
         getMemBlockName(k, pus);
         jvm_printf("garbage collect  %s [%x]\n", utf8_cstr(pus), k);
         utf8_destory(pus);
     }
-//#endif
+#endif
     Hashset *v = (Hashset *) hashtable_get(collector->son_2_father, k);
     _garbage_put_set(v);
     hashtable_remove(collector->son_2_father, k, 0);

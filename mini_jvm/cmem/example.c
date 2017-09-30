@@ -21,7 +21,7 @@ int main1() {
     Hashtable * map=hashtable_create(DEFAULT_HASH_FUNC,DEFAULT_HASH_EQUALS_FUNC);
     int i;
     for(i=0;i<100;i++){
-        hashtable_put(map,i,i);
+        hashtable_put(map,(HashtableValue)i,(HashtableValue)i);
     }
 
     HashtableIterator hti;
