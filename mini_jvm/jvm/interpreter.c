@@ -3319,7 +3319,7 @@ s32 execute_method(MethodInfo *method, Runtime *pruntime, Class *clazz) {
 #if _JVM_DEBUG_BYTECODE_DUMP
             jvm_printf("---------------------------------\n");
             jvm_printf("code dump\n");
-            printCodeAttribute(&ca, obj_of_clazz);
+            printCodeAttribute(ca, clazz);
             jvm_printf("---------------------------------\n");
 #endif
 #if _JVM_DEBUG > 3
@@ -3350,14 +3350,14 @@ s32 execute_method(MethodInfo *method, Runtime *pruntime, Class *clazz) {
                 InstructFunc func = find_instruct_func(runtime.pc[0]);
                 if (func != 0) {
 #if _JVM_DEBUG_PROFILE
-                    u8 instruct_code = pc[0];
+                    u8 instruct_code = runtime.pc[0];
                     s64 start_at = nanoTime();
 #endif
                     i = func(&runtime.pc, &runtime);
 
 #if _JVM_DEBUG_PROFILE
                     s64 spent = nanoTime() - start_at;
-                    spent = 1;
+                    //spent = 1;
                     HashtableValue v = hashtable_get(instruct_profile, (HashtableKey) (long) instruct_code);
                     if (v == NULL) {
                         hashtable_put(instruct_profile, (HashtableKey) (long) instruct_code, (HashtableKey)(long) (spent));

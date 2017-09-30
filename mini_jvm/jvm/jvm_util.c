@@ -491,7 +491,11 @@ void invoke_deepth(Runtime *runtime) {
     s32 len = i;
 
 #if _JVM_DEBUG_PRINT_FILE
+#ifdef _CYGWIN_CONFIG_H
+    fprintf(logfile, "%lx", (s64) (long) pthread_self());
+#else
     fprintf(logfile, "%lx", (s64) (long) pthread_self().p);
+#endif //_CYGWIN_CONFIG_H
     for (i = 0; i < len; i++) {
         fprintf(logfile, "    ");
     }
