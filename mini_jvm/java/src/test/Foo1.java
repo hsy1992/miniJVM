@@ -181,16 +181,12 @@ public class Foo1 {
                 System.out.println("thread here.");
                 int j = 0;
                 String c = null;
-                for (int i = 0; i < 1000000; i++) {
+                for (int i = 0; i < 100000; i++) {
                     String a = "abc";
                     String b = "def";
                     c = a + b;
-//                    if (i % 1000 == 0) {
-//                        System.out.println("t7 i=" + i);
-//                    }
-                    try {
-                        Thread.sleep(500);
-                    } catch (InterruptedException ex) {
+                    if (i % 10000 == 0) {
+                        System.out.println("t7 i=" + i);
                     }
                 }
                 System.out.println("thread c=\"" + c + "\"");
@@ -199,15 +195,15 @@ public class Foo1 {
         t.start();
         //
         int i = 0;
-        while (i++ < 10000) {
-            try {
-                Thread.sleep(1000);
+//        while (i++ < 10) {
+//            try {
+//                Thread.sleep(100);
 //                System.out.println("total mem:" + Runtime.getRuntime().totalMemory()
 //                        + "   free: " + Runtime.getRuntime().freeMemory());
-
-            } catch (InterruptedException ex) {
-            }
-        }
+//
+//            } catch (InterruptedException ex) {
+//            }
+//        }
     }
 
     long t81(long l) {
@@ -594,7 +590,7 @@ public class Foo1 {
 //        f.t4();
 //        f.t5();
 //        f.t6();
-//        f.t7();
+        f.t7();
 //        f.t8();
 //        f.t9();
         f.t10();

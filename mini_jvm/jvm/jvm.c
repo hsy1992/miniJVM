@@ -59,7 +59,7 @@ void classloader_destory(ClassLoader *class_loader) {
 
 s32 execute(c8 *p_classpath, c8 *p_mainclass, s32 argc, c8 **argv) {
 #ifdef __MEM_LEAK_DETECT
-    dbg_init(10);
+    dbg_init(0);
     //dbg_catch_sigsegv();
 #endif //__MEM_LEAK_DETECT
     //
