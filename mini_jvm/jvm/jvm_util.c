@@ -496,7 +496,11 @@ void invoke_deepth(Runtime *runtime) {
         fprintf(logfile, "    ");
     }
 #else
+#ifdef _CYGWIN_CONFIG_H
+    printf("%lx", (s64) (long) pthread_self());
+#else
     printf("%lx", (s64) (long) pthread_self().p);
+#endif //_CYGWIN_CONFIG_H
     for (i = 0; i < len; i++) {
         printf("    ");
     }
@@ -689,7 +693,7 @@ Instance *jarray_create_des(s32 count, Utf8String *descript) {
     s32 width = data_type_bytes[typeIdx];
     Instance *arr = jvm_alloc(sizeof(Instance));
     arr->mb.type = MEM_TYPE_ARR;
-    arr->mb.arr_type_idx=typeIdx;
+    arr->mb.arr_type_idx = typeIdx;
     arr->mb.garbage_mark = GARBAGE_MARK_UNDEF;//防止在上次回收过程中，此对象刚被放入池子就被回收
     arr->mb.clazz = array_class_get(descript);
     arr->arr_length = count;

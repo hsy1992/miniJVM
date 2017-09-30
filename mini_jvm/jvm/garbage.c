@@ -1,4 +1,5 @@
 
+#include <errno.h>
 #include "jvm.h"
 #include "garbage.h"
 #include "jvm_util.h"
@@ -13,7 +14,6 @@ void _garbage_put_set(Hashset *set);
 
 void garbage_mark_son(__refer r);
 
-s32 garbage_mark_by_classloader(ClassLoader *classLoader);
 
 /**
  * 创建垃圾收集线程，
@@ -69,9 +69,9 @@ s32 garbage_collector_create() {
 void garbage_collector_destory() {
     garbage_thread_lock();
     collector->_garbage_thread_stop = 1;
+    garbage_thread_notify();
     while (!collector->_garbage_thread_stoped) {
         garbage_thread_timedwait(50);
-        garbage_thread_notify();
     }
     garbage_thread_unlock();
     //
@@ -139,12 +139,12 @@ void __garbage_clear() {
 
 void *collect_thread_run(void *para) {
     while (!collector->_garbage_thread_stop) {
-        garbage_thread_lock();
         //_garbage_thread_pause=1;
         if (!collector->_garbage_thread_pause) {
             //dump_refer();
             garbage_collect();
         }
+        garbage_thread_lock();
         garbage_thread_timedwait(GARBAGE_PERIOD_MS);
         garbage_thread_unlock();
     }
@@ -319,7 +319,7 @@ void dump_refer() {
     }
 }
 
-//==============================   thre.run() =====================================
+//==============================   gc() =====================================
 /**
  * 查找所有实例，如果发现没有被引用 set->length==0 时，也不在运行时runtime的 stack 和 局部变量表中
  * 去除掉此对象对其他对象的引用，并销毁对象
@@ -361,6 +361,7 @@ s32 garbage_collect() {
     //in this sub proc ,in wait maybe other thread insert new obj into son_2_father ,
     // so new inserted obj must be garbage_mark==GARBAGE_MARK_UNDEF  ,otherwise new obj would be collected.
     if (garbage_mark_by_threads() != 0) {
+        garbage_thread_unlock();
         return 1;
     }
 
@@ -409,7 +410,7 @@ s32 garbage_mark_by_threads() {
         if (runtime->threadInfo->thread_status != THREAD_STATUS_ZOMBIE) {
             jthread_suspend(runtime);
             while (!runtime->threadInfo->is_suspend) {
-                garbage_thread_timedwait(100);
+                garbage_thread_timedwait(500);
 //                garbage_thread_wait();
                 if (collector->_garbage_thread_stop || collector->_garbage_thread_pause) {
                     return 1;
