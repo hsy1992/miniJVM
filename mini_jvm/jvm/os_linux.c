@@ -3,7 +3,7 @@
 //
 #include "jvm.h"
 
-#if __JVM_OS_LINUX__
+#if !__JVM_OS_WIN__
 
 #include <sys/time.h>
 #include "jvm_util.h"

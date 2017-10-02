@@ -23,7 +23,7 @@ extern "C" {
 #include <errno.h>
 #include <signal.h>
 
-#ifdef __JVM_OS_CYGWIN__
+#if __JVM_OS_CYGWIN__ || __JVM_OS_MINGW__
 
 #include <winsock2.h>
 #include <fcntl.h>
@@ -44,13 +44,13 @@ extern "C" {
 #define closesocket close
 #endif
 
-#ifdef __IPHONE_NA
+#if __IPHONE_NA || __JVM_OS_MAC__
 #include <netdb.h>
 #include <fcntl.h>
 #include <sys/errno.h>
 #include <unistd.h>
 #endif
-#ifdef __ANDROID__
+#if __ANDROID__ || __JVM_OS_ANDROID__
 #include <netdb.h>
 #include <linux/in.h>
 #include <sys/endian.h>

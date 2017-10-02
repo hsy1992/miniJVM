@@ -49,4 +49,4 @@ set(SOURCE_FILES
 add_executable(mini_jvm ${SOURCE_FILES})
 
 #Set link library.
-#TARGET_LINK_LIBRARIES(mini_jvm pthread ws2_32)
+TARGET_LINK_LIBRARIES(mini_jvm pthread ws2_32)
