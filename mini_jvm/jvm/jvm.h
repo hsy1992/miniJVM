@@ -1,6 +1,7 @@
 
 #ifndef PUP_JVM_H
 #define PUP_JVM_H
+
 #define HAVE_STRUCT_TIMESPEC
 #define _POSIX_C_SOURCE 200809L
 //#define __MEM_LEAK_DETECT
@@ -33,8 +34,19 @@
 // arm
 #define __JVM_BIG_ENDIAN__ 0
 
-#define __JVM_OS_LINUX__ 1
-#define __JVM_OS_WIN__  0
+
+#ifdef __MINGW_H
+#define __JVM_OS_MINGW__ 1
+#endif
+#ifdef _CYGWIN_CONFIG_H
+#define __JVM_OS_CYGWIN__ 1
+#endif
+#ifdef __DARWIN_C_ANSI
+#define __JVM_OS_MAC__ 1
+#endif
+#ifdef __DARWIN_C_ANSI
+#define __JVM_OS_ANDROID__ 1
+#endif
 
 
 //compile

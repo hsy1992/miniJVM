@@ -500,11 +500,11 @@ void invoke_deepth(Runtime *runtime) {
         fprintf(logfile, "    ");
     }
 #else
-#ifdef _CYGWIN_CONFIG_H
+#if __JVM_OS_MAC__ || __JVM_OS_CYGWIN__
     printf("%lx", (s64) (long) pthread_self());
 #else
     printf("%lx", (s64) (long) pthread_self().p);
-#endif //_CYGWIN_CONFIG_H
+#endif //
     for (i = 0; i < len; i++) {
         printf("    ");
     }

@@ -8,7 +8,7 @@
 #include "java_native_io.h"
 #include <sys/stat.h>
 
-#ifndef _CYGWIN_CONFIG_H
+#ifndef __JVM_OS_MAC__
 #ifndef __WIN32__
 #define __WIN32__
 #endif
@@ -23,7 +23,7 @@ extern "C" {
 #include <errno.h>
 #include <signal.h>
 
-#ifdef __WIN32__
+#ifdef __JVM_OS_CYGWIN__
 
 #include <winsock2.h>
 #include <fcntl.h>
@@ -174,7 +174,7 @@ s32 sock_open(Utf8String *ip, s32 port) {
     s32 sockfd;
     struct sockaddr_in inet_addr; /* connector's address information */
 
-#ifdef WIN32
+#ifdef __WIN32__
     WSADATA wsaData;
     WSAStartup(MAKEWORD(1, 1), &wsaData);
 #endif  /*  WIN32  */
@@ -226,7 +226,7 @@ s32 sock_open(Utf8String *ip, s32 port) {
         err("socket connect error");
         //exit(1);
     }
-#ifndef WIN32
+#ifndef __WIN32__
     signal(SIGPIPE, _on_sock_sig);
 #endif
     return sockfd;
@@ -240,7 +240,7 @@ s32 srv_bind(Utf8String *ip, u16 port) {
 
     struct sockaddr_in server_addr;
     s32 listenfd;
-#ifdef WIN32
+#ifdef __WIN32__
     WSADATA wsadata;
     if (WSAStartup(MAKEWORD(1, 1), &wsadata) == SOCKET_ERROR) {
         err("Error creating serversocket.");

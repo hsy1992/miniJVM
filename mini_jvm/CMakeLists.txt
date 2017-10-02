@@ -2,8 +2,7 @@ cmake_minimum_required(VERSION 3.8)
 project(mini_jvm)
 
 #set(CMAKE_CXX_STANDARD 11)
-set(CMAKE_C_FLAGS "-std=c99")
-set(CMAKE_C_FLAGS "${CMAKE_ENABLE_C99}")
+set(CMAKE_C_STANDARD 99)
 
 
 set(SOURCE_FILES
@@ -50,4 +49,4 @@ set(SOURCE_FILES
 add_executable(mini_jvm ${SOURCE_FILES})
 
 #Set link library.
-TARGET_LINK_LIBRARIES(mini_jvm pthread ws2_32)
+#TARGET_LINK_LIBRARIES(mini_jvm pthread ws2_32)
