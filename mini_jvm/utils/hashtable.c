@@ -65,7 +65,7 @@ static void hash_table_free_entry(Hashtable *hash_table, HashtableEntry *entry) 
 }
 
 unsigned long long DEFAULT_HASH_FUNC(HashtableKey kmer) {
-    return (unsigned long long) kmer;
+    return (unsigned long long) (long) kmer;
 }
 
 int DEFAULT_HASH_EQUALS_FUNC(HashtableValue value1, HashtableValue value2) {

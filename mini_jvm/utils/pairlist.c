@@ -2,8 +2,8 @@
 // Created by gust on 2017/8/25.
 //
 
+#include <memory.h>
 #include "pairlist.h"
-#include "d_type.h"
 
 Pairlist *pairlist_create(s32 len) {
     if (len <= 0) {
