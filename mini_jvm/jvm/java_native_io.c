@@ -203,7 +203,7 @@ s32 sock_open(Utf8String *ip, s32 port) {
     inet_addr.sin_family = AF_INET; /* host byte order */
     inet_addr.sin_port = htons((u16) port); /* short, network byte order */
 
-#ifdef  __ANDROID__
+#if  __JVM_OS_ANDROID__
     //LOGE("inet_addr.sin_port     : %x\n",inet_addr.sin_port);
         //LOGE("htons((u16)port)     : %x\n",htons((u16)10086));
         //u32 hosttmp = (((u32)221) << 24) | (((u32)179) << 16) | (((u32)222) << 8) | ((u32)66);
@@ -214,6 +214,10 @@ s32 sock_open(Utf8String *ip, s32 port) {
         //LOGE("host->h_addr: %x\n",htonl(*((u32 *)(host->h_addr))));
         //LOGE("htonl(0x0a000202ul): %x\n",htonl(0x0a000202ul));
         //LOGE("&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&\n");
+#elif __JVM_OS_MAC__
+    inet_addr.sin_addr = *((struct in_addr *) host->h_addrtype);
+    memset(&(inet_addr.sin_zero), 0, sizeof((inet_addr.sin_zero))); /* zero the rest of the struct */
+
 #else
     inet_addr.sin_addr = *((struct in_addr *) host->h_addr);
     memset(&(inet_addr.sin_zero), 0, sizeof((inet_addr.sin_zero))); /* zero the rest of the struct */
@@ -261,8 +265,10 @@ s32 srv_bind(Utf8String *ip, u16 port) {
             err("get host by name error");
 //exit(1);
         }
-#ifdef __WIN32__
+#if __WIN32__
         server_addr.sin_addr = *((struct in_addr *) host->h_addr);
+#elif __JVM_OS_MAC__
+        server_addr.sin_addr.s_addr = htonl(*((u32 *) (host->h_addrtype))); //htonl(hosttmp); //
 #else
         server_addr.sin_addr.s_addr = htonl(*((u32 *) (host->h_addr))); //htonl(hosttmp); //
 #endif
@@ -309,7 +315,7 @@ s32 srv_close(s32 listenfd) {
         //            WSACleanup();
         //#endif
     }
-
+    return 0;
 }
 
 
@@ -348,7 +354,7 @@ s32 javax_mini_net_socket_Protocol_readBuf(Runtime *runtime, Class *clazz) {
 
 s32 javax_mini_net_socket_Protocol_readByte(Runtime *runtime, Class *clazz) {
     s32 sockfd = (runtime->localVariables + 0)->integer;
-    u8 b = 0;
+    c8 b = 0;
     s32 len = sock_recv(sockfd, &b, 1);
     if (len < 0) {
         push_int(runtime->stack, -1);
@@ -382,7 +388,7 @@ s32 javax_mini_net_socket_Protocol_writeBuf(Runtime *runtime, Class *clazz) {
 s32 javax_mini_net_socket_Protocol_writeByte(Runtime *runtime, Class *clazz) {
     s32 sockfd = (runtime->localVariables + 0)->integer;
     s32 val = (runtime->localVariables + 1)->integer;
-    u8 b = (u8) val;
+    c8 b = (u8) val;
     s32 len = sock_send(sockfd, &b, 1);
 #if _JVM_DEBUG > 5
     jvm_printf("javax_mini_net_socket_Protocol_writeByte  \n");
@@ -715,7 +721,7 @@ s32 javax_mini_io_File_loadFD(Runtime *runtime, Class *clazz) {
         s32 a = S_ISDIR(buf.st_mode);
         if (ret == 0) {
             c8 *className = "javax/mini/io/FileDescriptor";
-            u8 *ptr;
+            c8 *ptr;
             ptr = getFieldPtr_byName_c(fd, className, "st_dev", "I");
             setFieldInt(ptr, buf.st_dev);
             ptr = getFieldPtr_byName_c(fd, className, "st_ino", "S");

@@ -130,7 +130,7 @@ s32 javax_mini_reflect_vm_RefNative_getLocalVal(Runtime *runtime, Class *clazz) 
     s32 slot = (runtime->localVariables + pos++)->integer;
     Instance *valuetype = (runtime->localVariables + pos++)->refer;
 
-    u8 *ptr = getFieldPtr_byName_c(valuetype, JDWP_CLASS_VALUETYPE, "bytes", "C");
+    c8 *ptr = getFieldPtr_byName_c(valuetype, JDWP_CLASS_VALUETYPE, "bytes", "C");
     u16 bytes = (u16) getFieldShort(ptr);
     ptr = getFieldPtr_byName_c(valuetype, JDWP_CLASS_VALUETYPE, "value", "J");
     if (slot < r->localvar_count) {
@@ -397,7 +397,7 @@ s32 javax_mini_reflect_Reference_mapReference(Runtime *runtime, Class *clazz) {
     l2d.i2l.i0 = (runtime->localVariables + pos++)->integer;
     Class *target = (__refer) (long) l2d.l;
     if (target) {
-        u8 *ptr;
+        c8 *ptr;
         ptr = getFieldPtr_byName_c(ins, JDWP_CLASS_REFERENCE, "className", "Ljava/lang/String;");
         Instance *clsName = jstring_create(target->name, runtime);
         if (ptr)setFieldRefer(ptr, clsName);
@@ -467,7 +467,7 @@ s32 javax_mini_reflect_Field_mapField(Runtime *runtime, Class *clazz) {
     l2d.i2l.i0 = (runtime->localVariables + pos++)->integer;
     FieldInfo *fieldInfo = (__refer) (long) l2d.l;
     if (ins && fieldInfo) {
-        u8 *ptr;
+        c8 *ptr;
         //
         ptr = getFieldPtr_byName_c(ins, JDWP_CLASS_FIELD, "fieldName", "Ljava/lang/String;");
         Instance *fieldName = jstring_create(fieldInfo->name, runtime);
@@ -490,7 +490,7 @@ Instance *localVarTable2java(Class *clazz, LocalVarTable *lvt, Runtime *runtime)
     Instance *ins = instance_create(cl);
     instance_init(ins, runtime);
     if (ins && lvt) {
-        u8 *ptr;
+        c8 *ptr;
         //
         ptr = getFieldPtr_byName_c(ins, JDWP_CLASS_LOCALVARTABLE, "name", "Ljava/lang/String;");
         Instance *name = jstring_create(get_utf8_string(clazz, lvt->name_index), runtime);
@@ -519,7 +519,7 @@ s32 javax_mini_reflect_Method_mapMethod(Runtime *runtime, Class *clazz) {
     l2d.i2l.i0 = (runtime->localVariables + pos++)->integer;
     MethodInfo *methodInfo = (__refer) (long) l2d.l;
     if (ins && methodInfo) {
-        u8 *ptr;
+        c8 *ptr;
         Long2Double l2d;
         //
         ptr = getFieldPtr_byName_c(ins, JDWP_CLASS_METHOD, "methodName", "Ljava/lang/String;");
@@ -547,13 +547,13 @@ s32 javax_mini_reflect_Method_mapMethod(Runtime *runtime, Class *clazz) {
         }
         //
         ptr = getFieldPtr_byName_c(ins, JDWP_CLASS_METHOD, "codeStart", "J");
-        if (ptr)if (att)setFieldLong(ptr, 0); else setFieldShort(ptr, -1);
+        if (ptr)setFieldLong(ptr, att ? 0 : -1);
         //
         ptr = getFieldPtr_byName_c(ins, JDWP_CLASS_METHOD, "codeEnd", "J");
-        if (ptr)if (att)setFieldLong(ptr, att->converted_code->attribute_length); else setFieldLong(ptr, -1);
+        if (ptr)setFieldLong(ptr, att ? att->converted_code->attribute_length : -1);
         //
         ptr = getFieldPtr_byName_c(ins, JDWP_CLASS_METHOD, "lines", "I");
-        if (ptr)if (att)setFieldInt(ptr, att->converted_code->line_number_table_length); else setFieldInt(ptr, 0);
+        if (ptr)setFieldInt(ptr, att ? att->converted_code->line_number_table_length : 0);
         //
         if (att) {
             {
@@ -566,7 +566,7 @@ s32 javax_mini_reflect_Method_mapMethod(Runtime *runtime, Class *clazz) {
             }
             {
                 //
-                u8 *table_type = "[Ljavax/mini/reflect/LocalVarTable;";
+                c8 *table_type = "[Ljavax/mini/reflect/LocalVarTable;";
                 ptr = getFieldPtr_byName_c(ins, JDWP_CLASS_METHOD, "localVarTable", table_type);
                 Utf8String *ustr = utf8_create_c(table_type);
                 utf8_substring(ustr, 1, ustr->length);
@@ -595,7 +595,7 @@ s32 javax_mini_reflect_StackFrame_mapRuntime(Runtime *runtime, Class *clazz) {
     l2d.i2l.i0 = (runtime->localVariables + pos++)->integer;
     Runtime *target = (__refer) (long) l2d.l;
     if (ins && target) {
-        u8 *ptr;
+        c8 *ptr;
         //
         ptr = getFieldPtr_byName_c(ins, JDWP_CLASS_RUNTIME, "classId", "J");
         if (ptr)setFieldLong(ptr, (u64) (long) target->clazz);
@@ -628,7 +628,7 @@ s32 javax_mini_reflect_Array_mapArray(Runtime *runtime, Class *clazz) {
     l2d.i2l.i0 = (runtime->localVariables + pos++)->integer;
     Instance *target = (__refer) (long) l2d.l;
     if (ins && target) {
-        u8 *ptr;
+        c8 *ptr;
         //
         ptr = getFieldPtr_byName_c(ins, JDWP_CLASS_RUNTIME, "length", "I");
         if (ptr)setFieldInt(ptr, target->arr_length);

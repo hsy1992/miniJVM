@@ -47,7 +47,7 @@ s32 jstring_get_count(Instance *jstr);
 
 s32 jstring_get_offset(Instance *jstr);
 
-u8 *jstring_get_value_ptr(Instance *jstr);
+c8 *jstring_get_value_ptr(Instance *jstr);
 
 Instance *jstring_get_value_array(Instance *jstr);
 
@@ -72,7 +72,7 @@ void runtime_dispose(Runtime *runtime);
 
 ////======================= thread =============================
 
-typedef struct _JavaThreadInfo {
+ struct _JavaThreadInfo {
     Instance *jthread;
     Runtime *top_runtime;
     u8 volatile thread_status;
@@ -82,14 +82,14 @@ typedef struct _JavaThreadInfo {
     pthread_t pthread;
     //调试器相关字段
     JdwpStep jdwp_step;
-} JavaThreadInfo;
+} ;
 
-typedef struct _ThreadLock {
+ struct _ThreadLock {
     pthread_cond_t thread_cond;
     pthread_mutexattr_t lock_attr;
     pthread_mutex_t mutex_lock; //互斥锁
     Instance *jthread_holder;
-} ThreadLock;
+} ;
 
 pthread_t jthread_create_and_start(Instance *ins);
 

@@ -282,6 +282,7 @@ s32 getDataTypeIndex(c8 ch) {
         default:
             jvm_printf("datatype not found %c\n", ch);
     }
+    return 0;
 }
 
 
@@ -390,7 +391,7 @@ s32 sys_properties_load(Utf8String *path) {
         return -1;
     }
     Utf8String *ustr = utf8_create();
-    c8 buf[256];
+    u8 buf[256];
     while (1) {
         u32 len = fread(buf, 1, 256, fp);
         utf8_append_part_c(ustr, buf, 0, len);
@@ -611,6 +612,7 @@ s32 jthread_lock(MemoryBlock *mb, Runtime *runtime) { //可能会重入，同一
     jvm_printf("  lock: %llx   lock holder: %llx \n", (s64) (long) (runtime->threadInfo->jthread),
            (s64) (long) (jtl->jthread_holder));
 #endif
+    return 0;
 }
 
 s32 jthread_unlock(MemoryBlock *mb, Runtime *runtime) {
@@ -621,11 +623,11 @@ s32 jthread_unlock(MemoryBlock *mb, Runtime *runtime) {
     ThreadLock *jtl = mb->thread_lock;
     pthread_mutex_unlock(&jtl->mutex_lock);
     jtl->jthread_holder = NULL;
-    return 0;
 #if _JVM_DEBUG > 5
     jvm_printf("unlock: %llx   lock holder: %llx, \n", (s64) (long) (runtime->threadInfo->jthread),
            (s64) (long) (jtl->jthread_holder));
 #endif
+    return 0;
 }
 
 s32 jthread_notify(MemoryBlock *mb, Runtime *runtime) {
@@ -653,11 +655,13 @@ s32 jthread_yield(Runtime *runtime) {
 
 s32 jthread_suspend(Runtime *runtime) {
     runtime->threadInfo->suspend_count++;
+    return 0;
 }
 
 s32 jthread_resume(Runtime *runtime) {
     if (runtime->threadInfo->suspend_count > 0)runtime->threadInfo->suspend_count--;
     garbage_thread_notify();
+    return 0;
 }
 
 s32 jthread_waitTime(MemoryBlock *mb, Runtime *runtime, long waitms) {
@@ -736,6 +740,7 @@ s32 jarray_destory(Instance *arr) {
         arr->arr_body = NULL;
         jvm_free(arr);
     }
+    return 0;
 }
 
 /**
@@ -905,7 +910,7 @@ s32 jstring_get_offset(Instance *jstr) {
     return getFieldInt(getFieldPtr_byName_c(jstr, STR_CLASS_JAVA_LANG_STRING, STR_FIELD_OFFSET, "I"));
 }
 
-u8 *jstring_get_value_ptr(Instance *jstr) {
+c8 *jstring_get_value_ptr(Instance *jstr) {
     return getFieldPtr_byName_c(jstr, STR_CLASS_JAVA_LANG_STRING, STR_FIELD_VALUE, "[C");
 }
 

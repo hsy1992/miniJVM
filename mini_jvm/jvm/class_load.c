@@ -556,6 +556,7 @@ s32 parseAttr(FieldInfo *ptr, FILE *fp) {
             tmp->info = NULL;
         }
     }
+    return 0;
 }
 
 /* parse Field Pool */
@@ -665,6 +666,7 @@ s32 parseIPClass(Class *_this, FILE *fp, s32 index) {
     ptr->stringIndex = s2c.s;
 
     _this->interfacePool.clasz_used++;
+    return 0;
 }
 
 void printInterfacePool(Class *clazz, InterfacePool *ip) {
@@ -731,6 +733,7 @@ s32 parseMethodAttr(MethodInfo *ptr, FILE *fp) {
         tmp->info = (u8 *) jvm_alloc(sizeof(u8) * tmp->attribute_length);
         fread(tmp->info, tmp->attribute_length, 1, fp);
     }
+    return 0;
 }
 
 

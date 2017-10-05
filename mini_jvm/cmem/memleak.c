@@ -158,7 +158,6 @@ int inited = 0;
 
 static inline void init_lock() {
     if (!inited) {
-        thread_cond = PTHREAD_COND_INITIALIZER;
         pthread_cond_init(&thread_cond, NULL);
         pthread_mutexattr_init(&lock_attr);
         pthread_mutexattr_settype(&lock_attr, PTHREAD_MUTEX_RECURSIVE);

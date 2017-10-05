@@ -20,12 +20,10 @@
 #include "jvm/garbage.h"
 
 
-int t1() {
-
+void t1() {
 }
 
 void t2() {
-
 }
 
 void t3() {
@@ -33,15 +31,14 @@ void t3() {
 }
 
 void t4() {
-    printf("pointer size:%d\n", sizeof(void *));
-    printf("jint size:%d\n", sizeof(s32));
-    printf("jlong size:%d\n", sizeof(s64));
-    printf("jshort size:%d\n", sizeof(s16));
-    printf("jbyte size:%d\n", sizeof(c8));
-    printf("jdouble size:%d\n", sizeof(f64));
-    printf("jfloat size:%d\n", sizeof(f32));
-
-    printf("long size:%d\n", sizeof(long));
+    printf("pointer size:%d\n", (s32) sizeof(void *));
+    printf("jint size:%d\n", (s32) sizeof(s32));
+    printf("jlong size:%d\n", (s32) sizeof(s64));
+    printf("jshort size:%d\n", (s32) sizeof(s16));
+    printf("jbyte size:%d\n", (s32) sizeof(c8));
+    printf("jdouble size:%d\n", (s32) sizeof(f64));
+    printf("jfloat size:%d\n", (s32) sizeof(f32));
+    printf("long size:%d\n", (s32) sizeof(long));
 }
 
 void t5() {

@@ -7,7 +7,6 @@
 
 #include <sys/time.h>
 #include "jvm_util.h"
-#include <afxres.h>
 #include <time.h>
 #include <unistd.h>
 

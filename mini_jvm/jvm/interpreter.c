@@ -4,10 +4,7 @@
 #include "java_native_std.h"
 #include "garbage.h"
 #include "jvm_util.h"
-#include "../utils/utf8_string.h"
-#include "../utils/arraylist.h"
-#include "java_native_reflect.h"
-#include "jdwp.h"
+
 
 
 /* ==================================opcode implementation =============================*/
@@ -2863,7 +2860,7 @@ s32 op_lookupswitch(u8 **opCode, Runtime *runtime) {
     jvm_printf("tableswitch: val=%d, offset=%d\n", val, offset);
 #endif
     *opCode = *opCode + offset;
-
+return 0;
 }
 
 s32 op_notsupport(u8 **opCode, Runtime *runtime) {
@@ -3245,6 +3242,7 @@ s32 synchronized_lock_method(MethodInfo *method, Runtime *runtime) {
             jthread_lock(&((Instance *) runtime->localVariables[0].refer)->mb, runtime);
         }
     }
+    return 0;
 }
 
 s32 synchronized_unlock_method(MethodInfo *method, Runtime *runtime) {
@@ -3256,6 +3254,7 @@ s32 synchronized_unlock_method(MethodInfo *method, Runtime *runtime) {
             jthread_unlock(&((Instance *) runtime->localVariables[0].refer)->mb, runtime);
         }
     }
+    return 0;
 }
 
 s32 execute_method(MethodInfo *method, Runtime *pruntime, Class *clazz) {

@@ -526,7 +526,7 @@ void readLocation(JdwpPacket *req, Location *loc) {
     loc->execIndex = jdwppacket_read_long(req);
 }
 
-s64 getPtrValue(u8 type, u8 *ptr) {
+s64 getPtrValue(u8 type, c8 *ptr) {
     s64 value;
     switch (getSimpleTag(type)) {
         case '1':
@@ -613,7 +613,7 @@ void getClassSignature(Class *clazz, Utf8String *ustr) {
 }
 
 s32 location_equals(Location *loc1, Location *loc2) {
-    if (!loc1 && loc2 || !loc2 && loc1)return 0; //其中一个为NULL，另一个不空
+    if ((!loc1 && loc2) || (!loc2 && loc1))return 0; //其中一个为NULL，另一个不空
     if (loc1->typeTag == loc2->typeTag
         && loc1->classID == loc2->classID
         && loc1->methodID == loc2->methodID
@@ -1437,7 +1437,7 @@ s32 jdwp_client_process(JdwpClient *client, Runtime *runtime) {
                     FieldInfo *fi = jdwppacket_read_refer(req);
                     ValueType vt;
                     vt.type = getDescripterTag(fi->descriptor);
-                    u8 *ptr = getFieldPtr_byName(NULL, ref->name, fi->name, fi->descriptor);
+                    c8 *ptr = getFieldPtr_byName(NULL, ref->name, fi->name, fi->descriptor);
                     vt.value = getPtrValue(vt.type, ptr);
                     writeValueType(res, &vt);
                 }
@@ -1617,7 +1617,7 @@ s32 jdwp_client_process(JdwpClient *client, Runtime *runtime) {
                     FieldInfo *fi = jdwppacket_read_refer(req);
                     ValueType vt;
                     vt.type = getDescripterTag(fi->descriptor);
-                    u8 *ptr = getFieldPtr_byName(obj, obj->mb.clazz->name, fi->name, fi->descriptor);
+                    c8 *ptr = getFieldPtr_byName(obj, obj->mb.clazz->name, fi->name, fi->descriptor);
                     vt.value = getPtrValue(vt.type, ptr);
                     writeValueType(res, &vt);
                 }

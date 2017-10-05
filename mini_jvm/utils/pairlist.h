@@ -6,7 +6,7 @@
 #define MINI_JVM_PAIRLIST_H
 
 
-#include "../jvm/global.h"
+#include "d_type.h"
 
 typedef struct _Pair {
     union {

@@ -14,7 +14,7 @@ extern Collector* collector;
 
 
 //每个线程一个回收站，线程多了就是灾难
-typedef struct _Collector {
+ struct _Collector {
     //
     Hashtable *son_2_father; //key=mem_ptr, value=我被别人引用的列表
     Hashtable *father_2_son; //key=mem_ptr, value=别人被我引用的列表
@@ -29,7 +29,7 @@ typedef struct _Collector {
     s32 _garbage_thread_stoped;
     s32 _garbage_thread_pause;
     s64 _garbage_count;
-} Collector;
+} ;
 
 void *collect_thread_run(void *para);
 

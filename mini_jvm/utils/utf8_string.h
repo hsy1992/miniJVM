@@ -53,7 +53,7 @@ void utf8_append_c(Utf8String *a1, char *a2);
 
 void utf8_append_part(Utf8String *a1, Utf8String *a2, int start, int len);
 
-void utf8_append_part_c(Utf8String *a1, char *a2, int start, int len);
+void utf8_append_part_c(Utf8String *a1, unsigned char *a2, int start, int len);
 
 void utf8_substring(Utf8String *a1, int start, int end);
 
@@ -86,7 +86,7 @@ utf8_char utf8_char_at(Utf8String *a1, int pos);
 
 int UNICODE_STR_EQUALS_FUNC(HashtableValue value1, HashtableValue value2);
 
-unsigned long UNICODE_STR_HASH_FUNC(HashtableKey kmer);
+unsigned long long UNICODE_STR_HASH_FUNC(HashtableKey kmer);
 
 unsigned long _utf8_hashCode(Utf8String *ustr);
 

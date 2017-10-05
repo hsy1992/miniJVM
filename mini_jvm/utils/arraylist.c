@@ -22,7 +22,8 @@ CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 #include <string.h>
 
 #include "arraylist.h"
-#include "../jvm/garbage.h"
+#include "d_type.h"
+
 
 /* malloc() / free() testing */
 

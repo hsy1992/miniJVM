@@ -5,7 +5,6 @@
  */
 #include "jvm.h"
 #include "jvm_util.h"
-#include "garbage.h"
 
 //===============================    创建及加载  ==================================
 
@@ -34,6 +33,7 @@ s32 class_destory(Class *clazz) {
 
     _DESTORY_CLASS(clazz);
     jvm_free(clazz);
+    return 0;
 }
 
 s32 _DESTORY_CLASS(Class *_this) {
@@ -49,6 +49,7 @@ s32 _DESTORY_CLASS(Class *_this) {
     jthreadlock_destory(&_this->mb);
     constant_list_destory(_this);
     utf8_destory(_this->name);
+    return 0;
 }
 
 void constant_list_create(Class *clazz) {

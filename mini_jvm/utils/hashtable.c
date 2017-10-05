@@ -24,7 +24,7 @@ CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 #include <stdio.h>
 #include "hashtable.h"
 #include "math.h"
-#include "../jvm/garbage.h"
+#include "d_type.h"
 
 static s32 HASH_TABLE_DEFAULT_SIZE = 16;
 
@@ -64,8 +64,8 @@ static void hash_table_free_entry(Hashtable *hash_table, HashtableEntry *entry) 
     jvm_free(entry);
 }
 
-unsigned long DEFAULT_HASH_FUNC(HashtableKey kmer) {
-    return (unsigned long) kmer;
+unsigned long long DEFAULT_HASH_FUNC(HashtableKey kmer) {
+    return (unsigned long long) kmer;
 }
 
 int DEFAULT_HASH_EQUALS_FUNC(HashtableValue value1, HashtableValue value2) {

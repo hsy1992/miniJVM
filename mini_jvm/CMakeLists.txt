@@ -4,6 +4,7 @@ project(mini_jvm)
 #set(CMAKE_CXX_STANDARD 11)
 set(CMAKE_C_STANDARD 99)
 
+include_directories(jvm utils cmem)
 
 set(SOURCE_FILES
         jvm/interpreter.c
@@ -44,9 +45,12 @@ set(SOURCE_FILES
         cmem/example.c
         cmem/phashtable.c
         cmem/phashtable.h
-        )
+        utils/d_vars.c)
 
 add_executable(mini_jvm ${SOURCE_FILES})
 
 #Set link library.
-TARGET_LINK_LIBRARIES(mini_jvm pthread ws2_32)
+TARGET_LINK_LIBRARIES(mini_jvm pthread )
+if (__WIN32__)
+    TARGET_LINK_LIBRARIES(mini_jvm  ws2_32)
+endif ()

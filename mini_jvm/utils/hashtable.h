@@ -106,7 +106,7 @@ struct _HashtableIterator {
  * @return       The hash value.
  */
 
-typedef unsigned long (*HashtableHashFunc)(HashtableKey value);
+typedef unsigned long long (*HashtableHashFunc)(HashtableKey value);
 
 /**
  * Function used to compare two keys for equality.
@@ -163,7 +163,7 @@ Hashtable *hashtable_create(HashtableHashFunc hash_func,
                             HashtableEqualFunc equal_func);
 
 
-unsigned long DEFAULT_HASH_FUNC(HashtableKey kmer);
+unsigned long long DEFAULT_HASH_FUNC(HashtableKey kmer);
 
 int DEFAULT_HASH_EQUALS_FUNC(HashtableValue value1, HashtableValue value2);
 

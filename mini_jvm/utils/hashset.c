@@ -4,8 +4,9 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include "math.h"
-#include "../jvm/garbage.h"
 #include "hashset.h"
+#include "d_type.h"
+#include "hashtable.h"
 
 static s32 HASH_SET_DEFAULT_SIZE = 4;
 
@@ -15,7 +16,7 @@ static s32 HASH_SET_DEFAULT_SIZE = 4;
 static int hashset_allocate_table(Hashset *set, int size) {
     if (size) {
         set->table = jvm_alloc(size *
-                               sizeof(HashtableEntry *));
+                               sizeof(HashsetEntry *));
         if (set->table)set->table_size = size;
     }
 

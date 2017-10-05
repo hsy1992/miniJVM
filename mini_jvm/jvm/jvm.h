@@ -4,12 +4,13 @@
 
 #define HAVE_STRUCT_TIMESPEC
 #define _POSIX_C_SOURCE 200809L
-//#define __MEM_LEAK_DETECT
+
 
 //
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+
 #include "../utils/d_type.h"
 #include "../jvm/global.h"
 #include "../utils/hashtable.h"
@@ -44,8 +45,9 @@
 #ifdef __DARWIN_C_ANSI
 #define __JVM_OS_MAC__ 1
 #endif
-#ifdef __DARWIN_C_ANSI
+#ifdef __ANDROID
 #define __JVM_OS_ANDROID__ 1
+#define  __ANDROID__
 #endif
 
 
@@ -164,7 +166,6 @@ typedef union _Long2Double {
 #endif
 
 typedef struct _ClassLoader ClassLoader;
-typedef union _field_value FieldValue;
 typedef struct _ClassType Class;
 typedef struct _InstanceType Instance;
 typedef struct _FieldInfo FieldInfo;
@@ -354,14 +355,11 @@ Instruction **instructionsIndexies;
 extern ArrayList *thread_list;
 extern ArrayList *native_libs;
 extern Hashtable *sys_prop;
-//
-extern s32 STACK_LENGHT;
-extern s64 MAX_HEAP_SIZE;
-extern s64 heap_size; //当前已经分配的内存总数
-extern Pairlist *mem_size_2_count;
 
 extern u8 volatile java_debug;
 
+
+extern s32 STACK_LENGHT;
 
 #if _JVM_DEBUG_PROFILE
 extern Hashtable *instruct_profile;
@@ -377,11 +375,11 @@ typedef struct _MemoryBlock {
     ThreadLock *volatile thread_lock;
 } MemoryBlock;
 
-typedef struct _ClassLoader {
+ struct _ClassLoader {
     Utf8String *g_classpath;
     Hashtable *classes;
     Class *JVM_CLASS;
-} ClassLoader;
+} ;
 //======================= class file =============================
 
 
@@ -505,13 +503,13 @@ typedef struct _ConstantInterfaceMethodRef {
 
 } ConstantInterfaceMethodRef;
 
-typedef struct _ConstantNameAndType {
+ struct _ConstantNameAndType {
     s32 index;
     u8 tag;
     s32 additional_byte_size;
     u16 nameIndex;
     u16 typeIndex;
-} ConstantNameAndType;
+} ;
 
 typedef struct _ConstantPool {
 
@@ -597,7 +595,7 @@ typedef struct _LocalVarTable {
     u16 index;
 } LocalVarTable;
 
-typedef struct _CodeAttribute {
+ struct _CodeAttribute {
     u16 attribute_name_index;
     s32 attribute_length;
     u16 max_stack;
@@ -611,10 +609,10 @@ typedef struct _CodeAttribute {
     u16 local_var_table_length;
     LocalVarTable *local_var_table;
 
-} CodeAttribute;
+} ;
 
 /* Field Info */
-typedef struct _FieldInfo {
+ struct _FieldInfo {
     u16 access_flags;
     u16 name_index;
     u16 descriptor_index;
@@ -625,7 +623,7 @@ typedef struct _FieldInfo {
     Utf8String *descriptor;
     u16 offset;//字段的偏移地址，静态字段存放在class中
     Class *_this_class;
-} FieldInfo;
+} ;
 
 /*  Field Pool */
 typedef struct _FieldPool {
@@ -634,7 +632,7 @@ typedef struct _FieldPool {
 } FieldPool;
 
 /* Method Info */
-typedef struct _MethodInfo {
+ struct _MethodInfo {
     u16 access_flags;
     u16 name_index;
     u16 descriptor_index;
@@ -650,7 +648,7 @@ typedef struct _MethodInfo {
     java_native_fun native_func;
     Pairlist *breakpoint;
 
-} MethodInfo;
+} ;
 
 /*  Method Pool */
 typedef struct _MethodPool {
@@ -691,7 +689,7 @@ typedef struct _LocalVarItem {
 } LocalVarItem;
 
 
-typedef struct _Runtime {
+ struct _Runtime {
     MethodInfo *methodInfo;
     Class *clazz;
     u8 *pc;
@@ -703,13 +701,13 @@ typedef struct _Runtime {
     LocalVarItem *localVariables;
     s32 localvar_count;
     u8 wideMode;
-} Runtime;
+} ;
 //======================= class =============================
 
 /*
  Gust 20170719 add Class define
  */
-typedef struct _ClassType {
+ struct _ClassType {
     MemoryBlock mb;
 
     Utf8String *name;
@@ -735,7 +733,7 @@ typedef struct _ClassType {
 
     //for array class
     s32 arr_data_type;
-} Class;
+} ;
 
 void _INIT_CLASS(Class *_this);
 
@@ -871,7 +869,7 @@ Runtime *threadlist_get(s32 i);
 //======================= instance =============================
 
 
-typedef struct _InstanceType {
+ struct _InstanceType {
     MemoryBlock mb;
     //
     union {
@@ -879,7 +877,7 @@ typedef struct _InstanceType {
         c8 *arr_body;//array body
     };
     s32 arr_length;
-} Instance;
+} ;
 
 
 Instance *instance_create(Class *clazz);
@@ -894,12 +892,12 @@ s32 instance_destory(Instance *instance);
 
 typedef s32 (*InstructFunc)(u8 **opCode, Runtime *runtime);
 
-typedef struct _Instruction {
+ struct _Instruction {
     c8 *name;
     u8 opCode;
     s32 offset;
     InstructFunc func;
-} Instruction;
+} ;
 
 static c8 *find_instruct_name(u8 op);
 

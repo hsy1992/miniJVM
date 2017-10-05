@@ -532,7 +532,7 @@ s32 java_lang_System_doubleToString(Runtime *runtime, Class *clazz) {
     Long2Double l2d;
     l2d.i2l.i1 = (runtime->localVariables + 0)->integer;
     l2d.i2l.i0 = (runtime->localVariables + 1)->integer;
-    u8 buf[22];
+    c8 buf[22];
     sprintf(buf, "%lf", l2d.d);
     Utf8String *str = utf8_create_c(buf);
     Instance *jstr = jstring_create(str, runtime);

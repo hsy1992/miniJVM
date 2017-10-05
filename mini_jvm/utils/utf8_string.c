@@ -2,7 +2,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include "utf8_string.h"
-#include "../jvm/garbage.h"
+#include "d_type.h"
 
 Utf8String *utf8_create() {
 
@@ -106,7 +106,7 @@ void utf8_append_c(Utf8String *a1, char *a2) {
     }
 }
 
-void utf8_append_part_c(Utf8String *a1, char *a2, int start, int len) {
+void utf8_append_part_c(Utf8String *a1, unsigned char *a2, int start, int len) {
     int i = 0;
     for (i = start; i < len; i++) {
         char ch = a2[i];
@@ -200,7 +200,7 @@ int utf8_last_indexof_c(Utf8String *a1, char *a2) {
 }
 
 int utf8_indexof_c(Utf8String *a1, char *a2) {
-    utf8_indexof_pos_c(a1, a2, 0);
+    return utf8_indexof_pos_c(a1, a2, 0);
 }
 
 int utf8_indexof_pos_c(Utf8String *a1, char *a2, int a1_pos) {
@@ -273,7 +273,7 @@ int UNICODE_STR_EQUALS_FUNC(HashtableValue value1, HashtableValue value2) {
     return utf8_equals(value1, value2) == 1;
 }
 
-unsigned long UNICODE_STR_HASH_FUNC(HashtableKey kmer) {
+unsigned long long UNICODE_STR_HASH_FUNC(HashtableKey kmer) {
     return _utf8_hashCode(kmer);
 }
 
@@ -281,8 +281,8 @@ unsigned long UNICODE_STR_HASH_FUNC(HashtableKey kmer) {
 //****************************************************************************
 unsigned long _utf8_hashCode(Utf8String *ustr) {
     if (!ustr->hash) {//如果未有赋值，则需计算
-        int i = 0;
-        for (i; i < ustr->length; i++) {
+        int i;
+        for (i=0; i < ustr->length; i++) {
             ustr->hash = 31 * ustr->hash + ustr->data[i];
         }
     }
