@@ -34,9 +34,6 @@ extern s64 heap_size; //当前已经分配的内存总数
 
 
 #ifndef __MEM_LEAK_DETECT
-//
-
-
 
 void *jvm_alloc(u32 size);
 

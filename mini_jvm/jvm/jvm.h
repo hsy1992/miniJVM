@@ -17,7 +17,7 @@
 #include "../utils/utf8_string.h"
 #include "../utils/arraylist.h"
 #include "../utils/pairlist.h"
-#include "../cmem/memLeak.h"
+
 
 //=======================  micro define  =============================
 #define _JVM_DEBUG 0
