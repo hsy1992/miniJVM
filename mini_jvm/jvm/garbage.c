@@ -141,7 +141,7 @@ void *collect_thread_run(void *para) {
     while (!collector->_garbage_thread_stop) {
         //_garbage_thread_pause=1;
         if (!collector->_garbage_thread_pause) {
-            //garbage_collect();
+            garbage_collect();
         }
 //        garbage_thread_lock();
         threadSleep(GARBAGE_PERIOD_MS);
