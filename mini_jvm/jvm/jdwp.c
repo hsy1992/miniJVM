@@ -84,7 +84,7 @@ s32 jdwp_start_server() {
     jdwpserver.clients = arraylist_create(0);
     jdwpserver.events = arraylist_create(0);
     jdwpserver.event_sets = hashtable_create(DEFAULT_HASH_FUNC, DEFAULT_HASH_EQUALS_FUNC);
-    jdwpserver.cache_ins = pairlist_create(0);
+    jdwpserver.cache_ins = arraylist_create(0);
 
     pthread_create(&jdwpserver.pt_listener, NULL, jdwp_thread_listener, &jdwpserver);
     pthread_create(&jdwpserver.pt_dispacher, NULL, jdwp_thread_dispacher, &jdwpserver);
@@ -118,10 +118,10 @@ s32 jdwp_stop_server() {
     hashtable_destory(jdwpserver.event_sets);
     //
     for (i = 0; i < jdwpserver.cache_ins->length; i++) {
-        Pair p = pairlist_get_pair(jdwpserver.cache_ins, i);
-        instance_destory(p.left);
+        Instance *p = (Instance *) arraylist_get_value(jdwpserver.cache_ins, i);
+        instance_destory(p);
     }
-    pairlist_destory(jdwpserver.cache_ins);
+    arraylist_destory(jdwpserver.cache_ins);
     //
     utf8_destory(jdwpserver.ip);
 
@@ -1394,7 +1394,7 @@ s32 jdwp_client_process(JdwpClient *client, Runtime *runtime) {
             case JDWP_CMD_VirtualMachine_CreateString: {//1.11
                 Utf8String *str = jdwppacket_read_utf(req);//防止回收此处需要
                 Instance *jstr = jstring_create(str, runtime);
-                pairlist_put(jdwpserver.cache_ins, jstr, NULL);
+                arraylist_append(jdwpserver.cache_ins, jstr);
                 utf8_destory(str);
                 jdwppacket_set_err(res, JDWP_ERROR_NONE);
                 jdwppacket_write_refer(res, jstr);
@@ -1427,7 +1427,7 @@ s32 jdwp_client_process(JdwpClient *client, Runtime *runtime) {
                     __refer ins = jdwppacket_read_refer(req);
                     instance_destory(ins);
                     s32 count = jdwppacket_read_int(req);
-                    pairlist_remove(jdwpserver.cache_ins, ins);
+                    arraylist_remove(jdwpserver.cache_ins, ins);
                 }
                 jdwppacket_set_err(res, JDWP_ERROR_NONE);
                 jdwp_writepacket(client, res);
