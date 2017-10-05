@@ -7,29 +7,30 @@ set(CMAKE_C_STANDARD 99)
 include_directories(jvm utils cmem)
 
 set(SOURCE_FILES
-        jvm/interpreter.c
-        jvm/class.c
-        jvm/jvm.c
-        jvm/jvm.h
-        jvm/runtime.c
+        utils/d_type.h
+        utils/d_vars.c
         utils/arraylist.c
         utils/arraylist.h
         utils/hashtable.c
         utils/hashtable.h
         utils/utf8_string.c
         utils/utf8_string.h
-        test.c jvm/garbage.h
+        utils/pairlist.h
+        utils/pairlist.c
+        utils/hashset.c
+        utils/hashset.h
+        jvm/jvm.h
+        jvm/interpreter.c
+        jvm/jvm.c
+        jvm/class.c
+        jvm/runtime.c
         jvm/garbage.c
         jvm/jvm_util.c
         jvm/jvm_util.h
         jvm/os_linux.c
         jvm/os_win.c
         jvm/global.c
-        utils/pairlist.h
-        utils/pairlist.c
         jvm/global.h
-        utils/hashset.c
-        utils/hashset.h
         jvm/java_native_std.h
         jvm/java_native_io.c
         jvm/java_native_std.c
@@ -39,13 +40,14 @@ set(SOURCE_FILES
         jvm/jdwp.h
         jvm/java_native_io.h
         jvm/class_load.c
-        utils/d_type.h
+        jvm/garbage.h
         cmem/memLeak.c
         cmem/memLeak.h
         cmem/example.c
         cmem/phashtable.c
         cmem/phashtable.h
-        utils/d_vars.c)
+        test.c
+        )
 
 add_executable(mini_jvm ${SOURCE_FILES})
 
