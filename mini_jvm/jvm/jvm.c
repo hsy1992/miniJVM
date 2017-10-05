@@ -119,7 +119,7 @@ s32 execute(c8 *p_classpath, c8 *p_mainclass, s32 argc, c8 **argv) {
     for (; hashtable_iter_has_more(&hti);) {
         Utf8String *k = hashtable_iter_next_key(&hti);
         Class *clazz = hashtable_get(sys_classloader->classes, k);
-//        if (clazz->status != CLASS_STATUS_CLINITED)class_clinit(clazz, &runtime);//初始化
+        if (clazz->status != CLASS_STATUS_CLINITED)class_clinit(clazz, &runtime);//初始化
     }
 
     Class *clazz = classes_get(str_mainClsName);
@@ -136,7 +136,7 @@ s32 execute(c8 *p_classpath, c8 *p_mainclass, s32 argc, c8 **argv) {
             //startJdwp(&runtime);
             jdwp_start_server();
             //启动垃圾回收
-            collector->_garbage_thread_pause = 0;
+            garbage_thread_resume();
 
             //准备参数
             localvar_init(&runtime, main->para_count + 1);
@@ -164,7 +164,6 @@ s32 execute(c8 *p_classpath, c8 *p_mainclass, s32 argc, c8 **argv) {
             jvm_printf("spent %lld\n", (currentTimeMillis() - start));
 
             localvar_dispose(&runtime);
-            //dump_refer();
 #if _JVM_DEBUG_PROFILE
             hashtable_iterate(instruct_profile, &hti);
             for (; hashtable_iter_has_more(&hti);) {

@@ -660,7 +660,6 @@ s32 jthread_suspend(Runtime *runtime) {
 
 s32 jthread_resume(Runtime *runtime) {
     if (runtime->threadInfo->suspend_count > 0)runtime->threadInfo->suspend_count--;
-    garbage_thread_notify();
     return 0;
 }
 
@@ -683,7 +682,6 @@ s32 check_suspend_and_pause(Runtime *runtime) {
     if (runtime->threadInfo->suspend_count) {
         garbage_thread_lock();
         runtime->threadInfo->is_suspend = 1;
-        garbage_thread_notify();
         while (runtime->threadInfo->suspend_count) {
             garbage_thread_timedwait(10);
         }

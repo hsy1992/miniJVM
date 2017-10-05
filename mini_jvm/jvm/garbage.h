@@ -25,11 +25,16 @@ extern Collector* collector;
     pthread_mutex_t _garbage_lock; //重入锁
     pthread_cond_t _garbageCond;
 
-    s32 _garbage_thread_stop;
-    s32 _garbage_thread_stoped;
-    s32 _garbage_thread_pause;
+     u8 _garbage_thread_status;
     s64 _garbage_count;
 } ;
+
+enum{
+    GARBAGE_THREAD_NORMAL,
+    GARBAGE_THREAD_PAUSE,
+    GARBAGE_THREAD_STOP,
+    GARBAGE_THREAD_DEAD,
+};
 
 void *collect_thread_run(void *para);
 
@@ -38,6 +43,10 @@ void garbage_thread_lock();
 void garbage_thread_unlock();
 
 void garbage_thread_stop();
+
+void garbage_thread_pause();
+
+void garbage_thread_resume();
 
 void garbage_thread_wait();
 

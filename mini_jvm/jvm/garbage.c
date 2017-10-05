@@ -56,8 +56,7 @@ s32 garbage_collector_create() {
     collector->father_2_son = hashtable_create(DEFAULT_HASH_FUNC, DEFAULT_HASH_EQUALS_FUNC);
     collector->_garbage_refer_set_pool = arraylist_create(4);
 
-    collector->_garbage_thread_pause = 1;
-    collector->_garbage_thread_stoped = 0;
+    collector->_garbage_thread_status = GARBAGE_THREAD_PAUSE;
     pthread_cond_init(&collector->_garbageCond, NULL);
     pthread_mutexattr_init(&collector->_garbage_attr);
     pthread_mutexattr_settype(&collector->_garbage_attr, PTHREAD_MUTEX_RECURSIVE);
@@ -68,9 +67,8 @@ s32 garbage_collector_create() {
 
 void garbage_collector_destory() {
     garbage_thread_lock();
-    collector->_garbage_thread_stop = 1;
-    garbage_thread_notify();
-    while (!collector->_garbage_thread_stoped) {
+    garbage_thread_stop();
+    while (collector->_garbage_thread_status != GARBAGE_THREAD_DEAD) {
         garbage_thread_timedwait(50);
     }
     garbage_thread_unlock();
@@ -138,16 +136,23 @@ void __garbage_clear() {
 //===============================   inner  ====================================
 
 void *collect_thread_run(void *para) {
-    while (!collector->_garbage_thread_stop) {
-        //_garbage_thread_pause=1;
-        if (!collector->_garbage_thread_pause) {
-            garbage_collect();
+    s64 startAt;
+    while (1) {
+        startAt = currentTimeMillis();
+        while (currentTimeMillis() - startAt < GARBAGE_PERIOD_MS
+               && collector->_garbage_thread_status == GARBAGE_THREAD_NORMAL
+                ) {
+            threadSleep(100);
         }
-//        garbage_thread_lock();
-        threadSleep(GARBAGE_PERIOD_MS);
-//        garbage_thread_unlock();
+        if (collector->_garbage_thread_status == GARBAGE_THREAD_STOP) {
+            break;
+        }
+        if (collector->_garbage_thread_status == GARBAGE_THREAD_PAUSE) {
+            continue;
+        }
+        garbage_collect();
     }
-    collector->_garbage_thread_stoped = 1;
+    collector->_garbage_thread_status = GARBAGE_THREAD_DEAD;
     return NULL;
 }
 
@@ -163,8 +168,16 @@ void garbage_thread_unlock() {
     pthread_mutex_unlock(&collector->_garbage_lock);
 }
 
+void garbage_thread_pause() {
+    collector->_garbage_thread_status = GARBAGE_THREAD_PAUSE;
+}
+
+void garbage_thread_resume() {
+    collector->_garbage_thread_status = GARBAGE_THREAD_NORMAL;
+}
+
 void garbage_thread_stop() {
-    collector->_garbage_thread_stop = 1;
+    collector->_garbage_thread_status = GARBAGE_THREAD_STOP;
 }
 
 void garbage_thread_wait() {
@@ -410,8 +423,7 @@ s32 garbage_mark_by_threads() {
             jthread_suspend(runtime);
             while (!runtime->threadInfo->is_suspend) {
                 garbage_thread_timedwait(500);
-//                garbage_thread_wait();
-                if (collector->_garbage_thread_stop || collector->_garbage_thread_pause) {
+                if (collector->_garbage_thread_status != GARBAGE_THREAD_NORMAL) {
                     return 1;
                 }
             }
