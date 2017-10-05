@@ -53,6 +53,6 @@ add_executable(mini_jvm ${SOURCE_FILES})
 
 #Set link library.
 TARGET_LINK_LIBRARIES(mini_jvm pthread )
-if (__WIN32__)
+if (CMAKE_SYSTEM_NAME MATCHES "Windows")
     TARGET_LINK_LIBRARIES(mini_jvm  ws2_32)
 endif ()
