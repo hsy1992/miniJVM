@@ -1,3 +1,0 @@
-D:/githome/mini_jvm/mini_jvm/cmake-build-debug/CMakeFiles/mini_jvm.dir
-D:/githome/mini_jvm/mini_jvm/cmake-build-debug/CMakeFiles/edit_cache.dir
-D:/githome/mini_jvm/mini_jvm/cmake-build-debug/CMakeFiles/rebuild_cache.dir

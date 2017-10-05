@@ -1,3 +1,0 @@
-"D:\JetBrains\CLion 2017.2\bin\cmake\bin\cmake.exe" -E remove -f CMakeFiles\mini_jvm.dir/objects.a
-C:\MinGW\bin\ar.exe cr CMakeFiles\mini_jvm.dir/objects.a @CMakeFiles\mini_jvm.dir\objects1.rsp
-C:\MinGW\bin\gcc.exe -g   -Wl,--whole-archive CMakeFiles\mini_jvm.dir/objects.a -Wl,--no-whole-archive  -o mini_jvm.exe -Wl,--out-implib,libmini_jvm.dll.a -Wl,--major-image-version,0,--minor-image-version,0 @CMakeFiles\mini_jvm.dir\linklibs.rsp
