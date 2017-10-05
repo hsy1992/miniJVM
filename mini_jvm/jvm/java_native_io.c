@@ -81,7 +81,7 @@ s32 sock_option(s32 sockfd, s32 opType, s32 opValue) {
                 ul = 0;
             }
             s32 ret = ioctlsocket(sockfd, FIONBIO, (unsigned long *) &ul);
-            if (ret == SOCKET_ERROR)err("set socket non_block error.");
+            if (ret == SOCKET_ERROR)err("set socket non_block error.\n");
 #else
             if (opValue) {
                 fcntl(sockfd, F_SETFL, O_NONBLOCK);
@@ -187,19 +187,19 @@ s32 sock_open(Utf8String *ip, s32 port) {
 
     struct hostent *host;
     if ((host = gethostbyname(utf8_cstr(ip))) == NULL) { /* get the host info */
-        err("get host by name error");
+        err("get host by name error\n");
         //exit(1);
     }
 
     if ((sockfd = socket(AF_INET, SOCK_STREAM, IPPROTO_TCP)) == -1) {
         err(strerror(errno));
-        err("socket init error");
+        err("socket init error\n");
 
         //exit(1);
     }
     s32 x = 1;
     if (setsockopt(sockfd, SOL_SOCKET, SO_REUSEADDR, (char *) &x, sizeof(x)) == -1) {
-        err("socket reuseaddr error");
+        err("socket reuseaddr error\n");
     }
 
     memset((char *) &sock_addr, 0, sizeof(sock_addr));
@@ -221,7 +221,7 @@ s32 sock_open(Utf8String *ip, s32 port) {
         //            LOGE("connect error no: %x\n", errno);
 //            __android_log_write(ANDROID_LOG_ERROR, "socket errno", strerror(errno));
 #endif
-        err("socket connect error");
+        err("socket connect error\n");
         //exit(1);
     }
 #ifndef __WIN32__
@@ -241,12 +241,12 @@ s32 srv_bind(Utf8String *ip, u16 port) {
 #ifdef __WIN32__
     WSADATA wsadata;
     if (WSAStartup(MAKEWORD(1, 1), &wsadata) == SOCKET_ERROR) {
-        err("Error creating serversocket.");
+        err("Error creating serversocket.\n");
     }
 #endif
 
     if ((listenfd = socket(AF_INET, SOCK_STREAM, 0)) < 0) {
-        err("Error opening serversocket.");
+        err("Error opening serversocket.\n");
     }
 
     struct hostent *host;
@@ -256,7 +256,7 @@ s32 srv_bind(Utf8String *ip, u16 port) {
     server_addr.sin_port = htons(port);
     if (ip->length != 0) {//如果指定了ip
         if ((host = gethostbyname(utf8_cstr(ip))) == NULL) { /* get the host info */
-            err("get host by name error");
+            err("get host by name error\n");
 //exit(1);
         }
 #if __WIN32__
@@ -273,7 +273,7 @@ s32 srv_bind(Utf8String *ip, u16 port) {
     s32 on = 1;
     setsockopt(listenfd, SOL_SOCKET, SO_REUSEADDR, (char *) &on, sizeof(on));
     if ((bind(listenfd, (struct sockaddr *) &server_addr, sizeof(server_addr))) < 0) {
-        err("Error binding serversocket.");
+        err("Error binding serversocket.\n");
     }
     return listenfd;
 }
@@ -282,7 +282,7 @@ s32 srv_bind(Utf8String *ip, u16 port) {
 s32 srv_listen(s32 listenfd) {
     u16 MAX_LISTEN = 64;
     if ((listen(listenfd, MAX_LISTEN)) < 0) {
-        err("Error listening on serversocket.");
+        err("Error listening on serversocket.\n");
         return -1;
     }
     return 0;
@@ -295,7 +295,7 @@ s32 srv_accept(s32 listenfd) {
     s32 clt_socket_fd = accept(listenfd, (struct sockaddr *) &clt_addr, (socklen_t *) &clt_addr_length);
     if (clt_socket_fd == -1) {
         if (errno != EINTR) {
-            err("Error accepting on serversocket.");
+            err("Error accepting on serversocket.\n");
         }
     }
 
