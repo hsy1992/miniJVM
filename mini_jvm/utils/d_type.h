@@ -8,6 +8,11 @@
 #include "stdlib.h"
 //#define __MEM_LEAK_DETECT
 
+
+#ifdef __MEM_LEAK_DETECT
+#include "../cmem/memleak.h"
+#endif //__MEM_LEAK_DETECT
+
 typedef unsigned char u8;
 typedef char c8;
 typedef unsigned short int u16;

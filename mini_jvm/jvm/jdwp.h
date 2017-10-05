@@ -280,7 +280,6 @@ typedef struct _JdwpPacket {
 } JdwpPacket;
 
 
-
 typedef struct _JdwpServer {
     Utf8String *ip;
     u16 port;
@@ -291,7 +290,8 @@ typedef struct _JdwpServer {
     ArrayList *clients;
     ArrayList *events;
     Hashtable *event_sets;
-    Runtime* runtime;
+    Runtime *runtime;
+    ArrayList *cache_ins;
 } JdwpServer;
 
 typedef struct _JdwpClient {
@@ -474,6 +474,8 @@ JdwpServer jdwpserver;
 s32 jdwp_client_process(JdwpClient *client, Runtime *runtime);
 
 s32 jdwp_start_server();
+
+s32 jdwp_stop_server();
 
 s32 jdwp_set_breakpoint(s32 setOrClear, Class *clazz, MethodInfo *methodInfo, s64 execIndex);
 
