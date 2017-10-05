@@ -175,6 +175,9 @@ s32 execute(c8 *p_classpath, c8 *p_mainclass, s32 argc, c8 **argv) {
 #endif
 
             main_thread_destory();
+            while (thread_list->length > 0) {
+                threadSleep(100);
+            }
         }
         utf8_destory(methodName);
         utf8_destory(methodType);

@@ -49,6 +49,8 @@ extern "C" {
 #include <fcntl.h>
 #include <sys/errno.h>
 #include <unistd.h>
+#include <arpa/inet.h>
+
 #endif
 #if __ANDROID__ || __JVM_OS_ANDROID__
 #include <netdb.h>
@@ -172,7 +174,7 @@ s32 sock_send(s32 sockfd, c8 *buf, s32 count) {
 
 s32 sock_open(Utf8String *ip, s32 port) {
     s32 sockfd;
-    struct sockaddr_in inet_addr; /* connector's address information */
+    struct sockaddr_in sock_addr; /* connector's address information */
 
 #ifdef __WIN32__
     WSADATA wsaData;
@@ -199,30 +201,21 @@ s32 sock_open(Utf8String *ip, s32 port) {
         err("socket reuseaddr error");
     }
 
-    memset((char *) &inet_addr, 0, sizeof(inet_addr));
-    inet_addr.sin_family = AF_INET; /* host byte order */
-    inet_addr.sin_port = htons((u16) port); /* short, network byte order */
+    memset((char *) &sock_addr, 0, sizeof(sock_addr));
+    sock_addr.sin_family = AF_INET; /* host byte order */
+    sock_addr.sin_port = htons((u16) port); /* short, network byte order */
 
 #if  __JVM_OS_ANDROID__
-    //LOGE("inet_addr.sin_port     : %x\n",inet_addr.sin_port);
-        //LOGE("htons((u16)port)     : %x\n",htons((u16)10086));
-        //u32 hosttmp = (((u32)221) << 24) | (((u32)179) << 16) | (((u32)222) << 8) | ((u32)66);
-        //LOGE("hosttmp     : %x\n",hosttmp);
-        //inet_addr.sin_addr.s_addr =  htonl(0x0a000202ul);//
-        //inet_addr.sin_addr.s_addr =  htonl(0x7f000001ul);//
         inet_addr.sin_addr.s_addr = *((u32 *) (host->h_addr)); //htonl(hosttmp); //
-        //LOGE("host->h_addr: %x\n",htonl(*((u32 *)(host->h_addr))));
-        //LOGE("htonl(0x0a000202ul): %x\n",htonl(0x0a000202ul));
-        //LOGE("&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&\n");
 #elif __JVM_OS_MAC__
-    inet_addr.sin_addr = *((struct in_addr *) host->h_addrtype);
-    memset(&(inet_addr.sin_zero), 0, sizeof((inet_addr.sin_zero))); /* zero the rest of the struct */
+    sock_addr.sin_addr.s_addr = inet_addr(utf8_cstr(ip));
+    memset(&(sock_addr.sin_zero), 0, sizeof((sock_addr.sin_zero))); /* zero the rest of the struct */
 
 #else
     inet_addr.sin_addr = *((struct in_addr *) host->h_addr);
     memset(&(inet_addr.sin_zero), 0, sizeof((inet_addr.sin_zero))); /* zero the rest of the struct */
 #endif
-    if (connect(sockfd, (struct sockaddr *) &inet_addr, sizeof(inet_addr)) == -1) {
+    if (connect(sockfd, (struct sockaddr *) &sock_addr, sizeof(sock_addr)) == -1) {
 #ifdef  __ANDROID__
         //            LOGE("connect error no: %x\n", errno);
 //            __android_log_write(ANDROID_LOG_ERROR, "socket errno", strerror(errno));
@@ -268,7 +261,7 @@ s32 srv_bind(Utf8String *ip, u16 port) {
 #if __WIN32__
         server_addr.sin_addr = *((struct in_addr *) host->h_addr);
 #elif __JVM_OS_MAC__
-        server_addr.sin_addr.s_addr = htonl(*((u32 *) (host->h_addrtype))); //htonl(hosttmp); //
+        server_addr.sin_addr.s_addr = inet_addr(utf8_cstr(ip));
 #else
         server_addr.sin_addr.s_addr = htonl(*((u32 *) (host->h_addr))); //htonl(hosttmp); //
 #endif
@@ -289,14 +282,16 @@ s32 srv_listen(s32 listenfd) {
     u16 MAX_LISTEN = 64;
     if ((listen(listenfd, MAX_LISTEN)) < 0) {
         err("Error listening on serversocket.");
+        return -1;
     }
+    return 0;
 }
 
 s32 srv_accept(s32 listenfd) {
     struct sockaddr_in clt_addr;
     memset(&clt_addr, 0, sizeof(clt_addr)); //清0
     s32 clt_addr_length = sizeof(clt_addr);
-    s32 clt_socket_fd = accept(listenfd, (struct sockaddr *) &clt_addr, (s32 *) &clt_addr_length);
+    s32 clt_socket_fd = accept(listenfd, (struct sockaddr *) &clt_addr, (socklen_t *) &clt_addr_length);
     if (clt_socket_fd == -1) {
         if (errno != EINTR) {
             err("Error accepting on serversocket.");
