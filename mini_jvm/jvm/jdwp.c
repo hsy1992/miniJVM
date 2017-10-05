@@ -3,12 +3,8 @@
 //
 
 #include "jdwp.h"
-#include "global.h"
-#include "jvm.h"
 #include "jvm_util.h"
-#include "java_native_reflect.h"
 #include "java_native_io.h"
-#include "garbage.h"
 
 
 void jdwp_post_events(JdwpClient *client);
@@ -378,6 +374,19 @@ s32 jdwp_writepacket(JdwpClient *client, JdwpPacket *packet) {
 }
 
 //==================================================    toolkit    ==================================================
+
+Runtime *getRuntimeOfThread(Instance *jthread) {
+    Runtime *r = NULL;
+    thread_lock(&sys_lock);
+    s32 i;
+    for (i = 0; i < thread_list->length; i++) {
+        Runtime *rt = arraylist_get_value(thread_list, i);
+        if (rt->threadInfo->jthread == jthread)r = rt;
+    }
+    thread_unlock(&sys_lock);
+    return r;
+}
+
 void signatureToName(Utf8String *signature) {
     if (utf8_char_at(signature, 0) == 'L') {
         utf8_substring(signature, 1, signature->length - 1);
@@ -1756,19 +1765,27 @@ s32 jdwp_client_process(JdwpClient *client, Runtime *runtime) {
             }
             case JDWP_CMD_ThreadReference_Status: {//11.4
                 Instance *jthread = jdwppacket_read_refer(req);
-                Runtime *r = jthread_get_threadq_value(jthread);
-                jdwppacket_set_err(res, JDWP_ERROR_NONE);
-                jdwppacket_write_int(res, r->threadInfo->thread_status);
-                jdwppacket_write_int(res, r->threadInfo->is_suspend ? JDWP_SUSPEND_STATUS_SUSPENDED : 0);
+                Runtime *r = getRuntimeOfThread(jthread);
+                if (r) {
+                    jdwppacket_set_err(res, JDWP_ERROR_NONE);
+                    jdwppacket_write_int(res, r->threadInfo->thread_status);
+                    jdwppacket_write_int(res, r->threadInfo->is_suspend ? JDWP_SUSPEND_STATUS_SUSPENDED : 0);
+                } else {
+                    jdwppacket_set_err(res, JDWP_ERROR_INVALID_THREAD);
+                }
                 jdwp_writepacket(client, res);
                 break;
             }
 
             case JDWP_CMD_ThreadReference_ThreadGroup: {//11.5
                 Instance *jthread = jdwppacket_read_refer(req);
-                Runtime *r = jthread_get_threadq_value(jthread);
-                jdwppacket_set_err(res, JDWP_ERROR_NONE);
-                jdwppacket_write_int(res, 0);
+                Runtime *r = getRuntimeOfThread(jthread);
+                if (r) {
+                    jdwppacket_set_err(res, JDWP_ERROR_NONE);
+                    jdwppacket_write_int(res, 0);
+                } else {
+                    jdwppacket_set_err(res, JDWP_ERROR_INVALID_THREAD);
+                }
                 jdwp_writepacket(client, res);
                 break;
             }
