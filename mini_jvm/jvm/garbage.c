@@ -141,12 +141,11 @@ void *collect_thread_run(void *para) {
     while (!collector->_garbage_thread_stop) {
         //_garbage_thread_pause=1;
         if (!collector->_garbage_thread_pause) {
-            //dump_refer();
-            garbage_collect();
+            //garbage_collect();
         }
-        garbage_thread_lock();
-        garbage_thread_timedwait(GARBAGE_PERIOD_MS);
-        garbage_thread_unlock();
+//        garbage_thread_lock();
+        threadSleep(GARBAGE_PERIOD_MS);
+//        garbage_thread_unlock();
     }
     collector->_garbage_thread_stoped = 1;
     return NULL;

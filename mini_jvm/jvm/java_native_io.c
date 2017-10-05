@@ -12,6 +12,7 @@
 #ifndef __WIN32__
 #define __WIN32__
 #endif
+#define socklen_t int
 #endif
 #define   err jvm_printf
 
@@ -212,8 +213,8 @@ s32 sock_open(Utf8String *ip, s32 port) {
     memset(&(sock_addr.sin_zero), 0, sizeof((sock_addr.sin_zero))); /* zero the rest of the struct */
 
 #else
-    inet_addr.sin_addr = *((struct in_addr *) host->h_addr);
-    memset(&(inet_addr.sin_zero), 0, sizeof((inet_addr.sin_zero))); /* zero the rest of the struct */
+    sock_addr.sin_addr = *((struct in_addr *) host->h_addr);
+    memset(&(sock_addr.sin_zero), 0, sizeof((sock_addr.sin_zero))); /* zero the rest of the struct */
 #endif
     if (connect(sockfd, (struct sockaddr *) &sock_addr, sizeof(sock_addr)) == -1) {
 #ifdef  __ANDROID__
