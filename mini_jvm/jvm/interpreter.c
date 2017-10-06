@@ -3189,9 +3189,9 @@ static void printCodeAttribute(CodeAttribute *ca, Class *p) {
 /**
  * 把堆栈中的方法调用参数存入方法本地变量
  * 调用方法前，父程序把函数参数推入堆栈，方法调用时，需要把堆栈中的参数存到本地变量
- * @param method
- * @param father
- * @param son
+ * @param method  method
+ * @param father  runtime of father
+ * @param son     runtime of son
  */
 void stack2localvar(MethodInfo *method, Runtime *father, Runtime *son) {
 

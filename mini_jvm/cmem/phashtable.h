@@ -160,7 +160,7 @@ struct _PHashtable {
  */
 
 PHashtable *phashtable_create(PHashtableHashFunc hash_func,
-                            PHashtableEqualFunc equal_func);
+                              PHashtableEqualFunc equal_func);
 
 
 unsigned long P_DEFAULT_HASH_FUNC(PHashtableKey kmer);
@@ -187,8 +187,8 @@ void phashtable_clear(PHashtable *hash_table);
  */
 
 void phashtable_register_free_functions(PHashtable *hash_table,
-                                       PHashtableKeyFreeFunc key_free_func,
-                                       PHashtableValueFreeFunc value_free_func);
+                                        PHashtableKeyFreeFunc key_free_func,
+                                        PHashtableValueFreeFunc value_free_func);
 
 /**
  * Insert a value into a hash table, overwriting any existing entry
@@ -203,8 +203,8 @@ void phashtable_register_free_functions(PHashtable *hash_table,
  */
 
 int phashtable_put(PHashtable *hash_table,
-                  PHashtableKey key,
-                  PHashtableValue value);
+                   PHashtableKey key,
+                   PHashtableValue value);
 
 /**
  * Look up a value in a hash table by key.
@@ -216,7 +216,7 @@ int phashtable_put(PHashtable *hash_table,
  */
 
 PHashtableValue phashtable_get(PHashtable *hash_table,
-                             PHashtableKey key);
+                               PHashtableKey key);
 
 /**
  * Remove a value from a hash table.

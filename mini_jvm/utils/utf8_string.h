@@ -33,7 +33,7 @@ typedef struct _utf8_string {
 } Utf8String;
 
 
-    Utf8String *utf8_create(void);
+Utf8String *utf8_create(void);
 
 Utf8String *utf8_create_c(char *str);
 

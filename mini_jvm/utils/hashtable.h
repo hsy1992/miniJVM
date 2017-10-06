@@ -88,7 +88,7 @@ typedef void *HashtableValue;
 struct _HashtableIterator {
     Hashtable *hash_table;
     HashtableEntry *next_entry;
-    int next_chain;
+    unsigned long long int next_chain;
 };
 
 /**

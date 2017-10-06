@@ -1061,7 +1061,7 @@ s32 _LOAD_FROM_FILE(Class *_this, c8 *file) {
 
 /**
  * 把各个索引转为直接地址引用，加快处理速度
- * @param clazz
+ * @param clazz class
  */
 void class_link(Class *clazz) {
     Utf8String* ustr=get_utf8_string(clazz, find_constant_classref(clazz, clazz->cff.this_class)->stringIndex);

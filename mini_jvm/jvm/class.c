@@ -84,8 +84,8 @@ void constant_list_destory(Class *clazz) {
 /**
  * 需要在所有类加载入系统之后
  * 初始化静态变量区，及生成实例模板
- * @param clazz
- * @return
+ * @param clazz class
+ * @return ret
  */
 s32 class_prepar(Class *clazz) {
     if (clazz->status >= CLASS_STATUS_PREPARING)return 0;
@@ -156,8 +156,8 @@ s32 class_prepar(Class *clazz) {
 
 /**
  * 执行静态代码，需要在类装入字节码，并初始化好静态变量区之后执行
- * @param clazz
- * @param runtime
+ * @param clazz class
+ * @param runtime  runtime
  */
 void class_clinit(Class *clazz, Runtime *runtime) {
     if (clazz->status < CLASS_STATUS_PREPARED) {
@@ -329,9 +329,9 @@ Utf8String *get_utf8_string(Class *clazz, s32 index) {
  * 父类的静态和实例成员 Fathar.x ，都会描述为  Son.x ,类名描述为本类
  * 而调用其他类（非父类）的静态变量比如：  System.out ，会被描述为 System.out ，类名描述为其他类
  *
- * @param clazz
- * @param field_ref
- * @return
+ * @param clazz class
+ * @param field_ref ref
+ * @return fi
  */
 FieldInfo *find_fieldInfo_by_fieldref(Class *clazz, s32 field_ref) {
     FieldInfo *fi = NULL;
@@ -389,7 +389,7 @@ find_constant_methodref_by_name(Utf8String *clsName, Utf8String *methodName, Utf
     Class *clazz = classes_get(clsName);
     ArrayList *mrarr = clazz->constantPool.methodRef;
     s32 i;
-    for (; i < mrarr->length; i++) {
+    for (i=0; i < mrarr->length; i++) {
         cmr = arraylist_get_value(mrarr, i);
         if (utf8_equals(methodName, cmr->methodInfo->name) == 1
             && utf8_equals(methodType, cmr->methodInfo->descriptor) == 1
@@ -402,10 +402,10 @@ find_constant_methodref_by_name(Utf8String *clsName, Utf8String *methodName, Utf
 
 /**
  * 查找实例的方法， invokevirtual
- * @param ins
- * @param methodName
- * @param methodType
- * @return
+ * @param ins ins
+ * @param methodName name
+ * @param methodType type
+ * @return mi
  */
 MethodInfo *find_instance_methodInfo_by_name(Instance *ins, Utf8String *methodName, Utf8String *methodType) {
     if (!ins)return NULL;

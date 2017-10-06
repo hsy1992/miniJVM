@@ -14,8 +14,7 @@ s64 heap_size = 0; //当前已经分配的内存总数
 
 /**
  * 在分配的内存块前面加4个字节用于存放此块内存的长度
- * @param size
- * @return
+ *
  */
 void *jvm_alloc(u32 size) {
 

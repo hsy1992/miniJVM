@@ -594,7 +594,7 @@ void readLocation(JdwpPacket *req, Location *loc) {
 }
 
 s64 getPtrValue(u8 type, c8 *ptr) {
-    s64 value;
+    s64 value = 0;
     switch (getSimpleTag(type)) {
         case '1':
             value = getFieldByte(ptr);
@@ -765,7 +765,7 @@ EventSet *jdwp_eventset_get(s32 id) {
 void jdwp_post_events(JdwpClient *client) {
     EventInfo *event;
     while ((event = jdwp_event_get()) != NULL) {
-        s32 i;
+        s32 i = 0;
         HashtableIterator hti;
         hashtable_iterate(jdwpserver.event_sets, &hti);
         for (; hashtable_iter_has_more(&hti);) {

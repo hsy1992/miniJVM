@@ -376,11 +376,11 @@ typedef struct _MemoryBlock {
     ThreadLock *volatile thread_lock;
 } MemoryBlock;
 
- struct _ClassLoader {
+struct _ClassLoader {
     Utf8String *g_classpath;
     Hashtable *classes;
     Class *JVM_CLASS;
-} ;
+};
 //======================= class file =============================
 
 
@@ -504,13 +504,13 @@ typedef struct _ConstantInterfaceMethodRef {
 
 } ConstantInterfaceMethodRef;
 
- struct _ConstantNameAndType {
+struct _ConstantNameAndType {
     s32 index;
     u8 tag;
     s32 additional_byte_size;
     u16 nameIndex;
     u16 typeIndex;
-} ;
+};
 
 typedef struct _ConstantPool {
 
@@ -596,7 +596,7 @@ typedef struct _LocalVarTable {
     u16 index;
 } LocalVarTable;
 
- struct _CodeAttribute {
+struct _CodeAttribute {
     u16 attribute_name_index;
     s32 attribute_length;
     u16 max_stack;
@@ -610,10 +610,10 @@ typedef struct _LocalVarTable {
     u16 local_var_table_length;
     LocalVarTable *local_var_table;
 
-} ;
+};
 
 /* Field Info */
- struct _FieldInfo {
+struct _FieldInfo {
     u16 access_flags;
     u16 name_index;
     u16 descriptor_index;
@@ -624,7 +624,7 @@ typedef struct _LocalVarTable {
     Utf8String *descriptor;
     u16 offset;//字段的偏移地址，静态字段存放在class中
     Class *_this_class;
-} ;
+};
 
 /*  Field Pool */
 typedef struct _FieldPool {
@@ -633,7 +633,7 @@ typedef struct _FieldPool {
 } FieldPool;
 
 /* Method Info */
- struct _MethodInfo {
+struct _MethodInfo {
     u16 access_flags;
     u16 name_index;
     u16 descriptor_index;
@@ -649,7 +649,7 @@ typedef struct _FieldPool {
     java_native_fun native_func;
     Pairlist *breakpoint;
 
-} ;
+};
 
 /*  Method Pool */
 typedef struct _MethodPool {
@@ -690,7 +690,7 @@ typedef struct _LocalVarItem {
 } LocalVarItem;
 
 
- struct _Runtime {
+struct _Runtime {
     MethodInfo *methodInfo;
     Class *clazz;
     u8 *pc;
@@ -702,13 +702,13 @@ typedef struct _LocalVarItem {
     LocalVarItem *localVariables;
     s32 localvar_count;
     u8 wideMode;
-} ;
+};
 //======================= class =============================
 
 /*
  Gust 20170719 add Class define
  */
- struct _ClassType {
+struct _ClassType {
     MemoryBlock mb;
 
     Utf8String *name;
@@ -734,7 +734,7 @@ typedef struct _LocalVarItem {
 
     //for array class
     s32 arr_data_type;
-} ;
+};
 
 void _INIT_CLASS(Class *_this);
 
@@ -870,7 +870,7 @@ Runtime *threadlist_get(s32 i);
 //======================= instance =============================
 
 
- struct _InstanceType {
+struct _InstanceType {
     MemoryBlock mb;
     //
     union {
@@ -878,7 +878,7 @@ Runtime *threadlist_get(s32 i);
         c8 *arr_body;//array body
     };
     s32 arr_length;
-} ;
+};
 
 
 Instance *instance_create(Class *clazz);
@@ -893,12 +893,12 @@ s32 instance_destory(Instance *instance);
 
 typedef s32 (*InstructFunc)(u8 **opCode, Runtime *runtime);
 
- struct _Instruction {
+struct _Instruction {
     c8 *name;
     u8 opCode;
     s32 offset;
     InstructFunc func;
-} ;
+};
 
 c8 *find_instruct_name(u8 op);
 
@@ -1003,7 +1003,7 @@ s32 localvar_init(Runtime *runtime, s32 count);
 s32 localvar_dispose(Runtime *runtime);
 
 //======================= other =============================
-    void open_log(void);
+void open_log(void);
 
 void close_log(void);
 
@@ -1017,5 +1017,5 @@ c8 *getMajorVersionString(u16 major_number);
 }
 #endif
 
-    
+
 #endif

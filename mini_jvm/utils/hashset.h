@@ -70,16 +70,12 @@ struct _Hashset {
 /**
  * Create a new hash table.
  *
- * @param hash_func            Function used to generate hash keys for the
- *                             keys used in the table.
- * @param equal_func           Function used to test keys used in the table
- *                             for equality.
  * @return                     A new hash table structure, or NULL if it
  *                             was not possible to allocate the new hash
  *                             table.
  */
 
-Hashset *hashset_create();
+Hashset *hashset_create(void);
 //
 //Hashset *hashset_create(HashtableHashFunc hash_func,
 //                            HashtableEqualFunc equal_func);
@@ -112,7 +108,6 @@ void hashset_clear(Hashset *hash_table);
  *
  * @param hash_table           The hash table.
  * @param key                  The key for the new value.
- * @param value                The value to insert.
  * @return                     Non-zero if the value was added successfully,
  *                             or zero if it was not possible to allocate
  *                             memory for the new entry.
@@ -189,7 +184,7 @@ int hashset_iter_has_more(HashsetIterator *iterator);
 
 HashsetKey hashset_iter_next_key(HashsetIterator *iterator);
 
-int hashset_resize(Hashset *hash_table,int size);
+int hashset_resize(Hashset *hash_table, int size);
 
 #ifdef __cplusplus
 }

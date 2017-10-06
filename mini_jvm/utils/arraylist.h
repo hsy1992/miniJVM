@@ -135,7 +135,8 @@ int arraylist_append(ArrayList *arraylist, ArrayListValue data);
 
 
 int arraylist_remove(ArrayList *arraylist, ArrayListValue data);
-/** 
+
+/**
  * Prepend a value to the beginning of an ArrayList.
  *
  * @param arraylist      The ArrayList.

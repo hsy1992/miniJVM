@@ -11,6 +11,7 @@ extern "C" {
 
 #include "../utils/utf8_string.h"
 #include "global.h"
+
 #define  SOCK_OP_TYPE_NON_BLOCK   0
 #define  SOCK_OP_TYPE_REUSEADDR   1
 #define  SOCK_OP_TYPE_RCVBUF   2

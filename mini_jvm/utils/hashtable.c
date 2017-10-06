@@ -476,7 +476,6 @@ HashtableKey hashtable_iter_next_key(HashtableIterator *iterator) {
 int hashtable_resize(Hashtable *hash_table, unsigned long long int size) {
     HashtableEntry **old_table;
     unsigned long long int old_table_size;
-    int old_prime_index;
     HashtableEntry *rover;
     HashtableEntry *next;
     unsigned long long int index;

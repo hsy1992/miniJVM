@@ -6,9 +6,9 @@
 
 void getMemBlockName(void *memblock, Utf8String *name);
 
-void __garbage_clear();
+void __garbage_clear(void);
 
-Hashset *_garbage_get_set();
+Hashset *_garbage_get_set(void);
 
 void _garbage_put_set(Hashset *set);
 
@@ -48,7 +48,7 @@ void garbage_mark_son(__refer r);
  *
  * 检查完这几方面之后，那些 （1）引用对象为0个，（2）未被其他线程运行时使用的对象，将被回收。
  *
- * @return
+ * @return errorcode
  */
 s32 garbage_collector_create() {
     collector = jvm_alloc(sizeof(Collector));
@@ -190,9 +190,9 @@ void garbage_thread_timedwait(s64 ms) {
     t.tv_sec = ms / 1000;
     t.tv_nsec = (ms % 1000) * 1000000;
     s32 ret = pthread_cond_timedwait(&collector->_garbageCond, &collector->_garbage_lock, &t);
-    if (ret == ETIMEDOUT) {
-        s32 debug = 1;
-    }
+//    if (ret == ETIMEDOUT) {
+//        s32 debug = 1;
+//    }
 }
 
 void garbage_thread_notify() {
@@ -209,7 +209,7 @@ Hashset *_garbage_get_set() {
 
 /**
  * 3 mode to mem or perfomence
- * @param set
+ * @param set putin eventset
  */
 void _garbage_put_set(Hashset *set) {
     s32 mode = 0;
@@ -336,7 +336,7 @@ void dump_refer() {
  * 查找所有实例，如果发现没有被引用 set->length==0 时，也不在运行时runtime的 stack 和 局部变量表中
  * 去除掉此对象对其他对象的引用，并销毁对象
  *
- * @return
+ * @return ret
  */
 s32 garbage_collect() {
     garbage_thread_lock();
@@ -407,8 +407,7 @@ s32 garbage_collect() {
 
 /**
  * 各个线程把自己还需要使用的对象进行标注，表示不能回收
- * @param son
- * @return
+ * @return ret
  */
 s32 garbage_mark_by_threads() {
     s32 i;
@@ -451,9 +450,8 @@ s32 garbage_mark_by_threads() {
  * 另一种是被运行时的栈或局部变量所引用，
  * 这两种情况下，对象是不能被释放的
  *
- * @param son
- * @param jthread
- * @return
+ * @param pruntime son of runtime
+ * @return how many marked
  */
 
 
@@ -497,7 +495,7 @@ s32 garbage_mark_refered_obj(Runtime *pruntime) {
 
 /**
  * 递归标注obj所有的子孙
- * @param obj
+ * @param r addr
  */
 void garbage_mark_son(__refer r) {
     MemoryBlock *obj = (MemoryBlock *) r;
@@ -527,7 +525,7 @@ void garbage_mark_son(__refer r) {
 
 /**
  * destory a instance
- * @param k
+ * @param k ins
  */
 void garbage_destory_memobj(__refer k) {
     garbage_derefer_all(k);
@@ -556,9 +554,9 @@ void garbage_destory_memobj(__refer k) {
  *    3. new 新对象时创建引用，其父为 NULL 空值， 此时这个对象在 栈或局部变量中
  *    4. newarray 新数组创建引用，其父为 NULL 空值， 此时这个对象在 栈或局部变量中
  *
- * @param sonPtr
- * @param parentPtr
- * @return
+ * @param sonPtr  son
+ * @param parentPtr father
+ * @return son
  */
 
 void *garbage_refer(__refer sonPtr, __refer parentPtr) {

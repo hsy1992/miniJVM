@@ -37,15 +37,15 @@ u8 getDataTypeTag(s32 index);
 
 Class *array_class_get(Utf8String *descript);
 
-s64 currentTimeMillis();
+s64 currentTimeMillis(void);
 
-s64 nanoTime();
+s64 nanoTime(void);
 
 s32 threadSleep(s64 ms);
 
 s32 sys_properties_load(Utf8String *path);
 
-void sys_properties_dispose();
+void sys_properties_dispose(void);
 
 void jstring_set_count(Instance *jstr, s32 count);
 
@@ -69,7 +69,7 @@ s32 parseMethodPara(Utf8String *methodType, Utf8String *out);
 
 Instance *getInstanceInStack(Class *clazz, ConstantMethodRef *cmr, RuntimeStack *stack);
 
-void printDumpOfClasses();
+void printDumpOfClasses(void);
 
 
 void runtime_init(Runtime *runtime);
@@ -78,7 +78,7 @@ void runtime_dispose(Runtime *runtime);
 
 ////======================= thread =============================
 
- struct _JavaThreadInfo {
+struct _JavaThreadInfo {
     Instance *jthread;
     Runtime *top_runtime;
     u8 volatile thread_status;
@@ -88,14 +88,14 @@ void runtime_dispose(Runtime *runtime);
     pthread_t pthread;
     //调试器相关字段
     JdwpStep jdwp_step;
-} ;
+};
 
- struct _ThreadLock {
+struct _ThreadLock {
     pthread_cond_t thread_cond;
     pthread_mutexattr_t lock_attr;
     pthread_mutex_t mutex_lock; //互斥锁
     Instance *jthread_holder;
-} ;
+};
 
 pthread_t jthread_create_and_start(Instance *ins);
 

@@ -35,7 +35,6 @@
 #include <stdlib.h>
 
 
-
 extern char *dbg_file_name;
 extern unsigned long dbg_line_number;
 

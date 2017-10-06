@@ -126,8 +126,8 @@ void threadlist_add(Runtime *r) {
 
 /**
  * 把utf字符串转为 java unicode 双字节串
- * @param ustr
- * @param arr
+ * @param ustr in
+ * @param arr out
  */
 s32 utf8_2_unicode(Utf8String *ustr, u16 *arr) {
     char *pInput = utf8_cstr(ustr);
@@ -184,7 +184,7 @@ s32 utf8_2_unicode(Utf8String *ustr, u16 *arr) {
 
 int unicode_2_utf8(u16 *jchar_arr, Utf8String *ustr, s32 totalSize) {
     s32 i;
-    s32 utf_len;
+    s32 utf_len = 0;
     for (i = 0; i < totalSize; i++) {
         s32 unic = jchar_arr[i];
 
@@ -235,8 +235,8 @@ int unicode_2_utf8(u16 *jchar_arr, Utf8String *ustr, s32 totalSize) {
 
 /**
  * 交换高低位，little endian 和 big endian 互转时用到
- * @param ptr
- * @param size
+ * @param ptr addr
+ * @param size len
  */
 void swap_endian_little_big(u8 *ptr, s32 size) {
     int i;
@@ -306,9 +306,9 @@ s32 isDataReferByIndex(s32 index) {
 
 /**
  * 从栈中取得实例对象，中间穿插着调用参数
- * @param cmr
- * @param stack
- * @return
+ * @param cmr cmr
+ * @param stack stack
+ * @return ins
  */
 Instance *getInstanceInStack(Class *clazz, ConstantMethodRef *cmr, RuntimeStack *stack) {
 
@@ -743,9 +743,9 @@ s32 jarray_destory(Instance *arr) {
 
 /**
  * create multi array
- * @param dim
- * @param pdesc
- * @return
+ * @param dim arrdim
+ * @param pdesc desc
+ * @return ins
  */
 Instance *jarray_multi_create(ArrayList *dim, Utf8String *pdesc, s32 deep) {
     Utf8String *desc = utf8_create_copy(pdesc);
@@ -1019,10 +1019,9 @@ Instance *exception_create(s32 exception_type, Runtime *runtime) {
 //===============================    实例操作  ==================================
 /**
  * get instance field value address
- * @param clazz maybe the ins 's superclass
- * @param ins
- * @param field_ref
- * @return
+ * @param ins ins
+ * @param fi fi
+ * @return addr
  */
 c8 *getInstanceFieldPtr(Instance *ins, FieldInfo *fi) {
     return &(ins->obj_fields[fi->_this_class->field_instance_start + fi->offset]);

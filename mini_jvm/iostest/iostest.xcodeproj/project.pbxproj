@@ -23,12 +23,6 @@
 		45C1251B1F87CDD400BF3925 /* hashtable.c in Sources */ = {isa = PBXBuildFile; fileRef = 45C125111F87CDD400BF3925 /* hashtable.c */; };
 		45C1251C1F87CDD400BF3925 /* hashset.c in Sources */ = {isa = PBXBuildFile; fileRef = 45C125141F87CDD400BF3925 /* hashset.c */; };
 		45C1251D1F87CDD400BF3925 /* utf8_string.c in Sources */ = {isa = PBXBuildFile; fileRef = 45C125151F87CDD400BF3925 /* utf8_string.c */; };
-		45C125261F87CE0400BF3925 /* phashtable.c in Sources */ = {isa = PBXBuildFile; fileRef = 45C1251F1F87CE0400BF3925 /* phashtable.c */; };
-		45C125271F87CE0400BF3925 /* memleak.c in Sources */ = {isa = PBXBuildFile; fileRef = 45C125201F87CE0400BF3925 /* memleak.c */; };
-		45C125281F87CE0400BF3925 /* README in Resources */ = {isa = PBXBuildFile; fileRef = 45C125211F87CE0400BF3925 /* README */; };
-		45C125291F87CE0400BF3925 /* Makefile in Sources */ = {isa = PBXBuildFile; fileRef = 45C125221F87CE0400BF3925 /* Makefile */; };
-		45C1252A1F87CE0400BF3925 /* LICENSE in Resources */ = {isa = PBXBuildFile; fileRef = 45C125231F87CE0400BF3925 /* LICENSE */; };
-		45C1252B1F87CE0400BF3925 /* example.c in Sources */ = {isa = PBXBuildFile; fileRef = 45C125251F87CE0400BF3925 /* example.c */; };
 		45C125421F87CE1400BF3925 /* global.c in Sources */ = {isa = PBXBuildFile; fileRef = 45C1252D1F87CE1100BF3925 /* global.c */; };
 		45C125431F87CE1400BF3925 /* java_native_std.c in Sources */ = {isa = PBXBuildFile; fileRef = 45C1252F1F87CE1100BF3925 /* java_native_std.c */; };
 		45C125441F87CE1400BF3925 /* os_linux.c in Sources */ = {isa = PBXBuildFile; fileRef = 45C125301F87CE1100BF3925 /* os_linux.c */; };
@@ -44,6 +38,11 @@
 		45C1254E1F87CE1400BF3925 /* class.c in Sources */ = {isa = PBXBuildFile; fileRef = 45C1253F1F87CE1300BF3925 /* class.c */; };
 		45C1254F1F87CE1400BF3925 /* java_native_io.c in Sources */ = {isa = PBXBuildFile; fileRef = 45C125411F87CE1400BF3925 /* java_native_io.c */; };
 		45C1255C1F87D33B00BF3925 /* classes in Resources */ = {isa = PBXBuildFile; fileRef = 45C1255B1F87D19D00BF3925 /* classes */; };
+		45C125661F87E9DE00BF3925 /* phashtable.c in Sources */ = {isa = PBXBuildFile; fileRef = 45C1255F1F87E9DE00BF3925 /* phashtable.c */; };
+		45C125671F87E9DE00BF3925 /* memleak.c in Sources */ = {isa = PBXBuildFile; fileRef = 45C125601F87E9DE00BF3925 /* memleak.c */; };
+		45C125681F87E9DE00BF3925 /* README in Resources */ = {isa = PBXBuildFile; fileRef = 45C125611F87E9DE00BF3925 /* README */; };
+		45C1256A1F87E9DE00BF3925 /* LICENSE in Resources */ = {isa = PBXBuildFile; fileRef = 45C125631F87E9DE00BF3925 /* LICENSE */; };
+		45C1256B1F87E9DE00BF3925 /* example.c in Sources */ = {isa = PBXBuildFile; fileRef = 45C125651F87E9DE00BF3925 /* example.c */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -93,14 +92,6 @@
 		45C125151F87CDD400BF3925 /* utf8_string.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = utf8_string.c; path = ../../utils/utf8_string.c; sourceTree = "<group>"; };
 		45C125161F87CDD400BF3925 /* utf8_string.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = utf8_string.h; path = ../../utils/utf8_string.h; sourceTree = "<group>"; };
 		45C125171F87CDD400BF3925 /* hashtable.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = hashtable.h; path = ../../utils/hashtable.h; sourceTree = "<group>"; };
-		45C1251E1F87CE0400BF3925 /* memleak.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = memleak.h; path = ../../../cmem/memleak.h; sourceTree = "<group>"; };
-		45C1251F1F87CE0400BF3925 /* phashtable.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = phashtable.c; path = ../../../cmem/phashtable.c; sourceTree = "<group>"; };
-		45C125201F87CE0400BF3925 /* memleak.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = memleak.c; path = ../../../cmem/memleak.c; sourceTree = "<group>"; };
-		45C125211F87CE0400BF3925 /* README */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = README; path = ../../../cmem/README; sourceTree = "<group>"; };
-		45C125221F87CE0400BF3925 /* Makefile */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.make; name = Makefile; path = ../../../cmem/Makefile; sourceTree = "<group>"; };
-		45C125231F87CE0400BF3925 /* LICENSE */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = LICENSE; path = ../../../cmem/LICENSE; sourceTree = "<group>"; };
-		45C125241F87CE0400BF3925 /* phashtable.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = phashtable.h; path = ../../../cmem/phashtable.h; sourceTree = "<group>"; };
-		45C125251F87CE0400BF3925 /* example.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = example.c; path = ../../../cmem/example.c; sourceTree = "<group>"; };
 		45C1252C1F87CE1100BF3925 /* java_native_std.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = java_native_std.h; path = ../../jvm/java_native_std.h; sourceTree = "<group>"; };
 		45C1252D1F87CE1100BF3925 /* global.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = global.c; path = ../../jvm/global.c; sourceTree = "<group>"; };
 		45C1252E1F87CE1100BF3925 /* global.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = global.h; path = ../../jvm/global.h; sourceTree = "<group>"; };
@@ -124,6 +115,13 @@
 		45C125401F87CE1400BF3925 /* jdwp.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = jdwp.h; path = ../../jvm/jdwp.h; sourceTree = "<group>"; };
 		45C125411F87CE1400BF3925 /* java_native_io.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = java_native_io.c; path = ../../jvm/java_native_io.c; sourceTree = "<group>"; };
 		45C1255B1F87D19D00BF3925 /* classes */ = {isa = PBXFileReference; lastKnownFileType = folder; name = classes; path = ../java/build/classes; sourceTree = "<group>"; };
+		45C1255E1F87E9DE00BF3925 /* memleak.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = memleak.h; path = ../../cmem/memleak.h; sourceTree = "<group>"; };
+		45C1255F1F87E9DE00BF3925 /* phashtable.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = phashtable.c; path = ../../cmem/phashtable.c; sourceTree = "<group>"; };
+		45C125601F87E9DE00BF3925 /* memleak.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = memleak.c; path = ../../cmem/memleak.c; sourceTree = "<group>"; };
+		45C125611F87E9DE00BF3925 /* README */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = README; path = ../../cmem/README; sourceTree = "<group>"; };
+		45C125631F87E9DE00BF3925 /* LICENSE */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = LICENSE; path = ../../cmem/LICENSE; sourceTree = "<group>"; };
+		45C125641F87E9DE00BF3925 /* phashtable.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = phashtable.h; path = ../../cmem/phashtable.h; sourceTree = "<group>"; };
+		45C125651F87E9DE00BF3925 /* example.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = example.c; path = ../../cmem/example.c; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -191,8 +189,8 @@
 		45C124421F87232100BF3925 /* iostestTests */ = {
 			isa = PBXGroup;
 			children = (
+				45C1255D1F87E9B500BF3925 /* cmem */,
 				45C124F91F87CD4700BF3925 /* utils */,
-				45C124EA1F87CD2900BF3925 /* cmem */,
 				45C124C51F87CD0300BF3925 /* jvm */,
 				45C124431F87232100BF3925 /* iostestTests.swift */,
 				45C1245D1F872A9200BF3925 /* invokec.c */,
@@ -249,22 +247,6 @@
 			name = jvm;
 			sourceTree = "<group>";
 		};
-		45C124EA1F87CD2900BF3925 /* cmem */ = {
-			isa = PBXGroup;
-			children = (
-				45C125251F87CE0400BF3925 /* example.c */,
-				45C125231F87CE0400BF3925 /* LICENSE */,
-				45C125221F87CE0400BF3925 /* Makefile */,
-				45C125201F87CE0400BF3925 /* memleak.c */,
-				45C1251E1F87CE0400BF3925 /* memleak.h */,
-				45C1251F1F87CE0400BF3925 /* phashtable.c */,
-				45C125241F87CE0400BF3925 /* phashtable.h */,
-				45C125211F87CE0400BF3925 /* README */,
-			);
-			name = cmem;
-			path = "New Group";
-			sourceTree = "<group>";
-		};
 		45C124F91F87CD4700BF3925 /* utils */ = {
 			isa = PBXGroup;
 			children = (
@@ -282,6 +264,20 @@
 				45C125161F87CDD400BF3925 /* utf8_string.h */,
 			);
 			name = utils;
+			sourceTree = "<group>";
+		};
+		45C1255D1F87E9B500BF3925 /* cmem */ = {
+			isa = PBXGroup;
+			children = (
+				45C125651F87E9DE00BF3925 /* example.c */,
+				45C125631F87E9DE00BF3925 /* LICENSE */,
+				45C125601F87E9DE00BF3925 /* memleak.c */,
+				45C1255E1F87E9DE00BF3925 /* memleak.h */,
+				45C1255F1F87E9DE00BF3925 /* phashtable.c */,
+				45C125641F87E9DE00BF3925 /* phashtable.h */,
+				45C125611F87E9DE00BF3925 /* README */,
+			);
+			name = cmem;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -403,8 +399,8 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				45C1252A1F87CE0400BF3925 /* LICENSE in Resources */,
-				45C125281F87CE0400BF3925 /* README in Resources */,
+				45C1256A1F87E9DE00BF3925 /* LICENSE in Resources */,
+				45C125681F87E9DE00BF3925 /* README in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -431,17 +427,18 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				45C1256B1F87E9DE00BF3925 /* example.c in Sources */,
 				45C125461F87CE1400BF3925 /* jvm.c in Sources */,
 				45C125421F87CE1400BF3925 /* global.c in Sources */,
-				45C125271F87CE0400BF3925 /* memleak.c in Sources */,
 				45C1251A1F87CDD400BF3925 /* pairlist.c in Sources */,
 				45C1254A1F87CE1400BF3925 /* garbage.c in Sources */,
 				45C1254B1F87CE1400BF3925 /* jvm_util.c in Sources */,
 				45C125191F87CDD400BF3925 /* d_vars.c in Sources */,
-				45C125291F87CE0400BF3925 /* Makefile in Sources */,
+				45C125671F87E9DE00BF3925 /* memleak.c in Sources */,
 				45C1251B1F87CDD400BF3925 /* hashtable.c in Sources */,
 				45C1251D1F87CDD400BF3925 /* utf8_string.c in Sources */,
 				45C1254F1F87CE1400BF3925 /* java_native_io.c in Sources */,
+				45C125661F87E9DE00BF3925 /* phashtable.c in Sources */,
 				45C1254D1F87CE1400BF3925 /* java_native_reflect.c in Sources */,
 				45C125481F87CE1400BF3925 /* class_load.c in Sources */,
 				45C124441F87232100BF3925 /* iostestTests.swift in Sources */,
@@ -455,8 +452,6 @@
 				45C125451F87CE1400BF3925 /* jdwp.c in Sources */,
 				45C1254C1F87CE1400BF3925 /* os_win.c in Sources */,
 				45C125441F87CE1400BF3925 /* os_linux.c in Sources */,
-				45C1252B1F87CE0400BF3925 /* example.c in Sources */,
-				45C125261F87CE0400BF3925 /* phashtable.c in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

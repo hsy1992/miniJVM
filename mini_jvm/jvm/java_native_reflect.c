@@ -172,7 +172,7 @@ s32 javax_mini_reflect_vm_RefNative_getFieldVal(Runtime *runtime, Class *clazz) 
     ptr = getFieldPtr_byName_c(valuetype, JDWP_CLASS_VALUETYPE, "value", "J");
     c8 *fptr;
     fptr = getFieldPtr_byName(ins, fi->_this_class->name, fi->name, fi->descriptor);
-    s64 val;
+    s64 val = 0;
     switch (bytes) {
         case 'R':
             val = (s64) (long) getFieldRefer(fptr);
