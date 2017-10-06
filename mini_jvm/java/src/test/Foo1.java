@@ -600,12 +600,12 @@ public class Foo1 {
 //        f.t17();
 //        f.t18();
 //        f.t19();
-        f.t21();
+//        f.t21();
     }
 
     public static void main(String[] agrs) {
-        BpDeepTest.main(agrs);
-//        Foo1.main();
+//        BpDeepTest.main(agrs);
+        Foo1.main();
 //        Foo2.main(agrs);
 //        Foo3.main(agrs);
 

@@ -14,9 +14,16 @@ class iostestTests: XCTestCase {
     override func setUp() {
         super.setUp()
         // Put setup code here. This method is called before the invocation of each test method in the class.
+        let myString = "Hello, World!"
+        print(myString)
+        
+
+        let mainBundle = Bundle.main.bundlePath
+        let app_path=mainBundle.cString(using: String.Encoding.utf8)
+        call_jvm(UnsafeMutablePointer<Int8>(mutating: app_path));
 
     }
-    
+
     override func tearDown() {
         // Put teardown code here. This method is called after the invocation of each test method in the class.
         super.tearDown()
@@ -25,13 +32,6 @@ class iostestTests: XCTestCase {
     func testExample() {
         // This is an example of a functional test case.
         // Use XCTAssert and related functions to verify your tests produce the correct results.
-        let myString = "Hello, World!"
-        print(myString)
-
-        let mainBundle = Bundle.main.bundlePath
-        let app_path=mainBundle.cString(using: String.Encoding.utf8)
-        call_jvm(UnsafeMutablePointer<Int8>(mutating: app_path));
-
     }
     
     func testPerformanceExample() {

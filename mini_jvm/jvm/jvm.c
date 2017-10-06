@@ -176,7 +176,7 @@ s32 execute(c8 *p_classpath, c8 *p_mainclass, s32 argc, c8 **argv) {
             jdwp_stop_server();
 
             main_thread_destory();
-            while (thread_list->length > 0) {
+            while (thread_list->length) {
                 threadSleep(100);
             }
         }
