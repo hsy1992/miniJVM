@@ -8,6 +8,10 @@
 #include "jvm.h"
 #include <pthread.h>
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 //回收线程
 extern s64 GARBAGE_PERIOD_MS;//
 extern Collector* collector;
@@ -77,5 +81,8 @@ void garbage_destory_memobj(__refer k);
 s32 garbage_mark_by_threads();
 
 s32 garbage_mark_refered_obj(Runtime *pruntime);
+#ifdef __cplusplus
+}
+#endif
 
 #endif //_GARBAGE_H

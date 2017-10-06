@@ -12,6 +12,10 @@
 #ifdef __MEM_LEAK_DETECT
 #include "../cmem/memleak.h"
 #endif //__MEM_LEAK_DETECT
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 
 typedef unsigned char u8;
 typedef char c8;
@@ -43,6 +47,9 @@ void *jvm_realloc(void *pPtr, u32 size);
 
 #endif //__MEM_LEAK_DETECT
 
+#ifdef __cplusplus
+}
+#endif
 
 
 #endif //MINI_JVM_JVM_TYPE_H

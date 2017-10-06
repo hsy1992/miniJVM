@@ -8,6 +8,10 @@
 
 #include "d_type.h"
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 typedef struct _Pair {
     union {
         __refer left;
@@ -44,5 +48,9 @@ long pairlist_getl(Pairlist *list, long left);
 
 s32 pairlist_putl(Pairlist *list, long left, long right);
 
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif //MINI_JVM_PAIRLIST_H

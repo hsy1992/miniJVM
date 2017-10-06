@@ -10,6 +10,12 @@
 #include "jdwp.h"
 #include <pthread.h>
 
+
+#ifdef __cplusplus
+extern "C" {
+#endif
+
+
 static s64 NANO_START = 0;
 typedef unsigned short uni_char;
 
@@ -128,5 +134,9 @@ void thread_lock(ThreadLock *lock);
 void thread_lock_dispose(ThreadLock *lock);
 
 void thread_lock_init(ThreadLock *lock);
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif //MINI_JVM_UTIL_H

@@ -1076,7 +1076,7 @@ s32 op_f2i(u8 **opCode, Runtime *runtime) {
     RuntimeStack *stack = runtime->stack;
     f32 value1 = pop_float(stack);
     s32 result = 0;
-    result = (s64) value1;
+    result = (s32) value1;
 #if _JVM_DEBUG > 5
     invoke_deepth(runtime);
     jvm_printf("f2i: %d <-- %f\n", result, value1);
@@ -3100,11 +3100,11 @@ void instruct_indexies_destory(Instruction **instcts) {
 }
 
 
-static c8 *find_instruct_name(u8 op) {
+ c8 *find_instruct_name(u8 op) {
     return instructionsIndexies[op]->name;
 }
 
-static InstructFunc find_instruct_func(u8 op) {
+ InstructFunc find_instruct_func(u8 op) {
     Instruction *i = instructionsIndexies[op];
     if (!i) {
         jvm_printf("instruct not found :[%x]\n", op);

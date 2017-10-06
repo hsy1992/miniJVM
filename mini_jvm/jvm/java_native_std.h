@@ -5,6 +5,10 @@
 
 #include "jvm.h"
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 
 typedef struct _java_native_method {
     c8 *clzname;
@@ -36,5 +40,9 @@ void reg_jdwp_native_lib();
 
 s32 native_lib_destory();
 
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif

@@ -6,6 +6,7 @@
 #include "jvm_util.h"
 #include "java_native_io.h"
 
+JdwpServer jdwpserver;
 
 void jdwp_post_events(JdwpClient *client);
 

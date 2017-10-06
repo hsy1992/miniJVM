@@ -184,9 +184,9 @@ int arraylist_insert(ArrayList *arraylist, int index, ArrayListValue data);
 
 /**
  * default int compare
- * @param a
- * @param b
- * @return
+ * @param a valuea
+ * @param b valueb
+ * @return equals
  */
 int arraylist_compare_int(ArrayListValue a, ArrayListValue b);
 

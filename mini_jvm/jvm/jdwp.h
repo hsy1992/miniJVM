@@ -12,6 +12,12 @@
 #include "jvm.h"
 #include "pthread.h"
 #include "../utils/hashset.h"
+
+
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 //=============================      error   ==============================================
 
 static u16 JDWP_ERROR_INVALID_TAG = 500; //object type id or class tag
@@ -469,7 +475,7 @@ typedef struct _JdwpStep {
 static s32 jdwp_eventset_requestid = 0;
 static s32 jdwp_eventset_commandid = 0;
 
-JdwpServer jdwpserver;
+extern JdwpServer jdwpserver;
 
 s32 jdwp_client_process(JdwpClient *client, Runtime *runtime);
 
@@ -491,6 +497,10 @@ void event_on_thread_start(Runtime *runtime);
 void jdwp_check_breakpoint(Runtime *runtime);
 
 void jdwp_check_debug_step(Runtime *runtime);
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif //MINI_JVM_JDWP_H
 

@@ -18,6 +18,10 @@
 #include "../utils/arraylist.h"
 #include "../utils/pairlist.h"
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 
 //=======================  micro define  =============================
 #define _JVM_DEBUG 0
@@ -26,9 +30,6 @@
 #define _JVM_DEBUG_GARBAGE_DUMP 0
 #define _JVM_DEBUG_PROFILE 0
 
-#ifndef LINUX
-#define LINUX 1
-#endif
 
 // x86   x64 ...
 #define __JVM_LITTLE_ENDIAN__ 1
@@ -350,7 +351,7 @@ extern ThreadLock sys_lock;
 extern ClassLoader *sys_classloader;
 extern ClassLoader *array_classloader;
 
-Instruction **instructionsIndexies;
+extern Instruction **instructionsIndexies;
 
 extern ArrayList *thread_list;
 extern ArrayList *native_libs;
@@ -739,7 +740,7 @@ void _INIT_CLASS(Class *_this);
 
 s32 _DESTORY_CLASS(Class *_this);
 
-Class *class_create();
+Class *class_create(void);
 
 Class *getSuperClass(Class *clazz);
 
@@ -899,9 +900,9 @@ typedef s32 (*InstructFunc)(u8 **opCode, Runtime *runtime);
     InstructFunc func;
 } ;
 
-static c8 *find_instruct_name(u8 op);
+c8 *find_instruct_name(u8 op);
 
-static InstructFunc find_instruct_func(u8 op);
+InstructFunc find_instruct_func(u8 op);
 
 ConstantUTF8 *find_constant_utf8(Class *clazz, s32 index);
 
@@ -951,7 +952,7 @@ s32 execute(c8 *p_classpath, c8 *mainclass, s32 argc, c8 **argv);
 
 s32 execute_method(MethodInfo *method, Runtime *runtime, Class *clazz);
 
-Instruction **instruct_indexies_create();
+Instruction **instruct_indexies_create(void);
 
 void instruct_indexies_destory(Instruction **instcts);
 //======================= stack =============================
@@ -994,8 +995,6 @@ s32 is_ref(StackEntry *entry);
 
 void stack2localvar(MethodInfo *method, Runtime *father, Runtime *son);
 
-static s32 op_notsupport(u8 **opCode, Runtime *runtime);
-
 void peek_entry(RuntimeStack *stack, StackEntry *entry, int index);
 
 //======================= localvar =============================
@@ -1004,9 +1003,9 @@ s32 localvar_init(Runtime *runtime, s32 count);
 s32 localvar_dispose(Runtime *runtime);
 
 //======================= other =============================
-void open_log();
+    void open_log(void);
 
-void close_log();
+void close_log(void);
 
 int jvm_printf(const char *, ...);
 
@@ -1014,4 +1013,9 @@ void invoke_deepth(Runtime *runtime);
 
 c8 *getMajorVersionString(u16 major_number);
 
+#ifdef __cplusplus
+}
+#endif
+
+    
 #endif

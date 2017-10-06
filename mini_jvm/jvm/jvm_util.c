@@ -744,7 +744,7 @@ s32 jarray_destory(Instance *arr) {
 /**
  * create multi array
  * @param dim
- * @param desc
+ * @param pdesc
  * @return
  */
 Instance *jarray_multi_create(ArrayList *dim, Utf8String *pdesc, s32 deep) {

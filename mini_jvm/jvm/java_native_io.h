@@ -5,6 +5,9 @@
 #ifndef MINI_JVM_JAVA_NATIVE_IO_H
 #define MINI_JVM_JAVA_NATIVE_IO_H
 
+#ifdef __cplusplus
+extern "C" {
+#endif
 
 #include "../utils/utf8_string.h"
 #include "global.h"
@@ -33,6 +36,11 @@ s32 srv_listen(s32 listenfd);
 s32 srv_accept(s32 listenfd);
 
 s32 srv_close(s32 listenfd);
+
+
+#ifdef __cplusplus
+}
+#endif
 
 
 #endif //MINI_JVM_JAVA_NATIVE_IO_H

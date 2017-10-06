@@ -8,7 +8,7 @@ package javax.mini.net;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import javax.mini.net.Socket;
-import javax.util.LinkedList;
+import java.util.LinkedList;
 
 /**
  *
