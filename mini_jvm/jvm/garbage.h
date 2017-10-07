@@ -29,6 +29,7 @@ struct _Collector {
     pthread_mutex_t _garbage_lock; //重入锁
     pthread_cond_t _garbageCond;
 
+    //
     u8 _garbage_thread_status;
     s64 _garbage_count;
 };

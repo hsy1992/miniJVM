@@ -175,6 +175,14 @@ public class Foo1 {
         Thread t = new Thread(new Runnable() {
             @Override
             public void run() {
+                try {
+                    Thread.sleep(2000);
+                    System.out.println("total mem:" + Runtime.getRuntime().totalMemory()
+                            + "   free: " + Runtime.getRuntime().freeMemory());
+
+                } catch (InterruptedException ex) {
+                }
+
                 System.out.println("thread here.");
                 int j = 0;
                 String c = null;
@@ -192,9 +200,9 @@ public class Foo1 {
         t.start();
         //
         int i = 0;
-//        while (i++ < 10) {
+//        while (i++ < 2) {
 //            try {
-//                Thread.sleep(100);
+//                Thread.sleep(1000);
 //                System.out.println("total mem:" + Runtime.getRuntime().totalMemory()
 //                        + "   free: " + Runtime.getRuntime().freeMemory());
 //

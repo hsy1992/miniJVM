@@ -141,8 +141,9 @@ void *collect_thread_run(void *para) {
         startAt = currentTimeMillis();
         while (currentTimeMillis() - startAt < GARBAGE_PERIOD_MS
                && collector->_garbage_thread_status == GARBAGE_THREAD_NORMAL
+               && heap_size < MAX_HEAP_SIZE
                 ) {
-            threadSleep(100);
+            threadSleep(30);
         }
         if (collector->_garbage_thread_status == GARBAGE_THREAD_STOP) {
             break;

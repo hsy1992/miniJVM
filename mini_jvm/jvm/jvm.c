@@ -77,6 +77,7 @@ s32 execute(c8 *p_classpath, c8 *p_mainclass, s32 argc, c8 **argv) {
     array_classloader = classloader_create("");
 
     //创建垃圾收集器
+    MAX_HEAP_SIZE = 20 * 1024 * 1024;//if heapsize great than MAX, gc would be trigger
     garbage_collector_create();
 
 
@@ -160,6 +161,9 @@ s32 execute(c8 *p_classpath, c8 *p_mainclass, s32 argc, c8 **argv) {
             jvm_printf("\n\n\n\n\n\n================================= main start ================================\n");
             //调用主方法
             ret = execute_method(main, &runtime, clazz);
+            while ((thread_list->length) > 1) {//wait for other thread over ,
+                threadSleep(100);
+            }
             jvm_printf("================================= main  end  ================================\n");
             jvm_printf("spent %lld\n", (currentTimeMillis() - start));
 
@@ -176,9 +180,6 @@ s32 execute(c8 *p_classpath, c8 *p_mainclass, s32 argc, c8 **argv) {
             jdwp_stop_server();
 
             main_thread_destory();
-            while (thread_list->length) {
-                threadSleep(100);
-            }
         }
         utf8_destory(methodName);
         utf8_destory(methodType);
