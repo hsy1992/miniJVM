@@ -382,9 +382,9 @@ s32 javax_mini_reflect_vm_RefNative_getStackFrame(Runtime *runtime, Class *clazz
     if (trun)
         push_long(runtime->stack, (u64) (long) trun);
     else
-        push_int(runtime->stack, 0);
+        push_long(runtime->stack, 0);
 #if _JVM_DEBUG > 5
-    jvm_printf("javax_mini_reflect_vm_RefNative_getStackFrame\n");
+    jvm_printf("javax_mini_reflect_vm_RefNative_getStackFrame %llx\n",(u64) (long) trun);
 #endif
     return 0;
 }
@@ -607,7 +607,7 @@ s32 javax_mini_reflect_StackFrame_mapRuntime(Runtime *runtime, Class *clazz) {
         if (ptr)setFieldLong(ptr, (u64) (long) target->pc);
         //
         ptr = getFieldPtr_byName_c(ins, JDWP_CLASS_RUNTIME, "byteCode", "J");
-        if (ptr)setFieldLong(ptr, (u64) (long) target->ca->code);
+        if (ptr)setFieldLong(ptr, target->ca ? (u64) (long) target->ca->code : 0);
         //
         ptr = getFieldPtr_byName_c(ins, JDWP_CLASS_RUNTIME, "methodId", "J");
         if (ptr)setFieldLong(ptr, (u64) (long) target->methodInfo);

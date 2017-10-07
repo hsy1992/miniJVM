@@ -6,7 +6,13 @@
 package javax.mini.reflect;
 
 /**
- *
+ * 反射一个数组实例，如
+ * 
+ * int[] a=new int[3];
+ * Array rarr = new Array(RefNative.obj2id(a));
+ * 
+ * 即可通过rarr 访问内数组成员
+ * 
  * @author gust
  */
 public class Array {
@@ -39,9 +45,9 @@ public class Array {
             case '4':
                 return ((int) data_ptr.readInt(firstIndex));
             case '8':
-                return (data_ptr.readByte(firstIndex));
+                return (data_ptr.readLong(firstIndex));
             case 'R':
-                return (data_ptr.readByte(firstIndex));
+                return (data_ptr.readRefer(firstIndex));
         }
         throw new IllegalAccessException();
     }

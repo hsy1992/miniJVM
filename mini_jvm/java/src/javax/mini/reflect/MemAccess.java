@@ -7,6 +7,8 @@ package javax.mini.reflect;
 
 /**
  *
+ * 用一个内存起始地址初始化一个内存块，以此为基准直接读取内存数据
+ * 
  * @author gust
  */
 public class MemAccess {

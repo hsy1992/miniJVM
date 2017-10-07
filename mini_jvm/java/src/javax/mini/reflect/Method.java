@@ -6,7 +6,9 @@
 package javax.mini.reflect;
 
 /**
- *
+ * 类方法的反射，以mini jvm中的 MethofInfo的实例内存地址进行初始化
+ * 初始化中会把内存中的相应变量反射到Method实例中。
+ * 
  * @author gust
  */
 public class Method {

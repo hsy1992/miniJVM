@@ -13,9 +13,15 @@ import java.io.ByteArrayOutputStream;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collections;
 import java.util.Enumeration;
+import java.util.HashMap;
 import java.util.Hashtable;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
 import java.util.Vector;
 import javax.cldc.io.Connector;
 import javax.cldc.io.ContentConnection;
@@ -23,6 +29,9 @@ import javax.mini.io.File;
 import javax.mini.io.RandomAccessFile;
 import javax.mini.net.ServerSocket;
 import javax.mini.net.Socket;
+import javax.mini.reflect.Reference;
+import javax.mini.reflect.StackFrame;
+import javax.mini.reflect.vm.RefNative;
 
 /**
  *
@@ -198,6 +207,10 @@ public class Foo1 {
             }
         });
         t.start();
+        long sfid = RefNative.getStackFrame(t);
+        System.out.println("sfid="+Long.toString(sfid, 16));
+        StackFrame sf = new StackFrame(sfid);
+        System.out.println("StackFrame:" + sf.method.methodName);
         //
         int i = 0;
 //        while (i++ < 2) {
@@ -483,56 +496,56 @@ public class Foo1 {
     }
 
     void t19() {
-//        System.out.println("fi=" + fi);
-//        Long[][] a = new Long[3][5];
-//        System.out.println("arr a:" + a);
-//        Object[][][] objs = new Object[4][][];
-//        System.out.println("arr objs:" + objs);
-//        objs[1] = new Object[2][];
-//        System.out.println("arr objs[1]:" + objs[1]);
-//        Short[] c = new Short[5];
-//        System.out.println("arr c:" + c);
-//        System.out.println("fi=" + fi);
-//
-//        List<Integer> list = new ArrayList();
-//        list.add(1);
-//        list.add(999);
-//        for (Iterator it = list.iterator(); it.hasNext();) {
-//            Object o = it.next();
-//            System.out.println("list[i]=" + o);
-//        }
-//        Integer[] iarr = list.toArray(new Integer[0]);
-//        for (Integer i : iarr) {
-//            System.out.println("i=" + i);
-//        }
-//        System.out.println("arr type:" + iarr.getClass());
-//
-//        Map<Long, String> map = new HashMap();
-//        map.put(3L, "Long");
-//        map.put(4L, "Float");
-//        for (Iterator<Long> it = map.keySet().iterator(); it.hasNext();) {
-//            Long key = it.next();
-//            String val = map.get(key);
-//            System.out.println(key + ":" + val);
-//        }
-//        List clist = Collections.synchronizedList(new ArrayList());
-//
-//        Class cla = "".getClass();
-//        Reference ref = new Reference(RefNative.obj2id(cla));
-//        System.out.println("ref.name=" + ref.className);
-//        try {
-//            System.out.println(new Long(0).getClass().toString());
-//            String s = (String) cla.newInstance();
-//            System.out.println(s);
-//        } catch (InstantiationException ex) {
-//        } catch (IllegalAccessException ex) {
-//        }
-//
-//        Class[] classes = RefNative.getClasses();
-//        for (Class cl : classes) {
-//            //System.out.println("class:" + cl.getName()+" id:"+JdwpNative.referenceId(cl));
-//        }
-//        System.out.println("fi=" + fi);
+        System.out.println("fi=" + fi);
+        Long[][] a = new Long[3][5];
+        System.out.println("arr a:" + a);
+        Object[][][] objs = new Object[4][][];
+        System.out.println("arr objs:" + objs);
+        objs[1] = new Object[2][];
+        System.out.println("arr objs[1]:" + objs[1]);
+        Short[] c = new Short[5];
+        System.out.println("arr c:" + c);
+        System.out.println("fi=" + fi);
+
+        List<Integer> list = new ArrayList();
+        list.add(1);
+        list.add(999);
+        for (Iterator it = list.iterator(); it.hasNext();) {
+            Object o = it.next();
+            System.out.println("list[i]=" + o);
+        }
+        Integer[] iarr = list.toArray(new Integer[0]);
+        for (Integer i : iarr) {
+            System.out.println("i=" + i);
+        }
+        System.out.println("arr type:" + iarr.getClass());
+
+        Map<Long, String> map = new HashMap();
+        map.put(3L, "Long");
+        map.put(4L, "Float");
+        for (Iterator<Long> it = map.keySet().iterator(); it.hasNext();) {
+            Long key = it.next();
+            String val = map.get(key);
+            System.out.println(key + ":" + val);
+        }
+        List clist = Collections.synchronizedList(new ArrayList());
+
+        Class cla = "".getClass();
+        Reference ref = new Reference(RefNative.obj2id(cla));
+        System.out.println("ref.name=" + ref.className);
+        try {
+            System.out.println(new Long(0).getClass().toString());
+            String s = (String) cla.newInstance();
+            System.out.println(s);
+        } catch (InstantiationException ex) {
+        } catch (IllegalAccessException ex) {
+        }
+
+        Class[] classes = RefNative.getClasses();
+        for (Class cl : classes) {
+            System.out.println("class:" + cl.getName() + " id:" + RefNative.obj2id(cl));
+        }
+        System.out.println("fi=" + fi);
         int i = 0;
         while (i++ < 1000) {
             try {

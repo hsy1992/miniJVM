@@ -7,6 +7,9 @@ package javax.mini.reflect;
 
 /**
  *
+ * 类成员的反射，初始化时传进mini jvm 中的 FieldIndo 实例地址，mapField会为此实例
+ * 赋值
+ * 
  * @author gust
  */
 public class Field {

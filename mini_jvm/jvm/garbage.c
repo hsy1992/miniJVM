@@ -143,7 +143,7 @@ void *collect_thread_run(void *para) {
                && collector->_garbage_thread_status == GARBAGE_THREAD_NORMAL
                && heap_size < MAX_HEAP_SIZE
                 ) {
-            threadSleep(30);
+            threadSleep(20);
         }
         if (collector->_garbage_thread_status == GARBAGE_THREAD_STOP) {
             break;
@@ -366,7 +366,7 @@ s32 garbage_collect() {
         garbage_mark_son(sys_classloader->JVM_CLASS);
         //printf("\n");
     }
-    if (sys_classloader) {
+    if (array_classloader) {
         garbage_mark_son(array_classloader->JVM_CLASS);
         //printf("\n");
     }
@@ -375,7 +375,7 @@ s32 garbage_collect() {
     // so new inserted obj must be garbage_mark==GARBAGE_MARK_UNDEF  ,otherwise new obj would be collected.
     if (garbage_mark_by_threads() != 0) {
         garbage_thread_unlock();
-        return 1;
+        return -1;
     }
 
     if (sys_classloader)garbage_mark_son(sys_classloader->JVM_CLASS);
@@ -424,7 +424,7 @@ s32 garbage_mark_by_threads() {
             while (!runtime->threadInfo->is_suspend) {
                 garbage_thread_timedwait(500);
                 if (collector->_garbage_thread_status != GARBAGE_THREAD_NORMAL) {
-                    return 1;
+                    return -1;
                 }
             }
             garbage_mark_refered_obj(runtime);

@@ -6,7 +6,7 @@
 package javax.mini.reflect;
 
 /**
- *
+ * StackFrame 中的局部变量 ，对应jvm中的Runtime.localvar
  * @author gust
  */
 public class LocalVarTable {
