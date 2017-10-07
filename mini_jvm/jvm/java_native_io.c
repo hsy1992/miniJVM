@@ -209,13 +209,11 @@ s32 sock_open(Utf8String *ip, s32 port) {
 #if  __JVM_OS_ANDROID__
         inet_addr.sin_addr.s_addr = *((u32 *) (host->h_addr)); //htonl(hosttmp); //
 #elif __JVM_OS_MAC__
-    sock_addr.sin_addr.s_addr = inet_addr(utf8_cstr(ip));
-    memset(&(sock_addr.sin_zero), 0, sizeof((sock_addr.sin_zero))); /* zero the rest of the struct */
-
+    sock_addr.sin_addr = *((struct in_addr *)host->h_addr_list[0]);
 #else
     sock_addr.sin_addr = *((struct in_addr *) host->h_addr);
-    memset(&(sock_addr.sin_zero), 0, sizeof((sock_addr.sin_zero))); /* zero the rest of the struct */
 #endif
+    memset(&(sock_addr.sin_zero), 0, sizeof((sock_addr.sin_zero))); /* zero the rest of the struct */
     if (connect(sockfd, (struct sockaddr *) &sock_addr, sizeof(sock_addr)) == -1) {
 #ifdef  __ANDROID__
         //            LOGE("connect error no: %x\n", errno);
@@ -252,17 +250,17 @@ s32 srv_bind(Utf8String *ip, u16 port) {
     struct hostent *host;
 
     memset((char *) &server_addr, 0, sizeof(server_addr));//清0
+    server_addr.sin_len = sizeof(struct sockaddr_in);
     server_addr.sin_family = AF_INET;
     server_addr.sin_port = htons(port);
-    if (ip->length != 0) {//如果指定了ip
+    if (ip->length) {//如果指定了ip
         if ((host = gethostbyname(utf8_cstr(ip))) == NULL) { /* get the host info */
             err("get host by name error\n");
-//exit(1);
         }
 #if __WIN32__
         server_addr.sin_addr = *((struct in_addr *) host->h_addr);
 #elif __JVM_OS_MAC__
-        server_addr.sin_addr.s_addr = inet_addr(utf8_cstr(ip));
+        server_addr.sin_addr = *((struct in_addr *)host->h_addr_list[0]);
 #else
         server_addr.sin_addr.s_addr = htonl(*((u32 *) (host->h_addr))); //htonl(hosttmp); //
 #endif

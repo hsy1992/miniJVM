@@ -65,7 +65,7 @@ public class Protocol implements ConnectionBaseInterface, ServerSocket {
         }
         // cstring is always NUL terminated (note the extra byte allocated).
         // This avoids awkward char array manipulation in C code.
-        byte cstring[] = new byte[hostname.length() + 1];
+        byte cstring[] = new byte[hostname.length()];
         for (int n = 0; n < hostname.length(); n++) {
             cstring[n] = (byte) (hostname.charAt(n));
         }

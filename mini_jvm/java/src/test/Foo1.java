@@ -210,7 +210,7 @@ public class Foo1 {
         long sfid = RefNative.getStackFrame(Thread.currentThread());
         System.out.println("sfid="+Long.toString(sfid, 16));
         StackFrame sf = new StackFrame(sfid);
-//        System.out.println("StackFrame:" + sf.method.methodName);
+        System.out.println("StackFrame:" + sf.method.methodName);
         //
         int i = 0;
 //        while (i++ < 2) {
@@ -276,7 +276,7 @@ public class Foo1 {
             @Override
             public void run() {
                 try {
-                    ServerSocket srvsock = (ServerSocket) Connector.open("serversocket://:80");
+                    ServerSocket srvsock = (ServerSocket) Connector.open("serversocket://:8080");
                     System.out.println("server socket listen...");
                     srvsock.listen();
                     while (true) {
@@ -336,14 +336,15 @@ public class Foo1 {
                 if (len == 0) {
                     zero++;
                 }
-                if (zero > 3) {
+                if (zero > 300) {
                     break;
                 }
                 for (int i = 0; i < len; i++) {
                     System.out.print((char) rcvbuf[i]);
                 }
-                System.out.print("\n");
+               
             };
+            System.out.print("\n");
         } catch (Exception e) {
 
         }
@@ -608,12 +609,12 @@ public class Foo1 {
 //        f.t4();
 //        f.t5();
 //        f.t6();
-        f.t7();
+//        f.t7();
 //        f.t8();
 //        f.t9();
-        f.t10();
+//        f.t10();
 //        f.t11();
-//        f.t12();
+        f.t12();
 //        f.t13();
 //        f.t14();
 //        f.t15();

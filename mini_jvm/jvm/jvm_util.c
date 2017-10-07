@@ -517,13 +517,13 @@ void invoke_deepth(Runtime *runtime) {
 void *jtherad_loader(void *para) {
     Instance *jthread = (Instance *) para;
     s32 ret = 0;
-    Runtime runtime;
-    runtime_init(&runtime);
-    localvar_init(&runtime, 1);
+    Runtime *runtime = (Runtime *) jthread_get_threadq_value(jthread);
+    runtime_init(runtime);
+    localvar_init(runtime, 1);
 
-    runtime.clazz = jthread->mb.clazz;
-    runtime.threadInfo->jthread = jthread;
-    runtime.threadInfo->pthread = pthread_self();
+    runtime->clazz = jthread->mb.clazz;
+    runtime->threadInfo->jthread = jthread;
+    runtime->threadInfo->pthread = pthread_self();
     Utf8String *methodName = utf8_create_c("run");
     Utf8String *methodType = utf8_create_c("()V");
     MethodInfo *method = NULL;
@@ -536,30 +536,33 @@ void *jtherad_loader(void *para) {
 #endif
 
     if (method) {
-        if (java_debug)event_on_thread_start(&runtime);
-        jthread_set_threadq_value(jthread, &runtime);
-        runtime.threadInfo->thread_status = THREAD_STATUS_RUNNING;
-        threadlist_add(&runtime);
-        push_ref(runtime.stack, (__refer) jthread);
+        if (java_debug)event_on_thread_start(runtime);
+        jthread_set_threadq_value(jthread, runtime);
+        runtime->threadInfo->thread_status = THREAD_STATUS_RUNNING;
 
-        ret = execute_method(method, &runtime, method->_this_class);
+        push_ref(runtime->stack, (__refer) jthread);
 
-        threadlist_remove(&runtime);
-        runtime.threadInfo->thread_status = THREAD_STATUS_ZOMBIE;
-        if (java_debug)event_on_thread_death(&runtime);
+        ret = execute_method(method, runtime, method->_this_class);
+
+        threadlist_remove(runtime);
+        runtime->threadInfo->thread_status = THREAD_STATUS_ZOMBIE;
+        if (java_debug)event_on_thread_death(runtime);
     }
     jthread_set_threadq_value(jthread, NULL);
-    localvar_dispose(&runtime);
-    runtime_dispose(&runtime);
+    localvar_dispose(runtime);
+    runtime_dispose(runtime);
+    jvm_free(runtime);
     garbage_derefer(jthread, main_thread);
-    jvm_printf("thread over %llx\n",(s64)(long)jthread);
+    jvm_printf("thread over %llx\n", (s64) (long) jthread);
     return (void *) (long) ret;
 }
 
 pthread_t jthread_create_and_start(Instance *ins) {//
     pthread_t pt;
+    Runtime *rt = jvm_alloc(sizeof(Runtime));
+    jthread_set_threadq_value(ins, rt);
+    threadlist_add(rt);
     pthread_create(&pt, NULL, jtherad_loader, ins);
-    garbage_refer(ins, main_thread);//防回收
     return pt;
 }
 
