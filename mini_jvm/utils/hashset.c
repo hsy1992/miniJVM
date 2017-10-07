@@ -73,6 +73,7 @@ Hashset *hashset_create() {
 }
 
 void hashset_destory(Hashset *set) {
+    if (!set)return;
     HashsetEntry *rover;
     HashsetEntry *next;
     unsigned long long int i;

@@ -207,10 +207,10 @@ public class Foo1 {
             }
         });
         t.start();
-        long sfid = RefNative.getStackFrame(t);
+        long sfid = RefNative.getStackFrame(Thread.currentThread());
         System.out.println("sfid="+Long.toString(sfid, 16));
         StackFrame sf = new StackFrame(sfid);
-        System.out.println("StackFrame:" + sf.method.methodName);
+//        System.out.println("StackFrame:" + sf.method.methodName);
         //
         int i = 0;
 //        while (i++ < 2) {
