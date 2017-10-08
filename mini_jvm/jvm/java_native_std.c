@@ -662,8 +662,11 @@ s32 java_lang_Thread_start(Runtime *runtime, Class *clazz) {
 s32 java_lang_Thread_isAlive(Runtime *runtime, Class *clazz) {
     RuntimeStack *stack = runtime->stack;
     Instance *ins = (Instance *) (runtime->localVariables + 0)->refer;
-
-    push_int(stack, runtime->threadInfo->thread_status != THREAD_STATUS_ZOMBIE);
+    Runtime *rt = jthread_get_threadq_value(ins);
+    if (rt)
+        push_int(stack, runtime->threadInfo->thread_status != THREAD_STATUS_ZOMBIE);
+    else
+        push_int(stack, 0);
 #if _JVM_DEBUG > 5
     invoke_deepth(runtime);
     jvm_printf("java_lang_Thread_isAlive \n");
@@ -859,10 +862,10 @@ s32 native_remove_lib(JavaNativeLib *lib) {
     return 0;
 }
 
-s32 native_lib_destory(){
+s32 native_lib_destory() {
     s32 i;
-    for(i=0;i<native_libs->length;i++){
-        __refer lib=arraylist_get_value(native_libs,i);
+    for (i = 0; i < native_libs->length; i++) {
+        __refer lib = arraylist_get_value(native_libs, i);
         jvm_free(lib);
     }
     arraylist_destory(native_libs);

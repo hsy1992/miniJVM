@@ -6,6 +6,7 @@
 #include "java_native_std.h"
 #include "garbage.h"
 #include "java_native_io.h"
+#include "jvm_util.h"
 #include <sys/stat.h>
 
 #ifndef __JVM_OS_MAC__
@@ -46,6 +47,7 @@ extern "C" {
 #endif
 
 #if __IPHONE_NA || __JVM_OS_MAC__
+
 #include <netdb.h>
 #include <fcntl.h>
 #include <sys/errno.h>
@@ -207,9 +209,9 @@ s32 sock_open(Utf8String *ip, s32 port) {
     sock_addr.sin_port = htons((u16) port); /* short, network byte order */
 
 #if  __JVM_OS_ANDROID__
-        inet_addr.sin_addr.s_addr = *((u32 *) (host->h_addr)); //htonl(hosttmp); //
+    inet_addr.sin_addr.s_addr = *((u32 *) (host->h_addr)); //htonl(hosttmp); //
 #elif __JVM_OS_MAC__
-    sock_addr.sin_addr = *((struct in_addr *)host->h_addr_list[0]);
+    sock_addr.sin_addr = *((struct in_addr *) host->h_addr_list[0]);
 #else
     sock_addr.sin_addr = *((struct in_addr *) host->h_addr);
 #endif
@@ -260,7 +262,7 @@ s32 srv_bind(Utf8String *ip, u16 port) {
 #if __WIN32__
         server_addr.sin_addr = *((struct in_addr *) host->h_addr);
 #elif __JVM_OS_MAC__
-        server_addr.sin_addr = *((struct in_addr *)host->h_addr_list[0]);
+        server_addr.sin_addr = *((struct in_addr *) host->h_addr_list[0]);
 #else
         server_addr.sin_addr.s_addr = htonl(*((u32 *) (host->h_addr))); //htonl(hosttmp); //
 #endif
@@ -338,7 +340,9 @@ s32 javax_mini_net_socket_Protocol_readBuf(Runtime *runtime, Class *clazz) {
     s32 offset = (runtime->localVariables + 2)->integer;
     s32 count = (runtime->localVariables + 3)->integer;
 
+    runtime->threadInfo->thread_status = THREAD_STATUS_WAIT;
     s32 len = sock_recv(sockfd, jbyte_arr->arr_body + offset, count);
+    runtime->threadInfo->thread_status = THREAD_STATUS_RUNNING;
     push_int(runtime->stack, len);
 #if _JVM_DEBUG > 5
     jvm_printf("javax_mini_net_socket_Protocol_readBuf  \n");
@@ -349,7 +353,9 @@ s32 javax_mini_net_socket_Protocol_readBuf(Runtime *runtime, Class *clazz) {
 s32 javax_mini_net_socket_Protocol_readByte(Runtime *runtime, Class *clazz) {
     s32 sockfd = (runtime->localVariables + 0)->integer;
     c8 b = 0;
+    runtime->threadInfo->thread_status = THREAD_STATUS_WAIT;
     s32 len = sock_recv(sockfd, &b, 1);
+    runtime->threadInfo->thread_status = THREAD_STATUS_RUNNING;
     if (len < 0) {
         push_int(runtime->stack, -1);
     } else {
@@ -370,7 +376,9 @@ s32 javax_mini_net_socket_Protocol_writeBuf(Runtime *runtime, Class *clazz) {
     s32 offset = (runtime->localVariables + 2)->integer;
     s32 count = (runtime->localVariables + 3)->integer;
 
+    runtime->threadInfo->thread_status = THREAD_STATUS_WAIT;
     s32 len = sock_send(sockfd, jbyte_arr->arr_body + offset, count);
+    runtime->threadInfo->thread_status = THREAD_STATUS_RUNNING;
 
     push_int(runtime->stack, len);
 #if _JVM_DEBUG > 5
@@ -383,7 +391,9 @@ s32 javax_mini_net_socket_Protocol_writeByte(Runtime *runtime, Class *clazz) {
     s32 sockfd = (runtime->localVariables + 0)->integer;
     s32 val = (runtime->localVariables + 1)->integer;
     c8 b = (u8) val;
+    runtime->threadInfo->thread_status = THREAD_STATUS_WAIT;
     s32 len = sock_send(sockfd, &b, 1);
+    runtime->threadInfo->thread_status = THREAD_STATUS_RUNNING;
 #if _JVM_DEBUG > 5
     jvm_printf("javax_mini_net_socket_Protocol_writeByte  \n");
 #endif
@@ -463,7 +473,9 @@ s32 javax_mini_net_serversocket_Protocol_accept0(Runtime *runtime, Class *clazz)
     s32 sockfd = (runtime->localVariables + 0)->integer;
     s32 ret = 0;
     if (sockfd) {
+        runtime->threadInfo->thread_status = THREAD_STATUS_WAIT;
         ret = srv_accept(sockfd);
+        runtime->threadInfo->thread_status = THREAD_STATUS_RUNNING;
     }
     push_int(runtime->stack, ret);
 #if _JVM_DEBUG > 5
