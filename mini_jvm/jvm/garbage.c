@@ -320,7 +320,7 @@ void *collect_thread_run(void *para) {
                && collector->_garbage_thread_status == GARBAGE_THREAD_NORMAL
                && heap_size < MAX_HEAP_SIZE
                 ) {
-            threadSleep(20);
+            threadSleep(100);
         }
         if (collector->_garbage_thread_status == GARBAGE_THREAD_STOP) {
             break;
