@@ -135,28 +135,6 @@ void __garbage_clear() {
 
 //===============================   inner  ====================================
 
-void *collect_thread_run(void *para) {
-    s64 startAt;
-    while (1) {
-        startAt = currentTimeMillis();
-        while (currentTimeMillis() - startAt < GARBAGE_PERIOD_MS
-               && collector->_garbage_thread_status == GARBAGE_THREAD_NORMAL
-               && heap_size < MAX_HEAP_SIZE
-                ) {
-            threadSleep(20);
-        }
-        if (collector->_garbage_thread_status == GARBAGE_THREAD_STOP) {
-            break;
-        }
-        if (collector->_garbage_thread_status == GARBAGE_THREAD_PAUSE) {
-            continue;
-        }
-        garbage_collect();
-    }
-    collector->_garbage_thread_status = GARBAGE_THREAD_DEAD;
-    return NULL;
-}
-
 s32 garbage_thread_trylock() {
     return pthread_mutex_trylock(&collector->_garbage_lock);
 }
@@ -333,6 +311,30 @@ void dump_refer() {
 }
 
 //==============================   gc() =====================================
+
+void *collect_thread_run(void *para) {
+    s64 startAt;
+    while (1) {
+        startAt = currentTimeMillis();
+        while (currentTimeMillis() - startAt < GARBAGE_PERIOD_MS
+               && collector->_garbage_thread_status == GARBAGE_THREAD_NORMAL
+               && heap_size < MAX_HEAP_SIZE
+                ) {
+            threadSleep(20);
+        }
+        if (collector->_garbage_thread_status == GARBAGE_THREAD_STOP) {
+            break;
+        }
+        if (collector->_garbage_thread_status == GARBAGE_THREAD_PAUSE) {
+            continue;
+        }
+        garbage_collect();
+    }
+    collector->_garbage_thread_status = GARBAGE_THREAD_DEAD;
+    return NULL;
+}
+
+
 /**
  * 查找所有实例，如果发现没有被引用 set->length==0 时，也不在运行时runtime的 stack 和 局部变量表中
  * 去除掉此对象对其他对象的引用，并销毁对象
@@ -421,16 +423,14 @@ s32 garbage_mark_by_threads() {
          */
         if (runtime->threadInfo->thread_status != THREAD_STATUS_ZOMBIE) {
             jthread_suspend(runtime);
-            while (!runtime->threadInfo->is_suspend) {
-                garbage_thread_timedwait(500);
+            while (!runtime->threadInfo->is_suspend
+                   && !runtime->threadInfo->is_blocking) {
+                garbage_thread_timedwait(20);
                 if (collector->_garbage_thread_status != GARBAGE_THREAD_NORMAL) {
                     return -1;
                 }
                 // if a native method blocking , must set thread status is wait before enter native method
-                if(runtime->threadInfo->thread_status==THREAD_STATUS_SLEEPING
-                   ||runtime->threadInfo->thread_status==THREAD_STATUS_WAIT){
-                    break;
-                }
+
             }
             garbage_mark_refered_obj(runtime);
             jthread_resume(runtime);
@@ -674,6 +674,25 @@ s32 garbage_is_refer_by(__refer sonPtr, __refer parentPtr) {
         set = hashtable_get(collector->son_2_father, sonPtr);
         if (set != HASH_NULL) {
             ret = hashset_get(set, parentPtr) != HASH_NULL;
+        }
+    }
+    garbage_thread_unlock();
+    return ret;
+}
+
+s32 garbage_is_alive(__refer sonPtr) {
+    garbage_thread_lock();
+    Hashset *set;
+    s32 ret = 0;
+    if (sonPtr) {
+        //移除子引父
+        set = hashtable_get(collector->son_2_father, sonPtr);
+        if (set != HASH_NULL) {
+            ret = 1;
+        }
+        set = hashtable_get(collector->father_2_son, sonPtr);
+        if (set != HASH_NULL) {
+            ret = 1;
         }
     }
     garbage_thread_unlock();

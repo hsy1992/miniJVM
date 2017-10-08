@@ -340,9 +340,9 @@ s32 javax_mini_net_socket_Protocol_readBuf(Runtime *runtime, Class *clazz) {
     s32 offset = (runtime->localVariables + 2)->integer;
     s32 count = (runtime->localVariables + 3)->integer;
 
-    runtime->threadInfo->thread_status = THREAD_STATUS_WAIT;
+    runtime->threadInfo->is_blocking = 1;
     s32 len = sock_recv(sockfd, jbyte_arr->arr_body + offset, count);
-    runtime->threadInfo->thread_status = THREAD_STATUS_RUNNING;
+    runtime->threadInfo->is_blocking = 0;
     push_int(runtime->stack, len);
 #if _JVM_DEBUG > 5
     jvm_printf("javax_mini_net_socket_Protocol_readBuf  \n");
@@ -353,9 +353,9 @@ s32 javax_mini_net_socket_Protocol_readBuf(Runtime *runtime, Class *clazz) {
 s32 javax_mini_net_socket_Protocol_readByte(Runtime *runtime, Class *clazz) {
     s32 sockfd = (runtime->localVariables + 0)->integer;
     c8 b = 0;
-    runtime->threadInfo->thread_status = THREAD_STATUS_WAIT;
+    runtime->threadInfo->is_blocking = 1;
     s32 len = sock_recv(sockfd, &b, 1);
-    runtime->threadInfo->thread_status = THREAD_STATUS_RUNNING;
+    runtime->threadInfo->is_blocking = 0;
     if (len < 0) {
         push_int(runtime->stack, -1);
     } else {
@@ -376,9 +376,9 @@ s32 javax_mini_net_socket_Protocol_writeBuf(Runtime *runtime, Class *clazz) {
     s32 offset = (runtime->localVariables + 2)->integer;
     s32 count = (runtime->localVariables + 3)->integer;
 
-    runtime->threadInfo->thread_status = THREAD_STATUS_WAIT;
+    runtime->threadInfo->is_blocking = 1;
     s32 len = sock_send(sockfd, jbyte_arr->arr_body + offset, count);
-    runtime->threadInfo->thread_status = THREAD_STATUS_RUNNING;
+    runtime->threadInfo->is_blocking = 0;
 
     push_int(runtime->stack, len);
 #if _JVM_DEBUG > 5
@@ -391,9 +391,9 @@ s32 javax_mini_net_socket_Protocol_writeByte(Runtime *runtime, Class *clazz) {
     s32 sockfd = (runtime->localVariables + 0)->integer;
     s32 val = (runtime->localVariables + 1)->integer;
     c8 b = (u8) val;
-    runtime->threadInfo->thread_status = THREAD_STATUS_WAIT;
+    runtime->threadInfo->is_blocking = 1;
     s32 len = sock_send(sockfd, &b, 1);
-    runtime->threadInfo->thread_status = THREAD_STATUS_RUNNING;
+    runtime->threadInfo->is_blocking = 0;
 #if _JVM_DEBUG > 5
     jvm_printf("javax_mini_net_socket_Protocol_writeByte  \n");
 #endif
@@ -473,9 +473,9 @@ s32 javax_mini_net_serversocket_Protocol_accept0(Runtime *runtime, Class *clazz)
     s32 sockfd = (runtime->localVariables + 0)->integer;
     s32 ret = 0;
     if (sockfd) {
-        runtime->threadInfo->thread_status = THREAD_STATUS_WAIT;
+        runtime->threadInfo->is_blocking = 1;
         ret = srv_accept(sockfd);
-        runtime->threadInfo->thread_status = THREAD_STATUS_RUNNING;
+        runtime->threadInfo->is_blocking = 0;
     }
     push_int(runtime->stack, ret);
 #if _JVM_DEBUG > 5

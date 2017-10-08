@@ -77,6 +77,8 @@ void garbage_derefer_all(void *parentPtr);
 
 s32 garbage_is_refer_by(__refer sonPtr, __refer parentPtr);
 
+s32 garbage_is_alive(__refer sonPtr);
+
 void garbage_destory_memobj(__refer k);
 
 s32 garbage_mark_by_threads(void);

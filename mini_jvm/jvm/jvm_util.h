@@ -84,6 +84,7 @@ struct _JavaThreadInfo {
     u8 volatile thread_status;
     s32 volatile suspend_count;//for jdwp suspend ,>0 suspend, ==0 resume
     u8 volatile is_suspend;
+    u8 volatile is_blocking;
 
     pthread_t pthread;
     //调试器相关字段

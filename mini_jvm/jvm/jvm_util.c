@@ -553,7 +553,7 @@ void *jtherad_loader(void *para) {
     runtime_dispose(runtime);
     jvm_free(runtime);
     garbage_derefer(jthread, main_thread);
-    jvm_printf("thread over %llx\n", (s64) (long) jthread);
+    //jvm_printf("thread over %llx\n", (s64) (long) jthread);
     return (void *) (long) ret;
 }
 

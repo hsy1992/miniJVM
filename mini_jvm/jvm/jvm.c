@@ -45,8 +45,8 @@ ClassLoader *classloader_create(c8 *path) {
 }
 
 void classloader_destory(ClassLoader *class_loader) {
-    utf8_destory(class_loader->JVM_CLASS->name);
-    class_loader->JVM_CLASS->name = NULL;
+//    utf8_destory(class_loader->JVM_CLASS->name);
+//    class_loader->JVM_CLASS->name = NULL;
     garbage_derefer_all(class_loader->JVM_CLASS);
     garbage_refer(class_loader->JVM_CLASS, NULL);
 
@@ -161,11 +161,11 @@ s32 execute(c8 *p_classpath, c8 *p_mainclass, s32 argc, c8 **argv) {
             jvm_printf("\n\n\n\n\n\n================================= main start ================================\n");
             //调用主方法
             ret = execute_method(main, &runtime, clazz);
-            runtime.threadInfo->thread_status = THREAD_STATUS_SLEEPING;
+            runtime.threadInfo->is_blocking = 1;
             while ((thread_list->length) > 1) {//wait for other thread over ,
                 threadSleep(100);
             }
-            runtime.threadInfo->thread_status = THREAD_STATUS_RUNNING;
+            runtime.threadInfo->is_blocking = 0;
             jvm_printf("================================= main  end  ================================\n");
             jvm_printf("spent %lld\n", (currentTimeMillis() - start));
 
