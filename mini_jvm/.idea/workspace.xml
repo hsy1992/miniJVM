@@ -25,8 +25,8 @@
       <file leaf-file-name="garbage.c" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/jvm/garbage.c">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="643">
-              <caret line="430" column="26" lean-forward="true" selection-start-line="430" selection-start-column="26" selection-end-line="430" selection-end-column="26" />
+            <state relative-caret-position="217">
+              <caret line="431" column="26" lean-forward="true" selection-start-line="431" selection-start-column="26" selection-end-line="431" selection-end-column="26" />
               <folding />
             </state>
           </provider>
@@ -267,10 +267,10 @@
         <option value="$PROJECT_DIR$/utils/hashset.c" />
         <option value="$PROJECT_DIR$/jvm/java_native_reflect.c" />
         <option value="$PROJECT_DIR$/jvm/jvm_util.c" />
-        <option value="$PROJECT_DIR$/jvm/garbage.c" />
         <option value="$PROJECT_DIR$/jvm/java_native_std.c" />
         <option value="$PROJECT_DIR$/jvm/java_native_io.c" />
         <option value="$PROJECT_DIR$/jvm/jvm.c" />
+        <option value="$PROJECT_DIR$/jvm/garbage.c" />
       </list>
     </option>
   </component>
@@ -443,12 +443,12 @@
       <workItem from="1504933525927" duration="162209000" />
       <workItem from="1506083002970" duration="259000" />
       <workItem from="1506335508599" duration="42639000" />
-      <workItem from="1507307991083" duration="18428000" />
+      <workItem from="1507307991083" duration="19376000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="1287446000" />
+    <option name="totallyTimeSpent" value="1288394000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="299" y="23" width="977" height="723" extended-state="0" />
@@ -877,8 +877,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/jvm/garbage.c">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="643">
-          <caret line="430" column="26" lean-forward="true" selection-start-line="430" selection-start-column="26" selection-end-line="430" selection-end-column="26" />
+        <state relative-caret-position="217">
+          <caret line="431" column="26" lean-forward="true" selection-start-line="431" selection-start-column="26" selection-end-line="431" selection-end-column="26" />
           <folding />
         </state>
       </provider>

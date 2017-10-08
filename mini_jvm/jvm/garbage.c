@@ -426,6 +426,7 @@ s32 garbage_mark_by_threads() {
                 if (collector->_garbage_thread_status != GARBAGE_THREAD_NORMAL) {
                     return -1;
                 }
+                // if a native method blocking , must set thread status is wait before enter native method
                 if(runtime->threadInfo->thread_status==THREAD_STATUS_SLEEPING
                    ||runtime->threadInfo->thread_status==THREAD_STATUS_WAIT){
                     break;
