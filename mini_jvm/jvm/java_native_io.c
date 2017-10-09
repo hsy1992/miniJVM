@@ -17,7 +17,8 @@ extern "C" {
 
 
 #include <errno.h>
-#include <signal.h>
+#include <dirent.h>
+
 
 #if  __JVM_OS_MINGW__ || __JVM_OS_CYGWIN__
 #ifndef __WIN32__
@@ -26,20 +27,17 @@ extern "C" {
 #define socklen_t int
 
 #include <winsock2.h>
-#include <unistd.h>
-#include <dirent.h>
 
 #define SHUT_RDWR SD_BOTH
 #define SHUT_RD SD_RECEIVE
 #define SHUT_WR SD_SEND
+
 #else
 
 #include <netdb.h>
 #include <fcntl.h>
-#include <unistd.h>
 #include <sys/socket.h>
-#include <dirent.h>
-
+#include <unistd.h>
 #define closesocket close
 #endif
 
@@ -79,12 +77,16 @@ s32 sock_option(s32 sockfd, s32 opType, s32 opValue) {
 #if __JVM_OS_MINGW__ || __JVM_OS_CYGWIN__
 #if __JVM_OS_CYGWIN__
             __ms_u_long ul = 1;
+//fix cygwin bug ,cygwin FIONBIO = 0x8008667E
+#undef FIONBIO
+#define FIONBIO 0x8004667E
 #else
             u_long ul = 1;
 #endif
             if (!opValue) {
                 ul = 0;
             }
+            //jvm_printf(" FIONBIO:%x\n", FIONBIO);
             ret = ioctlsocket(sockfd, FIONBIO, &ul);
             if (ret == SOCKET_ERROR) {
                 err("set socket non_block error.\n");
@@ -180,14 +182,11 @@ s32 sock_open(Utf8String *ip, s32 port) {
     struct hostent *host;
     if ((host = gethostbyname(utf8_cstr(ip))) == NULL) { /* get the host info */
         err("get host by name error\n");
-        //exit(1);
     }
 
     if ((sockfd = socket(AF_INET, SOCK_STREAM, IPPROTO_TCP)) == -1) {
         err(strerror(errno));
         err("socket init error\n");
-
-        //exit(1);
     }
     s32 x = 1;
     if (setsockopt(sockfd, SOL_SOCKET, SO_REUSEADDR, (char *) &x, sizeof(x)) == -1) {
