@@ -53,6 +53,7 @@ add_executable(mini_jvm ${SOURCE_FILES})
 
 #Set link library.
 TARGET_LINK_LIBRARIES(mini_jvm pthread )
-if (CMAKE_SYSTEM_NAME MATCHES "Windows")
+if ( (CMAKE_SYSTEM_NAME MATCHES "Windows") OR (CMAKE_SYSTEM_NAME MATCHES "CYGWIN"))
     TARGET_LINK_LIBRARIES(mini_jvm  ws2_32)
 endif ()
+MESSAGE(STATUS "platform: ${CMAKE_SYSTEM_NAME}")
