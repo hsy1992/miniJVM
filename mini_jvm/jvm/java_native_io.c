@@ -78,11 +78,12 @@ s32 sock_option(s32 sockfd, s32 opType, s32 opValue) {
     switch (opType) {
         case SOCK_OP_TYPE_NON_BLOCK: {//阻塞设置
 #ifdef __WIN32__
-            unsigned long ul = 1;
+            u_long ul = 1;
+
             if (!opValue) {
                 ul = 0;
             }
-            s32 ret = ioctlsocket(sockfd, FIONBIO, (unsigned long *) &ul);
+            s32 ret = ioctlsocket(sockfd, FIONBIO,  &ul);
             if (ret == SOCKET_ERROR)err("set socket non_block error.\n");
 #else
             if (opValue) {
