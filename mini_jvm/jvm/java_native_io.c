@@ -252,7 +252,6 @@ s32 srv_bind(Utf8String *ip, u16 port) {
     struct hostent *host;
 
     memset((char *) &server_addr, 0, sizeof(server_addr));//清0
-    server_addr.sin_len = sizeof(struct sockaddr_in);
     server_addr.sin_family = AF_INET;
     server_addr.sin_port = htons(port);
     if (ip->length) {//如果指定了ip
@@ -262,6 +261,7 @@ s32 srv_bind(Utf8String *ip, u16 port) {
 #if __WIN32__
         server_addr.sin_addr = *((struct in_addr *) host->h_addr);
 #elif __JVM_OS_MAC__
+        server_addr.sin_len = sizeof(struct sockaddr_in);
         server_addr.sin_addr = *((struct in_addr *) host->h_addr_list[0]);
 #else
         server_addr.sin_addr.s_addr = htonl(*((u32 *) (host->h_addr))); //htonl(hosttmp); //
