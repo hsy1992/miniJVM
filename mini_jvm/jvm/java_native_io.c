@@ -9,12 +9,6 @@
 #include "jvm_util.h"
 #include <sys/stat.h>
 
-#ifndef __JVM_OS_MAC__
-#ifndef __WIN32__
-#define __WIN32__ 1
-#endif
-#define socklen_t int
-#endif
 #define   err jvm_printf
 
 #ifdef __cplusplus
@@ -25,10 +19,13 @@ extern "C" {
 #include <errno.h>
 #include <signal.h>
 
-#if __JVM_OS_CYGWIN__ || __JVM_OS_MINGW__
+#if  __JVM_OS_MINGW__ || __JVM_OS_CYGWIN__
+#ifndef __WIN32__
+#define __WIN32__ 1
+#endif
+#define socklen_t int
 
 #include <winsock2.h>
-#include <fcntl.h>
 #include <unistd.h>
 #include <dirent.h>
 
@@ -75,57 +72,59 @@ void _on_sock_sig(s32 signo) {
 
 //=================================  socket  ====================================
 s32 sock_option(s32 sockfd, s32 opType, s32 opValue) {
+    s32 ret = 0;
     switch (opType) {
         case SOCK_OP_TYPE_NON_BLOCK: {//阻塞设置
-#ifdef __WIN32__
-            u_long ul = 1;
 
+#if __JVM_OS_MINGW__ || __JVM_OS_CYGWIN__
+#if __JVM_OS_CYGWIN__
+            __ms_u_long ul = 1;
+#else
+            u_long ul = 1;
+#endif
             if (!opValue) {
                 ul = 0;
             }
-            s32 ret = ioctlsocket(sockfd, FIONBIO,  &ul);
-            if (ret == SOCKET_ERROR)err("set socket non_block error.\n");
+            ret = ioctlsocket(sockfd, FIONBIO, &ul);
+            if (ret == SOCKET_ERROR) {
+                err("set socket non_block error.\n");
+                s32 ec = WSAGetLastError();
+                jvm_printf(" error code:%d\n", ec);
+            }
 #else
             if (opValue) {
-                fcntl(sockfd, F_SETFL, O_NONBLOCK);
+                s32 flags = fcntl(sockfd, F_GETFL, 0);
+                ret = fcntl(sockfd, F_SETFL, flags | O_NONBLOCK);
+                if (ret) {
+                    err("set socket non_block error.\n");
+                    //printf("errno.%02d is: %s\n", errno, strerror(errno));
+                }
             } else {
                 //fcntl(sockfd, F_SETFL, O_BLOCK);
             }
 #endif
             break;
         }
-        case SOCK_OP_TYPE_REUSEADDR: {//阻塞设置
+        case SOCK_OP_TYPE_REUSEADDR: {//
             s32 x = 1;
-            s32 ret = setsockopt(sockfd, SOL_SOCKET, SO_REUSEADDR, (char *) &x, sizeof(x));
-#ifndef __WIN32__
-#define SOCKET_ERROR -1
-#endif
-            return -2;
-
+            ret = setsockopt(sockfd, SOL_SOCKET, SO_REUSEADDR, (char *) &x, sizeof(x));
+            break;
         }
         case SOCK_OP_TYPE_RCVBUF: {//缓冲区设置
             int nRecvBuf = opValue;//设置为 opValue K
-            s32 ret = setsockopt(sockfd, SOL_SOCKET, SO_RCVBUF, (const char *) &nRecvBuf, sizeof(int));
-#ifndef __WIN32__
-#define SOCKET_ERROR -1
-#endif
-            return -3;
+            ret = setsockopt(sockfd, SOL_SOCKET, SO_RCVBUF, (const char *) &nRecvBuf, sizeof(int));
+            break;
         }
         case SOCK_OP_TYPE_SNDBUF: {//缓冲区设置
             s32 nRecvBuf = opValue;//设置为 opValue K
-            s32 ret = setsockopt(sockfd, SOL_SOCKET, SO_SNDBUF, (const char *) &nRecvBuf, sizeof(int));
-#ifndef __WIN32__
-#define SOCKET_ERROR -1
-#endif
-            return -4;
+            ret = setsockopt(sockfd, SOL_SOCKET, SO_SNDBUF, (const char *) &nRecvBuf, sizeof(int));
+            break;
         }
     }
-    return 0;
+    return ret;
 }
 
 s32 sock_recv(s32 sockfd, c8 *buf, s32 count) {
-
-
     s32 len = recv(sockfd, buf, count, 0);
 
     if (len == 0) {//如果是正常断开，返回-1
@@ -141,10 +140,6 @@ s32 sock_recv(s32 sockfd, c8 *buf, s32 count) {
         if (errno == EWOULDBLOCK || errno == EAGAIN) {
             len = 0;
         }
-#endif
-#ifdef  __ANDROID__
-        //            LOGE("recv error no: %x\n", errno);
-//            __android_log_write(ANDROID_LOG_ERROR, "socket errno", strerror(errno));
 #endif
     }
     return len;
@@ -167,10 +162,7 @@ s32 sock_send(s32 sockfd, c8 *buf, s32 count) {
             len = 0;
         }
 #endif
-#ifdef  __ANDROID__
-        //            LOGE("send error no: %x\n", errno);
-//            __android_log_write(ANDROID_LOG_ERROR, "socket errno", strerror(errno));
-#endif
+
         len = -1;
     }
     return len;
@@ -184,9 +176,6 @@ s32 sock_open(Utf8String *ip, s32 port) {
     WSADATA wsaData;
     WSAStartup(MAKEWORD(1, 1), &wsaData);
 #endif  /*  WIN32  */
-#ifdef  __ANDROID__
-    //LOGE("&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&\n");
-#endif
 
     struct hostent *host;
     if ((host = gethostbyname(utf8_cstr(ip))) == NULL) { /* get the host info */
@@ -218,12 +207,7 @@ s32 sock_open(Utf8String *ip, s32 port) {
 #endif
     memset(&(sock_addr.sin_zero), 0, sizeof((sock_addr.sin_zero))); /* zero the rest of the struct */
     if (connect(sockfd, (struct sockaddr *) &sock_addr, sizeof(sock_addr)) == -1) {
-#ifdef  __ANDROID__
-        //            LOGE("connect error no: %x\n", errno);
-//            __android_log_write(ANDROID_LOG_ERROR, "socket errno", strerror(errno));
-#endif
         err("socket connect error\n");
-        //exit(1);
     }
 #ifndef __WIN32__
     signal(SIGPIPE, _on_sock_sig);
@@ -307,10 +291,10 @@ s32 srv_close(s32 listenfd) {
     if (listenfd) {
         closesocket(listenfd);
         listenfd = 0;
-        //#ifdef WIN32
-        //            WSACancelBlockingCall();
-        //            WSACleanup();
-        //#endif
+#ifdef __WIN32__
+        WSACancelBlockingCall();
+        WSACleanup();
+#endif
     }
     return 0;
 }

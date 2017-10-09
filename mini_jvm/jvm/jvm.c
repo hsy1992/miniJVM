@@ -163,6 +163,7 @@ s32 execute(c8 *p_classpath, c8 *p_mainclass, s32 argc, c8 **argv) {
             ret = execute_method(main, &runtime, clazz);
             runtime.threadInfo->is_blocking = 1;
             while ((thread_list->length) > 1) {//wait for other thread over ,
+                check_suspend_and_pause(&runtime);
                 threadSleep(100);
             }
             runtime.threadInfo->is_blocking = 0;

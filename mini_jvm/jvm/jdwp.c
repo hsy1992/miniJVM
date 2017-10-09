@@ -1341,7 +1341,7 @@ s32 jdwp_client_process(JdwpClient *client, Runtime *runtime) {
                     Instance *jarr_name = jthread_get_name_value(t->threadInfo->jthread);
                     Utf8String *ustr = utf8_create();
                     unicode_2_utf8((u16 *) jarr_name->arr_body, ustr, jarr_name->arr_length);
-                    printf("%s\n", utf8_cstr(ustr));
+                    //printf("%s\n", utf8_cstr(ustr));
                     utf8_destory(ustr);
                 }
                 jdwp_writepacket(client, res);
@@ -1904,31 +1904,43 @@ s32 jdwp_client_process(JdwpClient *client, Runtime *runtime) {
 
             case JDWP_CMD_ThreadReference_Name: {//11.1
                 Instance *jthread = jdwppacket_read_refer(req);
-                Instance *jarr_name = jthread_get_name_value(jthread);
-                Utf8String *ustr = utf8_create();
-                unicode_2_utf8((u16 *) jarr_name->arr_body, ustr, jarr_name->arr_length);
+                Runtime *r = getRuntimeOfThread(jthread);
+                if (r) {
+                    Instance *jarr_name = jthread_get_name_value(jthread);
+                    Utf8String *ustr = utf8_create();
+                    unicode_2_utf8((u16 *) jarr_name->arr_body, ustr, jarr_name->arr_length);
 
-                jdwppacket_set_err(res, JDWP_ERROR_NONE);
-                jdwppacket_write_utf(res, ustr);
+                    jdwppacket_set_err(res, JDWP_ERROR_NONE);
+                    jdwppacket_write_utf(res, ustr);
+                    utf8_destory(ustr);
+                } else {
+                    jdwppacket_set_err(res, JDWP_ERROR_INVALID_THREAD);
+                }
                 jdwp_writepacket(client, res);
                 //jvm_printf("ThreadReference_Name:%s\n", utf8_cstr(ustr));
-                utf8_destory(ustr);
                 break;
             }
             case JDWP_CMD_ThreadReference_Suspend: {//11.2
                 Instance *jthread = jdwppacket_read_refer(req);
-                Runtime *r = jthread_get_threadq_value(jthread);
-                jthread_suspend(r);
-                jdwppacket_set_err(res, JDWP_ERROR_NONE);
+                Runtime *r = getRuntimeOfThread(jthread);
+                if (r) {
+                    jthread_suspend(r);
+                    jdwppacket_set_err(res, JDWP_ERROR_NONE);
+                } else {
+                    jdwppacket_set_err(res, JDWP_ERROR_INVALID_THREAD);
+                }
                 jdwp_writepacket(client, res);
                 break;
             }
             case JDWP_CMD_ThreadReference_Resume: {//11.3
                 Instance *jthread = jdwppacket_read_refer(req);
-                Runtime *r = jthread_get_threadq_value(jthread);
-                if (r->threadInfo->suspend_count > 0)jthread_resume(r);;
-
-                jdwppacket_set_err(res, JDWP_ERROR_NONE);
+                Runtime *r = getRuntimeOfThread(jthread);
+                if (r) {
+                    if (r->threadInfo->suspend_count > 0)jthread_resume(r);;
+                    jdwppacket_set_err(res, JDWP_ERROR_NONE);
+                } else {
+                    jdwppacket_set_err(res, JDWP_ERROR_INVALID_THREAD);
+                }
                 jdwp_writepacket(client, res);
                 break;
             }
@@ -1961,91 +1973,114 @@ s32 jdwp_client_process(JdwpClient *client, Runtime *runtime) {
             }
             case JDWP_CMD_ThreadReference_Frames: {//11.6
                 Instance *jthread = jdwppacket_read_refer(req);
-                Runtime *rt = jthread_get_threadq_value(jthread);
+                Runtime *rt = getRuntimeOfThread(jthread);
                 s32 startFrame = jdwppacket_read_int(req);
                 s32 length = jdwppacket_read_int(req);
-                //jvm_printf("ThreadReference_Frames: startFrame=%d, len=%d\n", startFrame, length);
-
-                jdwppacket_set_err(res, JDWP_ERROR_NONE);
-
-                s32 deepth = getRuntimeDepth(rt);
-                if (length == -1) {//等于-1返回所有剩下的
-                    length = deepth - startFrame;
-                }
-                jdwppacket_write_int(res, length);
-                Runtime *r = getLastSon(rt);
-                ////jvm_printf("deepth:" + frame.getDeepth());
-                s32 i;
-                for (i = 0; i < deepth; i++) {
-                    if (i >= startFrame && i < startFrame + length) {//返回指定层级的stackframe
-                        jdwppacket_write_refer(res, r);
-                        Location loc;
-                        loc.typeTag = getClassType(r->clazz);
-                        loc.classID = r->clazz;
-                        loc.methodID = r->methodInfo;
-                        if (r->ca)
-                            loc.execIndex = (s64) (long) r->pc - (s64) (long) r->ca->code;
-                        else
-                            loc.execIndex = 0;
-                        writeLocation(res, &loc);
+                if (rt) {
+                    //jvm_printf("ThreadReference_Frames: startFrame=%d, len=%d\n", startFrame, length);
+                    jdwppacket_set_err(res, JDWP_ERROR_NONE);
+                    s32 deepth = getRuntimeDepth(rt);
+                    if (length == -1) {//等于-1返回所有剩下的
+                        length = deepth - startFrame;
                     }
-                    r = r->parent;
-                    if (r == NULL) {
-                        break;
+                    jdwppacket_write_int(res, length);
+                    Runtime *r = getLastSon(rt);
+                    ////jvm_printf("deepth:" + frame.getDeepth());
+                    s32 i;
+                    for (i = 0; i < deepth; i++) {
+                        if (i >= startFrame && i < startFrame + length) {//返回指定层级的stackframe
+                            jdwppacket_write_refer(res, r);
+                            Location loc;
+                            loc.typeTag = getClassType(r->clazz);
+                            loc.classID = r->clazz;
+                            loc.methodID = r->methodInfo;
+                            if (r->ca)
+                                loc.execIndex = (s64) (long) r->pc - (s64) (long) r->ca->code;
+                            else
+                                loc.execIndex = 0;
+                            writeLocation(res, &loc);
+                        }
+                        r = r->parent;
+                        if (r == NULL) {
+                            break;
+                        }
                     }
+                } else {
+                    jdwppacket_set_err(res, JDWP_ERROR_INVALID_THREAD);
                 }
                 jdwp_writepacket(client, res);
                 break;
             }
             case JDWP_CMD_ThreadReference_FrameCount: {//11.7
                 Instance *jthread = jdwppacket_read_refer(req);
-                Runtime *r = jthread_get_threadq_value(jthread);
-                jdwppacket_set_err(res, JDWP_ERROR_NONE);
-                jdwppacket_write_int(res, getRuntimeDepth(r));
+                Runtime *r = getRuntimeOfThread(jthread);
+                if (r) {
+                    jdwppacket_set_err(res, JDWP_ERROR_NONE);
+                    jdwppacket_write_int(res, getRuntimeDepth(r));
+                } else {
+                    jdwppacket_set_err(res, JDWP_ERROR_INVALID_THREAD);
+                }
                 //jvm_printf("ThreadReference_FrameCount:%d\n", getRuntimeDepth(r));
                 jdwp_writepacket(client, res);
                 break;
             }
             case JDWP_CMD_ThreadReference_OwnedMonitors: {//11.8
                 Instance *jthread = jdwppacket_read_refer(req);
-                Runtime *r = jthread_get_threadq_value(jthread);
-                jdwppacket_set_err(res, JDWP_ERROR_NONE);
-                jdwppacket_write_int(res, 0);
+                Runtime *r = getRuntimeOfThread(jthread);
+                if (r) {
+                    jdwppacket_set_err(res, JDWP_ERROR_NONE);
+                    jdwppacket_write_int(res, 0);
+                } else {
+                    jdwppacket_set_err(res, JDWP_ERROR_INVALID_THREAD);
+                }
                 jdwp_writepacket(client, res);
                 break;
             }
             case JDWP_CMD_ThreadReference_CurrentContendedMonitor: {//11.9
                 Instance *jthread = jdwppacket_read_refer(req);
-                Runtime *r = jthread_get_threadq_value(jthread);
-                jdwppacket_set_err(res, JDWP_ERROR_NONE);
-                jdwppacket_write_refer(res, NULL);
+                Runtime *r = getRuntimeOfThread(jthread);
+                if (r) {
+                    jdwppacket_set_err(res, JDWP_ERROR_NONE);
+                    jdwppacket_write_refer(res, NULL);
+                } else {
+                    jdwppacket_set_err(res, JDWP_ERROR_INVALID_THREAD);
+                }
                 jdwp_writepacket(client, res);
                 break;
             }
             case JDWP_CMD_ThreadReference_Stop: {//11.10
                 Instance *jthread = jdwppacket_read_refer(req);
-                Runtime *r = jthread_get_threadq_value(jthread);
-                pthread_cancel(r->threadInfo->pthread);//todo need release all lock
-
-                jdwppacket_set_err(res, JDWP_ERROR_NONE);
+                Runtime *r = getRuntimeOfThread(jthread);
+                if (r) {
+                    pthread_cancel(r->threadInfo->pthread);//todo need release all lock
+                    jdwppacket_set_err(res, JDWP_ERROR_NONE);
+                } else {
+                    jdwppacket_set_err(res, JDWP_ERROR_INVALID_THREAD);
+                }
                 jdwp_writepacket(client, res);
                 break;
             }
             case JDWP_CMD_ThreadReference_Interrupt: {//11.11
                 Instance *jthread = jdwppacket_read_refer(req);
-                Runtime *r = jthread_get_threadq_value(jthread);
-                //todo
-
-                jdwppacket_set_err(res, JDWP_ERROR_NONE);
+                Runtime *r = getRuntimeOfThread(jthread);
+                if (r) {
+                    //todo
+                    jdwppacket_set_err(res, JDWP_ERROR_NONE);
+                } else {
+                    jdwppacket_set_err(res, JDWP_ERROR_INVALID_THREAD);
+                }
                 jdwp_writepacket(client, res);
                 break;
             }
             case JDWP_CMD_ThreadReference_SuspendCount: {//11.12
                 Instance *jthread = jdwppacket_read_refer(req);
-                Runtime *r = jthread_get_threadq_value(jthread);
-
-                jdwppacket_set_err(res, JDWP_ERROR_NONE);
-                jdwppacket_write_int(res, r->threadInfo->suspend_count);
+                Runtime *r = getRuntimeOfThread(jthread);
+                if (r) {
+                    jdwppacket_set_err(res, JDWP_ERROR_NONE);
+                    jdwppacket_write_int(res, r->threadInfo->suspend_count);
+                } else {
+                    jdwppacket_set_err(res, JDWP_ERROR_INVALID_THREAD);
+                }
                 //jvm_printf("ThreadReference_SuspendCount:%llx,%d\n", (s64) (long) jthread,r->threadInfo->suspend_count);
                 jdwp_writepacket(client, res);
                 break;
