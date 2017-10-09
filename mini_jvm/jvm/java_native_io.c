@@ -11,7 +11,7 @@
 
 #ifndef __JVM_OS_MAC__
 #ifndef __WIN32__
-#define __WIN32__
+#define __WIN32__ 1
 #endif
 #define socklen_t int
 #endif
