@@ -67,29 +67,11 @@ package java.lang;
  * @since   JDK1.0, CLDC 1.0
  */
  
-public class StringBuffer {
+public class StringBuffer extends StringBuilder{
 
-    /**
-     * The value is used for character storage.
-     */
-    private char value[];
 
-    /** 
-     * The count is the number of characters in the buffer.
-     */
-    private int count;
-
-    /**
-     * A flag indicating whether the buffer is shared 
-     */
-    private boolean shared;
-
-    /**
-     * Constructs a string buffer with no characters in it and an 
-     * initial capacity of 16 characters. 
-     */
     public StringBuffer() {
-        this(16);
+        super(16);
     }
 
     /**
@@ -101,8 +83,7 @@ public class StringBuffer {
      *               argument is less than <code>0</code>.
      */
     public StringBuffer(int length) {
-        value = new char[length];
-        shared = false;
+        super(length);
     }
 
     /**
@@ -115,83 +96,9 @@ public class StringBuffer {
      * @param   str   the initial contents of the buffer.
      */
     public StringBuffer(String str) {
-        this(str.length() + 16);
-        append(str);
+        super(str);
     }
 
-    /**
-     * Returns the length (character count) of this string buffer.
-     *
-     * @return  the length of the sequence of characters currently 
-     *          represented by this string buffer.
-     */
-    public int length() {
-        return count;
-    }
-
-    /**
-     * Returns the current capacity of the String buffer. The capacity
-     * is the amount of storage available for newly inserted
-     * characters; beyond which an allocation will occur.
-     *
-     * @return  the current capacity of this string buffer.
-     */
-    public int capacity() {
-        return value.length;
-    }
-
-    /**
-     * Copies the buffer value.  This is normally only called when shared
-     * is true.  It should only be called from a synchronized method.
-     */
-     final void copy() {
-        char newValue[] = new char[value.length];
-        System.arraycopy(value, 0, newValue, 0, count);
-        value = newValue;
-        shared = false;
-    }
-
-    /**
-     * Ensures that the capacity of the buffer is at least equal to the
-     * specified minimum.
-     * If the current capacity of this string buffer is less than the 
-     * argument, then a new internal buffer is allocated with greater 
-     * capacity. The new capacity is the larger of: 
-     * <ul>
-     * <li>The <code>minimumCapacity</code> argument. 
-     * <li>Twice the old capacity, plus <code>2</code>. 
-     * </ul>
-     * If the <code>minimumCapacity</code> argument is nonpositive, this
-     * method takes no action and simply returns.
-     *
-     * @param   minimumCapacity   the minimum desired capacity.
-     */
-    public synchronized void ensureCapacity(int minimumCapacity) {
-        if (minimumCapacity > value.length) {
-            expandCapacity(minimumCapacity);
-        }
-    }
-
-    /**
-     * This implements the expansion semantics of ensureCapacity but is
-     * unsynchronized for use internally by methods which are already
-     * synchronized.
-     *
-     * @see java.lang.StringBuffer#ensureCapacity(int)
-     */
-     void expandCapacity(int minimumCapacity) {
-        int newCapacity = (value.length + 1) * 2;
-        if (newCapacity < 0) {
-            newCapacity = Integer.MAX_VALUE;
-        } else if (minimumCapacity > newCapacity) {
-            newCapacity = minimumCapacity;
-        }
-        
-        char newValue[] = new char[newCapacity];
-        System.arraycopy(value, 0, newValue, 0, count);
-        value = newValue;
-        shared = false;
-    }
 
     /**
      * Sets the length of this string buffer.
@@ -222,32 +129,7 @@ public class StringBuffer {
      * @see        java.lang.StringBuffer#length()
      */
     public synchronized void setLength(int newLength) {
-        if (newLength < 0) {
-            throw new StringIndexOutOfBoundsException(newLength);
-        }
-        
-        if (newLength > value.length) {
-            expandCapacity(newLength);
-        }
-
-        if (count < newLength) {
-            if (shared) copy();
-            for (; count < newLength; count++) {
-                value[count] = '\0';
-            }
-        } else {
-            count = newLength;
-            if (shared) {
-                if (newLength > 0) {
-                    copy();
-                } else {
-                    // If newLength is zero, assume the StringBuffer is being
-                    // stripped for reuse; Make new buffer of default size
-                    value = new char[16];
-                    shared = false;
-                }
-            }
-        }
+        super.setLength(newLength);
     }
 
     /**
@@ -267,10 +149,7 @@ public class StringBuffer {
      * @see        java.lang.StringBuffer#length()
      */
     public synchronized char charAt(int index) {
-        if ((index < 0) || (index >= count)) {
-            throw new StringIndexOutOfBoundsException(index);
-        }
-        return value[index];
+        return super.charAt(index);
     }
 
     /**
@@ -305,16 +184,7 @@ public class StringBuffer {
      *             </ul>
      */
     public synchronized void getChars(int srcBegin, int srcEnd, char dst[], int dstBegin) {
-        if (srcBegin < 0) {
-            throw new StringIndexOutOfBoundsException(srcBegin);
-        }
-        if ((srcEnd < 0) || (srcEnd > count)) {
-            throw new StringIndexOutOfBoundsException(srcEnd);
-        }
-        if (srcBegin > srcEnd) {
-            throw new StringIndexOutOfBoundsException("srcBegin > srcEnd");
-        }
-        System.arraycopy(value, srcBegin, dst, dstBegin, srcEnd - srcBegin);
+        super.getChars(srcBegin, srcEnd, dst, dstBegin);
     }
 
     /**
@@ -334,11 +204,7 @@ public class StringBuffer {
      * @see        java.lang.StringBuffer#length()
      */
     public synchronized void setCharAt(int index, char ch) {
-        if ((index < 0) || (index >= count)) {
-            throw new StringIndexOutOfBoundsException(index);
-        }
-        if (shared) copy();
-        value[index] = ch;
+        super.setCharAt(index, ch);
     }
 
     /**
@@ -355,7 +221,8 @@ public class StringBuffer {
      * @see     java.lang.StringBuffer#append(java.lang.String)
      */
     public synchronized StringBuffer append(Object obj) {
-        return append(String.valueOf(obj));
+        super.append(obj);
+        return this;
     }
 
     /**
@@ -381,16 +248,7 @@ public class StringBuffer {
 //      public native synchronized StringBuffer append(String str);
 
     public synchronized StringBuffer append(String str) {
-      if (str == null) {
-          str = String.valueOf(str);
-      }
-
-      int len = str.length();
-      int newcount = count + len;
-      if (newcount > value.length)
-          expandCapacity(newcount);
-      str.getChars(0, len, value, count);
-      count = newcount;
+      super.append(str);
       return this;
   }
 
@@ -412,12 +270,7 @@ public class StringBuffer {
      * @return  a reference to this <code>StringBuffer</code> object.
      */
     public synchronized StringBuffer append(char str[]) {
-        int len = str.length;
-        int newcount = count + len;
-        if (newcount > value.length)
-            expandCapacity(newcount);
-        System.arraycopy(str, 0, value, count, len);
-        count = newcount;
+        super.append(str);
         return this;
     }
 
@@ -441,11 +294,7 @@ public class StringBuffer {
      * @return  a reference to this <code>StringBuffer</code> object.
      */
     public synchronized StringBuffer append(char str[], int offset, int len) {
-        int newcount = count + len;
-        if (newcount > value.length)
-            expandCapacity(newcount);
-        System.arraycopy(str, offset, value, count, len);
-        count = newcount;
+        super.append(str, offset, len);
         return this;
     }
 
@@ -463,7 +312,8 @@ public class StringBuffer {
      * @see     java.lang.StringBuffer#append(java.lang.String)
      */
     public StringBuffer append(boolean b) {
-        return append(String.valueOf(b));
+        super.append(String.valueOf(b));
+        return this;
     }
 
     /**
@@ -482,10 +332,7 @@ public class StringBuffer {
      * @return  a reference to this <code>StringBuffer</code> object.
      */
     public synchronized StringBuffer append(char c) {
-        int newcount = count + 1;
-        if (newcount > value.length)
-            expandCapacity(newcount);
-        value[count++] = c;
+        super.append(c);
         return this;
     }
 
@@ -505,7 +352,8 @@ public class StringBuffer {
 //    public native StringBuffer append(int i);
      
    public StringBuffer append(int i) {
-       return append(String.valueOf(i));
+       super.append(i);
+       return this;
    }
 
 
@@ -523,7 +371,8 @@ public class StringBuffer {
      * @see     java.lang.StringBuffer#append(java.lang.String)
      */
     public StringBuffer append(long l) {
-        return append(String.valueOf(l));
+        super.append(l);
+        return this;
     }
 
     /**
@@ -541,7 +390,8 @@ public class StringBuffer {
      * @since   CLDC 1.1
      */
     public StringBuffer append(float f) {
-        return append(String.valueOf(f));
+        super.append(f);
+        return this;
     }
 
     /**
@@ -559,7 +409,8 @@ public class StringBuffer {
      * @since   CLDC 1.1
      */
     public StringBuffer append(double d) {
-        return append(String.valueOf(d));
+        super.append(d);
+        return this;
     }
 
     /**
@@ -578,20 +429,7 @@ public class StringBuffer {
      * @since      JDK1.2
      */
     public synchronized StringBuffer delete(int start, int end) {
-        if (start < 0)
-            throw new StringIndexOutOfBoundsException(start);
-        if (end > count)
-            end = count;
-        if (start > end)
-            throw new StringIndexOutOfBoundsException();
-
-        int len = end - start;
-        if (len > 0) {
-            if (shared)
-                copy();
-            System.arraycopy(value, start+len, value, start, count-end);
-            count -= len;
-        }
+        super.delete(start, end);
         return this;
     }
 
@@ -608,12 +446,7 @@ public class StringBuffer {
      * @since       JDK1.2
      */
     public synchronized StringBuffer deleteCharAt(int index) {
-        if ((index < 0) || (index >= count))
-            throw new StringIndexOutOfBoundsException();
-        if (shared)
-            copy();
-        System.arraycopy(value, index+1, value, index, count-index-1);
-        count--;
+        super.deleteCharAt(index);
         return this;
     }
 
@@ -639,7 +472,8 @@ public class StringBuffer {
      * @see        java.lang.StringBuffer#length()
      */
     public synchronized StringBuffer insert(int offset, Object obj) {
-        return insert(offset, String.valueOf(obj));
+        super.insert(offset,obj);
+        return this;
     }
 
     /**
@@ -675,22 +509,7 @@ public class StringBuffer {
      * @see        java.lang.StringBuffer#length()
      */
     public synchronized StringBuffer insert(int offset, String str) {
-        if ((offset < 0) || (offset > count)) {
-            throw new StringIndexOutOfBoundsException();
-        }
-
-        if (str == null) {
-            str = String.valueOf(str);
-        }
-        int len = str.length();
-        int newcount = count + len;
-        if (newcount > value.length)
-            expandCapacity(newcount);
-        else if (shared)
-            copy();
-        System.arraycopy(value, offset, value, offset + len, count - offset);
-        str.getChars(0, len, value, offset);
-        count = newcount;
+        super.insert(offset,str);
         return this;
     }
 
@@ -716,18 +535,7 @@ public class StringBuffer {
      * @exception  StringIndexOutOfBoundsException  if the offset is invalid.
      */
     public synchronized StringBuffer insert(int offset, char str[]) {
-        if ((offset < 0) || (offset > count)) {
-            throw new StringIndexOutOfBoundsException();
-        }
-        int len = str.length;
-        int newcount = count + len;
-        if (newcount > value.length)
-            expandCapacity(newcount);
-        else if (shared)
-            copy();
-        System.arraycopy(value, offset, value, offset + len, count - offset);
-        System.arraycopy(str, 0, value, offset, len);
-        count = newcount;
+        super.insert(offset,str);
         return this;
     }
 
@@ -753,7 +561,8 @@ public class StringBuffer {
      * @see        java.lang.StringBuffer#length()
      */
     public StringBuffer insert(int offset, boolean b) {
-        return insert(offset, String.valueOf(b));
+        super.insert(offset,b);
+        return this;
     }
 
     /**
@@ -781,14 +590,7 @@ public class StringBuffer {
      * @see        java.lang.StringBuffer#length()
      */
     public synchronized StringBuffer insert(int offset, char c) {
-        int newcount = count + 1;
-        if (newcount > value.length)
-            expandCapacity(newcount);
-        else if (shared)
-            copy();
-        System.arraycopy(value, offset, value, offset + 1, count - offset);
-        value[offset] = c;
-        count = newcount;
+        super.insert(offset,c);
         return this;
     }
 
@@ -814,7 +616,8 @@ public class StringBuffer {
      * @see        java.lang.StringBuffer#length()
      */
     public StringBuffer insert(int offset, int i) {
-        return insert(offset, String.valueOf(i));
+        super.insert(offset,i);
+        return this;
     }
 
     /**
@@ -839,7 +642,8 @@ public class StringBuffer {
      * @see        java.lang.StringBuffer#length()
      */
     public StringBuffer insert(int offset, long l) {
-        return insert(offset, String.valueOf(l));
+        super.insert(offset,l);
+        return this;
     }
 
     /**
@@ -865,7 +669,8 @@ public class StringBuffer {
      * @since      CLDC 1.1
      */
     public StringBuffer insert(int offset, float f) {
-        return insert(offset, String.valueOf(f));
+        super.insert(offset,f);
+        return this;
     }
 
     /**
@@ -891,7 +696,8 @@ public class StringBuffer {
      * @since      CLDC 1.1
      */
     public StringBuffer insert(int offset, double d) {
-        return insert(offset, String.valueOf(d));
+        super.insert(offset,d);
+        return this;
     }
 
     /**
@@ -908,13 +714,7 @@ public class StringBuffer {
      * @since   JDK1.0.2
      */
     public synchronized StringBuffer reverse() {
-        if (shared) copy();
-        int n = count - 1;
-        for (int j = (n-1) >> 1; j >= 0; --j) {
-            char temp = value[j];
-            value[j] = value[n - j];
-            value[n - j] = temp;
-        }
+        super.reverse();
         return this;
     }
 
@@ -938,18 +738,6 @@ public class StringBuffer {
      * @return  a string representation of the string buffer.
      */
 //    public native String toString();
-
-   public String toString() {
-       return new String(value,0,count);
-   }
-
-
-    //
-    // The following two methods are needed by String to efficiently
-    // convert a StringBuffer into a String.  They are not public.
-    // They shouldn't be called by anyone but String.
-    final void setShared() { shared = true; } 
-    final char[] getValue() { return value; }
 
 }
 
