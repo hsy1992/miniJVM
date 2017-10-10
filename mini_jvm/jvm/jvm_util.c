@@ -541,7 +541,6 @@ void *jtherad_loader(void *para) {
         runtime->threadInfo->thread_status = THREAD_STATUS_RUNNING;
 
         push_ref(runtime->stack, (__refer) jthread);
-
         ret = execute_method(method, runtime, method->_this_class);
 
         threadlist_remove(runtime);
@@ -1001,7 +1000,8 @@ s32 jstring_2_utf8(Instance *jstr, Utf8String *utf8) {
     if (arr) {
         s32 count = jstring_get_count(jstr);
         s32 offset = jstring_get_offset(jstr);
-        unicode_2_utf8(((u16 *) arr->arr_body) + offset, utf8, count);
+        u16 *arrbody = (u16 *) arr->arr_body;
+        unicode_2_utf8(&arrbody[offset], utf8, count);
     }
     return 0;
 }

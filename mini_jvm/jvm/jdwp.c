@@ -59,6 +59,7 @@ void *jdwp_thread_dispacher(void *para) {
     Runtime runtime;
     runtime_init(&runtime);
     srv->runtime = &runtime;
+    push_ref(runtime.stack, srv->JDWP_ROOT); //用于指引垃圾回收器，这个对象是根结点
     s32 i;
     while (!srv->exit) {
         for (i = 0; i < srv->clients->length; i++) {
@@ -73,6 +74,7 @@ void *jdwp_thread_dispacher(void *para) {
         check_suspend_and_pause(&runtime);
         threadSleep(20);
     }
+    pop_ref(runtime.stack);
     runtime_dispose(&runtime);
     srv->runtime = NULL;
     return srv;
@@ -490,25 +492,6 @@ s32 getClassType(Class *clazz) {
     }
 }
 
-c8 getInstanceOfClassTag(Instance *ins) {
-    if (!ins)return JDWP_TAG_OBJECT;
-    if (ins->mb.type == MEM_TYPE_CLASS)return JDWP_TAG_CLASS_OBJECT;
-    Class *clazz = ins->mb.clazz;
-    if (clazz->arr_data_type)return JDWP_TAG_ARRAY;
-    if (utf8_equals_c(clazz->name, STR_CLASS_JAVA_LANG_THREAD))return JDWP_TAG_THREAD;
-    if (utf8_equals_c(clazz->name, STR_CLASS_JAVA_LANG_STRING))return JDWP_TAG_STRING;
-    return JDWP_TAG_OBJECT;
-}
-
-c8 getDescripterTag(Utf8String *des) {
-    c8 ch = utf8_char_at(des, 0);
-    if (ch == 'L') {
-        if (utf8_equals_c(des, STR_INS_JAVA_LANG_THREAD))ch = JDWP_TAG_THREAD;
-        if (utf8_equals_c(des, STR_INS_JAVA_LANG_STRING))ch = JDWP_TAG_STRING;
-        if (utf8_equals_c(des, STR_INS_JAVA_LANG_CLASS))ch = JDWP_TAG_CLASS_OBJECT;
-    }
-    return ch;
-}
 
 c8 getSimpleTag(u8 type) {
     char bytes = '0';
@@ -543,6 +526,27 @@ c8 getSimpleTag(u8 type) {
             break;
     }
     return bytes;
+}
+
+c8 getInstanceOfClassTag(Instance *ins) {
+    if (!ins)return JDWP_TAG_OBJECT;
+    if (ins->mb.type == MEM_TYPE_CLASS)return JDWP_TAG_CLASS_OBJECT;
+    Class *clazz = ins->mb.clazz;
+    if (clazz->arr_data_type)return JDWP_TAG_ARRAY;
+    if (utf8_equals_c(clazz->name, STR_CLASS_JAVA_LANG_THREAD))return JDWP_TAG_THREAD;
+    if (utf8_equals_c(clazz->name, STR_CLASS_JAVA_LANG_STRING))return JDWP_TAG_STRING;
+    return JDWP_TAG_OBJECT;
+}
+
+c8 getJdwpTag(Utf8String *ustr) {
+    if (utf8_equals_c(ustr, STR_INS_JAVA_LANG_STRING)) {
+        return JDWP_TAG_STRING;
+    } else if (utf8_equals_c(ustr, STR_INS_JAVA_LANG_CLASS)) {
+        return JDWP_TAG_CLASS_OBJECT;
+    } else if (utf8_equals_c(ustr, STR_INS_JAVA_LANG_THREAD)) {
+        return JDWP_TAG_THREAD;
+    }
+    return utf8_char_at(ustr, 0);
 }
 
 void writeValueType(JdwpPacket *res, ValueType *vt) {
@@ -646,26 +650,25 @@ void writeArrayRegion(JdwpPacket *res, Instance *arr, s32 firstIndex, s32 length
     c8 arr_type = utf8_char_at(arr->mb.clazz->name, 1);
     jdwppacket_write_byte(res, arr_type);
     jdwppacket_write_int(res, length);
-    c8 elem_type = utf8_char_at(arr->mb.clazz->name, 1);
-    c8 tag = getSimpleTag(elem_type);
+    c8 tag = getSimpleTag(arr_type);
     s32 i;
     //原子类型不用写标志，非原子类型则需要是ValueType
     for (i = 0; i < length; i++) {
         switch (tag) {
             case '1':
-                jdwppacket_write_byte(res, getFieldByte(&arr->arr_body[firstIndex + i]));
+                jdwppacket_write_byte(res, getFieldByte(&arr->arr_body[(firstIndex + i)]));
                 break;
             case '2':
-                jdwppacket_write_short(res, getFieldShort(&arr->arr_body[firstIndex + i * 2]));
+                jdwppacket_write_short(res, getFieldShort(&arr->arr_body[(firstIndex + i) * 2]));
                 break;
             case '4':
-                jdwppacket_write_int(res, getFieldInt(&arr->arr_body[firstIndex + i * 4]));
+                jdwppacket_write_int(res, getFieldInt(&arr->arr_body[(firstIndex + i) * 4]));
                 break;
             case '8':
-                jdwppacket_write_long(res, getFieldLong(&arr->arr_body[firstIndex + i * 8]));
+                jdwppacket_write_long(res, getFieldLong(&arr->arr_body[(firstIndex + i) * 8]));
                 break;
             case 'R': {
-                Instance *elem = getFieldRefer(&arr->arr_body[firstIndex + i * sizeof(__refer)]);
+                Instance *elem = getFieldRefer(&arr->arr_body[(firstIndex + i) * sizeof(__refer)]);
                 if (elem)
                     jdwppacket_write_byte(res, getInstanceOfClassTag(elem));
                 else
@@ -1527,7 +1530,11 @@ s32 jdwp_client_process(JdwpClient *client, Runtime *runtime) {
                 break;
             }
             case JDWP_CMD_ReferenceType_Modifiers: {//2.3
-                jvm_printf("%x not support\n", jdwppacket_get_cmd_err(req));
+                Class *ref = jdwppacket_read_refer(req);
+                jdwppacket_set_err(res, JDWP_ERROR_NONE);
+
+                jdwppacket_write_int(res, ref->cff.access_flags);
+                jdwp_writepacket(client, res);
                 break;
             }
             case JDWP_CMD_ReferenceType_Fields: {//2.4
@@ -1571,7 +1578,7 @@ s32 jdwp_client_process(JdwpClient *client, Runtime *runtime) {
                 for (i = 0; i < fields; i++) {
                     FieldInfo *fi = jdwppacket_read_refer(req);
                     ValueType vt;
-                    vt.type = getDescripterTag(fi->descriptor);
+                    vt.type = getJdwpTag(fi->descriptor);
                     c8 *ptr = getFieldPtr_byName(NULL, ref->name, fi->name, fi->descriptor);
                     vt.value = getPtrValue(vt.type, ptr);
                     writeValueType(res, &vt);
@@ -1790,7 +1797,7 @@ s32 jdwp_client_process(JdwpClient *client, Runtime *runtime) {
                 for (i = 0; i < fields; i++) {
                     FieldInfo *fi = jdwppacket_read_refer(req);
                     ValueType vt;
-                    vt.type = getDescripterTag(fi->descriptor);
+                    vt.type = getJdwpTag(fi->descriptor);
                     c8 *ptr = getFieldPtr_byName(obj, obj->mb.clazz->name, fi->name, fi->descriptor);
                     vt.value = getPtrValue(vt.type, ptr);
                     writeValueType(res, &vt);
@@ -1842,19 +1849,31 @@ s32 jdwp_client_process(JdwpClient *client, Runtime *runtime) {
                 ValueType vt;
                 memset(&vt, 0, sizeof(ValueType));
                 if (runtime->stack->size > stack_size) {
-                    Utf8String *us = methodInfo->descriptor;
-                    vt.type = utf8_char_at(us, utf8_indexof_c(us, ")") + 1);
+                    Utf8String *us = utf8_create_copy(methodInfo->descriptor);
+                    utf8_substring(us, utf8_indexof_c(us, ")") + 1, us->length);
+                    vt.type = getJdwpTag(us);
                     switch (getSimpleTag(vt.type)) {
                         case '8':
                             vt.value = pop_long(runtime->stack);
                             break;
-                        case 'R':
-                            vt.value = (s64) (long) pop_ref(runtime->stack);
+                        case 'R': {
+                            __refer r = pop_ref(runtime->stack);
+                            vt.type = getInstanceOfClassTag(r);//recorrect type, may be Arraylist<String>
+                            vt.value = (s64) (long) r;
+                            garbage_refer(r, jdwpserver.JDWP_ROOT);
+
+                            if (vt.type == 's') {
+                                s32 debug = 1;
+                                Utf8String *ustr = utf8_create();
+                                jstring_2_utf8((Instance *) r, ustr);
+                                utf8_destory(ustr);
+                            }
                             break;
+                        }
                         default:
                             vt.value = pop_int(runtime->stack);
                     }
-
+                    utf8_destory(us);
                 }
                 writeValueType(res, &vt);
                 vt.type = 'L';
@@ -2102,21 +2121,26 @@ s32 jdwp_client_process(JdwpClient *client, Runtime *runtime) {
 //set 13
             case JDWP_CMD_ArrayReference_Length: {//13.1
                 Instance *arr = jdwppacket_read_refer(req);
-
-
-                jdwppacket_set_err(res, JDWP_ERROR_NONE);
-                jdwppacket_write_int(res, arr->arr_length);
+                if (garbage_is_alive(arr)) {
+                    jdwppacket_set_err(res, JDWP_ERROR_NONE);
+                    jdwppacket_write_int(res, arr->arr_length);
+                } else {
+                    jdwppacket_set_err(res, JDWP_ERROR_INVALID_ARRAY);
+                }
                 //jvm_printf("ArrayReference_Length:%d\n", arr->arr_length);
                 jdwp_writepacket(client, res);
                 break;
             }
             case JDWP_CMD_ArrayReference_GetValues: {//13.2
                 Instance *arr = jdwppacket_read_refer(req);
-                s32 firstIndex = jdwppacket_read_int(req);
-                s32 length = jdwppacket_read_int(req);
-
-                jdwppacket_set_err(res, JDWP_ERROR_NONE);
-                writeArrayRegion(res, arr, firstIndex, length);
+                if (garbage_is_alive(arr)) {
+                    s32 firstIndex = jdwppacket_read_int(req);
+                    s32 length = jdwppacket_read_int(req);
+                    jdwppacket_set_err(res, JDWP_ERROR_NONE);
+                    writeArrayRegion(res, arr, firstIndex, length);
+                } else {
+                    jdwppacket_set_err(res, JDWP_ERROR_INVALID_ARRAY);
+                }
                 jdwp_writepacket(client, res);
                 //jvm_printf("ArrayReference_GetValues:%llx\n", arr);
                 break;

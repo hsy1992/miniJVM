@@ -224,6 +224,7 @@ static c8 *STR_FIELD_OFFSET = "offset";
 static c8 *STR_INS_JAVA_LANG_STRING = "Ljava/lang/String;";
 static c8 *STR_INS_JAVA_LANG_THREAD = "Ljava/lang/Thread;";
 static c8 *STR_INS_JAVA_LANG_CLASS = "Ljava/lang/Class;";
+static c8 *STR_INS_JAVA_LANG_OBJECT = "Ljava/lang/Object;";
 
 enum {
     METHOD_INVOKE_DYNAMIC,
@@ -238,8 +239,8 @@ enum {
 enum {
     MEM_TYPE_NODEF, //0
     MEM_TYPE_CLASS, //1
-    MEM_TYPE_INS,   //3
-    MEM_TYPE_ARR    //4
+    MEM_TYPE_INS,   //2
+    MEM_TYPE_ARR    //3
 };
 
 

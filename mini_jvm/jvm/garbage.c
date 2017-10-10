@@ -14,7 +14,7 @@ void _garbage_put_set(Hashset *set);
 
 void garbage_mark_son(__refer r);
 
-
+s32 checkAndWaitThreadIsSuspend(Runtime *runtime);
 /**
  * 创建垃圾收集线程，
  *
@@ -364,14 +364,9 @@ s32 garbage_collect() {
         mb->garbage_mark = GARBAGE_MARK_NO_REFERED;
     }
     //所有类标记他们的静态成员
-    if (sys_classloader) {
-        garbage_mark_son(sys_classloader->JVM_CLASS);
-        //printf("\n");
-    }
-    if (array_classloader) {
-        garbage_mark_son(array_classloader->JVM_CLASS);
-        //printf("\n");
-    }
+    if (sys_classloader)garbage_mark_son(sys_classloader->JVM_CLASS);
+    if (array_classloader)garbage_mark_son(array_classloader->JVM_CLASS);
+
     //轮询所有线程，标记被引用的对象
     //in this sub proc ,in wait maybe other thread insert new obj into son_2_father ,
     // so new inserted obj must be garbage_mark==GARBAGE_MARK_UNDEF  ,otherwise new obj would be collected.
@@ -379,9 +374,6 @@ s32 garbage_collect() {
         garbage_thread_unlock();
         return -1;
     }
-
-    if (sys_classloader)garbage_mark_son(sys_classloader->JVM_CLASS);
-    if (array_classloader)garbage_mark_son(array_classloader->JVM_CLASS);
 
     //如果没有被标记为引用，则回收掉
     s32 i = 0;
@@ -423,15 +415,10 @@ s32 garbage_mark_by_threads() {
          */
         if (runtime->threadInfo->thread_status != THREAD_STATUS_ZOMBIE) {
             jthread_suspend(runtime);
-            while (!runtime->threadInfo->is_suspend
-                   && !runtime->threadInfo->is_blocking) {
-                garbage_thread_timedwait(20);
-                if (collector->_garbage_thread_status != GARBAGE_THREAD_NORMAL) {
-                    return -1;
-                }
-                // if a native method blocking , must set thread status is wait before enter native method
-
+            if(checkAndWaitThreadIsSuspend(runtime)==-1){
+                return -1;
             }
+
             garbage_mark_refered_obj(runtime);
             jthread_resume(runtime);
         }
@@ -442,6 +429,9 @@ s32 garbage_mark_by_threads() {
         Runtime *runtime = jdwpserver.runtime;
         if (runtime) {
             jthread_suspend(runtime);
+            if(checkAndWaitThreadIsSuspend(runtime)==-1){
+                return -1;
+            }
             garbage_mark_refered_obj(runtime);
             jthread_resume(runtime);
         }
@@ -449,6 +439,16 @@ s32 garbage_mark_by_threads() {
     return 0;
 }
 
+s32 checkAndWaitThreadIsSuspend(Runtime *runtime){
+    while (!runtime->threadInfo->is_suspend
+           && !runtime->threadInfo->is_blocking) { // if a native method blocking , must set thread status is wait before enter native method
+        garbage_thread_timedwait(20);
+        if (collector->_garbage_thread_status != GARBAGE_THREAD_NORMAL) {
+            return -1;
+        }
+    }
+    return 0;
+}
 /**
  * 判定某个对象是否被所有线程的runtime引用
  * 引用有两种情况：
