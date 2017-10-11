@@ -1893,7 +1893,9 @@ s32 jdwp_client_process(JdwpClient *client, Runtime *runtime) {
             }
             case JDWP_CMD_ObjectReference_EnableCollection: {//9.8
                 Instance *obj = (Instance *) jdwppacket_read_refer(req);
-                garbage_derefer(obj, jdwpserver.JDWP_ROOT);
+                //Eclipse have a nonhuman opration that access a object after enable collection the same one
+                //so this garbage_derefer may be release the object
+                //garbage_derefer(obj, jdwpserver.JDWP_ROOT);
                 jdwppacket_set_err(res, JDWP_ERROR_NONE);
                 jdwp_writepacket(client, res);
 //                //jvm_printf("ObjectReference_EnableCollection:" + obj);
