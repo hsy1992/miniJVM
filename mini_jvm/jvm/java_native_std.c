@@ -149,6 +149,21 @@ s32 java_lang_Class_getName(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
+s32 java_lang_Class_getComponentType(Runtime *runtime, Class *clazz) {
+    RuntimeStack *stack = runtime->stack;
+    Class *cl = (Class *) (runtime->localVariables + 0)->refer;
+    if (cl->mb.type == MEM_TYPE_ARR) {
+        //todo
+    } else {
+        push_ref(stack, NULL);
+    }
+#if _JVM_DEBUG > 5
+    invoke_deepth(runtime);
+    jvm_printf("java_lang_Class_getComponentType\n");
+#endif
+    return 0;
+}
+
 s32 java_lang_Double_doubleToLongBits(Runtime *runtime, Class *clazz) {
     RuntimeStack *stack = runtime->stack;
     Long2Double l2d;
@@ -769,6 +784,7 @@ static java_native_method method_table[] = {
         {"java/lang/Class",                     "isInterface",       "()Z",                                        java_lang_Class_isInterface},
         {"java/lang/Class",                     "isArray",           "()Z",                                        java_lang_Class_isArray},
         {"java/lang/Class",                     "getName",           "()Ljava/lang/String;",                       java_lang_Class_getName},
+        {"java/lang/Class",                     "getComponentType",  "()Ljava/lang/Class;",                        java_lang_Class_getComponentType},
         {"java/lang/Double",                    "doubleToLongBits",  "(D)J",                                       java_lang_Double_doubleToLongBits},
         {"java/lang/Double",                    "longBitsToDouble",  "(J)D",                                       java_lang_Double_longBitsToDouble},
         {"java/lang/Float",                     "floatToIntBits",    "(F)I",                                       java_lang_Float_floatToIntBits},

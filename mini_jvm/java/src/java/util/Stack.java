@@ -1,7 +1,8 @@
 /*
- * Copyright C 2003 Sun Microsystems, Inc. All rights reserved.
+ * @(#)Stack.java	1.28 03/12/19
+ *
+ * Copyright 2004 Sun Microsystems, Inc. All rights reserved.
  * SUN PROPRIETARY/CONFIDENTIAL. Use is subject to license terms.
- * 
  */
 
 package java.util;
@@ -18,12 +19,11 @@ package java.util;
  * When a stack is first created, it contains no items. 
  *
  * @author  Jonathan Payne
- * @version 12/17/01 (CLDC 1.1)
- * @since   JDK1.0, CLDC 1.0
+ * @version 1.28, 12/19/03
+ * @since   JDK1.0
  */
 public
-class Stack extends Vector {
-
+class Stack<E> extends Vector<E> {
     /**
      * Creates an empty Stack.
      */
@@ -40,9 +40,10 @@ class Stack extends Vector {
      * @return  the <code>item</code> argument.
      * @see     java.util.Vector#addElement
      */
-    public Object push(Object item) {
-        addElement(item);
-        return item;
+    public E push(E item) {
+	addElement(item);
+
+	return item;
     }
 
     /**
@@ -53,14 +54,14 @@ class Stack extends Vector {
      *             of the <tt>Vector</tt> object).
      * @exception  EmptyStackException  if this stack is empty.
      */
-    public synchronized Object pop() {
-        Object obj;
-        int    len = size();
+    public synchronized E pop() {
+	E	obj;
+	int	len = size();
 
-        obj = peek();
-        removeElementAt(len - 1);
+	obj = peek();
+	removeElementAt(len - 1);
 
-        return obj;
+	return obj;
     }
 
     /**
@@ -71,14 +72,12 @@ class Stack extends Vector {
      *             of the <tt>Vector</tt> object). 
      * @exception  EmptyStackException  if this stack is empty.
      */
-    public synchronized Object peek() {
-        int len = size();
+    public synchronized E peek() {
+	int	len = size();
 
-        if (len == 0) {
-            throw new EmptyStackException();
-        }
-
-        return elementAt(len - 1);
+	if (len == 0)
+	    throw new EmptyStackException();
+	return elementAt(len - 1);
     }
 
     /**
@@ -88,7 +87,7 @@ class Stack extends Vector {
      *          no items; <code>false</code> otherwise.
      */
     public boolean empty() {
-        return size() == 0;
+	return size() == 0;
     }
 
     /**
@@ -106,14 +105,14 @@ class Stack extends Vector {
      *          indicates that the object is not on the stack.
      */
     public synchronized int search(Object o) {
-        int i = lastIndexOf(o);
+	int i = lastIndexOf(o);
 
-        if (i >= 0) {
-            return size() - i;
-        }
-
-        return -1;
+	if (i >= 0) {
+	    return size() - i;
+	}
+	return -1;
     }
 
+    /** use serialVersionUID from JDK 1.0.2 for interoperability */
+    private static final long serialVersionUID = 1224463164541339165L;
 }
-

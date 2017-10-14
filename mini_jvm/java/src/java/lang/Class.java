@@ -261,7 +261,17 @@ class Class<T> {
             return null;
         }
     }
-
+    /**
+     * Returns the {@code Class} representing the component type of an
+     * array.  If this class does not represent an array class this method
+     * returns null.
+     *
+     * @return the {@code Class} representing the component type of this
+     * class if this class is an array
+     * @see     java.lang.reflect.Array
+     * @since JDK1.1
+     */
+//    public native Class<?> getComponentType();
     /*
      * This private function is used during virtual machine initialization.
      * The user does not normally see this function.
