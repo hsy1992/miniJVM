@@ -8,12 +8,17 @@ package javax.mini.reflect;
 import javax.mini.reflect.vm.RefNative;
 
 /**
- *
- * Class cla = "xxx".getClass(); Reference ref = new
- * Reference(RefNative.obj2id(cla)); System.out.println("ref.name=" +
- * ref.className); try { String s = (String) cla.newInstance();
- * System.out.println(s); } catch (InstantiationException ex) { } catch
- * (IllegalAccessException ex) { }
+ * <code>
+ *      Class cla = "xxx".getClass();
+ *      Reference ref = new Reference(RefNative.obj2id(cla));
+ *      System.out.println("ref.name=" + ref.className);
+ *      try {
+ *          String s = (String) cla.newInstance();
+ *          System.out.println(s);
+ *      } catch (InstantiationException ex) {
+ *      } catch (IllegalAccessException ex) {
+ *      }
+ * </code>
  *
  * @author gust
  */

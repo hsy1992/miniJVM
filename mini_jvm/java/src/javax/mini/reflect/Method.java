@@ -10,29 +10,29 @@ import java.util.List;
 import javax.mini.reflect.vm.RefNative;
 
 /**
- * 类方法的反射，以mini jvm中的 MethofInfo的实例内存地址进行初始化 初始化中会把内存中的相应变量反射到Method实例中。
-        try {
-            //same as: "abcd".indexOf("cd",1);
-            String s = "abcd";
-            Method m;
-            Reference r = new Reference(RefNative.obj2id(java.lang.String.class));
-            m = r.getMethod("indexOf", new Class[]{java.lang.String.class, java.lang.Integer.class});
-            if (m != null) {
-                Object result = m.invoke(s, new Object[]{"cd", 1});
-                System.out.println("reflect invoke result:" + result);
-            }
-
-            //same as: new Long(0x1010101020202020L).longValue();
-            Long lo = new Long(0x1010101020202020L);
-            r = new Reference(RefNative.obj2id(java.lang.Long.class));
-            m = r.getMethod("longValue", new Class[]{});
-            if (m != null) {
-                Object result = m.invoke(lo, new Object[]{});
-                System.out.println("reflect invoke result:" + Long.toString((Long) result, 16));
-            }
-        } catch (Exception ex) {
-        }
-
+ * 类方法的反射，以mini jvm中的 MethofInfo的实例内存地址进行初始化 初始化中会把内存中的相应变量反射到Method实例中。  <code>
+ *      try {
+ *          //same as: "abcd".indexOf("cd",1);
+ *          String s = "abcd";
+ *          Method m;
+ *          Reference r = new Reference(RefNative.obj2id(java.lang.String.class));
+ *          m = r.getMethod("indexOf", new Class[]{java.lang.String.class, java.lang.Integer.class});
+ *          if (m != null) {
+ *              Object result = m.invoke(s, new Object[]{"cd", 1});
+ *              System.out.println("reflect invoke result:" + result);
+ *          }
+ *
+ *          //same as: new Long(0x1010101020202020L).longValue();
+ *          Long lo = new Long(0x1010101020202020L);
+ *          r = new Reference(RefNative.obj2id(java.lang.Long.class));
+ *          m = r.getMethod("longValue", new Class[]{});
+ *          if (m != null) {
+ *              Object result = m.invoke(lo, new Object[]{});
+ *              System.out.println("reflect invoke result:" + Long.toString((Long) result, 16));
+ *          }
+ *      } catch (Exception ex) {
+ *      }
+ * </code>
  *
  * @author gust
  */
@@ -189,7 +189,7 @@ public class Method {
                     break;
                 }
             }
-            
+
         }
         paras = args.toArray(new String[args.size()]);
         paras_class = new Class[paras.length];

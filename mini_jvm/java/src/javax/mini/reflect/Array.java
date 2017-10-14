@@ -10,6 +10,7 @@ package javax.mini.reflect;
  * 
  * int[] a=new int[3];
  * Array rarr = new Array(RefNative.obj2id(a));
+ * int v=(int)rarr.getVal(2);
  * 
  * 即可通过rarr 访问内数组成员
  * 
