@@ -6,7 +6,6 @@
 #include "jvm_util.h"
 
 
-
 /* ==================================opcode implementation =============================*/
 
 
@@ -1634,33 +1633,40 @@ s32 op_astore_3(u8 **opCode, Runtime *runtime) {
 static inline s32 op_xastore_impl(u8 **opCode, Runtime *runtime, u8 isReference) {
     RuntimeStack *stack = runtime->stack;
     StackEntry entry;
+    s32 ret = 0;
+
     pop_entry(stack, &entry);
     s32 index = pop_int(stack);
     Instance *ins = (Instance *) pop_ref(stack);
-    s32 tidx = (ins->mb.clazz->arr_data_type);
-    s32 bytes = data_type_bytes[tidx];
-    Long2Double l2d;
-    l2d.l = 0;
-    if (tidx == DATATYPE_REFERENCE) {
-        l2d.r = entry_2_refer(&entry);
+    if (ins == NULL) {
+        Instance *exception = exception_create(JVM_EXCEPTION_NULLPOINTER, runtime);
+        push_ref(runtime->stack, (__refer) exception);
+        ret = RUNTIME_STATUS_EXCEPTION;
     } else {
-        if (bytes > 4) {
-            l2d.l = entry_2_long(&entry);
+        s32 tidx = (ins->mb.clazz->arr_data_type);
+        s32 bytes = data_type_bytes[tidx];
+        Long2Double l2d;
+        l2d.l = 0;
+        if (tidx == DATATYPE_REFERENCE) {
+            l2d.r = entry_2_refer(&entry);
         } else {
-            l2d.i2l.i1 = entry_2_int(&entry);
+            if (bytes > 4) {
+                l2d.l = entry_2_long(&entry);
+            } else {
+                l2d.i2l.i1 = entry_2_int(&entry);
+            }
         }
-    }
-    jarray_set_field(ins, index, &l2d, bytes);
+        jarray_set_field(ins, index, &l2d, bytes);
 #if _JVM_DEBUG > 5
-    invoke_deepth(runtime);
-    jvm_printf("(icbfald)astore: save array[%llx]{%d bytes}.(%d)=%d:%llx:%lf)\n",
-               (s64) (long) ins, bytes, index,
-               l2d.i2l.i1, (s64) (long) l2d.r,
-               l2d.d);
+        invoke_deepth(runtime);
+        jvm_printf("(icbfald)astore: save array[%llx]{%d bytes}.(%d)=%d:%llx:%lf)\n",
+                   (s64) (long) ins, bytes, index,
+                   l2d.i2l.i1, (s64) (long) l2d.r,
+                   l2d.d);
 #endif
-
+    }
     *opCode = *opCode + 1;
-    return 0;
+    return ret;
 }
 
 s32 op_iastore(u8 **opCode, Runtime *runtime) {
@@ -1934,6 +1940,15 @@ static inline s32 op_ldc_impl(u8 **opCode, Runtime *runtime, s32 index) {
 #endif
             break;
         }
+        case CONSTANT_CLASS: {
+            Class *cl = classes_load_get(find_constant_classref(clazz, index)->name, runtime);
+            push_ref(stack, cl);
+            break;
+        }
+        default:{
+            push_long(stack,0);
+            jvm_printf("ldc: something not implemention \n");
+        }
     }
 
     return 0;
@@ -1962,7 +1977,7 @@ s32 op_ldc2_w(u8 **opCode, Runtime *runtime) {
     s2c.c0 = opCode[0][2];
 
     s32 index = s2c.s;
-    s64 value = get_constant_long(runtime->clazz, index);
+    s64 value = get_constant_long(runtime->clazz, index);//long or double
 
     push_long(stack, value);
 #if _JVM_DEBUG > 5
@@ -2860,7 +2875,7 @@ s32 op_lookupswitch(u8 **opCode, Runtime *runtime) {
     jvm_printf("tableswitch: val=%d, offset=%d\n", val, offset);
 #endif
     *opCode = *opCode + offset;
-return 0;
+    return 0;
 }
 
 s32 op_notsupport(u8 **opCode, Runtime *runtime) {
@@ -3100,11 +3115,11 @@ void instruct_indexies_destory(Instruction **instcts) {
 }
 
 
- c8 *find_instruct_name(u8 op) {
+c8 *find_instruct_name(u8 op) {
     return instructionsIndexies[op]->name;
 }
 
- InstructFunc find_instruct_func(u8 op) {
+InstructFunc find_instruct_func(u8 op) {
     Instruction *i = instructionsIndexies[op];
     if (!i) {
         jvm_printf("instruct not found :[%x]\n", op);

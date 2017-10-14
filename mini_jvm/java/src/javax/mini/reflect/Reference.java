@@ -9,16 +9,12 @@ import javax.mini.reflect.vm.RefNative;
 
 /**
  *
-        Class cla = "xxx".getClass();
-        Reference ref = new Reference(RefNative.obj2id(cla));
-        System.out.println("ref.name=" + ref.className);
-        try {
-            String s = (String) cla.newInstance();
-            System.out.println(s);
-        } catch (InstantiationException ex) {
-        } catch (IllegalAccessException ex) {
-        }
- * 
+ * Class cla = "xxx".getClass(); Reference ref = new
+ * Reference(RefNative.obj2id(cla)); System.out.println("ref.name=" +
+ * ref.className); try { String s = (String) cla.newInstance();
+ * System.out.println(s); } catch (InstantiationException ex) { } catch
+ * (IllegalAccessException ex) { }
+ *
  * @author gust
  */
 public class Reference {
@@ -55,6 +51,39 @@ public class Reference {
         }
     }
 
+    public Method getMethod(String methodName, String methodSignature) {
+        for (int i = 0; i < methods.length; i++) {
+            Method m = methods[i];
+            if (m.methodName.equals(methodName) && m.signature.equals(methodSignature)) {
+                return methods[i];
+            }
+        }
+        return null;
+    }
+
+    public Method getMethod(String methodName, Class<?>... parameterTypes) {
+        for (int i = 0; i < methods.length; i++) {
+            Method m = methods[i];
+            if (m.methodName.equals(methodName)) {
+                boolean found = true;
+                Class[] paras = m.getParameterTypes();
+                if (parameterTypes.length == paras.length) {
+                    for (int j = 0; j < parameterTypes.length; j++) {
+                        if (paras[j] != parameterTypes[j]) {
+                            found = false;
+                        }
+                    }
+                } else {
+                    found = false;
+                }
+                if (found) {
+                    return methods[i];
+                }
+            }
+        }
+        return null;
+    }
+
     public Method getMethod(long methodId) {
         for (int i = 0; i < methodIds.length; i++) {
             if (methods[i].methodId == methodId) {
@@ -81,6 +110,32 @@ public class Reference {
             return INTERFACE;
         } else {
             return CLASS;
+        }
+    }
+
+    static public Class getClassBySignature(String s) {
+        switch (s.charAt(0)) {
+            case 'S':
+                return RefNative.getClassByName("java/lang/Short");
+            case 'C':
+                return RefNative.getClassByName("java/lang/Character");
+            case 'B':
+                return RefNative.getClassByName("java/lang/Byte");
+            case 'I':
+                return RefNative.getClassByName("java/lang/Integer");
+            case 'F':
+                return RefNative.getClassByName("java/lang/Float");
+            case 'Z':
+                return RefNative.getClassByName("java/lang/Boolean");
+            case 'D':
+                return RefNative.getClassByName("java/lang/Double");
+            case 'J':
+                return RefNative.getClassByName("java/lang/Long");
+            case 'L':
+                s = s.substring(1, s.length() - 1);
+                return RefNative.getClassByName(s);
+            default:
+                return RefNative.getClassByName(s);
         }
     }
 

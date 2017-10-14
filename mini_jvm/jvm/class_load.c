@@ -322,7 +322,9 @@ s32 _parse_constant_pool(Class *_this, FILE *fp, s32 count) {
 
     return 0;
 }
+
 #ifdef _JVM_DEBUG
+
 /* print constant pool table */
 void printConstantPool(Class *clazz) {
     ConstantPool *p = &(clazz->constantPool);
@@ -471,6 +473,7 @@ void printConstantPool(Class *clazz) {
         }
     }
 }
+
 #endif //_JVM_DEBUG
 
 s32 _class_constant_pool_destory(Class *clazz) {
@@ -888,6 +891,7 @@ s32 _class_method_info_destory(Class *clazz) {
         if (mi->attributes)jvm_free(mi->attributes);
         mi->attributes = NULL;
         utf8_destory(mi->paraType);
+        utf8_destory(mi->returnType);
         if (mi->breakpoint)jvm_free(mi->breakpoint);
         mi->breakpoint = NULL;
     }
@@ -1064,7 +1068,7 @@ s32 _LOAD_FROM_FILE(Class *_this, c8 *file) {
  * @param clazz class
  */
 void class_link(Class *clazz) {
-    Utf8String* ustr=get_utf8_string(clazz, find_constant_classref(clazz, clazz->cff.this_class)->stringIndex);
+    Utf8String *ustr = get_utf8_string(clazz, find_constant_classref(clazz, clazz->cff.this_class)->stringIndex);
     clazz->name = utf8_create_copy(ustr);
 //    if (utf8_equals_c(clazz->name, "javax/mini/eio/socket/PrivateOutputStream")) {
 //        int debug = 1;
@@ -1092,6 +1096,8 @@ void class_link(Class *clazz) {
             if (!(ptr->access_flags & ACC_STATIC)) {
                 ptr->para_count++;//add instance
             }
+            s32 pos = utf8_indexof_c(ptr->descriptor, ")") + 1;
+            ptr->returnType = utf8_create_part(ptr->descriptor, pos, ptr->descriptor->length - pos);
         }
         s32 j;
 

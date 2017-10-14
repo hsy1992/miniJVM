@@ -645,6 +645,7 @@ struct _MethodInfo {
     Utf8String *name;
     Utf8String *descriptor;
     Utf8String *paraType;
+    Utf8String *returnType;
     s32 para_count;
     Class *_this_class;
     java_native_fun native_func;

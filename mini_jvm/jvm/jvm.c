@@ -137,7 +137,7 @@ s32 execute(c8 *p_classpath, c8 *p_mainclass, s32 argc, c8 **argv) {
             //startJdwp(&runtime);
             jdwp_start_server();
             //启动垃圾回收
-            garbage_thread_resume();
+            //garbage_thread_resume();
 
             //准备参数
             localvar_init(&runtime, main->para_count + 1);

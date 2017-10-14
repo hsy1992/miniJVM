@@ -2205,9 +2205,12 @@ s32 jdwp_client_process(JdwpClient *client, Runtime *runtime) {
                     vt.type = jdwppacket_read_byte(req);
                     if (slot < frame->localvar_count) {
                         switch (getSimpleTag(vt.type)) {
-                            case 'R':
-                                vt.value = (s64) (long) frame->localVariables[slot].refer;
+                            case 'R': {
+                                Instance *ins = frame->localVariables[slot].refer;
+                                vt.type = getInstanceOfClassTag(ins);
+                                vt.value = (s64) (long) ins;
                                 break;
+                            }
                             case '8':
                                 l2d.i2l.i1 = frame->localVariables[slot].integer;
                                 l2d.i2l.i0 = frame->localVariables[slot + 1].integer;

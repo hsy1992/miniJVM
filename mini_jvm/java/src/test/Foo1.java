@@ -29,6 +29,7 @@ import javax.mini.io.File;
 import javax.mini.io.RandomAccessFile;
 import javax.mini.net.ServerSocket;
 import javax.mini.net.Socket;
+import javax.mini.reflect.Method;
 import javax.mini.reflect.Reference;
 import javax.mini.reflect.StackFrame;
 import javax.mini.reflect.vm.RefNative;
@@ -208,7 +209,7 @@ public class Foo1 {
         });
         t.start();
         long sfid = RefNative.getStackFrame(Thread.currentThread());
-        System.out.println("sfid="+Long.toString(sfid, 16));
+        System.out.println("sfid=" + Long.toString(sfid, 16));
         StackFrame sf = new StackFrame(sfid);
         System.out.println("StackFrame:" + sf.method.methodName);
         //
@@ -342,7 +343,7 @@ public class Foo1 {
                 for (int i = 0; i < len; i++) {
                     System.out.print((char) rcvbuf[i]);
                 }
-               
+
             };
             System.out.print("\n");
         } catch (Exception e) {
@@ -378,7 +379,7 @@ public class Foo1 {
     void t15() {
 
         try {
-            String s = "这是一个测试";
+            String s = "杩欐槸涓�涓祴璇�";
             printBytes(s);
             printString(s);
             File test = new File("./a.txt");
@@ -410,7 +411,7 @@ public class Foo1 {
     void t16() {
         try {
             File b = new File("./b.txt");
-            String r = "这是一个测试";
+            String r = "杩欐槸涓�涓祴璇�";
             printBytes(r);
             printString(r);
             DataOutputStream dos = new DataOutputStream(b.getOutputStream(true));
@@ -430,7 +431,7 @@ public class Foo1 {
         try {
             RandomAccessFile c = new RandomAccessFile("./c.txt", "rw");
             c.seek(0);
-            String r = "这是一个测试";
+            String r = "杩欐槸涓�涓祴璇�";
             printBytes(r);
             printString(r);
             byte[] carr = r.getBytes("utf-8");
@@ -538,6 +539,12 @@ public class Foo1 {
             System.out.println(new Long(0).getClass().toString());
             String s = (String) cla.newInstance();
             System.out.println(s);
+            s += "abcd";
+            Method m = ref.getMethod("indexOf", "(Ljava.lang.String;I)I");
+            if (m != null) {
+                Object result = m.invoke(s, new Object[]{"cd", new Integer(1)});
+                System.out.println("reflect invoke result:" + result);
+            }
         } catch (InstantiationException ex) {
         } catch (IllegalAccessException ex) {
         }
@@ -554,9 +561,14 @@ public class Foo1 {
                 int debug = 1;
                 debug++;
                 debug++;
+                String xa = "a";
+                String xb = "b";
+                String xc = xa + xb;
+                xc = xc.substring(1);
                 debug++;
                 debug++;
                 debug++;
+                t22();
                 //System.out.println("sleep 1000");
             } catch (Exception e) {
             }
@@ -598,6 +610,29 @@ public class Foo1 {
         a.v = b;
         b.v = c;
         c.v = a;
+    }
+
+    void t22() {
+
+        try {
+            String s = "abcd";
+            Method m;
+            Reference r = new Reference(RefNative.obj2id(java.lang.String.class));
+            m = r.getMethod("indexOf", new Class[]{java.lang.String.class, java.lang.Integer.class});
+            if (m != null) {
+                Object result = m.invoke(s, new Object[]{"cd", 1});
+                System.out.println("reflect invoke result:" + result);
+            }
+
+            Long lo = new Long(0x1010101020202020L);
+            r = new Reference(RefNative.obj2id(java.lang.Long.class));
+            m = r.getMethod("longValue", new Class[]{});
+            if (m != null) {
+                Object result = m.invoke(lo, new Object[]{});
+                System.out.println("reflect invoke result:" + Long.toString((Long) result, 16));
+            }
+        } catch (Exception ex) {
+        }
     }
 
     public static void main() {

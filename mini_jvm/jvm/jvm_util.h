@@ -31,6 +31,8 @@ s32 getDataTypeIndex(c8 ch);
 
 s32 isDataReferByTag(c8 c);
 
+s32 isData8ByteByTag(c8 c);
+
 s32 isDataReferByIndex(s32 index);
 
 u8 getDataTypeTag(s32 index);

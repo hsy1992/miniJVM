@@ -81,6 +81,9 @@ s32 javax_mini_reflect_vm_RefNative_getClassByName(Runtime *runtime, Class *claz
     Utf8String *ustr = utf8_create();
     jstring_2_utf8(jstr, ustr);
     Class *cl = classes_get(ustr);
+    if (!cl) {
+        cl = array_class_get(ustr);
+    }
     push_ref(runtime->stack, cl);
     return 0;
 }
@@ -587,6 +590,59 @@ s32 javax_mini_reflect_Method_mapMethod(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
+
+s32 javax_mini_reflect_Method_invokeMethod(Runtime *runtime, Class *clazz) {
+    s32 pos = 0;
+    Instance *method_ins = (Instance *) (runtime->localVariables + pos++)->refer;
+    Long2Double l2d;
+    l2d.i2l.i1 = (runtime->localVariables + pos++)->integer;
+    l2d.i2l.i0 = (runtime->localVariables + pos++)->integer;
+    MethodInfo *methodInfo = (__refer) (long) l2d.l;
+    Instance *ins = (Instance *) (runtime->localVariables + pos++)->refer;
+    Instance *argsArr = (Instance *) (runtime->localVariables + pos++)->refer;
+    s32 ret = 0;
+    if (methodInfo) {
+        if (!(methodInfo->access_flags & ACC_STATIC)) {
+            push_ref(runtime->stack, ins);
+        }
+        s32 i;
+        for (i = 0; i < argsArr->arr_length; i++) {
+            Long2Double l2d;
+            jarray_get_field(argsArr, i, &l2d, data_type_bytes[argsArr->mb.clazz->arr_data_type]);
+            switch (utf8_char_at(methodInfo->paraType, i)) {
+                case '4': {
+                    push_int(runtime->stack, (s32) l2d.l);
+                    break;
+                }
+                case '8': {
+                    push_long(runtime->stack, l2d.l);
+                    break;
+                }
+                case 'R': {
+                    push_ref(runtime->stack, l2d.r);
+                    break;
+                }
+            }
+        }
+        ret = execute_method(methodInfo, runtime, methodInfo->_this_class);
+        if (ret == RUNTIME_STATUS_NORMAL) {
+            utf8_char ch = utf8_char_at(methodInfo->returnType, 0);
+            s64 v = 0;
+            if (ch == 'V') {
+            } else if (isDataReferByTag(ch)) {
+                v = (s64) (long) pop_ref(runtime->stack);
+            } else if (isData8ByteByTag(ch)) {
+                v = pop_long(runtime->stack);
+            } else {
+                v = pop_int(runtime->stack);
+            }
+            push_long(runtime->stack, v);
+        }
+    } else
+        push_long(runtime->stack, 0);
+    return ret;
+}
+
 s32 javax_mini_reflect_StackFrame_mapRuntime(Runtime *runtime, Class *clazz) {
     int pos = 0;
     Instance *ins = (Instance *) (runtime->localVariables + pos++)->refer;
@@ -669,6 +725,7 @@ static java_native_method method_jdwp_table[] = {
         {"javax/mini/reflect/Reference",    "mapReference",    "(J)V",                                  javax_mini_reflect_Reference_mapReference},
         {"javax/mini/reflect/Field",        "mapField",        "(J)V",                                  javax_mini_reflect_Field_mapField},
         {"javax/mini/reflect/Method",       "mapMethod",       "(J)V",                                  javax_mini_reflect_Method_mapMethod},
+        {"javax/mini/reflect/Method",       "invokeMethod",    "(JLjava/lang/Object;[J)J",              javax_mini_reflect_Method_invokeMethod},
         {"javax/mini/reflect/StackFrame",   "mapRuntime",      "(J)V",                                  javax_mini_reflect_StackFrame_mapRuntime},
         {"javax/mini/reflect/Array",        "mapArray",        "(J)V",                                  javax_mini_reflect_Array_mapArray},
 

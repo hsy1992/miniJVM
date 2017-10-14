@@ -90,10 +90,10 @@ s32 classes_put(Class *clazz) {
 }
 
 Class *array_class_get(Utf8String *descript) {
-    ThreadLock *tl = sys_classloader->JVM_CLASS->mb.thread_lock;
+    ThreadLock *tl = array_classloader->JVM_CLASS->mb.thread_lock;
     thread_lock(tl);
     Class *clazz = hashtable_get(array_classloader->classes, descript);
-    if (!clazz) {
+    if (!clazz&&descript&&descript->length) {
         clazz = class_create();
         clazz->arr_data_type = getDataTypeIndex(utf8_char_at(descript, 1));
         clazz->name = utf8_create_copy(descript);
@@ -292,6 +292,13 @@ u8 getDataTypeTag(s32 index) {
 
 s32 isDataReferByTag(c8 c) {
     if (c == 'L' || c == '[') {
+        return 1;
+    }
+    return 0;
+}
+
+s32 isData8ByteByTag(c8 c) {
+    if (c == 'D' || c == 'J') {
         return 1;
     }
     return 0;
@@ -504,7 +511,7 @@ void invoke_deepth(Runtime *runtime) {
 #if __JVM_OS_MAC__ || __JVM_OS_CYGWIN__
     printf("%llx", (s64) (long) pthread_self());
 #else
-    printf("%lx", (s64) (long) pthread_self().p);
+    printf("%lx", (s64) (long) pthread_self());
 #endif //
     for (i = 0; i < len; i++) {
         printf("    ");
