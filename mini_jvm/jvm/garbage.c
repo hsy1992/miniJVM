@@ -15,6 +15,7 @@ void _garbage_put_set(Hashset *set);
 void garbage_mark_son(__refer r);
 
 s32 checkAndWaitThreadIsSuspend(Runtime *runtime);
+
 /**
  * 创建垃圾收集线程，
  *
@@ -229,15 +230,17 @@ void getMemBlockName(void *memblock, Utf8String *name) {
             case MEM_TYPE_INS: {
                 Instance *ins = (Instance *) mb;
                 utf8_append_c(name, "L");
-                utf8_append(name, ins->mb.clazz->name);
+                if (sys_classloader)
+                    utf8_append(name, ins->mb.clazz->name);
                 utf8_append_c(name, ";");
                 break;
             }
             case MEM_TYPE_ARR: {
                 Instance *arr = (Instance *) mb;
-                //jvm_printf("Array{%d}", data_type_bytes[arr->arr_data_type]);
+
                 utf8_append_c(name, "Array{");
-                utf8_append(name, arr->mb.clazz->name);//'0' + data_type_bytes[arr->arr_data_type]);
+                if (array_classloader)
+                    utf8_append(name, arr->mb.clazz->name);
                 utf8_append_c(name, "}");
                 break;
             }
@@ -415,7 +418,7 @@ s32 garbage_mark_by_threads() {
          */
         if (runtime->threadInfo->thread_status != THREAD_STATUS_ZOMBIE) {
             jthread_suspend(runtime);
-            if(checkAndWaitThreadIsSuspend(runtime)==-1){
+            if (checkAndWaitThreadIsSuspend(runtime) == -1) {
                 return -1;
             }
 
@@ -429,7 +432,7 @@ s32 garbage_mark_by_threads() {
         Runtime *runtime = jdwpserver.runtime;
         if (runtime) {
             jthread_suspend(runtime);
-            if(checkAndWaitThreadIsSuspend(runtime)==-1){
+            if (checkAndWaitThreadIsSuspend(runtime) == -1) {
                 return -1;
             }
             garbage_mark_refered_obj(runtime);
@@ -439,9 +442,10 @@ s32 garbage_mark_by_threads() {
     return 0;
 }
 
-s32 checkAndWaitThreadIsSuspend(Runtime *runtime){
+s32 checkAndWaitThreadIsSuspend(Runtime *runtime) {
     while (!runtime->threadInfo->is_suspend
-           && !runtime->threadInfo->is_blocking) { // if a native method blocking , must set thread status is wait before enter native method
+           &&
+           !runtime->threadInfo->is_blocking) { // if a native method blocking , must set thread status is wait before enter native method
         garbage_thread_timedwait(20);
         if (collector->_garbage_thread_status != GARBAGE_THREAD_NORMAL) {
             return -1;
@@ -449,6 +453,7 @@ s32 checkAndWaitThreadIsSuspend(Runtime *runtime){
     }
     return 0;
 }
+
 /**
  * 判定某个对象是否被所有线程的runtime引用
  * 引用有两种情况：
@@ -610,12 +615,11 @@ void garbage_derefer(__refer sonPtr, __refer parentPtr) {
 #if _JVM_DEBUG_GARBAGE_DUMP
     Utf8String *pus = utf8_create();
     Utf8String *sus = utf8_create();
+//    if (hashtable_get(collector->father_2_son, parentPtr))
     getMemBlockName(parentPtr, pus);
-    getMemBlockName(sonPtr, sus);
-//    jvm_printf("-: %s[%x] <- %s[%x]\n", utf8_cstr(((Instance *) sonPtr)->mb.clazz->name), sonPtr, utf8_cstr(pus),
-//               parentPtr);
-    jvm_printf("-: [%x] <- [%x]\n", sonPtr, utf8_cstr(pus),
-               parentPtr);
+    if (hashtable_get(collector->son_2_father, sonPtr))
+        getMemBlockName(sonPtr, sus);
+    jvm_printf("-: %s[%x] <- %s[%x]\n", utf8_cstr(sus), sonPtr, utf8_cstr(pus), parentPtr);
     utf8_destory(sus);
     utf8_destory(pus);
 #endif

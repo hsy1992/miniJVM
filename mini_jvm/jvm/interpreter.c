@@ -1649,7 +1649,7 @@ static inline s32 op_xastore_impl(u8 **opCode, Runtime *runtime, u8 isReference)
 #if _JVM_DEBUG > 5
         invoke_deepth(runtime);
         jvm_printf("(icbfald)astore: save array[%llx]{%d bytes}.(%d)=%d:%llx:%lf)\n",
-                   (s64) (long) ins, bytes, index,
+                   (s64) (long) jarr, bytes, index,
                    l2d.i2l.i1, (s64) (long) l2d.r,
                    l2d.d);
 #endif
@@ -2128,6 +2128,7 @@ static inline s32 op_getfield_impl(u8 **opCode, Runtime *runtime, s32 isStatic) 
         ptr = getInstanceFieldPtr(ins, fi);
     }
     Long2Double l2d;
+    l2d.l = 0;
     if (isDataReferByTag(ch)) {
         l2d.r = getFieldRefer(ptr);
         push_ref(stack, l2d.r);

@@ -9,28 +9,27 @@ import java.io.IOException;
 import javax.cldc.io.Connection;
 
 /**
- * block and non block socket, setoption() to set it attribute
- <code>
-    void t13() {
-        try {
-            Socket conn = (Socket) Connector.open("socket://baidu.com:80");
-            conn.setOption(Socket.OP_TYPE_NON_BLOCK, Socket.OP_VAL_NON_BLOCK);
-            String request = "GET / HTTP/1.1\r\n\r\n";
-            conn.write(request.getBytes(), 0, request.length());
-            byte[] rcvbuf = new byte[256];
-            int len = 0;
-            while (len != -1) {
-                len = conn.read(rcvbuf, 0, 256);
-                for (int i = 0; i < len; i++) {
-                    System.out.print((char) rcvbuf[i]);
-                }
-                System.out.print("\n");
-            };
-        } catch (Exception e) {
-
-        }
-    }
-</code>
+ * block and non block socket, setoption() to set it attribute  <code>
+*    void t13() {
+ *        try {
+ *            Socket conn = (Socket) Connector.open("socket://baidu.com:80");
+ *            conn.setOption(Socket.OP_TYPE_NON_BLOCK, Socket.OP_VAL_NON_BLOCK);
+ *            String request = "GET / HTTP/1.1\r\n\r\n";
+ *            conn.write(request.getBytes(), 0, request.length());
+ *            byte[] rcvbuf = new byte[256];
+ *            int len = 0;
+ *            while (len != -1) {
+ *                len = conn.read(rcvbuf, 0, 256);
+ *                for (int i = 0; i < len; i++) {
+ *                    System.out.print((char) rcvbuf[i]);
+ *                }
+ *                System.out.print("\n");
+ *            };
+ *        } catch (Exception e) {
+ *
+ *        }
+ *    }
+ * </code>
  *
  * @author gust
  */

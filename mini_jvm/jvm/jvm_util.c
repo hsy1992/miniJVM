@@ -93,7 +93,7 @@ Class *array_class_get(Utf8String *descript) {
     ThreadLock *tl = array_classloader->JVM_CLASS->mb.thread_lock;
     thread_lock(tl);
     Class *clazz = hashtable_get(array_classloader->classes, descript);
-    if (!clazz&&descript&&descript->length) {
+    if (!clazz && descript && descript->length) {
         clazz = class_create();
         clazz->arr_type_index = getDataTypeIndex(utf8_char_at(descript, 1));
         clazz->name = utf8_create_copy(descript);
@@ -619,6 +619,7 @@ s32 jthread_lock(MemoryBlock *mb, Runtime *runtime) { //可能会重入，同一
     jtl->jthread_holder = runtime->threadInfo->jthread;
 
 #if _JVM_DEBUG > 5
+    invoke_deepth(runtime);
     jvm_printf("  lock: %llx   lock holder: %llx \n", (s64) (long) (runtime->threadInfo->jthread),
            (s64) (long) (jtl->jthread_holder));
 #endif
@@ -634,6 +635,7 @@ s32 jthread_unlock(MemoryBlock *mb, Runtime *runtime) {
     pthread_mutex_unlock(&jtl->mutex_lock);
     jtl->jthread_holder = NULL;
 #if _JVM_DEBUG > 5
+    invoke_deepth(runtime);
     jvm_printf("unlock: %llx   lock holder: %llx, \n", (s64) (long) (runtime->threadInfo->jthread),
            (s64) (long) (jtl->jthread_holder));
 #endif
@@ -784,8 +786,9 @@ Instance *jarray_multi_create(ArrayList *dim, Utf8String *pdesc, s32 deep) {
 
 
 void jarray_set_field(Instance *arr, s32 index, Long2Double *l2d) {
-    s32 bytes=data_type_bytes[arr->mb.arr_type_index];
-    if (isDataReferByIndex(arr->mb.arr_type_index)) {
+    s32 idx = arr->mb.arr_type_index;
+    s32 bytes = data_type_bytes[idx];
+    if (isDataReferByIndex(idx)) {
         __refer ref = (__refer) getFieldRefer(arr->arr_body + index * bytes);
         if (ref) { //把老索引关闭
             garbage_derefer((__refer) ref, arr);
@@ -813,9 +816,9 @@ void jarray_set_field(Instance *arr, s32 index, Long2Double *l2d) {
 }
 
 void jarray_get_field(Instance *arr, s32 index, Long2Double *l2d) {
-    Class* clazz=arr->mb.clazz;
-    s32 bytes=data_type_bytes[clazz->arr_type_index];
-    if (isDataReferByIndex(clazz->arr_type_index)) {
+    s32 idx = arr->mb.arr_type_index;
+    s32 bytes = data_type_bytes[idx];
+    if (isDataReferByIndex(idx)) {
         l2d->r = getFieldRefer(arr->arr_body + index * bytes);
     } else {
         switch (bytes) {
@@ -824,7 +827,7 @@ void jarray_get_field(Instance *arr, s32 index, Long2Double *l2d) {
                 break;
             case 2:
                 l2d->i2l.i1 = getFieldShort(arr->arr_body + index * bytes);
-                if (clazz->arr_type_index == DATATYPE_JCHAR) {
+                if (idx == DATATYPE_JCHAR) {
                     l2d->i2l.i1 = (u16) l2d->i2l.i1;
                 }
                 break;

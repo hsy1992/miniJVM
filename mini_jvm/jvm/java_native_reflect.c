@@ -84,6 +84,7 @@ s32 javax_mini_reflect_vm_RefNative_getClassByName(Runtime *runtime, Class *claz
     if (!cl) {
         cl = array_class_get(ustr);
     }
+    utf8_destory(ustr);
     push_ref(runtime->stack, cl);
     return 0;
 }

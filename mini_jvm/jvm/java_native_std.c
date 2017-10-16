@@ -57,6 +57,7 @@ s32 java_lang_Class_newInstance(Runtime *runtime, Class *clazz) {
     }
     if (ins) {
         push_ref(stack, (__refer) ins);
+        garbage_refer(ins, NULL);
     } else {
         Instance *exception = exception_create(JVM_EXCEPTION_INSTANTIATIONEXCEPTION, runtime);
         push_ref(stack, (__refer) exception);
@@ -138,7 +139,8 @@ s32 java_lang_Class_getName(Runtime *runtime, Class *clazz) {
     Class *cl = (Class *) (runtime->localVariables + 0)->refer;
     if (cl) {
         Instance *ins = jstring_create(cl->name, runtime);
-        push_ref(stack, (__refer) ins);
+        push_ref(stack, ins);
+        garbage_refer(ins, NULL);
     } else {
         push_ref(stack, NULL);
     }
@@ -563,6 +565,7 @@ s32 java_lang_System_doubleToString(Runtime *runtime, Class *clazz) {
     Utf8String *str = utf8_create_c(buf);
     Instance *jstr = jstring_create(str, runtime);
     push_ref(stack, (__refer) jstr);
+    garbage_refer(jstr, NULL);
     utf8_destory(str);
 
 #if _JVM_DEBUG > 5
