@@ -709,7 +709,7 @@ Instance *jarray_create_des(s32 count, Utf8String *descript) {
     s32 width = data_type_bytes[typeIdx];
     Instance *arr = jvm_alloc(sizeof(Instance));
     arr->mb.type = MEM_TYPE_ARR;
-    arr->mb.arr_type_idx = typeIdx;
+    arr->mb.arr_type_index = typeIdx;
     arr->mb.garbage_mark = GARBAGE_MARK_UNDEF;//防止在上次回收过程中，此对象刚被放入池子就被回收
     arr->mb.clazz = array_class_get(descript);
     arr->arr_length = count;
@@ -734,7 +734,7 @@ Instance *jarray_create(s32 count, s32 typeIdx, Utf8String *type) {
 
 s32 jarray_destory(Instance *arr) {
     if (arr && arr->mb.type == MEM_TYPE_ARR) {
-        if (isDataReferByIndex(arr->mb.arr_type_idx)) {
+        if (isDataReferByIndex(arr->mb.arr_type_index)) {
             s32 i;
             Long2Double l2d;
             l2d.l = 0;
@@ -784,9 +784,8 @@ Instance *jarray_multi_create(ArrayList *dim, Utf8String *pdesc, s32 deep) {
 
 
 void jarray_set_field(Instance *arr, s32 index, Long2Double *l2d) {
-    Class* clazz=arr->mb.clazz;
-    s32 bytes=data_type_bytes[clazz->arr_type_index];
-    if (isDataReferByIndex(clazz->arr_type_index)) {
+    s32 bytes=data_type_bytes[arr->mb.arr_type_index];
+    if (isDataReferByIndex(arr->mb.arr_type_index)) {
         __refer ref = (__refer) getFieldRefer(arr->arr_body + index * bytes);
         if (ref) { //把老索引关闭
             garbage_derefer((__refer) ref, arr);
