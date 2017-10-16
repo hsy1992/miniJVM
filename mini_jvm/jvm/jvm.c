@@ -137,7 +137,7 @@ s32 execute(c8 *p_classpath, c8 *p_mainclass, s32 argc, c8 **argv) {
             //startJdwp(&runtime);
             jdwp_start_server();
             //启动垃圾回收
-            //garbage_thread_resume();
+            garbage_thread_resume();
 
             //准备参数
             localvar_init(&runtime, main->para_count + 1);
@@ -152,7 +152,7 @@ s32 execute(c8 *p_classpath, c8 *p_mainclass, s32 argc, c8 **argv) {
                 Utf8String *utfs = utf8_create_c(argv[i]);
                 Instance *jstr = jstring_create(utfs, &runtime);
                 l2d.r = jstr;
-                jarray_set_field(arr, i, &l2d, bytes);
+                jarray_set_field(arr, i, &l2d);
                 utf8_destory(utfs);
             }
             push_ref(runtime.stack, arr);

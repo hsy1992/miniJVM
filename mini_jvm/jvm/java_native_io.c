@@ -770,7 +770,7 @@ s32 javax_mini_io_File_listDir(Runtime *runtime, Class *clazz) {
             garbage_refer(jarr, NULL);
             for (i = 0; i < files->length; i++) {
                 l2d.r = arraylist_get_value(files, i);
-                jarray_set_field(jarr, i, &l2d, data_type_bytes[DATATYPE_REFERENCE]);
+                jarray_set_field(jarr, i, &l2d);
             }
             push_ref(runtime->stack, jarr);
         } else {

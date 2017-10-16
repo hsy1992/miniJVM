@@ -95,7 +95,7 @@ Class *array_class_get(Utf8String *descript) {
     Class *clazz = hashtable_get(array_classloader->classes, descript);
     if (!clazz&&descript&&descript->length) {
         clazz = class_create();
-        clazz->arr_data_type = getDataTypeIndex(utf8_char_at(descript, 1));
+        clazz->arr_type_index = getDataTypeIndex(utf8_char_at(descript, 1));
         clazz->name = utf8_create_copy(descript);
         hashtable_put(array_classloader->classes, clazz->name, clazz);
         garbage_refer(clazz, array_classloader->JVM_CLASS);
@@ -502,7 +502,7 @@ void invoke_deepth(Runtime *runtime) {
 #ifdef _CYGWIN_CONFIG_H
     fprintf(logfile, "%lx", (s64) (long) pthread_self());
 #else
-    fprintf(logfile, "%lx", (s64) (long) pthread_self().p);
+    fprintf(logfile, "%lx", (s64) (long) pthread_self());
 #endif //_CYGWIN_CONFIG_H
     for (i = 0; i < len; i++) {
         fprintf(logfile, "    ");
@@ -739,7 +739,7 @@ s32 jarray_destory(Instance *arr) {
             Long2Double l2d;
             l2d.l = 0;
             for (i = 0; i < arr->arr_length; i++) {//把所有引用去除，否则不会垃圾回收
-                jarray_set_field(arr, i, &l2d, data_type_bytes[DATATYPE_REFERENCE]);
+                jarray_set_field(arr, i, &l2d);
             }
         }
         jthreadlock_destory(&arr->mb);
@@ -775,7 +775,7 @@ Instance *jarray_multi_create(ArrayList *dim, Utf8String *pdesc, s32 deep) {
         for (i = 0; i < len; i++) {
             Instance *elem = jarray_multi_create(dim, desc, deep + 1);
             l2d.r = (__refer) elem;
-            jarray_set_field(arr, i, &l2d, bytes);
+            jarray_set_field(arr, i, &l2d);
         }
     }
     utf8_destory(desc);
@@ -783,8 +783,10 @@ Instance *jarray_multi_create(ArrayList *dim, Utf8String *pdesc, s32 deep) {
 }
 
 
-void jarray_set_field(Instance *arr, s32 index, Long2Double *l2d, s32 bytes) {
-    if (isDataReferByIndex(arr->mb.clazz->arr_data_type)) {
+void jarray_set_field(Instance *arr, s32 index, Long2Double *l2d) {
+    Class* clazz=arr->mb.clazz;
+    s32 bytes=data_type_bytes[clazz->arr_type_index];
+    if (isDataReferByIndex(clazz->arr_type_index)) {
         __refer ref = (__refer) getFieldRefer(arr->arr_body + index * bytes);
         if (ref) { //把老索引关闭
             garbage_derefer((__refer) ref, arr);
@@ -811,8 +813,10 @@ void jarray_set_field(Instance *arr, s32 index, Long2Double *l2d, s32 bytes) {
     }
 }
 
-void jarray_get_field(Instance *arr, s32 index, Long2Double *l2d, s32 bytes) {
-    if (isDataReferByIndex(arr->mb.clazz->arr_data_type)) {
+void jarray_get_field(Instance *arr, s32 index, Long2Double *l2d) {
+    Class* clazz=arr->mb.clazz;
+    s32 bytes=data_type_bytes[clazz->arr_type_index];
+    if (isDataReferByIndex(clazz->arr_type_index)) {
         l2d->r = getFieldRefer(arr->arr_body + index * bytes);
     } else {
         switch (bytes) {
@@ -821,7 +825,7 @@ void jarray_get_field(Instance *arr, s32 index, Long2Double *l2d, s32 bytes) {
                 break;
             case 2:
                 l2d->i2l.i1 = getFieldShort(arr->arr_body + index * bytes);
-                if (arr->mb.clazz->arr_data_type == DATATYPE_JCHAR) {
+                if (clazz->arr_type_index == DATATYPE_JCHAR) {
                     l2d->i2l.i1 = (u16) l2d->i2l.i1;
                 }
                 break;

@@ -53,12 +53,14 @@ static inline s32 op_xaload(u8 **opCode, Runtime *runtime) {
 
     s32 index = pop_int(stack);
     Instance *arr = (Instance *) pop_ref(stack);
-    s32 bytes = data_type_bytes[arr->mb.clazz->arr_data_type];
+    s32 tidx = arr->mb.clazz->arr_type_index;
+    s32 bytes = data_type_bytes[tidx];
 
     Long2Double l2d;
-    jarray_get_field(arr, index, &l2d, bytes);
-
-    if (bytes <= 4) {
+    jarray_get_field(arr, index, &l2d);
+    if (isDataReferByIndex(tidx)) {
+        push_ref(stack, l2d.r);
+    } else if (bytes <= 4) {
         push_int(stack, l2d.i2l.i1);
     } else {
         push_long(stack, l2d.l);
@@ -66,7 +68,7 @@ static inline s32 op_xaload(u8 **opCode, Runtime *runtime) {
 
 #if _JVM_DEBUG > 5
     invoke_deepth(runtime);
-    jvm_printf("(icbdlfs)aload push arr[%llx]{%d bytes}.(%d)=%x:%d:%lld:%lf into stack\n", (u64) (long) arr, bytes,
+    jvm_printf("(icbdlfsa)aload push arr[%llx]{%d bytes}.(%d)=%x:%d:%lld:%lf into stack\n", (u64) (long) arr, bytes,
                index,
                l2d.i2l.i1,
                l2d.i2l.i1, l2d.l, l2d.d);
@@ -104,26 +106,26 @@ s32 op_baload(u8 **opCode, Runtime *runtime) {
 }
 
 s32 op_aaload(u8 **opCode, Runtime *runtime) {
-    RuntimeStack *stack = runtime->stack;
-
-    s32 index = pop_int(stack);
-    Instance *arr = (Instance *) pop_ref(stack);
-    s32 bytes = data_type_bytes[(arr->mb.clazz->arr_data_type)];
-
-    Long2Double l2d;
-    jarray_get_field(arr, index, &l2d, bytes);
-
-    push_ref(stack, (__refer) l2d.r);
-
-
-#if _JVM_DEBUG > 5
-    invoke_deepth(runtime);
-    jvm_printf("aaload push arr[%llx]{%d bytes}.(%d)=%x:%d:%llx:%lf into stack\n", (s64) (long) arr, bytes, index,
-               l2d.i2l.i1,
-               l2d.i2l.i1, l2d.l, l2d.d);
-#endif
-    *opCode = *opCode + 1;
-    return 0;
+//    RuntimeStack *stack = runtime->stack;
+//
+//    s32 index = pop_int(stack);
+//    Instance *arr = (Instance *) pop_ref(stack);
+//
+//    Long2Double l2d;
+//    jarray_get_field(arr, index, &l2d);
+//
+//    push_ref(stack, (__refer) l2d.r);
+//
+//
+//#if _JVM_DEBUG > 5
+//    invoke_deepth(runtime);
+//    jvm_printf("aaload push arr[%llx]{%d bytes}.(%d)=%x:%d:%llx:%lf into stack\n", (s64) (long) arr, bytes, index,
+//               l2d.i2l.i1,
+//               l2d.i2l.i1, l2d.l, l2d.d);
+//#endif
+//    *opCode = *opCode + 1;
+//    return 0;
+    return op_xaload(opCode, runtime);
 }
 
 
@@ -1643,11 +1645,11 @@ static inline s32 op_xastore_impl(u8 **opCode, Runtime *runtime, u8 isReference)
         push_ref(runtime->stack, (__refer) exception);
         ret = RUNTIME_STATUS_EXCEPTION;
     } else {
-        s32 tidx = (ins->mb.clazz->arr_data_type);
+        s32 tidx = (ins->mb.clazz->arr_type_index);
         s32 bytes = data_type_bytes[tidx];
         Long2Double l2d;
         l2d.l = 0;
-        if (tidx == DATATYPE_REFERENCE) {
+        if (isDataReferByIndex(tidx)) {
             l2d.r = entry_2_refer(&entry);
         } else {
             if (bytes > 4) {
@@ -1656,7 +1658,7 @@ static inline s32 op_xastore_impl(u8 **opCode, Runtime *runtime, u8 isReference)
                 l2d.i2l.i1 = entry_2_int(&entry);
             }
         }
-        jarray_set_field(ins, index, &l2d, bytes);
+        jarray_set_field(ins, index, &l2d);
 #if _JVM_DEBUG > 5
         invoke_deepth(runtime);
         jvm_printf("(icbfald)astore: save array[%llx]{%d bytes}.(%d)=%d:%llx:%lf)\n",
@@ -1945,8 +1947,8 @@ static inline s32 op_ldc_impl(u8 **opCode, Runtime *runtime, s32 index) {
             push_ref(stack, cl);
             break;
         }
-        default:{
-            push_long(stack,0);
+        default: {
+            push_long(stack, 0);
             jvm_printf("ldc: something not implemention \n");
         }
     }
@@ -2334,7 +2336,7 @@ s32 op_checkcast(u8 **opCode, Runtime *runtime) {
         } else if (ins->mb.type == MEM_TYPE_ARR) {
             Utf8String *utf = find_constant_classref(runtime->clazz, typeIdx)->name;
             u8 ch = utf8_char_at(utf, 1);
-            if (getDataTypeIndex(ch) == ins->mb.clazz->arr_data_type) {
+            if (getDataTypeIndex(ch) == ins->mb.clazz->arr_type_index) {
                 checkok = 1;
             }
         }

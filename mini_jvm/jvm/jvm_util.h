@@ -49,6 +49,45 @@ s32 sys_properties_load(Utf8String *path);
 
 void sys_properties_dispose(void);
 
+
+int jvm_printf(const char *, ...);
+
+void invoke_deepth(Runtime *runtime);
+
+
+c8 *getInstanceFieldPtr(Instance *ins, FieldInfo *fi);
+
+c8 *getStaticFieldPtr(FieldInfo *fi);
+
+void setFieldInt(c8 *ptr, s32 v);
+
+void setFieldRefer(c8 *ptr, __refer v);
+
+void setFieldLong(c8 *ptr, s64 v);
+
+void setFieldShort(c8 *ptr, s16 v);
+
+void setFieldByte(c8 *ptr, c8 v);
+
+void setFieldDouble(c8 *ptr, f64 v);
+
+void setFieldFloat(c8 *ptr, f32 v);
+
+s64 getFieldLong(c8 *ptr);
+
+c8 getFieldByte(c8 *ptr);
+
+s16 getFieldShort(c8 *ptr);
+
+s32 getFieldInt(c8 *ptr);
+
+__refer getFieldRefer(c8 *ptr);
+
+f32 getFieldDouble(c8 *ptr);
+
+f32 getFieldFloat(c8 *ptr);
+
+
 void jstring_set_count(Instance *jstr, s32 count);
 
 s32 jstring_get_count(Instance *jstr);
@@ -137,6 +176,41 @@ void thread_lock(ThreadLock *lock);
 void thread_lock_dispose(ThreadLock *lock);
 
 void thread_lock_init(ThreadLock *lock);
+
+
+Instance *jarray_create_des(s32 count, Utf8String *descript);
+
+Instance *jarray_create(s32 count, s32 typeIdx, Utf8String *type);
+
+s32 jarray_destory(Instance *arr);
+
+Instance *jarray_multi_create(ArrayList *dim, Utf8String *desc, s32 deep);
+
+void jarray_set_field(Instance *arr, s32 index, Long2Double *l2d);
+
+void jarray_get_field(Instance *arr, s32 index, Long2Double *l2d);
+
+Instance *jstring_create(Utf8String *src, Runtime *runtime);
+
+Instance *exception_create(s32 exception_type, Runtime *runtime);
+
+c8 *getFieldPtr_byName_c(Instance *instance, c8 *pclassName, c8 *pfieldName, c8 *pfieldType);
+
+c8 *getFieldPtr_byName(Instance *instance, Utf8String *clsName, Utf8String *fieldName, Utf8String *fieldType);
+
+Class *classes_get(Utf8String *clsName);
+
+Class *classes_load_get_c(c8 *pclassName, Runtime *runtime);
+
+s32 classes_put(Class *clazz);
+
+Class *classes_load_get(Utf8String *pclassName, Runtime *runtime);
+
+void threadlist_add(Runtime *r);
+
+void threadlist_remove(Runtime *r);
+
+Runtime *threadlist_get(s32 i);
 
 #ifdef __cplusplus
 }
