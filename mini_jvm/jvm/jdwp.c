@@ -1297,6 +1297,9 @@ s32 jdwp_client_process(JdwpClient *client, Runtime *runtime) {
 
                 signatureToName(signature);
                 Class *cl = classes_get(signature);
+                if(!cl){
+                    cl=array_class_get(signature);
+                }
                 if (cl == NULL) {
                     jdwppacket_write_int(res, 0);
                 } else {
@@ -1612,6 +1615,9 @@ s32 jdwp_client_process(JdwpClient *client, Runtime *runtime) {
                 s32 i;
                 for (i = 0; i < len; i++) {
                     Class *cl = classes_load_get(ref->interfacePool.clasz[i].name, runtime);
+                    if(!cl){
+                        cl=array_class_get(ref->interfacePool.clasz[i].name);
+                    }
                     jdwppacket_write_refer(res, cl);
                 }
                 //jvm_printf("ReferenceType_Interfaces:%s\n", utf8_cstr(ref->name));

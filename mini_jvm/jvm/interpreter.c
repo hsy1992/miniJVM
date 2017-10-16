@@ -50,31 +50,37 @@ s32 op_aload_3(u8 **opCode, Runtime *runtime) {
 
 static inline s32 op_xaload(u8 **opCode, Runtime *runtime) {
     RuntimeStack *stack = runtime->stack;
-
+    s32 ret = RUNTIME_STATUS_NORMAL;
     s32 index = pop_int(stack);
     Instance *arr = (Instance *) pop_ref(stack);
-    s32 tidx = arr->mb.clazz->arr_type_index;
-    s32 bytes = data_type_bytes[tidx];
-
-    Long2Double l2d;
-    jarray_get_field(arr, index, &l2d);
-    if (isDataReferByIndex(tidx)) {
-        push_ref(stack, l2d.r);
-    } else if (bytes <= 4) {
-        push_int(stack, l2d.i2l.i1);
+    if (arr == NULL) {
+        Instance *exception = exception_create(JVM_EXCEPTION_NULLPOINTER, runtime);
+        push_ref(runtime->stack, (__refer) exception);
+        ret = RUNTIME_STATUS_EXCEPTION;
     } else {
-        push_long(stack, l2d.l);
-    }
+        s32 tidx = arr->mb.clazz->arr_type_index;
+        s32 bytes = data_type_bytes[tidx];
+
+        Long2Double l2d;
+        jarray_get_field(arr, index, &l2d);
+        if (isDataReferByIndex(tidx)) {
+            push_ref(stack, l2d.r);
+        } else if (bytes <= 4) {
+            push_int(stack, l2d.i2l.i1);
+        } else {
+            push_long(stack, l2d.l);
+        }
 
 #if _JVM_DEBUG > 5
-    invoke_deepth(runtime);
-    jvm_printf("(icbdlfsa)aload push arr[%llx]{%d bytes}.(%d)=%x:%d:%lld:%lf into stack\n", (u64) (long) arr, bytes,
-               index,
-               l2d.i2l.i1,
-               l2d.i2l.i1, l2d.l, l2d.d);
+        invoke_deepth(runtime);
+        jvm_printf("(icbdlfsa)aload push arr[%llx]{%d bytes}.(%d)=%x:%d:%lld:%lf into stack\n", (u64) (long) arr, bytes,
+                   index,
+                   l2d.i2l.i1,
+                   l2d.i2l.i1, l2d.l, l2d.d);
 #endif
+    }
     *opCode = *opCode + 1;
-    return 0;
+    return ret;
 }
 
 s32 op_iaload(u8 **opCode, Runtime *runtime) {
@@ -106,25 +112,6 @@ s32 op_baload(u8 **opCode, Runtime *runtime) {
 }
 
 s32 op_aaload(u8 **opCode, Runtime *runtime) {
-//    RuntimeStack *stack = runtime->stack;
-//
-//    s32 index = pop_int(stack);
-//    Instance *arr = (Instance *) pop_ref(stack);
-//
-//    Long2Double l2d;
-//    jarray_get_field(arr, index, &l2d);
-//
-//    push_ref(stack, (__refer) l2d.r);
-//
-//
-//#if _JVM_DEBUG > 5
-//    invoke_deepth(runtime);
-//    jvm_printf("aaload push arr[%llx]{%d bytes}.(%d)=%x:%d:%llx:%lf into stack\n", (s64) (long) arr, bytes, index,
-//               l2d.i2l.i1,
-//               l2d.i2l.i1, l2d.l, l2d.d);
-//#endif
-//    *opCode = *opCode + 1;
-//    return 0;
     return op_xaload(opCode, runtime);
 }
 
@@ -1639,13 +1626,13 @@ static inline s32 op_xastore_impl(u8 **opCode, Runtime *runtime, u8 isReference)
 
     pop_entry(stack, &entry);
     s32 index = pop_int(stack);
-    Instance *ins = (Instance *) pop_ref(stack);
-    if (ins == NULL) {
+    Instance *jarr = (Instance *) pop_ref(stack);
+    if (jarr == NULL) {
         Instance *exception = exception_create(JVM_EXCEPTION_NULLPOINTER, runtime);
         push_ref(runtime->stack, (__refer) exception);
         ret = RUNTIME_STATUS_EXCEPTION;
     } else {
-        s32 tidx = (ins->mb.clazz->arr_type_index);
+        s32 tidx = (jarr->mb.clazz->arr_type_index);
         s32 bytes = data_type_bytes[tidx];
         Long2Double l2d;
         l2d.l = 0;
@@ -1658,7 +1645,7 @@ static inline s32 op_xastore_impl(u8 **opCode, Runtime *runtime, u8 isReference)
                 l2d.i2l.i1 = entry_2_int(&entry);
             }
         }
-        jarray_set_field(ins, index, &l2d);
+        jarray_set_field(jarr, index, &l2d);
 #if _JVM_DEBUG > 5
         invoke_deepth(runtime);
         jvm_printf("(icbfald)astore: save array[%llx]{%d bytes}.(%d)=%d:%llx:%lf)\n",
