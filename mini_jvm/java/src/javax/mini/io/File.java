@@ -11,6 +11,65 @@ import java.io.OutputStream;
 
 /**
  *
+ *
+ *
+ * <pre>
+ *
+ *
+ *    void t15() {
+ *
+ *        try {
+ *            String s = "这是一个测试";
+ *            System.out.println(s);
+ *            File test = new File("./a.txt");
+ *            StreamWriter writer = new UTF_8_Writer();
+ *            writer.open(test.getOutputStream(false), "utf-8");
+ *            writer.write(s);
+ *            writer.close();
+ *
+ *            StreamReader reader = new UTF_8_Reader();
+ *            reader.open(test.getInputStream(), "utf-8");
+ *            char[] buf = new char[100];
+ *            int len = reader.read(buf, 0, 100);
+ *            reader.close();
+ *            String r = new String(buf, 0, len);
+ *            System.out.println(r);
+ *
+ *        } catch (IOException ex) {
+ *            System.out.println(ex.getMessage());
+ *        }
+ *        t15_1();
+ *    }
+ *
+ *    void t15_1() {
+ *        File file = new File(".");
+ *        System.out.println("isDir:" + file.isDirectory());
+ *        String[] files = file.list();
+ *        for (int i = 0; i < files.length; i++) {
+ *            System.out.println(files[i]);
+ *        }
+ *    }
+ *
+ *    void t16() {
+ *        try {
+ *            File b = new File("./b.txt");
+ *            String r = "这是一个测试";
+ *            System.out.println(r);
+ *            DataOutputStream dos = new DataOutputStream(b.getOutputStream(true));
+ *            dos.writeUTF(r);
+ *            dos.close();
+ *            DataInputStream dis = new DataInputStream(b.getInputStream());
+ *            String s = dis.readUTF();
+ *            System.out.println(s);
+ *            dis.close();
+ *        } catch (IOException ex) {
+ *            System.out.println(ex.getMessage());
+ *        }
+ *    }
+ *
+ * </pre>
+ *
+ *
  * @author gust
  */
 public class File {

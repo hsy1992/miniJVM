@@ -56,6 +56,10 @@ public class Method {
     private Class[] paras_class;
 
     public Method(long mid) {
+        if (mid == 0) {
+            throw new IllegalArgumentException();
+        }
+        //System.out.println("mid:" + mid);
         this.methodId = mid;
         mapMethod(methodId);
         parseMethodPara();
@@ -147,6 +151,7 @@ public class Method {
     private void parseMethodPara() {
         String methodType = signature;
         List<String> args = new ArrayList();
+        //System.out.println("methodType:" + methodType);
         String s = methodType.substring(methodType.indexOf("(") + 1, methodType.indexOf(")"));
         //从后往前拆分方法参数，从栈中弹出放入本地变量
         while (s.length() > 0) {

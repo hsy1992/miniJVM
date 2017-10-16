@@ -182,47 +182,48 @@ public class Foo1 {
     }
 
     void t7() {
+        int MAX = 3000;
+        int PRINT_COUNT = 1000;
         Thread t = new Thread(new Runnable() {
             @Override
             public void run() {
                 try {
-                    Thread.sleep(2000);
                     System.out.println("total mem:" + Runtime.getRuntime().totalMemory()
                             + "   free: " + Runtime.getRuntime().freeMemory());
 
-                } catch (InterruptedException ex) {
+                } catch (Exception ex) {
                 }
 
                 System.out.println("thread here.");
                 int j = 0;
                 String c = null;
-                for (int i = 0; i < 100000; i++) {
+                for (int i = 0; i < MAX; i++) {
                     String a = "abc";
                     String b = "def";
                     c = a + b;
-                    if (i % 10000 == 0) {
+                    if (i % PRINT_COUNT == 0) {
                         System.out.println("t7 i=" + i);
                     }
                 }
-                System.out.println("thread c=\"" + c + "\"");
+                System.out.println("t17 thread c=\"" + c + "\"");
             }
         });
         t.start();
         long sfid = RefNative.getStackFrame(Thread.currentThread());
         System.out.println("sfid=" + Long.toString(sfid, 16));
         StackFrame sf = new StackFrame(sfid);
-        System.out.println("StackFrame:" + sf.method.methodName);
+        System.out.println("StackFrame:" + sf.method);
         //
-        int i = 0;
-//        while (i++ < 2) {
-//            try {
-//                Thread.sleep(1000);
-//                System.out.println("total mem:" + Runtime.getRuntime().totalMemory()
-//                        + "   free: " + Runtime.getRuntime().freeMemory());
-//
-//            } catch (InterruptedException ex) {
-//            }
-//        }
+        String c = null;
+        for (int i = 0; i < MAX; i++) {
+            String a = "abc";
+            String b = "def";
+            c = a + b;
+            if (i % PRINT_COUNT == 0) {
+                System.out.println("t10 i=" + i);
+            }
+        }
+        System.out.println("t17 main c=\"" + c + "\"");
     }
 
     long t81(long l) {
@@ -246,16 +247,7 @@ public class Foo1 {
     }
 
     void t10() {
-        String c = null;
-        for (int i = 0; i < 100000; i++) {
-            String a = "abc";
-            String b = "def";
-            c = a + b;
-            if (i % 10000 == 0) {
-                System.out.println("t10 i=" + i);
-            }
-        }
-        System.out.println("c=\"" + c + "\"");
+
     }
 
     void t11() {
@@ -346,6 +338,7 @@ public class Foo1 {
 
             };
             System.out.print("\n");
+            conn.close();
         } catch (Exception e) {
 
         }
@@ -379,7 +372,7 @@ public class Foo1 {
     void t15() {
 
         try {
-            String s = "杩欐槸涓�涓祴璇�";
+            String s = "这是一个测试";
             printBytes(s);
             printString(s);
             File test = new File("./a.txt");
@@ -399,19 +392,22 @@ public class Foo1 {
         } catch (IOException ex) {
             System.out.println(ex.getMessage());
         }
+        t15_1();
+    }
+
+    void t15_1() {
         File file = new File(".");
         System.out.println("isDir:" + file.isDirectory());
         String[] files = file.list();
         for (int i = 0; i < files.length; i++) {
             System.out.println(files[i]);
         }
-
     }
 
     void t16() {
         try {
             File b = new File("./b.txt");
-            String r = "杩欐槸涓�涓祴璇�";
+            String r = "这是一个测试";
             printBytes(r);
             printString(r);
             DataOutputStream dos = new DataOutputStream(b.getOutputStream(true));
@@ -431,7 +427,7 @@ public class Foo1 {
         try {
             RandomAccessFile c = new RandomAccessFile("./c.txt", "rw");
             c.seek(0);
-            String r = "杩欐槸涓�涓祴璇�";
+            String r = "这是一个测试";
             printBytes(r);
             printString(r);
             byte[] carr = r.getBytes("utf-8");
@@ -443,8 +439,6 @@ public class Foo1 {
             int len;
             len = c1.read(barr, 0, 256);
             System.out.println("len=" + len);
-//            len = c1.read(barr, 0, 256);
-//            System.out.println("len=" + len);
             c1.close();
             String s = new String(barr, 0, len, "utf-8");
             printBytes(s);
@@ -555,7 +549,7 @@ public class Foo1 {
         }
         System.out.println("fi=" + fi);
         int i = 0;
-        while (i++ < 1000) {
+        while (i++ < 1) {
             try {
                 Thread.sleep(1000);
                 int debug = 1;
@@ -638,26 +632,27 @@ public class Foo1 {
     public static void main() {
         Foo1 f = new Foo1();
 
-//        f.t1();
-//        f.t2();
-//        f.t3();
-//        f.t4();
-//        f.t5();
-//        f.t6();
-//        f.t7();
-//        f.t8();
-//        f.t9();
-//        f.t10();
-//        f.t11();
-//        f.t12();
+        f.t1();
+        f.t2();
+        f.t3();
+        f.t4();
+        f.t5();
+        f.t6();
+        f.t7();
+        f.t8();
+        f.t9();
+        f.t10();
+        f.t11();
+        f.t12();
         f.t13();
-//        f.t14();
-//        f.t15();
-//        f.t16();
-//        f.t17();
-//        f.t18();
+        f.t14();
+        f.t15();
+        f.t16();
+        f.t17();
+        f.t18();
         f.t19();
-//        f.t21();
+        f.t20();
+        f.t21();
     }
 
     public static void main(String[] agrs) {

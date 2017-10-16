@@ -3390,7 +3390,7 @@ s32 execute_method(MethodInfo *method, Runtime *pruntime, Class *clazz) {
                         ret = RUNTIME_STATUS_EXCEPTION;
                         break;
                     } else {
-                        //jvm_printf("Exception : %s\n", utf8_cstr(ins->mb.obj_of_clazz->name));
+                        jvm_printf("Exception : %s\n", utf8_cstr(ins->mb.clazz->name));
                         runtime.pc = (ca->code + et->handler_pc);
                         ret = RUNTIME_STATUS_NORMAL;
                     }

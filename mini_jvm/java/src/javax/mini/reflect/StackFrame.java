@@ -8,12 +8,11 @@ package javax.mini.reflect;
 /**
  *
  * 反射mini jvm中的 Runtime, 其包含调用堆栈相关的信息
- * 
- *      long sfid = RefNative.getStackFrame(Thread.currentThread());
- *      System.out.println("sfid="+Long.toString(sfid, 16));
- *      StackFrame sf = new StackFrame(sfid);
- *      System.out.println("StackFrame:" + sf.method.methodName);
- * 
+ *
+ * long sfid = RefNative.getStackFrame(Thread.currentThread());
+ * System.out.println("sfid="+Long.toString(sfid, 16)); StackFrame sf = new
+ * StackFrame(sfid); System.out.println("StackFrame:" + sf.method.methodName);
+ *
  * @author gust
  */
 public class StackFrame {
@@ -40,7 +39,9 @@ public class StackFrame {
         this.runtimeId = rid;
         this.parent = parent;
         mapRuntime(runtimeId);
-        method = new Method(methodId);
+        if (methodId != 0) {
+            method = new Method(methodId);
+        }
     }
 
     public StackFrame getLastSon() {

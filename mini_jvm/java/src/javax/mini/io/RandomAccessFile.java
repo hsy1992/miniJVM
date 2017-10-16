@@ -13,6 +13,31 @@ import java.io.IOException;
  *
  * filemode : r rw rws rwd
  *
+ * <pre>
+ *    void t17() {
+ *        try {
+ *            RandomAccessFile c = new RandomAccessFile("./c.txt", "rw");
+ *            c.seek(0);
+ *            String r = "这是一个测试";
+ *            System.out.println(r);
+ *            byte[] carr = r.getBytes("utf-8");
+ *            c.write(carr, 0, carr.length);
+ *            c.close();
+ *            RandomAccessFile c1 = new RandomAccessFile("./c.txt", "r");
+ *            c1.seek(0);
+ *            byte[] barr = new byte[256];
+ *            int len;
+ *            len = c1.read(barr, 0, 256);
+ *            System.out.println("len=" + len);
+ *            c1.close();
+ *            String s = new String(barr, 0, len, "utf-8");
+ *            System.out.println(s);
+ *        } catch (IOException ex) {
+ *            System.out.println(ex.getMessage());
+ *        }
+ *    }
+ * </pre>
+ *
  * @author gust
  */
 public class RandomAccessFile extends File {
@@ -20,7 +45,7 @@ public class RandomAccessFile extends File {
     boolean flush = false;
 
     public RandomAccessFile(String ppath, String pmode) {
-        System.out.println("pmode:"+pmode);
+        System.out.println("pmode:" + pmode);
         this.path = ppath;
         if ("r".equals(pmode)) {
             this.mode = "rb";
