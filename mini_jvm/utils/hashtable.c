@@ -359,7 +359,7 @@ int hashtable_iter_has_more(HashtableIterator *iterator) {
     return iterator->next_entry != NULL;
 }
 
-HashtableValue hashtable_iter_next(HashtableIterator *iterator) {
+HashtableEntry *hashtable_iter_next_entry(HashtableIterator *iterator) {
     HashtableEntry *current_entry;
     Hashtable *hash_table;
     HashtableValue result;
@@ -367,110 +367,42 @@ HashtableValue hashtable_iter_next(HashtableIterator *iterator) {
 
     hash_table = iterator->hash_table;
 
-    /* No more entries? */
-
     if (iterator->next_entry == NULL) {
         return HASH_NULL;
     }
 
-    /* Result is immediately available */
-
     current_entry = iterator->next_entry;
-    result = current_entry->value;
-
-    /* Find the next entry */
+    result = current_entry;
 
     if (current_entry->next != NULL) {
-
-        /* Next entry in current chain */
-
         iterator->next_entry = current_entry->next;
-
     } else {
-
-        /* None left in this chain, so advance to the next chain */
-
         chain = iterator->next_chain + 1;
-
-        /* Default value if no next chain found */
-
         iterator->next_entry = NULL;
-
         while (chain < hash_table->table_size) {
-
-            /* Is there anything in this chain? */
-
             if (hash_table->table[chain] != NULL) {
                 iterator->next_entry = hash_table->table[chain];
                 break;
             }
-
-            /* Try the next chain */
-
             ++chain;
         }
-
         iterator->next_chain = chain;
     }
-
     return result;
 }
 
+HashtableValue hashtable_iter_next_value(HashtableIterator *iterator) {
+    HashtableEntry *current_entry = hashtable_iter_next_entry(iterator);
+
+    if (current_entry)return current_entry->value;
+    return HASH_NULL;
+}
+
 HashtableKey hashtable_iter_next_key(HashtableIterator *iterator) {
-    HashtableEntry *current_entry;
-    Hashtable *hash_table;
-    HashtableKey result;
-    unsigned long long int chain;
+    HashtableEntry *current_entry = hashtable_iter_next_entry(iterator);
 
-    hash_table = iterator->hash_table;
-
-    /* No more entries? */
-
-    if (iterator->next_entry == NULL) {
-        return HASH_NULL;
-    }
-
-    /* Result is immediately available */
-
-    current_entry = iterator->next_entry;
-    result = current_entry->key;
-
-    /* Find the next entry */
-
-    if (current_entry->next != NULL) {
-
-        /* Next entry in current chain */
-
-        iterator->next_entry = current_entry->next;
-
-    } else {
-
-        /* None left in this chain, so advance to the next chain */
-
-        chain = iterator->next_chain + 1;
-
-        /* Default value if no next chain found */
-
-        iterator->next_entry = NULL;
-
-        while (chain < hash_table->table_size) {
-
-            /* Is there anything in this chain? */
-
-            if (hash_table->table[chain] != NULL) {
-                iterator->next_entry = hash_table->table[chain];
-                break;
-            }
-
-            /* Try the next chain */
-
-            ++chain;
-        }
-
-        iterator->next_chain = chain;
-    }
-
-    return result;
+    if (current_entry)return current_entry->key;
+    return HASH_NULL;
 }
 
 int hashtable_resize(Hashtable *hash_table, unsigned long long int size) {

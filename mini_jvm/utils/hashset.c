@@ -16,7 +16,7 @@ static s32 HASH_SET_DEFAULT_SIZE = 4;
 static int hashset_allocate_table(Hashset *set, int size) {
     if (size) {
         set->table = jvm_alloc(size *
-                                       sizeof(HashsetEntry *));
+                               sizeof(HashsetEntry *));
         if (set->table)set->table_size = size;
     }
 
@@ -319,61 +319,41 @@ int hashset_iter_has_more(HashsetIterator *iterator) {
 }
 
 
-HashsetKey hashset_iter_next_key(HashsetIterator *iterator) {
+HashsetEntry *hashset_iter_next_entry(HashsetIterator *iterator) {
     HashsetEntry *current_entry;
     Hashset *set;
-    HashsetKey result;
+    HashsetEntry *result;
     unsigned long long int chain;
 
     set = iterator->set;
-
-    /* No more entries? */
-
     if (iterator->next_entry == NULL) {
         return HASH_NULL;
     }
-
-    /* Result is immediately available */
-
     current_entry = iterator->next_entry;
-    result = current_entry->key;
-
-    /* Find the next entry */
+    result = current_entry;
 
     if (current_entry->next != NULL) {
-
-        /* Next entry in current chain */
-
         iterator->next_entry = current_entry->next;
-
     } else {
-
-        /* None left in this chain, so advance to the next chain */
-
         chain = iterator->next_chain + 1;
-
-        /* Default value if no next chain found */
-
         iterator->next_entry = NULL;
-
         while (chain < set->table_size) {
-
-            /* Is there anything in this chain? */
-
             if (set->table[chain] != NULL) {
                 iterator->next_entry = set->table[chain];
                 break;
             }
-
-            /* Try the next chain */
-
             ++chain;
         }
 
         iterator->next_chain = chain;
     }
-
     return result;
+}
+
+HashsetKey hashset_iter_next_key(HashsetIterator *iterator) {
+    HashsetEntry *current_entry = hashset_iter_next_entry(iterator);
+    if (current_entry)return current_entry->key;
+    return HASH_NULL;
 }
 
 int hashset_resize(Hashset *set, int size) {

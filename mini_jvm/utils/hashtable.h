@@ -269,7 +269,7 @@ int hashtable_iter_has_more(HashtableIterator *iterator);
  *                            keys to iterate over.
  */
 
-HashtableValue hashtable_iter_next(HashtableIterator *iterator);
+HashtableValue hashtable_iter_next_value(HashtableIterator *iterator);
 
 /**
  * (EXTENSION!)

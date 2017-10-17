@@ -212,7 +212,10 @@ public class Foo1 {
         long sfid = RefNative.getStackFrame(Thread.currentThread());
         System.out.println("sfid=" + Long.toString(sfid, 16));
         StackFrame sf = new StackFrame(sfid);
-        System.out.println("StackFrame:" + sf.method);
+        while (sf.parent != null) {
+            System.out.println(sf);
+            sf = sf.parent;
+        }
         //
         String c = null;
         for (int i = 0; i < MAX; i++) {
@@ -247,7 +250,18 @@ public class Foo1 {
     }
 
     void t10() {
-
+        int i = 0;
+        try {
+            i = 1;
+            if (true) {
+                throw new NullPointerException("exception test 1");
+            }
+            i = 0;
+        } catch (Exception e) {
+            e.printStackTrace();
+            i = 2;
+        }
+        System.out.println("i=" + i);
     }
 
     void t11() {

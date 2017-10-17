@@ -40,15 +40,28 @@ public class Reference {
     public long interfaces[];
     public long classObj;//类对象
 
-    public Field[] fields;
-    public Method[] methods;
+    private Field[] fields;
+    private Method[] methods;
 
     public Reference(long classId) {
         this.classId = classId;
         mapReference(classId);
+
+    }
+
+    private void loadFields() {
+        if (fields != null) {
+            return;
+        }
         fields = new Field[fieldIds.length];
         for (int i = 0; i < fieldIds.length; i++) {
             fields[i] = new Field(fieldIds[i]);
+        }
+    }
+
+    private void loadMethods() {
+        if (methods != null) {
+            return;
         }
         methods = new Method[methodIds.length];
         for (int i = 0; i < methodIds.length; i++) {
@@ -57,6 +70,7 @@ public class Reference {
     }
 
     public Method getMethod(String methodName, String methodSignature) {
+        loadMethods();
         for (int i = 0; i < methods.length; i++) {
             Method m = methods[i];
             if (m.methodName.equals(methodName) && m.signature.equals(methodSignature)) {
@@ -67,6 +81,7 @@ public class Reference {
     }
 
     public Method getMethod(String methodName, Class<?>... parameterTypes) {
+        loadMethods();
         for (int i = 0; i < methods.length; i++) {
             Method m = methods[i];
             if (m.methodName.equals(methodName)) {
@@ -90,6 +105,7 @@ public class Reference {
     }
 
     public Method getMethod(long methodId) {
+        loadMethods();
         for (int i = 0; i < methodIds.length; i++) {
             if (methods[i].methodId == methodId) {
                 return methods[i];
@@ -99,6 +115,7 @@ public class Reference {
     }
 
     public Field getField(long fieldId) {
+        loadFields();
         for (int i = 0; i < fieldIds.length; i++) {
             if (fields[i].fieldId == fieldId) {
                 return fields[i];

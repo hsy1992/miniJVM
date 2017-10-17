@@ -5,13 +5,17 @@
  */
 package javax.mini.reflect;
 
+import javax.mini.reflect.vm.RefNative;
+
 /**
  *
  * 反射mini jvm中的 Runtime, 其包含调用堆栈相关的信息
- *
+ * <pre>
  * long sfid = RefNative.getStackFrame(Thread.currentThread());
- * System.out.println("sfid="+Long.toString(sfid, 16)); StackFrame sf = new
- * StackFrame(sfid); System.out.println("StackFrame:" + sf.method.methodName);
+ * System.out.println("sfid="+Long.toString(sfid, 16));
+ * StackFrame sf = new StackFrame(sfid);
+ * System.out.println("StackFrame:" + sf.method.methodName);
+ * </pre>
  *
  * @author gust
  */
@@ -20,7 +24,7 @@ public class StackFrame {
     //不可随意改动字段类型及名字，要和native一起改
     public long runtimeId;
     public long classId;
-    public long sonId;
+    public long parentId;
     public long pc;
     public long byteCode;
     public long methodId;
@@ -35,12 +39,15 @@ public class StackFrame {
         this(rid, null);
     }
 
-    public StackFrame(long rid, StackFrame parent) {
+    public StackFrame(long rid, StackFrame son) {
         this.runtimeId = rid;
-        this.parent = parent;
+        this.son = son;
         mapRuntime(runtimeId);
         if (methodId != 0) {
             method = new Method(methodId);
+        }
+        if (parentId != 0) {
+            parent = new StackFrame(parentId, this);
         }
     }
 
@@ -48,6 +55,9 @@ public class StackFrame {
         return son == null ? this : son.getLastSon();
     }
 
+    public StackFrame getTopParent() {
+        return parent == null ? this : parent.getTopParent();
+    }
     /**
      * 返回 lastson=0 起的第frameID个runtime
      *
@@ -74,15 +84,16 @@ public class StackFrame {
     }
 
     public String toString() {
-        return "Runtime:"
+        return "StackFrame:"
                 + "|" + Long.toString(runtimeId, 16)
                 + "|class:" + Long.toString(classId, 16)
-                + "|son:" + Long.toString(sonId, 16)
+                + "|parent:" + Long.toString(parentId, 16)
                 + "|pc:" + Long.toString(pc, 16)
                 + "|" + Long.toString(byteCode, 16)
                 + "|pos:" + (pc - byteCode)
                 + "|this:" + Long.toString(localThis, 16)
-                + "|" + method.methodName;
+                + "|" + method.methodName
+                + "|" + RefNative.id2obj(classId);
     }
 
     final native void mapRuntime(long runtimeId);

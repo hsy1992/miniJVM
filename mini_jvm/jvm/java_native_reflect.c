@@ -382,9 +382,13 @@ s32 javax_mini_reflect_vm_RefNative_stopThread(Runtime *runtime, Class *clazz) {
 s32 javax_mini_reflect_vm_RefNative_getStackFrame(Runtime *runtime, Class *clazz) {
     Instance *thread = (Instance *) (runtime->localVariables + 0)->refer;
     Runtime *trun = (Runtime *) jthread_get_threadq_value(thread);//线程结束之后会清除掉runtime,因为其是一个栈变量，不可再用
-    if (trun)
+    if (trun) {
+        while (trun) {
+            if (!trun->son)break;
+            trun = trun->son;
+        }
         push_long(runtime->stack, (u64) (long) trun);
-    else
+    } else
         push_long(runtime->stack, 0);
 #if _JVM_DEBUG > 5
     jvm_printf("javax_mini_reflect_vm_RefNative_getStackFrame %llx\n",(u64) (long) trun);
@@ -683,8 +687,10 @@ s32 javax_mini_reflect_StackFrame_mapRuntime(Runtime *runtime, Class *clazz) {
         ptr = getFieldPtr_byName_c(ins, JDWP_CLASS_RUNTIME, "classId", "J");
         if (ptr)setFieldLong(ptr, (u64) (long) target->clazz);
         //
-        ptr = getFieldPtr_byName_c(ins, JDWP_CLASS_RUNTIME, "sonId", "J");
-        if (ptr)setFieldLong(ptr, (u64) (long) target->son);
+        ptr = getFieldPtr_byName_c(ins, JDWP_CLASS_RUNTIME, "parentId", "J");
+        if (ptr)
+            if ((target->parent) && (target->parent->parent))
+                setFieldLong(ptr, (u64) (long) target->parent);
         //
         ptr = getFieldPtr_byName_c(ins, JDWP_CLASS_RUNTIME, "pc", "J");
         if (ptr)setFieldLong(ptr, (u64) (long) target->pc);

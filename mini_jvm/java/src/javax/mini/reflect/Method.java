@@ -69,6 +69,17 @@ public class Method {
         return paras_class;
     }
 
+    public int getLineNum(long pc) {
+        if (lineNum != null && lineNum.length > 0) {
+            for (int i = 0; i < lineNum.length; i += 2) {
+                if (pc >= lineNum[lineNum.length - 2 - i]) {
+                    return lineNum[lineNum.length - 2 - i + 1];
+                }
+            }
+        }
+        return -1;
+    }
+
     public Object invoke(Object obj, Object... args)
             throws IllegalAccessException,
             IllegalArgumentException {

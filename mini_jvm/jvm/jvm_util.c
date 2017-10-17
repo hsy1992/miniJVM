@@ -1028,6 +1028,7 @@ Instance *exception_create(s32 exception_type, Runtime *runtime) {
     Class *clazz = classes_load_get(clsName, runtime);
     Instance *ins = instance_create(clazz);
     instance_init(ins, runtime);
+
     garbage_refer(ins, NULL);
     utf8_destory(clsName);
     return ins;

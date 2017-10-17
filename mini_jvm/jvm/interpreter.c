@@ -2327,6 +2327,11 @@ s32 op_checkcast(u8 **opCode, Runtime *runtime) {
             if (getDataTypeIndex(ch) == ins->mb.clazz->arr_type_index) {
                 checkok = 1;
             }
+        } else if (ins->mb.type == MEM_TYPE_CLASS) {
+            Utf8String *utf = find_constant_classref(runtime->clazz, typeIdx)->name;
+            if (utf8_equals_c(utf, STR_CLASS_JAVA_LANG_CLASS)) {
+                checkok = 1;
+            }
         }
     } else {
         checkok = 1;
@@ -3380,17 +3385,21 @@ s32 execute_method(MethodInfo *method, Runtime *pruntime, Class *clazz) {
 
                     Instance *ins = (Instance *) ref;
                     s32 lineNum = find_line_num(ca, runtime.pc - ca->code);
+#if _JVM_DEBUG > 3
                     printf("   at %s.%s(%s.java:%d)\n",
                            utf8_cstr(clazz->name), utf8_cstr(method->name),
                            utf8_cstr(clazz->name),
                            lineNum
                     );
+#endif
                     ExceptionTable *et = find_exception_handler(&runtime, ins, ca, runtime.pc - ca->code, ref);
                     if (et == NULL) {
                         ret = RUNTIME_STATUS_EXCEPTION;
                         break;
                     } else {
+#if _JVM_DEBUG > 3
                         jvm_printf("Exception : %s\n", utf8_cstr(ins->mb.clazz->name));
+#endif
                         runtime.pc = (ca->code + et->handler_pc);
                         ret = RUNTIME_STATUS_NORMAL;
                     }

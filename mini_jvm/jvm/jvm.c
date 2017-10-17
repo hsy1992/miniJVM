@@ -161,6 +161,11 @@ s32 execute(c8 *p_classpath, c8 *p_mainclass, s32 argc, c8 **argv) {
             jvm_printf("\n\n\n\n\n\n================================= main start ================================\n");
             //调用主方法
             ret = execute_method(main, &runtime, clazz);
+            if (ret != RUNTIME_STATUS_NORMAL) {
+                __refer ref = pop_ref(runtime.stack);
+                Instance *ins = (Instance *) ref;
+                jvm_printf("MAIN ERROR: %s\n", utf8_cstr(ins->mb.clazz->name));
+            }
             runtime.threadInfo->is_blocking = 1;
             while ((thread_list->length) > 1) {//wait for other thread over ,
                 check_suspend_and_pause(&runtime);
