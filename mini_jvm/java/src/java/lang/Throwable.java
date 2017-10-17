@@ -131,12 +131,18 @@ public class Throwable {
         if (backtrace != null) {
             StackTraceElement sf = (StackTraceElement) backtrace;
             while (sf != null) {
-                stack.append("    at ").append(sf.getDeclaringClass());
-                stack.append(".").append(sf.getMethodName());
-                stack.append("(").append(sf.getFileName());
-                stack.append(":").append(sf.getLineNumber());
-                stack.append(")\n");
-                sf = sf.parent;
+                try {
+                    Class clazz = Class.forName(sf.getDeclaringClass());
+                    if (!clazz.isAssignableFrom(Throwable.class)) {
+                        stack.append("    at ").append(sf.getDeclaringClass());
+                        stack.append(".").append(sf.getMethodName());
+                        stack.append("(").append(sf.getFileName());
+                        stack.append(":").append(sf.getLineNumber());
+                        stack.append(")\n");
+                    }
+                    sf = sf.parent;
+                } catch (Exception e) {
+                }
             }
         }
         return stack.toString();
