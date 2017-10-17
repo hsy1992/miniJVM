@@ -419,7 +419,6 @@ typedef struct _ConstantUTF8 {
     u16 string_size;
     //
     Utf8String *utfstr;
-    Instance *jstr;
 } ConstantUTF8;
 
 typedef struct _ConstantInteger {

@@ -31,6 +31,28 @@ void main_thread_destory() {
     garbage_refer(main_thread, NULL);//主线程实例被回收
 }
 
+void print_exception(Runtime *runtime) {
+    __refer ref = pop_ref(runtime->stack);
+    Instance *ins = (Instance *) ref;
+    Utf8String *getStackFrame_name = utf8_create_c("getCodeStack");
+    Utf8String *getStackFrame_type = utf8_create_c("()Ljava/lang/String;");
+    MethodInfo *getStackFrame = find_methodInfo_by_name(ins->mb.clazz->name, getStackFrame_name,
+                                                        getStackFrame_type);
+    utf8_destory(getStackFrame_name);
+    utf8_destory(getStackFrame_type);
+    if (getStackFrame) {
+        push_ref(runtime->stack, ins);
+        execute_method(getStackFrame, runtime, ins->mb.clazz);
+        ins = (Instance *) pop_ref(runtime->stack);
+        Utf8String *str = utf8_create();
+        jstring_2_utf8(ins, str);
+        jvm_printf("MAIN ERROR: %s\n", utf8_cstr(str));
+        utf8_destory(str);
+    } else {
+        jvm_printf("MAIN ERROR: %s\n", utf8_cstr(ins->mb.clazz->name));
+    }
+}
+
 ClassLoader *classloader_create(c8 *path) {
     ClassLoader *class_loader = jvm_alloc(sizeof(ClassLoader));
     class_loader->g_classpath = utf8_create_c(path);
@@ -162,9 +184,7 @@ s32 execute(c8 *p_classpath, c8 *p_mainclass, s32 argc, c8 **argv) {
             //调用主方法
             ret = execute_method(main, &runtime, clazz);
             if (ret != RUNTIME_STATUS_NORMAL) {
-                __refer ref = pop_ref(runtime.stack);
-                Instance *ins = (Instance *) ref;
-                jvm_printf("MAIN ERROR: %s\n", utf8_cstr(ins->mb.clazz->name));
+                print_exception(&runtime);
             }
             runtime.threadInfo->is_blocking = 1;
             while ((thread_list->length) > 1) {//wait for other thread over ,
