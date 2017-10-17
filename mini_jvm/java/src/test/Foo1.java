@@ -209,9 +209,9 @@ public class Foo1 {
             }
         });
         t.start();
-        long sfid = RefNative.getStackFrame(Thread.currentThread());
+        StackFrame sf = new StackFrame(RefNative.getStackFrame(Thread.currentThread()));
+        long sfid = sf.runtimeId;
         System.out.println("sfid=" + Long.toString(sfid, 16));
-        StackFrame sf = new StackFrame(sfid);
         while (sf.parent != null) {
             System.out.println(sf);
             sf = sf.parent;
