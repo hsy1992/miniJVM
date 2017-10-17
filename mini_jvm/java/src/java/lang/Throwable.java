@@ -5,9 +5,6 @@
  */
 package java.lang;
 
-import javax.mini.reflect.StackFrame;
-import javax.mini.reflect.vm.RefNative;
-
 /**
  * The <code>Throwable</code> class is the superclass of all errors and
  * exceptions in the Java language. Only objects that are instances of this
@@ -58,7 +55,7 @@ public class Throwable {
      * WARNING: this must be the second variable. Native code saves some
      * indication of the stack backtrace in this slot.
      */
-    private transient Object backtrace = new StackFrame(RefNative.getStackFrame(Thread.currentThread()));
+    private transient Object backtrace = buildStackElement();//
 
     /**
      * Constructs a new <code>Throwable</code> with <code>null</code> as its
@@ -132,28 +129,20 @@ public class Throwable {
         StringBuilder stack = new StringBuilder();
         stack.append(this.getClass().getName()).append(": ").append(getMessage()).append("\n");
         if (backtrace != null) {
-            StackFrame sf = (StackFrame) backtrace;
+            StackTraceElement sf = (StackTraceElement) backtrace;
             while (sf != null) {
-                if (sf.classId != 0 && sf.method != null) {
-                    javax.mini.reflect.Reference ref = new javax.mini.reflect.Reference(sf.classId);
-                    Class clazz = (Class) RefNative.id2obj(sf.classId);
-                    String className = ref.className;
-                    if (!clazz.isAssignableFrom(Throwable.class) && !clazz.isAssignableFrom(StackFrame.class)) {
-                        String methodName = sf.method.methodName;
-                        String sourceName = ref.source;
-                        int lineNum = sf.method.getLineNum(sf.pc - sf.byteCode);
-                        stack.append("    at ").append(className);
-                        stack.append(".").append(methodName);
-                        stack.append("(").append(sourceName);
-                        stack.append(":").append(lineNum);
-                        stack.append(")\n");
-                    }
-                }
+                stack.append("    at ").append(sf.getDeclaringClass());
+                stack.append(".").append(sf.getMethodName());
+                stack.append("(").append(sf.getFileName());
+                stack.append(":").append(sf.getLineNumber());
+                stack.append(")\n");
                 sf = sf.parent;
             }
         }
         return stack.toString();
     }
+
+    private native StackTraceElement buildStackElement();
 
     /* The given object must have a void println(char[]) method */
     //private native void printStackTrace0(Object s);

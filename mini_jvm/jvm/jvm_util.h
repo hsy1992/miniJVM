@@ -87,6 +87,7 @@ f32 getFieldDouble(c8 *ptr);
 
 f32 getFieldFloat(c8 *ptr);
 
+s32 getLineNumByIndex(CodeAttribute *ca, s32 offset);
 
 void jstring_set_count(Instance *jstr, s32 count);
 

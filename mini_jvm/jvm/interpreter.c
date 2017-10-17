@@ -3305,12 +3305,6 @@ s32 execute_method(MethodInfo *method, Runtime *pruntime, Class *clazz) {
         ret = method->native_func(&runtime, clazz);
         synchronized_unlock_method(method, &runtime);
         localvar_dispose(&runtime);
-//        if (java_debug) {
-//            //process jdwp suspend
-//            while (runtime.threadInfo->suspend_count) {
-//                threadSleep(20);
-//            }
-//        }
 #if _JVM_DEBUG > 3
         invoke_deepth(&runtime);
         jvm_printf("}\n");

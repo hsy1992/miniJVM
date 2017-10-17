@@ -17,7 +17,6 @@ void event_on_debug_step(Runtime *step_runtime);
 
 s32 getRuntimeDepth(Runtime *top);
 
-s32 getLineNumByIndex(CodeAttribute *ca, s32 offset);
 
 void jdwp_eventset_destory(EventSet *set);
 
@@ -869,24 +868,6 @@ s32 jdwp_set_breakpoint(s32 setOrClear, Class *clazz, MethodInfo *methodInfo, s6
 }
 
 
-s32 getLineNumByIndex(CodeAttribute *ca, s32 offset) {
-    s32 i, j;
-
-    for (j = 0; j < ca->line_number_table_length; j++) {
-        LineNumberTable *node = &(ca->line_number_table[j]);
-        if (offset >= node->start_pc) {
-            if (j + 1 < ca->line_number_table_length) {
-                LineNumberTable *next_node = &(ca->line_number_table[j + 1]);
-
-                if (offset < next_node->start_pc) {
-                    return node->line_number;
-                }
-            }
-        }
-    }
-    return -1;
-}
-
 s32 jdwp_set_debug_step(s32 setOrClear, Instance *jthread, s32 size, s32 depth) {
     /**
      * 由于方法调用层级不同，则runtime的son的层级不同，由此控制虚机方法step_into ,step_out
@@ -1297,8 +1278,8 @@ s32 jdwp_client_process(JdwpClient *client, Runtime *runtime) {
 
                 signatureToName(signature);
                 Class *cl = classes_get(signature);
-                if(!cl){
-                    cl=array_class_get(signature);
+                if (!cl) {
+                    cl = array_class_get(signature);
                 }
                 if (cl == NULL) {
                     jdwppacket_write_int(res, 0);
@@ -1615,8 +1596,8 @@ s32 jdwp_client_process(JdwpClient *client, Runtime *runtime) {
                 s32 i;
                 for (i = 0; i < len; i++) {
                     Class *cl = classes_load_get(ref->interfacePool.clasz[i].name, runtime);
-                    if(!cl){
-                        cl=array_class_get(ref->interfacePool.clasz[i].name);
+                    if (!cl) {
+                        cl = array_class_get(ref->interfacePool.clasz[i].name);
                     }
                     jdwppacket_write_refer(res, cl);
                 }

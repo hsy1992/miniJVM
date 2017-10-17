@@ -362,7 +362,6 @@ int hashtable_iter_has_more(HashtableIterator *iterator) {
 HashtableEntry *hashtable_iter_next_entry(HashtableIterator *iterator) {
     HashtableEntry *current_entry;
     Hashtable *hash_table;
-    HashtableValue result;
     unsigned long long int chain;
 
     hash_table = iterator->hash_table;
@@ -372,7 +371,6 @@ HashtableEntry *hashtable_iter_next_entry(HashtableIterator *iterator) {
     }
 
     current_entry = iterator->next_entry;
-    result = current_entry;
 
     if (current_entry->next != NULL) {
         iterator->next_entry = current_entry->next;
@@ -388,7 +386,7 @@ HashtableEntry *hashtable_iter_next_entry(HashtableIterator *iterator) {
         }
         iterator->next_chain = chain;
     }
-    return result;
+    return current_entry;
 }
 
 HashtableValue hashtable_iter_next_value(HashtableIterator *iterator) {

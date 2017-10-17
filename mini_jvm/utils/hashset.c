@@ -322,7 +322,6 @@ int hashset_iter_has_more(HashsetIterator *iterator) {
 HashsetEntry *hashset_iter_next_entry(HashsetIterator *iterator) {
     HashsetEntry *current_entry;
     Hashset *set;
-    HashsetEntry *result;
     unsigned long long int chain;
 
     set = iterator->set;
@@ -330,7 +329,6 @@ HashsetEntry *hashset_iter_next_entry(HashsetIterator *iterator) {
         return HASH_NULL;
     }
     current_entry = iterator->next_entry;
-    result = current_entry;
 
     if (current_entry->next != NULL) {
         iterator->next_entry = current_entry->next;
@@ -347,7 +345,7 @@ HashsetEntry *hashset_iter_next_entry(HashsetIterator *iterator) {
 
         iterator->next_chain = chain;
     }
-    return result;
+    return current_entry;
 }
 
 HashsetKey hashset_iter_next_key(HashsetIterator *iterator) {

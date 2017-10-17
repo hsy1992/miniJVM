@@ -776,10 +776,69 @@ s32 java_io_Throwable_printStackTrace0(Runtime *runtime, Class *clazz) {
     Instance *tmps = (Instance *) (runtime->localVariables + 0)->refer;
 #if _JVM_DEBUG > 5
     invoke_deepth(runtime);
-    jvm_printf("java_io_Throwable_printStackTrace0 \n");
-#endif
-    invoke_deepth(runtime);
     jvm_printf("java_io_Throwable_printStackTrace0 %s \n", utf8_cstr(tmps->mb.clazz->name));
+#endif
+    return 0;
+}
+
+Instance *buildStackElement(Runtime *runtime, Runtime *target) {
+    Class *clazz = classes_load_get_c(STR_CLASS_JAVA_LANG_STACKTRACE, target);
+    if (clazz) {
+        Instance *ins = instance_create(clazz);
+        instance_init(ins, runtime);
+        c8 *ptr;
+        //
+        ptr = getFieldPtr_byName_c(ins, STR_CLASS_JAVA_LANG_STACKTRACE, "declaringClass", "Ljava/lang/String;");
+        if (ptr) {
+            Instance *name = jstring_create(target->clazz->name, runtime);
+            setFieldRefer(ptr, name);
+            garbage_refer(name, ins);
+        }
+        //
+        ptr = getFieldPtr_byName_c(ins, STR_CLASS_JAVA_LANG_STACKTRACE, "methodName", "Ljava/lang/String;");
+        if (ptr) {
+            Instance *name = jstring_create(target->methodInfo->name, runtime);
+            setFieldRefer(ptr, name);
+            garbage_refer(name, ins);
+        }
+        //
+        ptr = getFieldPtr_byName_c(ins, STR_CLASS_JAVA_LANG_STACKTRACE, "fileName", "Ljava/lang/String;");
+        if (ptr) {
+            Instance *name = jstring_create(target->clazz->source, runtime);
+            setFieldRefer(ptr, name);
+            garbage_refer(name, ins);
+        }
+        //
+        ptr = getFieldPtr_byName_c(ins, STR_CLASS_JAVA_LANG_STACKTRACE, "lineNumber", "I");
+        if (ptr) {
+            if (target->methodInfo->access_flags & ACC_NATIVE) {
+                setFieldInt(ptr, -1);
+            } else {
+                setFieldInt(ptr, getLineNumByIndex(target->ca, target->pc - target->ca->code));
+            }
+        }
+        if (target->parent && target->parent->parent) {
+            ptr = getFieldPtr_byName_c(ins, STR_CLASS_JAVA_LANG_STACKTRACE, "parent", "Ljava/lang/StackTraceElement;");
+            if (ptr) {
+                Instance *parent = buildStackElement(runtime, target->parent);
+                setFieldRefer(ptr, parent);
+                garbage_refer(parent, ins);
+            }
+        }
+        return ins;
+    }
+    return NULL;
+}
+
+s32 java_io_Throwable_buildStackElement(Runtime *runtime, Class *clazz) {
+    RuntimeStack *stack = runtime->stack;
+    Instance *tmps = (Instance *) (runtime->localVariables + 0)->refer;
+#if _JVM_DEBUG > 5
+    invoke_deepth(runtime);
+    jvm_printf("java_io_Throwable_buildStackElement %s \n", utf8_cstr(tmps->mb.clazz->name));
+#endif
+    Instance *ins = buildStackElement(runtime, runtime->parent);
+    push_ref(stack, ins);
     return 0;
 }
 
@@ -842,8 +901,9 @@ static java_native_method method_table[] = {
         {"java/lang/Thread",                    "activeCount",       "()I",                                        java_lang_Thread_activeCount},
         {"java/lang/Thread",                    "setPriority0",      "(I)V",                                       java_lang_Thread_setPriority0},
         {"java/lang/Thread",                    "interrupt0",        "()V",                                        java_lang_Thread_interrupt0},
+        {"java/lang/Throwable",                 "printStackTrace0",  "",                                           java_io_Throwable_printStackTrace0},
+        {"java/lang/Throwable",                 "buildStackElement", "()Ljava/lang/StackTraceElement;",            java_io_Throwable_buildStackElement},
         {"java/io/PrintStream",                 "printImpl",         "",                                           java_io_PrintStream_printImpl},
-        {"java/io/Throwable",                   "printStackTrace0",  "",                                           java_io_Throwable_printStackTrace0},
 };
 
 

@@ -1158,3 +1158,21 @@ c8 *getFieldPtr_byName(Instance *instance, Utf8String *clsName, Utf8String *fiel
     return ptr;
 }
 
+s32 getLineNumByIndex(CodeAttribute *ca, s32 offset) {
+    s32 i, j;
+
+    for (j = 0; j < ca->line_number_table_length; j++) {
+        LineNumberTable *node = &(ca->line_number_table[j]);
+        if (offset >= node->start_pc) {
+            if (j + 1 < ca->line_number_table_length) {
+                LineNumberTable *next_node = &(ca->line_number_table[j + 1]);
+
+                if (offset < next_node->start_pc) {
+                    return node->line_number;
+                }
+            }
+        }
+    }
+    return -1;
+}
+
