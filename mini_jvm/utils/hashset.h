@@ -55,6 +55,7 @@ struct _HashsetIterator {
 
 struct _HashsetEntry {
     HashsetKey key;
+    int val;
     HashsetEntry *next;
 };
 
@@ -128,6 +129,9 @@ int hashset_put(Hashset *hash_table,
 HashsetKey hashset_get(Hashset *hash_table,
                        HashsetKey key);
 
+
+HashsetEntry* hashset_get_entry(Hashset *hash_table,
+                       HashsetKey key);
 /**
  * Remove a value from a hash table.
  *

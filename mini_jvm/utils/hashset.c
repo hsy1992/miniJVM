@@ -16,7 +16,7 @@ static s32 HASH_SET_DEFAULT_SIZE = 4;
 static int hashset_allocate_table(Hashset *set, int size) {
     if (size) {
         set->table = jvm_alloc(size *
-                               sizeof(HashsetEntry *));
+                                       sizeof(HashsetEntry *));
         if (set->table)set->table_size = size;
     }
 
@@ -160,25 +160,11 @@ int hashset_put(Hashset *set, HashsetKey key) {
 
     while (rover != NULL) {
         if (DEFAULT_HASH_EQUALS_FUNC(rover->key, key) != 0) {
-
-            /* Same key: overwrite this entry with new data */
-            /* Same with the key: use the new key value and free 
-             * the old one */
-
-//            if (set->key_free_func != NULL) {
-//                set->key_free_func(rover->key);
-//            }
-
             rover->key = key;
-
-            /* Finished */
-
             return 1;
         }
         rover = rover->next;
     }
-
-    /* Not in the hash table yet.  Create a new entry */
 
     newentry = (HashsetEntry *) jvm_alloc(sizeof(HashsetEntry));
 
@@ -187,7 +173,7 @@ int hashset_put(Hashset *set, HashsetKey key) {
     }
 
     newentry->key = key;
-
+    newentry->val = 0;
     /* Link into the list */
 
     newentry->next = set->table[index];
@@ -203,6 +189,12 @@ int hashset_put(Hashset *set, HashsetKey key) {
 }
 
 HashsetKey hashset_get(Hashset *set, HashsetKey key) {
+    HashsetEntry *rover = hashset_get_entry(set, key);
+    if (!rover)return rover->key;
+    return HASH_NULL;
+}
+
+HashsetEntry *hashset_get_entry(Hashset *set, HashsetKey key) {
     HashsetEntry *rover;
     unsigned long long int index;
 
@@ -220,7 +212,7 @@ HashsetKey hashset_get(Hashset *set, HashsetKey key) {
 
             /* Found the entry.  Return the data. */
 
-            return key;
+            return rover;
         }
         rover = rover->next;
     }

@@ -263,6 +263,8 @@ public class Foo1 {
         System.out.println(s1.equals(s2));
     }
 
+    ServerSocket sock;
+
     void t12() {
         new Thread(new Runnable() {
 
@@ -270,11 +272,17 @@ public class Foo1 {
             public void run() {
                 try {
                     ServerSocket srvsock = (ServerSocket) Connector.open("serversocket://:8080");
+                    sock = srvsock;
                     System.out.println("server socket listen...");
                     srvsock.listen();
                     while (true) {
                         try {
-                            Socket cltsock = srvsock.accept();
+                            Socket cltsock;
+                            try {
+                                cltsock = srvsock.accept();
+                            } catch (IOException e) {
+                                break;
+                            }
                             cltsock.setOption(Socket.OP_TYPE_NON_BLOCK, Socket.OP_VAL_NON_BLOCK);
                             System.out.println("accepted client socket:" + cltsock);
                             byte[] buf = new byte[256];
@@ -312,7 +320,25 @@ public class Foo1 {
                 }
             }
         }).start();
+        new Thread(new Runnable() {
 
+            @Override
+            public void run() {
+                try {
+                    int MAX = 30;
+                    for (int i = 0; i < MAX; i++) {
+                        System.out.println("server would close after " + (MAX - i) + " second .");
+                        Thread.sleep(1000);
+                    }
+                    if (sock != null) {
+                        sock.close();
+                    }
+                } catch (Exception e) {
+                    System.out.println(e);
+                }
+            }
+
+        }).start();
     }
 
     void t13() {

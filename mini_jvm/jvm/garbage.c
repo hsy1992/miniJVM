@@ -565,6 +565,7 @@ void garbage_destory_memobj(__refer k) {
  *    3. new 新对象时创建引用，其父为 NULL 空值， 此时这个对象在 栈或局部变量中
  *    4. newarray 新数组创建引用，其父为 NULL 空值， 此时这个对象在 栈或局部变量中
  *
+ *    两个对象可能建立多次引用，因此，需要记录引用次数
  * @param sonPtr  son
  * @param parentPtr father
  * @return son
@@ -576,27 +577,21 @@ void *garbage_refer(__refer sonPtr, __refer parentPtr) {
         return sonPtr;
     }
     garbage_thread_lock();
-#if _JVM_DEBUG_GARBAGE_DUMP
-    Utf8String *pus = utf8_create();
-    Utf8String *sus = utf8_create();
-    getMemBlockName(parentPtr, pus);
-    getMemBlockName(sonPtr, sus);
-    jvm_printf("+: %s[%x] <- %s[%x]\n", utf8_cstr(sus), sonPtr, utf8_cstr(pus),
-               parentPtr);
-    if (utf8_equals_c(pus, "java/lang/System")) {
-        s32 debug = 1;
-    }
-    utf8_destory(pus);
-    utf8_destory(sus);
-#endif
+    s32 referCount = 0;
     //放入子引父
     Hashset *set = (Hashset *) hashtable_get(collector->son_2_father, sonPtr);
     if (set == HASH_NULL) {
         set = _garbage_get_set();
         hashtable_put(collector->son_2_father, sonPtr, set);
     }
+
     if (parentPtr) {
         hashset_put(set, parentPtr);
+        HashsetEntry *entry = hashset_get_entry(set, parentPtr);
+        //两个对象引用多次
+        entry->val++;
+        referCount = entry->val;
+
         //放入父引子
         set = hashtable_get(collector->father_2_son, parentPtr);
         if (set == HASH_NULL) {
@@ -604,13 +599,68 @@ void *garbage_refer(__refer sonPtr, __refer parentPtr) {
             hashtable_put(collector->father_2_son, parentPtr, set);
         }
         hashset_put(set, sonPtr);
+        entry = hashset_get_entry(set, sonPtr);
+        //两个对象引用多次
+        entry->val++;
+        referCount = entry->val;
+
     }
     garbage_thread_unlock();
+
+#if _JVM_DEBUG_GARBAGE_DUMP
+    Utf8String *pus = utf8_create();
+    Utf8String *sus = utf8_create();
+    getMemBlockName(parentPtr, pus);
+    getMemBlockName(sonPtr, sus);
+    jvm_printf("+: %s[%x] <- %s[%x] count:%d\n", utf8_cstr(sus), sonPtr, utf8_cstr(pus),
+               parentPtr, referCount);
+//    if (utf8_equals_c(pus, "java/lang/System")) {
+//        s32 debug = 1;
+//    }
+    utf8_destory(pus);
+    utf8_destory(sus);
+#endif
     return sonPtr;
 }
 
-void garbage_derefer(__refer sonPtr, __refer parentPtr) {
+void _garbage_derefer(__refer sonPtr, __refer parentPtr, s32 clearAll) {
     garbage_thread_lock();
+    s32 referCount = 0;
+    Hashset *set;
+    if (sonPtr && parentPtr) {
+        //移除子引父
+        set = hashtable_get(collector->son_2_father, sonPtr);
+        if (set != HASH_NULL) {
+            HashsetEntry *entry = hashset_get_entry(set, parentPtr);
+            if (entry) {
+                if (entry->val > 0) {
+                    entry->val--;
+                    referCount = entry->val;
+                }
+                if ((!entry->val) || clearAll) {//引用次数为0时删除引用
+                    hashset_remove(set, parentPtr, 0);
+                }
+            }
+        }
+
+
+        //移除父引子
+        set = hashtable_get(collector->father_2_son, parentPtr);
+        if (set != HASH_NULL) {
+            HashsetEntry *entry = hashset_get_entry(set, sonPtr);
+            if (entry) {
+                if (entry->val > 0) {
+                    entry->val--;
+                    referCount = entry->val;
+                }
+                if ((!entry->val) || clearAll) {//引用次数为0时删除引用
+                    hashset_remove(set, sonPtr, 0);
+                }
+            }
+        }
+    }
+    garbage_thread_unlock();
+
 
 #if _JVM_DEBUG_GARBAGE_DUMP
     Utf8String *pus = utf8_create();
@@ -619,36 +669,19 @@ void garbage_derefer(__refer sonPtr, __refer parentPtr) {
     getMemBlockName(parentPtr, pus);
     if (hashtable_get(collector->son_2_father, sonPtr))
         getMemBlockName(sonPtr, sus);
-    jvm_printf("-: %s[%x] <- %s[%x]\n", utf8_cstr(sus), sonPtr, utf8_cstr(pus), parentPtr);
+    jvm_printf("-: %s[%x] <- %s[%x] count:%d\n", utf8_cstr(sus), sonPtr, utf8_cstr(pus), parentPtr, referCount);
     utf8_destory(sus);
     utf8_destory(pus);
 #endif
-    Hashset *set;
-    if (sonPtr && parentPtr) {
-        //移除子引父
-        set = hashtable_get(collector->son_2_father, sonPtr);
-        if (set != HASH_NULL) {
-            hashset_remove(set, parentPtr, 0);
-        }
+}
 
-
-        //移除父引子
-        set = hashtable_get(collector->father_2_son, parentPtr);
-        if (set != HASH_NULL) {
-            hashset_remove(set, sonPtr, 0);
-        }
-    }
-    garbage_thread_unlock();
+void garbage_derefer(__refer sonPtr, __refer parentPtr) {
+    _garbage_derefer(sonPtr, parentPtr, 0);
 }
 
 void garbage_derefer_all(__refer parentPtr) {
     garbage_thread_lock();
-#if _JVM_DEBUG_GARBAGE_DUMP
-    Utf8String *us = utf8_create();
-    getMemBlockName(parentPtr, us);
-    jvm_printf("X:  %s[%x]\n", utf8_cstr(us), parentPtr);
-    utf8_destory(us);
-#endif
+
     Hashset *set;
     //移除父引用的所有子
     set = hashtable_get(collector->father_2_son, parentPtr);
@@ -659,14 +692,19 @@ void garbage_derefer_all(__refer parentPtr) {
         for (; hashset_iter_has_more(&hti);) {
             HashsetKey key = hashset_iter_next_key(&hti);
             if (key) {
-                garbage_derefer(key, parentPtr);
+                _garbage_derefer(key, parentPtr, 1);
             }
         }
         _garbage_put_set(set);
     }
     hashtable_remove(collector->father_2_son, parentPtr, 0);
     garbage_thread_unlock();
-
+#if _JVM_DEBUG_GARBAGE_DUMP
+    Utf8String *us = utf8_create();
+    getMemBlockName(parentPtr, us);
+    jvm_printf("X:  %s[%x]\n", utf8_cstr(us), parentPtr);
+    utf8_destory(us);
+#endif
 }
 
 s32 garbage_is_refer_by(__refer sonPtr, __refer parentPtr) {

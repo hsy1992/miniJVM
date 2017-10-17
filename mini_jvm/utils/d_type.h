@@ -6,7 +6,7 @@
 #define MINI_JVM_JVM_TYPE_H
 
 #include "stdlib.h"
-#define __MEM_LEAK_DETECT
+//#define __MEM_LEAK_DETECT
 
 
 #ifdef __MEM_LEAK_DETECT
