@@ -90,18 +90,21 @@ s32 classes_put(Class *clazz) {
 }
 
 Class *array_class_get(Utf8String *descript) {
-    ThreadLock *tl = array_classloader->JVM_CLASS->mb.thread_lock;
-    thread_lock(tl);
-    Class *clazz = hashtable_get(array_classloader->classes, descript);
-    if (!clazz && descript && descript->length) {
-        clazz = class_create();
-        clazz->arr_type_index = getDataTypeIndex(utf8_char_at(descript, 1));
-        clazz->name = utf8_create_copy(descript);
-        hashtable_put(array_classloader->classes, clazz->name, clazz);
-        garbage_refer(clazz, array_classloader->JVM_CLASS);
+    if (descript && descript->length && utf8_char_at(descript, 0) == '[') {
+        ThreadLock *tl = array_classloader->JVM_CLASS->mb.thread_lock;
+        thread_lock(tl);
+        Class *clazz = hashtable_get(array_classloader->classes, descript);
+        if (!clazz && descript && descript->length) {
+            clazz = class_create();
+            clazz->arr_type_index = getDataTypeIndex(utf8_char_at(descript, 1));
+            clazz->name = utf8_create_copy(descript);
+            hashtable_put(array_classloader->classes, clazz->name, clazz);
+            garbage_refer(clazz, array_classloader->JVM_CLASS);
+        }
+        thread_unlock(tl);
+        return clazz;
     }
-    thread_unlock(tl);
-    return clazz;
+    return NULL;
 }
 
 Runtime *threadlist_get(s32 i) {
@@ -957,9 +960,9 @@ s32 jstring_index_of(Instance *jstr, uni_char ch, s32 startAt) {
         s32 count = jstring_get_count(jstr);
         s32 offset = jstring_get_offset(jstr);
         s32 i;
-        for (i = 0; i < count; i++) {
-            if (jchar_arr[i + offset + startAt] == ch) {
-                return i + startAt;
+        for (i = startAt; i < count; i++) {
+            if (jchar_arr[i + offset] == ch) {
+                return i;
             }
         }
     }

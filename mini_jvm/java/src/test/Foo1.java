@@ -493,6 +493,7 @@ public class Foo1 {
         DataInputStream dis = null;
         byte[] data;
         try {
+            System.out.println("url:"+url);
             c = (ContentConnection) Connector.open(url);
             int len = (int) c.getLength();
             dis = c.openDataInputStream();
@@ -696,10 +697,13 @@ public class Foo1 {
     }
 
     public static void main(String[] agrs) {
+        try {
 //        BpDeepTest.main(agrs);
-        Foo1.main();
+            Foo1.main();
 //        Foo2.main(agrs);
 //        Foo3.main(agrs);
-
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 }

@@ -184,9 +184,10 @@ s32 execute(c8 *p_classpath, c8 *p_mainclass, s32 argc, c8 **argv) {
             s64 start = currentTimeMillis();
             jvm_printf("\n\n\n\n\n\n================================= main start ================================\n");
             //调用主方法
+            //if (java_debug)jthread_suspend(&runtime);//jdwp 会启动调试器
             ret = execute_method(main, &runtime, clazz);
             if (ret != RUNTIME_STATUS_NORMAL) {
-                print_exception(&runtime);
+                //print_exception(&runtime);
             }
             runtime.threadInfo->is_blocking = 1;
             while ((thread_list->length) > 1) {//wait for other thread over ,

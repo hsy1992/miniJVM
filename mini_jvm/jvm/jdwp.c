@@ -1277,7 +1277,7 @@ s32 jdwp_client_process(JdwpClient *client, Runtime *runtime) {
                 jdwppacket_set_err(res, JDWP_ERROR_NONE);
 
                 signatureToName(signature);
-                Class *cl = classes_get(signature);
+                Class *cl = classes_load_get(signature, runtime);
                 if (!cl) {
                     cl = array_class_get(signature);
                 }
