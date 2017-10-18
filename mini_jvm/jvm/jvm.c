@@ -46,7 +46,7 @@ void print_exception(Runtime *runtime) {
         ins = (Instance *) pop_ref(runtime->stack);
         Utf8String *str = utf8_create();
         jstring_2_utf8(ins, str);
-        printf("MAIN METHOD ERROR:\n %s\n", utf8_cstr(str));
+        printf("%s\n", utf8_cstr(str));
         utf8_destory(str);
     } else {
         printf("MAIN ERROR: %s\n", utf8_cstr(ins->mb.clazz->name));

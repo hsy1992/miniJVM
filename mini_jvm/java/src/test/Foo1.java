@@ -277,7 +277,7 @@ public class Foo1 {
         System.out.println(s1.equals(s2));
     }
 
-    ServerSocket sock;
+    ServerSocket ssock;
 
     void t12() {
         new Thread(new Runnable() {
@@ -286,7 +286,7 @@ public class Foo1 {
             public void run() {
                 try {
                     ServerSocket srvsock = (ServerSocket) Connector.open("serversocket://:8080");
-                    sock = srvsock;
+                    ssock = srvsock;
                     System.out.println("server socket listen...");
                     srvsock.listen();
                     while (true) {
@@ -339,13 +339,13 @@ public class Foo1 {
             @Override
             public void run() {
                 try {
-                    int MAX = 10;
+                    int MAX = 5;
                     for (int i = 0; i < MAX; i++) {
                         System.out.println("server would close at " + (MAX - i) + " second later.");
                         Thread.sleep(1000);
                     }
-                    if (sock != null) {
-                        sock.close();
+                    if (ssock != null) {
+                        ssock.close();
                     }
                 } catch (Exception e) {
                     System.out.println(e);
@@ -357,7 +357,7 @@ public class Foo1 {
 
     void t13() {
         try {
-            Socket conn = (Socket) Connector.open("socket://baidu.com:80");
+            Socket conn = (Socket) Connector.open("socket://127.0.0.1:8080");
             conn.setOption(Socket.OP_TYPE_NON_BLOCK, Socket.OP_VAL_NON_BLOCK);
             String request = "GET / HTTP/1.1\r\n\r\n";
             conn.write(request.getBytes(), 0, request.length());
@@ -493,7 +493,7 @@ public class Foo1 {
         DataInputStream dis = null;
         byte[] data;
         try {
-            System.out.println("url:"+url);
+            System.out.println("url:" + url);
             c = (ContentConnection) Connector.open(url);
             int len = (int) c.getLength();
             dis = c.openDataInputStream();
@@ -585,9 +585,11 @@ public class Foo1 {
         }
 
         Class[] classes = RefNative.getClasses();
-        for (Class cl : classes) {
-            System.out.println("class:" + cl.getName() + " id:" + RefNative.obj2id(cl));
-        }
+        System.out.println("classes.size()=" + classes.length);
+//        for (Class cl : classes) {
+//            System.out.println("class:" + cl.getName() + " id:" + RefNative.obj2id(cl));
+//        }
+
         System.out.println("fi=" + fi);
         int i = 0;
         while (i++ < 1) {
@@ -672,28 +674,29 @@ public class Foo1 {
 
     public static void main() {
         Foo1 f = new Foo1();
-
-        f.t1();
-        f.t2();
-        f.t3();
-        f.t4();
-        f.t5();
-        f.t6();
-        f.t7();
-        f.t8();
-        f.t9();
-        f.t10();
-        f.t11();
-        f.t12();
-        f.t13();
-        f.t14();
-        f.t15();
-        f.t16();
-        f.t17();
-        f.t18();
-        f.t19();
-        f.t20();
-        f.t21();
+        for (int i = 0; i < 100; i++) {
+            f.t1();
+            f.t2();
+            f.t3();
+            f.t4();
+            f.t5();
+            f.t6();
+            f.t7();
+            f.t8();
+            f.t9();
+            f.t10();
+            f.t11();
+            f.t12();
+            f.t13();
+            f.t14();
+            f.t15();
+            f.t16();
+            f.t17();
+            f.t18();
+            f.t19();
+            f.t20();
+            f.t21();
+        }
     }
 
     public static void main(String[] agrs) {
