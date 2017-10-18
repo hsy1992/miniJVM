@@ -161,6 +161,7 @@ HashsetEntry *hashset_get_entry(Hashset *set, HashsetKey key) {
 int hashset_remove(Hashset *set, HashsetKey key, int resize) {
     HashsetEntry *rover;
     HashsetEntry *pre;
+    HashsetEntry *next;
     unsigned long long int index;
     unsigned long long int result;
 
@@ -178,7 +179,7 @@ int hashset_remove(Hashset *set, HashsetKey key, int resize) {
     pre = rover;
 
     while (rover != NULL) {
-        HashsetEntry *next = rover->next;
+        next = rover->next;
         if (DEFAULT_HASH_EQUALS_FUNC(key, rover->key) != 0) {
             if (pre == rover)set->table[index] = next;
             else pre->next = next;
@@ -257,7 +258,6 @@ HashsetKey hashset_iter_next_key(HashsetIterator *iterator) {
 int hashset_resize(Hashset *set, int size) {
     HashsetEntry **old_table;
     unsigned long long int old_table_size;
-    int old_prime_index;
     HashsetEntry *rover;
     HashsetEntry *next;
     unsigned long long int index;
