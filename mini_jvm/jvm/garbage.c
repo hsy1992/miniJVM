@@ -544,7 +544,7 @@ void garbage_destory_memobj(__refer k) {
     if (((MemoryBlock *) k)->type == MEM_TYPE_CLASS) {
         Utf8String *pus = utf8_create();
         getMemBlockName(k, pus);
-        jvm_printf("garbage collect  %s [%x]\n", utf8_cstr(pus), k);
+        jvm_printf("garbage collect  %s [%llx]\n", utf8_cstr(pus), (s64) (long) k);
         utf8_destory(pus);
     }
 #endif
@@ -612,8 +612,8 @@ void *garbage_refer(__refer sonPtr, __refer parentPtr) {
     Utf8String *sus = utf8_create();
     getMemBlockName(parentPtr, pus);
     getMemBlockName(sonPtr, sus);
-    jvm_printf("+: %s[%x] <- %s[%x] count:%d\n", utf8_cstr(sus), sonPtr, utf8_cstr(pus),
-               parentPtr, referCount);
+    jvm_printf("+: %s[%llx] <- %s[%llx] count:%d\n", utf8_cstr(sus), (s64) (long) sonPtr, utf8_cstr(pus),
+               (s64) (long) parentPtr, referCount);
 //    if (utf8_equals_c(pus, "java/lang/System")) {
 //        s32 debug = 1;
 //    }
@@ -669,7 +669,8 @@ void _garbage_derefer(__refer sonPtr, __refer parentPtr, s32 clearAll) {
     getMemBlockName(parentPtr, pus);
     if (hashtable_get(collector->son_2_father, sonPtr))
         getMemBlockName(sonPtr, sus);
-    jvm_printf("-: %s[%x] <- %s[%x] count:%d\n", utf8_cstr(sus), sonPtr, utf8_cstr(pus), parentPtr, referCount);
+    jvm_printf("-: %s[%llx] <- %s[%llx] count:%d\n", utf8_cstr(sus), (s64) (long) sonPtr, utf8_cstr(pus),
+               (s64) (long) parentPtr, referCount);
     utf8_destory(sus);
     utf8_destory(pus);
 #endif
@@ -702,7 +703,7 @@ void garbage_derefer_all(__refer parentPtr) {
 #if _JVM_DEBUG_GARBAGE_DUMP
     Utf8String *us = utf8_create();
     getMemBlockName(parentPtr, us);
-    jvm_printf("X:  %s[%x]\n", utf8_cstr(us), parentPtr);
+    jvm_printf("X:  %s[%llx]\n", utf8_cstr(us), (s64) (long) parentPtr);
     utf8_destory(us);
 #endif
 }
