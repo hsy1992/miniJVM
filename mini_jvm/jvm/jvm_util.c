@@ -485,7 +485,7 @@ int jvm_printf(const char *format, ...) {
         }
     }
 #else
-    result = vprintf(format, vp);
+        result = vprintf(format, vp);
 #endif
     va_end(vp);
     //garbage_thread_unlock();
@@ -1162,7 +1162,7 @@ c8 *getFieldPtr_byName(Instance *instance, Utf8String *clsName, Utf8String *fiel
 }
 
 s32 getLineNumByIndex(CodeAttribute *ca, s32 offset) {
-    s32 i, j;
+    s32 j;
 
     for (j = 0; j < ca->line_number_table_length; j++) {
         LineNumberTable *node = &(ca->line_number_table[j]);
@@ -1173,6 +1173,8 @@ s32 getLineNumByIndex(CodeAttribute *ca, s32 offset) {
                 if (offset < next_node->start_pc) {
                     return node->line_number;
                 }
+            } else {
+                return node->line_number;
             }
         }
     }

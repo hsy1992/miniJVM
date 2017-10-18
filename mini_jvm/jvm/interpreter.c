@@ -3152,25 +3152,6 @@ find_exception_handler(Runtime *runtime, Instance *exception, CodeAttribute *ca,
     return NULL;
 }
 
-static s32 find_line_num(CodeAttribute *ca, s32 offset) {
-    s32 i, j;
-
-    for (j = 0; j < ca->line_number_table_length; j++) {
-        LineNumberTable *node = &(ca->line_number_table[j]);
-        if (offset >= node->start_pc) {
-            if (j + 1 < ca->line_number_table_length) {
-                LineNumberTable *next_node = &(ca->line_number_table[j + 1]);
-
-                if (offset < next_node->start_pc) {
-                    return node->line_number;
-                }
-            } else {
-                return node->line_number;
-            }
-        }
-    }
-    return -1;
-}
 
 static void printCodeAttribute(CodeAttribute *ca, Class *p) {
     s32 i = 0;
@@ -3379,8 +3360,8 @@ s32 execute_method(MethodInfo *method, Runtime *pruntime, Class *clazz) {
                     push_ref(runtime.stack, ref);
 
                     Instance *ins = (Instance *) ref;
-                    s32 lineNum = find_line_num(ca, runtime.pc - ca->code);
 #if _JVM_DEBUG > 3
+                    s32 lineNum = getLineNumByIndex(ca, runtime.pc - ca->code);
                     printf("   at %s.%s(%s.java:%d)\n",
                            utf8_cstr(clazz->name), utf8_cstr(method->name),
                            utf8_cstr(clazz->name),
