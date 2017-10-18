@@ -37,7 +37,7 @@ static int hash_table_allocate_table(PHashtable *hash_table, unsigned long long 
     /* Allocate the table and initialise to NULL for all entries */
     if (size) {
         hash_table->table = calloc(size *
-                                      sizeof(PHashtableEntry *),1);
+                                   sizeof(PHashtableEntry *), 1);
         if (hash_table->table)hash_table->table_size = size;
     }
 
@@ -73,12 +73,12 @@ int P_DEFAULT_HASH_EQUALS_FUNC(PHashtableValue value1, PHashtableValue value2) {
 }
 
 PHashtable *phashtable_create(PHashtableHashFunc hash_func,
-                            PHashtableEqualFunc equal_func) {
+                              PHashtableEqualFunc equal_func) {
     PHashtable *hash_table;
 
     /* Allocate a new hash table structure */
 
-    hash_table = (PHashtable *) calloc(sizeof(PHashtable),1);
+    hash_table = (PHashtable *) calloc(sizeof(PHashtable), 1);
 
     if (hash_table == NULL) {
         return NULL;
@@ -152,8 +152,8 @@ void phashtable_clear(PHashtable *hash_table) {
 }
 
 void phashtable_register_free_functions(PHashtable *hash_table,
-                                       PHashtableKeyFreeFunc key_free_func,
-                                       PHashtableValueFreeFunc value_free_func) {
+                                        PHashtableKeyFreeFunc key_free_func,
+                                        PHashtableValueFreeFunc value_free_func) {
     hash_table->key_free_func = key_free_func;
     hash_table->value_free_func = value_free_func;
 }
@@ -216,7 +216,7 @@ int phashtable_put(PHashtable *hash_table, PHashtableKey key, PHashtableValue va
 
     /* Not in the hash table yet.  Create a new entry */
 
-    newentry = (PHashtableEntry *) calloc(sizeof(PHashtableEntry),1);
+    newentry = (PHashtableEntry *) calloc(sizeof(PHashtableEntry), 1);
 
     if (newentry == NULL) {
         return 0;
@@ -268,67 +268,39 @@ PHashtableValue phashtable_get(PHashtable *hash_table, PHashtableKey key) {
 }
 
 int phashtable_remove(PHashtable *hash_table, PHashtableKey key, int resize) {
-    PHashtableEntry **rover;
-    PHashtableEntry *entry;
+    PHashtableEntry *rover;
+    PHashtableEntry *pre;
+    PHashtableEntry *next;
     unsigned long long int index;
     unsigned long long int result;
 
-    /* If there are too few items in the table with respect to the table
-     * size, the table is taking up too much space. 
-     * Shrink table to improve space efficiency. */
-
     if (resize && (hash_table->entries << 3) < hash_table->table_size) {
-        /* Table is less than 1/4 full */
         if (!phashtable_resize(hash_table, hash_table->table_size >> 1)) {
-            /* Failed to enlarge the table */
             return 0;
         }
     }
-
-    /* Generate the hash of the key and hence the index into the table */
-
     index = hash_table->hash_func(key) % hash_table->table_size;
 
-    /* Rover points at the pointer which points at the current entry
-     * in the chain being inspected.  ie. the entry in the table, or
-     * the "next" pointer of the previous entry in the chain.  This
-     * allows us to unlink the entry when we find it. */
-
     result = 0;
-    rover = &hash_table->table[index];
+    rover = hash_table->table[index];
+    pre = rover;
 
-    while (*rover != NULL) {
-
-        if (hash_table->equal_func(key, (*rover)->key) != 0) {
-
-            /* This is the entry to remove */
-
-            entry = *rover;
-
-            /* Unlink from the list */
-
-            *rover = entry->next;
-
-            /* Destroy the entry structure */
-
-            hash_table_free_entry(hash_table, entry);
-
-            /* Track count of entries */
-
+    while (rover != NULL) {
+        next = rover->next;
+        if (hash_table->equal_func(key, rover->key) != 0) {
+            if (pre == rover)hash_table->table[index] = next;
+            else pre->next = next;
+            hash_table_free_entry(hash_table, rover);
             --hash_table->entries;
-
             result = 1;
-
             break;
         }
-
-        /* Advance to the next entry */
-
-        rover = &((*rover)->next);
+        pre = rover;
+        rover = next;
     }
-
     return result;
 }
+
 
 unsigned long long int phashtable_num_entries(PHashtable *hash_table) {
     return hash_table->entries;
