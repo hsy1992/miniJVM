@@ -3380,21 +3380,21 @@ s32 execute_method(MethodInfo *method, Runtime *pruntime, Class *clazz) {
 
                     Instance *ins = (Instance *) ref;
                     s32 lineNum = find_line_num(ca, runtime.pc - ca->code);
-//#if _JVM_DEBUG > 3
+#if _JVM_DEBUG > 3
                     printf("   at %s.%s(%s.java:%d)\n",
                            utf8_cstr(clazz->name), utf8_cstr(method->name),
                            utf8_cstr(clazz->name),
                            lineNum
                     );
-//#endif
+#endif
                     ExceptionTable *et = find_exception_handler(&runtime, ins, ca, runtime.pc - ca->code, ref);
                     if (et == NULL) {
                         ret = RUNTIME_STATUS_EXCEPTION;
                         break;
                     } else {
-//#if _JVM_DEBUG > 3
+#if _JVM_DEBUG > 3
                         jvm_printf("Exception : %s\n", utf8_cstr(ins->mb.clazz->name));
-//#endif
+#endif
                         runtime.pc = (ca->code + et->handler_pc);
                         ret = RUNTIME_STATUS_NORMAL;
                     }

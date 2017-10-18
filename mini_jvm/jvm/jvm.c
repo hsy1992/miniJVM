@@ -34,17 +34,15 @@ void main_thread_destory() {
 void print_exception(Runtime *runtime) {
     __refer ref = pop_ref(runtime->stack);
     Instance *ins = (Instance *) ref;
-    Utf8String *getStackFrame_class = utf8_create_c(STR_CLASS_JAVA_LANG_THROWABLE);
     Utf8String *getStackFrame_name = utf8_create_c("getCodeStack");
     Utf8String *getStackFrame_type = utf8_create_c("()Ljava/lang/String;");
-    MethodInfo *getStackFrame = find_methodInfo_by_name(getStackFrame_class, getStackFrame_name,
+    MethodInfo *getStackFrame = find_methodInfo_by_name(ins->mb.clazz->name, getStackFrame_name,
                                                         getStackFrame_type);
-    utf8_destory(getStackFrame_class);
     utf8_destory(getStackFrame_name);
     utf8_destory(getStackFrame_type);
     if (getStackFrame) {
         push_ref(runtime->stack, ins);
-        execute_method(getStackFrame, runtime, ins->mb.clazz);
+        execute_method(getStackFrame, runtime, getStackFrame->_this_class);
         ins = (Instance *) pop_ref(runtime->stack);
         Utf8String *str = utf8_create();
         jstring_2_utf8(ins, str);
@@ -187,7 +185,7 @@ s32 execute(c8 *p_classpath, c8 *p_mainclass, s32 argc, c8 **argv) {
             //if (java_debug)jthread_suspend(&runtime);//jdwp 会启动调试器
             ret = execute_method(main, &runtime, clazz);
             if (ret != RUNTIME_STATUS_NORMAL) {
-                //print_exception(&runtime);
+                print_exception(&runtime);
             }
             runtime.threadInfo->is_blocking = 1;
             while ((thread_list->length) > 1) {//wait for other thread over ,
