@@ -22,7 +22,7 @@ extern "C" {
 
 #if  __JVM_OS_MINGW__ || __JVM_OS_CYGWIN__
 #ifndef __WIN32__
-#define __WIN32__ 1
+#define __WIN32__
 #endif
 #define socklen_t int
 
@@ -233,7 +233,7 @@ s32 srv_bind(Utf8String *ip, u16 port) {
         if ((host = gethostbyname(utf8_cstr(ip))) == NULL) { /* get the host info */
             err("get host by name error\n");
         }
-#if __WIN32__
+#if defined(__WIN32__)
         server_addr.sin_addr = *((struct in_addr *) host->h_addr);
 #elif __JVM_OS_MAC__ || __JVM_OS_LINUX__
         //server_addr.sin_len = sizeof(struct sockaddr_in);
