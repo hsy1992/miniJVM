@@ -90,7 +90,6 @@ void garbage_collector_destory() {
     hashtable_destory(collector->father_2_son);
     collector->father_2_son = NULL;
     //
-//    pthread_exit(&collector->_garbage_thread);
     pthread_mutexattr_destroy(&collector->_garbage_attr);
     pthread_mutex_destroy(&collector->_garbage_lock);
     pthread_cond_destroy(&collector->_garbageCond);
@@ -334,6 +333,7 @@ void *collect_thread_run(void *para) {
         garbage_collect();
     }
     collector->_garbage_thread_status = GARBAGE_THREAD_DEAD;
+    pthread_detach(pthread_self());
     return NULL;
 }
 

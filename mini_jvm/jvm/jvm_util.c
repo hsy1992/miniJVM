@@ -563,6 +563,7 @@ void *jtherad_loader(void *para) {
     jvm_free(runtime);
     garbage_derefer(jthread, main_thread);
     //jvm_printf("thread over %llx\n", (s64) (long) jthread);
+    pthread_detach(pthread_self());
     return (void *) (long) ret;
 }
 
