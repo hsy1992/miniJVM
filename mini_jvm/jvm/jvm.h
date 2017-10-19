@@ -26,9 +26,9 @@ extern "C" {
 //=======================  micro define  =============================
 //_JVM_DEBUG   06 print all bytecode
 #define _JVM_DEBUG 0
-#define _JVM_DEBUG_PRINT_FILE 01
+#define _JVM_DEBUG_PRINT_FILE 0
 #define _JVM_DEBUG_BYTECODE_DUMP 0
-#define _JVM_DEBUG_GARBAGE_DUMP 01
+#define _JVM_DEBUG_GARBAGE_DUMP 0
 #define _JVM_DEBUG_PROFILE 0
 
 
@@ -47,9 +47,8 @@ extern "C" {
 #ifdef __DARWIN_C_ANSI
 #define __JVM_OS_MAC__ 1
 #endif
-#ifdef __ANDROID
-#define __JVM_OS_ANDROID__ 1
-#define  __ANDROID__
+#if defined(__GNU_LIBRARY__) || defined(__ANDROID__)
+#define __JVM_OS_LINUX__ 1
 #endif
 
 

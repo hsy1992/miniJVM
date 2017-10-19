@@ -50,23 +50,17 @@ extern "C" {
 #include <arpa/inet.h>
 
 #endif
-#if __ANDROID__ || __JVM_OS_ANDROID__
-#include <netdb.h>
-#include <linux/in.h>
-#include <sys/endian.h>
+#if __JVM_OS_LINUX__
+//#include <linux/in.h>
+
 #include <unistd.h>
 #include <fcntl.h>
 #include <sys/errno.h>
 
-//#include <android/log.h>
-//
-//#define  LOG_TAG    "gstlout"
-//#define  LOGI(...)  __android_log_print(ANDROID_LOG_INFO,LOG_TAG,__VA_ARGS__)
-//#define  LOGE(...)  __android_log_print(ANDROID_LOG_ERROR,LOG_TAG,__VA_ARGS__)
+
 #endif
 
-void _on_sock_sig(s32 signo) {
-}
+
 
 //=================================  socket  ====================================
 s32 sock_option(s32 sockfd, s32 opType, s32 opValue) {
@@ -197,9 +191,8 @@ s32 sock_open(Utf8String *ip, s32 port) {
     sock_addr.sin_family = AF_INET; /* host byte order */
     sock_addr.sin_port = htons((u16) port); /* short, network byte order */
 
-#if  __JVM_OS_ANDROID__
-    inet_addr.sin_addr.s_addr = *((u32 *) (host->h_addr)); //htonl(hosttmp); //
-#elif __JVM_OS_MAC__
+
+#if __JVM_OS_MAC__ || __JVM_OS_LINUX__
     sock_addr.sin_addr = *((struct in_addr *) host->h_addr_list[0]);
 #else
     sock_addr.sin_addr = *((struct in_addr *) host->h_addr);
@@ -208,9 +201,7 @@ s32 sock_open(Utf8String *ip, s32 port) {
     if (connect(sockfd, (struct sockaddr *) &sock_addr, sizeof(sock_addr)) == -1) {
         err("socket connect error\n");
     }
-#ifndef __WIN32__
-    signal(SIGPIPE, _on_sock_sig);
-#endif
+
     return sockfd;
 }
 
@@ -244,8 +235,8 @@ s32 srv_bind(Utf8String *ip, u16 port) {
         }
 #if __WIN32__
         server_addr.sin_addr = *((struct in_addr *) host->h_addr);
-#elif __JVM_OS_MAC__
-        server_addr.sin_len = sizeof(struct sockaddr_in);
+#elif __JVM_OS_MAC__ || __JVM_OS_LINUX__
+        //server_addr.sin_len = sizeof(struct sockaddr_in);
         server_addr.sin_addr = *((struct in_addr *) host->h_addr_list[0]);
 #else
         server_addr.sin_addr.s_addr = htonl(*((u32 *) (host->h_addr))); //htonl(hosttmp); //

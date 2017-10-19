@@ -3,6 +3,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <signal.h>
 #include "jvm.h"
 #include "../utils/utf8_string.h"
 #include "garbage.h"
@@ -10,6 +11,9 @@
 #include "java_native_std.h"
 #include "jdwp.h"
 
+void _on_jvm_sig(s32 signo) {
+    int debug = 1;
+}
 
 void main_thread_create(Runtime *runtime) {
 
@@ -86,6 +90,9 @@ s32 execute(c8 *p_classpath, c8 *p_mainclass, s32 argc, c8 **argv) {
 #endif //__MEM_LEAK_DETECT
     //
     open_log();
+
+    signal(SIGPIPE, _on_jvm_sig);
+
 #if _JVM_DEBUG_PROFILE
     instruct_profile = hashtable_create(DEFAULT_HASH_FUNC, DEFAULT_HASH_EQUALS_FUNC);
 #endif

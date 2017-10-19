@@ -41,8 +41,8 @@ set(SOURCE_FILES
         jvm/java_native_io.h
         jvm/class_load.c
         jvm/garbage.h
-        cmem/memLeak.c
-        cmem/memLeak.h
+        cmem/memleak.c
+        cmem/memleak.h
         cmem/example.c
         cmem/phashtable.c
         cmem/phashtable.h
@@ -52,7 +52,7 @@ set(SOURCE_FILES
 add_executable(mini_jvm ${SOURCE_FILES})
 
 #Set link library.
-TARGET_LINK_LIBRARIES(mini_jvm pthread )
+TARGET_LINK_LIBRARIES(mini_jvm pthread m )
 if ( (CMAKE_SYSTEM_NAME MATCHES "Windows") OR (CMAKE_SYSTEM_NAME MATCHES "CYGWIN"))
     TARGET_LINK_LIBRARIES(mini_jvm  ws2_32)
 endif ()
