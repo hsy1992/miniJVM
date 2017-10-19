@@ -51,7 +51,7 @@ void *jdwp_thread_listener(void *para) {
         jdwp_put_client(srv->clients, client);
     }
 
-    return srv;
+    return NULL;
 }
 
 void *jdwp_thread_dispacher(void *para) {
@@ -78,7 +78,7 @@ void *jdwp_thread_dispacher(void *para) {
     runtime_dispose(&runtime);
     srv->runtime = NULL;
 
-    return srv;
+    return NULL;
 }
 
 s32 jdwp_start_server() {
@@ -123,15 +123,14 @@ s32 jdwp_stop_server() {
     }
     hashtable_destory(jdwpserver.event_sets);
     //
-//    utf8_destory(jdwpserver.JDWP_ROOT->name);
-//    jdwpserver.JDWP_ROOT->name=NULL;
+
     garbage_derefer_all(jdwpserver.JDWP_ROOT);
     garbage_refer(jdwpserver.JDWP_ROOT, NULL);
 
     //
     utf8_destory(jdwpserver.ip);
-    pthread_detach(jdwpserver.pt_dispacher);
     pthread_detach(jdwpserver.pt_listener);
+    pthread_detach(jdwpserver.pt_dispacher);
     return 0;
 }
 
