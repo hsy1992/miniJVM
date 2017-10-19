@@ -505,7 +505,7 @@ void invoke_deepth(Runtime *runtime) {
 #ifdef _CYGWIN_CONFIG_H
     fprintf(logfile, "%lx", (s64) (long) pthread_self());
 #else
-    fprintf(logfile, "%lx", (s64) (long) pthread_self());
+    fprintf(logfile, "%llx", (s64) (long) pthread_self());
 #endif //_CYGWIN_CONFIG_H
     for (i = 0; i < len; i++) {
         fprintf(logfile, "    ");
