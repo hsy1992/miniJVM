@@ -65,6 +65,7 @@ public class RandomAccessFile extends File {
 
     public void close() throws IOException {
         closeFile(filePointer);
+        filePointer = 0;
     }
 
     public int read(byte[] b, int off, int len) throws IOException {
