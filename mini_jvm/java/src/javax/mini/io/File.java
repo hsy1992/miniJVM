@@ -134,36 +134,32 @@ public class File {
 
     public class FileInputStream extends InputStream {
 
-        long fileHandle;
-
         public FileInputStream(long fileHandle) {
-            this.fileHandle = fileHandle;
+
         }
 
         @Override
         public int read() throws IOException {
-            return read0(fileHandle);
+            return read0(filePointer);
         }
 
         @Override
         public void close() throws IOException {
-            closeFile(fileHandle);
-            fileHandle = 0;
+            closeFile(filePointer);
+            filePointer = 0;
         }
 
     }
 
     public class FileOutputStream extends OutputStream {
 
-        long fileHandle;
-
         public FileOutputStream(long fileHandle) {
-            this.fileHandle = fileHandle;
+
         }
 
         @Override
         public void write(int b) throws IOException {
-            int ret = write0(fileHandle, b);
+            int ret = write0(filePointer, b);
             if (ret < 0) {
                 throw new IOException("write file error: " + path);
             }
@@ -171,8 +167,8 @@ public class File {
 
         @Override
         public void close() throws IOException {
-            closeFile(fileHandle);
-            fileHandle = 0;
+            closeFile(filePointer);
+            filePointer = 0;
         }
     }
 
