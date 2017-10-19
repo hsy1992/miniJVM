@@ -50,7 +50,7 @@ void *jdwp_thread_listener(void *para) {
         client->rcvp = NULL;
         jdwp_put_client(srv->clients, client);
     }
-    pthread_detach(pthread_self());
+
     return srv;
 }
 
@@ -77,7 +77,7 @@ void *jdwp_thread_dispacher(void *para) {
     pop_ref(runtime.stack);
     runtime_dispose(&runtime);
     srv->runtime = NULL;
-    pthread_detach(pthread_self());
+
     return srv;
 }
 
@@ -130,8 +130,8 @@ s32 jdwp_stop_server() {
 
     //
     utf8_destory(jdwpserver.ip);
-
-
+    pthread_detach(jdwpserver.pt_dispacher);
+    pthread_detach(jdwpserver.pt_listener);
     return 0;
 }
 
