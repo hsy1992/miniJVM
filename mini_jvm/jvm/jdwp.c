@@ -98,6 +98,7 @@ s32 jdwp_start_server() {
 }
 
 s32 jdwp_stop_server() {
+    if (!java_debug)return 0;
     jdwpserver.exit = 1;
     srv_close(jdwpserver.srvsock);
     s32 i;
