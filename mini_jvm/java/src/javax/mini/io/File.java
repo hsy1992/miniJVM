@@ -116,6 +116,7 @@ public class File {
     public OutputStream getOutputStream(boolean append) throws IOException {
         if (filePointer != 0) {
             closeFile(filePointer);
+            filePointer = 0;
         }
         filePointer = openFile(path.getBytes(), append ? "a+b".getBytes() : "w+b".getBytes());;
 
@@ -125,6 +126,7 @@ public class File {
     public InputStream getInputStream() throws IOException {
         if (filePointer != 0) {
             closeFile(filePointer);
+            filePointer = 0;
         }
         filePointer = openFile(path.getBytes(), "rb".getBytes());
         return new FileInputStream(filePointer);
