@@ -112,6 +112,7 @@ void hashtable_clear(Hashtable *hash_table) {
             hash_table_free_entry(hash_table, rover);
             rover = next;
         }
+        hash_table->table[i] = NULL;
     }
     hash_table->entries = 0;
     if (hash_table->table_size > HASH_TABLE_DEFAULT_SIZE) {

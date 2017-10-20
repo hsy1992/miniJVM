@@ -557,11 +557,11 @@ void *jtherad_loader(void *para) {
         runtime->threadInfo->thread_status = THREAD_STATUS_ZOMBIE;
         if (java_debug)event_on_thread_death(runtime);
     }
+    garbage_derefer(jthread, main_thread);//get garbage lock ,maybe garbage is access this thread
     jthread_set_threadq_value(jthread, NULL);
     localvar_dispose(runtime);
     runtime_dispose(runtime);
     jvm_free(runtime);
-    garbage_derefer(jthread, main_thread);
     //jvm_printf("thread over %llx\n", (s64) (long) jthread);
     pthread_detach(pthread_self());
     return (void *) (long) ret;
@@ -572,7 +572,12 @@ pthread_t jthread_create_and_start(Instance *ins) {//
     Runtime *rt = jvm_alloc(sizeof(Runtime));
     jthread_set_threadq_value(ins, rt);
     threadlist_add(rt);
-    pthread_create(&pt, NULL, jtherad_loader, ins);
+
+    pthread_attr_t attr;
+    pthread_attr_init(&attr);
+    pthread_attr_setdetachstate(&attr, PTHREAD_CREATE_DETACHED);
+    pthread_create(&pt, &attr, jtherad_loader, ins);
+    pthread_attr_destroy(&attr);
     return pt;
 }
 

@@ -81,6 +81,7 @@ void hashset_clear(Hashset *set) {
             hashset_free_entry(set, rover);
             rover = next;
         }
+        set->table[i] = NULL;
     }
     set->entries = 0;
     if (set->table_size > HASH_SET_DEFAULT_SIZE) {
