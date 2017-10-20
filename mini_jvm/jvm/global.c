@@ -26,7 +26,7 @@ s32 STACK_LENGHT = 10240;
 s64 GARBAGE_PERIOD_MS = 1000;
 //
 //
-u8 volatile java_debug = 1;
+u8 volatile java_debug = 0;
 Instance *jdwp_jthread;
 
 

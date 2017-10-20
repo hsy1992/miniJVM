@@ -62,7 +62,13 @@ s32 garbage_collector_create() {
     pthread_mutexattr_init(&collector->_garbage_attr);
     pthread_mutexattr_settype(&collector->_garbage_attr, PTHREAD_MUTEX_RECURSIVE);
     pthread_mutex_init(&collector->_garbage_lock, &collector->_garbage_attr);
-    pthread_create(&collector->_garbage_thread, NULL, collect_thread_run, NULL);
+
+    pthread_attr_init(&collector->attr);
+    pthread_attr_setdetachstate(&collector->attr, PTHREAD_CREATE_DETACHED);
+    s32 rc = pthread_create(&collector->_garbage_thread, &collector->attr, collect_thread_run, NULL);
+    if (rc) {
+        jvm_printf("ERROR: garbage thread can't create is %d\n", rc);
+    }
     return 0;
 }
 
@@ -93,6 +99,7 @@ void garbage_collector_destory() {
     pthread_mutexattr_destroy(&collector->_garbage_attr);
     pthread_mutex_destroy(&collector->_garbage_lock);
     pthread_cond_destroy(&collector->_garbageCond);
+    pthread_attr_destroy(&collector->attr);
     jvm_free(collector);
     collector = NULL;
 }
@@ -191,7 +198,7 @@ Hashset *_garbage_get_set() {
  * @param set putin eventset
  */
 void _garbage_put_set(Hashset *set) {
-    s32 mode = 0;
+    s32 mode = 2;
     switch (mode) {
         case 0:
             //no cache
@@ -333,7 +340,6 @@ void *collect_thread_run(void *para) {
         garbage_collect();
     }
     collector->_garbage_thread_status = GARBAGE_THREAD_DEAD;
-    pthread_detach(pthread_self());
     return NULL;
 }
 

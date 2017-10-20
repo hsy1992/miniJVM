@@ -91,7 +91,7 @@ s32 execute(c8 *p_classpath, c8 *p_mainclass, s32 argc, c8 **argv) {
     //
     open_log();
 
-    signal(SIGPIPE, _on_jvm_sig);
+    //signal(SIGPIPE, _on_jvm_sig);
 
 #if _JVM_DEBUG_PROFILE
     instruct_profile = hashtable_create(DEFAULT_HASH_FUNC, DEFAULT_HASH_EQUALS_FUNC);
