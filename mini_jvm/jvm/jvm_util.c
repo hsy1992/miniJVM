@@ -547,7 +547,6 @@ s32 jthread_dispose(Instance *jthread) {
     jthread_set_threadq_value(jthread, NULL);
     localvar_dispose(runtime);
     runtime_dispose(runtime);
-    //garbage_derefer(jthread, main_thread);
     jvm_free(runtime);
 
     return 0;
@@ -572,8 +571,8 @@ void *jtherad_loader(void *para) {
 
     if (method) {
         if (java_debug)event_on_thread_start(runtime->threadInfo->jthread);
-        push_ref(runtime->stack, (__refer) jthread);
         runtime->threadInfo->thread_status = THREAD_STATUS_RUNNING;
+        push_ref(runtime->stack, (__refer) jthread);
         ret = execute_method(method, runtime, method->_this_class);
     }
     jthread_dispose(jthread);

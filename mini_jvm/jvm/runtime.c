@@ -204,6 +204,7 @@ s32 localvar_init(Runtime *runtime, s32 count) {
 
 s32 localvar_dispose(Runtime *runtime) {
     jvm_free(runtime->localVariables);
+    runtime->localVariables = NULL;
     runtime->localvar_count = 0;
     return 0;
 }
