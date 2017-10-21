@@ -810,17 +810,17 @@ void event_on_class_unload(Runtime *runtime, Class *clazz) {
     jdwp_event_put(ei);
 }
 
-void event_on_thread_start(Runtime *runtime) {
+void event_on_thread_start(Instance *jthread) {
     EventInfo *ei = jvm_alloc(sizeof(EventInfo));
     ei->eventKind = JDWP_EVENTKIND_THREAD_START;
-    ei->thread = runtime->threadInfo->jthread;
+    ei->thread = jthread;
     jdwp_event_put(ei);
 }
 
-void event_on_thread_death(Runtime *runtime) {
+void event_on_thread_death(Instance *jthread) {
     EventInfo *ei = jvm_alloc(sizeof(EventInfo));
     ei->eventKind = JDWP_EVENTKIND_THREAD_DEATH;
-    ei->thread = runtime->threadInfo->jthread;
+    ei->thread = jthread;
     jdwp_event_put(ei);
 }
 
@@ -1320,7 +1320,10 @@ s32 jdwp_client_process(JdwpClient *client, Runtime *runtime) {
                 break;
             }
             case JDWP_CMD_VirtualMachine_AllThreads: {//1.4
+                thread_lock(&sys_lock);
                 jdwppacket_set_err(res, JDWP_ERROR_NONE);
+
+                thread_lock(&sys_lock);
                 jdwppacket_write_int(res, thread_list->length);
                 s32 i;
                 for (i = 0; i < thread_list->length; i++) {
@@ -1333,7 +1336,10 @@ s32 jdwp_client_process(JdwpClient *client, Runtime *runtime) {
                     //printf("%s\n", utf8_cstr(ustr));
                     utf8_destory(ustr);
                 }
+                thread_unlock(&sys_lock);
+
                 jdwp_writepacket(client, res);
+                thread_unlock(&sys_lock);
                 break;
             }
             case JDWP_CMD_VirtualMachine_TopLevelThreadGroups: {//1.5
@@ -1367,25 +1373,27 @@ s32 jdwp_client_process(JdwpClient *client, Runtime *runtime) {
             }
             case JDWP_CMD_VirtualMachine_Suspend: {//1.8
                 s32 i;
+                thread_lock(&sys_lock);
                 for (i = 0; i < thread_list->length; i++) {
                     Runtime *t = threadlist_get(i);
                     jthread_suspend(t);
                     //jvm_printf("VirtualMachine_Suspend: %lld\n" + (s64) (long) t);
                 }
-
+                thread_unlock(&sys_lock);
                 jdwppacket_set_err(res, JDWP_ERROR_NONE);
 
                 jdwp_writepacket(client, res);
                 break;
             }
             case JDWP_CMD_VirtualMachine_Resume: {//1.9
+                thread_lock(&sys_lock);
                 s32 i;
                 for (i = 0; i < thread_list->length; i++) {
                     Runtime *t = threadlist_get(i);
                     if (t->threadInfo->suspend_count > 0)jthread_resume(t);
                     //jvm_printf("VirtualMachine_Resume: %llx\n", (s64) (long) t);
                 }
-
+                thread_unlock(&sys_lock);
                 jdwppacket_set_err(res, JDWP_ERROR_NONE);
 
                 jdwp_writepacket(client, res);

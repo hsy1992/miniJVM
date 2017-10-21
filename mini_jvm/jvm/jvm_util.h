@@ -140,7 +140,11 @@ struct _ThreadLock {
     Instance *jthread_holder;
 };
 
-pthread_t jthread_create_and_start(Instance *ins);
+s32 jthread_dispose(Instance *jthread);
+
+void *jtherad_loader(void *para);
+
+pthread_t jthread_start(Instance *ins);
 
 __refer jthread_get_threadq_value(Instance *ins);
 

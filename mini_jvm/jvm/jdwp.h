@@ -490,9 +490,9 @@ void event_on_breakpoint(Runtime *breakpoint_runtime);
 
 void event_on_class_prepar(Runtime *runtime, Class *clazz);
 
-void event_on_thread_death(Runtime *runtime);
+void event_on_thread_death(Instance *jthread);
 
-void event_on_thread_start(Runtime *runtime);
+void event_on_thread_start(Instance *jthread);
 
 void jdwp_check_breakpoint(Runtime *runtime);
 

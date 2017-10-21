@@ -25,9 +25,9 @@ struct _Collector {
     ArrayList *_garbage_refer_set_pool;
     //
     pthread_t _garbage_thread;//垃圾回收线程
-    pthread_mutexattr_t _garbage_attr;//
-    pthread_mutex_t _garbage_lock; //重入锁
-    pthread_cond_t _garbageCond;
+//    pthread_mutexattr_t _garbage_attr;//
+//    pthread_mutex_t _garbage_lock; //重入锁
+//    pthread_cond_t _garbageCond;
 
     //
     u8 _garbage_thread_status;

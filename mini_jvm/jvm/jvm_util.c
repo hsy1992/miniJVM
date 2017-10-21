@@ -485,7 +485,7 @@ int jvm_printf(const char *format, ...) {
         }
     }
 #else
-        result = vprintf(format, vp);
+    result = vprintf(format, vp);
 #endif
     va_end(vp);
     //garbage_thread_unlock();
@@ -524,16 +524,41 @@ void invoke_deepth(Runtime *runtime) {
 }
 
 //===============================    java 线程  ==================================
+s32 jthread_init(Instance *jthread) {
+    Runtime *runtime = jvm_alloc(sizeof(Runtime));
+    runtime_init(runtime);
+    localvar_init(runtime, 1);
+    jthread_set_threadq_value(jthread, runtime);
+    threadlist_add(runtime);
+    runtime->clazz = jthread->mb.clazz;
+    runtime->threadInfo->jthread = jthread;
+    runtime->threadInfo->thread_status = THREAD_STATUS_NEW;
+
+    return 0;
+}
+
+s32 jthread_dispose(Instance *jthread) {
+    Runtime *runtime = (Runtime *) jthread_get_threadq_value(jthread);
+
+    runtime->threadInfo->thread_status = THREAD_STATUS_ZOMBIE;
+    threadlist_remove(runtime);
+    if (java_debug)event_on_thread_death(runtime->threadInfo->jthread);
+    //destory
+    jthread_set_threadq_value(jthread, NULL);
+    localvar_dispose(runtime);
+    runtime_dispose(runtime);
+    //garbage_derefer(jthread, main_thread);
+    jvm_free(runtime);
+
+    return 0;
+}
+
 void *jtherad_loader(void *para) {
     Instance *jthread = (Instance *) para;
     s32 ret = 0;
     Runtime *runtime = (Runtime *) jthread_get_threadq_value(jthread);
-    runtime_init(runtime);
-    localvar_init(runtime, 1);
-
-    runtime->clazz = jthread->mb.clazz;
-    runtime->threadInfo->jthread = jthread;
     runtime->threadInfo->pthread = pthread_self();
+
     Utf8String *methodName = utf8_create_c("run");
     Utf8String *methodType = utf8_create_c("()V");
     MethodInfo *method = NULL;
@@ -546,37 +571,18 @@ void *jtherad_loader(void *para) {
 #endif
 
     if (method) {
-        if (java_debug)event_on_thread_start(runtime);
-        jthread_set_threadq_value(jthread, runtime);
-        runtime->threadInfo->thread_status = THREAD_STATUS_RUNNING;
-
+        if (java_debug)event_on_thread_start(runtime->threadInfo->jthread);
         push_ref(runtime->stack, (__refer) jthread);
+        runtime->threadInfo->thread_status = THREAD_STATUS_RUNNING;
         ret = execute_method(method, runtime, method->_this_class);
-
-        threadlist_remove(runtime);
-        runtime->threadInfo->thread_status = THREAD_STATUS_ZOMBIE;
-        if (java_debug)event_on_thread_death(runtime);
     }
-    //get garbage lock ,maybe garbage is access this thread
-    garbage_thread_lock();
-    garbage_thread_unlock();
-    //destory
-    jthread_set_threadq_value(jthread, NULL);
-    localvar_dispose(runtime);
-    runtime_dispose(runtime);
-    garbage_derefer(jthread, main_thread);
-    jvm_free(runtime);
+    jthread_dispose(jthread);
     //jvm_printf("thread over %llx\n", (s64) (long) jthread);
-    pthread_detach(pthread_self());
     return (void *) (long) ret;
 }
 
-pthread_t jthread_create_and_start(Instance *ins) {//
+pthread_t jthread_start(Instance *ins) {//
     pthread_t pt;
-    Runtime *rt = jvm_alloc(sizeof(Runtime));
-    jthread_set_threadq_value(ins, rt);
-    threadlist_add(rt);
-
     pthread_attr_t attr;
     pthread_attr_init(&attr);
     pthread_attr_setdetachstate(&attr, PTHREAD_CREATE_DETACHED);
@@ -864,6 +870,9 @@ Instance *instance_create(Class *clazz) {
     instance->obj_fields = jvm_alloc(instance->mb.clazz->field_instance_len);
 //    memcpy(instance->obj_fields, instance->obj_of_clazz->field_instance_template,
 //           instance->obj_of_clazz->field_instance_len);
+    if (utf8_equals_c(clazz->name, STR_CLASS_JAVA_LANG_THREAD)) {
+        jthread_init(instance);
+    }
     return instance;
 }
 
