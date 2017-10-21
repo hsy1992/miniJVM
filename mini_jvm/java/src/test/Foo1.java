@@ -286,6 +286,7 @@ public class Foo1 {
                 try {
                     ServerSocket srvsock = (ServerSocket) Connector.open("serversocket://:8080");
 
+                    //建一个线程，过5秒钟关掉自己
                     new Thread(new Runnable() {
 
                         @Override
@@ -300,7 +301,7 @@ public class Foo1 {
                                     srvsock.close();
                                 }
                             } catch (Exception e) {
-                                System.out.println(e);
+                                e.printStackTrace();
                             }
                         }
 
