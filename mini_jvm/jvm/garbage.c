@@ -390,6 +390,17 @@ s32 garbage_collect() {
         garbage_thread_unlock();
         return -1;
     }
+    //还要标记后来新加入的一些对象，这些是在收集器等待线程暂停的时候加入的
+    hashtable_iterate(collector->son_2_father, &hti);
+    for (; hashtable_iter_has_more(&hti);) {
+
+        HashtableKey k = hashtable_iter_next_key(&hti);
+        MemoryBlock *mb = (MemoryBlock *) k;
+
+        if (mb->garbage_mark == GARBAGE_MARK_UNDEF) {
+            garbage_mark_son(k);
+        }
+    }
 
     //如果没有被标记为引用，则回收掉
     s32 i = 0;
