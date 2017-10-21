@@ -494,10 +494,6 @@ s32 garbage_mark_refered_obj(Runtime *pruntime) {
             __refer ref = entry_2_refer(&entry);
             if (ref) {
                 garbage_mark_son(ref);
-                //printf("\n");
-                //jvm_printf("mark:[%llx]   ", (s64) (long) ref);
-                garbage_mark_son(ref);
-                //((MemoryBlock *) ref)->garbage_mark = GARBAGE_MARK_REFERED;
             }
         }
     }
@@ -506,11 +502,6 @@ s32 garbage_mark_refered_obj(Runtime *pruntime) {
             __refer ref = runtime->localVariables[i].refer;
             if (ref) {
                 garbage_mark_son(ref);
-                //printf("\n");
-                //jvm_printf("mark:[%llx]   ", (s64) (long) ref);
-                garbage_mark_son(ref);
-
-                //((MemoryBlock *) ref)->garbage_mark = GARBAGE_MARK_REFERED;
             }
         }
         runtime = runtime->son;

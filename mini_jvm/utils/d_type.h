@@ -29,12 +29,21 @@ typedef unsigned long long u64;
 typedef signed long long s64;
 typedef void *__refer;
 
-
+typedef struct _autoptr {
+    __refer ref;
+    s32 count;
+} autoptr;
 
 //======================= memory manage =============================
 
 extern s64 MAX_HEAP_SIZE;
 extern s64 heap_size; //当前已经分配的内存总数
+
+autoptr *autoptr_get(autoptr *a);
+
+autoptr *autoptr_new(__refer r);
+
+void autoptr_NULL(autoptr **aref);
 
 
 #ifndef __MEM_LEAK_DETECT

@@ -42,16 +42,33 @@ void t4() {
     printf("long size:%d\n", (s32) sizeof(long));
 }
 
+
+typedef struct _BB {
+    __refer ref;
+    s32 count;
+    autoptr *a;
+} BB;
+
 void t5() {
+    __refer r = jvm_alloc(100);
+    autoptr *a = autoptr_new(r);
 
-
+    BB *b = jvm_alloc(sizeof(BB));
+    b->a = autoptr_get(a);
+    autoptr_NULL(&a);
+    autoptr_NULL(&b->a);
+    jvm_printf("a = %llx , b->a = %llx\n", (s64) (long) a, (s64) (long) b->a);
+    jvm_free(b);
 }
 
 /*
  *
  */
 int main(int argc, char **argv) {
-    s32 ret = execute("../java/build/classes/", "test/Foo1", argc, argv);
+//    s32 ret = execute("../java/build/classes/", "test/Foo1", argc, argv);
+    s32 ret;
+    t5();
+
     return ret;
 }
 

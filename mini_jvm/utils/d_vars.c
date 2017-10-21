@@ -8,6 +8,44 @@
 s64 MAX_HEAP_SIZE = 20 * 1024 * 1024;
 s64 heap_size = 0; //当前已经分配的内存总数
 
+/**
+ * get a autoprt value;
+ * @param a
+ * @return
+ */
+autoptr *autoptr_get(autoptr *a) {
+    a->count++;
+    //printf("__ins_r refer : %d\n",a->count);
+    return a;
+}
+
+/**
+ * create a autoptr
+ * @param r
+ * @return
+ */
+autoptr *autoptr_new(__refer r) {
+    autoptr *a = jvm_alloc(sizeof(autoptr));
+    a->ref = r;
+    return autoptr_get(a);
+}
+
+/**
+ * set autoptr to null
+ * @param aref
+ */
+void autoptr_NULL(autoptr **aref) {
+    if (!aref)
+        return;
+    autoptr *a = *aref;
+    a->count--;
+    //printf("__ins_r refer : %d\n",a->count);
+    if (!a->count) {
+        jvm_free(a->ref);
+        jvm_free(a);
+    }
+    *aref = NULL;
+}
 
 
 #ifndef __MEM_LEAK_DETECT
