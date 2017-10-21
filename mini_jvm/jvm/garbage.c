@@ -145,6 +145,7 @@ void __garbage_clear() {
 
 s32 garbage_thread_trylock() {
     //return pthread_mutex_trylock(&collector->_garbage_lock);
+    return pthread_mutex_trylock(&sys_lock.mutex_lock);
 }
 
 void garbage_thread_lock() {
