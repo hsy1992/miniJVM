@@ -277,16 +277,34 @@ public class Foo1 {
         System.out.println(s1.equals(s2));
     }
 
-    ServerSocket ssock;
-
     void t12() {
+
         new Thread(new Runnable() {
 
             @Override
             public void run() {
                 try {
                     ServerSocket srvsock = (ServerSocket) Connector.open("serversocket://:8080");
-                    ssock = srvsock;
+
+                    new Thread(new Runnable() {
+
+                        @Override
+                        public void run() {
+                            try {
+                                int MAX = 5;
+                                for (int i = 0; i < MAX; i++) {
+                                    System.out.println("server would close at " + (MAX - i) + " second later.");
+                                    Thread.sleep(1000);
+                                }
+                                if (srvsock != null) {
+                                    srvsock.close();
+                                }
+                            } catch (Exception e) {
+                                System.out.println(e);
+                            }
+                        }
+
+                    }).start();
                     System.out.println("server socket listen...");
                     srvsock.listen();
                     while (true) {
@@ -334,25 +352,7 @@ public class Foo1 {
                 }
             }
         }).start();
-        new Thread(new Runnable() {
 
-            @Override
-            public void run() {
-                try {
-                    int MAX = 5;
-                    for (int i = 0; i < MAX; i++) {
-                        System.out.println("server would close at " + (MAX - i) + " second later.");
-                        Thread.sleep(1000);
-                    }
-                    if (ssock != null) {
-                        ssock.close();
-                    }
-                } catch (Exception e) {
-                    System.out.println(e);
-                }
-            }
-
-        }).start();
     }
 
     void t13() {
@@ -689,9 +689,9 @@ public class Foo1 {
             f.t12();
             f.t13();
             f.t14();
-            f.t15();
-            f.t16();
-            f.t17();
+//            f.t15();
+//            f.t16();
+//            f.t17();
             f.t18();
             f.t19();
             f.t20();
