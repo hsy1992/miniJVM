@@ -248,7 +248,9 @@ s32 srv_bind(Utf8String *ip, u16 port) {
     s32 on = 1;
     setsockopt(listenfd, SOL_SOCKET, SO_REUSEADDR, (char *) &on, sizeof(on));
     if ((bind(listenfd, (struct sockaddr *) &server_addr, sizeof(server_addr))) < 0) {
-        err("Error binding serversocket.\n");
+        err("Error binding serversocket: %d\n",errno);
+        closesocket(listenfd);
+        listenfd=0;
     }
     return listenfd;
 }
