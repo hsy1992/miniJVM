@@ -58,10 +58,7 @@ s32 garbage_collector_create() {
     collector->_garbage_refer_set_pool = arraylist_create(4);
 
     collector->_garbage_thread_status = GARBAGE_THREAD_PAUSE;
-//    pthread_cond_init(&collector->_garbageCond, NULL);
-//    pthread_mutexattr_init(&collector->_garbage_attr);
-//    pthread_mutexattr_settype(&collector->_garbage_attr, PTHREAD_MUTEX_RECURSIVE);
-//    pthread_mutex_init(&collector->_garbage_lock, &collector->_garbage_attr);
+    thread_lock_init(&collector->threadlock);
 
     pthread_attr_t attr;
     pthread_attr_init(&attr);
@@ -98,9 +95,7 @@ void garbage_collector_destory() {
     hashtable_destory(collector->father_2_son);
     collector->father_2_son = NULL;
     //
-//    pthread_mutexattr_destroy(&collector->_garbage_attr);
-//    pthread_mutex_destroy(&collector->_garbage_lock);
-//    pthread_cond_destroy(&collector->_garbageCond);
+    thread_lock_dispose(&collector->threadlock);
     jvm_free(collector);
     collector = NULL;
 }
@@ -144,18 +139,18 @@ void __garbage_clear() {
 //===============================   inner  ====================================
 
 s32 garbage_thread_trylock() {
-    //return pthread_mutex_trylock(&collector->_garbage_lock);
-    return pthread_mutex_trylock(&sys_lock.mutex_lock);
+    return pthread_mutex_trylock(&collector->threadlock.mutex_lock);
+//    return pthread_mutex_trylock(&sys_lock.mutex_lock);
 }
 
 void garbage_thread_lock() {
-    //pthread_mutex_lock(&collector->_garbage_lock);
-    thread_lock(&sys_lock);
+    pthread_mutex_lock(&collector->threadlock.mutex_lock);
+//    thread_lock(&sys_lock);
 }
 
 void garbage_thread_unlock() {
-    //pthread_mutex_unlock(&collector->_garbage_lock);
-    thread_unlock(&sys_lock);
+    pthread_mutex_unlock(&collector->threadlock.mutex_lock);
+//    thread_unlock(&sys_lock);
 }
 
 void garbage_thread_pause() {
@@ -171,8 +166,8 @@ void garbage_thread_stop() {
 }
 
 void garbage_thread_wait() {
-    //pthread_cond_wait(&collector->_garbageCond, &collector->_garbage_lock);
-    pthread_cond_wait(&sys_lock.thread_cond, &sys_lock.mutex_lock);
+    pthread_cond_wait(&collector->threadlock.thread_cond, &collector->threadlock.mutex_lock);
+//    pthread_cond_wait(&sys_lock.thread_cond, &sys_lock.mutex_lock);
 }
 
 void garbage_thread_timedwait(s64 ms) {
@@ -180,16 +175,16 @@ void garbage_thread_timedwait(s64 ms) {
     struct timespec t;
     t.tv_sec = ms / 1000;
     t.tv_nsec = (ms % 1000) * 1000000;
-    //s32 ret = pthread_cond_timedwait(&collector->_garbageCond, &collector->_garbage_lock, &t);
-    s32 ret = pthread_cond_timedwait(&sys_lock.thread_cond, &sys_lock.mutex_lock, &t);
+    s32 ret = pthread_cond_timedwait(&collector->threadlock.thread_cond, &collector->threadlock.mutex_lock, &t);
+//    s32 ret = pthread_cond_timedwait(&sys_lock.thread_cond, &sys_lock.mutex_lock, &t);
 //    if (ret == ETIMEDOUT) {
 //        s32 debug = 1;
 //    }
 }
 
 void garbage_thread_notify() {
-    //pthread_cond_signal(&collector->_garbageCond);
-    pthread_cond_signal(&sys_lock.thread_cond);
+    pthread_cond_signal(&collector->threadlock.thread_cond);
+//    pthread_cond_signal(&sys_lock.thread_cond);
 }
 
 Hashset *_garbage_get_set() {

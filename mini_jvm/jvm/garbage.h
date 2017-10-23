@@ -6,6 +6,7 @@
 #include "../utils/hashtable.h"
 #include "../utils/hashset.h"
 #include "jvm.h"
+#include "jvm_util.h"
 #include <pthread.h>
 
 #ifdef __cplusplus
@@ -28,6 +29,7 @@ struct _Collector {
 //    pthread_mutexattr_t _garbage_attr;//
 //    pthread_mutex_t _garbage_lock; //重入锁
 //    pthread_cond_t _garbageCond;
+    ThreadLock threadlock;
 
     //
     u8 _garbage_thread_status;
