@@ -9,7 +9,7 @@
 ClassLoader *sys_classloader;
 ClassLoader *array_classloader;
 
-ThreadLock sys_lock;
+ThreadLock threadlist_lock;
 
 ArrayList *native_libs;
 ArrayList *thread_list; //all thread

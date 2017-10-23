@@ -203,6 +203,8 @@ c8 *getFieldPtr_byName_c(Instance *instance, c8 *pclassName, c8 *pfieldName, c8 
 
 c8 *getFieldPtr_byName(Instance *instance, Utf8String *clsName, Utf8String *fieldName, Utf8String *fieldType);
 
+Class *classes_get_c(c8 *clsName);
+
 Class *classes_get(Utf8String *clsName);
 
 Class *classes_load_get_c(c8 *pclassName, Runtime *runtime);

@@ -350,7 +350,6 @@ enum {
 //======================= global var =============================
 extern Instance *main_thread;
 extern Runtime *main_runtime;
-extern ThreadLock sys_lock;
 
 extern ClassLoader *sys_classloader;
 extern ClassLoader *array_classloader;
@@ -358,6 +357,8 @@ extern ClassLoader *array_classloader;
 extern Instruction **instructionsIndexies;
 
 extern ArrayList *thread_list;
+extern ThreadLock threadlist_lock;
+
 extern ArrayList *native_libs;
 extern Hashtable *sys_prop;
 

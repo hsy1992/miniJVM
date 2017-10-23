@@ -39,6 +39,13 @@ void thread_unlock(ThreadLock *lock) {
     pthread_mutex_unlock(&lock->mutex_lock);
 }
 
+Class *classes_get_c(c8 *clsName) {
+    Utf8String *ustr = utf8_create_c(clsName);
+    Class *clazz = classes_get(ustr);
+    utf8_destory(ustr);
+    return clazz;
+}
+
 Class *classes_get(Utf8String *clsName) {
     Class *cl = NULL;
     ThreadLock *tl = sys_classloader->JVM_CLASS->mb.thread_lock;
@@ -109,22 +116,22 @@ Class *array_class_get(Utf8String *descript) {
 
 Runtime *threadlist_get(s32 i) {
     Runtime *r = NULL;
-    thread_lock(&sys_lock);
+    garbage_thread_lock();
     r = (Runtime *) arraylist_get_value(thread_list, i);
-    thread_unlock(&sys_lock);
+    garbage_thread_unlock();
     return r;
 }
 
 void threadlist_remove(Runtime *r) {
-    thread_lock(&sys_lock);
+    garbage_thread_lock();
     arraylist_remove(thread_list, r);
-    thread_unlock(&sys_lock);
+    garbage_thread_unlock();
 }
 
 void threadlist_add(Runtime *r) {
-    thread_lock(&sys_lock);
+    garbage_thread_lock();
     arraylist_append(thread_list, r);
-    thread_unlock(&sys_lock);
+    garbage_thread_unlock();
 }
 
 /**
@@ -403,7 +410,7 @@ s32 sys_properties_load(Utf8String *path) {
     Utf8String *ustr = utf8_create();
     u8 buf[256];
     while (1) {
-        u32 len = (u32)fread(buf, 1, 256, fp);
+        u32 len = (u32) fread(buf, 1, 256, fp);
         utf8_append_part_c(ustr, buf, 0, len);
         if (feof(fp)) {
             break;
@@ -533,13 +540,14 @@ s32 jthread_init(Instance *jthread) {
     runtime->clazz = jthread->mb.clazz;
     runtime->threadInfo->jthread = jthread;
     runtime->threadInfo->thread_status = THREAD_STATUS_NEW;
-
+    garbage_refer(jthread, main_thread);
     return 0;
 }
 
 s32 jthread_dispose(Instance *jthread) {
     Runtime *runtime = (Runtime *) jthread_get_threadq_value(jthread);
 
+    garbage_derefer(jthread, main_thread);
     runtime->threadInfo->thread_status = THREAD_STATUS_ZOMBIE;
     threadlist_remove(runtime);
     if (java_debug)event_on_thread_death(runtime->threadInfo->jthread);
@@ -869,7 +877,7 @@ Instance *instance_create(Class *clazz) {
     instance->obj_fields = jvm_alloc(instance->mb.clazz->field_instance_len);
 //    memcpy(instance->obj_fields, instance->obj_of_clazz->field_instance_template,
 //           instance->obj_of_clazz->field_instance_len);
-    if (utf8_equals_c(clazz->name, STR_CLASS_JAVA_LANG_THREAD)) {
+    if (instance_of( classes_get_c(STR_CLASS_JAVA_LANG_THREAD),instance)) {
         jthread_init(instance);
     }
     return instance;

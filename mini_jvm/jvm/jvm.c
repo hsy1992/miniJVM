@@ -96,7 +96,6 @@ s32 execute(c8 *p_classpath, c8 *p_mainclass, s32 argc, c8 **argv) {
 #if _JVM_DEBUG_PROFILE
     instruct_profile = hashtable_create(DEFAULT_HASH_FUNC, DEFAULT_HASH_EQUALS_FUNC);
 #endif
-    thread_lock_init(&sys_lock);
 
     //为指令创建索引
     instructionsIndexies = instruct_indexies_create();
@@ -112,6 +111,7 @@ s32 execute(c8 *p_classpath, c8 *p_mainclass, s32 argc, c8 **argv) {
 
     //创建线程容器
     thread_list = arraylist_create(0);
+    thread_lock_init(&threadlist_lock);
     //本地方法库
     native_libs = arraylist_create(0);
     reg_std_native_lib();
@@ -231,12 +231,12 @@ s32 execute(c8 *p_classpath, c8 *p_mainclass, s32 argc, c8 **argv) {
     //
     utf8_destory(str_mainClsName);
     arraylist_destory(thread_list);
+    thread_lock_dispose(&threadlist_lock);
     instruct_indexies_destory(instructionsIndexies);
     instructionsIndexies = NULL;
     native_lib_destory();
     runtime_dispose(&runtime);
     sys_properties_dispose();
-    thread_lock_dispose(&sys_lock);
     close_log();
     jvm_printf("over\n");
 

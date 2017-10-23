@@ -47,7 +47,7 @@ set(SOURCE_FILES
         cmem/phashtable.c
         cmem/phashtable.h
         test.c
-        )
+        utils/linkedlist.c utils/linkedlist.h)
 
 add_executable(mini_jvm ${SOURCE_FILES})
 

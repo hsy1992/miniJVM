@@ -16,6 +16,16 @@ void garbage_mark_son(__refer r);
 
 s32 checkAndWaitThreadIsSuspend(Runtime *runtime);
 
+void _garbage_derefer(__refer sonPtr, __refer parentPtr, s32 clearAll);
+
+void _garbage_refer(__refer sonPtr, __refer parentPtr);
+
+void _garbage_derefer_all(__refer parentPtr);
+
+s32 garbage_mark_by_threads();
+
+void _garbage_buf_2_table();
+
 /**
  * 创建垃圾收集线程，
  *
@@ -57,8 +67,11 @@ s32 garbage_collector_create() {
     collector->father_2_son = hashtable_create(DEFAULT_HASH_FUNC, DEFAULT_HASH_EQUALS_FUNC);
     collector->_garbage_refer_set_pool = arraylist_create(4);
 
+    collector->buffer = linkedlist_create();
+    thread_lock_init(&collector->bufferlock);
+
     collector->_garbage_thread_status = GARBAGE_THREAD_PAUSE;
-    thread_lock_init(&collector->threadlock);
+    thread_lock_init(&collector->garbagelock);
 
     pthread_attr_t attr;
     pthread_attr_init(&attr);
@@ -95,7 +108,10 @@ void garbage_collector_destory() {
     hashtable_destory(collector->father_2_son);
     collector->father_2_son = NULL;
     //
-    thread_lock_dispose(&collector->threadlock);
+    linkedlist_destory(collector->buffer);
+    thread_lock_dispose(&collector->bufferlock);
+    //
+    thread_lock_dispose(&collector->garbagelock);
     jvm_free(collector);
     collector = NULL;
 }
@@ -139,18 +155,15 @@ void __garbage_clear() {
 //===============================   inner  ====================================
 
 s32 garbage_thread_trylock() {
-    return pthread_mutex_trylock(&collector->threadlock.mutex_lock);
-//    return pthread_mutex_trylock(&sys_lock.mutex_lock);
+    return pthread_mutex_trylock(&collector->garbagelock.mutex_lock);
 }
 
 void garbage_thread_lock() {
-    pthread_mutex_lock(&collector->threadlock.mutex_lock);
-//    thread_lock(&sys_lock);
+    pthread_mutex_lock(&collector->garbagelock.mutex_lock);
 }
 
 void garbage_thread_unlock() {
-    pthread_mutex_unlock(&collector->threadlock.mutex_lock);
-//    thread_unlock(&sys_lock);
+    pthread_mutex_unlock(&collector->garbagelock.mutex_lock);
 }
 
 void garbage_thread_pause() {
@@ -166,8 +179,7 @@ void garbage_thread_stop() {
 }
 
 void garbage_thread_wait() {
-    pthread_cond_wait(&collector->threadlock.thread_cond, &collector->threadlock.mutex_lock);
-//    pthread_cond_wait(&sys_lock.thread_cond, &sys_lock.mutex_lock);
+    pthread_cond_wait(&collector->garbagelock.thread_cond, &collector->garbagelock.mutex_lock);
 }
 
 void garbage_thread_timedwait(s64 ms) {
@@ -175,16 +187,14 @@ void garbage_thread_timedwait(s64 ms) {
     struct timespec t;
     t.tv_sec = ms / 1000;
     t.tv_nsec = (ms % 1000) * 1000000;
-    s32 ret = pthread_cond_timedwait(&collector->threadlock.thread_cond, &collector->threadlock.mutex_lock, &t);
-//    s32 ret = pthread_cond_timedwait(&sys_lock.thread_cond, &sys_lock.mutex_lock, &t);
+    s32 ret = pthread_cond_timedwait(&collector->garbagelock.thread_cond, &collector->garbagelock.mutex_lock, &t);
 //    if (ret == ETIMEDOUT) {
 //        s32 debug = 1;
 //    }
 }
 
 void garbage_thread_notify() {
-    pthread_cond_signal(&collector->threadlock.thread_cond);
-//    pthread_cond_signal(&sys_lock.thread_cond);
+    pthread_cond_signal(&collector->garbagelock.thread_cond);
 }
 
 Hashset *_garbage_get_set() {
@@ -327,11 +337,12 @@ void *collect_thread_run(void *para) {
     s64 startAt;
     while (1) {
         startAt = currentTimeMillis();
+        _garbage_buf_2_table();
         while (currentTimeMillis() - startAt < GARBAGE_PERIOD_MS
                && collector->_garbage_thread_status == GARBAGE_THREAD_NORMAL
                && heap_size < MAX_HEAP_SIZE
                 ) {
-            threadSleep(100);
+            threadSleep(20);
         }
         if (collector->_garbage_thread_status == GARBAGE_THREAD_STOP) {
             break;
@@ -339,12 +350,29 @@ void *collect_thread_run(void *para) {
         if (collector->_garbage_thread_status == GARBAGE_THREAD_PAUSE) {
             continue;
         }
+
         garbage_collect();
     }
     collector->_garbage_thread_status = GARBAGE_THREAD_DEAD;
     return NULL;
 }
 
+void _garbage_buf_2_table() {
+    thread_lock(&collector->bufferlock);
+    ListEntry *e = NULL;
+    while (e = linkedlist_pop_end(collector->buffer)) {
+        GarbageOp *op = (GarbageOp *) linkedlist_data(e);
+        if (op->op_type == GARBAGE_OP_REFER) {
+            _garbage_refer(op->sonPtr, op->parentPtr);
+        } else if (op->op_type == GARBAGE_OP_DEREFER) {
+            _garbage_derefer(op->sonPtr, op->parentPtr, 0);
+        } else {
+            _garbage_derefer_all(op->parentPtr);
+        }
+        jvm_free(op);
+    }
+    thread_unlock(&collector->bufferlock);
+}
 
 /**
  * 查找所有实例，如果发现没有被引用 set->length==0 时，也不在运行时runtime的 stack 和 局部变量表中
@@ -353,7 +381,7 @@ void *collect_thread_run(void *para) {
  * @return ret
  */
 s32 garbage_collect() {
-    garbage_thread_lock();
+
 #if _JVM_DEBUG_GARBAGE_DUMP
     //dump_refer();
 #endif
@@ -374,6 +402,8 @@ s32 garbage_collect() {
         MemoryBlock *mb = (MemoryBlock *) hashtable_iter_next_key(&hti);
         mb->garbage_mark = GARBAGE_MARK_NO_REFERED;
     }
+
+
     //所有类标记他们的静态成员
     if (sys_classloader)garbage_mark_son(sys_classloader->JVM_CLASS);
     if (array_classloader)garbage_mark_son(array_classloader->JVM_CLASS);
@@ -381,8 +411,7 @@ s32 garbage_collect() {
     //轮询所有线程，标记被引用的对象
     //in this sub proc ,in wait maybe other thread insert new obj into son_2_father ,
     // so new inserted obj must be garbage_mark==GARBAGE_MARK_UNDEF  ,otherwise new obj would be collected.
-    if (garbage_mark_by_threads() != 0) {
-        garbage_thread_unlock();
+    if (garbage_mark_by_threads(thread_list) != 0) {
         return -1;
     }
     //还要标记后来新加入的一些对象，这些是在收集器等待线程暂停的时候加入的
@@ -397,6 +426,8 @@ s32 garbage_collect() {
         }
     }
 
+    garbage_thread_lock();
+    _garbage_buf_2_table();
     //如果没有被标记为引用，则回收掉
     s32 i = 0;
     hashtable_iterate(collector->son_2_father, &hti);
@@ -429,6 +460,7 @@ s32 garbage_collect() {
 s32 garbage_mark_by_threads() {
     s32 i;
     jvm_printf("thread size:%d\n", thread_list->length);
+    thread_lock(&threadlist_lock);
     for (i = 0; i < thread_list->length; i++) {
         Runtime *runtime = threadlist_get(i);
         /**
@@ -448,6 +480,7 @@ s32 garbage_mark_by_threads() {
         }
         //jvm_printf("thread marked refered , [%llx]\n", (s64) (long) runtime->threadInfo->jthread);
     }
+    thread_unlock(&threadlist_lock);
     //调试线程
     if (java_debug) {
         Runtime *runtime = jdwpserver.runtime;
@@ -567,28 +600,11 @@ void garbage_destory_memobj(__refer k) {
 
 }
 
-//=================================  reg unreg ==================================
-
-
-/**
- *    建立引用列表
- *    1.putfield 时需要创建引用，并把原对象的引用从列表删除
- *    2. aastore 时需要创建引用，并把原对象的引用从列表删除
- *    3. new 新对象时创建引用，其父为 NULL 空值， 此时这个对象在 栈或局部变量中
- *    4. newarray 新数组创建引用，其父为 NULL 空值， 此时这个对象在 栈或局部变量中
- *
- *    两个对象可能建立多次引用，因此，需要记录引用次数
- * @param sonPtr  son
- * @param parentPtr father
- * @return son
- */
-
-void *garbage_refer(__refer sonPtr, __refer parentPtr) {
-    if (sonPtr == NULL)return sonPtr;
+void _garbage_refer(__refer sonPtr, __refer parentPtr) {
+    if (sonPtr == NULL)return;
     if (sonPtr == parentPtr) {
-        return sonPtr;
+        return;
     }
-    garbage_thread_lock();
     s32 referCount = 0;
     //放入子引父
     Hashset *set = (Hashset *) hashtable_get(collector->son_2_father, sonPtr);
@@ -617,7 +633,6 @@ void *garbage_refer(__refer sonPtr, __refer parentPtr) {
         referCount = entry->val;
 
     }
-    garbage_thread_unlock();
 
 #if _JVM_DEBUG_GARBAGE_DUMP
     Utf8String *pus = utf8_create();
@@ -632,11 +647,10 @@ void *garbage_refer(__refer sonPtr, __refer parentPtr) {
     utf8_destory(pus);
     utf8_destory(sus);
 #endif
-    return sonPtr;
+    return;
 }
 
 void _garbage_derefer(__refer sonPtr, __refer parentPtr, s32 clearAll) {
-    garbage_thread_lock();
     s32 referCount = 0;
     Hashset *set;
     if (sonPtr && parentPtr) {
@@ -671,7 +685,6 @@ void _garbage_derefer(__refer sonPtr, __refer parentPtr, s32 clearAll) {
             }
         }
     }
-    garbage_thread_unlock();
 
 
 #if _JVM_DEBUG_GARBAGE_DUMP
@@ -688,12 +701,8 @@ void _garbage_derefer(__refer sonPtr, __refer parentPtr, s32 clearAll) {
 #endif
 }
 
-void garbage_derefer(__refer sonPtr, __refer parentPtr) {
-    _garbage_derefer(sonPtr, parentPtr, 0);
-}
 
-void garbage_derefer_all(__refer parentPtr) {
-    garbage_thread_lock();
+void _garbage_derefer_all(__refer parentPtr) {
 
     Hashset *set;
     //移除父引用的所有子
@@ -711,13 +720,50 @@ void garbage_derefer_all(__refer parentPtr) {
         _garbage_put_set(set);
     }
     hashtable_remove(collector->father_2_son, parentPtr, 0);
-    garbage_thread_unlock();
 #if _JVM_DEBUG_GARBAGE_DUMP
     Utf8String *us = utf8_create();
     getMemBlockName(parentPtr, us);
     jvm_printf("X:  %s[%llx]\n", utf8_cstr(us), (s64) (long) parentPtr);
     utf8_destory(us);
 #endif
+}
+//=================================  reg unreg ==================================
+
+void putin_op_buffer(c8 op_type, __refer sonPtr, __refer parentPtr) {
+    thread_lock(&collector->bufferlock);
+    GarbageOp *op = jvm_alloc(sizeof(GarbageOp));
+    op->op_type = op_type;
+    op->sonPtr = sonPtr;
+    op->parentPtr = parentPtr;
+    linkedlist_push_front(collector->buffer, op);
+    thread_unlock(&collector->bufferlock);
+}
+
+
+/**
+ *    建立引用列表
+ *    1.putfield 时需要创建引用，并把原对象的引用从列表删除
+ *    2. aastore 时需要创建引用，并把原对象的引用从列表删除
+ *    3. new 新对象时创建引用，其父为 NULL 空值， 此时这个对象在 栈或局部变量中
+ *    4. newarray 新数组创建引用，其父为 NULL 空值， 此时这个对象在 栈或局部变量中
+ *
+ *    两个对象可能建立多次引用，因此，需要记录引用次数
+ * @param sonPtr  son
+ * @param parentPtr father
+ * @return son
+ */
+
+void garbage_refer(__refer sonPtr, __refer parentPtr) {
+    putin_op_buffer(GARBAGE_OP_REFER, sonPtr, parentPtr);
+}
+
+
+void garbage_derefer(__refer sonPtr, __refer parentPtr) {
+    putin_op_buffer(GARBAGE_OP_DEREFER, sonPtr, parentPtr);
+}
+
+void garbage_derefer_all(__refer parentPtr) {
+    putin_op_buffer(GARBAGE_OP_DEREFER_ALL, NULL, parentPtr);
 }
 
 s32 garbage_is_refer_by(__refer sonPtr, __refer parentPtr) {

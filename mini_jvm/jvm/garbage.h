@@ -5,6 +5,7 @@
 
 #include "../utils/hashtable.h"
 #include "../utils/hashset.h"
+#include "../utils/linkedlist.h"
 #include "jvm.h"
 #include "jvm_util.h"
 #include <pthread.h>
@@ -26,11 +27,10 @@ struct _Collector {
     ArrayList *_garbage_refer_set_pool;
     //
     pthread_t _garbage_thread;//垃圾回收线程
-//    pthread_mutexattr_t _garbage_attr;//
-//    pthread_mutex_t _garbage_lock; //重入锁
-//    pthread_cond_t _garbageCond;
-    ThreadLock threadlock;
-
+    ThreadLock garbagelock;
+    //
+    LinkedList *buffer;
+    ThreadLock bufferlock;
     //
     u8 _garbage_thread_status;
     s64 _garbage_count;
@@ -41,6 +41,18 @@ enum {
     GARBAGE_THREAD_PAUSE,
     GARBAGE_THREAD_STOP,
     GARBAGE_THREAD_DEAD,
+};
+
+typedef struct _GarbageOp {
+    c8 op_type;
+    __refer sonPtr;
+    __refer parentPtr;
+} GarbageOp;
+
+enum {
+    GARBAGE_OP_REFER,
+    GARBAGE_OP_DEREFER,
+    GARBAGE_OP_DEREFER_ALL,
 };
 
 void *collect_thread_run(void *para);
@@ -71,7 +83,7 @@ s32 garbage_collect(void);
 
 void dump_refer(void);
 
-void *garbage_refer(void *sonPtr, void *parentPtr);
+void garbage_refer(void *sonPtr, void *parentPtr);
 
 void garbage_derefer(void *sonPtr, void *parentPtr);
 
@@ -83,7 +95,7 @@ s32 garbage_is_alive(__refer sonPtr);
 
 void garbage_destory_memobj(__refer k);
 
-s32 garbage_mark_by_threads(void);
+//s32 garbage_mark_by_threads(void);
 
 s32 garbage_mark_refered_obj(Runtime *pruntime);
 
