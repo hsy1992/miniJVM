@@ -10,8 +10,8 @@ s64 heap_size = 0; //当前已经分配的内存总数
 
 /**
  * get a autoprt value;
- * @param a
- * @return
+ * @param a var
+ * @return var
  */
 autoptr *autoptr_get(autoptr *a) {
     a->count++;
@@ -21,8 +21,8 @@ autoptr *autoptr_get(autoptr *a) {
 
 /**
  * create a autoptr
- * @param r
- * @return
+ * @param r var
+ * @return var
  */
 autoptr *autoptr_new(__refer r) {
     autoptr *a = jvm_alloc(sizeof(autoptr));
@@ -32,7 +32,7 @@ autoptr *autoptr_new(__refer r) {
 
 /**
  * set autoptr to null
- * @param aref
+ * @param aref var
  */
 void autoptr_NULL(autoptr **aref) {
     if (!aref)

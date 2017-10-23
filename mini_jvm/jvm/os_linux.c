@@ -29,7 +29,7 @@ s64 nanoTime() {
     return v - NANO_START;
 }
 
-s32 threadSleep(s64 ms) {
+s64 threadSleep(s64 ms) {
     //wait time
     struct timespec req;
     req.tv_sec = ms / 1000;
@@ -39,7 +39,7 @@ s32 threadSleep(s64 ms) {
     rem.tv_sec = 0;
     rem.tv_nsec = 0;
     nanosleep(&req, &rem);
-    return rem.tv_sec * 1000 + rem.tv_nsec / 1000000;
+    return (rem.tv_sec * 1000 + rem.tv_nsec / 1000000);
 }
 
 //s32 threadSleep(s64 ms) {

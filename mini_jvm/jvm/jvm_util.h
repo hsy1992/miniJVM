@@ -43,7 +43,7 @@ s64 currentTimeMillis(void);
 
 s64 nanoTime(void);
 
-s32 threadSleep(s64 ms);
+s64 threadSleep(s64 ms);
 
 s32 sys_properties_load(Utf8String *path);
 

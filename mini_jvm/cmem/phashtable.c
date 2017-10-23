@@ -31,8 +31,8 @@ static int HASH_TABLE_DEFAULT_SIZE = 16;
 /* Internal function used to allocate the table on hash table creation
  * and when enlarging the table */
 
-static int hash_table_allocate_table(PHashtable *hash_table, unsigned long long int size) {
-    //unsigned long long int new_table_size = getPHashtableSizeWithIncrement(hash_table, increment);
+static int hash_table_allocate_table(PHashtable *hash_table, unsigned int size) {
+    //unsigned int new_table_size = getPHashtableSizeWithIncrement(hash_table, increment);
 
     /* Allocate the table and initialise to NULL for all entries */
     if (size) {
@@ -104,7 +104,7 @@ PHashtable *phashtable_create(PHashtableHashFunc hash_func,
 void phashtable_destory(PHashtable *hash_table) {
     PHashtableEntry *rover;
     PHashtableEntry *next;
-    unsigned long long int i;
+    unsigned int i;
 
     /* Free all entries in all chains */
 
@@ -130,7 +130,7 @@ void phashtable_destory(PHashtable *hash_table) {
 void phashtable_clear(PHashtable *hash_table) {
     PHashtableEntry *rover;
     PHashtableEntry *next;
-    unsigned long long int i;
+    unsigned int i;
 
     for (i = 0; i < hash_table->table_size; ++i) {
         rover = hash_table->table[i];
@@ -162,7 +162,7 @@ void phashtable_register_free_functions(PHashtable *hash_table,
 int phashtable_put(PHashtable *hash_table, PHashtableKey key, PHashtableValue value) {
     PHashtableEntry *rover;
     PHashtableEntry *newentry;
-    unsigned long long int index;
+    unsigned int index;
 
     /* If there are too many items in the table with respect to the table
      * size, the number of hash collisions increases and performance
@@ -242,7 +242,7 @@ int phashtable_put(PHashtable *hash_table, PHashtableKey key, PHashtableValue va
 
 PHashtableValue phashtable_get(PHashtable *hash_table, PHashtableKey key) {
     PHashtableEntry *rover;
-    unsigned long long int index;
+    unsigned int index;
 
     /* Generate the hash of the key and hence the index into the table */
 
@@ -272,8 +272,8 @@ int phashtable_remove(PHashtable *hash_table, PHashtableKey key, int resize) {
     PHashtableEntry *rover;
     PHashtableEntry *pre;
     PHashtableEntry *next;
-    unsigned long long int index;
-    unsigned long long int result;
+    unsigned int index;
+    unsigned int result;
 
     if (resize && (hash_table->entries << 3) < hash_table->table_size) {
         if (!phashtable_resize(hash_table, hash_table->table_size >> 1)) {
@@ -303,12 +303,12 @@ int phashtable_remove(PHashtable *hash_table, PHashtableKey key, int resize) {
 }
 
 
-unsigned long long int phashtable_num_entries(PHashtable *hash_table) {
+unsigned int phashtable_num_entries(PHashtable *hash_table) {
     return hash_table->entries;
 }
 
 void phashtable_iterate(PHashtable *hash_table, PHashtableIterator *iterator) {
-    unsigned long long int chain;
+    unsigned int chain;
 
     iterator->hash_table = hash_table;
 
@@ -336,7 +336,7 @@ PHashtableValue phashtable_iter_next(PHashtableIterator *iterator) {
     PHashtableEntry *current_entry;
     PHashtable *hash_table;
     PHashtableValue result;
-    unsigned long long int chain;
+    unsigned int chain;
 
     hash_table = iterator->hash_table;
 
@@ -393,7 +393,7 @@ PHashtableKey phashtable_iter_next_key(PHashtableIterator *iterator) {
     PHashtableEntry *current_entry;
     PHashtable *hash_table;
     PHashtableKey result;
-    unsigned long long int chain;
+    unsigned int chain;
 
     hash_table = iterator->hash_table;
 
@@ -446,14 +446,13 @@ PHashtableKey phashtable_iter_next_key(PHashtableIterator *iterator) {
     return result;
 }
 
-int phashtable_resize(PHashtable *hash_table, unsigned long long int size) {
+int phashtable_resize(PHashtable *hash_table, unsigned int size) {
     PHashtableEntry **old_table;
-    unsigned long long int old_table_size;
-    int old_prime_index;
+    unsigned int old_table_size;
     PHashtableEntry *rover;
     PHashtableEntry *next;
-    unsigned long long int index;
-    unsigned long long int i;
+    unsigned int index;
+    unsigned int i;
 
 
     if (size) {

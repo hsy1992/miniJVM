@@ -121,7 +121,7 @@ s32 sock_option(s32 sockfd, s32 opType, s32 opValue) {
 }
 
 s32 sock_recv(s32 sockfd, c8 *buf, s32 count) {
-    s32 len = recv(sockfd, buf, count, 0);
+    s32 len = (s32)recv(sockfd, buf, count, 0);
 
     if (len == 0) {//如果是正常断开，返回-1
         len = -1;
@@ -143,7 +143,7 @@ s32 sock_recv(s32 sockfd, c8 *buf, s32 count) {
 
 
 s32 sock_send(s32 sockfd, c8 *buf, s32 count) {
-    s32 len = send(sockfd, buf, count, 0);
+    s32 len = (s32)send(sockfd, buf, count, 0);
 
     if (len == 0) {//如果是正常断开，返回-1
         len = -1;
@@ -612,7 +612,7 @@ s32 javax_mini_io_File_readbuf(Runtime *runtime, Class *clazz) {
     s32 len = (runtime->localVariables + pos++)->integer;
     s32 ret = -1;
     if (fd && bytes_arr) {
-        ret = fread(bytes_arr->arr_body + offset, 1, len, fd);
+        ret = (s32)fread(bytes_arr->arr_body + offset, 1, len, fd);
     }
     if (ret == 0) {
         ret = -1;
@@ -637,7 +637,7 @@ s32 javax_mini_io_File_writebuf(Runtime *runtime, Class *clazz) {
     s32 len = (runtime->localVariables + pos++)->integer;
     s32 ret = -1;
     if (fd && bytes_arr) {
-        ret = fwrite(bytes_arr->arr_body + offset, len, 1, fd);
+        ret = (s32)fwrite(bytes_arr->arr_body + offset, len, 1, fd);
         if (ret != len) {
             push_int(runtime->stack, -1);
         } else {

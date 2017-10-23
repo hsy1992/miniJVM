@@ -266,8 +266,8 @@ void *parseCPNameAndType(Class *_this, FILE *fp, s32 index) {
 s32 _parse_constant_pool(Class *_this, FILE *fp, s32 count) {
     u8 tag = 0;
     s32 i = 0;
-    s32 offset_start = 0;
-    s32 offset_end = 0;
+    u64 offset_start = 0;
+    u64 offset_end = 0;
     _this->constant_item_ptr = jvm_alloc(count * sizeof(void *));
     for (i = 1; i < count; i++) {
         fread(&tag, 1, 1, fp);

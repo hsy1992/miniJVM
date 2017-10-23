@@ -407,7 +407,7 @@ JdwpPacket *jdwp_readpacket(JdwpClient *client) {
         if (len == -1) {
             client->closed = 1;
         }
-        len = strlen(JDWP_HANDSHAKE);
+        len = (s32)strlen(JDWP_HANDSHAKE);
         s32 i;
         for (i = 0; i < len; i++) {
             if (JDWP_HANDSHAKE[i] != buf[i]) {
@@ -715,7 +715,7 @@ void jdwp_print_packet(JdwpPacket *packet) {
 }
 
 void jdwp_check_breakpoint(Runtime *runtime) {
-    u32 index = runtime->pc - runtime->ca->code;
+    u32 index = (u32)(runtime->pc - runtime->ca->code);
     MethodInfo *method = runtime->methodInfo;
     if ((method->breakpoint) && pairlist_getl(method->breakpoint, index)) {
         event_on_breakpoint(runtime);//
@@ -736,7 +736,7 @@ void jdwp_check_debug_step(Runtime *runtime) {
             if (runtime->ca) {
                 s32 depth = getRuntimeDepth(runtime->threadInfo->top_runtime);
                 if (depth == step->next_stop_runtime_depth) {
-                    if (getLineNumByIndex(runtime->ca, runtime->pc - runtime->ca->code) !=
+                    if (getLineNumByIndex(runtime->ca, (s32)(runtime->pc - runtime->ca->code)) !=
                         step->next_stop_bytecode_index) {
                         suspend = 1;
                     }
@@ -887,7 +887,7 @@ s32 jdwp_set_debug_step(s32 setOrClear, Instance *jthread, s32 size, s32 depth) 
         } else {
             if (size == JDWP_STEPSIZE_LINE) {
                 Runtime *last = getLastSon(r);//当前runtime
-                s32 nextPc = getLineNumByIndex(last->ca, last->pc - last->ca->code);
+                s32 nextPc = getLineNumByIndex(last->ca,(s32) (last->pc - last->ca->code));
                 step->next_type = NEXT_TYPE_OVER;
                 step->next_stop_bytecode_index = nextPc;
                 step->next_stop_runtime_depth = getRuntimeDepth(r->threadInfo->top_runtime);
@@ -1298,7 +1298,7 @@ s32 jdwp_client_process(JdwpClient *client, Runtime *runtime) {
             }
             case JDWP_CMD_VirtualMachine_AllClasses: {//1.3
                 jdwppacket_set_err(res, JDWP_ERROR_NONE);
-                jdwppacket_write_int(res, sys_classloader->classes->entries);
+                jdwppacket_write_int(res, (s32)sys_classloader->classes->entries);
 
                 Utf8String *ustr = utf8_create();
                 HashtableIterator hti;
@@ -1477,7 +1477,7 @@ s32 jdwp_client_process(JdwpClient *client, Runtime *runtime) {
             }
             case JDWP_CMD_VirtualMachine_AllClassesWithGeneric: {//1.20
                 jdwppacket_set_err(res, JDWP_ERROR_NONE);
-                jdwppacket_write_int(res, sys_classloader->classes->entries);
+                jdwppacket_write_int(res, (s32)sys_classloader->classes->entries);
 
                 Utf8String *ustr = utf8_create();
                 HashtableIterator hti;

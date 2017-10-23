@@ -51,7 +51,7 @@ s32 javax_mini_reflect_vm_RefNative_id2obj(Runtime *runtime, Class *clazz) {
 }
 
 s32 javax_mini_reflect_vm_RefNative_getClasses(Runtime *runtime, Class *clazz) {
-    s32 size = sys_classloader->classes->entries;
+    s32 size = (s32)sys_classloader->classes->entries;
 
     Utf8String *ustr = utf8_create_c(STR_INS_JAVA_LANG_CLASS);
     Instance *jarr = jarray_create(size, DATATYPE_REFERENCE, ustr);

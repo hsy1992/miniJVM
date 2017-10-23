@@ -3368,7 +3368,7 @@ s32 execute_method(MethodInfo *method, Runtime *pruntime, Class *clazz) {
                            lineNum
                     );
 #endif
-                    ExceptionTable *et = find_exception_handler(&runtime, ins, ca, runtime.pc - ca->code, ref);
+                    ExceptionTable *et = find_exception_handler(&runtime, ins, ca, (s32)(runtime.pc - ca->code), ref);
                     if (et == NULL) {
                         ret = RUNTIME_STATUS_EXCEPTION;
                         break;

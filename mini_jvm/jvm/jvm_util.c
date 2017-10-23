@@ -403,7 +403,7 @@ s32 sys_properties_load(Utf8String *path) {
     Utf8String *ustr = utf8_create();
     u8 buf[256];
     while (1) {
-        u32 len = fread(buf, 1, 256, fp);
+        u32 len = (u32)fread(buf, 1, 256, fp);
         utf8_append_part_c(ustr, buf, 0, len);
         if (feof(fp)) {
             break;

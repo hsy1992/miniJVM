@@ -30,7 +30,7 @@ static s32 HASH_TABLE_DEFAULT_SIZE = 16;
 
 static int hash_table_allocate_table(Hashtable *hash_table, unsigned long long int size) {
     if (size) {
-        hash_table->table = jvm_alloc(size *
+        hash_table->table = jvm_alloc((unsigned int)size *
                                       sizeof(HashtableEntry *));
         if (hash_table->table)hash_table->table_size = size;
     }
@@ -199,7 +199,7 @@ int hashtable_remove(Hashtable *hash_table, HashtableKey key, int resize) {
     HashtableEntry *pre;
     HashtableEntry *next;
     unsigned long long int index;
-    unsigned long long int result;
+    int result;
 
     if (resize && (hash_table->entries << 3) < hash_table->table_size) {
         if (!hashtable_resize(hash_table, hash_table->table_size >> 1)) {

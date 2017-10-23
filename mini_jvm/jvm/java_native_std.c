@@ -238,7 +238,7 @@ s32 java_lang_Math_random(Runtime *runtime, Class *clazz) {
     f64 r = 0.0f;
     s32 i;
     s32 times = 0;
-    srand(time(0));
+    srand((u32)time(0));
     times = rand() % 100;
     for (i = 0; i < times; i++)
         r = ((f64) rand() / (f64) RAND_MAX);
@@ -814,7 +814,7 @@ Instance *buildStackElement(Runtime *runtime, Runtime *target) {
             if (target->methodInfo->access_flags & ACC_NATIVE) {
                 setFieldInt(ptr, -1);
             } else {
-                setFieldInt(ptr, getLineNumByIndex(target->ca, target->pc - target->ca->code));
+                setFieldInt(ptr, getLineNumByIndex(target->ca, (s32)(target->pc - target->ca->code)));
             }
         }
         if (target->parent && target->parent->parent) {

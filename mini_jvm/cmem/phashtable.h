@@ -139,12 +139,12 @@ struct _PHashtableEntry {
 
 struct _PHashtable {
     PHashtableEntry **table;
-    unsigned long long int table_size;
+    unsigned int table_size;
     PHashtableHashFunc hash_func;
     PHashtableEqualFunc equal_func;
     PHashtableKeyFreeFunc key_free_func;
     PHashtableValueFreeFunc value_free_func;
-    unsigned long long int entries;
+    unsigned int entries;
 };
 
 /**
@@ -236,7 +236,7 @@ int phashtable_remove(PHashtable *hash_table, PHashtableKey key, int resize);
  * @return                    The number of entries in the hash table.
  */
 
-unsigned long long int phashtable_num_entries(PHashtable *hash_table);
+unsigned int phashtable_num_entries(PHashtable *hash_table);
 
 /**
  * Initialise a @ref PHashtableIterator to iterate over a hash table.
@@ -284,7 +284,7 @@ PHashtableValue phashtable_iter_next(PHashtableIterator *iterator);
 
 PHashtableKey phashtable_iter_next_key(PHashtableIterator *iterator);
 
-int phashtable_resize(PHashtable *hash_table, unsigned long long int size);
+int phashtable_resize(PHashtable *hash_table, unsigned int size);
 
 #ifdef __cplusplus
 }
