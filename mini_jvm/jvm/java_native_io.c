@@ -61,7 +61,6 @@ extern "C" {
 #endif
 
 
-
 //=================================  socket  ====================================
 s32 sock_option(s32 sockfd, s32 opType, s32 opValue) {
     s32 ret = 0;
@@ -83,9 +82,9 @@ s32 sock_option(s32 sockfd, s32 opType, s32 opValue) {
             //jvm_printf(" FIONBIO:%x\n", FIONBIO);
             ret = ioctlsocket(sockfd, FIONBIO, &ul);
             if (ret == SOCKET_ERROR) {
-                err("set socket non_block error.\n");
+                err("set socket non_block error: %s\n", strerror(errno));
                 s32 ec = WSAGetLastError();
-                jvm_printf(" error code:%d\n", ec);
+                //jvm_printf(" error code:%d\n", ec);
             }
 #else
             if (opValue) {
@@ -121,7 +120,7 @@ s32 sock_option(s32 sockfd, s32 opType, s32 opValue) {
 }
 
 s32 sock_recv(s32 sockfd, c8 *buf, s32 count) {
-    s32 len = (s32)recv(sockfd, buf, count, 0);
+    s32 len = (s32) recv(sockfd, buf, count, 0);
 
     if (len == 0) {//如果是正常断开，返回-1
         len = -1;
@@ -143,7 +142,7 @@ s32 sock_recv(s32 sockfd, c8 *buf, s32 count) {
 
 
 s32 sock_send(s32 sockfd, c8 *buf, s32 count) {
-    s32 len = (s32)send(sockfd, buf, count, 0);
+    s32 len = (s32) send(sockfd, buf, count, 0);
 
     if (len == 0) {//如果是正常断开，返回-1
         len = -1;
@@ -165,8 +164,7 @@ s32 sock_send(s32 sockfd, c8 *buf, s32 count) {
 }
 
 s32 sock_open(Utf8String *ip, s32 port) {
-    s32 sockfd;
-    struct sockaddr_in sock_addr; /* connector's address information */
+    s32 sockfd = -1;
 
 #ifdef __WIN32__
     WSADATA wsaData;
@@ -175,82 +173,84 @@ s32 sock_open(Utf8String *ip, s32 port) {
 
     struct hostent *host;
     if ((host = gethostbyname(utf8_cstr(ip))) == NULL) { /* get the host info */
-        err("get host by name error\n");
-    }
+        err("get host by name error: %s\n", strerror(errno));
+        sockfd = -1;
+    } else {
 
-    if ((sockfd = socket(AF_INET, SOCK_STREAM, IPPROTO_TCP)) == -1) {
-        err(strerror(errno));
-        err("socket init error\n");
-    }
-    s32 x = 1;
-    if (setsockopt(sockfd, SOL_SOCKET, SO_REUSEADDR, (char *) &x, sizeof(x)) == -1) {
-        err("socket reuseaddr error\n");
-    }
-
-    memset((char *) &sock_addr, 0, sizeof(sock_addr));
-    sock_addr.sin_family = AF_INET; /* host byte order */
-    sock_addr.sin_port = htons((u16) port); /* short, network byte order */
-
-
+        if ((sockfd = socket(AF_INET, SOCK_STREAM, IPPROTO_TCP)) == -1) {
+            err(strerror(errno));
+            err("socket init error: %s\n", strerror(errno));
+            sockfd = -1;
+        } else {
+            s32 x = 1;
+            if (setsockopt(sockfd, SOL_SOCKET, SO_REUSEADDR, (char *) &x, sizeof(x)) == -1) {
+                err("socket reuseaddr error: %s\n", strerror(errno));
+                sockfd = -1;
+            } else {
+                struct sockaddr_in sock_addr; /* connector's address information */
+                memset((char *) &sock_addr, 0, sizeof(sock_addr));
+                sock_addr.sin_family = AF_INET; /* host byte order */
+                sock_addr.sin_port = htons((u16) port); /* short, network byte order */
 #if __JVM_OS_MAC__ || __JVM_OS_LINUX__
-    sock_addr.sin_addr = *((struct in_addr *) host->h_addr_list[0]);
+                sock_addr.sin_addr = *((struct in_addr *) host->h_addr_list[0]);
 #else
-    sock_addr.sin_addr = *((struct in_addr *) host->h_addr);
+                sock_addr.sin_addr = *((struct in_addr *) host->h_addr);
 #endif
-    memset(&(sock_addr.sin_zero), 0, sizeof((sock_addr.sin_zero))); /* zero the rest of the struct */
-    if (connect(sockfd, (struct sockaddr *) &sock_addr, sizeof(sock_addr)) == -1) {
-        err("socket connect error\n");
+                memset(&(sock_addr.sin_zero), 0, sizeof((sock_addr.sin_zero))); /* zero the rest of the struct */
+                if (connect(sockfd, (struct sockaddr *) &sock_addr, sizeof(sock_addr)) == -1) {
+                    err("socket connect error: %s\n", strerror(errno));
+                    sockfd = -1;
+                }
+            }
+        }
     }
-
     return sockfd;
 }
-
-
 
 //=================================  serversocket  ====================================
 
 s32 srv_bind(Utf8String *ip, u16 port) {
 
     struct sockaddr_in server_addr;
-    s32 listenfd;
+    s32 listenfd = -1;
 #ifdef __WIN32__
     WSADATA wsadata;
     if (WSAStartup(MAKEWORD(1, 1), &wsadata) == SOCKET_ERROR) {
-        err("Error creating serversocket.\n");
+        err("Error creating serversocket: %s\n", strerror(errno));
     }
 #endif
 
     if ((listenfd = socket(AF_INET, SOCK_STREAM, 0)) < 0) {
-        err("Error opening serversocket.\n");
-    }
-
-    struct hostent *host;
-
-    memset((char *) &server_addr, 0, sizeof(server_addr));//清0
-    server_addr.sin_family = AF_INET;
-    server_addr.sin_port = htons(port);
-    if (ip->length) {//如果指定了ip
-        if ((host = gethostbyname(utf8_cstr(ip))) == NULL) { /* get the host info */
-            err("get host by name error\n");
-        }
-#if defined(__WIN32__)
-        server_addr.sin_addr = *((struct in_addr *) host->h_addr);
-#elif __JVM_OS_MAC__ || __JVM_OS_LINUX__
-        //server_addr.sin_len = sizeof(struct sockaddr_in);
-        server_addr.sin_addr = *((struct in_addr *) host->h_addr_list[0]);
-#else
-        server_addr.sin_addr.s_addr = htonl(*((u32 *) (host->h_addr))); //htonl(hosttmp); //
-#endif
+        err("Error opening serversocket: %s\n", strerror(errno));
+        listenfd = -1;
     } else {
-        server_addr.sin_addr.s_addr = htonl(INADDR_ANY);
-    }
 
-    s32 on = 1;
-    setsockopt(listenfd, SOL_SOCKET, SO_REUSEADDR, (char *) &on, sizeof(on));
-    if ((bind(listenfd, (struct sockaddr *) &server_addr, sizeof(server_addr))) < 0) {
-        err("Error binding serversocket: %d\n",errno);
-        closesocket(listenfd);
-        listenfd=0;
+        struct hostent *host;
+
+        memset((char *) &server_addr, 0, sizeof(server_addr));//清0
+        server_addr.sin_family = AF_INET;
+        server_addr.sin_port = htons(port);
+        if (ip->length) {//如果指定了ip
+            if ((host = gethostbyname(utf8_cstr(ip))) == NULL) { /* get the host info */
+                err("get host by name error: %s\n", strerror(errno));
+            }
+#if defined(__WIN32__)
+            server_addr.sin_addr = *((struct in_addr *) host->h_addr);
+#elif __JVM_OS_MAC__ || __JVM_OS_LINUX__
+            //server_addr.sin_len = sizeof(struct sockaddr_in);
+                        server_addr.sin_addr = *((struct in_addr *) host->h_addr_list[0]);
+#endif
+        } else {
+            server_addr.sin_addr.s_addr = htonl(INADDR_ANY);
+        }
+
+        s32 on = 1;
+        setsockopt(listenfd, SOL_SOCKET, SO_REUSEADDR, (char *) &on, sizeof(on));
+        if ((bind(listenfd, (struct sockaddr *) &server_addr, sizeof(server_addr))) < 0) {
+            err("Error binding serversocket: %s\n", strerror(errno));
+            closesocket(listenfd);
+            listenfd = -1;
+        }
     }
     return listenfd;
 }
@@ -259,7 +259,7 @@ s32 srv_bind(Utf8String *ip, u16 port) {
 s32 srv_listen(s32 listenfd) {
     u16 MAX_LISTEN = 64;
     if ((listen(listenfd, MAX_LISTEN)) < 0) {
-        err("Error listening on serversocket.\n");
+        err("Error listening on serversocket: %s\n", strerror(errno));
         return -1;
     }
     return 0;
@@ -272,7 +272,7 @@ s32 srv_accept(s32 listenfd) {
     s32 clt_socket_fd = accept(listenfd, (struct sockaddr *) &clt_addr, (socklen_t *) &clt_addr_length);
     if (clt_socket_fd == -1) {
         if (errno != EINTR) {
-            err("Error accepting on serversocket.\n");
+            err("Error accepting on serversocket: %s\n", strerror(errno));
         }
     }
 
@@ -432,9 +432,9 @@ s32 javax_mini_net_serversocket_Protocol_open0(Runtime *runtime, Class *clazz) {
     Instance *jbyte_arr = (runtime->localVariables + 0)->refer;
     s32 port = (runtime->localVariables + 1)->integer;
     Utf8String *ip = utf8_create_part_c(jbyte_arr->arr_body, 0, jbyte_arr->arr_length);
-    s32 ret = 0;
-    ret = srv_bind(ip, port);
-    push_int(runtime->stack, ret);
+    s32 sockfd = 0;
+    sockfd = srv_bind(ip, port);
+    push_int(runtime->stack, sockfd);
     utf8_destory(ip);
 #if _JVM_DEBUG > 5
     invoke_deepth(runtime);
@@ -614,7 +614,7 @@ s32 javax_mini_io_File_readbuf(Runtime *runtime, Class *clazz) {
     s32 len = (runtime->localVariables + pos++)->integer;
     s32 ret = -1;
     if (fd && bytes_arr) {
-        ret = (s32)fread(bytes_arr->arr_body + offset, 1, len, fd);
+        ret = (s32) fread(bytes_arr->arr_body + offset, 1, len, fd);
     }
     if (ret == 0) {
         ret = -1;
@@ -639,7 +639,7 @@ s32 javax_mini_io_File_writebuf(Runtime *runtime, Class *clazz) {
     s32 len = (runtime->localVariables + pos++)->integer;
     s32 ret = -1;
     if (fd && bytes_arr) {
-        ret = (s32)fwrite(bytes_arr->arr_body + offset, len, 1, fd);
+        ret = (s32) fwrite(bytes_arr->arr_body + offset, len, 1, fd);
         if (ret != len) {
             push_int(runtime->stack, -1);
         } else {

@@ -191,6 +191,7 @@ enum {
     JVM_EXCEPTION_ARRITHMETIC,
     JVM_EXCEPTION_CLASSNOTFOUND,
     JVM_EXCEPTION_NULLPOINTER,
+    JVM_EXCEPTION_IO,
     JVM_EXCEPTION_ILLEGALARGUMENT,
     JVM_EXCEPTION_CLASSCASTEXCEPTION,
     JVM_EXCEPTION_INSTANTIATIONEXCEPTION,
@@ -825,6 +826,8 @@ Instance *instance_create(Class *clazz);
 
 void instance_init(Instance *ins, Runtime *runtime);
 
+void instance_init_methodtype(Instance *ins, Runtime *runtime, c8 *methodtype, RuntimeStack *para);
+
 s32 instance_destory(Instance *instance);
 
 
@@ -895,7 +898,11 @@ s32 execute_method(MethodInfo *method, Runtime *runtime, Class *clazz);
 Instruction **instruct_indexies_create(void);
 
 void instruct_indexies_destory(Instruction **instcts);
+
 //======================= stack =============================
+RuntimeStack *stack_create(s32 entry_size);
+
+void stack_destory(RuntimeStack *stack);
 
 void push_entry(RuntimeStack *stack, StackEntry *entry);
 

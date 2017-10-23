@@ -877,18 +877,30 @@ Instance *instance_create(Class *clazz) {
     instance->obj_fields = jvm_alloc(instance->mb.clazz->field_instance_len);
 //    memcpy(instance->obj_fields, instance->obj_of_clazz->field_instance_template,
 //           instance->obj_of_clazz->field_instance_len);
-    if (instance_of( classes_get_c(STR_CLASS_JAVA_LANG_THREAD),instance)) {
+    if (instance_of(classes_get_c(STR_CLASS_JAVA_LANG_THREAD), instance)) {
         jthread_init(instance);
     }
     return instance;
 }
 
 void instance_init(Instance *ins, Runtime *runtime) {
+    instance_init_methodtype(ins, runtime, "()V", NULL);
+}
+
+void instance_init_methodtype(Instance *ins, Runtime *runtime, c8 *methodtype, RuntimeStack *para) {
     if (ins) {
         Utf8String *methodName = utf8_create_c("<init>");
-        Utf8String *methodType = utf8_create_c("()V");
+        Utf8String *methodType = utf8_create_c(methodtype);
         MethodInfo *mi = find_methodInfo_by_name(ins->mb.clazz->name, methodName, methodType);
         push_ref(runtime->stack, (__refer) ins);
+        if (para) {
+            s32 i;
+            for (i = 0; i < para->size; i++) {
+                StackEntry entry;
+                peek_entry(para, &entry, i);
+                push_entry(runtime->stack, &entry);
+            }
+        }
         execute_method(mi, runtime, ins->mb.clazz);
         utf8_destory(methodName);
         utf8_destory(methodType);
@@ -907,6 +919,7 @@ s32 instance_destory(Instance *ins) {
     } else if (ins->mb.type == MEM_TYPE_CLASS) {
         class_destory((Class *) ins);
     }
+
     return 0;
 }
 
@@ -1063,6 +1076,24 @@ Instance *exception_create(s32 exception_type, Runtime *runtime) {
     return ins;
 }
 
+Instance *exception_create_str(s32 exception_type, Runtime *runtime, c8 *errmsg) {
+#if _JVM_DEBUG > 5
+    jvm_printf("create exception : %s\n", exception_class_name[exception_type]);
+#endif
+    Utf8String *uerrmsg = utf8_create_c(errmsg);
+    Instance *jstr = jstring_create(uerrmsg, runtime);
+    utf8_destory(uerrmsg);
+    RuntimeStack *para = stack_create(1);
+    push_ref(para, jstr);
+    Utf8String *clsName = utf8_create_c(exception_class_name[exception_type]);
+    Class *clazz = classes_load_get(clsName, runtime);
+    utf8_destory(clsName);
+    Instance *ins = instance_create(clazz);
+    instance_init_methodtype(ins, runtime, "(Ljava/lang/String;)V", para);
+    stack_destory(para);
+    garbage_refer(ins, NULL);
+    return ins;
+}
 //===============================    实例操作  ==================================
 /**
  * get instance field value address

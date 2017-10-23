@@ -414,6 +414,10 @@ s32 garbage_collect() {
     if (garbage_mark_by_threads(thread_list) != 0) {
         return -1;
     }
+
+    garbage_thread_lock();
+    //
+    _garbage_buf_2_table();
     //还要标记后来新加入的一些对象，这些是在收集器等待线程暂停的时候加入的
     hashtable_iterate(collector->son_2_father, &hti);
     for (; hashtable_iter_has_more(&hti);) {
@@ -425,9 +429,6 @@ s32 garbage_collect() {
             garbage_mark_son(k);
         }
     }
-
-    garbage_thread_lock();
-    _garbage_buf_2_table();
     //如果没有被标记为引用，则回收掉
     s32 i = 0;
     hashtable_iterate(collector->son_2_father, &hti);
@@ -460,27 +461,42 @@ s32 garbage_collect() {
 s32 garbage_mark_by_threads() {
     s32 i;
     jvm_printf("thread size:%d\n", thread_list->length);
-    thread_lock(&threadlist_lock);
-    for (i = 0; i < thread_list->length; i++) {
-        Runtime *runtime = threadlist_get(i);
-        /**
-         *  回收线程 进行收集，先暂停线程，收集完之后恢复java工作线程
-         *
-         */
-        jvm_printf("%llx,%d,thread size:%d\n", (s64) (long) runtime, i, thread_list->length);
-        if (runtime->threadInfo->thread_status != THREAD_STATUS_ZOMBIE) {
+    garbage_thread_lock();
+    s32 all_paused = 0;
+    while (all_paused == thread_list->length) {//停掉所有线程
+        all_paused = 0;
+        for (i = 0; i < thread_list->length; i++) {
+            Runtime *runtime = arraylist_get_value(thread_list, i);
             jthread_suspend(runtime);
-            if (runtime->threadInfo->thread_status != THREAD_STATUS_NEW)
-                if (checkAndWaitThreadIsSuspend(runtime) == -1) {
-                    return -1;
-                }
-
-            garbage_mark_refered_obj(runtime);
-            jthread_resume(runtime);
+            if (runtime->threadInfo->is_suspend || runtime->threadInfo->is_blocking) {
+                all_paused++;
+            }
         }
-        //jvm_printf("thread marked refered , [%llx]\n", (s64) (long) runtime->threadInfo->jthread);
     }
-    thread_unlock(&threadlist_lock);
+    for (i = 0; i < thread_list->length; i++) {
+        Runtime *runtime = arraylist_get_value(thread_list, i);
+//        /**
+//         *  回收线程 进行收集，先暂停线程，收集完之后恢复java工作线程
+//         *
+//         */
+//        jvm_printf("%llx,%d,thread size:%d\n", (s64) (long) runtime, i, thread_list->length);
+//        if (runtime->threadInfo->thread_status != THREAD_STATUS_ZOMBIE) {
+//            jthread_suspend(runtime);
+//            if (runtime->threadInfo->thread_status != THREAD_STATUS_NEW)
+//                if (checkAndWaitThreadIsSuspend(runtime) == -1) {
+//                    return -1;
+//                }
+
+        garbage_mark_refered_obj(runtime);
+//            jthread_resume(runtime);
+//        }
+//        //jvm_printf("thread marked refered , [%llx]\n", (s64) (long) runtime->threadInfo->jthread);
+    }
+    for (i = 0; i < thread_list->length; i++) {
+        Runtime *runtime = arraylist_get_value(thread_list, i);
+        jthread_resume(runtime);
+    }
+    garbage_thread_unlock();
     //调试线程
     if (java_debug) {
         Runtime *runtime = jdwpserver.runtime;
@@ -754,16 +770,25 @@ void putin_op_buffer(c8 op_type, __refer sonPtr, __refer parentPtr) {
  */
 
 void garbage_refer(__refer sonPtr, __refer parentPtr) {
-    putin_op_buffer(GARBAGE_OP_REFER, sonPtr, parentPtr);
+//    putin_op_buffer(GARBAGE_OP_REFER, sonPtr, parentPtr);
+    garbage_thread_lock();
+    _garbage_refer(sonPtr, parentPtr);
+    garbage_thread_unlock();
 }
 
 
 void garbage_derefer(__refer sonPtr, __refer parentPtr) {
-    putin_op_buffer(GARBAGE_OP_DEREFER, sonPtr, parentPtr);
+//    putin_op_buffer(GARBAGE_OP_DEREFER, sonPtr, parentPtr);
+    garbage_thread_lock();
+    _garbage_derefer(sonPtr, parentPtr, 0);
+    garbage_thread_unlock();
 }
 
 void garbage_derefer_all(__refer parentPtr) {
-    putin_op_buffer(GARBAGE_OP_DEREFER_ALL, NULL, parentPtr);
+//    putin_op_buffer(GARBAGE_OP_DEREFER_ALL, NULL, parentPtr);
+    garbage_thread_lock();
+    _garbage_derefer_all(parentPtr);
+    garbage_thread_unlock();
 }
 
 s32 garbage_is_refer_by(__refer sonPtr, __refer parentPtr) {
