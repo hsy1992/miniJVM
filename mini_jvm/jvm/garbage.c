@@ -460,7 +460,7 @@ s32 garbage_collect() {
  */
 s32 garbage_mark_by_threads() {
     s32 i;
-    jvm_printf("thread size:%d\n", thread_list->length);
+    //jvm_printf("thread size:%d\n", thread_list->length);
     garbage_thread_lock();
     s32 all_paused = 0;
     while (all_paused == thread_list->length) {//停掉所有线程
@@ -468,9 +468,13 @@ s32 garbage_mark_by_threads() {
         for (i = 0; i < thread_list->length; i++) {
             Runtime *runtime = arraylist_get_value(thread_list, i);
             jthread_suspend(runtime);
-            if (runtime->threadInfo->is_suspend || runtime->threadInfo->is_blocking) {
+            if (runtime->threadInfo->is_suspend ||
+                runtime->threadInfo->is_blocking ||
+                runtime->threadInfo->thread_status == THREAD_STATUS_ZOMBIE) {
                 all_paused++;
+                continue;
             }
+            garbage_thread_timedwait(10);//让出锁
         }
     }
     for (i = 0; i < thread_list->length; i++) {

@@ -540,15 +540,14 @@ s32 jthread_init(Instance *jthread) {
     runtime->clazz = jthread->mb.clazz;
     runtime->threadInfo->jthread = jthread;
     runtime->threadInfo->thread_status = THREAD_STATUS_NEW;
-    garbage_refer(jthread, main_thread);
+
     return 0;
 }
 
 s32 jthread_dispose(Instance *jthread) {
     Runtime *runtime = (Runtime *) jthread_get_threadq_value(jthread);
 
-    garbage_derefer(jthread, main_thread);
-    runtime->threadInfo->thread_status = THREAD_STATUS_ZOMBIE;
+
     threadlist_remove(runtime);
     if (java_debug)event_on_thread_death(runtime->threadInfo->jthread);
     //destory
@@ -577,13 +576,11 @@ void *jtherad_loader(void *para) {
            utf8_cstr(method->name), utf8_cstr(method->descriptor));
 #endif
 
-    if (method) {
-        if (java_debug)event_on_thread_start(runtime->threadInfo->jthread);
-        runtime->threadInfo->thread_status = THREAD_STATUS_RUNNING;
-        push_ref(runtime->stack, (__refer) jthread);
-        ret = execute_method(method, runtime, method->_this_class);
-    }
-    jthread_dispose(jthread);
+    if (java_debug)event_on_thread_start(runtime->threadInfo->jthread);
+    runtime->threadInfo->thread_status = THREAD_STATUS_RUNNING;
+    push_ref(runtime->stack, (__refer) jthread);
+    ret = execute_method(method, runtime, method->_this_class);
+    runtime->threadInfo->thread_status = THREAD_STATUS_ZOMBIE;
     //jvm_printf("thread over %llx\n", (s64) (long) jthread);
     return (void *) (long) ret;
 }
@@ -869,18 +866,16 @@ void jarray_get_field(Instance *arr, s32 index, Long2Double *l2d) {
 
 //===============================    实例化对象  ==================================
 Instance *instance_create(Class *clazz) {
-    Instance *instance = jvm_alloc(sizeof(Instance));
-    instance->mb.type = MEM_TYPE_INS;
-    instance->mb.garbage_mark = GARBAGE_MARK_UNDEF;
-    instance->mb.clazz = clazz;
+    Instance *ins = jvm_alloc(sizeof(Instance));
+    ins->mb.type = MEM_TYPE_INS;
+    ins->mb.garbage_mark = GARBAGE_MARK_UNDEF;
+    ins->mb.clazz = clazz;
 
-    instance->obj_fields = jvm_alloc(instance->mb.clazz->field_instance_len);
-//    memcpy(instance->obj_fields, instance->obj_of_clazz->field_instance_template,
-//           instance->obj_of_clazz->field_instance_len);
-    if (instance_of(classes_get_c(STR_CLASS_JAVA_LANG_THREAD), instance)) {
-        jthread_init(instance);
+    ins->obj_fields = jvm_alloc(ins->mb.clazz->field_instance_len);
+    if (instance_of(classes_get_c(STR_CLASS_JAVA_LANG_THREAD), ins)) {
+        jthread_init(ins);
     }
-    return instance;
+    return ins;
 }
 
 void instance_init(Instance *ins, Runtime *runtime) {
@@ -911,9 +906,13 @@ void instance_init_methodtype(Instance *ins, Runtime *runtime, c8 *methodtype, R
 s32 instance_destory(Instance *ins) {
     if (!ins)return -1;
     if (ins->mb.type == MEM_TYPE_INS) {
+        if (instance_of(classes_get_c(STR_CLASS_JAVA_LANG_THREAD), ins)) {
+            jthread_dispose(ins);
+        }
         jthreadlock_destory(&ins->mb);
         jvm_free(ins->obj_fields);
         jvm_free(ins);
+
     } else if (ins->mb.type == MEM_TYPE_ARR) {
         jarray_destory(ins);
     } else if (ins->mb.type == MEM_TYPE_CLASS) {
