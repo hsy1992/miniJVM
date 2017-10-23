@@ -4,8 +4,8 @@
 
 
 #include <stdlib.h>
-#include <global.h>
 
+#include "d_type.h"
 #include "linkedlist.h"
 
 /* A doubly-linked list */
