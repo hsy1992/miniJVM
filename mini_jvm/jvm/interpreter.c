@@ -3248,12 +3248,7 @@ s32 synchronized_unlock_method(MethodInfo *method, Runtime *runtime) {
 s32 execute_method(MethodInfo *method, Runtime *pruntime, Class *clazz) {
     s32 j = 0, ret = 0;
 
-    Runtime *runtime=runtime_create();
-    runtime->stack = pruntime->stack;
-    runtime->threadInfo = pruntime->threadInfo;
-
-    pruntime->son = runtime;
-    runtime->parent = pruntime;
+    Runtime *runtime=runtime_create(pruntime);
 
     runtime->methodInfo = method;
     runtime->clazz = clazz;

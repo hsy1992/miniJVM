@@ -218,6 +218,11 @@ void threadlist_remove(Runtime *r);
 
 Runtime *threadlist_get(s32 i);
 
+
+void threadinfo_destory(JavaThreadInfo *threadInfo);
+
+JavaThreadInfo *threadinfo_create();
+
 #ifdef __cplusplus
 }
 #endif

@@ -56,8 +56,7 @@ void *jdwp_thread_listener(void *para) {
 
 void *jdwp_thread_dispacher(void *para) {
     JdwpServer *srv = (JdwpServer *) para;
-    Runtime *runtime = runtime_create();
-    runtime->stack = stack_create(STACK_LENGHT);
+    Runtime *runtime = runtime_create(NULL);
     srv->runtime = runtime;
     push_ref(runtime->stack, srv->JDWP_ROOT); //用于指引垃圾回收器，这个对象是根结点
     s32 i;
@@ -75,7 +74,6 @@ void *jdwp_thread_dispacher(void *para) {
         threadSleep(20);
     }
     pop_ref(runtime->stack);
-    stack_destory(runtime->stack);
     runtime_destory(runtime);
     srv->runtime = NULL;
 

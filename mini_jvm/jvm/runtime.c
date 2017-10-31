@@ -186,18 +186,32 @@ void peek_entry(RuntimeStack *stack, StackEntry *entry, int index) {
 
 
 
-Runtime *runtime_create() {
+Runtime *runtime_create(Runtime *parent) {
     Runtime *runtime = jvm_alloc(sizeof(Runtime));
-    memset(runtime, 0, sizeof(Runtime));
-    runtime->threadInfo = jvm_alloc(sizeof(JavaThreadInfo));
-    runtime->threadInfo->top_runtime = runtime;
+    if (parent) {
+        runtime->stack = parent->stack;
+        runtime->threadInfo = parent->threadInfo;
+        runtime->parent = parent;
+        parent->son = runtime;
+    } else {
+        runtime->stack = stack_create(STACK_LENGHT);
+        runtime->threadInfo = threadinfo_create();
+        runtime->threadInfo->top_runtime = runtime;
+    }
     return runtime;
 }
 
 
 void runtime_destory(Runtime *runtime) {
-    jvm_free(runtime->threadInfo);
-    runtime->stack = NULL;
+    if (runtime->threadInfo->top_runtime == runtime) {
+        stack_destory(runtime->stack);
+        threadinfo_destory(runtime->threadInfo);
+    }
+    if (runtime->parent) {
+        runtime->parent = NULL;
+    }
+    jvm_free(runtime);
+
 }
 
 

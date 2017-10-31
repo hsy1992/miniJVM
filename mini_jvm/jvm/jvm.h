@@ -949,7 +949,7 @@ void stack2localvar(MethodInfo *method, Runtime *father, Runtime *son);
 void peek_entry(RuntimeStack *stack, StackEntry *entry, int index);
 
 //======================= localvar =============================
-Runtime *runtime_create();
+Runtime *runtime_create(Runtime* parent);
 
 void runtime_destory(Runtime *runtime);
 

@@ -532,8 +532,7 @@ void invoke_deepth(Runtime *runtime) {
 
 //===============================    java 线程  ==================================
 s32 jthread_init(Instance *jthread) {
-    Runtime *runtime = runtime_create();
-    runtime->stack = stack_create(STACK_LENGHT);
+    Runtime *runtime = runtime_create(NULL);
     localvar_init(runtime, 1);
     jthread_set_threadq_value(jthread, runtime);
     threadlist_add(runtime);
@@ -553,7 +552,6 @@ s32 jthread_dispose(Instance *jthread) {
     //destory
     jthread_set_threadq_value(jthread, NULL);
     localvar_dispose(runtime);
-    stack_destory(runtime->stack);
     runtime_destory(runtime);
 
     return 0;
@@ -1253,4 +1251,14 @@ void memoryblock_destory(__refer ref) {
     } else if (mb->type == MEM_TYPE_CLASS) {
         class_destory((Class *) mb);
     }
+}
+
+JavaThreadInfo *threadinfo_create() {
+    JavaThreadInfo *threadInfo = jvm_alloc(sizeof(JavaThreadInfo));
+    return threadInfo;
+}
+
+void threadinfo_destory(JavaThreadInfo *threadInfo) {
+    jvm_free(threadInfo);
+
 }

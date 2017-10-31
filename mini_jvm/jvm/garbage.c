@@ -348,6 +348,7 @@ s32 garbage_stop_the_world() {
             }
         }
     }
+    return 0;
 }
 
 s32 garbage_resume_the_world() {
@@ -391,10 +392,12 @@ s32 garbage_is_alive(__refer sonPtr) {
 
 s32 garbage_refer_count_inc(__refer ref) {
     MemoryBlock *mb = (MemoryBlock *) ref;
-    garbage_thread_lock();
-    mb->refer_count++;
-    hashtable_put(collector->objs, mb, NULL);
-    garbage_thread_unlock();
+    if (mb) {
+        garbage_thread_lock();
+        mb->refer_count++;
+        hashtable_put(collector->objs, mb, NULL);
+        garbage_thread_unlock();
+    }
     return 0;
 }
 
