@@ -1082,7 +1082,7 @@ void class_link(Class *clazz) {
         FieldInfo *ptr = &clazz->fieldPool.field[i];
         ptr->name = get_utf8_string(clazz, ptr->name_index);
         ptr->descriptor = get_utf8_string(clazz, ptr->descriptor_index);
-
+        ptr->datatype_idx = getDataTypeIndex(utf8_char_at(ptr->descriptor, 0));
     }
     for (i = 0; i < clazz->methodPool.method_used; i++) {
         MethodInfo *ptr = &clazz->methodPool.method[i];

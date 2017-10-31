@@ -118,7 +118,7 @@ s32 class_prepar(Class *clazz) {
     s32 static_len = 0;
     s32 instance_len = 0;
     for (i = 0; i < clazz->fieldPool.field_used; i++) {
-        s32 width = data_type_bytes[getDataTypeIndex(utf8_char_at(f[i].descriptor, 0))];
+        s32 width = data_type_bytes[f[i].datatype_idx];
         if (f[i].access_flags & ACC_STATIC) {//静态变量
             f[i].offset = static_len;
             static_len += width;
@@ -389,7 +389,7 @@ find_constant_methodref_by_name(Utf8String *clsName, Utf8String *methodName, Utf
     Class *clazz = classes_get(clsName);
     ArrayList *mrarr = clazz->constantPool.methodRef;
     s32 i;
-    for (i=0; i < mrarr->length; i++) {
+    for (i = 0; i < mrarr->length; i++) {
         cmr = arraylist_get_value(mrarr, i);
         if (utf8_equals(methodName, cmr->methodInfo->name) == 1
             && utf8_equals(methodType, cmr->methodInfo->descriptor) == 1

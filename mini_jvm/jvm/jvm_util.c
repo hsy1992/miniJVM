@@ -90,7 +90,7 @@ s32 classes_put(Class *clazz) {
         thread_lock(tl);
         hashtable_put(sys_classloader->classes, clazz->name, clazz);
         thread_unlock(tl);
-        garbage_refer(clazz, sys_classloader->JVM_CLASS);
+        garbage_refer_count_inc(clazz);
         return 0;
     }
     return 1;
@@ -106,7 +106,7 @@ Class *array_class_get(Utf8String *descript) {
             clazz->arr_type_index = getDataTypeIndex(utf8_char_at(descript, 1));
             clazz->name = utf8_create_copy(descript);
             hashtable_put(array_classloader->classes, clazz->name, clazz);
-            garbage_refer(clazz, array_classloader->JVM_CLASS);
+            garbage_refer_count_inc(clazz);
         }
         thread_unlock(tl);
         return clazz;
@@ -492,7 +492,7 @@ int jvm_printf(const char *format, ...) {
         }
     }
 #else
-    result = vprintf(format, vp);
+        result = vprintf(format, vp);
 #endif
     va_end(vp);
     //garbage_thread_unlock();
@@ -532,8 +532,8 @@ void invoke_deepth(Runtime *runtime) {
 
 //===============================    java 线程  ==================================
 s32 jthread_init(Instance *jthread) {
-    Runtime *runtime = jvm_alloc(sizeof(Runtime));
-    runtime_init(runtime);
+    Runtime *runtime = runtime_create();
+    runtime->stack = stack_create(STACK_LENGHT);
     localvar_init(runtime, 1);
     jthread_set_threadq_value(jthread, runtime);
     threadlist_add(runtime);
@@ -553,8 +553,8 @@ s32 jthread_dispose(Instance *jthread) {
     //destory
     jthread_set_threadq_value(jthread, NULL);
     localvar_dispose(runtime);
-    runtime_dispose(runtime);
-    jvm_free(runtime);
+    stack_destory(runtime->stack);
+    runtime_destory(runtime);
 
     return 0;
 }
@@ -812,13 +812,6 @@ void jarray_set_field(Instance *arr, s32 index, Long2Double *l2d) {
     s32 idx = arr->mb.arr_type_index;
     s32 bytes = data_type_bytes[idx];
     if (isDataReferByIndex(idx)) {
-        __refer ref = (__refer) getFieldRefer(arr->arr_body + index * bytes);
-        if (ref) { //把老索引关闭
-            garbage_derefer((__refer) ref, arr);
-        }
-        if (l2d->r) {//建立新索引
-            garbage_refer((__refer) l2d->r, arr);
-        }
         setFieldRefer(arr->arr_body + index * bytes, l2d->r);
     } else {
         switch (bytes) {
@@ -902,22 +895,34 @@ void instance_init_methodtype(Instance *ins, Runtime *runtime, c8 *methodtype, R
     }
 }
 
+void instance_clear_refer(Instance *ins) {
+    s32 i;
+    Class *clazz = ins->mb.clazz;
+    while (clazz) {
+        FieldPool *fp = &clazz->fieldPool;
+        for (i = 0; i < fp->field_used; i++) {
+            FieldInfo *fi = &fp->field[i];
+            if (isDataReferByIndex(fi->datatype_idx)) {
+                __refer ref = getFieldRefer(ins->arr_body + fi->offset);
+                if (ref) {
+                    setFieldRefer(ins->arr_body + fi->offset, NULL);
+                }
+            }
+        }
+        clazz = getSuperClass(clazz);
+    }
+}
 
 s32 instance_destory(Instance *ins) {
-    if (!ins)return -1;
-    if (ins->mb.type == MEM_TYPE_INS) {
-        if (instance_of(classes_get_c(STR_CLASS_JAVA_LANG_THREAD), ins)) {
-            jthread_dispose(ins);
-        }
-        jthreadlock_destory(&ins->mb);
-        jvm_free(ins->obj_fields);
-        jvm_free(ins);
 
-    } else if (ins->mb.type == MEM_TYPE_ARR) {
-        jarray_destory(ins);
-    } else if (ins->mb.type == MEM_TYPE_CLASS) {
-        class_destory((Class *) ins);
+    if (instance_of(classes_get_c(STR_CLASS_JAVA_LANG_THREAD), ins)) {
+        jthread_dispose(ins);
     }
+    instance_clear_refer(ins);
+    jthreadlock_destory(&ins->mb);
+    jvm_free(ins->obj_fields);
+    jvm_free(ins);
+
 
     return 0;
 }
@@ -939,12 +944,10 @@ Instance *jstring_create(Utf8String *src, Runtime *runtime) {
         memcpy(arr->arr_body, buf, len * data_type_bytes[DATATYPE_JCHAR]);
         jvm_free(buf);
         __refer oldarr = getFieldRefer(ptr);//调用了String.init之后，已经有值了
-        if (oldarr) {
-            garbage_derefer(oldarr, jstring);
-        }
+
         setFieldRefer(ptr, (__refer) arr);//设置数组
         jstring_set_count(jstring, len);//设置长度
-        garbage_refer(arr, jstring);
+
     } else {
         setFieldRefer(ptr, 0);
     }
@@ -1070,7 +1073,6 @@ Instance *exception_create(s32 exception_type, Runtime *runtime) {
     Instance *ins = instance_create(clazz);
     instance_init(ins, runtime);
 
-    garbage_refer(ins, NULL);
     utf8_destory(clsName);
     return ins;
 }
@@ -1090,7 +1092,6 @@ Instance *exception_create_str(s32 exception_type, Runtime *runtime, c8 *errmsg)
     Instance *ins = instance_create(clazz);
     instance_init_methodtype(ins, runtime, "(Ljava/lang/String;)V", para);
     stack_destory(para);
-    garbage_refer(ins, NULL);
     return ins;
 }
 //===============================    实例操作  ==================================
@@ -1113,8 +1114,12 @@ void setFieldInt(c8 *ptr, s32 v) {
     memcpy(ptr, &v, sizeof(s32));
 }
 
-void setFieldRefer(c8 *ptr, __refer v) {
+__refer setFieldRefer(c8 *ptr, __refer v) {
+    __refer old = getFieldRefer(ptr);
+    if (old)garbage_refer_count_dec(old);
     memcpy(ptr, &v, sizeof(__refer));
+    if (v)garbage_refer_count_inc(v);
+    return old;
 }
 
 void setFieldLong(c8 *ptr, s64 v) {
@@ -1237,3 +1242,15 @@ s32 getLineNumByIndex(CodeAttribute *ca, s32 offset) {
     return -1;
 }
 
+
+void memoryblock_destory(__refer ref) {
+    MemoryBlock *mb = (MemoryBlock *) ref;
+    if (!mb)return;
+    if (mb->type == MEM_TYPE_INS) {
+        instance_destory((Instance *) mb);
+    } else if (mb->type == MEM_TYPE_ARR) {
+        jarray_destory((Instance *) mb);
+    } else if (mb->type == MEM_TYPE_CLASS) {
+        class_destory((Class *) mb);
+    }
+}

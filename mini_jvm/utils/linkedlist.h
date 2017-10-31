@@ -51,33 +51,18 @@ extern "C" {
  * containing a pointer to NULL.
  */
 
-
-typedef struct _ListEntry ListEntry;
-
-typedef struct _LinkedList {
-    ListEntry *mNode;
-    s64 count;
-} LinkedList;
-/**
- * Structure used to iterate over a list.
- */
-
-typedef struct _ListIterator ListIterator;
-
-/**
- * A value stored in a list.
- */
-
 typedef void *ListValue;
-
-/**
- * Definition of a @ref ListIterator.
- */
-
-struct _ListIterator {
-    ListEntry **prev_next;
-    ListEntry *current;
+typedef struct _ListEntry LinkedListEntry;
+struct _ListEntry {
+    ListValue data;
+    LinkedListEntry *prev;
+    LinkedListEntry *next;
 };
+typedef struct _LinkedList {
+    LinkedListEntry *mNode;
+    s64 length;
+} LinkedList;
+
 
 /**
  * A null @ref ListValue.
@@ -104,23 +89,27 @@ void linkedlist_destory(LinkedList *list);
 
 typedef int (*ListEqualFunc)(ListValue value1, ListValue value2);
 
-void _linkedlist_free(ListEntry *list);
+void _linkedlist_free(LinkedListEntry *list);
 
-ListEntry *linkedlist_push_end(LinkedList *list, ListValue data);
+LinkedListEntry *linkedlist_push_end(LinkedList *list, ListValue data);
 
-ListEntry *linkedlist_push_front(LinkedList *list, ListValue data);
+LinkedListEntry *linkedlist_push_front(LinkedList *list, ListValue data);
 
-ListEntry *linkedlist_pop_front(LinkedList *list);
+LinkedListEntry *linkedlist_pop_front(LinkedList *list);
 
-ListEntry *linkedlist_pop_end(LinkedList *list);
+LinkedListEntry *linkedlist_pop_end(LinkedList *list);
 
-ListEntry *linkedlist_prev(ListEntry *listentry);
+LinkedListEntry *linkedlist_header(LinkedList *list);
 
-ListEntry *linkedlist_next(ListEntry *listentry);
+LinkedListEntry *linkedlist_tail(LinkedList *list);
 
-ListValue linkedlist_data(ListEntry *listentry);
+LinkedListEntry *linkedlist_prev(LinkedListEntry *listentry);
 
-void linkedlist_set_data(ListEntry *listentry, ListValue value);
+LinkedListEntry *linkedlist_next(LinkedListEntry *listentry);
+
+ListValue linkedlist_data(LinkedListEntry *listentry);
+
+void linkedlist_set_data(LinkedListEntry *listentry, ListValue value);
 
 
 #ifdef __cplusplus

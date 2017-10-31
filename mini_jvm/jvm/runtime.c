@@ -94,6 +94,7 @@ void push_ref(RuntimeStack *stack, __refer value) {
     //memset(&stack->store[stack->size], 0, sizeof(StackEntry));
     u8 *tmp = stack->store[stack->size].entry;
     memcpy(tmp, &value, sizeof(__refer));
+    garbage_refer_count_inc(value);
     stack->store[stack->size].type = STACK_ENTRY_REF;
     stack->size++;
 }
@@ -104,6 +105,7 @@ __refer pop_ref(RuntimeStack *stack) {
     u8 *tmp = stack->store[stack->size].entry;
     memcpy(&value, tmp, sizeof(__refer));
     memset(&stack->store[stack->size], 0, sizeof(StackEntry));
+    garbage_refer_count_dec(value);
     return value;
 }
 
@@ -132,6 +134,9 @@ void pop_entry(RuntimeStack *stack, StackEntry *entry) {
     stack->size--;
     memcpy(entry, stack->store[stack->size].entry, sizeof(StackEntry));
     memset(&stack->store[stack->size], 0, sizeof(StackEntry));
+    if (entry->type == STACK_ENTRY_REF) {
+        garbage_refer_count_dec(entry_2_refer(entry));
+    }
 }
 
 /* Entry to Int */
@@ -181,17 +186,17 @@ void peek_entry(RuntimeStack *stack, StackEntry *entry, int index) {
 
 
 
-void runtime_init(Runtime *runtime) {
+Runtime *runtime_create() {
+    Runtime *runtime = jvm_alloc(sizeof(Runtime));
     memset(runtime, 0, sizeof(Runtime));
-    runtime->stack = stack_create(STACK_LENGHT);
     runtime->threadInfo = jvm_alloc(sizeof(JavaThreadInfo));
     runtime->threadInfo->top_runtime = runtime;
+    return runtime;
 }
 
 
-void runtime_dispose(Runtime *runtime) {
+void runtime_destory(Runtime *runtime) {
     jvm_free(runtime->threadInfo);
-    stack_destory(runtime->stack);
     runtime->stack = NULL;
 }
 
@@ -203,16 +208,41 @@ s32 localvar_init(Runtime *runtime, s32 count) {
 }
 
 s32 localvar_dispose(Runtime *runtime) {
+    s32 i;
+    for (i = 0; i < runtime->localvar_count; i++) {
+        __refer ref = localvar_getRefer(runtime, i);
+        if (ref) {
+            garbage_refer_count_dec(ref);
+        }
+    }
     jvm_free(runtime->localVariables);
     runtime->localVariables = NULL;
     runtime->localvar_count = 0;
     return 0;
 }
 
-void localvar_setInt(s32 index, s32 val, Runtime *runtime) {
-    (runtime->localVariables + index)->integer = val;
+void localvar_clear_refer(s32 index, Runtime *runtime) {
+    __refer old = runtime->localVariables[index].refer;
+    if (old) {
+        garbage_refer_count_dec(old);
+        runtime->localVariables[index].refer = NULL;
+    }
 }
 
-void localvar_setRefer(s32 index, __refer val, Runtime *runtime) {
-    (runtime->localVariables + index)->refer = val;
+void localvar_setInt(Runtime *runtime, s32 index, s32 val) {
+    localvar_clear_refer(index, runtime);
+    runtime->localVariables[index].integer = val;
+}
+
+void localvar_setRefer(Runtime *runtime, s32 index, __refer val) {
+    localvar_clear_refer(index, runtime);
+    runtime->localVariables[index].refer = val;
+}
+
+s32 localvar_getInt(Runtime *runtime, s32 index) {
+    return runtime->localVariables[index].integer;
+}
+
+__refer localvar_getRefer(Runtime *runtime, s32 index) {
+    return runtime->localVariables[index].refer;
 }

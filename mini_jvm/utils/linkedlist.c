@@ -10,15 +10,11 @@
 
 /* A doubly-linked list */
 
-struct _ListEntry {
-    ListValue data;
-    ListEntry *prev;
-    ListEntry *next;
-};
+
 
 LinkedList *linkedlist_create() {
     LinkedList *list = jvm_alloc(sizeof(LinkedList));
-    list->mNode = jvm_alloc(sizeof(ListEntry));
+    list->mNode = jvm_alloc(sizeof(LinkedListEntry));
     return list;
 }
 
@@ -27,13 +23,13 @@ void linkedlist_destory(LinkedList *list) {
     jvm_free(list);
 }
 
-void _linkedlist_free(ListEntry *list) {
-    ListEntry *entry;
+void _linkedlist_free(LinkedListEntry *list) {
+    LinkedListEntry *entry;
 
     entry = list;
 
     while (entry != NULL) {
-        ListEntry *next;
+        LinkedListEntry *next;
 
         next = entry->next;
 
@@ -43,25 +39,25 @@ void _linkedlist_free(ListEntry *list) {
     }
 }
 
-ListEntry *linkedlist_push_front(LinkedList *list, ListValue data) {
-    ListEntry *mNode = list->mNode;
-    ListEntry *newentry;
+LinkedListEntry *linkedlist_push_front(LinkedList *list, ListValue data) {
+    LinkedListEntry *mNode = list->mNode;
+    LinkedListEntry *newentry;
 
     if (list == NULL) {
         return NULL;
     }
-    newentry = jvm_alloc(sizeof(ListEntry));
+    newentry = jvm_alloc(sizeof(LinkedListEntry));
     if (newentry == NULL) {
         return NULL;
     }
     newentry->data = data;
-    list->count++;
+    list->length++;
     //
     if (mNode->next == NULL) {  //make a loop
         mNode->prev = mNode->next = newentry;
         newentry->prev = newentry->next = mNode;
     } else {
-        ListEntry *oldnext = mNode->next;
+        LinkedListEntry *oldnext = mNode->next;
         if (oldnext != NULL) {
             oldnext->prev = newentry;
         }
@@ -72,26 +68,26 @@ ListEntry *linkedlist_push_front(LinkedList *list, ListValue data) {
     return newentry;
 }
 
-ListEntry *linkedlist_push_end(LinkedList *list, ListValue data) {
+LinkedListEntry *linkedlist_push_end(LinkedList *list, ListValue data) {
 
-    ListEntry *mNode = list->mNode;
-    ListEntry *newentry;
+    LinkedListEntry *mNode = list->mNode;
+    LinkedListEntry *newentry;
 
     if (list == NULL) {
         return NULL;
     }
-    newentry = jvm_alloc(sizeof(ListEntry));
+    newentry = jvm_alloc(sizeof(LinkedListEntry));
     if (newentry == NULL) {
         return NULL;
     }
     newentry->data = data;
-    list->count++;
+    list->length++;
     //
     if (mNode->prev == NULL) {  //make a loop
         mNode->prev = mNode->next = newentry;
         newentry->prev = newentry->next = mNode;
     } else {
-        ListEntry *oldprev = mNode->prev;
+        LinkedListEntry *oldprev = mNode->prev;
 
         if (oldprev) {
             oldprev->next = newentry;
@@ -103,16 +99,16 @@ ListEntry *linkedlist_push_end(LinkedList *list, ListValue data) {
     return newentry;
 }
 
-ListEntry *linkedlist_pop_front(LinkedList *list) {
+LinkedListEntry *linkedlist_pop_front(LinkedList *list) {
     if (list == NULL) {
         return NULL;
     }
-    ListEntry *mNode = list->mNode;
-    ListEntry *oldnext = mNode->next;
+    LinkedListEntry *mNode = list->mNode;
+    LinkedListEntry *oldnext = mNode->next;
     if (oldnext) {
         mNode->next = oldnext->next;
         oldnext->prev = oldnext->next = NULL;
-        list->count--;
+        list->length--;
     }
     if (mNode->next) {
         mNode->next->prev = mNode;
@@ -124,16 +120,16 @@ ListEntry *linkedlist_pop_front(LinkedList *list) {
     return oldnext;
 }
 
-ListEntry *linkedlist_pop_end(LinkedList *list) {
+LinkedListEntry *linkedlist_pop_end(LinkedList *list) {
     if (list == NULL) {
         return NULL;
     }
-    ListEntry *mNode = list->mNode;
-    ListEntry *oldprev = mNode->prev;
+    LinkedListEntry *mNode = list->mNode;
+    LinkedListEntry *oldprev = mNode->prev;
     if (oldprev) {
         mNode->prev = oldprev->prev;
         oldprev->prev = oldprev->next = NULL;
-        list->count--;
+        list->length--;
     }
     if (mNode->prev) {
         mNode->prev->next = mNode;
@@ -145,7 +141,7 @@ ListEntry *linkedlist_pop_end(LinkedList *list) {
     return oldprev;
 }
 
-ListValue linkedlist_data(ListEntry *listentry) {
+ListValue linkedlist_data(LinkedListEntry *listentry) {
     if (listentry == NULL) {
         return LINKEDLIST_NULL;
     }
@@ -153,14 +149,27 @@ ListValue linkedlist_data(ListEntry *listentry) {
     return listentry->data;
 }
 
-void linkedlist_set_data(ListEntry *listentry, ListValue value) {
+void linkedlist_set_data(LinkedListEntry *listentry, ListValue value) {
     if (listentry != NULL) {
         listentry->data = value;
     }
 }
 
+LinkedListEntry *linkedlist_header(LinkedList *list) {
+    if (list) {
+        return list->mNode->next;
+    }
+    return NULL;
+}
 
-ListEntry *linkedlist_prev(ListEntry *listentry) {
+LinkedListEntry *linkedlist_tail(LinkedList *list) {
+    if (list) {
+        return list->mNode->prev;
+    }
+    return NULL;
+}
+
+LinkedListEntry *linkedlist_prev(LinkedListEntry *listentry) {
     if (listentry == NULL) {
         return NULL;
     }
@@ -169,7 +178,7 @@ ListEntry *linkedlist_prev(ListEntry *listentry) {
 }
 
 
-ListEntry *linkedlist_next(ListEntry *listentry) {
+LinkedListEntry *linkedlist_next(LinkedListEntry *listentry) {
     if (listentry == NULL) {
         return NULL;
     }

@@ -61,7 +61,7 @@ c8 *getStaticFieldPtr(FieldInfo *fi);
 
 void setFieldInt(c8 *ptr, s32 v);
 
-void setFieldRefer(c8 *ptr, __refer v);
+__refer setFieldRefer(c8 *ptr, __refer v);
 
 void setFieldLong(c8 *ptr, s64 v);
 
@@ -114,9 +114,6 @@ Instance *getInstanceInStack(Class *clazz, ConstantMethodRef *cmr, RuntimeStack 
 void printDumpOfClasses(void);
 
 
-void runtime_init(Runtime *runtime);
-
-void runtime_dispose(Runtime *runtime);
 
 ////======================= thread =============================
 

@@ -26,13 +26,15 @@ void main_thread_create(Runtime *runtime) {
     instance_init(main_thread, runtime);//必须放在最好，初始化时需要用到前面的赋值
     threadlist_add(runtime);
     jthread_set_threadq_value(main_thread, runtime);
+    garbage_refer_count_inc(main_thread);
 }
 
 void main_thread_destory() {
     threadlist_remove(main_runtime);
     main_runtime->threadInfo->is_suspend = 1;
-    garbage_derefer_all(main_thread);
-    garbage_refer(main_thread, NULL);//主线程实例被回收
+    //主线程实例被回收
+    garbage_refer_count_dec(main_thread);
+    main_thread = NULL;
 }
 
 void print_exception(Runtime *runtime) {
@@ -71,10 +73,8 @@ ClassLoader *classloader_create(c8 *path) {
 }
 
 void classloader_destory(ClassLoader *class_loader) {
-//    utf8_destory(class_loader->JVM_CLASS->name);
-//    class_loader->JVM_CLASS->name = NULL;
-    garbage_derefer_all(class_loader->JVM_CLASS);
-    garbage_refer(class_loader->JVM_CLASS, NULL);
+
+    garbage_refer_count_dec(class_loader->JVM_CLASS);
 
     utf8_destory(class_loader->g_classpath);
     class_loader->g_classpath = NULL;
@@ -119,9 +119,9 @@ s32 execute(c8 *p_classpath, c8 *p_mainclass, s32 argc, c8 **argv) {
     reg_jdwp_native_lib();
 
     //创建运行时栈
-    Runtime runtime;
-    runtime_init(&runtime);
-    main_runtime = &runtime;
+    Runtime *runtime = runtime_create();
+    runtime->stack = stack_create(STACK_LENGHT);
+    main_runtime = runtime;
 
     //开始装载类
 
@@ -149,7 +149,7 @@ s32 execute(c8 *p_classpath, c8 *p_mainclass, s32 argc, c8 **argv) {
     for (; hashtable_iter_has_more(&hti);) {
         Utf8String *k = hashtable_iter_next_key(&hti);
         Class *clazz = hashtable_get(sys_classloader->classes, k);
-        if (clazz->status != CLASS_STATUS_CLINITED)class_clinit(clazz, &runtime);//初始化
+        if (clazz->status != CLASS_STATUS_CLINITED)class_clinit(clazz, runtime);//初始化
     }
 
     Class *clazz = classes_get(str_mainClsName);
@@ -161,15 +161,15 @@ s32 execute(c8 *p_classpath, c8 *p_mainclass, s32 argc, c8 **argv) {
 
         MethodInfo *main = find_methodInfo_by_name(str_mainClsName, methodName, methodType);
         if (main) {
-            main_thread_create(&runtime);
+            main_thread_create(runtime);
             //启动调试器
-            //startJdwp(&runtime);
+            //startJdwp(runtime);
             jdwp_start_server();
             //启动垃圾回收
             garbage_thread_resume();
 
             //准备参数
-            localvar_init(&runtime, main->para_count + 1);
+            localvar_init(runtime, main->para_count + 1);
             s32 count = argc;
             Long2Double l2d;
             s32 bytes = data_type_bytes[DATATYPE_REFERENCE];
@@ -179,31 +179,30 @@ s32 execute(c8 *p_classpath, c8 *p_mainclass, s32 argc, c8 **argv) {
             int i;
             for (i = 0; i < argc; i++) {
                 Utf8String *utfs = utf8_create_c(argv[i]);
-                Instance *jstr = jstring_create(utfs, &runtime);
+                Instance *jstr = jstring_create(utfs, runtime);
                 l2d.r = jstr;
                 jarray_set_field(arr, i, &l2d);
                 utf8_destory(utfs);
             }
-            push_ref(runtime.stack, arr);
-            garbage_refer(arr, main_thread);
+            push_ref(runtime->stack, arr);
             s64 start = currentTimeMillis();
             jvm_printf("\n\n\n\n\n\n================================= main start ================================\n");
             //调用主方法
-            //if (java_debug)jthread_suspend(&runtime);//jdwp 会启动调试器
-            ret = execute_method(main, &runtime, clazz);
+            //if (java_debug)jthread_suspend(runtime);//jdwp 会启动调试器
+            ret = execute_method(main, runtime, clazz);
             if (ret != RUNTIME_STATUS_NORMAL) {
-                print_exception(&runtime);
+                print_exception(runtime);
             }
-            runtime.threadInfo->is_blocking = 1;
+            runtime->threadInfo->is_blocking = 1;
             while ((thread_list->length) > 1) {//wait for other thread over ,
-                check_suspend_and_pause(&runtime);
+                check_suspend_and_pause(runtime);
                 threadSleep(100);
             }
-            runtime.threadInfo->is_blocking = 0;
+            runtime->threadInfo->is_blocking = 0;
             jvm_printf("================================= main  end  ================================\n");
             jvm_printf("spent %lld\n", (currentTimeMillis() - start));
 
-            localvar_dispose(&runtime);
+            localvar_dispose(runtime);
 #if _JVM_DEBUG_PROFILE
             hashtable_iterate(instruct_profile, &hti);
             for (; hashtable_iter_has_more(&hti);) {
@@ -235,7 +234,8 @@ s32 execute(c8 *p_classpath, c8 *p_mainclass, s32 argc, c8 **argv) {
     instruct_indexies_destory(instructionsIndexies);
     instructionsIndexies = NULL;
     native_lib_destory();
-    runtime_dispose(&runtime);
+    stack_destory(runtime->stack);
+    runtime_destory(runtime);
     sys_properties_dispose();
     close_log();
     jvm_printf("over\n");

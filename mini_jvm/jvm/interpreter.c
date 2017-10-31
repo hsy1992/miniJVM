@@ -22,7 +22,7 @@ s32 op_nop(u8 **opCode, Runtime *runtime) {
 
 static inline s32 op_aload_n(u8 **opCode, Runtime *runtime, s32 i) {
     RuntimeStack *stack = runtime->stack;
-    __refer value = (runtime->localVariables + i)->refer;
+    __refer value = localvar_getRefer(runtime, i);
     push_ref(stack, value);
 #if _JVM_DEBUG > 5
     invoke_deepth(runtime);
@@ -680,7 +680,7 @@ s32 op_iload(u8 **opCode, Runtime *runtime) {
     }
     runtime->wideMode = 0;
 
-    s32 value = (runtime->localVariables + s2c.s)->integer;
+    s32 value = localvar_getInt(runtime, s2c.s);
 #if _JVM_DEBUG > 5
     invoke_deepth(runtime);
     jvm_printf("i(fa)load: push localvar(%d)= [%x]/%d  \n", s2c.s, value, value);
@@ -707,7 +707,7 @@ s32 op_aload(u8 **opCode, Runtime *runtime) {
     }
     runtime->wideMode = 0;
 
-    __refer value = (runtime->localVariables + s2c.s)->refer;
+    __refer value = localvar_getRefer(runtime, s2c.s);
 #if _JVM_DEBUG > 5
     invoke_deepth(runtime);
     jvm_printf("i(fa)load: push localvar(%d)= [%llx]  \n", s2c.s, (s64) (long) value);
@@ -730,8 +730,8 @@ s32 op_lload(u8 **opCode, Runtime *runtime) {
     runtime->wideMode = 0;
 
     Long2Double l2d;
-    l2d.i2l.i1 = (runtime->localVariables + s2c.s)->integer;
-    l2d.i2l.i0 = (runtime->localVariables + s2c.s + 1)->integer;
+    l2d.i2l.i1 = localvar_getInt(runtime, s2c.s);
+    l2d.i2l.i0 = localvar_getInt(runtime, s2c.s + 1);
 #if _JVM_DEBUG > 5
     invoke_deepth(runtime);
     jvm_printf("l(d)load: push localvar(%d) [%llx]/%lf into stack \n", s2c.s, l2d.l, l2d.d);
@@ -748,7 +748,7 @@ s32 op_dload(u8 **opCode, Runtime *runtime) {
 static inline s32 op_ifload_n(u8 **opCode, Runtime *runtime, s32 i) {
     RuntimeStack *stack = runtime->stack;
     Int2Float i2f;
-    i2f.i = (runtime->localVariables + i)->integer;
+    i2f.i = localvar_getInt(runtime, i);
 #if _JVM_DEBUG > 5
     invoke_deepth(runtime);
     jvm_printf("i(f)load_%d: push localvar(%d)= [%x]/%d/%f  \n", i, i, i2f.i, i2f.i, i2f.f);
@@ -797,8 +797,8 @@ s32 op_fload_3(u8 **opCode, Runtime *runtime) {
 s32 op_lload_n(u8 **opCode, Runtime *runtime, s32 index) {
     RuntimeStack *stack = runtime->stack;
     Long2Double l2d;
-    l2d.i2l.i1 = (runtime->localVariables + index)->integer;
-    l2d.i2l.i0 = (runtime->localVariables + index + 1)->integer;
+    l2d.i2l.i1 = localvar_getInt(runtime, index);
+    l2d.i2l.i0 = localvar_getInt(runtime, index + 1);
     s64 value = l2d.l;
 
 #if _JVM_DEBUG > 5
@@ -1403,8 +1403,8 @@ s32 op_iinc(u8 **opCode, Runtime *runtime) {
     }
     runtime->wideMode = 0;
 
-    s32 oldv = (runtime->localVariables + s2c1.s)->integer;
-    (runtime->localVariables + s2c1.s)->integer = oldv + s2c2.s;
+    s32 oldv = localvar_getInt(runtime, s2c1.s);
+    localvar_setInt(runtime, s2c1.s, oldv + s2c2.s);
 #if _JVM_DEBUG > 5
     invoke_deepth(runtime);
     jvm_printf("iinc: localvar(%d) = %d + %d\n", s2c1.s, oldv, s2c2.s);
@@ -1431,7 +1431,7 @@ s32 op_istore(u8 **opCode, Runtime *runtime) {
     invoke_deepth(runtime);
     jvm_printf("i(fa)store: save  localvar(%d) [%x]/%d \n", s2c.s, value, value);
 #endif
-    (runtime->localVariables + s2c.s)->integer = value;
+    localvar_setInt(runtime, s2c.s, value);
 
     return 0;
 }
@@ -1458,7 +1458,7 @@ s32 op_astore(u8 **opCode, Runtime *runtime) {
     invoke_deepth(runtime);
     jvm_printf("i(fa)store: save  localvar(%d) [%llx] \n", s2c.s, (s64) (long) value);
 #endif
-    (runtime->localVariables + s2c.s)->refer = value;
+    localvar_setRefer(runtime, s2c.s, value);
 
     return 0;
 }
@@ -1484,8 +1484,8 @@ s32 op_lstore(u8 **opCode, Runtime *runtime) {
     invoke_deepth(runtime);
     jvm_printf("l(d)store: save localvar(%d) %llx/%lld/%lf  \n", s2c.s, l2d.l, l2d.l, l2d.d);
 #endif
-    (runtime->localVariables + s2c.s)->integer = l2d.i2l.i1;
-    (runtime->localVariables + s2c.s + 1)->integer = l2d.i2l.i0;
+    localvar_setInt(runtime, s2c.s, l2d.i2l.i1);
+    localvar_setInt(runtime, s2c.s + 1, l2d.i2l.i0);
     return 0;
 }
 
@@ -1500,7 +1500,7 @@ s32 op_istore_n(u8 **opCode, Runtime *runtime, s32 i) {
     invoke_deepth(runtime);
     jvm_printf("istore_%d: save %x/%d into localvar(%d)\n", i, value, value, i);
 #endif
-    (runtime->localVariables + i)->integer = value;
+    localvar_setInt(runtime, i, value);
     *opCode = *opCode + 1;
     return 0;
 }
@@ -1551,8 +1551,8 @@ s32 op_lstore_n(u8 **opCode, Runtime *runtime, s32 i) {
     invoke_deepth(runtime);
     jvm_printf("l(d)store_%d: save localvar(%d) [%llx]/%lld/%lf  \n", i, i, l2d.l, l2d.l, l2d.d);
 #endif
-    (runtime->localVariables + i)->integer = l2d.i2l.i1;
-    (runtime->localVariables + i + 1)->integer = l2d.i2l.i0;
+    localvar_setInt(runtime, i, l2d.i2l.i1);
+    localvar_setInt(runtime, i + 1, l2d.i2l.i0);
     *opCode = *opCode + 1;
     return 0;
 }
@@ -1597,7 +1597,7 @@ s32 op_astore_n(u8 **opCode, Runtime *runtime, s32 i) {
     invoke_deepth(runtime);
     jvm_printf("astore_%d:  [%llx]\n", i, (s64) (long) value);
 #endif
-    (runtime->localVariables + i)->refer = value;
+    localvar_setRefer(runtime, i, value);
     *opCode = *opCode + 1;
     return 0;
 }
@@ -1915,14 +1915,10 @@ static inline s32 op_ldc_impl(u8 **opCode, Runtime *runtime, s32 index) {
         }
         case CONSTANT_STRING_REF: {
             ConstantUTF8 *cutf = find_constant_utf8(clazz, find_constant_stringref(clazz, index)->stringIndex);
-//            if (!cutf->jstr) {//缓存字符串
             Instance *jstr = jstring_create(cutf->utfstr, runtime);
-//                garbage_refer(jstr, clazz);
-            //cutf->jstr = jstr;
-//            }
 
             push_ref(stack, (__refer) jstr);
-            garbage_refer(jstr, NULL);
+            //garbage_refer(jstr, NULL);
 
 #if _JVM_DEBUG > 5
             invoke_deepth(runtime);
@@ -2043,19 +2039,19 @@ static inline s32 op_putfield_impl(u8 **opCode, Runtime *runtime, s32 isStatic) 
 
     if (isDataReferByTag(ch)) {//垃圾回收标识
         __refer ref = getFieldRefer(ptr);
-        if (ref) { //把老索引关闭
-            if (isStatic) {
-                garbage_derefer(ref, fi->_this_class);
-            } else {
-                garbage_derefer(ref, ins);
-            }
-        }
+//        if (ref) { //把老索引关闭
+//            if (isStatic) {
+//                garbage_derefer(ref, fi->_this_class);
+//            } else {
+//                garbage_derefer(ref, ins);
+//            }
+//        }
         __refer newins = entry_2_refer(&entry);
-        if (isStatic) { //建立新索引
-            garbage_refer(newins, fi->_this_class);
-        } else {
-            garbage_refer(newins, ins);
-        }
+//        if (isStatic) { //建立新索引
+//            garbage_refer(newins, fi->_this_class);
+//        } else {
+//            garbage_refer(newins, ins);
+//        }
         setFieldRefer(ptr, newins);
     } else {
         s32 value = 0;
@@ -2194,7 +2190,7 @@ s32 op_new(u8 **opCode, Runtime *runtime) {
     Instance *ins = NULL;
     if (other) {
         ins = instance_create(other);
-        garbage_refer(ins, NULL);
+        //garbage_refer(ins, NULL);
     }
     push_ref(stack, (__refer) ins);
 #if _JVM_DEBUG > 5
@@ -2215,7 +2211,7 @@ static inline s32 op_newarray_impl(Runtime *runtime, s32 count, s32 typeIdx, Utf
 #endif
     if (arr) {
         push_ref(stack, (__refer) arr);
-        garbage_refer(arr, NULL);
+        //garbage_refer(arr, NULL);
     } else {
         Instance *exception = exception_create(JVM_EXCEPTION_NULLPOINTER, runtime);
         push_ref(stack, (__refer) exception);
@@ -2263,7 +2259,7 @@ s32 op_multianewarray(u8 **opCode, Runtime *runtime) {
 
     Instance *arr = jarray_multi_create(dim, desc, 0);
     arraylist_destory(dim);
-    garbage_refer(arr, NULL);
+    //garbage_refer(arr, NULL);
 #if _JVM_DEBUG > 5
     invoke_deepth(runtime);
     jvm_printf("multianewarray  [%llx] type:%s , count:%d  \n", (s64) (long) arr, utf8_cstr(desc), count);
@@ -2775,7 +2771,7 @@ s32 op_ret(u8 **opCode, Runtime *runtime) {
     }
     runtime->wideMode = 0;
 
-    __refer addr = (runtime->localVariables + s2c.s)->refer;
+    __refer addr = localvar_getRefer(runtime, s2c.s);
 
 #if _JVM_DEBUG > 5
     invoke_deepth(runtime);
@@ -3197,7 +3193,7 @@ void stack2localvar(MethodInfo *method, Runtime *father, Runtime *son) {
     s32 stack_pointer = stack_size - paraLen;
     if (!(method->access_flags & ACC_STATIC)) {//非静态方法需要把局部变量位置0设为this
         peek_entry(father->stack, &entry, stack_pointer - 1);
-        (son->localVariables + i_local++)->refer = entry_2_refer(&entry);
+        localvar_setRefer(son, i_local++, entry_2_refer(&entry));
         ins_this = 1;
     }
     for (i = 0; i < paraType->length; i++) {
@@ -3205,19 +3201,19 @@ void stack2localvar(MethodInfo *method, Runtime *father, Runtime *son) {
         peek_entry(father->stack, &entry, stack_pointer++);
         switch (type) {
             case 'R': {
-                (son->localVariables + i_local++)->refer = entry_2_refer(&entry);
+                localvar_setRefer(son, i_local++, entry_2_refer(&entry));
                 break;
             }
             case '8': {
                 //把双字类型拆成两个单元放入本地变量
                 Long2Double l2d;
                 l2d.l = entry_2_long(&entry);
-                (son->localVariables + i_local++)->integer = l2d.i2l.i1;
-                (son->localVariables + i_local++)->integer = l2d.i2l.i0;
+                localvar_setInt(son, i_local++, l2d.i2l.i1);
+                localvar_setInt(son, i_local++, l2d.i2l.i0);
                 break;
             }
             case '4': {
-                (son->localVariables + i_local++)->integer = entry_2_int(&entry);
+                localvar_setInt(son, i_local++, entry_2_int(&entry));
                 break;
             }
         }
@@ -3231,7 +3227,7 @@ s32 synchronized_lock_method(MethodInfo *method, Runtime *runtime) {
         if (method->access_flags & ACC_STATIC) {
             jthread_lock((MemoryBlock *) runtime->clazz, runtime);
         } else {
-            jthread_lock(&((Instance *) runtime->localVariables[0].refer)->mb, runtime);
+            jthread_lock(&((Instance *) localvar_getRefer(runtime, 0))->mb, runtime);
         }
     }
     return 0;
@@ -3241,9 +3237,9 @@ s32 synchronized_unlock_method(MethodInfo *method, Runtime *runtime) {
     //synchronized process
     if (method->access_flags & ACC_SYNCHRONIZED) {
         if (method->access_flags & ACC_STATIC) {
-            jthread_unlock(&runtime->clazz->mb, runtime);
+            jthread_unlock((MemoryBlock *)runtime->clazz, runtime);
         } else {
-            jthread_unlock(&((Instance *) runtime->localVariables[0].refer)->mb, runtime);
+            jthread_unlock(&((Instance *) localvar_getRefer(runtime, 0))->mb, runtime);
         }
     }
     return 0;
@@ -3252,23 +3248,22 @@ s32 synchronized_unlock_method(MethodInfo *method, Runtime *runtime) {
 s32 execute_method(MethodInfo *method, Runtime *pruntime, Class *clazz) {
     s32 j = 0, ret = 0;
 
-    Runtime runtime;
-    memset(&(runtime), 0, sizeof(runtime));
-    runtime.stack = pruntime->stack;
-    runtime.threadInfo = pruntime->threadInfo;
+    Runtime *runtime=runtime_create();
+    runtime->stack = pruntime->stack;
+    runtime->threadInfo = pruntime->threadInfo;
 
-    pruntime->son = &runtime;
-    runtime.parent = pruntime;
+    pruntime->son = runtime;
+    runtime->parent = pruntime;
 
-    runtime.methodInfo = method;
-    runtime.clazz = clazz;
+    runtime->methodInfo = method;
+    runtime->clazz = clazz;
     s32 stackSize;
 //    if (utf8_equals_c(method->name, "createPacketAnalyzer")) {
 //        int debug = 1;
 //    }
     if (method->access_flags & ACC_NATIVE) {//本地方法
-        localvar_init(&runtime, method->para_count + 1);//可能有非静态本地方法调用，因此+1
-        stack2localvar(method, pruntime, &runtime);
+        localvar_init(runtime, method->para_count + 1);//可能有非静态本地方法调用，因此+1
+        stack2localvar(method, pruntime, runtime);
         stackSize = pruntime->stack->size;
         //缓存调用本地方法
         if (!method->native_func) { //把本地方法找出来缓存
@@ -3277,17 +3272,17 @@ s32 execute_method(MethodInfo *method, Runtime *pruntime, Class *clazz) {
             method->native_func = native->func_pointer;
         }
 #if _JVM_DEBUG > 3
-        invoke_deepth(&runtime);
+        invoke_deepth(runtime);
         java_native_method *native = find_native_method(utf8_cstr(clazz->name), utf8_cstr(method->name),
                                                         utf8_cstr(method->descriptor));
         jvm_printf("%s.%s()  {\n", native->clzname, native->methodname);
 #endif
-        synchronized_lock_method(method, &runtime);
-        ret = method->native_func(&runtime, clazz);
-        synchronized_unlock_method(method, &runtime);
-        localvar_dispose(&runtime);
+        synchronized_lock_method(method, runtime);
+        ret = method->native_func(runtime, clazz);
+        synchronized_unlock_method(method, runtime);
+        localvar_dispose(runtime);
 #if _JVM_DEBUG > 3
-        invoke_deepth(&runtime);
+        invoke_deepth(runtime);
         jvm_printf("}\n");
 #endif
 
@@ -3296,10 +3291,10 @@ s32 execute_method(MethodInfo *method, Runtime *pruntime, Class *clazz) {
         for (j = 0; j < method->attributes_count; j++) {
             if (!method->attributes[j].converted_code)continue;
             CodeAttribute *ca = method->attributes[j].converted_code;
-            localvar_init(&runtime, ca->max_locals + 1);
-            stack2localvar(method, pruntime, &runtime);
+            localvar_init(runtime, ca->max_locals + 1);
+            stack2localvar(method, pruntime, runtime);
             stackSize = pruntime->stack->size;
-            synchronized_lock_method(method, &runtime);
+            synchronized_lock_method(method, runtime);
 
 #if _JVM_DEBUG_BYTECODE_DUMP
             jvm_printf("---------------------------------\n");
@@ -3309,36 +3304,36 @@ s32 execute_method(MethodInfo *method, Runtime *pruntime, Class *clazz) {
 #endif
 #if _JVM_DEBUG > 3
             if (utf8_char_at(clazz->name, 3) != '/' && utf8_char_at(clazz->name, 4) != 's') {
-                invoke_deepth(&runtime);
+                invoke_deepth(runtime);
                 jvm_printf("%s.%s()  {\n", utf8_cstr(clazz->name), utf8_cstr(method->name));
             }
 #endif
-            runtime.pc = ca->code;
-            runtime.ca = ca;
+            runtime->pc = ca->code;
+            runtime->ca = ca;
             s32 i = 0;
             do {
                 if (java_debug) {
                     //breakpoint
                     if (method->breakpoint) {
-                        jdwp_check_breakpoint(&runtime);
+                        jdwp_check_breakpoint(runtime);
                     }
                     //debug step
-                    if (runtime.threadInfo->jdwp_step.active) {//单步状态
-                        runtime.threadInfo->jdwp_step.bytecode_count++;
-                        jdwp_check_debug_step(&runtime);
+                    if (runtime->threadInfo->jdwp_step.active) {//单步状态
+                        runtime->threadInfo->jdwp_step.bytecode_count++;
+                        jdwp_check_debug_step(runtime);
 
                     }
                 }
                 //process thread suspend
-                check_suspend_and_pause(&runtime);
+                check_suspend_and_pause(runtime);
 
-                InstructFunc func = find_instruct_func(runtime.pc[0]);
+                InstructFunc func = find_instruct_func(runtime->pc[0]);
                 if (func != 0) {
 #if _JVM_DEBUG_PROFILE
-                    u8 instruct_code = runtime.pc[0];
+                    u8 instruct_code = runtime->pc[0];
                     s64 start_at = nanoTime();
 #endif
-                    i = func(&runtime.pc, &runtime);
+                    i = func(&runtime->pc, runtime);
 
 #if _JVM_DEBUG_PROFILE
                     s64 spent = nanoTime() - start_at;
@@ -3354,21 +3349,21 @@ s32 execute_method(MethodInfo *method, Runtime *pruntime, Class *clazz) {
                 }
                 if (i == RUNTIME_STATUS_RETURN) break;
                 else if (i == RUNTIME_STATUS_EXCEPTION) {
-                    __refer ref = pop_ref(runtime.stack);
-                    //jvm_printf("stack size:%d , enter size:%d\n", runtime.stack->size, stackSize);
-                    runtime.stack->size = stackSize;//恢复堆栈大小
-                    push_ref(runtime.stack, ref);
+                    __refer ref = pop_ref(runtime->stack);
+                    //jvm_printf("stack size:%d , enter size:%d\n", runtime->stack->size, stackSize);
+                    runtime->stack->size = stackSize;//恢复堆栈大小
+                    push_ref(runtime->stack, ref);
 
                     Instance *ins = (Instance *) ref;
 #if _JVM_DEBUG > 3
-                    s32 lineNum = getLineNumByIndex(ca, runtime.pc - ca->code);
+                    s32 lineNum = getLineNumByIndex(ca, runtime->pc - ca->code);
                     printf("   at %s.%s(%s.java:%d)\n",
                            utf8_cstr(clazz->name), utf8_cstr(method->name),
                            utf8_cstr(clazz->name),
                            lineNum
                     );
 #endif
-                    ExceptionTable *et = find_exception_handler(&runtime, ins, ca, (s32)(runtime.pc - ca->code), ref);
+                    ExceptionTable *et = find_exception_handler(runtime, ins, ca, (s32) (runtime->pc - ca->code), ref);
                     if (et == NULL) {
                         ret = RUNTIME_STATUS_EXCEPTION;
                         break;
@@ -3376,16 +3371,16 @@ s32 execute_method(MethodInfo *method, Runtime *pruntime, Class *clazz) {
 #if _JVM_DEBUG > 3
                         jvm_printf("Exception : %s\n", utf8_cstr(ins->mb.clazz->name));
 #endif
-                        runtime.pc = (ca->code + et->handler_pc);
+                        runtime->pc = (ca->code + et->handler_pc);
                         ret = RUNTIME_STATUS_NORMAL;
                     }
                 }
             } while (1);
-            synchronized_unlock_method(method, &runtime);
-            localvar_dispose(&runtime);
+            synchronized_unlock_method(method, runtime);
+            localvar_dispose(runtime);
 #if _JVM_DEBUG > 3
             if (utf8_char_at(clazz->name, 3) != '/' && utf8_char_at(clazz->name, 4) != 's') {//   that com/sun
-                invoke_deepth(&runtime);
+                invoke_deepth(runtime);
                 jvm_printf("}\n");
             } else {
                 int debug = 1;
@@ -3407,6 +3402,7 @@ s32 execute_method(MethodInfo *method, Runtime *pruntime, Class *clazz) {
 #endif
         }
     }
+    runtime_destory(runtime);
     pruntime->son = NULL;
     return ret;
 }

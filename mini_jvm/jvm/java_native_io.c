@@ -298,9 +298,9 @@ s32 srv_close(s32 listenfd) {
 
 s32 javax_mini_net_socket_Protocol_open0(Runtime *runtime, Class *clazz) {
     RuntimeStack *stack = runtime->stack;
-    Instance *jbyte_arr = (Instance *) (runtime->localVariables + 0)->refer;
-    s32 port = (runtime->localVariables + 1)->integer;
-    s32 mode = (runtime->localVariables + 2)->integer;
+    Instance *jbyte_arr = (Instance *) localvar_getRefer(runtime, 0);
+    s32 port = localvar_getInt(runtime, 1);
+    s32 mode = localvar_getInt(runtime, 2);
     Utf8String *ip = utf8_create_part_c(jbyte_arr->arr_body, 0, jbyte_arr->arr_length);
 
     s32 sockfd = sock_open(ip, port);
@@ -314,10 +314,10 @@ s32 javax_mini_net_socket_Protocol_open0(Runtime *runtime, Class *clazz) {
 }
 
 s32 javax_mini_net_socket_Protocol_readBuf(Runtime *runtime, Class *clazz) {
-    s32 sockfd = (runtime->localVariables + 0)->integer;
-    Instance *jbyte_arr = (Instance *) (runtime->localVariables + 1)->refer;
-    s32 offset = (runtime->localVariables + 2)->integer;
-    s32 count = (runtime->localVariables + 3)->integer;
+    s32 sockfd = localvar_getInt(runtime, 0);
+    Instance *jbyte_arr = (Instance *) localvar_getRefer(runtime, 1);
+    s32 offset = localvar_getInt(runtime, 2);
+    s32 count = localvar_getInt(runtime, 3);
 
     runtime->threadInfo->is_blocking = 1;
     s32 len = sock_recv(sockfd, jbyte_arr->arr_body + offset, count);
@@ -331,7 +331,7 @@ s32 javax_mini_net_socket_Protocol_readBuf(Runtime *runtime, Class *clazz) {
 }
 
 s32 javax_mini_net_socket_Protocol_readByte(Runtime *runtime, Class *clazz) {
-    s32 sockfd = (runtime->localVariables + 0)->integer;
+    s32 sockfd = localvar_getInt(runtime, 0);
     c8 b = 0;
     runtime->threadInfo->is_blocking = 1;
     s32 len = sock_recv(sockfd, &b, 1);
@@ -352,10 +352,10 @@ s32 javax_mini_net_socket_Protocol_readByte(Runtime *runtime, Class *clazz) {
 
 
 s32 javax_mini_net_socket_Protocol_writeBuf(Runtime *runtime, Class *clazz) {
-    s32 sockfd = (runtime->localVariables + 0)->integer;
-    Instance *jbyte_arr = (Instance *) (runtime->localVariables + 1)->refer;
-    s32 offset = (runtime->localVariables + 2)->integer;
-    s32 count = (runtime->localVariables + 3)->integer;
+    s32 sockfd = localvar_getInt(runtime, 0);
+    Instance *jbyte_arr = (Instance *) localvar_getRefer(runtime, 1);
+    s32 offset = localvar_getInt(runtime, 2);
+    s32 count = localvar_getInt(runtime, 3);
 
     runtime->threadInfo->is_blocking = 1;
     s32 len = sock_send(sockfd, jbyte_arr->arr_body + offset, count);
@@ -370,8 +370,8 @@ s32 javax_mini_net_socket_Protocol_writeBuf(Runtime *runtime, Class *clazz) {
 }
 
 s32 javax_mini_net_socket_Protocol_writeByte(Runtime *runtime, Class *clazz) {
-    s32 sockfd = (runtime->localVariables + 0)->integer;
-    s32 val = (runtime->localVariables + 1)->integer;
+    s32 sockfd = localvar_getInt(runtime, 0);
+    s32 val = localvar_getInt(runtime, 1);
     c8 b = (u8) val;
     runtime->threadInfo->is_blocking = 1;
     s32 len = sock_send(sockfd, &b, 1);
@@ -385,7 +385,6 @@ s32 javax_mini_net_socket_Protocol_writeByte(Runtime *runtime, Class *clazz) {
 }
 
 s32 javax_mini_net_socket_Protocol_available0(Runtime *runtime, Class *clazz) {
-//    Instance *tmps = (Instance *) (runtime->localVariables + 0)->refer;
 #if _JVM_DEBUG > 5
     invoke_deepth(runtime);
     jvm_printf("javax_mini_net_socket_Protocol_available0  \n");
@@ -395,7 +394,7 @@ s32 javax_mini_net_socket_Protocol_available0(Runtime *runtime, Class *clazz) {
 }
 
 s32 javax_mini_net_socket_Protocol_close0(Runtime *runtime, Class *clazz) {
-    s32 sockfd = (runtime->localVariables + 0)->integer;
+    s32 sockfd = localvar_getInt(runtime, 0);
     if (sockfd) {
         shutdown(sockfd, SHUT_RDWR);
         closesocket(sockfd);
@@ -412,9 +411,9 @@ s32 javax_mini_net_socket_Protocol_close0(Runtime *runtime, Class *clazz) {
 }
 
 s32 javax_mini_net_socket_Protocol_setOption0(Runtime *runtime, Class *clazz) {
-    s32 sockfd = (runtime->localVariables + 0)->integer;
-    s32 type = (runtime->localVariables + 1)->integer;
-    s32 val = (runtime->localVariables + 2)->integer;
+    s32 sockfd = localvar_getInt(runtime, 0);
+    s32 type = localvar_getInt(runtime, 1);
+    s32 val = localvar_getInt(runtime, 2);
     s32 ret = 0;
     if (sockfd) {
         ret = sock_option(sockfd, type, val);
@@ -429,8 +428,8 @@ s32 javax_mini_net_socket_Protocol_setOption0(Runtime *runtime, Class *clazz) {
 
 
 s32 javax_mini_net_serversocket_Protocol_open0(Runtime *runtime, Class *clazz) {
-    Instance *jbyte_arr = (runtime->localVariables + 0)->refer;
-    s32 port = (runtime->localVariables + 1)->integer;
+    Instance *jbyte_arr = localvar_getRefer(runtime, 0);
+    s32 port = localvar_getInt(runtime, 1);
     Utf8String *ip = utf8_create_part_c(jbyte_arr->arr_body, 0, jbyte_arr->arr_length);
     s32 sockfd = 0;
     sockfd = srv_bind(ip, port);
@@ -444,7 +443,7 @@ s32 javax_mini_net_serversocket_Protocol_open0(Runtime *runtime, Class *clazz) {
 }
 
 s32 javax_mini_net_serversocket_Protocol_listen0(Runtime *runtime, Class *clazz) {
-    s32 sockfd = (runtime->localVariables + 0)->integer;
+    s32 sockfd = localvar_getInt(runtime, 0);
     s32 ret = 0;
     if (sockfd) {
         ret = srv_listen(sockfd);
@@ -459,7 +458,7 @@ s32 javax_mini_net_serversocket_Protocol_listen0(Runtime *runtime, Class *clazz)
 
 
 s32 javax_mini_net_serversocket_Protocol_accept0(Runtime *runtime, Class *clazz) {
-    s32 sockfd = (runtime->localVariables + 0)->integer;
+    s32 sockfd = localvar_getInt(runtime, 0);
     s32 ret = 0;
     if (sockfd) {
         runtime->threadInfo->is_blocking = 1;
@@ -475,7 +474,7 @@ s32 javax_mini_net_serversocket_Protocol_accept0(Runtime *runtime, Class *clazz)
 }
 
 s32 javax_mini_net_serversocket_Protocol_close0(Runtime *runtime, Class *clazz) {
-    s32 sockfd = (runtime->localVariables + 0)->integer;
+    s32 sockfd = localvar_getInt(runtime, 0);
     s32 ret = 0;
     if (sockfd) {
         ret = srv_close(sockfd);
@@ -489,7 +488,7 @@ s32 javax_mini_net_serversocket_Protocol_close0(Runtime *runtime, Class *clazz) 
 }
 
 s32 javax_mini_net_serversocket_Protocol_registerCleanup(Runtime *runtime, Class *clazz) {
-    s32 sockfd = (runtime->localVariables + 0)->integer;
+    s32 sockfd = localvar_getInt(runtime, 0);
     s32 ret = 0;
     if (sockfd) {
 
@@ -503,7 +502,7 @@ s32 javax_mini_net_serversocket_Protocol_registerCleanup(Runtime *runtime, Class
 }
 
 s32 javax_mini_net_serversocket_Protocol_finalize(Runtime *runtime, Class *clazz) {
-    s32 sockfd = (runtime->localVariables + 0)->integer;
+    s32 sockfd = localvar_getInt(runtime, 0);
     s32 ret = 0;
     if (sockfd) {
 
@@ -517,8 +516,8 @@ s32 javax_mini_net_serversocket_Protocol_finalize(Runtime *runtime, Class *clazz
 }
 
 s32 javax_mini_io_File_openFile(Runtime *runtime, Class *clazz) {
-    Instance *name_arr = (runtime->localVariables + 0)->refer;
-    Instance *mode_arr = (runtime->localVariables + 1)->refer;
+    Instance *name_arr = localvar_getRefer(runtime, 0);
+    Instance *mode_arr = localvar_getRefer(runtime, 1);
     if (name_arr) {
         Utf8String *filepath = utf8_create_part_c(name_arr->arr_body, 0, name_arr->arr_length);
         Utf8String *mode = utf8_create_part_c(mode_arr->arr_body, 0, mode_arr->arr_length);
@@ -539,8 +538,8 @@ s32 javax_mini_io_File_openFile(Runtime *runtime, Class *clazz) {
 
 s32 javax_mini_io_File_closeFile(Runtime *runtime, Class *clazz) {
     Long2Double l2d;
-    l2d.i2l.i1 = (runtime->localVariables + 0)->integer;
-    l2d.i2l.i0 = (runtime->localVariables + 1)->integer;
+    l2d.i2l.i1 = localvar_getInt(runtime, 0);
+    l2d.i2l.i0 = localvar_getInt(runtime, 1);
     __refer fd = l2d.r;
     s32 ret = -1;
     if (fd) {
@@ -556,8 +555,8 @@ s32 javax_mini_io_File_closeFile(Runtime *runtime, Class *clazz) {
 
 s32 javax_mini_io_File_read0(Runtime *runtime, Class *clazz) {
     Long2Double l2d;
-    l2d.i2l.i1 = (runtime->localVariables + 0)->integer;
-    l2d.i2l.i0 = (runtime->localVariables + 1)->integer;
+    l2d.i2l.i1 = localvar_getInt(runtime, 0);
+    l2d.i2l.i0 = localvar_getInt(runtime, 1);
     __refer fd = l2d.r;
     s32 ret = -1;
     if (fd) {
@@ -580,10 +579,10 @@ s32 javax_mini_io_File_read0(Runtime *runtime, Class *clazz) {
 
 s32 javax_mini_io_File_write0(Runtime *runtime, Class *clazz) {
     Long2Double l2d;
-    l2d.i2l.i1 = (runtime->localVariables + 0)->integer;
-    l2d.i2l.i0 = (runtime->localVariables + 1)->integer;
+    l2d.i2l.i1 = localvar_getInt(runtime, 0);
+    l2d.i2l.i0 = localvar_getInt(runtime, 1);
     __refer fd = l2d.r;
-    u8 byte = (u8) (runtime->localVariables + 2)->integer;
+    u8 byte = (u8) localvar_getInt(runtime, 2);
     s32 ret = -1;
     if (fd) {
         ret = fputc(byte, fd);
@@ -606,12 +605,12 @@ s32 javax_mini_io_File_write0(Runtime *runtime, Class *clazz) {
 s32 javax_mini_io_File_readbuf(Runtime *runtime, Class *clazz) {
     s32 pos = 0;
     Long2Double l2d;
-    l2d.i2l.i1 = (runtime->localVariables + pos++)->integer;
-    l2d.i2l.i0 = (runtime->localVariables + pos++)->integer;
+    l2d.i2l.i1 = localvar_getInt(runtime, pos++);
+    l2d.i2l.i0 = localvar_getInt(runtime, pos++);
     __refer fd = l2d.r;
-    Instance *bytes_arr = (runtime->localVariables + pos++)->refer;
-    s32 offset = (runtime->localVariables + pos++)->integer;
-    s32 len = (runtime->localVariables + pos++)->integer;
+    Instance *bytes_arr = localvar_getRefer(runtime, pos++);
+    s32 offset = localvar_getInt(runtime, pos++);
+    s32 len = localvar_getInt(runtime, pos++);
     s32 ret = -1;
     if (fd && bytes_arr) {
         ret = (s32) fread(bytes_arr->arr_body + offset, 1, len, fd);
@@ -631,12 +630,12 @@ s32 javax_mini_io_File_readbuf(Runtime *runtime, Class *clazz) {
 s32 javax_mini_io_File_writebuf(Runtime *runtime, Class *clazz) {
     s32 pos = 0;
     Long2Double l2d;
-    l2d.i2l.i1 = (runtime->localVariables + pos++)->integer;
-    l2d.i2l.i0 = (runtime->localVariables + pos++)->integer;
+    l2d.i2l.i1 = localvar_getInt(runtime, pos++);
+    l2d.i2l.i0 = localvar_getInt(runtime, pos++);
     __refer fd = l2d.r;
-    Instance *bytes_arr = (runtime->localVariables + pos++)->refer;
-    s32 offset = (runtime->localVariables + pos++)->integer;
-    s32 len = (runtime->localVariables + pos++)->integer;
+    Instance *bytes_arr = localvar_getRefer(runtime, pos++);
+    s32 offset = localvar_getInt(runtime, pos++);
+    s32 len = localvar_getInt(runtime, pos++);
     s32 ret = -1;
     if (fd && bytes_arr) {
         ret = (s32) fwrite(bytes_arr->arr_body + offset, len, 1, fd);
@@ -659,11 +658,11 @@ s32 javax_mini_io_File_writebuf(Runtime *runtime, Class *clazz) {
 s32 javax_mini_io_File_seek0(Runtime *runtime, Class *clazz) {
     s32 pos = 0;
     Long2Double l2d;
-    l2d.i2l.i1 = (runtime->localVariables + pos++)->integer;
-    l2d.i2l.i0 = (runtime->localVariables + pos++)->integer;
+    l2d.i2l.i1 = localvar_getInt(runtime, pos++);
+    l2d.i2l.i0 = localvar_getInt(runtime, pos++);
     __refer fd = l2d.r;
-    l2d.i2l.i1 = (runtime->localVariables + pos++)->integer;
-    l2d.i2l.i0 = (runtime->localVariables + pos++)->integer;
+    l2d.i2l.i1 = localvar_getInt(runtime, pos++);
+    l2d.i2l.i0 = localvar_getInt(runtime, pos++);
     s64 filepos = l2d.l;
     s32 ret = -1;
     if (fd) {
@@ -680,11 +679,11 @@ s32 javax_mini_io_File_seek0(Runtime *runtime, Class *clazz) {
 s32 javax_mini_io_File_setLength0(Runtime *runtime, Class *clazz) {
     s32 pos = 0;
     Long2Double l2d;
-    l2d.i2l.i1 = (runtime->localVariables + pos++)->integer;
-    l2d.i2l.i0 = (runtime->localVariables + pos++)->integer;
+    l2d.i2l.i1 = localvar_getInt(runtime, pos++);
+    l2d.i2l.i0 = localvar_getInt(runtime, pos++);
     __refer fd = l2d.r;
-    l2d.i2l.i1 = (runtime->localVariables + pos++)->integer;
-    l2d.i2l.i0 = (runtime->localVariables + pos++)->integer;
+    l2d.i2l.i1 = localvar_getInt(runtime, pos++);
+    l2d.i2l.i0 = localvar_getInt(runtime, pos++);
     s64 filelen = l2d.l;
     s32 ret = 0;
     if (fd) {
@@ -703,8 +702,8 @@ s32 javax_mini_io_File_setLength0(Runtime *runtime, Class *clazz) {
 
 s32 javax_mini_io_File_flush0(Runtime *runtime, Class *clazz) {
     Long2Double l2d;
-    l2d.i2l.i1 = (runtime->localVariables + 0)->integer;
-    l2d.i2l.i0 = (runtime->localVariables + 1)->integer;
+    l2d.i2l.i1 = localvar_getInt(runtime, 0);
+    l2d.i2l.i0 = localvar_getInt(runtime, 1);
     __refer fd = l2d.r;
     s32 ret = -1;
     if (fd) {
@@ -719,8 +718,8 @@ s32 javax_mini_io_File_flush0(Runtime *runtime, Class *clazz) {
 }
 
 s32 javax_mini_io_File_loadFD(Runtime *runtime, Class *clazz) {
-    Instance *name_arr = (runtime->localVariables + 0)->refer;
-    Instance *fd = (runtime->localVariables + 1)->refer;
+    Instance *name_arr = localvar_getRefer(runtime, 0);
+    Instance *fd = localvar_getRefer(runtime, 1);
     s32 ret = -1;
     if (name_arr) {
         Utf8String *filepath = utf8_create_part_c(name_arr->arr_body, 0, name_arr->arr_length);
@@ -764,7 +763,7 @@ s32 javax_mini_io_File_loadFD(Runtime *runtime, Class *clazz) {
 }
 
 s32 javax_mini_io_File_listDir(Runtime *runtime, Class *clazz) {
-    Instance *name_arr = (runtime->localVariables + 0)->refer;
+    Instance *name_arr = localvar_getRefer(runtime, 0);
     if (name_arr) {
         Utf8String *filepath = utf8_create_part_c(name_arr->arr_body, 0, name_arr->arr_length);
 
@@ -786,7 +785,6 @@ s32 javax_mini_io_File_listDir(Runtime *runtime, Class *clazz) {
             Utf8String *ustr = utf8_create_c(STR_INS_JAVA_LANG_STRING);
             Instance *jarr = jarray_create(files->length, 0, ustr);
             utf8_destory(ustr);
-            garbage_refer(jarr, NULL);
             for (i = 0; i < files->length; i++) {
                 l2d.r = arraylist_get_value(files, i);
                 jarray_set_field(jarr, i, &l2d);

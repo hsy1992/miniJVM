@@ -380,6 +380,9 @@ typedef struct _MemoryBlock {
     u8 arr_type_index;
     Class *clazz;
     ThreadLock *volatile thread_lock;
+
+    //
+    s32 refer_count;
 } MemoryBlock;
 
 struct _ClassLoader {
@@ -627,6 +630,7 @@ struct _FieldInfo {
     //link
     Utf8String *name;
     Utf8String *descriptor;
+    u8 datatype_idx;
     u16 offset;//字段的偏移地址，静态字段存放在class中
     Class *_this_class;
 };
@@ -945,9 +949,21 @@ void stack2localvar(MethodInfo *method, Runtime *father, Runtime *son);
 void peek_entry(RuntimeStack *stack, StackEntry *entry, int index);
 
 //======================= localvar =============================
+Runtime *runtime_create();
+
+void runtime_destory(Runtime *runtime);
+
 s32 localvar_init(Runtime *runtime, s32 count);
 
 s32 localvar_dispose(Runtime *runtime);
+
+void localvar_setRefer(Runtime *runtime, s32 index, __refer val);
+
+void localvar_setInt(Runtime *runtime, s32 index, s32 val);
+
+__refer localvar_getRefer(Runtime *runtime, s32 index);
+
+s32 localvar_getInt(Runtime *runtime, s32 index);
 
 //======================= other =============================
 void open_log(void);
@@ -955,6 +971,9 @@ void open_log(void);
 void close_log(void);
 
 c8 *getMajorVersionString(u16 major_number);
+
+void memoryblock_destory(__refer ref);
+
 
 #ifdef __cplusplus
 }
