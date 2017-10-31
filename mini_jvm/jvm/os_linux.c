@@ -10,7 +10,7 @@
 #include <time.h>
 #include <unistd.h>
 #if __JVM_OS_MINGW__
-#include <pthread_time.h>
+//#include <pthread_time.h>
 #endif //__JVM_OS_MINGW__
 
 s64 currentTimeMillis() {

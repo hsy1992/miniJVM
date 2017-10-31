@@ -12,8 +12,9 @@ void __garbage_clear(void);
 s32 checkAndWaitThreadIsSuspend(Runtime *runtime);
 
 
-s32 garbage_stop_the_world();
+s32 garbage_pause_the_world();
 
+s32 garbage_resume_the_world();
 
 /**
  * 创建垃圾收集线程，
@@ -270,7 +271,7 @@ s32 garbage_collect() {
     s64 mem1 = heap_size;
     s64 del = 0;
 
-    if (garbage_stop_the_world(thread_list) != 0) {
+    if (garbage_pause_the_world(thread_list) != 0) {
         return -1;
     }
 
@@ -284,9 +285,9 @@ s32 garbage_collect() {
         MemoryBlock *mb = (MemoryBlock *) k;
 
         if (mb->refer_count == 0) {
+            hashtable_remove(collector->objs, mb, 0);
             garbage_destory_memobj(mb);
             del++;
-            hashtable_remove(collector->objs, mb, 0);
         }
     }
 
@@ -297,6 +298,7 @@ s32 garbage_collect() {
         hashtable_remove(collector->objs, NULL, 1);
     }
     garbage_thread_unlock();
+    garbage_resume_the_world();
 
     return del;
 }
@@ -327,23 +329,25 @@ void garbage_destory_memobj(MemoryBlock *mb) {
  * 各个线程把自己还需要使用的对象进行标注，表示不能回收
  * @return ret
  */
-s32 garbage_stop_the_world() {
+s32 garbage_pause_the_world() {
     s32 i;
     //jvm_printf("thread size:%d\n", thread_list->length);
     garbage_thread_lock();
     s32 all_paused = 0;
-    while (all_paused == thread_list->length) {//停掉所有线程
-        all_paused = 0;
-        for (i = 0; i < thread_list->length; i++) {
-            Runtime *runtime = arraylist_get_value(thread_list, i);
-            jthread_suspend(runtime);
-            if (runtime->threadInfo->is_suspend ||
-                runtime->threadInfo->is_blocking ||
-                runtime->threadInfo->thread_status == THREAD_STATUS_ZOMBIE) {
-                all_paused++;
-                continue;
+    if (thread_list->length) {
+        while (all_paused == thread_list->length) {//停掉所有线程
+            all_paused = 0;
+            for (i = 0; i < thread_list->length; i++) {
+                Runtime *runtime = arraylist_get_value(thread_list, i);
+                jthread_suspend(runtime);
+                if (runtime->threadInfo->is_suspend ||
+                    runtime->threadInfo->is_blocking ||
+                    runtime->threadInfo->thread_status == THREAD_STATUS_ZOMBIE) {
+                    all_paused++;
+                    continue;
+                }
+                garbage_thread_timedwait(10);//让出锁
             }
-            garbage_thread_timedwait(10);//让出锁
         }
     }
     //调试线程
@@ -402,8 +406,8 @@ s32 garbage_refer_count_inc(__refer ref) {
     MemoryBlock *mb = (MemoryBlock *) ref;
     if (mb) {
         garbage_thread_lock();
+        if (mb->refer_count == 0)hashtable_put(collector->objs, mb, mb);
         mb->refer_count++;
-        hashtable_put(collector->objs, mb, mb);
         garbage_thread_unlock();
 
 #if _JVM_DEBUG_GARBAGE_DUMP
@@ -432,13 +436,5 @@ s32 garbage_refer_count_dec(__refer ref) {
         utf8_destory(sus);
 #endif
     }
-    return 0;
-}
-
-s32 garbage_reg(__refer ref) {
-    MemoryBlock *mb = (MemoryBlock *) ref;
-    garbage_thread_lock();
-    hashtable_put(collector->objs, mb, NULL);
-    garbage_thread_unlock();
     return 0;
 }

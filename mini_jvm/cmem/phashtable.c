@@ -31,7 +31,7 @@ static int HASH_TABLE_DEFAULT_SIZE = 16;
 /* Internal function used to allocate the table on hash table creation
  * and when enlarging the table */
 
-static int hash_table_allocate_table(PHashtable *hash_table, unsigned int size) {
+static int phashtable_allocate_table(PHashtable *hash_table, unsigned int size) {
     //unsigned int new_table_size = getPHashtableSizeWithIncrement(hash_table, increment);
 
     /* Allocate the table and initialise to NULL for all entries */
@@ -46,7 +46,7 @@ static int hash_table_allocate_table(PHashtable *hash_table, unsigned int size) 
 
 /* Free an entry, calling the free functions if there are any registered */
 
-static void hash_table_free_entry(PHashtable *hash_table, PHashtableEntry *entry) {
+static void phashtable_free_entry(PHashtable *hash_table, PHashtableEntry *entry) {
     /* If there is a function registered for freeing keys, use it to free
      * the key */
 
@@ -92,7 +92,7 @@ PHashtable *phashtable_create(PHashtableHashFunc hash_func,
 
     /* Allocate the table */
 
-    if (!hash_table_allocate_table(hash_table, HASH_TABLE_DEFAULT_SIZE)) {
+    if (!phashtable_allocate_table(hash_table, HASH_TABLE_DEFAULT_SIZE)) {
         free(hash_table);
 
         return NULL;
@@ -112,7 +112,7 @@ void phashtable_destory(PHashtable *hash_table) {
         rover = hash_table->table[i];
         while (rover != NULL) {
             next = rover->next;
-            hash_table_free_entry(hash_table, rover);
+            phashtable_free_entry(hash_table, rover);
             rover = next;
         }
     }
@@ -136,7 +136,7 @@ void phashtable_clear(PHashtable *hash_table) {
         rover = hash_table->table[i];
         while (rover != NULL) {
             next = rover->next;
-            hash_table_free_entry(hash_table, rover);
+            phashtable_free_entry(hash_table, rover);
             rover = next;
         }
         hash_table->table[i] = NULL;
@@ -146,7 +146,7 @@ void phashtable_clear(PHashtable *hash_table) {
         free(hash_table->table);
         hash_table->table = NULL;
         hash_table->table_size = 0;
-        if (!hash_table_allocate_table(hash_table, HASH_TABLE_DEFAULT_SIZE)) {
+        if (!phashtable_allocate_table(hash_table, HASH_TABLE_DEFAULT_SIZE)) {
             free(hash_table);
         }
     }
@@ -291,7 +291,7 @@ int phashtable_remove(PHashtable *hash_table, PHashtableKey key, int resize) {
         if (hash_table->equal_func(key, rover->key) != 0) {
             if (pre == rover)hash_table->table[index] = next;
             else pre->next = next;
-            hash_table_free_entry(hash_table, rover);
+            phashtable_free_entry(hash_table, rover);
             --hash_table->entries;
             result = 1;
             break;
@@ -460,7 +460,7 @@ int phashtable_resize(PHashtable *hash_table, unsigned int size) {
         old_table = hash_table->table;
         old_table_size = hash_table->table_size;
 
-        if (!hash_table_allocate_table(hash_table, size)) {
+        if (!phashtable_allocate_table(hash_table, size)) {
 
             /* Failed to allocate the new table */
 

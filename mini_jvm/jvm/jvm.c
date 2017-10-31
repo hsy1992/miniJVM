@@ -27,7 +27,7 @@ void main_thread_create(Runtime *runtime) {
 }
 
 void main_thread_destory() {
-    threadlist_remove(main_runtime);
+
     main_runtime->threadInfo->is_suspend = 1;
     //主线程实例被回收
     garbage_refer_count_dec(main_thread);
@@ -167,6 +167,7 @@ s32 execute(c8 *p_classpath, c8 *p_mainclass, s32 argc, c8 **argv) {
             garbage_thread_resume();
 
             //准备参数
+            localvar_dispose(mr);
             localvar_init(mr, main->para_count + 1);
             s32 count = argc;
             Long2Double l2d;
@@ -200,7 +201,6 @@ s32 execute(c8 *p_classpath, c8 *p_mainclass, s32 argc, c8 **argv) {
             jvm_printf("================================= main  end  ================================\n");
             jvm_printf("spent %lld\n", (currentTimeMillis() - start));
 
-            localvar_dispose(mr);
 #if _JVM_DEBUG_PROFILE
             hashtable_iterate(instruct_profile, &hti);
             for (; hashtable_iter_has_more(&hti);) {
@@ -210,9 +210,8 @@ s32 execute(c8 *p_classpath, c8 *p_mainclass, s32 argc, c8 **argv) {
             }
 #endif
 
-            jdwp_stop_server();
-
             main_thread_destory();
+            jdwp_stop_server();
         }
         utf8_destory(methodName);
         utf8_destory(methodType);

@@ -1,7 +1,7 @@
 //
 // Created by gust on 2017/9/20.
 //
-
+#include "../utils/d_type.h"
 #include "jdwp.h"
 #include "jvm_util.h"
 #include "java_native_io.h"

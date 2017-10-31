@@ -4,6 +4,7 @@
 
 
 #include <stdarg.h>
+#include "../utils/d_type.h"
 #include "jvm.h"
 #include <pthread.h>
 #include "jvm_util.h"
@@ -512,7 +513,7 @@ void invoke_deepth(Runtime *runtime) {
 #ifdef _CYGWIN_CONFIG_H
     fprintf(logfile, "%lx", (s64) (long) pthread_self());
 #else
-    fprintf(logfile, "%llx", (s64) (long) pthread_self());
+    fprintf(logfile, "%llx", (s64) (long) pthread_self().p);
 #endif //_CYGWIN_CONFIG_H
     for (i = 0; i < len; i++) {
         fprintf(logfile, "    ");
@@ -535,10 +536,10 @@ s32 jthread_init(Instance *jthread) {
     Runtime *runtime = runtime_create(NULL);
     localvar_init(runtime, 1);
     jthread_set_threadq_value(jthread, runtime);
-    threadlist_add(runtime);
     runtime->clazz = jthread->mb.clazz;
     runtime->threadInfo->jthread = jthread;
     runtime->threadInfo->thread_status = THREAD_STATUS_NEW;
+    threadlist_add(runtime);
 
     return 0;
 }
@@ -580,8 +581,8 @@ void *jtherad_loader(void *para) {
     push_ref(runtime->stack, (__refer) jthread);
     ret = execute_method(method, runtime, method->_this_class);
     runtime->threadInfo->thread_status = THREAD_STATUS_ZOMBIE;
-    garbage_refer_count_dec(jthread);
     jthread_dispose(jthread);
+    garbage_refer_count_dec(jthread);
     //jvm_printf("thread over %llx\n", (s64) (long) jthread);
     return para;
 }
@@ -739,7 +740,7 @@ Instance *jarray_create_des(s32 count, Utf8String *descript) {
     arr->mb.garbage_mark = GARBAGE_MARK_UNDEF;//防止在上次回收过程中，此对象刚被放入池子就被回收
     arr->mb.clazz = array_class_get(descript);
     arr->arr_length = count;
-    arr->arr_body = jvm_alloc(width * count);
+    if (arr->arr_length)arr->arr_body = jvm_alloc(width * count);
     return arr;
 }
 
@@ -760,6 +761,9 @@ Instance *jarray_create(s32 count, s32 typeIdx, Utf8String *type) {
 
 s32 jarray_destory(Instance *arr) {
     if (arr && arr->mb.type == MEM_TYPE_ARR) {
+        if (arr->arr_length == -1) {
+            int debug = 1;
+        }
         if (isDataReferByIndex(arr->mb.arr_type_index)) {
             s32 i;
             Long2Double l2d;
@@ -770,8 +774,11 @@ s32 jarray_destory(Instance *arr) {
         }
         jthreadlock_destory(&arr->mb);
         arr->mb.thread_lock = NULL;
-        jvm_free(arr->arr_body);
-        arr->arr_body = NULL;
+        if (arr->arr_body) {
+            jvm_free(arr->arr_body);
+            arr->arr_body = NULL;
+        }
+        arr->arr_length = -1;
         jvm_free(arr);
     }
     return 0;

@@ -3,6 +3,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include "../utils/d_type.h"
 #include "jvm.h"
 #include "garbage.h"
 #include "jvm_util.h"
@@ -29,7 +30,7 @@ void stack_destory(RuntimeStack *stack) {
 /* push Integer */
 void push_int(RuntimeStack *stack, s32 value) {
     //memset(&stack->store[stack->size], 0, sizeof(StackEntry));
-    u8 *tmp = stack->store[stack->size].entry;
+    void *tmp = &stack->store[stack->size].entry;
     memcpy(tmp, &value, sizeof(s32));
     stack->store[stack->size].type = STACK_ENTRY_INT;
     stack->size++;
@@ -39,7 +40,7 @@ void push_int(RuntimeStack *stack, s32 value) {
 /* push Double */
 void push_double(RuntimeStack *stack, f64 value) {
     //memset(&stack->store[stack->size], 0, sizeof(StackEntry));
-    u8 *tmp = stack->store[stack->size].entry;
+    void *tmp = &stack->store[stack->size].entry;
     memcpy(tmp, &value, sizeof(f64));
     stack->store[stack->size].type = STACK_ENTRY_DOUBLE;
     stack->size++;
@@ -49,7 +50,7 @@ void push_double(RuntimeStack *stack, f64 value) {
 f64 pop_double(RuntimeStack *stack) {
     stack->size--;
     f64 value = 0;
-    u8 *tmp = stack->store[stack->size].entry;
+    void *tmp = &stack->store[stack->size].entry;
     memcpy(&value, tmp, sizeof(f64));
     memset(&stack->store[stack->size], 0, sizeof(StackEntry));
     return value;
@@ -58,7 +59,7 @@ f64 pop_double(RuntimeStack *stack) {
 /* push Float */
 void push_float(RuntimeStack *stack, f32 value) {
     //memset(&stack->store[stack->size], 0, sizeof(StackEntry));
-    u8 *tmp = stack->store[stack->size].entry;
+    void *tmp = &stack->store[stack->size].entry;
     memcpy(tmp, &value, sizeof(f32));
     stack->store[stack->size].type = STACK_ENTRY_FLOAT;
     stack->size++;
@@ -68,7 +69,7 @@ void push_float(RuntimeStack *stack, f32 value) {
 f32 pop_float(RuntimeStack *stack) {
     stack->size--;
     f32 value = 0;
-    u8 *tmp = stack->store[stack->size].entry;
+    void *tmp = &stack->store[stack->size].entry;
     memcpy(&value, tmp, sizeof(f32));
     memset(&stack->store[stack->size], 0, sizeof(StackEntry));
     return value;
@@ -77,7 +78,7 @@ f32 pop_float(RuntimeStack *stack) {
 /* pop Integer */
 s32 pop_int(RuntimeStack *stack) {
     stack->size--;
-    u8 *tmp = stack->store[stack->size].entry;
+    void *tmp = &stack->store[stack->size].entry;
     s32 value = 0;
     memcpy(&value, tmp, sizeof(s32));
     memset(&stack->store[stack->size], 0, sizeof(StackEntry));
@@ -87,7 +88,7 @@ s32 pop_int(RuntimeStack *stack) {
 /* push Long */
 void push_long(RuntimeStack *stack, s64 value) {
     //memset(&stack->store[stack->size], 0, sizeof(StackEntry));
-    u8 *tmp = stack->store[stack->size].entry;
+    void *tmp = &stack->store[stack->size].entry;
     memcpy(tmp, &value, sizeof(s64));
     stack->store[stack->size].type = STACK_ENTRY_LONG;
     stack->size++;
@@ -97,7 +98,7 @@ void push_long(RuntimeStack *stack, s64 value) {
 s64 pop_long(RuntimeStack *stack) {
     stack->size--;
     s64 value = 0;
-    u8 *tmp = stack->store[stack->size].entry;
+    void *tmp = &stack->store[stack->size].entry;
     memcpy(&value, tmp, sizeof(s64));
     memset(&stack->store[stack->size], 0, sizeof(StackEntry));
     return value;
@@ -106,7 +107,7 @@ s64 pop_long(RuntimeStack *stack) {
 /* push Ref */
 void push_ref(RuntimeStack *stack, __refer value) {
     //memset(&stack->store[stack->size], 0, sizeof(StackEntry));
-    u8 *tmp = stack->store[stack->size].entry;
+    void *tmp = &stack->store[stack->size].entry;
     memcpy(tmp, &value, sizeof(__refer));
     stack->store[stack->size].type = STACK_ENTRY_REF;
     if (value)garbage_refer_count_inc(value);
@@ -116,7 +117,7 @@ void push_ref(RuntimeStack *stack, __refer value) {
 __refer pop_ref(RuntimeStack *stack) {
     stack->size--;
     __refer value = 0;
-    u8 *tmp = stack->store[stack->size].entry;
+    void *tmp = &stack->store[stack->size].entry;
     memcpy(&value, tmp, sizeof(__refer));
     memset(&stack->store[stack->size], 0, sizeof(StackEntry));
     if (value)garbage_refer_count_dec(value);
@@ -125,7 +126,7 @@ __refer pop_ref(RuntimeStack *stack) {
 
 
 void push_entry(RuntimeStack *stack, StackEntry *entry) {
-    u8 *tmp = stack->store[stack->size].entry;
+    void *tmp = &stack->store[stack->size].entry;
     memcpy(tmp, entry, sizeof(StackEntry));
     if (entry->type == STACK_ENTRY_REF) {
         __refer ref = entry_2_refer(entry);
@@ -137,7 +138,7 @@ void push_entry(RuntimeStack *stack, StackEntry *entry) {
 /* Pop Stack Entry */
 void pop_entry(RuntimeStack *stack, StackEntry *entry) {
     stack->size--;
-    memcpy(entry, stack->store[stack->size].entry, sizeof(StackEntry));
+    memcpy(entry, &stack->store[stack->size].entry, sizeof(StackEntry));
     memset(&stack->store[stack->size], 0, sizeof(StackEntry));
     if (entry->type == STACK_ENTRY_REF) {
         __refer ref = entry_2_refer(entry);
@@ -148,19 +149,19 @@ void pop_entry(RuntimeStack *stack, StackEntry *entry) {
 /* Entry to Int */
 s32 entry_2_int(StackEntry *entry) {
     s32 value = 0;
-    memcpy(&value, entry->entry, sizeof(s32));
+    memcpy(&value, &entry->entry, sizeof(s32));
     return value;
 }
 
 s64 entry_2_long(StackEntry *entry) {
     s64 value = 0;
-    memcpy(&value, entry->entry, sizeof(s64));
+    memcpy(&value, &entry->entry, sizeof(s64));
     return value;
 }
 
 __refer entry_2_refer(StackEntry *entry) {
     __refer value = 0;
-    memcpy(&value, entry->entry, sizeof(__refer));
+    memcpy(&value, &entry->entry, sizeof(__refer));
     return value;
 }
 
@@ -185,7 +186,7 @@ s32 is_ref(StackEntry *entry) {
 }
 
 void peek_entry(RuntimeStack *stack, StackEntry *entry, int index) {
-    memcpy(entry, stack->store[index].entry, sizeof(StackEntry));
+    memcpy(entry, &stack->store[index].entry, sizeof(StackEntry));
 }
 
 //======================= localvar =============================
@@ -235,6 +236,9 @@ s32 localvar_dispose(Runtime *runtime) {
             garbage_refer_count_dec(ref);
         }
     }
+    if (runtime->localVariables == NULL) {
+        int debug = 1;
+    }
     jvm_free(runtime->localVariables);
     runtime->localVariables = NULL;
     runtime->localvar_count = 0;
@@ -257,6 +261,9 @@ void localvar_setInt(Runtime *runtime, s32 index, s32 val) {
 void localvar_setRefer(Runtime *runtime, s32 index, __refer val) {
     localvar_clear_refer(index, runtime);
     runtime->localVariables[index].refer = val;
+    if (((long)val & 0x01000000) != ((long)val & 0xff000000)) {
+        int debug = 1;
+    }
 }
 
 s32 localvar_getInt(Runtime *runtime, s32 index) {

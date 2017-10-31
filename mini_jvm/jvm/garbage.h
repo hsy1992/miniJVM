@@ -85,7 +85,6 @@ s32 garbage_is_alive(__refer sonPtr);
 void garbage_destory_memobj(MemoryBlock *k);
 
 
-s32 garbage_reg(__refer ref);
 
 s32 garbage_refer_count_dec(__refer ref);
 

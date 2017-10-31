@@ -242,7 +242,8 @@ int dbg_check_addr(char *msg, void *addr, int opt) {
                     (unsigned long) p->size, p->in.free.file, p->in.free.line);
             return CHK_FREED;
         }
-    if (opt) fprintf(stderr, "%s:%lu: %s: unknown\n", dbg_file_name, dbg_line_number, msg);
+    if (opt)
+        fprintf(stderr, "%s:%lu: %s: unknown\n", dbg_file_name, dbg_line_number, msg);
     return 0;
 }
 

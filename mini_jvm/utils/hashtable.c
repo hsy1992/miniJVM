@@ -279,7 +279,9 @@ HashtableEntry *hashtable_iter_next_entry(HashtableIterator *iterator) {
     }
     return current_entry;
 }
-
+HashtableKey hashtable_iter_remove(HashtableIterator *iterator) {
+    return HASH_NULL;
+}
 HashtableValue hashtable_iter_next_value(HashtableIterator *iterator) {
     HashtableEntry *current_entry = hashtable_iter_next_entry(iterator);
 
