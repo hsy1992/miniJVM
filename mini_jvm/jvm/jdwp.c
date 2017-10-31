@@ -58,7 +58,6 @@ void *jdwp_thread_dispacher(void *para) {
     JdwpServer *srv = (JdwpServer *) para;
     Runtime *runtime = runtime_create(NULL);
     srv->runtime = runtime;
-    push_ref(runtime->stack, srv->JDWP_ROOT); //用于指引垃圾回收器，这个对象是根结点
     s32 i;
     while (!srv->exit) {
         for (i = 0; i < srv->clients->length; i++) {
@@ -73,7 +72,6 @@ void *jdwp_thread_dispacher(void *para) {
         check_suspend_and_pause(runtime);
         threadSleep(20);
     }
-    pop_ref(runtime->stack);
     runtime_destory(runtime);
     srv->runtime = NULL;
 
@@ -88,8 +86,6 @@ s32 jdwp_start_server() {
     jdwpserver.clients = arraylist_create(0);
     jdwpserver.events = arraylist_create(0);
     jdwpserver.event_sets = hashtable_create(DEFAULT_HASH_FUNC, DEFAULT_HASH_EQUALS_FUNC);
-    jdwpserver.JDWP_ROOT = class_create();
-    jdwpserver.JDWP_ROOT->name = utf8_create_c("JdwpRoot");
 
     pthread_create(&jdwpserver.pt_listener, NULL, jdwp_thread_listener, &jdwpserver);
     pthread_create(&jdwpserver.pt_dispacher, NULL, jdwp_thread_dispacher, &jdwpserver);
@@ -123,8 +119,6 @@ s32 jdwp_stop_server() {
     }
     hashtable_destory(jdwpserver.event_sets);
     //
-
-    memoryblock_destory(jdwpserver.JDWP_ROOT);
 
     //
     utf8_destory(jdwpserver.ip);

@@ -593,7 +593,7 @@ public class Foo1 {
 
         System.out.println("fi=" + fi);
         int i = 0;
-        while (i++ < 1) {
+        while (i++ < 100) {
             try {
                 Thread.sleep(1000);
                 int debug = 1;
@@ -675,28 +675,28 @@ public class Foo1 {
 
     public static void main() {
         Foo1 f = new Foo1();
-        for (int i = 0; i < 100; i++) {
-            f.t1();
-            f.t2();
-            f.t3();
-            f.t4();
+        for (int i = 0; i < 1; i++) {
+//            f.t1();
+//            f.t2();
+//            f.t3();
+//            f.t4();
             f.t5();
-            f.t6();
-            f.t7();
-            f.t8();
-            f.t9();
-            f.t10();
-            f.t11();
-            f.t12();
-            f.t13();
-            f.t14();
-//            f.t15();
-//            f.t16();
-//            f.t17();
-            f.t18();
-            f.t19();
-            f.t20();
-            f.t21();
+//            f.t6();
+//            f.t7();
+//            f.t8();
+//            f.t9();
+//            f.t10();
+//            f.t11();
+//            f.t12();
+//            f.t13();
+//            f.t14();
+////            f.t15();
+////            f.t16();
+////            f.t17();
+//            f.t18();
+//            f.t19();
+//            f.t20();
+//            f.t21();
         }
     }
 

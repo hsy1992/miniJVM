@@ -8,23 +8,12 @@ void getMemBlockName(void *memblock, Utf8String *name);
 
 void __garbage_clear(void);
 
-Hashset *_garbage_get_set(void);
-
-void _garbage_put_set(Hashset *set);
-
-void garbage_mark_son(__refer r);
 
 s32 checkAndWaitThreadIsSuspend(Runtime *runtime);
 
-void _garbage_derefer(__refer sonPtr, __refer parentPtr, s32 clearAll);
-
-void _garbage_refer(__refer sonPtr, __refer parentPtr);
-
-void _garbage_derefer_all(__refer parentPtr);
 
 s32 garbage_stop_the_world();
 
-void _garbage_buf_2_table();
 
 /**
  * 创建垃圾收集线程，
@@ -65,9 +54,6 @@ s32 garbage_collector_create() {
     collector = jvm_alloc(sizeof(Collector));
     collector->objs = hashtable_create(DEFAULT_HASH_FUNC, DEFAULT_HASH_EQUALS_FUNC);
 
-    collector->buffer = linkedlist_create();
-    thread_lock_init(&collector->bufferlock);
-
     collector->_garbage_thread_status = GARBAGE_THREAD_PAUSE;
     thread_lock_init(&collector->garbagelock);
 
@@ -98,9 +84,6 @@ void garbage_collector_destory() {
     collector->objs = NULL;
 
     //
-    linkedlist_destory(collector->buffer);
-    thread_lock_dispose(&collector->bufferlock);
-    //
     thread_lock_dispose(&collector->garbagelock);
     jvm_free(collector);
     collector = NULL;
@@ -111,22 +94,34 @@ void __garbage_clear() {
     HashtableIterator hti;
     //
     jvm_printf("objs size :%lld\n", collector->objs->entries);
-    //解除所有引用关系后，回收全部对象
-    while (garbage_collect()) {
 
+    //解除所有引用关系后，回收全部对象
+    while (garbage_collect());//collect instance
+
+    //release classes
+    hashtable_iterate(sys_classloader->classes, &hti);
+    for (; hashtable_iter_has_more(&hti);) {
+        HashtableValue v = hashtable_iter_next_value(&hti);
+        garbage_refer_count_dec(v);
     }
+    hashtable_clear(sys_classloader->classes);
+    hashtable_iterate(array_classloader->classes, &hti);
+    for (; hashtable_iter_has_more(&hti);) {
+        HashtableValue v = hashtable_iter_next_value(&hti);
+        garbage_refer_count_dec(v);
+    }
+    hashtable_clear(array_classloader->classes);
+    while (garbage_collect());//collect classes
     //
     jvm_printf("objs size :%lld\n", collector->objs->entries);
+
+    dump_refer();
     //
-    hashtable_iterate(collector->objs, &hti);
-    for (; hashtable_iter_has_more(&hti);) {
-        HashtableKey k = hashtable_iter_next_key(&hti);
-        Hashset *v = (Hashset *) hashtable_get(collector->objs, k);
-        if (v != HASH_NULL) {
-            hashset_destory(v);
-            hashtable_put(collector->objs, k, NULL);
-        }
-    }
+//    hashtable_iterate(collector->objs, &hti);
+//    for (; hashtable_iter_has_more(&hti);) {
+//        HashtableKey k = hashtable_iter_next_key(&hti);
+//        garbage_destory_memobj((MemoryBlock *) k);
+//    }
 
 }
 
@@ -185,14 +180,16 @@ void getMemBlockName(void *memblock, Utf8String *name) {
         switch (mb->type) {
             case MEM_TYPE_CLASS: {
                 Class *clazz = (Class *) mb;
+                utf8_append_c(name, "C");
                 utf8_append(name, clazz->name);
                 break;
             }
             case MEM_TYPE_INS: {
                 Instance *ins = (Instance *) mb;
                 utf8_append_c(name, "L");
-                if (sys_classloader)
-                    utf8_append(name, ins->mb.clazz->name);
+                Class *clazz = hashtable_get(collector->objs, ins->mb.clazz);
+                if (clazz)
+                    utf8_append(name, clazz->name);
                 utf8_append_c(name, ";");
                 break;
             }
@@ -200,8 +197,9 @@ void getMemBlockName(void *memblock, Utf8String *name) {
                 Instance *arr = (Instance *) mb;
 
                 utf8_append_c(name, "Array{");
-                if (array_classloader)
-                    utf8_append(name, arr->mb.clazz->name);
+                Class *clazz = hashtable_get(collector->objs, arr->mb.clazz);
+                if (clazz)
+                    utf8_append(name, clazz->name);
                 utf8_append_c(name, "}");
                 break;
             }
@@ -224,7 +222,7 @@ void dump_refer() {
         HashtableKey k = hashtable_iter_next_key(&hti);
         Utf8String *name = utf8_create();
         getMemBlockName(k, name);
-        jvm_printf("%s[%llx] :{ %d }\n", utf8_cstr(name), (s64) (long) k, ((MemoryBlock *) k)->refer_count);
+        jvm_printf("   %s[%llx] count:%d\n", utf8_cstr(name), (s64) (long) k, ((MemoryBlock *) k)->refer_count);
         utf8_destory(name);
     }
 
@@ -286,7 +284,7 @@ s32 garbage_collect() {
         MemoryBlock *mb = (MemoryBlock *) k;
 
         if (mb->refer_count == 0) {
-            //memoryblock_destory((Instance *) mb);
+            garbage_destory_memobj(mb);
             del++;
             hashtable_remove(collector->objs, mb, 0);
         }
@@ -313,6 +311,16 @@ s32 checkAndWaitThreadIsSuspend(Runtime *runtime) {
         }
     }
     return 0;
+}
+
+void garbage_destory_memobj(MemoryBlock *mb) {
+#if _JVM_DEBUG_GARBAGE_DUMP
+    Utf8String *sus = utf8_create();
+    getMemBlockName(mb, sus);
+    jvm_printf("X: %s[%llx] count:%d\n", utf8_cstr(sus), (s64) (long) mb, mb->refer_count);
+    utf8_destory(sus);
+#endif
+    memoryblock_destory((Instance *) mb);
 }
 
 /**
@@ -395,8 +403,15 @@ s32 garbage_refer_count_inc(__refer ref) {
     if (mb) {
         garbage_thread_lock();
         mb->refer_count++;
-        hashtable_put(collector->objs, mb, NULL);
+        hashtable_put(collector->objs, mb, mb);
         garbage_thread_unlock();
+
+#if _JVM_DEBUG_GARBAGE_DUMP
+        Utf8String *sus = utf8_create();
+        getMemBlockName(mb, sus);
+        jvm_printf("+: %s[%llx] count:%d\n", utf8_cstr(sus), (s64) (long) mb, mb->refer_count);
+        utf8_destory(sus);
+#endif
     }
     return 0;
 }
@@ -410,6 +425,12 @@ s32 garbage_refer_count_dec(__refer ref) {
             jvm_printf("garbage detect error: instance not found %llx\n", (s64) (long) mb);
         }
         garbage_thread_unlock();
+#if _JVM_DEBUG_GARBAGE_DUMP
+        Utf8String *sus = utf8_create();
+        getMemBlockName(mb, sus);
+        jvm_printf("-: %s[%llx] count:%d\n", utf8_cstr(sus), (s64) (long) mb, mb->refer_count);
+        utf8_destory(sus);
+#endif
     }
     return 0;
 }

@@ -20,12 +20,9 @@ void main_thread_create(Runtime *runtime) {
     Class *thread_clazz = classes_load_get_c("java/lang/Thread", runtime);
     //为主线程创建Thread实例
     main_thread = instance_create(thread_clazz);
-    //pthread_t pthread = pthread_self();
-    runtime->threadInfo->jthread = main_thread;
-    runtime->threadInfo->thread_status = THREAD_STATUS_RUNNING;
-    instance_init(main_thread, runtime);//必须放在最好，初始化时需要用到前面的赋值
-    threadlist_add(runtime);
-    jthread_set_threadq_value(main_thread, runtime);
+    instance_init(main_thread, runtime);
+    jthread_init(main_thread);
+
     garbage_refer_count_inc(main_thread);
 }
 
@@ -34,6 +31,7 @@ void main_thread_destory() {
     main_runtime->threadInfo->is_suspend = 1;
     //主线程实例被回收
     garbage_refer_count_dec(main_thread);
+    jthread_dispose(main_thread);
     main_thread = NULL;
 }
 
@@ -68,13 +66,11 @@ ClassLoader *classloader_create(c8 *path) {
     class_loader->JVM_CLASS = class_create();
     class_loader->JVM_CLASS->name = utf8_create_c("ClassLoader");
     //创建数组类容器
-
+    garbage_refer_count_inc(class_loader->JVM_CLASS);
     return class_loader;
 }
 
 void classloader_destory(ClassLoader *class_loader) {
-
-    garbage_refer_count_dec(class_loader->JVM_CLASS);
 
     utf8_destory(class_loader->g_classpath);
     class_loader->g_classpath = NULL;
@@ -82,6 +78,7 @@ void classloader_destory(ClassLoader *class_loader) {
     class_loader->classes = NULL;
     jvm_free(class_loader);
 }
+
 
 s32 execute(c8 *p_classpath, c8 *p_mainclass, s32 argc, c8 **argv) {
 #ifdef __MEM_LEAK_DETECT
@@ -99,14 +96,15 @@ s32 execute(c8 *p_classpath, c8 *p_mainclass, s32 argc, c8 **argv) {
 
     //为指令创建索引
     instructionsIndexies = instruct_indexies_create();
+    //创建垃圾收集器
+    MAX_HEAP_SIZE = 20 * 1024 * 1024;//if heapsize great than MAX, gc would be trigger
+    garbage_collector_create();
 
     sys_classloader = classloader_create(p_classpath);
 
     array_classloader = classloader_create("");
 
-    //创建垃圾收集器
-    MAX_HEAP_SIZE = 20 * 1024 * 1024;//if heapsize great than MAX, gc would be trigger
-    garbage_collector_create();
+
 
 
     //创建线程容器
@@ -161,6 +159,7 @@ s32 execute(c8 *p_classpath, c8 *p_mainclass, s32 argc, c8 **argv) {
         MethodInfo *main = find_methodInfo_by_name(str_mainClsName, methodName, methodType);
         if (main) {
             main_thread_create(runtime);
+            Runtime *mr = jthread_get_threadq_value(main_thread);
             //启动调试器
             //startJdwp(runtime);
             jdwp_start_server();
@@ -168,7 +167,7 @@ s32 execute(c8 *p_classpath, c8 *p_mainclass, s32 argc, c8 **argv) {
             garbage_thread_resume();
 
             //准备参数
-            localvar_init(runtime, main->para_count + 1);
+            localvar_init(mr, main->para_count + 1);
             s32 count = argc;
             Long2Double l2d;
             s32 bytes = data_type_bytes[DATATYPE_REFERENCE];
@@ -188,20 +187,20 @@ s32 execute(c8 *p_classpath, c8 *p_mainclass, s32 argc, c8 **argv) {
             jvm_printf("\n\n\n\n\n\n================================= main start ================================\n");
             //调用主方法
             //if (java_debug)jthread_suspend(runtime);//jdwp 会启动调试器
-            ret = execute_method(main, runtime, clazz);
+            ret = execute_method(main, mr, clazz);
             if (ret != RUNTIME_STATUS_NORMAL) {
-                print_exception(runtime);
+                print_exception(mr);
             }
-            runtime->threadInfo->is_blocking = 1;
+            mr->threadInfo->is_blocking = 1;
             while ((thread_list->length) > 1) {//wait for other thread over ,
-                check_suspend_and_pause(runtime);
+                check_suspend_and_pause(mr);
                 threadSleep(100);
             }
-            runtime->threadInfo->is_blocking = 0;
+            mr->threadInfo->is_blocking = 0;
             jvm_printf("================================= main  end  ================================\n");
             jvm_printf("spent %lld\n", (currentTimeMillis() - start));
 
-            localvar_dispose(runtime);
+            localvar_dispose(mr);
 #if _JVM_DEBUG_PROFILE
             hashtable_iterate(instruct_profile, &hti);
             for (; hashtable_iter_has_more(&hti);) {
@@ -220,12 +219,14 @@ s32 execute(c8 *p_classpath, c8 *p_mainclass, s32 argc, c8 **argv) {
     }
 
 
+
+    //
+    garbage_collector_destory();
     //
     classloader_destory(sys_classloader);
     sys_classloader = NULL;
     classloader_destory(array_classloader);
     array_classloader = NULL;
-    garbage_collector_destory();
     //
     utf8_destory(str_mainClsName);
     arraylist_destory(thread_list);

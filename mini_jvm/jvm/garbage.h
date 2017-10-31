@@ -27,9 +27,7 @@ struct _Collector {
     //
     pthread_t _garbage_thread;//垃圾回收线程
     ThreadLock garbagelock;
-    //
-    LinkedList *buffer;
-    ThreadLock bufferlock;
+
     //
     u8 _garbage_thread_status;
     s64 _garbage_count;
@@ -82,21 +80,9 @@ s32 garbage_collect(void);
 
 void dump_refer(void);
 
-//void garbage_refer(void *sonPtr, void *parentPtr);
-//
-//void garbage_derefer(void *sonPtr, void *parentPtr);
-//
-//void garbage_derefer_all(void *parentPtr);
-
-s32 garbage_is_refer_by(__refer sonPtr, __refer parentPtr);
-
 s32 garbage_is_alive(__refer sonPtr);
 
-void garbage_destory_memobj(__refer k);
-
-//s32 garbage_mark_by_threads(void);
-
-s32 garbage_mark_refered_obj(Runtime *pruntime);
+void garbage_destory_memobj(MemoryBlock *k);
 
 
 s32 garbage_reg(__refer ref);

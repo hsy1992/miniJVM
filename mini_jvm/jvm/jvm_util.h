@@ -137,6 +137,8 @@ struct _ThreadLock {
     Instance *jthread_holder;
 };
 
+s32 jthread_init(Instance *jthread);
+
 s32 jthread_dispose(Instance *jthread);
 
 void *jtherad_loader(void *para);

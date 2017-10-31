@@ -559,6 +559,7 @@ s32 jthread_dispose(Instance *jthread) {
 
 void *jtherad_loader(void *para) {
     Instance *jthread = (Instance *) para;
+    jthread_init(jthread);
     s32 ret = 0;
     Runtime *runtime = (Runtime *) jthread_get_threadq_value(jthread);
     runtime->threadInfo->pthread = pthread_self();
@@ -573,14 +574,16 @@ void *jtherad_loader(void *para) {
     jvm_printf("therad_loader    %s.%s%s  \n", utf8_cstr(method->_this_class->name),
            utf8_cstr(method->name), utf8_cstr(method->descriptor));
 #endif
-
+    garbage_refer_count_inc(jthread);
     if (java_debug)event_on_thread_start(runtime->threadInfo->jthread);
     runtime->threadInfo->thread_status = THREAD_STATUS_RUNNING;
     push_ref(runtime->stack, (__refer) jthread);
     ret = execute_method(method, runtime, method->_this_class);
     runtime->threadInfo->thread_status = THREAD_STATUS_ZOMBIE;
+    garbage_refer_count_dec(jthread);
+    jthread_dispose(jthread);
     //jvm_printf("thread over %llx\n", (s64) (long) jthread);
-    return (void *) (long) ret;
+    return para;
 }
 
 pthread_t jthread_start(Instance *ins) {//
@@ -863,9 +866,6 @@ Instance *instance_create(Class *clazz) {
     ins->mb.clazz = clazz;
 
     ins->obj_fields = jvm_alloc(ins->mb.clazz->field_instance_len);
-    if (instance_of(classes_get_c(STR_CLASS_JAVA_LANG_THREAD), ins)) {
-        jthread_init(ins);
-    }
     return ins;
 }
 
@@ -900,10 +900,13 @@ void instance_clear_refer(Instance *ins) {
         FieldPool *fp = &clazz->fieldPool;
         for (i = 0; i < fp->field_used; i++) {
             FieldInfo *fi = &fp->field[i];
-            if (isDataReferByIndex(fi->datatype_idx)) {
-                __refer ref = getFieldRefer(ins->arr_body + fi->offset);
-                if (ref) {
-                    setFieldRefer(ins->arr_body + fi->offset, NULL);
+//            if (utf8_equals_c(fi->name, "small5pow")) {
+//                s32 debug = 1;
+//            }
+            if ((fi->access_flags & ACC_STATIC) == 0 && isDataReferByIndex(fi->datatype_idx)) {
+                c8 *ptr = getInstanceFieldPtr(ins, fi);
+                if (ptr) {
+                    setFieldRefer(ptr, NULL);
                 }
             }
         }
@@ -913,9 +916,6 @@ void instance_clear_refer(Instance *ins) {
 
 s32 instance_destory(Instance *ins) {
 
-    if (instance_of(classes_get_c(STR_CLASS_JAVA_LANG_THREAD), ins)) {
-        jthread_dispose(ins);
-    }
     instance_clear_refer(ins);
     jthreadlock_destory(&ins->mb);
     jvm_free(ins->obj_fields);

@@ -6,6 +6,8 @@
 #include "jvm.h"
 #include "jvm_util.h"
 
+
+void class_clear_refer(Class *clazz);
 //===============================    创建及加载  ==================================
 
 
@@ -37,12 +39,15 @@ s32 class_destory(Class *clazz) {
 }
 
 s32 _DESTORY_CLASS(Class *_this) {
+    //
+    class_clear_refer(_this);
+    if (_this->field_static)jvm_free(_this->field_static);
+    //
     _class_method_info_destory(_this);
     _class_interface_pool_destory(_this);
     _class_field_info_destory(_this);
     _class_constant_pool_destory(_this);
     _class_attribute_info_destory(_this);
-    if (_this->field_static)jvm_free(_this->field_static);
     _this->field_static = NULL;
     if (_this->constant_item_ptr)jvm_free(_this->constant_item_ptr);
     _this->constant_item_ptr = NULL;
@@ -78,6 +83,26 @@ void constant_list_destory(Class *clazz) {
     arraylist_destory(clazz->constantPool.methodRef);
     arraylist_destory(clazz->constantPool.interfaceRef);
     arraylist_destory(clazz->constantPool.name_and_type);
+}
+
+void class_clear_refer(Class *clazz) {
+    s32 i;
+
+    FieldPool *fp = &clazz->fieldPool;
+    //if(clazz->s)
+    for (i = 0; i < fp->field_used; i++) {
+        FieldInfo *fi = &fp->field[i];
+//        if (utf8_equals_c(fi->name, "zones")) {
+//            s32 debug = 1;
+//        }
+        if ((fi->access_flags & ACC_STATIC) != 0 && isDataReferByIndex(fi->datatype_idx)) {
+            c8 *ptr = getStaticFieldPtr(fi);
+            if (ptr) {
+                setFieldRefer(ptr, NULL);
+            }
+        }
+    }
+
 }
 //===============================    初始化相关  ==================================
 

@@ -2010,8 +2010,9 @@ static inline s32 op_putfield_impl(u8 **opCode, Runtime *runtime, s32 isStatic) 
         fi = find_fieldInfo_by_fieldref(clazz, field_ref);
         find_constant_fieldref(clazz, field_ref)->fieldInfo = fi;
     }
-    c8 ch = utf8_char_at(fi->descriptor, 0);
-    s32 data_bytes = data_type_bytes[getDataTypeIndex(ch)];
+
+
+    s32 data_bytes = data_type_bytes[fi->datatype_idx];
     StackEntry entry;
     pop_entry(stack, &entry);
 
@@ -2037,20 +2038,11 @@ static inline s32 op_putfield_impl(u8 **opCode, Runtime *runtime, s32 isStatic) 
                (s64) (long) ptr, entry_2_long(&entry));
 #endif
 
-    if (isDataReferByTag(ch)) {//垃圾回收标识
-        __refer ref = getFieldRefer(ptr);
-//        if (ref) { //把老索引关闭
-//            if (isStatic) {
-//                garbage_derefer(ref, fi->_this_class);
-//            } else {
-//                garbage_derefer(ref, ins);
-//            }
-//        }
+    if (isDataReferByIndex(fi->datatype_idx)) {//垃圾回收标识
+
         __refer newins = entry_2_refer(&entry);
-//        if (isStatic) { //建立新索引
-//            garbage_refer(newins, fi->_this_class);
-//        } else {
-//            garbage_refer(newins, ins);
+//        if (utf8_equals_c(fi->name, "small5pow")) {
+//            s32 debug = 1;
 //        }
         setFieldRefer(ptr, newins);
     } else {
@@ -3237,7 +3229,7 @@ s32 synchronized_unlock_method(MethodInfo *method, Runtime *runtime) {
     //synchronized process
     if (method->access_flags & ACC_SYNCHRONIZED) {
         if (method->access_flags & ACC_STATIC) {
-            jthread_unlock((MemoryBlock *)runtime->clazz, runtime);
+            jthread_unlock((MemoryBlock *) runtime->clazz, runtime);
         } else {
             jthread_unlock(&((Instance *) localvar_getRefer(runtime, 0))->mb, runtime);
         }
@@ -3248,7 +3240,7 @@ s32 synchronized_unlock_method(MethodInfo *method, Runtime *runtime) {
 s32 execute_method(MethodInfo *method, Runtime *pruntime, Class *clazz) {
     s32 j = 0, ret = 0;
 
-    Runtime *runtime=runtime_create(pruntime);
+    Runtime *runtime = runtime_create(pruntime);
 
     runtime->methodInfo = method;
     runtime->clazz = clazz;
