@@ -201,7 +201,7 @@ s32 execute(c8 *p_classpath, c8 *p_mainclass, s32 argc, c8 **argv) {
                 jarray_set_field(arr, i, &l2d);
                 utf8_destory(utfs);
             }
-            push_ref(runtime->stack, arr);
+            push_ref(mr->stack, arr);
             s64 start = currentTimeMillis();
             jvm_printf("\n\n\n\n\n\n================================= main start ================================\n");
             //调用主方法

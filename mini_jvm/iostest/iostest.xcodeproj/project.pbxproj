@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		45631EE31FA9FA9A0013BDE1 /* classes in Resources */ = {isa = PBXBuildFile; fileRef = 45631EE21FA9FA990013BDE1 /* classes */; };
 		45872C451F9DE5F300BD1018 /* linkedlist.c in Sources */ = {isa = PBXBuildFile; fileRef = 45872C441F9DE5F200BD1018 /* linkedlist.c */; };
 		45C1242F1F87232100BF3925 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45C1242E1F87232100BF3925 /* AppDelegate.swift */; };
 		45C124311F87232100BF3925 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45C124301F87232100BF3925 /* ViewController.swift */; };
@@ -38,7 +39,6 @@
 		45C1254D1F87CE1400BF3925 /* java_native_reflect.c in Sources */ = {isa = PBXBuildFile; fileRef = 45C1253E1F87CE1300BF3925 /* java_native_reflect.c */; };
 		45C1254E1F87CE1400BF3925 /* class.c in Sources */ = {isa = PBXBuildFile; fileRef = 45C1253F1F87CE1300BF3925 /* class.c */; };
 		45C1254F1F87CE1400BF3925 /* java_native_io.c in Sources */ = {isa = PBXBuildFile; fileRef = 45C125411F87CE1400BF3925 /* java_native_io.c */; };
-		45C1255C1F87D33B00BF3925 /* classes in Resources */ = {isa = PBXBuildFile; fileRef = 45C1255B1F87D19D00BF3925 /* classes */; };
 		45C125661F87E9DE00BF3925 /* phashtable.c in Sources */ = {isa = PBXBuildFile; fileRef = 45C1255F1F87E9DE00BF3925 /* phashtable.c */; };
 		45C125671F87E9DE00BF3925 /* memleak.c in Sources */ = {isa = PBXBuildFile; fileRef = 45C125601F87E9DE00BF3925 /* memleak.c */; };
 		45C125681F87E9DE00BF3925 /* README in Resources */ = {isa = PBXBuildFile; fileRef = 45C125611F87E9DE00BF3925 /* README */; };
@@ -64,6 +64,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		45631EE21FA9FA990013BDE1 /* classes */ = {isa = PBXFileReference; lastKnownFileType = folder; name = classes; path = ../../javalib_test/build/classes; sourceTree = "<group>"; };
 		45872C431F9DE5F200BD1018 /* linkedlist.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = linkedlist.h; path = ../../utils/linkedlist.h; sourceTree = "<group>"; };
 		45872C441F9DE5F200BD1018 /* linkedlist.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = linkedlist.c; path = ../../utils/linkedlist.c; sourceTree = "<group>"; };
 		45C1242B1F87232100BF3925 /* iostest.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = iostest.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -117,7 +118,6 @@
 		45C1253F1F87CE1300BF3925 /* class.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = class.c; path = ../../jvm/class.c; sourceTree = "<group>"; };
 		45C125401F87CE1400BF3925 /* jdwp.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = jdwp.h; path = ../../jvm/jdwp.h; sourceTree = "<group>"; };
 		45C125411F87CE1400BF3925 /* java_native_io.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = java_native_io.c; path = ../../jvm/java_native_io.c; sourceTree = "<group>"; };
-		45C1255B1F87D19D00BF3925 /* classes */ = {isa = PBXFileReference; lastKnownFileType = folder; name = classes; path = ../java/build/classes; sourceTree = "<group>"; };
 		45C1255E1F87E9DE00BF3925 /* memleak.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = memleak.h; path = ../../cmem/memleak.h; sourceTree = "<group>"; };
 		45C1255F1F87E9DE00BF3925 /* phashtable.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = phashtable.c; path = ../../cmem/phashtable.c; sourceTree = "<group>"; };
 		45C125601F87E9DE00BF3925 /* memleak.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = memleak.c; path = ../../cmem/memleak.c; sourceTree = "<group>"; };
@@ -157,7 +157,7 @@
 		45C124221F87232100BF3925 = {
 			isa = PBXGroup;
 			children = (
-				45C1255B1F87D19D00BF3925 /* classes */,
+				45631EE21FA9FA990013BDE1 /* classes */,
 				45C1242D1F87232100BF3925 /* iostest */,
 				45C124421F87232100BF3925 /* iostestTests */,
 				45C1244D1F87232100BF3925 /* iostestUITests */,
@@ -393,10 +393,10 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				45C1255C1F87D33B00BF3925 /* classes in Resources */,
 				45C124391F87232100BF3925 /* LaunchScreen.storyboard in Resources */,
 				45C124361F87232100BF3925 /* Assets.xcassets in Resources */,
 				45C124341F87232100BF3925 /* Main.storyboard in Resources */,
+				45631EE31FA9FA9A0013BDE1 /* classes in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
