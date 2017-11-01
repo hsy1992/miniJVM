@@ -573,7 +573,7 @@ void *jtherad_loader(void *para) {
     utf8_destory(methodType);
 #if _JVM_DEBUG > 5
     jvm_printf("therad_loader    %s.%s%s  \n", utf8_cstr(method->_this_class->name),
-           utf8_cstr(method->name), utf8_cstr(method->descriptor));
+               utf8_cstr(method->name), utf8_cstr(method->descriptor));
 #endif
     garbage_refer_count_inc(jthread);
     if (java_debug)event_on_thread_start(runtime->threadInfo->jthread);
@@ -650,7 +650,7 @@ s32 jthread_lock(MemoryBlock *mb, Runtime *runtime) { //可能会重入，同一
 #if _JVM_DEBUG > 5
     invoke_deepth(runtime);
     jvm_printf("  lock: %llx   lock holder: %llx \n", (s64) (long) (runtime->threadInfo->jthread),
-           (s64) (long) (jtl->jthread_holder));
+               (s64) (long) (jtl->jthread_holder));
 #endif
     return 0;
 }
@@ -666,7 +666,7 @@ s32 jthread_unlock(MemoryBlock *mb, Runtime *runtime) {
 #if _JVM_DEBUG > 5
     invoke_deepth(runtime);
     jvm_printf("unlock: %llx   lock holder: %llx, \n", (s64) (long) (runtime->threadInfo->jthread),
-           (s64) (long) (jtl->jthread_holder));
+               (s64) (long) (jtl->jthread_holder));
 #endif
     return 0;
 }

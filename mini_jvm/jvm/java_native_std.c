@@ -760,7 +760,7 @@ s32 java_io_PrintStream_printImpl(Runtime *runtime, Class *clazz) {
             for (; i < ptr->arr_length; i++) {
                 u16 ch = jchar_arr[i];
                 //swap_endian_little_big((u8*)&ch, sizeof(ch));
-                jvm_printf("%c", (u8) ch);
+                printf("%c", ch);
             }
         }
     }
@@ -895,7 +895,7 @@ static java_native_method method_table[] = {
         {"java/lang/Thread",                    "interrupt0",        "()V",                                        java_lang_Thread_interrupt0},
         {"java/lang/Throwable",                 "printStackTrace0",  "",                                           java_io_Throwable_printStackTrace0},
         {"java/lang/Throwable",                 "buildStackElement", "()Ljava/lang/StackTraceElement;",            java_io_Throwable_buildStackElement},
-        {"java/io/PrintStream",                 "printImpl",         "",                                           java_io_PrintStream_printImpl},
+        {"java/io/PrintStream",                 "printImpl",         "(Ljava/lang/String;)V",                                           java_io_PrintStream_printImpl},
 };
 
 

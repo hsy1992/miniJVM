@@ -178,9 +178,10 @@ void getMemBlockName(void *memblock, Utf8String *name) {
     } else {
         switch (mb->type) {
             case MEM_TYPE_CLASS: {
-                Class *clazz = (Class *) mb;
                 utf8_append_c(name, "C");
-                utf8_append(name, clazz->name);
+                Class *clazz = hashtable_get(collector->objs, mb);
+                if (clazz)
+                    utf8_append(name, clazz->name);
                 break;
             }
             case MEM_TYPE_INS: {
@@ -282,7 +283,7 @@ s32 garbage_collect() {
         HashtableKey k = hashtable_iter_next_key(&hti);
         MemoryBlock *mb = (MemoryBlock *) k;
 
-        if (mb->refer_count == 0) {
+        if (mb->refer_count <= 0) {
             hashtable_remove(collector->objs, mb, 0);
             garbage_destory_memobj(mb);
             del++;
@@ -421,7 +422,7 @@ s32 garbage_refer_count_inc(__refer ref) {
 s32 garbage_refer_count_dec(__refer ref) {
     MemoryBlock *mb = (MemoryBlock *) ref;
     if (mb) {
-        if (mb->refer_count == 0) {
+        if (mb->refer_count == 0 && mb->type == MEM_TYPE_CLASS) {
             int debug = 1;
         }
         garbage_thread_lock();

@@ -265,7 +265,7 @@ void dbg_heap_dump(char *key) {
         buf = malloc(strlen(p->file) + 2 * length(long) + 20);
         sprintf(buf, "(alloc: %s:%lu size: %lu)\n", p->file, p->line, (unsigned long) p->size);
 //        print_buf(p->addr, p->size);
-//        fprintf(stderr,"%llx\n",(long long)(long)p->addr);
+        fprintf(stderr,"%llx\n",(long long)(long)p->addr);
         if (strstr(buf, key)) fputs(buf, stderr);
         free(buf);
     }

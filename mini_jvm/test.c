@@ -65,7 +65,7 @@ void t5() {
  *
  */
 int main(int argc, char **argv) {
-    s32 ret = execute("../java/build/classes/", "test/Foo1", argc, argv);
+    s32 ret = execute("../../javalib_test/build/classes/", "test/Foo1", argc, argv);
 //    s32 ret;
 //    t5();
 

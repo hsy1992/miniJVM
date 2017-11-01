@@ -1722,8 +1722,8 @@ s32 op_invokevirtual(u8 **opCode, Runtime *runtime) {
     ConstantMethodRef *cmr = find_constant_method_ref(clazz, object_ref);//此cmr所描述的方法，对于不同的实例，有不同的method
 
     Instance *ins = getInstanceInStack(clazz, cmr, runtime->stack);
-//    if (ins == 7)
-//        ins = getInstanceInStack(clazz, cmr, runtime->stack);
+    if (ins == NULL)
+        ins = getInstanceInStack(clazz, cmr, runtime->stack);
     if (ins == NULL) {
         Instance *exception = exception_create(JVM_EXCEPTION_NULLPOINTER, runtime);
         push_ref(runtime->stack, (__refer) exception);
@@ -1922,7 +1922,7 @@ static inline s32 op_ldc_impl(u8 **opCode, Runtime *runtime, s32 index) {
 
 #if _JVM_DEBUG > 5
             invoke_deepth(runtime);
-            jvm_printf("ldc: [%llx] =\"%s\"\n", (s64) (long) cutf->jstr, utf8_cstr(cutf->utfstr));
+            jvm_printf("ldc: [%llx] =\"%s\"\n", (s64) (long) jstr, utf8_cstr(cutf->utfstr));
 #endif
             break;
         }
@@ -3178,39 +3178,37 @@ void stack2localvar(MethodInfo *method, Runtime *father, Runtime *son) {
     Utf8String *paraType = method->paraType;
     s32 i;
     StackEntry entry;
-    s32 i_local = 0;
     s32 paraLen = paraType->length;
-    s32 ins_this = 0;
-    s32 stack_size = father->stack->size;
-    s32 stack_pointer = stack_size - paraLen;
-    if (!(method->access_flags & ACC_STATIC)) {//非静态方法需要把局部变量位置0设为this
-        peek_entry(father->stack, &entry, stack_pointer - 1);
-        localvar_setRefer(son, i_local++, entry_2_refer(&entry));
-        ins_this = 1;
-    }
-    for (i = 0; i < paraType->length; i++) {
-        char type = utf8_char_at(paraType, i);
-        peek_entry(father->stack, &entry, stack_pointer++);
+    s32 i_local = method->para_count;
+
+    for (i = 0; i < paraLen; i++) {
+        pop_entry(father->stack, &entry);
+        char type = utf8_char_at(paraType, paraLen - 1 - i);
+
         switch (type) {
             case 'R': {
-                localvar_setRefer(son, i_local++, entry_2_refer(&entry));
+                localvar_setRefer(son, --i_local, entry_2_refer(&entry));
                 break;
             }
             case '8': {
                 //把双字类型拆成两个单元放入本地变量
                 Long2Double l2d;
                 l2d.l = entry_2_long(&entry);
-                localvar_setInt(son, i_local++, l2d.i2l.i1);
-                localvar_setInt(son, i_local++, l2d.i2l.i0);
+                localvar_setInt(son, --i_local, l2d.i2l.i0);
+                localvar_setInt(son, --i_local, l2d.i2l.i1);
                 break;
             }
             case '4': {
-                localvar_setInt(son, i_local++, entry_2_int(&entry));
+                localvar_setInt(son, --i_local, entry_2_int(&entry));
                 break;
             }
         }
     }
-    father->stack->size -= paraLen + ins_this;
+    if (!(method->access_flags & ACC_STATIC)) {//非静态方法需要把局部变量位置0设为this
+        __refer _this = pop_ref(father->stack);
+        localvar_setRefer(son, --i_local, _this);
+    }
+
 }
 
 s32 synchronized_lock_method(MethodInfo *method, Runtime *runtime) {
@@ -3291,7 +3289,7 @@ s32 execute_method(MethodInfo *method, Runtime *pruntime, Class *clazz) {
 #endif
 #if _JVM_DEBUG > 3
             if (utf8_char_at(clazz->name, 3) != '/' && utf8_char_at(clazz->name, 4) != 's') {
-                invoke_deepth(runtime);
+                invoke_deepth(runtime->parent);
                 jvm_printf("%s.%s()  {\n", utf8_cstr(clazz->name), utf8_cstr(method->name));
             }
 #endif
@@ -3338,7 +3336,9 @@ s32 execute_method(MethodInfo *method, Runtime *pruntime, Class *clazz) {
                 else if (i == RUNTIME_STATUS_EXCEPTION) {
                     __refer ref = pop_ref(runtime->stack);
                     //jvm_printf("stack size:%d , enter size:%d\n", runtime->stack->size, stackSize);
-                    runtime->stack->size = stackSize;//恢复堆栈大小
+                    //restore stack enter method size, must pop for garbage
+                    StackEntry entry;
+                    while(runtime->stack->size > stackSize)pop_entry(runtime->stack,&entry);
                     push_ref(runtime->stack, ref);
 
                     Instance *ins = (Instance *) ref;
@@ -3367,7 +3367,7 @@ s32 execute_method(MethodInfo *method, Runtime *pruntime, Class *clazz) {
             localvar_dispose(runtime);
 #if _JVM_DEBUG > 3
             if (utf8_char_at(clazz->name, 3) != '/' && utf8_char_at(clazz->name, 4) != 's') {//   that com/sun
-                invoke_deepth(runtime);
+                invoke_deepth(runtime->parent);
                 jvm_printf("}\n");
             } else {
                 int debug = 1;

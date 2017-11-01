@@ -261,9 +261,10 @@ void localvar_setInt(Runtime *runtime, s32 index, s32 val) {
 void localvar_setRefer(Runtime *runtime, s32 index, __refer val) {
     localvar_clear_refer(index, runtime);
     runtime->localVariables[index].refer = val;
-    if (((long)val & 0x01000000) != ((long)val & 0xff000000)) {
-        int debug = 1;
-    }
+    if (val)garbage_refer_count_inc(val);
+//    if (((long) val & 0x01000000) != ((long) val & 0xff000000)) {
+//        int debug = 1;
+//    }
 }
 
 s32 localvar_getInt(Runtime *runtime, s32 index) {

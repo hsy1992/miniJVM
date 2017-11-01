@@ -20,6 +20,7 @@ void main_thread_create(Runtime *runtime) {
     Class *thread_clazz = classes_load_get_c("java/lang/Thread", runtime);
     //为主线程创建Thread实例
     main_thread = instance_create(thread_clazz);
+    runtime->threadInfo->jthread=main_thread;//Thread.init currentThread() need this
     instance_init(main_thread, runtime);
     jthread_init(main_thread);
 
@@ -75,9 +76,9 @@ void classloader_destory(ClassLoader *class_loader) {
     hashtable_iterate(class_loader->classes, &hti);
     for (; hashtable_iter_has_more(&hti);) {
         HashtableValue v = hashtable_iter_next_value(&hti);
-        Class *clazz = (Class *) (v);
         garbage_refer_count_dec(v);
     }
+    garbage_refer_count_dec(class_loader->JVM_CLASS);
 
     hashtable_clear(array_classloader->classes);
     utf8_destory(class_loader->g_classpath);
