@@ -80,7 +80,7 @@ void classloader_destory(ClassLoader *class_loader) {
     }
     garbage_refer_count_dec(class_loader->JVM_CLASS);
 
-    hashtable_clear(array_classloader->classes);
+    hashtable_clear(class_loader->classes);
     utf8_destory(class_loader->g_classpath);
     class_loader->g_classpath = NULL;
     hashtable_destory(class_loader->classes);

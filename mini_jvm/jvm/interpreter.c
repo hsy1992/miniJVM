@@ -2251,7 +2251,6 @@ s32 op_multianewarray(u8 **opCode, Runtime *runtime) {
 
     Instance *arr = jarray_multi_create(dim, desc, 0);
     arraylist_destory(dim);
-    //garbage_refer(arr, NULL);
 #if _JVM_DEBUG > 5
     invoke_deepth(runtime);
     jvm_printf("multianewarray  [%llx] type:%s , count:%d  \n", (s64) (long) arr, utf8_cstr(desc), count);

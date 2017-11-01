@@ -225,8 +225,8 @@ class Foo1 {
 //    }
     void t11() {
         int[][][] a3 = new int[2][2][];
-        a3[1][1]=new int[3];
-        a3[1][1][2]=9;
+//        a3[1][1]=new int[3];
+//        a3[1][1][2]=9;
 //        System.out.println("arr print:"+a3[1][1][2]);
     }
 

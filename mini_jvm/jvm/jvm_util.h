@@ -37,7 +37,7 @@ s32 isDataReferByIndex(s32 index);
 
 u8 getDataTypeTag(s32 index);
 
-Class *array_class_get(Utf8String *descript);
+Class *array_class_get(Utf8String *desc);
 
 s64 currentTimeMillis(void);
 
@@ -182,7 +182,7 @@ void thread_lock_dispose(ThreadLock *lock);
 void thread_lock_init(ThreadLock *lock);
 
 
-Instance *jarray_create_des(s32 count, Utf8String *descript);
+Instance *jarray_create_des(s32 count, Utf8String *desc);
 
 Instance *jarray_create(s32 count, s32 typeIdx, Utf8String *type);
 

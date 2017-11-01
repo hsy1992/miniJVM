@@ -97,15 +97,15 @@ s32 classes_put(Class *clazz) {
     return 1;
 }
 
-Class *array_class_get(Utf8String *descript) {
-    if (descript && descript->length && utf8_char_at(descript, 0) == '[') {
+Class *array_class_get(Utf8String *desc) {
+    if (desc && desc->length && utf8_char_at(desc, 0) == '[') {
         ThreadLock *tl = array_classloader->JVM_CLASS->mb.thread_lock;
         thread_lock(tl);
-        Class *clazz = hashtable_get(array_classloader->classes, descript);
-        if (!clazz && descript && descript->length) {
+        Class *clazz = hashtable_get(array_classloader->classes, desc);
+        if (!clazz && desc && desc->length) {
             clazz = class_create();
-            clazz->arr_type_index = getDataTypeIndex(utf8_char_at(descript, 1));
-            clazz->name = utf8_create_copy(descript);
+            clazz->arr_type_index = getDataTypeIndex(utf8_char_at(desc, 1));
+            clazz->name = utf8_create_copy(desc);
             hashtable_put(array_classloader->classes, clazz->name, clazz);
             garbage_refer_count_inc(clazz);
         }
@@ -513,7 +513,7 @@ void invoke_deepth(Runtime *runtime) {
 #ifdef _CYGWIN_CONFIG_H
     fprintf(logfile, "%lx", (s64) (long) pthread_self());
 #else
-    fprintf(logfile, "%llx", (s64) (long) pthread_self());
+    fprintf(logfile, "%llx", (s64) (long) pthread_self().x);
 #endif //_CYGWIN_CONFIG_H
     for (i = 0; i < len; i++) {
         fprintf(logfile, "    ");
@@ -522,7 +522,7 @@ void invoke_deepth(Runtime *runtime) {
 #if __JVM_OS_MAC__ || __JVM_OS_CYGWIN__
     printf("%llx", (s64) (long) pthread_self());
 #else
-    printf("%lx", (s64) (long) pthread_self());
+    printf("%lx", (s64) (long) pthread_self().x);
 #endif //
     for (i = 0; i < len; i++) {
         printf("    ");
@@ -734,15 +734,15 @@ s32 check_suspend_and_pause(Runtime *runtime) {
 }
 
 //===============================    实例化数组  ==================================
-Instance *jarray_create_des(s32 count, Utf8String *descript) {
-    u8 ch = utf8_char_at(descript, 1);
+Instance *jarray_create_des(s32 count, Utf8String *desc) {
+    u8 ch = utf8_char_at(desc, 1);
     s32 typeIdx = getDataTypeIndex(ch);
     s32 width = data_type_bytes[typeIdx];
     Instance *arr = jvm_alloc(sizeof(Instance));
     arr->mb.type = MEM_TYPE_ARR;
     arr->mb.arr_type_index = typeIdx;
     arr->mb.garbage_mark = GARBAGE_MARK_UNDEF;//防止在上次回收过程中，此对象刚被放入池子就被回收
-    arr->mb.clazz = array_class_get(descript);
+    arr->mb.clazz = array_class_get(desc);
     arr->arr_length = count;
     if (arr->arr_length)arr->arr_body = jvm_alloc(width * count);
     return arr;
@@ -765,9 +765,9 @@ Instance *jarray_create(s32 count, s32 typeIdx, Utf8String *type) {
 
 s32 jarray_destory(Instance *arr) {
     if (arr && arr->mb.type == MEM_TYPE_ARR) {
-        if (arr->arr_length == -1) {
-            int debug = 1;
-        }
+//        if (arr->arr_length == -1) {
+//            int debug = 1;
+//        }
         if (isDataReferByIndex(arr->mb.arr_type_index)) {
             s32 i;
             Long2Double l2d;
@@ -797,9 +797,11 @@ s32 jarray_destory(Instance *arr) {
 Instance *jarray_multi_create(ArrayList *dim, Utf8String *pdesc, s32 deep) {
     Utf8String *desc = utf8_create_copy(pdesc);
     s32 len = (s32) (long) arraylist_get_value(dim, dim->length - 1 - deep);
-    if (len == -1)return NULL;
+    if (len == -1){
+        utf8_destory(desc);
+        return NULL;
+    }
     c8 ch = utf8_char_at(desc, 1);
-    s32 typeIdx = getDataTypeIndex(ch);
     Instance *arr = jarray_create_des(len, desc);
     utf8_substring(desc, 1, desc->length);
 #if _JVM_DEBUG > 5
@@ -808,7 +810,6 @@ Instance *jarray_multi_create(ArrayList *dim, Utf8String *pdesc, s32 deep) {
     if (ch == '[') {
         int i;
         Long2Double l2d;
-        s32 bytes = data_type_bytes[typeIdx];
         for (i = 0; i < len; i++) {
             Instance *elem = jarray_multi_create(dim, desc, deep + 1);
             l2d.r = (__refer) elem;

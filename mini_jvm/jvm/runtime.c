@@ -29,14 +29,26 @@ void stack_destory(RuntimeStack *stack) {
 
 /* push Integer */
 void push_int(RuntimeStack *stack, s32 value) {
-    //memset(&stack->store[stack->size], 0, sizeof(StackEntry));
-    void *tmp = &stack->store[stack->size].value;
-    memcpy(tmp, &value, sizeof(s32));
-    stack->store[stack->size].type = STACK_ENTRY_INT;
+    StackEntry *entry= &stack->store[stack->size];
+    memcpy(&entry->value, &value, sizeof(s32));
+    entry->type = STACK_ENTRY_INT;
     stack->size++;
 }
 
 
+/* pop Integer */
+s32 pop_int(RuntimeStack *stack) {
+    stack->size--;
+    StackEntry *entry= &stack->store[stack->size];
+    if(entry->type&STACK_ENTRY_REF){
+        __refer ref=entry_2_refer(entry);
+        if(ref)garbage_refer_count_dec(ref);
+    }
+    s32 value = 0;
+    memcpy(&value, &entry->value, sizeof(s32));
+    memset(&stack->store[stack->size], 0, sizeof(StackEntry));
+    return value;
+}
 /* push Double */
 void push_double(RuntimeStack *stack, f64 value) {
     //memset(&stack->store[stack->size], 0, sizeof(StackEntry));
@@ -49,9 +61,14 @@ void push_double(RuntimeStack *stack, f64 value) {
 /* pop Double */
 f64 pop_double(RuntimeStack *stack) {
     stack->size--;
+    StackEntry *entry= &stack->store[stack->size];
+    if(entry->type&STACK_ENTRY_REF){
+        __refer ref=entry_2_refer(entry);
+        if(ref)garbage_refer_count_dec(ref);
+    }
     f64 value = 0;
-    void *tmp = &stack->store[stack->size].value;
-    memcpy(&value, tmp, sizeof(f64));
+
+    memcpy(&value, &entry->value, sizeof(f64));
     memset(&stack->store[stack->size], 0, sizeof(StackEntry));
     return value;
 }
@@ -68,22 +85,18 @@ void push_float(RuntimeStack *stack, f32 value) {
 /* pop Float */
 f32 pop_float(RuntimeStack *stack) {
     stack->size--;
+    StackEntry *entry= &stack->store[stack->size];
+    if(entry->type&STACK_ENTRY_REF){
+        __refer ref=entry_2_refer(entry);
+        if(ref)garbage_refer_count_dec(ref);
+    }
     f32 value = 0;
-    void *tmp = &stack->store[stack->size].value;
-    memcpy(&value, tmp, sizeof(f32));
+
+    memcpy(&value, &entry->value, sizeof(f32));
     memset(&stack->store[stack->size], 0, sizeof(StackEntry));
     return value;
 }
 
-/* pop Integer */
-s32 pop_int(RuntimeStack *stack) {
-    stack->size--;
-    void *tmp = &stack->store[stack->size].value;
-    s32 value = 0;
-    memcpy(&value, tmp, sizeof(s32));
-    memset(&stack->store[stack->size], 0, sizeof(StackEntry));
-    return value;
-}
 
 /* push Long */
 void push_long(RuntimeStack *stack, s64 value) {
@@ -97,9 +110,13 @@ void push_long(RuntimeStack *stack, s64 value) {
 /* pop Long */
 s64 pop_long(RuntimeStack *stack) {
     stack->size--;
+    StackEntry *entry= &stack->store[stack->size];
+    if(entry->type&STACK_ENTRY_REF){
+        __refer ref=entry_2_refer(entry);
+        if(ref)garbage_refer_count_dec(ref);
+    }
     s64 value = 0;
-    void *tmp = &stack->store[stack->size].value;
-    memcpy(&value, tmp, sizeof(s64));
+    memcpy(&value, &entry->value, sizeof(s64));
     memset(&stack->store[stack->size], 0, sizeof(StackEntry));
     return value;
 }
@@ -116,9 +133,9 @@ void push_ref(RuntimeStack *stack, __refer value) {
 
 __refer pop_ref(RuntimeStack *stack) {
     stack->size--;
+    StackEntry *entry= &stack->store[stack->size];
     __refer value = 0;
-    void *tmp = &stack->store[stack->size].value;
-    memcpy(&value, tmp, sizeof(__refer));
+    memcpy(&value, &entry->value, sizeof(__refer));
     memset(&stack->store[stack->size], 0, sizeof(StackEntry));
     if (value)garbage_refer_count_dec(value);
     return value;
