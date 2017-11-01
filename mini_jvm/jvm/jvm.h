@@ -688,7 +688,7 @@ typedef struct _AttributePool {
 #define STACK_ENTRY_REF         16
 
 typedef struct _StackEntry {
-    s64 entry;
+    s64 value;
     s32 type;
 } StackEntry;
 

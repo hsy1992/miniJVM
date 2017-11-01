@@ -493,7 +493,7 @@ int jvm_printf(const char *format, ...) {
         }
     }
 #else
-        result = vprintf(format, vp);
+    result = vprintf(format, vp);
 #endif
     va_end(vp);
     //garbage_thread_unlock();
@@ -940,7 +940,7 @@ s32 instance_destory(Instance *ins) {
 Instance *jstring_create(Utf8String *src, Runtime *runtime) {
     if (!src)return NULL;
     Utf8String *clsName = utf8_create_c(STR_CLASS_JAVA_LANG_STRING);
-    Class *jstr_clazz = classes_get(clsName);
+    Class *jstr_clazz = classes_load_get(clsName, runtime);
     Instance *jstring = instance_create(jstr_clazz);
     jstring->mb.clazz = jstr_clazz;
     instance_init(jstring, runtime);
@@ -1120,6 +1120,9 @@ c8 *getStaticFieldPtr(FieldInfo *fi) {
 
 
 void setFieldInt(c8 *ptr, s32 v) {
+    if (!ptr) {
+        jvm_printf("error here setFieldInt\n");
+    }
     memcpy(ptr, &v, sizeof(s32));
 }
 

@@ -1998,7 +1998,7 @@ static inline s32 op_putfield_impl(u8 **opCode, Runtime *runtime, s32 isStatic) 
     s2c.c0 = opCode[0][2];
 
     u16 field_ref = s2c.s;
-//    if (utf8_equals_c(clazz->name, "javax/mini/jdwp/analyzer/AnalyzerManager")) {
+//    if (utf8_equals_c(clazz->name, "java/lang/String")) {
 //        int debug = 1;
 //    }
     if (clazz->status < CLASS_STATUS_CLINITED) {
@@ -2629,11 +2629,12 @@ s32 op_if_0(u8 **opCode, Runtime *runtime, s32 type) {
 
     s32 branchoffset = s2c.s;
 
-    c8 *syb;
+    c8 *syb = " ";
     StackEntry entry;
     pop_entry(stack, &entry);
     s32 con = 0;
     Long2Double l2d;
+    l2d.l = 0;
     if (is_ref(&entry)) {
         l2d.r = entry_2_refer(&entry);
     } else {
@@ -3075,7 +3076,7 @@ static Instruction instructionSet[] = {
 
 Instruction **instruct_indexies_create() {
     size_t byteCode_size = sizeof(instructionSet) / sizeof(Instruction);
-    Instruction **indexies = jvm_alloc(0xff * sizeof(Instruction *));
+    Instruction **indexies = jvm_alloc(0x100 * sizeof(Instruction *));
     s32 i;
     for (i = 0; i < byteCode_size; i++) {
         s32 opCode = instructionSet[i].opCode;
@@ -3182,6 +3183,9 @@ void stack2localvar(MethodInfo *method, Runtime *father, Runtime *son) {
     s32 i_local = method->para_count;
 
     for (i = 0; i < paraLen; i++) {
+        if (father->stack == 0) {
+            int debug = 1;
+        }
         pop_entry(father->stack, &entry);
         char type = utf8_char_at(paraType, paraLen - 1 - i);
 
@@ -3338,7 +3342,7 @@ s32 execute_method(MethodInfo *method, Runtime *pruntime, Class *clazz) {
                     //jvm_printf("stack size:%d , enter size:%d\n", runtime->stack->size, stackSize);
                     //restore stack enter method size, must pop for garbage
                     StackEntry entry;
-                    while(runtime->stack->size > stackSize)pop_entry(runtime->stack,&entry);
+                    while (runtime->stack->size > stackSize)pop_entry(runtime->stack, &entry);
                     push_ref(runtime->stack, ref);
 
                     Instance *ins = (Instance *) ref;
