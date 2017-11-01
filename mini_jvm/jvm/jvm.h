@@ -390,6 +390,11 @@ struct _ClassLoader {
     Hashtable *classes;
     Class *JVM_CLASS;
 };
+
+
+void classloader_class_release(ClassLoader *class_loader);
+
+void classloader_destory(ClassLoader *class_loader);
 //======================= class file =============================
 
 
@@ -811,6 +816,9 @@ u8 instance_of(Class *clazz, Instance *ins);
 u8 isSonOfInterface(Class *clazz, Class *son);
 
 u8 assignable_from(Class *clazzSon, Class *clazzSuper);
+
+void class_clear_refer(Class *clazz);
+
 
 //======================= instance =============================
 

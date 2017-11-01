@@ -40,8 +40,8 @@ s32 class_destory(Class *clazz) {
 
 s32 _DESTORY_CLASS(Class *_this) {
     //
-    class_clear_refer(_this);
-    if (_this->field_static)jvm_free(_this->field_static);
+    //class_clear_refer(_this);
+
     //
     _class_method_info_destory(_this);
     _class_interface_pool_destory(_this);
@@ -87,22 +87,24 @@ void constant_list_destory(Class *clazz) {
 
 void class_clear_refer(Class *clazz) {
     s32 i;
-
-    FieldPool *fp = &clazz->fieldPool;
-    //if(clazz->s)
-    for (i = 0; i < fp->field_used; i++) {
-        FieldInfo *fi = &fp->field[i];
+    if (clazz->field_static) {
+        FieldPool *fp = &clazz->fieldPool;
+        for (i = 0; i < fp->field_used; i++) {
+            FieldInfo *fi = &fp->field[i];
 //        if (utf8_equals_c(fi->name, "zones")) {
 //            s32 debug = 1;
 //        }
-        if ((fi->access_flags & ACC_STATIC) != 0 && isDataReferByIndex(fi->datatype_idx)) {
-            c8 *ptr = getStaticFieldPtr(fi);
-            if (ptr) {
-                setFieldRefer(ptr, NULL);
+            if ((fi->access_flags & ACC_STATIC) != 0 && isDataReferByIndex(fi->datatype_idx)) {
+                c8 *ptr = getStaticFieldPtr(fi);
+                if (ptr) {
+                    setFieldRefer(ptr, NULL);
+                }
             }
         }
+        if (clazz->field_static)jvm_free(clazz->field_static);
+        clazz->field_static = NULL;
+        clazz->field_static_len = 0;
     }
-
 }
 //===============================    初始化相关  ==================================
 

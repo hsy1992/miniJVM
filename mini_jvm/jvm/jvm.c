@@ -71,7 +71,15 @@ ClassLoader *classloader_create(c8 *path) {
 }
 
 void classloader_destory(ClassLoader *class_loader) {
+    HashtableIterator hti;
+    hashtable_iterate(class_loader->classes, &hti);
+    for (; hashtable_iter_has_more(&hti);) {
+        HashtableValue v = hashtable_iter_next_value(&hti);
+        Class *clazz = (Class *) (v);
+        garbage_refer_count_dec(v);
+    }
 
+    hashtable_clear(array_classloader->classes);
     utf8_destory(class_loader->g_classpath);
     class_loader->g_classpath = NULL;
     hashtable_destory(class_loader->classes);
@@ -79,6 +87,15 @@ void classloader_destory(ClassLoader *class_loader) {
     jvm_free(class_loader);
 }
 
+void classloader_class_release(ClassLoader *class_loader) {
+    HashtableIterator hti;
+    hashtable_iterate(class_loader->classes, &hti);
+    for (; hashtable_iter_has_more(&hti);) {
+        HashtableValue v = hashtable_iter_next_value(&hti);
+        Class *clazz = (Class *) (v);
+        class_clear_refer(clazz);
+    }
+}
 
 s32 execute(c8 *p_classpath, c8 *p_mainclass, s32 argc, c8 **argv) {
 #ifdef __MEM_LEAK_DETECT
@@ -222,10 +239,7 @@ s32 execute(c8 *p_classpath, c8 *p_mainclass, s32 argc, c8 **argv) {
     //
     garbage_collector_destory();
     //
-    classloader_destory(sys_classloader);
-    sys_classloader = NULL;
-    classloader_destory(array_classloader);
-    array_classloader = NULL;
+
     //
     utf8_destory(str_mainClsName);
     arraylist_destory(thread_list);

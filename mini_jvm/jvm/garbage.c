@@ -91,6 +91,7 @@ void garbage_collector_destory() {
 }
 
 void __garbage_clear() {
+    jvm_printf("garbage clear start========================\n");
     //
     HashtableIterator hti;
     //
@@ -99,19 +100,16 @@ void __garbage_clear() {
     //解除所有引用关系后，回收全部对象
     while (garbage_collect());//collect instance
 
+    //release class static field
+    classloader_class_release(sys_classloader);
+    classloader_class_release(array_classloader);
+    while (garbage_collect());//collect classes
+
     //release classes
-    hashtable_iterate(sys_classloader->classes, &hti);
-    for (; hashtable_iter_has_more(&hti);) {
-        HashtableValue v = hashtable_iter_next_value(&hti);
-        garbage_refer_count_dec(v);
-    }
-    hashtable_clear(sys_classloader->classes);
-    hashtable_iterate(array_classloader->classes, &hti);
-    for (; hashtable_iter_has_more(&hti);) {
-        HashtableValue v = hashtable_iter_next_value(&hti);
-        garbage_refer_count_dec(v);
-    }
-    hashtable_clear(array_classloader->classes);
+    classloader_destory(sys_classloader);
+    sys_classloader = NULL;
+    classloader_destory(array_classloader);
+    array_classloader = NULL;
     while (garbage_collect());//collect classes
     //
     jvm_printf("objs size :%lld\n", collector->objs->entries);
@@ -423,6 +421,9 @@ s32 garbage_refer_count_inc(__refer ref) {
 s32 garbage_refer_count_dec(__refer ref) {
     MemoryBlock *mb = (MemoryBlock *) ref;
     if (mb) {
+        if (mb->refer_count == 0) {
+            int debug = 1;
+        }
         garbage_thread_lock();
         mb->refer_count--;
         if (hashtable_get(collector->objs, mb) == NULL) {

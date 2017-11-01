@@ -513,7 +513,7 @@ void invoke_deepth(Runtime *runtime) {
 #ifdef _CYGWIN_CONFIG_H
     fprintf(logfile, "%lx", (s64) (long) pthread_self());
 #else
-    fprintf(logfile, "%llx", (s64) (long) pthread_self().p);
+    fprintf(logfile, "%llx", (s64) (long) pthread_self());
 #endif //_CYGWIN_CONFIG_H
     for (i = 0; i < len; i++) {
         fprintf(logfile, "    ");
@@ -605,11 +605,15 @@ __refer jthread_get_name_value(Instance *ins) {
 __refer jthread_get_threadq_value(Instance *ins) {
     c8 *ptr = getFieldPtr_byName_c(ins, STR_CLASS_JAVA_LANG_THREAD, STR_FIELD_THREADQ, "Ljava/lang/Thread;");
     return getFieldRefer(ptr);
+    __refer v;
+    memcpy((c8 *) &v, ptr, sizeof(__refer));
+    return v;
 }
 
-void jthread_set_threadq_value(Instance *ins, void *val) {
+void jthread_set_threadq_value(Instance *ins, __refer val) {
     c8 *ptr = getFieldPtr_byName_c(ins, STR_CLASS_JAVA_LANG_THREAD, STR_FIELD_THREADQ, "Ljava/lang/Thread;");
-    setFieldRefer(ptr, (__refer) val);
+    //setFieldRefer(ptr, (__refer) val);
+    memcpy(ptr, &val, sizeof(__refer));
 }
 
 
