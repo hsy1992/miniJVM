@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<VariablesViewState
+   version = "1.0">
+   <ContextStates>
+      <ContextState
+         contextName = "op_astore:interpreter.c">
+      </ContextState>
+      <ContextState
+         contextName = "pop_entry:runtime.c">
+      </ContextState>
+      <ContextState
+         contextName = "stack2localvar:interpreter.c">
+      </ContextState>
+      <ContextState
+         contextName = "execute_method:interpreter.c">
+         <PersistentStrings>
+            <PersistentString
+               value = "method-&gt;_this_class-&gt;name-&gt;data">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+   </ContextStates>
+</VariablesViewState>

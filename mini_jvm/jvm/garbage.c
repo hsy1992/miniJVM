@@ -405,7 +405,10 @@ s32 garbage_refer_count_inc(__refer ref) {
     MemoryBlock *mb = (MemoryBlock *) ref;
     if (mb) {
         garbage_thread_lock();
-        if (mb->refer_count == 0)hashtable_put(collector->objs, mb, mb);
+        if (!mb->garbage_reg){
+            hashtable_put(collector->objs, mb, mb);
+            mb->garbage_reg=1;
+        }
         mb->refer_count++;
         garbage_thread_unlock();
 
@@ -422,9 +425,9 @@ s32 garbage_refer_count_inc(__refer ref) {
 s32 garbage_refer_count_dec(__refer ref) {
     MemoryBlock *mb = (MemoryBlock *) ref;
     if (mb) {
-        if (mb->refer_count == 0 && mb->type == MEM_TYPE_CLASS) {
-            int debug = 1;
-        }
+//        if (mb->refer_count == 0 && mb->type == MEM_TYPE_CLASS) {
+//            int debug = 1;
+//        }
         garbage_thread_lock();
         mb->refer_count--;
         if (hashtable_get(collector->objs, mb) == NULL) {

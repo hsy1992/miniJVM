@@ -202,10 +202,10 @@ public class Foo1 {
                     String b = "def";
                     c = a + b;
                     if (i % PRINT_COUNT == 0) {
-                        System.out.println("t7 i=" + i);
+                        System.out.println("thread i=" + i);
                     }
                 }
-                System.out.println("t17 thread c=\"" + c + "\"");
+                System.out.println(" thread c=\"" + c + "\"");
             }
         });
         t.start();
@@ -223,10 +223,10 @@ public class Foo1 {
             String b = "def";
             c = a + b;
             if (i % PRINT_COUNT == 0) {
-                System.out.println("t10 i=" + i);
+                System.out.println("main i=" + i);
             }
         }
-        System.out.println("t17 main c=\"" + c + "\"");
+        System.out.println("main c=\"" + c + "\"");
     }
 
     long t81(long l) {

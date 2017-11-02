@@ -28,7 +28,7 @@ extern "C" {
 #define _JVM_DEBUG 0
 #define _JVM_DEBUG_PRINT_FILE 0
 #define _JVM_DEBUG_BYTECODE_DUMP 0
-#define _JVM_DEBUG_GARBAGE_DUMP 0
+#define _JVM_DEBUG_GARBAGE_DUMP 01
 #define _JVM_DEBUG_PROFILE 0
 
 
@@ -383,6 +383,7 @@ typedef struct _MemoryBlock {
 
     //
     s32 refer_count;
+    u8 garbage_reg;
 } MemoryBlock;
 
 struct _ClassLoader {

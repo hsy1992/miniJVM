@@ -943,6 +943,7 @@ Instance *jstring_create(Utf8String *src, Runtime *runtime) {
     Utf8String *clsName = utf8_create_c(STR_CLASS_JAVA_LANG_STRING);
     Class *jstr_clazz = classes_load_get(clsName, runtime);
     Instance *jstring = instance_create(jstr_clazz);
+    garbage_refer_count_inc(jstring);//hold
     jstring->mb.clazz = jstr_clazz;
     instance_init(jstring, runtime);
 
@@ -962,7 +963,7 @@ Instance *jstring_create(Utf8String *src, Runtime *runtime) {
         setFieldRefer(ptr, 0);
     }
     utf8_destory(clsName);
-
+    garbage_refer_count_dec(jstring);
     return jstring;
 }
 

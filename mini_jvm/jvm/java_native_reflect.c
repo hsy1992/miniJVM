@@ -386,7 +386,7 @@ s32 javax_mini_reflect_vm_RefNative_getStackFrame(Runtime *runtime, Class *clazz
             if (!trun->son)break;
             trun = trun->son;
         }
-        push_long(runtime->stack, (u64) (long) trun);
+        push_long(runtime->stack, (u64) (long) trun->parent);
     } else
         push_long(runtime->stack, 0);
 #if _JVM_DEBUG > 5
@@ -524,6 +524,7 @@ Instance *localVarTable2java(Class *clazz, LocalVarTable *lvt, Runtime *runtime)
         ptr = getFieldPtr_byName_c(ins, JDWP_CLASS_LOCALVARTABLE, "length", "I");
         if (ptr)setFieldInt(ptr, lvt->length);
     }
+    garbage_refer_count_dec(ins);//release by manual
     return ins;
 }
 
@@ -599,7 +600,7 @@ s32 javax_mini_reflect_Method_mapMethod(Runtime *runtime, Class *clazz) {
                         LocalVarTable *lvt = &att->converted_code->local_var_table[i];
                         l2d.r = localVarTable2java(methodInfo->_this_class, lvt, runtime);
                         jarray_set_field(jarr, i, &l2d);
-                        garbage_refer_count_dec(l2d.r);//release by manual
+                        
                     }
                 }
             }
