@@ -337,28 +337,26 @@ s32 garbage_pause_the_world() {
             Runtime *runtime = arraylist_get_value(thread_list, i);
             jthread_suspend(runtime);
         }
-        
-        s32 all_paused = 0;
-        while (all_paused != thread_list->length) {//停掉所有线程
-            all_paused = 0;
-            for (i = 0; i < thread_list->length; i++) {
-                Runtime *runtime = arraylist_get_value(thread_list, i);
-                if (runtime->threadInfo->is_suspend ||
-                    runtime->threadInfo->is_blocking ||
-                    runtime->threadInfo->thread_status == THREAD_STATUS_ZOMBIE) {
-                    all_paused++;
-                    Runtime *last = getLastSon(runtime);
-                    jvm_printf("PAUSE thread[%llx] %s.%s, op:%d\n",
-                               (s64) (long) runtime,
-                               utf8_cstr(last->methodInfo->_this_class->name),
-                               utf8_cstr(last->methodInfo->name),
-                               (last->pc) - (last->ca ? last->ca->code : 0)
-                    );
-                    continue;
-                }
+
+        for (i = 0; i < thread_list->length; i++) {
+            Runtime *runtime = arraylist_get_value(thread_list, i);
+
+            while (!(runtime->threadInfo->is_suspend ||
+                     runtime->threadInfo->is_blocking ||
+                     runtime->threadInfo->thread_status == THREAD_STATUS_ZOMBIE)) {
                 garbage_thread_timedwait(10);//让出锁
             }
+#if _JVM_DEBUG_GARBAGE_DUMP
+            Runtime *last = getLastSon(runtime);
+            jvm_printf("PAUSE thread[%llx] %s.%s, op:%d\n",
+                       (s64) (long) runtime,
+                       utf8_cstr(last->methodInfo->_this_class->name),
+                       utf8_cstr(last->methodInfo->name),
+                       (last->pc) - (last->ca ? last->ca->code : 0)
+            );
+#endif
         }
+
     }
     //调试线程
     if (java_debug) {
