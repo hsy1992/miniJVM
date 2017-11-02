@@ -207,7 +207,7 @@ void peek_entry(RuntimeStack *stack, StackEntry *entry, int index) {
     memcpy(entry, &stack->store[index].value, sizeof(StackEntry));
 }
 
-//======================= localvar =============================
+//======================= runtime =============================
 
 
 
@@ -238,6 +238,25 @@ void runtime_destory(Runtime *runtime) {
     jvm_free(runtime);
 
 }
+
+s32 getRuntimeDepth(Runtime *top) {
+    s32 deep = 0;
+    while (top) {
+        deep++;
+        top = top->son;
+    }
+    deep--;//top need not
+    return deep;
+}
+
+Runtime *getLastSon(Runtime *top) {
+    while (top) {
+        if (!top->son)return top;
+        top = top->son;
+    }
+    return NULL;
+}
+//======================= localvar =============================
 
 
 s32 localvar_init(Runtime *runtime, s32 count) {

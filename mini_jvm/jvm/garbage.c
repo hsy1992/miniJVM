@@ -332,17 +332,28 @@ s32 garbage_pause_the_world() {
     s32 i;
     //jvm_printf("thread size:%d\n", thread_list->length);
     garbage_thread_lock();
-    s32 all_paused = 0;
     if (thread_list->length) {
-        while (all_paused == thread_list->length) {//停掉所有线程
+        for (i = 0; i < thread_list->length; i++) {
+            Runtime *runtime = arraylist_get_value(thread_list, i);
+            jthread_suspend(runtime);
+        }
+        
+        s32 all_paused = 0;
+        while (all_paused != thread_list->length) {//停掉所有线程
             all_paused = 0;
             for (i = 0; i < thread_list->length; i++) {
                 Runtime *runtime = arraylist_get_value(thread_list, i);
-                jthread_suspend(runtime);
                 if (runtime->threadInfo->is_suspend ||
                     runtime->threadInfo->is_blocking ||
                     runtime->threadInfo->thread_status == THREAD_STATUS_ZOMBIE) {
                     all_paused++;
+                    Runtime *last = getLastSon(runtime);
+                    jvm_printf("PAUSE thread[%llx] %s.%s, op:%d\n",
+                               (s64) (long) runtime,
+                               utf8_cstr(last->methodInfo->_this_class->name),
+                               utf8_cstr(last->methodInfo->name),
+                               (last->pc) - (last->ca ? last->ca->code : 0)
+                    );
                     continue;
                 }
                 garbage_thread_timedwait(10);//让出锁
@@ -405,9 +416,9 @@ s32 garbage_refer_count_inc(__refer ref) {
     MemoryBlock *mb = (MemoryBlock *) ref;
     if (mb) {
         garbage_thread_lock();
-        if (!mb->garbage_reg){
+        if (!mb->garbage_reg) {
             hashtable_put(collector->objs, mb, mb);
-            mb->garbage_reg=1;
+            mb->garbage_reg = 1;
         }
         mb->refer_count++;
         garbage_thread_unlock();

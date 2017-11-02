@@ -513,7 +513,7 @@ void invoke_deepth(Runtime *runtime) {
 #ifdef _CYGWIN_CONFIG_H
     fprintf(logfile, "%lx", (s64) (long) pthread_self());
 #else
-    fprintf(logfile, "%llx", (s64) (long) pthread_self().x);
+    fprintf(logfile, "%llx", (s64) (long) pthread_self());
 #endif //_CYGWIN_CONFIG_H
     for (i = 0; i < len; i++) {
         fprintf(logfile, "    ");
@@ -887,6 +887,7 @@ void instance_init(Instance *ins, Runtime *runtime) {
 
 void instance_init_methodtype(Instance *ins, Runtime *runtime, c8 *methodtype, RuntimeStack *para) {
     if (ins) {
+        garbage_refer_count_inc(ins);
         Utf8String *methodName = utf8_create_c("<init>");
         Utf8String *methodType = utf8_create_c(methodtype);
         MethodInfo *mi = find_methodInfo_by_name(ins->mb.clazz->name, methodName, methodType);
@@ -902,6 +903,7 @@ void instance_init_methodtype(Instance *ins, Runtime *runtime, c8 *methodtype, R
         execute_method(mi, runtime, ins->mb.clazz);
         utf8_destory(methodName);
         utf8_destory(methodType);
+        garbage_refer_count_dec(ins);
     }
 }
 
@@ -952,13 +954,11 @@ Instance *jstring_create(Utf8String *src, Runtime *runtime) {
         u16 *buf = jvm_alloc(src->length * data_type_bytes[DATATYPE_JCHAR]);
         s32 len = utf8_2_unicode(src, buf);
         Instance *arr = jarray_create(len, DATATYPE_JCHAR, NULL);//u16 type is 5
+        setFieldRefer(ptr, (__refer) arr);//设置数组
+
         memcpy(arr->arr_body, buf, len * data_type_bytes[DATATYPE_JCHAR]);
         jvm_free(buf);
-        __refer oldarr = getFieldRefer(ptr);//调用了String.init之后，已经有值了
-
-        setFieldRefer(ptr, (__refer) arr);//设置数组
         jstring_set_count(jstring, len);//设置长度
-
     } else {
         setFieldRefer(ptr, 0);
     }

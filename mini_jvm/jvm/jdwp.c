@@ -15,9 +15,6 @@ void jdwp_eventset_post(JdwpClient *client, EventSet *set, EventInfo *event);
 
 void event_on_debug_step(Runtime *step_runtime);
 
-s32 getRuntimeDepth(Runtime *top);
-
-
 void jdwp_eventset_destory(EventSet *set);
 
 void jdwppacket_destory(JdwpPacket *packet);
@@ -618,24 +615,6 @@ s64 getPtrValue(u8 type, c8 *ptr) {
             break;
     }
     return value;
-}
-
-s32 getRuntimeDepth(Runtime *top) {
-    s32 deep = 0;
-    while (top) {
-        deep++;
-        top = top->son;
-    }
-    deep--;//top need not
-    return deep;
-}
-
-Runtime *getLastSon(Runtime *top) {
-    while (top) {
-        if (!top->son)return top;
-        top = top->son;
-    }
-    return NULL;
 }
 
 

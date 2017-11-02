@@ -25,10 +25,10 @@ extern "C" {
 
 //=======================  micro define  =============================
 //_JVM_DEBUG   06 print all bytecode
-#define _JVM_DEBUG 07
-#define _JVM_DEBUG_PRINT_FILE 01
+#define _JVM_DEBUG 0
+#define _JVM_DEBUG_PRINT_FILE 0
 #define _JVM_DEBUG_BYTECODE_DUMP 0
-#define _JVM_DEBUG_GARBAGE_DUMP 01
+#define _JVM_DEBUG_GARBAGE_DUMP 0
 #define _JVM_DEBUG_PROFILE 0
 
 
@@ -958,9 +958,13 @@ void stack2localvar(MethodInfo *method, Runtime *father, Runtime *son);
 void peek_entry(RuntimeStack *stack, StackEntry *entry, int index);
 
 //======================= localvar =============================
-Runtime *runtime_create(Runtime* parent);
+Runtime *runtime_create(Runtime *parent);
 
 void runtime_destory(Runtime *runtime);
+
+Runtime *getLastSon(Runtime *top);
+
+s32 getRuntimeDepth(Runtime *top);
 
 s32 localvar_init(Runtime *runtime, s32 count);
 
