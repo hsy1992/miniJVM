@@ -341,11 +341,6 @@ enum {
     TYPE_IFNONNULL,
     TYPE_IFNULL
 };
-enum {
-    GARBAGE_MARK_UNDEF,
-    GARBAGE_MARK_NO_REFERED,
-    GARBAGE_MARK_REFERED,
-};
 
 
 //======================= global var =============================

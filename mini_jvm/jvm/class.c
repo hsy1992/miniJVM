@@ -16,7 +16,6 @@ Class *class_create() {
     Class *clazz = jvm_alloc(sizeof(Class));
     clazz->mb.clazz = clazz;
     clazz->mb.type = MEM_TYPE_CLASS;
-    clazz->mb.garbage_mark = GARBAGE_MARK_UNDEF;
     clazz->field_instance_len = 0;
     clazz->field_static = NULL;
     clazz->status = CLASS_STATUS_RAW;

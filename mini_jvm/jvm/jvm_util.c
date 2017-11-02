@@ -741,7 +741,6 @@ Instance *jarray_create_des(s32 count, Utf8String *desc) {
     Instance *arr = jvm_alloc(sizeof(Instance));
     arr->mb.type = MEM_TYPE_ARR;
     arr->mb.arr_type_index = typeIdx;
-    arr->mb.garbage_mark = GARBAGE_MARK_UNDEF;//防止在上次回收过程中，此对象刚被放入池子就被回收
     arr->mb.clazz = array_class_get(desc);
     arr->arr_length = count;
     if (arr->arr_length)arr->arr_body = jvm_alloc(width * count);
@@ -874,7 +873,6 @@ void jarray_get_field(Instance *arr, s32 index, Long2Double *l2d) {
 Instance *instance_create(Class *clazz) {
     Instance *ins = jvm_alloc(sizeof(Instance));
     ins->mb.type = MEM_TYPE_INS;
-    ins->mb.garbage_mark = GARBAGE_MARK_UNDEF;
     ins->mb.clazz = clazz;
 
     ins->obj_fields = jvm_alloc(ins->mb.clazz->field_instance_len);

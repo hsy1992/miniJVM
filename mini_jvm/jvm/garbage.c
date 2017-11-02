@@ -413,13 +413,13 @@ s32 garbage_is_alive(__refer sonPtr) {
 s32 garbage_refer_count_inc(__refer ref) {
     MemoryBlock *mb = (MemoryBlock *) ref;
     if (mb) {
+        garbage_thread_lock();
         if (!mb->garbage_reg) {
-            garbage_thread_lock();
             hashtable_put(collector->objs, mb, mb);
             mb->garbage_reg = 1;
-            garbage_thread_unlock();
         }
         mb->refer_count++;
+        garbage_thread_unlock();
 
 #if _JVM_DEBUG_GARBAGE_DUMP
         Utf8String *sus = utf8_create();
@@ -434,15 +434,12 @@ s32 garbage_refer_count_inc(__refer ref) {
 s32 garbage_refer_count_dec(__refer ref) {
     MemoryBlock *mb = (MemoryBlock *) ref;
     if (mb) {
-//        if (mb->refer_count == 0 && mb->type == MEM_TYPE_CLASS) {
-//            int debug = 1;
-//        }
-//        garbage_thread_lock();
+        garbage_thread_lock();
         mb->refer_count--;
         if (hashtable_get(collector->objs, mb) == NULL) {
             jvm_printf("garbage detect error: instance not found %llx\n", (s64) (long) mb);
         }
-//        garbage_thread_unlock();
+        garbage_thread_unlock();
 #if _JVM_DEBUG_GARBAGE_DUMP
         Utf8String *sus = utf8_create();
         getMemBlockName(mb, sus);
