@@ -153,6 +153,7 @@ s32 class_prepar(Class *clazz) {
             f[i].offset = instance_len;
             instance_len += width;
         }
+        f[i]._this_class=clazz;
     }
     //静态变量分配
     clazz->field_static_len = static_len;
@@ -376,7 +377,6 @@ FieldInfo *find_fieldInfo_by_fieldref(Class *clazz, s32 field_ref) {
             if (utf8_equals(fieldName, fp->field[i].name) == 1
                 && utf8_equals(type, fp->field[i].descriptor) == 1) {
                 fi = &(other->fieldPool.field[i]);
-                fi->_this_class = other;//把类引用赋值
                 break;
             }
         }
@@ -399,7 +399,6 @@ FieldInfo *find_fieldInfo_by_name(Utf8String *clsName, Utf8String *fieldName, Ut
                 && utf8_equals(fieldType, tmp->descriptor) == 1
                     ) {
                 fi = tmp;
-                fi->_this_class = other;
                 break;
             }
         }

@@ -784,6 +784,7 @@ Instance *buildStackElement(Runtime *runtime, Runtime *target) {
     Class *clazz = classes_load_get_c(STR_CLASS_JAVA_LANG_STACKTRACE, target);
     if (clazz) {
         Instance *ins = instance_create(clazz);
+        garbage_refer_count_inc(ins);
         instance_init(ins, runtime);
         c8 *ptr;
         //
@@ -820,6 +821,7 @@ Instance *buildStackElement(Runtime *runtime, Runtime *target) {
                 setFieldRefer(ptr, parent);
             }
         }
+        garbage_refer_count_dec(ins);
         return ins;
     }
     return NULL;

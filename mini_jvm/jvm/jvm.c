@@ -31,8 +31,8 @@ void main_thread_destory() {
 
     main_runtime->threadInfo->is_suspend = 1;
     //主线程实例被回收
-    garbage_refer_count_dec(main_thread);
     jthread_dispose(main_thread);
+    garbage_refer_count_dec(main_thread);
     main_thread = NULL;
 }
 
