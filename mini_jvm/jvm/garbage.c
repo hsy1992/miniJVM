@@ -20,34 +20,18 @@ s32 garbage_resume_the_world();
  * 创建垃圾收集线程，
  *
  * 收集方法如下：
- * 所有新创建的对象，向垃圾收集器注册，表示这个对象将来可能会被回收，纳入监管体系。
- * 同时向 son_2_father，father_2_son 注册，
- * son_2_father 记录了子对象对父对象的引用，同时在father_2_son中记录父对象对子对象的引用。
+ * 当对象被引用时，会引用计数+1，同时注册进垃圾收集器，纳入监管体系。
  *
- * 建立和解除引用关系，比如：
- * Class Foo{
- *     Object var;
- *
- *     void m(Object obj1, Object obj2){
- *         var= obj1;  //建立 Foo实例 与 obj1 的引用关系
- *         var= obj2;  //解除 Foo实例 与 obj1 的引用关系， 建立 Foo实例 与 obj2 的引用关系
- *     }
- * }
  *
  * 注册的对象包括 Class 类， Instance 对象实例（包括数组对象）
  *
- * 在垃圾回收时，由单独的线程来异步收集，主要收集 son_2_father 中的对象，
- * 其中在 son_2_father 中尚存在引用关系的不收集，
- * key为一个对象实例，值为一个set集合，其中包括所有其他引用了key的对象，set 中0个对象时，表示系统中没有别的对象对其引用。
- * 不过，有一些对象并没有被别的对象引用，但他仍然在运行程序中被使用，也不可回收，
- * 这些对象存在于 Runtime中的堆栈 Runtime->stack或者方法method的局部变量表中Runtime->localvar。
+ * 在垃圾回收时，由垃圾收集线程来收集，收集 collector->objs 中的对象，
+ * 收集所有引用计数<=0的对象，直接销毁，释放内存
  *
- * 因此在收集时，收集线程会暂停正在执行中的java线程 ，然后比对这个线程中所有的 stack 和 localvar ,
- * 如果有对象正在栈或局部变量中，则标记为不可回收。
+ * 收集线程会暂停所有正在执行中的java线程 ，回收完之后，恢复线程执行
  *
- * 还有一个jdwp调试线程中的运行时对象不可回收。
+ * jdwp调试线程中的运行时对象不可回收。
  *
- * 检查完这几方面之后，那些 （1）引用对象为0个，（2）未被其他线程运行时使用的对象，将被回收。
  *
  * @return errorcode
  */
@@ -114,7 +98,7 @@ void __garbage_clear() {
     //
     jvm_printf("objs size :%lld\n", collector->objs->entries);
 
-    dump_refer();
+    //dump_refer();
     //
 //    hashtable_iterate(collector->objs, &hti);
 //    for (; hashtable_iter_has_more(&hti);) {

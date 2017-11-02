@@ -182,8 +182,8 @@ public class Foo1 {
     }
 
     void t7() {
-        int MAX = 3000;
-        int PRINT_COUNT = 1000;
+        int MAX = 50000;
+        int PRINT_COUNT = 10000;
         Thread t = new Thread(new Runnable() {
             @Override
             public void run() {
@@ -676,33 +676,33 @@ public class Foo1 {
     public static void main() {
         Foo1 f = new Foo1();
         for (int i = 0; i < 1; i++) {
-            f.t1();
-            f.t2();
-            f.t3();
-            f.t4();
-            f.t5();
-            f.t6();
+//            f.t1();
+//            f.t2();
+//            f.t3();
+//            f.t4();
+//            f.t5();
+//            f.t6();
             f.t7();
-            f.t8();
-            f.t9();
-            f.t10();
-            f.t11();
-            f.t12();
-            f.t13();
-            f.t14();
-//            f.t15();
-//            f.t16();
-//            f.t17();
-            f.t18();
-            f.t19();
-            f.t20();
-            f.t21();
+//            f.t8();
+//            f.t9();
+//            f.t10();
+//            f.t11();
+//            f.t12();
+//            f.t13();
+//            f.t14();
+////            f.t15();
+////            f.t16();
+////            f.t17();
+//            f.t18();
+//            f.t19();
+//            f.t20();
+//            f.t21();
         }
     }
 
     public static void main(String[] agrs) {
         try {
-            BpDeepTest.main(agrs);
+//            BpDeepTest.main(agrs);
             Foo1.main();
 //            Foo2.main(agrs);
 //            Foo3.main(agrs);
