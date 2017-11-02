@@ -702,10 +702,10 @@ public class Foo1 {
 
     public static void main(String[] agrs) {
         try {
-//        BpDeepTest.main(agrs);
+            BpDeepTest.main(agrs);
             Foo1.main();
-//        Foo2.main(agrs);
-//        Foo3.main(agrs);
+//            Foo2.main(agrs);
+//            Foo3.main(agrs);
         } catch (Exception e) {
             e.printStackTrace();
         }

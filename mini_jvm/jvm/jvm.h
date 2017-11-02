@@ -376,14 +376,13 @@ extern Hashtable *instruct_profile;
 
 typedef struct _MemoryBlock {
     u8 type;//type of array or object runtime,class
-    u8 garbage_mark;
     u8 arr_type_index;
+    //
+    u8 volatile garbage_reg;
+    s32 volatile refer_count;
+
     Class *clazz;
     ThreadLock *volatile thread_lock;
-
-    //
-    s32 refer_count;
-    u8 garbage_reg;
 } MemoryBlock;
 
 struct _ClassLoader {
