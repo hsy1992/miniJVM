@@ -147,24 +147,41 @@ class Foo1 {
 //            System.out.println("val[" + i + "]=" + val[i]);
 //        }
 //    }
-//
-//    class T7class {
-//
-//        Object obj_r;
-//    }
-//
-//    void t7_1(T7class t7) {
-//
-//        t7.obj_r = new Long(1);//在方法结束时，此对象应该被释放
-//
-//        t7.obj_r = new Integer(2);
-//
-//    }
-//
-//    void t7() {
-//        T7class t7 = new T7class();
-//        t7_1(t7);
-//    }
+
+    void t7() {
+        int MAX = 30000;
+        int PRINT_COUNT = 1000;
+        Thread t = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                System.out.println("thread here.");
+                int j = 0;
+                String c = null;
+                for (int i = 0; i < MAX; i++) {
+                    String a = "abc";
+                    String b = "def";
+                    c = a + b;
+                    if (i % PRINT_COUNT == 0) {
+                        System.out.println("thread i=" + i);
+                    }
+                }
+                System.out.println(" thread c=\"" + c + "\"");
+            }
+        });
+        //t.start();
+        //
+        String c = null;
+        for (int i = 0; i < MAX; i++) {
+            String a = "abc";
+            String b = "def";
+            c = a + b;
+            if (i % PRINT_COUNT == 0) {
+                System.out.println("main i=" + i);
+            }
+        }
+        System.out.println("main c=\"" + c + "\"");
+    }
+
 //    void t8() throws RuntimeException {
 //        int i = 0;
 //        try {
@@ -225,13 +242,13 @@ class Foo1 {
 //    }
     void t11() {
         int[][][] a3 = new int[2][2][];
-//        a3[1][1]=new int[3];
-//        a3[1][1][2]=9;
-//        System.out.println("arr print:"+a3[1][1][2]);
+        a3[1][1]=new int[3];
+        a3[1][1][2]=9;
+        System.out.println("arr print:"+a3[1][1][2]);
     }
 
     public static void main(String args[]) {
         Foo1 obj = new Foo1();
-        obj.t11();
+        obj.t7();
     }
 }
