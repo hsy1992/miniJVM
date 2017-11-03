@@ -374,6 +374,10 @@ s32 garbage_resume_the_world() {
     return 0;
 }
 
+void garbage_big_search(){
+    
+}
+
 //=================================  reg unreg ==================================
 
 

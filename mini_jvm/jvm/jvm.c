@@ -20,9 +20,9 @@ void main_thread_create(Runtime *runtime) {
     Class *thread_clazz = classes_load_get_c("java/lang/Thread", runtime);
     //为主线程创建Thread实例
     main_thread = instance_create(thread_clazz);
-    runtime->threadInfo->jthread=main_thread;//Thread.init currentThread() need this
+    runtime->threadInfo->jthread = main_thread;//Thread.init currentThread() need this
     instance_init(main_thread, runtime);
-    jthread_init(main_thread);
+    jthread_init_with_runtime(main_thread, runtime);
 
     garbage_refer_count_inc(main_thread);
 }
@@ -177,7 +177,6 @@ s32 execute(c8 *p_classpath, c8 *p_mainclass, s32 argc, c8 **argv) {
         MethodInfo *main = find_methodInfo_by_name(str_mainClsName, methodName, methodType);
         if (main) {
             main_thread_create(runtime);
-            Runtime *mr = jthread_get_threadq_value(main_thread);
             //启动调试器
             //startJdwp(runtime);
             jdwp_start_server();
@@ -185,11 +184,10 @@ s32 execute(c8 *p_classpath, c8 *p_mainclass, s32 argc, c8 **argv) {
             garbage_thread_resume();
 
             //准备参数
-            localvar_dispose(mr);
-            localvar_init(mr, main->para_count + 1);
+            localvar_dispose(runtime);
+            localvar_init(runtime, main->para_count + 1);
             s32 count = argc;
             Long2Double l2d;
-            s32 bytes = data_type_bytes[DATATYPE_REFERENCE];
             Utf8String *ustr = utf8_create_c("[java/lang/String;");
             Instance *arr = jarray_create(count, DATATYPE_REFERENCE, ustr);
             utf8_destory(ustr);
@@ -201,21 +199,21 @@ s32 execute(c8 *p_classpath, c8 *p_mainclass, s32 argc, c8 **argv) {
                 jarray_set_field(arr, i, &l2d);
                 utf8_destory(utfs);
             }
-            push_ref(mr->stack, arr);
+            push_ref(runtime->stack, arr);
             s64 start = currentTimeMillis();
             jvm_printf("\n\n\n\n\n\n================================= main start ================================\n");
             //调用主方法
             //if (java_debug)jthread_suspend(runtime);//jdwp 会启动调试器
-            ret = execute_method(main, mr, clazz);
+            ret = execute_method(main, runtime, clazz);
             if (ret != RUNTIME_STATUS_NORMAL) {
-                print_exception(mr);
+                print_exception(runtime);
             }
-            mr->threadInfo->is_blocking = 1;
+            runtime->threadInfo->is_blocking = 1;
             while ((thread_list->length) > 1) {//wait for other thread over ,
-                check_suspend_and_pause(mr);
+                check_suspend_and_pause(runtime);
                 threadSleep(100);
             }
-            mr->threadInfo->is_blocking = 0;
+            runtime->threadInfo->is_blocking = 0;
             jvm_printf("================================= main  end  ================================\n");
             jvm_printf("spent %lld\n", (currentTimeMillis() - start));
 

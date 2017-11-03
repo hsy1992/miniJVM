@@ -533,7 +533,11 @@ void invoke_deepth(Runtime *runtime) {
 
 //===============================    java 线程  ==================================
 s32 jthread_init(Instance *jthread) {
-    Runtime *runtime = runtime_create(NULL);
+    jthread_init_with_runtime(jthread, NULL);
+}
+
+s32 jthread_init_with_runtime(Instance *jthread, Runtime *runtime) {
+    if (!runtime)runtime = runtime_create(NULL);
     localvar_init(runtime, 1);
     jthread_set_threadq_value(jthread, runtime);
     runtime->clazz = jthread->mb.clazz;
@@ -796,7 +800,7 @@ s32 jarray_destory(Instance *arr) {
 Instance *jarray_multi_create(ArrayList *dim, Utf8String *pdesc, s32 deep) {
     Utf8String *desc = utf8_create_copy(pdesc);
     s32 len = (s32) (long) arraylist_get_value(dim, dim->length - 1 - deep);
-    if (len == -1){
+    if (len == -1) {
         utf8_destory(desc);
         return NULL;
     }
