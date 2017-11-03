@@ -544,7 +544,7 @@ s32 jthread_init_with_runtime(Instance *jthread, Runtime *runtime) {
     jthread_set_threadq_value(jthread, runtime);
     runtime->clazz = jthread->mb.clazz;
     runtime->threadInfo->jthread = jthread;
-    runtime->threadInfo->thread_status = THREAD_STATUS_NEW;
+    runtime->threadInfo->thread_status = THREAD_STATUS_RUNNING;
     threadlist_add(runtime);
 
     return 0;
@@ -620,16 +620,13 @@ void jthread_set_threadq_value(Instance *ins, __refer val) {
 
 
 void jthreadlock_create(MemoryBlock *mb) {
+    thread_lock(&threadlist_lock);
     if (!mb->thread_lock) {
         ThreadLock *tl = jvm_alloc(sizeof(ThreadLock));
         thread_lock_init(tl);
-
         mb->thread_lock = tl;
-        if (mb->thread_lock != tl) {//recheck
-            thread_lock_dispose(tl);
-            jvm_free(tl);
-        }
     }
+    thread_unlock(&threadlist_lock);
 }
 
 void jthreadlock_destory(MemoryBlock *mb) {

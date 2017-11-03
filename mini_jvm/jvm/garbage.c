@@ -281,11 +281,6 @@ s32 garbage_collect() {
         HashtableKey k = hashtable_iter_next_key(&hti);
         MemoryBlock *mb = (MemoryBlock *) k;
 
-//        if (mb->refer_count <= 0) {
-//            hashtable_remove(collector->objs, mb, 0);
-//            garbage_destory_memobj(mb);
-//            del++;
-//        }
         if (mb->garbage_mark != collector->flag_refer) {
             hashtable_remove(collector->objs, mb, 0);
             garbage_destory_memobj(mb);
@@ -410,15 +405,12 @@ s32 garbage_big_search() {
     for (i = 0; i < thread_list->length; i++) {
         Runtime *runtime = threadlist_get(i);
         garbage_mark_thread(runtime);
-        jthread_resume(runtime);
     }
     //调试线程
     if (java_debug) {
         Runtime *runtime = jdwpserver.runtime;
         if (runtime) {
-            jthread_suspend(runtime);
             garbage_mark_thread(runtime);
-            jthread_resume(runtime);
         }
     }
 

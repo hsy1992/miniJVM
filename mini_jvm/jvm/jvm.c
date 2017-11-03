@@ -231,13 +231,8 @@ s32 execute(c8 *p_classpath, c8 *p_mainclass, s32 argc, c8 **argv) {
         utf8_destory(methodName);
         utf8_destory(methodType);
     }
-
-
-
     //
     garbage_collector_destory();
-    //
-
     //
     utf8_destory(str_mainClsName);
     arraylist_destory(thread_list);
