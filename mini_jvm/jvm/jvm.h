@@ -25,7 +25,7 @@ extern "C" {
 
 //=======================  micro define  =============================
 //_JVM_DEBUG   06 print all bytecode
-#define _JVM_DEBUG 0
+#define _JVM_DEBUG_BYTECODE_DETAIL 0
 #define _JVM_DEBUG_PRINT_FILE 0
 #define _JVM_DEBUG_BYTECODE_DUMP 0
 #define _JVM_DEBUG_GARBAGE_DUMP 0
@@ -372,8 +372,12 @@ extern Hashtable *instruct_profile;
 typedef struct _MemoryBlock {
     u8 type;//type of array or object runtime,class
     u8 arr_type_index;
-    //
+    u8 garbage_mark;
     u8 volatile garbage_reg;
+    u8 hold;
+    u8 unuse1;
+    u8 unuse2;
+    u8 unuse3;
     s32 volatile refer_count;
 
     Class *clazz;
@@ -934,6 +938,8 @@ f64 pop_double(RuntimeStack *stack);
 f32 pop_float(RuntimeStack *stack);
 
 void pop_entry(RuntimeStack *stack, StackEntry *entry);
+
+void pop_empty(RuntimeStack *stack);
 
 s32 entry_2_int(StackEntry *entry);
 

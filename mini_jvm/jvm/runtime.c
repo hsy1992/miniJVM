@@ -164,6 +164,15 @@ void pop_entry(RuntimeStack *stack, StackEntry *entry) {
     }
 }
 
+void pop_empty(RuntimeStack *stack){
+    stack->size--;
+    StackEntry *entry= &stack->store[stack->size];
+    if(entry->type&STACK_ENTRY_REF){
+        __refer ref=entry_2_refer(entry);
+        if(ref)garbage_refer_count_dec(ref);
+    }
+}
+
 /* Entry to Int */
 s32 entry_2_int(StackEntry *entry) {
     s32 value = 0;

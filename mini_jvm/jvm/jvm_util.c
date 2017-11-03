@@ -575,7 +575,7 @@ void *jtherad_loader(void *para) {
     method = find_instance_methodInfo_by_name(jthread, methodName, methodType);
     utf8_destory(methodName);
     utf8_destory(methodType);
-#if _JVM_DEBUG > 5
+#if _JVM_DEBUG_BYTECODE_DETAIL > 5
     jvm_printf("therad_loader    %s.%s%s  \n", utf8_cstr(method->_this_class->name),
                utf8_cstr(method->name), utf8_cstr(method->descriptor));
 #endif
@@ -651,7 +651,7 @@ s32 jthread_lock(MemoryBlock *mb, Runtime *runtime) { //可能会重入，同一
     pthread_mutex_lock(&jtl->mutex_lock);
     jtl->jthread_holder = runtime->threadInfo->jthread;
 
-#if _JVM_DEBUG > 5
+#if _JVM_DEBUG_BYTECODE_DETAIL > 5
     invoke_deepth(runtime);
     jvm_printf("  lock: %llx   lock holder: %llx \n", (s64) (long) (runtime->threadInfo->jthread),
                (s64) (long) (jtl->jthread_holder));
@@ -667,7 +667,7 @@ s32 jthread_unlock(MemoryBlock *mb, Runtime *runtime) {
     ThreadLock *jtl = mb->thread_lock;
     pthread_mutex_unlock(&jtl->mutex_lock);
     jtl->jthread_holder = NULL;
-#if _JVM_DEBUG > 5
+#if _JVM_DEBUG_BYTECODE_DETAIL > 5
     invoke_deepth(runtime);
     jvm_printf("unlock: %llx   lock holder: %llx, \n", (s64) (long) (runtime->threadInfo->jthread),
                (s64) (long) (jtl->jthread_holder));
@@ -807,7 +807,7 @@ Instance *jarray_multi_create(ArrayList *dim, Utf8String *pdesc, s32 deep) {
     c8 ch = utf8_char_at(desc, 1);
     Instance *arr = jarray_create_des(len, desc);
     utf8_substring(desc, 1, desc->length);
-#if _JVM_DEBUG > 5
+#if _JVM_DEBUG_BYTECODE_DETAIL > 5
     jvm_printf("multi arr deep :%d  type(%c) arr[%x] size:%d\n", deep, ch, arr, len);
 #endif
     if (ch == '[') {
@@ -889,7 +889,6 @@ void instance_init(Instance *ins, Runtime *runtime) {
 
 void instance_init_methodtype(Instance *ins, Runtime *runtime, c8 *methodtype, RuntimeStack *para) {
     if (ins) {
-        garbage_refer_count_inc(ins);
         Utf8String *methodName = utf8_create_c("<init>");
         Utf8String *methodType = utf8_create_c(methodtype);
         MethodInfo *mi = find_methodInfo_by_name(ins->mb.clazz->name, methodName, methodType);
@@ -905,7 +904,6 @@ void instance_init_methodtype(Instance *ins, Runtime *runtime, c8 *methodtype, R
         execute_method(mi, runtime, ins->mb.clazz);
         utf8_destory(methodName);
         utf8_destory(methodType);
-        garbage_refer_count_dec(ins);
     }
 }
 
@@ -947,7 +945,7 @@ Instance *jstring_create(Utf8String *src, Runtime *runtime) {
     Utf8String *clsName = utf8_create_c(STR_CLASS_JAVA_LANG_STRING);
     Class *jstr_clazz = classes_load_get(clsName, runtime);
     Instance *jstring = instance_create(jstr_clazz);
-    garbage_refer_count_inc(jstring);//hold
+    push_ref(runtime->stack, jstring);//hold for no gc
     jstring->mb.clazz = jstr_clazz;
     instance_init(jstring, runtime);
 
@@ -965,7 +963,7 @@ Instance *jstring_create(Utf8String *src, Runtime *runtime) {
         setFieldRefer(ptr, 0);
     }
     utf8_destory(clsName);
-    garbage_refer_count_dec(jstring);
+    pop_empty(runtime->stack);
     return jstring;
 }
 
@@ -1078,7 +1076,7 @@ s32 jstring_2_utf8(Instance *jstr, Utf8String *utf8) {
 //===============================    例外  ==================================
 
 Instance *exception_create(s32 exception_type, Runtime *runtime) {
-#if _JVM_DEBUG > 5
+#if _JVM_DEBUG_BYTECODE_DETAIL > 5
     jvm_printf("create exception : %s\n", exception_class_name[exception_type]);
 #endif
     Utf8String *clsName = utf8_create_c(exception_class_name[exception_type]);
@@ -1091,7 +1089,7 @@ Instance *exception_create(s32 exception_type, Runtime *runtime) {
 }
 
 Instance *exception_create_str(s32 exception_type, Runtime *runtime, c8 *errmsg) {
-#if _JVM_DEBUG > 5
+#if _JVM_DEBUG_BYTECODE_DETAIL > 5
     jvm_printf("create exception : %s\n", exception_class_name[exception_type]);
 #endif
     Utf8String *uerrmsg = utf8_create_c(errmsg);

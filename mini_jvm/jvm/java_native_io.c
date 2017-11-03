@@ -305,7 +305,7 @@ s32 javax_mini_net_socket_Protocol_open0(Runtime *runtime, Class *clazz) {
 
     s32 sockfd = sock_open(ip, port);
     utf8_destory(ip);
-#if _JVM_DEBUG > 5
+#if _JVM_DEBUG_BYTECODE_DETAIL > 5
     invoke_deepth(runtime);
     jvm_printf("javax_mini_net_socket_Protocol_open0  \n");
 #endif
@@ -323,7 +323,7 @@ s32 javax_mini_net_socket_Protocol_readBuf(Runtime *runtime, Class *clazz) {
     s32 len = sock_recv(sockfd, jbyte_arr->arr_body + offset, count);
     runtime->threadInfo->is_blocking = 0;
     push_int(runtime->stack, len);
-#if _JVM_DEBUG > 5
+#if _JVM_DEBUG_BYTECODE_DETAIL > 5
     invoke_deepth(runtime);
     jvm_printf("javax_mini_net_socket_Protocol_readBuf  \n");
 #endif
@@ -343,7 +343,7 @@ s32 javax_mini_net_socket_Protocol_readByte(Runtime *runtime, Class *clazz) {
 
     }
 
-#if _JVM_DEBUG > 5
+#if _JVM_DEBUG_BYTECODE_DETAIL > 5
     invoke_deepth(runtime);
     jvm_printf("javax_mini_net_socket_Protocol_readByte  \n");
 #endif
@@ -362,7 +362,7 @@ s32 javax_mini_net_socket_Protocol_writeBuf(Runtime *runtime, Class *clazz) {
     runtime->threadInfo->is_blocking = 0;
 
     push_int(runtime->stack, len);
-#if _JVM_DEBUG > 5
+#if _JVM_DEBUG_BYTECODE_DETAIL > 5
     invoke_deepth(runtime);
     jvm_printf("javax_mini_net_socket_Protocol_writeBuf  \n");
 #endif
@@ -376,7 +376,7 @@ s32 javax_mini_net_socket_Protocol_writeByte(Runtime *runtime, Class *clazz) {
     runtime->threadInfo->is_blocking = 1;
     s32 len = sock_send(sockfd, &b, 1);
     runtime->threadInfo->is_blocking = 0;
-#if _JVM_DEBUG > 5
+#if _JVM_DEBUG_BYTECODE_DETAIL > 5
     invoke_deepth(runtime);
     jvm_printf("javax_mini_net_socket_Protocol_writeByte  \n");
 #endif
@@ -385,7 +385,7 @@ s32 javax_mini_net_socket_Protocol_writeByte(Runtime *runtime, Class *clazz) {
 }
 
 s32 javax_mini_net_socket_Protocol_available0(Runtime *runtime, Class *clazz) {
-#if _JVM_DEBUG > 5
+#if _JVM_DEBUG_BYTECODE_DETAIL > 5
     invoke_deepth(runtime);
     jvm_printf("javax_mini_net_socket_Protocol_available0  \n");
 #endif
@@ -403,7 +403,7 @@ s32 javax_mini_net_socket_Protocol_close0(Runtime *runtime, Class *clazz) {
 #endif
         sockfd = 0;
     }
-#if _JVM_DEBUG > 5
+#if _JVM_DEBUG_BYTECODE_DETAIL > 5
     invoke_deepth(runtime);
     jvm_printf("javax_mini_net_socket_Protocol_close0  \n");
 #endif
@@ -419,7 +419,7 @@ s32 javax_mini_net_socket_Protocol_setOption0(Runtime *runtime, Class *clazz) {
         ret = sock_option(sockfd, type, val);
     }
     push_int(runtime->stack, ret);
-#if _JVM_DEBUG > 5
+#if _JVM_DEBUG_BYTECODE_DETAIL > 5
     invoke_deepth(runtime);
     jvm_printf("javax_mini_net_socket_Protocol_setOption0  \n");
 #endif
@@ -435,7 +435,7 @@ s32 javax_mini_net_serversocket_Protocol_open0(Runtime *runtime, Class *clazz) {
     sockfd = srv_bind(ip, port);
     push_int(runtime->stack, sockfd);
     utf8_destory(ip);
-#if _JVM_DEBUG > 5
+#if _JVM_DEBUG_BYTECODE_DETAIL > 5
     invoke_deepth(runtime);
     jvm_printf("javax_mini_net_serversocket_Protocol_open0  \n");
 #endif
@@ -449,7 +449,7 @@ s32 javax_mini_net_serversocket_Protocol_listen0(Runtime *runtime, Class *clazz)
         ret = srv_listen(sockfd);
     }
     push_int(runtime->stack, ret);
-#if _JVM_DEBUG > 5
+#if _JVM_DEBUG_BYTECODE_DETAIL > 5
     invoke_deepth(runtime);
     jvm_printf("javax_mini_net_serversocket_Protocol_listen0  \n");
 #endif
@@ -466,7 +466,7 @@ s32 javax_mini_net_serversocket_Protocol_accept0(Runtime *runtime, Class *clazz)
         runtime->threadInfo->is_blocking = 0;
     }
     push_int(runtime->stack, ret);
-#if _JVM_DEBUG > 5
+#if _JVM_DEBUG_BYTECODE_DETAIL > 5
     invoke_deepth(runtime);
     jvm_printf("javax_mini_net_serversocket_Protocol_accept0  \n");
 #endif
@@ -480,7 +480,7 @@ s32 javax_mini_net_serversocket_Protocol_close0(Runtime *runtime, Class *clazz) 
         ret = srv_close(sockfd);
     }
     push_int(runtime->stack, ret);
-#if _JVM_DEBUG > 5
+#if _JVM_DEBUG_BYTECODE_DETAIL > 5
     invoke_deepth(runtime);
     jvm_printf("javax_mini_net_serversocket_Protocol_close0  \n");
 #endif
@@ -494,7 +494,7 @@ s32 javax_mini_net_serversocket_Protocol_registerCleanup(Runtime *runtime, Class
 
     }
 
-#if _JVM_DEBUG > 5
+#if _JVM_DEBUG_BYTECODE_DETAIL > 5
     invoke_deepth(runtime);
     jvm_printf("javax_mini_net_serversocket_Protocol_registerCleanup  \n");
 #endif
@@ -508,7 +508,7 @@ s32 javax_mini_net_serversocket_Protocol_finalize(Runtime *runtime, Class *clazz
 
     }
 
-#if _JVM_DEBUG > 5
+#if _JVM_DEBUG_BYTECODE_DETAIL > 5
     invoke_deepth(runtime);
     jvm_printf("javax_mini_net_serversocket_Protocol_finalize  \n");
 #endif
@@ -529,7 +529,7 @@ s32 javax_mini_io_File_openFile(Runtime *runtime, Class *clazz) {
         push_long(runtime->stack, 0);
     }
 
-#if _JVM_DEBUG > 5
+#if _JVM_DEBUG_BYTECODE_DETAIL > 5
     invoke_deepth(runtime);
     jvm_printf("javax_mini_io_File_openFile  \n");
 #endif
@@ -546,7 +546,7 @@ s32 javax_mini_io_File_closeFile(Runtime *runtime, Class *clazz) {
         ret = fclose(fd);
     }
     push_int(runtime->stack, ret);
-#if _JVM_DEBUG > 5
+#if _JVM_DEBUG_BYTECODE_DETAIL > 5
     invoke_deepth(runtime);
     jvm_printf("javax_mini_io_File_closeFile  \n");
 #endif
@@ -570,7 +570,7 @@ s32 javax_mini_io_File_read0(Runtime *runtime, Class *clazz) {
         push_int(runtime->stack, ret);
     }
 
-#if _JVM_DEBUG > 5
+#if _JVM_DEBUG_BYTECODE_DETAIL > 5
     invoke_deepth(runtime);
     jvm_printf("javax_mini_io_File_read0  \n");
 #endif
@@ -595,7 +595,7 @@ s32 javax_mini_io_File_write0(Runtime *runtime, Class *clazz) {
         push_int(runtime->stack, ret);
     }
 
-#if _JVM_DEBUG > 5
+#if _JVM_DEBUG_BYTECODE_DETAIL > 5
     invoke_deepth(runtime);
     jvm_printf("javax_mini_io_File_write0  \n");
 #endif
@@ -620,7 +620,7 @@ s32 javax_mini_io_File_readbuf(Runtime *runtime, Class *clazz) {
     }
     push_int(runtime->stack, ret);
 
-#if _JVM_DEBUG > 5
+#if _JVM_DEBUG_BYTECODE_DETAIL > 5
     invoke_deepth(runtime);
     jvm_printf("javax_mini_io_File_readbuf  \n");
 #endif
@@ -648,7 +648,7 @@ s32 javax_mini_io_File_writebuf(Runtime *runtime, Class *clazz) {
         push_int(runtime->stack, ret);
     }
 
-#if _JVM_DEBUG > 5
+#if _JVM_DEBUG_BYTECODE_DETAIL > 5
     invoke_deepth(runtime);
     jvm_printf("javax_mini_io_File_writebuf  \n");
 #endif
@@ -669,7 +669,7 @@ s32 javax_mini_io_File_seek0(Runtime *runtime, Class *clazz) {
         ret = fseek(fd, (long) filepos, SEEK_SET);
     }
     push_int(runtime->stack, ret);
-#if _JVM_DEBUG > 5
+#if _JVM_DEBUG_BYTECODE_DETAIL > 5
     invoke_deepth(runtime);
     jvm_printf("javax_mini_io_File_seek0  \n");
 #endif
@@ -692,7 +692,7 @@ s32 javax_mini_io_File_setLength0(Runtime *runtime, Class *clazz) {
 #endif
     }
     push_int(runtime->stack, ret);
-#if _JVM_DEBUG > 5
+#if _JVM_DEBUG_BYTECODE_DETAIL > 5
     invoke_deepth(runtime);
     jvm_printf("javax_mini_io_File_setLength0  \n");
 #endif
@@ -710,7 +710,7 @@ s32 javax_mini_io_File_flush0(Runtime *runtime, Class *clazz) {
         ret = fflush(fd);
     }
     push_int(runtime->stack, ret);
-#if _JVM_DEBUG > 5
+#if _JVM_DEBUG_BYTECODE_DETAIL > 5
     invoke_deepth(runtime);
     jvm_printf("javax_mini_io_File_flush0  \n");
 #endif
@@ -755,7 +755,7 @@ s32 javax_mini_io_File_loadFD(Runtime *runtime, Class *clazz) {
         utf8_destory(filepath);
     }
     push_long(runtime->stack, ret);
-#if _JVM_DEBUG > 5
+#if _JVM_DEBUG_BYTECODE_DETAIL > 5
     invoke_deepth(runtime);
     jvm_printf("javax_mini_io_File_loadFD  \n");
 #endif
@@ -798,7 +798,7 @@ s32 javax_mini_io_File_listDir(Runtime *runtime, Class *clazz) {
     } else {
         push_ref(runtime->stack, NULL);
     }
-#if _JVM_DEBUG > 5
+#if _JVM_DEBUG_BYTECODE_DETAIL > 5
     invoke_deepth(runtime);
     jvm_printf("javax_mini_io_File_listDir  \n");
 #endif

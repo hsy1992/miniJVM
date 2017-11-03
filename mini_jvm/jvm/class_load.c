@@ -323,7 +323,7 @@ s32 _parse_constant_pool(Class *_this, FILE *fp, s32 count) {
     return 0;
 }
 
-#ifdef _JVM_DEBUG
+#ifdef _JVM_DEBUG_BYTECODE_DETAIL
 
 /* print constant pool table */
 void printConstantPool(Class *clazz) {
@@ -1281,7 +1281,7 @@ s32 load_class(Utf8String *pClassPath, Utf8String *pClassName, hmap_t classes) {
             if (iret != 0) {
                 jvm_printf(" class not found : %s\n", utf8_cstr(pClassName));
             } else {
-#if _JVM_DEBUG > 5
+#if _JVM_DEBUG_BYTECODE_DETAIL > 5
                 jvm_printf("load class:  %s \n", utf8_cstr(tmppath));
 #endif
                 classes_put(clazz);

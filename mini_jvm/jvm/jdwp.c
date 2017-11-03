@@ -1373,7 +1373,7 @@ s32 jdwp_client_process(JdwpClient *client, Runtime *runtime) {
             case JDWP_CMD_VirtualMachine_CreateString: {//1.11
                 Utf8String *str = jdwppacket_read_utf(req);
                 Instance *jstr = jstring_create(str, runtime);
-                garbage_refer_count_inc(jstr);//防止回收此处需要++
+                garbage_refer_hold(jstr);//防止回收此处需要++
                 utf8_destory(str);
                 jdwppacket_set_err(res, JDWP_ERROR_NONE);
                 jdwppacket_write_refer(res, jstr);
@@ -1411,7 +1411,7 @@ s32 jdwp_client_process(JdwpClient *client, Runtime *runtime) {
                     __refer ins = jdwppacket_read_refer(req);
                     memoryblock_destory(ins);
                     s32 count = jdwppacket_read_int(req);
-                    garbage_refer_count_dec(ins);//失去系统引用
+                    garbage_refer_release(ins);//失去系统引用
                 }
                 jdwppacket_set_err(res, JDWP_ERROR_NONE);
                 jdwp_writepacket(client, res);
@@ -1824,7 +1824,7 @@ s32 jdwp_client_process(JdwpClient *client, Runtime *runtime) {
                             __refer r = pop_ref(runtime->stack);
                             vt.type = getInstanceOfClassTag(r);//recorrect type, may be Arraylist<String>
                             vt.value = (s64) (long) r;
-                            garbage_refer_count_inc(r);
+                            garbage_refer_hold(r);
 
                             if (vt.type == 's') {
                                 s32 debug = 1;
@@ -1848,7 +1848,7 @@ s32 jdwp_client_process(JdwpClient *client, Runtime *runtime) {
             }
             case JDWP_CMD_ObjectReference_DisableCollection: {//9.7
                 Instance *obj = (Instance *) jdwppacket_read_refer(req);
-                garbage_refer_count_inc(obj);
+                garbage_refer_hold(obj);
 
                 jdwppacket_set_err(res, JDWP_ERROR_NONE);
                 jdwp_writepacket(client, res);

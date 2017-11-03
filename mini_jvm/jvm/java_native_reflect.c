@@ -19,7 +19,7 @@ extern "C" {
 s32 javax_mini_reflect_vm_RefNative_refIdSize(Runtime *runtime, Class *clazz) {
     push_int(runtime->stack, sizeof(__refer));
 
-#if _JVM_DEBUG > 5
+#if _JVM_DEBUG_BYTECODE_DETAIL > 5
     jvm_printf("javax_mini_reflect_vm_RefNative_refIdSize\n");
 #endif
     return 0;
@@ -31,7 +31,7 @@ s32 javax_mini_reflect_vm_RefNative_obj2id(Runtime *runtime, Class *clazz) {
     l2d.l = (u64) (long) ins;
     push_long(runtime->stack, l2d.l);
 
-#if _JVM_DEBUG > 5
+#if _JVM_DEBUG_BYTECODE_DETAIL > 5
     jvm_printf("javax_mini_reflect_vm_RefNative_obj2id\n");
 #endif
     return 0;
@@ -44,7 +44,7 @@ s32 javax_mini_reflect_vm_RefNative_id2obj(Runtime *runtime, Class *clazz) {
     __refer r = (__refer) (long) l2d.l;//这里不能直接转化，可能在外部发生了数据精度丢失，只能从低位强转
     push_ref(runtime->stack, r);
 
-#if _JVM_DEBUG > 5
+#if _JVM_DEBUG_BYTECODE_DETAIL > 5
     jvm_printf("javax_mini_jdwp_RefNative_id2obj\n");
 #endif
     return 0;
@@ -69,7 +69,7 @@ s32 javax_mini_reflect_vm_RefNative_getClasses(Runtime *runtime, Class *clazz) {
     }
     push_ref(runtime->stack, jarr);//先放入栈，再关联回收器，防止多线程回收
 
-#if _JVM_DEBUG > 5
+#if _JVM_DEBUG_BYTECODE_DETAIL > 5
     jvm_printf("javax_mini_reflect_vm_RefNative_getClasses\n");
 #endif
     return 0;
@@ -209,7 +209,7 @@ s32 javax_mini_reflect_MemAccess_readByte0(Runtime *runtime, Class *clazz) {
     s32 offset = localvar_getInt(runtime, 2);
     u8 val = getFieldByte(((c8 *) r) + offset);
     push_int(runtime->stack, val);
-#if _JVM_DEBUG > 5
+#if _JVM_DEBUG_BYTECODE_DETAIL > 5
     jvm_printf("javax_mini_reflect_vm_MemObject_readByte0\n");
 #endif
     return 0;
@@ -223,7 +223,7 @@ s32 javax_mini_reflect_MemAccess_readShort0(Runtime *runtime, Class *clazz) {
     s32 offset = localvar_getInt(runtime, 2);
     u16 val = getFieldShort(((c8 *) r) + offset);
     push_int(runtime->stack, val);
-#if _JVM_DEBUG > 5
+#if _JVM_DEBUG_BYTECODE_DETAIL > 5
     jvm_printf("javax_mini_reflect_vm_MemObject_readShort0\n");
 #endif
     return 0;
@@ -237,7 +237,7 @@ s32 javax_mini_reflect_MemAccess_readInt0(Runtime *runtime, Class *clazz) {
     s32 offset = localvar_getInt(runtime, 2);
     s32 val = getFieldInt(((c8 *) r) + offset);
     push_int(runtime->stack, val);
-#if _JVM_DEBUG > 5
+#if _JVM_DEBUG_BYTECODE_DETAIL > 5
     jvm_printf("javax_mini_reflect_vm_MemObject_readInt0\n");
 #endif
     return 0;
@@ -251,7 +251,7 @@ s32 javax_mini_reflect_MemAccess_readLong0(Runtime *runtime, Class *clazz) {
     s32 offset = localvar_getInt(runtime, 2);
     s64 val = getFieldLong(((c8 *) r) + offset);
     push_long(runtime->stack, val);
-#if _JVM_DEBUG > 5
+#if _JVM_DEBUG_BYTECODE_DETAIL > 5
     jvm_printf("javax_mini_reflect_vm_MemObject_readLong0\n");
 #endif
     return 0;
@@ -265,7 +265,7 @@ s32 javax_mini_reflect_MemAccess_readRefer0(Runtime *runtime, Class *clazz) {
     s32 offset = localvar_getInt(runtime, 2);
     __refer val = getFieldRefer(((c8 *) r) + offset);
     push_long(runtime->stack, (u64) (long) val);
-#if _JVM_DEBUG > 5
+#if _JVM_DEBUG_BYTECODE_DETAIL > 5
     jvm_printf("javax_mini_reflect_vm_MemObject_readRefer0\n");
 #endif
     return 0;
@@ -286,7 +286,7 @@ s32 javax_mini_reflect_vm_RefNative_getThreads(Runtime *runtime, Class *clazz) {
     }
     push_ref(runtime->stack, jarr);//先放入栈，再关联回收器，防止多线程回收
     thread_unlock(&threadlist_lock);
-#if _JVM_DEBUG > 5
+#if _JVM_DEBUG_BYTECODE_DETAIL > 5
     jvm_printf("javax_mini_reflect_vm_RefNative_getThreads\n");
 #endif
     return 0;
@@ -299,7 +299,7 @@ s32 javax_mini_reflect_vm_RefNative_getStatus(Runtime *runtime, Class *clazz) {
         push_int(runtime->stack, trun->threadInfo->thread_status);
     else
         push_int(runtime->stack, THREAD_STATUS_ZOMBIE);
-#if _JVM_DEBUG > 5
+#if _JVM_DEBUG_BYTECODE_DETAIL > 5
     jvm_printf("com_egls_jvm_RefNative_getStatus\n");
 #endif
     return 0;
@@ -313,7 +313,7 @@ s32 javax_mini_reflect_vm_RefNative_suspendThread(Runtime *runtime, Class *clazz
         push_int(runtime->stack, 0);
     } else
         push_int(runtime->stack, 1);
-#if _JVM_DEBUG > 5
+#if _JVM_DEBUG_BYTECODE_DETAIL > 5
     jvm_printf("com_egls_jvm_RefNative_suspendThread\n");
 #endif
     return 0;
@@ -327,7 +327,7 @@ s32 javax_mini_reflect_vm_RefNative_resumeThread(Runtime *runtime, Class *clazz)
         push_int(runtime->stack, 0);
     } else
         push_int(runtime->stack, 1);
-#if _JVM_DEBUG > 5
+#if _JVM_DEBUG_BYTECODE_DETAIL > 5
     jvm_printf("com_egls_jvm_RefNative_resumeThread\n");
 #endif
     return 0;
@@ -341,7 +341,7 @@ s32 javax_mini_reflect_vm_RefNative_getSuspendCount(Runtime *runtime, Class *cla
         push_int(runtime->stack, trun->threadInfo->suspend_count);
     } else
         push_int(runtime->stack, 0);
-#if _JVM_DEBUG > 5
+#if _JVM_DEBUG_BYTECODE_DETAIL > 5
     jvm_printf("com_egls_jvm_RefNative_getSuspendCount\n");
 #endif
     return 0;
@@ -371,7 +371,7 @@ s32 javax_mini_reflect_vm_RefNative_stopThread(Runtime *runtime, Class *clazz) {
         push_int(runtime->stack, 0);
     } else
         push_int(runtime->stack, 0);
-#if _JVM_DEBUG > 5
+#if _JVM_DEBUG_BYTECODE_DETAIL > 5
     jvm_printf("com_egls_jvm_RefNative_stopThread\n");
 #endif
     return 0;
@@ -389,7 +389,7 @@ s32 javax_mini_reflect_vm_RefNative_getStackFrame(Runtime *runtime, Class *clazz
         push_long(runtime->stack, (u64) (long) trun->parent);
     } else
         push_long(runtime->stack, 0);
-#if _JVM_DEBUG > 5
+#if _JVM_DEBUG_BYTECODE_DETAIL > 5
     jvm_printf("javax_mini_reflect_vm_RefNative_getStackFrame %llx\n",(u64) (long) trun);
 #endif
     return 0;
@@ -502,7 +502,7 @@ Instance *localVarTable2java(Class *clazz, LocalVarTable *lvt, Runtime *runtime)
     Class *cl = classes_load_get_c(JDWP_CLASS_LOCALVARTABLE, runtime);
     Instance *ins = instance_create(cl);
     instance_init(ins, runtime);
-    garbage_refer_count_inc(ins);// hold by manual
+    garbage_refer_hold(ins);// hold by manual
     if (ins && lvt) {
         c8 *ptr;
         //
@@ -524,7 +524,7 @@ Instance *localVarTable2java(Class *clazz, LocalVarTable *lvt, Runtime *runtime)
         ptr = getFieldPtr_byName_c(ins, JDWP_CLASS_LOCALVARTABLE, "length", "I");
         if (ptr)setFieldInt(ptr, lvt->length);
     }
-    garbage_refer_count_dec(ins);//release by manual
+    garbage_refer_release(ins);//release by manual
     return ins;
 }
 
@@ -600,7 +600,7 @@ s32 javax_mini_reflect_Method_mapMethod(Runtime *runtime, Class *clazz) {
                         LocalVarTable *lvt = &att->converted_code->local_var_table[i];
                         l2d.r = localVarTable2java(methodInfo->_this_class, lvt, runtime);
                         jarray_set_field(jarr, i, &l2d);
-                        
+
                     }
                 }
             }

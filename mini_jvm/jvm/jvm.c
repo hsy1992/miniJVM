@@ -149,13 +149,13 @@ s32 execute(c8 *p_classpath, c8 *p_mainclass, s32 argc, c8 **argv) {
 
     HashtableIterator hti;
     hashtable_iterate(sys_classloader->classes, &hti);
-#if _JVM_DEBUG > 5
+#if _JVM_DEBUG_BYTECODE_DETAIL > 5
     jvm_printf("classes size:%d\n", hashtable_num_entries(sys_classloader->classes));
 #endif
     for (; hashtable_iter_has_more(&hti);) {
         Utf8String *k = hashtable_iter_next_key(&hti);
         Class *clazz = hashtable_get(sys_classloader->classes, k);
-#if _JVM_DEBUG > 5
+#if _JVM_DEBUG_BYTECODE_DETAIL > 5
         jvm_printf("classes entry : %s,%d\n", utf8_cstr(k), clazz);
 #endif
         if (clazz->status != CLASS_STATUS_PREPARED)class_prepar(clazz);

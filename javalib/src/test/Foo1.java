@@ -182,7 +182,7 @@ public class Foo1 {
     }
 
     void t7() {
-        int MAX = 50000;
+        int MAX = 20000;
         int PRINT_COUNT = 10000;
         Thread t = new Thread(new Runnable() {
             @Override

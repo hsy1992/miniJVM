@@ -12,9 +12,24 @@ void __garbage_clear(void);
 s32 checkAndWaitThreadIsSuspend(Runtime *runtime);
 
 
+s32 garbage_big_search();
+
 s32 garbage_pause_the_world();
 
 s32 garbage_resume_the_world();
+
+void class_mark_refer(Class *clazz);
+
+s32 jarray_mark_refer(Instance *arr);
+
+void instance_mark_refer(Instance *ins);
+
+void garbage_mark_object(__refer r);
+
+void garbage_mark_classloader(ClassLoader *class_loader);
+
+s32 garbage_mark_thread(Runtime *pruntime);
+
 
 /**
  * 创建垃圾收集线程，
@@ -38,6 +53,7 @@ s32 garbage_resume_the_world();
 s32 garbage_collector_create() {
     collector = jvm_alloc(sizeof(Collector));
     collector->objs = hashtable_create(DEFAULT_HASH_FUNC, DEFAULT_HASH_EQUALS_FUNC);
+    collector->objs_holder = hashset_create();
 
     collector->_garbage_thread_status = GARBAGE_THREAD_PAUSE;
     thread_lock_init(&collector->garbagelock);
@@ -63,7 +79,8 @@ void garbage_collector_destory() {
     //
     __garbage_clear();
     //
-
+    hashset_destory(collector->objs_holder);
+    collector->objs_holder = NULL;
     //
     hashtable_destory(collector->objs);
     collector->objs = NULL;
@@ -212,7 +229,7 @@ void dump_refer() {
 
 }
 
-//==============================   gc() =====================================
+//==============================   thread_run() =====================================
 
 void *collect_thread_run(void *para) {
     s64 startAt;
@@ -245,9 +262,6 @@ void *collect_thread_run(void *para) {
  */
 s32 garbage_collect() {
 
-#if _JVM_DEBUG_GARBAGE_DUMP
-    //dump_refer();
-#endif
     s64 obj_count = (collector->objs->entries);
 
     HashtableIterator hti;
@@ -260,6 +274,8 @@ s32 garbage_collect() {
 
     garbage_thread_lock();
     //
+    collector->flag_refer++;
+    garbage_big_search();
 
     hashtable_iterate(collector->objs, &hti);
     for (; hashtable_iter_has_more(&hti);) {
@@ -272,6 +288,11 @@ s32 garbage_collect() {
             garbage_destory_memobj(mb);
             del++;
         }
+//        if (mb->garbage_mark != collector->flag_refer) {
+//            garbage_destory_memobj(mb);
+//            del++;
+//        }
+
     }
 
     jvm_printf("garbage cllected OBJ: %lld -> %lld    MEM : %lld -> %lld\n",
@@ -300,6 +321,9 @@ s32 checkAndWaitThreadIsSuspend(Runtime *runtime) {
 
 void garbage_destory_memobj(MemoryBlock *mb) {
 #if _JVM_DEBUG_GARBAGE_DUMP
+    if (mb->garbage_mark != collector->flag_refer) {
+        jvm_printf("?");
+    }
     Utf8String *sus = utf8_create();
     getMemBlockName(mb, sus);
     jvm_printf("X: %s[%llx] count:%d\n", utf8_cstr(sus), (s64) (long) mb, mb->refer_count);
@@ -373,11 +397,176 @@ s32 garbage_resume_the_world() {
     }
     return 0;
 }
+//=================================  big_search ==================================
 
-void garbage_big_search(){
-    
+/**
+ * on all threads stoped ,
+ * mark thread's localvar and stack refered obj and deep search
+ * @return ret
+ */
+
+s32 garbage_big_search() {
+    s32 i;
+    //jvm_printf("thread set size:%d\n", thread_list->length);
+    for (i = 0; i < thread_list->length; i++) {
+        Runtime *runtime = threadlist_get(i);
+        garbage_mark_thread(runtime);
+        jthread_resume(runtime);
+    }
+    //调试线程
+    if (java_debug) {
+        Runtime *runtime = jdwpserver.runtime;
+        if (runtime) {
+            jthread_suspend(runtime);
+            garbage_mark_thread(runtime);
+            jthread_resume(runtime);
+        }
+    }
+
+    HashsetIterator hi;
+    hashset_iterate(collector->objs_holder, &hi);
+    while (hashset_iter_has_more(&hi)) {
+        HashsetKey k = hashset_iter_next_key(&hi);
+        garbage_mark_object(k);
+    }
+
+    garbage_mark_classloader(sys_classloader);
+    garbage_mark_classloader(array_classloader);
+    return 0;
 }
 
+void garbage_mark_classloader(ClassLoader *class_loader) {
+    HashtableIterator hti;
+    hashtable_iterate(class_loader->classes, &hti);
+    for (; hashtable_iter_has_more(&hti);) {
+        HashtableValue v = hashtable_iter_next_value(&hti);
+        garbage_mark_object((Class *) v);
+    }
+    garbage_mark_object(class_loader->JVM_CLASS);
+}
+
+/**
+ * 判定某个对象是否被所有线程的runtime引用
+ * 引用有两种情况：
+ * 一种是被其他实例所引用，会putfield或putstatic
+ * 另一种是被运行时的栈或局部变量所引用，
+ * 这两种情况下，对象是不能被释放的
+ *
+ * @param pruntime son of runtime
+ * @return how many marked
+ */
+
+
+s32 garbage_mark_thread(Runtime *pruntime) {
+    garbage_mark_object(pruntime->threadInfo->jthread);
+
+    s32 i;
+    StackEntry entry;
+    Runtime *runtime = pruntime;
+    RuntimeStack *stack = runtime->stack;
+    for (i = 0; i < stack->size; i++) {
+        peek_entry(stack, &entry, i);
+        if (is_ref(&entry)) {
+            __refer ref = entry_2_refer(&entry);
+            if (ref) {
+                garbage_mark_object(ref);
+            }
+        }
+    }
+    while (runtime) {
+        for (i = 0; i < runtime->localvar_count; i++) {
+            __refer ref = runtime->localVariables[i].refer;
+            if (ref) {
+                garbage_mark_object(ref);
+            }
+        }
+        runtime = runtime->son;
+    }
+    //jvm_printf("[%llx] notified\n", (s64) (long) pruntime->threadInfo->jthread);
+    return 0;
+}
+
+/**
+ * 递归标注obj所有的子孙
+ * @param r addr
+ */
+
+void garbage_mark_object(__refer r) {
+    if (r) {
+        MemoryBlock *obj = (MemoryBlock *) r;
+
+        //printf("%s [", utf8_cstr(obj->clazz->name));
+        if (collector->flag_refer != obj->garbage_mark) {
+            obj->garbage_mark = collector->flag_refer;;
+            switch (obj->type) {
+                case MEM_TYPE_INS:
+                    instance_mark_refer((Instance *) obj);
+                    break;
+                case MEM_TYPE_ARR:
+                    jarray_mark_refer((Instance *) obj);
+                    break;
+                case MEM_TYPE_CLASS:
+                    class_mark_refer((Class *) obj);
+                    break;
+            }
+        }
+    }
+    //printf("]");
+}
+
+void instance_mark_refer(Instance *ins) {
+    s32 i;
+    Class *clazz = ins->mb.clazz;
+    while (clazz) {
+        FieldPool *fp = &clazz->fieldPool;
+        for (i = 0; i < fp->field_used; i++) {
+            FieldInfo *fi = &fp->field[i];
+            if ((fi->access_flags & ACC_STATIC) == 0 && isDataReferByIndex(fi->datatype_idx)) {
+                c8 *ptr = getInstanceFieldPtr(ins, fi);
+                if (ptr) {
+                    __refer ref = getFieldRefer(ptr);
+                    garbage_mark_object(ref);
+                }
+            }
+        }
+        clazz = getSuperClass(clazz);
+    }
+}
+
+
+s32 jarray_mark_refer(Instance *arr) {
+    if (arr && arr->mb.type == MEM_TYPE_ARR) {
+        if (isDataReferByIndex(arr->mb.arr_type_index)) {
+            s32 i;
+            Long2Double l2d;
+            for (i = 0; i < arr->arr_length; i++) {//把所有引用去除，否则不会垃圾回收
+                l2d.l = 0;
+                jarray_get_field(arr, i, &l2d);
+                garbage_mark_object(l2d.r);
+            }
+        }
+
+    }
+    return 0;
+}
+
+void class_mark_refer(Class *clazz) {
+    s32 i;
+    if (clazz->field_static) {
+        FieldPool *fp = &clazz->fieldPool;
+        for (i = 0; i < fp->field_used; i++) {
+            FieldInfo *fi = &fp->field[i];
+            if ((fi->access_flags & ACC_STATIC) != 0 && isDataReferByIndex(fi->datatype_idx)) {
+                c8 *ptr = getStaticFieldPtr(fi);
+                if (ptr) {
+                    __refer ref = getFieldRefer(ptr);
+                    garbage_mark_object(ref);
+                }
+            }
+        }
+
+    }
+}
 //=================================  reg unreg ==================================
 
 
@@ -399,8 +588,8 @@ s32 garbage_is_alive(__refer sonPtr) {
 }
 
 s32 garbage_refer_count_inc(__refer ref) {
-    MemoryBlock *mb = (MemoryBlock *) ref;
-    if (mb) {
+    if (ref) {
+        MemoryBlock *mb = (MemoryBlock *) ref;
         garbage_thread_lock();
         if (!mb->garbage_reg) {
             hashtable_put(collector->objs, mb, mb);
@@ -420,8 +609,8 @@ s32 garbage_refer_count_inc(__refer ref) {
 }
 
 s32 garbage_refer_count_dec(__refer ref) {
-    MemoryBlock *mb = (MemoryBlock *) ref;
-    if (mb) {
+    if (ref) {
+        MemoryBlock *mb = (MemoryBlock *) ref;
         garbage_thread_lock();
         mb->refer_count--;
         if (hashtable_get(collector->objs, mb) == NULL) {
@@ -436,4 +625,35 @@ s32 garbage_refer_count_dec(__refer ref) {
 #endif
     }
     return 0;
+}
+
+void garbage_refer_hold(__refer ref) {
+    if (ref) {
+        MemoryBlock *mb = (MemoryBlock *) ref;
+        garbage_thread_lock();
+        hashset_put(collector->objs_holder, ref);
+        garbage_thread_unlock();
+
+#if _JVM_DEBUG_GARBAGE_DUMP
+        Utf8String *sus = utf8_create();
+        getMemBlockName(mb, sus);
+        jvm_printf("<: %s[%llx] count:%d\n", utf8_cstr(sus), (s64) (long) mb, mb->refer_count);
+        utf8_destory(sus);
+#endif
+    }
+}
+
+void garbage_refer_release(__refer ref) {
+    if (ref) {
+        MemoryBlock *mb = (MemoryBlock *) ref;
+        garbage_thread_lock();
+        hashset_remove(collector->objs_holder, ref, 0);
+        garbage_thread_unlock();
+#if _JVM_DEBUG_GARBAGE_DUMP
+        Utf8String *sus = utf8_create();
+        getMemBlockName(mb, sus);
+        jvm_printf(">: %s[%llx] count:%d\n", utf8_cstr(sus), (s64) (long) mb, mb->refer_count);
+        utf8_destory(sus);
+#endif
+    }
 }
