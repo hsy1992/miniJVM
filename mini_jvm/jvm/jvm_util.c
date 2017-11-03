@@ -643,7 +643,12 @@ s32 jthread_lock(MemoryBlock *mb, Runtime *runtime) { //可能会重入，同一
         jthreadlock_create(mb);
     }
     ThreadLock *jtl = mb->thread_lock;
-    pthread_mutex_lock(&jtl->mutex_lock);
+    //can pause when lock
+    while (pthread_mutex_trylock(&jtl->mutex_lock)) {
+        check_suspend_and_pause(runtime);
+        jthread_yield(runtime);
+    }
+//    pthread_mutex_lock(&jtl->mutex_lock);
     jtl->jthread_holder = runtime->threadInfo->jthread;
 
 #if _JVM_DEBUG_BYTECODE_DETAIL > 5
@@ -703,15 +708,15 @@ s32 jthread_resume(Runtime *runtime) {
     return 0;
 }
 
-s32 jthread_waitTime(MemoryBlock *mb, Runtime *runtime, long waitms) {
+s32 jthread_waitTime(MemoryBlock *mb, Runtime *runtime, s64 waitms) {
     if (mb == NULL)return -1;
     if (!mb->thread_lock) {
         jthreadlock_create(mb);
     }
-    waitms += currentTimeMillis();
-    struct timespec t;
-    t.tv_sec = waitms / 1000;
-    t.tv_nsec = (waitms % 1000) * 1000000;
+    //waitms += currentTimeMillis();
+    struct timespec t;clock_gettime(CLOCK_REALTIME, &t);
+    t.tv_sec += waitms / 1000;
+    t.tv_nsec += (waitms % 1000) * 1000000;
     runtime->threadInfo->thread_status = THREAD_STATUS_WAIT;
     pthread_cond_timedwait(&mb->thread_lock->thread_cond, &mb->thread_lock->mutex_lock, &t);
     runtime->threadInfo->thread_status = THREAD_STATUS_RUNNING;
@@ -727,6 +732,7 @@ s32 check_suspend_and_pause(Runtime *runtime) {
         }
         runtime->threadInfo->is_suspend = 0;
         garbage_thread_notify();
+        //jvm_printf(".");
         garbage_thread_unlock();
     }
     return 0;

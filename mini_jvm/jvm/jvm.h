@@ -373,11 +373,6 @@ typedef struct _MemoryBlock {
     u8 arr_type_index;
     u8 garbage_mark;
     u8 volatile garbage_reg;
-    u8 hold;
-    u8 unuse1;
-    u8 unuse2;
-    u8 unuse3;
-    s32 volatile refer_count;
 
     Class *clazz;
     ThreadLock *volatile thread_lock;

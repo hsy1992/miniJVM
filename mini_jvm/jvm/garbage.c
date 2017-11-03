@@ -45,6 +45,15 @@ s32 garbage_mark_thread(Runtime *pruntime);
  *
  * jdwp调试线程中的运行时对象不可回收。
  *
+ * known issue:
+ * gc spent much time , the next step is opmize , smaller stop the world:
+ * 1. stop the world
+ * 2. all reg/hold/release operation putin a cache comtainer after stop the world,
+ * 3. copy all runtime refer
+ * 4. resume the world
+ * 5. gc
+ * 6. move cache to main objs comtainer
+ * 7. restore reg/hold/release opreation
  *
  * @return errorcode
  */
@@ -221,7 +230,7 @@ void dump_refer() {
         HashtableKey k = hashtable_iter_next_key(&hti);
         Utf8String *name = utf8_create();
         getMemBlockName(k, name);
-        jvm_printf("   %s[%llx] count:%d\n", utf8_cstr(name), (s64) (long) k, ((MemoryBlock *) k)->refer_count);
+        jvm_printf("   %s[%llx] \n", utf8_cstr(name), (s64) (long) k);
         utf8_destory(name);
     }
 
@@ -265,12 +274,15 @@ s32 garbage_collect() {
     HashtableIterator hti;
     s64 mem1 = heap_size;
     s64 del = 0;
+    s64 startAt = currentTimeMillis();
+
+    garbage_thread_lock();
 
     if (garbage_pause_the_world() != 0) {
+        garbage_resume_the_world();
         return -1;
     }
 
-    garbage_thread_lock();
     //
     collector->flag_refer++;
     garbage_big_search();
@@ -289,28 +301,17 @@ s32 garbage_collect() {
 
     }
 
-    jvm_printf("garbage cllected OBJ: %lld -> %lld    MEM : %lld -> %lld\n",
-               obj_count, hashtable_num_entries(collector->objs), mem1, heap_size);
 
     if (collector->_garbage_count++ % 5 == 0) {//每n秒resize一次
         hashtable_remove(collector->objs, NULL, 1);
     }
     garbage_thread_unlock();
     garbage_resume_the_world();
+    s64 end = currentTimeMillis();
+    jvm_printf("garbage cllected obj: %lld -> %lld  heap : %lld -> %lld  spent: %lld\n",
+               obj_count, hashtable_num_entries(collector->objs), mem1, heap_size, (end - startAt));
 
     return del;
-}
-
-s32 checkAndWaitThreadIsSuspend(Runtime *runtime) {
-    while (!runtime->threadInfo->is_suspend
-           &&
-           !runtime->threadInfo->is_blocking) { // if a native method blocking , must set thread status is wait before enter native method
-        garbage_thread_timedwait(20);
-        if (collector->_garbage_thread_status != GARBAGE_THREAD_NORMAL) {
-            return -1;
-        }
-    }
-    return 0;
 }
 
 void garbage_destory_memobj(MemoryBlock *mb) {
@@ -320,7 +321,7 @@ void garbage_destory_memobj(MemoryBlock *mb) {
     }
     Utf8String *sus = utf8_create();
     getMemBlockName(mb, sus);
-    jvm_printf("X: %s[%llx] count:%d\n", utf8_cstr(sus), (s64) (long) mb, mb->refer_count);
+    jvm_printf("X: %s[%llx] \n", utf8_cstr(sus), (s64) (long) mb);
     utf8_destory(sus);
 #endif
     memoryblock_destory((Instance *) mb);
@@ -333,7 +334,7 @@ void garbage_destory_memobj(MemoryBlock *mb) {
 s32 garbage_pause_the_world() {
     s32 i;
     //jvm_printf("thread size:%d\n", thread_list->length);
-    garbage_thread_lock();
+
     if (thread_list->length) {
         for (i = 0; i < thread_list->length; i++) {
             Runtime *runtime = arraylist_get_value(thread_list, i);
@@ -343,10 +344,8 @@ s32 garbage_pause_the_world() {
         for (i = 0; i < thread_list->length; i++) {
             Runtime *runtime = arraylist_get_value(thread_list, i);
 
-            while (!(runtime->threadInfo->is_suspend ||
-                     runtime->threadInfo->is_blocking ||
-                     runtime->threadInfo->thread_status == THREAD_STATUS_ZOMBIE)) {
-                garbage_thread_timedwait(10);//让出锁
+            if (checkAndWaitThreadIsSuspend(runtime) == -1) {
+                return -1;
             }
 #if _JVM_DEBUG_GARBAGE_DUMP
             Runtime *last = getLastSon(runtime);
@@ -381,7 +380,7 @@ s32 garbage_resume_the_world() {
             jthread_resume(runtime);
         }
     }
-    garbage_thread_unlock();
+
     //调试线程
     if (java_debug) {
         Runtime *runtime = jdwpserver.runtime;
@@ -391,6 +390,20 @@ s32 garbage_resume_the_world() {
     }
     return 0;
 }
+
+
+s32 checkAndWaitThreadIsSuspend(Runtime *runtime) {
+    while (!runtime->threadInfo->is_suspend
+           &&
+           !runtime->threadInfo->is_blocking) { // if a native method blocking , must set thread status is wait before enter native method
+        garbage_thread_timedwait(20);
+        if (collector->_garbage_thread_status != GARBAGE_THREAD_NORMAL) {
+            return -1;
+        }
+    }
+    return 0;
+}
+
 //=================================  big_search ==================================
 
 /**
@@ -580,7 +593,7 @@ s32 garbage_refer_reg(__refer ref) {
 #if _JVM_DEBUG_GARBAGE_DUMP
         Utf8String *sus = utf8_create();
         getMemBlockName(mb, sus);
-        jvm_printf("+: %s[%llx] count:%d\n", utf8_cstr(sus), (s64) (long) mb, mb->refer_count);
+        jvm_printf("+: %s[%llx] \n", utf8_cstr(sus), (s64) (long) mb);
         utf8_destory(sus);
 #endif
     }
@@ -597,7 +610,7 @@ void garbage_refer_hold(__refer ref) {
 #if _JVM_DEBUG_GARBAGE_DUMP
         Utf8String *sus = utf8_create();
         getMemBlockName(mb, sus);
-        jvm_printf("<: %s[%llx] count:%d\n", utf8_cstr(sus), (s64) (long) mb, mb->refer_count);
+        jvm_printf("<: %s[%llx] \n", utf8_cstr(sus), (s64) (long) mb);
         utf8_destory(sus);
 #endif
     }
@@ -611,7 +624,7 @@ void garbage_refer_release(__refer ref) {
 #if _JVM_DEBUG_GARBAGE_DUMP
         Utf8String *sus = utf8_create();
         getMemBlockName(mb, sus);
-        jvm_printf(">: %s[%llx] count:%d\n", utf8_cstr(sus), (s64) (long) mb, mb->refer_count);
+        jvm_printf(">: %s[%llx] \n", utf8_cstr(sus), (s64) (long) mb);
         utf8_destory(sus);
 #endif
     }

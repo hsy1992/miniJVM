@@ -1280,6 +1280,7 @@ s32 load_class(Utf8String *pClassPath, Utf8String *pClassName, hmap_t classes) {
             //回收
             if (iret != 0) {
                 jvm_printf(" class not found : %s\n", utf8_cstr(pClassName));
+                class_destory(clazz);
             } else {
 #if _JVM_DEBUG_BYTECODE_DETAIL > 5
                 jvm_printf("load class:  %s \n", utf8_cstr(tmppath));

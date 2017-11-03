@@ -305,6 +305,7 @@ typedef struct _JdwpClient {
     u8 closed;
     u8 conn_first;
     JdwpPacket *rcvp; //用于非阻塞接收，多次接收往同一个包内写入字节
+    Hashset * temp_obj_holder;
 } JdwpClient;
 
 typedef struct _JdwpConn {

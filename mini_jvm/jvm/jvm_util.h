@@ -165,7 +165,7 @@ s32 jthread_notify(MemoryBlock *mb, Runtime *runtime);
 
 s32 jthread_notifyAll(MemoryBlock *mb, Runtime *runtime);
 
-s32 jthread_waitTime(MemoryBlock *mb, Runtime *runtime, long waitms);
+s32 jthread_waitTime(MemoryBlock *mb, Runtime *runtime, s64 waitms);
 
 s32 jthread_yield(Runtime *runtime);
 

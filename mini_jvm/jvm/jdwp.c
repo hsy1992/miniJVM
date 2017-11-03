@@ -19,6 +19,8 @@ void jdwp_eventset_destory(EventSet *set);
 
 void jdwppacket_destory(JdwpPacket *packet);
 
+JdwpClient *jdwp_client_create(s32 sockfd);
+
 void jdwp_client_destory(JdwpClient *client);
 
 //==================================================    server    ==================================================
@@ -40,11 +42,7 @@ void *jdwp_thread_listener(void *para) {
             break;
         }
         sock_option(sockfd, SOCK_OP_TYPE_NON_BLOCK, SOCK_OP_VAL_NON_BLOCK);
-        JdwpClient *client = jvm_alloc(sizeof(JdwpClient));
-        client->closed = 0;
-        client->conn_first = 1;
-        client->sockfd = sockfd;
-        client->rcvp = NULL;
+        JdwpClient *client = jdwp_client_create(sockfd);
         jdwp_put_client(srv->clients, client);
     }
 
@@ -125,13 +123,42 @@ s32 jdwp_stop_server() {
 }
 
 
+JdwpClient *jdwp_client_create(s32 sockfd) {
+    JdwpClient *client = jvm_alloc(sizeof(JdwpClient));
+    client->closed = 0;
+    client->conn_first = 1;
+    client->sockfd = sockfd;
+    client->rcvp = NULL;
+    client->temp_obj_holder = hashset_create();
+    return client;
+}
+
 void jdwp_client_destory(JdwpClient *client) {
     if (client->rcvp) {
         jdwppacket_destory(client->rcvp);
     }
+    //release all hold object
+    HashsetIterator hi;
+    hashset_iterate(client->temp_obj_holder, &hi);
+    while (hashset_iter_has_more(&hi)) {
+        HashsetKey k = hashset_iter_next_key(&hi);
+        garbage_refer_release(k);
+    }
+    hashset_destory(client->temp_obj_holder);
+    client->temp_obj_holder = NULL;
     jvm_free(client);
 }
 
+void jdwp_client_hold_obj(JdwpClient *client, __refer obj) {
+    hashset_put(client->temp_obj_holder, obj);
+    garbage_refer_hold(obj);
+    garbage_refer_reg(obj);
+}
+
+void jdwp_client_release_obj(JdwpClient *client, __refer obj) {
+    hashset_remove(client->temp_obj_holder, obj, 1);
+    garbage_refer_release(obj);
+}
 //==================================================    packet    ==================================================
 
 
@@ -1373,7 +1400,7 @@ s32 jdwp_client_process(JdwpClient *client, Runtime *runtime) {
             case JDWP_CMD_VirtualMachine_CreateString: {//1.11
                 Utf8String *str = jdwppacket_read_utf(req);
                 Instance *jstr = jstring_create(str, runtime);
-                garbage_refer_hold(jstr);//防止回收此处需要++
+                jdwp_client_hold_obj(client, jstr);//防止回收此处需要hold
                 utf8_destory(str);
                 jdwppacket_set_err(res, JDWP_ERROR_NONE);
                 jdwppacket_write_refer(res, jstr);
@@ -1411,7 +1438,7 @@ s32 jdwp_client_process(JdwpClient *client, Runtime *runtime) {
                     __refer ins = jdwppacket_read_refer(req);
                     memoryblock_destory(ins);
                     s32 count = jdwppacket_read_int(req);
-                    garbage_refer_release(ins);//失去系统引用
+                    jdwp_client_release_obj(client, ins);//release obj
                 }
                 jdwppacket_set_err(res, JDWP_ERROR_NONE);
                 jdwp_writepacket(client, res);
@@ -1824,7 +1851,7 @@ s32 jdwp_client_process(JdwpClient *client, Runtime *runtime) {
                             __refer r = pop_ref(runtime->stack);
                             vt.type = getInstanceOfClassTag(r);//recorrect type, may be Arraylist<String>
                             vt.value = (s64) (long) r;
-                            garbage_refer_hold(r);
+                            jdwp_client_hold_obj(client, r);
 
                             if (vt.type == 's') {
                                 s32 debug = 1;
@@ -1848,7 +1875,7 @@ s32 jdwp_client_process(JdwpClient *client, Runtime *runtime) {
             }
             case JDWP_CMD_ObjectReference_DisableCollection: {//9.7
                 Instance *obj = (Instance *) jdwppacket_read_refer(req);
-                garbage_refer_hold(obj);
+                jdwp_client_hold_obj(client, obj);
 
                 jdwppacket_set_err(res, JDWP_ERROR_NONE);
                 jdwp_writepacket(client, res);
