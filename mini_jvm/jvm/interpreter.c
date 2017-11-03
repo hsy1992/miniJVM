@@ -2182,7 +2182,7 @@ s32 op_new(u8 **opCode, Runtime *runtime) {
     Instance *ins = NULL;
     if (other) {
         ins = instance_create(other);
-        //garbage_refer(ins, NULL);
+        garbage_refer_reg(ins);
     }
     push_ref(stack, (__refer) ins);
 #if _JVM_DEBUG_BYTECODE_DETAIL > 5
@@ -2203,7 +2203,7 @@ static inline s32 op_newarray_impl(Runtime *runtime, s32 count, s32 typeIdx, Utf
 #endif
     if (arr) {
         push_ref(stack, (__refer) arr);
-        //garbage_refer(arr, NULL);
+        garbage_refer_reg(arr);
     } else {
         Instance *exception = exception_create(JVM_EXCEPTION_NULLPOINTER, runtime);
         push_ref(stack, (__refer) exception);
@@ -2250,6 +2250,7 @@ s32 op_multianewarray(u8 **opCode, Runtime *runtime) {
         arraylist_append(dim, (ArrayListValue) (long) pop_int(stack));
 
     Instance *arr = jarray_multi_create(dim, desc, 0);
+    garbage_refer_reg(arr);
     arraylist_destory(dim);
 #if _JVM_DEBUG_BYTECODE_DETAIL > 5
     invoke_deepth(runtime);

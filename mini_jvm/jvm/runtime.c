@@ -40,10 +40,7 @@ void push_int(RuntimeStack *stack, s32 value) {
 s32 pop_int(RuntimeStack *stack) {
     stack->size--;
     StackEntry *entry= &stack->store[stack->size];
-    if(entry->type&STACK_ENTRY_REF){
-        __refer ref=entry_2_refer(entry);
-        if(ref)garbage_refer_count_dec(ref);
-    }
+
     s32 value = 0;
     memcpy(&value, &entry->value, sizeof(s32));
     memset(&stack->store[stack->size], 0, sizeof(StackEntry));
@@ -62,12 +59,7 @@ void push_double(RuntimeStack *stack, f64 value) {
 f64 pop_double(RuntimeStack *stack) {
     stack->size--;
     StackEntry *entry= &stack->store[stack->size];
-    if(entry->type&STACK_ENTRY_REF){
-        __refer ref=entry_2_refer(entry);
-        if(ref)garbage_refer_count_dec(ref);
-    }
     f64 value = 0;
-
     memcpy(&value, &entry->value, sizeof(f64));
     memset(&stack->store[stack->size], 0, sizeof(StackEntry));
     return value;
@@ -86,10 +78,7 @@ void push_float(RuntimeStack *stack, f32 value) {
 f32 pop_float(RuntimeStack *stack) {
     stack->size--;
     StackEntry *entry= &stack->store[stack->size];
-    if(entry->type&STACK_ENTRY_REF){
-        __refer ref=entry_2_refer(entry);
-        if(ref)garbage_refer_count_dec(ref);
-    }
+
     f32 value = 0;
 
     memcpy(&value, &entry->value, sizeof(f32));
@@ -111,10 +100,7 @@ void push_long(RuntimeStack *stack, s64 value) {
 s64 pop_long(RuntimeStack *stack) {
     stack->size--;
     StackEntry *entry= &stack->store[stack->size];
-    if(entry->type&STACK_ENTRY_REF){
-        __refer ref=entry_2_refer(entry);
-        if(ref)garbage_refer_count_dec(ref);
-    }
+
     s64 value = 0;
     memcpy(&value, &entry->value, sizeof(s64));
     memset(&stack->store[stack->size], 0, sizeof(StackEntry));
@@ -127,7 +113,7 @@ void push_ref(RuntimeStack *stack, __refer value) {
     void *tmp = &stack->store[stack->size].value;
     memcpy(tmp, &value, sizeof(__refer));
     stack->store[stack->size].type = STACK_ENTRY_REF;
-    if (value)garbage_refer_count_inc(value);
+    if (value)garbage_refer_reg(value);
     stack->size++;
 }
 
@@ -137,7 +123,7 @@ __refer pop_ref(RuntimeStack *stack) {
     __refer value = 0;
     memcpy(&value, &entry->value, sizeof(__refer));
     memset(&stack->store[stack->size], 0, sizeof(StackEntry));
-    if (value)garbage_refer_count_dec(value);
+
     return value;
 }
 
@@ -145,10 +131,6 @@ __refer pop_ref(RuntimeStack *stack) {
 void push_entry(RuntimeStack *stack, StackEntry *entry) {
     void *tmp = &stack->store[stack->size];
     memcpy(tmp, entry, sizeof(StackEntry));
-    if (entry->type == STACK_ENTRY_REF) {
-        __refer ref = entry_2_refer(entry);
-        if (ref)garbage_refer_count_inc(ref);
-    }
     stack->size++;
 }
 
@@ -158,19 +140,12 @@ void pop_entry(RuntimeStack *stack, StackEntry *entry) {
     void* ptr=&stack->store[stack->size];
     memcpy(entry, ptr, sizeof(StackEntry));
     memset(ptr, 0, sizeof(StackEntry));
-    if (entry->type == STACK_ENTRY_REF) {
-        __refer ref = entry_2_refer(entry);
-        if (ref)garbage_refer_count_dec(ref);
-    }
+
 }
 
 void pop_empty(RuntimeStack *stack){
     stack->size--;
-    StackEntry *entry= &stack->store[stack->size];
-    if(entry->type&STACK_ENTRY_REF){
-        __refer ref=entry_2_refer(entry);
-        if(ref)garbage_refer_count_dec(ref);
-    }
+    memset(&stack->store[stack->size], 0, sizeof(StackEntry));
 }
 
 /* Entry to Int */
@@ -276,15 +251,10 @@ s32 localvar_init(Runtime *runtime, s32 count) {
 
 s32 localvar_dispose(Runtime *runtime) {
     s32 i;
-    for (i = 0; i < runtime->localvar_count; i++) {
-        __refer ref = localvar_getRefer(runtime, i);
-        if (ref) {
-            garbage_refer_count_dec(ref);
-        }
-    }
-    if (runtime->localVariables == NULL) {
-        int debug = 1;
-    }
+
+//    if (runtime->localVariables == NULL) {
+//        int debug = 1;
+//    }
     jvm_free(runtime->localVariables);
     runtime->localVariables = NULL;
     runtime->localvar_count = 0;
@@ -294,23 +264,16 @@ s32 localvar_dispose(Runtime *runtime) {
 void localvar_clear_refer(s32 index, Runtime *runtime) {
     __refer old = runtime->localVariables[index].refer;
     if (old) {
-        garbage_refer_count_dec(old);
         runtime->localVariables[index].refer = NULL;
     }
 }
 
 void localvar_setInt(Runtime *runtime, s32 index, s32 val) {
-    localvar_clear_refer(index, runtime);
     runtime->localVariables[index].integer = val;
 }
 
 void localvar_setRefer(Runtime *runtime, s32 index, __refer val) {
-    localvar_clear_refer(index, runtime);
     runtime->localVariables[index].refer = val;
-    if (val)garbage_refer_count_inc(val);
-//    if (((long) val & 0x01000000) != ((long) val & 0xff000000)) {
-//        int debug = 1;
-//    }
 }
 
 s32 localvar_getInt(Runtime *runtime, s32 index) {

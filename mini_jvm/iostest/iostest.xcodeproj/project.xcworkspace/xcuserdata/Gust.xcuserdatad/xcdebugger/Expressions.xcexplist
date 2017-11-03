@@ -3,19 +3,41 @@
    version = "1.0">
    <ContextStates>
       <ContextState
-         contextName = "op_astore:interpreter.c">
-      </ContextState>
-      <ContextState
          contextName = "pop_entry:runtime.c">
       </ContextState>
       <ContextState
          contextName = "stack2localvar:interpreter.c">
       </ContextState>
       <ContextState
+         contextName = "op_astore:interpreter.c">
+         <PersistentStrings>
+            <PersistentString
+               value = "(Instance*)value">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
          contextName = "execute_method:interpreter.c">
          <PersistentStrings>
             <PersistentString
                value = "method-&gt;_this_class-&gt;name-&gt;data">
+            </PersistentString>
+            <PersistentString
+               value = "method-&gt;name-&gt;data">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "jthread_resume:jvm_util.c">
+      </ContextState>
+      <ContextState
+         contextName = "getStaticFieldPtr:jvm_util.c">
+      </ContextState>
+      <ContextState
+         contextName = "classloader_class_release:jvm.c">
+         <PersistentStrings>
+            <PersistentString
+               value = "clazz-&gt;name-&gt;data">
             </PersistentString>
          </PersistentStrings>
       </ContextState>

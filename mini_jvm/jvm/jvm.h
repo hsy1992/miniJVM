@@ -391,7 +391,7 @@ struct _ClassLoader {
 };
 
 
-void classloader_class_release(ClassLoader *class_loader);
+void classloader_classstatic_clear(ClassLoader *class_loader);
 
 void classloader_destory(ClassLoader *class_loader);
 //======================= class file =============================

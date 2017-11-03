@@ -26,8 +26,6 @@ void instance_mark_refer(Instance *ins);
 
 void garbage_mark_object(__refer r);
 
-void garbage_mark_classloader(ClassLoader *class_loader);
-
 s32 garbage_mark_thread(Runtime *pruntime);
 
 
@@ -102,8 +100,8 @@ void __garbage_clear() {
     while (garbage_collect());//collect instance
 
     //release class static field
-    classloader_class_release(sys_classloader);
-    classloader_class_release(array_classloader);
+    classloader_classstatic_clear(sys_classloader);
+    classloader_classstatic_clear(array_classloader);
     while (garbage_collect());//collect classes
 
     //release classes
@@ -283,15 +281,16 @@ s32 garbage_collect() {
         HashtableKey k = hashtable_iter_next_key(&hti);
         MemoryBlock *mb = (MemoryBlock *) k;
 
-        if (mb->refer_count <= 0) {
+//        if (mb->refer_count <= 0) {
+//            hashtable_remove(collector->objs, mb, 0);
+//            garbage_destory_memobj(mb);
+//            del++;
+//        }
+        if (mb->garbage_mark != collector->flag_refer) {
             hashtable_remove(collector->objs, mb, 0);
             garbage_destory_memobj(mb);
             del++;
         }
-//        if (mb->garbage_mark != collector->flag_refer) {
-//            garbage_destory_memobj(mb);
-//            del++;
-//        }
 
     }
 
@@ -430,20 +429,9 @@ s32 garbage_big_search() {
         garbage_mark_object(k);
     }
 
-    garbage_mark_classloader(sys_classloader);
-    garbage_mark_classloader(array_classloader);
     return 0;
 }
 
-void garbage_mark_classloader(ClassLoader *class_loader) {
-    HashtableIterator hti;
-    hashtable_iterate(class_loader->classes, &hti);
-    for (; hashtable_iter_has_more(&hti);) {
-        HashtableValue v = hashtable_iter_next_value(&hti);
-        garbage_mark_object((Class *) v);
-    }
-    garbage_mark_object(class_loader->JVM_CLASS);
-}
 
 /**
  * 判定某个对象是否被所有线程的runtime引用
@@ -587,7 +575,7 @@ s32 garbage_is_alive(__refer sonPtr) {
     return ret;
 }
 
-s32 garbage_refer_count_inc(__refer ref) {
+s32 garbage_refer_reg(__refer ref) {
     if (ref) {
         MemoryBlock *mb = (MemoryBlock *) ref;
         garbage_thread_lock();
@@ -595,7 +583,6 @@ s32 garbage_refer_count_inc(__refer ref) {
             hashtable_put(collector->objs, mb, mb);
             mb->garbage_reg = 1;
         }
-        mb->refer_count++;
         garbage_thread_unlock();
 
 #if _JVM_DEBUG_GARBAGE_DUMP
@@ -608,28 +595,9 @@ s32 garbage_refer_count_inc(__refer ref) {
     return 0;
 }
 
-s32 garbage_refer_count_dec(__refer ref) {
-    if (ref) {
-        MemoryBlock *mb = (MemoryBlock *) ref;
-        garbage_thread_lock();
-        mb->refer_count--;
-        if (hashtable_get(collector->objs, mb) == NULL) {
-            jvm_printf("garbage detect error: instance not found %llx\n", (s64) (long) mb);
-        }
-        garbage_thread_unlock();
-#if _JVM_DEBUG_GARBAGE_DUMP
-        Utf8String *sus = utf8_create();
-        getMemBlockName(mb, sus);
-        jvm_printf("-: %s[%llx] count:%d\n", utf8_cstr(sus), (s64) (long) mb, mb->refer_count);
-        utf8_destory(sus);
-#endif
-    }
-    return 0;
-}
 
 void garbage_refer_hold(__refer ref) {
     if (ref) {
-        MemoryBlock *mb = (MemoryBlock *) ref;
         garbage_thread_lock();
         hashset_put(collector->objs_holder, ref);
         garbage_thread_unlock();

@@ -91,7 +91,8 @@ s32 classes_put(Class *clazz) {
         thread_lock(tl);
         hashtable_put(sys_classloader->classes, clazz->name, clazz);
         thread_unlock(tl);
-        garbage_refer_count_inc(clazz);
+        garbage_refer_hold(clazz);
+        garbage_refer_reg(clazz);
         return 0;
     }
     return 1;
@@ -107,7 +108,8 @@ Class *array_class_get(Utf8String *desc) {
             clazz->arr_type_index = getDataTypeIndex(utf8_char_at(desc, 1));
             clazz->name = utf8_create_copy(desc);
             hashtable_put(array_classloader->classes, clazz->name, clazz);
-            garbage_refer_count_inc(clazz);
+            garbage_refer_hold(clazz);
+            garbage_refer_reg(clazz);
         }
         thread_unlock(tl);
         return clazz;
@@ -533,7 +535,7 @@ void invoke_deepth(Runtime *runtime) {
 
 //===============================    java 线程  ==================================
 s32 jthread_init(Instance *jthread) {
-    jthread_init_with_runtime(jthread, NULL);
+    return jthread_init_with_runtime(jthread, NULL);
 }
 
 s32 jthread_init_with_runtime(Instance *jthread, Runtime *runtime) {
@@ -579,14 +581,13 @@ void *jtherad_loader(void *para) {
     jvm_printf("therad_loader    %s.%s%s  \n", utf8_cstr(method->_this_class->name),
                utf8_cstr(method->name), utf8_cstr(method->descriptor));
 #endif
-    garbage_refer_count_inc(jthread);
+    garbage_refer_reg(jthread);
     if (java_debug)event_on_thread_start(runtime->threadInfo->jthread);
     runtime->threadInfo->thread_status = THREAD_STATUS_RUNNING;
     push_ref(runtime->stack, (__refer) jthread);
     ret = execute_method(method, runtime, method->_this_class);
     runtime->threadInfo->thread_status = THREAD_STATUS_ZOMBIE;
     jthread_dispose(jthread);
-    garbage_refer_count_dec(jthread);
     //jvm_printf("thread over %llx\n", (s64) (long) jthread);
     return para;
 }
@@ -798,14 +799,14 @@ s32 jarray_destory(Instance *arr) {
  * @return ins
  */
 Instance *jarray_multi_create(ArrayList *dim, Utf8String *pdesc, s32 deep) {
-    Utf8String *desc = utf8_create_copy(pdesc);
     s32 len = (s32) (long) arraylist_get_value(dim, dim->length - 1 - deep);
     if (len == -1) {
-        utf8_destory(desc);
         return NULL;
     }
+    Utf8String *desc = utf8_create_copy(pdesc);
     c8 ch = utf8_char_at(desc, 1);
     Instance *arr = jarray_create_des(len, desc);
+    garbage_refer_hold(arr);
     utf8_substring(desc, 1, desc->length);
 #if _JVM_DEBUG_BYTECODE_DETAIL > 5
     jvm_printf("multi arr deep :%d  type(%c) arr[%x] size:%d\n", deep, ch, arr, len);
@@ -819,6 +820,7 @@ Instance *jarray_multi_create(ArrayList *dim, Utf8String *pdesc, s32 deep) {
             jarray_set_field(arr, i, &l2d);
         }
     }
+    garbage_refer_release(arr);
     utf8_destory(desc);
     return arr;
 }
@@ -945,7 +947,7 @@ Instance *jstring_create(Utf8String *src, Runtime *runtime) {
     Utf8String *clsName = utf8_create_c(STR_CLASS_JAVA_LANG_STRING);
     Class *jstr_clazz = classes_load_get(clsName, runtime);
     Instance *jstring = instance_create(jstr_clazz);
-    push_ref(runtime->stack, jstring);//hold for no gc
+    garbage_refer_hold(jstring);//hold for no gc
     jstring->mb.clazz = jstr_clazz;
     instance_init(jstring, runtime);
 
@@ -963,7 +965,7 @@ Instance *jstring_create(Utf8String *src, Runtime *runtime) {
         setFieldRefer(ptr, 0);
     }
     utf8_destory(clsName);
-    pop_empty(runtime->stack);
+    garbage_refer_release(jstring);
     return jstring;
 }
 
@@ -1081,10 +1083,10 @@ Instance *exception_create(s32 exception_type, Runtime *runtime) {
 #endif
     Utf8String *clsName = utf8_create_c(exception_class_name[exception_type]);
     Class *clazz = classes_load_get(clsName, runtime);
+    utf8_destory(clsName);
+
     Instance *ins = instance_create(clazz);
     instance_init(ins, runtime);
-
-    utf8_destory(clsName);
     return ins;
 }
 
@@ -1130,9 +1132,8 @@ void setFieldInt(c8 *ptr, s32 v) {
 
 __refer setFieldRefer(c8 *ptr, __refer v) {
     __refer old = getFieldRefer(ptr);
-    if (old)garbage_refer_count_dec(old);
     memcpy(ptr, &v, sizeof(__refer));
-    if (v)garbage_refer_count_inc(v);
+    if (v)garbage_refer_reg(v);
     return old;
 }
 

@@ -501,8 +501,8 @@ s32 javax_mini_reflect_Field_mapField(Runtime *runtime, Class *clazz) {
 Instance *localVarTable2java(Class *clazz, LocalVarTable *lvt, Runtime *runtime) {
     Class *cl = classes_load_get_c(JDWP_CLASS_LOCALVARTABLE, runtime);
     Instance *ins = instance_create(cl);
-    instance_init(ins, runtime);
     garbage_refer_hold(ins);// hold by manual
+    instance_init(ins, runtime);
     if (ins && lvt) {
         c8 *ptr;
         //

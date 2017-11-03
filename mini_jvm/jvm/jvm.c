@@ -24,7 +24,7 @@ void main_thread_create(Runtime *runtime) {
     instance_init(main_thread, runtime);
     jthread_init_with_runtime(main_thread, runtime);
 
-    garbage_refer_count_inc(main_thread);
+    garbage_refer_reg(main_thread);
 }
 
 void main_thread_destory() {
@@ -32,7 +32,6 @@ void main_thread_destory() {
     main_runtime->threadInfo->is_suspend = 1;
     //主线程实例被回收
     jthread_dispose(main_thread);
-    garbage_refer_count_dec(main_thread);
     main_thread = NULL;
 }
 
@@ -66,8 +65,8 @@ ClassLoader *classloader_create(c8 *path) {
     //创建引用类
     class_loader->JVM_CLASS = class_create();
     class_loader->JVM_CLASS->name = utf8_create_c("ClassLoader");
-    //创建数组类容器
-    garbage_refer_count_inc(class_loader->JVM_CLASS);
+    garbage_refer_hold(class_loader->JVM_CLASS);
+    garbage_refer_reg(class_loader->JVM_CLASS);
     return class_loader;
 }
 
@@ -76,9 +75,9 @@ void classloader_destory(ClassLoader *class_loader) {
     hashtable_iterate(class_loader->classes, &hti);
     for (; hashtable_iter_has_more(&hti);) {
         HashtableValue v = hashtable_iter_next_value(&hti);
-        garbage_refer_count_dec(v);
+        garbage_refer_release(v);
     }
-    garbage_refer_count_dec(class_loader->JVM_CLASS);
+    garbage_refer_release(class_loader->JVM_CLASS);
 
     hashtable_clear(class_loader->classes);
     utf8_destory(class_loader->g_classpath);
@@ -88,7 +87,7 @@ void classloader_destory(ClassLoader *class_loader) {
     jvm_free(class_loader);
 }
 
-void classloader_class_release(ClassLoader *class_loader) {
+void classloader_classstatic_clear(ClassLoader *class_loader) {
     HashtableIterator hti;
     hashtable_iterate(class_loader->classes, &hti);
     for (; hashtable_iter_has_more(&hti);) {
@@ -246,7 +245,6 @@ s32 execute(c8 *p_classpath, c8 *p_mainclass, s32 argc, c8 **argv) {
     instruct_indexies_destory(instructionsIndexies);
     instructionsIndexies = NULL;
     native_lib_destory();
-    runtime_destory(runtime);
     sys_properties_dispose();
     close_log();
     jvm_printf("over\n");
