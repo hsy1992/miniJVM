@@ -54,7 +54,7 @@ void hashset_destory(Hashset *set) {
     if (!set)return;
     HashsetEntry *rover;
     HashsetEntry *next;
-    unsigned int i;
+    unsigned long long int i;
 
     for (i = 0; i < set->table_size; ++i) {
         rover = set->table[i];
@@ -98,7 +98,7 @@ void hashset_clear(Hashset *set) {
 int hashset_put(Hashset *set, HashsetKey key) {
     HashsetEntry *rover;
     HashsetEntry *newentry;
-    unsigned int index;
+    unsigned long long int index;
 
 
     if ((set->entries << 1) >= set->table_size) {
@@ -128,7 +128,6 @@ int hashset_put(Hashset *set, HashsetKey key) {
     }
 
     newentry->key = key;
-    newentry->val = 0;
 
     newentry->next = set->table[index];
     set->table[index] = newentry;
@@ -146,7 +145,7 @@ HashsetKey hashset_get(Hashset *set, HashsetKey key) {
 
 HashsetEntry *hashset_get_entry(Hashset *set, HashsetKey key) {
     HashsetEntry *rover;
-    unsigned int index;
+    unsigned long long int index;
     index = DEFAULT_HASH_FUNC(key) % set->table_size;
     rover = set->table[index];
 
@@ -163,7 +162,7 @@ int hashset_remove(Hashset *set, HashsetKey key, int resize) {
     HashsetEntry *rover;
     HashsetEntry *pre;
     HashsetEntry *next;
-    unsigned int index;
+    unsigned long long int index;
     unsigned int result;
 
 
@@ -202,7 +201,7 @@ unsigned int hashset_num_entries(Hashset *set) {
 }
 
 void hashset_iterate(Hashset *set, HashsetIterator *iterator) {
-    unsigned int chain;
+    unsigned long long int chain;
 
     iterator->set = set;
     iterator->next_entry = NULL;
@@ -256,7 +255,7 @@ HashsetKey hashset_iter_next_key(HashsetIterator *iterator) {
     return HASH_NULL;
 }
 
-int hashset_resize(Hashset *set, int size) {
+int hashset_resize(Hashset *set, unsigned long long int size) {
     HashsetEntry **old_table;
     unsigned int old_table_size;
     HashsetEntry *rover;

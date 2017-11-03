@@ -610,9 +610,6 @@ __refer jthread_get_name_value(Instance *ins) {
 __refer jthread_get_threadq_value(Instance *ins) {
     c8 *ptr = getFieldPtr_byName_c(ins, STR_CLASS_JAVA_LANG_THREAD, STR_FIELD_THREADQ, "Ljava/lang/Thread;");
     return getFieldRefer(ptr);
-    __refer v;
-    memcpy((c8 *) &v, ptr, sizeof(__refer));
-    return v;
 }
 
 void jthread_set_threadq_value(Instance *ins, __refer val) {
@@ -1202,7 +1199,7 @@ f32 getFieldDouble(c8 *ptr) {
 
 c8 *getFieldPtr_byName_c(Instance *instance, c8 *pclassName, c8 *pfieldName, c8 *pfieldType) {
     Utf8String *clsName = utf8_create_c(pclassName);
-    Class *clazz = classes_get(clsName);
+    //Class *clazz = classes_get(clsName);
 
     //set value
     Utf8String *fieldName = utf8_create_c(pfieldName);

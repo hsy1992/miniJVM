@@ -42,7 +42,7 @@ typedef void *HashsetKey;
 struct _HashsetIterator {
     Hashset *set;
     HashsetEntry *next_entry;
-    int next_chain;
+    unsigned long long int next_chain;
 };
 
 /**
@@ -55,17 +55,16 @@ struct _HashsetIterator {
 
 struct _HashsetEntry {
     HashsetKey key;
-    int val;
     HashsetEntry *next;
 };
 
 struct _Hashset {
     HashsetEntry **table;
-    unsigned int table_size;
+    unsigned long long int table_size;
 //    HashtableHashFunc hash_func;
 //    HashtableEqualFunc equal_func;
 //    HashtableKeyFreeFunc key_free_func;
-    unsigned int entries;
+    unsigned long long int entries;
 };
 
 /**
@@ -130,8 +129,9 @@ HashsetKey hashset_get(Hashset *hash_table,
                        HashsetKey key);
 
 
-HashsetEntry* hashset_get_entry(Hashset *hash_table,
-                       HashsetKey key);
+HashsetEntry *hashset_get_entry(Hashset *hash_table,
+                                HashsetKey key);
+
 /**
  * Remove a value from a hash table.
  *
@@ -188,7 +188,7 @@ int hashset_iter_has_more(HashsetIterator *iterator);
 
 HashsetKey hashset_iter_next_key(HashsetIterator *iterator);
 
-int hashset_resize(Hashset *hash_table, int size);
+int hashset_resize(Hashset *hash_table, unsigned long long int size);
 
 #ifdef __cplusplus
 }

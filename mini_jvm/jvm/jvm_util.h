@@ -225,7 +225,7 @@ Runtime *threadlist_get(s32 i);
 
 void threadinfo_destory(JavaThreadInfo *threadInfo);
 
-JavaThreadInfo *threadinfo_create();
+    JavaThreadInfo *threadinfo_create(void);
 
 #ifdef __cplusplus
 }

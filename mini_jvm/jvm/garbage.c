@@ -12,11 +12,11 @@ void __garbage_clear(void);
 s32 checkAndWaitThreadIsSuspend(Runtime *runtime);
 
 
-s32 garbage_big_search();
+s32 garbage_big_search(void);
 
-s32 garbage_pause_the_world();
+s32 garbage_pause_the_world(void);
 
-s32 garbage_resume_the_world();
+s32 garbage_resume_the_world(void);
 
 void class_mark_refer(Class *clazz);
 
@@ -266,7 +266,7 @@ s32 garbage_collect() {
     s64 mem1 = heap_size;
     s64 del = 0;
 
-    if (garbage_pause_the_world(thread_list) != 0) {
+    if (garbage_pause_the_world() != 0) {
         return -1;
     }
 
@@ -613,7 +613,6 @@ void garbage_refer_hold(__refer ref) {
 
 void garbage_refer_release(__refer ref) {
     if (ref) {
-        MemoryBlock *mb = (MemoryBlock *) ref;
         garbage_thread_lock();
         hashset_remove(collector->objs_holder, ref, 0);
         garbage_thread_unlock();
