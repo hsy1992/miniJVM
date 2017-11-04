@@ -51,13 +51,9 @@ extern "C" {
  * containing a pointer to NULL.
  */
 
-typedef void *ListValue;
+typedef void *LinkedListValue;
 typedef struct _ListEntry LinkedListEntry;
-struct _ListEntry {
-    ListValue data;
-    LinkedListEntry *prev;
-    LinkedListEntry *next;
-};
+
 typedef struct _LinkedList {
     LinkedListEntry *mNode;
     s64 length;
@@ -80,36 +76,36 @@ typedef struct _LinkedList {
  *                    after value2, zero if value1 and value2 are equal.
  */
 
-typedef int (*ListCompareFunc)(ListValue value1, ListValue value2);
+typedef int (*ListCompareFunc)(LinkedListValue value1, LinkedListValue value2);
 
 
 LinkedList *linkedlist_create();
 
 void linkedlist_destory(LinkedList *list);
 
-typedef int (*ListEqualFunc)(ListValue value1, ListValue value2);
+typedef int (*ListEqualFunc)(LinkedListValue value1, LinkedListValue value2);
 
 void _linkedlist_free(LinkedListEntry *list);
 
-LinkedListEntry *linkedlist_push_end(LinkedList *list, ListValue data);
+LinkedListEntry *linkedlist_push_end(LinkedList *list, LinkedListValue data);
 
-LinkedListEntry *linkedlist_push_front(LinkedList *list, ListValue data);
+LinkedListEntry *linkedlist_push_front(LinkedList *list, LinkedListValue data);
 
-LinkedListEntry *linkedlist_pop_front(LinkedList *list);
+LinkedListValue linkedlist_pop_front(LinkedList *list);
 
-LinkedListEntry *linkedlist_pop_end(LinkedList *list);
+LinkedListValue linkedlist_pop_end(LinkedList *list);
 
 LinkedListEntry *linkedlist_header(LinkedList *list);
 
 LinkedListEntry *linkedlist_tail(LinkedList *list);
 
-LinkedListEntry *linkedlist_prev(LinkedListEntry *listentry);
+LinkedListEntry *linkedlist_prev(LinkedList *list, LinkedListEntry *listentry);
 
-LinkedListEntry *linkedlist_next(LinkedListEntry *listentry);
+LinkedListEntry *linkedlist_next(LinkedList *list, LinkedListEntry *listentry);
 
-ListValue linkedlist_data(LinkedListEntry *listentry);
+LinkedListValue linkedlist_data(LinkedListEntry *listentry);
 
-void linkedlist_set_data(LinkedListEntry *listentry, ListValue value);
+void linkedlist_set_data(LinkedListEntry *listentry, LinkedListValue value);
 
 
 #ifdef __cplusplus

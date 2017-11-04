@@ -143,7 +143,7 @@ s32 jthread_init_with_runtime(Instance *jthread, Runtime *runtime);
 
 s32 jthread_dispose(Instance *jthread);
 
-void *jtherad_loader(void *para);
+void *jtherad_run(void *para);
 
 pthread_t jthread_start(Instance *ins);
 
@@ -166,6 +166,8 @@ s32 jthread_notify(MemoryBlock *mb, Runtime *runtime);
 s32 jthread_notifyAll(MemoryBlock *mb, Runtime *runtime);
 
 s32 jthread_waitTime(MemoryBlock *mb, Runtime *runtime, s64 waitms);
+
+s32 jtherad_sleep(Runtime *runtime, s64 ms);
 
 s32 jthread_yield(Runtime *runtime);
 
@@ -225,7 +227,7 @@ Runtime *threadlist_get(s32 i);
 
 void threadinfo_destory(JavaThreadInfo *threadInfo);
 
-    JavaThreadInfo *threadinfo_create(void);
+JavaThreadInfo *threadinfo_create(void);
 
 #ifdef __cplusplus
 }

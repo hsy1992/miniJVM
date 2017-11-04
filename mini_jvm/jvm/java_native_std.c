@@ -432,9 +432,9 @@ s32 java_lang_Runtime_gc(Runtime *runtime, Class *clazz) {
     invoke_deepth(runtime);
     jvm_printf("java_lang_Runtime_gc \n");
 #endif
-    runtime->threadInfo->is_blocking=1;
+    runtime->threadInfo->is_blocking = 1;
     garbage_collect();
-    runtime->threadInfo->is_blocking=0;
+    runtime->threadInfo->is_blocking = 0;
     return 0;
 }
 
@@ -668,10 +668,7 @@ s32 java_lang_Thread_sleep(Runtime *runtime, Class *clazz) {
     invoke_deepth(runtime);
     jvm_printf("java_lang_Thread_sleep %lld\n", l2d.l);
 #endif
-    runtime->threadInfo->thread_status = THREAD_STATUS_SLEEPING;
-    threadSleep(l2d.l);
-    runtime->threadInfo->thread_status = THREAD_STATUS_RUNNING;
-    check_suspend_and_pause(runtime);
+    jtherad_sleep(runtime, l2d.l);
     return 0;
 }
 
@@ -901,7 +898,7 @@ static java_native_method method_table[] = {
         {"java/lang/Thread",                    "interrupt0",        "()V",                                        java_lang_Thread_interrupt0},
         {"java/lang/Throwable",                 "printStackTrace0",  "",                                           java_io_Throwable_printStackTrace0},
         {"java/lang/Throwable",                 "buildStackElement", "()Ljava/lang/StackTraceElement;",            java_io_Throwable_buildStackElement},
-        {"java/io/PrintStream",                 "printImpl",         "(Ljava/lang/String;)V",                                           java_io_PrintStream_printImpl},
+        {"java/io/PrintStream",                 "printImpl",         "(Ljava/lang/String;)V",                      java_io_PrintStream_printImpl},
 };
 
 

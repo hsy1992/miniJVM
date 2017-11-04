@@ -495,7 +495,7 @@ int jvm_printf(const char *format, ...) {
         }
     }
 #else
-    result = vprintf(format, vp);
+        result = vprintf(format, vp);
 #endif
     va_end(vp);
     //garbage_thread_unlock();
@@ -562,7 +562,7 @@ s32 jthread_dispose(Instance *jthread) {
     return 0;
 }
 
-void *jtherad_loader(void *para) {
+void *jtherad_run(void *para) {
     Instance *jthread = (Instance *) para;
     jthread_init(jthread);
     s32 ret = 0;
@@ -595,7 +595,7 @@ pthread_t jthread_start(Instance *ins) {//
     pthread_attr_t attr;
     pthread_attr_init(&attr);
     pthread_attr_setdetachstate(&attr, PTHREAD_CREATE_DETACHED);
-    pthread_create(&pt, &attr, jtherad_loader, ins);
+    pthread_create(&pt, &attr, jtherad_run, ins);
     pthread_attr_destroy(&attr);
     return pt;
 }
@@ -721,6 +721,13 @@ s32 jthread_waitTime(MemoryBlock *mb, Runtime *runtime, s64 waitms) {
     runtime->threadInfo->thread_status = THREAD_STATUS_RUNNING;
     check_suspend_and_pause(runtime);
     return 0;
+}
+
+s32 jtherad_sleep(Runtime *runtime, s64 ms) {
+    runtime->threadInfo->thread_status = THREAD_STATUS_SLEEPING;
+    threadSleep(ms);
+    runtime->threadInfo->thread_status = THREAD_STATUS_RUNNING;
+    check_suspend_and_pause(runtime);
 }
 
 s32 check_suspend_and_pause(Runtime *runtime) {

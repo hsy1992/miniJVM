@@ -179,8 +179,6 @@ s32 execute(c8 *p_classpath, c8 *p_mainclass, s32 argc, c8 **argv) {
             //启动调试器
             //startJdwp(runtime);
             jdwp_start_server();
-            //启动垃圾回收
-            garbage_thread_resume();
 
             //准备参数
             localvar_dispose(runtime);
@@ -199,6 +197,9 @@ s32 execute(c8 *p_classpath, c8 *p_mainclass, s32 argc, c8 **argv) {
                 utf8_destory(utfs);
             }
             push_ref(runtime->stack, arr);
+            //启动垃圾回收
+            garbage_thread_resume();
+
             s64 start = currentTimeMillis();
             jvm_printf("\n\n\n\n\n\n================================= main start ================================\n");
             //调用主方法

@@ -22,16 +22,14 @@ extern Collector *collector;
 //每个线程一个回收站，线程多了就是灾难
 struct _Collector {
     //
-    Hashtable *objs; //key=mem_ptr, value=我被别人引用的列表
+    Hashset *objs; //key=mem_ptr, value=我被别人引用的列表
     Hashset *objs_holder; //法外之地，防回收的持有器，放入其中的对象及其引用的其他对象不会被回收
     //
     pthread_t _garbage_thread;//垃圾回收线程
     ThreadLock garbagelock;
 
     //
-    LinkedList *cache_reg;
-    LinkedList *cache_hold;
-    LinkedList *cache_release;
+    LinkedList *operation_cache;
     ArrayList *runtime_refer_copy;
     //
     s64 _garbage_count;
@@ -48,14 +46,13 @@ enum {
 
 typedef struct _GarbageOp {
     c8 op_type;
-    __refer sonPtr;
-    __refer parentPtr;
+    __refer val;
 } GarbageOp;
 
 enum {
-    GARBAGE_OP_REFER,
-    GARBAGE_OP_DEREFER,
-    GARBAGE_OP_DEREFER_ALL,
+    GARBAGE_OP_REG,
+    GARBAGE_OP_HOLD,
+    GARBAGE_OP_RELEASE,
 };
 
 void *collect_thread_run(void *para);

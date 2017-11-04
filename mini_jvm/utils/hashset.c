@@ -139,7 +139,7 @@ int hashset_put(Hashset *set, HashsetKey key) {
 
 HashsetKey hashset_get(Hashset *set, HashsetKey key) {
     HashsetEntry *rover = hashset_get_entry(set, key);
-    if (!rover)return rover->key;
+    if (rover)return rover->key;
     return HASH_NULL;
 }
 
