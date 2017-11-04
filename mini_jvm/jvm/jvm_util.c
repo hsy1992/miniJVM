@@ -495,7 +495,7 @@ int jvm_printf(const char *format, ...) {
         }
     }
 #else
-        result = vprintf(format, vp);
+    result = vprintf(format, vp);
 #endif
     va_end(vp);
     //garbage_thread_unlock();
@@ -728,6 +728,7 @@ s32 jtherad_sleep(Runtime *runtime, s64 ms) {
     threadSleep(ms);
     runtime->threadInfo->thread_status = THREAD_STATUS_RUNNING;
     check_suspend_and_pause(runtime);
+    return 0;
 }
 
 s32 check_suspend_and_pause(Runtime *runtime) {

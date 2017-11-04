@@ -10,7 +10,7 @@
 
 static s32 HASH_SET_DEFAULT_SIZE = 4;
 
-static int hashset_allocate_table(Hashset *set, int size) {
+unsigned int hashset_allocate_table(Hashset *set, unsigned int size) {
     if (size) {
         set->table = jvm_alloc(size *
                                sizeof(HashsetEntry *));
@@ -196,7 +196,7 @@ int hashset_remove(Hashset *set, HashsetKey key, int resize) {
     return result;
 }
 
-unsigned int hashset_num_entries(Hashset *set) {
+unsigned long long int hashset_num_entries(Hashset *set) {
     return set->entries;
 }
 
@@ -223,7 +223,7 @@ int hashset_iter_has_more(HashsetIterator *iterator) {
 HashsetEntry *hashset_iter_next_entry(HashsetIterator *iterator) {
     HashsetEntry *current_entry;
     Hashset *set;
-    unsigned int chain;
+    unsigned long long int chain;
 
     set = iterator->set;
     if (iterator->next_entry == NULL) {
@@ -255,12 +255,12 @@ HashsetKey hashset_iter_next_key(HashsetIterator *iterator) {
     return HASH_NULL;
 }
 
-int hashset_resize(Hashset *set, unsigned long long int size) {
+int hashset_resize(Hashset *set, unsigned int size) {
     HashsetEntry **old_table;
-    unsigned int old_table_size;
+    unsigned long long int old_table_size;
     HashsetEntry *rover;
     HashsetEntry *next;
-    unsigned int index;
+    unsigned long long int index;
     unsigned int i;
 
     if (size != 0) {

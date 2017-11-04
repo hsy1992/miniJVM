@@ -60,7 +60,7 @@ s32 javax_mini_reflect_vm_RefNative_getClasses(Runtime *runtime, Class *clazz) {
     Long2Double l2d;
     HashtableIterator hti;
     hashtable_iterate(sys_classloader->classes, &hti);
-    s32 bytes = data_type_bytes[DATATYPE_REFERENCE];
+
     for (; hashtable_iter_has_more(&hti);) {
         Utf8String *k = hashtable_iter_next_key(&hti);
         l2d.r = classes_get(k);

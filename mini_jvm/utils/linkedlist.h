@@ -79,7 +79,7 @@ typedef struct _LinkedList {
 typedef int (*ListCompareFunc)(LinkedListValue value1, LinkedListValue value2);
 
 
-LinkedList *linkedlist_create();
+LinkedList *linkedlist_create(void);
 
 void linkedlist_destory(LinkedList *list);
 

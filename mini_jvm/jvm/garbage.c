@@ -15,9 +15,9 @@ void __garbage_clear(void);
 void garbage_destory_memobj(MemoryBlock *k);
 
 
-void garbage_move_cache();
+void garbage_move_cache(void);
 
-void garbage_copy_refer();
+void garbage_copy_refer(void);
 
 s32 garbage_big_search(void);
 
@@ -115,8 +115,7 @@ void garbage_collector_destory() {
 
 void __garbage_clear() {
     jvm_printf("garbage clear start========================\n");
-    //
-    HashsetIterator hti;
+
     //
     jvm_printf("objs size :%lld\n", collector->objs->entries);
 
@@ -321,7 +320,7 @@ void garbage_move_cache() {
  *
  * @return ret
  */
-s32 garbage_collect() {
+s64 garbage_collect() {
 
     s64 obj_count = (collector->objs->entries);
 
@@ -456,10 +455,10 @@ s32 garbage_resume_the_world() {
 
 
 s32 checkAndWaitThreadIsSuspend(Runtime *runtime) {
-    while (!runtime->threadInfo->is_suspend &&
-           !runtime->threadInfo->thread_status == THREAD_STATUS_SLEEPING &&
-           !runtime->threadInfo->thread_status == THREAD_STATUS_WAIT &&
-           !runtime->threadInfo->is_blocking) { // if a native method blocking , must set thread status is wait before enter native method
+    while (!(runtime->threadInfo->is_suspend) &&
+           !(runtime->threadInfo->thread_status == THREAD_STATUS_SLEEPING) &&
+           !(runtime->threadInfo->thread_status == THREAD_STATUS_WAIT) &&
+           !(runtime->threadInfo->is_blocking)) { // if a native method blocking , must set thread status is wait before enter native method
         garbage_thread_timedwait(2);
         if (collector->_garbage_thread_status != GARBAGE_THREAD_NORMAL) {
             return -1;

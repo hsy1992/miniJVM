@@ -150,7 +150,7 @@ int hashset_remove(Hashset *hash_table, HashsetKey key, int resize);
  * @return                    The number of entries in the hash table.
  */
 
-unsigned int hashset_num_entries(Hashset *hash_table);
+unsigned long long int hashset_num_entries(Hashset *hash_table);
 
 /**
  * Initialise a @ref HashsetIterator to iterate over a hash table.
@@ -188,7 +188,7 @@ int hashset_iter_has_more(HashsetIterator *iterator);
 
 HashsetKey hashset_iter_next_key(HashsetIterator *iterator);
 
-int hashset_resize(Hashset *hash_table, unsigned long long int size);
+int hashset_resize(Hashset *hash_table, unsigned int size);
 
 #ifdef __cplusplus
 }

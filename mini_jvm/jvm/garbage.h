@@ -79,7 +79,7 @@ s32 garbage_collector_create(void);
 
 void garbage_collector_destory(void);
 
-s32 garbage_collect(void);
+s64 garbage_collect(void);
 
 s32 garbage_is_alive(__refer sonPtr);
 
