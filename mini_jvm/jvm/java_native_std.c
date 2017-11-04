@@ -671,6 +671,7 @@ s32 java_lang_Thread_sleep(Runtime *runtime, Class *clazz) {
     runtime->threadInfo->thread_status = THREAD_STATUS_SLEEPING;
     threadSleep(l2d.l);
     runtime->threadInfo->thread_status = THREAD_STATUS_RUNNING;
+    check_suspend_and_pause(runtime);
     return 0;
 }
 
@@ -796,7 +797,7 @@ Instance *buildStackElement(Runtime *runtime, Runtime *target) {
         //
         ptr = getFieldPtr_byName_c(ins, STR_CLASS_JAVA_LANG_STACKTRACE, "methodName", "Ljava/lang/String;");
         if (ptr) {
-            Instance *name = jstring_create(target->methodInfo->name, runtime);
+            Instance *name = jstring_create(target->method->name, runtime);
             setFieldRefer(ptr, name);
         }
         //
@@ -808,7 +809,7 @@ Instance *buildStackElement(Runtime *runtime, Runtime *target) {
         //
         ptr = getFieldPtr_byName_c(ins, STR_CLASS_JAVA_LANG_STACKTRACE, "lineNumber", "I");
         if (ptr) {
-            if (target->methodInfo->access_flags & ACC_NATIVE) {
+            if (target->method->access_flags & ACC_NATIVE) {
                 setFieldInt(ptr, -1);
             } else {
                 setFieldInt(ptr, getLineNumByIndex(target->ca, (s32) (target->pc - target->ca->code)));

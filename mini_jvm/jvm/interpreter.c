@@ -3245,7 +3245,7 @@ s32 execute_method(MethodInfo *method, Runtime *pruntime, Class *clazz) {
 
     Runtime *runtime = runtime_create(pruntime);
 
-    runtime->methodInfo = method;
+    runtime->method = method;
     runtime->clazz = clazz;
     s32 stackSize;
 //    if (utf8_equals_c(method->name, "createPacketAnalyzer")) {

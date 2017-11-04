@@ -552,8 +552,6 @@ s32 jthread_init_with_runtime(Instance *jthread, Runtime *runtime) {
 
 s32 jthread_dispose(Instance *jthread) {
     Runtime *runtime = (Runtime *) jthread_get_threadq_value(jthread);
-
-
     threadlist_remove(runtime);
     if (java_debug)event_on_thread_death(runtime->threadInfo->jthread);
     //destory
@@ -714,12 +712,14 @@ s32 jthread_waitTime(MemoryBlock *mb, Runtime *runtime, s64 waitms) {
         jthreadlock_create(mb);
     }
     //waitms += currentTimeMillis();
-    struct timespec t;clock_gettime(CLOCK_REALTIME, &t);
+    struct timespec t;
+    clock_gettime(CLOCK_REALTIME, &t);
     t.tv_sec += waitms / 1000;
     t.tv_nsec += (waitms % 1000) * 1000000;
     runtime->threadInfo->thread_status = THREAD_STATUS_WAIT;
     pthread_cond_timedwait(&mb->thread_lock->thread_cond, &mb->thread_lock->mutex_lock, &t);
     runtime->threadInfo->thread_status = THREAD_STATUS_RUNNING;
+    check_suspend_and_pause(runtime);
     return 0;
 }
 
@@ -728,7 +728,7 @@ s32 check_suspend_and_pause(Runtime *runtime) {
         garbage_thread_lock();
         runtime->threadInfo->is_suspend = 1;
         while (runtime->threadInfo->suspend_count) {
-            garbage_thread_timedwait(10);
+            garbage_thread_timedwait(1);
         }
         runtime->threadInfo->is_suspend = 0;
         garbage_thread_notify();

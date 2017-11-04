@@ -714,7 +714,7 @@ void jdwp_print_packet(JdwpPacket *packet) {
 
 void jdwp_check_breakpoint(Runtime *runtime) {
     u32 index = (u32) (runtime->pc - runtime->ca->code);
-    MethodInfo *method = runtime->methodInfo;
+    MethodInfo *method = runtime->method;
     if ((method->breakpoint) && pairlist_getl(method->breakpoint, index)) {
         event_on_breakpoint(runtime);//
         jthread_suspend(runtime);
@@ -828,7 +828,7 @@ void event_on_breakpoint(Runtime *breakpoint_runtime) {
     ei->thread = breakpoint_runtime->threadInfo->jthread;
     ei->loc.typeTag = getClassType(breakpoint_runtime->clazz);
     ei->loc.classID = breakpoint_runtime->clazz;
-    ei->loc.methodID = breakpoint_runtime->methodInfo;
+    ei->loc.methodID = breakpoint_runtime->method;
     ei->loc.execIndex = (u64) (long) breakpoint_runtime->pc - (u64) (long) breakpoint_runtime->ca->code;
     jdwp_event_put(ei);
 }
@@ -839,7 +839,7 @@ void event_on_debug_step(Runtime *step_runtime) {
     ei->thread = step_runtime->threadInfo->jthread;
     ei->loc.typeTag = getClassType(step_runtime->clazz);
     ei->loc.classID = step_runtime->clazz;
-    ei->loc.methodID = step_runtime->methodInfo;
+    ei->loc.methodID = step_runtime->method;
     ei->loc.execIndex = (u64) (long) step_runtime->pc - (u64) (long) step_runtime->ca->code;
     jdwp_event_put(ei);
 }
@@ -2005,7 +2005,7 @@ s32 jdwp_client_process(JdwpClient *client, Runtime *runtime) {
                             Location loc;
                             loc.typeTag = getClassType(r->clazz);
                             loc.classID = r->clazz;
-                            loc.methodID = r->methodInfo;
+                            loc.methodID = r->method;
                             if (r->ca)
                                 loc.execIndex = (s64) (long) r->pc - (s64) (long) r->ca->code;
                             else
@@ -2264,7 +2264,7 @@ s32 jdwp_client_process(JdwpClient *client, Runtime *runtime) {
                 Runtime *frame = jdwppacket_read_refer(req);
                 jdwppacket_set_err(res, JDWP_ERROR_NONE);
                 ValueType vt;
-                if (frame->methodInfo->access_flags & ACC_STATIC || frame->methodInfo->access_flags & ACC_NATIVE) {
+                if (frame->method->access_flags & ACC_STATIC || frame->method->access_flags & ACC_NATIVE) {
                     vt.type = JDWP_TAG_OBJECT;
                     vt.value = 0;
                 } else {

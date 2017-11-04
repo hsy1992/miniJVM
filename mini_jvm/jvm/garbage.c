@@ -8,15 +8,21 @@ void getMemBlockName(void *memblock, Utf8String *name);
 
 void __garbage_clear(void);
 
+void garbage_destory_memobj(MemoryBlock *k);
 
-s32 checkAndWaitThreadIsSuspend(Runtime *runtime);
+void dump_refer(void);
 
+void garbage_move_cache();
+
+void garbage_copy_refer();
 
 s32 garbage_big_search(void);
 
 s32 garbage_pause_the_world(void);
 
 s32 garbage_resume_the_world(void);
+
+s32 checkAndWaitThreadIsSuspend(Runtime *runtime);
 
 void class_mark_refer(Class *clazz);
 
@@ -26,7 +32,7 @@ void instance_mark_refer(Instance *ins);
 
 void garbage_mark_object(__refer r);
 
-s32 garbage_mark_thread(Runtime *pruntime);
+s32 garbage_copy_refer_thread(Runtime *pruntime);
 
 
 /**
@@ -45,8 +51,8 @@ s32 garbage_mark_thread(Runtime *pruntime);
  *
  * jdwp调试线程中的运行时对象不可回收。
  *
- * known issue:
- * gc spent much time , the next step is opmize , smaller stop the world:
+ * collecting  step:
+ * gc spent much time , more smaller stop the world:
  * 1. stop the world
  * 2. all reg/hold/release operation putin a cache comtainer after stop the world,
  * 3. copy all runtime refer
@@ -61,6 +67,11 @@ s32 garbage_collector_create() {
     collector = jvm_alloc(sizeof(Collector));
     collector->objs = hashtable_create(DEFAULT_HASH_FUNC, DEFAULT_HASH_EQUALS_FUNC);
     collector->objs_holder = hashset_create();
+
+    collector->cache_reg = linkedlist_create();
+    collector->cache_hold = linkedlist_create();
+    collector->cache_release = linkedlist_create();
+    collector->runtime_refer_copy = arraylist_create(256);
 
     collector->_garbage_thread_status = GARBAGE_THREAD_PAUSE;
     thread_lock_init(&collector->garbagelock);
@@ -91,6 +102,11 @@ void garbage_collector_destory() {
     //
     hashtable_destory(collector->objs);
     collector->objs = NULL;
+
+    linkedlist_destory(collector->cache_reg);
+    linkedlist_destory(collector->cache_hold);
+    linkedlist_destory(collector->cache_release);
+    arraylist_destory(collector->runtime_refer_copy);
 
     //
     thread_lock_dispose(&collector->garbagelock);
@@ -239,26 +255,41 @@ void dump_refer() {
 //==============================   thread_run() =====================================
 
 void *collect_thread_run(void *para) {
-    s64 startAt;
+    s64 lastgc = 0;
     while (1) {
-        startAt = currentTimeMillis();
-        while (currentTimeMillis() - startAt < GARBAGE_PERIOD_MS
-               && collector->_garbage_thread_status == GARBAGE_THREAD_NORMAL
-               && heap_size < MAX_HEAP_SIZE
-                ) {
-            threadSleep(20);
-        }
+        garbage_thread_lock();
+        garbage_thread_timedwait(1000);
+        garbage_move_cache();
+        garbage_thread_unlock();
+
         if (collector->_garbage_thread_status == GARBAGE_THREAD_STOP) {
             break;
         }
         if (collector->_garbage_thread_status == GARBAGE_THREAD_PAUSE) {
             continue;
         }
+        if (currentTimeMillis() - lastgc > GARBAGE_PERIOD_MS || heap_size > MAX_HEAP_SIZE) {
+            garbage_collect();
+            lastgc = currentTimeMillis();
+        }
 
-        garbage_collect();
     }
     collector->_garbage_thread_status = GARBAGE_THREAD_DEAD;
     return NULL;
+}
+
+void garbage_move_cache() {
+    //jvm_printf(" move cache\n");
+    __refer ref;
+    while (NULL != (ref = linkedlist_pop_end(collector->cache_reg))) {
+        hashtable_put(collector->objs, ref, 0);
+    }
+    while (NULL != (ref = linkedlist_pop_end(collector->cache_hold))) {
+        hashset_put(collector->objs_holder, ref);
+    }
+    while (NULL != (ref = linkedlist_pop_end(collector->cache_release))) {
+        hashset_remove(collector->objs_holder, ref, 0);
+    }
 }
 
 /**
@@ -274,17 +305,33 @@ s32 garbage_collect() {
     HashtableIterator hti;
     s64 mem1 = heap_size;
     s64 del = 0;
-    s64 startAt = currentTimeMillis();
+    s64 time_startAt;
 
+    time_startAt = currentTimeMillis();
+    //prepar gc resource ,
     garbage_thread_lock();
-
     if (garbage_pause_the_world() != 0) {
         garbage_resume_the_world();
         return -1;
     }
-
+//    jvm_printf("garbage_pause_the_world: %lld\n", currentTimeMillis() - time_startAt);
+//    time_startAt = currentTimeMillis();
+    garbage_move_cache();
+//    jvm_printf("garbage_move_cache: %lld\n", currentTimeMillis() - time_startAt);
+//    time_startAt = currentTimeMillis();
+    garbage_copy_refer();
+//    jvm_printf("garbage_copy_refer: %lld\n", currentTimeMillis() - time_startAt);
+//    time_startAt = currentTimeMillis();
+    garbage_resume_the_world();
+//    jvm_printf("garbage_resume_the_world: %lld\n", currentTimeMillis() - time_startAt);
+//    time_startAt = currentTimeMillis();
+    garbage_thread_unlock();
     //
     collector->flag_refer++;
+    s64 time_stopWorld = currentTimeMillis() - time_startAt;
+
+    //real GC start
+    time_startAt = currentTimeMillis();
     garbage_big_search();
 
     hashtable_iterate(collector->objs, &hti);
@@ -298,18 +345,15 @@ s32 garbage_collect() {
             garbage_destory_memobj(mb);
             del++;
         }
-
     }
-
 
     if (collector->_garbage_count++ % 5 == 0) {//每n秒resize一次
         hashtable_remove(collector->objs, NULL, 1);
     }
-    garbage_thread_unlock();
-    garbage_resume_the_world();
-    s64 end = currentTimeMillis();
-    jvm_printf("garbage cllected obj: %lld -> %lld  heap : %lld -> %lld  spent: %lld\n",
-               obj_count, hashtable_num_entries(collector->objs), mem1, heap_size, (end - startAt));
+
+    s64 time_gc = currentTimeMillis() - time_startAt;
+    jvm_printf("gc obj: %lld -> %lld  heap : %lld -> %lld  stop_world: %lld  gc:%lld\n",
+               obj_count, hashtable_num_entries(collector->objs), mem1, heap_size, time_stopWorld, time_gc);
 
     return del;
 }
@@ -343,7 +387,6 @@ s32 garbage_pause_the_world() {
 
         for (i = 0; i < thread_list->length; i++) {
             Runtime *runtime = arraylist_get_value(thread_list, i);
-
             if (checkAndWaitThreadIsSuspend(runtime) == -1) {
                 return -1;
             }
@@ -393,10 +436,11 @@ s32 garbage_resume_the_world() {
 
 
 s32 checkAndWaitThreadIsSuspend(Runtime *runtime) {
-    while (!runtime->threadInfo->is_suspend
-           &&
+    while (!runtime->threadInfo->is_suspend &&
+           !runtime->threadInfo->thread_status == THREAD_STATUS_SLEEPING &&
+           !runtime->threadInfo->thread_status == THREAD_STATUS_WAIT &&
            !runtime->threadInfo->is_blocking) { // if a native method blocking , must set thread status is wait before enter native method
-        garbage_thread_timedwait(20);
+        garbage_thread_timedwait(2);
         if (collector->_garbage_thread_status != GARBAGE_THREAD_NORMAL) {
             return -1;
         }
@@ -406,25 +450,18 @@ s32 checkAndWaitThreadIsSuspend(Runtime *runtime) {
 
 //=================================  big_search ==================================
 
+
+
 /**
  * on all threads stoped ,
  * mark thread's localvar and stack refered obj and deep search
  * @return ret
  */
-
 s32 garbage_big_search() {
     s32 i;
-    //jvm_printf("thread set size:%d\n", thread_list->length);
-    for (i = 0; i < thread_list->length; i++) {
-        Runtime *runtime = threadlist_get(i);
-        garbage_mark_thread(runtime);
-    }
-    //调试线程
-    if (java_debug) {
-        Runtime *runtime = jdwpserver.runtime;
-        if (runtime) {
-            garbage_mark_thread(runtime);
-        }
+    for (i = 0; i < collector->runtime_refer_copy->length; i++) {
+        __refer r = arraylist_get_value(collector->runtime_refer_copy, i);
+        garbage_mark_object(r);
     }
 
     HashsetIterator hi;
@@ -438,6 +475,23 @@ s32 garbage_big_search() {
 }
 
 
+void garbage_copy_refer() {
+    arraylist_clear(collector->runtime_refer_copy);
+    s32 i;
+    //jvm_printf("thread set size:%d\n", thread_list->length);
+    for (i = 0; i < thread_list->length; i++) {
+        Runtime *runtime = threadlist_get(i);
+        garbage_copy_refer_thread(runtime);
+    }
+    //调试线程
+    if (java_debug) {
+        Runtime *runtime = jdwpserver.runtime;
+        if (runtime) {
+            garbage_copy_refer_thread(runtime);
+        }
+    }
+}
+
 /**
  * 判定某个对象是否被所有线程的runtime引用
  * 引用有两种情况：
@@ -450,7 +504,7 @@ s32 garbage_big_search() {
  */
 
 
-s32 garbage_mark_thread(Runtime *pruntime) {
+s32 garbage_copy_refer_thread(Runtime *pruntime) {
     garbage_mark_object(pruntime->threadInfo->jthread);
 
     s32 i;
@@ -462,7 +516,8 @@ s32 garbage_mark_thread(Runtime *pruntime) {
         if (is_ref(&entry)) {
             __refer ref = entry_2_refer(&entry);
             if (ref) {
-                garbage_mark_object(ref);
+                //garbage_mark_object(ref);
+                arraylist_append(collector->runtime_refer_copy, ref);
             }
         }
     }
@@ -470,7 +525,8 @@ s32 garbage_mark_thread(Runtime *pruntime) {
         for (i = 0; i < runtime->localvar_count; i++) {
             __refer ref = runtime->localVariables[i].refer;
             if (ref) {
-                garbage_mark_object(ref);
+                //garbage_mark_object(ref);
+                arraylist_append(collector->runtime_refer_copy, ref);
             }
         }
         runtime = runtime->son;
@@ -585,7 +641,9 @@ s32 garbage_refer_reg(__refer ref) {
         MemoryBlock *mb = (MemoryBlock *) ref;
         garbage_thread_lock();
         if (!mb->garbage_reg) {
-            hashtable_put(collector->objs, mb, mb);
+            //hashtable_put(collector->objs, mb, mb);
+            linkedlist_push_front(collector->cache_reg, ref);
+            garbage_thread_notify();
             mb->garbage_reg = 1;
         }
         garbage_thread_unlock();
@@ -604,7 +662,9 @@ s32 garbage_refer_reg(__refer ref) {
 void garbage_refer_hold(__refer ref) {
     if (ref) {
         garbage_thread_lock();
-        hashset_put(collector->objs_holder, ref);
+        //hashset_put(collector->objs_holder, ref);
+        linkedlist_push_front(collector->cache_hold, ref);
+        garbage_thread_notify();
         garbage_thread_unlock();
 
 #if _JVM_DEBUG_GARBAGE_DUMP
@@ -619,7 +679,9 @@ void garbage_refer_hold(__refer ref) {
 void garbage_refer_release(__refer ref) {
     if (ref) {
         garbage_thread_lock();
-        hashset_remove(collector->objs_holder, ref, 0);
+        //hashset_remove(collector->objs_holder, ref, 0);
+        linkedlist_push_front(collector->cache_release, ref);
+        garbage_thread_notify();
         garbage_thread_unlock();
 #if _JVM_DEBUG_GARBAGE_DUMP
         Utf8String *sus = utf8_create();

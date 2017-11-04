@@ -29,7 +29,7 @@ void stack_destory(RuntimeStack *stack) {
 
 /* push Integer */
 void push_int(RuntimeStack *stack, s32 value) {
-    StackEntry *entry= &stack->store[stack->size];
+    StackEntry *entry = &stack->store[stack->size];
     memcpy(&entry->value, &value, sizeof(s32));
     entry->type = STACK_ENTRY_INT;
     stack->size++;
@@ -39,13 +39,14 @@ void push_int(RuntimeStack *stack, s32 value) {
 /* pop Integer */
 s32 pop_int(RuntimeStack *stack) {
     stack->size--;
-    StackEntry *entry= &stack->store[stack->size];
+    StackEntry *entry = &stack->store[stack->size];
 
     s32 value = 0;
     memcpy(&value, &entry->value, sizeof(s32));
     memset(&stack->store[stack->size], 0, sizeof(StackEntry));
     return value;
 }
+
 /* push Double */
 void push_double(RuntimeStack *stack, f64 value) {
     //memset(&stack->store[stack->size], 0, sizeof(StackEntry));
@@ -58,7 +59,7 @@ void push_double(RuntimeStack *stack, f64 value) {
 /* pop Double */
 f64 pop_double(RuntimeStack *stack) {
     stack->size--;
-    StackEntry *entry= &stack->store[stack->size];
+    StackEntry *entry = &stack->store[stack->size];
     f64 value = 0;
     memcpy(&value, &entry->value, sizeof(f64));
     memset(&stack->store[stack->size], 0, sizeof(StackEntry));
@@ -77,7 +78,7 @@ void push_float(RuntimeStack *stack, f32 value) {
 /* pop Float */
 f32 pop_float(RuntimeStack *stack) {
     stack->size--;
-    StackEntry *entry= &stack->store[stack->size];
+    StackEntry *entry = &stack->store[stack->size];
 
     f32 value = 0;
 
@@ -99,7 +100,7 @@ void push_long(RuntimeStack *stack, s64 value) {
 /* pop Long */
 s64 pop_long(RuntimeStack *stack) {
     stack->size--;
-    StackEntry *entry= &stack->store[stack->size];
+    StackEntry *entry = &stack->store[stack->size];
 
     s64 value = 0;
     memcpy(&value, &entry->value, sizeof(s64));
@@ -119,7 +120,7 @@ void push_ref(RuntimeStack *stack, __refer value) {
 
 __refer pop_ref(RuntimeStack *stack) {
     stack->size--;
-    StackEntry *entry= &stack->store[stack->size];
+    StackEntry *entry = &stack->store[stack->size];
     __refer value = 0;
     memcpy(&value, &entry->value, sizeof(__refer));
     memset(&stack->store[stack->size], 0, sizeof(StackEntry));
@@ -137,13 +138,13 @@ void push_entry(RuntimeStack *stack, StackEntry *entry) {
 /* Pop Stack Entry */
 void pop_entry(RuntimeStack *stack, StackEntry *entry) {
     stack->size--;
-    void* ptr=&stack->store[stack->size];
+    void *ptr = &stack->store[stack->size];
     memcpy(entry, ptr, sizeof(StackEntry));
     memset(ptr, 0, sizeof(StackEntry));
 
 }
 
-void pop_empty(RuntimeStack *stack){
+void pop_empty(RuntimeStack *stack) {
     stack->size--;
     memset(&stack->store[stack->size], 0, sizeof(StackEntry));
 }
@@ -239,6 +240,13 @@ Runtime *getLastSon(Runtime *top) {
         top = top->son;
     }
     return NULL;
+}
+
+s64 getInstructPointer(Runtime *runtime) {
+    if (runtime && runtime->method && runtime->ca) {
+        return runtime->pc - runtime->ca->code;
+    }
+    return -1;
 }
 //======================= localvar =============================
 

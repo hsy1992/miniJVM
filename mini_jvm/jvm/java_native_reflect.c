@@ -688,9 +688,9 @@ s32 javax_mini_reflect_StackFrame_mapRuntime(Runtime *runtime, Class *clazz) {
         if (ptr)setFieldLong(ptr, target->ca ? (u64) (long) target->ca->code : 0);
         //
         ptr = getFieldPtr_byName_c(ins, JDWP_CLASS_RUNTIME, "methodId", "J");
-        if (ptr)setFieldLong(ptr, (u64) (long) target->methodInfo);
+        if (ptr)setFieldLong(ptr, (u64) (long) target->method);
         //
-        if (target->methodInfo && !(target->methodInfo->access_flags & ACC_STATIC)) {//top runtime method is null
+        if (target->method && !(target->method->access_flags & ACC_STATIC)) {//top runtime method is null
             ptr = getFieldPtr_byName_c(ins, JDWP_CLASS_RUNTIME, "localThis", "J");
             if (ptr)setFieldLong(ptr, (s64) (long) localvar_getRefer(target, 0));
         }

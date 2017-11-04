@@ -23,11 +23,16 @@ extern Collector *collector;
 struct _Collector {
     //
     Hashtable *objs; //key=mem_ptr, value=我被别人引用的列表
-    Hashset * objs_holder; //法外之地，防回收的持有器，放入其中的对象及其引用的其他对象不会被回收
+    Hashset *objs_holder; //法外之地，防回收的持有器，放入其中的对象及其引用的其他对象不会被回收
     //
     pthread_t _garbage_thread;//垃圾回收线程
     ThreadLock garbagelock;
 
+    //
+    LinkedList *cache_reg;
+    LinkedList *cache_hold;
+    LinkedList *cache_release;
+    ArrayList *runtime_refer_copy;
     //
     s64 _garbage_count;
     u8 _garbage_thread_status;
@@ -79,16 +84,11 @@ void garbage_collector_destory(void);
 
 s32 garbage_collect(void);
 
-void dump_refer(void);
-
 s32 garbage_is_alive(__refer sonPtr);
-
-void garbage_destory_memobj(MemoryBlock *k);
 
 void garbage_refer_hold(__refer ref);
 
 void garbage_refer_release(__refer ref);
-
 
 s32 garbage_refer_reg(__refer ref);
 

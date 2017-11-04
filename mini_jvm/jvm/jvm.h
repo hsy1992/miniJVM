@@ -699,7 +699,7 @@ typedef struct _LocalVarItem {
 
 
 struct _Runtime {
-    MethodInfo *methodInfo;
+    MethodInfo *method;
     Class *clazz;
     u8 *pc;
     CodeAttribute *ca;//method bytecode
@@ -957,6 +957,8 @@ Runtime *runtime_create(Runtime *parent);
 void runtime_destory(Runtime *runtime);
 
 Runtime *getLastSon(Runtime *top);
+
+s64 getInstructPointer(Runtime *runtime);
 
 s32 getRuntimeDepth(Runtime *top);
 
