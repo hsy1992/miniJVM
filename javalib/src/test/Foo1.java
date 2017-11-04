@@ -182,7 +182,7 @@ public class Foo1 {
     }
 
     void t7() {
-        int MAX = 20000;
+        int MAX = 3000;
         int PRINT_COUNT = 10000;
         Thread t = new Thread(new Runnable() {
             @Override
@@ -593,7 +593,7 @@ public class Foo1 {
 
         System.out.println("fi=" + fi);
         int i = 0;
-        while (i++ < 1) {
+        while (i++ < 10) {
             try {
                 Thread.sleep(1000);
                 int debug = 1;
