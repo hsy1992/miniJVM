@@ -114,7 +114,6 @@ s32 execute(c8 *p_classpath, c8 *p_mainclass, s32 argc, c8 **argv) {
     //为指令创建索引
     instructionsIndexies = instruct_indexies_create();
     //创建垃圾收集器
-    MAX_HEAP_SIZE = 20 * 1024 * 1024;//if heapsize great than MAX, gc would be trigger
     garbage_collector_create();
 
     sys_classloader = classloader_create(p_classpath);

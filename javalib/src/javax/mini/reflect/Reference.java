@@ -69,6 +69,11 @@ public class Reference {
         }
     }
 
+    public Method[] getMethods() {
+        loadMethods();
+        return methods;
+    }
+
     public Method getMethod(String methodName, String methodSignature) {
         loadMethods();
         for (int i = 0; i < methods.length; i++) {

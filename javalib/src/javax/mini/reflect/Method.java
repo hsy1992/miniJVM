@@ -68,6 +68,9 @@ public class Method {
     public Class[] getParameterTypes() {
         return paras_class;
     }
+        public String[] getParameterStrs() {
+        return paras;
+    }
 
     public int getLineNum(long pc) {
         if (lineNum != null && lineNum.length > 0) {
