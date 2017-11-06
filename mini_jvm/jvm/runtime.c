@@ -114,7 +114,6 @@ void push_ref(RuntimeStack *stack, __refer value) {
     void *tmp = &stack->store[stack->size].value;
     memcpy(tmp, &value, sizeof(__refer));
     stack->store[stack->size].type = STACK_ENTRY_REF;
-    if (value)garbage_refer_reg(value);
     stack->size++;
 }
 
