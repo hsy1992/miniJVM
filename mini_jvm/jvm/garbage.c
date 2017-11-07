@@ -262,7 +262,8 @@ void dump_refer() {
         HashsetKey k = hashset_iter_next_key(&hti);
         Utf8String *name = utf8_create();
         getMemBlockName(k, name);
-        jvm_printf("   %s[%llx] \n", utf8_cstr(name), (s64) (long) k);
+        jvm_printf("   %s[%llx] \n", utf8_cstr(name), (s64) (
+                long) k);
         utf8_destory(name);
     }
 
@@ -381,12 +382,13 @@ s64 garbage_collect() {
 }
 
 void garbage_destory_memobj(MemoryBlock *mb) {
-#if _JVM_DEBUG_GARBAGE_DUMP
+//#if _JVM_DEBUG_GARBAGE_DUMP
     Utf8String *sus = utf8_create();
     getMemBlockName(mb, sus);
-    jvm_printf("X: %s[0x%llx] \n", utf8_cstr(sus), (s64) (long) mb);
+    if (utf8_indexof_pos_c(sus, "Ljava/lang/String;", 0) >= 0)
+        jvm_printf("X: %s[0x%llx] \n", utf8_cstr(sus), (s64) (long) mb);
     utf8_destory(sus);
-#endif
+//#endif
     memoryblock_destory((Instance *) mb);
 }
 
@@ -409,15 +411,20 @@ s32 garbage_pause_the_world() {
             if (checkAndWaitThreadIsSuspend(runtime) == -1) {
                 return -1;
             }
-#if _JVM_DEBUG_GARBAGE_DUMP
+//#if _JVM_DEBUG_GARBAGE_DUMP
             Runtime *last = getLastSon(runtime);
-            jvm_printf("PAUSE thread[%llx] %s.%s, op:%d\n",
-                       (s64) (long) runtime,
-                       utf8_cstr(last->method->_this_class->name),
-                       utf8_cstr(last->method->name),
-                       (last->pc) - (last->ca ? last->ca->code : 0)
-            );
-#endif
+            while (last) {
+                jvm_printf("PAUSE thread[%llx] %s.%s, op:%d\n",
+                           (s64) (
+                                   long) runtime,
+                           utf8_cstr(last->method->_this_class->name),
+                           utf8_cstr(last->method->name),
+                           (last->pc) - (last->ca ? last->ca->code : 0)
+                );
+                last = last->parent;
+                if (last->parent->parent == NULL)break;
+            }
+//#endif
         }
 
     }
@@ -671,12 +678,13 @@ s32 garbage_refer_reg(__refer ref) {
             mb->garbage_reg = 1;
         }
 
-#if _JVM_DEBUG_GARBAGE_DUMP
+//#if _JVM_DEBUG_GARBAGE_DUMP
         Utf8String *sus = utf8_create();
         getMemBlockName(mb, sus);
-        jvm_printf("R: %s[0x%llx] \n", utf8_cstr(sus), (s64) (long) mb);
+        if (utf8_indexof_pos_c(sus, "Ljava/lang/String;", 0) >= 0)
+            jvm_printf("R: %s[0x%llx] \n", utf8_cstr(sus), (s64) (long) mb);
         utf8_destory(sus);
-#endif
+//#endif
         garbage_thread_unlock();
     }
     return 0;
@@ -692,6 +700,7 @@ void garbage_refer_hold(__refer ref) {
 #if _JVM_DEBUG_GARBAGE_DUMP
         Utf8String *sus = utf8_create();
         getMemBlockName((MemoryBlock *) ref, sus);
+        if (utf8_indexof_pos_c(sus, "Ljava/lang/String;", 0) >= 0)
         jvm_printf("+: %s[0x%llx] \n", utf8_cstr(sus), (s64) (long) ref);
         utf8_destory(sus);
 #endif
@@ -708,6 +717,7 @@ void garbage_refer_release(__refer ref) {
 #if _JVM_DEBUG_GARBAGE_DUMP
         Utf8String *sus = utf8_create();
         getMemBlockName((MemoryBlock *) ref, sus);
+        if (utf8_indexof_pos_c(sus, "Ljava/lang/String;", 0) >= 0)
         jvm_printf("-: %s[0x%llx] \n", utf8_cstr(sus), (s64) (long) ref);
         utf8_destory(sus);
 #endif

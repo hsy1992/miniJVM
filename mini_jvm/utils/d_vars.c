@@ -5,7 +5,7 @@
 #include <memory.h>
 #include "d_type.h"
 
-s64 MAX_HEAP_SIZE = 5 * 1024 * 1024;
+s64 MAX_HEAP_SIZE = 1 * 1024 * 1024;
 s64 heap_size = 0; //当前已经分配的内存总数
 
 /**

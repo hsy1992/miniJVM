@@ -1141,7 +1141,6 @@ void setFieldInt(c8 *ptr, s32 v) {
 __refer setFieldRefer(c8 *ptr, __refer v) {
     __refer old = getFieldRefer(ptr);
     memcpy(ptr, &v, sizeof(__refer));
-    if (v)garbage_refer_reg(v);
     return old;
 }
 
