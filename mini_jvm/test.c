@@ -28,7 +28,15 @@ void t2() {
 }
 
 void t3() {
-
+    LinkedList* list=linkedlist_create();
+    linkedlist_push_front(list,(long)1);
+    linkedlist_push_front(list,(long)2);
+    linkedlist_push_front(list,(long)3);
+    linkedlist_push_front(list,(long)4);
+    __refer ref;
+    while (NULL != (ref = linkedlist_pop_end(list))) {
+        printf("%lld\n",ref);
+    }
 }
 
 void t4() {
@@ -65,10 +73,10 @@ void t5() {
  *
  */
 int main(int argc, char **argv) {
-//    s32 ret = execute("../../javalib_test/build/classes/", "test/Foo1", argc, argv);
-    s32 ret = execute("../../javalib/build/classes/", "test/Foo1", argc, argv);
-//    s32 ret;
-//    t5();
+    s32 ret;
+//    ret = execute("../../javalib_test/build/classes/", "test/Foo1", argc, argv);
+    ret = execute("../../javalib/build/classes/", "test/Foo1", argc, argv);
+    t3();
 
     return ret;
 }

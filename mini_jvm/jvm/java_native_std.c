@@ -529,22 +529,12 @@ s32 java_lang_System_arraycopy(Runtime *runtime, Class *clazz) {
         push_ref(stack, (__refer) exception);
     } else {
         s32 bytes = data_type_bytes[src->mb.clazz->arr_type_index];
-        //如果是引用类型，需要处理引用关系
-        if (isDataReferByIndex(src->mb.clazz->arr_type_index)) {
-            s32 i;
-            for (i = 0; i < count; i++) {
-                Long2Double l2d;
-                jarray_get_field(src, src_start + i, &l2d);
-                jarray_set_field(dest, dest_start + i, &l2d);
-            }
-        } else {
-            //根据元素宽
-            src_start *= bytes;
-            count *= bytes;
-            dest_start *= bytes;
-            if (src && dest && src->arr_body && dest->arr_body && count > 0)
-                memcpy(&(dest->arr_body[dest_start]), &(src->arr_body[src_start]), count);
-        }
+        //根据元素宽
+        src_start *= bytes;
+        count *= bytes;
+        dest_start *= bytes;
+        if (src && dest && src->arr_body && dest->arr_body && count > 0)
+            memcpy(&(dest->arr_body[dest_start]), &(src->arr_body[src_start]), count);
     }
 #if _JVM_DEBUG_BYTECODE_DETAIL > 5
     invoke_deepth(runtime);
