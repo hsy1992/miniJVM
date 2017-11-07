@@ -384,10 +384,10 @@ void garbage_destory_memobj(MemoryBlock *mb) {
 #if _JVM_DEBUG_GARBAGE_DUMP
     Utf8String *sus = utf8_create();
     getMemBlockName(mb, sus);
-    if (utf8_indexof_pos_c(sus, "Ljava/lang/String;", 0) == 0) {
-        jvm_printf("X: %s[0x%llx] \n", utf8_cstr(sus), (s64) (long) mb);
-        utf8_destory(sus);
-    }
+    //if (utf8_indexof_pos_c(sus, "Ljava/lang/String;", 0) == 0) {
+    jvm_printf("X: %s[0x%llx] \n", utf8_cstr(sus), (s64) (long) mb);
+    utf8_destory(sus);
+    //}
 #endif
     memoryblock_destory((Instance *) mb);
 }
