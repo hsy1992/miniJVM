@@ -503,6 +503,7 @@ Instance *localVarTable2java(Class *clazz, LocalVarTable *lvt, Runtime *runtime)
     Instance *ins = instance_create(cl);
     garbage_refer_hold(ins);// hold by manual
     instance_init(ins, runtime);
+
     if (ins && lvt) {
         c8 *ptr;
         //

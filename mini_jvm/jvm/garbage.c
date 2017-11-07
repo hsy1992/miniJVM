@@ -4,7 +4,7 @@
 #include "garbage.h"
 #include "jvm_util.h"
 
-Class *__garbage_find_class(__refer ref);
+MemoryBlock *__garbage_find_obj(__refer ref);
 
 void dump_refer(void);
 
@@ -33,7 +33,7 @@ s32 jarray_mark_refer(Instance *arr);
 
 void instance_mark_refer(Instance *ins);
 
-void garbage_mark_object(__refer r);
+void garbage_mark_object(__refer ref);
 
 s32 garbage_copy_refer_thread(Runtime *pruntime);
 
@@ -196,7 +196,7 @@ void getMemBlockName(void *memblock, Utf8String *name) {
         switch (mb->type) {
             case MEM_TYPE_CLASS: {
                 utf8_append_c(name, "C");
-                Class *clazz = __garbage_find_class(mb);
+                Class *clazz = (Class *) __garbage_find_obj(mb);
                 if (clazz)
                     utf8_append(name, clazz->name);
                 break;
@@ -204,7 +204,7 @@ void getMemBlockName(void *memblock, Utf8String *name) {
             case MEM_TYPE_INS: {
                 Instance *ins = (Instance *) mb;
                 utf8_append_c(name, "L");
-                Class *clazz = __garbage_find_class(ins->mb.clazz);
+                Class *clazz = (Class *) __garbage_find_obj(ins->mb.clazz);
                 if (clazz)
                     utf8_append(name, clazz->name);
                 utf8_append_c(name, ";");
@@ -214,7 +214,7 @@ void getMemBlockName(void *memblock, Utf8String *name) {
                 Instance *arr = (Instance *) mb;
 
                 utf8_append_c(name, "Array{");
-                Class *clazz = __garbage_find_class(arr->mb.clazz);
+                Class *clazz = (Class *) __garbage_find_obj(arr->mb.clazz);
                 if (clazz)
                     utf8_append(name, clazz->name);
                 utf8_append_c(name, "}");
@@ -226,7 +226,7 @@ void getMemBlockName(void *memblock, Utf8String *name) {
     }
 }
 
-Class *__garbage_find_class(__refer ref) {
+MemoryBlock *__garbage_find_obj(__refer ref) {
     __refer result = hashset_get(collector->objs, ref);
     if (!result) {
         result = hashset_get(collector->objs_holder, ref);
@@ -246,7 +246,7 @@ Class *__garbage_find_class(__refer ref) {
         }
     }
 
-    return (Class *) result;
+    return (MemoryBlock *) result;
 }
 
 /**
@@ -297,9 +297,8 @@ void *collect_thread_run(void *para) {
 
 void garbage_move_cache() {
     //jvm_printf(" move cache\n");
-    __refer ref;
-    while (NULL != (ref = linkedlist_pop_end(collector->operation_cache))) {
-        GarbageOp *op = (GarbageOp *) ref;
+    GarbageOp *op;
+    while (NULL != (op = (GarbageOp *) linkedlist_pop_end(collector->operation_cache))) {
         switch (op->op_type) {
             case GARBAGE_OP_REG:
                 hashset_put(collector->objs, op->val);
@@ -382,13 +381,14 @@ s64 garbage_collect() {
 }
 
 void garbage_destory_memobj(MemoryBlock *mb) {
-//#if _JVM_DEBUG_GARBAGE_DUMP
+#if _JVM_DEBUG_GARBAGE_DUMP
     Utf8String *sus = utf8_create();
     getMemBlockName(mb, sus);
-    if (utf8_indexof_pos_c(sus, "Ljava/lang/String;", 0) >= 0)
+    if (utf8_indexof_pos_c(sus, "Ljava/lang/String;", 0) == 0) {
         jvm_printf("X: %s[0x%llx] \n", utf8_cstr(sus), (s64) (long) mb);
-    utf8_destory(sus);
-//#endif
+        utf8_destory(sus);
+    }
+#endif
     memoryblock_destory((Instance *) mb);
 }
 
@@ -411,7 +411,7 @@ s32 garbage_pause_the_world() {
             if (checkAndWaitThreadIsSuspend(runtime) == -1) {
                 return -1;
             }
-//#if _JVM_DEBUG_GARBAGE_DUMP
+#if _JVM_DEBUG_GARBAGE_DUMP
             Runtime *last = getLastSon(runtime);
             while (last) {
                 jvm_printf("PAUSE thread[%llx] %s.%s, op:%d\n",
@@ -422,9 +422,9 @@ s32 garbage_pause_the_world() {
                            (last->pc) - (last->ca ? last->ca->code : 0)
                 );
                 last = last->parent;
-                if (last->parent->parent == NULL)break;
+                if (last->parent == NULL || last->parent->parent == NULL)break;
             }
-//#endif
+#endif
         }
 
     }
@@ -561,12 +561,12 @@ s32 garbage_copy_refer_thread(Runtime *pruntime) {
 
 /**
  * 递归标注obj所有的子孙
- * @param r addr
+ * @param ref addr
  */
 
-void garbage_mark_object(__refer r) {
-    if (r) {
-        MemoryBlock *obj = (MemoryBlock *) r;
+void garbage_mark_object(__refer ref) {
+    if (ref) {
+        MemoryBlock *obj = (MemoryBlock *) ref;
         //printf("%s [", utf8_cstr(obj->clazz->name));
         if (collector->flag_refer != obj->garbage_mark) {
             obj->garbage_mark = collector->flag_refer;;
@@ -676,16 +676,15 @@ s32 garbage_refer_reg(__refer ref) {
             __garbage_putin_cache(GARBAGE_OP_REG, ref);
             garbage_thread_notify();
             mb->garbage_reg = 1;
-        }
-
-//#if _JVM_DEBUG_GARBAGE_DUMP
-        Utf8String *sus = utf8_create();
-        getMemBlockName(mb, sus);
-        if (utf8_indexof_pos_c(sus, "Ljava/lang/String;", 0) >= 0)
+#if _JVM_DEBUG_GARBAGE_DUMP
+            Utf8String *sus = utf8_create();
+            getMemBlockName(mb, sus);
             jvm_printf("R: %s[0x%llx] \n", utf8_cstr(sus), (s64) (long) mb);
-        utf8_destory(sus);
-//#endif
+            utf8_destory(sus);
+#endif
+        }
         garbage_thread_unlock();
+
     }
     return 0;
 }
@@ -700,7 +699,6 @@ void garbage_refer_hold(__refer ref) {
 #if _JVM_DEBUG_GARBAGE_DUMP
         Utf8String *sus = utf8_create();
         getMemBlockName((MemoryBlock *) ref, sus);
-        if (utf8_indexof_pos_c(sus, "Ljava/lang/String;", 0) >= 0)
         jvm_printf("+: %s[0x%llx] \n", utf8_cstr(sus), (s64) (long) ref);
         utf8_destory(sus);
 #endif
@@ -717,7 +715,6 @@ void garbage_refer_release(__refer ref) {
 #if _JVM_DEBUG_GARBAGE_DUMP
         Utf8String *sus = utf8_create();
         getMemBlockName((MemoryBlock *) ref, sus);
-        if (utf8_indexof_pos_c(sus, "Ljava/lang/String;", 0) >= 0)
         jvm_printf("-: %s[0x%llx] \n", utf8_cstr(sus), (s64) (long) ref);
         utf8_destory(sus);
 #endif

@@ -1919,7 +1919,7 @@ static inline s32 op_ldc_impl(u8 **opCode, Runtime *runtime, s32 index) {
             Instance *jstr = jstring_create(cutf->utfstr, runtime);
 
             push_ref(stack, (__refer) jstr);
-            //garbage_refer(jstr, NULL);
+
 
 #if _JVM_DEBUG_BYTECODE_DETAIL > 5
             invoke_deepth(runtime);
@@ -2185,7 +2185,7 @@ s32 op_new(u8 **opCode, Runtime *runtime) {
         ins = instance_create(other);
     }
     push_ref(stack, (__refer) ins);
-    garbage_refer_reg(ins);
+
 #if _JVM_DEBUG_BYTECODE_DETAIL > 5
     invoke_deepth(runtime);
     jvm_printf("new %s [%llx]\n", utf8_cstr(clsName), (s64) (long) ins);
@@ -2204,7 +2204,6 @@ static inline s32 op_newarray_impl(Runtime *runtime, s32 count, s32 typeIdx, Utf
 #endif
     if (arr) {
         push_ref(stack, (__refer) arr);
-        garbage_refer_reg(arr);
     } else {
         Instance *exception = exception_create(JVM_EXCEPTION_NULLPOINTER, runtime);
         push_ref(stack, (__refer) exception);
@@ -2258,7 +2257,7 @@ s32 op_multianewarray(u8 **opCode, Runtime *runtime) {
 #endif
     if (arr) {
         push_ref(stack, (__refer) arr);
-        garbage_refer_reg(arr);
+
     } else {
         Instance *exception = exception_create(JVM_EXCEPTION_NULLPOINTER, runtime);
         push_ref(stack, (__refer) exception);
@@ -3248,9 +3247,14 @@ s32 execute_method(MethodInfo *method, Runtime *pruntime, Class *clazz) {
     runtime->method = method;
     runtime->clazz = clazz;
     s32 stackSize;
-//    if (utf8_equals_c(method->name, "createPacketAnalyzer")) {
-//        int debug = 1;
-//    }
+    if (utf8_equals_c(clazz->name, "javax/mini/reflect/Method") && utf8_equals_c(method->name, "<init>")) {
+        //int debug = 1;
+        jvm_printf("Method.init===========================================\n");
+    }
+    if (utf8_equals_c(clazz->name, "javax/mini/reflect/Reference") && utf8_equals_c(method->name, "loadMethods")) {
+        //int debug = 1;
+        jvm_printf("Reference.loadMethods===========================================\n");
+    }
     if (method->access_flags & ACC_NATIVE) {//本地方法
         localvar_init(runtime, method->para_count + 1);//可能有非静态本地方法调用，因此+1
         stack2localvar(method, pruntime, runtime);

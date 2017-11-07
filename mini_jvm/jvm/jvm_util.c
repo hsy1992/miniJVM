@@ -772,6 +772,7 @@ Instance *jarray_create(s32 count, s32 typeIdx, Utf8String *type) {
     }
     Instance *arr = jarray_create_des(count, ustr);
     utf8_destory(ustr);
+    garbage_refer_reg(arr);
     return arr;
 }
 
@@ -829,6 +830,7 @@ Instance *jarray_multi_create(ArrayList *dim, Utf8String *pdesc, s32 deep) {
         }
     }
     garbage_refer_release(arr);
+    garbage_refer_reg(arr);
     utf8_destory(desc);
     return arr;
 }
@@ -890,6 +892,7 @@ Instance *instance_create(Class *clazz) {
     ins->mb.clazz = clazz;
 
     ins->obj_fields = jvm_alloc(ins->mb.clazz->field_instance_len);
+    garbage_refer_reg(ins);
     return ins;
 }
 
@@ -956,6 +959,7 @@ Instance *jstring_create(Utf8String *src, Runtime *runtime) {
     Class *jstr_clazz = classes_load_get(clsName, runtime);
     Instance *jstring = instance_create(jstr_clazz);
     garbage_refer_hold(jstring);//hold for no gc
+
     jstring->mb.clazz = jstr_clazz;
     instance_init(jstring, runtime);
 
@@ -1094,7 +1098,9 @@ Instance *exception_create(s32 exception_type, Runtime *runtime) {
     utf8_destory(clsName);
 
     Instance *ins = instance_create(clazz);
+    garbage_refer_hold(ins);
     instance_init(ins, runtime);
+    garbage_refer_release(ins);
     return ins;
 }
 
@@ -1104,14 +1110,18 @@ Instance *exception_create_str(s32 exception_type, Runtime *runtime, c8 *errmsg)
 #endif
     Utf8String *uerrmsg = utf8_create_c(errmsg);
     Instance *jstr = jstring_create(uerrmsg, runtime);
+    garbage_refer_hold(jstr);
     utf8_destory(uerrmsg);
     RuntimeStack *para = stack_create(1);
     push_ref(para, jstr);
+    garbage_refer_release(jstr);
     Utf8String *clsName = utf8_create_c(exception_class_name[exception_type]);
     Class *clazz = classes_load_get(clsName, runtime);
     utf8_destory(clsName);
     Instance *ins = instance_create(clazz);
+    garbage_refer_hold(ins);
     instance_init_methodtype(ins, runtime, "(Ljava/lang/String;)V", para);
+    garbage_refer_release(ins);
     stack_destory(para);
     return ins;
 }

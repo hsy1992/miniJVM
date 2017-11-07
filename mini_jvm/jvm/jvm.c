@@ -24,7 +24,6 @@ void main_thread_create(Runtime *runtime) {
     instance_init(main_thread, runtime);
     jthread_init_with_runtime(main_thread, runtime);
 
-    garbage_refer_reg(main_thread);
 }
 
 void main_thread_destory() {
@@ -186,6 +185,7 @@ s32 execute(c8 *p_classpath, c8 *p_mainclass, s32 argc, c8 **argv) {
             Long2Double l2d;
             Utf8String *ustr = utf8_create_c("[java/lang/String;");
             Instance *arr = jarray_create(count, DATATYPE_REFERENCE, ustr);
+            garbage_refer_hold(arr);
             utf8_destory(ustr);
             int i;
             for (i = 0; i < argc; i++) {
@@ -196,6 +196,7 @@ s32 execute(c8 *p_classpath, c8 *p_mainclass, s32 argc, c8 **argv) {
                 utf8_destory(utfs);
             }
             push_ref(runtime->stack, arr);
+            garbage_refer_release(arr);
             //启动垃圾回收
             garbage_thread_resume();
 

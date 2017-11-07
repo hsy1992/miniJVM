@@ -57,6 +57,7 @@ s32 java_lang_Class_newInstance(Runtime *runtime, Class *clazz) {
     }
     if (ins) {
         push_ref(stack, (__refer) ins);
+
     } else {
         Instance *exception = exception_create(JVM_EXCEPTION_INSTANTIATIONEXCEPTION, runtime);
         push_ref(stack, (__refer) exception);

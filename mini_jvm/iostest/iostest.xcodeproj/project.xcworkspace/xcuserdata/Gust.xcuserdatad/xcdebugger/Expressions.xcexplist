@@ -3,10 +3,24 @@
    version = "1.0">
    <ContextStates>
       <ContextState
+         contextName = "jarray_mark_refer:garbage.c">
+      </ContextState>
+      <ContextState
+         contextName = "instance_mark_refer:garbage.c">
+         <PersistentStrings>
+            <PersistentString
+               value = "(MethodInfo*)(__refer)(long)getFieldRefer(getFieldPtr_byName_c(ins,&quot;javax/mini/reflect/Method&quot;,&quot;methodId&quot;,&quot;J&quot;))">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
          contextName = "pop_entry:runtime.c">
       </ContextState>
       <ContextState
          contextName = "stack2localvar:interpreter.c">
+      </ContextState>
+      <ContextState
+         contextName = "garbage_mark_object:garbage.c">
       </ContextState>
       <ContextState
          contextName = "op_astore:interpreter.c">

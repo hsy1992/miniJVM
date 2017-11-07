@@ -775,6 +775,7 @@ s32 javax_mini_io_File_listDir(Runtime *runtime, Class *clazz) {
             while ((dp = readdir(dirp)) != NULL) { //通过目录指针读目录
                 Utf8String *ustr = utf8_create_c(dp->d_name);
                 Instance *jstr = jstring_create(ustr, runtime);
+                garbage_refer_hold(jstr);
                 utf8_destory(ustr);
                 arraylist_append(files, jstr);
             }
@@ -787,6 +788,7 @@ s32 javax_mini_io_File_listDir(Runtime *runtime, Class *clazz) {
             utf8_destory(ustr);
             for (i = 0; i < files->length; i++) {
                 l2d.r = arraylist_get_value(files, i);
+                garbage_refer_release(l2d.r);
                 jarray_set_field(jarr, i, &l2d);
             }
             push_ref(runtime->stack, jarr);
