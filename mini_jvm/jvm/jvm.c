@@ -174,6 +174,7 @@ s32 execute(c8 *p_classpath, c8 *p_mainclass, s32 argc, c8 **argv) {
         MethodInfo *main = find_methodInfo_by_name(str_mainClsName, methodName, methodType);
         if (main) {
             main_thread_create(runtime);
+
             //启动调试器
             //startJdwp(runtime);
             jdwp_start_server();
@@ -204,6 +205,8 @@ s32 execute(c8 *p_classpath, c8 *p_mainclass, s32 argc, c8 **argv) {
             jvm_printf("\n\n\n\n\n\n================================= main start ================================\n");
             //调用主方法
             //if (java_debug)jthread_suspend(runtime);//jdwp 会启动调试器
+            runtime->method=NULL;
+            runtime->clazz=clazz;
             ret = execute_method(main, runtime, clazz);
             if (ret != RUNTIME_STATUS_NORMAL) {
                 print_exception(runtime);

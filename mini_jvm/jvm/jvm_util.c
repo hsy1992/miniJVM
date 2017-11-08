@@ -36,6 +36,22 @@ void thread_lock(ThreadLock *lock) {
     pthread_mutex_lock(&lock->mutex_lock);
 }
 
+s32 thread_notify(ThreadLock *lock) {
+    pthread_cond_signal(&lock->thread_cond);
+    return 0;
+}
+
+s32 thread_waitTime(ThreadLock *lock, s64 waitms) {
+
+    //waitms += currentTimeMillis();
+    struct timespec t;
+    clock_gettime(CLOCK_REALTIME, &t);
+    t.tv_sec += waitms / 1000;
+    t.tv_nsec += (waitms % 1000) * 1000000;
+    pthread_cond_timedwait(&lock->thread_cond, &lock->mutex_lock, &t);
+    return 0;
+}
+
 void thread_unlock(ThreadLock *lock) {
     pthread_mutex_unlock(&lock->mutex_lock);
 }
@@ -495,7 +511,7 @@ int jvm_printf(const char *format, ...) {
         }
     }
 #else
-    result = vprintf(format, vp);
+        result = vprintf(format, vp);
 #endif
     va_end(vp);
     //garbage_thread_unlock();
@@ -1083,7 +1099,7 @@ s32 jstring_2_utf8(Instance *jstr, Utf8String *utf8) {
         s32 count = jstring_get_count(jstr);
         s32 offset = jstring_get_offset(jstr);
         u16 *arrbody = (u16 *) arr->arr_body;
-        unicode_2_utf8(&arrbody[offset], utf8, count);
+        if (arr->arr_body)unicode_2_utf8(&arrbody[offset], utf8, count);
     }
     return 0;
 }

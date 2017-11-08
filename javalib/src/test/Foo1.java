@@ -669,13 +669,13 @@ public class Foo1 {
 //                    }
 //                }
 
-                Long lo = new Long(0x1010101020202020L);
-                r = new Reference(RefNative.obj2id(java.lang.Long.class));
-                m = r.getMethod("longValue", new Class[]{});
-                if (m != null) {
-                    Object result = m.invoke(lo, new Object[]{});
-                    //System.out.println("reflect invoke result:" + Long.toString((Long) result, 16));
-                }
+//                Long lo = new Long(0x1010101020202020L);
+//                r = new Reference(RefNative.obj2id(java.lang.Long.class));
+//                m = r.getMethod("longValue", new Class[]{});
+//                if (m != null) {
+//                    Object result = m.invoke(lo, new Object[]{});
+//                    //System.out.println("reflect invoke result:" + Long.toString((Long) result, 16));
+//                }
 //                for (int j = 0; j < r.getMethods().length; j++) {
 //                    Method md = r.getMethod(j);
 //                    String[] paras = md.getParameterStrs();

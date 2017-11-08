@@ -181,6 +181,10 @@ void thread_unlock(ThreadLock *lock);
 
 void thread_lock(ThreadLock *lock);
 
+s32 thread_waitTime(ThreadLock *lock, s64 waitms);
+
+s32 thread_notify(ThreadLock *lock);
+
 void thread_lock_dispose(ThreadLock *lock);
 
 void thread_lock_init(ThreadLock *lock);
