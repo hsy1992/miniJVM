@@ -419,6 +419,14 @@ void garbage_destory_memobj(MemoryBlock *mb) {
     utf8_destory(sus);
     //}
 #endif
+    if (mb->run_count == refer_method_count) {
+        int debug = 1;
+        garbage_thread_pause();
+        while (1) {
+            garbage_thread_timedwait(100);
+
+        }
+    }
     memoryblock_destory((Instance *) mb);
 }
 
@@ -627,7 +635,7 @@ void instance_mark_refer(Instance *ins) {
         for (i = 0; i < fp->field_used; i++) {
             FieldInfo *fi = &fp->field[i];
             if ((fi->access_flags & ACC_STATIC) == 0 && isDataReferByIndex(fi->datatype_idx)) {
-                if(utf8_equals_c(fi->name,"threadQ"))continue;
+                if (utf8_equals_c(fi->name, "threadQ"))continue;
                 c8 *ptr = getInstanceFieldPtr(ins, fi);
                 if (ptr) {
                     __refer ref = getFieldRefer(ptr);
@@ -677,19 +685,12 @@ void class_mark_refer(Class *clazz) {
 
 
 
-s32 garbage_is_alive(__refer sonPtr) {
+s32 garbage_is_alive(__refer obj) {
+    __refer ref = NULL;
     garbage_thread_lock();
-    Hashset *set;
-    s32 ret = 0;
-    if (sonPtr) {
-        //移除子引父
-        set = hashset_get(collector->objs, sonPtr);
-        if (set != HASH_NULL) {
-            ret = 1;
-        }
-    }
+    ref = __garbage_find_obj(obj);
     garbage_thread_unlock();
-    return ret;
+    return ref != NULL;
 }
 
 

@@ -26,9 +26,9 @@ extern "C" {
 //=======================  micro define  =============================
 //_JVM_DEBUG   06 print all bytecode
 #define _JVM_DEBUG_BYTECODE_DETAIL 0
-#define _JVM_DEBUG_PRINT_FILE 01
+#define _JVM_DEBUG_PRINT_FILE 0
 #define _JVM_DEBUG_BYTECODE_DUMP 0
-#define _JVM_DEBUG_GARBAGE_DUMP 01
+#define _JVM_DEBUG_GARBAGE_DUMP 0
 #define _JVM_DEBUG_PROFILE 0
 
 
@@ -358,7 +358,7 @@ extern ArrayList *native_libs;
 extern Hashtable *sys_prop;
 
 extern u8 volatile java_debug;
-
+s32 refer_method_count;
 
 extern s32 STACK_LENGHT;
 
@@ -373,6 +373,8 @@ typedef struct _MemoryBlock {
     u8 arr_type_index;
     u8 garbage_mark;
     u8 volatile garbage_reg;
+
+    s32 run_count;
 
     Class *clazz;
     ThreadLock *volatile thread_lock;

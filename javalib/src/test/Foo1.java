@@ -653,6 +653,10 @@ public class Foo1 {
     void t22() {
         for (int i = 0; i < 50000; i++) {
             try {
+                if (RefNative.getGarbageStatus() == 1) {
+                    Object[] objs = RefNative.getGarbageReferedObjs();
+                    int debug = 1;
+                }
                 String s = "abcd";
                 Method m;
                 Reference r = new Reference(RefNative.obj2id(java.lang.String.class));
@@ -661,6 +665,7 @@ public class Foo1 {
                     Object result = m.invoke(s, new Object[]{"cd", 1});
                     //System.out.println("reflect invoke result:" + result);
                 }
+
 //                for (int j = 0; j < r.getMethods().length; j++) {
 //                    Method md = r.getMethod(j);
 //                    String[] paras = md.getParameterStrs();
@@ -668,7 +673,6 @@ public class Foo1 {
 //                        p.hashCode();
 //                    }
 //                }
-
 //                Long lo = new Long(0x1010101020202020L);
 //                r = new Reference(RefNative.obj2id(java.lang.Long.class));
 //                m = r.getMethod("longValue", new Class[]{});

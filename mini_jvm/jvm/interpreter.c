@@ -1639,6 +1639,7 @@ static inline s32 op_xastore_impl(u8 **opCode, Runtime *runtime, u8 isReference)
         l2d.l = 0;
         if (isDataReferByIndex(tidx)) {
             l2d.r = entry_2_refer(&entry);
+            ((Instance*)l2d.r)->mb.run_count=refer_method_count;
         } else {
             if (bytes > 4) {
                 l2d.l = entry_2_long(&entry);
@@ -3249,11 +3250,12 @@ s32 execute_method(MethodInfo *method, Runtime *pruntime, Class *clazz) {
     s32 stackSize;
     if (utf8_equals_c(clazz->name, "javax/mini/reflect/Method") && utf8_equals_c(method->name, "<init>")) {
         //int debug = 1;
-        jvm_printf("Method.init===========================================\n");
+        //jvm_printf("Method.init===========================================\n");
     }
     if (utf8_equals_c(clazz->name, "javax/mini/reflect/Reference") && utf8_equals_c(method->name, "loadMethods")) {
         //int debug = 1;
-        jvm_printf("Reference.loadMethods===========================================\n");
+        refer_method_count++;
+        //jvm_printf("Reference.loadMethods===========================================\n");
     }
     if (method->access_flags & ACC_NATIVE) {//本地方法
         localvar_init(runtime, method->para_count + 1);//可能有非静态本地方法调用，因此+1

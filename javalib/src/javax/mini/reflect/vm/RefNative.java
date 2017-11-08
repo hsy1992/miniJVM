@@ -45,4 +45,9 @@ public class RefNative {
     static public native int stopThread(Thread t, long objid);
 
     static public native long getStackFrame(Thread t);
+
+    //
+    public static native Object[] getGarbageReferedObjs();
+
+    public static native int getGarbageStatus();
 }

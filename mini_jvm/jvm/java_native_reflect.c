@@ -395,6 +395,37 @@ s32 javax_mini_reflect_vm_RefNative_getStackFrame(Runtime *runtime, Class *clazz
     return 0;
 }
 
+s32 javax_mini_reflect_vm_RefNative_getGarbageReferedObjs(Runtime *runtime, Class *clazz) {
+    s32 size = (s32) collector->runtime_refer_copy->length;
+
+    Utf8String *ustr = utf8_create_c(STR_INS_JAVA_LANG_OBJECT);
+    Instance *jarr = jarray_create(size, DATATYPE_REFERENCE, ustr);
+    utf8_destory(ustr);
+    s32 i = 0;
+    Long2Double l2d;
+
+    for (i = 0; i < collector->runtime_refer_copy->length; i++) {
+        l2d.r = arraylist_get_value(collector->runtime_refer_copy, i);
+        jarray_set_field(jarr, i, &l2d);
+    }
+    push_ref(runtime->stack, jarr);//先放入栈，再关联回收器，防止多线程回收
+
+#if _JVM_DEBUG_BYTECODE_DETAIL > 5
+    jvm_printf("javax_mini_reflect_vm_RefNative_getGarbageReferedObjs %llx\n",(u64) (long) trun);
+#endif
+    return 0;
+}
+
+s32 javax_mini_reflect_vm_RefNative_getGarbageStatus(Runtime *runtime, Class *clazz) {
+
+    push_int(runtime->stack, collector->_garbage_thread_status);//先放入栈，再关联回收器，防止多线程回收
+
+#if _JVM_DEBUG_BYTECODE_DETAIL > 5
+    jvm_printf("javax_mini_reflect_vm_RefNative_getGarbageStatus %llx\n",(u64) (long) trun);
+#endif
+    return 0;
+}
+
 s32 javax_mini_reflect_Reference_mapReference(Runtime *runtime, Class *clazz) {
     int pos = 0;
     Instance *ins = (Instance *) localvar_getRefer(runtime, pos++);
@@ -724,33 +755,35 @@ s32 javax_mini_reflect_Array_mapArray(Runtime *runtime, Class *clazz) {
 }
 
 static java_native_method method_jdwp_table[] = {
-        {"javax/mini/reflect/vm/RefNative", "refIdSize",       "()I",                                   javax_mini_reflect_vm_RefNative_refIdSize},
-        {"javax/mini/reflect/vm/RefNative", "obj2id",          "(Ljava/lang/Object;)J",                 javax_mini_reflect_vm_RefNative_obj2id},
-        {"javax/mini/reflect/vm/RefNative", "id2obj",          "(J)Ljava/lang/Object;",                 javax_mini_reflect_vm_RefNative_id2obj},
-        {"javax/mini/reflect/vm/RefNative", "getClasses",      "()[Ljava/lang/Class;",                  javax_mini_reflect_vm_RefNative_getClasses},
-        {"javax/mini/reflect/vm/RefNative", "getClassByName",  "(Ljava/lang/String;)Ljava/lang/Class;", javax_mini_reflect_vm_RefNative_getClassByName},
-        {"javax/mini/reflect/vm/RefNative", "setLocalVal",     "(JIBJI)I",                              javax_mini_reflect_vm_RefNative_setLocalVal},
-        {"javax/mini/reflect/vm/RefNative", "getLocalVal",     "(JILjavax/mini/jdwp/type/ValueType;)I", javax_mini_reflect_vm_RefNative_getLocalVal},
-        {"javax/mini/reflect/vm/RefNative", "getFieldVal",     "(JJLjavax/mini/jdwp/type/ValueType;)I", javax_mini_reflect_vm_RefNative_getFieldVal},
-        {"javax/mini/reflect/vm/RefNative", "getThreads",      "()[Ljava/lang/Thread;",                 javax_mini_reflect_vm_RefNative_getThreads},
-        {"javax/mini/reflect/vm/RefNative", "getStatus",       "(Ljava/lang/Thread;)I",                 javax_mini_reflect_vm_RefNative_getStatus},
-        {"javax/mini/reflect/vm/RefNative", "suspendThread",   "(Ljava/lang/Thread;)I",                 javax_mini_reflect_vm_RefNative_suspendThread},
-        {"javax/mini/reflect/vm/RefNative", "resumeThread",    "(Ljava/lang/Thread;)I",                 javax_mini_reflect_vm_RefNative_resumeThread},
-        {"javax/mini/reflect/vm/RefNative", "getSuspendCount", "(Ljava/lang/Thread;)I",                 javax_mini_reflect_vm_RefNative_getSuspendCount},
-        {"javax/mini/reflect/vm/RefNative", "getFrameCount",   "(Ljava/lang/Thread;)I",                 javax_mini_reflect_vm_RefNative_getFrameCount},
-        {"javax/mini/reflect/vm/RefNative", "stopThread",      "(Ljava/lang/Thread;J)I",                javax_mini_reflect_vm_RefNative_stopThread},
-        {"javax/mini/reflect/vm/RefNative", "getStackFrame",   "(Ljava/lang/Thread;)J",                 javax_mini_reflect_vm_RefNative_getStackFrame},
-        {"javax/mini/reflect/MemAccess",    "readByte0",       "(JI)B",                                 javax_mini_reflect_MemAccess_readByte0},
-        {"javax/mini/reflect/MemAccess",    "readShort0",      "(JI)S",                                 javax_mini_reflect_MemAccess_readShort0},
-        {"javax/mini/reflect/MemAccess",    "readInt0",        "(JI)I",                                 javax_mini_reflect_MemAccess_readInt0},
-        {"javax/mini/reflect/MemAccess",    "readLong0",       "(JI)J",                                 javax_mini_reflect_MemAccess_readLong0},
-        {"javax/mini/reflect/MemAccess",    "readRefer0",      "(JI)J",                                 javax_mini_reflect_MemAccess_readRefer0},
-        {"javax/mini/reflect/Reference",    "mapReference",    "(J)V",                                  javax_mini_reflect_Reference_mapReference},
-        {"javax/mini/reflect/Field",        "mapField",        "(J)V",                                  javax_mini_reflect_Field_mapField},
-        {"javax/mini/reflect/Method",       "mapMethod",       "(J)V",                                  javax_mini_reflect_Method_mapMethod},
-        {"javax/mini/reflect/Method",       "invokeMethod",    "(JLjava/lang/Object;[J)J",              javax_mini_reflect_Method_invokeMethod},
-        {"javax/mini/reflect/StackFrame",   "mapRuntime",      "(J)V",                                  javax_mini_reflect_StackFrame_mapRuntime},
-        {"javax/mini/reflect/Array",        "mapArray",        "(J)V",                                  javax_mini_reflect_Array_mapArray},
+        {"javax/mini/reflect/vm/RefNative", "refIdSize",             "()I",                                   javax_mini_reflect_vm_RefNative_refIdSize},
+        {"javax/mini/reflect/vm/RefNative", "obj2id",                "(Ljava/lang/Object;)J",                 javax_mini_reflect_vm_RefNative_obj2id},
+        {"javax/mini/reflect/vm/RefNative", "id2obj",                "(J)Ljava/lang/Object;",                 javax_mini_reflect_vm_RefNative_id2obj},
+        {"javax/mini/reflect/vm/RefNative", "getClasses",            "()[Ljava/lang/Class;",                  javax_mini_reflect_vm_RefNative_getClasses},
+        {"javax/mini/reflect/vm/RefNative", "getClassByName",        "(Ljava/lang/String;)Ljava/lang/Class;", javax_mini_reflect_vm_RefNative_getClassByName},
+        {"javax/mini/reflect/vm/RefNative", "setLocalVal",           "(JIBJI)I",                              javax_mini_reflect_vm_RefNative_setLocalVal},
+        {"javax/mini/reflect/vm/RefNative", "getLocalVal",           "(JILjavax/mini/jdwp/type/ValueType;)I", javax_mini_reflect_vm_RefNative_getLocalVal},
+        {"javax/mini/reflect/vm/RefNative", "getFieldVal",           "(JJLjavax/mini/jdwp/type/ValueType;)I", javax_mini_reflect_vm_RefNative_getFieldVal},
+        {"javax/mini/reflect/vm/RefNative", "getThreads",            "()[Ljava/lang/Thread;",                 javax_mini_reflect_vm_RefNative_getThreads},
+        {"javax/mini/reflect/vm/RefNative", "getStatus",             "(Ljava/lang/Thread;)I",                 javax_mini_reflect_vm_RefNative_getStatus},
+        {"javax/mini/reflect/vm/RefNative", "suspendThread",         "(Ljava/lang/Thread;)I",                 javax_mini_reflect_vm_RefNative_suspendThread},
+        {"javax/mini/reflect/vm/RefNative", "resumeThread",          "(Ljava/lang/Thread;)I",                 javax_mini_reflect_vm_RefNative_resumeThread},
+        {"javax/mini/reflect/vm/RefNative", "getSuspendCount",       "(Ljava/lang/Thread;)I",                 javax_mini_reflect_vm_RefNative_getSuspendCount},
+        {"javax/mini/reflect/vm/RefNative", "getFrameCount",         "(Ljava/lang/Thread;)I",                 javax_mini_reflect_vm_RefNative_getFrameCount},
+        {"javax/mini/reflect/vm/RefNative", "stopThread",            "(Ljava/lang/Thread;J)I",                javax_mini_reflect_vm_RefNative_stopThread},
+        {"javax/mini/reflect/vm/RefNative", "getStackFrame",         "(Ljava/lang/Thread;)J",                 javax_mini_reflect_vm_RefNative_getStackFrame},
+        {"javax/mini/reflect/vm/RefNative", "getGarbageReferedObjs", "()[Ljava/lang/Object;",                 javax_mini_reflect_vm_RefNative_getGarbageReferedObjs},
+        {"javax/mini/reflect/vm/RefNative", "getGarbageStatus",      "()I",                                   javax_mini_reflect_vm_RefNative_getGarbageStatus},
+        {"javax/mini/reflect/MemAccess",    "readByte0",             "(JI)B",                                 javax_mini_reflect_MemAccess_readByte0},
+        {"javax/mini/reflect/MemAccess",    "readShort0",            "(JI)S",                                 javax_mini_reflect_MemAccess_readShort0},
+        {"javax/mini/reflect/MemAccess",    "readInt0",              "(JI)I",                                 javax_mini_reflect_MemAccess_readInt0},
+        {"javax/mini/reflect/MemAccess",    "readLong0",             "(JI)J",                                 javax_mini_reflect_MemAccess_readLong0},
+        {"javax/mini/reflect/MemAccess",    "readRefer0",            "(JI)J",                                 javax_mini_reflect_MemAccess_readRefer0},
+        {"javax/mini/reflect/Reference",    "mapReference",          "(J)V",                                  javax_mini_reflect_Reference_mapReference},
+        {"javax/mini/reflect/Field",        "mapField",              "(J)V",                                  javax_mini_reflect_Field_mapField},
+        {"javax/mini/reflect/Method",       "mapMethod",             "(J)V",                                  javax_mini_reflect_Method_mapMethod},
+        {"javax/mini/reflect/Method",       "invokeMethod",          "(JLjava/lang/Object;[J)J",              javax_mini_reflect_Method_invokeMethod},
+        {"javax/mini/reflect/StackFrame",   "mapRuntime",            "(J)V",                                  javax_mini_reflect_StackFrame_mapRuntime},
+        {"javax/mini/reflect/Array",        "mapArray",              "(J)V",                                  javax_mini_reflect_Array_mapArray},
 
 };
 

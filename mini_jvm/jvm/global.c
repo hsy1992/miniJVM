@@ -29,7 +29,7 @@ s64 GARBAGE_PERIOD_MS = 10000;
 u8 volatile java_debug = 1;
 Instance *jdwp_jthread;
 
-
+s32 refer_method_count=0;
 
 
 
