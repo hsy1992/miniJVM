@@ -137,6 +137,7 @@ int hashset_put(Hashset *set, HashsetKey key) {
     return 1;
 }
 
+
 HashsetKey hashset_get(Hashset *set, HashsetKey key) {
     HashsetEntry *rover = hashset_get_entry(set, key);
     if (rover)return rover->key;
@@ -209,7 +210,7 @@ void hashset_iterate(Hashset *set, HashsetIterator *iterator) {
 
         if (set->table[chain] != NULL) {
             iterator->next_entry = set->table[chain];
-            iterator->next_chain = chain;
+            iterator->curr_chain = iterator->next_chain = chain;
             break;
         }
     }
@@ -221,18 +222,19 @@ int hashset_iter_has_more(HashsetIterator *iterator) {
 
 
 HashsetEntry *hashset_iter_next_entry(HashsetIterator *iterator) {
-    HashsetEntry *current_entry;
     Hashset *set;
     unsigned long long int chain;
+
+    iterator->curr_entry = iterator->next_entry;
+    iterator->curr_chain = iterator->next_chain;
 
     set = iterator->set;
     if (iterator->next_entry == NULL) {
         return HASH_NULL;
     }
-    current_entry = iterator->next_entry;
 
-    if (current_entry->next != NULL) {
-        iterator->next_entry = current_entry->next;
+    if (iterator->curr_entry->next != NULL) {
+        iterator->next_entry = iterator->curr_entry->next;
     } else {
         chain = iterator->next_chain + 1;
         iterator->next_entry = NULL;
@@ -243,10 +245,9 @@ HashsetEntry *hashset_iter_next_entry(HashsetIterator *iterator) {
             }
             ++chain;
         }
-
         iterator->next_chain = chain;
     }
-    return current_entry;
+    return iterator->curr_entry;
 }
 
 HashsetKey hashset_iter_next_key(HashsetIterator *iterator) {
@@ -255,7 +256,28 @@ HashsetKey hashset_iter_next_key(HashsetIterator *iterator) {
     return HASH_NULL;
 }
 
-int hashset_resize(Hashset *set, unsigned int size) {
+HashsetKey hashset_iter_remove(HashsetIterator *iterator) {
+    if (iterator->curr_entry) {
+        HashsetEntry *prev = NULL;
+        HashsetEntry *rover = iterator->set->table[iterator->curr_chain];
+        if (rover == iterator->curr_entry) {
+            iterator->set->table[iterator->curr_chain] = iterator->curr_entry->next;
+        } else {
+            while (rover != iterator->curr_entry) {
+                prev = rover;
+                rover = rover->next;
+            }
+            prev->next = rover->next;
+        }
+        HashsetKey key = iterator->curr_entry->key;
+        hashset_free_entry(iterator->set, iterator->curr_entry);
+        iterator->curr_entry = NULL;
+        return key;
+    }
+    return NULL;
+}
+
+int hashset_resize(Hashset *set, unsigned long long int size) {
     HashsetEntry **old_table;
     unsigned long long int old_table_size;
     HashsetEntry *rover;
@@ -292,3 +314,19 @@ int hashset_resize(Hashset *set, unsigned int size) {
     return 1;
 }
 
+
+unsigned long long int hashset_count(Hashset *set) {
+    HashsetEntry *rover;
+    unsigned long long int i, count;
+    count = 0;
+
+    for (i = 0; i < set->table_size; i++) {
+        rover = set->table[i];
+        while (rover != NULL) {
+            count++;
+            rover = rover->next;
+        }
+    }
+
+    return count;
+}

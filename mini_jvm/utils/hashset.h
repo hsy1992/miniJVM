@@ -41,7 +41,10 @@ typedef void *HashsetKey;
 
 struct _HashsetIterator {
     Hashset *set;
+//    HashsetEntry *prev_entry;
+    HashsetEntry *curr_entry;
     HashsetEntry *next_entry;
+    unsigned long long int curr_chain;
     unsigned long long int next_chain;
 };
 
@@ -188,7 +191,11 @@ int hashset_iter_has_more(HashsetIterator *iterator);
 
 HashsetKey hashset_iter_next_key(HashsetIterator *iterator);
 
-int hashset_resize(Hashset *hash_table, unsigned int size);
+HashsetKey hashset_iter_remove(HashsetIterator *iterator);
+
+int hashset_resize(Hashset *hash_table, unsigned long long int size);
+
+unsigned long long int hashset_count(Hashset *set);
 
 #ifdef __cplusplus
 }
