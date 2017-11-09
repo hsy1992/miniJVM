@@ -653,10 +653,6 @@ public class Foo1 {
     void t22() {
         for (int i = 0; i < 50000; i++) {
             try {
-                if (RefNative.getGarbageStatus() == 1) {
-                    Object[] objs = RefNative.getGarbageReferedObjs();
-                    int debug = 1;
-                }
                 String s = "abcd";
                 Method m;
                 Reference r = new Reference(RefNative.obj2id(java.lang.String.class));
@@ -665,14 +661,32 @@ public class Foo1 {
                     Object result = m.invoke(s, new Object[]{"cd", 1});
                     //System.out.println("reflect invoke result:" + result);
                 }
+                if (RefNative.getGarbageStatus() == 1) {
+                    Object[] objs = RefNative.getGarbageReferedObjs();
+                    for (int n = 0; n < objs.length; n++) {
+                        Object o = objs[n];
+                        if (o != null && o instanceof Reference) {
+                            Method[] mds = ((Reference) objs[n]).getMethods();
+                            System.out.println("Reference[" + Long.toString(RefNative.obj2id(objs[n]), 10) + "]:");
+                            for (int j = 0; j < mds.length; j++) {
+                                Method md = mds[j];
 
-//                for (int j = 0; j < r.getMethods().length; j++) {
-//                    Method md = r.getMethod(j);
-//                    String[] paras = md.getParameterStrs();
-//                    for (String p : paras) {
-//                        p.hashCode();
-//                    }
-//                }
+                                if (md == null) {
+                                    System.out.println("Method[" + j + "]:" + md);
+                                } else {
+                                    String[] paras = md.getParameterStrs();
+                                    int k = 0;
+                                    for (String p : paras) {
+                                        System.out.println("Method[" + j + "][" + Long.toString(RefNative.obj2id(md), 16) + "](" + Long.toString(RefNative.obj2id(md), 10) + "):" + md.methodName + " paras[" + k + "]:" + p + "|" + Long.toString(RefNative.obj2id(p), 16));
+                                        k++;
+                                    }
+                                }
+                            }
+                        }
+                    }
+                    int debug = 1;
+                }
+
 //                Long lo = new Long(0x1010101020202020L);
 //                r = new Reference(RefNative.obj2id(java.lang.Long.class));
 //                m = r.getMethod("longValue", new Class[]{});
