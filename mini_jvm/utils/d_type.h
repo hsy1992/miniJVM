@@ -45,7 +45,6 @@ autoptr *autoptr_new(__refer r);
 
 void autoptr_NULL(autoptr **aref);
 
-
 #ifndef __MEM_LEAK_DETECT
 
 void *jvm_alloc(u32 size);
