@@ -16,6 +16,7 @@
 s64 currentTimeMillis() {
     struct timeval tv;
     gettimeofday(&tv, NULL);
+    //clock_gettime(CLOCK_REALTIME, &t);
     return ((s64) tv.tv_sec) * 1000 + tv.tv_usec / 1000;
 }
 

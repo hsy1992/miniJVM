@@ -205,18 +205,18 @@ s32 execute(c8 *p_classpath, c8 *p_mainclass, s32 argc, c8 **argv) {
             jvm_printf("\n\n\n\n\n\n================================= main start ================================\n");
             //调用主方法
             //if (java_debug)jthread_suspend(runtime);//jdwp 会启动调试器
-            runtime->method=NULL;
-            runtime->clazz=clazz;
+            runtime->method = NULL;
+            runtime->clazz = clazz;
             ret = execute_method(main, runtime, clazz);
             if (ret != RUNTIME_STATUS_NORMAL) {
                 print_exception(runtime);
             }
-            runtime->threadInfo->is_blocking = 1;
+            jthread_block_enter(runtime);
             while ((thread_list->length) > 1) {//wait for other thread over ,
                 check_suspend_and_pause(runtime);
                 threadSleep(100);
             }
-            runtime->threadInfo->is_blocking = 0;
+            jthread_block_exit(runtime);
             jvm_printf("================================= main  end  ================================\n");
             jvm_printf("spent %lld\n", (currentTimeMillis() - start));
 

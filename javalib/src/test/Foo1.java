@@ -593,9 +593,9 @@ public class Foo1 {
 
         System.out.println("fi=" + fi);
         int i = 0;
-        while (i++ < 10) {
+        while (i++ < 100000) {
             try {
-                Thread.sleep(1000);
+                //Thread.sleep(1000);
                 int debug = 1;
                 debug++;
                 debug++;
@@ -727,10 +727,10 @@ public class Foo1 {
 ////            f.t16();
 ////            f.t17();
 //            f.t18();
-//            f.t19();
+            f.t19();
 //            f.t20();
 //            f.t21();
-            f.t22();
+//            f.t22();
         }
     }
 

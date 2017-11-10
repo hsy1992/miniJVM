@@ -433,9 +433,9 @@ s32 java_lang_Runtime_gc(Runtime *runtime, Class *clazz) {
     invoke_deepth(runtime);
     jvm_printf("java_lang_Runtime_gc \n");
 #endif
-    runtime->threadInfo->is_blocking = 1;
+    jthread_block_enter(runtime);
     garbage_collect();
-    runtime->threadInfo->is_blocking = 0;
+    jthread_block_exit(runtime);
     return 0;
 }
 
@@ -659,7 +659,7 @@ s32 java_lang_Thread_sleep(Runtime *runtime, Class *clazz) {
     invoke_deepth(runtime);
     jvm_printf("java_lang_Thread_sleep %lld\n", l2d.l);
 #endif
-    jtherad_sleep(runtime, l2d.l);
+    jthread_sleep(runtime, l2d.l);
     return 0;
 }
 

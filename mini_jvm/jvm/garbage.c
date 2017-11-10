@@ -359,8 +359,6 @@ s64 garbage_collect() {
         garbage_resume_the_world();
         return -1;
     }
-    s64 time_stopWorld = currentTimeMillis() - time_startAt;
-    time_startAt = currentTimeMillis();
     garbage_move_cache();
     garbage_copy_refer();
     //
@@ -374,7 +372,7 @@ s64 garbage_collect() {
     garbage_resume_the_world();
     garbage_thread_unlock();
 
-    s64 time_mark = currentTimeMillis() - time_startAt;
+    s64 time_stopWorld = currentTimeMillis() - time_startAt;
     time_startAt = currentTimeMillis();
     //
     hashset_iterate(collector->objs, &hti);
@@ -397,8 +395,8 @@ s64 garbage_collect() {
 
 
     s64 time_gc = currentTimeMillis() - time_startAt;
-    jvm_printf("gc obj: %lld -> %lld  heap : %lld -> %lld  stop_world: %lld  mark: %lld  gc:%lld\n",
-               obj_count, hashset_num_entries(collector->objs), mem1, heap_size, time_stopWorld, time_mark, time_gc);
+    jvm_printf("gc obj: %lld -> %lld  heap : %lld -> %lld  stop_world: %lld  gc:%lld\n",
+               obj_count, hashset_num_entries(collector->objs), mem1, heap_size, time_stopWorld, time_gc);
 
     return del;
 }
@@ -441,12 +439,12 @@ s32 garbage_pause_the_world() {
             if (checkAndWaitThreadIsSuspend(runtime) == -1) {
                 return -1;
             }
-#if _JVM_DEBUG_GARBAGE_DUMP
+//#if _JVM_DEBUG_GARBAGE_DUMP
             Utf8String *stack = utf8_create();
             getRuntimeStack(runtime, stack);
             jvm_printf("%s", utf8_cstr(stack));
             utf8_destory(stack);
-#endif
+//#endif
         }
 
     }

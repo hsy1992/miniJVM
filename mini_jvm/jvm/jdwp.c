@@ -64,10 +64,9 @@ void *jdwp_thread_dispacher(void *para) {
                 arraylist_remove(srv->clients, client);
             }
         }
-        threadSleep(20);
-        check_suspend_and_pause(runtime);
+        jthread_sleep(runtime, 20);
     }
-    check_suspend_and_pause(runtime);
+    check_suspend_and_pause(runtime);//for no destory when gc()
     runtime_destory(runtime);
     srv->runtime = NULL;
 

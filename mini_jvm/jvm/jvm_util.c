@@ -43,9 +43,9 @@ s32 thread_notify(ThreadLock *lock) {
 
 s32 thread_waitTime(ThreadLock *lock, s64 waitms) {
 
-    //waitms += currentTimeMillis();
+    waitms += currentTimeMillis();
     struct timespec t;
-    clock_gettime(CLOCK_REALTIME, &t);
+
     t.tv_sec += waitms / 1000;
     t.tv_nsec += (waitms % 1000) * 1000000;
     pthread_cond_timedwait(&lock->thread_cond, &lock->mutex_lock, &t);
@@ -717,6 +717,15 @@ s32 jthread_suspend(Runtime *runtime) {
     return 0;
 }
 
+void jthread_block_enter(Runtime *runtime){
+    runtime->threadInfo->is_blocking=1;
+}
+
+void jthread_block_exit(Runtime *runtime){
+    runtime->threadInfo->is_blocking=0;
+    check_suspend_and_pause(runtime);
+}
+
 s32 jthread_resume(Runtime *runtime) {
     if (runtime->threadInfo->suspend_count > 0)runtime->threadInfo->suspend_count--;
     return 0;
@@ -727,9 +736,9 @@ s32 jthread_waitTime(MemoryBlock *mb, Runtime *runtime, s64 waitms) {
     if (!mb->thread_lock) {
         jthreadlock_create(mb);
     }
-    //waitms += currentTimeMillis();
+    waitms += currentTimeMillis();
     struct timespec t;
-    clock_gettime(CLOCK_REALTIME, &t);
+    //clock_gettime(CLOCK_REALTIME, &t);
     t.tv_sec += waitms / 1000;
     t.tv_nsec += (waitms % 1000) * 1000000;
     runtime->threadInfo->thread_status = THREAD_STATUS_WAIT;
@@ -739,7 +748,7 @@ s32 jthread_waitTime(MemoryBlock *mb, Runtime *runtime, s64 waitms) {
     return 0;
 }
 
-s32 jtherad_sleep(Runtime *runtime, s64 ms) {
+s32 jthread_sleep(Runtime *runtime, s64 ms) {
     runtime->threadInfo->thread_status = THREAD_STATUS_SLEEPING;
     threadSleep(ms);
     runtime->threadInfo->thread_status = THREAD_STATUS_RUNNING;

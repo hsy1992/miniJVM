@@ -38,6 +38,7 @@ extern "C" {
 #include <fcntl.h>
 #include <sys/socket.h>
 #include <unistd.h>
+
 #define closesocket close
 #endif
 
@@ -238,7 +239,7 @@ s32 srv_bind(Utf8String *ip, u16 port) {
             server_addr.sin_addr = *((struct in_addr *) host->h_addr);
 #elif __JVM_OS_MAC__ || __JVM_OS_LINUX__
             //server_addr.sin_len = sizeof(struct sockaddr_in);
-                        server_addr.sin_addr = *((struct in_addr *) host->h_addr_list[0]);
+            server_addr.sin_addr = *((struct in_addr *) host->h_addr_list[0]);
 #endif
         } else {
             server_addr.sin_addr.s_addr = htonl(INADDR_ANY);
@@ -319,9 +320,9 @@ s32 javax_mini_net_socket_Protocol_readBuf(Runtime *runtime, Class *clazz) {
     s32 offset = localvar_getInt(runtime, 2);
     s32 count = localvar_getInt(runtime, 3);
 
-    runtime->threadInfo->is_blocking = 1;
+    jthread_block_enter(runtime);
     s32 len = sock_recv(sockfd, jbyte_arr->arr_body + offset, count);
-    runtime->threadInfo->is_blocking = 0;
+    jthread_block_exit(runtime);
     push_int(runtime->stack, len);
 #if _JVM_DEBUG_BYTECODE_DETAIL > 5
     invoke_deepth(runtime);
@@ -333,9 +334,9 @@ s32 javax_mini_net_socket_Protocol_readBuf(Runtime *runtime, Class *clazz) {
 s32 javax_mini_net_socket_Protocol_readByte(Runtime *runtime, Class *clazz) {
     s32 sockfd = localvar_getInt(runtime, 0);
     c8 b = 0;
-    runtime->threadInfo->is_blocking = 1;
+    jthread_block_enter(runtime);
     s32 len = sock_recv(sockfd, &b, 1);
-    runtime->threadInfo->is_blocking = 0;
+    jthread_block_exit(runtime);
     if (len < 0) {
         push_int(runtime->stack, -1);
     } else {
@@ -357,9 +358,9 @@ s32 javax_mini_net_socket_Protocol_writeBuf(Runtime *runtime, Class *clazz) {
     s32 offset = localvar_getInt(runtime, 2);
     s32 count = localvar_getInt(runtime, 3);
 
-    runtime->threadInfo->is_blocking = 1;
+    jthread_block_enter(runtime);
     s32 len = sock_send(sockfd, jbyte_arr->arr_body + offset, count);
-    runtime->threadInfo->is_blocking = 0;
+    jthread_block_exit(runtime);
 
     push_int(runtime->stack, len);
 #if _JVM_DEBUG_BYTECODE_DETAIL > 5
@@ -373,9 +374,9 @@ s32 javax_mini_net_socket_Protocol_writeByte(Runtime *runtime, Class *clazz) {
     s32 sockfd = localvar_getInt(runtime, 0);
     s32 val = localvar_getInt(runtime, 1);
     c8 b = (u8) val;
-    runtime->threadInfo->is_blocking = 1;
+    jthread_block_enter(runtime);
     s32 len = sock_send(sockfd, &b, 1);
-    runtime->threadInfo->is_blocking = 0;
+    jthread_block_exit(runtime);
 #if _JVM_DEBUG_BYTECODE_DETAIL > 5
     invoke_deepth(runtime);
     jvm_printf("javax_mini_net_socket_Protocol_writeByte  \n");
@@ -461,9 +462,10 @@ s32 javax_mini_net_serversocket_Protocol_accept0(Runtime *runtime, Class *clazz)
     s32 sockfd = localvar_getInt(runtime, 0);
     s32 ret = 0;
     if (sockfd) {
-        runtime->threadInfo->is_blocking = 1;
+
+        jthread_block_enter(runtime);
         ret = srv_accept(sockfd);
-        runtime->threadInfo->is_blocking = 0;
+        jthread_block_exit(runtime);
     }
     push_int(runtime->stack, ret);
 #if _JVM_DEBUG_BYTECODE_DETAIL > 5
