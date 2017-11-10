@@ -359,27 +359,23 @@ s64 garbage_collect() {
         garbage_resume_the_world();
         return -1;
     }
-//    jvm_printf("garbage_pause_the_world: %lld\n", currentTimeMillis() - time_startAt);
-//    time_startAt = currentTimeMillis();
-    garbage_move_cache();
-//    jvm_printf("garbage_move_cache: %lld\n", currentTimeMillis() - time_startAt);
-//    time_startAt = currentTimeMillis();
-    garbage_copy_refer();
-//    jvm_printf("garbage_copy_refer: %lld\n", currentTimeMillis() - time_startAt);
-//    time_startAt = currentTimeMillis();
-    garbage_resume_the_world();
-//    jvm_printf("garbage_resume_the_world: %lld\n", currentTimeMillis() - time_startAt);
-//    time_startAt = currentTimeMillis();
-    //
     s64 time_stopWorld = currentTimeMillis() - time_startAt;
+    time_startAt = currentTimeMillis();
+    garbage_move_cache();
+    garbage_copy_refer();
+    //
 
     s64 obj_count = (collector->objs->entries);
     //real GC start
-    time_startAt = currentTimeMillis();
     //
     _garbage_change_flag();
     garbage_big_search();
 
+    garbage_resume_the_world();
+    garbage_thread_unlock();
+
+    s64 time_mark = currentTimeMillis() - time_startAt;
+    time_startAt = currentTimeMillis();
     //
     hashset_iterate(collector->objs, &hti);
     for (; hashset_iter_has_more(&hti);) {
@@ -399,11 +395,10 @@ s64 garbage_collect() {
         hashset_remove(collector->objs, NULL, 1);
     }
 
-    garbage_thread_unlock();
 
     s64 time_gc = currentTimeMillis() - time_startAt;
-    jvm_printf("gc obj: %lld -> %lld  heap : %lld -> %lld  stop_world: %lld  gc:%lld\n",
-               obj_count, hashset_num_entries(collector->objs), mem1, heap_size, time_stopWorld, time_gc);
+    jvm_printf("gc obj: %lld -> %lld  heap : %lld -> %lld  stop_world: %lld  mark: %lld  gc:%lld\n",
+               obj_count, hashset_num_entries(collector->objs), mem1, heap_size, time_stopWorld, time_mark, time_gc);
 
     return del;
 }
@@ -446,12 +441,12 @@ s32 garbage_pause_the_world() {
             if (checkAndWaitThreadIsSuspend(runtime) == -1) {
                 return -1;
             }
-//#if _JVM_DEBUG_GARBAGE_DUMP
+#if _JVM_DEBUG_GARBAGE_DUMP
             Utf8String *stack = utf8_create();
             getRuntimeStack(runtime, stack);
             jvm_printf("%s", utf8_cstr(stack));
             utf8_destory(stack);
-//#endif
+#endif
         }
 
     }
@@ -509,8 +504,8 @@ s32 checkAndWaitThreadIsSuspend(Runtime *runtime) {
  * @return ret
  */
 s32 garbage_big_search() {
-    s32 i;
-    for (i = 0; i < collector->runtime_refer_copy->length; i++) {
+    s32 i, len;
+    for (i = 0, len = collector->runtime_refer_copy->length; i < len; i++) {
         __refer r = arraylist_get_value(collector->runtime_refer_copy, i);
         garbage_mark_object(r);
     }
@@ -594,7 +589,6 @@ s32 garbage_copy_refer_thread(Runtime *pruntime) {
 void garbage_mark_object(__refer ref) {
     if (ref) {
         MemoryBlock *obj = (MemoryBlock *) ref;
-        //printf("%s [", utf8_cstr(obj->clazz->name));
         if (collector->flag_refer != obj->garbage_mark) {
             obj->garbage_mark = collector->flag_refer;
             switch (obj->type) {
@@ -610,7 +604,6 @@ void garbage_mark_object(__refer ref) {
             }
         }
     }
-    //printf("]");
 }
 
 void instance_mark_refer(Instance *ins) {
@@ -621,7 +614,7 @@ void instance_mark_refer(Instance *ins) {
         for (i = 0; i < fp->field_used; i++) {
             FieldInfo *fi = &fp->field[i];
             if ((fi->access_flags & ACC_STATIC) == 0 && isDataReferByIndex(fi->datatype_idx)) {
-                if (utf8_equals_c(fi->name, "threadQ"))continue;
+                if (utf8_equals_c(fi->name, "threadQ"))continue;//this field save Runtime*
                 c8 *ptr = getInstanceFieldPtr(ins, fi);
                 if (ptr) {
                     __refer ref = getFieldRefer(ptr);
@@ -650,6 +643,10 @@ s32 jarray_mark_refer(Instance *arr) {
     return 0;
 }
 
+/**
+ * mark class static field is used
+ * @param clazz
+ */
 void class_mark_refer(Class *clazz) {
     s32 i;
     if (clazz->field_static) {
