@@ -286,6 +286,9 @@ void *collect_thread_run(void *para) {
         if (collector->_garbage_thread_status == GARBAGE_THREAD_PAUSE) {
             continue;
         }
+        if (currentTimeMillis() - lastgc < 3000) {// less than 3 sec no gc
+            continue;
+        }
         if (currentTimeMillis() - lastgc > GARBAGE_PERIOD_MS || heap_size > MAX_HEAP_SIZE) {
             garbage_collect();
             lastgc = currentTimeMillis();
@@ -439,12 +442,12 @@ s32 garbage_pause_the_world() {
             if (checkAndWaitThreadIsSuspend(runtime) == -1) {
                 return -1;
             }
-//#if _JVM_DEBUG_GARBAGE_DUMP
+#if _JVM_DEBUG_GARBAGE_DUMP
             Utf8String *stack = utf8_create();
             getRuntimeStack(runtime, stack);
             jvm_printf("%s", utf8_cstr(stack));
             utf8_destory(stack);
-//#endif
+#endif
         }
 
     }
