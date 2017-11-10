@@ -36,9 +36,6 @@ typedef struct _autoptr {
 
 //======================= memory manage =============================
 
-extern s64 MAX_HEAP_SIZE;
-extern s64 heap_size; //当前已经分配的内存总数
-
 autoptr *autoptr_get(autoptr *a);
 
 autoptr *autoptr_new(__refer r);

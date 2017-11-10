@@ -250,6 +250,25 @@ MemoryBlock *__garbage_find_obj(__refer ref) {
     return (MemoryBlock *) result;
 }
 
+s32 getMbSize(MemoryBlock *mb) {
+    s32 size = 0;
+    switch (mb->type) {
+        case MEM_TYPE_INS:
+            size += sizeof(Instance);
+            size += mb->clazz->field_instance_len;
+            break;
+        case MEM_TYPE_ARR:
+            size += sizeof(Instance);
+            size += data_type_bytes[mb->clazz->arr_type_index] * ((Instance *) mb)->arr_length;
+            break;
+        case MEM_TYPE_CLASS:
+            size += sizeof(Class);
+            size += mb->clazz->field_static_len;
+            break;
+    }
+    return size;
+}
+
 /**
  * 调试用，打印所有引用信息
  */
@@ -289,7 +308,7 @@ void *collect_thread_run(void *para) {
         if (currentTimeMillis() - lastgc < 3000) {// less than 3 sec no gc
             continue;
         }
-        if (currentTimeMillis() - lastgc > GARBAGE_PERIOD_MS || heap_size > MAX_HEAP_SIZE) {
+        if (currentTimeMillis() - lastgc > GARBAGE_PERIOD_MS || collector->heap_size > MAX_HEAP_SIZE) {
             garbage_collect();
             lastgc = currentTimeMillis();
         }
@@ -306,6 +325,7 @@ void garbage_move_cache() {
         switch (op->op_type) {
             case GARBAGE_OP_REG: {
                 hashset_put(collector->objs, op->val);
+                collector->heap_size += getMbSize(op->val);
 #if _JVM_DEBUG_GARBAGE_DUMP
                 MemoryBlock *mb = op->val;
                 Utf8String *sus = utf8_create();
@@ -351,7 +371,7 @@ s64 garbage_collect() {
 
 
     HashsetIterator hti;
-    s64 mem1 = heap_size;
+    s64 mem1 = collector->heap_size;
     s64 del = 0;
     s64 time_startAt;
 
@@ -399,7 +419,7 @@ s64 garbage_collect() {
 
     s64 time_gc = currentTimeMillis() - time_startAt;
     jvm_printf("gc obj: %lld -> %lld  heap : %lld -> %lld  stop_world: %lld  gc:%lld\n",
-               obj_count, hashset_num_entries(collector->objs), mem1, heap_size, time_stopWorld, time_gc);
+               obj_count, hashset_num_entries(collector->objs), mem1, collector->heap_size, time_stopWorld, time_gc);
 
     return del;
 }
@@ -419,6 +439,7 @@ void garbage_destory_memobj(MemoryBlock *mb) {
     jvm_printf("X: %s[0x%llx] \n", utf8_cstr(sus), (s64) (long) mb);
     utf8_destory(sus);
 #endif
+    collector->heap_size -= getMbSize(mb);
     memoryblock_destory((Instance *) mb);
 }
 

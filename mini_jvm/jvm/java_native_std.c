@@ -409,7 +409,7 @@ s32 java_lang_Runtime_exitInternal(Runtime *runtime, Class *clazz) {
 s32 java_lang_Runtime_freeMemory(Runtime *runtime, Class *clazz) {
     RuntimeStack *stack = runtime->stack;
 
-    push_long(stack, MAX_HEAP_SIZE - heap_size);
+    push_long(stack, MAX_HEAP_SIZE - collector->heap_size);
 #if _JVM_DEBUG_BYTECODE_DETAIL > 5
     invoke_deepth(runtime);
     jvm_printf("java_lang_Runtime_freeMemory \n");

@@ -18,6 +18,8 @@ extern "C" {
 extern s64 GARBAGE_PERIOD_MS;//
 extern GcCollector *collector;
 
+extern s64 MAX_HEAP_SIZE;
+
 
 //每个线程一个回收站，线程多了就是灾难
 struct _GcCollectorType {
@@ -31,6 +33,8 @@ struct _GcCollectorType {
     //
     LinkedList *operation_cache;
     ArrayList *runtime_refer_copy;
+    //
+    s64 heap_size; //当前已经分配的内存总数
     //
     s64 _garbage_count;
     u8 _garbage_thread_status;
