@@ -115,10 +115,10 @@ void garbage_collector_destory() {
 }
 
 void __garbage_clear() {
-    jvm_printf("garbage clear start========================\n");
+    jvm_printf("[INFO]garbage clear start========================\n");
 
     //
-    jvm_printf("objs size :%lld\n", collector->objs->entries);
+    jvm_printf("[INFO]objs size :%lld\n", collector->objs->entries);
 
     //解除所有引用关系后，回收全部对象
     while (garbage_collect());//collect instance
@@ -135,7 +135,7 @@ void __garbage_clear() {
     array_classloader = NULL;
     while (garbage_collect());//collect classes
     //
-    jvm_printf("objs size :%lld\n", collector->objs->entries);
+    jvm_printf("[INFO]objs size :%lld\n", collector->objs->entries);
 
     //dump_refer();
 }
@@ -276,7 +276,7 @@ void dump_refer() {
     //jvm_printf("%d\n",sizeof(struct _Hashset));
     HashsetIterator hti;
     hashset_iterate(collector->objs, &hti);
-    jvm_printf("=========================objs :%lld\n", (collector->objs->entries));
+    jvm_printf("[INFO]=================   dump objs :%lld\n", (collector->objs->entries));
     for (; hashset_iter_has_more(&hti);) {
 
         HashsetKey k = hashset_iter_next_key(&hti);
@@ -296,7 +296,12 @@ void *collect_thread_run(void *para) {
     while (1) {
         garbage_thread_lock();
         garbage_thread_timedwait(1000);
+        s64 startAt = currentTimeMillis();
         garbage_move_cache();
+        s64 endAt = currentTimeMillis() - startAt;
+        if (endAt - startAt > 1000) {
+            jvm_printf("[WARN]gc movcache: %lld\n", endAt - startAt);
+        }
         garbage_thread_unlock();
 
         if (collector->_garbage_thread_status == GARBAGE_THREAD_STOP) {
@@ -418,7 +423,7 @@ s64 garbage_collect() {
 
 
     s64 time_gc = currentTimeMillis() - time_startAt;
-    jvm_printf("gc obj: %lld -> %lld  heap : %lld -> %lld  stop_world: %lld  gc:%lld\n",
+    jvm_printf("[INFO]gc obj: %lld -> %lld  heap : %lld -> %lld  stop_world: %lld  gc:%lld\n",
                obj_count, hashset_num_entries(collector->objs), mem1, collector->heap_size, time_stopWorld, time_gc);
 
     return del;
