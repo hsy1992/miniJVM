@@ -106,6 +106,58 @@ void utf8_append_c(Utf8String *a1, char *a2) {
     }
 }
 
+void utf8_append_s64(Utf8String *a1, long long int val, int radix) {
+    if (a1) {
+        int pos = a1->length;
+        if (val == 0) {
+            utf8_insert(a1, pos, '0');
+        } else {
+            long long int tv = val;
+            if (val < 0) {
+                utf8_insert(a1, pos, '-');
+                pos++;
+                tv = -val;
+            }
+            while (tv) {
+                long long int m = tv % radix;
+                if (m < 10)utf8_insert(a1, pos, '0' + m);
+                else utf8_insert(a1, pos, 'A' + (m - 10));
+                tv = tv / radix;
+            }
+        }
+    }
+
+}
+
+void utf8_upcase(Utf8String *a1) {
+    for (size_t i = 0; i < a1->length; i++) {
+        if (a1->data[i] >= 'a' && a1->data[i] <= 'z') {
+            a1->data[i] = a1->data[i] - ('a' - 'A');
+        }
+    }
+}
+
+long long int utf8_aton(Utf8String *sp, int n) {
+    long long int v = 0;
+    c8 negative = 0;
+    utf8_upcase(sp);
+    for (size_t i = 0; i < sp->length; i++) {
+        utf8_char ch = sp->data[i];
+        if (ch == '-')
+            negative = 1;
+        else if (ch >= '0' && ch <= '9') {
+            v *= n;
+            v += ch - '0';
+        } else if (ch >= 'A' && ch <= 'Z') {
+            v *= n;
+            v += 10 + (ch - 'A');
+        }
+    }
+    if (negative)
+        v = -v;
+    return v;
+}
+
 void utf8_append_part_c(Utf8String *a1, unsigned char *a2, int start, int len) {
     int i = 0;
     for (i = start; i < len; i++) {
@@ -282,7 +334,7 @@ unsigned long long UNICODE_STR_HASH_FUNC(HashtableKey kmer) {
 unsigned long _utf8_hashCode(Utf8String *ustr) {
     if (!ustr->hash) {//如果未有赋值，则需计算
         int i;
-        for (i=0; i < ustr->length; i++) {
+        for (i = 0; i < ustr->length; i++) {
             ustr->hash = 31 * ustr->hash + ustr->data[i];
         }
     }

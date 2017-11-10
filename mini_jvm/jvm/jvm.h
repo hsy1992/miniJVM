@@ -180,7 +180,7 @@ typedef struct _CodeAttribute CodeAttribute;
 
 typedef s32 (*java_native_fun)(Runtime *runtime, Class *p);
 
-typedef struct _Collector Collector;
+typedef struct _GcCollectorType GcCollector;
 
 enum {
     JVM_ERROR_OUTOFMEMORY,
@@ -358,7 +358,6 @@ extern ArrayList *native_libs;
 extern Hashtable *sys_prop;
 
 extern u8 volatile java_debug;
-s32 refer_method_count;
 
 extern s32 STACK_LENGHT;
 
@@ -373,8 +372,6 @@ typedef struct _MemoryBlock {
     u8 arr_type_index;
     u8 garbage_mark;
     u8 volatile garbage_reg;
-
-    s32 run_count;
 
     Class *clazz;
     ThreadLock *volatile thread_lock;
@@ -961,6 +958,8 @@ void runtime_destory(Runtime *runtime);
 Runtime *getLastSon(Runtime *top);
 
 s64 getInstructPointer(Runtime *runtime);
+
+void getRuntimeStack(Runtime *runtime, Utf8String *ustr);
 
 s32 getRuntimeDepth(Runtime *top);
 

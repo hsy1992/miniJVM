@@ -15,7 +15,7 @@ ArrayList *native_libs;
 ArrayList *thread_list; //all thread
 Hashtable *sys_prop;
 
-Collector *collector;
+GcCollector *collector;
 
 Instruction **instructionsIndexies;
 Instance *main_thread;//

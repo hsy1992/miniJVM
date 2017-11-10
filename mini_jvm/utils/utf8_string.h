@@ -55,6 +55,12 @@ void utf8_append_part(Utf8String *a1, Utf8String *a2, int start, int len);
 
 void utf8_append_part_c(Utf8String *a1, unsigned char *a2, int start, int len);
 
+long long int utf8_aton(Utf8String *sp, int n);
+
+void utf8_upcase(Utf8String *a1);
+
+void utf8_append_s64(Utf8String *a1, long long int val, int radix);
+
 void utf8_substring(Utf8String *a1, int start, int end);
 
 char *utf8_cstr(Utf8String *a1);

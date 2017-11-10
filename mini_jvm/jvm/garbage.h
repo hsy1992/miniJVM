@@ -16,11 +16,11 @@ extern "C" {
 
 //回收线程
 extern s64 GARBAGE_PERIOD_MS;//
-extern Collector *collector;
+extern GcCollector *collector;
 
 
 //每个线程一个回收站，线程多了就是灾难
-struct _Collector {
+struct _GcCollectorType {
     //
     Hashset *objs; //key=mem_ptr, value=我被别人引用的列表
     Hashset *objs_holder; //法外之地，防回收的持有器，放入其中的对象及其引用的其他对象不会被回收

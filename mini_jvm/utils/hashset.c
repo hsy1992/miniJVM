@@ -258,10 +258,11 @@ HashsetKey hashset_iter_next_key(HashsetIterator *iterator) {
 
 HashsetKey hashset_iter_remove(HashsetIterator *iterator) {
     if (iterator->curr_entry) {
+        Hashset *set = iterator->set;
         HashsetEntry *prev = NULL;
-        HashsetEntry *rover = iterator->set->table[iterator->curr_chain];
+        HashsetEntry *rover = set->table[iterator->curr_chain];
         if (rover == iterator->curr_entry) {
-            iterator->set->table[iterator->curr_chain] = iterator->curr_entry->next;
+            set->table[iterator->curr_chain] = iterator->curr_entry->next;
         } else {
             while (rover != iterator->curr_entry) {
                 prev = rover;
@@ -270,8 +271,9 @@ HashsetKey hashset_iter_remove(HashsetIterator *iterator) {
             prev->next = rover->next;
         }
         HashsetKey key = iterator->curr_entry->key;
-        hashset_free_entry(iterator->set, iterator->curr_entry);
+        hashset_free_entry(set, iterator->curr_entry);
         iterator->curr_entry = NULL;
+        --set->entries;
         return key;
     }
     return NULL;

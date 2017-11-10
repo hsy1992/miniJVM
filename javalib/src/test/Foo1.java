@@ -651,7 +651,7 @@ public class Foo1 {
     }
 
     void t22() {
-        for (int i = 0; i < 50000; i++) {
+        for (int i = 0; i < 1000; i++) {
             try {
                 String s = "abcd";
                 Method m;
