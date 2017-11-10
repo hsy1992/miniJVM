@@ -181,18 +181,9 @@ void jthread_block_enter(Runtime *runtime);
 
 s32 check_suspend_and_pause(Runtime *runtime);
 
-//void thread_unlock(ThreadLock *lock);
-//
-//void thread_lock(ThreadLock *lock);
-
-s32 thread_waitTime(ThreadLock *lock, s64 waitms);
-
-s32 thread_notify(ThreadLock *lock);
-
 void thread_lock_dispose(ThreadLock *lock);
 
 void thread_lock_init(ThreadLock *lock);
-
 
 Instance *jarray_create_des(s32 count, Utf8String *desc);
 

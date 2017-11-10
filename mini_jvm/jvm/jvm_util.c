@@ -31,31 +31,6 @@ void thread_lock_dispose(ThreadLock *lock) {
         lock->jthread_holder = NULL;
     }
 }
-//
-//void thread_lock(ThreadLock *lock) {
-//    pthread_mutex_lock(&lock->mutex_lock);
-//}
-//
-//s32 thread_notify(ThreadLock *lock) {
-//    pthread_cond_signal(&lock->thread_cond);
-//    return 0;
-//}
-//
-//s32 thread_waitTime(ThreadLock *lock, s64 waitms) {
-//
-//    waitms += currentTimeMillis();
-//    struct timespec t;
-//
-//    t.tv_sec += waitms / 1000;
-//    t.tv_nsec += (waitms % 1000) * 1000000;
-//    pthread_cond_timedwait(&lock->thread_cond, &lock->mutex_lock, &t);
-//    return 0;
-//}
-//
-//void thread_unlock(ThreadLock *lock) {
-//    pthread_mutex_unlock(&lock->mutex_lock);
-//}
-
 
 
 Class *classes_get_c(c8 *clsName) {
@@ -103,7 +78,6 @@ Class *classes_load_get(Utf8String *ustr, Runtime *runtime) {
 
 s32 classes_put(Class *clazz) {
     if (clazz) {
-        ThreadLock *tl = sys_classloader->JVM_CLASS->mb.thread_lock;
         garbage_thread_lock();
         hashtable_put(sys_classloader->classes, clazz->name, clazz);
         garbage_thread_unlock();
@@ -116,7 +90,6 @@ s32 classes_put(Class *clazz) {
 
 Class *array_class_get(Utf8String *desc) {
     if (desc && desc->length && utf8_char_at(desc, 0) == '[') {
-        ThreadLock *tl = array_classloader->JVM_CLASS->mb.thread_lock;
         garbage_thread_lock();
         Class *clazz = hashtable_get(array_classloader->classes, desc);
         if (!clazz && desc && desc->length) {

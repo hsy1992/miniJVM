@@ -380,7 +380,6 @@ typedef struct _MemoryBlock {
 struct _ClassLoader {
     Utf8String *g_classpath;
     Hashtable *classes;
-    Class *JVM_CLASS;
 
     //
     c8 volatile lock;

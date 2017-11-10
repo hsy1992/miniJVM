@@ -61,11 +61,6 @@ ClassLoader *classloader_create(c8 *path) {
     class_loader->g_classpath = utf8_create_c(path);
     //创建类容器
     class_loader->classes = hashtable_create(UNICODE_STR_HASH_FUNC, UNICODE_STR_EQUALS_FUNC);
-    //创建引用类
-    class_loader->JVM_CLASS = class_create();
-    class_loader->JVM_CLASS->name = utf8_create_c("ClassLoader");
-    garbage_refer_hold(class_loader->JVM_CLASS);
-    garbage_refer_reg(class_loader->JVM_CLASS);
     return class_loader;
 }
 
@@ -76,7 +71,6 @@ void classloader_destory(ClassLoader *class_loader) {
         HashtableValue v = hashtable_iter_next_value(&hti);
         garbage_refer_release(v);
     }
-    garbage_refer_release(class_loader->JVM_CLASS);
 
     hashtable_clear(class_loader->classes);
     utf8_destory(class_loader->g_classpath);
@@ -118,8 +112,6 @@ s32 execute(c8 *p_classpath, c8 *p_mainclass, s32 argc, c8 **argv) {
     sys_classloader = classloader_create(p_classpath);
 
     array_classloader = classloader_create("");
-
-
 
 
     //创建线程容器
