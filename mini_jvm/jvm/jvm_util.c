@@ -712,8 +712,8 @@ s32 jthread_waitTime(MemoryBlock *mb, Runtime *runtime, s64 waitms) {
     waitms += currentTimeMillis();
     struct timespec t;
     //clock_gettime(CLOCK_REALTIME, &t);
-    t.tv_sec += waitms / 1000;
-    t.tv_nsec += (waitms % 1000) * 1000000;
+    t.tv_sec = waitms / 1000;
+    t.tv_nsec = (waitms % 1000) * 1000000;
     runtime->threadInfo->thread_status = THREAD_STATUS_WAIT;
     pthread_cond_timedwait(&mb->thread_lock->thread_cond, &mb->thread_lock->mutex_lock, &t);
     runtime->threadInfo->thread_status = THREAD_STATUS_RUNNING;

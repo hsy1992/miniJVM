@@ -14,7 +14,7 @@ void __garbage_clear(void);
 
 void garbage_destory_memobj(MemoryBlock *k);
 
-void _garbage_change_flag();
+void _garbage_change_flag(void);
 
 void garbage_move_cache(void);
 
@@ -671,7 +671,7 @@ s32 jarray_mark_refer(Instance *arr) {
 
 /**
  * mark class static field is used
- * @param clazz
+ * @param clazz class
  */
 void class_mark_refer(Class *clazz) {
     s32 i;

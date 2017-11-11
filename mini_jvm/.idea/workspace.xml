@@ -11,7 +11,25 @@
     </configurations>
   </component>
   <component name="ChangeListManager">
-    <list default="true" readonly="true" id="8573b6ef-7560-47b3-bf8a-687a65174ff8" name="Default" comment="" />
+    <list default="true" readonly="true" id="8573b6ef-7560-47b3-bf8a-687a65174ff8" name="Default" comment="">
+      <change type="MOVED" beforePath="$PROJECT_DIR$/iostest/iostestTests/invokec.c" afterPath="$PROJECT_DIR$/iostest/invokec.c" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/iostest/iostestTests/iostestTests-Bridging-Header.h" afterPath="$PROJECT_DIR$/iostest/iostestTests-Bridging-Header.h" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/iostest/iostest.xcodeproj/project.xcworkspace/xcuserdata/Gust.xcuserdatad/UserInterfaceState.xcuserstate" afterPath="$PROJECT_DIR$/iostest/iostest.xcodeproj/project.xcworkspace/xcuserdata/Gust.xcuserdatad/UserInterfaceState.xcuserstate" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../javalib/nbproject/private/private.xml" afterPath="$PROJECT_DIR$/../javalib/nbproject/private/private.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../javalib_test/nbproject/private/private.properties" afterPath="$PROJECT_DIR$/../javalib_test/nbproject/private/private.properties" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/iostest/iostest.xcodeproj/project.pbxproj" afterPath="$PROJECT_DIR$/iostest/iostest.xcodeproj/project.pbxproj" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/iostest/iostest.xcodeproj/project.xcworkspace/contents.xcworkspacedata" afterPath="$PROJECT_DIR$/iostest/iostest.xcodeproj/project.xcworkspace/contents.xcworkspacedata" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/iostest/iostest.xcodeproj/xcuserdata/Gust.xcuserdatad/xcschemes/iostest.xcscheme" afterPath="$PROJECT_DIR$/iostest/iostest.xcodeproj/xcuserdata/Gust.xcuserdatad/xcschemes/iostest.xcscheme" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/iostest/iostest/AppDelegate.swift" afterPath="$PROJECT_DIR$/iostest/iostest/AppDelegate.swift" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/iostest/iostest/ViewController.swift" afterPath="$PROJECT_DIR$/iostest/iostest/ViewController.swift" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/iostest/iostestTests/iostestTests.swift" afterPath="$PROJECT_DIR$/iostest/iostestTests/iostestTests.swift" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/jvm/garbage.c" afterPath="$PROJECT_DIR$/jvm/garbage.c" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/jvm/interpreter.c" afterPath="$PROJECT_DIR$/jvm/interpreter.c" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/jvm/java_native_io.c" afterPath="$PROJECT_DIR$/jvm/java_native_io.c" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/jvm/jvm_util.c" afterPath="$PROJECT_DIR$/jvm/jvm_util.c" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/utils/hashset.c" afterPath="$PROJECT_DIR$/utils/hashset.c" />
+    </list>
     <ignored path="$PROJECT_DIR$/cmake-build-debug/" />
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="TRACKING_ENABLED" value="true" />
@@ -22,69 +40,30 @@
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file leaf-file-name="jvm_util.c" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/jvm/jvm_util.c">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="-934">
-              <caret line="977" column="0" lean-forward="false" selection-start-line="977" selection-start-column="0" selection-end-line="977" selection-end-column="0" />
-              <folding>
-                <marker date="1508145772517" expanded="false" signature="13437:13466" ph="..." />
-                <marker date="1508145772517" expanded="false" signature="13772:13825" ph="..." />
-                <marker date="1508145772517" expanded="false" signature="13994:14208" ph="..." />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
       <file leaf-file-name="garbage.c" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/jvm/garbage.c">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="10693">
-              <caret line="658" column="13" lean-forward="false" selection-start-line="658" selection-start-column="13" selection-end-line="658" selection-end-column="13" />
+            <state relative-caret-position="4905">
+              <caret line="327" column="18" lean-forward="false" selection-start-line="327" selection-start-column="18" selection-end-line="327" selection-end-column="18" />
               <folding>
-                <marker date="1508213105457" expanded="false" signature="10723:10738" ph="..." />
-                <marker date="1508213105457" expanded="false" signature="16542:16768" ph="..." />
+                <element signature="e#9367#9605#0" expanded="true" />
+                <element signature="e#9793#10009#0" expanded="true" />
+                <element signature="e#10205#10421#0" expanded="true" />
+                <element signature="e#12295#12449#0" expanded="true" />
+                <element signature="e#13165#13325#0" expanded="true" />
               </folding>
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="java_native_io.c" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/jvm/java_native_io.c">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="114">
-              <caret line="271" column="13" lean-forward="false" selection-start-line="271" selection-start-column="13" selection-end-line="271" selection-end-column="13" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="memleak.c" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/cmem/memleak.c">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="344">
-              <caret line="267" column="49" lean-forward="false" selection-start-line="267" selection-start-column="49" selection-end-line="267" selection-end-column="49" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="interpreter.c" pinned="false" current-in-tab="false">
+      <file leaf-file-name="interpreter.c" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/jvm/interpreter.c">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="140">
-              <caret line="1762" column="0" lean-forward="false" selection-start-line="1762" selection-start-column="0" selection-end-line="1762" selection-end-column="0" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="jvm.c" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/jvm/jvm.c">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="54">
-              <caret line="182" column="31" lean-forward="true" selection-start-line="182" selection-start-column="31" selection-end-line="182" selection-end-column="31" />
-              <folding />
+            <state relative-caret-position="263">
+              <caret line="2486" column="5" lean-forward="false" selection-start-line="2486" selection-start-column="5" selection-end-line="2486" selection-end-column="5" />
+              <folding>
+                <element signature="e#67552#67718#0" expanded="true" />
+              </folding>
             </state>
           </provider>
         </entry>
@@ -92,8 +71,8 @@
       <file leaf-file-name="d_type.h" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/utils/d_type.h">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="152">
-              <caret line="8" column="2" lean-forward="false" selection-start-line="8" selection-start-column="2" selection-end-line="8" selection-end-column="2" />
+            <state relative-caret-position="555">
+              <caret line="37" column="0" lean-forward="false" selection-start-line="37" selection-start-column="0" selection-end-line="37" selection-end-column="0" />
               <folding>
                 <element signature="e#172#200#0" expanded="true" />
               </folding>
@@ -101,11 +80,120 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="jvm.h" pinned="false" current-in-tab="true">
+      <file leaf-file-name="global.c" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/jvm/global.c">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="420">
+              <caret line="28" column="0" lean-forward="false" selection-start-line="28" selection-start-column="0" selection-end-line="28" selection-end-column="0" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="garbage.h" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/jvm/garbage.h">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="315">
+              <caret line="21" column="0" lean-forward="false" selection-start-line="21" selection-start-column="0" selection-end-line="21" selection-end-column="0" />
+              <folding>
+                <marker date="1510304475338" expanded="true" signature="381:398" ph="{...}" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="d_vars.c" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/utils/d_vars.c">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="960">
+              <caret line="64" column="0" lean-forward="false" selection-start-line="64" selection-start-column="0" selection-end-line="64" selection-end-column="0" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="jvm.h" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/jvm/jvm.h">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="207">
-              <caret line="28" column="31" lean-forward="true" selection-start-line="28" selection-start-column="31" selection-end-line="28" selection-end-column="31" />
+            <state relative-caret-position="5730">
+              <caret line="382" column="0" lean-forward="false" selection-start-line="382" selection-start-column="0" selection-end-line="382" selection-end-column="0" />
+              <folding>
+                <element signature="e#104#122#0" expanded="true" />
+                <marker date="1510374916583" expanded="true" signature="8486:8547" ph="{...}" />
+                <marker date="1510374916583" expanded="true" signature="18040:18043" ph="{...}" />
+                <marker date="1510374916583" expanded="true" signature="18436:18507" ph="{...}" />
+                <marker date="1510374916583" expanded="false" signature="22299:22300" ph="..." />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="jvm_util.c" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/jvm/jvm_util.c">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="1815">
+              <caret line="121" column="0" lean-forward="false" selection-start-line="121" selection-start-column="0" selection-end-line="121" selection-end-column="0" />
+              <folding>
+                <marker date="1510378214383" expanded="false" signature="13376:13405" ph="..." />
+                <marker date="1510378214383" expanded="false" signature="13711:13764" ph="..." />
+                <marker date="1510378214383" expanded="false" signature="13934:14150" ph="..." />
+                <marker date="1510378214383" expanded="true" signature="19900:20441" ph="{...}" />
+                <marker date="1510378214383" expanded="true" signature="20487:20692" ph="{...}" />
+                <marker date="1510378214383" expanded="true" signature="20740:21127" ph="{...}" />
+                <marker date="1510378214383" expanded="true" signature="21265:21478" ph="{...}" />
+                <marker date="1510378214383" expanded="true" signature="24744:25534" ph="{...}" />
+                <marker date="1510378214383" expanded="true" signature="25655:25880" ph="{...}" />
+                <marker date="1510378214383" expanded="true" signature="25934:25994" ph="{...}" />
+                <marker date="1510378214383" expanded="true" signature="26095:26742" ph="{...}" />
+                <marker date="1510378214383" expanded="true" signature="26785:27404" ph="{...}" />
+                <marker date="1510378214383" expanded="true" signature="27442:27578" ph="{...}" />
+                <marker date="1510378214383" expanded="true" signature="27720:28654" ph="{...}" />
+                <marker date="1510378214383" expanded="true" signature="28694:28799" ph="{...}" />
+                <marker date="1510378214383" expanded="true" signature="28851:28956" ph="{...}" />
+                <marker date="1510378214383" expanded="true" signature="28997:29103" ph="{...}" />
+                <marker date="1510378214383" expanded="true" signature="29147:29240" ph="{...}" />
+                <marker date="1510378214383" expanded="true" signature="29292:29417" ph="{...}" />
+                <marker date="1510378214383" expanded="true" signature="29466:29798" ph="{...}" />
+                <marker date="1510378214383" expanded="true" signature="29864:30334" ph="{...}" />
+                <marker date="1510378214383" expanded="true" signature="30389:31556" ph="{...}" />
+                <marker date="1510378214383" expanded="true" signature="31611:31911" ph="{...}" />
+                <marker date="1510378214383" expanded="true" signature="32054:32496" ph="{...}" />
+                <marker date="1510378214383" expanded="false" signature="32095:32171" ph="..." />
+                <marker date="1510378214383" expanded="true" signature="32579:33349" ph="{...}" />
+                <marker date="1510378214383" expanded="false" signature="32620:32696" ph="..." />
+                <marker date="1510378214383" expanded="true" signature="33428:33521" ph="/**...*/" />
+                <marker date="1510378214383" expanded="true" signature="33576:33662" ph="{...}" />
+                <marker date="1510378214383" expanded="true" signature="33701:33761" ph="{...}" />
+                <marker date="1510378214383" expanded="true" signature="33797:33904" ph="{...}" />
+                <marker date="1510378214383" expanded="true" signature="33948:34043" ph="{...}" />
+                <marker date="1510378214383" expanded="true" signature="34079:34116" ph="{...}" />
+                <marker date="1510378214383" expanded="true" signature="34153:34190" ph="{...}" />
+                <marker date="1510378214383" expanded="true" signature="34225:34244" ph="{...}" />
+                <marker date="1510378214383" expanded="true" signature="34282:34319" ph="{...}" />
+                <marker date="1510378214383" expanded="true" signature="34356:34393" ph="{...}" />
+                <marker date="1510378214383" expanded="true" signature="34420:34493" ph="{...}" />
+                <marker date="1510378214383" expanded="true" signature="34526:34607" ph="{...}" />
+                <marker date="1510378214383" expanded="true" signature="34636:34709" ph="{...}" />
+                <marker date="1510378214383" expanded="true" signature="34736:34772" ph="{...}" />
+                <marker date="1510378214383" expanded="true" signature="34800:34873" ph="{...}" />
+                <marker date="1510378214383" expanded="true" signature="34902:34975" ph="{...}" />
+                <marker date="1510378214383" expanded="true" signature="35006:35079" ph="{...}" />
+                <marker date="1510378214383" expanded="true" signature="35175:35577" ph="{...}" />
+                <marker date="1510378214383" expanded="true" signature="35690:36316" ph="{...}" />
+                <marker date="1510378214383" expanded="true" signature="36371:36903" ph="{...}" />
+                <marker date="1510378214383" expanded="true" signature="36944:37261" ph="{...}" />
+                <marker date="1510378214383" expanded="true" signature="37299:37393" ph="{...}" />
+                <marker date="1510378214383" expanded="true" signature="37447:37477" ph="{...}" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="jvm.c" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/jvm/jvm.c">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="3600">
+              <caret line="240" column="24" lean-forward="false" selection-start-line="240" selection-start-column="24" selection-end-line="240" selection-end-column="24" />
               <folding />
             </state>
           </provider>
@@ -114,19 +202,11 @@
       <file leaf-file-name="java_native_std.c" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/jvm/java_native_std.c">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="149">
-              <caret line="457" column="18" lean-forward="false" selection-start-line="457" selection-start-column="18" selection-end-line="457" selection-end-column="18" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="hashset.c" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/utils/hashset.c">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="254">
-              <caret line="162" column="29" lean-forward="false" selection-start-line="162" selection-start-column="29" selection-end-line="162" selection-end-column="29" />
-              <folding />
+            <state relative-caret-position="6165">
+              <caret line="411" column="48" lean-forward="false" selection-start-line="411" selection-start-column="48" selection-end-line="411" selection-end-column="48" />
+              <folding>
+                <marker date="1510305543456" expanded="true" signature="12569:12688" ph="{...}" />
+              </folding>
             </state>
           </provider>
         </entry>
@@ -135,39 +215,38 @@
   </component>
   <component name="FindInProjectRecents">
     <findStrings>
-      <find>intern</find>
-      <find>s</find>
-      <find>'R'</find>
-      <find>utf8_indexof</find>
-      <find>execute</find>
-      <find>stringres</find>
-      <find>jdwp</find>
-      <find>garbage_re</find>
-      <find>referencetype</find>
-      <find>enable</find>
-      <find>invoke</find>
-      <find>eclipse</find>
-      <find>_loader</find>
-      <find>parseMethodAr</find>
-      <find>e_getv</find>
-      <find>null</find>
-      <find>convert</find>
-      <find>ldc</find>
-      <find>classes_get</find>
-      <find>xas</find>
-      <find>getfield</find>
-      <find>classes_</find>
-      <find>getstackf</find>
-      <find>_getfield</find>
-      <find>memcpy</find>
-      <find>_new</find>
-      <find>utf8_creat</find>
-      <find>jstring_create</find>
-      <find>new</find>
-      <find>lock:</find>
+      <find>_putfi</find>
+      <find>_Classl</find>
+      <find>push_</find>
+      <find>7fecb6d18200</find>
+      <find>7fb67fd08c40</find>
+      <find>451f00e</find>
+      <find>getlastS</find>
+      <find>getlast</find>
+      <find>op_new</find>
+      <find>pop_em</find>
+      <find>pop</find>
+      <find>jarray</find>
+      <find>_invoke</find>
+      <find>7f9ab482f114</find>
+      <find>7fac5be6fbe4</find>
+      <find>7fd017f72174</find>
+      <find>7fb0d62d5bb4</find>
+      <find>7fbff1f21f04</find>
+      <find>7fb5ffe9f194</find>
+      <find>7ffab99379d4</find>
+      <find>7fc4da552254</find>
+      <find>7f87dd4b5ae4</find>
+      <find>7fd68b8e8ac4</find>
+      <find>hashset resize</find>
+      <find>7fa49721b014</find>
+      <find>7fd8ea143524</find>
+      <find>aastore</find>
+      <find>&amp;threadLock</find>
+      <find>hashset_remove</find>
+      <find>sleep</find>
     </findStrings>
     <replaceStrings>
-      <replace />
       <replace>_</replace>
       <replace>&quot;,       &quot;&quot;,</replace>
       <replace>net</replace>
@@ -197,6 +276,7 @@
       <replace>sys_class_loader-&gt;</replace>
       <replace>unsigned long</replace>
       <replace>invoke_deepth(runtime);</replace>
+      <replace>threadLock</replace>
     </replaceStrings>
     <dirStrings>
       <dir>D:\cSrc\simple_vm\simple_jvm</dir>
@@ -212,18 +292,18 @@
       <dir>D:\githome\mini_jvm\mini_jvm\jvm</dir>
     </dirStrings>
   </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/.." />
+  </component>
   <component name="HighlightingSettingsPerFile">
-    <setting file="file://$PROJECT_DIR$/jvm/jvm_util.c" root0="FORCE_HIGHLIGHTING" />
-    <setting file="file://$PROJECT_DIR$/jvm/jvm.c" root0="FORCE_HIGHLIGHTING" />
-    <setting file="file://$PROJECT_DIR$/jvm/interpreter.c" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/jvm/jvm.h" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/jvm/jvm.c" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/jvm/jvm_util.c" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/jvm/interpreter.c" root0="FORCE_HIGHLIGHTING" />
   </component>
   <component name="IdeDocumentHistory">
     <option name="CHANGED_PATHS">
       <list>
-        <option value="$PROJECT_DIR$/utils/hashtable.h" />
-        <option value="$PROJECT_DIR$/jvm/stack.c" />
-        <option value="$PROJECT_DIR$/cmake-build-debug/jvmlog.txt" />
         <option value="$PROJECT_DIR$/jvm/java_native_jdwp.h" />
         <option value="$PROJECT_DIR$/jvm/java_native_jdwp.c" />
         <option value="$PROJECT_DIR$/jvm/java_native_reflect.h" />
@@ -239,39 +319,42 @@
         <option value="$PROJECT_DIR$/utils/jvm_type.h" />
         <option value="$PROJECT_DIR$/cmem/CMemLeak.h" />
         <option value="$PROJECT_DIR$/cmem/CMemLeak.c" />
-        <option value="$PROJECT_DIR$/jvm/global.h" />
         <option value="$PROJECT_DIR$/cmem/example.c" />
-        <option value="$PROJECT_DIR$/jvm/class.c" />
-        <option value="$PROJECT_DIR$/jvm/runtime.c" />
         <option value="$PROJECT_DIR$/cmem/memleak.h" />
         <option value="$PROJECT_DIR$/cmem/phashtable.h" />
         <option value="$PROJECT_DIR$/jvm/java_native_io.h" />
         <option value="$PROJECT_DIR$/jvm/java_native_std.h" />
         <option value="$PROJECT_DIR$/utils/arraylist.h" />
-        <option value="$PROJECT_DIR$/utils/utf8_string.h" />
-        <option value="$PROJECT_DIR$/utils/d_vars.c" />
-        <option value="$PROJECT_DIR$/jvm/jdwp.h" />
-        <option value="$PROJECT_DIR$/jvm/garbage.h" />
-        <option value="$PROJECT_DIR$/CMakeLists.txt" />
-        <option value="$PROJECT_DIR$/test.c" />
         <option value="$PROJECT_DIR$/jvm/class_load.c" />
-        <option value="$PROJECT_DIR$/jvm/os_linux.c" />
-        <option value="$PROJECT_DIR$/jvm/global.c" />
-        <option value="$PROJECT_DIR$/jvm/jvm.c" />
-        <option value="$PROJECT_DIR$/jvm/jvm_util.h" />
-        <option value="$PROJECT_DIR$/jvm/jdwp.c" />
-        <option value="$PROJECT_DIR$/jvm/jvm_util.c" />
-        <option value="$PROJECT_DIR$/jvm/java_native_io.c" />
-        <option value="$PROJECT_DIR$/jvm/java_native_reflect.c" />
-        <option value="$PROJECT_DIR$/jvm/java_native_std.c" />
-        <option value="$PROJECT_DIR$/jvm/interpreter.c" />
-        <option value="$PROJECT_DIR$/cmem/memleak.c" />
-        <option value="$PROJECT_DIR$/utils/hashset.h" />
         <option value="$PROJECT_DIR$/utils/hashtable.c" />
+        <option value="$PROJECT_DIR$/jvm/jdwp.h" />
+        <option value="$PROJECT_DIR$/cmem/memleak.c" />
+        <option value="$PROJECT_DIR$/jvm/class.c" />
+        <option value="$PROJECT_DIR$/utils/linkedlist.c" />
+        <option value="$PROJECT_DIR$/jvm/global.h" />
+        <option value="$PROJECT_DIR$/jvm/runtime.c" />
+        <option value="$PROJECT_DIR$/utils/utf8_string.h" />
+        <option value="$PROJECT_DIR$/utils/utf8_string.c" />
+        <option value="$PROJECT_DIR$/utils/hashset.h" />
+        <option value="$PROJECT_DIR$/test.c" />
         <option value="$PROJECT_DIR$/utils/hashset.c" />
-        <option value="$PROJECT_DIR$/jvm/garbage.c" />
-        <option value="$PROJECT_DIR$/utils/d_type.h" />
+        <option value="$PROJECT_DIR$/utils/linkedlist.h" />
+        <option value="$PROJECT_DIR$/jvm/java_native_io.c" />
+        <option value="$PROJECT_DIR$/jvm/os_linux.c" />
+        <option value="$PROJECT_DIR$/CMakeLists.txt" />
+        <option value="$PROJECT_DIR$/jvm/java_native_reflect.c" />
+        <option value="$PROJECT_DIR$/jvm/jdwp.c" />
+        <option value="$PROJECT_DIR$/jvm/jvm_util.h" />
         <option value="$PROJECT_DIR$/jvm/jvm.h" />
+        <option value="$PROJECT_DIR$/jvm/jvm_util.c" />
+        <option value="$PROJECT_DIR$/utils/d_type.h" />
+        <option value="$PROJECT_DIR$/jvm/global.c" />
+        <option value="$PROJECT_DIR$/jvm/garbage.h" />
+        <option value="$PROJECT_DIR$/utils/d_vars.c" />
+        <option value="$PROJECT_DIR$/jvm/jvm.c" />
+        <option value="$PROJECT_DIR$/jvm/java_native_std.c" />
+        <option value="$PROJECT_DIR$/jvm/garbage.c" />
+        <option value="$PROJECT_DIR$/jvm/interpreter.c" />
       </list>
     </option>
   </component>
@@ -290,10 +373,10 @@
   </component>
   <component name="OCFindUsagesOptions" text="false" ivars="false" properties="true" derivedClasses="false" />
   <component name="ProjectFrameBounds">
-    <option name="x" value="342" />
+    <option name="x" value="65" />
     <option name="y" value="23" />
-    <option name="width" value="1456" />
-    <option name="height" value="971" />
+    <option name="width" value="1200" />
+    <option name="height" value="728" />
   </component>
   <component name="ProjectInspectionProfilesVisibleTreeState">
     <entry key="Project Default">
@@ -339,11 +422,6 @@
             <path>
               <item name="mini_jvm" type="dad4c3:CidrFilesViewHelper$MyProjectTreeStructure$1" />
               <item name="mini_jvm" type="462c0819:PsiDirectoryNode" />
-              <item name="cmem" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="mini_jvm" type="dad4c3:CidrFilesViewHelper$MyProjectTreeStructure$1" />
-              <item name="mini_jvm" type="462c0819:PsiDirectoryNode" />
               <item name="jvm" type="462c0819:PsiDirectoryNode" />
             </path>
             <path>
@@ -360,7 +438,7 @@
   <component name="PropertiesComponent">
     <property name="WebServerToolWindowFactoryState" value="false" />
     <property name="last_opened_file_path" value="$PROJECT_DIR$" />
-    <property name="settings.editor.selected.configurable" value="CPPToolchains" />
+    <property name="settings.editor.selected.configurable" value="preferences.keymap" />
   </component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
@@ -379,15 +457,15 @@
       </list>
     </option>
   </component>
-  <component name="RunManager" selected="Application.Build All">
-    <configuration name="Build All" type="CMakeRunConfiguration" factoryName="Application" PASS_PARENT_ENVS_2="true" PROJECT_NAME="mini_jvm" TARGET_NAME="mini_jvm" CONFIG_NAME="Debug" RUN_TARGET_PROJECT_NAME="mini_jvm" RUN_TARGET_NAME="mini_jvm">
-      <envs />
-    </configuration>
+  <component name="RunManager" selected="Application.mini_jvm">
     <configuration name="mini_jvm" type="CMakeRunConfiguration" factoryName="Application" PASS_PARENT_ENVS_2="true" PROJECT_NAME="mini_jvm" TARGET_NAME="mini_jvm" CONFIG_NAME="Debug" RUN_TARGET_PROJECT_NAME="mini_jvm" RUN_TARGET_NAME="mini_jvm">
       <envs />
     </configuration>
+    <configuration name="valgrind" type="CMakeRunConfiguration" factoryName="Application" PROGRAM_PARAMS=" --leak-check=yes ./mini_jvm" WORKING_DIR="file://$PROJECT_DIR$/cmake-build-debug/" PASS_PARENT_ENVS_2="true" PROJECT_NAME="mini_jvm" TARGET_NAME="mini_jvm" CONFIG_NAME="Debug" RUN_PATH="$USER_HOME$/tools/valgrind/bin/valgrind">
+      <envs />
+    </configuration>
     <list size="2">
-      <item index="0" class="java.lang.String" itemvalue="Application.Build All" />
+      <item index="0" class="java.lang.String" itemvalue="Application.valgrind" />
       <item index="1" class="java.lang.String" itemvalue="Application.mini_jvm" />
     </list>
   </component>
@@ -398,7 +476,7 @@
     <option name="ACTIVE_ACTIONS" value=",ALPHA_COMPARATOR" />
   </component>
   <component name="SvnConfiguration" cleanupOnStartRun="true">
-    <configuration>C:\Users\gust\AppData\Roaming\Subversion</configuration>
+    <configuration>$USER_HOME$/.subversion</configuration>
     <supportedVersion>125</supportedVersion>
     <option name="runUnderTerminal" value="true" />
   </component>
@@ -448,33 +526,39 @@
       <workItem from="1507612876326" duration="31027000" />
       <workItem from="1507943573346" duration="486000" />
       <workItem from="1507944520643" duration="54555000" />
+      <workItem from="1508472528448" duration="13313000" />
+      <workItem from="1509438402168" duration="52723000" />
+      <workItem from="1509803942867" duration="29000" />
+      <workItem from="1509804010515" duration="18884000" />
+      <workItem from="1510036438853" duration="93900000" />
+      <workItem from="1510381944980" duration="1008000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="1420813000" />
+    <option name="totallyTimeSpent" value="1628054000" />
   </component>
   <component name="ToolWindowManager">
-    <frame x="342" y="23" width="1456" height="971" extended-state="0" />
+    <frame x="65" y="23" width="1200" height="728" extended-state="0" />
     <layout>
+      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.18739206" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
-      <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4451074" sideWeight="0.49044058" order="7" side_tool="false" content_ui="tabs" />
+      <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.51026857" sideWeight="0.48013818" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="CMake" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32696897" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
-      <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.40890688" sideWeight="0.514461" order="7" side_tool="true" content_ui="tabs" />
-      <window_info id="Run" active="true" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.34606206" sideWeight="0.48295927" order="2" side_tool="false" content_ui="tabs" />
-      <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
+      <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.3665087" sideWeight="0.5250432" order="7" side_tool="true" content_ui="tabs" />
+      <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32961783" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
+      <window_info id="Run" active="true" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.41548184" sideWeight="0.48295927" order="2" side_tool="false" content_ui="tabs" />
+      <window_info id="Structure" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.22452505" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
       <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32854864" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
-      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.17191978" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
-      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.3890215" sideWeight="0.485539" order="1" side_tool="false" content_ui="tabs" />
-      <window_info id="Structure" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.22492836" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
-      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.24582338" sideWeight="0.48301575" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="1" side_tool="true" content_ui="tabs" />
+      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33965245" sideWeight="0.46804836" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Data View" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32978722" sideWeight="0.5" order="3" side_tool="true" content_ui="tabs" />
       <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
       <window_info id="Message" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Commander" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Inspection" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
       <window_info id="Hierarchy" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.2497809" sideWeight="0.5" order="2" side_tool="false" content_ui="combo" />
+      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.3665087" sideWeight="0.4749568" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Ant Build" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
     </layout>
   </component>
@@ -490,18 +574,6 @@
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
-      <breakpoints>
-        <line-breakpoint enabled="true" type="com.jetbrains.cidr.execution.debugger.OCBreakpointType">
-          <url>file://$PROJECT_DIR$/jvm/class_load.c</url>
-          <line>1281</line>
-          <option name="timeStamp" value="1145" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="com.jetbrains.cidr.execution.debugger.OCBreakpointType">
-          <url>file://$PROJECT_DIR$/cmem/memleak.c</url>
-          <line>257</line>
-          <option name="timeStamp" value="1207" />
-        </line-breakpoint>
-      </breakpoints>
       <breakpoints-dialog>
         <breakpoints-dialog />
       </breakpoints-dialog>
@@ -510,61 +582,15 @@
           <properties />
         </breakpoint>
       </default-breakpoints>
-      <option name="time" value="1212" />
+      <option name="time" value="1363" />
     </breakpoint-manager>
     <watches-manager>
       <configuration name="CMakeRunConfiguration">
-        <watch expression="data_type_bytes[argsArr-&gt;mb.clazz-&gt;arr_data_type]" />
-        <watch expression="method-&gt;name-&gt;data" />
-        <watch expression="((utf8_char *)(clazz-&gt;name-&gt;data))" />
-        <watch expression="cmr-&gt;clsName-&gt;data" />
-        <watch expression="runtime-&gt;pc-runtime-&gt;ca-&gt;code" language="ObjectiveC" />
-        <watch expression="(Instance*)getFieldInt(runtime-&gt;stack-&gt;store[0].entry)" language="ObjectiveC" />
-        <watch expression="hashtable_get(collector-&gt;son_2_father,0x17f7104)" language="ObjectiveC" />
-        <watch expression="(Instance*) p-&gt;addr" language="ObjectiveC" />
-        <watch expression="clazz-&gt;name-&gt;data" />
-        <watch expression="(Instance*)parentPtr" language="ObjectiveC" />
+        <watch expression="collector-&gt;flag_refer" />
       </configuration>
     </watches-manager>
   </component>
   <component name="editorHistoryManager">
-    <entry file="file:///Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.13.sdk/usr/include/netinet/in.h" />
-    <entry file="file:///Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.13.sdk/usr/include/sys/socket.h" />
-    <entry file="file://$PROJECT_DIR$/utils/arraylist.c">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="101">
-          <caret line="47" column="40" lean-forward="false" selection-start-line="47" selection-start-column="40" selection-end-line="47" selection-end-column="40" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/jvm/runtime.c">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="107">
-          <caret line="199" column="0" lean-forward="false" selection-start-line="199" selection-start-column="0" selection-end-line="199" selection-end-column="0" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/cmem/phashtable.h">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="0">
-          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/jvm/global.h">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="150">
-          <caret line="11" column="0" lean-forward="true" selection-start-line="11" selection-start-column="0" selection-end-line="11" selection-end-column="0" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/jvm/java_native_io.h">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-59">
-          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/jvm/java_native_reflect.h">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="-129">
@@ -576,13 +602,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="366">
           <caret line="43" column="18" lean-forward="false" selection-start-line="43" selection-start-column="18" selection-end-line="43" selection-end-column="18" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/utils/arraylist.h">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="28">
-          <caret line="53" column="26" lean-forward="false" selection-start-line="53" selection-start-column="26" selection-end-line="53" selection-end-column="26" />
         </state>
       </provider>
     </entry>
@@ -600,14 +619,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/utils/utf8_string.h">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="157">
-          <caret line="42" column="0" lean-forward="false" selection-start-line="42" selection-start-column="0" selection-end-line="42" selection-end-column="0" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/utils/pairlist.c">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="296">
@@ -616,291 +627,341 @@
       </provider>
     </entry>
     <entry file="file:///Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.13.sdk/usr/include/netdb.h" />
-    <entry file="file://$PROJECT_DIR$/jvm/garbage.h">
+    <entry file="file://C:/MinGW/include/winsock2.h" />
+    <entry file="file://C:/cygwin64/usr/include/sys/_default_fcntl.h" />
+    <entry file="file://C:/cygwin64/usr/include/sys/errno.h" />
+    <entry file="file://C:/cygwin64/usr/include/w32api/_bsd_types.h" />
+    <entry file="file://C:/cygwin64/usr/include/w32api/minwindef.h" />
+    <entry file="file://C:/cygwin64/usr/include/w32api/basetsd.h" />
+    <entry file="file://C:/cygwin64/usr/include/w32api/psdk_inc/_socket_types.h" />
+    <entry file="file://C:/cygwin64/usr/include/w32api/_mingw.h" />
+    <entry file="file://C:/cygwin64/usr/include/w32api/winsock2.h" />
+    <entry file="file://C:/MinGW/include/stdio.h" />
+    <entry file="file://$PROJECT_DIR$/cmem/memleak.h">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1064">
-          <caret line="56" column="0" lean-forward="false" selection-start-line="56" selection-start-column="0" selection-end-line="56" selection-end-column="0" />
+        <state relative-caret-position="173">
+          <caret line="81" column="41" lean-forward="true" selection-start-line="81" selection-start-column="41" selection-end-line="81" selection-end-column="41" />
         </state>
       </provider>
     </entry>
-    <entry file="file://C:/MinGW/include/winsock2.h">
+    <entry file="file://$PROJECT_DIR$/utils/hashtable.c">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="126">
-          <caret line="43" column="16" lean-forward="false" selection-start-line="43" selection-start-column="16" selection-end-line="43" selection-end-column="16" />
+        <state relative-caret-position="720">
+          <caret line="48" column="0" lean-forward="false" selection-start-line="48" selection-start-column="0" selection-end-line="48" selection-end-column="0" />
         </state>
       </provider>
     </entry>
-    <entry file="file://C:/cygwin64/usr/include/sys/_default_fcntl.h">
+    <entry file="file://$PROJECT_DIR$/cmem/phashtable.c">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="133">
-          <caret line="194" column="11" lean-forward="false" selection-start-line="194" selection-start-column="11" selection-end-line="194" selection-end-column="11" />
+        <state relative-caret-position="228">
+          <caret line="499" column="0" lean-forward="false" selection-start-line="499" selection-start-column="0" selection-end-line="499" selection-end-column="0" />
         </state>
       </provider>
     </entry>
-    <entry file="file://C:/cygwin64/usr/include/sys/errno.h">
+    <entry file="file://$PROJECT_DIR$/cmem/memleak.c">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="304">
-          <caret line="22" column="49" lean-forward="true" selection-start-line="22" selection-start-column="49" selection-end-line="22" selection-end-column="49" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://C:/cygwin64/usr/include/w32api/_bsd_types.h">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="298">
-          <caret line="29" column="22" lean-forward="false" selection-start-line="29" selection-start-column="22" selection-end-line="29" selection-end-column="22" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://C:/cygwin64/usr/include/w32api/minwindef.h">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="156">
-          <caret line="97" column="22" lean-forward="false" selection-start-line="97" selection-start-column="22" selection-end-line="97" selection-end-column="22" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://C:/cygwin64/usr/include/w32api/basetsd.h">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="156">
-          <caret line="46" column="45" lean-forward="false" selection-start-line="46" selection-start-column="45" selection-end-line="46" selection-end-column="45" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://C:/cygwin64/usr/include/w32api/psdk_inc/_socket_types.h">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="165">
-          <caret line="10" column="13" lean-forward="false" selection-start-line="10" selection-start-column="13" selection-end-line="10" selection-end-column="13" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://C:/cygwin64/usr/include/w32api/_mingw.h">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="513">
-          <caret line="27" column="8" lean-forward="false" selection-start-line="27" selection-start-column="8" selection-end-line="27" selection-end-column="8" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://C:/cygwin64/usr/include/w32api/winsock2.h">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1463">
-          <caret line="77" column="0" lean-forward="false" selection-start-line="77" selection-start-column="0" selection-end-line="77" selection-end-column="0" />
+        <state relative-caret-position="255">
+          <caret line="268" column="36" lean-forward="false" selection-start-line="268" selection-start-column="36" selection-end-line="268" selection-end-column="36" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/jvm/jdwp.h">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="2470">
-          <caret line="130" column="8" lean-forward="false" selection-start-line="130" selection-start-column="8" selection-end-line="130" selection-end-column="8" />
-          <folding />
+        <state relative-caret-position="93">
+          <caret line="299" column="0" lean-forward="false" selection-start-line="299" selection-start-column="0" selection-end-line="299" selection-end-column="0" />
         </state>
       </provider>
     </entry>
-    <entry file="file://C:/MinGW/include/stdio.h">
+    <entry file="file://$PROJECT_DIR$/jvm/global.h">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="149">
-          <caret line="1006" column="29" lean-forward="false" selection-start-line="1006" selection-start-column="29" selection-end-line="1006" selection-end-column="29" />
+        <state relative-caret-position="135">
+          <caret line="9" column="0" lean-forward="true" selection-start-line="9" selection-start-column="0" selection-end-line="9" selection-end-column="0" />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/test.c">
+    <entry file="file://$PROJECT_DIR$/utils/utf8_string.h">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="551">
-          <caret line="29" column="11" lean-forward="false" selection-start-line="29" selection-start-column="11" selection-end-line="29" selection-end-column="11" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/CMakeLists.txt">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="456">
-          <caret line="24" column="19" lean-forward="false" selection-start-line="24" selection-start-column="19" selection-end-line="24" selection-end-column="19" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/jvm/os_linux.c">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="208">
-          <caret line="12" column="25" lean-forward="false" selection-start-line="12" selection-start-column="25" selection-end-line="12" selection-end-column="25" />
-          <folding>
-            <element signature="e#77#98#0" expanded="false" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/utils/d_vars.c">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="161">
-          <caret line="36" column="0" lean-forward="false" selection-start-line="36" selection-start-column="0" selection-end-line="36" selection-end-column="0" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/jvm/global.c">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="332">
-          <caret line="25" column="25" lean-forward="false" selection-start-line="25" selection-start-column="25" selection-end-line="25" selection-end-column="25" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/jvm/jvm_util.h">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="182">
-          <caret line="49" column="34" lean-forward="false" selection-start-line="49" selection-start-column="34" selection-end-line="49" selection-end-column="34" />
-          <folding />
+        <state relative-caret-position="124">
+          <caret line="59" column="33" lean-forward="false" selection-start-line="59" selection-start-column="33" selection-end-line="59" selection-end-column="33" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/utils/utf8_string.c">
       <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="232">
+          <caret line="124" column="32" lean-forward="true" selection-start-line="124" selection-start-column="32" selection-end-line="124" selection-end-column="32" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/jvm/runtime.c">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="281">
+          <caret line="264" column="71" lean-forward="false" selection-start-line="264" selection-start-column="71" selection-end-line="264" selection-end-column="71" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/utils/hashset.h">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="112">
+          <caret line="193" column="11" lean-forward="true" selection-start-line="193" selection-start-column="11" selection-end-line="193" selection-end-column="11" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/utils/arraylist.h">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="103">
+          <caret line="72" column="8" lean-forward="false" selection-start-line="72" selection-start-column="8" selection-end-line="72" selection-end-column="8" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/test.c">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="170">
+          <caret line="60" column="29" lean-forward="false" selection-start-line="60" selection-start-column="29" selection-end-line="60" selection-end-column="29" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/utils/hashset.c">
+      <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="172">
-          <caret line="31" column="0" lean-forward="false" selection-start-line="31" selection-start-column="0" selection-end-line="31" selection-end-column="0" />
+          <caret line="263" column="37" lean-forward="false" selection-start-line="263" selection-start-column="37" selection-end-line="263" selection-end-column="37" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/utils/arraylist.c">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="127">
+          <caret line="184" column="15" lean-forward="false" selection-start-line="184" selection-start-column="15" selection-end-line="184" selection-end-column="15" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/utils/linkedlist.c">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="136">
+          <caret line="24" column="14" lean-forward="false" selection-start-line="24" selection-start-column="14" selection-end-line="24" selection-end-column="14" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/utils/linkedlist.h">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="355">
+          <caret line="58" column="17" lean-forward="false" selection-start-line="58" selection-start-column="17" selection-end-line="58" selection-end-column="17" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file:///Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.13.sdk/usr/include/unistd.h">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-1633">
+          <caret line="124" column="25" lean-forward="false" selection-start-line="124" selection-start-column="8" selection-end-line="124" selection-end-column="25" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/CMakeLists.txt">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="60">
+          <caret line="4" column="24" lean-forward="true" selection-start-line="4" selection-start-column="24" selection-end-line="4" selection-end-column="24" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/jvm/java_native_io.c">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="104">
+          <caret line="272" column="0" lean-forward="false" selection-start-line="272" selection-start-column="0" selection-end-line="272" selection-end-column="0" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/jvm/os_linux.c">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="109">
+          <caret line="41" column="0" lean-forward="false" selection-start-line="41" selection-start-column="0" selection-end-line="41" selection-end-column="0" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/jvm/class.c">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="104">
+          <caret line="282" column="0" lean-forward="false" selection-start-line="282" selection-start-column="0" selection-end-line="282" selection-end-column="0" />
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/jvm/class_load.c">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="120">
-          <caret line="1071" column="11" lean-forward="false" selection-start-line="1071" selection-start-column="11" selection-end-line="1071" selection-end-column="11" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/jvm/jdwp.c">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="120">
-          <caret line="1416" column="33" lean-forward="false" selection-start-line="1416" selection-start-column="33" selection-end-line="1416" selection-end-column="33" />
-          <folding />
+        <state relative-caret-position="15">
+          <caret line="1273" column="20" lean-forward="false" selection-start-line="1273" selection-start-column="20" selection-end-line="1273" selection-end-column="20" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/jvm/java_native_reflect.c">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="225">
-          <caret line="492" column="60" lean-forward="false" selection-start-line="492" selection-start-column="60" selection-end-line="492" selection-end-column="60" />
+        <state relative-caret-position="118">
+          <caret line="287" column="4" lean-forward="false" selection-start-line="287" selection-start-column="4" selection-end-line="287" selection-end-column="4" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/jvm/jdwp.c">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="25">
+          <caret line="1386" column="47" lean-forward="true" selection-start-line="1386" selection-start-column="47" selection-end-line="1386" selection-end-column="47" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/jvm/jvm_util.h">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="66">
+          <caret line="186" column="0" lean-forward="true" selection-start-line="186" selection-start-column="0" selection-end-line="186" selection-end-column="0" />
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/cmem/memleak.h">
+    <entry file="file://$PROJECT_DIR$/jvm/jvm.h">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="173">
-          <caret line="81" column="41" lean-forward="true" selection-start-line="81" selection-start-column="41" selection-end-line="81" selection-end-column="41" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/utils/hashset.h">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="216">
-          <caret line="132" column="13" lean-forward="false" selection-start-line="132" selection-start-column="13" selection-end-line="132" selection-end-column="13" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/utils/hashtable.c">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="59">
-          <caret line="259" column="32" lean-forward="true" selection-start-line="259" selection-start-column="32" selection-end-line="259" selection-end-column="32" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/jvm/class.c">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="140">
-          <caret line="411" column="0" lean-forward="false" selection-start-line="411" selection-start-column="0" selection-end-line="411" selection-end-column="0" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/utils/hashset.c">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="254">
-          <caret line="162" column="29" lean-forward="false" selection-start-line="162" selection-start-column="29" selection-end-line="162" selection-end-column="29" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/jvm/interpreter.c">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="140">
-          <caret line="1762" column="0" lean-forward="false" selection-start-line="1762" selection-start-column="0" selection-end-line="1762" selection-end-column="0" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/jvm/java_native_std.c">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="149">
-          <caret line="457" column="18" lean-forward="false" selection-start-line="457" selection-start-column="18" selection-end-line="457" selection-end-column="18" />
-          <folding />
+        <state relative-caret-position="5730">
+          <caret line="382" column="0" lean-forward="false" selection-start-line="382" selection-start-column="0" selection-end-line="382" selection-end-column="0" />
+          <folding>
+            <element signature="e#104#122#0" expanded="true" />
+            <marker date="1510374916583" expanded="true" signature="8486:8547" ph="{...}" />
+            <marker date="1510374916583" expanded="true" signature="18040:18043" ph="{...}" />
+            <marker date="1510374916583" expanded="true" signature="18436:18507" ph="{...}" />
+            <marker date="1510374916583" expanded="false" signature="22299:22300" ph="..." />
+          </folding>
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/jvm/jvm_util.c">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-934">
-          <caret line="977" column="0" lean-forward="false" selection-start-line="977" selection-start-column="0" selection-end-line="977" selection-end-column="0" />
+        <state relative-caret-position="1815">
+          <caret line="121" column="0" lean-forward="false" selection-start-line="121" selection-start-column="0" selection-end-line="121" selection-end-column="0" />
           <folding>
-            <marker date="1508145772517" expanded="false" signature="13437:13466" ph="..." />
-            <marker date="1508145772517" expanded="false" signature="13772:13825" ph="..." />
-            <marker date="1508145772517" expanded="false" signature="13994:14208" ph="..." />
+            <marker date="1510378214383" expanded="false" signature="13376:13405" ph="..." />
+            <marker date="1510378214383" expanded="false" signature="13711:13764" ph="..." />
+            <marker date="1510378214383" expanded="false" signature="13934:14150" ph="..." />
+            <marker date="1510378214383" expanded="true" signature="19900:20441" ph="{...}" />
+            <marker date="1510378214383" expanded="true" signature="20487:20692" ph="{...}" />
+            <marker date="1510378214383" expanded="true" signature="20740:21127" ph="{...}" />
+            <marker date="1510378214383" expanded="true" signature="21265:21478" ph="{...}" />
+            <marker date="1510378214383" expanded="true" signature="24744:25534" ph="{...}" />
+            <marker date="1510378214383" expanded="true" signature="25655:25880" ph="{...}" />
+            <marker date="1510378214383" expanded="true" signature="25934:25994" ph="{...}" />
+            <marker date="1510378214383" expanded="true" signature="26095:26742" ph="{...}" />
+            <marker date="1510378214383" expanded="true" signature="26785:27404" ph="{...}" />
+            <marker date="1510378214383" expanded="true" signature="27442:27578" ph="{...}" />
+            <marker date="1510378214383" expanded="true" signature="27720:28654" ph="{...}" />
+            <marker date="1510378214383" expanded="true" signature="28694:28799" ph="{...}" />
+            <marker date="1510378214383" expanded="true" signature="28851:28956" ph="{...}" />
+            <marker date="1510378214383" expanded="true" signature="28997:29103" ph="{...}" />
+            <marker date="1510378214383" expanded="true" signature="29147:29240" ph="{...}" />
+            <marker date="1510378214383" expanded="true" signature="29292:29417" ph="{...}" />
+            <marker date="1510378214383" expanded="true" signature="29466:29798" ph="{...}" />
+            <marker date="1510378214383" expanded="true" signature="29864:30334" ph="{...}" />
+            <marker date="1510378214383" expanded="true" signature="30389:31556" ph="{...}" />
+            <marker date="1510378214383" expanded="true" signature="31611:31911" ph="{...}" />
+            <marker date="1510378214383" expanded="true" signature="32054:32496" ph="{...}" />
+            <marker date="1510378214383" expanded="false" signature="32095:32171" ph="..." />
+            <marker date="1510378214383" expanded="true" signature="32579:33349" ph="{...}" />
+            <marker date="1510378214383" expanded="false" signature="32620:32696" ph="..." />
+            <marker date="1510378214383" expanded="true" signature="33428:33521" ph="/**...*/" />
+            <marker date="1510378214383" expanded="true" signature="33576:33662" ph="{...}" />
+            <marker date="1510378214383" expanded="true" signature="33701:33761" ph="{...}" />
+            <marker date="1510378214383" expanded="true" signature="33797:33904" ph="{...}" />
+            <marker date="1510378214383" expanded="true" signature="33948:34043" ph="{...}" />
+            <marker date="1510378214383" expanded="true" signature="34079:34116" ph="{...}" />
+            <marker date="1510378214383" expanded="true" signature="34153:34190" ph="{...}" />
+            <marker date="1510378214383" expanded="true" signature="34225:34244" ph="{...}" />
+            <marker date="1510378214383" expanded="true" signature="34282:34319" ph="{...}" />
+            <marker date="1510378214383" expanded="true" signature="34356:34393" ph="{...}" />
+            <marker date="1510378214383" expanded="true" signature="34420:34493" ph="{...}" />
+            <marker date="1510378214383" expanded="true" signature="34526:34607" ph="{...}" />
+            <marker date="1510378214383" expanded="true" signature="34636:34709" ph="{...}" />
+            <marker date="1510378214383" expanded="true" signature="34736:34772" ph="{...}" />
+            <marker date="1510378214383" expanded="true" signature="34800:34873" ph="{...}" />
+            <marker date="1510378214383" expanded="true" signature="34902:34975" ph="{...}" />
+            <marker date="1510378214383" expanded="true" signature="35006:35079" ph="{...}" />
+            <marker date="1510378214383" expanded="true" signature="35175:35577" ph="{...}" />
+            <marker date="1510378214383" expanded="true" signature="35690:36316" ph="{...}" />
+            <marker date="1510378214383" expanded="true" signature="36371:36903" ph="{...}" />
+            <marker date="1510378214383" expanded="true" signature="36944:37261" ph="{...}" />
+            <marker date="1510378214383" expanded="true" signature="37299:37393" ph="{...}" />
+            <marker date="1510378214383" expanded="true" signature="37447:37477" ph="{...}" />
           </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/cmem/memleak.c">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="344">
-          <caret line="267" column="49" lean-forward="false" selection-start-line="267" selection-start-column="49" selection-end-line="267" selection-end-column="49" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/jvm/garbage.c">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="10693">
-          <caret line="658" column="13" lean-forward="false" selection-start-line="658" selection-start-column="13" selection-end-line="658" selection-end-column="13" />
-          <folding>
-            <marker date="1508213105457" expanded="false" signature="10723:10738" ph="..." />
-            <marker date="1508213105457" expanded="false" signature="16542:16768" ph="..." />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/jvm/java_native_io.c">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="114">
-          <caret line="271" column="13" lean-forward="false" selection-start-line="271" selection-start-column="13" selection-end-line="271" selection-end-column="13" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/jvm/jvm.c">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="54">
-          <caret line="182" column="31" lean-forward="true" selection-start-line="182" selection-start-column="31" selection-end-line="182" selection-end-column="31" />
-          <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/utils/d_type.h">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="152">
-          <caret line="8" column="2" lean-forward="false" selection-start-line="8" selection-start-column="2" selection-end-line="8" selection-end-column="2" />
+        <state relative-caret-position="555">
+          <caret line="37" column="0" lean-forward="false" selection-start-line="37" selection-start-column="0" selection-end-line="37" selection-end-column="0" />
           <folding>
             <element signature="e#172#200#0" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/jvm/jvm.h">
+    <entry file="file://$PROJECT_DIR$/jvm/global.c">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="207">
-          <caret line="28" column="31" lean-forward="true" selection-start-line="28" selection-start-column="31" selection-end-line="28" selection-end-column="31" />
+        <state relative-caret-position="420">
+          <caret line="28" column="0" lean-forward="false" selection-start-line="28" selection-start-column="0" selection-end-line="28" selection-end-column="0" />
           <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/jvm/garbage.h">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="315">
+          <caret line="21" column="0" lean-forward="false" selection-start-line="21" selection-start-column="0" selection-end-line="21" selection-end-column="0" />
+          <folding>
+            <marker date="1510304475338" expanded="true" signature="381:398" ph="{...}" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/utils/d_vars.c">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="960">
+          <caret line="64" column="0" lean-forward="false" selection-start-line="64" selection-start-column="0" selection-end-line="64" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/jvm/jvm.c">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="3600">
+          <caret line="240" column="24" lean-forward="false" selection-start-line="240" selection-start-column="24" selection-end-line="240" selection-end-column="24" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/jvm/java_native_std.c">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="6165">
+          <caret line="411" column="48" lean-forward="false" selection-start-line="411" selection-start-column="48" selection-end-line="411" selection-end-column="48" />
+          <folding>
+            <marker date="1510305543456" expanded="true" signature="12569:12688" ph="{...}" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/jvm/garbage.c">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="4905">
+          <caret line="327" column="18" lean-forward="false" selection-start-line="327" selection-start-column="18" selection-end-line="327" selection-end-column="18" />
+          <folding>
+            <element signature="e#9367#9605#0" expanded="true" />
+            <element signature="e#9793#10009#0" expanded="true" />
+            <element signature="e#10205#10421#0" expanded="true" />
+            <element signature="e#12295#12449#0" expanded="true" />
+            <element signature="e#13165#13325#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/jvm/interpreter.c">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="263">
+          <caret line="2486" column="5" lean-forward="false" selection-start-line="2486" selection-start-column="5" selection-end-line="2486" selection-end-column="5" />
+          <folding>
+            <element signature="e#67552#67718#0" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>

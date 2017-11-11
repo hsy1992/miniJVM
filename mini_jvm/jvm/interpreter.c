@@ -2455,48 +2455,40 @@ s32 op_if_cmp_ia(u8 **opCode, Runtime *runtime, s32 type) {
 
     s32 branchoffset = s2c.s;
 
-
     s32 v2 = pop_int(stack);
     s32 v1 = pop_int(stack);
-    c8 *syb;
+
     s32 con = 0;
     switch (type) {
         case TYPE_IF_ACMPEQ:
             con = v1 == v2;
-            syb = "==";
             break;
         case TYPE_IF_ACMPNE:
             con = v1 != v2;
-            syb = "!=";
             break;
         case TYPE_IF_ICMPEQ:
             con = v1 == v2;
-            syb = "==";
             break;
         case TYPE_IF_ICMPGE:
             con = v1 >= v2;
-            syb = ">=";
             break;
         case TYPE_IF_ICMPGT:
             con = v1 > v2;
-            syb = ">";
             break;
         case TYPE_IF_ICMPLE:
             con = v1 <= v2;
-            syb = "<=";
             break;
         case TYPE_IF_ICMPLT:
             con = v1 < v2;
-            syb = "<";
             break;
         case TYPE_IF_ICMPNE:
             con = v1 != v2;
-            syb = "!=";
             break;
     }
 #if _JVM_DEBUG_BYTECODE_DETAIL > 5
+    c8 *syb[8]={"==","!=","==",">=",">","<=","<","!="};
     invoke_deepth(runtime);
-    jvm_printf("ifcmp: %d %s %d =%d then %d\n", v1, syb, v2, con, branchoffset);
+    jvm_printf("ifcmp: %d %s %d =%d then %d\n", v1, syb[type], v2, con, branchoffset);
 #endif
     if (con) {
         *opCode = *opCode + branchoffset;

@@ -159,7 +159,6 @@ s32 sock_send(s32 sockfd, c8 *buf, s32 count) {
         }
 #endif
 
-        len = -1;
     }
     return len;
 }
@@ -283,7 +282,6 @@ s32 srv_accept(s32 listenfd) {
 s32 srv_close(s32 listenfd) {
     if (listenfd) {
         closesocket(listenfd);
-        listenfd = 0;
 #ifdef __WIN32__
         WSACancelBlockingCall();
         WSACleanup();

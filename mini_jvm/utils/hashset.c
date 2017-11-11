@@ -291,7 +291,7 @@ int hashset_resize(Hashset *set, unsigned long long int size) {
         old_table = set->table;
         old_table_size = set->table_size;
 
-        if (!hashset_allocate_table(set, size)) {
+        if (!hashset_allocate_table(set, (unsigned int)size)) {
             printf("CRITICAL: FAILED TO ALLOCATE HASH TABLE!\n");
 
             set->table = old_table;

@@ -6,7 +6,7 @@
 //  Copyright © 2017年 Gust. All rights reserved.
 //
 
-#include "../../jvm/jvm.h"
+#include "../jvm/jvm.h"
 #include "iostestTests-Bridging-Header.h"
 
 int call_jvm(char* app_path) {
