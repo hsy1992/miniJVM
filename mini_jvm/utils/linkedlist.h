@@ -40,6 +40,8 @@
  */
 
 
+#include <pthread.h>
+
 #ifdef __cplusplus
 extern "C" {
 #endif
@@ -57,6 +59,7 @@ typedef struct _ListEntry LinkedListEntry;
 typedef struct _LinkedList {
     LinkedListEntry *mNode;
     long long int length;
+    pthread_spinlock_t spinlock;
 } LinkedList;
 
 

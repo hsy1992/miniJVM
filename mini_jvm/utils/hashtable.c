@@ -22,6 +22,8 @@ CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 
 #include <stdlib.h>
 #include <stdio.h>
+#include <pthread.h>
+#include <mem.h>
 #include "hashtable.h"
 #include "math.h"
 #include "d_type.h"
@@ -30,7 +32,7 @@ static s32 HASH_TABLE_DEFAULT_SIZE = 16;
 
 static int hash_table_allocate_table(Hashtable *hash_table, unsigned long long int size) {
     if (size) {
-        hash_table->table = jvm_alloc((unsigned int)size *
+        hash_table->table = jvm_alloc((unsigned int) size *
                                       sizeof(HashtableEntry *));
         if (hash_table->table)hash_table->table_size = size;
     }
@@ -78,6 +80,8 @@ Hashtable *hashtable_create(HashtableHashFunc hash_func,
         return NULL;
     }
 
+    pthread_spin_init(&hash_table->spinlock, PTHREAD_PROCESS_PRIVATE);
+
     return hash_table;
 }
 
@@ -94,7 +98,7 @@ void hashtable_destory(Hashtable *hash_table) {
             rover = next;
         }
     }
-
+    pthread_spin_destroy(&hash_table->spinlock);
     jvm_free(hash_table->table);
     jvm_free(hash_table);
 }
@@ -279,9 +283,11 @@ HashtableEntry *hashtable_iter_next_entry(HashtableIterator *iterator) {
     }
     return current_entry;
 }
+
 HashtableKey hashtable_iter_remove(HashtableIterator *iterator) {
     return HASH_NULL;
 }
+
 HashtableValue hashtable_iter_next_value(HashtableIterator *iterator) {
     HashtableEntry *current_entry = hashtable_iter_next_entry(iterator);
 

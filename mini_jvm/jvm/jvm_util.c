@@ -42,11 +42,13 @@ Class *classes_get_c(c8 *clsName) {
 
 Class *classes_get(Utf8String *clsName) {
     Class *cl = NULL;
-    garbage_thread_lock();
     if (clsName) {
+//        garbage_thread_lock();
+        pthread_spin_lock(&sys_classloader->classes->spinlock);
         cl = hashtable_get(sys_classloader->classes, clsName);
+//        garbage_thread_unlock();
+        pthread_spin_unlock(&sys_classloader->classes->spinlock);
     }
-    garbage_thread_unlock();
     return cl;
 }
 
@@ -57,13 +59,13 @@ Class *classes_load_get_c(c8 *pclassName, Runtime *runtime) {
     return clazz;
 }
 
-Class *classes_load_get(Utf8String *ustr, Runtime *runtime) {
-    if (!ustr)return NULL;
+Class *classes_load_get(Utf8String *pustr, Runtime *runtime) {
+    if (!pustr)return NULL;
     Class *cl;
-    garbage_thread_lock();
+//    garbage_thread_lock();
+    Utf8String *ustr = utf8_create_copy(pustr);
     utf8_replace_c(ustr, ".", "/");
     cl = classes_get(ustr);
-
     if (!cl) {
         load_class(sys_classloader->g_classpath, ustr, sys_classloader->classes);
         cl = classes_get(ustr);
@@ -72,15 +74,17 @@ Class *classes_load_get(Utf8String *ustr, Runtime *runtime) {
     if (cl) {
         class_clinit(cl, runtime);
     }
-    garbage_thread_unlock();
+//    garbage_thread_unlock();
     return cl;
 }
 
 s32 classes_put(Class *clazz) {
     if (clazz) {
-        garbage_thread_lock();
+//        garbage_thread_lock();
+        pthread_spin_lock(&sys_classloader->classes->spinlock);
         hashtable_put(sys_classloader->classes, clazz->name, clazz);
-        garbage_thread_unlock();
+        pthread_spin_unlock(&sys_classloader->classes->spinlock);
+//        garbage_thread_unlock();
         garbage_refer_hold(clazz);
         garbage_refer_reg(clazz);
         return 0;
@@ -90,17 +94,21 @@ s32 classes_put(Class *clazz) {
 
 Class *array_class_get(Utf8String *desc) {
     if (desc && desc->length && utf8_char_at(desc, 0) == '[') {
-        garbage_thread_lock();
+//        garbage_thread_lock();
+        pthread_spin_lock(&array_classloader->classes->spinlock);
         Class *clazz = hashtable_get(array_classloader->classes, desc);
+        pthread_spin_unlock(&array_classloader->classes->spinlock);
         if (!clazz && desc && desc->length) {
             clazz = class_create();
             clazz->arr_type_index = getDataTypeIndex(utf8_char_at(desc, 1));
             clazz->name = utf8_create_copy(desc);
+            pthread_spin_lock(&array_classloader->classes->spinlock);
             hashtable_put(array_classloader->classes, clazz->name, clazz);
+            pthread_spin_unlock(&array_classloader->classes->spinlock);
             garbage_refer_hold(clazz);
             garbage_refer_reg(clazz);
         }
-        garbage_thread_unlock();
+//        garbage_thread_unlock();
         return clazz;
     }
     return NULL;
@@ -513,7 +521,7 @@ void invoke_deepth(Runtime *runtime) {
 #if __JVM_OS_MAC__ || __JVM_OS_CYGWIN__
     printf("%llx", (s64) (long) pthread_self());
 #else
-    printf("%lx", (s64) (long) pthread_self().x);
+    printf("%lx", (s64) (long) pthread_self());
 #endif //
     for (i = 0; i < len; i++) {
         printf("    ");

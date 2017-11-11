@@ -19,11 +19,13 @@ struct _ListEntry {
 LinkedList *linkedlist_create() {
     LinkedList *list = jvm_alloc(sizeof(LinkedList));
     list->mNode = jvm_alloc(sizeof(LinkedListEntry));
+    pthread_spin_init(&list->spinlock, PTHREAD_PROCESS_PRIVATE);
     return list;
 }
 
 void linkedlist_destory(LinkedList *list) {
     _linkedlist_free(list->mNode);
+    pthread_spin_destroy(&list->spinlock);
     jvm_free(list);
 }
 

@@ -12,23 +12,13 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" readonly="true" id="8573b6ef-7560-47b3-bf8a-687a65174ff8" name="Default" comment="">
-      <change type="MOVED" beforePath="$PROJECT_DIR$/iostest/iostestTests/invokec.c" afterPath="$PROJECT_DIR$/iostest/invokec.c" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/iostest/iostestTests/iostestTests-Bridging-Header.h" afterPath="$PROJECT_DIR$/iostest/iostestTests-Bridging-Header.h" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/iostest/iostest.xcodeproj/project.xcworkspace/xcuserdata/Gust.xcuserdatad/UserInterfaceState.xcuserstate" afterPath="$PROJECT_DIR$/iostest/iostest.xcodeproj/project.xcworkspace/xcuserdata/Gust.xcuserdatad/UserInterfaceState.xcuserstate" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../javalib/nbproject/private/private.xml" afterPath="$PROJECT_DIR$/../javalib/nbproject/private/private.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../javalib_test/nbproject/private/private.properties" afterPath="$PROJECT_DIR$/../javalib_test/nbproject/private/private.properties" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/iostest/iostest.xcodeproj/project.pbxproj" afterPath="$PROJECT_DIR$/iostest/iostest.xcodeproj/project.pbxproj" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/iostest/iostest.xcodeproj/project.xcworkspace/contents.xcworkspacedata" afterPath="$PROJECT_DIR$/iostest/iostest.xcodeproj/project.xcworkspace/contents.xcworkspacedata" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/iostest/iostest.xcodeproj/xcuserdata/Gust.xcuserdatad/xcschemes/iostest.xcscheme" afterPath="$PROJECT_DIR$/iostest/iostest.xcodeproj/xcuserdata/Gust.xcuserdatad/xcschemes/iostest.xcscheme" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/iostest/iostest/AppDelegate.swift" afterPath="$PROJECT_DIR$/iostest/iostest/AppDelegate.swift" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/iostest/iostest/ViewController.swift" afterPath="$PROJECT_DIR$/iostest/iostest/ViewController.swift" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/iostest/iostestTests/iostestTests.swift" afterPath="$PROJECT_DIR$/iostest/iostestTests/iostestTests.swift" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/jvm/garbage.c" afterPath="$PROJECT_DIR$/jvm/garbage.c" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/jvm/interpreter.c" afterPath="$PROJECT_DIR$/jvm/interpreter.c" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/jvm/java_native_io.c" afterPath="$PROJECT_DIR$/jvm/java_native_io.c" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/jvm/jvm_util.c" afterPath="$PROJECT_DIR$/jvm/jvm_util.c" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/utils/hashset.c" afterPath="$PROJECT_DIR$/utils/hashset.c" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/jvm/os_linux.c" afterPath="$PROJECT_DIR$/jvm/os_linux.c" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/utils/hashtable.c" afterPath="$PROJECT_DIR$/utils/hashtable.c" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/utils/hashtable.h" afterPath="$PROJECT_DIR$/utils/hashtable.h" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/utils/linkedlist.c" afterPath="$PROJECT_DIR$/utils/linkedlist.c" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/utils/linkedlist.h" afterPath="$PROJECT_DIR$/utils/linkedlist.h" />
     </list>
     <ignored path="$PROJECT_DIR$/cmake-build-debug/" />
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -40,173 +30,77 @@
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file leaf-file-name="garbage.c" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/jvm/garbage.c">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="4905">
-              <caret line="327" column="18" lean-forward="false" selection-start-line="327" selection-start-column="18" selection-end-line="327" selection-end-column="18" />
-              <folding>
-                <element signature="e#9367#9605#0" expanded="true" />
-                <element signature="e#9793#10009#0" expanded="true" />
-                <element signature="e#10205#10421#0" expanded="true" />
-                <element signature="e#12295#12449#0" expanded="true" />
-                <element signature="e#13165#13325#0" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="interpreter.c" pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/jvm/interpreter.c">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="263">
-              <caret line="2486" column="5" lean-forward="false" selection-start-line="2486" selection-start-column="5" selection-end-line="2486" selection-end-column="5" />
-              <folding>
-                <element signature="e#67552#67718#0" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="d_type.h" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/utils/d_type.h">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="555">
-              <caret line="37" column="0" lean-forward="false" selection-start-line="37" selection-start-column="0" selection-end-line="37" selection-end-column="0" />
-              <folding>
-                <element signature="e#172#200#0" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="global.c" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/jvm/global.c">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="420">
-              <caret line="28" column="0" lean-forward="false" selection-start-line="28" selection-start-column="0" selection-end-line="28" selection-end-column="0" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="garbage.h" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/jvm/garbage.h">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="315">
-              <caret line="21" column="0" lean-forward="false" selection-start-line="21" selection-start-column="0" selection-end-line="21" selection-end-column="0" />
-              <folding>
-                <marker date="1510304475338" expanded="true" signature="381:398" ph="{...}" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="d_vars.c" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/utils/d_vars.c">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="960">
-              <caret line="64" column="0" lean-forward="false" selection-start-line="64" selection-start-column="0" selection-end-line="64" selection-end-column="0" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="jvm.h" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/jvm/jvm.h">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="5730">
-              <caret line="382" column="0" lean-forward="false" selection-start-line="382" selection-start-column="0" selection-end-line="382" selection-end-column="0" />
-              <folding>
-                <element signature="e#104#122#0" expanded="true" />
-                <marker date="1510374916583" expanded="true" signature="8486:8547" ph="{...}" />
-                <marker date="1510374916583" expanded="true" signature="18040:18043" ph="{...}" />
-                <marker date="1510374916583" expanded="true" signature="18436:18507" ph="{...}" />
-                <marker date="1510374916583" expanded="false" signature="22299:22300" ph="..." />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
       <file leaf-file-name="jvm_util.c" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/jvm/jvm_util.c">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="1815">
-              <caret line="121" column="0" lean-forward="false" selection-start-line="121" selection-start-column="0" selection-end-line="121" selection-end-column="0" />
+            <state relative-caret-position="361">
+              <caret line="79" column="0" lean-forward="true" selection-start-line="79" selection-start-column="0" selection-end-line="79" selection-end-column="0" />
               <folding>
-                <marker date="1510378214383" expanded="false" signature="13376:13405" ph="..." />
-                <marker date="1510378214383" expanded="false" signature="13711:13764" ph="..." />
-                <marker date="1510378214383" expanded="false" signature="13934:14150" ph="..." />
-                <marker date="1510378214383" expanded="true" signature="19900:20441" ph="{...}" />
-                <marker date="1510378214383" expanded="true" signature="20487:20692" ph="{...}" />
-                <marker date="1510378214383" expanded="true" signature="20740:21127" ph="{...}" />
-                <marker date="1510378214383" expanded="true" signature="21265:21478" ph="{...}" />
-                <marker date="1510378214383" expanded="true" signature="24744:25534" ph="{...}" />
-                <marker date="1510378214383" expanded="true" signature="25655:25880" ph="{...}" />
-                <marker date="1510378214383" expanded="true" signature="25934:25994" ph="{...}" />
-                <marker date="1510378214383" expanded="true" signature="26095:26742" ph="{...}" />
-                <marker date="1510378214383" expanded="true" signature="26785:27404" ph="{...}" />
-                <marker date="1510378214383" expanded="true" signature="27442:27578" ph="{...}" />
-                <marker date="1510378214383" expanded="true" signature="27720:28654" ph="{...}" />
-                <marker date="1510378214383" expanded="true" signature="28694:28799" ph="{...}" />
-                <marker date="1510378214383" expanded="true" signature="28851:28956" ph="{...}" />
-                <marker date="1510378214383" expanded="true" signature="28997:29103" ph="{...}" />
-                <marker date="1510378214383" expanded="true" signature="29147:29240" ph="{...}" />
-                <marker date="1510378214383" expanded="true" signature="29292:29417" ph="{...}" />
-                <marker date="1510378214383" expanded="true" signature="29466:29798" ph="{...}" />
-                <marker date="1510378214383" expanded="true" signature="29864:30334" ph="{...}" />
-                <marker date="1510378214383" expanded="true" signature="30389:31556" ph="{...}" />
-                <marker date="1510378214383" expanded="true" signature="31611:31911" ph="{...}" />
-                <marker date="1510378214383" expanded="true" signature="32054:32496" ph="{...}" />
-                <marker date="1510378214383" expanded="false" signature="32095:32171" ph="..." />
-                <marker date="1510378214383" expanded="true" signature="32579:33349" ph="{...}" />
-                <marker date="1510378214383" expanded="false" signature="32620:32696" ph="..." />
-                <marker date="1510378214383" expanded="true" signature="33428:33521" ph="/**...*/" />
-                <marker date="1510378214383" expanded="true" signature="33576:33662" ph="{...}" />
-                <marker date="1510378214383" expanded="true" signature="33701:33761" ph="{...}" />
-                <marker date="1510378214383" expanded="true" signature="33797:33904" ph="{...}" />
-                <marker date="1510378214383" expanded="true" signature="33948:34043" ph="{...}" />
-                <marker date="1510378214383" expanded="true" signature="34079:34116" ph="{...}" />
-                <marker date="1510378214383" expanded="true" signature="34153:34190" ph="{...}" />
-                <marker date="1510378214383" expanded="true" signature="34225:34244" ph="{...}" />
-                <marker date="1510378214383" expanded="true" signature="34282:34319" ph="{...}" />
-                <marker date="1510378214383" expanded="true" signature="34356:34393" ph="{...}" />
-                <marker date="1510378214383" expanded="true" signature="34420:34493" ph="{...}" />
-                <marker date="1510378214383" expanded="true" signature="34526:34607" ph="{...}" />
-                <marker date="1510378214383" expanded="true" signature="34636:34709" ph="{...}" />
-                <marker date="1510378214383" expanded="true" signature="34736:34772" ph="{...}" />
-                <marker date="1510378214383" expanded="true" signature="34800:34873" ph="{...}" />
-                <marker date="1510378214383" expanded="true" signature="34902:34975" ph="{...}" />
-                <marker date="1510378214383" expanded="true" signature="35006:35079" ph="{...}" />
-                <marker date="1510378214383" expanded="true" signature="35175:35577" ph="{...}" />
-                <marker date="1510378214383" expanded="true" signature="35690:36316" ph="{...}" />
-                <marker date="1510378214383" expanded="true" signature="36371:36903" ph="{...}" />
-                <marker date="1510378214383" expanded="true" signature="36944:37261" ph="{...}" />
-                <marker date="1510378214383" expanded="true" signature="37299:37393" ph="{...}" />
-                <marker date="1510378214383" expanded="true" signature="37447:37477" ph="{...}" />
+                <marker date="1510386825633" expanded="true" signature="33911:33956" ph="{...}" />
               </folding>
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="jvm.c" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/jvm/jvm.c">
+      <file leaf-file-name="linkedlist.c" pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/utils/linkedlist.c">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="3600">
-              <caret line="240" column="24" lean-forward="false" selection-start-line="240" selection-start-column="24" selection-end-line="240" selection-end-column="24" />
+            <state relative-caret-position="250">
+              <caret line="26" column="34" lean-forward="true" selection-start-line="26" selection-start-column="34" selection-end-line="26" selection-end-column="34" />
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="java_native_std.c" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/jvm/java_native_std.c">
+      <file leaf-file-name="class.c" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/jvm/class.c">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="6165">
-              <caret line="411" column="48" lean-forward="false" selection-start-line="411" selection-start-column="48" selection-end-line="411" selection-end-column="48" />
+            <state relative-caret-position="-1796">
+              <caret line="188" column="5" lean-forward="false" selection-start-line="188" selection-start-column="5" selection-end-line="188" selection-end-column="5" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="interpreter.c" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/jvm/interpreter.c">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="138">
+              <caret line="1809" column="30" lean-forward="true" selection-start-line="1809" selection-start-column="30" selection-end-line="1809" selection-end-column="30" />
               <folding>
-                <marker date="1510305543456" expanded="true" signature="12569:12688" ph="{...}" />
+                <marker date="1510384715001" expanded="true" signature="41778:42421" ph="{...}" />
+                <marker date="1510384715001" expanded="true" signature="92737:99134" ph="{...}" />
               </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="class_load.c" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/jvm/class_load.c">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="138">
+              <caret line="1247" column="55" lean-forward="true" selection-start-line="1247" selection-start-column="55" selection-end-line="1247" selection-end-column="55" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="hashtable.c" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/utils/hashtable.c">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="152">
+              <caret line="100" column="48" lean-forward="true" selection-start-line="100" selection-start-column="4" selection-end-line="100" selection-end-column="48" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="linkedlist.h" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/utils/linkedlist.h">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="165">
+              <caret line="42" column="20" lean-forward="true" selection-start-line="42" selection-start-column="20" selection-end-line="42" selection-end-column="20" />
+              <folding />
             </state>
           </provider>
         </entry>
@@ -296,15 +190,14 @@
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/.." />
   </component>
   <component name="HighlightingSettingsPerFile">
-    <setting file="file://$PROJECT_DIR$/jvm/jvm.h" root0="FORCE_HIGHLIGHTING" />
-    <setting file="file://$PROJECT_DIR$/jvm/jvm.c" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/jvm/jvm_util.c" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/jvm/jvm.c" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/jvm/interpreter.c" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/jvm/jvm.h" root0="FORCE_HIGHLIGHTING" />
   </component>
   <component name="IdeDocumentHistory">
     <option name="CHANGED_PATHS">
       <list>
-        <option value="$PROJECT_DIR$/jvm/java_native_jdwp.h" />
         <option value="$PROJECT_DIR$/jvm/java_native_jdwp.c" />
         <option value="$PROJECT_DIR$/jvm/java_native_reflect.h" />
         <option value="$PROJECT_DIR$/cmake-build-debug/CMakeCache.txt" />
@@ -326,11 +219,9 @@
         <option value="$PROJECT_DIR$/jvm/java_native_std.h" />
         <option value="$PROJECT_DIR$/utils/arraylist.h" />
         <option value="$PROJECT_DIR$/jvm/class_load.c" />
-        <option value="$PROJECT_DIR$/utils/hashtable.c" />
         <option value="$PROJECT_DIR$/jvm/jdwp.h" />
         <option value="$PROJECT_DIR$/cmem/memleak.c" />
         <option value="$PROJECT_DIR$/jvm/class.c" />
-        <option value="$PROJECT_DIR$/utils/linkedlist.c" />
         <option value="$PROJECT_DIR$/jvm/global.h" />
         <option value="$PROJECT_DIR$/jvm/runtime.c" />
         <option value="$PROJECT_DIR$/utils/utf8_string.h" />
@@ -338,15 +229,12 @@
         <option value="$PROJECT_DIR$/utils/hashset.h" />
         <option value="$PROJECT_DIR$/test.c" />
         <option value="$PROJECT_DIR$/utils/hashset.c" />
-        <option value="$PROJECT_DIR$/utils/linkedlist.h" />
         <option value="$PROJECT_DIR$/jvm/java_native_io.c" />
-        <option value="$PROJECT_DIR$/jvm/os_linux.c" />
         <option value="$PROJECT_DIR$/CMakeLists.txt" />
         <option value="$PROJECT_DIR$/jvm/java_native_reflect.c" />
         <option value="$PROJECT_DIR$/jvm/jdwp.c" />
         <option value="$PROJECT_DIR$/jvm/jvm_util.h" />
         <option value="$PROJECT_DIR$/jvm/jvm.h" />
-        <option value="$PROJECT_DIR$/jvm/jvm_util.c" />
         <option value="$PROJECT_DIR$/utils/d_type.h" />
         <option value="$PROJECT_DIR$/jvm/global.c" />
         <option value="$PROJECT_DIR$/jvm/garbage.h" />
@@ -355,6 +243,12 @@
         <option value="$PROJECT_DIR$/jvm/java_native_std.c" />
         <option value="$PROJECT_DIR$/jvm/garbage.c" />
         <option value="$PROJECT_DIR$/jvm/interpreter.c" />
+        <option value="$PROJECT_DIR$/utils/hashtable.c" />
+        <option value="$PROJECT_DIR$/utils/hashtable.h" />
+        <option value="$PROJECT_DIR$/jvm/os_linux.c" />
+        <option value="$PROJECT_DIR$/jvm/jvm_util.c" />
+        <option value="$PROJECT_DIR$/utils/linkedlist.h" />
+        <option value="$PROJECT_DIR$/utils/linkedlist.c" />
       </list>
     </option>
   </component>
@@ -422,6 +316,11 @@
             <path>
               <item name="mini_jvm" type="dad4c3:CidrFilesViewHelper$MyProjectTreeStructure$1" />
               <item name="mini_jvm" type="462c0819:PsiDirectoryNode" />
+              <item name="cmem" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="mini_jvm" type="dad4c3:CidrFilesViewHelper$MyProjectTreeStructure$1" />
+              <item name="mini_jvm" type="462c0819:PsiDirectoryNode" />
               <item name="jvm" type="462c0819:PsiDirectoryNode" />
             </path>
             <path>
@@ -438,7 +337,7 @@
   <component name="PropertiesComponent">
     <property name="WebServerToolWindowFactoryState" value="false" />
     <property name="last_opened_file_path" value="$PROJECT_DIR$" />
-    <property name="settings.editor.selected.configurable" value="preferences.keymap" />
+    <property name="settings.editor.selected.configurable" value="CPPToolchains" />
   </component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
@@ -536,30 +435,43 @@
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="1628054000" />
+    <option name="totallyTimeSpent" value="1630764000" />
   </component>
   <component name="ToolWindowManager">
-    <frame x="65" y="23" width="1200" height="728" extended-state="0" />
+    <frame x="400" y="101" width="1358" height="867" extended-state="0" />
     <layout>
-      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.18739206" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
-      <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.51026857" sideWeight="0.48013818" order="7" side_tool="false" content_ui="tabs" />
+      <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.5375171" sideWeight="0.49044058" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="CMake" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32696897" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
-      <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.3665087" sideWeight="0.5250432" order="7" side_tool="true" content_ui="tabs" />
-      <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32961783" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
-      <window_info id="Run" active="true" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.41548184" sideWeight="0.48295927" order="2" side_tool="false" content_ui="tabs" />
-      <window_info id="Structure" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.22452505" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
+      <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.39290586" sideWeight="0.5030817" order="7" side_tool="true" content_ui="tabs" />
+      <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
+      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.29604366" sideWeight="0.51848996" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32854864" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
+      <window_info id="Project" active="true" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.17180277" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
+      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.36016372" sideWeight="0.5641953" order="1" side_tool="false" content_ui="tabs" />
+      <window_info id="Structure" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.21340524" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
       <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="1" side_tool="true" content_ui="tabs" />
-      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33965245" sideWeight="0.46804836" order="3" side_tool="false" content_ui="tabs" />
+      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.39290586" sideWeight="0.49691835" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Data View" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32978722" sideWeight="0.5" order="3" side_tool="true" content_ui="tabs" />
       <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
+      <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
+      <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.51026857" sideWeight="0.48013818" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Message" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Commander" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
+      <window_info id="CMake" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32696897" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
+      <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.3665087" sideWeight="0.5250432" order="7" side_tool="true" content_ui="tabs" />
       <window_info id="Inspection" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
+      <window_info id="Run" active="true" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.41548184" sideWeight="0.48295927" order="2" side_tool="false" content_ui="tabs" />
+      <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32961783" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
+      <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32854864" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Hierarchy" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.2497809" sideWeight="0.5" order="2" side_tool="false" content_ui="combo" />
+      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.18739206" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
       <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.3665087" sideWeight="0.4749568" order="1" side_tool="false" content_ui="tabs" />
+      <window_info id="Structure" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.22452505" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
       <window_info id="Ant Build" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
+      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33965245" sideWeight="0.46804836" order="3" side_tool="false" content_ui="tabs" />
+      <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="1" side_tool="true" content_ui="tabs" />
+      <window_info id="Data View" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32978722" sideWeight="0.5" order="3" side_tool="true" content_ui="tabs" />
     </layout>
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -574,6 +486,13 @@
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
+      <breakpoints>
+        <line-breakpoint enabled="true" type="com.jetbrains.cidr.execution.debugger.OCBreakpointType">
+          <url>file://$PROJECT_DIR$/jvm/class_load.c</url>
+          <line>1281</line>
+          <option name="timeStamp" value="1363" />
+        </line-breakpoint>
+      </breakpoints>
       <breakpoints-dialog>
         <breakpoints-dialog />
       </breakpoints-dialog>
@@ -582,7 +501,7 @@
           <properties />
         </breakpoint>
       </default-breakpoints>
-      <option name="time" value="1363" />
+      <option name="time" value="1364" />
     </breakpoint-manager>
     <watches-manager>
       <configuration name="CMakeRunConfiguration">
@@ -591,24 +510,10 @@
     </watches-manager>
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/jvm/java_native_reflect.h">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-129">
-          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/jvm/java_native_std.h">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="366">
           <caret line="43" column="18" lean-forward="false" selection-start-line="43" selection-start-column="18" selection-end-line="43" selection-end-column="18" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/utils/hashtable.h">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="216">
-          <caret line="151" column="2" lean-forward="false" selection-start-line="151" selection-start-column="2" selection-end-line="151" selection-end-column="2" />
         </state>
       </provider>
     </entry>
@@ -641,13 +546,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="173">
           <caret line="81" column="41" lean-forward="true" selection-start-line="81" selection-start-column="41" selection-end-line="81" selection-end-column="41" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/utils/hashtable.c">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="720">
-          <caret line="48" column="0" lean-forward="false" selection-start-line="48" selection-start-column="0" selection-end-line="48" selection-end-column="0" />
         </state>
       </provider>
     </entry>
@@ -723,8 +621,9 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/utils/hashset.c">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="172">
-          <caret line="263" column="37" lean-forward="false" selection-start-line="263" selection-start-column="37" selection-end-line="263" selection-end-column="37" />
+        <state relative-caret-position="2403">
+          <caret line="137" column="1" lean-forward="false" selection-start-line="137" selection-start-column="1" selection-end-line="137" selection-end-column="1" />
+          <folding />
         </state>
       </provider>
     </entry>
@@ -735,67 +634,63 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/utils/linkedlist.c">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="136">
-          <caret line="24" column="14" lean-forward="false" selection-start-line="24" selection-start-column="14" selection-end-line="24" selection-end-column="14" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/utils/linkedlist.h">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="355">
-          <caret line="58" column="17" lean-forward="false" selection-start-line="58" selection-start-column="17" selection-end-line="58" selection-end-column="17" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file:///Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.13.sdk/usr/include/unistd.h">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-1633">
-          <caret line="124" column="25" lean-forward="false" selection-start-line="124" selection-start-column="8" selection-end-line="124" selection-end-column="25" />
-        </state>
-      </provider>
-    </entry>
+    <entry file="file:///Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.13.sdk/usr/include/unistd.h" />
     <entry file="file://$PROJECT_DIR$/CMakeLists.txt">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="60">
-          <caret line="4" column="24" lean-forward="true" selection-start-line="4" selection-start-column="24" selection-end-line="4" selection-end-column="24" />
+        <state relative-caret-position="95">
+          <caret line="5" column="0" lean-forward="false" selection-start-line="5" selection-start-column="0" selection-end-line="5" selection-end-column="0" />
+          <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/jvm/java_native_io.c">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="104">
-          <caret line="272" column="0" lean-forward="false" selection-start-line="272" selection-start-column="0" selection-end-line="272" selection-end-column="0" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/jvm/os_linux.c">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="109">
-          <caret line="41" column="0" lean-forward="false" selection-start-line="41" selection-start-column="0" selection-end-line="41" selection-end-column="0" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/jvm/class.c">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="104">
-          <caret line="282" column="0" lean-forward="false" selection-start-line="282" selection-start-column="0" selection-end-line="282" selection-end-column="0" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/jvm/class_load.c">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="15">
-          <caret line="1273" column="20" lean-forward="false" selection-start-line="1273" selection-start-column="20" selection-end-line="1273" selection-end-column="20" />
+        <state relative-caret-position="633">
+          <caret line="374" column="25" lean-forward="false" selection-start-line="374" selection-start-column="25" selection-end-line="374" selection-end-column="25" />
+          <folding>
+            <marker date="1510384715012" expanded="false" signature="504:586" ph="..." />
+            <marker date="1510384715012" expanded="true" signature="13390:13586" ph="{...}" />
+            <marker date="1510384715012" expanded="false" signature="13472:13563" ph="..." />
+            <marker date="1510384715012" expanded="true" signature="13668:13977" ph="{...}" />
+            <marker date="1510384715012" expanded="false" signature="13864:13954" ph="..." />
+            <marker date="1510384715012" expanded="true" signature="14068:14320" ph="{...}" />
+            <marker date="1510384715012" expanded="false" signature="14198:14297" ph="..." />
+            <marker date="1510384715012" expanded="true" signature="14404:14649" ph="{...}" />
+            <marker date="1510384715012" expanded="false" signature="14534:14626" ph="..." />
+            <marker date="1510384715012" expanded="true" signature="14715:15407" ph="{...}" />
+            <marker date="1510384715012" expanded="false" signature="15310:15384" ph="..." />
+            <marker date="1510384715012" expanded="true" signature="15474:15849" ph="{...}" />
+            <marker date="1510384715012" expanded="false" signature="15751:15826" ph="..." />
+            <marker date="1510384715012" expanded="true" signature="15912:16438" ph="{...}" />
+            <marker date="1510384715012" expanded="false" signature="16344:16415" ph="..." />
+            <marker date="1510384715012" expanded="true" signature="16502:17084" ph="{...}" />
+            <marker date="1510384715012" expanded="false" signature="16989:17061" ph="..." />
+            <marker date="1510384715012" expanded="true" signature="17149:17806" ph="{...}" />
+            <marker date="1510384715012" expanded="false" signature="17710:17783" ph="..." />
+            <marker date="1510384715012" expanded="true" signature="17872:18642" ph="{...}" />
+            <marker date="1510384715012" expanded="false" signature="18545:18619" ph="..." />
+            <marker date="1510384715012" expanded="true" signature="18705:19251" ph="{...}" />
+            <marker date="1510384715012" expanded="false" signature="19157:19228" ph="..." />
+            <marker date="1510384715012" expanded="true" signature="19319:19890" ph="{...}" />
+            <marker date="1510384715012" expanded="false" signature="19661:19703" ph="..." />
+            <marker date="1510384715012" expanded="false" signature="19791:19867" ph="..." />
+            <marker date="1510384715012" expanded="true" signature="19955:20327" ph="{...}" />
+            <marker date="1510384715012" expanded="false" signature="20232:20304" ph="..." />
+            <marker date="1510384715012" expanded="true" signature="20391:22336" ph="{...}" />
+            <marker date="1510384715012" expanded="false" signature="22241:22313" ph="..." />
+            <marker date="1510384715012" expanded="true" signature="22401:23924" ph="{...}" />
+            <marker date="1510384715012" expanded="false" signature="23828:23901" ph="..." />
+            <marker date="1510384715012" expanded="true" signature="27849:27951" ph="{...}" />
+            <marker date="1510384715012" expanded="false" signature="27973:27974" ph="..." />
+          </folding>
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/jvm/java_native_reflect.c">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="118">
-          <caret line="287" column="4" lean-forward="false" selection-start-line="287" selection-start-column="4" selection-end-line="287" selection-end-column="4" />
+        <state relative-caret-position="191">
+          <caret line="599" column="20" lean-forward="false" selection-start-line="599" selection-start-column="20" selection-end-line="599" selection-end-column="20" />
+          <folding />
         </state>
       </provider>
     </entry>
@@ -816,73 +711,10 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/jvm/jvm.h">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="5730">
-          <caret line="382" column="0" lean-forward="false" selection-start-line="382" selection-start-column="0" selection-end-line="382" selection-end-column="0" />
+        <state relative-caret-position="-11128">
+          <caret line="391" column="66" lean-forward="false" selection-start-line="391" selection-start-column="66" selection-end-line="391" selection-end-column="66" />
           <folding>
-            <element signature="e#104#122#0" expanded="true" />
-            <marker date="1510374916583" expanded="true" signature="8486:8547" ph="{...}" />
-            <marker date="1510374916583" expanded="true" signature="18040:18043" ph="{...}" />
-            <marker date="1510374916583" expanded="true" signature="18436:18507" ph="{...}" />
-            <marker date="1510374916583" expanded="false" signature="22299:22300" ph="..." />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/jvm/jvm_util.c">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1815">
-          <caret line="121" column="0" lean-forward="false" selection-start-line="121" selection-start-column="0" selection-end-line="121" selection-end-column="0" />
-          <folding>
-            <marker date="1510378214383" expanded="false" signature="13376:13405" ph="..." />
-            <marker date="1510378214383" expanded="false" signature="13711:13764" ph="..." />
-            <marker date="1510378214383" expanded="false" signature="13934:14150" ph="..." />
-            <marker date="1510378214383" expanded="true" signature="19900:20441" ph="{...}" />
-            <marker date="1510378214383" expanded="true" signature="20487:20692" ph="{...}" />
-            <marker date="1510378214383" expanded="true" signature="20740:21127" ph="{...}" />
-            <marker date="1510378214383" expanded="true" signature="21265:21478" ph="{...}" />
-            <marker date="1510378214383" expanded="true" signature="24744:25534" ph="{...}" />
-            <marker date="1510378214383" expanded="true" signature="25655:25880" ph="{...}" />
-            <marker date="1510378214383" expanded="true" signature="25934:25994" ph="{...}" />
-            <marker date="1510378214383" expanded="true" signature="26095:26742" ph="{...}" />
-            <marker date="1510378214383" expanded="true" signature="26785:27404" ph="{...}" />
-            <marker date="1510378214383" expanded="true" signature="27442:27578" ph="{...}" />
-            <marker date="1510378214383" expanded="true" signature="27720:28654" ph="{...}" />
-            <marker date="1510378214383" expanded="true" signature="28694:28799" ph="{...}" />
-            <marker date="1510378214383" expanded="true" signature="28851:28956" ph="{...}" />
-            <marker date="1510378214383" expanded="true" signature="28997:29103" ph="{...}" />
-            <marker date="1510378214383" expanded="true" signature="29147:29240" ph="{...}" />
-            <marker date="1510378214383" expanded="true" signature="29292:29417" ph="{...}" />
-            <marker date="1510378214383" expanded="true" signature="29466:29798" ph="{...}" />
-            <marker date="1510378214383" expanded="true" signature="29864:30334" ph="{...}" />
-            <marker date="1510378214383" expanded="true" signature="30389:31556" ph="{...}" />
-            <marker date="1510378214383" expanded="true" signature="31611:31911" ph="{...}" />
-            <marker date="1510378214383" expanded="true" signature="32054:32496" ph="{...}" />
-            <marker date="1510378214383" expanded="false" signature="32095:32171" ph="..." />
-            <marker date="1510378214383" expanded="true" signature="32579:33349" ph="{...}" />
-            <marker date="1510378214383" expanded="false" signature="32620:32696" ph="..." />
-            <marker date="1510378214383" expanded="true" signature="33428:33521" ph="/**...*/" />
-            <marker date="1510378214383" expanded="true" signature="33576:33662" ph="{...}" />
-            <marker date="1510378214383" expanded="true" signature="33701:33761" ph="{...}" />
-            <marker date="1510378214383" expanded="true" signature="33797:33904" ph="{...}" />
-            <marker date="1510378214383" expanded="true" signature="33948:34043" ph="{...}" />
-            <marker date="1510378214383" expanded="true" signature="34079:34116" ph="{...}" />
-            <marker date="1510378214383" expanded="true" signature="34153:34190" ph="{...}" />
-            <marker date="1510378214383" expanded="true" signature="34225:34244" ph="{...}" />
-            <marker date="1510378214383" expanded="true" signature="34282:34319" ph="{...}" />
-            <marker date="1510378214383" expanded="true" signature="34356:34393" ph="{...}" />
-            <marker date="1510378214383" expanded="true" signature="34420:34493" ph="{...}" />
-            <marker date="1510378214383" expanded="true" signature="34526:34607" ph="{...}" />
-            <marker date="1510378214383" expanded="true" signature="34636:34709" ph="{...}" />
-            <marker date="1510378214383" expanded="true" signature="34736:34772" ph="{...}" />
-            <marker date="1510378214383" expanded="true" signature="34800:34873" ph="{...}" />
-            <marker date="1510378214383" expanded="true" signature="34902:34975" ph="{...}" />
-            <marker date="1510378214383" expanded="true" signature="35006:35079" ph="{...}" />
-            <marker date="1510378214383" expanded="true" signature="35175:35577" ph="{...}" />
-            <marker date="1510378214383" expanded="true" signature="35690:36316" ph="{...}" />
-            <marker date="1510378214383" expanded="true" signature="36371:36903" ph="{...}" />
-            <marker date="1510378214383" expanded="true" signature="36944:37261" ph="{...}" />
-            <marker date="1510378214383" expanded="true" signature="37299:37393" ph="{...}" />
-            <marker date="1510378214383" expanded="true" signature="37447:37477" ph="{...}" />
+            <marker date="1510373931121" expanded="false" signature="772:798" ph="..." />
           </folding>
         </state>
       </provider>
@@ -909,9 +741,7 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="315">
           <caret line="21" column="0" lean-forward="false" selection-start-line="21" selection-start-column="0" selection-end-line="21" selection-end-column="0" />
-          <folding>
-            <marker date="1510304475338" expanded="true" signature="381:398" ph="{...}" />
-          </folding>
+          <folding />
         </state>
       </provider>
     </entry>
@@ -919,7 +749,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="960">
           <caret line="64" column="0" lean-forward="false" selection-start-line="64" selection-start-column="0" selection-end-line="64" selection-end-column="0" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -935,16 +764,14 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="6165">
           <caret line="411" column="48" lean-forward="false" selection-start-line="411" selection-start-column="48" selection-end-line="411" selection-end-column="48" />
-          <folding>
-            <marker date="1510305543456" expanded="true" signature="12569:12688" ph="{...}" />
-          </folding>
+          <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/jvm/garbage.c">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="4905">
-          <caret line="327" column="18" lean-forward="false" selection-start-line="327" selection-start-column="18" selection-end-line="327" selection-end-column="18" />
+        <state relative-caret-position="312">
+          <caret line="629" column="26" lean-forward="true" selection-start-line="629" selection-start-column="26" selection-end-line="629" selection-end-column="26" />
           <folding>
             <element signature="e#9367#9605#0" expanded="true" />
             <element signature="e#9793#10009#0" expanded="true" />
@@ -955,13 +782,88 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/jvm/class.c">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-1796">
+          <caret line="188" column="5" lean-forward="false" selection-start-line="188" selection-start-column="5" selection-end-line="188" selection-end-column="5" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/jvm/class_load.c">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="138">
+          <caret line="1247" column="55" lean-forward="true" selection-start-line="1247" selection-start-column="55" selection-end-line="1247" selection-end-column="55" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/jvm/interpreter.c">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="263">
-          <caret line="2486" column="5" lean-forward="false" selection-start-line="2486" selection-start-column="5" selection-end-line="2486" selection-end-column="5" />
+        <state relative-caret-position="138">
+          <caret line="1809" column="30" lean-forward="true" selection-start-line="1809" selection-start-column="30" selection-end-line="1809" selection-end-column="30" />
           <folding>
-            <element signature="e#67552#67718#0" expanded="true" />
+            <marker date="1510384715001" expanded="true" signature="41778:42421" ph="{...}" />
+            <marker date="1510384715001" expanded="true" signature="92737:99134" ph="{...}" />
           </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/jvm/jvm_util.c">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="361">
+          <caret line="79" column="0" lean-forward="true" selection-start-line="79" selection-start-column="0" selection-end-line="79" selection-end-column="0" />
+          <folding>
+            <marker date="1510386825633" expanded="true" signature="33911:33956" ph="{...}" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/utils/hashtable.h">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="218">
+          <caret line="147" column="0" lean-forward="false" selection-start-line="147" selection-start-column="0" selection-end-line="147" selection-end-column="32" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/jvm/os_linux.c">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-246">
+          <caret line="11" column="0" lean-forward="true" selection-start-line="11" selection-start-column="0" selection-end-line="11" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/utils/linkedlist.h">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="165">
+          <caret line="42" column="20" lean-forward="true" selection-start-line="42" selection-start-column="20" selection-end-line="42" selection-end-column="20" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/utils/hashtable.c">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="152">
+          <caret line="100" column="48" lean-forward="true" selection-start-line="100" selection-start-column="4" selection-end-line="100" selection-end-column="48" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://C:/TDM-GCC-32/include/pthread.h">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="138">
+          <caret line="347" column="19" lean-forward="false" selection-start-line="347" selection-start-column="19" selection-end-line="347" selection-end-column="19" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/utils/linkedlist.c">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="250">
+          <caret line="26" column="34" lean-forward="true" selection-start-line="26" selection-start-column="34" selection-end-line="26" selection-end-column="34" />
+          <folding />
         </state>
       </provider>
     </entry>

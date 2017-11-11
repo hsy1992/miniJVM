@@ -49,7 +49,7 @@ CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 extern "C" {
 #endif
 
-
+#include "pthread.h"
 /**
  * A hash table structure.
  */
@@ -145,6 +145,7 @@ struct _Hashtable {
     HashtableKeyFreeFunc key_free_func;
     HashtableValueFreeFunc value_free_func;
     unsigned long long int entries;
+    pthread_spinlock_t spinlock;
 };
 
 /**
