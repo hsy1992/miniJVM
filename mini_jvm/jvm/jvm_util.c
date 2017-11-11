@@ -751,8 +751,8 @@ Instance *jarray_create_des(s32 count, Utf8String *desc) {
     s32 width = data_type_bytes[typeIdx];
     Instance *arr = jvm_alloc(sizeof(Instance));
     arr->mb.type = MEM_TYPE_ARR;
-    arr->mb.arr_type_index = typeIdx;
     arr->mb.clazz = array_class_get(desc);
+    arr->arr_type_index = typeIdx;
     arr->arr_length = count;
     if (arr->arr_length)arr->arr_body = jvm_alloc(width * count);
     return arr;
@@ -779,7 +779,7 @@ s32 jarray_destory(Instance *arr) {
 //        if (arr->arr_length == -1) {
 //            int debug = 1;
 //        }
-        if (isDataReferByIndex(arr->mb.arr_type_index)) {
+        if (isDataReferByIndex(arr->arr_type_index)) {
             s32 i;
             Long2Double l2d;
             l2d.l = 0;
@@ -835,7 +835,7 @@ Instance *jarray_multi_create(ArrayList *dim, Utf8String *pdesc, s32 deep) {
 
 
 void jarray_set_field(Instance *arr, s32 index, Long2Double *l2d) {
-    s32 idx = arr->mb.arr_type_index;
+    s32 idx = arr->arr_type_index;
     s32 bytes = data_type_bytes[idx];
     if (isDataReferByIndex(idx)) {
         setFieldRefer(arr->arr_body + index * bytes, l2d->r);
@@ -858,7 +858,7 @@ void jarray_set_field(Instance *arr, s32 index, Long2Double *l2d) {
 }
 
 void jarray_get_field(Instance *arr, s32 index, Long2Double *l2d) {
-    s32 idx = arr->mb.arr_type_index;
+    s32 idx = arr->arr_type_index;
     s32 bytes = data_type_bytes[idx];
     if (isDataReferByIndex(idx)) {
         l2d->r = getFieldRefer(arr->arr_body + index * bytes);

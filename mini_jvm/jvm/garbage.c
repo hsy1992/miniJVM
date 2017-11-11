@@ -656,7 +656,7 @@ void instance_mark_refer(Instance *ins) {
 
 s32 jarray_mark_refer(Instance *arr) {
     if (arr && arr->mb.type == MEM_TYPE_ARR) {
-        if (isDataReferByIndex(arr->mb.arr_type_index)) {
+        if (isDataReferByIndex(arr->arr_type_index)) {
             s32 i;
             Long2Double l2d;
             for (i = 0; i < arr->arr_length; i++) {//把所有引用去除，否则不会垃圾回收
@@ -665,7 +665,6 @@ s32 jarray_mark_refer(Instance *arr) {
                 garbage_mark_object(l2d.r);
             }
         }
-
     }
     return 0;
 }

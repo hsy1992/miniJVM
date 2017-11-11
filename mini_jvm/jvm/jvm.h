@@ -369,9 +369,9 @@ extern Hashtable *instruct_profile;
 
 typedef struct _MemoryBlock {
     u8 type;//type of array or object runtime,class
-    u8 arr_type_index;
     u8 garbage_mark;
     u8 volatile garbage_reg;
+    u8 un_use;
 
     Class *clazz;
     ThreadLock *volatile thread_lock;
@@ -825,6 +825,7 @@ struct _InstanceType {
         c8 *arr_body;//array body
     };
     s32 arr_length;
+    u8 arr_type_index;
 };
 
 

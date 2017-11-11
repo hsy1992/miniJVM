@@ -18,10 +18,12 @@ import java.util.Calendar;
 import java.util.Collections;
 import java.util.Enumeration;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Hashtable;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.Vector;
 import javax.cldc.io.Connector;
 import javax.cldc.io.ContentConnection;
@@ -185,6 +187,9 @@ public class Foo1 {
         int MAX = 50000;
         int PRINT_COUNT = 10000;
         Thread t = new Thread(new Runnable() {
+            List<String> list = new ArrayList();
+            Set<String> set = new HashSet();
+
             @Override
             public void run() {
                 try {
@@ -201,10 +206,13 @@ public class Foo1 {
                     String a = "abc";
                     String b = "def";
                     c = a + b;
+                    list.add(c);
+                    set.add(c);
                     if (i % PRINT_COUNT == 0) {
                         System.out.println("thread i=" + i);
                     }
                 }
+                System.out.println("list.size():" + list.size() + "  ,set.size():" + set.size());
                 System.out.println(" thread c=\"" + c + "\"");
             }
         });
@@ -652,6 +660,8 @@ public class Foo1 {
 
     void t22() {
         long lastms = System.currentTimeMillis();
+        Reference r = new Reference(RefNative.obj2id(java.lang.String.class));
+        Reference r2 = new Reference(RefNative.obj2id(java.lang.Long.class));
         for (int i = 0; i < 1000; i++) {
             try {
                 System.out.print(" " + (System.currentTimeMillis() - lastms));
@@ -662,52 +672,44 @@ public class Foo1 {
                 String s = "abcd";
                 s.indexOf("cd", 1);
                 Method m;
-                Reference r = new Reference(RefNative.obj2id(java.lang.String.class));
                 m = r.getMethod("indexOf", new Class[]{java.lang.String.class, java.lang.Integer.class});
                 if (m != null) {
                     Object result = m.invoke(s, new Object[]{"cd", 1});
                     //System.out.println("reflect invoke result:" + result);
                 }
-                if (RefNative.getGarbageStatus() == 1) {
-                    Object[] objs = RefNative.getGarbageReferedObjs();
-                    for (int n = 0; n < objs.length; n++) {
-                        Object o = objs[n];
-                        if (o != null && o instanceof Reference) {
-                            Method[] mds = ((Reference) objs[n]).getMethods();
-                            System.out.println("Reference[" + Long.toString(RefNative.obj2id(objs[n]), 10) + "]:");
-                            for (int j = 0; j < mds.length; j++) {
-                                Method md = mds[j];
-
-                                if (md == null) {
-                                    System.out.println("Method[" + j + "]:" + md);
-                                } else {
-                                    String[] paras = md.getParameterStrs();
-                                    int k = 0;
-                                    for (String p : paras) {
-                                        System.out.println("Method[" + j + "][" + Long.toString(RefNative.obj2id(md), 16) + "](" + Long.toString(RefNative.obj2id(md), 10) + "):" + md.methodName + " paras[" + k + "]:" + p + "|" + Long.toString(RefNative.obj2id(p), 16));
-                                        k++;
-                                    }
-                                }
-                            }
-                        }
-                    }
-                    int debug = 1;
-                }
-
-//                Long lo = new Long(0x1010101020202020L);
-//                r = new Reference(RefNative.obj2id(java.lang.Long.class));
-//                m = r.getMethod("longValue", new Class[]{});
-//                if (m != null) {
-//                    Object result = m.invoke(lo, new Object[]{});
-//                    //System.out.println("reflect invoke result:" + Long.toString((Long) result, 16));
-//                }
-//                for (int j = 0; j < r.getMethods().length; j++) {
-//                    Method md = r.getMethod(j);
-//                    String[] paras = md.getParameterStrs();
-//                    for (String p : paras) {
-//                        p.hashCode();
+//                if (RefNative.getGarbageStatus() == 1) {
+//                    Object[] objs = RefNative.getGarbageReferedObjs();
+//                    for (int n = 0; n < objs.length; n++) {
+//                        Object o = objs[n];
+//                        if (o != null && o instanceof Reference) {
+//                            Method[] mds = ((Reference) objs[n]).getMethods();
+//                            System.out.println("Reference[" + Long.toString(RefNative.obj2id(objs[n]), 10) + "]:");
+//                            for (int j = 0; j < mds.length; j++) {
+//                                Method md = mds[j];
+//
+//                                if (md == null) {
+//                                    System.out.println("Method[" + j + "]:" + md);
+//                                } else {
+//                                    String[] paras = md.getParameterStrs();
+//                                    int k = 0;
+//                                    for (String p : paras) {
+//                                        System.out.println("Method[" + j + "][" + Long.toString(RefNative.obj2id(md), 16) + "](" + Long.toString(RefNative.obj2id(md), 10) + "):" + md.methodName + " paras[" + k + "]:" + p + "|" + Long.toString(RefNative.obj2id(p), 16));
+//                                        k++;
+//                                    }
+//                                }
+//                            }
+//                        }
 //                    }
+//                    int debug = 1;
 //                }
+
+                Long lo = new Long(0x1010101020202020L);
+
+                m = r2.getMethod("longValue", new Class[]{});
+                if (m != null) {
+                    Object result = m.invoke(lo, new Object[]{});
+                    //System.out.println("reflect invoke result:" + Long.toString((Long) result, 16));
+                }
             } catch (Exception ex) {
             }
         }
@@ -722,7 +724,7 @@ public class Foo1 {
 //            f.t4();
 //            f.t5();
 //            f.t6();
-//            f.t7();
+            f.t7();
 //            f.t8();
 //            f.t9();
 //            f.t10();
@@ -737,13 +739,13 @@ public class Foo1 {
 //            f.t19();
 //            f.t20();
 //            f.t21();
-            f.t22();
+//            f.t22();
         }
     }
 
     public static void main(String[] agrs) {
         try {
-//            BpDeepTest.main(agrs);
+            BpDeepTest.main(agrs);
             Foo1.main();
 //            Foo2.main(agrs);
 //            Foo3.main(agrs);
