@@ -62,6 +62,7 @@ ArrayList *arraylist_create(int length) {
         jvm_free(new_arraylist);
         return NULL;
     }
+    pthread_spin_init(&new_arraylist->spinlock, PTHREAD_PROCESS_PRIVATE);
 
     return new_arraylist;
 }
@@ -71,6 +72,7 @@ void arraylist_destory(ArrayList *arraylist) {
 
     if (arraylist != NULL) {
         jvm_free(arraylist->data);
+        pthread_spin_destroy(&arraylist->spinlock);
         jvm_free(arraylist);
     }
 }
@@ -185,7 +187,7 @@ int arraylist_index_of(ArrayList *arraylist,
 ArrayListValue arraylist_get_value(ArrayList *arraylist, int index) {
     if (index >= 0 && index < arraylist->length)
         return arraylist->data[index];
-    return (void *) -1;
+    return NULL;
 }
 
 ArrayListValue arraylist_pop_front(ArrayList *arraylist) {

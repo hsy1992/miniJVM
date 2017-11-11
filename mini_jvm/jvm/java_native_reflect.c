@@ -272,7 +272,7 @@ s32 javax_mini_reflect_MemAccess_readRefer0(Runtime *runtime, Class *clazz) {
 }
 
 s32 javax_mini_reflect_vm_RefNative_getThreads(Runtime *runtime, Class *clazz) {
-    garbage_thread_lock();
+//    garbage_thread_lock();
     Utf8String *ustr = utf8_create_c(STR_INS_JAVA_LANG_THREAD);
     Instance *jarr = jarray_create(thread_list->length, DATATYPE_REFERENCE, ustr);
     utf8_destory(ustr);
@@ -281,11 +281,13 @@ s32 javax_mini_reflect_vm_RefNative_getThreads(Runtime *runtime, Class *clazz) {
 
     for (i = 0; i < thread_list->length; i++) {
         Runtime *r = threadlist_get(i);
-        l2d.r = r->threadInfo->jthread;
-        jarray_set_field(jarr, i, &l2d);
+        if(r) {
+            l2d.r = r->threadInfo->jthread;
+            jarray_set_field(jarr, i, &l2d);
+        }
     }
     push_ref(runtime->stack, jarr);//先放入栈，再关联回收器，防止多线程回收
-    garbage_thread_unlock();
+//    garbage_thread_unlock();
 #if _JVM_DEBUG_BYTECODE_DETAIL > 5
     jvm_printf("javax_mini_reflect_vm_RefNative_getThreads\n");
 #endif

@@ -39,6 +39,8 @@ CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 #ifndef ALGORITHM_ARRAYLIST_H
 #define ALGORITHM_ARRAYLIST_H
 
+#include <pthread.h>
+
 #ifdef __cplusplus
 extern "C" {
 #endif
@@ -75,6 +77,7 @@ struct _ArrayList {
     /** Private data and should not be accessed */
 
     int _alloced;
+    pthread_spinlock_t spinlock;
 };
 
 /**

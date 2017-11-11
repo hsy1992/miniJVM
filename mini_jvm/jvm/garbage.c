@@ -4,7 +4,6 @@
 #include "garbage.h"
 #include "jvm_util.h"
 
-MemoryBlock *__garbage_find_obj(__refer ref);
 
 void dump_refer(void);
 
@@ -197,7 +196,7 @@ void getMemBlockName(void *memblock, Utf8String *name) {
         switch (mb->type) {
             case MEM_TYPE_CLASS: {
                 utf8_append_c(name, "C");
-                Class *clazz = (Class *) __garbage_find_obj(mb);
+                Class *clazz = (Class *) garbage_is_alive(mb);
                 if (clazz)
                     utf8_append(name, clazz->name);
                 break;
@@ -205,7 +204,7 @@ void getMemBlockName(void *memblock, Utf8String *name) {
             case MEM_TYPE_INS: {
                 Instance *ins = (Instance *) mb;
                 utf8_append_c(name, "L");
-                Class *clazz = (Class *) __garbage_find_obj(ins->mb.clazz);
+                Class *clazz = (Class *) garbage_is_alive(ins->mb.clazz);
                 if (clazz)
                     utf8_append(name, clazz->name);
                 utf8_append_c(name, ";");
@@ -215,7 +214,7 @@ void getMemBlockName(void *memblock, Utf8String *name) {
                 Instance *arr = (Instance *) mb;
 
                 utf8_append_c(name, "Array{");
-                Class *clazz = (Class *) __garbage_find_obj(arr->mb.clazz);
+                Class *clazz = (Class *) garbage_is_alive(arr->mb.clazz);
                 if (clazz)
                     utf8_append(name, clazz->name);
                 utf8_append_c(name, "}");
@@ -225,29 +224,6 @@ void getMemBlockName(void *memblock, Utf8String *name) {
                 utf8_append_c(name, "ERROR");
         }
     }
-}
-
-MemoryBlock *__garbage_find_obj(__refer ref) {
-    __refer result = hashset_get(collector->objs, ref);
-    if (!result) {
-        result = hashset_get(collector->objs_holder, ref);
-    }
-    if (!result) {
-        if (collector->operation_cache->length == 0) {
-            int debug = 1;
-        }
-        LinkedListEntry *entry = linkedlist_header(collector->operation_cache);
-        while (entry) {
-            GarbageOp *op = (GarbageOp *) linkedlist_data(entry);
-            if (op->val == ref) {
-                result = ref;
-                break;
-            }
-            entry = linkedlist_next(collector->operation_cache, entry);
-        }
-    }
-
-    return (MemoryBlock *) result;
 }
 
 s32 getMbSize(MemoryBlock *mb) {
@@ -294,15 +270,15 @@ void dump_refer() {
 void *collect_thread_run(void *para) {
     s64 lastgc = currentTimeMillis();
     while (1) {
-        garbage_thread_lock();
-        garbage_thread_timedwait(1000);
+//        garbage_thread_lock();
+//        garbage_thread_timedwait(1000);
         s64 startAt = currentTimeMillis();
         garbage_move_cache();
         s64 endAt = currentTimeMillis() - startAt;
         if (endAt - startAt > 1000) {
             jvm_printf("[WARN]gc movcache: %lld\n", endAt - startAt);
         }
-        garbage_thread_unlock();
+//        garbage_thread_unlock();
 
         if (collector->_garbage_thread_status == GARBAGE_THREAD_STOP) {
             break;
@@ -326,7 +302,13 @@ void *collect_thread_run(void *para) {
 void garbage_move_cache() {
     //jvm_printf(" move cache\n");
     GarbageOp *op;
-    while (NULL != (op = (GarbageOp *) linkedlist_pop_end(collector->operation_cache))) {
+    while (1) {
+        pthread_spin_lock(&collector->operation_cache->spinlock);
+        op = (GarbageOp *) linkedlist_pop_end(collector->operation_cache);
+        pthread_spin_unlock(&collector->operation_cache->spinlock);
+        if (op == NULL) {
+            break;
+        }
         switch (op->op_type) {
             case GARBAGE_OP_REG: {
                 hashset_put(collector->objs, op->val);
@@ -691,15 +673,26 @@ void class_mark_refer(Class *clazz) {
 }
 //=================================  reg unreg ==================================
 
+MemoryBlock *garbage_is_alive(__refer ref) {
+    __refer result = hashset_get(collector->objs, ref);
+    if (!result) {
+        result = hashset_get(collector->objs_holder, ref);
+    }
+    if (!result) {
+        pthread_spin_lock(&collector->operation_cache->spinlock);
+        LinkedListEntry *entry = linkedlist_header(collector->operation_cache);
+        while (entry) {
+            GarbageOp *op = (GarbageOp *) linkedlist_data(entry);
+            if (op->val == ref) {
+                result = ref;
+                break;
+            }
+            entry = linkedlist_next(collector->operation_cache, entry);
+        }
+        pthread_spin_unlock(&collector->operation_cache->spinlock);
+    }
 
-
-
-s32 garbage_is_alive(__refer obj) {
-    __refer ref = NULL;
-    garbage_thread_lock();
-    ref = __garbage_find_obj(obj);
-    garbage_thread_unlock();
-    return ref != NULL;
+    return (MemoryBlock *) result;
 }
 
 
@@ -707,21 +700,23 @@ void __garbage_putin_cache(c8 op_type, __refer ref) {
     GarbageOp *op = jvm_alloc(sizeof(GarbageOp));
     op->op_type = op_type;
     op->val = ref;
+    pthread_spin_lock(&collector->operation_cache->spinlock);
     linkedlist_push_front(collector->operation_cache, op);
+    pthread_spin_unlock(&collector->operation_cache->spinlock);
 }
 
 
 s32 garbage_refer_reg(__refer ref) {
     if (ref) {
         MemoryBlock *mb = (MemoryBlock *) ref;
-        garbage_thread_lock();
+//        garbage_thread_lock();
         if (!mb->garbage_reg) {
             __garbage_putin_cache(GARBAGE_OP_REG, ref);
             garbage_thread_notify();
             mb->garbage_reg = 1;
 
         }
-        garbage_thread_unlock();
+//        garbage_thread_unlock();
 
     }
     return 0;
@@ -730,20 +725,20 @@ s32 garbage_refer_reg(__refer ref) {
 
 void garbage_refer_hold(__refer ref) {
     if (ref) {
-        garbage_thread_lock();
+//        garbage_thread_lock();
         __garbage_putin_cache(GARBAGE_OP_HOLD, ref);
 
-        garbage_thread_notify();
-        garbage_thread_unlock();
+//        garbage_thread_notify();
+//        garbage_thread_unlock();
     }
 }
 
 void garbage_refer_release(__refer ref) {
     if (ref) {
-        garbage_thread_lock();
+//        garbage_thread_lock();
         __garbage_putin_cache(GARBAGE_OP_RELEASE, ref);
 
-        garbage_thread_notify();
-        garbage_thread_unlock();
+//        garbage_thread_notify();
+//        garbage_thread_unlock();
     }
 }

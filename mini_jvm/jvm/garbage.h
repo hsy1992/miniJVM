@@ -85,7 +85,7 @@ void garbage_collector_destory(void);
 
 s64 garbage_collect(void);
 
-s32 garbage_is_alive(__refer obj);
+MemoryBlock *garbage_is_alive(__refer obj);
 
 void garbage_refer_hold(__refer ref);
 

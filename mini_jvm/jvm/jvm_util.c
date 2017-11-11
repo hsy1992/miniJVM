@@ -116,22 +116,30 @@ Class *array_class_get(Utf8String *desc) {
 
 Runtime *threadlist_get(s32 i) {
     Runtime *r = NULL;
-    garbage_thread_lock();
-    r = (Runtime *) arraylist_get_value(thread_list, i);
-    garbage_thread_unlock();
+    //garbage_thread_lock();
+    if (i < thread_list->length) {
+        pthread_spin_lock(&thread_list->spinlock);
+        r = (Runtime *) arraylist_get_value(thread_list, i);
+//    garbage_thread_unlock();
+        pthread_spin_unlock(&thread_list->spinlock);
+    }
     return r;
 }
 
 void threadlist_remove(Runtime *r) {
-    garbage_thread_lock();
+//    garbage_thread_lock();
+    pthread_spin_lock(&thread_list->spinlock);
     arraylist_remove(thread_list, r);
-    garbage_thread_unlock();
+//    garbage_thread_unlock();
+    pthread_spin_unlock(&thread_list->spinlock);
 }
 
 void threadlist_add(Runtime *r) {
-    garbage_thread_lock();
+//    garbage_thread_lock();
+    pthread_spin_lock(&thread_list->spinlock);
     arraylist_append(thread_list, r);
-    garbage_thread_unlock();
+//    garbage_thread_unlock();
+    pthread_spin_unlock(&thread_list->spinlock);
 }
 
 /**

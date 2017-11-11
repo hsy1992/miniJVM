@@ -456,13 +456,11 @@ s32 jdwp_writepacket(JdwpClient *client, JdwpPacket *packet) {
 
 Runtime *getRuntimeOfThread(Instance *jthread) {
     Runtime *r = NULL;
-    garbage_thread_lock();
     s32 i;
     for (i = 0; i < thread_list->length; i++) {
-        Runtime *rt = arraylist_get_value(thread_list, i);
-        if (rt->threadInfo->jthread == jthread)r = rt;
+        Runtime *rt = threadlist_get(i);
+        if (rt && rt->threadInfo->jthread == jthread)r = rt;
     }
-    garbage_thread_unlock();
     return r;
 }
 
@@ -1318,22 +1316,22 @@ s32 jdwp_client_process(JdwpClient *client, Runtime *runtime) {
                 break;
             }
             case JDWP_CMD_VirtualMachine_AllThreads: {//1.4
-                garbage_thread_lock();
                 jdwppacket_set_err(res, JDWP_ERROR_NONE);
                 jdwppacket_write_int(res, thread_list->length);
                 s32 i;
                 for (i = 0; i < thread_list->length; i++) {
                     Runtime *t = threadlist_get(i);
-                    jdwppacket_write_refer(res, t->threadInfo->jthread);
-                    //jvm_printf("VirtualMachine_AllThreads: %llx\n", (s64) (long) t);
-                    Instance *jarr_name = jthread_get_name_value(t->threadInfo->jthread);
-                    Utf8String *ustr = utf8_create();
-                    unicode_2_utf8((u16 *) jarr_name->arr_body, ustr, jarr_name->arr_length);
-                    //printf("%s\n", utf8_cstr(ustr));
-                    utf8_destory(ustr);
+                    if (t) {
+                        jdwppacket_write_refer(res, t->threadInfo->jthread);
+                        //jvm_printf("VirtualMachine_AllThreads: %llx\n", (s64) (long) t);
+                        Instance *jarr_name = jthread_get_name_value(t->threadInfo->jthread);
+                        Utf8String *ustr = utf8_create();
+                        unicode_2_utf8((u16 *) jarr_name->arr_body, ustr, jarr_name->arr_length);
+                        //printf("%s\n", utf8_cstr(ustr));
+                        utf8_destory(ustr);
+                    }
                 }
                 jdwp_writepacket(client, res);
-                garbage_thread_unlock();
                 break;
             }
             case JDWP_CMD_VirtualMachine_TopLevelThreadGroups: {//1.5
@@ -1367,27 +1365,23 @@ s32 jdwp_client_process(JdwpClient *client, Runtime *runtime) {
             }
             case JDWP_CMD_VirtualMachine_Suspend: {//1.8
                 s32 i;
-                garbage_thread_lock();
                 for (i = 0; i < thread_list->length; i++) {
                     Runtime *t = threadlist_get(i);
-                    jthread_suspend(t);
+                    if (t)jthread_suspend(t);
                     //jvm_printf("VirtualMachine_Suspend: %lld\n" + (s64) (long) t);
                 }
-                garbage_thread_unlock();
                 jdwppacket_set_err(res, JDWP_ERROR_NONE);
 
                 jdwp_writepacket(client, res);
                 break;
             }
             case JDWP_CMD_VirtualMachine_Resume: {//1.9
-                garbage_thread_lock();
                 s32 i;
                 for (i = 0; i < thread_list->length; i++) {
                     Runtime *t = threadlist_get(i);
-                    if (t->threadInfo->suspend_count > 0)jthread_resume(t);
+                    if (t)jthread_resume(t);
                     //jvm_printf("VirtualMachine_Resume: %llx\n", (s64) (long) t);
                 }
-                garbage_thread_unlock();
                 jdwppacket_set_err(res, JDWP_ERROR_NONE);
 
                 jdwp_writepacket(client, res);
