@@ -29,12 +29,9 @@ s64 MAX_HEAP_SIZE = 20 * 1024 * 1024;
 
 
 //
+InstanceFieldInfo ins_field_offset;
 //
 u8 volatile java_debug = 1;
-Instance *jdwp_jthread;
-
-s32 refer_method_count=0;
-
 
 
 #if _JVM_DEBUG_PROFILE

@@ -183,6 +183,35 @@ s32 class_prepar(Class *clazz) {
         clazz->field_instance_len = clazz->field_instance_start + instance_len;
     }
 
+    //预计算字段在实例内存中的偏移，节约运行时时间
+    if (utf8_equals_c(clazz->name, STR_CLASS_JAVA_LANG_STRING)) {
+        FieldInfo *fi;
+        fi = find_fieldInfo_by_name_c(STR_CLASS_JAVA_LANG_STRING, STR_FIELD_COUNT, "I");
+        ins_field_offset.string_count = fi;
+        fi = find_fieldInfo_by_name_c(STR_CLASS_JAVA_LANG_STRING, STR_FIELD_OFFSET, "I");
+        ins_field_offset.string_offset = fi;
+        fi = find_fieldInfo_by_name_c(STR_CLASS_JAVA_LANG_STRING, STR_FIELD_VALUE, "[C");
+        ins_field_offset.string_value = fi;
+    } else if (utf8_equals_c(clazz->name, STR_CLASS_JAVA_LANG_THREAD)) {
+        FieldInfo *fi;
+        fi = find_fieldInfo_by_name_c(STR_CLASS_JAVA_LANG_THREAD, STR_FIELD_NAME, "[C");
+        ins_field_offset.thread_name = fi;
+        fi = find_fieldInfo_by_name_c(STR_CLASS_JAVA_LANG_THREAD, STR_FIELD_STACKFRAME, "J");
+        ins_field_offset.thread_stackFrame = fi;
+    } else if (utf8_equals_c(clazz->name, STR_CLASS_JAVA_LANG_STACKTRACE)) {
+        FieldInfo *fi;
+        fi = find_fieldInfo_by_name_c(STR_CLASS_JAVA_LANG_STACKTRACE, "declaringClass", STR_INS_JAVA_LANG_STRING);
+        ins_field_offset.stacktrace_declaringClass = fi;
+        fi = find_fieldInfo_by_name_c(STR_CLASS_JAVA_LANG_STACKTRACE, "methodName", STR_INS_JAVA_LANG_STRING);
+        ins_field_offset.stacktrace_methodName = fi;
+        fi = find_fieldInfo_by_name_c(STR_CLASS_JAVA_LANG_STACKTRACE, "fileName", STR_INS_JAVA_LANG_STRING);
+        ins_field_offset.stacktrace_fileName = fi;
+        fi = find_fieldInfo_by_name_c(STR_CLASS_JAVA_LANG_STACKTRACE, "lineNumber", "I");
+        ins_field_offset.stacktrace_lineNumber = fi;
+        fi = find_fieldInfo_by_name_c(STR_CLASS_JAVA_LANG_STACKTRACE, "parent", STR_INS_JAVA_LANG_STACKTRACEELEMENT);
+        ins_field_offset.stacktrace_parent = fi;
+    }
+
     clazz->status = CLASS_STATUS_PREPARED;
     return 0;
 }
@@ -393,6 +422,17 @@ FieldInfo *find_fieldInfo_by_fieldref(Class *clazz, s32 field_ref) {
         other = getSuperClass(other);
     }
 
+    return fi;
+}
+
+FieldInfo *find_fieldInfo_by_name_c(c8 *pclsName, c8 *pfieldName, c8 *pfieldType) {
+    Utf8String *clsName = utf8_create_c(pclsName);
+    Utf8String *fieldName = utf8_create_c(pfieldName);
+    Utf8String *fieldType = utf8_create_c(pfieldType);
+    FieldInfo *fi = find_fieldInfo_by_name(clsName, fieldName, fieldType);
+    utf8_destory(clsName);
+    utf8_destory(fieldName);
+    utf8_destory(fieldType);
     return fi;
 }
 

@@ -205,6 +205,7 @@ static c8 *STR_INS_JAVA_LANG_STRING = "Ljava/lang/String;";
 static c8 *STR_INS_JAVA_LANG_THREAD = "Ljava/lang/Thread;";
 static c8 *STR_INS_JAVA_LANG_CLASS = "Ljava/lang/Class;";
 static c8 *STR_INS_JAVA_LANG_OBJECT = "Ljava/lang/Object;";
+static c8 *STR_INS_JAVA_LANG_STACKTRACEELEMENT = "Ljava/lang/StackTraceElement;";
 
 enum {
     METHOD_INVOKE_DYNAMIC,
@@ -856,6 +857,8 @@ MethodInfo *find_methodInfo_by_name(Utf8String *clsName, Utf8String *methodName,
 ConstantFieldRef *find_constant_fieldref(Class *clazz, s32 field_ref);
 
 FieldInfo *find_fieldInfo_by_fieldref(Class *clazz, s32 field_ref);
+
+FieldInfo *find_fieldInfo_by_name_c(c8 *pclsName, c8 *pfieldName, c8 *pfieldType);
 
 FieldInfo *find_fieldInfo_by_name(Utf8String *clsName, Utf8String *fieldName, Utf8String *fieldType);
 

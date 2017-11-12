@@ -1847,12 +1847,12 @@ s32 jdwp_client_process(JdwpClient *client, Runtime *runtime) {
                             vt.value = (s64) (long) r;
                             jdwp_client_hold_obj(client, r);
 
-                            if (vt.type == 's') {
-                                s32 debug = 1;
-                                Utf8String *ustr = utf8_create();
-                                jstring_2_utf8((Instance *) r, ustr);
-                                utf8_destory(ustr);
-                            }
+//                            if (vt.type == 's') {
+//                                s32 debug = 1;
+//                                Utf8String *ustr = utf8_create();
+//                                jstring_2_utf8((Instance *) r, ustr);
+//                                utf8_destory(ustr);
+//                            }
                             break;
                         }
                         default:

@@ -113,7 +113,7 @@ s32 execute(c8 *p_classpath, c8 *p_mainclass, s32 argc, c8 **argv) {
 
     array_classloader = classloader_create("");
 
-
+    memset(&ins_field_offset,0, sizeof(InstanceFieldInfo));
     //创建线程容器
     thread_list = arraylist_create(0);
     thread_lock_init(&threadlist_lock);

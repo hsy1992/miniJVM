@@ -1859,6 +1859,10 @@ s32 op_invokeinterface(u8 **opCode, Runtime *runtime) {
                 method = find_instance_methodInfo_by_name(ins, cmr->name, cmr->descriptor);
                 pairlist_put(cmr->virtual_methods, ins->mb.clazz, method);//放入缓存，以便下次直接调用
             }
+//            if (cmr->virtual_methods->count > 3) {
+//                jvm_printf("virtual method:%s.%s %d\n", utf8_cstr(cmr->clsName), utf8_cstr(cmr->name),
+//                           cmr->virtual_methods->count);
+//            }
         }
 
 #if _JVM_DEBUG_BYTECODE_DETAIL > 5
@@ -3179,9 +3183,9 @@ void stack2localvar(MethodInfo *method, Runtime *father, Runtime *son) {
     s32 i_local = method->para_count;
 
     for (i = 0; i < paraLen; i++) {
-        if (father->stack == 0) {
-            int debug = 1;
-        }
+//        if (father->stack == 0) {
+//            int debug = 1;
+//        }
         pop_entry(father->stack, &entry);
         char type = utf8_char_at(paraType, paraLen - 1 - i);
 

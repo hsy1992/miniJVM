@@ -20,6 +20,22 @@ static s64 NANO_START = 0;
 typedef unsigned short uni_char;
 
 //======================= utils =============================
+typedef struct _InstanceFieldInfo {
+    FieldInfo *string_offset;
+    FieldInfo *string_count;
+    FieldInfo *string_value;
+    //
+    FieldInfo *thread_name;
+    FieldInfo *thread_stackFrame;
+    //
+    FieldInfo *stacktrace_declaringClass;
+    FieldInfo *stacktrace_methodName;
+    FieldInfo *stacktrace_fileName;
+    FieldInfo *stacktrace_lineNumber;
+    FieldInfo *stacktrace_parent;
+
+} InstanceFieldInfo;
+extern InstanceFieldInfo ins_field_offset;
 
 s32 utf8_2_unicode(Utf8String *ustr, u16 *arr);
 

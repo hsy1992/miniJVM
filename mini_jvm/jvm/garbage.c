@@ -265,7 +265,7 @@ void *collect_thread_run(void *para) {
     s64 lastgc = currentTimeMillis();
     while (1) {
 //        garbage_thread_lock();
-//        garbage_thread_timedwait(1000);
+//        threadSleep(100);
         s64 startAt = currentTimeMillis();
         garbage_move_cache();
         s64 endAt = currentTimeMillis() - startAt;

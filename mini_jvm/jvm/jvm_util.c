@@ -606,17 +606,17 @@ pthread_t jthread_start(Instance *ins) {//
 }
 
 __refer jthread_get_name_value(Instance *ins) {
-    c8 *ptr = getFieldPtr_byName_c(ins, STR_CLASS_JAVA_LANG_THREAD, STR_FIELD_NAME, "[C");
+    c8 *ptr = getInstanceFieldPtr(ins, ins_field_offset.thread_name);
     return getFieldRefer(ptr);
 }
 
 __refer jthread_get_stackframe_value(Instance *ins) {
-    c8 *ptr = getFieldPtr_byName_c(ins, STR_CLASS_JAVA_LANG_THREAD, STR_FIELD_STACKFRAME, "J");
+    c8 *ptr = getInstanceFieldPtr(ins, ins_field_offset.thread_stackFrame);
     return (__refer) (long) getFieldLong(ptr);
 }
 
 void jthread_set_stackframe_value(Instance *ins, __refer val) {
-    c8 *ptr = getFieldPtr_byName_c(ins, STR_CLASS_JAVA_LANG_THREAD, STR_FIELD_STACKFRAME, "J");
+    c8 *ptr = getInstanceFieldPtr(ins, ins_field_offset.thread_stackFrame);
     setFieldLong(ptr, (s64) (long) val);
 }
 
@@ -965,6 +965,14 @@ s32 instance_destory(Instance *ins) {
     return 0;
 }
 
+/**
+ * for java string instance copy
+ * deepth copy instance
+ * not deepth copy array
+ *
+ * @param src  source instance
+ * @return
+ */
 Instance *instance_copy(Instance *src) {
     Instance *dst = jvm_alloc(sizeof(Instance));
     memcpy(dst, src, sizeof(Instance));
@@ -1027,19 +1035,19 @@ Instance *jstring_create(Utf8String *src, Runtime *runtime) {
 }
 
 s32 jstring_get_count(Instance *jstr) {
-    return getFieldInt(getFieldPtr_byName_c(jstr, STR_CLASS_JAVA_LANG_STRING, STR_FIELD_COUNT, "I"));
+    return getFieldInt(getInstanceFieldPtr(jstr, ins_field_offset.string_count));
 }
 
 void jstring_set_count(Instance *jstr, s32 count) {
-    setFieldInt(getFieldPtr_byName_c(jstr, STR_CLASS_JAVA_LANG_STRING, STR_FIELD_COUNT, "I"), count);
+    setFieldInt(getInstanceFieldPtr(jstr, ins_field_offset.string_count), count);
 }
 
 s32 jstring_get_offset(Instance *jstr) {
-    return getFieldInt(getFieldPtr_byName_c(jstr, STR_CLASS_JAVA_LANG_STRING, STR_FIELD_OFFSET, "I"));
+    return getFieldInt(getInstanceFieldPtr(jstr, ins_field_offset.string_offset));
 }
 
 c8 *jstring_get_value_ptr(Instance *jstr) {
-    return getFieldPtr_byName_c(jstr, STR_CLASS_JAVA_LANG_STRING, STR_FIELD_VALUE, "[C");
+    return getInstanceFieldPtr(jstr, ins_field_offset.string_value);
 }
 
 Instance *jstring_get_value_array(Instance *jstr) {
