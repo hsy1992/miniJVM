@@ -195,7 +195,7 @@ static c8 *STR_CLASS_JAVA_LANG_THREAD = "java/lang/Thread";
 static c8 *STR_CLASS_JAVA_LANG_CLASS = "java/lang/Class";
 static c8 *STR_CLASS_JAVA_LANG_STACKTRACE = "java/lang/StackTraceElement";
 static c8 *STR_CLASS_JAVA_LANG_THROWABLE = "java/lang/Throwable";
-static c8 *STR_FIELD_THREADQ = "threadQ";
+static c8 *STR_FIELD_STACKFRAME = "stackFrame";
 static c8 *STR_FIELD_NAME = "name";
 static c8 *STR_FIELD_VALUE = "value";
 static c8 *STR_FIELD_COUNT = "count";
@@ -696,6 +696,17 @@ struct _Runtime {
  */
 struct _ClassType {
     MemoryBlock mb;
+    Class *superclass;
+    __refer *constant_item_ptr;//存放常量池项目地址
+    //类变量及实例变量的参数
+    s32 field_instance_start;//实例变量模板起始起址，继承自父类的变量放在前面
+    s32 field_instance_len; //非静态变量长度
+    s32 field_static_len; //静态变量内存长度
+    c8 *field_static; //静态变量内存地址
+    //public:
+    s32 (*_load_from_file)(struct _ClassType *_this, c8 *file);
+
+    Utf8String *source;
 
     Utf8String *name;
     ClassFileFormat cff;
@@ -705,21 +716,10 @@ struct _ClassType {
     MethodPool methodPool;
     AttributePool attributePool;
 
-    __refer *constant_item_ptr;//存放常量池项目地址
-    c8 status;
-    //类变量及实例变量的参数
-    s32 field_instance_start;//实例变量模板起始起址，继承自父类的变量放在前面
-    s32 field_instance_len; //非静态变量长度
-    s32 field_static_len; //静态变量内存长度
-    c8 *field_static; //静态变量内存地址
-
-    //public:
-    s32 (*_load_from_file)(struct _ClassType *_this, c8 *file);
-
-    Utf8String *source;
 
     //for array class
     s32 arr_type_index;
+    c8 status;
 };
 
 void _INIT_CLASS(Class *_this);

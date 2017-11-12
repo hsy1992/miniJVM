@@ -546,7 +546,7 @@ s32 jthread_init(Instance *jthread) {
 s32 jthread_init_with_runtime(Instance *jthread, Runtime *runtime) {
     if (!runtime)runtime = runtime_create(NULL);
     localvar_init(runtime, 1);
-    jthread_set_threadq_value(jthread, runtime);
+    jthread_set_stackframe_value(jthread, runtime);
     runtime->clazz = jthread->mb.clazz;
     runtime->threadInfo->jthread = jthread;
     runtime->threadInfo->thread_status = THREAD_STATUS_RUNNING;
@@ -556,11 +556,11 @@ s32 jthread_init_with_runtime(Instance *jthread, Runtime *runtime) {
 }
 
 s32 jthread_dispose(Instance *jthread) {
-    Runtime *runtime = (Runtime *) jthread_get_threadq_value(jthread);
+    Runtime *runtime = (Runtime *) jthread_get_stackframe_value(jthread);
     threadlist_remove(runtime);
     if (java_debug)event_on_thread_death(runtime->threadInfo->jthread);
     //destory
-    jthread_set_threadq_value(jthread, NULL);
+    jthread_set_stackframe_value(jthread, NULL);
     localvar_dispose(runtime);
     runtime_destory(runtime);
 
@@ -571,7 +571,7 @@ void *jtherad_run(void *para) {
     Instance *jthread = (Instance *) para;
     jthread_init(jthread);
     s32 ret = 0;
-    Runtime *runtime = (Runtime *) jthread_get_threadq_value(jthread);
+    Runtime *runtime = (Runtime *) jthread_get_stackframe_value(jthread);
     runtime->threadInfo->pthread = pthread_self();
 
     Utf8String *methodName = utf8_create_c("run");
@@ -610,15 +610,14 @@ __refer jthread_get_name_value(Instance *ins) {
     return getFieldRefer(ptr);
 }
 
-__refer jthread_get_threadq_value(Instance *ins) {
-    c8 *ptr = getFieldPtr_byName_c(ins, STR_CLASS_JAVA_LANG_THREAD, STR_FIELD_THREADQ, "Ljava/lang/Thread;");
-    return getFieldRefer(ptr);
+__refer jthread_get_stackframe_value(Instance *ins) {
+    c8 *ptr = getFieldPtr_byName_c(ins, STR_CLASS_JAVA_LANG_THREAD, STR_FIELD_STACKFRAME, "J");
+    return (__refer) (long) getFieldLong(ptr);
 }
 
-void jthread_set_threadq_value(Instance *ins, __refer val) {
-    c8 *ptr = getFieldPtr_byName_c(ins, STR_CLASS_JAVA_LANG_THREAD, STR_FIELD_THREADQ, "Ljava/lang/Thread;");
-    //setFieldRefer(ptr, (__refer) val);
-    memcpy(ptr, &val, sizeof(__refer));
+void jthread_set_stackframe_value(Instance *ins, __refer val) {
+    c8 *ptr = getFieldPtr_byName_c(ins, STR_CLASS_JAVA_LANG_THREAD, STR_FIELD_STACKFRAME, "J");
+    setFieldLong(ptr, (s64) (long) val);
 }
 
 

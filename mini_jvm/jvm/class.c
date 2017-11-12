@@ -152,7 +152,7 @@ s32 class_prepar(Class *clazz) {
             f[i].offset = instance_len;
             instance_len += width;
         }
-        f[i]._this_class=clazz;
+        f[i]._this_class = clazz;
     }
     //静态变量分配
     clazz->field_static_len = static_len;
@@ -253,15 +253,20 @@ u8 assignable_from(Class *clazzSon, Class *clazzSuper) {
 }
 
 Class *getSuperClass(Class *clazz) {
-    s32 superid = clazz->cff.super_class;
-    if (!superid)return NULL;
-    ConstantClassRef *ccf = find_constant_classref(clazz, superid);
-    if (ccf) {
-        Utf8String *clsName_u = get_utf8_string(clazz, ccf->stringIndex);
-        Class *other = classes_get(clsName_u);
-        return other;
+    if (clazz->superclass) {
+        return clazz->superclass;
+    } else {
+        s32 superid = clazz->cff.super_class;
+        if (!superid)return NULL;
+        ConstantClassRef *ccf = find_constant_classref(clazz, superid);
+        if (ccf) {
+            Utf8String *clsName_u = get_utf8_string(clazz, ccf->stringIndex);
+            Class *other = classes_get(clsName_u);
+            clazz->superclass = other;
+            return other;
+        }
+        return NULL;
     }
-    return NULL;
 }
 
 //===============================    类数据访问  ==================================

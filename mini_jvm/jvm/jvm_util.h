@@ -147,9 +147,9 @@ void *jtherad_run(void *para);
 
 pthread_t jthread_start(Instance *ins);
 
-__refer jthread_get_threadq_value(Instance *ins);
+__refer jthread_get_stackframe_value(Instance *ins);
 
-void jthread_set_threadq_value(Instance *ins, void *val);
+void jthread_set_stackframe_value(Instance *ins, void *val);
 
 __refer jthread_get_name_value(Instance *ins);
 

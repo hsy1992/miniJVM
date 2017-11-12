@@ -679,7 +679,7 @@ s32 java_lang_Thread_start(Runtime *runtime, Class *clazz) {
 s32 java_lang_Thread_isAlive(Runtime *runtime, Class *clazz) {
     RuntimeStack *stack = runtime->stack;
     Instance *ins = (Instance *) localvar_getRefer(runtime, 0);
-    Runtime *rt = jthread_get_threadq_value(ins);
+    Runtime *rt = jthread_get_stackframe_value(ins);
     if (rt)
         push_int(stack, runtime->threadInfo->thread_status != THREAD_STATUS_ZOMBIE);
     else

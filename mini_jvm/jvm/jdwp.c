@@ -870,7 +870,7 @@ s32 jdwp_set_debug_step(s32 setOrClear, Instance *jthread, s32 size, s32 depth) 
     /**
      * 由于方法调用层级不同，则runtime的son的层级不同，由此控制虚机方法step_into ,step_out
      */
-    Runtime *r = jthread_get_threadq_value(jthread);
+    Runtime *r = jthread_get_stackframe_value(jthread);
     JdwpStep *step = &r->threadInfo->jdwp_step;
     if (setOrClear) {
         step->active = 1;

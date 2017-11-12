@@ -296,7 +296,7 @@ s32 javax_mini_reflect_vm_RefNative_getThreads(Runtime *runtime, Class *clazz) {
 
 s32 javax_mini_reflect_vm_RefNative_getStatus(Runtime *runtime, Class *clazz) {
     Instance *thread = (Instance *) localvar_getRefer(runtime, 0);
-    Runtime *trun = (Runtime *) jthread_get_threadq_value(thread);//线程结束之后会清除掉runtime,因为其是一个栈变量，不可再用
+    Runtime *trun = (Runtime *) jthread_get_stackframe_value(thread);//线程结束之后会清除掉runtime,因为其是一个栈变量，不可再用
     if (trun)
         push_int(runtime->stack, trun->threadInfo->thread_status);
     else
@@ -309,7 +309,7 @@ s32 javax_mini_reflect_vm_RefNative_getStatus(Runtime *runtime, Class *clazz) {
 
 s32 javax_mini_reflect_vm_RefNative_suspendThread(Runtime *runtime, Class *clazz) {
     Instance *thread = (Instance *) localvar_getRefer(runtime, 0);
-    Runtime *trun = (Runtime *) jthread_get_threadq_value(thread);//线程结束之后会清除掉runtime,因为其是一个栈变量，不可再用
+    Runtime *trun = (Runtime *) jthread_get_stackframe_value(thread);//线程结束之后会清除掉runtime,因为其是一个栈变量，不可再用
     if (trun) {
         jthread_suspend(trun);
         push_int(runtime->stack, 0);
@@ -323,7 +323,7 @@ s32 javax_mini_reflect_vm_RefNative_suspendThread(Runtime *runtime, Class *clazz
 
 s32 javax_mini_reflect_vm_RefNative_resumeThread(Runtime *runtime, Class *clazz) {
     Instance *thread = (Instance *) localvar_getRefer(runtime, 0);
-    Runtime *trun = (Runtime *) jthread_get_threadq_value(thread);//线程结束之后会清除掉runtime,因为其是一个栈变量，不可再用
+    Runtime *trun = (Runtime *) jthread_get_stackframe_value(thread);//线程结束之后会清除掉runtime,因为其是一个栈变量，不可再用
     if (trun) {
         if (trun->threadInfo->suspend_count > 0)trun->threadInfo->suspend_count--;
         push_int(runtime->stack, 0);
@@ -338,7 +338,7 @@ s32 javax_mini_reflect_vm_RefNative_resumeThread(Runtime *runtime, Class *clazz)
 
 s32 javax_mini_reflect_vm_RefNative_getSuspendCount(Runtime *runtime, Class *clazz) {
     Instance *thread = (Instance *) localvar_getRefer(runtime, 0);
-    Runtime *trun = (Runtime *) jthread_get_threadq_value(thread);//线程结束之后会清除掉runtime,因为其是一个栈变量，不可再用
+    Runtime *trun = (Runtime *) jthread_get_stackframe_value(thread);//线程结束之后会清除掉runtime,因为其是一个栈变量，不可再用
     if (trun) {
         push_int(runtime->stack, trun->threadInfo->suspend_count);
     } else
@@ -351,7 +351,7 @@ s32 javax_mini_reflect_vm_RefNative_getSuspendCount(Runtime *runtime, Class *cla
 
 s32 javax_mini_reflect_vm_RefNative_getFrameCount(Runtime *runtime, Class *clazz) {
     Instance *thread = (Instance *) localvar_getRefer(runtime, 0);
-    Runtime *trun = (Runtime *) jthread_get_threadq_value(thread);//线程结束之后会清除掉runtime,因为其是一个栈变量，不可再用
+    Runtime *trun = (Runtime *) jthread_get_stackframe_value(thread);//线程结束之后会清除掉runtime,因为其是一个栈变量，不可再用
     int i = 0;
     while (trun) {
         i++;
@@ -368,7 +368,7 @@ s32 javax_mini_reflect_vm_RefNative_stopThread(Runtime *runtime, Class *clazz) {
     l2d.i2l.i1 = localvar_getInt(runtime, 1);
     l2d.i2l.i0 = localvar_getInt(runtime, 2);
     Instance *ins = (__refer) (long) l2d.l;
-    Runtime *trun = (Runtime *) jthread_get_threadq_value(thread);//线程结束之后会清除掉runtime,因为其是一个栈变量，不可再用
+    Runtime *trun = (Runtime *) jthread_get_stackframe_value(thread);//线程结束之后会清除掉runtime,因为其是一个栈变量，不可再用
     if (trun) {
         push_int(runtime->stack, 0);
     } else
@@ -382,7 +382,7 @@ s32 javax_mini_reflect_vm_RefNative_stopThread(Runtime *runtime, Class *clazz) {
 
 s32 javax_mini_reflect_vm_RefNative_getStackFrame(Runtime *runtime, Class *clazz) {
     Instance *thread = (Instance *) localvar_getRefer(runtime, 0);
-    Runtime *trun = (Runtime *) jthread_get_threadq_value(thread);//线程结束之后会清除掉runtime,因为其是一个栈变量，不可再用
+    Runtime *trun = (Runtime *) jthread_get_stackframe_value(thread);//线程结束之后会清除掉runtime,因为其是一个栈变量，不可再用
     if (trun) {
         while (trun) {
             if (!trun->son)break;

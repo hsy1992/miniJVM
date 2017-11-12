@@ -27,12 +27,6 @@ s32 garbage_resume_the_world(void);
 
 s32 checkAndWaitThreadIsSuspend(Runtime *runtime);
 
-void class_mark_refer(Class *clazz);
-
-s32 jarray_mark_refer(Instance *arr);
-
-void instance_mark_refer(Instance *ins);
-
 void garbage_mark_object(__refer ref);
 
 s32 garbage_copy_refer_thread(Runtime *pruntime);
@@ -590,6 +584,64 @@ s32 garbage_copy_refer_thread(Runtime *pruntime) {
     return 0;
 }
 
+
+static inline void instance_mark_refer(Instance *ins) {
+    s32 i;
+    Class *clazz = ins->mb.clazz;
+    while (clazz) {
+        FieldPool *fp = &clazz->fieldPool;
+        for (i = 0; i < fp->field_used; i++) {
+            FieldInfo *fi = &fp->field[i];
+            if ((fi->access_flags & ACC_STATIC) == 0 && isDataReferByIndex(fi->datatype_idx)) {
+                c8 *ptr = getInstanceFieldPtr(ins, fi);
+                if (ptr) {
+                    __refer ref = getFieldRefer(ptr);
+                    garbage_mark_object(ref);
+                }
+            }
+        }
+        clazz = getSuperClass(clazz);
+    }
+}
+
+
+static inline void jarray_mark_refer(Instance *arr) {
+    if (arr && arr->mb.type == MEM_TYPE_ARR) {
+        if (isDataReferByIndex(arr->arr_type_index)) {
+            s32 i;
+            Long2Double l2d;
+            for (i = 0; i < arr->arr_length; i++) {//把所有引用去除，否则不会垃圾回收
+                l2d.l = 0;
+                jarray_get_field(arr, i, &l2d);
+                garbage_mark_object(l2d.r);
+            }
+        }
+    }
+    return ;
+}
+
+/**
+ * mark class static field is used
+ * @param clazz class
+ */
+static inline void class_mark_refer(Class *clazz) {
+    s32 i;
+    if (clazz->field_static) {
+        FieldPool *fp = &clazz->fieldPool;
+        for (i = 0; i < fp->field_used; i++) {
+            FieldInfo *fi = &fp->field[i];
+            if ((fi->access_flags & ACC_STATIC) != 0 && isDataReferByIndex(fi->datatype_idx)) {
+                c8 *ptr = getStaticFieldPtr(fi);
+                if (ptr) {
+                    __refer ref = getFieldRefer(ptr);
+                    garbage_mark_object(ref);
+                }
+            }
+        }
+    }
+}
+
+
 /**
  * 递归标注obj所有的子孙
  * @param ref addr
@@ -610,63 +662,6 @@ void garbage_mark_object(__refer ref) {
                 case MEM_TYPE_CLASS:
                     class_mark_refer((Class *) obj);
                     break;
-            }
-        }
-    }
-}
-
-void instance_mark_refer(Instance *ins) {
-    s32 i;
-    Class *clazz = ins->mb.clazz;
-    while (clazz) {
-        FieldPool *fp = &clazz->fieldPool;
-        for (i = 0; i < fp->field_used; i++) {
-            FieldInfo *fi = &fp->field[i];
-            if ((fi->access_flags & ACC_STATIC) == 0 && isDataReferByIndex(fi->datatype_idx)) {
-                if (utf8_equals_c(fi->name, "threadQ"))continue;//this field save Runtime*
-                c8 *ptr = getInstanceFieldPtr(ins, fi);
-                if (ptr) {
-                    __refer ref = getFieldRefer(ptr);
-                    garbage_mark_object(ref);
-                }
-            }
-        }
-        clazz = getSuperClass(clazz);
-    }
-}
-
-
-s32 jarray_mark_refer(Instance *arr) {
-    if (arr && arr->mb.type == MEM_TYPE_ARR) {
-        if (isDataReferByIndex(arr->arr_type_index)) {
-            s32 i;
-            Long2Double l2d;
-            for (i = 0; i < arr->arr_length; i++) {//把所有引用去除，否则不会垃圾回收
-                l2d.l = 0;
-                jarray_get_field(arr, i, &l2d);
-                garbage_mark_object(l2d.r);
-            }
-        }
-    }
-    return 0;
-}
-
-/**
- * mark class static field is used
- * @param clazz class
- */
-void class_mark_refer(Class *clazz) {
-    s32 i;
-    if (clazz->field_static) {
-        FieldPool *fp = &clazz->fieldPool;
-        for (i = 0; i < fp->field_used; i++) {
-            FieldInfo *fi = &fp->field[i];
-            if ((fi->access_flags & ACC_STATIC) != 0 && isDataReferByIndex(fi->datatype_idx)) {
-                c8 *ptr = getStaticFieldPtr(fi);
-                if (ptr) {
-                    __refer ref = getFieldRefer(ptr);
-                    garbage_mark_object(ref);
-                }
             }
         }
     }
