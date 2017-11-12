@@ -529,7 +529,7 @@ void invoke_deepth(Runtime *runtime) {
 #if __JVM_OS_MAC__ || __JVM_OS_CYGWIN__
     printf("%llx", (s64) (long) pthread_self());
 #else
-    printf("%lx", (s64) (long) pthread_self());
+    printf("%lx", (s64) (long) pthread_self().p);
 #endif //
     for (i = 0; i < len; i++) {
         printf("    ");

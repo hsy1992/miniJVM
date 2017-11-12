@@ -8,7 +8,7 @@ include_directories(jvm utils cmem)
 
 set(SOURCE_FILES
         utils/d_type.h
-        utils/d_vars.c
+        utils/d_utils.c
         utils/arraylist.c
         utils/arraylist.h
         utils/hashtable.c

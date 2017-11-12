@@ -9,6 +9,30 @@
 //#define __MEM_LEAK_DETECT
 
 
+// x86   x64 ...
+#define __JVM_LITTLE_ENDIAN__ 1
+// arm
+#define __JVM_BIG_ENDIAN__ 0
+
+
+#ifdef __MINGW_H
+#define __JVM_OS_MINGW__ 1
+#endif
+#ifdef _CYGWIN_CONFIG_H
+#define __JVM_OS_CYGWIN__ 1
+#endif
+#ifdef __DARWIN_C_ANSI
+#define __JVM_OS_MAC__ 1
+#endif
+#if defined(__GNU_LIBRARY__) || defined(__ANDROID__)
+#define __JVM_OS_LINUX__ 1
+#endif
+
+
+//compile
+#define __C99
+//libary option : -lpthread -lws2_32
+
 #ifdef __MEM_LEAK_DETECT
 #include "../cmem/memleak.h"
 #endif //__MEM_LEAK_DETECT
@@ -34,13 +58,31 @@ typedef struct _autoptr {
     s32 count;
 } autoptr;
 
-//======================= memory manage =============================
+//======================= smart ptr =============================
 
 autoptr *autoptr_get(autoptr *a);
 
 autoptr *autoptr_new(__refer r);
 
 void autoptr_NULL(autoptr **aref);
+
+//======================= spinlock =============================
+
+#if __JVM_OS_MAC__
+
+typedef int pthread_spinlock_t;
+
+int pthread_spin_init(pthread_spinlock_t *lock, int pshared);
+
+int pthread_spin_destroy(pthread_spinlock_t *lock);
+
+int pthread_spin_lock(pthread_spinlock_t *lock);
+
+int pthread_spin_trylock(pthread_spinlock_t *lock);
+
+int pthread_spin_unlock(pthread_spinlock_t *lock);
+#endif
+//======================= memory manage =============================
 
 #ifndef __MEM_LEAK_DETECT
 
