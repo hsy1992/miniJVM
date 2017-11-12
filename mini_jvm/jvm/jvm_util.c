@@ -965,6 +965,38 @@ s32 instance_destory(Instance *ins) {
     return 0;
 }
 
+Instance *instance_copy(Instance *src) {
+    Instance *dst = jvm_alloc(sizeof(Instance));
+    memcpy(dst, src, sizeof(Instance));
+    if (src->mb.type == MEM_TYPE_INS) {
+        s32 i, len;
+        Class *clazz = src->mb.clazz;
+        while (clazz) {
+            FieldPool *fp = &clazz->fieldPool;
+            for (i = 0, len = fp->field_used; i < len; i++) {
+                FieldInfo *fi = &fp->field[i];
+                if ((fi->access_flags & ACC_STATIC) == 0 && isDataReferByIndex(fi->datatype_idx)) {
+                    c8 *ptr = getInstanceFieldPtr(src, fi);
+                    Instance *ins = (Instance *) getFieldRefer(ptr);
+                    if (ins) {
+                        Instance *field_ins = instance_copy(ins);
+                        ptr = getInstanceFieldPtr(dst, fi);
+                        setFieldRefer(ptr, field_ins);
+                    }
+                }
+            }
+            clazz = getSuperClass(clazz);
+        }
+    } else if (src->mb.type == MEM_TYPE_ARR) {
+        s32 size = src->arr_length * data_type_bytes[src->arr_type_index];
+        c8 *arr_body = jvm_alloc(size);
+        dst->arr_body = arr_body;
+        memcpy(arr_body, src->arr_body, size);
+    }
+    garbage_refer_reg(dst);
+    return dst;
+}
+
 //===============================    实例化字符串  ==================================
 Instance *jstring_create(Utf8String *src, Runtime *runtime) {
     if (!src)return NULL;

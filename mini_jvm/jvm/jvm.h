@@ -402,6 +402,7 @@ typedef struct _ConstantUTF8 {
     u16 string_size;
     //
     Utf8String *utfstr;
+    Instance *jstr;
 } ConstantUTF8;
 
 typedef struct _ConstantInteger {
@@ -814,6 +815,7 @@ void instance_init_methodtype(Instance *ins, Runtime *runtime, c8 *methodtype, R
 
 s32 instance_destory(Instance *instance);
 
+Instance *instance_copy(Instance *src);
 
 //======================= bytecode =============================
 

@@ -1916,8 +1916,12 @@ static inline s32 op_ldc_impl(u8 **opCode, Runtime *runtime, s32 index) {
         }
         case CONSTANT_STRING_REF: {
             ConstantUTF8 *cutf = find_constant_utf8(clazz, find_constant_stringref(clazz, index)->stringIndex);
-            Instance *jstr = jstring_create(cutf->utfstr, runtime);
-
+            if (!cutf->jstr) {
+                Instance *jstr = jstring_create(cutf->utfstr, runtime);
+                garbage_refer_hold(jstr);
+                cutf->jstr = jstr;
+            }
+            Instance *jstr = instance_copy(cutf->jstr);
             push_ref(stack, (__refer) jstr);
 
 

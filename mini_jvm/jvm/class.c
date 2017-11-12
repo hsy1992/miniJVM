@@ -5,6 +5,7 @@
  */
 #include "jvm.h"
 #include "jvm_util.h"
+#include "garbage.h"
 
 
 void class_clear_refer(Class *clazz);
@@ -85,7 +86,7 @@ void constant_list_destory(Class *clazz) {
 }
 
 void class_clear_refer(Class *clazz) {
-    s32 i;
+    s32 i, len;
     if (clazz->field_static) {
         FieldPool *fp = &clazz->fieldPool;
         for (i = 0; i < fp->field_used; i++) {
@@ -103,6 +104,11 @@ void class_clear_refer(Class *clazz) {
         if (clazz->field_static)jvm_free(clazz->field_static);
         clazz->field_static = NULL;
         clazz->field_static_len = 0;
+    }
+    ArrayList *utf8list = clazz->constantPool.utf8CP;
+    for (i = 0, len = utf8list->length; i < len; i++) {
+        ConstantUTF8 *cutf = arraylist_get_value(utf8list, i);
+        garbage_refer_release(cutf->jstr);
     }
 }
 //===============================    初始化相关  ==================================
