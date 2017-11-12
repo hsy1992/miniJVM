@@ -437,7 +437,7 @@ s32 javax_mini_reflect_Reference_mapReference(Runtime *runtime, Class *clazz) {
     Class *target = (__refer) (long) l2d.l;
     if (target) {
         c8 *ptr;
-        ptr = getFieldPtr_byName_c(ins, JDWP_CLASS_REFERENCE, "className", "Ljava/lang/String;");
+        ptr = getFieldPtr_byName_c(ins, JDWP_CLASS_REFERENCE, "className", STR_INS_JAVA_LANG_STRING);
         if (ptr) {
             Instance *clsName = jstring_create(target->name, runtime);
             setFieldRefer(ptr, clsName);
@@ -456,7 +456,7 @@ s32 javax_mini_reflect_Reference_mapReference(Runtime *runtime, Class *clazz) {
             setFieldInt(ptr, target->status >= CLASS_STATUS_CLINITED ?
                              7 : (target->status >= CLASS_STATUS_PREPARED ? 3 : 1));
         //
-        ptr = getFieldPtr_byName_c(ins, JDWP_CLASS_REFERENCE, "source", "Ljava/lang/String;");
+        ptr = getFieldPtr_byName_c(ins, JDWP_CLASS_REFERENCE, "source", STR_INS_JAVA_LANG_STRING);
         if (ptr) {
             Instance *source = jstring_create(target->source, runtime);
             setFieldRefer(ptr, source);
@@ -513,7 +513,7 @@ s32 javax_mini_reflect_Field_mapField(Runtime *runtime, Class *clazz) {
     if (ins && fieldInfo) {
         c8 *ptr;
         //
-        ptr = getFieldPtr_byName_c(ins, JDWP_CLASS_FIELD, "fieldName", "Ljava/lang/String;");
+        ptr = getFieldPtr_byName_c(ins, JDWP_CLASS_FIELD, "fieldName", STR_INS_JAVA_LANG_STRING);
         if (ptr) {
             Instance *fieldName = jstring_create(fieldInfo->name, runtime);
             setFieldRefer(ptr, fieldName);
@@ -522,7 +522,7 @@ s32 javax_mini_reflect_Field_mapField(Runtime *runtime, Class *clazz) {
         ptr = getFieldPtr_byName_c(ins, JDWP_CLASS_FIELD, "accessFlags", "S");
         if (ptr)setFieldShort(ptr, fieldInfo->access_flags);
         //
-        ptr = getFieldPtr_byName_c(ins, JDWP_CLASS_FIELD, "signature", "Ljava/lang/String;");
+        ptr = getFieldPtr_byName_c(ins, JDWP_CLASS_FIELD, "signature", STR_INS_JAVA_LANG_STRING);
         if (ptr) {
             Instance *signature = jstring_create(fieldInfo->descriptor, runtime);
             setFieldRefer(ptr, signature);
@@ -540,13 +540,13 @@ Instance *localVarTable2java(Class *clazz, LocalVarTable *lvt, Runtime *runtime)
     if (ins && lvt) {
         c8 *ptr;
         //
-        ptr = getFieldPtr_byName_c(ins, JDWP_CLASS_LOCALVARTABLE, "name", "Ljava/lang/String;");
+        ptr = getFieldPtr_byName_c(ins, JDWP_CLASS_LOCALVARTABLE, "name", STR_INS_JAVA_LANG_STRING);
         if (ptr) {
             Instance *name = jstring_create(get_utf8_string(clazz, lvt->name_index), runtime);
             setFieldRefer(ptr, name);
         }
         //
-        ptr = getFieldPtr_byName_c(ins, JDWP_CLASS_LOCALVARTABLE, "signature", "Ljava/lang/String;");
+        ptr = getFieldPtr_byName_c(ins, JDWP_CLASS_LOCALVARTABLE, "signature", STR_INS_JAVA_LANG_STRING);
         if (ptr) {
             Instance *signature = jstring_create(get_utf8_string(clazz, lvt->descriptor_index), runtime);
             setFieldRefer(ptr, signature);
@@ -573,13 +573,13 @@ s32 javax_mini_reflect_Method_mapMethod(Runtime *runtime, Class *clazz) {
         c8 *ptr;
         Long2Double l2d;
         //
-        ptr = getFieldPtr_byName_c(ins, JDWP_CLASS_METHOD, "methodName", "Ljava/lang/String;");
+        ptr = getFieldPtr_byName_c(ins, JDWP_CLASS_METHOD, "methodName", STR_INS_JAVA_LANG_STRING);
         if (ptr) {
             Instance *methodName = jstring_create(methodInfo->name, runtime);
             setFieldRefer(ptr, methodName);
         }
         //
-        ptr = getFieldPtr_byName_c(ins, JDWP_CLASS_METHOD, "signature", "Ljava/lang/String;");
+        ptr = getFieldPtr_byName_c(ins, JDWP_CLASS_METHOD, "signature", STR_INS_JAVA_LANG_STRING);
         if (ptr) {
             Instance *signature = jstring_create(methodInfo->descriptor, runtime);
             setFieldRefer(ptr, signature);

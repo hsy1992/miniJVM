@@ -586,11 +586,11 @@ s32 garbage_copy_refer_thread(Runtime *pruntime) {
 
 
 static inline void instance_mark_refer(Instance *ins) {
-    s32 i;
+    s32 i, len;
     Class *clazz = ins->mb.clazz;
     while (clazz) {
         FieldPool *fp = &clazz->fieldPool;
-        for (i = 0; i < fp->field_used; i++) {
+        for (i = 0, len = fp->field_used; i < len; i++) {
             FieldInfo *fi = &fp->field[i];
             if ((fi->access_flags & ACC_STATIC) == 0 && isDataReferByIndex(fi->datatype_idx)) {
                 c8 *ptr = getInstanceFieldPtr(ins, fi);
@@ -617,7 +617,7 @@ static inline void jarray_mark_refer(Instance *arr) {
             }
         }
     }
-    return ;
+    return;
 }
 
 /**
@@ -625,10 +625,10 @@ static inline void jarray_mark_refer(Instance *arr) {
  * @param clazz class
  */
 static inline void class_mark_refer(Class *clazz) {
-    s32 i;
+    s32 i, len;
     if (clazz->field_static) {
         FieldPool *fp = &clazz->fieldPool;
-        for (i = 0; i < fp->field_used; i++) {
+        for (i = 0, len = fp->field_used; i < len; i++) {
             FieldInfo *fi = &fp->field[i];
             if ((fi->access_flags & ACC_STATIC) != 0 && isDataReferByIndex(fi->datatype_idx)) {
                 c8 *ptr = getStaticFieldPtr(fi);

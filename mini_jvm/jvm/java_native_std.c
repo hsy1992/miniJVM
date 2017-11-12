@@ -777,19 +777,19 @@ Instance *buildStackElement(Runtime *runtime, Runtime *target) {
         instance_init(ins, runtime);
         c8 *ptr;
         //
-        ptr = getFieldPtr_byName_c(ins, STR_CLASS_JAVA_LANG_STACKTRACE, "declaringClass", "Ljava/lang/String;");
+        ptr = getFieldPtr_byName_c(ins, STR_CLASS_JAVA_LANG_STACKTRACE, "declaringClass", STR_INS_JAVA_LANG_STRING);
         if (ptr) {
             Instance *name = jstring_create(target->clazz->name, runtime);
             setFieldRefer(ptr, name);
         }
         //
-        ptr = getFieldPtr_byName_c(ins, STR_CLASS_JAVA_LANG_STACKTRACE, "methodName", "Ljava/lang/String;");
+        ptr = getFieldPtr_byName_c(ins, STR_CLASS_JAVA_LANG_STACKTRACE, "methodName", STR_INS_JAVA_LANG_STRING);
         if (ptr) {
             Instance *name = jstring_create(target->method->name, runtime);
             setFieldRefer(ptr, name);
         }
         //
-        ptr = getFieldPtr_byName_c(ins, STR_CLASS_JAVA_LANG_STACKTRACE, "fileName", "Ljava/lang/String;");
+        ptr = getFieldPtr_byName_c(ins, STR_CLASS_JAVA_LANG_STACKTRACE, "fileName", STR_INS_JAVA_LANG_STRING);
         if (ptr) {
             Instance *name = jstring_create(target->clazz->source, runtime);
             setFieldRefer(ptr, name);
