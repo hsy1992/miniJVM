@@ -61,7 +61,7 @@ s32 garbage_copy_refer_thread(Runtime *pruntime);
  * @return errorcode
  */
 s32 garbage_collector_create() {
-    collector = jvm_alloc(sizeof(GcCollector));
+    collector = jvm_calloc(sizeof(GcCollector));
     collector->objs = hashset_create();
     collector->objs_holder = hashset_create();
 
@@ -692,7 +692,7 @@ MemoryBlock *garbage_is_alive(__refer ref) {
 
 
 void __garbage_putin_cache(c8 op_type, __refer ref) {
-    GarbageOp *op = jvm_alloc(sizeof(GarbageOp));
+    GarbageOp *op = jvm_calloc(sizeof(GarbageOp));
     op->op_type = op_type;
     op->val = ref;
     pthread_spin_lock(&collector->operation_cache->spinlock);

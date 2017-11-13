@@ -58,10 +58,10 @@ typedef struct _BB {
 } BB;
 
 void t5() {
-    __refer r = jvm_alloc(100);
+    __refer r = jvm_calloc(100);
     autoptr *a = autoptr_new(r);
 
-    BB *b = jvm_alloc(sizeof(BB));
+    BB *b = jvm_calloc(sizeof(BB));
     b->a = autoptr_get(a);
     autoptr_NULL(&a);
     autoptr_NULL(&b->a);

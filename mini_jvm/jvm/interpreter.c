@@ -3076,7 +3076,7 @@ static Instruction instructionSet[] = {
 
 Instruction **instruct_indexies_create() {
     size_t byteCode_size = sizeof(instructionSet) / sizeof(Instruction);
-    Instruction **indexies = jvm_alloc(0x100 * sizeof(Instruction *));
+    Instruction **indexies = jvm_calloc(0x100 * sizeof(Instruction *));
     s32 i;
     for (i = 0; i < byteCode_size; i++) {
         s32 opCode = instructionSet[i].opCode;

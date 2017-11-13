@@ -11,8 +11,8 @@
 
 /* Stack Initialization */
 RuntimeStack *stack_create(s32 entry_size) {
-    RuntimeStack *stack = jvm_alloc(sizeof(RuntimeStack));
-    stack->store = (StackEntry *) jvm_alloc(sizeof(StackEntry) * entry_size);
+    RuntimeStack *stack = jvm_calloc(sizeof(RuntimeStack));
+    stack->store = (StackEntry *) jvm_calloc(sizeof(StackEntry) * entry_size);
     stack->size = 0;
     stack->max_size = entry_size;
     return stack;
@@ -169,7 +169,7 @@ void peek_entry(RuntimeStack *stack, StackEntry *entry, int index) {
 
 
 Runtime *runtime_create(Runtime *parent) {
-    Runtime *runtime = jvm_alloc(sizeof(Runtime));
+    Runtime *runtime = jvm_calloc(sizeof(Runtime));
     if (parent) {
         runtime->stack = parent->stack;
         runtime->threadInfo = parent->threadInfo;
@@ -242,7 +242,7 @@ void getRuntimeStack(Runtime *runtime, Utf8String *ustr) {
 
 
 s32 localvar_init(Runtime *runtime, s32 count) {
-    runtime->localVariables = jvm_alloc(sizeof(LocalVarItem) * count);
+    runtime->localVariables = jvm_calloc(sizeof(LocalVarItem) * count);
     runtime->localvar_count = count;
     return 0;
 }

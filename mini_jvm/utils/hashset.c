@@ -12,8 +12,8 @@ static s32 HASH_SET_DEFAULT_SIZE = 4;
 
 unsigned int hashset_allocate_table(Hashset *set, unsigned int size) {
     if (size) {
-        set->table = jvm_alloc(size *
-                               sizeof(HashsetEntry *));
+        set->table = jvm_calloc(size *
+                                sizeof(HashsetEntry *));
         if (set->table)set->table_size = size;
     }
 
@@ -33,7 +33,7 @@ unsigned long _DEFAULT_HashsetHash(HashsetKey kmer) {
 Hashset *hashset_create() {
     Hashset *set;
 
-    set = (Hashset *) jvm_alloc(sizeof(Hashset));
+    set = (Hashset *) jvm_calloc(sizeof(Hashset));
 
     if (set == NULL) {
         return NULL;
@@ -121,7 +121,7 @@ int hashset_put(Hashset *set, HashsetKey key) {
         rover = rover->next;
     }
 
-    newentry = (HashsetEntry *) jvm_alloc(sizeof(HashsetEntry));
+    newentry = (HashsetEntry *) jvm_calloc(sizeof(HashsetEntry));
 
     if (newentry == NULL) {
         return 0;

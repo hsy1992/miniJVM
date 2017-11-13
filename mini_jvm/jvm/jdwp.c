@@ -124,7 +124,7 @@ s32 jdwp_stop_server() {
 
 
 JdwpClient *jdwp_client_create(s32 sockfd) {
-    JdwpClient *client = jvm_alloc(sizeof(JdwpClient));
+    JdwpClient *client = jvm_calloc(sizeof(JdwpClient));
     client->closed = 0;
     client->conn_first = 1;
     client->sockfd = sockfd;
@@ -164,16 +164,16 @@ void jdwp_client_release_obj(JdwpClient *client, __refer obj) {
 
 
 JdwpPacket *jdwppacket_create() {
-    JdwpPacket *packet = jvm_alloc(sizeof(JdwpPacket));
+    JdwpPacket *packet = jvm_calloc(sizeof(JdwpPacket));
     packet->alloc = 32;
     packet->readPos = 11;
     packet->writePos = 11;
-    packet->data = jvm_alloc(packet->alloc);
+    packet->data = jvm_calloc(packet->alloc);
     return packet;
 }
 
 JdwpPacket *jdwppacket_create_data(c8 *data, s32 len) {
-    JdwpPacket *packet = jvm_alloc(sizeof(JdwpPacket));
+    JdwpPacket *packet = jvm_calloc(sizeof(JdwpPacket));
     packet->data = data;
     packet->alloc = len;
     return packet;
@@ -242,7 +242,7 @@ void jdwppacket_ensureCapacity(JdwpPacket *packet, s32 length) {
     s32 newcount = packet->writePos + length;
     if (newcount >= packet->alloc) {
         newcount = newcount > packet->alloc << 1 ? newcount : packet->alloc << 1;
-        c8 *tmp = jvm_alloc(newcount);
+        c8 *tmp = jvm_calloc(newcount);
         memcpy(tmp, packet->data, packet->alloc);
         jvm_free(packet->data);
         packet->data = tmp;
@@ -789,7 +789,7 @@ void jdwp_post_events(JdwpClient *client) {
 }
 
 void event_on_class_prepar(Runtime *runtime, Class *clazz) {
-    EventInfo *ei = jvm_alloc(sizeof(EventInfo));
+    EventInfo *ei = jvm_calloc(sizeof(EventInfo));
     ei->eventKind = JDWP_EVENTKIND_CLASS_PREPARE;
     ei->thread = runtime->threadInfo->jthread;
     ei->refTypeTag = getClassType(clazz);
@@ -800,28 +800,28 @@ void event_on_class_prepar(Runtime *runtime, Class *clazz) {
 }
 
 void event_on_class_unload(Runtime *runtime, Class *clazz) {
-    EventInfo *ei = jvm_alloc(sizeof(EventInfo));
+    EventInfo *ei = jvm_calloc(sizeof(EventInfo));
     ei->eventKind = JDWP_EVENTKIND_CLASS_UNLOAD;
     ei->signature = clazz->name;
     jdwp_event_put(ei);
 }
 
 void event_on_thread_start(Instance *jthread) {
-    EventInfo *ei = jvm_alloc(sizeof(EventInfo));
+    EventInfo *ei = jvm_calloc(sizeof(EventInfo));
     ei->eventKind = JDWP_EVENTKIND_THREAD_START;
     ei->thread = jthread;
     jdwp_event_put(ei);
 }
 
 void event_on_thread_death(Instance *jthread) {
-    EventInfo *ei = jvm_alloc(sizeof(EventInfo));
+    EventInfo *ei = jvm_calloc(sizeof(EventInfo));
     ei->eventKind = JDWP_EVENTKIND_THREAD_DEATH;
     ei->thread = jthread;
     jdwp_event_put(ei);
 }
 
 void event_on_breakpoint(Runtime *breakpoint_runtime) {
-    EventInfo *ei = jvm_alloc(sizeof(EventInfo));
+    EventInfo *ei = jvm_calloc(sizeof(EventInfo));
     ei->eventKind = JDWP_EVENTKIND_BREAKPOINT;
     ei->thread = breakpoint_runtime->threadInfo->jthread;
     ei->loc.typeTag = getClassType(breakpoint_runtime->clazz);
@@ -832,7 +832,7 @@ void event_on_breakpoint(Runtime *breakpoint_runtime) {
 }
 
 void event_on_debug_step(Runtime *step_runtime) {
-    EventInfo *ei = jvm_alloc(sizeof(EventInfo));
+    EventInfo *ei = jvm_calloc(sizeof(EventInfo));
     ei->eventKind = JDWP_EVENTKIND_SINGLE_STEP;
     ei->thread = step_runtime->threadInfo->jthread;
     ei->loc.typeTag = getClassType(step_runtime->clazz);
@@ -899,12 +899,12 @@ s32 jdwp_set_debug_step(s32 setOrClear, Instance *jthread, s32 size, s32 depth) 
 }
 
 EventSet *jdwp_create_eventset(JdwpPacket *req) {
-    EventSet *set = jvm_alloc(sizeof(EventSet));
+    EventSet *set = jvm_calloc(sizeof(EventSet));
     set->requestId = jdwp_eventset_requestid++;
     set->eventKind = jdwppacket_read_byte(req);
     set->suspendPolicy = jdwppacket_read_byte(req);
     set->modifiers = jdwppacket_read_int(req);
-    set->mods = jvm_alloc(set->modifiers * sizeof(EventSetMod));
+    set->mods = jvm_calloc(set->modifiers * sizeof(EventSetMod));
     s32 i;
     for (i = 0; i < set->modifiers; i++) {
         EventSetMod *mod = &set->mods[i];

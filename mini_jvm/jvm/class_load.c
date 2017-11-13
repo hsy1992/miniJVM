@@ -12,7 +12,7 @@
 /* parse UTF-8 String */
 void *parseCPString(Class *_this, FILE *fp, s32 index) {
     u8 short_tmp[2];
-    ConstantUTF8 *ptr = jvm_alloc(sizeof(ConstantUTF8));
+    ConstantUTF8 *ptr = jvm_calloc(sizeof(ConstantUTF8));
 
     ptr->tag = CONSTANT_UTF8;
     ptr->index = index;
@@ -37,7 +37,7 @@ void *parseCPString(Class *_this, FILE *fp, s32 index) {
 /* parse Integer */
 void *parseCPInteger(Class *_this, FILE *fp, s32 index) {
     u8 tmp[4];
-    ConstantInteger *ptr = jvm_alloc(sizeof(ConstantInteger));
+    ConstantInteger *ptr = jvm_calloc(sizeof(ConstantInteger));
 
     ptr->tag = CONSTANT_INTEGER;
     ptr->index = index;
@@ -57,7 +57,7 @@ void *parseCPInteger(Class *_this, FILE *fp, s32 index) {
 /* parse Float */
 void *parseCPFloat(Class *_this, FILE *fp, s32 index) {
     c8 tmp[4];
-    ConstantFloat *ptr = jvm_alloc(sizeof(ConstantFloat));
+    ConstantFloat *ptr = jvm_calloc(sizeof(ConstantFloat));
 
     ptr->tag = CONSTANT_FLOAT;
     ptr->index = index;
@@ -78,7 +78,7 @@ void *parseCPFloat(Class *_this, FILE *fp, s32 index) {
 /* parse LONG */
 void *parseCPLong(Class *_this, FILE *fp, s32 index) {
     u8 tmp[8];
-    ConstantLong *ptr = jvm_alloc(sizeof(ConstantLong));
+    ConstantLong *ptr = jvm_calloc(sizeof(ConstantLong));
 
     ptr->tag = CONSTANT_LONG;
     ptr->index = index;
@@ -102,7 +102,7 @@ void *parseCPLong(Class *_this, FILE *fp, s32 index) {
 /* parse Double */
 void *parseCPDouble(Class *_this, FILE *fp, s32 index) {
     u8 tmp[8];
-    ConstantDouble *ptr = jvm_alloc(sizeof(ConstantDouble));
+    ConstantDouble *ptr = jvm_calloc(sizeof(ConstantDouble));
 
     ptr->tag = CONSTANT_DOUBLE;
     ptr->index = index;
@@ -126,7 +126,7 @@ void *parseCPDouble(Class *_this, FILE *fp, s32 index) {
 /* parse Constant Pool Class */
 void *parseCPClass(Class *_this, FILE *fp, s32 index) {
     u8 short_tmp[2];
-    ConstantClassRef *ptr = jvm_alloc(sizeof(ConstantClassRef));
+    ConstantClassRef *ptr = jvm_calloc(sizeof(ConstantClassRef));
 
     ptr->tag = CONSTANT_CLASS;
     ptr->index = index;
@@ -144,7 +144,7 @@ void *parseCPClass(Class *_this, FILE *fp, s32 index) {
 /* parse Constant Pool String Ref */
 void *parseCPStringRef(Class *_this, FILE *fp, s32 index) {
     u8 short_tmp[2];
-    ConstantStringRef *ptr = jvm_alloc(sizeof(ConstantStringRef));
+    ConstantStringRef *ptr = jvm_calloc(sizeof(ConstantStringRef));
 
     ptr->tag = CONSTANT_STRING_REF;
     ptr->index = index;
@@ -162,7 +162,7 @@ void *parseCPStringRef(Class *_this, FILE *fp, s32 index) {
 /* parse Constant Pool Field */
 void *parseCPField(Class *_this, FILE *fp, s32 index) {
     u8 short_tmp[2];
-    ConstantFieldRef *ptr = jvm_alloc(sizeof(ConstantFieldRef));
+    ConstantFieldRef *ptr = jvm_calloc(sizeof(ConstantFieldRef));
 
     ptr->tag = CONSTANT_FIELD_REF;
     ptr->index = index;
@@ -185,7 +185,7 @@ void *parseCPField(Class *_this, FILE *fp, s32 index) {
 /* parse Constant Pool Method */
 void *parseCPMethod(Class *_this, FILE *fp, s32 index) {
     u8 short_tmp[2];
-    ConstantMethodRef *ptr = jvm_alloc(sizeof(ConstantMethodRef));
+    ConstantMethodRef *ptr = jvm_calloc(sizeof(ConstantMethodRef));
     ptr->methodParaCount = -1;
 
     ptr->tag = CONSTANT_METHOD_REF;
@@ -209,7 +209,7 @@ void *parseCPMethod(Class *_this, FILE *fp, s32 index) {
 /* parse Constant Pool Interface */
 void *parseCPInterface(Class *_this, FILE *fp, s32 index) {
     u8 short_tmp[2];
-    ConstantInterfaceMethodRef *ptr = jvm_alloc(sizeof(ConstantInterfaceMethodRef));
+    ConstantInterfaceMethodRef *ptr = jvm_calloc(sizeof(ConstantInterfaceMethodRef));
 
     ptr->tag = CONSTANT_INTERFACE_REF;
     ptr->index = index;
@@ -232,7 +232,7 @@ void *parseCPInterface(Class *_this, FILE *fp, s32 index) {
 /* parse Constant Pool Interface */
 void *parseCPNameAndType(Class *_this, FILE *fp, s32 index) {
     u8 short_tmp[2];
-    ConstantNameAndType *ptr = jvm_alloc(sizeof(ConstantNameAndType));
+    ConstantNameAndType *ptr = jvm_calloc(sizeof(ConstantNameAndType));
 
     ptr->tag = CONSTANT_NAME_AND_TYPE;
     ptr->index = index;
@@ -257,7 +257,7 @@ s32 _parse_constant_pool(Class *_this, FILE *fp, s32 count) {
     s32 i = 0;
     u64 offset_start = 0;
     u64 offset_end = 0;
-    _this->constant_item_ptr = jvm_alloc(count * sizeof(void *));
+    _this->constant_item_ptr = jvm_calloc(count * sizeof(void *));
     for (i = 1; i < count; i++) {
         fread(&tag, 1, 1, fp);
         offset_start = ftell(fp);
@@ -536,7 +536,7 @@ s32 parseAttr(FieldInfo *ptr, FILE *fp) {
         tmp->attribute_length = i2c.i;
 
         if (tmp->attribute_length > 0) {
-            tmp->info = (u8 *) jvm_alloc(sizeof(u8) * tmp->attribute_length);
+            tmp->info = (u8 *) jvm_calloc(sizeof(u8) * tmp->attribute_length);
             fread(tmp->info, tmp->attribute_length, 1, fp);
         } else {
             tmp->info = NULL;
@@ -578,7 +578,7 @@ s32 parseFP(Class *_this, FILE *fp) {
     ptr->attributes_count = s2c.s;
 
     if (ptr->attributes_count > 0) {
-        ptr->attributes = (AttributeInfo *) jvm_alloc(sizeof(AttributeInfo) * ptr->attributes_count);
+        ptr->attributes = (AttributeInfo *) jvm_calloc(sizeof(AttributeInfo) * ptr->attributes_count);
     } else {
         ptr->attributes = NULL;
     }
@@ -609,7 +609,7 @@ void printFieldPool(Class *clazz, FieldPool *fp) {
 
 s32 _parse_field_pool(Class *_this, FILE *fp, s32 count) {
     s32 size = sizeof(FieldInfo) * count;
-    _this->fieldPool.field = jvm_alloc(size);
+    _this->fieldPool.field = jvm_calloc(size);
 
     s32 i;
     for (i = 0; i < count; i++)
@@ -677,7 +677,7 @@ void printInterfacePool(Class *clazz, InterfacePool *ip) {
 s32 _parse_interface_pool(Class *_this, FILE *fp, s32 count) {
 
     s32 size = sizeof(ConstantClassRef) * count;
-    _this->interfacePool.clasz = jvm_alloc(size);
+    _this->interfacePool.clasz = jvm_calloc(size);
     s32 i;
     for (i = 0; i < count; i++)
         parseIPClass(_this, fp, i);
@@ -714,7 +714,7 @@ s32 parseMethodAttr(MethodInfo *ptr, FILE *fp) {
         i2c.c0 = integer_tmp[3];
         tmp->attribute_length = i2c.i;
 
-        tmp->info = (u8 *) jvm_alloc(sizeof(u8) * tmp->attribute_length);
+        tmp->info = (u8 *) jvm_calloc(sizeof(u8) * tmp->attribute_length);
         fread(tmp->info, tmp->attribute_length, 1, fp);
     }
     return 0;
@@ -752,7 +752,7 @@ s32 parseMP(Class *_this, FILE *fp) {
     s2c.c0 = short_tmp[1];
     ptr->attributes_count = s2c.s;
 
-    ptr->attributes = (AttributeInfo *) jvm_alloc(sizeof(AttributeInfo) * ptr->attributes_count);
+    ptr->attributes = (AttributeInfo *) jvm_calloc(sizeof(AttributeInfo) * ptr->attributes_count);
     memset(ptr->attributes, 0, sizeof(AttributeInfo) * ptr->attributes_count);
     /* parse methodRef attributes */
     parseMethodAttr(ptr, fp);
@@ -838,7 +838,7 @@ void printMethodPool(Class *p, MethodPool *mp) {
 s32 _parse_method_pool(Class *_this, FILE *fp, s32 count) {
 
     s32 size = sizeof(MethodInfo) * count;
-    _this->methodPool.method = jvm_alloc(size);
+    _this->methodPool.method = jvm_calloc(size);
     s32 i;
     for (i = 0; i < count; i++)
         parseMP(_this, fp);
@@ -884,7 +884,7 @@ s32 _class_method_info_destory(Class *clazz) {
 s32 _parse_attribute_pool(Class *_this, FILE *fp, s32 count) {
 
     s32 size = sizeof(AttributeInfo) * count;
-    _this->attributePool.attribute = jvm_alloc(size);
+    _this->attributePool.attribute = jvm_calloc(size);
     _this->attributePool.attribute_used = count;
     s32 i;
     u8 short_tmp[2];
@@ -907,7 +907,7 @@ s32 _parse_attribute_pool(Class *_this, FILE *fp, s32 count) {
         i2c.c0 = integer_tmp[3];
         ptr->attribute_length = i2c.i;
         //
-        ptr->info = jvm_alloc(ptr->attribute_length);
+        ptr->info = jvm_calloc(ptr->attribute_length);
         fread(ptr->info, ptr->attribute_length, 1, fp);
     }
     return 0;
@@ -1085,7 +1085,7 @@ void class_link(Class *clazz) {
         //转attribute为CdoeAttribute
         for (j = 0; j < ptr->attributes_count; j++) {
             if (utf8_equals_c(get_utf8_string(clazz, ptr->attributes[j].attribute_name_index), "Code") == 1) {
-                CodeAttribute *ca = jvm_alloc(sizeof(CodeAttribute));
+                CodeAttribute *ca = jvm_calloc(sizeof(CodeAttribute));
                 convert_to_code_attribute(ca, &ptr->attributes[j], clazz);
                 jvm_free(ptr->attributes[j].info);//无用删除
                 ptr->attributes[j].info = NULL;
@@ -1151,14 +1151,14 @@ s32 convert_to_code_attribute(CodeAttribute *ca, AttributeInfo *attr, Class *cla
     i2c.c1 = attr->info[info_p++];
     i2c.c0 = attr->info[info_p++];
     ca->code_length = i2c.i;
-    ca->code = (u8 *) jvm_alloc(sizeof(u8) * ca->code_length);
+    ca->code = (u8 *) jvm_calloc(sizeof(u8) * ca->code_length);
     memcpy(ca->code, attr->info + info_p, ca->code_length);
     info_p += ca->code_length;
     s2c.c1 = attr->info[info_p++];
     s2c.c0 = attr->info[info_p++];
     ca->exception_table_length = s2c.s;
     s32 bytelen = sizeof(ExceptionTable) * ca->exception_table_length;
-    ca->exception_table = jvm_alloc(bytelen);
+    ca->exception_table = jvm_calloc(bytelen);
     int i;
     for (i = 0; i < 4 * ca->exception_table_length; i++) {
         s2c.c1 = attr->info[info_p++];
@@ -1183,7 +1183,7 @@ s32 convert_to_code_attribute(CodeAttribute *ca, AttributeInfo *attr, Class *cla
             s2c.c1 = attr->info[info_p++];
             s2c.c0 = attr->info[info_p++];
             ca->line_number_table_length = (u16) s2c.s;
-            ca->line_number_table = jvm_alloc(sizeof(u32) * ca->line_number_table_length);
+            ca->line_number_table = jvm_calloc(sizeof(u32) * ca->line_number_table_length);
             s32 j;
             for (j = 0; j < ca->line_number_table_length; j++) {
                 s2c.c1 = attr->info[info_p++];
@@ -1199,7 +1199,7 @@ s32 convert_to_code_attribute(CodeAttribute *ca, AttributeInfo *attr, Class *cla
             s2c.c1 = attr->info[info_p++];
             s2c.c0 = attr->info[info_p++];
             ca->local_var_table_length = (u16) s2c.s;
-            ca->local_var_table = jvm_alloc(sizeof(LocalVarTable) * ca->local_var_table_length);
+            ca->local_var_table = jvm_calloc(sizeof(LocalVarTable) * ca->local_var_table_length);
             s32 j;
             for (j = 0; j < ca->local_var_table_length; j++) {
                 s2c.c1 = attr->info[info_p++];

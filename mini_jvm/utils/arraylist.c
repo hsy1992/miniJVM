@@ -45,7 +45,7 @@ ArrayList *arraylist_create(int length) {
     /* Allocate the new ArrayList and fill in the obj_fields.  There are
      * initially no entries. */
 
-    new_arraylist = (ArrayList *) jvm_alloc(sizeof(ArrayList));
+    new_arraylist = (ArrayList *) jvm_calloc(sizeof(ArrayList));
 
     if (new_arraylist == NULL) {
         return NULL;
@@ -56,7 +56,7 @@ ArrayList *arraylist_create(int length) {
 
     /* Allocate the data array */
 
-    new_arraylist->data = jvm_alloc(length * sizeof(ArrayListValue));
+    new_arraylist->data = jvm_calloc(length * sizeof(ArrayListValue));
 
     if (new_arraylist->data == NULL) {
         jvm_free(new_arraylist);

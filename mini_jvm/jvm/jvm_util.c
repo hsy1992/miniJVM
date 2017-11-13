@@ -611,7 +611,7 @@ void jthread_set_stackframe_value(Instance *ins, __refer val) {
 void jthreadlock_create(MemoryBlock *mb) {
     garbage_thread_lock();
     if (!mb->thread_lock) {
-        ThreadLock *tl = jvm_alloc(sizeof(ThreadLock));
+        ThreadLock *tl = jvm_calloc(sizeof(ThreadLock));
         thread_lock_init(tl);
         mb->thread_lock = tl;
     }
@@ -751,12 +751,12 @@ Instance *jarray_create_des(s32 count, Utf8String *desc) {
     u8 ch = utf8_char_at(desc, 1);
     s32 typeIdx = getDataTypeIndex(ch);
     s32 width = data_type_bytes[typeIdx];
-    Instance *arr = jvm_alloc(sizeof(Instance));
+    Instance *arr = jvm_calloc(sizeof(Instance));
     arr->mb.type = MEM_TYPE_ARR;
     arr->mb.clazz = array_class_get(desc);
     arr->arr_type_index = typeIdx;
     arr->arr_length = count;
-    if (arr->arr_length)arr->arr_body = jvm_alloc(width * count);
+    if (arr->arr_length)arr->arr_body = jvm_calloc(width * count);
     return arr;
 }
 
@@ -884,11 +884,11 @@ void jarray_get_field(Instance *arr, s32 index, Long2Double *l2d) {
 
 //===============================    实例化对象  ==================================
 Instance *instance_create(Class *clazz) {
-    Instance *ins = jvm_alloc(sizeof(Instance));
+    Instance *ins = jvm_calloc(sizeof(Instance));
     ins->mb.type = MEM_TYPE_INS;
     ins->mb.clazz = clazz;
 
-    ins->obj_fields = jvm_alloc(ins->mb.clazz->field_instance_len);
+    ins->obj_fields = jvm_calloc(ins->mb.clazz->field_instance_len);
     garbage_refer_reg(ins);
     return ins;
 }
@@ -955,7 +955,7 @@ s32 instance_destory(Instance *ins) {
  * @return
  */
 Instance *instance_copy(Instance *src) {
-    Instance *dst = jvm_alloc(sizeof(Instance));
+    Instance *dst = jvm_calloc(sizeof(Instance));
     memcpy(dst, src, sizeof(Instance));
     if (src->mb.type == MEM_TYPE_INS) {
         s32 i, len;
@@ -978,7 +978,7 @@ Instance *instance_copy(Instance *src) {
         }
     } else if (src->mb.type == MEM_TYPE_ARR) {
         s32 size = src->arr_length * data_type_bytes[src->arr_type_index];
-        c8 *arr_body = jvm_alloc(size);
+        c8 *arr_body = jvm_calloc(size);
         dst->arr_body = arr_body;
         memcpy(arr_body, src->arr_body, size);
     }
@@ -999,7 +999,7 @@ Instance *jstring_create(Utf8String *src, Runtime *runtime) {
 
     c8 *ptr = jstring_get_value_ptr(jstring);
     if (src->length) {
-        u16 *buf = jvm_alloc(src->length * data_type_bytes[DATATYPE_JCHAR]);
+        u16 *buf = jvm_calloc(src->length * data_type_bytes[DATATYPE_JCHAR]);
         s32 len = utf8_2_unicode(src, buf);
         Instance *arr = jarray_create(len, DATATYPE_JCHAR, NULL);//u16 type is 5
         setFieldRefer(ptr, (__refer) arr);//设置数组
@@ -1322,7 +1322,7 @@ void memoryblock_destory(__refer ref) {
 }
 
 JavaThreadInfo *threadinfo_create() {
-    JavaThreadInfo *threadInfo = jvm_alloc(sizeof(JavaThreadInfo));
+    JavaThreadInfo *threadInfo = jvm_calloc(sizeof(JavaThreadInfo));
     return threadInfo;
 }
 

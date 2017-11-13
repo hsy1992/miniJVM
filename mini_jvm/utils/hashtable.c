@@ -32,8 +32,8 @@ static s32 HASH_TABLE_DEFAULT_SIZE = 16;
 
 static int hash_table_allocate_table(Hashtable *hash_table, unsigned long long int size) {
     if (size) {
-        hash_table->table = jvm_alloc((unsigned int) size *
-                                      sizeof(HashtableEntry *));
+        hash_table->table = jvm_calloc((unsigned int) size *
+                                       sizeof(HashtableEntry *));
         if (hash_table->table)hash_table->table_size = size;
     }
     return hash_table->table != NULL;
@@ -62,7 +62,7 @@ int DEFAULT_HASH_EQUALS_FUNC(HashtableValue value1, HashtableValue value2) {
 Hashtable *hashtable_create(HashtableHashFunc hash_func,
                             HashtableEqualFunc equal_func) {
     Hashtable *hash_table;
-    hash_table = (Hashtable *) jvm_alloc(sizeof(Hashtable));
+    hash_table = (Hashtable *) jvm_calloc(sizeof(Hashtable));
 
     if (hash_table == NULL) {
         return NULL;
@@ -165,7 +165,7 @@ int hashtable_put(Hashtable *hash_table, HashtableKey key, HashtableValue value)
         }
         rover = rover->next;
     }
-    newentry = (HashtableEntry *) jvm_alloc(sizeof(HashtableEntry));
+    newentry = (HashtableEntry *) jvm_calloc(sizeof(HashtableEntry));
 
     if (newentry == NULL) {
         return 0;

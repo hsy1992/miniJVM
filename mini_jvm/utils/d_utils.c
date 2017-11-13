@@ -25,7 +25,7 @@ autoptr *autoptr_get(autoptr *a) {
  * @return var
  */
 autoptr *autoptr_new(__refer r) {
-    autoptr *a = jvm_alloc(sizeof(autoptr));
+    autoptr *a = jvm_calloc(sizeof(autoptr));
     a->ref = r;
     return autoptr_get(a);
 }
@@ -51,7 +51,7 @@ void autoptr_NULL(autoptr **aref) {
 #if __JVM_OS_MAC__
 
 int pthread_spin_init(pthread_spinlock_t *lock, int pshared) {
-    __asm__ __volatile__ ("" ::: "memory");
+    __asm__ __volatile__ ("":: : "memory");
     *lock = 0;
     return 0;
 }
@@ -63,7 +63,7 @@ int pthread_spin_destroy(pthread_spinlock_t *lock) {
 int pthread_spin_lock(pthread_spinlock_t *lock) {
     while (1) {
         int i;
-        for (i=0; i < 10000; i++) {
+        for (i = 0; i < 10000; i++) {
             if (__sync_bool_compare_and_swap(lock, 0, 1)) {
                 return 0;
             }
@@ -81,10 +81,11 @@ int pthread_spin_trylock(pthread_spinlock_t *lock) {
 }
 
 int pthread_spin_unlock(pthread_spinlock_t *lock) {
-    __asm__ __volatile__ ("" ::: "memory");
+    __asm__ __volatile__ ("":: : "memory");
     *lock = 0;
     return 0;
 }
+
 #endif
 //========================     mem alloc     =========================
 
@@ -94,8 +95,12 @@ int pthread_spin_unlock(pthread_spinlock_t *lock) {
  * 在分配的内存块前面加4个字节用于存放此块内存的长度
  *
  */
-void *jvm_alloc(u32 size) {
+void *jvm_calloc(u32 size) {
     return calloc(size, 1);
+}
+
+void *jvm_malloc(u32 size) {
+    return malloc(size);
 }
 
 s32 jvm_free(void *ptr) {

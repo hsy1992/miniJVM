@@ -14,7 +14,7 @@ void class_clear_refer(Class *clazz);
 
 
 Class *class_create() {
-    Class *clazz = jvm_alloc(sizeof(Class));
+    Class *clazz = jvm_calloc(sizeof(Class));
     clazz->mb.clazz = clazz;
     clazz->mb.type = MEM_TYPE_CLASS;
     clazz->field_instance_len = 0;
@@ -162,7 +162,7 @@ s32 class_prepar(Class *clazz) {
     }
     //静态变量分配
     clazz->field_static_len = static_len;
-    clazz->field_static = jvm_alloc(clazz->field_static_len);
+    clazz->field_static = jvm_calloc(clazz->field_static_len);
 
 //    if (utf8_equals_c(clazz->name, "com/sun/cldc/i18n/mini/ISO8859_1_Writer") == 0) {
 //        int debug = 1;

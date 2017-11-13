@@ -57,7 +57,7 @@ void print_exception(Runtime *runtime) {
 }
 
 ClassLoader *classloader_create(c8 *path) {
-    ClassLoader *class_loader = jvm_alloc(sizeof(ClassLoader));
+    ClassLoader *class_loader = jvm_calloc(sizeof(ClassLoader));
     class_loader->g_classpath = utf8_create_c(path);
     //创建类容器
     class_loader->classes = hashtable_create(UNICODE_STR_HASH_FUNC, UNICODE_STR_EQUALS_FUNC);

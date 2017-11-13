@@ -16,7 +16,7 @@ Utf8String *utf8_create() {
     /* Allocate the new uni_string and fill in the obj_fields.  There are
      * initially no entries. */
 
-    uni_str = (Utf8String *) jvm_alloc(sizeof(Utf8String));
+    uni_str = (Utf8String *) jvm_calloc(sizeof(Utf8String));
 
     if (uni_str == NULL) {
         return NULL;
@@ -29,7 +29,7 @@ Utf8String *utf8_create() {
 
     /* Allocate the data array */
 
-    uni_str->data = jvm_alloc(length * sizeof(utf8_char));
+    uni_str->data = jvm_calloc(length * sizeof(utf8_char));
 
     if (uni_str->data == NULL) {
         jvm_free(uni_str);

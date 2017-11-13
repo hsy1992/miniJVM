@@ -81,12 +81,15 @@ int pthread_spin_lock(pthread_spinlock_t *lock);
 int pthread_spin_trylock(pthread_spinlock_t *lock);
 
 int pthread_spin_unlock(pthread_spinlock_t *lock);
+
 #endif
 //======================= memory manage =============================
 
 #ifndef __MEM_LEAK_DETECT
 
-void *jvm_alloc(u32 size);
+void *jvm_calloc(u32 size);
+
+void *jvm_malloc(u32 size);
 
 s32 jvm_free(void *ptr);
 

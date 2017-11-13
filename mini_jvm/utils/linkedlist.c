@@ -17,8 +17,8 @@ struct _ListEntry {
 };
 
 LinkedList *linkedlist_create() {
-    LinkedList *list = jvm_alloc(sizeof(LinkedList));
-    list->mNode = jvm_alloc(sizeof(LinkedListEntry));
+    LinkedList *list = jvm_calloc(sizeof(LinkedList));
+    list->mNode = jvm_calloc(sizeof(LinkedListEntry));
     pthread_spin_init(&list->spinlock, PTHREAD_PROCESS_PRIVATE);
     return list;
 }
@@ -52,7 +52,7 @@ LinkedListEntry *linkedlist_push_front(LinkedList *list, LinkedListValue data) {
     if (list == NULL) {
         return NULL;
     }
-    newentry = jvm_alloc(sizeof(LinkedListEntry));
+    newentry = jvm_calloc(sizeof(LinkedListEntry));
     if (newentry == NULL) {
         return NULL;
     }
@@ -82,7 +82,7 @@ LinkedListEntry *linkedlist_push_end(LinkedList *list, LinkedListValue data) {
     if (list == NULL) {
         return NULL;
     }
-    newentry = jvm_alloc(sizeof(LinkedListEntry));
+    newentry = jvm_calloc(sizeof(LinkedListEntry));
     if (newentry == NULL) {
         return NULL;
     }

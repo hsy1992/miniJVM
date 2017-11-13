@@ -9,9 +9,9 @@ Pairlist *pairlist_create(s32 len) {
     if (len <= 0) {
         len = 4;
     }
-    Pairlist *list = (Pairlist *) jvm_alloc(sizeof(Pairlist));//每个位置放两个指针
+    Pairlist *list = (Pairlist *) jvm_calloc(sizeof(Pairlist));//每个位置放两个指针
     if (list) {
-        list->ptr = jvm_alloc(sizeof(__refer) * 2 * len);//每个位置放两个指针
+        list->ptr = jvm_calloc(sizeof(__refer) * 2 * len);//每个位置放两个指针
         list->_alloced = len;
         list->count = 0;
         return list;
