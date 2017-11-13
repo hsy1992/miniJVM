@@ -644,7 +644,13 @@ typedef struct _AttributePool {
 #define STACK_ENTRY_REF         16
 
 typedef struct _StackEntry {
-    s64 value;
+    union {
+        s64 lvalue;
+        f64 dvalue;
+        f32 fvalue;
+        s32 ivalue;
+        __refer rvalue;
+    };
     s32 type;
 } StackEntry;
 
