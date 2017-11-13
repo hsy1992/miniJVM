@@ -297,9 +297,7 @@ void garbage_move_cache() {
     //jvm_printf(" move cache\n");
     GarbageOp *op;
     while (1) {
-        pthread_spin_lock(&collector->operation_cache->spinlock);
         op = (GarbageOp *) linkedlist_pop_end(collector->operation_cache);
-        pthread_spin_unlock(&collector->operation_cache->spinlock);
         if (op == NULL) {
             break;
         }
@@ -695,9 +693,7 @@ void __garbage_putin_cache(c8 op_type, __refer ref) {
     GarbageOp *op = jvm_calloc(sizeof(GarbageOp));
     op->op_type = op_type;
     op->val = ref;
-    pthread_spin_lock(&collector->operation_cache->spinlock);
     linkedlist_push_front(collector->operation_cache, op);
-    pthread_spin_unlock(&collector->operation_cache->spinlock);
 }
 
 

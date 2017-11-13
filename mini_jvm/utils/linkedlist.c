@@ -56,21 +56,25 @@ LinkedListEntry *linkedlist_push_front(LinkedList *list, LinkedListValue data) {
     if (newentry == NULL) {
         return NULL;
     }
-    newentry->data = data;
-    list->length++;
-    //
-    if (mNode->next == NULL) {  //make a loop
-        mNode->prev = mNode->next = newentry;
-        newentry->prev = newentry->next = mNode;
-    } else {
-        LinkedListEntry *oldnext = mNode->next;
-        if (oldnext != NULL) {
-            oldnext->prev = newentry;
+    pthread_spin_lock(&list->spinlock);
+    {
+        newentry->data = data;
+        list->length++;
+        //
+        if (mNode->next == NULL) {  //make a loop
+            mNode->prev = mNode->next = newentry;
+            newentry->prev = newentry->next = mNode;
+        } else {
+            LinkedListEntry *oldnext = mNode->next;
+            if (oldnext != NULL) {
+                oldnext->prev = newentry;
+            }
+            newentry->prev = mNode;
+            newentry->next = oldnext;
+            mNode->next = newentry;
         }
-        newentry->prev = mNode;
-        newentry->next = oldnext;
-        mNode->next = newentry;
     }
+    pthread_spin_unlock(&list->spinlock);
     return newentry;
 }
 
@@ -86,22 +90,26 @@ LinkedListEntry *linkedlist_push_end(LinkedList *list, LinkedListValue data) {
     if (newentry == NULL) {
         return NULL;
     }
-    newentry->data = data;
-    list->length++;
-    //
-    if (mNode->prev == NULL) {  //make a loop
-        mNode->prev = mNode->next = newentry;
-        newentry->prev = newentry->next = mNode;
-    } else {
-        LinkedListEntry *oldprev = mNode->prev;
+    pthread_spin_lock(&list->spinlock);
+    {
+        newentry->data = data;
+        list->length++;
+        //
+        if (mNode->prev == NULL) {  //make a loop
+            mNode->prev = mNode->next = newentry;
+            newentry->prev = newentry->next = mNode;
+        } else {
+            LinkedListEntry *oldprev = mNode->prev;
 
-        if (oldprev) {
-            oldprev->next = newentry;
+            if (oldprev) {
+                oldprev->next = newentry;
+            }
+            mNode->prev = newentry;
+            newentry->next = mNode;
+            newentry->prev = oldprev;
         }
-        mNode->prev = newentry;
-        newentry->next = mNode;
-        newentry->prev = oldprev;
     }
+    pthread_spin_unlock(&list->spinlock);
     return newentry;
 }
 
@@ -109,22 +117,30 @@ LinkedListValue linkedlist_pop_front(LinkedList *list) {
     if (list == NULL) {
         return NULL;
     }
-    LinkedListEntry *mNode = list->mNode;
-    LinkedListEntry *oldnext = mNode->next;
-    if (oldnext) {
-        mNode->next = oldnext->next;
-        oldnext->prev = oldnext->next = NULL;
-        list->length--;
-    }
-    if (mNode->next) {
-        mNode->next->prev = mNode;
-    }
-    if (mNode->prev == mNode) {  // remove loop
-        mNode->next = mNode->prev = NULL;
-    }
     LinkedListValue val = NULL;
+    LinkedListEntry *mNode;
+    LinkedListEntry *oldnext;
+
+    pthread_spin_lock(&list->spinlock);
+    {
+        mNode = list->mNode;
+        oldnext = mNode->next;
+        if (oldnext) {
+            mNode->next = oldnext->next;
+            oldnext->prev = oldnext->next = NULL;
+            val = oldnext->data;
+
+            list->length--;
+        }
+        if (mNode->next) {
+            mNode->next->prev = mNode;
+        }
+        if (mNode->prev == mNode) {  // remove loop
+            mNode->next = mNode->prev = NULL;
+        }
+    }
+    pthread_spin_unlock(&list->spinlock);
     if (oldnext) {
-        val = oldnext->data;
         jvm_free(oldnext);
     }
     return val;
@@ -134,23 +150,30 @@ LinkedListValue linkedlist_pop_end(LinkedList *list) {
     if (list == NULL) {
         return NULL;
     }
-    LinkedListEntry *mNode = list->mNode;
-    LinkedListEntry *oldprev = mNode->prev;
-    if (oldprev) {
-        mNode->prev = oldprev->prev;
-        oldprev->prev = oldprev->next = NULL;
-        list->length--;
-    }
-    if (mNode->prev) {
-        mNode->prev->next = mNode;
-    }
-    if (mNode->next == mNode) {
-        mNode->next = mNode->prev = NULL;
-    }
-
     LinkedListValue val = NULL;
+    LinkedListEntry *oldprev;
+    LinkedListEntry *mNode;
+
+    pthread_spin_lock(&list->spinlock);
+    {
+        mNode = list->mNode;
+        oldprev = mNode->prev;
+        if (oldprev) {
+            mNode->prev = oldprev->prev;
+            oldprev->prev = oldprev->next = NULL;
+            val = oldprev->data;
+            list->length--;
+        }
+        if (mNode->prev) {
+            mNode->prev->next = mNode;
+        }
+        if (mNode->next == mNode) {
+            mNode->next = mNode->prev = NULL;
+        }
+    }
+    pthread_spin_unlock(&list->spinlock);
+
     if (oldprev) {
-        val = oldprev->data;
         jvm_free(oldprev);
     }
     return val;

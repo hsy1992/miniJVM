@@ -77,7 +77,7 @@ c8 *getStaticFieldPtr(FieldInfo *fi);
 
 void setFieldInt(c8 *ptr, s32 v);
 
-__refer setFieldRefer(c8 *ptr, __refer v);
+void setFieldRefer(c8 *ptr, __refer v);
 
 void setFieldLong(c8 *ptr, s64 v);
 

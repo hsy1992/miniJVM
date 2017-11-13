@@ -22,9 +22,8 @@ s32 op_nop(u8 **opCode, Runtime *runtime) {
 
 
 static inline s32 op_aload_n(u8 **opCode, Runtime *runtime, s32 i) {
-    RuntimeStack *stack = runtime->stack;
     __refer value = localvar_getRefer(runtime, i);
-    push_ref(stack, value);
+    push_ref(runtime->stack, value);
 #if _JVM_DEBUG_BYTECODE_DETAIL > 5
     invoke_deepth(runtime);
     jvm_printf("aload_%d push localvar [%llx] into stack\n", i, (s64) (long) value);
@@ -2050,9 +2049,6 @@ static inline s32 op_putfield_impl(u8 **opCode, Runtime *runtime, s32 isStatic) 
     if (isDataReferByIndex(fi->datatype_idx)) {//垃圾回收标识
 
         __refer newins = entry_2_refer(&entry);
-//        if (utf8_equals_c(fi->name, "small5pow")) {
-//            s32 debug = 1;
-//        }
         setFieldRefer(ptr, newins);
     } else {
         s32 value = 0;
@@ -2109,7 +2105,6 @@ static inline s32 op_getfield_impl(u8 **opCode, Runtime *runtime, s32 isStatic) 
         fi = find_fieldInfo_by_fieldref(clazz, field_ref);
         find_constant_fieldref(clazz, field_ref)->fieldInfo = fi;
     }
-    c8 ch = utf8_char_at(fi->descriptor, 0);
     s32 data_bytes = data_type_bytes[fi->datatype_idx];
 
     Instance *ins = NULL;
@@ -2127,7 +2122,7 @@ static inline s32 op_getfield_impl(u8 **opCode, Runtime *runtime, s32 isStatic) 
     }
     Long2Double l2d;
     l2d.l = 0;
-    if (isDataReferByTag(ch)) {
+    if (isDataReferByIndex(fi->datatype_idx)) {
         l2d.r = getFieldRefer(ptr);
         push_ref(stack, l2d.r);
     } else {

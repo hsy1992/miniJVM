@@ -955,7 +955,7 @@ s32 instance_destory(Instance *ins) {
  * @return
  */
 Instance *instance_copy(Instance *src) {
-    Instance *dst = jvm_calloc(sizeof(Instance));
+    Instance *dst = jvm_malloc(sizeof(Instance));
     memcpy(dst, src, sizeof(Instance));
     if (src->mb.type == MEM_TYPE_INS) {
         s32 i, len;
@@ -978,7 +978,7 @@ Instance *instance_copy(Instance *src) {
         }
     } else if (src->mb.type == MEM_TYPE_ARR) {
         s32 size = src->arr_length * data_type_bytes[src->arr_type_index];
-        c8 *arr_body = jvm_calloc(size);
+        c8 *arr_body = jvm_malloc(size);
         dst->arr_body = arr_body;
         memcpy(arr_body, src->arr_body, size);
     }
@@ -1182,10 +1182,8 @@ void setFieldInt(c8 *ptr, s32 v) {
     memcpy(ptr, &v, sizeof(s32));
 }
 
-__refer setFieldRefer(c8 *ptr, __refer v) {
-    __refer old = getFieldRefer(ptr);
+void setFieldRefer(c8 *ptr, __refer v) {
     memcpy(ptr, &v, sizeof(__refer));
-    return old;
 }
 
 void setFieldLong(c8 *ptr, s64 v) {
