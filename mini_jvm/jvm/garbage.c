@@ -265,7 +265,7 @@ void *collect_thread_run(void *para) {
     s64 lastgc = currentTimeMillis();
     while (1) {
 //        garbage_thread_lock();
-//        threadSleep(100);
+        threadSleep(1000);
         s64 startAt = currentTimeMillis();
         garbage_move_cache();
         s64 endAt = currentTimeMillis() - startAt;
@@ -280,7 +280,7 @@ void *collect_thread_run(void *para) {
         if (collector->_garbage_thread_status == GARBAGE_THREAD_PAUSE) {
             continue;
         }
-        if (currentTimeMillis() - lastgc < 3000) {// less than 3 sec no gc
+        if (currentTimeMillis() - lastgc < 5000) {// less than 3 sec no gc
             continue;
         }
         if (currentTimeMillis() - lastgc > GARBAGE_PERIOD_MS || collector->heap_size > MAX_HEAP_SIZE) {
