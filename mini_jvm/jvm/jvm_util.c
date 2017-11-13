@@ -43,9 +43,7 @@ Class *classes_get_c(c8 *clsName) {
 Class *classes_get(Utf8String *clsName) {
     Class *cl = NULL;
     if (clsName) {
-        pthread_spin_lock(&sys_classloader->classes->spinlock);
         cl = hashtable_get(sys_classloader->classes, clsName);
-        pthread_spin_unlock(&sys_classloader->classes->spinlock);
     }
     return cl;
 }
@@ -77,9 +75,7 @@ Class *classes_load_get(Utf8String *pustr, Runtime *runtime) {
 
 s32 classes_put(Class *clazz) {
     if (clazz) {
-        pthread_spin_lock(&sys_classloader->classes->spinlock);
         hashtable_put(sys_classloader->classes, clazz->name, clazz);
-        pthread_spin_unlock(&sys_classloader->classes->spinlock);
         garbage_refer_hold(clazz);
         garbage_refer_reg(clazz);
         return 0;
@@ -89,16 +85,12 @@ s32 classes_put(Class *clazz) {
 
 Class *array_class_get(Utf8String *desc) {
     if (desc && desc->length && utf8_char_at(desc, 0) == '[') {
-        pthread_spin_lock(&array_classloader->classes->spinlock);
         Class *clazz = hashtable_get(array_classloader->classes, desc);
-        pthread_spin_unlock(&array_classloader->classes->spinlock);
         if (!clazz && desc && desc->length) {
             clazz = class_create();
             clazz->arr_type_index = getDataTypeIndex(utf8_char_at(desc, 1));
             clazz->name = utf8_create_copy(desc);
-            pthread_spin_lock(&array_classloader->classes->spinlock);
             hashtable_put(array_classloader->classes, clazz->name, clazz);
-            pthread_spin_unlock(&array_classloader->classes->spinlock);
             garbage_refer_hold(clazz);
             garbage_refer_reg(clazz);
         }

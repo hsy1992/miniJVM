@@ -89,18 +89,21 @@ void hashtable_destory(Hashtable *hash_table) {
     HashtableEntry *rover;
     HashtableEntry *next;
     unsigned long long int i;
-
-    for (i = 0; i < hash_table->table_size; ++i) {
-        rover = hash_table->table[i];
-        while (rover != NULL) {
-            next = rover->next;
-            hash_table_free_entry(hash_table, rover);
-            rover = next;
+    pthread_spin_lock(&hash_table->spinlock);
+    {
+        for (i = 0; i < hash_table->table_size; ++i) {
+            rover = hash_table->table[i];
+            while (rover != NULL) {
+                next = rover->next;
+                hash_table_free_entry(hash_table, rover);
+                rover = next;
+            }
         }
+        pthread_spin_destroy(&hash_table->spinlock);
+        jvm_free(hash_table->table);
+        jvm_free(hash_table);
     }
-    pthread_spin_destroy(&hash_table->spinlock);
-    jvm_free(hash_table->table);
-    jvm_free(hash_table);
+    pthread_spin_unlock(&hash_table->spinlock);
 }
 
 
@@ -108,25 +111,28 @@ void hashtable_clear(Hashtable *hash_table) {
     HashtableEntry *rover;
     HashtableEntry *next;
     unsigned long long int i;
-
-    for (i = 0; i < hash_table->table_size; ++i) {
-        rover = hash_table->table[i];
-        while (rover != NULL) {
-            next = rover->next;
-            hash_table_free_entry(hash_table, rover);
-            rover = next;
+    pthread_spin_lock(&hash_table->spinlock);
+    {
+        for (i = 0; i < hash_table->table_size; ++i) {
+            rover = hash_table->table[i];
+            while (rover != NULL) {
+                next = rover->next;
+                hash_table_free_entry(hash_table, rover);
+                rover = next;
+            }
+            hash_table->table[i] = NULL;
         }
-        hash_table->table[i] = NULL;
-    }
-    hash_table->entries = 0;
-    if (hash_table->table_size > HASH_TABLE_DEFAULT_SIZE) {
-        jvm_free(hash_table->table);
-        hash_table->table = NULL;
-        hash_table->table_size = 0;
-        if (!hash_table_allocate_table(hash_table, HASH_TABLE_DEFAULT_SIZE)) {
-            jvm_free(hash_table);
+        hash_table->entries = 0;
+        if (hash_table->table_size > HASH_TABLE_DEFAULT_SIZE) {
+            jvm_free(hash_table->table);
+            hash_table->table = NULL;
+            hash_table->table_size = 0;
+            if (!hash_table_allocate_table(hash_table, HASH_TABLE_DEFAULT_SIZE)) {
+                jvm_free(hash_table);
+            }
         }
     }
+    pthread_spin_unlock(&hash_table->spinlock);
 }
 
 void hashtable_register_free_functions(Hashtable *hash_table,
@@ -140,62 +146,72 @@ int hashtable_put(Hashtable *hash_table, HashtableKey key, HashtableValue value)
     HashtableEntry *rover;
     HashtableEntry *newentry;
     unsigned long long int index;
+    int success = 0;
 
-    if ((hash_table->entries << 1) >= hash_table->table_size) {
-        if (!hashtable_resize(hash_table, hash_table->table_size << 1)) {
-            return 0;
+    pthread_spin_lock(&hash_table->spinlock);
+    {
+        if ((hash_table->entries << 1) >= hash_table->table_size) {
+            hashtable_resize(hash_table, hash_table->table_size << 1);
+        }
+        index = hash_table->hash_func(key) % hash_table->table_size;
+        rover = hash_table->table[index];
+
+        while (rover != NULL) {
+            if (hash_table->equal_func(rover->key, key) != 0) {
+                if (hash_table->value_free_func != NULL) {
+                    hash_table->value_free_func(rover->value);
+                }
+
+                if (hash_table->key_free_func != NULL) {
+                    hash_table->key_free_func(rover->key);
+                }
+
+                rover->key = key;
+                rover->value = value;
+                success = 1;
+                break;
+            }
+            rover = rover->next;
+        }
+        if (!success) {
+            newentry = (HashtableEntry *) jvm_calloc(sizeof(HashtableEntry));
+
+            if (newentry != NULL) {
+                newentry->key = key;
+                newentry->value = value;
+                newentry->next = hash_table->table[index];
+                hash_table->table[index] = newentry;
+                ++hash_table->entries;
+
+                success = 1;
+            }
         }
     }
-    index = hash_table->hash_func(key) % hash_table->table_size;
-    rover = hash_table->table[index];
-
-    while (rover != NULL) {
-        if (hash_table->equal_func(rover->key, key) != 0) {
-            if (hash_table->value_free_func != NULL) {
-                hash_table->value_free_func(rover->value);
-            }
-
-            if (hash_table->key_free_func != NULL) {
-                hash_table->key_free_func(rover->key);
-            }
-
-            rover->key = key;
-            rover->value = value;
-            return 1;
-        }
-        rover = rover->next;
-    }
-    newentry = (HashtableEntry *) jvm_calloc(sizeof(HashtableEntry));
-
-    if (newentry == NULL) {
-        return 0;
-    }
-    newentry->key = key;
-    newentry->value = value;
-
-    newentry->next = hash_table->table[index];
-    hash_table->table[index] = newentry;
-
-    ++hash_table->entries;
-
-    return 1;
+    pthread_spin_unlock(&hash_table->spinlock);
+    return success;
 }
 
 HashtableValue hashtable_get(Hashtable *hash_table, HashtableKey key) {
     HashtableEntry *rover;
     unsigned long long int index;
+    HashtableValue value = HASH_NULL;
 
-    index = hash_table->hash_func(key) % hash_table->table_size;
+    pthread_spin_lock(&hash_table->spinlock);
+    {
+        index = hash_table->hash_func(key) % hash_table->table_size;
 
-    rover = hash_table->table[index];
+        rover = hash_table->table[index];
 
-    while (rover != NULL) {
-        if (hash_table->equal_func(key, rover->key) != 0) {
-            return rover->value;
+        while (rover != NULL) {
+            if (hash_table->equal_func(key, rover->key) != 0) {
+                value = rover->value;
+                break;
+            }
+            rover = rover->next;
         }
-        rover = rover->next;
     }
-    return HASH_NULL;
+    pthread_spin_unlock(&hash_table->spinlock);
+    return value;
 }
 
 int hashtable_remove(Hashtable *hash_table, HashtableKey key, int resize) {
@@ -203,33 +219,33 @@ int hashtable_remove(Hashtable *hash_table, HashtableKey key, int resize) {
     HashtableEntry *pre;
     HashtableEntry *next;
     unsigned long long int index;
-    int result;
-
-    if (resize && (hash_table->entries << 3) < hash_table->table_size) {
-        if (!hashtable_resize(hash_table, hash_table->table_size >> 1)) {
-            return 0;
+    int success = 0;
+    pthread_spin_lock(&hash_table->spinlock);
+    {
+        if (resize && (hash_table->entries << 3) < hash_table->table_size) {
+            hashtable_resize(hash_table, hash_table->table_size >> 1);
         }
-    }
-    index = hash_table->hash_func(key) % hash_table->table_size;
+        index = hash_table->hash_func(key) % hash_table->table_size;
 
-    result = 0;
-    rover = hash_table->table[index];
-    pre = rover;
-
-    while (rover != NULL) {
-        next = rover->next;
-        if (hash_table->equal_func(key, rover->key) != 0) {
-            if (pre == rover)hash_table->table[index] = next;
-            else pre->next = next;
-            hash_table_free_entry(hash_table, rover);
-            --hash_table->entries;
-            result = 1;
-            break;
-        }
+        rover = hash_table->table[index];
         pre = rover;
-        rover = next;
+
+        while (rover != NULL) {
+            next = rover->next;
+            if (hash_table->equal_func(key, rover->key) != 0) {
+                if (pre == rover)hash_table->table[index] = next;
+                else pre->next = next;
+                hash_table_free_entry(hash_table, rover);
+                --hash_table->entries;
+                success = 1;
+                break;
+            }
+            pre = rover;
+            rover = next;
+        }
     }
-    return result;
+    pthread_spin_unlock(&hash_table->spinlock);
+    return success;
 }
 
 unsigned long long int hashtable_num_entries(Hashtable *hash_table) {

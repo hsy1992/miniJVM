@@ -3,7 +3,7 @@
 //
 
 #include <memory.h>
-#include <printf.h>
+#include <stdio.h>
 #include "sched.h"
 #include "d_type.h"
 //========================     autoprt     =========================
