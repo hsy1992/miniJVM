@@ -3,6 +3,7 @@
 //
 
 #include <memory.h>
+#include "sched.h"
 #include "d_type.h"
 
 /**
@@ -71,7 +72,7 @@ int pthread_spin_trylock(pthread_spinlock_t *lock) {
     if (__sync_bool_compare_and_swap(lock, 0, 1)) {
         return 0;
     }
-    return EBUSY;
+    return 1;
 }
 
 int pthread_spin_unlock(pthread_spinlock_t *lock) {

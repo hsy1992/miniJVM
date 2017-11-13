@@ -23,10 +23,10 @@ CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 #include <stdlib.h>
 #include <stdio.h>
 #include <pthread.h>
-#include <mem.h>
+#include "d_type.h"
+//#include <mem.h>
 #include "hashtable.h"
 #include "math.h"
-#include "d_type.h"
 
 static s32 HASH_TABLE_DEFAULT_SIZE = 16;
 

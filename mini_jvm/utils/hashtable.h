@@ -50,6 +50,7 @@ extern "C" {
 #endif
 
 #include "pthread.h"
+#include "d_type.h"
 /**
  * A hash table structure.
  */

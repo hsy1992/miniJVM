@@ -21,8 +21,8 @@ CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 #include <stdlib.h>
 #include <string.h>
 
-#include "arraylist.h"
 #include "d_type.h"
+#include "arraylist.h"
 
 
 /* malloc() / free() testing */
