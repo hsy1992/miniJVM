@@ -88,13 +88,9 @@ void utf8_append(Utf8String *a1, Utf8String *a2) {
 
 void utf8_append_part(Utf8String *a1, Utf8String *a2, int start, int len) {
     if (a1 == NULL || a2 == NULL)return;
-    int i = 0;
     _utf8_space_require(a1, len);
     memcpy(a1->data + a1->length, a2->data + start * sizeof(utf8_char), len * sizeof(utf8_char));
     a1->length += len;
-//    for (i = start; (i < a2->length) && (i < start + len); i++) {
-//        utf8_pushback(a1, a2->data[i]);
-//    }
 }
 
 void utf8_append_c(Utf8String *a1, char *a2) {

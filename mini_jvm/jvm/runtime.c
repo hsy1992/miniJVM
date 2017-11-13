@@ -145,6 +145,8 @@ void pop_entry(RuntimeStack *stack, StackEntry *entry) {
 
 void pop_empty(RuntimeStack *stack) {
     stack->size--;
+//    stack->store[stack->size].type=0;
+//    stack->store[stack->size].value=0;
     memset(&stack->store[stack->size], 0, sizeof(StackEntry));
 }
 
@@ -275,11 +277,6 @@ s32 localvar_init(Runtime *runtime, s32 count) {
 }
 
 s32 localvar_dispose(Runtime *runtime) {
-    s32 i;
-
-//    if (runtime->localVariables == NULL) {
-//        int debug = 1;
-//    }
     jvm_free(runtime->localVariables);
     runtime->localVariables = NULL;
     runtime->localvar_count = 0;

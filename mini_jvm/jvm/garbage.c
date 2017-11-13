@@ -704,15 +704,11 @@ void __garbage_putin_cache(c8 op_type, __refer ref) {
 s32 garbage_refer_reg(__refer ref) {
     if (ref) {
         MemoryBlock *mb = (MemoryBlock *) ref;
-//        garbage_thread_lock();
         if (!mb->garbage_reg) {
             __garbage_putin_cache(GARBAGE_OP_REG, ref);
-            garbage_thread_notify();
             mb->garbage_reg = 1;
 
         }
-//        garbage_thread_unlock();
-
     }
     return 0;
 }
@@ -720,20 +716,12 @@ s32 garbage_refer_reg(__refer ref) {
 
 void garbage_refer_hold(__refer ref) {
     if (ref) {
-//        garbage_thread_lock();
         __garbage_putin_cache(GARBAGE_OP_HOLD, ref);
-
-//        garbage_thread_notify();
-//        garbage_thread_unlock();
     }
 }
 
 void garbage_refer_release(__refer ref) {
     if (ref) {
-//        garbage_thread_lock();
         __garbage_putin_cache(GARBAGE_OP_RELEASE, ref);
-
-//        garbage_thread_notify();
-//        garbage_thread_unlock();
     }
 }

@@ -192,7 +192,7 @@ int arraylist_insert(ArrayList *arraylist, int index, ArrayListValue data);
  * @param b valueb
  * @return equals
  */
-int arraylist_compare_int(ArrayListValue a, ArrayListValue b);
+int arraylist_compare_ptr(ArrayListValue a, ArrayListValue b);
 
 /**
  * Find the index of a particular value in an ArrayList.

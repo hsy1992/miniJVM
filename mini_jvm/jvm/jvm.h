@@ -255,12 +255,6 @@ static const s32 DATATYPE_ARRAY = 13;
 static const s32 DATATYPE_SHORT = 9;
 static const s32 DATATYPE_LONG = 11;
 
-static const c8 tag_additional_byte_size[13] = {
-        0, 2, 0, 4, 4,
-        8, 8, 2, 2, 4,
-        4, 4, 4
-};
-
 //访问标志
 static const u16 ACC_PUBLIC = 0x0001;
 static const u16 ACC_PRIVATE = 0x0002;
@@ -399,7 +393,6 @@ typedef struct _ConstantType {
 typedef struct _ConstantUTF8 {
     s32 index;
     u8 tag;
-    s32 additional_byte_size;
     u16 string_size;
     //
     Utf8String *utfstr;
@@ -409,14 +402,12 @@ typedef struct _ConstantUTF8 {
 typedef struct _ConstantInteger {
     s32 index;
     u8 tag;
-    s32 additional_byte_size;
     s32 value;
 } ConstantInteger;
 
 typedef struct _ConstantFloat {
     s32 index;
     u8 tag;
-    s32 additional_byte_size;
     f32 value;
 
 } ConstantFloat;
@@ -424,21 +415,18 @@ typedef struct _ConstantFloat {
 typedef struct _ConstantLong {
     s32 index;
     u8 tag;
-    s32 additional_byte_size;
     s64 value;
 } ConstantLong;
 
 typedef struct _ConstantDouble {
     s32 index;
     u8 tag;
-    s32 additional_byte_size;
     f64 value;
 } ConstantDouble;
 
 typedef struct _ConstantClassRef {
     s32 index;
     u8 tag;
-    s32 additional_byte_size;
     u16 stringIndex;
 
     //
@@ -448,14 +436,12 @@ typedef struct _ConstantClassRef {
 typedef struct _ConstantStringRef {
     s32 index;
     u8 tag;
-    s32 additional_byte_size;
     u16 stringIndex;
 } ConstantStringRef;
 
 typedef struct _ConstantFieldRef {
     s32 index;
     u8 tag;
-    s32 additional_byte_size;
     u16 classIndex;
     u16 nameAndTypeIndex;
     //
@@ -465,7 +451,6 @@ typedef struct _ConstantFieldRef {
 typedef struct _ConstantMethodRef {
     s32 index;
     u8 tag;
-    s32 additional_byte_size;
     u16 classIndex;
     u16 nameAndTypeIndex;
     //
@@ -481,7 +466,6 @@ typedef struct _ConstantMethodRef {
 typedef struct _ConstantInterfaceMethodRef {
     s32 index;
     u8 tag;
-    s32 additional_byte_size;
     u16 classIndex;
     u16 nameAndTypeIndex;
 
@@ -493,7 +477,6 @@ typedef struct _ConstantInterfaceMethodRef {
 struct _ConstantNameAndType {
     s32 index;
     u8 tag;
-    s32 additional_byte_size;
     u16 nameIndex;
     u16 typeIndex;
 };
@@ -831,8 +814,6 @@ struct _Instruction {
 };
 
 c8 *find_instruct_name(u8 op);
-
-InstructFunc find_instruct_func(u8 op);
 
 ConstantUTF8 *find_constant_utf8(Class *clazz, s32 index);
 

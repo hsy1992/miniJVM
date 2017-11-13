@@ -2110,7 +2110,7 @@ static inline s32 op_getfield_impl(u8 **opCode, Runtime *runtime, s32 isStatic) 
         find_constant_fieldref(clazz, field_ref)->fieldInfo = fi;
     }
     c8 ch = utf8_char_at(fi->descriptor, 0);
-    s32 data_bytes = data_type_bytes[getDataTypeIndex(ch)];
+    s32 data_bytes = data_type_bytes[fi->datatype_idx];
 
     Instance *ins = NULL;
     c8 *ptr;
@@ -3104,13 +3104,15 @@ c8 *find_instruct_name(u8 op) {
     return instructionsIndexies[op]->name;
 }
 
-InstructFunc find_instruct_func(u8 op) {
+static inline InstructFunc find_instruct_func(u8 op) {
     Instruction *i = instructionsIndexies[op];
+//#if _JVM_DEBUG_BYTECODE_DUMP
     if (!i) {
         jvm_printf("instruct not found :[%x]\n", op);
         exit(1);
         return 0;
     }
+//#endif
     return i->func;
 }
 

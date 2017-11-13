@@ -22,7 +22,6 @@ void *parseCPString(Class *_this, FILE *fp, s32 index) {
     s2c.c1 = short_tmp[0];
     s2c.c0 = short_tmp[1];
     ptr->string_size = s2c.s;
-    ptr->additional_byte_size = tag_additional_byte_size[CONSTANT_UTF8] + ptr->string_size;
 
     ptr->utfstr = utf8_create();
     s32 i = 0;
@@ -42,7 +41,6 @@ void *parseCPInteger(Class *_this, FILE *fp, s32 index) {
 
     ptr->tag = CONSTANT_INTEGER;
     ptr->index = index;
-    ptr->additional_byte_size = tag_additional_byte_size[CONSTANT_INTEGER];
 
     fread(tmp, 4, 1, fp);
     Int2Float i2c;
@@ -63,7 +61,6 @@ void *parseCPFloat(Class *_this, FILE *fp, s32 index) {
 
     ptr->tag = CONSTANT_FLOAT;
     ptr->index = index;
-    ptr->additional_byte_size = tag_additional_byte_size[CONSTANT_FLOAT];
 
     fread(tmp, 4, 1, fp);
     Int2Float i2c;
@@ -85,7 +82,6 @@ void *parseCPLong(Class *_this, FILE *fp, s32 index) {
 
     ptr->tag = CONSTANT_LONG;
     ptr->index = index;
-    ptr->additional_byte_size = tag_additional_byte_size[CONSTANT_LONG];
 
     fread(tmp, 8, 1, fp);
     Long2Double l2d;
@@ -110,7 +106,6 @@ void *parseCPDouble(Class *_this, FILE *fp, s32 index) {
 
     ptr->tag = CONSTANT_DOUBLE;
     ptr->index = index;
-    ptr->additional_byte_size = tag_additional_byte_size[CONSTANT_DOUBLE];
 
     fread(tmp, 8, 1, fp);
     Long2Double l2d;
@@ -135,7 +130,6 @@ void *parseCPClass(Class *_this, FILE *fp, s32 index) {
 
     ptr->tag = CONSTANT_CLASS;
     ptr->index = index;
-    ptr->additional_byte_size = tag_additional_byte_size[CONSTANT_CLASS];
 
     fread(short_tmp, 2, 1, fp);
     Short2Char s2c;
@@ -154,7 +148,6 @@ void *parseCPStringRef(Class *_this, FILE *fp, s32 index) {
 
     ptr->tag = CONSTANT_STRING_REF;
     ptr->index = index;
-    ptr->additional_byte_size = tag_additional_byte_size[CONSTANT_STRING_REF];
 
     fread(short_tmp, 2, 1, fp);
     Short2Char s2c;
@@ -173,7 +166,6 @@ void *parseCPField(Class *_this, FILE *fp, s32 index) {
 
     ptr->tag = CONSTANT_FIELD_REF;
     ptr->index = index;
-    ptr->additional_byte_size = tag_additional_byte_size[CONSTANT_FIELD_REF];
 
     fread(short_tmp, 2, 1, fp);
     Short2Char s2c;
@@ -198,7 +190,6 @@ void *parseCPMethod(Class *_this, FILE *fp, s32 index) {
 
     ptr->tag = CONSTANT_METHOD_REF;
     ptr->index = index;
-    ptr->additional_byte_size = tag_additional_byte_size[CONSTANT_METHOD_REF];
 
     fread(short_tmp, 2, 1, fp);
     Short2Char s2c;
@@ -222,7 +213,6 @@ void *parseCPInterface(Class *_this, FILE *fp, s32 index) {
 
     ptr->tag = CONSTANT_INTERFACE_REF;
     ptr->index = index;
-    ptr->additional_byte_size = tag_additional_byte_size[CONSTANT_INTERFACE_REF];
 
     fread(short_tmp, 2, 1, fp);
     Short2Char s2c;
@@ -246,7 +236,6 @@ void *parseCPNameAndType(Class *_this, FILE *fp, s32 index) {
 
     ptr->tag = CONSTANT_NAME_AND_TYPE;
     ptr->index = index;
-    ptr->additional_byte_size = tag_additional_byte_size[CONSTANT_NAME_AND_TYPE];
 
     fread(short_tmp, 2, 1, fp);
     Short2Char s2c;
@@ -333,7 +322,7 @@ void printConstantPool(Class *clazz) {
     jvm_printf("ConstantUTF8 = \n");
     for (i = 0; i < p->utf8CP->length; i++) {
         ConstantUTF8 *cutf = arraylist_get_value(p->utf8CP, i);
-        jvm_printf("cp_index[%d], utf8[%d], tag = %d, size = %d, ",
+        jvm_printf("cp_index[%d], utf8[%d], tag = %d,  ",
                    cutf->index, i, cutf->tag,
                    cutf->string_size);
         jvm_printf("%s\n", utf8_cstr(cutf->utfstr));
@@ -343,9 +332,8 @@ void printConstantPool(Class *clazz) {
         jvm_printf("Constant Integer= \n");
         for (i = 0; i < p->integerCP->length; i++) {
             ConstantInteger *ci = arraylist_get_value(p->integerCP, i);
-            jvm_printf(" cp_index[%d], integer[%d], tag = %d, size = %d, %d\n",
+            jvm_printf(" cp_index[%d], integer[%d], tag = %d, %d\n",
                        ci->index, i, ci->tag,
-                       ci->additional_byte_size,
                        ci->value);
         }
     }
@@ -354,9 +342,9 @@ void printConstantPool(Class *clazz) {
         jvm_printf("Constant Float= \n");
         for (i = 0; i < p->floatCP->length; i++) {
             ConstantFloat *cf = arraylist_get_value(p->floatCP, i);
-            jvm_printf(" cp_index[%d], f32[%d], tag = %d, size = %d, %.4f\n",
+            jvm_printf(" cp_index[%d], f32[%d], tag = %d,  %.4f\n",
                        cf->index, i, cf->tag,
-                       cf->additional_byte_size,
+                       
                        cf->value);
         }
     }
@@ -365,9 +353,8 @@ void printConstantPool(Class *clazz) {
         jvm_printf("Constant Double= \n");
         for (i = 0; i < p->doubleCP->length; i++) {
             ConstantDouble *cd = arraylist_get_value(p->doubleCP, i);
-            jvm_printf(" cp_index[%d], f64[%d], tag = %d, size = %d, %.5f\n",
+            jvm_printf(" cp_index[%d], f64[%d], tag = %d,  %.5f\n",
                        cd->index, i, cd->tag,
-                       cd->additional_byte_size,
                        cd->value);
         }
     }
@@ -378,9 +365,8 @@ void printConstantPool(Class *clazz) {
         for (i = 0; i < p->classRef->length; i++) {
             ConstantClassRef *ccr = arraylist_get_value(p->classRef, i);
             ConstantUTF8 *ptr = find_constant_utf8(clazz, ccr->stringIndex);
-            jvm_printf(" cp_index[%d], class[%d], tag = %d, size = %d, %d",
+            jvm_printf(" cp_index[%d], class[%d], tag = %d,  %d",
                        ccr->index, i, ccr->tag,
-                       ccr->additional_byte_size,
                        ccr->stringIndex
             );
             if (ptr != 0) {
@@ -398,9 +384,8 @@ void printConstantPool(Class *clazz) {
         for (i = 0; i < p->stringRef->length; i++) {
             ConstantStringRef *csr = arraylist_get_value(p->stringRef, i);
             ConstantUTF8 *ptr = find_constant_utf8(clazz, csr->stringIndex);
-            jvm_printf(" cp_index[%d], strRef[%d], tag = %d, size = %d, %d",
+            jvm_printf(" cp_index[%d], strRef[%d], tag = %d,  %d",
                        csr->index, i, csr->tag,
-                       csr->additional_byte_size,
                        csr->stringIndex);
             if (ptr != 0) {
                 jvm_printf(" ");
@@ -418,9 +403,8 @@ void printConstantPool(Class *clazz) {
             ConstantClassRef *ptr = find_constant_classref(clazz, cfr->classIndex);
             ConstantNameAndType *ptr2 = find_constant_name_and_type(clazz, cfr->nameAndTypeIndex);
 
-            jvm_printf(" cp_index[%d], fieldRef[%d], tag = %d, size = %d, cls %d, nat= %d",
+            jvm_printf(" cp_index[%d], fieldRef[%d], tag = %d,  cls %d, nat= %d",
                        cfr->index, i, cfr->tag,
-                       cfr->additional_byte_size,
                        cfr->classIndex,
                        cfr->nameAndTypeIndex);
             if (ptr != 0) {
@@ -449,9 +433,8 @@ void printConstantPool(Class *clazz) {
             ConstantClassRef *ptr = find_constant_classref(clazz, cmr->classIndex);
             ConstantNameAndType *ptr2 = find_constant_name_and_type(clazz, cmr->nameAndTypeIndex);
 
-            jvm_printf(" cp_index[%d], methodRef[%d], tag = %d, size = %d, cls %d, nat= %d",
+            jvm_printf(" cp_index[%d], methodRef[%d], tag = %d,  cls %d, nat= %d",
                        cmr->index, i, cmr->tag,
-                       cmr->additional_byte_size,
                        cmr->classIndex,
                        cmr->nameAndTypeIndex);
             if (ptr != 0) {
@@ -660,7 +643,6 @@ s32 parseIPClass(Class *_this, FILE *fp, s32 index) {
 
     ptr->tag = CONSTANT_CLASS;
     ptr->index = index;
-    ptr->additional_byte_size = 2;
 
     fread(short_tmp, 2, 1, fp);
     Short2Char s2c;
@@ -679,9 +661,8 @@ void printInterfacePool(Class *clazz, InterfacePool *ip) {
         jvm_printf("Interface Class Pool= \n");
         for (i = 0; i < ip->clasz_used; i++) {
             ConstantUTF8 *ptr = find_constant_utf8(clazz, ip->clasz[i].stringIndex);
-            jvm_printf(" ip_index[%d], class[%d], tag = %d, size = %d, %d",
+            jvm_printf(" ip_index[%d], class[%d], tag = %d,  %d",
                        ip->clasz[i].index, i, ip->clasz[i].tag,
-                       ip->clasz[i].additional_byte_size,
                        ip->clasz[i].stringIndex);
             if (ptr != 0) {
                 jvm_printf(" ");

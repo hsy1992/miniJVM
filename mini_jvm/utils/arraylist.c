@@ -134,7 +134,7 @@ int arraylist_append(ArrayList *arraylist, ArrayListValue data) {
 }
 
 int arraylist_remove(ArrayList *arraylist, ArrayListValue data) {
-    int index = arraylist_index_of(arraylist, arraylist_compare_int, data);
+    int index = arraylist_index_of(arraylist, arraylist_compare_ptr, data);
     if (index >= 0)
         arraylist_remove_at(arraylist, index);
     return index;
@@ -163,7 +163,7 @@ void arraylist_remove_range(ArrayList *arraylist, int index, int length) {
     arraylist->length -= length;
 }
 
-int arraylist_compare_int(ArrayListValue a, ArrayListValue b) {
+int arraylist_compare_ptr(ArrayListValue a, ArrayListValue b) {
     return a == b;
 }
 

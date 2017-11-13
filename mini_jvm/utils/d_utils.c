@@ -3,8 +3,10 @@
 //
 
 #include <memory.h>
+#include <printf.h>
 #include "sched.h"
 #include "d_type.h"
+//========================     autoprt     =========================
 
 /**
  * get a autoprt value;
@@ -44,6 +46,8 @@ void autoptr_NULL(autoptr **aref) {
     }
     *aref = NULL;
 }
+
+//========================     spinlock     =========================
 #if __JVM_OS_MAC__
 
 int pthread_spin_init(pthread_spinlock_t *lock, int pshared) {
@@ -64,6 +68,7 @@ int pthread_spin_lock(pthread_spinlock_t *lock) {
                 return 0;
             }
         }
+        //printf(" %d\n",i);
         sched_yield();
     }
 }
@@ -81,6 +86,7 @@ int pthread_spin_unlock(pthread_spinlock_t *lock) {
     return 0;
 }
 #endif
+//========================     mem alloc     =========================
 
 #ifndef __MEM_LEAK_DETECT
 

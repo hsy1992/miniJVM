@@ -43,10 +43,8 @@ Class *classes_get_c(c8 *clsName) {
 Class *classes_get(Utf8String *clsName) {
     Class *cl = NULL;
     if (clsName) {
-//        garbage_thread_lock();
         pthread_spin_lock(&sys_classloader->classes->spinlock);
         cl = hashtable_get(sys_classloader->classes, clsName);
-//        garbage_thread_unlock();
         pthread_spin_unlock(&sys_classloader->classes->spinlock);
     }
     return cl;
@@ -62,9 +60,9 @@ Class *classes_load_get_c(c8 *pclassName, Runtime *runtime) {
 Class *classes_load_get(Utf8String *pustr, Runtime *runtime) {
     if (!pustr)return NULL;
     Class *cl;
-//    garbage_thread_lock();
     Utf8String *ustr = utf8_create_copy(pustr);
-    utf8_replace_c(ustr, ".", "/");
+    if (utf8_index_of(pustr, '.') >= 0)
+        utf8_replace_c(ustr, ".", "/");
     cl = classes_get(ustr);
     if (!cl) {
         load_class(sys_classloader->g_classpath, ustr, sys_classloader->classes);
@@ -74,17 +72,14 @@ Class *classes_load_get(Utf8String *pustr, Runtime *runtime) {
     if (cl) {
         class_clinit(cl, runtime);
     }
-//    garbage_thread_unlock();
     return cl;
 }
 
 s32 classes_put(Class *clazz) {
     if (clazz) {
-//        garbage_thread_lock();
         pthread_spin_lock(&sys_classloader->classes->spinlock);
         hashtable_put(sys_classloader->classes, clazz->name, clazz);
         pthread_spin_unlock(&sys_classloader->classes->spinlock);
-//        garbage_thread_unlock();
         garbage_refer_hold(clazz);
         garbage_refer_reg(clazz);
         return 0;
@@ -94,7 +89,6 @@ s32 classes_put(Class *clazz) {
 
 Class *array_class_get(Utf8String *desc) {
     if (desc && desc->length && utf8_char_at(desc, 0) == '[') {
-//        garbage_thread_lock();
         pthread_spin_lock(&array_classloader->classes->spinlock);
         Class *clazz = hashtable_get(array_classloader->classes, desc);
         pthread_spin_unlock(&array_classloader->classes->spinlock);
@@ -108,7 +102,6 @@ Class *array_class_get(Utf8String *desc) {
             garbage_refer_hold(clazz);
             garbage_refer_reg(clazz);
         }
-//        garbage_thread_unlock();
         return clazz;
     }
     return NULL;
@@ -116,29 +109,23 @@ Class *array_class_get(Utf8String *desc) {
 
 Runtime *threadlist_get(s32 i) {
     Runtime *r = NULL;
-    //garbage_thread_lock();
     if (i < thread_list->length) {
         pthread_spin_lock(&thread_list->spinlock);
         r = (Runtime *) arraylist_get_value(thread_list, i);
-//    garbage_thread_unlock();
         pthread_spin_unlock(&thread_list->spinlock);
     }
     return r;
 }
 
 void threadlist_remove(Runtime *r) {
-//    garbage_thread_lock();
     pthread_spin_lock(&thread_list->spinlock);
     arraylist_remove(thread_list, r);
-//    garbage_thread_unlock();
     pthread_spin_unlock(&thread_list->spinlock);
 }
 
 void threadlist_add(Runtime *r) {
-//    garbage_thread_lock();
     pthread_spin_lock(&thread_list->spinlock);
     arraylist_append(thread_list, r);
-//    garbage_thread_unlock();
     pthread_spin_unlock(&thread_list->spinlock);
 }
 
@@ -283,10 +270,12 @@ s32 getDataTypeIndex(c8 ch) {
         case 'L':
         case '[':
             return 12;
-        case 'B':
-            return 8;
         case 'C':
             return 5;
+        case 'B':
+            return 8;
+        case 'Z':
+            return 4;
         case 'J':
             return 11;
         case 'F':
@@ -295,8 +284,6 @@ s32 getDataTypeIndex(c8 ch) {
             return 7;
         case 'S':
             return 9;
-        case 'Z':
-            return 4;
         default:
             jvm_printf("datatype not found %c\n", ch);
     }
@@ -791,9 +778,6 @@ Instance *jarray_create(s32 count, s32 typeIdx, Utf8String *type) {
 
 s32 jarray_destory(Instance *arr) {
     if (arr && arr->mb.type == MEM_TYPE_ARR) {
-//        if (arr->arr_length == -1) {
-//            int debug = 1;
-//        }
         if (isDataReferByIndex(arr->arr_type_index)) {
             s32 i;
             Long2Double l2d;
@@ -940,9 +924,6 @@ void instance_clear_refer(Instance *ins) {
         FieldPool *fp = &clazz->fieldPool;
         for (i = 0; i < fp->field_used; i++) {
             FieldInfo *fi = &fp->field[i];
-//            if (utf8_equals_c(fi->name, "small5pow")) {
-//                s32 debug = 1;
-//            }
             if ((fi->access_flags & ACC_STATIC) == 0 && isDataReferByIndex(fi->datatype_idx)) {
                 c8 *ptr = getInstanceFieldPtr(ins, fi);
                 if (ptr) {
