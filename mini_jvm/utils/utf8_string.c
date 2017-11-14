@@ -295,14 +295,14 @@ int utf8_equals(Utf8String *a1, Utf8String *a2) {
     if (a1->length != a2->length)return 0;
     if (_utf8_hashCode(a1) != _utf8_hashCode(a2))return 0;
 
-//    int i = 0;
-//    for (; i < a1->length && i < a2->length; i++) {
-//        if (a1->data[i] > a2->data[i]) {
-//            return 0;
-//        } else if (a1->data[i] < a2->data[i]) {
-//            return 0;
-//        }
-//    }
+    int i = 0;
+    for (; i < a1->length && i < a2->length; i++) {
+        if (a1->data[i] > a2->data[i]) {
+            return 0;
+        } else if (a1->data[i] < a2->data[i]) {
+            return 0;
+        }
+    }
     return 1;
 }
 
