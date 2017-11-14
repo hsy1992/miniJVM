@@ -300,7 +300,7 @@ public class Foo1 {
                         @Override
                         public void run() {
                             try {
-                                int MAX = 5;
+                                int MAX = 3;
                                 for (int i = 0; i < MAX; i++) {
                                     System.out.println("server would close at " + (MAX - i) + " second later.");
                                     Thread.sleep(1000);
@@ -664,7 +664,7 @@ public class Foo1 {
         Reference r2 = new Reference(RefNative.obj2id(java.lang.Long.class));
         for (int i = 0; i < 1000; i++) {
             try {
-                System.out.print(" " + (System.currentTimeMillis() - lastms));
+                //System.out.print(" " + (System.currentTimeMillis() - lastms));
                 lastms = System.currentTimeMillis();
                 if (i % 10 == 0) {
                     System.out.println();

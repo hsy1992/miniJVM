@@ -99,11 +99,12 @@ void hashtable_destory(Hashtable *hash_table) {
                 rover = next;
             }
         }
-        pthread_spin_destroy(&hash_table->spinlock);
-        jvm_free(hash_table->table);
-        jvm_free(hash_table);
     }
     pthread_spin_unlock(&hash_table->spinlock);
+    pthread_spin_destroy(&hash_table->spinlock);
+    jvm_free(hash_table->table);
+    jvm_free(hash_table);
+
 }
 
 
