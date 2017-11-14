@@ -1919,11 +1919,6 @@ static inline s32 op_ldc_impl(u8 **opCode, Runtime *runtime, s32 index) {
         }
         case CONSTANT_STRING_REF: {
             ConstantUTF8 *cutf = find_constant_utf8(clazz, find_constant_stringref(clazz, index)->stringIndex);
-            if (!cutf->jstr) {
-                Instance *jstr = jstring_create(cutf->utfstr, runtime);
-                garbage_refer_hold(jstr);
-                cutf->jstr = jstr;
-            }
             Instance *jstr = instance_copy(cutf->jstr);
             push_ref(stack, (__refer) jstr);
 
@@ -2250,7 +2245,7 @@ s32 op_multianewarray(u8 **opCode, Runtime *runtime) {
     ArrayList *dim = arraylist_create(count);
     int i;
     for (i = 0; i < count; i++)
-        arraylist_append(dim, (ArrayListValue) (long) pop_int(stack));
+        arraylist_push_end(dim, (ArrayListValue) (long) pop_int(stack));
 
     Instance *arr = jarray_multi_create(dim, desc, 0);
     arraylist_destory(dim);

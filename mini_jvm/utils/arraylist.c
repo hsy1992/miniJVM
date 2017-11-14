@@ -31,7 +31,12 @@ CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 #include "alloc-testing.h"
 #endif
 
-/* Automatically resizing array */
+void arraylist_remove_range(ArrayList *arraylist, int index, int length);
+
+/**
+ * Automatically resizing array
+ *
+ * */
 
 ArrayList *arraylist_create(int length) {
     ArrayList *new_arraylist;
@@ -102,51 +107,68 @@ static int arraylist_enlarge(ArrayList *arraylist) {
 int arraylist_insert(ArrayList *arraylist, int index, ArrayListValue data) {
     /* Sanity check the index */
 
-    if (index < 0 || index > arraylist->length) {
-        return 0;
-    }
-
-    /* Increase the size if necessary */
-
-    if (arraylist->length + 1 > arraylist->_alloced) {
-        if (!arraylist_enlarge(arraylist)) {
+    pthread_spin_lock(&arraylist->spinlock);
+    {
+        if (index < 0 || index > arraylist->length) {
             return 0;
         }
+        /* Increase the size if necessary */
+        int doit = 1;
+        if (arraylist->length + 1 > arraylist->_alloced) {
+            if (!arraylist_enlarge(arraylist)) {
+                doit = 0;
+            }
+        }
+        if (doit) {
+            /* Move the contents of the array forward from the index
+             * onwards */
+
+            memmove(&arraylist->data[index + 1],
+                    &arraylist->data[index],
+                    (arraylist->length - index) * sizeof(ArrayListValue));
+
+            /* Insert the new entry at the index */
+
+            arraylist->data[index] = data;
+            ++arraylist->length;
+        }
     }
-
-    /* Move the contents of the array forward from the index
-     * onwards */
-
-    memmove(&arraylist->data[index + 1],
-            &arraylist->data[index],
-            (arraylist->length - index) * sizeof(ArrayListValue));
-
-    /* Insert the new entry at the index */
-
-    arraylist->data[index] = data;
-    ++arraylist->length;
+    pthread_spin_unlock(&arraylist->spinlock);
 
     return 1;
 }
 
-int arraylist_append(ArrayList *arraylist, ArrayListValue data) {
-    return arraylist_insert(arraylist, arraylist->length, data);
-}
 
 int arraylist_remove(ArrayList *arraylist, ArrayListValue data) {
-    int index = arraylist_index_of(arraylist, arraylist_compare_ptr, data);
-    if (index >= 0)
-        arraylist_remove_at(arraylist, index);
+    int index = -1;
+    pthread_spin_lock(&arraylist->spinlock);
+    {
+        int i;
+        for (i = 0; i < arraylist->length; ++i) {
+            if (arraylist_compare_ptr(arraylist->data[i], data)) {
+                index = i;
+                break;
+            }
+        }
+        if (index >= 0)
+            arraylist_remove_range(arraylist, index, 1);
+    }
+    pthread_spin_unlock(&arraylist->spinlock);
     return index;
 }
 
 
-int arraylist_prepend(ArrayList *arraylist, ArrayListValue data) {
+int arraylist_push_front(ArrayList *arraylist, ArrayListValue data) {
     return arraylist_insert(arraylist, 0, data);
+}
+
+int arraylist_push_end(ArrayList *arraylist, ArrayListValue data) {
+    return arraylist_insert(arraylist, arraylist->length, data);
 }
 
 void arraylist_remove_range(ArrayList *arraylist, int index, int length) {
     /* Check this is a valid range */
+
 
     if (index < 0 || length < 0 || index + length > arraylist->length) {
         return;
@@ -161,6 +183,7 @@ void arraylist_remove_range(ArrayList *arraylist, int index, int length) {
     /* Decrease the counter */
 
     arraylist->length -= length;
+
 }
 
 int arraylist_compare_ptr(ArrayListValue a, ArrayListValue b) {
@@ -168,43 +191,65 @@ int arraylist_compare_ptr(ArrayListValue a, ArrayListValue b) {
 }
 
 void arraylist_remove_at(ArrayList *arraylist, int index) {
-    arraylist_remove_range(arraylist, index, 1);
+    pthread_spin_lock(&arraylist->spinlock);
+    {
+        arraylist_remove_range(arraylist, index, 1);
+    }
+    pthread_spin_unlock(&arraylist->spinlock);
 }
 
 int arraylist_index_of(ArrayList *arraylist,
-                       ArrayListEqualFunc callback,
+                       ArrayListEqualFunc equals,
                        ArrayListValue data) {
+    int index = -1;
     int i;
-
-    for (i = 0; i < arraylist->length; ++i) {
-        if (callback(arraylist->data[i], data) != 0)
-            return i;
+    pthread_spin_lock(&arraylist->spinlock);
+    {
+        for (i = 0; i < arraylist->length; ++i) {
+            if (equals(arraylist->data[i], data) != 0) {
+                index = i;
+                break;
+            }
+        }
     }
-
-    return -1;
+    pthread_spin_unlock(&arraylist->spinlock);
+    return index;
 }
 
 ArrayListValue arraylist_get_value(ArrayList *arraylist, int index) {
-    if (index >= 0 && index < arraylist->length)
-        return arraylist->data[index];
-    return NULL;
+    ArrayListValue value = NULL;
+    pthread_spin_lock(&arraylist->spinlock);
+    {
+        if (index >= 0 && index < arraylist->length)
+            value = arraylist->data[index];
+    }
+    pthread_spin_unlock(&arraylist->spinlock);
+    return value;
 }
 
 ArrayListValue arraylist_pop_front(ArrayList *arraylist) {
     ArrayListValue v = NULL;
-    if (arraylist->length > 0) {
-        v = arraylist->data[0];
-        arraylist_remove_range(arraylist, 0, 1);
+    pthread_spin_lock(&arraylist->spinlock);
+    {
+        if (arraylist->length > 0) {
+            v = arraylist->data[0];
+            arraylist_remove_range(arraylist, 0, 1);
+        }
     }
+    pthread_spin_unlock(&arraylist->spinlock);
     return v;
 }
 
 ArrayListValue arraylist_pop_back(ArrayList *arraylist) {
     ArrayListValue v = NULL;
-    if (arraylist->length > 0) {
-        v = arraylist->data[arraylist->length - 1];
-        arraylist->length--;
+    pthread_spin_lock(&arraylist->spinlock);
+    {
+        if (arraylist->length > 0) {
+            v = arraylist->data[arraylist->length - 1];
+            arraylist->length--;
+        }
     }
+    pthread_spin_unlock(&arraylist->spinlock);
     return v;
 }
 
@@ -290,6 +335,9 @@ static void arraylist_sort_internal(ArrayListValue *list_data, int list_length,
 
 void arraylist_sort(ArrayList *arraylist, ArrayListCompareFunc compare_func) {
     /* Perform the recursive sort */
-
-    arraylist_sort_internal(arraylist->data, arraylist->length, compare_func);
+    pthread_spin_lock(&arraylist->spinlock);
+    {
+        arraylist_sort_internal(arraylist->data, arraylist->length, compare_func);
+    }
+    pthread_spin_unlock(&arraylist->spinlock);
 }

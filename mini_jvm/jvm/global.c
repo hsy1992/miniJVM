@@ -9,11 +9,11 @@
 ClassLoader *sys_classloader;
 ClassLoader *array_classloader;
 
-ThreadLock threadlist_lock;
 
 ArrayList *native_libs;
 ArrayList *thread_list; //all thread
 Hashtable *sys_prop;
+ArrayList *runtime_cache;
 
 GcCollector *collector;
 
@@ -26,6 +26,7 @@ s32 STACK_LENGHT = 10240;
 s64 GARBAGE_PERIOD_MS = 10000;
 
 s64 MAX_HEAP_SIZE = 20 * 1024 * 1024;
+
 
 
 //

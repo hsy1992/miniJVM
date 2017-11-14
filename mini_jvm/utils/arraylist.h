@@ -134,7 +134,7 @@ void arraylist_destory(ArrayList *arraylist);
  */
 
 
-int arraylist_append(ArrayList *arraylist, ArrayListValue data);
+int arraylist_push_end(ArrayList *arraylist, ArrayListValue data);
 
 
 int arraylist_remove(ArrayList *arraylist, ArrayListValue data);
@@ -149,7 +149,7 @@ int arraylist_remove(ArrayList *arraylist, ArrayListValue data);
  *                       for the new entry.
  */
 
-int arraylist_prepend(ArrayList *arraylist, ArrayListValue data);
+int arraylist_push_front(ArrayList *arraylist, ArrayListValue data);
 
 /**
  * Remove the entry at the specified location in an ArrayList.
@@ -160,15 +160,6 @@ int arraylist_prepend(ArrayList *arraylist, ArrayListValue data);
 
 void arraylist_remove_at(ArrayList *arraylist, int index);
 
-/**
- * Remove a range of entries at the specified location in an ArrayList.
- *
- * @param arraylist      The ArrayList.
- * @param index          The index of the start of the range to remove.
- * @param length         The length of the range to remove.
- */
-
-void arraylist_remove_range(ArrayList *arraylist, int index, int length);
 
 /**
  * Insert a value at the specified index in an ArrayList.
@@ -198,7 +189,7 @@ int arraylist_compare_ptr(ArrayListValue a, ArrayListValue b);
  * Find the index of a particular value in an ArrayList.
  *
  * @param arraylist      The ArrayList to search.
- * @param callback       Callback function to be invoked to compare
+ * @param equals       Callback function to be invoked to compare
  *                       values in the list with the value to be
  *                       searched for.
  * @param data           The value to search for.
@@ -206,7 +197,7 @@ int arraylist_compare_ptr(ArrayListValue a, ArrayListValue b);
  */
 
 int arraylist_index_of(ArrayList *arraylist,
-                       ArrayListEqualFunc callback,
+                       ArrayListEqualFunc equals,
                        ArrayListValue data);
 
 

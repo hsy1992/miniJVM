@@ -929,7 +929,7 @@ s32 native_reg_lib(java_native_method *methods, s32 method_size) {
     JavaNativeLib *lib = jvm_calloc(sizeof(JavaNativeLib));
     lib->methods_count = method_size;
     lib->methods = methods;
-    arraylist_append(native_libs, lib);
+    arraylist_push_end(native_libs, lib);
     return 0;
 }
 

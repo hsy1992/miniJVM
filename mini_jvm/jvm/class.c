@@ -227,6 +227,17 @@ void class_clinit(Class *clazz, Runtime *runtime) {
     }
     if (clazz->status >= CLASS_STATUS_CLINITING)return;
     clazz->status = CLASS_STATUS_CLINITING;
+    // init javastring
+    s32 i, len;
+    ArrayList *utf8list = clazz->constantPool.utf8CP;
+    for (i = 0, len = utf8list->length; i < len; i++) {
+        ConstantUTF8 *cutf = arraylist_get_value(utf8list, i);
+        Instance *jstr = jstring_create(cutf->utfstr, runtime);
+        garbage_refer_hold(jstr);
+        cutf->jstr = jstr;
+    }
+
+
     //优先初始化基类
     Class *superclass = getSuperClass(clazz);
     if (superclass && superclass->status < CLASS_STATUS_CLINITED) {
@@ -234,7 +245,6 @@ void class_clinit(Class *clazz, Runtime *runtime) {
     }
 
     MethodPool *p = &(clazz->methodPool);
-    s32 i;
     for (i = 0; i < p->method_used; i++) {
         //jvm_printf("%s,%s\n", utf8_cstr(p->methodRef[i].name), utf8_cstr(p->methodRef[i].descriptor));
         if (utf8_equals_c(p->method[i].name, "<clinit>") == 1) {

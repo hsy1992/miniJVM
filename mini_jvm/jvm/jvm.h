@@ -354,7 +354,7 @@ struct _ClassLoader {
     Hashtable *classes;
 
     //
-    c8 volatile lock;
+    pthread_spinlock_t lock;
 };
 
 

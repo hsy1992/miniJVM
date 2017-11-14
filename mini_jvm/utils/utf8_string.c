@@ -6,15 +6,8 @@
 
 Utf8String *utf8_create() {
 
-    int length = 16;
+    int length = 32;
     Utf8String *uni_str;
-    /* If the arr_length is not specified, use a sensible default */
-
-    if (length <= 0) {
-        length = 16;
-    }
-    /* Allocate the new uni_string and fill in the obj_fields.  There are
-     * initially no entries. */
 
     uni_str = (Utf8String *) jvm_calloc(sizeof(Utf8String));
 

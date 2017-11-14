@@ -55,16 +55,22 @@ Class *classes_load_get_c(c8 *pclassName, Runtime *runtime) {
     return clazz;
 }
 
-Class *classes_load_get(Utf8String *pustr, Runtime *runtime) {
-    if (!pustr)return NULL;
+Class *classes_load_get(Utf8String *ustr, Runtime *runtime) {
+    if (!ustr)return NULL;
     Class *cl;
-    Utf8String *ustr = utf8_create_copy(pustr);
-    if (utf8_index_of(pustr, '.') >= 0)
+    pthread_spin_lock(&sys_classloader->lock);//fast lock
+    if (utf8_index_of(ustr, '.') >= 0)
         utf8_replace_c(ustr, ".", "/");
+    pthread_spin_unlock(&sys_classloader->lock);
     cl = classes_get(ustr);
     if (!cl) {
-        load_class(sys_classloader->g_classpath, ustr, sys_classloader->classes);
+        garbage_thread_lock();//slow lock
         cl = classes_get(ustr);
+        if (!cl) {
+            load_class(sys_classloader->g_classpath, ustr, sys_classloader->classes);
+        }
+        cl = classes_get(ustr);
+        garbage_thread_unlock();
         //if (java_debug)event_on_class_prepar(runtime, cl);
     }
     if (cl) {
@@ -80,19 +86,24 @@ s32 classes_put(Class *clazz) {
         garbage_refer_reg(clazz);
         return 0;
     }
-    return 1;
+    return -1;
 }
 
 Class *array_class_get(Utf8String *desc) {
     if (desc && desc->length && utf8_char_at(desc, 0) == '[') {
         Class *clazz = hashtable_get(array_classloader->classes, desc);
-        if (!clazz && desc && desc->length) {
-            clazz = class_create();
-            clazz->arr_type_index = getDataTypeIndex(utf8_char_at(desc, 1));
-            clazz->name = utf8_create_copy(desc);
-            hashtable_put(array_classloader->classes, clazz->name, clazz);
-            garbage_refer_hold(clazz);
-            garbage_refer_reg(clazz);
+        if (!clazz) {
+            garbage_thread_lock();
+            clazz = hashtable_get(array_classloader->classes, desc);
+            if (!clazz) {
+                clazz = class_create();
+                clazz->arr_type_index = getDataTypeIndex(utf8_char_at(desc, 1));
+                clazz->name = utf8_create_copy(desc);
+                hashtable_put(array_classloader->classes, clazz->name, clazz);
+                garbage_refer_hold(clazz);
+                garbage_refer_reg(clazz);
+            }
+            garbage_thread_unlock();
         }
         return clazz;
     }
@@ -102,23 +113,17 @@ Class *array_class_get(Utf8String *desc) {
 Runtime *threadlist_get(s32 i) {
     Runtime *r = NULL;
     if (i < thread_list->length) {
-        pthread_spin_lock(&thread_list->spinlock);
         r = (Runtime *) arraylist_get_value(thread_list, i);
-        pthread_spin_unlock(&thread_list->spinlock);
     }
     return r;
 }
 
 void threadlist_remove(Runtime *r) {
-    pthread_spin_lock(&thread_list->spinlock);
     arraylist_remove(thread_list, r);
-    pthread_spin_unlock(&thread_list->spinlock);
 }
 
 void threadlist_add(Runtime *r) {
-    pthread_spin_lock(&thread_list->spinlock);
-    arraylist_append(thread_list, r);
-    pthread_spin_unlock(&thread_list->spinlock);
+    arraylist_push_end(thread_list, r);
 }
 
 /**

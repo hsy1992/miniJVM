@@ -30,7 +30,7 @@ void *parseCPString(Class *_this, FILE *fp, s32 index) {
         fread(&ch, 1, 1, fp);
         utf8_append_part_c(ptr->utfstr, &ch, 0, 1);
     }
-    arraylist_append(_this->constantPool.utf8CP, ptr);
+    arraylist_push_end(_this->constantPool.utf8CP, ptr);
     return ptr;
 }
 
@@ -49,7 +49,7 @@ void *parseCPInteger(Class *_this, FILE *fp, s32 index) {
     i2c.c1 = tmp[2];
     i2c.c0 = tmp[3];
     ptr->value = i2c.i;
-    arraylist_append(_this->constantPool.integerCP, ptr);
+    arraylist_push_end(_this->constantPool.integerCP, ptr);
 
     return ptr;
 }
@@ -71,7 +71,7 @@ void *parseCPFloat(Class *_this, FILE *fp, s32 index) {
 
     ptr->value = i2c.f;
 
-    arraylist_append(_this->constantPool.floatCP, ptr);
+    arraylist_push_end(_this->constantPool.floatCP, ptr);
     return ptr;
 }
 
@@ -95,7 +95,7 @@ void *parseCPLong(Class *_this, FILE *fp, s32 index) {
     l2d.c0 = tmp[7];
     ptr->value = l2d.l;
 
-    arraylist_append(_this->constantPool.longCP, ptr);
+    arraylist_push_end(_this->constantPool.longCP, ptr);
     return ptr;
 }
 
@@ -119,7 +119,7 @@ void *parseCPDouble(Class *_this, FILE *fp, s32 index) {
     l2d.c0 = tmp[7];
     ptr->value = l2d.d;
 
-    arraylist_append(_this->constantPool.doubleCP, ptr);
+    arraylist_push_end(_this->constantPool.doubleCP, ptr);
     return ptr;
 }
 
@@ -137,7 +137,7 @@ void *parseCPClass(Class *_this, FILE *fp, s32 index) {
     s2c.c0 = short_tmp[1];
     ptr->stringIndex = s2c.s;
 
-    arraylist_append(_this->constantPool.classRef, ptr);
+    arraylist_push_end(_this->constantPool.classRef, ptr);
     return ptr;
 }
 
@@ -155,7 +155,7 @@ void *parseCPStringRef(Class *_this, FILE *fp, s32 index) {
     s2c.c0 = short_tmp[1];
     ptr->stringIndex = s2c.s;
 
-    arraylist_append(_this->constantPool.stringRef, ptr);
+    arraylist_push_end(_this->constantPool.stringRef, ptr);
     return ptr;
 }
 
@@ -178,7 +178,7 @@ void *parseCPField(Class *_this, FILE *fp, s32 index) {
     s2c.c0 = short_tmp[1];
     ptr->nameAndTypeIndex = s2c.s;
 
-    arraylist_append(_this->constantPool.fieldRef, ptr);
+    arraylist_push_end(_this->constantPool.fieldRef, ptr);
     return ptr;
 }
 
@@ -202,7 +202,7 @@ void *parseCPMethod(Class *_this, FILE *fp, s32 index) {
     s2c.c0 = short_tmp[1];
     ptr->nameAndTypeIndex = s2c.s;
 
-    arraylist_append(_this->constantPool.methodRef, ptr);
+    arraylist_push_end(_this->constantPool.methodRef, ptr);
     return ptr;
 }
 
@@ -225,7 +225,7 @@ void *parseCPInterface(Class *_this, FILE *fp, s32 index) {
     s2c.c0 = short_tmp[1];
     ptr->nameAndTypeIndex = s2c.s;
 
-    arraylist_append(_this->constantPool.interfaceRef, ptr);
+    arraylist_push_end(_this->constantPool.interfaceRef, ptr);
     return ptr;
 }
 
@@ -248,7 +248,7 @@ void *parseCPNameAndType(Class *_this, FILE *fp, s32 index) {
     s2c.c0 = short_tmp[1];
     ptr->typeIndex = s2c.s;
 
-    arraylist_append(_this->constantPool.name_and_type, ptr);
+    arraylist_push_end(_this->constantPool.name_and_type, ptr);
     return ptr;
 }
 

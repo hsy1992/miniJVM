@@ -107,6 +107,8 @@ void garbage_collector_destory() {
     collector = NULL;
 }
 
+static int class_clear_end = 0;
+
 void __garbage_clear() {
     jvm_printf("[INFO]garbage clear start========================\n");
 
@@ -126,6 +128,7 @@ void __garbage_clear() {
     sys_classloader = NULL;
     classloader_destory(array_classloader);
     array_classloader = NULL;
+    class_clear_end = 1;
     while (garbage_collect());//collect classes
     //
     jvm_printf("[INFO]objs size :%lld\n", collector->objs->entries);
@@ -515,7 +518,13 @@ s32 garbage_big_search() {
     hashset_iterate(collector->objs_holder, &hi);
     while (hashset_iter_has_more(&hi)) {
         HashsetKey k = hashset_iter_next_key(&hi);
-        garbage_mark_object(k);
+        MemoryBlock *mb = (MemoryBlock *) k;
+        if (class_clear_end ) {
+            int debug = 1;
+            jvm_free(k);
+            jvm_free(k);
+        } else
+            garbage_mark_object(k);
     }
 
     return 0;
@@ -552,7 +561,7 @@ void garbage_copy_refer() {
 
 
 s32 garbage_copy_refer_thread(Runtime *pruntime) {
-    arraylist_append(collector->runtime_refer_copy, pruntime->threadInfo->jthread);
+    arraylist_push_end(collector->runtime_refer_copy, pruntime->threadInfo->jthread);
 
     s32 i;
     StackEntry entry;
@@ -564,7 +573,7 @@ s32 garbage_copy_refer_thread(Runtime *pruntime) {
             __refer ref = entry_2_refer(&entry);
             if (ref) {
                 //garbage_mark_object(ref);
-                arraylist_append(collector->runtime_refer_copy, ref);
+                arraylist_push_end(collector->runtime_refer_copy, ref);
             }
         }
     }
@@ -573,7 +582,7 @@ s32 garbage_copy_refer_thread(Runtime *pruntime) {
             __refer ref = runtime->localVariables[i].refer;
             if (ref) {
                 //garbage_mark_object(ref);
-                arraylist_append(collector->runtime_refer_copy, ref);
+                arraylist_push_end(collector->runtime_refer_copy, ref);
             }
         }
         runtime = runtime->son;

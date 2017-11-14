@@ -58,6 +58,7 @@ void print_exception(Runtime *runtime) {
 
 ClassLoader *classloader_create(c8 *path) {
     ClassLoader *class_loader = jvm_calloc(sizeof(ClassLoader));
+    pthread_spin_init(&class_loader->lock, PTHREAD_PROCESS_PRIVATE);
     class_loader->g_classpath = utf8_create_c(path);
     //创建类容器
     class_loader->classes = hashtable_create(UNICODE_STR_HASH_FUNC, UNICODE_STR_EQUALS_FUNC);
@@ -77,6 +78,7 @@ void classloader_destory(ClassLoader *class_loader) {
     class_loader->g_classpath = NULL;
     hashtable_destory(class_loader->classes);
     class_loader->classes = NULL;
+    pthread_spin_destroy(&class_loader->lock);
     jvm_free(class_loader);
 }
 
@@ -113,10 +115,9 @@ s32 execute(c8 *p_classpath, c8 *p_mainclass, s32 argc, c8 **argv) {
 
     array_classloader = classloader_create("");
 
-    memset(&ins_field_offset,0, sizeof(InstanceFieldInfo));
+    memset(&ins_field_offset, 0, sizeof(InstanceFieldInfo));
     //创建线程容器
     thread_list = arraylist_create(0);
-    thread_lock_init(&threadlist_lock);
     //本地方法库
     native_libs = arraylist_create(0);
     reg_std_native_lib();
@@ -232,7 +233,6 @@ s32 execute(c8 *p_classpath, c8 *p_mainclass, s32 argc, c8 **argv) {
     //
     utf8_destory(str_mainClsName);
     arraylist_destory(thread_list);
-    thread_lock_dispose(&threadlist_lock);
     instruct_indexies_destory(instructionsIndexies);
     instructionsIndexies = NULL;
     native_lib_destory();
