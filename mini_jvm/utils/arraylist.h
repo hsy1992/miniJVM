@@ -80,6 +80,9 @@ struct _ArrayList {
     pthread_spinlock_t spinlock;
 };
 
+
+typedef void (*ArrayListIteratorFunc)(ArrayListValue value, void *para);
+
 /**
  * Compare two values in an arraylist to determine if they are equal.
  *
@@ -223,6 +226,9 @@ void arraylist_clear(ArrayList *arraylist);
  */
 
 void arraylist_sort(ArrayList *arraylist, ArrayListCompareFunc compare_func);
+
+
+void arraylist_iter_safe(ArrayList *arraylist, ArrayListIteratorFunc func, void *para);
 
 #ifdef __cplusplus
 }

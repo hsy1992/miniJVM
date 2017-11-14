@@ -320,6 +320,19 @@ HashtableKey hashtable_iter_next_key(HashtableIterator *iterator) {
     return HASH_NULL;
 }
 
+void hashtable_iter_safe(Hashtable *hash_table, HashtableIteratorFunc func, void *para) {
+    HashtableIterator hti;
+    pthread_spin_lock(&hash_table->spinlock);
+    {
+        hashtable_iterate(hash_table, &hti);
+        for (; hashtable_iter_has_more(&hti);) {
+            HashtableEntry *entry = hashtable_iter_next_entry(&hti);
+            func(entry->key, entry->value, para);
+        }
+    }
+    pthread_spin_unlock(&hash_table->spinlock);
+}
+
 int hashtable_resize(Hashtable *hash_table, unsigned long long int size) {
     HashtableEntry **old_table;
     unsigned long long int old_table_size;

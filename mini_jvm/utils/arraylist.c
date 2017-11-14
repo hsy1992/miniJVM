@@ -341,3 +341,16 @@ void arraylist_sort(ArrayList *arraylist, ArrayListCompareFunc compare_func) {
     }
     pthread_spin_unlock(&arraylist->spinlock);
 }
+
+
+void arraylist_iter_safe(ArrayList *arraylist, ArrayListIteratorFunc func, void *para) {
+    pthread_spin_lock(&arraylist->spinlock);
+    {
+        int i, len;
+        for (i = 0, len = arraylist->length; i < len; i++) {
+            ArrayListValue value = arraylist->data[i];
+            func(value, para);
+        }
+    }
+    pthread_spin_unlock(&arraylist->spinlock);
+}

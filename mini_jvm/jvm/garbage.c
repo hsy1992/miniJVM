@@ -519,7 +519,7 @@ s32 garbage_big_search() {
     while (hashset_iter_has_more(&hi)) {
         HashsetKey k = hashset_iter_next_key(&hi);
         MemoryBlock *mb = (MemoryBlock *) k;
-        if (class_clear_end ) {
+        if (class_clear_end) {
             int debug = 1;
             jvm_free(k);
             jvm_free(k);
@@ -530,15 +530,20 @@ s32 garbage_big_search() {
     return 0;
 }
 
+void _list_iter_iter_copy(ArrayListValue value, void *para) {
+    Runtime *runtime = value;
+    garbage_copy_refer_thread(runtime);
+}
 
 void garbage_copy_refer() {
     arraylist_clear(collector->runtime_refer_copy);
-    s32 i;
-    //jvm_printf("thread set size:%d\n", thread_list->length);
-    for (i = 0; i < thread_list->length; i++) {
-        Runtime *runtime = threadlist_get(i);
-        garbage_copy_refer_thread(runtime);
-    }
+//    s32 i;
+//    //jvm_printf("thread set size:%d\n", thread_list->length);
+//    for (i = 0; i < thread_list->length; i++) {
+//        Runtime *runtime = threadlist_get(i);
+//        garbage_copy_refer_thread(runtime);
+//    }
+    arraylist_iter_safe(thread_list, _list_iter_iter_copy, NULL);
     //调试线程
     if (java_debug) {
         Runtime *runtime = jdwpserver.runtime;

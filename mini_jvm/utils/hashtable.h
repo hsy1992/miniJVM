@@ -51,6 +51,7 @@ extern "C" {
 
 #include "pthread.h"
 #include "d_type.h"
+
 /**
  * A hash table structure.
  */
@@ -131,6 +132,10 @@ typedef void (*HashtableKeyFreeFunc)(HashtableKey value);
  */
 
 typedef void (*HashtableValueFreeFunc)(HashtableValue value);
+
+
+typedef void (*HashtableIteratorFunc)(HashtableKey key, HashtableValue value, void *para);
+
 
 struct _HashtableEntry {
     HashtableKey key;
@@ -285,6 +290,8 @@ HashtableValue hashtable_iter_next_value(HashtableIterator *iterator);
  */
 
 HashtableKey hashtable_iter_next_key(HashtableIterator *iterator);
+
+void hashtable_iter_safe(Hashtable *hash_table, HashtableIteratorFunc func, void *para);
 
 int hashtable_resize(Hashtable *hash_table, unsigned long long int size);
 
