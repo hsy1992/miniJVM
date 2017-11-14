@@ -430,15 +430,20 @@ void garbage_destory_memobj(MemoryBlock *mb) {
  * 各个线程把自己还需要使用的对象进行标注，表示不能回收
  * @return ret
  */
+void _list_iter_thread_pause(ArrayListValue value, void *para) {
+    jthread_suspend((Runtime *) value);
+}
+
 s32 garbage_pause_the_world() {
     s32 i;
     //jvm_printf("thread size:%d\n", thread_list->length);
 
     if (thread_list->length) {
-        for (i = 0; i < thread_list->length; i++) {
-            Runtime *runtime = arraylist_get_value(thread_list, i);
-            jthread_suspend(runtime);
-        }
+//        for (i = 0; i < thread_list->length; i++) {
+//            Runtime *runtime = arraylist_get_value(thread_list, i);
+//            jthread_suspend(runtime);
+//        }
+        arraylist_iter_safe(thread_list, _list_iter_thread_pause, NULL);
 
         for (i = 0; i < thread_list->length; i++) {
             Runtime *runtime = arraylist_get_value(thread_list, i);

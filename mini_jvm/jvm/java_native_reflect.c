@@ -271,21 +271,39 @@ s32 javax_mini_reflect_MemAccess_readRefer0(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
+struct _list_getthread_para {
+    s32 i;
+    Instance *jarr;
+    Long2Double l2d;
+};
+
+void _list_iter_getthread(ArrayListValue value, void *para) {
+    if (value) {
+        Runtime *r = value;
+        struct _list_getthread_para *p = para;
+        p->l2d.r = r->threadInfo->jthread;
+        jarray_set_field(p->jarr, p->i, &p->l2d);
+    }
+}
+
 s32 javax_mini_reflect_vm_RefNative_getThreads(Runtime *runtime, Class *clazz) {
 //    garbage_thread_lock();
     Utf8String *ustr = utf8_create_c(STR_INS_JAVA_LANG_THREAD);
     Instance *jarr = jarray_create(thread_list->length, DATATYPE_REFERENCE, ustr);
     utf8_destory(ustr);
-    s32 i = 0;
-    Long2Double l2d;
 
-    for (i = 0; i < thread_list->length; i++) {
-        Runtime *r = threadlist_get(i);
-        if(r) {
-            l2d.r = r->threadInfo->jthread;
-            jarray_set_field(jarr, i, &l2d);
-        }
-    }
+    struct _list_getthread_para para;
+    para.i = 0;
+    para.jarr = jarr;
+    arraylist_iter_safe(thread_list, _list_iter_getthread, &para);
+//    s32 i = 0;
+//    for (i = 0; i < thread_list->length; i++) {
+//        Runtime *r = threadlist_get(i);
+//        if(r) {
+//            l2d.r = r->threadInfo->jthread;
+//            jarray_set_field(jarr, i, &l2d);
+//        }
+//    }
     push_ref(runtime->stack, jarr);//先放入栈，再关联回收器，防止多线程回收
 //    garbage_thread_unlock();
 #if _JVM_DEBUG_BYTECODE_DETAIL > 5
