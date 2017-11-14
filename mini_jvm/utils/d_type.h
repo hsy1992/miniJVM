@@ -6,8 +6,11 @@
 #define MINI_JVM_JVM_TYPE_H
 
 #include "stdlib.h"
-//#define __MEM_LEAK_DETECT
+#define __MEM_LEAK_DETECT
 
+#ifdef __MEM_LEAK_DETECT
+#include "./cmem/memleak.h"
+#endif //__MEM_LEAK_DETECT
 
 // x86   x64 ...
 #define __JVM_LITTLE_ENDIAN__ 1
@@ -33,9 +36,7 @@
 #define __C99
 //libary option : -lpthread -lws2_32
 
-#ifdef __MEM_LEAK_DETECT
-#include "../cmem/memleak.h"
-#endif //__MEM_LEAK_DETECT
+
 #ifdef __cplusplus
 extern "C" {
 #endif
@@ -66,23 +67,7 @@ autoptr *autoptr_new(__refer r);
 
 void autoptr_NULL(autoptr **aref);
 
-//======================= spinlock =============================
 
-#if __JVM_OS_MAC__
-
-typedef int pthread_spinlock_t;
-
-int pthread_spin_init(pthread_spinlock_t *lock, int pshared);
-
-int pthread_spin_destroy(pthread_spinlock_t *lock);
-
-int pthread_spin_lock(pthread_spinlock_t *lock);
-
-int pthread_spin_trylock(pthread_spinlock_t *lock);
-
-int pthread_spin_unlock(pthread_spinlock_t *lock);
-
-#endif
 //======================= memory manage =============================
 
 #ifndef __MEM_LEAK_DETECT

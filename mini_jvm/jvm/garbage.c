@@ -523,13 +523,8 @@ s32 garbage_big_search() {
     hashset_iterate(collector->objs_holder, &hi);
     while (hashset_iter_has_more(&hi)) {
         HashsetKey k = hashset_iter_next_key(&hi);
-        MemoryBlock *mb = (MemoryBlock *) k;
-        if (class_clear_end) {
-            int debug = 1;
-            jvm_free(k);
-            jvm_free(k);
-        } else
-            garbage_mark_object(k);
+
+        garbage_mark_object(k);
     }
 
     return 0;

@@ -3,7 +3,7 @@
   <component name="CMakeWorkspace" PROJECT_DIR="$PROJECT_DIR$" />
   <component name="CidrRootsConfiguration">
     <sourceRoots>
-      <file path="$PROJECT_DIR$/cmem" />
+      <file path="$PROJECT_DIR$/utils/cmem" />
     </sourceRoots>
   </component>
   <component name="SvnBranchConfigurationManager">

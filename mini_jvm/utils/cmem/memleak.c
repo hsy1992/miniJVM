@@ -104,6 +104,7 @@
 #include <signal.h>
 #include <limits.h>
 #include <pthread.h>
+#include "../spinlock.h"
 
 #define die(msg) (perror(msg), abort())
 #define length(type) ((sizeof(type)*5)/2 + 1)
@@ -151,27 +152,14 @@ void print_buf(char *buf, size_t len);
 
 
 /////////////////////////////////////////////////////////////////////////
-pthread_mutex_t mutex_lock;
-pthread_cond_t thread_cond;
-pthread_mutexattr_t lock_attr;
-int inited = 0;
-
-static inline void init_lock() {
-    if (!inited) {
-        pthread_cond_init(&thread_cond, NULL);
-        pthread_mutexattr_init(&lock_attr);
-        pthread_mutexattr_settype(&lock_attr, PTHREAD_MUTEX_RECURSIVE);
-        pthread_mutex_init(&mutex_lock, &lock_attr);
-        inited = 1;
-    }
-}
+pthread_spinlock_t spinlock;
 
 void lock() {
-    pthread_mutex_lock(&mutex_lock);
+    pthread_spin_lock(&spinlock);
 }
 
 void unlock() {
-    pthread_mutex_unlock(&mutex_lock);
+    pthread_spin_unlock(&spinlock);
 }
 
 /////////////////////////////////////////////////////////////////////////
@@ -264,7 +252,7 @@ void dbg_heap_dump(char *key) {
         p = (void *) phashtable_get(map, k);
         buf = malloc(strlen(p->file) + 2 * length(long) + 20);
         sprintf(buf, "(alloc: %s:%lu size: %lu)\n", p->file, p->line, (unsigned long) p->size);
-        print_buf(p->addr, p->size);
+        //print_buf(p->addr, p->size);
         fprintf(stderr,"%llx\n",(long long)(long)p->addr);
         if (strstr(buf, key)) fputs(buf, stderr);
         free(buf);
@@ -326,7 +314,7 @@ void dbg_catch_sigsegv(void) {
 void dbg_init(int hist_len) {
     history_length = hist_len;
     init_map();
-    init_lock();
+    pthread_spin_init(&spinlock,PTHREAD_PROCESS_PRIVATE);
 }
 
 void print_buf(char *buf, size_t len) {

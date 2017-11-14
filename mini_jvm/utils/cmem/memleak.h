@@ -34,7 +34,6 @@
 /* this makes sure that stdlib.h gets included before our macros */
 #include <stdlib.h>
 
-
 extern char *dbg_file_name;
 extern unsigned long dbg_line_number;
 
@@ -69,11 +68,12 @@ extern void dbg_catch_sigsegv(void);
 #ifdef __MEM_LEAK_DETECT
 
 #define FILE_LINE dbg_file_name = __FILE__, dbg_line_number = __LINE__
-#define malloc(s) (FILE_LINE, dbg_malloc(s))
+//#define malloc(s) (FILE_LINE, dbg_malloc(s))
+#define jvm_malloc(s) (FILE_LINE, dbg_malloc(s))
 //#define realloc(p, s) (FILE_LINE, dbg_realloc(p, s))
 #define jvm_realloc(p, s) (FILE_LINE, dbg_realloc(p, s))
 //#define calloc(n, s) (FILE_LINE, dbg_calloc(n, s))
-#define jvm_alloc(n) (FILE_LINE, dbg_calloc(n, 1))
+#define jvm_calloc(n) (FILE_LINE, dbg_calloc(n, 1))
 //#define free(p) (FILE_LINE, dbg_free(p))
 #define jvm_free(p) (FILE_LINE, dbg_free(p))
 

@@ -5,7 +5,7 @@ project(mini_jvm)
 #set(CMAKE_C_STANDARD 11)
 set(CMAKE_C_STANDARD 99)
 
-include_directories(jvm utils cmem)
+include_directories(jvm utils utils/cmem)
 
 set(SOURCE_FILES
         utils/d_type.h
@@ -42,14 +42,14 @@ set(SOURCE_FILES
         jvm/java_native_io.h
         jvm/class_load.c
         jvm/garbage.h
-        cmem/memleak.c
-        cmem/memleak.h
-        cmem/example.c
-        cmem/phashtable.c
-        cmem/phashtable.h
+        utils/cmem/memleak.c
+        utils/cmem/memleak.h
+        utils/cmem/example.c
+        utils/cmem/phashtable.c
+        utils/cmem/phashtable.h
         test.c
         utils/linkedlist.c
-        utils/linkedlist.h)
+        utils/linkedlist.h utils/spinlock.c utils/spinlock.h)
 
 add_executable(mini_jvm ${SOURCE_FILES})
 

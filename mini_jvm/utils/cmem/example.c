@@ -3,7 +3,7 @@
 #include <unistd.h>
 #include <memory.h>
 #include "memleak.h"
-#include "../utils/utf8_string.h"
+#include "utf8_string.h"
 
 int main1() {
     dbg_init(0);
