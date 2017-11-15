@@ -37,6 +37,7 @@ void t3() {
     while (NULL != (ref = linkedlist_pop_end(list))) {
         printf("%lld\n",(s64)(long)ref);
     }
+    linkedlist_destory(list);
 }
 
 void t4() {

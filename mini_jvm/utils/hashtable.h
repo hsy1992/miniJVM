@@ -51,6 +51,7 @@ extern "C" {
 
 #include "pthread.h"
 #include "d_type.h"
+#include "spinlock.h"
 
 /**
  * A hash table structure.
