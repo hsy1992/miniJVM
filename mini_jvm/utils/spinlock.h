@@ -1,14 +1,15 @@
 //
 // Created by Gust on 2017/11/15 0015.
 //
+#include "pthread.h"
 
 #ifndef MINI_JVM_SPINLOCK_H
 #define MINI_JVM_SPINLOCK_H
 
 //======================= spinlock =============================
 
-#ifndef PTHREAD_SPINLOCK_INITIALIZER
-
+#if  !(defined(_POSIX_SPIN_LOCKS) || defined(PTHREAD_SPINLOCK_INITIALIZER))
+#define _POSIX_SPIN_LOCKS
 typedef int pthread_spinlock_t;
 
 int pthread_spin_init(pthread_spinlock_t *lock, int pshared);
