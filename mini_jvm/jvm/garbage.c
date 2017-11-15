@@ -351,7 +351,6 @@ void garbage_move_cache() {
  */
 s64 garbage_collect() {
 
-    jvm_printf("gc enter \n");
     HashsetIterator hti;
     s64 mem1 = collector->heap_size;
     s64 del = 0;
@@ -359,34 +358,27 @@ s64 garbage_collect() {
 
     time_startAt = currentTimeMillis();
     //prepar gc resource ,
-    jvm_printf("gc lock \n");
     garbage_thread_lock();
-    jvm_printf("gc pause world \n");
     if (garbage_pause_the_world() != 0) {
         garbage_resume_the_world();
         return -1;
     }
-    jvm_printf("gc move cache \n");
     garbage_move_cache();
-    jvm_printf("copy refer \n");
     garbage_copy_refer();
     //
 
     s64 obj_count = (collector->objs->entries);
     //real GC start
     //
-    jvm_printf("gc big search \n");
     _garbage_change_flag();
     garbage_big_search();
 
-    jvm_printf("gc resume \n");
     garbage_resume_the_world();
     garbage_thread_unlock();
 
     s64 time_stopWorld = currentTimeMillis() - time_startAt;
     time_startAt = currentTimeMillis();
     //
-    jvm_printf("gc del \n");
     hashset_iterate(collector->objs, &hti);
     for (; hashset_iter_has_more(&hti);) {
 
@@ -400,7 +392,6 @@ s64 garbage_collect() {
         }
     }
 
-    jvm_printf("gc resize \n");
 
     if (collector->_garbage_count++ % 5 == 0) {//每n秒resize一次
         hashset_remove(collector->objs, NULL, 1);
