@@ -83,10 +83,16 @@ int main(int argc, char **argv) {
     //dbg_catch_sigsegv();
 #endif //__MEM_LEAK_DETECT
 
+
+
+
     s32 ret;
 //    ret = execute("../../javalib_test/build/classes/", "test/Foo1", argc, argv);
-//    ret = execute("../../javalib/build/classes/", "test/Foo1", argc, argv);
-    t3();
+    ret = execute("../../javalib/build/classes/", "test/Foo1", argc, argv);
+//    t3();
+
+
+
 #ifdef __MEM_LEAK_DETECT
     dbg_heap_dump("");
     dbg_mem_stat();

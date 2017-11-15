@@ -667,7 +667,7 @@ public class Foo1 {
                 //System.out.print(" " + (System.currentTimeMillis() - lastms));
                 lastms = System.currentTimeMillis();
                 if (i % 10 == 0) {
-                    System.out.println();
+                    //System.out.println();
                 }
                 String s = "abcd";
                 s.indexOf("cd", 1);

@@ -120,7 +120,7 @@ static int free_cnt = 0;
 
 static unsigned history_length = 0;
 
-struct head {
+struct MNode {
     void *addr;
     size_t size;
     char *file;
@@ -128,7 +128,7 @@ struct head {
     /* two addresses took the same space as an address and an integer on many archs => usable */
     union {
         struct {
-            struct head *prev, *next;
+            struct MNode *prev, *next;
         } list;
         struct {
             char *file;
@@ -148,7 +148,7 @@ void dbg_abort(char *msg);
 void print_buf(char *buf, size_t len);
 
 
-#define HLEN sizeof(struct head)
+#define HLEN sizeof(struct MNode)
 
 
 /////////////////////////////////////////////////////////////////////////
@@ -176,9 +176,9 @@ void init_map() {
 
 /////////////////////////////////////////////////////////////////////////
 
-static struct head *add(void *buf, size_t s) {
+static struct MNode *add(void *buf, size_t s) {
 
-    struct head *p;
+    struct MNode *p;
     p = malloc(HLEN);
     if (p) {
         p->addr = buf;
@@ -192,7 +192,7 @@ static struct head *add(void *buf, size_t s) {
     return p;
 }
 
-static void del(struct head *p) {
+static void del(struct MNode *p) {
     memory_cnt -= p->size;
     phashtable_remove(map, p->addr, 0);
     if (history_length) {
@@ -204,19 +204,19 @@ static void del(struct head *p) {
 }
 
 
-static struct head *find_in_heap(void *addr) {
-    struct head *p;
+static struct MNode *find_in_heap(void *addr) {
+    struct MNode *p;
     /* start search from lately allocated blocks */
     p = phashtable_get(map, addr);
     return p;
 }
 
-static struct head *find_in_hist(void *addr) {
+static struct MNode *find_in_hist(void *addr) {
     return phashtable_get(map_hist, addr);
 }
 
 int dbg_check_addr(char *msg, void *addr, int opt) {
-    struct head *p;
+    struct MNode *p;
     if (opt & CHK_ALLOC)
         if ((p = find_in_heap(addr))) {
             fprintf(stderr, "%s:%lu: %s: allocated (alloc: %s:%lu size: %lu)\n",
@@ -243,7 +243,7 @@ void dbg_mem_stat(void) {
 
 void dbg_heap_dump(char *key) {
     char *buf;
-    struct head *p;
+    struct MNode *p;
     fprintf(stderr, "***** %s:%lu: heap dump start\n", dbg_file_name, dbg_line_number);
     PHashtableIterator hti;
     phashtable_iterate(map, &hti);
@@ -263,7 +263,7 @@ void dbg_heap_dump(char *key) {
 void dbg_history_dump(char *key) {
 //    int cnt;
     char *buf;
-    struct head *p;
+    struct MNode *p;
     if (history_length) {
         fprintf(stderr, "***** %s:%lu: history dump start\n", dbg_file_name, dbg_line_number);
 
@@ -371,7 +371,7 @@ void *dbg_calloc(size_t n, size_t s) {
 
 void dbg_free(void *buf) {
     lock();
-    struct head *p;
+    struct MNode *p;
     free_cnt++;
     if (buf)
         if ((p = find_in_heap(buf))) {
@@ -387,7 +387,7 @@ void dbg_free(void *buf) {
 
 void *dbg_realloc(void *buf, size_t s) {
     lock();
-    struct head *p;
+    struct MNode *p;
     realloc_cnt++;
     if (buf) /* when buf is NULL do malloc. counted twice as r and m */
         if (s)  /* when s = 0 realloc() acts like free(). counted twice: as r and f */
