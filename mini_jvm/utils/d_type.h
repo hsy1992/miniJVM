@@ -8,10 +8,6 @@
 #include "stdlib.h"
 //#define __MEM_LEAK_DETECT
 
-#ifdef __MEM_LEAK_DETECT
-#include "./cmem/memleak.h"
-#endif //__MEM_LEAK_DETECT
-
 // x86   x64 ...
 #define __JVM_LITTLE_ENDIAN__ 1
 // arm
@@ -30,6 +26,11 @@
 #if defined(__GNU_LIBRARY__) || defined(__ANDROID__)
 #define __JVM_OS_LINUX__ 1
 #endif
+
+
+#ifdef __MEM_LEAK_DETECT
+#include "./cmem/memleak.h"
+#endif //__MEM_LEAK_DETECT
 
 
 //compile

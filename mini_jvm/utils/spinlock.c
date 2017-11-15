@@ -2,9 +2,10 @@
 // Created by Gust on 2017/11/15 0015.
 //
 #include <sched.h>
+#include "d_type.h"
 #include "spinlock.h"
 //========================     spinlock     =========================
-#ifndef PTHREAD_SPINLOCK_INITIALIZER
+#if __JVM_OS_MAC__
 
 int pthread_spin_init(pthread_spinlock_t *lock, int pshared) {
     __asm__ __volatile__ ("":: : "memory");
