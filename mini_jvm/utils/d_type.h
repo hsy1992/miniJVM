@@ -76,7 +76,7 @@ void *jvm_calloc(u32 size);
 
 void *jvm_malloc(u32 size);
 
-s32 jvm_free(void *ptr);
+void jvm_free(void *ptr);
 
 void *jvm_realloc(void *pPtr, u32 size);
 

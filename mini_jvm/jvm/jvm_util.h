@@ -99,7 +99,7 @@ s32 getFieldInt(c8 *ptr);
 
 __refer getFieldRefer(c8 *ptr);
 
-f32 getFieldDouble(c8 *ptr);
+f64 getFieldDouble(c8 *ptr);
 
 f32 getFieldFloat(c8 *ptr);
 

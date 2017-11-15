@@ -56,17 +56,16 @@ void autoptr_NULL(autoptr **aref) {
  * 在分配的内存块前面加4个字节用于存放此块内存的长度
  *
  */
-void *jvm_calloc(u32 size) {
+inline void *jvm_calloc(u32 size) {
     return calloc(size, 1);
 }
 
-void *jvm_malloc(u32 size) {
+inline void *jvm_malloc(u32 size) {
     return malloc(size);
 }
 
-s32 jvm_free(void *ptr) {
+inline void jvm_free(void *ptr) {
     free(ptr);
-    return 0;
 }
 
 void *jvm_realloc(void *pPtr, u32 size) {

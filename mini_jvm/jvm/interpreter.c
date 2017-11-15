@@ -2176,7 +2176,7 @@ s32 op_new(u8 **opCode, Runtime *runtime) {
     u16 object_ref = s2c.s;
 
     ConstantClassRef *ccf = find_constant_classref(clazz, object_ref);
-    if(!ccf->clazz) {
+    if (!ccf->clazz) {
         Utf8String *clsName = get_utf8_string(clazz, ccf->stringIndex);
         ccf->clazz = classes_load_get(clsName, runtime);
     }
@@ -3316,7 +3316,7 @@ s32 execute_method(MethodInfo *method, Runtime *pruntime, Class *clazz) {
                 //process thread suspend
                 check_suspend_and_pause(runtime);
 
-                InstructFunc func = find_instruct_func(runtime->pc[0]);
+                InstructFunc func = instructionsIndexies[runtime->pc[0]]->func;//find_instruct_func(runtime->pc[0]);
                 if (func != 0) {
 #if _JVM_DEBUG_PROFILE
                     u8 instruct_code = runtime->pc[0];

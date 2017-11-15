@@ -1190,77 +1190,61 @@ c8 *getStaticFieldPtr(FieldInfo *fi) {
 }
 
 
-void setFieldInt(c8 *ptr, s32 v) {
-    if (!ptr) {
-        jvm_printf("error here setFieldInt\n");
-    }
-    memcpy(ptr, &v, sizeof(s32));
+inline void setFieldInt(c8 *ptr, s32 v) {
+    *((s32 *) ptr) = v;
 }
 
-void setFieldRefer(c8 *ptr, __refer v) {
-    memcpy(ptr, &v, sizeof(__refer));
+inline void setFieldRefer(c8 *ptr, __refer v) {
+    *((__refer *) ptr) = v;
 }
 
-void setFieldLong(c8 *ptr, s64 v) {
-    memcpy(ptr, &v, sizeof(s64));
+inline void setFieldLong(c8 *ptr, s64 v) {
+    *((s64 *) ptr) = v;
 }
 
-void setFieldShort(c8 *ptr, s16 v) {
-    memcpy(ptr, &v, sizeof(s16));
+inline void setFieldShort(c8 *ptr, s16 v) {
+    *((s16 *) ptr) = v;
 }
 
-void setFieldByte(c8 *ptr, c8 v) {
-    ptr[0] = v;
+inline void setFieldByte(c8 *ptr, c8 v) {
+    *((c8 *) ptr) = v;
 }
 
-void setFieldDouble(c8 *ptr, f64 v) {
-    memcpy(ptr, &v, sizeof(f64));
+inline void setFieldDouble(c8 *ptr, f64 v) {
+    *((f64 *) ptr) = v;
 }
 
 void setFieldFloat(c8 *ptr, f32 v) {
-    memcpy(ptr, &v, sizeof(f32));
+    *((f32 *) ptr) = v;
 }
 
-s32 getFieldInt(c8 *ptr) {
-    s32 v = 0;
-    memcpy((c8 *) &v, ptr, sizeof(s32));
-    return v;
+inline s32 getFieldInt(c8 *ptr) {
+    return *((s32 *) ptr);
 }
 
-__refer getFieldRefer(c8 *ptr) {
-    __refer v = 0;
-    memcpy((c8 *) &v, ptr, sizeof(__refer));
-    return v;
+inline __refer getFieldRefer(c8 *ptr) {
+    return *((__refer *) ptr);
 }
 
-s16 getFieldShort(c8 *ptr) {
-    s16 v = 0;
-    memcpy((c8 *) &v, ptr, sizeof(s16));
-    return v;
+inline s16 getFieldShort(c8 *ptr) {
+    return *((s16 *) ptr);
 }
 
-c8 getFieldByte(c8 *ptr) {
-    c8 v = ptr[0];
-    return v;
+inline c8 getFieldByte(c8 *ptr) {
+    return *((c8 *) ptr);
 }
 
-s64 getFieldLong(c8 *ptr) {
-    s64 v = 0;
-    memcpy((c8 *) &v, ptr, sizeof(s64));
-    return v;
+inline s64 getFieldLong(c8 *ptr) {
+    return *((s64 *) ptr);
 }
 
-f32 getFieldFloat(c8 *ptr) {
-    f32 v = 0;
-    memcpy((c8 *) &v, ptr, sizeof(f32));
-    return v;
+inline f32 getFieldFloat(c8 *ptr) {
+    return *((f32 *) ptr);
 }
 
 
-f32 getFieldDouble(c8 *ptr) {
-    f64 v = 0;
-    memcpy((c8 *) &v, ptr, sizeof(f64));
-    return v;
+inline f64 getFieldDouble(c8 *ptr) {
+    return *((f64 *) ptr);
 }
 
 
