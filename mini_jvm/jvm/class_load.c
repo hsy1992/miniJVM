@@ -5,7 +5,6 @@
 #include "stdlib.h"
 #include <stdio.h>
 #include <string.h>
-#include "global.h"
 #include "jvm.h"
 #include "jvm_util.h"
 

@@ -31,7 +31,6 @@ set(SOURCE_FILES
         jvm/os_linux.c
         jvm/os_win.c
         jvm/global.c
-        jvm/global.h
         jvm/java_native_std.h
         jvm/java_native_io.c
         jvm/java_native_std.c

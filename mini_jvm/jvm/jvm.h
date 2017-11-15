@@ -12,7 +12,6 @@
 #include <string.h>
 
 #include "../utils/d_type.h"
-#include "../jvm/global.h"
 #include "../utils/hashtable.h"
 #include "../utils/utf8_string.h"
 #include "../utils/arraylist.h"
