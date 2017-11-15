@@ -279,8 +279,9 @@ s32 srv_accept(s32 listenfd) {
     return clt_socket_fd;
 }
 
-s32 srv_close(s32 listenfd) {
+s32 sock_close(s32 listenfd) {
     if (listenfd) {
+        shutdown(listenfd,SHUT_RDWR);
         closesocket(listenfd);
 #ifdef __WIN32__
         WSACancelBlockingCall();
@@ -394,14 +395,7 @@ s32 javax_mini_net_socket_Protocol_available0(Runtime *runtime, Class *clazz) {
 
 s32 javax_mini_net_socket_Protocol_close0(Runtime *runtime, Class *clazz) {
     s32 sockfd = localvar_getInt(runtime, 0);
-    if (sockfd) {
-        shutdown(sockfd, SHUT_RDWR);
-        closesocket(sockfd);
-#ifdef __WIN32__
-        //            WSACleanup();
-#endif
-        sockfd = 0;
-    }
+    sock_close(sockfd);
 #if _JVM_DEBUG_BYTECODE_DETAIL > 5
     invoke_deepth(runtime);
     jvm_printf("javax_mini_net_socket_Protocol_close0  \n");
@@ -477,7 +471,7 @@ s32 javax_mini_net_serversocket_Protocol_close0(Runtime *runtime, Class *clazz) 
     s32 sockfd = localvar_getInt(runtime, 0);
     s32 ret = 0;
     if (sockfd) {
-        ret = srv_close(sockfd);
+        ret = sock_close(sockfd);
     }
     push_int(runtime->stack, ret);
 #if _JVM_DEBUG_BYTECODE_DETAIL > 5
