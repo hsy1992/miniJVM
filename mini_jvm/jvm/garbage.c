@@ -584,7 +584,7 @@ s32 garbage_copy_refer_thread(Runtime *pruntime) {
     }
     while (runtime) {
         for (i = 0; i < runtime->localvar_count; i++) {
-            __refer ref = runtime->localVariables[i].refer;
+            __refer ref = runtime->localvar[i].refer;
             if (ref) {
                 //garbage_mark_object(ref);
                 arraylist_push_back(collector->runtime_refer_copy, ref);

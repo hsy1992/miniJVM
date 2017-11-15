@@ -104,47 +104,67 @@ static int arraylist_enlarge(ArrayList *arraylist) {
     }
 }
 
-int arraylist_insert(ArrayList *arraylist, int index, ArrayListValue data) {
-    /* Sanity check the index */
+int _arraylist_insert_impl(ArrayList *arraylist, int index, ArrayListValue data) {
 
-    pthread_spin_lock(&arraylist->spinlock);
-    {
-        int doit = 1;
-        if (index < 0 || index > arraylist->length) {
+    int doit = 1;
+    if (index < 0 || index > arraylist->length) {
+        doit = 0;
+    }
+    if (arraylist->length + 1 > arraylist->_alloced) {
+        if (!arraylist_enlarge(arraylist)) {
             doit = 0;
         }
-        /* Increase the size if necessary */
-        if (arraylist->length + 1 > arraylist->_alloced) {
-            if (!arraylist_enlarge(arraylist)) {
-                doit = 0;
-            }
-        }
-        if (doit) {
-            /* Move the contents of the array forward from the index
-             * onwards */
-
-            memmove(&arraylist->data[index + 1],
-                    &arraylist->data[index],
-                    (arraylist->length - index) * sizeof(ArrayListValue));
-
-            /* Insert the new entry at the index */
-
-            arraylist->data[index] = data;
-            ++arraylist->length;
-        }
     }
-    pthread_spin_unlock(&arraylist->spinlock);
+    if (doit) {
+        memmove(&arraylist->data[index + 1],
+                &arraylist->data[index],
+                (arraylist->length - index) * sizeof(ArrayListValue));
+
+        arraylist->data[index] = data;
+        ++arraylist->length;
+    }
 
     return 1;
 }
 
+int arraylist_insert(ArrayList *arraylist, int index, ArrayListValue data) {
+    s32 r;
+    pthread_spin_lock(&arraylist->spinlock);
+    {
+        r = _arraylist_insert_impl(arraylist, index, data);
+    }
+    pthread_spin_unlock(&arraylist->spinlock);
+
+    return r;
+}
 
 int arraylist_push_front(ArrayList *arraylist, ArrayListValue data) {
-    return arraylist_insert(arraylist, 0, data);
+    s32 r;
+    pthread_spin_lock(&arraylist->spinlock);
+    {
+        r = _arraylist_insert_impl(arraylist, 0, data);
+    }
+    pthread_spin_unlock(&arraylist->spinlock);
+
+    return r;
 }
 
 int arraylist_push_back(ArrayList *arraylist, ArrayListValue data) {
-    return arraylist_insert(arraylist, arraylist->length, data);
+    s32 r;
+    pthread_spin_lock(&arraylist->spinlock);
+    {
+        r = _arraylist_insert_impl(arraylist, arraylist->length, data);
+    }
+    pthread_spin_unlock(&arraylist->spinlock);
+
+    return r;
+}
+
+int arraylist_push_back_unsafe(ArrayList *arraylist, ArrayListValue data) {
+    s32 r;
+    r = _arraylist_insert_impl(arraylist, arraylist->length, data);
+
+    return r;
 }
 
 int arraylist_remove(ArrayList *arraylist, ArrayListValue data) {
@@ -239,18 +259,25 @@ ArrayListValue arraylist_pop_front(ArrayList *arraylist) {
     return v;
 }
 
+ArrayListValue arraylist_pop_back_unsafe(ArrayList *arraylist) {
+    ArrayListValue v = NULL;
+    if (arraylist->length > 0) {
+        v = arraylist->data[arraylist->length - 1];
+        arraylist->length--;
+    }
+    return v;
+}
+
 ArrayListValue arraylist_pop_back(ArrayList *arraylist) {
     ArrayListValue v = NULL;
     pthread_spin_lock(&arraylist->spinlock);
     {
-        if (arraylist->length > 0) {
-            v = arraylist->data[arraylist->length - 1];
-            arraylist->length--;
-        }
+        v = arraylist_pop_back_unsafe(arraylist);
     }
     pthread_spin_unlock(&arraylist->spinlock);
     return v;
 }
+
 
 void arraylist_clear(ArrayList *arraylist) {
     /* To clear the list, simply set the arr_length to zero */

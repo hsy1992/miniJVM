@@ -677,9 +677,10 @@ struct _Runtime {
     Runtime *son;//sub method's runtime
     Runtime *parent;//father method's runtime
     RuntimeStack *stack;
-    LocalVarItem *localVariables;
-    s32 localvar_count;
-    ArrayList *runtime_pool;// save runtimes for performance
+    LocalVarItem *localvar;
+    s16 localvar_count;
+    s16 localvar_max;
+    ArrayList *runtime_pool;// cache runtimes for performance
     u8 wideMode;
 };
 //======================= class =============================

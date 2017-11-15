@@ -166,18 +166,30 @@ void peek_entry(RuntimeStack *stack, StackEntry *entry, int index) {
 
 //======================= runtime =============================
 
+static int RUNTIME_POOL_SIZE = 20;
+static int RUNTIME_LOCALVAR_SIZE = 10;
 
-
+/**
+ * runtime 的创建和销毁会极大影响性能，因此对其进行缓存
+ * @param parent
+ * @return
+ */
 Runtime *runtime_create(Runtime *parent) {
     s32 is_top = parent == NULL;
     Runtime *runtime = NULL;
     if (!is_top) {
-        runtime = arraylist_pop_back(parent->threadInfo->top_runtime->runtime_pool);
+        runtime = arraylist_pop_back_unsafe(parent->threadInfo->top_runtime->runtime_pool);
     }
     if (runtime == NULL) {
         runtime = jvm_calloc(sizeof(Runtime));
+        runtime->localvar = jvm_calloc(RUNTIME_LOCALVAR_SIZE * sizeof(LocalVarItem));
+        runtime->localvar_max = RUNTIME_LOCALVAR_SIZE;
     } else {
+        __refer lv = runtime->localvar;
+        s32 max = runtime->localvar_max;
         memset(runtime, 0, sizeof(Runtime));
+        runtime->localvar = lv;
+        runtime->localvar_max = max;
     }
     if (!is_top) {
         runtime->stack = parent->stack;
@@ -188,7 +200,7 @@ Runtime *runtime_create(Runtime *parent) {
         runtime->stack = stack_create(STACK_LENGHT);
         runtime->threadInfo = threadinfo_create();
         runtime->threadInfo->top_runtime = runtime;
-        runtime->runtime_pool = arraylist_create(20);
+        runtime->runtime_pool = arraylist_create(RUNTIME_POOL_SIZE);
     }
     return runtime;
 }
@@ -197,13 +209,14 @@ Runtime *runtime_create(Runtime *parent) {
 void runtime_destory(Runtime *runtime) {
     s32 is_top = runtime->threadInfo->top_runtime == runtime;
     if (!is_top) {
-        arraylist_push_back(runtime->threadInfo->top_runtime->runtime_pool, runtime);
+        arraylist_push_back_unsafe(runtime->threadInfo->top_runtime->runtime_pool, runtime);
     } else {
         stack_destory(runtime->stack);
         threadinfo_destory(runtime->threadInfo);
         s32 i;
         for (i = 0; i < runtime->runtime_pool->length; i++) {
             Runtime *r = arraylist_get_value(runtime->runtime_pool, i);
+            jvm_free(r->localvar);
             jvm_free(r);
         }
         arraylist_destory(runtime->runtime_pool);
@@ -260,30 +273,32 @@ void getRuntimeStack(Runtime *runtime, Utf8String *ustr) {
 
 
 s32 localvar_init(Runtime *runtime, s32 count) {
-    runtime->localVariables = jvm_calloc(sizeof(LocalVarItem) * count);
+    if (count > runtime->localvar_max) {
+        jvm_free(runtime->localvar);
+        runtime->localvar = jvm_calloc(sizeof(LocalVarItem) * count);
+        runtime->localvar_max = count;
+    }
     runtime->localvar_count = count;
     return 0;
 }
 
 s32 localvar_dispose(Runtime *runtime) {
-    jvm_free(runtime->localVariables);
-    runtime->localVariables = NULL;
     runtime->localvar_count = 0;
     return 0;
 }
 
 void localvar_setInt(Runtime *runtime, s32 index, s32 val) {
-    runtime->localVariables[index].integer = val;
+    runtime->localvar[index].integer = val;
 }
 
 void localvar_setRefer(Runtime *runtime, s32 index, __refer val) {
-    runtime->localVariables[index].refer = val;
+    runtime->localvar[index].refer = val;
 }
 
 s32 localvar_getInt(Runtime *runtime, s32 index) {
-    return runtime->localVariables[index].integer;
+    return runtime->localvar[index].integer;
 }
 
 __refer localvar_getRefer(Runtime *runtime, s32 index) {
-    return runtime->localVariables[index].refer;
+    return runtime->localvar[index].refer;
 }
