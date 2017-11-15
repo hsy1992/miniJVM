@@ -116,10 +116,11 @@ int _arraylist_insert_impl(ArrayList *arraylist, int index, ArrayListValue data)
         }
     }
     if (doit) {
-        memmove(&arraylist->data[index + 1],
-                &arraylist->data[index],
-                (arraylist->length - index) * sizeof(ArrayListValue));
-
+        if(arraylist->length - index>0) {
+            memmove(&arraylist->data[index + 1],
+                    &arraylist->data[index],
+                    (arraylist->length - index) * sizeof(ArrayListValue));
+        }
         arraylist->data[index] = data;
         ++arraylist->length;
     }
