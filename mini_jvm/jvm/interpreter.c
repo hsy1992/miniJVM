@@ -2248,7 +2248,7 @@ s32 op_multianewarray(u8 **opCode, Runtime *runtime) {
     ArrayList *dim = arraylist_create(count);
     int i;
     for (i = 0; i < count; i++)
-        arraylist_push_end(dim, (ArrayListValue) (long) pop_int(stack));
+        arraylist_push_back(dim, (ArrayListValue) (long) pop_int(stack));
 
     Instance *arr = jarray_multi_create(dim, desc, 0);
     arraylist_destory(dim);

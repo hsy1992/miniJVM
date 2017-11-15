@@ -777,7 +777,7 @@ s32 javax_mini_io_File_listDir(Runtime *runtime, Class *clazz) {
                 Instance *jstr = jstring_create(ustr, runtime);
                 garbage_refer_hold(jstr);
                 utf8_destory(ustr);
-                arraylist_push_end(files, jstr);
+                arraylist_push_back(files, jstr);
             }
             (void) closedir(dirp); //关闭目录
 

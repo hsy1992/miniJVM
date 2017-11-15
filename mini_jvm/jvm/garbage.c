@@ -566,7 +566,7 @@ void garbage_copy_refer() {
 
 
 s32 garbage_copy_refer_thread(Runtime *pruntime) {
-    arraylist_push_end(collector->runtime_refer_copy, pruntime->threadInfo->jthread);
+    arraylist_push_back(collector->runtime_refer_copy, pruntime->threadInfo->jthread);
 
     s32 i;
     StackEntry entry;
@@ -578,7 +578,7 @@ s32 garbage_copy_refer_thread(Runtime *pruntime) {
             __refer ref = entry_2_refer(&entry);
             if (ref) {
                 //garbage_mark_object(ref);
-                arraylist_push_end(collector->runtime_refer_copy, ref);
+                arraylist_push_back(collector->runtime_refer_copy, ref);
             }
         }
     }
@@ -587,7 +587,7 @@ s32 garbage_copy_refer_thread(Runtime *pruntime) {
             __refer ref = runtime->localVariables[i].refer;
             if (ref) {
                 //garbage_mark_object(ref);
-                arraylist_push_end(collector->runtime_refer_copy, ref);
+                arraylist_push_back(collector->runtime_refer_copy, ref);
             }
         }
         runtime = runtime->son;

@@ -138,7 +138,7 @@ void arraylist_destory(ArrayList *arraylist);
  */
 
 
-int arraylist_push_end(ArrayList *arraylist, ArrayListValue data);
+int arraylist_push_back(ArrayList *arraylist, ArrayListValue data);
 
 
 int arraylist_remove(ArrayList *arraylist, ArrayListValue data);

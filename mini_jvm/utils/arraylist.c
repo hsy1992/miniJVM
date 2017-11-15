@@ -109,11 +109,11 @@ int arraylist_insert(ArrayList *arraylist, int index, ArrayListValue data) {
 
     pthread_spin_lock(&arraylist->spinlock);
     {
+        int doit = 1;
         if (index < 0 || index > arraylist->length) {
-            return 0;
+            doit = 0;
         }
         /* Increase the size if necessary */
-        int doit = 1;
         if (arraylist->length + 1 > arraylist->_alloced) {
             if (!arraylist_enlarge(arraylist)) {
                 doit = 0;
@@ -139,6 +139,14 @@ int arraylist_insert(ArrayList *arraylist, int index, ArrayListValue data) {
 }
 
 
+int arraylist_push_front(ArrayList *arraylist, ArrayListValue data) {
+    return arraylist_insert(arraylist, 0, data);
+}
+
+int arraylist_push_back(ArrayList *arraylist, ArrayListValue data) {
+    return arraylist_insert(arraylist, arraylist->length, data);
+}
+
 int arraylist_remove(ArrayList *arraylist, ArrayListValue data) {
     int index = -1;
     pthread_spin_lock(&arraylist->spinlock);
@@ -155,15 +163,6 @@ int arraylist_remove(ArrayList *arraylist, ArrayListValue data) {
     }
     pthread_spin_unlock(&arraylist->spinlock);
     return index;
-}
-
-
-int arraylist_push_front(ArrayList *arraylist, ArrayListValue data) {
-    return arraylist_insert(arraylist, 0, data);
-}
-
-int arraylist_push_end(ArrayList *arraylist, ArrayListValue data) {
-    return arraylist_insert(arraylist, arraylist->length, data);
 }
 
 void arraylist_remove_range(ArrayList *arraylist, int index, int length) {

@@ -679,6 +679,7 @@ struct _Runtime {
     RuntimeStack *stack;
     LocalVarItem *localVariables;
     s32 localvar_count;
+    ArrayList *runtime_pool;// save runtimes for performance
     u8 wideMode;
 };
 //======================= class =============================

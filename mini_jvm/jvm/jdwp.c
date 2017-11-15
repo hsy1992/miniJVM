@@ -26,7 +26,7 @@ void jdwp_client_destory(JdwpClient *client);
 //==================================================    server    ==================================================
 
 void jdwp_put_client(ArrayList *clients, JdwpClient *client) {
-    arraylist_push_end(clients, client);
+    arraylist_push_back(clients, client);
 }
 
 void *jdwp_thread_listener(void *para) {
@@ -755,7 +755,7 @@ void jdwp_check_debug_step(Runtime *runtime) {
 //==================================================    event    ==================================================
 
 void jdwp_event_put(EventInfo *event) {
-    arraylist_push_end(jdwpserver.events, event);
+    arraylist_push_back(jdwpserver.events, event);
 }
 
 EventInfo *jdwp_event_get() {

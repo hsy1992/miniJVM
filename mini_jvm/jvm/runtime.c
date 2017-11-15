@@ -169,8 +169,17 @@ void peek_entry(RuntimeStack *stack, StackEntry *entry, int index) {
 
 
 Runtime *runtime_create(Runtime *parent) {
-    Runtime *runtime = jvm_calloc(sizeof(Runtime));
-    if (parent) {
+    s32 is_top = parent == NULL;
+    Runtime *runtime = NULL;
+    if (!is_top) {
+        runtime = arraylist_pop_back(parent->threadInfo->top_runtime->runtime_pool);
+    }
+    if (runtime == NULL) {
+        runtime = jvm_calloc(sizeof(Runtime));
+    } else {
+        memset(runtime, 0, sizeof(Runtime));
+    }
+    if (!is_top) {
         runtime->stack = parent->stack;
         runtime->threadInfo = parent->threadInfo;
         runtime->parent = parent;
@@ -179,21 +188,27 @@ Runtime *runtime_create(Runtime *parent) {
         runtime->stack = stack_create(STACK_LENGHT);
         runtime->threadInfo = threadinfo_create();
         runtime->threadInfo->top_runtime = runtime;
+        runtime->runtime_pool = arraylist_create(20);
     }
     return runtime;
 }
 
 
 void runtime_destory(Runtime *runtime) {
-    if (runtime->threadInfo->top_runtime == runtime) {
+    s32 is_top = runtime->threadInfo->top_runtime == runtime;
+    if (!is_top) {
+        arraylist_push_back(runtime->threadInfo->top_runtime->runtime_pool, runtime);
+    } else {
         stack_destory(runtime->stack);
         threadinfo_destory(runtime->threadInfo);
+        s32 i;
+        for (i = 0; i < runtime->runtime_pool->length; i++) {
+            Runtime *r = arraylist_get_value(runtime->runtime_pool, i);
+            jvm_free(r);
+        }
+        arraylist_destory(runtime->runtime_pool);
+        runtime->runtime_pool = NULL;
     }
-    if (runtime->parent) {
-        runtime->parent = NULL;
-    }
-    jvm_free(runtime);
-
 }
 
 s32 getRuntimeDepth(Runtime *top) {
@@ -240,6 +255,7 @@ void getRuntimeStack(Runtime *runtime, Utf8String *ustr) {
         if (last->parent == NULL || last->parent->parent == NULL)break;
     }
 }
+
 //======================= localvar =============================
 
 

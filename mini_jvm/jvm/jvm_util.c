@@ -123,7 +123,7 @@ void threadlist_remove(Runtime *r) {
 }
 
 void threadlist_add(Runtime *r) {
-    arraylist_push_end(thread_list, r);
+    arraylist_push_back(thread_list, r);
 }
 
 /**
