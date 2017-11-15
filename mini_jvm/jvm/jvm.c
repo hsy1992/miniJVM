@@ -11,10 +11,6 @@
 #include "java_native_std.h"
 #include "jdwp.h"
 
-void _on_jvm_sig(s32 signo) {
-    int debug = 1;
-}
-
 void main_thread_create(Runtime *runtime) {
 
     Class *thread_clazz = classes_load_get_c("java/lang/Thread", runtime);
@@ -93,10 +89,6 @@ void classloader_classstatic_clear(ClassLoader *class_loader) {
 }
 
 s32 execute(c8 *p_classpath, c8 *p_mainclass, s32 argc, c8 **argv) {
-#ifdef __MEM_LEAK_DETECT
-    dbg_init(0);
-    //dbg_catch_sigsegv();
-#endif //__MEM_LEAK_DETECT
     //
     open_log();
 
@@ -240,9 +232,6 @@ s32 execute(c8 *p_classpath, c8 *p_mainclass, s32 argc, c8 **argv) {
     close_log();
     jvm_printf("over \n");
 
-#ifdef __MEM_LEAK_DETECT
-    dbg_heap_dump("");
-    dbg_mem_stat();
-#endif //__MEM_LEAK_DETECT
+
     return ret;
 }

@@ -69,15 +69,27 @@ void t5() {
     jvm_free(b);
 }
 
+void _on_jvm_sig(s32 signo) {
+    int debug = 1;
+}
+
 /*
  *
  */
 int main(int argc, char **argv) {
+#ifdef __MEM_LEAK_DETECT
+    dbg_init(0);
+    //dbg_catch_sigsegv();
+#endif //__MEM_LEAK_DETECT
+
     s32 ret;
 //    ret = execute("../../javalib_test/build/classes/", "test/Foo1", argc, argv);
-    ret = execute("../../javalib/build/classes/", "test/Foo1", argc, argv);
-    //t3();
-
+//    ret = execute("../../javalib/build/classes/", "test/Foo1", argc, argv);
+    t3();
+#ifdef __MEM_LEAK_DETECT
+    dbg_heap_dump("");
+    dbg_mem_stat();
+#endif //__MEM_LEAK_DETECT
     return ret;
 }
 
