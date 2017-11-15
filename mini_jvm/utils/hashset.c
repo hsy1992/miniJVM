@@ -4,11 +4,32 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include "math.h"
-#include "hashset.h"
 #include "d_type.h"
+#include "hashset.h"
 #include "hashtable.h"
 
-static s32 HASH_SET_DEFAULT_SIZE = 4;
+static s32 HASH_SET_DEFAULT_SIZE = 1024 * 4;
+
+
+HashsetEntry *_hashset_get_entry(Hashset *set) {
+    if (set->entry_pool->length) {
+        return arraylist_pop_back_unsafe(set->entry_pool);
+    } else {
+        return jvm_calloc(sizeof(HashsetEntry));
+    }
+}
+
+static void _hashset_free_entry(Hashset *set, HashsetEntry *entry) {
+    arraylist_push_back(set->entry_pool, entry);
+}
+
+void _hashset_clear_pool(Hashset *set) {
+    s32 i;
+    for (i = 0; i < set->entry_pool->length; i++) {
+        ArrayListValue val = arraylist_get_value(set->entry_pool, i);
+        jvm_free(val);
+    }
+}
 
 unsigned int hashset_allocate_table(Hashset *set, unsigned int size) {
     if (size) {
@@ -20,11 +41,6 @@ unsigned int hashset_allocate_table(Hashset *set, unsigned int size) {
     return set->table != NULL;
 }
 
-
-static void hashset_free_entry(Hashset *set, HashsetEntry *entry) {
-
-    jvm_free(entry);
-}
 
 unsigned long _DEFAULT_HashsetHash(HashsetKey kmer) {
     return (unsigned long) kmer;
@@ -46,6 +62,7 @@ Hashset *hashset_create() {
 
         return NULL;
     }
+    set->entry_pool = arraylist_create(128);
 
     return set;
 }
@@ -60,10 +77,12 @@ void hashset_destory(Hashset *set) {
         rover = set->table[i];
         while (rover != NULL) {
             next = rover->next;
-            hashset_free_entry(set, rover);
+            _hashset_free_entry(set, rover);
             rover = next;
         }
     }
+    _hashset_clear_pool(set);
+    arraylist_destory(set->entry_pool);
     jvm_free(set->table);
     jvm_free(set);
 }
@@ -74,11 +93,12 @@ void hashset_clear(Hashset *set) {
     HashsetEntry *next;
     unsigned int i;
 
+    _hashset_clear_pool(set);
     for (i = 0; i < set->table_size; ++i) {
         rover = set->table[i];
         while (rover != NULL) {
             next = rover->next;
-            hashset_free_entry(set, rover);
+            _hashset_free_entry(set, rover);
             rover = next;
         }
         set->table[i] = NULL;
@@ -89,6 +109,7 @@ void hashset_clear(Hashset *set) {
         set->table = NULL;
         set->table_size = 0;
         if (!hashset_allocate_table(set, HASH_SET_DEFAULT_SIZE)) {
+            arraylist_destory(set->entry_pool);
             jvm_free(set);
         }
     }
@@ -121,7 +142,7 @@ int hashset_put(Hashset *set, HashsetKey key) {
         rover = rover->next;
     }
 
-    newentry = (HashsetEntry *) jvm_calloc(sizeof(HashsetEntry));
+    newentry = _hashset_get_entry(set);;
 
     if (newentry == NULL) {
         return 0;
@@ -185,7 +206,7 @@ int hashset_remove(Hashset *set, HashsetKey key, int resize) {
             if (pre == rover)set->table[index] = next;
             else pre->next = next;
 
-            hashset_free_entry(set, rover);
+            _hashset_free_entry(set, rover);
             --set->entries;
             result = 1;
             break;
@@ -271,7 +292,7 @@ HashsetKey hashset_iter_remove(HashsetIterator *iterator) {
             prev->next = rover->next;
         }
         HashsetKey key = iterator->curr_entry->key;
-        hashset_free_entry(set, iterator->curr_entry);
+        _hashset_free_entry(set, iterator->curr_entry);
         iterator->curr_entry = NULL;
         --set->entries;
         return key;
@@ -291,7 +312,7 @@ int hashset_resize(Hashset *set, unsigned long long int size) {
         old_table = set->table;
         old_table_size = set->table_size;
 
-        if (!hashset_allocate_table(set, (unsigned int)size)) {
+        if (!hashset_allocate_table(set, (unsigned int) size)) {
             printf("CRITICAL: FAILED TO ALLOCATE HASH TABLE!\n");
 
             set->table = old_table;

@@ -52,6 +52,7 @@ extern "C" {
 #include "pthread.h"
 #include "d_type.h"
 #include "spinlock.h"
+#include "arraylist.h"
 
 /**
  * A hash table structure.
@@ -153,6 +154,7 @@ struct _Hashtable {
     HashtableValueFreeFunc value_free_func;
     unsigned long long int entries;
     pthread_spinlock_t spinlock;
+    ArrayList *entry_pool;
 };
 
 /**

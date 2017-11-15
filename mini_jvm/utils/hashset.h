@@ -5,6 +5,8 @@
 #ifndef MINI_JVM_hashset_H
 #define MINI_JVM_hashset_H
 
+#include "arraylist.h"
+
 #ifdef __cplusplus
 extern "C" {
 #endif
@@ -64,10 +66,8 @@ struct _HashsetEntry {
 struct _Hashset {
     HashsetEntry **table;
     unsigned long long int table_size;
-//    HashtableHashFunc hash_func;
-//    HashtableEqualFunc equal_func;
-//    HashtableKeyFreeFunc key_free_func;
     unsigned long long int entries;
+    ArrayList *entry_pool;
 };
 
 /**
