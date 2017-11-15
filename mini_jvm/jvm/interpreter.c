@@ -2176,8 +2176,11 @@ s32 op_new(u8 **opCode, Runtime *runtime) {
     u16 object_ref = s2c.s;
 
     ConstantClassRef *ccf = find_constant_classref(clazz, object_ref);
-    Utf8String *clsName = get_utf8_string(clazz, ccf->stringIndex);
-    Class *other = classes_load_get(clsName, runtime);
+    if(!ccf->clazz) {
+        Utf8String *clsName = get_utf8_string(clazz, ccf->stringIndex);
+        ccf->clazz = classes_load_get(clsName, runtime);
+    }
+    Class *other = ccf->clazz;
     Instance *ins = NULL;
     if (other) {
         ins = instance_create(other);

@@ -430,6 +430,8 @@ typedef struct _ConstantClassRef {
 
     //
     Utf8String *name;
+    Class *clazz;
+
 } ConstantClassRef;
 
 typedef struct _ConstantStringRef {
