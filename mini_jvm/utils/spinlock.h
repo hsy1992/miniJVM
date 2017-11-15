@@ -3,13 +3,15 @@
 //
 #include "pthread.h"
 
+
+
 #ifndef MINI_JVM_SPINLOCK_H
 #define MINI_JVM_SPINLOCK_H
 
 //======================= spinlock =============================
 
-#if  !(defined(_POSIX_SPIN_LOCKS) || defined(PTHREAD_SPINLOCK_INITIALIZER))
-#define _POSIX_SPIN_LOCKS
+#if  __JVM_OS_MAC__
+
 typedef int pthread_spinlock_t;
 
 int pthread_spin_init(pthread_spinlock_t *lock, int pshared);
