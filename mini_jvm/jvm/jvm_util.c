@@ -775,14 +775,14 @@ Instance *jarray_create(s32 count, s32 typeIdx, Utf8String *type) {
 
 s32 jarray_destory(Instance *arr) {
     if (arr && arr->mb.type == MEM_TYPE_ARR) {
-        if (isDataReferByIndex(arr->arr_type_index)) {
-            s32 i;
-            Long2Double l2d;
-            l2d.l = 0;
-            for (i = 0; i < arr->arr_length; i++) {//把所有引用去除，否则不会垃圾回收
-                jarray_set_field(arr, i, &l2d);
-            }
-        }
+//        if (isDataReferByIndex(arr->arr_type_index)) {
+//            s32 i;
+//            Long2Double l2d;
+//            l2d.l = 0;
+//            for (i = 0; i < arr->arr_length; i++) {//把所有引用去除，否则不会垃圾回收
+//                jarray_set_field(arr, i, &l2d);
+//            }
+//        }
         jthreadlock_destory(&arr->mb);
         arr->mb.thread_lock = NULL;
         if (arr->arr_body) {
@@ -934,7 +934,7 @@ void instance_clear_refer(Instance *ins) {
 
 s32 instance_destory(Instance *ins) {
 
-    instance_clear_refer(ins);
+//    instance_clear_refer(ins);
     jthreadlock_destory(&ins->mb);
     jvm_free(ins->obj_fields);
     jvm_free(ins);
