@@ -64,6 +64,8 @@ typedef struct _LinkedList {
 } LinkedList;
 
 
+typedef void (*LinkedListIteratorFunc)(LinkedList *list, LinkedListEntry *entry, void *para);
+
 /**
  * A null @ref ListValue.
  */
@@ -103,14 +105,17 @@ LinkedListEntry *linkedlist_header(LinkedList *list);
 
 LinkedListEntry *linkedlist_tail(LinkedList *list);
 
-LinkedListEntry *linkedlist_prev(LinkedList *list, LinkedListEntry *listentry);
+LinkedListEntry *linkedlist_prev(LinkedList *list, LinkedListEntry *entry);
 
-LinkedListEntry *linkedlist_next(LinkedList *list, LinkedListEntry *listentry);
+LinkedListEntry *linkedlist_next(LinkedList *list, LinkedListEntry *entry);
 
 LinkedListValue linkedlist_data(LinkedListEntry *listentry);
 
 void linkedlist_set_data(LinkedListEntry *listentry, LinkedListValue value);
 
+void linkedlist_remove(LinkedList *list, LinkedListEntry *entry);
+
+void linkedlist_iter_safe(LinkedList *list, LinkedListIteratorFunc func, void *para);
 
 #ifdef __cplusplus
 }

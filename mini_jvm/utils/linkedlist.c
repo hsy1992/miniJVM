@@ -207,19 +207,50 @@ LinkedListEntry *linkedlist_tail(LinkedList *list) {
     return NULL;
 }
 
-LinkedListEntry *linkedlist_prev(LinkedList *list, LinkedListEntry *listentry) {
-    if (listentry == NULL) {
+LinkedListEntry *linkedlist_prev(LinkedList *list, LinkedListEntry *entry) {
+    if (entry == NULL) {
         return NULL;
     }
-    if (listentry->prev == list->mNode)return NULL;
-    return listentry->prev;
+    if (entry->prev == list->mNode)return NULL;
+    return entry->prev;
 }
 
 
-LinkedListEntry *linkedlist_next(LinkedList *list, LinkedListEntry *listentry) {
-    if (listentry == NULL) {
+LinkedListEntry *linkedlist_next(LinkedList *list, LinkedListEntry *entry) {
+    if (entry == NULL) {
         return NULL;
     }
-    if (listentry->next == list->mNode)return NULL;
-    return listentry->next;
+    if (entry->next == list->mNode)return NULL;
+    return entry->next;
+}
+
+
+void linkedlist_remove(LinkedList *list, LinkedListEntry *entry) {
+    if (entry == NULL) {
+        return;
+    }
+    if (entry->next == list->mNode) {
+        entry->next->prev = NULL;
+    } else {
+        entry->next->prev = entry->prev;
+    }
+    if (entry->prev == list->mNode) {
+        entry->prev->next = NULL;
+    } else {
+        entry->prev->next = entry->next;
+    }
+    jvm_free(entry);
+    list->length--;
+}
+
+
+void linkedlist_iter_safe(LinkedList *list, LinkedListIteratorFunc func, void *para) {
+    pthread_spin_lock(&list->spinlock);
+    LinkedListEntry *entry = linkedlist_header(list);
+    while (entry) {
+        LinkedListEntry * tmp=entry;
+        entry = linkedlist_next(list, entry);
+        func(list, entry, para);
+    }
+    pthread_spin_unlock(&list->spinlock);
 }
