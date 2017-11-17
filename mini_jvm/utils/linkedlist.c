@@ -250,7 +250,7 @@ void linkedlist_iter_safe(LinkedList *list, LinkedListIteratorFunc func, void *p
     while (entry) {
         LinkedListEntry * tmp=entry;
         entry = linkedlist_next(list, entry);
-        func(list, entry, para);
+        func(list, tmp, para);
     }
     pthread_spin_unlock(&list->spinlock);
 }
