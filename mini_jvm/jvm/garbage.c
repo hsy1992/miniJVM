@@ -268,7 +268,7 @@ void *collect_thread_run(void *para) {
     s64 lastgc = currentTimeMillis();
     while (1) {
 //        garbage_thread_lock();
-        threadSleep(10);
+        //threadSleep(10);
         s64 startAt = currentTimeMillis();
         garbage_move_cache();
         s64 endAt = currentTimeMillis() - startAt;
@@ -298,10 +298,11 @@ void *collect_thread_run(void *para) {
 
 void garbage_move_cache() {
     //jvm_printf(" move cache\n");
+    s64 move_count = 0;
     GarbageOp *op;
     while (1) {
         op = (GarbageOp *) linkedlist_pop_end(collector->operation_cache);
-        if (op == NULL) {
+        if (op == NULL || move_count++ > 50000) {
             break;
         }
         switch (op->op_type) {
