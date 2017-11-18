@@ -229,15 +229,12 @@ void linkedlist_remove(LinkedList *list, LinkedListEntry *entry) {
     if (entry == NULL) {
         return;
     }
-    if (entry->next == list->mNode) {
-        entry->next->prev = NULL;
-    } else {
-        entry->next->prev = entry->prev;
-    }
-    if (entry->prev == list->mNode) {
-        entry->prev->next = NULL;
+
+    if (entry->next == list->mNode && entry->prev == list->mNode) {
+        list->mNode->prev = list->mNode->next = NULL;
     } else {
         entry->prev->next = entry->next;
+        entry->next->prev = entry->prev;
     }
     jvm_free(entry);
     list->length--;
@@ -248,7 +245,7 @@ void linkedlist_iter_safe(LinkedList *list, LinkedListIteratorFunc func, void *p
     pthread_spin_lock(&list->spinlock);
     LinkedListEntry *entry = linkedlist_header(list);
     while (entry) {
-        LinkedListEntry * tmp=entry;
+        LinkedListEntry *tmp = entry;
         entry = linkedlist_next(list, entry);
         func(list, tmp, para);
     }
