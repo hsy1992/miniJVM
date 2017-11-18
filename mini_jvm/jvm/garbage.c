@@ -15,7 +15,7 @@ void garbage_destory_memobj(MemoryBlock *k);
 
 void _garbage_change_flag(void);
 
-void garbage_move_cache(void);
+void garbage_move_cache(s32 move_limit);
 
 void garbage_copy_refer(void);
 
@@ -267,15 +267,8 @@ void dump_refer() {
 void *collect_thread_run(void *para) {
     s64 lastgc = currentTimeMillis();
     while (1) {
-//        garbage_thread_lock();
-        //threadSleep(10);
-        s64 startAt = currentTimeMillis();
-        garbage_move_cache();
-        s64 endAt = currentTimeMillis() - startAt;
-        if (endAt - startAt > 1000) {
-            jvm_printf("[WARN]gc movcache: %lld\n", endAt - startAt);
-        }
-//        garbage_thread_unlock();
+        threadSleep(10);
+        garbage_move_cache(50000);
 
         if (collector->_garbage_thread_status == GARBAGE_THREAD_STOP) {
             break;
@@ -296,19 +289,27 @@ void *collect_thread_run(void *para) {
     return NULL;
 }
 
-void garbage_move_cache() {
+void garbage_move_cache(s32 move_limit) {
     //jvm_printf(" move cache\n");
     s64 move_count = 0;
     GarbageOp *op;
     while (1) {
         op = (GarbageOp *) linkedlist_pop_end(collector->operation_cache);
-        if (op == NULL || move_count++ > 50000) {
+        if (move_limit > 0) {
+            if (move_count++ > move_limit) {
+                break;
+            }
+        }
+        if (op == NULL) {
             break;
         }
         switch (op->op_type) {
             case GARBAGE_OP_REG: {
-                hashset_put(collector->objs, op->val);
-                collector->heap_size += getMbSize(op->val);
+                s32 ret = hashset_put(collector->objs, op->val);
+                if (ret == 1)collector->heap_size += getMbSize(op->val);
+                else {
+                    int debug = 1;
+                }
 #if _JVM_DEBUG_GARBAGE_DUMP
                 MemoryBlock *mb = op->val;
                 Utf8String *sus = utf8_create();
@@ -364,7 +365,7 @@ s64 garbage_collect() {
         garbage_resume_the_world();
         return -1;
     }
-    garbage_move_cache();
+    garbage_move_cache(0);//0 : all
     garbage_copy_refer();
     //
 
@@ -434,7 +435,7 @@ void _list_iter_thread_pause(ArrayListValue value, void *para) {
     jthread_suspend((Runtime *) value);
 }
 
-s32 garbage_pause_the_world() {
+s32 garbage_pause_the_world(void) {
     s32 i;
     //jvm_printf("thread size:%d\n", thread_list->length);
 

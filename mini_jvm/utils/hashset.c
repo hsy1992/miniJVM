@@ -137,7 +137,7 @@ int hashset_put(Hashset *set, HashsetKey key) {
     while (rover != NULL) {
         if (DEFAULT_HASH_EQUALS_FUNC(rover->key, key) != 0) {
             rover->key = key;
-            return 1;
+            return 2;
         }
         rover = rover->next;
     }
