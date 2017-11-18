@@ -12,11 +12,11 @@ static s32 HASH_SET_DEFAULT_SIZE = 1024 * 4;
 
 
 static inline HashsetEntry *_hashset_get_entry(Hashset *set) {
-        return jvm_calloc(sizeof(HashsetEntry));
+    return jvm_calloc(sizeof(HashsetEntry));
 }
 
 static inline void _hashset_free_entry(Hashset *set, HashsetEntry *entry) {
-        jvm_free(entry);
+    jvm_free(entry);
 }
 
 unsigned int hashset_allocate_table(Hashset *set, unsigned int size) {
@@ -103,48 +103,55 @@ int hashset_put(Hashset *set, HashsetKey key) {
     HashsetEntry *newentry;
     unsigned long long int index;
 
+    pthread_spin_lock(&set->lock);
+    {
+        if ((set->entries << 1) >= set->table_size) {
 
-    if ((set->entries << 1) >= set->table_size) {
+            if (!hashset_resize(set, set->table_size << 1)) {
 
-        if (!hashset_resize(set, set->table_size << 1)) {
+                return 0;
+            }
+        }
 
+        index = DEFAULT_HASH_FUNC(key) % set->table_size;
+
+        rover = set->table[index];
+
+        while (rover != NULL) {
+            if (DEFAULT_HASH_EQUALS_FUNC(rover->key, key) != 0) {
+                rover->key = key;
+                return 2;
+            }
+            rover = rover->next;
+        }
+
+        newentry = _hashset_get_entry(set);;
+
+        if (newentry == NULL) {
             return 0;
         }
+
+        newentry->key = key;
+
+        newentry->next = set->table[index];
+        set->table[index] = newentry;
+
+        ++set->entries;
     }
-
-    index = DEFAULT_HASH_FUNC(key) % set->table_size;
-
-    rover = set->table[index];
-
-    while (rover != NULL) {
-        if (DEFAULT_HASH_EQUALS_FUNC(rover->key, key) != 0) {
-            rover->key = key;
-            return 2;
-        }
-        rover = rover->next;
-    }
-
-    newentry = _hashset_get_entry(set);;
-
-    if (newentry == NULL) {
-        return 0;
-    }
-
-    newentry->key = key;
-
-    newentry->next = set->table[index];
-    set->table[index] = newentry;
-
-    ++set->entries;
-
+    pthread_spin_unlock(&set->lock);
     return 1;
 }
 
 
 HashsetKey hashset_get(Hashset *set, HashsetKey key) {
-    HashsetEntry *rover = hashset_get_entry(set, key);
-    if (rover)return rover->key;
-    return HASH_NULL;
+    HashsetKey *ret = HASH_NULL;
+    pthread_spin_lock(&set->lock);
+    {
+        HashsetEntry *rover = hashset_get_entry(set, key);
+        if (rover)ret = rover->key;
+    }
+    pthread_spin_unlock(&set->lock);
+    return ret;
 }
 
 HashsetEntry *hashset_get_entry(Hashset *set, HashsetKey key) {
@@ -169,34 +176,34 @@ int hashset_remove(Hashset *set, HashsetKey key, int resize) {
     unsigned long long int index;
     unsigned int result;
 
-
-    if (resize && (set->entries << 3) < set->table_size) {
-        if (!hashset_resize(set, set->table_size >> 1)) {
-            return 0;
+    pthread_spin_lock(&set->lock);
+    {
+        if (resize && (set->entries << 3) < set->table_size) {
+            hashset_resize(set, set->table_size >> 1);
         }
-    }
 
-    index = DEFAULT_HASH_FUNC(key) % set->table_size;
+        index = DEFAULT_HASH_FUNC(key) % set->table_size;
 
-    result = 0;
-    rover = set->table[index];
-    pre = rover;
-
-    while (rover != NULL) {
-        next = rover->next;
-        if (DEFAULT_HASH_EQUALS_FUNC(key, rover->key) != 0) {
-            if (pre == rover)set->table[index] = next;
-            else pre->next = next;
-
-            _hashset_free_entry(set, rover);
-            --set->entries;
-            result = 1;
-            break;
-        }
+        result = 0;
+        rover = set->table[index];
         pre = rover;
-        rover = next;
-    }
 
+        while (rover != NULL) {
+            next = rover->next;
+            if (DEFAULT_HASH_EQUALS_FUNC(key, rover->key) != 0) {
+                if (pre == rover)set->table[index] = next;
+                else pre->next = next;
+
+                _hashset_free_entry(set, rover);
+                --set->entries;
+                result = 1;
+                break;
+            }
+            pre = rover;
+            rover = next;
+        }
+    }
+    pthread_spin_unlock(&set->lock);
     return result;
 }
 
@@ -260,26 +267,31 @@ HashsetKey hashset_iter_next_key(HashsetIterator *iterator) {
 }
 
 HashsetKey hashset_iter_remove(HashsetIterator *iterator) {
+    HashsetKey key = HASH_NULL;
     if (iterator->curr_entry) {
         Hashset *set = iterator->set;
-        HashsetEntry *prev = NULL;
-        HashsetEntry *rover = set->table[iterator->curr_chain];
-        if (rover == iterator->curr_entry) {
-            set->table[iterator->curr_chain] = iterator->curr_entry->next;
-        } else {
-            while (rover != iterator->curr_entry) {
-                prev = rover;
-                rover = rover->next;
+        pthread_spin_lock(&set->lock);
+        {
+            HashsetEntry *prev = NULL;
+            HashsetEntry *rover = set->table[iterator->curr_chain];
+            if (rover == iterator->curr_entry) {
+                set->table[iterator->curr_chain] = iterator->curr_entry->next;
+            } else {
+                while (rover != iterator->curr_entry) {
+                    prev = rover;
+                    rover = rover->next;
+                }
+                prev->next = rover->next;
             }
-            prev->next = rover->next;
+            key = iterator->curr_entry->key;
+            _hashset_free_entry(set, iterator->curr_entry);
+            iterator->curr_entry = NULL;
+            --set->entries;
         }
-        HashsetKey key = iterator->curr_entry->key;
-        _hashset_free_entry(set, iterator->curr_entry);
-        iterator->curr_entry = NULL;
-        --set->entries;
-        return key;
+        pthread_spin_unlock(&set->lock);
+
     }
-    return NULL;
+    return key;
 }
 
 int hashset_resize(Hashset *set, unsigned long long int size) {
@@ -308,6 +320,9 @@ int hashset_resize(Hashset *set, unsigned long long int size) {
             while (rover != NULL) {
                 next = rover->next;
                 index = DEFAULT_HASH_FUNC(rover->key) % set->table_size;
+                if (rover->next && rover->next == set->table[index]) {
+                    int debug = 1;
+                }
                 rover->next = set->table[index];
                 set->table[index] = rover;
                 rover = next;

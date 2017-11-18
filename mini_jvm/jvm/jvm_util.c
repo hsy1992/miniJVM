@@ -956,6 +956,7 @@ Instance *instance_copy(Instance *src) {
     memcpy(dst, src, sizeof(Instance));
     dst->mb.thread_lock = NULL;
     dst->mb.garbage_reg = 0;
+    dst->mb.garbage_mark = 0;
     if (src->mb.type == MEM_TYPE_INS) {
         Class *clazz = src->mb.clazz;
         s32 fileds_len = clazz->field_instance_len;

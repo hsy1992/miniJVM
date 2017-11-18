@@ -39,6 +39,7 @@ struct _GcCollectorType {
     s64 _garbage_count;
     u8 _garbage_thread_status;
     u8 flag_refer;
+    u8 isgc;
 };
 
 enum {
