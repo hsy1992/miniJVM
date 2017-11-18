@@ -29,6 +29,7 @@ CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 #include "math.h"
 
 static s32 HASH_TABLE_DEFAULT_SIZE = 16;
+static s32 HASH_TABLE_POOL_SIZE = 1000;
 
 static int hash_table_allocate_table(Hashtable *hash_table, unsigned long long int size) {
     if (size) {
@@ -66,8 +67,10 @@ static void _hashtable_free_entry(Hashtable *hash_table, HashtableEntry *entry) 
     if (hash_table->value_free_func != NULL) {
         hash_table->value_free_func(entry->value);
     }
-    //jvm_free(entry);
-    arraylist_push_back(hash_table->entry_pool, entry);
+    if (hash_table->entry_pool->length < HASH_TABLE_POOL_SIZE)
+        arraylist_push_back(hash_table->entry_pool, entry);
+    else
+        jvm_free(entry);
 }
 
 void _hashtable_clear_pool(Hashtable *hash_table) {
