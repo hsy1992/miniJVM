@@ -265,7 +265,7 @@ void getRuntimeStack(Runtime *runtime, Utf8String *ustr) {
         utf8_append_c(ustr, "\n");
 
         last = last->parent;
-        if (last->parent == NULL || last->parent->parent == NULL)break;
+        if (last == NULL || last->parent == NULL || last->parent->parent == NULL)break;
     }
 }
 
