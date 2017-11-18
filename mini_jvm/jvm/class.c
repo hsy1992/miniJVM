@@ -103,7 +103,6 @@ void class_clear_refer(Class *clazz) {
         }
         if (clazz->field_static)jvm_free(clazz->field_static);
         clazz->field_static = NULL;
-        clazz->field_static_len = 0;
     }
     ArrayList *utf8list = clazz->constantPool.utf8CP;
     for (i = 0, len = utf8list->length; i < len; i++) {
