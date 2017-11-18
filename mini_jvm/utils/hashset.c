@@ -9,30 +9,14 @@
 #include "hashtable.h"
 
 static s32 HASH_SET_DEFAULT_SIZE = 1024 * 4;
-static s32 HASH_SET_POOL_SIZE = 1024 * 8;
 
 
-HashsetEntry *_hashset_get_entry(Hashset *set) {
-    if (set->entry_pool->length) {
-        return arraylist_pop_back_unsafe(set->entry_pool);
-    } else {
+static inline HashsetEntry *_hashset_get_entry(Hashset *set) {
         return jvm_calloc(sizeof(HashsetEntry));
-    }
 }
 
-static void _hashset_free_entry(Hashset *set, HashsetEntry *entry) {
-    if (set->entry_pool->length < HASH_SET_POOL_SIZE)
-        arraylist_push_back(set->entry_pool, entry);
-    else
+static inline void _hashset_free_entry(Hashset *set, HashsetEntry *entry) {
         jvm_free(entry);
-}
-
-void _hashset_clear_pool(Hashset *set) {
-    s32 i;
-    for (i = 0; i < set->entry_pool->length; i++) {
-        ArrayListValue val = arraylist_get_value(set->entry_pool, i);
-        jvm_free(val);
-    }
 }
 
 unsigned int hashset_allocate_table(Hashset *set, unsigned int size) {
@@ -66,8 +50,6 @@ Hashset *hashset_create() {
 
         return NULL;
     }
-    set->entry_pool = arraylist_create(128);
-
     return set;
 }
 
@@ -85,8 +67,6 @@ void hashset_destory(Hashset *set) {
             rover = next;
         }
     }
-    _hashset_clear_pool(set);
-    arraylist_destory(set->entry_pool);
     jvm_free(set->table);
     jvm_free(set);
 }
@@ -97,7 +77,6 @@ void hashset_clear(Hashset *set) {
     HashsetEntry *next;
     unsigned int i;
 
-    _hashset_clear_pool(set);
     for (i = 0; i < set->table_size; ++i) {
         rover = set->table[i];
         while (rover != NULL) {
@@ -113,7 +92,6 @@ void hashset_clear(Hashset *set) {
         set->table = NULL;
         set->table_size = 0;
         if (!hashset_allocate_table(set, HASH_SET_DEFAULT_SIZE)) {
-            arraylist_destory(set->entry_pool);
             jvm_free(set);
         }
     }

@@ -67,7 +67,6 @@ struct _Hashset {
     HashsetEntry **table;
     unsigned long long int table_size;
     unsigned long long int entries;
-    ArrayList *entry_pool;
 };
 
 /**

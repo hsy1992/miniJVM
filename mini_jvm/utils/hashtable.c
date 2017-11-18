@@ -29,7 +29,7 @@ CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 #include "math.h"
 
 static s32 HASH_TABLE_DEFAULT_SIZE = 16;
-static s32 HASH_TABLE_POOL_SIZE = 1000;
+static s32 HASH_TABLE_POOL_SIZE = 1024;
 
 static int hash_table_allocate_table(Hashtable *hash_table, unsigned long long int size) {
     if (size) {
@@ -52,7 +52,7 @@ int DEFAULT_HASH_EQUALS_FUNC(HashtableValue value1, HashtableValue value2) {
 
 HashtableEntry *_hashtable_get_entry(Hashtable *hash_table) {
     if (hash_table->entry_pool->length) {
-        return arraylist_pop_back_unsafe(hash_table->entry_pool);
+        return arraylist_pop_back(hash_table->entry_pool);
     } else {
         return jvm_calloc(sizeof(HashtableEntry));
     }
@@ -99,7 +99,7 @@ Hashtable *hashtable_create(HashtableHashFunc hash_func,
     hash_table->key_free_func = NULL;
     hash_table->value_free_func = NULL;
     hash_table->entries = 0;
-    hash_table->entry_pool = arraylist_create(128);
+    hash_table->entry_pool = arraylist_create(HASH_TABLE_POOL_SIZE);
 
     if (!hash_table_allocate_table(hash_table, HASH_TABLE_DEFAULT_SIZE)) {
         jvm_free(hash_table);
@@ -154,6 +154,9 @@ void hashtable_clear(Hashtable *hash_table) {
             hash_table->table[i] = NULL;
         }
         hash_table->entries = 0;
+
+        _hashtable_clear_pool(hash_table);
+
         if (hash_table->table_size > HASH_TABLE_DEFAULT_SIZE) {
             jvm_free(hash_table->table);
             hash_table->table = NULL;
