@@ -28,7 +28,7 @@ void stack_destory(RuntimeStack *stack) {
 
 
 /* push Integer */
-void push_int(RuntimeStack *stack, s32 value) {
+inline void push_int(RuntimeStack *stack, s32 value) {
     StackEntry *ptr = &stack->store[stack->size];
     ptr->lvalue = 0;//clear 64bit
     ptr->ivalue = value;
@@ -38,14 +38,14 @@ void push_int(RuntimeStack *stack, s32 value) {
 
 
 /* pop Integer */
-s32 pop_int(RuntimeStack *stack) {
+inline s32 pop_int(RuntimeStack *stack) {
     stack->size--;
     StackEntry *ptr = &stack->store[stack->size];
     return ptr->ivalue;
 }
 
 /* push Double */
-void push_double(RuntimeStack *stack, f64 value) {
+inline void push_double(RuntimeStack *stack, f64 value) {
     StackEntry *ptr = &stack->store[stack->size];
     ptr->dvalue = value;
     ptr->type = STACK_ENTRY_DOUBLE;
@@ -53,7 +53,7 @@ void push_double(RuntimeStack *stack, f64 value) {
 }
 
 /* pop Double */
-f64 pop_double(RuntimeStack *stack) {
+inline f64 pop_double(RuntimeStack *stack) {
     stack->size--;
     StackEntry *ptr = &stack->store[stack->size];
     return ptr->dvalue;
@@ -69,7 +69,7 @@ void push_float(RuntimeStack *stack, f32 value) {
 }
 
 /* pop Float */
-f32 pop_float(RuntimeStack *stack) {
+inline f32 pop_float(RuntimeStack *stack) {
     stack->size--;
     StackEntry *ptr = &stack->store[stack->size];
     return ptr->fvalue;
@@ -77,7 +77,7 @@ f32 pop_float(RuntimeStack *stack) {
 
 
 /* push Long */
-void push_long(RuntimeStack *stack, s64 value) {
+inline void push_long(RuntimeStack *stack, s64 value) {
     StackEntry *ptr = &stack->store[stack->size];
     ptr->type = STACK_ENTRY_LONG;
     ptr->lvalue = value;
@@ -92,7 +92,7 @@ s64 pop_long(RuntimeStack *stack) {
 }
 
 /* push Ref */
-void push_ref(RuntimeStack *stack, __refer value) {
+inline void push_ref(RuntimeStack *stack, __refer value) {
     StackEntry *ptr = &stack->store[stack->size];
     ptr->lvalue = 0;//clear 64bit
     ptr->type = STACK_ENTRY_REF;
@@ -100,14 +100,14 @@ void push_ref(RuntimeStack *stack, __refer value) {
     stack->size++;
 }
 
-__refer pop_ref(RuntimeStack *stack) {
+inline __refer pop_ref(RuntimeStack *stack) {
     stack->size--;
     StackEntry *ptr = &stack->store[stack->size];
     return ptr->rvalue;
 }
 
 
-void push_entry(RuntimeStack *stack, StackEntry *entry) {
+inline void push_entry(RuntimeStack *stack, StackEntry *entry) {
     StackEntry *ptr = &stack->store[stack->size];
     ptr->type = entry->type;
     ptr->lvalue = entry->lvalue;
@@ -115,7 +115,7 @@ void push_entry(RuntimeStack *stack, StackEntry *entry) {
 }
 
 /* Pop Stack Entry */
-void pop_entry(RuntimeStack *stack, StackEntry *entry) {
+inline void pop_entry(RuntimeStack *stack, StackEntry *entry) {
     stack->size--;
     StackEntry *ptr = &stack->store[stack->size];
     entry->type = ptr->type;
@@ -123,20 +123,20 @@ void pop_entry(RuntimeStack *stack, StackEntry *entry) {
 
 }
 
-void pop_empty(RuntimeStack *stack) {
+inline void pop_empty(RuntimeStack *stack) {
     stack->size--;
 }
 
 /* Entry to Int */
-s32 entry_2_int(StackEntry *entry) {
+inline s32 entry_2_int(StackEntry *entry) {
     return entry->ivalue;
 }
 
-s64 entry_2_long(StackEntry *entry) {
+inline s64 entry_2_long(StackEntry *entry) {
     return entry->lvalue;
 }
 
-__refer entry_2_refer(StackEntry *entry) {
+inline __refer entry_2_refer(StackEntry *entry) {
     return entry->rvalue;
 }
 
