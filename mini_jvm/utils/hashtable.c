@@ -29,7 +29,6 @@ CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 #include "math.h"
 
 static s32 HASH_TABLE_DEFAULT_SIZE = 16;
-static s32 HASH_TABLE_POOL_SIZE = 1024;
 
 static int hash_table_allocate_table(Hashtable *hash_table, unsigned long long int size) {
     if (size) {
@@ -50,15 +49,11 @@ int DEFAULT_HASH_EQUALS_FUNC(HashtableValue value1, HashtableValue value2) {
 }
 
 
-HashtableEntry *_hashtable_get_entry(Hashtable *hash_table) {
-    if (hash_table->entry_pool->length) {
-        return arraylist_pop_back(hash_table->entry_pool);
-    } else {
-        return jvm_calloc(sizeof(HashtableEntry));
-    }
+static inline HashtableEntry *_hashtable_get_entry(Hashtable *hash_table) {
+    return jvm_calloc(sizeof(HashtableEntry));
 }
 
-static void _hashtable_free_entry(Hashtable *hash_table, HashtableEntry *entry) {
+static inline void _hashtable_free_entry(Hashtable *hash_table, HashtableEntry *entry) {
 
     if (hash_table->key_free_func != NULL) {
         hash_table->key_free_func(entry->key);
@@ -67,18 +62,7 @@ static void _hashtable_free_entry(Hashtable *hash_table, HashtableEntry *entry) 
     if (hash_table->value_free_func != NULL) {
         hash_table->value_free_func(entry->value);
     }
-    if (hash_table->entry_pool->length < HASH_TABLE_POOL_SIZE)
-        arraylist_push_back(hash_table->entry_pool, entry);
-    else
-        jvm_free(entry);
-}
-
-void _hashtable_clear_pool(Hashtable *hash_table) {
-    s32 i;
-    for (i = 0; i < hash_table->entry_pool->length; i++) {
-        ArrayListValue val = arraylist_get_value(hash_table->entry_pool, i);
-        jvm_free(val);
-    }
+    jvm_free(entry);
 }
 
 
@@ -99,7 +83,6 @@ Hashtable *hashtable_create(HashtableHashFunc hash_func,
     hash_table->key_free_func = NULL;
     hash_table->value_free_func = NULL;
     hash_table->entries = 0;
-    hash_table->entry_pool = arraylist_create(HASH_TABLE_POOL_SIZE);
 
     if (!hash_table_allocate_table(hash_table, HASH_TABLE_DEFAULT_SIZE)) {
         jvm_free(hash_table);
@@ -129,8 +112,6 @@ void hashtable_destory(Hashtable *hash_table) {
     }
     pthread_spin_unlock(&hash_table->spinlock);
 
-    _hashtable_clear_pool(hash_table);
-    arraylist_destory(hash_table->entry_pool);
     pthread_spin_destroy(&hash_table->spinlock);
     jvm_free(hash_table->table);
     jvm_free(hash_table);
@@ -155,14 +136,12 @@ void hashtable_clear(Hashtable *hash_table) {
         }
         hash_table->entries = 0;
 
-        _hashtable_clear_pool(hash_table);
 
         if (hash_table->table_size > HASH_TABLE_DEFAULT_SIZE) {
             jvm_free(hash_table->table);
             hash_table->table = NULL;
             hash_table->table_size = 0;
             if (!hash_table_allocate_table(hash_table, HASH_TABLE_DEFAULT_SIZE)) {
-                arraylist_destory(hash_table->entry_pool);
                 jvm_free(hash_table);
             }
         }

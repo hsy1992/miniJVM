@@ -154,7 +154,6 @@ struct _Hashtable {
     HashtableValueFreeFunc value_free_func;
     unsigned long long int entries;
     pthread_spinlock_t spinlock;
-    ArrayList *entry_pool;
 };
 
 /**

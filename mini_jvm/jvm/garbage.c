@@ -60,6 +60,8 @@ s32 garbage_copy_refer_thread(Runtime *pruntime);
  *
  * @return errorcode
  */
+
+
 s32 garbage_collector_create() {
     collector = jvm_calloc(sizeof(GcCollector));
     collector->objs = hashset_create();
@@ -236,8 +238,10 @@ s32 getMbSize(MemoryBlock *mb) {
             break;
         case MEM_TYPE_CLASS:
             size += sizeof(Class);
-            size += mb->clazz->field_static_len;
             break;
+        default: {
+            int debug = 1;
+        }
     }
     return size;
 }
@@ -306,10 +310,8 @@ void garbage_move_cache(s32 move_limit) {
         switch (op->op_type) {
             case GARBAGE_OP_REG: {
                 s32 ret = hashset_put(collector->objs, op->val);
-                if (ret == 1)collector->heap_size += getMbSize(op->val);
-                else {
-                    int debug = 1;
-                }
+                s32 size = getMbSize(op->val);
+                collector->heap_size += size;
 #if _JVM_DEBUG_GARBAGE_DUMP
                 MemoryBlock *mb = op->val;
                 Utf8String *sus = utf8_create();
@@ -422,7 +424,8 @@ void garbage_destory_memobj(MemoryBlock *mb) {
     jvm_printf("X: %s[0x%llx] \n", utf8_cstr(sus), (s64) (long) mb);
     utf8_destory(sus);
 #endif
-    collector->heap_size -= getMbSize(mb);
+    s32 size = getMbSize(mb);
+    collector->heap_size -= size;
     memoryblock_destory((Instance *) mb);
 }
 
@@ -454,7 +457,7 @@ s32 garbage_pause_the_world(void) {
 #if _JVM_DEBUG_GARBAGE_DUMP
             Utf8String *stack = utf8_create();
             getRuntimeStack(runtime, stack);
-            jvm_printf("%s", utf8_cstr(stack));
+            jvm_printf("%s\n", utf8_cstr(stack));
             utf8_destory(stack);
 #endif
         }
@@ -478,6 +481,12 @@ s32 garbage_resume_the_world() {
     for (i = 0; i < thread_list->length; i++) {
         Runtime *runtime = arraylist_get_value(thread_list, i);
         if (runtime) {
+#if _JVM_DEBUG_GARBAGE_DUMP
+            Utf8String *stack = utf8_create();
+            getRuntimeStack(runtime, stack);
+            jvm_printf("%s\n", utf8_cstr(stack));
+            utf8_destory(stack);
+#endif
             jthread_resume(runtime);
         }
     }
