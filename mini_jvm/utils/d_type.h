@@ -7,7 +7,7 @@
 #define MINI_JVM_JVM_TYPE_H
 
 #include "stdlib.h"
-#define __MEM_LEAK_DETECT
+//#define __MEM_LEAK_DETECT
 
 // x86   x64 ...
 #define __JVM_LITTLE_ENDIAN__ 1
