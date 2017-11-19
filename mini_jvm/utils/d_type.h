@@ -73,6 +73,8 @@ void autoptr_NULL(autoptr **aref);
 
 #ifndef __MEM_LEAK_DETECT
 
+extern s64 heap_size;
+
 void *jvm_calloc(u32 size);
 
 void *jvm_malloc(u32 size);

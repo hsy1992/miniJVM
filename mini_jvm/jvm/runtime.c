@@ -189,6 +189,7 @@ Runtime *runtime_create(Runtime *parent) {
         s32 max = runtime->localvar_max;
         memset(runtime, 0, sizeof(Runtime));
         runtime->localvar = lv;
+        memset(lv, 0, RUNTIME_LOCALVAR_SIZE * sizeof(LocalVarItem));
         runtime->localvar_max = max;
     }
     if (!is_top) {
@@ -209,7 +210,7 @@ Runtime *runtime_create(Runtime *parent) {
 void runtime_destory(Runtime *runtime) {
     s32 is_top = runtime->threadInfo->top_runtime == runtime;
     if (!is_top) {
-        arraylist_push_back_unsafe(runtime->threadInfo->top_runtime->runtime_pool, runtime);
+        arraylist_push_back(runtime->threadInfo->top_runtime->runtime_pool, runtime);
     } else {
         stack_destory(runtime->stack);
         threadinfo_destory(runtime->threadInfo);

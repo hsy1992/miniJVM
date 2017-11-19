@@ -146,15 +146,10 @@ int hashset_put(Hashset *set, HashsetKey key) {
                 set->table[index] = newentry;
                 ++set->entries;
                 success = 1;
-            } else{
-                int debug = 1;
             }
         }
     }
     pthread_spin_unlock(&set->lock);
-    if (success != 1) {
-        int debug = 1;
-    }
     return success;
 }
 
@@ -220,9 +215,6 @@ int hashset_remove(Hashset *set, HashsetKey key, int resize) {
         }
     }
     pthread_spin_unlock(&set->lock);
-    if (key&&result != 1) {
-        int debug = 1;
-    }
     return result;
 }
 
@@ -339,16 +331,13 @@ int hashset_resize(Hashset *set, unsigned long long int size) {
             while (rover != NULL) {
                 next = rover->next;
                 index = DEFAULT_HASH_FUNC(rover->key) % set->table_size;
-//                if (rover->next && rover->next == set->table[index]) {
-//                    int debug = 1;
-//                }
                 rover->next = set->table[index];
                 set->table[index] = rover;
                 rover = next;
             }
         }
         jvm_free(old_table);
-        printf("hashset resize:%lld\n",size);
+        printf("hashset resize:%lld\n", size);
     }
 
     return 1;

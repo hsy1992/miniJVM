@@ -371,7 +371,7 @@ void garbage_move_cache(s32 move_limit) {
 s64 garbage_collect() {
     collector->isgc = 1;
     HashsetIterator hti;
-    s64 mem1 = collector->heap_size;
+    s64 mem1 = heap_size;
     s64 del = 0;
     s64 time_startAt;
 
@@ -411,35 +411,25 @@ s64 garbage_collect() {
 
         HashsetKey k = hashset_iter_next_key(&hti);
         MemoryBlock *mb = (MemoryBlock *) k;
-        if (mb->thread_lock && (long) mb->thread_lock < 0x1000) {
-            int debug = 1;
-            //continue;
-        }
-
-        if (mb->un_use == 0x88) {
-            int debug = 1;
-        }
 
         if (mb->garbage_mark != collector->flag_refer) {
             gremove++;
             mb->un_use = 0x88;
             garbage_destory_memobj(mb);
-            //memset(mb, 0x88, sizeof(MemoryBlock));
             hashset_iter_remove(&hti);
-            //hashset_remove(collector->objs, k, 0);
             del++;
         }
     }
 
 
     if (collector->_garbage_count++ % 5 == 0) {//每n秒resize一次
-        //hashset_remove(collector->objs, NULL, 1);
+        hashset_remove(collector->objs, NULL, 1);
     }
 
 
     s64 time_gc = currentTimeMillis() - time_startAt;
     jvm_printf("[INFO]gc obj: %lld -> %lld  heap : %lld -> %lld  stop_world: %lld  gc:%lld\n",
-               obj_count, hashset_num_entries(collector->objs), mem1, collector->heap_size, time_stopWorld, time_gc);
+               obj_count, hashset_num_entries(collector->objs), mem1, heap_size, time_stopWorld, time_gc);
 
     jvm_printf("[INFO]putin: %lld    remove: %lld\n", gputin, gremove);
 
@@ -456,12 +446,12 @@ void _garbage_change_flag() {
 
 
 void garbage_destory_memobj(MemoryBlock *mb) {
-//#if _JVM_DEBUG_GARBAGE_DUMP
+#if _JVM_DEBUG_GARBAGE_DUMP
     Utf8String *sus = utf8_create();
     getMBName(mb, sus);
     jvm_printf("X: %s[%llx]\n", utf8_cstr(sus), (s64) (long) mb);
     utf8_destory(sus);
-//#endif
+#endif
     s32 size = getMbSize(mb);
     collector->heap_size -= size;
     memoryblock_destory((Instance *) mb);
@@ -488,12 +478,12 @@ s32 garbage_pause_the_world(void) {
             if (checkAndWaitThreadIsSuspend(runtime) == -1) {
                 return -1;
             }
-//#if _JVM_DEBUG_GARBAGE_DUMP
+#if _JVM_DEBUG_GARBAGE_DUMP
             Utf8String *stack = utf8_create();
             getRuntimeStack(runtime, stack);
             jvm_printf("%s\n", utf8_cstr(stack));
             utf8_destory(stack);
-//#endif
+#endif
         }
 
     }

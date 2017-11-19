@@ -6,6 +6,7 @@
 #include <stdio.h>
 #include "sched.h"
 #include "d_type.h"
+#include "spinlock.h"
 //========================     autoprt     =========================
 
 /**
@@ -56,21 +57,77 @@ void autoptr_NULL(autoptr **aref) {
  * 在分配的内存块前面加4个字节用于存放此块内存的长度
  *
  */
-inline void *jvm_calloc(u32 size) {
-    return calloc(size, 1);
+//inline void *jvm_calloc(u32 size) {
+//    return calloc(size, 1);
+//}
+//
+//inline void *jvm_malloc(u32 size) {
+//    return malloc(size);
+//}
+//
+//inline void jvm_free(void *ptr) {
+//    free(ptr);
+//}
+//
+//void *jvm_realloc(void *pPtr, u32 size) {
+//    return realloc(pPtr, size);
+//
+//}
+s64 heap_size;
+static pthread_spinlock_t mlock = 0;
+
+void *jvm_malloc(u32 size) {
+    if (!size)return NULL;
+    size += 4;
+    void *ptr = malloc(size);
+    if (ptr) {
+        pthread_spin_lock(&mlock);
+        heap_size += size;
+        pthread_spin_unlock(&mlock);
+        *(u32 *) (ptr) = size;
+        return ptr + 4;
+    }
+    return NULL;
 }
 
-inline void *jvm_malloc(u32 size) {
-    return malloc(size);
+void *jvm_calloc(u32 size) {
+    if (!size)return NULL;
+    size += 4;
+    void *ptr = malloc(size);
+    if (ptr) {
+        memset(ptr, 0, size);
+        pthread_spin_lock(&mlock);
+        heap_size += size;
+        pthread_spin_unlock(&mlock);
+        *(u32 *) (ptr) = size;
+        return ptr + 4;
+    }
+    return NULL;
 }
 
-inline void jvm_free(void *ptr) {
-    free(ptr);
+void jvm_free(void *ptr) {
+    if (ptr) {
+        pthread_spin_lock(&mlock);
+        heap_size -= *(u32 *) (ptr - 4);
+        pthread_spin_unlock(&mlock);
+        free(ptr - 4);
+    }
 }
 
 void *jvm_realloc(void *pPtr, u32 size) {
-    return realloc(pPtr, size);
-
+    if (!pPtr)return NULL;
+    if (!size)return NULL;
+    size += 4;
+    void *ptr = realloc(pPtr - 4, size);
+    if (ptr) {
+        u32 old_size = *(u32 *) (pPtr - 4);
+        pthread_spin_lock(&mlock);
+        heap_size += size - old_size + 4;
+        pthread_spin_unlock(&mlock);
+        *(u32 *) (ptr) = size;
+        return ptr + 4;
+    }
+    return NULL;
 }
 
 #endif //__MEM_LEAK_DETECT
