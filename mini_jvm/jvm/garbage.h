@@ -34,8 +34,6 @@ struct _GcCollectorType {
     LinkedList *operation_cache;
     ArrayList *runtime_refer_copy;
     //
-    s64 heap_size; //当前已经分配的内存总数
-    //
     s64 _garbage_count;
     u8 _garbage_thread_status;
     u8 flag_refer;

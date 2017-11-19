@@ -319,7 +319,7 @@ void *collect_thread_run(void *para) {
         if (currentTimeMillis() - lastgc < 1000) {// less than 3 sec no gc
             continue;
         }
-        if (currentTimeMillis() - lastgc > GARBAGE_PERIOD_MS || collector->heap_size > MAX_HEAP_SIZE) {
+        if (currentTimeMillis() - lastgc > GARBAGE_PERIOD_MS || heap_size > MAX_HEAP_SIZE) {
             garbage_collect();
             lastgc = currentTimeMillis();
         }
@@ -452,8 +452,6 @@ void garbage_destory_memobj(MemoryBlock *mb) {
     jvm_printf("X: %s[%llx]\n", utf8_cstr(sus), (s64) (long) mb);
     utf8_destory(sus);
 #endif
-    s32 size = getMbSize(mb);
-    collector->heap_size -= size;
     memoryblock_destory((Instance *) mb);
 }
 
@@ -758,9 +756,6 @@ s32 garbage_refer_reg(__refer ref) {
 
             }
             mb->garbage_reg = 1;
-
-            s32 size = getMbSize(mb);
-            collector->heap_size += size;
         }
     }
     return 0;

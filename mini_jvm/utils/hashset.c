@@ -337,7 +337,6 @@ int hashset_resize(Hashset *set, unsigned long long int size) {
             }
         }
         jvm_free(old_table);
-        printf("hashset resize:%lld\n", size);
     }
 
     return 1;
