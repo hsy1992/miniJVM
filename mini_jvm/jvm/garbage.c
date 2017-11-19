@@ -232,7 +232,7 @@ s32 getMbSize(MemoryBlock *mb) {
             break;
         case MEM_TYPE_ARR:
             size += sizeof(Instance);
-            size += data_type_bytes[mb->clazz->arr_type_index] * ((Instance *) mb)->arr_length;
+            //size += data_type_bytes[mb->clazz->arr_type_index] * ((Instance *) mb)->arr_length;
             break;
         case MEM_TYPE_CLASS:
             size += sizeof(Class);
@@ -264,6 +264,44 @@ void dump_refer() {
 
 }
 
+static s64 gputin = 0, gremove = 0;
+
+void _garbage_put_in_objs(__refer ref) {
+    s32 ret = hashset_put(collector->objs, ref);
+    if (ret != 0) {
+        pthread_spin_lock(&collector->objs->lock);
+        gputin++;
+        pthread_spin_unlock(&collector->objs->lock);
+    }
+#if _JVM_DEBUG_GARBAGE_DUMP
+    MemoryBlock *mb = ref;
+    Utf8String *sus = utf8_create();
+    getMBName(mb, sus);
+    jvm_printf("R: %s[0x%llx] \n", utf8_cstr(sus), (s64) (long) ref);
+    utf8_destory(sus);
+#endif
+}
+
+void _garbage_put_in_holder(__refer ref) {
+    hashset_put(collector->objs_holder, ref);
+
+#if _JVM_DEBUG_GARBAGE_DUMP
+    Utf8String *sus = utf8_create();
+    getMBName((MemoryBlock *) ref, sus);
+    jvm_printf("+: %s[%llx]\n", utf8_cstr(sus), (s64) (long) ref);
+    utf8_destory(sus);
+#endif
+}
+
+void _garbage_remove_out_holder(__refer ref) {
+    hashset_remove(collector->objs_holder, ref, 0);
+#if _JVM_DEBUG_GARBAGE_DUMP
+    Utf8String *sus = utf8_create();
+    getMBName((MemoryBlock *) ref, sus);
+    jvm_printf("-: %s[%llx]\n", utf8_cstr(sus), (s64) (long) ref);
+    utf8_destory(sus);
+#endif
+}
 //==============================   thread_run() =====================================
 
 void *collect_thread_run(void *para) {
@@ -291,6 +329,7 @@ void *collect_thread_run(void *para) {
     return NULL;
 }
 
+
 void garbage_move_cache(s32 move_limit) {
     //jvm_printf(" move cache\n");
     s64 move_count = 0;
@@ -307,36 +346,15 @@ void garbage_move_cache(s32 move_limit) {
         }
         switch (op->op_type) {
             case GARBAGE_OP_REG: {
-                s32 ret = hashset_put(collector->objs, op->val);
-
-#if _JVM_DEBUG_GARBAGE_DUMP
-                MemoryBlock *mb = op->val;
-                Utf8String *sus = utf8_create();
-                getMemBlockName(mb, sus);
-                jvm_printf("R: %s[0x%llx] \n", utf8_cstr(sus), (s64) (long) op->val);
-                utf8_destory(sus);
-#endif
+                _garbage_put_in_objs(op->val);
                 break;
             }
             case GARBAGE_OP_HOLD: {
-                hashset_put(collector->objs_holder, op->val);
-
-#if _JVM_DEBUG_GARBAGE_DUMP
-                Utf8String *sus = utf8_create();
-                getMemBlockName((MemoryBlock *) op->val, sus);
-                jvm_printf("+: %s[0x%llx] \n", utf8_cstr(sus), (s64) (long) op->val);
-                utf8_destory(sus);
-#endif
+                _garbage_put_in_holder(op->val);
                 break;
             }
             case GARBAGE_OP_RELEASE: {
-                hashset_remove(collector->objs_holder, op->val, 0);
-#if _JVM_DEBUG_GARBAGE_DUMP
-                Utf8String *sus = utf8_create();
-                getMemBlockName((MemoryBlock *) op->val, sus);
-                jvm_printf("-: %s[0x%llx] \n", utf8_cstr(sus), (s64) (long) op->val);
-                utf8_destory(sus);
-#endif
+                _garbage_remove_out_holder(op->val);
                 break;
             }
         }
@@ -383,7 +401,7 @@ s64 garbage_collect() {
 //    time_startAt = currentTimeMillis();
     garbage_resume_the_world();
     garbage_thread_unlock();
-    garbage_big_search();
+
 //    jvm_printf("garbage_resume_the_world %lld\n", (currentTimeMillis() - time_startAt));
     s64 time_stopWorld = currentTimeMillis() - time_startAt;
     time_startAt = currentTimeMillis();
@@ -393,23 +411,37 @@ s64 garbage_collect() {
 
         HashsetKey k = hashset_iter_next_key(&hti);
         MemoryBlock *mb = (MemoryBlock *) k;
+        if (mb->thread_lock && (long) mb->thread_lock < 0x1000) {
+            int debug = 1;
+            //continue;
+        }
+
+        if (mb->un_use == 0x88) {
+            int debug = 1;
+        }
 
         if (mb->garbage_mark != collector->flag_refer) {
+            gremove++;
+            mb->un_use = 0x88;
             garbage_destory_memobj(mb);
+            //memset(mb, 0x88, sizeof(MemoryBlock));
             hashset_iter_remove(&hti);
+            //hashset_remove(collector->objs, k, 0);
             del++;
         }
     }
 
 
     if (collector->_garbage_count++ % 5 == 0) {//每n秒resize一次
-        hashset_remove(collector->objs, NULL, 1);
+        //hashset_remove(collector->objs, NULL, 1);
     }
 
 
     s64 time_gc = currentTimeMillis() - time_startAt;
     jvm_printf("[INFO]gc obj: %lld -> %lld  heap : %lld -> %lld  stop_world: %lld  gc:%lld\n",
                obj_count, hashset_num_entries(collector->objs), mem1, collector->heap_size, time_stopWorld, time_gc);
+
+    jvm_printf("[INFO]putin: %lld    remove: %lld\n", gputin, gremove);
 
     collector->isgc = 0;
     return del;
@@ -424,12 +456,12 @@ void _garbage_change_flag() {
 
 
 void garbage_destory_memobj(MemoryBlock *mb) {
-#if _JVM_DEBUG_GARBAGE_DUMP
+//#if _JVM_DEBUG_GARBAGE_DUMP
     Utf8String *sus = utf8_create();
-    getMemBlockName(mb, sus);
-    jvm_printf("X: %s[0x%llx] \n", utf8_cstr(sus), (s64) (long) mb);
+    getMBName(mb, sus);
+    jvm_printf("X: %s[%llx]\n", utf8_cstr(sus), (s64) (long) mb);
     utf8_destory(sus);
-#endif
+//#endif
     s32 size = getMbSize(mb);
     collector->heap_size -= size;
     memoryblock_destory((Instance *) mb);
@@ -456,12 +488,12 @@ s32 garbage_pause_the_world(void) {
             if (checkAndWaitThreadIsSuspend(runtime) == -1) {
                 return -1;
             }
-#if _JVM_DEBUG_GARBAGE_DUMP
+//#if _JVM_DEBUG_GARBAGE_DUMP
             Utf8String *stack = utf8_create();
             getRuntimeStack(runtime, stack);
             jvm_printf("%s\n", utf8_cstr(stack));
             utf8_destory(stack);
-#endif
+//#endif
         }
 
     }
@@ -549,13 +581,13 @@ void _list_iter_iter_copy(ArrayListValue value, void *para) {
 
 void garbage_copy_refer() {
     arraylist_clear(collector->runtime_refer_copy);
-//    s32 i;
-//    //jvm_printf("thread set size:%d\n", thread_list->length);
-//    for (i = 0; i < thread_list->length; i++) {
-//        Runtime *runtime = threadlist_get(i);
-//        garbage_copy_refer_thread(runtime);
-//    }
-    arraylist_iter_safe(thread_list, _list_iter_iter_copy, NULL);
+    s32 i;
+    //jvm_printf("thread set size:%d\n", thread_list->length);
+    for (i = 0; i < thread_list->length; i++) {
+        Runtime *runtime = threadlist_get(i);
+        garbage_copy_refer_thread(runtime);
+    }
+//    arraylist_iter_safe(thread_list, _list_iter_iter_copy, NULL);
     //调试线程
     if (java_debug) {
         Runtime *runtime = jdwpserver.runtime;
@@ -673,18 +705,18 @@ static inline void class_mark_refer(Class *clazz) {
 
 void garbage_mark_object(__refer ref) {
     if (ref) {
-        MemoryBlock *obj = (MemoryBlock *) ref;
-        if (collector->flag_refer != obj->garbage_mark) {
-            obj->garbage_mark = collector->flag_refer;
-            switch (obj->type) {
+        MemoryBlock *mb = (MemoryBlock *) ref;
+        if (collector->flag_refer != mb->garbage_mark) {
+            mb->garbage_mark = collector->flag_refer;
+            switch (mb->type) {
                 case MEM_TYPE_INS:
-                    instance_mark_refer((Instance *) obj);
+                    instance_mark_refer((Instance *) mb);
                     break;
                 case MEM_TYPE_ARR:
-                    jarray_mark_refer((Instance *) obj);
+                    jarray_mark_refer((Instance *) mb);
                     break;
                 case MEM_TYPE_CLASS:
-                    class_mark_refer((Class *) obj);
+                    class_mark_refer((Class *) mb);
                     break;
             }
         }
@@ -732,7 +764,8 @@ s32 garbage_refer_reg(__refer ref) {
             if (collector->isgc) {
                 __garbage_putin_cache(GARBAGE_OP_REG, ref);
             } else {
-                hashset_put(collector->objs, ref);
+                _garbage_put_in_objs(ref);
+
             }
             mb->garbage_reg = 1;
 
@@ -749,7 +782,7 @@ void garbage_refer_hold(__refer ref) {
         if (collector->isgc) {
             __garbage_putin_cache(GARBAGE_OP_HOLD, ref);
         } else {
-            hashset_put(collector->objs_holder, ref);
+            _garbage_put_in_holder(ref);
         }
     }
 }
@@ -759,7 +792,7 @@ void garbage_refer_release(__refer ref) {
         if (collector->isgc) {
             __garbage_putin_cache(GARBAGE_OP_RELEASE, ref);
         } else {
-            hashset_remove(collector->objs_holder, ref, 0);
+            _garbage_remove_out_holder(ref);
         }
     }
 }

@@ -8,10 +8,10 @@
 #include "hashset.h"
 #include "hashtable.h"
 
-static s32 HASH_SET_DEFAULT_SIZE = 1024 * 4;
+static s32 HASH_SET_DEFAULT_SIZE = 1024 * 1024;
 
-HashsetEntry *hashset_get_entry(Hashset *hash_table,
-                                HashsetKey key);
+HashsetEntry *hashset_find_entry(Hashset *hash_table,
+                                 HashsetKey key);
 
 
 static inline HashsetEntry *_hashset_get_entry(Hashset *set) {
@@ -132,7 +132,6 @@ int hashset_put(Hashset *set, HashsetKey key) {
 
         while (rover != NULL) {
             if (DEFAULT_HASH_EQUALS_FUNC(rover->key, key) != 0) {
-                rover->key = key;
                 success = 2;
                 break;
             }
@@ -140,17 +139,22 @@ int hashset_put(Hashset *set, HashsetKey key) {
         }
 
         if (!success) {
-            newentry = _hashset_get_entry(set);;
+            newentry = _hashset_get_entry(set);
             if (newentry != NULL) {
                 newentry->key = key;
                 newentry->next = set->table[index];
                 set->table[index] = newentry;
                 ++set->entries;
                 success = 1;
+            } else{
+                int debug = 1;
             }
         }
     }
     pthread_spin_unlock(&set->lock);
+    if (success != 1) {
+        int debug = 1;
+    }
     return success;
 }
 
@@ -159,14 +163,14 @@ HashsetKey hashset_get(Hashset *set, HashsetKey key) {
     HashsetKey *ret = HASH_NULL;
     pthread_spin_lock(&set->lock);
     {
-        HashsetEntry *rover = hashset_get_entry(set, key);
+        HashsetEntry *rover = hashset_find_entry(set, key);
         if (rover)ret = rover->key;
     }
     pthread_spin_unlock(&set->lock);
     return ret;
 }
 
-HashsetEntry *hashset_get_entry(Hashset *set, HashsetKey key) {
+HashsetEntry *hashset_find_entry(Hashset *set, HashsetKey key) {
     HashsetEntry *rover;
     unsigned long long int index;
     index = DEFAULT_HASH_FUNC(key) % set->table_size;
@@ -216,6 +220,9 @@ int hashset_remove(Hashset *set, HashsetKey key, int resize) {
         }
     }
     pthread_spin_unlock(&set->lock);
+    if (key&&result != 1) {
+        int debug = 1;
+    }
     return result;
 }
 
@@ -341,6 +348,7 @@ int hashset_resize(Hashset *set, unsigned long long int size) {
             }
         }
         jvm_free(old_table);
+        printf("hashset resize:%lld\n",size);
     }
 
     return 1;
