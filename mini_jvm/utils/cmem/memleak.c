@@ -104,8 +104,6 @@
 #include <signal.h>
 #include <limits.h>
 
-#define __JVM_OS_MAC__ 1
-
 #include <spinlock.h>
 
 
@@ -155,7 +153,7 @@ void print_buf(char *buf, size_t len);
 
 
 /////////////////////////////////////////////////////////////////////////
-pthread_spinlock_t spinlock;
+spinlock_t spinlock;
 
 void lock() {
     pthread_spin_lock(&spinlock);

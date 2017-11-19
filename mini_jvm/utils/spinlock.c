@@ -5,19 +5,19 @@
 #include "d_type.h"
 #include "spinlock.h"
 //========================     spinlock     =========================
-#if __JVM_OS_MAC__
 
-int pthread_spin_init(pthread_spinlock_t *lock, int pshared) {
+
+int spin_init(spinlock_t *lock, int pshared) {
     __asm__ __volatile__ ("":: : "memory");
     *lock = 0;
     return 0;
 }
 
-int pthread_spin_destroy(pthread_spinlock_t *lock) {
+int spin_destroy(spinlock_t *lock) {
     return 0;
 }
 
-int pthread_spin_lock(pthread_spinlock_t *lock) {
+int spin_lock(spinlock_t *lock) {
     while (1) {
         int i;
         for (i = 0; i < 10000; i++) {
@@ -30,17 +30,16 @@ int pthread_spin_lock(pthread_spinlock_t *lock) {
     }
 }
 
-int pthread_spin_trylock(pthread_spinlock_t *lock) {
+int spin_trylock(spinlock_t *lock) {
     if (__sync_bool_compare_and_swap(lock, 0, 1)) {
         return 0;
     }
     return 1;
 }
 
-int pthread_spin_unlock(pthread_spinlock_t *lock) {
+int spin_unlock(spinlock_t *lock) {
     __asm__ __volatile__ ("":: : "memory");
     *lock = 0;
     return 0;
 }
 
-#endif

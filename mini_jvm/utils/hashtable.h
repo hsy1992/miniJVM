@@ -153,7 +153,7 @@ struct _Hashtable {
     HashtableKeyFreeFunc key_free_func;
     HashtableValueFreeFunc value_free_func;
     unsigned long long int entries;
-    pthread_spinlock_t spinlock;
+    spinlock_t spinlock;
 };
 
 /**

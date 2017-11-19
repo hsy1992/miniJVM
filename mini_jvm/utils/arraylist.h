@@ -78,7 +78,7 @@ struct _ArrayList {
     /** Private data and should not be accessed */
 
     int _alloced;
-    pthread_spinlock_t spinlock;
+    spinlock_t spinlock;
 };
 
 

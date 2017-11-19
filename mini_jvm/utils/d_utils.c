@@ -81,7 +81,7 @@ void autoptr_NULL(autoptr **aref) {
 //
 //}
 
-static pthread_spinlock_t mlock = 0;
+static spinlock_t mlock = 0;
 
 void *jvm_malloc(u32 size) {
     if (!size)return NULL;

@@ -353,7 +353,7 @@ struct _ClassLoader {
     Hashtable *classes;
 
     //
-    pthread_spinlock_t lock;
+    spinlock_t lock;
 };
 
 
