@@ -230,7 +230,7 @@ s32 execute(c8 *p_classpath, c8 *p_mainclass, s32 argc, c8 **argv) {
     native_lib_destory();
     sys_properties_dispose();
     close_log();
-    jvm_printf("over \n");
+    jvm_printf("over %lld\n", heap_size);
 
 
     return ret;

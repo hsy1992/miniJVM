@@ -184,7 +184,7 @@ public class Foo1 {
     }
 
     void t7() {
-        int MAX = 500000;
+        int MAX = 50000;
         int PRINT_COUNT = 10000;
         Thread t = new Thread(new Runnable() {
             List<String> list = new ArrayList();
@@ -217,6 +217,37 @@ public class Foo1 {
             }
         });
         t.start();
+        Thread t1 = new Thread(new Runnable() {
+            List<String> list = new ArrayList();
+            Set<String> set = new HashSet();
+
+            @Override
+            public void run() {
+                try {
+                    System.out.println("total mem:" + Runtime.getRuntime().totalMemory()
+                            + "   free: " + Runtime.getRuntime().freeMemory());
+
+                } catch (Exception ex) {
+                }
+
+                System.out.println("thread here.");
+                int j = 0;
+                String c = null;
+                for (int i = 0; i < MAX; i++) {
+                    String a = "abc";
+                    String b = "def";
+                    c = a + b;
+                    list.add(c);
+                    set.add(c);
+                    if (i % PRINT_COUNT == 0) {
+                        System.out.println("thread i=" + i);
+                    }
+                }
+                System.out.println("list.size():" + list.size() + "  ,set.size():" + set.size());
+                System.out.println(" thread c=\"" + c + "\"");
+            }
+        });
+        t1.start();
         StackFrame sf = new StackFrame(RefNative.getStackFrame(Thread.currentThread()));
         long sfid = sf.runtimeId;
         System.out.println("sfid=" + Long.toString(sfid, 16));
@@ -720,25 +751,25 @@ public class Foo1 {
         for (int i = 0; i < 1; i++) {
             f.t1();
             f.t2();
-            f.t3();
-            f.t4();
-            f.t5();
-            f.t6();
+//            f.t3();
+//            f.t4();
+//            f.t5();
+//            f.t6();
             f.t7();
-            f.t8();
-            f.t9();
-            f.t10();
-            f.t11();
-            f.t12();
-            f.t13();
-            f.t14();
-//            f.t15();
-//            f.t16();
-//            f.t17();
-            f.t18();
-            f.t19();
-            f.t20();
-            f.t21();
+//            f.t8();
+//            f.t9();
+//            f.t10();
+//            f.t11();
+//            f.t12();
+//            f.t13();
+//            f.t14();
+////            f.t15();
+////            f.t16();
+////            f.t17();
+//            f.t18();
+//            f.t19();
+//            f.t20();
+//            f.t21();
             f.t22();
         }
     }

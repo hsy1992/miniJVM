@@ -25,9 +25,9 @@ extern "C" {
 //=======================  micro define  =============================
 //_JVM_DEBUG   06 print all bytecode
 #define _JVM_DEBUG_BYTECODE_DETAIL 0
-#define _JVM_DEBUG_PRINT_FILE 0
+#define _JVM_DEBUG_PRINT_FILE 01
 #define _JVM_DEBUG_BYTECODE_DUMP 0
-#define _JVM_DEBUG_GARBAGE_DUMP 0
+#define _JVM_DEBUG_GARBAGE_DUMP 01
 #define _JVM_DEBUG_PROFILE 0
 
 
