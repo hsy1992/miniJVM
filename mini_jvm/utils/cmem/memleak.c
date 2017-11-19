@@ -103,9 +103,11 @@
 #include <string.h>
 #include <signal.h>
 #include <limits.h>
-#include <pthread.h>
-#include "../d_type.h"
-#include "../spinlock.h"
+
+#define __JVM_OS_MAC__ 1
+
+#include <spinlock.h>
+
 
 #define die(msg) (perror(msg), abort())
 #define length(type) ((sizeof(type)*5)/2 + 1)

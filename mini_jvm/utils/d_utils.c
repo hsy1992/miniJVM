@@ -7,6 +7,13 @@
 #include "sched.h"
 #include "d_type.h"
 #include "spinlock.h"
+
+
+//========================     var     =========================
+
+
+s64 heap_size;
+
 //========================     autoprt     =========================
 
 /**
@@ -73,7 +80,7 @@ void autoptr_NULL(autoptr **aref) {
 //    return realloc(pPtr, size);
 //
 //}
-s64 heap_size;
+
 static pthread_spinlock_t mlock = 0;
 
 void *jvm_malloc(u32 size) {

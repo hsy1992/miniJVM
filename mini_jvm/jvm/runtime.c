@@ -222,6 +222,8 @@ void runtime_destory(Runtime *runtime) {
         }
         arraylist_destory(runtime->runtime_pool);
         runtime->runtime_pool = NULL;
+        jvm_free(runtime->localvar);
+        jvm_free(runtime);
     }
 }
 

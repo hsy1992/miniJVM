@@ -1,6 +1,7 @@
 //
 // Created by gust on 2017/9/25.
 //
+#include "stdlib.h"
 
 #ifndef MINI_JVM_JVM_TYPE_H
 #define MINI_JVM_JVM_TYPE_H
@@ -55,12 +56,14 @@ typedef unsigned long long u64;
 typedef signed long long s64;
 typedef void *__refer;
 
+
+extern s64 heap_size;
+//======================= smart ptr =============================
 typedef struct _autoptr {
     __refer ref;
     s32 count;
 } autoptr;
 
-//======================= smart ptr =============================
 
 autoptr *autoptr_get(autoptr *a);
 
@@ -72,8 +75,6 @@ void autoptr_NULL(autoptr **aref);
 //======================= memory manage =============================
 
 #ifndef __MEM_LEAK_DETECT
-
-extern s64 heap_size;
 
 void *jvm_calloc(u32 size);
 

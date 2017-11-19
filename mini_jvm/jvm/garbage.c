@@ -264,13 +264,11 @@ void dump_refer() {
 
 }
 
-static s64 gputin = 0, gremove = 0;
 
 void _garbage_put_in_objs(__refer ref) {
     s32 ret = hashset_put(collector->objs, ref);
     if (ret != 0) {
         pthread_spin_lock(&collector->objs->lock);
-        gputin++;
         pthread_spin_unlock(&collector->objs->lock);
     }
 #if _JVM_DEBUG_GARBAGE_DUMP
@@ -413,8 +411,6 @@ s64 garbage_collect() {
         MemoryBlock *mb = (MemoryBlock *) k;
 
         if (mb->garbage_mark != collector->flag_refer) {
-            gremove++;
-            mb->un_use = 0x88;
             garbage_destory_memobj(mb);
             hashset_iter_remove(&hti);
             del++;
@@ -431,7 +427,6 @@ s64 garbage_collect() {
     jvm_printf("[INFO]gc obj: %lld -> %lld  heap : %lld -> %lld  stop_world: %lld  gc:%lld\n",
                obj_count, hashset_num_entries(collector->objs), mem1, heap_size, time_stopWorld, time_gc);
 
-    jvm_printf("[INFO]putin: %lld    remove: %lld\n", gputin, gremove);
 
     collector->isgc = 0;
     return del;
