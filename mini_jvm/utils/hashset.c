@@ -10,6 +10,9 @@
 
 static s32 HASH_SET_DEFAULT_SIZE = 1024 * 4;
 
+HashsetEntry *hashset_get_entry(Hashset *hash_table,
+                                HashsetKey key);
+
 
 static inline HashsetEntry *_hashset_get_entry(Hashset *set) {
     return jvm_calloc(sizeof(HashsetEntry));
@@ -50,6 +53,8 @@ Hashset *hashset_create() {
 
         return NULL;
     }
+
+    pthread_spin_init(&set->lock, PTHREAD_PROCESS_PRIVATE);
     return set;
 }
 
@@ -59,14 +64,20 @@ void hashset_destory(Hashset *set) {
     HashsetEntry *next;
     unsigned long long int i;
 
-    for (i = 0; i < set->table_size; ++i) {
-        rover = set->table[i];
-        while (rover != NULL) {
-            next = rover->next;
-            _hashset_free_entry(set, rover);
-            rover = next;
+    pthread_spin_lock(&set->lock);
+    {
+        for (i = 0; i < set->table_size; ++i) {
+            rover = set->table[i];
+            while (rover != NULL) {
+                next = rover->next;
+                _hashset_free_entry(set, rover);
+                rover = next;
+            }
         }
     }
+    pthread_spin_unlock(&set->lock);
+
+    pthread_spin_destroy(&set->lock);
     jvm_free(set->table);
     jvm_free(set);
 }
@@ -77,16 +88,21 @@ void hashset_clear(Hashset *set) {
     HashsetEntry *next;
     unsigned int i;
 
-    for (i = 0; i < set->table_size; ++i) {
-        rover = set->table[i];
-        while (rover != NULL) {
-            next = rover->next;
-            _hashset_free_entry(set, rover);
-            rover = next;
+    pthread_spin_lock(&set->lock);
+    {
+        for (i = 0; i < set->table_size; ++i) {
+            rover = set->table[i];
+            while (rover != NULL) {
+                next = rover->next;
+                _hashset_free_entry(set, rover);
+                rover = next;
+            }
+            set->table[i] = NULL;
         }
-        set->table[i] = NULL;
+        set->entries = 0;
     }
-    set->entries = 0;
+    pthread_spin_unlock(&set->lock);
+
     if (set->table_size > HASH_SET_DEFAULT_SIZE) {
         jvm_free(set->table);
         set->table = NULL;
@@ -102,15 +118,12 @@ int hashset_put(Hashset *set, HashsetKey key) {
     HashsetEntry *rover;
     HashsetEntry *newentry;
     unsigned long long int index;
+    int success = 0;
 
     pthread_spin_lock(&set->lock);
     {
         if ((set->entries << 1) >= set->table_size) {
-
-            if (!hashset_resize(set, set->table_size << 1)) {
-
-                return 0;
-            }
+            hashset_resize(set, set->table_size << 1);
         }
 
         index = DEFAULT_HASH_FUNC(key) % set->table_size;
@@ -120,26 +133,25 @@ int hashset_put(Hashset *set, HashsetKey key) {
         while (rover != NULL) {
             if (DEFAULT_HASH_EQUALS_FUNC(rover->key, key) != 0) {
                 rover->key = key;
-                return 2;
+                success = 2;
+                break;
             }
             rover = rover->next;
         }
 
-        newentry = _hashset_get_entry(set);;
-
-        if (newentry == NULL) {
-            return 0;
+        if (!success) {
+            newentry = _hashset_get_entry(set);;
+            if (newentry != NULL) {
+                newentry->key = key;
+                newentry->next = set->table[index];
+                set->table[index] = newentry;
+                ++set->entries;
+                success = 1;
+            }
         }
-
-        newentry->key = key;
-
-        newentry->next = set->table[index];
-        set->table[index] = newentry;
-
-        ++set->entries;
     }
     pthread_spin_unlock(&set->lock);
-    return 1;
+    return success;
 }
 
 
@@ -320,9 +332,9 @@ int hashset_resize(Hashset *set, unsigned long long int size) {
             while (rover != NULL) {
                 next = rover->next;
                 index = DEFAULT_HASH_FUNC(rover->key) % set->table_size;
-                if (rover->next && rover->next == set->table[index]) {
-                    int debug = 1;
-                }
+//                if (rover->next && rover->next == set->table[index]) {
+//                    int debug = 1;
+//                }
                 rover->next = set->table[index];
                 set->table[index] = rover;
                 rover = next;

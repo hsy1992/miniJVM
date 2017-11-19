@@ -132,8 +132,6 @@ HashsetKey hashset_get(Hashset *hash_table,
                        HashsetKey key);
 
 
-HashsetEntry *hashset_get_entry(Hashset *hash_table,
-                                HashsetKey key);
 
 /**
  * Remove a value from a hash table.
