@@ -19,13 +19,13 @@ struct _ListEntry {
 LinkedList *linkedlist_create() {
     LinkedList *list = jvm_calloc(sizeof(LinkedList));
     list->mNode = jvm_calloc(sizeof(LinkedListEntry));
-    pthread_spin_init(&list->spinlock, PTHREAD_PROCESS_PRIVATE);
+    spin_init(&list->spinlock, 0);
     return list;
 }
 
 void linkedlist_destory(LinkedList *list) {
     _linkedlist_free(list->mNode);
-    pthread_spin_destroy(&list->spinlock);
+    spin_destroy(&list->spinlock);
     jvm_free(list);
 }
 
@@ -56,7 +56,7 @@ LinkedListEntry *linkedlist_push_front(LinkedList *list, LinkedListValue data) {
     if (newentry == NULL) {
         return NULL;
     }
-    pthread_spin_lock(&list->spinlock);
+    spin_lock(&list->spinlock);
     {
         newentry->data = data;
         list->length++;
@@ -74,7 +74,7 @@ LinkedListEntry *linkedlist_push_front(LinkedList *list, LinkedListValue data) {
             mNode->next = newentry;
         }
     }
-    pthread_spin_unlock(&list->spinlock);
+    spin_unlock(&list->spinlock);
     return newentry;
 }
 
@@ -90,7 +90,7 @@ LinkedListEntry *linkedlist_push_end(LinkedList *list, LinkedListValue data) {
     if (newentry == NULL) {
         return NULL;
     }
-    pthread_spin_lock(&list->spinlock);
+    spin_lock(&list->spinlock);
     {
         newentry->data = data;
         list->length++;
@@ -109,7 +109,7 @@ LinkedListEntry *linkedlist_push_end(LinkedList *list, LinkedListValue data) {
             newentry->prev = oldprev;
         }
     }
-    pthread_spin_unlock(&list->spinlock);
+    spin_unlock(&list->spinlock);
     return newentry;
 }
 
@@ -121,7 +121,7 @@ LinkedListValue linkedlist_pop_front(LinkedList *list) {
     LinkedListEntry *mNode;
     LinkedListEntry *oldnext;
 
-    pthread_spin_lock(&list->spinlock);
+    spin_lock(&list->spinlock);
     {
         mNode = list->mNode;
         oldnext = mNode->next;
@@ -139,7 +139,7 @@ LinkedListValue linkedlist_pop_front(LinkedList *list) {
             mNode->next = mNode->prev = NULL;
         }
     }
-    pthread_spin_unlock(&list->spinlock);
+    spin_unlock(&list->spinlock);
     if (oldnext) {
         jvm_free(oldnext);
     }
@@ -154,7 +154,7 @@ LinkedListValue linkedlist_pop_end(LinkedList *list) {
     LinkedListEntry *oldprev;
     LinkedListEntry *mNode;
 
-    pthread_spin_lock(&list->spinlock);
+    spin_lock(&list->spinlock);
     {
         mNode = list->mNode;
         oldprev = mNode->prev;
@@ -171,7 +171,7 @@ LinkedListValue linkedlist_pop_end(LinkedList *list) {
             mNode->next = mNode->prev = NULL;
         }
     }
-    pthread_spin_unlock(&list->spinlock);
+    spin_unlock(&list->spinlock);
 
     if (oldprev) {
         jvm_free(oldprev);
@@ -242,12 +242,12 @@ void linkedlist_remove(LinkedList *list, LinkedListEntry *entry) {
 
 
 void linkedlist_iter_safe(LinkedList *list, LinkedListIteratorFunc func, void *para) {
-    pthread_spin_lock(&list->spinlock);
+    spin_lock(&list->spinlock);
     LinkedListEntry *entry = linkedlist_header(list);
     while (entry) {
         LinkedListEntry *tmp = entry;
         entry = linkedlist_next(list, entry);
         func(list, tmp, para);
     }
-    pthread_spin_unlock(&list->spinlock);
+    spin_unlock(&list->spinlock);
 }

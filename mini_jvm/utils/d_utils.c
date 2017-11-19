@@ -88,9 +88,9 @@ void *jvm_malloc(u32 size) {
     size += 4;
     void *ptr = malloc(size);
     if (ptr) {
-        pthread_spin_lock(&mlock);
+        spin_lock(&mlock);
         heap_size += size;
-        pthread_spin_unlock(&mlock);
+        spin_unlock(&mlock);
         *(u32 *) (ptr) = size;
         return ptr + 4;
     }
@@ -103,9 +103,9 @@ void *jvm_calloc(u32 size) {
     void *ptr = malloc(size);
     if (ptr) {
         memset(ptr, 0, size);
-        pthread_spin_lock(&mlock);
+        spin_lock(&mlock);
         heap_size += size;
-        pthread_spin_unlock(&mlock);
+        spin_unlock(&mlock);
         *(u32 *) (ptr) = size;
         return ptr + 4;
     }
@@ -114,9 +114,9 @@ void *jvm_calloc(u32 size) {
 
 void jvm_free(void *ptr) {
     if (ptr) {
-        pthread_spin_lock(&mlock);
+        spin_lock(&mlock);
         heap_size -= *(u32 *) (ptr - 4);
-        pthread_spin_unlock(&mlock);
+        spin_unlock(&mlock);
         free(ptr - 4);
     }
 }
@@ -128,9 +128,9 @@ void *jvm_realloc(void *pPtr, u32 size) {
     void *ptr = realloc(pPtr - 4, size);
     if (ptr) {
         u32 old_size = *(u32 *) (pPtr - 4);
-        pthread_spin_lock(&mlock);
+        spin_lock(&mlock);
         heap_size += size - old_size + 4;
-        pthread_spin_unlock(&mlock);
+        spin_unlock(&mlock);
         *(u32 *) (ptr) = size;
         return ptr + 4;
     }

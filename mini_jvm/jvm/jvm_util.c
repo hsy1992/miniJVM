@@ -58,10 +58,10 @@ Class *classes_load_get_c(c8 *pclassName, Runtime *runtime) {
 Class *classes_load_get(Utf8String *ustr, Runtime *runtime) {
     if (!ustr)return NULL;
     Class *cl;
-    pthread_spin_lock(&sys_classloader->lock);//fast lock
+    spin_lock(&sys_classloader->lock);//fast lock
     if (utf8_index_of(ustr, '.') >= 0)
         utf8_replace_c(ustr, ".", "/");
-    pthread_spin_unlock(&sys_classloader->lock);
+    spin_unlock(&sys_classloader->lock);
     cl = classes_get(ustr);
     if (!cl) {
         garbage_thread_lock();//slow lock

@@ -54,7 +54,7 @@ Hashset *hashset_create() {
         return NULL;
     }
 
-    pthread_spin_init(&set->lock, PTHREAD_PROCESS_PRIVATE);
+    spin_init(&set->lock, 0);
     return set;
 }
 
@@ -64,7 +64,7 @@ void hashset_destory(Hashset *set) {
     HashsetEntry *next;
     unsigned long long int i;
 
-    pthread_spin_lock(&set->lock);
+    spin_lock(&set->lock);
     {
         for (i = 0; i < set->table_size; ++i) {
             rover = set->table[i];
@@ -75,9 +75,9 @@ void hashset_destory(Hashset *set) {
             }
         }
     }
-    pthread_spin_unlock(&set->lock);
+    spin_unlock(&set->lock);
 
-    pthread_spin_destroy(&set->lock);
+    spin_destroy(&set->lock);
     jvm_free(set->table);
     jvm_free(set);
 }
@@ -88,7 +88,7 @@ void hashset_clear(Hashset *set) {
     HashsetEntry *next;
     unsigned int i;
 
-    pthread_spin_lock(&set->lock);
+    spin_lock(&set->lock);
     {
         for (i = 0; i < set->table_size; ++i) {
             rover = set->table[i];
@@ -101,7 +101,7 @@ void hashset_clear(Hashset *set) {
         }
         set->entries = 0;
     }
-    pthread_spin_unlock(&set->lock);
+    spin_unlock(&set->lock);
 
     if (set->table_size > HASH_SET_DEFAULT_SIZE) {
         jvm_free(set->table);
@@ -120,7 +120,7 @@ int hashset_put(Hashset *set, HashsetKey key) {
     unsigned long long int index;
     int success = 0;
 
-    pthread_spin_lock(&set->lock);
+    spin_lock(&set->lock);
     {
         if ((set->entries << 1) >= set->table_size) {
             hashset_resize(set, set->table_size << 1);
@@ -149,19 +149,19 @@ int hashset_put(Hashset *set, HashsetKey key) {
             }
         }
     }
-    pthread_spin_unlock(&set->lock);
+    spin_unlock(&set->lock);
     return success;
 }
 
 
 HashsetKey hashset_get(Hashset *set, HashsetKey key) {
     HashsetKey *ret = HASH_NULL;
-    pthread_spin_lock(&set->lock);
+    spin_lock(&set->lock);
     {
         HashsetEntry *rover = hashset_find_entry(set, key);
         if (rover)ret = rover->key;
     }
-    pthread_spin_unlock(&set->lock);
+    spin_unlock(&set->lock);
     return ret;
 }
 
@@ -187,7 +187,7 @@ int hashset_remove(Hashset *set, HashsetKey key, int resize) {
     unsigned long long int index;
     unsigned int result;
 
-    pthread_spin_lock(&set->lock);
+    spin_lock(&set->lock);
     {
         if (resize && (set->entries << 3) < set->table_size) {
             hashset_resize(set, set->table_size >> 1);
@@ -214,7 +214,7 @@ int hashset_remove(Hashset *set, HashsetKey key, int resize) {
             rover = next;
         }
     }
-    pthread_spin_unlock(&set->lock);
+    spin_unlock(&set->lock);
     return result;
 }
 
@@ -281,7 +281,7 @@ HashsetKey hashset_iter_remove(HashsetIterator *iterator) {
     HashsetKey key = HASH_NULL;
     if (iterator->curr_entry) {
         Hashset *set = iterator->set;
-        pthread_spin_lock(&set->lock);
+        spin_lock(&set->lock);
         {
             HashsetEntry *prev = NULL;
             HashsetEntry *rover = set->table[iterator->curr_chain];
@@ -299,7 +299,7 @@ HashsetKey hashset_iter_remove(HashsetIterator *iterator) {
             iterator->curr_entry = NULL;
             --set->entries;
         }
-        pthread_spin_unlock(&set->lock);
+        spin_unlock(&set->lock);
 
     }
     return key;

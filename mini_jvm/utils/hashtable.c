@@ -90,7 +90,7 @@ Hashtable *hashtable_create(HashtableHashFunc hash_func,
         return NULL;
     }
 
-    pthread_spin_init(&hash_table->spinlock, PTHREAD_PROCESS_PRIVATE);
+    spin_init(&hash_table->spinlock, 0);
 
     return hash_table;
 }
@@ -99,7 +99,7 @@ void hashtable_destory(Hashtable *hash_table) {
     HashtableEntry *rover;
     HashtableEntry *next;
     unsigned long long int i;
-    pthread_spin_lock(&hash_table->spinlock);
+    spin_lock(&hash_table->spinlock);
     {
         for (i = 0; i < hash_table->table_size; ++i) {
             rover = hash_table->table[i];
@@ -110,9 +110,9 @@ void hashtable_destory(Hashtable *hash_table) {
             }
         }
     }
-    pthread_spin_unlock(&hash_table->spinlock);
+    spin_unlock(&hash_table->spinlock);
 
-    pthread_spin_destroy(&hash_table->spinlock);
+    spin_destroy(&hash_table->spinlock);
     jvm_free(hash_table->table);
     jvm_free(hash_table);
 
@@ -123,7 +123,7 @@ void hashtable_clear(Hashtable *hash_table) {
     HashtableEntry *rover;
     HashtableEntry *next;
     unsigned long long int i;
-    pthread_spin_lock(&hash_table->spinlock);
+    spin_lock(&hash_table->spinlock);
     {
         for (i = 0; i < hash_table->table_size; ++i) {
             rover = hash_table->table[i];
@@ -146,7 +146,7 @@ void hashtable_clear(Hashtable *hash_table) {
             }
         }
     }
-    pthread_spin_unlock(&hash_table->spinlock);
+    spin_unlock(&hash_table->spinlock);
 }
 
 void hashtable_register_free_functions(Hashtable *hash_table,
@@ -162,7 +162,7 @@ int hashtable_put(Hashtable *hash_table, HashtableKey key, HashtableValue value)
     unsigned long long int index;
     int success = 0;
 
-    pthread_spin_lock(&hash_table->spinlock);
+    spin_lock(&hash_table->spinlock);
     {
         if ((hash_table->entries << 1) >= hash_table->table_size) {
             hashtable_resize(hash_table, hash_table->table_size << 1);
@@ -201,7 +201,7 @@ int hashtable_put(Hashtable *hash_table, HashtableKey key, HashtableValue value)
             }
         }
     }
-    pthread_spin_unlock(&hash_table->spinlock);
+    spin_unlock(&hash_table->spinlock);
     return success;
 }
 
@@ -210,7 +210,7 @@ HashtableValue hashtable_get(Hashtable *hash_table, HashtableKey key) {
     unsigned long long int index;
     HashtableValue value = HASH_NULL;
 
-    pthread_spin_lock(&hash_table->spinlock);
+    spin_lock(&hash_table->spinlock);
     {
         index = hash_table->hash_func(key) % hash_table->table_size;
 
@@ -224,7 +224,7 @@ HashtableValue hashtable_get(Hashtable *hash_table, HashtableKey key) {
             rover = rover->next;
         }
     }
-    pthread_spin_unlock(&hash_table->spinlock);
+    spin_unlock(&hash_table->spinlock);
     return value;
 }
 
@@ -234,7 +234,7 @@ int hashtable_remove(Hashtable *hash_table, HashtableKey key, int resize) {
     HashtableEntry *next;
     unsigned long long int index;
     int success = 0;
-    pthread_spin_lock(&hash_table->spinlock);
+    spin_lock(&hash_table->spinlock);
     {
         if (resize && (hash_table->entries << 3) < hash_table->table_size) {
             hashtable_resize(hash_table, hash_table->table_size >> 1);
@@ -258,7 +258,7 @@ int hashtable_remove(Hashtable *hash_table, HashtableKey key, int resize) {
             rover = next;
         }
     }
-    pthread_spin_unlock(&hash_table->spinlock);
+    spin_unlock(&hash_table->spinlock);
     return success;
 }
 
@@ -334,7 +334,7 @@ HashtableKey hashtable_iter_next_key(HashtableIterator *iterator) {
 
 void hashtable_iter_safe(Hashtable *hash_table, HashtableIteratorFunc func, void *para) {
     HashtableIterator hti;
-    pthread_spin_lock(&hash_table->spinlock);
+    spin_lock(&hash_table->spinlock);
     {
         hashtable_iterate(hash_table, &hti);
         for (; hashtable_iter_has_more(&hti);) {
@@ -342,7 +342,7 @@ void hashtable_iter_safe(Hashtable *hash_table, HashtableIteratorFunc func, void
             func(entry->key, entry->value, para);
         }
     }
-    pthread_spin_unlock(&hash_table->spinlock);
+    spin_unlock(&hash_table->spinlock);
 }
 
 int hashtable_resize(Hashtable *hash_table, unsigned long long int size) {

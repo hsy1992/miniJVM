@@ -266,11 +266,7 @@ void dump_refer() {
 
 
 void _garbage_put_in_objs(__refer ref) {
-    s32 ret = hashset_put(collector->objs, ref);
-    if (ret != 0) {
-        pthread_spin_lock(&collector->objs->lock);
-        pthread_spin_unlock(&collector->objs->lock);
-    }
+    hashset_put(collector->objs, ref);
 #if _JVM_DEBUG_GARBAGE_DUMP
     MemoryBlock *mb = ref;
     Utf8String *sus = utf8_create();
@@ -713,7 +709,7 @@ MemoryBlock *garbage_is_alive(__refer ref) {
         result = hashset_get(collector->objs_holder, ref);
     }
     if (!result) {
-        pthread_spin_lock(&collector->operation_cache->spinlock);
+        spin_lock(&collector->operation_cache->spinlock);
         LinkedListEntry *entry = linkedlist_header(collector->operation_cache);
         while (entry) {
             GarbageOp *op = (GarbageOp *) linkedlist_data(entry);
@@ -723,7 +719,7 @@ MemoryBlock *garbage_is_alive(__refer ref) {
             }
             entry = linkedlist_next(collector->operation_cache, entry);
         }
-        pthread_spin_unlock(&collector->operation_cache->spinlock);
+        spin_unlock(&collector->operation_cache->spinlock);
     }
 
     return (MemoryBlock *) result;

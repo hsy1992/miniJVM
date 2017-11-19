@@ -156,11 +156,11 @@ void print_buf(char *buf, size_t len);
 spinlock_t spinlock;
 
 void lock() {
-    pthread_spin_lock(&spinlock);
+    spin_lock(&spinlock);
 }
 
 void unlock() {
-    pthread_spin_unlock(&spinlock);
+    spin_unlock(&spinlock);
 }
 
 /////////////////////////////////////////////////////////////////////////
@@ -315,7 +315,7 @@ void dbg_catch_sigsegv(void) {
 void dbg_init(int hist_len) {
     history_length = hist_len;
     init_map();
-    pthread_spin_init(&spinlock,PTHREAD_PROCESS_PRIVATE);
+    spin_init(&spinlock,0);
 }
 
 void print_buf(char *buf, size_t len) {

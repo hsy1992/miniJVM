@@ -54,7 +54,7 @@ void print_exception(Runtime *runtime) {
 
 ClassLoader *classloader_create(c8 *path) {
     ClassLoader *class_loader = jvm_calloc(sizeof(ClassLoader));
-    pthread_spin_init(&class_loader->lock, PTHREAD_PROCESS_PRIVATE);
+    spin_init(&class_loader->lock, 0);
     class_loader->g_classpath = utf8_create_c(path);
     //创建类容器
     class_loader->classes = hashtable_create(UNICODE_STR_HASH_FUNC, UNICODE_STR_EQUALS_FUNC);
@@ -74,7 +74,7 @@ void classloader_destory(ClassLoader *class_loader) {
     class_loader->g_classpath = NULL;
     hashtable_destory(class_loader->classes);
     class_loader->classes = NULL;
-    pthread_spin_destroy(&class_loader->lock);
+    spin_destroy(&class_loader->lock);
     jvm_free(class_loader);
 }
 
