@@ -313,6 +313,9 @@ void *collect_thread_run(void *para) {
         if (currentTimeMillis() - lastgc < 1000) {// less than 3 sec no gc
             continue;
         }
+        if (jdwpserver.clients->length) {// less than 3 sec no gc
+            continue;
+        }
         if (currentTimeMillis() - lastgc > GARBAGE_PERIOD_MS || heap_size > MAX_HEAP_SIZE) {
             garbage_collect();
             lastgc = currentTimeMillis();

@@ -456,7 +456,8 @@ typedef struct _EventInfo {
     //VM_DEATH
 } EventInfo;
 enum {
-    NEXT_TYPE_INTOOUT,
+    NEXT_TYPE_INTO,
+    NEXT_TYPE_OUT,
     NEXT_TYPE_OVER,
     NEXT_TYPE_SINGLE,
 };

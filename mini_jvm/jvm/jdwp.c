@@ -715,7 +715,13 @@ void jdwp_check_breakpoint(Runtime *runtime) {
     MethodInfo *method = runtime->method;
     if ((method->breakpoint) && pairlist_getl(method->breakpoint, index)) {
         event_on_breakpoint(runtime);//
-        jthread_suspend(runtime);
+        s32 i;
+        for (i = 0; i < thread_list->length; i++) {
+            Runtime *t = threadlist_get(i);
+            if (t){
+                jthread_suspend(t);
+            }
+        }
     }
 }
 
@@ -741,7 +747,12 @@ void jdwp_check_debug_step(Runtime *runtime) {
                 }
             }
             break;
-        case NEXT_TYPE_INTOOUT:
+        case NEXT_TYPE_INTO:
+            if (getRuntimeDepth(runtime->threadInfo->top_runtime) <= step->next_stop_runtime_depth) {
+                suspend = 1;
+            }
+            break;
+        case NEXT_TYPE_OUT:
             if (getRuntimeDepth(runtime->threadInfo->top_runtime) == step->next_stop_runtime_depth) {
                 suspend = 1;
             }
@@ -875,10 +886,10 @@ s32 jdwp_set_debug_step(s32 setOrClear, Instance *jthread, s32 size, s32 depth) 
     if (setOrClear) {
         step->active = 1;
         if (depth == JDWP_STEPDEPTH_INTO) {
-            step->next_type = NEXT_TYPE_INTOOUT;
+            step->next_type = NEXT_TYPE_INTO;
             step->next_stop_runtime_depth = getRuntimeDepth(r->threadInfo->top_runtime) + 1;
         } else if (depth == JDWP_STEPDEPTH_OUT) {
-            step->next_type = NEXT_TYPE_INTOOUT;
+            step->next_type = NEXT_TYPE_OUT;
             step->next_stop_runtime_depth = getRuntimeDepth(r->threadInfo->top_runtime) - 1;
         } else {
             if (size == JDWP_STEPSIZE_LINE) {
