@@ -6,9 +6,9 @@
 #include "math.h"
 #include "d_type.h"
 #include "hashset.h"
-#include "hashtable.h"
 
-static s32 HASH_SET_DEFAULT_SIZE = 1024 * 1024;
+
+static s32 HASH_SET_DEFAULT_SIZE = 4 * 1024;
 
 HashsetEntry *hashset_find_entry(Hashset *hash_table,
                                  HashsetKey key);
@@ -33,9 +33,14 @@ unsigned int hashset_allocate_table(Hashset *set, unsigned int size) {
 }
 
 
-unsigned long _DEFAULT_HashsetHash(HashsetKey kmer) {
-    return (unsigned long) kmer;
+unsigned long _DEFAULT_HASH_FUNC(HashsetKey kmer) {
+    return ((unsigned long) kmer) >> 4;
 }
+
+int _DEFAULT_HASH_EQUALS_FUNC(HashsetKey value1, HashsetKey value2) {
+    return (value1 == value2);
+}
+
 
 Hashset *hashset_create() {
     Hashset *set;
@@ -126,12 +131,12 @@ int hashset_put(Hashset *set, HashsetKey key) {
             hashset_resize(set, set->table_size << 1);
         }
 
-        index = DEFAULT_HASH_FUNC(key) % set->table_size;
+        index = _DEFAULT_HASH_FUNC(key) % set->table_size;
 
         rover = set->table[index];
 
         while (rover != NULL) {
-            if (DEFAULT_HASH_EQUALS_FUNC(rover->key, key) != 0) {
+            if (_DEFAULT_HASH_EQUALS_FUNC(rover->key, key) != 0) {
                 success = 2;
                 break;
             }
@@ -168,11 +173,11 @@ HashsetKey hashset_get(Hashset *set, HashsetKey key) {
 HashsetEntry *hashset_find_entry(Hashset *set, HashsetKey key) {
     HashsetEntry *rover;
     unsigned long long int index;
-    index = DEFAULT_HASH_FUNC(key) % set->table_size;
+    index = _DEFAULT_HASH_FUNC(key) % set->table_size;
     rover = set->table[index];
 
     while (rover != NULL) {
-        if (DEFAULT_HASH_EQUALS_FUNC(key, rover->key) != 0) {
+        if (_DEFAULT_HASH_EQUALS_FUNC(key, rover->key) != 0) {
             return rover;
         }
         rover = rover->next;
@@ -193,7 +198,7 @@ int hashset_remove(Hashset *set, HashsetKey key, int resize) {
             hashset_resize(set, set->table_size >> 1);
         }
 
-        index = DEFAULT_HASH_FUNC(key) % set->table_size;
+        index = _DEFAULT_HASH_FUNC(key) % set->table_size;
 
         result = 0;
         rover = set->table[index];
@@ -201,7 +206,7 @@ int hashset_remove(Hashset *set, HashsetKey key, int resize) {
 
         while (rover != NULL) {
             next = rover->next;
-            if (DEFAULT_HASH_EQUALS_FUNC(key, rover->key) != 0) {
+            if (_DEFAULT_HASH_EQUALS_FUNC(key, rover->key) != 0) {
                 if (pre == rover)set->table[index] = next;
                 else pre->next = next;
 
@@ -330,7 +335,7 @@ int hashset_resize(Hashset *set, unsigned long long int size) {
 
             while (rover != NULL) {
                 next = rover->next;
-                index = DEFAULT_HASH_FUNC(rover->key) % set->table_size;
+                index = _DEFAULT_HASH_FUNC(rover->key) % set->table_size;
                 rover->next = set->table[index];
                 set->table[index] = rover;
                 rover = next;
