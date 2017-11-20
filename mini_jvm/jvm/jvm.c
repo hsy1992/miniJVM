@@ -89,6 +89,7 @@ void classloader_classstatic_clear(ClassLoader *class_loader) {
 }
 
 s32 execute(c8 *p_classpath, c8 *p_mainclass, s32 argc, c8 **argv) {
+    heap_size = 0;
     //
     open_log();
 
