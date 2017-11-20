@@ -302,7 +302,7 @@ void *collect_thread_run(void *para) {
     s64 lastgc = currentTimeMillis();
     while (1) {
         threadSleep(10);
-        garbage_move_cache(100000);
+        garbage_move_cache(0);
 
         if (collector->_garbage_thread_status == GARBAGE_THREAD_STOP) {
             break;
