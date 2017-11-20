@@ -449,7 +449,6 @@ void garbage_destory_memobj(MemoryBlock *mb) {
 
 /**
  * 各个线程把自己还需要使用的对象进行标注，表示不能回收
- * @return ret
  */
 void _list_iter_thread_pause(ArrayListValue value, void *para) {
     jthread_suspend((Runtime *) value);

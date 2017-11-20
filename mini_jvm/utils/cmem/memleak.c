@@ -104,7 +104,7 @@
 #include <signal.h>
 #include <limits.h>
 
-#include <spinlock.h>
+#include "../spinlock.h"
 
 
 #define die(msg) (perror(msg), abort())

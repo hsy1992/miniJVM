@@ -171,8 +171,8 @@ static int RUNTIME_LOCALVAR_SIZE = 10;
 
 /**
  * runtime 的创建和销毁会极大影响性能，因此对其进行缓存
- * @param parent
- * @return
+ * @param parent runtime of parent
+ * @return runtime
  */
 Runtime *runtime_create(Runtime *parent) {
     s32 is_top = parent == NULL;

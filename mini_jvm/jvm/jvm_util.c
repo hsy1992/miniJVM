@@ -949,7 +949,7 @@ s32 instance_destory(Instance *ins) {
  * deepth copy array
  *
  * @param src  source instance
- * @return
+ * @return  instance
  */
 Instance *instance_copy(Instance *src) {
     Instance *dst = jvm_malloc(sizeof(Instance));
