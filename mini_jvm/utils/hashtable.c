@@ -41,7 +41,7 @@ static int hash_table_allocate_table(Hashtable *hash_table, unsigned long long i
 
 
 unsigned long long DEFAULT_HASH_FUNC(HashtableKey kmer) {
-    return (unsigned long long) (long) kmer;
+    return ((unsigned long long) (long) kmer) >> 4;
 }
 
 int DEFAULT_HASH_EQUALS_FUNC(HashtableValue value1, HashtableValue value2) {

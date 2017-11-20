@@ -17,17 +17,21 @@ int spin_destroy(spinlock_t *lock) {
     return 0;
 }
 
-int spin_lock(spinlock_t *lock) {
+
+int spin_lock_count(spinlock_t *lock, int count) {
     while (1) {
         int i;
-        for (i = 0; i < 10000; i++) {
+        for (i = 0; i < count; i++) {
             if (__sync_bool_compare_and_swap(lock, 0, 1)) {
                 return 0;
             }
         }
-        //printf(" %d\n",i);
         sched_yield();
     }
+}
+
+int spin_lock(spinlock_t *lock) {
+    return spin_lock_count(lock, 10000);
 }
 
 int spin_trylock(spinlock_t *lock) {
