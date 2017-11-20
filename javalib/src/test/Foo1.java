@@ -184,7 +184,7 @@ public class Foo1 {
     }
 
     void t7() {
-        int MAX = 50000;
+        int MAX = 500000;
         int PRINT_COUNT = 10000;
         Thread t = new Thread(new Runnable() {
             List<String> list = new ArrayList();
@@ -247,7 +247,7 @@ public class Foo1 {
                 System.out.println(" thread c=\"" + c + "\"");
             }
         });
-        t1.start();
+        //t1.start();
         StackFrame sf = new StackFrame(RefNative.getStackFrame(Thread.currentThread()));
         long sfid = sf.runtimeId;
         System.out.println("sfid=" + Long.toString(sfid, 16));
@@ -751,25 +751,25 @@ public class Foo1 {
         for (int i = 0; i < 1; i++) {
             f.t1();
             f.t2();
-//            f.t3();
-//            f.t4();
-//            f.t5();
-//            f.t6();
+            f.t3();
+            f.t4();
+            f.t5();
+            f.t6();
             f.t7();
-//            f.t8();
-//            f.t9();
-//            f.t10();
-//            f.t11();
-//            f.t12();
-//            f.t13();
-//            f.t14();
-////            f.t15();
-////            f.t16();
-////            f.t17();
-//            f.t18();
-//            f.t19();
-//            f.t20();
-//            f.t21();
+            f.t8();
+            f.t9();
+            f.t10();
+            f.t11();
+            f.t12();
+            f.t13();
+            f.t14();
+//            f.t15();
+//            f.t16();
+//            f.t17();
+            f.t18();
+            f.t19();
+            f.t20();
+            f.t21();
             f.t22();
         }
     }

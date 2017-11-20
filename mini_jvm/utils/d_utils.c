@@ -90,9 +90,6 @@ void *jvm_malloc(u32 size) {
     if (ptr) {
         spin_lock(&mlock);
         heap_size += size;
-        if (heap_size > 1000000000) {
-            int debug = 1;
-        }
         spin_unlock(&mlock);
         *(u32 *) (ptr) = size;
         return ptr + 4;
@@ -107,9 +104,6 @@ void *jvm_calloc(u32 size) {
     if (ptr) {
         spin_lock(&mlock);
         heap_size += size;
-        if (heap_size > 1000000000) {
-            int debug = 1;
-        }
         spin_unlock(&mlock);
         *(u32 *) (ptr) = size;
         return ptr + 4;
@@ -121,9 +115,6 @@ void jvm_free(void *ptr) {
     if (ptr) {
         spin_lock(&mlock);
         heap_size -= *(u32 *) (ptr - 4);
-        if (heap_size > 1000000000) {
-            int debug = 1;
-        }
         spin_unlock(&mlock);
         free(ptr - 4);
     }
@@ -136,9 +127,6 @@ void *jvm_realloc(void *pPtr, u32 size) {
     u32 old_size = *(u32 *) (pPtr - 4);
     void *ptr = realloc(pPtr - 4, size);
     if (ptr) {
-        if (heap_size > 1000000000) {
-            int debug = 1;
-        }
         spin_lock(&mlock);
         heap_size += size - old_size + 4;
         spin_unlock(&mlock);
