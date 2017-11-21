@@ -746,31 +746,47 @@ public class Foo1 {
         }
     }
 
+    void t23() {
+        System.out.println(2);
+        for (int i = 3; i < 100000; i += 2) {
+            boolean isPrime = true;
+            for (int j = 3; j < i / 2; j += 2) {
+                if ((i % j) == 0) {
+                    isPrime = false;
+                    break;
+                }
+            }
+            if (isPrime) {
+                //System.out.println(i);
+            }
+        }
+    }
+
     public static void main() {
         Foo1 f = new Foo1();
         for (int i = 0; i < 1; i++) {
-            f.t1();
-            f.t2();
-            f.t3();
-            f.t4();
-            f.t5();
-            f.t6();
-            f.t7();
-            f.t8();
-            f.t9();
-            f.t10();
-            f.t11();
-            f.t12();
-            f.t13();
-            f.t14();
-//            f.t15();
-//            f.t16();
-//            f.t17();
-            f.t18();
-            f.t19();
-            f.t20();
-            f.t21();
-            f.t22();
+//            f.t1();
+//            f.t2();
+//            f.t3();
+//            f.t4();
+//            f.t5();
+//            f.t6();
+//            f.t7();
+//            f.t8();
+//            f.t9();
+//            f.t10();
+//            f.t11();
+//            f.t12();
+//            f.t13();
+//            f.t14();
+////            f.t15();
+////            f.t16();
+////            f.t17();
+//            f.t18();
+//            f.t19();
+//            f.t20();
+//            f.t21();
+            f.t23();
         }
     }
 
