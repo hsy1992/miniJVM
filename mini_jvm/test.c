@@ -13,6 +13,7 @@
 
 #include <stdio.h>
 #include <stdlib.h>
+#include <miniz/miniz_wrapper.h>
 #include "utils/hashtable.h"
 #include "utils/utf8_string.h"
 #include "jvm/jvm.h"
@@ -90,7 +91,7 @@ int main(int argc, char **argv) {
 //    ret = execute("../../javalib_test/build/classes/", "test/Foo1", argc, argv);
     ret = execute("../../javalib/build/classes/", "test/Foo1", argc, argv);
 //    t3();
-
+//    testMinizWrapper();
 
 
 #ifdef __MEM_LEAK_DETECT

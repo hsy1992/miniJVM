@@ -4,6 +4,7 @@
   <component name="CidrRootsConfiguration">
     <sourceRoots>
       <file path="$PROJECT_DIR$/utils/cmem" />
+      <file path="$PROJECT_DIR$/utils/miniz" />
     </sourceRoots>
   </component>
   <component name="SvnBranchConfigurationManager">

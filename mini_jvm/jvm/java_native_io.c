@@ -303,7 +303,9 @@ s32 javax_mini_net_socket_Protocol_open0(Runtime *runtime, Class *clazz) {
     s32 mode = localvar_getInt(runtime, 2);
     Utf8String *ip = utf8_create_part_c(jbyte_arr->arr_body, 0, jbyte_arr->arr_length);
 
+    jthread_block_enter(runtime);
     s32 sockfd = sock_open(ip, port);
+    jthread_block_exit(runtime);
     utf8_destory(ip);
 #if _JVM_DEBUG_BYTECODE_DETAIL > 5
     invoke_deepth(runtime);
@@ -425,7 +427,9 @@ s32 javax_mini_net_serversocket_Protocol_open0(Runtime *runtime, Class *clazz) {
     s32 port = localvar_getInt(runtime, 1);
     Utf8String *ip = utf8_create_part_c(jbyte_arr->arr_body, 0, jbyte_arr->arr_length);
     s32 sockfd = 0;
+    jthread_block_enter(runtime);
     sockfd = srv_bind(ip, port);
+    jthread_block_exit(runtime);
     push_int(runtime->stack, sockfd);
     utf8_destory(ip);
 #if _JVM_DEBUG_BYTECODE_DETAIL > 5
@@ -439,7 +443,9 @@ s32 javax_mini_net_serversocket_Protocol_listen0(Runtime *runtime, Class *clazz)
     s32 sockfd = localvar_getInt(runtime, 0);
     s32 ret = 0;
     if (sockfd) {
+        jthread_block_enter(runtime);
         ret = srv_listen(sockfd);
+        jthread_block_exit(runtime);
     }
     push_int(runtime->stack, ret);
 #if _JVM_DEBUG_BYTECODE_DETAIL > 5

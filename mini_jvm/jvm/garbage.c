@@ -182,6 +182,9 @@ void garbage_thread_notify() {
     pthread_cond_signal(&collector->garbagelock.thread_cond);
 }
 
+void garbage_thread_notifyall() {
+    pthread_cond_broadcast(&collector->garbagelock.thread_cond);
+}
 //=============================   debug ===================================
 
 void getMBName(void *memblock, Utf8String *name) {
@@ -503,6 +506,7 @@ s32 garbage_resume_the_world() {
             utf8_destory(stack);
 #endif
             jthread_resume(runtime);
+            garbage_thread_notifyall();
         }
     }
 
@@ -522,7 +526,7 @@ s32 checkAndWaitThreadIsSuspend(Runtime *runtime) {
            !(runtime->threadInfo->thread_status == THREAD_STATUS_SLEEPING) &&
            !(runtime->threadInfo->thread_status == THREAD_STATUS_WAIT) &&
            !(runtime->threadInfo->is_blocking)) { // if a native method blocking , must set thread status is wait before enter native method
-        garbage_thread_timedwait(2);
+        garbage_thread_timedwait(100);
         if (collector->_garbage_thread_status != GARBAGE_THREAD_NORMAL) {
             return -1;
         }
@@ -553,11 +557,6 @@ s32 garbage_big_search() {
     }
 
     return 0;
-}
-
-void _list_iter_iter_copy(ArrayListValue value, void *para) {
-    Runtime *runtime = value;
-    garbage_copy_refer_thread(runtime);
 }
 
 void garbage_copy_refer() {

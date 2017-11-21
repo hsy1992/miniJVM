@@ -730,13 +730,13 @@ s32 jthread_sleep(Runtime *runtime, s64 ms) {
 
 s32 check_suspend_and_pause(Runtime *runtime) {
     if (runtime->threadInfo->suspend_count) {
-        garbage_thread_lock();
         runtime->threadInfo->is_suspend = 1;
+        garbage_thread_lock();
+        garbage_thread_notifyall();
         while (runtime->threadInfo->suspend_count) {
-            garbage_thread_timedwait(1);
+            garbage_thread_timedwait(10);
         }
         runtime->threadInfo->is_suspend = 0;
-        garbage_thread_notify();
         //jvm_printf(".");
         garbage_thread_unlock();
     }

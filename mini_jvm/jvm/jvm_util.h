@@ -136,10 +136,11 @@ void printDumpOfClasses(void);
 struct _JavaThreadInfo {
     Instance *jthread;
     Runtime *top_runtime;
-    u8 volatile thread_status;
     s32 volatile suspend_count;//for jdwp suspend ,>0 suspend, ==0 resume
+    u8 volatile thread_status;
     u8 volatile is_suspend;
     u8 volatile is_blocking;
+    u8 un_use;
 
     pthread_t pthread;
     //调试器相关字段

@@ -818,7 +818,6 @@ typedef s32 (*InstructFunc)(u8 **opCode, Runtime *runtime);
 struct _Instruction {
     c8 *name;
     u8 opCode;
-    s32 offset;
     InstructFunc func;
 };
 

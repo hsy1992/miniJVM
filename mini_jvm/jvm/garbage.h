@@ -76,6 +76,8 @@ void garbage_thread_timedwait(s64 ms);
 
 void garbage_thread_notify(void);
 
+void garbage_thread_notifyall(void);
+
 //其他函数
 
 s32 garbage_collector_create(void);
