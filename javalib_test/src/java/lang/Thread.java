@@ -89,7 +89,8 @@ class Thread implements Runnable {
 
     /* Thread name */
     private char        name[];
-
+    /*  save top runtime   */
+    private long stackFrame;
     /**
      * The minimum priority that a thread can have.
      */
