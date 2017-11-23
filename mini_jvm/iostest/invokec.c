@@ -14,6 +14,7 @@ int call_jvm(char* app_path) {
     char ** argv=NULL;
     s32 ret ;
     char path[256];
+    memset(&path,0,256);
     strcat(path,app_path);
     strcat(path,"/classes/");
     printf("classpath: %s\n",path);
