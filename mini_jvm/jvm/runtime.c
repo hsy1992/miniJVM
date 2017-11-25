@@ -60,7 +60,7 @@ inline f64 pop_double(RuntimeStack *stack) {
 }
 
 /* push Float */
-void push_float(RuntimeStack *stack, f32 value) {
+inline void push_float(RuntimeStack *stack, f32 value) {
     StackEntry *ptr = &stack->store[stack->size];
     ptr->lvalue = 0;//clear 64bit
     ptr->fvalue = value;
@@ -85,7 +85,7 @@ inline void push_long(RuntimeStack *stack, s64 value) {
 }
 
 /* pop Long */
-s64 pop_long(RuntimeStack *stack) {
+inline s64 pop_long(RuntimeStack *stack) {
     stack->size--;
     StackEntry *ptr = &stack->store[stack->size];
     return ptr->lvalue;

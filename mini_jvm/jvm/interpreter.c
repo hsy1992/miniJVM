@@ -2614,103 +2614,155 @@ s32 op_dcmpg(u8 **opCode, Runtime *runtime) {
 }
 
 
-s32 op_if_0(u8 **opCode, Runtime *runtime, s32 type) {
+s32 op_ifnonnull(u8 **opCode, Runtime *runtime) {
     RuntimeStack *stack = runtime->stack;
-    Short2Char s2c;
-    s2c.c1 = opCode[0][1];
-    s2c.c0 = opCode[0][2];
-
-    s32 branchoffset = s2c.s;
-
-    c8 *syb = " ";
-    StackEntry entry;
-    pop_entry(stack, &entry);
-    s32 con = 0;
-    Long2Double l2d;
-    l2d.l = 0;
-    if (is_ref(&entry)) {
-        l2d.r = entry_2_refer(&entry);
-    } else {
-        l2d.i2l.i1 = entry_2_int(&entry);
-    }
-    switch (type) {
-        case TYPE_IFEQ:
-            con = l2d.i2l.i1 == 0;
-            syb = "==";
-            break;
-        case TYPE_IFNE:
-            con = l2d.i2l.i1 != 0;
-            syb = "!=";
-            break;
-        case TYPE_IFLT:
-            con = l2d.i2l.i1 < 0;
-            syb = "<";
-            break;
-        case TYPE_IFGT:
-            con = l2d.i2l.i1 > 0;
-            syb = ">";
-            break;
-        case TYPE_IFLE:
-            con = l2d.i2l.i1 <= 0;
-            syb = "<";
-            break;
-        case TYPE_IFGE:
-            con = l2d.i2l.i1 >= 0;
-            syb = ">=";
-            break;
-        case TYPE_IFNONNULL:
-            con = l2d.r != 0;
-            syb = "!= NULL";
-            break;
-        case TYPE_IFNULL:
-            con = l2d.r == 0;
-            syb = "== NULL";
-            break;
-    }
-
-#if _JVM_DEBUG_BYTECODE_DETAIL > 5
-    invoke_deepth(runtime);
-    jvm_printf("if_0: %d/%llx %s 0  then %d \n", l2d.i2l.i1, (s64) (long) l2d.r, syb, branchoffset);
-#endif
-    if (con) {
-        *opCode = *opCode + branchoffset;
+    __refer ref = pop_ref(stack);
+    if (ref) {
+        Short2Char s2c;
+        s2c.c1 = opCode[0][1];
+        s2c.c0 = opCode[0][2];
+        *opCode = *opCode + s2c.s;
     } else {
         *opCode = *opCode + 3;
     }
+#if _JVM_DEBUG_BYTECODE_DETAIL > 5
+    invoke_deepth(runtime);
+    jvm_printf("op_ifnonnull: %d/%llx != 0  then jump %d \n", (s32) (long)ref, (s64) (long) l2d.r);
+#endif
     return 0;
 }
 
-
-s32 op_ifnonnull(u8 **opCode, Runtime *runtime) {
-    return op_if_0(opCode, runtime, TYPE_IFNONNULL);
-}
-
 s32 op_ifnull(u8 **opCode, Runtime *runtime) {
-    return op_if_0(opCode, runtime, TYPE_IFNULL);
+    RuntimeStack *stack = runtime->stack;
+    __refer ref = pop_ref(stack);
+    if (!ref) {
+        Short2Char s2c;
+        s2c.c1 = opCode[0][1];
+        s2c.c0 = opCode[0][2];
+        *opCode = *opCode + s2c.s;
+    } else {
+        *opCode = *opCode + 3;
+    }
+#if _JVM_DEBUG_BYTECODE_DETAIL > 5
+    invoke_deepth(runtime);
+    jvm_printf("op_ifnonnull: %d/%llx != 0  then jump %d \n", (s32) (long)ref, (s64) (long) ref);
+#endif
+
+    return 0;
 }
 
 s32 op_iflt(u8 **opCode, Runtime *runtime) {
-    return op_if_0(opCode, runtime, TYPE_IFLT);
+    RuntimeStack *stack = runtime->stack;
+    s32 val = pop_int(stack);
+    if (val < 0) {
+        Short2Char s2c;
+        s2c.c1 = opCode[0][1];
+        s2c.c0 = opCode[0][2];
+        *opCode = *opCode + s2c.s;
+    } else {
+        *opCode = *opCode + 3;
+    }
+#if _JVM_DEBUG_BYTECODE_DETAIL > 5
+    invoke_deepth(runtime);
+    jvm_printf("op_iflt: %d/%llx < 0  then jump %d \n", (s32) (long)ref, (s64) (long) ref);
+#endif
+
+    return 0;
 }
 
 s32 op_ifgt(u8 **opCode, Runtime *runtime) {
-    return op_if_0(opCode, runtime, TYPE_IFGT);
+    RuntimeStack *stack = runtime->stack;
+    s32 val = pop_int(stack);
+    if (val > 0) {
+        Short2Char s2c;
+        s2c.c1 = opCode[0][1];
+        s2c.c0 = opCode[0][2];
+        *opCode = *opCode + s2c.s;
+    } else {
+        *opCode = *opCode + 3;
+    }
+#if _JVM_DEBUG_BYTECODE_DETAIL > 5
+    invoke_deepth(runtime);
+    jvm_printf("op_ifgt: %d/%llx > 0  then jump %d \n", (s32) (long)ref, (s64) (long) ref);
+#endif
+
+    return 0;
 }
 
 s32 op_ifle(u8 **opCode, Runtime *runtime) {
-    return op_if_0(opCode, runtime, TYPE_IFLE);
+    RuntimeStack *stack = runtime->stack;
+    s32 val = pop_int(stack);
+    if (val <= 0) {
+        Short2Char s2c;
+        s2c.c1 = opCode[0][1];
+        s2c.c0 = opCode[0][2];
+        *opCode = *opCode + s2c.s;
+    } else {
+        *opCode = *opCode + 3;
+    }
+#if _JVM_DEBUG_BYTECODE_DETAIL > 5
+    invoke_deepth(runtime);
+    jvm_printf("op_ifle: %d/%llx <= 0  then jump %d \n", (s32) (long)ref, (s64) (long) ref);
+#endif
+
+    return 0;
 }
 
 s32 op_ifge(u8 **opCode, Runtime *runtime) {
-    return op_if_0(opCode, runtime, TYPE_IFGE);
+    RuntimeStack *stack = runtime->stack;
+    s32 val = pop_int(stack);
+    if (val >= 0) {
+        Short2Char s2c;
+        s2c.c1 = opCode[0][1];
+        s2c.c0 = opCode[0][2];
+        *opCode = *opCode + s2c.s;
+    } else {
+        *opCode = *opCode + 3;
+    }
+#if _JVM_DEBUG_BYTECODE_DETAIL > 5
+    invoke_deepth(runtime);
+    jvm_printf("op_ifge: %d/%llx >= 0  then jump %d \n", (s32) (long)ref, (s64) (long) ref);
+#endif
+
+    return 0;
 }
 
 s32 op_ifeq(u8 **opCode, Runtime *runtime) {
-    return op_if_0(opCode, runtime, TYPE_IFEQ);
+    RuntimeStack *stack = runtime->stack;
+    s32 val = pop_int(stack);
+    if (val == 0) {
+        Short2Char s2c;
+        s2c.c1 = opCode[0][1];
+        s2c.c0 = opCode[0][2];
+        *opCode = *opCode + s2c.s;
+    } else {
+        *opCode = *opCode + 3;
+    }
+#if _JVM_DEBUG_BYTECODE_DETAIL > 5
+    invoke_deepth(runtime);
+    jvm_printf("op_ifeq: %d/%llx != 0  then jump %d \n", (s32) (long)ref, (s64) (long) ref);
+#endif
+
+    return 0;
 }
 
 s32 op_ifne(u8 **opCode, Runtime *runtime) {
-    return op_if_0(opCode, runtime, TYPE_IFNE);
+    RuntimeStack *stack = runtime->stack;
+    s32 val = pop_int(stack);
+    if (val != 0) {
+        Short2Char s2c;
+        s2c.c1 = opCode[0][1];
+        s2c.c0 = opCode[0][2];
+        *opCode = *opCode + s2c.s;
+    } else {
+        *opCode = *opCode + 3;
+    }
+#if _JVM_DEBUG_BYTECODE_DETAIL > 5
+    invoke_deepth(runtime);
+    jvm_printf("op_ifne: %d/%llx != 0  then jump %d \n", (s32) (long)ref, (s64) (long) ref);
+#endif
+
+    return 0;
 }
 
 
