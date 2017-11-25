@@ -30,8 +30,7 @@ void stack_destory(RuntimeStack *stack) {
 /* push Integer */
 inline void push_int(RuntimeStack *stack, s32 value) {
     StackEntry *ptr = &stack->store[stack->size];
-    ptr->lvalue = 0;//clear 64bit
-    ptr->ivalue = value;
+    ptr->lvalue = value;//clear 64bit
     ptr->type = STACK_ENTRY_INT;
     stack->size++;
 }
@@ -41,7 +40,7 @@ inline void push_int(RuntimeStack *stack, s32 value) {
 inline s32 pop_int(RuntimeStack *stack) {
     stack->size--;
     StackEntry *ptr = &stack->store[stack->size];
-    return ptr->ivalue;
+    return (s32) ptr->lvalue;
 }
 
 /* push Double */

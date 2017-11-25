@@ -118,10 +118,8 @@ s32 op_aaload(u8 **opCode, Runtime *runtime) {
 
 /* bipush */
 s32 op_bipush(u8 **opCode, Runtime *runtime) {
-    RuntimeStack *stack = runtime->stack;
-
     s32 value = (c8) opCode[0][1];
-    push_int(stack, value);
+    push_int(runtime->stack, value);
 #if _JVM_DEBUG_BYTECODE_DETAIL > 5
     invoke_deepth(runtime);
     jvm_printf("bipush a byte %d onto the stack \n", value);
@@ -343,8 +341,7 @@ s32 op_swap(u8 **opCode, Runtime *runtime) {
 
 
 s32 op_pop(u8 **opCode, Runtime *runtime) {
-    RuntimeStack *stack = runtime->stack;
-    pop_int(stack);
+    pop_empty(runtime->stack);
 #if _JVM_DEBUG_BYTECODE_DETAIL > 5
     invoke_deepth(runtime);
     jvm_printf("pop\n");
@@ -391,9 +388,7 @@ s32 op_iadd(u8 **opCode, Runtime *runtime) {
 }
 
 s32 op_iconst_n(u8 **opCode, Runtime *runtime, s32 i) {
-    RuntimeStack *stack = runtime->stack;
-
-    push_int(stack, i);
+    push_int(runtime->stack, i);
 #if _JVM_DEBUG_BYTECODE_DETAIL > 5
     invoke_deepth(runtime);
     jvm_printf("iconst_%d: push %d into stack\n", i, i);
@@ -437,9 +432,8 @@ s32 op_iconst_5(u8 **opCode, Runtime *runtime) {
 }
 
 s32 op_aconst_null(u8 **opCode, Runtime *runtime) {
-    RuntimeStack *stack = runtime->stack;
 
-    push_ref(stack, NULL);
+    push_ref(runtime->stack, NULL);
 #if _JVM_DEBUG_BYTECODE_DETAIL > 5
     invoke_deepth(runtime);
     jvm_printf("aconst_null: push %d into stack\n", 0);
@@ -449,9 +443,8 @@ s32 op_aconst_null(u8 **opCode, Runtime *runtime) {
 }
 
 s32 op_lconst_n(u8 **opCode, Runtime *runtime, s64 i) {
-    RuntimeStack *stack = runtime->stack;
 
-    push_long(stack, i);
+    push_long(runtime->stack, i);
 #if _JVM_DEBUG_BYTECODE_DETAIL > 5
     invoke_deepth(runtime);
     jvm_printf("lconst_%lld: push %lld into stack\n", i, i);
@@ -469,8 +462,7 @@ s32 op_lconst_1(u8 **opCode, Runtime *runtime) {
 }
 
 s32 op_fconst_n(u8 **opCode, Runtime *runtime, f32 f) {
-    RuntimeStack *stack = runtime->stack;
-    push_float(stack, f);
+    push_float(runtime->stack, f);
 
 #if _JVM_DEBUG_BYTECODE_DETAIL > 5
     invoke_deepth(runtime);
@@ -494,8 +486,7 @@ s32 op_fconst_2(u8 **opCode, Runtime *runtime) {
 
 
 s32 op_dconst_n(u8 **opCode, Runtime *runtime, f64 d) {
-    RuntimeStack *stack = runtime->stack;
-    push_double(stack, d);
+    push_double(runtime->stack, d);
 
 #if _JVM_DEBUG_BYTECODE_DETAIL > 5
     invoke_deepth(runtime);
@@ -668,7 +659,6 @@ s32 op_lmul(u8 **opCode, Runtime *runtime) {
 
 
 s32 op_iload(u8 **opCode, Runtime *runtime) {
-    RuntimeStack *stack = runtime->stack;
     Short2Char s2c;
     if (runtime->wideMode) {
         s2c.c1 = opCode[0][1];
@@ -685,7 +675,7 @@ s32 op_iload(u8 **opCode, Runtime *runtime) {
     invoke_deepth(runtime);
     jvm_printf("i(fa)load: push localvar(%d)= [%x]/%d  \n", s2c.s, value, value);
 #endif
-    push_int(stack, value);
+    push_int(runtime->stack, value);
     return 0;
 }
 
@@ -695,7 +685,6 @@ s32 op_fload(u8 **opCode, Runtime *runtime) {
 }
 
 s32 op_aload(u8 **opCode, Runtime *runtime) {
-    RuntimeStack *stack = runtime->stack;
     Short2Char s2c;
     if (runtime->wideMode) {
         s2c.c1 = opCode[0][1];
@@ -712,12 +701,11 @@ s32 op_aload(u8 **opCode, Runtime *runtime) {
     invoke_deepth(runtime);
     jvm_printf("i(fa)load: push localvar(%d)= [%llx]  \n", s2c.s, (s64) (long) value);
 #endif
-    push_ref(stack, value);
+    push_ref(runtime->stack, value);
     return 0;
 }
 
 s32 op_lload(u8 **opCode, Runtime *runtime) {
-    RuntimeStack *stack = runtime->stack;
     Short2Char s2c;
     if (runtime->wideMode) {
         s2c.c1 = opCode[0][1];
@@ -736,7 +724,7 @@ s32 op_lload(u8 **opCode, Runtime *runtime) {
     invoke_deepth(runtime);
     jvm_printf("l(d)load: push localvar(%d) [%llx]/%lf into stack \n", s2c.s, l2d.l, l2d.d);
 #endif
-    push_long(stack, l2d.l);
+    push_long(runtime->stack, l2d.l);
     return 0;
 }
 
@@ -746,14 +734,13 @@ s32 op_dload(u8 **opCode, Runtime *runtime) {
 
 
 static inline s32 op_ifload_n(u8 **opCode, Runtime *runtime, s32 i) {
-    RuntimeStack *stack = runtime->stack;
     Int2Float i2f;
     i2f.i = localvar_getInt(runtime, i);
 #if _JVM_DEBUG_BYTECODE_DETAIL > 5
     invoke_deepth(runtime);
     jvm_printf("i(f)load_%d: push localvar(%d)= [%x]/%d/%f  \n", i, i, i2f.i, i2f.i, i2f.f);
 #endif
-    push_int(stack, i2f.i);
+    push_int(runtime->stack, i2f.i);
     *opCode = *opCode + 1;
     return 0;
 }
@@ -795,7 +782,6 @@ s32 op_fload_3(u8 **opCode, Runtime *runtime) {
 }
 
 s32 op_lload_n(u8 **opCode, Runtime *runtime, s32 index) {
-    RuntimeStack *stack = runtime->stack;
     Long2Double l2d;
     l2d.i2l.i1 = localvar_getInt(runtime, index);
     l2d.i2l.i0 = localvar_getInt(runtime, index + 1);
@@ -805,7 +791,7 @@ s32 op_lload_n(u8 **opCode, Runtime *runtime, s32 index) {
     invoke_deepth(runtime);
     jvm_printf("l(d)load_%d: push localvar(%d)= [%llx]/%lld/%lf  \n", index, index, value, value, value);
 #endif
-    push_long(stack, value);
+    push_long(runtime->stack, value);
     *opCode = *opCode + 1;
     return 0;
 }
@@ -1636,7 +1622,7 @@ static inline s32 op_xastore_impl(u8 **opCode, Runtime *runtime, u8 isReference)
         s32 bytes = data_type_bytes[tidx];
         Long2Double l2d;
         l2d.l = 0;
-        if (isDataReferByIndex(tidx)) {
+        if (isReference) {
             l2d.r = entry_2_refer(&entry);
         } else {
             if (bytes > 4) {
@@ -2094,7 +2080,7 @@ static inline s32 op_getfield_impl(u8 **opCode, Runtime *runtime, s32 isStatic) 
         class_clinit(clazz, runtime);
     }
 
-    // check variable type to determain long/s32/f64/f32
+    // check variable type to determine s64/s32/f64/f32
     FieldInfo *fi = find_constant_fieldref(clazz, field_ref)->fieldInfo;
     if (fi == NULL) {
         fi = find_fieldInfo_by_fieldref(clazz, field_ref);
@@ -2399,23 +2385,19 @@ s32 op_monitorexit(u8 **opCode, Runtime *runtime) {
 }
 
 s32 op_wide(u8 **opCode, Runtime *runtime) {
-    RuntimeStack *stack = runtime->stack;
-
 #if _JVM_DEBUG_BYTECODE_DETAIL > 5
+    RuntimeStack *stack = runtime->stack;
     invoke_deepth(runtime);
     jvm_printf("wide  \n");
 #endif
     runtime->wideMode = 1;
-    //op_notsupport(opCode, runtime);
     *opCode = *opCode + 1;
     return 0;
 }
 
 s32 op_breakpoint(u8 **opCode, Runtime *runtime) {
-    RuntimeStack *stack = runtime->stack;
-
-
 #if _JVM_DEBUG_BYTECODE_DETAIL > 5
+    RuntimeStack *stack = runtime->stack;
     invoke_deepth(runtime);
     jvm_printf("breakpoint \n");
 #endif
@@ -2435,9 +2417,9 @@ s32 op_return(u8 **opCode, Runtime *runtime) {
 
 
 s32 op_ireturn(u8 **opCode, Runtime *runtime) {
-    RuntimeStack *stack = runtime->stack;
 
 #if _JVM_DEBUG_BYTECODE_DETAIL > 5
+    RuntimeStack *stack = runtime->stack;
     StackEntry entry;
     peek_entry(stack, &entry, stack->size - 1);
     invoke_deepth(runtime);
