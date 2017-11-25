@@ -99,8 +99,6 @@ s32 execute(c8 *p_classpath, c8 *p_mainclass, s32 argc, c8 **argv) {
     instruct_profile = hashtable_create(DEFAULT_HASH_FUNC, DEFAULT_HASH_EQUALS_FUNC);
 #endif
 
-    //为指令创建索引
-    instructionsIndexies = instruct_indexies_create();
     //创建垃圾收集器
     garbage_collector_create();
 
@@ -226,7 +224,6 @@ s32 execute(c8 *p_classpath, c8 *p_mainclass, s32 argc, c8 **argv) {
     //
     utf8_destory(str_mainClsName);
     arraylist_destory(thread_list);
-    instruct_indexies_destory(instructionsIndexies);
     instructionsIndexies = NULL;
     native_lib_destory();
     sys_properties_dispose();

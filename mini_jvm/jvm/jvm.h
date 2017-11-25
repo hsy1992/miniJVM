@@ -793,16 +793,6 @@ Instance *instance_copy(Instance *src);
 //======================= bytecode =============================
 
 
-typedef s32 (*InstructFunc)(u8 **opCode, Runtime *runtime);
-
-struct _Instruction {
-    c8 *name;
-    u8 opCode;
-    InstructFunc func;
-};
-
-c8 *find_instruct_name(u8 op);
-
 ConstantUTF8 *find_constant_utf8(Class *clazz, s32 index);
 
 ConstantStringRef *find_constant_stringref(Class *clazz, s32 index);
@@ -852,10 +842,6 @@ Class *getClassByConstantClassRef(Class *clazz, s32 index);
 s32 execute(c8 *p_classpath, c8 *mainclass, s32 argc, c8 **argv);
 
 s32 execute_method(MethodInfo *method, Runtime *runtime, Class *clazz);
-
-Instruction **instruct_indexies_create(void);
-
-void instruct_indexies_destory(Instruction **instcts);
 
 //======================= stack =============================
 RuntimeStack *stack_create(s32 entry_size);

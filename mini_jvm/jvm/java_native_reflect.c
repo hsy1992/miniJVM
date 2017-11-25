@@ -431,7 +431,7 @@ s32 javax_mini_reflect_vm_RefNative_getGarbageReferedObjs(Runtime *runtime, Clas
     push_ref(runtime->stack, jarr);//先放入栈，再关联回收器，防止多线程回收
 
 #if _JVM_DEBUG_BYTECODE_DETAIL > 5
-    jvm_printf("javax_mini_reflect_vm_RefNative_getGarbageReferedObjs %llx\n",(u64) (long) trun);
+    jvm_printf("javax_mini_reflect_vm_RefNative_getGarbageReferedObjs %llx\n",(u64) (long) jarr);
 #endif
     return 0;
 }
@@ -441,7 +441,7 @@ s32 javax_mini_reflect_vm_RefNative_getGarbageStatus(Runtime *runtime, Class *cl
     push_int(runtime->stack, collector->_garbage_thread_status);//先放入栈，再关联回收器，防止多线程回收
 
 #if _JVM_DEBUG_BYTECODE_DETAIL > 5
-    jvm_printf("javax_mini_reflect_vm_RefNative_getGarbageStatus %llx\n",(u64) (long) trun);
+    jvm_printf("javax_mini_reflect_vm_RefNative_getGarbageStatus %d\n",collector->_garbage_thread_status);
 #endif
     return 0;
 }
