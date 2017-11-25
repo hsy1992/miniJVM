@@ -203,7 +203,7 @@ Runtime *runtime_create(Runtime *parent) {
 void runtime_destory(Runtime *runtime) {
     s32 is_top = runtime->threadInfo->top_runtime == runtime;
     if (!is_top) {
-        arraylist_push_back(runtime->threadInfo->top_runtime->runtime_pool, runtime);
+        arraylist_push_back_unsafe(runtime->threadInfo->top_runtime->runtime_pool, runtime);
         __refer lv = runtime->localvar;
         s32 max = runtime->localvar_max;
         memset(runtime, 0, sizeof(Runtime));

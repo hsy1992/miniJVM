@@ -343,7 +343,7 @@ void printConstantPool(Class *clazz) {
             ConstantFloat *cf = arraylist_get_value(p->floatCP, i);
             jvm_printf(" cp_index[%d], f32[%d], tag = %d,  %.4f\n",
                        cf->index, i, cf->tag,
-                       
+
                        cf->value);
         }
     }
@@ -1089,6 +1089,7 @@ void class_link(Class *clazz) {
                 jvm_free(ptr->attributes[j].info);//无用删除
                 ptr->attributes[j].info = NULL;
                 ptr->attributes[j].converted_code = ca;
+                ptr->code_attr_idx = j;
             }
         }
     }

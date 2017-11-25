@@ -600,7 +600,7 @@ struct _MethodInfo {
     Class *_this_class;
     java_native_fun native_func;
     Pairlist *breakpoint;
-
+    s32 code_attr_idx;
 };
 
 /*  Method Pool */

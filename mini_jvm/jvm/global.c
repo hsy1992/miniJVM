@@ -13,7 +13,6 @@ ClassLoader *array_classloader;
 ArrayList *native_libs;
 ArrayList *thread_list; //all thread
 Hashtable *sys_prop;
-ArrayList *runtime_cache;
 
 GcCollector *collector;
 

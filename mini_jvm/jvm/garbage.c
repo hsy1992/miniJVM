@@ -36,7 +36,7 @@ s32 garbage_copy_refer_thread(Runtime *pruntime);
  * 创建垃圾收集线程，
  *
  * 收集方法如下：
- * 当对象被引用时，会引用计数+1，同时注册进垃圾收集器，纳入监管体系。
+ * 当对象被创建时，注册进垃圾收集器，纳入监管体系。
  *
  *
  * 注册的对象包括 Class 类， Instance 对象实例（包括数组对象）
@@ -49,13 +49,13 @@ s32 garbage_copy_refer_thread(Runtime *pruntime);
  * jdwp调试线程中的运行时对象不可回收。
  *
  * collecting  step:
- * gc spent much time , more smaller stop the world:
+ *
  * 1. stop the world
  * 2. all reg/hold/release operation putin a cache comtainer after stop the world,
  * 3. copy all runtime refer
- * 4. resume the world
- * 5. gc
- * 6. move cache to main objs comtainer
+ * 4. move cache to main objs comtainer
+ * 5. resume the world
+ * 6. gc
  * 7. restore reg/hold/release opreation
  *
  * @return errorcode
@@ -316,7 +316,7 @@ void *collect_thread_run(void *para) {
         if (currentTimeMillis() - lastgc < 1000) {// less than 3 sec no gc
             continue;
         }
-        if (jdwpserver.clients->length) {// less than 3 sec no gc
+        if (java_debug && jdwpserver.clients->length) {// less than 3 sec no gc
             continue;
         }
         if (currentTimeMillis() - lastgc > GARBAGE_PERIOD_MS || heap_size > MAX_HEAP_SIZE) {
@@ -363,7 +363,7 @@ void garbage_move_cache(s32 move_limit) {
 }
 
 /**
- * 查找所有实例，如果发现没有被引用 set->length==0 时，也不在运行时runtime的 stack 和 局部变量表中
+ * 查找所有实例，如果发现没有被引用时 mb->garbage_mark ，
  * 去除掉此对象对其他对象的引用，并销毁对象
  *
  * @return ret
@@ -579,9 +579,7 @@ void garbage_copy_refer() {
 
 /**
  * 判定某个对象是否被所有线程的runtime引用
- * 引用有两种情况：
- * 一种是被其他实例所引用，会putfield或putstatic
- * 另一种是被运行时的栈或局部变量所引用，
+ * 被运行时的栈或局部变量所引用，
  * 这两种情况下，对象是不能被释放的
  *
  * @param pruntime son of runtime
