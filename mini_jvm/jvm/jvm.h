@@ -292,26 +292,6 @@ static const c8 RUNTIME_STATUS_RETURN = -1;
 static const c8 RUNTIME_STATUS_EXCEPTION = -2;
 static const c8 RUNTIME_STATUS_ERROR = -3;
 
-//指令if类型
-enum {
-    TYPE_IF_ACMPEQ,
-    TYPE_IF_ACMPNE,
-    TYPE_IF_ICMPEQ,
-    TYPE_IF_ICMPGE,
-    TYPE_IF_ICMPGT,
-    TYPE_IF_ICMPLE,
-    TYPE_IF_ICMPLT,
-    TYPE_IF_ICMPNE,
-    TYPE_IFEQ,
-    TYPE_IFGE,
-    TYPE_IFGT,
-    TYPE_IFLE,
-    TYPE_IFLT,
-    TYPE_IFNE,
-    TYPE_IFNONNULL,
-    TYPE_IFNULL
-};
-
 
 //======================= global var =============================
 extern Instance *main_thread;

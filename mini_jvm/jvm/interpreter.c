@@ -2447,88 +2447,157 @@ s32 op_ireturn(u8 **opCode, Runtime *runtime) {
     return RUNTIME_STATUS_RETURN;
 }
 
-s32 op_if_cmp_ia(u8 **opCode, Runtime *runtime, s32 type) {
+
+s32 op_if_acmpeq(u8 **opCode, Runtime *runtime) {
     RuntimeStack *stack = runtime->stack;
-
-    Short2Char s2c;
-    s2c.c1 = opCode[0][1];
-    s2c.c0 = opCode[0][2];
-
-    s32 branchoffset = s2c.s;
-
-    s32 v2 = pop_int(stack);
-    s32 v1 = pop_int(stack);
-
-    s32 con = 0;
-    switch (type) {
-        case TYPE_IF_ACMPEQ:
-            con = v1 == v2;
-            break;
-        case TYPE_IF_ACMPNE:
-            con = v1 != v2;
-            break;
-        case TYPE_IF_ICMPEQ:
-            con = v1 == v2;
-            break;
-        case TYPE_IF_ICMPGE:
-            con = v1 >= v2;
-            break;
-        case TYPE_IF_ICMPGT:
-            con = v1 > v2;
-            break;
-        case TYPE_IF_ICMPLE:
-            con = v1 <= v2;
-            break;
-        case TYPE_IF_ICMPLT:
-            con = v1 < v2;
-            break;
-        case TYPE_IF_ICMPNE:
-            con = v1 != v2;
-            break;
-    }
-#if _JVM_DEBUG_BYTECODE_DETAIL > 5
-    c8 *syb[8]={"==","!=","==",">=",">","<=","<","!="};
-    invoke_deepth(runtime);
-    jvm_printf("ifcmp: %d %s %d =%d then %d\n", v1, syb[type], v2, con, branchoffset);
-#endif
-    if (con) {
-        *opCode = *opCode + branchoffset;
+    __refer v2 = pop_ref(stack);
+    __refer v1 = pop_ref(stack);
+    if (v1 == v2) {
+        Short2Char s2c;
+        s2c.c1 = opCode[0][1];
+        s2c.c0 = opCode[0][2];
+        *opCode = *opCode + s2c.s;
     } else {
         *opCode = *opCode + 3;
     }
+#if _JVM_DEBUG_BYTECODE_DETAIL > 5
+    invoke_deepth(runtime);
+    jvm_printf("op_if_acmpeq: %lld == %lld \n", (s64) (long)v1,(s64) (long)v2);
+#endif
     return 0;
 }
 
-s32 op_if_acmpeq(u8 **opCode, Runtime *runtime) {
-    return op_if_cmp_ia(opCode, runtime, TYPE_IF_ACMPEQ);
-}
-
 s32 op_if_acmpne(u8 **opCode, Runtime *runtime) {
-    return op_if_cmp_ia(opCode, runtime, TYPE_IF_ACMPNE);
+    RuntimeStack *stack = runtime->stack;
+    __refer v2 = pop_ref(stack);
+    __refer v1 = pop_ref(stack);
+    if (v1 != v2) {
+        Short2Char s2c;
+        s2c.c1 = opCode[0][1];
+        s2c.c0 = opCode[0][2];
+        *opCode = *opCode + s2c.s;
+    } else {
+        *opCode = *opCode + 3;
+    }
+#if _JVM_DEBUG_BYTECODE_DETAIL > 5
+    invoke_deepth(runtime);
+    jvm_printf("op_if_acmpne: %lld != %lld \n", (s64) (long)v1,(s64) (long)v2);
+#endif
+    return 0;
 }
 
 s32 op_if_icmpeq(u8 **opCode, Runtime *runtime) {
-    return op_if_cmp_ia(opCode, runtime, TYPE_IF_ICMPEQ);
+    RuntimeStack *stack = runtime->stack;
+    s32 v2 = pop_int(stack);
+    s32 v1 = pop_int(stack);
+    if (v1 == v2) {
+        Short2Char s2c;
+        s2c.c1 = opCode[0][1];
+        s2c.c0 = opCode[0][2];
+        *opCode = *opCode + s2c.s;
+    } else {
+        *opCode = *opCode + 3;
+    }
+#if _JVM_DEBUG_BYTECODE_DETAIL > 5
+    invoke_deepth(runtime);
+    jvm_printf("op_if_icmpeq: %lld == %lld \n", (s64) (long)v1,(s64) (long)v2);
+#endif
+    return 0;
 }
 
 s32 op_if_icmpne(u8 **opCode, Runtime *runtime) {
-    return op_if_cmp_ia(opCode, runtime, TYPE_IF_ICMPNE);
+    RuntimeStack *stack = runtime->stack;
+    s32 v2 = pop_int(stack);
+    s32 v1 = pop_int(stack);
+    if (v1 != v2) {
+        Short2Char s2c;
+        s2c.c1 = opCode[0][1];
+        s2c.c0 = opCode[0][2];
+        *opCode = *opCode + s2c.s;
+    } else {
+        *opCode = *opCode + 3;
+    }
+#if _JVM_DEBUG_BYTECODE_DETAIL > 5
+    invoke_deepth(runtime);
+    jvm_printf("op_if_icmpne: %lld != %lld \n", (s64) (long)v1,(s64) (long)v2);
+#endif
+    return 0;
 }
 
 s32 op_if_icmple(u8 **opCode, Runtime *runtime) {
-    return op_if_cmp_ia(opCode, runtime, TYPE_IF_ICMPLE);
+    RuntimeStack *stack = runtime->stack;
+    s32 v2 = pop_int(stack);
+    s32 v1 = pop_int(stack);
+    if (v1 <= v2) {
+        Short2Char s2c;
+        s2c.c1 = opCode[0][1];
+        s2c.c0 = opCode[0][2];
+        *opCode = *opCode + s2c.s;
+    } else {
+        *opCode = *opCode + 3;
+    }
+#if _JVM_DEBUG_BYTECODE_DETAIL > 5
+    invoke_deepth(runtime);
+    jvm_printf("op_if_icmple: %lld <= %lld \n", (s64) (long)v1,(s64) (long)v2);
+#endif
+    return 0;
 }
 
 s32 op_if_icmpge(u8 **opCode, Runtime *runtime) {
-    return op_if_cmp_ia(opCode, runtime, TYPE_IF_ICMPGE);
+    RuntimeStack *stack = runtime->stack;
+    s32 v2 = pop_int(stack);
+    s32 v1 = pop_int(stack);
+    if (v1 >= v2) {
+        Short2Char s2c;
+        s2c.c1 = opCode[0][1];
+        s2c.c0 = opCode[0][2];
+        *opCode = *opCode + s2c.s;
+    } else {
+        *opCode = *opCode + 3;
+    }
+#if _JVM_DEBUG_BYTECODE_DETAIL > 5
+    invoke_deepth(runtime);
+    jvm_printf("op_if_icmpge: %lld >= %lld \n", (s64) (long)v1,(s64) (long)v2);
+#endif
+    return 0;
 }
 
 s32 op_if_icmplt(u8 **opCode, Runtime *runtime) {
-    return op_if_cmp_ia(opCode, runtime, TYPE_IF_ICMPLT);
+    RuntimeStack *stack = runtime->stack;
+    s32 v2 = pop_int(stack);
+    s32 v1 = pop_int(stack);
+    if (v1 < v2) {
+        Short2Char s2c;
+        s2c.c1 = opCode[0][1];
+        s2c.c0 = opCode[0][2];
+        *opCode = *opCode + s2c.s;
+    } else {
+        *opCode = *opCode + 3;
+    }
+#if _JVM_DEBUG_BYTECODE_DETAIL > 5
+    invoke_deepth(runtime);
+    jvm_printf("op_if_icmplt: %lld < %lld \n", (s64) (long)v1,(s64) (long)v2);
+#endif
+    return 0;
 }
 
 s32 op_if_icmpgt(u8 **opCode, Runtime *runtime) {
-    return op_if_cmp_ia(opCode, runtime, TYPE_IF_ICMPGT);
+    RuntimeStack *stack = runtime->stack;
+    s32 v2 = pop_int(stack);
+    s32 v1 = pop_int(stack);
+    if (v1 > v2) {
+        Short2Char s2c;
+        s2c.c1 = opCode[0][1];
+        s2c.c0 = opCode[0][2];
+        *opCode = *opCode + s2c.s;
+    } else {
+        *opCode = *opCode + 3;
+    }
+#if _JVM_DEBUG_BYTECODE_DETAIL > 5
+    invoke_deepth(runtime);
+    jvm_printf("op_if_icmpgt: %lld > %lld \n", (s64) (long)v1,(s64) (long)v2);
+#endif
+    return 0;
 }
 
 
