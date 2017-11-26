@@ -234,7 +234,7 @@ static inline s32 op_xaload(u8 **opCode, Runtime *runtime) {
     Instance *arr = (Instance *) pop_ref(stack);
     if (arr == NULL) {
         Instance *exception = exception_create(JVM_EXCEPTION_NULLPOINTER, runtime);
-        push_ref(runtime->stack, (__refer) exception);
+        push_ref(stack, (__refer) exception);
         ret = RUNTIME_STATUS_EXCEPTION;
     } else {
         s32 tidx = arr->mb.clazz->arr_type_index;
@@ -688,6 +688,7 @@ s32 op_notsupport(u8 **opCode, Runtime *runtime) {
     return 0;
 }
 
+//----------------------------------  tool func  ------------------------------------------
 
 static ExceptionTable *
 find_exception_handler(Runtime *runtime, Instance *exception, CodeAttribute *ca, s32 offset, __refer exception_ref) {
@@ -798,6 +799,7 @@ s32 execute_method(MethodInfo *method, Runtime *pruntime, Class *clazz) {
 
     runtime->method = method;
     runtime->clazz = clazz;
+    s32 method_sync = method->access_flags & ACC_SYNCHRONIZED;
     s32 stackSize;
 
     if (method->access_flags & ACC_NATIVE) {//本地方法
@@ -816,9 +818,9 @@ s32 execute_method(MethodInfo *method, Runtime *pruntime, Class *clazz) {
                                                         utf8_cstr(method->descriptor));
         jvm_printf("%s.%s()  {\n", native->clzname, native->methodname);
 #endif
-        if (method->access_flags & ACC_SYNCHRONIZED)synchronized_lock_method(method, runtime);
+        if (method_sync)synchronized_lock_method(method, runtime);
         ret = method->native_func(runtime, clazz);
-        if (method->access_flags & ACC_SYNCHRONIZED)synchronized_unlock_method(method, runtime);
+        if (method_sync)synchronized_unlock_method(method, runtime);
         localvar_dispose(runtime);
 #if _JVM_DEBUG_BYTECODE_DETAIL > 3
         invoke_deepth(runtime);
@@ -831,7 +833,7 @@ s32 execute_method(MethodInfo *method, Runtime *pruntime, Class *clazz) {
             localvar_init(runtime, ca->max_locals + 1);
             stack2localvar(method, pruntime, runtime);
             stackSize = pruntime->stack->size;
-            if (method->access_flags & ACC_SYNCHRONIZED)synchronized_lock_method(method, runtime);
+            if (method_sync)synchronized_lock_method(method, runtime);
 
 #if _JVM_DEBUG_BYTECODE_DUMP
             jvm_printf("---------------------------------\n");
@@ -848,6 +850,7 @@ s32 execute_method(MethodInfo *method, Runtime *pruntime, Class *clazz) {
             runtime->pc = ca->code;
             runtime->ca = ca;
             s32 i_r = 0;
+            RuntimeStack *stack = runtime->stack;
             do {
                 if (java_debug) {
                     //breakpoint
@@ -862,7 +865,7 @@ s32 execute_method(MethodInfo *method, Runtime *pruntime, Class *clazz) {
                     }
                 }
                 //process thread suspend
-                check_suspend_and_pause(runtime);
+                if (runtime->threadInfo->suspend_count)check_suspend_and_pause(runtime);
 
 #if _JVM_DEBUG_PROFILE
                 u8 instruct_code = runtime->pc[0];
@@ -882,18 +885,18 @@ s32 execute_method(MethodInfo *method, Runtime *pruntime, Class *clazz) {
                         jvm_printf("nop\n");
 #endif
                         *opCode = *opCode + 1;
-                        
+
                         break;
                     }
                     case op_aconst_null: {
 
-                        push_ref(runtime->stack, NULL);
+                        push_ref(stack, NULL);
 #if _JVM_DEBUG_BYTECODE_DETAIL > 5
                         invoke_deepth(runtime);
                         jvm_printf("aconst_null: push %d into stack\n", 0);
 #endif
                         *opCode = *opCode + 1;
-                        
+
                         break;
                     }
                     case op_iconst_m1: {
@@ -971,18 +974,18 @@ s32 execute_method(MethodInfo *method, Runtime *pruntime, Class *clazz) {
 
                     case op_bipush: {
                         s32 value = (c8) opCode[0][1];
-                        push_int(runtime->stack, value);
+                        push_int(stack, value);
 #if _JVM_DEBUG_BYTECODE_DETAIL > 5
                         invoke_deepth(runtime);
                         jvm_printf("bipush a byte %d onto the stack \n", value);
 #endif
                         *opCode = *opCode + 2;
-                        
+
                         break;
                     }
 
                     case op_sipush: {
-                        RuntimeStack *stack = runtime->stack;
+
                         Short2Char s2c;
                         s2c.c1 = opCode[0][1];
                         s2c.c0 = opCode[0][2];
@@ -992,7 +995,7 @@ s32 execute_method(MethodInfo *method, Runtime *pruntime, Class *clazz) {
 #endif
                         push_int(stack, s2c.s);
                         *opCode = *opCode + 3;
-                        
+
                         break;
                     }
 
@@ -1015,7 +1018,7 @@ s32 execute_method(MethodInfo *method, Runtime *pruntime, Class *clazz) {
                     }
 
                     case op_ldc2_w: {
-                        RuntimeStack *stack = runtime->stack;
+
                         Short2Char s2c;
                         s2c.c1 = opCode[0][1];
                         s2c.c0 = opCode[0][2];
@@ -1029,7 +1032,7 @@ s32 execute_method(MethodInfo *method, Runtime *pruntime, Class *clazz) {
                         jvm_printf("ldc2_w: push a constant(%d) [%llx] onto the stack \n", index, value);
 #endif
                         *opCode = *opCode + 3;
-                        
+
                         break;
                     }
 
@@ -1052,8 +1055,8 @@ s32 execute_method(MethodInfo *method, Runtime *pruntime, Class *clazz) {
                         invoke_deepth(runtime);
                         jvm_printf("i(fa)load: push localvar(%d)= [%x]/%d  \n", s2c.s, value, value);
 #endif
-                        push_int(runtime->stack, value);
-                        
+                        push_int(stack, value);
+
                         break;
                     }
 
@@ -1078,8 +1081,8 @@ s32 execute_method(MethodInfo *method, Runtime *pruntime, Class *clazz) {
                         invoke_deepth(runtime);
                         jvm_printf("l(d)load: push localvar(%d) [%llx]/%lf into stack \n", s2c.s, l2d.l, l2d.d);
 #endif
-                        push_long(runtime->stack, l2d.l);
-                        
+                        push_long(stack, l2d.l);
+
                         break;
                     }
 
@@ -1101,8 +1104,8 @@ s32 execute_method(MethodInfo *method, Runtime *pruntime, Class *clazz) {
                         invoke_deepth(runtime);
                         jvm_printf("i(fa)load: push localvar(%d)= [%llx]  \n", s2c.s, (s64) (long) value);
 #endif
-                        push_ref(runtime->stack, value);
-                        
+                        push_ref(stack, value);
+
                         break;
                     }
 
@@ -1205,7 +1208,6 @@ s32 execute_method(MethodInfo *method, Runtime *pruntime, Class *clazz) {
                     case op_aload_3: {
                         i_r = op_aload_n(opCode, runtime, 3);
                         break;
-                        break;
                     }
 
                     case op_iaload: {
@@ -1270,7 +1272,7 @@ s32 execute_method(MethodInfo *method, Runtime *pruntime, Class *clazz) {
 
 
                     case op_astore: {
-                        RuntimeStack *stack = runtime->stack;
+
                         Short2Char s2c;
                         if (runtime->wideMode) {
                             s2c.c1 = opCode[0][1];
@@ -1289,7 +1291,7 @@ s32 execute_method(MethodInfo *method, Runtime *pruntime, Class *clazz) {
 #endif
                         localvar_setRefer(runtime, s2c.s, value);
 
-                        
+
                         break;
                     }
 
@@ -1441,19 +1443,19 @@ s32 execute_method(MethodInfo *method, Runtime *pruntime, Class *clazz) {
 
 
                     case op_pop: {
-                        pop_empty(runtime->stack);
+                        pop_empty(stack);
 #if _JVM_DEBUG_BYTECODE_DETAIL > 5
                         invoke_deepth(runtime);
                         jvm_printf("pop\n");
 #endif
                         *opCode = *opCode + 1;
-                        
+
                         break;
                     }
 
 
                     case op_pop2: {
-                        RuntimeStack *stack = runtime->stack;
+
 
                         StackEntry entry;
                         peek_entry(stack, &entry, stack->size - 1);
@@ -1468,13 +1470,13 @@ s32 execute_method(MethodInfo *method, Runtime *pruntime, Class *clazz) {
                         jvm_printf("pop2\n");
 #endif
                         *opCode = *opCode + 1;
-                        
+
                         break;
                     }
 
 
                     case op_dup: {
-                        RuntimeStack *stack = runtime->stack;
+
 
                         StackEntry entry;
                         pop_entry(stack, &entry);
@@ -1487,12 +1489,12 @@ s32 execute_method(MethodInfo *method, Runtime *pruntime, Class *clazz) {
                         jvm_printf("dup\n");
 #endif
                         *opCode = *opCode + 1;
-                        
+
                         break;
                     }
 
                     case op_dup_x1: {
-                        RuntimeStack *stack = runtime->stack;
+
                         StackEntry entry1;
                         pop_entry(stack, &entry1);
                         StackEntry entry2;
@@ -1507,12 +1509,12 @@ s32 execute_method(MethodInfo *method, Runtime *pruntime, Class *clazz) {
                         jvm_printf("dup_x1\n");
 #endif
                         *opCode = *opCode + 1;
-                        
+
                         break;
                     }
 
                     case op_dup_x2: {
-                        RuntimeStack *stack = runtime->stack;
+
                         StackEntry entry;
                         peek_entry(stack, &entry, stack->size - 2);
                         if (is_cat2(&entry)) {
@@ -1542,12 +1544,12 @@ s32 execute_method(MethodInfo *method, Runtime *pruntime, Class *clazz) {
                         jvm_printf("dup_x2 \n");
 #endif
                         *opCode = *opCode + 1;
-                        
+
                         break;
                     }
 
                     case op_dup2: {
-                        RuntimeStack *stack = runtime->stack;
+
                         StackEntry entry;
                         peek_entry(stack, &entry, stack->size - 1);
                         if (is_cat2(&entry)) {
@@ -1567,13 +1569,13 @@ s32 execute_method(MethodInfo *method, Runtime *pruntime, Class *clazz) {
                         jvm_printf("op_dup2\n");
 #endif
                         *opCode = *opCode + 1;
-                        
+
                         break;
                     }
 
 
                     case op_dup2_x1: {
-                        RuntimeStack *stack = runtime->stack;
+
                         StackEntry entry;
                         peek_entry(stack, &entry, stack->size - 1);
                         if (is_cat2(&entry)) {
@@ -1604,12 +1606,12 @@ s32 execute_method(MethodInfo *method, Runtime *pruntime, Class *clazz) {
                         jvm_printf("dup2_x1\n");
 #endif
                         *opCode = *opCode + 1;
-                        
+
                         break;
                     }
 
                     case op_dup2_x2: {
-                        RuntimeStack *stack = runtime->stack;
+
 
                         StackEntry entry1;
                         peek_entry(stack, &entry1, stack->size - 1);
@@ -1665,12 +1667,12 @@ s32 execute_method(MethodInfo *method, Runtime *pruntime, Class *clazz) {
                         jvm_printf("dup2_x2\n");
 #endif
                         *opCode = *opCode + 1;
-                        
+
                         break;
                     }
 
                     case op_swap: {
-                        RuntimeStack *stack = runtime->stack;
+
 
                         StackEntry entry1;
                         pop_entry(stack, &entry1);
@@ -1686,13 +1688,13 @@ s32 execute_method(MethodInfo *method, Runtime *pruntime, Class *clazz) {
                         jvm_printf("swap\n");
 #endif
                         *opCode = *opCode + 1;
-                        
+
                         break;
                     }
 
 
                     case op_iadd: {
-                        RuntimeStack *stack = runtime->stack;
+
 
                         s32 value1 = pop_int(stack);
                         s32 value2 = pop_int(stack);
@@ -1703,13 +1705,13 @@ s32 execute_method(MethodInfo *method, Runtime *pruntime, Class *clazz) {
 #endif
                         push_int(stack, result);
                         *opCode = *opCode + 1;
-                        
+
                         break;
                     }
 
 
                     case op_ladd: {
-                        RuntimeStack *stack = runtime->stack;
+
                         s64 value1 = pop_long(stack);
                         s64 value2 = pop_long(stack);
                         s64 result = value2 + value1;
@@ -1720,12 +1722,12 @@ s32 execute_method(MethodInfo *method, Runtime *pruntime, Class *clazz) {
 #endif
                         push_long(stack, result);
                         *opCode = *opCode + 1;
-                        
+
                         break;
                     }
 
                     case op_fadd: {
-                        RuntimeStack *stack = runtime->stack;
+
                         f32 value1 = pop_float(stack);
                         f32 value2 = pop_float(stack);
                         f32 result = value2 + value1;
@@ -1736,12 +1738,12 @@ s32 execute_method(MethodInfo *method, Runtime *pruntime, Class *clazz) {
 #endif
                         push_float(stack, result);
                         *opCode = *opCode + 1;
-                        
+
                         break;
                     }
 
                     case op_dadd: {
-                        RuntimeStack *stack = runtime->stack;
+
 
                         f64 value1 = pop_double(stack);
                         f64 value2 = pop_double(stack);
@@ -1753,12 +1755,12 @@ s32 execute_method(MethodInfo *method, Runtime *pruntime, Class *clazz) {
 #endif
                         push_double(stack, result);
                         *opCode = *opCode + 1;
-                        
+
                         break;
                     }
 
                     case op_isub: {
-                        RuntimeStack *stack = runtime->stack;
+
                         s32 value2 = pop_int(stack);
                         s32 value1 = pop_int(stack);
                         s32 result = 0;
@@ -1769,12 +1771,12 @@ s32 execute_method(MethodInfo *method, Runtime *pruntime, Class *clazz) {
 #endif
                         push_int(stack, result);
                         *opCode = *opCode + 1;
-                        
+
                         break;
                     }
 
                     case op_lsub: {
-                        RuntimeStack *stack = runtime->stack;
+
                         s64 value1 = pop_long(stack);
                         s64 value2 = pop_long(stack);
                         s64 result = value2 - value1;
@@ -1785,12 +1787,12 @@ s32 execute_method(MethodInfo *method, Runtime *pruntime, Class *clazz) {
 #endif
                         push_long(stack, result);
                         *opCode = *opCode + 1;
-                        
+
                         break;
                     }
 
                     case op_fsub: {
-                        RuntimeStack *stack = runtime->stack;
+
                         f32 value1 = pop_float(stack);
                         f32 value2 = pop_float(stack);
                         f32 result = value2 - value1;
@@ -1801,13 +1803,13 @@ s32 execute_method(MethodInfo *method, Runtime *pruntime, Class *clazz) {
 #endif
                         push_float(stack, result);
                         *opCode = *opCode + 1;
-                        
+
                         break;
                     }
 
 
                     case op_dsub: {
-                        RuntimeStack *stack = runtime->stack;
+
                         f64 value1 = pop_double(stack);
                         f64 value2 = pop_double(stack);
                         f64 result = value2 - value1;
@@ -1818,12 +1820,12 @@ s32 execute_method(MethodInfo *method, Runtime *pruntime, Class *clazz) {
 #endif
                         push_double(stack, result);
                         *opCode = *opCode + 1;
-                        
+
                         break;
                     }
 
                     case op_imul: {
-                        RuntimeStack *stack = runtime->stack;
+
 
                         s32 value1 = pop_int(stack);
                         s32 value2 = pop_int(stack);
@@ -1835,12 +1837,12 @@ s32 execute_method(MethodInfo *method, Runtime *pruntime, Class *clazz) {
 #endif
                         push_int(stack, result);
                         *opCode = *opCode + 1;
-                        
+
                         break;
                     }
 
                     case op_lmul: {
-                        RuntimeStack *stack = runtime->stack;
+
                         s64 value1 = pop_long(stack);
                         s64 value2 = pop_long(stack);
                         s64 result = value2 * value1;
@@ -1851,12 +1853,12 @@ s32 execute_method(MethodInfo *method, Runtime *pruntime, Class *clazz) {
 #endif
                         push_long(stack, result);
                         *opCode = *opCode + 1;
-                        
+
                         break;
                     }
 
                     case op_fmul: {
-                        RuntimeStack *stack = runtime->stack;
+
                         f32 value1 = pop_float(stack);
                         f32 value2 = pop_float(stack);
                         f32 result = 0;
@@ -1867,12 +1869,12 @@ s32 execute_method(MethodInfo *method, Runtime *pruntime, Class *clazz) {
 #endif
                         push_float(stack, result);
                         *opCode = *opCode + 1;
-                        
+
                         break;
                     }
 
                     case op_dmul: {
-                        RuntimeStack *stack = runtime->stack;
+
                         f64 value1 = pop_double(stack);
                         f64 value2 = pop_double(stack);
                         f64 result = 0;
@@ -1883,13 +1885,13 @@ s32 execute_method(MethodInfo *method, Runtime *pruntime, Class *clazz) {
 #endif
                         push_double(stack, result);
                         *opCode = *opCode + 1;
-                        
+
                         break;
                     }
 
 
                     case op_idiv: {
-                        RuntimeStack *stack = runtime->stack;
+
 
                         s32 value2 = pop_int(stack);
                         s32 value1 = pop_int(stack);
@@ -1901,12 +1903,12 @@ s32 execute_method(MethodInfo *method, Runtime *pruntime, Class *clazz) {
 #endif
                         push_int(stack, result);
                         *opCode = *opCode + 1;
-                        
+
                         break;
                     }
 
                     case op_ldiv: {
-                        RuntimeStack *stack = runtime->stack;
+
                         s64 value1 = pop_long(stack);
                         s64 value2 = pop_long(stack);
                         s64 result = value2 / value1;
@@ -1917,12 +1919,12 @@ s32 execute_method(MethodInfo *method, Runtime *pruntime, Class *clazz) {
 #endif
                         push_long(stack, result);
                         *opCode = *opCode + 1;
-                        
+
                         break;
                     }
 
                     case op_fdiv: {
-                        RuntimeStack *stack = runtime->stack;
+
                         f32 value1 = pop_float(stack);
                         f32 value2 = pop_float(stack);
                         f32 result = value2 / value1;
@@ -1933,11 +1935,11 @@ s32 execute_method(MethodInfo *method, Runtime *pruntime, Class *clazz) {
 #endif
                         push_float(stack, result);
                         *opCode = *opCode + 1;
-                        
+
                         break;
                     }
                     case op_ddiv: {
-                        RuntimeStack *stack = runtime->stack;
+
                         f64 value1 = pop_double(stack);
                         f64 value2 = pop_double(stack);
                         f64 result = value2 / value1;
@@ -1948,13 +1950,13 @@ s32 execute_method(MethodInfo *method, Runtime *pruntime, Class *clazz) {
 #endif
                         push_double(stack, result);
                         *opCode = *opCode + 1;
-                        
+
                         break;
                     }
 
 
                     case op_irem: {
-                        RuntimeStack *stack = runtime->stack;
+
                         s32 value1 = pop_int(stack);
                         s32 value2 = pop_int(stack);
                         s32 result = 0;
@@ -1965,12 +1967,12 @@ s32 execute_method(MethodInfo *method, Runtime *pruntime, Class *clazz) {
 #endif
                         push_int(stack, result);
                         *opCode = *opCode + 1;
-                        
+
                         break;
                     }
 
                     case op_lrem: {
-                        RuntimeStack *stack = runtime->stack;
+
                         s64 value1 = pop_long(stack);
                         s64 value2 = pop_long(stack);
                         s64 result = value2 % value1;
@@ -1981,12 +1983,12 @@ s32 execute_method(MethodInfo *method, Runtime *pruntime, Class *clazz) {
 #endif
                         push_long(stack, result);
                         *opCode = *opCode + 1;
-                        
+
                         break;
                     }
 
                     case op_frem: {
-                        RuntimeStack *stack = runtime->stack;
+
                         f32 value1 = pop_float(stack);
                         f32 value2 = pop_float(stack);
                         f32 result = 0;
@@ -1997,12 +1999,12 @@ s32 execute_method(MethodInfo *method, Runtime *pruntime, Class *clazz) {
 #endif
                         push_float(stack, result);
                         *opCode = *opCode + 1;
-                        
+
                         break;
                     }
 
                     case op_drem: {
-                        RuntimeStack *stack = runtime->stack;
+
                         f64 value1 = pop_double(stack);
                         f64 value2 = pop_double(stack);
                         f64 result = value2 - ((s64) (value2 / value1) * value1);;
@@ -2013,12 +2015,12 @@ s32 execute_method(MethodInfo *method, Runtime *pruntime, Class *clazz) {
 #endif
                         push_double(stack, result);
                         *opCode = *opCode + 1;
-                        
+
                         break;
                     }
 
                     case op_ineg: {
-                        RuntimeStack *stack = runtime->stack;
+
                         s32 value1 = pop_int(stack);
 
 #if _JVM_DEBUG_BYTECODE_DETAIL > 5
@@ -2027,12 +2029,12 @@ s32 execute_method(MethodInfo *method, Runtime *pruntime, Class *clazz) {
 #endif
                         push_int(stack, -value1);
                         *opCode = *opCode + 1;
-                        
+
                         break;
                     }
 
                     case op_lneg: {
-                        RuntimeStack *stack = runtime->stack;
+
                         s64 value1 = pop_long(stack);
 
 #if _JVM_DEBUG_BYTECODE_DETAIL > 5
@@ -2041,13 +2043,13 @@ s32 execute_method(MethodInfo *method, Runtime *pruntime, Class *clazz) {
 #endif
                         push_long(stack, -value1);
                         *opCode = *opCode + 1;
-                        
+
                         break;
                     }
 
 
                     case op_fneg: {
-                        RuntimeStack *stack = runtime->stack;
+
                         f32 value1 = pop_float(stack);
 
 #if _JVM_DEBUG_BYTECODE_DETAIL > 5
@@ -2056,13 +2058,13 @@ s32 execute_method(MethodInfo *method, Runtime *pruntime, Class *clazz) {
 #endif
                         push_float(stack, -value1);
                         *opCode = *opCode + 1;
-                        
+
                         break;
                     }
 
 
                     case op_dneg: {
-                        RuntimeStack *stack = runtime->stack;
+
                         f64 value1 = pop_double(stack);
 
 #if _JVM_DEBUG_BYTECODE_DETAIL > 5
@@ -2071,12 +2073,12 @@ s32 execute_method(MethodInfo *method, Runtime *pruntime, Class *clazz) {
 #endif
                         push_double(stack, -value1);
                         *opCode = *opCode + 1;
-                        
+
                         break;
                     }
 
                     case op_ishl: {
-                        RuntimeStack *stack = runtime->stack;
+
                         s32 value1 = pop_int(stack);
                         s32 value2 = pop_int(stack);
 
@@ -2086,12 +2088,12 @@ s32 execute_method(MethodInfo *method, Runtime *pruntime, Class *clazz) {
 #endif
                         push_int(stack, value2 << value1);
                         *opCode = *opCode + 1;
-                        
+
                         break;
                     }
 
                     case op_lshl: {
-                        RuntimeStack *stack = runtime->stack;
+
                         s32 value1 = pop_int(stack);
                         s64 value2 = pop_long(stack);
 
@@ -2101,12 +2103,12 @@ s32 execute_method(MethodInfo *method, Runtime *pruntime, Class *clazz) {
 #endif
                         push_long(stack, value2 << value1);
                         *opCode = *opCode + 1;
-                        
+
                         break;
                     }
 
                     case op_ishr: {
-                        RuntimeStack *stack = runtime->stack;
+
                         s32 value1 = pop_int(stack);
                         s32 value2 = pop_int(stack);
 
@@ -2116,12 +2118,12 @@ s32 execute_method(MethodInfo *method, Runtime *pruntime, Class *clazz) {
 #endif
                         push_int(stack, value2 >> value1);
                         *opCode = *opCode + 1;
-                        
+
                         break;
                     }
 
                     case op_lshr: {
-                        RuntimeStack *stack = runtime->stack;
+
                         s32 value1 = pop_int(stack);
                         s64 value2 = pop_long(stack);
 
@@ -2131,12 +2133,12 @@ s32 execute_method(MethodInfo *method, Runtime *pruntime, Class *clazz) {
 #endif
                         push_long(stack, value2 >> value1);
                         *opCode = *opCode + 1;
-                        
+
                         break;
                     }
 
                     case op_iushr: {
-                        RuntimeStack *stack = runtime->stack;
+
                         s32 value1 = pop_int(stack);
                         u32 value2 = pop_int(stack);
 
@@ -2146,12 +2148,12 @@ s32 execute_method(MethodInfo *method, Runtime *pruntime, Class *clazz) {
 #endif
                         push_int(stack, value2 >> value1);
                         *opCode = *opCode + 1;
-                        
+
                         break;
                     }
 
                     case op_lushr: {
-                        RuntimeStack *stack = runtime->stack;
+
                         s32 value1 = pop_int(stack);
                         u64 value2 = pop_long(stack);
 
@@ -2161,12 +2163,12 @@ s32 execute_method(MethodInfo *method, Runtime *pruntime, Class *clazz) {
 #endif
                         push_long(stack, value2 >> value1);
                         *opCode = *opCode + 1;
-                        
+
                         break;
                     }
 
                     case op_iand: {
-                        RuntimeStack *stack = runtime->stack;
+
                         u32 value1 = pop_int(stack);
                         u32 value2 = pop_int(stack);
 
@@ -2176,12 +2178,12 @@ s32 execute_method(MethodInfo *method, Runtime *pruntime, Class *clazz) {
 #endif
                         push_int(stack, value2 & value1);
                         *opCode = *opCode + 1;
-                        
+
                         break;
                     }
 
                     case op_land: {
-                        RuntimeStack *stack = runtime->stack;
+
                         u64 value1 = pop_long(stack);
                         u64 value2 = pop_long(stack);
 
@@ -2191,13 +2193,13 @@ s32 execute_method(MethodInfo *method, Runtime *pruntime, Class *clazz) {
 #endif
                         push_long(stack, value2 & value1);
                         *opCode = *opCode + 1;
-                        
+
                         break;
                     }
 
 
                     case op_ior: {
-                        RuntimeStack *stack = runtime->stack;
+
                         u32 value1 = pop_int(stack);
                         u32 value2 = pop_int(stack);
 
@@ -2207,12 +2209,12 @@ s32 execute_method(MethodInfo *method, Runtime *pruntime, Class *clazz) {
 #endif
                         push_int(stack, value2 | value1);
                         *opCode = *opCode + 1;
-                        
+
                         break;
                     }
 
                     case op_lor: {
-                        RuntimeStack *stack = runtime->stack;
+
                         u64 value1 = pop_long(stack);
                         u64 value2 = pop_long(stack);
 
@@ -2222,13 +2224,13 @@ s32 execute_method(MethodInfo *method, Runtime *pruntime, Class *clazz) {
 #endif
                         push_long(stack, value2 | value1);
                         *opCode = *opCode + 1;
-                        
+
                         break;
                     }
 
 
                     case op_ixor: {
-                        RuntimeStack *stack = runtime->stack;
+
                         u32 value1 = pop_int(stack);
                         u32 value2 = pop_int(stack);
 
@@ -2238,12 +2240,12 @@ s32 execute_method(MethodInfo *method, Runtime *pruntime, Class *clazz) {
 #endif
                         push_int(stack, value2 ^ value1);
                         *opCode = *opCode + 1;
-                        
+
                         break;
                     }
 
                     case op_lxor: {
-                        RuntimeStack *stack = runtime->stack;
+
                         u64 value1 = pop_long(stack);
                         u64 value2 = pop_long(stack);
 
@@ -2253,7 +2255,7 @@ s32 execute_method(MethodInfo *method, Runtime *pruntime, Class *clazz) {
 #endif
                         push_long(stack, value2 ^ value1);
                         *opCode = *opCode + 1;
-                        
+
                         break;
                     }
 
@@ -2279,12 +2281,12 @@ s32 execute_method(MethodInfo *method, Runtime *pruntime, Class *clazz) {
                         invoke_deepth(runtime);
                         jvm_printf("iinc: localvar(%d) = %d + %d\n", s2c1.s, oldv, s2c2.s);
 #endif
-                        
+
                         break;
                     }
 
                     case op_i2l: {
-                        RuntimeStack *stack = runtime->stack;
+
                         s32 value = pop_int(stack);
 
 #if _JVM_DEBUG_BYTECODE_DETAIL > 5
@@ -2293,12 +2295,12 @@ s32 execute_method(MethodInfo *method, Runtime *pruntime, Class *clazz) {
 #endif
                         push_long(stack, (s64) value);
                         *opCode = *opCode + 1;
-                        
+
                         break;
                     }
 
                     case op_i2f: {
-                        RuntimeStack *stack = runtime->stack;
+
                         s32 value = pop_int(stack);
                         f32 result = value;
 #if _JVM_DEBUG_BYTECODE_DETAIL > 5
@@ -2307,12 +2309,12 @@ s32 execute_method(MethodInfo *method, Runtime *pruntime, Class *clazz) {
 #endif
                         push_float(stack, result);
                         *opCode = *opCode + 1;
-                        
+
                         break;
                     }
 
                     case op_i2d: {
-                        RuntimeStack *stack = runtime->stack;
+
                         s32 value = pop_int(stack);
                         f64 result = value;
 #if _JVM_DEBUG_BYTECODE_DETAIL > 5
@@ -2321,12 +2323,12 @@ s32 execute_method(MethodInfo *method, Runtime *pruntime, Class *clazz) {
 #endif
                         push_double(stack, result);
                         *opCode = *opCode + 1;
-                        
+
                         break;
                     }
 
                     case op_l2i: {
-                        RuntimeStack *stack = runtime->stack;
+
                         s64 value = pop_long(stack);
 
 #if _JVM_DEBUG_BYTECODE_DETAIL > 5
@@ -2335,12 +2337,12 @@ s32 execute_method(MethodInfo *method, Runtime *pruntime, Class *clazz) {
 #endif
                         push_int(stack, (s32) value);
                         *opCode = *opCode + 1;
-                        
+
                         break;
                     }
 
                     case op_l2f: {
-                        RuntimeStack *stack = runtime->stack;
+
                         s64 value = pop_long(stack);
 
 #if _JVM_DEBUG_BYTECODE_DETAIL > 5
@@ -2349,12 +2351,12 @@ s32 execute_method(MethodInfo *method, Runtime *pruntime, Class *clazz) {
 #endif
                         push_float(stack, (f32) value);
                         *opCode = *opCode + 1;
-                        
+
                         break;
                     }
 
                     case op_l2d: {
-                        RuntimeStack *stack = runtime->stack;
+
                         s64 value = pop_long(stack);
 
 #if _JVM_DEBUG_BYTECODE_DETAIL > 5
@@ -2363,13 +2365,13 @@ s32 execute_method(MethodInfo *method, Runtime *pruntime, Class *clazz) {
 #endif
                         push_double(stack, (f64) value);
                         *opCode = *opCode + 1;
-                        
+
                         break;
                     }
 
 
                     case op_f2i: {
-                        RuntimeStack *stack = runtime->stack;
+
                         f32 value1 = pop_float(stack);
                         s32 result = 0;
                         result = (s32) value1;
@@ -2379,12 +2381,12 @@ s32 execute_method(MethodInfo *method, Runtime *pruntime, Class *clazz) {
 #endif
                         push_int(stack, result);
                         *opCode = *opCode + 1;
-                        
+
                         break;
                     }
 
                     case op_f2l: {
-                        RuntimeStack *stack = runtime->stack;
+
                         f32 value1 = pop_float(stack);
                         s64 result = 0;
                         result = (s64) value1;
@@ -2394,12 +2396,12 @@ s32 execute_method(MethodInfo *method, Runtime *pruntime, Class *clazz) {
 #endif
                         push_long(stack, result);
                         *opCode = *opCode + 1;
-                        
+
                         break;
                     }
 
                     case op_f2d: {
-                        RuntimeStack *stack = runtime->stack;
+
                         f32 value1 = pop_float(stack);
                         f64 result = 0;
                         result = value1;
@@ -2409,13 +2411,13 @@ s32 execute_method(MethodInfo *method, Runtime *pruntime, Class *clazz) {
 #endif
                         push_double(stack, result);
                         *opCode = *opCode + 1;
-                        
+
                         break;
                     }
 
 
                     case op_d2i: {
-                        RuntimeStack *stack = runtime->stack;
+
                         f64 value1 = pop_double(stack);
                         s32 result = 0;
                         result = (s32) value1;
@@ -2425,12 +2427,12 @@ s32 execute_method(MethodInfo *method, Runtime *pruntime, Class *clazz) {
 #endif
                         push_int(stack, result);
                         *opCode = *opCode + 1;
-                        
+
                         break;
                     }
 
                     case op_d2l: {
-                        RuntimeStack *stack = runtime->stack;
+
                         f64 value1 = pop_double(stack);
                         s64 result = 0;
                         result = (s64) value1;
@@ -2440,12 +2442,12 @@ s32 execute_method(MethodInfo *method, Runtime *pruntime, Class *clazz) {
 #endif
                         push_long(stack, result);
                         *opCode = *opCode + 1;
-                        
+
                         break;
                     }
 
                     case op_d2f: {
-                        RuntimeStack *stack = runtime->stack;
+
                         f64 value1 = pop_double(stack);
                         f32 result = 0;
                         result = (f32) value1;
@@ -2455,12 +2457,12 @@ s32 execute_method(MethodInfo *method, Runtime *pruntime, Class *clazz) {
 #endif
                         push_float(stack, result);
                         *opCode = *opCode + 1;
-                        
+
                         break;
                     }
 
                     case op_i2b: {
-                        RuntimeStack *stack = runtime->stack;
+
                         s32 value = pop_int(stack);
 
 #if _JVM_DEBUG_BYTECODE_DETAIL > 5
@@ -2469,14 +2471,14 @@ s32 execute_method(MethodInfo *method, Runtime *pruntime, Class *clazz) {
 #endif
                         push_int(stack, (c8) value);
                         *opCode = *opCode + 1;
-                        
+
                         break;
                     }
 
 
                     case op_i2c:
                     case op_i2s: {
-                        RuntimeStack *stack = runtime->stack;
+
                         s32 value = pop_int(stack);
 
 #if _JVM_DEBUG_BYTECODE_DETAIL > 5
@@ -2485,12 +2487,12 @@ s32 execute_method(MethodInfo *method, Runtime *pruntime, Class *clazz) {
 #endif
                         push_int(stack, (u16) value);
                         *opCode = *opCode + 1;
-                        
+
                         break;
                     }
 
                     case op_lcmp: {
-                        RuntimeStack *stack = runtime->stack;
+
                         s64 value1 = pop_long(stack);
                         s64 value2 = pop_long(stack);
                         s32 result = value2 == value1 ? 0 : (value2 > value1 ? 1 : -1);
@@ -2502,13 +2504,13 @@ s32 execute_method(MethodInfo *method, Runtime *pruntime, Class *clazz) {
                         push_int(stack, result);
 
                         *opCode = *opCode + 1;
-                        
+
                         break;
                     }
 
 
                     case op_fcmpl: {
-                        RuntimeStack *stack = runtime->stack;
+
                         f32 value1 = pop_float(stack);
                         f32 value2 = pop_float(stack);
                         s32 result = value2 == value1 ? 0 : (value2 > value1 ? 1 : -1);
@@ -2520,12 +2522,12 @@ s32 execute_method(MethodInfo *method, Runtime *pruntime, Class *clazz) {
                         push_int(stack, result);
 
                         *opCode = *opCode + 1;
-                        
+
                         break;
                     }
 
                     case op_fcmpg: {
-                        RuntimeStack *stack = runtime->stack;
+
                         f32 value1 = pop_float(stack);
                         f32 value2 = pop_float(stack);
                         s32 result = value2 == value1 ? 0 : (value2 > value1 ? 1 : -1);
@@ -2537,12 +2539,12 @@ s32 execute_method(MethodInfo *method, Runtime *pruntime, Class *clazz) {
                         push_int(stack, result);
 
                         *opCode = *opCode + 1;
-                        
+
                         break;
                     }
 
                     case op_dcmpl: {
-                        RuntimeStack *stack = runtime->stack;
+
                         f64 value1 = pop_double(stack);
                         f64 value2 = pop_double(stack);
                         s32 result = value2 == value1 ? 0 : (value2 > value1 ? 1 : -1);
@@ -2554,12 +2556,12 @@ s32 execute_method(MethodInfo *method, Runtime *pruntime, Class *clazz) {
                         push_int(stack, result);
 
                         *opCode = *opCode + 1;
-                        
+
                         break;
                     }
 
                     case op_dcmpg: {
-                        RuntimeStack *stack = runtime->stack;
+
                         f64 value1 = pop_double(stack);
                         f64 value2 = pop_double(stack);
                         s32 result = value2 == value1 ? 0 : (value2 > value1 ? 1 : -1);
@@ -2571,13 +2573,13 @@ s32 execute_method(MethodInfo *method, Runtime *pruntime, Class *clazz) {
                         push_int(stack, result);
 
                         *opCode = *opCode + 1;
-                        
+
                         break;
                     }
 
 
                     case op_ifeq: {
-                        RuntimeStack *stack = runtime->stack;
+
                         s32 val = pop_int(stack);
                         if (val == 0) {
                             Short2Char s2c;
@@ -2592,12 +2594,12 @@ s32 execute_method(MethodInfo *method, Runtime *pruntime, Class *clazz) {
                         jvm_printf("op_ifeq: %d/%llx != 0  then jump %d \n", (s32) (long) val, (s64) (long) val);
 #endif
 
-                        
+
                         break;
                     }
 
                     case op_ifne: {
-                        RuntimeStack *stack = runtime->stack;
+
                         s32 val = pop_int(stack);
                         if (val != 0) {
                             Short2Char s2c;
@@ -2612,13 +2614,13 @@ s32 execute_method(MethodInfo *method, Runtime *pruntime, Class *clazz) {
                         jvm_printf("op_ifne: %d/%llx != 0  then jump %d \n", (s32) (long) val, (s64) (long) val);
 #endif
 
-                        
+
                         break;
                     }
 
 
                     case op_iflt: {
-                        RuntimeStack *stack = runtime->stack;
+
                         s32 val = pop_int(stack);
                         if (val < 0) {
                             Short2Char s2c;
@@ -2633,12 +2635,12 @@ s32 execute_method(MethodInfo *method, Runtime *pruntime, Class *clazz) {
                         jvm_printf("op_iflt: %d/%llx < 0  then jump %d \n", (s32) (long) val, (s64) (long) val);
 #endif
 
-                        
+
                         break;
                     }
 
                     case op_ifge: {
-                        RuntimeStack *stack = runtime->stack;
+
                         s32 val = pop_int(stack);
                         if (val >= 0) {
                             Short2Char s2c;
@@ -2653,12 +2655,12 @@ s32 execute_method(MethodInfo *method, Runtime *pruntime, Class *clazz) {
                         jvm_printf("op_ifge: %d/%llx >= 0  then jump %d \n", (s32) (long) val, (s64) (long) val);
 #endif
 
-                        
+
                         break;
                     }
 
                     case op_ifgt: {
-                        RuntimeStack *stack = runtime->stack;
+
                         s32 val = pop_int(stack);
                         if (val > 0) {
                             Short2Char s2c;
@@ -2673,12 +2675,12 @@ s32 execute_method(MethodInfo *method, Runtime *pruntime, Class *clazz) {
                         jvm_printf("op_ifgt: %d/%llx > 0  then jump %d \n", (s32) (long) val, (s64) (long) val);
 #endif
 
-                        
+
                         break;
                     }
 
                     case op_ifle: {
-                        RuntimeStack *stack = runtime->stack;
+
                         s32 val = pop_int(stack);
                         if (val <= 0) {
                             Short2Char s2c;
@@ -2693,12 +2695,12 @@ s32 execute_method(MethodInfo *method, Runtime *pruntime, Class *clazz) {
                         jvm_printf("op_ifle: %d/%llx <= 0  then jump %d \n", (s32) (long) val, (s64) (long) val);
 #endif
 
-                        
+
                         break;
                     }
 
                     case op_if_icmpeq: {
-                        RuntimeStack *stack = runtime->stack;
+
                         s32 v2 = pop_int(stack);
                         s32 v1 = pop_int(stack);
                         if (v1 == v2) {
@@ -2713,12 +2715,12 @@ s32 execute_method(MethodInfo *method, Runtime *pruntime, Class *clazz) {
                         invoke_deepth(runtime);
                         jvm_printf("op_if_icmpeq: %lld == %lld \n", (s64) (long) v1, (s64) (long) v2);
 #endif
-                        
+
                         break;
                     }
 
                     case op_if_icmpne: {
-                        RuntimeStack *stack = runtime->stack;
+
                         s32 v2 = pop_int(stack);
                         s32 v1 = pop_int(stack);
                         if (v1 != v2) {
@@ -2733,12 +2735,12 @@ s32 execute_method(MethodInfo *method, Runtime *pruntime, Class *clazz) {
                         invoke_deepth(runtime);
                         jvm_printf("op_if_icmpne: %lld != %lld \n", (s64) (long) v1, (s64) (long) v2);
 #endif
-                        
+
                         break;
                     }
 
                     case op_if_icmplt: {
-                        RuntimeStack *stack = runtime->stack;
+
                         s32 v2 = pop_int(stack);
                         s32 v1 = pop_int(stack);
                         if (v1 < v2) {
@@ -2753,12 +2755,12 @@ s32 execute_method(MethodInfo *method, Runtime *pruntime, Class *clazz) {
                         invoke_deepth(runtime);
                         jvm_printf("op_if_icmplt: %lld < %lld \n", (s64) (long) v1, (s64) (long) v2);
 #endif
-                        
+
                         break;
                     }
 
                     case op_if_icmpge: {
-                        RuntimeStack *stack = runtime->stack;
+
                         s32 v2 = pop_int(stack);
                         s32 v1 = pop_int(stack);
                         if (v1 >= v2) {
@@ -2773,12 +2775,12 @@ s32 execute_method(MethodInfo *method, Runtime *pruntime, Class *clazz) {
                         invoke_deepth(runtime);
                         jvm_printf("op_if_icmpge: %lld >= %lld \n", (s64) (long) v1, (s64) (long) v2);
 #endif
-                        
+
                         break;
                     }
 
                     case op_if_icmpgt: {
-                        RuntimeStack *stack = runtime->stack;
+
                         s32 v2 = pop_int(stack);
                         s32 v1 = pop_int(stack);
                         if (v1 > v2) {
@@ -2793,13 +2795,13 @@ s32 execute_method(MethodInfo *method, Runtime *pruntime, Class *clazz) {
                         invoke_deepth(runtime);
                         jvm_printf("op_if_icmpgt: %lld > %lld \n", (s64) (long) v1, (s64) (long) v2);
 #endif
-                        
+
                         break;
                     }
 
 
                     case op_if_icmple: {
-                        RuntimeStack *stack = runtime->stack;
+
                         s32 v2 = pop_int(stack);
                         s32 v1 = pop_int(stack);
                         if (v1 <= v2) {
@@ -2814,12 +2816,12 @@ s32 execute_method(MethodInfo *method, Runtime *pruntime, Class *clazz) {
                         invoke_deepth(runtime);
                         jvm_printf("op_if_icmple: %lld <= %lld \n", (s64) (long) v1, (s64) (long) v2);
 #endif
-                        
+
                         break;
                     }
 
                     case op_if_acmpeq: {
-                        RuntimeStack *stack = runtime->stack;
+
                         __refer v2 = pop_ref(stack);
                         __refer v1 = pop_ref(stack);
                         if (v1 == v2) {
@@ -2834,12 +2836,12 @@ s32 execute_method(MethodInfo *method, Runtime *pruntime, Class *clazz) {
                         invoke_deepth(runtime);
                         jvm_printf("op_if_acmpeq: %lld == %lld \n", (s64) (long) v1, (s64) (long) v2);
 #endif
-                        
+
                         break;
                     }
 
                     case op_if_acmpne: {
-                        RuntimeStack *stack = runtime->stack;
+
                         __refer v2 = pop_ref(stack);
                         __refer v1 = pop_ref(stack);
                         if (v1 != v2) {
@@ -2854,7 +2856,7 @@ s32 execute_method(MethodInfo *method, Runtime *pruntime, Class *clazz) {
                         invoke_deepth(runtime);
                         jvm_printf("op_if_acmpne: %lld != %lld \n", (s64) (long) v1, (s64) (long) v2);
 #endif
-                        
+
                         break;
                     }
 
@@ -2871,12 +2873,12 @@ s32 execute_method(MethodInfo *method, Runtime *pruntime, Class *clazz) {
 #endif
                         *opCode = *opCode + branchoffset;
 
-                        
+
                         break;
                     }
 
                     case op_jsr: {
-                        RuntimeStack *stack = runtime->stack;
+
                         Short2Char s2c;
                         s2c.c1 = opCode[0][1];
                         s2c.c0 = opCode[0][2];
@@ -2889,7 +2891,7 @@ s32 execute_method(MethodInfo *method, Runtime *pruntime, Class *clazz) {
 #endif
                         *opCode = *opCode + branchoffset;
 
-                        
+
                         break;
                     }
 
@@ -2911,7 +2913,7 @@ s32 execute_method(MethodInfo *method, Runtime *pruntime, Class *clazz) {
 #endif
                         *opCode = (u8 *) addr;
 
-                        
+
                         break;
                     }
 
@@ -2937,7 +2939,7 @@ s32 execute_method(MethodInfo *method, Runtime *pruntime, Class *clazz) {
                         i2c.c0 = opCode[0][pos++];
                         s32 high = i2c.i;
 
-                        int val = pop_int(runtime->stack);// pop an int from the stack
+                        int val = pop_int(stack);// pop an int from the stack
                         int offset = 0;
                         if (val < low || val > high) {  // if its less than <low> or greater than <high>,
                             offset = default_offset;              // branch to default
@@ -2956,7 +2958,7 @@ s32 execute_method(MethodInfo *method, Runtime *pruntime, Class *clazz) {
 #endif
                         *opCode = *opCode + offset;
 
-                        
+
                         break;
                     }
 
@@ -2976,7 +2978,7 @@ s32 execute_method(MethodInfo *method, Runtime *pruntime, Class *clazz) {
                         s32 n = i2c.i;
                         s32 i, key;
 
-                        int val = pop_int(runtime->stack);// pop an int from the stack
+                        int val = pop_int(stack);// pop an int from the stack
                         int offset = default_offset;
                         for (i = 0; i < n; i++) {
                             i2c.c3 = opCode[0][pos++];
@@ -3001,7 +3003,7 @@ s32 execute_method(MethodInfo *method, Runtime *pruntime, Class *clazz) {
                         jvm_printf("tableswitch: val=%d, offset=%d\n", val, offset);
 #endif
                         *opCode = *opCode + offset;
-                        
+
                         break;
                     }
 
@@ -3012,7 +3014,7 @@ s32 execute_method(MethodInfo *method, Runtime *pruntime, Class *clazz) {
                     case op_areturn: {
 
 #if _JVM_DEBUG_BYTECODE_DETAIL > 5
-                        RuntimeStack *stack = runtime->stack;
+
                         StackEntry entry;
                         peek_entry(stack, &entry, stack->size - 1);
                         invoke_deepth(runtime);
@@ -3069,12 +3071,12 @@ s32 execute_method(MethodInfo *method, Runtime *pruntime, Class *clazz) {
                         ConstantMethodRef *cmr = find_constant_method_ref(clazz,
                                                                           object_ref);//此cmr所描述的方法，对于不同的实例，有不同的method
 
-                        Instance *ins = getInstanceInStack(clazz, cmr, runtime->stack);
+                        Instance *ins = getInstanceInStack(clazz, cmr, stack);
                         if (ins == NULL)
-                            ins = getInstanceInStack(clazz, cmr, runtime->stack);
+                            ins = getInstanceInStack(clazz, cmr, stack);
                         if (ins == NULL) {
                             Instance *exception = exception_create(JVM_EXCEPTION_NULLPOINTER, runtime);
-                            push_ref(runtime->stack, (__refer) exception);
+                            push_ref(stack, (__refer) exception);
                             ret = RUNTIME_STATUS_EXCEPTION;
                         } else {
                             MethodInfo *method = NULL;
@@ -3191,10 +3193,10 @@ s32 execute_method(MethodInfo *method, Runtime *pruntime, Class *clazz) {
 
                         s32 ret = 0;
                         ConstantMethodRef *cmr = find_constant_method_ref(clazz, object_ref);
-                        Instance *ins = getInstanceInStack(clazz, cmr, runtime->stack);
+                        Instance *ins = getInstanceInStack(clazz, cmr, stack);
                         if (ins == NULL) {
                             Instance *exception = exception_create(JVM_EXCEPTION_NULLPOINTER, runtime);
-                            push_ref(runtime->stack, (__refer) exception);
+                            push_ref(stack, (__refer) exception);
                             ret = RUNTIME_STATUS_EXCEPTION;
                         } else {
                             MethodInfo *method = NULL;
@@ -3250,7 +3252,7 @@ s32 execute_method(MethodInfo *method, Runtime *pruntime, Class *clazz) {
 
 
                     case op_new: {
-                        RuntimeStack *stack = runtime->stack;
+
                         Class *clazz = runtime->clazz;
                         Short2Char s2c;
                         s2c.c1 = opCode[0][1];
@@ -3275,13 +3277,13 @@ s32 execute_method(MethodInfo *method, Runtime *pruntime, Class *clazz) {
                         jvm_printf("new %s [%llx]\n", utf8_cstr(ccf->name), (s64) (long) ins);
 #endif
                         *opCode = *opCode + 3;
-                        
+
                         break;
                     }
 
 
                     case op_newarray: {
-                        RuntimeStack *stack = runtime->stack;
+
                         s32 typeIdx = opCode[0][1];
 
                         s32 count = pop_int(stack);
@@ -3291,7 +3293,7 @@ s32 execute_method(MethodInfo *method, Runtime *pruntime, Class *clazz) {
                     }
 
                     case op_anewarray: {
-                        RuntimeStack *stack = runtime->stack;
+
                         Short2Char s2c;
                         s2c.c1 = opCode[0][1];
                         s2c.c0 = opCode[0][2];
@@ -3303,7 +3305,7 @@ s32 execute_method(MethodInfo *method, Runtime *pruntime, Class *clazz) {
                     }
 
                     case op_arraylength: {
-                        RuntimeStack *stack = runtime->stack;
+
                         Instance *arr_ref = (Instance *) pop_ref(stack);
 
 #if _JVM_DEBUG_BYTECODE_DETAIL > 5
@@ -3313,13 +3315,13 @@ s32 execute_method(MethodInfo *method, Runtime *pruntime, Class *clazz) {
 #endif
                         push_int(stack, arr_ref->arr_length);
                         *opCode = *opCode + 1;
-                        
+
                         break;
                     }
 
 
                     case op_athrow: {
-                        RuntimeStack *stack = runtime->stack;
+
                         Instance *ins = (Instance *) pop_ref(stack);
                         push_ref(stack, (__refer) ins);
 
@@ -3333,7 +3335,7 @@ s32 execute_method(MethodInfo *method, Runtime *pruntime, Class *clazz) {
                     }
 
                     case op_checkcast: {
-                        RuntimeStack *stack = runtime->stack;
+
                         Instance *ins = (Instance *) pop_ref(stack);
                         Short2Char s2c;
                         s2c.c1 = opCode[0][1];
@@ -3382,7 +3384,7 @@ s32 execute_method(MethodInfo *method, Runtime *pruntime, Class *clazz) {
 
 
                     case op_instanceof: {
-                        RuntimeStack *stack = runtime->stack;
+
                         Instance *ins = (Instance *) pop_ref(stack);
                         Short2Char s2c;
                         s2c.c1 = opCode[0][1];
@@ -3409,12 +3411,12 @@ s32 execute_method(MethodInfo *method, Runtime *pruntime, Class *clazz) {
                                    utf8_cstr(find_constant_classref(runtime->clazz, typeIdx)->name));
 #endif
                         *opCode = *opCode + 3;
-                        
+
                         break;
                     }
 
                     case op_monitorenter: {
-                        RuntimeStack *stack = runtime->stack;
+
                         Instance *ins = (Instance *) pop_ref(stack);
                         jthread_lock(&ins->mb, runtime);
 #if _JVM_DEBUG_BYTECODE_DETAIL > 5
@@ -3423,12 +3425,12 @@ s32 execute_method(MethodInfo *method, Runtime *pruntime, Class *clazz) {
                                    ins ? utf8_cstr(ins->mb.clazz->name) : "null");
 #endif
                         *opCode = *opCode + 1;
-                        
+
                         break;
                     }
 
                     case op_monitorexit: {
-                        RuntimeStack *stack = runtime->stack;
+
                         Instance *ins = (Instance *) pop_ref(stack);
                         jthread_unlock(&ins->mb, runtime);
 #if _JVM_DEBUG_BYTECODE_DETAIL > 5
@@ -3437,24 +3439,24 @@ s32 execute_method(MethodInfo *method, Runtime *pruntime, Class *clazz) {
                                    ins ? utf8_cstr(ins->mb.clazz->name) : "null");
 #endif
                         *opCode = *opCode + 1;
-                        
+
                         break;
                     }
 
                     case op_wide: {
 #if _JVM_DEBUG_BYTECODE_DETAIL > 5
-                        RuntimeStack *stack = runtime->stack;
+
                         invoke_deepth(runtime);
                         jvm_printf("wide  \n");
 #endif
                         runtime->wideMode = 1;
                         *opCode = *opCode + 1;
-                        
+
                         break;
                     }
 
                     case op_multianewarray: {
-                        RuntimeStack *stack = runtime->stack;
+
                         //data type index
                         Short2Char s2c;
                         s2c.c1 = opCode[0][1];
@@ -3477,7 +3479,7 @@ s32 execute_method(MethodInfo *method, Runtime *pruntime, Class *clazz) {
 #endif
                         if (arr) {
                             push_ref(stack, (__refer) arr);
-                            
+
                         } else {
                             Instance *exception = exception_create(JVM_EXCEPTION_NULLPOINTER, runtime);
                             push_ref(stack, (__refer) exception);
@@ -3489,7 +3491,7 @@ s32 execute_method(MethodInfo *method, Runtime *pruntime, Class *clazz) {
 
 
                     case op_ifnull: {
-                        RuntimeStack *stack = runtime->stack;
+
                         __refer ref = pop_ref(stack);
                         if (!ref) {
                             Short2Char s2c;
@@ -3505,12 +3507,12 @@ s32 execute_method(MethodInfo *method, Runtime *pruntime, Class *clazz) {
                                    (s64) (long) ref);
 #endif
 
-                        
+
                         break;
                     }
 
                     case op_ifnonnull: {
-                        RuntimeStack *stack = runtime->stack;
+
                         __refer ref = pop_ref(stack);
                         if (ref) {
                             Short2Char s2c;
@@ -3524,18 +3526,18 @@ s32 execute_method(MethodInfo *method, Runtime *pruntime, Class *clazz) {
                         invoke_deepth(runtime);
                         jvm_printf("op_ifnonnull: %d/%llx != 0  then \n", (s32) (long) ref, (s64) (long) ref);
 #endif
-                        
+
                         break;
                     }
 
                     case op_breakpoint: {
 #if _JVM_DEBUG_BYTECODE_DETAIL > 5
-                        RuntimeStack *stack = runtime->stack;
+
                         invoke_deepth(runtime);
                         jvm_printf("breakpoint \n");
 #endif
                         //*opCode = *opCode + 1;
-                        
+
                         break;
                     }
 
@@ -3560,12 +3562,12 @@ s32 execute_method(MethodInfo *method, Runtime *pruntime, Class *clazz) {
 #endif
                 if (i_r == RUNTIME_STATUS_RETURN) break;
                 else if (i_r == RUNTIME_STATUS_EXCEPTION) {
-                    __refer ref = pop_ref(runtime->stack);
-                    //jvm_printf("stack size:%d , enter size:%d\n", runtime->stack->size, stackSize);
+                    __refer ref = pop_ref(stack);
+                    //jvm_printf("stack size:%d , enter size:%d\n", stack->size, stackSize);
                     //restore stack enter method size, must pop for garbage
                     StackEntry entry;
-                    while (runtime->stack->size > stackSize)pop_entry(runtime->stack, &entry);
-                    push_ref(runtime->stack, ref);
+                    while (stack->size > stackSize)pop_entry(stack, &entry);
+                    push_ref(stack, ref);
 
                     Instance *ins = (Instance *) ref;
 #if _JVM_DEBUG_BYTECODE_DETAIL > 3
@@ -3589,7 +3591,7 @@ s32 execute_method(MethodInfo *method, Runtime *pruntime, Class *clazz) {
                     }
                 }
             } while (1);
-            if (method->access_flags & ACC_SYNCHRONIZED)synchronized_unlock_method(method, runtime);
+            if (method_sync)synchronized_unlock_method(method, runtime);
             localvar_dispose(runtime);
 #if _JVM_DEBUG_BYTECODE_DETAIL > 3
             if (utf8_char_at(clazz->name, 3) != '/' && utf8_char_at(clazz->name, 4) != 's') {//   that com/sun
