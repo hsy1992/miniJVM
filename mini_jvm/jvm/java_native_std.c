@@ -9,7 +9,7 @@
 
 s32 com_sun_cldc_io_ConsoleOutputStream_write(Runtime *runtime, Class *clazz) {
     s16 ch = localvar_getInt(runtime, 1);
-    printf("%c", ch);
+    fprintf(stdout, "%c", ch);
 #if _JVM_DEBUG_BYTECODE_DETAIL > 5
     invoke_deepth(runtime);
     jvm_printf("com_sun_cldc_io_ConsoleOutputStream_write\n");

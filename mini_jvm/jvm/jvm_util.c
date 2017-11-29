@@ -484,7 +484,8 @@ int jvm_printf(const char *format, ...) {
         }
     }
 #else
-    result = vprintf(format, vp);
+    //result = vprintf(format, vp);
+    result = vfprintf(stderr, format, vp);
 #endif
     va_end(vp);
     //garbage_thread_unlock();
