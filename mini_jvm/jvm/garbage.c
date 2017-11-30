@@ -369,13 +369,14 @@ s64 garbage_collect() {
             if (prevmb)prevmb->next = nextmb;
             else collector->header = nextmb;
             del++;
-            spin_lock(&collector->lock);
-            collector->obj_count--;
-            spin_unlock(&collector->lock);
+
         } else {
             prevmb = curmb;
         }
     }
+    spin_lock(&collector->lock);
+    collector->obj_count -= del;
+    spin_unlock(&collector->lock);
 
     s64 time_gc = currentTimeMillis() - time_startAt;
     jvm_printf("[INFO]gc obj: %lld->%lld   heap : %lld -> %lld  stop_world: %lld  gc:%lld\n",
