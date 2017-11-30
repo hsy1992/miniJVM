@@ -28,7 +28,6 @@ void thread_lock_dispose(ThreadLock *lock) {
         pthread_cond_destroy(&lock->thread_cond);
         pthread_mutexattr_destroy(&lock->lock_attr);
         pthread_mutex_destroy(&lock->mutex_lock);
-        lock->jthread_holder = NULL;
     }
 }
 
@@ -635,8 +634,6 @@ s32 jthread_lock(MemoryBlock *mb, Runtime *runtime) { //可能会重入，同一
         check_suspend_and_pause(runtime);
         jthread_yield(runtime);
     }
-//    pthread_mutex_lock(&jtl->mutex_lock);
-    jtl->jthread_holder = runtime->threadInfo->jthread;
 
 #if _JVM_DEBUG_BYTECODE_DETAIL > 5
     invoke_deepth(runtime);
@@ -653,7 +650,6 @@ s32 jthread_unlock(MemoryBlock *mb, Runtime *runtime) {
     }
     ThreadLock *jtl = mb->thread_lock;
     pthread_mutex_unlock(&jtl->mutex_lock);
-    jtl->jthread_holder = NULL;
 #if _JVM_DEBUG_BYTECODE_DETAIL > 5
     invoke_deepth(runtime);
     jvm_printf("unlock: %llx   lock holder: %llx, \n", (s64) (long) (runtime->threadInfo->jthread),
@@ -752,7 +748,7 @@ Instance *jarray_create_des(s32 count, Utf8String *desc) {
     Instance *arr = jvm_calloc(sizeof(Instance));
     arr->mb.type = MEM_TYPE_ARR;
     arr->mb.clazz = array_class_get(desc);
-    arr->arr_type_index = typeIdx;
+    arr->mb.arr_type_index = typeIdx;
     arr->arr_length = count;
     if (arr->arr_length)arr->arr_body = jvm_calloc(width * count);
     return arr;
@@ -832,7 +828,7 @@ Instance *jarray_multi_create(ArrayList *dim, Utf8String *pdesc, s32 deep) {
 
 
 void jarray_set_field(Instance *arr, s32 index, Long2Double *l2d) {
-    s32 idx = arr->arr_type_index;
+    s32 idx = arr->mb.arr_type_index;
     s32 bytes = data_type_bytes[idx];
     if (isDataReferByIndex(idx)) {
         setFieldRefer(arr->arr_body + index * bytes, l2d->r);
@@ -855,7 +851,7 @@ void jarray_set_field(Instance *arr, s32 index, Long2Double *l2d) {
 }
 
 void jarray_get_field(Instance *arr, s32 index, Long2Double *l2d) {
-    s32 idx = arr->arr_type_index;
+    s32 idx = arr->mb.arr_type_index;
     s32 bytes = data_type_bytes[idx];
     if (isDataReferByIndex(idx)) {
         l2d->r = getFieldRefer(arr->arr_body + index * bytes);
@@ -983,9 +979,9 @@ Instance *instance_copy(Instance *src) {
             }
         }
     } else if (src->mb.type == MEM_TYPE_ARR) {
-        s32 size = src->arr_length * data_type_bytes[src->arr_type_index];
+        s32 size = src->arr_length * data_type_bytes[src->mb.arr_type_index];
         dst->arr_body = jvm_malloc(size);
-        if (isDataReferByIndex(src->arr_type_index)) {
+        if (isDataReferByIndex(src->mb.arr_type_index)) {
             s32 i;
             Long2Double l2d;
             for (i = 0; i < dst->arr_length; i++) {

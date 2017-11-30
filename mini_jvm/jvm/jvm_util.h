@@ -151,7 +151,6 @@ struct _ThreadLock {
     pthread_cond_t thread_cond;
     pthread_mutexattr_t lock_attr;
     pthread_mutex_t mutex_lock; //互斥锁
-    Instance *jthread_holder;
 };
 
 s32 jthread_init(Instance *jthread);
