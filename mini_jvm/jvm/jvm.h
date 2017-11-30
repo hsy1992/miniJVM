@@ -325,6 +325,7 @@ typedef struct _MemoryBlock {
     u8 arr_type_index;
 
     Class *clazz;
+    struct _MemoryBlock *next;
     ThreadLock *volatile thread_lock;
 } MemoryBlock;
 

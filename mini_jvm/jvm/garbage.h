@@ -24,14 +24,15 @@ extern s64 MAX_HEAP_SIZE;
 //每个线程一个回收站，线程多了就是灾难
 struct _GcCollectorType {
     //
-    Hashset *objs; //key=mem_ptr, value=我被别人引用的列表
     Hashset *objs_holder; //法外之地，防回收的持有器，放入其中的对象及其引用的其他对象不会被回收
+    MemoryBlock *header, *tmp_header;
+    s64 obj_count;
     //
     pthread_t _garbage_thread;//垃圾回收线程
     ThreadLock garbagelock;
 
+    spinlock_t lock;
     //
-    LinkedList *operation_cache;
     ArrayList *runtime_refer_copy;
     //
     s64 _garbage_count;
@@ -45,17 +46,6 @@ enum {
     GARBAGE_THREAD_PAUSE,
     GARBAGE_THREAD_STOP,
     GARBAGE_THREAD_DEAD,
-};
-
-typedef struct _GarbageOp {
-    c8 op_type;
-    __refer val;
-} GarbageOp;
-
-enum {
-    GARBAGE_OP_REG,
-    GARBAGE_OP_HOLD,
-    GARBAGE_OP_RELEASE,
 };
 
 void *collect_thread_run(void *para);
@@ -93,6 +83,8 @@ void garbage_refer_hold(__refer ref);
 void garbage_refer_release(__refer ref);
 
 s32 garbage_refer_reg(__refer ref);
+
+//__refer g_calloc(u32 size);
 
 #ifdef __cplusplus
 }

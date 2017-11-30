@@ -24,7 +24,7 @@ HashsetEntry *_hashset_get_entry(Hashset *set) {
 
 static void _hashset_free_entry(Hashset *set, HashsetEntry *entry) {
     if (set->entry_pool->length < HASH_SET_POOL_SIZE)
-        arraylist_push_back(set->entry_pool, entry);
+        arraylist_push_back_unsafe(set->entry_pool, entry);
     else
         jvm_free(entry);
 }

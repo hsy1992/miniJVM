@@ -15,8 +15,6 @@ void garbage_destory_memobj(MemoryBlock *k);
 
 void _garbage_change_flag(void);
 
-void garbage_move_cache(s32 move_limit);
-
 void garbage_copy_refer(void);
 
 s32 garbage_big_search(void);
@@ -64,10 +62,8 @@ s32 garbage_copy_refer_thread(Runtime *pruntime);
 
 s32 garbage_collector_create() {
     collector = jvm_calloc(sizeof(GcCollector));
-    collector->objs = hashset_create();
     collector->objs_holder = hashset_create();
 
-    collector->operation_cache = linkedlist_create();
     collector->runtime_refer_copy = arraylist_create(256);
 
     collector->_garbage_thread_status = GARBAGE_THREAD_PAUSE;
@@ -96,11 +92,7 @@ void garbage_collector_destory() {
     //
     hashset_destory(collector->objs_holder);
     collector->objs_holder = NULL;
-    //
-    hashset_destory(collector->objs);
-    collector->objs = NULL;
 
-    linkedlist_destory(collector->operation_cache);
     arraylist_destory(collector->runtime_refer_copy);
 
     //
@@ -114,7 +106,7 @@ void __garbage_clear() {
     jvm_printf("[INFO]garbage clear start========================\n");
 
     //
-    jvm_printf("[INFO]objs size :%lld\n", collector->objs->entries);
+    jvm_printf("[INFO]objs size :%lld\n", collector->obj_count);
 
     //解除所有引用关系后，回收全部对象
     while (garbage_collect());//collect instance
@@ -131,7 +123,7 @@ void __garbage_clear() {
     array_classloader = NULL;
     while (garbage_collect());//collect classes
     //
-    jvm_printf("[INFO]objs size :%lld\n", collector->objs->entries);
+    jvm_printf("[INFO]objs size :%lld\n", collector->obj_count);
 
     //dump_refer();
 }
@@ -252,32 +244,16 @@ s32 getMbSize(MemoryBlock *mb) {
  */
 void dump_refer() {
     //jvm_printf("%d\n",sizeof(struct _Hashset));
-    HashsetIterator hti;
-    hashset_iterate(collector->objs, &hti);
-    jvm_printf("[INFO]=================   dump objs :%lld\n", (collector->objs->entries));
-    for (; hashset_iter_has_more(&hti);) {
-
-        HashsetKey k = hashset_iter_next_key(&hti);
+    MemoryBlock *mb = collector->tmp_header;
+    while (mb) {
         Utf8String *name = utf8_create();
-        getMBName(k, name);
-        jvm_printf("   %s[%llx] \n", utf8_cstr(name), (s64) (
-                long) k);
+        getMBName(mb, name);
+        jvm_printf("   %s[%llx] \n", utf8_cstr(name), (s64) (long) mb);
         utf8_destory(name);
+        mb = mb->next;
     }
-
 }
 
-
-void _garbage_put_in_objs(__refer ref) {
-    hashset_put(collector->objs, ref);
-#if _JVM_DEBUG_GARBAGE_DUMP
-    MemoryBlock *mb = ref;
-    Utf8String *sus = utf8_create();
-    getMBName(mb, sus);
-    jvm_printf("R: %s[0x%llx] \n", utf8_cstr(sus), (s64) (long) ref);
-    utf8_destory(sus);
-#endif
-}
 
 void _garbage_put_in_holder(__refer ref) {
     hashset_put(collector->objs_holder, ref);
@@ -305,7 +281,6 @@ void *collect_thread_run(void *para) {
     s64 lastgc = currentTimeMillis();
     while (1) {
         threadSleep(10);
-        garbage_move_cache(0);
 
         if (collector->_garbage_thread_status == GARBAGE_THREAD_STOP) {
             break;
@@ -313,7 +288,7 @@ void *collect_thread_run(void *para) {
         if (collector->_garbage_thread_status == GARBAGE_THREAD_PAUSE) {
             continue;
         }
-        if (currentTimeMillis() - lastgc < 1000) {// less than 3 sec no gc
+        if (currentTimeMillis() - lastgc < 1000) {// less than custom sec no gc
             continue;
         }
         if (java_debug && jdwpserver.clients->length) {// less than 3 sec no gc
@@ -330,38 +305,6 @@ void *collect_thread_run(void *para) {
 }
 
 
-void garbage_move_cache(s32 move_limit) {
-    //jvm_printf(" move cache\n");
-    s64 move_count = 0;
-    GarbageOp *op;
-    while (1) {
-        op = (GarbageOp *) linkedlist_pop_end(collector->operation_cache);
-        if (move_limit > 0) {
-            if (move_count++ > move_limit) {
-                break;
-            }
-        }
-        if (op == NULL) {
-            break;
-        }
-        switch (op->op_type) {
-            case GARBAGE_OP_REG: {
-                _garbage_put_in_objs(op->val);
-                break;
-            }
-            case GARBAGE_OP_HOLD: {
-                _garbage_put_in_holder(op->val);
-                break;
-            }
-            case GARBAGE_OP_RELEASE: {
-                _garbage_remove_out_holder(op->val);
-                break;
-            }
-        }
-        jvm_free(op);
-    }
-}
-
 /**
  * 查找所有实例，如果发现没有被引用时 mb->garbage_mark ，
  * 去除掉此对象对其他对象的引用，并销毁对象
@@ -370,7 +313,6 @@ void garbage_move_cache(s32 move_limit) {
  */
 s64 garbage_collect() {
     collector->isgc = 1;
-    HashsetIterator hti;
     s64 mem1 = heap_size;
     s64 del = 0;
     s64 time_startAt;
@@ -385,14 +327,22 @@ s64 garbage_collect() {
     }
 //    jvm_printf("garbage_pause_the_world %lld\n", (currentTimeMillis() - time_startAt));
 //    time_startAt = currentTimeMillis();
-    garbage_move_cache(0);//0 : all
+    if (collector->tmp_header) {
+        MemoryBlock *mb = collector->tmp_header;
+        while (mb->next) {
+            mb = mb->next;
+        }
+        mb->next = collector->header;//接起来
+        collector->header = collector->tmp_header;
+        collector->tmp_header = NULL;
+    }
 //    jvm_printf("garbage_move_cache %lld\n", (currentTimeMillis() - time_startAt));
 //    time_startAt = currentTimeMillis();
     garbage_copy_refer();
     //
 //    jvm_printf("garbage_copy_refer %lld\n", (currentTimeMillis() - time_startAt));
 //    time_startAt = currentTimeMillis();
-    s64 obj_count = (collector->objs->entries);
+    s64 obj_count = (collector->obj_count);
     //real GC start
     //
     _garbage_change_flag();
@@ -406,28 +356,30 @@ s64 garbage_collect() {
     s64 time_stopWorld = currentTimeMillis() - time_startAt;
     time_startAt = currentTimeMillis();
     //
-    hashset_iterate(collector->objs, &hti);
-    for (; hashset_iter_has_more(&hti);) {
 
-        HashsetKey k = hashset_iter_next_key(&hti);
-        MemoryBlock *mb = (MemoryBlock *) k;
-
-        if (mb->garbage_mark != collector->flag_refer) {
-            garbage_destory_memobj(mb);
-            hashset_iter_remove(&hti);
+    MemoryBlock *nextmb = collector->header;
+    MemoryBlock *curmb, *prevmb = NULL;
+    s64 iter = 0;
+    while (nextmb) {
+        iter++;
+        curmb = nextmb;
+        nextmb = curmb->next;
+        if (curmb->garbage_mark != collector->flag_refer) {
+            garbage_destory_memobj(curmb);
+            if (prevmb)prevmb->next = nextmb;
+            else collector->header = nextmb;
             del++;
+            spin_lock(&collector->lock);
+            collector->obj_count--;
+            spin_unlock(&collector->lock);
+        } else {
+            prevmb = curmb;
         }
     }
 
-
-    if (collector->_garbage_count++ % 5 == 0) {//每n秒resize一次
-        hashset_remove(collector->objs, NULL, 1);
-    }
-
-
     s64 time_gc = currentTimeMillis() - time_startAt;
-    jvm_printf("[INFO]gc obj: %lld -> %lld  heap : %lld -> %lld  stop_world: %lld  gc:%lld\n",
-               obj_count, hashset_num_entries(collector->objs), mem1, heap_size, time_stopWorld, time_gc);
+    jvm_printf("[INFO]gc obj: %lld->%lld   heap : %lld -> %lld  stop_world: %lld  gc:%lld\n",
+               obj_count, collector->obj_count, mem1, heap_size, time_stopWorld, time_gc);
 
 
     collector->isgc = 0;
@@ -703,50 +655,46 @@ void garbage_mark_object(__refer ref) {
 //=================================  reg unreg ==================================
 
 MemoryBlock *garbage_is_alive(__refer ref) {
-    __refer result = hashset_get(collector->objs, ref);
+    __refer result = hashset_get(collector->objs_holder, ref);
     if (!result) {
-        result = hashset_get(collector->objs_holder, ref);
+        MemoryBlock *mb = collector->header;
+        while (mb) {
+            if (mb == ref) {
+                result = mb;
+            }
+            mb = mb->next;
+        }
     }
     if (!result) {
-        spin_lock(&collector->operation_cache->spinlock);
-        LinkedListEntry *entry = linkedlist_header(collector->operation_cache);
-        while (entry) {
-            GarbageOp *op = (GarbageOp *) linkedlist_data(entry);
-            if (op->val == ref) {
-                result = ref;
-                break;
+        MemoryBlock *mb = collector->tmp_header;
+        while (mb) {
+            if (mb == ref) {
+                result = mb;
             }
-            entry = linkedlist_next(collector->operation_cache, entry);
+            mb = mb->next;
         }
-        spin_unlock(&collector->operation_cache->spinlock);
     }
 
     return (MemoryBlock *) result;
 }
 
 
-void __garbage_putin_cache(c8 op_type, __refer ref) {
-
-    GarbageOp *op = jvm_calloc(sizeof(GarbageOp));
-    op->op_type = op_type;
-    op->val = ref;
-    linkedlist_push_front(collector->operation_cache, op);
-
-}
-
-
 s32 garbage_refer_reg(__refer ref) {
     if (ref) {
         MemoryBlock *mb = (MemoryBlock *) ref;
+        spin_lock(&collector->lock);
         if (!mb->garbage_reg) {
-            if (collector->isgc) {
-                __garbage_putin_cache(GARBAGE_OP_REG, ref);
-            } else {
-                _garbage_put_in_objs(ref);
-
-            }
             mb->garbage_reg = 1;
+            collector->obj_count++;
+            if (collector->isgc) {
+                mb->next = collector->tmp_header;
+                collector->tmp_header = mb;
+            } else {
+                mb->next = collector->header;
+                collector->header = mb;
+            }
         }
+        spin_unlock(&collector->lock);
     }
     return 0;
 }
@@ -754,20 +702,12 @@ s32 garbage_refer_reg(__refer ref) {
 
 void garbage_refer_hold(__refer ref) {
     if (ref) {
-        if (collector->isgc) {
-            __garbage_putin_cache(GARBAGE_OP_HOLD, ref);
-        } else {
-            _garbage_put_in_holder(ref);
-        }
+        _garbage_put_in_holder(ref);
     }
 }
 
 void garbage_refer_release(__refer ref) {
     if (ref) {
-        if (collector->isgc) {
-            __garbage_putin_cache(GARBAGE_OP_RELEASE, ref);
-        } else {
-            _garbage_remove_out_holder(ref);
-        }
+        _garbage_remove_out_holder(ref);
     }
 }
