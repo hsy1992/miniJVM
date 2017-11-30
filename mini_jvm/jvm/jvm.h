@@ -236,6 +236,7 @@ long  11
   reference 12
  */
 extern c8 *data_type_str;
+extern __refer data_type_classes[14];
 static const s32 data_type_bytes[14] = {0, 0, 0, 0,
                                         sizeof(c8),
                                         sizeof(u16),

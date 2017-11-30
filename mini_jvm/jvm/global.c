@@ -21,11 +21,11 @@ Instance *main_thread;//
 Runtime *main_runtime = NULL;
 
 c8 *data_type_str = "    ZCFDBSIJL[";
+__refer data_type_classes[14] = {NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL,};
 s32 STACK_LENGHT = 10240;
 s64 GARBAGE_PERIOD_MS = 1000;
 
 s64 MAX_HEAP_SIZE = 20 * 1024 * 1024;
-
 
 
 //

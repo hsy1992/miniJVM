@@ -169,7 +169,7 @@ s32 execute(c8 *p_classpath, c8 *p_mainclass, s32 argc, c8 **argv) {
             s32 count = argc;
             Long2Double l2d;
             Utf8String *ustr = utf8_create_c("[java/lang/String;");
-            Instance *arr = jarray_create(count, DATATYPE_REFERENCE, ustr);
+            Instance *arr = jarray_create(count, 0, ustr);
             garbage_refer_hold(arr);
             utf8_destory(ustr);
             int i;

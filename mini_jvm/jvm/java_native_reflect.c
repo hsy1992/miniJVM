@@ -54,7 +54,7 @@ s32 javax_mini_reflect_vm_RefNative_getClasses(Runtime *runtime, Class *clazz) {
     s32 size = (s32) sys_classloader->classes->entries;
 
     Utf8String *ustr = utf8_create_c(STR_INS_JAVA_LANG_CLASS);
-    Instance *jarr = jarray_create(size, DATATYPE_REFERENCE, ustr);
+    Instance *jarr = jarray_create(size, 0, ustr);
     utf8_destory(ustr);
     s32 i = 0;
     Long2Double l2d;
@@ -289,7 +289,7 @@ void _list_iter_getthread(ArrayListValue value, void *para) {
 s32 javax_mini_reflect_vm_RefNative_getThreads(Runtime *runtime, Class *clazz) {
 //    garbage_thread_lock();
     Utf8String *ustr = utf8_create_c(STR_INS_JAVA_LANG_THREAD);
-    Instance *jarr = jarray_create(thread_list->length, DATATYPE_REFERENCE, ustr);
+    Instance *jarr = jarray_create(thread_list->length, 0, ustr);
     utf8_destory(ustr);
 
     struct _list_getthread_para para;
@@ -419,7 +419,7 @@ s32 javax_mini_reflect_vm_RefNative_getGarbageReferedObjs(Runtime *runtime, Clas
     s32 size = (s32) collector->runtime_refer_copy->length;
 
     Utf8String *ustr = utf8_create_c(STR_INS_JAVA_LANG_OBJECT);
-    Instance *jarr = jarray_create(size, DATATYPE_REFERENCE, ustr);
+    Instance *jarr = jarray_create(size, 0, ustr);
     utf8_destory(ustr);
     s32 i = 0;
     Long2Double l2d;
@@ -644,8 +644,7 @@ s32 javax_mini_reflect_Method_mapMethod(Runtime *runtime, Class *clazz) {
                 if (ptr) {
                     Utf8String *ustr = utf8_create_c(table_type);
                     utf8_substring(ustr, 1, ustr->length);
-                    Instance *jarr = jarray_create(att->converted_code->local_var_table_length, DATATYPE_REFERENCE,
-                                                   ustr);
+                    Instance *jarr = jarray_create(att->converted_code->local_var_table_length, 0, ustr);
                     setFieldRefer(ptr, jarr);
                     utf8_destory(ustr);
                     for (i = 0; i < att->converted_code->local_var_table_length; i++) {
