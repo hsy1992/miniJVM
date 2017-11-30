@@ -128,7 +128,7 @@ void *jvm_realloc(void *pPtr, u32 size) {
     void *ptr = realloc(pPtr - 4, size);
     if (ptr) {
         spin_lock(&mlock);
-        heap_size += size - old_size + 4;
+        heap_size += size - old_size ;
         spin_unlock(&mlock);
         *(u32 *) (ptr) = size;
         return ptr + 4;
