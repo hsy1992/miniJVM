@@ -16,6 +16,9 @@ class ViewController: UIViewController {
         // Do any additional setup after loading the view, typically from a nib.
         
         let screenSize = UIScreen.main.bounds
+        let lab = UILabel.init(frame:CGRect(x:0, y:30, width:screenSize.width, height:20))
+        lab.text="stderr:"
+        self.view.addSubview(lab)
         let textview = UITextView.init(frame:CGRect(x:0, y:50, width:screenSize.width, height:screenSize.height-100))
         tv=textview;
         textview.layer.borderWidth = 1  //边框粗细
@@ -30,13 +33,16 @@ class ViewController: UIViewController {
         //设置按钮位置和大小
         button.frame = CGRect(x:0, y:screenSize.height-50, width:screenSize.width, height:50)
         //设置按钮文字
-        button.setTitle("ecex test", for:.normal)
+        button.setTitle("Launch jvm", for:.normal)
         self.view.addSubview(button)
         button.addTarget(self, action:#selector(tapped(_:)), for:.touchUpInside)
         
         let myString = "in main!"
         print(myString)
+        
+        _ = Timer.scheduledTimer(timeInterval: 1, target: self, selector: #selector(self.show_output), userInfo: nil, repeats: true)
     }
+    
     
 
     override func didReceiveMemoryWarning() {
@@ -44,16 +50,21 @@ class ViewController: UIViewController {
         // Dispose of any resources that can be recreated.
     }
     
+    @objc func show_output()    {
+        self.tv.text = self.readFromDocumentsFile(fileName: "console.txt")
+    }
     
     @objc func tapped(_ button:UIButton){
         print(button.title(for: .normal))
         //tv.text = "start..."
-        
+        execjvm()
+    }
+    
+    @objc func execjvm()    {
+       
         let mainBundle = Bundle.main.bundlePath
         let app_path=mainBundle.cString(using: String.Encoding.utf8)
         call_jvm(UnsafeMutablePointer<Int8>(mutating: app_path));
-        
-        tv.text = readFromDocumentsFile(fileName: "console.txt")
     }
 
     
@@ -72,9 +83,9 @@ class ViewController: UIViewController {
         } else {
             file = ""
         }
-        
         return file
     }
 
 }
+
 
