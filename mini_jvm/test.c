@@ -12,10 +12,9 @@
  */
 
 #include <stdio.h>
-#include <stdlib.h>
-#include <miniz/miniz_wrapper.h>
+
 #include "utils/hashtable.h"
-#include "utils/utf8_string.h"
+
 #include "jvm/jvm.h"
 #include "jvm/jvm_util.h"
 #include "jvm/garbage.h"
