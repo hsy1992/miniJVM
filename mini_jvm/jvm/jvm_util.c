@@ -741,13 +741,12 @@ s32 check_suspend_and_pause(Runtime *runtime) {
 }
 
 //===============================    实例化数组  ==================================
-Instance *jarray_create_des(s32 count, Utf8String *desc) {
-    u8 ch = utf8_char_at(desc, 1);
-    s32 typeIdx = getDataTypeIndex(ch);
+Instance *jarray_create_by_class(s32 count, Class *clazz) {
+    s32 typeIdx = clazz->arr_type_index;
     s32 width = data_type_bytes[typeIdx];
     Instance *arr = jvm_calloc(sizeof(Instance));
     arr->mb.type = MEM_TYPE_ARR;
-    arr->mb.clazz = array_class_get(desc);
+    arr->mb.clazz = clazz;
     arr->mb.arr_type_index = typeIdx;
     arr->arr_length = count;
     if (arr->arr_length)arr->arr_body = jvm_calloc(width * count);
@@ -755,31 +754,33 @@ Instance *jarray_create_des(s32 count, Utf8String *desc) {
 }
 
 Instance *jarray_create(s32 count, s32 typeIdx, Utf8String *type) {
-    Utf8String *ustr = utf8_create_c("[");
+    Class *clazz = NULL;
     if (type) {
+        Utf8String *ustr = utf8_create_c("[");
         if (!isDataReferByTag(utf8_char_at(type, 0)))utf8_append_c(ustr, "L");
         utf8_append(ustr, type);
         if (utf8_char_at(type, type->length - 1) != ';')
             utf8_append_c(ustr, ";");
+        clazz = array_class_get(ustr);
+        utf8_destory(ustr);
     } else {
-        utf8_insert(ustr, ustr->length, getDataTypeTag(typeIdx));
+        if (!data_type_classes[typeIdx]) {
+            Utf8String *ustr = utf8_create_c("[");
+            utf8_insert(ustr, ustr->length, getDataTypeTag(typeIdx));
+            data_type_classes[typeIdx] = array_class_get(ustr);
+            utf8_destory(ustr);
+        }
+        clazz = data_type_classes[typeIdx];
     }
-    Instance *arr = jarray_create_des(count, ustr);
-    utf8_destory(ustr);
+
+    Instance *arr = jarray_create_by_class(count, clazz);
+
     garbage_refer_reg(arr);
     return arr;
 }
 
 s32 jarray_destory(Instance *arr) {
     if (arr && arr->mb.type == MEM_TYPE_ARR) {
-//        if (isDataReferByIndex(arr->arr_type_index)) {
-//            s32 i;
-//            Long2Double l2d;
-//            l2d.l = 0;
-//            for (i = 0; i < arr->arr_length; i++) {//把所有引用去除，否则不会垃圾回收
-//                jarray_set_field(arr, i, &l2d);
-//            }
-//        }
         jthreadlock_destory(&arr->mb);
         arr->mb.thread_lock = NULL;
         if (arr->arr_body) {
@@ -805,7 +806,8 @@ Instance *jarray_multi_create(ArrayList *dim, Utf8String *pdesc, s32 deep) {
     }
     Utf8String *desc = utf8_create_copy(pdesc);
     c8 ch = utf8_char_at(desc, 1);
-    Instance *arr = jarray_create_des(len, desc);
+    Class *clazz = array_class_get(desc);
+    Instance *arr = jarray_create_by_class(len, clazz);
     garbage_refer_hold(arr);
     utf8_substring(desc, 1, desc->length);
 #if _JVM_DEBUG_BYTECODE_DETAIL > 5

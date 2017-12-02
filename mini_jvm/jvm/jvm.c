@@ -52,6 +52,31 @@ void print_exception(Runtime *runtime) {
     }
 }
 
+void objcache_create() {
+    obj_cache = arraylist_create(1024 * 256);
+}
+
+void objcache_destory() {
+    while (obj_cache->length) {
+        Instance *ins = arraylist_pop_back(obj_cache);
+        jvm_free(ins);
+    }
+    arraylist_destory(obj_cache);
+    obj_cache = NULL;
+}
+
+Instance *objcache_get() {
+    Instance *ins = arraylist_pop_back(obj_cache);
+    if (!ins) {
+        ins = jvm_calloc(sizeof(Instance));
+    }
+    return ins;
+}
+
+void objcache_put(Instance *ins) {
+    arraylist_push_back(obj_cache, ins);
+}
+
 ClassLoader *classloader_create(c8 *path) {
     ClassLoader *class_loader = jvm_calloc(sizeof(ClassLoader));
     spin_init(&class_loader->lock, 0);
@@ -98,7 +123,8 @@ s32 execute(c8 *p_classpath, c8 *p_mainclass, s32 argc, c8 **argv) {
 #if _JVM_DEBUG_PROFILE
     instruct_profile = hashtable_create(DEFAULT_HASH_FUNC, DEFAULT_HASH_EQUALS_FUNC);
 #endif
-
+    //
+    objcache_create();
     //创建垃圾收集器
     garbage_collector_create();
 
@@ -169,7 +195,7 @@ s32 execute(c8 *p_classpath, c8 *p_mainclass, s32 argc, c8 **argv) {
             s32 count = argc;
             Long2Double l2d;
             Utf8String *ustr = utf8_create_c("[java/lang/String;");
-            Instance *arr = jarray_create(count, DATATYPE_REFERENCE, ustr);
+            Instance *arr = jarray_create(count, 0, ustr);
             garbage_refer_hold(arr);
             utf8_destory(ustr);
             int i;
@@ -224,9 +250,9 @@ s32 execute(c8 *p_classpath, c8 *p_mainclass, s32 argc, c8 **argv) {
     //
     utf8_destory(str_mainClsName);
     arraylist_destory(thread_list);
-    instructionsIndexies = NULL;
     native_lib_destory();
     sys_properties_dispose();
+    objcache_destory();
     close_log();
     jvm_printf("over %lld\n", heap_size);
 

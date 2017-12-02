@@ -236,6 +236,7 @@ long  11
   reference 12
  */
 extern c8 *data_type_str;
+extern __refer data_type_classes[14];
 static const s32 data_type_bytes[14] = {0, 0, 0, 0,
                                         sizeof(c8),
                                         sizeof(u16),
@@ -300,10 +301,9 @@ extern Runtime *main_runtime;
 extern ClassLoader *sys_classloader;
 extern ClassLoader *array_classloader;
 
-extern Instruction **instructionsIndexies;
+extern ArrayList *obj_cache;
 
 extern ArrayList *thread_list;
-extern ThreadLock threadlist_lock;
 
 extern ArrayList *native_libs;
 extern Hashtable *sys_prop;
@@ -341,6 +341,11 @@ struct _ClassLoader {
 void classloader_classstatic_clear(ClassLoader *class_loader);
 
 void classloader_destory(ClassLoader *class_loader);
+
+void objcache_put(Instance *ins);
+
+Instance *objcache_get();
+
 //======================= class file =============================
 
 
