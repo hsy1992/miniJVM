@@ -383,9 +383,6 @@ static inline s32 op_putfield_impl(u8 **opCode, Runtime *runtime, RuntimeStack *
     s2c.c0 = opCode[0][2];
 
     u16 field_ref = s2c.s;
-//    if (utf8_equals_c(clazz->name, "java/lang/String")) {
-//        int debug = 1;
-//    }
     if (clazz->status < CLASS_STATUS_CLINITED) {
         class_clinit(clazz, runtime);
     }
@@ -396,17 +393,14 @@ static inline s32 op_putfield_impl(u8 **opCode, Runtime *runtime, RuntimeStack *
         find_constant_fieldref(clazz, field_ref)->fieldInfo = fi;
     }
 
-
-    s32 data_bytes = data_type_bytes[fi->datatype_idx];
     StackEntry entry;
     pop_entry(stack, &entry);
 
-
-    Instance *ins = NULL;
     c8 *ptr;
     if (isStatic) {
         ptr = getStaticFieldPtr(fi);
     } else {
+        Instance *ins = NULL;
         ins = (Instance *) pop_ref(stack);
         if (!ins) {
             Instance *exception = exception_create(JVM_EXCEPTION_NULLPOINTER, runtime);
@@ -423,31 +417,26 @@ static inline s32 op_putfield_impl(u8 **opCode, Runtime *runtime, RuntimeStack *
                (s64) (long) ptr, entry_2_long(&entry));
 #endif
 
-    if (isDataReferByIndex(fi->datatype_idx)) {//垃圾回收标识
-
-        __refer newins = entry_2_refer(&entry);
-        setFieldRefer(ptr, newins);
+    if (fi->isrefer) {//垃圾回收标识
+        setFieldRefer(ptr, entry_2_refer(&entry));
     } else {
-        s32 value = 0;
-        s64 valuelong = 0;
-        if (data_bytes > 4)valuelong = entry_2_long(&entry);
-        else value = entry_2_int(&entry);
+        s32 data_bytes = data_type_bytes[fi->datatype_idx];
         //非引用类型
         switch (data_bytes) {
             case 8: {
-                setFieldLong(ptr, valuelong);
+                setFieldLong(ptr, entry_2_long(&entry));
                 break;
             }
             case 4: {
-                setFieldInt(ptr, value);
+                setFieldInt(ptr, entry_2_int(&entry));
                 break;
             }
             case 2: {
-                setFieldShort(ptr, value);
+                setFieldShort(ptr, entry_2_int(&entry));
                 break;
             }
             case 1: {
-                setFieldByte(ptr, value);
+                setFieldByte(ptr, entry_2_int(&entry));
                 break;
             }
         }
@@ -473,13 +462,12 @@ static inline s32 op_getfield_impl(u8 **opCode, Runtime *runtime, RuntimeStack *
         fi = find_fieldInfo_by_fieldref(clazz, field_ref);
         find_constant_fieldref(clazz, field_ref)->fieldInfo = fi;
     }
-    s32 data_bytes = data_type_bytes[fi->datatype_idx];
 
-    Instance *ins = NULL;
     c8 *ptr;
     if (isStatic) {
         ptr = getStaticFieldPtr(fi);
     } else {
+        Instance *ins = NULL;
         ins = (Instance *) pop_ref(stack);
         if (!ins) {
             Instance *exception = exception_create(JVM_EXCEPTION_NULLPOINTER, runtime);
@@ -490,10 +478,11 @@ static inline s32 op_getfield_impl(u8 **opCode, Runtime *runtime, RuntimeStack *
     }
     Long2Double l2d;
     l2d.l = 0;
-    if (isDataReferByIndex(fi->datatype_idx)) {
+    if (fi->isrefer) {
         l2d.r = getFieldRefer(ptr);
         push_ref(stack, l2d.r);
     } else {
+        s32 data_bytes = data_type_bytes[fi->datatype_idx];
         switch (data_bytes) {
             case 8: {
                 l2d.l = getFieldLong(ptr);

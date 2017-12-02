@@ -578,9 +578,10 @@ struct _FieldInfo {
     //link
     Utf8String *name;
     Utf8String *descriptor;
-    u8 datatype_idx;
-    u16 offset;//字段的偏移地址，静态字段存放在class中
     Class *_this_class;
+    u16 offset;//字段的偏移地址，静态字段存放在class中
+    u8 datatype_idx;
+    u8 isrefer;
 };
 
 /*  Field Pool */
