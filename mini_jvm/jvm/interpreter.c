@@ -227,42 +227,6 @@ static inline s32 op_aload_n(u8 **opCode, Runtime *runtime, s32 i) {
 }
 
 
-static inline s32 op_xaload(u8 **opCode, Runtime *runtime) {
-    RuntimeStack *stack = runtime->stack;
-    s32 ret = RUNTIME_STATUS_NORMAL;
-    s32 index = pop_int(stack);
-    Instance *arr = (Instance *) pop_ref(stack);
-    if (arr == NULL) {
-        Instance *exception = exception_create(JVM_EXCEPTION_NULLPOINTER, runtime);
-        push_ref(stack, (__refer) exception);
-        ret = RUNTIME_STATUS_EXCEPTION;
-    } else {
-        s32 tidx = arr->mb.clazz->arr_type_index;
-        s32 bytes = data_type_bytes[tidx];
-
-        Long2Double l2d;
-        jarray_get_field(arr, index, &l2d);
-        if (isDataReferByIndex(tidx)) {
-            push_ref(stack, l2d.r);
-        } else if (bytes <= 4) {
-            push_int(stack, l2d.i2l.i1);
-        } else {
-            push_long(stack, l2d.l);
-        }
-
-#if _JVM_DEBUG_BYTECODE_DETAIL > 5
-        invoke_deepth(runtime);
-        jvm_printf("(icbdlfsa)aload push arr[%llx]{%d bytes}.(%d)=%x:%d:%lld:%lf into stack\n", (u64) (long) arr, bytes,
-                   index,
-                   l2d.i2l.i1,
-                   l2d.i2l.i1, l2d.l, l2d.d);
-#endif
-    }
-    *opCode = *opCode + 1;
-    return ret;
-}
-
-
 static inline s32 op_ifload_n(u8 **opCode, Runtime *runtime, s32 i) {
     Int2Float i2f;
     i2f.i = localvar_getInt(runtime, i);
@@ -276,49 +240,7 @@ static inline s32 op_ifload_n(u8 **opCode, Runtime *runtime, s32 i) {
 }
 
 
-static inline s32 op_xastore_impl(u8 **opCode, Runtime *runtime, u8 isReference) {
-    RuntimeStack *stack = runtime->stack;
-    StackEntry entry;
-    s32 ret = 0;
-
-    pop_entry(stack, &entry);
-    s32 index = pop_int(stack);
-    Instance *jarr = (Instance *) pop_ref(stack);
-    if (jarr == NULL) {
-        Instance *exception = exception_create(JVM_EXCEPTION_NULLPOINTER, runtime);
-        push_ref(runtime->stack, (__refer) exception);
-        ret = RUNTIME_STATUS_EXCEPTION;
-    } else {
-        s32 tidx = (jarr->mb.clazz->arr_type_index);
-        s32 bytes = data_type_bytes[tidx];
-        Long2Double l2d;
-        l2d.l = 0;
-        if (isReference) {
-            l2d.r = entry_2_refer(&entry);
-        } else {
-            if (bytes > 4) {
-                l2d.l = entry_2_long(&entry);
-            } else {
-                l2d.i2l.i1 = entry_2_int(&entry);
-            }
-        }
-        jarray_set_field(jarr, index, &l2d);
-#if _JVM_DEBUG_BYTECODE_DETAIL > 5
-        invoke_deepth(runtime);
-        jvm_printf("(icbfald)astore: save array[%llx]{%d bytes}.(%d)=%d:%llx:%lf)\n",
-                   (s64) (long) jarr, bytes, index,
-                   l2d.i2l.i1, (s64) (long) l2d.r,
-                   l2d.d);
-#endif
-    }
-    *opCode = *opCode + 1;
-    return ret;
-}
-
-
-/* ldc */
-static inline s32 op_ldc_impl(u8 **opCode, Runtime *runtime, s32 index) {
-    RuntimeStack *stack = runtime->stack;
+static inline s32 op_ldc_impl(u8 **opCode, Runtime *runtime, RuntimeStack *stack, s32 index) {
     Class *clazz = runtime->clazz;
 
     ConstantItem *item = find_constant_item(clazz, index);
@@ -402,8 +324,7 @@ static inline s32 op_lconst_n(u8 **opCode, Runtime *runtime, s64 i) {
     return 0;
 }
 
-static inline s32 op_lload_n(u8 **opCode, Runtime *runtime, s32
-index) {
+static inline s32 op_lload_n(u8 **opCode, Runtime *runtime, s32 index) {
     Long2Double l2d;
     l2d.i2l.i1 = localvar_getInt(runtime, index);
     l2d.i2l.i0 = localvar_getInt(runtime, index + 1);
@@ -418,8 +339,7 @@ index) {
     return 0;
 }
 
-static inline s32 op_istore_n(u8 **opCode, Runtime *runtime, s32 i) {
-    RuntimeStack *stack = runtime->stack;
+static inline s32 op_istore_n(u8 **opCode, Runtime *runtime, RuntimeStack *stack, s32 i) {
     s32 value = pop_int(stack);
 #if _JVM_DEBUG_BYTECODE_DETAIL > 5
     invoke_deepth(runtime);
@@ -430,8 +350,7 @@ static inline s32 op_istore_n(u8 **opCode, Runtime *runtime, s32 i) {
     return 0;
 }
 
-static inline s32 op_astore_n(u8 **opCode, Runtime *runtime, s32 i) {
-    RuntimeStack *stack = runtime->stack;
+static inline s32 op_astore_n(u8 **opCode, Runtime *runtime, RuntimeStack *stack, s32 i) {
     __refer value = pop_ref(stack);
 #if _JVM_DEBUG_BYTECODE_DETAIL > 5
     invoke_deepth(runtime);
@@ -442,8 +361,7 @@ static inline s32 op_astore_n(u8 **opCode, Runtime *runtime, s32 i) {
     return 0;
 }
 
-static inline s32 op_lstore_n(u8 **opCode, Runtime *runtime, s32 i) {
-    RuntimeStack *stack = runtime->stack;
+static inline s32 op_lstore_n(u8 **opCode, Runtime *runtime, RuntimeStack *stack, s32 i) {
     Long2Double l2d;
     l2d.l = pop_long(stack);
 
@@ -458,8 +376,7 @@ static inline s32 op_lstore_n(u8 **opCode, Runtime *runtime, s32 i) {
     return 0;
 }
 
-static inline s32 op_putfield_impl(u8 **opCode, Runtime *runtime, s32 isStatic) {
-    RuntimeStack *stack = runtime->stack;
+static inline s32 op_putfield_impl(u8 **opCode, Runtime *runtime, RuntimeStack *stack, s32 isStatic) {
     Class *clazz = runtime->clazz;
     Short2Char s2c;
     s2c.c1 = opCode[0][1];
@@ -539,8 +456,7 @@ static inline s32 op_putfield_impl(u8 **opCode, Runtime *runtime, s32 isStatic) 
     return 0;
 }
 
-static inline s32 op_getfield_impl(u8 **opCode, Runtime *runtime, s32 isStatic) {
-    RuntimeStack *stack = runtime->stack;
+static inline s32 op_getfield_impl(u8 **opCode, Runtime *runtime, RuntimeStack *stack, s32 isStatic) {
     Class *clazz = runtime->clazz;
     Short2Char s2c;
     s2c.c1 = opCode[0][1];
@@ -613,8 +529,7 @@ static inline s32 op_getfield_impl(u8 **opCode, Runtime *runtime, s32 isStatic) 
 
 }
 
-static inline s32 op_newarray_impl(Runtime *runtime, s32 count, s32 typeIdx, Utf8String *type) {
-    RuntimeStack *stack = runtime->stack;
+static inline s32 op_newarray_impl(Runtime *runtime, RuntimeStack *stack, s32 count, s32 typeIdx, Utf8String *type) {
     Instance *arr = jarray_create(count, typeIdx, type);
 
 #if _JVM_DEBUG_BYTECODE_DETAIL > 5
@@ -632,8 +547,7 @@ static inline s32 op_newarray_impl(Runtime *runtime, s32 count, s32 typeIdx, Utf
     return 0;
 }
 
-static inline s32 op_ifstore_impl(u8 **opCode, Runtime *runtime) {
-    RuntimeStack *stack = runtime->stack;
+static inline s32 op_ifstore_impl(u8 **opCode, Runtime *runtime, RuntimeStack *stack) {
     Short2Char s2c;
     if (runtime->wideMode) {
         s2c.c1 = opCode[0][1];
@@ -648,15 +562,14 @@ static inline s32 op_ifstore_impl(u8 **opCode, Runtime *runtime) {
     s32 value = pop_int(stack);
 #if _JVM_DEBUG_BYTECODE_DETAIL > 5
     invoke_deepth(runtime);
-                        jvm_printf("i(f)store: save  localvar(%d) [%x]/%d \n", s2c.s, value, value);
+    jvm_printf("i(f)store: save  localvar(%d) [%x]/%d \n", s2c.s, value, value);
 #endif
     localvar_setInt(runtime, s2c.s, value);
 
     return 0;
 }
 
-static inline s32 op_ldstore_impl(u8 **opCode, Runtime *runtime) {
-    RuntimeStack *stack = runtime->stack;
+static inline s32 op_ldstore_impl(u8 **opCode, Runtime *runtime, RuntimeStack *stack) {
 
     Short2Char s2c;
     if (runtime->wideMode) {
@@ -674,7 +587,7 @@ static inline s32 op_ldstore_impl(u8 **opCode, Runtime *runtime) {
 
 #if _JVM_DEBUG_BYTECODE_DETAIL > 5
     invoke_deepth(runtime);
-                        jvm_printf("l(d)store: save localvar(%d) %llx/%lld/%lf  \n", s2c.s, l2d.l, l2d.l, l2d.d);
+    jvm_printf("l(d)store: save localvar(%d) %llx/%lld/%lf  \n", s2c.s, l2d.l, l2d.l, l2d.d);
 #endif
     localvar_setInt(runtime, s2c.s, l2d.i2l.i1);
     localvar_setInt(runtime, s2c.s + 1, l2d.i2l.i0);
@@ -1003,7 +916,7 @@ s32 execute_method(MethodInfo *method, Runtime *pruntime, Class *clazz) {
                     case op_ldc: {
                         s32 index = opCode[0][1];
                         *opCode = *opCode + 2;
-                        i_r = op_ldc_impl(opCode, runtime, index);
+                        i_r = op_ldc_impl(opCode, runtime, stack, index);
                         break;
                     }
 
@@ -1012,7 +925,7 @@ s32 execute_method(MethodInfo *method, Runtime *pruntime, Class *clazz) {
                         s2c.c1 = opCode[0][1];
                         s2c.c0 = opCode[0][2];
                         s32 index = s2c.s;
-                        i_r = op_ldc_impl(opCode, runtime, index);
+                        i_r = op_ldc_impl(opCode, runtime, stack, index);
                         *opCode = *opCode + 3;
                         break;
                     }
@@ -1210,63 +1123,151 @@ s32 execute_method(MethodInfo *method, Runtime *pruntime, Class *clazz) {
                         break;
                     }
 
-                    case op_iaload: {
-                        i_r = op_xaload(opCode, runtime);
-                        break;
-                    }
-
-                    case op_laload: {
-                        i_r = op_xaload(opCode, runtime);
-                        break;
-                    }
-
+                    case op_iaload:
                     case op_faload: {
-                        i_r = op_xaload(opCode, runtime);
+                        s32 index = pop_int(stack);
+                        Instance *arr = (Instance *) pop_ref(stack);
+                        if (arr == NULL) {
+                            Instance *exception = exception_create(JVM_EXCEPTION_NULLPOINTER, runtime);
+                            push_ref(stack, (__refer) exception);
+                            i_r = RUNTIME_STATUS_EXCEPTION;
+                        } else {
+                            s32 s = *(s32 *) (arr->arr_body + (index << 2));
+                            push_int(stack, s);
+
+#if _JVM_DEBUG_BYTECODE_DETAIL > 5
+                            invoke_deepth(runtime);
+                            jvm_printf("iaload push arr[%llx].(%d)=%x:%d:%lf into stack\n", (u64) (long) arr, index,
+                                       s, s, *(f32 *) &s);
+#endif
+                        }
+                        *opCode = *opCode + 1;
                         break;
                     }
 
+                    case op_laload:
                     case op_daload: {
-                        i_r = op_xaload(opCode, runtime);
+                        s32 index = pop_int(stack);
+                        Instance *arr = (Instance *) pop_ref(stack);
+                        if (arr == NULL) {
+                            Instance *exception = exception_create(JVM_EXCEPTION_NULLPOINTER, runtime);
+                            push_ref(stack, (__refer) exception);
+                            i_r = RUNTIME_STATUS_EXCEPTION;
+                        } else {
+                            s64 s = *(s64 *) (arr->arr_body + (index << 3));
+                            push_long(stack, s);
+
+#if _JVM_DEBUG_BYTECODE_DETAIL > 5
+                            invoke_deepth(runtime);
+                            jvm_printf("daload push arr[%llx].(%d)=%llx:%lld:%lf into stack\n", (u64) (long) arr, index,
+                                       s, s, *(f64 *) &s);
+#endif
+                        }
+                        *opCode = *opCode + 1;
                         break;
                     }
 
                     case op_aaload: {
-                        i_r = op_xaload(opCode, runtime);
+                        s32 index = pop_int(stack);
+                        Instance *arr = (Instance *) pop_ref(stack);
+                        if (arr == NULL) {
+                            Instance *exception = exception_create(JVM_EXCEPTION_NULLPOINTER, runtime);
+                            push_ref(stack, (__refer) exception);
+                            i_r = RUNTIME_STATUS_EXCEPTION;
+                        } else {
+                            __refer s = *(__refer *) (arr->arr_body + (index * sizeof(__refer)));
+                            push_ref(stack, s);
+
+#if _JVM_DEBUG_BYTECODE_DETAIL > 5
+                            invoke_deepth(runtime);
+                            jvm_printf("aaload push arr[%llx].(%d)=%llx:%lld into stack\n", (u64) (long) arr, index,
+                                       (s64) (long) s, (s64) (long) s);
+#endif
+                        }
+                        *opCode = *opCode + 1;
                         break;
                     }
 
                     case op_baload: {
-                        i_r = op_xaload(opCode, runtime);
+                        s32 index = pop_int(stack);
+                        Instance *arr = (Instance *) pop_ref(stack);
+                        if (arr == NULL) {
+                            Instance *exception = exception_create(JVM_EXCEPTION_NULLPOINTER, runtime);
+                            push_ref(stack, (__refer) exception);
+                            i_r = RUNTIME_STATUS_EXCEPTION;
+                        } else {
+                            s32 s = *(c8 *) (arr->arr_body + (index));
+                            push_int(stack, s);
+
+#if _JVM_DEBUG_BYTECODE_DETAIL > 5
+                            invoke_deepth(runtime);
+                            jvm_printf("iaload push arr[%llx].(%d)=%x:%d:%lf into stack\n", (u64) (long) arr, index,
+                                       s, s, *(f32 *) &s);
+#endif
+                        }
+                        *opCode = *opCode + 1;
                         break;
                     }
 
                     case op_caload: {
-                        i_r = op_xaload(opCode, runtime);
+                        s32 index = pop_int(stack);
+                        Instance *arr = (Instance *) pop_ref(stack);
+                        if (arr == NULL) {
+                            Instance *exception = exception_create(JVM_EXCEPTION_NULLPOINTER, runtime);
+                            push_ref(stack, (__refer) exception);
+                            i_r = RUNTIME_STATUS_EXCEPTION;
+                        } else {
+                            s32 s = *(u16 *) (arr->arr_body + (index << 1));
+                            push_int(stack, s);
+
+#if _JVM_DEBUG_BYTECODE_DETAIL > 5
+                            invoke_deepth(runtime);
+                            jvm_printf("iaload push arr[%llx].(%d)=%x:%d:%lf into stack\n", (u64) (long) arr, index,
+                                       s, s, *(f32 *) &s);
+#endif
+                        }
+                        *opCode = *opCode + 1;
                         break;
                     }
 
                     case op_saload: {
-                        i_r = op_xaload(opCode, runtime);
+                        s32 index = pop_int(stack);
+                        Instance *arr = (Instance *) pop_ref(stack);
+                        if (arr == NULL) {
+                            Instance *exception = exception_create(JVM_EXCEPTION_NULLPOINTER, runtime);
+                            push_ref(stack, (__refer) exception);
+                            i_r = RUNTIME_STATUS_EXCEPTION;
+                        } else {
+                            s32 s = *(s16 *) (arr->arr_body + (index << 1));
+                            push_int(stack, s);
+
+#if _JVM_DEBUG_BYTECODE_DETAIL > 5
+                            invoke_deepth(runtime);
+                            jvm_printf("iaload push arr[%llx].(%d)=%x:%d:%lf into stack\n", (u64) (long) arr, index,
+                                       s, s, *(f32 *) &s);
+#endif
+                        }
+                        *opCode = *opCode + 1;
                         break;
                     }
 
                     case op_istore: {
-                        i_r = op_ifstore_impl(opCode, runtime);
+                        i_r = op_ifstore_impl(opCode, runtime, stack);
                         break;
                     }
 
                     case op_lstore: {
-                        i_r = op_ldstore_impl(opCode, runtime);
+                        i_r = op_ldstore_impl(opCode, runtime, stack);
                         break;
                     }
 
                     case op_fstore: {
-                        i_r = op_ifstore_impl(opCode, runtime);
+                        i_r = op_ifstore_impl(opCode, runtime, stack);
                         break;
                     }
 
                     case op_dstore: {
-                        i_r = op_ldstore_impl(opCode, runtime);
+                        i_r = op_ldstore_impl(opCode, runtime, stack);
                         break;
                     }
 
@@ -1296,148 +1297,236 @@ s32 execute_method(MethodInfo *method, Runtime *pruntime, Class *clazz) {
                     }
 
                     case op_istore_0: {
-                        i_r = op_istore_n(opCode, runtime, 0);
+                        i_r = op_istore_n(opCode, runtime, stack, 0);
                         break;
                     }
 
                     case op_istore_1: {
-                        i_r = op_istore_n(opCode, runtime, 1);
+                        i_r = op_istore_n(opCode, runtime, stack, 1);
                         break;
                     }
 
                     case op_istore_2: {
-                        i_r = op_istore_n(opCode, runtime, 2);
+                        i_r = op_istore_n(opCode, runtime, stack, 2);
                         break;
                     }
 
                     case op_istore_3: {
-                        i_r = op_istore_n(opCode, runtime, 3);
+                        i_r = op_istore_n(opCode, runtime, stack, 3);
                         break;
                     }
 
                     case op_lstore_0: {
-                        i_r = op_lstore_n(opCode, runtime, 0);
+                        i_r = op_lstore_n(opCode, runtime, stack, 0);
                         break;
                     }
 
                     case op_lstore_1: {
-                        i_r = op_lstore_n(opCode, runtime, 1);
+                        i_r = op_lstore_n(opCode, runtime, stack, 1);
                         break;
                     }
 
                     case op_lstore_2: {
-                        i_r = op_lstore_n(opCode, runtime, 2);
+                        i_r = op_lstore_n(opCode, runtime, stack, 2);
                         break;
                     }
 
                     case op_lstore_3: {
-                        i_r = op_lstore_n(opCode, runtime, 3);
+                        i_r = op_lstore_n(opCode, runtime, stack, 3);
                         break;
                     }
 
 
                     case op_fstore_0: {
-                        i_r = op_istore_n(opCode, runtime, 0);
+                        i_r = op_istore_n(opCode, runtime, stack, 0);
                         break;
                     }
 
                     case op_fstore_1: {
-                        i_r = op_istore_n(opCode, runtime, 1);
+                        i_r = op_istore_n(opCode, runtime, stack, 1);
                         break;
                     }
 
                     case op_fstore_2: {
-                        i_r = op_istore_n(opCode, runtime, 2);
+                        i_r = op_istore_n(opCode, runtime, stack, 2);
                         break;
                     }
 
                     case op_fstore_3: {
-                        i_r = op_istore_n(opCode, runtime, 3);
+                        i_r = op_istore_n(opCode, runtime, stack, 3);
                         break;
                     }
 
 
                     case op_dstore_0: {
-                        i_r = op_lstore_n(opCode, runtime, 0);
+                        i_r = op_lstore_n(opCode, runtime, stack, 0);
                         break;
                     }
 
                     case op_dstore_1: {
-                        i_r = op_lstore_n(opCode, runtime, 1);
+                        i_r = op_lstore_n(opCode, runtime, stack, 1);
                         break;
                     }
 
                     case op_dstore_2: {
-                        i_r = op_lstore_n(opCode, runtime, 2);
+                        i_r = op_lstore_n(opCode, runtime, stack, 2);
                         break;
                     }
 
                     case op_dstore_3: {
-                        i_r = op_lstore_n(opCode, runtime, 3);
+                        i_r = op_lstore_n(opCode, runtime, stack, 3);
                         break;
                     }
 
 
                     case op_astore_0: {
-                        i_r = op_astore_n(opCode, runtime, 0);
+                        i_r = op_astore_n(opCode, runtime, stack, 0);
                         break;
                     }
 
                     case op_astore_1: {
-                        i_r = op_astore_n(opCode, runtime, 1);
+                        i_r = op_astore_n(opCode, runtime, stack, 1);
                         break;
                     }
 
                     case op_astore_2: {
-                        i_r = op_astore_n(opCode, runtime, 2);
+                        i_r = op_astore_n(opCode, runtime, stack, 2);
                         break;
                     }
 
                     case op_astore_3: {
-                        i_r = op_astore_n(opCode, runtime, 3);
+                        i_r = op_astore_n(opCode, runtime, stack, 3);
                         break;
                     }
 
-
+                    case op_fastore:
                     case op_iastore: {
-                        i_r = op_xastore_impl(opCode, runtime, 0);
+                        s32 i = pop_int(stack);
+                        s32 index = pop_int(stack);
+                        Instance *jarr = (Instance *) pop_ref(stack);
+                        if (jarr == NULL) {
+                            Instance *exception = exception_create(JVM_EXCEPTION_NULLPOINTER, runtime);
+                            push_ref(runtime->stack, (__refer) exception);
+                            i_r = RUNTIME_STATUS_EXCEPTION;
+                        } else {
+                            *(s32 *) (jarr->arr_body + (index << 2)) = i;
+
+#if _JVM_DEBUG_BYTECODE_DETAIL > 5
+                            invoke_deepth(runtime);
+                            jvm_printf("iastore: save array[%llx].(%d)=%d)\n",
+                                       (s64) (long) jarr, index, i);
+#endif
+                        }
+                        *opCode = *opCode + 1;
                         break;
                     }
 
+                    case op_dastore:
                     case op_lastore: {
-                        i_r = op_xastore_impl(opCode, runtime, 0);
-                        break;
-                    }
+                        s64 j = pop_long(stack);
+                        s32 index = pop_int(stack);
+                        Instance *jarr = (Instance *) pop_ref(stack);
+                        if (jarr == NULL) {
+                            Instance *exception = exception_create(JVM_EXCEPTION_NULLPOINTER, runtime);
+                            push_ref(runtime->stack, (__refer) exception);
+                            i_r = RUNTIME_STATUS_EXCEPTION;
+                        } else {
+                            *(s64 *) (jarr->arr_body + (index << 3)) = j;
 
-                    case op_fastore: {
-                        i_r = op_xastore_impl(opCode, runtime, 0);
-                        break;
-                    }
-
-                    case op_dastore: {
-                        i_r = op_xastore_impl(opCode, runtime, 0);
+#if _JVM_DEBUG_BYTECODE_DETAIL > 5
+                            invoke_deepth(runtime);
+                            jvm_printf("iastore: save array[%llx].(%d)=%lld)\n",
+                                       (s64) (long) jarr, index, j);
+#endif
+                        }
+                        *opCode = *opCode + 1;
                         break;
                     }
 
 
                     case op_aastore: {
-                        i_r = op_xastore_impl(opCode, runtime, 1);
+                        __refer r = pop_ref(stack);
+                        s32 index = pop_int(stack);
+                        Instance *jarr = (Instance *) pop_ref(stack);
+                        if (jarr == NULL) {
+                            Instance *exception = exception_create(JVM_EXCEPTION_NULLPOINTER, runtime);
+                            push_ref(runtime->stack, (__refer) exception);
+                            i_r = RUNTIME_STATUS_EXCEPTION;
+                        } else {
+                            *(__refer *) (jarr->arr_body + (index * sizeof(__refer))) = r;
+
+#if _JVM_DEBUG_BYTECODE_DETAIL > 5
+                            invoke_deepth(runtime);
+                            jvm_printf("iastore: save array[%llx].(%d)=%llx)\n",
+                                       (s64) (long) jarr, index, (s64) (long) r);
+#endif
+                        }
+                        *opCode = *opCode + 1;
                         break;
                     }
 
                     case op_bastore: {
-                        i_r = op_xastore_impl(opCode, runtime, 0);
+                        s32 i = pop_int(stack);
+                        s32 index = pop_int(stack);
+                        Instance *jarr = (Instance *) pop_ref(stack);
+                        if (jarr == NULL) {
+                            Instance *exception = exception_create(JVM_EXCEPTION_NULLPOINTER, runtime);
+                            push_ref(runtime->stack, (__refer) exception);
+                            i_r = RUNTIME_STATUS_EXCEPTION;
+                        } else {
+                            *(c8 *) (jarr->arr_body + (index)) = (c8) i;
+
+#if _JVM_DEBUG_BYTECODE_DETAIL > 5
+                            invoke_deepth(runtime);
+                            jvm_printf("iastore: save array[%llx].(%d)=%d)\n",
+                                       (s64) (long) jarr, index, i);
+#endif
+                        }
+                        *opCode = *opCode + 1;
                         break;
                     }
 
 
                     case op_castore: {
-                        i_r = op_xastore_impl(opCode, runtime, 0);
+                        s32 i = pop_int(stack);
+                        s32 index = pop_int(stack);
+                        Instance *jarr = (Instance *) pop_ref(stack);
+                        if (jarr == NULL) {
+                            Instance *exception = exception_create(JVM_EXCEPTION_NULLPOINTER, runtime);
+                            push_ref(runtime->stack, (__refer) exception);
+                            i_r = RUNTIME_STATUS_EXCEPTION;
+                        } else {
+                            *(u16 *) (jarr->arr_body + (index << 1)) = i;
+
+#if _JVM_DEBUG_BYTECODE_DETAIL > 5
+                            invoke_deepth(runtime);
+                            jvm_printf("iastore: save array[%llx].(%d)=%d)\n",
+                                       (s64) (long) jarr, index, i);
+#endif
+                        }
+                        *opCode = *opCode + 1;
                         break;
                     }
 
                     case op_sastore: {
-                        i_r = op_xastore_impl(opCode, runtime, 0);
+
+                        s32 i = pop_int(stack);
+                        s32 index = pop_int(stack);
+                        Instance *jarr = (Instance *) pop_ref(stack);
+                        if (jarr == NULL) {
+                            Instance *exception = exception_create(JVM_EXCEPTION_NULLPOINTER, runtime);
+                            push_ref(runtime->stack, (__refer) exception);
+                            i_r = RUNTIME_STATUS_EXCEPTION;
+                        } else {
+                            *(s16 *) (jarr->arr_body + (index << 1)) = i;
+
+#if _JVM_DEBUG_BYTECODE_DETAIL > 5
+                            invoke_deepth(runtime);
+                            jvm_printf("iastore: save array[%llx].(%d)=%d)\n",
+                                       (s64) (long) jarr, index, i);
+#endif
+                        }
+                        *opCode = *opCode + 1;
                         break;
                     }
 
@@ -3037,23 +3126,23 @@ s32 execute_method(MethodInfo *method, Runtime *pruntime, Class *clazz) {
                     }
 
                     case op_getstatic: {
-                        i_r = op_getfield_impl(opCode, runtime, 1);
+                        i_r = op_getfield_impl(opCode, runtime, stack, 1);
                         break;
                     }
 
                     case op_putstatic: {
-                        i_r = op_putfield_impl(opCode, runtime, 1);
+                        i_r = op_putfield_impl(opCode, runtime, stack, 1);
                         break;
                     }
 
                     case op_getfield: {
-                        i_r = op_getfield_impl(opCode, runtime, 0);
+                        i_r = op_getfield_impl(opCode, runtime, stack, 0);
                         break;
                     }
 
 
                     case op_putfield: {
-                        i_r = op_putfield_impl(opCode, runtime, 0);
+                        i_r = op_putfield_impl(opCode, runtime, stack, 0);
                         break;
                     }
 
@@ -3288,7 +3377,7 @@ s32 execute_method(MethodInfo *method, Runtime *pruntime, Class *clazz) {
 
                         s32 count = pop_int(stack);
                         *opCode = *opCode + 2;
-                        i_r = op_newarray_impl(runtime, count, typeIdx, NULL);
+                        i_r = op_newarray_impl(runtime, stack, count, typeIdx, NULL);
                         break;
                     }
 
@@ -3300,7 +3389,7 @@ s32 execute_method(MethodInfo *method, Runtime *pruntime, Class *clazz) {
 
                         s32 count = pop_int(stack);
                         *opCode = *opCode + 3;
-                        i_r = op_newarray_impl(runtime, count, 0, get_utf8_string(runtime->clazz, s2c.s));
+                        i_r = op_newarray_impl(runtime, stack, count, 0, get_utf8_string(runtime->clazz, s2c.s));
                         break;
                     }
 

@@ -637,8 +637,8 @@ s32 jthread_lock(MemoryBlock *mb, Runtime *runtime) { //可能会重入，同一
 
 #if _JVM_DEBUG_BYTECODE_DETAIL > 5
     invoke_deepth(runtime);
-    jvm_printf("  lock: %llx   lock holder: %llx \n", (s64) (long) (runtime->threadInfo->jthread),
-               (s64) (long) (jtl->jthread_holder));
+    jvm_printf("  lock: %llx   lock holder: %s \n", (s64) (long) (runtime->threadInfo->jthread),
+               utf8_cstr(mb->clazz->name));
 #endif
     return 0;
 }
@@ -652,8 +652,8 @@ s32 jthread_unlock(MemoryBlock *mb, Runtime *runtime) {
     pthread_mutex_unlock(&jtl->mutex_lock);
 #if _JVM_DEBUG_BYTECODE_DETAIL > 5
     invoke_deepth(runtime);
-    jvm_printf("unlock: %llx   lock holder: %llx, \n", (s64) (long) (runtime->threadInfo->jthread),
-               (s64) (long) (jtl->jthread_holder));
+    jvm_printf("unlock: %llx   lock holder: %s, \n", (s64) (long) (runtime->threadInfo->jthread),
+               utf8_cstr(mb->clazz->name));
 #endif
     return 0;
 }
