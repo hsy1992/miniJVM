@@ -400,8 +400,7 @@ static inline s32 op_putfield_impl(u8 **opCode, Runtime *runtime, RuntimeStack *
     if (isStatic) {
         ptr = getStaticFieldPtr(fi);
     } else {
-        Instance *ins = NULL;
-        ins = (Instance *) pop_ref(stack);
+        Instance *ins = (Instance *) pop_ref(stack);
         if (!ins) {
             Instance *exception = exception_create(JVM_EXCEPTION_NULLPOINTER, runtime);
             push_ref(stack, (__refer) exception);
@@ -467,8 +466,7 @@ static inline s32 op_getfield_impl(u8 **opCode, Runtime *runtime, RuntimeStack *
     if (isStatic) {
         ptr = getStaticFieldPtr(fi);
     } else {
-        Instance *ins = NULL;
-        ins = (Instance *) pop_ref(stack);
+        Instance *ins = (Instance *) pop_ref(stack);
         if (!ins) {
             Instance *exception = exception_create(JVM_EXCEPTION_NULLPOINTER, runtime);
             push_ref(stack, (__refer) exception);
