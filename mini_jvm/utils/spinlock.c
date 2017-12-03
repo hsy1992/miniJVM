@@ -18,7 +18,7 @@ int spin_destroy(spinlock_t *lock) {
 }
 
 
-int spin_lock_count(spinlock_t *lock, int count) {
+inline int spin_lock_count(spinlock_t *lock, int count) {
     while (1) {
         int i;
         for (i = 0; i < count; i++) {
@@ -31,7 +31,7 @@ int spin_lock_count(spinlock_t *lock, int count) {
 }
 
 int spin_lock(spinlock_t *lock) {
-    return spin_lock_count(lock, 10000);
+    return spin_lock_count(lock, 1000);
 }
 
 int spin_trylock(spinlock_t *lock) {

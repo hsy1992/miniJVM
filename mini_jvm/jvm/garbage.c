@@ -657,6 +657,7 @@ void garbage_mark_object(__refer ref) {
 
 MemoryBlock *garbage_is_alive(__refer ref) {
     __refer result = hashset_get(collector->objs_holder, ref);
+    spin_lock(&collector->lock);
     if (!result) {
         MemoryBlock *mb = collector->header;
         while (mb) {
@@ -675,7 +676,7 @@ MemoryBlock *garbage_is_alive(__refer ref) {
             mb = mb->next;
         }
     }
-
+    spin_unlock(&collector->lock);
     return (MemoryBlock *) result;
 }
 
