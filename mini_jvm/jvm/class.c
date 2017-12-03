@@ -250,7 +250,10 @@ void class_clinit(Class *clazz, Runtime *runtime) {
 #if _JVM_DEBUG_BYTECODE_DETAIL > 5
             jvm_printf("%s <clinit>\n", utf8_cstr(clazz->name));
 #endif
-            execute_method(&(p->method[i]), runtime, clazz);
+            s32 ret = execute_method(&(p->method[i]), runtime, clazz);
+            if (ret != RUNTIME_STATUS_NORMAL) {
+                print_exception(runtime);
+            }
         }
     }
 

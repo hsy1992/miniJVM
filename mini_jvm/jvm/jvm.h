@@ -846,6 +846,8 @@ Class *getClassByConstantClassRef(Class *clazz, s32 index);
 
 //======================= execute =============================
 
+void print_exception(Runtime *runtime);
+
 s32 execute(c8 *p_classpath, c8 *mainclass, s32 argc, c8 **argv);
 
 s32 execute_method(MethodInfo *method, Runtime *runtime, Class *clazz);

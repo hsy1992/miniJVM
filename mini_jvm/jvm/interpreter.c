@@ -3143,7 +3143,6 @@ s32 execute_method(MethodInfo *method, Runtime *pruntime, Class *clazz) {
                         if (runtime->clazz->status < CLASS_STATUS_CLINITED) {
                             class_clinit(runtime->clazz, runtime);
                         }
-                        s32 ret = 0;
                         ConstantMethodRef *cmr = find_constant_method_ref(clazz,
                                                                           object_ref);//此cmr所描述的方法，对于不同的实例，有不同的method
 
@@ -3153,7 +3152,7 @@ s32 execute_method(MethodInfo *method, Runtime *pruntime, Class *clazz) {
                         if (ins == NULL) {
                             Instance *exception = exception_create(JVM_EXCEPTION_NULLPOINTER, runtime);
                             push_ref(stack, (__refer) exception);
-                            ret = RUNTIME_STATUS_EXCEPTION;
+                            i_r = RUNTIME_STATUS_EXCEPTION;
                         } else {
                             MethodInfo *method = NULL;
 
@@ -3186,11 +3185,10 @@ s32 execute_method(MethodInfo *method, Runtime *pruntime, Class *clazz) {
 #endif
 
                             if (method) {
-                                ret = execute_method(method, runtime, method->_this_class);
+                                i_r = execute_method(method, runtime, method->_this_class);
                             }
                         }
                         *opCode = *opCode + 3;
-                        i_r = ret;
                         break;
                     }
 
@@ -3203,7 +3201,6 @@ s32 execute_method(MethodInfo *method, Runtime *pruntime, Class *clazz) {
                         if (runtime->clazz->status < CLASS_STATUS_CLINITED) {
                             class_clinit(runtime->clazz, runtime);
                         }
-                        s32 ret = 0;
                         ConstantMethodRef *cmr = find_constant_method_ref(runtime->clazz, object_ref);
                         MethodInfo *method = cmr->methodInfo;
                         if (!method) {
@@ -3216,11 +3213,10 @@ s32 execute_method(MethodInfo *method, Runtime *pruntime, Class *clazz) {
                                    utf8_cstr(method->name), utf8_cstr(method->descriptor));
 #endif
                         if (method) {
-                            ret = execute_method(method, runtime, method->_this_class);
+                            i_r = execute_method(method, runtime, method->_this_class);
                         }
 
                         *opCode = *opCode + 3;
-                        i_r = ret;
                         break;
                     }
 
@@ -3232,12 +3228,11 @@ s32 execute_method(MethodInfo *method, Runtime *pruntime, Class *clazz) {
                         s2c.c0 = opCode[0][2];
                         u16 object_ref = s2c.s;
                         ConstantMethodRef *cmr = find_constant_method_ref(runtime->clazz, object_ref);
-                        classes_load_get(cmr->clsName, runtime);
+                        if (!cmr->methodInfo)classes_load_get(cmr->clsName, runtime);
                         if (runtime->clazz->status < CLASS_STATUS_CLINITED) {
                             class_clinit(runtime->clazz, runtime);
                         }
 
-                        s32 ret = 0;
                         MethodInfo *method = cmr->methodInfo;
                         if (!method) {
                             method = find_methodInfo_by_methodref(runtime->clazz, object_ref);
@@ -3249,11 +3244,10 @@ s32 execute_method(MethodInfo *method, Runtime *pruntime, Class *clazz) {
                                    utf8_cstr(method->name), utf8_cstr(method->descriptor));
 #endif
                         if (method) {
-                            ret = execute_method(method, runtime, method->_this_class);
+                            i_r = execute_method(method, runtime, method->_this_class);
                         }
 
                         *opCode = *opCode + 3;
-                        i_r = ret;
                         break;
                     }
 
@@ -3267,13 +3261,12 @@ s32 execute_method(MethodInfo *method, Runtime *pruntime, Class *clazz) {
 
                         s32 paraCount = (c8) opCode[0][3];
 
-                        s32 ret = 0;
                         ConstantMethodRef *cmr = find_constant_method_ref(clazz, object_ref);
                         Instance *ins = getInstanceInStack(clazz, cmr, stack);
                         if (ins == NULL) {
                             Instance *exception = exception_create(JVM_EXCEPTION_NULLPOINTER, runtime);
                             push_ref(stack, (__refer) exception);
-                            ret = RUNTIME_STATUS_EXCEPTION;
+                            i_r = RUNTIME_STATUS_EXCEPTION;
                         } else {
                             MethodInfo *method = NULL;
                             if (ins->mb.type == MEM_TYPE_CLASS) {
@@ -3296,11 +3289,10 @@ s32 execute_method(MethodInfo *method, Runtime *pruntime, Class *clazz) {
                                        utf8_cstr(method->name), utf8_cstr(method->descriptor));
 #endif
                             if (method) {
-                                ret = execute_method(method, runtime, method->_this_class);
+                                i_r = execute_method(method, runtime, method->_this_class);
                             }
                         }
                         *opCode = *opCode + 5;
-                        i_r = ret;
                         break;
                     }
 
@@ -3310,7 +3302,6 @@ s32 execute_method(MethodInfo *method, Runtime *pruntime, Class *clazz) {
                         s2c.c0 = opCode[0][2];
                         u16 object_ref = s2c.s;
 
-                        s32 ret = 0;
                         MethodInfo *method = find_constant_method_ref(runtime->clazz, object_ref)->methodInfo;
 #if _JVM_DEBUG_BYTECODE_DETAIL > 5
                         invoke_deepth(runtime);
@@ -3318,11 +3309,10 @@ s32 execute_method(MethodInfo *method, Runtime *pruntime, Class *clazz) {
                                    utf8_cstr(method->name), utf8_cstr(method->descriptor));
 #endif
                         if (method) {
-                            ret = execute_method(method, runtime, method->_this_class);
+                            i_r = execute_method(method, runtime, method->_this_class);
                         }
 
                         *opCode = *opCode + 3;
-                        i_r = ret;
                         break;
                     }
 
