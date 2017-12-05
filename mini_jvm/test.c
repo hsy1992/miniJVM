@@ -28,14 +28,14 @@ void t2() {
 }
 
 void t3() {
-    LinkedList* list=linkedlist_create();
-    linkedlist_push_front(list,(__refer)(long)1);
-    linkedlist_push_front(list,(__refer)(long)2);
-    linkedlist_push_front(list,(__refer)(long)3);
-    linkedlist_push_front(list,(__refer)(long)4);
+    LinkedList *list = linkedlist_create();
+    linkedlist_push_front(list, (__refer) (long) 1);
+    linkedlist_push_front(list, (__refer) (long) 2);
+    linkedlist_push_front(list, (__refer) (long) 3);
+    linkedlist_push_front(list, (__refer) (long) 4);
     __refer ref;
     while (NULL != (ref = linkedlist_pop_end(list))) {
-        printf("%lld\n",(s64)(long)ref);
+        printf("%lld\n", (s64) (long) ref);
     }
     linkedlist_destory(list);
 }
@@ -84,11 +84,9 @@ int main(int argc, char **argv) {
 #endif //__MEM_LEAK_DETECT
 
 
-
-
     s32 ret;
-//    ret = execute("../../javalib_test/build/classes/", "test/Foo1", argc, argv);
-    ret = execute("../javalib/build/classes/", "test/Foo1", argc, argv);
+//    ret = execute("../../javalib_test/build/classes/", "test/Foo1", argc, (c8 **)argv);
+    ret = execute("../../javalib/build/classes/", "test/Foo1", argc, (c8 **) argv);
 //    t3();
 //    testMinizWrapper();
 
