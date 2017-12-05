@@ -2665,7 +2665,7 @@ s32 execute_method(MethodInfo *method, Runtime *pruntime, Class *clazz) {
                         }
 #if _JVM_DEBUG_BYTECODE_DETAIL > 5
                         invoke_deepth(runtime);
-                        jvm_printf("op_ifeq: %d/%llx != 0  then jump %d \n", (s32) (long) val, (s64) (long) val);
+                        jvm_printf("op_ifeq: %d/%llx != 0  then jump \n", (s32) (long) val);
 #endif
 
 
@@ -2685,7 +2685,7 @@ s32 execute_method(MethodInfo *method, Runtime *pruntime, Class *clazz) {
                         }
 #if _JVM_DEBUG_BYTECODE_DETAIL > 5
                         invoke_deepth(runtime);
-                        jvm_printf("op_ifne: %d/%llx != 0  then jump %d \n", (s32) (long) val, (s64) (long) val);
+                        jvm_printf("op_ifne: %d/%llx != 0  then jump\n", (s32) (long) val);
 #endif
 
 
@@ -2706,7 +2706,7 @@ s32 execute_method(MethodInfo *method, Runtime *pruntime, Class *clazz) {
                         }
 #if _JVM_DEBUG_BYTECODE_DETAIL > 5
                         invoke_deepth(runtime);
-                        jvm_printf("op_iflt: %d/%llx < 0  then jump %d \n", (s32) (long) val, (s64) (long) val);
+                        jvm_printf("op_iflt: %d/%llx < 0  then jump  \n", (s32) (long) val);
 #endif
 
 
@@ -2726,7 +2726,7 @@ s32 execute_method(MethodInfo *method, Runtime *pruntime, Class *clazz) {
                         }
 #if _JVM_DEBUG_BYTECODE_DETAIL > 5
                         invoke_deepth(runtime);
-                        jvm_printf("op_ifge: %d/%llx >= 0  then jump %d \n", (s32) (long) val, (s64) (long) val);
+                        jvm_printf("op_ifge: %d/%llx >= 0  then jump \n", (s32) (long) val);
 #endif
 
 
@@ -2746,7 +2746,7 @@ s32 execute_method(MethodInfo *method, Runtime *pruntime, Class *clazz) {
                         }
 #if _JVM_DEBUG_BYTECODE_DETAIL > 5
                         invoke_deepth(runtime);
-                        jvm_printf("op_ifgt: %d/%llx > 0  then jump %d \n", (s32) (long) val, (s64) (long) val);
+                        jvm_printf("op_ifgt: %d/%llx > 0  then jump \n", (s32) (long) val);
 #endif
 
 
@@ -2766,7 +2766,7 @@ s32 execute_method(MethodInfo *method, Runtime *pruntime, Class *clazz) {
                         }
 #if _JVM_DEBUG_BYTECODE_DETAIL > 5
                         invoke_deepth(runtime);
-                        jvm_printf("op_ifle: %d/%llx <= 0  then jump %d \n", (s32) (long) val, (s64) (long) val);
+                        jvm_printf("op_ifle: %d/%llx <= 0  then jump \n", (s32) (long) val);
 #endif
 
 
