@@ -4,7 +4,7 @@
  * and open the template in the editor.
  */
 
-/* 
+/*
  * File:   test.c
  * Author: gust
  *
@@ -88,7 +88,7 @@ int main(int argc, char **argv) {
 
     s32 ret;
 //    ret = execute("../../javalib_test/build/classes/", "test/Foo1", argc, argv);
-    ret = execute("../../javalib/build/classes/", "test/Foo1", argc, argv);
+    ret = execute("../javalib/build/classes/", "test/Foo1", argc, argv);
 //    t3();
 //    testMinizWrapper();
 

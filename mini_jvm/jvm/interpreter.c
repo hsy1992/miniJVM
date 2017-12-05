@@ -410,9 +410,8 @@ static inline s32 op_putfield_impl(u8 **opCode, Runtime *runtime, RuntimeStack *
     }
 #if _JVM_DEBUG_BYTECODE_DETAIL > 5
     invoke_deepth(runtime);
-    jvm_printf("%s  save:%s[%llx].%s[%llx]=[%llx]  \n",
-               isStatic ? "putstatic" : "putfield", utf8_cstr(clazz->name),
-               isStatic ? (s64) (long) clazz : (s64) (long) ins, utf8_cstr(fi->name),
+    jvm_printf("%s  save:%s.%s[%llx]=[%llx]  \n",
+               isStatic ? "putstatic" : "putfield", utf8_cstr(clazz->name), utf8_cstr(fi->name),
                (s64) (long) ptr, entry_2_long(&entry));
 #endif
 
@@ -506,9 +505,8 @@ static inline s32 op_getfield_impl(u8 **opCode, Runtime *runtime, RuntimeStack *
     }
 #if _JVM_DEBUG_BYTECODE_DETAIL > 5
     invoke_deepth(runtime);
-    jvm_printf("%s: push %s[%llx].%s[%llx]=[%llx]\n",
-               isStatic ? "getstatic" : "getfield", utf8_cstr(clazz->name),
-               isStatic ? (s64) (long) clazz : (s64) (long) ins, utf8_cstr(fi->name),
+    jvm_printf("%s: push %s.%s[%llx]=[%llx]\n",
+               isStatic ? "getstatic" : "getfield", utf8_cstr(clazz->name), utf8_cstr(fi->name),
                (s64) (long) ptr, l2d.l);
 #endif
     *opCode = *opCode + 3;

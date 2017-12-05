@@ -507,16 +507,16 @@ void invoke_deepth(Runtime *runtime) {
     fprintf(logfile, "%llx", (s64) (long) pthread_self());
 #endif //_CYGWIN_CONFIG_H
     for (i = 0; i < len; i++) {
-        fprintf(logfile, "    ");
+        fprintf(logfile, "  ");
     }
 #else
 #if __JVM_OS_MAC__ || __JVM_OS_CYGWIN__
-    printf("%llx", (s64) (long) pthread_self());
+    fprintf(stderr, "%llx", (s64) (long) pthread_self());
 #else
-    printf("%lx", (s64) (long) pthread_self());
+    fprintf(stderr, "%lx", (s64) (long) pthread_self());
 #endif //
     for (i = 0; i < len; i++) {
-        printf("    ");
+        fprintf(stderr, "  ");
     }
 #endif
     garbage_thread_unlock();
