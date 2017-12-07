@@ -837,7 +837,7 @@ void jarray_set_field(Instance *arr, s32 index, Long2Double *l2d) {
     } else {
         switch (bytes) {
             case 1:
-                setFieldByte(arr->arr_body + index * bytes, (c8) l2d->i2l.i1);
+                setFieldByte(arr->arr_body + index * bytes, (s8) l2d->i2l.i1);
                 break;
             case 2:
                 setFieldShort(arr->arr_body + index * bytes, (s16) l2d->i2l.i1);

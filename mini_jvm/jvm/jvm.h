@@ -288,10 +288,10 @@ enum {
 };
 
 //指令指行返回状态
-static const c8 RUNTIME_STATUS_NORMAL = 0;
-static const c8 RUNTIME_STATUS_RETURN = -1;
-static const c8 RUNTIME_STATUS_EXCEPTION = -2;
-static const c8 RUNTIME_STATUS_ERROR = -3;
+static const s8 RUNTIME_STATUS_NORMAL = 0;
+static const s8 RUNTIME_STATUS_RETURN = -1;
+static const s8 RUNTIME_STATUS_EXCEPTION = -2;
+static const s8 RUNTIME_STATUS_ERROR = -3;
 
 
 //======================= global var =============================
@@ -700,7 +700,7 @@ struct _ClassType {
 
     //for array class
     s32 arr_type_index;
-    c8 status;
+    s8 status;
 };
 
 void _INIT_CLASS(Class *_this);

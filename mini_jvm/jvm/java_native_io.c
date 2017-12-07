@@ -334,7 +334,7 @@ s32 javax_mini_net_socket_Protocol_readBuf(Runtime *runtime, Class *clazz) {
 
 s32 javax_mini_net_socket_Protocol_readByte(Runtime *runtime, Class *clazz) {
     s32 sockfd = localvar_getInt(runtime, 0);
-    c8 b = 0;
+    u8 b = 0;
     jthread_block_enter(runtime);
     s32 len = sock_recv(sockfd, &b, 1);
     jthread_block_exit(runtime);

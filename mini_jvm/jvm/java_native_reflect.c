@@ -766,7 +766,7 @@ s32 javax_mini_reflect_Array_mapArray(Runtime *runtime, Class *clazz) {
         if (ptr)setFieldLong(ptr, (u64) (long) target->arr_body);
         //
         ptr = getFieldPtr_byName_c(ins, JDWP_CLASS_RUNTIME, "type", "B");
-        if (ptr)setFieldByte(ptr, (c8) utf8_char_at(target->mb.clazz->name, 1));
+        if (ptr)setFieldByte(ptr, (s8) utf8_char_at(target->mb.clazz->name, 1));
         //
 
     }

@@ -184,7 +184,7 @@ void jdwppacket_destory(JdwpPacket *packet) {
     jvm_free(packet);
 }
 
-c8 jdwppacket_read_byte(JdwpPacket *packet) {
+s8 jdwppacket_read_byte(JdwpPacket *packet) {
     return packet->data[packet->readPos++];
 }
 
@@ -250,7 +250,7 @@ void jdwppacket_ensureCapacity(JdwpPacket *packet, s32 length) {
     }
 }
 
-void jdwppacket_write_byte(JdwpPacket *packet, c8 val) {
+void jdwppacket_write_byte(JdwpPacket *packet, s8 val) {
     jdwppacket_ensureCapacity(packet, 1);
     packet->data[packet->writePos] = val;
     packet->writePos++;
@@ -568,7 +568,7 @@ void writeValueType(JdwpPacket *res, ValueType *vt) {
     jdwppacket_write_byte(res, vt->type);
     switch (getSimpleTag(vt->type)) {
         case '1':
-            jdwppacket_write_byte(res, (c8) vt->value);
+            jdwppacket_write_byte(res, (s8) vt->value);
             break;
         case '2':
             jdwppacket_write_short(res, (short) vt->value);
