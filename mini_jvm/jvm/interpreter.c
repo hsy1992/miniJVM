@@ -871,7 +871,7 @@ s32 execute_method(MethodInfo *method, Runtime *pruntime, Class *clazz) {
                     }
 
                     case op_bipush: {
-                        s32 value = (c8) opCode[0][1];
+                        s32 value = (s8) opCode[0][1];
                         push_int(stack, value);
 #if _JVM_DEBUG_BYTECODE_DETAIL > 5
                         invoke_deepth(runtime);

@@ -45,7 +45,8 @@ extern "C" {
 
 
 typedef unsigned char u8;
-typedef signed char c8;
+typedef signed char s8;
+typedef char c8;
 typedef unsigned short int u16;
 typedef signed short int s16;
 typedef unsigned int u32;
