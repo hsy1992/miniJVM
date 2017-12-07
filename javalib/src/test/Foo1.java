@@ -184,7 +184,7 @@ public class Foo1 {
     }
 
     void t7() {
-        int MAX = 20000;
+        int MAX = 100000;
         int PRINT_COUNT = 10000;
         Thread t = new Thread(new Runnable() {
             List<String> list = new ArrayList();
@@ -248,13 +248,13 @@ public class Foo1 {
             }
         });
         //t1.start();
-        StackFrame sf = new StackFrame(RefNative.getStackFrame(Thread.currentThread()));
-        long sfid = sf.runtimeId;
-        System.out.println("sfid=" + Long.toString(sfid, 16));
-        while (sf.parent != null) {
-            System.out.println(sf);
-            sf = sf.parent;
-        }
+//        StackFrame sf = new StackFrame(RefNative.getStackFrame(Thread.currentThread()));
+//        long sfid = sf.runtimeId;
+//        System.out.println("sfid=" + Long.toString(sfid, 16));
+//        while (sf.parent != null) {
+//            System.out.println(sf);
+//            sf = sf.parent;
+//        }
         //
         String c = null;
         for (int i = 0; i < MAX; i++) {
