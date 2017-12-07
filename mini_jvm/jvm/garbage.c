@@ -188,7 +188,7 @@ void getMBName(void *memblock, Utf8String *name) {
         switch (mb->type) {
             case MEM_TYPE_CLASS: {
                 utf8_append_c(name, "C");
-                Class *clazz = collector->_garbage_thread_status == GARBAGE_THREAD_NORMAL?(Class *) (mb):NULL;
+                Class *clazz = collector->_garbage_thread_status == GARBAGE_THREAD_NORMAL ? (Class *) mb : NULL;
                 if (clazz)
                     utf8_append(name, clazz->name);
                 break;
@@ -196,7 +196,7 @@ void getMBName(void *memblock, Utf8String *name) {
             case MEM_TYPE_INS: {
                 Instance *ins = (Instance *) mb;
                 utf8_append_c(name, "L");
-                Class *clazz = collector->_garbage_thread_status == GARBAGE_THREAD_NORMAL?ins->mb.clazz:NULL;
+                Class *clazz = collector->_garbage_thread_status == GARBAGE_THREAD_NORMAL ? ins->mb.clazz : NULL;
                 if (clazz)
                     utf8_append(name, clazz->name);
                 utf8_append_c(name, ";");
@@ -206,7 +206,7 @@ void getMBName(void *memblock, Utf8String *name) {
                 Instance *arr = (Instance *) mb;
 
                 utf8_append_c(name, "Array{");
-                Class *clazz = collector->_garbage_thread_status == GARBAGE_THREAD_NORMAL?arr->mb.clazz:NULL;
+                Class *clazz = collector->_garbage_thread_status == GARBAGE_THREAD_NORMAL ? arr->mb.clazz : NULL;
                 if (clazz)
                     utf8_append(name, clazz->name);
                 utf8_append_c(name, "}");
@@ -218,26 +218,6 @@ void getMBName(void *memblock, Utf8String *name) {
     }
 }
 
-s32 getMbSize(MemoryBlock *mb) {
-    s32 size = 0;
-    switch (mb->type) {
-        case MEM_TYPE_INS:
-            size += sizeof(Instance);
-            size += mb->clazz->field_instance_len;
-            break;
-        case MEM_TYPE_ARR:
-            size += sizeof(Instance);
-            //size += data_type_bytes[mb->clazz->arr_type_index] * ((Instance *) mb)->arr_length;
-            break;
-        case MEM_TYPE_CLASS:
-            size += sizeof(Class);
-            break;
-        default: {
-            int debug = 1;
-        }
-    }
-    return size;
-}
 
 /**
  * 调试用，打印所有引用信息
@@ -696,10 +676,10 @@ s32 garbage_refer_reg(__refer ref) {
                 collector->header = mb;
             }
 #if _JVM_DEBUG_GARBAGE_DUMP
-    Utf8String *sus = utf8_create();
-    getMBName((MemoryBlock *) ref, sus);
-    jvm_printf("R: %s[%llx]\n", utf8_cstr(sus), (s64) (long) ref);
-    utf8_destory(sus);
+            Utf8String *sus = utf8_create();
+            getMBName((MemoryBlock *) ref, sus);
+            jvm_printf("R: %s[%llx]\n", utf8_cstr(sus), (s64) (long) ref);
+            utf8_destory(sus);
 #endif
         }
         spin_unlock(&collector->lock);
