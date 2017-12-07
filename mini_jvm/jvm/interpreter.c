@@ -539,7 +539,7 @@ static inline s32 op_ifstore_impl(u8 **opCode, Runtime *runtime, RuntimeStack *s
         s2c.c0 = opCode[0][2];
         *opCode = *opCode + 3;
     } else {
-        s2c.s = (c8) opCode[0][1];
+        s2c.s = (u8) opCode[0][1];
         *opCode = *opCode + 2;
     }
     runtime->wideMode = 0;
@@ -562,7 +562,7 @@ static inline s32 op_ldstore_impl(u8 **opCode, Runtime *runtime, RuntimeStack *s
         s2c.c0 = opCode[0][2];
         *opCode = *opCode + 3;
     } else {
-        s2c.s = (c8) opCode[0][1];
+        s2c.s = (u8) opCode[0][1];
         *opCode = *opCode + 2;
     }
     runtime->wideMode = 0;
@@ -943,7 +943,7 @@ s32 execute_method(MethodInfo *method, Runtime *pruntime, Class *clazz) {
                             s2c.c0 = opCode[0][2];
                             *opCode = *opCode + 3;
                         } else {
-                            s2c.s = (c8) opCode[0][1];
+                            s2c.s = (u8) opCode[0][1];
                             *opCode = *opCode + 2;
                         }
                         runtime->wideMode = 0;
@@ -967,7 +967,7 @@ s32 execute_method(MethodInfo *method, Runtime *pruntime, Class *clazz) {
                             s2c.c0 = opCode[0][2];
                             *opCode = *opCode + 3;
                         } else {
-                            s2c.s = (c8) opCode[0][1];
+                            s2c.s = (u8) opCode[0][1];
                             *opCode = *opCode + 2;
                         }
                         runtime->wideMode = 0;
@@ -992,7 +992,7 @@ s32 execute_method(MethodInfo *method, Runtime *pruntime, Class *clazz) {
                             s2c.c0 = opCode[0][2];
                             *opCode = *opCode + 3;
                         } else {
-                            s2c.s = (c8) opCode[0][1];
+                            s2c.s = (u8) opCode[0][1];
                             *opCode = *opCode + 2;
                         }
                         runtime->wideMode = 0;
@@ -1181,7 +1181,7 @@ s32 execute_method(MethodInfo *method, Runtime *pruntime, Class *clazz) {
                             push_ref(stack, (__refer) exception);
                             i_r = RUNTIME_STATUS_EXCEPTION;
                         } else {
-                            s32 s = *(c8 *) (arr->arr_body + (index));
+                            s32 s = *(s8 *) (arr->arr_body + (index));
                             push_int(stack, s);
 
 #if _JVM_DEBUG_BYTECODE_DETAIL > 5
@@ -1265,7 +1265,7 @@ s32 execute_method(MethodInfo *method, Runtime *pruntime, Class *clazz) {
                             s2c.c0 = opCode[0][2];
                             *opCode = *opCode + 3;
                         } else {
-                            s2c.s = (c8) opCode[0][1];
+                            s2c.s = (u8) opCode[0][1];
                             *opCode = *opCode + 2;
                         }
                         runtime->wideMode = 0;
@@ -1459,7 +1459,7 @@ s32 execute_method(MethodInfo *method, Runtime *pruntime, Class *clazz) {
                             push_ref(runtime->stack, (__refer) exception);
                             i_r = RUNTIME_STATUS_EXCEPTION;
                         } else {
-                            *(c8 *) (jarr->arr_body + (index)) = (c8) i;
+                            *(s8 *) (jarr->arr_body + (index)) = (s8) i;
 
 #if _JVM_DEBUG_BYTECODE_DETAIL > 5
                             invoke_deepth(runtime);
@@ -2343,8 +2343,8 @@ s32 execute_method(MethodInfo *method, Runtime *pruntime, Class *clazz) {
                             s2c2.c0 = opCode[0][4];
                             *opCode = *opCode + 5;
                         } else {
-                            s2c1.s = (c8) opCode[0][1];
-                            s2c2.s = (c8) opCode[0][2];
+                            s2c1.s = (u8) opCode[0][1];
+                            s2c2.s = (u8) opCode[0][2];
                             *opCode = *opCode + 3;
                         }
                         runtime->wideMode = 0;
@@ -2541,9 +2541,9 @@ s32 execute_method(MethodInfo *method, Runtime *pruntime, Class *clazz) {
 
 #if _JVM_DEBUG_BYTECODE_DETAIL > 5
                         invoke_deepth(runtime);
-                        jvm_printf("i2b: %d --> %d\n", (c8) value, value);
+                        jvm_printf("i2b: %d --> %d\n", (s8) value, value);
 #endif
-                        push_int(stack, (c8) value);
+                        push_int(stack, (s8) value);
                         *opCode = *opCode + 1;
 
                         break;
@@ -2975,7 +2975,7 @@ s32 execute_method(MethodInfo *method, Runtime *pruntime, Class *clazz) {
                             s2c.c1 = opCode[0][1];
                             s2c.c0 = opCode[0][2];
                         } else {
-                            s2c.s = (c8) opCode[0][1];
+                            s2c.s = (u8) opCode[0][1];
                         }
                         runtime->wideMode = 0;
 
@@ -3257,7 +3257,7 @@ s32 execute_method(MethodInfo *method, Runtime *pruntime, Class *clazz) {
                         s2c.c0 = opCode[0][2];
                         u16 object_ref = s2c.s;
 
-                        s32 paraCount = (c8) opCode[0][3];
+                        s32 paraCount = (u8) opCode[0][3];
 
                         ConstantMethodRef *cmr = find_constant_method_ref(clazz, object_ref);
                         Instance *ins = getInstanceInStack(clazz, cmr, stack);
@@ -3528,7 +3528,7 @@ s32 execute_method(MethodInfo *method, Runtime *pruntime, Class *clazz) {
 
                         Utf8String *desc = get_utf8_string(runtime->clazz, s2c.s);
                         //array dim
-                        s32 count = (c8) opCode[0][3];
+                        s32 count = (u8) opCode[0][3];
                         ArrayList *dim = arraylist_create(count);
                         int i;
                         for (i = 0; i < count; i++)
