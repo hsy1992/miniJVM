@@ -1206,8 +1206,8 @@ inline void setFieldShort(c8 *ptr, s16 v) {
     *((s16 *) ptr) = v;
 }
 
-inline void setFieldByte(c8 *ptr, c8 v) {
-    *((c8 *) ptr) = v;
+inline void setFieldByte(c8 *ptr, s8 v) {
+    *((s8 *) ptr) = v;
 }
 
 inline void setFieldDouble(c8 *ptr, f64 v) {
@@ -1230,8 +1230,8 @@ inline s16 getFieldShort(c8 *ptr) {
     return *((s16 *) ptr);
 }
 
-inline c8 getFieldByte(c8 *ptr) {
-    return *((c8 *) ptr);
+inline s8 getFieldByte(c8 *ptr) {
+    return *((s8 *) ptr);
 }
 
 inline s64 getFieldLong(c8 *ptr) {

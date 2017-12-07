@@ -83,7 +83,7 @@ void setFieldLong(c8 *ptr, s64 v);
 
 void setFieldShort(c8 *ptr, s16 v);
 
-void setFieldByte(c8 *ptr, c8 v);
+void setFieldByte(c8 *ptr, s8 v);
 
 void setFieldDouble(c8 *ptr, f64 v);
 
@@ -91,7 +91,7 @@ void setFieldFloat(c8 *ptr, f32 v);
 
 s64 getFieldLong(c8 *ptr);
 
-c8 getFieldByte(c8 *ptr);
+s8 getFieldByte(c8 *ptr);
 
 s16 getFieldShort(c8 *ptr);
 
