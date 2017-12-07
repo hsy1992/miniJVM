@@ -188,7 +188,7 @@ void getMBName(void *memblock, Utf8String *name) {
         switch (mb->type) {
             case MEM_TYPE_CLASS: {
                 utf8_append_c(name, "C");
-                Class *clazz = (Class *) garbage_is_alive(mb);
+                Class *clazz = collector->_garbage_thread_status == GARBAGE_THREAD_NORMAL?(Class *) (mb):NULL;
                 if (clazz)
                     utf8_append(name, clazz->name);
                 break;
@@ -196,7 +196,7 @@ void getMBName(void *memblock, Utf8String *name) {
             case MEM_TYPE_INS: {
                 Instance *ins = (Instance *) mb;
                 utf8_append_c(name, "L");
-                Class *clazz = (Class *) garbage_is_alive(ins->mb.clazz);
+                Class *clazz = collector->_garbage_thread_status == GARBAGE_THREAD_NORMAL?ins->mb.clazz:NULL;
                 if (clazz)
                     utf8_append(name, clazz->name);
                 utf8_append_c(name, ";");
@@ -206,7 +206,7 @@ void getMBName(void *memblock, Utf8String *name) {
                 Instance *arr = (Instance *) mb;
 
                 utf8_append_c(name, "Array{");
-                Class *clazz = (Class *) garbage_is_alive(arr->mb.clazz);
+                Class *clazz = collector->_garbage_thread_status == GARBAGE_THREAD_NORMAL?arr->mb.clazz:NULL;
                 if (clazz)
                     utf8_append(name, clazz->name);
                 utf8_append_c(name, "}");
@@ -695,6 +695,12 @@ s32 garbage_refer_reg(__refer ref) {
                 mb->next = collector->header;
                 collector->header = mb;
             }
+#if _JVM_DEBUG_GARBAGE_DUMP
+    Utf8String *sus = utf8_create();
+    getMBName((MemoryBlock *) ref, sus);
+    jvm_printf("R: %s[%llx]\n", utf8_cstr(sus), (s64) (long) ref);
+    utf8_destory(sus);
+#endif
         }
         spin_unlock(&collector->lock);
     }

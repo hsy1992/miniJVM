@@ -575,3 +575,291 @@
 	"garbage.h"
 	"jvm_util.h"
 
+1512369565 source:/home/pi/src/mini_jvm/mini_jvm/jvm/class.c
+	"jvm.h"
+	"jvm_util.h"
+	"garbage.h"
+
+1512649553 /home/pi/src/mini_jvm/mini_jvm/jvm/jvm.h
+	<stdio.h>
+	<stdlib.h>
+	<string.h>
+	"../utils/d_type.h"
+	"../utils/hashtable.h"
+	"../utils/utf8_string.h"
+	"../utils/arraylist.h"
+	"../utils/pairlist.h"
+
+1512647475 /home/pi/src/mini_jvm/mini_jvm/utils/d_type.h
+	"stdlib.h"
+	"stdlib.h"
+	"./cmem/memleak.h"
+
+1512369565 /home/pi/src/mini_jvm/mini_jvm/utils/cmem/memleak.h
+	<stdlib.h>
+	<string.h>
+
+1512369565 /home/pi/src/mini_jvm/mini_jvm/utils/hashtable.h
+	"pthread.h"
+	"d_type.h"
+	"spinlock.h"
+	"arraylist.h"
+
+1512369565 /home/pi/src/mini_jvm/mini_jvm/utils/spinlock.h
+	"pthread.h"
+
+1512369565 /home/pi/src/mini_jvm/mini_jvm/utils/arraylist.h
+	<pthread.h>
+	"spinlock.h"
+
+1512369565 /home/pi/src/mini_jvm/mini_jvm/utils/utf8_string.h
+	"hashtable.h"
+
+1512369565 /home/pi/src/mini_jvm/mini_jvm/utils/pairlist.h
+	"d_type.h"
+
+1512638972 /home/pi/src/mini_jvm/mini_jvm/jvm/jvm_util.h
+	"jvm.h"
+	"../utils/hashset.h"
+	"jdwp.h"
+	<pthread.h>
+
+1512369565 /home/pi/src/mini_jvm/mini_jvm/utils/hashset.h
+	"arraylist.h"
+
+1512369565 /home/pi/src/mini_jvm/mini_jvm/jvm/jdwp.h
+	"../utils/utf8_string.h"
+	"../utils/arraylist.h"
+	"jvm.h"
+	"pthread.h"
+	"../utils/hashset.h"
+
+1512369565 /home/pi/src/mini_jvm/mini_jvm/jvm/garbage.h
+	"../utils/hashtable.h"
+	"../utils/hashset.h"
+	"../utils/linkedlist.h"
+	"jvm.h"
+	"jvm_util.h"
+	<pthread.h>
+
+1512369565 /home/pi/src/mini_jvm/mini_jvm/utils/linkedlist.h
+	<pthread.h>
+	"spinlock.h"
+
+1512369565 source:/home/pi/src/mini_jvm/mini_jvm/jvm/class_load.c
+	"stdlib.h"
+	<stdio.h>
+	<string.h>
+	"jvm.h"
+	"jvm_util.h"
+
+1512649153 source:/home/pi/src/mini_jvm/mini_jvm/jvm/garbage.c
+	<errno.h>
+	"jvm.h"
+	"garbage.h"
+	"jvm_util.h"
+
+1512369565 source:/home/pi/src/mini_jvm/mini_jvm/jvm/global.c
+	"jvm.h"
+	"jvm_util.h"
+
+1512638972 source:/home/pi/src/mini_jvm/mini_jvm/jvm/interpreter.c
+	"../utils/d_type.h"
+	"jvm.h"
+	"java_native_std.h"
+	"garbage.h"
+	"jvm_util.h"
+
+1512369565 /home/pi/src/mini_jvm/mini_jvm/jvm/java_native_std.h
+	"jvm.h"
+
+1512638972 source:/home/pi/src/mini_jvm/mini_jvm/jvm/java_native_io.c
+	"jvm.h"
+	"java_native_std.h"
+	"garbage.h"
+	"java_native_io.h"
+	"jvm_util.h"
+	<sys/stat.h>
+	<errno.h>
+	<dirent.h>
+	<winsock2.h>
+	<netdb.h>
+	<fcntl.h>
+	<sys/socket.h>
+	<unistd.h>
+	<netdb.h>
+	<fcntl.h>
+	<sys/errno.h>
+	<unistd.h>
+	<arpa/inet.h>
+	<unistd.h>
+	<fcntl.h>
+	<sys/errno.h>
+
+1512369565 /home/pi/src/mini_jvm/mini_jvm/jvm/java_native_io.h
+	"../utils/utf8_string.h"
+
+1512638972 source:/home/pi/src/mini_jvm/mini_jvm/jvm/java_native_reflect.c
+	"jvm.h"
+	"java_native_std.h"
+	"garbage.h"
+	"jvm_util.h"
+	"java_native_reflect.h"
+
+1512369565 /home/pi/src/mini_jvm/mini_jvm/jvm/java_native_reflect.h
+	"jvm.h"
+
+1512369565 source:/home/pi/src/mini_jvm/mini_jvm/jvm/java_native_std.c
+	<time.h>
+	"java_native_std.h"
+	"garbage.h"
+	"jvm_util.h"
+	<math.h>
+
+1512638972 source:/home/pi/src/mini_jvm/mini_jvm/jvm/jdwp.c
+	"../utils/d_type.h"
+	"jdwp.h"
+	"jvm_util.h"
+	"java_native_io.h"
+	"garbage.h"
+
+1512369565 source:/home/pi/src/mini_jvm/mini_jvm/jvm/jvm.c
+	<stdio.h>
+	<stdlib.h>
+	<string.h>
+	<signal.h>
+	"jvm.h"
+	"../utils/utf8_string.h"
+	"garbage.h"
+	"jvm_util.h"
+	"java_native_std.h"
+	"jdwp.h"
+
+1512638972 source:/home/pi/src/mini_jvm/mini_jvm/jvm/jvm_util.c
+	<stdarg.h>
+	"../utils/d_type.h"
+	"jvm.h"
+	<pthread.h>
+	"jvm_util.h"
+	"garbage.h"
+	"java_native_reflect.h"
+	"jdwp.h"
+
+1512369565 source:/home/pi/src/mini_jvm/mini_jvm/jvm/os_linux.c
+	"jvm.h"
+	<sys/time.h>
+	"jvm_util.h"
+	<time.h>
+	<unistd.h>
+	<pthread_time.h>
+
+1512369565 source:/home/pi/src/mini_jvm/mini_jvm/jvm/os_win.c
+	"jvm.h"
+
+1512369565 source:/home/pi/src/mini_jvm/mini_jvm/jvm/runtime.c
+	<stdio.h>
+	<stdlib.h>
+	<string.h>
+	"../utils/d_type.h"
+	"jvm.h"
+	"garbage.h"
+	"jvm_util.h"
+
+1512453106 source:/home/pi/src/mini_jvm/mini_jvm/test.c
+	<stdio.h>
+	"utils/hashtable.h"
+	"jvm/jvm.h"
+	"jvm/jvm_util.h"
+	"jvm/garbage.h"
+
+1512369565 source:/home/pi/src/mini_jvm/mini_jvm/utils/arraylist.c
+	<stdlib.h>
+	<string.h>
+	"d_type.h"
+	"arraylist.h"
+	"alloc-testing.h"
+
+1512381366 source:/home/pi/src/mini_jvm/mini_jvm/utils/cmem/example.c
+	<stdlib.h>
+	<stdio.h>
+	<unistd.h>
+	<memory.h>
+	"memleak.h"
+	"../utf8_string.h"
+
+1512369565 source:/home/pi/src/mini_jvm/mini_jvm/utils/cmem/memleak.c
+	"sys/types.h"
+	"phashtable.h"
+	<stdlib.h>
+	<stdio.h>
+	<string.h>
+	<signal.h>
+	<limits.h>
+	"../spinlock.h"
+
+1512369565 /home/pi/src/mini_jvm/mini_jvm/utils/cmem/phashtable.h
+
+1512369565 source:/home/pi/src/mini_jvm/mini_jvm/utils/cmem/phashtable.c
+	<stdlib.h>
+	<stdio.h>
+	"phashtable.h"
+	"math.h"
+
+1512650108 source:/home/pi/src/mini_jvm/mini_jvm/utils/d_utils.c
+	<memory.h>
+	<stdio.h>
+	"sched.h"
+	"d_type.h"
+	"spinlock.h"
+
+1512369565 source:/home/pi/src/mini_jvm/mini_jvm/utils/hashset.c
+	<stdlib.h>
+	<stdio.h>
+	"math.h"
+	"d_type.h"
+	"hashset.h"
+
+1512369565 source:/home/pi/src/mini_jvm/mini_jvm/utils/hashtable.c
+	<stdlib.h>
+	<stdio.h>
+	<pthread.h>
+	"d_type.h"
+	"hashtable.h"
+	"math.h"
+
+1512369565 source:/home/pi/src/mini_jvm/mini_jvm/utils/linkedlist.c
+	<stdlib.h>
+	"d_type.h"
+	"linkedlist.h"
+
+1512369565 source:/home/pi/src/mini_jvm/mini_jvm/utils/miniz/miniz_wrapper.c
+	"miniz.c"
+
+1512369565 /home/pi/src/mini_jvm/mini_jvm/utils/miniz/miniz.c
+	<stdlib.h>
+	<time.h>
+	<string.h>
+	<assert.h>
+	<stdio.h>
+	<sys/stat.h>
+	<sys/utime.h>
+	<sys/utime.h>
+	<sys/utime.h>
+	<utime.h>
+	<utime.h>
+
+1512369565 source:/home/pi/src/mini_jvm/mini_jvm/utils/pairlist.c
+	<memory.h>
+	"pairlist.h"
+
+1512369565 source:/home/pi/src/mini_jvm/mini_jvm/utils/spinlock.c
+	<sched.h>
+	"d_type.h"
+	"spinlock.h"
+
+1512369565 source:/home/pi/src/mini_jvm/mini_jvm/utils/utf8_string.c
+	<stdlib.h>
+	<string.h>
+	"utf8_string.h"
+	"d_type.h"
+
