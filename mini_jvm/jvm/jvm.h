@@ -288,11 +288,12 @@ enum {
 };
 
 //指令指行返回状态
-static const s8 RUNTIME_STATUS_NORMAL = 0;
-static const s8 RUNTIME_STATUS_RETURN = -1;
-static const s8 RUNTIME_STATUS_EXCEPTION = -2;
-static const s8 RUNTIME_STATUS_ERROR = -3;
-
+enum{
+    RUNTIME_STATUS_NORMAL,
+    RUNTIME_STATUS_RETURN,
+    RUNTIME_STATUS_EXCEPTION,
+    RUNTIME_STATUS_ERROR,
+};
 
 //======================= global var =============================
 extern Instance *main_thread;
