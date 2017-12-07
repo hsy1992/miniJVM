@@ -184,7 +184,7 @@ public class Foo1 {
     }
 
     void t7() {
-        int MAX = 100000;
+        int MAX = 10000;
         int PRINT_COUNT = 10000;
         Thread t = new Thread(new Runnable() {
             List<String> list = new ArrayList();
