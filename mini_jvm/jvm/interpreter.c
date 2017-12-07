@@ -549,7 +549,7 @@ static inline s32 op_ifstore_impl(u8 **opCode, Runtime *runtime, RuntimeStack *s
     invoke_deepth(runtime);
     jvm_printf("i(f)store: save  localvar(%d) [%x]/%d \n", s2c.s, value, value);
 #endif
-    localvar_setInt(runtime, s2c.s, value);
+    localvar_setInt(runtime, (u16) s2c.s, value);
 
     return 0;
 }
@@ -574,8 +574,8 @@ static inline s32 op_ldstore_impl(u8 **opCode, Runtime *runtime, RuntimeStack *s
     invoke_deepth(runtime);
     jvm_printf("l(d)store: save localvar(%d) %llx/%lld/%lf  \n", s2c.s, l2d.l, l2d.l, l2d.d);
 #endif
-    localvar_setInt(runtime, s2c.s, l2d.i2l.i1);
-    localvar_setInt(runtime, s2c.s + 1, l2d.i2l.i0);
+    localvar_setInt(runtime, (u16) s2c.s, l2d.i2l.i1);
+    localvar_setInt(runtime, (u16) s2c.s + 1, l2d.i2l.i0);
     return 0;
 }
 
@@ -948,7 +948,7 @@ s32 execute_method(MethodInfo *method, Runtime *pruntime, Class *clazz) {
                         }
                         runtime->wideMode = 0;
 
-                        s32 value = localvar_getInt(runtime, s2c.s);
+                        s32 value = localvar_getInt(runtime, (u16) s2c.s);
 #if _JVM_DEBUG_BYTECODE_DETAIL > 5
                         invoke_deepth(runtime);
                         jvm_printf("i(fa)load: push localvar(%d)= [%x]/%d  \n", s2c.s, value, value);
@@ -973,8 +973,8 @@ s32 execute_method(MethodInfo *method, Runtime *pruntime, Class *clazz) {
                         runtime->wideMode = 0;
 
                         Long2Double l2d;
-                        l2d.i2l.i1 = localvar_getInt(runtime, s2c.s);
-                        l2d.i2l.i0 = localvar_getInt(runtime, s2c.s + 1);
+                        l2d.i2l.i1 = localvar_getInt(runtime, (u16) s2c.s);
+                        l2d.i2l.i0 = localvar_getInt(runtime, (u16) s2c.s + 1);
 #if _JVM_DEBUG_BYTECODE_DETAIL > 5
                         invoke_deepth(runtime);
                         jvm_printf("l(d)load: push localvar(%d) [%llx]/%lf into stack \n", s2c.s, l2d.l, l2d.d);
@@ -997,7 +997,7 @@ s32 execute_method(MethodInfo *method, Runtime *pruntime, Class *clazz) {
                         }
                         runtime->wideMode = 0;
 
-                        __refer value = localvar_getRefer(runtime, s2c.s);
+                        __refer value = localvar_getRefer(runtime, (u16) s2c.s);
 #if _JVM_DEBUG_BYTECODE_DETAIL > 5
                         invoke_deepth(runtime);
                         jvm_printf("i(fa)load: push localvar(%d)= [%llx]  \n", s2c.s, (s64) (long) value);
@@ -1275,7 +1275,7 @@ s32 execute_method(MethodInfo *method, Runtime *pruntime, Class *clazz) {
                         invoke_deepth(runtime);
                         jvm_printf("i(fa)store: save  localvar(%d) [%llx] \n", s2c.s, (s64) (long) value);
 #endif
-                        localvar_setRefer(runtime, s2c.s, value);
+                        localvar_setRefer(runtime, (u16) s2c.s, value);
 
 
                         break;
@@ -2344,13 +2344,13 @@ s32 execute_method(MethodInfo *method, Runtime *pruntime, Class *clazz) {
                             *opCode = *opCode + 5;
                         } else {
                             s2c1.s = (u8) opCode[0][1];
-                            s2c2.s = (u8) opCode[0][2];
+                            s2c2.s = (s8) opCode[0][2];
                             *opCode = *opCode + 3;
                         }
                         runtime->wideMode = 0;
 
-                        s32 oldv = localvar_getInt(runtime, s2c1.s);
-                        localvar_setInt(runtime, s2c1.s, oldv + s2c2.s);
+                        s32 oldv = localvar_getInt(runtime, (u16) s2c1.s);
+                        localvar_setInt(runtime, (u16) s2c1.s, oldv + s2c2.s);
 #if _JVM_DEBUG_BYTECODE_DETAIL > 5
                         invoke_deepth(runtime);
                         jvm_printf("iinc: localvar(%d) = %d + %d\n", s2c1.s, oldv, s2c2.s);
@@ -2979,7 +2979,7 @@ s32 execute_method(MethodInfo *method, Runtime *pruntime, Class *clazz) {
                         }
                         runtime->wideMode = 0;
 
-                        __refer addr = localvar_getRefer(runtime, s2c.s);
+                        __refer addr = localvar_getRefer(runtime, (u16) s2c.s);
 
 #if _JVM_DEBUG_BYTECODE_DETAIL > 5
                         invoke_deepth(runtime);
