@@ -513,7 +513,7 @@ void invoke_deepth(Runtime *runtime) {
 #if __JVM_OS_MAC__ || __JVM_OS_CYGWIN__
     fprintf(stderr, "%llx", (s64) (long) pthread_self());
 #else
-    fprintf(stderr, "%lx", (s64) (long) pthread_self());
+    fprintf(stderr, "%llx", (s64) (long) pthread_self());
 #endif //
     for (i = 0; i < len; i++) {
         fprintf(stderr, "  ");
