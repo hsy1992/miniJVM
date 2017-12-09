@@ -36,7 +36,7 @@ void print_exception(Runtime *runtime) {
     Utf8String *getStackFrame_name = utf8_create_c("getCodeStack");
     Utf8String *getStackFrame_type = utf8_create_c("()Ljava/lang/String;");
     MethodInfo *getStackFrame = find_methodInfo_by_name(ins->mb.clazz->name, getStackFrame_name,
-                                                        getStackFrame_type);
+            getStackFrame_type);
     utf8_destory(getStackFrame_name);
     utf8_destory(getStackFrame_type);
     if (getStackFrame) {
@@ -238,6 +238,9 @@ s32 execute(c8 *p_classpath, c8 *p_mainclass, s32 argc, c8 **argv) {
         }
         utf8_destory(methodName);
         utf8_destory(methodType);
+    } else {
+        runtime_destory(main_runtime);
+        main_runtime = NULL;
     }
     //
     garbage_collector_destory();
