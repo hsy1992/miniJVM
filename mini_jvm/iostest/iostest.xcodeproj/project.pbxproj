@@ -22,7 +22,6 @@
 		455763F91FB6BCEE00EE3363 /* java_native_reflect.c in Sources */ = {isa = PBXBuildFile; fileRef = 455763EA1FB6BCED00EE3363 /* java_native_reflect.c */; };
 		455763FA1FB6BCEE00EE3363 /* class.c in Sources */ = {isa = PBXBuildFile; fileRef = 455763EB1FB6BCED00EE3363 /* class.c */; };
 		455763FB1FB6BCEE00EE3363 /* java_native_io.c in Sources */ = {isa = PBXBuildFile; fileRef = 455763ED1FB6BCED00EE3363 /* java_native_io.c */; };
-		45631EE91FAAF45D0013BDE1 /* classes in Resources */ = {isa = PBXBuildFile; fileRef = 45631EE81FAAF45D0013BDE1 /* classes */; };
 		45C1242F1F87232100BF3925 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45C1242E1F87232100BF3925 /* AppDelegate.swift */; };
 		45C124311F87232100BF3925 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45C124301F87232100BF3925 /* ViewController.swift */; };
 		45C124341F87232100BF3925 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 45C124321F87232100BF3925 /* Main.storyboard */; };
@@ -89,7 +88,6 @@
 		455763EB1FB6BCED00EE3363 /* class.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = class.c; path = ../jvm/class.c; sourceTree = "<group>"; };
 		455763EC1FB6BCED00EE3363 /* jdwp.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = jdwp.h; path = ../jvm/jdwp.h; sourceTree = "<group>"; };
 		455763ED1FB6BCED00EE3363 /* java_native_io.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = java_native_io.c; path = ../jvm/java_native_io.c; sourceTree = "<group>"; };
-		45631EE81FAAF45D0013BDE1 /* classes */ = {isa = PBXFileReference; lastKnownFileType = folder; name = classes; path = ../../javalib/build/classes; sourceTree = "<group>"; };
 		45C1242B1F87232100BF3925 /* iostest.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = iostest.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		45C1242E1F87232100BF3925 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		45C124301F87232100BF3925 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
@@ -200,7 +198,6 @@
 				455763D71FB6BCDE00EE3363 /* jvm */,
 				45C1245C1F872A9100BF3925 /* iostestTests-Bridging-Header.h */,
 				45C1245D1F872A9200BF3925 /* invokec.c */,
-				45631EE81FAAF45D0013BDE1 /* classes */,
 				45C1242D1F87232100BF3925 /* iostest */,
 				45C124421F87232100BF3925 /* iostestTests */,
 				45C1244D1F87232100BF3925 /* iostestUITests */,
@@ -420,7 +417,6 @@
 				45FA647F1FE7D46C00A2E7CE /* LICENSE in Resources */,
 				45FA647C1FE7D46C00A2E7CE /* README in Resources */,
 				45C124391F87232100BF3925 /* LaunchScreen.storyboard in Resources */,
-				45631EE91FAAF45D0013BDE1 /* classes in Resources */,
 				45C124361F87232100BF3925 /* Assets.xcassets in Resources */,
 				45C124341F87232100BF3925 /* Main.storyboard in Resources */,
 				45FA64851FE7D6D900A2E7CE /* dist in Resources */,
