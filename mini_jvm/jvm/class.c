@@ -20,7 +20,7 @@ Class *class_create() {
     clazz->field_instance_len = 0;
     clazz->field_static = NULL;
     clazz->status = CLASS_STATUS_RAW;
-    clazz->_load_from_file = _LOAD_FROM_FILE;
+    clazz->_load_class_from_bytes = _LOAD_CLASS_FROM_BYTES;
     //
     _INIT_CLASS(clazz);
     constant_list_create(clazz);

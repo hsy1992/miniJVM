@@ -36,7 +36,7 @@ void print_exception(Runtime *runtime) {
     Utf8String *getStackFrame_name = utf8_create_c("getCodeStack");
     Utf8String *getStackFrame_type = utf8_create_c("()Ljava/lang/String;");
     MethodInfo *getStackFrame = find_methodInfo_by_name(ins->mb.clazz->name, getStackFrame_name,
-            getStackFrame_type);
+                                                        getStackFrame_type);
     utf8_destory(getStackFrame_name);
     utf8_destory(getStackFrame_type);
     if (getStackFrame) {
@@ -80,7 +80,31 @@ void objcache_put(Instance *ins) {
 ClassLoader *classloader_create(c8 *path) {
     ClassLoader *class_loader = jvm_calloc(sizeof(ClassLoader));
     spin_init(&class_loader->lock, 0);
-    class_loader->g_classpath = utf8_create_c(path);
+
+    //split classpath
+    class_loader->classpath = arraylist_create(0);
+    Utf8String *g_classpath = utf8_create_c(path);
+    Utf8String *tmp = NULL;
+    s32 i = 0;
+    while (i < g_classpath->length) {
+        if (tmp == NULL) {
+            tmp = utf8_create();
+        }
+        c8 ch = utf8_char_at(g_classpath, i++);
+        if (i == g_classpath->length) {
+            utf8_insert(tmp, tmp->length, ch);
+            ch = ';';
+        }
+        if (ch == ';' || ch == ':') {
+            if (utf8_last_indexof_c(tmp, "/") == tmp->length - 1)
+                utf8_remove(tmp, tmp->length - 1);
+            arraylist_push_back(class_loader->classpath, tmp);
+            tmp = NULL;
+        } else {
+            utf8_insert(tmp, tmp->length, ch);
+        }
+    }
+    utf8_destory(g_classpath);
     //创建类容器
     class_loader->classes = hashtable_create(UNICODE_STR_HASH_FUNC, UNICODE_STR_EQUALS_FUNC);
     return class_loader;
@@ -95,8 +119,11 @@ void classloader_destory(ClassLoader *class_loader) {
     }
 
     hashtable_clear(class_loader->classes);
-    utf8_destory(class_loader->g_classpath);
-    class_loader->g_classpath = NULL;
+    s32 i;
+    for (i = 0; i < class_loader->classpath->length; i++) {
+        utf8_destory(arraylist_get_value(class_loader->classpath, i));
+    }
+    arraylist_destory(class_loader->classpath);
     hashtable_destory(class_loader->classes);
     class_loader->classes = NULL;
     spin_destroy(&class_loader->lock);
@@ -150,9 +177,13 @@ s32 execute(c8 *p_classpath, c8 *p_mainclass, s32 argc, c8 **argv) {
     Utf8String *str_mainClsName = utf8_create_c(p_mainclass);
 
     //装入系统属性
-    sys_properties_load(sys_classloader->g_classpath);
-
-    load_class(sys_classloader->g_classpath, str_mainClsName, sys_classloader->classes);
+    sys_properties_load(sys_classloader);
+    //装入基础类
+    Utf8String *str_jstring = utf8_create_c(STR_CLASS_JAVA_LANG_STRING);
+    load_class(sys_classloader, str_jstring);
+    utf8_destory(str_jstring);
+    //装入主类
+    load_class(sys_classloader, str_mainClsName);
 
     HashtableIterator hti;
     hashtable_iterate(sys_classloader->classes, &hti);

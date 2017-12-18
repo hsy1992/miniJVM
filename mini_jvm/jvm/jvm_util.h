@@ -61,7 +61,9 @@ s64 nanoTime(void);
 
 s64 threadSleep(s64 ms);
 
-s32 sys_properties_load(Utf8String *path);
+s32 isDir(Utf8String *path);
+
+s32 sys_properties_load(ClassLoader *loader);
 
 void sys_properties_dispose(void);
 

@@ -7,6 +7,8 @@
 #include "../utils/d_type.h"
 #include "jvm.h"
 #include <pthread.h>
+#include <sys/stat.h>
+#include <miniz/miniz_wrapper.h>
 #include "jvm_util.h"
 #include "garbage.h"
 #include "java_native_reflect.h"
@@ -66,7 +68,7 @@ Class *classes_load_get(Utf8String *ustr, Runtime *runtime) {
         garbage_thread_lock();//slow lock
         cl = classes_get(ustr);
         if (!cl) {
-            load_class(sys_classloader->g_classpath, ustr, sys_classloader->classes);
+            load_class(sys_classloader, ustr);
         }
         cl = classes_get(ustr);
         garbage_thread_unlock();
@@ -101,6 +103,10 @@ Class *array_class_get(Utf8String *desc) {
                 hashtable_put(array_classloader->classes, clazz->name, clazz);
                 garbage_refer_hold(clazz);
                 garbage_refer_reg(clazz);
+#if _JVM_DEBUG_BYTECODE_DETAIL > 5
+                jvm_printf("load class:  %s \n", utf8_cstr(desc));
+#endif
+
             }
             garbage_thread_unlock();
         }
@@ -386,54 +392,79 @@ void printDumpOfClasses() {
     }
 }
 
-s32 sys_properties_load(Utf8String *path) {
+s32 isDir(Utf8String *path) {
+    struct stat buf;
+    s32 ret = stat(utf8_cstr(path), &buf);
+    s32 a = S_ISDIR(buf.st_mode);
+    return a;
+}
+
+s32 sys_properties_load(ClassLoader *loader) {
     sys_prop = hashtable_create(UNICODE_STR_HASH_FUNC, UNICODE_STR_EQUALS_FUNC);
+    s32 i;
+    for (i = 0; i < loader->classpath->length; i++) {
+        Utf8String *path = arraylist_get_value(loader->classpath, i);
+        Utf8String *ustr = utf8_create();
+        if (isDir(path)) {
+            FILE *fp = 0;
+            Utf8String *filepath = utf8_create_copy(path);
+            utf8_append_c(filepath, "sys.properties");
+            fp = fopen(utf8_cstr(filepath), "rb");
+            utf8_destory(filepath);
+            if (fp == 0) {
+                continue;
+            }
 
-    FILE *fp = 0;
-    Utf8String *filepath = utf8_create_copy(path);
-    utf8_append_c(filepath, "sys.properties");
-    fp = fopen(utf8_cstr(filepath), "rb");
-    utf8_destory(filepath);
-    if (fp == 0) {
-        jvm_printf("Open file properties failed\n");
-        return -1;
-    }
-    Utf8String *ustr = utf8_create();
-    u8 buf[256];
-    while (1) {
-        u32 len = (u32) fread(buf, 1, 256, fp);
-        utf8_append_part_c(ustr, buf, 0, len);
-        if (feof(fp)) {
-            break;
+            u8 buf[256];
+            while (1) {
+                u32 len = (u32) fread(buf, 1, 256, fp);
+                utf8_append_part_c(ustr, buf, 0, len);
+                if (feof(fp)) {
+                    break;
+                }
+            }
+            fclose(fp);
+        } else {//jar
+            ByteBuf *buf = bytebuf_create(16);
+            s32 ret = zip_loadfile(utf8_cstr(path), "sys.properties", buf);
+            if (ret == 0) {
+                while (bytebuf_available(buf)) {
+                    c8 ch = (c8) bytebuf_read(buf);
+                    utf8_insert(ustr, ustr->length, ch);
+                }
+                bytebuf_destory(buf);
+                break;
+            } else {
+                bytebuf_destory(buf);
+                continue;
+            }
         }
-    }
-    fclose(fp);
-
-    //parse
-    utf8_replace_c(ustr, "\r\n", "\n");
-    utf8_replace_c(ustr, "\r", "\n");
-    Utf8String *line = utf8_create();
-    while (ustr->length > 0) {
-        s32 lineEndAt = utf8_indexof_c(ustr, "\n");
-        utf8_clear(line);
-        if (lineEndAt >= 0) {
-            utf8_append_part(line, ustr, 0, lineEndAt);
-            utf8_substring(ustr, lineEndAt + 1, ustr->length);
-        } else {
-            utf8_append_part(line, ustr, 0, ustr->length);
-            utf8_substring(ustr, ustr->length, ustr->length);
+        //parse
+        utf8_replace_c(ustr, "\r\n", "\n");
+        utf8_replace_c(ustr, "\r", "\n");
+        Utf8String *line = utf8_create();
+        while (ustr->length > 0) {
+            s32 lineEndAt = utf8_indexof_c(ustr, "\n");
+            utf8_clear(line);
+            if (lineEndAt >= 0) {
+                utf8_append_part(line, ustr, 0, lineEndAt);
+                utf8_substring(ustr, lineEndAt + 1, ustr->length);
+            } else {
+                utf8_append_part(line, ustr, 0, ustr->length);
+                utf8_substring(ustr, ustr->length, ustr->length);
+            }
+            s32 eqAt = utf8_indexof_c(line, "=");
+            if (eqAt > 0) {
+                Utf8String *key = utf8_create();
+                Utf8String *val = utf8_create();
+                utf8_append_part(key, line, 0, eqAt);
+                utf8_append_part(val, line, eqAt + 1, line->length - (eqAt + 1));
+                hashtable_put(sys_prop, key, val);
+            }
         }
-        s32 eqAt = utf8_indexof_c(line, "=");
-        if (eqAt > 0) {
-            Utf8String *key = utf8_create();
-            Utf8String *val = utf8_create();
-            utf8_append_part(key, line, 0, eqAt);
-            utf8_append_part(val, line, eqAt + 1, line->length - (eqAt + 1));
-            hashtable_put(sys_prop, key, val);
-        }
+        utf8_destory(line);
+        utf8_destory(ustr);
     }
-    utf8_destory(line);
-    utf8_destory(ustr);
     return 0;
 }
 

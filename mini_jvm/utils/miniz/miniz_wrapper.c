@@ -1,41 +1,29 @@
+#include "../bytebuf.h"
 #include "miniz.c"
-//#include <stdio.h>
-//#include <stdlib.h>
 
-/*
-void testMinizWrapper(void) {
+
+s32 zip_loadfile(char *jarpath, char *filename, ByteBuf *buf) {
     int file_index = 0;
     mz_zip_archive zipArchive = {0};
     mz_zip_archive_file_stat file_stat = {0};
 
-    if (mz_zip_reader_init_file(&zipArchive, "../../javalib/dist/mini_jvm_java.jar", 0) == MZ_FALSE) {
-        printf("Failed to open zip file\n");
-        exit(1);
+    if (mz_zip_reader_init_file(&zipArchive, jarpath, 0) == MZ_FALSE) {//"../../javalib/dist/mini_jvm_java.jar"
+        return -1;
     }
-    printf("Open zip file success\n");
 
-    printf("Total Files:%d\n", mz_zip_reader_get_num_files(&zipArchive));
-
-    file_index = mz_zip_reader_locate_file(&zipArchive, "java/lang/Object.class", NULL, 0);
-
+    file_index = mz_zip_reader_locate_file(&zipArchive, filename, NULL, 0);//"java/lang/Object.class"
     if (!mz_zip_reader_file_stat(&zipArchive, file_index, &file_stat)) {
-        printf("Failed to get zip file info,fileIndex:%d\n", file_index);
-        exit(1);
+        return -1;
     }
-
     size_t uncompressed_size = (size_t) file_stat.m_uncomp_size;
     void *p = mz_zip_reader_extract_file_to_heap(&zipArchive, file_stat.m_filename, &uncompressed_size, 0);
     if (!p) {
-        printf("Failed to unzip file data\n");
-        exit(1);
+        return -1;
     }
 
-    printf("Poem %s:", file_stat.m_filename);
-    for (int i = 0; i < (int) uncompressed_size; i++) {
-        printf("%c", *((char *) p + i));
-    }
-    printf("\n");
+    bytebuf_write_batch(buf, p, uncompressed_size);
     mz_free(p);
     mz_zip_reader_end(&zipArchive);
+    return 0;
 }
-*/
+

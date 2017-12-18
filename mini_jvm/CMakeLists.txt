@@ -51,7 +51,8 @@ set(SOURCE_FILES
         utils/linkedlist.h
         utils/spinlock.c
         utils/spinlock.h
-#        utils/miniz/miniz.c
+        utils/bytebuf.c
+        utils/bytebuf.h
         utils/miniz/miniz_wrapper.c
         utils/miniz/miniz_wrapper.h
         )

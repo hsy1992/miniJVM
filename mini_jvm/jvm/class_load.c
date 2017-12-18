@@ -5,28 +5,31 @@
 #include "stdlib.h"
 #include <stdio.h>
 #include <string.h>
+#include <sys/stat.h>
+#include <bytebuf.h>
+#include <miniz/miniz_wrapper.h>
 #include "jvm.h"
 #include "jvm_util.h"
 
 /* parse UTF-8 String */
-void *parseCPString(Class *_this, FILE *fp, s32 index) {
+void *parseCPString(Class *_this, ByteBuf *buf, s32 index) {
     u8 short_tmp[2];
     ConstantUTF8 *ptr = jvm_calloc(sizeof(ConstantUTF8));
 
     ptr->tag = CONSTANT_UTF8;
     ptr->index = index;
 
-    fread(short_tmp, 2, 1, fp);
+    //fread(short_tmp, 2, 1, fp);
     Short2Char s2c;
-    s2c.c1 = short_tmp[0];
-    s2c.c0 = short_tmp[1];
+    s2c.c1 = (c8) bytebuf_read(buf);//short_tmp[0];
+    s2c.c0 = (c8) bytebuf_read(buf);//short_tmp[1];
     ptr->string_size = s2c.s;
 
     ptr->utfstr = utf8_create();
     s32 i = 0;
     for (; i < ptr->string_size; i++) {
-        u8 ch = 0;
-        fread(&ch, 1, 1, fp);
+        u8 ch = (u8) bytebuf_read(buf);//0;
+        //fread(&ch, 1, 1, fp);
         utf8_append_part_c(ptr->utfstr, &ch, 0, 1);
     }
     arraylist_push_back(_this->constantPool.utf8CP, ptr);
@@ -34,19 +37,19 @@ void *parseCPString(Class *_this, FILE *fp, s32 index) {
 }
 
 /* parse Integer */
-void *parseCPInteger(Class *_this, FILE *fp, s32 index) {
+void *parseCPInteger(Class *_this, ByteBuf *buf, s32 index) {
     u8 tmp[4];
     ConstantInteger *ptr = jvm_calloc(sizeof(ConstantInteger));
 
     ptr->tag = CONSTANT_INTEGER;
     ptr->index = index;
 
-    fread(tmp, 4, 1, fp);
+    //fread(tmp, 4, 1, fp);
     Int2Float i2c;
-    i2c.c3 = tmp[0];
-    i2c.c2 = tmp[1];
-    i2c.c1 = tmp[2];
-    i2c.c0 = tmp[3];
+    i2c.c3 = (u8) bytebuf_read(buf);//tmp[0];
+    i2c.c2 = (u8) bytebuf_read(buf);//tmp[1];
+    i2c.c1 = (u8) bytebuf_read(buf);//tmp[2];
+    i2c.c0 = (u8) bytebuf_read(buf);//tmp[3];
     ptr->value = i2c.i;
     arraylist_push_back(_this->constantPool.integerCP, ptr);
 
@@ -54,19 +57,19 @@ void *parseCPInteger(Class *_this, FILE *fp, s32 index) {
 }
 
 /* parse Float */
-void *parseCPFloat(Class *_this, FILE *fp, s32 index) {
+void *parseCPFloat(Class *_this, ByteBuf *buf, s32 index) {
     c8 tmp[4];
     ConstantFloat *ptr = jvm_calloc(sizeof(ConstantFloat));
 
     ptr->tag = CONSTANT_FLOAT;
     ptr->index = index;
 
-    fread(tmp, 4, 1, fp);
+    //fread(tmp, 4, 1, fp);
     Int2Float i2c;
-    i2c.c3 = tmp[0];
-    i2c.c2 = tmp[1];
-    i2c.c1 = tmp[2];
-    i2c.c0 = tmp[3];
+    i2c.c3 = (u8) bytebuf_read(buf);//tmp[0];
+    i2c.c2 = (u8) bytebuf_read(buf);//tmp[1];
+    i2c.c1 = (u8) bytebuf_read(buf);//tmp[2];
+    i2c.c0 = (u8) bytebuf_read(buf);//tmp[3];
 
     ptr->value = i2c.f;
 
@@ -75,23 +78,23 @@ void *parseCPFloat(Class *_this, FILE *fp, s32 index) {
 }
 
 /* parse LONG */
-void *parseCPLong(Class *_this, FILE *fp, s32 index) {
+void *parseCPLong(Class *_this, ByteBuf *buf, s32 index) {
     u8 tmp[8];
     ConstantLong *ptr = jvm_calloc(sizeof(ConstantLong));
 
     ptr->tag = CONSTANT_LONG;
     ptr->index = index;
 
-    fread(tmp, 8, 1, fp);
+    //fread(tmp, 8, 1, fp);
     Long2Double l2d;
-    l2d.c7 = tmp[0];
-    l2d.c6 = tmp[1];
-    l2d.c5 = tmp[2];
-    l2d.c4 = tmp[3];
-    l2d.c3 = tmp[4];
-    l2d.c2 = tmp[5];
-    l2d.c1 = tmp[6];
-    l2d.c0 = tmp[7];
+    l2d.c7 = (u8) bytebuf_read(buf);//tmp[0];
+    l2d.c6 = (u8) bytebuf_read(buf);//tmp[1];
+    l2d.c5 = (u8) bytebuf_read(buf);//tmp[2];
+    l2d.c4 = (u8) bytebuf_read(buf);//tmp[3];
+    l2d.c3 = (u8) bytebuf_read(buf);//tmp[4];
+    l2d.c2 = (u8) bytebuf_read(buf);//tmp[5];
+    l2d.c1 = (u8) bytebuf_read(buf);//tmp[6];
+    l2d.c0 = (u8) bytebuf_read(buf);//tmp[7];
     ptr->value = l2d.l;
 
     arraylist_push_back(_this->constantPool.longCP, ptr);
@@ -99,23 +102,23 @@ void *parseCPLong(Class *_this, FILE *fp, s32 index) {
 }
 
 /* parse Double */
-void *parseCPDouble(Class *_this, FILE *fp, s32 index) {
+void *parseCPDouble(Class *_this, ByteBuf *buf, s32 index) {
     u8 tmp[8];
     ConstantDouble *ptr = jvm_calloc(sizeof(ConstantDouble));
 
     ptr->tag = CONSTANT_DOUBLE;
     ptr->index = index;
 
-    fread(tmp, 8, 1, fp);
+    //fread(tmp, 8, 1, fp);
     Long2Double l2d;
-    l2d.c7 = tmp[0];
-    l2d.c6 = tmp[1];
-    l2d.c5 = tmp[2];
-    l2d.c4 = tmp[3];
-    l2d.c3 = tmp[4];
-    l2d.c2 = tmp[5];
-    l2d.c1 = tmp[6];
-    l2d.c0 = tmp[7];
+    l2d.c7 = (u8) bytebuf_read(buf);//tmp[0];
+    l2d.c6 = (u8) bytebuf_read(buf);//tmp[1];
+    l2d.c5 = (u8) bytebuf_read(buf);//tmp[2];
+    l2d.c4 = (u8) bytebuf_read(buf);//tmp[3];
+    l2d.c3 = (u8) bytebuf_read(buf);//tmp[4];
+    l2d.c2 = (u8) bytebuf_read(buf);//tmp[5];
+    l2d.c1 = (u8) bytebuf_read(buf);//tmp[6];
+    l2d.c0 = (u8) bytebuf_read(buf);//tmp[7];
     ptr->value = l2d.d;
 
     arraylist_push_back(_this->constantPool.doubleCP, ptr);
@@ -123,17 +126,17 @@ void *parseCPDouble(Class *_this, FILE *fp, s32 index) {
 }
 
 /* parse Constant Pool Class */
-void *parseCPClass(Class *_this, FILE *fp, s32 index) {
+void *parseCPClass(Class *_this, ByteBuf *buf, s32 index) {
     u8 short_tmp[2];
     ConstantClassRef *ptr = jvm_calloc(sizeof(ConstantClassRef));
 
     ptr->tag = CONSTANT_CLASS;
     ptr->index = index;
 
-    fread(short_tmp, 2, 1, fp);
+    //fread(short_tmp, 2, 1, fp);
     Short2Char s2c;
-    s2c.c1 = short_tmp[0];
-    s2c.c0 = short_tmp[1];
+    s2c.c1 = (u8) bytebuf_read(buf);//short_tmp[0];
+    s2c.c0 = (u8) bytebuf_read(buf);//short_tmp[1];
     ptr->stringIndex = s2c.s;
 
     arraylist_push_back(_this->constantPool.classRef, ptr);
@@ -141,17 +144,17 @@ void *parseCPClass(Class *_this, FILE *fp, s32 index) {
 }
 
 /* parse Constant Pool String Ref */
-void *parseCPStringRef(Class *_this, FILE *fp, s32 index) {
+void *parseCPStringRef(Class *_this, ByteBuf *buf, s32 index) {
     u8 short_tmp[2];
     ConstantStringRef *ptr = jvm_calloc(sizeof(ConstantStringRef));
 
     ptr->tag = CONSTANT_STRING_REF;
     ptr->index = index;
 
-    fread(short_tmp, 2, 1, fp);
+    //fread(short_tmp, 2, 1, fp);
     Short2Char s2c;
-    s2c.c1 = short_tmp[0];
-    s2c.c0 = short_tmp[1];
+    s2c.c1 = (u8) bytebuf_read(buf);//short_tmp[0];
+    s2c.c0 = (u8) bytebuf_read(buf);//short_tmp[1];
     ptr->stringIndex = s2c.s;
 
     arraylist_push_back(_this->constantPool.stringRef, ptr);
@@ -159,22 +162,22 @@ void *parseCPStringRef(Class *_this, FILE *fp, s32 index) {
 }
 
 /* parse Constant Pool Field */
-void *parseCPField(Class *_this, FILE *fp, s32 index) {
+void *parseCPField(Class *_this, ByteBuf *buf, s32 index) {
     u8 short_tmp[2];
     ConstantFieldRef *ptr = jvm_calloc(sizeof(ConstantFieldRef));
 
     ptr->tag = CONSTANT_FIELD_REF;
     ptr->index = index;
 
-    fread(short_tmp, 2, 1, fp);
+    //fread(short_tmp, 2, 1, fp);
     Short2Char s2c;
-    s2c.c1 = short_tmp[0];
-    s2c.c0 = short_tmp[1];
+    s2c.c1 = (u8) bytebuf_read(buf);//short_tmp[0];
+    s2c.c0 = (u8) bytebuf_read(buf);//short_tmp[1];
     ptr->classIndex = s2c.s;
 
-    fread(short_tmp, 2, 1, fp);
-    s2c.c1 = short_tmp[0];
-    s2c.c0 = short_tmp[1];
+    //fread(short_tmp, 2, 1, fp);
+    s2c.c1 = (u8) bytebuf_read(buf);//short_tmp[0];
+    s2c.c0 = (u8) bytebuf_read(buf);//short_tmp[1];
     ptr->nameAndTypeIndex = s2c.s;
 
     arraylist_push_back(_this->constantPool.fieldRef, ptr);
@@ -182,7 +185,7 @@ void *parseCPField(Class *_this, FILE *fp, s32 index) {
 }
 
 /* parse Constant Pool Method */
-void *parseCPMethod(Class *_this, FILE *fp, s32 index) {
+void *parseCPMethod(Class *_this, ByteBuf *buf, s32 index) {
     u8 short_tmp[2];
     ConstantMethodRef *ptr = jvm_calloc(sizeof(ConstantMethodRef));
     ptr->methodParaCount = -1;
@@ -190,15 +193,15 @@ void *parseCPMethod(Class *_this, FILE *fp, s32 index) {
     ptr->tag = CONSTANT_METHOD_REF;
     ptr->index = index;
 
-    fread(short_tmp, 2, 1, fp);
+    //fread(short_tmp, 2, 1, fp);
     Short2Char s2c;
-    s2c.c1 = short_tmp[0];
-    s2c.c0 = short_tmp[1];
+    s2c.c1 = (u8) bytebuf_read(buf);//short_tmp[0];
+    s2c.c0 = (u8) bytebuf_read(buf);//short_tmp[1];
     ptr->classIndex = s2c.s;
 
-    fread(short_tmp, 2, 1, fp);
-    s2c.c1 = short_tmp[0];
-    s2c.c0 = short_tmp[1];
+    //fread(short_tmp, 2, 1, fp);
+    s2c.c1 = (u8) bytebuf_read(buf);//short_tmp[0];
+    s2c.c0 = (u8) bytebuf_read(buf);//short_tmp[1];
     ptr->nameAndTypeIndex = s2c.s;
 
     arraylist_push_back(_this->constantPool.methodRef, ptr);
@@ -206,22 +209,22 @@ void *parseCPMethod(Class *_this, FILE *fp, s32 index) {
 }
 
 /* parse Constant Pool Interface */
-void *parseCPInterface(Class *_this, FILE *fp, s32 index) {
+void *parseCPInterface(Class *_this, ByteBuf *buf, s32 index) {
     u8 short_tmp[2];
     ConstantInterfaceMethodRef *ptr = jvm_calloc(sizeof(ConstantInterfaceMethodRef));
 
     ptr->tag = CONSTANT_INTERFACE_REF;
     ptr->index = index;
 
-    fread(short_tmp, 2, 1, fp);
+    //fread(short_tmp, 2, 1, fp);
     Short2Char s2c;
-    s2c.c1 = short_tmp[0];
-    s2c.c0 = short_tmp[1];
+    s2c.c1 = (u8) bytebuf_read(buf);//short_tmp[0];
+    s2c.c0 = (u8) bytebuf_read(buf);//short_tmp[1];
     ptr->classIndex = s2c.s;
 
-    fread(short_tmp, 2, 1, fp);
-    s2c.c1 = short_tmp[0];
-    s2c.c0 = short_tmp[1];
+    //fread(short_tmp, 2, 1, fp);
+    s2c.c1 = (u8) bytebuf_read(buf);//short_tmp[0];
+    s2c.c0 = (u8) bytebuf_read(buf);//short_tmp[1];
     ptr->nameAndTypeIndex = s2c.s;
 
     arraylist_push_back(_this->constantPool.interfaceRef, ptr);
@@ -229,86 +232,26 @@ void *parseCPInterface(Class *_this, FILE *fp, s32 index) {
 }
 
 /* parse Constant Pool Interface */
-void *parseCPNameAndType(Class *_this, FILE *fp, s32 index) {
+void *parseCPNameAndType(Class *_this, ByteBuf *buf, s32 index) {
     u8 short_tmp[2];
     ConstantNameAndType *ptr = jvm_calloc(sizeof(ConstantNameAndType));
 
     ptr->tag = CONSTANT_NAME_AND_TYPE;
     ptr->index = index;
 
-    fread(short_tmp, 2, 1, fp);
+    //fread(short_tmp, 2, 1, fp);
     Short2Char s2c;
-    s2c.c1 = short_tmp[0];
-    s2c.c0 = short_tmp[1];
+    s2c.c1 = (u8) bytebuf_read(buf);//short_tmp[0];
+    s2c.c0 = (u8) bytebuf_read(buf);//short_tmp[1];
     ptr->nameIndex = s2c.s;
 
-    fread(short_tmp, 2, 1, fp);
-    s2c.c1 = short_tmp[0];
-    s2c.c0 = short_tmp[1];
+    //fread(short_tmp, 2, 1, fp);
+    s2c.c1 = (u8) bytebuf_read(buf);//short_tmp[0];
+    s2c.c0 = (u8) bytebuf_read(buf);//short_tmp[1];
     ptr->typeIndex = s2c.s;
 
     arraylist_push_back(_this->constantPool.name_and_type, ptr);
     return ptr;
-}
-
-s32 _parse_constant_pool(Class *_this, FILE *fp, s32 count) {
-    u8 tag = 0;
-    s32 i = 0;
-    u64 offset_start = 0;
-    u64 offset_end = 0;
-    _this->constant_item_ptr = jvm_calloc(count * sizeof(void *));
-    for (i = 1; i < count; i++) {
-        fread(&tag, 1, 1, fp);
-        offset_start = ftell(fp);
-        //jvm_printf("!!!read tag = %02x!!!\n", tag);
-        __refer ptr = NULL;
-        s32 idx = i;
-        switch (tag) {
-            case CONSTANT_UTF8:
-                ptr = parseCPString(_this, fp, i);
-                break;
-            case CONSTANT_INTEGER:
-                ptr = parseCPInteger(_this, fp, i);
-                break;
-            case CONSTANT_FLOAT:
-                ptr = parseCPFloat(_this, fp, i);
-                break;
-            case CONSTANT_LONG:
-                ptr = parseCPLong(_this, fp, i);
-                i++;
-                break;
-            case CONSTANT_DOUBLE:
-                ptr = parseCPDouble(_this, fp, i);
-                i++;
-                break;
-            case CONSTANT_STRING_REF:
-                ptr = parseCPStringRef(_this, fp, i);
-                break;
-            case CONSTANT_CLASS:
-                ptr = parseCPClass(_this, fp, i);
-                break;
-            case CONSTANT_FIELD_REF:
-                ptr = parseCPField(_this, fp, i);
-                break;
-            case CONSTANT_METHOD_REF:
-                ptr = parseCPMethod(_this, fp, i);
-                break;
-            case CONSTANT_INTERFACE_REF:
-                ptr = parseCPMethod(_this, fp, i);//parseCPInterface(_this, fp, i);
-                break;
-            case CONSTANT_NAME_AND_TYPE:
-                ptr = parseCPNameAndType(_this, fp, i);
-                break;
-            default:
-                jvm_printf("\n!!!unknow tag = %02x!!!\n\n", tag);
-                fseek(fp, -1, SEEK_CUR);
-                break;
-        };
-        offset_end = ftell(fp);
-        _this->constant_item_ptr[idx] = ptr;
-    }
-
-    return 0;
 }
 
 #ifdef _JVM_DEBUG_BYTECODE_DETAIL
@@ -510,7 +453,7 @@ s32 _class_constant_pool_destory(Class *clazz) {
     return 0;
 }
 
-s32 parseAttr(FieldInfo *ptr, FILE *fp) {
+s32 parseAttr(FieldInfo *ptr, ByteBuf *buf) {
     s32 i;
     AttributeInfo *tmp = 0;
     u8 short_tmp[2];
@@ -520,23 +463,24 @@ s32 parseAttr(FieldInfo *ptr, FILE *fp) {
 #endif
     for (i = 0; i < ptr->attributes_count; i++) {
         tmp = &(ptr->attributes[i]);
-        fread(short_tmp, 2, 1, fp);
+        //fread(short_tmp, 2, 1, fp);
         Short2Char s2c;
-        s2c.c1 = short_tmp[0];
-        s2c.c0 = short_tmp[1];
+        s2c.c1 = (u8) bytebuf_read(buf);//short_tmp[0];
+        s2c.c0 = (u8) bytebuf_read(buf);//short_tmp[1];
         tmp->attribute_name_index = s2c.s;
 
-        fread(integer_tmp, 4, 1, fp);
+        //fread(integer_tmp, 4, 1, fp);
         Int2Float i2c;
-        i2c.c3 = integer_tmp[0];
-        i2c.c2 = integer_tmp[1];
-        i2c.c1 = integer_tmp[2];
-        i2c.c0 = integer_tmp[3];
+        i2c.c3 = (u8) bytebuf_read(buf);//integer_tmp[0];
+        i2c.c2 = (u8) bytebuf_read(buf);//integer_tmp[1];
+        i2c.c1 = (u8) bytebuf_read(buf);//integer_tmp[2];
+        i2c.c0 = (u8) bytebuf_read(buf);//integer_tmp[3];
         tmp->attribute_length = i2c.i;
 
         if (tmp->attribute_length > 0) {
             tmp->info = (u8 *) jvm_calloc(sizeof(u8) * tmp->attribute_length);
-            fread(tmp->info, tmp->attribute_length, 1, fp);
+            //fread(tmp->info, tmp->attribute_length, 1, fp);
+            bytebuf_read_batch(buf, tmp->info, tmp->attribute_length);
         } else {
             tmp->info = NULL;
         }
@@ -545,35 +489,35 @@ s32 parseAttr(FieldInfo *ptr, FILE *fp) {
 }
 
 /* parse Field Pool */
-s32 parseFP(Class *_this, FILE *fp) {
+s32 parseFP(Class *_this, ByteBuf *buf) {
     s32 i = 0;
     u8 short_tmp[2];
     FieldInfo *ptr = &(_this->fieldPool.field[_this->fieldPool.field_used]);
 
     /* access flag */
-    fread(short_tmp, 2, 1, fp);
+    //fread(short_tmp, 2, 1, fp);
     Short2Char s2c;
-    s2c.c1 = short_tmp[0];
-    s2c.c0 = short_tmp[1];
+    s2c.c1 = (u8) bytebuf_read(buf);//short_tmp[0];
+    s2c.c0 = (u8) bytebuf_read(buf);//short_tmp[1];
     ptr->access_flags = s2c.s;
 
     /* name index */
-    fread(short_tmp, 2, 1, fp);
-    s2c.c1 = short_tmp[0];
-    s2c.c0 = short_tmp[1];
+    //fread(short_tmp, 2, 1, fp);
+    s2c.c1 = (u8) bytebuf_read(buf);//short_tmp[0];
+    s2c.c0 = (u8) bytebuf_read(buf);//short_tmp[1];
     ptr->name_index = s2c.s;
 
 
     /* descriptor index */
-    fread(short_tmp, 2, 1, fp);
-    s2c.c1 = short_tmp[0];
-    s2c.c0 = short_tmp[1];
+    //fread(short_tmp, 2, 1, fp);
+    s2c.c1 = (u8) bytebuf_read(buf);//short_tmp[0];
+    s2c.c0 = (u8) bytebuf_read(buf);//short_tmp[1];
     ptr->descriptor_index = s2c.s;
 
     /* attributes count */
-    fread(short_tmp, 2, 1, fp);
-    s2c.c1 = short_tmp[0];
-    s2c.c0 = short_tmp[1];
+    //fread(short_tmp, 2, 1, fp);
+    s2c.c1 = (u8) bytebuf_read(buf);//short_tmp[0];
+    s2c.c0 = (u8) bytebuf_read(buf);//short_tmp[1];
     ptr->attributes_count = s2c.s;
 
     if (ptr->attributes_count > 0) {
@@ -582,7 +526,7 @@ s32 parseFP(Class *_this, FILE *fp) {
         ptr->attributes = NULL;
     }
     /* parse attributes */
-    parseAttr(ptr, fp);
+    parseAttr(ptr, buf);
     _this->fieldPool.field_used++;
     return 0;
 }
@@ -606,13 +550,13 @@ void printFieldPool(Class *clazz, FieldPool *fp) {
     }
 }
 
-s32 _parse_field_pool(Class *_this, FILE *fp, s32 count) {
+s32 _parse_field_pool(Class *_this, ByteBuf *buf, s32 count) {
     s32 size = sizeof(FieldInfo) * count;
     _this->fieldPool.field = jvm_calloc(size);
 
     s32 i;
     for (i = 0; i < count; i++)
-        parseFP(_this, fp);
+        parseFP(_this, buf);
     return 0;
 }
 
@@ -636,17 +580,17 @@ s32 _class_field_info_destory(Class *clazz) {
 
 
 /* parse Interface Pool Class */
-s32 parseIPClass(Class *_this, FILE *fp, s32 index) {
+s32 parseIPClass(Class *_this, ByteBuf *buf, s32 index) {
     u8 short_tmp[2];
     ConstantClassRef *ptr = &_this->interfacePool.clasz[_this->interfacePool.clasz_used];
 
     ptr->tag = CONSTANT_CLASS;
     ptr->index = index;
 
-    fread(short_tmp, 2, 1, fp);
+    //fread(short_tmp, 2, 1, fp);
     Short2Char s2c;
-    s2c.c1 = short_tmp[0];
-    s2c.c0 = short_tmp[1];
+    s2c.c1 = (u8) bytebuf_read(buf);//short_tmp[0];
+    s2c.c0 = (u8) bytebuf_read(buf);//short_tmp[1];
     ptr->stringIndex = s2c.s;
 
     _this->interfacePool.clasz_used++;
@@ -673,13 +617,13 @@ void printInterfacePool(Class *clazz, InterfacePool *ip) {
     }
 }
 
-s32 _parse_interface_pool(Class *_this, FILE *fp, s32 count) {
+s32 _parse_interface_pool(Class *_this, ByteBuf *buf, s32 count) {
 
     s32 size = sizeof(ConstantClassRef) * count;
     _this->interfacePool.clasz = jvm_calloc(size);
     s32 i;
     for (i = 0; i < count; i++)
-        parseIPClass(_this, fp, i);
+        parseIPClass(_this, buf, i);
     return 0;
 }
 
@@ -693,68 +637,69 @@ s32 _class_interface_pool_destory(Class *clazz) {
 //=================================     load         ======================================
 
 
-s32 parseMethodAttr(MethodInfo *ptr, FILE *fp) {
+s32 parseMethodAttr(MethodInfo *ptr, ByteBuf *buf) {
     s32 i;
     AttributeInfo *tmp = 0;
     u8 short_tmp[2];
     u8 integer_tmp[4];
     for (i = 0; i < ptr->attributes_count; i++) {
         tmp = &ptr->attributes[i];
-        fread(short_tmp, 2, 1, fp);
+        //fread(short_tmp, 2, 1, fp);
         Short2Char s2c;
-        s2c.c1 = short_tmp[0];
-        s2c.c0 = short_tmp[1];
+        s2c.c1 = (u8) bytebuf_read(buf);//short_tmp[0];
+        s2c.c0 = (u8) bytebuf_read(buf);//short_tmp[1];
         tmp->attribute_name_index = s2c.s;
-        fread(integer_tmp, 4, 1, fp);
+        //fread(integer_tmp, 4, 1, fp);
         Int2Float i2c;
-        i2c.c3 = integer_tmp[0];
-        i2c.c2 = integer_tmp[1];
-        i2c.c1 = integer_tmp[2];
-        i2c.c0 = integer_tmp[3];
+        i2c.c3 = (u8) bytebuf_read(buf);//integer_tmp[0];
+        i2c.c2 = (u8) bytebuf_read(buf);//integer_tmp[1];
+        i2c.c1 = (u8) bytebuf_read(buf);//integer_tmp[2];
+        i2c.c0 = (u8) bytebuf_read(buf);//integer_tmp[3];
         tmp->attribute_length = i2c.i;
 
         tmp->info = (u8 *) jvm_calloc(sizeof(u8) * tmp->attribute_length);
-        fread(tmp->info, tmp->attribute_length, 1, fp);
+        //fread(tmp->info, tmp->attribute_length, 1, fp);
+        bytebuf_read_batch(buf, tmp->info, tmp->attribute_length);
     }
     return 0;
 }
 
 
 /* parse Method Pool */
-s32 parseMP(Class *_this, FILE *fp) {
+s32 parseMP(Class *_this, ByteBuf *buf) {
     s32 i = 0;
     u8 short_tmp[2];
     MethodInfo *ptr = &(_this->methodPool.method[_this->methodPool.method_used]);
 
     /* access flag */
-    fread(short_tmp, 2, 1, fp);
+    //fread(short_tmp, 2, 1, fp);
     Short2Char s2c;
-    s2c.c1 = short_tmp[0];
-    s2c.c0 = short_tmp[1];
+    s2c.c1 = (u8) bytebuf_read(buf);//short_tmp[0];
+    s2c.c0 = (u8) bytebuf_read(buf);//short_tmp[1];
     ptr->access_flags = s2c.s;
 
     /* name index */
-    fread(short_tmp, 2, 1, fp);
-    s2c.c1 = short_tmp[0];
-    s2c.c0 = short_tmp[1];
+    //fread(short_tmp, 2, 1, fp);
+    s2c.c1 = (u8) bytebuf_read(buf);//short_tmp[0];
+    s2c.c0 = (u8) bytebuf_read(buf);//short_tmp[1];
     ptr->name_index = s2c.s;
 
     /* descriptor index */
-    fread(short_tmp, 2, 1, fp);
-    s2c.c1 = short_tmp[0];
-    s2c.c0 = short_tmp[1];
+    //fread(short_tmp, 2, 1, fp);
+    s2c.c1 = (u8) bytebuf_read(buf);//short_tmp[0];
+    s2c.c0 = (u8) bytebuf_read(buf);//short_tmp[1];
     ptr->descriptor_index = s2c.s;
 
     /* attributes count */
-    fread(short_tmp, 2, 1, fp);
-    s2c.c1 = short_tmp[0];
-    s2c.c0 = short_tmp[1];
+    //fread(short_tmp, 2, 1, fp);
+    s2c.c1 = (u8) bytebuf_read(buf);//short_tmp[0];
+    s2c.c0 = (u8) bytebuf_read(buf);//short_tmp[1];
     ptr->attributes_count = s2c.s;
 
     ptr->attributes = (AttributeInfo *) jvm_calloc(sizeof(AttributeInfo) * ptr->attributes_count);
     memset(ptr->attributes, 0, sizeof(AttributeInfo) * ptr->attributes_count);
     /* parse methodRef attributes */
-    parseMethodAttr(ptr, fp);
+    parseMethodAttr(ptr, buf);
 
     _this->methodPool.method_used++;
     return 0;
@@ -834,13 +779,13 @@ void printMethodPool(Class *p, MethodPool *mp) {
     }
 }
 
-s32 _parse_method_pool(Class *_this, FILE *fp, s32 count) {
+s32 _parse_method_pool(Class *_this, ByteBuf *buf, s32 count) {
 
     s32 size = sizeof(MethodInfo) * count;
     _this->methodPool.method = jvm_calloc(size);
     s32 i;
     for (i = 0; i < count; i++)
-        parseMP(_this, fp);
+        parseMP(_this, buf);
     return 0;
 }
 
@@ -880,7 +825,7 @@ s32 _class_method_info_destory(Class *clazz) {
     return 0;
 }
 
-s32 _parse_attribute_pool(Class *_this, FILE *fp, s32 count) {
+s32 _parse_attribute_pool(Class *_this, ByteBuf *buf, s32 count) {
 
     s32 size = sizeof(AttributeInfo) * count;
     _this->attributePool.attribute = jvm_calloc(size);
@@ -892,22 +837,23 @@ s32 _parse_attribute_pool(Class *_this, FILE *fp, s32 count) {
         AttributeInfo *ptr = &(_this->attributePool.attribute[i]);
 
         /* access flag */
-        fread(short_tmp, 2, 1, fp);
+        //fread(short_tmp, 2, 1, fp);
         Short2Char s2c;
-        s2c.c1 = short_tmp[0];
-        s2c.c0 = short_tmp[1];
+        s2c.c1 = (u8) bytebuf_read(buf);//short_tmp[0];
+        s2c.c0 = (u8) bytebuf_read(buf);//short_tmp[1];
         ptr->attribute_name_index = s2c.s;
 
-        fread(integer_tmp, 4, 1, fp);
+        //fread(integer_tmp, 4, 1, fp);
         Int2Float i2c;
-        i2c.c3 = integer_tmp[0];
-        i2c.c2 = integer_tmp[1];
-        i2c.c1 = integer_tmp[2];
-        i2c.c0 = integer_tmp[3];
+        i2c.c3 = (u8) bytebuf_read(buf);//integer_tmp[0];
+        i2c.c2 = (u8) bytebuf_read(buf);//integer_tmp[1];
+        i2c.c1 = (u8) bytebuf_read(buf);//integer_tmp[2];
+        i2c.c0 = (u8) bytebuf_read(buf);//integer_tmp[3];
         ptr->attribute_length = i2c.i;
         //
         ptr->info = jvm_calloc(ptr->attribute_length);
-        fread(ptr->info, ptr->attribute_length, 1, fp);
+        //fread(ptr->info, ptr->attribute_length, 1, fp);
+        bytebuf_read_batch(buf, ptr->info, ptr->attribute_length);
     }
     return 0;
 }
@@ -952,90 +898,189 @@ void printClassFileFormat(ClassFileFormat *cff) {
                cff->methods_count, cff->methods_count);
 }
 
-/* Parse Class File */
-s32 _LOAD_FROM_FILE(Class *_this, c8 *file) {
-    ClassFileFormat *cff = &(_this->cff);
-    FILE *fp = 0;
-    u8 short_tmp[2];
-    fp = fopen(file, "rb");
-    if (fp == 0) {
-        jvm_printf("Open file %s failed\n", file);
+s32 loadFileContents(c8 *file, ByteBuf *buf) {
+
+    FILE *pFile;
+    long lSize;
+    char *buffer;
+    size_t result;
+
+    /* 若要一个byte不漏地读入整个文件，只能采用二进制方式打开 */
+    pFile = fopen(file, "rb");
+    if (pFile == NULL) {
+        //jvm_printf("File error");
         return -1;
     }
+
+    /* 获取文件大小 */
+    fseek(pFile, 0, SEEK_END);
+    lSize = ftell(pFile);
+    rewind(pFile);
+
+    /* 分配内存存储整个文件 */
+    buffer = jvm_malloc(sizeof(char) * lSize);
+    if (buffer == NULL) {
+        //jvm_printf("Memory error");
+        return -1;
+    }
+
+    /* 将文件拷贝到buffer中 */
+    result = fread(buffer, 1, lSize, pFile);
+    if (result != lSize) {
+        //jvm_printf("Reading error");
+        return -1;
+    }
+    /* 现在整个文件已经在buffer中，可由标准输出打印内容 */
+    //printf("%s", buffer);
+
+    /* 结束演示，关闭文件并释放内存 */
+    fclose(pFile);
+    bytebuf_write_batch(buf, buffer, lSize);
+    jvm_free(buffer);
+
+    return 0;
+}
+
+s32 _parse_constant_pool(Class *_this, ByteBuf *buf, s32 count) {
+    u8 tag = 0;
+    s32 i = 0;
+    u64 offset_start = 0;
+    u64 offset_end = 0;
+    _this->constant_item_ptr = jvm_calloc(count * sizeof(void *));
+    for (i = 1; i < count; i++) {
+        //fread(&tag, 1, 1, fp);
+        tag = (u8) bytebuf_read(buf);
+        offset_start = buf->rp;
+        //jvm_printf("!!!read tag = %02x!!!\n", tag);
+        __refer ptr = NULL;
+        s32 idx = i;
+        switch (tag) {
+            case CONSTANT_UTF8:
+                ptr = parseCPString(_this, buf, i);
+                break;
+            case CONSTANT_INTEGER:
+                ptr = parseCPInteger(_this, buf, i);
+                break;
+            case CONSTANT_FLOAT:
+                ptr = parseCPFloat(_this, buf, i);
+                break;
+            case CONSTANT_LONG:
+                ptr = parseCPLong(_this, buf, i);
+                i++;
+                break;
+            case CONSTANT_DOUBLE:
+                ptr = parseCPDouble(_this, buf, i);
+                i++;
+                break;
+            case CONSTANT_STRING_REF:
+                ptr = parseCPStringRef(_this, buf, i);
+                break;
+            case CONSTANT_CLASS:
+                ptr = parseCPClass(_this, buf, i);
+                break;
+            case CONSTANT_FIELD_REF:
+                ptr = parseCPField(_this, buf, i);
+                break;
+            case CONSTANT_METHOD_REF:
+                ptr = parseCPMethod(_this, buf, i);
+                break;
+            case CONSTANT_INTERFACE_REF:
+                ptr = parseCPMethod(_this, buf, i);//parseCPInterface(_this, fp, i);
+                break;
+            case CONSTANT_NAME_AND_TYPE:
+                ptr = parseCPNameAndType(_this, buf, i);
+                break;
+            default:
+                jvm_printf("\n!!!unknow tag = %02x!!!\n\n", tag);
+                //fseek(fp, -1, SEEK_CUR);
+                break;
+        };
+        offset_end = buf->rp;
+        _this->constant_item_ptr[idx] = ptr;
+    }
+
+    return 0;
+}
+
+/* Parse Class File */
+s32 _LOAD_CLASS_FROM_BYTES(Class *_this, ByteBuf *buf) {
+    ClassFileFormat *cff = &(_this->cff);
+
     /* magic number */
-    fread(cff->magic_number, 4, 1, fp);
+    bytebuf_read_batch(buf, (c8 *) &cff->magic_number, 4);
+//    fread(cff->magic_number, 4, 1, fp);
 
     /* minor_version */
-    fread(short_tmp, 2, 1, fp);
+    //fread(short_tmp, 2, 1, fp);
     Short2Char s2c;
-    s2c.c1 = short_tmp[0];
-    s2c.c0 = short_tmp[1];
+    s2c.c1 = (c8) bytebuf_read(buf);
+    s2c.c0 = (c8) bytebuf_read(buf);
     cff->minor_version = s2c.s;
 
     /* major_version */
-    fread(short_tmp, 2, 1, fp);
-    s2c.c1 = short_tmp[0];
-    s2c.c0 = short_tmp[1];
+    //fread(short_tmp, 2, 1, fp);
+    s2c.c1 = (c8) bytebuf_read(buf);
+    s2c.c0 = (c8) bytebuf_read(buf);
     cff->major_version = s2c.s;
 
     /* constant pool */
-    fread(short_tmp, 2, 1, fp);
-    s2c.c1 = short_tmp[0];
-    s2c.c0 = short_tmp[1];
+    //fread(short_tmp, 2, 1, fp);
+    s2c.c1 = (c8) bytebuf_read(buf);
+    s2c.c0 = (c8) bytebuf_read(buf);
     cff->constant_pool_count = s2c.s;
     /* constant pool table */
-    _parse_constant_pool(_this, fp, cff->constant_pool_count);
+    _parse_constant_pool(_this, buf, cff->constant_pool_count);
     /* access flag */
-    fread(short_tmp, 2, 1, fp);
-    s2c.c1 = short_tmp[0];
-    s2c.c0 = short_tmp[1];
+    //fread(short_tmp, 2, 1, fp);
+    s2c.c1 = (c8) bytebuf_read(buf);
+    s2c.c0 = (c8) bytebuf_read(buf);
     cff->access_flags = s2c.s;
 
     /* this class */
-    fread(short_tmp, 2, 1, fp);
-    s2c.c1 = short_tmp[0];
-    s2c.c0 = short_tmp[1];
+    //fread(short_tmp, 2, 1, fp);
+    s2c.c1 = (c8) bytebuf_read(buf);
+    s2c.c0 = (c8) bytebuf_read(buf);
     cff->this_class = s2c.s;
 
     /* super class */
-    fread(short_tmp, 2, 1, fp);
-    s2c.c1 = short_tmp[0];
-    s2c.c0 = short_tmp[1];
+    //fread(short_tmp, 2, 1, fp);
+    s2c.c1 = (c8) bytebuf_read(buf);
+    s2c.c0 = (c8) bytebuf_read(buf);
     cff->super_class = s2c.s;
 
     /* interfaceRef count */
-    fread(short_tmp, 2, 1, fp);
-    s2c.c1 = short_tmp[0];
-    s2c.c0 = short_tmp[1];
+    //fread(short_tmp, 2, 1, fp);
+    s2c.c1 = (c8) bytebuf_read(buf);
+    s2c.c0 = (c8) bytebuf_read(buf);
     cff->interface_count = s2c.s;
     /* interfaceRef pool table */
-    _parse_interface_pool(_this, fp, cff->interface_count);
+    _parse_interface_pool(_this, buf, cff->interface_count);
 
     /* fieldRef count */
-    fread(short_tmp, 2, 1, fp);
-    s2c.c1 = short_tmp[0];
-    s2c.c0 = short_tmp[1];
+    //fread(short_tmp, 2, 1, fp);
+    s2c.c1 = (c8) bytebuf_read(buf);
+    s2c.c0 = (c8) bytebuf_read(buf);
     cff->fields_count = s2c.s;
 
     /* fieldRef pool table */
-    _parse_field_pool(_this, fp, cff->fields_count);
+    _parse_field_pool(_this, buf, cff->fields_count);
     /* methodRef count */
-    fread(short_tmp, 2, 1, fp);
-    s2c.c1 = short_tmp[0];
-    s2c.c0 = short_tmp[1];
+    //fread(short_tmp, 2, 1, fp);
+    s2c.c1 = (c8) bytebuf_read(buf);
+    s2c.c0 = (c8) bytebuf_read(buf);
     cff->methods_count = s2c.s;
 
     /* methodRef pool table */
-    _parse_method_pool(_this, fp, cff->methods_count);
+    _parse_method_pool(_this, buf, cff->methods_count);
 
     //attribute
-    fread(short_tmp, 2, 1, fp);
-    s2c.c1 = short_tmp[0];
-    s2c.c0 = short_tmp[1];
+    //fread(short_tmp, 2, 1, fp);
+    s2c.c1 = (c8) bytebuf_read(buf);
+    s2c.c0 = (c8) bytebuf_read(buf);
     cff->attributes_count = s2c.s;
-    _parse_attribute_pool(_this, fp, cff->attributes_count);
+    _parse_attribute_pool(_this, buf, cff->attributes_count);
 
-    fclose(fp);
+    //fclose(fp);
 
     class_link(_this);
 
@@ -1227,52 +1272,78 @@ s32 convert_to_code_attribute(CodeAttribute *ca, AttributeInfo *attr, Class *cla
 }
 
 
-s32 load_related_class(Utf8String *classpath, Class *clazz, hmap_t classes) {
+s32 load_related_class(ClassLoader *loader, Class *clazz) {
     ConstantPool *p = &(clazz->constantPool);
-    if (p->classRef->length > 0) {
-        s32 i;
-        for (i = 0; i < p->classRef->length; i++) {
-            ConstantClassRef *ccr = (ConstantClassRef *) arraylist_get_value(p->classRef, i);
-            s32 ret = load_class(classpath, find_constant_utf8(clazz, ccr->stringIndex)->utfstr, classes);
-            if (ret != 0) {
-                return ret;
-            }
+    s32 i;
+    for (i = 0; i < p->classRef->length; i++) {
+        ConstantClassRef *ccr = (ConstantClassRef *) arraylist_get_value(p->classRef, i);
+        s32 ret = load_class(loader, find_constant_utf8(clazz, ccr->stringIndex)->utfstr);
+        if (ret != 0) {
+            return ret;
         }
     }
     return 0;
 }
 
-s32 load_class(Utf8String *pClassPath, Utf8String *pClassName, hmap_t classes) {
-    if (!pClassName)return 0;
+s32 load_class(ClassLoader *loader, Utf8String *pClassName) {
+    if (!loader)return 0;
     s32 iret = 0;
-    if (utf8_last_indexof_c(pClassPath, "/") != pClassPath->length - 1)utf8_append_c(pClassPath, "/");
-
+    //
     Utf8String *clsName = utf8_create_copy(pClassName);
     utf8_replace_c(clsName, ".", "/");
-
-    Utf8String *tmppath = utf8_create_copy(pClassPath);
-    utf8_append(tmppath, clsName);
-    utf8_append_c(tmppath, ".class");
     Class *tmpclazz = classes_get(clsName);
+    if (utf8_indexof_c(clsName, "[") == 0) {
+        tmpclazz = array_class_get(clsName);
+    }
     if (!tmpclazz) {
-        if (utf8_indexof_c(tmppath, "[") < 0) {
-            Class *clazz = class_create();
-            iret = clazz->_load_from_file(clazz, utf8_cstr(tmppath));
-            //jvm_printf("load class :%llx , %llx\n", (long long) (long) tmppath, (long long) (long) clsName);
-            //回收
-            if (iret != 0) {
-                jvm_printf(" class not found : %s\n", utf8_cstr(pClassName));
-                class_destory(clazz);
-            } else {
+        ByteBuf *bytebuf = NULL;
+        s32 i;
+        for (i = 0; i < loader->classpath->length; i++) {
+            Utf8String *pClassPath = arraylist_get_value(loader->classpath, i);
+            if (isDir(pClassPath)) { //form file
+                Utf8String *filepath = utf8_create_copy(pClassPath);
+                utf8_pushback(filepath, '/');
+                utf8_append(filepath, clsName);
+                utf8_append_c(filepath, ".class");
+
+                bytebuf = bytebuf_create(16);
+                iret = loadFileContents(utf8_cstr(filepath), bytebuf);
+                utf8_destory(filepath);
+                //回收
+                if (iret != 0) {
+                    bytebuf_destory(bytebuf);
+                    bytebuf = NULL;
+                }
+            } else { //from jar
+                utf8_append_c(clsName, ".class");
+                bytebuf = bytebuf_create(16);
+                iret = zip_loadfile(utf8_cstr(pClassPath), utf8_cstr(clsName), bytebuf);
+                //回收
+                if (iret != 0) {
+                    bytebuf_destory(bytebuf);
+                    bytebuf = NULL;
+                }
+            }
+            if (bytebuf != NULL) {
+                tmpclazz = class_create();
+                iret = tmpclazz->_load_class_from_bytes(tmpclazz, bytebuf);//load file
+                bytebuf_destory(bytebuf);
+                if (iret == 0) {
+                    classes_put(tmpclazz);
 #if _JVM_DEBUG_BYTECODE_DETAIL > 5
-                jvm_printf("load class:  %s \n", utf8_cstr(tmppath));
+                    jvm_printf("load class:  %s \n", utf8_cstr(clsName));
 #endif
-                classes_put(clazz);
-                load_related_class(pClassPath, clazz, classes);
+                    load_related_class(loader, tmpclazz);
+                    break;
+                } else {
+                    class_destory(tmpclazz);
+                }
             }
         }
     }
-    utf8_destory(tmppath);
+    if (!tmpclazz) {
+        jvm_printf("class not found:  %s \n", utf8_cstr(clsName));
+    }
     utf8_destory(clsName);
     return iret;
 }

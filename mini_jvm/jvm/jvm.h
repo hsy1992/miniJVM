@@ -10,6 +10,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <bytebuf.h>
 
 #include "../utils/d_type.h"
 #include "../utils/hashtable.h"
@@ -331,7 +332,7 @@ typedef struct _MemoryBlock {
 } MemoryBlock;
 
 struct _ClassLoader {
-    Utf8String *g_classpath;
+    ArrayList* classpath;
     Hashtable *classes;
 
     //
@@ -686,7 +687,7 @@ struct _ClassType {
     s32 field_static_len; //静态变量内存长度
     c8 *field_static; //静态变量内存地址
     //public:
-    s32 (*_load_from_file)(struct _ClassType *_this, c8 *file);
+    s32 (*_load_class_from_bytes)(struct _ClassType *_this, ByteBuf *buf);
 
     Utf8String *source;
 
@@ -718,11 +719,11 @@ void constant_list_destory(Class *clazz);
 
 s32 class_destory(Class *clazz);
 
-s32 load_class(Utf8String *pClassPath, Utf8String *pClassName, hmap_t classes);
+s32 load_class(ClassLoader *loader, Utf8String *pClassName);
 
-s32 load_related_class(Utf8String *classpath, Class *clazz, hmap_t classes);
+s32 load_related_class(ClassLoader *loader, Class *clazz);
 
-s32 _LOAD_FROM_FILE(Class *_this, c8 *file);
+s32 _LOAD_CLASS_FROM_BYTES(Class *_this, ByteBuf *buf);
 
 s32 class_prepar(Class *clazz);
 
@@ -734,35 +735,15 @@ void class_clinit(Class *clazz, Runtime *runtime);
 
 void printClassFileFormat(ClassFileFormat *cff);
 
-/* Method Pool Parser */
-s32 _parse_method_pool(Class *_this, FILE *fp, s32 count);
-
 s32 _class_method_info_destory(Class *clazz);
 
 s32 _class_attribute_info_destory(Class *clazz);
 
-void printMethodPool(Class *p, MethodPool *fp);
-
-void printMethodAttributes(Class *p, MethodInfo *method);
-
-/* Interface Pool Parser */
-s32 _parse_interface_pool(Class *_this, FILE *fp, s32 count);
-
 s32 _class_interface_pool_destory(Class *clazz);
-
-void printInterfacePool(Class *clazz, InterfacePool *ip);
-
-/* constant pool parser */
-s32 _parse_constant_pool(Class *_this, FILE *fp, s32 count);
 
 s32 _class_constant_pool_destory(Class *clazz);
 
-/* Field Pool Parser */
-s32 _parse_field_pool(Class *_this, FILE *fp, s32 count);
-
 s32 _class_field_info_destory(Class *clazz);
-
-void printFieldPool(Class *clazz, FieldPool *fp);
 
 u8 instance_of(Class *clazz, Instance *ins);
 
