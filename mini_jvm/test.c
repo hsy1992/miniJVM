@@ -31,9 +31,8 @@ int main(int argc, char **argv) {
 #endif //__MEM_LEAK_DETECT
 
     s32 ret;
-//    ret = execute("../../javalib_test/build/classes/", "test/Foo1", argc, (c8 **)argv);
-    ret = execute("../../javalib/build/classes/", "test/Foo1", argc, (c8 **) argv);
-//    ret = execute("../../javalib/dist/mini_jvm_java.jar:../../javalib/dist/", "test/Foo1", argc, (c8 **) argv);
+//    ret = execute("../../javalib_test/dist/minijvm_javatest.jar:../../javalib_test/build/classes/", "test/Foo1", argc, (c8 **)argv);
+    ret = execute("../../javalib/dist/mini_jvm_java.jar:../../javalib/build/classes/", "test/Foo1", argc, (c8 **) argv);
 //    testMinizWrapper();
 
 

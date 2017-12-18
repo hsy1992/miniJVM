@@ -32,8 +32,8 @@ s32 bytebuf_read_from(ByteBuf *bf, ByteBuf *src, s32 size);
 
 s32 bytebuf_write_to(ByteBuf *bf, ByteBuf *dst, s32 size);
 
-void bytebuf_expand(ByteBuf *bf, size_t size);
+void bytebuf_expand(ByteBuf *bf, u32 size);
 
-s32 bytebuf_chkread(ByteBuf *bf, size_t pos);
+s32 bytebuf_chkread(ByteBuf *bf, u32 pos);
 
 #endif //MINI_JVM_BYTEBUF_H

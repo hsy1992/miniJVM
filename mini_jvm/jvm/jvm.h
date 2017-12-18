@@ -10,13 +10,13 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include <bytebuf.h>
 
 #include "../utils/d_type.h"
 #include "../utils/hashtable.h"
 #include "../utils/utf8_string.h"
 #include "../utils/arraylist.h"
 #include "../utils/pairlist.h"
+#include "../utils/bytebuf.h"
 
 #ifdef __cplusplus
 extern "C" {

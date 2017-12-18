@@ -8,7 +8,7 @@
 #include "jvm.h"
 #include <pthread.h>
 #include <sys/stat.h>
-#include <miniz/miniz_wrapper.h>
+#include "../utils/miniz/miniz_wrapper.h"
 #include "jvm_util.h"
 #include "garbage.h"
 #include "java_native_reflect.h"
@@ -404,7 +404,7 @@ s32 sys_properties_load(ClassLoader *loader) {
     s32 i;
     for (i = 0; i < loader->classpath->length; i++) {
         Utf8String *path = arraylist_get_value(loader->classpath, i);
-        Utf8String *ustr = utf8_create();
+        Utf8String *ustr = NULL;
         if (isDir(path)) {
             FILE *fp = 0;
             Utf8String *filepath = utf8_create_copy(path);
@@ -415,6 +415,7 @@ s32 sys_properties_load(ClassLoader *loader) {
                 continue;
             }
 
+            ustr = utf8_create();
             u8 buf[256];
             while (1) {
                 u32 len = (u32) fread(buf, 1, 256, fp);
@@ -428,42 +429,44 @@ s32 sys_properties_load(ClassLoader *loader) {
             ByteBuf *buf = bytebuf_create(16);
             s32 ret = zip_loadfile(utf8_cstr(path), "sys.properties", buf);
             if (ret == 0) {
+                ustr = utf8_create();
                 while (bytebuf_available(buf)) {
                     c8 ch = (c8) bytebuf_read(buf);
                     utf8_insert(ustr, ustr->length, ch);
                 }
                 bytebuf_destory(buf);
-                break;
             } else {
                 bytebuf_destory(buf);
                 continue;
             }
         }
         //parse
-        utf8_replace_c(ustr, "\r\n", "\n");
-        utf8_replace_c(ustr, "\r", "\n");
-        Utf8String *line = utf8_create();
-        while (ustr->length > 0) {
-            s32 lineEndAt = utf8_indexof_c(ustr, "\n");
-            utf8_clear(line);
-            if (lineEndAt >= 0) {
-                utf8_append_part(line, ustr, 0, lineEndAt);
-                utf8_substring(ustr, lineEndAt + 1, ustr->length);
-            } else {
-                utf8_append_part(line, ustr, 0, ustr->length);
-                utf8_substring(ustr, ustr->length, ustr->length);
+        if (ustr) {
+            utf8_replace_c(ustr, "\r\n", "\n");
+            utf8_replace_c(ustr, "\r", "\n");
+            Utf8String *line = utf8_create();
+            while (ustr->length > 0) {
+                s32 lineEndAt = utf8_indexof_c(ustr, "\n");
+                utf8_clear(line);
+                if (lineEndAt >= 0) {
+                    utf8_append_part(line, ustr, 0, lineEndAt);
+                    utf8_substring(ustr, lineEndAt + 1, ustr->length);
+                } else {
+                    utf8_append_part(line, ustr, 0, ustr->length);
+                    utf8_substring(ustr, ustr->length, ustr->length);
+                }
+                s32 eqAt = utf8_indexof_c(line, "=");
+                if (eqAt > 0) {
+                    Utf8String *key = utf8_create();
+                    Utf8String *val = utf8_create();
+                    utf8_append_part(key, line, 0, eqAt);
+                    utf8_append_part(val, line, eqAt + 1, line->length - (eqAt + 1));
+                    hashtable_put(sys_prop, key, val);
+                }
             }
-            s32 eqAt = utf8_indexof_c(line, "=");
-            if (eqAt > 0) {
-                Utf8String *key = utf8_create();
-                Utf8String *val = utf8_create();
-                utf8_append_part(key, line, 0, eqAt);
-                utf8_append_part(val, line, eqAt + 1, line->length - (eqAt + 1));
-                hashtable_put(sys_prop, key, val);
-            }
+            utf8_destory(line);
+            utf8_destory(ustr);
         }
-        utf8_destory(line);
-        utf8_destory(ustr);
     }
     return 0;
 }

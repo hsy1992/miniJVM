@@ -6,8 +6,8 @@
 #include <stdio.h>
 #include <string.h>
 #include <sys/stat.h>
-#include <bytebuf.h>
-#include <miniz/miniz_wrapper.h>
+#include "../utils/bytebuf.h"
+#include "../utils/miniz/miniz_wrapper.h"
 #include "jvm.h"
 #include "jvm_util.h"
 
@@ -480,7 +480,7 @@ s32 parseAttr(FieldInfo *ptr, ByteBuf *buf) {
         if (tmp->attribute_length > 0) {
             tmp->info = (u8 *) jvm_calloc(sizeof(u8) * tmp->attribute_length);
             //fread(tmp->info, tmp->attribute_length, 1, fp);
-            bytebuf_read_batch(buf, tmp->info, tmp->attribute_length);
+            bytebuf_read_batch(buf, (c8 *) tmp->info, tmp->attribute_length);
         } else {
             tmp->info = NULL;
         }
@@ -659,7 +659,7 @@ s32 parseMethodAttr(MethodInfo *ptr, ByteBuf *buf) {
 
         tmp->info = (u8 *) jvm_calloc(sizeof(u8) * tmp->attribute_length);
         //fread(tmp->info, tmp->attribute_length, 1, fp);
-        bytebuf_read_batch(buf, tmp->info, tmp->attribute_length);
+        bytebuf_read_batch(buf, (c8 *) tmp->info, tmp->attribute_length);
     }
     return 0;
 }
@@ -853,7 +853,7 @@ s32 _parse_attribute_pool(Class *_this, ByteBuf *buf, s32 count) {
         //
         ptr->info = jvm_calloc(ptr->attribute_length);
         //fread(ptr->info, ptr->attribute_length, 1, fp);
-        bytebuf_read_batch(buf, ptr->info, ptr->attribute_length);
+        bytebuf_read_batch(buf, (c8 *) ptr->info, ptr->attribute_length);
     }
     return 0;
 }
@@ -918,7 +918,7 @@ s32 loadFileContents(c8 *file, ByteBuf *buf) {
     rewind(pFile);
 
     /* 分配内存存储整个文件 */
-    buffer = jvm_malloc(sizeof(char) * lSize);
+    buffer = jvm_malloc(lSize);
     if (buffer == NULL) {
         //jvm_printf("Memory error");
         return -1;

@@ -91,7 +91,7 @@ s32 bytebuf_write_to(ByteBuf *bf, ByteBuf *dst, s32 size) {
 //------------------------------------private ---------------------------------------
 
 
-void bytebuf_expand(ByteBuf *bf, size_t size) {
+void bytebuf_expand(ByteBuf *bf, u32 size) {
     if (size == 0) {
         return;
     }
@@ -106,7 +106,7 @@ void bytebuf_expand(ByteBuf *bf, size_t size) {
 }
 
 
-s32 bytebuf_chkread(ByteBuf *bf, size_t pos) {
+s32 bytebuf_chkread(ByteBuf *bf, u32 pos) {
     if (pos > bf->wp) {
         return 0;
     }
