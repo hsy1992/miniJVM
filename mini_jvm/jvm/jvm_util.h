@@ -5,10 +5,10 @@
 #ifndef MINI_JVM_UTIL_H
 #define MINI_JVM_UTIL_H
 
+#include <pthread.h>
 #include "jvm.h"
 #include "../utils/hashset.h"
 #include "jdwp.h"
-#include <pthread.h>
 
 
 #ifdef __cplusplus

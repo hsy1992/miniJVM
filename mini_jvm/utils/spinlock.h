@@ -1,7 +1,6 @@
 //
 // Created by Gust on 2017/11/15 0015.
 //
-#include "pthread.h"
 
 
 #ifndef MINI_JVM_SPINLOCK_H

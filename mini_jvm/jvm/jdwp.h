@@ -6,10 +6,10 @@
 #define MINI_JVM_JDWP_H
 
 
+#include <pthread.h>
 #include "../utils/utf8_string.h"
 #include "../utils/arraylist.h"
 #include "jvm.h"
-#include "pthread.h"
 #include "../utils/hashset.h"
 
 

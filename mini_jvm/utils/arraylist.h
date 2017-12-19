@@ -39,7 +39,6 @@ CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 #ifndef ALGORITHM_ARRAYLIST_H
 #define ALGORITHM_ARRAYLIST_H
 
-#include <pthread.h>
 #include "spinlock.h"
 
 #ifdef __cplusplus

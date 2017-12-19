@@ -49,7 +49,6 @@ CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 extern "C" {
 #endif
 
-#include "pthread.h"
 #include "d_type.h"
 #include "spinlock.h"
 #include "arraylist.h"

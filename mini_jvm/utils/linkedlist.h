@@ -40,7 +40,6 @@
  */
 
 
-#include <pthread.h>
 #include "spinlock.h"
 
 #ifdef __cplusplus

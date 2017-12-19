@@ -53,7 +53,7 @@ void print_exception(Runtime *runtime) {
 }
 
 void objcache_create() {
-    obj_cache = arraylist_create(1024 * 256);
+    obj_cache = arraylist_create(1024 * 1);
 }
 
 void objcache_destory() {

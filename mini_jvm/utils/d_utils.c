@@ -3,8 +3,6 @@
 //
 
 #include <memory.h>
-#include <stdio.h>
-#include "sched.h"
 #include "d_type.h"
 #include "spinlock.h"
 

@@ -1,11 +1,11 @@
 //
 // Created by gust on 2017/9/25.
 //
-#include "stdlib.h"
 
 #ifndef MINI_JVM_JVM_TYPE_H
 #define MINI_JVM_JVM_TYPE_H
 
+#include "sys/types.h"
 #include "stdlib.h"
 //#define __MEM_LEAK_DETECT
 
