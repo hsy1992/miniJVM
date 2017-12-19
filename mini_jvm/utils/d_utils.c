@@ -61,23 +61,24 @@ void autoptr_NULL(autoptr **aref) {
  * 在分配的内存块前面加4个字节用于存放此块内存的长度
  *
  */
-//inline void *jvm_calloc(u32 size) {
-//    return calloc(size, 1);
-//}
-//
-//inline void *jvm_malloc(u32 size) {
-//    return malloc(size);
-//}
-//
-//inline void jvm_free(void *ptr) {
-//    free(ptr);
-//}
-//
-//void *jvm_realloc(void *pPtr, u32 size) {
-//    return realloc(pPtr, size);
-//
-//}
-//
+#ifndef __DEBUG
+inline void *jvm_calloc(u32 size) {
+    return calloc(size, 1);
+}
+
+inline void *jvm_malloc(u32 size) {
+    return malloc(size);
+}
+
+inline void jvm_free(void *ptr) {
+    free(ptr);
+}
+
+void *jvm_realloc(void *pPtr, u32 size) {
+    return realloc(pPtr, size);
+
+}
+#else
 static spinlock_t mlock = 0;
 
 void *jvm_malloc(u32 size) {
@@ -133,3 +134,4 @@ void *jvm_realloc(void *pPtr, u32 size) {
     return NULL;
 }
 
+#endif

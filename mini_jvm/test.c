@@ -27,7 +27,7 @@
 int main(int argc, char **argv) {
 
     s32 ret;
-//    ret = execute("../../javalib_test/dist/minijvm_javatest.jar:../../javalib_test/build/classes/", "test/Foo1", argc, (c8 **)argv);
+    ret = execute_jvm("../../javalib_test/dist/minijvm_javatest.jar:../../javalib_test/build/classes/", "test/Foo1", argc, (c8 **)argv);
     ret = execute_jvm("../../javalib/dist/mini_jvm_java.jar:../../javalib/build/classes/", "test/Foo1", argc,
                       (c8 **) argv);
 //    testMinizWrapper();

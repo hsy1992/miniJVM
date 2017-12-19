@@ -155,6 +155,8 @@ s32 execute_jvm(c8 *p_classpath, c8 *p_mainclass, s32 argc, c8 **argv) {
     //创建垃圾收集器
     garbage_collector_create();
 
+    memset(&data_type_classes, 0, DATATYPE_COUNT * sizeof(__refer));
+
     sys_classloader = classloader_create(p_classpath);
 
     array_classloader = classloader_create("");

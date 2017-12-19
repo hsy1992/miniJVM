@@ -34,6 +34,8 @@
 //libary option : -lpthread -lws2_32
 
 
+//#define __DEBUG
+
 #ifdef __cplusplus
 extern "C" {
 #endif

@@ -22,6 +22,18 @@ Runtime *main_runtime = NULL;
 
 c8 *data_type_str = "    ZCFDBSIJL[";
 __refer data_type_classes[DATATYPE_COUNT] ;
+s32 data_type_bytes[DATATYPE_COUNT] = {0, 0, 0, 0,
+                                       sizeof(c8),
+                                       sizeof(u16),
+                                       sizeof(f32),
+                                       sizeof(f64),
+                                       sizeof(c8),
+                                       sizeof(s16),
+                                       sizeof(s32),
+                                       sizeof(s64),
+                                       sizeof(__refer),
+                                       sizeof(__refer),
+};
 s32 STACK_LENGHT = 10240;
 s64 GARBAGE_PERIOD_MS = 1000;
 

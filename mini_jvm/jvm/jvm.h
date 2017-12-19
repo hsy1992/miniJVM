@@ -239,18 +239,8 @@ long  11
 #define DATATYPE_COUNT 14
 extern c8 *data_type_str;
 extern __refer data_type_classes[DATATYPE_COUNT];
-static const s32 data_type_bytes[DATATYPE_COUNT] = {0, 0, 0, 0,
-                                        sizeof(c8),
-                                        sizeof(u16),
-                                        sizeof(f32),
-                                        sizeof(f64),
-                                        sizeof(c8),
-                                        sizeof(s16),
-                                        sizeof(s32),
-                                        sizeof(s64),
-                                        sizeof(__refer),
-                                        sizeof(__refer),
-};
+extern s32 data_type_bytes[DATATYPE_COUNT];
+
 enum {
     DATATYPE_JCHAR = 5,
     DATATYPE_REFERENCE = 12,
