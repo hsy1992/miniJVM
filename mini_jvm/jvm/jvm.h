@@ -236,9 +236,10 @@ int  10
 long  11
   reference 12
  */
+#define DATATYPE_COUNT 14
 extern c8 *data_type_str;
-extern __refer data_type_classes[14];
-static const s32 data_type_bytes[14] = {0, 0, 0, 0,
+extern __refer data_type_classes[DATATYPE_COUNT];
+static const s32 data_type_bytes[DATATYPE_COUNT] = {0, 0, 0, 0,
                                         sizeof(c8),
                                         sizeof(u16),
                                         sizeof(f32),
@@ -250,12 +251,13 @@ static const s32 data_type_bytes[14] = {0, 0, 0, 0,
                                         sizeof(__refer),
                                         sizeof(__refer),
 };
-static const s32 DATATYPE_JCHAR = 5;
-static const s32 DATATYPE_REFERENCE = 12;
-static const s32 DATATYPE_ARRAY = 13;
-static const s32 DATATYPE_SHORT = 9;
-static const s32 DATATYPE_LONG = 11;
-
+enum {
+    DATATYPE_JCHAR = 5,
+    DATATYPE_REFERENCE = 12,
+    DATATYPE_ARRAY = 13,
+    DATATYPE_SHORT = 9,
+    DATATYPE_LONG = 11,
+};
 //访问标志
 static const u16 ACC_PUBLIC = 0x0001;
 static const u16 ACC_PRIVATE = 0x0002;
@@ -289,7 +291,7 @@ enum {
 };
 
 //指令指行返回状态
-enum{
+enum {
     RUNTIME_STATUS_NORMAL,
     RUNTIME_STATUS_RETURN,
     RUNTIME_STATUS_EXCEPTION,
@@ -332,7 +334,7 @@ typedef struct _MemoryBlock {
 } MemoryBlock;
 
 struct _ClassLoader {
-    ArrayList* classpath;
+    ArrayList *classpath;
     Hashtable *classes;
 
     //

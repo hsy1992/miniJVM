@@ -21,7 +21,7 @@ Instance *main_thread;//
 Runtime *main_runtime = NULL;
 
 c8 *data_type_str = "    ZCFDBSIJL[";
-__refer data_type_classes[14] = {NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL,};
+__refer data_type_classes[DATATYPE_COUNT] ;
 s32 STACK_LENGHT = 10240;
 s64 GARBAGE_PERIOD_MS = 1000;
 
