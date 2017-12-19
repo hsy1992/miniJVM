@@ -40,11 +40,6 @@
 		45FA646F1FE7D42600A2E7CE /* utf8_string.c in Sources */ = {isa = PBXBuildFile; fileRef = 45FA645F1FE7D42500A2E7CE /* utf8_string.c */; };
 		45FA64701FE7D42600A2E7CE /* linkedlist.c in Sources */ = {isa = PBXBuildFile; fileRef = 45FA64621FE7D42500A2E7CE /* linkedlist.c */; };
 		45FA64721FE7D42600A2E7CE /* hashtable.c in Sources */ = {isa = PBXBuildFile; fileRef = 45FA64661FE7D42600A2E7CE /* hashtable.c */; };
-		45FA647B1FE7D46C00A2E7CE /* memleak.c in Sources */ = {isa = PBXBuildFile; fileRef = 45FA64741FE7D46B00A2E7CE /* memleak.c */; };
-		45FA647C1FE7D46C00A2E7CE /* README in Resources */ = {isa = PBXBuildFile; fileRef = 45FA64751FE7D46B00A2E7CE /* README */; };
-		45FA647D1FE7D46C00A2E7CE /* example.c in Sources */ = {isa = PBXBuildFile; fileRef = 45FA64761FE7D46C00A2E7CE /* example.c */; };
-		45FA647E1FE7D46C00A2E7CE /* phashtable.c in Sources */ = {isa = PBXBuildFile; fileRef = 45FA64781FE7D46C00A2E7CE /* phashtable.c */; };
-		45FA647F1FE7D46C00A2E7CE /* LICENSE in Resources */ = {isa = PBXBuildFile; fileRef = 45FA647A1FE7D46C00A2E7CE /* LICENSE */; };
 		45FA64831FE7D47F00A2E7CE /* miniz_wrapper.c in Sources */ = {isa = PBXBuildFile; fileRef = 45FA64811FE7D47F00A2E7CE /* miniz_wrapper.c */; };
 		45FA64851FE7D6D900A2E7CE /* dist in Resources */ = {isa = PBXBuildFile; fileRef = 45FA64841FE7D6D900A2E7CE /* dist */; };
 /* End PBXBuildFile section */
@@ -123,13 +118,6 @@
 		45FA64651FE7D42600A2E7CE /* spinlock.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = spinlock.h; path = ../utils/spinlock.h; sourceTree = "<group>"; };
 		45FA64661FE7D42600A2E7CE /* hashtable.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = hashtable.c; path = ../utils/hashtable.c; sourceTree = "<group>"; };
 		45FA64671FE7D42600A2E7CE /* arraylist.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = arraylist.h; path = ../utils/arraylist.h; sourceTree = "<group>"; };
-		45FA64741FE7D46B00A2E7CE /* memleak.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = memleak.c; path = ../utils/cmem/memleak.c; sourceTree = "<group>"; };
-		45FA64751FE7D46B00A2E7CE /* README */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = README; path = ../utils/cmem/README; sourceTree = "<group>"; };
-		45FA64761FE7D46C00A2E7CE /* example.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = example.c; path = ../utils/cmem/example.c; sourceTree = "<group>"; };
-		45FA64771FE7D46C00A2E7CE /* memleak.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = memleak.h; path = ../utils/cmem/memleak.h; sourceTree = "<group>"; };
-		45FA64781FE7D46C00A2E7CE /* phashtable.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = phashtable.c; path = ../utils/cmem/phashtable.c; sourceTree = "<group>"; };
-		45FA64791FE7D46C00A2E7CE /* phashtable.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = phashtable.h; path = ../utils/cmem/phashtable.h; sourceTree = "<group>"; };
-		45FA647A1FE7D46C00A2E7CE /* LICENSE */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = LICENSE; path = ../utils/cmem/LICENSE; sourceTree = "<group>"; };
 		45FA64811FE7D47F00A2E7CE /* miniz_wrapper.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = miniz_wrapper.c; path = ../utils/miniz/miniz_wrapper.c; sourceTree = "<group>"; };
 		45FA64821FE7D47F00A2E7CE /* miniz_wrapper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = miniz_wrapper.h; path = ../utils/miniz/miniz_wrapper.h; sourceTree = "<group>"; };
 		45FA64841FE7D6D900A2E7CE /* dist */ = {isa = PBXFileReference; lastKnownFileType = folder; name = dist; path = ../../javalib/dist; sourceTree = "<group>"; };
@@ -260,7 +248,6 @@
 			isa = PBXGroup;
 			children = (
 				45FA64801FE7D47000A2E7CE /* miniz */,
-				45FA64731FE7D45A00A2E7CE /* cmem */,
 				45FA64551FE7D42400A2E7CE /* arraylist.c */,
 				45FA64671FE7D42600A2E7CE /* arraylist.h */,
 				45FA64561FE7D42400A2E7CE /* bytebuf.c */,
@@ -281,20 +268,6 @@
 				45FA64601FE7D42500A2E7CE /* utf8_string.h */,
 			);
 			name = utils;
-			sourceTree = "<group>";
-		};
-		45FA64731FE7D45A00A2E7CE /* cmem */ = {
-			isa = PBXGroup;
-			children = (
-				45FA64761FE7D46C00A2E7CE /* example.c */,
-				45FA647A1FE7D46C00A2E7CE /* LICENSE */,
-				45FA64741FE7D46B00A2E7CE /* memleak.c */,
-				45FA64771FE7D46C00A2E7CE /* memleak.h */,
-				45FA64781FE7D46C00A2E7CE /* phashtable.c */,
-				45FA64791FE7D46C00A2E7CE /* phashtable.h */,
-				45FA64751FE7D46B00A2E7CE /* README */,
-			);
-			name = cmem;
 			sourceTree = "<group>";
 		};
 		45FA64801FE7D47000A2E7CE /* miniz */ = {
@@ -414,8 +387,6 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				45FA647F1FE7D46C00A2E7CE /* LICENSE in Resources */,
-				45FA647C1FE7D46C00A2E7CE /* README in Resources */,
 				45C124391F87232100BF3925 /* LaunchScreen.storyboard in Resources */,
 				45C124361F87232100BF3925 /* Assets.xcassets in Resources */,
 				45C124341F87232100BF3925 /* Main.storyboard in Resources */,
@@ -444,13 +415,11 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				45FA647B1FE7D46C00A2E7CE /* memleak.c in Sources */,
 				45FA646D1FE7D42600A2E7CE /* hashset.c in Sources */,
 				455763F01FB6BCEE00EE3363 /* os_linux.c in Sources */,
 				455763F91FB6BCEE00EE3363 /* java_native_reflect.c in Sources */,
 				45C124311F87232100BF3925 /* ViewController.swift in Sources */,
 				455763F71FB6BCEE00EE3363 /* jvm_util.c in Sources */,
-				45FA647D1FE7D46C00A2E7CE /* example.c in Sources */,
 				45FA646B1FE7D42600A2E7CE /* d_utils.c in Sources */,
 				455763FB1FB6BCEE00EE3363 /* java_native_io.c in Sources */,
 				455763F11FB6BCEE00EE3363 /* jdwp.c in Sources */,
@@ -464,7 +433,6 @@
 				455763F61FB6BCEE00EE3363 /* garbage.c in Sources */,
 				45C1242F1F87232100BF3925 /* AppDelegate.swift in Sources */,
 				45FA64691FE7D42600A2E7CE /* bytebuf.c in Sources */,
-				45FA647E1FE7D46C00A2E7CE /* phashtable.c in Sources */,
 				455763F81FB6BCEE00EE3363 /* os_win.c in Sources */,
 				45FA646A1FE7D42600A2E7CE /* pairlist.c in Sources */,
 				45FA64701FE7D42600A2E7CE /* linkedlist.c in Sources */,
