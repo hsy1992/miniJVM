@@ -25,21 +25,13 @@
  *
  */
 int main(int argc, char **argv) {
-#ifdef __MEM_LEAK_DETECT
-    dbg_init(0);
-    //dbg_catch_sigsegv();
-#endif //__MEM_LEAK_DETECT
 
     s32 ret;
 //    ret = execute("../../javalib_test/dist/minijvm_javatest.jar:../../javalib_test/build/classes/", "test/Foo1", argc, (c8 **)argv);
-    ret = execute("../../javalib/dist/mini_jvm_java.jar:../../javalib/build/classes/", "test/Foo1", argc, (c8 **) argv);
+    ret = execute_jvm("../../javalib/dist/mini_jvm_java.jar:../../javalib/build/classes/", "test/Foo1", argc,
+                      (c8 **) argv);
 //    testMinizWrapper();
 
-
-#ifdef __MEM_LEAK_DETECT
-    dbg_heap_dump("");
-    dbg_mem_stat();
-#endif //__MEM_LEAK_DETECT
     return ret;
 }
 

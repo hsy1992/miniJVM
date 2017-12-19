@@ -41,11 +41,6 @@ set(SOURCE_FILES
         jvm/java_native_io.h
         jvm/class_load.c
         jvm/garbage.h
-        utils/cmem/memleak.c
-        utils/cmem/memleak.h
-        utils/cmem/example.c
-        utils/cmem/phashtable.c
-        utils/cmem/phashtable.h
         test.c
         utils/linkedlist.c
         utils/linkedlist.h

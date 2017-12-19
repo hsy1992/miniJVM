@@ -7,7 +7,6 @@
 
 #include "sys/types.h"
 #include "stdlib.h"
-//#define __MEM_LEAK_DETECT
 
 // x86   x64 ...
 #define __JVM_LITTLE_ENDIAN__ 1
@@ -28,10 +27,6 @@
 #define __JVM_OS_LINUX__ 1
 #endif
 
-
-#ifdef __MEM_LEAK_DETECT
-#include "./cmem/memleak.h"
-#endif //__MEM_LEAK_DETECT
 
 
 //compile
@@ -75,7 +70,6 @@ void autoptr_NULL(autoptr **aref);
 
 //======================= memory manage =============================
 
-#ifndef __MEM_LEAK_DETECT
 
 void *jvm_calloc(u32 size);
 
@@ -85,7 +79,6 @@ void jvm_free(void *ptr);
 
 void *jvm_realloc(void *pPtr, u32 size);
 
-#endif //__MEM_LEAK_DETECT
 
 #ifdef __cplusplus
 }

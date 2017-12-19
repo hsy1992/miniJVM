@@ -56,7 +56,6 @@ void autoptr_NULL(autoptr **aref) {
 
 //========================     mem alloc     =========================
 
-#ifndef __MEM_LEAK_DETECT
 
 /**
  * 在分配的内存块前面加4个字节用于存放此块内存的长度
@@ -134,4 +133,3 @@ void *jvm_realloc(void *pPtr, u32 size) {
     return NULL;
 }
 
-#endif //__MEM_LEAK_DETECT
