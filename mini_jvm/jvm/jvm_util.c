@@ -15,6 +15,10 @@
 #include "java_native_reflect.h"
 #include "jdwp.h"
 
+
+#ifdef __JVM_OS_MINGW__
+#include <pthread_time.h>
+#endif
 //==================================================================================
 
 void thread_lock_init(ThreadLock *lock) {
