@@ -168,7 +168,7 @@ class Foo1 {
                 System.out.println(" thread c=\"" + c + "\"");
             }
         });
-        //t.start();
+        t.start();
         //
         String c = null;
         for (int i = 0; i < MAX; i++) {

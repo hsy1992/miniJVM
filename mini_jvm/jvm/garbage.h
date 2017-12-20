@@ -48,7 +48,7 @@ enum {
     GARBAGE_THREAD_DEAD,
 };
 
-void *collect_thread_run(void *para);
+void *_collect_thread_run(void *para);
 
 void garbage_thread_lock(void);
 

@@ -46,17 +46,19 @@ extern "C" {
  *  11 Interface methodRef garbage_refer
  *  12 Name and type descriptor
  * */
-#define CONSTANT_UTF8           1
-#define CONSTANT_INTEGER        3
-#define CONSTANT_FLOAT          4
-#define CONSTANT_LONG           5
-#define CONSTANT_DOUBLE         6
-#define CONSTANT_CLASS          7
-#define CONSTANT_STRING_REF     8
-#define CONSTANT_FIELD_REF      9
-#define CONSTANT_METHOD_REF     10
-#define CONSTANT_INTERFACE_REF  11
-#define CONSTANT_NAME_AND_TYPE  12
+enum {
+    CONSTANT_UTF8 = 1,
+    CONSTANT_INTEGER = 3,
+    CONSTANT_FLOAT = 4,
+    CONSTANT_LONG = 5,
+    CONSTANT_DOUBLE = 6,
+    CONSTANT_CLASS = 7,
+    CONSTANT_STRING_REF = 8,
+    CONSTANT_FIELD_REF = 9,
+    CONSTANT_METHOD_REF = 10,
+    CONSTANT_INTERFACE_REF = 11,
+    CONSTANT_NAME_AND_TYPE = 12,
+};
 //=======================  typedef  =============================
 
 #if __JVM_LITTLE_ENDIAN__
@@ -249,19 +251,20 @@ enum {
     DATATYPE_LONG = 11,
 };
 //访问标志
-static const u16 ACC_PUBLIC = 0x0001;
-static const u16 ACC_PRIVATE = 0x0002;
-static const u16 ACC_PROTECTED = 0x0004;
-static const u16 ACC_STATIC = 0x0008;
-static const u16 ACC_FINAL = 0x0010;
-static const u16 ACC_SYNCHRONIZED = 0x0020;
-static const u16 ACC_VOLATILE = 0x0040;
-static const u16 ACC_TRANSIENT = 0x0080;
-static const u16 ACC_NATIVE = 0x0100;
-static const u16 ACC_INTERFACE = 0x0200;
-static const u16 ACC_ABSTRACT = 0x0400;
-static const u16 ACC_STRICT = 0x0800;
-
+enum {
+    ACC_PUBLIC = 0x0001,
+    ACC_PRIVATE = 0x0002,
+    ACC_PROTECTED = 0x0004,
+    ACC_STATIC = 0x0008,
+    ACC_FINAL = 0x0010,
+    ACC_SYNCHRONIZED = 0x0020,
+    ACC_VOLATILE = 0x0040,
+    ACC_TRANSIENT = 0x0080,
+    ACC_NATIVE = 0x0100,
+    ACC_INTERFACE = 0x0200,
+    ACC_ABSTRACT = 0x0400,
+    ACC_STRICT = 0x0800,
+};
 //类状态
 enum {
     CLASS_STATUS_RAW,
@@ -336,9 +339,6 @@ void classloader_classstatic_clear(ClassLoader *class_loader);
 
 void classloader_destory(ClassLoader *class_loader);
 
-void objcache_put(Instance *ins);
-
-Instance *objcache_get();
 
 //======================= class file =============================
 
@@ -463,60 +463,35 @@ struct _ConstantNameAndType {
 };
 
 typedef struct _ConstantPool {
-
-    /* UTF-8 String */
-//    ConstantUTF8 *utf8CP;
     ArrayList *utf8CP;
 
-    /* Integer */
-//    ConstantInteger *integerCP;
     ArrayList *integerCP;
 
-    /* Float */
-//    ConstantFloat *floatCP;
     ArrayList *floatCP;
 
-    /* Long */
-//    ConstantLong *longCP;
     ArrayList *longCP;
 
-    /* Double */
-//    ConstantDouble *doubleCP;
     ArrayList *doubleCP;
 
-    /* Class Reference */
-//    ConstantClassRef *classRef;
     ArrayList *classRef;
 
-    /* String Reference */
-//    ConstantStringRef *stringRef;
     ArrayList *stringRef;
 
-    /* Field Reference */
-//    ConstantFieldRef *fieldRef;
     ArrayList *fieldRef;
 
-    /* Method Reference */
-//    ConstantMethodRef *methodRef;
     ArrayList *methodRef;
 
-    /* Interface Reference */
-//    ConstantInterfaceRef *interfaceRef;
     ArrayList *interfaceRef;
 
-    /* Name And Type Reference */
-//    ConstantNameAndType *name_and_type;
     ArrayList *name_and_type;
 
 } ConstantPool;
 
 typedef struct _InterfacePool {
-    /* Class Reference */
     ConstantClassRef *clasz;
     s32 clasz_used;
 } InterfacePool;
 
-/* Attribute Info */
 typedef struct _AttributeInfo {
     u16 attribute_name_index;
     s32 attribute_length;
@@ -562,7 +537,6 @@ struct _CodeAttribute {
 
 };
 
-/* Field Info */
 struct _FieldInfo {
     u16 access_flags;
     u16 name_index;
@@ -578,13 +552,11 @@ struct _FieldInfo {
     u8 isrefer;
 };
 
-/*  Field Pool */
 typedef struct _FieldPool {
     FieldInfo *field;
     s32 field_used;
 } FieldPool;
 
-/* Method Info */
 struct _MethodInfo {
     u16 access_flags;
     u16 name_index;
@@ -604,7 +576,6 @@ struct _MethodInfo {
     s32 code_attr_idx;
 };
 
-/*  Method Pool */
 typedef struct _MethodPool {
     MethodInfo *method;
     s32 method_used;
@@ -697,9 +668,8 @@ struct _ClassType {
     s8 status;
 };
 
-void _INIT_CLASS(Class *_this);
 
-s32 _DESTORY_CLASS(Class *_this);
+s32 _DESTORY_CLASS(Class *clazz);
 
 Class *class_create(void);
 
@@ -719,9 +689,7 @@ s32 _LOAD_CLASS_FROM_BYTES(Class *_this, ByteBuf *buf);
 
 s32 class_prepar(Class *clazz);
 
-s32 convert_to_code_attribute(CodeAttribute *ca, AttributeInfo *attr, Class *clazz);
-
-void class_link(Class *clazz);
+void _class_link(Class *clazz);
 
 void class_clinit(Class *clazz, Runtime *runtime);
 
@@ -869,7 +837,7 @@ s32 is_cat1(StackEntry *entry);
 
 s32 is_ref(StackEntry *entry);
 
-void stack2localvar(MethodInfo *method, Runtime *father, Runtime *son);
+void _stack2localvar(MethodInfo *method, Runtime *father, Runtime *son);
 
 void peek_entry(RuntimeStack *stack, StackEntry *entry, int index);
 

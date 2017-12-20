@@ -183,7 +183,6 @@ public class Foo1 {
         }
     }
 
-    
     void t7() {
         int MAX = 500000;
         int PRINT_COUNT = 10000;
@@ -200,7 +199,7 @@ public class Foo1 {
                 } catch (Exception ex) {
                 }
 
-                long start =System.currentTimeMillis();
+                long start = System.currentTimeMillis();
                 System.out.println("thread here.");
                 int j = 0;
                 String c = null;
@@ -216,7 +215,7 @@ public class Foo1 {
                 }
                 System.out.println("list.size():" + list.size() + "  ,set.size():" + set.size());
                 System.out.println(" thread c=\"" + c + "\"");
-                System.out.println(" thread cost: "+(System.currentTimeMillis()-start));
+                System.out.println(" thread cost: " + (System.currentTimeMillis() - start));
             }
         });
         t.start();
@@ -756,8 +755,11 @@ public class Foo1 {
         }
     }
 
-    public static void main(String[] agrs) {
+    public static void main(String[] args) {
         try {
+            for (int i = 0; i < args.length; i++) {
+                System.out.println("args " + i + " :" + args[i]);
+            }
 //            BpDeepTest.main(agrs);
             Foo1.main();
 //            Foo2.main(agrs);

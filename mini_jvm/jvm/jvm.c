@@ -52,30 +52,6 @@ void print_exception(Runtime *runtime) {
     }
 }
 
-void objcache_create() {
-    obj_cache = arraylist_create(1024 * 1);
-}
-
-void objcache_destory() {
-    while (obj_cache->length) {
-        Instance *ins = arraylist_pop_back(obj_cache);
-        jvm_free(ins);
-    }
-    arraylist_destory(obj_cache);
-    obj_cache = NULL;
-}
-
-Instance *objcache_get() {
-    Instance *ins = arraylist_pop_back(obj_cache);
-    if (!ins) {
-        ins = jvm_calloc(sizeof(Instance));
-    }
-    return ins;
-}
-
-void objcache_put(Instance *ins) {
-    arraylist_push_back(obj_cache, ins);
-}
 
 ClassLoader *classloader_create(c8 *path) {
     ClassLoader *class_loader = jvm_calloc(sizeof(ClassLoader));
@@ -139,7 +115,14 @@ void classloader_classstatic_clear(ClassLoader *class_loader) {
         class_clear_refer(clazz);
     }
 }
-
+/**
+ *  load classes and execute main class
+ * @param p_classpath speicfy classpath split with ';' or ':' ,item is jar file or directory
+ * @param p_mainclass class that contain public void main(String[] args) method
+ * @param argc main class args count
+ * @param argv main class args value
+ * @return errcode
+ */
 s32 execute_jvm(c8 *p_classpath, c8 *p_mainclass, s32 argc, c8 **argv) {
     heap_size = 0;
     //

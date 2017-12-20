@@ -21,7 +21,7 @@ s32 zip_loadfile(char *jarpath, char *filename, ByteBuf *buf) {
         return -1;
     }
 
-    bytebuf_write_batch(buf, p, uncompressed_size);
+    bytebuf_write_batch(buf, p, (s32)uncompressed_size);
     mz_free(p);
     mz_zip_reader_end(&zipArchive);
     return 0;

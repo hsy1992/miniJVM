@@ -5,29 +5,29 @@
 #include "jvm_util.h"
 
 
-void dump_refer(void);
+void _dump_refer(void);
 
-void getMBName(void *memblock, Utf8String *name);
+void _getMBName(void *memblock, Utf8String *name);
 
-void __garbage_clear(void);
+void _garbage_clear(void);
 
-void garbage_destory_memobj(MemoryBlock *k);
+void _garbage_destory_memobj(MemoryBlock *k);
 
 void _garbage_change_flag(void);
 
-void garbage_copy_refer(void);
+void _garbage_copy_refer(void);
 
-s32 garbage_big_search(void);
+s32 _garbage_big_search(void);
 
-s32 garbage_pause_the_world(void);
+s32 _garbage_pause_the_world(void);
 
-s32 garbage_resume_the_world(void);
+s32 _garbage_resume_the_world(void);
 
-s32 checkAndWaitThreadIsSuspend(Runtime *runtime);
+s32 _checkAndWaitThreadIsSuspend(Runtime *runtime);
 
-void garbage_mark_object(__refer ref);
+void _garbage_mark_object(__refer ref);
 
-s32 garbage_copy_refer_thread(Runtime *pruntime);
+s32 _garbage_copy_refer_thread(Runtime *pruntime);
 
 
 /**
@@ -72,7 +72,7 @@ s32 garbage_collector_create() {
     pthread_attr_t attr;
     pthread_attr_init(&attr);
     pthread_attr_setdetachstate(&attr, PTHREAD_CREATE_DETACHED);
-    s32 rc = pthread_create(&collector->_garbage_thread, &attr, collect_thread_run, NULL);
+    s32 rc = pthread_create(&collector->_garbage_thread, &attr, _collect_thread_run, NULL);
     pthread_attr_destroy(&attr);
     if (rc) {
         jvm_printf("ERROR: garbage thread can't create is %d\n", rc);
@@ -88,7 +88,7 @@ void garbage_collector_destory() {
     }
     garbage_thread_unlock();
     //
-    __garbage_clear();
+    _garbage_clear();
     //
     hashset_destory(collector->objs_holder);
     collector->objs_holder = NULL;
@@ -102,7 +102,7 @@ void garbage_collector_destory() {
 }
 
 
-void __garbage_clear() {
+void _garbage_clear() {
     jvm_printf("[INFO]garbage clear start========================\n");
 
     //
@@ -179,7 +179,7 @@ void garbage_thread_notifyall() {
 }
 //=============================   debug ===================================
 
-void getMBName(void *memblock, Utf8String *name) {
+void _getMBName(void *memblock, Utf8String *name) {
 
     MemoryBlock *mb = (MemoryBlock *) memblock;
     if (!mb) {
@@ -222,12 +222,12 @@ void getMBName(void *memblock, Utf8String *name) {
 /**
  * 调试用，打印所有引用信息
  */
-void dump_refer() {
+void _dump_refer() {
     //jvm_printf("%d\n",sizeof(struct _Hashset));
     MemoryBlock *mb = collector->tmp_header;
     while (mb) {
         Utf8String *name = utf8_create();
-        getMBName(mb, name);
+        _getMBName(mb, name);
         jvm_printf("   %s[%llx] \n", utf8_cstr(name), (s64) (long) mb);
         utf8_destory(name);
         mb = mb->next;
@@ -257,7 +257,7 @@ void _garbage_remove_out_holder(__refer ref) {
 }
 //==============================   thread_run() =====================================
 
-void *collect_thread_run(void *para) {
+void *_collect_thread_run(void *para) {
     s64 lastgc = currentTimeMillis();
     while (1) {
         threadSleep(10);
@@ -301,8 +301,8 @@ s64 garbage_collect() {
     //prepar gc resource ,
     garbage_thread_lock();
 
-    if (garbage_pause_the_world() != 0) {
-        garbage_resume_the_world();
+    if (_garbage_pause_the_world() != 0) {
+        _garbage_resume_the_world();
         return -1;
     }
 //    jvm_printf("garbage_pause_the_world %lld\n", (currentTimeMillis() - time_startAt));
@@ -318,7 +318,7 @@ s64 garbage_collect() {
     }
 //    jvm_printf("garbage_move_cache %lld\n", (currentTimeMillis() - time_startAt));
 //    time_startAt = currentTimeMillis();
-    garbage_copy_refer();
+    _garbage_copy_refer();
     //
 //    jvm_printf("garbage_copy_refer %lld\n", (currentTimeMillis() - time_startAt));
 //    time_startAt = currentTimeMillis();
@@ -326,10 +326,10 @@ s64 garbage_collect() {
     //real GC start
     //
     _garbage_change_flag();
-    garbage_big_search();
+    _garbage_big_search();
 //    jvm_printf("garbage_big_search %lld\n", (currentTimeMillis() - time_startAt));
 //    time_startAt = currentTimeMillis();
-    garbage_resume_the_world();
+    _garbage_resume_the_world();
     garbage_thread_unlock();
 
 //    jvm_printf("garbage_resume_the_world %lld\n", (currentTimeMillis() - time_startAt));
@@ -345,7 +345,7 @@ s64 garbage_collect() {
         curmb = nextmb;
         nextmb = curmb->next;
         if (curmb->garbage_mark != collector->flag_refer) {
-            garbage_destory_memobj(curmb);
+            _garbage_destory_memobj(curmb);
             if (prevmb)prevmb->next = nextmb;
             else collector->header = nextmb;
             del++;
@@ -375,7 +375,7 @@ void _garbage_change_flag() {
 }
 
 
-void garbage_destory_memobj(MemoryBlock *mb) {
+void _garbage_destory_memobj(MemoryBlock *mb) {
 #if _JVM_DEBUG_GARBAGE_DUMP
     Utf8String *sus = utf8_create();
     getMBName(mb, sus);
@@ -393,7 +393,7 @@ void _list_iter_thread_pause(ArrayListValue value, void *para) {
     jthread_suspend((Runtime *) value);
 }
 
-s32 garbage_pause_the_world(void) {
+s32 _garbage_pause_the_world(void) {
     s32 i;
     //jvm_printf("thread size:%d\n", thread_list->length);
 
@@ -402,7 +402,7 @@ s32 garbage_pause_the_world(void) {
 
         for (i = 0; i < thread_list->length; i++) {
             Runtime *runtime = arraylist_get_value(thread_list, i);
-            if (checkAndWaitThreadIsSuspend(runtime) == -1) {
+            if (_checkAndWaitThreadIsSuspend(runtime) == -1) {
                 return -1;
             }
 #if _JVM_DEBUG_GARBAGE_DUMP
@@ -419,7 +419,7 @@ s32 garbage_pause_the_world(void) {
         Runtime *runtime = jdwpserver.runtime;
         if (runtime) {
             jthread_suspend(runtime);
-            if (checkAndWaitThreadIsSuspend(runtime) == -1) {
+            if (_checkAndWaitThreadIsSuspend(runtime) == -1) {
                 return -1;
             }
         }
@@ -427,7 +427,7 @@ s32 garbage_pause_the_world(void) {
     return 0;
 }
 
-s32 garbage_resume_the_world() {
+s32 _garbage_resume_the_world() {
     s32 i;
     for (i = 0; i < thread_list->length; i++) {
         Runtime *runtime = arraylist_get_value(thread_list, i);
@@ -454,7 +454,7 @@ s32 garbage_resume_the_world() {
 }
 
 
-s32 checkAndWaitThreadIsSuspend(Runtime *runtime) {
+s32 _checkAndWaitThreadIsSuspend(Runtime *runtime) {
     while (!(runtime->threadInfo->is_suspend) &&
            !(runtime->threadInfo->thread_status == THREAD_STATUS_SLEEPING) &&
            !(runtime->threadInfo->thread_status == THREAD_STATUS_WAIT) &&
@@ -474,11 +474,11 @@ s32 checkAndWaitThreadIsSuspend(Runtime *runtime) {
  * mark thread's localvar and stack refered obj and deep search
  * @return ret
  */
-s32 garbage_big_search() {
+s32 _garbage_big_search() {
     s32 i, len;
     for (i = 0, len = collector->runtime_refer_copy->length; i < len; i++) {
         __refer r = arraylist_get_value(collector->runtime_refer_copy, i);
-        garbage_mark_object(r);
+        _garbage_mark_object(r);
     }
 
     HashsetIterator hi;
@@ -486,26 +486,26 @@ s32 garbage_big_search() {
     while (hashset_iter_has_more(&hi)) {
         HashsetKey k = hashset_iter_next_key(&hi);
 
-        garbage_mark_object(k);
+        _garbage_mark_object(k);
     }
 
     return 0;
 }
 
-void garbage_copy_refer() {
+void _garbage_copy_refer() {
     arraylist_clear(collector->runtime_refer_copy);
     s32 i;
     //jvm_printf("thread set size:%d\n", thread_list->length);
     for (i = 0; i < thread_list->length; i++) {
         Runtime *runtime = threadlist_get(i);
-        garbage_copy_refer_thread(runtime);
+        _garbage_copy_refer_thread(runtime);
     }
 //    arraylist_iter_safe(thread_list, _list_iter_iter_copy, NULL);
     //调试线程
     if (java_debug) {
         Runtime *runtime = jdwpserver.runtime;
         if (runtime) {
-            garbage_copy_refer_thread(runtime);
+            _garbage_copy_refer_thread(runtime);
         }
     }
 }
@@ -520,7 +520,7 @@ void garbage_copy_refer() {
  */
 
 
-s32 garbage_copy_refer_thread(Runtime *pruntime) {
+s32 _garbage_copy_refer_thread(Runtime *pruntime) {
     arraylist_push_back(collector->runtime_refer_copy, pruntime->threadInfo->jthread);
 
     s32 i;
@@ -552,7 +552,7 @@ s32 garbage_copy_refer_thread(Runtime *pruntime) {
 }
 
 
-static inline void instance_mark_refer(Instance *ins) {
+static inline void _instance_mark_refer(Instance *ins) {
     s32 i, len;
     Class *clazz = ins->mb.clazz;
     while (clazz) {
@@ -563,7 +563,7 @@ static inline void instance_mark_refer(Instance *ins) {
                 c8 *ptr = getInstanceFieldPtr(ins, fi);
                 if (ptr) {
                     __refer ref = getFieldRefer(ptr);
-                    garbage_mark_object(ref);
+                    _garbage_mark_object(ref);
                 }
             }
         }
@@ -572,7 +572,7 @@ static inline void instance_mark_refer(Instance *ins) {
 }
 
 
-static inline void jarray_mark_refer(Instance *arr) {
+static inline void _jarray_mark_refer(Instance *arr) {
     if (arr && arr->mb.type == MEM_TYPE_ARR) {
         if (isDataReferByIndex(arr->mb.arr_type_index)) {
             s32 i;
@@ -580,7 +580,7 @@ static inline void jarray_mark_refer(Instance *arr) {
             for (i = 0; i < arr->arr_length; i++) {//把所有引用去除，否则不会垃圾回收
                 l2d.l = 0;
                 jarray_get_field(arr, i, &l2d);
-                garbage_mark_object(l2d.r);
+                _garbage_mark_object(l2d.r);
             }
         }
     }
@@ -591,7 +591,7 @@ static inline void jarray_mark_refer(Instance *arr) {
  * mark class static field is used
  * @param clazz class
  */
-static inline void class_mark_refer(Class *clazz) {
+static inline void _class_mark_refer(Class *clazz) {
     s32 i, len;
     if (clazz->field_static) {
         FieldPool *fp = &clazz->fieldPool;
@@ -601,7 +601,7 @@ static inline void class_mark_refer(Class *clazz) {
                 c8 *ptr = getStaticFieldPtr(fi);
                 if (ptr) {
                     __refer ref = getFieldRefer(ptr);
-                    garbage_mark_object(ref);
+                    _garbage_mark_object(ref);
                 }
             }
         }
@@ -614,20 +614,20 @@ static inline void class_mark_refer(Class *clazz) {
  * @param ref addr
  */
 
-void garbage_mark_object(__refer ref) {
+void _garbage_mark_object(__refer ref) {
     if (ref) {
         MemoryBlock *mb = (MemoryBlock *) ref;
         if (collector->flag_refer != mb->garbage_mark) {
             mb->garbage_mark = collector->flag_refer;
             switch (mb->type) {
                 case MEM_TYPE_INS:
-                    instance_mark_refer((Instance *) mb);
+                    _instance_mark_refer((Instance *) mb);
                     break;
                 case MEM_TYPE_ARR:
-                    jarray_mark_refer((Instance *) mb);
+                    _jarray_mark_refer((Instance *) mb);
                     break;
                 case MEM_TYPE_CLASS:
-                    class_mark_refer((Class *) mb);
+                    _class_mark_refer((Class *) mb);
                     break;
             }
         }

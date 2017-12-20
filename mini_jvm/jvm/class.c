@@ -8,7 +8,6 @@
 #include "garbage.h"
 
 
-void class_clear_refer(Class *clazz);
 //===============================    创建及加载  ==================================
 
 
@@ -22,38 +21,15 @@ Class *class_create() {
     clazz->status = CLASS_STATUS_RAW;
     clazz->_load_class_from_bytes = _LOAD_CLASS_FROM_BYTES;
     //
-    _INIT_CLASS(clazz);
+    jthreadlock_create(&clazz->mb);
     constant_list_create(clazz);
     return clazz;
-}
-
-void _INIT_CLASS(Class *_this) {
-    jthreadlock_create(&_this->mb);
 }
 
 s32 class_destory(Class *clazz) {
 
     _DESTORY_CLASS(clazz);
     jvm_free(clazz);
-    return 0;
-}
-
-s32 _DESTORY_CLASS(Class *_this) {
-    //
-    //class_clear_refer(_this);
-
-    //
-    _class_method_info_destory(_this);
-    _class_interface_pool_destory(_this);
-    _class_field_info_destory(_this);
-    _class_constant_pool_destory(_this);
-    _class_attribute_info_destory(_this);
-    _this->field_static = NULL;
-    if (_this->constant_item_ptr)jvm_free(_this->constant_item_ptr);
-    _this->constant_item_ptr = NULL;
-    jthreadlock_destory(&_this->mb);
-    constant_list_destory(_this);
-    utf8_destory(_this->name);
     return 0;
 }
 

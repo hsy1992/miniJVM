@@ -76,7 +76,7 @@ void *jdwp_thread_dispacher(void *para) {
 s32 jdwp_start_server() {
     if (!java_debug)return 0;
     jdwpserver.ip = utf8_create();
-    jdwpserver.port = 8000;
+    jdwpserver.port = JDWP_TCP_PORT;
     jdwpserver.exit = 0;
     jdwpserver.clients = arraylist_create(0);
     jdwpserver.events = arraylist_create(0);

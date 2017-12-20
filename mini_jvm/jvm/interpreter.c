@@ -215,7 +215,7 @@ enum {
 /* 0xCA */ op_breakpoint,
 };
 
-static inline s32 op_aload_n(u8 **opCode, Runtime *runtime, s32 i) {
+static inline s32 _op_aload_n(u8 **opCode, Runtime *runtime, s32 i) {
     __refer value = localvar_getRefer(runtime, i);
     push_ref(runtime->stack, value);
 #if _JVM_DEBUG_BYTECODE_DETAIL > 5
@@ -227,7 +227,7 @@ static inline s32 op_aload_n(u8 **opCode, Runtime *runtime, s32 i) {
 }
 
 
-static inline s32 op_ifload_n(u8 **opCode, Runtime *runtime, s32 i) {
+static inline s32 _op_ifload_n(u8 **opCode, Runtime *runtime, s32 i) {
     Int2Float i2f;
     i2f.i = localvar_getInt(runtime, i);
 #if _JVM_DEBUG_BYTECODE_DETAIL > 5
@@ -240,7 +240,7 @@ static inline s32 op_ifload_n(u8 **opCode, Runtime *runtime, s32 i) {
 }
 
 
-static inline s32 op_ldc_impl(u8 **opCode, Runtime *runtime, RuntimeStack *stack, s32 index) {
+static inline s32 _op_ldc_impl(u8 **opCode, Runtime *runtime, RuntimeStack *stack, s32 index) {
     Class *clazz = runtime->clazz;
 
     ConstantItem *item = find_constant_item(clazz, index);
@@ -281,7 +281,7 @@ static inline s32 op_ldc_impl(u8 **opCode, Runtime *runtime, RuntimeStack *stack
     return 0;
 }
 
-static inline s32 op_iconst_n(u8 **opCode, Runtime *runtime, s32 i) {
+static inline s32 _op_iconst_n(u8 **opCode, Runtime *runtime, s32 i) {
     push_int(runtime->stack, i);
 #if _JVM_DEBUG_BYTECODE_DETAIL > 5
     invoke_deepth(runtime);
@@ -291,7 +291,7 @@ static inline s32 op_iconst_n(u8 **opCode, Runtime *runtime, s32 i) {
     return 0;
 }
 
-static inline s32 op_dconst_n(u8 **opCode, Runtime *runtime, f64 d) {
+static inline s32 _op_dconst_n(u8 **opCode, Runtime *runtime, f64 d) {
     push_double(runtime->stack, d);
 
 #if _JVM_DEBUG_BYTECODE_DETAIL > 5
@@ -302,7 +302,7 @@ static inline s32 op_dconst_n(u8 **opCode, Runtime *runtime, f64 d) {
     return 0;
 }
 
-static inline s32 op_fconst_n(u8 **opCode, Runtime *runtime, f32 f) {
+static inline s32 _op_fconst_n(u8 **opCode, Runtime *runtime, f32 f) {
     push_float(runtime->stack, f);
 
 #if _JVM_DEBUG_BYTECODE_DETAIL > 5
@@ -313,7 +313,7 @@ static inline s32 op_fconst_n(u8 **opCode, Runtime *runtime, f32 f) {
     return 0;
 }
 
-static inline s32 op_lconst_n(u8 **opCode, Runtime *runtime, s64 i) {
+static inline s32 _op_lconst_n(u8 **opCode, Runtime *runtime, s64 i) {
 
     push_long(runtime->stack, i);
 #if _JVM_DEBUG_BYTECODE_DETAIL > 5
@@ -324,7 +324,7 @@ static inline s32 op_lconst_n(u8 **opCode, Runtime *runtime, s64 i) {
     return 0;
 }
 
-static inline s32 op_lload_n(u8 **opCode, Runtime *runtime, s32 index) {
+static inline s32 _op_lload_n(u8 **opCode, Runtime *runtime, s32 index) {
     Long2Double l2d;
     l2d.i2l.i1 = localvar_getInt(runtime, index);
     l2d.i2l.i0 = localvar_getInt(runtime, index + 1);
@@ -339,7 +339,7 @@ static inline s32 op_lload_n(u8 **opCode, Runtime *runtime, s32 index) {
     return 0;
 }
 
-static inline s32 op_istore_n(u8 **opCode, Runtime *runtime, RuntimeStack *stack, s32 i) {
+static inline s32 _op_istore_n(u8 **opCode, Runtime *runtime, RuntimeStack *stack, s32 i) {
     s32 value = pop_int(stack);
 #if _JVM_DEBUG_BYTECODE_DETAIL > 5
     invoke_deepth(runtime);
@@ -350,7 +350,7 @@ static inline s32 op_istore_n(u8 **opCode, Runtime *runtime, RuntimeStack *stack
     return 0;
 }
 
-static inline s32 op_astore_n(u8 **opCode, Runtime *runtime, RuntimeStack *stack, s32 i) {
+static inline s32 _op_astore_n(u8 **opCode, Runtime *runtime, RuntimeStack *stack, s32 i) {
     __refer value = pop_ref(stack);
 #if _JVM_DEBUG_BYTECODE_DETAIL > 5
     invoke_deepth(runtime);
@@ -361,7 +361,7 @@ static inline s32 op_astore_n(u8 **opCode, Runtime *runtime, RuntimeStack *stack
     return 0;
 }
 
-static inline s32 op_lstore_n(u8 **opCode, Runtime *runtime, RuntimeStack *stack, s32 i) {
+static inline s32 _op_lstore_n(u8 **opCode, Runtime *runtime, RuntimeStack *stack, s32 i) {
     Long2Double l2d;
     l2d.l = pop_long(stack);
 
@@ -376,7 +376,7 @@ static inline s32 op_lstore_n(u8 **opCode, Runtime *runtime, RuntimeStack *stack
     return 0;
 }
 
-static inline s32 op_putfield_impl(u8 **opCode, Runtime *runtime, RuntimeStack *stack, s32 isStatic) {
+static inline s32 _op_putfield_impl(u8 **opCode, Runtime *runtime, RuntimeStack *stack, s32 isStatic) {
     Class *clazz = runtime->clazz;
     Short2Char s2c;
     s2c.c1 = opCode[0][1];
@@ -443,7 +443,7 @@ static inline s32 op_putfield_impl(u8 **opCode, Runtime *runtime, RuntimeStack *
     return 0;
 }
 
-static inline s32 op_getfield_impl(u8 **opCode, Runtime *runtime, RuntimeStack *stack, s32 isStatic) {
+static inline s32 _op_getfield_impl(u8 **opCode, Runtime *runtime, RuntimeStack *stack, s32 isStatic) {
     Class *clazz = runtime->clazz;
     Short2Char s2c;
     s2c.c1 = opCode[0][1];
@@ -514,7 +514,7 @@ static inline s32 op_getfield_impl(u8 **opCode, Runtime *runtime, RuntimeStack *
 
 }
 
-static inline s32 op_newarray_impl(Runtime *runtime, RuntimeStack *stack, s32 count, s32 typeIdx, Utf8String *type) {
+static inline s32 _op_newarray_impl(Runtime *runtime, RuntimeStack *stack, s32 count, s32 typeIdx, Utf8String *type) {
     Instance *arr = jarray_create(count, typeIdx, type);
 
 #if _JVM_DEBUG_BYTECODE_DETAIL > 5
@@ -532,7 +532,7 @@ static inline s32 op_newarray_impl(Runtime *runtime, RuntimeStack *stack, s32 co
     return 0;
 }
 
-static inline s32 op_ifstore_impl(u8 **opCode, Runtime *runtime, RuntimeStack *stack) {
+static inline s32 _op_ifstore_impl(u8 **opCode, Runtime *runtime, RuntimeStack *stack) {
     Short2Char s2c;
     if (runtime->wideMode) {
         s2c.c1 = opCode[0][1];
@@ -554,7 +554,7 @@ static inline s32 op_ifstore_impl(u8 **opCode, Runtime *runtime, RuntimeStack *s
     return 0;
 }
 
-static inline s32 op_ldstore_impl(u8 **opCode, Runtime *runtime, RuntimeStack *stack) {
+static inline s32 _op_ldstore_impl(u8 **opCode, Runtime *runtime, RuntimeStack *stack) {
 
     Short2Char s2c;
     if (runtime->wideMode) {
@@ -579,7 +579,7 @@ static inline s32 op_ldstore_impl(u8 **opCode, Runtime *runtime, RuntimeStack *s
     return 0;
 }
 
-s32 op_notsupport(u8 **opCode, Runtime *runtime) {
+s32 _op_notsupport(u8 **opCode, Runtime *runtime) {
     invoke_deepth(runtime);
     jvm_printf("not support instruct [%x]\n", opCode[0][0]);
     exit(-3);
@@ -589,7 +589,7 @@ s32 op_notsupport(u8 **opCode, Runtime *runtime) {
 //----------------------------------  tool func  ------------------------------------------
 
 static ExceptionTable *
-find_exception_handler(Runtime *runtime, Instance *exception, CodeAttribute *ca, s32 offset, __refer exception_ref) {
+_find_exception_handler(Runtime *runtime, Instance *exception, CodeAttribute *ca, s32 offset, __refer exception_ref) {
     Instance *ins = (Instance *) exception_ref;
 
     s32 i;
@@ -611,7 +611,7 @@ find_exception_handler(Runtime *runtime, Instance *exception, CodeAttribute *ca,
 }
 
 
-static void printCodeAttribute(CodeAttribute *ca, Class *p) {
+static void _printCodeAttribute(CodeAttribute *ca, Class *p) {
     s32 i = 0;
     s32 tmp = 0;
     u8 opCode = 0;
@@ -630,7 +630,7 @@ static void printCodeAttribute(CodeAttribute *ca, Class *p) {
  * @param father  runtime of father
  * @param son     runtime of son
  */
-void stack2localvar(MethodInfo *method, Runtime *father, Runtime *son) {
+void _stack2localvar(MethodInfo *method, Runtime *father, Runtime *son) {
 
     Utf8String *paraType = method->paraType;
     s32 i;
@@ -666,7 +666,7 @@ void stack2localvar(MethodInfo *method, Runtime *father, Runtime *son) {
 
 }
 
-s32 synchronized_lock_method(MethodInfo *method, Runtime *runtime) {
+s32 _synchronized_lock_method(MethodInfo *method, Runtime *runtime) {
     //synchronized process
     {
         if (method->access_flags & ACC_STATIC) {
@@ -678,7 +678,7 @@ s32 synchronized_lock_method(MethodInfo *method, Runtime *runtime) {
     return 0;
 }
 
-s32 synchronized_unlock_method(MethodInfo *method, Runtime *runtime) {
+s32 _synchronized_unlock_method(MethodInfo *method, Runtime *runtime) {
     //synchronized process
     {
         if (method->access_flags & ACC_STATIC) {
@@ -702,7 +702,7 @@ s32 execute_method(MethodInfo *method, Runtime *pruntime, Class *clazz) {
 
     if (method->access_flags & ACC_NATIVE) {//本地方法
         localvar_init(runtime, method->para_count + 1);//可能有非静态本地方法调用，因此+1
-        stack2localvar(method, pruntime, runtime);
+        _stack2localvar(method, pruntime, runtime);
         stackSize = pruntime->stack->size;
         //缓存调用本地方法
         if (!method->native_func) { //把本地方法找出来缓存
@@ -716,9 +716,9 @@ s32 execute_method(MethodInfo *method, Runtime *pruntime, Class *clazz) {
                                                         utf8_cstr(method->descriptor));
         jvm_printf("%s.%s()  {\n", native->clzname, native->methodname);
 #endif
-        if (method_sync)synchronized_lock_method(method, runtime);
+        if (method_sync)_synchronized_lock_method(method, runtime);
         ret = method->native_func(runtime, clazz);
-        if (method_sync)synchronized_unlock_method(method, runtime);
+        if (method_sync)_synchronized_unlock_method(method, runtime);
         localvar_dispose(runtime);
 #if _JVM_DEBUG_BYTECODE_DETAIL > 3
         invoke_deepth(runtime);
@@ -729,9 +729,9 @@ s32 execute_method(MethodInfo *method, Runtime *pruntime, Class *clazz) {
         CodeAttribute *ca = method->attributes[j].converted_code;
         if (ca) {
             localvar_init(runtime, ca->max_locals + 1);
-            stack2localvar(method, pruntime, runtime);
+            _stack2localvar(method, pruntime, runtime);
             stackSize = pruntime->stack->size;
-            if (method_sync)synchronized_lock_method(method, runtime);
+            if (method_sync)_synchronized_lock_method(method, runtime);
 
 #if _JVM_DEBUG_BYTECODE_DUMP
             jvm_printf("---------------------------------\n");
@@ -798,75 +798,75 @@ s32 execute_method(MethodInfo *method, Runtime *pruntime, Class *clazz) {
                         break;
                     }
                     case op_iconst_m1: {
-                        i_r = op_iconst_n(opCode, runtime, -1);
+                        i_r = _op_iconst_n(opCode, runtime, -1);
                         break;
                     }
 
 
                     case op_iconst_0: {
-                        i_r = op_iconst_n(opCode, runtime, 0);
+                        i_r = _op_iconst_n(opCode, runtime, 0);
                         break;
                     }
 
                     case op_iconst_1: {
-                        i_r = op_iconst_n(opCode, runtime, 1);
+                        i_r = _op_iconst_n(opCode, runtime, 1);
                         break;
                     }
 
                     case op_iconst_2: {
-                        i_r = op_iconst_n(opCode, runtime, 2);
+                        i_r = _op_iconst_n(opCode, runtime, 2);
                         break;
                     }
 
                     case op_iconst_3: {
-                        i_r = op_iconst_n(opCode, runtime, 3);
+                        i_r = _op_iconst_n(opCode, runtime, 3);
                         break;
                     }
 
                     case op_iconst_4: {
-                        i_r = op_iconst_n(opCode, runtime, 4);
+                        i_r = _op_iconst_n(opCode, runtime, 4);
                         break;
                     }
 
                     case op_iconst_5: {
-                        i_r = op_iconst_n(opCode, runtime, 5);
+                        i_r = _op_iconst_n(opCode, runtime, 5);
                         break;
                     }
 
                     case op_lconst_0: {
-                        i_r = op_lconst_n(opCode, runtime, 0);
+                        i_r = _op_lconst_n(opCode, runtime, 0);
                         break;
                     }
 
                     case op_lconst_1: {
-                        i_r = op_lconst_n(opCode, runtime, 1);
+                        i_r = _op_lconst_n(opCode, runtime, 1);
                         break;
                     }
 
 
                     case op_fconst_0: {
-                        i_r = op_fconst_n(opCode, runtime, 0.0f);
+                        i_r = _op_fconst_n(opCode, runtime, 0.0f);
                         break;
                     }
 
                     case op_fconst_1: {
-                        i_r = op_fconst_n(opCode, runtime, 1.0f);
+                        i_r = _op_fconst_n(opCode, runtime, 1.0f);
                         break;
                     }
 
                     case op_fconst_2: {
-                        i_r = op_fconst_n(opCode, runtime, 2.0f);
+                        i_r = _op_fconst_n(opCode, runtime, 2.0f);
                         break;
                     }
 
 
                     case op_dconst_0: {
-                        i_r = op_dconst_n(opCode, runtime, 0.0f);
+                        i_r = _op_dconst_n(opCode, runtime, 0.0f);
                         break;
                     }
 
                     case op_dconst_1: {
-                        i_r = op_dconst_n(opCode, runtime, 1.0f);
+                        i_r = _op_dconst_n(opCode, runtime, 1.0f);
                         break;
                     }
 
@@ -901,7 +901,7 @@ s32 execute_method(MethodInfo *method, Runtime *pruntime, Class *clazz) {
                     case op_ldc: {
                         s32 index = opCode[0][1];
                         *opCode = *opCode + 2;
-                        i_r = op_ldc_impl(opCode, runtime, stack, index);
+                        i_r = _op_ldc_impl(opCode, runtime, stack, index);
                         break;
                     }
 
@@ -910,7 +910,7 @@ s32 execute_method(MethodInfo *method, Runtime *pruntime, Class *clazz) {
                         s2c.c1 = opCode[0][1];
                         s2c.c0 = opCode[0][2];
                         s32 index = s2c.s;
-                        i_r = op_ldc_impl(opCode, runtime, stack, index);
+                        i_r = _op_ldc_impl(opCode, runtime, stack, index);
                         *opCode = *opCode + 3;
                         break;
                     }
@@ -1008,103 +1008,103 @@ s32 execute_method(MethodInfo *method, Runtime *pruntime, Class *clazz) {
                     }
 
                     case op_iload_0: {
-                        i_r = op_ifload_n(opCode, runtime, 0);
+                        i_r = _op_ifload_n(opCode, runtime, 0);
                         break;
                     }
 
                     case op_iload_1: {
-                        i_r = op_ifload_n(opCode, runtime, 1);
+                        i_r = _op_ifload_n(opCode, runtime, 1);
                         break;
                     }
 
                     case op_iload_2: {
-                        i_r = op_ifload_n(opCode, runtime, 2);
+                        i_r = _op_ifload_n(opCode, runtime, 2);
                         break;
                     }
 
                     case op_iload_3: {
-                        i_r = op_ifload_n(opCode, runtime, 3);
+                        i_r = _op_ifload_n(opCode, runtime, 3);
                         break;
                     }
 
                     case op_lload_0: {
-                        i_r = op_lload_n(opCode, runtime, 0);
+                        i_r = _op_lload_n(opCode, runtime, 0);
                         break;
                     }
 
                     case op_lload_1: {
-                        i_r = op_lload_n(opCode, runtime, 1);
+                        i_r = _op_lload_n(opCode, runtime, 1);
                         break;
                     }
 
                     case op_lload_2: {
-                        i_r = op_lload_n(opCode, runtime, 2);
+                        i_r = _op_lload_n(opCode, runtime, 2);
                         break;
                     }
 
                     case op_lload_3: {
-                        i_r = op_lload_n(opCode, runtime, 3);
+                        i_r = _op_lload_n(opCode, runtime, 3);
                         break;
                     }
 
                     case op_fload_0: {
-                        i_r = op_ifload_n(opCode, runtime, 0);
+                        i_r = _op_ifload_n(opCode, runtime, 0);
                         break;
                     }
 
                     case op_fload_1: {
-                        i_r = op_ifload_n(opCode, runtime, 1);
+                        i_r = _op_ifload_n(opCode, runtime, 1);
                         break;
                     }
 
                     case op_fload_2: {
-                        i_r = op_ifload_n(opCode, runtime, 2);
+                        i_r = _op_ifload_n(opCode, runtime, 2);
                         break;
                     }
 
                     case op_fload_3: {
-                        i_r = op_ifload_n(opCode, runtime, 3);
+                        i_r = _op_ifload_n(opCode, runtime, 3);
                         break;
                     }
 
 
                     case op_dload_0: {
-                        i_r = op_lload_n(opCode, runtime, 0);
+                        i_r = _op_lload_n(opCode, runtime, 0);
                         break;
                     }
 
                     case op_dload_1: {
-                        i_r = op_lload_n(opCode, runtime, 1);
+                        i_r = _op_lload_n(opCode, runtime, 1);
                         break;
                     }
 
                     case op_dload_2: {
-                        i_r = op_lload_n(opCode, runtime, 2);
+                        i_r = _op_lload_n(opCode, runtime, 2);
                         break;
                     }
 
                     case op_dload_3: {
-                        i_r = op_lload_n(opCode, runtime, 3);
+                        i_r = _op_lload_n(opCode, runtime, 3);
                         break;
                     }
 
                     case op_aload_0: {
-                        i_r = op_aload_n(opCode, runtime, 0);
+                        i_r = _op_aload_n(opCode, runtime, 0);
                         break;
                     }
 
                     case op_aload_1: {
-                        i_r = op_aload_n(opCode, runtime, 1);
+                        i_r = _op_aload_n(opCode, runtime, 1);
                         break;
                     }
 
                     case op_aload_2: {
-                        i_r = op_aload_n(opCode, runtime, 2);
+                        i_r = _op_aload_n(opCode, runtime, 2);
                         break;
                     }
 
                     case op_aload_3: {
-                        i_r = op_aload_n(opCode, runtime, 3);
+                        i_r = _op_aload_n(opCode, runtime, 3);
                         break;
                     }
 
@@ -1237,22 +1237,22 @@ s32 execute_method(MethodInfo *method, Runtime *pruntime, Class *clazz) {
                     }
 
                     case op_istore: {
-                        i_r = op_ifstore_impl(opCode, runtime, stack);
+                        i_r = _op_ifstore_impl(opCode, runtime, stack);
                         break;
                     }
 
                     case op_lstore: {
-                        i_r = op_ldstore_impl(opCode, runtime, stack);
+                        i_r = _op_ldstore_impl(opCode, runtime, stack);
                         break;
                     }
 
                     case op_fstore: {
-                        i_r = op_ifstore_impl(opCode, runtime, stack);
+                        i_r = _op_ifstore_impl(opCode, runtime, stack);
                         break;
                     }
 
                     case op_dstore: {
-                        i_r = op_ldstore_impl(opCode, runtime, stack);
+                        i_r = _op_ldstore_impl(opCode, runtime, stack);
                         break;
                     }
 
@@ -1282,105 +1282,105 @@ s32 execute_method(MethodInfo *method, Runtime *pruntime, Class *clazz) {
                     }
 
                     case op_istore_0: {
-                        i_r = op_istore_n(opCode, runtime, stack, 0);
+                        i_r = _op_istore_n(opCode, runtime, stack, 0);
                         break;
                     }
 
                     case op_istore_1: {
-                        i_r = op_istore_n(opCode, runtime, stack, 1);
+                        i_r = _op_istore_n(opCode, runtime, stack, 1);
                         break;
                     }
 
                     case op_istore_2: {
-                        i_r = op_istore_n(opCode, runtime, stack, 2);
+                        i_r = _op_istore_n(opCode, runtime, stack, 2);
                         break;
                     }
 
                     case op_istore_3: {
-                        i_r = op_istore_n(opCode, runtime, stack, 3);
+                        i_r = _op_istore_n(opCode, runtime, stack, 3);
                         break;
                     }
 
                     case op_lstore_0: {
-                        i_r = op_lstore_n(opCode, runtime, stack, 0);
+                        i_r = _op_lstore_n(opCode, runtime, stack, 0);
                         break;
                     }
 
                     case op_lstore_1: {
-                        i_r = op_lstore_n(opCode, runtime, stack, 1);
+                        i_r = _op_lstore_n(opCode, runtime, stack, 1);
                         break;
                     }
 
                     case op_lstore_2: {
-                        i_r = op_lstore_n(opCode, runtime, stack, 2);
+                        i_r = _op_lstore_n(opCode, runtime, stack, 2);
                         break;
                     }
 
                     case op_lstore_3: {
-                        i_r = op_lstore_n(opCode, runtime, stack, 3);
+                        i_r = _op_lstore_n(opCode, runtime, stack, 3);
                         break;
                     }
 
 
                     case op_fstore_0: {
-                        i_r = op_istore_n(opCode, runtime, stack, 0);
+                        i_r = _op_istore_n(opCode, runtime, stack, 0);
                         break;
                     }
 
                     case op_fstore_1: {
-                        i_r = op_istore_n(opCode, runtime, stack, 1);
+                        i_r = _op_istore_n(opCode, runtime, stack, 1);
                         break;
                     }
 
                     case op_fstore_2: {
-                        i_r = op_istore_n(opCode, runtime, stack, 2);
+                        i_r = _op_istore_n(opCode, runtime, stack, 2);
                         break;
                     }
 
                     case op_fstore_3: {
-                        i_r = op_istore_n(opCode, runtime, stack, 3);
+                        i_r = _op_istore_n(opCode, runtime, stack, 3);
                         break;
                     }
 
 
                     case op_dstore_0: {
-                        i_r = op_lstore_n(opCode, runtime, stack, 0);
+                        i_r = _op_lstore_n(opCode, runtime, stack, 0);
                         break;
                     }
 
                     case op_dstore_1: {
-                        i_r = op_lstore_n(opCode, runtime, stack, 1);
+                        i_r = _op_lstore_n(opCode, runtime, stack, 1);
                         break;
                     }
 
                     case op_dstore_2: {
-                        i_r = op_lstore_n(opCode, runtime, stack, 2);
+                        i_r = _op_lstore_n(opCode, runtime, stack, 2);
                         break;
                     }
 
                     case op_dstore_3: {
-                        i_r = op_lstore_n(opCode, runtime, stack, 3);
+                        i_r = _op_lstore_n(opCode, runtime, stack, 3);
                         break;
                     }
 
 
                     case op_astore_0: {
-                        i_r = op_astore_n(opCode, runtime, stack, 0);
+                        i_r = _op_astore_n(opCode, runtime, stack, 0);
                         break;
                     }
 
                     case op_astore_1: {
-                        i_r = op_astore_n(opCode, runtime, stack, 1);
+                        i_r = _op_astore_n(opCode, runtime, stack, 1);
                         break;
                     }
 
                     case op_astore_2: {
-                        i_r = op_astore_n(opCode, runtime, stack, 2);
+                        i_r = _op_astore_n(opCode, runtime, stack, 2);
                         break;
                     }
 
                     case op_astore_3: {
-                        i_r = op_astore_n(opCode, runtime, stack, 3);
+                        i_r = _op_astore_n(opCode, runtime, stack, 3);
                         break;
                     }
 
@@ -3111,23 +3111,23 @@ s32 execute_method(MethodInfo *method, Runtime *pruntime, Class *clazz) {
                     }
 
                     case op_getstatic: {
-                        i_r = op_getfield_impl(opCode, runtime, stack, 1);
+                        i_r = _op_getfield_impl(opCode, runtime, stack, 1);
                         break;
                     }
 
                     case op_putstatic: {
-                        i_r = op_putfield_impl(opCode, runtime, stack, 1);
+                        i_r = _op_putfield_impl(opCode, runtime, stack, 1);
                         break;
                     }
 
                     case op_getfield: {
-                        i_r = op_getfield_impl(opCode, runtime, stack, 0);
+                        i_r = _op_getfield_impl(opCode, runtime, stack, 0);
                         break;
                     }
 
 
                     case op_putfield: {
-                        i_r = op_putfield_impl(opCode, runtime, stack, 0);
+                        i_r = _op_putfield_impl(opCode, runtime, stack, 0);
                         break;
                     }
 
@@ -3352,7 +3352,7 @@ s32 execute_method(MethodInfo *method, Runtime *pruntime, Class *clazz) {
 
                         s32 count = pop_int(stack);
                         *opCode = *opCode + 2;
-                        i_r = op_newarray_impl(runtime, stack, count, typeIdx, NULL);
+                        i_r = _op_newarray_impl(runtime, stack, count, typeIdx, NULL);
                         break;
                     }
 
@@ -3364,7 +3364,7 @@ s32 execute_method(MethodInfo *method, Runtime *pruntime, Class *clazz) {
 
                         s32 count = pop_int(stack);
                         *opCode = *opCode + 3;
-                        i_r = op_newarray_impl(runtime, stack, count, 0, get_utf8_string(runtime->clazz, s2c.s));
+                        i_r = _op_newarray_impl(runtime, stack, count, 0, get_utf8_string(runtime->clazz, s2c.s));
                         break;
                     }
 
@@ -3642,7 +3642,7 @@ s32 execute_method(MethodInfo *method, Runtime *pruntime, Class *clazz) {
                            lineNum
                     );
 #endif
-                    ExceptionTable *et = find_exception_handler(runtime, ins, ca, (s32) (runtime->pc - ca->code), ref);
+                    ExceptionTable *et = _find_exception_handler(runtime, ins, ca, (s32) (runtime->pc - ca->code), ref);
                     if (et == NULL) {
                         ret = RUNTIME_STATUS_EXCEPTION;
                         break;
@@ -3655,7 +3655,7 @@ s32 execute_method(MethodInfo *method, Runtime *pruntime, Class *clazz) {
                     }
                 }
             } while (1);
-            if (method_sync)synchronized_unlock_method(method, runtime);
+            if (method_sync)_synchronized_unlock_method(method, runtime);
             localvar_dispose(runtime);
 #if _JVM_DEBUG_BYTECODE_DETAIL > 3
             if (utf8_char_at(clazz->name, 3) != '/' && utf8_char_at(clazz->name, 4) != 's') {//   that com/sun

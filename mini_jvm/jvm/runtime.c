@@ -164,9 +164,10 @@ void peek_entry(RuntimeStack *stack, StackEntry *entry, int index) {
 }
 
 //======================= runtime =============================
-
-static int RUNTIME_POOL_SIZE = 20;
-static int RUNTIME_LOCALVAR_SIZE = 10;
+enum {
+    RUNTIME_POOL_SIZE = 20,
+    RUNTIME_LOCALVAR_SIZE = 10,
+};
 
 /**
  * runtime 的创建和销毁会极大影响性能，因此对其进行缓存

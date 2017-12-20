@@ -12,7 +12,7 @@
 #include "jvm_util.h"
 
 /* parse UTF-8 String */
-void *parseCPString(Class *_this, ByteBuf *buf, s32 index) {
+void *_parseCPString(Class *_this, ByteBuf *buf, s32 index) {
     u8 short_tmp[2];
     ConstantUTF8 *ptr = jvm_calloc(sizeof(ConstantUTF8));
 
@@ -37,7 +37,7 @@ void *parseCPString(Class *_this, ByteBuf *buf, s32 index) {
 }
 
 /* parse Integer */
-void *parseCPInteger(Class *_this, ByteBuf *buf, s32 index) {
+void *_parseCPInteger(Class *_this, ByteBuf *buf, s32 index) {
     u8 tmp[4];
     ConstantInteger *ptr = jvm_calloc(sizeof(ConstantInteger));
 
@@ -57,7 +57,7 @@ void *parseCPInteger(Class *_this, ByteBuf *buf, s32 index) {
 }
 
 /* parse Float */
-void *parseCPFloat(Class *_this, ByteBuf *buf, s32 index) {
+void *_parseCPFloat(Class *_this, ByteBuf *buf, s32 index) {
     c8 tmp[4];
     ConstantFloat *ptr = jvm_calloc(sizeof(ConstantFloat));
 
@@ -78,7 +78,7 @@ void *parseCPFloat(Class *_this, ByteBuf *buf, s32 index) {
 }
 
 /* parse LONG */
-void *parseCPLong(Class *_this, ByteBuf *buf, s32 index) {
+void *_parseCPLong(Class *_this, ByteBuf *buf, s32 index) {
     u8 tmp[8];
     ConstantLong *ptr = jvm_calloc(sizeof(ConstantLong));
 
@@ -102,7 +102,7 @@ void *parseCPLong(Class *_this, ByteBuf *buf, s32 index) {
 }
 
 /* parse Double */
-void *parseCPDouble(Class *_this, ByteBuf *buf, s32 index) {
+void *_parseCPDouble(Class *_this, ByteBuf *buf, s32 index) {
     u8 tmp[8];
     ConstantDouble *ptr = jvm_calloc(sizeof(ConstantDouble));
 
@@ -126,7 +126,7 @@ void *parseCPDouble(Class *_this, ByteBuf *buf, s32 index) {
 }
 
 /* parse Constant Pool Class */
-void *parseCPClass(Class *_this, ByteBuf *buf, s32 index) {
+void *_parseCPClass(Class *_this, ByteBuf *buf, s32 index) {
     u8 short_tmp[2];
     ConstantClassRef *ptr = jvm_calloc(sizeof(ConstantClassRef));
 
@@ -144,7 +144,7 @@ void *parseCPClass(Class *_this, ByteBuf *buf, s32 index) {
 }
 
 /* parse Constant Pool String Ref */
-void *parseCPStringRef(Class *_this, ByteBuf *buf, s32 index) {
+void *_parseCPStringRef(Class *_this, ByteBuf *buf, s32 index) {
     u8 short_tmp[2];
     ConstantStringRef *ptr = jvm_calloc(sizeof(ConstantStringRef));
 
@@ -162,7 +162,7 @@ void *parseCPStringRef(Class *_this, ByteBuf *buf, s32 index) {
 }
 
 /* parse Constant Pool Field */
-void *parseCPField(Class *_this, ByteBuf *buf, s32 index) {
+void *_parseCPField(Class *_this, ByteBuf *buf, s32 index) {
     u8 short_tmp[2];
     ConstantFieldRef *ptr = jvm_calloc(sizeof(ConstantFieldRef));
 
@@ -185,7 +185,7 @@ void *parseCPField(Class *_this, ByteBuf *buf, s32 index) {
 }
 
 /* parse Constant Pool Method */
-void *parseCPMethod(Class *_this, ByteBuf *buf, s32 index) {
+void *_parseCPMethod(Class *_this, ByteBuf *buf, s32 index) {
     u8 short_tmp[2];
     ConstantMethodRef *ptr = jvm_calloc(sizeof(ConstantMethodRef));
     ptr->methodParaCount = -1;
@@ -209,7 +209,7 @@ void *parseCPMethod(Class *_this, ByteBuf *buf, s32 index) {
 }
 
 /* parse Constant Pool Interface */
-void *parseCPInterface(Class *_this, ByteBuf *buf, s32 index) {
+void *_parseCPInterface(Class *_this, ByteBuf *buf, s32 index) {
     u8 short_tmp[2];
     ConstantInterfaceMethodRef *ptr = jvm_calloc(sizeof(ConstantInterfaceMethodRef));
 
@@ -232,7 +232,7 @@ void *parseCPInterface(Class *_this, ByteBuf *buf, s32 index) {
 }
 
 /* parse Constant Pool Interface */
-void *parseCPNameAndType(Class *_this, ByteBuf *buf, s32 index) {
+void *_parseCPNameAndType(Class *_this, ByteBuf *buf, s32 index) {
     u8 short_tmp[2];
     ConstantNameAndType *ptr = jvm_calloc(sizeof(ConstantNameAndType));
 
@@ -256,148 +256,6 @@ void *parseCPNameAndType(Class *_this, ByteBuf *buf, s32 index) {
 
 #ifdef _JVM_DEBUG_BYTECODE_DETAIL
 
-/* print constant pool table */
-void printConstantPool(Class *clazz) {
-    ConstantPool *p = &(clazz->constantPool);
-
-    s32 i, j;
-    jvm_printf("ConstantUTF8 = \n");
-    for (i = 0; i < p->utf8CP->length; i++) {
-        ConstantUTF8 *cutf = arraylist_get_value(p->utf8CP, i);
-        jvm_printf("cp_index[%d], utf8[%d], tag = %d,  ",
-                   cutf->index, i, cutf->tag,
-                   cutf->string_size);
-        jvm_printf("%s\n", utf8_cstr(cutf->utfstr));
-    }
-    jvm_printf("p->integer_used = %d\n", p->integerCP->length);
-    if (p->integerCP->length > 0) {
-        jvm_printf("Constant Integer= \n");
-        for (i = 0; i < p->integerCP->length; i++) {
-            ConstantInteger *ci = arraylist_get_value(p->integerCP, i);
-            jvm_printf(" cp_index[%d], integer[%d], tag = %d, %d\n",
-                       ci->index, i, ci->tag,
-                       ci->value);
-        }
-    }
-    jvm_printf("p->float_used = %d\n", p->floatCP->length);
-    if (p->floatCP->length > 0) {
-        jvm_printf("Constant Float= \n");
-        for (i = 0; i < p->floatCP->length; i++) {
-            ConstantFloat *cf = arraylist_get_value(p->floatCP, i);
-            jvm_printf(" cp_index[%d], f32[%d], tag = %d,  %.4f\n",
-                       cf->index, i, cf->tag,
-
-                       cf->value);
-        }
-    }
-    jvm_printf("p->double_used = %d\n", p->doubleCP->length);
-    if (p->doubleCP->length > 0) {
-        jvm_printf("Constant Double= \n");
-        for (i = 0; i < p->doubleCP->length; i++) {
-            ConstantDouble *cd = arraylist_get_value(p->doubleCP, i);
-            jvm_printf(" cp_index[%d], f64[%d], tag = %d,  %.5f\n",
-                       cd->index, i, cd->tag,
-                       cd->value);
-        }
-    }
-
-    jvm_printf("p->clasz_used = %d\n", p->classRef->length);
-    if (p->classRef->length > 0) {
-        jvm_printf("Constant Class Pool===================== \n");
-        for (i = 0; i < p->classRef->length; i++) {
-            ConstantClassRef *ccr = arraylist_get_value(p->classRef, i);
-            ConstantUTF8 *ptr = find_constant_utf8(clazz, ccr->stringIndex);
-            jvm_printf(" cp_index[%d], class[%d], tag = %d,  %d",
-                       ccr->index, i, ccr->tag,
-                       ccr->stringIndex
-            );
-            if (ptr != 0) {
-                jvm_printf(" ");
-                jvm_printf(" %s\n", utf8_cstr(ptr->utfstr));
-            } else {
-                jvm_printf("\n");
-            }
-        }
-    }
-
-    jvm_printf("p->stringRef_used = %d\n", p->stringRef->length);
-    if (p->stringRef->length > 0) {
-        jvm_printf("Constant String Reference===================== \n");
-        for (i = 0; i < p->stringRef->length; i++) {
-            ConstantStringRef *csr = arraylist_get_value(p->stringRef, i);
-            ConstantUTF8 *ptr = find_constant_utf8(clazz, csr->stringIndex);
-            jvm_printf(" cp_index[%d], strRef[%d], tag = %d,  %d",
-                       csr->index, i, csr->tag,
-                       csr->stringIndex);
-            if (ptr != 0) {
-                jvm_printf(" ");
-                jvm_printf(" %s\n", utf8_cstr(ptr->utfstr));
-            } else {
-                jvm_printf("\n");
-            }
-        }
-    }
-    jvm_printf("p->field_used = %d\n", p->fieldRef->length);
-    if (p->fieldRef->length > 0) {
-        jvm_printf("Constant Field ===================== \n");
-        for (i = 0; i < p->fieldRef->length; i++) {
-            ConstantFieldRef *cfr = arraylist_get_value(p->fieldRef, i);
-            ConstantClassRef *ptr = find_constant_classref(clazz, cfr->classIndex);
-            ConstantNameAndType *ptr2 = find_constant_name_and_type(clazz, cfr->nameAndTypeIndex);
-
-            jvm_printf(" cp_index[%d], fieldRef[%d], tag = %d,  cls %d, nat= %d",
-                       cfr->index, i, cfr->tag,
-                       cfr->classIndex,
-                       cfr->nameAndTypeIndex);
-            if (ptr != 0) {
-                ConstantUTF8 *name = find_constant_utf8(clazz, ptr->stringIndex);
-                if (name != 0) {
-                    jvm_printf(" %s", utf8_cstr(name->utfstr));
-                }
-            }
-            if (ptr2 != 0) {
-                ConstantUTF8 *name = find_constant_utf8(clazz, ptr2->nameIndex);
-                ConstantUTF8 *type = find_constant_utf8(clazz, ptr2->typeIndex);
-                if (name != 0) {
-                    jvm_printf(".%s", utf8_cstr(name->utfstr));
-                }
-                if (type != 0) {
-                    jvm_printf(":%s\n", utf8_cstr(type->utfstr));
-                }
-            }
-        }
-    }
-    jvm_printf("p->method_used= %d\n", p->methodRef->length);
-    if (p->methodRef->length > 0) {
-        jvm_printf("Constant Method===================== \n");
-        for (i = 0; i < p->methodRef->length; i++) {
-            ConstantMethodRef *cmr = arraylist_get_value(p->methodRef, i);
-            ConstantClassRef *ptr = find_constant_classref(clazz, cmr->classIndex);
-            ConstantNameAndType *ptr2 = find_constant_name_and_type(clazz, cmr->nameAndTypeIndex);
-
-            jvm_printf(" cp_index[%d], methodRef[%d], tag = %d,  cls %d, nat= %d",
-                       cmr->index, i, cmr->tag,
-                       cmr->classIndex,
-                       cmr->nameAndTypeIndex);
-            if (ptr != 0) {
-                ConstantUTF8 *name = find_constant_utf8(clazz, ptr->stringIndex);
-                if (name != 0) {
-                    jvm_printf(" %s", utf8_cstr(name->utfstr));
-                }
-            }
-            if (ptr2 != 0) {
-                ConstantUTF8 *name = find_constant_utf8(clazz, ptr2->nameIndex);
-                ConstantUTF8 *type = find_constant_utf8(clazz, ptr2->typeIndex);
-                if (name != 0) {
-                    jvm_printf(".%s", utf8_cstr(name->utfstr));
-                }
-                if (type != 0) {
-                    jvm_printf("%s\n", utf8_cstr(type->utfstr));
-                }
-            }
-        }
-    }
-}
 
 #endif //_JVM_DEBUG
 
@@ -453,7 +311,7 @@ s32 _class_constant_pool_destory(Class *clazz) {
     return 0;
 }
 
-s32 parseAttr(FieldInfo *ptr, ByteBuf *buf) {
+s32 _parseAttr(FieldInfo *ptr, ByteBuf *buf) {
     s32 i;
     AttributeInfo *tmp = 0;
     u8 short_tmp[2];
@@ -489,7 +347,7 @@ s32 parseAttr(FieldInfo *ptr, ByteBuf *buf) {
 }
 
 /* parse Field Pool */
-s32 parseFP(Class *_this, ByteBuf *buf) {
+s32 _parseFP(Class *_this, ByteBuf *buf) {
     s32 i = 0;
     u8 short_tmp[2];
     FieldInfo *ptr = &(_this->fieldPool.field[_this->fieldPool.field_used]);
@@ -526,29 +384,11 @@ s32 parseFP(Class *_this, ByteBuf *buf) {
         ptr->attributes = NULL;
     }
     /* parse attributes */
-    parseAttr(ptr, buf);
+    _parseAttr(ptr, buf);
     _this->fieldPool.field_used++;
     return 0;
 }
 
-void printFieldPool(Class *clazz, FieldPool *fp) {
-    s32 i, j;
-
-    jvm_printf("Field Pool==================== \n");
-    if (fp->field_used > 0) {
-        for (i = 0; i < fp->field_used; i++) {
-            ConstantUTF8 *ptr = find_constant_utf8(clazz, fp->field[i].name_index);
-            jvm_printf("fieldRef[%d], attr_count = %d, %d",
-                       i, fp->field[i].attributes_count,
-                       fp->field[i].name_index);
-            if (ptr != 0) {
-                jvm_printf(" %s\n", utf8_cstr(ptr->utfstr));
-            } else {
-                jvm_printf("\n");
-            }
-        }
-    }
-}
 
 s32 _parse_field_pool(Class *_this, ByteBuf *buf, s32 count) {
     s32 size = sizeof(FieldInfo) * count;
@@ -556,7 +396,7 @@ s32 _parse_field_pool(Class *_this, ByteBuf *buf, s32 count) {
 
     s32 i;
     for (i = 0; i < count; i++)
-        parseFP(_this, buf);
+        _parseFP(_this, buf);
     return 0;
 }
 
@@ -580,7 +420,7 @@ s32 _class_field_info_destory(Class *clazz) {
 
 
 /* parse Interface Pool Class */
-s32 parseIPClass(Class *_this, ByteBuf *buf, s32 index) {
+s32 _parseIPClass(Class *_this, ByteBuf *buf, s32 index) {
     u8 short_tmp[2];
     ConstantClassRef *ptr = &_this->interfacePool.clasz[_this->interfacePool.clasz_used];
 
@@ -597,25 +437,6 @@ s32 parseIPClass(Class *_this, ByteBuf *buf, s32 index) {
     return 0;
 }
 
-void printInterfacePool(Class *clazz, InterfacePool *ip) {
-    s32 i, j;
-
-    if (ip->clasz_used > 0) {
-        jvm_printf("Interface Class Pool= \n");
-        for (i = 0; i < ip->clasz_used; i++) {
-            ConstantUTF8 *ptr = find_constant_utf8(clazz, ip->clasz[i].stringIndex);
-            jvm_printf(" ip_index[%d], class[%d], tag = %d,  %d",
-                       ip->clasz[i].index, i, ip->clasz[i].tag,
-                       ip->clasz[i].stringIndex);
-            if (ptr != 0) {
-                jvm_printf(" ");
-                jvm_printf(" %s\n", utf8_cstr(ptr->utfstr));
-            } else {
-                jvm_printf("\n");
-            }
-        }
-    }
-}
 
 s32 _parse_interface_pool(Class *_this, ByteBuf *buf, s32 count) {
 
@@ -623,7 +444,7 @@ s32 _parse_interface_pool(Class *_this, ByteBuf *buf, s32 count) {
     _this->interfacePool.clasz = jvm_calloc(size);
     s32 i;
     for (i = 0; i < count; i++)
-        parseIPClass(_this, buf, i);
+        _parseIPClass(_this, buf, i);
     return 0;
 }
 
@@ -637,7 +458,7 @@ s32 _class_interface_pool_destory(Class *clazz) {
 //=================================     load         ======================================
 
 
-s32 parseMethodAttr(MethodInfo *ptr, ByteBuf *buf) {
+s32 _parseMethodAttr(MethodInfo *ptr, ByteBuf *buf) {
     s32 i;
     AttributeInfo *tmp = 0;
     u8 short_tmp[2];
@@ -666,7 +487,7 @@ s32 parseMethodAttr(MethodInfo *ptr, ByteBuf *buf) {
 
 
 /* parse Method Pool */
-s32 parseMP(Class *_this, ByteBuf *buf) {
+s32 _parseMP(Class *_this, ByteBuf *buf) {
     s32 i = 0;
     u8 short_tmp[2];
     MethodInfo *ptr = &(_this->methodPool.method[_this->methodPool.method_used]);
@@ -699,84 +520,10 @@ s32 parseMP(Class *_this, ByteBuf *buf) {
     ptr->attributes = (AttributeInfo *) jvm_calloc(sizeof(AttributeInfo) * ptr->attributes_count);
     memset(ptr->attributes, 0, sizeof(AttributeInfo) * ptr->attributes_count);
     /* parse methodRef attributes */
-    parseMethodAttr(ptr, buf);
+    _parseMethodAttr(ptr, buf);
 
     _this->methodPool.method_used++;
     return 0;
-}
-
-/* Print Method Attributes */
-void printMethodAttributes(Class *p, MethodInfo *method) {
-    s32 i;
-    AttributeInfo *attr = 0;
-
-    for (i = 0; i < method->attributes_count; i++) {
-        attr = &method->attributes[i];
-
-        jvm_printf("attribute name = %s\n", utf8_cstr(get_utf8_string(p, attr->attribute_name_index)));
-    }
-}
-
-/* Print Method Pool */
-void printMethodPool(Class *p, MethodPool *mp) {
-    s32 i, j;
-    jvm_printf("Method Pool===================== \n");
-    if (mp->method_used > 0) {
-        for (i = 0; i < mp->method_used; i++) {
-            ConstantUTF8 *ptr = find_constant_utf8(p, mp->method[i].name_index);
-            ConstantUTF8 *ptr2 = find_constant_utf8(p, mp->method[i].descriptor_index);
-            ConstantMethodRef *mRefPtr = find_constant_method_ref(p, mp->method[i].name_index);
-            jvm_printf("methodRef[%d], attr_count = %d, %d",
-                       i, mp->method[i].attributes_count,
-                       mp->method[i].name_index);
-            if (ptr != 0) {
-                jvm_printf(" %s", utf8_cstr(ptr->utfstr));
-            }
-#if 0
-                else if (mRefPtr != 0) {
-                    ConstantClassRef *obj_of_clazz = find_class_ref(p, mRefPtr->classIndex);
-                    if (obj_of_clazz != 0) {
-                        ConstantUTF8 *name = find_utf8(p, obj_of_clazz->stringIndex);
-                        if (name != 0) {
-                            jvm_printf(" ");
-                            for (j = 0; j < name->string_size; j++)
-                                jvm_printf("%c", name->arr_body[j]);
-                            jvm_printf(" ");
-
-                        }
-                    }
-                    ConstantNameAndType *nameAndType = find_name_and_type(p, mRefPtr->nameAndTypeIndex);
-                    if (nameAndType != 0) {
-                        ConstantUTF8 *name = find_utf8(p, nameAndType->nameIndex);
-                        ConstantUTF8 *type = find_utf8(p, nameAndType->typeIndex);
-
-                        if (name != 0) {
-                            jvm_printf(" ");
-                            for (j = 0; j < name->string_size; j++)
-                                jvm_printf("%c", name->arr_body[j]);
-                            jvm_printf(" ");
-                        }
-                        if (type != 0) {
-                            jvm_printf(" ");
-                            for (j = 0; j < type->string_size; j++)
-                                jvm_printf("%c", type->arr_body[j]);
-                            jvm_printf(" ");
-                        }
-                    }
-                    jvm_printf("\n");
-                }
-#endif
-            else {
-                jvm_printf("\n");
-                continue;
-            }
-            if (ptr2 != 0) {
-                jvm_printf("");
-                jvm_printf("%s\n", utf8_cstr(ptr2->utfstr));
-            }
-            printMethodAttributes(p, &mp->method[i]);
-        }
-    }
 }
 
 s32 _parse_method_pool(Class *_this, ByteBuf *buf, s32 count) {
@@ -785,7 +532,7 @@ s32 _parse_method_pool(Class *_this, ByteBuf *buf, s32 count) {
     _this->methodPool.method = jvm_calloc(size);
     s32 i;
     for (i = 0; i < count; i++)
-        parseMP(_this, buf);
+        _parseMP(_this, buf);
     return 0;
 }
 
@@ -871,34 +618,10 @@ s32 _class_attribute_info_destory(Class *clazz) {
     return 0;
 }
 
-/* Print Class File Format */
-void printClassFileFormat(ClassFileFormat *cff) {
-    s32 i;
-    jvm_printf("Magic Number = ");
-    for (i = 0; i < 4; i++)
-        jvm_printf("0x%02X ", cff->magic_number[i]);
-    jvm_printf("\n");
-    jvm_printf("Minor Number = 0x(%02X) %d \n",
-               cff->minor_version, cff->minor_version);
-    jvm_printf("Major Number(%s) = 0x(%02X) %d \n",
-               getMajorVersionString(cff->major_version),
-               cff->major_version, cff->major_version);
-    jvm_printf("Constant Pool Count = 0x(%02X) %d \n",
-               cff->constant_pool_count, cff->constant_pool_count);
-    jvm_printf("access flag = 0x(%02X) %d \n", cff->access_flags, cff->access_flags);
-    jvm_printf("this class = 0x(%02X) %d \n",
-               cff->this_class, cff->this_class);
-    jvm_printf("super class = 0x(%02X) %d \n",
-               cff->super_class, cff->super_class);
-    jvm_printf("interfaceRef count = 0x(%02X) %d \n",
-               cff->interface_count, cff->interface_count);
-    jvm_printf("fieldRef count = 0x(%02X) %d \n",
-               cff->fields_count, cff->fields_count);
-    jvm_printf("methodRef count = 0x(%02X) %d \n",
-               cff->methods_count, cff->methods_count);
-}
-
-s32 loadFileContents(c8 *file, ByteBuf *buf) {
+/**
+ * load file less than 4G bytes
+ */
+s32 _loadFileContents(c8 *file, ByteBuf *buf) {
 
     FILE *pFile;
     long lSize;
@@ -918,7 +641,7 @@ s32 loadFileContents(c8 *file, ByteBuf *buf) {
     rewind(pFile);
 
     /* 分配内存存储整个文件 */
-    buffer = jvm_malloc(lSize);
+    buffer = jvm_malloc((u32)lSize);
     if (buffer == NULL) {
         //jvm_printf("Memory error");
         return -1;
@@ -935,7 +658,7 @@ s32 loadFileContents(c8 *file, ByteBuf *buf) {
 
     /* 结束演示，关闭文件并释放内存 */
     fclose(pFile);
-    bytebuf_write_batch(buf, buffer, lSize);
+    bytebuf_write_batch(buf, buffer, (s32)lSize);
     jvm_free(buffer);
 
     return 0;
@@ -956,39 +679,39 @@ s32 _parse_constant_pool(Class *_this, ByteBuf *buf, s32 count) {
         s32 idx = i;
         switch (tag) {
             case CONSTANT_UTF8:
-                ptr = parseCPString(_this, buf, i);
+                ptr = _parseCPString(_this, buf, i);
                 break;
             case CONSTANT_INTEGER:
-                ptr = parseCPInteger(_this, buf, i);
+                ptr = _parseCPInteger(_this, buf, i);
                 break;
             case CONSTANT_FLOAT:
-                ptr = parseCPFloat(_this, buf, i);
+                ptr = _parseCPFloat(_this, buf, i);
                 break;
             case CONSTANT_LONG:
-                ptr = parseCPLong(_this, buf, i);
+                ptr = _parseCPLong(_this, buf, i);
                 i++;
                 break;
             case CONSTANT_DOUBLE:
-                ptr = parseCPDouble(_this, buf, i);
+                ptr = _parseCPDouble(_this, buf, i);
                 i++;
                 break;
             case CONSTANT_STRING_REF:
-                ptr = parseCPStringRef(_this, buf, i);
+                ptr = _parseCPStringRef(_this, buf, i);
                 break;
             case CONSTANT_CLASS:
-                ptr = parseCPClass(_this, buf, i);
+                ptr = _parseCPClass(_this, buf, i);
                 break;
             case CONSTANT_FIELD_REF:
-                ptr = parseCPField(_this, buf, i);
+                ptr = _parseCPField(_this, buf, i);
                 break;
             case CONSTANT_METHOD_REF:
-                ptr = parseCPMethod(_this, buf, i);
+                ptr = _parseCPMethod(_this, buf, i);
                 break;
             case CONSTANT_INTERFACE_REF:
-                ptr = parseCPMethod(_this, buf, i);//parseCPInterface(_this, fp, i);
+                ptr = _parseCPMethod(_this, buf, i);//parseCPInterface(_this, fp, i);
                 break;
             case CONSTANT_NAME_AND_TYPE:
-                ptr = parseCPNameAndType(_this, buf, i);
+                ptr = _parseCPNameAndType(_this, buf, i);
                 break;
             default:
                 jvm_printf("\n!!!unknow tag = %02x!!!\n\n", tag);
@@ -1002,184 +725,9 @@ s32 _parse_constant_pool(Class *_this, ByteBuf *buf, s32 count) {
     return 0;
 }
 
-/* Parse Class File */
-s32 _LOAD_CLASS_FROM_BYTES(Class *_this, ByteBuf *buf) {
-    ClassFileFormat *cff = &(_this->cff);
 
-    /* magic number */
-    bytebuf_read_batch(buf, (c8 *) &cff->magic_number, 4);
-//    fread(cff->magic_number, 4, 1, fp);
 
-    /* minor_version */
-    //fread(short_tmp, 2, 1, fp);
-    Short2Char s2c;
-    s2c.c1 = (c8) bytebuf_read(buf);
-    s2c.c0 = (c8) bytebuf_read(buf);
-    cff->minor_version = s2c.s;
-
-    /* major_version */
-    //fread(short_tmp, 2, 1, fp);
-    s2c.c1 = (c8) bytebuf_read(buf);
-    s2c.c0 = (c8) bytebuf_read(buf);
-    cff->major_version = s2c.s;
-
-    /* constant pool */
-    //fread(short_tmp, 2, 1, fp);
-    s2c.c1 = (c8) bytebuf_read(buf);
-    s2c.c0 = (c8) bytebuf_read(buf);
-    cff->constant_pool_count = s2c.s;
-    /* constant pool table */
-    _parse_constant_pool(_this, buf, cff->constant_pool_count);
-    /* access flag */
-    //fread(short_tmp, 2, 1, fp);
-    s2c.c1 = (c8) bytebuf_read(buf);
-    s2c.c0 = (c8) bytebuf_read(buf);
-    cff->access_flags = s2c.s;
-
-    /* this class */
-    //fread(short_tmp, 2, 1, fp);
-    s2c.c1 = (c8) bytebuf_read(buf);
-    s2c.c0 = (c8) bytebuf_read(buf);
-    cff->this_class = s2c.s;
-
-    /* super class */
-    //fread(short_tmp, 2, 1, fp);
-    s2c.c1 = (c8) bytebuf_read(buf);
-    s2c.c0 = (c8) bytebuf_read(buf);
-    cff->super_class = s2c.s;
-
-    /* interfaceRef count */
-    //fread(short_tmp, 2, 1, fp);
-    s2c.c1 = (c8) bytebuf_read(buf);
-    s2c.c0 = (c8) bytebuf_read(buf);
-    cff->interface_count = s2c.s;
-    /* interfaceRef pool table */
-    _parse_interface_pool(_this, buf, cff->interface_count);
-
-    /* fieldRef count */
-    //fread(short_tmp, 2, 1, fp);
-    s2c.c1 = (c8) bytebuf_read(buf);
-    s2c.c0 = (c8) bytebuf_read(buf);
-    cff->fields_count = s2c.s;
-
-    /* fieldRef pool table */
-    _parse_field_pool(_this, buf, cff->fields_count);
-    /* methodRef count */
-    //fread(short_tmp, 2, 1, fp);
-    s2c.c1 = (c8) bytebuf_read(buf);
-    s2c.c0 = (c8) bytebuf_read(buf);
-    cff->methods_count = s2c.s;
-
-    /* methodRef pool table */
-    _parse_method_pool(_this, buf, cff->methods_count);
-
-    //attribute
-    //fread(short_tmp, 2, 1, fp);
-    s2c.c1 = (c8) bytebuf_read(buf);
-    s2c.c0 = (c8) bytebuf_read(buf);
-    cff->attributes_count = s2c.s;
-    _parse_attribute_pool(_this, buf, cff->attributes_count);
-
-    //fclose(fp);
-
-    class_link(_this);
-
-    _this->status = CLASS_STATUS_LOADED;
-    return 0;
-}
-
-/**
- * 把各个索引转为直接地址引用，加快处理速度
- * @param clazz class
- */
-void class_link(Class *clazz) {
-    Utf8String *ustr = get_utf8_string(clazz, find_constant_classref(clazz, clazz->cff.this_class)->stringIndex);
-    clazz->name = utf8_create_copy(ustr);
-//    if (utf8_equals_c(clazz->name, "javax/mini/eio/socket/PrivateOutputStream")) {
-//        int debug = 1;
-//    }
-    s32 i;
-    for (i = 0; i < clazz->interfacePool.clasz_used; i++) {
-        ConstantClassRef *ptr = &clazz->interfacePool.clasz[i];
-        ptr->name = get_utf8_string(clazz, find_constant_classref(clazz, ptr->stringIndex)->stringIndex);
-    }
-    for (i = 0; i < clazz->fieldPool.field_used; i++) {
-        FieldInfo *ptr = &clazz->fieldPool.field[i];
-        ptr->name = get_utf8_string(clazz, ptr->name_index);
-        ptr->descriptor = get_utf8_string(clazz, ptr->descriptor_index);
-        ptr->datatype_idx = getDataTypeIndex(utf8_char_at(ptr->descriptor, 0));
-        ptr->isrefer = isDataReferByIndex(ptr->datatype_idx);
-    }
-    for (i = 0; i < clazz->methodPool.method_used; i++) {
-        MethodInfo *ptr = &clazz->methodPool.method[i];
-        ptr->name = get_utf8_string(clazz, ptr->name_index);
-        ptr->descriptor = get_utf8_string(clazz, ptr->descriptor_index);
-        ptr->_this_class = clazz;
-        if (!ptr->paraType) {//首次执行
-            // eg:  (Ljava/lang/Object;IBLjava/lang/String;[[[ILjava/lang/Object;)Ljava/lang/String;Z
-            ptr->paraType = utf8_create();
-            ptr->para_count = parseMethodPara(ptr->descriptor, ptr->paraType);
-            if (!(ptr->access_flags & ACC_STATIC)) {
-                ptr->para_count++;//add instance
-            }
-            s32 pos = utf8_indexof_c(ptr->descriptor, ")") + 1;
-            ptr->returnType = utf8_create_part(ptr->descriptor, pos, ptr->descriptor->length - pos);
-        }
-        s32 j;
-
-        //转attribute为CdoeAttribute
-        for (j = 0; j < ptr->attributes_count; j++) {
-            if (utf8_equals_c(get_utf8_string(clazz, ptr->attributes[j].attribute_name_index), "Code") == 1) {
-                CodeAttribute *ca = jvm_calloc(sizeof(CodeAttribute));
-                convert_to_code_attribute(ca, &ptr->attributes[j], clazz);
-                jvm_free(ptr->attributes[j].info);//无用删除
-                ptr->attributes[j].info = NULL;
-                ptr->attributes[j].converted_code = ca;
-                ptr->code_attr_idx = j;
-            }
-        }
-    }
-    for (i = 0; i < clazz->attributePool.attribute_used; i++) {
-        AttributeInfo *ptr = &clazz->attributePool.attribute[i];
-        Utf8String *name = get_utf8_string(clazz, ptr->attribute_name_index);
-        if (utf8_equals_c(name, "SourceFile")) {
-            Short2Char s2c;
-            s2c.c1 = ptr->info[0];
-            s2c.c0 = ptr->info[1];
-            clazz->source = get_utf8_string(clazz, s2c.s);
-        }
-    }
-
-    for (i = 0; i < clazz->constantPool.classRef->length; i++) {
-        ConstantClassRef *ccr = (ConstantClassRef *) arraylist_get_value(clazz->constantPool.classRef, i);
-        ccr->name = get_utf8_string(clazz, ccr->stringIndex);
-    }
-    for (i = 0; i < clazz->constantPool.interfaceRef->length; i++) {
-        ConstantInterfaceMethodRef *cir = (ConstantInterfaceMethodRef *) arraylist_get_value(
-                clazz->constantPool.interfaceRef, i);
-        cir->name = get_utf8_string(clazz, find_constant_name_and_type(clazz, cir->nameAndTypeIndex)->nameIndex);
-    }
-    for (i = 0; i < clazz->constantPool.methodRef->length; i++) {
-        ConstantMethodRef *cmr = (ConstantMethodRef *) arraylist_get_value(clazz->constantPool.methodRef, i);
-        cmr->nameAndType = find_constant_name_and_type(clazz, cmr->nameAndTypeIndex);
-        cmr->name = get_utf8_string(clazz, cmr->nameAndType->nameIndex);
-        cmr->descriptor = get_utf8_string(clazz, cmr->nameAndType->typeIndex);
-        cmr->clsName = find_constant_classref(clazz, cmr->classIndex)->name;
-//        if (utf8_equals_c(clazz->name, "java/lang/String")) {
-//            printf("%s,%s\n", utf8_cstr(cmr->name), utf8_cstr(cmr->clsName));
-//            int debug = 1;
-//        }
-        if (cmr->methodParaCount == -1) {
-            Utf8String *tmps = utf8_create();
-            parseMethodPara(cmr->descriptor, tmps);
-            cmr->methodParaCount = tmps->length;
-            utf8_destory(tmps);
-        }
-    }
-
-}
-
-s32 convert_to_code_attribute(CodeAttribute *ca, AttributeInfo *attr, Class *clazz) {
+s32 _convert_to_code_attribute(CodeAttribute *ca, AttributeInfo *attr, Class *clazz) {
     s32 info_p = 0;
 
     ca->attribute_name_index = attr->attribute_name_index;
@@ -1271,6 +819,184 @@ s32 convert_to_code_attribute(CodeAttribute *ca, AttributeInfo *attr, Class *cla
     return 0;
 }
 
+/**
+ * 把各个索引转为直接地址引用，加快处理速度
+ * @param clazz class
+ */
+void _class_link(Class *clazz) {
+    Utf8String *ustr = get_utf8_string(clazz, find_constant_classref(clazz, clazz->cff.this_class)->stringIndex);
+    clazz->name = utf8_create_copy(ustr);
+//    if (utf8_equals_c(clazz->name, "javax/mini/eio/socket/PrivateOutputStream")) {
+//        int debug = 1;
+//    }
+    s32 i;
+    for (i = 0; i < clazz->interfacePool.clasz_used; i++) {
+        ConstantClassRef *ptr = &clazz->interfacePool.clasz[i];
+        ptr->name = get_utf8_string(clazz, find_constant_classref(clazz, ptr->stringIndex)->stringIndex);
+    }
+    for (i = 0; i < clazz->fieldPool.field_used; i++) {
+        FieldInfo *ptr = &clazz->fieldPool.field[i];
+        ptr->name = get_utf8_string(clazz, ptr->name_index);
+        ptr->descriptor = get_utf8_string(clazz, ptr->descriptor_index);
+        ptr->datatype_idx = getDataTypeIndex(utf8_char_at(ptr->descriptor, 0));
+        ptr->isrefer = isDataReferByIndex(ptr->datatype_idx);
+    }
+    for (i = 0; i < clazz->methodPool.method_used; i++) {
+        MethodInfo *ptr = &clazz->methodPool.method[i];
+        ptr->name = get_utf8_string(clazz, ptr->name_index);
+        ptr->descriptor = get_utf8_string(clazz, ptr->descriptor_index);
+        ptr->_this_class = clazz;
+        if (!ptr->paraType) {//首次执行
+            // eg:  (Ljava/lang/Object;IBLjava/lang/String;[[[ILjava/lang/Object;)Ljava/lang/String;Z
+            ptr->paraType = utf8_create();
+            ptr->para_count = parseMethodPara(ptr->descriptor, ptr->paraType);
+            if (!(ptr->access_flags & ACC_STATIC)) {
+                ptr->para_count++;//add instance
+            }
+            s32 pos = utf8_indexof_c(ptr->descriptor, ")") + 1;
+            ptr->returnType = utf8_create_part(ptr->descriptor, pos, ptr->descriptor->length - pos);
+        }
+        s32 j;
+
+        //转attribute为CdoeAttribute
+        for (j = 0; j < ptr->attributes_count; j++) {
+            if (utf8_equals_c(get_utf8_string(clazz, ptr->attributes[j].attribute_name_index), "Code") == 1) {
+                CodeAttribute *ca = jvm_calloc(sizeof(CodeAttribute));
+                _convert_to_code_attribute(ca, &ptr->attributes[j], clazz);
+                jvm_free(ptr->attributes[j].info);//无用删除
+                ptr->attributes[j].info = NULL;
+                ptr->attributes[j].converted_code = ca;
+                ptr->code_attr_idx = j;
+            }
+        }
+    }
+    for (i = 0; i < clazz->attributePool.attribute_used; i++) {
+        AttributeInfo *ptr = &clazz->attributePool.attribute[i];
+        Utf8String *name = get_utf8_string(clazz, ptr->attribute_name_index);
+        if (utf8_equals_c(name, "SourceFile")) {
+            Short2Char s2c;
+            s2c.c1 = ptr->info[0];
+            s2c.c0 = ptr->info[1];
+            clazz->source = get_utf8_string(clazz, s2c.s);
+        }
+    }
+
+    for (i = 0; i < clazz->constantPool.classRef->length; i++) {
+        ConstantClassRef *ccr = (ConstantClassRef *) arraylist_get_value(clazz->constantPool.classRef, i);
+        ccr->name = get_utf8_string(clazz, ccr->stringIndex);
+    }
+    for (i = 0; i < clazz->constantPool.interfaceRef->length; i++) {
+        ConstantInterfaceMethodRef *cir = (ConstantInterfaceMethodRef *) arraylist_get_value(
+                clazz->constantPool.interfaceRef, i);
+        cir->name = get_utf8_string(clazz, find_constant_name_and_type(clazz, cir->nameAndTypeIndex)->nameIndex);
+    }
+    for (i = 0; i < clazz->constantPool.methodRef->length; i++) {
+        ConstantMethodRef *cmr = (ConstantMethodRef *) arraylist_get_value(clazz->constantPool.methodRef, i);
+        cmr->nameAndType = find_constant_name_and_type(clazz, cmr->nameAndTypeIndex);
+        cmr->name = get_utf8_string(clazz, cmr->nameAndType->nameIndex);
+        cmr->descriptor = get_utf8_string(clazz, cmr->nameAndType->typeIndex);
+        cmr->clsName = find_constant_classref(clazz, cmr->classIndex)->name;
+//        if (utf8_equals_c(clazz->name, "java/lang/String")) {
+//            printf("%s,%s\n", utf8_cstr(cmr->name), utf8_cstr(cmr->clsName));
+//            int debug = 1;
+//        }
+        if (cmr->methodParaCount == -1) {
+            Utf8String *tmps = utf8_create();
+            parseMethodPara(cmr->descriptor, tmps);
+            cmr->methodParaCount = tmps->length;
+            utf8_destory(tmps);
+        }
+    }
+
+}
+
+
+/* Parse Class File */
+s32 _LOAD_CLASS_FROM_BYTES(Class *_this, ByteBuf *buf) {
+    ClassFileFormat *cff = &(_this->cff);
+
+    /* magic number */
+    bytebuf_read_batch(buf, (c8 *) &cff->magic_number, 4);
+//    fread(cff->magic_number, 4, 1, fp);
+
+    /* minor_version */
+    //fread(short_tmp, 2, 1, fp);
+    Short2Char s2c;
+    s2c.c1 = (c8) bytebuf_read(buf);
+    s2c.c0 = (c8) bytebuf_read(buf);
+    cff->minor_version = s2c.s;
+
+    /* major_version */
+    //fread(short_tmp, 2, 1, fp);
+    s2c.c1 = (c8) bytebuf_read(buf);
+    s2c.c0 = (c8) bytebuf_read(buf);
+    cff->major_version = s2c.s;
+
+    /* constant pool */
+    //fread(short_tmp, 2, 1, fp);
+    s2c.c1 = (c8) bytebuf_read(buf);
+    s2c.c0 = (c8) bytebuf_read(buf);
+    cff->constant_pool_count = s2c.s;
+    /* constant pool table */
+    _parse_constant_pool(_this, buf, cff->constant_pool_count);
+    /* access flag */
+    //fread(short_tmp, 2, 1, fp);
+    s2c.c1 = (c8) bytebuf_read(buf);
+    s2c.c0 = (c8) bytebuf_read(buf);
+    cff->access_flags = s2c.s;
+
+    /* this class */
+    //fread(short_tmp, 2, 1, fp);
+    s2c.c1 = (c8) bytebuf_read(buf);
+    s2c.c0 = (c8) bytebuf_read(buf);
+    cff->this_class = s2c.s;
+
+    /* super class */
+    //fread(short_tmp, 2, 1, fp);
+    s2c.c1 = (c8) bytebuf_read(buf);
+    s2c.c0 = (c8) bytebuf_read(buf);
+    cff->super_class = s2c.s;
+
+    /* interfaceRef count */
+    //fread(short_tmp, 2, 1, fp);
+    s2c.c1 = (c8) bytebuf_read(buf);
+    s2c.c0 = (c8) bytebuf_read(buf);
+    cff->interface_count = s2c.s;
+    /* interfaceRef pool table */
+    _parse_interface_pool(_this, buf, cff->interface_count);
+
+    /* fieldRef count */
+    //fread(short_tmp, 2, 1, fp);
+    s2c.c1 = (c8) bytebuf_read(buf);
+    s2c.c0 = (c8) bytebuf_read(buf);
+    cff->fields_count = s2c.s;
+
+    /* fieldRef pool table */
+    _parse_field_pool(_this, buf, cff->fields_count);
+    /* methodRef count */
+    //fread(short_tmp, 2, 1, fp);
+    s2c.c1 = (c8) bytebuf_read(buf);
+    s2c.c0 = (c8) bytebuf_read(buf);
+    cff->methods_count = s2c.s;
+
+    /* methodRef pool table */
+    _parse_method_pool(_this, buf, cff->methods_count);
+
+    //attribute
+    //fread(short_tmp, 2, 1, fp);
+    s2c.c1 = (c8) bytebuf_read(buf);
+    s2c.c0 = (c8) bytebuf_read(buf);
+    cff->attributes_count = s2c.s;
+    _parse_attribute_pool(_this, buf, cff->attributes_count);
+
+    //fclose(fp);
+
+    _class_link(_this);
+
+    _this->status = CLASS_STATUS_LOADED;
+    return 0;
+}
+
 
 s32 load_related_class(ClassLoader *loader, Class *clazz) {
     ConstantPool *p = &(clazz->constantPool);
@@ -1307,7 +1033,7 @@ s32 load_class(ClassLoader *loader, Utf8String *pClassName) {
                 utf8_append_c(filepath, ".class");
 
                 bytebuf = bytebuf_create(16);
-                iret = loadFileContents(utf8_cstr(filepath), bytebuf);
+                iret = _loadFileContents(utf8_cstr(filepath), bytebuf);
                 utf8_destory(filepath);
                 //回收
                 if (iret != 0) {
@@ -1349,3 +1075,19 @@ s32 load_class(ClassLoader *loader, Utf8String *pClassName) {
 }
 
 
+
+s32 _DESTORY_CLASS(Class *clazz) {
+    //
+    _class_method_info_destory(clazz);
+    _class_interface_pool_destory(clazz);
+    _class_field_info_destory(clazz);
+    _class_constant_pool_destory(clazz);
+    _class_attribute_info_destory(clazz);
+    clazz->field_static = NULL;
+    if (clazz->constant_item_ptr)jvm_free(clazz->constant_item_ptr);
+    clazz->constant_item_ptr = NULL;
+    jthreadlock_destory(&clazz->mb);
+    constant_list_destory(clazz);
+    utf8_destory(clazz->name);
+    return 0;
+}

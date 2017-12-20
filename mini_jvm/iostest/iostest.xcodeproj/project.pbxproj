@@ -10,7 +10,6 @@
 		454C4AEF1FB6B89D008B9C1D /* invokec.c in Sources */ = {isa = PBXBuildFile; fileRef = 45C1245D1F872A9200BF3925 /* invokec.c */; };
 		455763EE1FB6BCEE00EE3363 /* global.c in Sources */ = {isa = PBXBuildFile; fileRef = 455763D91FB6BCEC00EE3363 /* global.c */; };
 		455763EF1FB6BCEE00EE3363 /* java_native_std.c in Sources */ = {isa = PBXBuildFile; fileRef = 455763DB1FB6BCEC00EE3363 /* java_native_std.c */; };
-		455763F01FB6BCEE00EE3363 /* os_linux.c in Sources */ = {isa = PBXBuildFile; fileRef = 455763DC1FB6BCEC00EE3363 /* os_linux.c */; };
 		455763F11FB6BCEE00EE3363 /* jdwp.c in Sources */ = {isa = PBXBuildFile; fileRef = 455763DD1FB6BCEC00EE3363 /* jdwp.c */; };
 		455763F21FB6BCEE00EE3363 /* jvm.c in Sources */ = {isa = PBXBuildFile; fileRef = 455763DE1FB6BCEC00EE3363 /* jvm.c */; };
 		455763F31FB6BCEE00EE3363 /* runtime.c in Sources */ = {isa = PBXBuildFile; fileRef = 455763DF1FB6BCEC00EE3363 /* runtime.c */; };
@@ -18,7 +17,6 @@
 		455763F51FB6BCEE00EE3363 /* interpreter.c in Sources */ = {isa = PBXBuildFile; fileRef = 455763E31FB6BCED00EE3363 /* interpreter.c */; };
 		455763F61FB6BCEE00EE3363 /* garbage.c in Sources */ = {isa = PBXBuildFile; fileRef = 455763E41FB6BCED00EE3363 /* garbage.c */; };
 		455763F71FB6BCEE00EE3363 /* jvm_util.c in Sources */ = {isa = PBXBuildFile; fileRef = 455763E81FB6BCED00EE3363 /* jvm_util.c */; };
-		455763F81FB6BCEE00EE3363 /* os_win.c in Sources */ = {isa = PBXBuildFile; fileRef = 455763E91FB6BCED00EE3363 /* os_win.c */; };
 		455763F91FB6BCEE00EE3363 /* java_native_reflect.c in Sources */ = {isa = PBXBuildFile; fileRef = 455763EA1FB6BCED00EE3363 /* java_native_reflect.c */; };
 		455763FA1FB6BCEE00EE3363 /* class.c in Sources */ = {isa = PBXBuildFile; fileRef = 455763EB1FB6BCED00EE3363 /* class.c */; };
 		455763FB1FB6BCEE00EE3363 /* java_native_io.c in Sources */ = {isa = PBXBuildFile; fileRef = 455763ED1FB6BCED00EE3363 /* java_native_io.c */; };
@@ -65,7 +63,6 @@
 		455763D81FB6BCEC00EE3363 /* java_native_std.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = java_native_std.h; path = ../jvm/java_native_std.h; sourceTree = "<group>"; };
 		455763D91FB6BCEC00EE3363 /* global.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = global.c; path = ../jvm/global.c; sourceTree = "<group>"; };
 		455763DB1FB6BCEC00EE3363 /* java_native_std.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = java_native_std.c; path = ../jvm/java_native_std.c; sourceTree = "<group>"; };
-		455763DC1FB6BCEC00EE3363 /* os_linux.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = os_linux.c; path = ../jvm/os_linux.c; sourceTree = "<group>"; };
 		455763DD1FB6BCEC00EE3363 /* jdwp.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = jdwp.c; path = ../jvm/jdwp.c; sourceTree = "<group>"; };
 		455763DE1FB6BCEC00EE3363 /* jvm.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = jvm.c; path = ../jvm/jvm.c; sourceTree = "<group>"; };
 		455763DF1FB6BCEC00EE3363 /* runtime.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = runtime.c; path = ../jvm/runtime.c; sourceTree = "<group>"; };
@@ -78,7 +75,6 @@
 		455763E61FB6BCED00EE3363 /* java_native_io.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = java_native_io.h; path = ../jvm/java_native_io.h; sourceTree = "<group>"; };
 		455763E71FB6BCED00EE3363 /* jvm.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = jvm.h; path = ../jvm/jvm.h; sourceTree = "<group>"; };
 		455763E81FB6BCED00EE3363 /* jvm_util.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = jvm_util.c; path = ../jvm/jvm_util.c; sourceTree = "<group>"; };
-		455763E91FB6BCED00EE3363 /* os_win.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = os_win.c; path = ../jvm/os_win.c; sourceTree = "<group>"; };
 		455763EA1FB6BCED00EE3363 /* java_native_reflect.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = java_native_reflect.c; path = ../jvm/java_native_reflect.c; sourceTree = "<group>"; };
 		455763EB1FB6BCED00EE3363 /* class.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = class.c; path = ../jvm/class.c; sourceTree = "<group>"; };
 		455763EC1FB6BCED00EE3363 /* jdwp.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = jdwp.h; path = ../jvm/jdwp.h; sourceTree = "<group>"; };
@@ -171,8 +167,6 @@
 				455763E11FB6BCEC00EE3363 /* jvm_util.h */,
 				455763DE1FB6BCEC00EE3363 /* jvm.c */,
 				455763E71FB6BCED00EE3363 /* jvm.h */,
-				455763DC1FB6BCEC00EE3363 /* os_linux.c */,
-				455763E91FB6BCED00EE3363 /* os_win.c */,
 				455763DF1FB6BCEC00EE3363 /* runtime.c */,
 			);
 			name = jvm;
@@ -416,7 +410,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				45FA646D1FE7D42600A2E7CE /* hashset.c in Sources */,
-				455763F01FB6BCEE00EE3363 /* os_linux.c in Sources */,
 				455763F91FB6BCEE00EE3363 /* java_native_reflect.c in Sources */,
 				45C124311F87232100BF3925 /* ViewController.swift in Sources */,
 				455763F71FB6BCEE00EE3363 /* jvm_util.c in Sources */,
@@ -433,7 +426,6 @@
 				455763F61FB6BCEE00EE3363 /* garbage.c in Sources */,
 				45C1242F1F87232100BF3925 /* AppDelegate.swift in Sources */,
 				45FA64691FE7D42600A2E7CE /* bytebuf.c in Sources */,
-				455763F81FB6BCEE00EE3363 /* os_win.c in Sources */,
 				45FA646A1FE7D42600A2E7CE /* pairlist.c in Sources */,
 				45FA64701FE7D42600A2E7CE /* linkedlist.c in Sources */,
 				455763F51FB6BCEE00EE3363 /* interpreter.c in Sources */,

@@ -8,6 +8,7 @@
 #include "jvm.h"
 #include <pthread.h>
 #include <sys/stat.h>
+#include <sys/time.h>
 #include "../utils/miniz/miniz_wrapper.h"
 #include "jvm_util.h"
 #include "garbage.h"
@@ -498,6 +499,8 @@ void close_log() {
 #if _JVM_DEBUG_PRINT_FILE
     if (!logfile) {
         fclose(logfile);
+        logfile = NULL;
+        last_flush = 0;
     }
 #endif
 }
@@ -1360,4 +1363,60 @@ JavaThreadInfo *threadinfo_create() {
 void threadinfo_destory(JavaThreadInfo *threadInfo) {
     jvm_free(threadInfo);
 
+}
+
+void objcache_create() {
+    obj_cache = arraylist_create(1024 * 1);
+}
+
+void objcache_destory() {
+    while (obj_cache->length) {
+        Instance *ins = arraylist_pop_back(obj_cache);
+        jvm_free(ins);
+    }
+    arraylist_destory(obj_cache);
+    obj_cache = NULL;
+}
+
+Instance *objcache_get() {
+    Instance *ins = arraylist_pop_back(obj_cache);
+    if (!ins) {
+        ins = jvm_calloc(sizeof(Instance));
+    }
+    return ins;
+}
+
+void objcache_put(Instance *ins) {
+    arraylist_push_back(obj_cache, ins);
+}
+
+
+s64 currentTimeMillis() {
+    struct timeval tv;
+    gettimeofday(&tv, NULL);
+    //clock_gettime(CLOCK_REALTIME, &t);
+    return ((s64) tv.tv_sec) * 1000 + tv.tv_usec / 1000;
+}
+
+s64 nanoTime() {
+    struct timeval tv;
+    gettimeofday(&tv, NULL);
+    if (!NANO_START) {
+        NANO_START = ((s64) tv.tv_sec) * 1000000000;
+    }
+    s64 v = (((s64) tv.tv_sec) * 1000000 + tv.tv_usec) * 1000;
+    return v - NANO_START;
+}
+
+s64 threadSleep(s64 ms) {
+    //wait time
+    struct timespec req;
+    req.tv_sec = ms / 1000;
+    req.tv_nsec = (ms % 1000) * 1000000;
+    //if notify or notifyall ,the thread is active again, rem record remain wait time
+    struct timespec rem;
+    rem.tv_sec = 0;
+    rem.tv_nsec = 0;
+    nanosleep(&req, &rem);
+    return (rem.tv_sec * 1000 + rem.tv_nsec / 1000000);
 }

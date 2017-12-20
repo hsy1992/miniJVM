@@ -56,18 +56,6 @@ typedef void *__refer;
 
 
 extern s64 heap_size;
-//======================= smart ptr =============================
-typedef struct _autoptr {
-    __refer ref;
-    s32 count;
-} autoptr;
-
-
-autoptr *autoptr_get(autoptr *a);
-
-autoptr *autoptr_new(__refer r);
-
-void autoptr_NULL(autoptr **aref);
 
 
 //======================= memory manage =============================

@@ -28,8 +28,6 @@ set(SOURCE_FILES
         jvm/garbage.c
         jvm/jvm_util.c
         jvm/jvm_util.h
-        jvm/os_linux.c
-        jvm/os_win.c
         jvm/global.c
         jvm/java_native_std.h
         jvm/java_native_io.c

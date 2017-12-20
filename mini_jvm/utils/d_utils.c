@@ -12,47 +12,6 @@
 
 s64 heap_size = 0;
 
-//========================     autoprt     =========================
-
-/**
- * get a autoprt value;
- * @param a var
- * @return var
- */
-autoptr *autoptr_get(autoptr *a) {
-    a->count++;
-    //printf("__ins_r refer : %d\n",a->count);
-    return a;
-}
-
-/**
- * create a autoptr
- * @param r var
- * @return var
- */
-autoptr *autoptr_new(__refer r) {
-    autoptr *a = jvm_calloc(sizeof(autoptr));
-    a->ref = r;
-    return autoptr_get(a);
-}
-
-/**
- * set autoptr to null
- * @param aref var
- */
-void autoptr_NULL(autoptr **aref) {
-    if (!aref)
-        return;
-    autoptr *a = *aref;
-    a->count--;
-    //printf("__ins_r refer : %d\n",a->count);
-    if (!a->count) {
-        jvm_free(a->ref);
-        jvm_free(a);
-    }
-    *aref = NULL;
-}
-
 
 //========================     mem alloc     =========================
 
