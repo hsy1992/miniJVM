@@ -5,7 +5,9 @@
  * SUN PROPRIETARY/CONFIDENTIAL. Use is subject to license terms.
  */
 
-package java.util;
+package java.lang;
+
+import java.util.Iterator;
 
 
 /** Implementing this interface allows an object to be the target of

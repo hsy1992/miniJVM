@@ -82,7 +82,7 @@ package java.util;
  * @author Doug Lea
  * @param <E> the type of elements held in this collection
  */
-public interface Queue<E> extends Collection<E> {
+public interface Queue<E> extends Collection<E>,Iterable<E> {
 
     /**
      * Inserts the specified element into this queue, if possible.  When

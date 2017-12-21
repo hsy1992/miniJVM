@@ -63,7 +63,7 @@ package java.util;
  * @since 1.2
  */
 
-public interface Set<E> extends Collection<E> {
+public interface Set<E> extends Collection<E>,java.lang.Iterable<E> {
     // Query Operations
 
     /**

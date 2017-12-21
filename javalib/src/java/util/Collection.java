@@ -96,7 +96,7 @@ package java.util;
  * @since 1.2
  */
 
-public interface Collection<E> extends Iterable<E> {
+public interface Collection<E> extends java.lang.Iterable<E> {
     // Query Operations
 
     /**

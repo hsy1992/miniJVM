@@ -33,7 +33,6 @@ import javax.mini.net.ServerSocket;
 import javax.mini.net.Socket;
 import javax.mini.reflect.Method;
 import javax.mini.reflect.Reference;
-import javax.mini.reflect.StackFrame;
 import javax.mini.reflect.vm.RefNative;
 
 /**
