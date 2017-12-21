@@ -26,21 +26,24 @@ class ViewController: UIViewController {
         textview.font = .systemFont(ofSize: 16)
         textview.isEditable=false
         self.view.addSubview(textview)
-        textview.text = "press buttom to start jvm_mini test"
+        textview.text = "press buttom show log"
         
         //创建一个ContactAdd类型的按钮
         let button:UIButton = UIButton(type:.contactAdd)
         //设置按钮位置和大小
         button.frame = CGRect(x:0, y:screenSize.height-50, width:screenSize.width, height:50)
         //设置按钮文字
-        button.setTitle("Launch jvm", for:.normal)
+        button.setTitle("show log", for:.normal)
         self.view.addSubview(button)
         button.addTarget(self, action:#selector(tapped(_:)), for:.touchUpInside)
         
         let myString = "in main!"
         print(myString)
+                
+        //_ = Timer.scheduledTimer(timeInterval: 1, target: self, selector: #selector(self.show_output), userInfo: nil, repeats: true)
+        execjvm()
         
-        _ = Timer.scheduledTimer(timeInterval: 1, target: self, selector: #selector(self.show_output), userInfo: nil, repeats: true)
+        
     }
     
     
@@ -57,7 +60,7 @@ class ViewController: UIViewController {
     @objc func tapped(_ button:UIButton){
         print(button.title(for: .normal))
         //tv.text = "start..."
-        execjvm()
+        show_output()
     }
     
     @objc func execjvm()    {

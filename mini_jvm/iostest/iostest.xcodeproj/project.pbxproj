@@ -39,7 +39,7 @@
 		45FA64701FE7D42600A2E7CE /* linkedlist.c in Sources */ = {isa = PBXBuildFile; fileRef = 45FA64621FE7D42500A2E7CE /* linkedlist.c */; };
 		45FA64721FE7D42600A2E7CE /* hashtable.c in Sources */ = {isa = PBXBuildFile; fileRef = 45FA64661FE7D42600A2E7CE /* hashtable.c */; };
 		45FA64831FE7D47F00A2E7CE /* miniz_wrapper.c in Sources */ = {isa = PBXBuildFile; fileRef = 45FA64811FE7D47F00A2E7CE /* miniz_wrapper.c */; };
-		45FA64851FE7D6D900A2E7CE /* dist in Resources */ = {isa = PBXBuildFile; fileRef = 45FA64841FE7D6D900A2E7CE /* dist */; };
+		45FA648E1FEB812F00A2E7CE /* dist in Resources */ = {isa = PBXBuildFile; fileRef = 45FA648D1FEB812F00A2E7CE /* dist */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -116,7 +116,7 @@
 		45FA64671FE7D42600A2E7CE /* arraylist.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = arraylist.h; path = ../utils/arraylist.h; sourceTree = "<group>"; };
 		45FA64811FE7D47F00A2E7CE /* miniz_wrapper.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = miniz_wrapper.c; path = ../utils/miniz/miniz_wrapper.c; sourceTree = "<group>"; };
 		45FA64821FE7D47F00A2E7CE /* miniz_wrapper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = miniz_wrapper.h; path = ../utils/miniz/miniz_wrapper.h; sourceTree = "<group>"; };
-		45FA64841FE7D6D900A2E7CE /* dist */ = {isa = PBXFileReference; lastKnownFileType = folder; name = dist; path = ../../javalib/dist; sourceTree = "<group>"; };
+		45FA648D1FEB812F00A2E7CE /* dist */ = {isa = PBXFileReference; lastKnownFileType = folder; name = dist; path = ../../javalib_test/dist; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -175,7 +175,7 @@
 		45C124221F87232100BF3925 = {
 			isa = PBXGroup;
 			children = (
-				45FA64841FE7D6D900A2E7CE /* dist */,
+				45FA648D1FEB812F00A2E7CE /* dist */,
 				45FA64531FE7D41200A2E7CE /* utils */,
 				455763D71FB6BCDE00EE3363 /* jvm */,
 				45C1245C1F872A9100BF3925 /* iostestTests-Bridging-Header.h */,
@@ -382,9 +382,9 @@
 			buildActionMask = 2147483647;
 			files = (
 				45C124391F87232100BF3925 /* LaunchScreen.storyboard in Resources */,
+				45FA648E1FEB812F00A2E7CE /* dist in Resources */,
 				45C124361F87232100BF3925 /* Assets.xcassets in Resources */,
 				45C124341F87232100BF3925 /* Main.storyboard in Resources */,
-				45FA64851FE7D6D900A2E7CE /* dist in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

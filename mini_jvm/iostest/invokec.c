@@ -13,10 +13,13 @@ int call_jvm(char* app_path) {
     s32 argc=0;
     char ** argv=NULL;
     s32 ret ;
-    char path[256];
-    memset(&path,0,256);
+    char path[512];
+    memset(&path,0,512);
     strcat(path,app_path);
-    strcat(path,"/dist/mini_jvm_java.jar");
+    strcat(path,"/dist/lib/mini_jvm_java.jar");
+    strcat(path,";");
+    strcat(path,app_path);
+    strcat(path,"/dist/minijvm_javatest.jar");
     printf("classpath: %s\n",path);
     ret= execute_jvm(path, "test/Foo1", argc, argv);
     return ret;

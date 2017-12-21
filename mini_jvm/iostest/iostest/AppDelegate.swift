@@ -20,7 +20,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         let documentsDirectory = paths[0]
         let fileName = "console.txt"
         let logFilePath = (documentsDirectory as NSString).appendingPathComponent(fileName)
-        //freopen(logFilePath.cString(using: String.Encoding.utf8)!, "w", stderr)
+        freopen(logFilePath.cString(using: String.Encoding.utf8)!, "w", stderr)
         //freopen(logFilePath.cString(using: String.Encoding.utf8)!, "w", stdout)
         print(logFilePath)
         return true
