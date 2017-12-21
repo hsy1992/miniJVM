@@ -1223,6 +1223,9 @@ Instance *exception_create_str(s32 exception_type, Runtime *runtime, c8 *errmsg)
  * @return addr
  */
 inline c8 *getInstanceFieldPtr(Instance *ins, FieldInfo *fi) {
+//    if(fi->offset_instance!=fi->_this_class->field_instance_start + fi->offset){
+//        int debug=1;
+//    }
     return &(ins->obj_fields[fi->offset_instance]);
 }
 

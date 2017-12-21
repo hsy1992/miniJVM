@@ -205,10 +205,14 @@ void class_clinit(Class *clazz, Runtime *runtime) {
         ConstantFieldRef *cfr = (ConstantFieldRef *) arraylist_get_value(clazz->constantPool.fieldRef, i);
         FieldInfo *fi = find_fieldInfo_by_fieldref(clazz, cfr->index, runtime);
         cfr->fieldInfo = fi;
-        fi->offset_instance = fi->_this_class->field_instance_start + fi->offset;
 //        if (cfr->fieldInfo == NULL) {
 //            int debug = 1;
 //        }
+    }
+    for (i = 0; i < clazz->fieldPool.field_used; i++) {
+        FieldInfo * fi=&clazz->fieldPool.field[i];
+
+        fi->offset_instance = fi->_this_class->field_instance_start + fi->offset;
     }
 
     ArrayList *utf8list = clazz->constantPool.utf8CP;
