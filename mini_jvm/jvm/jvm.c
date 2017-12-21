@@ -164,9 +164,9 @@ s32 execute_jvm(c8 *p_classpath, c8 *p_mainclass, s32 argc, c8 **argv) {
     //装入系统属性
     sys_properties_load(sys_classloader);
 //    //装入基础类
-//    Utf8String *str_jstring = utf8_create_c(STR_CLASS_JAVA_LANG_STRING);
-//    load_class(sys_classloader, str_jstring);
-//    utf8_destory(str_jstring);
+    Utf8String *str_jstring = utf8_create_c(STR_CLASS_JAVA_LANG_STRING);
+    load_class(sys_classloader, str_jstring);
+    utf8_destory(str_jstring);
     //装入主类
     load_class(sys_classloader, str_mainClsName);
 
