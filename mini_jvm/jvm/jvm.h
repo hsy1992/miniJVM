@@ -548,6 +548,7 @@ struct _FieldInfo {
     Utf8String *descriptor;
     Class *_this_class;
     u16 offset;//字段的偏移地址，静态字段存放在class中
+    u16 offset_instance;
     u8 datatype_idx;
     u8 isrefer;
 };
@@ -764,7 +765,7 @@ MethodInfo *find_methodInfo_by_name(Utf8String *clsName, Utf8String *methodName,
 
 ConstantFieldRef *find_constant_fieldref(Class *clazz, s32 field_ref);
 
-FieldInfo *find_fieldInfo_by_fieldref(Class *clazz, s32 field_ref);
+FieldInfo *find_fieldInfo_by_fieldref(Class *clazz, s32 field_ref, Runtime *runtime);
 
 FieldInfo *find_fieldInfo_by_name_c(c8 *pclsName, c8 *pfieldName, c8 *pfieldType);
 

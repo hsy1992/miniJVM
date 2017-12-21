@@ -108,10 +108,7 @@ s32 class_prepar(Class *clazz) {
 //    if (utf8_equals_c(clazz->name, "javax/mini/eio/socket/PrivateOutputStream")) {
 //        int debug = 1;
 //    }
-    for (i = 0; i < clazz->constantPool.fieldRef->length; i++) {
-        ConstantFieldRef *cfr = (ConstantFieldRef *) arraylist_get_value(clazz->constantPool.fieldRef, i);
-        cfr->fieldInfo = find_fieldInfo_by_fieldref(clazz, cfr->index);
-    }
+
     for (i = 0; i < clazz->constantPool.methodRef->length; i++) {
         ConstantMethodRef *cmr = (ConstantMethodRef *) arraylist_get_value(clazz->constantPool.methodRef, i);
         cmr->methodInfo = find_methodInfo_by_methodref(clazz, cmr->index);
@@ -204,6 +201,16 @@ void class_clinit(Class *clazz, Runtime *runtime) {
     clazz->status = CLASS_STATUS_CLINITING;
     // init javastring
     s32 i, len;
+    for (i = 0; i < clazz->constantPool.fieldRef->length; i++) {
+        ConstantFieldRef *cfr = (ConstantFieldRef *) arraylist_get_value(clazz->constantPool.fieldRef, i);
+        FieldInfo *fi = find_fieldInfo_by_fieldref(clazz, cfr->index, runtime);
+        cfr->fieldInfo = fi;
+        fi->offset_instance = fi->_this_class->field_instance_start + fi->offset;
+//        if (cfr->fieldInfo == NULL) {
+//            int debug = 1;
+//        }
+    }
+
     ArrayList *utf8list = clazz->constantPool.utf8CP;
     for (i = 0, len = utf8list->length; i < len; i++) {
         ConstantUTF8 *cutf = arraylist_get_value(utf8list, i);
@@ -230,6 +237,7 @@ void class_clinit(Class *clazz, Runtime *runtime) {
             if (ret != RUNTIME_STATUS_NORMAL) {
                 print_exception(runtime);
             }
+            break;
         }
     }
 
@@ -388,14 +396,14 @@ inline Utf8String *get_utf8_string(Class *clazz, s32 index) {
  * @param field_ref ref
  * @return fi
  */
-FieldInfo *find_fieldInfo_by_fieldref(Class *clazz, s32 field_ref) {
+FieldInfo *find_fieldInfo_by_fieldref(Class *clazz, s32 field_ref, Runtime *runtime) {
     FieldInfo *fi = NULL;
     ConstantFieldRef *cfr = find_constant_fieldref(clazz, field_ref);
     ConstantNameAndType *nat = find_constant_name_and_type(clazz, cfr->nameAndTypeIndex);
     Utf8String *clsName = get_utf8_string(clazz, find_constant_classref(clazz, cfr->classIndex)->stringIndex);
     Utf8String *fieldName = get_utf8_string(clazz, nat->nameIndex);
     Utf8String *type = get_utf8_string(clazz, nat->typeIndex);
-    Class *other = classes_get(clsName);
+    Class *other = classes_load_get(clsName, runtime);
 
     while (fi == NULL && other) {
         FieldPool *fp = &(other->fieldPool);

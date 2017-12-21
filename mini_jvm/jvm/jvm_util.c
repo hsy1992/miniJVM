@@ -1222,11 +1222,11 @@ Instance *exception_create_str(s32 exception_type, Runtime *runtime, c8 *errmsg)
  * @param fi fi
  * @return addr
  */
-c8 *getInstanceFieldPtr(Instance *ins, FieldInfo *fi) {
-    return &(ins->obj_fields[fi->_this_class->field_instance_start + fi->offset]);
+inline c8 *getInstanceFieldPtr(Instance *ins, FieldInfo *fi) {
+    return &(ins->obj_fields[fi->offset_instance]);
 }
 
-c8 *getStaticFieldPtr(FieldInfo *fi) {
+inline c8 *getStaticFieldPtr(FieldInfo *fi) {
     return &(fi->_this_class->field_static[fi->offset]);
 }
 

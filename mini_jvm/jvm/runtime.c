@@ -205,12 +205,12 @@ void runtime_destory(Runtime *runtime) {
     s32 is_top = runtime->threadInfo->top_runtime == runtime;
     if (!is_top) {
         arraylist_push_back_unsafe(runtime->threadInfo->top_runtime->runtime_pool, runtime);
-        __refer lv = runtime->localvar;
-        s32 max = runtime->localvar_max;
-        memset(runtime, 0, sizeof(Runtime));
-        runtime->localvar = lv;
-        memset(lv, 0, RUNTIME_LOCALVAR_SIZE * sizeof(LocalVarItem));
-        runtime->localvar_max = max;
+//        __refer lv = runtime->localvar;
+//        s32 max = runtime->localvar_max;
+//        memset(runtime, 0, sizeof(Runtime));
+//        runtime->localvar = lv;
+//        memset(lv, 0, RUNTIME_LOCALVAR_SIZE * sizeof(LocalVarItem));
+//        runtime->localvar_max = max;
     } else {
         stack_destory(runtime->stack);
         threadinfo_destory(runtime->threadInfo);
@@ -280,6 +280,8 @@ s32 localvar_init(Runtime *runtime, s32 count) {
         jvm_free(runtime->localvar);
         runtime->localvar = jvm_calloc(sizeof(LocalVarItem) * count);
         runtime->localvar_max = count;
+    }else{
+        memset(runtime->localvar, 0, count * sizeof(LocalVarItem));
     }
     runtime->localvar_count = count;
     return 0;

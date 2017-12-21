@@ -388,10 +388,6 @@ static inline s32 _op_putfield_impl(u8 **opCode, Runtime *runtime, RuntimeStack 
     }
     // check variable type to determain long/s32/f64/f32
     FieldInfo *fi = find_constant_fieldref(clazz, field_ref)->fieldInfo;
-    if (fi == NULL) {
-        fi = find_fieldInfo_by_fieldref(clazz, field_ref);
-        find_constant_fieldref(clazz, field_ref)->fieldInfo = fi;
-    }
 
     StackEntry entry;
     pop_entry(stack, &entry);
@@ -406,7 +402,7 @@ static inline s32 _op_putfield_impl(u8 **opCode, Runtime *runtime, RuntimeStack 
             push_ref(stack, (__refer) exception);
             return RUNTIME_STATUS_EXCEPTION;
         }
-        ptr = getInstanceFieldPtr(ins, fi);
+        ptr = &(ins->obj_fields[fi->offset_instance]);
     }
 #if _JVM_DEBUG_BYTECODE_DETAIL > 5
     invoke_deepth(runtime);
@@ -421,20 +417,24 @@ static inline s32 _op_putfield_impl(u8 **opCode, Runtime *runtime, RuntimeStack 
         s32 data_bytes = data_type_bytes[fi->datatype_idx];
         //非引用类型
         switch (data_bytes) {
-            case 8: {
-                setFieldLong(ptr, entry_2_long(&entry));
-                break;
-            }
-            case 4: {
-                setFieldInt(ptr, entry_2_int(&entry));
+            case 1: {
+                setFieldByte(ptr, entry_2_int(&entry));
                 break;
             }
             case 2: {
                 setFieldShort(ptr, entry_2_int(&entry));
                 break;
             }
-            case 1: {
-                setFieldByte(ptr, entry_2_int(&entry));
+            case 3://impossible
+            case 4: {
+                setFieldInt(ptr, entry_2_int(&entry));
+                break;
+            }
+            case 5://impossible
+            case 6://impossible
+            case 7://impossible
+            case 8: {
+                setFieldLong(ptr, entry_2_long(&entry));
                 break;
             }
         }
@@ -450,16 +450,12 @@ static inline s32 _op_getfield_impl(u8 **opCode, Runtime *runtime, RuntimeStack 
     s2c.c0 = opCode[0][2];
 
     u16 field_ref = s2c.s;
-    if (clazz->status <= CLASS_STATUS_CLINITED) {
+    if (clazz->status < CLASS_STATUS_CLINITED) {
         class_clinit(clazz, runtime);
     }
 
     // check variable type to determine s64/s32/f64/f32
     FieldInfo *fi = find_constant_fieldref(clazz, field_ref)->fieldInfo;
-    if (fi == NULL) {
-        fi = find_fieldInfo_by_fieldref(clazz, field_ref);
-        find_constant_fieldref(clazz, field_ref)->fieldInfo = fi;
-    }
 
     c8 *ptr;
     if (isStatic) {
@@ -471,43 +467,43 @@ static inline s32 _op_getfield_impl(u8 **opCode, Runtime *runtime, RuntimeStack 
             push_ref(stack, (__refer) exception);
             return RUNTIME_STATUS_EXCEPTION;
         }
-        ptr = getInstanceFieldPtr(ins, fi);
+        ptr = &(ins->obj_fields[fi->offset_instance]);
     }
-    Long2Double l2d;
-    l2d.l = 0;
     if (fi->isrefer) {
-        l2d.r = getFieldRefer(ptr);
-        push_ref(stack, l2d.r);
+        push_ref(stack, getFieldRefer(ptr));
     } else {
         s32 data_bytes = data_type_bytes[fi->datatype_idx];
         switch (data_bytes) {
-            case 8: {
-                l2d.l = getFieldLong(ptr);
-                push_long(stack, l2d.l);
-                break;
-            }
-            case 4: {
-                l2d.i2l.i1 = getFieldInt(ptr);
-                push_int(stack, l2d.i2l.i1);
+            case 1: {
+                push_int(stack, getFieldByte(ptr));
                 break;
             }
             case 2: {
-                l2d.i2l.i1 = getFieldShort(ptr);
-                push_int(stack, l2d.i2l.i1);
+                push_int(stack, getFieldShort(ptr));
                 break;
             }
-            case 1: {
-                l2d.i2l.i1 = getFieldByte(ptr);
-                push_int(stack, l2d.i2l.i1);
+            case 3://impossible
+            case 4: {
+                push_int(stack, getFieldInt(ptr));
+                break;
+            }
+            case 5://impossible
+            case 6://impossible
+            case 7://impossible
+            case 8: {
+                push_long(stack, getFieldLong(ptr));
                 break;
             }
         }
     }
 #if _JVM_DEBUG_BYTECODE_DETAIL > 5
     invoke_deepth(runtime);
-    jvm_printf("%s: push %s.%s[%llx]=[%llx]\n",
+    StackEntry entry;
+    peek_entry(stack, &entry, stack->size - 1);
+    s64 v = entry_2_long(&entry);
+    jvm_printf("%s: push %s.%s[%llx]\n",
                isStatic ? "getstatic" : "getfield", utf8_cstr(clazz->name), utf8_cstr(fi->name),
-               (s64) (long) ptr, l2d.l);
+               (s64) (long) ptr, v);
 #endif
     *opCode = *opCode + 3;
     return 0;
