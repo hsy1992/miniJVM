@@ -13,7 +13,48 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" readonly="true" id="8573b6ef-7560-47b3-bf8a-687a65174ff8" name="Default" comment="">
+      <change beforePath="$PROJECT_DIR$/../javalib/dist/mini_jvm_java.jar" afterPath="$PROJECT_DIR$/../javalib/dist/mini_jvm_java.jar" />
+      <change beforePath="$PROJECT_DIR$/../javalib/src/test/BpDeep.java" afterPath="" />
+      <change beforePath="$PROJECT_DIR$/../javalib/src/test/BpDeepTest.java" afterPath="" />
+      <change beforePath="$PROJECT_DIR$/../javalib/src/test/Foo1.java" afterPath="" />
+      <change beforePath="$PROJECT_DIR$/../javalib/src/test/Foo2.java" afterPath="" />
+      <change beforePath="$PROJECT_DIR$/../javalib/src/test/Foo3.java" afterPath="" />
+      <change beforePath="$PROJECT_DIR$/../javalib_test/dist/README.TXT" afterPath="$PROJECT_DIR$/../javalib_test/dist/README.TXT" />
+      <change beforePath="$PROJECT_DIR$/../javalib_test/dist/minijvm_javatest.jar" afterPath="$PROJECT_DIR$/../javalib_test/dist/minijvm_javatest.jar" />
+      <change beforePath="$PROJECT_DIR$/../javalib_test/nbproject/build-impl.xml" afterPath="$PROJECT_DIR$/../javalib_test/nbproject/build-impl.xml" />
+      <change beforePath="$PROJECT_DIR$/../javalib_test/nbproject/genfiles.properties" afterPath="$PROJECT_DIR$/../javalib_test/nbproject/genfiles.properties" />
+      <change beforePath="$PROJECT_DIR$/../javalib_test/nbproject/project.properties" afterPath="$PROJECT_DIR$/../javalib_test/nbproject/project.properties" />
+      <change beforePath="$PROJECT_DIR$/../javalib_test/nbproject/project.xml" afterPath="$PROJECT_DIR$/../javalib_test/nbproject/project.xml" />
+      <change beforePath="$PROJECT_DIR$/../javalib_test/src/java/io/PrintStream.java" afterPath="" />
+      <change beforePath="$PROJECT_DIR$/../javalib_test/src/java/lang/Boolean.java" afterPath="" />
+      <change beforePath="$PROJECT_DIR$/../javalib_test/src/java/lang/Byte.java" afterPath="" />
+      <change beforePath="$PROJECT_DIR$/../javalib_test/src/java/lang/Character.java" afterPath="" />
+      <change beforePath="$PROJECT_DIR$/../javalib_test/src/java/lang/Double.java" afterPath="" />
+      <change beforePath="$PROJECT_DIR$/../javalib_test/src/java/lang/Exception.java" afterPath="" />
+      <change beforePath="$PROJECT_DIR$/../javalib_test/src/java/lang/Float.java" afterPath="" />
+      <change beforePath="$PROJECT_DIR$/../javalib_test/src/java/lang/Integer.java" afterPath="" />
+      <change beforePath="$PROJECT_DIR$/../javalib_test/src/java/lang/Long.java" afterPath="" />
+      <change beforePath="$PROJECT_DIR$/../javalib_test/src/java/lang/Math.java" afterPath="" />
+      <change beforePath="$PROJECT_DIR$/../javalib_test/src/java/lang/NullPointerException.java" afterPath="" />
+      <change beforePath="$PROJECT_DIR$/../javalib_test/src/java/lang/Object.java" afterPath="" />
+      <change beforePath="$PROJECT_DIR$/../javalib_test/src/java/lang/Runnable.java" afterPath="" />
+      <change beforePath="$PROJECT_DIR$/../javalib_test/src/java/lang/RuntimeException.java" afterPath="" />
+      <change beforePath="$PROJECT_DIR$/../javalib_test/src/java/lang/Short.java" afterPath="" />
+      <change beforePath="$PROJECT_DIR$/../javalib_test/src/java/lang/String.java" afterPath="" />
+      <change beforePath="$PROJECT_DIR$/../javalib_test/src/java/lang/StringBuffer.java" afterPath="" />
+      <change beforePath="$PROJECT_DIR$/../javalib_test/src/java/lang/StringBuilder.java" afterPath="" />
+      <change beforePath="$PROJECT_DIR$/../javalib_test/src/java/lang/System.java" afterPath="" />
+      <change beforePath="$PROJECT_DIR$/../javalib_test/src/java/lang/Thread.java" afterPath="" />
+      <change beforePath="$PROJECT_DIR$/../javalib_test/src/java/lang/Throwable.java" afterPath="" />
+      <change beforePath="$PROJECT_DIR$/../javalib_test/src/test/Foo1.java" afterPath="$PROJECT_DIR$/../javalib_test/src/test/Foo1.java" />
+      <change beforePath="$PROJECT_DIR$/../javalib_test/src/test/Foo2.java" afterPath="$PROJECT_DIR$/../javalib_test/src/test/Foo2.java" />
+      <change beforePath="$PROJECT_DIR$/../javalib_test/src/test/P.java" afterPath="" />
+      <change beforePath="$PROJECT_DIR$/../javalib_test/src/test/R.java" afterPath="" />
+      <change beforePath="$PROJECT_DIR$/../javalib_test/src/test/TestInterface.java" afterPath="" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
+      <change beforePath="$PROJECT_DIR$/jvm/class_load.c" afterPath="$PROJECT_DIR$/jvm/class_load.c" />
+      <change beforePath="$PROJECT_DIR$/jvm/jvm.c" afterPath="$PROJECT_DIR$/jvm/jvm.c" />
+      <change beforePath="$PROJECT_DIR$/test.c" afterPath="$PROJECT_DIR$/test.c" />
     </list>
     <ignored path="$PROJECT_DIR$/cmake-build-debug/" />
     <ignored path="$PROJECT_DIR$/cmake-build-release/" />
@@ -165,11 +206,11 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="spinlock.c" pinned="false" current-in-tab="true">
+      <file leaf-file-name="spinlock.c" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/utils/spinlock.c">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="38">
-              <caret line="2" column="2" lean-forward="true" selection-start-line="2" selection-start-column="2" selection-end-line="2" selection-end-column="2" />
+            <state relative-caret-position="19">
+              <caret line="1" column="30" lean-forward="true" selection-start-line="1" selection-start-column="30" selection-end-line="1" selection-end-column="30" />
               <folding />
             </state>
           </provider>
@@ -209,14 +250,13 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="test.c" pinned="false" current-in-tab="false">
+      <file leaf-file-name="test.c" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/test.c">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="456">
-              <caret line="24" column="12" lean-forward="false" selection-start-line="24" selection-start-column="12" selection-end-line="24" selection-end-column="12" />
+            <state relative-caret-position="414">
+              <caret line="26" column="15" lean-forward="true" selection-start-line="26" selection-start-column="15" selection-end-line="26" selection-end-column="15" />
               <folding>
-                <marker date="1513743455247" expanded="false" signature="273:283" ph="..." />
-                <marker date="1513743455247" expanded="true" signature="642:663" ph="{...}" />
+                <marker date="1513832712040" expanded="true" signature="527:548" ph="{...}" />
               </folding>
             </state>
           </provider>
@@ -225,29 +265,18 @@
       <file leaf-file-name="jvm.c" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/jvm/jvm.c">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="4902">
-              <caret line="258" column="28" lean-forward="false" selection-start-line="258" selection-start-column="28" selection-end-line="258" selection-end-column="28" />
-              <folding>
-                <marker date="1513743455181" expanded="false" signature="11:221" ph="..." />
-                <marker date="1513743455181" expanded="true" signature="265:596" ph="{...}" />
-                <marker date="1513743455181" expanded="true" signature="625:748" ph="{...}" />
-                <marker date="1513743455181" expanded="true" signature="789:1683" ph="{...}" />
-                <marker date="1513743455181" expanded="true" signature="1728:2762" ph="{...}" />
-                <marker date="1513743455181" expanded="true" signature="2816:3431" ph="{...}" />
-                <marker date="1513743455181" expanded="true" signature="3495:3760" ph="{...}" />
-                <marker date="1513743455181" expanded="true" signature="4146:9056" ph="{...}" />
-                <marker date="1513743455181" expanded="false" signature="4255:4336" ph="..." />
-                <marker date="1513743455181" expanded="false" signature="8163:8539" ph="..." />
-              </folding>
+            <state relative-caret-position="232">
+              <caret line="168" column="14" lean-forward="true" selection-start-line="168" selection-start-column="14" selection-end-line="168" selection-end-column="14" />
+              <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="CMakeLists.txt" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/CMakeLists.txt">
+      <file leaf-file-name="class_load.c" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/jvm/class_load.c">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="779">
-              <caret line="41" column="14" lean-forward="false" selection-start-line="41" selection-start-column="14" selection-end-line="41" selection-end-column="14" />
+            <state relative-caret-position="154">
+              <caret line="1043" column="72" lean-forward="false" selection-start-line="1043" selection-start-column="72" selection-end-line="1043" selection-end-column="72" />
               <folding />
             </state>
           </provider>
@@ -398,8 +427,6 @@
         <option value="$PROJECT_DIR$/utils/miniz/miniz_wrapper.c" />
         <option value="$PROJECT_DIR$/utils/bytebuf.c" />
         <option value="$PROJECT_DIR$/utils/cmem/memleak.c" />
-        <option value="$PROJECT_DIR$/jvm/class_load.c" />
-        <option value="$PROJECT_DIR$/jvm/jvm.c" />
         <option value="$PROJECT_DIR$/utils/d_utils.c" />
         <option value="$PROJECT_DIR$/utils/spinlock.h" />
         <option value="$PROJECT_DIR$/utils/arraylist.h" />
@@ -411,10 +438,12 @@
         <option value="$PROJECT_DIR$/jvm/interpreter.c" />
         <option value="$PROJECT_DIR$/utils/d_type.h" />
         <option value="$PROJECT_DIR$/CMakeLists.txt" />
-        <option value="$PROJECT_DIR$/test.c" />
         <option value="$PROJECT_DIR$/jvm/jvm.h" />
         <option value="$PROJECT_DIR$/jvm/global.c" />
         <option value="$PROJECT_DIR$/jvm/jvm_util.c" />
+        <option value="$PROJECT_DIR$/jvm/jvm.c" />
+        <option value="$PROJECT_DIR$/jvm/class_load.c" />
+        <option value="$PROJECT_DIR$/test.c" />
       </list>
     </option>
   </component>
@@ -436,7 +465,7 @@
     <option name="x" value="152" />
     <option name="y" value="38" />
     <option name="width" value="1291" />
-    <option name="height" value="776" />
+    <option name="height" value="938" />
   </component>
   <component name="ProjectInspectionProfilesVisibleTreeState">
     <entry key="Project Default">
@@ -486,17 +515,6 @@
               <item name="mini_jvm" type="dad4c3:CidrFilesViewHelper$MyProjectTreeStructure$1" />
               <item name="mini_jvm" type="462c0819:PsiDirectoryNode" />
               <item name="jvm" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="mini_jvm" type="dad4c3:CidrFilesViewHelper$MyProjectTreeStructure$1" />
-              <item name="mini_jvm" type="462c0819:PsiDirectoryNode" />
-              <item name="utils" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="mini_jvm" type="dad4c3:CidrFilesViewHelper$MyProjectTreeStructure$1" />
-              <item name="mini_jvm" type="462c0819:PsiDirectoryNode" />
-              <item name="utils" type="462c0819:PsiDirectoryNode" />
-              <item name="miniz" type="462c0819:PsiDirectoryNode" />
             </path>
           </expand>
           <select />
@@ -613,15 +631,15 @@
       <workItem from="1513594384800" duration="1383000" />
       <workItem from="1513681041634" duration="9472000" />
       <workItem from="1513744261575" duration="2118000" />
-      <workItem from="1513773299310" duration="2644000" />
+      <workItem from="1513773299310" duration="3878000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="1756833000" />
+    <option name="totallyTimeSpent" value="1758067000" />
   </component>
   <component name="ToolWindowManager">
-    <frame x="152" y="38" width="1291" height="776" extended-state="0" />
+    <frame x="152" y="38" width="1291" height="938" extended-state="0" />
     <editor active="true" />
     <layout>
       <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.19902518" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
@@ -629,11 +647,11 @@
       <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.3716952" sideWeight="0.47402596" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="CMake" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32696897" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.47368422" sideWeight="0.52840906" order="7" side_tool="true" content_ui="tabs" />
-      <window_info id="Run" active="true" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.33903578" sideWeight="0.46996754" order="2" side_tool="false" content_ui="tabs" />
+      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.21987578" sideWeight="0.46996754" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32961783" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.22420797" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
       <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32854864" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
-      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.27060133" sideWeight="0.46849757" order="3" side_tool="false" content_ui="tabs" />
+      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.2021773" sideWeight="0.46849757" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="1" side_tool="true" content_ui="tabs" />
       <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
       <window_info id="Message" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
@@ -665,7 +683,7 @@
           <properties />
         </breakpoint>
       </default-breakpoints>
-      <option name="time" value="1448" />
+      <option name="time" value="1450" />
     </breakpoint-manager>
     <watches-manager>
       <configuration name="CMakeRunConfiguration">
@@ -737,6 +755,7 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="-5543">
           <caret line="233" column="0" lean-forward="false" selection-start-line="233" selection-start-column="0" selection-end-line="233" selection-end-column="0" />
+          <folding />
         </state>
       </provider>
     </entry>
@@ -768,13 +787,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="17860">
           <caret line="940" column="4" lean-forward="false" selection-start-line="940" selection-start-column="4" selection-end-line="940" selection-end-column="4" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/jvm/class_load.c">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="136">
-          <caret line="1079" column="31" lean-forward="false" selection-start-line="1079" selection-start-column="31" selection-end-line="1079" selection-end-column="31" />
         </state>
       </provider>
     </entry>
@@ -852,6 +864,7 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="133">
           <caret line="7" column="0" lean-forward="false" selection-start-line="7" selection-start-column="0" selection-end-line="7" selection-end-column="0" />
+          <folding />
         </state>
       </provider>
     </entry>
@@ -904,36 +917,6 @@
             <marker date="1513743455074" expanded="true" signature="219:4743" ph="{...}" />
             <marker date="1513743455074" expanded="true" signature="128440:129565" ph="{...}" />
             <marker date="1513743455074" expanded="false" signature="128571:129468" ph="..." />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/test.c">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="456">
-          <caret line="24" column="12" lean-forward="false" selection-start-line="24" selection-start-column="12" selection-end-line="24" selection-end-column="12" />
-          <folding>
-            <marker date="1513743455247" expanded="false" signature="273:283" ph="..." />
-            <marker date="1513743455247" expanded="true" signature="642:663" ph="{...}" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/jvm/jvm.c">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="4902">
-          <caret line="258" column="28" lean-forward="false" selection-start-line="258" selection-start-column="28" selection-end-line="258" selection-end-column="28" />
-          <folding>
-            <marker date="1513743455181" expanded="false" signature="11:221" ph="..." />
-            <marker date="1513743455181" expanded="true" signature="265:596" ph="{...}" />
-            <marker date="1513743455181" expanded="true" signature="625:748" ph="{...}" />
-            <marker date="1513743455181" expanded="true" signature="789:1683" ph="{...}" />
-            <marker date="1513743455181" expanded="true" signature="1728:2762" ph="{...}" />
-            <marker date="1513743455181" expanded="true" signature="2816:3431" ph="{...}" />
-            <marker date="1513743455181" expanded="true" signature="3495:3760" ph="{...}" />
-            <marker date="1513743455181" expanded="true" signature="4146:9056" ph="{...}" />
-            <marker date="1513743455181" expanded="false" signature="4255:4336" ph="..." />
-            <marker date="1513743455181" expanded="false" signature="8163:8539" ph="..." />
           </folding>
         </state>
       </provider>
@@ -1126,9 +1109,35 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/utils/spinlock.c">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="38">
-          <caret line="2" column="2" lean-forward="true" selection-start-line="2" selection-start-column="2" selection-end-line="2" selection-end-column="2" />
+        <state relative-caret-position="19">
+          <caret line="1" column="30" lean-forward="true" selection-start-line="1" selection-start-column="30" selection-end-line="1" selection-end-column="30" />
           <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/jvm/jvm.c">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="232">
+          <caret line="168" column="14" lean-forward="true" selection-start-line="168" selection-start-column="14" selection-end-line="168" selection-end-column="14" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/jvm/class_load.c">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="154">
+          <caret line="1043" column="72" lean-forward="false" selection-start-line="1043" selection-start-column="72" selection-end-line="1043" selection-end-column="72" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/test.c">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="414">
+          <caret line="26" column="15" lean-forward="true" selection-start-line="26" selection-start-column="15" selection-end-line="26" selection-end-column="15" />
+          <folding>
+            <marker date="1513832712040" expanded="true" signature="527:548" ph="{...}" />
+          </folding>
         </state>
       </provider>
     </entry>

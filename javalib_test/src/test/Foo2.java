@@ -1,167 +1,253 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package test;
 
-import static test.P.p;
-import static test.P.p_static_var;
+class Foo2 {
 
-/**
- *
- * @author gust
- */
-
-class Foo2 extends P {
-
-    int i;
-    static int si;
-    int[] arr = new int[]{5, 6};
-    short s;
-    byte b;
-    Object o;
-    char c;
-    double d;
-    float f;
-    long l = 0x1000000120000002L;
-    String str;
-
-    public String getName(Object o1, int i, byte b, String a, Object o) {
-        return "NameClass";
-    }
-
-    public int getValue() {
-        return i;
+    public void t0() {
+        System.out.println("HelloWorld.");
     }
 
     public void t1() {
-        System.out.println("start ...");
-        long start = System.currentTimeMillis();
-        for (int i = 0; i < 100000; i++) {
-            si += Math.min(i, 10000);
+
+        byte f0 = 100;
+        byte f1 = (byte) (5 % f0 - 2 * (9 + 5) / 2);
+        System.out.println("+ = " + (f0 + f1));
+        System.out.println("- = " + (f0 - f1));
+        System.out.println("* = " + (f0 * f1));
+        System.out.println("/ = " + (f0 / f1));
+        System.out.println("% = " + (f0 % f1));
+        byte[] val = new byte[10];
+        f1 = 100;
+        f1 = (byte) (f1 * f1 / f1 + f1 - f1 / 2);
+        System.out.println(f1);
+        val[0] = f1;
+        System.out.println(val[0]);
+        for (int i = 0; i < val.length; i++) {
+            val[i] = (byte) (5 % f0 - 2 * (9 + 5) / 2);
         }
-        long end = System.currentTimeMillis();
-        System.out.println("spent ms :" + (end - start));
-        System.out.println("si =" + si);
+        System.out.println("strs.length=" + val.length);
+        for (int i = 0; i < val.length; i++) {
+            System.out.println("val[" + i + "]=" + val[i]);
+        }
     }
 
     public void t2() {
-        Foo2 foo1 = new Foo2();
-        foo1.i = 90;
-        foo1.str = foo1.getName(foo1.o, foo1.i, foo1.b, "", foo1.o);
-        foo1.p_ins_var = 66;
-        p_static_var = 67;
-        foo1.arr[1] = 7;
-        for (int k = 0; k < foo1.arr.length; k++) {
-            System.out.println("arr[" + k + "]=" + foo1.arr[k]);
-        }
 
-        System.out.println(Long.toHexString(foo1.l));
-        System.out.println(foo1.str);
-        System.out.println(foo1.getX());
-        foo1.t1();
+        short f0 = 100;
+        short f1 = (short) (5 % f0 - 2 * (9 + 5) / 2);
+        System.out.println("+ = " + (f0 + f1));
+        System.out.println("- = " + (f0 - f1));
+        System.out.println("* = " + (f0 * f1));
+        System.out.println("/ = " + (f0 / f1));
+        System.out.println("% = " + (f0 % f1));
+        short[] val = new short[10];
+        f1 = 1000;
+        f1 = (short) (f1 * f1 / f1 + f1 - f1 / 2);
+        System.out.println(f1);
+        val[0] = f1;
+        System.out.println(val[0]);
+        for (int i = 0; i < val.length; i++) {
+            val[i] = (short) (5 % f0 - 2 * (9 + 5) / 2);
+        }
+        System.out.println("strs.length=" + val.length);
+        for (int i = 0; i < val.length; i++) {
+            System.out.println("val[" + i + "]=" + val[i]);
+        }
     }
 
     public void t3() {
 
-        si = 65;
-
-        System.out.println("P.p()=" + p());
-        System.out.println("helloworld");
-
-        System.out.println(System.currentTimeMillis());
-        System.out.println(System.nanoTime());
-
-        System.out.println("p.p_static_var=" + p_static_var);
-        P.p_static_var = 5;
-        System.out.println(p_static_var);
-
+        int f0 = 100;
+        int f1 = 5 % f0 - 2 * (9 + 5) / 2;;
+        System.out.println("+ = " + (f0 + f1));
+        System.out.println("- = " + (f0 - f1));
+        System.out.println("* = " + (f0 * f1));
+        System.out.println("/ = " + (f0 / f1));
+        System.out.println("% = " + (f0 % f1));
+        int[] val = new int[10];
+        f1 = 100000000;
+        f1 = f1 * f1 / f1 + f1 - f1 / 2;
+        System.out.println(f1);
+        val[0] = f1;
+        System.out.println(val[0]);
+        for (int i = 0; i < val.length; i++) {
+            val[i] = 5 % f0 - 2 * (9 + 5) / 2;
+        }
+        System.out.println("strs.length=" + val.length);
+        for (int i = 0; i < val.length; i++) {
+            System.out.println("val[" + i + "]=" + val[i]);
+        }
     }
 
     public void t4() {
-        int x = (int) (Math.random() * 42 + 1);
-        int y = 6345;
-        int c = 0;
-        int d = 23456;
-        int f = 0;
-        System.out.println("abc".lastIndexOf(""));
-        System.out.println("--------------------");
-        System.out.println("initial value ");
-        System.out.println("random number x : " + x);
-        System.out.println("x = " + x);
-        System.out.println("y = " + y);
-        System.out.println("c = " + c);
-        System.out.println("d = " + d);
-        System.out.println("f = " + f);
-        System.out.println("--------------------");
 
-        c = x + y;
-        d += c;
-        System.out.println("c = x + y = " + x + " + " + y + " = " + c);
-        System.out.println("d = d + c = " + d);
-        x = c / 2;
-        System.out.println("x = c/2 = " + x);
-
-        c = x * y;
-        d += c;
-        System.out.println("c = x * y = " + x + " * " + y + " = " + c);
-        System.out.println("d = d + c = " + d);
-        x = c / 2;
-        System.out.println("x = c/2 = " + x);
-
-        c = x - y;
-        d += c;
-        System.out.println("c = x - y = " + x + " - " + y + " = " + c);
-        System.out.println("d = d + c = " + d);
-        x = c / 2;
-        System.out.println("x = c/2 = " + x);
-
-        c = x / y;
-        d += c;
-        System.out.println("c = x / y = " + x + " / " + y + " = " + c);
-        System.out.println("d = d + c = " + d);
-
-        f = d + x + y + c;
-        System.out.println("f = " + (d) + " + " + (x) + " + " + (y) + " + " + (c) + " = " + f);
-        System.out.println("Foo Test ");
-
+        long f0 = 100;
+        long f1 = 5 % f0 - 2 * (9 + 5) / 2;;
+        System.out.println("+ = " + (f0 + f1));
+        System.out.println("- = " + (f0 - f1));
+        System.out.println("* = " + (f0 * f1));
+        System.out.println("/ = " + (f0 / f1));
+        System.out.println("% = " + (f0 % f1));
+        long[] val = new long[10];
+        f1 = 1000000000000000L;
+        f1 = f1 * f1 / f1 + f1 - f1 / 2;
+        System.out.println(f1);
+        val[0] = f1;
+        System.out.println(val[0]);
+        for (int i = 0; i < val.length; i++) {
+            val[i] = 5 % f0 - 2 * (9 + 5) / 2;
+        }
+        System.out.println("strs.length=" + val.length);
+        for (int i = 0; i < val.length; i++) {
+            System.out.println("val[" + i + "]=" + val[i]);
+        }
     }
 
     public void t5() {
-        String[] strs = new String[10];
-        for (int i = 0; i < strs.length; i++) {
-            strs[i] = "" + i;
+
+        float f0 = 1.5f;
+        float f1 = f0;
+        System.out.println("+ = " + (f0 + f1));
+        System.out.println("- = " + (f0 - f1));
+        System.out.println("* = " + (f0 * f1));
+        System.out.println("/ = " + (f0 / f1));
+        System.out.println("% = " + (f0 % f1));
+        float[] val = new float[10];
+        f1 = 5 % f0 - 0.6f * (0.5f + 5) / 9.8f;
+        System.out.println(f1);
+        val[0] = f1;
+        System.out.println(val[0]);
+        for (int i = 0; i < val.length; i++) {
+            val[i] = i % f0 - 0.6f * (0.5f + 5) / 9.8f;
         }
-        System.out.println("strs.length=" + strs.length);
-        for (int i = 0; i < strs.length; i++) {
-            System.out.println("strs[" + i + "]=" + strs[i]);
+        System.out.println("strs.length=" + val.length);
+        for (int i = 0; i < val.length; i++) {
+            System.out.println("val[" + i + "]=" + val[i]);
         }
     }
 
     public void t6() {
-//        double d=5.5;
-//        double d1=d;
 
         double f0 = 1.5f;
         double f1 = f0;
-//        System.out.println("+ = "+(f0+f1));
-//        System.out.println("- = "+(f0-f1));
-//        System.out.println("* = "+(f0*f1));
-//        System.out.println("/ = "+(f0/f1));
-//        System.out.println("% = "+(f0%f1));
+        System.out.println("+ = " + (f0 + f1));
+        System.out.println("- = " + (f0 - f1));
+        System.out.println("* = " + (f0 * f1));
+        System.out.println("/ = " + (f0 / f1));
+        System.out.println("% = " + (f0 % f1));
         double[] val = new double[10];
         f1 = 5 % f0 - 0.6f * (0.5f + 5) / 9.8f;
         System.out.println(f1);
         val[0] = f1;
         System.out.println(val[0]);
-//        for (int i = 0; i < val.length; i++) {
-//            val[i] = i % f0 - 0.6f * (0.5f + 5) / 9.8f;
-//        }
-//        System.out.println("strs.length=" + val.length);
-//        for (int i = 0; i < val.length; i++) {
-//            System.out.println("val[" + i + "]=" + val[i]);
-//        }
+        for (int i = 0; i < val.length; i++) {
+            val[i] = i % f0 - 0.6f * (0.5f + 5) / 9.8f;
+        }
+        System.out.println("strs.length=" + val.length);
+        for (int i = 0; i < val.length; i++) {
+            System.out.println("val[" + i + "]=" + val[i]);
+        }
     }
 
+    class T7class {
+
+        Object obj_r;
+    }
+
+    void t7_1(T7class t7) {
+
+        t7.obj_r = new Long(1);//在方法结束时，此对象应该被释放
+
+        t7.obj_r = new Integer(2);
+
+    }
+
+    void t7() {
+        for (int i = 0; i < 1000000; i++) {
+            T7class t7= new T7class();
+            new T7class();
+            t7_1(t7);
+        }
+    }
+
+    void t8() throws RuntimeException {
+        int i = 0;
+        try {
+            i = 1;
+            if (true) {
+                throw new Exception("exception test 1");
+            }
+            i = 0;
+        } catch (Exception e) {
+            i = 2;
+        }
+        System.out.println("i=" + i);
+
+        i = 3;
+        if (true) {
+            //throw new RuntimeException();
+        }
+
+        System.out.println("i=" + i);
+    }
+
+    void t9() {
+        int ch = 5;
+        int v = 66;
+        switch (ch) {
+            case 4:
+                v = 98;
+                break;
+            case 5:
+                v = 85;
+                break;
+            case 6:
+                v = 108;
+                break;
+            default:
+                v = 90;
+        }
+        System.out.println("v=" + v);
+    }
+
+    void t10() {
+        int ch = 1000;
+        int v = 66;
+        switch (ch) {
+            case 1:
+                v = 98;
+                break;
+            case 100:
+                v = 85;
+                break;
+            case 1000:
+                v = 108;
+                break;
+            default:
+                v = 90;
+        }
+        System.out.println("v=" + v);
+    }
+
+    void t11() {
+        int[][][] a3 = new int[2][2][];
+        a3[1][1] = new int[3];
+        a3[1][1][2] = 9;
+        System.out.println("arr print:" + a3[1][1][2]);
+    }
+
+    public static void main(String args[]) {
+        Foo2 obj = new Foo2();
+        obj.t1();
+//        obj.t2();
+//        obj.t3();
+//        obj.t4();
+//        obj.t5();
+//        obj.t6();
+//        obj.t7();
+//        obj.t8();
+//        obj.t9();
+//        obj.t10();
+//        obj.t11();
+
+    }
 }

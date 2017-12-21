@@ -641,7 +641,7 @@ s32 _loadFileContents(c8 *file, ByteBuf *buf) {
     rewind(pFile);
 
     /* 分配内存存储整个文件 */
-    buffer = jvm_malloc((u32)lSize);
+    buffer = jvm_malloc((u32) lSize);
     if (buffer == NULL) {
         //jvm_printf("Memory error");
         return -1;
@@ -658,7 +658,7 @@ s32 _loadFileContents(c8 *file, ByteBuf *buf) {
 
     /* 结束演示，关闭文件并释放内存 */
     fclose(pFile);
-    bytebuf_write_batch(buf, buffer, (s32)lSize);
+    bytebuf_write_batch(buf, buffer, (s32) lSize);
     jvm_free(buffer);
 
     return 0;
@@ -724,7 +724,6 @@ s32 _parse_constant_pool(Class *_this, ByteBuf *buf, s32 count) {
 
     return 0;
 }
-
 
 
 s32 _convert_to_code_attribute(CodeAttribute *ca, AttributeInfo *attr, Class *clazz) {
@@ -1024,13 +1023,13 @@ s32 load_class(ClassLoader *loader, Utf8String *pClassName) {
     if (!tmpclazz) {
         ByteBuf *bytebuf = NULL;
         s32 i;
+        utf8_append_c(clsName, ".class");
         for (i = 0; i < loader->classpath->length; i++) {
             Utf8String *pClassPath = arraylist_get_value(loader->classpath, i);
             if (isDir(pClassPath)) { //form file
                 Utf8String *filepath = utf8_create_copy(pClassPath);
                 utf8_pushback(filepath, '/');
                 utf8_append(filepath, clsName);
-                utf8_append_c(filepath, ".class");
 
                 bytebuf = bytebuf_create(16);
                 iret = _loadFileContents(utf8_cstr(filepath), bytebuf);
@@ -1041,7 +1040,6 @@ s32 load_class(ClassLoader *loader, Utf8String *pClassName) {
                     bytebuf = NULL;
                 }
             } else { //from jar
-                utf8_append_c(clsName, ".class");
                 bytebuf = bytebuf_create(16);
                 iret = zip_loadfile(utf8_cstr(pClassPath), utf8_cstr(clsName), bytebuf);
                 //回收
@@ -1073,7 +1071,6 @@ s32 load_class(ClassLoader *loader, Utf8String *pClassName) {
     utf8_destory(clsName);
     return iret;
 }
-
 
 
 s32 _DESTORY_CLASS(Class *clazz) {
