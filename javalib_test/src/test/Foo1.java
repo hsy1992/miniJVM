@@ -5,13 +5,8 @@
  */
 package test;
 
-import com.sun.cldc.i18n.StreamReader;
-import com.sun.cldc.i18n.StreamWriter;
-import com.sun.cldc.i18n.mini.UTF_8_Reader;
-import com.sun.cldc.i18n.mini.UTF_8_Writer;
 import java.io.ByteArrayOutputStream;
 import java.io.DataInputStream;
-import java.io.DataOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -27,8 +22,6 @@ import java.util.Set;
 import java.util.Vector;
 import javax.cldc.io.Connector;
 import javax.cldc.io.ContentConnection;
-import javax.mini.io.File;
-import javax.mini.io.RandomAccessFile;
 import javax.mini.net.ServerSocket;
 import javax.mini.net.Socket;
 import javax.mini.reflect.Method;
@@ -392,147 +385,7 @@ public class Foo1 {
 
     }
 
-    void printString(String s) {
-        for (int i = 0; i < s.length(); i++) {
-            System.out.print(" " + Integer.toString((int) (s.charAt(i) & 0xffff)));
-        }
-        System.out.println();
-    }
 
-    void printBytes(String s) {
-        try {
-            byte[] barr = s.getBytes("utf-8");
-            for (int i = 0; i < barr.length; i++) {
-                System.out.print(" " + Integer.toHexString((int) (barr[i] & 0xff)));
-            }
-            System.out.println();
-        } catch (Exception ex) {
-            System.out.println(ex.getMessage());
-        }
-    }
-
-    void t15() {
-
-        try {
-            String s = "这是一个测试";
-            printBytes(s);
-            printString(s);
-            File test = new File("./a.txt");
-            StreamWriter writer = new UTF_8_Writer();
-            writer.open(test.getOutputStream(false), "utf-8");
-            writer.write(s);
-            writer.close();
-
-            StreamReader reader = new UTF_8_Reader();
-            reader.open(test.getInputStream(), "utf-8");
-            char[] buf = new char[100];
-            int len = reader.read(buf, 0, 100);
-            reader.close();
-            String r = new String(buf, 0, len);
-            printString(r);
-
-        } catch (IOException ex) {
-            System.out.println(ex.getMessage());
-        }
-        t15_1();
-    }
-
-    void t15_1() {
-        File file = new File(".");
-        System.out.println("isDir:" + file.isDirectory());
-        String[] files = file.list();
-        for (int i = 0; i < files.length; i++) {
-            System.out.println(files[i]);
-        }
-    }
-
-    void t16() {
-        try {
-            File b = new File("./b.txt");
-            String r = "这是一个测试";
-            printBytes(r);
-            printString(r);
-            DataOutputStream dos = new DataOutputStream(b.getOutputStream(true));
-            dos.writeUTF(r);
-            dos.close();
-            DataInputStream dis = new DataInputStream(b.getInputStream());
-            String s = dis.readUTF();
-            printBytes(s);
-            printString(s);
-            dis.close();
-        } catch (IOException ex) {
-            System.out.println(ex.getMessage());
-        }
-    }
-
-    void t17() {
-        try {
-            RandomAccessFile c = new RandomAccessFile("./c.txt", "rw");
-            c.seek(0);
-            String r = "这是一个测试";
-            printBytes(r);
-            printString(r);
-            byte[] carr = r.getBytes("utf-8");
-            c.write(carr, 0, carr.length);
-            c.close();
-            RandomAccessFile c1 = new RandomAccessFile("./c.txt", "r");
-            c1.seek(0);
-            byte[] barr = new byte[256];
-            int len;
-            len = c1.read(barr, 0, 256);
-            System.out.println("len=" + len);
-            c1.close();
-            String s = new String(barr, 0, len, "utf-8");
-            printBytes(s);
-            printString(s);
-        } catch (IOException ex) {
-            System.out.println(ex.getMessage());
-        }
-    }
-
-    byte[] getViaContentConnection(String url) throws IOException {
-        ContentConnection c = null;
-        DataInputStream dis = null;
-        byte[] data;
-        try {
-            System.out.println("url:" + url);
-            c = (ContentConnection) Connector.open(url);
-            int len = (int) c.getLength();
-            dis = c.openDataInputStream();
-            if (len > 0) {
-                data = new byte[len];
-                dis.readFully(data);
-            } else {
-                ByteArrayOutputStream baos = new ByteArrayOutputStream();
-                int ch;
-                while ((ch = dis.read()) != -1) {
-
-                    baos.write(ch);
-                }
-                data = baos.toByteArray();
-            }
-        } finally {
-            if (dis != null) {
-                dis.close();
-            }
-            if (c != null) {
-                c.close();
-            }
-        }
-        return data;
-    }
-
-    void t18() {
-        try {
-            byte[] data = getViaContentConnection("http://baidu.com/");
-            for (int i = 0; i < data.length; i++) {
-                System.out.print((char) data[i]);
-            }
-        } catch (IOException ex) {
-//            System.out.println(ex.getMessage());
-        }
-        System.out.println();
-    }
 
     void t19() {
         System.out.println("fi=" + fi);
@@ -741,9 +594,6 @@ public class Foo1 {
 //            f.t12();
 //            f.t13();
 //            f.t14();
-////            f.t15();
-////            f.t16();
-////            f.t17();
 //            f.t18();
 //            f.t19();
 //            f.t20();

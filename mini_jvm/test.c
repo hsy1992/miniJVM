@@ -21,28 +21,28 @@
 int main(int argc, char **argv) {
 
     s32 ret;
-//    ret = execute_jvm("../../javalib/dist/mini_jvm_java.jar;../../javalib_test/dist/minijvm_javatest.jar;./",
-//                      "test/Foo1",
-//                      argc,
-//                      (c8 **) argv);
+    ret = execute_jvm("../../javalib/dist/mini_jvm_java.jar;../../javalib_test/dist/minijvm_javatest.jar;./",
+                      "test/Foo1",
+                      argc,
+                      (c8 **) argv);
 
 //    ret = execute_jvm("../../javalib/dist/mini_jvm_java.jar;../../javalib_test/dist/minijvm_javatest.jar;./",
 //                      "test/Foo2",
 //                      argc,
 //                      (c8 **) argv);
 
-    ret = execute_jvm("../../javalib/dist/mini_jvm_java.jar;../../javalib_test/dist/minijvm_javatest.jar;./",
-                      "test/HttpServer",
-                      argc,
-                      (c8 **) argv);
-
 //    ret = execute_jvm("../../javalib/dist/mini_jvm_java.jar;../../javalib_test/dist/minijvm_javatest.jar;./",
-//                      "gscript_j2se/Gscript_j2se",
+//                      "test/HttpServer",
 //                      argc,
 //                      (c8 **) argv);
 
 //    ret = execute_jvm("../../javalib/dist/mini_jvm_java.jar;../../javalib_test/dist/minijvm_javatest.jar;./",
 //                      "test/BpDeepTest",
+//                      argc,
+//                      (c8 **) argv);
+
+//    ret = execute_jvm("../../javalib/dist/mini_jvm_java.jar;../../javalib_test/dist/minijvm_javatest.jar;./",
+//                      "test/TestFile",
 //                      argc,
 //                      (c8 **) argv);
 

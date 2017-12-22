@@ -5,9 +5,12 @@
  */
 package test;
 
+import java.io.ByteArrayOutputStream;
+import java.io.DataInputStream;
 import java.io.IOException;
 import java.util.Calendar;
 import javax.cldc.io.Connector;
+import javax.cldc.io.ContentConnection;
 import javax.mini.net.ServerSocket;
 import javax.mini.net.Socket;
 
@@ -21,6 +24,7 @@ public class HttpServer {
         HttpServer f = new HttpServer();
         f.t12();
         f.t13();
+        f.t18();
     }
 
     void t12() {
@@ -103,11 +107,11 @@ public class HttpServer {
     }
 
     void t13() {
-        for (int j = 0; j < 3; j++) {
-            
+        for (int j = 0; j < 1; j++) {
+
             try {
                 Thread.sleep(2000);
-                
+
                 Socket conn = (Socket) Connector.open("socket://127.0.0.1:8080");
                 conn.setOption(Socket.OP_TYPE_NON_BLOCK, Socket.OP_VAL_NON_BLOCK);
                 String request = "GET / HTTP/1.1\r\n\r\n";
@@ -134,5 +138,51 @@ public class HttpServer {
 
             }
         }
+    }
+
+    byte[] getViaContentConnection(String url) throws IOException {
+        ContentConnection c = null;
+        DataInputStream dis = null;
+        byte[] data;
+        try {
+            System.out.println("url:" + url);
+            c = (ContentConnection) Connector.open(url);
+            int len = (int) c.getLength();
+            dis = c.openDataInputStream();
+            if (len > 0) {
+                data = new byte[len];
+                dis.readFully(data);
+            } else {
+                ByteArrayOutputStream baos = new ByteArrayOutputStream();
+                int ch;
+                while ((ch = dis.read()) != -1) {
+
+                    baos.write(ch);
+                }
+                data = baos.toByteArray();
+            }
+        } finally {
+            if (dis != null) {
+                dis.close();
+            }
+            if (c != null) {
+                c.close();
+            }
+        }
+        return data;
+    }
+
+    void t18() {
+        String url = "http://baidu.com/";
+        System.out.println("Connect to :" + url);
+        try {
+            byte[] data = getViaContentConnection(url);
+            for (int i = 0; i < data.length; i++) {
+                System.out.print((char) data[i]);
+            }
+        } catch (IOException ex) {
+//            System.out.println(ex.getMessage());
+        }
+        System.out.println();
     }
 }
