@@ -1375,32 +1375,6 @@ void threadinfo_destory(JavaThreadInfo *threadInfo) {
 
 }
 
-void objcache_create() {
-    obj_cache = arraylist_create(1024 * 1);
-}
-
-void objcache_destory() {
-    while (obj_cache->length) {
-        Instance *ins = arraylist_pop_back(obj_cache);
-        jvm_free(ins);
-    }
-    arraylist_destory(obj_cache);
-    obj_cache = NULL;
-}
-
-Instance *objcache_get() {
-    Instance *ins = arraylist_pop_back(obj_cache);
-    if (!ins) {
-        ins = jvm_calloc(sizeof(Instance));
-    }
-    return ins;
-}
-
-void objcache_put(Instance *ins) {
-    arraylist_push_back(obj_cache, ins);
-}
-
-
 s64 currentTimeMillis() {
     struct timeval tv;
     gettimeofday(&tv, NULL);

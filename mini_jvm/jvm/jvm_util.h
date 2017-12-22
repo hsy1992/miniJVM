@@ -43,15 +43,6 @@ int unicode_2_utf8(u16 *jchar_arr, Utf8String *ustr, s32 totalSize);
 
 void swap_endian_little_big(u8 *ptr, s32 size);
 
-
-void objcache_destory(void);
-
-void objcache_create(void);
-
-void objcache_put(Instance *ins);
-
-Instance *objcache_get(void);
-
 s32 getDataTypeIndex(c8 ch);
 
 s32 isDataReferByTag(c8 c);

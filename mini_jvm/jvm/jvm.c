@@ -134,7 +134,6 @@ s32 execute_jvm(c8 *p_classpath, c8 *p_mainclass, s32 argc, c8 **argv) {
     instruct_profile = hashtable_create(DEFAULT_HASH_FUNC, DEFAULT_HASH_EQUALS_FUNC);
 #endif
     //
-    objcache_create();
     //创建垃圾收集器
     garbage_collector_create();
 
@@ -265,7 +264,6 @@ s32 execute_jvm(c8 *p_classpath, c8 *p_mainclass, s32 argc, c8 **argv) {
     arraylist_destory(thread_list);
     native_lib_destory();
     sys_properties_dispose();
-    objcache_destory();
     close_log();
     jvm_printf("over %lld\n", heap_size);
 

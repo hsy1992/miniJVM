@@ -532,7 +532,6 @@ s32 _garbage_copy_refer_thread(Runtime *pruntime) {
         if (is_ref(&entry)) {
             __refer ref = entry_2_refer(&entry);
             if (ref) {
-                //garbage_mark_object(ref);
                 arraylist_push_back(collector->runtime_refer_copy, ref);
             }
         }
@@ -541,7 +540,6 @@ s32 _garbage_copy_refer_thread(Runtime *pruntime) {
         for (i = 0; i < runtime->localvar_count; i++) {
             __refer ref = runtime->localvar[i].refer;
             if (ref) {
-                //garbage_mark_object(ref);
                 arraylist_push_back(collector->runtime_refer_copy, ref);
             }
         }
