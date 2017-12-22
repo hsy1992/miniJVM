@@ -112,8 +112,8 @@ void _garbage_clear() {
     while (garbage_collect());//collect instance
 
     //release class static field
-    classloader_classstatic_clear(sys_classloader);
-    classloader_classstatic_clear(array_classloader);
+    classloader_release_classs_static_field(sys_classloader);
+    classloader_release_classs_static_field(array_classloader);
     while (garbage_collect());//collect classes
 
     //release classes

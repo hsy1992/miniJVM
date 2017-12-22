@@ -90,7 +90,7 @@ class Class<T> {
      *               instantiation fails for some other reason.
      * @since     JDK1.0
      */
-    public native Object newInstance()
+    public native T newInstance()
         throws InstantiationException, IllegalAccessException;
 
     /**

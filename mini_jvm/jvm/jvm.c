@@ -106,7 +106,7 @@ void classloader_destory(ClassLoader *class_loader) {
     jvm_free(class_loader);
 }
 
-void classloader_classstatic_clear(ClassLoader *class_loader) {
+void classloader_release_classs_static_field(ClassLoader *class_loader) {
     HashtableIterator hti;
     hashtable_iterate(class_loader->classes, &hti);
     for (; hashtable_iter_has_more(&hti);) {
