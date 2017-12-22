@@ -594,7 +594,7 @@ s32 jthread_dispose(Instance *jthread) {
 
 void *jtherad_run(void *para) {
     Instance *jthread = (Instance *) para;
-    jthread_init(jthread);
+
     s32 ret = 0;
     Runtime *runtime = (Runtime *) jthread_get_stackframe_value(jthread);
     runtime->threadInfo->pthread = pthread_self();
@@ -621,6 +621,7 @@ void *jtherad_run(void *para) {
 }
 
 pthread_t jthread_start(Instance *ins) {//
+    jthread_init(ins);
     pthread_t pt;
     pthread_attr_t attr;
     pthread_attr_init(&attr);
@@ -1224,8 +1225,10 @@ Instance *exception_create_str(s32 exception_type, Runtime *runtime, c8 *errmsg)
  */
 inline c8 *getInstanceFieldPtr(Instance *ins, FieldInfo *fi) {
 //    if(fi->offset_instance!=fi->_this_class->field_instance_start + fi->offset){
+//        jvm_printf("error in getInstanceFieldPtr\n");
 //        int debug=1;
 //    }
+//    return &(ins->obj_fields[fi->offset+fi->_this_class->field_instance_start]);
     return &(ins->obj_fields[fi->offset_instance]);
 }
 

@@ -389,9 +389,7 @@ public class Foo1 {
     }
 
     void t14() {
-        String sbuf = "HTTP/1.0 200 OK\r\nContent-Type: text/html\r\n\r\nFor mini_jvm test. ( EGLS Beijing co.,ltd)" + Calendar.getInstance().getTime().toString();
-//        String sbuf = Calendar.getInstance().getTime().toString();
-        System.out.println("s=" + sbuf);
+
     }
 
     void printString(String s) {

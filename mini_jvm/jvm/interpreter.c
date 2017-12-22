@@ -402,7 +402,7 @@ static inline s32 _op_putfield_impl(u8 **opCode, Runtime *runtime, RuntimeStack 
             push_ref(stack, (__refer) exception);
             return RUNTIME_STATUS_EXCEPTION;
         }
-        ptr = &(ins->obj_fields[fi->offset_instance]);
+        ptr = &(ins->obj_fields[fi->offset_instance]);//getInstanceFieldPtr(ins, fi);//
     }
 #if _JVM_DEBUG_BYTECODE_DETAIL > 5
     invoke_deepth(runtime);
@@ -425,14 +425,10 @@ static inline s32 _op_putfield_impl(u8 **opCode, Runtime *runtime, RuntimeStack 
                 setFieldShort(ptr, entry_2_int(&entry));
                 break;
             }
-            case 3://impossible
             case 4: {
                 setFieldInt(ptr, entry_2_int(&entry));
                 break;
             }
-            case 5://impossible
-            case 6://impossible
-            case 7://impossible
             case 8: {
                 setFieldLong(ptr, entry_2_long(&entry));
                 break;
@@ -467,7 +463,7 @@ static inline s32 _op_getfield_impl(u8 **opCode, Runtime *runtime, RuntimeStack 
             push_ref(stack, (__refer) exception);
             return RUNTIME_STATUS_EXCEPTION;
         }
-        ptr = &(ins->obj_fields[fi->offset_instance]);
+        ptr = &(ins->obj_fields[fi->offset_instance]);//getInstanceFieldPtr(ins, fi);//&(ins->obj_fields[fi->offset_instance]);
     }
     if (fi->isrefer) {
         push_ref(stack, getFieldRefer(ptr));
@@ -482,14 +478,10 @@ static inline s32 _op_getfield_impl(u8 **opCode, Runtime *runtime, RuntimeStack 
                 push_int(stack, getFieldShort(ptr));
                 break;
             }
-            case 3://impossible
             case 4: {
                 push_int(stack, getFieldInt(ptr));
                 break;
             }
-            case 5://impossible
-            case 6://impossible
-            case 7://impossible
             case 8: {
                 push_long(stack, getFieldLong(ptr));
                 break;
@@ -3141,8 +3133,6 @@ s32 execute_method(MethodInfo *method, Runtime *pruntime, Class *clazz) {
                                                                           object_ref);//此cmr所描述的方法，对于不同的实例，有不同的method
 
                         Instance *ins = getInstanceInStack(clazz, cmr, stack);
-                        if (ins == NULL)
-                            ins = getInstanceInStack(clazz, cmr, stack);
                         if (ins == NULL) {
                             Instance *exception = exception_create(JVM_EXCEPTION_NULLPOINTER, runtime);
                             push_ref(stack, (__refer) exception);

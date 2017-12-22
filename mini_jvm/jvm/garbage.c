@@ -240,7 +240,7 @@ void _garbage_put_in_holder(__refer ref) {
 
 #if _JVM_DEBUG_GARBAGE_DUMP
     Utf8String *sus = utf8_create();
-    getMBName((MemoryBlock *) ref, sus);
+    _getMBName((MemoryBlock *) ref, sus);
     jvm_printf("+: %s[%llx]\n", utf8_cstr(sus), (s64) (long) ref);
     utf8_destory(sus);
 #endif
@@ -250,7 +250,7 @@ void _garbage_remove_out_holder(__refer ref) {
     hashset_remove(collector->objs_holder, ref, 0);
 #if _JVM_DEBUG_GARBAGE_DUMP
     Utf8String *sus = utf8_create();
-    getMBName((MemoryBlock *) ref, sus);
+    _getMBName((MemoryBlock *) ref, sus);
     jvm_printf("-: %s[%llx]\n", utf8_cstr(sus), (s64) (long) ref);
     utf8_destory(sus);
 #endif
@@ -378,7 +378,7 @@ void _garbage_change_flag() {
 void _garbage_destory_memobj(MemoryBlock *mb) {
 #if _JVM_DEBUG_GARBAGE_DUMP
     Utf8String *sus = utf8_create();
-    getMBName(mb, sus);
+    _getMBName(mb, sus);
     jvm_printf("X: %s[%llx]\n", utf8_cstr(sus), (s64) (long) mb);
     utf8_destory(sus);
 #endif
@@ -677,7 +677,7 @@ s32 garbage_refer_reg(__refer ref) {
             }
 #if _JVM_DEBUG_GARBAGE_DUMP
             Utf8String *sus = utf8_create();
-            getMBName((MemoryBlock *) ref, sus);
+            _getMBName((MemoryBlock *) ref, sus);
             jvm_printf("R: %s[%llx]\n", utf8_cstr(sus), (s64) (long) ref);
             utf8_destory(sus);
 #endif
