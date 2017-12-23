@@ -3,11 +3,14 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package javax.mini.io;
+package org.mini.fs;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.io.UnsupportedEncodingException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
@@ -72,17 +75,17 @@ import java.io.OutputStream;
  *
  * @author gust
  */
-public class File {
+public class InnerFile {
 
-    FileDescriptor fd;
+    InnerFileStat fd;
     long filePointer;
     String path;
     String mode;
 
-    public File(String path) {
+    public InnerFile(String path) {
         this.path = path;
-        fd = new FileDescriptor();
-        int ret = loadFD(path.getBytes(), fd);
+        fd = new InnerFileStat();
+        int ret = loadFS(InnerFile.getPathBytes(path), fd);
         if (ret < 0) {
             fd.exists = false;
         } else {
@@ -90,7 +93,7 @@ public class File {
         }
     }
 
-    protected File() {
+    protected InnerFile() {
     }
 
     public boolean isFile() {
@@ -110,7 +113,7 @@ public class File {
     }
 
     public String[] list() {
-        return listDir(path.getBytes());
+        return listDir(InnerFile.getPathBytes(path));
     }
 
     public OutputStream getOutputStream(boolean append) throws IOException {
@@ -118,9 +121,9 @@ public class File {
             closeFile(filePointer);
             filePointer = 0;
         }
-        filePointer = openFile(path.getBytes(), append ? "a+b".getBytes() : "w+b".getBytes());;
+        filePointer = openFile(InnerFile.getPathBytes(path), append ? "a+b".getBytes() : "w+b".getBytes());;
 
-        return new FileOutputStream(filePointer);
+        return new InnerFileOutputStream(filePointer);
     }
 
     public InputStream getInputStream() throws IOException {
@@ -128,38 +131,50 @@ public class File {
             closeFile(filePointer);
             filePointer = 0;
         }
-        filePointer = openFile(path.getBytes(), "rb".getBytes());
-        return new FileInputStream(filePointer);
+        filePointer = openFile(InnerFile.getPathBytes(path), "rb".getBytes());
+        return new InnerFileInputStream(filePointer);
     }
 
-    public class FileInputStream extends InputStream {
+    public class InnerFileInputStream extends InputStream {
 
-        public FileInputStream(long fileHandle) {
+        public InnerFileInputStream(long fileHandle) {
 
+        }
+
+        public InnerFile getInnerFile() {
+            return InnerFile.this;
+        }
+
+        public int available() throws IOException {
+            return available0(getFilePointer());
         }
 
         @Override
         public int read() throws IOException {
-            return read0(filePointer);
+            return read0(getFilePointer());
         }
 
         @Override
         public void close() throws IOException {
-            closeFile(filePointer);
+            closeFile(getFilePointer());
             filePointer = 0;
         }
 
     }
 
-    public class FileOutputStream extends OutputStream {
+    public class InnerFileOutputStream extends OutputStream {
 
-        public FileOutputStream(long fileHandle) {
+        public InnerFileOutputStream(long fileHandle) {
 
+        }
+
+        public InnerFile getInnerFile() {
+            return InnerFile.this;
         }
 
         @Override
         public void write(int b) throws IOException {
-            int ret = write0(filePointer, b);
+            int ret = write0(getFilePointer(), b);
             if (ret < 0) {
                 throw new IOException("write file error: " + path);
             }
@@ -167,31 +182,76 @@ public class File {
 
         @Override
         public void close() throws IOException {
-            closeFile(filePointer);
+            closeFile(getFilePointer());
             filePointer = 0;
         }
     }
 
-    static native int loadFD(byte[] filePath, FileDescriptor fd);
+    public int read() throws IOException {
+        int ret = read0(filePointer);
+        if (ret < 0) {
+            throw new IOException("read file error: " + path);
+        }
+        return ret;
+    }
 
-    static native String[] listDir(byte[] filePath);
+    public void write(int b) throws IOException {
+        int ret = write0(filePointer, b);
+        if (ret < 0) {
+            throw new IOException("write file error: " + path);
+        }
+    }
 
-    static native long openFile(byte[] filePath, byte[] mode);
+    public void close() throws IOException {
+        closeFile(filePointer);
+        filePointer = 0;
+    }
 
-    static native int closeFile(long fileHandle);
+    static public byte[] getPathBytes(String path) {
+        try {
+            return path.getBytes("utf-8");
+        } catch (UnsupportedEncodingException ex) {
+        }
+        return path.getBytes();
+    }
 
-    static native int flush0(long fileHandle);
+    public static native int loadFS(byte[] filePath, InnerFileStat fd);
 
-    static native int read0(long fileHandle);
+    public static native int getcwd(byte[] pathbuf);
 
-    static native int write0(long fileHandle, int b);
+    public static native int fullpath(byte[] fullpath, byte[] path);
 
-    static native int readbuf(long fileHandle, byte[] b, int off, int len);
+    public static native String[] listDir(byte[] filePath);
 
-    static native int writebuf(long fileHandle, byte[] b, int off, int len);
+    public static native long openFile(byte[] filePath, byte[] mode);
 
-    static native int seek0(long fileHandle, long pos);
+    public static native int closeFile(long fileHandle);
 
-    static native int setLength0(long fileHandle, long len);
+    public static native int flush0(long fileHandle);
+
+    public static native int read0(long fileHandle);
+
+    public static native int write0(long fileHandle, int b);
+
+    public static native int readbuf(long fileHandle, byte[] b, int off, int len);
+
+    public static native int writebuf(long fileHandle, byte[] b, int off, int len);
+
+    public static native int available0(long fileHandle);
+
+    public static native int seek0(long fileHandle, long pos);
+
+    public static native int setLength0(long fileHandle, long len);
+
+    /**
+     * @return the filePointer
+     */
+    public long getFilePointer() {
+        return filePointer;
+    }
+
+    public void setFilePointer(long fd) {
+        filePointer = fd;
+    }
 
 }

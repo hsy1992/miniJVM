@@ -281,7 +281,7 @@ s32 srv_accept(s32 listenfd) {
 
 s32 sock_close(s32 listenfd) {
     if (listenfd) {
-        shutdown(listenfd,SHUT_RDWR);
+        shutdown(listenfd, SHUT_RDWR);
         closesocket(listenfd);
 #ifdef __WIN32__
         WSACancelBlockingCall();
@@ -341,7 +341,7 @@ s32 javax_mini_net_socket_Protocol_readByte(Runtime *runtime, Class *clazz) {
     if (len < 0) {
         push_int(runtime->stack, -1);
     } else {
-        push_int(runtime->stack, (u8)b);
+        push_int(runtime->stack, (u8) b);
 
     }
 
@@ -515,7 +515,7 @@ s32 javax_mini_net_serversocket_Protocol_finalize(Runtime *runtime, Class *clazz
     return 0;
 }
 
-s32 javax_mini_io_File_openFile(Runtime *runtime, Class *clazz) {
+s32 org_mini_fs_InnerFile_openFile(Runtime *runtime, Class *clazz) {
     Instance *name_arr = localvar_getRefer(runtime, 0);
     Instance *mode_arr = localvar_getRefer(runtime, 1);
     if (name_arr) {
@@ -531,16 +531,16 @@ s32 javax_mini_io_File_openFile(Runtime *runtime, Class *clazz) {
 
 #if _JVM_DEBUG_BYTECODE_DETAIL > 5
     invoke_deepth(runtime);
-    jvm_printf("javax_mini_io_File_openFile  \n");
+    jvm_printf("org_mini_fs_InnerFile_openFile  \n");
 #endif
     return 0;
 }
 
-s32 javax_mini_io_File_closeFile(Runtime *runtime, Class *clazz) {
+s32 org_mini_fs_InnerFile_closeFile(Runtime *runtime, Class *clazz) {
     Long2Double l2d;
     l2d.i2l.i1 = localvar_getInt(runtime, 0);
     l2d.i2l.i0 = localvar_getInt(runtime, 1);
-    __refer fd = l2d.r;
+    __refer fd = (__refer) (long) l2d.l;
     s32 ret = -1;
     if (fd) {
         ret = fclose(fd);
@@ -548,16 +548,16 @@ s32 javax_mini_io_File_closeFile(Runtime *runtime, Class *clazz) {
     push_int(runtime->stack, ret);
 #if _JVM_DEBUG_BYTECODE_DETAIL > 5
     invoke_deepth(runtime);
-    jvm_printf("javax_mini_io_File_closeFile  \n");
+    jvm_printf("org_mini_fs_InnerFile_closeFile  \n");
 #endif
     return 0;
 }
 
-s32 javax_mini_io_File_read0(Runtime *runtime, Class *clazz) {
+s32 org_mini_fs_InnerFile_read0(Runtime *runtime, Class *clazz) {
     Long2Double l2d;
     l2d.i2l.i1 = localvar_getInt(runtime, 0);
     l2d.i2l.i0 = localvar_getInt(runtime, 1);
-    __refer fd = l2d.r;
+    __refer fd = (__refer) (long) l2d.l;
     s32 ret = -1;
     if (fd) {
         ret = fgetc(fd);
@@ -572,16 +572,16 @@ s32 javax_mini_io_File_read0(Runtime *runtime, Class *clazz) {
 
 #if _JVM_DEBUG_BYTECODE_DETAIL > 5
     invoke_deepth(runtime);
-    jvm_printf("javax_mini_io_File_read0  \n");
+    jvm_printf("org_mini_fs_InnerFile_read0  \n");
 #endif
     return 0;
 }
 
-s32 javax_mini_io_File_write0(Runtime *runtime, Class *clazz) {
+s32 org_mini_fs_InnerFile_write0(Runtime *runtime, Class *clazz) {
     Long2Double l2d;
     l2d.i2l.i1 = localvar_getInt(runtime, 0);
     l2d.i2l.i0 = localvar_getInt(runtime, 1);
-    __refer fd = l2d.r;
+    __refer fd = (__refer) (long) l2d.l;
     u8 byte = (u8) localvar_getInt(runtime, 2);
     s32 ret = -1;
     if (fd) {
@@ -597,17 +597,17 @@ s32 javax_mini_io_File_write0(Runtime *runtime, Class *clazz) {
 
 #if _JVM_DEBUG_BYTECODE_DETAIL > 5
     invoke_deepth(runtime);
-    jvm_printf("javax_mini_io_File_write0  \n");
+    jvm_printf("org_mini_fs_InnerFile_write0  \n");
 #endif
     return 0;
 }
 
-s32 javax_mini_io_File_readbuf(Runtime *runtime, Class *clazz) {
+s32 org_mini_fs_InnerFile_readbuf(Runtime *runtime, Class *clazz) {
     s32 pos = 0;
     Long2Double l2d;
     l2d.i2l.i1 = localvar_getInt(runtime, pos++);
     l2d.i2l.i0 = localvar_getInt(runtime, pos++);
-    __refer fd = l2d.r;
+    __refer fd = (__refer) (long) l2d.l;
     Instance *bytes_arr = localvar_getRefer(runtime, pos++);
     s32 offset = localvar_getInt(runtime, pos++);
     s32 len = localvar_getInt(runtime, pos++);
@@ -622,45 +622,44 @@ s32 javax_mini_io_File_readbuf(Runtime *runtime, Class *clazz) {
 
 #if _JVM_DEBUG_BYTECODE_DETAIL > 5
     invoke_deepth(runtime);
-    jvm_printf("javax_mini_io_File_readbuf  \n");
+    jvm_printf("org_mini_fs_InnerFile_readbuf  \n");
 #endif
     return 0;
 }
 
-s32 javax_mini_io_File_writebuf(Runtime *runtime, Class *clazz) {
+s32 org_mini_fs_InnerFile_writebuf(Runtime *runtime, Class *clazz) {
     s32 pos = 0;
     Long2Double l2d;
     l2d.i2l.i1 = localvar_getInt(runtime, pos++);
     l2d.i2l.i0 = localvar_getInt(runtime, pos++);
-    __refer fd = l2d.r;
+    __refer fd = (__refer) (long) l2d.l;
     Instance *bytes_arr = localvar_getRefer(runtime, pos++);
     s32 offset = localvar_getInt(runtime, pos++);
     s32 len = localvar_getInt(runtime, pos++);
     s32 ret = -1;
     if (fd && bytes_arr) {
-        ret = (s32) fwrite(bytes_arr->arr_body + offset, len, 1, fd);
-        if (ret != len) {
-            push_int(runtime->stack, -1);
-        } else {
-            push_int(runtime->stack, ret);
+        ret = (s32) fwrite(bytes_arr->arr_body + offset, 1, len, fd);
+        if (ret == 0) {
+            ret = -1;
         }
+        push_int(runtime->stack, ret);
     } else {
         push_int(runtime->stack, ret);
     }
 
 #if _JVM_DEBUG_BYTECODE_DETAIL > 5
     invoke_deepth(runtime);
-    jvm_printf("javax_mini_io_File_writebuf  \n");
+    jvm_printf("org_mini_fs_InnerFile_writebuf  \n");
 #endif
     return 0;
 }
 
-s32 javax_mini_io_File_seek0(Runtime *runtime, Class *clazz) {
+s32 org_mini_fs_InnerFile_seek0(Runtime *runtime, Class *clazz) {
     s32 pos = 0;
     Long2Double l2d;
     l2d.i2l.i1 = localvar_getInt(runtime, pos++);
     l2d.i2l.i0 = localvar_getInt(runtime, pos++);
-    __refer fd = l2d.r;
+    __refer fd = (__refer) (long) l2d.l;
     l2d.i2l.i1 = localvar_getInt(runtime, pos++);
     l2d.i2l.i0 = localvar_getInt(runtime, pos++);
     s64 filepos = l2d.l;
@@ -671,17 +670,38 @@ s32 javax_mini_io_File_seek0(Runtime *runtime, Class *clazz) {
     push_int(runtime->stack, ret);
 #if _JVM_DEBUG_BYTECODE_DETAIL > 5
     invoke_deepth(runtime);
-    jvm_printf("javax_mini_io_File_seek0  \n");
+    jvm_printf("org_mini_fs_InnerFile_seek0  \n");
 #endif
     return 0;
 }
 
-s32 javax_mini_io_File_setLength0(Runtime *runtime, Class *clazz) {
+s32 org_mini_fs_InnerFile_available0(Runtime *runtime, Class *clazz) {
     s32 pos = 0;
     Long2Double l2d;
     l2d.i2l.i1 = localvar_getInt(runtime, pos++);
     l2d.i2l.i0 = localvar_getInt(runtime, pos++);
-    __refer fd = l2d.r;
+    __refer fd = (__refer) (long) l2d.l;
+
+    s32 cur = 0, end = 0;
+    if (fd) {
+        cur = fseek(fd, (long) 0, SEEK_CUR);
+        end = fseek(fd, (long) 0, SEEK_END);
+        fseek(fd, (long) cur, SEEK_SET);
+    }
+    push_int(runtime->stack, end - cur);
+#if _JVM_DEBUG_BYTECODE_DETAIL > 5
+    invoke_deepth(runtime);
+    jvm_printf("org_mini_fs_InnerFile_available0  \n");
+#endif
+    return 0;
+}
+
+s32 org_mini_fs_InnerFile_setLength0(Runtime *runtime, Class *clazz) {
+    s32 pos = 0;
+    Long2Double l2d;
+    l2d.i2l.i1 = localvar_getInt(runtime, pos++);
+    l2d.i2l.i0 = localvar_getInt(runtime, pos++);
+    __refer fd = (__refer) (long) l2d.l;
     l2d.i2l.i1 = localvar_getInt(runtime, pos++);
     l2d.i2l.i0 = localvar_getInt(runtime, pos++);
     s64 filelen = l2d.l;
@@ -694,17 +714,17 @@ s32 javax_mini_io_File_setLength0(Runtime *runtime, Class *clazz) {
     push_int(runtime->stack, ret);
 #if _JVM_DEBUG_BYTECODE_DETAIL > 5
     invoke_deepth(runtime);
-    jvm_printf("javax_mini_io_File_setLength0  \n");
+    jvm_printf("org_mini_fs_InnerFile_setLength0  \n");
 #endif
     return 0;
 }
 
 
-s32 javax_mini_io_File_flush0(Runtime *runtime, Class *clazz) {
+s32 org_mini_fs_InnerFile_flush0(Runtime *runtime, Class *clazz) {
     Long2Double l2d;
     l2d.i2l.i1 = localvar_getInt(runtime, 0);
     l2d.i2l.i0 = localvar_getInt(runtime, 1);
-    __refer fd = l2d.r;
+    __refer fd = (__refer) (long) l2d.l;
     s32 ret = -1;
     if (fd) {
         ret = fflush(fd);
@@ -712,12 +732,12 @@ s32 javax_mini_io_File_flush0(Runtime *runtime, Class *clazz) {
     push_int(runtime->stack, ret);
 #if _JVM_DEBUG_BYTECODE_DETAIL > 5
     invoke_deepth(runtime);
-    jvm_printf("javax_mini_io_File_flush0  \n");
+    jvm_printf("org_mini_fs_InnerFile_flush0  \n");
 #endif
     return 0;
 }
 
-s32 javax_mini_io_File_loadFD(Runtime *runtime, Class *clazz) {
+s32 org_mini_fs_InnerFile_loadFS(Runtime *runtime, Class *clazz) {
     Instance *name_arr = localvar_getRefer(runtime, 0);
     Instance *fd = localvar_getRefer(runtime, 1);
     s32 ret = -1;
@@ -727,7 +747,7 @@ s32 javax_mini_io_File_loadFD(Runtime *runtime, Class *clazz) {
         ret = stat(utf8_cstr(filepath), &buf);
         s32 a = S_ISDIR(buf.st_mode);
         if (ret == 0) {
-            c8 *className = "javax/mini/io/FileDescriptor";
+            c8 *className = "org/mini/fs/InnerFileStat";
             c8 *ptr;
             ptr = getFieldPtr_byName_c(fd, className, "st_dev", "I");
             setFieldInt(ptr, buf.st_dev);
@@ -757,12 +777,12 @@ s32 javax_mini_io_File_loadFD(Runtime *runtime, Class *clazz) {
     push_long(runtime->stack, ret);
 #if _JVM_DEBUG_BYTECODE_DETAIL > 5
     invoke_deepth(runtime);
-    jvm_printf("javax_mini_io_File_loadFD  \n");
+    jvm_printf("org_mini_fs_InnerFile_loadFD  \n");
 #endif
     return 0;
 }
 
-s32 javax_mini_io_File_listDir(Runtime *runtime, Class *clazz) {
+s32 org_mini_fs_InnerFile_listDir(Runtime *runtime, Class *clazz) {
     Instance *name_arr = localvar_getRefer(runtime, 0);
     if (name_arr) {
         Utf8String *filepath = utf8_create_part_c(name_arr->arr_body, 0, name_arr->arr_length);
@@ -802,37 +822,71 @@ s32 javax_mini_io_File_listDir(Runtime *runtime, Class *clazz) {
     }
 #if _JVM_DEBUG_BYTECODE_DETAIL > 5
     invoke_deepth(runtime);
-    jvm_printf("javax_mini_io_File_listDir  \n");
+    jvm_printf("org_mini_fs_InnerFile_listDir  \n");
+#endif
+    return 0;
+}
+
+s32 org_mini_fs_InnerFile_getcwd(Runtime *runtime, Class *clazz) {
+    Instance *path_arr = localvar_getRefer(runtime, 0);
+    if (path_arr) {
+        getcwd(path_arr->arr_body, path_arr->arr_length);
+        push_int(runtime->stack, 0);
+    } else {
+        push_int(runtime->stack, -1);
+    }
+#if _JVM_DEBUG_BYTECODE_DETAIL > 5
+    invoke_deepth(runtime);
+    jvm_printf("org_mini_fs_InnerFile_getcwd  \n");
+#endif
+    return 0;
+}
+
+s32 org_mini_fs_InnerFile_fullpath(Runtime *runtime, Class *clazz) {
+    Instance *fullpath_arr = localvar_getRefer(runtime, 0);
+    Instance *path_arr = localvar_getRefer(runtime, 1);
+    if (path_arr) {
+        _fullpath(fullpath_arr->arr_body, path_arr->arr_body, fullpath_arr->arr_length);
+        push_int(runtime->stack, 0);
+    } else {
+        push_int(runtime->stack, -1);
+    }
+#if _JVM_DEBUG_BYTECODE_DETAIL > 5
+    invoke_deepth(runtime);
+    jvm_printf("org_mini_fs_InnerFile_getcwd  \n");
 #endif
     return 0;
 }
 
 static java_native_method method_net_table[] = {
-        {"javax/mini/net/protocol/socket/Protocol",       "open0",           "([BII)I",                             javax_mini_net_socket_Protocol_open0},
-        {"javax/mini/net/protocol/socket/Protocol",       "readBuf",         "(I[BII)I",                            javax_mini_net_socket_Protocol_readBuf},
-        {"javax/mini/net/protocol/socket/Protocol",       "readByte",        "(I)I",                                javax_mini_net_socket_Protocol_readByte},
-        {"javax/mini/net/protocol/socket/Protocol",       "writeBuf",        "(I[BII)I",                            javax_mini_net_socket_Protocol_writeBuf},
-        {"javax/mini/net/protocol/socket/Protocol",       "writeByte",       "(II)I",                               javax_mini_net_socket_Protocol_writeByte},
-        {"javax/mini/net/protocol/socket/Protocol",       "available0",      "(I)I",                                javax_mini_net_socket_Protocol_available0},
-        {"javax/mini/net/protocol/socket/Protocol",       "close0",          "(I)V",                                javax_mini_net_socket_Protocol_close0},
-        {"javax/mini/net/protocol/socket/Protocol",       "setOption0",      "(III)I",                              javax_mini_net_socket_Protocol_setOption0},
-        {"javax/mini/net/protocol/serversocket/Protocol", "accept0",         "(I)I",                                javax_mini_net_serversocket_Protocol_accept0},
-        {"javax/mini/net/protocol/serversocket/Protocol", "close0",          "(I)V",                                javax_mini_net_serversocket_Protocol_close0},
-        {"javax/mini/net/protocol/serversocket/Protocol", "listen0",         "(I)I",                                javax_mini_net_serversocket_Protocol_listen0},
-        {"javax/mini/net/protocol/serversocket/Protocol", "open0",           "([BI)I",                              javax_mini_net_serversocket_Protocol_open0},
-        {"javax/mini/net/protocol/serversocket/Protocol", "registerCleanup", "",                                    javax_mini_net_serversocket_Protocol_registerCleanup},
-        {"javax/mini/net/protocol/serversocket/Protocol", "finalize",        "",                                    javax_mini_net_serversocket_Protocol_finalize},
-        {"javax/mini/io/File",                            "openFile",        "([B[B)J",                             javax_mini_io_File_openFile},
-        {"javax/mini/io/File",                            "closeFile",       "(J)I",                                javax_mini_io_File_closeFile},
-        {"javax/mini/io/File",                            "read0",           "(J)I",                                javax_mini_io_File_read0},
-        {"javax/mini/io/File",                            "write0",          "(JI)I",                               javax_mini_io_File_write0},
-        {"javax/mini/io/File",                            "readbuf",         "(J[BII)I",                            javax_mini_io_File_readbuf},
-        {"javax/mini/io/File",                            "writebuf",        "(J[BII)I",                            javax_mini_io_File_writebuf},
-        {"javax/mini/io/File",                            "seek0",           "(JJ)I",                               javax_mini_io_File_seek0},
-        {"javax/mini/io/File",                            "setLength0",      "(JJ)I",                               javax_mini_io_File_setLength0},
-        {"javax/mini/io/File",                            "flush0",          "(J)I",                                javax_mini_io_File_flush0},
-        {"javax/mini/io/File",                            "loadFD",          "([BLjavax/mini/io/FileDescriptor;)I", javax_mini_io_File_loadFD},
-        {"javax/mini/io/File",                            "listDir",         "([B)[Ljava/lang/String;",             javax_mini_io_File_listDir},
+        {"javax/mini/net/protocol/socket/Protocol",       "open0",           "([BII)I",                          javax_mini_net_socket_Protocol_open0},
+        {"javax/mini/net/protocol/socket/Protocol",       "readBuf",         "(I[BII)I",                         javax_mini_net_socket_Protocol_readBuf},
+        {"javax/mini/net/protocol/socket/Protocol",       "readByte",        "(I)I",                             javax_mini_net_socket_Protocol_readByte},
+        {"javax/mini/net/protocol/socket/Protocol",       "writeBuf",        "(I[BII)I",                         javax_mini_net_socket_Protocol_writeBuf},
+        {"javax/mini/net/protocol/socket/Protocol",       "writeByte",       "(II)I",                            javax_mini_net_socket_Protocol_writeByte},
+        {"javax/mini/net/protocol/socket/Protocol",       "available0",      "(I)I",                             javax_mini_net_socket_Protocol_available0},
+        {"javax/mini/net/protocol/socket/Protocol",       "close0",          "(I)V",                             javax_mini_net_socket_Protocol_close0},
+        {"javax/mini/net/protocol/socket/Protocol",       "setOption0",      "(III)I",                           javax_mini_net_socket_Protocol_setOption0},
+        {"javax/mini/net/protocol/serversocket/Protocol", "accept0",         "(I)I",                             javax_mini_net_serversocket_Protocol_accept0},
+        {"javax/mini/net/protocol/serversocket/Protocol", "close0",          "(I)V",                             javax_mini_net_serversocket_Protocol_close0},
+        {"javax/mini/net/protocol/serversocket/Protocol", "listen0",         "(I)I",                             javax_mini_net_serversocket_Protocol_listen0},
+        {"javax/mini/net/protocol/serversocket/Protocol", "open0",           "([BI)I",                           javax_mini_net_serversocket_Protocol_open0},
+        {"javax/mini/net/protocol/serversocket/Protocol", "registerCleanup", "",                                 javax_mini_net_serversocket_Protocol_registerCleanup},
+        {"javax/mini/net/protocol/serversocket/Protocol", "finalize",        "",                                 javax_mini_net_serversocket_Protocol_finalize},
+        {"org/mini/fs/InnerFile",                         "openFile",        "([B[B)J",                          org_mini_fs_InnerFile_openFile},
+        {"org/mini/fs/InnerFile",                         "closeFile",       "(J)I",                             org_mini_fs_InnerFile_closeFile},
+        {"org/mini/fs/InnerFile",                         "read0",           "(J)I",                             org_mini_fs_InnerFile_read0},
+        {"org/mini/fs/InnerFile",                         "write0",          "(JI)I",                            org_mini_fs_InnerFile_write0},
+        {"org/mini/fs/InnerFile",                         "readbuf",         "(J[BII)I",                         org_mini_fs_InnerFile_readbuf},
+        {"org/mini/fs/InnerFile",                         "writebuf",        "(J[BII)I",                         org_mini_fs_InnerFile_writebuf},
+        {"org/mini/fs/InnerFile",                         "seek0",           "(JJ)I",                            org_mini_fs_InnerFile_seek0},
+        {"org/mini/fs/InnerFile",                         "available0",      "(J)I",                             org_mini_fs_InnerFile_available0},
+        {"org/mini/fs/InnerFile",                         "setLength0",      "(JJ)I",                            org_mini_fs_InnerFile_setLength0},
+        {"org/mini/fs/InnerFile",                         "flush0",          "(J)I",                             org_mini_fs_InnerFile_flush0},
+        {"org/mini/fs/InnerFile",                         "loadFS",          "([BLorg/mini/fs/InnerFileStat;)I", org_mini_fs_InnerFile_loadFS},
+        {"org/mini/fs/InnerFile",                         "listDir",         "([B)[Ljava/lang/String;",          org_mini_fs_InnerFile_listDir},
+        {"org/mini/fs/InnerFile",                         "getcwd",          "([B)I",                            org_mini_fs_InnerFile_getcwd},
+        {"org/mini/fs/InnerFile",                         "fullpath",        "([B[B)I",                          org_mini_fs_InnerFile_fullpath},
 
 };
 

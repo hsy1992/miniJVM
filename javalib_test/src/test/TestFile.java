@@ -11,16 +11,18 @@ import com.sun.cldc.i18n.mini.UTF_8_Reader;
 import com.sun.cldc.i18n.mini.UTF_8_Writer;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.IOException;
-import javax.mini.io.File;
-import javax.mini.io.RandomAccessFile;
+import java.io.RandomAccessFile;
 
 /**
  *
  * @author Gust
  */
 public class TestFile {
-   
+
     void printString(String s) {
         for (int i = 0; i < s.length(); i++) {
             System.out.print(" " + Integer.toHexString((int) (s.charAt(i) & 0xffff)));
@@ -48,12 +50,12 @@ public class TestFile {
             printString(s);
             File test = new File("./a.txt");
             StreamWriter writer = new UTF_8_Writer();
-            writer.open(test.getOutputStream(false), "utf-8");
+            writer.open(new FileOutputStream(test), "utf-8");
             writer.write(s);
             writer.close();
 
             StreamReader reader = new UTF_8_Reader();
-            reader.open(test.getInputStream(), "utf-8");
+            reader.open(new FileInputStream(test), "utf-8");
             char[] buf = new char[100];
             int len = reader.read(buf, 0, 100);
             reader.close();
@@ -77,14 +79,15 @@ public class TestFile {
 
     void t16() {
         try {
-            File b = new File("./b.txt");
+            File b = new File("./f.txt");
+            System.out.println("fullpath:" + b.getAbsolutePath());
             String r = "这是一个测试";
             printBytes(r);
             printString(r);
-            DataOutputStream dos = new DataOutputStream(b.getOutputStream(true));
+            DataOutputStream dos = new DataOutputStream(new FileOutputStream(b.getPath(), true));
             dos.writeUTF(r);
             dos.close();
-            DataInputStream dis = new DataInputStream(b.getInputStream());
+            DataInputStream dis = new DataInputStream(new FileInputStream(b));
             String s = dis.readUTF();
             printBytes(s);
             printString(s);
@@ -115,12 +118,13 @@ public class TestFile {
             printBytes(s);
             printString(s);
         } catch (IOException ex) {
-            System.out.println(ex.getMessage());
+            ex.printStackTrace();
         }
     }
-     public static void main(String[] args) {
+
+    public static void main(String[] args) {
         try {
-            TestFile tf=new TestFile();
+            TestFile tf = new TestFile();
             tf.t15();
             tf.t16();
             tf.t17();

@@ -21,10 +21,11 @@
 int main(int argc, char **argv) {
 
     s32 ret;
-    ret = execute_jvm("../../javalib/dist/mini_jvm_java.jar;../../javalib_test/dist/minijvm_javatest.jar;./",
-                      "test/Foo1",
-                      argc,
-                      (c8 **) argv);
+
+//    ret = execute_jvm("../../javalib/dist/mini_jvm_java.jar;../../javalib_test/dist/minijvm_javatest.jar;./",
+//                      "test/Foo1",
+//                      argc,
+//                      (c8 **) argv);
 
 //    ret = execute_jvm("../../javalib/dist/mini_jvm_java.jar;../../javalib_test/dist/minijvm_javatest.jar;./",
 //                      "test/Foo2",
@@ -41,10 +42,10 @@ int main(int argc, char **argv) {
 //                      argc,
 //                      (c8 **) argv);
 
-//    ret = execute_jvm("../../javalib/dist/mini_jvm_java.jar;../../javalib_test/dist/minijvm_javatest.jar;./",
-//                      "test/TestFile",
-//                      argc,
-//                      (c8 **) argv);
+    ret = execute_jvm("../../javalib/dist/mini_jvm_java.jar;../../javalib_test/dist/minijvm_javatest.jar;./",
+                      "test/TestFile",
+                      argc,
+                      (c8 **) argv);
 
     return ret;
 }

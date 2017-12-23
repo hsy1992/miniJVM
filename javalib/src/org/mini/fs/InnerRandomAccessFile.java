@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package javax.mini.io;
+package org.mini.fs;
 
 import java.io.IOException;
 
@@ -40,12 +40,12 @@ import java.io.IOException;
  *
  * @author gust
  */
-public class RandomAccessFile extends File {
+public class InnerRandomAccessFile extends InnerFile {
 
     boolean flush = false;
 
-    public RandomAccessFile(String ppath, String pmode) {
-        System.out.println("pmode:" + pmode);
+    public InnerRandomAccessFile(String ppath, String pmode) {
+        //System.out.println("pmode:" + pmode);
         this.path = ppath;
         if ("r".equals(pmode)) {
             this.mode = "rb";
@@ -60,31 +60,31 @@ public class RandomAccessFile extends File {
         } else {
             this.mode = "rb";
         }
-        filePointer = openFile(path.getBytes(), mode.getBytes());
+        filePointer = openFile(InnerFile.getPathBytes(path), mode.getBytes());
     }
 
     public void close() throws IOException {
-        closeFile(filePointer);
+        closeFile(getFilePointer());
         filePointer = 0;
     }
 
     public int read(byte[] b, int off, int len) throws IOException {
-        return readbuf(filePointer, b, off, len);
+        return readbuf(getFilePointer(), b, off, len);
     }
 
     public int write(byte[] b, int off, int len) throws IOException {
-        int ret = writebuf(filePointer, b, off, len);
+        int ret = writebuf(getFilePointer(), b, off, len);
         if (flush) {
-            flush0(filePointer);
+            flush0(getFilePointer());
         }
         return ret;
     }
 
     public int seek(long pos) throws IOException {
-        return seek0(filePointer, pos);
+        return seek0(getFilePointer(), pos);
     }
 
     public int setLength(long length) throws IOException {
-        return setLength0(filePointer, length);
+        return setLength0(getFilePointer(), length);
     }
 }
