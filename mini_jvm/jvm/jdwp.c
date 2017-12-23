@@ -34,6 +34,7 @@ void *jdwp_thread_listener(void *para) {
     s32 srvsock = srv_bind(srv->ip, srv->port);
     srv->srvsock = srvsock;
     srv_listen(srvsock);
+    srv->mode |= JDWP_MODE_LISTEN;
 
     while (!srv->exit) {
         s32 sockfd = srv_accept(srvsock);
@@ -53,6 +54,7 @@ void *jdwp_thread_dispacher(void *para) {
     JdwpServer *srv = (JdwpServer *) para;
     Runtime *runtime = runtime_create(NULL);
     srv->runtime = runtime;
+    srv->mode |= JDWP_MODE_DISPATCH;
     s32 i;
     while (!srv->exit) {
         for (i = 0; i < srv->clients->length; i++) {
@@ -89,6 +91,9 @@ s32 jdwp_start_server() {
 
 s32 jdwp_stop_server() {
     if (!java_debug)return 0;
+    while (jdwpserver.mode != JDWP_MODE_LISTEN + JDWP_MODE_DISPATCH) {
+        threadSleep(10);
+    }
     jdwpserver.exit = 1;
     sock_close(jdwpserver.srvsock);
     s32 i;
@@ -718,7 +723,7 @@ void jdwp_check_breakpoint(Runtime *runtime) {
         s32 i;
         for (i = 0; i < thread_list->length; i++) {
             Runtime *t = threadlist_get(i);
-            if (t){
+            if (t) {
                 jthread_suspend(t);
             }
         }

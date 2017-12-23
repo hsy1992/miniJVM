@@ -286,19 +286,22 @@ typedef struct _JdwpPacket {
     u8 _4len;
 } JdwpPacket;
 
-
+enum{
+    JDWP_MODE_LISTEN=0x01,
+    JDWP_MODE_DISPATCH=0x02,
+};
 typedef struct _JdwpServer {
     Utf8String *ip;
-    u16 port;
     pthread_t pt_listener;
     pthread_t pt_dispacher;
-    u8 exit;
     s32 srvsock;
     ArrayList *clients;
     ArrayList *events;
     Hashtable *event_sets;
     Runtime *runtime;
-
+    u16 port;
+    u8 exit;
+    u8 mode;
 } JdwpServer;
 
 typedef struct _JdwpClient {
