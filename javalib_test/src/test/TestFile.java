@@ -79,7 +79,7 @@ public class TestFile {
 
     void t16() {
         try {
-            File b = new File("./f.txt");
+            File b = new File("./b.txt");
             System.out.println("fullpath:" + b.getAbsolutePath());
             String r = "这是一个测试";
             printBytes(r);
@@ -99,6 +99,18 @@ public class TestFile {
 
     void t17() {
         try {
+            String s = "---1---2---3";
+            System.out.println("s=" + s);
+            s = s.substring(s.indexOf('1'));
+            System.out.println("s=" + s);
+            s = s.replaceAll("-", "=");
+            System.out.println("s=" + s);
+
+            File dir = new File("./a.txt");
+            dir.mkdirs();
+            dir.delete();
+            File b = new File("./b.txt");
+            b.renameTo(new File("./bb.txt"));
             RandomAccessFile c = new RandomAccessFile("./c.txt", "rw");
             c.seek(0);
             String r = "这是一个测试";
@@ -114,9 +126,9 @@ public class TestFile {
             len = c1.read(barr, 0, 256);
             System.out.println("len=" + len);
             c1.close();
-            String s = new String(barr, 0, len, "utf-8");
-            printBytes(s);
-            printString(s);
+            String s1 = new String(barr, 0, len, "utf-8");
+            printBytes(s1);
+            printString(s1);
         } catch (IOException ex) {
             ex.printStackTrace();
         }

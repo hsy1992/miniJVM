@@ -1024,17 +1024,18 @@ public final class String {
     }
 
     public String replace(String src, String dst) {
-        if (src == null || dst == null) {
+        if (src == null || dst == null || src.length() == 0) {
             return this;
         }
-        StringBuffer sb = new StringBuffer();
-        for (int i = offset; i < count; i++) {
-            char ch = value[i];
+        StringBuilder sb = new StringBuilder();
+        for (int i = 0; i < count;) {
+            int index = i + offset;
+            char ch = value[index];
             boolean match = false;
             if (ch == src.value[src.offset]) {
                 match = true;
-                for (int j = 0; j < src.count; j++) {
-                    if (value[i + j] != src.value[src.offset + j]) {
+                for (int j = 1; j < src.count; j++) {
+                    if (value[index + j] != src.value[src.offset + j]) {
                         match = false;
                         break;
                     }
@@ -1044,7 +1045,8 @@ public final class String {
                 sb.append(dst);
                 i += src.length();
             } else {
-                sb.append(value[i]);
+                sb.append(ch);
+                i++;
             }
         }
         return sb.toString();

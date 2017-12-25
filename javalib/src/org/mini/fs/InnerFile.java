@@ -85,7 +85,7 @@ public class InnerFile {
     public InnerFile(String path) {
         this.path = path;
         fd = new InnerFileStat();
-        int ret = loadFS(InnerFile.getPathBytes(path), fd);
+        int ret = loadFS(InnerFile.getPathBytesForNative(path), fd);
         if (ret < 0) {
             fd.exists = false;
         } else {
@@ -113,7 +113,7 @@ public class InnerFile {
     }
 
     public String[] list() {
-        return listDir(InnerFile.getPathBytes(path));
+        return listDir(InnerFile.getPathBytesForNative(path));
     }
 
     public OutputStream getOutputStream(boolean append) throws IOException {
@@ -121,7 +121,7 @@ public class InnerFile {
             closeFile(filePointer);
             filePointer = 0;
         }
-        filePointer = openFile(InnerFile.getPathBytes(path), append ? "a+b".getBytes() : "w+b".getBytes());;
+        filePointer = openFile(InnerFile.getPathBytesForNative(path), append ? "a+b".getBytes() : "w+b".getBytes());;
 
         return new InnerFileOutputStream(filePointer);
     }
@@ -131,7 +131,7 @@ public class InnerFile {
             closeFile(filePointer);
             filePointer = 0;
         }
-        filePointer = openFile(InnerFile.getPathBytes(path), "rb".getBytes());
+        filePointer = openFile(InnerFile.getPathBytesForNative(path), "rb".getBytes());
         return new InnerFileInputStream(filePointer);
     }
 
@@ -207,17 +207,48 @@ public class InnerFile {
         filePointer = 0;
     }
 
-    static public byte[] getPathBytes(String path) {
+    /**
+     * @return the filePointer
+     */
+    public long getFilePointer() {
+        return filePointer;
+    }
+
+    public void setFilePointer(long fd) {
+        filePointer = fd;
+    }
+
+    /**
+     * 在字节数组后加一个0 ，C string中的结束符
+     *
+     * @param path
+     * @return
+     */
+    static public byte[] getPathBytesForNative(String path) {
+        byte[] bp = null;
         try {
-            return path.getBytes("utf-8");
+            bp = path.getBytes("utf-8");
         } catch (UnsupportedEncodingException ex) {
         }
-        return path.getBytes();
+        if (bp == null) {
+            bp = path.getBytes();
+        }
+        byte[] result = new byte[bp.length + 1];
+        System.arraycopy(bp, 0, result, 0, bp.length);
+        return result;
     }
+
+    public static native int getOS();
 
     public static native int loadFS(byte[] filePath, InnerFileStat fd);
 
     public static native int getcwd(byte[] pathbuf);
+
+    public static native int mkdir0(byte[] pathbuf);
+
+    public static native int delete0(byte[] pathbuf);
+
+    public static native int rename0(byte[] oldpath, byte[] newpath);
 
     public static native int fullpath(byte[] fullpath, byte[] path);
 
@@ -242,16 +273,5 @@ public class InnerFile {
     public static native int seek0(long fileHandle, long pos);
 
     public static native int setLength0(long fileHandle, long len);
-
-    /**
-     * @return the filePointer
-     */
-    public long getFilePointer() {
-        return filePointer;
-    }
-
-    public void setFilePointer(long fd) {
-        filePointer = fd;
-    }
 
 }

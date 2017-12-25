@@ -7,16 +7,15 @@
  * Use is subject to license terms.
  * 
  */
-
 package java.io;
 
-import org.mini.fs.FileSystemImpl;
-
+import org.mini.fs.FileSystemPosix;
+import org.mini.fs.FileSystemWin;
+import org.mini.fs.InnerFile;
 
 /**
  * Package-private abstract class for the local filesystem abstraction.
  */
-
 public abstract class FileSystem {
 
     /**
@@ -24,13 +23,12 @@ public abstract class FileSystem {
      * filesystem.
      */
 //    public static native FileSystem getFileSystem();
-    public static FileSystem getFileSystem(){
-        return new FileSystemImpl();
+    public static FileSystem getFileSystem() {
+        return InnerFile.getOS() == 0 ? new FileSystemPosix() : new FileSystemWin();
     }
 
 
     /* -- Normalization and construction -- */
-
     /**
      * Return the local filesystem's name-separator character.
      */
@@ -42,21 +40,20 @@ public abstract class FileSystem {
     public abstract char getPathSeparator();
 
     /**
-     * Convert the given pathname string to normal form.  If the string is
+     * Convert the given pathname string to normal form. If the string is
      * already in normal form then it is simply returned.
      */
     public abstract String normalize(String path);
 
     /**
-     * Compute the length of this pathname string's prefix.  The pathname
-     * string must be in normal form.
+     * Compute the length of this pathname string's prefix. The pathname string
+     * must be in normal form.
      */
     public abstract int prefixLength(String path);
 
     /**
-     * Resolve the child pathname string against the parent.
-     * Both strings must be in normal form, and the result
-     * will be in normal form.
+     * Resolve the child pathname string against the parent. Both strings must
+     * be in normal form, and the result will be in normal form.
      */
     public abstract String resolve(String parent, String child);
 
@@ -69,14 +66,13 @@ public abstract class FileSystem {
 
 
     /* -- Path operations -- */
-
     /**
      * Tell whether or not the given abstract pathname is absolute.
      */
     public abstract boolean isAbsolute(File f);
 
     /**
-     * Resolve the given abstract pathname into absolute form.  Invoked by the
+     * Resolve the given abstract pathname into absolute form. Invoked by the
      * getAbsolutePath and getCanonicalPath methods in the File class.
      */
     public abstract String resolve(File f);
@@ -86,54 +82,52 @@ public abstract class FileSystem {
 
     /* -- Attribute accessors -- */
 
-    /* Constants for simple boolean attributes */
-    public static final int BA_EXISTS    = 0x01;
-    public static final int BA_REGULAR   = 0x02;
+ /* Constants for simple boolean attributes */
+    public static final int BA_EXISTS = 0x01;
+    public static final int BA_REGULAR = 0x02;
     public static final int BA_DIRECTORY = 0x04;
-    public static final int BA_HIDDEN    = 0x08;
+    public static final int BA_HIDDEN = 0x08;
 
     /**
-     * Return the simple boolean attributes for the file or directory denoted
-     * by the given abstract pathname, or zero if it does not exist or some
-     * other I/O error occurs.
+     * Return the simple boolean attributes for the file or directory denoted by
+     * the given abstract pathname, or zero if it does not exist or some other
+     * I/O error occurs.
      */
     public abstract int getBooleanAttributes(File f);
 
     /**
      * Check whether the file or directory denoted by the given abstract
-     * pathname may be accessed by this process.  If the second argument is
+     * pathname may be accessed by this process. If the second argument is
      * <code>false</code>, then a check for read access is made; if the second
      * argument is <code>true</code>, then a check for write (not read-write)
-     * access is made.  Return false if access is denied or an I/O error
-     * occurs.
+     * access is made. Return false if access is denied or an I/O error occurs.
      */
     public abstract boolean checkAccess(File f, boolean write);
 
     /**
      * Return the time at which the file or directory denoted by the given
-     * abstract pathname was last modified, or zero if it does not exist or
-     * some other I/O error occurs.
+     * abstract pathname was last modified, or zero if it does not exist or some
+     * other I/O error occurs.
      */
     public abstract long getLastModifiedTime(File f);
 
     /**
      * Return the length in bytes of the file denoted by the given abstract
-     * pathname, or zero if it does not exist, is a directory, or some other
-     * I/O error occurs.
+     * pathname, or zero if it does not exist, is a directory, or some other I/O
+     * error occurs.
      */
     public abstract long getLength(File f);
 
 
     /* -- File operations -- */
-
     /**
-     * Create a new empty file with the given pathname.  Return
-     * <code>true</code> if the file was created and <code>false</code> if a
-     * file or directory with the given pathname already exists.  Throw an
-     * IOException if an I/O error occurs.
+     * Create a new empty file with the given pathname. Return <code>true</code>
+     * if the file was created and <code>false</code> if a file or directory
+     * with the given pathname already exists. Throw an IOException if an I/O
+     * error occurs.
      */
     public abstract boolean createFileExclusively(String pathname)
-	throws IOException;
+            throws IOException;
 
     /**
      * Delete the file or directory denoted by the given abstract pathname,
@@ -142,22 +136,22 @@ public abstract class FileSystem {
     public abstract boolean delete(File f);
 
     /**
-     * Arrange for the file or directory denoted by the given abstract
-     * pathname to be deleted when the VM exits, returning <code>true</code> if
-     * and only if the operation succeeds.
+     * Arrange for the file or directory denoted by the given abstract pathname
+     * to be deleted when the VM exits, returning <code>true</code> if and only
+     * if the operation succeeds.
      */
     public abstract boolean deleteOnExit(File f);
 
     /**
      * List the elements of the directory denoted by the given abstract
-     * pathname.  Return an array of strings naming the elements of the
-     * directory if successful; otherwise, return <code>null</code>.
+     * pathname. Return an array of strings naming the elements of the directory
+     * if successful; otherwise, return <code>null</code>.
      */
     public abstract String[] list(File f);
 
     /**
-     * Create a new directory denoted by the given abstract pathname,
-     * returning <code>true</code> if and only if the operation succeeds.
+     * Create a new directory denoted by the given abstract pathname, returning
+     * <code>true</code> if and only if the operation succeeds.
      */
     public abstract boolean createDirectory(File f);
 
@@ -169,8 +163,8 @@ public abstract class FileSystem {
     public abstract boolean rename(File f1, File f2);
 
     /**
-     * Set the last-modified time of the file or directory denoted by the
-     * given abstract pathname, returning <code>true</code> if and only if the
+     * Set the last-modified time of the file or directory denoted by the given
+     * abstract pathname, returning <code>true</code> if and only if the
      * operation succeeds.
      */
     public abstract boolean setLastModifiedTime(File f, long time);
@@ -184,7 +178,6 @@ public abstract class FileSystem {
 
 
     /* -- Filesystem interface -- */
-
     /**
      * List the available filesystem roots.
      */
@@ -192,7 +185,6 @@ public abstract class FileSystem {
 
 
     /* -- Basic infrastructure -- */
-
     /**
      * Compare two abstract pathnames lexicographically.
      */

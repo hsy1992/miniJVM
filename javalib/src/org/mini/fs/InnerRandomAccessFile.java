@@ -60,7 +60,7 @@ public class InnerRandomAccessFile extends InnerFile {
         } else {
             this.mode = "rb";
         }
-        filePointer = openFile(InnerFile.getPathBytes(path), mode.getBytes());
+        filePointer = openFile(InnerFile.getPathBytesForNative(path), mode.getBytes());
     }
 
     public void close() throws IOException {

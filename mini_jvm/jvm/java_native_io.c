@@ -853,7 +853,75 @@ s32 org_mini_fs_InnerFile_fullpath(Runtime *runtime, Class *clazz) {
     }
 #if _JVM_DEBUG_BYTECODE_DETAIL > 5
     invoke_deepth(runtime);
-    jvm_printf("org_mini_fs_InnerFile_getcwd  \n");
+    jvm_printf("org_mini_fs_InnerFile_fullpath  \n");
+#endif
+    return 0;
+}
+
+s32 org_mini_fs_InnerFile_rename0(Runtime *runtime, Class *clazz) {
+    Instance *old_arr = localvar_getRefer(runtime, 0);
+    Instance *new_arr = localvar_getRefer(runtime, 1);
+    if (old_arr && new_arr) {
+        rename(old_arr->arr_body, new_arr->arr_body);
+        push_int(runtime->stack, 0);
+    } else {
+        push_int(runtime->stack, -1);
+    }
+#if _JVM_DEBUG_BYTECODE_DETAIL > 5
+    invoke_deepth(runtime);
+    jvm_printf("org_mini_fs_InnerFile_rename0  \n");
+#endif
+    return 0;
+}
+
+s32 org_mini_fs_InnerFile_mkdir0(Runtime *runtime, Class *clazz) {
+    Instance *path_arr = localvar_getRefer(runtime, 0);
+    s32 ret = -1;
+    if (path_arr) {
+        ret = mkdir(path_arr->arr_body);
+        push_int(runtime->stack, ret);
+    } else {
+        push_int(runtime->stack, ret);
+    }
+#if _JVM_DEBUG_BYTECODE_DETAIL > 5
+    invoke_deepth(runtime);
+    jvm_printf("org_mini_fs_InnerFile_mkdir  \n");
+#endif
+    return 0;
+}
+
+s32 org_mini_fs_InnerFile_getOS(Runtime *runtime, Class *clazz) {
+#if defined(__JVM_OS_MINGW__) || defined(__JVM_OS_CYGWIN__)
+    push_int(runtime->stack, 1);
+#else
+    push_int(runtime->stack, 0);
+#endif
+#if _JVM_DEBUG_BYTECODE_DETAIL > 5
+    invoke_deepth(runtime);
+    jvm_printf("org_mini_fs_InnerFile_getOS  \n");
+#endif
+    return 0;
+}
+
+s32 org_mini_fs_InnerFile_delete0(Runtime *runtime, Class *clazz) {
+    Instance *path_arr = localvar_getRefer(runtime, 0);
+    s32 ret = -1;
+    if (path_arr) {
+        struct stat buf;
+        stat(path_arr->arr_body, &buf);
+        s32 a = S_ISDIR(buf.st_mode);
+        if (a) {
+            ret = rmdir(path_arr->arr_body);
+        } else {
+            ret = remove(path_arr->arr_body);
+        }
+        push_int(runtime->stack, ret);
+    } else {
+        push_int(runtime->stack, ret);
+    }
+#if _JVM_DEBUG_BYTECODE_DETAIL > 5
+    invoke_deepth(runtime);
+    jvm_printf("org_mini_fs_InnerFile_delete0  \n");
 #endif
     return 0;
 }
@@ -887,6 +955,10 @@ static java_native_method method_net_table[] = {
         {"org/mini/fs/InnerFile",                         "listDir",         "([B)[Ljava/lang/String;",          org_mini_fs_InnerFile_listDir},
         {"org/mini/fs/InnerFile",                         "getcwd",          "([B)I",                            org_mini_fs_InnerFile_getcwd},
         {"org/mini/fs/InnerFile",                         "fullpath",        "([B[B)I",                          org_mini_fs_InnerFile_fullpath},
+        {"org/mini/fs/InnerFile",                         "mkdir0",          "([B)I",                            org_mini_fs_InnerFile_mkdir0},
+        {"org/mini/fs/InnerFile",                         "getOS",           "()I",                              org_mini_fs_InnerFile_getOS},
+        {"org/mini/fs/InnerFile",                         "delete0",         "([B)I",                            org_mini_fs_InnerFile_delete0},
+        {"org/mini/fs/InnerFile",                         "rename0",         "([B[B)I",                          org_mini_fs_InnerFile_rename0},
 
 };
 
