@@ -49,6 +49,8 @@ public class TestFile {
             printBytes(s);
             printString(s);
             File test = new File("./\\/./a.txt");
+            System.out.println("path:"+test.getPath());
+            System.out.println("parent:"+test.getParent());
 //            File test = new File("/cygdrive/d/githome/mini_jvm/mini_jvm/cmake-build-debug/./a.txt");
             System.out.println("full path:" + test.getAbsolutePath());
             System.out.println("file exists:" + test.exists());

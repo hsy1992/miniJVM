@@ -22,7 +22,8 @@ abstract public class FileSystemImpl extends org.mini.fs.FileSystem {
         byte[] pathbuf = new byte[512];
         InnerFile.getcwd(pathbuf);
         int size = 0;
-        while (pathbuf[size++] != 0) {
+        while (pathbuf[size] != 0) {
+            size++;
         }
         return new String(pathbuf, 0, size);
     }
