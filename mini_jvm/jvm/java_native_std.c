@@ -525,9 +525,11 @@ s32 java_lang_System_arraycopy(Runtime *runtime, Class *clazz) {
     Instance *dest = (Instance *) localvar_getRefer(runtime, 2);
     s32 src_start = localvar_getInt(runtime, 1);
     Instance *src = (Instance *) localvar_getRefer(runtime, 0);
+    s32 ret = 0;
     if (src == NULL || dest == NULL) {
         Instance *exception = exception_create(JVM_EXCEPTION_NULLPOINTER, runtime);
         push_ref(stack, (__refer) exception);
+        ret = RUNTIME_STATUS_EXCEPTION;
     } else {
         s32 bytes = data_type_bytes[src->mb.clazz->arr_type_index];
         //根据元素宽
@@ -542,7 +544,7 @@ s32 java_lang_System_arraycopy(Runtime *runtime, Class *clazz) {
     jvm_printf("java_lang_System_arraycopy\n");
 #endif
 
-    return 0;
+    return ret;
 }
 
 

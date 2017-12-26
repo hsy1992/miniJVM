@@ -61,6 +61,9 @@ public class InnerRandomAccessFile extends InnerFile {
             this.mode = "rb";
         }
         filePointer = openFile(InnerFile.getPathBytesForNative(path), mode.getBytes());
+        if (filePointer == 0) {
+            throw new RuntimeException("open file error:" + path);
+        }
     }
 
     public void close() throws IOException {

@@ -6,20 +6,16 @@
 package org.mini.fs;
 
 import java.io.File;
-import java.io.FileSystem;
 import java.io.IOException;
 
 /**
  *
  * @author gust
  */
-abstract public class FileSystemImpl extends FileSystem {
+abstract public class FileSystemImpl extends org.mini.fs.FileSystem {
 
-    @Override
-    public String normalize(String path) {
-        path = path.replace('/', getSeparator());
-        return path;
-    }
+    static String PARENT_DIR = "..";
+    static String CUR_DIR = ".";
 
     @Override
     public String getDefaultParent() {
@@ -31,18 +27,47 @@ abstract public class FileSystemImpl extends FileSystem {
         return new String(pathbuf, 0, size);
     }
 
+    abstract boolean isAbsolute(String path);
+
     @Override
     public boolean isAbsolute(File f) {
-        throw new RuntimeException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        String path = f.getPath();
+        return isAbsolute(path);
+    }
+
+    private String removeParentTag(String path) {
+        String P = PARENT_DIR + getSeparator();
+        int index;
+        while ((index = path.indexOf(P)) > 0) {
+            String prev = path.substring(0, index - 1);
+            prev = prev.substring(0, prev.lastIndexOf(getSeparator()) + 1);
+            String back = path.substring(index + P.length());
+            path = prev + back;
+        }
+        return path;
+    }
+
+    @Override
+    public String normalize(String path) {
+        String ds = "" + getSeparator() + getSeparator();   //remove all "//" to "/"
+        String ss = "" + getSeparator();
+        while (path.indexOf(ds) >= 0) {
+            path = path.replaceAll(ds, ss);
+        }
+        path = path.replaceAll(PARENT_DIR + getSeparator(), "\uffff\uffff\uffff");
+        path = path.replaceAll(CUR_DIR + getSeparator(), "");  //remove all "./" to ""
+        path = path.replaceAll("\uffff\uffff\uffff", PARENT_DIR + getSeparator());
+
+        return path;
     }
 
     private String getFullPath(String path) {
-        byte[] full = new byte[512];
-        InnerFile.fullpath(full, InnerFile.getPathBytesForNative(path));
-        int size = 0;
-        while (full[size++] != 0) {
+        String parent = getDefaultParent();
+        if (!isAbsolute(path)) {
+            path = parent + getSeparator() + path;    //   replace   "/tmp/abc/../a.txt" to "/tmp/a.txt"
         }
-        return new String(full, 0, size);
+        path = removeParentTag(path);
+        return path;
     }
 
     @Override

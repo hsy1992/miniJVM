@@ -33,6 +33,11 @@ int main(int argc, char **argv) {
 //                      (c8 **) argv);
 
 //    ret = execute_jvm("../../javalib/dist/mini_jvm_java.jar;../../javalib_test/dist/minijvm_javatest.jar;./",
+//                      "test/Foo3",
+//                      argc,
+//                      (c8 **) argv);
+
+//    ret = execute_jvm("../../javalib/dist/mini_jvm_java.jar;../../javalib_test/dist/minijvm_javatest.jar;./",
 //                      "test/HttpServer",
 //                      argc,
 //                      (c8 **) argv);

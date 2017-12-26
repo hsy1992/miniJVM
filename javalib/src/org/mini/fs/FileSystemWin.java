@@ -12,6 +12,24 @@ package org.mini.fs;
 public class FileSystemWin extends FileSystemImpl {
 
     @Override
+    public String normalize(String path) {
+        path = path.replace('/', getSeparator());
+        path = super.normalize(path);
+        return path;
+    }
+
+    @Override
+    public boolean isAbsolute(String path) {
+        if (path.charAt(0) == getSeparator()) {
+            return true;
+        }
+        if (path.length() >= 2 && path.charAt(1) == ':') {
+            return true;
+        }
+        return false;
+    }
+
+    @Override
     public char getSeparator() {
         return '\\';
     }

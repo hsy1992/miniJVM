@@ -7,8 +7,10 @@
  * Use is subject to license terms.
  * 
  */
-package java.io;
+package org.mini.fs;
 
+import java.io.File;
+import java.io.IOException;
 import org.mini.fs.FileSystemPosix;
 import org.mini.fs.FileSystemWin;
 import org.mini.fs.InnerFile;

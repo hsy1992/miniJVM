@@ -9,8 +9,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.UnsupportedEncodingException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /**
  *
@@ -121,8 +119,10 @@ public class InnerFile {
             closeFile(filePointer);
             filePointer = 0;
         }
-        filePointer = openFile(InnerFile.getPathBytesForNative(path), append ? "a+b".getBytes() : "w+b".getBytes());;
-
+        filePointer = openFile(InnerFile.getPathBytesForNative(path), append ? InnerFile.getPathBytesForNative("a+b") : InnerFile.getPathBytesForNative("w+b"));;
+        if (filePointer == 0) {
+            throw new IOException("open file error:" + path);
+        }
         return new InnerFileOutputStream(filePointer);
     }
 
@@ -131,7 +131,10 @@ public class InnerFile {
             closeFile(filePointer);
             filePointer = 0;
         }
-        filePointer = openFile(InnerFile.getPathBytesForNative(path), "rb".getBytes());
+        filePointer = openFile(InnerFile.getPathBytesForNative(path), InnerFile.getPathBytesForNative("rb"));
+        if (filePointer == 0) {
+            throw new IOException("open file error:" + path);
+        }
         return new InnerFileInputStream(filePointer);
     }
 

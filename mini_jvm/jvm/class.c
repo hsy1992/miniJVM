@@ -210,11 +210,10 @@ void class_clinit(Class *clazz, Runtime *runtime) {
 //        }
     }
     for (i = 0; i < clazz->fieldPool.field_used; i++) {
-        FieldInfo * fi=&clazz->fieldPool.field[i];
+        FieldInfo *fi = &clazz->fieldPool.field[i];
 
         fi->offset_instance = fi->_this_class->field_instance_start + fi->offset;
     }
-
     ArrayList *utf8list = clazz->constantPool.utf8CP;
     for (i = 0, len = utf8list->length; i < len; i++) {
         ConstantUTF8 *cutf = arraylist_get_value(utf8list, i);
@@ -237,6 +236,7 @@ void class_clinit(Class *clazz, Runtime *runtime) {
 #if _JVM_DEBUG_BYTECODE_DETAIL > 5
             jvm_printf("%s <clinit>\n", utf8_cstr(clazz->name));
 #endif
+
             s32 ret = execute_method(&(p->method[i]), runtime, clazz);
             if (ret != RUNTIME_STATUS_NORMAL) {
                 print_exception(runtime);

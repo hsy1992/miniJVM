@@ -8,6 +8,8 @@
 #include "java_native_io.h"
 #include "jvm_util.h"
 #include <sys/stat.h>
+#include <stdlib.h>
+#include <limits.h>
 
 #define   err jvm_printf
 
@@ -27,6 +29,8 @@ extern "C" {
 #define socklen_t int
 
 #include <winsock2.h>
+#include <unistd.h>
+
 
 #define SHUT_RDWR SD_BOTH
 #define SHUT_RD SD_RECEIVE
@@ -519,12 +523,8 @@ s32 org_mini_fs_InnerFile_openFile(Runtime *runtime, Class *clazz) {
     Instance *name_arr = localvar_getRefer(runtime, 0);
     Instance *mode_arr = localvar_getRefer(runtime, 1);
     if (name_arr) {
-        Utf8String *filepath = utf8_create_part_c(name_arr->arr_body, 0, name_arr->arr_length);
-        Utf8String *mode = utf8_create_part_c(mode_arr->arr_body, 0, mode_arr->arr_length);
-        FILE *fd = fopen(utf8_cstr(filepath), utf8_cstr(mode));
+        FILE *fd = fopen(name_arr->arr_body, mode_arr->arr_body);
         push_long(runtime->stack, (s64) (long) fd);
-        utf8_destory(filepath);
-        utf8_destory(mode);
     } else {
         push_long(runtime->stack, 0);
     }
@@ -846,7 +846,11 @@ s32 org_mini_fs_InnerFile_fullpath(Runtime *runtime, Class *clazz) {
     Instance *fullpath_arr = localvar_getRefer(runtime, 0);
     Instance *path_arr = localvar_getRefer(runtime, 1);
     if (path_arr) {
+#ifdef __JVM_OS_MINGW__
         _fullpath(fullpath_arr->arr_body, path_arr->arr_body, fullpath_arr->arr_length);
+#else
+        //realpath(path_arr->arr_body, fullpath_arr->arr_body);
+#endif
         push_int(runtime->stack, 0);
     } else {
         push_int(runtime->stack, -1);
@@ -878,7 +882,11 @@ s32 org_mini_fs_InnerFile_mkdir0(Runtime *runtime, Class *clazz) {
     Instance *path_arr = localvar_getRefer(runtime, 0);
     s32 ret = -1;
     if (path_arr) {
+#ifdef __JVM_OS_MINGW__
         ret = mkdir(path_arr->arr_body);
+#else
+        ret = mkdir(path_arr->arr_body, S_IRWXU | S_IRWXG | S_IROTH | S_IXOTH);
+#endif
         push_int(runtime->stack, ret);
     } else {
         push_int(runtime->stack, ret);
@@ -891,7 +899,7 @@ s32 org_mini_fs_InnerFile_mkdir0(Runtime *runtime, Class *clazz) {
 }
 
 s32 org_mini_fs_InnerFile_getOS(Runtime *runtime, Class *clazz) {
-#if defined(__JVM_OS_MINGW__) || defined(__JVM_OS_CYGWIN__)
+#if defined(__JVM_OS_MINGW__)
     push_int(runtime->stack, 1);
 #else
     push_int(runtime->stack, 0);

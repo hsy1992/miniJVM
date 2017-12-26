@@ -9,6 +9,7 @@
  */
 package java.io;
 
+import org.mini.fs.FileSystem;
 import java.util.ArrayList;
 
 /**
@@ -89,7 +90,7 @@ public class File implements java.util.Comparable {
     /**
      * The FileSystem object representing the platform's local file system.
      */
-    static private FileSystem fs = FileSystem.getFileSystem();
+    static private org.mini.fs.FileSystem fs = org.mini.fs.FileSystem.getFileSystem();
 
     /**
      * This abstract pathname's normalized pathname string. A normalized

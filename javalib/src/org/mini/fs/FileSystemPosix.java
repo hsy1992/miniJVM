@@ -5,11 +5,28 @@
  */
 package org.mini.fs;
 
+import java.io.File;
+
 /**
  *
  * @author gust
  */
 public class FileSystemPosix extends FileSystemImpl {
+
+    @Override
+    public String normalize(String path) {
+        path = path.replace('\\', getSeparator());
+        path = super.normalize(path);
+        return path;
+    }
+
+    @Override
+    public boolean isAbsolute(String path) {
+        if (path.charAt(0) == getSeparator()) {
+            return true;
+        }
+        return false;
+    }
 
     @Override
     public char getSeparator() {

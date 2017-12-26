@@ -1055,18 +1055,14 @@ Instance *jstring_create(Utf8String *src, Runtime *runtime) {
     instance_init(jstring, runtime);
 
     c8 *ptr = jstring_get_value_ptr(jstring);
-    if (src->length) {
-        u16 *buf = jvm_calloc(src->length * data_type_bytes[DATATYPE_JCHAR]);
-        s32 len = utf8_2_unicode(src, buf);
-        Instance *arr = jarray_create(len, DATATYPE_JCHAR, NULL);//u16 type is 5
-        setFieldRefer(ptr, (__refer) arr);//设置数组
+    u16 *buf = jvm_calloc(src->length * data_type_bytes[DATATYPE_JCHAR]);
+    s32 len = utf8_2_unicode(src, buf);
+    Instance *arr = jarray_create(len, DATATYPE_JCHAR, NULL);//u16 type is 5
+    setFieldRefer(ptr, (__refer) arr);//设置数组
 
-        memcpy(arr->arr_body, buf, len * data_type_bytes[DATATYPE_JCHAR]);
-        jvm_free(buf);
-        jstring_set_count(jstring, len);//设置长度
-    } else {
-        setFieldRefer(ptr, 0);
-    }
+    memcpy(arr->arr_body, buf, len * data_type_bytes[DATATYPE_JCHAR]);
+    jvm_free(buf);
+    jstring_set_count(jstring, len);//设置长度
     utf8_destory(clsName);
     garbage_refer_release(jstring);
     return jstring;
