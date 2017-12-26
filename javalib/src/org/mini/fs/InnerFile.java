@@ -84,11 +84,6 @@ public class InnerFile {
         this.path = path;
         fd = new InnerFileStat();
         int ret = loadFS(InnerFile.getPathBytesForNative(path), fd);
-        if (ret < 0) {
-            fd.exists = false;
-        } else {
-            fd.exists = true;
-        }
     }
 
     protected InnerFile() {
@@ -250,6 +245,8 @@ public class InnerFile {
     public static native int mkdir0(byte[] pathbuf);
 
     public static native int delete0(byte[] pathbuf);
+
+    public static native int chmod(byte[] pathbuf, int mode);
 
     public static native int rename0(byte[] oldpath, byte[] newpath);
 

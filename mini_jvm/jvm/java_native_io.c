@@ -771,6 +771,8 @@ s32 org_mini_fs_InnerFile_loadFS(Runtime *runtime, Class *clazz) {
             setFieldLong(ptr, buf.st_mtime);
             ptr = getFieldPtr_byName_c(fd, className, "st_ctime", "J");
             setFieldLong(ptr, buf.st_ctime);
+            ptr = getFieldPtr_byName_c(fd, className, "exists", "Z");
+            setFieldByte(ptr, 1);
         }
         utf8_destory(filepath);
     }
@@ -830,8 +832,8 @@ s32 org_mini_fs_InnerFile_listDir(Runtime *runtime, Class *clazz) {
 s32 org_mini_fs_InnerFile_getcwd(Runtime *runtime, Class *clazz) {
     Instance *path_arr = localvar_getRefer(runtime, 0);
     if (path_arr) {
-        getcwd(path_arr->arr_body, path_arr->arr_length);
-        push_int(runtime->stack, 0);
+        __refer ret = getcwd(path_arr->arr_body, path_arr->arr_length);
+        push_int(runtime->stack, ret == path_arr->arr_body ? 0 : -1);
     } else {
         push_int(runtime->stack, -1);
     }
@@ -842,16 +844,12 @@ s32 org_mini_fs_InnerFile_getcwd(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-s32 org_mini_fs_InnerFile_fullpath(Runtime *runtime, Class *clazz) {
-    Instance *fullpath_arr = localvar_getRefer(runtime, 0);
-    Instance *path_arr = localvar_getRefer(runtime, 1);
+s32 org_mini_fs_InnerFile_chmod(Runtime *runtime, Class *clazz) {
+    Instance *path_arr = localvar_getRefer(runtime, 0);
+    s32 mode = localvar_getInt(runtime, 1);
     if (path_arr) {
-#ifdef __JVM_OS_MINGW__
-        _fullpath(fullpath_arr->arr_body, path_arr->arr_body, fullpath_arr->arr_length);
-#else
-        //realpath(path_arr->arr_body, fullpath_arr->arr_body);
-#endif
-        push_int(runtime->stack, 0);
+        s32 ret = chmod(path_arr->arr_body, mode);
+        push_int(runtime->stack, ret);
     } else {
         push_int(runtime->stack, -1);
     }
@@ -866,8 +864,8 @@ s32 org_mini_fs_InnerFile_rename0(Runtime *runtime, Class *clazz) {
     Instance *old_arr = localvar_getRefer(runtime, 0);
     Instance *new_arr = localvar_getRefer(runtime, 1);
     if (old_arr && new_arr) {
-        rename(old_arr->arr_body, new_arr->arr_body);
-        push_int(runtime->stack, 0);
+        s32 ret = rename(old_arr->arr_body, new_arr->arr_body);
+        push_int(runtime->stack, ret);
     } else {
         push_int(runtime->stack, -1);
     }
@@ -962,7 +960,7 @@ static java_native_method method_net_table[] = {
         {"org/mini/fs/InnerFile",                         "loadFS",          "([BLorg/mini/fs/InnerFileStat;)I", org_mini_fs_InnerFile_loadFS},
         {"org/mini/fs/InnerFile",                         "listDir",         "([B)[Ljava/lang/String;",          org_mini_fs_InnerFile_listDir},
         {"org/mini/fs/InnerFile",                         "getcwd",          "([B)I",                            org_mini_fs_InnerFile_getcwd},
-        {"org/mini/fs/InnerFile",                         "fullpath",        "([B[B)I",                          org_mini_fs_InnerFile_fullpath},
+        {"org/mini/fs/InnerFile",                         "chmod",           "([BI)I",                           org_mini_fs_InnerFile_chmod},
         {"org/mini/fs/InnerFile",                         "mkdir0",          "([B)I",                            org_mini_fs_InnerFile_mkdir0},
         {"org/mini/fs/InnerFile",                         "getOS",           "()I",                              org_mini_fs_InnerFile_getOS},
         {"org/mini/fs/InnerFile",                         "delete0",         "([B)I",                            org_mini_fs_InnerFile_delete0},

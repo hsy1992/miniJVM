@@ -48,8 +48,8 @@ public class TestFile {
             String s = "这是一个测试";
             printBytes(s);
             printString(s);
-//            File test = new File("../\\/./a.txt");
-            File test = new File("/cygdrive/d/githome/mini_jvm/mini_jvm/cmake-build-debug/./a.txt");
+            File test = new File("./\\/./a.txt");
+//            File test = new File("/cygdrive/d/githome/mini_jvm/mini_jvm/cmake-build-debug/./a.txt");
             System.out.println("full path:" + test.getAbsolutePath());
             System.out.println("file exists:" + test.exists());
             StreamWriter writer = new UTF_8_Writer();
@@ -58,6 +58,7 @@ public class TestFile {
             writer.open(fos, "utf-8");
             writer.write(s);
             writer.close();
+            System.out.println("file exists:" + test.exists());
 
             StreamReader reader = new UTF_8_Reader();
             reader.open(new FileInputStream(test), "utf-8");
