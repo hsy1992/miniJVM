@@ -119,7 +119,8 @@ void utf8_append_s64(Utf8String *a1, long long int val, int radix) {
 }
 
 void utf8_upcase(Utf8String *a1) {
-    for (size_t i = 0; i < a1->length; i++) {
+    int i;
+    for (i = 0; i < a1->length; i++) {
         if (a1->data[i] >= 'a' && a1->data[i] <= 'z') {
             a1->data[i] = a1->data[i] - ('a' - 'A');
         }
@@ -130,7 +131,8 @@ long long int utf8_aton(Utf8String *sp, int n) {
     long long int v = 0;
     c8 negative = 0;
     utf8_upcase(sp);
-    for (size_t i = 0; i < sp->length; i++) {
+    int i;
+    for (i = 0; i < sp->length; i++) {
         utf8_char ch = sp->data[i];
         if (ch == '-')
             negative = 1;

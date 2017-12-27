@@ -5,11 +5,7 @@
  */
 package test;
 
-import java.io.ByteArrayOutputStream;
-import java.io.DataInputStream;
-import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Collections;
 import java.util.Enumeration;
 import java.util.HashMap;
@@ -20,13 +16,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.Vector;
-import javax.cldc.io.Connector;
-import javax.cldc.io.ContentConnection;
-import javax.mini.net.ServerSocket;
-import javax.mini.net.Socket;
-import javax.mini.reflect.Method;
-import javax.mini.reflect.Reference;
-import javax.mini.reflect.vm.RefNative;
 
 /**
  *
@@ -176,7 +165,7 @@ public class Foo1 {
     }
 
     void t7() {
-        int MAX = 500000;
+        int MAX = 50000;
         int PRINT_COUNT = 10000;
         Thread t = new Thread(new Runnable() {
             List<String> list = new ArrayList();
@@ -274,118 +263,14 @@ public class Foo1 {
     }
 
     void t12() {
-
-        new Thread(new Runnable() {
-
-            @Override
-            public void run() {
-                try {
-                    ServerSocket srvsock = (ServerSocket) Connector.open("serversocket://:8080");
-
-                    //建一个线程，过5秒钟关掉自己
-                    new Thread(new Runnable() {
-
-                        @Override
-                        public void run() {
-                            try {
-                                int MAX = 3;
-                                for (int i = 0; i < MAX; i++) {
-                                    System.out.println("server would close at " + (MAX - i) + " second later.");
-                                    Thread.sleep(1000);
-                                }
-                                if (srvsock != null) {
-                                    srvsock.close();
-                                }
-                            } catch (Exception e) {
-                                e.printStackTrace();
-                            }
-                        }
-
-                    }).start();
-                    System.out.println("server socket listen...");
-                    srvsock.listen();
-                    while (true) {
-                        try {
-                            Socket cltsock;
-                            try {
-                                cltsock = srvsock.accept();
-                            } catch (IOException e) {
-                                break;
-                            }
-                            cltsock.setOption(Socket.OP_TYPE_NON_BLOCK, Socket.OP_VAL_NON_BLOCK);
-                            System.out.println("accepted client socket:" + cltsock);
-                            byte[] buf = new byte[256];
-                            StringBuffer tmps = new StringBuffer();
-                            int rlen;
-                            while ((rlen = cltsock.read(buf, 0, 256)) != -1) {
-                                String s = new String(buf, 0, rlen);
-                                tmps.append(s);
-                                String s1 = tmps.toString();
-                                if (s1.indexOf("\n\n") >= 0 || s1.indexOf("\r\n\r\n") >= 0) {
-                                    break;
-                                }
-                            }
-                            //System.out.println("RECV: " + tmps.toString());
-                            String sbuf = "HTTP/1.0 200 OK\r\nContent-Type: text/html\r\n\r\nFor mini_jvm test. ( EGLS Beijing co.,ltd)" + Calendar.getInstance().getTime().toString();
-                            int sent = 0;
-                            while ((sent) < sbuf.length()) {
-                                int wlen = cltsock.write(sbuf.getBytes(), sent, sbuf.length() - sent);
-                                if (wlen == -1) {
-                                    break;
-                                }
-                                sent += wlen;
-                            }
-                            cltsock.close();
-                            if (false) {
-                                break;
-                            }
-                        } catch (Exception e) {
-                            System.out.println(e);
-                        }
-                    }
-                    srvsock.close();
-                } catch (Exception e) {
-                    System.out.println(e);
-                }
-            }
-        }).start();
-
     }
 
     void t13() {
-        try {
-            Socket conn = (Socket) Connector.open("socket://127.0.0.1:8080");
-            conn.setOption(Socket.OP_TYPE_NON_BLOCK, Socket.OP_VAL_NON_BLOCK);
-            String request = "GET / HTTP/1.1\r\n\r\n";
-            conn.write(request.getBytes(), 0, request.length());
-            byte[] rcvbuf = new byte[256];
-            int len = 0;
-            int zero = 0;
-            while (len != -1) {
-                len = conn.read(rcvbuf, 0, 256);
-                if (len == 0) {
-                    zero++;
-                }
-                if (zero > 300) {
-                    break;
-                }
-                for (int i = 0; i < len; i++) {
-                    System.out.print((char) rcvbuf[i]);
-                }
-
-            };
-            System.out.print("\n");
-            conn.close();
-        } catch (Exception e) {
-
-        }
     }
 
     void t14() {
 
     }
-
-
 
     void t19() {
         System.out.println("fi=" + fi);
@@ -415,35 +300,11 @@ public class Foo1 {
         Map<Long, String> map = new HashMap();
         map.put(3L, "Long");
         map.put(4L, "Float");
-        for (Iterator<Long> it = map.keySet().iterator(); it.hasNext();) {
-            Long key = it.next();
+        for (Long key : map.keySet()) {
             String val = map.get(key);
             System.out.println(key + ":" + val);
         }
         List clist = Collections.synchronizedList(new ArrayList());
-
-        Class cla = "".getClass();
-        Reference ref = new Reference(RefNative.obj2id(cla));
-        System.out.println("ref.name=" + ref.className);
-        try {
-            System.out.println(new Long(0).getClass().toString());
-            String s = (String) cla.newInstance();
-            System.out.println(s);
-            s += "abcd";
-            Method m = ref.getMethod("indexOf", "(Ljava.lang.String;I)I");
-            if (m != null) {
-                Object result = m.invoke(s, new Object[]{"cd", new Integer(1)});
-                System.out.println("reflect invoke result:" + result);
-            }
-        } catch (InstantiationException ex) {
-        } catch (IllegalAccessException ex) {
-        }
-
-        Class[] classes = RefNative.getClasses();
-        System.out.println("classes.size()=" + classes.length);
-//        for (Class cl : classes) {
-//            System.out.println("class:" + cl.getName() + " id:" + RefNative.obj2id(cl));
-//        }
 
         System.out.println("fi=" + fi);
         int i = 0;
@@ -502,63 +363,6 @@ public class Foo1 {
         a.v = b;
         b.v = c;
         c.v = a;
-    }
-
-    void t22() {
-        long lastms = System.currentTimeMillis();
-        Reference r = new Reference(RefNative.obj2id(java.lang.String.class));
-        Reference r2 = new Reference(RefNative.obj2id(java.lang.Long.class));
-        for (int i = 0; i < 1000; i++) {
-            try {
-                //System.out.print(" " + (System.currentTimeMillis() - lastms));
-                lastms = System.currentTimeMillis();
-                if (i % 10 == 0) {
-                    //System.out.println();
-                }
-                String s = "abcd";
-                s.indexOf("cd", 1);
-                Method m;
-                m = r.getMethod("indexOf", new Class[]{java.lang.String.class, java.lang.Integer.class});
-                if (m != null) {
-                    Object result = m.invoke(s, new Object[]{"cd", 1});
-                    //System.out.println("reflect invoke result:" + result);
-                }
-//                if (RefNative.getGarbageStatus() == 1) {
-//                    Object[] objs = RefNative.getGarbageReferedObjs();
-//                    for (int n = 0; n < objs.length; n++) {
-//                        Object o = objs[n];
-//                        if (o != null && o instanceof Reference) {
-//                            Method[] mds = ((Reference) objs[n]).getMethods();
-//                            System.out.println("Reference[" + Long.toString(RefNative.obj2id(objs[n]), 10) + "]:");
-//                            for (int j = 0; j < mds.length; j++) {
-//                                Method md = mds[j];
-//
-//                                if (md == null) {
-//                                    System.out.println("Method[" + j + "]:" + md);
-//                                } else {
-//                                    String[] paras = md.getParameterStrs();
-//                                    int k = 0;
-//                                    for (String p : paras) {
-//                                        System.out.println("Method[" + j + "][" + Long.toString(RefNative.obj2id(md), 16) + "](" + Long.toString(RefNative.obj2id(md), 10) + "):" + md.methodName + " paras[" + k + "]:" + p + "|" + Long.toString(RefNative.obj2id(p), 16));
-//                                        k++;
-//                                    }
-//                                }
-//                            }
-//                        }
-//                    }
-//                    int debug = 1;
-//                }
-
-                Long lo = new Long(0x1010101020202020L);
-
-                m = r2.getMethod("longValue", new Class[]{});
-                if (m != null) {
-                    Object result = m.invoke(lo, new Object[]{});
-                    //System.out.println("reflect invoke result:" + Long.toString((Long) result, 16));
-                }
-            } catch (Exception ex) {
-            }
-        }
     }
 
     void t23() {
