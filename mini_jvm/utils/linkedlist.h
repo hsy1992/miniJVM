@@ -58,7 +58,7 @@ typedef struct _ListEntry LinkedListEntry;
 
 typedef struct _LinkedList {
     LinkedListEntry *mNode;
-    long long int length;
+    s64 length;
     spinlock_t spinlock;
 } LinkedList;
 

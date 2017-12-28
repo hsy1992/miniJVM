@@ -220,7 +220,7 @@ static inline s32 _op_aload_n(u8 **opCode, Runtime *runtime, s32 i) {
     push_ref(runtime->stack, value);
 #if _JVM_DEBUG_BYTECODE_DETAIL > 5
     invoke_deepth(runtime);
-    jvm_printf("aload_%d push localvar [%llx] into stack\n", i, (s64) (long) value);
+    jvm_printf("aload_%d push localvar [%llx] into stack\n", i, (s64) (intptr_t) value);
 #endif
     *opCode = *opCode + 1;
     return 0;
@@ -263,7 +263,7 @@ static inline s32 _op_ldc_impl(u8 **opCode, Runtime *runtime, RuntimeStack *stac
 
 #if _JVM_DEBUG_BYTECODE_DETAIL > 5
             invoke_deepth(runtime);
-            jvm_printf("ldc: [%llx] =\"%s\"\n", (s64) (long) jstr, utf8_cstr(cutf->utfstr));
+            jvm_printf("ldc: [%llx] =\"%s\"\n", (s64) (intptr_t) jstr, utf8_cstr(cutf->utfstr));
 #endif
             break;
         }
@@ -354,7 +354,7 @@ static inline s32 _op_astore_n(u8 **opCode, Runtime *runtime, RuntimeStack *stac
     __refer value = pop_ref(stack);
 #if _JVM_DEBUG_BYTECODE_DETAIL > 5
     invoke_deepth(runtime);
-    jvm_printf("astore_%d:  [%llx]\n", i, (s64) (long) value);
+    jvm_printf("astore_%d:  [%llx]\n", i, (s64) (intptr_t) value);
 #endif
     localvar_setRefer(runtime, i, value);
     *opCode = *opCode + 1;
@@ -408,7 +408,7 @@ static inline s32 _op_putfield_impl(u8 **opCode, Runtime *runtime, RuntimeStack 
     invoke_deepth(runtime);
     jvm_printf("%s  save:%s.%s[%llx]=[%llx]  \n",
                isStatic ? "putstatic" : "putfield", utf8_cstr(clazz->name), utf8_cstr(fi->name),
-               (s64) (long) ptr, entry_2_long(&entry));
+               (s64) (intptr_t) ptr, entry_2_long(&entry));
 #endif
 
     if (fi->isrefer) {//垃圾回收标识
@@ -495,7 +495,7 @@ static inline s32 _op_getfield_impl(u8 **opCode, Runtime *runtime, RuntimeStack 
     s64 v = entry_2_long(&entry);
     jvm_printf("%s: push %s.%s[%llx]\n",
                isStatic ? "getstatic" : "getfield", utf8_cstr(clazz->name), utf8_cstr(fi->name),
-               (s64) (long) ptr, v);
+               (s64) (intptr_t) ptr, v);
 #endif
     *opCode = *opCode + 3;
     return 0;
@@ -507,7 +507,7 @@ static inline s32 _op_newarray_impl(Runtime *runtime, RuntimeStack *stack, s32 c
 
 #if _JVM_DEBUG_BYTECODE_DETAIL > 5
     invoke_deepth(runtime);
-    jvm_printf("(a)newarray  [%llx] type:%c , count:%d  \n", (s64) (long) arr, getDataTypeTag(typeIdx), count);
+    jvm_printf("(a)newarray  [%llx] type:%c , count:%d  \n", (s64) (intptr_t) arr, getDataTypeTag(typeIdx), count);
 #endif
     if (arr) {
         push_ref(stack, (__refer) arr);
@@ -721,12 +721,6 @@ s32 execute_method(MethodInfo *method, Runtime *pruntime, Class *clazz) {
             stackSize = pruntime->stack->size;
             if (method_sync)_synchronized_lock_method(method, runtime);
 
-#if _JVM_DEBUG_BYTECODE_DUMP
-            jvm_printf("---------------------------------\n");
-            jvm_printf("code dump\n");
-            printCodeAttribute(ca, clazz);
-            jvm_printf("---------------------------------\n");
-#endif
 #if _JVM_DEBUG_BYTECODE_DETAIL > 3
             if (utf8_char_at(clazz->name, 3) != '/' && utf8_char_at(clazz->name, 4) != 's') {
                 invoke_deepth(runtime->parent);
@@ -988,7 +982,7 @@ s32 execute_method(MethodInfo *method, Runtime *pruntime, Class *clazz) {
                         __refer value = localvar_getRefer(runtime, (u16) s2c.s);
 #if _JVM_DEBUG_BYTECODE_DETAIL > 5
                         invoke_deepth(runtime);
-                        jvm_printf("i(fa)load: push localvar(%d)= [%llx]  \n", s2c.s, (s64) (long) value);
+                        jvm_printf("i(fa)load: push localvar(%d)= [%llx]  \n", s2c.s, (s64) (intptr_t) value);
 #endif
                         push_ref(stack, value);
 
@@ -1110,7 +1104,7 @@ s32 execute_method(MethodInfo *method, Runtime *pruntime, Class *clazz) {
 
 #if _JVM_DEBUG_BYTECODE_DETAIL > 5
                             invoke_deepth(runtime);
-                            jvm_printf("iaload push arr[%llx].(%d)=%x:%d:%lf into stack\n", (u64) (long) arr, index,
+                            jvm_printf("iaload push arr[%llx].(%d)=%x:%d:%lf into stack\n", (u64) (intptr_t) arr, index,
                                        s, s, *(f32 *) &s);
 #endif
                         }
@@ -1132,7 +1126,7 @@ s32 execute_method(MethodInfo *method, Runtime *pruntime, Class *clazz) {
 
 #if _JVM_DEBUG_BYTECODE_DETAIL > 5
                             invoke_deepth(runtime);
-                            jvm_printf("daload push arr[%llx].(%d)=%llx:%lld:%lf into stack\n", (u64) (long) arr, index,
+                            jvm_printf("daload push arr[%llx].(%d)=%llx:%lld:%lf into stack\n", (u64) (intptr_t) arr, index,
                                        s, s, *(f64 *) &s);
 #endif
                         }
@@ -1153,8 +1147,8 @@ s32 execute_method(MethodInfo *method, Runtime *pruntime, Class *clazz) {
 
 #if _JVM_DEBUG_BYTECODE_DETAIL > 5
                             invoke_deepth(runtime);
-                            jvm_printf("aaload push arr[%llx].(%d)=%llx:%lld into stack\n", (u64) (long) arr, index,
-                                       (s64) (long) s, (s64) (long) s);
+                            jvm_printf("aaload push arr[%llx].(%d)=%llx:%lld into stack\n", (u64) (intptr_t) arr, index,
+                                       (s64) (intptr_t) s, (s64) (intptr_t) s);
 #endif
                         }
                         *opCode = *opCode + 1;
@@ -1174,7 +1168,7 @@ s32 execute_method(MethodInfo *method, Runtime *pruntime, Class *clazz) {
 
 #if _JVM_DEBUG_BYTECODE_DETAIL > 5
                             invoke_deepth(runtime);
-                            jvm_printf("iaload push arr[%llx].(%d)=%x:%d:%lf into stack\n", (u64) (long) arr, index,
+                            jvm_printf("iaload push arr[%llx].(%d)=%x:%d:%lf into stack\n", (u64) (intptr_t) arr, index,
                                        s, s, *(f32 *) &s);
 #endif
                         }
@@ -1195,7 +1189,7 @@ s32 execute_method(MethodInfo *method, Runtime *pruntime, Class *clazz) {
 
 #if _JVM_DEBUG_BYTECODE_DETAIL > 5
                             invoke_deepth(runtime);
-                            jvm_printf("iaload push arr[%llx].(%d)=%x:%d:%lf into stack\n", (u64) (long) arr, index,
+                            jvm_printf("iaload push arr[%llx].(%d)=%x:%d:%lf into stack\n", (u64) (intptr_t) arr, index,
                                        s, s, *(f32 *) &s);
 #endif
                         }
@@ -1216,7 +1210,7 @@ s32 execute_method(MethodInfo *method, Runtime *pruntime, Class *clazz) {
 
 #if _JVM_DEBUG_BYTECODE_DETAIL > 5
                             invoke_deepth(runtime);
-                            jvm_printf("iaload push arr[%llx].(%d)=%x:%d:%lf into stack\n", (u64) (long) arr, index,
+                            jvm_printf("iaload push arr[%llx].(%d)=%x:%d:%lf into stack\n", (u64) (intptr_t) arr, index,
                                        s, s, *(f32 *) &s);
 #endif
                         }
@@ -1261,7 +1255,7 @@ s32 execute_method(MethodInfo *method, Runtime *pruntime, Class *clazz) {
                         __refer value = pop_ref(stack);
 #if _JVM_DEBUG_BYTECODE_DETAIL > 5
                         invoke_deepth(runtime);
-                        jvm_printf("i(fa)store: save  localvar(%d) [%llx] \n", s2c.s, (s64) (long) value);
+                        jvm_printf("i(fa)store: save  localvar(%d) [%llx] \n", s2c.s, (s64) (intptr_t) value);
 #endif
                         localvar_setRefer(runtime, (u16) s2c.s, value);
 
@@ -1387,7 +1381,7 @@ s32 execute_method(MethodInfo *method, Runtime *pruntime, Class *clazz) {
 #if _JVM_DEBUG_BYTECODE_DETAIL > 5
                             invoke_deepth(runtime);
                             jvm_printf("iastore: save array[%llx].(%d)=%d)\n",
-                                       (s64) (long) jarr, index, i);
+                                       (s64) (intptr_t) jarr, index, i);
 #endif
                         }
                         *opCode = *opCode + 1;
@@ -1409,7 +1403,7 @@ s32 execute_method(MethodInfo *method, Runtime *pruntime, Class *clazz) {
 #if _JVM_DEBUG_BYTECODE_DETAIL > 5
                             invoke_deepth(runtime);
                             jvm_printf("iastore: save array[%llx].(%d)=%lld)\n",
-                                       (s64) (long) jarr, index, j);
+                                       (s64) (intptr_t) jarr, index, j);
 #endif
                         }
                         *opCode = *opCode + 1;
@@ -1431,7 +1425,7 @@ s32 execute_method(MethodInfo *method, Runtime *pruntime, Class *clazz) {
 #if _JVM_DEBUG_BYTECODE_DETAIL > 5
                             invoke_deepth(runtime);
                             jvm_printf("iastore: save array[%llx].(%d)=%llx)\n",
-                                       (s64) (long) jarr, index, (s64) (long) r);
+                                       (s64) (intptr_t) jarr, index, (s64) (intptr_t) r);
 #endif
                         }
                         *opCode = *opCode + 1;
@@ -1452,7 +1446,7 @@ s32 execute_method(MethodInfo *method, Runtime *pruntime, Class *clazz) {
 #if _JVM_DEBUG_BYTECODE_DETAIL > 5
                             invoke_deepth(runtime);
                             jvm_printf("iastore: save array[%llx].(%d)=%d)\n",
-                                       (s64) (long) jarr, index, i);
+                                       (s64) (intptr_t) jarr, index, i);
 #endif
                         }
                         *opCode = *opCode + 1;
@@ -1474,7 +1468,7 @@ s32 execute_method(MethodInfo *method, Runtime *pruntime, Class *clazz) {
 #if _JVM_DEBUG_BYTECODE_DETAIL > 5
                             invoke_deepth(runtime);
                             jvm_printf("iastore: save array[%llx].(%d)=%d)\n",
-                                       (s64) (long) jarr, index, i);
+                                       (s64) (intptr_t) jarr, index, i);
 #endif
                         }
                         *opCode = *opCode + 1;
@@ -1496,7 +1490,7 @@ s32 execute_method(MethodInfo *method, Runtime *pruntime, Class *clazz) {
 #if _JVM_DEBUG_BYTECODE_DETAIL > 5
                             invoke_deepth(runtime);
                             jvm_printf("iastore: save array[%llx].(%d)=%d)\n",
-                                       (s64) (long) jarr, index, i);
+                                       (s64) (intptr_t) jarr, index, i);
 #endif
                         }
                         *opCode = *opCode + 1;
@@ -2653,7 +2647,7 @@ s32 execute_method(MethodInfo *method, Runtime *pruntime, Class *clazz) {
                         }
 #if _JVM_DEBUG_BYTECODE_DETAIL > 5
                         invoke_deepth(runtime);
-                        jvm_printf("op_ifeq: %d/%llx != 0  then jump \n", (s32) (long) val);
+                        jvm_printf("op_ifeq: %d/%llx != 0  then jump \n", (s32) (intptr_t) val);
 #endif
 
 
@@ -2673,7 +2667,7 @@ s32 execute_method(MethodInfo *method, Runtime *pruntime, Class *clazz) {
                         }
 #if _JVM_DEBUG_BYTECODE_DETAIL > 5
                         invoke_deepth(runtime);
-                        jvm_printf("op_ifne: %d/%llx != 0  then jump\n", (s32) (long) val);
+                        jvm_printf("op_ifne: %d/%llx != 0  then jump\n", (s32) (intptr_t) val);
 #endif
 
 
@@ -2694,7 +2688,7 @@ s32 execute_method(MethodInfo *method, Runtime *pruntime, Class *clazz) {
                         }
 #if _JVM_DEBUG_BYTECODE_DETAIL > 5
                         invoke_deepth(runtime);
-                        jvm_printf("op_iflt: %d/%llx < 0  then jump  \n", (s32) (long) val);
+                        jvm_printf("op_iflt: %d/%llx < 0  then jump  \n", (s32) (intptr_t) val);
 #endif
 
 
@@ -2714,7 +2708,7 @@ s32 execute_method(MethodInfo *method, Runtime *pruntime, Class *clazz) {
                         }
 #if _JVM_DEBUG_BYTECODE_DETAIL > 5
                         invoke_deepth(runtime);
-                        jvm_printf("op_ifge: %d/%llx >= 0  then jump \n", (s32) (long) val);
+                        jvm_printf("op_ifge: %d/%llx >= 0  then jump \n", (s32) (intptr_t) val);
 #endif
 
 
@@ -2734,7 +2728,7 @@ s32 execute_method(MethodInfo *method, Runtime *pruntime, Class *clazz) {
                         }
 #if _JVM_DEBUG_BYTECODE_DETAIL > 5
                         invoke_deepth(runtime);
-                        jvm_printf("op_ifgt: %d/%llx > 0  then jump \n", (s32) (long) val);
+                        jvm_printf("op_ifgt: %d/%llx > 0  then jump \n", (s32) (intptr_t) val);
 #endif
 
 
@@ -2754,7 +2748,7 @@ s32 execute_method(MethodInfo *method, Runtime *pruntime, Class *clazz) {
                         }
 #if _JVM_DEBUG_BYTECODE_DETAIL > 5
                         invoke_deepth(runtime);
-                        jvm_printf("op_ifle: %d/%llx <= 0  then jump \n", (s32) (long) val);
+                        jvm_printf("op_ifle: %d/%llx <= 0  then jump \n", (s32) (intptr_t) val);
 #endif
 
 
@@ -2775,7 +2769,7 @@ s32 execute_method(MethodInfo *method, Runtime *pruntime, Class *clazz) {
                         }
 #if _JVM_DEBUG_BYTECODE_DETAIL > 5
                         invoke_deepth(runtime);
-                        jvm_printf("op_if_icmpeq: %lld == %lld \n", (s64) (long) v1, (s64) (long) v2);
+                        jvm_printf("op_if_icmpeq: %lld == %lld \n", (s64) (intptr_t) v1, (s64) (intptr_t) v2);
 #endif
 
                         break;
@@ -2795,7 +2789,7 @@ s32 execute_method(MethodInfo *method, Runtime *pruntime, Class *clazz) {
                         }
 #if _JVM_DEBUG_BYTECODE_DETAIL > 5
                         invoke_deepth(runtime);
-                        jvm_printf("op_if_icmpne: %lld != %lld \n", (s64) (long) v1, (s64) (long) v2);
+                        jvm_printf("op_if_icmpne: %lld != %lld \n", (s64) (intptr_t) v1, (s64) (intptr_t) v2);
 #endif
 
                         break;
@@ -2815,7 +2809,7 @@ s32 execute_method(MethodInfo *method, Runtime *pruntime, Class *clazz) {
                         }
 #if _JVM_DEBUG_BYTECODE_DETAIL > 5
                         invoke_deepth(runtime);
-                        jvm_printf("op_if_icmplt: %lld < %lld \n", (s64) (long) v1, (s64) (long) v2);
+                        jvm_printf("op_if_icmplt: %lld < %lld \n", (s64) (intptr_t) v1, (s64) (intptr_t) v2);
 #endif
 
                         break;
@@ -2835,7 +2829,7 @@ s32 execute_method(MethodInfo *method, Runtime *pruntime, Class *clazz) {
                         }
 #if _JVM_DEBUG_BYTECODE_DETAIL > 5
                         invoke_deepth(runtime);
-                        jvm_printf("op_if_icmpge: %lld >= %lld \n", (s64) (long) v1, (s64) (long) v2);
+                        jvm_printf("op_if_icmpge: %lld >= %lld \n", (s64) (intptr_t) v1, (s64) (intptr_t) v2);
 #endif
 
                         break;
@@ -2855,7 +2849,7 @@ s32 execute_method(MethodInfo *method, Runtime *pruntime, Class *clazz) {
                         }
 #if _JVM_DEBUG_BYTECODE_DETAIL > 5
                         invoke_deepth(runtime);
-                        jvm_printf("op_if_icmpgt: %lld > %lld \n", (s64) (long) v1, (s64) (long) v2);
+                        jvm_printf("op_if_icmpgt: %lld > %lld \n", (s64) (intptr_t) v1, (s64) (intptr_t) v2);
 #endif
 
                         break;
@@ -2876,7 +2870,7 @@ s32 execute_method(MethodInfo *method, Runtime *pruntime, Class *clazz) {
                         }
 #if _JVM_DEBUG_BYTECODE_DETAIL > 5
                         invoke_deepth(runtime);
-                        jvm_printf("op_if_icmple: %lld <= %lld \n", (s64) (long) v1, (s64) (long) v2);
+                        jvm_printf("op_if_icmple: %lld <= %lld \n", (s64) (intptr_t) v1, (s64) (intptr_t) v2);
 #endif
 
                         break;
@@ -2896,7 +2890,7 @@ s32 execute_method(MethodInfo *method, Runtime *pruntime, Class *clazz) {
                         }
 #if _JVM_DEBUG_BYTECODE_DETAIL > 5
                         invoke_deepth(runtime);
-                        jvm_printf("op_if_acmpeq: %lld == %lld \n", (s64) (long) v1, (s64) (long) v2);
+                        jvm_printf("op_if_acmpeq: %lld == %lld \n", (s64) (intptr_t) v1, (s64) (intptr_t) v2);
 #endif
 
                         break;
@@ -2916,7 +2910,7 @@ s32 execute_method(MethodInfo *method, Runtime *pruntime, Class *clazz) {
                         }
 #if _JVM_DEBUG_BYTECODE_DETAIL > 5
                         invoke_deepth(runtime);
-                        jvm_printf("op_if_acmpne: %lld != %lld \n", (s64) (long) v1, (s64) (long) v2);
+                        jvm_printf("op_if_acmpne: %lld != %lld \n", (s64) (intptr_t) v1, (s64) (intptr_t) v2);
 #endif
 
                         break;
@@ -2971,7 +2965,7 @@ s32 execute_method(MethodInfo *method, Runtime *pruntime, Class *clazz) {
 
 #if _JVM_DEBUG_BYTECODE_DETAIL > 5
                         invoke_deepth(runtime);
-                        jvm_printf("ret: %x\n", (s64) (long) addr);
+                        jvm_printf("ret: %x\n", (s64) (intptr_t) addr);
 #endif
                         *opCode = (u8 *) addr;
 
@@ -2982,7 +2976,7 @@ s32 execute_method(MethodInfo *method, Runtime *pruntime, Class *clazz) {
 
                     case op_tableswitch: {
                         s32 pos = 0;
-                        pos = 4 - ((((u64) (long) *opCode) - (u64) (long) (runtime->ca->code)) % 4);//4 byte对齐
+                        pos = 4 - ((((u64) (intptr_t) *opCode) - (u64) (intptr_t) (runtime->ca->code)) % 4);//4 byte对齐
 
                         Int2Float i2c;
                         i2c.c3 = opCode[0][pos++];
@@ -3026,7 +3020,7 @@ s32 execute_method(MethodInfo *method, Runtime *pruntime, Class *clazz) {
 
                     case op_lookupswitch: {
                         s32 pos = 0;
-                        pos = 4 - ((((u64) (long) *opCode) - (u64) (long) (runtime->ca->code)) % 4);//4 byte对齐
+                        pos = 4 - ((((u64) (intptr_t) *opCode) - (u64) (intptr_t) (runtime->ca->code)) % 4);//4 byte对齐
                         Int2Float i2c;
                         i2c.c3 = opCode[0][pos++];
                         i2c.c2 = opCode[0][pos++];
@@ -3324,7 +3318,7 @@ s32 execute_method(MethodInfo *method, Runtime *pruntime, Class *clazz) {
 
 #if _JVM_DEBUG_BYTECODE_DETAIL > 5
                         invoke_deepth(runtime);
-                        jvm_printf("new %s [%llx]\n", utf8_cstr(ccf->name), (s64) (long) ins);
+                        jvm_printf("new %s [%llx]\n", utf8_cstr(ccf->name), (s64) (intptr_t) ins);
 #endif
                         *opCode = *opCode + 3;
 
@@ -3361,7 +3355,7 @@ s32 execute_method(MethodInfo *method, Runtime *pruntime, Class *clazz) {
 #if _JVM_DEBUG_BYTECODE_DETAIL > 5
                         invoke_deepth(runtime);
                         jvm_printf("arraylength  [%llx].arr_body[%llx] len:%d  \n",
-                                   (s64) (long) arr_ref, (s64) (long) arr_ref->arr_body, arr_ref->arr_length);
+                                   (s64) (intptr_t) arr_ref, (s64) (intptr_t) arr_ref->arr_body, arr_ref->arr_length);
 #endif
                         push_int(stack, arr_ref->arr_length);
                         *opCode = *opCode + 1;
@@ -3377,7 +3371,7 @@ s32 execute_method(MethodInfo *method, Runtime *pruntime, Class *clazz) {
 
 #if _JVM_DEBUG_BYTECODE_DETAIL > 5
                         invoke_deepth(runtime);
-                        jvm_printf("athrow  [%llx].exception throws  \n", (s64) (long) ins);
+                        jvm_printf("athrow  [%llx].exception throws  \n", (s64) (intptr_t) ins);
 #endif
                         //*opCode = *opCode + 1;
                         i_r = RUNTIME_STATUS_EXCEPTION;
@@ -3424,7 +3418,7 @@ s32 execute_method(MethodInfo *method, Runtime *pruntime, Class *clazz) {
                         }
 #if _JVM_DEBUG_BYTECODE_DETAIL > 5
                         invoke_deepth(runtime);
-                        jvm_printf("checkcast  [%llx] instancof %s is:%d \n", (s64) (long) ins,
+                        jvm_printf("checkcast  [%llx] instancof %s is:%d \n", (s64) (intptr_t) ins,
                                    utf8_cstr(find_constant_classref(runtime->clazz, typeIdx)->name),
                                    checkok);
 #endif
@@ -3457,7 +3451,7 @@ s32 execute_method(MethodInfo *method, Runtime *pruntime, Class *clazz) {
 
 #if _JVM_DEBUG_BYTECODE_DETAIL > 5
                         invoke_deepth(runtime);
-                        jvm_printf("instanceof  [%llx] instancof %s  \n", (s64) (long) ins,
+                        jvm_printf("instanceof  [%llx] instancof %s  \n", (s64) (intptr_t) ins,
                                    utf8_cstr(find_constant_classref(runtime->clazz, typeIdx)->name));
 #endif
                         *opCode = *opCode + 3;
@@ -3471,7 +3465,7 @@ s32 execute_method(MethodInfo *method, Runtime *pruntime, Class *clazz) {
                         jthread_lock(&ins->mb, runtime);
 #if _JVM_DEBUG_BYTECODE_DETAIL > 5
                         invoke_deepth(runtime);
-                        jvm_printf("monitorenter  [%llx] %s  \n", (s64) (long) ins,
+                        jvm_printf("monitorenter  [%llx] %s  \n", (s64) (intptr_t) ins,
                                    ins ? utf8_cstr(ins->mb.clazz->name) : "null");
 #endif
                         *opCode = *opCode + 1;
@@ -3485,7 +3479,7 @@ s32 execute_method(MethodInfo *method, Runtime *pruntime, Class *clazz) {
                         jthread_unlock(&ins->mb, runtime);
 #if _JVM_DEBUG_BYTECODE_DETAIL > 5
                         invoke_deepth(runtime);
-                        jvm_printf("monitorexit  [%llx] %s  \n", (s64) (long) ins,
+                        jvm_printf("monitorexit  [%llx] %s  \n", (s64) (intptr_t) ins,
                                    ins ? utf8_cstr(ins->mb.clazz->name) : "null");
 #endif
                         *opCode = *opCode + 1;
@@ -3518,13 +3512,13 @@ s32 execute_method(MethodInfo *method, Runtime *pruntime, Class *clazz) {
                         ArrayList *dim = arraylist_create(count);
                         int i;
                         for (i = 0; i < count; i++)
-                            arraylist_push_back(dim, (ArrayListValue) (long) pop_int(stack));
+                            arraylist_push_back(dim, (ArrayListValue) (intptr_t) pop_int(stack));
 
                         Instance *arr = jarray_multi_create(dim, desc, 0);
                         arraylist_destory(dim);
 #if _JVM_DEBUG_BYTECODE_DETAIL > 5
                         invoke_deepth(runtime);
-                        jvm_printf("multianewarray  [%llx] type:%s , count:%d  \n", (s64) (long) arr,
+                        jvm_printf("multianewarray  [%llx] type:%s , count:%d  \n", (s64) (intptr_t) arr,
                                    utf8_cstr(desc), count);
 #endif
                         if (arr) {
@@ -3553,8 +3547,8 @@ s32 execute_method(MethodInfo *method, Runtime *pruntime, Class *clazz) {
                         }
 #if _JVM_DEBUG_BYTECODE_DETAIL > 5
                         invoke_deepth(runtime);
-                        jvm_printf("op_ifnonnull: %d/%llx != 0  then jump %d \n", (s32) (long) ref,
-                                   (s64) (long) ref);
+                        jvm_printf("op_ifnonnull: %d/%llx != 0  then jump %d \n", (s32) (intptr_t) ref,
+                                   (s64) (intptr_t) ref);
 #endif
 
 
@@ -3574,7 +3568,7 @@ s32 execute_method(MethodInfo *method, Runtime *pruntime, Class *clazz) {
                         }
 #if _JVM_DEBUG_BYTECODE_DETAIL > 5
                         invoke_deepth(runtime);
-                        jvm_printf("op_ifnonnull: %d/%llx != 0  then \n", (s32) (long) ref, (s64) (long) ref);
+                        jvm_printf("op_ifnonnull: %d/%llx != 0  then \n", (s32) (intptr_t) ref, (s64) (intptr_t) ref);
 #endif
 
                         break;
@@ -3602,11 +3596,11 @@ s32 execute_method(MethodInfo *method, Runtime *pruntime, Class *clazz) {
 #if _JVM_DEBUG_PROFILE
                 s64 spent = nanoTime() - start_at;
                 //spent = 1;
-                HashtableValue v = hashtable_get(instruct_profile, (HashtableKey) (long) instruct_code);
+                HashtableValue v = hashtable_get(instruct_profile, (HashtableKey) (intptr_t) instruct_code);
                 if (v == NULL) {
-                    hashtable_put(instruct_profile, (HashtableKey) (long) instruct_code, (HashtableKey)(long) (spent));
+                    hashtable_put(instruct_profile, (HashtableKey) (intptr_t) instruct_code, (HashtableKey)(intptr_t) (spent));
                 } else {
-                    hashtable_put(instruct_profile, (HashtableKey) (long) instruct_code,
+                    hashtable_put(instruct_profile, (HashtableKey) (intptr_t) instruct_code,
                                   (HashtableKey) (v + spent));
                 }
 #endif

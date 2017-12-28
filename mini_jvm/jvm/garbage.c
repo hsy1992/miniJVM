@@ -228,7 +228,7 @@ void _dump_refer() {
     while (mb) {
         Utf8String *name = utf8_create();
         _getMBName(mb, name);
-        jvm_printf("   %s[%llx] \n", utf8_cstr(name), (s64) (long) mb);
+        jvm_printf("   %s[%llx] \n", utf8_cstr(name), (s64) (intptr_t) mb);
         utf8_destory(name);
         mb = mb->next;
     }
@@ -241,7 +241,7 @@ void _garbage_put_in_holder(__refer ref) {
 #if _JVM_DEBUG_GARBAGE_DUMP
     Utf8String *sus = utf8_create();
     _getMBName((MemoryBlock *) ref, sus);
-    jvm_printf("+: %s[%llx]\n", utf8_cstr(sus), (s64) (long) ref);
+    jvm_printf("+: %s[%llx]\n", utf8_cstr(sus), (s64) (intptr_t) ref);
     utf8_destory(sus);
 #endif
 }
@@ -251,7 +251,7 @@ void _garbage_remove_out_holder(__refer ref) {
 #if _JVM_DEBUG_GARBAGE_DUMP
     Utf8String *sus = utf8_create();
     _getMBName((MemoryBlock *) ref, sus);
-    jvm_printf("-: %s[%llx]\n", utf8_cstr(sus), (s64) (long) ref);
+    jvm_printf("-: %s[%llx]\n", utf8_cstr(sus), (s64) (intptr_t) ref);
     utf8_destory(sus);
 #endif
 }
@@ -379,7 +379,7 @@ void _garbage_destory_memobj(MemoryBlock *mb) {
 #if _JVM_DEBUG_GARBAGE_DUMP
     Utf8String *sus = utf8_create();
     _getMBName(mb, sus);
-    jvm_printf("X: %s[%llx]\n", utf8_cstr(sus), (s64) (long) mb);
+    jvm_printf("X: %s[%llx]\n", utf8_cstr(sus), (s64) (intptr_t) mb);
     utf8_destory(sus);
 #endif
     memoryblock_destory((Instance *) mb);
@@ -545,7 +545,7 @@ s32 _garbage_copy_refer_thread(Runtime *pruntime) {
         }
         runtime = runtime->son;
     }
-    //jvm_printf("[%llx] notified\n", (s64) (long) pruntime->threadInfo->jthread);
+    //jvm_printf("[%llx] notified\n", (s64) (intptr_t) pruntime->threadInfo->jthread);
     return 0;
 }
 
@@ -676,7 +676,7 @@ s32 garbage_refer_reg(__refer ref) {
 #if _JVM_DEBUG_GARBAGE_DUMP
             Utf8String *sus = utf8_create();
             _getMBName((MemoryBlock *) ref, sus);
-            jvm_printf("R: %s[%llx]\n", utf8_cstr(sus), (s64) (long) ref);
+            jvm_printf("R: %s[%llx]\n", utf8_cstr(sus), (s64) (intptr_t) ref);
             utf8_destory(sus);
 #endif
         }

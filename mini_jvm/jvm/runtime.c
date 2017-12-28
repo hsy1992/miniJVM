@@ -255,7 +255,7 @@ s64 getInstructPointer(Runtime *runtime) {
 void getRuntimeStack(Runtime *runtime, Utf8String *ustr) {
     Runtime *last = getLastSon(runtime);
     while (last) {
-        utf8_append_s64(ustr, (s64) (long) runtime, 16);
+        utf8_append_s64(ustr, (s64) (intptr_t) runtime, 16);
         utf8_append_c(ustr, " ");
         if (last->method) {
             utf8_append(ustr, last->method->_this_class->name);

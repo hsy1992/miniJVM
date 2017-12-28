@@ -95,20 +95,20 @@ void utf8_append_c(Utf8String *a1, char *a2) {
     }
 }
 
-void utf8_append_s64(Utf8String *a1, long long int val, int radix) {
+void utf8_append_s64(Utf8String *a1, s64 val, int radix) {
     if (a1) {
         int pos = a1->length;
         if (val == 0) {
             utf8_insert(a1, pos, '0');
         } else {
-            long long int tv = val;
+            s64 tv = val;
             if (val < 0) {
                 utf8_insert(a1, pos, '-');
                 pos++;
                 tv = -val;
             }
             while (tv) {
-                long long int m = tv % radix;
+                s64 m = tv % radix;
                 if (m < 10)utf8_insert(a1, pos, '0' + m);
                 else utf8_insert(a1, pos, 'A' + (m - 10));
                 tv = tv / radix;
@@ -127,8 +127,8 @@ void utf8_upcase(Utf8String *a1) {
     }
 }
 
-long long int utf8_aton(Utf8String *sp, int n) {
-    long long int v = 0;
+s64 utf8_aton(Utf8String *sp, int n) {
+    s64 v = 0;
     c8 negative = 0;
     utf8_upcase(sp);
     int i;
@@ -316,7 +316,7 @@ int UNICODE_STR_EQUALS_FUNC(HashtableValue value1, HashtableValue value2) {
     return utf8_equals(value1, value2) == 1;
 }
 
-unsigned long long UNICODE_STR_HASH_FUNC(HashtableKey kmer) {
+u64 UNICODE_STR_HASH_FUNC(HashtableKey kmer) {
     return _utf8_hashCode(kmer);
 }
 

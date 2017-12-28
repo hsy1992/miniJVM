@@ -41,7 +41,7 @@ s32 java_lang_Class_forName(Runtime *runtime, Class *clazz) {
     }
 #if _JVM_DEBUG_BYTECODE_DETAIL > 5
     invoke_deepth(runtime);
-    jvm_printf("java_lang_Class_forName [%llx]\n", (s64) (long) cl);
+    jvm_printf("java_lang_Class_forName [%llx]\n", (s64) (intptr_t) cl);
 #endif
     return ret;
 }
@@ -65,7 +65,7 @@ s32 java_lang_Class_newInstance(Runtime *runtime, Class *clazz) {
     }
 #if _JVM_DEBUG_BYTECODE_DETAIL > 5
     invoke_deepth(runtime);
-    jvm_printf("java_lang_Class_newInstance  class:[%llx] ins:[%llx]\n", (s64) (long) cl, (s64) (long) ins);
+    jvm_printf("java_lang_Class_newInstance  class:[%llx] ins:[%llx]\n", (s64) (intptr_t) cl, (s64) (intptr_t) ins);
 #endif
     return ret;
 }
@@ -349,10 +349,10 @@ s32 java_lang_Object_getClass(Runtime *runtime, Class *clazz) {
 s32 java_lang_Object_hashCode(Runtime *runtime, Class *clazz) {
     RuntimeStack *stack = runtime->stack;
     Instance *ins = (Instance *) localvar_getRefer(runtime, 0);
-    push_int(stack, (s32) (long) ins);
+    push_int(stack, (s32) (intptr_t) ins);
 #if _JVM_DEBUG_BYTECODE_DETAIL > 5
     invoke_deepth(runtime);
-    jvm_printf("java_lang_Object_hashCode %llx\n", (s32) (long) ins);
+    jvm_printf("java_lang_Object_hashCode %llx\n", (s32) (intptr_t) ins);
 #endif
     return 0;
 }
@@ -388,7 +388,7 @@ s32 java_lang_Object_wait(Runtime *runtime, Class *clazz) {
     l2d.i2l.i0 = localvar_getInt(runtime, 2);
 #if _JVM_DEBUG_BYTECODE_DETAIL > 5
     invoke_deepth(runtime);
-    jvm_printf("java_lang_Object_wait %llx  wait %lld\n", (s64) (long) ins, l2d.l);
+    jvm_printf("java_lang_Object_wait %llx  wait %lld\n", (s64) (intptr_t) ins, l2d.l);
 #endif
     jthread_waitTime(&ins->mb, runtime, l2d.l);
     garbage_thread_unlock();
@@ -621,7 +621,7 @@ s32 java_lang_System_getProperty0(Runtime *runtime, Class *clazz) {
         Instance *jstr = jstring_create(val, runtime);
         push_ref(stack, jstr);
     } else {
-        push_ref(stack, (__refer) (long) NULL);
+        push_ref(stack, (__refer) (intptr_t) NULL);
     }
     utf8_destory(key);
 

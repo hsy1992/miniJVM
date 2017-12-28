@@ -543,18 +543,18 @@ void invoke_deepth(Runtime *runtime) {
 
 #if _JVM_DEBUG_PRINT_FILE
 #ifdef _CYGWIN_CONFIG_H
-    fprintf(logfile, "%lx", (s64) (long) pthread_self());
+    fprintf(logfile, "%lx", (s64) (intptr_t) pthread_self());
 #else
-    fprintf(logfile, "%llx", (s64) (long) pthread_self());
+    fprintf(logfile, "%llx", (s64) (intptr_t) pthread_self());
 #endif //_CYGWIN_CONFIG_H
     for (i = 0; i < len; i++) {
         fprintf(logfile, "  ");
     }
 #else
 #if __JVM_OS_MAC__ || __JVM_OS_CYGWIN__
-    fprintf(stderr, "%llx", (s64) (long) pthread_self());
+    fprintf(stderr, "%llx", (s64) (intptr_t) pthread_self());
 #else
-    fprintf(stderr, "%llx", (s64) (long) pthread_self());
+    fprintf(stderr, "%llx", (s64) (intptr_t) pthread_self());
 #endif //
     for (i = 0; i < len; i++) {
         fprintf(stderr, "  ");
@@ -616,7 +616,7 @@ void *jtherad_run(void *para) {
     ret = execute_method(method, runtime, method->_this_class);
     runtime->threadInfo->thread_status = THREAD_STATUS_ZOMBIE;
     jthread_dispose(jthread);
-    //jvm_printf("thread over %llx\n", (s64) (long) jthread);
+    //jvm_printf("thread over %llx\n", (s64) (intptr_t) jthread);
     return para;
 }
 
@@ -638,12 +638,12 @@ __refer jthread_get_name_value(Instance *ins) {
 
 __refer jthread_get_stackframe_value(Instance *ins) {
     c8 *ptr = getInstanceFieldPtr(ins, ins_field_offset.thread_stackFrame);
-    return (__refer) (long) getFieldLong(ptr);
+    return (__refer) (intptr_t) getFieldLong(ptr);
 }
 
 void jthread_set_stackframe_value(Instance *ins, __refer val) {
     c8 *ptr = getInstanceFieldPtr(ins, ins_field_offset.thread_stackFrame);
-    setFieldLong(ptr, (s64) (long) val);
+    setFieldLong(ptr, (s64) (intptr_t) val);
 }
 
 
@@ -679,7 +679,7 @@ s32 jthread_lock(MemoryBlock *mb, Runtime *runtime) { //可能会重入，同一
 
 #if _JVM_DEBUG_BYTECODE_DETAIL > 5
     invoke_deepth(runtime);
-    jvm_printf("  lock: %llx   lock holder: %s \n", (s64) (long) (runtime->threadInfo->jthread),
+    jvm_printf("  lock: %llx   lock holder: %s \n", (s64) (intptr_t) (runtime->threadInfo->jthread),
                utf8_cstr(mb->clazz->name));
 #endif
     return 0;
@@ -694,7 +694,7 @@ s32 jthread_unlock(MemoryBlock *mb, Runtime *runtime) {
     pthread_mutex_unlock(&jtl->mutex_lock);
 #if _JVM_DEBUG_BYTECODE_DETAIL > 5
     invoke_deepth(runtime);
-    jvm_printf("unlock: %llx   lock holder: %s, \n", (s64) (long) (runtime->threadInfo->jthread),
+    jvm_printf("unlock: %llx   lock holder: %s, \n", (s64) (intptr_t) (runtime->threadInfo->jthread),
                utf8_cstr(mb->clazz->name));
 #endif
     return 0;
@@ -842,7 +842,7 @@ s32 jarray_destory(Instance *arr) {
  * @return ins
  */
 Instance *jarray_multi_create(ArrayList *dim, Utf8String *pdesc, s32 deep) {
-    s32 len = (s32) (long) arraylist_get_value(dim, dim->length - 1 - deep);
+    s32 len = (s32) (intptr_t) arraylist_get_value(dim, dim->length - 1 - deep);
     if (len == -1) {
         return NULL;
     }

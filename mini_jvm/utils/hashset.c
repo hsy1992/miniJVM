@@ -48,8 +48,8 @@ unsigned int hashset_allocate_table(Hashset *set, unsigned int size) {
 }
 
 
-unsigned long _DEFAULT_HASH_FUNC(HashsetKey kmer) {
-    return ((unsigned long) kmer) >> 4;
+u64 _DEFAULT_HASH_FUNC(HashsetKey kmer) {
+    return ((u64) (intptr_t) kmer) >> 4;
 }
 
 int _DEFAULT_HASH_EQUALS_FUNC(HashsetKey value1, HashsetKey value2) {
@@ -82,7 +82,7 @@ void hashset_destory(Hashset *set) {
     if (!set)return;
     HashsetEntry *rover;
     HashsetEntry *next;
-    unsigned long long int i;
+    u64 i;
 
     for (i = 0; i < set->table_size; ++i) {
         rover = set->table[i];
@@ -131,7 +131,7 @@ void hashset_clear(Hashset *set) {
 int hashset_put(Hashset *set, HashsetKey key) {
     HashsetEntry *rover;
     HashsetEntry *newentry;
-    unsigned long long int index;
+    u64 index;
     int success = 0;
 
 
@@ -181,7 +181,7 @@ HashsetKey hashset_get(Hashset *set, HashsetKey key) {
 
 HashsetEntry *hashset_find_entry(Hashset *set, HashsetKey key) {
     HashsetEntry *rover;
-    unsigned long long int index;
+    u64 index;
     index = _DEFAULT_HASH_FUNC(key) % set->table_size;
     rover = set->table[index];
 
@@ -198,7 +198,7 @@ int hashset_remove(Hashset *set, HashsetKey key, int resize) {
     HashsetEntry *rover;
     HashsetEntry *pre;
     HashsetEntry *next;
-    unsigned long long int index;
+    u64 index;
     unsigned int result;
 
 
@@ -232,12 +232,12 @@ int hashset_remove(Hashset *set, HashsetKey key, int resize) {
     return result;
 }
 
-unsigned long long int hashset_num_entries(Hashset *set) {
+u64 hashset_num_entries(Hashset *set) {
     return set->entries;
 }
 
 void hashset_iterate(Hashset *set, HashsetIterator *iterator) {
-    unsigned long long int chain;
+    u64 chain;
 
     iterator->set = set;
     iterator->next_entry = NULL;
@@ -258,7 +258,7 @@ int hashset_iter_has_more(HashsetIterator *iterator) {
 
 HashsetEntry *hashset_iter_next_entry(HashsetIterator *iterator) {
     Hashset *set;
-    unsigned long long int chain;
+    u64 chain;
 
     iterator->curr_entry = iterator->next_entry;
     iterator->curr_chain = iterator->next_chain;
@@ -319,12 +319,12 @@ HashsetKey hashset_iter_remove(HashsetIterator *iterator) {
     return key;
 }
 
-int hashset_resize(Hashset *set, unsigned long long int size) {
+int hashset_resize(Hashset *set, u64 size) {
     HashsetEntry **old_table;
-    unsigned long long int old_table_size;
+    u64 old_table_size;
     HashsetEntry *rover;
     HashsetEntry *next;
-    unsigned long long int index;
+    u64 index;
     unsigned int i;
 
     spin_lock_count(&set->lock, 1);
@@ -361,9 +361,9 @@ int hashset_resize(Hashset *set, unsigned long long int size) {
 }
 
 
-unsigned long long int hashset_count(Hashset *set) {
+u64 hashset_count(Hashset *set) {
     HashsetEntry *rover;
-    unsigned long long int i, count;
+    u64 i, count;
     count = 0;
 
     for (i = 0; i < set->table_size; i++) {

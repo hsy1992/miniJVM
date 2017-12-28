@@ -237,9 +237,9 @@ Utf8String *jdwppacket_read_utf(JdwpPacket *packet) {
 
 __refer jdwppacket_read_refer(JdwpPacket *packet) {
     if (sizeof(__refer) > 4) {
-        return (__refer) (long) jdwppacket_read_long(packet);
+        return (__refer) (intptr_t) jdwppacket_read_long(packet);
     } else {
-        return (__refer) (long) jdwppacket_read_int(packet);
+        return (__refer) (intptr_t) jdwppacket_read_int(packet);
     }
 }
 
@@ -304,9 +304,9 @@ void jdwppacket_write_utf(JdwpPacket *packet, Utf8String *val) {
 
 void jdwppacket_write_refer(JdwpPacket *packet, __refer val) {
     if (sizeof(__refer) > 4) {
-        jdwppacket_write_long(packet, (s64) (long) val);
+        jdwppacket_write_long(packet, (s64) (intptr_t) val);
     } else {
-        jdwppacket_write_int(packet, (s32) (long) val);
+        jdwppacket_write_int(packet, (s32) (intptr_t) val);
     }
 }
 
@@ -585,7 +585,7 @@ void writeValueType(JdwpPacket *res, ValueType *vt) {
             jdwppacket_write_long(res, vt->value);
             break;
         case 'R':
-            jdwppacket_write_refer(res, (__refer) (long) vt->value);
+            jdwppacket_write_refer(res, (__refer) (intptr_t) vt->value);
             break;
     }
 }
@@ -606,7 +606,7 @@ void readValueType(JdwpPacket *req, ValueType *vt) {
             vt->value = jdwppacket_read_long(req);
             break;
         case 'R':
-            vt->value = (s64) (long) jdwppacket_read_refer(req);
+            vt->value = (s64) (intptr_t) jdwppacket_read_refer(req);
             break;
     }
 }
@@ -641,7 +641,7 @@ s64 getPtrValue(u8 type, c8 *ptr) {
             value = getFieldLong(ptr);
             break;
         case 'R':
-            value = (s64) (long) getFieldRefer(ptr);
+            value = (s64) (intptr_t) getFieldRefer(ptr);
             break;
     }
     return value;
@@ -779,11 +779,11 @@ EventInfo *jdwp_event_get() {
 }
 
 void jdwp_eventset_put(EventSet *set) {
-    hashtable_put((jdwpserver.event_sets), (__refer) (long) set->requestId, set);
+    hashtable_put((jdwpserver.event_sets), (__refer) (intptr_t) set->requestId, set);
 }
 
 EventSet *jdwp_eventset_get(s32 id) {
-    return hashtable_get((jdwpserver.event_sets), (__refer) (long) id);
+    return hashtable_get((jdwpserver.event_sets), (__refer) (intptr_t) id);
 }
 
 void jdwp_post_events(JdwpClient *client) {
@@ -843,7 +843,7 @@ void event_on_breakpoint(Runtime *breakpoint_runtime) {
     ei->loc.typeTag = getClassType(breakpoint_runtime->clazz);
     ei->loc.classID = breakpoint_runtime->clazz;
     ei->loc.methodID = breakpoint_runtime->method;
-    ei->loc.execIndex = (u64) (long) breakpoint_runtime->pc - (u64) (long) breakpoint_runtime->ca->code;
+    ei->loc.execIndex = (u64) (intptr_t) breakpoint_runtime->pc - (u64) (intptr_t) breakpoint_runtime->ca->code;
     jdwp_event_put(ei);
 }
 
@@ -854,7 +854,7 @@ void event_on_debug_step(Runtime *step_runtime) {
     ei->loc.typeTag = getClassType(step_runtime->clazz);
     ei->loc.classID = step_runtime->clazz;
     ei->loc.methodID = step_runtime->method;
-    ei->loc.execIndex = (u64) (long) step_runtime->pc - (u64) (long) step_runtime->ca->code;
+    ei->loc.execIndex = (u64) (intptr_t) step_runtime->pc - (u64) (intptr_t) step_runtime->ca->code;
     jdwp_event_put(ei);
 }
 
@@ -866,10 +866,10 @@ s32 jdwp_set_breakpoint(s32 setOrClear, Class *clazz, MethodInfo *methodInfo, s6
     for (i = 0; i < methodInfo->attributes_count; i++) {
         if (methodInfo->attributes[i].converted_code) {
             if (setOrClear) {
-                pairlist_putl(methodInfo->breakpoint, (long) execIndex, 1);
+                pairlist_putl(methodInfo->breakpoint, (intptr_t) execIndex, 1);
                 return JDWP_ERROR_NONE;
             } else {
-                pairlist_removel(methodInfo->breakpoint, (long) execIndex);
+                pairlist_removel(methodInfo->breakpoint, (intptr_t) execIndex);
                 if (methodInfo->breakpoint->count == 0) {
                     jvm_free(methodInfo->breakpoint);
                     methodInfo->breakpoint = NULL;
@@ -1150,7 +1150,7 @@ s16 jdwp_eventset_clear(s32 id) {
             }
         }
     }
-    hashtable_remove(jdwpserver.event_sets, (__refer) (long) id, 0);
+    hashtable_remove(jdwpserver.event_sets, (__refer) (intptr_t) id, 0);
     jdwp_eventset_destory(set);
     return JDWP_ERROR_NONE;
 }
@@ -1303,7 +1303,7 @@ s32 jdwp_client_process(JdwpClient *client, Runtime *runtime) {
                     jdwppacket_write_refer(res, cl);
                     jdwppacket_write_int(res, getClassStatus(cl));
                 }
-                //jvm_printf("VirtualMachine_ClassesBySignature:%s ,%lld\n", utf8_cstr(signature), (s64) (long) cl);
+                //jvm_printf("VirtualMachine_ClassesBySignature:%s ,%lld\n", utf8_cstr(signature), (s64) (intptr_t) cl);
                 jdwp_writepacket(client, res);
                 utf8_destory(signature);
                 break;
@@ -1339,7 +1339,7 @@ s32 jdwp_client_process(JdwpClient *client, Runtime *runtime) {
                     Runtime *t = threadlist_get(i);
                     if (t) {
                         jdwppacket_write_refer(res, t->threadInfo->jthread);
-                        //jvm_printf("VirtualMachine_AllThreads: %llx\n", (s64) (long) t);
+                        //jvm_printf("VirtualMachine_AllThreads: %llx\n", (s64) (intptr_t) t);
                         Instance *jarr_name = jthread_get_name_value(t->threadInfo->jthread);
                         Utf8String *ustr = utf8_create();
                         unicode_2_utf8((u16 *) jarr_name->arr_body, ustr, jarr_name->arr_length);
@@ -1384,7 +1384,7 @@ s32 jdwp_client_process(JdwpClient *client, Runtime *runtime) {
                 for (i = 0; i < thread_list->length; i++) {
                     Runtime *t = threadlist_get(i);
                     if (t)jthread_suspend(t);
-                    //jvm_printf("VirtualMachine_Suspend: %lld\n" + (s64) (long) t);
+                    //jvm_printf("VirtualMachine_Suspend: %lld\n" + (s64) (intptr_t) t);
                 }
                 jdwppacket_set_err(res, JDWP_ERROR_NONE);
 
@@ -1396,7 +1396,7 @@ s32 jdwp_client_process(JdwpClient *client, Runtime *runtime) {
                 for (i = 0; i < thread_list->length; i++) {
                     Runtime *t = threadlist_get(i);
                     if (t)jthread_resume(t);
-                    //jvm_printf("VirtualMachine_Resume: %llx\n", (s64) (long) t);
+                    //jvm_printf("VirtualMachine_Resume: %llx\n", (s64) (intptr_t) t);
                 }
                 jdwppacket_set_err(res, JDWP_ERROR_NONE);
 
@@ -1414,7 +1414,7 @@ s32 jdwp_client_process(JdwpClient *client, Runtime *runtime) {
                 utf8_destory(str);
                 jdwppacket_set_err(res, JDWP_ERROR_NONE);
                 jdwppacket_write_refer(res, jstr);
-                //jvm_printf("VirtualMachine_CreateString: %s , rid: %llx\n", utf8_cstr(str), (s64) (long) jstr);
+                //jvm_printf("VirtualMachine_CreateString: %s , rid: %llx\n", utf8_cstr(str), (s64) (intptr_t) jstr);
                 jdwp_writepacket(client, res);
                 break;
             }
@@ -1514,7 +1514,7 @@ s32 jdwp_client_process(JdwpClient *client, Runtime *runtime) {
                 getClassSignature(ref, str);
                 jdwppacket_write_utf(res, str);
                 jdwp_writepacket(client, res);
-                //jvm_printf("ReferenceType_Signature:%llx , %s \n", (s64) (long) ref, utf8_cstr(str));
+                //jvm_printf("ReferenceType_Signature:%llx , %s \n", (s64) (intptr_t) ref, utf8_cstr(str));
                 utf8_destory(str);
                 break;
             }
@@ -1644,7 +1644,7 @@ s32 jdwp_client_process(JdwpClient *client, Runtime *runtime) {
                 utf8_clear(str);
                 jdwppacket_write_utf(res, str);
                 jdwp_writepacket(client, res);
-                //jvm_printf("JDWP_CMD_ReferenceType_SignatureWithGeneric:%llx , %s \n", (s64) (long) ref, utf8_cstr(str));
+                //jvm_printf("JDWP_CMD_ReferenceType_SignatureWithGeneric:%llx , %s \n", (s64) (intptr_t) ref, utf8_cstr(str));
                 utf8_destory(str);
                 break;
             }
@@ -1837,7 +1837,7 @@ s32 jdwp_client_process(JdwpClient *client, Runtime *runtime) {
                             push_long(runtime->stack, vt.value);
                             break;
                         case 'R':
-                            push_ref(runtime->stack, (__refer) (long) vt.value);
+                            push_ref(runtime->stack, (__refer) (intptr_t) vt.value);
                             break;
                         default:
                             push_int(runtime->stack, (s32) vt.value);
@@ -1860,7 +1860,7 @@ s32 jdwp_client_process(JdwpClient *client, Runtime *runtime) {
                         case 'R': {
                             __refer r = pop_ref(runtime->stack);
                             vt.type = getInstanceOfClassTag(r);//recorrect type, may be Arraylist<String>
-                            vt.value = (s64) (long) r;
+                            vt.value = (s64) (intptr_t) r;
                             jdwp_client_hold_obj(client, r);
 
 //                            if (vt.type == 's') {
@@ -2017,7 +2017,7 @@ s32 jdwp_client_process(JdwpClient *client, Runtime *runtime) {
                             loc.classID = r->clazz;
                             loc.methodID = r->method;
                             if (r->ca)
-                                loc.execIndex = (s64) (long) r->pc - (s64) (long) r->ca->code;
+                                loc.execIndex = (s64) (intptr_t) r->pc - (s64) (intptr_t) r->ca->code;
                             else
                                 loc.execIndex = 0;
                             writeLocation(res, &loc);
@@ -2103,7 +2103,7 @@ s32 jdwp_client_process(JdwpClient *client, Runtime *runtime) {
                 } else {
                     jdwppacket_set_err(res, JDWP_ERROR_INVALID_THREAD);
                 }
-                //jvm_printf("ThreadReference_SuspendCount:%llx,%d\n", (s64) (long) jthread,r->threadInfo->suspend_count);
+                //jvm_printf("ThreadReference_SuspendCount:%llx,%d\n", (s64) (intptr_t) jthread,r->threadInfo->suspend_count);
                 jdwp_writepacket(client, res);
                 break;
             }
@@ -2209,7 +2209,7 @@ s32 jdwp_client_process(JdwpClient *client, Runtime *runtime) {
                             case 'R': {
                                 Instance *ins = localvar_getRefer(frame, slot);
                                 vt.type = getInstanceOfClassTag(ins);
-                                vt.value = (s64) (long) ins;
+                                vt.value = (s64) (intptr_t) ins;
                                 break;
                             }
                             case '8':
@@ -2225,8 +2225,8 @@ s32 jdwp_client_process(JdwpClient *client, Runtime *runtime) {
                         }
                     }
                     writeValueType(res, &vt);
-                    //jvm_printf("JDWP_CMD_StackFrame_GetValues,thead=%llx , frame=%llx, val=%llx\n", (s64) (long) thread,
-                    //(s64) (long) frame, vt.value);
+                    //jvm_printf("JDWP_CMD_StackFrame_GetValues,thead=%llx , frame=%llx, val=%llx\n", (s64) (intptr_t) thread,
+                    //(s64) (intptr_t) frame, vt.value);
                 }
                 jdwp_writepacket(client, res);
                 break;
@@ -2245,7 +2245,7 @@ s32 jdwp_client_process(JdwpClient *client, Runtime *runtime) {
                     if (slot < frame->localvar_count) {
                         switch (getSimpleTag(vt.type)) {
                             case 'R':
-                                localvar_setRefer(frame, slot, (__refer) (long) vt.value);
+                                localvar_setRefer(frame, slot, (__refer) (intptr_t) vt.value);
                                 break;
                             case '8':
                                 l2d.l = vt.value;
@@ -2260,8 +2260,8 @@ s32 jdwp_client_process(JdwpClient *client, Runtime *runtime) {
                         }
                     }
 
-                    //jvm_printf("StackFrame_SetValues,thead=%llx , frame=%llx, val=%llx\n", (s64) (long) thread,
-                    //(s64) (long) frame, vt.value);
+                    //jvm_printf("StackFrame_SetValues,thead=%llx , frame=%llx, val=%llx\n", (s64) (intptr_t) thread,
+                    //(s64) (intptr_t) frame, vt.value);
                 }
 
 
@@ -2280,12 +2280,12 @@ s32 jdwp_client_process(JdwpClient *client, Runtime *runtime) {
                 } else {
                     Instance *ins = localvar_getRefer(frame, 0);
                     vt.type = getInstanceOfClassTag(ins);
-                    vt.value = (s64) (long) ins;
+                    vt.value = (s64) (intptr_t) ins;
                 }
                 writeValueType(res, &vt);
                 jdwp_writepacket(client, res);
-                //jvm_printf("StackFrame_ThisObject,thead=%llx , frame=%llx \n", (s64) (long) thread,
-                //(s64) (long) frame);
+                //jvm_printf("StackFrame_ThisObject,thead=%llx , frame=%llx \n", (s64) (intptr_t) thread,
+                //(s64) (intptr_t) frame);
                 break;
             }
             case JDWP_CMD_StackFrame_PopFrames: {//16.4

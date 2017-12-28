@@ -3,6 +3,7 @@
 //
 
 #include <memory.h>
+#include <mem.h>
 #include "pairlist.h"
 
 Pairlist *pairlist_create(s32 len) {
@@ -19,16 +20,16 @@ Pairlist *pairlist_create(s32 len) {
     return NULL;
 };
 
-s32 pairlist_putl(Pairlist *list, long left, long right) {
+s32 pairlist_putl(Pairlist *list, intptr_t left, intptr_t right) {
     return pairlist_put(list, (__refer) left, (__refer) right);
 }
 
-long pairlist_getl(Pairlist *list, long left) {
-    return (long) pairlist_get(list, (__refer) left);
+intptr_t pairlist_getl(Pairlist *list, intptr_t left) {
+    return (intptr_t) pairlist_get(list, (__refer) left);
 }
 
-long pairlist_removel(Pairlist *list, long left) {
-    return (long) pairlist_remove(list, (__refer) left);
+intptr_t pairlist_removel(Pairlist *list, intptr_t left) {
+    return (intptr_t) pairlist_remove(list, (__refer) left);
 }
 
 s32 pairlist_put(Pairlist *list, __refer left, __refer right) {

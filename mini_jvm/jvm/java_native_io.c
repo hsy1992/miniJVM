@@ -524,7 +524,7 @@ s32 org_mini_fs_InnerFile_openFile(Runtime *runtime, Class *clazz) {
     Instance *mode_arr = localvar_getRefer(runtime, 1);
     if (name_arr) {
         FILE *fd = fopen(name_arr->arr_body, mode_arr->arr_body);
-        push_long(runtime->stack, (s64) (long) fd);
+        push_long(runtime->stack, (s64) (intptr_t) fd);
     } else {
         push_long(runtime->stack, 0);
     }
@@ -540,7 +540,7 @@ s32 org_mini_fs_InnerFile_closeFile(Runtime *runtime, Class *clazz) {
     Long2Double l2d;
     l2d.i2l.i1 = localvar_getInt(runtime, 0);
     l2d.i2l.i0 = localvar_getInt(runtime, 1);
-    __refer fd = (__refer) (long) l2d.l;
+    __refer fd = (__refer) (intptr_t) l2d.l;
     s32 ret = -1;
     if (fd) {
         ret = fclose(fd);
@@ -557,7 +557,7 @@ s32 org_mini_fs_InnerFile_read0(Runtime *runtime, Class *clazz) {
     Long2Double l2d;
     l2d.i2l.i1 = localvar_getInt(runtime, 0);
     l2d.i2l.i0 = localvar_getInt(runtime, 1);
-    __refer fd = (__refer) (long) l2d.l;
+    __refer fd = (__refer) (intptr_t) l2d.l;
     s32 ret = -1;
     if (fd) {
         ret = fgetc(fd);
@@ -581,7 +581,7 @@ s32 org_mini_fs_InnerFile_write0(Runtime *runtime, Class *clazz) {
     Long2Double l2d;
     l2d.i2l.i1 = localvar_getInt(runtime, 0);
     l2d.i2l.i0 = localvar_getInt(runtime, 1);
-    __refer fd = (__refer) (long) l2d.l;
+    __refer fd = (__refer) (intptr_t) l2d.l;
     u8 byte = (u8) localvar_getInt(runtime, 2);
     s32 ret = -1;
     if (fd) {
@@ -607,7 +607,7 @@ s32 org_mini_fs_InnerFile_readbuf(Runtime *runtime, Class *clazz) {
     Long2Double l2d;
     l2d.i2l.i1 = localvar_getInt(runtime, pos++);
     l2d.i2l.i0 = localvar_getInt(runtime, pos++);
-    __refer fd = (__refer) (long) l2d.l;
+    __refer fd = (__refer) (intptr_t) l2d.l;
     Instance *bytes_arr = localvar_getRefer(runtime, pos++);
     s32 offset = localvar_getInt(runtime, pos++);
     s32 len = localvar_getInt(runtime, pos++);
@@ -632,7 +632,7 @@ s32 org_mini_fs_InnerFile_writebuf(Runtime *runtime, Class *clazz) {
     Long2Double l2d;
     l2d.i2l.i1 = localvar_getInt(runtime, pos++);
     l2d.i2l.i0 = localvar_getInt(runtime, pos++);
-    __refer fd = (__refer) (long) l2d.l;
+    __refer fd = (__refer) (intptr_t) l2d.l;
     Instance *bytes_arr = localvar_getRefer(runtime, pos++);
     s32 offset = localvar_getInt(runtime, pos++);
     s32 len = localvar_getInt(runtime, pos++);
@@ -659,7 +659,7 @@ s32 org_mini_fs_InnerFile_seek0(Runtime *runtime, Class *clazz) {
     Long2Double l2d;
     l2d.i2l.i1 = localvar_getInt(runtime, pos++);
     l2d.i2l.i0 = localvar_getInt(runtime, pos++);
-    __refer fd = (__refer) (long) l2d.l;
+    __refer fd = (__refer) (intptr_t) l2d.l;
     l2d.i2l.i1 = localvar_getInt(runtime, pos++);
     l2d.i2l.i0 = localvar_getInt(runtime, pos++);
     s64 filepos = l2d.l;
@@ -680,7 +680,7 @@ s32 org_mini_fs_InnerFile_available0(Runtime *runtime, Class *clazz) {
     Long2Double l2d;
     l2d.i2l.i1 = localvar_getInt(runtime, pos++);
     l2d.i2l.i0 = localvar_getInt(runtime, pos++);
-    __refer fd = (__refer) (long) l2d.l;
+    __refer fd = (__refer) (intptr_t) l2d.l;
 
     s32 cur = 0, end = 0;
     if (fd) {
@@ -701,14 +701,14 @@ s32 org_mini_fs_InnerFile_setLength0(Runtime *runtime, Class *clazz) {
     Long2Double l2d;
     l2d.i2l.i1 = localvar_getInt(runtime, pos++);
     l2d.i2l.i0 = localvar_getInt(runtime, pos++);
-    __refer fd = (__refer) (long) l2d.l;
+    __refer fd = (__refer) (intptr_t) l2d.l;
     l2d.i2l.i1 = localvar_getInt(runtime, pos++);
     l2d.i2l.i0 = localvar_getInt(runtime, pos++);
     s64 filelen = l2d.l;
     s32 ret = 0;
     if (fd) {
 #ifndef __C99
-        ret = ftruncate((s32) (long) fd, filelen);
+        ret = ftruncate((s32) (intptr_t) fd, filelen);
 #endif
     }
     push_int(runtime->stack, ret);
@@ -724,7 +724,7 @@ s32 org_mini_fs_InnerFile_flush0(Runtime *runtime, Class *clazz) {
     Long2Double l2d;
     l2d.i2l.i1 = localvar_getInt(runtime, 0);
     l2d.i2l.i0 = localvar_getInt(runtime, 1);
-    __refer fd = (__refer) (long) l2d.l;
+    __refer fd = (__refer) (intptr_t) l2d.l;
     s32 ret = -1;
     if (fd) {
         ret = fflush(fd);

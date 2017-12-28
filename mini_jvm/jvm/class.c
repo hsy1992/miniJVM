@@ -113,7 +113,7 @@ s32 class_prepar(Class *clazz) {
         ConstantMethodRef *cmr = (ConstantMethodRef *) arraylist_get_value(clazz->constantPool.methodRef, i);
         cmr->methodInfo = find_methodInfo_by_methodref(clazz, cmr->index);
         cmr->virtual_methods = pairlist_create(0);
-        //jvm_printf("%s.%s %llx\n", utf8_cstr(clazz->name), utf8_cstr(cmr->name), (s64) (long) cmr->virtual_methods);
+        //jvm_printf("%s.%s %llx\n", utf8_cstr(clazz->name), utf8_cstr(cmr->name), (s64) (intptr_t) cmr->virtual_methods);
     }
 
 

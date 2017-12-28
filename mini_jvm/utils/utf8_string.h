@@ -55,11 +55,11 @@ void utf8_append_part(Utf8String *a1, Utf8String *a2, int start, int len);
 
 void utf8_append_part_c(Utf8String *a1, unsigned char *a2, int start, int len);
 
-long long int utf8_aton(Utf8String *sp, int n);
+s64 utf8_aton(Utf8String *sp, int n);
 
 void utf8_upcase(Utf8String *a1);
 
-void utf8_append_s64(Utf8String *a1, long long int val, int radix);
+void utf8_append_s64(Utf8String *a1, s64 val, int radix);
 
 void utf8_substring(Utf8String *a1, int start, int end);
 
@@ -92,7 +92,7 @@ utf8_char utf8_char_at(Utf8String *a1, int pos);
 
 int UNICODE_STR_EQUALS_FUNC(HashtableValue value1, HashtableValue value2);
 
-unsigned long long UNICODE_STR_HASH_FUNC(HashtableKey kmer);
+u64 UNICODE_STR_HASH_FUNC(HashtableKey kmer);
 
 unsigned long _utf8_hashCode(Utf8String *ustr);
 

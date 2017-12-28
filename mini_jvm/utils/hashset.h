@@ -46,8 +46,8 @@ struct _HashsetIterator {
 //    HashsetEntry *prev_entry;
     HashsetEntry *curr_entry;
     HashsetEntry *next_entry;
-    unsigned long long int curr_chain;
-    unsigned long long int next_chain;
+    u64 curr_chain;
+    u64 next_chain;
 };
 
 /**
@@ -65,8 +65,8 @@ struct _HashsetEntry {
 
 struct _Hashset {
     HashsetEntry **table;
-    unsigned long long int table_size;
-    unsigned long long int entries;
+    u64 table_size;
+    u64 entries;
     spinlock_t lock;
     ArrayList *entry_pool;
 };
@@ -152,7 +152,7 @@ int hashset_remove(Hashset *hash_table, HashsetKey key, int resize);
  * @return                    The number of entries in the hash table.
  */
 
-unsigned long long int hashset_num_entries(Hashset *hash_table);
+u64 hashset_num_entries(Hashset *hash_table);
 
 /**
  * Initialise a @ref HashsetIterator to iterate over a hash table.
@@ -192,9 +192,9 @@ HashsetKey hashset_iter_next_key(HashsetIterator *iterator);
 
 HashsetKey hashset_iter_remove(HashsetIterator *iterator);
 
-int hashset_resize(Hashset *hash_table, unsigned long long int size);
+int hashset_resize(Hashset *hash_table, u64 size);
 
-unsigned long long int hashset_count(Hashset *set);
+u64 hashset_count(Hashset *set);
 
 #ifdef __cplusplus
 }

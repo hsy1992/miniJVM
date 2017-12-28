@@ -42,11 +42,11 @@ __refer pairlist_remove(Pairlist *list, __refer left);
 
 Pair pairlist_get_pair(Pairlist *list, s32 index);
 
-long pairlist_removel(Pairlist *list, long left);
+intptr_t pairlist_removel(Pairlist *list, intptr_t left);
 
-long pairlist_getl(Pairlist *list, long left);
+intptr_t pairlist_getl(Pairlist *list, intptr_t left);
 
-s32 pairlist_putl(Pairlist *list, long left, long right);
+s32 pairlist_putl(Pairlist *list, intptr_t left, intptr_t right);
 
 
 #ifdef __cplusplus

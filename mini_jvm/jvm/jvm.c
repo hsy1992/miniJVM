@@ -242,9 +242,9 @@ s32 execute_jvm(c8 *p_classpath, c8 *p_mainclass, s32 argc, c8 **argv) {
 #if _JVM_DEBUG_PROFILE
             hashtable_iterate(instruct_profile, &hti);
             for (; hashtable_iter_has_more(&hti);) {
-                u8 instruct_code = (u8) (long) hashtable_iter_next_key(&hti);
-                HashtableValue sum_v = hashtable_get(instruct_profile, (HashtableKey) (long) instruct_code);
-                jvm_printf("%2x \t %lld\n", instruct_code, (s64) (long) sum_v);
+                u8 instruct_code = (u8) (intptr_t) hashtable_iter_next_key(&hti);
+                HashtableValue sum_v = hashtable_get(instruct_profile, (HashtableKey) (intptr_t) instruct_code);
+                jvm_printf("%2x \t %lld\n", instruct_code, (s64) (intptr_t) sum_v);
             }
 #endif
 

@@ -7,6 +7,7 @@
 
 #include "sys/types.h"
 #include "stdlib.h"
+#include "stdint.h"
 
 // x86   x64 ...
 #define __JVM_LITTLE_ENDIAN__ 1
@@ -14,7 +15,7 @@
 #define __JVM_BIG_ENDIAN__ 0
 
 
-#ifdef __MINGW_H
+#if defined(__MINGW_H) || defined(__MINGW32_MAJOR_VERSION)
 #define __JVM_OS_MINGW__ 1
 #endif
 #ifdef _CYGWIN_CONFIG_H
@@ -50,8 +51,8 @@ typedef unsigned int u32;
 typedef signed int s32;
 typedef float f32;
 typedef double f64;
-typedef unsigned long long u64;
-typedef signed long long s64;
+typedef unsigned long long int u64;
+typedef signed long long int s64;
 typedef void *__refer;
 
 
