@@ -3,7 +3,6 @@
 //
 
 #include <memory.h>
-#include <mem.h>
 #include "pairlist.h"
 
 Pairlist *pairlist_create(s32 len) {
