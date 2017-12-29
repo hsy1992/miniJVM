@@ -155,6 +155,7 @@ typedef struct _ThreadLock ThreadLock;
 typedef struct _JavaThreadInfo JavaThreadInfo;
 typedef struct _Runtime Runtime;
 typedef struct _CodeAttribute CodeAttribute;
+typedef struct _JNIENV JNIENV;
 
 typedef s32 (*java_native_fun)(Runtime *runtime, Class *p);
 
@@ -298,6 +299,8 @@ extern ClassLoader *sys_classloader;
 extern ClassLoader *array_classloader;
 
 extern ArrayList *obj_cache;
+
+extern JNIENV jnienv;
 
 extern ArrayList *thread_list;
 
@@ -630,9 +633,10 @@ struct _Runtime {
     Runtime *parent;//father method's runtime
     RuntimeStack *stack;
     LocalVarItem *localvar;
+    ArrayList *runtime_pool;// cache runtimes for performance
+    JNIENV *jnienv;
     s16 localvar_count;
     s16 localvar_max;
-    ArrayList *runtime_pool;// cache runtimes for performance
     u8 wideMode;
 };
 //======================= class =============================
@@ -827,6 +831,8 @@ void pop_empty(RuntimeStack *stack);
 
 s32 entry_2_int(StackEntry *entry);
 
+void peek_entry(RuntimeStack *stack, StackEntry *entry, int index);
+
 s64 entry_2_long(StackEntry *entry);
 
 __refer entry_2_refer(StackEntry *entry);
@@ -839,7 +845,6 @@ s32 is_ref(StackEntry *entry);
 
 void _stack2localvar(MethodInfo *method, Runtime *father, Runtime *son);
 
-void peek_entry(RuntimeStack *stack, StackEntry *entry, int index);
 
 //======================= localvar =============================
 Runtime *runtime_create(Runtime *parent);
@@ -874,6 +879,93 @@ void close_log(void);
 c8 *getMajorVersionString(u16 major_number);
 
 void memoryblock_destory(__refer ref);
+
+
+//======================= jni =============================
+
+typedef struct _java_native_method {
+    c8 *clzname;
+    c8 *methodname;
+    c8 *methodtype;
+    java_native_fun func_pointer;
+} java_native_method;
+
+java_native_method *find_native_method(c8 *cls_name, c8 *method_name, c8 *method_type);
+
+s32 invoke_native_method(Runtime *runtime, Class *p,
+                         c8 *cls_name, c8 *method_name, c8 *type);
+
+
+typedef struct _JavaNativeLib {
+    java_native_method *methods;
+    s32 methods_count;
+} JavaNativeLib;
+
+
+s32 native_reg_lib(java_native_method *methods, s32 method_size);
+
+s32 native_remove_lib(JavaNativeLib *lib);
+
+s32 native_lib_destory(void);
+
+void reg_std_native_lib(void);
+
+void reg_net_native_lib(void);
+
+void reg_jdwp_native_lib(void);
+
+
+typedef struct _JNIENV {
+    s32 (*native_reg_lib)(java_native_method *methods, s32 method_size);
+
+    s32 (*native_remove_lib)(JavaNativeLib *lib);
+
+    void (*push_entry)(RuntimeStack *stack, StackEntry *entry);
+
+    void (*push_int)(RuntimeStack *stack, s32 value);
+
+    void (*push_long)(RuntimeStack *stack, s64 value);
+
+    void (*push_double)(RuntimeStack *stack, f64 value);
+
+    void (*push_float)(RuntimeStack *stack, f32 value);
+
+    void (*push_ref)(RuntimeStack *stack, __refer value);
+
+    __refer (*pop_ref)(RuntimeStack *stack);
+
+    s32 (*pop_int)(RuntimeStack *stack);
+
+    s64 (*pop_long)(RuntimeStack *stack);
+
+    f64 (*pop_double)(RuntimeStack *stack);
+
+    f32 (*pop_float)(RuntimeStack *stack);
+
+    void (*pop_entry)(RuntimeStack *stack, StackEntry *entry);
+
+    void (*pop_empty)(RuntimeStack *stack);
+
+    s32 (*entry_2_int)(StackEntry *entry);
+
+    void (*peek_entry)(RuntimeStack *stack, StackEntry *entry, int index);
+
+    s64 (*entry_2_long)(StackEntry *entry);
+
+    __refer (*entry_2_refer)(StackEntry *entry);
+
+    void (*localvar_setRefer)(Runtime *runtime, s32 index, __refer val);
+
+    void (*localvar_setInt)(Runtime *runtime, s32 index, s32 val);
+
+    __refer (*localvar_getRefer)(Runtime *runtime, s32 index);
+
+    s32 (*localvar_getInt)(Runtime *runtime, s32 index);
+} JNIENV;
+
+
+
+//=======================   =============================
 
 
 #ifdef __cplusplus

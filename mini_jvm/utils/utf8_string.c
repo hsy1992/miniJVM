@@ -95,6 +95,14 @@ void utf8_append_c(Utf8String *a1, char *a2) {
     }
 }
 
+void utf8_append_data(Utf8String *a1, char *a2, s32 size) {
+    int i = 0;
+    for (i = 0; i < size; i++) {
+        char ch = a2[i];
+        utf8_pushback(a1, ch);
+    }
+}
+
 void utf8_append_s64(Utf8String *a1, s64 val, int radix) {
     if (a1) {
         int pos = a1->length;

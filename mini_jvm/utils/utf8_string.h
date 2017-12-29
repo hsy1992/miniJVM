@@ -55,6 +55,8 @@ void utf8_append_part(Utf8String *a1, Utf8String *a2, int start, int len);
 
 void utf8_append_part_c(Utf8String *a1, unsigned char *a2, int start, int len);
 
+void utf8_append_data(Utf8String *a1, char *a2, s32 size);
+
 s64 utf8_aton(Utf8String *sp, int n);
 
 void utf8_upcase(Utf8String *a1);
@@ -70,6 +72,7 @@ int utf8_indexof(Utf8String *a1, Utf8String *a2);
 int utf8_indexof_c(Utf8String *a1, char *a2);
 
 int utf8_indexof_pos(Utf8String *a1, Utf8String *a2, int a1_pos); // find a2 from a1, at a1+pos
+
 int utf8_indexof_pos_c(Utf8String *a1, char *a2, int a1_pos);
 
 int utf8_last_indexof(Utf8String *a1, Utf8String *a2);

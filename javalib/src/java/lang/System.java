@@ -248,5 +248,21 @@ public static native String doubleToString(double val);
         Runtime.getRuntime().gc();
     }
 
+    public static void loadLibrary(String libname) {
+        if (libname == null) {
+            return;
+        }
+        byte[] b = null;
+        try {
+            b = libname.getBytes("utf-8");
+        } catch (UnsupportedEncodingException ex) {
+            b = libname.getBytes();
+        }
+        byte[] b1=new byte[b.length+1];
+        System.arraycopy(b, 0, b1, 0, b.length);
+        loadLibrary0(b1);
+    }
+
+    public static native void loadLibrary0(byte[] name);
 }
 

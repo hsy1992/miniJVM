@@ -185,6 +185,7 @@ Runtime *runtime_create(Runtime *parent) {
         runtime->localvar = jvm_calloc(RUNTIME_LOCALVAR_SIZE * sizeof(LocalVarItem));
         runtime->localvar_max = RUNTIME_LOCALVAR_SIZE;
     }
+    runtime->jnienv = &jnienv;
     //
     if (!is_top) {
         runtime->stack = parent->stack;
@@ -280,7 +281,7 @@ s32 localvar_init(Runtime *runtime, s32 count) {
         jvm_free(runtime->localvar);
         runtime->localvar = jvm_calloc(sizeof(LocalVarItem) * count);
         runtime->localvar_max = count;
-    }else{
+    } else {
         memset(runtime->localvar, 0, count * sizeof(LocalVarItem));
     }
     runtime->localvar_count = count;

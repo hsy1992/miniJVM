@@ -115,6 +115,33 @@ void classloader_release_classs_static_field(ClassLoader *class_loader) {
         class_clear_refer(clazz);
     }
 }
+
+void init_jni_func() {
+    jnienv.native_reg_lib = native_reg_lib;
+    jnienv.native_remove_lib = native_remove_lib;
+    jnienv.push_entry = push_entry;
+    jnienv.push_int = push_int;
+    jnienv.push_long = push_long;
+    jnienv.push_double = push_double;
+    jnienv.push_float = push_float;
+    jnienv.push_ref = push_ref;
+    jnienv.pop_ref = pop_ref;
+    jnienv.pop_int = pop_int;
+    jnienv.pop_long = pop_long;
+    jnienv.pop_double = pop_double;
+    jnienv.pop_float = pop_float;
+    jnienv.pop_entry = pop_entry;
+    jnienv.pop_empty = pop_empty;
+    jnienv.entry_2_int = entry_2_int;
+    jnienv.peek_entry = peek_entry;
+    jnienv.entry_2_long = entry_2_long;
+    jnienv.entry_2_refer = entry_2_refer;
+    jnienv.localvar_setRefer = localvar_setRefer;
+    jnienv.localvar_setInt = localvar_setInt;
+    jnienv.localvar_getRefer = localvar_getRefer;
+    jnienv.localvar_getInt = localvar_getInt;
+}
+
 /**
  *  load classes and execute main class
  * @param p_classpath speicfy classpath split with ';' or ':' ,item is jar file or directory
@@ -134,6 +161,8 @@ s32 execute_jvm(c8 *p_classpath, c8 *p_mainclass, s32 argc, c8 **argv) {
     instruct_profile = hashtable_create(DEFAULT_HASH_FUNC, DEFAULT_HASH_EQUALS_FUNC);
 #endif
     //
+    init_jni_func();
+
     //创建垃圾收集器
     garbage_collector_create();
 

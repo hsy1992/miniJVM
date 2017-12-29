@@ -5,6 +5,7 @@
 #include "garbage.h"
 #include "jvm_util.h"
 #include <math.h>
+#include <rpc.h>
 
 
 s32 com_sun_cldc_io_ConsoleOutputStream_write(Runtime *runtime, Class *clazz) {
@@ -583,6 +584,78 @@ s32 java_lang_System_currentTimeMillis(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
+s32 java_lang_System_loadLibrary0(Runtime *runtime, Class *clazz) {
+    Instance *name_arr = localvar_getRefer(runtime, 0);
+    if (name_arr && name_arr->arr_length) {
+        Utf8String *lab = utf8_create_c("java.library.path");
+        Utf8String *val = hashtable_get(sys_prop, lab);
+        Utf8String *libname = utf8_create();
+        if (val) {
+            utf8_append(libname, val);
+        }
+        const c8 *note1 = "lib not found:%s\n";
+        const c8 *note2 = "register function not found:%s\n";
+        const c8 *onload = "JNI_OnLoad";
+
+#if defined(__JVM_OS_MINGW__) || defined(__JVM_OS_CYGWIN__)
+        utf8_append_c(libname, "/lib");
+        utf8_append_c(libname, name_arr->arr_body);
+        utf8_append_c(libname, ".dll");
+        HINSTANCE hInstLibrary = LoadLibrary(utf8_cstr(libname));
+        if (!hInstLibrary) {
+            jvm_printf(note1, utf8_cstr(libname));
+        } else {
+            FARPROC f = GetProcAddress(hInstLibrary, onload);
+            if (!f) {
+                jvm_printf(note2, onload);
+            } else {
+                f(&jnienv);
+            }
+        }
+#elif defined(__JVM_OS_MAC__)
+        utf8_append_c(libname, "/lib");
+        utf8_append_c(libname, name_arr->arr_body);
+        utf8_append_c(libname, ".dylib");
+        __refer lib = dlopen(utf8_cstr(libname), RTLD_LAZY);
+        if (!lib) {
+            jvm_printf(note1, utf8_cstr(libname));
+        } else {
+            __refer f = dlsym(lib, onload);
+            if (!f) {
+                jvm_printf(note2, onload);
+            } else {
+                f(&jnienv);
+            }
+        }
+#else //__JVM_OS_LINUX__
+        utf8_append_c(libname, "/lib");
+        utf8_append_c(libname, name_arr->arr_body);
+        utf8_append_c(libname, ".so");
+        HINSTANCE hInstLibrary = LoadLibrary(utf8_cstr(libname));
+        if (!hInstLibrary) {
+            jvm_printf(note1,utf8_cstr(libname));
+        } else {
+            FARPROC f = GetProcAddress(hInstLibrary,  onload);
+            if (!f) {
+                jvm_printf(note2,  onload);
+            } else {
+                f(&jnienv);
+            }
+        }
+
+#endif
+        utf8_destory(lab);
+        utf8_destory(libname);
+    }
+
+#if _JVM_DEBUG_BYTECODE_DETAIL > 5
+    invoke_deepth(runtime);
+    jvm_printf("java_lang_System_loadLibrary0\n");
+#endif
+
+    return 0;
+}
+
 s32 java_lang_System_nanotime(Runtime *runtime, Class *clazz) {
     RuntimeStack *stack = runtime->stack;
 
@@ -872,12 +945,10 @@ static java_native_method method_table[] = {
         {"java/lang/String",                    "indexOf",           "(I)I",                                       java_lang_String_indexOf},
         {"java/lang/String",                    "indexOf",           "(II)I",                                      java_lang_String_indexOfFrom},
         {"java/lang/String",                    "intern",            "()Ljava/lang/String;",                       java_lang_String_intern},
-//        {"java/lang/StringBuffer",              "append",       "",            java_lang_StringBuffer_append},
-//        {"java/lang/StringBuffer",              "appendi",       "",            java_lang_StringBuffer_appendi},
-//        {"java/lang/StringBuffer",              "toString",       "",          java_lang_StringBuffer_toString},
         {"java/lang/System",                    "arraycopy",         "(Ljava/lang/Object;ILjava/lang/Object;II)V", java_lang_System_arraycopy},
         {"java/lang/System",                    "doubleToString",    "(D)Ljava/lang/String;",                      java_lang_System_doubleToString},
         {"java/lang/System",                    "currentTimeMillis", "()J",                                        java_lang_System_currentTimeMillis},
+        {"java/lang/System",                    "loadLibrary0",      "([B)V",                                      java_lang_System_loadLibrary0},
         {"java/lang/System",                    "nanoTime",          "()J",                                        java_lang_System_nanotime},
         {"java/lang/System",                    "identityHashCode",  "(Ljava/lang/Object;)I",                      java_lang_System_identityHashCode},
         {"java/lang/System",                    "getProperty0",      "(Ljava/lang/String;)Ljava/lang/String;",     java_lang_System_getProperty0},

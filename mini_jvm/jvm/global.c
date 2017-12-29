@@ -15,6 +15,8 @@ Hashtable *sys_prop;
 
 GcCollector *collector;
 
+JNIENV jnienv;
+
 Instance *main_thread;//
 Runtime *main_runtime = NULL;
 
