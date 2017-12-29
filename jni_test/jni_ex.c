@@ -6,7 +6,7 @@
 #include "../mini_jvm/jvm/jvm.h"
 
 int test_JniTest_getValue(Runtime *runtime, Class *clazz) {
-    JNIENV *env = runtime->jnienv;
+    JniEnv *env = runtime->jnienv;
     int v = env->localvar_getInt(runtime, 0);
     printf("native test_JniTest_getValue(I)I invoked: v = %d\n", v);
     env->push_int(runtime->stack, v + 1);
@@ -18,12 +18,12 @@ static java_native_method method_test2_table[] = {
         {"test/JniTest", "getValue", "(I)I", test_JniTest_getValue},
 };
 
-void JNI_OnLoad(JNIENV *env) {
+void JNI_OnLoad(JniEnv *env) {
     env->native_reg_lib(&(method_test2_table[0]), sizeof(method_test2_table) / sizeof(java_native_method));
 }
-void JNI_OnUnload(JNIENV *env) {
+void JNI_OnUnload(JniEnv *env) {
 }
 
-int main(char **argv, int argc) {
+int main(int argc, char **argv) {
     return 0;
 }

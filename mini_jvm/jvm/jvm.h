@@ -155,7 +155,7 @@ typedef struct _ThreadLock ThreadLock;
 typedef struct _JavaThreadInfo JavaThreadInfo;
 typedef struct _Runtime Runtime;
 typedef struct _CodeAttribute CodeAttribute;
-typedef struct _JNIENV JNIENV;
+typedef struct _JNIENV JniEnv;
 
 typedef s32 (*java_native_fun)(Runtime *runtime, Class *p);
 
@@ -300,7 +300,7 @@ extern ClassLoader *array_classloader;
 
 extern ArrayList *obj_cache;
 
-extern JNIENV jnienv;
+extern JniEnv jnienv;
 
 extern ArrayList *thread_list;
 
@@ -634,7 +634,7 @@ struct _Runtime {
     RuntimeStack *stack;
     LocalVarItem *localvar;
     ArrayList *runtime_pool;// cache runtimes for performance
-    JNIENV *jnienv;
+    JniEnv *jnienv;
     s16 localvar_count;
     s16 localvar_max;
     u8 wideMode;
@@ -915,7 +915,7 @@ void reg_net_native_lib(void);
 void reg_jdwp_native_lib(void);
 
 
-typedef struct _JNIENV {
+struct _JNIENV {
     s32 (*native_reg_lib)(java_native_method *methods, s32 method_size);
 
     s32 (*native_remove_lib)(JavaNativeLib *lib);
@@ -961,7 +961,7 @@ typedef struct _JNIENV {
     __refer (*localvar_getRefer)(Runtime *runtime, s32 index);
 
     s32 (*localvar_getInt)(Runtime *runtime, s32 index);
-} JNIENV;
+} ;
 
 
 

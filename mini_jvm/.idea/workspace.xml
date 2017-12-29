@@ -13,23 +13,12 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" readonly="true" id="8573b6ef-7560-47b3-bf8a-687a65174ff8" name="Default" comment="">
-      <change beforePath="$PROJECT_DIR$/../javalib/dist/mini_jvm_java.jar" afterPath="$PROJECT_DIR$/../javalib/dist/mini_jvm_java.jar" />
-      <change beforePath="$PROJECT_DIR$/../javalib/nbproject/private/private.properties" afterPath="$PROJECT_DIR$/../javalib/nbproject/private/private.properties" />
-      <change beforePath="$PROJECT_DIR$/../javalib/src/java/lang/System.java" afterPath="$PROJECT_DIR$/../javalib/src/java/lang/System.java" />
-      <change beforePath="$PROJECT_DIR$/../javalib/src/sys.properties" afterPath="$PROJECT_DIR$/../javalib/src/sys.properties" />
-      <change beforePath="$PROJECT_DIR$/../javalib_test/dist/lib/mini_jvm_java.jar" afterPath="$PROJECT_DIR$/../javalib_test/dist/lib/mini_jvm_java.jar" />
-      <change beforePath="$PROJECT_DIR$/../javalib_test/dist/minijvm_javatest.jar" afterPath="$PROJECT_DIR$/../javalib_test/dist/minijvm_javatest.jar" />
-      <change beforePath="$PROJECT_DIR$/../javalib_test/src/test/Foo3.java" afterPath="" />
+      <change beforePath="$PROJECT_DIR$/../jni_test/.idea/workspace.xml" afterPath="$PROJECT_DIR$/../jni_test/.idea/workspace.xml" />
+      <change beforePath="$PROJECT_DIR$/../jni_test/jni_ex.c" afterPath="$PROJECT_DIR$/../jni_test/jni_ex.c" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
       <change beforePath="$PROJECT_DIR$/jvm/global.c" afterPath="$PROJECT_DIR$/jvm/global.c" />
       <change beforePath="$PROJECT_DIR$/jvm/java_native_std.c" afterPath="$PROJECT_DIR$/jvm/java_native_std.c" />
-      <change beforePath="$PROJECT_DIR$/jvm/java_native_std.h" afterPath="$PROJECT_DIR$/jvm/java_native_std.h" />
-      <change beforePath="$PROJECT_DIR$/jvm/jvm.c" afterPath="$PROJECT_DIR$/jvm/jvm.c" />
       <change beforePath="$PROJECT_DIR$/jvm/jvm.h" afterPath="$PROJECT_DIR$/jvm/jvm.h" />
-      <change beforePath="$PROJECT_DIR$/jvm/runtime.c" afterPath="$PROJECT_DIR$/jvm/runtime.c" />
-      <change beforePath="$PROJECT_DIR$/test.c" afterPath="$PROJECT_DIR$/test.c" />
-      <change beforePath="$PROJECT_DIR$/utils/utf8_string.c" afterPath="$PROJECT_DIR$/utils/utf8_string.c" />
-      <change beforePath="$PROJECT_DIR$/utils/utf8_string.h" afterPath="$PROJECT_DIR$/utils/utf8_string.h" />
     </list>
     <ignored path="$PROJECT_DIR$/cmake-build-debug/" />
     <ignored path="$PROJECT_DIR$/cmake-build-release/" />
@@ -43,24 +32,41 @@
   <component name="ExecutionTargetManager" SELECTED_TARGET="CMakeBuildProfile:Debug" />
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file leaf-file-name="runtime.c" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/jvm/runtime.c">
+      <file leaf-file-name="jni_ex.c" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/../jni_test/jni_ex.c">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="249">
-              <caret line="188" column="6" lean-forward="false" selection-start-line="188" selection-start-column="6" selection-end-line="188" selection-end-column="6" />
+            <state relative-caret-position="228">
+              <caret line="20" column="30" lean-forward="false" selection-start-line="20" selection-start-column="30" selection-end-line="20" selection-end-column="30" />
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="jvm.h" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/jvm/jvm.h">
+      <file leaf-file-name="jvm_util.c" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/jvm/jvm_util.c">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="429">
-              <caret line="936" column="40" lean-forward="false" selection-start-line="936" selection-start-column="40" selection-end-line="936" selection-end-column="40" />
+            <state relative-caret-position="273">
+              <caret line="833" column="5" lean-forward="false" selection-start-line="833" selection-start-column="5" selection-end-line="833" selection-end-column="5" />
               <folding>
-                <element signature="e#6787#6822#0" expanded="true" />
+                <element signature="e#3156#3206#0" expanded="true" />
+                <element signature="e#14266#14335#0" expanded="true" />
+                <element signature="e#14395#14489#0" expanded="true" />
+                <element signature="e#14663#14872#0" expanded="true" />
+                <element signature="e#15235#15485#0" expanded="true" />
+                <element signature="e#24778#24859#0" expanded="true" />
+                <element signature="e#35330#35406#0" expanded="true" />
+                <element signature="e#35855#35931#0" expanded="true" />
               </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="test.c" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/test.c">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="135">
+              <caret line="21" column="0" lean-forward="false" selection-start-line="21" selection-start-column="0" selection-end-line="21" selection-end-column="33" />
+              <folding />
             </state>
           </provider>
         </entry>
@@ -68,18 +74,50 @@
       <file leaf-file-name="jvm.c" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/jvm/jvm.c">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="316">
-              <caret line="165" column="13" lean-forward="false" selection-start-line="165" selection-start-column="13" selection-end-line="165" selection-end-column="13" />
+            <state relative-caret-position="748">
+              <caret line="150" column="18" lean-forward="false" selection-start-line="150" selection-start-column="18" selection-end-line="150" selection-end-column="18" />
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="global.c" pinned="false" current-in-tab="false">
+      <file leaf-file-name="global.c" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/jvm/global.c">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="228">
-              <caret line="17" column="14" lean-forward="false" selection-start-line="17" selection-start-column="14" selection-end-line="17" selection-end-column="14" />
+            <state relative-caret-position="114">
+              <caret line="24" column="50" lean-forward="true" selection-start-line="24" selection-start-column="50" selection-end-line="24" selection-end-column="50" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="java_native_io.c" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/jvm/java_native_io.c">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="226">
+              <caret line="736" column="13" lean-forward="false" selection-start-line="736" selection-start-column="13" selection-end-line="736" selection-end-column="13" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="pairlist.c" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/utils/pairlist.c">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="248">
+              <caret line="23" column="62" lean-forward="false" selection-start-line="23" selection-start-column="62" selection-end-line="23" selection-end-column="62" />
+              <folding>
+                <element signature="e#40#59#0" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="java_native_std.c" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/jvm/java_native_std.c">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="45">
+              <caret line="3" column="0" lean-forward="false" selection-start-line="3" selection-start-column="0" selection-end-line="3" selection-end-column="0" />
               <folding />
             </state>
           </provider>
@@ -88,56 +126,25 @@
       <file leaf-file-name="interpreter.c" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/jvm/interpreter.c">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="310">
-              <caret line="709" column="34" lean-forward="false" selection-start-line="709" selection-start-column="34" selection-end-line="709" selection-end-column="34" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="java_native_std.c" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/jvm/java_native_std.c">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="360">
-              <caret line="614" column="29" lean-forward="true" selection-start-line="614" selection-start-column="29" selection-end-line="614" selection-end-column="29" />
+            <state relative-caret-position="45">
+              <caret line="3" column="0" lean-forward="false" selection-start-line="3" selection-start-column="0" selection-end-line="3" selection-end-column="0" />
               <folding>
-                <element signature="e#2#19#0" expanded="true" />
-                <element signature="e#18429#19405#0" expanded="true" />
-                <element signature="e#19518#19592#0" expanded="true" />
-                <element signature="e#21713#21792#0" expanded="true" />
+                <element signature="e#127127#127428#0" expanded="true" />
+                <element signature="e#127770#127833#0" expanded="true" />
+                <element signature="e#128186#129083#0" expanded="true" />
               </folding>
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="java_native_reflect.c" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/jvm/java_native_reflect.c">
+      <file leaf-file-name="jvm.h" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/jvm/jvm.h">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="75">
-              <caret line="14" column="0" lean-forward="false" selection-start-line="14" selection-start-column="0" selection-end-line="14" selection-end-column="0" />
+            <state relative-caret-position="105">
+              <caret line="917" column="0" lean-forward="false" selection-start-line="917" selection-start-column="0" selection-end-line="917" selection-end-column="0" />
               <folding>
-                <element signature="e#39#55#0" expanded="true" />
+                <element signature="e#6787#6822#0" expanded="true" />
               </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="java_native_std.h" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/jvm/java_native_std.h">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="285">
-              <caret line="15" column="6" lean-forward="false" selection-start-line="15" selection-start-column="6" selection-end-line="15" selection-end-column="6" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="test.c" pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/test.c">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="322">
-              <caret line="38" column="0" lean-forward="true" selection-start-line="38" selection-start-column="0" selection-end-line="38" selection-end-column="0" />
-              <folding />
             </state>
           </provider>
         </entry>
@@ -159,7 +166,6 @@
       <find>bytebuf</find>
       <find>__MEM_LEAK_DETECT</find>
       <find>find_fieldInfo_by_fieldref</find>
-      <find>classes_</find>
       <find>fd = l2d.r;</find>
       <find>__refer fd = (long)l2d.l;</find>
       <find>InnerFileD</find>
@@ -176,6 +182,7 @@
       <find>long</find>
       <find>_JVM_DEBUG_BYTECODE_DUMP</find>
       <find>__refer (*</find>
+      <find>classes_</find>
     </findStrings>
     <replaceStrings>
       <replace>p</replace>
@@ -198,7 +205,6 @@
       <replace>invoke_deepth(runtime);</replace>
       <replace>threadLock</replace>
       <replace>ByteBuf *buf</replace>
-      <replace>,</replace>
       <replace>fd = l2d.l;</replace>
       <replace>__refer fd = (__refer)(long)l2d.l;</replace>
       <replace>InnerFileStat</replace>
@@ -208,6 +214,7 @@
       <replace>s64</replace>
       <replace>(s32) (intptr_t)</replace>
       <replace>(u64) (intptr_t)</replace>
+      <replace>,</replace>
     </replaceStrings>
     <dirStrings>
       <dir>D:\cSrc\simple_vm\simple_jvm</dir>
@@ -280,12 +287,12 @@
         <option value="$PROJECT_DIR$/utils/utf8_string.c" />
         <option value="$PROJECT_DIR$/utils/utf8_string.h" />
         <option value="$PROJECT_DIR$/jvm/java_native_std.h" />
-        <option value="$PROJECT_DIR$/jvm/global.c" />
-        <option value="$PROJECT_DIR$/jvm/jvm.h" />
         <option value="$PROJECT_DIR$/jvm/jvm.c" />
-        <option value="$PROJECT_DIR$/jvm/java_native_std.c" />
         <option value="$PROJECT_DIR$/jvm/runtime.c" />
         <option value="$PROJECT_DIR$/test.c" />
+        <option value="$PROJECT_DIR$/jvm/java_native_std.c" />
+        <option value="$PROJECT_DIR$/jvm/jvm.h" />
+        <option value="$PROJECT_DIR$/jvm/global.c" />
       </list>
     </option>
   </component>
@@ -304,10 +311,10 @@
   </component>
   <component name="OCFindUsagesOptions" text="false" ivars="false" properties="true" derivedClasses="false" />
   <component name="ProjectFrameBounds">
-    <option name="x" value="604" />
-    <option name="y" value="75" />
-    <option name="width" value="1295" />
-    <option name="height" value="916" />
+    <option name="x" value="65" />
+    <option name="y" value="41" />
+    <option name="width" value="1292" />
+    <option name="height" value="733" />
   </component>
   <component name="ProjectInspectionProfilesVisibleTreeState">
     <entry key="Project Default">
@@ -479,30 +486,42 @@
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="1843031000" />
+    <option name="totallyTimeSpent" value="1844493000" />
   </component>
   <component name="ToolWindowManager">
-    <frame x="604" y="75" width="1295" height="916" extended-state="0" />
+    <frame x="65" y="41" width="1292" height="733" extended-state="0" />
     <editor active="true" />
     <layout>
-      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.19919029" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
+      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.1896" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
-      <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.37037036" sideWeight="0.47402596" order="7" side_tool="false" content_ui="tabs" />
+      <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.3291536" sideWeight="0.47402596" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="CMake" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32696897" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.47368422" sideWeight="0.52840906" order="7" side_tool="true" content_ui="tabs" />
-      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.18333334" sideWeight="0.4715909" order="1" side_tool="false" content_ui="tabs" />
+      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.35736677" sideWeight="0.4715909" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32961783" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
-      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.27203065" sideWeight="0.46996754" order="2" side_tool="false" content_ui="tabs" />
-      <window_info id="Structure" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.20647773" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
+      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.3526646" sideWeight="0.46996754" order="2" side_tool="false" content_ui="tabs" />
+      <window_info id="Structure" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.2248" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
       <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32854864" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="1" side_tool="true" content_ui="tabs" />
-      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.357599" sideWeight="0.46849757" order="3" side_tool="false" content_ui="tabs" />
+      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.36050156" sideWeight="0.46849757" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
+      <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
+      <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.37037036" sideWeight="0.47402596" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Message" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Commander" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
+      <window_info id="CMake" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32696897" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
+      <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.47368422" sideWeight="0.52840906" order="7" side_tool="true" content_ui="tabs" />
       <window_info id="Inspection" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
+      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.27203065" sideWeight="0.46996754" order="2" side_tool="false" content_ui="tabs" />
+      <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32961783" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
+      <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32854864" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Hierarchy" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.2497809" sideWeight="0.5" order="2" side_tool="false" content_ui="combo" />
+      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.19919029" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
+      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.18333334" sideWeight="0.4715909" order="1" side_tool="false" content_ui="tabs" />
+      <window_info id="Structure" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.20647773" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
       <window_info id="Ant Build" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
+      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.357599" sideWeight="0.46849757" order="3" side_tool="false" content_ui="tabs" />
+      <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="1" side_tool="true" content_ui="tabs" />
       <window_info id="Data View" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32978722" sideWeight="0.5" order="3" side_tool="true" content_ui="tabs" />
     </layout>
   </component>
@@ -530,21 +549,12 @@
     </breakpoint-manager>
     <watches-manager>
       <configuration name="CMakeRunConfiguration">
-        <watch expression="method-&gt;name-&gt;data" />
-        <watch expression="clazz-&gt;name-&gt;data" />
-        <watch expression="method-&gt;descriptor-&gt;data" />
-        <watch expression="libname-&gt;data" />
+        <watch expression="clazz" />
+        <watch expression="ins-&gt;mb.clazz" />
       </configuration>
     </watches-manager>
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/utils/bytebuf.c">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="589">
-          <caret line="31" column="26" lean-forward="false" selection-start-line="31" selection-start-column="26" selection-end-line="31" selection-end-column="26" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/utils/bytebuf.h">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="494">
@@ -614,8 +624,9 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/jvm/garbage.c">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="167">
-          <caret line="384" column="0" lean-forward="false" selection-start-line="384" selection-start-column="0" selection-end-line="384" selection-end-column="0" />
+        <state relative-caret-position="405">
+          <caret line="389" column="29" lean-forward="false" selection-start-line="389" selection-start-column="29" selection-end-line="389" selection-end-column="29" />
+          <folding />
         </state>
       </provider>
     </entry>
@@ -635,93 +646,47 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/jvm/jdwp.c">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="91">
-          <caret line="85" column="0" lean-forward="true" selection-start-line="85" selection-start-column="0" selection-end-line="85" selection-end-column="0" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://C:/TDM-GCC-32/include/io.h">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="167">
-          <caret line="300" column="38" lean-forward="false" selection-start-line="300" selection-start-column="38" selection-end-line="300" selection-end-column="38" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://C:/TDM-GCC-32/include/stdlib.h">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="130">
-          <caret line="417" column="40" lean-forward="false" selection-start-line="417" selection-start-column="40" selection-end-line="417" selection-end-column="40" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://C:/cygwin64/usr/include/sys/stat.h">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="210">
-          <caret line="113" column="24" lean-forward="false" selection-start-line="113" selection-start-column="24" selection-end-line="113" selection-end-column="24" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://C:/cygwin64/usr/include/sys/unistd.h">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="210">
-          <caret line="95" column="53" lean-forward="false" selection-start-line="95" selection-start-column="53" selection-end-line="95" selection-end-column="53" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/CMakeLists.txt">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="375">
-          <caret line="45" column="24" lean-forward="true" selection-start-line="45" selection-start-column="24" selection-end-line="45" selection-end-column="24" />
+        <state relative-caret-position="80">
+          <caret line="828" column="0" lean-forward="false" selection-start-line="828" selection-start-column="0" selection-end-line="828" selection-end-column="0" />
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://C:/mingw64/x86_64-w64-mingw32/include/_mingw.h">
+    <entry file="file://C:/TDM-GCC-32/include/io.h" />
+    <entry file="file://C:/TDM-GCC-32/include/stdlib.h" />
+    <entry file="file://C:/cygwin64/usr/include/sys/stat.h" />
+    <entry file="file://C:/cygwin64/usr/include/sys/unistd.h" />
+    <entry file="file://$PROJECT_DIR$/CMakeLists.txt">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="154">
-          <caret line="233" column="8" lean-forward="false" selection-start-line="233" selection-start-column="8" selection-end-line="233" selection-end-column="8" />
-          <folding>
-            <marker date="1510294910000" expanded="false" signature="428:448" ph="..." />
-            <marker date="1510294910000" expanded="false" signature="943:963" ph="..." />
-            <marker date="1510294910000" expanded="false" signature="2733:2783" ph="..." />
-          </folding>
+        <state relative-caret-position="375">
+          <caret line="45" column="24" lean-forward="true" selection-start-line="45" selection-start-column="24" selection-end-line="45" selection-end-column="24" />
         </state>
       </provider>
     </entry>
-    <entry file="file://C:/mingw64/x86_64-w64-mingw32/include/crtdefs.h">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="154">
-          <caret line="61" column="31" lean-forward="false" selection-start-line="61" selection-start-column="31" selection-end-line="61" selection-end-column="31" />
-          <folding>
-            <marker date="1510294910000" expanded="false" signature="704:732" ph="..." />
-            <marker date="1510294910000" expanded="false" signature="911:931" ph="..." />
-            <marker date="1510294910000" expanded="false" signature="1251:1272" ph="..." />
-            <marker date="1510294910000" expanded="false" signature="1558:1589" ph="..." />
-            <marker date="1510294910000" expanded="false" signature="1852:1874" ph="..." />
-            <marker date="1510294910000" expanded="false" signature="2870:2896" ph="..." />
-          </folding>
-        </state>
-      </provider>
-    </entry>
+    <entry file="file://C:/mingw64/x86_64-w64-mingw32/include/_mingw.h" />
+    <entry file="file://C:/mingw64/x86_64-w64-mingw32/include/crtdefs.h" />
     <entry file="file://$PROJECT_DIR$/jvm/jvm_util.c">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="118">
-          <caret line="556" column="40" lean-forward="false" selection-start-line="556" selection-start-column="40" selection-end-line="556" selection-end-column="40" />
+        <state relative-caret-position="273">
+          <caret line="833" column="5" lean-forward="false" selection-start-line="833" selection-start-column="5" selection-end-line="833" selection-end-column="5" />
           <folding>
-            <element signature="e#40#59#0" expanded="false" />
+            <element signature="e#3156#3206#0" expanded="true" />
+            <element signature="e#14266#14335#0" expanded="true" />
+            <element signature="e#14395#14489#0" expanded="true" />
+            <element signature="e#14663#14872#0" expanded="true" />
+            <element signature="e#15235#15485#0" expanded="true" />
+            <element signature="e#24778#24859#0" expanded="true" />
+            <element signature="e#35330#35406#0" expanded="true" />
+            <element signature="e#35855#35931#0" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/jvm/java_native_io.c">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="325">
-          <caret line="542" column="44" lean-forward="false" selection-start-line="542" selection-start-column="44" selection-end-line="542" selection-end-column="44" />
-          <folding>
-            <marker date="1514451791938" expanded="false" signature="1372:1386" ph="..." />
-            <marker date="1514451791938" expanded="false" signature="26425:26457" ph="..." />
-            <marker date="1514451791938" expanded="false" signature="26886:26914" ph="..." />
-          </folding>
+        <state relative-caret-position="226">
+          <caret line="736" column="13" lean-forward="false" selection-start-line="736" selection-start-column="13" selection-end-line="736" selection-end-column="13" />
+          <folding />
         </state>
       </provider>
     </entry>
@@ -785,22 +750,15 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/utils/pairlist.c">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="336">
-          <caret line="91" column="0" lean-forward="false" selection-start-line="91" selection-start-column="0" selection-end-line="91" selection-end-column="0" />
+        <state relative-caret-position="248">
+          <caret line="23" column="62" lean-forward="false" selection-start-line="23" selection-start-column="62" selection-end-line="23" selection-end-column="62" />
           <folding>
-            <element signature="e#40#59#0" expanded="false" />
+            <element signature="e#40#59#0" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://C:/mingw64/x86_64-w64-mingw32/include/winbase.h">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="154">
-          <caret line="1525" column="8" lean-forward="false" selection-start-line="1525" selection-start-column="8" selection-end-line="1525" selection-end-column="8" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
+    <entry file="file://C:/mingw64/x86_64-w64-mingw32/include/winbase.h" />
     <entry file="file://$PROJECT_DIR$/utils/utf8_string.h">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="305">
@@ -840,7 +798,6 @@
           <folding>
             <element signature="e#365#392#0" expanded="false" />
             <element signature="e#423#447#0" expanded="false" />
-            <marker date="1514451226667" expanded="true" signature="307:333" ph="..." />
           </folding>
         </state>
       </provider>
@@ -863,48 +820,15 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/jvm/global.c">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="228">
-          <caret line="17" column="14" lean-forward="false" selection-start-line="17" selection-start-column="14" selection-end-line="17" selection-end-column="14" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/jvm/jvm.h">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="429">
-          <caret line="936" column="40" lean-forward="false" selection-start-line="936" selection-start-column="40" selection-end-line="936" selection-end-column="40" />
-          <folding>
-            <element signature="e#6787#6822#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/jvm/jvm.c">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="316">
-          <caret line="165" column="13" lean-forward="false" selection-start-line="165" selection-start-column="13" selection-end-line="165" selection-end-column="13" />
+        <state relative-caret-position="748">
+          <caret line="150" column="18" lean-forward="false" selection-start-line="150" selection-start-column="18" selection-end-line="150" selection-end-column="18" />
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/jvm/interpreter.c">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="310">
-          <caret line="709" column="34" lean-forward="false" selection-start-line="709" selection-start-column="34" selection-end-line="709" selection-end-column="34" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/../../test/jni_ex.c">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="152">
-          <caret line="9" column="0" lean-forward="false" selection-start-line="9" selection-start-column="0" selection-end-line="9" selection-end-column="0" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
+    <entry file="file://$PROJECT_DIR$/../../test/jni_ex.c" />
     <entry file="file://$PROJECT_DIR$/jvm/runtime.c">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="249">
@@ -913,23 +837,56 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/jvm/java_native_std.c">
+    <entry file="file://$PROJECT_DIR$/test.c">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="360">
-          <caret line="614" column="29" lean-forward="true" selection-start-line="614" selection-start-column="29" selection-end-line="614" selection-end-column="29" />
+        <state relative-caret-position="135">
+          <caret line="21" column="0" lean-forward="false" selection-start-line="21" selection-start-column="0" selection-end-line="21" selection-end-column="33" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/../jni_test/jni_ex.c">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="228">
+          <caret line="20" column="30" lean-forward="false" selection-start-line="20" selection-start-column="30" selection-end-line="20" selection-end-column="30" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/jvm/interpreter.c">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="45">
+          <caret line="3" column="0" lean-forward="false" selection-start-line="3" selection-start-column="0" selection-end-line="3" selection-end-column="0" />
           <folding>
-            <element signature="e#2#19#0" expanded="true" />
-            <element signature="e#18429#19405#0" expanded="true" />
-            <element signature="e#19518#19592#0" expanded="true" />
-            <element signature="e#21713#21792#0" expanded="true" />
+            <element signature="e#127127#127428#0" expanded="true" />
+            <element signature="e#127770#127833#0" expanded="true" />
+            <element signature="e#128186#129083#0" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/test.c">
+    <entry file="file://$PROJECT_DIR$/jvm/jvm.h">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="322">
-          <caret line="38" column="0" lean-forward="true" selection-start-line="38" selection-start-column="0" selection-end-line="38" selection-end-column="0" />
+        <state relative-caret-position="105">
+          <caret line="917" column="0" lean-forward="false" selection-start-line="917" selection-start-column="0" selection-end-line="917" selection-end-column="0" />
+          <folding>
+            <element signature="e#6787#6822#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/jvm/java_native_std.c">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="45">
+          <caret line="3" column="0" lean-forward="false" selection-start-line="3" selection-start-column="0" selection-end-line="3" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/jvm/global.c">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="114">
+          <caret line="24" column="50" lean-forward="true" selection-start-line="24" selection-start-column="50" selection-end-line="24" selection-end-column="50" />
           <folding />
         </state>
       </provider>

@@ -5,7 +5,7 @@
 #include "garbage.h"
 #include "jvm_util.h"
 #include <math.h>
-#include <rpc.h>
+#include <dlfcn.h>
 
 
 s32 com_sun_cldc_io_ConsoleOutputStream_write(Runtime *runtime, Class *clazz) {
@@ -620,7 +620,8 @@ s32 java_lang_System_loadLibrary0(Runtime *runtime, Class *clazz) {
         if (!lib) {
             jvm_printf(note1, utf8_cstr(libname));
         } else {
-            __refer f = dlsym(lib, onload);
+            void (*f)(__refer);
+            f = dlsym(lib, onload);
             if (!f) {
                 jvm_printf(note2, onload);
             } else {
