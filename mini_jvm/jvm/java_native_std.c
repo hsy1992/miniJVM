@@ -5,8 +5,13 @@
 #include "garbage.h"
 #include "jvm_util.h"
 #include <math.h>
-#include <dlfcn.h>
 
+
+#ifdef __JVM_OS_MAC__
+#include <dlfcn.h>
+#else
+#include <rpc.h>
+#endif
 
 s32 com_sun_cldc_io_ConsoleOutputStream_write(Runtime *runtime, Class *clazz) {
     s16 ch = localvar_getInt(runtime, 1);
