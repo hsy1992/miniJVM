@@ -961,7 +961,17 @@ struct _JNIENV {
     __refer (*localvar_getRefer)(Runtime *runtime, s32 index);
 
     s32 (*localvar_getInt)(Runtime *runtime, s32 index);
-} ;
+
+    void (*jthread_block_enter)(Runtime *runtime);
+
+    void (*jthread_block_exit)(Runtime *runtime);
+
+    Utf8String *(*utf8_create_part_c)(char *str, int start, int len);
+
+    char *(*utf8_cstr)(Utf8String *a1);
+
+    void (*utf8_destory)(Utf8String *);
+};
 
 
 
