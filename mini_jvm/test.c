@@ -25,6 +25,11 @@ int main(int argc, char **argv) {
     jvm_printf("intptr_t size:%d\n", sizeof(intptr_t));
     s32 ret;
 
+//    ret = execute_jvm("../../javalib/dist/mini_jvm_java.jar;../../win_gui/gui_lib/dist/gui_lib.jar;./",
+//                      "test/GuiTest",
+//                      argc,
+//                      (c8 **) argv);
+
 
 
 //    ret = execute_jvm("../../javalib/dist/mini_jvm_java.jar;../../javalib_test/dist/minijvm_javatest.jar;./",
@@ -32,7 +37,7 @@ int main(int argc, char **argv) {
 //                      argc,
 //                      (c8 **) argv);
 
-    ret = execute_jvm("../../javalib/dist/mini_jvm_java.jar;../../javalib_test/dist/minijvm_javatest.jar;./",
+    ret = execute_jvm("../../javalib/dist/mini_jvm_java.jar;../../jni_test/java/dist/java.jar;./",
                       "test/JniTest",
                       argc,
                       (c8 **) argv);
