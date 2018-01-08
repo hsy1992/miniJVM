@@ -204,7 +204,47 @@ public static native String doubleToString(double val);
     }
 
     private native static String getProperty0(String key);
-
+    /**
+     * Sets the system property indicated by the specified key. 
+     * <p>
+     * First, if a security manager exists, its 
+     * <code>SecurityManager.checkPermission</code> method
+     * is called with a <code>PropertyPermission(key, "write")</code>
+     * permission. This may result in a SecurityException being thrown.
+     * If no exception is thrown, the specified property is set to the given
+     * value.
+     * <p>
+     *
+     * @param      key   the name of the system property.
+     * @param      value the value of the system property.
+     * @return     the previous value of the system property,
+     *             or <code>null</code> if it did not have one.
+     *
+     * @exception  SecurityException  if a security manager exists and its  
+     *             <code>checkPermission</code> method doesn't allow 
+     *             setting of the specified property.
+     * @exception  NullPointerException if <code>key</code> is
+     *             <code>null</code>.
+     * @exception  IllegalArgumentException if <code>key</code> is empty.
+     * @see        #getProperty
+     * @see        java.lang.System#getProperty(java.lang.String)
+     * @see        java.lang.System#getProperty(java.lang.String, java.lang.String)
+     * @see        java.util.PropertyPermission
+     * @see        SecurityManager#checkPermission
+     * @since      1.2
+     */
+    public static String setProperty(String key, String value) {
+	if (key == null) {
+	    throw new NullPointerException("key can't be null");
+	}
+	if (key.equals("")) {
+	    throw new IllegalArgumentException("key can't be empty");
+	}
+	return setProperty0(key, value);
+    }
+    
+    private native static String setProperty0(String key, String value);
+    
     /**
      * Terminates the currently running Java application. The
      * argument serves as a status code; by convention, a nonzero
