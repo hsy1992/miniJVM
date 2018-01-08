@@ -37,7 +37,7 @@ int main(int argc, char **argv) {
 //                      argc,
 //                      (c8 **) argv);
 
-    ret = execute_jvm("../../javalib/dist/mini_jvm_java.jar;../../jni_test/java/dist/java.jar;./",
+    ret = execute_jvm("../../javalib/dist/mini_jvm_java.jar;../../jni_test/java/dist/jni_test.jar;./",
                       "test/JniTest",
                       argc,
                       (c8 **) argv);
