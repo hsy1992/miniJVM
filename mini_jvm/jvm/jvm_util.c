@@ -1165,6 +1165,7 @@ s32 jstring_equals(Instance *jstr1, Instance *jstr2) {
 }
 
 s32 jstring_2_utf8(Instance *jstr, Utf8String *utf8) {
+    if(!jstr)return 0;
     Instance *arr = jstring_get_value_array(jstr);
     if (arr) {
         s32 count = jstring_get_count(jstr);
