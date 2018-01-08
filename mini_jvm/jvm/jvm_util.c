@@ -406,6 +406,9 @@ s32 isDir(Utf8String *path) {
 
 s32 sys_properties_load(ClassLoader *loader) {
     sys_prop = hashtable_create(UNICODE_STR_HASH_FUNC, UNICODE_STR_EQUALS_FUNC);
+    hashtable_register_free_functions(sys_prop,
+                                      (HashtableKeyFreeFunc)utf8_destory,
+                                      (HashtableValueFreeFunc )utf8_destory);
     s32 i;
     for (i = 0; i < loader->classpath->length; i++) {
         Utf8String *path = arraylist_get_value(loader->classpath, i);
@@ -477,14 +480,6 @@ s32 sys_properties_load(ClassLoader *loader) {
 }
 
 void sys_properties_dispose() {
-    HashtableIterator hti;
-    hashtable_iterate(sys_prop, &hti);
-    for (; hashtable_iter_has_more(&hti);) {
-        Utf8String *k = hashtable_iter_next_key(&hti);
-        Utf8String *v = hashtable_get(sys_prop, k);
-        utf8_destory(k);
-        utf8_destory(v);
-    }
     hashtable_destory(sys_prop);
 }
 
@@ -1165,7 +1160,7 @@ s32 jstring_equals(Instance *jstr1, Instance *jstr2) {
 }
 
 s32 jstring_2_utf8(Instance *jstr, Utf8String *utf8) {
-    if(!jstr)return 0;
+    if (!jstr)return 0;
     Instance *arr = jstring_get_value_array(jstr);
     if (arr) {
         s32 count = jstring_get_count(jstr);

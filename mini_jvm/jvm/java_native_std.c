@@ -721,19 +721,17 @@ s32 java_lang_System_setProperty0(Runtime *runtime, Class *clazz) {
     Instance *jstr1 = (Instance *) localvar_getRefer(runtime, 0);
     Utf8String *key = utf8_create();
     jstring_2_utf8(jstr1, key);
-    Instance *jstr2 = (Instance *) localvar_getRefer(runtime, 0);
+    Instance *jstr2 = (Instance *) localvar_getRefer(runtime, 1);
     Utf8String *val = utf8_create();
     jstring_2_utf8(jstr2, val);
     Utf8String *old_val = (Utf8String *) hashtable_get(sys_prop, key);
-    hashtable_put(sys_prop, key, val);
     if (old_val) {
-        Instance *jstr = jstring_create(val, runtime);
+        Instance *jstr = jstring_create(old_val, runtime);
         push_ref(stack, jstr);
     } else {
         push_ref(stack, (__refer) (intptr_t) NULL);
     }
-    utf8_destory(key);
-    utf8_destory(old_val);
+    hashtable_put(sys_prop, key, val);
 
 #if _JVM_DEBUG_BYTECODE_DETAIL > 5
     invoke_deepth(runtime);
