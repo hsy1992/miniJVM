@@ -5,7 +5,7 @@ project(mini_jvm)
 #set(CMAKE_C_STANDARD 11)
 set(CMAKE_C_STANDARD 99)
 
-include_directories(jvm utils utils/cmem )
+include_directories( )
 
 set(SOURCE_FILES
         utils/d_type.h
@@ -39,7 +39,7 @@ set(SOURCE_FILES
         jvm/java_native_io.h
         jvm/class_load.c
         jvm/garbage.h
-        test.c
+        main.c
         utils/linkedlist.c
         utils/linkedlist.h
         utils/spinlock.c

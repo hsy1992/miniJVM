@@ -12,7 +12,9 @@
 #include <dlfcn.h>
 
 #else
+
 #include <rpc.h>
+
 #endif
 
 s32 com_sun_cldc_io_ConsoleOutputStream_write(Runtime *runtime, Class *clazz) {
@@ -591,6 +593,8 @@ s32 java_lang_System_currentTimeMillis(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
+typedef void (*jni_fun)(__refer);
+
 s32 java_lang_System_loadLibrary0(Runtime *runtime, Class *clazz) {
     Instance *name_arr = localvar_getRefer(runtime, 0);
     if (name_arr && name_arr->arr_length) {
@@ -603,48 +607,38 @@ s32 java_lang_System_loadLibrary0(Runtime *runtime, Class *clazz) {
         const c8 *note1 = "lib not found:%s\n";
         const c8 *note2 = "register function not found:%s\n";
         const c8 *onload = "JNI_OnLoad";
-
+        jni_fun f;
 #if defined(__JVM_OS_MINGW__) || defined(__JVM_OS_CYGWIN__)
         utf8_append_c(libname, "/lib");
         utf8_append_c(libname, name_arr->arr_body);
         utf8_append_c(libname, ".dll");
+        utf8_replace_c(libname, "//", "/");
         HINSTANCE hInstLibrary = LoadLibrary(utf8_cstr(libname));
         if (!hInstLibrary) {
             jvm_printf(note1, utf8_cstr(libname));
         } else {
-            FARPROC f = GetProcAddress(hInstLibrary, onload);
-            if (!f) {
+            FARPROC fp = GetProcAddress(hInstLibrary, onload);
+            if (!fp) {
                 jvm_printf(note2, onload);
             } else {
+                f = (jni_fun) fp;
                 f(&jnienv);
             }
         }
-#elif defined(__JVM_OS_MAC__)
-        utf8_append_c(libname, "/lib");
-        utf8_append_c(libname, name_arr->arr_body);
-        utf8_append_c(libname, ".dylib");
-        __refer lib = dlopen(utf8_cstr(libname), RTLD_LAZY);
-        if (!lib) {
-            jvm_printf(note1, utf8_cstr(libname));
-        } else {
-            void (*f)(__refer);
-            f = dlsym(lib, onload);
-            if (!f) {
-                jvm_printf(note2, onload);
-            } else {
-                f(&jnienv);
-            }
-        }
-#else //__JVM_OS_LINUX__
 
+#else
         utf8_append_c(libname, "/lib");
         utf8_append_c(libname, name_arr->arr_body);
+#if defined(__JVM_OS_MAC__)
+        utf8_append_c(libname, ".dylib");
+#else //__JVM_OS_LINUX__
         utf8_append_c(libname, ".so");
+#endif
         __refer lib = dlopen(utf8_cstr(libname), RTLD_LAZY);
         if (!lib) {
             jvm_printf(note1, utf8_cstr(libname));
         } else {
-            void (*f)(__refer);
+
             f = dlsym(lib, onload);
             if (!f) {
                 jvm_printf(note2, onload);

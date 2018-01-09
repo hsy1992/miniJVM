@@ -7,8 +7,8 @@
 <!-- the Compile on Save feature is turned off for the project. -->
 <!-- You can turn off the Compile on Save (or Deploy on Save) setting -->
 <!-- in the project's Project Properties dialog box.-->
-<project name="mini_jvm_java" default="default" basedir=".">
-    <description>Builds, tests, and runs the project mini_jvm_java.</description>
+<project name="minijvm_rt" default="default" basedir=".">
+    <description>Builds, tests, and runs the project minijvm_rt.</description>
     <import file="nbproject/build-impl.xml"/>
     <!--
 
@@ -58,7 +58,7 @@
 
     An example of overriding the target for project execution could look like this:
 
-        <target name="run" depends="mini_jvm_java-impl.jar">
+        <target name="run" depends="minijvm_rt-impl.jar">
             <exec dir="bin" executable="launcher.exe">
                 <arg file="${dist.jar}"/>
             </exec>

@@ -686,39 +686,13 @@ s32 execute_method(MethodInfo *method, Runtime *pruntime, Class *clazz) {
     runtime->method = method;
     runtime->clazz = clazz;
     s32 method_sync = method->access_flags & ACC_SYNCHRONIZED;
-    s32 stackSize;
 
-    if (method->access_flags & ACC_NATIVE) {//本地方法
-        localvar_init(runtime, method->para_count + 1);//可能有非静态本地方法调用，因此+1
-        _stack2localvar(method, pruntime, runtime);
-        stackSize = pruntime->stack->size;
-        //缓存调用本地方法
-        if (!method->native_func) { //把本地方法找出来缓存
-            java_native_method *native = find_native_method(utf8_cstr(clazz->name), utf8_cstr(method->name),
-                                                            utf8_cstr(method->descriptor));
-            method->native_func = native->func_pointer;
-        }
-#if _JVM_DEBUG_BYTECODE_DETAIL > 3
-        invoke_deepth(runtime);
-        java_native_method *native = find_native_method(utf8_cstr(clazz->name), utf8_cstr(method->name),
-                                                        utf8_cstr(method->descriptor));
-        jvm_printf("%s.%s()  {\n", native->clzname, native->methodname);
-#endif
-        if (method_sync)_synchronized_lock_method(method, runtime);
-        ret = method->native_func(runtime, clazz);
-        if (method_sync)_synchronized_unlock_method(method, runtime);
-        localvar_dispose(runtime);
-#if _JVM_DEBUG_BYTECODE_DETAIL > 3
-        invoke_deepth(runtime);
-        jvm_printf("}\n");
-#endif
-
-    } else {
+    if (!(method->access_flags & ACC_NATIVE)) {
         CodeAttribute *ca = method->attributes[j].converted_code;
         if (ca) {
             localvar_init(runtime, ca->max_locals + 1);
             _stack2localvar(method, pruntime, runtime);
-            stackSize = pruntime->stack->size;
+            s32 stackSize = pruntime->stack->size;
             if (method_sync)_synchronized_lock_method(method, runtime);
 
 #if _JVM_DEBUG_BYTECODE_DETAIL > 3
@@ -3609,8 +3583,7 @@ s32 execute_method(MethodInfo *method, Runtime *pruntime, Class *clazz) {
                     __refer ref = pop_ref(stack);
                     //jvm_printf("stack size:%d , enter size:%d\n", stack->size, stackSize);
                     //restore stack enter method size, must pop for garbage
-                    StackEntry entry;
-                    while (stack->size > stackSize)pop_entry(stack, &entry);
+                    while (stack->size > stackSize)pop_empty(stack);
                     push_ref(stack, ref);
 
                     Instance *ins = (Instance *) ref;
@@ -3660,6 +3633,45 @@ s32 execute_method(MethodInfo *method, Runtime *pruntime, Class *clazz) {
             }
 #endif
         }
+    } else {//本地方法
+        localvar_init(runtime, method->para_count + 1);//可能有非静态本地方法调用，因此+1
+        _stack2localvar(method, pruntime, runtime);
+        //缓存调用本地方法
+        if (!method->native_func) { //把本地方法找出来缓存
+            java_native_method *native = find_native_method(utf8_cstr(clazz->name), utf8_cstr(method->name),
+                                                            utf8_cstr(method->descriptor));
+            if (!native) {
+                Utf8String *errstr = utf8_create_c("native method not found:");
+                utf8_append(errstr, clazz->name);
+                utf8_pushback(errstr, '.');
+                utf8_append(errstr, method->name);
+                utf8_append(errstr, method->descriptor);
+                Instance *exception = exception_create_str(JVM_EXCEPTION_NULLPOINTER, runtime,
+                                                           utf8_cstr(errstr));
+                utf8_destory(errstr);
+                push_ref(runtime->stack, (__refer) exception);
+                ret = RUNTIME_STATUS_EXCEPTION;
+            } else {
+                method->native_func = native->func_pointer;
+            }
+        }
+#if _JVM_DEBUG_BYTECODE_DETAIL > 3
+        invoke_deepth(runtime);
+        java_native_method *native = find_native_method(utf8_cstr(clazz->name), utf8_cstr(method->name),
+                                                        utf8_cstr(method->descriptor));
+        jvm_printf("%s.%s()  {\n", native->clzname, native->methodname);
+#endif
+        if (method->native_func) {
+            if (method_sync)_synchronized_lock_method(method, runtime);
+            ret = method->native_func(runtime, clazz);
+            if (method_sync)_synchronized_unlock_method(method, runtime);
+        }
+        localvar_dispose(runtime);
+#if _JVM_DEBUG_BYTECODE_DETAIL > 3
+        invoke_deepth(runtime);
+        jvm_printf("}\n");
+#endif
+
     }
     runtime_destory(runtime);
     pruntime->son = NULL;

@@ -14,8 +14,9 @@ package test;
 public class JniTest {
 
     static {
-        String s = System.setProperty("java.library.path", "../../jni_test/cmake-build-debug/");
-        System.out.println("java.library.path:"+s);
+        String s;
+//        s = System.setProperty("java.library.path", "../../jni_test/cmake-build-release/");
+//        System.out.println("java.library.path:"+s);
         s=System.getProperty("java.library.path");
         System.out.println("java.library.path:"+s);
         System.loadLibrary("jnitest"); //加载 linux:libjnitest.so  ,win: libjnitest.dll ,mac libjnitest.dylib
