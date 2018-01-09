@@ -12,6 +12,7 @@
  */
 #include <stdio.h>
 #include <errno.h>
+#include <signal.h>
 #include "jvm/jvm_util.h"
 #include "jvm/jvm.h"
 
