@@ -11,6 +11,7 @@
  * Created on 2017年7月19日, 下午3:14
  */
 #include <stdio.h>
+#include <errno.h>
 #include "jvm/jvm_util.h"
 #include "jvm/jvm.h"
 
@@ -31,14 +32,13 @@ int main(int argc, char **argv) {
     signal(SIGFPE, _on_jvm_sig);
     signal(SIGSEGV, _on_jvm_sig);
     signal(SIGTERM, _on_jvm_sig);
-    signal(SIGBREAK, _on_jvm_sig);
 
     char *classpath = NULL;
     char *main_name = NULL;
     ArrayList *java_para = arraylist_create(0);
     s32 ret;
     if (argc >
-        1) {//  mini_jvm   -Xmx1024M -cp ../../javalib/dist/mini_jvm_java.jar;../../javalib_test/dist/minijvm_javatest.jar;./ test/Foo1 999
+        1) {//  mini_jvm   -Xmx1024M -cp ../../javalib/dist/minijvm_rt.jar;../../javalib_test/dist/minijvm_test.jar;./ test/Foo1 999
         s32 i;
         for (i = 1; i < argc; i++) {
             if (strcmp(argv[i], "-cp") == 0 || strcmp(argv[i], "-classpath") == 0) {
@@ -53,14 +53,14 @@ int main(int argc, char **argv) {
             }
         }
     } else {
-//        classpath = "../../javalib/dist/mini_jvm_java.jar;../../win_gui/gui_lib/dist/gui_lib.jar;./";
+//        classpath = "../../javalib/dist/minijvm_rt.jar;../../win_gui/gui_lib/dist/gui_lib.jar;./";
 //        main_name = "test/GuiTest";
 
-        classpath = "../../javalib/dist/mini_jvm_java.jar;../../jni_test/java/dist/jni_test.jar;./";
+        classpath = "../../javalib/dist/minijvm_rt.jar;../../jni_test/java/dist/jni_test.jar;./";
         main_name = "test/JniTest";
 
 
-//        classpath = "../../javalib/dist/mini_jvm_java.jar;../../javalib_test/dist/minijvm_javatest.jar;./";
+//        classpath = "../../javalib/dist/minijvm_rt.jar;../../javalib_test/dist/minijvm_test.jar;./";
 //        main_name = "test/Foo1";
 //        main_name = "test/Foo2";
 //        main_name = "test/TestFile";
