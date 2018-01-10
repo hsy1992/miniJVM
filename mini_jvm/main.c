@@ -57,12 +57,12 @@ int main(int argc, char **argv) {
 //        classpath = "../../javalib/dist/minijvm_rt.jar;../../win_gui/gui_lib/dist/gui_lib.jar;./";
 //        main_name = "test/GuiTest";
 
-        classpath = "../../javalib/dist/minijvm_rt.jar;../../jni_test/java/dist/jni_test.jar;./";
-        main_name = "test/JniTest";
+//        classpath = "../../javalib/dist/minijvm_rt.jar;../../jni_test/java/dist/jni_test.jar;./";
+//        main_name = "test/JniTest";
 
 
-//        classpath = "../../javalib/dist/minijvm_rt.jar;../../javalib_test/dist/minijvm_test.jar;./";
-//        main_name = "test/Foo1";
+        classpath = "../../javalib/dist/minijvm_rt.jar;../../javalib_test/dist/minijvm_test.jar;./";
+        main_name = "test/Foo1";
 //        main_name = "test/Foo2";
 //        main_name = "test/TestFile";
 //        main_name = "test/HttpServer";
