@@ -235,7 +235,6 @@ void _dump_refer() {
 }
 
 void garbage_dump_runtime() {
-    arraylist_clear(collector->runtime_refer_copy);
     s32 i;
     //jvm_printf("thread set size:%d\n", thread_list->length);
     Utf8String *name = utf8_create();
