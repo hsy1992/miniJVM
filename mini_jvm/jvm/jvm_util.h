@@ -107,6 +107,11 @@ f32 getFieldFloat(c8 *ptr);
 
 s32 getLineNumByIndex(CodeAttribute *ca, s32 offset);
 
+
+////======================= jstring =============================
+
+Instance *jstring_create(Utf8String *src, Runtime *runtime);
+
 void jstring_set_count(Instance *jstr, s32 count);
 
 s32 jstring_get_count(Instance *jstr);
@@ -214,8 +219,6 @@ Instance *jarray_multi_create(ArrayList *dim, Utf8String *desc, s32 deep);
 void jarray_set_field(Instance *arr, s32 index, Long2Double *l2d);
 
 void jarray_get_field(Instance *arr, s32 index, Long2Double *l2d);
-
-Instance *jstring_create(Utf8String *src, Runtime *runtime);
 
 Instance *exception_create(s32 exception_type, Runtime *runtime);
 

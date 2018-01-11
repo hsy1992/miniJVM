@@ -914,6 +914,7 @@ void reg_net_native_lib(void);
 
 void reg_jdwp_native_lib(void);
 
+void init_jni_func_table();
 
 struct _JNIENV {
     s32 (*native_reg_lib)(java_native_method *methods, s32 method_size);
@@ -971,6 +972,24 @@ struct _JNIENV {
     char *(*utf8_cstr)(Utf8String *a1);
 
     void (*utf8_destory)(Utf8String *);
+
+    Instance *(*jstring_create)(Utf8String *src, Runtime *runtime);
+
+    s32 (*jstring_2_utf8)(Instance *jstr, Utf8String *utf8);
+
+    Instance *(*jarray_create)(s32 count, s32 typeIdx, Utf8String *type);
+
+    void *(*jvm_calloc)(u32 size);
+
+    void *(*jvm_malloc)(u32 size);
+
+    void (*jvm_free)(void *ptr);
+
+    void *(*jvm_realloc)(void *pPtr, u32 size);
+
+    s32 (*execute_method)(MethodInfo *method, Runtime *runtime, Class *clazz);
+
+    MethodInfo *(*find_methodInfo_by_name)(Utf8String *clsName, Utf8String *methodName, Utf8String *methodType);
 };
 
 

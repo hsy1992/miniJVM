@@ -1396,3 +1396,44 @@ s64 threadSleep(s64 ms) {
     nanosleep(&req, &rem);
     return (rem.tv_sec * 1000 + rem.tv_nsec / 1000000);
 }
+
+
+void init_jni_func_table() {
+    jnienv.native_reg_lib = native_reg_lib;
+    jnienv.native_remove_lib = native_remove_lib;
+    jnienv.push_entry = push_entry;
+    jnienv.push_int = push_int;
+    jnienv.push_long = push_long;
+    jnienv.push_double = push_double;
+    jnienv.push_float = push_float;
+    jnienv.push_ref = push_ref;
+    jnienv.pop_ref = pop_ref;
+    jnienv.pop_int = pop_int;
+    jnienv.pop_long = pop_long;
+    jnienv.pop_double = pop_double;
+    jnienv.pop_float = pop_float;
+    jnienv.pop_entry = pop_entry;
+    jnienv.pop_empty = pop_empty;
+    jnienv.entry_2_int = entry_2_int;
+    jnienv.peek_entry = peek_entry;
+    jnienv.entry_2_long = entry_2_long;
+    jnienv.entry_2_refer = entry_2_refer;
+    jnienv.localvar_setRefer = localvar_setRefer;
+    jnienv.localvar_setInt = localvar_setInt;
+    jnienv.localvar_getRefer = localvar_getRefer;
+    jnienv.localvar_getInt = localvar_getInt;
+    jnienv.jthread_block_enter = jthread_block_enter;
+    jnienv.jthread_block_exit = jthread_block_exit;
+    jnienv.utf8_create_part_c = utf8_create_part_c;
+    jnienv.utf8_cstr = utf8_cstr;
+    jnienv.utf8_destory = utf8_destory;
+    jnienv.jstring_2_utf8 = jstring_2_utf8;
+    jnienv.jstring_create = jstring_create;
+    jnienv.jvm_calloc = jvm_calloc;
+    jnienv.jvm_malloc = jvm_malloc;
+    jnienv.jvm_free = jvm_free;
+    jnienv.jvm_realloc = jvm_realloc;
+    jnienv.execute_method = execute_method;
+    jnienv.find_methodInfo_by_name = find_methodInfo_by_name;
+    jnienv.jarray_create = jarray_create;
+}
