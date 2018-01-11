@@ -234,6 +234,45 @@ void _dump_refer() {
     }
 }
 
+void garbage_dump_runtime() {
+    arraylist_clear(collector->runtime_refer_copy);
+    s32 i;
+    //jvm_printf("thread set size:%d\n", thread_list->length);
+    Utf8String *name = utf8_create();
+    for (i = 0; i < thread_list->length; i++) {
+        Runtime *runtime = threadlist_get(i);
+
+        jvm_printf("[INFO]============ runtime dump [%llx] ============\n", (s64) (intptr_t) runtime);
+        s32 j;
+        StackEntry entry;
+        RuntimeStack *stack = runtime->stack;
+        for (j = 0; j < stack->size; j++) {
+            peek_entry(stack, &entry, j);
+            if (is_ref(&entry)) {
+                __refer ref = entry_2_refer(&entry);
+                if (ref) {
+                    utf8_clear(name);
+                    _getMBName(ref, name);
+                    jvm_printf("   %s[%llx] \n", utf8_cstr(name), (s64) (intptr_t) ref);
+                    utf8_destory(name);
+                }
+            }
+        }
+        while (runtime) {
+            for (j = 0; j < runtime->localvar_count; j++) {
+                __refer ref = runtime->localvar[j].refer;
+                if (ref) {
+                    utf8_clear(name);
+                    _getMBName(ref, name);
+                    jvm_printf("   %s[%llx] \n", utf8_cstr(name), (s64) (intptr_t) ref);
+                    utf8_destory(name);
+                }
+            }
+            runtime = runtime->son;
+        }
+    }
+}
+
 
 void _garbage_put_in_holder(__refer ref) {
     hashset_put(collector->objs_holder, ref);
@@ -523,7 +562,7 @@ void _garbage_copy_refer() {
 s32 _garbage_copy_refer_thread(Runtime *pruntime) {
     arraylist_push_back(collector->runtime_refer_copy, pruntime->threadInfo->jthread);
 
-    s32 i;
+    s32 i, imax;
     StackEntry entry;
     Runtime *runtime = pruntime;
     RuntimeStack *stack = runtime->stack;
@@ -535,6 +574,11 @@ s32 _garbage_copy_refer_thread(Runtime *pruntime) {
                 arraylist_push_back(collector->runtime_refer_copy, ref);
             }
         }
+    }
+    ArrayList *holder = runtime->threadInfo->instance_holder;
+    for (i = 0, imax < holder->length; i < imax; i++) {
+        __refer ref = arraylist_get_value(holder, i);
+        arraylist_push_back(collector->runtime_refer_copy, ref);
     }
     while (runtime) {
         for (i = 0; i < runtime->localvar_count; i++) {

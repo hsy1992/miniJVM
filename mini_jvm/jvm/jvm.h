@@ -987,6 +987,10 @@ struct _JNIENV {
 
     void *(*jvm_realloc)(void *pPtr, u32 size);
 
+    void (*instance_release_from_thread)(Instance *ref, Runtime *runtime);
+
+    void (*instance_hold_to_thread)(Instance *ref, Runtime *runtime);
+
     s32 (*execute_method)(MethodInfo *method, Runtime *runtime, Class *clazz);
 
     MethodInfo *(*find_methodInfo_by_name)(Utf8String *clsName, Utf8String *methodName, Utf8String *methodType);

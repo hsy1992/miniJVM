@@ -67,6 +67,9 @@ s32 sys_properties_load(ClassLoader *loader);
 
 void sys_properties_dispose(void);
 
+void instance_release_from_thread(Instance *ref, Runtime *runtime);
+
+void instance_hold_to_thread(Instance *ref, Runtime *runtime);
 
 int jvm_printf(const char *, ...);
 
@@ -143,6 +146,7 @@ void printDumpOfClasses(void);
 struct _JavaThreadInfo {
     Instance *jthread;
     Runtime *top_runtime;
+    ArrayList *instance_holder;//for jni hold java object
     s32 volatile suspend_count;//for jdwp suspend ,>0 suspend, ==0 resume
     u8 volatile thread_status;
     u8 volatile is_suspend;

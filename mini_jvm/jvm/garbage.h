@@ -84,7 +84,7 @@ void garbage_refer_release(__refer ref);
 
 s32 garbage_refer_reg(__refer ref);
 
-//__refer g_calloc(u32 size);
+void garbage_dump_runtime();
 
 #ifdef __cplusplus
 }

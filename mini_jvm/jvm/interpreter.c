@@ -686,9 +686,9 @@ s32 execute_method(MethodInfo *method, Runtime *pruntime, Class *clazz) {
     runtime->method = method;
     runtime->clazz = clazz;
     s32 method_sync = method->access_flags & ACC_SYNCHRONIZED;
-    if (utf8_equals_c(method->name, "t24")) {
-        s32 debug = 1;
-    }
+//    if (utf8_equals_c(method->name, "t24")) {
+//        s32 debug = 1;
+//    }
 
     if (!(method->access_flags & ACC_NATIVE)) {
         CodeAttribute *ca = method->attributes[j].converted_code;

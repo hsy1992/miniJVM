@@ -17,7 +17,9 @@
 
 
 #ifdef __JVM_OS_MINGW__
+
 #include <pthread_time.h>
+
 #endif
 //==================================================================================
 
@@ -407,8 +409,8 @@ s32 isDir(Utf8String *path) {
 s32 sys_properties_load(ClassLoader *loader) {
     sys_prop = hashtable_create(UNICODE_STR_HASH_FUNC, UNICODE_STR_EQUALS_FUNC);
     hashtable_register_free_functions(sys_prop,
-                                      (HashtableKeyFreeFunc)utf8_destory,
-                                      (HashtableValueFreeFunc )utf8_destory);
+                                      (HashtableKeyFreeFunc) utf8_destory,
+                                      (HashtableValueFreeFunc) utf8_destory);
     s32 i;
     for (i = 0; i < loader->classpath->length; i++) {
         Utf8String *path = arraylist_get_value(loader->classpath, i);
@@ -1348,6 +1350,10 @@ s32 getLineNumByIndex(CodeAttribute *ca, s32 offset) {
 void memoryblock_destory(__refer ref) {
     MemoryBlock *mb = (MemoryBlock *) ref;
     if (!mb)return;
+//    if (utf8_equals_c(mb->clazz->name, "test/GuiTest$CallBack")) {
+//        garbage_dump_runtime();
+//        int debug = 1;
+//    }
     if (mb->type == MEM_TYPE_INS) {
         instance_destory((Instance *) mb);
     } else if (mb->type == MEM_TYPE_ARR) {
@@ -1359,12 +1365,13 @@ void memoryblock_destory(__refer ref) {
 
 JavaThreadInfo *threadinfo_create() {
     JavaThreadInfo *threadInfo = jvm_calloc(sizeof(JavaThreadInfo));
+    threadInfo->instance_holder = arraylist_create(0);
     return threadInfo;
 }
 
 void threadinfo_destory(JavaThreadInfo *threadInfo) {
+    arraylist_destory(threadInfo->instance_holder);
     jvm_free(threadInfo);
-
 }
 
 s64 currentTimeMillis() {
@@ -1397,6 +1404,17 @@ s64 threadSleep(s64 ms) {
     return (rem.tv_sec * 1000 + rem.tv_nsec / 1000000);
 }
 
+void instance_hold_to_thread(Instance *ref, Runtime *runtime) {
+    if (runtime && ref) {
+        arraylist_push_back(runtime->threadInfo->instance_holder, ref);
+    }
+}
+
+void instance_release_from_thread(Instance *ref, Runtime *runtime) {
+    if (runtime && ref) {
+        arraylist_remove(runtime->threadInfo->instance_holder, ref);
+    }
+}
 
 void init_jni_func_table() {
     jnienv.native_reg_lib = native_reg_lib;
@@ -1436,4 +1454,6 @@ void init_jni_func_table() {
     jnienv.execute_method = execute_method;
     jnienv.find_methodInfo_by_name = find_methodInfo_by_name;
     jnienv.jarray_create = jarray_create;
+    jnienv.instance_hold_to_thread = instance_hold_to_thread;
+    jnienv.instance_release_from_thread = instance_release_from_thread;
 }
