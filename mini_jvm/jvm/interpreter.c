@@ -686,6 +686,9 @@ s32 execute_method(MethodInfo *method, Runtime *pruntime, Class *clazz) {
     runtime->method = method;
     runtime->clazz = clazz;
     s32 method_sync = method->access_flags & ACC_SYNCHRONIZED;
+    if (utf8_equals_c(method->name, "t24")) {
+        s32 debug = 1;
+    }
 
     if (!(method->access_flags & ACC_NATIVE)) {
         CodeAttribute *ca = method->attributes[j].converted_code;
@@ -1583,8 +1586,7 @@ s32 execute_method(MethodInfo *method, Runtime *pruntime, Class *clazz) {
                         StackEntry entry;
                         peek_entry(stack, &entry, stack->size - 1);
                         if (is_cat2(&entry)) {
-                            StackEntry entry1;
-                            push_entry(stack, &entry1);
+                            push_entry(stack, &entry);
                         } else {
                             StackEntry entry1;
                             peek_entry(stack, &entry1, stack->size - 1);
