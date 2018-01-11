@@ -575,7 +575,7 @@ s32 _garbage_copy_refer_thread(Runtime *pruntime) {
         }
     }
     ArrayList *holder = runtime->threadInfo->instance_holder;
-    for (i = 0, imax < holder->length; i < imax; i++) {
+    for (i = 0, imax = holder->length; i < imax; i++) {
         __refer ref = arraylist_get_value(holder, i);
         arraylist_push_back(collector->runtime_refer_copy, ref);
     }
