@@ -14,7 +14,6 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="11483427-6e30-4b72-ab0b-6c8bf1c1b7fe" name="Default" comment="">
-      <change beforePath="" afterPath="$PROJECT_DIR$/jni_glfw.c" />
       <change beforePath="$PROJECT_DIR$/test1.txt" afterPath="" />
     </list>
     <ignored path="$PROJECT_DIR$/cmake-build-debug/" />
@@ -32,8 +31,8 @@
       <file leaf-file-name="jni_glfw.c" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/jni_glfw.c">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="306">
-              <caret line="1006" column="18" lean-forward="false" selection-start-line="1006" selection-start-column="18" selection-end-line="1006" selection-end-column="18" />
+            <state relative-caret-position="108">
+              <caret line="819" column="17" lean-forward="false" selection-start-line="819" selection-start-column="17" selection-end-line="819" selection-end-column="17" />
               <folding>
                 <element signature="e#68#86#0" expanded="true" />
               </folding>
@@ -56,6 +55,16 @@
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="0">
               <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="jvm.h" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/../mini_jvm/jvm/jvm.h">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="268">
+              <caret line="921" column="72" lean-forward="false" selection-start-line="921" selection-start-column="72" selection-end-line="921" selection-end-column="72" />
               <folding />
             </state>
           </provider>
@@ -108,6 +117,7 @@
       <find>glfwInitJni</find>
       <find>glBegin</find>
       <find>org_mini_gl_GL_glBindVertexArray</find>
+      <find>offset</find>
     </findStrings>
     <replaceStrings>
       <replace>env-&gt;</replace>
@@ -115,13 +125,14 @@
       <replace>}</replace>
       <replace>jni_gui</replace>
       <replace>org_mini_glfw_Glfw_</replace>
+      <replace>offset</replace>
     </replaceStrings>
     <dirStrings>
       <dir>D:\githome\mini_jvm\win_gui</dir>
     </dirStrings>
   </component>
   <component name="Git.Settings">
-    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/.." />
   </component>
   <component name="HighlightingSettingsPerFile">
     <setting file="file://$PROJECT_DIR$/jni_glfw.c" root0="SKIP_HIGHLIGHTING" />
@@ -139,6 +150,7 @@
         <option value="$PROJECT_DIR$/gui.c" />
         <option value="$PROJECT_DIR$/CMakeLists.txt" />
         <option value="$PROJECT_DIR$/deps/include/glad/glad.h" />
+        <option value="$PROJECT_DIR$/../mini_jvm/jvm/jvm.h" />
         <option value="$PROJECT_DIR$/jni_glfw.c" />
       </list>
     </option>
@@ -277,12 +289,12 @@
       <workItem from="1515030580344" duration="168000" />
       <workItem from="1515031007284" duration="4719000" />
       <workItem from="1515573968617" duration="18061000" />
-      <workItem from="1515653363318" duration="37313000" />
+      <workItem from="1515653363318" duration="39393000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="114409000" />
+    <option name="totallyTimeSpent" value="116489000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="600" y="219" width="1226" height="833" extended-state="0" />
@@ -533,14 +545,6 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/nuklear.h" />
     <entry file="file://$PROJECT_DIR$/nuklear_gdi.h" />
-    <entry file="file://$PROJECT_DIR$/../mini_jvm/jvm/jvm.h">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="101">
-          <caret line="991" column="29" lean-forward="false" selection-start-line="991" selection-start-column="29" selection-end-line="991" selection-end-column="29" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/deps/include/GLFW/glfw3.h">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="151">
@@ -597,10 +601,18 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/../mini_jvm/jvm/jvm.h">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="268">
+          <caret line="921" column="72" lean-forward="false" selection-start-line="921" selection-start-column="72" selection-end-line="921" selection-end-column="72" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/jni_glfw.c">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="306">
-          <caret line="1006" column="18" lean-forward="false" selection-start-line="1006" selection-start-column="18" selection-end-line="1006" selection-end-column="18" />
+        <state relative-caret-position="108">
+          <caret line="819" column="17" lean-forward="false" selection-start-line="819" selection-start-column="17" selection-end-line="819" selection-end-column="17" />
           <folding>
             <element signature="e#68#86#0" expanded="true" />
           </folding>

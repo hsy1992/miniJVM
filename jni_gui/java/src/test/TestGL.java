@@ -155,6 +155,67 @@ public class TestGL {
         GL.glDrawArrays(GL.GL_TRIANGLES, 0, NumVertices);
 
     }
+    byte[] mask = new byte[]{
+        (byte) 0x00, (byte) 0x00, (byte) 0x00, (byte) 0x00, //   这是最下面的一行
+
+        (byte) 0x00, (byte) 0x00, (byte) 0x00, (byte) 0x00,
+        (byte) 0x03, (byte) 0x80, (byte) 0x01, (byte) 0xC0, //   麻
+
+        (byte) 0x06, (byte) 0xC0, (byte) 0x03, (byte) 0x60, //   烦
+
+        (byte) 0x04, (byte) 0x60, (byte) 0x06, (byte) 0x20, //   的
+
+        (byte) 0x04, (byte) 0x30, (byte) 0x0C, (byte) 0x20, //   初
+
+        (byte) 0x04, (byte) 0x18, (byte) 0x18, (byte) 0x20, //   始
+
+        (byte) 0x04, (byte) 0x0C, (byte) 0x30, (byte) 0x20, //   化
+
+        (byte) 0x04, (byte) 0x06, (byte) 0x60, (byte) 0x20, //   ，
+
+        (byte) 0x44, (byte) 0x03, (byte) 0xC0, (byte) 0x22, //   不
+
+        (byte) 0x44, (byte) 0x01, (byte) 0x80, (byte) 0x22, //   建
+
+        (byte) 0x44, (byte) 0x01, (byte) 0x80, (byte) 0x22, //   议
+
+        (byte) 0x44, (byte) 0x01, (byte) 0x80, (byte) 0x22, //   使
+
+        (byte) 0x44, (byte) 0x01, (byte) 0x80, (byte) 0x22, //   用
+
+        (byte) 0x44, (byte) 0x01, (byte) 0x80, (byte) 0x22,
+        (byte) 0x44, (byte) 0x01, (byte) 0x80, (byte) 0x22,
+        (byte) 0x66, (byte) 0x01, (byte) 0x80, (byte) 0x66,
+        (byte) 0x33, (byte) 0x01, (byte) 0x80, (byte) 0xCC,
+        (byte) 0x19, (byte) 0x81, (byte) 0x81, (byte) 0x98,
+        (byte) 0x0C, (byte) 0xC1, (byte) 0x83, (byte) 0x30,
+        (byte) 0x07, (byte) 0xE1, (byte) 0x87, (byte) 0xE0,
+        (byte) 0x03, (byte) 0x3F, (byte) 0xFC, (byte) 0xC0,
+        (byte) 0x03, (byte) 0x31, (byte) 0x8C, (byte) 0xC0,
+        (byte) 0x03, (byte) 0x3F, (byte) 0xFC, (byte) 0xC0,
+        (byte) 0x06, (byte) 0x64, (byte) 0x26, (byte) 0x60,
+        (byte) 0x0C, (byte) 0xCC, (byte) 0x33, (byte) 0x30,
+        (byte) 0x18, (byte) 0xCC, (byte) 0x33, (byte) 0x18,
+        (byte) 0x10, (byte) 0xC4, (byte) 0x23, (byte) 0x08,
+        (byte) 0x10, (byte) 0x63, (byte) 0xC6, (byte) 0x08,
+        (byte) 0x10, (byte) 0x30, (byte) 0x0C, (byte) 0x08,
+        (byte) 0x10, (byte) 0x18, (byte) 0x18, (byte) 0x08,
+        (byte) 0x10, (byte) 0x00, (byte) 0x00, (byte) 0x08 // 这是最上面的一行
+    };
+
+    void draw1() {
+        GL.glClear(GL.GL_COLOR_BUFFER_BIT);
+
+        GL.glEnable(GL.GL_POLYGON_STIPPLE);
+
+        GL.glPolygonStipple(mask, 0);
+
+        GL.glRectf(-0.5f, -0.5f, 0.0f, 0.0f);   // 在左下方绘制一个有镂空效果的正方形
+
+        GL.glDisable(GL.GL_POLYGON_STIPPLE);
+
+        GL.glRectf(0.0f, 0.0f, 0.5f, 0.5f);     // 在右上方绘制一个无镂空效果的正方形
+    }
 
     void draw() {
         GL.glColor3f(0.f, 1.f, 0.f);
@@ -186,7 +247,7 @@ public class TestGL {
             GL.glVertex2f(0.0f, 1.0f);         // 以上两个点可以画y轴
         }
         GL.glEnd();
-        
+
         GL.glBegin(GL.GL_LINE_STRIP);
         {
             for (x = -1.0f / factor; x < 1.0f / factor; x += 0.01f) {
@@ -218,7 +279,7 @@ public class TestGL {
             while (!Glfw.glfwWindowShouldClose(win)) {
 
                 //display();
-                draw();
+                draw1();
 
                 Glfw.glfwPollEvents();
                 Glfw.glfwSwapBuffers(win);

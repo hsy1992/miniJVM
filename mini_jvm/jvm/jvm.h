@@ -917,6 +917,8 @@ void reg_jdwp_native_lib(void);
 void init_jni_func_table();
 
 struct _JNIENV {
+    s32 *data_type_bytes;
+
     s32 (*native_reg_lib)(java_native_method *methods, s32 method_size);
 
     s32 (*native_remove_lib)(JavaNativeLib *lib);

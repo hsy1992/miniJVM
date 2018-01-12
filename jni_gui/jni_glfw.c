@@ -545,9 +545,10 @@ int org_mini_gl_GL_glMatrixMode(Runtime *runtime, Class *clazz) {
 int org_mini_gl_GL_glLoadMatrixf(Runtime *runtime, Class *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
-    Instance *m = env->localvar_getRefer(runtime, pos++);
-    s32 mByteOffset = env->localvar_getInt(runtime, pos++);
-    glLoadMatrixf((const GLfloat *) (m + mByteOffset));
+    Instance *arr = env->localvar_getRefer(runtime, pos++);
+    s32 offset = env->localvar_getInt(runtime, pos++);
+    offset *= env->data_type_bytes[arr->mb.arr_type_index];
+    glLoadMatrixf((const GLfloat *) (arr + offset));
     return 0;
 }
 
@@ -658,6 +659,14 @@ int org_mini_gl_GL_glCullFace(Runtime *runtime, Class *clazz) {
     s32 pos = 0;
     s32 mode = env->localvar_getInt(runtime, pos++);
     glCullFace((GLenum) mode);
+    return 0;
+}
+
+int org_mini_gl_GL_glFrontFace(Runtime *runtime, Class *clazz) {
+    JniEnv *env = runtime->jnienv;
+    s32 pos = 0;
+    s32 mode = env->localvar_getInt(runtime, pos++);
+    glFrontFace((GLenum) mode);
     return 0;
 }
 
@@ -796,9 +805,10 @@ int org_mini_gl_GL_glLightfv(Runtime *runtime, Class *clazz) {
     s32 pos = 0;
     s32 light = env->localvar_getInt(runtime, pos++);
     s32 pname = env->localvar_getInt(runtime, pos++);
-    Instance *params = env->localvar_getRefer(runtime, pos++);
-    s32 paramsByteOffset = env->localvar_getInt(runtime, pos++);
-    glLightfv((GLenum) light, (GLenum) pname, (const GLfloat *) (params->arr_body + paramsByteOffset));
+    Instance *arr = env->localvar_getRefer(runtime, pos++);
+    s32 offset = env->localvar_getInt(runtime, pos++);
+    offset *= env->data_type_bytes[arr->mb.arr_type_index];
+    glLightfv((GLenum) light, (GLenum) pname, (const GLfloat *) (arr->arr_body + offset));
     return 0;
 }
 
@@ -807,9 +817,10 @@ int org_mini_gl_GL_glMaterialfv(Runtime *runtime, Class *clazz) {
     s32 pos = 0;
     s32 light = env->localvar_getInt(runtime, pos++);
     s32 pname = env->localvar_getInt(runtime, pos++);
-    Instance *params = env->localvar_getRefer(runtime, pos++);
-    s32 paramsByteOffset = env->localvar_getInt(runtime, pos++);
-    glMaterialfv((GLenum) light, (GLenum) pname, (const GLfloat *) (params->arr_body + paramsByteOffset));
+    Instance *arr = env->localvar_getRefer(runtime, pos++);
+    s32 offset = env->localvar_getInt(runtime, pos++);
+    offset *= env->data_type_bytes[arr->mb.arr_type_index];
+    glMaterialfv((GLenum) light, (GLenum) pname, (const GLfloat *) (arr->arr_body + offset));
     return 0;
 }
 
@@ -958,6 +969,7 @@ int org_mini_gl_GL_glBufferData(Runtime *runtime, Class *clazz) {
     Instance *arr = env->localvar_getRefer(runtime, pos++);
     s32 offset = env->localvar_getInt(runtime, pos++);
     s32 usage = env->localvar_getInt(runtime, pos++);
+    offset *= env->data_type_bytes[arr->mb.arr_type_index];
     glBufferData((GLenum) target, (GLsizeiptr) size, (const GLvoid *) (arr->arr_body + offset), (GLenum) usage);
     return 0;
 }
@@ -968,6 +980,7 @@ int org_mini_gl_GL_glGenBuffers(Runtime *runtime, Class *clazz) {
     s32 n = env->localvar_getInt(runtime, pos++);
     Instance *arr = env->localvar_getRefer(runtime, pos++);
     s32 offset = env->localvar_getInt(runtime, pos++);
+    offset *= env->data_type_bytes[arr->mb.arr_type_index];
     glGenBuffers((GLsizei) n, (GLuint *) (arr->arr_body + offset));
     return 0;
 }
@@ -978,7 +991,7 @@ int org_mini_gl_GL_glGenVertexArrays(Runtime *runtime, Class *clazz) {
     s32 n = env->localvar_getInt(runtime, pos++);
     Instance *arr = env->localvar_getRefer(runtime, pos++);
     s32 offset = env->localvar_getInt(runtime, pos++);
-    __refer r = glGenVertexArrays;
+    offset *= env->data_type_bytes[arr->mb.arr_type_index];
     glGenVertexArrays((GLsizei) n, (GLuint *) (arr->arr_body + offset));
     return 0;
 }
@@ -1010,6 +1023,16 @@ int org_mini_gl_GL_glLineWidth(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
+
+int org_mini_gl_GL_glPolygonStipple(Runtime *runtime, Class *clazz) {
+    JniEnv *env = runtime->jnienv;
+    s32 pos = 0;
+    Instance *arr = env->localvar_getRefer(runtime, pos++);
+    s32 offset = env->localvar_getInt(runtime, pos++);
+    offset *= env->data_type_bytes[arr->mb.arr_type_index];
+    glPolygonStipple((const GLubyte *) (arr->arr_body + offset));
+    return 0;
+}
 
 static java_native_method method_test2_table[] = {
         {"org/mini/glfw/utils/GlUtils", "f2b",                       "([F[B)[B",                         org_mini_glfw_utils_GlUtils_f2b},
@@ -1045,6 +1068,7 @@ static java_native_method method_test2_table[] = {
         {"org/mini/gl/GL",              "glScalef",                  "(FFF)V",                           org_mini_gl_GL_glScalef},
         {"org/mini/gl/GL",              "glRotatef",                 "(FFFF)V",                          org_mini_gl_GL_glRotatef},
         {"org/mini/gl/GL",              "glCullFace",                "(I)V",                             org_mini_gl_GL_glCullFace},
+        {"org/mini/gl/GL",              "glFrontFace",               "(I)V",                             org_mini_gl_GL_glFrontFace},
         {"org/mini/gl/GL",              "glBegin",                   "(I)V",                             org_mini_gl_GL_glBegin},
         {"org/mini/gl/GL",              "glEnd",                     "()V",                              org_mini_gl_GL_glEnd},
         {"org/mini/gl/GL",              "glFlush",                   "()V",                              org_mini_gl_GL_glFlush},
@@ -1080,6 +1104,7 @@ static java_native_method method_test2_table[] = {
         {"org/mini/gl/GL",              "glBindBuffer",              "(II)V",                            org_mini_gl_GL_glBindBuffer},
         {"org/mini/gl/GL",              "glPointSize",               "(F)V",                             org_mini_gl_GL_glPointSize},
         {"org/mini/gl/GL",              "glLineWidth",               "(F)V",                             org_mini_gl_GL_glLineWidth},
+        {"org/mini/gl/GL",              "glPolygonStipple",          "(Ljava/lang/Object;I)V",           org_mini_gl_GL_glPolygonStipple},
 };
 
 void JNI_OnLoad(JniEnv *env) {

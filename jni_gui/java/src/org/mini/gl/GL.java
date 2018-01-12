@@ -9389,22 +9389,22 @@ public class GL {
 		glPolygonOffset((GLfloat)factor, (GLfloat)units);
      */
 
-    public static native void glPolygonStipple(Buffer mask, int maskByteOffset);
+    public static native void glPolygonStipple(Object mask, int offset);
 
     /*
-		glPolygonStipple((const GLubyte*)(mask + maskByteOffset));
+		glPolygonStipple((const GLubyte*)(mask + offset));
      */
 
-    public static native void glPolygonStipple(long mask);
+    //public static native void glPolygonStipple(long mask);
 
     /*
 		glPolygonStipple((const GLubyte*)mask);
      */
 
-    public static native void glGetPolygonStipple(Buffer mask, int maskByteOffset);
+    public static native void glGetPolygonStipple(Object mask, int offset);
 
     /*
-		glGetPolygonStipple((GLubyte*)(mask + maskByteOffset));
+		glGetPolygonStipple((GLubyte*)(mask + offset));
      */
 
     public static native void glGetPolygonStipple(long mask);
