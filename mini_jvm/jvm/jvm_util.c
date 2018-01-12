@@ -1417,7 +1417,7 @@ void instance_release_from_thread(Instance *ref, Runtime *runtime) {
 }
 
 void init_jni_func_table() {
-    jnienv.data_type_bytes = &data_type_bytes;
+    jnienv.data_type_bytes = (s32 *) &data_type_bytes;
     jnienv.native_reg_lib = native_reg_lib;
     jnienv.native_remove_lib = native_remove_lib;
     jnienv.push_entry = push_entry;
