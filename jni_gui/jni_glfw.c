@@ -613,44 +613,46 @@ int org_mini_gl_GL_glReadBuffer(Runtime *runtime, Class *clazz) {
 int org_mini_gl_GL_glTranslatef(Runtime *runtime, Class *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
-    Int2Float i2f;
-    i2f.i = env->localvar_getInt(runtime, pos++);
-    f32 x = i2f.f;
-    i2f.i = env->localvar_getInt(runtime, pos++);
-    f32 y = i2f.f;
-    i2f.i = env->localvar_getInt(runtime, pos++);
-    f32 z = i2f.f;
-    glTranslatef((GLfloat) x, (GLfloat) y, (GLfloat) z);
+    Int2Float x, y, z;
+    x.i = env->localvar_getInt(runtime, pos++);
+    y.i = env->localvar_getInt(runtime, pos++);
+    z.i = env->localvar_getInt(runtime, pos++);
+    glTranslatef((GLfloat) x.f, (GLfloat) y.f, (GLfloat) z.f);
     return 0;
 }
 
 int org_mini_gl_GL_glRotatef(Runtime *runtime, Class *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
-    Int2Float i2f;
-    i2f.i = env->localvar_getInt(runtime, pos++);
-    f32 a = i2f.f;
-    i2f.i = env->localvar_getInt(runtime, pos++);
-    f32 x = i2f.f;
-    i2f.i = env->localvar_getInt(runtime, pos++);
-    f32 y = i2f.f;
-    i2f.i = env->localvar_getInt(runtime, pos++);
-    f32 z = i2f.f;
-    glRotatef((GLfloat) a, (GLfloat) x, (GLfloat) y, (GLfloat) z);
+    Int2Float a, x, y, z;
+    a.i = env->localvar_getInt(runtime, pos++);
+    x.i = env->localvar_getInt(runtime, pos++);
+    y.i = env->localvar_getInt(runtime, pos++);
+    z.i = env->localvar_getInt(runtime, pos++);
+    glRotatef((GLfloat) a.f, (GLfloat) x.f, (GLfloat) y.f, (GLfloat) z.f);
+    return 0;
+}
+
+int org_mini_gl_GL_glRotated(Runtime *runtime, Class *clazz) {
+    JniEnv *env = runtime->jnienv;
+    s32 pos = 0;
+    Long2Double a, x, y, z;
+    a.l = env->localvar_getInt(runtime, pos++);
+    x.l = env->localvar_getInt(runtime, pos++);
+    y.l = env->localvar_getInt(runtime, pos++);
+    z.l = env->localvar_getInt(runtime, pos++);
+    glRotated((GLdouble) a.d, (GLdouble) x.d, (GLdouble) y.d, (GLdouble) z.d);
     return 0;
 }
 
 int org_mini_gl_GL_glScalef(Runtime *runtime, Class *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
-    Int2Float i2f;
-    i2f.i = env->localvar_getInt(runtime, pos++);
-    f32 x = i2f.f;
-    i2f.i = env->localvar_getInt(runtime, pos++);
-    f32 y = i2f.f;
-    i2f.i = env->localvar_getInt(runtime, pos++);
-    f32 z = i2f.f;
-    glScalef((GLfloat) x, (GLfloat) y, (GLfloat) z);
+    Int2Float x, y, z;
+    x.i = env->localvar_getInt(runtime, pos++);
+    y.i = env->localvar_getInt(runtime, pos++);
+    z.i = env->localvar_getInt(runtime, pos++);
+    glScalef((GLfloat) x.f, (GLfloat) y.f, (GLfloat) z.f);
     return 0;
 }
 
@@ -701,102 +703,90 @@ int org_mini_gl_GL_glGetError(Runtime *runtime, Class *clazz) {
 int org_mini_gl_GL_glColor3f(Runtime *runtime, Class *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
-    Int2Float i2f;
-    i2f.i = env->localvar_getInt(runtime, pos++);
-    f32 x = i2f.f;
-    i2f.i = env->localvar_getInt(runtime, pos++);
-    f32 y = i2f.f;
-    i2f.i = env->localvar_getInt(runtime, pos++);
-    f32 z = i2f.f;
-    glColor3f((GLfloat) x, (GLfloat) y, (GLfloat) z);
+    Int2Float x, y, z;
+    x.i = env->localvar_getInt(runtime, pos++);
+    y.i = env->localvar_getInt(runtime, pos++);
+    z.i = env->localvar_getInt(runtime, pos++);
+    glColor3f((GLfloat) x.f, (GLfloat) y.f, (GLfloat) z.f);
     return 0;
 }
 
 int org_mini_gl_GL_glVertex2f(Runtime *runtime, Class *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
-    Int2Float i2f;
-    i2f.i = env->localvar_getInt(runtime, pos++);
-    f32 x = i2f.f;
-    i2f.i = env->localvar_getInt(runtime, pos++);
-    f32 y = i2f.f;
-    glVertex2f((GLfloat) x, (GLfloat) y);
+    Int2Float x, y;
+    x.i = env->localvar_getInt(runtime, pos++);
+    y.i = env->localvar_getInt(runtime, pos++);
+    glVertex2f((GLfloat) x.f, (GLfloat) y.f);
     return 0;
 }
 
 int org_mini_gl_GL_glVertex3f(Runtime *runtime, Class *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
-    Int2Float i2f;
-    i2f.i = env->localvar_getInt(runtime, pos++);
-    f32 x = i2f.f;
-    i2f.i = env->localvar_getInt(runtime, pos++);
-    f32 y = i2f.f;
-    i2f.i = env->localvar_getInt(runtime, pos++);
-    f32 z = i2f.f;
-    glVertex3f((GLfloat) x, (GLfloat) y, (GLfloat) z);
+    Int2Float x, y, z;
+    x.i = env->localvar_getInt(runtime, pos++);
+    y.i = env->localvar_getInt(runtime, pos++);
+    z.i = env->localvar_getInt(runtime, pos++);
+    glVertex3f((GLfloat) x.f, (GLfloat) y.f, (GLfloat) z.f);
+    return 0;
+}
+
+int org_mini_gl_GL_glVertex3d(Runtime *runtime, Class *clazz) {
+    JniEnv *env = runtime->jnienv;
+    s32 pos = 0;
+    Long2Double x, y, z;
+    x.l = env->localvar_getInt(runtime, pos++);
+    y.l = env->localvar_getInt(runtime, pos++);
+    z.l = env->localvar_getInt(runtime, pos++);
+    glVertex3d((GLdouble) x.d, (GLdouble) y.d, (GLdouble) z.d);
     return 0;
 }
 
 int org_mini_gl_GL_glVertex4f(Runtime *runtime, Class *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
-    Int2Float i2f;
-    i2f.i = env->localvar_getInt(runtime, pos++);
-    f32 x = i2f.f;
-    i2f.i = env->localvar_getInt(runtime, pos++);
-    f32 y = i2f.f;
-    i2f.i = env->localvar_getInt(runtime, pos++);
-    f32 z = i2f.f;
-    i2f.i = env->localvar_getInt(runtime, pos++);
-    f32 w = i2f.f;
-    glVertex4f((GLfloat) x, (GLfloat) y, (GLfloat) z, (GLfloat) w);
+    Int2Float x, y, z, w;
+    x.i = env->localvar_getInt(runtime, pos++);
+    y.i = env->localvar_getInt(runtime, pos++);
+    z.i = env->localvar_getInt(runtime, pos++);
+    w.i = env->localvar_getInt(runtime, pos++);
+    glVertex4f((GLfloat) x.f, (GLfloat) y.f, (GLfloat) z.f, (GLfloat) w.f);
     return 0;
 }
 
 int org_mini_gl_GL_glNormal3f(Runtime *runtime, Class *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
-    Int2Float i2f;
-    i2f.i = env->localvar_getInt(runtime, pos++);
-    f32 x = i2f.f;
-    i2f.i = env->localvar_getInt(runtime, pos++);
-    f32 y = i2f.f;
-    i2f.i = env->localvar_getInt(runtime, pos++);
-    f32 z = i2f.f;
-    glNormal3f((GLfloat) x, (GLfloat) y, (GLfloat) z);
+    Int2Float x, y, z;
+    x.i = env->localvar_getInt(runtime, pos++);
+    y.i = env->localvar_getInt(runtime, pos++);
+    z.i = env->localvar_getInt(runtime, pos++);
+    glNormal3f((GLfloat) x.f, (GLfloat) y.f, (GLfloat) z.f);
     return 0;
 }
 
 int org_mini_gl_GL_glClearColor(Runtime *runtime, Class *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
-    Int2Float i2f;
-    i2f.i = env->localvar_getInt(runtime, pos++);
-    f32 x = i2f.f;
-    i2f.i = env->localvar_getInt(runtime, pos++);
-    f32 y = i2f.f;
-    i2f.i = env->localvar_getInt(runtime, pos++);
-    f32 z = i2f.f;
-    i2f.i = env->localvar_getInt(runtime, pos++);
-    f32 a = i2f.f;
-    glClearColor((GLfloat) x, (GLfloat) y, (GLfloat) z, (GLfloat) a);
+    Int2Float x, y, z, a;
+    x.i = env->localvar_getInt(runtime, pos++);
+    y.i = env->localvar_getInt(runtime, pos++);
+    z.i = env->localvar_getInt(runtime, pos++);
+    a.i = env->localvar_getInt(runtime, pos++);
+    glClearColor((GLfloat) x.f, (GLfloat) y.f, (GLfloat) z.f, (GLfloat) a.f);
     return 0;
 }
 
 int org_mini_gl_GL_glRectf(Runtime *runtime, Class *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
-    Int2Float i2f;
-    i2f.i = env->localvar_getInt(runtime, pos++);
-    f32 x1 = i2f.f;
-    i2f.i = env->localvar_getInt(runtime, pos++);
-    f32 y1 = i2f.f;
-    i2f.i = env->localvar_getInt(runtime, pos++);
-    f32 x2 = i2f.f;
-    i2f.i = env->localvar_getInt(runtime, pos++);
-    f32 y2 = i2f.f;
-    glRectf((GLfloat) x1, (GLfloat) y1, (GLfloat) x2, (GLfloat) y2);
+    Int2Float x1, y1, x2, y2;
+    x1.i = env->localvar_getInt(runtime, pos++);
+    y1.i = env->localvar_getInt(runtime, pos++);
+    x2.i = env->localvar_getInt(runtime, pos++);
+    y2.i = env->localvar_getInt(runtime, pos++);
+    glRectf((GLfloat) x1.f, (GLfloat) y1.f, (GLfloat) x2.f, (GLfloat) y2.f);
     return 0;
 }
 
@@ -936,27 +926,21 @@ int org_mini_gl_GL_glLoadIdentity(Runtime *runtime, Class *clazz) {
 int org_mini_gl_GL_glFrustum(Runtime *runtime, Class *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
-    Long2Double l2d;
-    l2d.l = getParaLong(runtime, pos);
+    Long2Double left, right, bottom, top, near_val, far_val;
+    left.l = getParaLong(runtime, pos);
     pos += 2;
-    f64 left = l2d.l;
-    l2d.l = getParaLong(runtime, pos);
+    right.l = getParaLong(runtime, pos);
     pos += 2;
-    f64 right = l2d.l;
-    l2d.l = getParaLong(runtime, pos);
+    bottom.l = getParaLong(runtime, pos);
     pos += 2;
-    f64 bottom = l2d.l;
-    l2d.l = getParaLong(runtime, pos);
+    top.l = getParaLong(runtime, pos);
     pos += 2;
-    f64 top = l2d.l;
-    l2d.l = getParaLong(runtime, pos);
+    near_val.l = getParaLong(runtime, pos);
     pos += 2;
-    f64 near_val = l2d.l;
-    l2d.l = getParaLong(runtime, pos);
+    far_val.l = getParaLong(runtime, pos);
     pos += 2;
-    f64 far_val = l2d.l;
-    glFrustum((GLdouble) left, (GLdouble) right, (GLdouble) bottom, (GLdouble) top, (GLdouble) near_val,
-              (GLdouble) far_val);
+    glFrustum((GLdouble) left.d, (GLdouble) right.d, (GLdouble) bottom.d, (GLdouble) top.d, (GLdouble) near_val.d,
+              (GLdouble) far_val.d);
     return 0;
 }
 
@@ -1067,6 +1051,7 @@ static java_native_method method_test2_table[] = {
         {"org/mini/gl/GL",              "glTranslatef",              "(FFF)V",                           org_mini_gl_GL_glTranslatef},
         {"org/mini/gl/GL",              "glScalef",                  "(FFF)V",                           org_mini_gl_GL_glScalef},
         {"org/mini/gl/GL",              "glRotatef",                 "(FFFF)V",                          org_mini_gl_GL_glRotatef},
+        {"org/mini/gl/GL",              "glRotated",                 "(DDDD)V",                          org_mini_gl_GL_glRotated},
         {"org/mini/gl/GL",              "glCullFace",                "(I)V",                             org_mini_gl_GL_glCullFace},
         {"org/mini/gl/GL",              "glFrontFace",               "(I)V",                             org_mini_gl_GL_glFrontFace},
         {"org/mini/gl/GL",              "glBegin",                   "(I)V",                             org_mini_gl_GL_glBegin},
@@ -1077,6 +1062,7 @@ static java_native_method method_test2_table[] = {
         {"org/mini/gl/GL",              "glColor3f",                 "(FFF)V",                           org_mini_gl_GL_glColor3f},
         {"org/mini/gl/GL",              "glVertex2f",                "(FF)V",                            org_mini_gl_GL_glVertex2f},
         {"org/mini/gl/GL",              "glVertex3f",                "(FFF)V",                           org_mini_gl_GL_glVertex3f},
+        {"org/mini/gl/GL",              "glVertex3d",                "(DDD)V",                           org_mini_gl_GL_glVertex3d},
         {"org/mini/gl/GL",              "glVertex4f",                "(FFFF)V",                          org_mini_gl_GL_glVertex4f},
         {"org/mini/gl/GL",              "glNormal3f",                "(FFF)V",                           org_mini_gl_GL_glNormal3f},
         {"org/mini/gl/GL",              "glClearColor",              "(FFFF)V",                          org_mini_gl_GL_glClearColor},
