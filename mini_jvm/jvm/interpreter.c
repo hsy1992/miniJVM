@@ -945,6 +945,10 @@ s32 execute_method(MethodInfo *method, Runtime *pruntime, Class *clazz) {
 
 
                     case op_aload: {
+//                        if (utf8_equals_c(method->name, "reshape")) {
+//                            int debug = 1;
+//                        }
+
                         Short2Char s2c;
                         if (runtime->wideMode) {
                             s2c.c1 = opCode[0][1];
@@ -3140,6 +3144,11 @@ s32 execute_method(MethodInfo *method, Runtime *pruntime, Class *clazz) {
 
                             if (method) {
                                 i_r = execute_method(method, runtime, method->_this_class);
+                            } else {
+                                Instance *exception = exception_create_str(JVM_EXCEPTION_NOSUCHMETHODEXCEPTION, runtime,
+                                                                           utf8_cstr(cmr->name));
+                                push_ref(runtime->stack, (__refer) exception);
+                                i_r = RUNTIME_STATUS_EXCEPTION;
                             }
                         }
                         *opCode = *opCode + 3;
@@ -3168,6 +3177,11 @@ s32 execute_method(MethodInfo *method, Runtime *pruntime, Class *clazz) {
 #endif
                         if (method) {
                             i_r = execute_method(method, runtime, method->_this_class);
+                        } else {
+                            Instance *exception = exception_create_str(JVM_EXCEPTION_NOSUCHMETHODEXCEPTION, runtime,
+                                                                       utf8_cstr(method->name));
+                            push_ref(runtime->stack, (__refer) exception);
+                            i_r = RUNTIME_STATUS_EXCEPTION;
                         }
 
                         *opCode = *opCode + 3;
@@ -3199,6 +3213,11 @@ s32 execute_method(MethodInfo *method, Runtime *pruntime, Class *clazz) {
 #endif
                         if (method) {
                             i_r = execute_method(method, runtime, method->_this_class);
+                        } else {
+                            Instance *exception = exception_create_str(JVM_EXCEPTION_NOSUCHMETHODEXCEPTION, runtime,
+                                                                       utf8_cstr(cmr->name));
+                            push_ref(runtime->stack, (__refer) exception);
+                            i_r = RUNTIME_STATUS_EXCEPTION;
                         }
 
                         *opCode = *opCode + 3;
@@ -3244,6 +3263,11 @@ s32 execute_method(MethodInfo *method, Runtime *pruntime, Class *clazz) {
 #endif
                             if (method) {
                                 i_r = execute_method(method, runtime, method->_this_class);
+                            } else {
+                                Instance *exception = exception_create_str(JVM_EXCEPTION_NOSUCHMETHODEXCEPTION, runtime,
+                                                                           utf8_cstr(cmr->name));
+                                push_ref(runtime->stack, (__refer) exception);
+                                i_r = RUNTIME_STATUS_EXCEPTION;
                             }
                         }
                         *opCode = *opCode + 5;
@@ -3264,6 +3288,10 @@ s32 execute_method(MethodInfo *method, Runtime *pruntime, Class *clazz) {
 #endif
                         if (method) {
                             i_r = execute_method(method, runtime, method->_this_class);
+                        } else {
+                            Instance *exception = exception_create(JVM_EXCEPTION_NOSUCHMETHODEXCEPTION, runtime);
+                            push_ref(runtime->stack, (__refer) exception);
+                            i_r = RUNTIME_STATUS_EXCEPTION;
                         }
 
                         *opCode = *opCode + 3;
@@ -3643,14 +3671,8 @@ s32 execute_method(MethodInfo *method, Runtime *pruntime, Class *clazz) {
             java_native_method *native = find_native_method(utf8_cstr(clazz->name), utf8_cstr(method->name),
                                                             utf8_cstr(method->descriptor));
             if (!native) {
-                Utf8String *errstr = utf8_create_c("native method not found:");
-                utf8_append(errstr, clazz->name);
-                utf8_pushback(errstr, '.');
-                utf8_append(errstr, method->name);
-                utf8_append(errstr, method->descriptor);
-                Instance *exception = exception_create_str(JVM_EXCEPTION_NULLPOINTER, runtime,
-                                                           utf8_cstr(errstr));
-                utf8_destory(errstr);
+                Instance *exception = exception_create_str(JVM_EXCEPTION_NOSUCHMETHODEXCEPTION, runtime,
+                                                           utf8_cstr(method->name));
                 push_ref(runtime->stack, (__refer) exception);
                 ret = RUNTIME_STATUS_EXCEPTION;
             } else {

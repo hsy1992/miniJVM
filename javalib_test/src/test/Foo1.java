@@ -381,7 +381,13 @@ public class Foo1 {
         }
     }
 
-    public static void main() {
+    void t24() {
+        long a = 0;
+        boolean b = ((a++) % 100) == 0;
+        System.out.println("a:" + a + "   b:" + b);
+    }
+
+    public static void exec() {
         Foo1 f = new Foo1();
         for (int i = 0; i < 1; i++) {
 //            f.t1();
@@ -390,7 +396,7 @@ public class Foo1 {
 //            f.t4();
 //            f.t5();
 //            f.t6();
-            f.t7();
+//            f.t7();
 //            f.t8();
 //            f.t9();
 //            f.t10();
@@ -403,6 +409,7 @@ public class Foo1 {
 //            f.t20();
 //            f.t21();
 //            f.t23();
+            f.t24();
         }
     }
 
@@ -411,10 +418,7 @@ public class Foo1 {
             for (int i = 0; i < args.length; i++) {
                 System.out.println("args " + i + " :" + args[i]);
             }
-//            BpDeepTest.main(agrs);
-            Foo1.main();
-//            Foo2.main(agrs);
-//            Foo3.main(agrs);
+            Foo1.exec();
         } catch (Exception e) {
             e.printStackTrace();
         }

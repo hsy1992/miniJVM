@@ -231,6 +231,7 @@ public class Gears {
         GL.glPopMatrix();
 
         GL.glPopMatrix();
+        //ball.drawBall();
     }
 
 
@@ -330,6 +331,7 @@ public class Gears {
         GL.glEnable(GL_NORMALIZE);
     }
 
+    Ball ball=new Ball();
     void t1() {
         Glfw.glfwInit();
 //        Glfw.glfwWindowHint(Glfw.GLFW_CONTEXT_VERSION_MAJOR, 2);
@@ -355,6 +357,7 @@ public class Gears {
 
                 // Draw gears
                 draw();
+                
 
                 // Update animation
                 animate();

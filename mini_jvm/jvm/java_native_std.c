@@ -345,6 +345,96 @@ s32 java_lang_Math_floor(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
+s32 java_lang_Math_asin(Runtime *runtime, Class *clazz) {
+    RuntimeStack *stack = runtime->stack;
+    Long2Double l2d;
+    l2d.i2l.i1 = localvar_getInt(runtime, 0);
+    l2d.i2l.i0 = localvar_getInt(runtime, 1);
+    f64 r = asin(l2d.d);
+#if _JVM_DEBUG_BYTECODE_DETAIL > 5
+    invoke_deepth(runtime);
+    jvm_printf("java_lang_Math_asin r = %f\n", r);
+#endif
+    push_double(stack, r);
+    return 0;
+}
+
+s32 java_lang_Math_acos(Runtime *runtime, Class *clazz) {
+    RuntimeStack *stack = runtime->stack;
+    Long2Double l2d;
+    l2d.i2l.i1 = localvar_getInt(runtime, 0);
+    l2d.i2l.i0 = localvar_getInt(runtime, 1);
+    f64 r = acos(l2d.d);
+#if _JVM_DEBUG_BYTECODE_DETAIL > 5
+    invoke_deepth(runtime);
+    jvm_printf("java_lang_Math_acos r = %f\n", r);
+#endif
+    push_double(stack, r);
+    return 0;
+}
+
+s32 java_lang_Math_atan(Runtime *runtime, Class *clazz) {
+    RuntimeStack *stack = runtime->stack;
+    Long2Double l2d;
+    l2d.i2l.i1 = localvar_getInt(runtime, 0);
+    l2d.i2l.i0 = localvar_getInt(runtime, 1);
+    f64 r = atan(l2d.d);
+#if _JVM_DEBUG_BYTECODE_DETAIL > 5
+    invoke_deepth(runtime);
+    jvm_printf("java_lang_Math_atan r = %f\n", r);
+#endif
+    push_double(stack, r);
+    return 0;
+}
+
+s32 java_lang_Math_log(Runtime *runtime, Class *clazz) {
+    RuntimeStack *stack = runtime->stack;
+    Long2Double l2d;
+    l2d.i2l.i1 = localvar_getInt(runtime, 0);
+    l2d.i2l.i0 = localvar_getInt(runtime, 1);
+    f64 r = log(l2d.d);
+#if _JVM_DEBUG_BYTECODE_DETAIL > 5
+    invoke_deepth(runtime);
+    jvm_printf("java_lang_Math_log r = %f\n", r);
+#endif
+    push_double(stack, r);
+    return 0;
+}
+
+s32 java_lang_Math_atan2(Runtime *runtime, Class *clazz) {
+    RuntimeStack *stack = runtime->stack;
+    Long2Double l2d;
+    l2d.i2l.i1 = localvar_getInt(runtime, 0);
+    l2d.i2l.i0 = localvar_getInt(runtime, 1);
+    f64 y = (l2d.d);
+    l2d.i2l.i1 = localvar_getInt(runtime, 0);
+    l2d.i2l.i0 = localvar_getInt(runtime, 1);
+    f64 x = floor(l2d.d);
+#if _JVM_DEBUG_BYTECODE_DETAIL > 5
+    invoke_deepth(runtime);
+    jvm_printf("java_lang_Math_atan2 \n");
+#endif
+    push_double(stack, atan2(y,x));
+    return 0;
+}
+
+s32 java_lang_Math_pow(Runtime *runtime, Class *clazz) {
+    RuntimeStack *stack = runtime->stack;
+    Long2Double l2d;
+    l2d.i2l.i1 = localvar_getInt(runtime, 0);
+    l2d.i2l.i0 = localvar_getInt(runtime, 1);
+    f64 a = (l2d.d);
+    l2d.i2l.i1 = localvar_getInt(runtime, 0);
+    l2d.i2l.i0 = localvar_getInt(runtime, 1);
+    f64 b = floor(l2d.d);
+#if _JVM_DEBUG_BYTECODE_DETAIL > 5
+    invoke_deepth(runtime);
+    jvm_printf("java_lang_Math_pow \n", );
+#endif
+    push_double(stack, pow(a, b));
+    return 0;
+}
+
 s32 java_lang_Object_getClass(Runtime *runtime, Class *clazz) {
     RuntimeStack *stack = runtime->stack;
     Instance *ins = (Instance *) localvar_getRefer(runtime, 0);
@@ -960,6 +1050,12 @@ static java_native_method method_table[] = {
         {"java/lang/Math",                      "sqrt",              "(D)D",                                                     java_lang_Math_sqrt},
         {"java/lang/Math",                      "ceil",              "(D)D",                                                     java_lang_Math_ceil},
         {"java/lang/Math",                      "floor",             "(D)D",                                                     java_lang_Math_floor},
+        {"java/lang/Math",                      "asin",              "(D)D",                                                     java_lang_Math_asin},
+        {"java/lang/Math",                      "acos",              "(D)D",                                                     java_lang_Math_acos},
+        {"java/lang/Math",                      "atan",              "(D)D",                                                     java_lang_Math_atan},
+        {"java/lang/Math",                      "log",               "(D)D",                                                     java_lang_Math_log},
+        {"java/lang/Math",                      "atan2",             "(DD)D",                                                    java_lang_Math_atan2},
+        {"java/lang/Math",                      "pow",               "(DD)D",                                                    java_lang_Math_pow},
         {"java/lang/Object",                    "getClass",          "()Ljava/lang/Class;",                                      java_lang_Object_getClass},
         {"java/lang/Object",                    "hashCode",          "()I",                                                      java_lang_Object_hashCode},
         {"java/lang/Object",                    "notify",            "()V",                                                      java_lang_Object_notify},
