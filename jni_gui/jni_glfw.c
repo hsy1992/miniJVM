@@ -1332,6 +1332,13 @@ int org_mini_gl_GL_glEnableVertexAttribArray(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
+int org_mini_gl_GL_glUseProgram(Runtime *runtime, Class *clazz) {
+    JniEnv *env = runtime->jnienv;
+    s32 pos = 0;
+    s32 program = env->localvar_getInt(runtime, pos++);
+    glUseProgram((GLuint) program);
+    return 0;
+}
 int org_mini_gl_GL_glLinkProgram(Runtime *runtime, Class *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
@@ -1359,6 +1366,17 @@ int org_mini_gl_GL_glCompileShader(Runtime *runtime, Class *clazz) {
     s32 pos = 0;
     s32 shader = env->localvar_getInt(runtime, pos++);
     glCompileShader((GLuint) shader);
+
+    GLint compileResult = GL_TRUE;
+    glGetShaderiv(shader, GL_COMPILE_STATUS, &compileResult);
+    if (compileResult == GL_FALSE) {
+        char szLog[1024] = {0};
+        GLsizei logLen = 0;
+        glGetShaderInfoLog(shader, 1024, &logLen, szLog);
+        fprintf(stderr, "Compile Shader fail error log: %s \nshader code:\n", szLog);
+        glDeleteShader(shader);
+        shader = 0;
+    }
     return 0;
 }
 
@@ -1515,7 +1533,7 @@ static java_native_method method_test2_table[] = {
         {"org/mini/glfw/utils/Gutil", "mat4x4_perspective",        "([FFFFF)[F",                       org_mini_glfw_utils_Gutil_mat4x4_perspective},
         {"org/mini/glfw/utils/Gutil", "mat4x4_look_at",            "([F[F[F[F)[F",                     org_mini_glfw_utils_Gutil_mat4x4_look_at},
         {"org/mini/glfw/Glfw",        "glfwGetTime",               "()D",                              org_mini_glfw_Glfw_glfwGetTime},
-        {"org/mini/glfw/Glfw",        "glfwSetTime",               "(D)V",                              org_mini_glfw_Glfw_glfwSetTime},
+        {"org/mini/glfw/Glfw",        "glfwSetTime",               "(D)V",                             org_mini_glfw_Glfw_glfwSetTime},
         {"org/mini/glfw/Glfw",        "glfwCreateWindowJni",       "(II[BJJ)J",                        org_mini_glfw_Glfw_glfwCreateWindowJni},
         {"org/mini/glfw/Glfw",        "glfwDestroyWindow",         "(J)V",                             org_mini_glfw_Glfw_glfwDestroyWindow},
         {"org/mini/glfw/Glfw",        "glfwWindowShouldClose",     "(J)Z",                             org_mini_glfw_Glfw_glfwWindowShouldClose},
@@ -1608,6 +1626,7 @@ static java_native_method method_test2_table[] = {
         {"org/mini/gl/GL",            "glShaderSource",            "(I[B)V",                           org_mini_gl_GL_glShaderSource},
         {"org/mini/gl/GL",            "glCompileShader",           "(I)V",                             org_mini_gl_GL_glCompileShader},
         {"org/mini/gl/GL",            "glAttachShader",            "(II)V",                            org_mini_gl_GL_glAttachShader},
+        {"org/mini/gl/GL",            "glUseProgram",             "(I)V",                             org_mini_gl_GL_glUseProgram},
         {"org/mini/gl/GL",            "glLinkProgram",             "(I)V",                             org_mini_gl_GL_glLinkProgram},
         {"org/mini/gl/GL",            "glCreateShader",            "(I)I",                             org_mini_gl_GL_glCreateShader},
         {"org/mini/gl/GL",            "glCreateProgram",           "()I",                              org_mini_gl_GL_glCreateProgram},

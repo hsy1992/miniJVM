@@ -1,7 +1,49 @@
 package test;
 
-import org.mini.gl.GL;
-import org.mini.glfw.Glfw;
+import static org.mini.gl.GL.GL_ARRAY_BUFFER;
+import static org.mini.gl.GL.GL_COLOR_BUFFER_BIT;
+import static org.mini.gl.GL.GL_FALSE;
+import static org.mini.gl.GL.GL_FLOAT;
+import static org.mini.gl.GL.GL_FRAGMENT_SHADER;
+import static org.mini.gl.GL.GL_STATIC_DRAW;
+import static org.mini.gl.GL.GL_TRIANGLES;
+import static org.mini.gl.GL.GL_VERTEX_SHADER;
+import static org.mini.gl.GL.glAttachShader;
+import static org.mini.gl.GL.glBindBuffer;
+import static org.mini.gl.GL.glBindVertexArray;
+import static org.mini.gl.GL.glBufferData;
+import static org.mini.gl.GL.glClear;
+import static org.mini.gl.GL.glCompileShader;
+import static org.mini.gl.GL.glCreateProgram;
+import static org.mini.gl.GL.glCreateShader;
+import static org.mini.gl.GL.glDrawArrays;
+import static org.mini.gl.GL.glEnableVertexAttribArray;
+import static org.mini.gl.GL.glGenBuffers;
+import static org.mini.gl.GL.glGenVertexArrays;
+import static org.mini.gl.GL.glGetError;
+import static org.mini.gl.GL.glLinkProgram;
+import static org.mini.gl.GL.glShaderSource;
+import static org.mini.gl.GL.glUseProgram;
+import static org.mini.gl.GL.glVertexAttribPointer;
+import static org.mini.glfw.Glfw.GLFW_CONTEXT_VERSION_MAJOR;
+import static org.mini.glfw.Glfw.GLFW_CONTEXT_VERSION_MINOR;
+import static org.mini.glfw.Glfw.GLFW_KEY_ESCAPE;
+import static org.mini.glfw.Glfw.GLFW_MOUSE_BUTTON_2;
+import static org.mini.glfw.Glfw.GLFW_MOUSE_BUTTON_LEFT;
+import static org.mini.glfw.Glfw.GLFW_PRESS;
+import static org.mini.glfw.Glfw.GLFW_TRUE;
+import static org.mini.glfw.Glfw.glfwCreateWindow;
+import static org.mini.glfw.Glfw.glfwGetFramebufferSizeH;
+import static org.mini.glfw.Glfw.glfwGetFramebufferSizeW;
+import static org.mini.glfw.Glfw.glfwInit;
+import static org.mini.glfw.Glfw.glfwMakeContextCurrent;
+import static org.mini.glfw.Glfw.glfwPollEvents;
+import static org.mini.glfw.Glfw.glfwSetCallback;
+import static org.mini.glfw.Glfw.glfwSetWindowShouldClose;
+import static org.mini.glfw.Glfw.glfwSwapBuffers;
+import static org.mini.glfw.Glfw.glfwTerminate;
+import static org.mini.glfw.Glfw.glfwWindowHint;
+import static org.mini.glfw.Glfw.glfwWindowShouldClose;
 import org.mini.glfw.GlfwCallbackAdapter;
 
 /*
@@ -24,15 +66,15 @@ public class Shader {
         @Override
         public void key(long window, int key, int scancode, int action, int mods) {
             System.out.println("key:" + key + " action:" + action);
-            if (key == Glfw.GLFW_KEY_ESCAPE && action == Glfw.GLFW_PRESS) {
-                Glfw.glfwSetWindowShouldClose(window, Glfw.GLFW_TRUE);
+            if (key == GLFW_KEY_ESCAPE && action == GLFW_PRESS) {
+                glfwSetWindowShouldClose(window, GLFW_TRUE);
             }
         }
 
         @Override
         public void mouseButton(long window, int button, boolean pressed) {
             if (window == curWin) {
-                String bt = button == Glfw.GLFW_MOUSE_BUTTON_LEFT ? "LEFT" : button == Glfw.GLFW_MOUSE_BUTTON_2 ? "RIGHT" : "OTHER";
+                String bt = button == GLFW_MOUSE_BUTTON_LEFT ? "LEFT" : button == GLFW_MOUSE_BUTTON_2 ? "RIGHT" : "OTHER";
                 String press = pressed ? "pressed" : "released";
                 System.out.println(bt + " " + mx + " " + my + "  " + press);
             }
@@ -77,8 +119,8 @@ public class Shader {
     int NumVertices = 6;
 
     void init() {
-        GL.glGenVertexArrays(NumVAOs, VAOs, 0);
-        GL.glBindVertexArray(VAOs[Triangles]);
+        glGenVertexArrays(NumVAOs, VAOs, 0);
+        glBindVertexArray(VAOs[Triangles]);
 
         // 我们首先指定了要渲染的两个三角形的位置信息.  
         float[] vertices = new float[]{
@@ -90,54 +132,48 @@ public class Shader {
             -0.85f, 0.90f
         };
 
-        GL.glGenBuffers(NumBuffers, Buffers, 0);
-        GL.glBindBuffer(GL.GL_ARRAY_BUFFER, Buffers[ArrayBuffer]);
-        GL.glBufferData(GL.GL_ARRAY_BUFFER, vertices.length * 4,
-                vertices, 0, GL.GL_STATIC_DRAW);
+        glGenBuffers(NumBuffers, Buffers, 0);
+        glBindBuffer(GL_ARRAY_BUFFER, Buffers[ArrayBuffer]);
+        glBufferData(GL_ARRAY_BUFFER, vertices.length * 4,
+                vertices, 0, GL_STATIC_DRAW);
 
-//        // 然后使用了必需的vertex和fragment shaders  
-//        ShaderInfo shaders[] = {
-//            {GL_VERTEX_SHADER, "triangles.vert"},
-//            {GL_FRAGMENT_SHADER, "triangles.frag"},
-//            {GL_NONE, NULL}
-//        };
         int vertex_shader, fragment_shader, program;
-        vertex_shader = GL.glCreateShader(GL.GL_VERTEX_SHADER);
-        String s0 = "#version 110 core  \n"
+        vertex_shader = glCreateShader(GL_VERTEX_SHADER);
+        String s0 = "#version 330   \n"
                 + "layout(location = 0) in vec4 vPosition;  \n"
                 + "void  \n"
                 + "main()  \n"
                 + " {  \n"
                 + "     gl_Position = vPosition;  \n"
                 + "} \000";
-        GL.glShaderSource(vertex_shader, s0.getBytes());
-        GL.glCompileShader(vertex_shader);
-        String s1 = "#version 110 core  \n"
+        glShaderSource(vertex_shader, s0.getBytes());
+        glCompileShader(vertex_shader);
+        
+        String s1 = "#version 330   \n"
                 + "out vec4 fColor;  \n"
                 + "void  \n"
                 + "main()  \n"
                 + "{  \n"
                 + "fColor = vec4(0.0, 0.0, 1.0, 1.0);  \n"
                 + "}  \000";
-        fragment_shader = GL.glCreateShader(GL.GL_FRAGMENT_SHADER);
-        GL.glShaderSource(fragment_shader, s1.getBytes());
-        GL.glCompileShader(fragment_shader);
+        fragment_shader = glCreateShader(GL_FRAGMENT_SHADER);
+        glShaderSource(fragment_shader, s1.getBytes());
+        glCompileShader(fragment_shader);
 
-        program = GL.glCreateProgram();
-        GL.glAttachShader(program, vertex_shader);
-        GL.glAttachShader(program, fragment_shader);
-        GL.glAttachShader(0, 0);
-        GL.glLinkProgram(program);
+        program = glCreateProgram();
+        glAttachShader(program, vertex_shader);
+        glAttachShader(program, fragment_shader);
+        glLinkProgram(program);
 
 //        // LoadShaders()是我们自定义(这里没有给出)的一个函数,  
 //        // 用于简化为GPU准备shaders的过程,后面会详细讲述  
 //        int program = LoadShaders(shaders);
-//        GL.glUseProgram(program);
+        glUseProgram(program);
         // 最后这部分我们成为shader plumbing,  
         // 我们把需要的数据和shader程序中的变量关联在一起,后面会详细讲述  
-        GL.glVertexAttribPointer(vPosition, 2, GL.GL_FLOAT, GL.GL_FALSE, 0, 0);
-        GL.glEnableVertexAttribArray(vPosition);
-        System.out.println("  error:" + GL.glGetError());
+        glVertexAttribPointer(vPosition, 2, GL_FLOAT, GL_FALSE, 0, 0);
+        glEnableVertexAttribArray(vPosition);
+        System.out.println("  error:" + glGetError());
     }
 
 //---------------------------------------------------------------------  
@@ -149,11 +185,11 @@ public class Shader {
 //  
     void display() {
         // 1. 调用glClear()清空窗口  
-        GL.glClear(GL.GL_COLOR_BUFFER_BIT);
+        glClear(GL_COLOR_BUFFER_BIT);
 
 //          // 2. 发起OpenGL调用来请求渲染你的对象  
-        GL.glBindVertexArray(VAOs[Triangles]);
-        GL.glDrawArrays(GL.GL_TRIANGLES, 0, NumVertices);
+        glBindVertexArray(VAOs[Triangles]);
+        glDrawArrays(GL_TRIANGLES, 0, NumVertices);
         try {
             Thread.sleep(10);
         } catch (InterruptedException ex) {
@@ -162,29 +198,29 @@ public class Shader {
     }
 
     void t1() {
-        Glfw.glfwInit();
-        Glfw.glfwWindowHint(Glfw.GLFW_CONTEXT_VERSION_MAJOR, 3);
-        Glfw.glfwWindowHint(Glfw.GLFW_CONTEXT_VERSION_MINOR, 0);
-//        Glfw.glfwWindowHint(Glfw.GLFW_DEPTH_BITS, 16);
-//        Glfw.glfwWindowHint(Glfw.GLFW_TRANSPARENT_FRAMEBUFFER, Glfw.GLFW_TRUE);
-        long win = Glfw.glfwCreateWindow(640, 480, "hello glfw", 0, 0);
+        glfwInit();
+        glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
+        glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
+//        glfwWindowHint(GLFW_DEPTH_BITS, 16);
+//        glfwWindowHint(GLFW_TRANSPARENT_FRAMEBUFFER, GLFW_TRUE);
+        long win = glfwCreateWindow(640, 480, "hello glfw", 0, 0);
         if (win != 0) {
-            Glfw.glfwSetCallback(win, new CallBack());
-            Glfw.glfwMakeContextCurrent(win);
-            //Glfw.glfwSwapInterval(1);
+            glfwSetCallback(win, new CallBack());
+            glfwMakeContextCurrent(win);
+            //glfwSwapInterval(1);
 
-            int w = Glfw.glfwGetFramebufferSizeW(win);
-            int h = Glfw.glfwGetFramebufferSizeH(win);
+            int w = glfwGetFramebufferSizeW(win);
+            int h = glfwGetFramebufferSizeH(win);
             System.out.println("w=" + w + "  ,h=" + h);
             init();
             long last = System.currentTimeMillis(), now;
             int count = 0;
-            while (!Glfw.glfwWindowShouldClose(win)) {
+            while (!glfwWindowShouldClose(win)) {
 
                 display();
 
-                Glfw.glfwPollEvents();
-                Glfw.glfwSwapBuffers(win);
+                glfwPollEvents();
+                glfwSwapBuffers(win);
                 count++;
                 now = System.currentTimeMillis();
                 if (now - last > 1000) {
@@ -193,7 +229,7 @@ public class Shader {
                     count = 0;
                 }
             }
-            Glfw.glfwTerminate();
+            glfwTerminate();
         }
     }
 
