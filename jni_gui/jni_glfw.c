@@ -700,14 +700,69 @@ int org_mini_gl_GL_glGetError(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-int org_mini_gl_GL_glColor3f(Runtime *runtime, Class *clazz) {
+int org_mini_gl_GL_glVertex2s(Runtime *runtime, Class *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
-    Int2Float x, y, z;
-    x.i = env->localvar_getInt(runtime, pos++);
-    y.i = env->localvar_getInt(runtime, pos++);
-    z.i = env->localvar_getInt(runtime, pos++);
-    glColor3f((GLfloat) x.f, (GLfloat) y.f, (GLfloat) z.f);
+    int x, y;
+    x = env->localvar_getInt(runtime, pos++);
+    y = env->localvar_getInt(runtime, pos++);
+    glVertex2s((GLshort) x, (GLshort) y);
+    return 0;
+}
+
+int org_mini_gl_GL_glVertex3s(Runtime *runtime, Class *clazz) {
+    JniEnv *env = runtime->jnienv;
+    s32 pos = 0;
+    int x, y, z, w;
+    x = env->localvar_getInt(runtime, pos++);
+    y = env->localvar_getInt(runtime, pos++);
+    z = env->localvar_getInt(runtime, pos++);
+    glVertex3s((GLshort) x, (GLshort) y, (GLshort) z);
+    return 0;
+}
+
+int org_mini_gl_GL_glVertex4s(Runtime *runtime, Class *clazz) {
+    JniEnv *env = runtime->jnienv;
+    s32 pos = 0;
+    int x, y, z, w;
+    x = env->localvar_getInt(runtime, pos++);
+    y = env->localvar_getInt(runtime, pos++);
+    z = env->localvar_getInt(runtime, pos++);
+    w = env->localvar_getInt(runtime, pos++);
+    glVertex4s((GLshort) x, (GLshort) y, (GLshort) z, (GLshort) w);
+    return 0;
+}
+
+int org_mini_gl_GL_glVertex2i(Runtime *runtime, Class *clazz) {
+    JniEnv *env = runtime->jnienv;
+    s32 pos = 0;
+    int x, y;
+    x = env->localvar_getInt(runtime, pos++);
+    y = env->localvar_getInt(runtime, pos++);
+    glVertex2i((GLint) x, (GLint) y);
+    return 0;
+}
+
+int org_mini_gl_GL_glVertex3i(Runtime *runtime, Class *clazz) {
+    JniEnv *env = runtime->jnienv;
+    s32 pos = 0;
+    int x, y, z;
+    x = env->localvar_getInt(runtime, pos++);
+    y = env->localvar_getInt(runtime, pos++);
+    z = env->localvar_getInt(runtime, pos++);
+    glVertex3i((GLint) x, (GLint) y, (GLint) z);
+    return 0;
+}
+
+int org_mini_gl_GL_glVertex4i(Runtime *runtime, Class *clazz) {
+    JniEnv *env = runtime->jnienv;
+    s32 pos = 0;
+    int x, y, z, w;
+    x = env->localvar_getInt(runtime, pos++);
+    y = env->localvar_getInt(runtime, pos++);
+    z = env->localvar_getInt(runtime, pos++);
+    w = env->localvar_getInt(runtime, pos++);
+    glVertex4i((GLint) x, (GLint) y, (GLint) z, (GLint) w);
     return 0;
 }
 
@@ -718,6 +773,17 @@ int org_mini_gl_GL_glVertex2f(Runtime *runtime, Class *clazz) {
     x.i = env->localvar_getInt(runtime, pos++);
     y.i = env->localvar_getInt(runtime, pos++);
     glVertex2f((GLfloat) x.f, (GLfloat) y.f);
+    return 0;
+}
+
+int org_mini_gl_GL_glColor3f(Runtime *runtime, Class *clazz) {
+    JniEnv *env = runtime->jnienv;
+    s32 pos = 0;
+    Int2Float x, y, z;
+    x.i = env->localvar_getInt(runtime, pos++);
+    y.i = env->localvar_getInt(runtime, pos++);
+    z.i = env->localvar_getInt(runtime, pos++);
+    glColor3f((GLfloat) x.f, (GLfloat) y.f, (GLfloat) z.f);
     return 0;
 }
 
@@ -732,6 +798,28 @@ int org_mini_gl_GL_glVertex3f(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
+int org_mini_gl_GL_glVertex4f(Runtime *runtime, Class *clazz) {
+    JniEnv *env = runtime->jnienv;
+    s32 pos = 0;
+    Int2Float x, y, z, w;
+    x.i = env->localvar_getInt(runtime, pos++);
+    y.i = env->localvar_getInt(runtime, pos++);
+    z.i = env->localvar_getInt(runtime, pos++);
+    w.i = env->localvar_getInt(runtime, pos++);
+    glVertex4f((GLfloat) x.f, (GLfloat) y.f, (GLfloat) z.f, (GLfloat) w.f);
+    return 0;
+}
+
+int org_mini_gl_GL_glVertex2d(Runtime *runtime, Class *clazz) {
+    JniEnv *env = runtime->jnienv;
+    s32 pos = 0;
+    Long2Double x, y, z;
+    x.l = env->localvar_getInt(runtime, pos++);
+    y.l = env->localvar_getInt(runtime, pos++);
+    glVertex2d((GLdouble) x.d, (GLdouble) y.d);
+    return 0;
+}
+
 int org_mini_gl_GL_glVertex3d(Runtime *runtime, Class *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
@@ -743,15 +831,15 @@ int org_mini_gl_GL_glVertex3d(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-int org_mini_gl_GL_glVertex4f(Runtime *runtime, Class *clazz) {
+int org_mini_gl_GL_glVertex4d(Runtime *runtime, Class *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
-    Int2Float x, y, z, w;
-    x.i = env->localvar_getInt(runtime, pos++);
-    y.i = env->localvar_getInt(runtime, pos++);
-    z.i = env->localvar_getInt(runtime, pos++);
-    w.i = env->localvar_getInt(runtime, pos++);
-    glVertex4f((GLfloat) x.f, (GLfloat) y.f, (GLfloat) z.f, (GLfloat) w.f);
+    Long2Double x, y, z, w;
+    x.l = env->localvar_getInt(runtime, pos++);
+    y.l = env->localvar_getInt(runtime, pos++);
+    z.l = env->localvar_getInt(runtime, pos++);
+    w.l = env->localvar_getInt(runtime, pos++);
+    glVertex4d((GLdouble) x.d, (GLdouble) y.d, (GLdouble) z.d, (GLdouble) w.d);
     return 0;
 }
 
@@ -1060,10 +1148,18 @@ static java_native_method method_test2_table[] = {
         {"org/mini/gl/GL",              "glFinish",                  "()V",                              org_mini_gl_GL_glFinish},
         {"org/mini/gl/GL",              "glGetError",                "()V",                              org_mini_gl_GL_glGetError},
         {"org/mini/gl/GL",              "glColor3f",                 "(FFF)V",                           org_mini_gl_GL_glColor3f},
+        {"org/mini/gl/GL",              "glVertex2s",                "(SS)V",                            org_mini_gl_GL_glVertex2s},
+        {"org/mini/gl/GL",              "glVertex3s",                "(SSS)V",                           org_mini_gl_GL_glVertex3s},
+        {"org/mini/gl/GL",              "glVertex4s",                "(SSSS)V",                          org_mini_gl_GL_glVertex4s},
+        {"org/mini/gl/GL",              "glVertex2i",                "(II)V",                            org_mini_gl_GL_glVertex2i},
+        {"org/mini/gl/GL",              "glVertex3i",                "(III)V",                           org_mini_gl_GL_glVertex3i},
+        {"org/mini/gl/GL",              "glVertex4i",                "(IIII)V",                          org_mini_gl_GL_glVertex4i},
         {"org/mini/gl/GL",              "glVertex2f",                "(FF)V",                            org_mini_gl_GL_glVertex2f},
         {"org/mini/gl/GL",              "glVertex3f",                "(FFF)V",                           org_mini_gl_GL_glVertex3f},
-        {"org/mini/gl/GL",              "glVertex3d",                "(DDD)V",                           org_mini_gl_GL_glVertex3d},
         {"org/mini/gl/GL",              "glVertex4f",                "(FFFF)V",                          org_mini_gl_GL_glVertex4f},
+        {"org/mini/gl/GL",              "glVertex2d",                "(DD)V",                            org_mini_gl_GL_glVertex2d},
+        {"org/mini/gl/GL",              "glVertex3d",                "(DDD)V",                           org_mini_gl_GL_glVertex3d},
+        {"org/mini/gl/GL",              "glVertex4d",                "(DDDD)V",                          org_mini_gl_GL_glVertex4d},
         {"org/mini/gl/GL",              "glNormal3f",                "(FFF)V",                           org_mini_gl_GL_glNormal3f},
         {"org/mini/gl/GL",              "glClearColor",              "(FFFF)V",                          org_mini_gl_GL_glClearColor},
         {"org/mini/gl/GL",              "glRectf",                   "(FFFF)V",                          org_mini_gl_GL_glRectf},

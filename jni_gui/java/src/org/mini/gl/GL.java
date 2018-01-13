@@ -9911,145 +9911,145 @@ public class GL {
 		glVertex4s((GLshort)x, (GLshort)y, (GLshort)z, (GLshort)w);
      */
 
-    public static native void glVertex2dv(Buffer v, int vByteOffset);
+    public static native void glVertex2dv(Object v, int vByteOffset);
 
     /*
 		glVertex2dv((const GLdouble*)(v + vByteOffset));
      */
 
-    public static native void glVertex2dv(long v);
+//    public static native void glVertex2dv(long v);
 
     /*
 		glVertex2dv((const GLdouble*)v);
      */
 
-    public static native void glVertex2fv(Buffer v, int vByteOffset);
+    public static native void glVertex2fv(Object v, int vByteOffset);
 
     /*
 		glVertex2fv((const GLfloat*)(v + vByteOffset));
      */
 
-    public static native void glVertex2fv(long v);
+//    public static native void glVertex2fv(long v);
 
     /*
 		glVertex2fv((const GLfloat*)v);
      */
 
-    public static native void glVertex2iv(Buffer v, int vByteOffset);
+    public static native void glVertex2iv(Object v, int vByteOffset);
 
     /*
 		glVertex2iv((const GLint*)(v + vByteOffset));
      */
 
-    public static native void glVertex2iv(long v);
+//    public static native void glVertex2iv(long v);
 
     /*
 		glVertex2iv((const GLint*)v);
      */
 
-    public static native void glVertex2sv(Buffer v, int vByteOffset);
+    public static native void glVertex2sv(Object v, int vByteOffset);
 
     /*
 		glVertex2sv((const GLshort*)(v + vByteOffset));
      */
 
-    public static native void glVertex2sv(long v);
+//    public static native void glVertex2sv(long v);
 
     /*
 		glVertex2sv((const GLshort*)v);
      */
 
-    public static native void glVertex3dv(Buffer v, int vByteOffset);
+    public static native void glVertex3dv(Object v, int vByteOffset);
 
     /*
 		glVertex3dv((const GLdouble*)(v + vByteOffset));
      */
 
-    public static native void glVertex3dv(long v);
+//    public static native void glVertex3dv(long v);
 
     /*
 		glVertex3dv((const GLdouble*)v);
      */
 
-    public static native void glVertex3fv(Buffer v, int vByteOffset);
+    public static native void glVertex3fv(Object v, int vByteOffset);
 
     /*
 		glVertex3fv((const GLfloat*)(v + vByteOffset));
      */
 
-    public static native void glVertex3fv(long v);
+//    public static native void glVertex3fv(long v);
 
     /*
 		glVertex3fv((const GLfloat*)v);
      */
 
-    public static native void glVertex3iv(Buffer v, int vByteOffset);
+    public static native void glVertex3iv(Object v, int vByteOffset);
 
     /*
 		glVertex3iv((const GLint*)(v + vByteOffset));
      */
 
-    public static native void glVertex3iv(long v);
+//    public static native void glVertex3iv(long v);
 
     /*
 		glVertex3iv((const GLint*)v);
      */
 
-    public static native void glVertex3sv(Buffer v, int vByteOffset);
+    public static native void glVertex3sv(Object v, int vByteOffset);
 
     /*
 		glVertex3sv((const GLshort*)(v + vByteOffset));
      */
 
-    public static native void glVertex3sv(long v);
+//    public static native void glVertex3sv(long v);
 
     /*
 		glVertex3sv((const GLshort*)v);
      */
 
-    public static native void glVertex4dv(Buffer v, int vByteOffset);
+    public static native void glVertex4dv(Object v, int vByteOffset);
 
     /*
 		glVertex4dv((const GLdouble*)(v + vByteOffset));
      */
 
-    public static native void glVertex4dv(long v);
+//    public static native void glVertex4dv(long v);
 
     /*
 		glVertex4dv((const GLdouble*)v);
      */
 
-    public static native void glVertex4fv(Buffer v, int vByteOffset);
+    public static native void glVertex4fv(Object v, int vByteOffset);
 
     /*
 		glVertex4fv((const GLfloat*)(v + vByteOffset));
      */
 
-    public static native void glVertex4fv(long v);
+//    public static native void glVertex4fv(long v);
 
     /*
 		glVertex4fv((const GLfloat*)v);
      */
 
-    public static native void glVertex4iv(Buffer v, int vByteOffset);
+    public static native void glVertex4iv(Object v, int vByteOffset);
 
     /*
 		glVertex4iv((const GLint*)(v + vByteOffset));
      */
 
-    public static native void glVertex4iv(long v);
+//    public static native void glVertex4iv(long v);
 
     /*
 		glVertex4iv((const GLint*)v);
      */
 
-    public static native void glVertex4sv(Buffer v, int vByteOffset);
+    public static native void glVertex4sv(Object v, int vByteOffset);
 
     /*
 		glVertex4sv((const GLshort*)(v + vByteOffset));
      */
 
-    public static native void glVertex4sv(long v);
+//    public static native void glVertex4sv(long v);
 
     /*
 		glVertex4sv((const GLshort*)v);
@@ -10085,61 +10085,61 @@ public class GL {
 		glNormal3s((GLshort)nx, (GLshort)ny, (GLshort)nz);
      */
 
-    public static native void glNormal3bv(Buffer v, int vByteOffset);
+    public static native void glNormal3bv(Object v, int vByteOffset);
 
     /*
 		glNormal3bv((const GLbyte*)(v + vByteOffset));
      */
 
-    public static native void glNormal3bv(long v);
+//    public static native void glNormal3bv(long v);
 
     /*
 		glNormal3bv((const GLbyte*)v);
      */
 
-    public static native void glNormal3dv(Buffer v, int vByteOffset);
+    public static native void glNormal3dv(Object v, int vByteOffset);
 
     /*
 		glNormal3dv((const GLdouble*)(v + vByteOffset));
      */
 
-    public static native void glNormal3dv(long v);
+//    public static native void glNormal3dv(long v);
 
     /*
 		glNormal3dv((const GLdouble*)v);
      */
 
-    public static native void glNormal3fv(Buffer v, int vByteOffset);
+    public static native void glNormal3fv(Object v, int vByteOffset);
 
     /*
 		glNormal3fv((const GLfloat*)(v + vByteOffset));
      */
 
-    public static native void glNormal3fv(long v);
+//    public static native void glNormal3fv(long v);
 
     /*
 		glNormal3fv((const GLfloat*)v);
      */
 
-    public static native void glNormal3iv(Buffer v, int vByteOffset);
+    public static native void glNormal3iv(Object v, int vByteOffset);
 
     /*
 		glNormal3iv((const GLint*)(v + vByteOffset));
      */
 
-    public static native void glNormal3iv(long v);
+//    public static native void glNormal3iv(long v);
 
     /*
 		glNormal3iv((const GLint*)v);
      */
 
-    public static native void glNormal3sv(Buffer v, int vByteOffset);
+    public static native void glNormal3sv(Object v, int vByteOffset);
 
     /*
 		glNormal3sv((const GLshort*)(v + vByteOffset));
      */
 
-    public static native void glNormal3sv(long v);
+//    public static native void glNormal3sv(long v);
 
     /*
 		glNormal3sv((const GLshort*)v);
