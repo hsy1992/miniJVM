@@ -219,6 +219,7 @@ int org_mini_glfw_Glfw_glfwSetCallbackJni(Runtime *runtime, Class *clazz) {
 
     glfwSetErrorCallback(_callback_error);
     glfwSetKeyCallback(window, _callback_key);
+    glfwSetCharCallback(window, _callback_character);
     glfwSetMouseButtonCallback(window, _button_callback_mouse);
     glfwSetCursorPosCallback(window, _callback_cursor_pos);
     glfwSetCursorEnterCallback(window, _callback_cursor_enter);
@@ -228,7 +229,6 @@ int org_mini_glfw_Glfw_glfwSetCallbackJni(Runtime *runtime, Class *clazz) {
     glfwSetWindowFocusCallback(window, _callback_window_focus);
     glfwSetWindowIconifyCallback(window, _callback_window_iconify);
     glfwSetWindowRefreshCallback(window, _callback_window_refresh);
-    glfwSetCharCallback(window, _callback_character);
     glfwSetFramebufferSizeCallback(window, _callback_framebuffer_size);
 
     c8 *name_s, *type_s;
@@ -257,7 +257,7 @@ int org_mini_glfw_Glfw_glfwSetCallbackJni(Runtime *runtime, Class *clazz) {
         type_s = "(JC)V";
         Utf8String *name = env->utf8_create_part_c(name_s, 0, strlen(name_s));
         Utf8String *type = env->utf8_create_part_c(type_s, 0, strlen(type_s));
-        refers._callback_key =
+        refers._callback_character =
                 env->find_methodInfo_by_name(refers.glfw_callback->mb.clazz->name, name, type);
         env->utf8_destory(name);
         env->utf8_destory(type);
@@ -843,6 +843,159 @@ int org_mini_gl_GL_glVertex4d(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
+int org_mini_gl_GL_glVertex2sv(Runtime *runtime, Class *clazz) {
+    JniEnv *env = runtime->jnienv;
+    s32 pos = 0;
+    Instance *arr = env->localvar_getRefer(runtime, pos++);
+    s32 offset = env->localvar_getInt(runtime, pos++);
+    offset *= env->data_type_bytes[arr->mb.arr_type_index];
+    glVertex2sv((const GLshort *) (arr->arr_body + offset));
+    return 0;
+}
+
+int org_mini_gl_GL_glVertex3sv(Runtime *runtime, Class *clazz) {
+    JniEnv *env = runtime->jnienv;
+    s32 pos = 0;
+    Instance *arr = env->localvar_getRefer(runtime, pos++);
+    s32 offset = env->localvar_getInt(runtime, pos++);
+    offset *= env->data_type_bytes[arr->mb.arr_type_index];
+    glVertex3sv((const GLshort *) (arr->arr_body + offset));
+    return 0;
+}
+
+int org_mini_gl_GL_glVertex4sv(Runtime *runtime, Class *clazz) {
+    JniEnv *env = runtime->jnienv;
+    s32 pos = 0;
+    Instance *arr = env->localvar_getRefer(runtime, pos++);
+    s32 offset = env->localvar_getInt(runtime, pos++);
+    offset *= env->data_type_bytes[arr->mb.arr_type_index];
+    glVertex4sv((const GLshort *) (arr->arr_body + offset));
+    return 0;
+}
+
+int org_mini_gl_GL_glVertex2iv(Runtime *runtime, Class *clazz) {
+    JniEnv *env = runtime->jnienv;
+    s32 pos = 0;
+    Instance *arr = env->localvar_getRefer(runtime, pos++);
+    s32 offset = env->localvar_getInt(runtime, pos++);
+    offset *= env->data_type_bytes[arr->mb.arr_type_index];
+    glVertex2iv((const GLint *) (arr->arr_body + offset));
+    return 0;
+}
+
+int org_mini_gl_GL_glVertex3iv(Runtime *runtime, Class *clazz) {
+    JniEnv *env = runtime->jnienv;
+    s32 pos = 0;
+    Instance *arr = env->localvar_getRefer(runtime, pos++);
+    s32 offset = env->localvar_getInt(runtime, pos++);
+    offset *= env->data_type_bytes[arr->mb.arr_type_index];
+    glVertex3iv((const GLint *) (arr->arr_body + offset));
+    return 0;
+}
+
+int org_mini_gl_GL_glVertex4iv(Runtime *runtime, Class *clazz) {
+    JniEnv *env = runtime->jnienv;
+    s32 pos = 0;
+    Instance *arr = env->localvar_getRefer(runtime, pos++);
+    s32 offset = env->localvar_getInt(runtime, pos++);
+    offset *= env->data_type_bytes[arr->mb.arr_type_index];
+    glVertex4iv((const GLint *) (arr->arr_body + offset));
+    return 0;
+}
+
+int org_mini_gl_GL_glVertex2fv(Runtime *runtime, Class *clazz) {
+    JniEnv *env = runtime->jnienv;
+    s32 pos = 0;
+    Instance *arr = env->localvar_getRefer(runtime, pos++);
+    s32 offset = env->localvar_getInt(runtime, pos++);
+    offset *= env->data_type_bytes[arr->mb.arr_type_index];
+    glVertex2fv((const GLfloat *) (arr->arr_body + offset));
+    return 0;
+}
+
+int org_mini_gl_GL_glVertex3fv(Runtime *runtime, Class *clazz) {
+    JniEnv *env = runtime->jnienv;
+    s32 pos = 0;
+    Instance *arr = env->localvar_getRefer(runtime, pos++);
+    s32 offset = env->localvar_getInt(runtime, pos++);
+    offset *= env->data_type_bytes[arr->mb.arr_type_index];
+    glVertex3fv((const GLfloat *) (arr->arr_body + offset));
+    return 0;
+}
+
+int org_mini_gl_GL_glVertex4fv(Runtime *runtime, Class *clazz) {
+    JniEnv *env = runtime->jnienv;
+    s32 pos = 0;
+    Instance *arr = env->localvar_getRefer(runtime, pos++);
+    s32 offset = env->localvar_getInt(runtime, pos++);
+    offset *= env->data_type_bytes[arr->mb.arr_type_index];
+    glVertex4fv((const GLfloat *) (arr->arr_body + offset));
+    return 0;
+}
+
+int org_mini_gl_GL_glVertex2dv(Runtime *runtime, Class *clazz) {
+    JniEnv *env = runtime->jnienv;
+    s32 pos = 0;
+    Instance *arr = env->localvar_getRefer(runtime, pos++);
+    s32 offset = env->localvar_getInt(runtime, pos++);
+    offset *= env->data_type_bytes[arr->mb.arr_type_index];
+    glVertex2dv((const GLdouble *) (arr->arr_body + offset));
+    return 0;
+}
+
+int org_mini_gl_GL_glVertex3dv(Runtime *runtime, Class *clazz) {
+    JniEnv *env = runtime->jnienv;
+    s32 pos = 0;
+    Instance *arr = env->localvar_getRefer(runtime, pos++);
+    s32 offset = env->localvar_getInt(runtime, pos++);
+    offset *= env->data_type_bytes[arr->mb.arr_type_index];
+    glVertex3dv((const GLdouble *) (arr->arr_body + offset));
+    return 0;
+}
+
+int org_mini_gl_GL_glVertex4dv(Runtime *runtime, Class *clazz) {
+    JniEnv *env = runtime->jnienv;
+    s32 pos = 0;
+    Instance *arr = env->localvar_getRefer(runtime, pos++);
+    s32 offset = env->localvar_getInt(runtime, pos++);
+    offset *= env->data_type_bytes[arr->mb.arr_type_index];
+    glVertex4dv((const GLdouble *) (arr->arr_body + offset));
+    return 0;
+}
+
+int org_mini_gl_GL_glNormal3b(Runtime *runtime, Class *clazz) {
+    JniEnv *env = runtime->jnienv;
+    s32 pos = 0;
+    int x, y, z;
+    x = env->localvar_getInt(runtime, pos++);
+    y = env->localvar_getInt(runtime, pos++);
+    z = env->localvar_getInt(runtime, pos++);
+    glNormal3b((GLbyte) x, (GLbyte) y, (GLbyte) z);
+    return 0;
+}
+
+int org_mini_gl_GL_glNormal3s(Runtime *runtime, Class *clazz) {
+    JniEnv *env = runtime->jnienv;
+    s32 pos = 0;
+    int x, y, z;
+    x = env->localvar_getInt(runtime, pos++);
+    y = env->localvar_getInt(runtime, pos++);
+    z = env->localvar_getInt(runtime, pos++);
+    glNormal3s((GLshort) x, (GLshort) y, (GLshort) z);
+    return 0;
+}
+
+int org_mini_gl_GL_glNormal3i(Runtime *runtime, Class *clazz) {
+    JniEnv *env = runtime->jnienv;
+    s32 pos = 0;
+    int x, y, z;
+    x = env->localvar_getInt(runtime, pos++);
+    y = env->localvar_getInt(runtime, pos++);
+    z = env->localvar_getInt(runtime, pos++);
+    glNormal3i((GLint) x, (GLint) y, (GLint) z);
+    return 0;
+}
+
 int org_mini_gl_GL_glNormal3f(Runtime *runtime, Class *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
@@ -851,6 +1004,67 @@ int org_mini_gl_GL_glNormal3f(Runtime *runtime, Class *clazz) {
     y.i = env->localvar_getInt(runtime, pos++);
     z.i = env->localvar_getInt(runtime, pos++);
     glNormal3f((GLfloat) x.f, (GLfloat) y.f, (GLfloat) z.f);
+    return 0;
+}
+
+int org_mini_gl_GL_glNormal3d(Runtime *runtime, Class *clazz) {
+    JniEnv *env = runtime->jnienv;
+    s32 pos = 0;
+    Long2Double x, y, z;
+    x.l = env->localvar_getInt(runtime, pos++);
+    y.l = env->localvar_getInt(runtime, pos++);
+    z.l = env->localvar_getInt(runtime, pos++);
+    glNormal3d((GLdouble) x.d, (GLdouble) y.d, (GLdouble) z.d);
+    return 0;
+}
+
+int org_mini_gl_GL_glNormal3bv(Runtime *runtime, Class *clazz) {
+    JniEnv *env = runtime->jnienv;
+    s32 pos = 0;
+    Instance *arr = env->localvar_getRefer(runtime, pos++);
+    s32 offset = env->localvar_getInt(runtime, pos++);
+    offset *= env->data_type_bytes[arr->mb.arr_type_index];
+    glNormal3bv((const GLbyte *) (arr->arr_body + offset));
+    return 0;
+}
+
+int org_mini_gl_GL_glNormal3sv(Runtime *runtime, Class *clazz) {
+    JniEnv *env = runtime->jnienv;
+    s32 pos = 0;
+    Instance *arr = env->localvar_getRefer(runtime, pos++);
+    s32 offset = env->localvar_getInt(runtime, pos++);
+    offset *= env->data_type_bytes[arr->mb.arr_type_index];
+    glNormal3sv((const GLshort *) (arr->arr_body + offset));
+    return 0;
+}
+
+int org_mini_gl_GL_glNormal3iv(Runtime *runtime, Class *clazz) {
+    JniEnv *env = runtime->jnienv;
+    s32 pos = 0;
+    Instance *arr = env->localvar_getRefer(runtime, pos++);
+    s32 offset = env->localvar_getInt(runtime, pos++);
+    offset *= env->data_type_bytes[arr->mb.arr_type_index];
+    glNormal3iv((const GLint *) (arr->arr_body + offset));
+    return 0;
+}
+
+int org_mini_gl_GL_glNormal3fv(Runtime *runtime, Class *clazz) {
+    JniEnv *env = runtime->jnienv;
+    s32 pos = 0;
+    Instance *arr = env->localvar_getRefer(runtime, pos++);
+    s32 offset = env->localvar_getInt(runtime, pos++);
+    offset *= env->data_type_bytes[arr->mb.arr_type_index];
+    glNormal3fv((const GLfloat *) (arr->arr_body + offset));
+    return 0;
+}
+
+int org_mini_gl_GL_glNormal3dv(Runtime *runtime, Class *clazz) {
+    JniEnv *env = runtime->jnienv;
+    s32 pos = 0;
+    Instance *arr = env->localvar_getRefer(runtime, pos++);
+    s32 offset = env->localvar_getInt(runtime, pos++);
+    offset *= env->data_type_bytes[arr->mb.arr_type_index];
+    glNormal3dv((const GLdouble *) (arr->arr_body + offset));
     return 0;
 }
 
@@ -1160,7 +1374,28 @@ static java_native_method method_test2_table[] = {
         {"org/mini/gl/GL",              "glVertex2d",                "(DD)V",                            org_mini_gl_GL_glVertex2d},
         {"org/mini/gl/GL",              "glVertex3d",                "(DDD)V",                           org_mini_gl_GL_glVertex3d},
         {"org/mini/gl/GL",              "glVertex4d",                "(DDDD)V",                          org_mini_gl_GL_glVertex4d},
+        {"org/mini/gl/GL",              "glVertex2sv",               "(Ljava/lang/Object;I)V",           org_mini_gl_GL_glVertex2sv},
+        {"org/mini/gl/GL",              "glVertex3sv",               "(Ljava/lang/Object;I)V",           org_mini_gl_GL_glVertex3sv},
+        {"org/mini/gl/GL",              "glVertex4sv",               "(Ljava/lang/Object;I)V",           org_mini_gl_GL_glVertex4sv},
+        {"org/mini/gl/GL",              "glVertex2iv",               "(Ljava/lang/Object;I)V",           org_mini_gl_GL_glVertex2iv},
+        {"org/mini/gl/GL",              "glVertex3iv",               "(Ljava/lang/Object;I)V",           org_mini_gl_GL_glVertex3iv},
+        {"org/mini/gl/GL",              "glVertex4iv",               "(Ljava/lang/Object;I)V",           org_mini_gl_GL_glVertex4iv},
+        {"org/mini/gl/GL",              "glVertex2fv",               "(Ljava/lang/Object;I)V",           org_mini_gl_GL_glVertex2fv},
+        {"org/mini/gl/GL",              "glVertex3fv",               "(Ljava/lang/Object;I)V",           org_mini_gl_GL_glVertex3fv},
+        {"org/mini/gl/GL",              "glVertex4fv",               "(Ljava/lang/Object;I)V",           org_mini_gl_GL_glVertex4fv},
+        {"org/mini/gl/GL",              "glVertex2dv",               "(Ljava/lang/Object;I)V",           org_mini_gl_GL_glVertex2dv},
+        {"org/mini/gl/GL",              "glVertex3dv",               "(Ljava/lang/Object;I)V",           org_mini_gl_GL_glVertex3dv},
+        {"org/mini/gl/GL",              "glVertex4dv",               "(Ljava/lang/Object;I)V",           org_mini_gl_GL_glVertex4dv},
+        {"org/mini/gl/GL",              "glNormal3b",                "(BBB)V",                           org_mini_gl_GL_glNormal3b},
+        {"org/mini/gl/GL",              "glNormal3s",                "(SSS)V",                           org_mini_gl_GL_glNormal3s},
+        {"org/mini/gl/GL",              "glNormal3i",                "(III)V",                           org_mini_gl_GL_glNormal3i},
         {"org/mini/gl/GL",              "glNormal3f",                "(FFF)V",                           org_mini_gl_GL_glNormal3f},
+        {"org/mini/gl/GL",              "glNormal3d",                "(DDD)V",                           org_mini_gl_GL_glNormal3d},
+        {"org/mini/gl/GL",              "glNormal3bv",               "(Ljava/lang/Object;I)V",           org_mini_gl_GL_glNormal3bv},
+        {"org/mini/gl/GL",              "glNormal3sv",               "(Ljava/lang/Object;I)V",           org_mini_gl_GL_glNormal3sv},
+        {"org/mini/gl/GL",              "glNormal3iv",               "(Ljava/lang/Object;I)V",           org_mini_gl_GL_glNormal3iv},
+        {"org/mini/gl/GL",              "glNormal3fv",               "(Ljava/lang/Object;I)V",           org_mini_gl_GL_glNormal3fv},
+        {"org/mini/gl/GL",              "glNormal3dv",               "(Ljava/lang/Object;I)V",           org_mini_gl_GL_glNormal3dv},
         {"org/mini/gl/GL",              "glClearColor",              "(FFFF)V",                          org_mini_gl_GL_glClearColor},
         {"org/mini/gl/GL",              "glRectf",                   "(FFFF)V",                          org_mini_gl_GL_glRectf},
         {"org/mini/gl/GL",              "glLightfv",                 "(IILjava/lang/Object;I)V",         org_mini_gl_GL_glLightfv},
