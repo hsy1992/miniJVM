@@ -349,6 +349,258 @@ int org_mini_glfw_utils_Gutil_mat4x4_identity(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
+int org_mini_glfw_utils_Gutil_mat4x4_dup(Runtime *runtime, Class *clazz) {
+    JniEnv *env = runtime->jnienv;
+    int pos = 0;
+    Instance *r = env->localvar_getRefer(runtime, pos++);
+    Instance *m1 = env->localvar_getRefer(runtime, pos++);
+    mat4x4_dup((vec4 *) r->arr_body, (vec4 *) m1->arr_body);
+    env->push_ref(runtime->stack, r);
+    return 0;
+}
+
+int org_mini_glfw_utils_Gutil_mat4x4_row(Runtime *runtime, Class *clazz) {
+    JniEnv *env = runtime->jnienv;
+    int pos = 0;
+    Instance *r = env->localvar_getRefer(runtime, pos++);
+    Instance *m1 = env->localvar_getRefer(runtime, pos++);
+    int row = env->localvar_getInt(runtime, pos++);
+    mat4x4_row((GLfloat *) r->arr_body, (vec4 *) m1->arr_body, row);
+    env->push_ref(runtime->stack, r);
+    return 0;
+}
+
+int org_mini_glfw_utils_Gutil_mat4x4_col(Runtime *runtime, Class *clazz) {
+    JniEnv *env = runtime->jnienv;
+    int pos = 0;
+    Instance *r = env->localvar_getRefer(runtime, pos++);
+    Instance *m1 = env->localvar_getRefer(runtime, pos++);
+    int col = env->localvar_getInt(runtime, pos++);
+    mat4x4_col((GLfloat *) r->arr_body, (vec4 *) m1->arr_body, col);
+    env->push_ref(runtime->stack, r);
+    return 0;
+}
+
+int org_mini_glfw_utils_Gutil_mat4x4_transpose(Runtime *runtime, Class *clazz) {
+    JniEnv *env = runtime->jnienv;
+    int pos = 0;
+    Instance *r = env->localvar_getRefer(runtime, pos++);
+    Instance *m1 = env->localvar_getRefer(runtime, pos++);
+    mat4x4_transpose((vec4 *) r->arr_body, (vec4 *) m1->arr_body);
+    env->push_ref(runtime->stack, r);
+    return 0;
+}
+
+int org_mini_glfw_utils_Gutil_mat4x4_add(Runtime *runtime, Class *clazz) {
+    JniEnv *env = runtime->jnienv;
+    int pos = 0;
+    Instance *r = env->localvar_getRefer(runtime, pos++);
+    Instance *m1 = env->localvar_getRefer(runtime, pos++);
+    Instance *m2 = env->localvar_getRefer(runtime, pos++);
+    mat4x4_add((vec4 *) r->arr_body, (vec4 *) m1->arr_body, (vec4 *) m2->arr_body);
+    env->push_ref(runtime->stack, r);
+    return 0;
+}
+
+int org_mini_glfw_utils_Gutil_mat4x4_sub(Runtime *runtime, Class *clazz) {
+    JniEnv *env = runtime->jnienv;
+    int pos = 0;
+    Instance *r = env->localvar_getRefer(runtime, pos++);
+    Instance *m1 = env->localvar_getRefer(runtime, pos++);
+    Instance *m2 = env->localvar_getRefer(runtime, pos++);
+    mat4x4_sub((vec4 *) r->arr_body, (vec4 *) m1->arr_body, (vec4 *) m2->arr_body);
+    env->push_ref(runtime->stack, r);
+    return 0;
+}
+
+int org_mini_glfw_utils_Gutil_mat4x4_mul(Runtime *runtime, Class *clazz) {
+    JniEnv *env = runtime->jnienv;
+    int pos = 0;
+    Instance *r = env->localvar_getRefer(runtime, pos++);
+    Instance *m1 = env->localvar_getRefer(runtime, pos++);
+    Instance *m2 = env->localvar_getRefer(runtime, pos++);
+    mat4x4_mul((vec4 *) r->arr_body, (vec4 *) m1->arr_body, (vec4 *) m2->arr_body);
+    env->push_ref(runtime->stack, r);
+    return 0;
+}
+
+int org_mini_glfw_utils_Gutil_mat4x4_mul_vec4(Runtime *runtime, Class *clazz) {
+    JniEnv *env = runtime->jnienv;
+    int pos = 0;
+    Instance *r = env->localvar_getRefer(runtime, pos++);
+    Instance *m1 = env->localvar_getRefer(runtime, pos++);
+    Instance *m2 = env->localvar_getRefer(runtime, pos++);
+    mat4x4_mul_vec4((GLfloat *) r->arr_body, (vec4 *) m1->arr_body, (GLfloat *) m2->arr_body);
+    env->push_ref(runtime->stack, r);
+    return 0;
+}
+
+int org_mini_glfw_utils_Gutil_mat4x4_from_vec3_mul_outer(Runtime *runtime, Class *clazz) {
+    JniEnv *env = runtime->jnienv;
+    int pos = 0;
+    Instance *r = env->localvar_getRefer(runtime, pos++);
+    Instance *m1 = env->localvar_getRefer(runtime, pos++);
+    Instance *m2 = env->localvar_getRefer(runtime, pos++);
+    mat4x4_from_vec3_mul_outer((vec4 *) r->arr_body, (GLfloat *) m1->arr_body, (GLfloat *) m2->arr_body);
+    env->push_ref(runtime->stack, r);
+    return 0;
+}
+
+int org_mini_glfw_utils_Gutil_mat4x4_translate(Runtime *runtime, Class *clazz) {
+    JniEnv *env = runtime->jnienv;
+    int pos = 0;
+    Instance *r = env->localvar_getRefer(runtime, pos++);
+    Int2Float x, y, z;
+    x.i = env->localvar_getInt(runtime, pos++);
+    y.i = env->localvar_getInt(runtime, pos++);
+    z.i = env->localvar_getInt(runtime, pos++);
+    mat4x4_translate((vec4 *) r->arr_body, x.f, y.f, z.f);
+    env->push_ref(runtime->stack, r);
+    return 0;
+}
+
+int org_mini_glfw_utils_Gutil_mat4x4_translate_in_place(Runtime *runtime, Class *clazz) {
+    JniEnv *env = runtime->jnienv;
+    int pos = 0;
+    Instance *r = env->localvar_getRefer(runtime, pos++);
+    Int2Float x, y, z;
+    x.i = env->localvar_getInt(runtime, pos++);
+    y.i = env->localvar_getInt(runtime, pos++);
+    z.i = env->localvar_getInt(runtime, pos++);
+    mat4x4_translate_in_place((vec4 *) r->arr_body, x.f, y.f, z.f);
+    env->push_ref(runtime->stack, r);
+    return 0;
+}
+
+int org_mini_glfw_utils_Gutil_mat4x4_scale(Runtime *runtime, Class *clazz) {
+    JniEnv *env = runtime->jnienv;
+    int pos = 0;
+    Instance *r = env->localvar_getRefer(runtime, pos++);
+    Instance *m1 = env->localvar_getRefer(runtime, pos++);
+    Int2Float f;
+    f.i = env->localvar_getInt(runtime, pos++);
+    mat4x4_scale((vec4 *) r->arr_body, (vec4 *) m1->arr_body, f.f);
+    env->push_ref(runtime->stack, r);
+    return 0;
+}
+
+int org_mini_glfw_utils_Gutil_mat4x4_scale_aniso(Runtime *runtime, Class *clazz) {
+    JniEnv *env = runtime->jnienv;
+    int pos = 0;
+    Instance *r = env->localvar_getRefer(runtime, pos++);
+    Instance *m1 = env->localvar_getRefer(runtime, pos++);
+    Int2Float x, y, z;
+    x.i = env->localvar_getInt(runtime, pos++);
+    y.i = env->localvar_getInt(runtime, pos++);
+    z.i = env->localvar_getInt(runtime, pos++);
+    mat4x4_scale_aniso((vec4 *) r->arr_body, (vec4 *) m1->arr_body, x.f, y.f, z.f);
+    env->push_ref(runtime->stack, r);
+    return 0;
+}
+
+int org_mini_glfw_utils_Gutil_mat4x4_rotate(Runtime *runtime, Class *clazz) {
+    JniEnv *env = runtime->jnienv;
+    int pos = 0;
+    Instance *r = env->localvar_getRefer(runtime, pos++);
+    Instance *m1 = env->localvar_getRefer(runtime, pos++);
+    Int2Float x, y, z, a;
+    x.i = env->localvar_getInt(runtime, pos++);
+    y.i = env->localvar_getInt(runtime, pos++);
+    z.i = env->localvar_getInt(runtime, pos++);
+    a.i = env->localvar_getInt(runtime, pos++);
+    mat4x4_rotate((vec4 *) r->arr_body, (vec4 *) m1->arr_body, x.f, y.f, z.f, a.f);
+    env->push_ref(runtime->stack, r);
+    return 0;
+}
+
+int org_mini_glfw_utils_Gutil_mat4x4_rotateX(Runtime *runtime, Class *clazz) {
+    JniEnv *env = runtime->jnienv;
+    int pos = 0;
+    Instance *r = env->localvar_getRefer(runtime, pos++);
+    Instance *m1 = env->localvar_getRefer(runtime, pos++);
+    Int2Float f;
+    f.i = env->localvar_getInt(runtime, pos++);
+    mat4x4_rotate_X((vec4 *) r->arr_body, (vec4 *) m1->arr_body, f.f);
+    env->push_ref(runtime->stack, r);
+    return 0;
+}
+
+int org_mini_glfw_utils_Gutil_mat4x4_rotateY(Runtime *runtime, Class *clazz) {
+    JniEnv *env = runtime->jnienv;
+    int pos = 0;
+    Instance *r = env->localvar_getRefer(runtime, pos++);
+    Instance *m1 = env->localvar_getRefer(runtime, pos++);
+    Int2Float f;
+    f.i = env->localvar_getInt(runtime, pos++);
+    mat4x4_rotate_Y((vec4 *) r->arr_body, (vec4 *) m1->arr_body, f.f);
+    env->push_ref(runtime->stack, r);
+    return 0;
+}
+
+int org_mini_glfw_utils_Gutil_mat4x4_rotateZ(Runtime *runtime, Class *clazz) {
+    JniEnv *env = runtime->jnienv;
+    int pos = 0;
+    Instance *r = env->localvar_getRefer(runtime, pos++);
+    Instance *m1 = env->localvar_getRefer(runtime, pos++);
+    Int2Float f;
+    f.i = env->localvar_getInt(runtime, pos++);
+    mat4x4_rotate_Z((vec4 *) r->arr_body, (vec4 *) m1->arr_body, f.f);
+    env->push_ref(runtime->stack, r);
+    return 0;
+}
+
+int org_mini_glfw_utils_Gutil_mat4x4_invert(Runtime *runtime, Class *clazz) {
+    JniEnv *env = runtime->jnienv;
+    int pos = 0;
+    Instance *r = env->localvar_getRefer(runtime, pos++);
+    Instance *m1 = env->localvar_getRefer(runtime, pos++);
+    mat4x4_invert((vec4 *) r->arr_body, (vec4 *) m1->arr_body);
+    env->push_ref(runtime->stack, r);
+    return 0;
+}
+
+int org_mini_glfw_utils_Gutil_mat4x4_orthonormalize(Runtime *runtime, Class *clazz) {
+    JniEnv *env = runtime->jnienv;
+    int pos = 0;
+    Instance *r = env->localvar_getRefer(runtime, pos++);
+    Instance *m1 = env->localvar_getRefer(runtime, pos++);
+    mat4x4_orthonormalize((vec4 *) r->arr_body, (vec4 *) m1->arr_body);
+    env->push_ref(runtime->stack, r);
+    return 0;
+}
+
+int org_mini_glfw_utils_Gutil_mat4x4_ortho(Runtime *runtime, Class *clazz) {
+    JniEnv *env = runtime->jnienv;
+    int pos = 0;
+    Instance *ra = env->localvar_getRefer(runtime, pos++);
+    Int2Float l, r, b, t, n, f;
+    l.i = env->localvar_getInt(runtime, pos++);
+    r.i = env->localvar_getInt(runtime, pos++);
+    b.i = env->localvar_getInt(runtime, pos++);
+    t.i = env->localvar_getInt(runtime, pos++);
+    n.i = env->localvar_getInt(runtime, pos++);
+    f.i = env->localvar_getInt(runtime, pos++);
+    mat4x4_ortho((vec4 *) ra->arr_body, l.f, r.f, b.f, t.f, n.f, f.f);
+    env->push_ref(runtime->stack, ra);
+    return 0;
+}
+
+int org_mini_glfw_utils_Gutil_mat4x4_frustum(Runtime *runtime, Class *clazz) {
+    JniEnv *env = runtime->jnienv;
+    int pos = 0;
+    Instance *ra = env->localvar_getRefer(runtime, pos++);
+    Int2Float l, r, b, t, n, f;
+    l.i = env->localvar_getInt(runtime, pos++);
+    r.i = env->localvar_getInt(runtime, pos++);
+    b.i = env->localvar_getInt(runtime, pos++);
+    t.i = env->localvar_getInt(runtime, pos++);
+    n.i = env->localvar_getInt(runtime, pos++);
+    f.i = env->localvar_getInt(runtime, pos++);
+    mat4x4_frustum((vec4 *) ra->arr_body, l.f, r.f, b.f, t.f, n.f, f.f);
+    env->push_ref(runtime->stack, ra);
+    return 0;
+}
+
 int org_mini_glfw_utils_Gutil_mat4x4_perspective(Runtime *runtime, Class *clazz) {
     JniEnv *env = runtime->jnienv;
     int pos = 0;
@@ -1575,123 +1827,145 @@ int org_mini_gl_GL_glGetString(Runtime *runtime, Class *clazz) {
 }
 
 static java_native_method method_test2_table[] = {
-        {"org/mini/glfw/utils/Gutil", "f2b",                       "([F[B)[B",                         org_mini_glfw_utils_Gutil_f2b},
-        {"org/mini/glfw/utils/Gutil", "vec_add",                   "([F[F[F)[F",                       org_mini_glfw_utils_Gutil_vec_add},
-        {"org/mini/glfw/utils/Gutil", "vec_sub",                   "([F[F[F)[F",                       org_mini_glfw_utils_Gutil_vec_sub},
-        {"org/mini/glfw/utils/Gutil", "vec_scale",                 "([F[FF)[F",                        org_mini_glfw_utils_Gutil_vec_scale},
-        {"org/mini/glfw/utils/Gutil", "vec_mul_inner",             "([F[F)[F",                         org_mini_glfw_utils_Gutil_vec_mul_inner},
-        {"org/mini/glfw/utils/Gutil", "vec_len",                   "([F)F",                            org_mini_glfw_utils_Gutil_vec_len},
-        {"org/mini/glfw/utils/Gutil", "vec_normal",                "([F[F)[F",                         org_mini_glfw_utils_Gutil_vec_normal},
-        {"org/mini/glfw/utils/Gutil", "vec_mul_cross",             "([F[F[F)[F",                       org_mini_glfw_utils_Gutil_vec_mul_cross},
-        {"org/mini/glfw/utils/Gutil", "vec_reflect",               "([F[F[F)[F",                       org_mini_glfw_utils_Gutil_vec_reflect},
-        {"org/mini/glfw/utils/Gutil", "mat4x4_perspective",        "([FFFFF)[F",                       org_mini_glfw_utils_Gutil_mat4x4_perspective},
-        {"org/mini/glfw/utils/Gutil", "mat4x4_look_at",            "([F[F[F[F)[F",                     org_mini_glfw_utils_Gutil_mat4x4_look_at},
-        {"org/mini/glfw/Glfw",        "glfwGetTime",               "()D",                              org_mini_glfw_Glfw_glfwGetTime},
-        {"org/mini/glfw/Glfw",        "glfwSetTime",               "(D)V",                             org_mini_glfw_Glfw_glfwSetTime},
-        {"org/mini/glfw/Glfw",        "glfwCreateWindowJni",       "(II[BJJ)J",                        org_mini_glfw_Glfw_glfwCreateWindowJni},
-        {"org/mini/glfw/Glfw",        "glfwDestroyWindow",         "(J)V",                             org_mini_glfw_Glfw_glfwDestroyWindow},
-        {"org/mini/glfw/Glfw",        "glfwWindowShouldClose",     "(J)Z",                             org_mini_glfw_Glfw_glfwWindowShouldClose},
-        {"org/mini/glfw/Glfw",        "glfwSetCallbackJni",        "(JLorg/mini/glfw/GlfwCallback;)V", org_mini_glfw_Glfw_glfwSetCallbackJni},
-        {"org/mini/glfw/Glfw",        "glfwInitJni",               "()Z",                              org_mini_glfw_Glfw_glfwInitJni},
-        {"org/mini/glfw/Glfw",        "glfwTerminate",             "()V",                              org_mini_glfw_Glfw_glfwTerminate},
-        {"org/mini/glfw/Glfw",        "glfwWindowHint",            "(II)V",                            org_mini_glfw_Glfw_glfwWindowHint},
-        {"org/mini/glfw/Glfw",        "glfwPollEvents",            "()V",                              org_mini_glfw_Glfw_glfwPollEvents},
-        {"org/mini/glfw/Glfw",        "glfwSetWindowShouldClose",  "(JI)V",                            org_mini_glfw_Glfw_glfwSetWindowShouldClose},
-        {"org/mini/glfw/Glfw",        "glfwMakeContextCurrentJni", "(J)V",                             org_mini_glfw_Glfw_glfwMakeContextCurrentJni},
-        {"org/mini/glfw/Glfw",        "glfwSwapInterval",          "(I)V",                             org_mini_glfw_Glfw_glfwSwapInterval},
-        {"org/mini/glfw/Glfw",        "glfwSwapBuffers",           "(J)V",                             org_mini_glfw_Glfw_glfwSwapBuffers},
-        {"org/mini/glfw/Glfw",        "glfwGetFramebufferSizeW",   "(J)I",                             org_mini_glfw_Glfw_glfwGetFramebufferSizeW},
-        {"org/mini/glfw/Glfw",        "glfwGetFramebufferSizeH",   "(J)I",                             org_mini_glfw_Glfw_glfwGetFramebufferSizeH},
-        {"org/mini/glfw/Glfw",        "glfwSetWindowAspectRatio",  "(JII)V",                           org_mini_glfw_Glfw_glfwSetWindowAspectRatio},
-        {"org/mini/gl/GL",            "init",                      "()V",                              org_mini_gl_GL_init},
-        {"org/mini/gl/GL",            "glViewport",                "(IIII)V",                          org_mini_gl_GL_glViewport},
-        {"org/mini/gl/GL",            "glVertexAttribPointer",     "(IIIIII)V",                        org_mini_gl_GL_glVertexAttribPointer},
-        {"org/mini/gl/GL",            "glMatrixMode",              "(I)V",                             org_mini_gl_GL_glMatrixMode},
-        {"org/mini/gl/GL",            "glLoadMatrixf",             "([FI)V",                           org_mini_gl_GL_glLoadMatrixf},
-        {"org/mini/gl/GL",            "glPushMatrix",              "()V",                              org_mini_gl_GL_glPushMatrix},
-        {"org/mini/gl/GL",            "glPopMatrix",               "()V",                              org_mini_gl_GL_glPopMatrix},
-        {"org/mini/gl/GL",            "glEnable",                  "(I)V",                             org_mini_gl_GL_glEnable},
-        {"org/mini/gl/GL",            "glDisable",                 "(I)V",                             org_mini_gl_GL_glDisable},
-        {"org/mini/gl/GL",            "glShadeModel",              "(I)V",                             org_mini_gl_GL_glShadeModel},
-        {"org/mini/gl/GL",            "glClear",                   "(I)V",                             org_mini_gl_GL_glClear},
-        {"org/mini/gl/GL",            "glDrawBuffer",              "(I)V",                             org_mini_gl_GL_glDrawBuffer},
-        {"org/mini/gl/GL",            "glReadBuffer",              "(I)V",                             org_mini_gl_GL_glReadBuffer},
-        {"org/mini/gl/GL",            "glTranslatef",              "(FFF)V",                           org_mini_gl_GL_glTranslatef},
-        {"org/mini/gl/GL",            "glTranslated",              "(DDD)V",                           org_mini_gl_GL_glTranslated},
-        {"org/mini/gl/GL",            "glScalef",                  "(FFF)V",                           org_mini_gl_GL_glScalef},
-        {"org/mini/gl/GL",            "glScaled",                  "(DDD)V",                           org_mini_gl_GL_glScaled},
-        {"org/mini/gl/GL",            "glRotatef",                 "(FFFF)V",                          org_mini_gl_GL_glRotatef},
-        {"org/mini/gl/GL",            "glRotated",                 "(DDDD)V",                          org_mini_gl_GL_glRotated},
-        {"org/mini/gl/GL",            "glCullFace",                "(I)V",                             org_mini_gl_GL_glCullFace},
-        {"org/mini/gl/GL",            "glFrontFace",               "(I)V",                             org_mini_gl_GL_glFrontFace},
-        {"org/mini/gl/GL",            "glBegin",                   "(I)V",                             org_mini_gl_GL_glBegin},
-        {"org/mini/gl/GL",            "glEnd",                     "()V",                              org_mini_gl_GL_glEnd},
-        {"org/mini/gl/GL",            "glFlush",                   "()V",                              org_mini_gl_GL_glFlush},
-        {"org/mini/gl/GL",            "glFinish",                  "()V",                              org_mini_gl_GL_glFinish},
-        {"org/mini/gl/GL",            "glColor3f",                 "(FFF)V",                           org_mini_gl_GL_glColor3f},
-        {"org/mini/gl/GL",            "glVertex2s",                "(SS)V",                            org_mini_gl_GL_glVertex2s},
-        {"org/mini/gl/GL",            "glVertex3s",                "(SSS)V",                           org_mini_gl_GL_glVertex3s},
-        {"org/mini/gl/GL",            "glVertex4s",                "(SSSS)V",                          org_mini_gl_GL_glVertex4s},
-        {"org/mini/gl/GL",            "glVertex2i",                "(II)V",                            org_mini_gl_GL_glVertex2i},
-        {"org/mini/gl/GL",            "glVertex3i",                "(III)V",                           org_mini_gl_GL_glVertex3i},
-        {"org/mini/gl/GL",            "glVertex4i",                "(IIII)V",                          org_mini_gl_GL_glVertex4i},
-        {"org/mini/gl/GL",            "glVertex2f",                "(FF)V",                            org_mini_gl_GL_glVertex2f},
-        {"org/mini/gl/GL",            "glVertex3f",                "(FFF)V",                           org_mini_gl_GL_glVertex3f},
-        {"org/mini/gl/GL",            "glVertex4f",                "(FFFF)V",                          org_mini_gl_GL_glVertex4f},
-        {"org/mini/gl/GL",            "glVertex2d",                "(DD)V",                            org_mini_gl_GL_glVertex2d},
-        {"org/mini/gl/GL",            "glVertex3d",                "(DDD)V",                           org_mini_gl_GL_glVertex3d},
-        {"org/mini/gl/GL",            "glVertex4d",                "(DDDD)V",                          org_mini_gl_GL_glVertex4d},
-        {"org/mini/gl/GL",            "glVertex2sv",               "([SI)V",                           org_mini_gl_GL_glVertex2sv},
-        {"org/mini/gl/GL",            "glVertex3sv",               "([SI)V",                           org_mini_gl_GL_glVertex3sv},
-        {"org/mini/gl/GL",            "glVertex4sv",               "([SI)V",                           org_mini_gl_GL_glVertex4sv},
-        {"org/mini/gl/GL",            "glVertex2iv",               "([II)V",                           org_mini_gl_GL_glVertex2iv},
-        {"org/mini/gl/GL",            "glVertex3iv",               "([II)V",                           org_mini_gl_GL_glVertex3iv},
-        {"org/mini/gl/GL",            "glVertex4iv",               "([II)V",                           org_mini_gl_GL_glVertex4iv},
-        {"org/mini/gl/GL",            "glVertex2fv",               "([FI)V",                           org_mini_gl_GL_glVertex2fv},
-        {"org/mini/gl/GL",            "glVertex3fv",               "([FI)V",                           org_mini_gl_GL_glVertex3fv},
-        {"org/mini/gl/GL",            "glVertex4fv",               "([FI)V",                           org_mini_gl_GL_glVertex4fv},
-        {"org/mini/gl/GL",            "glVertex2dv",               "([DI)V",                           org_mini_gl_GL_glVertex2dv},
-        {"org/mini/gl/GL",            "glVertex3dv",               "([DI)V",                           org_mini_gl_GL_glVertex3dv},
-        {"org/mini/gl/GL",            "glVertex4dv",               "([DI)V",                           org_mini_gl_GL_glVertex4dv},
-        {"org/mini/gl/GL",            "glNormal3b",                "(BBB)V",                           org_mini_gl_GL_glNormal3b},
-        {"org/mini/gl/GL",            "glNormal3s",                "(SSS)V",                           org_mini_gl_GL_glNormal3s},
-        {"org/mini/gl/GL",            "glNormal3i",                "(III)V",                           org_mini_gl_GL_glNormal3i},
-        {"org/mini/gl/GL",            "glNormal3f",                "(FFF)V",                           org_mini_gl_GL_glNormal3f},
-        {"org/mini/gl/GL",            "glNormal3d",                "(DDD)V",                           org_mini_gl_GL_glNormal3d},
-        {"org/mini/gl/GL",            "glNormal3bv",               "([BI)V",                           org_mini_gl_GL_glNormal3bv},
-        {"org/mini/gl/GL",            "glNormal3sv",               "([SI)V",                           org_mini_gl_GL_glNormal3sv},
-        {"org/mini/gl/GL",            "glNormal3iv",               "([II)V",                           org_mini_gl_GL_glNormal3iv},
-        {"org/mini/gl/GL",            "glNormal3fv",               "([FI)V",                           org_mini_gl_GL_glNormal3fv},
-        {"org/mini/gl/GL",            "glNormal3dv",               "([DI)V",                           org_mini_gl_GL_glNormal3dv},
-        {"org/mini/gl/GL",            "glClearColor",              "(FFFF)V",                          org_mini_gl_GL_glClearColor},
-        {"org/mini/gl/GL",            "glRectf",                   "(FFFF)V",                          org_mini_gl_GL_glRectf},
-        {"org/mini/gl/GL",            "glLightfv",                 "(II[FI)V",                         org_mini_gl_GL_glLightfv},
-        {"org/mini/gl/GL",            "glMaterialfv",              "(II[FI)V",                         org_mini_gl_GL_glMaterialfv},
-        {"org/mini/gl/GL",            "glNewList",                 "(II)V",                            org_mini_gl_GL_glNewList},
-        {"org/mini/gl/GL",            "glGenLists",                "(I)I",                             org_mini_gl_GL_glGenLists},
-        {"org/mini/gl/GL",            "glEndList",                 "()V",                              org_mini_gl_GL_glEndList},
-        {"org/mini/gl/GL",            "glCallList",                "(I)V",                             org_mini_gl_GL_glCallList},
-        {"org/mini/gl/GL",            "glDrawArrays",              "(III)V",                           org_mini_gl_GL_glDrawArrays},
-        {"org/mini/gl/GL",            "glGenVertexArrays",         "(I[II)V",                          org_mini_gl_GL_glGenVertexArrays},
-        {"org/mini/gl/GL",            "glBindVertexArray",         "(I)V",                             org_mini_gl_GL_glBindVertexArray},
-        {"org/mini/gl/GL",            "glEnableVertexAttribArray", "(I)V",                             org_mini_gl_GL_glEnableVertexAttribArray},
-        {"org/mini/gl/GL",            "glLoadIdentity",            "()V",                              org_mini_gl_GL_glLoadIdentity},
-        {"org/mini/gl/GL",            "glFrustum",                 "(DDDDDD)V",                        org_mini_gl_GL_glFrustum},
-        {"org/mini/gl/GL",            "glShaderSource",            "(I[B)V",                           org_mini_gl_GL_glShaderSource},
-        {"org/mini/gl/GL",            "glCompileShader",           "(I)V",                             org_mini_gl_GL_glCompileShader},
-        {"org/mini/gl/GL",            "glAttachShader",            "(II)V",                            org_mini_gl_GL_glAttachShader},
-        {"org/mini/gl/GL",            "glUseProgram",              "(I)V",                             org_mini_gl_GL_glUseProgram},
-        {"org/mini/gl/GL",            "glLinkProgram",             "(I)V",                             org_mini_gl_GL_glLinkProgram},
-        {"org/mini/gl/GL",            "glCreateShader",            "(I)I",                             org_mini_gl_GL_glCreateShader},
-        {"org/mini/gl/GL",            "glCreateProgram",           "()I",                              org_mini_gl_GL_glCreateProgram},
-        {"org/mini/gl/GL",            "glBufferData",              "(IJLjava/lang/Object;II)V",        org_mini_gl_GL_glBufferData},
-        {"org/mini/gl/GL",            "glGenBuffers",              "(I[II)V",                          org_mini_gl_GL_glGenBuffers},
-        {"org/mini/gl/GL",            "glBindBuffer",              "(II)V",                            org_mini_gl_GL_glBindBuffer},
-        {"org/mini/gl/GL",            "glPointSize",               "(F)V",                             org_mini_gl_GL_glPointSize},
-        {"org/mini/gl/GL",            "glLineWidth",               "(F)V",                             org_mini_gl_GL_glLineWidth},
-        {"org/mini/gl/GL",            "glPolygonStipple",          "([BI)V",                           org_mini_gl_GL_glPolygonStipple},
-        {"org/mini/gl/GL",            "glGetError",                "()I",                              org_mini_gl_GL_glGetError},
-        {"org/mini/gl/GL",            "glGetString",               "(I)Ljava/lang/String;",            org_mini_gl_GL_glGetString},
+        {"org/mini/glfw/utils/Gutil", "f2b",                        "([F[B)[B",                         org_mini_glfw_utils_Gutil_f2b},
+        {"org/mini/glfw/utils/Gutil", "vec_add",                    "([F[F[F)[F",                       org_mini_glfw_utils_Gutil_vec_add},
+        {"org/mini/glfw/utils/Gutil", "vec_sub",                    "([F[F[F)[F",                       org_mini_glfw_utils_Gutil_vec_sub},
+        {"org/mini/glfw/utils/Gutil", "vec_scale",                  "([F[FF)[F",                        org_mini_glfw_utils_Gutil_vec_scale},
+        {"org/mini/glfw/utils/Gutil", "vec_mul_inner",              "([F[F)[F",                         org_mini_glfw_utils_Gutil_vec_mul_inner},
+        {"org/mini/glfw/utils/Gutil", "vec_len",                    "([F)F",                            org_mini_glfw_utils_Gutil_vec_len},
+        {"org/mini/glfw/utils/Gutil", "vec_normal",                 "([F[F)[F",                         org_mini_glfw_utils_Gutil_vec_normal},
+        {"org/mini/glfw/utils/Gutil", "vec_mul_cross",              "([F[F[F)[F",                       org_mini_glfw_utils_Gutil_vec_mul_cross},
+        {"org/mini/glfw/utils/Gutil", "vec_reflect",                "([F[F[F)[F",                       org_mini_glfw_utils_Gutil_vec_reflect},
+        {"org/mini/glfw/utils/Gutil", "mat4x4_identity",            "([F)[F",                           org_mini_glfw_utils_Gutil_mat4x4_identity},
+        {"org/mini/glfw/utils/Gutil", "mat4x4_dup",                 "([F[F)[F",                         org_mini_glfw_utils_Gutil_mat4x4_dup},
+        {"org/mini/glfw/utils/Gutil", "mat4x4_row",                 "([F[FI)[F",                        org_mini_glfw_utils_Gutil_mat4x4_row},
+        {"org/mini/glfw/utils/Gutil", "mat4x4_col",                 "([F[FI)[F",                        org_mini_glfw_utils_Gutil_mat4x4_col},
+        {"org/mini/glfw/utils/Gutil", "mat4x4_transpose",           "([F[F)[F",                         org_mini_glfw_utils_Gutil_mat4x4_transpose},
+        {"org/mini/glfw/utils/Gutil", "mat4x4_add",                 "([F[F[F)[F",                       org_mini_glfw_utils_Gutil_mat4x4_add},
+        {"org/mini/glfw/utils/Gutil", "mat4x4_sub",                 "([F[F[F)[F",                       org_mini_glfw_utils_Gutil_mat4x4_sub},
+        {"org/mini/glfw/utils/Gutil", "mat4x4_mul",                 "([F[F[F)[F",                       org_mini_glfw_utils_Gutil_mat4x4_mul},
+        {"org/mini/glfw/utils/Gutil", "mat4x4_mul_vec4",            "([F[F[F)[F",                       org_mini_glfw_utils_Gutil_mat4x4_mul_vec4},
+        {"org/mini/glfw/utils/Gutil", "mat4x4_from_vec3_mul_outer", "([F[F[F)[F",                       org_mini_glfw_utils_Gutil_mat4x4_from_vec3_mul_outer},
+        {"org/mini/glfw/utils/Gutil", "mat4x4_translate",           "([FFFF)[F",                        org_mini_glfw_utils_Gutil_mat4x4_translate},
+        {"org/mini/glfw/utils/Gutil", "mat4x4_translate_in_place",  "([FFFF)[F",                        org_mini_glfw_utils_Gutil_mat4x4_translate_in_place},
+        {"org/mini/glfw/utils/Gutil", "mat4x4_scale",               "([F[FF)[F",                        org_mini_glfw_utils_Gutil_mat4x4_scale},
+        {"org/mini/glfw/utils/Gutil", "mat4x4_scale_aniso",         "([F[FFFF)[F",                      org_mini_glfw_utils_Gutil_mat4x4_scale_aniso},
+        {"org/mini/glfw/utils/Gutil", "mat4x4_rotate",              "([F[FFFFF)[F",                     org_mini_glfw_utils_Gutil_mat4x4_rotate},
+        {"org/mini/glfw/utils/Gutil", "mat4x4_rotateX",             "([F[FF)[F",                        org_mini_glfw_utils_Gutil_mat4x4_rotateX},
+        {"org/mini/glfw/utils/Gutil", "mat4x4_rotateY",             "([F[FF)[F",                        org_mini_glfw_utils_Gutil_mat4x4_rotateY},
+        {"org/mini/glfw/utils/Gutil", "mat4x4_rotateZ",             "([F[FF)[F",                        org_mini_glfw_utils_Gutil_mat4x4_rotateZ},
+        {"org/mini/glfw/utils/Gutil", "mat4x4_invert",              "([F[F)[F",                         org_mini_glfw_utils_Gutil_mat4x4_invert},
+        {"org/mini/glfw/utils/Gutil", "mat4x4_orthonormalize",      "([F[F)[F",                         org_mini_glfw_utils_Gutil_mat4x4_orthonormalize},
+        {"org/mini/glfw/utils/Gutil", "mat4x4_ortho",               "([FFFFFFF)[F",                     org_mini_glfw_utils_Gutil_mat4x4_ortho},
+        {"org/mini/glfw/utils/Gutil", "mat4x4_frustum",             "([FFFFFFF)[F",                     org_mini_glfw_utils_Gutil_mat4x4_frustum},
+        {"org/mini/glfw/utils/Gutil", "mat4x4_perspective",         "([FFFFF)[F",                       org_mini_glfw_utils_Gutil_mat4x4_perspective},
+        {"org/mini/glfw/utils/Gutil", "mat4x4_look_at",             "([F[F[F[F)[F",                     org_mini_glfw_utils_Gutil_mat4x4_look_at},
+        {"org/mini/glfw/Glfw",        "glfwGetTime",                "()D",                              org_mini_glfw_Glfw_glfwGetTime},
+        {"org/mini/glfw/Glfw",        "glfwSetTime",                "(D)V",                             org_mini_glfw_Glfw_glfwSetTime},
+        {"org/mini/glfw/Glfw",        "glfwCreateWindowJni",        "(II[BJJ)J",                        org_mini_glfw_Glfw_glfwCreateWindowJni},
+        {"org/mini/glfw/Glfw",        "glfwDestroyWindow",          "(J)V",                             org_mini_glfw_Glfw_glfwDestroyWindow},
+        {"org/mini/glfw/Glfw",        "glfwWindowShouldClose",      "(J)Z",                             org_mini_glfw_Glfw_glfwWindowShouldClose},
+        {"org/mini/glfw/Glfw",        "glfwSetCallbackJni",         "(JLorg/mini/glfw/GlfwCallback;)V", org_mini_glfw_Glfw_glfwSetCallbackJni},
+        {"org/mini/glfw/Glfw",        "glfwInitJni",                "()Z",                              org_mini_glfw_Glfw_glfwInitJni},
+        {"org/mini/glfw/Glfw",        "glfwTerminate",              "()V",                              org_mini_glfw_Glfw_glfwTerminate},
+        {"org/mini/glfw/Glfw",        "glfwWindowHint",             "(II)V",                            org_mini_glfw_Glfw_glfwWindowHint},
+        {"org/mini/glfw/Glfw",        "glfwPollEvents",             "()V",                              org_mini_glfw_Glfw_glfwPollEvents},
+        {"org/mini/glfw/Glfw",        "glfwSetWindowShouldClose",   "(JI)V",                            org_mini_glfw_Glfw_glfwSetWindowShouldClose},
+        {"org/mini/glfw/Glfw",        "glfwMakeContextCurrentJni",  "(J)V",                             org_mini_glfw_Glfw_glfwMakeContextCurrentJni},
+        {"org/mini/glfw/Glfw",        "glfwSwapInterval",           "(I)V",                             org_mini_glfw_Glfw_glfwSwapInterval},
+        {"org/mini/glfw/Glfw",        "glfwSwapBuffers",            "(J)V",                             org_mini_glfw_Glfw_glfwSwapBuffers},
+        {"org/mini/glfw/Glfw",        "glfwGetFramebufferSizeW",    "(J)I",                             org_mini_glfw_Glfw_glfwGetFramebufferSizeW},
+        {"org/mini/glfw/Glfw",        "glfwGetFramebufferSizeH",    "(J)I",                             org_mini_glfw_Glfw_glfwGetFramebufferSizeH},
+        {"org/mini/glfw/Glfw",        "glfwSetWindowAspectRatio",   "(JII)V",                           org_mini_glfw_Glfw_glfwSetWindowAspectRatio},
+        {"org/mini/gl/GL",            "init",                       "()V",                              org_mini_gl_GL_init},
+        {"org/mini/gl/GL",            "glViewport",                 "(IIII)V",                          org_mini_gl_GL_glViewport},
+        {"org/mini/gl/GL",            "glVertexAttribPointer",      "(IIIIII)V",                        org_mini_gl_GL_glVertexAttribPointer},
+        {"org/mini/gl/GL",            "glMatrixMode",               "(I)V",                             org_mini_gl_GL_glMatrixMode},
+        {"org/mini/gl/GL",            "glLoadMatrixf",              "([FI)V",                           org_mini_gl_GL_glLoadMatrixf},
+        {"org/mini/gl/GL",            "glPushMatrix",               "()V",                              org_mini_gl_GL_glPushMatrix},
+        {"org/mini/gl/GL",            "glPopMatrix",                "()V",                              org_mini_gl_GL_glPopMatrix},
+        {"org/mini/gl/GL",            "glEnable",                   "(I)V",                             org_mini_gl_GL_glEnable},
+        {"org/mini/gl/GL",            "glDisable",                  "(I)V",                             org_mini_gl_GL_glDisable},
+        {"org/mini/gl/GL",            "glShadeModel",               "(I)V",                             org_mini_gl_GL_glShadeModel},
+        {"org/mini/gl/GL",            "glClear",                    "(I)V",                             org_mini_gl_GL_glClear},
+        {"org/mini/gl/GL",            "glDrawBuffer",               "(I)V",                             org_mini_gl_GL_glDrawBuffer},
+        {"org/mini/gl/GL",            "glReadBuffer",               "(I)V",                             org_mini_gl_GL_glReadBuffer},
+        {"org/mini/gl/GL",            "glTranslatef",               "(FFF)V",                           org_mini_gl_GL_glTranslatef},
+        {"org/mini/gl/GL",            "glTranslated",               "(DDD)V",                           org_mini_gl_GL_glTranslated},
+        {"org/mini/gl/GL",            "glScalef",                   "(FFF)V",                           org_mini_gl_GL_glScalef},
+        {"org/mini/gl/GL",            "glScaled",                   "(DDD)V",                           org_mini_gl_GL_glScaled},
+        {"org/mini/gl/GL",            "glRotatef",                  "(FFFF)V",                          org_mini_gl_GL_glRotatef},
+        {"org/mini/gl/GL",            "glRotated",                  "(DDDD)V",                          org_mini_gl_GL_glRotated},
+        {"org/mini/gl/GL",            "glCullFace",                 "(I)V",                             org_mini_gl_GL_glCullFace},
+        {"org/mini/gl/GL",            "glFrontFace",                "(I)V",                             org_mini_gl_GL_glFrontFace},
+        {"org/mini/gl/GL",            "glBegin",                    "(I)V",                             org_mini_gl_GL_glBegin},
+        {"org/mini/gl/GL",            "glEnd",                      "()V",                              org_mini_gl_GL_glEnd},
+        {"org/mini/gl/GL",            "glFlush",                    "()V",                              org_mini_gl_GL_glFlush},
+        {"org/mini/gl/GL",            "glFinish",                   "()V",                              org_mini_gl_GL_glFinish},
+        {"org/mini/gl/GL",            "glColor3f",                  "(FFF)V",                           org_mini_gl_GL_glColor3f},
+        {"org/mini/gl/GL",            "glVertex2s",                 "(SS)V",                            org_mini_gl_GL_glVertex2s},
+        {"org/mini/gl/GL",            "glVertex3s",                 "(SSS)V",                           org_mini_gl_GL_glVertex3s},
+        {"org/mini/gl/GL",            "glVertex4s",                 "(SSSS)V",                          org_mini_gl_GL_glVertex4s},
+        {"org/mini/gl/GL",            "glVertex2i",                 "(II)V",                            org_mini_gl_GL_glVertex2i},
+        {"org/mini/gl/GL",            "glVertex3i",                 "(III)V",                           org_mini_gl_GL_glVertex3i},
+        {"org/mini/gl/GL",            "glVertex4i",                 "(IIII)V",                          org_mini_gl_GL_glVertex4i},
+        {"org/mini/gl/GL",            "glVertex2f",                 "(FF)V",                            org_mini_gl_GL_glVertex2f},
+        {"org/mini/gl/GL",            "glVertex3f",                 "(FFF)V",                           org_mini_gl_GL_glVertex3f},
+        {"org/mini/gl/GL",            "glVertex4f",                 "(FFFF)V",                          org_mini_gl_GL_glVertex4f},
+        {"org/mini/gl/GL",            "glVertex2d",                 "(DD)V",                            org_mini_gl_GL_glVertex2d},
+        {"org/mini/gl/GL",            "glVertex3d",                 "(DDD)V",                           org_mini_gl_GL_glVertex3d},
+        {"org/mini/gl/GL",            "glVertex4d",                 "(DDDD)V",                          org_mini_gl_GL_glVertex4d},
+        {"org/mini/gl/GL",            "glVertex2sv",                "([SI)V",                           org_mini_gl_GL_glVertex2sv},
+        {"org/mini/gl/GL",            "glVertex3sv",                "([SI)V",                           org_mini_gl_GL_glVertex3sv},
+        {"org/mini/gl/GL",            "glVertex4sv",                "([SI)V",                           org_mini_gl_GL_glVertex4sv},
+        {"org/mini/gl/GL",            "glVertex2iv",                "([II)V",                           org_mini_gl_GL_glVertex2iv},
+        {"org/mini/gl/GL",            "glVertex3iv",                "([II)V",                           org_mini_gl_GL_glVertex3iv},
+        {"org/mini/gl/GL",            "glVertex4iv",                "([II)V",                           org_mini_gl_GL_glVertex4iv},
+        {"org/mini/gl/GL",            "glVertex2fv",                "([FI)V",                           org_mini_gl_GL_glVertex2fv},
+        {"org/mini/gl/GL",            "glVertex3fv",                "([FI)V",                           org_mini_gl_GL_glVertex3fv},
+        {"org/mini/gl/GL",            "glVertex4fv",                "([FI)V",                           org_mini_gl_GL_glVertex4fv},
+        {"org/mini/gl/GL",            "glVertex2dv",                "([DI)V",                           org_mini_gl_GL_glVertex2dv},
+        {"org/mini/gl/GL",            "glVertex3dv",                "([DI)V",                           org_mini_gl_GL_glVertex3dv},
+        {"org/mini/gl/GL",            "glVertex4dv",                "([DI)V",                           org_mini_gl_GL_glVertex4dv},
+        {"org/mini/gl/GL",            "glNormal3b",                 "(BBB)V",                           org_mini_gl_GL_glNormal3b},
+        {"org/mini/gl/GL",            "glNormal3s",                 "(SSS)V",                           org_mini_gl_GL_glNormal3s},
+        {"org/mini/gl/GL",            "glNormal3i",                 "(III)V",                           org_mini_gl_GL_glNormal3i},
+        {"org/mini/gl/GL",            "glNormal3f",                 "(FFF)V",                           org_mini_gl_GL_glNormal3f},
+        {"org/mini/gl/GL",            "glNormal3d",                 "(DDD)V",                           org_mini_gl_GL_glNormal3d},
+        {"org/mini/gl/GL",            "glNormal3bv",                "([BI)V",                           org_mini_gl_GL_glNormal3bv},
+        {"org/mini/gl/GL",            "glNormal3sv",                "([SI)V",                           org_mini_gl_GL_glNormal3sv},
+        {"org/mini/gl/GL",            "glNormal3iv",                "([II)V",                           org_mini_gl_GL_glNormal3iv},
+        {"org/mini/gl/GL",            "glNormal3fv",                "([FI)V",                           org_mini_gl_GL_glNormal3fv},
+        {"org/mini/gl/GL",            "glNormal3dv",                "([DI)V",                           org_mini_gl_GL_glNormal3dv},
+        {"org/mini/gl/GL",            "glClearColor",               "(FFFF)V",                          org_mini_gl_GL_glClearColor},
+        {"org/mini/gl/GL",            "glRectf",                    "(FFFF)V",                          org_mini_gl_GL_glRectf},
+        {"org/mini/gl/GL",            "glLightfv",                  "(II[FI)V",                         org_mini_gl_GL_glLightfv},
+        {"org/mini/gl/GL",            "glMaterialfv",               "(II[FI)V",                         org_mini_gl_GL_glMaterialfv},
+        {"org/mini/gl/GL",            "glNewList",                  "(II)V",                            org_mini_gl_GL_glNewList},
+        {"org/mini/gl/GL",            "glGenLists",                 "(I)I",                             org_mini_gl_GL_glGenLists},
+        {"org/mini/gl/GL",            "glEndList",                  "()V",                              org_mini_gl_GL_glEndList},
+        {"org/mini/gl/GL",            "glCallList",                 "(I)V",                             org_mini_gl_GL_glCallList},
+        {"org/mini/gl/GL",            "glDrawArrays",               "(III)V",                           org_mini_gl_GL_glDrawArrays},
+        {"org/mini/gl/GL",            "glGenVertexArrays",          "(I[II)V",                          org_mini_gl_GL_glGenVertexArrays},
+        {"org/mini/gl/GL",            "glBindVertexArray",          "(I)V",                             org_mini_gl_GL_glBindVertexArray},
+        {"org/mini/gl/GL",            "glEnableVertexAttribArray",  "(I)V",                             org_mini_gl_GL_glEnableVertexAttribArray},
+        {"org/mini/gl/GL",            "glLoadIdentity",             "()V",                              org_mini_gl_GL_glLoadIdentity},
+        {"org/mini/gl/GL",            "glFrustum",                  "(DDDDDD)V",                        org_mini_gl_GL_glFrustum},
+        {"org/mini/gl/GL",            "glShaderSource",             "(I[B)V",                           org_mini_gl_GL_glShaderSource},
+        {"org/mini/gl/GL",            "glCompileShader",            "(I)V",                             org_mini_gl_GL_glCompileShader},
+        {"org/mini/gl/GL",            "glAttachShader",             "(II)V",                            org_mini_gl_GL_glAttachShader},
+        {"org/mini/gl/GL",            "glUseProgram",               "(I)V",                             org_mini_gl_GL_glUseProgram},
+        {"org/mini/gl/GL",            "glLinkProgram",              "(I)V",                             org_mini_gl_GL_glLinkProgram},
+        {"org/mini/gl/GL",            "glCreateShader",             "(I)I",                             org_mini_gl_GL_glCreateShader},
+        {"org/mini/gl/GL",            "glCreateProgram",            "()I",                              org_mini_gl_GL_glCreateProgram},
+        {"org/mini/gl/GL",            "glBufferData",               "(IJLjava/lang/Object;II)V",        org_mini_gl_GL_glBufferData},
+        {"org/mini/gl/GL",            "glGenBuffers",               "(I[II)V",                          org_mini_gl_GL_glGenBuffers},
+        {"org/mini/gl/GL",            "glBindBuffer",               "(II)V",                            org_mini_gl_GL_glBindBuffer},
+        {"org/mini/gl/GL",            "glPointSize",                "(F)V",                             org_mini_gl_GL_glPointSize},
+        {"org/mini/gl/GL",            "glLineWidth",                "(F)V",                             org_mini_gl_GL_glLineWidth},
+        {"org/mini/gl/GL",            "glPolygonStipple",           "([BI)V",                           org_mini_gl_GL_glPolygonStipple},
+        {"org/mini/gl/GL",            "glGetError",                 "()I",                              org_mini_gl_GL_glGetError},
+        {"org/mini/gl/GL",            "glGetString",                "(I)Ljava/lang/String;",            org_mini_gl_GL_glGetString},
 };
 
 void JNI_OnLoad(JniEnv *env) {

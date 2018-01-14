@@ -39,6 +39,16 @@ public class Boing {
                 String press = pressed ? "pressed" : "released";
                 System.out.println(bt + " " + mx + " " + my + "  " + press);
             }
+            if (button != Glfw.GLFW_MOUSE_BUTTON_LEFT) {
+                return;
+            }
+
+            if (pressed) {
+                override_pos = true;
+                set_ball_pos(cursor_x, cursor_y);
+            } else {
+                override_pos = false;
+            }
         }
 
         @Override
@@ -123,6 +133,10 @@ public class Boing {
         n[z] = u1 * v2 - v1 * u2;
     }
 
+    void set_ball_pos(float x, float y) {
+        ball_x = (width / 2) - x;
+        ball_y = y - (height / 2);
+    }
     boolean colorToggle = false;
     final int DRAW_BALL = 0, DRAW_BALL_SHADOW = 1;
     int drawBallHow;
@@ -409,7 +423,6 @@ public class Boing {
         GL.glShadeModel(GL.GL_FLAT);
     }
 
-
     void display() {
 
         GL.glClear(GL.GL_COLOR_BUFFER_BIT | GL.GL_DEPTH_BUFFER_BIT);
@@ -421,8 +434,7 @@ public class Boing {
         //GL.DrawGrid();
         drawBallHow = DRAW_BALL;
         DrawBoingBall();
-        
-        
+
         GL.glFlush();
     }
 
@@ -439,10 +451,10 @@ public class Boing {
             Glfw.glfwSetWindowAspectRatio(win, 1, 1);
 //            Glfw.glfwSwapInterval(1);
 
-            int w = Glfw.glfwGetFramebufferSizeW(win);
-            int h = Glfw.glfwGetFramebufferSizeH(win);
-            System.out.println("w=" + w + "  ,h=" + h);
-            reshape(win, w, h);
+            width = Glfw.glfwGetFramebufferSizeW(win);
+            height = Glfw.glfwGetFramebufferSizeH(win);
+            System.out.println("w=" + width + "  ,h=" + height);
+            reshape(win, width, height);
 
             Glfw.glfwSetTime(0.0);
 

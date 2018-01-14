@@ -73,7 +73,7 @@ public class Gutil {
 
     static public native float[] mat4x4_scale(float[] r, float[] m1, float factor);
 
-    static public native float[] mat4x4_scale_aniso(float[] r, float[] m1, float factor);
+    static public native float[] mat4x4_scale_aniso(float[] r, float[] m1, float x, float y, float z);
 
     static public native float[] mat4x4_rotate(float[] r, float[] m1, float x, float y, float z, float a);
 
