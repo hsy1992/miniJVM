@@ -409,6 +409,7 @@ public class Boing {
         GL.glShadeModel(GL.GL_FLAT);
     }
 
+
     void display() {
 
         GL.glClear(GL.GL_COLOR_BUFFER_BIT | GL.GL_DEPTH_BUFFER_BIT);
@@ -420,7 +421,8 @@ public class Boing {
         //GL.DrawGrid();
         drawBallHow = DRAW_BALL;
         DrawBoingBall();
-
+        
+        
         GL.glFlush();
     }
 

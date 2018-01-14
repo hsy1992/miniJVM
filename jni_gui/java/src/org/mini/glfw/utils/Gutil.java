@@ -21,23 +21,31 @@ public class Gutil {
     static public native byte[] f2b(float[] farr, byte[] barr);
 
     /**
-     * vec and matrix      
+     * vec and matrix
      */
+    //vec2, vec3, vec4
     static public native float[] vec_add(float[] result, float[] vec1, float[] vec2);
 
+    //vec2, vec3, vec4
     static public native float[] vec_sub(float[] result, float[] vec1, float[] vec2);
 
+    //vec2, vec3, vec4
     static public native float[] vec_scale(float[] result, float[] vec1, float factor);
 
+    //vec2, vec3, vec4
     static public native float vec_mul_inner(float[] vec1, float[] vec2);
 
-    static public native float[] vec_mul_cross(float[] result, float[] vec1, float[] vec2);
-
-    static public native float[] vec_reflect(float[] result, float[] vec1, float[] vec2);
-
+    //vec2, vec3, vec4
     static public native float vec_len(float[] vec1);
 
+    //vec2, vec3, vec4
     static public native float[] vec_normal(float[] result, float[] vec1);
+
+    //vec3, vec4
+    static public native float[] vec_mul_cross(float[] result, float[] vec1, float[] vec2);
+
+    //vec3, vec4
+    static public native float[] vec_reflect(float[] result, float[] vec1, float[] vec2);
 
     static public native float[] mat4x4_identity(float[] m1);
 

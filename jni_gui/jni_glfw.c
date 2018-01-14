@@ -204,85 +204,93 @@ int org_mini_glfw_utils_Gutil_f2b(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-void vec_add(Instance *r, Instance *a, Instance *b) {
+void vec_add(Instance *ra, Instance *aa, Instance *ba) {
+    GLfloat *r = (GLfloat *) ra->arr_body;
+    GLfloat *a = (GLfloat *) aa->arr_body;
+    GLfloat *b = (GLfloat *) ba->arr_body;
     int i;
-    for (i = 0; i < r->arr_length; ++i)
-        r->arr_body[i] = a->arr_body[i] + b->arr_body[i];
+    for (i = 0; i < ra->arr_length; ++i)
+        r[i] = a[i] + b[i];
 }
 
 int org_mini_glfw_utils_Gutil_vec_add(Runtime *runtime, Class *clazz) {
     JniEnv *env = runtime->jnienv;
     int pos = 0;
-    Instance *r = env->localvar_getRefer(runtime, pos++);
-    Instance *a = env->localvar_getRefer(runtime, pos++);
-    Instance *b = env->localvar_getRefer(runtime, pos++);
-    vec_add(r, a, b);
-    env->push_ref(runtime->stack, r);
+    Instance *ra = env->localvar_getRefer(runtime, pos++);
+    Instance *aa = env->localvar_getRefer(runtime, pos++);
+    Instance *ba = env->localvar_getRefer(runtime, pos++);
+    vec_add(ra, aa, ba);
+    env->push_ref(runtime->stack, ra);
     return 0;
 }
 
-void vec_sub(Instance *r, Instance *a, Instance *b) {
+void vec_sub(Instance *ra, Instance *aa, Instance *ba) {
+    GLfloat *r = (GLfloat *) ra->arr_body;
+    GLfloat *a = (GLfloat *) aa->arr_body;
+    GLfloat *b = (GLfloat *) ba->arr_body;
     int i;
-    for (i = 0; i < r->arr_length; ++i)
-        r->arr_body[i] = a->arr_body[i] - b->arr_body[i];
+    for (i = 0; i < ra->arr_length; ++i)
+        r[i] = a[i] - b[i];
 }
 
 int org_mini_glfw_utils_Gutil_vec_sub(Runtime *runtime, Class *clazz) {
     JniEnv *env = runtime->jnienv;
     int pos = 0;
-    Instance *r = env->localvar_getRefer(runtime, pos++);
-    Instance *a = env->localvar_getRefer(runtime, pos++);
-    Instance *b = env->localvar_getRefer(runtime, pos++);
-    vec_sub(r, a, b);
-    env->push_ref(runtime->stack, r);
+    Instance *ra = env->localvar_getRefer(runtime, pos++);
+    Instance *aa = env->localvar_getRefer(runtime, pos++);
+    Instance *ba = env->localvar_getRefer(runtime, pos++);
+    vec_sub(ra, aa, ba);
+    env->push_ref(runtime->stack, ra);
     return 0;
 }
 
-float vec_mul_inner(Instance *a, Instance *b) {
+float vec_mul_inner(Instance *aa, Instance *ba) {
     int i;
     float r;
-    for (i = 0; i < a->arr_length; ++i)
-        r += a->arr_body[i] * b->arr_body[i];
+    for (i = 0; i < aa->arr_length; ++i)
+        r += aa->arr_body[i] * ba->arr_body[i];
     return r;
 }
 
 int org_mini_glfw_utils_Gutil_vec_mul_inner(Runtime *runtime, Class *clazz) {
     JniEnv *env = runtime->jnienv;
     int pos = 0;
-    Instance *a = env->localvar_getRefer(runtime, pos++);
-    Instance *b = env->localvar_getRefer(runtime, pos++);
-    float r = vec_mul_inner(a, b);
+    Instance *aa = env->localvar_getRefer(runtime, pos++);
+    Instance *ba = env->localvar_getRefer(runtime, pos++);
+    float r = vec_mul_inner(aa, ba);
     env->push_float(runtime->stack, r);
     return 0;
 }
 
-void vec_scale(Instance *r, Instance *a, float f) {
+void vec_scale(Instance *ra, Instance *aa, float f) {
+    GLfloat *r = (GLfloat *) ra->arr_body;
+    GLfloat *a = (GLfloat *) aa->arr_body;
     int i;
-    for (i = 0; i < r->arr_length; ++i)
-        r->arr_body[i] = a->arr_body[i] * f;
+    for (i = 0; i < ra->arr_length; ++i)
+        r[i] = a[i] * f;
 }
 
 int org_mini_glfw_utils_Gutil_vec_scale(Runtime *runtime, Class *clazz) {
     JniEnv *env = runtime->jnienv;
     int pos = 0;
-    Instance *r = env->localvar_getRefer(runtime, pos++);
-    Instance *a = env->localvar_getRefer(runtime, pos++);
+    Instance *ra = env->localvar_getRefer(runtime, pos++);
+    Instance *aa = env->localvar_getRefer(runtime, pos++);
     Int2Float f;
     f.i = env->localvar_getInt(runtime, pos++);
-    vec_scale(r, a, f.f);
-    env->push_ref(runtime->stack, r);
+    vec_scale(ra, aa, f.f);
+    env->push_ref(runtime->stack, ra);
     return 0;
 }
 
-float vec_len(Instance *r) {
-    return (float) sqrt(vec_mul_inner(r, r));
+float vec_len(Instance *ra) {
+    return (float) sqrt(vec_mul_inner(ra, ra));
 }
 
 int org_mini_glfw_utils_Gutil_vec_len(Runtime *runtime, Class *clazz) {
     JniEnv *env = runtime->jnienv;
     int pos = 0;
-    Instance *r = env->localvar_getRefer(runtime, pos++);
-    float f = vec_len(r);
+    Instance *ra = env->localvar_getRefer(runtime, pos++);
+    float f = vec_len(ra);
     env->push_float(runtime->stack, f);
     return 0;
 }
@@ -290,10 +298,53 @@ int org_mini_glfw_utils_Gutil_vec_len(Runtime *runtime, Class *clazz) {
 int org_mini_glfw_utils_Gutil_vec_normal(Runtime *runtime, Class *clazz) {
     JniEnv *env = runtime->jnienv;
     int pos = 0;
+    Instance *ra = env->localvar_getRefer(runtime, pos++);
+    Instance *aa = env->localvar_getRefer(runtime, pos++);
+    float k = 1.f / vec_len(aa);
+    vec_scale(ra, aa, k);
+    env->push_ref(runtime->stack, ra);
+    return 0;
+}
+
+int org_mini_glfw_utils_Gutil_vec_reflect(Runtime *runtime, Class *clazz) {
+    JniEnv *env = runtime->jnienv;
+    int pos = 0;
+    Instance *ra = env->localvar_getRefer(runtime, pos++);
+    Instance *aa = env->localvar_getRefer(runtime, pos++);
+    Instance *ba = env->localvar_getRefer(runtime, pos++);
+    GLfloat *r = (GLfloat *) ra->arr_body;
+    GLfloat *a = (GLfloat *) aa->arr_body;
+    GLfloat *b = (GLfloat *) ba->arr_body;
+    float p = 2.f * vec_mul_inner(aa, ba);
+    int i;
+    for (i = 0; i < 4; ++i)
+        r[i] = a[i] - p * b[i];
+    env->push_ref(runtime->stack, ra);
+    return 0;
+}
+
+int org_mini_glfw_utils_Gutil_vec_mul_cross(Runtime *runtime, Class *clazz) {
+    JniEnv *env = runtime->jnienv;
+    int pos = 0;
+    Instance *ra = env->localvar_getRefer(runtime, pos++);
+    Instance *aa = env->localvar_getRefer(runtime, pos++);
+    Instance *ba = env->localvar_getRefer(runtime, pos++);
+    GLfloat *r = (GLfloat *) ra->arr_body;
+    GLfloat *a = (GLfloat *) aa->arr_body;
+    GLfloat *b = (GLfloat *) ba->arr_body;
+    r[0] = a[1] * b[2] - a[2] * b[1];
+    r[1] = a[2] * b[0] - a[0] * b[2];
+    r[2] = a[0] * b[1] - a[1] * b[0];
+    if (ra->arr_length > 3)r[3] = 1.f;
+    env->push_ref(runtime->stack, ra);
+    return 0;
+}
+
+int org_mini_glfw_utils_Gutil_mat4x4_identity(Runtime *runtime, Class *clazz) {
+    JniEnv *env = runtime->jnienv;
+    int pos = 0;
     Instance *r = env->localvar_getRefer(runtime, pos++);
-    Instance *a = env->localvar_getRefer(runtime, pos++);
-    float k = 1.f / vec_len(a);
-    vec_scale(r, a, k);
+    mat4x4_identity((vec4 *) r->arr_body);
     env->push_ref(runtime->stack, r);
     return 0;
 }
@@ -1339,6 +1390,7 @@ int org_mini_gl_GL_glUseProgram(Runtime *runtime, Class *clazz) {
     glUseProgram((GLuint) program);
     return 0;
 }
+
 int org_mini_gl_GL_glLinkProgram(Runtime *runtime, Class *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
@@ -1530,6 +1582,8 @@ static java_native_method method_test2_table[] = {
         {"org/mini/glfw/utils/Gutil", "vec_mul_inner",             "([F[F)[F",                         org_mini_glfw_utils_Gutil_vec_mul_inner},
         {"org/mini/glfw/utils/Gutil", "vec_len",                   "([F)F",                            org_mini_glfw_utils_Gutil_vec_len},
         {"org/mini/glfw/utils/Gutil", "vec_normal",                "([F[F)[F",                         org_mini_glfw_utils_Gutil_vec_normal},
+        {"org/mini/glfw/utils/Gutil", "vec_mul_cross",             "([F[F[F)[F",                       org_mini_glfw_utils_Gutil_vec_mul_cross},
+        {"org/mini/glfw/utils/Gutil", "vec_reflect",               "([F[F[F)[F",                       org_mini_glfw_utils_Gutil_vec_reflect},
         {"org/mini/glfw/utils/Gutil", "mat4x4_perspective",        "([FFFFF)[F",                       org_mini_glfw_utils_Gutil_mat4x4_perspective},
         {"org/mini/glfw/utils/Gutil", "mat4x4_look_at",            "([F[F[F[F)[F",                     org_mini_glfw_utils_Gutil_mat4x4_look_at},
         {"org/mini/glfw/Glfw",        "glfwGetTime",               "()D",                              org_mini_glfw_Glfw_glfwGetTime},
@@ -1626,7 +1680,7 @@ static java_native_method method_test2_table[] = {
         {"org/mini/gl/GL",            "glShaderSource",            "(I[B)V",                           org_mini_gl_GL_glShaderSource},
         {"org/mini/gl/GL",            "glCompileShader",           "(I)V",                             org_mini_gl_GL_glCompileShader},
         {"org/mini/gl/GL",            "glAttachShader",            "(II)V",                            org_mini_gl_GL_glAttachShader},
-        {"org/mini/gl/GL",            "glUseProgram",             "(I)V",                             org_mini_gl_GL_glUseProgram},
+        {"org/mini/gl/GL",            "glUseProgram",              "(I)V",                             org_mini_gl_GL_glUseProgram},
         {"org/mini/gl/GL",            "glLinkProgram",             "(I)V",                             org_mini_gl_GL_glLinkProgram},
         {"org/mini/gl/GL",            "glCreateShader",            "(I)I",                             org_mini_gl_GL_glCreateShader},
         {"org/mini/gl/GL",            "glCreateProgram",           "()I",                              org_mini_gl_GL_glCreateProgram},

@@ -6,6 +6,7 @@
 package test;
 
 import org.mini.gl.GL;
+import static org.mini.gl.GL.glGetError;
 
 /**
  *
@@ -92,6 +93,7 @@ public class Ball {
     }
 
     void drawBall() {
+        System.out.println("  error:" + glGetError());
         GL.glMatrixMode(GL.GL_MODELVIEW);
         GL.glLoadIdentity();
         GL.glClear(GL.GL_COLOR_BUFFER_BIT | GL.GL_DEPTH_BUFFER_BIT);

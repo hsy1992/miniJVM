@@ -165,15 +165,12 @@ public class Shader {
         glAttachShader(program, fragment_shader);
         glLinkProgram(program);
 
-//        // LoadShaders()是我们自定义(这里没有给出)的一个函数,  
-//        // 用于简化为GPU准备shaders的过程,后面会详细讲述  
-//        int program = LoadShaders(shaders);
         glUseProgram(program);
         // 最后这部分我们成为shader plumbing,  
         // 我们把需要的数据和shader程序中的变量关联在一起,后面会详细讲述  
         glVertexAttribPointer(vPosition, 2, GL_FLOAT, GL_FALSE, 0, 0);
         glEnableVertexAttribArray(vPosition);
-        System.out.println("  error:" + glGetError());
+        
     }
 
 //---------------------------------------------------------------------  
@@ -190,6 +187,9 @@ public class Shader {
 //          // 2. 发起OpenGL调用来请求渲染你的对象  
         glBindVertexArray(VAOs[Triangles]);
         glDrawArrays(GL_TRIANGLES, 0, NumVertices);
+        
+        
+       
         try {
             Thread.sleep(10);
         } catch (InterruptedException ex) {
@@ -197,6 +197,7 @@ public class Shader {
 
     }
 
+    
     void t1() {
         glfwInit();
         glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
