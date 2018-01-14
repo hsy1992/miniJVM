@@ -380,8 +380,10 @@ public class Boing {
 
         GL.glPopMatrix();
 //        System.out.println("error:"+GL.glGetError());
+
         return;
     }
+    
 
     /**
      * ***************************************************************************
@@ -434,7 +436,7 @@ public class Boing {
         //GL.DrawGrid();
         drawBallHow = DRAW_BALL;
         DrawBoingBall();
-
+        
         GL.glFlush();
     }
 

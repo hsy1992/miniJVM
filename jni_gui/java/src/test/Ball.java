@@ -1,107 +1,226 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
+//package test;
+//
+//import static java.lang.Math.cos;
+//import static java.lang.Math.sin;
+//import static org.mini.gl.GL.GL_LINE_LOOP;
+//import static org.mini.gl.GL.GL_MODELVIEW;
+//import static org.mini.gl.GL.GL_PROJECTION;
+//import static org.mini.gl.GL.GL_QUADS;
+//import static org.mini.gl.GL.glBegin;
+//import static org.mini.gl.GL.glColor3f;
+//import static org.mini.gl.GL.glEnd;
+//import static org.mini.gl.GL.glLoadIdentity;
+//import static org.mini.gl.GL.glMatrixMode;
+//import static org.mini.gl.GL.glOrtho;
+//import static org.mini.gl.GL.glVertex3f;
+//import static org.mini.gl.GL.glViewport;
+//
+//class Ball {
+//
+//    Point[] mx;
+//    float pi = 3.1415926f;
+//    public static final int SOLID = 3000;
+//    public static final int WIRE = 3001;
+//
+//    float tx,ty,tz;
+////typedef int int;
+//    class Point {
+//
+//        float x;
+//        float y;
+//        float z;
+//    };
+//    int w, h, mode;
+//
+//    public Ball(float radius, int slices, int mode) {
+//        w = 2 * slices;
+//        h = slices;
+//        this.mode = mode;
+//        mx = getPointMatrix(radius, slices);
+//    }
+//    
+//    void translate(float tx,float ty,float tz){
+//        this.tx=tx;
+//        this.ty=ty;
+//        this.tz=tz;
+//    }
+//
+//
+//    void reshape(int w, int h) {
+//        glViewport(0, 0, (int) w, (int) h);
+//        glMatrixMode(GL_PROJECTION);
+//        glLoadIdentity();
+//        glOrtho(0.0, 500, 0.0, 500, -500, 500);
+//        glMatrixMode(GL_MODELVIEW);
+//        glLoadIdentity();
+//    }
+//
+//    int getPoint(float radius, float a, float b, Point p) {
+//        p.x = (float) (radius * sin(a * pi / 180.0f) * cos(b * pi / 180.0f));
+//        p.y = (float) (radius * sin(a * pi / 180.0f) * sin(b * pi / 180.0f));
+//        p.z = (float) (radius * cos(a * pi / 180.0f));
+//        return 1;
+//    }
+//
+//    void drawSlice(Point p1, Point p2, Point p3, Point p4, int mode) {
+//        switch (mode) {
+//            case SOLID:
+//                glBegin(GL_QUADS);
+//                break;
+//            case WIRE:
+//                glBegin(GL_LINE_LOOP);
+//                break;
+//        }
+//        glColor3f(1, 0, 0);
+//        glVertex3f(p1.x, p1.y, p1.z);
+//        glVertex3f(p2.x, p2.y, p2.z);
+//        glVertex3f(p3.x, p3.y, p3.z);
+//        glVertex3f(p4.x, p4.y, p4.z);
+//        glEnd();
+//    }
+//
+//    Point[] getPointMatrix(float radius, int slices) {
+//        int i, j, w = 2 * slices, h = slices;
+//        float a = 0.0f, b = 0.0f;
+//        float hStep = 180.0f / (h - 1);
+//        float wStep = 360.0f / w;
+//        int length = w * h;
+//        Point[] matrix;
+//        matrix = new Point[length];
+//        for (a = 0.0f, i = 0; i < h; i++, a += hStep) {
+//            for (b = 0.0f, j = 0; j < w; j++, b += wStep) {
+//                matrix[i * w + j] = new Point();
+//                getPoint(radius, a, b, matrix[i * w + j]);
+//            }
+//        }
+//        return matrix;
+//    }
+//
+//    int drawSphere() {
+//        int i = 0, j = 0;
+//        for (; i < h - 1; i++) {
+//            for (j = 0; j < w - 1; j++) {
+//                drawSlice(mx[i * w + j], mx[i * w + j + 1], mx[(i + 1) * w + j + 1], mx[(i + 1) * w + j], mode);
+//            }
+//            drawSlice(mx[i * w + j], mx[i * w], mx[(i + 1) * w], mx[(i + 1) * w + j], mode);
+//        }
+//
+//        return 1;
+//    }
+//}
 package test;
 
-import org.mini.gl.GL;
-import static org.mini.gl.GL.glGetError;
+import static java.lang.Math.cos;
+import static java.lang.Math.sin;
+import static org.mini.gl.GL.GL_LINE_LOOP;
+import static org.mini.gl.GL.GL_MODELVIEW;
+import static org.mini.gl.GL.GL_PROJECTION;
+import static org.mini.gl.GL.GL_QUADS;
+import static org.mini.gl.GL.glBegin;
+import static org.mini.gl.GL.glColor3f;
+import static org.mini.gl.GL.glEnd;
+import static org.mini.gl.GL.glLoadIdentity;
+import static org.mini.gl.GL.glMatrixMode;
+import static org.mini.gl.GL.glOrtho;
+import static org.mini.gl.GL.glVertex3f;
+import static org.mini.gl.GL.glViewport;
+import org.mini.glfw.utils.Gutil;
 
-/**
- *
- * @author gust
- */
-public class Ball {
+class Ball {
 
-    final float PI = 3.1415926535f;
-    final float PI2 = 3.1415926535f * 2;
-    final int width = 600, height = 600;
+    float[][] mx;
+    float pi = 3.1415926f;
+    public static final int SOLID = 3000;
+    public static final int WIRE = 3001;
+    final int x = 0, y = 1, z = 2;
 
-    int uStepsNum = 50, vStepNum = 50;
+    float[] trans = new float[3];
+//typedef int int;
 
     class Point {
 
-        Point() {
-        }
-
-        ;
-        Point(double a, double b, double c) {
-            x = a;
-            y = b;
-            z = c;
-        }
-        ;
-    double x;
-        double y;
-        double z;
+        float x;
+        float y;
+        float z;
     };
+    int w, h, mode;
 
-    Point getPoint(double u, double v) {
-        double x = Math.sin(PI * v) * Math.cos(PI2 * u);
-        double y = Math.sin(PI * v) * Math.sin(PI2 * u);
-        double z = Math.cos(PI * v);
-        return new Point(x, y, z);
+    public Ball(float radius, int slices, int mode) {
+        w = 2 * slices;
+        h = slices;
+        this.mode = mode;
+        mx = getPointMatrix(radius, slices);
     }
 
-    void drawWire() {
-        double ustep = 1 / (double) uStepsNum, vstep = 1 / (double) vStepNum;
-        double u = 0, v = 0;
-        //绘制下端三角形组
-        for (int i = 0; i < uStepsNum; i++) {
-            GL.glBegin(GL.GL_LINE_LOOP);
-            Point a = getPoint(0, 0);
-            GL.glVertex3d(a.x, a.y, a.z);
-            Point b = getPoint(u, vstep);
-            GL.glVertex3d(b.x, b.y, b.z);
-            Point c = getPoint(u + ustep, vstep);
-            GL.glVertex3d(c.x, c.y, c.z);
-            u += ustep;
-            GL.glEnd();
+    void translate(float tx, float ty, float tz) {
+        trans[x] = tx;
+        trans[y] = ty;
+        trans[z] = tz;
+    }
+
+    void reshape(int w, int h) {
+        glViewport(0, 0, (int) w, (int) h);
+        glMatrixMode(GL_PROJECTION);
+        glLoadIdentity();
+        glOrtho(0.0, 500, 0.0, 500, -500, 500);
+        glMatrixMode(GL_MODELVIEW);
+        glLoadIdentity();
+    }
+
+    int getPoint(float radius, float a, float b, float[] p) {
+        p[x] = (float) (radius * sin(a * pi / 180.0f) * cos(b * pi / 180.0f));
+        p[y] = (float) (radius * sin(a * pi / 180.0f) * sin(b * pi / 180.0f));
+        p[z] = (float) (radius * cos(a * pi / 180.0f));
+        return 1;
+    }
+
+    void drawSlice(float[] p1, float[] p2, float[] p3, float[] p4, int mode) {
+        switch (mode) {
+            case SOLID:
+                glBegin(GL_QUADS);
+                break;
+            case WIRE:
+                glBegin(GL_LINE_LOOP);
+                break;
         }
-        //绘制中间四边形组
-        u = 0;
-        v = vstep;
-        for (int i = 1; i < vStepNum - 1; i++) {
-            for (int j = 0; j < uStepsNum; j++) {
-                GL.glBegin(GL.GL_LINE_LOOP);
-                Point a = getPoint(u, v);
-                Point b = getPoint(u + ustep, v);
-                Point c = getPoint(u + ustep, v + vstep);
-                Point d = getPoint(u, v + vstep);
-                GL.glVertex3d(a.x, a.y, a.z);
-                GL.glVertex3d(b.x, b.y, b.z);
-                GL.glVertex3d(c.x, c.y, c.z);
-                GL.glVertex3d(d.x, d.y, d.z);
-                u += ustep;
-                GL.glEnd();
+        p1 = Gutil.vec_add(new float[3], p1, trans);
+        p2 = Gutil.vec_add(new float[3], p2, trans);
+        p3 = Gutil.vec_add(new float[3], p3, trans);
+        p4 = Gutil.vec_add(new float[3], p4, trans);
+        //glColor3f(1, 0, 0);
+        glVertex3f(p1[x], p1[y], p1[z]);
+        glVertex3f(p2[x], p2[y], p2[z]);
+        glVertex3f(p3[x], p3[y], p3[z]);
+        glVertex3f(p4[x], p4[y], p4[z]);
+        glEnd();
+    }
+
+    float[][] getPointMatrix(float radius, int slices) {
+        int i, j, w = 2 * slices, h = slices;
+        float a = 0.0f, b = 0.0f;
+        float hStep = 180.0f / (h - 1);
+        float wStep = 360.0f / w;
+        int length = w * h;
+        float[][] matrix;
+        matrix = new float[length][];
+        for (a = 0.0f, i = 0; i < h; i++, a += hStep) {
+            for (b = 0.0f, j = 0; j < w; j++, b += wStep) {
+                matrix[i * w + j] = new float[3];
+                getPoint(radius, a, b, matrix[i * w + j]);
             }
-            v += vstep;
         }
-        //绘制下端三角形组
-        u = 0;
-        for (int i = 0; i < uStepsNum; i++) {
-            GL.glBegin(GL.GL_LINE_LOOP);
-            Point a = getPoint(0, 1);
-            Point b = getPoint(u, 1 - vstep);
-            Point c = getPoint(u + ustep, 1 - vstep);
-            GL.glVertex3d(a.x, a.y, a.z);
-            GL.glVertex3d(b.x, b.y, b.z);
-            GL.glVertex3d(c.x, c.y, c.z);
-            GL.glEnd();
-        }
+        return matrix;
     }
 
-    void drawBall() {
-        System.out.println("  error:" + glGetError());
-        GL.glMatrixMode(GL.GL_MODELVIEW);
-        GL.glLoadIdentity();
-        GL.glClear(GL.GL_COLOR_BUFFER_BIT | GL.GL_DEPTH_BUFFER_BIT);
-        GL.glColor3f(1.0f, 0.0f, 0.0f);
-        GL.glPointSize(1.0f);
-        GL.glRotated(30, 1, 0, 0);
-        GL.glRotated(60, 0, 1, 0);
-        GL.glRotated(90, 0, 0, 1);
-        drawWire();
+    int drawSphere() {
+        int i = 0, j = 0;
+        for (; i < h - 1; i++) {
+            for (j = 0; j < w - 1; j++) {
+                drawSlice(mx[i * w + j], mx[i * w + j + 1], mx[(i + 1) * w + j + 1], mx[(i + 1) * w + j], mode);
+            }
+            drawSlice(mx[i * w + j], mx[i * w], mx[(i + 1) * w], mx[(i + 1) * w + j], mode);
+        }
+
+        return 1;
     }
 }

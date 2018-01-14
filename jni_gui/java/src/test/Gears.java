@@ -331,7 +331,6 @@ public class Gears {
         GL.glEnable(GL_NORMALIZE);
     }
 
-    Ball ball=new Ball();
     void t1() {
         Glfw.glfwInit();
 //        Glfw.glfwWindowHint(Glfw.GLFW_CONTEXT_VERSION_MAJOR, 2);

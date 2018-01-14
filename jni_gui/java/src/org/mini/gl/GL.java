@@ -9467,40 +9467,40 @@ public class GL {
     /*
 		glDisableClientState((GLenum)cap);
      */
-    public static native void glGetBooleanv(int pname, Buffer params, int paramsByteOffset);
+    public static native void glGetBooleanv(int pname, Buffer params, int paramsOffset);
 
     /*
-		glGetBooleanv((GLenum)pname, (GLboolean*)(params + paramsByteOffset));
+		glGetBooleanv((GLenum)pname, (GLboolean*)(params + paramsOffset));
      */
     public static native void glGetBooleanv(int pname, long params);
 
     /*
 		glGetBooleanv((GLenum)pname, (GLboolean*)params);
      */
-    public static native void glGetDoublev(int pname, Buffer params, int paramsByteOffset);
+    public static native void glGetDoublev(int pname, Buffer params, int paramsOffset);
 
     /*
-		glGetDoublev((GLenum)pname, (GLdouble*)(params + paramsByteOffset));
+		glGetDoublev((GLenum)pname, (GLdouble*)(params + paramsOffset));
      */
     public static native void glGetDoublev(int pname, long params);
 
     /*
 		glGetDoublev((GLenum)pname, (GLdouble*)params);
      */
-    public static native void glGetFloatv(int pname, Buffer params, int paramsByteOffset);
+    public static native void glGetFloatv(int pname, Buffer params, int paramsOffset);
 
     /*
-		glGetFloatv((GLenum)pname, (GLfloat*)(params + paramsByteOffset));
+		glGetFloatv((GLenum)pname, (GLfloat*)(params + paramsOffset));
      */
     public static native void glGetFloatv(int pname, long params);
 
     /*
 		glGetFloatv((GLenum)pname, (GLfloat*)params);
      */
-    public static native void glGetIntegerv(int pname, Buffer params, int paramsByteOffset);
+    public static native void glGetIntegerv(int pname, Buffer params, int paramsOffset);
 
     /*
-		glGetIntegerv((GLenum)pname, (GLint*)(params + paramsByteOffset));
+		glGetIntegerv((GLenum)pname, (GLint*)(params + paramsOffset));
      */
     public static native void glGetIntegerv(int pname, long params);
 
@@ -10812,40 +10812,40 @@ public class GL {
     /*
 		glLighti((GLenum)light, (GLenum)pname, (GLint)param);
      */
-    public static native void glLightfv(int light, int pname, float[] params, int paramsByteOffset);
+    public static native void glLightfv(int light, int pname, float[] params, int paramsOffset);
 
     /*
-		glLightfv((GLenum)light, (GLenum)pname, (const GLfloat*)(params + paramsByteOffset));
+		glLightfv((GLenum)light, (GLenum)pname, (const GLfloat*)(params + paramsOffset));
      */
 //    public static native void glLightfv(int light, int pname, long params);
 
     /*
 		glLightfv((GLenum)light, (GLenum)pname, (const GLfloat*)params);
      */
-    public static native void glLightiv(int light, int pname, Buffer params, int paramsByteOffset);
+    public static native void glLightiv(int light, int pname, Buffer params, int paramsOffset);
 
     /*
-		glLightiv((GLenum)light, (GLenum)pname, (const GLint*)(params + paramsByteOffset));
+		glLightiv((GLenum)light, (GLenum)pname, (const GLint*)(params + paramsOffset));
      */
     public static native void glLightiv(int light, int pname, long params);
 
     /*
 		glLightiv((GLenum)light, (GLenum)pname, (const GLint*)params);
      */
-    public static native void glGetLightfv(int light, int pname, Buffer params, int paramsByteOffset);
+    public static native void glGetLightfv(int light, int pname, Buffer params, int paramsOffset);
 
     /*
-		glGetLightfv((GLenum)light, (GLenum)pname, (GLfloat*)(params + paramsByteOffset));
+		glGetLightfv((GLenum)light, (GLenum)pname, (GLfloat*)(params + paramsOffset));
      */
     public static native void glGetLightfv(int light, int pname, long params);
 
     /*
 		glGetLightfv((GLenum)light, (GLenum)pname, (GLfloat*)params);
      */
-    public static native void glGetLightiv(int light, int pname, Buffer params, int paramsByteOffset);
+    public static native void glGetLightiv(int light, int pname, Buffer params, int paramsOffset);
 
     /*
-		glGetLightiv((GLenum)light, (GLenum)pname, (GLint*)(params + paramsByteOffset));
+		glGetLightiv((GLenum)light, (GLenum)pname, (GLint*)(params + paramsOffset));
      */
     public static native void glGetLightiv(int light, int pname, long params);
 
@@ -10862,20 +10862,20 @@ public class GL {
     /*
 		glLightModeli((GLenum)pname, (GLint)param);
      */
-    public static native void glLightModelfv(int pname, Buffer params, int paramsByteOffset);
+    public static native void glLightModelfv(int pname, Buffer params, int paramsOffset);
 
     /*
-		glLightModelfv((GLenum)pname, (const GLfloat*)(params + paramsByteOffset));
+		glLightModelfv((GLenum)pname, (const GLfloat*)(params + paramsOffset));
      */
     public static native void glLightModelfv(int pname, long params);
 
     /*
 		glLightModelfv((GLenum)pname, (const GLfloat*)params);
      */
-    public static native void glLightModeliv(int pname, Buffer params, int paramsByteOffset);
+    public static native void glLightModeliv(int pname, Buffer params, int paramsOffset);
 
     /*
-		glLightModeliv((GLenum)pname, (const GLint*)(params + paramsByteOffset));
+		glLightModeliv((GLenum)pname, (const GLint*)(params + paramsOffset));
      */
     public static native void glLightModeliv(int pname, long params);
 
@@ -10892,40 +10892,40 @@ public class GL {
     /*
 		glMateriali((GLenum)face, (GLenum)pname, (GLint)param);
      */
-    public static native void glMaterialfv(int face, int pname, float[] params, int paramsByteOffset);
+    public static native void glMaterialfv(int face, int pname, float[] params, int paramsOffset);
 
     /*
-		glMaterialfv((GLenum)face, (GLenum)pname, (const GLfloat*)(params + paramsByteOffset));
+		glMaterialfv((GLenum)face, (GLenum)pname, (const GLfloat*)(params + paramsOffset));
      */
 //    public static native void glMaterialfv(int face, int pname, long params);
 
     /*
 		glMaterialfv((GLenum)face, (GLenum)pname, (const GLfloat*)params);
      */
-    public static native void glMaterialiv(int face, int pname, Buffer params, int paramsByteOffset);
+    public static native void glMaterialiv(int face, int pname, Buffer params, int paramsOffset);
 
     /*
-		glMaterialiv((GLenum)face, (GLenum)pname, (const GLint*)(params + paramsByteOffset));
+		glMaterialiv((GLenum)face, (GLenum)pname, (const GLint*)(params + paramsOffset));
      */
     public static native void glMaterialiv(int face, int pname, long params);
 
     /*
 		glMaterialiv((GLenum)face, (GLenum)pname, (const GLint*)params);
      */
-    public static native void glGetMaterialfv(int face, int pname, Buffer params, int paramsByteOffset);
+    public static native void glGetMaterialfv(int face, int pname, Buffer params, int paramsOffset);
 
     /*
-		glGetMaterialfv((GLenum)face, (GLenum)pname, (GLfloat*)(params + paramsByteOffset));
+		glGetMaterialfv((GLenum)face, (GLenum)pname, (GLfloat*)(params + paramsOffset));
      */
     public static native void glGetMaterialfv(int face, int pname, long params);
 
     /*
 		glGetMaterialfv((GLenum)face, (GLenum)pname, (GLfloat*)params);
      */
-    public static native void glGetMaterialiv(int face, int pname, Buffer params, int paramsByteOffset);
+    public static native void glGetMaterialiv(int face, int pname, Buffer params, int paramsOffset);
 
     /*
-		glGetMaterialiv((GLenum)face, (GLenum)pname, (GLint*)(params + paramsByteOffset));
+		glGetMaterialiv((GLenum)face, (GLenum)pname, (GLint*)(params + paramsOffset));
      */
     public static native void glGetMaterialiv(int face, int pname, long params);
 
@@ -11092,60 +11092,60 @@ public class GL {
     /*
 		glTexGeni((GLenum)coord, (GLenum)pname, (GLint)param);
      */
-    public static native void glTexGendv(int coord, int pname, Buffer params, int paramsByteOffset);
+    public static native void glTexGendv(int coord, int pname, Buffer params, int paramsOffset);
 
     /*
-		glTexGendv((GLenum)coord, (GLenum)pname, (const GLdouble*)(params + paramsByteOffset));
+		glTexGendv((GLenum)coord, (GLenum)pname, (const GLdouble*)(params + paramsOffset));
      */
     public static native void glTexGendv(int coord, int pname, long params);
 
     /*
 		glTexGendv((GLenum)coord, (GLenum)pname, (const GLdouble*)params);
      */
-    public static native void glTexGenfv(int coord, int pname, Buffer params, int paramsByteOffset);
+    public static native void glTexGenfv(int coord, int pname, Buffer params, int paramsOffset);
 
     /*
-		glTexGenfv((GLenum)coord, (GLenum)pname, (const GLfloat*)(params + paramsByteOffset));
+		glTexGenfv((GLenum)coord, (GLenum)pname, (const GLfloat*)(params + paramsOffset));
      */
     public static native void glTexGenfv(int coord, int pname, long params);
 
     /*
 		glTexGenfv((GLenum)coord, (GLenum)pname, (const GLfloat*)params);
      */
-    public static native void glTexGeniv(int coord, int pname, Buffer params, int paramsByteOffset);
+    public static native void glTexGeniv(int coord, int pname, Buffer params, int paramsOffset);
 
     /*
-		glTexGeniv((GLenum)coord, (GLenum)pname, (const GLint*)(params + paramsByteOffset));
+		glTexGeniv((GLenum)coord, (GLenum)pname, (const GLint*)(params + paramsOffset));
      */
     public static native void glTexGeniv(int coord, int pname, long params);
 
     /*
 		glTexGeniv((GLenum)coord, (GLenum)pname, (const GLint*)params);
      */
-    public static native void glGetTexGendv(int coord, int pname, Buffer params, int paramsByteOffset);
+    public static native void glGetTexGendv(int coord, int pname, Buffer params, int paramsOffset);
 
     /*
-		glGetTexGendv((GLenum)coord, (GLenum)pname, (GLdouble*)(params + paramsByteOffset));
+		glGetTexGendv((GLenum)coord, (GLenum)pname, (GLdouble*)(params + paramsOffset));
      */
     public static native void glGetTexGendv(int coord, int pname, long params);
 
     /*
 		glGetTexGendv((GLenum)coord, (GLenum)pname, (GLdouble*)params);
      */
-    public static native void glGetTexGenfv(int coord, int pname, Buffer params, int paramsByteOffset);
+    public static native void glGetTexGenfv(int coord, int pname, Buffer params, int paramsOffset);
 
     /*
-		glGetTexGenfv((GLenum)coord, (GLenum)pname, (GLfloat*)(params + paramsByteOffset));
+		glGetTexGenfv((GLenum)coord, (GLenum)pname, (GLfloat*)(params + paramsOffset));
      */
     public static native void glGetTexGenfv(int coord, int pname, long params);
 
     /*
 		glGetTexGenfv((GLenum)coord, (GLenum)pname, (GLfloat*)params);
      */
-    public static native void glGetTexGeniv(int coord, int pname, Buffer params, int paramsByteOffset);
+    public static native void glGetTexGeniv(int coord, int pname, Buffer params, int paramsOffset);
 
     /*
-		glGetTexGeniv((GLenum)coord, (GLenum)pname, (GLint*)(params + paramsByteOffset));
+		glGetTexGeniv((GLenum)coord, (GLenum)pname, (GLint*)(params + paramsOffset));
      */
     public static native void glGetTexGeniv(int coord, int pname, long params);
 
@@ -11162,40 +11162,40 @@ public class GL {
     /*
 		glTexEnvi((GLenum)target, (GLenum)pname, (GLint)param);
      */
-    public static native void glTexEnvfv(int target, int pname, Buffer params, int paramsByteOffset);
+    public static native void glTexEnvfv(int target, int pname, Buffer params, int paramsOffset);
 
     /*
-		glTexEnvfv((GLenum)target, (GLenum)pname, (const GLfloat*)(params + paramsByteOffset));
+		glTexEnvfv((GLenum)target, (GLenum)pname, (const GLfloat*)(params + paramsOffset));
      */
     public static native void glTexEnvfv(int target, int pname, long params);
 
     /*
 		glTexEnvfv((GLenum)target, (GLenum)pname, (const GLfloat*)params);
      */
-    public static native void glTexEnviv(int target, int pname, Buffer params, int paramsByteOffset);
+    public static native void glTexEnviv(int target, int pname, Buffer params, int paramsOffset);
 
     /*
-		glTexEnviv((GLenum)target, (GLenum)pname, (const GLint*)(params + paramsByteOffset));
+		glTexEnviv((GLenum)target, (GLenum)pname, (const GLint*)(params + paramsOffset));
      */
     public static native void glTexEnviv(int target, int pname, long params);
 
     /*
 		glTexEnviv((GLenum)target, (GLenum)pname, (const GLint*)params);
      */
-    public static native void glGetTexEnvfv(int target, int pname, Buffer params, int paramsByteOffset);
+    public static native void glGetTexEnvfv(int target, int pname, Buffer params, int paramsOffset);
 
     /*
-		glGetTexEnvfv((GLenum)target, (GLenum)pname, (GLfloat*)(params + paramsByteOffset));
+		glGetTexEnvfv((GLenum)target, (GLenum)pname, (GLfloat*)(params + paramsOffset));
      */
     public static native void glGetTexEnvfv(int target, int pname, long params);
 
     /*
 		glGetTexEnvfv((GLenum)target, (GLenum)pname, (GLfloat*)params);
      */
-    public static native void glGetTexEnviv(int target, int pname, Buffer params, int paramsByteOffset);
+    public static native void glGetTexEnviv(int target, int pname, Buffer params, int paramsOffset);
 
     /*
-		glGetTexEnviv((GLenum)target, (GLenum)pname, (GLint*)(params + paramsByteOffset));
+		glGetTexEnviv((GLenum)target, (GLenum)pname, (GLint*)(params + paramsOffset));
      */
     public static native void glGetTexEnviv(int target, int pname, long params);
 
@@ -11212,60 +11212,60 @@ public class GL {
     /*
 		glTexParameteri((GLenum)target, (GLenum)pname, (GLint)param);
      */
-    public static native void glTexParameterfv(int target, int pname, Buffer params, int paramsByteOffset);
+    public static native void glTexParameterfv(int target, int pname, Buffer params, int paramsOffset);
 
     /*
-		glTexParameterfv((GLenum)target, (GLenum)pname, (const GLfloat*)(params + paramsByteOffset));
+		glTexParameterfv((GLenum)target, (GLenum)pname, (const GLfloat*)(params + paramsOffset));
      */
     public static native void glTexParameterfv(int target, int pname, long params);
 
     /*
 		glTexParameterfv((GLenum)target, (GLenum)pname, (const GLfloat*)params);
      */
-    public static native void glTexParameteriv(int target, int pname, Buffer params, int paramsByteOffset);
+    public static native void glTexParameteriv(int target, int pname, Buffer params, int paramsOffset);
 
     /*
-		glTexParameteriv((GLenum)target, (GLenum)pname, (const GLint*)(params + paramsByteOffset));
+		glTexParameteriv((GLenum)target, (GLenum)pname, (const GLint*)(params + paramsOffset));
      */
     public static native void glTexParameteriv(int target, int pname, long params);
 
     /*
 		glTexParameteriv((GLenum)target, (GLenum)pname, (const GLint*)params);
      */
-    public static native void glGetTexParameterfv(int target, int pname, Buffer params, int paramsByteOffset);
+    public static native void glGetTexParameterfv(int target, int pname, Buffer params, int paramsOffset);
 
     /*
-		glGetTexParameterfv((GLenum)target, (GLenum)pname, (GLfloat*)(params + paramsByteOffset));
+		glGetTexParameterfv((GLenum)target, (GLenum)pname, (GLfloat*)(params + paramsOffset));
      */
     public static native void glGetTexParameterfv(int target, int pname, long params);
 
     /*
 		glGetTexParameterfv((GLenum)target, (GLenum)pname, (GLfloat*)params);
      */
-    public static native void glGetTexParameteriv(int target, int pname, Buffer params, int paramsByteOffset);
+    public static native void glGetTexParameteriv(int target, int pname, Buffer params, int paramsOffset);
 
     /*
-		glGetTexParameteriv((GLenum)target, (GLenum)pname, (GLint*)(params + paramsByteOffset));
+		glGetTexParameteriv((GLenum)target, (GLenum)pname, (GLint*)(params + paramsOffset));
      */
     public static native void glGetTexParameteriv(int target, int pname, long params);
 
     /*
 		glGetTexParameteriv((GLenum)target, (GLenum)pname, (GLint*)params);
      */
-    public static native void glGetTexLevelParameterfv(int target, int level, int pname, Buffer params, int paramsByteOffset);
+    public static native void glGetTexLevelParameterfv(int target, int level, int pname, Buffer params, int paramsOffset);
 
     /*
-		glGetTexLevelParameterfv((GLenum)target, (GLint)level, (GLenum)pname, (GLfloat*)(params + paramsByteOffset));
+		glGetTexLevelParameterfv((GLenum)target, (GLint)level, (GLenum)pname, (GLfloat*)(params + paramsOffset));
      */
     public static native void glGetTexLevelParameterfv(int target, int level, int pname, long params);
 
     /*
 		glGetTexLevelParameterfv((GLenum)target, (GLint)level, (GLenum)pname, (GLfloat*)params);
      */
-    public static native void glGetTexLevelParameteriv(int target, int level, int pname, Buffer params, int paramsByteOffset);
+    public static native void glGetTexLevelParameteriv(int target, int level, int pname, Buffer params, int paramsOffset);
 
     /*
-		glGetTexLevelParameteriv((GLenum)target, (GLint)level, (GLenum)pname, (GLint*)(params + paramsByteOffset));
+		glGetTexLevelParameteriv((GLenum)target, (GLint)level, (GLenum)pname, (GLint*)(params + paramsOffset));
      */
     public static native void glGetTexLevelParameteriv(int target, int level, int pname, long params);
 
@@ -11482,20 +11482,20 @@ public class GL {
     /*
 		glFogi((GLenum)pname, (GLint)param);
      */
-    public static native void glFogfv(int pname, Buffer params, int paramsByteOffset);
+    public static native void glFogfv(int pname, Buffer params, int paramsOffset);
 
     /*
-		glFogfv((GLenum)pname, (const GLfloat*)(params + paramsByteOffset));
+		glFogfv((GLenum)pname, (const GLfloat*)(params + paramsOffset));
      */
     public static native void glFogfv(int pname, long params);
 
     /*
 		glFogfv((GLenum)pname, (const GLfloat*)params);
      */
-    public static native void glFogiv(int pname, Buffer params, int paramsByteOffset);
+    public static native void glFogiv(int pname, Buffer params, int paramsOffset);
 
     /*
-		glFogiv((GLenum)pname, (const GLint*)(params + paramsByteOffset));
+		glFogiv((GLenum)pname, (const GLint*)(params + paramsOffset));
      */
     public static native void glFogiv(int pname, long params);
 
@@ -11782,20 +11782,20 @@ public class GL {
     /*
 		ext_glColorTable((GLenum)target, (GLenum)internalformat, (GLsizei)width, (GLenum)format, (GLenum)type, (const GLvoid*)table);
      */
-    public static native void glColorTableParameterfv(int target, int pname, Buffer params, int paramsByteOffset);
+    public static native void glColorTableParameterfv(int target, int pname, Buffer params, int paramsOffset);
 
     /*
-		ext_glColorTableParameterfv((GLenum)target, (GLenum)pname, (const GLfloat*)(params + paramsByteOffset));
+		ext_glColorTableParameterfv((GLenum)target, (GLenum)pname, (const GLfloat*)(params + paramsOffset));
      */
     public static native void glColorTableParameterfv(int target, int pname, long params);
 
     /*
 		ext_glColorTableParameterfv((GLenum)target, (GLenum)pname, (const GLfloat*)params);
      */
-    public static native void glColorTableParameteriv(int target, int pname, Buffer params, int paramsByteOffset);
+    public static native void glColorTableParameteriv(int target, int pname, Buffer params, int paramsOffset);
 
     /*
-		ext_glColorTableParameteriv((GLenum)target, (GLenum)pname, (const GLint*)(params + paramsByteOffset));
+		ext_glColorTableParameteriv((GLenum)target, (GLenum)pname, (const GLint*)(params + paramsOffset));
      */
     public static native void glColorTableParameteriv(int target, int pname, long params);
 
@@ -11817,20 +11817,20 @@ public class GL {
     /*
 		ext_glGetColorTable((GLenum)target, (GLenum)format, (GLenum)type, (GLvoid*)table);
      */
-    public static native void glGetColorTableParameterfv(int target, int pname, Buffer params, int paramsByteOffset);
+    public static native void glGetColorTableParameterfv(int target, int pname, Buffer params, int paramsOffset);
 
     /*
-		ext_glGetColorTableParameterfv((GLenum)target, (GLenum)pname, (GLfloat*)(params + paramsByteOffset));
+		ext_glGetColorTableParameterfv((GLenum)target, (GLenum)pname, (GLfloat*)(params + paramsOffset));
      */
     public static native void glGetColorTableParameterfv(int target, int pname, long params);
 
     /*
 		ext_glGetColorTableParameterfv((GLenum)target, (GLenum)pname, (GLfloat*)params);
      */
-    public static native void glGetColorTableParameteriv(int target, int pname, Buffer params, int paramsByteOffset);
+    public static native void glGetColorTableParameteriv(int target, int pname, Buffer params, int paramsOffset);
 
     /*
-		ext_glGetColorTableParameteriv((GLenum)target, (GLenum)pname, (GLint*)(params + paramsByteOffset));
+		ext_glGetColorTableParameteriv((GLenum)target, (GLenum)pname, (GLint*)(params + paramsOffset));
      */
     public static native void glGetColorTableParameteriv(int target, int pname, long params);
 
@@ -11877,10 +11877,10 @@ public class GL {
     /*
 		ext_glConvolutionParameterf((GLenum)target, (GLenum)pname, (GLfloat)params);
      */
-    public static native void glConvolutionParameterfv(int target, int pname, Buffer params, int paramsByteOffset);
+    public static native void glConvolutionParameterfv(int target, int pname, Buffer params, int paramsOffset);
 
     /*
-		ext_glConvolutionParameterfv((GLenum)target, (GLenum)pname, (const GLfloat*)(params + paramsByteOffset));
+		ext_glConvolutionParameterfv((GLenum)target, (GLenum)pname, (const GLfloat*)(params + paramsOffset));
      */
     public static native void glConvolutionParameterfv(int target, int pname, long params);
 
@@ -11892,10 +11892,10 @@ public class GL {
     /*
 		ext_glConvolutionParameteri((GLenum)target, (GLenum)pname, (GLint)params);
      */
-    public static native void glConvolutionParameteriv(int target, int pname, Buffer params, int paramsByteOffset);
+    public static native void glConvolutionParameteriv(int target, int pname, Buffer params, int paramsOffset);
 
     /*
-		ext_glConvolutionParameteriv((GLenum)target, (GLenum)pname, (const GLint*)(params + paramsByteOffset));
+		ext_glConvolutionParameteriv((GLenum)target, (GLenum)pname, (const GLint*)(params + paramsOffset));
      */
     public static native void glConvolutionParameteriv(int target, int pname, long params);
 
@@ -11922,20 +11922,20 @@ public class GL {
     /*
 		ext_glGetConvolutionFilter((GLenum)target, (GLenum)format, (GLenum)type, (GLvoid*)image);
      */
-    public static native void glGetConvolutionParameterfv(int target, int pname, Buffer params, int paramsByteOffset);
+    public static native void glGetConvolutionParameterfv(int target, int pname, Buffer params, int paramsOffset);
 
     /*
-		ext_glGetConvolutionParameterfv((GLenum)target, (GLenum)pname, (GLfloat*)(params + paramsByteOffset));
+		ext_glGetConvolutionParameterfv((GLenum)target, (GLenum)pname, (GLfloat*)(params + paramsOffset));
      */
     public static native void glGetConvolutionParameterfv(int target, int pname, long params);
 
     /*
 		ext_glGetConvolutionParameterfv((GLenum)target, (GLenum)pname, (GLfloat*)params);
      */
-    public static native void glGetConvolutionParameteriv(int target, int pname, Buffer params, int paramsByteOffset);
+    public static native void glGetConvolutionParameteriv(int target, int pname, Buffer params, int paramsOffset);
 
     /*
-		ext_glGetConvolutionParameteriv((GLenum)target, (GLenum)pname, (GLint*)(params + paramsByteOffset));
+		ext_glGetConvolutionParameteriv((GLenum)target, (GLenum)pname, (GLint*)(params + paramsOffset));
      */
     public static native void glGetConvolutionParameteriv(int target, int pname, long params);
 
@@ -11972,20 +11972,20 @@ public class GL {
     /*
 		ext_glGetHistogram((GLenum)target, (GLboolean)reset, (GLenum)format, (GLenum)type, (GLvoid*)values);
      */
-    public static native void glGetHistogramParameterfv(int target, int pname, Buffer params, int paramsByteOffset);
+    public static native void glGetHistogramParameterfv(int target, int pname, Buffer params, int paramsOffset);
 
     /*
-		ext_glGetHistogramParameterfv((GLenum)target, (GLenum)pname, (GLfloat*)(params + paramsByteOffset));
+		ext_glGetHistogramParameterfv((GLenum)target, (GLenum)pname, (GLfloat*)(params + paramsOffset));
      */
     public static native void glGetHistogramParameterfv(int target, int pname, long params);
 
     /*
 		ext_glGetHistogramParameterfv((GLenum)target, (GLenum)pname, (GLfloat*)params);
      */
-    public static native void glGetHistogramParameteriv(int target, int pname, Buffer params, int paramsByteOffset);
+    public static native void glGetHistogramParameteriv(int target, int pname, Buffer params, int paramsOffset);
 
     /*
-		ext_glGetHistogramParameteriv((GLenum)target, (GLenum)pname, (GLint*)(params + paramsByteOffset));
+		ext_glGetHistogramParameteriv((GLenum)target, (GLenum)pname, (GLint*)(params + paramsOffset));
      */
     public static native void glGetHistogramParameteriv(int target, int pname, long params);
 
@@ -12002,20 +12002,20 @@ public class GL {
     /*
 		ext_glGetMinmax((GLenum)target, (GLboolean)reset, (GLenum)format, (GLenum)type, (GLvoid*)values);
      */
-    public static native void glGetMinmaxParameterfv(int target, int pname, Buffer params, int paramsByteOffset);
+    public static native void glGetMinmaxParameterfv(int target, int pname, Buffer params, int paramsOffset);
 
     /*
-		ext_glGetMinmaxParameterfv((GLenum)target, (GLenum)pname, (GLfloat*)(params + paramsByteOffset));
+		ext_glGetMinmaxParameterfv((GLenum)target, (GLenum)pname, (GLfloat*)(params + paramsOffset));
      */
     public static native void glGetMinmaxParameterfv(int target, int pname, long params);
 
     /*
 		ext_glGetMinmaxParameterfv((GLenum)target, (GLenum)pname, (GLfloat*)params);
      */
-    public static native void glGetMinmaxParameteriv(int target, int pname, Buffer params, int paramsByteOffset);
+    public static native void glGetMinmaxParameteriv(int target, int pname, Buffer params, int paramsOffset);
 
     /*
-		ext_glGetMinmaxParameteriv((GLenum)target, (GLenum)pname, (GLint*)(params + paramsByteOffset));
+		ext_glGetMinmaxParameteriv((GLenum)target, (GLenum)pname, (GLint*)(params + paramsOffset));
      */
     public static native void glGetMinmaxParameteriv(int target, int pname, long params);
 
@@ -12437,10 +12437,10 @@ public class GL {
     /*
 		ext_glPointParameterf((GLenum)pname, (GLfloat)param);
      */
-    public static native void glPointParameterfv(int pname, Buffer params, int paramsByteOffset);
+    public static native void glPointParameterfv(int pname, Buffer params, int paramsOffset);
 
     /*
-		ext_glPointParameterfv((GLenum)pname, (const GLfloat*)(params + paramsByteOffset));
+		ext_glPointParameterfv((GLenum)pname, (const GLfloat*)(params + paramsOffset));
      */
     public static native void glPointParameterfv(int pname, long params);
 
@@ -12452,10 +12452,10 @@ public class GL {
     /*
 		ext_glPointParameteri((GLenum)pname, (GLint)param);
      */
-    public static native void glPointParameteriv(int pname, Buffer params, int paramsByteOffset);
+    public static native void glPointParameteriv(int pname, Buffer params, int paramsOffset);
 
     /*
-		ext_glPointParameteriv((GLenum)pname, (const GLint*)(params + paramsByteOffset));
+		ext_glPointParameteriv((GLenum)pname, (const GLint*)(params + paramsOffset));
      */
     public static native void glPointParameteriv(int pname, long params);
 
@@ -12787,30 +12787,30 @@ public class GL {
     /*
 		ext_glEndQuery((GLenum)target);
      */
-    public static native void glGetQueryiv(int target, int pname, Buffer params, int paramsByteOffset);
+    public static native void glGetQueryiv(int target, int pname, Buffer params, int paramsOffset);
 
     /*
-		ext_glGetQueryiv((GLenum)target, (GLenum)pname, (GLint*)(params + paramsByteOffset));
+		ext_glGetQueryiv((GLenum)target, (GLenum)pname, (GLint*)(params + paramsOffset));
      */
     public static native void glGetQueryiv(int target, int pname, long params);
 
     /*
 		ext_glGetQueryiv((GLenum)target, (GLenum)pname, (GLint*)params);
      */
-    public static native void glGetQueryObjectiv(int id, int pname, Buffer params, int paramsByteOffset);
+    public static native void glGetQueryObjectiv(int id, int pname, Buffer params, int paramsOffset);
 
     /*
-		ext_glGetQueryObjectiv((GLuint)id, (GLenum)pname, (GLint*)(params + paramsByteOffset));
+		ext_glGetQueryObjectiv((GLuint)id, (GLenum)pname, (GLint*)(params + paramsOffset));
      */
     public static native void glGetQueryObjectiv(int id, int pname, long params);
 
     /*
 		ext_glGetQueryObjectiv((GLuint)id, (GLenum)pname, (GLint*)params);
      */
-    public static native void glGetQueryObjectuiv(int id, int pname, Buffer params, int paramsByteOffset);
+    public static native void glGetQueryObjectuiv(int id, int pname, Buffer params, int paramsOffset);
 
     /*
-		ext_glGetQueryObjectuiv((GLuint)id, (GLenum)pname, (GLuint*)(params + paramsByteOffset));
+		ext_glGetQueryObjectuiv((GLuint)id, (GLenum)pname, (GLuint*)(params + paramsOffset));
      */
     public static native void glGetQueryObjectuiv(int id, int pname, long params);
 
@@ -12889,20 +12889,20 @@ public class GL {
     /*
 		return (jboolean)ext_glUnmapBuffer((GLenum)target);
      */
-    public static native void glGetBufferParameteriv(int target, int pname, Buffer params, int paramsByteOffset);
+    public static native void glGetBufferParameteriv(int target, int pname, Buffer params, int paramsOffset);
 
     /*
-		ext_glGetBufferParameteriv((GLenum)target, (GLenum)pname, (GLint*)(params + paramsByteOffset));
+		ext_glGetBufferParameteriv((GLenum)target, (GLenum)pname, (GLint*)(params + paramsOffset));
      */
     public static native void glGetBufferParameteriv(int target, int pname, long params);
 
     /*
 		ext_glGetBufferParameteriv((GLenum)target, (GLenum)pname, (GLint*)params);
      */
-    public static native void glGetBufferPointerv(int target, int pname, Buffer params, int paramsByteOffset);
+    public static native void glGetBufferPointerv(int target, int pname, Buffer params, int paramsOffset);
 
     /*
-		ext_glGetBufferPointerv((GLenum)target, (GLenum)pname, (GLvoid**)(params + paramsByteOffset));
+		ext_glGetBufferPointerv((GLenum)target, (GLenum)pname, (GLvoid**)(params + paramsOffset));
      */
     public static native void glGetBufferPointerv(int target, int pname, long params);
 
@@ -13020,10 +13020,10 @@ public class GL {
     /*
 		return (jint)ext_glGetAttribLocation((GLuint)program, (const GLchar*)(name));
      */
-    public static native void glGetProgramiv(int program, int pname, Buffer params, int paramsByteOffset);
+    public static native void glGetProgramiv(int program, int pname, Buffer params, int paramsOffset);
 
     /*
-		ext_glGetProgramiv((GLuint)program, (GLenum)pname, (GLint*)(params + paramsByteOffset));
+		ext_glGetProgramiv((GLuint)program, (GLenum)pname, (GLint*)(params + paramsOffset));
      */
     public static native void glGetProgramiv(int program, int pname, long params);
 
@@ -13039,10 +13039,10 @@ public class GL {
         ext_glGetProgramInfoLog(program, 1024*10, &length, info);
 		return env->NewStringUTF(info);
      */
-    public static native void glGetShaderiv(int shader, int pname, Buffer params, int paramsByteOffset);
+    public static native void glGetShaderiv(int shader, int pname, Buffer params, int paramsOffset);
 
     /*
-		ext_glGetShaderiv((GLuint)shader, (GLenum)pname, (GLint*)(params + paramsByteOffset));
+		ext_glGetShaderiv((GLuint)shader, (GLenum)pname, (GLint*)(params + paramsOffset));
      */
     public static native void glGetShaderiv(int shader, int pname, long params);
 
@@ -13073,50 +13073,50 @@ public class GL {
     /*
 		return (jint)ext_glGetUniformLocation((GLuint)program, (const GLchar*)(name));
      */
-    public static native void glGetUniformfv(int program, int location, Buffer params, int paramsByteOffset);
+    public static native void glGetUniformfv(int program, int location, Buffer params, int paramsOffset);
 
     /*
-		ext_glGetUniformfv((GLuint)program, (GLint)location, (GLfloat*)(params + paramsByteOffset));
+		ext_glGetUniformfv((GLuint)program, (GLint)location, (GLfloat*)(params + paramsOffset));
      */
     public static native void glGetUniformfv(int program, int location, long params);
 
     /*
 		ext_glGetUniformfv((GLuint)program, (GLint)location, (GLfloat*)params);
      */
-    public static native void glGetUniformiv(int program, int location, Buffer params, int paramsByteOffset);
+    public static native void glGetUniformiv(int program, int location, Buffer params, int paramsOffset);
 
     /*
-		ext_glGetUniformiv((GLuint)program, (GLint)location, (GLint*)(params + paramsByteOffset));
+		ext_glGetUniformiv((GLuint)program, (GLint)location, (GLint*)(params + paramsOffset));
      */
     public static native void glGetUniformiv(int program, int location, long params);
 
     /*
 		ext_glGetUniformiv((GLuint)program, (GLint)location, (GLint*)params);
      */
-    public static native void glGetVertexAttribdv(int index, int pname, Buffer params, int paramsByteOffset);
+    public static native void glGetVertexAttribdv(int index, int pname, Buffer params, int paramsOffset);
 
     /*
-		ext_glGetVertexAttribdv((GLuint)index, (GLenum)pname, (GLdouble*)(params + paramsByteOffset));
+		ext_glGetVertexAttribdv((GLuint)index, (GLenum)pname, (GLdouble*)(params + paramsOffset));
      */
     public static native void glGetVertexAttribdv(int index, int pname, long params);
 
     /*
 		ext_glGetVertexAttribdv((GLuint)index, (GLenum)pname, (GLdouble*)params);
      */
-    public static native void glGetVertexAttribfv(int index, int pname, Buffer params, int paramsByteOffset);
+    public static native void glGetVertexAttribfv(int index, int pname, Buffer params, int paramsOffset);
 
     /*
-		ext_glGetVertexAttribfv((GLuint)index, (GLenum)pname, (GLfloat*)(params + paramsByteOffset));
+		ext_glGetVertexAttribfv((GLuint)index, (GLenum)pname, (GLfloat*)(params + paramsOffset));
      */
     public static native void glGetVertexAttribfv(int index, int pname, long params);
 
     /*
 		ext_glGetVertexAttribfv((GLuint)index, (GLenum)pname, (GLfloat*)params);
      */
-    public static native void glGetVertexAttribiv(int index, int pname, Buffer params, int paramsByteOffset);
+    public static native void glGetVertexAttribiv(int index, int pname, Buffer params, int paramsOffset);
 
     /*
-		ext_glGetVertexAttribiv((GLuint)index, (GLenum)pname, (GLint*)(params + paramsByteOffset));
+		ext_glGetVertexAttribiv((GLuint)index, (GLenum)pname, (GLint*)(params + paramsOffset));
      */
     public static native void glGetVertexAttribiv(int index, int pname, long params);
 
@@ -13763,20 +13763,20 @@ public class GL {
     /*
 		ext_glVertexAttribIPointer((GLuint)index, (GLint)size, (GLenum)type, (GLsizei)stride, (const GLvoid*)pointer);
      */
-    public static native void glGetVertexAttribIiv(int index, int pname, Buffer params, int paramsByteOffset);
+    public static native void glGetVertexAttribIiv(int index, int pname, Buffer params, int paramsOffset);
 
     /*
-		ext_glGetVertexAttribIiv((GLuint)index, (GLenum)pname, (GLint*)(params + paramsByteOffset));
+		ext_glGetVertexAttribIiv((GLuint)index, (GLenum)pname, (GLint*)(params + paramsOffset));
      */
     public static native void glGetVertexAttribIiv(int index, int pname, long params);
 
     /*
 		ext_glGetVertexAttribIiv((GLuint)index, (GLenum)pname, (GLint*)params);
      */
-    public static native void glGetVertexAttribIuiv(int index, int pname, Buffer params, int paramsByteOffset);
+    public static native void glGetVertexAttribIuiv(int index, int pname, Buffer params, int paramsOffset);
 
     /*
-		ext_glGetVertexAttribIuiv((GLuint)index, (GLenum)pname, (GLuint*)(params + paramsByteOffset));
+		ext_glGetVertexAttribIuiv((GLuint)index, (GLenum)pname, (GLuint*)(params + paramsOffset));
      */
     public static native void glGetVertexAttribIuiv(int index, int pname, long params);
 
@@ -13943,10 +13943,10 @@ public class GL {
     /*
 		ext_glVertexAttribI4usv((GLuint)index, (const GLushort*)v);
      */
-    public static native void glGetUniformuiv(int program, int location, Buffer params, int paramsByteOffset);
+    public static native void glGetUniformuiv(int program, int location, Buffer params, int paramsOffset);
 
     /*
-		ext_glGetUniformuiv((GLuint)program, (GLint)location, (GLuint*)(params + paramsByteOffset));
+		ext_glGetUniformuiv((GLuint)program, (GLint)location, (GLuint*)(params + paramsOffset));
      */
     public static native void glGetUniformuiv(int program, int location, long params);
 
@@ -14033,40 +14033,40 @@ public class GL {
     /*
 		ext_glUniform4uiv((GLint)location, (GLsizei)count, (const GLuint*)value);
      */
-    public static native void glTexParameterIiv(int target, int pname, Buffer params, int paramsByteOffset);
+    public static native void glTexParameterIiv(int target, int pname, Buffer params, int paramsOffset);
 
     /*
-		ext_glTexParameterIiv((GLenum)target, (GLenum)pname, (const GLint*)(params + paramsByteOffset));
+		ext_glTexParameterIiv((GLenum)target, (GLenum)pname, (const GLint*)(params + paramsOffset));
      */
     public static native void glTexParameterIiv(int target, int pname, long params);
 
     /*
 		ext_glTexParameterIiv((GLenum)target, (GLenum)pname, (const GLint*)params);
      */
-    public static native void glTexParameterIuiv(int target, int pname, Buffer params, int paramsByteOffset);
+    public static native void glTexParameterIuiv(int target, int pname, Buffer params, int paramsOffset);
 
     /*
-		ext_glTexParameterIuiv((GLenum)target, (GLenum)pname, (const GLuint*)(params + paramsByteOffset));
+		ext_glTexParameterIuiv((GLenum)target, (GLenum)pname, (const GLuint*)(params + paramsOffset));
      */
     public static native void glTexParameterIuiv(int target, int pname, long params);
 
     /*
 		ext_glTexParameterIuiv((GLenum)target, (GLenum)pname, (const GLuint*)params);
      */
-    public static native void glGetTexParameterIiv(int target, int pname, Buffer params, int paramsByteOffset);
+    public static native void glGetTexParameterIiv(int target, int pname, Buffer params, int paramsOffset);
 
     /*
-		ext_glGetTexParameterIiv((GLenum)target, (GLenum)pname, (GLint*)(params + paramsByteOffset));
+		ext_glGetTexParameterIiv((GLenum)target, (GLenum)pname, (GLint*)(params + paramsOffset));
      */
     public static native void glGetTexParameterIiv(int target, int pname, long params);
 
     /*
 		ext_glGetTexParameterIiv((GLenum)target, (GLenum)pname, (GLint*)params);
      */
-    public static native void glGetTexParameterIuiv(int target, int pname, Buffer params, int paramsByteOffset);
+    public static native void glGetTexParameterIuiv(int target, int pname, Buffer params, int paramsOffset);
 
     /*
-		ext_glGetTexParameterIuiv((GLenum)target, (GLenum)pname, (GLuint*)(params + paramsByteOffset));
+		ext_glGetTexParameterIuiv((GLenum)target, (GLenum)pname, (GLuint*)(params + paramsOffset));
      */
     public static native void glGetTexParameterIuiv(int target, int pname, long params);
 
@@ -14138,10 +14138,10 @@ public class GL {
     /*
 		ext_glPrimitiveRestartIndex((GLuint)index);
      */
-    public static native void glGetBufferParameteri64v(int target, int pname, Buffer params, int paramsByteOffset);
+    public static native void glGetBufferParameteri64v(int target, int pname, Buffer params, int paramsOffset);
 
     /*
-		ext_glGetBufferParameteri64v((GLenum)target, (GLenum)pname, (GLint64*)(params + paramsByteOffset));
+		ext_glGetBufferParameteri64v((GLenum)target, (GLenum)pname, (GLint64*)(params + paramsOffset));
      */
     public static native void glGetBufferParameteri64v(int target, int pname, long params);
 
@@ -14553,10 +14553,10 @@ public class GL {
     /*
 		ext_glPointParameterfARB((GLenum)pname, (GLfloat)param);
      */
-    public static native void glPointParameterfvARB(int pname, Buffer params, int paramsByteOffset);
+    public static native void glPointParameterfvARB(int pname, Buffer params, int paramsOffset);
 
     /*
-		ext_glPointParameterfvARB((GLenum)pname, (const GLfloat*)(params + paramsByteOffset));
+		ext_glPointParameterfvARB((GLenum)pname, (const GLfloat*)(params + paramsOffset));
      */
     public static native void glPointParameterfvARB(int pname, long params);
 
@@ -15178,10 +15178,10 @@ public class GL {
     /*
 		ext_glProgramEnvParameter4dARB((GLenum)target, (GLuint)index, (GLdouble)x, (GLdouble)y, (GLdouble)z, (GLdouble)w);
      */
-    public static native void glProgramEnvParameter4dvARB(int target, int index, Buffer params, int paramsByteOffset);
+    public static native void glProgramEnvParameter4dvARB(int target, int index, Buffer params, int paramsOffset);
 
     /*
-		ext_glProgramEnvParameter4dvARB((GLenum)target, (GLuint)index, (const GLdouble*)(params + paramsByteOffset));
+		ext_glProgramEnvParameter4dvARB((GLenum)target, (GLuint)index, (const GLdouble*)(params + paramsOffset));
      */
     public static native void glProgramEnvParameter4dvARB(int target, int index, long params);
 
@@ -15193,10 +15193,10 @@ public class GL {
     /*
 		ext_glProgramEnvParameter4fARB((GLenum)target, (GLuint)index, (GLfloat)x, (GLfloat)y, (GLfloat)z, (GLfloat)w);
      */
-    public static native void glProgramEnvParameter4fvARB(int target, int index, Buffer params, int paramsByteOffset);
+    public static native void glProgramEnvParameter4fvARB(int target, int index, Buffer params, int paramsOffset);
 
     /*
-		ext_glProgramEnvParameter4fvARB((GLenum)target, (GLuint)index, (const GLfloat*)(params + paramsByteOffset));
+		ext_glProgramEnvParameter4fvARB((GLenum)target, (GLuint)index, (const GLfloat*)(params + paramsOffset));
      */
     public static native void glProgramEnvParameter4fvARB(int target, int index, long params);
 
@@ -15208,10 +15208,10 @@ public class GL {
     /*
 		ext_glProgramLocalParameter4dARB((GLenum)target, (GLuint)index, (GLdouble)x, (GLdouble)y, (GLdouble)z, (GLdouble)w);
      */
-    public static native void glProgramLocalParameter4dvARB(int target, int index, Buffer params, int paramsByteOffset);
+    public static native void glProgramLocalParameter4dvARB(int target, int index, Buffer params, int paramsOffset);
 
     /*
-		ext_glProgramLocalParameter4dvARB((GLenum)target, (GLuint)index, (const GLdouble*)(params + paramsByteOffset));
+		ext_glProgramLocalParameter4dvARB((GLenum)target, (GLuint)index, (const GLdouble*)(params + paramsOffset));
      */
     public static native void glProgramLocalParameter4dvARB(int target, int index, long params);
 
@@ -15223,60 +15223,60 @@ public class GL {
     /*
 		ext_glProgramLocalParameter4fARB((GLenum)target, (GLuint)index, (GLfloat)x, (GLfloat)y, (GLfloat)z, (GLfloat)w);
      */
-    public static native void glProgramLocalParameter4fvARB(int target, int index, Buffer params, int paramsByteOffset);
+    public static native void glProgramLocalParameter4fvARB(int target, int index, Buffer params, int paramsOffset);
 
     /*
-		ext_glProgramLocalParameter4fvARB((GLenum)target, (GLuint)index, (const GLfloat*)(params + paramsByteOffset));
+		ext_glProgramLocalParameter4fvARB((GLenum)target, (GLuint)index, (const GLfloat*)(params + paramsOffset));
      */
     public static native void glProgramLocalParameter4fvARB(int target, int index, long params);
 
     /*
 		ext_glProgramLocalParameter4fvARB((GLenum)target, (GLuint)index, (const GLfloat*)params);
      */
-    public static native void glGetProgramEnvParameterdvARB(int target, int index, Buffer params, int paramsByteOffset);
+    public static native void glGetProgramEnvParameterdvARB(int target, int index, Buffer params, int paramsOffset);
 
     /*
-		ext_glGetProgramEnvParameterdvARB((GLenum)target, (GLuint)index, (GLdouble*)(params + paramsByteOffset));
+		ext_glGetProgramEnvParameterdvARB((GLenum)target, (GLuint)index, (GLdouble*)(params + paramsOffset));
      */
     public static native void glGetProgramEnvParameterdvARB(int target, int index, long params);
 
     /*
 		ext_glGetProgramEnvParameterdvARB((GLenum)target, (GLuint)index, (GLdouble*)params);
      */
-    public static native void glGetProgramEnvParameterfvARB(int target, int index, Buffer params, int paramsByteOffset);
+    public static native void glGetProgramEnvParameterfvARB(int target, int index, Buffer params, int paramsOffset);
 
     /*
-		ext_glGetProgramEnvParameterfvARB((GLenum)target, (GLuint)index, (GLfloat*)(params + paramsByteOffset));
+		ext_glGetProgramEnvParameterfvARB((GLenum)target, (GLuint)index, (GLfloat*)(params + paramsOffset));
      */
     public static native void glGetProgramEnvParameterfvARB(int target, int index, long params);
 
     /*
 		ext_glGetProgramEnvParameterfvARB((GLenum)target, (GLuint)index, (GLfloat*)params);
      */
-    public static native void glGetProgramLocalParameterdvARB(int target, int index, Buffer params, int paramsByteOffset);
+    public static native void glGetProgramLocalParameterdvARB(int target, int index, Buffer params, int paramsOffset);
 
     /*
-		ext_glGetProgramLocalParameterdvARB((GLenum)target, (GLuint)index, (GLdouble*)(params + paramsByteOffset));
+		ext_glGetProgramLocalParameterdvARB((GLenum)target, (GLuint)index, (GLdouble*)(params + paramsOffset));
      */
     public static native void glGetProgramLocalParameterdvARB(int target, int index, long params);
 
     /*
 		ext_glGetProgramLocalParameterdvARB((GLenum)target, (GLuint)index, (GLdouble*)params);
      */
-    public static native void glGetProgramLocalParameterfvARB(int target, int index, Buffer params, int paramsByteOffset);
+    public static native void glGetProgramLocalParameterfvARB(int target, int index, Buffer params, int paramsOffset);
 
     /*
-		ext_glGetProgramLocalParameterfvARB((GLenum)target, (GLuint)index, (GLfloat*)(params + paramsByteOffset));
+		ext_glGetProgramLocalParameterfvARB((GLenum)target, (GLuint)index, (GLfloat*)(params + paramsOffset));
      */
     public static native void glGetProgramLocalParameterfvARB(int target, int index, long params);
 
     /*
 		ext_glGetProgramLocalParameterfvARB((GLenum)target, (GLuint)index, (GLfloat*)params);
      */
-    public static native void glGetProgramivARB(int target, int pname, Buffer params, int paramsByteOffset);
+    public static native void glGetProgramivARB(int target, int pname, Buffer params, int paramsOffset);
 
     /*
-		ext_glGetProgramivARB((GLenum)target, (GLenum)pname, (GLint*)(params + paramsByteOffset));
+		ext_glGetProgramivARB((GLenum)target, (GLenum)pname, (GLint*)(params + paramsOffset));
      */
     public static native void glGetProgramivARB(int target, int pname, long params);
 
@@ -15293,30 +15293,30 @@ public class GL {
     /*
 		ext_glGetProgramStringARB((GLenum)target, (GLenum)pname, (GLvoid*)string);
      */
-    public static native void glGetVertexAttribdvARB(int index, int pname, Buffer params, int paramsByteOffset);
+    public static native void glGetVertexAttribdvARB(int index, int pname, Buffer params, int paramsOffset);
 
     /*
-		ext_glGetVertexAttribdvARB((GLuint)index, (GLenum)pname, (GLdouble*)(params + paramsByteOffset));
+		ext_glGetVertexAttribdvARB((GLuint)index, (GLenum)pname, (GLdouble*)(params + paramsOffset));
      */
     public static native void glGetVertexAttribdvARB(int index, int pname, long params);
 
     /*
 		ext_glGetVertexAttribdvARB((GLuint)index, (GLenum)pname, (GLdouble*)params);
      */
-    public static native void glGetVertexAttribfvARB(int index, int pname, Buffer params, int paramsByteOffset);
+    public static native void glGetVertexAttribfvARB(int index, int pname, Buffer params, int paramsOffset);
 
     /*
-		ext_glGetVertexAttribfvARB((GLuint)index, (GLenum)pname, (GLfloat*)(params + paramsByteOffset));
+		ext_glGetVertexAttribfvARB((GLuint)index, (GLenum)pname, (GLfloat*)(params + paramsOffset));
      */
     public static native void glGetVertexAttribfvARB(int index, int pname, long params);
 
     /*
 		ext_glGetVertexAttribfvARB((GLuint)index, (GLenum)pname, (GLfloat*)params);
      */
-    public static native void glGetVertexAttribivARB(int index, int pname, Buffer params, int paramsByteOffset);
+    public static native void glGetVertexAttribivARB(int index, int pname, Buffer params, int paramsOffset);
 
     /*
-		ext_glGetVertexAttribivARB((GLuint)index, (GLenum)pname, (GLint*)(params + paramsByteOffset));
+		ext_glGetVertexAttribivARB((GLuint)index, (GLenum)pname, (GLint*)(params + paramsOffset));
      */
     public static native void glGetVertexAttribivARB(int index, int pname, long params);
 
@@ -15410,20 +15410,20 @@ public class GL {
     /*
 		return (jboolean)ext_glUnmapBufferARB((GLenum)target);
      */
-    public static native void glGetBufferParameterivARB(int target, int pname, Buffer params, int paramsByteOffset);
+    public static native void glGetBufferParameterivARB(int target, int pname, Buffer params, int paramsOffset);
 
     /*
-		ext_glGetBufferParameterivARB((GLenum)target, (GLenum)pname, (GLint*)(params + paramsByteOffset));
+		ext_glGetBufferParameterivARB((GLenum)target, (GLenum)pname, (GLint*)(params + paramsOffset));
      */
     public static native void glGetBufferParameterivARB(int target, int pname, long params);
 
     /*
 		ext_glGetBufferParameterivARB((GLenum)target, (GLenum)pname, (GLint*)params);
      */
-    public static native void glGetBufferPointervARB(int target, int pname, Buffer params, int paramsByteOffset);
+    public static native void glGetBufferPointervARB(int target, int pname, Buffer params, int paramsOffset);
 
     /*
-		ext_glGetBufferPointervARB((GLenum)target, (GLenum)pname, (GLvoid**)(params + paramsByteOffset));
+		ext_glGetBufferPointervARB((GLenum)target, (GLenum)pname, (GLvoid**)(params + paramsOffset));
      */
     public static native void glGetBufferPointervARB(int target, int pname, long params);
 
@@ -15465,30 +15465,30 @@ public class GL {
     /*
 		ext_glEndQueryARB((GLenum)target);
      */
-    public static native void glGetQueryivARB(int target, int pname, Buffer params, int paramsByteOffset);
+    public static native void glGetQueryivARB(int target, int pname, Buffer params, int paramsOffset);
 
     /*
-		ext_glGetQueryivARB((GLenum)target, (GLenum)pname, (GLint*)(params + paramsByteOffset));
+		ext_glGetQueryivARB((GLenum)target, (GLenum)pname, (GLint*)(params + paramsOffset));
      */
     public static native void glGetQueryivARB(int target, int pname, long params);
 
     /*
 		ext_glGetQueryivARB((GLenum)target, (GLenum)pname, (GLint*)params);
      */
-    public static native void glGetQueryObjectivARB(int id, int pname, Buffer params, int paramsByteOffset);
+    public static native void glGetQueryObjectivARB(int id, int pname, Buffer params, int paramsOffset);
 
     /*
-		ext_glGetQueryObjectivARB((GLuint)id, (GLenum)pname, (GLint*)(params + paramsByteOffset));
+		ext_glGetQueryObjectivARB((GLuint)id, (GLenum)pname, (GLint*)(params + paramsOffset));
      */
     public static native void glGetQueryObjectivARB(int id, int pname, long params);
 
     /*
 		ext_glGetQueryObjectivARB((GLuint)id, (GLenum)pname, (GLint*)params);
      */
-    public static native void glGetQueryObjectuivARB(int id, int pname, Buffer params, int paramsByteOffset);
+    public static native void glGetQueryObjectuivARB(int id, int pname, Buffer params, int paramsOffset);
 
     /*
-		ext_glGetQueryObjectuivARB((GLuint)id, (GLenum)pname, (GLuint*)(params + paramsByteOffset));
+		ext_glGetQueryObjectuivARB((GLuint)id, (GLenum)pname, (GLuint*)(params + paramsOffset));
      */
     public static native void glGetQueryObjectuivARB(int id, int pname, long params);
 
@@ -15700,20 +15700,20 @@ public class GL {
     /*
 		ext_glUniformMatrix4fvARB((GLint)location, (GLsizei)count, (GLboolean)transpose, (const GLfloat*)value);
      */
-    public static native void glGetObjectParameterfvARB(long obj, int pname, Buffer params, int paramsByteOffset);
+    public static native void glGetObjectParameterfvARB(long obj, int pname, Buffer params, int paramsOffset);
 
     /*
-		ext_glGetObjectParameterfvARB((GLhandleARB)obj, (GLenum)pname, (GLfloat*)(params + paramsByteOffset));
+		ext_glGetObjectParameterfvARB((GLhandleARB)obj, (GLenum)pname, (GLfloat*)(params + paramsOffset));
      */
     public static native void glGetObjectParameterfvARB(long obj, int pname, long params);
 
     /*
 		ext_glGetObjectParameterfvARB((GLhandleARB)obj, (GLenum)pname, (GLfloat*)params);
      */
-    public static native void glGetObjectParameterivARB(long obj, int pname, Buffer params, int paramsByteOffset);
+    public static native void glGetObjectParameterivARB(long obj, int pname, Buffer params, int paramsOffset);
 
     /*
-		ext_glGetObjectParameterivARB((GLhandleARB)obj, (GLenum)pname, (GLint*)(params + paramsByteOffset));
+		ext_glGetObjectParameterivARB((GLhandleARB)obj, (GLenum)pname, (GLint*)(params + paramsOffset));
      */
     public static native void glGetObjectParameterivARB(long obj, int pname, long params);
 
@@ -15760,20 +15760,20 @@ public class GL {
     /*
 		ext_glGetActiveUniformARB((GLhandleARB)programObj, (GLuint)index, (GLsizei)maxLength, (GLsizei*)length, (GLint*)size, (GLenum*)type, (GLcharARB*)name);
      */
-    public static native void glGetUniformfvARB(long programObj, int location, Buffer params, int paramsByteOffset);
+    public static native void glGetUniformfvARB(long programObj, int location, Buffer params, int paramsOffset);
 
     /*
-		ext_glGetUniformfvARB((GLhandleARB)programObj, (GLint)location, (GLfloat*)(params + paramsByteOffset));
+		ext_glGetUniformfvARB((GLhandleARB)programObj, (GLint)location, (GLfloat*)(params + paramsOffset));
      */
     public static native void glGetUniformfvARB(long programObj, int location, long params);
 
     /*
 		ext_glGetUniformfvARB((GLhandleARB)programObj, (GLint)location, (GLfloat*)params);
      */
-    public static native void glGetUniformivARB(long programObj, int location, Buffer params, int paramsByteOffset);
+    public static native void glGetUniformivARB(long programObj, int location, Buffer params, int paramsOffset);
 
     /*
-		ext_glGetUniformivARB((GLhandleARB)programObj, (GLint)location, (GLint*)(params + paramsByteOffset));
+		ext_glGetUniformivARB((GLhandleARB)programObj, (GLint)location, (GLint*)(params + paramsOffset));
      */
     public static native void glGetUniformivARB(long programObj, int location, long params);
 
@@ -15885,10 +15885,10 @@ public class GL {
     /*
 		ext_glRenderbufferStorage((GLenum)target, (GLenum)internalformat, (GLsizei)width, (GLsizei)height);
      */
-    public static native void glGetRenderbufferParameteriv(int target, int pname, Buffer params, int paramsByteOffset);
+    public static native void glGetRenderbufferParameteriv(int target, int pname, Buffer params, int paramsOffset);
 
     /*
-		ext_glGetRenderbufferParameteriv((GLenum)target, (GLenum)pname, (GLint*)(params + paramsByteOffset));
+		ext_glGetRenderbufferParameteriv((GLenum)target, (GLenum)pname, (GLint*)(params + paramsOffset));
      */
     public static native void glGetRenderbufferParameteriv(int target, int pname, long params);
 
@@ -15950,10 +15950,10 @@ public class GL {
     /*
 		ext_glFramebufferRenderbuffer((GLenum)target, (GLenum)attachment, (GLenum)renderbuffertarget, (GLuint)renderbuffer);
      */
-    public static native void glGetFramebufferAttachmentParameteriv(int target, int attachment, int pname, Buffer params, int paramsByteOffset);
+    public static native void glGetFramebufferAttachmentParameteriv(int target, int attachment, int pname, Buffer params, int paramsOffset);
 
     /*
-		ext_glGetFramebufferAttachmentParameteriv((GLenum)target, (GLenum)attachment, (GLenum)pname, (GLint*)(params + paramsByteOffset));
+		ext_glGetFramebufferAttachmentParameteriv((GLenum)target, (GLenum)attachment, (GLenum)pname, (GLint*)(params + paramsOffset));
      */
     public static native void glGetFramebufferAttachmentParameteriv(int target, int attachment, int pname, long params);
 
@@ -16027,20 +16027,20 @@ public class GL {
     /*
 		ext_glBindVertexArray((GLuint)array);
      */
-    public static native void glDeleteVertexArrays(int n, Buffer arrays, int arraysByteOffset);
+    public static native void glDeleteVertexArrays(int n, int[] arrays, int arraysOffset);
 
     /*
-		ext_glDeleteVertexArrays((GLsizei)n, (const GLuint*)(arrays + arraysByteOffset));
+		ext_glDeleteVertexArrays((GLsizei)n, (const GLuint*)(arrays + arraysOffset));
      */
-    public static native void glDeleteVertexArrays(int n, long arrays);
+//    public static native void glDeleteVertexArrays(int n, long arrays);
 
     /*
 		ext_glDeleteVertexArrays((GLsizei)n, (const GLuint*)arrays);
      */
-    public static native void glGenVertexArrays(int n, int[] arrays, int arraysByteOffset);
+    public static native void glGenVertexArrays(int n, int[] arrays, int arraysOffset);
 
     /*
-		ext_glGenVertexArrays((GLsizei)n, (GLuint*)(arrays + arraysByteOffset));
+		ext_glGenVertexArrays((GLsizei)n, (GLuint*)(arrays + arraysOffset));
      */
     //public static native void glGenVertexArrays(int n, long arrays);
 
@@ -16062,10 +16062,10 @@ public class GL {
     /*
 		ext_glGetUniformIndices((GLuint)program, (GLsizei)uniformCount, (const GLchar**)uniformNames, (GLuint*)uniformIndices);
      */
-    public static native void glGetActiveUniformsiv(int program, int uniformCount, Buffer uniformIndices, int uniformIndicesByteOffset, int pname, Buffer params, int paramsByteOffset);
+    public static native void glGetActiveUniformsiv(int program, int uniformCount, Buffer uniformIndices, int uniformIndicesByteOffset, int pname, Buffer params, int paramsOffset);
 
     /*
-		ext_glGetActiveUniformsiv((GLuint)program, (GLsizei)uniformCount, (const GLuint*)(uniformIndices + uniformIndicesByteOffset), (GLenum)pname, (GLint*)(params + paramsByteOffset));
+		ext_glGetActiveUniformsiv((GLuint)program, (GLsizei)uniformCount, (const GLuint*)(uniformIndices + uniformIndicesByteOffset), (GLenum)pname, (GLint*)(params + paramsOffset));
      */
     public static native void glGetActiveUniformsiv(int program, int uniformCount, long uniformIndices, int pname, long params);
 
@@ -16092,10 +16092,10 @@ public class GL {
     /*
 		return (jint)ext_glGetUniformBlockIndex((GLuint)program, (const GLchar*)uniformBlockName);
      */
-    public static native void glGetActiveUniformBlockiv(int program, int uniformBlockIndex, int pname, Buffer params, int paramsByteOffset);
+    public static native void glGetActiveUniformBlockiv(int program, int uniformBlockIndex, int pname, Buffer params, int paramsOffset);
 
     /*
-		ext_glGetActiveUniformBlockiv((GLuint)program, (GLuint)uniformBlockIndex, (GLenum)pname, (GLint*)(params + paramsByteOffset));
+		ext_glGetActiveUniformBlockiv((GLuint)program, (GLuint)uniformBlockIndex, (GLenum)pname, (GLint*)(params + paramsOffset));
      */
     public static native void glGetActiveUniformBlockiv(int program, int uniformBlockIndex, int pname, long params);
 
@@ -16192,10 +16192,10 @@ public class GL {
     /*
 		ext_glWaitSync((GLsync)sync, (GLbitfield)flags, (GLuint64)timeout);
      */
-    public static native void glGetInteger64v(int pname, Buffer params, int paramsByteOffset);
+    public static native void glGetInteger64v(int pname, Buffer params, int paramsOffset);
 
     /*
-		ext_glGetInteger64v((GLenum)pname, (GLint64*)(params + paramsByteOffset));
+		ext_glGetInteger64v((GLenum)pname, (GLint64*)(params + paramsOffset));
      */
     public static native void glGetInteger64v(int pname, long params);
 
@@ -16312,10 +16312,10 @@ public class GL {
     /*
 		ext_glGetNamedStringARB((GLint)namelen, (const GLchar*)name, (GLsizei)bufSize, (GLint*)stringlen, (GLchar*)string);
      */
-    public static native void glGetNamedStringivARB(int namelen, Buffer name, int nameByteOffset, int pname, Buffer params, int paramsByteOffset);
+    public static native void glGetNamedStringivARB(int namelen, Buffer name, int nameByteOffset, int pname, Buffer params, int paramsOffset);
 
     /*
-		ext_glGetNamedStringivARB((GLint)namelen, (const GLchar*)(name + nameByteOffset), (GLenum)pname, (GLint*)(params + paramsByteOffset));
+		ext_glGetNamedStringivARB((GLint)namelen, (const GLchar*)(name + nameByteOffset), (GLenum)pname, (GLint*)(params + paramsOffset));
      */
     public static native void glGetNamedStringivARB(int namelen, long name, int pname, long params);
 
@@ -16422,40 +16422,40 @@ public class GL {
     /*
 		ext_glSamplerParameterIuiv((GLuint)sampler, (GLenum)pname, (const GLuint*)param);
      */
-    public static native void glGetSamplerParameteriv(int sampler, int pname, Buffer params, int paramsByteOffset);
+    public static native void glGetSamplerParameteriv(int sampler, int pname, Buffer params, int paramsOffset);
 
     /*
-		ext_glGetSamplerParameteriv((GLuint)sampler, (GLenum)pname, (GLint*)(params + paramsByteOffset));
+		ext_glGetSamplerParameteriv((GLuint)sampler, (GLenum)pname, (GLint*)(params + paramsOffset));
      */
     public static native void glGetSamplerParameteriv(int sampler, int pname, long params);
 
     /*
 		ext_glGetSamplerParameteriv((GLuint)sampler, (GLenum)pname, (GLint*)params);
      */
-    public static native void glGetSamplerParameterIiv(int sampler, int pname, Buffer params, int paramsByteOffset);
+    public static native void glGetSamplerParameterIiv(int sampler, int pname, Buffer params, int paramsOffset);
 
     /*
-		ext_glGetSamplerParameterIiv((GLuint)sampler, (GLenum)pname, (GLint*)(params + paramsByteOffset));
+		ext_glGetSamplerParameterIiv((GLuint)sampler, (GLenum)pname, (GLint*)(params + paramsOffset));
      */
     public static native void glGetSamplerParameterIiv(int sampler, int pname, long params);
 
     /*
 		ext_glGetSamplerParameterIiv((GLuint)sampler, (GLenum)pname, (GLint*)params);
      */
-    public static native void glGetSamplerParameterfv(int sampler, int pname, Buffer params, int paramsByteOffset);
+    public static native void glGetSamplerParameterfv(int sampler, int pname, Buffer params, int paramsOffset);
 
     /*
-		ext_glGetSamplerParameterfv((GLuint)sampler, (GLenum)pname, (GLfloat*)(params + paramsByteOffset));
+		ext_glGetSamplerParameterfv((GLuint)sampler, (GLenum)pname, (GLfloat*)(params + paramsOffset));
      */
     public static native void glGetSamplerParameterfv(int sampler, int pname, long params);
 
     /*
 		ext_glGetSamplerParameterfv((GLuint)sampler, (GLenum)pname, (GLfloat*)params);
      */
-    public static native void glGetSamplerParameterIuiv(int sampler, int pname, Buffer params, int paramsByteOffset);
+    public static native void glGetSamplerParameterIuiv(int sampler, int pname, Buffer params, int paramsOffset);
 
     /*
-		ext_glGetSamplerParameterIuiv((GLuint)sampler, (GLenum)pname, (GLuint*)(params + paramsByteOffset));
+		ext_glGetSamplerParameterIuiv((GLuint)sampler, (GLenum)pname, (GLuint*)(params + paramsOffset));
      */
     public static native void glGetSamplerParameterIuiv(int sampler, int pname, long params);
 
@@ -16467,20 +16467,20 @@ public class GL {
     /*
 		ext_glQueryCounter((GLuint)id, (GLenum)target);
      */
-    public static native void glGetQueryObjecti64v(int id, int pname, Buffer params, int paramsByteOffset);
+    public static native void glGetQueryObjecti64v(int id, int pname, Buffer params, int paramsOffset);
 
     /*
-		ext_glGetQueryObjecti64v((GLuint)id, (GLenum)pname, (GLint64*)(params + paramsByteOffset));
+		ext_glGetQueryObjecti64v((GLuint)id, (GLenum)pname, (GLint64*)(params + paramsOffset));
      */
     public static native void glGetQueryObjecti64v(int id, int pname, long params);
 
     /*
 		ext_glGetQueryObjecti64v((GLuint)id, (GLenum)pname, (GLint64*)params);
      */
-    public static native void glGetQueryObjectui64v(int id, int pname, Buffer params, int paramsByteOffset);
+    public static native void glGetQueryObjectui64v(int id, int pname, Buffer params, int paramsOffset);
 
     /*
-		ext_glGetQueryObjectui64v((GLuint)id, (GLenum)pname, (GLuint64*)(params + paramsByteOffset));
+		ext_glGetQueryObjectui64v((GLuint)id, (GLenum)pname, (GLuint64*)(params + paramsOffset));
      */
     public static native void glGetQueryObjectui64v(int id, int pname, long params);
 
@@ -16942,10 +16942,10 @@ public class GL {
     /*
 		ext_glUniformMatrix4x3dv((GLint)location, (GLsizei)count, (GLboolean)transpose, (const GLdouble*)value);
      */
-    public static native void glGetUniformdv(int program, int location, Buffer params, int paramsByteOffset);
+    public static native void glGetUniformdv(int program, int location, Buffer params, int paramsOffset);
 
     /*
-		ext_glGetUniformdv((GLuint)program, (GLint)location, (GLdouble*)(params + paramsByteOffset));
+		ext_glGetUniformdv((GLuint)program, (GLint)location, (GLdouble*)(params + paramsOffset));
      */
     public static native void glGetUniformdv(int program, int location, long params);
 
@@ -17012,10 +17012,10 @@ public class GL {
     /*
 		ext_glUniformSubroutinesuiv((GLenum)shadertype, (GLsizei)count, (const GLuint*)indices);
      */
-    public static native void glGetUniformSubroutineuiv(int shadertype, int location, Buffer params, int paramsByteOffset);
+    public static native void glGetUniformSubroutineuiv(int shadertype, int location, Buffer params, int paramsOffset);
 
     /*
-		ext_glGetUniformSubroutineuiv((GLenum)shadertype, (GLint)location, (GLuint*)(params + paramsByteOffset));
+		ext_glGetUniformSubroutineuiv((GLenum)shadertype, (GLint)location, (GLuint*)(params + paramsOffset));
      */
     public static native void glGetUniformSubroutineuiv(int shadertype, int location, long params);
 
@@ -17107,10 +17107,10 @@ public class GL {
     /*
 		ext_glEndQueryIndexed((GLenum)target, (GLuint)index);
      */
-    public static native void glGetQueryIndexediv(int target, int index, int pname, Buffer params, int paramsByteOffset);
+    public static native void glGetQueryIndexediv(int target, int index, int pname, Buffer params, int paramsOffset);
 
     /*
-		ext_glGetQueryIndexediv((GLenum)target, (GLuint)index, (GLenum)pname, (GLint*)(params + paramsByteOffset));
+		ext_glGetQueryIndexediv((GLenum)target, (GLuint)index, (GLenum)pname, (GLint*)(params + paramsOffset));
      */
     public static native void glGetQueryIndexediv(int target, int index, int pname, long params);
 
@@ -17227,10 +17227,10 @@ public class GL {
     /*
 		return (jboolean)ext_glIsProgramPipeline((GLuint)pipeline);
      */
-    public static native void glGetProgramPipelineiv(int pipeline, int pname, Buffer params, int paramsByteOffset);
+    public static native void glGetProgramPipelineiv(int pipeline, int pname, Buffer params, int paramsOffset);
 
     /*
-		ext_glGetProgramPipelineiv((GLuint)pipeline, (GLenum)pname, (GLint*)(params + paramsByteOffset));
+		ext_glGetProgramPipelineiv((GLuint)pipeline, (GLenum)pname, (GLint*)(params + paramsOffset));
      */
     public static native void glGetProgramPipelineiv(int pipeline, int pname, long params);
 
@@ -17742,10 +17742,10 @@ public class GL {
     /*
 		ext_glVertexAttribLPointer((GLuint)index, (GLint)size, (GLenum)type, (GLsizei)stride, (const GLvoid*)pointer);
      */
-    public static native void glGetVertexAttribLdv(int index, int pname, Buffer params, int paramsByteOffset);
+    public static native void glGetVertexAttribLdv(int index, int pname, Buffer params, int paramsOffset);
 
     /*
-		ext_glGetVertexAttribLdv((GLuint)index, (GLenum)pname, (GLdouble*)(params + paramsByteOffset));
+		ext_glGetVertexAttribLdv((GLuint)index, (GLenum)pname, (GLdouble*)(params + paramsOffset));
      */
     public static native void glGetVertexAttribLdv(int index, int pname, long params);
 
@@ -17992,40 +17992,40 @@ public class GL {
     /*
 		ext_glGetnCompressedTexImageARB((GLenum)target, (GLint)lod, (GLsizei)bufSize, (GLvoid*)img);
      */
-    public static native void glGetnUniformfvARB(int program, int location, int bufSize, Buffer params, int paramsByteOffset);
+    public static native void glGetnUniformfvARB(int program, int location, int bufSize, Buffer params, int paramsOffset);
 
     /*
-		ext_glGetnUniformfvARB((GLuint)program, (GLint)location, (GLsizei)bufSize, (GLfloat*)(params + paramsByteOffset));
+		ext_glGetnUniformfvARB((GLuint)program, (GLint)location, (GLsizei)bufSize, (GLfloat*)(params + paramsOffset));
      */
     public static native void glGetnUniformfvARB(int program, int location, int bufSize, long params);
 
     /*
 		ext_glGetnUniformfvARB((GLuint)program, (GLint)location, (GLsizei)bufSize, (GLfloat*)params);
      */
-    public static native void glGetnUniformivARB(int program, int location, int bufSize, Buffer params, int paramsByteOffset);
+    public static native void glGetnUniformivARB(int program, int location, int bufSize, Buffer params, int paramsOffset);
 
     /*
-		ext_glGetnUniformivARB((GLuint)program, (GLint)location, (GLsizei)bufSize, (GLint*)(params + paramsByteOffset));
+		ext_glGetnUniformivARB((GLuint)program, (GLint)location, (GLsizei)bufSize, (GLint*)(params + paramsOffset));
      */
     public static native void glGetnUniformivARB(int program, int location, int bufSize, long params);
 
     /*
 		ext_glGetnUniformivARB((GLuint)program, (GLint)location, (GLsizei)bufSize, (GLint*)params);
      */
-    public static native void glGetnUniformuivARB(int program, int location, int bufSize, Buffer params, int paramsByteOffset);
+    public static native void glGetnUniformuivARB(int program, int location, int bufSize, Buffer params, int paramsOffset);
 
     /*
-		ext_glGetnUniformuivARB((GLuint)program, (GLint)location, (GLsizei)bufSize, (GLuint*)(params + paramsByteOffset));
+		ext_glGetnUniformuivARB((GLuint)program, (GLint)location, (GLsizei)bufSize, (GLuint*)(params + paramsOffset));
      */
     public static native void glGetnUniformuivARB(int program, int location, int bufSize, long params);
 
     /*
 		ext_glGetnUniformuivARB((GLuint)program, (GLint)location, (GLsizei)bufSize, (GLuint*)params);
      */
-    public static native void glGetnUniformdvARB(int program, int location, int bufSize, Buffer params, int paramsByteOffset);
+    public static native void glGetnUniformdvARB(int program, int location, int bufSize, Buffer params, int paramsOffset);
 
     /*
-		ext_glGetnUniformdvARB((GLuint)program, (GLint)location, (GLsizei)bufSize, (GLdouble*)(params + paramsByteOffset));
+		ext_glGetnUniformdvARB((GLuint)program, (GLint)location, (GLsizei)bufSize, (GLdouble*)(params + paramsOffset));
      */
     public static native void glGetnUniformdvARB(int program, int location, int bufSize, long params);
 
@@ -18067,20 +18067,20 @@ public class GL {
     /*
 		ext_glDrawTransformFeedbackStreamInstanced((GLenum)mode, (GLuint)id, (GLuint)stream, (GLsizei)instancecount);
      */
-    public static native void glGetInternalformativ(int target, int internalformat, int pname, int bufSize, Buffer params, int paramsByteOffset);
+    public static native void glGetInternalformativ(int target, int internalformat, int pname, int bufSize, Buffer params, int paramsOffset);
 
     /*
-		ext_glGetInternalformativ((GLenum)target, (GLenum)internalformat, (GLenum)pname, (GLsizei)bufSize, (GLint*)(params + paramsByteOffset));
+		ext_glGetInternalformativ((GLenum)target, (GLenum)internalformat, (GLenum)pname, (GLsizei)bufSize, (GLint*)(params + paramsOffset));
      */
     public static native void glGetInternalformativ(int target, int internalformat, int pname, int bufSize, long params);
 
     /*
 		ext_glGetInternalformativ((GLenum)target, (GLenum)internalformat, (GLenum)pname, (GLsizei)bufSize, (GLint*)params);
      */
-    public static native void glGetActiveAtomicCounterBufferiv(int program, int bufferIndex, int pname, Buffer params, int paramsByteOffset);
+    public static native void glGetActiveAtomicCounterBufferiv(int program, int bufferIndex, int pname, Buffer params, int paramsOffset);
 
     /*
-		ext_glGetActiveAtomicCounterBufferiv((GLuint)program, (GLuint)bufferIndex, (GLenum)pname, (GLint*)(params + paramsByteOffset));
+		ext_glGetActiveAtomicCounterBufferiv((GLuint)program, (GLuint)bufferIndex, (GLenum)pname, (GLint*)(params + paramsOffset));
      */
     public static native void glGetActiveAtomicCounterBufferiv(int program, int bufferIndex, int pname, long params);
 
@@ -18317,10 +18317,10 @@ public class GL {
     /*
 		ext_glFramebufferParameteri((GLenum)target, (GLenum)pname, (GLint)param);
      */
-    public static native void glGetFramebufferParameteriv(int target, int pname, Buffer params, int paramsByteOffset);
+    public static native void glGetFramebufferParameteriv(int target, int pname, Buffer params, int paramsOffset);
 
     /*
-		ext_glGetFramebufferParameteriv((GLenum)target, (GLenum)pname, (GLint*)(params + paramsByteOffset));
+		ext_glGetFramebufferParameteriv((GLenum)target, (GLenum)pname, (GLint*)(params + paramsOffset));
      */
     public static native void glGetFramebufferParameteriv(int target, int pname, long params);
 
@@ -18332,20 +18332,20 @@ public class GL {
     /*
 		ext_glNamedFramebufferParameteriEXT((GLuint)framebuffer, (GLenum)pname, (GLint)param);
      */
-    public static native void glGetNamedFramebufferParameterivEXT(int framebuffer, int pname, Buffer params, int paramsByteOffset);
+    public static native void glGetNamedFramebufferParameterivEXT(int framebuffer, int pname, Buffer params, int paramsOffset);
 
     /*
-		ext_glGetNamedFramebufferParameterivEXT((GLuint)framebuffer, (GLenum)pname, (GLint*)(params + paramsByteOffset));
+		ext_glGetNamedFramebufferParameterivEXT((GLuint)framebuffer, (GLenum)pname, (GLint*)(params + paramsOffset));
      */
     public static native void glGetNamedFramebufferParameterivEXT(int framebuffer, int pname, long params);
 
     /*
 		ext_glGetNamedFramebufferParameterivEXT((GLuint)framebuffer, (GLenum)pname, (GLint*)params);
      */
-    public static native void glGetInternalformati64v(int target, int internalformat, int pname, int bufSize, Buffer params, int paramsByteOffset);
+    public static native void glGetInternalformati64v(int target, int internalformat, int pname, int bufSize, Buffer params, int paramsOffset);
 
     /*
-		ext_glGetInternalformati64v((GLenum)target, (GLenum)internalformat, (GLenum)pname, (GLsizei)bufSize, (GLint64*)(params + paramsByteOffset));
+		ext_glGetInternalformati64v((GLenum)target, (GLenum)internalformat, (GLenum)pname, (GLsizei)bufSize, (GLint64*)(params + paramsOffset));
      */
     public static native void glGetInternalformati64v(int target, int internalformat, int pname, int bufSize, long params);
 
@@ -18412,10 +18412,10 @@ public class GL {
     /*
 		ext_glMultiDrawElementsIndirect((GLenum)mode, (GLenum)type, (const void*)indirect, (GLsizei)drawcount, (GLsizei)stride);
      */
-    public static native void glGetProgramInterfaceiv(int program, int programInterface, int pname, Buffer params, int paramsByteOffset);
+    public static native void glGetProgramInterfaceiv(int program, int programInterface, int pname, Buffer params, int paramsOffset);
 
     /*
-		ext_glGetProgramInterfaceiv((GLuint)program, (GLenum)programInterface, (GLenum)pname, (GLint*)(params + paramsByteOffset));
+		ext_glGetProgramInterfaceiv((GLuint)program, (GLenum)programInterface, (GLenum)pname, (GLint*)(params + paramsOffset));
      */
     public static native void glGetProgramInterfaceiv(int program, int programInterface, int pname, long params);
 
@@ -18442,10 +18442,10 @@ public class GL {
     /*
 		ext_glGetProgramResourceName((GLuint)program, (GLenum)programInterface, (GLuint)index, (GLsizei)bufSize, (GLsizei*)length, (GLchar*)name);
      */
-    public static native void glGetProgramResourceiv(int program, int programInterface, int index, int propCount, Buffer props, int propsByteOffset, int bufSize, Buffer length, int lengthByteOffset, Buffer params, int paramsByteOffset);
+    public static native void glGetProgramResourceiv(int program, int programInterface, int index, int propCount, Buffer props, int propsByteOffset, int bufSize, Buffer length, int lengthByteOffset, Buffer params, int paramsOffset);
 
     /*
-		ext_glGetProgramResourceiv((GLuint)program, (GLenum)programInterface, (GLuint)index, (GLsizei)propCount, (const GLenum*)(props + propsByteOffset), (GLsizei)bufSize, (GLsizei*)(length + lengthByteOffset), (GLint*)(params + paramsByteOffset));
+		ext_glGetProgramResourceiv((GLuint)program, (GLenum)programInterface, (GLuint)index, (GLsizei)propCount, (const GLenum*)(props + propsByteOffset), (GLsizei)bufSize, (GLsizei*)(length + lengthByteOffset), (GLint*)(params + paramsOffset));
      */
     public static native void glGetProgramResourceiv(int program, int programInterface, int index, int propCount, long props, int bufSize, long length, long params);
 
@@ -18612,20 +18612,20 @@ public class GL {
     /*
 		ext_glGetHistogramEXT((GLenum)target, (GLboolean)reset, (GLenum)format, (GLenum)type, (GLvoid*)values);
      */
-    public static native void glGetHistogramParameterfvEXT(int target, int pname, Buffer params, int paramsByteOffset);
+    public static native void glGetHistogramParameterfvEXT(int target, int pname, Buffer params, int paramsOffset);
 
     /*
-		ext_glGetHistogramParameterfvEXT((GLenum)target, (GLenum)pname, (GLfloat*)(params + paramsByteOffset));
+		ext_glGetHistogramParameterfvEXT((GLenum)target, (GLenum)pname, (GLfloat*)(params + paramsOffset));
      */
     public static native void glGetHistogramParameterfvEXT(int target, int pname, long params);
 
     /*
 		ext_glGetHistogramParameterfvEXT((GLenum)target, (GLenum)pname, (GLfloat*)params);
      */
-    public static native void glGetHistogramParameterivEXT(int target, int pname, Buffer params, int paramsByteOffset);
+    public static native void glGetHistogramParameterivEXT(int target, int pname, Buffer params, int paramsOffset);
 
     /*
-		ext_glGetHistogramParameterivEXT((GLenum)target, (GLenum)pname, (GLint*)(params + paramsByteOffset));
+		ext_glGetHistogramParameterivEXT((GLenum)target, (GLenum)pname, (GLint*)(params + paramsOffset));
      */
     public static native void glGetHistogramParameterivEXT(int target, int pname, long params);
 
@@ -18642,20 +18642,20 @@ public class GL {
     /*
 		ext_glGetMinmaxEXT((GLenum)target, (GLboolean)reset, (GLenum)format, (GLenum)type, (GLvoid*)values);
      */
-    public static native void glGetMinmaxParameterfvEXT(int target, int pname, Buffer params, int paramsByteOffset);
+    public static native void glGetMinmaxParameterfvEXT(int target, int pname, Buffer params, int paramsOffset);
 
     /*
-		ext_glGetMinmaxParameterfvEXT((GLenum)target, (GLenum)pname, (GLfloat*)(params + paramsByteOffset));
+		ext_glGetMinmaxParameterfvEXT((GLenum)target, (GLenum)pname, (GLfloat*)(params + paramsOffset));
      */
     public static native void glGetMinmaxParameterfvEXT(int target, int pname, long params);
 
     /*
 		ext_glGetMinmaxParameterfvEXT((GLenum)target, (GLenum)pname, (GLfloat*)params);
      */
-    public static native void glGetMinmaxParameterivEXT(int target, int pname, Buffer params, int paramsByteOffset);
+    public static native void glGetMinmaxParameterivEXT(int target, int pname, Buffer params, int paramsOffset);
 
     /*
-		ext_glGetMinmaxParameterivEXT((GLenum)target, (GLenum)pname, (GLint*)(params + paramsByteOffset));
+		ext_glGetMinmaxParameterivEXT((GLenum)target, (GLenum)pname, (GLint*)(params + paramsOffset));
      */
     public static native void glGetMinmaxParameterivEXT(int target, int pname, long params);
 
@@ -18707,10 +18707,10 @@ public class GL {
     /*
 		ext_glConvolutionParameterfEXT((GLenum)target, (GLenum)pname, (GLfloat)params);
      */
-    public static native void glConvolutionParameterfvEXT(int target, int pname, Buffer params, int paramsByteOffset);
+    public static native void glConvolutionParameterfvEXT(int target, int pname, Buffer params, int paramsOffset);
 
     /*
-		ext_glConvolutionParameterfvEXT((GLenum)target, (GLenum)pname, (const GLfloat*)(params + paramsByteOffset));
+		ext_glConvolutionParameterfvEXT((GLenum)target, (GLenum)pname, (const GLfloat*)(params + paramsOffset));
      */
     public static native void glConvolutionParameterfvEXT(int target, int pname, long params);
 
@@ -18722,10 +18722,10 @@ public class GL {
     /*
 		ext_glConvolutionParameteriEXT((GLenum)target, (GLenum)pname, (GLint)params);
      */
-    public static native void glConvolutionParameterivEXT(int target, int pname, Buffer params, int paramsByteOffset);
+    public static native void glConvolutionParameterivEXT(int target, int pname, Buffer params, int paramsOffset);
 
     /*
-		ext_glConvolutionParameterivEXT((GLenum)target, (GLenum)pname, (const GLint*)(params + paramsByteOffset));
+		ext_glConvolutionParameterivEXT((GLenum)target, (GLenum)pname, (const GLint*)(params + paramsOffset));
      */
     public static native void glConvolutionParameterivEXT(int target, int pname, long params);
 
@@ -18752,20 +18752,20 @@ public class GL {
     /*
 		ext_glGetConvolutionFilterEXT((GLenum)target, (GLenum)format, (GLenum)type, (GLvoid*)image);
      */
-    public static native void glGetConvolutionParameterfvEXT(int target, int pname, Buffer params, int paramsByteOffset);
+    public static native void glGetConvolutionParameterfvEXT(int target, int pname, Buffer params, int paramsOffset);
 
     /*
-		ext_glGetConvolutionParameterfvEXT((GLenum)target, (GLenum)pname, (GLfloat*)(params + paramsByteOffset));
+		ext_glGetConvolutionParameterfvEXT((GLenum)target, (GLenum)pname, (GLfloat*)(params + paramsOffset));
      */
     public static native void glGetConvolutionParameterfvEXT(int target, int pname, long params);
 
     /*
 		ext_glGetConvolutionParameterfvEXT((GLenum)target, (GLenum)pname, (GLfloat*)params);
      */
-    public static native void glGetConvolutionParameterivEXT(int target, int pname, Buffer params, int paramsByteOffset);
+    public static native void glGetConvolutionParameterivEXT(int target, int pname, Buffer params, int paramsOffset);
 
     /*
-		ext_glGetConvolutionParameterivEXT((GLenum)target, (GLenum)pname, (GLint*)(params + paramsByteOffset));
+		ext_glGetConvolutionParameterivEXT((GLenum)target, (GLenum)pname, (GLint*)(params + paramsOffset));
      */
     public static native void glGetConvolutionParameterivEXT(int target, int pname, long params);
 
@@ -18802,20 +18802,20 @@ public class GL {
     /*
 		ext_glColorTableSGI((GLenum)target, (GLenum)internalformat, (GLsizei)width, (GLenum)format, (GLenum)type, (const GLvoid*)table);
      */
-    public static native void glColorTableParameterfvSGI(int target, int pname, Buffer params, int paramsByteOffset);
+    public static native void glColorTableParameterfvSGI(int target, int pname, Buffer params, int paramsOffset);
 
     /*
-		ext_glColorTableParameterfvSGI((GLenum)target, (GLenum)pname, (const GLfloat*)(params + paramsByteOffset));
+		ext_glColorTableParameterfvSGI((GLenum)target, (GLenum)pname, (const GLfloat*)(params + paramsOffset));
      */
     public static native void glColorTableParameterfvSGI(int target, int pname, long params);
 
     /*
 		ext_glColorTableParameterfvSGI((GLenum)target, (GLenum)pname, (const GLfloat*)params);
      */
-    public static native void glColorTableParameterivSGI(int target, int pname, Buffer params, int paramsByteOffset);
+    public static native void glColorTableParameterivSGI(int target, int pname, Buffer params, int paramsOffset);
 
     /*
-		ext_glColorTableParameterivSGI((GLenum)target, (GLenum)pname, (const GLint*)(params + paramsByteOffset));
+		ext_glColorTableParameterivSGI((GLenum)target, (GLenum)pname, (const GLint*)(params + paramsOffset));
      */
     public static native void glColorTableParameterivSGI(int target, int pname, long params);
 
@@ -18837,20 +18837,20 @@ public class GL {
     /*
 		ext_glGetColorTableSGI((GLenum)target, (GLenum)format, (GLenum)type, (GLvoid*)table);
      */
-    public static native void glGetColorTableParameterfvSGI(int target, int pname, Buffer params, int paramsByteOffset);
+    public static native void glGetColorTableParameterfvSGI(int target, int pname, Buffer params, int paramsOffset);
 
     /*
-		ext_glGetColorTableParameterfvSGI((GLenum)target, (GLenum)pname, (GLfloat*)(params + paramsByteOffset));
+		ext_glGetColorTableParameterfvSGI((GLenum)target, (GLenum)pname, (GLfloat*)(params + paramsOffset));
      */
     public static native void glGetColorTableParameterfvSGI(int target, int pname, long params);
 
     /*
 		ext_glGetColorTableParameterfvSGI((GLenum)target, (GLenum)pname, (GLfloat*)params);
      */
-    public static native void glGetColorTableParameterivSGI(int target, int pname, Buffer params, int paramsByteOffset);
+    public static native void glGetColorTableParameterivSGI(int target, int pname, Buffer params, int paramsOffset);
 
     /*
-		ext_glGetColorTableParameterivSGI((GLenum)target, (GLenum)pname, (GLint*)(params + paramsByteOffset));
+		ext_glGetColorTableParameterivSGI((GLenum)target, (GLenum)pname, (GLint*)(params + paramsOffset));
      */
     public static native void glGetColorTableParameterivSGI(int target, int pname, long params);
 
@@ -18867,10 +18867,10 @@ public class GL {
     /*
 		ext_glPixelTexGenParameteriSGIS((GLenum)pname, (GLint)param);
      */
-    public static native void glPixelTexGenParameterivSGIS(int pname, Buffer params, int paramsByteOffset);
+    public static native void glPixelTexGenParameterivSGIS(int pname, Buffer params, int paramsOffset);
 
     /*
-		ext_glPixelTexGenParameterivSGIS((GLenum)pname, (const GLint*)(params + paramsByteOffset));
+		ext_glPixelTexGenParameterivSGIS((GLenum)pname, (const GLint*)(params + paramsOffset));
      */
     public static native void glPixelTexGenParameterivSGIS(int pname, long params);
 
@@ -18882,30 +18882,30 @@ public class GL {
     /*
 		ext_glPixelTexGenParameterfSGIS((GLenum)pname, (GLfloat)param);
      */
-    public static native void glPixelTexGenParameterfvSGIS(int pname, Buffer params, int paramsByteOffset);
+    public static native void glPixelTexGenParameterfvSGIS(int pname, Buffer params, int paramsOffset);
 
     /*
-		ext_glPixelTexGenParameterfvSGIS((GLenum)pname, (const GLfloat*)(params + paramsByteOffset));
+		ext_glPixelTexGenParameterfvSGIS((GLenum)pname, (const GLfloat*)(params + paramsOffset));
      */
     public static native void glPixelTexGenParameterfvSGIS(int pname, long params);
 
     /*
 		ext_glPixelTexGenParameterfvSGIS((GLenum)pname, (const GLfloat*)params);
      */
-    public static native void glGetPixelTexGenParameterivSGIS(int pname, Buffer params, int paramsByteOffset);
+    public static native void glGetPixelTexGenParameterivSGIS(int pname, Buffer params, int paramsOffset);
 
     /*
-		ext_glGetPixelTexGenParameterivSGIS((GLenum)pname, (GLint*)(params + paramsByteOffset));
+		ext_glGetPixelTexGenParameterivSGIS((GLenum)pname, (GLint*)(params + paramsOffset));
      */
     public static native void glGetPixelTexGenParameterivSGIS(int pname, long params);
 
     /*
 		ext_glGetPixelTexGenParameterivSGIS((GLenum)pname, (GLint*)params);
      */
-    public static native void glGetPixelTexGenParameterfvSGIS(int pname, Buffer params, int paramsByteOffset);
+    public static native void glGetPixelTexGenParameterfvSGIS(int pname, Buffer params, int paramsOffset);
 
     /*
-		ext_glGetPixelTexGenParameterfvSGIS((GLenum)pname, (GLfloat*)(params + paramsByteOffset));
+		ext_glGetPixelTexGenParameterfvSGIS((GLenum)pname, (GLfloat*)(params + paramsOffset));
      */
     public static native void glGetPixelTexGenParameterfvSGIS(int pname, long params);
 
@@ -19112,10 +19112,10 @@ public class GL {
     /*
 		ext_glSpriteParameterfSGIX((GLenum)pname, (GLfloat)param);
      */
-    public static native void glSpriteParameterfvSGIX(int pname, Buffer params, int paramsByteOffset);
+    public static native void glSpriteParameterfvSGIX(int pname, Buffer params, int paramsOffset);
 
     /*
-		ext_glSpriteParameterfvSGIX((GLenum)pname, (const GLfloat*)(params + paramsByteOffset));
+		ext_glSpriteParameterfvSGIX((GLenum)pname, (const GLfloat*)(params + paramsOffset));
      */
     public static native void glSpriteParameterfvSGIX(int pname, long params);
 
@@ -19127,10 +19127,10 @@ public class GL {
     /*
 		ext_glSpriteParameteriSGIX((GLenum)pname, (GLint)param);
      */
-    public static native void glSpriteParameterivSGIX(int pname, Buffer params, int paramsByteOffset);
+    public static native void glSpriteParameterivSGIX(int pname, Buffer params, int paramsOffset);
 
     /*
-		ext_glSpriteParameterivSGIX((GLenum)pname, (const GLint*)(params + paramsByteOffset));
+		ext_glSpriteParameterivSGIX((GLenum)pname, (const GLint*)(params + paramsOffset));
      */
     public static native void glSpriteParameterivSGIX(int pname, long params);
 
@@ -19142,10 +19142,10 @@ public class GL {
     /*
 		ext_glPointParameterfEXT((GLenum)pname, (GLfloat)param);
      */
-    public static native void glPointParameterfvEXT(int pname, Buffer params, int paramsByteOffset);
+    public static native void glPointParameterfvEXT(int pname, Buffer params, int paramsOffset);
 
     /*
-		ext_glPointParameterfvEXT((GLenum)pname, (const GLfloat*)(params + paramsByteOffset));
+		ext_glPointParameterfvEXT((GLenum)pname, (const GLfloat*)(params + paramsOffset));
      */
     public static native void glPointParameterfvEXT(int pname, long params);
 
@@ -19157,10 +19157,10 @@ public class GL {
     /*
 		ext_glPointParameterfSGIS((GLenum)pname, (GLfloat)param);
      */
-    public static native void glPointParameterfvSGIS(int pname, Buffer params, int paramsByteOffset);
+    public static native void glPointParameterfvSGIS(int pname, Buffer params, int paramsOffset);
 
     /*
-		ext_glPointParameterfvSGIS((GLenum)pname, (const GLfloat*)(params + paramsByteOffset));
+		ext_glPointParameterfvSGIS((GLenum)pname, (const GLfloat*)(params + paramsOffset));
      */
     public static native void glPointParameterfvSGIS(int pname, long params);
 
@@ -19292,40 +19292,40 @@ public class GL {
     /*
 		ext_glImageTransformParameterfHP((GLenum)target, (GLenum)pname, (GLfloat)param);
      */
-    public static native void glImageTransformParameterivHP(int target, int pname, Buffer params, int paramsByteOffset);
+    public static native void glImageTransformParameterivHP(int target, int pname, Buffer params, int paramsOffset);
 
     /*
-		ext_glImageTransformParameterivHP((GLenum)target, (GLenum)pname, (const GLint*)(params + paramsByteOffset));
+		ext_glImageTransformParameterivHP((GLenum)target, (GLenum)pname, (const GLint*)(params + paramsOffset));
      */
     public static native void glImageTransformParameterivHP(int target, int pname, long params);
 
     /*
 		ext_glImageTransformParameterivHP((GLenum)target, (GLenum)pname, (const GLint*)params);
      */
-    public static native void glImageTransformParameterfvHP(int target, int pname, Buffer params, int paramsByteOffset);
+    public static native void glImageTransformParameterfvHP(int target, int pname, Buffer params, int paramsOffset);
 
     /*
-		ext_glImageTransformParameterfvHP((GLenum)target, (GLenum)pname, (const GLfloat*)(params + paramsByteOffset));
+		ext_glImageTransformParameterfvHP((GLenum)target, (GLenum)pname, (const GLfloat*)(params + paramsOffset));
      */
     public static native void glImageTransformParameterfvHP(int target, int pname, long params);
 
     /*
 		ext_glImageTransformParameterfvHP((GLenum)target, (GLenum)pname, (const GLfloat*)params);
      */
-    public static native void glGetImageTransformParameterivHP(int target, int pname, Buffer params, int paramsByteOffset);
+    public static native void glGetImageTransformParameterivHP(int target, int pname, Buffer params, int paramsOffset);
 
     /*
-		ext_glGetImageTransformParameterivHP((GLenum)target, (GLenum)pname, (GLint*)(params + paramsByteOffset));
+		ext_glGetImageTransformParameterivHP((GLenum)target, (GLenum)pname, (GLint*)(params + paramsOffset));
      */
     public static native void glGetImageTransformParameterivHP(int target, int pname, long params);
 
     /*
 		ext_glGetImageTransformParameterivHP((GLenum)target, (GLenum)pname, (GLint*)params);
      */
-    public static native void glGetImageTransformParameterfvHP(int target, int pname, Buffer params, int paramsByteOffset);
+    public static native void glGetImageTransformParameterfvHP(int target, int pname, Buffer params, int paramsOffset);
 
     /*
-		ext_glGetImageTransformParameterfvHP((GLenum)target, (GLenum)pname, (GLfloat*)(params + paramsByteOffset));
+		ext_glGetImageTransformParameterfvHP((GLenum)target, (GLenum)pname, (GLfloat*)(params + paramsOffset));
      */
     public static native void glGetImageTransformParameterfvHP(int target, int pname, long params);
 
@@ -19372,40 +19372,40 @@ public class GL {
     /*
 		ext_glGetColorTableEXT((GLenum)target, (GLenum)format, (GLenum)type, (GLvoid*)data);
      */
-    public static native void glGetColorTableParameterivEXT(int target, int pname, Buffer params, int paramsByteOffset);
+    public static native void glGetColorTableParameterivEXT(int target, int pname, Buffer params, int paramsOffset);
 
     /*
-		ext_glGetColorTableParameterivEXT((GLenum)target, (GLenum)pname, (GLint*)(params + paramsByteOffset));
+		ext_glGetColorTableParameterivEXT((GLenum)target, (GLenum)pname, (GLint*)(params + paramsOffset));
      */
     public static native void glGetColorTableParameterivEXT(int target, int pname, long params);
 
     /*
 		ext_glGetColorTableParameterivEXT((GLenum)target, (GLenum)pname, (GLint*)params);
      */
-    public static native void glGetColorTableParameterfvEXT(int target, int pname, Buffer params, int paramsByteOffset);
+    public static native void glGetColorTableParameterfvEXT(int target, int pname, Buffer params, int paramsOffset);
 
     /*
-		ext_glGetColorTableParameterfvEXT((GLenum)target, (GLenum)pname, (GLfloat*)(params + paramsByteOffset));
+		ext_glGetColorTableParameterfvEXT((GLenum)target, (GLenum)pname, (GLfloat*)(params + paramsOffset));
      */
     public static native void glGetColorTableParameterfvEXT(int target, int pname, long params);
 
     /*
 		ext_glGetColorTableParameterfvEXT((GLenum)target, (GLenum)pname, (GLfloat*)params);
      */
-    public static native void glGetListParameterfvSGIX(int list, int pname, Buffer params, int paramsByteOffset);
+    public static native void glGetListParameterfvSGIX(int list, int pname, Buffer params, int paramsOffset);
 
     /*
-		ext_glGetListParameterfvSGIX((GLuint)list, (GLenum)pname, (GLfloat*)(params + paramsByteOffset));
+		ext_glGetListParameterfvSGIX((GLuint)list, (GLenum)pname, (GLfloat*)(params + paramsOffset));
      */
     public static native void glGetListParameterfvSGIX(int list, int pname, long params);
 
     /*
 		ext_glGetListParameterfvSGIX((GLuint)list, (GLenum)pname, (GLfloat*)params);
      */
-    public static native void glGetListParameterivSGIX(int list, int pname, Buffer params, int paramsByteOffset);
+    public static native void glGetListParameterivSGIX(int list, int pname, Buffer params, int paramsOffset);
 
     /*
-		ext_glGetListParameterivSGIX((GLuint)list, (GLenum)pname, (GLint*)(params + paramsByteOffset));
+		ext_glGetListParameterivSGIX((GLuint)list, (GLenum)pname, (GLint*)(params + paramsOffset));
      */
     public static native void glGetListParameterivSGIX(int list, int pname, long params);
 
@@ -19417,10 +19417,10 @@ public class GL {
     /*
 		ext_glListParameterfSGIX((GLuint)list, (GLenum)pname, (GLfloat)param);
      */
-    public static native void glListParameterfvSGIX(int list, int pname, Buffer params, int paramsByteOffset);
+    public static native void glListParameterfvSGIX(int list, int pname, Buffer params, int paramsOffset);
 
     /*
-		ext_glListParameterfvSGIX((GLuint)list, (GLenum)pname, (const GLfloat*)(params + paramsByteOffset));
+		ext_glListParameterfvSGIX((GLuint)list, (GLenum)pname, (const GLfloat*)(params + paramsOffset));
      */
     public static native void glListParameterfvSGIX(int list, int pname, long params);
 
@@ -19432,10 +19432,10 @@ public class GL {
     /*
 		ext_glListParameteriSGIX((GLuint)list, (GLenum)pname, (GLint)param);
      */
-    public static native void glListParameterivSGIX(int list, int pname, Buffer params, int paramsByteOffset);
+    public static native void glListParameterivSGIX(int list, int pname, Buffer params, int paramsOffset);
 
     /*
-		ext_glListParameterivSGIX((GLuint)list, (GLenum)pname, (const GLint*)(params + paramsByteOffset));
+		ext_glListParameterivSGIX((GLuint)list, (GLenum)pname, (const GLint*)(params + paramsOffset));
      */
     public static native void glListParameterivSGIX(int list, int pname, long params);
 
@@ -19462,20 +19462,20 @@ public class GL {
     /*
 		ext_glUnlockArraysEXT();
      */
-    public static native void glCullParameterdvEXT(int pname, Buffer params, int paramsByteOffset);
+    public static native void glCullParameterdvEXT(int pname, Buffer params, int paramsOffset);
 
     /*
-		ext_glCullParameterdvEXT((GLenum)pname, (GLdouble*)(params + paramsByteOffset));
+		ext_glCullParameterdvEXT((GLenum)pname, (GLdouble*)(params + paramsOffset));
      */
     public static native void glCullParameterdvEXT(int pname, long params);
 
     /*
 		ext_glCullParameterdvEXT((GLenum)pname, (GLdouble*)params);
      */
-    public static native void glCullParameterfvEXT(int pname, Buffer params, int paramsByteOffset);
+    public static native void glCullParameterfvEXT(int pname, Buffer params, int paramsOffset);
 
     /*
-		ext_glCullParameterfvEXT((GLenum)pname, (GLfloat*)(params + paramsByteOffset));
+		ext_glCullParameterfvEXT((GLenum)pname, (GLfloat*)(params + paramsOffset));
      */
     public static native void glCullParameterfvEXT(int pname, long params);
 
@@ -19492,10 +19492,10 @@ public class GL {
     /*
 		ext_glFragmentLightfSGIX((GLenum)light, (GLenum)pname, (GLfloat)param);
      */
-    public static native void glFragmentLightfvSGIX(int light, int pname, Buffer params, int paramsByteOffset);
+    public static native void glFragmentLightfvSGIX(int light, int pname, Buffer params, int paramsOffset);
 
     /*
-		ext_glFragmentLightfvSGIX((GLenum)light, (GLenum)pname, (const GLfloat*)(params + paramsByteOffset));
+		ext_glFragmentLightfvSGIX((GLenum)light, (GLenum)pname, (const GLfloat*)(params + paramsOffset));
      */
     public static native void glFragmentLightfvSGIX(int light, int pname, long params);
 
@@ -19507,10 +19507,10 @@ public class GL {
     /*
 		ext_glFragmentLightiSGIX((GLenum)light, (GLenum)pname, (GLint)param);
      */
-    public static native void glFragmentLightivSGIX(int light, int pname, Buffer params, int paramsByteOffset);
+    public static native void glFragmentLightivSGIX(int light, int pname, Buffer params, int paramsOffset);
 
     /*
-		ext_glFragmentLightivSGIX((GLenum)light, (GLenum)pname, (const GLint*)(params + paramsByteOffset));
+		ext_glFragmentLightivSGIX((GLenum)light, (GLenum)pname, (const GLint*)(params + paramsOffset));
      */
     public static native void glFragmentLightivSGIX(int light, int pname, long params);
 
@@ -19522,10 +19522,10 @@ public class GL {
     /*
 		ext_glFragmentLightModelfSGIX((GLenum)pname, (GLfloat)param);
      */
-    public static native void glFragmentLightModelfvSGIX(int pname, Buffer params, int paramsByteOffset);
+    public static native void glFragmentLightModelfvSGIX(int pname, Buffer params, int paramsOffset);
 
     /*
-		ext_glFragmentLightModelfvSGIX((GLenum)pname, (const GLfloat*)(params + paramsByteOffset));
+		ext_glFragmentLightModelfvSGIX((GLenum)pname, (const GLfloat*)(params + paramsOffset));
      */
     public static native void glFragmentLightModelfvSGIX(int pname, long params);
 
@@ -19537,10 +19537,10 @@ public class GL {
     /*
 		ext_glFragmentLightModeliSGIX((GLenum)pname, (GLint)param);
      */
-    public static native void glFragmentLightModelivSGIX(int pname, Buffer params, int paramsByteOffset);
+    public static native void glFragmentLightModelivSGIX(int pname, Buffer params, int paramsOffset);
 
     /*
-		ext_glFragmentLightModelivSGIX((GLenum)pname, (const GLint*)(params + paramsByteOffset));
+		ext_glFragmentLightModelivSGIX((GLenum)pname, (const GLint*)(params + paramsOffset));
      */
     public static native void glFragmentLightModelivSGIX(int pname, long params);
 
@@ -19552,10 +19552,10 @@ public class GL {
     /*
 		ext_glFragmentMaterialfSGIX((GLenum)face, (GLenum)pname, (GLfloat)param);
      */
-    public static native void glFragmentMaterialfvSGIX(int face, int pname, Buffer params, int paramsByteOffset);
+    public static native void glFragmentMaterialfvSGIX(int face, int pname, Buffer params, int paramsOffset);
 
     /*
-		ext_glFragmentMaterialfvSGIX((GLenum)face, (GLenum)pname, (const GLfloat*)(params + paramsByteOffset));
+		ext_glFragmentMaterialfvSGIX((GLenum)face, (GLenum)pname, (const GLfloat*)(params + paramsOffset));
      */
     public static native void glFragmentMaterialfvSGIX(int face, int pname, long params);
 
@@ -19567,50 +19567,50 @@ public class GL {
     /*
 		ext_glFragmentMaterialiSGIX((GLenum)face, (GLenum)pname, (GLint)param);
      */
-    public static native void glFragmentMaterialivSGIX(int face, int pname, Buffer params, int paramsByteOffset);
+    public static native void glFragmentMaterialivSGIX(int face, int pname, Buffer params, int paramsOffset);
 
     /*
-		ext_glFragmentMaterialivSGIX((GLenum)face, (GLenum)pname, (const GLint*)(params + paramsByteOffset));
+		ext_glFragmentMaterialivSGIX((GLenum)face, (GLenum)pname, (const GLint*)(params + paramsOffset));
      */
     public static native void glFragmentMaterialivSGIX(int face, int pname, long params);
 
     /*
 		ext_glFragmentMaterialivSGIX((GLenum)face, (GLenum)pname, (const GLint*)params);
      */
-    public static native void glGetFragmentLightfvSGIX(int light, int pname, Buffer params, int paramsByteOffset);
+    public static native void glGetFragmentLightfvSGIX(int light, int pname, Buffer params, int paramsOffset);
 
     /*
-		ext_glGetFragmentLightfvSGIX((GLenum)light, (GLenum)pname, (GLfloat*)(params + paramsByteOffset));
+		ext_glGetFragmentLightfvSGIX((GLenum)light, (GLenum)pname, (GLfloat*)(params + paramsOffset));
      */
     public static native void glGetFragmentLightfvSGIX(int light, int pname, long params);
 
     /*
 		ext_glGetFragmentLightfvSGIX((GLenum)light, (GLenum)pname, (GLfloat*)params);
      */
-    public static native void glGetFragmentLightivSGIX(int light, int pname, Buffer params, int paramsByteOffset);
+    public static native void glGetFragmentLightivSGIX(int light, int pname, Buffer params, int paramsOffset);
 
     /*
-		ext_glGetFragmentLightivSGIX((GLenum)light, (GLenum)pname, (GLint*)(params + paramsByteOffset));
+		ext_glGetFragmentLightivSGIX((GLenum)light, (GLenum)pname, (GLint*)(params + paramsOffset));
      */
     public static native void glGetFragmentLightivSGIX(int light, int pname, long params);
 
     /*
 		ext_glGetFragmentLightivSGIX((GLenum)light, (GLenum)pname, (GLint*)params);
      */
-    public static native void glGetFragmentMaterialfvSGIX(int face, int pname, Buffer params, int paramsByteOffset);
+    public static native void glGetFragmentMaterialfvSGIX(int face, int pname, Buffer params, int paramsOffset);
 
     /*
-		ext_glGetFragmentMaterialfvSGIX((GLenum)face, (GLenum)pname, (GLfloat*)(params + paramsByteOffset));
+		ext_glGetFragmentMaterialfvSGIX((GLenum)face, (GLenum)pname, (GLfloat*)(params + paramsOffset));
      */
     public static native void glGetFragmentMaterialfvSGIX(int face, int pname, long params);
 
     /*
 		ext_glGetFragmentMaterialfvSGIX((GLenum)face, (GLenum)pname, (GLfloat*)params);
      */
-    public static native void glGetFragmentMaterialivSGIX(int face, int pname, Buffer params, int paramsByteOffset);
+    public static native void glGetFragmentMaterialivSGIX(int face, int pname, Buffer params, int paramsOffset);
 
     /*
-		ext_glGetFragmentMaterialivSGIX((GLenum)face, (GLenum)pname, (GLint*)(params + paramsByteOffset));
+		ext_glGetFragmentMaterialivSGIX((GLenum)face, (GLenum)pname, (GLint*)(params + paramsOffset));
      */
     public static native void glGetFragmentMaterialivSGIX(int face, int pname, long params);
 
@@ -19737,40 +19737,40 @@ public class GL {
     /*
 		ext_glPixelTransformParameterfEXT((GLenum)target, (GLenum)pname, (GLfloat)param);
      */
-    public static native void glPixelTransformParameterivEXT(int target, int pname, Buffer params, int paramsByteOffset);
+    public static native void glPixelTransformParameterivEXT(int target, int pname, Buffer params, int paramsOffset);
 
     /*
-		ext_glPixelTransformParameterivEXT((GLenum)target, (GLenum)pname, (const GLint*)(params + paramsByteOffset));
+		ext_glPixelTransformParameterivEXT((GLenum)target, (GLenum)pname, (const GLint*)(params + paramsOffset));
      */
     public static native void glPixelTransformParameterivEXT(int target, int pname, long params);
 
     /*
 		ext_glPixelTransformParameterivEXT((GLenum)target, (GLenum)pname, (const GLint*)params);
      */
-    public static native void glPixelTransformParameterfvEXT(int target, int pname, Buffer params, int paramsByteOffset);
+    public static native void glPixelTransformParameterfvEXT(int target, int pname, Buffer params, int paramsOffset);
 
     /*
-		ext_glPixelTransformParameterfvEXT((GLenum)target, (GLenum)pname, (const GLfloat*)(params + paramsByteOffset));
+		ext_glPixelTransformParameterfvEXT((GLenum)target, (GLenum)pname, (const GLfloat*)(params + paramsOffset));
      */
     public static native void glPixelTransformParameterfvEXT(int target, int pname, long params);
 
     /*
 		ext_glPixelTransformParameterfvEXT((GLenum)target, (GLenum)pname, (const GLfloat*)params);
      */
-    public static native void glGetPixelTransformParameterivEXT(int target, int pname, Buffer params, int paramsByteOffset);
+    public static native void glGetPixelTransformParameterivEXT(int target, int pname, Buffer params, int paramsOffset);
 
     /*
-		ext_glGetPixelTransformParameterivEXT((GLenum)target, (GLenum)pname, (GLint*)(params + paramsByteOffset));
+		ext_glGetPixelTransformParameterivEXT((GLenum)target, (GLenum)pname, (GLint*)(params + paramsOffset));
      */
     public static native void glGetPixelTransformParameterivEXT(int target, int pname, long params);
 
     /*
 		ext_glGetPixelTransformParameterivEXT((GLenum)target, (GLenum)pname, (GLint*)params);
      */
-    public static native void glGetPixelTransformParameterfvEXT(int target, int pname, Buffer params, int paramsByteOffset);
+    public static native void glGetPixelTransformParameterfvEXT(int target, int pname, Buffer params, int paramsOffset);
 
     /*
-		ext_glGetPixelTransformParameterfvEXT((GLenum)target, (GLenum)pname, (GLfloat*)(params + paramsByteOffset));
+		ext_glGetPixelTransformParameterfvEXT((GLenum)target, (GLenum)pname, (GLfloat*)(params + paramsOffset));
      */
     public static native void glGetPixelTransformParameterfvEXT(int target, int pname, long params);
 
@@ -20592,10 +20592,10 @@ public class GL {
     /*
 		ext_glVertexArrayRangeNV((GLsizei)length, (const GLvoid*)pointer);
      */
-    public static native void glCombinerParameterfvNV(int pname, Buffer params, int paramsByteOffset);
+    public static native void glCombinerParameterfvNV(int pname, Buffer params, int paramsOffset);
 
     /*
-		ext_glCombinerParameterfvNV((GLenum)pname, (const GLfloat*)(params + paramsByteOffset));
+		ext_glCombinerParameterfvNV((GLenum)pname, (const GLfloat*)(params + paramsOffset));
      */
     public static native void glCombinerParameterfvNV(int pname, long params);
 
@@ -20607,10 +20607,10 @@ public class GL {
     /*
 		ext_glCombinerParameterfNV((GLenum)pname, (GLfloat)param);
      */
-    public static native void glCombinerParameterivNV(int pname, Buffer params, int paramsByteOffset);
+    public static native void glCombinerParameterivNV(int pname, Buffer params, int paramsOffset);
 
     /*
-		ext_glCombinerParameterivNV((GLenum)pname, (const GLint*)(params + paramsByteOffset));
+		ext_glCombinerParameterivNV((GLenum)pname, (const GLint*)(params + paramsOffset));
      */
     public static native void glCombinerParameterivNV(int pname, long params);
 
@@ -20637,60 +20637,60 @@ public class GL {
     /*
 		ext_glFinalCombinerInputNV((GLenum)variable, (GLenum)input, (GLenum)mapping, (GLenum)componentUsage);
      */
-    public static native void glGetCombinerInputParameterfvNV(int stage, int portion, int variable, int pname, Buffer params, int paramsByteOffset);
+    public static native void glGetCombinerInputParameterfvNV(int stage, int portion, int variable, int pname, Buffer params, int paramsOffset);
 
     /*
-		ext_glGetCombinerInputParameterfvNV((GLenum)stage, (GLenum)portion, (GLenum)variable, (GLenum)pname, (GLfloat*)(params + paramsByteOffset));
+		ext_glGetCombinerInputParameterfvNV((GLenum)stage, (GLenum)portion, (GLenum)variable, (GLenum)pname, (GLfloat*)(params + paramsOffset));
      */
     public static native void glGetCombinerInputParameterfvNV(int stage, int portion, int variable, int pname, long params);
 
     /*
 		ext_glGetCombinerInputParameterfvNV((GLenum)stage, (GLenum)portion, (GLenum)variable, (GLenum)pname, (GLfloat*)params);
      */
-    public static native void glGetCombinerInputParameterivNV(int stage, int portion, int variable, int pname, Buffer params, int paramsByteOffset);
+    public static native void glGetCombinerInputParameterivNV(int stage, int portion, int variable, int pname, Buffer params, int paramsOffset);
 
     /*
-		ext_glGetCombinerInputParameterivNV((GLenum)stage, (GLenum)portion, (GLenum)variable, (GLenum)pname, (GLint*)(params + paramsByteOffset));
+		ext_glGetCombinerInputParameterivNV((GLenum)stage, (GLenum)portion, (GLenum)variable, (GLenum)pname, (GLint*)(params + paramsOffset));
      */
     public static native void glGetCombinerInputParameterivNV(int stage, int portion, int variable, int pname, long params);
 
     /*
 		ext_glGetCombinerInputParameterivNV((GLenum)stage, (GLenum)portion, (GLenum)variable, (GLenum)pname, (GLint*)params);
      */
-    public static native void glGetCombinerOutputParameterfvNV(int stage, int portion, int pname, Buffer params, int paramsByteOffset);
+    public static native void glGetCombinerOutputParameterfvNV(int stage, int portion, int pname, Buffer params, int paramsOffset);
 
     /*
-		ext_glGetCombinerOutputParameterfvNV((GLenum)stage, (GLenum)portion, (GLenum)pname, (GLfloat*)(params + paramsByteOffset));
+		ext_glGetCombinerOutputParameterfvNV((GLenum)stage, (GLenum)portion, (GLenum)pname, (GLfloat*)(params + paramsOffset));
      */
     public static native void glGetCombinerOutputParameterfvNV(int stage, int portion, int pname, long params);
 
     /*
 		ext_glGetCombinerOutputParameterfvNV((GLenum)stage, (GLenum)portion, (GLenum)pname, (GLfloat*)params);
      */
-    public static native void glGetCombinerOutputParameterivNV(int stage, int portion, int pname, Buffer params, int paramsByteOffset);
+    public static native void glGetCombinerOutputParameterivNV(int stage, int portion, int pname, Buffer params, int paramsOffset);
 
     /*
-		ext_glGetCombinerOutputParameterivNV((GLenum)stage, (GLenum)portion, (GLenum)pname, (GLint*)(params + paramsByteOffset));
+		ext_glGetCombinerOutputParameterivNV((GLenum)stage, (GLenum)portion, (GLenum)pname, (GLint*)(params + paramsOffset));
      */
     public static native void glGetCombinerOutputParameterivNV(int stage, int portion, int pname, long params);
 
     /*
 		ext_glGetCombinerOutputParameterivNV((GLenum)stage, (GLenum)portion, (GLenum)pname, (GLint*)params);
      */
-    public static native void glGetFinalCombinerInputParameterfvNV(int variable, int pname, Buffer params, int paramsByteOffset);
+    public static native void glGetFinalCombinerInputParameterfvNV(int variable, int pname, Buffer params, int paramsOffset);
 
     /*
-		ext_glGetFinalCombinerInputParameterfvNV((GLenum)variable, (GLenum)pname, (GLfloat*)(params + paramsByteOffset));
+		ext_glGetFinalCombinerInputParameterfvNV((GLenum)variable, (GLenum)pname, (GLfloat*)(params + paramsOffset));
      */
     public static native void glGetFinalCombinerInputParameterfvNV(int variable, int pname, long params);
 
     /*
 		ext_glGetFinalCombinerInputParameterfvNV((GLenum)variable, (GLenum)pname, (GLfloat*)params);
      */
-    public static native void glGetFinalCombinerInputParameterivNV(int variable, int pname, Buffer params, int paramsByteOffset);
+    public static native void glGetFinalCombinerInputParameterivNV(int variable, int pname, Buffer params, int paramsOffset);
 
     /*
-		ext_glGetFinalCombinerInputParameterivNV((GLenum)variable, (GLenum)pname, (GLint*)(params + paramsByteOffset));
+		ext_glGetFinalCombinerInputParameterivNV((GLenum)variable, (GLenum)pname, (GLint*)(params + paramsOffset));
      */
     public static native void glGetFinalCombinerInputParameterivNV(int variable, int pname, long params);
 
@@ -21002,10 +21002,10 @@ public class GL {
     /*
 		ext_glTextureColorMaskSGIS((GLboolean)red, (GLboolean)green, (GLboolean)blue, (GLboolean)alpha);
      */
-    public static native void glIglooInterfaceSGIX(int pname, Buffer params, int paramsByteOffset);
+    public static native void glIglooInterfaceSGIX(int pname, Buffer params, int paramsOffset);
 
     /*
-		ext_glIglooInterfaceSGIX((GLenum)pname, (const GLvoid*)(params + paramsByteOffset));
+		ext_glIglooInterfaceSGIX((GLenum)pname, (const GLvoid*)(params + paramsOffset));
      */
     public static native void glIglooInterfaceSGIX(int pname, long params);
 
@@ -21042,10 +21042,10 @@ public class GL {
     /*
 		return (jboolean)ext_glTestFenceNV((GLuint)fence);
      */
-    public static native void glGetFenceivNV(int fence, int pname, Buffer params, int paramsByteOffset);
+    public static native void glGetFenceivNV(int fence, int pname, Buffer params, int paramsOffset);
 
     /*
-		ext_glGetFenceivNV((GLuint)fence, (GLenum)pname, (GLint*)(params + paramsByteOffset));
+		ext_glGetFenceivNV((GLuint)fence, (GLenum)pname, (GLint*)(params + paramsOffset));
      */
     public static native void glGetFenceivNV(int fence, int pname, long params);
 
@@ -21072,20 +21072,20 @@ public class GL {
     /*
 		ext_glMapControlPointsNV((GLenum)target, (GLuint)index, (GLenum)type, (GLsizei)ustride, (GLsizei)vstride, (GLint)uorder, (GLint)vorder, (GLboolean)packed, (const GLvoid*)points);
      */
-    public static native void glMapParameterivNV(int target, int pname, Buffer params, int paramsByteOffset);
+    public static native void glMapParameterivNV(int target, int pname, Buffer params, int paramsOffset);
 
     /*
-		ext_glMapParameterivNV((GLenum)target, (GLenum)pname, (const GLint*)(params + paramsByteOffset));
+		ext_glMapParameterivNV((GLenum)target, (GLenum)pname, (const GLint*)(params + paramsOffset));
      */
     public static native void glMapParameterivNV(int target, int pname, long params);
 
     /*
 		ext_glMapParameterivNV((GLenum)target, (GLenum)pname, (const GLint*)params);
      */
-    public static native void glMapParameterfvNV(int target, int pname, Buffer params, int paramsByteOffset);
+    public static native void glMapParameterfvNV(int target, int pname, Buffer params, int paramsOffset);
 
     /*
-		ext_glMapParameterfvNV((GLenum)target, (GLenum)pname, (const GLfloat*)(params + paramsByteOffset));
+		ext_glMapParameterfvNV((GLenum)target, (GLenum)pname, (const GLfloat*)(params + paramsOffset));
      */
     public static native void glMapParameterfvNV(int target, int pname, long params);
 
@@ -21102,40 +21102,40 @@ public class GL {
     /*
 		ext_glGetMapControlPointsNV((GLenum)target, (GLuint)index, (GLenum)type, (GLsizei)ustride, (GLsizei)vstride, (GLboolean)packed, (GLvoid*)points);
      */
-    public static native void glGetMapParameterivNV(int target, int pname, Buffer params, int paramsByteOffset);
+    public static native void glGetMapParameterivNV(int target, int pname, Buffer params, int paramsOffset);
 
     /*
-		ext_glGetMapParameterivNV((GLenum)target, (GLenum)pname, (GLint*)(params + paramsByteOffset));
+		ext_glGetMapParameterivNV((GLenum)target, (GLenum)pname, (GLint*)(params + paramsOffset));
      */
     public static native void glGetMapParameterivNV(int target, int pname, long params);
 
     /*
 		ext_glGetMapParameterivNV((GLenum)target, (GLenum)pname, (GLint*)params);
      */
-    public static native void glGetMapParameterfvNV(int target, int pname, Buffer params, int paramsByteOffset);
+    public static native void glGetMapParameterfvNV(int target, int pname, Buffer params, int paramsOffset);
 
     /*
-		ext_glGetMapParameterfvNV((GLenum)target, (GLenum)pname, (GLfloat*)(params + paramsByteOffset));
+		ext_glGetMapParameterfvNV((GLenum)target, (GLenum)pname, (GLfloat*)(params + paramsOffset));
      */
     public static native void glGetMapParameterfvNV(int target, int pname, long params);
 
     /*
 		ext_glGetMapParameterfvNV((GLenum)target, (GLenum)pname, (GLfloat*)params);
      */
-    public static native void glGetMapAttribParameterivNV(int target, int index, int pname, Buffer params, int paramsByteOffset);
+    public static native void glGetMapAttribParameterivNV(int target, int index, int pname, Buffer params, int paramsOffset);
 
     /*
-		ext_glGetMapAttribParameterivNV((GLenum)target, (GLuint)index, (GLenum)pname, (GLint*)(params + paramsByteOffset));
+		ext_glGetMapAttribParameterivNV((GLenum)target, (GLuint)index, (GLenum)pname, (GLint*)(params + paramsOffset));
      */
     public static native void glGetMapAttribParameterivNV(int target, int index, int pname, long params);
 
     /*
 		ext_glGetMapAttribParameterivNV((GLenum)target, (GLuint)index, (GLenum)pname, (GLint*)params);
      */
-    public static native void glGetMapAttribParameterfvNV(int target, int index, int pname, Buffer params, int paramsByteOffset);
+    public static native void glGetMapAttribParameterfvNV(int target, int index, int pname, Buffer params, int paramsOffset);
 
     /*
-		ext_glGetMapAttribParameterfvNV((GLenum)target, (GLuint)index, (GLenum)pname, (GLfloat*)(params + paramsByteOffset));
+		ext_glGetMapAttribParameterfvNV((GLenum)target, (GLuint)index, (GLenum)pname, (GLfloat*)(params + paramsOffset));
      */
     public static native void glGetMapAttribParameterfvNV(int target, int index, int pname, long params);
 
@@ -21147,20 +21147,20 @@ public class GL {
     /*
 		ext_glEvalMapsNV((GLenum)target, (GLenum)mode);
      */
-    public static native void glCombinerStageParameterfvNV(int stage, int pname, Buffer params, int paramsByteOffset);
+    public static native void glCombinerStageParameterfvNV(int stage, int pname, Buffer params, int paramsOffset);
 
     /*
-		ext_glCombinerStageParameterfvNV((GLenum)stage, (GLenum)pname, (const GLfloat*)(params + paramsByteOffset));
+		ext_glCombinerStageParameterfvNV((GLenum)stage, (GLenum)pname, (const GLfloat*)(params + paramsOffset));
      */
     public static native void glCombinerStageParameterfvNV(int stage, int pname, long params);
 
     /*
 		ext_glCombinerStageParameterfvNV((GLenum)stage, (GLenum)pname, (const GLfloat*)params);
      */
-    public static native void glGetCombinerStageParameterfvNV(int stage, int pname, Buffer params, int paramsByteOffset);
+    public static native void glGetCombinerStageParameterfvNV(int stage, int pname, Buffer params, int paramsOffset);
 
     /*
-		ext_glGetCombinerStageParameterfvNV((GLenum)stage, (GLenum)pname, (GLfloat*)(params + paramsByteOffset));
+		ext_glGetCombinerStageParameterfvNV((GLenum)stage, (GLenum)pname, (GLfloat*)(params + paramsOffset));
      */
     public static native void glGetCombinerStageParameterfvNV(int stage, int pname, long params);
 
@@ -21192,10 +21192,10 @@ public class GL {
     /*
 		ext_glDeleteProgramsNV((GLsizei)n, (const GLuint*)programs);
      */
-    public static native void glExecuteProgramNV(int target, int id, Buffer params, int paramsByteOffset);
+    public static native void glExecuteProgramNV(int target, int id, Buffer params, int paramsOffset);
 
     /*
-		ext_glExecuteProgramNV((GLenum)target, (GLuint)id, (const GLfloat*)(params + paramsByteOffset));
+		ext_glExecuteProgramNV((GLenum)target, (GLuint)id, (const GLfloat*)(params + paramsOffset));
      */
     public static native void glExecuteProgramNV(int target, int id, long params);
 
@@ -21212,30 +21212,30 @@ public class GL {
     /*
 		ext_glGenProgramsNV((GLsizei)n, (GLuint*)programs);
      */
-    public static native void glGetProgramParameterdvNV(int target, int index, int pname, Buffer params, int paramsByteOffset);
+    public static native void glGetProgramParameterdvNV(int target, int index, int pname, Buffer params, int paramsOffset);
 
     /*
-		ext_glGetProgramParameterdvNV((GLenum)target, (GLuint)index, (GLenum)pname, (GLdouble*)(params + paramsByteOffset));
+		ext_glGetProgramParameterdvNV((GLenum)target, (GLuint)index, (GLenum)pname, (GLdouble*)(params + paramsOffset));
      */
     public static native void glGetProgramParameterdvNV(int target, int index, int pname, long params);
 
     /*
 		ext_glGetProgramParameterdvNV((GLenum)target, (GLuint)index, (GLenum)pname, (GLdouble*)params);
      */
-    public static native void glGetProgramParameterfvNV(int target, int index, int pname, Buffer params, int paramsByteOffset);
+    public static native void glGetProgramParameterfvNV(int target, int index, int pname, Buffer params, int paramsOffset);
 
     /*
-		ext_glGetProgramParameterfvNV((GLenum)target, (GLuint)index, (GLenum)pname, (GLfloat*)(params + paramsByteOffset));
+		ext_glGetProgramParameterfvNV((GLenum)target, (GLuint)index, (GLenum)pname, (GLfloat*)(params + paramsOffset));
      */
     public static native void glGetProgramParameterfvNV(int target, int index, int pname, long params);
 
     /*
 		ext_glGetProgramParameterfvNV((GLenum)target, (GLuint)index, (GLenum)pname, (GLfloat*)params);
      */
-    public static native void glGetProgramivNV(int id, int pname, Buffer params, int paramsByteOffset);
+    public static native void glGetProgramivNV(int id, int pname, Buffer params, int paramsOffset);
 
     /*
-		ext_glGetProgramivNV((GLuint)id, (GLenum)pname, (GLint*)(params + paramsByteOffset));
+		ext_glGetProgramivNV((GLuint)id, (GLenum)pname, (GLint*)(params + paramsOffset));
      */
     public static native void glGetProgramivNV(int id, int pname, long params);
 
@@ -21252,40 +21252,40 @@ public class GL {
     /*
 		ext_glGetProgramStringNV((GLuint)id, (GLenum)pname, (GLubyte*)program);
      */
-    public static native void glGetTrackMatrixivNV(int target, int address, int pname, Buffer params, int paramsByteOffset);
+    public static native void glGetTrackMatrixivNV(int target, int address, int pname, Buffer params, int paramsOffset);
 
     /*
-		ext_glGetTrackMatrixivNV((GLenum)target, (GLuint)address, (GLenum)pname, (GLint*)(params + paramsByteOffset));
+		ext_glGetTrackMatrixivNV((GLenum)target, (GLuint)address, (GLenum)pname, (GLint*)(params + paramsOffset));
      */
     public static native void glGetTrackMatrixivNV(int target, int address, int pname, long params);
 
     /*
 		ext_glGetTrackMatrixivNV((GLenum)target, (GLuint)address, (GLenum)pname, (GLint*)params);
      */
-    public static native void glGetVertexAttribdvNV(int index, int pname, Buffer params, int paramsByteOffset);
+    public static native void glGetVertexAttribdvNV(int index, int pname, Buffer params, int paramsOffset);
 
     /*
-		ext_glGetVertexAttribdvNV((GLuint)index, (GLenum)pname, (GLdouble*)(params + paramsByteOffset));
+		ext_glGetVertexAttribdvNV((GLuint)index, (GLenum)pname, (GLdouble*)(params + paramsOffset));
      */
     public static native void glGetVertexAttribdvNV(int index, int pname, long params);
 
     /*
 		ext_glGetVertexAttribdvNV((GLuint)index, (GLenum)pname, (GLdouble*)params);
      */
-    public static native void glGetVertexAttribfvNV(int index, int pname, Buffer params, int paramsByteOffset);
+    public static native void glGetVertexAttribfvNV(int index, int pname, Buffer params, int paramsOffset);
 
     /*
-		ext_glGetVertexAttribfvNV((GLuint)index, (GLenum)pname, (GLfloat*)(params + paramsByteOffset));
+		ext_glGetVertexAttribfvNV((GLuint)index, (GLenum)pname, (GLfloat*)(params + paramsOffset));
      */
     public static native void glGetVertexAttribfvNV(int index, int pname, long params);
 
     /*
 		ext_glGetVertexAttribfvNV((GLuint)index, (GLenum)pname, (GLfloat*)params);
      */
-    public static native void glGetVertexAttribivNV(int index, int pname, Buffer params, int paramsByteOffset);
+    public static native void glGetVertexAttribivNV(int index, int pname, Buffer params, int paramsOffset);
 
     /*
-		ext_glGetVertexAttribivNV((GLuint)index, (GLenum)pname, (GLint*)(params + paramsByteOffset));
+		ext_glGetVertexAttribivNV((GLuint)index, (GLenum)pname, (GLint*)(params + paramsOffset));
      */
     public static native void glGetVertexAttribivNV(int index, int pname, long params);
 
@@ -21867,20 +21867,20 @@ public class GL {
     /*
 		ext_glUpdateObjectBufferATI((GLuint)buffer, (GLuint)offset, (GLsizei)size, (const GLvoid*)pointer, (GLenum)preserve);
      */
-    public static native void glGetObjectBufferfvATI(int buffer, int pname, Buffer params, int paramsByteOffset);
+    public static native void glGetObjectBufferfvATI(int buffer, int pname, Buffer params, int paramsOffset);
 
     /*
-		ext_glGetObjectBufferfvATI((GLuint)buffer, (GLenum)pname, (GLfloat*)(params + paramsByteOffset));
+		ext_glGetObjectBufferfvATI((GLuint)buffer, (GLenum)pname, (GLfloat*)(params + paramsOffset));
      */
     public static native void glGetObjectBufferfvATI(int buffer, int pname, long params);
 
     /*
 		ext_glGetObjectBufferfvATI((GLuint)buffer, (GLenum)pname, (GLfloat*)params);
      */
-    public static native void glGetObjectBufferivATI(int buffer, int pname, Buffer params, int paramsByteOffset);
+    public static native void glGetObjectBufferivATI(int buffer, int pname, Buffer params, int paramsOffset);
 
     /*
-		ext_glGetObjectBufferivATI((GLuint)buffer, (GLenum)pname, (GLint*)(params + paramsByteOffset));
+		ext_glGetObjectBufferivATI((GLuint)buffer, (GLenum)pname, (GLint*)(params + paramsOffset));
      */
     public static native void glGetObjectBufferivATI(int buffer, int pname, long params);
 
@@ -21897,20 +21897,20 @@ public class GL {
     /*
 		ext_glArrayObjectATI((GLenum)array, (GLint)size, (GLenum)type, (GLsizei)stride, (GLuint)buffer, (GLuint)offset);
      */
-    public static native void glGetArrayObjectfvATI(int array, int pname, Buffer params, int paramsByteOffset);
+    public static native void glGetArrayObjectfvATI(int array, int pname, Buffer params, int paramsOffset);
 
     /*
-		ext_glGetArrayObjectfvATI((GLenum)array, (GLenum)pname, (GLfloat*)(params + paramsByteOffset));
+		ext_glGetArrayObjectfvATI((GLenum)array, (GLenum)pname, (GLfloat*)(params + paramsOffset));
      */
     public static native void glGetArrayObjectfvATI(int array, int pname, long params);
 
     /*
 		ext_glGetArrayObjectfvATI((GLenum)array, (GLenum)pname, (GLfloat*)params);
      */
-    public static native void glGetArrayObjectivATI(int array, int pname, Buffer params, int paramsByteOffset);
+    public static native void glGetArrayObjectivATI(int array, int pname, Buffer params, int paramsOffset);
 
     /*
-		ext_glGetArrayObjectivATI((GLenum)array, (GLenum)pname, (GLint*)(params + paramsByteOffset));
+		ext_glGetArrayObjectivATI((GLenum)array, (GLenum)pname, (GLint*)(params + paramsOffset));
      */
     public static native void glGetArrayObjectivATI(int array, int pname, long params);
 
@@ -21922,20 +21922,20 @@ public class GL {
     /*
 		ext_glVariantArrayObjectATI((GLuint)id, (GLenum)type, (GLsizei)stride, (GLuint)buffer, (GLuint)offset);
      */
-    public static native void glGetVariantArrayObjectfvATI(int id, int pname, Buffer params, int paramsByteOffset);
+    public static native void glGetVariantArrayObjectfvATI(int id, int pname, Buffer params, int paramsOffset);
 
     /*
-		ext_glGetVariantArrayObjectfvATI((GLuint)id, (GLenum)pname, (GLfloat*)(params + paramsByteOffset));
+		ext_glGetVariantArrayObjectfvATI((GLuint)id, (GLenum)pname, (GLfloat*)(params + paramsOffset));
      */
     public static native void glGetVariantArrayObjectfvATI(int id, int pname, long params);
 
     /*
 		ext_glGetVariantArrayObjectfvATI((GLuint)id, (GLenum)pname, (GLfloat*)params);
      */
-    public static native void glGetVariantArrayObjectivATI(int id, int pname, Buffer params, int paramsByteOffset);
+    public static native void glGetVariantArrayObjectivATI(int id, int pname, Buffer params, int paramsOffset);
 
     /*
-		ext_glGetVariantArrayObjectivATI((GLuint)id, (GLenum)pname, (GLint*)(params + paramsByteOffset));
+		ext_glGetVariantArrayObjectivATI((GLuint)id, (GLenum)pname, (GLint*)(params + paramsOffset));
      */
     public static native void glGetVariantArrayObjectivATI(int id, int pname, long params);
 
@@ -22647,20 +22647,20 @@ public class GL {
     /*
 		ext_glEndOcclusionQueryNV();
      */
-    public static native void glGetOcclusionQueryivNV(int id, int pname, Buffer params, int paramsByteOffset);
+    public static native void glGetOcclusionQueryivNV(int id, int pname, Buffer params, int paramsOffset);
 
     /*
-		ext_glGetOcclusionQueryivNV((GLuint)id, (GLenum)pname, (GLint*)(params + paramsByteOffset));
+		ext_glGetOcclusionQueryivNV((GLuint)id, (GLenum)pname, (GLint*)(params + paramsOffset));
      */
     public static native void glGetOcclusionQueryivNV(int id, int pname, long params);
 
     /*
 		ext_glGetOcclusionQueryivNV((GLuint)id, (GLenum)pname, (GLint*)params);
      */
-    public static native void glGetOcclusionQueryuivNV(int id, int pname, Buffer params, int paramsByteOffset);
+    public static native void glGetOcclusionQueryuivNV(int id, int pname, Buffer params, int paramsOffset);
 
     /*
-		ext_glGetOcclusionQueryuivNV((GLuint)id, (GLenum)pname, (GLuint*)(params + paramsByteOffset));
+		ext_glGetOcclusionQueryuivNV((GLuint)id, (GLenum)pname, (GLuint*)(params + paramsOffset));
      */
     public static native void glGetOcclusionQueryuivNV(int id, int pname, long params);
 
@@ -22672,10 +22672,10 @@ public class GL {
     /*
 		ext_glPointParameteriNV((GLenum)pname, (GLint)param);
      */
-    public static native void glPointParameterivNV(int pname, Buffer params, int paramsByteOffset);
+    public static native void glPointParameterivNV(int pname, Buffer params, int paramsOffset);
 
     /*
-		ext_glPointParameterivNV((GLenum)pname, (const GLint*)(params + paramsByteOffset));
+		ext_glPointParameterivNV((GLenum)pname, (const GLint*)(params + paramsOffset));
      */
     public static native void glPointParameterivNV(int pname, long params);
 
@@ -22782,20 +22782,20 @@ public class GL {
     /*
 		ext_glBindVertexArrayAPPLE((GLuint)array);
      */
-    public static native void glDeleteVertexArraysAPPLE(int n, Buffer arrays, int arraysByteOffset);
+    public static native void glDeleteVertexArraysAPPLE(int n, Buffer arrays, int arraysOffset);
 
     /*
-		ext_glDeleteVertexArraysAPPLE((GLsizei)n, (const GLuint*)(arrays + arraysByteOffset));
+		ext_glDeleteVertexArraysAPPLE((GLsizei)n, (const GLuint*)(arrays + arraysOffset));
      */
     public static native void glDeleteVertexArraysAPPLE(int n, long arrays);
 
     /*
 		ext_glDeleteVertexArraysAPPLE((GLsizei)n, (const GLuint*)arrays);
      */
-    public static native void glGenVertexArraysAPPLE(int n, Buffer arrays, int arraysByteOffset);
+    public static native void glGenVertexArraysAPPLE(int n, Buffer arrays, int arraysOffset);
 
     /*
-		ext_glGenVertexArraysAPPLE((GLsizei)n, (GLuint*)(arrays + arraysByteOffset));
+		ext_glGenVertexArraysAPPLE((GLsizei)n, (GLuint*)(arrays + arraysOffset));
      */
     public static native void glGenVertexArraysAPPLE(int n, long arrays);
 
@@ -22882,20 +22882,20 @@ public class GL {
     /*
 		ext_glProgramNamedParameter4dvNV((GLuint)id, (GLsizei)len, (const GLubyte*)name, (const GLdouble*)v);
      */
-    public static native void glGetProgramNamedParameterfvNV(int id, int len, Buffer name, int nameByteOffset, Buffer params, int paramsByteOffset);
+    public static native void glGetProgramNamedParameterfvNV(int id, int len, Buffer name, int nameByteOffset, Buffer params, int paramsOffset);
 
     /*
-		ext_glGetProgramNamedParameterfvNV((GLuint)id, (GLsizei)len, (const GLubyte*)(name + nameByteOffset), (GLfloat*)(params + paramsByteOffset));
+		ext_glGetProgramNamedParameterfvNV((GLuint)id, (GLsizei)len, (const GLubyte*)(name + nameByteOffset), (GLfloat*)(params + paramsOffset));
      */
     public static native void glGetProgramNamedParameterfvNV(int id, int len, long name, long params);
 
     /*
 		ext_glGetProgramNamedParameterfvNV((GLuint)id, (GLsizei)len, (const GLubyte*)name, (GLfloat*)params);
      */
-    public static native void glGetProgramNamedParameterdvNV(int id, int len, Buffer name, int nameByteOffset, Buffer params, int paramsByteOffset);
+    public static native void glGetProgramNamedParameterdvNV(int id, int len, Buffer name, int nameByteOffset, Buffer params, int paramsOffset);
 
     /*
-		ext_glGetProgramNamedParameterdvNV((GLuint)id, (GLsizei)len, (const GLubyte*)(name + nameByteOffset), (GLdouble*)(params + paramsByteOffset));
+		ext_glGetProgramNamedParameterdvNV((GLuint)id, (GLsizei)len, (const GLubyte*)(name + nameByteOffset), (GLdouble*)(params + paramsOffset));
      */
     public static native void glGetProgramNamedParameterdvNV(int id, int len, long name, long params);
 
@@ -23309,20 +23309,20 @@ public class GL {
     /*
 		ext_glVertexAttribArrayObjectATI((GLuint)index, (GLint)size, (GLenum)type, (GLboolean)normalized, (GLsizei)stride, (GLuint)buffer, (GLuint)offset);
      */
-    public static native void glGetVertexAttribArrayObjectfvATI(int index, int pname, Buffer params, int paramsByteOffset);
+    public static native void glGetVertexAttribArrayObjectfvATI(int index, int pname, Buffer params, int paramsOffset);
 
     /*
-		ext_glGetVertexAttribArrayObjectfvATI((GLuint)index, (GLenum)pname, (GLfloat*)(params + paramsByteOffset));
+		ext_glGetVertexAttribArrayObjectfvATI((GLuint)index, (GLenum)pname, (GLfloat*)(params + paramsOffset));
      */
     public static native void glGetVertexAttribArrayObjectfvATI(int index, int pname, long params);
 
     /*
 		ext_glGetVertexAttribArrayObjectfvATI((GLuint)index, (GLenum)pname, (GLfloat*)params);
      */
-    public static native void glGetVertexAttribArrayObjectivATI(int index, int pname, Buffer params, int paramsByteOffset);
+    public static native void glGetVertexAttribArrayObjectivATI(int index, int pname, Buffer params, int paramsOffset);
 
     /*
-		ext_glGetVertexAttribArrayObjectivATI((GLuint)index, (GLenum)pname, (GLint*)(params + paramsByteOffset));
+		ext_glGetVertexAttribArrayObjectivATI((GLuint)index, (GLenum)pname, (GLint*)(params + paramsOffset));
      */
     public static native void glGetVertexAttribArrayObjectivATI(int index, int pname, long params);
 
@@ -23579,10 +23579,10 @@ public class GL {
     /*
 		ext_glConvolutionParameterxOES((GLenum)target, (GLenum)pname, (GLfixed)param);
      */
-    public static native void glConvolutionParameterxvOES(int target, int pname, Buffer params, int paramsByteOffset);
+    public static native void glConvolutionParameterxvOES(int target, int pname, Buffer params, int paramsOffset);
 
     /*
-		ext_glConvolutionParameterxvOES((GLenum)target, (GLenum)pname, (const GLfixed*)(params + paramsByteOffset));
+		ext_glConvolutionParameterxvOES((GLenum)target, (GLenum)pname, (const GLfixed*)(params + paramsOffset));
      */
     public static native void glConvolutionParameterxvOES(int target, int pname, long params);
 
@@ -23664,40 +23664,40 @@ public class GL {
     /*
 		ext_glGetClipPlanexOES((GLenum)plane, (GLfixed*)equation);
      */
-    public static native void glGetConvolutionParameterxvOES(int target, int pname, Buffer params, int paramsByteOffset);
+    public static native void glGetConvolutionParameterxvOES(int target, int pname, Buffer params, int paramsOffset);
 
     /*
-		ext_glGetConvolutionParameterxvOES((GLenum)target, (GLenum)pname, (GLfixed*)(params + paramsByteOffset));
+		ext_glGetConvolutionParameterxvOES((GLenum)target, (GLenum)pname, (GLfixed*)(params + paramsOffset));
      */
     public static native void glGetConvolutionParameterxvOES(int target, int pname, long params);
 
     /*
 		ext_glGetConvolutionParameterxvOES((GLenum)target, (GLenum)pname, (GLfixed*)params);
      */
-    public static native void glGetFixedvOES(int pname, Buffer params, int paramsByteOffset);
+    public static native void glGetFixedvOES(int pname, Buffer params, int paramsOffset);
 
     /*
-		ext_glGetFixedvOES((GLenum)pname, (GLfixed*)(params + paramsByteOffset));
+		ext_glGetFixedvOES((GLenum)pname, (GLfixed*)(params + paramsOffset));
      */
     public static native void glGetFixedvOES(int pname, long params);
 
     /*
 		ext_glGetFixedvOES((GLenum)pname, (GLfixed*)params);
      */
-    public static native void glGetHistogramParameterxvOES(int target, int pname, Buffer params, int paramsByteOffset);
+    public static native void glGetHistogramParameterxvOES(int target, int pname, Buffer params, int paramsOffset);
 
     /*
-		ext_glGetHistogramParameterxvOES((GLenum)target, (GLenum)pname, (GLfixed*)(params + paramsByteOffset));
+		ext_glGetHistogramParameterxvOES((GLenum)target, (GLenum)pname, (GLfixed*)(params + paramsOffset));
      */
     public static native void glGetHistogramParameterxvOES(int target, int pname, long params);
 
     /*
 		ext_glGetHistogramParameterxvOES((GLenum)target, (GLenum)pname, (GLfixed*)params);
      */
-    public static native void glGetLightxOES(int light, int pname, Buffer params, int paramsByteOffset);
+    public static native void glGetLightxOES(int light, int pname, Buffer params, int paramsOffset);
 
     /*
-		ext_glGetLightxOES((GLenum)light, (GLenum)pname, (GLfixed*)(params + paramsByteOffset));
+		ext_glGetLightxOES((GLenum)light, (GLenum)pname, (GLfixed*)(params + paramsOffset));
      */
     public static native void glGetLightxOES(int light, int pname, long params);
 
@@ -23729,40 +23729,40 @@ public class GL {
     /*
 		ext_glGetPixelMapxv((GLenum)map, (GLint)size, (GLfixed*)values);
      */
-    public static native void glGetTexEnvxvOES(int target, int pname, Buffer params, int paramsByteOffset);
+    public static native void glGetTexEnvxvOES(int target, int pname, Buffer params, int paramsOffset);
 
     /*
-		ext_glGetTexEnvxvOES((GLenum)target, (GLenum)pname, (GLfixed*)(params + paramsByteOffset));
+		ext_glGetTexEnvxvOES((GLenum)target, (GLenum)pname, (GLfixed*)(params + paramsOffset));
      */
     public static native void glGetTexEnvxvOES(int target, int pname, long params);
 
     /*
 		ext_glGetTexEnvxvOES((GLenum)target, (GLenum)pname, (GLfixed*)params);
      */
-    public static native void glGetTexGenxvOES(int coord, int pname, Buffer params, int paramsByteOffset);
+    public static native void glGetTexGenxvOES(int coord, int pname, Buffer params, int paramsOffset);
 
     /*
-		ext_glGetTexGenxvOES((GLenum)coord, (GLenum)pname, (GLfixed*)(params + paramsByteOffset));
+		ext_glGetTexGenxvOES((GLenum)coord, (GLenum)pname, (GLfixed*)(params + paramsOffset));
      */
     public static native void glGetTexGenxvOES(int coord, int pname, long params);
 
     /*
 		ext_glGetTexGenxvOES((GLenum)coord, (GLenum)pname, (GLfixed*)params);
      */
-    public static native void glGetTexLevelParameterxvOES(int target, int level, int pname, Buffer params, int paramsByteOffset);
+    public static native void glGetTexLevelParameterxvOES(int target, int level, int pname, Buffer params, int paramsOffset);
 
     /*
-		ext_glGetTexLevelParameterxvOES((GLenum)target, (GLint)level, (GLenum)pname, (GLfixed*)(params + paramsByteOffset));
+		ext_glGetTexLevelParameterxvOES((GLenum)target, (GLint)level, (GLenum)pname, (GLfixed*)(params + paramsOffset));
      */
     public static native void glGetTexLevelParameterxvOES(int target, int level, int pname, long params);
 
     /*
 		ext_glGetTexLevelParameterxvOES((GLenum)target, (GLint)level, (GLenum)pname, (GLfixed*)params);
      */
-    public static native void glGetTexParameterxvOES(int target, int pname, Buffer params, int paramsByteOffset);
+    public static native void glGetTexParameterxvOES(int target, int pname, Buffer params, int paramsOffset);
 
     /*
-		ext_glGetTexParameterxvOES((GLenum)target, (GLenum)pname, (GLfixed*)(params + paramsByteOffset));
+		ext_glGetTexParameterxvOES((GLenum)target, (GLenum)pname, (GLfixed*)(params + paramsOffset));
      */
     public static native void glGetTexParameterxvOES(int target, int pname, long params);
 
@@ -23804,10 +23804,10 @@ public class GL {
     /*
 		ext_glLightxOES((GLenum)light, (GLenum)pname, (GLfixed)param);
      */
-    public static native void glLightxvOES(int light, int pname, Buffer params, int paramsByteOffset);
+    public static native void glLightxvOES(int light, int pname, Buffer params, int paramsOffset);
 
     /*
-		ext_glLightxvOES((GLenum)light, (GLenum)pname, (const GLfixed*)(params + paramsByteOffset));
+		ext_glLightxvOES((GLenum)light, (GLenum)pname, (const GLfixed*)(params + paramsOffset));
      */
     public static native void glLightxvOES(int light, int pname, long params);
 
@@ -24004,10 +24004,10 @@ public class GL {
     /*
 		ext_glPixelZoomxOES((GLfixed)xfactor, (GLfixed)yfactor);
      */
-    public static native void glPointParameterxvOES(int pname, Buffer params, int paramsByteOffset);
+    public static native void glPointParameterxvOES(int pname, Buffer params, int paramsOffset);
 
     /*
-		ext_glPointParameterxvOES((GLenum)pname, (const GLfixed*)(params + paramsByteOffset));
+		ext_glPointParameterxvOES((GLenum)pname, (const GLfixed*)(params + paramsOffset));
      */
     public static native void glPointParameterxvOES(int pname, long params);
 
@@ -24174,10 +24174,10 @@ public class GL {
     /*
 		ext_glTexEnvxOES((GLenum)target, (GLenum)pname, (GLfixed)param);
      */
-    public static native void glTexEnvxvOES(int target, int pname, Buffer params, int paramsByteOffset);
+    public static native void glTexEnvxvOES(int target, int pname, Buffer params, int paramsOffset);
 
     /*
-		ext_glTexEnvxvOES((GLenum)target, (GLenum)pname, (const GLfixed*)(params + paramsByteOffset));
+		ext_glTexEnvxvOES((GLenum)target, (GLenum)pname, (const GLfixed*)(params + paramsOffset));
      */
     public static native void glTexEnvxvOES(int target, int pname, long params);
 
@@ -24189,10 +24189,10 @@ public class GL {
     /*
 		ext_glTexGenxOES((GLenum)coord, (GLenum)pname, (GLfixed)param);
      */
-    public static native void glTexGenxvOES(int coord, int pname, Buffer params, int paramsByteOffset);
+    public static native void glTexGenxvOES(int coord, int pname, Buffer params, int paramsOffset);
 
     /*
-		ext_glTexGenxvOES((GLenum)coord, (GLenum)pname, (const GLfixed*)(params + paramsByteOffset));
+		ext_glTexGenxvOES((GLenum)coord, (GLenum)pname, (const GLfixed*)(params + paramsOffset));
      */
     public static native void glTexGenxvOES(int coord, int pname, long params);
 
@@ -24204,10 +24204,10 @@ public class GL {
     /*
 		ext_glTexParameterxOES((GLenum)target, (GLenum)pname, (GLfixed)param);
      */
-    public static native void glTexParameterxvOES(int target, int pname, Buffer params, int paramsByteOffset);
+    public static native void glTexParameterxvOES(int target, int pname, Buffer params, int paramsOffset);
 
     /*
-		ext_glTexParameterxvOES((GLenum)target, (GLenum)pname, (const GLfixed*)(params + paramsByteOffset));
+		ext_glTexParameterxvOES((GLenum)target, (GLenum)pname, (const GLfixed*)(params + paramsOffset));
      */
     public static native void glTexParameterxvOES(int target, int pname, long params);
 
@@ -24359,10 +24359,10 @@ public class GL {
     /*
 		ext_glRenderbufferStorageEXT((GLenum)target, (GLenum)internalformat, (GLsizei)width, (GLsizei)height);
      */
-    public static native void glGetRenderbufferParameterivEXT(int target, int pname, Buffer params, int paramsByteOffset);
+    public static native void glGetRenderbufferParameterivEXT(int target, int pname, Buffer params, int paramsOffset);
 
     /*
-		ext_glGetRenderbufferParameterivEXT((GLenum)target, (GLenum)pname, (GLint*)(params + paramsByteOffset));
+		ext_glGetRenderbufferParameterivEXT((GLenum)target, (GLenum)pname, (GLint*)(params + paramsOffset));
      */
     public static native void glGetRenderbufferParameterivEXT(int target, int pname, long params);
 
@@ -24424,10 +24424,10 @@ public class GL {
     /*
 		ext_glFramebufferRenderbufferEXT((GLenum)target, (GLenum)attachment, (GLenum)renderbuffertarget, (GLuint)renderbuffer);
      */
-    public static native void glGetFramebufferAttachmentParameterivEXT(int target, int attachment, int pname, Buffer params, int paramsByteOffset);
+    public static native void glGetFramebufferAttachmentParameterivEXT(int target, int attachment, int pname, Buffer params, int paramsOffset);
 
     /*
-		ext_glGetFramebufferAttachmentParameterivEXT((GLenum)target, (GLenum)attachment, (GLenum)pname, (GLint*)(params + paramsByteOffset));
+		ext_glGetFramebufferAttachmentParameterivEXT((GLenum)target, (GLenum)attachment, (GLenum)pname, (GLint*)(params + paramsOffset));
      */
     public static native void glGetFramebufferAttachmentParameterivEXT(int target, int attachment, int pname, long params);
 
@@ -24464,40 +24464,40 @@ public class GL {
     /*
 		ext_glRenderbufferStorageMultisampleEXT((GLenum)target, (GLsizei)samples, (GLenum)internalformat, (GLsizei)width, (GLsizei)height);
      */
-    public static native void glGetQueryObjecti64vEXT(int id, int pname, Buffer params, int paramsByteOffset);
+    public static native void glGetQueryObjecti64vEXT(int id, int pname, Buffer params, int paramsOffset);
 
     /*
-		ext_glGetQueryObjecti64vEXT((GLuint)id, (GLenum)pname, (GLint64EXT*)(params + paramsByteOffset));
+		ext_glGetQueryObjecti64vEXT((GLuint)id, (GLenum)pname, (GLint64EXT*)(params + paramsOffset));
      */
     public static native void glGetQueryObjecti64vEXT(int id, int pname, long params);
 
     /*
 		ext_glGetQueryObjecti64vEXT((GLuint)id, (GLenum)pname, (GLint64EXT*)params);
      */
-    public static native void glGetQueryObjectui64vEXT(int id, int pname, Buffer params, int paramsByteOffset);
+    public static native void glGetQueryObjectui64vEXT(int id, int pname, Buffer params, int paramsOffset);
 
     /*
-		ext_glGetQueryObjectui64vEXT((GLuint)id, (GLenum)pname, (GLuint64EXT*)(params + paramsByteOffset));
+		ext_glGetQueryObjectui64vEXT((GLuint)id, (GLenum)pname, (GLuint64EXT*)(params + paramsOffset));
      */
     public static native void glGetQueryObjectui64vEXT(int id, int pname, long params);
 
     /*
 		ext_glGetQueryObjectui64vEXT((GLuint)id, (GLenum)pname, (GLuint64EXT*)params);
      */
-    public static native void glProgramEnvParameters4fvEXT(int target, int index, int count, Buffer params, int paramsByteOffset);
+    public static native void glProgramEnvParameters4fvEXT(int target, int index, int count, Buffer params, int paramsOffset);
 
     /*
-		ext_glProgramEnvParameters4fvEXT((GLenum)target, (GLuint)index, (GLsizei)count, (const GLfloat*)(params + paramsByteOffset));
+		ext_glProgramEnvParameters4fvEXT((GLenum)target, (GLuint)index, (GLsizei)count, (const GLfloat*)(params + paramsOffset));
      */
     public static native void glProgramEnvParameters4fvEXT(int target, int index, int count, long params);
 
     /*
 		ext_glProgramEnvParameters4fvEXT((GLenum)target, (GLuint)index, (GLsizei)count, (const GLfloat*)params);
      */
-    public static native void glProgramLocalParameters4fvEXT(int target, int index, int count, Buffer params, int paramsByteOffset);
+    public static native void glProgramLocalParameters4fvEXT(int target, int index, int count, Buffer params, int paramsOffset);
 
     /*
-		ext_glProgramLocalParameters4fvEXT((GLenum)target, (GLuint)index, (GLsizei)count, (const GLfloat*)(params + paramsByteOffset));
+		ext_glProgramLocalParameters4fvEXT((GLenum)target, (GLuint)index, (GLsizei)count, (const GLfloat*)(params + paramsOffset));
      */
     public static native void glProgramLocalParameters4fvEXT(int target, int index, int count, long params);
 
@@ -24519,20 +24519,20 @@ public class GL {
     /*
 		ext_glProgramLocalParameterI4iNV((GLenum)target, (GLuint)index, (GLint)x, (GLint)y, (GLint)z, (GLint)w);
      */
-    public static native void glProgramLocalParameterI4ivNV(int target, int index, Buffer params, int paramsByteOffset);
+    public static native void glProgramLocalParameterI4ivNV(int target, int index, Buffer params, int paramsOffset);
 
     /*
-		ext_glProgramLocalParameterI4ivNV((GLenum)target, (GLuint)index, (const GLint*)(params + paramsByteOffset));
+		ext_glProgramLocalParameterI4ivNV((GLenum)target, (GLuint)index, (const GLint*)(params + paramsOffset));
      */
     public static native void glProgramLocalParameterI4ivNV(int target, int index, long params);
 
     /*
 		ext_glProgramLocalParameterI4ivNV((GLenum)target, (GLuint)index, (const GLint*)params);
      */
-    public static native void glProgramLocalParametersI4ivNV(int target, int index, int count, Buffer params, int paramsByteOffset);
+    public static native void glProgramLocalParametersI4ivNV(int target, int index, int count, Buffer params, int paramsOffset);
 
     /*
-		ext_glProgramLocalParametersI4ivNV((GLenum)target, (GLuint)index, (GLsizei)count, (const GLint*)(params + paramsByteOffset));
+		ext_glProgramLocalParametersI4ivNV((GLenum)target, (GLuint)index, (GLsizei)count, (const GLint*)(params + paramsOffset));
      */
     public static native void glProgramLocalParametersI4ivNV(int target, int index, int count, long params);
 
@@ -24544,20 +24544,20 @@ public class GL {
     /*
 		ext_glProgramLocalParameterI4uiNV((GLenum)target, (GLuint)index, (GLuint)x, (GLuint)y, (GLuint)z, (GLuint)w);
      */
-    public static native void glProgramLocalParameterI4uivNV(int target, int index, Buffer params, int paramsByteOffset);
+    public static native void glProgramLocalParameterI4uivNV(int target, int index, Buffer params, int paramsOffset);
 
     /*
-		ext_glProgramLocalParameterI4uivNV((GLenum)target, (GLuint)index, (const GLuint*)(params + paramsByteOffset));
+		ext_glProgramLocalParameterI4uivNV((GLenum)target, (GLuint)index, (const GLuint*)(params + paramsOffset));
      */
     public static native void glProgramLocalParameterI4uivNV(int target, int index, long params);
 
     /*
 		ext_glProgramLocalParameterI4uivNV((GLenum)target, (GLuint)index, (const GLuint*)params);
      */
-    public static native void glProgramLocalParametersI4uivNV(int target, int index, int count, Buffer params, int paramsByteOffset);
+    public static native void glProgramLocalParametersI4uivNV(int target, int index, int count, Buffer params, int paramsOffset);
 
     /*
-		ext_glProgramLocalParametersI4uivNV((GLenum)target, (GLuint)index, (GLsizei)count, (const GLuint*)(params + paramsByteOffset));
+		ext_glProgramLocalParametersI4uivNV((GLenum)target, (GLuint)index, (GLsizei)count, (const GLuint*)(params + paramsOffset));
      */
     public static native void glProgramLocalParametersI4uivNV(int target, int index, int count, long params);
 
@@ -24569,20 +24569,20 @@ public class GL {
     /*
 		ext_glProgramEnvParameterI4iNV((GLenum)target, (GLuint)index, (GLint)x, (GLint)y, (GLint)z, (GLint)w);
      */
-    public static native void glProgramEnvParameterI4ivNV(int target, int index, Buffer params, int paramsByteOffset);
+    public static native void glProgramEnvParameterI4ivNV(int target, int index, Buffer params, int paramsOffset);
 
     /*
-		ext_glProgramEnvParameterI4ivNV((GLenum)target, (GLuint)index, (const GLint*)(params + paramsByteOffset));
+		ext_glProgramEnvParameterI4ivNV((GLenum)target, (GLuint)index, (const GLint*)(params + paramsOffset));
      */
     public static native void glProgramEnvParameterI4ivNV(int target, int index, long params);
 
     /*
 		ext_glProgramEnvParameterI4ivNV((GLenum)target, (GLuint)index, (const GLint*)params);
      */
-    public static native void glProgramEnvParametersI4ivNV(int target, int index, int count, Buffer params, int paramsByteOffset);
+    public static native void glProgramEnvParametersI4ivNV(int target, int index, int count, Buffer params, int paramsOffset);
 
     /*
-		ext_glProgramEnvParametersI4ivNV((GLenum)target, (GLuint)index, (GLsizei)count, (const GLint*)(params + paramsByteOffset));
+		ext_glProgramEnvParametersI4ivNV((GLenum)target, (GLuint)index, (GLsizei)count, (const GLint*)(params + paramsOffset));
      */
     public static native void glProgramEnvParametersI4ivNV(int target, int index, int count, long params);
 
@@ -24594,60 +24594,60 @@ public class GL {
     /*
 		ext_glProgramEnvParameterI4uiNV((GLenum)target, (GLuint)index, (GLuint)x, (GLuint)y, (GLuint)z, (GLuint)w);
      */
-    public static native void glProgramEnvParameterI4uivNV(int target, int index, Buffer params, int paramsByteOffset);
+    public static native void glProgramEnvParameterI4uivNV(int target, int index, Buffer params, int paramsOffset);
 
     /*
-		ext_glProgramEnvParameterI4uivNV((GLenum)target, (GLuint)index, (const GLuint*)(params + paramsByteOffset));
+		ext_glProgramEnvParameterI4uivNV((GLenum)target, (GLuint)index, (const GLuint*)(params + paramsOffset));
      */
     public static native void glProgramEnvParameterI4uivNV(int target, int index, long params);
 
     /*
 		ext_glProgramEnvParameterI4uivNV((GLenum)target, (GLuint)index, (const GLuint*)params);
      */
-    public static native void glProgramEnvParametersI4uivNV(int target, int index, int count, Buffer params, int paramsByteOffset);
+    public static native void glProgramEnvParametersI4uivNV(int target, int index, int count, Buffer params, int paramsOffset);
 
     /*
-		ext_glProgramEnvParametersI4uivNV((GLenum)target, (GLuint)index, (GLsizei)count, (const GLuint*)(params + paramsByteOffset));
+		ext_glProgramEnvParametersI4uivNV((GLenum)target, (GLuint)index, (GLsizei)count, (const GLuint*)(params + paramsOffset));
      */
     public static native void glProgramEnvParametersI4uivNV(int target, int index, int count, long params);
 
     /*
 		ext_glProgramEnvParametersI4uivNV((GLenum)target, (GLuint)index, (GLsizei)count, (const GLuint*)params);
      */
-    public static native void glGetProgramLocalParameterIivNV(int target, int index, Buffer params, int paramsByteOffset);
+    public static native void glGetProgramLocalParameterIivNV(int target, int index, Buffer params, int paramsOffset);
 
     /*
-		ext_glGetProgramLocalParameterIivNV((GLenum)target, (GLuint)index, (GLint*)(params + paramsByteOffset));
+		ext_glGetProgramLocalParameterIivNV((GLenum)target, (GLuint)index, (GLint*)(params + paramsOffset));
      */
     public static native void glGetProgramLocalParameterIivNV(int target, int index, long params);
 
     /*
 		ext_glGetProgramLocalParameterIivNV((GLenum)target, (GLuint)index, (GLint*)params);
      */
-    public static native void glGetProgramLocalParameterIuivNV(int target, int index, Buffer params, int paramsByteOffset);
+    public static native void glGetProgramLocalParameterIuivNV(int target, int index, Buffer params, int paramsOffset);
 
     /*
-		ext_glGetProgramLocalParameterIuivNV((GLenum)target, (GLuint)index, (GLuint*)(params + paramsByteOffset));
+		ext_glGetProgramLocalParameterIuivNV((GLenum)target, (GLuint)index, (GLuint*)(params + paramsOffset));
      */
     public static native void glGetProgramLocalParameterIuivNV(int target, int index, long params);
 
     /*
 		ext_glGetProgramLocalParameterIuivNV((GLenum)target, (GLuint)index, (GLuint*)params);
      */
-    public static native void glGetProgramEnvParameterIivNV(int target, int index, Buffer params, int paramsByteOffset);
+    public static native void glGetProgramEnvParameterIivNV(int target, int index, Buffer params, int paramsOffset);
 
     /*
-		ext_glGetProgramEnvParameterIivNV((GLenum)target, (GLuint)index, (GLint*)(params + paramsByteOffset));
+		ext_glGetProgramEnvParameterIivNV((GLenum)target, (GLuint)index, (GLint*)(params + paramsOffset));
      */
     public static native void glGetProgramEnvParameterIivNV(int target, int index, long params);
 
     /*
 		ext_glGetProgramEnvParameterIivNV((GLenum)target, (GLuint)index, (GLint*)params);
      */
-    public static native void glGetProgramEnvParameterIuivNV(int target, int index, Buffer params, int paramsByteOffset);
+    public static native void glGetProgramEnvParameterIuivNV(int target, int index, Buffer params, int paramsOffset);
 
     /*
-		ext_glGetProgramEnvParameterIuivNV((GLenum)target, (GLuint)index, (GLuint*)(params + paramsByteOffset));
+		ext_glGetProgramEnvParameterIuivNV((GLenum)target, (GLuint)index, (GLuint*)(params + paramsOffset));
      */
     public static native void glGetProgramEnvParameterIuivNV(int target, int index, long params);
 
@@ -24849,30 +24849,30 @@ public class GL {
     /*
 		ext_glVertexAttribIPointerEXT((GLuint)index, (GLint)size, (GLenum)type, (GLsizei)stride, (const GLvoid*)pointer);
      */
-    public static native void glGetVertexAttribIivEXT(int index, int pname, Buffer params, int paramsByteOffset);
+    public static native void glGetVertexAttribIivEXT(int index, int pname, Buffer params, int paramsOffset);
 
     /*
-		ext_glGetVertexAttribIivEXT((GLuint)index, (GLenum)pname, (GLint*)(params + paramsByteOffset));
+		ext_glGetVertexAttribIivEXT((GLuint)index, (GLenum)pname, (GLint*)(params + paramsOffset));
      */
     public static native void glGetVertexAttribIivEXT(int index, int pname, long params);
 
     /*
 		ext_glGetVertexAttribIivEXT((GLuint)index, (GLenum)pname, (GLint*)params);
      */
-    public static native void glGetVertexAttribIuivEXT(int index, int pname, Buffer params, int paramsByteOffset);
+    public static native void glGetVertexAttribIuivEXT(int index, int pname, Buffer params, int paramsOffset);
 
     /*
-		ext_glGetVertexAttribIuivEXT((GLuint)index, (GLenum)pname, (GLuint*)(params + paramsByteOffset));
+		ext_glGetVertexAttribIuivEXT((GLuint)index, (GLenum)pname, (GLuint*)(params + paramsOffset));
      */
     public static native void glGetVertexAttribIuivEXT(int index, int pname, long params);
 
     /*
 		ext_glGetVertexAttribIuivEXT((GLuint)index, (GLenum)pname, (GLuint*)params);
      */
-    public static native void glGetUniformuivEXT(int program, int location, Buffer params, int paramsByteOffset);
+    public static native void glGetUniformuivEXT(int program, int location, Buffer params, int paramsOffset);
 
     /*
-		ext_glGetUniformuivEXT((GLuint)program, (GLint)location, (GLuint*)(params + paramsByteOffset));
+		ext_glGetUniformuivEXT((GLuint)program, (GLint)location, (GLuint*)(params + paramsOffset));
      */
     public static native void glGetUniformuivEXT(int program, int location, long params);
 
@@ -24999,30 +24999,30 @@ public class GL {
     /*
 		ext_glRenderbufferStorageMultisampleCoverageNV((GLenum)target, (GLsizei)coverageSamples, (GLsizei)colorSamples, (GLenum)internalformat, (GLsizei)width, (GLsizei)height);
      */
-    public static native void glProgramBufferParametersfvNV(int target, int bindingIndex, int wordIndex, int count, Buffer params, int paramsByteOffset);
+    public static native void glProgramBufferParametersfvNV(int target, int bindingIndex, int wordIndex, int count, Buffer params, int paramsOffset);
 
     /*
-		ext_glProgramBufferParametersfvNV((GLenum)target, (GLuint)bindingIndex, (GLuint)wordIndex, (GLsizei)count, (const GLfloat*)(params + paramsByteOffset));
+		ext_glProgramBufferParametersfvNV((GLenum)target, (GLuint)bindingIndex, (GLuint)wordIndex, (GLsizei)count, (const GLfloat*)(params + paramsOffset));
      */
     public static native void glProgramBufferParametersfvNV(int target, int bindingIndex, int wordIndex, int count, long params);
 
     /*
 		ext_glProgramBufferParametersfvNV((GLenum)target, (GLuint)bindingIndex, (GLuint)wordIndex, (GLsizei)count, (const GLfloat*)params);
      */
-    public static native void glProgramBufferParametersIivNV(int target, int bindingIndex, int wordIndex, int count, Buffer params, int paramsByteOffset);
+    public static native void glProgramBufferParametersIivNV(int target, int bindingIndex, int wordIndex, int count, Buffer params, int paramsOffset);
 
     /*
-		ext_glProgramBufferParametersIivNV((GLenum)target, (GLuint)bindingIndex, (GLuint)wordIndex, (GLsizei)count, (const GLint*)(params + paramsByteOffset));
+		ext_glProgramBufferParametersIivNV((GLenum)target, (GLuint)bindingIndex, (GLuint)wordIndex, (GLsizei)count, (const GLint*)(params + paramsOffset));
      */
     public static native void glProgramBufferParametersIivNV(int target, int bindingIndex, int wordIndex, int count, long params);
 
     /*
 		ext_glProgramBufferParametersIivNV((GLenum)target, (GLuint)bindingIndex, (GLuint)wordIndex, (GLsizei)count, (const GLint*)params);
      */
-    public static native void glProgramBufferParametersIuivNV(int target, int bindingIndex, int wordIndex, int count, Buffer params, int paramsByteOffset);
+    public static native void glProgramBufferParametersIuivNV(int target, int bindingIndex, int wordIndex, int count, Buffer params, int paramsOffset);
 
     /*
-		ext_glProgramBufferParametersIuivNV((GLenum)target, (GLuint)bindingIndex, (GLuint)wordIndex, (GLsizei)count, (const GLuint*)(params + paramsByteOffset));
+		ext_glProgramBufferParametersIuivNV((GLenum)target, (GLuint)bindingIndex, (GLuint)wordIndex, (GLsizei)count, (const GLuint*)(params + paramsOffset));
      */
     public static native void glProgramBufferParametersIuivNV(int target, int bindingIndex, int wordIndex, int count, long params);
 
@@ -25179,40 +25179,40 @@ public class GL {
     /*
 		return (jlong)ext_glGetUniformOffsetEXT((GLuint)program, (GLint)location);
      */
-    public static native void glTexParameterIivEXT(int target, int pname, Buffer params, int paramsByteOffset);
+    public static native void glTexParameterIivEXT(int target, int pname, Buffer params, int paramsOffset);
 
     /*
-		ext_glTexParameterIivEXT((GLenum)target, (GLenum)pname, (const GLint*)(params + paramsByteOffset));
+		ext_glTexParameterIivEXT((GLenum)target, (GLenum)pname, (const GLint*)(params + paramsOffset));
      */
     public static native void glTexParameterIivEXT(int target, int pname, long params);
 
     /*
 		ext_glTexParameterIivEXT((GLenum)target, (GLenum)pname, (const GLint*)params);
      */
-    public static native void glTexParameterIuivEXT(int target, int pname, Buffer params, int paramsByteOffset);
+    public static native void glTexParameterIuivEXT(int target, int pname, Buffer params, int paramsOffset);
 
     /*
-		ext_glTexParameterIuivEXT((GLenum)target, (GLenum)pname, (const GLuint*)(params + paramsByteOffset));
+		ext_glTexParameterIuivEXT((GLenum)target, (GLenum)pname, (const GLuint*)(params + paramsOffset));
      */
     public static native void glTexParameterIuivEXT(int target, int pname, long params);
 
     /*
 		ext_glTexParameterIuivEXT((GLenum)target, (GLenum)pname, (const GLuint*)params);
      */
-    public static native void glGetTexParameterIivEXT(int target, int pname, Buffer params, int paramsByteOffset);
+    public static native void glGetTexParameterIivEXT(int target, int pname, Buffer params, int paramsOffset);
 
     /*
-		ext_glGetTexParameterIivEXT((GLenum)target, (GLenum)pname, (GLint*)(params + paramsByteOffset));
+		ext_glGetTexParameterIivEXT((GLenum)target, (GLenum)pname, (GLint*)(params + paramsOffset));
      */
     public static native void glGetTexParameterIivEXT(int target, int pname, long params);
 
     /*
 		ext_glGetTexParameterIivEXT((GLenum)target, (GLenum)pname, (GLint*)params);
      */
-    public static native void glGetTexParameterIuivEXT(int target, int pname, Buffer params, int paramsByteOffset);
+    public static native void glGetTexParameterIuivEXT(int target, int pname, Buffer params, int paramsOffset);
 
     /*
-		ext_glGetTexParameterIuivEXT((GLenum)target, (GLenum)pname, (GLuint*)(params + paramsByteOffset));
+		ext_glGetTexParameterIuivEXT((GLenum)target, (GLenum)pname, (GLuint*)(params + paramsOffset));
      */
     public static native void glGetTexParameterIuivEXT(int target, int pname, long params);
 
@@ -25254,40 +25254,40 @@ public class GL {
     /*
 		ext_glPresentFrameDualFillNV((GLuint)video_slot, (GLuint64EXT)minPresentTime, (GLuint)beginPresentTimeId, (GLuint)presentDurationId, (GLenum)type, (GLenum)target0, (GLuint)fill0, (GLenum)target1, (GLuint)fill1, (GLenum)target2, (GLuint)fill2, (GLenum)target3, (GLuint)fill3);
      */
-    public static native void glGetVideoivNV(int video_slot, int pname, Buffer params, int paramsByteOffset);
+    public static native void glGetVideoivNV(int video_slot, int pname, Buffer params, int paramsOffset);
 
     /*
-		ext_glGetVideoivNV((GLuint)video_slot, (GLenum)pname, (GLint*)(params + paramsByteOffset));
+		ext_glGetVideoivNV((GLuint)video_slot, (GLenum)pname, (GLint*)(params + paramsOffset));
      */
     public static native void glGetVideoivNV(int video_slot, int pname, long params);
 
     /*
 		ext_glGetVideoivNV((GLuint)video_slot, (GLenum)pname, (GLint*)params);
      */
-    public static native void glGetVideouivNV(int video_slot, int pname, Buffer params, int paramsByteOffset);
+    public static native void glGetVideouivNV(int video_slot, int pname, Buffer params, int paramsOffset);
 
     /*
-		ext_glGetVideouivNV((GLuint)video_slot, (GLenum)pname, (GLuint*)(params + paramsByteOffset));
+		ext_glGetVideouivNV((GLuint)video_slot, (GLenum)pname, (GLuint*)(params + paramsOffset));
      */
     public static native void glGetVideouivNV(int video_slot, int pname, long params);
 
     /*
 		ext_glGetVideouivNV((GLuint)video_slot, (GLenum)pname, (GLuint*)params);
      */
-    public static native void glGetVideoi64vNV(int video_slot, int pname, Buffer params, int paramsByteOffset);
+    public static native void glGetVideoi64vNV(int video_slot, int pname, Buffer params, int paramsOffset);
 
     /*
-		ext_glGetVideoi64vNV((GLuint)video_slot, (GLenum)pname, (GLint64EXT*)(params + paramsByteOffset));
+		ext_glGetVideoi64vNV((GLuint)video_slot, (GLenum)pname, (GLint64EXT*)(params + paramsOffset));
      */
     public static native void glGetVideoi64vNV(int video_slot, int pname, long params);
 
     /*
 		ext_glGetVideoi64vNV((GLuint)video_slot, (GLenum)pname, (GLint64EXT*)params);
      */
-    public static native void glGetVideoui64vNV(int video_slot, int pname, Buffer params, int paramsByteOffset);
+    public static native void glGetVideoui64vNV(int video_slot, int pname, Buffer params, int paramsOffset);
 
     /*
-		ext_glGetVideoui64vNV((GLuint)video_slot, (GLenum)pname, (GLuint64EXT*)(params + paramsByteOffset));
+		ext_glGetVideoui64vNV((GLuint)video_slot, (GLenum)pname, (GLuint64EXT*)(params + paramsOffset));
      */
     public static native void glGetVideoui64vNV(int video_slot, int pname, long params);
 
@@ -25489,10 +25489,10 @@ public class GL {
     /*
 		ext_glTextureParameterfEXT((GLuint)texture, (GLenum)target, (GLenum)pname, (GLfloat)param);
      */
-    public static native void glTextureParameterfvEXT(int texture, int target, int pname, Buffer params, int paramsByteOffset);
+    public static native void glTextureParameterfvEXT(int texture, int target, int pname, Buffer params, int paramsOffset);
 
     /*
-		ext_glTextureParameterfvEXT((GLuint)texture, (GLenum)target, (GLenum)pname, (const GLfloat*)(params + paramsByteOffset));
+		ext_glTextureParameterfvEXT((GLuint)texture, (GLenum)target, (GLenum)pname, (const GLfloat*)(params + paramsOffset));
      */
     public static native void glTextureParameterfvEXT(int texture, int target, int pname, long params);
 
@@ -25504,10 +25504,10 @@ public class GL {
     /*
 		ext_glTextureParameteriEXT((GLuint)texture, (GLenum)target, (GLenum)pname, (GLint)param);
      */
-    public static native void glTextureParameterivEXT(int texture, int target, int pname, Buffer params, int paramsByteOffset);
+    public static native void glTextureParameterivEXT(int texture, int target, int pname, Buffer params, int paramsOffset);
 
     /*
-		ext_glTextureParameterivEXT((GLuint)texture, (GLenum)target, (GLenum)pname, (const GLint*)(params + paramsByteOffset));
+		ext_glTextureParameterivEXT((GLuint)texture, (GLenum)target, (GLenum)pname, (const GLint*)(params + paramsOffset));
      */
     public static native void glTextureParameterivEXT(int texture, int target, int pname, long params);
 
@@ -25584,40 +25584,40 @@ public class GL {
     /*
 		ext_glGetTextureImageEXT((GLuint)texture, (GLenum)target, (GLint)level, (GLenum)format, (GLenum)type, (GLvoid*)pixels);
      */
-    public static native void glGetTextureParameterfvEXT(int texture, int target, int pname, Buffer params, int paramsByteOffset);
+    public static native void glGetTextureParameterfvEXT(int texture, int target, int pname, Buffer params, int paramsOffset);
 
     /*
-		ext_glGetTextureParameterfvEXT((GLuint)texture, (GLenum)target, (GLenum)pname, (GLfloat*)(params + paramsByteOffset));
+		ext_glGetTextureParameterfvEXT((GLuint)texture, (GLenum)target, (GLenum)pname, (GLfloat*)(params + paramsOffset));
      */
     public static native void glGetTextureParameterfvEXT(int texture, int target, int pname, long params);
 
     /*
 		ext_glGetTextureParameterfvEXT((GLuint)texture, (GLenum)target, (GLenum)pname, (GLfloat*)params);
      */
-    public static native void glGetTextureParameterivEXT(int texture, int target, int pname, Buffer params, int paramsByteOffset);
+    public static native void glGetTextureParameterivEXT(int texture, int target, int pname, Buffer params, int paramsOffset);
 
     /*
-		ext_glGetTextureParameterivEXT((GLuint)texture, (GLenum)target, (GLenum)pname, (GLint*)(params + paramsByteOffset));
+		ext_glGetTextureParameterivEXT((GLuint)texture, (GLenum)target, (GLenum)pname, (GLint*)(params + paramsOffset));
      */
     public static native void glGetTextureParameterivEXT(int texture, int target, int pname, long params);
 
     /*
 		ext_glGetTextureParameterivEXT((GLuint)texture, (GLenum)target, (GLenum)pname, (GLint*)params);
      */
-    public static native void glGetTextureLevelParameterfvEXT(int texture, int target, int level, int pname, Buffer params, int paramsByteOffset);
+    public static native void glGetTextureLevelParameterfvEXT(int texture, int target, int level, int pname, Buffer params, int paramsOffset);
 
     /*
-		ext_glGetTextureLevelParameterfvEXT((GLuint)texture, (GLenum)target, (GLint)level, (GLenum)pname, (GLfloat*)(params + paramsByteOffset));
+		ext_glGetTextureLevelParameterfvEXT((GLuint)texture, (GLenum)target, (GLint)level, (GLenum)pname, (GLfloat*)(params + paramsOffset));
      */
     public static native void glGetTextureLevelParameterfvEXT(int texture, int target, int level, int pname, long params);
 
     /*
 		ext_glGetTextureLevelParameterfvEXT((GLuint)texture, (GLenum)target, (GLint)level, (GLenum)pname, (GLfloat*)params);
      */
-    public static native void glGetTextureLevelParameterivEXT(int texture, int target, int level, int pname, Buffer params, int paramsByteOffset);
+    public static native void glGetTextureLevelParameterivEXT(int texture, int target, int level, int pname, Buffer params, int paramsOffset);
 
     /*
-		ext_glGetTextureLevelParameterivEXT((GLuint)texture, (GLenum)target, (GLint)level, (GLenum)pname, (GLint*)(params + paramsByteOffset));
+		ext_glGetTextureLevelParameterivEXT((GLuint)texture, (GLenum)target, (GLint)level, (GLenum)pname, (GLint*)(params + paramsOffset));
      */
     public static native void glGetTextureLevelParameterivEXT(int texture, int target, int level, int pname, long params);
 
@@ -25654,10 +25654,10 @@ public class GL {
     /*
 		ext_glMultiTexParameterfEXT((GLenum)texunit, (GLenum)target, (GLenum)pname, (GLfloat)param);
      */
-    public static native void glMultiTexParameterfvEXT(int texunit, int target, int pname, Buffer params, int paramsByteOffset);
+    public static native void glMultiTexParameterfvEXT(int texunit, int target, int pname, Buffer params, int paramsOffset);
 
     /*
-		ext_glMultiTexParameterfvEXT((GLenum)texunit, (GLenum)target, (GLenum)pname, (const GLfloat*)(params + paramsByteOffset));
+		ext_glMultiTexParameterfvEXT((GLenum)texunit, (GLenum)target, (GLenum)pname, (const GLfloat*)(params + paramsOffset));
      */
     public static native void glMultiTexParameterfvEXT(int texunit, int target, int pname, long params);
 
@@ -25669,10 +25669,10 @@ public class GL {
     /*
 		ext_glMultiTexParameteriEXT((GLenum)texunit, (GLenum)target, (GLenum)pname, (GLint)param);
      */
-    public static native void glMultiTexParameterivEXT(int texunit, int target, int pname, Buffer params, int paramsByteOffset);
+    public static native void glMultiTexParameterivEXT(int texunit, int target, int pname, Buffer params, int paramsOffset);
 
     /*
-		ext_glMultiTexParameterivEXT((GLenum)texunit, (GLenum)target, (GLenum)pname, (const GLint*)(params + paramsByteOffset));
+		ext_glMultiTexParameterivEXT((GLenum)texunit, (GLenum)target, (GLenum)pname, (const GLint*)(params + paramsOffset));
      */
     public static native void glMultiTexParameterivEXT(int texunit, int target, int pname, long params);
 
@@ -25749,40 +25749,40 @@ public class GL {
     /*
 		ext_glGetMultiTexImageEXT((GLenum)texunit, (GLenum)target, (GLint)level, (GLenum)format, (GLenum)type, (GLvoid*)pixels);
      */
-    public static native void glGetMultiTexParameterfvEXT(int texunit, int target, int pname, Buffer params, int paramsByteOffset);
+    public static native void glGetMultiTexParameterfvEXT(int texunit, int target, int pname, Buffer params, int paramsOffset);
 
     /*
-		ext_glGetMultiTexParameterfvEXT((GLenum)texunit, (GLenum)target, (GLenum)pname, (GLfloat*)(params + paramsByteOffset));
+		ext_glGetMultiTexParameterfvEXT((GLenum)texunit, (GLenum)target, (GLenum)pname, (GLfloat*)(params + paramsOffset));
      */
     public static native void glGetMultiTexParameterfvEXT(int texunit, int target, int pname, long params);
 
     /*
 		ext_glGetMultiTexParameterfvEXT((GLenum)texunit, (GLenum)target, (GLenum)pname, (GLfloat*)params);
      */
-    public static native void glGetMultiTexParameterivEXT(int texunit, int target, int pname, Buffer params, int paramsByteOffset);
+    public static native void glGetMultiTexParameterivEXT(int texunit, int target, int pname, Buffer params, int paramsOffset);
 
     /*
-		ext_glGetMultiTexParameterivEXT((GLenum)texunit, (GLenum)target, (GLenum)pname, (GLint*)(params + paramsByteOffset));
+		ext_glGetMultiTexParameterivEXT((GLenum)texunit, (GLenum)target, (GLenum)pname, (GLint*)(params + paramsOffset));
      */
     public static native void glGetMultiTexParameterivEXT(int texunit, int target, int pname, long params);
 
     /*
 		ext_glGetMultiTexParameterivEXT((GLenum)texunit, (GLenum)target, (GLenum)pname, (GLint*)params);
      */
-    public static native void glGetMultiTexLevelParameterfvEXT(int texunit, int target, int level, int pname, Buffer params, int paramsByteOffset);
+    public static native void glGetMultiTexLevelParameterfvEXT(int texunit, int target, int level, int pname, Buffer params, int paramsOffset);
 
     /*
-		ext_glGetMultiTexLevelParameterfvEXT((GLenum)texunit, (GLenum)target, (GLint)level, (GLenum)pname, (GLfloat*)(params + paramsByteOffset));
+		ext_glGetMultiTexLevelParameterfvEXT((GLenum)texunit, (GLenum)target, (GLint)level, (GLenum)pname, (GLfloat*)(params + paramsOffset));
      */
     public static native void glGetMultiTexLevelParameterfvEXT(int texunit, int target, int level, int pname, long params);
 
     /*
 		ext_glGetMultiTexLevelParameterfvEXT((GLenum)texunit, (GLenum)target, (GLint)level, (GLenum)pname, (GLfloat*)params);
      */
-    public static native void glGetMultiTexLevelParameterivEXT(int texunit, int target, int level, int pname, Buffer params, int paramsByteOffset);
+    public static native void glGetMultiTexLevelParameterivEXT(int texunit, int target, int level, int pname, Buffer params, int paramsOffset);
 
     /*
-		ext_glGetMultiTexLevelParameterivEXT((GLenum)texunit, (GLenum)target, (GLint)level, (GLenum)pname, (GLint*)(params + paramsByteOffset));
+		ext_glGetMultiTexLevelParameterivEXT((GLenum)texunit, (GLenum)target, (GLint)level, (GLenum)pname, (GLint*)(params + paramsOffset));
      */
     public static native void glGetMultiTexLevelParameterivEXT(int texunit, int target, int level, int pname, long params);
 
@@ -25844,10 +25844,10 @@ public class GL {
     /*
 		ext_glMultiTexEnvfEXT((GLenum)texunit, (GLenum)target, (GLenum)pname, (GLfloat)param);
      */
-    public static native void glMultiTexEnvfvEXT(int texunit, int target, int pname, Buffer params, int paramsByteOffset);
+    public static native void glMultiTexEnvfvEXT(int texunit, int target, int pname, Buffer params, int paramsOffset);
 
     /*
-		ext_glMultiTexEnvfvEXT((GLenum)texunit, (GLenum)target, (GLenum)pname, (const GLfloat*)(params + paramsByteOffset));
+		ext_glMultiTexEnvfvEXT((GLenum)texunit, (GLenum)target, (GLenum)pname, (const GLfloat*)(params + paramsOffset));
      */
     public static native void glMultiTexEnvfvEXT(int texunit, int target, int pname, long params);
 
@@ -25859,10 +25859,10 @@ public class GL {
     /*
 		ext_glMultiTexEnviEXT((GLenum)texunit, (GLenum)target, (GLenum)pname, (GLint)param);
      */
-    public static native void glMultiTexEnvivEXT(int texunit, int target, int pname, Buffer params, int paramsByteOffset);
+    public static native void glMultiTexEnvivEXT(int texunit, int target, int pname, Buffer params, int paramsOffset);
 
     /*
-		ext_glMultiTexEnvivEXT((GLenum)texunit, (GLenum)target, (GLenum)pname, (const GLint*)(params + paramsByteOffset));
+		ext_glMultiTexEnvivEXT((GLenum)texunit, (GLenum)target, (GLenum)pname, (const GLint*)(params + paramsOffset));
      */
     public static native void glMultiTexEnvivEXT(int texunit, int target, int pname, long params);
 
@@ -25874,10 +25874,10 @@ public class GL {
     /*
 		ext_glMultiTexGendEXT((GLenum)texunit, (GLenum)coord, (GLenum)pname, (GLdouble)param);
      */
-    public static native void glMultiTexGendvEXT(int texunit, int coord, int pname, Buffer params, int paramsByteOffset);
+    public static native void glMultiTexGendvEXT(int texunit, int coord, int pname, Buffer params, int paramsOffset);
 
     /*
-		ext_glMultiTexGendvEXT((GLenum)texunit, (GLenum)coord, (GLenum)pname, (const GLdouble*)(params + paramsByteOffset));
+		ext_glMultiTexGendvEXT((GLenum)texunit, (GLenum)coord, (GLenum)pname, (const GLdouble*)(params + paramsOffset));
      */
     public static native void glMultiTexGendvEXT(int texunit, int coord, int pname, long params);
 
@@ -25889,10 +25889,10 @@ public class GL {
     /*
 		ext_glMultiTexGenfEXT((GLenum)texunit, (GLenum)coord, (GLenum)pname, (GLfloat)param);
      */
-    public static native void glMultiTexGenfvEXT(int texunit, int coord, int pname, Buffer params, int paramsByteOffset);
+    public static native void glMultiTexGenfvEXT(int texunit, int coord, int pname, Buffer params, int paramsOffset);
 
     /*
-		ext_glMultiTexGenfvEXT((GLenum)texunit, (GLenum)coord, (GLenum)pname, (const GLfloat*)(params + paramsByteOffset));
+		ext_glMultiTexGenfvEXT((GLenum)texunit, (GLenum)coord, (GLenum)pname, (const GLfloat*)(params + paramsOffset));
      */
     public static native void glMultiTexGenfvEXT(int texunit, int coord, int pname, long params);
 
@@ -25904,60 +25904,60 @@ public class GL {
     /*
 		ext_glMultiTexGeniEXT((GLenum)texunit, (GLenum)coord, (GLenum)pname, (GLint)param);
      */
-    public static native void glMultiTexGenivEXT(int texunit, int coord, int pname, Buffer params, int paramsByteOffset);
+    public static native void glMultiTexGenivEXT(int texunit, int coord, int pname, Buffer params, int paramsOffset);
 
     /*
-		ext_glMultiTexGenivEXT((GLenum)texunit, (GLenum)coord, (GLenum)pname, (const GLint*)(params + paramsByteOffset));
+		ext_glMultiTexGenivEXT((GLenum)texunit, (GLenum)coord, (GLenum)pname, (const GLint*)(params + paramsOffset));
      */
     public static native void glMultiTexGenivEXT(int texunit, int coord, int pname, long params);
 
     /*
 		ext_glMultiTexGenivEXT((GLenum)texunit, (GLenum)coord, (GLenum)pname, (const GLint*)params);
      */
-    public static native void glGetMultiTexEnvfvEXT(int texunit, int target, int pname, Buffer params, int paramsByteOffset);
+    public static native void glGetMultiTexEnvfvEXT(int texunit, int target, int pname, Buffer params, int paramsOffset);
 
     /*
-		ext_glGetMultiTexEnvfvEXT((GLenum)texunit, (GLenum)target, (GLenum)pname, (GLfloat*)(params + paramsByteOffset));
+		ext_glGetMultiTexEnvfvEXT((GLenum)texunit, (GLenum)target, (GLenum)pname, (GLfloat*)(params + paramsOffset));
      */
     public static native void glGetMultiTexEnvfvEXT(int texunit, int target, int pname, long params);
 
     /*
 		ext_glGetMultiTexEnvfvEXT((GLenum)texunit, (GLenum)target, (GLenum)pname, (GLfloat*)params);
      */
-    public static native void glGetMultiTexEnvivEXT(int texunit, int target, int pname, Buffer params, int paramsByteOffset);
+    public static native void glGetMultiTexEnvivEXT(int texunit, int target, int pname, Buffer params, int paramsOffset);
 
     /*
-		ext_glGetMultiTexEnvivEXT((GLenum)texunit, (GLenum)target, (GLenum)pname, (GLint*)(params + paramsByteOffset));
+		ext_glGetMultiTexEnvivEXT((GLenum)texunit, (GLenum)target, (GLenum)pname, (GLint*)(params + paramsOffset));
      */
     public static native void glGetMultiTexEnvivEXT(int texunit, int target, int pname, long params);
 
     /*
 		ext_glGetMultiTexEnvivEXT((GLenum)texunit, (GLenum)target, (GLenum)pname, (GLint*)params);
      */
-    public static native void glGetMultiTexGendvEXT(int texunit, int coord, int pname, Buffer params, int paramsByteOffset);
+    public static native void glGetMultiTexGendvEXT(int texunit, int coord, int pname, Buffer params, int paramsOffset);
 
     /*
-		ext_glGetMultiTexGendvEXT((GLenum)texunit, (GLenum)coord, (GLenum)pname, (GLdouble*)(params + paramsByteOffset));
+		ext_glGetMultiTexGendvEXT((GLenum)texunit, (GLenum)coord, (GLenum)pname, (GLdouble*)(params + paramsOffset));
      */
     public static native void glGetMultiTexGendvEXT(int texunit, int coord, int pname, long params);
 
     /*
 		ext_glGetMultiTexGendvEXT((GLenum)texunit, (GLenum)coord, (GLenum)pname, (GLdouble*)params);
      */
-    public static native void glGetMultiTexGenfvEXT(int texunit, int coord, int pname, Buffer params, int paramsByteOffset);
+    public static native void glGetMultiTexGenfvEXT(int texunit, int coord, int pname, Buffer params, int paramsOffset);
 
     /*
-		ext_glGetMultiTexGenfvEXT((GLenum)texunit, (GLenum)coord, (GLenum)pname, (GLfloat*)(params + paramsByteOffset));
+		ext_glGetMultiTexGenfvEXT((GLenum)texunit, (GLenum)coord, (GLenum)pname, (GLfloat*)(params + paramsOffset));
      */
     public static native void glGetMultiTexGenfvEXT(int texunit, int coord, int pname, long params);
 
     /*
 		ext_glGetMultiTexGenfvEXT((GLenum)texunit, (GLenum)coord, (GLenum)pname, (GLfloat*)params);
      */
-    public static native void glGetMultiTexGenivEXT(int texunit, int coord, int pname, Buffer params, int paramsByteOffset);
+    public static native void glGetMultiTexGenivEXT(int texunit, int coord, int pname, Buffer params, int paramsOffset);
 
     /*
-		ext_glGetMultiTexGenivEXT((GLenum)texunit, (GLenum)coord, (GLenum)pname, (GLint*)(params + paramsByteOffset));
+		ext_glGetMultiTexGenivEXT((GLenum)texunit, (GLenum)coord, (GLenum)pname, (GLint*)(params + paramsOffset));
      */
     public static native void glGetMultiTexGenivEXT(int texunit, int coord, int pname, long params);
 
@@ -26149,10 +26149,10 @@ public class GL {
     /*
 		ext_glNamedProgramLocalParameter4dEXT((GLuint)program, (GLenum)target, (GLuint)index, (GLdouble)x, (GLdouble)y, (GLdouble)z, (GLdouble)w);
      */
-    public static native void glNamedProgramLocalParameter4dvEXT(int program, int target, int index, Buffer params, int paramsByteOffset);
+    public static native void glNamedProgramLocalParameter4dvEXT(int program, int target, int index, Buffer params, int paramsOffset);
 
     /*
-		ext_glNamedProgramLocalParameter4dvEXT((GLuint)program, (GLenum)target, (GLuint)index, (const GLdouble*)(params + paramsByteOffset));
+		ext_glNamedProgramLocalParameter4dvEXT((GLuint)program, (GLenum)target, (GLuint)index, (const GLdouble*)(params + paramsOffset));
      */
     public static native void glNamedProgramLocalParameter4dvEXT(int program, int target, int index, long params);
 
@@ -26164,40 +26164,40 @@ public class GL {
     /*
 		ext_glNamedProgramLocalParameter4fEXT((GLuint)program, (GLenum)target, (GLuint)index, (GLfloat)x, (GLfloat)y, (GLfloat)z, (GLfloat)w);
      */
-    public static native void glNamedProgramLocalParameter4fvEXT(int program, int target, int index, Buffer params, int paramsByteOffset);
+    public static native void glNamedProgramLocalParameter4fvEXT(int program, int target, int index, Buffer params, int paramsOffset);
 
     /*
-		ext_glNamedProgramLocalParameter4fvEXT((GLuint)program, (GLenum)target, (GLuint)index, (const GLfloat*)(params + paramsByteOffset));
+		ext_glNamedProgramLocalParameter4fvEXT((GLuint)program, (GLenum)target, (GLuint)index, (const GLfloat*)(params + paramsOffset));
      */
     public static native void glNamedProgramLocalParameter4fvEXT(int program, int target, int index, long params);
 
     /*
 		ext_glNamedProgramLocalParameter4fvEXT((GLuint)program, (GLenum)target, (GLuint)index, (const GLfloat*)params);
      */
-    public static native void glGetNamedProgramLocalParameterdvEXT(int program, int target, int index, Buffer params, int paramsByteOffset);
+    public static native void glGetNamedProgramLocalParameterdvEXT(int program, int target, int index, Buffer params, int paramsOffset);
 
     /*
-		ext_glGetNamedProgramLocalParameterdvEXT((GLuint)program, (GLenum)target, (GLuint)index, (GLdouble*)(params + paramsByteOffset));
+		ext_glGetNamedProgramLocalParameterdvEXT((GLuint)program, (GLenum)target, (GLuint)index, (GLdouble*)(params + paramsOffset));
      */
     public static native void glGetNamedProgramLocalParameterdvEXT(int program, int target, int index, long params);
 
     /*
 		ext_glGetNamedProgramLocalParameterdvEXT((GLuint)program, (GLenum)target, (GLuint)index, (GLdouble*)params);
      */
-    public static native void glGetNamedProgramLocalParameterfvEXT(int program, int target, int index, Buffer params, int paramsByteOffset);
+    public static native void glGetNamedProgramLocalParameterfvEXT(int program, int target, int index, Buffer params, int paramsOffset);
 
     /*
-		ext_glGetNamedProgramLocalParameterfvEXT((GLuint)program, (GLenum)target, (GLuint)index, (GLfloat*)(params + paramsByteOffset));
+		ext_glGetNamedProgramLocalParameterfvEXT((GLuint)program, (GLenum)target, (GLuint)index, (GLfloat*)(params + paramsOffset));
      */
     public static native void glGetNamedProgramLocalParameterfvEXT(int program, int target, int index, long params);
 
     /*
 		ext_glGetNamedProgramLocalParameterfvEXT((GLuint)program, (GLenum)target, (GLuint)index, (GLfloat*)params);
      */
-    public static native void glGetNamedProgramivEXT(int program, int target, int pname, Buffer params, int paramsByteOffset);
+    public static native void glGetNamedProgramivEXT(int program, int target, int pname, Buffer params, int paramsOffset);
 
     /*
-		ext_glGetNamedProgramivEXT((GLuint)program, (GLenum)target, (GLenum)pname, (GLint*)(params + paramsByteOffset));
+		ext_glGetNamedProgramivEXT((GLuint)program, (GLenum)target, (GLenum)pname, (GLint*)(params + paramsOffset));
      */
     public static native void glGetNamedProgramivEXT(int program, int target, int pname, long params);
 
@@ -26214,10 +26214,10 @@ public class GL {
     /*
 		ext_glGetNamedProgramStringEXT((GLuint)program, (GLenum)target, (GLenum)pname, (GLvoid*)string);
      */
-    public static native void glNamedProgramLocalParameters4fvEXT(int program, int target, int index, int count, Buffer params, int paramsByteOffset);
+    public static native void glNamedProgramLocalParameters4fvEXT(int program, int target, int index, int count, Buffer params, int paramsOffset);
 
     /*
-		ext_glNamedProgramLocalParameters4fvEXT((GLuint)program, (GLenum)target, (GLuint)index, (GLsizei)count, (const GLfloat*)(params + paramsByteOffset));
+		ext_glNamedProgramLocalParameters4fvEXT((GLuint)program, (GLenum)target, (GLuint)index, (GLsizei)count, (const GLfloat*)(params + paramsOffset));
      */
     public static native void glNamedProgramLocalParameters4fvEXT(int program, int target, int index, int count, long params);
 
@@ -26229,20 +26229,20 @@ public class GL {
     /*
 		ext_glNamedProgramLocalParameterI4iEXT((GLuint)program, (GLenum)target, (GLuint)index, (GLint)x, (GLint)y, (GLint)z, (GLint)w);
      */
-    public static native void glNamedProgramLocalParameterI4ivEXT(int program, int target, int index, Buffer params, int paramsByteOffset);
+    public static native void glNamedProgramLocalParameterI4ivEXT(int program, int target, int index, Buffer params, int paramsOffset);
 
     /*
-		ext_glNamedProgramLocalParameterI4ivEXT((GLuint)program, (GLenum)target, (GLuint)index, (const GLint*)(params + paramsByteOffset));
+		ext_glNamedProgramLocalParameterI4ivEXT((GLuint)program, (GLenum)target, (GLuint)index, (const GLint*)(params + paramsOffset));
      */
     public static native void glNamedProgramLocalParameterI4ivEXT(int program, int target, int index, long params);
 
     /*
 		ext_glNamedProgramLocalParameterI4ivEXT((GLuint)program, (GLenum)target, (GLuint)index, (const GLint*)params);
      */
-    public static native void glNamedProgramLocalParametersI4ivEXT(int program, int target, int index, int count, Buffer params, int paramsByteOffset);
+    public static native void glNamedProgramLocalParametersI4ivEXT(int program, int target, int index, int count, Buffer params, int paramsOffset);
 
     /*
-		ext_glNamedProgramLocalParametersI4ivEXT((GLuint)program, (GLenum)target, (GLuint)index, (GLsizei)count, (const GLint*)(params + paramsByteOffset));
+		ext_glNamedProgramLocalParametersI4ivEXT((GLuint)program, (GLenum)target, (GLuint)index, (GLsizei)count, (const GLint*)(params + paramsOffset));
      */
     public static native void glNamedProgramLocalParametersI4ivEXT(int program, int target, int index, int count, long params);
 
@@ -26254,120 +26254,120 @@ public class GL {
     /*
 		ext_glNamedProgramLocalParameterI4uiEXT((GLuint)program, (GLenum)target, (GLuint)index, (GLuint)x, (GLuint)y, (GLuint)z, (GLuint)w);
      */
-    public static native void glNamedProgramLocalParameterI4uivEXT(int program, int target, int index, Buffer params, int paramsByteOffset);
+    public static native void glNamedProgramLocalParameterI4uivEXT(int program, int target, int index, Buffer params, int paramsOffset);
 
     /*
-		ext_glNamedProgramLocalParameterI4uivEXT((GLuint)program, (GLenum)target, (GLuint)index, (const GLuint*)(params + paramsByteOffset));
+		ext_glNamedProgramLocalParameterI4uivEXT((GLuint)program, (GLenum)target, (GLuint)index, (const GLuint*)(params + paramsOffset));
      */
     public static native void glNamedProgramLocalParameterI4uivEXT(int program, int target, int index, long params);
 
     /*
 		ext_glNamedProgramLocalParameterI4uivEXT((GLuint)program, (GLenum)target, (GLuint)index, (const GLuint*)params);
      */
-    public static native void glNamedProgramLocalParametersI4uivEXT(int program, int target, int index, int count, Buffer params, int paramsByteOffset);
+    public static native void glNamedProgramLocalParametersI4uivEXT(int program, int target, int index, int count, Buffer params, int paramsOffset);
 
     /*
-		ext_glNamedProgramLocalParametersI4uivEXT((GLuint)program, (GLenum)target, (GLuint)index, (GLsizei)count, (const GLuint*)(params + paramsByteOffset));
+		ext_glNamedProgramLocalParametersI4uivEXT((GLuint)program, (GLenum)target, (GLuint)index, (GLsizei)count, (const GLuint*)(params + paramsOffset));
      */
     public static native void glNamedProgramLocalParametersI4uivEXT(int program, int target, int index, int count, long params);
 
     /*
 		ext_glNamedProgramLocalParametersI4uivEXT((GLuint)program, (GLenum)target, (GLuint)index, (GLsizei)count, (const GLuint*)params);
      */
-    public static native void glGetNamedProgramLocalParameterIivEXT(int program, int target, int index, Buffer params, int paramsByteOffset);
+    public static native void glGetNamedProgramLocalParameterIivEXT(int program, int target, int index, Buffer params, int paramsOffset);
 
     /*
-		ext_glGetNamedProgramLocalParameterIivEXT((GLuint)program, (GLenum)target, (GLuint)index, (GLint*)(params + paramsByteOffset));
+		ext_glGetNamedProgramLocalParameterIivEXT((GLuint)program, (GLenum)target, (GLuint)index, (GLint*)(params + paramsOffset));
      */
     public static native void glGetNamedProgramLocalParameterIivEXT(int program, int target, int index, long params);
 
     /*
 		ext_glGetNamedProgramLocalParameterIivEXT((GLuint)program, (GLenum)target, (GLuint)index, (GLint*)params);
      */
-    public static native void glGetNamedProgramLocalParameterIuivEXT(int program, int target, int index, Buffer params, int paramsByteOffset);
+    public static native void glGetNamedProgramLocalParameterIuivEXT(int program, int target, int index, Buffer params, int paramsOffset);
 
     /*
-		ext_glGetNamedProgramLocalParameterIuivEXT((GLuint)program, (GLenum)target, (GLuint)index, (GLuint*)(params + paramsByteOffset));
+		ext_glGetNamedProgramLocalParameterIuivEXT((GLuint)program, (GLenum)target, (GLuint)index, (GLuint*)(params + paramsOffset));
      */
     public static native void glGetNamedProgramLocalParameterIuivEXT(int program, int target, int index, long params);
 
     /*
 		ext_glGetNamedProgramLocalParameterIuivEXT((GLuint)program, (GLenum)target, (GLuint)index, (GLuint*)params);
      */
-    public static native void glTextureParameterIivEXT(int texture, int target, int pname, Buffer params, int paramsByteOffset);
+    public static native void glTextureParameterIivEXT(int texture, int target, int pname, Buffer params, int paramsOffset);
 
     /*
-		ext_glTextureParameterIivEXT((GLuint)texture, (GLenum)target, (GLenum)pname, (const GLint*)(params + paramsByteOffset));
+		ext_glTextureParameterIivEXT((GLuint)texture, (GLenum)target, (GLenum)pname, (const GLint*)(params + paramsOffset));
      */
     public static native void glTextureParameterIivEXT(int texture, int target, int pname, long params);
 
     /*
 		ext_glTextureParameterIivEXT((GLuint)texture, (GLenum)target, (GLenum)pname, (const GLint*)params);
      */
-    public static native void glTextureParameterIuivEXT(int texture, int target, int pname, Buffer params, int paramsByteOffset);
+    public static native void glTextureParameterIuivEXT(int texture, int target, int pname, Buffer params, int paramsOffset);
 
     /*
-		ext_glTextureParameterIuivEXT((GLuint)texture, (GLenum)target, (GLenum)pname, (const GLuint*)(params + paramsByteOffset));
+		ext_glTextureParameterIuivEXT((GLuint)texture, (GLenum)target, (GLenum)pname, (const GLuint*)(params + paramsOffset));
      */
     public static native void glTextureParameterIuivEXT(int texture, int target, int pname, long params);
 
     /*
 		ext_glTextureParameterIuivEXT((GLuint)texture, (GLenum)target, (GLenum)pname, (const GLuint*)params);
      */
-    public static native void glGetTextureParameterIivEXT(int texture, int target, int pname, Buffer params, int paramsByteOffset);
+    public static native void glGetTextureParameterIivEXT(int texture, int target, int pname, Buffer params, int paramsOffset);
 
     /*
-		ext_glGetTextureParameterIivEXT((GLuint)texture, (GLenum)target, (GLenum)pname, (GLint*)(params + paramsByteOffset));
+		ext_glGetTextureParameterIivEXT((GLuint)texture, (GLenum)target, (GLenum)pname, (GLint*)(params + paramsOffset));
      */
     public static native void glGetTextureParameterIivEXT(int texture, int target, int pname, long params);
 
     /*
 		ext_glGetTextureParameterIivEXT((GLuint)texture, (GLenum)target, (GLenum)pname, (GLint*)params);
      */
-    public static native void glGetTextureParameterIuivEXT(int texture, int target, int pname, Buffer params, int paramsByteOffset);
+    public static native void glGetTextureParameterIuivEXT(int texture, int target, int pname, Buffer params, int paramsOffset);
 
     /*
-		ext_glGetTextureParameterIuivEXT((GLuint)texture, (GLenum)target, (GLenum)pname, (GLuint*)(params + paramsByteOffset));
+		ext_glGetTextureParameterIuivEXT((GLuint)texture, (GLenum)target, (GLenum)pname, (GLuint*)(params + paramsOffset));
      */
     public static native void glGetTextureParameterIuivEXT(int texture, int target, int pname, long params);
 
     /*
 		ext_glGetTextureParameterIuivEXT((GLuint)texture, (GLenum)target, (GLenum)pname, (GLuint*)params);
      */
-    public static native void glMultiTexParameterIivEXT(int texunit, int target, int pname, Buffer params, int paramsByteOffset);
+    public static native void glMultiTexParameterIivEXT(int texunit, int target, int pname, Buffer params, int paramsOffset);
 
     /*
-		ext_glMultiTexParameterIivEXT((GLenum)texunit, (GLenum)target, (GLenum)pname, (const GLint*)(params + paramsByteOffset));
+		ext_glMultiTexParameterIivEXT((GLenum)texunit, (GLenum)target, (GLenum)pname, (const GLint*)(params + paramsOffset));
      */
     public static native void glMultiTexParameterIivEXT(int texunit, int target, int pname, long params);
 
     /*
 		ext_glMultiTexParameterIivEXT((GLenum)texunit, (GLenum)target, (GLenum)pname, (const GLint*)params);
      */
-    public static native void glMultiTexParameterIuivEXT(int texunit, int target, int pname, Buffer params, int paramsByteOffset);
+    public static native void glMultiTexParameterIuivEXT(int texunit, int target, int pname, Buffer params, int paramsOffset);
 
     /*
-		ext_glMultiTexParameterIuivEXT((GLenum)texunit, (GLenum)target, (GLenum)pname, (const GLuint*)(params + paramsByteOffset));
+		ext_glMultiTexParameterIuivEXT((GLenum)texunit, (GLenum)target, (GLenum)pname, (const GLuint*)(params + paramsOffset));
      */
     public static native void glMultiTexParameterIuivEXT(int texunit, int target, int pname, long params);
 
     /*
 		ext_glMultiTexParameterIuivEXT((GLenum)texunit, (GLenum)target, (GLenum)pname, (const GLuint*)params);
      */
-    public static native void glGetMultiTexParameterIivEXT(int texunit, int target, int pname, Buffer params, int paramsByteOffset);
+    public static native void glGetMultiTexParameterIivEXT(int texunit, int target, int pname, Buffer params, int paramsOffset);
 
     /*
-		ext_glGetMultiTexParameterIivEXT((GLenum)texunit, (GLenum)target, (GLenum)pname, (GLint*)(params + paramsByteOffset));
+		ext_glGetMultiTexParameterIivEXT((GLenum)texunit, (GLenum)target, (GLenum)pname, (GLint*)(params + paramsOffset));
      */
     public static native void glGetMultiTexParameterIivEXT(int texunit, int target, int pname, long params);
 
     /*
 		ext_glGetMultiTexParameterIivEXT((GLenum)texunit, (GLenum)target, (GLenum)pname, (GLint*)params);
      */
-    public static native void glGetMultiTexParameterIuivEXT(int texunit, int target, int pname, Buffer params, int paramsByteOffset);
+    public static native void glGetMultiTexParameterIuivEXT(int texunit, int target, int pname, Buffer params, int paramsOffset);
 
     /*
-		ext_glGetMultiTexParameterIuivEXT((GLenum)texunit, (GLenum)target, (GLenum)pname, (GLuint*)(params + paramsByteOffset));
+		ext_glGetMultiTexParameterIuivEXT((GLenum)texunit, (GLenum)target, (GLenum)pname, (GLuint*)(params + paramsOffset));
      */
     public static native void glGetMultiTexParameterIuivEXT(int texunit, int target, int pname, long params);
 
@@ -26693,20 +26693,20 @@ public class GL {
     /*
 		ext_glNamedCopyBufferSubDataEXT((GLuint)readBuffer, (GLuint)writeBuffer, (GLintptr)readOffset, (GLintptr)writeOffset, (GLsizeiptr)size);
      */
-    public static native void glGetNamedBufferParameterivEXT(int buffer, int pname, Buffer params, int paramsByteOffset);
+    public static native void glGetNamedBufferParameterivEXT(int buffer, int pname, Buffer params, int paramsOffset);
 
     /*
-		ext_glGetNamedBufferParameterivEXT((GLuint)buffer, (GLenum)pname, (GLint*)(params + paramsByteOffset));
+		ext_glGetNamedBufferParameterivEXT((GLuint)buffer, (GLenum)pname, (GLint*)(params + paramsOffset));
      */
     public static native void glGetNamedBufferParameterivEXT(int buffer, int pname, long params);
 
     /*
 		ext_glGetNamedBufferParameterivEXT((GLuint)buffer, (GLenum)pname, (GLint*)params);
      */
-    public static native void glGetNamedBufferPointervEXT(int buffer, int pname, Buffer params, int paramsByteOffset);
+    public static native void glGetNamedBufferPointervEXT(int buffer, int pname, Buffer params, int paramsOffset);
 
     /*
-		ext_glGetNamedBufferPointervEXT((GLuint)buffer, (GLenum)pname, (GLvoid**)(params + paramsByteOffset));
+		ext_glGetNamedBufferPointervEXT((GLuint)buffer, (GLenum)pname, (GLvoid**)(params + paramsOffset));
      */
     public static native void glGetNamedBufferPointervEXT(int buffer, int pname, long params);
 
@@ -26738,10 +26738,10 @@ public class GL {
     /*
 		ext_glNamedRenderbufferStorageEXT((GLuint)renderbuffer, (GLenum)internalformat, (GLsizei)width, (GLsizei)height);
      */
-    public static native void glGetNamedRenderbufferParameterivEXT(int renderbuffer, int pname, Buffer params, int paramsByteOffset);
+    public static native void glGetNamedRenderbufferParameterivEXT(int renderbuffer, int pname, Buffer params, int paramsOffset);
 
     /*
-		ext_glGetNamedRenderbufferParameterivEXT((GLuint)renderbuffer, (GLenum)pname, (GLint*)(params + paramsByteOffset));
+		ext_glGetNamedRenderbufferParameterivEXT((GLuint)renderbuffer, (GLenum)pname, (GLint*)(params + paramsOffset));
      */
     public static native void glGetNamedRenderbufferParameterivEXT(int renderbuffer, int pname, long params);
 
@@ -26773,10 +26773,10 @@ public class GL {
     /*
 		ext_glNamedFramebufferRenderbufferEXT((GLuint)framebuffer, (GLenum)attachment, (GLenum)renderbuffertarget, (GLuint)renderbuffer);
      */
-    public static native void glGetNamedFramebufferAttachmentParameterivEXT(int framebuffer, int attachment, int pname, Buffer params, int paramsByteOffset);
+    public static native void glGetNamedFramebufferAttachmentParameterivEXT(int framebuffer, int attachment, int pname, Buffer params, int paramsOffset);
 
     /*
-		ext_glGetNamedFramebufferAttachmentParameterivEXT((GLuint)framebuffer, (GLenum)attachment, (GLenum)pname, (GLint*)(params + paramsByteOffset));
+		ext_glGetNamedFramebufferAttachmentParameterivEXT((GLuint)framebuffer, (GLenum)attachment, (GLenum)pname, (GLint*)(params + paramsOffset));
      */
     public static native void glGetNamedFramebufferAttachmentParameterivEXT(int framebuffer, int attachment, int pname, long params);
 
@@ -26813,10 +26813,10 @@ public class GL {
     /*
 		ext_glFramebufferReadBufferEXT((GLuint)framebuffer, (GLenum)mode);
      */
-    public static native void glGetFramebufferParameterivEXT(int framebuffer, int pname, Buffer params, int paramsByteOffset);
+    public static native void glGetFramebufferParameterivEXT(int framebuffer, int pname, Buffer params, int paramsOffset);
 
     /*
-		ext_glGetFramebufferParameterivEXT((GLuint)framebuffer, (GLenum)pname, (GLint*)(params + paramsByteOffset));
+		ext_glGetFramebufferParameterivEXT((GLuint)framebuffer, (GLenum)pname, (GLint*)(params + paramsOffset));
      */
     public static native void glGetFramebufferParameterivEXT(int framebuffer, int pname, long params);
 
@@ -27218,10 +27218,10 @@ public class GL {
     /*
 		ext_glTextureRangeAPPLE((GLenum)target, (GLsizei)length, (const GLvoid*)pointer);
      */
-    public static native void glGetTexParameterPointervAPPLE(int target, int pname, Buffer params, int paramsByteOffset);
+    public static native void glGetTexParameterPointervAPPLE(int target, int pname, Buffer params, int paramsOffset);
 
     /*
-		ext_glGetTexParameterPointervAPPLE((GLenum)target, (GLenum)pname, (GLvoid**)(params + paramsByteOffset));
+		ext_glGetTexParameterPointervAPPLE((GLenum)target, (GLenum)pname, (GLvoid**)(params + paramsOffset));
      */
     public static native void glGetTexParameterPointervAPPLE(int target, int pname, long params);
 
@@ -27293,10 +27293,10 @@ public class GL {
     /*
 		return (jint)ext_glObjectUnpurgeableAPPLE((GLenum)objectType, (GLuint)name, (GLenum)option);
      */
-    public static native void glGetObjectParameterivAPPLE(int objectType, int name, int pname, Buffer params, int paramsByteOffset);
+    public static native void glGetObjectParameterivAPPLE(int objectType, int name, int pname, Buffer params, int paramsOffset);
 
     /*
-		ext_glGetObjectParameterivAPPLE((GLenum)objectType, (GLuint)name, (GLenum)pname, (GLint*)(params + paramsByteOffset));
+		ext_glGetObjectParameterivAPPLE((GLenum)objectType, (GLuint)name, (GLenum)pname, (GLint*)(params + paramsOffset));
      */
     public static native void glGetObjectParameterivAPPLE(int objectType, int name, int pname, long params);
 
@@ -27323,40 +27323,40 @@ public class GL {
     /*
 		ext_glEndVideoCaptureNV((GLuint)video_capture_slot);
      */
-    public static native void glGetVideoCaptureivNV(int video_capture_slot, int pname, Buffer params, int paramsByteOffset);
+    public static native void glGetVideoCaptureivNV(int video_capture_slot, int pname, Buffer params, int paramsOffset);
 
     /*
-		ext_glGetVideoCaptureivNV((GLuint)video_capture_slot, (GLenum)pname, (GLint*)(params + paramsByteOffset));
+		ext_glGetVideoCaptureivNV((GLuint)video_capture_slot, (GLenum)pname, (GLint*)(params + paramsOffset));
      */
     public static native void glGetVideoCaptureivNV(int video_capture_slot, int pname, long params);
 
     /*
 		ext_glGetVideoCaptureivNV((GLuint)video_capture_slot, (GLenum)pname, (GLint*)params);
      */
-    public static native void glGetVideoCaptureStreamivNV(int video_capture_slot, int stream, int pname, Buffer params, int paramsByteOffset);
+    public static native void glGetVideoCaptureStreamivNV(int video_capture_slot, int stream, int pname, Buffer params, int paramsOffset);
 
     /*
-		ext_glGetVideoCaptureStreamivNV((GLuint)video_capture_slot, (GLuint)stream, (GLenum)pname, (GLint*)(params + paramsByteOffset));
+		ext_glGetVideoCaptureStreamivNV((GLuint)video_capture_slot, (GLuint)stream, (GLenum)pname, (GLint*)(params + paramsOffset));
      */
     public static native void glGetVideoCaptureStreamivNV(int video_capture_slot, int stream, int pname, long params);
 
     /*
 		ext_glGetVideoCaptureStreamivNV((GLuint)video_capture_slot, (GLuint)stream, (GLenum)pname, (GLint*)params);
      */
-    public static native void glGetVideoCaptureStreamfvNV(int video_capture_slot, int stream, int pname, Buffer params, int paramsByteOffset);
+    public static native void glGetVideoCaptureStreamfvNV(int video_capture_slot, int stream, int pname, Buffer params, int paramsOffset);
 
     /*
-		ext_glGetVideoCaptureStreamfvNV((GLuint)video_capture_slot, (GLuint)stream, (GLenum)pname, (GLfloat*)(params + paramsByteOffset));
+		ext_glGetVideoCaptureStreamfvNV((GLuint)video_capture_slot, (GLuint)stream, (GLenum)pname, (GLfloat*)(params + paramsOffset));
      */
     public static native void glGetVideoCaptureStreamfvNV(int video_capture_slot, int stream, int pname, long params);
 
     /*
 		ext_glGetVideoCaptureStreamfvNV((GLuint)video_capture_slot, (GLuint)stream, (GLenum)pname, (GLfloat*)params);
      */
-    public static native void glGetVideoCaptureStreamdvNV(int video_capture_slot, int stream, int pname, Buffer params, int paramsByteOffset);
+    public static native void glGetVideoCaptureStreamdvNV(int video_capture_slot, int stream, int pname, Buffer params, int paramsOffset);
 
     /*
-		ext_glGetVideoCaptureStreamdvNV((GLuint)video_capture_slot, (GLuint)stream, (GLenum)pname, (GLdouble*)(params + paramsByteOffset));
+		ext_glGetVideoCaptureStreamdvNV((GLuint)video_capture_slot, (GLuint)stream, (GLenum)pname, (GLdouble*)(params + paramsOffset));
      */
     public static native void glGetVideoCaptureStreamdvNV(int video_capture_slot, int stream, int pname, long params);
 
@@ -27373,30 +27373,30 @@ public class GL {
     /*
 		return (jint)ext_glVideoCaptureNV((GLuint)video_capture_slot, (GLuint*)sequence_num, (GLuint64EXT*)capture_time);
      */
-    public static native void glVideoCaptureStreamParameterivNV(int video_capture_slot, int stream, int pname, Buffer params, int paramsByteOffset);
+    public static native void glVideoCaptureStreamParameterivNV(int video_capture_slot, int stream, int pname, Buffer params, int paramsOffset);
 
     /*
-		ext_glVideoCaptureStreamParameterivNV((GLuint)video_capture_slot, (GLuint)stream, (GLenum)pname, (const GLint*)(params + paramsByteOffset));
+		ext_glVideoCaptureStreamParameterivNV((GLuint)video_capture_slot, (GLuint)stream, (GLenum)pname, (const GLint*)(params + paramsOffset));
      */
     public static native void glVideoCaptureStreamParameterivNV(int video_capture_slot, int stream, int pname, long params);
 
     /*
 		ext_glVideoCaptureStreamParameterivNV((GLuint)video_capture_slot, (GLuint)stream, (GLenum)pname, (const GLint*)params);
      */
-    public static native void glVideoCaptureStreamParameterfvNV(int video_capture_slot, int stream, int pname, Buffer params, int paramsByteOffset);
+    public static native void glVideoCaptureStreamParameterfvNV(int video_capture_slot, int stream, int pname, Buffer params, int paramsOffset);
 
     /*
-		ext_glVideoCaptureStreamParameterfvNV((GLuint)video_capture_slot, (GLuint)stream, (GLenum)pname, (const GLfloat*)(params + paramsByteOffset));
+		ext_glVideoCaptureStreamParameterfvNV((GLuint)video_capture_slot, (GLuint)stream, (GLenum)pname, (const GLfloat*)(params + paramsOffset));
      */
     public static native void glVideoCaptureStreamParameterfvNV(int video_capture_slot, int stream, int pname, long params);
 
     /*
 		ext_glVideoCaptureStreamParameterfvNV((GLuint)video_capture_slot, (GLuint)stream, (GLenum)pname, (const GLfloat*)params);
      */
-    public static native void glVideoCaptureStreamParameterdvNV(int video_capture_slot, int stream, int pname, Buffer params, int paramsByteOffset);
+    public static native void glVideoCaptureStreamParameterdvNV(int video_capture_slot, int stream, int pname, Buffer params, int paramsOffset);
 
     /*
-		ext_glVideoCaptureStreamParameterdvNV((GLuint)video_capture_slot, (GLuint)stream, (GLenum)pname, (const GLdouble*)(params + paramsByteOffset));
+		ext_glVideoCaptureStreamParameterdvNV((GLuint)video_capture_slot, (GLuint)stream, (GLenum)pname, (const GLdouble*)(params + paramsOffset));
      */
     public static native void glVideoCaptureStreamParameterdvNV(int video_capture_slot, int stream, int pname, long params);
 
@@ -27458,20 +27458,20 @@ public class GL {
     /*
 		return (jboolean)ext_glIsNamedBufferResidentNV((GLuint)buffer);
      */
-    public static native void glGetBufferParameterui64vNV(int target, int pname, Buffer params, int paramsByteOffset);
+    public static native void glGetBufferParameterui64vNV(int target, int pname, Buffer params, int paramsOffset);
 
     /*
-		ext_glGetBufferParameterui64vNV((GLenum)target, (GLenum)pname, (GLuint64EXT*)(params + paramsByteOffset));
+		ext_glGetBufferParameterui64vNV((GLenum)target, (GLenum)pname, (GLuint64EXT*)(params + paramsOffset));
      */
     public static native void glGetBufferParameterui64vNV(int target, int pname, long params);
 
     /*
 		ext_glGetBufferParameterui64vNV((GLenum)target, (GLenum)pname, (GLuint64EXT*)params);
      */
-    public static native void glGetNamedBufferParameterui64vNV(int buffer, int pname, Buffer params, int paramsByteOffset);
+    public static native void glGetNamedBufferParameterui64vNV(int buffer, int pname, Buffer params, int paramsOffset);
 
     /*
-		ext_glGetNamedBufferParameterui64vNV((GLuint)buffer, (GLenum)pname, (GLuint64EXT*)(params + paramsByteOffset));
+		ext_glGetNamedBufferParameterui64vNV((GLuint)buffer, (GLenum)pname, (GLuint64EXT*)(params + paramsOffset));
      */
     public static native void glGetNamedBufferParameterui64vNV(int buffer, int pname, long params);
 
@@ -27503,10 +27503,10 @@ public class GL {
     /*
 		ext_glUniformui64vNV((GLint)location, (GLsizei)count, (const GLuint64EXT*)value);
      */
-    public static native void glGetUniformui64vNV(int program, int location, Buffer params, int paramsByteOffset);
+    public static native void glGetUniformui64vNV(int program, int location, Buffer params, int paramsOffset);
 
     /*
-		ext_glGetUniformui64vNV((GLuint)program, (GLint)location, (GLuint64EXT*)(params + paramsByteOffset));
+		ext_glGetUniformui64vNV((GLuint)program, (GLint)location, (GLuint64EXT*)(params + paramsOffset));
      */
     public static native void glGetUniformui64vNV(int program, int location, long params);
 
@@ -27668,10 +27668,10 @@ public class GL {
     /*
 		ext_glVertexAttribLPointerEXT((GLuint)index, (GLint)size, (GLenum)type, (GLsizei)stride, (const GLvoid*)pointer);
      */
-    public static native void glGetVertexAttribLdvEXT(int index, int pname, Buffer params, int paramsByteOffset);
+    public static native void glGetVertexAttribLdvEXT(int index, int pname, Buffer params, int paramsOffset);
 
     /*
-		ext_glGetVertexAttribLdvEXT((GLuint)index, (GLenum)pname, (GLdouble*)(params + paramsByteOffset));
+		ext_glGetVertexAttribLdvEXT((GLuint)index, (GLenum)pname, (GLdouble*)(params + paramsOffset));
      */
     public static native void glGetVertexAttribLdvEXT(int index, int pname, long params);
 
@@ -27683,10 +27683,10 @@ public class GL {
     /*
 		ext_glVertexArrayVertexAttribLOffsetEXT((GLuint)vaobj, (GLuint)buffer, (GLuint)index, (GLint)size, (GLenum)type, (GLsizei)stride, (GLintptr)offset);
      */
-    public static native void glProgramSubroutineParametersuivNV(int target, int count, Buffer params, int paramsByteOffset);
+    public static native void glProgramSubroutineParametersuivNV(int target, int count, Buffer params, int paramsOffset);
 
     /*
-		ext_glProgramSubroutineParametersuivNV((GLenum)target, (GLsizei)count, (const GLuint*)(params + paramsByteOffset));
+		ext_glProgramSubroutineParametersuivNV((GLenum)target, (GLsizei)count, (const GLuint*)(params + paramsOffset));
      */
     public static native void glProgramSubroutineParametersuivNV(int target, int count, long params);
 
@@ -27823,10 +27823,10 @@ public class GL {
     /*
 		ext_glUniform4ui64vNV((GLint)location, (GLsizei)count, (const GLuint64EXT*)value);
      */
-    public static native void glGetUniformi64vNV(int program, int location, Buffer params, int paramsByteOffset);
+    public static native void glGetUniformi64vNV(int program, int location, Buffer params, int paramsOffset);
 
     /*
-		ext_glGetUniformi64vNV((GLuint)program, (GLint)location, (GLint64EXT*)(params + paramsByteOffset));
+		ext_glGetUniformi64vNV((GLuint)program, (GLint)location, (GLint64EXT*)(params + paramsOffset));
      */
     public static native void glGetUniformi64vNV(int program, int location, long params);
 
@@ -28073,20 +28073,20 @@ public class GL {
     /*
 		ext_glVertexAttribL4ui64vNV((GLuint)index, (const GLuint64EXT*)v);
      */
-    public static native void glGetVertexAttribLi64vNV(int index, int pname, Buffer params, int paramsByteOffset);
+    public static native void glGetVertexAttribLi64vNV(int index, int pname, Buffer params, int paramsOffset);
 
     /*
-		ext_glGetVertexAttribLi64vNV((GLuint)index, (GLenum)pname, (GLint64EXT*)(params + paramsByteOffset));
+		ext_glGetVertexAttribLi64vNV((GLuint)index, (GLenum)pname, (GLint64EXT*)(params + paramsOffset));
      */
     public static native void glGetVertexAttribLi64vNV(int index, int pname, long params);
 
     /*
 		ext_glGetVertexAttribLi64vNV((GLuint)index, (GLenum)pname, (GLint64EXT*)params);
      */
-    public static native void glGetVertexAttribLui64vNV(int index, int pname, Buffer params, int paramsByteOffset);
+    public static native void glGetVertexAttribLui64vNV(int index, int pname, Buffer params, int paramsOffset);
 
     /*
-		ext_glGetVertexAttribLui64vNV((GLuint)index, (GLenum)pname, (GLuint64EXT*)(params + paramsByteOffset));
+		ext_glGetVertexAttribLui64vNV((GLuint)index, (GLenum)pname, (GLuint64EXT*)(params + paramsOffset));
      */
     public static native void glGetVertexAttribLui64vNV(int index, int pname, long params);
 

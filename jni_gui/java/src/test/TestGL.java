@@ -1,9 +1,31 @@
 package test;
 
-import java.util.Random;
 import org.mini.gl.GL;
+import static org.mini.gl.GL.GL_AMBIENT;
+import static org.mini.gl.GL.GL_COLOR_BUFFER_BIT;
+import static org.mini.gl.GL.GL_DEPTH_BUFFER_BIT;
+import static org.mini.gl.GL.GL_DEPTH_TEST;
+import static org.mini.gl.GL.GL_DIFFUSE;
+import static org.mini.gl.GL.GL_EMISSION;
+import static org.mini.gl.GL.GL_FRONT;
+import static org.mini.gl.GL.GL_LIGHT0;
+import static org.mini.gl.GL.GL_LIGHTING;
+import static org.mini.gl.GL.GL_MODELVIEW;
+import static org.mini.gl.GL.GL_POSITION;
+import static org.mini.gl.GL.GL_SHININESS;
+import static org.mini.gl.GL.GL_SPECULAR;
+import static org.mini.gl.GL.glClear;
+import static org.mini.gl.GL.glColor3f;
+import static org.mini.gl.GL.glEnable;
+import static org.mini.gl.GL.glFlush;
+import static org.mini.gl.GL.glLightfv;
+import static org.mini.gl.GL.glMaterialf;
+import static org.mini.gl.GL.glMaterialfv;
+import static org.mini.gl.GL.glMatrixMode;
+import static org.mini.gl.GL.glTranslatef;
 import org.mini.glfw.Glfw;
 import org.mini.glfw.GlfwCallbackAdapter;
+import org.mini.glfw.utils.Gutil;
 
 /*
  * To change this license header, choose License Headers in Project Properties.
@@ -61,7 +83,6 @@ public class TestGL {
         public void framebufferSize(long window, int x, int y) {
         }
     }
-
 
     byte[] mask = new byte[]{
         (byte) 0x00, (byte) 0x00, (byte) 0x00, (byte) 0x00, //   这是最下面的一行
@@ -179,12 +200,99 @@ public class TestGL {
         }
         GL.glEnd();
     }
+    int day = 200; // day的变化：从0到359
+    int w, h;
+    float[] projection = new float[16], view = new float[16];
+    Ball sun = new Ball(69600000, 8, Ball.SOLID);
+    Ball earth = new Ball(15945000, 8, Ball.WIRE);
+    Ball moon = new Ball(4345000, 8, Ball.WIRE);
+
+    void init() {
+
+//        glMatrixMode(GL_PROJECTION);
+//        glLoadIdentity();
+//        gluPerspective(75, 1, 1, 400000000);
+        GL.glViewport(0, 0, (int) w, (int) h);
+        GL.glMatrixMode(GL.GL_PROJECTION);
+        Gutil.mat4x4_perspective(projection,
+                1.5f,
+                (float) w / (float) h,
+                1.f, 400000000f);
+        GL.glLoadMatrixf(projection, 0);
+        glMatrixMode(GL_MODELVIEW);
+
+//        glLoadIdentity();
+//        gluLookAt(0, -200000000, 200000000, 0, 0, 0, 0, 0, 1);
+        GL.glMatrixMode(GL.GL_MODELVIEW);
+        {
+            float[] eye = {0.f, 0.f, 200000000f};
+            float[] center = {0.f, 0.f, 0.f};
+            float[] up = {0.f, -1.f, 0.f};
+            Gutil.mat4x4_look_at(view, eye, center, up);
+        }
+        GL.glLoadMatrixf(view, 0);
+    }
+
+    void draw2() {
+//        glLoadIdentity();
+//        glEnable(GL_DEPTH_TEST);
+        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+        // 绘制红色的“太阳”
+            // 定义太阳光源，它是一种白色的光源
+    {
+        float[] sun_light_position = {0.0f, 0.0f, 0.0f, 1.0f};
+        float[] sun_light_ambient   = {0.0f, 0.0f, 0.0f, 1.0f};
+        float[] sun_light_diffuse   = {1.0f, 1.0f, 1.0f, 1.0f};
+        float[] sun_light_specular = {1.0f, 1.0f, 1.0f, 1.0f};
+
+        glLightfv(GL_LIGHT0, GL_POSITION, sun_light_position,0);
+        glLightfv(GL_LIGHT0, GL_AMBIENT,   sun_light_ambient,0);
+        glLightfv(GL_LIGHT0, GL_DIFFUSE,   sun_light_diffuse,0);
+        glLightfv(GL_LIGHT0, GL_SPECULAR, sun_light_specular,0);
+
+        glEnable(GL_LIGHT0);
+        glEnable(GL_LIGHTING);
+//        glEnable(GL_DEPTH_TEST);
+    }
+     // 定义太阳的材质并绘制太阳
+    {
+        float[] sun_mat_ambient   = {0.0f, 0.0f, 0.0f, 1.0f};
+        float[] sun_mat_diffuse   = {0.0f, 0.0f, 0.0f, 1.0f};
+        float[] sun_mat_specular = {0.0f, 0.0f, 0.0f, 1.0f};
+        float[] sun_mat_emission = {0.5f, 0.0f, 0.0f, 1.0f};
+        float sun_mat_shininess   = 0.0f;
+
+        glMaterialfv(GL_FRONT, GL_AMBIENT,    sun_mat_ambient,0);
+        glMaterialfv(GL_FRONT, GL_DIFFUSE,    sun_mat_diffuse,0);
+        glMaterialfv(GL_FRONT, GL_SPECULAR,   sun_mat_specular,0);
+        glMaterialfv(GL_FRONT, GL_EMISSION,   sun_mat_emission,0);
+        glMaterialf (GL_FRONT, GL_SHININESS, sun_mat_shininess);
+
+    }
+//        glutSolidSphere(69600000, 20, 20);
+        // 绘制蓝色的“地球”
+        sun.drawSphere();
+        glColor3f(0.0f, 0.0f, 1.0f);
+        GL.glRotatef((float) (day / 360.0 * 360.0), 0.0f, 0.0f, -1.0f);
+        glTranslatef(150000000f, 0.0f, 0.0f);
+//        glutSolidSphere(15945000, 20, 20);
+        earth.drawSphere();
+        // 绘制黄色的“月亮”
+        glColor3f(1.0f, 1.0f, 0.0f);
+        GL.glRotatef((float) (day / 30.0 * 360.0 - day / 360.0 * 360.0), 0.0f, 0.0f, -1.0f);
+        glTranslatef(38000000f, 0.0f, 0.0f);
+//        glutSolidSphere(4345000, 20, 20);
+        moon.drawSphere();
+
+//        day++;
+        glFlush();
+    }
 
     void t1() {
         Glfw.glfwInit();
 //        Glfw.glfwWindowHint(Glfw.GLFW_CONTEXT_VERSION_MAJOR, 2);
 //        Glfw.glfwWindowHint(Glfw.GLFW_CONTEXT_VERSION_MINOR, 0);
-        Glfw.glfwWindowHint(Glfw.GLFW_DEPTH_BITS, 16);
+//        Glfw.glfwWindowHint(Glfw.GLFW_DEPTH_BITS, 16);
 //        Glfw.glfwWindowHint(Glfw.GLFW_TRANSPARENT_FRAMEBUFFER, Glfw.GLFW_TRUE);
         long win = Glfw.glfwCreateWindow(300, 300, "hello glfw", 0, 0);
         if (win != 0) {
@@ -192,22 +300,24 @@ public class TestGL {
             Glfw.glfwMakeContextCurrent(win);
 //            Glfw.glfwSwapInterval(1);
 
-            int w = Glfw.glfwGetFramebufferSizeW(win);
-            int h = Glfw.glfwGetFramebufferSizeH(win);
+            w = Glfw.glfwGetFramebufferSizeW(win);
+            h = Glfw.glfwGetFramebufferSizeH(win);
             System.out.println("w=" + w + "  ,h=" + h);
 
+            init();
             long last = System.currentTimeMillis(), now;
             int count = 0;
             while (!Glfw.glfwWindowShouldClose(win)) {
 
-                draw1();
-                /* Timing */
- /* Draw one frame */
-//                displayB();
+                draw2();
 
                 Glfw.glfwPollEvents();
                 Glfw.glfwSwapBuffers(win);
 
+                try {
+                    Thread.sleep(1000);
+                } catch (InterruptedException ex) {
+                }
                 count++;
                 now = System.currentTimeMillis();
                 if (now - last > 1000) {

@@ -1579,6 +1579,17 @@ int org_mini_gl_GL_glMaterialfv(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
+int org_mini_gl_GL_glMaterialf(Runtime *runtime, Class *clazz) {
+    JniEnv *env = runtime->jnienv;
+    s32 pos = 0;
+    s32 light = env->localvar_getInt(runtime, pos++);
+    s32 pname = env->localvar_getInt(runtime, pos++);
+    Int2Float p;
+    p.i = env->localvar_getInt(runtime, pos++);
+    glMaterialf((GLenum) light, (GLenum) pname, (GLfloat) p.f);
+    return 0;
+}
+
 int org_mini_gl_GL_glNewList(Runtime *runtime, Class *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
@@ -1766,6 +1777,17 @@ int org_mini_gl_GL_glGenVertexArrays(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
+int org_mini_gl_GL_glDeleteVertexArrays(Runtime *runtime, Class *clazz) {
+    JniEnv *env = runtime->jnienv;
+    s32 pos = 0;
+    s32 n = env->localvar_getInt(runtime, pos++);
+    Instance *arr = env->localvar_getRefer(runtime, pos++);
+    s32 offset = env->localvar_getInt(runtime, pos++);
+    offset *= env->data_type_bytes[arr->mb.arr_type_index];
+    glDeleteVertexArrays((GLsizei) n, (GLuint *) (arr->arr_body + offset));
+    return 0;
+}
+
 int org_mini_gl_GL_glBindBuffer(Runtime *runtime, Class *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
@@ -1879,7 +1901,6 @@ static java_native_method method_test2_table[] = {
         {"org/mini/glfw/Glfw",        "glfwSetWindowAspectRatio",   "(JII)V",                           org_mini_glfw_Glfw_glfwSetWindowAspectRatio},
         {"org/mini/gl/GL",            "init",                       "()V",                              org_mini_gl_GL_init},
         {"org/mini/gl/GL",            "glViewport",                 "(IIII)V",                          org_mini_gl_GL_glViewport},
-        {"org/mini/gl/GL",            "glVertexAttribPointer",      "(IIIIII)V",                        org_mini_gl_GL_glVertexAttribPointer},
         {"org/mini/gl/GL",            "glMatrixMode",               "(I)V",                             org_mini_gl_GL_glMatrixMode},
         {"org/mini/gl/GL",            "glLoadMatrixf",              "([FI)V",                           org_mini_gl_GL_glLoadMatrixf},
         {"org/mini/gl/GL",            "glPushMatrix",               "()V",                              org_mini_gl_GL_glPushMatrix},
@@ -1941,14 +1962,17 @@ static java_native_method method_test2_table[] = {
         {"org/mini/gl/GL",            "glRectf",                    "(FFFF)V",                          org_mini_gl_GL_glRectf},
         {"org/mini/gl/GL",            "glLightfv",                  "(II[FI)V",                         org_mini_gl_GL_glLightfv},
         {"org/mini/gl/GL",            "glMaterialfv",               "(II[FI)V",                         org_mini_gl_GL_glMaterialfv},
+        {"org/mini/gl/GL",            "glMaterialf",                "(IIF)V",                           org_mini_gl_GL_glMaterialf},
         {"org/mini/gl/GL",            "glNewList",                  "(II)V",                            org_mini_gl_GL_glNewList},
         {"org/mini/gl/GL",            "glGenLists",                 "(I)I",                             org_mini_gl_GL_glGenLists},
         {"org/mini/gl/GL",            "glEndList",                  "()V",                              org_mini_gl_GL_glEndList},
         {"org/mini/gl/GL",            "glCallList",                 "(I)V",                             org_mini_gl_GL_glCallList},
         {"org/mini/gl/GL",            "glDrawArrays",               "(III)V",                           org_mini_gl_GL_glDrawArrays},
         {"org/mini/gl/GL",            "glGenVertexArrays",          "(I[II)V",                          org_mini_gl_GL_glGenVertexArrays},
+        {"org/mini/gl/GL",            "glDeleteVertexArrays",       "(I[II)V",                          org_mini_gl_GL_glDeleteVertexArrays},
         {"org/mini/gl/GL",            "glBindVertexArray",          "(I)V",                             org_mini_gl_GL_glBindVertexArray},
         {"org/mini/gl/GL",            "glEnableVertexAttribArray",  "(I)V",                             org_mini_gl_GL_glEnableVertexAttribArray},
+        {"org/mini/gl/GL",            "glVertexAttribPointer",      "(IIIIII)V",                        org_mini_gl_GL_glVertexAttribPointer},
         {"org/mini/gl/GL",            "glLoadIdentity",             "()V",                              org_mini_gl_GL_glLoadIdentity},
         {"org/mini/gl/GL",            "glFrustum",                  "(DDDDDD)V",                        org_mini_gl_GL_glFrustum},
         {"org/mini/gl/GL",            "glShaderSource",             "(I[B)V",                           org_mini_gl_GL_glShaderSource},
