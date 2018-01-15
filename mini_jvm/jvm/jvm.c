@@ -228,7 +228,7 @@ s32 execute_jvm(c8 *p_classpath, c8 *p_mainclass, ArrayList *java_para) {
             //调用主方法
             if (java_debug) {
                 jthread_suspend(runtime);
-                jvm_printf("waiting for jdwp(port:8000) debug client connected...\n");
+                jvm_printf("waiting for jdwp(port:%d) debug client connected...\n", JDWP_TCP_PORT);
             }//jdwp 会启动调试器
             runtime->method = NULL;
             runtime->clazz = clazz;
