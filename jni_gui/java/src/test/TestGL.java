@@ -2,21 +2,27 @@ package test;
 
 import org.mini.gl.GL;
 import static org.mini.gl.GL.GL_AMBIENT;
+import static org.mini.gl.GL.GL_BLEND;
 import static org.mini.gl.GL.GL_COLOR_BUFFER_BIT;
 import static org.mini.gl.GL.GL_DEPTH_BUFFER_BIT;
-import static org.mini.gl.GL.GL_DEPTH_TEST;
 import static org.mini.gl.GL.GL_DIFFUSE;
 import static org.mini.gl.GL.GL_EMISSION;
 import static org.mini.gl.GL.GL_FRONT;
 import static org.mini.gl.GL.GL_LIGHT0;
 import static org.mini.gl.GL.GL_LIGHTING;
 import static org.mini.gl.GL.GL_MODELVIEW;
+import static org.mini.gl.GL.GL_ONE;
+import static org.mini.gl.GL.GL_ONE_MINUS_SRC_ALPHA;
 import static org.mini.gl.GL.GL_POSITION;
 import static org.mini.gl.GL.GL_SHININESS;
 import static org.mini.gl.GL.GL_SPECULAR;
+import static org.mini.gl.GL.GL_SRC_ALPHA;
+import static org.mini.gl.GL.GL_ZERO;
+import static org.mini.gl.GL.glBlendFunc;
 import static org.mini.gl.GL.glClear;
 import static org.mini.gl.GL.glColor3f;
 import static org.mini.gl.GL.glEnable;
+import static org.mini.gl.GL.glEnd;
 import static org.mini.gl.GL.glFlush;
 import static org.mini.gl.GL.glLightfv;
 import static org.mini.gl.GL.glMaterialf;
@@ -177,6 +183,7 @@ public class TestGL {
             float R = 0.2f;
             int n = 20;
             for (int i = 0; i < n; ++i) {
+                GL.glColor3f(1f / (i + 1), 1.f / (i + 1), 1.f / (i + 1));
                 GL.glVertex2f((float) (R * Math.cos(2 * Math.PI / n * i)), (float) (R * Math.sin(2 * Math.PI / n * i)));
             }
         }
@@ -185,6 +192,7 @@ public class TestGL {
         float x, factor = 0.1f;
         GL.glBegin(GL.GL_LINES);
         {
+            GL.glColor3f(1f, 1.f, 1.f);
             GL.glVertex2f(-1.0f, 0.0f);
             GL.glVertex2f(1.0f, 0.0f);         // 以上两个点可以画x轴
             GL.glVertex2f(0.0f, -1.0f);
@@ -199,6 +207,7 @@ public class TestGL {
             }
         }
         GL.glEnd();
+        Gutil.drawCood();
     }
     int day = 200; // day的变化：从0到359
     int w, h;
@@ -232,43 +241,44 @@ public class TestGL {
         }
         GL.glLoadMatrixf(view, 0);
     }
+    float[] sun_light_position = {0.0f, 0.0f, 0.0f, 1.0f};
+    float[] sun_light_ambient = {0.0f, 0.0f, 0.0f, 1.0f};
+    float[] sun_light_diffuse = {1.0f, 1.0f, 1.0f, 1.0f};
+    float[] sun_light_specular = {1.0f, 1.0f, 1.0f, 1.0f};
+    //
+    float[] sun_mat_ambient = {0.0f, 0.0f, 0.0f, 1.0f};
+    float[] sun_mat_diffuse = {0.0f, 0.0f, 0.0f, 1.0f};
+    float[] sun_mat_specular = {0.0f, 0.0f, 0.0f, 1.0f};
+    float[] sun_mat_emission = {0.5f, 0.0f, 0.0f, 1.0f};
+    float sun_mat_shininess = 0.0f;
 
     void draw2() {
 //        glLoadIdentity();
 //        glEnable(GL_DEPTH_TEST);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
         // 绘制红色的“太阳”
-            // 定义太阳光源，它是一种白色的光源
-    {
-        float[] sun_light_position = {0.0f, 0.0f, 0.0f, 1.0f};
-        float[] sun_light_ambient   = {0.0f, 0.0f, 0.0f, 1.0f};
-        float[] sun_light_diffuse   = {1.0f, 1.0f, 1.0f, 1.0f};
-        float[] sun_light_specular = {1.0f, 1.0f, 1.0f, 1.0f};
+        // 定义太阳光源，它是一种白色的光源
+        {
 
-        glLightfv(GL_LIGHT0, GL_POSITION, sun_light_position,0);
-        glLightfv(GL_LIGHT0, GL_AMBIENT,   sun_light_ambient,0);
-        glLightfv(GL_LIGHT0, GL_DIFFUSE,   sun_light_diffuse,0);
-        glLightfv(GL_LIGHT0, GL_SPECULAR, sun_light_specular,0);
+            glLightfv(GL_LIGHT0, GL_POSITION, sun_light_position, 0);
+            glLightfv(GL_LIGHT0, GL_AMBIENT, sun_light_ambient, 0);
+            glLightfv(GL_LIGHT0, GL_DIFFUSE, sun_light_diffuse, 0);
+            glLightfv(GL_LIGHT0, GL_SPECULAR, sun_light_specular, 0);
 
-        glEnable(GL_LIGHT0);
-        glEnable(GL_LIGHTING);
-//        glEnable(GL_DEPTH_TEST);
-    }
-     // 定义太阳的材质并绘制太阳
-    {
-        float[] sun_mat_ambient   = {0.0f, 0.0f, 0.0f, 1.0f};
-        float[] sun_mat_diffuse   = {0.0f, 0.0f, 0.0f, 1.0f};
-        float[] sun_mat_specular = {0.0f, 0.0f, 0.0f, 1.0f};
-        float[] sun_mat_emission = {0.5f, 0.0f, 0.0f, 1.0f};
-        float sun_mat_shininess   = 0.0f;
+            glEnable(GL_LIGHT0);
+            glEnable(GL_LIGHTING);
+//            glEnable(GL_DEPTH_TEST);
+        }
+        // 定义太阳的材质并绘制太阳
+        {
 
-        glMaterialfv(GL_FRONT, GL_AMBIENT,    sun_mat_ambient,0);
-        glMaterialfv(GL_FRONT, GL_DIFFUSE,    sun_mat_diffuse,0);
-        glMaterialfv(GL_FRONT, GL_SPECULAR,   sun_mat_specular,0);
-        glMaterialfv(GL_FRONT, GL_EMISSION,   sun_mat_emission,0);
-        glMaterialf (GL_FRONT, GL_SHININESS, sun_mat_shininess);
+            glMaterialfv(GL_FRONT, GL_AMBIENT, sun_mat_ambient, 0);
+            glMaterialfv(GL_FRONT, GL_DIFFUSE, sun_mat_diffuse, 0);
+            glMaterialfv(GL_FRONT, GL_SPECULAR, sun_mat_specular, 0);
+            glMaterialfv(GL_FRONT, GL_EMISSION, sun_mat_emission, 0);
+            glMaterialf(GL_FRONT, GL_SHININESS, sun_mat_shininess);
 
-    }
+        }
 //        glutSolidSphere(69600000, 20, 20);
         // 绘制蓝色的“地球”
         sun.drawSphere();
@@ -283,10 +293,24 @@ public class TestGL {
         glTranslatef(38000000f, 0.0f, 0.0f);
 //        glutSolidSphere(4345000, 20, 20);
         moon.drawSphere();
-
+        glEnd();
 //        day++;
         glFlush();
     }
+
+    void draw3() {
+        glEnable(GL_BLEND);
+        glBlendFunc(GL_ONE, GL_ZERO);
+        glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+//        glBlendFunc(GL_ONE, GL_ONE);
+
+        GL.glColor4f(1, 0, 0, 0.5f);
+        GL.glRectf(-1f, -1, 0.5f, 0.5f);
+        GL.glColor4f(0, 1, 0, 0.5f);
+        GL.glRectf(-0.5f, -0.5f, 1, 1);
+    }
+
+    int test;
 
     void t1() {
         Glfw.glfwInit();
@@ -304,18 +328,38 @@ public class TestGL {
             h = Glfw.glfwGetFramebufferSizeH(win);
             System.out.println("w=" + w + "  ,h=" + h);
 
-            init();
+            test = 0;
+            switch (test) {
+                case 2:
+                    init();
+                    break;
+            }
             long last = System.currentTimeMillis(), now;
             int count = 0;
             while (!Glfw.glfwWindowShouldClose(win)) {
 
-                draw2();
+                int sleep = 100;
+                switch (test) {
+                    case 0:
+                        draw0();
+                        break;
+                    case 1:
+                        draw1();
+                        break;
+                    case 2:
+                        draw2();
+                        sleep = 1000;
+                        break;
+                    case 3:
+                        draw3();
+                        break;
+                }
 
                 Glfw.glfwPollEvents();
                 Glfw.glfwSwapBuffers(win);
 
                 try {
-                    Thread.sleep(1000);
+                    Thread.sleep(sleep);
                 } catch (InterruptedException ex) {
                 }
                 count++;

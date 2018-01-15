@@ -9567,7 +9567,7 @@ public class GL {
     /*
 		glDepthFunc((GLenum)func);
      */
-    public static native void glDepthMask(boolean flag);
+    public static native void glDepthMask(int flag);
 
     /*
 		glDepthMask((GLboolean)flag);
@@ -9722,12 +9722,12 @@ public class GL {
     /*
 		glCallList((GLuint)list);
      */
-    public static native void glCallLists(int n, int type, Buffer lists, int listsByteOffset);
+    public static native void glCallLists(int n, int type, Object lists, int listsOffset);
 
     /*
-		glCallLists((GLsizei)n, (GLenum)type, (const GLvoid*)(lists + listsByteOffset));
+		glCallLists((GLsizei)n, (GLenum)type, (const GLvoid*)(lists + listsOffset));
      */
-    public static native void glCallLists(int n, int type, long lists);
+//    public static native void glCallLists(int n, int type, long lists);
 
     /*
 		glCallLists((GLsizei)n, (GLenum)type, (const GLvoid*)lists);
@@ -10157,162 +10157,162 @@ public class GL {
     /*
 		glColor4us((GLushort)red, (GLushort)green, (GLushort)blue, (GLushort)alpha);
      */
-    public static native void glColor3bv(Buffer v, int offset);
+    public static native void glColor3bv(byte[] v, int offset);
 
     /*
 		glColor3bv((const GLbyte*)(v + offset));
      */
-    public static native void glColor3bv(long v);
+//    public static native void glColor3bv(long v);
 
     /*
 		glColor3bv((const GLbyte*)v);
      */
-    public static native void glColor3dv(Buffer v, int offset);
+    public static native void glColor3dv(double[] v, int offset);
 
     /*
 		glColor3dv((const GLdouble*)(v + offset));
      */
-    public static native void glColor3dv(long v);
+//    public static native void glColor3dv(long v);
 
     /*
 		glColor3dv((const GLdouble*)v);
      */
-    public static native void glColor3fv(Buffer v, int offset);
+    public static native void glColor3fv(float[] v, int offset);
 
     /*
 		glColor3fv((const GLfloat*)(v + offset));
      */
-    public static native void glColor3fv(long v);
+//    public static native void glColor3fv(long v);
 
     /*
 		glColor3fv((const GLfloat*)v);
      */
-    public static native void glColor3iv(Buffer v, int offset);
+    public static native void glColor3iv(int[] v, int offset);
 
     /*
 		glColor3iv((const GLint*)(v + offset));
      */
-    public static native void glColor3iv(long v);
+//    public static native void glColor3iv(long v);
 
     /*
 		glColor3iv((const GLint*)v);
      */
-    public static native void glColor3sv(Buffer v, int offset);
+    public static native void glColor3sv(short[] v, int offset);
 
     /*
 		glColor3sv((const GLshort*)(v + offset));
      */
-    public static native void glColor3sv(long v);
+//    public static native void glColor3sv(long v);
 
     /*
 		glColor3sv((const GLshort*)v);
      */
-    public static native void glColor3ubv(Buffer v, int offset);
+    public static native void glColor3ubv(byte[] v, int offset);
 
     /*
 		glColor3ubv((const GLubyte*)(v + offset));
      */
-    public static native void glColor3ubv(long v);
+//    public static native void glColor3ubv(long v);
 
     /*
 		glColor3ubv((const GLubyte*)v);
      */
-    public static native void glColor3uiv(Buffer v, int offset);
+    public static native void glColor3uiv(int[] v, int offset);
 
     /*
 		glColor3uiv((const GLuint*)(v + offset));
      */
-    public static native void glColor3uiv(long v);
+//    public static native void glColor3uiv(long v);
 
     /*
 		glColor3uiv((const GLuint*)v);
      */
-    public static native void glColor3usv(Buffer v, int offset);
+    public static native void glColor3usv(short[] v, int offset);
 
     /*
 		glColor3usv((const GLushort*)(v + offset));
      */
-    public static native void glColor3usv(long v);
+//    public static native void glColor3usv(long v);
 
     /*
 		glColor3usv((const GLushort*)v);
      */
-    public static native void glColor4bv(Buffer v, int offset);
+    public static native void glColor4bv(byte[] v, int offset);
 
     /*
 		glColor4bv((const GLbyte*)(v + offset));
      */
-    public static native void glColor4bv(long v);
+//    public static native void glColor4bv(long v);
 
     /*
 		glColor4bv((const GLbyte*)v);
      */
-    public static native void glColor4dv(Buffer v, int offset);
+    public static native void glColor4dv(double[] v, int offset);
 
     /*
 		glColor4dv((const GLdouble*)(v + offset));
      */
-    public static native void glColor4dv(long v);
+//    public static native void glColor4dv(long v);
 
     /*
 		glColor4dv((const GLdouble*)v);
      */
-    public static native void glColor4fv(Buffer v, int offset);
+    public static native void glColor4fv(float[] v, int offset);
 
     /*
 		glColor4fv((const GLfloat*)(v + offset));
      */
-    public static native void glColor4fv(long v);
+//    public static native void glColor4fv(long v);
 
     /*
 		glColor4fv((const GLfloat*)v);
      */
-    public static native void glColor4iv(Buffer v, int offset);
+    public static native void glColor4iv(int[] v, int offset);
 
     /*
 		glColor4iv((const GLint*)(v + offset));
      */
-    public static native void glColor4iv(long v);
+//    public static native void glColor4iv(long v);
 
     /*
 		glColor4iv((const GLint*)v);
      */
-    public static native void glColor4sv(Buffer v, int offset);
+    public static native void glColor4sv(short[] v, int offset);
 
     /*
 		glColor4sv((const GLshort*)(v + offset));
      */
-    public static native void glColor4sv(long v);
+//    public static native void glColor4sv(long v);
 
     /*
 		glColor4sv((const GLshort*)v);
      */
-    public static native void glColor4ubv(Buffer v, int offset);
+    public static native void glColor4ubv(byte[] v, int offset);
 
     /*
 		glColor4ubv((const GLubyte*)(v + offset));
      */
-    public static native void glColor4ubv(long v);
+//    public static native void glColor4ubv(long v);
 
     /*
 		glColor4ubv((const GLubyte*)v);
      */
-    public static native void glColor4uiv(Buffer v, int offset);
+    public static native void glColor4uiv(int[] v, int offset);
 
     /*
 		glColor4uiv((const GLuint*)(v + offset));
      */
-    public static native void glColor4uiv(long v);
+//    public static native void glColor4uiv(long v);
 
     /*
 		glColor4uiv((const GLuint*)v);
      */
-    public static native void glColor4usv(Buffer v, int offset);
+    public static native void glColor4usv(short[] v, int offset);
 
     /*
 		glColor4usv((const GLushort*)(v + offset));
      */
-    public static native void glColor4usv(long v);
+//    public static native void glColor4usv(long v);
 
     /*
 		glColor4usv((const GLushort*)v);
@@ -10907,27 +10907,27 @@ public class GL {
     /*
 		glMaterialiv((GLenum)face, (GLenum)pname, (const GLint*)(params + paramsOffset));
      */
-    public static native void glMaterialiv(int face, int pname, long params);
+//    public static native void glMaterialiv(int face, int pname, long params);
 
     /*
 		glMaterialiv((GLenum)face, (GLenum)pname, (const GLint*)params);
      */
-    public static native void glGetMaterialfv(int face, int pname, Buffer params, int paramsOffset);
+    public static native void glGetMaterialfv(int face, int pname, float[] params, int paramsOffset);
 
     /*
 		glGetMaterialfv((GLenum)face, (GLenum)pname, (GLfloat*)(params + paramsOffset));
      */
-    public static native void glGetMaterialfv(int face, int pname, long params);
+//    public static native void glGetMaterialfv(int face, int pname, long params);
 
     /*
 		glGetMaterialfv((GLenum)face, (GLenum)pname, (GLfloat*)params);
      */
-    public static native void glGetMaterialiv(int face, int pname, Buffer params, int paramsOffset);
+    public static native void glGetMaterialiv(int face, int pname, int[] params, int paramsOffset);
 
     /*
 		glGetMaterialiv((GLenum)face, (GLenum)pname, (GLint*)(params + paramsOffset));
      */
-    public static native void glGetMaterialiv(int face, int pname, long params);
+//    public static native void glGetMaterialiv(int face, int pname, long params);
 
     /*
 		glGetMaterialiv((GLenum)face, (GLenum)pname, (GLint*)params);

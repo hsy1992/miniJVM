@@ -5,6 +5,11 @@
  */
 package org.mini.glfw.utils;
 
+import org.mini.gl.GL;
+import static org.mini.gl.GL.GL_LINES;
+import static org.mini.gl.GL.glBegin;
+import static org.mini.gl.GL.glEnd;
+
 /**
  *
  * @author gust
@@ -94,4 +99,23 @@ public class Gutil {
     static public native float[] mat4x4_perspective(float[] rm, float y_fov, float aspect, float near, float far);
 
     static public native float[] mat4x4_look_at(float[] rm, float[] vec3_eye, float[] vec3_center, float[] vec3_up);
+
+    static public void drawCood() {
+//        GL.glPointSize(5.f);
+        glBegin(GL_LINES);
+        GL.glColor3f(1.f, 0, 0);
+        GL.glVertex3f(0, 0, 0);
+        GL.glVertex3f(1, 0, 0);
+        glEnd();
+        glBegin(GL_LINES);
+        GL.glColor3f(0, 1.f, 0);
+        GL.glVertex3f(0, 0, 0);
+        GL.glVertex3f(0, 1, 0);
+        glEnd();
+        glBegin(GL_LINES);
+        GL.glColor3f(0, 0, 1.f);
+        GL.glVertex3f(0, 0, 0);
+        GL.glVertex3f(0, 0, 1);
+        glEnd();
+    }
 }
