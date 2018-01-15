@@ -1,5 +1,6 @@
 package test;
 
+import org.mini.gl.GL;
 import static org.mini.gl.GL.GL_AMBIENT;
 import static org.mini.gl.GL.GL_AMBIENT_AND_DIFFUSE;
 import static org.mini.gl.GL.GL_BLEND;
@@ -9,28 +10,35 @@ import static org.mini.gl.GL.GL_DEPTH_TEST;
 import static org.mini.gl.GL.GL_DIFFUSE;
 import static org.mini.gl.GL.GL_EMISSION;
 import static org.mini.gl.GL.GL_FALSE;
-import static org.mini.gl.GL.GL_FRONT;
 import static org.mini.gl.GL.GL_LIGHT0;
 import static org.mini.gl.GL.GL_LIGHTING;
 import static org.mini.gl.GL.GL_ONE_MINUS_SRC_ALPHA;
 import static org.mini.gl.GL.GL_POSITION;
+import static org.mini.gl.GL.GL_QUADS;
 import static org.mini.gl.GL.GL_SHININESS;
+import static org.mini.gl.GL.GL_SMOOTH;
 import static org.mini.gl.GL.GL_SPECULAR;
 import static org.mini.gl.GL.GL_SRC_ALPHA;
 import static org.mini.gl.GL.GL_TRUE;
+import static org.mini.gl.GL.glBegin;
 import static org.mini.gl.GL.glBlendFunc;
 import static org.mini.gl.GL.glClear;
 import static org.mini.gl.GL.glDepthMask;
 import static org.mini.gl.GL.glEnable;
+import static org.mini.gl.GL.glEnd;
 import static org.mini.gl.GL.glLightfv;
 import static org.mini.gl.GL.glMaterialf;
 import static org.mini.gl.GL.glMaterialfv;
+import static org.mini.gl.GL.glNormal3f;
 import static org.mini.gl.GL.glPopMatrix;
 import static org.mini.gl.GL.glPushMatrix;
 import static org.mini.gl.GL.glTranslatef;
+import static org.mini.gl.GL.glVertex3f;
 import org.mini.glfw.Glfw;
 import org.mini.glfw.GlfwCallbackAdapter;
 import org.mini.glfw.utils.Gutil;
+import static org.mini.glfw.utils.Gutil.vec_mul_cross;
+import static org.mini.glfw.utils.Gutil.vec_sub;
 
 /*
  * To change this license header, choose License Headers in Project Properties.
@@ -46,6 +54,7 @@ public class Alpha {
     boolean exit = false;
     long curWin;
     int mx, my;
+    boolean rotate = true;
 
     class CallBack extends GlfwCallbackAdapter {
 
@@ -55,6 +64,17 @@ public class Alpha {
             if (key == Glfw.GLFW_KEY_ESCAPE && action == Glfw.GLFW_PRESS) {
                 Glfw.glfwSetWindowShouldClose(window, Glfw.GLFW_TRUE);
             }
+            if (key == Glfw.GLFW_KEY_V) {
+                if (mods == Glfw.GLFW_MOD_CONTROL) {
+
+                    String string = Glfw.glfwGetClipboardString(window);
+                    if (string != null) {
+                        System.out.println("Clipboard contains " + string);
+                    } else {
+                        System.out.println("Clipboard does not contain a string\n");
+                    }
+                }
+            }
         }
 
         @Override
@@ -63,6 +83,18 @@ public class Alpha {
                 String bt = button == Glfw.GLFW_MOUSE_BUTTON_LEFT ? "LEFT" : button == Glfw.GLFW_MOUSE_BUTTON_2 ? "RIGHT" : "OTHER";
                 String press = pressed ? "pressed" : "released";
                 System.out.println(bt + " " + mx + " " + my + "  " + press);
+            }
+            if (pressed) {
+                rotate = false;
+            } else {
+                rotate = true;
+            }
+        }
+
+        @Override
+        public void drop(long window, int count, String[] paths) {
+            for (int i = 0; i < count; i++) {
+                System.out.println(i + " " + paths[i]);
             }
         }
 
@@ -89,7 +121,6 @@ public class Alpha {
         }
     }
 
-   
     int w, h;
 
     void t1() {
@@ -144,7 +175,7 @@ public class Alpha {
     //===========================================================
     //===========================================================
 
-    static float light_position[] = {1.0f, 1.0f, -1.0f, 1.0f};
+    static float light_position[] = {3.0f, 3.0f, -3.0f, 1.0f};
     static float light_ambient[] = {0.2f, 0.2f, 0.2f, 1.0f};
     static float light_diffuse[] = {1.0f, 1.0f, 1.0f, 1.0f};
     static float light_specular[] = {1.0f, 1.0f, 1.0f, 1.0f};
@@ -160,15 +191,15 @@ public class Alpha {
         glEnable(GL_LIGHTING);
         glEnable(GL_DEPTH_TEST);
     }
-    static float mat_specular[] = {0.0f, 0.0f, 0.0f, 1.0f};
+    static float mat_specular[] = {0.3f, 0.3f, 0.3f, 1.0f};
     static float mat_emission[] = {0.0f, 0.0f, 0.0f, 1.0f};
 
     void setMatirial(float[] mat_diffuse, float mat_shininess) {
 
-        glMaterialfv(GL_FRONT, GL_AMBIENT_AND_DIFFUSE, mat_diffuse, 0);
-        glMaterialfv(GL_FRONT, GL_SPECULAR, mat_specular, 0);
-        glMaterialfv(GL_FRONT, GL_EMISSION, mat_emission, 0);
-        glMaterialf(GL_FRONT, GL_SHININESS, mat_shininess);
+        glMaterialfv(GL.GL_FRONT, GL_AMBIENT_AND_DIFFUSE, mat_diffuse, 0);
+        glMaterialfv(GL.GL_FRONT, GL_SPECULAR, mat_specular, 0);
+        glMaterialfv(GL.GL_FRONT, GL_EMISSION, mat_emission, 0);
+        glMaterialf(GL.GL_FRONT, GL_SHININESS, mat_shininess);
     }
 
     static float red_color[] = {1.0f, 0.0f, 0.0f, 1.0f};
@@ -179,6 +210,9 @@ public class Alpha {
     Ball blue = new Ball(0.2f, 8, Ball.SOLID);
     Ball green = new Ball(0.15f, 8, Ball.SOLID);
 
+    float cube_angel = 0.f;
+    Cube cube = new Cube(0.1f, 0.1f, 0.1f);
+
     void draw2() {
         // 定义一些材质颜色
 
@@ -188,7 +222,7 @@ public class Alpha {
         // 启动混合并设置混合因子
         glEnable(GL_BLEND);
         glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-
+        GL.glShadeModel(GL_SMOOTH);
         // 设置光源
         setLight();
 
@@ -197,7 +231,7 @@ public class Alpha {
         glPushMatrix();
         glTranslatef(0.0f, 0.0f, 0.5f);
 //    glutSolidSphere(0.3, 30, 30);
-        red.drawSphere();
+        red.draw();
         glPopMatrix();
 
         // 下面将绘制半透明物体了，因此将深度缓冲设置为只读
@@ -208,7 +242,7 @@ public class Alpha {
         glPushMatrix();
         glTranslatef(0.2f, 0.0f, -0.5f);
 //    glutSolidSphere(0.2, 30, 30);
-        blue.drawSphere();
+        blue.draw();
         glPopMatrix();
 
         // 以(0.1, 0, 0)为中心，绘制一个半径为.15的半透明绿色球体（在前两个球体之间）
@@ -216,11 +250,25 @@ public class Alpha {
         glPushMatrix();
         glTranslatef(0.1f, 0, 0);
 //    glutSolidSphere(0.15, 30, 30);
-        green.drawSphere();
+        green.draw();
         glPopMatrix();
 
         // 完成半透明物体的绘制，将深度缓冲区恢复为可读可写的形式
         glDepthMask(GL_TRUE);
+
+        setMatirial(red_color, 30.0f);
+        glPushMatrix();
+        glTranslatef(-.5f, -0.5f, 0.5f);
+        if (rotate) {
+            cube_angel += 10f;     //递增旋转角度计数器
+        }
+        if (cube_angel >= 360.0f) //如果已旋转一周,复位计数器
+        {
+            cube_angel = 0.0f;
+        }
+        GL.glRotatef(cube_angel, 0.3f, 0.3f, 0.3f);
+        cube.draw();
+        glPopMatrix();
 
     }
 

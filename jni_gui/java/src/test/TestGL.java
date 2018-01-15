@@ -32,6 +32,8 @@ import static org.mini.gl.GL.glTranslatef;
 import org.mini.glfw.Glfw;
 import org.mini.glfw.GlfwCallbackAdapter;
 import org.mini.glfw.utils.Gutil;
+import static org.mini.glfw.utils.Gutil.vec_mul_cross;
+import static org.mini.glfw.utils.Gutil.vec_sub;
 
 /*
  * To change this license header, choose License Headers in Project Properties.
@@ -281,18 +283,18 @@ public class TestGL {
         }
 //        glutSolidSphere(69600000, 20, 20);
         // 绘制蓝色的“地球”
-        sun.drawSphere();
+        sun.draw();
         glColor3f(0.0f, 0.0f, 1.0f);
         GL.glRotatef((float) (day / 360.0 * 360.0), 0.0f, 0.0f, -1.0f);
         glTranslatef(150000000f, 0.0f, 0.0f);
 //        glutSolidSphere(15945000, 20, 20);
-        earth.drawSphere();
+        earth.draw();
         // 绘制黄色的“月亮”
         glColor3f(1.0f, 1.0f, 0.0f);
         GL.glRotatef((float) (day / 30.0 * 360.0 - day / 360.0 * 360.0), 0.0f, 0.0f, -1.0f);
         glTranslatef(38000000f, 0.0f, 0.0f);
 //        glutSolidSphere(4345000, 20, 20);
-        moon.drawSphere();
+        moon.draw();
         glEnd();
 //        day++;
         glFlush();
@@ -308,6 +310,22 @@ public class TestGL {
         GL.glRectf(-1f, -1, 0.5f, 0.5f);
         GL.glColor4f(0, 1, 0, 0.5f);
         GL.glRectf(-0.5f, -0.5f, 1, 1);
+    }
+
+    void testNormal() {
+        float[] p0 = {1, 1, 0};
+        float[] p1 = {0, 0, 0};
+        float[] p2 = {-1, 1, 0};
+
+        float[] tmp0 = {0, 0, 0};
+        float[] tmp1 = {0, 0, 0};
+        float[] tmp2 = {0, 0, 0};
+        vec_mul_cross(tmp2, vec_sub(tmp0, p1, p0), vec_sub(tmp1, p2, p1));
+        //Gutil.vec_normal(tmp0, tmp2);
+        tmp0[0] = tmp2[0];
+        tmp0[1] = tmp2[1];
+        tmp0[2] = tmp2[2];
+        System.out.println(tmp0[0] + "," + tmp0[1] + "," + tmp0[2]);
     }
 
     int test;

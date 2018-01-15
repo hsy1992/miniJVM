@@ -63,4 +63,8 @@ public class GlfwCallbackAdapter implements GlfwCallback {
     @Override
     public void scroll(long window, double scrollX, double scrollY) {
     }
+    
+    @Override
+    public void drop(long window, int count, String[] paths){
+    }
 }

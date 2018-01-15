@@ -10862,22 +10862,22 @@ public class GL {
     /*
 		glLightModeli((GLenum)pname, (GLint)param);
      */
-    public static native void glLightModelfv(int pname, Buffer params, int paramsOffset);
+    public static native void glLightModelfv(int pname, float[] params, int paramsOffset);
 
     /*
 		glLightModelfv((GLenum)pname, (const GLfloat*)(params + paramsOffset));
      */
-    public static native void glLightModelfv(int pname, long params);
+//    public static native void glLightModelfv(int pname, long params);
 
     /*
 		glLightModelfv((GLenum)pname, (const GLfloat*)params);
      */
-    public static native void glLightModeliv(int pname, Buffer params, int paramsOffset);
+    public static native void glLightModeliv(int pname, int[] params, int paramsOffset);
 
     /*
 		glLightModeliv((GLenum)pname, (const GLint*)(params + paramsOffset));
      */
-    public static native void glLightModeliv(int pname, long params);
+//    public static native void glLightModeliv(int pname, long params);
 
     /*
 		glLightModeliv((GLenum)pname, (const GLint*)params);

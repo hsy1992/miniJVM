@@ -106,4 +106,11 @@ public class GlfwCallbacks implements GlfwCallback {
             processors.get(i).scroll(window, scrollX, scrollY);
         }
     }
+
+    @Override
+    public void drop(long window, int count, String[] paths) {
+        for (int i = 0, n = processors.size(); i < n; i++) {
+            processors.get(i).drop(window, count, paths);
+        }
+    }
 }

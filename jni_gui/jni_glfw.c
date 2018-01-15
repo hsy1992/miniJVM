@@ -13,10 +13,12 @@ typedef struct _GlobeRefer GlobeRefer;
 
 struct _GlobeRefer {
     JniEnv *env;
+    Runtime *runtime;
     Instance *glfw_callback;
     MethodInfo *_callback_error;
     MethodInfo *_callback_key;
     MethodInfo *_callback_character;
+    MethodInfo *_callback_drop;
     MethodInfo *_button_callback_mouse;
     MethodInfo *_callback_cursor_pos;
     MethodInfo *_callback_cursor_enter;
@@ -27,7 +29,6 @@ struct _GlobeRefer {
     MethodInfo *_callback_window_iconify;
     MethodInfo *_callback_window_refresh;
     MethodInfo *_callback_framebuffer_size;
-    Runtime *runtime;
 };
 GlobeRefer refers;
 
@@ -47,6 +48,14 @@ c8 *jbytearr2c8arr(JniEnv *env, Instance *jbytearr) {
     memcpy(arr, jbytearr->arr_body, jbytearr->arr_length);
     arr[jbytearr->arr_length] = 0;
     return arr;
+}
+
+Instance *createJavaString(Runtime *runtime, c8 *cstr) {
+    JniEnv *env = runtime->jnienv;
+    Utf8String *ustr = env->utf8_create_part_c(cstr, 0, strlen(cstr));
+    Instance *jstr = env->jstring_create(ustr, runtime);
+    env->utf8_destory(ustr);
+    return jstr;
 }
 
 /* ==============================   jni callback =================================*/
@@ -87,6 +96,25 @@ static void _callback_character(GLFWwindow *window, u32 ch) {
     }
 }
 
+static void _callback_drop(GLFWwindow *window, s32 count, const c8 **cstrs) {
+    if (refers._callback_drop) {
+        JniEnv *env = refers.env;
+        env->push_ref(refers.runtime->stack, refers.glfw_callback);
+        env->push_long(refers.runtime->stack, (s64) (intptr_t) window);
+        env->push_int(refers.runtime->stack, count);
+        Utf8String *cls = env->utf8_create_part_c(STR_CLASS_JAVA_LANG_STRING, 0, strlen(STR_CLASS_JAVA_LANG_STRING));
+        Instance *jstrs = env->jarray_create(count, 0, cls);
+        env->utf8_destory(cls);
+        s32 i;
+        Long2Double l2d;
+        for (i = 0; i < count; i++) {
+            l2d.r = createJavaString(refers.runtime, (c8 *) cstrs[i]);
+            env->jarray_set_field(jstrs, i, &l2d);
+        }
+        env->push_ref(refers.runtime->stack, jstrs);
+        env->execute_method(refers._callback_drop, refers.runtime, refers.glfw_callback->mb.clazz);
+    }
+}
 
 void _button_callback_mouse(GLFWwindow *window, int button, int action, int mods) {
     if (refers._button_callback_mouse) {
@@ -645,6 +673,7 @@ int org_mini_glfw_Glfw_glfwSetCallbackJni(Runtime *runtime, Class *clazz) {
     glfwSetErrorCallback(_callback_error);
     glfwSetKeyCallback(window, _callback_key);
     glfwSetCharCallback(window, _callback_character);
+    glfwSetDropCallback(window, _callback_drop);
     glfwSetMouseButtonCallback(window, _button_callback_mouse);
     glfwSetCursorPosCallback(window, _callback_cursor_pos);
     glfwSetCursorEnterCallback(window, _callback_cursor_enter);
@@ -683,6 +712,16 @@ int org_mini_glfw_Glfw_glfwSetCallbackJni(Runtime *runtime, Class *clazz) {
         Utf8String *name = env->utf8_create_part_c(name_s, 0, strlen(name_s));
         Utf8String *type = env->utf8_create_part_c(type_s, 0, strlen(type_s));
         refers._callback_character =
+                env->find_methodInfo_by_name(refers.glfw_callback->mb.clazz->name, name, type);
+        env->utf8_destory(name);
+        env->utf8_destory(type);
+    }
+    {
+        name_s = "drop";
+        type_s = "(JI[Ljava/lang/String;)V";
+        Utf8String *name = env->utf8_create_part_c(name_s, 0, strlen(name_s));
+        Utf8String *type = env->utf8_create_part_c(type_s, 0, strlen(type_s));
+        refers._callback_drop =
                 env->find_methodInfo_by_name(refers.glfw_callback->mb.clazz->name, name, type);
         env->utf8_destory(name);
         env->utf8_destory(type);
@@ -939,6 +978,22 @@ int org_mini_glfw_Glfw_glfwSetWindowAspectRatio(Runtime *runtime, Class *clazz) 
     s32 numer = env->localvar_getInt(runtime, pos++);
     s32 denom = env->localvar_getInt(runtime, pos++);
     glfwSetWindowAspectRatio(window, numer, denom);
+    return 0;
+}
+
+int org_mini_glfw_Glfw_glfwGetClipboardString(Runtime *runtime, Class *clazz) {
+    JniEnv *env = runtime->jnienv;
+    s32 pos = 0;
+    GLFWwindow *window = (__refer) (intptr_t) getParaLong(runtime, pos);
+    c8 *cstr = (c8 *) glfwGetClipboardString(window);
+    if (cstr) {
+        Utf8String *ustr = env->utf8_create_part_c(cstr, 0, strlen(cstr));
+        Instance *jstr = env->jstring_create(ustr, runtime);
+        env->utf8_destory(ustr);
+        env->push_ref(runtime->stack, jstr);
+    } else {
+        env->push_ref(runtime->stack, NULL);
+    }
     return 0;
 }
 
@@ -1978,6 +2033,25 @@ int org_mini_gl_GL_glRectf(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
+int org_mini_gl_GL_glLightModelf(Runtime *runtime, Class *clazz) {
+    JniEnv *env = runtime->jnienv;
+    s32 pos = 0;
+    s32 pname = env->localvar_getInt(runtime, pos++);
+    Int2Float param;
+    param.i = env->localvar_getInt(runtime, pos++);
+    glLightModelf((GLenum) pname, (GLfloat) param.f);
+    return 0;
+}
+
+int org_mini_gl_GL_glLightModeli(Runtime *runtime, Class *clazz) {
+    JniEnv *env = runtime->jnienv;
+    s32 pos = 0;
+    s32 pname = env->localvar_getInt(runtime, pos++);
+    s32 param = env->localvar_getInt(runtime, pos++);
+    glLightModeli((GLenum) pname, (GLint) param);
+    return 0;
+}
+
 int org_mini_gl_GL_glLightfv(Runtime *runtime, Class *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
@@ -1987,6 +2061,18 @@ int org_mini_gl_GL_glLightfv(Runtime *runtime, Class *clazz) {
     s32 offset = env->localvar_getInt(runtime, pos++);
     offset *= env->data_type_bytes[arr->mb.arr_type_index];
     glLightfv((GLenum) light, (GLenum) pname, (const GLfloat *) (arr->arr_body + offset));
+    return 0;
+}
+
+int org_mini_gl_GL_glLightiv(Runtime *runtime, Class *clazz) {
+    JniEnv *env = runtime->jnienv;
+    s32 pos = 0;
+    s32 light = env->localvar_getInt(runtime, pos++);
+    s32 pname = env->localvar_getInt(runtime, pos++);
+    Instance *arr = env->localvar_getRefer(runtime, pos++);
+    s32 offset = env->localvar_getInt(runtime, pos++);
+    offset *= env->data_type_bytes[arr->mb.arr_type_index];
+    glLightiv((GLenum) light, (GLenum) pname, (const GLint *) (arr->arr_body + offset));
     return 0;
 }
 
@@ -2353,9 +2439,7 @@ int org_mini_gl_GL_glGetString(Runtime *runtime, Class *clazz) {
     s32 name = env->localvar_getInt(runtime, pos++);
     c8 *cstr = (c8 *) glGetString((GLenum) name);
     if (cstr) {
-        Utf8String *ustr = env->utf8_create_part_c(cstr, 0, strlen(cstr));
-        Instance *jstr = env->jstring_create(ustr, runtime);
-        env->utf8_destory(ustr);
+        Instance *jstr = createJavaString(runtime, cstr);
         env->push_ref(runtime->stack, jstr);
     } else {
         env->push_ref(runtime->stack, NULL);
@@ -2414,6 +2498,7 @@ static java_native_method method_test2_table[] = {
         {"org/mini/glfw/Glfw",        "glfwGetFramebufferSizeW",    "(J)I",                             org_mini_glfw_Glfw_glfwGetFramebufferSizeW},
         {"org/mini/glfw/Glfw",        "glfwGetFramebufferSizeH",    "(J)I",                             org_mini_glfw_Glfw_glfwGetFramebufferSizeH},
         {"org/mini/glfw/Glfw",        "glfwSetWindowAspectRatio",   "(JII)V",                           org_mini_glfw_Glfw_glfwSetWindowAspectRatio},
+        {"org/mini/glfw/Glfw",        "glfwGetClipboardString",     "(J)Ljava/lang/String;",            org_mini_glfw_Glfw_glfwGetClipboardString},
         {"org/mini/gl/GL",            "init",                       "()V",                              org_mini_gl_GL_init},
         {"org/mini/gl/GL",            "glViewport",                 "(IIII)V",                          org_mini_gl_GL_glViewport},
         {"org/mini/gl/GL",            "glMatrixMode",               "(I)V",                             org_mini_gl_GL_glMatrixMode},
@@ -2517,6 +2602,7 @@ static java_native_method method_test2_table[] = {
         {"org/mini/gl/GL",            "glNormal3dv",                "([DI)V",                           org_mini_gl_GL_glNormal3dv},
         {"org/mini/gl/GL",            "glRectf",                    "(FFFF)V",                          org_mini_gl_GL_glRectf},
         {"org/mini/gl/GL",            "glLightfv",                  "(II[FI)V",                         org_mini_gl_GL_glLightfv},
+        {"org/mini/gl/GL",            "glLightiv",                  "(II[II)V",                         org_mini_gl_GL_glLightiv},
         {"org/mini/gl/GL",            "glMaterialf",                "(IIF)V",                           org_mini_gl_GL_glMaterialf},
         {"org/mini/gl/GL",            "glMateriali",                "(III)V",                           org_mini_gl_GL_glMateriali},
         {"org/mini/gl/GL",            "glMaterialfv",               "(II[FI)V",                         org_mini_gl_GL_glMaterialfv},

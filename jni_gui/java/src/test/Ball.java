@@ -1,14 +1,16 @@
-
 package test;
 
 import static java.lang.Math.cos;
 import static java.lang.Math.sin;
+import org.mini.gl.GL;
 import static org.mini.gl.GL.GL_LINE_LOOP;
 import static org.mini.gl.GL.GL_QUADS;
 import static org.mini.gl.GL.glBegin;
 import static org.mini.gl.GL.glEnd;
 import static org.mini.gl.GL.glVertex3f;
 import org.mini.glfw.utils.Gutil;
+import static org.mini.glfw.utils.Gutil.vec_mul_cross;
+import static org.mini.glfw.utils.Gutil.vec_sub;
 
 class Ball {
 
@@ -17,9 +19,6 @@ class Ball {
     public static final int SOLID = 3000;
     public static final int WIRE = 3001;
     final int x = 0, y = 1, z = 2;
-
-    float[] trans = new float[3];
-//typedef int int;
 
     class Point {
 
@@ -36,20 +35,9 @@ class Ball {
         mx = getPointMatrix(radius, slices);
     }
 
-    void translate(float tx, float ty, float tz) {
-        trans[x] = tx;
-        trans[y] = ty;
-        trans[z] = tz;
+    void setMode(int mode) {
+        this.mode = mode;
     }
-
-//    void reshape(int w, int h) {
-//        glViewport(0, 0, (int) w, (int) h);
-//        glMatrixMode(GL_PROJECTION);
-//        glLoadIdentity();
-//        glOrtho(0.0, 500, 0.0, 500, -500, 500);
-//        glMatrixMode(GL_MODELVIEW);
-//        glLoadIdentity();
-//    }
 
     int getPoint(float radius, float a, float b, float[] p) {
         p[x] = (float) (radius * sin(a * pi / 180.0f) * cos(b * pi / 180.0f));
@@ -57,6 +45,10 @@ class Ball {
         p[z] = (float) (radius * cos(a * pi / 180.0f));
         return 1;
     }
+
+    float[] tmp0 = {0, 0, 0};
+    float[] tmp1 = {0, 0, 0};
+    float[] tmp2 = {0, 0, 0};
 
     void drawSlice(float[] p1, float[] p2, float[] p3, float[] p4, int mode) {
         switch (mode) {
@@ -67,11 +59,9 @@ class Ball {
                 glBegin(GL_LINE_LOOP);
                 break;
         }
-        p1 = Gutil.vec_add(new float[3], p1, trans);
-        p2 = Gutil.vec_add(new float[3], p2, trans);
-        p3 = Gutil.vec_add(new float[3], p3, trans);
-        p4 = Gutil.vec_add(new float[3], p4, trans);
-        //glColor3f(1, 0, 0);
+        vec_mul_cross(tmp2, vec_sub(tmp0, p2, p1), vec_sub(tmp1, p3, p2));
+        Gutil.vec_normal(tmp0, tmp2);
+        GL.glNormal3fv(tmp2, 0);
         glVertex3f(p1[x], p1[y], p1[z]);
         glVertex3f(p2[x], p2[y], p2[z]);
         glVertex3f(p3[x], p3[y], p3[z]);
@@ -79,24 +69,26 @@ class Ball {
         glEnd();
     }
 
-    float[][] getPointMatrix(float radius, int slices) {
-        int i, j, w = 2 * slices, h = slices;
-        float a = 0.0f, b = 0.0f;
+    final float[][] getPointMatrix(float radius, int slices) {
+        int i, j;
+        float a, b;
         float hStep = 180.0f / (h - 1);
         float wStep = 360.0f / w;
         int length = w * h;
         float[][] matrix;
+        float[] vec3;
         matrix = new float[length][];
         for (a = 0.0f, i = 0; i < h; i++, a += hStep) {
             for (b = 0.0f, j = 0; j < w; j++, b += wStep) {
-                matrix[i * w + j] = new float[3];
-                getPoint(radius, a, b, matrix[i * w + j]);
+                vec3 = new float[3];
+                matrix[i * w + j] = vec3;
+                getPoint(radius, a, b, vec3);
             }
         }
         return matrix;
     }
 
-    public int drawSphere() {
+    public int draw() {
         int i = 0, j = 0;
         for (; i < h - 1; i++) {
             for (j = 0; j < w - 1; j++) {
@@ -104,7 +96,6 @@ class Ball {
             }
             drawSlice(mx[i * w + j], mx[i * w], mx[(i + 1) * w], mx[(i + 1) * w + j], mode);
         }
-
         return 1;
     }
 }
