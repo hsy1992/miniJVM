@@ -34,16 +34,16 @@ public class JniBuilder {
             "int ${PKG_NAME}${METHOD_NAME}(Runtime *runtime, Class *clazz) {\n"
             + "    JniEnv *env = runtime->jnienv;\n"
             + "    s32 pos = 0;\n"
-            + "    ${METHOD_BODY}\n"
-            + "    ${RETURN_TYPE}${METHOD_NAME}(${ARGV_LIST});\n"
+            + "    \n${GET_VAR}\n"
+            + "    ${RETURN_TYPE}${METHOD_NAME}(${NATIVE_ARGV});\n"
             + "    ${PUSH_RESULT}\n"
             + "    return 0;\n"
             + "}\n\n";
     String PKG_NAME = "${PKG_NAME}";
     String METHOD_NAME = "${METHOD_NAME}";
-    String METHOD_BODY = "${METHOD_BODY}";
+    String GET_VAR = "${GET_VAR}";
     String RETURN_TYPE = "${RETURN_TYPE}";
-    String ARGV_LIST = "${ARGV_LIST}";
+    String NATIVE_ARGV = "${NATIVE_ARGV}";
     String PUSH_RESULT = "${PUSH_RESULT}";
 
     String VOID = "void";
@@ -116,11 +116,54 @@ public class JniBuilder {
 
                     //process body
                     String varCode = "";
+                    String nativeArgvCode = "";
                     for (String argv : argvs) {
-                        String[] tmps = argv.split(" ");
-                        String argvType = tmps[0];
-                        String argvName = tmps[1];
+                        if (argv.length() == 0) {
+                            continue;
+                        }
+                        String[] tmps = argv.trim().split(" ");
+                        String argvType = tmps[0].trim();
+                        String argvName = tmps[1].trim();
+                        if ("int".equals(argvType)) {
+                            varCode += "    s32 " + argvName + " = env->localvar_getInt(runtime, pos++);\n";
+                            nativeArgvCode += nativeArgvCode.length() > 0 ? "," : "";
+                            nativeArgvCode += "(GLint)" + argvName;
+                        } else if ("short".equals(argvType)) {
+                            varCode += "    s32 " + argvName + " = env->localvar_getInt(runtime, pos++);\n";
+                            nativeArgvCode += nativeArgvCode.length() > 0 ? "," : "";
+                            nativeArgvCode += "(GLshort)" + argvName;
+                        } else if ("byte".equals(argvType)) {
+                            varCode += "    s32 " + argvName + " = env->localvar_getInt(runtime, pos++);\n";
+                            nativeArgvCode += nativeArgvCode.length() > 0 ? "," : "";
+                            nativeArgvCode += "(GLbyte)" + argvName;
+                        } else if ("boolean".equals(argvType)) {
+                            varCode += "    s32 " + argvName + " = env->localvar_getInt(runtime, pos++);\n";
+                            nativeArgvCode += nativeArgvCode.length() > 0 ? "," : "";
+                            nativeArgvCode += "(GLboolean)" + argvName;
+                        } else if ("long".equals(argvType)) {
+                            varCode += "    s64 " + argvName + " = getParaLong(runtime, pos);pos += 2;\n";
+                            nativeArgvCode += nativeArgvCode.length() > 0 ? "," : "";
+                            nativeArgvCode += "(GLlong)" + argvName;
+                        } else if ("float".equals(argvType)) {
+                            varCode += "    Int2Float " + argvName + ";" + argvName + ".i = env->localvar_getInt(runtime, pos++);\n";
+                            nativeArgvCode += nativeArgvCode.length() > 0 ? "," : "";
+                            nativeArgvCode += "(GLfloat)" + argvName;
+                        } else if ("double".equals(argvType)) {
+                            varCode += "    Long2Double " + argvName + ";" + argvName + ".l = getParaLong(runtime, pos);pos += 2;\n";
+                            nativeArgvCode += nativeArgvCode.length() > 0 ? "," : "";
+                            nativeArgvCode += "(GLdouble)" + argvName;
+                        } else if (argvType.indexOf("[]") > 0) {
+                            varCode += "    Instance * " + argvName + " = env->localvar_getRefer(runtime, pos++);\n";
+                            varCode += "    s32 offset = env->localvar_getInt(runtime, pos++);\n";
+                            varCode += "    offset *= env->data_type_bytes[arr->mb.arr_type_index];\n";
+                            nativeArgvCode += nativeArgvCode.length() > 0 ? "," : "";
+                            nativeArgvCode += "((const GLvoid *) (" + argvName + "->arr_body + offset)";
+                        } else {
+                            System.out.println("error " + lineNo + " argv type:" + returnType + " in :" + whole);
+                        }
                     }
+                    output = output.replace(GET_VAR, varCode);
+                    output = output.replace(NATIVE_ARGV, nativeArgvCode);
                     bw.write(output);
                 }
             }
