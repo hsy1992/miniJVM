@@ -127,37 +127,37 @@ public class JniBuilder {
                         if ("int".equals(argvType)) {
                             varCode += "    s32 " + argvName + " = env->localvar_getInt(runtime, pos++);\n";
                             nativeArgvCode += nativeArgvCode.length() > 0 ? "," : "";
-                            nativeArgvCode += "(GLint)" + argvName;
+                            nativeArgvCode += "(GLint) " + argvName;
                         } else if ("short".equals(argvType)) {
                             varCode += "    s32 " + argvName + " = env->localvar_getInt(runtime, pos++);\n";
                             nativeArgvCode += nativeArgvCode.length() > 0 ? "," : "";
-                            nativeArgvCode += "(GLshort)" + argvName;
+                            nativeArgvCode += "(GLshort) " + argvName;
                         } else if ("byte".equals(argvType)) {
                             varCode += "    s32 " + argvName + " = env->localvar_getInt(runtime, pos++);\n";
                             nativeArgvCode += nativeArgvCode.length() > 0 ? "," : "";
-                            nativeArgvCode += "(GLbyte)" + argvName;
+                            nativeArgvCode += "(GLbyte) " + argvName;
                         } else if ("boolean".equals(argvType)) {
                             varCode += "    s32 " + argvName + " = env->localvar_getInt(runtime, pos++);\n";
                             nativeArgvCode += nativeArgvCode.length() > 0 ? "," : "";
-                            nativeArgvCode += "(GLboolean)" + argvName;
+                            nativeArgvCode += "(GLboolean) " + argvName;
                         } else if ("long".equals(argvType)) {
                             varCode += "    s64 " + argvName + " = getParaLong(runtime, pos);pos += 2;\n";
                             nativeArgvCode += nativeArgvCode.length() > 0 ? "," : "";
-                            nativeArgvCode += "(GLlong)" + argvName;
+                            nativeArgvCode += "(GLlong) " + argvName;
                         } else if ("float".equals(argvType)) {
                             varCode += "    Int2Float " + argvName + ";" + argvName + ".i = env->localvar_getInt(runtime, pos++);\n";
                             nativeArgvCode += nativeArgvCode.length() > 0 ? "," : "";
-                            nativeArgvCode += "(GLfloat)" + argvName;
+                            nativeArgvCode += "(GLfloat) " + argvName;
                         } else if ("double".equals(argvType)) {
                             varCode += "    Long2Double " + argvName + ";" + argvName + ".l = getParaLong(runtime, pos);pos += 2;\n";
                             nativeArgvCode += nativeArgvCode.length() > 0 ? "," : "";
-                            nativeArgvCode += "(GLdouble)" + argvName;
+                            nativeArgvCode += "(GLdouble) " + argvName;
                         } else if (argvType.indexOf("[]") > 0) {
                             varCode += "    Instance * " + argvName + " = env->localvar_getRefer(runtime, pos++);\n";
                             varCode += "    s32 offset = env->localvar_getInt(runtime, pos++);\n";
                             varCode += "    offset *= env->data_type_bytes[arr->mb.arr_type_index];\n";
                             nativeArgvCode += nativeArgvCode.length() > 0 ? "," : "";
-                            nativeArgvCode += "((const GLvoid *) (" + argvName + "->arr_body + offset)";
+                            nativeArgvCode += "(const GLvoid *) (" + argvName + "->arr_body + offset)";
                         } else {
                             System.out.println("error " + lineNo + " argv type:" + returnType + " in :" + whole);
                         }
