@@ -131,7 +131,6 @@ s32 execute_jvm(c8 *p_classpath, c8 *p_mainclass, ArrayList *java_para) {
     open_log();
 
 
-
 #if _JVM_DEBUG_PROFILE
     instruct_profile = hashtable_create(DEFAULT_HASH_FUNC, DEFAULT_HASH_EQUALS_FUNC);
 #endif
@@ -227,7 +226,10 @@ s32 execute_jvm(c8 *p_classpath, c8 *p_mainclass, ArrayList *java_para) {
             s64 start = currentTimeMillis();
             jvm_printf("\n\n\n\n\n\n================================= main start ================================\n");
             //调用主方法
-            //if (java_debug)jthread_suspend(runtime);//jdwp 会启动调试器
+            if (java_debug) {
+                jthread_suspend(runtime);
+                jvm_printf("waiting for jdwp(port:8000) debug client connected...\n");
+            }//jdwp 会启动调试器
             runtime->method = NULL;
             runtime->clazz = clazz;
             ret = execute_method(main, runtime, clazz);

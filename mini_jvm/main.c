@@ -45,6 +45,8 @@ int main(int argc, char **argv) {
             if (strcmp(argv[i], "-cp") == 0 || strcmp(argv[i], "-classpath") == 0) {
                 classpath = argv[i + 1];
                 i++;
+            } else if (strcmp(argv[i], "-Xdebug") == 0) {
+                java_debug = 1;
             } else if (argv[i][0] == '-') {
                 //other jvm para
             } else if (main_name == NULL) {
@@ -54,8 +56,12 @@ int main(int argc, char **argv) {
             }
         }
     } else {
-//        classpath = "../../javalib/dist/minijvm_rt.jar;../../win_gui/gui_lib/dist/gui_lib.jar;./";
-//        main_name = "test/GuiTest";
+        java_debug = 1;
+//        classpath = "../../javalib/dist/minijvm_rt.jar;../../jni_gui/java/dist/gui_lib.jar;./";
+//        main_name = "test/Gears";
+//        main_name = "test/TestGL";
+//        main_name = "test/Shader";
+//        main_name = "test/Boing";
 
 //        classpath = "../../javalib/dist/minijvm_rt.jar;../../jni_test/java/dist/jni_test.jar;./";
 //        main_name = "test/JniTest";
