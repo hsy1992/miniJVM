@@ -1,5 +1,6 @@
 package test;
 
+import org.mini.gl.GL;
 import static org.mini.gl.GL.GL_ARRAY_BUFFER;
 import static org.mini.gl.GL.GL_COLOR_BUFFER_BIT;
 import static org.mini.gl.GL.GL_FALSE;
@@ -11,7 +12,6 @@ import static org.mini.gl.GL.GL_VERTEX_SHADER;
 import static org.mini.gl.GL.glAttachShader;
 import static org.mini.gl.GL.glBindBuffer;
 import static org.mini.gl.GL.glBindVertexArray;
-import static org.mini.gl.GL.glBufferData;
 import static org.mini.gl.GL.glClear;
 import static org.mini.gl.GL.glCompileShader;
 import static org.mini.gl.GL.glCreateProgram;
@@ -20,7 +20,6 @@ import static org.mini.gl.GL.glDrawArrays;
 import static org.mini.gl.GL.glEnableVertexAttribArray;
 import static org.mini.gl.GL.glGenBuffers;
 import static org.mini.gl.GL.glGenVertexArrays;
-import static org.mini.gl.GL.glGetError;
 import static org.mini.gl.GL.glLinkProgram;
 import static org.mini.gl.GL.glShaderSource;
 import static org.mini.gl.GL.glUseProgram;
@@ -134,7 +133,7 @@ public class Shader {
 
         glGenBuffers(NumBuffers, Buffers, 0);
         glBindBuffer(GL_ARRAY_BUFFER, Buffers[ArrayBuffer]);
-        glBufferData(GL_ARRAY_BUFFER, vertices.length * 4,
+        GL.glBufferData(GL_ARRAY_BUFFER, (long)(vertices.length * 4),
                 vertices, 0, GL_STATIC_DRAW);
 
         int vertex_shader, fragment_shader, program;
@@ -146,9 +145,9 @@ public class Shader {
                 + " {  \n"
                 + "     gl_Position = vPosition;  \n"
                 + "} \000";
-        glShaderSource(vertex_shader, s0.getBytes());
+        glShaderSource(vertex_shader, 1, s0.getBytes(), 0, null, 0);
         glCompileShader(vertex_shader);
-        
+
         String s1 = "#version 330   \n"
                 + "out vec4 fColor;  \n"
                 + "void  \n"
@@ -157,7 +156,7 @@ public class Shader {
                 + "fColor = vec4(0.0, 0.0, 1.0, 1.0);  \n"
                 + "}  \000";
         fragment_shader = glCreateShader(GL_FRAGMENT_SHADER);
-        glShaderSource(fragment_shader, s1.getBytes());
+        glShaderSource(fragment_shader, 1, s1.getBytes(), 0, null, 0);
         glCompileShader(fragment_shader);
 
         program = glCreateProgram();
@@ -168,9 +167,9 @@ public class Shader {
         glUseProgram(program);
         // 最后这部分我们成为shader plumbing,  
         // 我们把需要的数据和shader程序中的变量关联在一起,后面会详细讲述  
-        glVertexAttribPointer(vPosition, 2, GL_FLOAT, GL_FALSE, 0, 0);
+        glVertexAttribPointer(vPosition, 2, GL_FLOAT, GL_FALSE, 0, null, 0);
         glEnableVertexAttribArray(vPosition);
-        
+
     }
 
 //---------------------------------------------------------------------  
@@ -187,9 +186,7 @@ public class Shader {
 //          // 2. 发起OpenGL调用来请求渲染你的对象  
         glBindVertexArray(VAOs[Triangles]);
         glDrawArrays(GL_TRIANGLES, 0, NumVertices);
-        
-        
-       
+
         try {
             Thread.sleep(10);
         } catch (InterruptedException ex) {
@@ -197,7 +194,6 @@ public class Shader {
 
     }
 
-    
     void t1() {
         glfwInit();
         glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);

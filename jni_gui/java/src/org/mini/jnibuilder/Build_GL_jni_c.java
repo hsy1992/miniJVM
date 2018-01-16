@@ -110,7 +110,7 @@ public class Build_GL_jni_c {
                             pushCode = "env->push_int(runtime->stack, ret_value);";
                             javaReturnCode = "Z";
                         } else if ("long".equals(returnType)) {
-                            returnCode = "s64 ret_value = (s64)";
+                            returnCode = "s64 ret_value = (s64)(intptr_t)";
                             pushCode = "env->push_long(runtime->stack, ret_value);";
                             javaReturnCode = "J";
                         } else if ("double".equals(returnType)) {
@@ -126,12 +126,24 @@ public class Build_GL_jni_c {
                                     + "        env->push_ref(runtime->stack, NULL);\n"
                                     + "    }";
                             javaReturnCode = "Ljava/lang/String;";
-                        } else if ("byte[]".equals(returnType)) {
+                        } else if ("long[]".equals(returnType)) {
                             returnCode = "";
                             pushCode = " \n"
-                                    + "        Instance *barr = env->jarray_create(count, DATATYPE_BYTE, NULL);\n"
-                                    + "        env->push_ref(runtime->stack, barr);\n";
+                                    + "        //Instance *barr = env->jarray_create(count, DATATYPE_LONG, NULL);\n"
+                                    + "        env->push_ref(runtime->stack, NULL);\n";
+                            javaReturnCode = "[J";
+                        } else if ("byte[]".equals(returnType)) {
+                            returnCode = "";
+                            pushCode = "        \n"
+                                    + "        //Instance *barr = env->jarray_create(count, DATATYPE_LONG, NULL);\n"
+                                    + "        env->push_ref(runtime->stack, NULL);\n";
                             javaReturnCode = "[B";
+                        } else if ("Object".equals(returnType)) {
+                            returnCode = "__refer ptr = ";
+                            pushCode = "        \n"
+                                    + "        //Instance *barr = env->jarray_create(count, DATATYPE_LONG, NULL);\n"
+                                    + "        env->push_ref(runtime->stack, NULL);\n";
+                            javaReturnCode = "Ljava/lang/Object;";
                         } else {
                             System.out.println(" " + lineNo + " return type:" + returnType + " in :" + whole);
                         }
@@ -160,44 +172,48 @@ public class Build_GL_jni_c {
                         if ("int".equals(argvType)) {
                             varCode += "    s32 " + argvName + " = env->localvar_getInt(runtime, pos++);\n";
                             nativeArgvCode += nativeArgvCode.length() > 0 ? "," : "";
-                            nativeArgvCode += nativeArgvs[nativei] + " " + argvName;
+                            nativeArgvCode += "(" + nativeArgvs[nativei] + ") " + argvName;
                             javaArgvCode += "I";
                         } else if ("short".equals(argvType)) {
                             varCode += "    s32 " + argvName + " = env->localvar_getInt(runtime, pos++);\n";
                             nativeArgvCode += nativeArgvCode.length() > 0 ? "," : "";
-                            nativeArgvCode += nativeArgvs[nativei] + " " + argvName;
+                            nativeArgvCode += "(" + nativeArgvs[nativei] + ") " + argvName;
                             javaArgvCode += "S";
                         } else if ("byte".equals(argvType)) {
                             varCode += "    s32 " + argvName + " = env->localvar_getInt(runtime, pos++);\n";
                             nativeArgvCode += nativeArgvCode.length() > 0 ? "," : "";
-                            nativeArgvCode += nativeArgvs[nativei] + " " + argvName;
+                            nativeArgvCode += "(" + nativeArgvs[nativei] + ") " + argvName;
                             javaArgvCode += "B";
                         } else if ("boolean".equals(argvType)) {
                             varCode += "    s32 " + argvName + " = env->localvar_getInt(runtime, pos++);\n";
                             nativeArgvCode += nativeArgvCode.length() > 0 ? "," : "";
-                            nativeArgvCode += nativeArgvs[nativei] + " " + argvName;
+                            nativeArgvCode += "(" + nativeArgvs[nativei] + ") " + argvName;
                             javaArgvCode += "Z";
                         } else if ("long".equals(argvType)) {
                             varCode += "    s64 " + argvName + " = getParaLong(runtime, pos);pos += 2;\n";
                             nativeArgvCode += nativeArgvCode.length() > 0 ? "," : "";
-                            nativeArgvCode += nativeArgvs[nativei] + " " + argvName;
+                            nativeArgvCode += "(" + nativeArgvs[nativei] + ") " + argvName;
                             javaArgvCode += "J";
                         } else if ("float".equals(argvType)) {
                             varCode += "    Int2Float " + argvName + ";" + argvName + ".i = env->localvar_getInt(runtime, pos++);\n";
-                            nativeArgvCode += nativeArgvCode.length() > 0 ? "," : "";
-                            nativeArgvCode += nativeArgvs[nativei] + " " + argvName;
+                            nativeArgvCode += nativeArgvCode.length() > 0 ? ", " : " ";
+                            nativeArgvCode += "(" + nativeArgvs[nativei] + ") " + argvName + ".f";
                             javaArgvCode += "F";
                         } else if ("double".equals(argvType)) {
                             varCode += "    Long2Double " + argvName + ";" + argvName + ".l = getParaLong(runtime, pos);pos += 2;\n";
                             nativeArgvCode += nativeArgvCode.length() > 0 ? "," : "";
-                            nativeArgvCode += nativeArgvs[nativei] + " " + argvName;
+                            nativeArgvCode += "(" + nativeArgvs[nativei] + ") " + argvName + ".d";
                             javaArgvCode += "D";
                         } else if (argvType.indexOf("[]") > 0 || "Object".equals(argvType)) {
                             varCode += "    Instance *" + argvName + " = env->localvar_getRefer(runtime, pos++);\n";
-                            varCode += "    s32 offset = env->localvar_getInt(runtime, pos++);\n";
-                            varCode += "    offset *= env->data_type_bytes[" + argvName + "->mb.arr_type_index];\n";
+                            varCode += "    s32 arr_offset" + i + " = env->localvar_getInt(runtime, pos++);\n";
+                            varCode += "    __refer ptr" + i + " = NULL;\n";
+                            varCode += "    if(" + argvName + "){\n";
+                            varCode += "        arr_offset" + i + " *= env->data_type_bytes[" + argvName + "->mb.arr_type_index];\n";
+                            varCode += "        ptr" + i + " = " + argvName + "->arr_body + arr_offset" + i + ";\n";
+                            varCode += "    }\n";
                             nativeArgvCode += nativeArgvCode.length() > 0 ? "," : "";
-                            nativeArgvCode += nativeArgvs[nativei] + " " + "(" + argvName + "->arr_body + offset)";
+                            nativeArgvCode += "(" + nativeArgvs[nativei] + ") " + "(ptr" + i + ")";
                             i++;
                             if (argvType.startsWith("int")) {
                                 javaArgvCode += "[II";
@@ -212,9 +228,9 @@ public class Build_GL_jni_c {
                             } else if (argvType.startsWith("double")) {
                                 javaArgvCode += "[DI";
                             } else if (argvType.startsWith("String")) {
-                                javaArgvCode += "[Ljava/lang/String;I";
+                                javaArgvCode += "Ljava/lang/String;I";
                             } else if (argvType.startsWith("Object")) {
-                                javaArgvCode += "[Ljava/lang/Object;I";
+                                javaArgvCode += "Ljava/lang/Object;I";
                             } else if (argvType.startsWith("boolean")) {
                                 javaArgvCode += "[ZI";
                             } else {
@@ -249,36 +265,4 @@ public class Build_GL_jni_c {
         System.out.println("success.");
     }
 
-    void buildJava() {
-        BufferedReader br = null;
-        BufferedWriter bw = null;
-        try {
-            File file = new File(path[0]);
-            br = new BufferedReader(new FileReader(file));
-            bw = new BufferedWriter(new FileWriter("./output.c"));
-            String line, whole;
-            String defineHeader = "public static native";
-            String funcHeader = "WINGDIAPI";
-            int lineNo = 0;
-            while ((line = br.readLine()) != null) {
-                lineNo++;
-                line = line.trim();
-                whole = new String(line.getBytes());
-                if (line.startsWith(defineHeader)) {
-                } else if (line.startsWith(funcHeader)) {
-                }
-            }
-        } catch (Exception ex) {
-            Logger.getLogger(Build_GL_jni_c.class.getName()).log(Level.SEVERE, null, ex);
-        } finally {
-            try {
-                br.close();
-                bw.close();
-            } catch (IOException ex) {
-                Logger.getLogger(Build_GL_jni_c.class.getName()).log(Level.SEVERE, null, ex);
-            }
-        }
-        System.out.println("success.");
-
-    }
 }

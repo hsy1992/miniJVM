@@ -17,7 +17,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
- *
+ * @deprecated old file
  * @author gust
  */
 public class Fix_GL_java {
@@ -27,7 +27,7 @@ public class Fix_GL_java {
         gt.removeBuffer();
     }
 
-    String[] path = {"src/org/mini/gl/GL.java_old", "org_mini_gl_GL_", "org/mini/gl/GL", "src/org/mini/gl/GL.java"};
+    String[] path = {"src/org/mini/jnibuilder/GL.java_old", "org_mini_gl_GL_", "org/mini/gl/GL", "src/org/mini/jnibuilder/GL.java"};
 
     String FUNC_BODY_TEMPLATE
             = //
