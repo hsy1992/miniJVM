@@ -234,7 +234,7 @@ boolean   4
 char  5
 float  6
 double 7
-unsigned char 8
+byte 8
 short   9
 int  10
 long  11
@@ -247,6 +247,7 @@ extern s32 data_type_bytes[DATATYPE_COUNT];
 
 enum {
     DATATYPE_JCHAR = 5,
+    DATATYPE_BYTE = 8,
     DATATYPE_REFERENCE = 12,
     DATATYPE_ARRAY = 13,
     DATATYPE_SHORT = 9,

@@ -20,10 +20,10 @@ import java.util.logging.Logger;
  *
  * @author gust
  */
-public class JniBuilder {
+public class Build_GL_jni_c {
 
     public static void main(String[] args) {
-        JniBuilder gt = new JniBuilder();
+        Build_GL_jni_c gt = new Build_GL_jni_c();
         gt.buildC();
     }
 
@@ -70,13 +70,14 @@ public class JniBuilder {
                 whole = new String(line.getBytes());
                 if (line.startsWith(header)) {
 
+                    String nativeArgvType = line.substring(line.indexOf("//") + 2).trim();
+                    String[] nativeArgvs = nativeArgvType.split(",");
                     line = line.substring(header.length()).trim();
                     String returnType = line.substring(0, line.indexOf(' ')).trim();
                     line = line.substring(returnType.length()).trim();
                     String methodName = line.substring(0, line.indexOf('('));
                     line = line.substring(line.indexOf('(') + 1, line.indexOf(')')).trim();
                     String[] argvs = line.split(",");
-
                     //
                     String output = new String(FUNC_BODY_TEMPLATE.getBytes());
                     output = output.replace(PKG_NAME, path[1]);
@@ -125,6 +126,12 @@ public class JniBuilder {
                                     + "        env->push_ref(runtime->stack, NULL);\n"
                                     + "    }";
                             javaReturnCode = "Ljava/lang/String;";
+                        } else if ("byte[]".equals(returnType)) {
+                            returnCode = "";
+                            pushCode = " \n"
+                                    + "        Instance *barr = env->jarray_create(count, DATATYPE_BYTE, NULL);\n"
+                                    + "        env->push_ref(runtime->stack, barr);\n";
+                            javaReturnCode = "[B";
                         } else {
                             System.out.println(" " + lineNo + " return type:" + returnType + " in :" + whole);
                         }
@@ -139,55 +146,58 @@ public class JniBuilder {
                     String varCode = "";
                     String nativeArgvCode = "";
                     String javaArgvCode = "";
-                    for (int i = 0; i < argvs.length; i++) {
-                        String argv = argvs[i];
+                    for (int i = 0, nativei = 0; i < argvs.length; i++, nativei++) {
+                        String argv = argvs[i].trim();
                         if (argv.length() == 0) {
                             continue;
                         }
                         String[] tmps = argv.trim().split(" ");
                         String argvType = tmps[0].trim();
                         String argvName = tmps[1].trim();
+                        if (nativei >= nativeArgvs.length) {
+                            int debug = 1;
+                        }
                         if ("int".equals(argvType)) {
                             varCode += "    s32 " + argvName + " = env->localvar_getInt(runtime, pos++);\n";
                             nativeArgvCode += nativeArgvCode.length() > 0 ? "," : "";
-                            nativeArgvCode += "(GLint) " + argvName;
+                            nativeArgvCode += nativeArgvs[nativei] + " " + argvName;
                             javaArgvCode += "I";
                         } else if ("short".equals(argvType)) {
                             varCode += "    s32 " + argvName + " = env->localvar_getInt(runtime, pos++);\n";
                             nativeArgvCode += nativeArgvCode.length() > 0 ? "," : "";
-                            nativeArgvCode += "(GLshort) " + argvName;
+                            nativeArgvCode += nativeArgvs[nativei] + " " + argvName;
                             javaArgvCode += "S";
                         } else if ("byte".equals(argvType)) {
                             varCode += "    s32 " + argvName + " = env->localvar_getInt(runtime, pos++);\n";
                             nativeArgvCode += nativeArgvCode.length() > 0 ? "," : "";
-                            nativeArgvCode += "(GLbyte) " + argvName;
+                            nativeArgvCode += nativeArgvs[nativei] + " " + argvName;
                             javaArgvCode += "B";
                         } else if ("boolean".equals(argvType)) {
                             varCode += "    s32 " + argvName + " = env->localvar_getInt(runtime, pos++);\n";
                             nativeArgvCode += nativeArgvCode.length() > 0 ? "," : "";
-                            nativeArgvCode += "(GLboolean) " + argvName;
+                            nativeArgvCode += nativeArgvs[nativei] + " " + argvName;
                             javaArgvCode += "Z";
                         } else if ("long".equals(argvType)) {
                             varCode += "    s64 " + argvName + " = getParaLong(runtime, pos);pos += 2;\n";
                             nativeArgvCode += nativeArgvCode.length() > 0 ? "," : "";
-                            nativeArgvCode += "(GLlong) " + argvName;
+                            nativeArgvCode += nativeArgvs[nativei] + " " + argvName;
                             javaArgvCode += "J";
                         } else if ("float".equals(argvType)) {
                             varCode += "    Int2Float " + argvName + ";" + argvName + ".i = env->localvar_getInt(runtime, pos++);\n";
                             nativeArgvCode += nativeArgvCode.length() > 0 ? "," : "";
-                            nativeArgvCode += "(GLfloat) " + argvName;
+                            nativeArgvCode += nativeArgvs[nativei] + " " + argvName;
                             javaArgvCode += "F";
                         } else if ("double".equals(argvType)) {
                             varCode += "    Long2Double " + argvName + ";" + argvName + ".l = getParaLong(runtime, pos);pos += 2;\n";
                             nativeArgvCode += nativeArgvCode.length() > 0 ? "," : "";
-                            nativeArgvCode += "(GLdouble) " + argvName;
+                            nativeArgvCode += nativeArgvs[nativei] + " " + argvName;
                             javaArgvCode += "D";
-                        } else if (argvType.indexOf("[]") > 0) {
+                        } else if (argvType.indexOf("[]") > 0||"Object".equals(argvType)) {
                             varCode += "    Instance *" + argvName + " = env->localvar_getRefer(runtime, pos++);\n";
                             varCode += "    s32 offset = env->localvar_getInt(runtime, pos++);\n";
                             varCode += "    offset *= env->data_type_bytes[arr->mb.arr_type_index];\n";
                             nativeArgvCode += nativeArgvCode.length() > 0 ? "," : "";
-                            nativeArgvCode += "(const GLvoid *) (" + argvName + "->arr_body + offset)";
+                            nativeArgvCode += nativeArgvs[nativei] + " " + "(" + argvName + "->arr_body + offset)";
                             i++;
                             if (argvType.startsWith("int")) {
                                 javaArgvCode += "[II";
@@ -203,6 +213,8 @@ public class JniBuilder {
                                 javaArgvCode += "[DI";
                             } else if (argvType.startsWith("String")) {
                                 javaArgvCode += "[Ljava/lang/String;I";
+                            }  else if (argvType.startsWith("Object")) {
+                                javaArgvCode += "[Ljava/lang/Object;I";
                             } else if (argvType.startsWith("boolean")) {
                                 javaArgvCode += "[ZI";
                             } else {
@@ -225,13 +237,13 @@ public class JniBuilder {
                 bw.write(s + "\n");
             }
         } catch (Exception ex) {
-            Logger.getLogger(JniBuilder.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(Build_GL_jni_c.class.getName()).log(Level.SEVERE, null, ex);
         } finally {
             try {
                 br.close();
                 bw.close();
             } catch (IOException ex) {
-                Logger.getLogger(JniBuilder.class.getName()).log(Level.SEVERE, null, ex);
+                Logger.getLogger(Build_GL_jni_c.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
         System.out.println("success.");
@@ -257,13 +269,13 @@ public class JniBuilder {
                 }
             }
         } catch (Exception ex) {
-            Logger.getLogger(JniBuilder.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(Build_GL_jni_c.class.getName()).log(Level.SEVERE, null, ex);
         } finally {
             try {
                 br.close();
                 bw.close();
             } catch (IOException ex) {
-                Logger.getLogger(JniBuilder.class.getName()).log(Level.SEVERE, null, ex);
+                Logger.getLogger(Build_GL_jni_c.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
         System.out.println("success.");

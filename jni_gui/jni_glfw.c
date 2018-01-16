@@ -930,7 +930,7 @@ int org_mini_glfw_Glfw_glfwMakeContextCurrentJni(Runtime *runtime, Class *clazz)
     GLFWwindow *window = (__refer) (intptr_t) getParaLong(runtime, pos);
     pos += 2;
     glfwMakeContextCurrent(window);
-    gladLoadGLLoader((GLADloadproc) glfwGetProcAddress);
+
     return 0;
 }
 
@@ -1003,7 +1003,7 @@ int org_mini_glfw_Glfw_glfwGetClipboardString(Runtime *runtime, Class *clazz) {
 
 int org_mini_gl_GL_init(Runtime *runtime, Class *clazz) {
     JniEnv *env = runtime->jnienv;
-
+    gladLoadGLLoader((GLADloadproc) glfwGetProcAddress);
     return 0;
 }
 
