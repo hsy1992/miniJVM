@@ -10027,7 +10027,7 @@ public class GL {
     /*
 		glIndexub((GLubyte)c);
      */
-    public static native void glIndexdv(Buffer c, int cByteOffset);
+    public static native void glIndexdv(double[] c, int cByteOffset);
 
     /*
 		glIndexdv((const GLdouble*)(c + cByteOffset));
@@ -10037,7 +10037,7 @@ public class GL {
     /*
 		glIndexdv((const GLdouble*)c);
      */
-    public static native void glIndexfv(Buffer c, int cByteOffset);
+    public static native void glIndexfv(float[] c, int cByteOffset);
 
     /*
 		glIndexfv((const GLfloat*)(c + cByteOffset));
@@ -10047,7 +10047,7 @@ public class GL {
     /*
 		glIndexfv((const GLfloat*)c);
      */
-    public static native void glIndexiv(Buffer c, int cByteOffset);
+    public static native void glIndexiv(int[] c, int cByteOffset);
 
     /*
 		glIndexiv((const GLint*)(c + cByteOffset));
@@ -10057,7 +10057,7 @@ public class GL {
     /*
 		glIndexiv((const GLint*)c);
      */
-    public static native void glIndexsv(Buffer c, int cByteOffset);
+    public static native void glIndexsv(short[] c, int cByteOffset);
 
     /*
 		glIndexsv((const GLshort*)(c + cByteOffset));
@@ -10067,7 +10067,7 @@ public class GL {
     /*
 		glIndexsv((const GLshort*)c);
      */
-    public static native void glIndexubv(Buffer c, int cByteOffset);
+    public static native void glIndexubv(byte[] c, int cByteOffset);
 
     /*
 		glIndexubv((const GLubyte*)(c + cByteOffset));
@@ -10397,7 +10397,7 @@ public class GL {
     /*
 		glTexCoord4s((GLshort)s, (GLshort)t, (GLshort)r, (GLshort)q);
      */
-    public static native void glTexCoord1dv(Buffer v, int offset);
+    public static native void glTexCoord1dv(double[] v, int offset);
 
     /*
 		glTexCoord1dv((const GLdouble*)(v + offset));
@@ -10407,7 +10407,7 @@ public class GL {
     /*
 		glTexCoord1dv((const GLdouble*)v);
      */
-    public static native void glTexCoord1fv(Buffer v, int offset);
+    public static native void glTexCoord1fv(float[] v, int offset);
 
     /*
 		glTexCoord1fv((const GLfloat*)(v + offset));
@@ -10417,7 +10417,7 @@ public class GL {
     /*
 		glTexCoord1fv((const GLfloat*)v);
      */
-    public static native void glTexCoord1iv(Buffer v, int offset);
+    public static native void glTexCoord1iv(int[] v, int offset);
 
     /*
 		glTexCoord1iv((const GLint*)(v + offset));
@@ -10427,7 +10427,7 @@ public class GL {
     /*
 		glTexCoord1iv((const GLint*)v);
      */
-    public static native void glTexCoord1sv(Buffer v, int offset);
+    public static native void glTexCoord1sv(short[] v, int offset);
 
     /*
 		glTexCoord1sv((const GLshort*)(v + offset));
@@ -10437,7 +10437,7 @@ public class GL {
     /*
 		glTexCoord1sv((const GLshort*)v);
      */
-    public static native void glTexCoord2dv(Buffer v, int offset);
+    public static native void glTexCoord2dv(double[] v, int offset);
 
     /*
 		glTexCoord2dv((const GLdouble*)(v + offset));
@@ -10447,7 +10447,7 @@ public class GL {
     /*
 		glTexCoord2dv((const GLdouble*)v);
      */
-    public static native void glTexCoord2fv(Buffer v, int offset);
+    public static native void glTexCoord2fv(float[] v, int offset);
 
     /*
 		glTexCoord2fv((const GLfloat*)(v + offset));
@@ -10457,7 +10457,7 @@ public class GL {
     /*
 		glTexCoord2fv((const GLfloat*)v);
      */
-    public static native void glTexCoord2iv(Buffer v, int offset);
+    public static native void glTexCoord2iv(int[] v, int offset);
 
     /*
 		glTexCoord2iv((const GLint*)(v + offset));
@@ -10467,7 +10467,7 @@ public class GL {
     /*
 		glTexCoord2iv((const GLint*)v);
      */
-    public static native void glTexCoord2sv(Buffer v, int offset);
+    public static native void glTexCoord2sv(short[] v, int offset);
 
     /*
 		glTexCoord2sv((const GLshort*)(v + offset));
@@ -10477,7 +10477,7 @@ public class GL {
     /*
 		glTexCoord2sv((const GLshort*)v);
      */
-    public static native void glTexCoord3dv(Buffer v, int offset);
+    public static native void glTexCoord3dv(double[] v, int offset);
 
     /*
 		glTexCoord3dv((const GLdouble*)(v + offset));
@@ -10487,7 +10487,7 @@ public class GL {
     /*
 		glTexCoord3dv((const GLdouble*)v);
      */
-    public static native void glTexCoord3fv(Buffer v, int offset);
+    public static native void glTexCoord3fv(float[] v, int offset);
 
     /*
 		glTexCoord3fv((const GLfloat*)(v + offset));
@@ -10497,7 +10497,7 @@ public class GL {
     /*
 		glTexCoord3fv((const GLfloat*)v);
      */
-    public static native void glTexCoord3iv(Buffer v, int offset);
+    public static native void glTexCoord3iv(int[] v, int offset);
 
     /*
 		glTexCoord3iv((const GLint*)(v + offset));
@@ -10507,7 +10507,7 @@ public class GL {
     /*
 		glTexCoord3iv((const GLint*)v);
      */
-    public static native void glTexCoord3sv(Buffer v, int offset);
+    public static native void glTexCoord3sv(short[] v, int offset);
 
     /*
 		glTexCoord3sv((const GLshort*)(v + offset));
@@ -10517,7 +10517,7 @@ public class GL {
     /*
 		glTexCoord3sv((const GLshort*)v);
      */
-    public static native void glTexCoord4dv(Buffer v, int offset);
+    public static native void glTexCoord4dv(double[] v, int offset);
 
     /*
 		glTexCoord4dv((const GLdouble*)(v + offset));
@@ -10527,7 +10527,7 @@ public class GL {
     /*
 		glTexCoord4dv((const GLdouble*)v);
      */
-    public static native void glTexCoord4fv(Buffer v, int offset);
+    public static native void glTexCoord4fv(float[] v, int offset);
 
     /*
 		glTexCoord4fv((const GLfloat*)(v + offset));
@@ -10537,7 +10537,7 @@ public class GL {
     /*
 		glTexCoord4fv((const GLfloat*)v);
      */
-    public static native void glTexCoord4iv(Buffer v, int offset);
+    public static native void glTexCoord4iv(int[] v, int offset);
 
     /*
 		glTexCoord4iv((const GLint*)(v + offset));
@@ -10547,7 +10547,7 @@ public class GL {
     /*
 		glTexCoord4iv((const GLint*)v);
      */
-    public static native void glTexCoord4sv(Buffer v, int offset);
+    public static native void glTexCoord4sv(short[] v, int offset);
 
     /*
 		glTexCoord4sv((const GLshort*)(v + offset));
@@ -10617,7 +10617,7 @@ public class GL {
     /*
 		glRasterPos4s((GLshort)x, (GLshort)y, (GLshort)z, (GLshort)w);
      */
-    public static native void glRasterPos2dv(Buffer v, int offset);
+    public static native void glRasterPos2dv(double[] v, int offset);
 
     /*
 		glRasterPos2dv((const GLdouble*)(v + offset));
@@ -10627,7 +10627,7 @@ public class GL {
     /*
 		glRasterPos2dv((const GLdouble*)v);
      */
-    public static native void glRasterPos2fv(Buffer v, int offset);
+    public static native void glRasterPos2fv(float[] v, int offset);
 
     /*
 		glRasterPos2fv((const GLfloat*)(v + offset));
@@ -10637,7 +10637,7 @@ public class GL {
     /*
 		glRasterPos2fv((const GLfloat*)v);
      */
-    public static native void glRasterPos2iv(Buffer v, int offset);
+    public static native void glRasterPos2iv(int[] v, int offset);
 
     /*
 		glRasterPos2iv((const GLint*)(v + offset));
@@ -10647,7 +10647,7 @@ public class GL {
     /*
 		glRasterPos2iv((const GLint*)v);
      */
-    public static native void glRasterPos2sv(Buffer v, int offset);
+    public static native void glRasterPos2sv(short[] v, int offset);
 
     /*
 		glRasterPos2sv((const GLshort*)(v + offset));
@@ -10657,7 +10657,7 @@ public class GL {
     /*
 		glRasterPos2sv((const GLshort*)v);
      */
-    public static native void glRasterPos3dv(Buffer v, int offset);
+    public static native void glRasterPos3dv(double[] v, int offset);
 
     /*
 		glRasterPos3dv((const GLdouble*)(v + offset));
@@ -10667,7 +10667,7 @@ public class GL {
     /*
 		glRasterPos3dv((const GLdouble*)v);
      */
-    public static native void glRasterPos3fv(Buffer v, int offset);
+    public static native void glRasterPos3fv(float[] v, int offset);
 
     /*
 		glRasterPos3fv((const GLfloat*)(v + offset));
@@ -10677,7 +10677,7 @@ public class GL {
     /*
 		glRasterPos3fv((const GLfloat*)v);
      */
-    public static native void glRasterPos3iv(Buffer v, int offset);
+    public static native void glRasterPos3iv(int[] v, int offset);
 
     /*
 		glRasterPos3iv((const GLint*)(v + offset));
@@ -10687,7 +10687,7 @@ public class GL {
     /*
 		glRasterPos3iv((const GLint*)v);
      */
-    public static native void glRasterPos3sv(Buffer v, int offset);
+    public static native void glRasterPos3sv(short[] v, int offset);
 
     /*
 		glRasterPos3sv((const GLshort*)(v + offset));
@@ -10697,7 +10697,7 @@ public class GL {
     /*
 		glRasterPos3sv((const GLshort*)v);
      */
-    public static native void glRasterPos4dv(Buffer v, int offset);
+    public static native void glRasterPos4dv(double[] v, int offset);
 
     /*
 		glRasterPos4dv((const GLdouble*)(v + offset));
@@ -10707,7 +10707,7 @@ public class GL {
     /*
 		glRasterPos4dv((const GLdouble*)v);
      */
-    public static native void glRasterPos4fv(Buffer v, int offset);
+    public static native void glRasterPos4fv(float[] v, int offset);
 
     /*
 		glRasterPos4fv((const GLfloat*)(v + offset));
@@ -10717,7 +10717,7 @@ public class GL {
     /*
 		glRasterPos4fv((const GLfloat*)v);
      */
-    public static native void glRasterPos4iv(Buffer v, int offset);
+    public static native void glRasterPos4iv(int[] v, int offset);
 
     /*
 		glRasterPos4iv((const GLint*)(v + offset));
@@ -10727,7 +10727,7 @@ public class GL {
     /*
 		glRasterPos4iv((const GLint*)v);
      */
-    public static native void glRasterPos4sv(Buffer v, int offset);
+    public static native void glRasterPos4sv(short[] v, int offset);
 
     /*
 		glRasterPos4sv((const GLshort*)(v + offset));
@@ -10757,7 +10757,7 @@ public class GL {
     /*
 		glRects((GLshort)x1, (GLshort)y1, (GLshort)x2, (GLshort)y2);
      */
-    public static native void glRectdv(Buffer v1, int v1ByteOffset, Buffer v2, int v2ByteOffset);
+    public static native void glRectdv(double[] v1, int v1ByteOffset, Buffer v2, int v2ByteOffset);
 
     /*
 		glRectdv((const GLdouble*)(v1 + v1ByteOffset), (const GLdouble*)(v2 + v2ByteOffset));
@@ -10767,7 +10767,7 @@ public class GL {
     /*
 		glRectdv((const GLdouble*)v1, (const GLdouble*)v2);
      */
-    public static native void glRectfv(Buffer v1, int v1ByteOffset, Buffer v2, int v2ByteOffset);
+    public static native void glRectfv(float[] v1, int v1ByteOffset, Buffer v2, int v2ByteOffset);
 
     /*
 		glRectfv((const GLfloat*)(v1 + v1ByteOffset), (const GLfloat*)(v2 + v2ByteOffset));
@@ -10777,7 +10777,7 @@ public class GL {
     /*
 		glRectfv((const GLfloat*)v1, (const GLfloat*)v2);
      */
-    public static native void glRectiv(Buffer v1, int v1ByteOffset, Buffer v2, int v2ByteOffset);
+    public static native void glRectiv(int[] v1, int v1ByteOffset, Buffer v2, int v2ByteOffset);
 
     /*
 		glRectiv((const GLint*)(v1 + v1ByteOffset), (const GLint*)(v2 + v2ByteOffset));
@@ -10787,7 +10787,7 @@ public class GL {
     /*
 		glRectiv((const GLint*)v1, (const GLint*)v2);
      */
-    public static native void glRectsv(Buffer v1, int v1ByteOffset, Buffer v2, int v2ByteOffset);
+    public static native void glRectsv(short[] v1, int v1ByteOffset, Buffer v2, int v2ByteOffset);
 
     /*
 		glRectsv((const GLshort*)(v1 + v1ByteOffset), (const GLshort*)(v2 + v2ByteOffset));
@@ -10847,7 +10847,7 @@ public class GL {
     /*
 		glGetLightiv((GLenum)light, (GLenum)pname, (GLint*)(params + paramsOffset));
      */
-    public static native void glGetLightiv(int light, int pname, long params);
+//    public static native void glGetLightiv(int light, int pname, long params);
 
     /*
 		glGetLightiv((GLenum)light, (GLenum)pname, (GLint*)params);
@@ -11382,7 +11382,7 @@ public class GL {
     /*
 		glEvalCoord1f((GLfloat)u);
      */
-    public static native void glEvalCoord1dv(Buffer u, int uByteOffset);
+    public static native void glEvalCoord1dv(double[] u, int uByteOffset);
 
     /*
 		glEvalCoord1dv((const GLdouble*)(u + uByteOffset));
@@ -11392,7 +11392,7 @@ public class GL {
     /*
 		glEvalCoord1dv((const GLdouble*)u);
      */
-    public static native void glEvalCoord1fv(Buffer u, int uByteOffset);
+    public static native void glEvalCoord1fv(float[] u, int uByteOffset);
 
     /*
 		glEvalCoord1fv((const GLfloat*)(u + uByteOffset));
@@ -11412,7 +11412,7 @@ public class GL {
     /*
 		glEvalCoord2f((GLfloat)u, (GLfloat)v);
      */
-    public static native void glEvalCoord2dv(Buffer u, int uByteOffset);
+    public static native void glEvalCoord2dv(double[] u, int uByteOffset);
 
     /*
 		glEvalCoord2dv((const GLdouble*)(u + uByteOffset));
@@ -11422,7 +11422,7 @@ public class GL {
     /*
 		glEvalCoord2dv((const GLdouble*)u);
      */
-    public static native void glEvalCoord2fv(Buffer u, int uByteOffset);
+    public static native void glEvalCoord2fv(float[] u, int uByteOffset);
 
     /*
 		glEvalCoord2fv((const GLfloat*)(u + uByteOffset));
@@ -12467,7 +12467,7 @@ public class GL {
     /*
 		ext_glFogCoordf((GLfloat)coord);
      */
-    public static native void glFogCoordfv(Buffer coord, int coordByteOffset);
+    public static native void glFogCoordfv(float[] coord, int coordByteOffset);
 
     /*
 		ext_glFogCoordfv((const GLfloat*)(coord + coordByteOffset));
@@ -12482,7 +12482,7 @@ public class GL {
     /*
 		ext_glFogCoordd((GLdouble)coord);
      */
-    public static native void glFogCoorddv(Buffer coord, int coordByteOffset);
+    public static native void glFogCoorddv(double[] coord, int coordByteOffset);
 
     /*
 		ext_glFogCoorddv((const GLdouble*)(coord + coordByteOffset));
@@ -12507,7 +12507,7 @@ public class GL {
     /*
 		ext_glSecondaryColor3b((GLbyte)red, (GLbyte)green, (GLbyte)blue);
      */
-    public static native void glSecondaryColor3bv(Buffer v, int offset);
+    public static native void glSecondaryColor3bv(byte[] v, int offset);
 
     /*
 		ext_glSecondaryColor3bv((const GLbyte*)(v + offset));
@@ -12522,7 +12522,7 @@ public class GL {
     /*
 		ext_glSecondaryColor3d((GLdouble)red, (GLdouble)green, (GLdouble)blue);
      */
-    public static native void glSecondaryColor3dv(Buffer v, int offset);
+    public static native void glSecondaryColor3dv(double[] v, int offset);
 
     /*
 		ext_glSecondaryColor3dv((const GLdouble*)(v + offset));
@@ -12537,7 +12537,7 @@ public class GL {
     /*
 		ext_glSecondaryColor3f((GLfloat)red, (GLfloat)green, (GLfloat)blue);
      */
-    public static native void glSecondaryColor3fv(Buffer v, int offset);
+    public static native void glSecondaryColor3fv(float[] v, int offset);
 
     /*
 		ext_glSecondaryColor3fv((const GLfloat*)(v + offset));
@@ -12552,7 +12552,7 @@ public class GL {
     /*
 		ext_glSecondaryColor3i((GLint)red, (GLint)green, (GLint)blue);
      */
-    public static native void glSecondaryColor3iv(Buffer v, int offset);
+    public static native void glSecondaryColor3iv(int[] v, int offset);
 
     /*
 		ext_glSecondaryColor3iv((const GLint*)(v + offset));
@@ -12567,7 +12567,7 @@ public class GL {
     /*
 		ext_glSecondaryColor3s((GLshort)red, (GLshort)green, (GLshort)blue);
      */
-    public static native void glSecondaryColor3sv(Buffer v, int offset);
+    public static native void glSecondaryColor3sv(short[] v, int offset);
 
     /*
 		ext_glSecondaryColor3sv((const GLshort*)(v + offset));
@@ -12582,7 +12582,7 @@ public class GL {
     /*
 		ext_glSecondaryColor3ub((GLubyte)red, (GLubyte)green, (GLubyte)blue);
      */
-    public static native void glSecondaryColor3ubv(Buffer v, int offset);
+    public static native void glSecondaryColor3ubv(byte[] v, int offset);
 
     /*
 		ext_glSecondaryColor3ubv((const GLubyte*)(v + offset));
@@ -12597,7 +12597,7 @@ public class GL {
     /*
 		ext_glSecondaryColor3ui((GLuint)red, (GLuint)green, (GLuint)blue);
      */
-    public static native void glSecondaryColor3uiv(Buffer v, int offset);
+    public static native void glSecondaryColor3uiv(int[] v, int offset);
 
     /*
 		ext_glSecondaryColor3uiv((const GLuint*)(v + offset));
@@ -12612,7 +12612,7 @@ public class GL {
     /*
 		ext_glSecondaryColor3us((GLushort)red, (GLushort)green, (GLushort)blue);
      */
-    public static native void glSecondaryColor3usv(Buffer v, int offset);
+    public static native void glSecondaryColor3usv(short[] v, int offset);
 
     /*
 		ext_glSecondaryColor3usv((const GLushort*)(v + offset));
@@ -12637,7 +12637,7 @@ public class GL {
     /*
 		ext_glWindowPos2d((GLdouble)x, (GLdouble)y);
      */
-    public static native void glWindowPos2dv(Buffer v, int offset);
+    public static native void glWindowPos2dv(double[] v, int offset);
 
     /*
 		ext_glWindowPos2dv((const GLdouble*)(v + offset));
@@ -12652,7 +12652,7 @@ public class GL {
     /*
 		ext_glWindowPos2f((GLfloat)x, (GLfloat)y);
      */
-    public static native void glWindowPos2fv(Buffer v, int offset);
+    public static native void glWindowPos2fv(float[] v, int offset);
 
     /*
 		ext_glWindowPos2fv((const GLfloat*)(v + offset));
@@ -12667,7 +12667,7 @@ public class GL {
     /*
 		ext_glWindowPos2i((GLint)x, (GLint)y);
      */
-    public static native void glWindowPos2iv(Buffer v, int offset);
+    public static native void glWindowPos2iv(int[] v, int offset);
 
     /*
 		ext_glWindowPos2iv((const GLint*)(v + offset));
@@ -12682,7 +12682,7 @@ public class GL {
     /*
 		ext_glWindowPos2s((GLshort)x, (GLshort)y);
      */
-    public static native void glWindowPos2sv(Buffer v, int offset);
+    public static native void glWindowPos2sv(short[] v, int offset);
 
     /*
 		ext_glWindowPos2sv((const GLshort*)(v + offset));
@@ -12697,7 +12697,7 @@ public class GL {
     /*
 		ext_glWindowPos3d((GLdouble)x, (GLdouble)y, (GLdouble)z);
      */
-    public static native void glWindowPos3dv(Buffer v, int offset);
+    public static native void glWindowPos3dv(double[] v, int offset);
 
     /*
 		ext_glWindowPos3dv((const GLdouble*)(v + offset));
@@ -12712,7 +12712,7 @@ public class GL {
     /*
 		ext_glWindowPos3f((GLfloat)x, (GLfloat)y, (GLfloat)z);
      */
-    public static native void glWindowPos3fv(Buffer v, int offset);
+    public static native void glWindowPos3fv(float[] v, int offset);
 
     /*
 		ext_glWindowPos3fv((const GLfloat*)(v + offset));
@@ -12727,7 +12727,7 @@ public class GL {
     /*
 		ext_glWindowPos3i((GLint)x, (GLint)y, (GLint)z);
      */
-    public static native void glWindowPos3iv(Buffer v, int offset);
+    public static native void glWindowPos3iv(int[] v, int offset);
 
     /*
 		ext_glWindowPos3iv((const GLint*)(v + offset));
@@ -12742,7 +12742,7 @@ public class GL {
     /*
 		ext_glWindowPos3s((GLshort)x, (GLshort)y, (GLshort)z);
      */
-    public static native void glWindowPos3sv(Buffer v, int offset);
+    public static native void glWindowPos3sv(short[] v, int offset);
 
     /*
 		ext_glWindowPos3sv((const GLshort*)(v + offset));
