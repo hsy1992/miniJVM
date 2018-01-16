@@ -80,9 +80,12 @@ public class Build_GL_java {
         List<String> lines = new ArrayList();
         int lineNo = 0;
         try {
-            File file = new File(path[0]);
-            br = new BufferedReader(new FileReader(file));
-            bw = new BufferedWriter(new FileWriter(path[1]));
+            File ifile = new File(path[0]);
+            br = new BufferedReader(new FileReader(ifile));
+            System.out.println("open input file:" + ifile.getAbsolutePath());
+            File ofile = new File(path[1]);
+            bw = new BufferedWriter(new FileWriter(ofile));
+            System.out.println("open output file:" + ofile.getAbsolutePath());
             String line;
 
             //fields

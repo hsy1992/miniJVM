@@ -27,7 +27,7 @@ public class Build_GL_jni_c {
         gt.buildC();
     }
 
-    String[] path = {"src/org/mini/gl/GL.java", "org_mini_gl_GL_", "org/mini/gl/GL"};
+    String[] path = {"src/org/mini/gl/GL.java", "org_mini_gl_GL_", "org/mini/gl/GL", "./output.c"};
 
     String FUNC_BODY_TEMPLATE
             = //
@@ -58,9 +58,12 @@ public class Build_GL_jni_c {
         BufferedWriter bw = null;
         List<String> funcTable = new ArrayList();
         try {
-            File file = new File(path[0]);
-            br = new BufferedReader(new FileReader(file));
-            bw = new BufferedWriter(new FileWriter("./output.c"));
+            File ifile = new File(path[0]);
+            br = new BufferedReader(new FileReader(ifile));
+            System.out.println("open input file:" + ifile.getAbsolutePath());
+            File ofile = new File(path[3]);
+            bw = new BufferedWriter(new FileWriter(ofile));
+            System.out.println("open output file:" + ofile.getAbsolutePath());
             String line, whole;
             String header = "public static native";
             int lineNo = 0;
