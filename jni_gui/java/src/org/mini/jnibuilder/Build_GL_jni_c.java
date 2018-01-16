@@ -192,10 +192,10 @@ public class Build_GL_jni_c {
                             nativeArgvCode += nativeArgvCode.length() > 0 ? "," : "";
                             nativeArgvCode += nativeArgvs[nativei] + " " + argvName;
                             javaArgvCode += "D";
-                        } else if (argvType.indexOf("[]") > 0||"Object".equals(argvType)) {
+                        } else if (argvType.indexOf("[]") > 0 || "Object".equals(argvType)) {
                             varCode += "    Instance *" + argvName + " = env->localvar_getRefer(runtime, pos++);\n";
                             varCode += "    s32 offset = env->localvar_getInt(runtime, pos++);\n";
-                            varCode += "    offset *= env->data_type_bytes[arr->mb.arr_type_index];\n";
+                            varCode += "    offset *= env->data_type_bytes[" + argvName + "->mb.arr_type_index];\n";
                             nativeArgvCode += nativeArgvCode.length() > 0 ? "," : "";
                             nativeArgvCode += nativeArgvs[nativei] + " " + "(" + argvName + "->arr_body + offset)";
                             i++;
@@ -213,7 +213,7 @@ public class Build_GL_jni_c {
                                 javaArgvCode += "[DI";
                             } else if (argvType.startsWith("String")) {
                                 javaArgvCode += "[Ljava/lang/String;I";
-                            }  else if (argvType.startsWith("Object")) {
+                            } else if (argvType.startsWith("Object")) {
                                 javaArgvCode += "[Ljava/lang/Object;I";
                             } else if (argvType.startsWith("boolean")) {
                                 javaArgvCode += "[ZI";

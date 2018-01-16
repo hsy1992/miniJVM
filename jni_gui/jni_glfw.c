@@ -1,7 +1,6 @@
 /* nuklear - 1.32.0 - public domain */
 #define WIN32_LEAN_AND_MEAN
 
-#include "GL/GL.h"
 #include <stdio.h>
 #include <string.h>
 #include "deps/include/glad/glad.h"
@@ -1588,9 +1587,9 @@ int org_mini_gl_GL_glColor3iv(Runtime *runtime, Class *clazz) {
 
     Instance *v = env->localvar_getRefer(runtime, pos++);
     s32 offset = env->localvar_getInt(runtime, pos++);
-    offset *= env->data_type_bytes[arr->mb.arr_type_index];
+    offset *= env->data_type_bytes[v->mb.arr_type_index];
 
-    glColor3iv((const GLvoid *) (v->arr_body + offset));
+    glColor3iv((const GLint*) (v->arr_body + offset));
 
     return 0;
 }
@@ -2459,6 +2458,7 @@ int org_mini_gl_GL_glGetString(Runtime *runtime, Class *clazz) {
     }
     return 0;
 }
+
 
 static java_native_method method_test2_table[] = {
         {"org/mini/glfw/utils/Gutil", "f2b",                        "([F[B)[B",                         org_mini_glfw_utils_Gutil_f2b},
