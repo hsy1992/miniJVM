@@ -1005,1289 +1005,7 @@ int org_mini_gl_GL_init(Runtime *runtime, Class *clazz) {
     gladLoadGLLoader((GLADloadproc) glfwGetProcAddress);
     return 0;
 }
-/*
-int org_mini_gl_GL_glViewport(Runtime *runtime, Class *clazz) {
-    //glViewport(GLint x,GLint y,GLsizei width,GLsizei height);
-    JniEnv *env = runtime->jnienv;
-    s32 pos = 0;
-    s32 x = env->localvar_getInt(runtime, pos++);
-    s32 y = env->localvar_getInt(runtime, pos++);
-    s32 w = env->localvar_getInt(runtime, pos++);
-    s32 h = env->localvar_getInt(runtime, pos++);
-    glViewport(x, y, (GLsizei) w, (GLsizei) h);
-    return 0;
-}
 
-int org_mini_gl_GL_glVertexAttribPointer(Runtime *runtime, Class *clazz) {
-    JniEnv *env = runtime->jnienv;
-    s32 pos = 0;
-    s32 index = env->localvar_getInt(runtime, pos++);
-    s32 size = env->localvar_getInt(runtime, pos++);
-    s32 type = env->localvar_getInt(runtime, pos++);
-    s32 normalized = env->localvar_getInt(runtime, pos++);
-    s32 stride = env->localvar_getInt(runtime, pos++);
-    s32 offset = env->localvar_getInt(runtime, pos++);
-    glVertexAttribPointer((GLuint) index, (GLint) size, (GLenum) type, (GLboolean) normalized, (GLsizei) stride,
-                          (const GLvoid *) (NULL + offset));
-    return 0;
-}
-
-
-int org_mini_gl_GL_glMatrixMode(Runtime *runtime, Class *clazz) {
-    JniEnv *env = runtime->jnienv;
-    s32 pos = 0;
-    s32 mode = env->localvar_getInt(runtime, pos++);
-    glMatrixMode((GLenum) mode);
-    return 0;
-}
-
-int org_mini_gl_GL_glLoadMatrixf(Runtime *runtime, Class *clazz) {
-    JniEnv *env = runtime->jnienv;
-    s32 pos = 0;
-    Instance *arr = env->localvar_getRefer(runtime, pos++);
-    s32 offset = env->localvar_getInt(runtime, pos++);
-    offset *= env->data_type_bytes[arr->mb.arr_type_index];
-    glLoadMatrixf((const GLfloat *) (arr->arr_body + offset));
-    return 0;
-}
-
-int org_mini_gl_GL_glPushMatrix(Runtime *runtime, Class *clazz) {
-    glPushMatrix();
-    return 0;
-}
-
-int org_mini_gl_GL_glPopMatrix(Runtime *runtime, Class *clazz) {
-    glPopMatrix();
-    return 0;
-}
-
-int org_mini_gl_GL_glEnable(Runtime *runtime, Class *clazz) {
-    JniEnv *env = runtime->jnienv;
-    s32 pos = 0;
-    s32 cap = env->localvar_getInt(runtime, pos++);
-    glEnable((GLenum) cap);
-    return 0;
-}
-
-int org_mini_gl_GL_glDisable(Runtime *runtime, Class *clazz) {
-    JniEnv *env = runtime->jnienv;
-    s32 pos = 0;
-    s32 cap = env->localvar_getInt(runtime, pos++);
-    glDisable((GLenum) cap);
-    return 0;
-}
-
-int org_mini_gl_GL_glShadeModel(Runtime *runtime, Class *clazz) {
-    JniEnv *env = runtime->jnienv;
-    s32 pos = 0;
-    s32 mode = env->localvar_getInt(runtime, pos++);
-    glShadeModel((GLenum) mode);
-    return 0;
-}
-
-int org_mini_gl_GL_glClear(Runtime *runtime, Class *clazz) {
-    JniEnv *env = runtime->jnienv;
-    s32 pos = 0;
-    s32 mask = env->localvar_getInt(runtime, pos++);
-    glClear((GLbitfield) mask);
-    return 0;
-}
-
-int org_mini_gl_GL_glHint(Runtime *runtime, Class *clazz) {
-    JniEnv *env = runtime->jnienv;
-    s32 pos = 0;
-    s32 target = env->localvar_getInt(runtime, pos++);
-    s32 mode = env->localvar_getInt(runtime, pos++);
-    glHint((GLenum) target, (GLenum) mode);
-    return 0;
-}
-
-int org_mini_gl_GL_glClearDepth(Runtime *runtime, Class *clazz) {
-    JniEnv *env = runtime->jnienv;
-    s32 pos = 0;
-    Long2Double depth;
-    depth.l = getParaLong(runtime, pos);
-    glClearDepth((GLclampd) depth.d);
-    return 0;
-}
-
-int org_mini_gl_GL_glDepthFunc(Runtime *runtime, Class *clazz) {
-    JniEnv *env = runtime->jnienv;
-    s32 pos = 0;
-    s32 func = env->localvar_getInt(runtime, pos++);
-    glDepthFunc((GLenum) func);
-    return 0;
-}
-
-int org_mini_gl_GL_glDepthMask(Runtime *runtime, Class *clazz) {
-    JniEnv *env = runtime->jnienv;
-    s32 pos = 0;
-    s32 flag = env->localvar_getInt(runtime, pos++);
-    glDepthMask((GLboolean) flag);
-    return 0;
-}
-
-int org_mini_gl_GL_glDepthRange(Runtime *runtime, Class *clazz) {
-    JniEnv *env = runtime->jnienv;
-    s32 pos = 0;
-    Long2Double near_val, far_val;
-    near_val.l = getParaLong(runtime, pos);
-    far_val.l = getParaLong(runtime, pos);
-    glDepthRange((GLclampd) near_val.d, (GLclampd) far_val.d);
-    return 0;
-}
-
-int org_mini_gl_GL_glDrawBuffer(Runtime *runtime, Class *clazz) {
-    JniEnv *env = runtime->jnienv;
-    s32 pos = 0;
-    s32 mode = env->localvar_getInt(runtime, pos++);
-    glDrawBuffer((GLenum) mode);
-    return 0;
-}
-
-int org_mini_gl_GL_glReadBuffer(Runtime *runtime, Class *clazz) {
-    JniEnv *env = runtime->jnienv;
-    s32 pos = 0;
-    s32 mode = env->localvar_getInt(runtime, pos++);
-    glReadBuffer((GLenum) mode);
-    return 0;
-}
-
-int org_mini_gl_GL_glTranslatef(Runtime *runtime, Class *clazz) {
-    JniEnv *env = runtime->jnienv;
-    s32 pos = 0;
-    Int2Float x, y, z;
-    x.i = env->localvar_getInt(runtime, pos++);
-    y.i = env->localvar_getInt(runtime, pos++);
-    z.i = env->localvar_getInt(runtime, pos++);
-    glTranslatef((GLfloat) x.f, (GLfloat) y.f, (GLfloat) z.f);
-    return 0;
-}
-
-int org_mini_gl_GL_glTranslated(Runtime *runtime, Class *clazz) {
-    JniEnv *env = runtime->jnienv;
-    s32 pos = 0;
-    Long2Double x, y, z;
-    x.l = env->localvar_getInt(runtime, pos++);
-    y.l = env->localvar_getInt(runtime, pos++);
-    z.l = env->localvar_getInt(runtime, pos++);
-    glTranslated((GLdouble) x.d, (GLdouble) y.d, (GLdouble) z.d);
-    return 0;
-}
-
-int org_mini_gl_GL_glRotatef(Runtime *runtime, Class *clazz) {
-    JniEnv *env = runtime->jnienv;
-    s32 pos = 0;
-    Int2Float a, x, y, z;
-    a.i = env->localvar_getInt(runtime, pos++);
-    x.i = env->localvar_getInt(runtime, pos++);
-    y.i = env->localvar_getInt(runtime, pos++);
-    z.i = env->localvar_getInt(runtime, pos++);
-    glRotatef((GLfloat) a.f, (GLfloat) x.f, (GLfloat) y.f, (GLfloat) z.f);
-    return 0;
-}
-
-int org_mini_gl_GL_glRotated(Runtime *runtime, Class *clazz) {
-    JniEnv *env = runtime->jnienv;
-    s32 pos = 0;
-    Long2Double a, x, y, z;
-    a.l = env->localvar_getInt(runtime, pos++);
-    x.l = env->localvar_getInt(runtime, pos++);
-    y.l = env->localvar_getInt(runtime, pos++);
-    z.l = env->localvar_getInt(runtime, pos++);
-    glRotated((GLdouble) a.d, (GLdouble) x.d, (GLdouble) y.d, (GLdouble) z.d);
-    return 0;
-}
-
-int org_mini_gl_GL_glScalef(Runtime *runtime, Class *clazz) {
-    JniEnv *env = runtime->jnienv;
-    s32 pos = 0;
-    Int2Float x, y, z;
-    x.i = env->localvar_getInt(runtime, pos++);
-    y.i = env->localvar_getInt(runtime, pos++);
-    z.i = env->localvar_getInt(runtime, pos++);
-    glScalef((GLfloat) x.f, (GLfloat) y.f, (GLfloat) z.f);
-    return 0;
-}
-
-
-int org_mini_gl_GL_glScaled(Runtime *runtime, Class *clazz) {
-    JniEnv *env = runtime->jnienv;
-    s32 pos = 0;
-    Long2Double x, y, z;
-    x.l = env->localvar_getInt(runtime, pos++);
-    y.l = env->localvar_getInt(runtime, pos++);
-    z.l = env->localvar_getInt(runtime, pos++);
-    glScaled((GLdouble) x.d, (GLdouble) y.d, (GLdouble) z.d);
-    return 0;
-}
-
-
-int org_mini_gl_GL_glCullFace(Runtime *runtime, Class *clazz) {
-    JniEnv *env = runtime->jnienv;
-    s32 pos = 0;
-    s32 mode = env->localvar_getInt(runtime, pos++);
-    glCullFace((GLenum) mode);
-    return 0;
-}
-
-int org_mini_gl_GL_glIndexMask(Runtime *runtime, Class *clazz) {
-    JniEnv *env = runtime->jnienv;
-    s32 pos = 0;
-    s32 mask = env->localvar_getInt(runtime, pos++);
-    glIndexMask((GLuint) mask);
-    return 0;
-}
-
-int org_mini_gl_GL_glLogicOp(Runtime *runtime, Class *clazz) {
-    JniEnv *env = runtime->jnienv;
-    s32 pos = 0;
-    s32 opcode = env->localvar_getInt(runtime, pos++);
-    glLogicOp((GLenum) opcode);
-    return 0;
-}
-
-int org_mini_gl_GL_glBlendFunc(Runtime *runtime, Class *clazz) {
-    JniEnv *env = runtime->jnienv;
-    s32 pos = 0;
-    s32 sfactor = env->localvar_getInt(runtime, pos++);
-    s32 dfactor = env->localvar_getInt(runtime, pos++);
-    glBlendFunc((GLenum) sfactor, (GLenum) dfactor);
-    return 0;
-}
-
-int org_mini_gl_GL_glColorMask(Runtime *runtime, Class *clazz) {
-    JniEnv *env = runtime->jnienv;
-    s32 pos = 0;
-    s32 red = env->localvar_getInt(runtime, pos++);
-    s32 green = env->localvar_getInt(runtime, pos++);
-    s32 blue = env->localvar_getInt(runtime, pos++);
-    s32 alpha = env->localvar_getInt(runtime, pos++);
-    glColorMask((GLboolean) red, (GLboolean) green, (GLboolean) blue, (GLboolean) alpha);
-    return 0;
-}
-
-int org_mini_gl_GL_glAlphaFunc(Runtime *runtime, Class *clazz) {
-    JniEnv *env = runtime->jnienv;
-    s32 pos = 0;
-    s32 func = env->localvar_getInt(runtime, pos++);
-    Int2Float ref;
-    ref.i = env->localvar_getInt(runtime, pos++);
-    glAlphaFunc((GLenum) func, (GLclampf) ref.f);
-    return 0;
-}
-
-int org_mini_gl_GL_glFrontFace(Runtime *runtime, Class *clazz) {
-    JniEnv *env = runtime->jnienv;
-    s32 pos = 0;
-    s32 mode = env->localvar_getInt(runtime, pos++);
-    glFrontFace((GLenum) mode);
-    return 0;
-}
-
-int org_mini_gl_GL_glBegin(Runtime *runtime, Class *clazz) {
-    JniEnv *env = runtime->jnienv;
-    s32 pos = 0;
-    s32 mode = env->localvar_getInt(runtime, pos++);
-    glBegin((GLenum) mode);
-    return 0;
-}
-
-int org_mini_gl_GL_glEnd(Runtime *runtime, Class *clazz) {
-    glEnd();
-    return 0;
-}
-
-int org_mini_gl_GL_glFlush(Runtime *runtime, Class *clazz) {
-    glFlush();
-    return 0;
-}
-
-int org_mini_gl_GL_glFinish(Runtime *runtime, Class *clazz) {
-    glFinish();
-    return 0;
-}
-
-int org_mini_gl_GL_glColor3f(Runtime *runtime, Class *clazz) {
-    JniEnv *env = runtime->jnienv;
-    s32 pos = 0;
-    Int2Float r, g, b;
-    r.i = env->localvar_getInt(runtime, pos++);
-    g.i = env->localvar_getInt(runtime, pos++);
-    b.i = env->localvar_getInt(runtime, pos++);
-    glColor3f((GLfloat) r.f, (GLfloat) g.f, (GLfloat) b.f);
-    return 0;
-}
-
-int org_mini_gl_GL_glColor4f(Runtime *runtime, Class *clazz) {
-    JniEnv *env = runtime->jnienv;
-    s32 pos = 0;
-    Int2Float r, g, b, a;
-    r.i = env->localvar_getInt(runtime, pos++);
-    g.i = env->localvar_getInt(runtime, pos++);
-    b.i = env->localvar_getInt(runtime, pos++);
-    a.i = env->localvar_getInt(runtime, pos++);
-    glColor4f((GLfloat) r.f, (GLfloat) g.f, (GLfloat) b.f, (GLfloat) a.f);
-    return 0;
-}
-
-int org_mini_gl_GL_glColor3d(Runtime *runtime, Class *clazz) {
-    JniEnv *env = runtime->jnienv;
-    s32 pos = 0;
-    Long2Double r, g, b;
-    r.l = env->localvar_getInt(runtime, pos++);
-    g.l = env->localvar_getInt(runtime, pos++);
-    b.l = env->localvar_getInt(runtime, pos++);
-    glColor3d((GLdouble) r.d, (GLdouble) g.d, (GLdouble) b.d);
-    return 0;
-}
-
-int org_mini_gl_GL_glColor4d(Runtime *runtime, Class *clazz) {
-    JniEnv *env = runtime->jnienv;
-    s32 pos = 0;
-    Long2Double r, g, b, a;
-    r.l = env->localvar_getInt(runtime, pos++);
-    g.l = env->localvar_getInt(runtime, pos++);
-    b.l = env->localvar_getInt(runtime, pos++);
-    a.l = env->localvar_getInt(runtime, pos++);
-    glColor4d((GLdouble) r.d, (GLdouble) g.d, (GLdouble) b.d, (GLdouble) a.d);
-    return 0;
-}
-
-int org_mini_gl_GL_glColor3b(Runtime *runtime, Class *clazz) {
-    JniEnv *env = runtime->jnienv;
-    s32 pos = 0;
-    s32 r, g, b;
-    r = env->localvar_getInt(runtime, pos++);
-    g = env->localvar_getInt(runtime, pos++);
-    b = env->localvar_getInt(runtime, pos++);
-    glColor3b((GLbyte) r, (GLbyte) g, (GLbyte) b);
-    return 0;
-}
-
-int org_mini_gl_GL_glColor4b(Runtime *runtime, Class *clazz) {
-    JniEnv *env = runtime->jnienv;
-    s32 pos = 0;
-    s32 r, g, b, a;
-    r = env->localvar_getInt(runtime, pos++);
-    g = env->localvar_getInt(runtime, pos++);
-    b = env->localvar_getInt(runtime, pos++);
-    a = env->localvar_getInt(runtime, pos++);
-    glColor4b((GLbyte) r, (GLbyte) g, (GLbyte) b, (GLbyte) a);
-    return 0;
-}
-
-int org_mini_gl_GL_glColor3ub(Runtime *runtime, Class *clazz) {
-    JniEnv *env = runtime->jnienv;
-    s32 pos = 0;
-    s32 r, g, b;
-    r = env->localvar_getInt(runtime, pos++);
-    g = env->localvar_getInt(runtime, pos++);
-    b = env->localvar_getInt(runtime, pos++);
-    glColor3ub((GLubyte) r, (GLubyte) g, (GLubyte) b);
-    return 0;
-}
-
-int org_mini_gl_GL_glColor4ub(Runtime *runtime, Class *clazz) {
-    JniEnv *env = runtime->jnienv;
-    s32 pos = 0;
-    s32 r, g, b, a;
-    r = env->localvar_getInt(runtime, pos++);
-    g = env->localvar_getInt(runtime, pos++);
-    b = env->localvar_getInt(runtime, pos++);
-    a = env->localvar_getInt(runtime, pos++);
-    glColor4ub((GLubyte) r, (GLubyte) g, (GLubyte) b, (GLubyte) a);
-    return 0;
-}
-
-int org_mini_gl_GL_glColor3i(Runtime *runtime, Class *clazz) {
-    JniEnv *env = runtime->jnienv;
-    s32 pos = 0;
-    s32 r, g, b;
-    r = env->localvar_getInt(runtime, pos++);
-    g = env->localvar_getInt(runtime, pos++);
-    b = env->localvar_getInt(runtime, pos++);
-    glColor3i((GLint) r, (GLint) g, (GLint) b);
-    return 0;
-}
-
-int org_mini_gl_GL_glColor4i(Runtime *runtime, Class *clazz) {
-    JniEnv *env = runtime->jnienv;
-    s32 pos = 0;
-    s32 r, g, b, a;
-    r = env->localvar_getInt(runtime, pos++);
-    g = env->localvar_getInt(runtime, pos++);
-    b = env->localvar_getInt(runtime, pos++);
-    a = env->localvar_getInt(runtime, pos++);
-    glColor4i((GLint) r, (GLint) g, (GLint) b, (GLint) a);
-    return 0;
-}
-
-int org_mini_gl_GL_glColor3ui(Runtime *runtime, Class *clazz) {
-    JniEnv *env = runtime->jnienv;
-    s32 pos = 0;
-    s32 r, g, b;
-    r = env->localvar_getInt(runtime, pos++);
-    g = env->localvar_getInt(runtime, pos++);
-    b = env->localvar_getInt(runtime, pos++);
-    glColor3ui((GLuint) r, (GLuint) g, (GLuint) b);
-    return 0;
-}
-
-int org_mini_gl_GL_glColor4ui(Runtime *runtime, Class *clazz) {
-    JniEnv *env = runtime->jnienv;
-    s32 pos = 0;
-    s32 r, g, b, a;
-    r = env->localvar_getInt(runtime, pos++);
-    g = env->localvar_getInt(runtime, pos++);
-    b = env->localvar_getInt(runtime, pos++);
-    a = env->localvar_getInt(runtime, pos++);
-    glColor4ui((GLuint) r, (GLuint) g, (GLuint) b, (GLuint) a);
-    return 0;
-}
-
-int org_mini_gl_GL_glColor3s(Runtime *runtime, Class *clazz) {
-    JniEnv *env = runtime->jnienv;
-    s32 pos = 0;
-    s32 r, g, b;
-    r = env->localvar_getInt(runtime, pos++);
-    g = env->localvar_getInt(runtime, pos++);
-    b = env->localvar_getInt(runtime, pos++);
-    glColor3s((GLshort) r, (GLshort) g, (GLshort) b);
-    return 0;
-}
-
-int org_mini_gl_GL_glColor4s(Runtime *runtime, Class *clazz) {
-    JniEnv *env = runtime->jnienv;
-    s32 pos = 0;
-    s32 r, g, b, a;
-    r = env->localvar_getInt(runtime, pos++);
-    g = env->localvar_getInt(runtime, pos++);
-    b = env->localvar_getInt(runtime, pos++);
-    a = env->localvar_getInt(runtime, pos++);
-    glColor4s((GLshort) r, (GLshort) g, (GLshort) b, (GLshort) a);
-    return 0;
-}
-
-int org_mini_gl_GL_glColor3us(Runtime *runtime, Class *clazz) {
-    JniEnv *env = runtime->jnienv;
-    s32 pos = 0;
-    s32 r, g, b;
-    r = env->localvar_getInt(runtime, pos++);
-    g = env->localvar_getInt(runtime, pos++);
-    b = env->localvar_getInt(runtime, pos++);
-    glColor3us((GLushort) r, (GLushort) g, (GLushort) b);
-    return 0;
-}
-
-int org_mini_gl_GL_glColor4us(Runtime *runtime, Class *clazz) {
-    JniEnv *env = runtime->jnienv;
-    s32 pos = 0;
-    s32 r, g, b, a;
-    r = env->localvar_getInt(runtime, pos++);
-    g = env->localvar_getInt(runtime, pos++);
-    b = env->localvar_getInt(runtime, pos++);
-    a = env->localvar_getInt(runtime, pos++);
-    glColor4us((GLushort) r, (GLushort) g, (GLushort) b, (GLushort) a);
-    return 0;
-}
-
-int org_mini_gl_GL_glColor3dv(Runtime *runtime, Class *clazz) {
-    JniEnv *env = runtime->jnienv;
-    s32 pos = 0;
-    Instance *arr = env->localvar_getRefer(runtime, pos++);
-    s32 offset = env->localvar_getInt(runtime, pos++);
-    offset *= env->data_type_bytes[arr->mb.arr_type_index];
-    glColor3dv((const GLdouble *) (arr->arr_body + offset));
-    return 0;
-}
-
-int org_mini_gl_GL_glColor4dv(Runtime *runtime, Class *clazz) {
-    JniEnv *env = runtime->jnienv;
-    s32 pos = 0;
-    Instance *arr = env->localvar_getRefer(runtime, pos++);
-    s32 offset = env->localvar_getInt(runtime, pos++);
-    offset *= env->data_type_bytes[arr->mb.arr_type_index];
-    glColor4dv((const GLdouble *) (arr->arr_body + offset));
-    return 0;
-}
-
-int org_mini_gl_GL_glColor3fv(Runtime *runtime, Class *clazz) {
-    JniEnv *env = runtime->jnienv;
-    s32 pos = 0;
-    Instance *arr = env->localvar_getRefer(runtime, pos++);
-    s32 offset = env->localvar_getInt(runtime, pos++);
-    offset *= env->data_type_bytes[arr->mb.arr_type_index];
-    glColor3fv((const GLfloat *) (arr->arr_body + offset));
-    return 0;
-}
-
-int org_mini_gl_GL_glColor4fv(Runtime *runtime, Class *clazz) {
-    JniEnv *env = runtime->jnienv;
-    s32 pos = 0;
-    Instance *arr = env->localvar_getRefer(runtime, pos++);
-    s32 offset = env->localvar_getInt(runtime, pos++);
-    offset *= env->data_type_bytes[arr->mb.arr_type_index];
-    glColor4fv((const GLfloat *) (arr->arr_body + offset));
-    return 0;
-}
-
-int org_mini_gl_GL_glColor3bv(Runtime *runtime, Class *clazz) {
-    JniEnv *env = runtime->jnienv;
-    s32 pos = 0;
-    Instance *arr = env->localvar_getRefer(runtime, pos++);
-    s32 offset = env->localvar_getInt(runtime, pos++);
-    offset *= env->data_type_bytes[arr->mb.arr_type_index];
-    glColor3bv((const GLbyte *) (arr->arr_body + offset));
-    return 0;
-}
-
-int org_mini_gl_GL_glColor4bv(Runtime *runtime, Class *clazz) {
-    JniEnv *env = runtime->jnienv;
-    s32 pos = 0;
-    Instance *arr = env->localvar_getRefer(runtime, pos++);
-    s32 offset = env->localvar_getInt(runtime, pos++);
-    offset *= env->data_type_bytes[arr->mb.arr_type_index];
-    glColor4bv((const GLbyte *) (arr->arr_body + offset));
-    return 0;
-}
-
-int org_mini_gl_GL_glColor3ubv(Runtime *runtime, Class *clazz) {
-    JniEnv *env = runtime->jnienv;
-    s32 pos = 0;
-    Instance *arr = env->localvar_getRefer(runtime, pos++);
-    s32 offset = env->localvar_getInt(runtime, pos++);
-    offset *= env->data_type_bytes[arr->mb.arr_type_index];
-    glColor3ubv((const GLubyte *) (arr->arr_body + offset));
-    return 0;
-}
-
-int org_mini_gl_GL_glColor4ubv(Runtime *runtime, Class *clazz) {
-    JniEnv *env = runtime->jnienv;
-    s32 pos = 0;
-    Instance *arr = env->localvar_getRefer(runtime, pos++);
-    s32 offset = env->localvar_getInt(runtime, pos++);
-    offset *= env->data_type_bytes[arr->mb.arr_type_index];
-    glColor4ubv((const GLubyte *) (arr->arr_body + offset));
-    return 0;
-}
-
-//int org_mini_gl_GL_glColor3iv(Runtime *runtime, Class *clazz) {
-//    JniEnv *env = runtime->jnienv;
-//    s32 pos = 0;
-//    Instance *arr = env->localvar_getRefer(runtime, pos++);
-//    s32 offset = env->localvar_getInt(runtime, pos++);
-//    offset *= env->data_type_bytes[arr->mb.arr_type_index];
-//    glColor3iv((const GLint *) (arr->arr_body + offset));
-//    return 0;
-//}
-int org_mini_gl_GL_glColor3iv(Runtime *runtime, Class *clazz) {
-    JniEnv *env = runtime->jnienv;
-    s32 pos = 0;
-
-    Instance *v = env->localvar_getRefer(runtime, pos++);
-    s32 offset = env->localvar_getInt(runtime, pos++);
-    offset *= env->data_type_bytes[v->mb.arr_type_index];
-
-    glColor3iv((const GLint *) (v->arr_body + offset));
-
-    return 0;
-}
-
-int org_mini_gl_GL_glColor4iv(Runtime *runtime, Class *clazz) {
-    JniEnv *env = runtime->jnienv;
-    s32 pos = 0;
-    Instance *arr = env->localvar_getRefer(runtime, pos++);
-    s32 offset = env->localvar_getInt(runtime, pos++);
-    offset *= env->data_type_bytes[arr->mb.arr_type_index];
-    glColor4iv((const GLint *) (arr->arr_body + offset));
-    return 0;
-}
-
-int org_mini_gl_GL_glColor3uiv(Runtime *runtime, Class *clazz) {
-    JniEnv *env = runtime->jnienv;
-    s32 pos = 0;
-    Instance *arr = env->localvar_getRefer(runtime, pos++);
-    s32 offset = env->localvar_getInt(runtime, pos++);
-    offset *= env->data_type_bytes[arr->mb.arr_type_index];
-    glColor3uiv((const GLuint *) (arr->arr_body + offset));
-    return 0;
-}
-
-int org_mini_gl_GL_glColor4uiv(Runtime *runtime, Class *clazz) {
-    JniEnv *env = runtime->jnienv;
-    s32 pos = 0;
-    Instance *arr = env->localvar_getRefer(runtime, pos++);
-    s32 offset = env->localvar_getInt(runtime, pos++);
-    offset *= env->data_type_bytes[arr->mb.arr_type_index];
-    glColor4uiv((const GLuint *) (arr->arr_body + offset));
-    return 0;
-}
-
-int org_mini_gl_GL_glColor3sv(Runtime *runtime, Class *clazz) {
-    JniEnv *env = runtime->jnienv;
-    s32 pos = 0;
-    Instance *arr = env->localvar_getRefer(runtime, pos++);
-    s32 offset = env->localvar_getInt(runtime, pos++);
-    offset *= env->data_type_bytes[arr->mb.arr_type_index];
-    glColor3sv((const GLshort *) (arr->arr_body + offset));
-    return 0;
-}
-
-int org_mini_gl_GL_glColor4sv(Runtime *runtime, Class *clazz) {
-    JniEnv *env = runtime->jnienv;
-    s32 pos = 0;
-    Instance *arr = env->localvar_getRefer(runtime, pos++);
-    s32 offset = env->localvar_getInt(runtime, pos++);
-    offset *= env->data_type_bytes[arr->mb.arr_type_index];
-    glColor4sv((const GLshort *) (arr->arr_body + offset));
-    return 0;
-}
-
-int org_mini_gl_GL_glColor3usv(Runtime *runtime, Class *clazz) {
-    JniEnv *env = runtime->jnienv;
-    s32 pos = 0;
-    Instance *arr = env->localvar_getRefer(runtime, pos++);
-    s32 offset = env->localvar_getInt(runtime, pos++);
-    offset *= env->data_type_bytes[arr->mb.arr_type_index];
-    glColor3usv((const GLshort *) (arr->arr_body + offset));
-    return 0;
-}
-
-int org_mini_gl_GL_glColor4usv(Runtime *runtime, Class *clazz) {
-    JniEnv *env = runtime->jnienv;
-    s32 pos = 0;
-    Instance *arr = env->localvar_getRefer(runtime, pos++);
-    s32 offset = env->localvar_getInt(runtime, pos++);
-    offset *= env->data_type_bytes[arr->mb.arr_type_index];
-    glColor4usv((const GLshort *) (arr->arr_body + offset));
-    return 0;
-}
-
-int org_mini_gl_GL_glVertex2s(Runtime *runtime, Class *clazz) {
-    JniEnv *env = runtime->jnienv;
-    s32 pos = 0;
-    int x, y;
-    x = env->localvar_getInt(runtime, pos++);
-    y = env->localvar_getInt(runtime, pos++);
-    glVertex2s((GLshort) x, (GLshort) y);
-    return 0;
-}
-
-int org_mini_gl_GL_glVertex3s(Runtime *runtime, Class *clazz) {
-    JniEnv *env = runtime->jnienv;
-    s32 pos = 0;
-    int x, y, z, w;
-    x = env->localvar_getInt(runtime, pos++);
-    y = env->localvar_getInt(runtime, pos++);
-    z = env->localvar_getInt(runtime, pos++);
-    glVertex3s((GLshort) x, (GLshort) y, (GLshort) z);
-    return 0;
-}
-
-int org_mini_gl_GL_glVertex4s(Runtime *runtime, Class *clazz) {
-    JniEnv *env = runtime->jnienv;
-    s32 pos = 0;
-    int x, y, z, w;
-    x = env->localvar_getInt(runtime, pos++);
-    y = env->localvar_getInt(runtime, pos++);
-    z = env->localvar_getInt(runtime, pos++);
-    w = env->localvar_getInt(runtime, pos++);
-    glVertex4s((GLshort) x, (GLshort) y, (GLshort) z, (GLshort) w);
-    return 0;
-}
-
-int org_mini_gl_GL_glVertex2i(Runtime *runtime, Class *clazz) {
-    JniEnv *env = runtime->jnienv;
-    s32 pos = 0;
-    int x, y;
-    x = env->localvar_getInt(runtime, pos++);
-    y = env->localvar_getInt(runtime, pos++);
-    glVertex2i((GLint) x, (GLint) y);
-    return 0;
-}
-
-int org_mini_gl_GL_glVertex3i(Runtime *runtime, Class *clazz) {
-    JniEnv *env = runtime->jnienv;
-    s32 pos = 0;
-    int x, y, z;
-    x = env->localvar_getInt(runtime, pos++);
-    y = env->localvar_getInt(runtime, pos++);
-    z = env->localvar_getInt(runtime, pos++);
-    glVertex3i((GLint) x, (GLint) y, (GLint) z);
-    return 0;
-}
-
-int org_mini_gl_GL_glVertex4i(Runtime *runtime, Class *clazz) {
-    JniEnv *env = runtime->jnienv;
-    s32 pos = 0;
-    int x, y, z, w;
-    x = env->localvar_getInt(runtime, pos++);
-    y = env->localvar_getInt(runtime, pos++);
-    z = env->localvar_getInt(runtime, pos++);
-    w = env->localvar_getInt(runtime, pos++);
-    glVertex4i((GLint) x, (GLint) y, (GLint) z, (GLint) w);
-    return 0;
-}
-
-int org_mini_gl_GL_glVertex2f(Runtime *runtime, Class *clazz) {
-    JniEnv *env = runtime->jnienv;
-    s32 pos = 0;
-    Int2Float x, y;
-    x.i = env->localvar_getInt(runtime, pos++);
-    y.i = env->localvar_getInt(runtime, pos++);
-    glVertex2f((GLfloat) x.f, (GLfloat) y.f);
-    return 0;
-}
-
-int org_mini_gl_GL_glVertex3f(Runtime *runtime, Class *clazz) {
-    JniEnv *env = runtime->jnienv;
-    s32 pos = 0;
-    Int2Float x, y, z;
-    x.i = env->localvar_getInt(runtime, pos++);
-    y.i = env->localvar_getInt(runtime, pos++);
-    z.i = env->localvar_getInt(runtime, pos++);
-    glVertex3f((GLfloat) x.f, (GLfloat) y.f, (GLfloat) z.f);
-    return 0;
-}
-
-int org_mini_gl_GL_glVertex4f(Runtime *runtime, Class *clazz) {
-    JniEnv *env = runtime->jnienv;
-    s32 pos = 0;
-    Int2Float x, y, z, w;
-    x.i = env->localvar_getInt(runtime, pos++);
-    y.i = env->localvar_getInt(runtime, pos++);
-    z.i = env->localvar_getInt(runtime, pos++);
-    w.i = env->localvar_getInt(runtime, pos++);
-    glVertex4f((GLfloat) x.f, (GLfloat) y.f, (GLfloat) z.f, (GLfloat) w.f);
-    return 0;
-}
-
-int org_mini_gl_GL_glVertex2d(Runtime *runtime, Class *clazz) {
-    JniEnv *env = runtime->jnienv;
-    s32 pos = 0;
-    Long2Double x, y, z;
-    x.l = env->localvar_getInt(runtime, pos++);
-    y.l = env->localvar_getInt(runtime, pos++);
-    glVertex2d((GLdouble) x.d, (GLdouble) y.d);
-    return 0;
-}
-
-int org_mini_gl_GL_glVertex3d(Runtime *runtime, Class *clazz) {
-    JniEnv *env = runtime->jnienv;
-    s32 pos = 0;
-    Long2Double x, y, z;
-    x.l = env->localvar_getInt(runtime, pos++);
-    y.l = env->localvar_getInt(runtime, pos++);
-    z.l = env->localvar_getInt(runtime, pos++);
-    glVertex3d((GLdouble) x.d, (GLdouble) y.d, (GLdouble) z.d);
-    return 0;
-}
-
-int org_mini_gl_GL_glVertex4d(Runtime *runtime, Class *clazz) {
-    JniEnv *env = runtime->jnienv;
-    s32 pos = 0;
-    Long2Double x, y, z, w;
-    x.l = env->localvar_getInt(runtime, pos++);
-    y.l = env->localvar_getInt(runtime, pos++);
-    z.l = env->localvar_getInt(runtime, pos++);
-    w.l = env->localvar_getInt(runtime, pos++);
-    glVertex4d((GLdouble) x.d, (GLdouble) y.d, (GLdouble) z.d, (GLdouble) w.d);
-    return 0;
-}
-
-int org_mini_gl_GL_glVertex2sv(Runtime *runtime, Class *clazz) {
-    JniEnv *env = runtime->jnienv;
-    s32 pos = 0;
-    Instance *arr = env->localvar_getRefer(runtime, pos++);
-    s32 offset = env->localvar_getInt(runtime, pos++);
-    offset *= env->data_type_bytes[arr->mb.arr_type_index];
-    glVertex2sv((const GLshort *) (arr->arr_body + offset));
-    return 0;
-}
-
-int org_mini_gl_GL_glVertex3sv(Runtime *runtime, Class *clazz) {
-    JniEnv *env = runtime->jnienv;
-    s32 pos = 0;
-    Instance *arr = env->localvar_getRefer(runtime, pos++);
-    s32 offset = env->localvar_getInt(runtime, pos++);
-    offset *= env->data_type_bytes[arr->mb.arr_type_index];
-    glVertex3sv((const GLshort *) (arr->arr_body + offset));
-    return 0;
-}
-
-int org_mini_gl_GL_glVertex4sv(Runtime *runtime, Class *clazz) {
-    JniEnv *env = runtime->jnienv;
-    s32 pos = 0;
-    Instance *arr = env->localvar_getRefer(runtime, pos++);
-    s32 offset = env->localvar_getInt(runtime, pos++);
-    offset *= env->data_type_bytes[arr->mb.arr_type_index];
-    glVertex4sv((const GLshort *) (arr->arr_body + offset));
-    return 0;
-}
-
-int org_mini_gl_GL_glVertex2iv(Runtime *runtime, Class *clazz) {
-    JniEnv *env = runtime->jnienv;
-    s32 pos = 0;
-    Instance *arr = env->localvar_getRefer(runtime, pos++);
-    s32 offset = env->localvar_getInt(runtime, pos++);
-    offset *= env->data_type_bytes[arr->mb.arr_type_index];
-    glVertex2iv((const GLint *) (arr->arr_body + offset));
-    return 0;
-}
-
-int org_mini_gl_GL_glVertex3iv(Runtime *runtime, Class *clazz) {
-    JniEnv *env = runtime->jnienv;
-    s32 pos = 0;
-    Instance *arr = env->localvar_getRefer(runtime, pos++);
-    s32 offset = env->localvar_getInt(runtime, pos++);
-    offset *= env->data_type_bytes[arr->mb.arr_type_index];
-    glVertex3iv((const GLint *) (arr->arr_body + offset));
-    return 0;
-}
-
-int org_mini_gl_GL_glVertex4iv(Runtime *runtime, Class *clazz) {
-    JniEnv *env = runtime->jnienv;
-    s32 pos = 0;
-    Instance *arr = env->localvar_getRefer(runtime, pos++);
-    s32 offset = env->localvar_getInt(runtime, pos++);
-    offset *= env->data_type_bytes[arr->mb.arr_type_index];
-    glVertex4iv((const GLint *) (arr->arr_body + offset));
-    return 0;
-}
-
-int org_mini_gl_GL_glVertex2fv(Runtime *runtime, Class *clazz) {
-    JniEnv *env = runtime->jnienv;
-    s32 pos = 0;
-    Instance *arr = env->localvar_getRefer(runtime, pos++);
-    s32 offset = env->localvar_getInt(runtime, pos++);
-    offset *= env->data_type_bytes[arr->mb.arr_type_index];
-    glVertex2fv((const GLfloat *) (arr->arr_body + offset));
-    return 0;
-}
-
-int org_mini_gl_GL_glVertex3fv(Runtime *runtime, Class *clazz) {
-    JniEnv *env = runtime->jnienv;
-    s32 pos = 0;
-    Instance *arr = env->localvar_getRefer(runtime, pos++);
-    s32 offset = env->localvar_getInt(runtime, pos++);
-    offset *= env->data_type_bytes[arr->mb.arr_type_index];
-    glVertex3fv((const GLfloat *) (arr->arr_body + offset));
-    return 0;
-}
-
-int org_mini_gl_GL_glVertex4fv(Runtime *runtime, Class *clazz) {
-    JniEnv *env = runtime->jnienv;
-    s32 pos = 0;
-    Instance *arr = env->localvar_getRefer(runtime, pos++);
-    s32 offset = env->localvar_getInt(runtime, pos++);
-    offset *= env->data_type_bytes[arr->mb.arr_type_index];
-    glVertex4fv((const GLfloat *) (arr->arr_body + offset));
-    return 0;
-}
-
-int org_mini_gl_GL_glVertex2dv(Runtime *runtime, Class *clazz) {
-    JniEnv *env = runtime->jnienv;
-    s32 pos = 0;
-    Instance *arr = env->localvar_getRefer(runtime, pos++);
-    s32 offset = env->localvar_getInt(runtime, pos++);
-    offset *= env->data_type_bytes[arr->mb.arr_type_index];
-    glVertex2dv((const GLdouble *) (arr->arr_body + offset));
-    return 0;
-}
-
-int org_mini_gl_GL_glVertex3dv(Runtime *runtime, Class *clazz) {
-    JniEnv *env = runtime->jnienv;
-    s32 pos = 0;
-    Instance *arr = env->localvar_getRefer(runtime, pos++);
-    s32 offset = env->localvar_getInt(runtime, pos++);
-    offset *= env->data_type_bytes[arr->mb.arr_type_index];
-    glVertex3dv((const GLdouble *) (arr->arr_body + offset));
-    return 0;
-}
-
-int org_mini_gl_GL_glVertex4dv(Runtime *runtime, Class *clazz) {
-    JniEnv *env = runtime->jnienv;
-    s32 pos = 0;
-    Instance *arr = env->localvar_getRefer(runtime, pos++);
-    s32 offset = env->localvar_getInt(runtime, pos++);
-    offset *= env->data_type_bytes[arr->mb.arr_type_index];
-    glVertex4dv((const GLdouble *) (arr->arr_body + offset));
-    return 0;
-}
-
-int org_mini_gl_GL_glNormal3b(Runtime *runtime, Class *clazz) {
-    JniEnv *env = runtime->jnienv;
-    s32 pos = 0;
-    int x, y, z;
-    x = env->localvar_getInt(runtime, pos++);
-    y = env->localvar_getInt(runtime, pos++);
-    z = env->localvar_getInt(runtime, pos++);
-    glNormal3b((GLbyte) x, (GLbyte) y, (GLbyte) z);
-    return 0;
-}
-
-int org_mini_gl_GL_glNormal3s(Runtime *runtime, Class *clazz) {
-    JniEnv *env = runtime->jnienv;
-    s32 pos = 0;
-    int x, y, z;
-    x = env->localvar_getInt(runtime, pos++);
-    y = env->localvar_getInt(runtime, pos++);
-    z = env->localvar_getInt(runtime, pos++);
-    glNormal3s((GLshort) x, (GLshort) y, (GLshort) z);
-    return 0;
-}
-
-int org_mini_gl_GL_glNormal3i(Runtime *runtime, Class *clazz) {
-    JniEnv *env = runtime->jnienv;
-    s32 pos = 0;
-    int x, y, z;
-    x = env->localvar_getInt(runtime, pos++);
-    y = env->localvar_getInt(runtime, pos++);
-    z = env->localvar_getInt(runtime, pos++);
-    glNormal3i((GLint) x, (GLint) y, (GLint) z);
-    return 0;
-}
-
-int org_mini_gl_GL_glNormal3f(Runtime *runtime, Class *clazz) {
-    JniEnv *env = runtime->jnienv;
-    s32 pos = 0;
-    Int2Float x, y, z;
-    x.i = env->localvar_getInt(runtime, pos++);
-    y.i = env->localvar_getInt(runtime, pos++);
-    z.i = env->localvar_getInt(runtime, pos++);
-    glNormal3f((GLfloat) x.f, (GLfloat) y.f, (GLfloat) z.f);
-    return 0;
-}
-
-int org_mini_gl_GL_glNormal3d(Runtime *runtime, Class *clazz) {
-    JniEnv *env = runtime->jnienv;
-    s32 pos = 0;
-    Long2Double x, y, z;
-    x.l = env->localvar_getInt(runtime, pos++);
-    y.l = env->localvar_getInt(runtime, pos++);
-    z.l = env->localvar_getInt(runtime, pos++);
-    glNormal3d((GLdouble) x.d, (GLdouble) y.d, (GLdouble) z.d);
-    return 0;
-}
-
-int org_mini_gl_GL_glNormal3bv(Runtime *runtime, Class *clazz) {
-    JniEnv *env = runtime->jnienv;
-    s32 pos = 0;
-    Instance *arr = env->localvar_getRefer(runtime, pos++);
-    s32 offset = env->localvar_getInt(runtime, pos++);
-    offset *= env->data_type_bytes[arr->mb.arr_type_index];
-    glNormal3bv((const GLbyte *) (arr->arr_body + offset));
-    return 0;
-}
-
-int org_mini_gl_GL_glNormal3sv(Runtime *runtime, Class *clazz) {
-    JniEnv *env = runtime->jnienv;
-    s32 pos = 0;
-    Instance *arr = env->localvar_getRefer(runtime, pos++);
-    s32 offset = env->localvar_getInt(runtime, pos++);
-    offset *= env->data_type_bytes[arr->mb.arr_type_index];
-    glNormal3sv((const GLshort *) (arr->arr_body + offset));
-    return 0;
-}
-
-int org_mini_gl_GL_glNormal3iv(Runtime *runtime, Class *clazz) {
-    JniEnv *env = runtime->jnienv;
-    s32 pos = 0;
-    Instance *arr = env->localvar_getRefer(runtime, pos++);
-    s32 offset = env->localvar_getInt(runtime, pos++);
-    offset *= env->data_type_bytes[arr->mb.arr_type_index];
-    glNormal3iv((const GLint *) (arr->arr_body + offset));
-    return 0;
-}
-
-int org_mini_gl_GL_glNormal3fv(Runtime *runtime, Class *clazz) {
-    JniEnv *env = runtime->jnienv;
-    s32 pos = 0;
-    Instance *arr = env->localvar_getRefer(runtime, pos++);
-    s32 offset = env->localvar_getInt(runtime, pos++);
-    offset *= env->data_type_bytes[arr->mb.arr_type_index];
-    glNormal3fv((const GLfloat *) (arr->arr_body + offset));
-    return 0;
-}
-
-int org_mini_gl_GL_glNormal3dv(Runtime *runtime, Class *clazz) {
-    JniEnv *env = runtime->jnienv;
-    s32 pos = 0;
-    Instance *arr = env->localvar_getRefer(runtime, pos++);
-    s32 offset = env->localvar_getInt(runtime, pos++);
-    offset *= env->data_type_bytes[arr->mb.arr_type_index];
-    glNormal3dv((const GLdouble *) (arr->arr_body + offset));
-    return 0;
-}
-
-int org_mini_gl_GL_glClearColor(Runtime *runtime, Class *clazz) {
-    JniEnv *env = runtime->jnienv;
-    s32 pos = 0;
-    Int2Float x, y, z, a;
-    x.i = env->localvar_getInt(runtime, pos++);
-    y.i = env->localvar_getInt(runtime, pos++);
-    z.i = env->localvar_getInt(runtime, pos++);
-    a.i = env->localvar_getInt(runtime, pos++);
-    glClearColor((GLfloat) x.f, (GLfloat) y.f, (GLfloat) z.f, (GLfloat) a.f);
-    return 0;
-}
-
-int org_mini_gl_GL_glRectf(Runtime *runtime, Class *clazz) {
-    JniEnv *env = runtime->jnienv;
-    s32 pos = 0;
-    Int2Float x1, y1, x2, y2;
-    x1.i = env->localvar_getInt(runtime, pos++);
-    y1.i = env->localvar_getInt(runtime, pos++);
-    x2.i = env->localvar_getInt(runtime, pos++);
-    y2.i = env->localvar_getInt(runtime, pos++);
-    glRectf((GLfloat) x1.f, (GLfloat) y1.f, (GLfloat) x2.f, (GLfloat) y2.f);
-    return 0;
-}
-
-int org_mini_gl_GL_glLightModelf(Runtime *runtime, Class *clazz) {
-    JniEnv *env = runtime->jnienv;
-    s32 pos = 0;
-    s32 pname = env->localvar_getInt(runtime, pos++);
-    Int2Float param;
-    param.i = env->localvar_getInt(runtime, pos++);
-    glLightModelf((GLenum) pname, (GLfloat) param.f);
-    return 0;
-}
-
-int org_mini_gl_GL_glLightModeli(Runtime *runtime, Class *clazz) {
-    JniEnv *env = runtime->jnienv;
-    s32 pos = 0;
-    s32 pname = env->localvar_getInt(runtime, pos++);
-    s32 param = env->localvar_getInt(runtime, pos++);
-    glLightModeli((GLenum) pname, (GLint) param);
-    return 0;
-}
-
-int org_mini_gl_GL_glLightfv(Runtime *runtime, Class *clazz) {
-    JniEnv *env = runtime->jnienv;
-    s32 pos = 0;
-    s32 light = env->localvar_getInt(runtime, pos++);
-    s32 pname = env->localvar_getInt(runtime, pos++);
-    Instance *arr = env->localvar_getRefer(runtime, pos++);
-    s32 offset = env->localvar_getInt(runtime, pos++);
-    offset *= env->data_type_bytes[arr->mb.arr_type_index];
-    glLightfv((GLenum) light, (GLenum) pname, (const GLfloat *) (arr->arr_body + offset));
-    return 0;
-}
-
-int org_mini_gl_GL_glLightiv(Runtime *runtime, Class *clazz) {
-    JniEnv *env = runtime->jnienv;
-    s32 pos = 0;
-    s32 light = env->localvar_getInt(runtime, pos++);
-    s32 pname = env->localvar_getInt(runtime, pos++);
-    Instance *arr = env->localvar_getRefer(runtime, pos++);
-    s32 offset = env->localvar_getInt(runtime, pos++);
-    offset *= env->data_type_bytes[arr->mb.arr_type_index];
-    glLightiv((GLenum) light, (GLenum) pname, (const GLint *) (arr->arr_body + offset));
-    return 0;
-}
-
-int org_mini_gl_GL_glMaterialf(Runtime *runtime, Class *clazz) {
-    JniEnv *env = runtime->jnienv;
-    s32 pos = 0;
-    s32 face = env->localvar_getInt(runtime, pos++);
-    s32 pname = env->localvar_getInt(runtime, pos++);
-    Int2Float param;
-    param.i = env->localvar_getInt(runtime, pos++);
-    glMaterialf((GLenum) face, (GLenum) pname, (GLfloat) param.f);
-    return 0;
-}
-
-int org_mini_gl_GL_glMateriali(Runtime *runtime, Class *clazz) {
-    JniEnv *env = runtime->jnienv;
-    s32 pos = 0;
-    s32 face = env->localvar_getInt(runtime, pos++);
-    s32 pname = env->localvar_getInt(runtime, pos++);
-    s32 param = env->localvar_getInt(runtime, pos++);
-    glMateriali((GLenum) face, (GLenum) pname, (GLint) param);
-    return 0;
-}
-
-int org_mini_gl_GL_glMaterialfv(Runtime *runtime, Class *clazz) {
-    JniEnv *env = runtime->jnienv;
-    s32 pos = 0;
-    s32 face = env->localvar_getInt(runtime, pos++);
-    s32 pname = env->localvar_getInt(runtime, pos++);
-    Instance *arr = env->localvar_getRefer(runtime, pos++);
-    s32 offset = env->localvar_getInt(runtime, pos++);
-    offset *= env->data_type_bytes[arr->mb.arr_type_index];
-    glMaterialfv((GLenum) face, (GLenum) pname, (const GLfloat *) (arr->arr_body + offset));
-    return 0;
-}
-
-int org_mini_gl_GL_glMaterialiv(Runtime *runtime, Class *clazz) {
-    JniEnv *env = runtime->jnienv;
-    s32 pos = 0;
-    s32 face = env->localvar_getInt(runtime, pos++);
-    s32 pname = env->localvar_getInt(runtime, pos++);
-    Instance *arr = env->localvar_getRefer(runtime, pos++);
-    s32 offset = env->localvar_getInt(runtime, pos++);
-    offset *= env->data_type_bytes[arr->mb.arr_type_index];
-    glMaterialiv((GLenum) face, (GLenum) pname, (const GLint *) (arr->arr_body + offset));
-    return 0;
-}
-
-int org_mini_gl_GL_glGetMaterialfv(Runtime *runtime, Class *clazz) {
-    JniEnv *env = runtime->jnienv;
-    s32 pos = 0;
-    s32 face = env->localvar_getInt(runtime, pos++);
-    s32 pname = env->localvar_getInt(runtime, pos++);
-    Instance *arr = env->localvar_getRefer(runtime, pos++);
-    s32 offset = env->localvar_getInt(runtime, pos++);
-    offset *= env->data_type_bytes[arr->mb.arr_type_index];
-    glGetMaterialfv((GLenum) face, (GLenum) pname, (GLfloat *) (arr->arr_body + offset));
-    return 0;
-}
-
-int org_mini_gl_GL_glGetMaterialiv(Runtime *runtime, Class *clazz) {
-    JniEnv *env = runtime->jnienv;
-    s32 pos = 0;
-    s32 face = env->localvar_getInt(runtime, pos++);
-    s32 pname = env->localvar_getInt(runtime, pos++);
-    Instance *arr = env->localvar_getRefer(runtime, pos++);
-    s32 offset = env->localvar_getInt(runtime, pos++);
-    offset *= env->data_type_bytes[arr->mb.arr_type_index];
-    glGetMaterialiv((GLenum) face, (GLenum) pname, (GLint *) (arr->arr_body + offset));
-    return 0;
-}
-
-int org_mini_gl_GL_glColorMaterial(Runtime *runtime, Class *clazz) {
-    JniEnv *env = runtime->jnienv;
-    s32 pos = 0;
-    s32 face = env->localvar_getInt(runtime, pos++);
-    s32 mode = env->localvar_getInt(runtime, pos++);
-    glColorMaterial((GLenum) face, (GLenum) mode);
-    return 0;
-}
-
-int org_mini_gl_GL_glNewList(Runtime *runtime, Class *clazz) {
-    JniEnv *env = runtime->jnienv;
-    s32 pos = 0;
-    s32 list = env->localvar_getInt(runtime, pos++);
-    s32 mode = env->localvar_getInt(runtime, pos++);
-    glNewList((GLuint) list, (GLenum) mode);
-    return 0;
-}
-
-int org_mini_gl_GL_glGenLists(Runtime *runtime, Class *clazz) {
-    JniEnv *env = runtime->jnienv;
-    s32 pos = 0;
-    s32 range = env->localvar_getInt(runtime, pos++);
-    env->push_int(runtime->stack, glGenLists((GLsizei) range));
-    return 0;
-}
-
-int org_mini_gl_GL_glDeleteLists(Runtime *runtime, Class *clazz) {
-    JniEnv *env = runtime->jnienv;
-    s32 pos = 0;
-    s32 list = env->localvar_getInt(runtime, pos++);
-    s32 range = env->localvar_getInt(runtime, pos++);
-    glDeleteLists((GLuint) list, (GLsizei) range);
-    return 0;
-}
-
-int org_mini_gl_GL_glEndList(Runtime *runtime, Class *clazz) {
-    glEndList();
-    return 0;
-}
-
-int org_mini_gl_GL_glCallList(Runtime *runtime, Class *clazz) {
-    JniEnv *env = runtime->jnienv;
-    s32 pos = 0;
-    s32 list = env->localvar_getInt(runtime, pos++);
-    glCallList((GLuint) list);
-    return 0;
-}
-
-int org_mini_gl_GL_glIsList(Runtime *runtime, Class *clazz) {
-    JniEnv *env = runtime->jnienv;
-    s32 pos = 0;
-    s32 list = env->localvar_getInt(runtime, pos++);
-    env->push_int(runtime->stack, glIsList((GLuint) list) == GL_TRUE);
-    return 0;
-}
-
-int org_mini_gl_GL_glListBase(Runtime *runtime, Class *clazz) {
-    JniEnv *env = runtime->jnienv;
-    s32 pos = 0;
-    s32 base = env->localvar_getInt(runtime, pos++);
-    glListBase((GLuint) base);
-    return 0;
-}
-
-int org_mini_gl_GL_glCallLists(Runtime *runtime, Class *clazz) {
-    JniEnv *env = runtime->jnienv;
-    s32 pos = 0;
-    s32 n = env->localvar_getInt(runtime, pos++);
-    s32 type = env->localvar_getInt(runtime, pos++);
-    Instance *arr = env->localvar_getRefer(runtime, pos++);
-    s32 offset = env->localvar_getInt(runtime, pos++);
-    offset *= env->data_type_bytes[arr->mb.arr_type_index];
-    glCallLists((GLsizei) n, (GLenum) type, (const GLvoid *) (arr->arr_body + offset));
-    return 0;
-}
-
-int org_mini_gl_GL_glDrawArrays(Runtime *runtime, Class *clazz) {
-    JniEnv *env = runtime->jnienv;
-    s32 pos = 0;
-    s32 mode = env->localvar_getInt(runtime, pos++);
-    s32 first = env->localvar_getInt(runtime, pos++);
-    s32 count = env->localvar_getInt(runtime, pos++);
-    glDrawArrays((GLenum) mode, (GLint) first, (GLsizei) count);
-    return 0;
-}
-
-int org_mini_gl_GL_glBindVertexArray(Runtime *runtime, Class *clazz) {
-    JniEnv *env = runtime->jnienv;
-    s32 pos = 0;
-    s32 array = env->localvar_getInt(runtime, pos++);
-    glBindVertexArray((GLuint) array);
-    return 0;
-}
-
-int org_mini_gl_GL_glEnableVertexAttribArray(Runtime *runtime, Class *clazz) {
-    JniEnv *env = runtime->jnienv;
-    s32 pos = 0;
-    s32 index = env->localvar_getInt(runtime, pos++);
-    glEnableVertexAttribArray((GLuint) index);
-    return 0;
-}
-
-int org_mini_gl_GL_glUseProgram(Runtime *runtime, Class *clazz) {
-    JniEnv *env = runtime->jnienv;
-    s32 pos = 0;
-    s32 program = env->localvar_getInt(runtime, pos++);
-    glUseProgram((GLuint) program);
-    return 0;
-}
-
-int org_mini_gl_GL_glLinkProgram(Runtime *runtime, Class *clazz) {
-    JniEnv *env = runtime->jnienv;
-    s32 pos = 0;
-    s32 program = env->localvar_getInt(runtime, pos++);
-    glLinkProgram((GLuint) program);
-    return 0;
-}
-
-int org_mini_gl_GL_glCreateShader(Runtime *runtime, Class *clazz) {
-    JniEnv *env = runtime->jnienv;
-    s32 pos = 0;
-    s32 type = env->localvar_getInt(runtime, pos++);
-    env->push_int(runtime->stack, glCreateShader((GLenum) type));
-    return 0;
-}
-
-int org_mini_gl_GL_glCreateProgram(Runtime *runtime, Class *clazz) {
-    JniEnv *env = runtime->jnienv;
-    env->push_int(runtime->stack, glCreateProgram());
-    return 0;
-}
 
 int org_mini_gl_GL_glCompileShader(Runtime *runtime, Class *clazz) {
     JniEnv *env = runtime->jnienv;
@@ -2308,143 +1026,7 @@ int org_mini_gl_GL_glCompileShader(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-int org_mini_gl_GL_glShaderSource(Runtime *runtime, Class *clazz) {
-    JniEnv *env = runtime->jnienv;
-    s32 pos = 0;
-    s32 shader = env->localvar_getInt(runtime, pos++);
-    Instance *barr = env->localvar_getRefer(runtime, pos++);
-    const GLchar *src = barr->arr_body;
 
-    glShaderSource((GLuint) shader, 1, &src, NULL);
-    return 0;
-}
-
-int org_mini_gl_GL_glAttachShader(Runtime *runtime, Class *clazz) {
-    JniEnv *env = runtime->jnienv;
-    s32 pos = 0;
-    s32 program = env->localvar_getInt(runtime, pos++);
-    s32 shader = env->localvar_getInt(runtime, pos++);
-    glAttachShader((GLuint) program, (GLuint) shader);
-    return 0;
-}
-
-int org_mini_gl_GL_glLoadIdentity(Runtime *runtime, Class *clazz) {
-    glLoadIdentity();
-    return 0;
-}
-
-int org_mini_gl_GL_glFrustum(Runtime *runtime, Class *clazz) {
-    JniEnv *env = runtime->jnienv;
-    s32 pos = 0;
-    Long2Double left, right, bottom, top, near_val, far_val;
-    left.l = getParaLong(runtime, pos);
-    pos += 2;
-    right.l = getParaLong(runtime, pos);
-    pos += 2;
-    bottom.l = getParaLong(runtime, pos);
-    pos += 2;
-    top.l = getParaLong(runtime, pos);
-    pos += 2;
-    near_val.l = getParaLong(runtime, pos);
-    pos += 2;
-    far_val.l = getParaLong(runtime, pos);
-    pos += 2;
-    glFrustum((GLdouble) left.d, (GLdouble) right.d, (GLdouble) bottom.d, (GLdouble) top.d, (GLdouble) near_val.d,
-              (GLdouble) far_val.d);
-    return 0;
-}
-
-int org_mini_gl_GL_glBufferData(Runtime *runtime, Class *clazz) {
-    JniEnv *env = runtime->jnienv;
-    s32 pos = 0;
-    s32 target = env->localvar_getInt(runtime, pos++);
-    s64 size = getParaLong(runtime, pos);
-    pos += 2;
-    Instance *arr = env->localvar_getRefer(runtime, pos++);
-    s32 offset = env->localvar_getInt(runtime, pos++);
-    s32 usage = env->localvar_getInt(runtime, pos++);
-    offset *= env->data_type_bytes[arr->mb.arr_type_index];
-    glBufferData((GLenum) target, (GLsizeiptr) size, (const GLvoid *) (arr->arr_body + offset), (GLenum) usage);
-    return 0;
-}
-
-int org_mini_gl_GL_glGenBuffers(Runtime *runtime, Class *clazz) {
-    JniEnv *env = runtime->jnienv;
-    s32 pos = 0;
-    s32 n = env->localvar_getInt(runtime, pos++);
-    Instance *arr = env->localvar_getRefer(runtime, pos++);
-    s32 offset = env->localvar_getInt(runtime, pos++);
-    offset *= env->data_type_bytes[arr->mb.arr_type_index];
-    glGenBuffers((GLsizei) n, (GLuint *) (arr->arr_body + offset));
-    return 0;
-}
-
-int org_mini_gl_GL_glGenVertexArrays(Runtime *runtime, Class *clazz) {
-    JniEnv *env = runtime->jnienv;
-    s32 pos = 0;
-    s32 n = env->localvar_getInt(runtime, pos++);
-    Instance *arr = env->localvar_getRefer(runtime, pos++);
-    s32 offset = env->localvar_getInt(runtime, pos++);
-    offset *= env->data_type_bytes[arr->mb.arr_type_index];
-    glGenVertexArrays((GLsizei) n, (GLuint *) (arr->arr_body + offset));
-    return 0;
-}
-
-int org_mini_gl_GL_glDeleteVertexArrays(Runtime *runtime, Class *clazz) {
-    JniEnv *env = runtime->jnienv;
-    s32 pos = 0;
-    s32 n = env->localvar_getInt(runtime, pos++);
-    Instance *arr = env->localvar_getRefer(runtime, pos++);
-    s32 offset = env->localvar_getInt(runtime, pos++);
-    offset *= env->data_type_bytes[arr->mb.arr_type_index];
-    glDeleteVertexArrays((GLsizei) n, (GLuint *) (arr->arr_body + offset));
-    return 0;
-}
-
-int org_mini_gl_GL_glBindBuffer(Runtime *runtime, Class *clazz) {
-    JniEnv *env = runtime->jnienv;
-    s32 pos = 0;
-    s32 target = env->localvar_getInt(runtime, pos++);
-    s32 buffer = env->localvar_getInt(runtime, pos++);
-    glBindBuffer((GLenum) target, (GLuint) buffer);
-    return 0;
-}
-
-int org_mini_gl_GL_glPointSize(Runtime *runtime, Class *clazz) {
-    JniEnv *env = runtime->jnienv;
-    s32 pos = 0;
-    Int2Float i2f;
-    i2f.i = env->localvar_getInt(runtime, pos++);
-    glPointSize((GLfloat) i2f.f);
-    return 0;
-}
-
-int org_mini_gl_GL_glLineWidth(Runtime *runtime, Class *clazz) {
-    JniEnv *env = runtime->jnienv;
-    s32 pos = 0;
-    Int2Float i2f;
-    i2f.i = env->localvar_getInt(runtime, pos++);
-    glLineWidth((GLfloat) i2f.f);
-    return 0;
-}
-
-
-int org_mini_gl_GL_glPolygonStipple(Runtime *runtime, Class *clazz) {
-    JniEnv *env = runtime->jnienv;
-    s32 pos = 0;
-    Instance *arr = env->localvar_getRefer(runtime, pos++);
-    s32 offset = env->localvar_getInt(runtime, pos++);
-    offset *= env->data_type_bytes[arr->mb.arr_type_index];
-    glPolygonStipple((const GLbyte *) (arr->arr_body + offset));
-    return 0;
-}
-
-int org_mini_gl_GL_glGetError(Runtime *runtime, Class *clazz) {
-    JniEnv *env = runtime->jnienv;
-    env->push_int(runtime->stack, glGetError());
-    return 0;
-}
-*/
 int org_mini_gl_GL_glGetString(Runtime *runtime, Class *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
@@ -2460,6 +1042,11 @@ int org_mini_gl_GL_glGetString(Runtime *runtime, Class *clazz) {
 }
 /*
  * ===============================================================================
+ * ===============================================================================
+ * =================================  auto gen code ==============================
+ * ===============================================================================
+ * ===============================================================================
+ * ===============================================================================
 */
 
 
@@ -2469,7 +1056,7 @@ int org_mini_gl_GL_glCullFace(Runtime *runtime, Class *clazz) {
 
     s32 mode = env->localvar_getInt(runtime, pos++);
 
-    glCullFace((GLenum) mode);
+    glCullFace((GLenum)mode);
 
     return 0;
 }
@@ -2480,7 +1067,7 @@ int org_mini_gl_GL_glFrontFace(Runtime *runtime, Class *clazz) {
 
     s32 mode = env->localvar_getInt(runtime, pos++);
 
-    glFrontFace((GLenum) mode);
+    glFrontFace((GLenum)mode);
 
     return 0;
 }
@@ -2492,7 +1079,7 @@ int org_mini_gl_GL_glHint(Runtime *runtime, Class *clazz) {
     s32 target = env->localvar_getInt(runtime, pos++);
     s32 mode = env->localvar_getInt(runtime, pos++);
 
-    glHint((GLenum) target,(GLenum) mode);
+    glHint((GLenum)target, (GLenum)mode);
 
     return 0;
 }
@@ -2503,7 +1090,7 @@ int org_mini_gl_GL_glLineWidth(Runtime *runtime, Class *clazz) {
 
     Int2Float width;width.i = env->localvar_getInt(runtime, pos++);
 
-    glLineWidth( (GLfloat) width.f);
+    glLineWidth((GLfloat)width.f);
 
     return 0;
 }
@@ -2514,7 +1101,7 @@ int org_mini_gl_GL_glPointSize(Runtime *runtime, Class *clazz) {
 
     Int2Float size;size.i = env->localvar_getInt(runtime, pos++);
 
-    glPointSize( (GLfloat) size.f);
+    glPointSize((GLfloat)size.f);
 
     return 0;
 }
@@ -2526,7 +1113,7 @@ int org_mini_gl_GL_glPolygonMode(Runtime *runtime, Class *clazz) {
     s32 face = env->localvar_getInt(runtime, pos++);
     s32 mode = env->localvar_getInt(runtime, pos++);
 
-    glPolygonMode((GLenum) face,(GLenum) mode);
+    glPolygonMode((GLenum)face, (GLenum)mode);
 
     return 0;
 }
@@ -2540,7 +1127,7 @@ int org_mini_gl_GL_glScissor(Runtime *runtime, Class *clazz) {
     s32 width = env->localvar_getInt(runtime, pos++);
     s32 height = env->localvar_getInt(runtime, pos++);
 
-    glScissor((GLint) x,(GLint) y,(GLsizei) width,(GLsizei) height);
+    glScissor((GLint)x, (GLint)y, (GLsizei)width, (GLsizei)height);
 
     return 0;
 }
@@ -2553,7 +1140,7 @@ int org_mini_gl_GL_glTexParameterf(Runtime *runtime, Class *clazz) {
     s32 pname = env->localvar_getInt(runtime, pos++);
     Int2Float param;param.i = env->localvar_getInt(runtime, pos++);
 
-    glTexParameterf((GLenum) target,(GLenum) pname, (GLfloat) param.f);
+    glTexParameterf((GLenum)target, (GLenum)pname, (GLfloat)param.f);
 
     return 0;
 }
@@ -2572,7 +1159,7 @@ int org_mini_gl_GL_glTexParameterfv(Runtime *runtime, Class *clazz) {
         ptr2 = params->arr_body + arr_offset2;
     }
 
-    glTexParameterfv((GLenum) target,(GLenum) pname,(const GLfloat *) (ptr2));
+    glTexParameterfv((GLenum)target, (GLenum)pname, (const GLfloat *)(ptr2));
 
     return 0;
 }
@@ -2585,7 +1172,7 @@ int org_mini_gl_GL_glTexParameteri(Runtime *runtime, Class *clazz) {
     s32 pname = env->localvar_getInt(runtime, pos++);
     s32 param = env->localvar_getInt(runtime, pos++);
 
-    glTexParameteri((GLenum) target,(GLenum) pname,(GLint) param);
+    glTexParameteri((GLenum)target, (GLenum)pname, (GLint)param);
 
     return 0;
 }
@@ -2604,7 +1191,7 @@ int org_mini_gl_GL_glTexParameteriv(Runtime *runtime, Class *clazz) {
         ptr2 = params->arr_body + arr_offset2;
     }
 
-    glTexParameteriv((GLenum) target,(GLenum) pname,(const GLint *) (ptr2));
+    glTexParameteriv((GLenum)target, (GLenum)pname, (const GLint *)(ptr2));
 
     return 0;
 }
@@ -2628,7 +1215,7 @@ int org_mini_gl_GL_glTexImage1D(Runtime *runtime, Class *clazz) {
         ptr7 = pixels->arr_body + arr_offset7;
     }
 
-    glTexImage1D((GLenum) target,(GLint) level,(GLint) internalformat,(GLsizei) width,(GLint) border,(GLenum) format,(GLenum) type,(const void *) (ptr7));
+    glTexImage1D((GLenum)target, (GLint)level, (GLint)internalformat, (GLsizei)width, (GLint)border, (GLenum)format, (GLenum)type, (const void *)(ptr7));
 
     return 0;
 }
@@ -2653,7 +1240,7 @@ int org_mini_gl_GL_glTexImage2D(Runtime *runtime, Class *clazz) {
         ptr8 = pixels->arr_body + arr_offset8;
     }
 
-    glTexImage2D((GLenum) target,(GLint) level,(GLint) internalformat,(GLsizei) width,(GLsizei) height,(GLint) border,(GLenum) format,(GLenum) type,(const void *) (ptr8));
+    glTexImage2D((GLenum)target, (GLint)level, (GLint)internalformat, (GLsizei)width, (GLsizei)height, (GLint)border, (GLenum)format, (GLenum)type, (const void *)(ptr8));
 
     return 0;
 }
@@ -2664,7 +1251,7 @@ int org_mini_gl_GL_glDrawBuffer(Runtime *runtime, Class *clazz) {
 
     s32 buf = env->localvar_getInt(runtime, pos++);
 
-    glDrawBuffer((GLenum) buf);
+    glDrawBuffer((GLenum)buf);
 
     return 0;
 }
@@ -2675,7 +1262,7 @@ int org_mini_gl_GL_glClear(Runtime *runtime, Class *clazz) {
 
     s32 mask = env->localvar_getInt(runtime, pos++);
 
-    glClear((GLbitfield) mask);
+    glClear((GLbitfield)mask);
 
     return 0;
 }
@@ -2689,7 +1276,7 @@ int org_mini_gl_GL_glClearColor(Runtime *runtime, Class *clazz) {
     Int2Float blue;blue.i = env->localvar_getInt(runtime, pos++);
     Int2Float alpha;alpha.i = env->localvar_getInt(runtime, pos++);
 
-    glClearColor( (GLfloat) red.f, (GLfloat) green.f, (GLfloat) blue.f, (GLfloat) alpha.f);
+    glClearColor((GLfloat)red.f, (GLfloat)green.f, (GLfloat)blue.f, (GLfloat)alpha.f);
 
     return 0;
 }
@@ -2700,7 +1287,7 @@ int org_mini_gl_GL_glClearStencil(Runtime *runtime, Class *clazz) {
 
     s32 s = env->localvar_getInt(runtime, pos++);
 
-    glClearStencil((GLint) s);
+    glClearStencil((GLint)s);
 
     return 0;
 }
@@ -2711,7 +1298,7 @@ int org_mini_gl_GL_glClearDepth(Runtime *runtime, Class *clazz) {
 
     Long2Double depth;depth.l = getParaLong(runtime, pos);pos += 2;
 
-    glClearDepth((GLdouble) depth.d);
+    glClearDepth((GLdouble)depth.d);
 
     return 0;
 }
@@ -2722,7 +1309,7 @@ int org_mini_gl_GL_glStencilMask(Runtime *runtime, Class *clazz) {
 
     s32 mask = env->localvar_getInt(runtime, pos++);
 
-    glStencilMask((GLuint) mask);
+    glStencilMask((GLuint)mask);
 
     return 0;
 }
@@ -2736,7 +1323,7 @@ int org_mini_gl_GL_glColorMask(Runtime *runtime, Class *clazz) {
     s32 blue = env->localvar_getInt(runtime, pos++);
     s32 alpha = env->localvar_getInt(runtime, pos++);
 
-    glColorMask((GLboolean) red,(GLboolean) green,(GLboolean) blue,(GLboolean) alpha);
+    glColorMask((GLboolean)red, (GLboolean)green, (GLboolean)blue, (GLboolean)alpha);
 
     return 0;
 }
@@ -2747,7 +1334,7 @@ int org_mini_gl_GL_glDepthMask(Runtime *runtime, Class *clazz) {
 
     s32 flag = env->localvar_getInt(runtime, pos++);
 
-    glDepthMask((GLboolean) flag);
+    glDepthMask((GLboolean)flag);
 
     return 0;
 }
@@ -2758,7 +1345,7 @@ int org_mini_gl_GL_glDisable(Runtime *runtime, Class *clazz) {
 
     s32 cap = env->localvar_getInt(runtime, pos++);
 
-    glDisable((GLenum) cap);
+    glDisable((GLenum)cap);
 
     return 0;
 }
@@ -2769,7 +1356,7 @@ int org_mini_gl_GL_glEnable(Runtime *runtime, Class *clazz) {
 
     s32 cap = env->localvar_getInt(runtime, pos++);
 
-    glEnable((GLenum) cap);
+    glEnable((GLenum)cap);
 
     return 0;
 }
@@ -2801,7 +1388,7 @@ int org_mini_gl_GL_glBlendFunc(Runtime *runtime, Class *clazz) {
     s32 sfactor = env->localvar_getInt(runtime, pos++);
     s32 dfactor = env->localvar_getInt(runtime, pos++);
 
-    glBlendFunc((GLenum) sfactor,(GLenum) dfactor);
+    glBlendFunc((GLenum)sfactor, (GLenum)dfactor);
 
     return 0;
 }
@@ -2812,7 +1399,7 @@ int org_mini_gl_GL_glLogicOp(Runtime *runtime, Class *clazz) {
 
     s32 opcode = env->localvar_getInt(runtime, pos++);
 
-    glLogicOp((GLenum) opcode);
+    glLogicOp((GLenum)opcode);
 
     return 0;
 }
@@ -2825,7 +1412,7 @@ int org_mini_gl_GL_glStencilFunc(Runtime *runtime, Class *clazz) {
     s32 ref = env->localvar_getInt(runtime, pos++);
     s32 mask = env->localvar_getInt(runtime, pos++);
 
-    glStencilFunc((GLenum) func,(GLint) ref,(GLuint) mask);
+    glStencilFunc((GLenum)func, (GLint)ref, (GLuint)mask);
 
     return 0;
 }
@@ -2838,7 +1425,7 @@ int org_mini_gl_GL_glStencilOp(Runtime *runtime, Class *clazz) {
     s32 zfail = env->localvar_getInt(runtime, pos++);
     s32 zpass = env->localvar_getInt(runtime, pos++);
 
-    glStencilOp((GLenum) fail,(GLenum) zfail,(GLenum) zpass);
+    glStencilOp((GLenum)fail, (GLenum)zfail, (GLenum)zpass);
 
     return 0;
 }
@@ -2849,7 +1436,7 @@ int org_mini_gl_GL_glDepthFunc(Runtime *runtime, Class *clazz) {
 
     s32 func = env->localvar_getInt(runtime, pos++);
 
-    glDepthFunc((GLenum) func);
+    glDepthFunc((GLenum)func);
 
     return 0;
 }
@@ -2861,7 +1448,7 @@ int org_mini_gl_GL_glPixelStoref(Runtime *runtime, Class *clazz) {
     s32 pname = env->localvar_getInt(runtime, pos++);
     Int2Float param;param.i = env->localvar_getInt(runtime, pos++);
 
-    glPixelStoref((GLenum) pname, (GLfloat) param.f);
+    glPixelStoref((GLenum)pname, (GLfloat)param.f);
 
     return 0;
 }
@@ -2873,7 +1460,7 @@ int org_mini_gl_GL_glPixelStorei(Runtime *runtime, Class *clazz) {
     s32 pname = env->localvar_getInt(runtime, pos++);
     s32 param = env->localvar_getInt(runtime, pos++);
 
-    glPixelStorei((GLenum) pname,(GLint) param);
+    glPixelStorei((GLenum)pname, (GLint)param);
 
     return 0;
 }
@@ -2884,7 +1471,7 @@ int org_mini_gl_GL_glReadBuffer(Runtime *runtime, Class *clazz) {
 
     s32 src = env->localvar_getInt(runtime, pos++);
 
-    glReadBuffer((GLenum) src);
+    glReadBuffer((GLenum)src);
 
     return 0;
 }
@@ -2907,7 +1494,7 @@ int org_mini_gl_GL_glReadPixels(Runtime *runtime, Class *clazz) {
         ptr6 = pixels->arr_body + arr_offset6;
     }
 
-    glReadPixels((GLint) x,(GLint) y,(GLsizei) width,(GLsizei) height,(GLenum) format,(GLenum) type,(void *) (ptr6));
+    glReadPixels((GLint)x, (GLint)y, (GLsizei)width, (GLsizei)height, (GLenum)format, (GLenum)type, (void *)(ptr6));
 
     return 0;
 }
@@ -2925,7 +1512,7 @@ int org_mini_gl_GL_glGetBooleanv(Runtime *runtime, Class *clazz) {
         ptr1 = data->arr_body + arr_offset1;
     }
 
-    glGetBooleanv((GLenum) pname,(GLboolean *) (ptr1));
+    glGetBooleanv((GLenum)pname, (GLboolean *)(ptr1));
 
     return 0;
 }
@@ -2943,7 +1530,7 @@ int org_mini_gl_GL_glGetDoublev(Runtime *runtime, Class *clazz) {
         ptr1 = data->arr_body + arr_offset1;
     }
 
-    glGetDoublev((GLenum) pname,(GLdouble *) (ptr1));
+    glGetDoublev((GLenum)pname, (GLdouble *)(ptr1));
 
     return 0;
 }
@@ -2971,7 +1558,7 @@ int org_mini_gl_GL_glGetFloatv(Runtime *runtime, Class *clazz) {
         ptr1 = data->arr_body + arr_offset1;
     }
 
-    glGetFloatv((GLenum) pname,(GLfloat *) (ptr1));
+    glGetFloatv((GLenum)pname, (GLfloat *)(ptr1));
 
     return 0;
 }
@@ -2989,11 +1576,10 @@ int org_mini_gl_GL_glGetIntegerv(Runtime *runtime, Class *clazz) {
         ptr1 = data->arr_body + arr_offset1;
     }
 
-    glGetIntegerv((GLenum) pname,(GLint *) (ptr1));
+    glGetIntegerv((GLenum)pname, (GLint *)(ptr1));
 
     return 0;
 }
-
 
 int org_mini_gl_GL_glGetTexImage(Runtime *runtime, Class *clazz) {
     JniEnv *env = runtime->jnienv;
@@ -3011,7 +1597,7 @@ int org_mini_gl_GL_glGetTexImage(Runtime *runtime, Class *clazz) {
         ptr4 = pixels->arr_body + arr_offset4;
     }
 
-    glGetTexImage((GLenum) target,(GLint) level,(GLenum) format,(GLenum) type,(void *) (ptr4));
+    glGetTexImage((GLenum)target, (GLint)level, (GLenum)format, (GLenum)type, (void *)(ptr4));
 
     return 0;
 }
@@ -3030,7 +1616,7 @@ int org_mini_gl_GL_glGetTexParameterfv(Runtime *runtime, Class *clazz) {
         ptr2 = params->arr_body + arr_offset2;
     }
 
-    glGetTexParameterfv((GLenum) target,(GLenum) pname,(GLfloat *) (ptr2));
+    glGetTexParameterfv((GLenum)target, (GLenum)pname, (GLfloat *)(ptr2));
 
     return 0;
 }
@@ -3049,7 +1635,7 @@ int org_mini_gl_GL_glGetTexParameteriv(Runtime *runtime, Class *clazz) {
         ptr2 = params->arr_body + arr_offset2;
     }
 
-    glGetTexParameteriv((GLenum) target,(GLenum) pname,(GLint *) (ptr2));
+    glGetTexParameteriv((GLenum)target, (GLenum)pname, (GLint *)(ptr2));
 
     return 0;
 }
@@ -3069,7 +1655,7 @@ int org_mini_gl_GL_glGetTexLevelParameterfv(Runtime *runtime, Class *clazz) {
         ptr3 = params->arr_body + arr_offset3;
     }
 
-    glGetTexLevelParameterfv((GLenum) target,(GLint) level,(GLenum) pname,(GLfloat *) (ptr3));
+    glGetTexLevelParameterfv((GLenum)target, (GLint)level, (GLenum)pname, (GLfloat *)(ptr3));
 
     return 0;
 }
@@ -3089,7 +1675,7 @@ int org_mini_gl_GL_glGetTexLevelParameteriv(Runtime *runtime, Class *clazz) {
         ptr3 = params->arr_body + arr_offset3;
     }
 
-    glGetTexLevelParameteriv((GLenum) target,(GLint) level,(GLenum) pname,(GLint *) (ptr3));
+    glGetTexLevelParameteriv((GLenum)target, (GLint)level, (GLenum)pname, (GLint *)(ptr3));
 
     return 0;
 }
@@ -3100,7 +1686,7 @@ int org_mini_gl_GL_glIsEnabled(Runtime *runtime, Class *clazz) {
 
     s32 cap = env->localvar_getInt(runtime, pos++);
 
-    s32 ret_value = (s32)glIsEnabled((GLenum) cap);
+    s32 ret_value = (s32)glIsEnabled((GLenum)cap);
     env->push_int(runtime->stack, ret_value);
     return 0;
 }
@@ -3112,7 +1698,7 @@ int org_mini_gl_GL_glDepthRange(Runtime *runtime, Class *clazz) {
     Long2Double pnear;pnear.l = getParaLong(runtime, pos);pos += 2;
     Long2Double pfar;pfar.l = getParaLong(runtime, pos);pos += 2;
 
-    glDepthRange((GLdouble) pnear.d,(GLdouble) pfar.d);
+    glDepthRange((GLdouble)pnear.d, (GLdouble)pfar.d);
 
     return 0;
 }
@@ -3126,7 +1712,7 @@ int org_mini_gl_GL_glViewport(Runtime *runtime, Class *clazz) {
     s32 width = env->localvar_getInt(runtime, pos++);
     s32 height = env->localvar_getInt(runtime, pos++);
 
-    glViewport((GLint) x,(GLint) y,(GLsizei) width,(GLsizei) height);
+    glViewport((GLint)x, (GLint)y, (GLsizei)width, (GLsizei)height);
 
     return 0;
 }
@@ -3138,7 +1724,7 @@ int org_mini_gl_GL_glNewList(Runtime *runtime, Class *clazz) {
     s32 list = env->localvar_getInt(runtime, pos++);
     s32 mode = env->localvar_getInt(runtime, pos++);
 
-    glNewList((GLuint) list,(GLenum) mode);
+    glNewList((GLuint)list, (GLenum)mode);
 
     return 0;
 }
@@ -3159,7 +1745,7 @@ int org_mini_gl_GL_glCallList(Runtime *runtime, Class *clazz) {
 
     s32 list = env->localvar_getInt(runtime, pos++);
 
-    glCallList((GLuint) list);
+    glCallList((GLuint)list);
 
     return 0;
 }
@@ -3178,7 +1764,7 @@ int org_mini_gl_GL_glCallLists(Runtime *runtime, Class *clazz) {
         ptr2 = lists->arr_body + arr_offset2;
     }
 
-    glCallLists((GLsizei) n,(GLenum) type,(const void *) (ptr2));
+    glCallLists((GLsizei)n, (GLenum)type, (const void *)(ptr2));
 
     return 0;
 }
@@ -3190,7 +1776,7 @@ int org_mini_gl_GL_glDeleteLists(Runtime *runtime, Class *clazz) {
     s32 list = env->localvar_getInt(runtime, pos++);
     s32 range = env->localvar_getInt(runtime, pos++);
 
-    glDeleteLists((GLuint) list,(GLsizei) range);
+    glDeleteLists((GLuint)list, (GLsizei)range);
 
     return 0;
 }
@@ -3201,7 +1787,7 @@ int org_mini_gl_GL_glGenLists(Runtime *runtime, Class *clazz) {
 
     s32 range = env->localvar_getInt(runtime, pos++);
 
-    s32 ret_value = (s32)glGenLists((GLsizei) range);
+    s32 ret_value = (s32)glGenLists((GLsizei)range);
     env->push_int(runtime->stack, ret_value);
     return 0;
 }
@@ -3212,7 +1798,7 @@ int org_mini_gl_GL_glListBase(Runtime *runtime, Class *clazz) {
 
     s32 base = env->localvar_getInt(runtime, pos++);
 
-    glListBase((GLuint) base);
+    glListBase((GLuint)base);
 
     return 0;
 }
@@ -3223,7 +1809,7 @@ int org_mini_gl_GL_glBegin(Runtime *runtime, Class *clazz) {
 
     s32 mode = env->localvar_getInt(runtime, pos++);
 
-    glBegin((GLenum) mode);
+    glBegin((GLenum)mode);
 
     return 0;
 }
@@ -3246,7 +1832,7 @@ int org_mini_gl_GL_glBitmap(Runtime *runtime, Class *clazz) {
         ptr6 = bitmap->arr_body + arr_offset6;
     }
 
-    glBitmap((GLsizei) width,(GLsizei) height, (GLfloat) xorig.f, (GLfloat) yorig.f, (GLfloat) xmove.f, (GLfloat) ymove.f,(const GLubyte *) (ptr6));
+    glBitmap((GLsizei)width, (GLsizei)height, (GLfloat)xorig.f, (GLfloat)yorig.f, (GLfloat)xmove.f, (GLfloat)ymove.f, (const GLubyte *)(ptr6));
 
     return 0;
 }
@@ -3259,7 +1845,7 @@ int org_mini_gl_GL_glColor3b(Runtime *runtime, Class *clazz) {
     s32 green = env->localvar_getInt(runtime, pos++);
     s32 blue = env->localvar_getInt(runtime, pos++);
 
-    glColor3b((GLbyte) red,(GLbyte) green,(GLbyte) blue);
+    glColor3b((GLbyte)red, (GLbyte)green, (GLbyte)blue);
 
     return 0;
 }
@@ -3276,7 +1862,7 @@ int org_mini_gl_GL_glColor3bv(Runtime *runtime, Class *clazz) {
         ptr0 = v->arr_body + arr_offset0;
     }
 
-    glColor3bv((const GLbyte *) (ptr0));
+    glColor3bv((const GLbyte *)(ptr0));
 
     return 0;
 }
@@ -3289,7 +1875,7 @@ int org_mini_gl_GL_glColor3d(Runtime *runtime, Class *clazz) {
     Long2Double green;green.l = getParaLong(runtime, pos);pos += 2;
     Long2Double blue;blue.l = getParaLong(runtime, pos);pos += 2;
 
-    glColor3d((GLdouble) red.d,(GLdouble) green.d,(GLdouble) blue.d);
+    glColor3d((GLdouble)red.d, (GLdouble)green.d, (GLdouble)blue.d);
 
     return 0;
 }
@@ -3306,7 +1892,7 @@ int org_mini_gl_GL_glColor3dv(Runtime *runtime, Class *clazz) {
         ptr0 = v->arr_body + arr_offset0;
     }
 
-    glColor3dv((const GLdouble *) (ptr0));
+    glColor3dv((const GLdouble *)(ptr0));
 
     return 0;
 }
@@ -3319,7 +1905,7 @@ int org_mini_gl_GL_glColor3f(Runtime *runtime, Class *clazz) {
     Int2Float green;green.i = env->localvar_getInt(runtime, pos++);
     Int2Float blue;blue.i = env->localvar_getInt(runtime, pos++);
 
-    glColor3f( (GLfloat) red.f, (GLfloat) green.f, (GLfloat) blue.f);
+    glColor3f((GLfloat)red.f, (GLfloat)green.f, (GLfloat)blue.f);
 
     return 0;
 }
@@ -3336,7 +1922,7 @@ int org_mini_gl_GL_glColor3fv(Runtime *runtime, Class *clazz) {
         ptr0 = v->arr_body + arr_offset0;
     }
 
-    glColor3fv((const GLfloat *) (ptr0));
+    glColor3fv((const GLfloat *)(ptr0));
 
     return 0;
 }
@@ -3349,7 +1935,7 @@ int org_mini_gl_GL_glColor3i(Runtime *runtime, Class *clazz) {
     s32 green = env->localvar_getInt(runtime, pos++);
     s32 blue = env->localvar_getInt(runtime, pos++);
 
-    glColor3i((GLint) red,(GLint) green,(GLint) blue);
+    glColor3i((GLint)red, (GLint)green, (GLint)blue);
 
     return 0;
 }
@@ -3366,7 +1952,7 @@ int org_mini_gl_GL_glColor3iv(Runtime *runtime, Class *clazz) {
         ptr0 = v->arr_body + arr_offset0;
     }
 
-    glColor3iv((const GLint *) (ptr0));
+    glColor3iv((const GLint *)(ptr0));
 
     return 0;
 }
@@ -3379,7 +1965,7 @@ int org_mini_gl_GL_glColor3s(Runtime *runtime, Class *clazz) {
     s32 green = env->localvar_getInt(runtime, pos++);
     s32 blue = env->localvar_getInt(runtime, pos++);
 
-    glColor3s((GLshort) red,(GLshort) green,(GLshort) blue);
+    glColor3s((GLshort)red, (GLshort)green, (GLshort)blue);
 
     return 0;
 }
@@ -3396,7 +1982,7 @@ int org_mini_gl_GL_glColor3sv(Runtime *runtime, Class *clazz) {
         ptr0 = v->arr_body + arr_offset0;
     }
 
-    glColor3sv((const GLshort *) (ptr0));
+    glColor3sv((const GLshort *)(ptr0));
 
     return 0;
 }
@@ -3409,7 +1995,7 @@ int org_mini_gl_GL_glColor3ub(Runtime *runtime, Class *clazz) {
     s32 green = env->localvar_getInt(runtime, pos++);
     s32 blue = env->localvar_getInt(runtime, pos++);
 
-    glColor3ub((GLubyte) red,(GLubyte) green,(GLubyte) blue);
+    glColor3ub((GLubyte)red, (GLubyte)green, (GLubyte)blue);
 
     return 0;
 }
@@ -3426,7 +2012,7 @@ int org_mini_gl_GL_glColor3ubv(Runtime *runtime, Class *clazz) {
         ptr0 = v->arr_body + arr_offset0;
     }
 
-    glColor3ubv((const GLubyte *) (ptr0));
+    glColor3ubv((const GLubyte *)(ptr0));
 
     return 0;
 }
@@ -3439,7 +2025,7 @@ int org_mini_gl_GL_glColor3ui(Runtime *runtime, Class *clazz) {
     s32 green = env->localvar_getInt(runtime, pos++);
     s32 blue = env->localvar_getInt(runtime, pos++);
 
-    glColor3ui((GLuint) red,(GLuint) green,(GLuint) blue);
+    glColor3ui((GLuint)red, (GLuint)green, (GLuint)blue);
 
     return 0;
 }
@@ -3456,7 +2042,7 @@ int org_mini_gl_GL_glColor3uiv(Runtime *runtime, Class *clazz) {
         ptr0 = v->arr_body + arr_offset0;
     }
 
-    glColor3uiv((const GLuint *) (ptr0));
+    glColor3uiv((const GLuint *)(ptr0));
 
     return 0;
 }
@@ -3469,7 +2055,7 @@ int org_mini_gl_GL_glColor3us(Runtime *runtime, Class *clazz) {
     s32 green = env->localvar_getInt(runtime, pos++);
     s32 blue = env->localvar_getInt(runtime, pos++);
 
-    glColor3us((GLushort) red,(GLushort) green,(GLushort) blue);
+    glColor3us((GLushort)red, (GLushort)green, (GLushort)blue);
 
     return 0;
 }
@@ -3486,7 +2072,7 @@ int org_mini_gl_GL_glColor3usv(Runtime *runtime, Class *clazz) {
         ptr0 = v->arr_body + arr_offset0;
     }
 
-    glColor3usv((const GLushort *) (ptr0));
+    glColor3usv((const GLushort *)(ptr0));
 
     return 0;
 }
@@ -3500,7 +2086,7 @@ int org_mini_gl_GL_glColor4b(Runtime *runtime, Class *clazz) {
     s32 blue = env->localvar_getInt(runtime, pos++);
     s32 alpha = env->localvar_getInt(runtime, pos++);
 
-    glColor4b((GLbyte) red,(GLbyte) green,(GLbyte) blue,(GLbyte) alpha);
+    glColor4b((GLbyte)red, (GLbyte)green, (GLbyte)blue, (GLbyte)alpha);
 
     return 0;
 }
@@ -3517,7 +2103,7 @@ int org_mini_gl_GL_glColor4bv(Runtime *runtime, Class *clazz) {
         ptr0 = v->arr_body + arr_offset0;
     }
 
-    glColor4bv((const GLbyte *) (ptr0));
+    glColor4bv((const GLbyte *)(ptr0));
 
     return 0;
 }
@@ -3531,7 +2117,7 @@ int org_mini_gl_GL_glColor4d(Runtime *runtime, Class *clazz) {
     Long2Double blue;blue.l = getParaLong(runtime, pos);pos += 2;
     Long2Double alpha;alpha.l = getParaLong(runtime, pos);pos += 2;
 
-    glColor4d((GLdouble) red.d,(GLdouble) green.d,(GLdouble) blue.d,(GLdouble) alpha.d);
+    glColor4d((GLdouble)red.d, (GLdouble)green.d, (GLdouble)blue.d, (GLdouble)alpha.d);
 
     return 0;
 }
@@ -3548,7 +2134,7 @@ int org_mini_gl_GL_glColor4dv(Runtime *runtime, Class *clazz) {
         ptr0 = v->arr_body + arr_offset0;
     }
 
-    glColor4dv((const GLdouble *) (ptr0));
+    glColor4dv((const GLdouble *)(ptr0));
 
     return 0;
 }
@@ -3562,7 +2148,7 @@ int org_mini_gl_GL_glColor4f(Runtime *runtime, Class *clazz) {
     Int2Float blue;blue.i = env->localvar_getInt(runtime, pos++);
     Int2Float alpha;alpha.i = env->localvar_getInt(runtime, pos++);
 
-    glColor4f( (GLfloat) red.f, (GLfloat) green.f, (GLfloat) blue.f, (GLfloat) alpha.f);
+    glColor4f((GLfloat)red.f, (GLfloat)green.f, (GLfloat)blue.f, (GLfloat)alpha.f);
 
     return 0;
 }
@@ -3579,7 +2165,7 @@ int org_mini_gl_GL_glColor4fv(Runtime *runtime, Class *clazz) {
         ptr0 = v->arr_body + arr_offset0;
     }
 
-    glColor4fv((const GLfloat *) (ptr0));
+    glColor4fv((const GLfloat *)(ptr0));
 
     return 0;
 }
@@ -3593,7 +2179,7 @@ int org_mini_gl_GL_glColor4i(Runtime *runtime, Class *clazz) {
     s32 blue = env->localvar_getInt(runtime, pos++);
     s32 alpha = env->localvar_getInt(runtime, pos++);
 
-    glColor4i((GLint) red,(GLint) green,(GLint) blue,(GLint) alpha);
+    glColor4i((GLint)red, (GLint)green, (GLint)blue, (GLint)alpha);
 
     return 0;
 }
@@ -3610,7 +2196,7 @@ int org_mini_gl_GL_glColor4iv(Runtime *runtime, Class *clazz) {
         ptr0 = v->arr_body + arr_offset0;
     }
 
-    glColor4iv((const GLint *) (ptr0));
+    glColor4iv((const GLint *)(ptr0));
 
     return 0;
 }
@@ -3624,7 +2210,7 @@ int org_mini_gl_GL_glColor4s(Runtime *runtime, Class *clazz) {
     s32 blue = env->localvar_getInt(runtime, pos++);
     s32 alpha = env->localvar_getInt(runtime, pos++);
 
-    glColor4s((GLshort) red,(GLshort) green,(GLshort) blue,(GLshort) alpha);
+    glColor4s((GLshort)red, (GLshort)green, (GLshort)blue, (GLshort)alpha);
 
     return 0;
 }
@@ -3641,7 +2227,7 @@ int org_mini_gl_GL_glColor4sv(Runtime *runtime, Class *clazz) {
         ptr0 = v->arr_body + arr_offset0;
     }
 
-    glColor4sv((const GLshort *) (ptr0));
+    glColor4sv((const GLshort *)(ptr0));
 
     return 0;
 }
@@ -3655,7 +2241,7 @@ int org_mini_gl_GL_glColor4ub(Runtime *runtime, Class *clazz) {
     s32 blue = env->localvar_getInt(runtime, pos++);
     s32 alpha = env->localvar_getInt(runtime, pos++);
 
-    glColor4ub((GLubyte) red,(GLubyte) green,(GLubyte) blue,(GLubyte) alpha);
+    glColor4ub((GLubyte)red, (GLubyte)green, (GLubyte)blue, (GLubyte)alpha);
 
     return 0;
 }
@@ -3672,7 +2258,7 @@ int org_mini_gl_GL_glColor4ubv(Runtime *runtime, Class *clazz) {
         ptr0 = v->arr_body + arr_offset0;
     }
 
-    glColor4ubv((const GLubyte *) (ptr0));
+    glColor4ubv((const GLubyte *)(ptr0));
 
     return 0;
 }
@@ -3686,7 +2272,7 @@ int org_mini_gl_GL_glColor4ui(Runtime *runtime, Class *clazz) {
     s32 blue = env->localvar_getInt(runtime, pos++);
     s32 alpha = env->localvar_getInt(runtime, pos++);
 
-    glColor4ui((GLuint) red,(GLuint) green,(GLuint) blue,(GLuint) alpha);
+    glColor4ui((GLuint)red, (GLuint)green, (GLuint)blue, (GLuint)alpha);
 
     return 0;
 }
@@ -3703,7 +2289,7 @@ int org_mini_gl_GL_glColor4uiv(Runtime *runtime, Class *clazz) {
         ptr0 = v->arr_body + arr_offset0;
     }
 
-    glColor4uiv((const GLuint *) (ptr0));
+    glColor4uiv((const GLuint *)(ptr0));
 
     return 0;
 }
@@ -3717,7 +2303,7 @@ int org_mini_gl_GL_glColor4us(Runtime *runtime, Class *clazz) {
     s32 blue = env->localvar_getInt(runtime, pos++);
     s32 alpha = env->localvar_getInt(runtime, pos++);
 
-    glColor4us((GLushort) red,(GLushort) green,(GLushort) blue,(GLushort) alpha);
+    glColor4us((GLushort)red, (GLushort)green, (GLushort)blue, (GLushort)alpha);
 
     return 0;
 }
@@ -3734,7 +2320,7 @@ int org_mini_gl_GL_glColor4usv(Runtime *runtime, Class *clazz) {
         ptr0 = v->arr_body + arr_offset0;
     }
 
-    glColor4usv((const GLushort *) (ptr0));
+    glColor4usv((const GLushort *)(ptr0));
 
     return 0;
 }
@@ -3745,7 +2331,7 @@ int org_mini_gl_GL_glEdgeFlag(Runtime *runtime, Class *clazz) {
 
     s32 flag = env->localvar_getInt(runtime, pos++);
 
-    glEdgeFlag((GLboolean) flag);
+    glEdgeFlag((GLboolean)flag);
 
     return 0;
 }
@@ -3762,7 +2348,7 @@ int org_mini_gl_GL_glEdgeFlagv(Runtime *runtime, Class *clazz) {
         ptr0 = flag->arr_body + arr_offset0;
     }
 
-    glEdgeFlagv((const GLboolean *) (ptr0));
+    glEdgeFlagv((const GLboolean *)(ptr0));
 
     return 0;
 }
@@ -3783,7 +2369,7 @@ int org_mini_gl_GL_glIndexd(Runtime *runtime, Class *clazz) {
 
     Long2Double c;c.l = getParaLong(runtime, pos);pos += 2;
 
-    glIndexd((GLdouble) c.d);
+    glIndexd((GLdouble)c.d);
 
     return 0;
 }
@@ -3800,7 +2386,7 @@ int org_mini_gl_GL_glIndexdv(Runtime *runtime, Class *clazz) {
         ptr0 = c->arr_body + arr_offset0;
     }
 
-    glIndexdv((const GLdouble *) (ptr0));
+    glIndexdv((const GLdouble *)(ptr0));
 
     return 0;
 }
@@ -3811,7 +2397,7 @@ int org_mini_gl_GL_glIndexf(Runtime *runtime, Class *clazz) {
 
     Int2Float c;c.i = env->localvar_getInt(runtime, pos++);
 
-    glIndexf( (GLfloat) c.f);
+    glIndexf((GLfloat)c.f);
 
     return 0;
 }
@@ -3828,7 +2414,7 @@ int org_mini_gl_GL_glIndexfv(Runtime *runtime, Class *clazz) {
         ptr0 = c->arr_body + arr_offset0;
     }
 
-    glIndexfv((const GLfloat *) (ptr0));
+    glIndexfv((const GLfloat *)(ptr0));
 
     return 0;
 }
@@ -3839,7 +2425,7 @@ int org_mini_gl_GL_glIndexi(Runtime *runtime, Class *clazz) {
 
     s32 c = env->localvar_getInt(runtime, pos++);
 
-    glIndexi((GLint) c);
+    glIndexi((GLint)c);
 
     return 0;
 }
@@ -3856,7 +2442,7 @@ int org_mini_gl_GL_glIndexiv(Runtime *runtime, Class *clazz) {
         ptr0 = c->arr_body + arr_offset0;
     }
 
-    glIndexiv((const GLint *) (ptr0));
+    glIndexiv((const GLint *)(ptr0));
 
     return 0;
 }
@@ -3867,7 +2453,7 @@ int org_mini_gl_GL_glIndexs(Runtime *runtime, Class *clazz) {
 
     s32 c = env->localvar_getInt(runtime, pos++);
 
-    glIndexs((GLshort) c);
+    glIndexs((GLshort)c);
 
     return 0;
 }
@@ -3884,7 +2470,7 @@ int org_mini_gl_GL_glIndexsv(Runtime *runtime, Class *clazz) {
         ptr0 = c->arr_body + arr_offset0;
     }
 
-    glIndexsv((const GLshort *) (ptr0));
+    glIndexsv((const GLshort *)(ptr0));
 
     return 0;
 }
@@ -3897,7 +2483,7 @@ int org_mini_gl_GL_glNormal3b(Runtime *runtime, Class *clazz) {
     s32 ny = env->localvar_getInt(runtime, pos++);
     s32 nz = env->localvar_getInt(runtime, pos++);
 
-    glNormal3b((GLbyte) nx,(GLbyte) ny,(GLbyte) nz);
+    glNormal3b((GLbyte)nx, (GLbyte)ny, (GLbyte)nz);
 
     return 0;
 }
@@ -3914,7 +2500,7 @@ int org_mini_gl_GL_glNormal3bv(Runtime *runtime, Class *clazz) {
         ptr0 = v->arr_body + arr_offset0;
     }
 
-    glNormal3bv((const GLbyte *) (ptr0));
+    glNormal3bv((const GLbyte *)(ptr0));
 
     return 0;
 }
@@ -3927,7 +2513,7 @@ int org_mini_gl_GL_glNormal3d(Runtime *runtime, Class *clazz) {
     Long2Double ny;ny.l = getParaLong(runtime, pos);pos += 2;
     Long2Double nz;nz.l = getParaLong(runtime, pos);pos += 2;
 
-    glNormal3d((GLdouble) nx.d,(GLdouble) ny.d,(GLdouble) nz.d);
+    glNormal3d((GLdouble)nx.d, (GLdouble)ny.d, (GLdouble)nz.d);
 
     return 0;
 }
@@ -3944,7 +2530,7 @@ int org_mini_gl_GL_glNormal3dv(Runtime *runtime, Class *clazz) {
         ptr0 = v->arr_body + arr_offset0;
     }
 
-    glNormal3dv((const GLdouble *) (ptr0));
+    glNormal3dv((const GLdouble *)(ptr0));
 
     return 0;
 }
@@ -3957,7 +2543,7 @@ int org_mini_gl_GL_glNormal3f(Runtime *runtime, Class *clazz) {
     Int2Float ny;ny.i = env->localvar_getInt(runtime, pos++);
     Int2Float nz;nz.i = env->localvar_getInt(runtime, pos++);
 
-    glNormal3f( (GLfloat) nx.f, (GLfloat) ny.f, (GLfloat) nz.f);
+    glNormal3f((GLfloat)nx.f, (GLfloat)ny.f, (GLfloat)nz.f);
 
     return 0;
 }
@@ -3974,7 +2560,7 @@ int org_mini_gl_GL_glNormal3fv(Runtime *runtime, Class *clazz) {
         ptr0 = v->arr_body + arr_offset0;
     }
 
-    glNormal3fv((const GLfloat *) (ptr0));
+    glNormal3fv((const GLfloat *)(ptr0));
 
     return 0;
 }
@@ -3987,7 +2573,7 @@ int org_mini_gl_GL_glNormal3i(Runtime *runtime, Class *clazz) {
     s32 ny = env->localvar_getInt(runtime, pos++);
     s32 nz = env->localvar_getInt(runtime, pos++);
 
-    glNormal3i((GLint) nx,(GLint) ny,(GLint) nz);
+    glNormal3i((GLint)nx, (GLint)ny, (GLint)nz);
 
     return 0;
 }
@@ -4004,7 +2590,7 @@ int org_mini_gl_GL_glNormal3iv(Runtime *runtime, Class *clazz) {
         ptr0 = v->arr_body + arr_offset0;
     }
 
-    glNormal3iv((const GLint *) (ptr0));
+    glNormal3iv((const GLint *)(ptr0));
 
     return 0;
 }
@@ -4017,7 +2603,7 @@ int org_mini_gl_GL_glNormal3s(Runtime *runtime, Class *clazz) {
     s32 ny = env->localvar_getInt(runtime, pos++);
     s32 nz = env->localvar_getInt(runtime, pos++);
 
-    glNormal3s((GLshort) nx,(GLshort) ny,(GLshort) nz);
+    glNormal3s((GLshort)nx, (GLshort)ny, (GLshort)nz);
 
     return 0;
 }
@@ -4034,7 +2620,7 @@ int org_mini_gl_GL_glNormal3sv(Runtime *runtime, Class *clazz) {
         ptr0 = v->arr_body + arr_offset0;
     }
 
-    glNormal3sv((const GLshort *) (ptr0));
+    glNormal3sv((const GLshort *)(ptr0));
 
     return 0;
 }
@@ -4046,7 +2632,7 @@ int org_mini_gl_GL_glRasterPos2d(Runtime *runtime, Class *clazz) {
     Long2Double x;x.l = getParaLong(runtime, pos);pos += 2;
     Long2Double y;y.l = getParaLong(runtime, pos);pos += 2;
 
-    glRasterPos2d((GLdouble) x.d,(GLdouble) y.d);
+    glRasterPos2d((GLdouble)x.d, (GLdouble)y.d);
 
     return 0;
 }
@@ -4063,7 +2649,7 @@ int org_mini_gl_GL_glRasterPos2dv(Runtime *runtime, Class *clazz) {
         ptr0 = v->arr_body + arr_offset0;
     }
 
-    glRasterPos2dv((const GLdouble *) (ptr0));
+    glRasterPos2dv((const GLdouble *)(ptr0));
 
     return 0;
 }
@@ -4075,7 +2661,7 @@ int org_mini_gl_GL_glRasterPos2f(Runtime *runtime, Class *clazz) {
     Int2Float x;x.i = env->localvar_getInt(runtime, pos++);
     Int2Float y;y.i = env->localvar_getInt(runtime, pos++);
 
-    glRasterPos2f( (GLfloat) x.f, (GLfloat) y.f);
+    glRasterPos2f((GLfloat)x.f, (GLfloat)y.f);
 
     return 0;
 }
@@ -4092,7 +2678,7 @@ int org_mini_gl_GL_glRasterPos2fv(Runtime *runtime, Class *clazz) {
         ptr0 = v->arr_body + arr_offset0;
     }
 
-    glRasterPos2fv((const GLfloat *) (ptr0));
+    glRasterPos2fv((const GLfloat *)(ptr0));
 
     return 0;
 }
@@ -4104,7 +2690,7 @@ int org_mini_gl_GL_glRasterPos2i(Runtime *runtime, Class *clazz) {
     s32 x = env->localvar_getInt(runtime, pos++);
     s32 y = env->localvar_getInt(runtime, pos++);
 
-    glRasterPos2i((GLint) x,(GLint) y);
+    glRasterPos2i((GLint)x, (GLint)y);
 
     return 0;
 }
@@ -4121,7 +2707,7 @@ int org_mini_gl_GL_glRasterPos2iv(Runtime *runtime, Class *clazz) {
         ptr0 = v->arr_body + arr_offset0;
     }
 
-    glRasterPos2iv((const GLint *) (ptr0));
+    glRasterPos2iv((const GLint *)(ptr0));
 
     return 0;
 }
@@ -4133,7 +2719,7 @@ int org_mini_gl_GL_glRasterPos2s(Runtime *runtime, Class *clazz) {
     s32 x = env->localvar_getInt(runtime, pos++);
     s32 y = env->localvar_getInt(runtime, pos++);
 
-    glRasterPos2s((GLshort) x,(GLshort) y);
+    glRasterPos2s((GLshort)x, (GLshort)y);
 
     return 0;
 }
@@ -4150,7 +2736,7 @@ int org_mini_gl_GL_glRasterPos2sv(Runtime *runtime, Class *clazz) {
         ptr0 = v->arr_body + arr_offset0;
     }
 
-    glRasterPos2sv((const GLshort *) (ptr0));
+    glRasterPos2sv((const GLshort *)(ptr0));
 
     return 0;
 }
@@ -4163,7 +2749,7 @@ int org_mini_gl_GL_glRasterPos3d(Runtime *runtime, Class *clazz) {
     Long2Double y;y.l = getParaLong(runtime, pos);pos += 2;
     Long2Double z;z.l = getParaLong(runtime, pos);pos += 2;
 
-    glRasterPos3d((GLdouble) x.d,(GLdouble) y.d,(GLdouble) z.d);
+    glRasterPos3d((GLdouble)x.d, (GLdouble)y.d, (GLdouble)z.d);
 
     return 0;
 }
@@ -4180,7 +2766,7 @@ int org_mini_gl_GL_glRasterPos3dv(Runtime *runtime, Class *clazz) {
         ptr0 = v->arr_body + arr_offset0;
     }
 
-    glRasterPos3dv((const GLdouble *) (ptr0));
+    glRasterPos3dv((const GLdouble *)(ptr0));
 
     return 0;
 }
@@ -4193,7 +2779,7 @@ int org_mini_gl_GL_glRasterPos3f(Runtime *runtime, Class *clazz) {
     Int2Float y;y.i = env->localvar_getInt(runtime, pos++);
     Int2Float z;z.i = env->localvar_getInt(runtime, pos++);
 
-    glRasterPos3f( (GLfloat) x.f, (GLfloat) y.f, (GLfloat) z.f);
+    glRasterPos3f((GLfloat)x.f, (GLfloat)y.f, (GLfloat)z.f);
 
     return 0;
 }
@@ -4210,7 +2796,7 @@ int org_mini_gl_GL_glRasterPos3fv(Runtime *runtime, Class *clazz) {
         ptr0 = v->arr_body + arr_offset0;
     }
 
-    glRasterPos3fv((const GLfloat *) (ptr0));
+    glRasterPos3fv((const GLfloat *)(ptr0));
 
     return 0;
 }
@@ -4223,7 +2809,7 @@ int org_mini_gl_GL_glRasterPos3i(Runtime *runtime, Class *clazz) {
     s32 y = env->localvar_getInt(runtime, pos++);
     s32 z = env->localvar_getInt(runtime, pos++);
 
-    glRasterPos3i((GLint) x,(GLint) y,(GLint) z);
+    glRasterPos3i((GLint)x, (GLint)y, (GLint)z);
 
     return 0;
 }
@@ -4240,7 +2826,7 @@ int org_mini_gl_GL_glRasterPos3iv(Runtime *runtime, Class *clazz) {
         ptr0 = v->arr_body + arr_offset0;
     }
 
-    glRasterPos3iv((const GLint *) (ptr0));
+    glRasterPos3iv((const GLint *)(ptr0));
 
     return 0;
 }
@@ -4253,7 +2839,7 @@ int org_mini_gl_GL_glRasterPos3s(Runtime *runtime, Class *clazz) {
     s32 y = env->localvar_getInt(runtime, pos++);
     s32 z = env->localvar_getInt(runtime, pos++);
 
-    glRasterPos3s((GLshort) x,(GLshort) y,(GLshort) z);
+    glRasterPos3s((GLshort)x, (GLshort)y, (GLshort)z);
 
     return 0;
 }
@@ -4270,7 +2856,7 @@ int org_mini_gl_GL_glRasterPos3sv(Runtime *runtime, Class *clazz) {
         ptr0 = v->arr_body + arr_offset0;
     }
 
-    glRasterPos3sv((const GLshort *) (ptr0));
+    glRasterPos3sv((const GLshort *)(ptr0));
 
     return 0;
 }
@@ -4284,7 +2870,7 @@ int org_mini_gl_GL_glRasterPos4d(Runtime *runtime, Class *clazz) {
     Long2Double z;z.l = getParaLong(runtime, pos);pos += 2;
     Long2Double w;w.l = getParaLong(runtime, pos);pos += 2;
 
-    glRasterPos4d((GLdouble) x.d,(GLdouble) y.d,(GLdouble) z.d,(GLdouble) w.d);
+    glRasterPos4d((GLdouble)x.d, (GLdouble)y.d, (GLdouble)z.d, (GLdouble)w.d);
 
     return 0;
 }
@@ -4301,7 +2887,7 @@ int org_mini_gl_GL_glRasterPos4dv(Runtime *runtime, Class *clazz) {
         ptr0 = v->arr_body + arr_offset0;
     }
 
-    glRasterPos4dv((const GLdouble *) (ptr0));
+    glRasterPos4dv((const GLdouble *)(ptr0));
 
     return 0;
 }
@@ -4315,7 +2901,7 @@ int org_mini_gl_GL_glRasterPos4f(Runtime *runtime, Class *clazz) {
     Int2Float z;z.i = env->localvar_getInt(runtime, pos++);
     Int2Float w;w.i = env->localvar_getInt(runtime, pos++);
 
-    glRasterPos4f( (GLfloat) x.f, (GLfloat) y.f, (GLfloat) z.f, (GLfloat) w.f);
+    glRasterPos4f((GLfloat)x.f, (GLfloat)y.f, (GLfloat)z.f, (GLfloat)w.f);
 
     return 0;
 }
@@ -4332,7 +2918,7 @@ int org_mini_gl_GL_glRasterPos4fv(Runtime *runtime, Class *clazz) {
         ptr0 = v->arr_body + arr_offset0;
     }
 
-    glRasterPos4fv((const GLfloat *) (ptr0));
+    glRasterPos4fv((const GLfloat *)(ptr0));
 
     return 0;
 }
@@ -4346,7 +2932,7 @@ int org_mini_gl_GL_glRasterPos4i(Runtime *runtime, Class *clazz) {
     s32 z = env->localvar_getInt(runtime, pos++);
     s32 w = env->localvar_getInt(runtime, pos++);
 
-    glRasterPos4i((GLint) x,(GLint) y,(GLint) z,(GLint) w);
+    glRasterPos4i((GLint)x, (GLint)y, (GLint)z, (GLint)w);
 
     return 0;
 }
@@ -4363,7 +2949,7 @@ int org_mini_gl_GL_glRasterPos4iv(Runtime *runtime, Class *clazz) {
         ptr0 = v->arr_body + arr_offset0;
     }
 
-    glRasterPos4iv((const GLint *) (ptr0));
+    glRasterPos4iv((const GLint *)(ptr0));
 
     return 0;
 }
@@ -4377,7 +2963,7 @@ int org_mini_gl_GL_glRasterPos4s(Runtime *runtime, Class *clazz) {
     s32 z = env->localvar_getInt(runtime, pos++);
     s32 w = env->localvar_getInt(runtime, pos++);
 
-    glRasterPos4s((GLshort) x,(GLshort) y,(GLshort) z,(GLshort) w);
+    glRasterPos4s((GLshort)x, (GLshort)y, (GLshort)z, (GLshort)w);
 
     return 0;
 }
@@ -4394,7 +2980,7 @@ int org_mini_gl_GL_glRasterPos4sv(Runtime *runtime, Class *clazz) {
         ptr0 = v->arr_body + arr_offset0;
     }
 
-    glRasterPos4sv((const GLshort *) (ptr0));
+    glRasterPos4sv((const GLshort *)(ptr0));
 
     return 0;
 }
@@ -4408,7 +2994,7 @@ int org_mini_gl_GL_glRectd(Runtime *runtime, Class *clazz) {
     Long2Double x2;x2.l = getParaLong(runtime, pos);pos += 2;
     Long2Double y2;y2.l = getParaLong(runtime, pos);pos += 2;
 
-    glRectd((GLdouble) x1.d,(GLdouble) y1.d,(GLdouble) x2.d,(GLdouble) y2.d);
+    glRectd((GLdouble)x1.d, (GLdouble)y1.d, (GLdouble)x2.d, (GLdouble)y2.d);
 
     return 0;
 }
@@ -4432,7 +3018,7 @@ int org_mini_gl_GL_glRectdv(Runtime *runtime, Class *clazz) {
         ptr2 = v2->arr_body + arr_offset2;
     }
 
-    glRectdv((const GLdouble *) (ptr0),(const GLdouble *) (ptr2));
+    glRectdv((const GLdouble *)(ptr0), (const GLdouble *)(ptr2));
 
     return 0;
 }
@@ -4446,7 +3032,7 @@ int org_mini_gl_GL_glRectf(Runtime *runtime, Class *clazz) {
     Int2Float x2;x2.i = env->localvar_getInt(runtime, pos++);
     Int2Float y2;y2.i = env->localvar_getInt(runtime, pos++);
 
-    glRectf( (GLfloat) x1.f, (GLfloat) y1.f, (GLfloat) x2.f, (GLfloat) y2.f);
+    glRectf((GLfloat)x1.f, (GLfloat)y1.f, (GLfloat)x2.f, (GLfloat)y2.f);
 
     return 0;
 }
@@ -4470,7 +3056,7 @@ int org_mini_gl_GL_glRectfv(Runtime *runtime, Class *clazz) {
         ptr2 = v2->arr_body + arr_offset2;
     }
 
-    glRectfv((const GLfloat *) (ptr0),(const GLfloat *) (ptr2));
+    glRectfv((const GLfloat *)(ptr0), (const GLfloat *)(ptr2));
 
     return 0;
 }
@@ -4484,7 +3070,7 @@ int org_mini_gl_GL_glRecti(Runtime *runtime, Class *clazz) {
     s32 x2 = env->localvar_getInt(runtime, pos++);
     s32 y2 = env->localvar_getInt(runtime, pos++);
 
-    glRecti((GLint) x1,(GLint) y1,(GLint) x2,(GLint) y2);
+    glRecti((GLint)x1, (GLint)y1, (GLint)x2, (GLint)y2);
 
     return 0;
 }
@@ -4508,7 +3094,7 @@ int org_mini_gl_GL_glRectiv(Runtime *runtime, Class *clazz) {
         ptr2 = v2->arr_body + arr_offset2;
     }
 
-    glRectiv((const GLint *) (ptr0),(const GLint *) (ptr2));
+    glRectiv((const GLint *)(ptr0), (const GLint *)(ptr2));
 
     return 0;
 }
@@ -4522,7 +3108,7 @@ int org_mini_gl_GL_glRects(Runtime *runtime, Class *clazz) {
     s32 x2 = env->localvar_getInt(runtime, pos++);
     s32 y2 = env->localvar_getInt(runtime, pos++);
 
-    glRects((GLshort) x1,(GLshort) y1,(GLshort) x2,(GLshort) y2);
+    glRects((GLshort)x1, (GLshort)y1, (GLshort)x2, (GLshort)y2);
 
     return 0;
 }
@@ -4546,7 +3132,7 @@ int org_mini_gl_GL_glRectsv(Runtime *runtime, Class *clazz) {
         ptr2 = v2->arr_body + arr_offset2;
     }
 
-    glRectsv((const GLshort *) (ptr0),(const GLshort *) (ptr2));
+    glRectsv((const GLshort *)(ptr0), (const GLshort *)(ptr2));
 
     return 0;
 }
@@ -4557,7 +3143,7 @@ int org_mini_gl_GL_glTexCoord1d(Runtime *runtime, Class *clazz) {
 
     Long2Double s;s.l = getParaLong(runtime, pos);pos += 2;
 
-    glTexCoord1d((GLdouble) s.d);
+    glTexCoord1d((GLdouble)s.d);
 
     return 0;
 }
@@ -4574,7 +3160,7 @@ int org_mini_gl_GL_glTexCoord1dv(Runtime *runtime, Class *clazz) {
         ptr0 = v->arr_body + arr_offset0;
     }
 
-    glTexCoord1dv((const GLdouble *) (ptr0));
+    glTexCoord1dv((const GLdouble *)(ptr0));
 
     return 0;
 }
@@ -4585,7 +3171,7 @@ int org_mini_gl_GL_glTexCoord1f(Runtime *runtime, Class *clazz) {
 
     Int2Float s;s.i = env->localvar_getInt(runtime, pos++);
 
-    glTexCoord1f( (GLfloat) s.f);
+    glTexCoord1f((GLfloat)s.f);
 
     return 0;
 }
@@ -4602,7 +3188,7 @@ int org_mini_gl_GL_glTexCoord1fv(Runtime *runtime, Class *clazz) {
         ptr0 = v->arr_body + arr_offset0;
     }
 
-    glTexCoord1fv((const GLfloat *) (ptr0));
+    glTexCoord1fv((const GLfloat *)(ptr0));
 
     return 0;
 }
@@ -4613,7 +3199,7 @@ int org_mini_gl_GL_glTexCoord1i(Runtime *runtime, Class *clazz) {
 
     s32 s = env->localvar_getInt(runtime, pos++);
 
-    glTexCoord1i((GLint) s);
+    glTexCoord1i((GLint)s);
 
     return 0;
 }
@@ -4630,7 +3216,7 @@ int org_mini_gl_GL_glTexCoord1iv(Runtime *runtime, Class *clazz) {
         ptr0 = v->arr_body + arr_offset0;
     }
 
-    glTexCoord1iv((const GLint *) (ptr0));
+    glTexCoord1iv((const GLint *)(ptr0));
 
     return 0;
 }
@@ -4641,7 +3227,7 @@ int org_mini_gl_GL_glTexCoord1s(Runtime *runtime, Class *clazz) {
 
     s32 s = env->localvar_getInt(runtime, pos++);
 
-    glTexCoord1s((GLshort) s);
+    glTexCoord1s((GLshort)s);
 
     return 0;
 }
@@ -4658,7 +3244,7 @@ int org_mini_gl_GL_glTexCoord1sv(Runtime *runtime, Class *clazz) {
         ptr0 = v->arr_body + arr_offset0;
     }
 
-    glTexCoord1sv((const GLshort *) (ptr0));
+    glTexCoord1sv((const GLshort *)(ptr0));
 
     return 0;
 }
@@ -4670,7 +3256,7 @@ int org_mini_gl_GL_glTexCoord2d(Runtime *runtime, Class *clazz) {
     Long2Double s;s.l = getParaLong(runtime, pos);pos += 2;
     Long2Double t;t.l = getParaLong(runtime, pos);pos += 2;
 
-    glTexCoord2d((GLdouble) s.d,(GLdouble) t.d);
+    glTexCoord2d((GLdouble)s.d, (GLdouble)t.d);
 
     return 0;
 }
@@ -4687,7 +3273,7 @@ int org_mini_gl_GL_glTexCoord2dv(Runtime *runtime, Class *clazz) {
         ptr0 = v->arr_body + arr_offset0;
     }
 
-    glTexCoord2dv((const GLdouble *) (ptr0));
+    glTexCoord2dv((const GLdouble *)(ptr0));
 
     return 0;
 }
@@ -4699,7 +3285,7 @@ int org_mini_gl_GL_glTexCoord2f(Runtime *runtime, Class *clazz) {
     Int2Float s;s.i = env->localvar_getInt(runtime, pos++);
     Int2Float t;t.i = env->localvar_getInt(runtime, pos++);
 
-    glTexCoord2f( (GLfloat) s.f, (GLfloat) t.f);
+    glTexCoord2f((GLfloat)s.f, (GLfloat)t.f);
 
     return 0;
 }
@@ -4716,7 +3302,7 @@ int org_mini_gl_GL_glTexCoord2fv(Runtime *runtime, Class *clazz) {
         ptr0 = v->arr_body + arr_offset0;
     }
 
-    glTexCoord2fv((const GLfloat *) (ptr0));
+    glTexCoord2fv((const GLfloat *)(ptr0));
 
     return 0;
 }
@@ -4728,7 +3314,7 @@ int org_mini_gl_GL_glTexCoord2i(Runtime *runtime, Class *clazz) {
     s32 s = env->localvar_getInt(runtime, pos++);
     s32 t = env->localvar_getInt(runtime, pos++);
 
-    glTexCoord2i((GLint) s,(GLint) t);
+    glTexCoord2i((GLint)s, (GLint)t);
 
     return 0;
 }
@@ -4745,7 +3331,7 @@ int org_mini_gl_GL_glTexCoord2iv(Runtime *runtime, Class *clazz) {
         ptr0 = v->arr_body + arr_offset0;
     }
 
-    glTexCoord2iv((const GLint *) (ptr0));
+    glTexCoord2iv((const GLint *)(ptr0));
 
     return 0;
 }
@@ -4757,7 +3343,7 @@ int org_mini_gl_GL_glTexCoord2s(Runtime *runtime, Class *clazz) {
     s32 s = env->localvar_getInt(runtime, pos++);
     s32 t = env->localvar_getInt(runtime, pos++);
 
-    glTexCoord2s((GLshort) s,(GLshort) t);
+    glTexCoord2s((GLshort)s, (GLshort)t);
 
     return 0;
 }
@@ -4774,7 +3360,7 @@ int org_mini_gl_GL_glTexCoord2sv(Runtime *runtime, Class *clazz) {
         ptr0 = v->arr_body + arr_offset0;
     }
 
-    glTexCoord2sv((const GLshort *) (ptr0));
+    glTexCoord2sv((const GLshort *)(ptr0));
 
     return 0;
 }
@@ -4787,7 +3373,7 @@ int org_mini_gl_GL_glTexCoord3d(Runtime *runtime, Class *clazz) {
     Long2Double t;t.l = getParaLong(runtime, pos);pos += 2;
     Long2Double r;r.l = getParaLong(runtime, pos);pos += 2;
 
-    glTexCoord3d((GLdouble) s.d,(GLdouble) t.d,(GLdouble) r.d);
+    glTexCoord3d((GLdouble)s.d, (GLdouble)t.d, (GLdouble)r.d);
 
     return 0;
 }
@@ -4804,7 +3390,7 @@ int org_mini_gl_GL_glTexCoord3dv(Runtime *runtime, Class *clazz) {
         ptr0 = v->arr_body + arr_offset0;
     }
 
-    glTexCoord3dv((const GLdouble *) (ptr0));
+    glTexCoord3dv((const GLdouble *)(ptr0));
 
     return 0;
 }
@@ -4817,7 +3403,7 @@ int org_mini_gl_GL_glTexCoord3f(Runtime *runtime, Class *clazz) {
     Int2Float t;t.i = env->localvar_getInt(runtime, pos++);
     Int2Float r;r.i = env->localvar_getInt(runtime, pos++);
 
-    glTexCoord3f( (GLfloat) s.f, (GLfloat) t.f, (GLfloat) r.f);
+    glTexCoord3f((GLfloat)s.f, (GLfloat)t.f, (GLfloat)r.f);
 
     return 0;
 }
@@ -4834,7 +3420,7 @@ int org_mini_gl_GL_glTexCoord3fv(Runtime *runtime, Class *clazz) {
         ptr0 = v->arr_body + arr_offset0;
     }
 
-    glTexCoord3fv((const GLfloat *) (ptr0));
+    glTexCoord3fv((const GLfloat *)(ptr0));
 
     return 0;
 }
@@ -4847,7 +3433,7 @@ int org_mini_gl_GL_glTexCoord3i(Runtime *runtime, Class *clazz) {
     s32 t = env->localvar_getInt(runtime, pos++);
     s32 r = env->localvar_getInt(runtime, pos++);
 
-    glTexCoord3i((GLint) s,(GLint) t,(GLint) r);
+    glTexCoord3i((GLint)s, (GLint)t, (GLint)r);
 
     return 0;
 }
@@ -4864,7 +3450,7 @@ int org_mini_gl_GL_glTexCoord3iv(Runtime *runtime, Class *clazz) {
         ptr0 = v->arr_body + arr_offset0;
     }
 
-    glTexCoord3iv((const GLint *) (ptr0));
+    glTexCoord3iv((const GLint *)(ptr0));
 
     return 0;
 }
@@ -4877,7 +3463,7 @@ int org_mini_gl_GL_glTexCoord3s(Runtime *runtime, Class *clazz) {
     s32 t = env->localvar_getInt(runtime, pos++);
     s32 r = env->localvar_getInt(runtime, pos++);
 
-    glTexCoord3s((GLshort) s,(GLshort) t,(GLshort) r);
+    glTexCoord3s((GLshort)s, (GLshort)t, (GLshort)r);
 
     return 0;
 }
@@ -4894,7 +3480,7 @@ int org_mini_gl_GL_glTexCoord3sv(Runtime *runtime, Class *clazz) {
         ptr0 = v->arr_body + arr_offset0;
     }
 
-    glTexCoord3sv((const GLshort *) (ptr0));
+    glTexCoord3sv((const GLshort *)(ptr0));
 
     return 0;
 }
@@ -4908,7 +3494,7 @@ int org_mini_gl_GL_glTexCoord4d(Runtime *runtime, Class *clazz) {
     Long2Double r;r.l = getParaLong(runtime, pos);pos += 2;
     Long2Double q;q.l = getParaLong(runtime, pos);pos += 2;
 
-    glTexCoord4d((GLdouble) s.d,(GLdouble) t.d,(GLdouble) r.d,(GLdouble) q.d);
+    glTexCoord4d((GLdouble)s.d, (GLdouble)t.d, (GLdouble)r.d, (GLdouble)q.d);
 
     return 0;
 }
@@ -4925,7 +3511,7 @@ int org_mini_gl_GL_glTexCoord4dv(Runtime *runtime, Class *clazz) {
         ptr0 = v->arr_body + arr_offset0;
     }
 
-    glTexCoord4dv((const GLdouble *) (ptr0));
+    glTexCoord4dv((const GLdouble *)(ptr0));
 
     return 0;
 }
@@ -4939,7 +3525,7 @@ int org_mini_gl_GL_glTexCoord4f(Runtime *runtime, Class *clazz) {
     Int2Float r;r.i = env->localvar_getInt(runtime, pos++);
     Int2Float q;q.i = env->localvar_getInt(runtime, pos++);
 
-    glTexCoord4f( (GLfloat) s.f, (GLfloat) t.f, (GLfloat) r.f, (GLfloat) q.f);
+    glTexCoord4f((GLfloat)s.f, (GLfloat)t.f, (GLfloat)r.f, (GLfloat)q.f);
 
     return 0;
 }
@@ -4956,7 +3542,7 @@ int org_mini_gl_GL_glTexCoord4fv(Runtime *runtime, Class *clazz) {
         ptr0 = v->arr_body + arr_offset0;
     }
 
-    glTexCoord4fv((const GLfloat *) (ptr0));
+    glTexCoord4fv((const GLfloat *)(ptr0));
 
     return 0;
 }
@@ -4970,7 +3556,7 @@ int org_mini_gl_GL_glTexCoord4i(Runtime *runtime, Class *clazz) {
     s32 r = env->localvar_getInt(runtime, pos++);
     s32 q = env->localvar_getInt(runtime, pos++);
 
-    glTexCoord4i((GLint) s,(GLint) t,(GLint) r,(GLint) q);
+    glTexCoord4i((GLint)s, (GLint)t, (GLint)r, (GLint)q);
 
     return 0;
 }
@@ -4987,7 +3573,7 @@ int org_mini_gl_GL_glTexCoord4iv(Runtime *runtime, Class *clazz) {
         ptr0 = v->arr_body + arr_offset0;
     }
 
-    glTexCoord4iv((const GLint *) (ptr0));
+    glTexCoord4iv((const GLint *)(ptr0));
 
     return 0;
 }
@@ -5001,7 +3587,7 @@ int org_mini_gl_GL_glTexCoord4s(Runtime *runtime, Class *clazz) {
     s32 r = env->localvar_getInt(runtime, pos++);
     s32 q = env->localvar_getInt(runtime, pos++);
 
-    glTexCoord4s((GLshort) s,(GLshort) t,(GLshort) r,(GLshort) q);
+    glTexCoord4s((GLshort)s, (GLshort)t, (GLshort)r, (GLshort)q);
 
     return 0;
 }
@@ -5018,7 +3604,7 @@ int org_mini_gl_GL_glTexCoord4sv(Runtime *runtime, Class *clazz) {
         ptr0 = v->arr_body + arr_offset0;
     }
 
-    glTexCoord4sv((const GLshort *) (ptr0));
+    glTexCoord4sv((const GLshort *)(ptr0));
 
     return 0;
 }
@@ -5030,7 +3616,7 @@ int org_mini_gl_GL_glVertex2d(Runtime *runtime, Class *clazz) {
     Long2Double x;x.l = getParaLong(runtime, pos);pos += 2;
     Long2Double y;y.l = getParaLong(runtime, pos);pos += 2;
 
-    glVertex2d((GLdouble) x.d,(GLdouble) y.d);
+    glVertex2d((GLdouble)x.d, (GLdouble)y.d);
 
     return 0;
 }
@@ -5047,7 +3633,7 @@ int org_mini_gl_GL_glVertex2dv(Runtime *runtime, Class *clazz) {
         ptr0 = v->arr_body + arr_offset0;
     }
 
-    glVertex2dv((const GLdouble *) (ptr0));
+    glVertex2dv((const GLdouble *)(ptr0));
 
     return 0;
 }
@@ -5059,7 +3645,7 @@ int org_mini_gl_GL_glVertex2f(Runtime *runtime, Class *clazz) {
     Int2Float x;x.i = env->localvar_getInt(runtime, pos++);
     Int2Float y;y.i = env->localvar_getInt(runtime, pos++);
 
-    glVertex2f( (GLfloat) x.f, (GLfloat) y.f);
+    glVertex2f((GLfloat)x.f, (GLfloat)y.f);
 
     return 0;
 }
@@ -5076,7 +3662,7 @@ int org_mini_gl_GL_glVertex2fv(Runtime *runtime, Class *clazz) {
         ptr0 = v->arr_body + arr_offset0;
     }
 
-    glVertex2fv((const GLfloat *) (ptr0));
+    glVertex2fv((const GLfloat *)(ptr0));
 
     return 0;
 }
@@ -5088,7 +3674,7 @@ int org_mini_gl_GL_glVertex2i(Runtime *runtime, Class *clazz) {
     s32 x = env->localvar_getInt(runtime, pos++);
     s32 y = env->localvar_getInt(runtime, pos++);
 
-    glVertex2i((GLint) x,(GLint) y);
+    glVertex2i((GLint)x, (GLint)y);
 
     return 0;
 }
@@ -5105,7 +3691,7 @@ int org_mini_gl_GL_glVertex2iv(Runtime *runtime, Class *clazz) {
         ptr0 = v->arr_body + arr_offset0;
     }
 
-    glVertex2iv((const GLint *) (ptr0));
+    glVertex2iv((const GLint *)(ptr0));
 
     return 0;
 }
@@ -5117,7 +3703,7 @@ int org_mini_gl_GL_glVertex2s(Runtime *runtime, Class *clazz) {
     s32 x = env->localvar_getInt(runtime, pos++);
     s32 y = env->localvar_getInt(runtime, pos++);
 
-    glVertex2s((GLshort) x,(GLshort) y);
+    glVertex2s((GLshort)x, (GLshort)y);
 
     return 0;
 }
@@ -5134,7 +3720,7 @@ int org_mini_gl_GL_glVertex2sv(Runtime *runtime, Class *clazz) {
         ptr0 = v->arr_body + arr_offset0;
     }
 
-    glVertex2sv((const GLshort *) (ptr0));
+    glVertex2sv((const GLshort *)(ptr0));
 
     return 0;
 }
@@ -5147,7 +3733,7 @@ int org_mini_gl_GL_glVertex3d(Runtime *runtime, Class *clazz) {
     Long2Double y;y.l = getParaLong(runtime, pos);pos += 2;
     Long2Double z;z.l = getParaLong(runtime, pos);pos += 2;
 
-    glVertex3d((GLdouble) x.d,(GLdouble) y.d,(GLdouble) z.d);
+    glVertex3d((GLdouble)x.d, (GLdouble)y.d, (GLdouble)z.d);
 
     return 0;
 }
@@ -5164,7 +3750,7 @@ int org_mini_gl_GL_glVertex3dv(Runtime *runtime, Class *clazz) {
         ptr0 = v->arr_body + arr_offset0;
     }
 
-    glVertex3dv((const GLdouble *) (ptr0));
+    glVertex3dv((const GLdouble *)(ptr0));
 
     return 0;
 }
@@ -5177,7 +3763,7 @@ int org_mini_gl_GL_glVertex3f(Runtime *runtime, Class *clazz) {
     Int2Float y;y.i = env->localvar_getInt(runtime, pos++);
     Int2Float z;z.i = env->localvar_getInt(runtime, pos++);
 
-    glVertex3f( (GLfloat) x.f, (GLfloat) y.f, (GLfloat) z.f);
+    glVertex3f((GLfloat)x.f, (GLfloat)y.f, (GLfloat)z.f);
 
     return 0;
 }
@@ -5194,7 +3780,7 @@ int org_mini_gl_GL_glVertex3fv(Runtime *runtime, Class *clazz) {
         ptr0 = v->arr_body + arr_offset0;
     }
 
-    glVertex3fv((const GLfloat *) (ptr0));
+    glVertex3fv((const GLfloat *)(ptr0));
 
     return 0;
 }
@@ -5207,7 +3793,7 @@ int org_mini_gl_GL_glVertex3i(Runtime *runtime, Class *clazz) {
     s32 y = env->localvar_getInt(runtime, pos++);
     s32 z = env->localvar_getInt(runtime, pos++);
 
-    glVertex3i((GLint) x,(GLint) y,(GLint) z);
+    glVertex3i((GLint)x, (GLint)y, (GLint)z);
 
     return 0;
 }
@@ -5224,7 +3810,7 @@ int org_mini_gl_GL_glVertex3iv(Runtime *runtime, Class *clazz) {
         ptr0 = v->arr_body + arr_offset0;
     }
 
-    glVertex3iv((const GLint *) (ptr0));
+    glVertex3iv((const GLint *)(ptr0));
 
     return 0;
 }
@@ -5237,7 +3823,7 @@ int org_mini_gl_GL_glVertex3s(Runtime *runtime, Class *clazz) {
     s32 y = env->localvar_getInt(runtime, pos++);
     s32 z = env->localvar_getInt(runtime, pos++);
 
-    glVertex3s((GLshort) x,(GLshort) y,(GLshort) z);
+    glVertex3s((GLshort)x, (GLshort)y, (GLshort)z);
 
     return 0;
 }
@@ -5254,7 +3840,7 @@ int org_mini_gl_GL_glVertex3sv(Runtime *runtime, Class *clazz) {
         ptr0 = v->arr_body + arr_offset0;
     }
 
-    glVertex3sv((const GLshort *) (ptr0));
+    glVertex3sv((const GLshort *)(ptr0));
 
     return 0;
 }
@@ -5268,7 +3854,7 @@ int org_mini_gl_GL_glVertex4d(Runtime *runtime, Class *clazz) {
     Long2Double z;z.l = getParaLong(runtime, pos);pos += 2;
     Long2Double w;w.l = getParaLong(runtime, pos);pos += 2;
 
-    glVertex4d((GLdouble) x.d,(GLdouble) y.d,(GLdouble) z.d,(GLdouble) w.d);
+    glVertex4d((GLdouble)x.d, (GLdouble)y.d, (GLdouble)z.d, (GLdouble)w.d);
 
     return 0;
 }
@@ -5285,7 +3871,7 @@ int org_mini_gl_GL_glVertex4dv(Runtime *runtime, Class *clazz) {
         ptr0 = v->arr_body + arr_offset0;
     }
 
-    glVertex4dv((const GLdouble *) (ptr0));
+    glVertex4dv((const GLdouble *)(ptr0));
 
     return 0;
 }
@@ -5299,7 +3885,7 @@ int org_mini_gl_GL_glVertex4f(Runtime *runtime, Class *clazz) {
     Int2Float z;z.i = env->localvar_getInt(runtime, pos++);
     Int2Float w;w.i = env->localvar_getInt(runtime, pos++);
 
-    glVertex4f( (GLfloat) x.f, (GLfloat) y.f, (GLfloat) z.f, (GLfloat) w.f);
+    glVertex4f((GLfloat)x.f, (GLfloat)y.f, (GLfloat)z.f, (GLfloat)w.f);
 
     return 0;
 }
@@ -5316,7 +3902,7 @@ int org_mini_gl_GL_glVertex4fv(Runtime *runtime, Class *clazz) {
         ptr0 = v->arr_body + arr_offset0;
     }
 
-    glVertex4fv((const GLfloat *) (ptr0));
+    glVertex4fv((const GLfloat *)(ptr0));
 
     return 0;
 }
@@ -5330,7 +3916,7 @@ int org_mini_gl_GL_glVertex4i(Runtime *runtime, Class *clazz) {
     s32 z = env->localvar_getInt(runtime, pos++);
     s32 w = env->localvar_getInt(runtime, pos++);
 
-    glVertex4i((GLint) x,(GLint) y,(GLint) z,(GLint) w);
+    glVertex4i((GLint)x, (GLint)y, (GLint)z, (GLint)w);
 
     return 0;
 }
@@ -5347,7 +3933,7 @@ int org_mini_gl_GL_glVertex4iv(Runtime *runtime, Class *clazz) {
         ptr0 = v->arr_body + arr_offset0;
     }
 
-    glVertex4iv((const GLint *) (ptr0));
+    glVertex4iv((const GLint *)(ptr0));
 
     return 0;
 }
@@ -5361,7 +3947,7 @@ int org_mini_gl_GL_glVertex4s(Runtime *runtime, Class *clazz) {
     s32 z = env->localvar_getInt(runtime, pos++);
     s32 w = env->localvar_getInt(runtime, pos++);
 
-    glVertex4s((GLshort) x,(GLshort) y,(GLshort) z,(GLshort) w);
+    glVertex4s((GLshort)x, (GLshort)y, (GLshort)z, (GLshort)w);
 
     return 0;
 }
@@ -5378,7 +3964,7 @@ int org_mini_gl_GL_glVertex4sv(Runtime *runtime, Class *clazz) {
         ptr0 = v->arr_body + arr_offset0;
     }
 
-    glVertex4sv((const GLshort *) (ptr0));
+    glVertex4sv((const GLshort *)(ptr0));
 
     return 0;
 }
@@ -5396,7 +3982,7 @@ int org_mini_gl_GL_glClipPlane(Runtime *runtime, Class *clazz) {
         ptr1 = equation->arr_body + arr_offset1;
     }
 
-    glClipPlane((GLenum) plane,(const GLdouble *) (ptr1));
+    glClipPlane((GLenum)plane, (const GLdouble *)(ptr1));
 
     return 0;
 }
@@ -5408,7 +3994,7 @@ int org_mini_gl_GL_glColorMaterial(Runtime *runtime, Class *clazz) {
     s32 face = env->localvar_getInt(runtime, pos++);
     s32 mode = env->localvar_getInt(runtime, pos++);
 
-    glColorMaterial((GLenum) face,(GLenum) mode);
+    glColorMaterial((GLenum)face, (GLenum)mode);
 
     return 0;
 }
@@ -5420,7 +4006,7 @@ int org_mini_gl_GL_glFogf(Runtime *runtime, Class *clazz) {
     s32 pname = env->localvar_getInt(runtime, pos++);
     Int2Float param;param.i = env->localvar_getInt(runtime, pos++);
 
-    glFogf((GLenum) pname, (GLfloat) param.f);
+    glFogf((GLenum)pname, (GLfloat)param.f);
 
     return 0;
 }
@@ -5438,7 +4024,7 @@ int org_mini_gl_GL_glFogfv(Runtime *runtime, Class *clazz) {
         ptr1 = params->arr_body + arr_offset1;
     }
 
-    glFogfv((GLenum) pname,(const GLfloat *) (ptr1));
+    glFogfv((GLenum)pname, (const GLfloat *)(ptr1));
 
     return 0;
 }
@@ -5450,7 +4036,7 @@ int org_mini_gl_GL_glFogi(Runtime *runtime, Class *clazz) {
     s32 pname = env->localvar_getInt(runtime, pos++);
     s32 param = env->localvar_getInt(runtime, pos++);
 
-    glFogi((GLenum) pname,(GLint) param);
+    glFogi((GLenum)pname, (GLint)param);
 
     return 0;
 }
@@ -5468,7 +4054,7 @@ int org_mini_gl_GL_glFogiv(Runtime *runtime, Class *clazz) {
         ptr1 = params->arr_body + arr_offset1;
     }
 
-    glFogiv((GLenum) pname,(const GLint *) (ptr1));
+    glFogiv((GLenum)pname, (const GLint *)(ptr1));
 
     return 0;
 }
@@ -5481,7 +4067,7 @@ int org_mini_gl_GL_glLightf(Runtime *runtime, Class *clazz) {
     s32 pname = env->localvar_getInt(runtime, pos++);
     Int2Float param;param.i = env->localvar_getInt(runtime, pos++);
 
-    glLightf((GLenum) light,(GLenum) pname, (GLfloat) param.f);
+    glLightf((GLenum)light, (GLenum)pname, (GLfloat)param.f);
 
     return 0;
 }
@@ -5500,7 +4086,7 @@ int org_mini_gl_GL_glLightfv(Runtime *runtime, Class *clazz) {
         ptr2 = params->arr_body + arr_offset2;
     }
 
-    glLightfv((GLenum) light,(GLenum) pname,(const GLfloat *) (ptr2));
+    glLightfv((GLenum)light, (GLenum)pname, (const GLfloat *)(ptr2));
 
     return 0;
 }
@@ -5513,7 +4099,7 @@ int org_mini_gl_GL_glLighti(Runtime *runtime, Class *clazz) {
     s32 pname = env->localvar_getInt(runtime, pos++);
     s32 param = env->localvar_getInt(runtime, pos++);
 
-    glLighti((GLenum) light,(GLenum) pname,(GLint) param);
+    glLighti((GLenum)light, (GLenum)pname, (GLint)param);
 
     return 0;
 }
@@ -5532,7 +4118,7 @@ int org_mini_gl_GL_glLightiv(Runtime *runtime, Class *clazz) {
         ptr2 = params->arr_body + arr_offset2;
     }
 
-    glLightiv((GLenum) light,(GLenum) pname,(const GLint *) (ptr2));
+    glLightiv((GLenum)light, (GLenum)pname, (const GLint *)(ptr2));
 
     return 0;
 }
@@ -5544,7 +4130,7 @@ int org_mini_gl_GL_glLightModelf(Runtime *runtime, Class *clazz) {
     s32 pname = env->localvar_getInt(runtime, pos++);
     Int2Float param;param.i = env->localvar_getInt(runtime, pos++);
 
-    glLightModelf((GLenum) pname, (GLfloat) param.f);
+    glLightModelf((GLenum)pname, (GLfloat)param.f);
 
     return 0;
 }
@@ -5562,7 +4148,7 @@ int org_mini_gl_GL_glLightModelfv(Runtime *runtime, Class *clazz) {
         ptr1 = params->arr_body + arr_offset1;
     }
 
-    glLightModelfv((GLenum) pname,(const GLfloat *) (ptr1));
+    glLightModelfv((GLenum)pname, (const GLfloat *)(ptr1));
 
     return 0;
 }
@@ -5574,7 +4160,7 @@ int org_mini_gl_GL_glLightModeli(Runtime *runtime, Class *clazz) {
     s32 pname = env->localvar_getInt(runtime, pos++);
     s32 param = env->localvar_getInt(runtime, pos++);
 
-    glLightModeli((GLenum) pname,(GLint) param);
+    glLightModeli((GLenum)pname, (GLint)param);
 
     return 0;
 }
@@ -5592,7 +4178,7 @@ int org_mini_gl_GL_glLightModeliv(Runtime *runtime, Class *clazz) {
         ptr1 = params->arr_body + arr_offset1;
     }
 
-    glLightModeliv((GLenum) pname,(const GLint *) (ptr1));
+    glLightModeliv((GLenum)pname, (const GLint *)(ptr1));
 
     return 0;
 }
@@ -5604,7 +4190,7 @@ int org_mini_gl_GL_glLineStipple(Runtime *runtime, Class *clazz) {
     s32 factor = env->localvar_getInt(runtime, pos++);
     s32 pattern = env->localvar_getInt(runtime, pos++);
 
-    glLineStipple((GLint) factor,(GLushort) pattern);
+    glLineStipple((GLint)factor, (GLushort)pattern);
 
     return 0;
 }
@@ -5617,7 +4203,7 @@ int org_mini_gl_GL_glMaterialf(Runtime *runtime, Class *clazz) {
     s32 pname = env->localvar_getInt(runtime, pos++);
     Int2Float param;param.i = env->localvar_getInt(runtime, pos++);
 
-    glMaterialf((GLenum) face,(GLenum) pname, (GLfloat) param.f);
+    glMaterialf((GLenum)face, (GLenum)pname, (GLfloat)param.f);
 
     return 0;
 }
@@ -5636,7 +4222,7 @@ int org_mini_gl_GL_glMaterialfv(Runtime *runtime, Class *clazz) {
         ptr2 = params->arr_body + arr_offset2;
     }
 
-    glMaterialfv((GLenum) face,(GLenum) pname,(const GLfloat *) (ptr2));
+    glMaterialfv((GLenum)face, (GLenum)pname, (const GLfloat *)(ptr2));
 
     return 0;
 }
@@ -5649,7 +4235,7 @@ int org_mini_gl_GL_glMateriali(Runtime *runtime, Class *clazz) {
     s32 pname = env->localvar_getInt(runtime, pos++);
     s32 param = env->localvar_getInt(runtime, pos++);
 
-    glMateriali((GLenum) face,(GLenum) pname,(GLint) param);
+    glMateriali((GLenum)face, (GLenum)pname, (GLint)param);
 
     return 0;
 }
@@ -5668,7 +4254,7 @@ int org_mini_gl_GL_glMaterialiv(Runtime *runtime, Class *clazz) {
         ptr2 = params->arr_body + arr_offset2;
     }
 
-    glMaterialiv((GLenum) face,(GLenum) pname,(const GLint *) (ptr2));
+    glMaterialiv((GLenum)face, (GLenum)pname, (const GLint *)(ptr2));
 
     return 0;
 }
@@ -5685,7 +4271,7 @@ int org_mini_gl_GL_glPolygonStipple(Runtime *runtime, Class *clazz) {
         ptr0 = mask->arr_body + arr_offset0;
     }
 
-    glPolygonStipple((const GLubyte *) (ptr0));
+    glPolygonStipple((const GLubyte *)(ptr0));
 
     return 0;
 }
@@ -5696,7 +4282,7 @@ int org_mini_gl_GL_glShadeModel(Runtime *runtime, Class *clazz) {
 
     s32 mode = env->localvar_getInt(runtime, pos++);
 
-    glShadeModel((GLenum) mode);
+    glShadeModel((GLenum)mode);
 
     return 0;
 }
@@ -5709,7 +4295,7 @@ int org_mini_gl_GL_glTexEnvf(Runtime *runtime, Class *clazz) {
     s32 pname = env->localvar_getInt(runtime, pos++);
     Int2Float param;param.i = env->localvar_getInt(runtime, pos++);
 
-    glTexEnvf((GLenum) target,(GLenum) pname, (GLfloat) param.f);
+    glTexEnvf((GLenum)target, (GLenum)pname, (GLfloat)param.f);
 
     return 0;
 }
@@ -5728,7 +4314,7 @@ int org_mini_gl_GL_glTexEnvfv(Runtime *runtime, Class *clazz) {
         ptr2 = params->arr_body + arr_offset2;
     }
 
-    glTexEnvfv((GLenum) target,(GLenum) pname,(const GLfloat *) (ptr2));
+    glTexEnvfv((GLenum)target, (GLenum)pname, (const GLfloat *)(ptr2));
 
     return 0;
 }
@@ -5741,7 +4327,7 @@ int org_mini_gl_GL_glTexEnvi(Runtime *runtime, Class *clazz) {
     s32 pname = env->localvar_getInt(runtime, pos++);
     s32 param = env->localvar_getInt(runtime, pos++);
 
-    glTexEnvi((GLenum) target,(GLenum) pname,(GLint) param);
+    glTexEnvi((GLenum)target, (GLenum)pname, (GLint)param);
 
     return 0;
 }
@@ -5760,7 +4346,7 @@ int org_mini_gl_GL_glTexEnviv(Runtime *runtime, Class *clazz) {
         ptr2 = params->arr_body + arr_offset2;
     }
 
-    glTexEnviv((GLenum) target,(GLenum) pname,(const GLint *) (ptr2));
+    glTexEnviv((GLenum)target, (GLenum)pname, (const GLint *)(ptr2));
 
     return 0;
 }
@@ -5773,7 +4359,7 @@ int org_mini_gl_GL_glTexGend(Runtime *runtime, Class *clazz) {
     s32 pname = env->localvar_getInt(runtime, pos++);
     Long2Double param;param.l = getParaLong(runtime, pos);pos += 2;
 
-    glTexGend((GLenum) coord,(GLenum) pname,(GLdouble) param.d);
+    glTexGend((GLenum)coord, (GLenum)pname, (GLdouble)param.d);
 
     return 0;
 }
@@ -5792,7 +4378,7 @@ int org_mini_gl_GL_glTexGendv(Runtime *runtime, Class *clazz) {
         ptr2 = params->arr_body + arr_offset2;
     }
 
-    glTexGendv((GLenum) coord,(GLenum) pname,(const GLdouble *) (ptr2));
+    glTexGendv((GLenum)coord, (GLenum)pname, (const GLdouble *)(ptr2));
 
     return 0;
 }
@@ -5805,7 +4391,7 @@ int org_mini_gl_GL_glTexGenf(Runtime *runtime, Class *clazz) {
     s32 pname = env->localvar_getInt(runtime, pos++);
     Int2Float param;param.i = env->localvar_getInt(runtime, pos++);
 
-    glTexGenf((GLenum) coord,(GLenum) pname, (GLfloat) param.f);
+    glTexGenf((GLenum)coord, (GLenum)pname, (GLfloat)param.f);
 
     return 0;
 }
@@ -5824,7 +4410,7 @@ int org_mini_gl_GL_glTexGenfv(Runtime *runtime, Class *clazz) {
         ptr2 = params->arr_body + arr_offset2;
     }
 
-    glTexGenfv((GLenum) coord,(GLenum) pname,(const GLfloat *) (ptr2));
+    glTexGenfv((GLenum)coord, (GLenum)pname, (const GLfloat *)(ptr2));
 
     return 0;
 }
@@ -5837,7 +4423,7 @@ int org_mini_gl_GL_glTexGeni(Runtime *runtime, Class *clazz) {
     s32 pname = env->localvar_getInt(runtime, pos++);
     s32 param = env->localvar_getInt(runtime, pos++);
 
-    glTexGeni((GLenum) coord,(GLenum) pname,(GLint) param);
+    glTexGeni((GLenum)coord, (GLenum)pname, (GLint)param);
 
     return 0;
 }
@@ -5856,7 +4442,7 @@ int org_mini_gl_GL_glTexGeniv(Runtime *runtime, Class *clazz) {
         ptr2 = params->arr_body + arr_offset2;
     }
 
-    glTexGeniv((GLenum) coord,(GLenum) pname,(const GLint *) (ptr2));
+    glTexGeniv((GLenum)coord, (GLenum)pname, (const GLint *)(ptr2));
 
     return 0;
 }
@@ -5875,7 +4461,7 @@ int org_mini_gl_GL_glFeedbackBuffer(Runtime *runtime, Class *clazz) {
         ptr2 = buffer->arr_body + arr_offset2;
     }
 
-    glFeedbackBuffer((GLsizei) size,(GLenum) type,(GLfloat *) (ptr2));
+    glFeedbackBuffer((GLsizei)size, (GLenum)type, (GLfloat *)(ptr2));
 
     return 0;
 }
@@ -5893,7 +4479,7 @@ int org_mini_gl_GL_glSelectBuffer(Runtime *runtime, Class *clazz) {
         ptr1 = buffer->arr_body + arr_offset1;
     }
 
-    glSelectBuffer((GLsizei) size,(GLuint *) (ptr1));
+    glSelectBuffer((GLsizei)size, (GLuint *)(ptr1));
 
     return 0;
 }
@@ -5904,7 +4490,7 @@ int org_mini_gl_GL_glRenderMode(Runtime *runtime, Class *clazz) {
 
     s32 mode = env->localvar_getInt(runtime, pos++);
 
-    s32 ret_value = (s32)glRenderMode((GLenum) mode);
+    s32 ret_value = (s32)glRenderMode((GLenum)mode);
     env->push_int(runtime->stack, ret_value);
     return 0;
 }
@@ -5925,7 +4511,7 @@ int org_mini_gl_GL_glLoadName(Runtime *runtime, Class *clazz) {
 
     s32 name = env->localvar_getInt(runtime, pos++);
 
-    glLoadName((GLuint) name);
+    glLoadName((GLuint)name);
 
     return 0;
 }
@@ -5936,7 +4522,7 @@ int org_mini_gl_GL_glPassThrough(Runtime *runtime, Class *clazz) {
 
     Int2Float token;token.i = env->localvar_getInt(runtime, pos++);
 
-    glPassThrough( (GLfloat) token.f);
+    glPassThrough((GLfloat)token.f);
 
     return 0;
 }
@@ -5957,7 +4543,7 @@ int org_mini_gl_GL_glPushName(Runtime *runtime, Class *clazz) {
 
     s32 name = env->localvar_getInt(runtime, pos++);
 
-    glPushName((GLuint) name);
+    glPushName((GLuint)name);
 
     return 0;
 }
@@ -5971,7 +4557,7 @@ int org_mini_gl_GL_glClearAccum(Runtime *runtime, Class *clazz) {
     Int2Float blue;blue.i = env->localvar_getInt(runtime, pos++);
     Int2Float alpha;alpha.i = env->localvar_getInt(runtime, pos++);
 
-    glClearAccum( (GLfloat) red.f, (GLfloat) green.f, (GLfloat) blue.f, (GLfloat) alpha.f);
+    glClearAccum((GLfloat)red.f, (GLfloat)green.f, (GLfloat)blue.f, (GLfloat)alpha.f);
 
     return 0;
 }
@@ -5982,7 +4568,7 @@ int org_mini_gl_GL_glClearIndex(Runtime *runtime, Class *clazz) {
 
     Int2Float c;c.i = env->localvar_getInt(runtime, pos++);
 
-    glClearIndex( (GLfloat) c.f);
+    glClearIndex((GLfloat)c.f);
 
     return 0;
 }
@@ -5993,7 +4579,7 @@ int org_mini_gl_GL_glIndexMask(Runtime *runtime, Class *clazz) {
 
     s32 mask = env->localvar_getInt(runtime, pos++);
 
-    glIndexMask((GLuint) mask);
+    glIndexMask((GLuint)mask);
 
     return 0;
 }
@@ -6005,7 +4591,7 @@ int org_mini_gl_GL_glAccum(Runtime *runtime, Class *clazz) {
     s32 op = env->localvar_getInt(runtime, pos++);
     Int2Float value;value.i = env->localvar_getInt(runtime, pos++);
 
-    glAccum((GLenum) op, (GLfloat) value.f);
+    glAccum((GLenum)op, (GLfloat)value.f);
 
     return 0;
 }
@@ -6026,7 +4612,7 @@ int org_mini_gl_GL_glPushAttrib(Runtime *runtime, Class *clazz) {
 
     s32 mask = env->localvar_getInt(runtime, pos++);
 
-    glPushAttrib((GLbitfield) mask);
+    glPushAttrib((GLbitfield)mask);
 
     return 0;
 }
@@ -6048,7 +4634,7 @@ int org_mini_gl_GL_glMap1d(Runtime *runtime, Class *clazz) {
         ptr5 = points->arr_body + arr_offset5;
     }
 
-    glMap1d((GLenum) target,(GLdouble) u1.d,(GLdouble) u2.d,(GLint) stride,(GLint) order,(const GLdouble *) (ptr5));
+    glMap1d((GLenum)target, (GLdouble)u1.d, (GLdouble)u2.d, (GLint)stride, (GLint)order, (const GLdouble *)(ptr5));
 
     return 0;
 }
@@ -6070,7 +4656,7 @@ int org_mini_gl_GL_glMap1f(Runtime *runtime, Class *clazz) {
         ptr5 = points->arr_body + arr_offset5;
     }
 
-    glMap1f((GLenum) target, (GLfloat) u1.f, (GLfloat) u2.f,(GLint) stride,(GLint) order,(const GLfloat *) (ptr5));
+    glMap1f((GLenum)target, (GLfloat)u1.f, (GLfloat)u2.f, (GLint)stride, (GLint)order, (const GLfloat *)(ptr5));
 
     return 0;
 }
@@ -6096,7 +4682,7 @@ int org_mini_gl_GL_glMap2d(Runtime *runtime, Class *clazz) {
         ptr9 = points->arr_body + arr_offset9;
     }
 
-    glMap2d((GLenum) target,(GLdouble) u1.d,(GLdouble) u2.d,(GLint) ustride,(GLint) uorder,(GLdouble) v1.d,(GLdouble) v2.d,(GLint) vstride,(GLint) vorder,(const GLdouble *) (ptr9));
+    glMap2d((GLenum)target, (GLdouble)u1.d, (GLdouble)u2.d, (GLint)ustride, (GLint)uorder, (GLdouble)v1.d, (GLdouble)v2.d, (GLint)vstride, (GLint)vorder, (const GLdouble *)(ptr9));
 
     return 0;
 }
@@ -6122,7 +4708,7 @@ int org_mini_gl_GL_glMap2f(Runtime *runtime, Class *clazz) {
         ptr9 = points->arr_body + arr_offset9;
     }
 
-    glMap2f((GLenum) target, (GLfloat) u1.f, (GLfloat) u2.f,(GLint) ustride,(GLint) uorder, (GLfloat) v1.f, (GLfloat) v2.f,(GLint) vstride,(GLint) vorder,(const GLfloat *) (ptr9));
+    glMap2f((GLenum)target, (GLfloat)u1.f, (GLfloat)u2.f, (GLint)ustride, (GLint)uorder, (GLfloat)v1.f, (GLfloat)v2.f, (GLint)vstride, (GLint)vorder, (const GLfloat *)(ptr9));
 
     return 0;
 }
@@ -6135,7 +4721,7 @@ int org_mini_gl_GL_glMapGrid1d(Runtime *runtime, Class *clazz) {
     Long2Double u1;u1.l = getParaLong(runtime, pos);pos += 2;
     Long2Double u2;u2.l = getParaLong(runtime, pos);pos += 2;
 
-    glMapGrid1d((GLint) un,(GLdouble) u1.d,(GLdouble) u2.d);
+    glMapGrid1d((GLint)un, (GLdouble)u1.d, (GLdouble)u2.d);
 
     return 0;
 }
@@ -6148,7 +4734,7 @@ int org_mini_gl_GL_glMapGrid1f(Runtime *runtime, Class *clazz) {
     Int2Float u1;u1.i = env->localvar_getInt(runtime, pos++);
     Int2Float u2;u2.i = env->localvar_getInt(runtime, pos++);
 
-    glMapGrid1f((GLint) un, (GLfloat) u1.f, (GLfloat) u2.f);
+    glMapGrid1f((GLint)un, (GLfloat)u1.f, (GLfloat)u2.f);
 
     return 0;
 }
@@ -6164,7 +4750,7 @@ int org_mini_gl_GL_glMapGrid2d(Runtime *runtime, Class *clazz) {
     Long2Double v1;v1.l = getParaLong(runtime, pos);pos += 2;
     Long2Double v2;v2.l = getParaLong(runtime, pos);pos += 2;
 
-    glMapGrid2d((GLint) un,(GLdouble) u1.d,(GLdouble) u2.d,(GLint) vn,(GLdouble) v1.d,(GLdouble) v2.d);
+    glMapGrid2d((GLint)un, (GLdouble)u1.d, (GLdouble)u2.d, (GLint)vn, (GLdouble)v1.d, (GLdouble)v2.d);
 
     return 0;
 }
@@ -6180,7 +4766,7 @@ int org_mini_gl_GL_glMapGrid2f(Runtime *runtime, Class *clazz) {
     Int2Float v1;v1.i = env->localvar_getInt(runtime, pos++);
     Int2Float v2;v2.i = env->localvar_getInt(runtime, pos++);
 
-    glMapGrid2f((GLint) un, (GLfloat) u1.f, (GLfloat) u2.f,(GLint) vn, (GLfloat) v1.f, (GLfloat) v2.f);
+    glMapGrid2f((GLint)un, (GLfloat)u1.f, (GLfloat)u2.f, (GLint)vn, (GLfloat)v1.f, (GLfloat)v2.f);
 
     return 0;
 }
@@ -6191,7 +4777,7 @@ int org_mini_gl_GL_glEvalCoord1d(Runtime *runtime, Class *clazz) {
 
     Long2Double u;u.l = getParaLong(runtime, pos);pos += 2;
 
-    glEvalCoord1d((GLdouble) u.d);
+    glEvalCoord1d((GLdouble)u.d);
 
     return 0;
 }
@@ -6208,7 +4794,7 @@ int org_mini_gl_GL_glEvalCoord1dv(Runtime *runtime, Class *clazz) {
         ptr0 = u->arr_body + arr_offset0;
     }
 
-    glEvalCoord1dv((const GLdouble *) (ptr0));
+    glEvalCoord1dv((const GLdouble *)(ptr0));
 
     return 0;
 }
@@ -6219,7 +4805,7 @@ int org_mini_gl_GL_glEvalCoord1f(Runtime *runtime, Class *clazz) {
 
     Int2Float u;u.i = env->localvar_getInt(runtime, pos++);
 
-    glEvalCoord1f( (GLfloat) u.f);
+    glEvalCoord1f((GLfloat)u.f);
 
     return 0;
 }
@@ -6236,7 +4822,7 @@ int org_mini_gl_GL_glEvalCoord1fv(Runtime *runtime, Class *clazz) {
         ptr0 = u->arr_body + arr_offset0;
     }
 
-    glEvalCoord1fv((const GLfloat *) (ptr0));
+    glEvalCoord1fv((const GLfloat *)(ptr0));
 
     return 0;
 }
@@ -6248,7 +4834,7 @@ int org_mini_gl_GL_glEvalCoord2d(Runtime *runtime, Class *clazz) {
     Long2Double u;u.l = getParaLong(runtime, pos);pos += 2;
     Long2Double v;v.l = getParaLong(runtime, pos);pos += 2;
 
-    glEvalCoord2d((GLdouble) u.d,(GLdouble) v.d);
+    glEvalCoord2d((GLdouble)u.d, (GLdouble)v.d);
 
     return 0;
 }
@@ -6265,7 +4851,7 @@ int org_mini_gl_GL_glEvalCoord2dv(Runtime *runtime, Class *clazz) {
         ptr0 = u->arr_body + arr_offset0;
     }
 
-    glEvalCoord2dv((const GLdouble *) (ptr0));
+    glEvalCoord2dv((const GLdouble *)(ptr0));
 
     return 0;
 }
@@ -6277,7 +4863,7 @@ int org_mini_gl_GL_glEvalCoord2f(Runtime *runtime, Class *clazz) {
     Int2Float u;u.i = env->localvar_getInt(runtime, pos++);
     Int2Float v;v.i = env->localvar_getInt(runtime, pos++);
 
-    glEvalCoord2f( (GLfloat) u.f, (GLfloat) v.f);
+    glEvalCoord2f((GLfloat)u.f, (GLfloat)v.f);
 
     return 0;
 }
@@ -6294,7 +4880,7 @@ int org_mini_gl_GL_glEvalCoord2fv(Runtime *runtime, Class *clazz) {
         ptr0 = u->arr_body + arr_offset0;
     }
 
-    glEvalCoord2fv((const GLfloat *) (ptr0));
+    glEvalCoord2fv((const GLfloat *)(ptr0));
 
     return 0;
 }
@@ -6307,7 +4893,7 @@ int org_mini_gl_GL_glEvalMesh1(Runtime *runtime, Class *clazz) {
     s32 i1 = env->localvar_getInt(runtime, pos++);
     s32 i2 = env->localvar_getInt(runtime, pos++);
 
-    glEvalMesh1((GLenum) mode,(GLint) i1,(GLint) i2);
+    glEvalMesh1((GLenum)mode, (GLint)i1, (GLint)i2);
 
     return 0;
 }
@@ -6318,7 +4904,7 @@ int org_mini_gl_GL_glEvalPoint1(Runtime *runtime, Class *clazz) {
 
     s32 i = env->localvar_getInt(runtime, pos++);
 
-    glEvalPoint1((GLint) i);
+    glEvalPoint1((GLint)i);
 
     return 0;
 }
@@ -6333,7 +4919,7 @@ int org_mini_gl_GL_glEvalMesh2(Runtime *runtime, Class *clazz) {
     s32 j1 = env->localvar_getInt(runtime, pos++);
     s32 j2 = env->localvar_getInt(runtime, pos++);
 
-    glEvalMesh2((GLenum) mode,(GLint) i1,(GLint) i2,(GLint) j1,(GLint) j2);
+    glEvalMesh2((GLenum)mode, (GLint)i1, (GLint)i2, (GLint)j1, (GLint)j2);
 
     return 0;
 }
@@ -6345,7 +4931,7 @@ int org_mini_gl_GL_glEvalPoint2(Runtime *runtime, Class *clazz) {
     s32 i = env->localvar_getInt(runtime, pos++);
     s32 j = env->localvar_getInt(runtime, pos++);
 
-    glEvalPoint2((GLint) i,(GLint) j);
+    glEvalPoint2((GLint)i, (GLint)j);
 
     return 0;
 }
@@ -6357,7 +4943,7 @@ int org_mini_gl_GL_glAlphaFunc(Runtime *runtime, Class *clazz) {
     s32 func = env->localvar_getInt(runtime, pos++);
     Int2Float ref;ref.i = env->localvar_getInt(runtime, pos++);
 
-    glAlphaFunc((GLenum) func, (GLfloat) ref.f);
+    glAlphaFunc((GLenum)func, (GLfloat)ref.f);
 
     return 0;
 }
@@ -6369,7 +4955,7 @@ int org_mini_gl_GL_glPixelZoom(Runtime *runtime, Class *clazz) {
     Int2Float xfactor;xfactor.i = env->localvar_getInt(runtime, pos++);
     Int2Float yfactor;yfactor.i = env->localvar_getInt(runtime, pos++);
 
-    glPixelZoom( (GLfloat) xfactor.f, (GLfloat) yfactor.f);
+    glPixelZoom((GLfloat)xfactor.f, (GLfloat)yfactor.f);
 
     return 0;
 }
@@ -6381,7 +4967,7 @@ int org_mini_gl_GL_glPixelTransferf(Runtime *runtime, Class *clazz) {
     s32 pname = env->localvar_getInt(runtime, pos++);
     Int2Float param;param.i = env->localvar_getInt(runtime, pos++);
 
-    glPixelTransferf((GLenum) pname, (GLfloat) param.f);
+    glPixelTransferf((GLenum)pname, (GLfloat)param.f);
 
     return 0;
 }
@@ -6393,7 +4979,7 @@ int org_mini_gl_GL_glPixelTransferi(Runtime *runtime, Class *clazz) {
     s32 pname = env->localvar_getInt(runtime, pos++);
     s32 param = env->localvar_getInt(runtime, pos++);
 
-    glPixelTransferi((GLenum) pname,(GLint) param);
+    glPixelTransferi((GLenum)pname, (GLint)param);
 
     return 0;
 }
@@ -6412,7 +4998,7 @@ int org_mini_gl_GL_glPixelMapfv(Runtime *runtime, Class *clazz) {
         ptr2 = values->arr_body + arr_offset2;
     }
 
-    glPixelMapfv((GLenum) map,(GLsizei) mapsize,(const GLfloat *) (ptr2));
+    glPixelMapfv((GLenum)map, (GLsizei)mapsize, (const GLfloat *)(ptr2));
 
     return 0;
 }
@@ -6431,7 +5017,7 @@ int org_mini_gl_GL_glPixelMapuiv(Runtime *runtime, Class *clazz) {
         ptr2 = values->arr_body + arr_offset2;
     }
 
-    glPixelMapuiv((GLenum) map,(GLsizei) mapsize,(const GLuint *) (ptr2));
+    glPixelMapuiv((GLenum)map, (GLsizei)mapsize, (const GLuint *)(ptr2));
 
     return 0;
 }
@@ -6450,7 +5036,7 @@ int org_mini_gl_GL_glPixelMapusv(Runtime *runtime, Class *clazz) {
         ptr2 = values->arr_body + arr_offset2;
     }
 
-    glPixelMapusv((GLenum) map,(GLsizei) mapsize,(const GLushort *) (ptr2));
+    glPixelMapusv((GLenum)map, (GLsizei)mapsize, (const GLushort *)(ptr2));
 
     return 0;
 }
@@ -6465,7 +5051,7 @@ int org_mini_gl_GL_glCopyPixels(Runtime *runtime, Class *clazz) {
     s32 height = env->localvar_getInt(runtime, pos++);
     s32 type = env->localvar_getInt(runtime, pos++);
 
-    glCopyPixels((GLint) x,(GLint) y,(GLsizei) width,(GLsizei) height,(GLenum) type);
+    glCopyPixels((GLint)x, (GLint)y, (GLsizei)width, (GLsizei)height, (GLenum)type);
 
     return 0;
 }
@@ -6486,7 +5072,7 @@ int org_mini_gl_GL_glDrawPixels(Runtime *runtime, Class *clazz) {
         ptr4 = pixels->arr_body + arr_offset4;
     }
 
-    glDrawPixels((GLsizei) width,(GLsizei) height,(GLenum) format,(GLenum) type,(const void *) (ptr4));
+    glDrawPixels((GLsizei)width, (GLsizei)height, (GLenum)format, (GLenum)type, (const void *)(ptr4));
 
     return 0;
 }
@@ -6504,7 +5090,7 @@ int org_mini_gl_GL_glGetClipPlane(Runtime *runtime, Class *clazz) {
         ptr1 = equation->arr_body + arr_offset1;
     }
 
-    glGetClipPlane((GLenum) plane,(GLdouble *) (ptr1));
+    glGetClipPlane((GLenum)plane, (GLdouble *)(ptr1));
 
     return 0;
 }
@@ -6523,7 +5109,7 @@ int org_mini_gl_GL_glGetLightfv(Runtime *runtime, Class *clazz) {
         ptr2 = params->arr_body + arr_offset2;
     }
 
-    glGetLightfv((GLenum) light,(GLenum) pname,(GLfloat *) (ptr2));
+    glGetLightfv((GLenum)light, (GLenum)pname, (GLfloat *)(ptr2));
 
     return 0;
 }
@@ -6542,7 +5128,7 @@ int org_mini_gl_GL_glGetLightiv(Runtime *runtime, Class *clazz) {
         ptr2 = params->arr_body + arr_offset2;
     }
 
-    glGetLightiv((GLenum) light,(GLenum) pname,(GLint *) (ptr2));
+    glGetLightiv((GLenum)light, (GLenum)pname, (GLint *)(ptr2));
 
     return 0;
 }
@@ -6561,7 +5147,7 @@ int org_mini_gl_GL_glGetMapdv(Runtime *runtime, Class *clazz) {
         ptr2 = v->arr_body + arr_offset2;
     }
 
-    glGetMapdv((GLenum) target,(GLenum) query,(GLdouble *) (ptr2));
+    glGetMapdv((GLenum)target, (GLenum)query, (GLdouble *)(ptr2));
 
     return 0;
 }
@@ -6580,7 +5166,7 @@ int org_mini_gl_GL_glGetMapfv(Runtime *runtime, Class *clazz) {
         ptr2 = v->arr_body + arr_offset2;
     }
 
-    glGetMapfv((GLenum) target,(GLenum) query,(GLfloat *) (ptr2));
+    glGetMapfv((GLenum)target, (GLenum)query, (GLfloat *)(ptr2));
 
     return 0;
 }
@@ -6599,7 +5185,7 @@ int org_mini_gl_GL_glGetMapiv(Runtime *runtime, Class *clazz) {
         ptr2 = v->arr_body + arr_offset2;
     }
 
-    glGetMapiv((GLenum) target,(GLenum) query,(GLint *) (ptr2));
+    glGetMapiv((GLenum)target, (GLenum)query, (GLint *)(ptr2));
 
     return 0;
 }
@@ -6618,7 +5204,7 @@ int org_mini_gl_GL_glGetMaterialfv(Runtime *runtime, Class *clazz) {
         ptr2 = params->arr_body + arr_offset2;
     }
 
-    glGetMaterialfv((GLenum) face,(GLenum) pname,(GLfloat *) (ptr2));
+    glGetMaterialfv((GLenum)face, (GLenum)pname, (GLfloat *)(ptr2));
 
     return 0;
 }
@@ -6637,7 +5223,7 @@ int org_mini_gl_GL_glGetMaterialiv(Runtime *runtime, Class *clazz) {
         ptr2 = params->arr_body + arr_offset2;
     }
 
-    glGetMaterialiv((GLenum) face,(GLenum) pname,(GLint *) (ptr2));
+    glGetMaterialiv((GLenum)face, (GLenum)pname, (GLint *)(ptr2));
 
     return 0;
 }
@@ -6655,7 +5241,7 @@ int org_mini_gl_GL_glGetPixelMapfv(Runtime *runtime, Class *clazz) {
         ptr1 = values->arr_body + arr_offset1;
     }
 
-    glGetPixelMapfv((GLenum) map,(GLfloat *) (ptr1));
+    glGetPixelMapfv((GLenum)map, (GLfloat *)(ptr1));
 
     return 0;
 }
@@ -6673,7 +5259,7 @@ int org_mini_gl_GL_glGetPixelMapuiv(Runtime *runtime, Class *clazz) {
         ptr1 = values->arr_body + arr_offset1;
     }
 
-    glGetPixelMapuiv((GLenum) map,(GLuint *) (ptr1));
+    glGetPixelMapuiv((GLenum)map, (GLuint *)(ptr1));
 
     return 0;
 }
@@ -6691,7 +5277,7 @@ int org_mini_gl_GL_glGetPixelMapusv(Runtime *runtime, Class *clazz) {
         ptr1 = values->arr_body + arr_offset1;
     }
 
-    glGetPixelMapusv((GLenum) map,(GLushort *) (ptr1));
+    glGetPixelMapusv((GLenum)map, (GLushort *)(ptr1));
 
     return 0;
 }
@@ -6708,7 +5294,7 @@ int org_mini_gl_GL_glGetPolygonStipple(Runtime *runtime, Class *clazz) {
         ptr0 = mask->arr_body + arr_offset0;
     }
 
-    glGetPolygonStipple((GLubyte *) (ptr0));
+    glGetPolygonStipple((GLubyte *)(ptr0));
 
     return 0;
 }
@@ -6727,7 +5313,7 @@ int org_mini_gl_GL_glGetTexEnvfv(Runtime *runtime, Class *clazz) {
         ptr2 = params->arr_body + arr_offset2;
     }
 
-    glGetTexEnvfv((GLenum) target,(GLenum) pname,(GLfloat *) (ptr2));
+    glGetTexEnvfv((GLenum)target, (GLenum)pname, (GLfloat *)(ptr2));
 
     return 0;
 }
@@ -6746,7 +5332,7 @@ int org_mini_gl_GL_glGetTexEnviv(Runtime *runtime, Class *clazz) {
         ptr2 = params->arr_body + arr_offset2;
     }
 
-    glGetTexEnviv((GLenum) target,(GLenum) pname,(GLint *) (ptr2));
+    glGetTexEnviv((GLenum)target, (GLenum)pname, (GLint *)(ptr2));
 
     return 0;
 }
@@ -6765,7 +5351,7 @@ int org_mini_gl_GL_glGetTexGendv(Runtime *runtime, Class *clazz) {
         ptr2 = params->arr_body + arr_offset2;
     }
 
-    glGetTexGendv((GLenum) coord,(GLenum) pname,(GLdouble *) (ptr2));
+    glGetTexGendv((GLenum)coord, (GLenum)pname, (GLdouble *)(ptr2));
 
     return 0;
 }
@@ -6784,7 +5370,7 @@ int org_mini_gl_GL_glGetTexGenfv(Runtime *runtime, Class *clazz) {
         ptr2 = params->arr_body + arr_offset2;
     }
 
-    glGetTexGenfv((GLenum) coord,(GLenum) pname,(GLfloat *) (ptr2));
+    glGetTexGenfv((GLenum)coord, (GLenum)pname, (GLfloat *)(ptr2));
 
     return 0;
 }
@@ -6803,7 +5389,7 @@ int org_mini_gl_GL_glGetTexGeniv(Runtime *runtime, Class *clazz) {
         ptr2 = params->arr_body + arr_offset2;
     }
 
-    glGetTexGeniv((GLenum) coord,(GLenum) pname,(GLint *) (ptr2));
+    glGetTexGeniv((GLenum)coord, (GLenum)pname, (GLint *)(ptr2));
 
     return 0;
 }
@@ -6814,7 +5400,7 @@ int org_mini_gl_GL_glIsList(Runtime *runtime, Class *clazz) {
 
     s32 list = env->localvar_getInt(runtime, pos++);
 
-    s32 ret_value = (s32)glIsList((GLuint) list);
+    s32 ret_value = (s32)glIsList((GLuint)list);
     env->push_int(runtime->stack, ret_value);
     return 0;
 }
@@ -6830,7 +5416,7 @@ int org_mini_gl_GL_glFrustum(Runtime *runtime, Class *clazz) {
     Long2Double zNear;zNear.l = getParaLong(runtime, pos);pos += 2;
     Long2Double zFar;zFar.l = getParaLong(runtime, pos);pos += 2;
 
-    glFrustum((GLdouble) left.d,(GLdouble) right.d,(GLdouble) bottom.d,(GLdouble) top.d,(GLdouble) zNear.d,(GLdouble) zFar.d);
+    glFrustum((GLdouble)left.d, (GLdouble)right.d, (GLdouble)bottom.d, (GLdouble)top.d, (GLdouble)zNear.d, (GLdouble)zFar.d);
 
     return 0;
 }
@@ -6857,7 +5443,7 @@ int org_mini_gl_GL_glLoadMatrixf(Runtime *runtime, Class *clazz) {
         ptr0 = m->arr_body + arr_offset0;
     }
 
-    glLoadMatrixf((const GLfloat *) (ptr0));
+    glLoadMatrixf((const GLfloat *)(ptr0));
 
     return 0;
 }
@@ -6874,7 +5460,7 @@ int org_mini_gl_GL_glLoadMatrixd(Runtime *runtime, Class *clazz) {
         ptr0 = m->arr_body + arr_offset0;
     }
 
-    glLoadMatrixd((const GLdouble *) (ptr0));
+    glLoadMatrixd((const GLdouble *)(ptr0));
 
     return 0;
 }
@@ -6885,7 +5471,7 @@ int org_mini_gl_GL_glMatrixMode(Runtime *runtime, Class *clazz) {
 
     s32 mode = env->localvar_getInt(runtime, pos++);
 
-    glMatrixMode((GLenum) mode);
+    glMatrixMode((GLenum)mode);
 
     return 0;
 }
@@ -6902,7 +5488,7 @@ int org_mini_gl_GL_glMultMatrixf(Runtime *runtime, Class *clazz) {
         ptr0 = m->arr_body + arr_offset0;
     }
 
-    glMultMatrixf((const GLfloat *) (ptr0));
+    glMultMatrixf((const GLfloat *)(ptr0));
 
     return 0;
 }
@@ -6919,7 +5505,7 @@ int org_mini_gl_GL_glMultMatrixd(Runtime *runtime, Class *clazz) {
         ptr0 = m->arr_body + arr_offset0;
     }
 
-    glMultMatrixd((const GLdouble *) (ptr0));
+    glMultMatrixd((const GLdouble *)(ptr0));
 
     return 0;
 }
@@ -6935,7 +5521,7 @@ int org_mini_gl_GL_glOrtho(Runtime *runtime, Class *clazz) {
     Long2Double zNear;zNear.l = getParaLong(runtime, pos);pos += 2;
     Long2Double zFar;zFar.l = getParaLong(runtime, pos);pos += 2;
 
-    glOrtho((GLdouble) left.d,(GLdouble) right.d,(GLdouble) bottom.d,(GLdouble) top.d,(GLdouble) zNear.d,(GLdouble) zFar.d);
+    glOrtho((GLdouble)left.d, (GLdouble)right.d, (GLdouble)bottom.d, (GLdouble)top.d, (GLdouble)zNear.d, (GLdouble)zFar.d);
 
     return 0;
 }
@@ -6969,7 +5555,7 @@ int org_mini_gl_GL_glRotated(Runtime *runtime, Class *clazz) {
     Long2Double y;y.l = getParaLong(runtime, pos);pos += 2;
     Long2Double z;z.l = getParaLong(runtime, pos);pos += 2;
 
-    glRotated((GLdouble) angle.d,(GLdouble) x.d,(GLdouble) y.d,(GLdouble) z.d);
+    glRotated((GLdouble)angle.d, (GLdouble)x.d, (GLdouble)y.d, (GLdouble)z.d);
 
     return 0;
 }
@@ -6983,7 +5569,7 @@ int org_mini_gl_GL_glRotatef(Runtime *runtime, Class *clazz) {
     Int2Float y;y.i = env->localvar_getInt(runtime, pos++);
     Int2Float z;z.i = env->localvar_getInt(runtime, pos++);
 
-    glRotatef( (GLfloat) angle.f, (GLfloat) x.f, (GLfloat) y.f, (GLfloat) z.f);
+    glRotatef((GLfloat)angle.f, (GLfloat)x.f, (GLfloat)y.f, (GLfloat)z.f);
 
     return 0;
 }
@@ -6996,7 +5582,7 @@ int org_mini_gl_GL_glScaled(Runtime *runtime, Class *clazz) {
     Long2Double y;y.l = getParaLong(runtime, pos);pos += 2;
     Long2Double z;z.l = getParaLong(runtime, pos);pos += 2;
 
-    glScaled((GLdouble) x.d,(GLdouble) y.d,(GLdouble) z.d);
+    glScaled((GLdouble)x.d, (GLdouble)y.d, (GLdouble)z.d);
 
     return 0;
 }
@@ -7009,7 +5595,7 @@ int org_mini_gl_GL_glScalef(Runtime *runtime, Class *clazz) {
     Int2Float y;y.i = env->localvar_getInt(runtime, pos++);
     Int2Float z;z.i = env->localvar_getInt(runtime, pos++);
 
-    glScalef( (GLfloat) x.f, (GLfloat) y.f, (GLfloat) z.f);
+    glScalef((GLfloat)x.f, (GLfloat)y.f, (GLfloat)z.f);
 
     return 0;
 }
@@ -7022,7 +5608,7 @@ int org_mini_gl_GL_glTranslated(Runtime *runtime, Class *clazz) {
     Long2Double y;y.l = getParaLong(runtime, pos);pos += 2;
     Long2Double z;z.l = getParaLong(runtime, pos);pos += 2;
 
-    glTranslated((GLdouble) x.d,(GLdouble) y.d,(GLdouble) z.d);
+    glTranslated((GLdouble)x.d, (GLdouble)y.d, (GLdouble)z.d);
 
     return 0;
 }
@@ -7035,7 +5621,7 @@ int org_mini_gl_GL_glTranslatef(Runtime *runtime, Class *clazz) {
     Int2Float y;y.i = env->localvar_getInt(runtime, pos++);
     Int2Float z;z.i = env->localvar_getInt(runtime, pos++);
 
-    glTranslatef( (GLfloat) x.f, (GLfloat) y.f, (GLfloat) z.f);
+    glTranslatef((GLfloat)x.f, (GLfloat)y.f, (GLfloat)z.f);
 
     return 0;
 }
@@ -7048,7 +5634,7 @@ int org_mini_gl_GL_glDrawArrays(Runtime *runtime, Class *clazz) {
     s32 first = env->localvar_getInt(runtime, pos++);
     s32 count = env->localvar_getInt(runtime, pos++);
 
-    glDrawArrays((GLenum) mode,(GLint) first,(GLsizei) count);
+    glDrawArrays((GLenum)mode, (GLint)first, (GLsizei)count);
 
     return 0;
 }
@@ -7068,7 +5654,7 @@ int org_mini_gl_GL_glDrawElements(Runtime *runtime, Class *clazz) {
         ptr3 = indices->arr_body + arr_offset3;
     }
 
-    glDrawElements((GLenum) mode,(GLsizei) count,(GLenum) type,(const void *) (ptr3));
+    glDrawElements((GLenum)mode, (GLsizei)count, (GLenum)type, (const void *)(ptr3));
 
     return 0;
 }
@@ -7086,7 +5672,7 @@ int org_mini_gl_GL_glGetPointerv(Runtime *runtime, Class *clazz) {
         ptr1 = params->arr_body + arr_offset1;
     }
 
-    glGetPointerv((GLenum) pname,(void **) (ptr1));
+    glGetPointerv((GLenum)pname, (void **)(ptr1));
 
     return 0;
 }
@@ -7098,7 +5684,7 @@ int org_mini_gl_GL_glPolygonOffset(Runtime *runtime, Class *clazz) {
     Int2Float factor;factor.i = env->localvar_getInt(runtime, pos++);
     Int2Float units;units.i = env->localvar_getInt(runtime, pos++);
 
-    glPolygonOffset( (GLfloat) factor.f, (GLfloat) units.f);
+    glPolygonOffset((GLfloat)factor.f, (GLfloat)units.f);
 
     return 0;
 }
@@ -7115,7 +5701,7 @@ int org_mini_gl_GL_glCopyTexImage1D(Runtime *runtime, Class *clazz) {
     s32 width = env->localvar_getInt(runtime, pos++);
     s32 border = env->localvar_getInt(runtime, pos++);
 
-    glCopyTexImage1D((GLenum) target,(GLint) level,(GLenum) internalformat,(GLint) x,(GLint) y,(GLsizei) width,(GLint) border);
+    glCopyTexImage1D((GLenum)target, (GLint)level, (GLenum)internalformat, (GLint)x, (GLint)y, (GLsizei)width, (GLint)border);
 
     return 0;
 }
@@ -7133,7 +5719,7 @@ int org_mini_gl_GL_glCopyTexImage2D(Runtime *runtime, Class *clazz) {
     s32 height = env->localvar_getInt(runtime, pos++);
     s32 border = env->localvar_getInt(runtime, pos++);
 
-    glCopyTexImage2D((GLenum) target,(GLint) level,(GLenum) internalformat,(GLint) x,(GLint) y,(GLsizei) width,(GLsizei) height,(GLint) border);
+    glCopyTexImage2D((GLenum)target, (GLint)level, (GLenum)internalformat, (GLint)x, (GLint)y, (GLsizei)width, (GLsizei)height, (GLint)border);
 
     return 0;
 }
@@ -7149,7 +5735,7 @@ int org_mini_gl_GL_glCopyTexSubImage1D(Runtime *runtime, Class *clazz) {
     s32 y = env->localvar_getInt(runtime, pos++);
     s32 width = env->localvar_getInt(runtime, pos++);
 
-    glCopyTexSubImage1D((GLenum) target,(GLint) level,(GLint) xoffset,(GLint) x,(GLint) y,(GLsizei) width);
+    glCopyTexSubImage1D((GLenum)target, (GLint)level, (GLint)xoffset, (GLint)x, (GLint)y, (GLsizei)width);
 
     return 0;
 }
@@ -7167,7 +5753,7 @@ int org_mini_gl_GL_glCopyTexSubImage2D(Runtime *runtime, Class *clazz) {
     s32 width = env->localvar_getInt(runtime, pos++);
     s32 height = env->localvar_getInt(runtime, pos++);
 
-    glCopyTexSubImage2D((GLenum) target,(GLint) level,(GLint) xoffset,(GLint) yoffset,(GLint) x,(GLint) y,(GLsizei) width,(GLsizei) height);
+    glCopyTexSubImage2D((GLenum)target, (GLint)level, (GLint)xoffset, (GLint)yoffset, (GLint)x, (GLint)y, (GLsizei)width, (GLsizei)height);
 
     return 0;
 }
@@ -7190,7 +5776,7 @@ int org_mini_gl_GL_glTexSubImage1D(Runtime *runtime, Class *clazz) {
         ptr6 = pixels->arr_body + arr_offset6;
     }
 
-    glTexSubImage1D((GLenum) target,(GLint) level,(GLint) xoffset,(GLsizei) width,(GLenum) format,(GLenum) type,(const void *) (ptr6));
+    glTexSubImage1D((GLenum)target, (GLint)level, (GLint)xoffset, (GLsizei)width, (GLenum)format, (GLenum)type, (const void *)(ptr6));
 
     return 0;
 }
@@ -7215,7 +5801,7 @@ int org_mini_gl_GL_glTexSubImage2D(Runtime *runtime, Class *clazz) {
         ptr8 = pixels->arr_body + arr_offset8;
     }
 
-    glTexSubImage2D((GLenum) target,(GLint) level,(GLint) xoffset,(GLint) yoffset,(GLsizei) width,(GLsizei) height,(GLenum) format,(GLenum) type,(const void *) (ptr8));
+    glTexSubImage2D((GLenum)target, (GLint)level, (GLint)xoffset, (GLint)yoffset, (GLsizei)width, (GLsizei)height, (GLenum)format, (GLenum)type, (const void *)(ptr8));
 
     return 0;
 }
@@ -7227,7 +5813,7 @@ int org_mini_gl_GL_glBindTexture(Runtime *runtime, Class *clazz) {
     s32 target = env->localvar_getInt(runtime, pos++);
     s32 texture = env->localvar_getInt(runtime, pos++);
 
-    glBindTexture((GLenum) target,(GLuint) texture);
+    glBindTexture((GLenum)target, (GLuint)texture);
 
     return 0;
 }
@@ -7245,7 +5831,7 @@ int org_mini_gl_GL_glDeleteTextures(Runtime *runtime, Class *clazz) {
         ptr1 = textures->arr_body + arr_offset1;
     }
 
-    glDeleteTextures((GLsizei) n,(const GLuint *) (ptr1));
+    glDeleteTextures((GLsizei)n, (const GLuint *)(ptr1));
 
     return 0;
 }
@@ -7263,7 +5849,7 @@ int org_mini_gl_GL_glGenTextures(Runtime *runtime, Class *clazz) {
         ptr1 = textures->arr_body + arr_offset1;
     }
 
-    glGenTextures((GLsizei) n,(GLuint *) (ptr1));
+    glGenTextures((GLsizei)n, (GLuint *)(ptr1));
 
     return 0;
 }
@@ -7274,7 +5860,7 @@ int org_mini_gl_GL_glIsTexture(Runtime *runtime, Class *clazz) {
 
     s32 texture = env->localvar_getInt(runtime, pos++);
 
-    s32 ret_value = (s32)glIsTexture((GLuint) texture);
+    s32 ret_value = (s32)glIsTexture((GLuint)texture);
     env->push_int(runtime->stack, ret_value);
     return 0;
 }
@@ -7285,7 +5871,7 @@ int org_mini_gl_GL_glArrayElement(Runtime *runtime, Class *clazz) {
 
     s32 i = env->localvar_getInt(runtime, pos++);
 
-    glArrayElement((GLint) i);
+    glArrayElement((GLint)i);
 
     return 0;
 }
@@ -7305,7 +5891,7 @@ int org_mini_gl_GL_glColorPointer(Runtime *runtime, Class *clazz) {
         ptr3 = pointer->arr_body + arr_offset3;
     }
 
-    glColorPointer((GLint) size,(GLenum) type,(GLsizei) stride,(const void *) (ptr3));
+    glColorPointer((GLint)size, (GLenum)type, (GLsizei)stride, (const void *)(ptr3));
 
     return 0;
 }
@@ -7316,7 +5902,7 @@ int org_mini_gl_GL_glDisableClientState(Runtime *runtime, Class *clazz) {
 
     s32 array = env->localvar_getInt(runtime, pos++);
 
-    glDisableClientState((GLenum) array);
+    glDisableClientState((GLenum)array);
 
     return 0;
 }
@@ -7334,7 +5920,7 @@ int org_mini_gl_GL_glEdgeFlagPointer(Runtime *runtime, Class *clazz) {
         ptr1 = pointer->arr_body + arr_offset1;
     }
 
-    glEdgeFlagPointer((GLsizei) stride,(const void *) (ptr1));
+    glEdgeFlagPointer((GLsizei)stride, (const void *)(ptr1));
 
     return 0;
 }
@@ -7345,7 +5931,7 @@ int org_mini_gl_GL_glEnableClientState(Runtime *runtime, Class *clazz) {
 
     s32 array = env->localvar_getInt(runtime, pos++);
 
-    glEnableClientState((GLenum) array);
+    glEnableClientState((GLenum)array);
 
     return 0;
 }
@@ -7364,7 +5950,7 @@ int org_mini_gl_GL_glIndexPointer(Runtime *runtime, Class *clazz) {
         ptr2 = pointer->arr_body + arr_offset2;
     }
 
-    glIndexPointer((GLenum) type,(GLsizei) stride,(const void *) (ptr2));
+    glIndexPointer((GLenum)type, (GLsizei)stride, (const void *)(ptr2));
 
     return 0;
 }
@@ -7383,7 +5969,7 @@ int org_mini_gl_GL_glInterleavedArrays(Runtime *runtime, Class *clazz) {
         ptr2 = pointer->arr_body + arr_offset2;
     }
 
-    glInterleavedArrays((GLenum) format,(GLsizei) stride,(const void *) (ptr2));
+    glInterleavedArrays((GLenum)format, (GLsizei)stride, (const void *)(ptr2));
 
     return 0;
 }
@@ -7402,7 +5988,7 @@ int org_mini_gl_GL_glNormalPointer(Runtime *runtime, Class *clazz) {
         ptr2 = pointer->arr_body + arr_offset2;
     }
 
-    glNormalPointer((GLenum) type,(GLsizei) stride,(const void *) (ptr2));
+    glNormalPointer((GLenum)type, (GLsizei)stride, (const void *)(ptr2));
 
     return 0;
 }
@@ -7422,7 +6008,7 @@ int org_mini_gl_GL_glTexCoordPointer(Runtime *runtime, Class *clazz) {
         ptr3 = pointer->arr_body + arr_offset3;
     }
 
-    glTexCoordPointer((GLint) size,(GLenum) type,(GLsizei) stride,(const void *) (ptr3));
+    glTexCoordPointer((GLint)size, (GLenum)type, (GLsizei)stride, (const void *)(ptr3));
 
     return 0;
 }
@@ -7442,7 +6028,7 @@ int org_mini_gl_GL_glVertexPointer(Runtime *runtime, Class *clazz) {
         ptr3 = pointer->arr_body + arr_offset3;
     }
 
-    glVertexPointer((GLint) size,(GLenum) type,(GLsizei) stride,(const void *) (ptr3));
+    glVertexPointer((GLint)size, (GLenum)type, (GLsizei)stride, (const void *)(ptr3));
 
     return 0;
 }
@@ -7467,7 +6053,7 @@ int org_mini_gl_GL_glAreTexturesResident(Runtime *runtime, Class *clazz) {
         ptr3 = residences->arr_body + arr_offset3;
     }
 
-    s32 ret_value = (s32)glAreTexturesResident((GLsizei) n,(const GLuint *) (ptr1),(GLboolean *) (ptr3));
+    s32 ret_value = (s32)glAreTexturesResident((GLsizei)n, (const GLuint *)(ptr1), (GLboolean *)(ptr3));
     env->push_int(runtime->stack, ret_value);
     return 0;
 }
@@ -7492,7 +6078,7 @@ int org_mini_gl_GL_glPrioritizeTextures(Runtime *runtime, Class *clazz) {
         ptr3 = priorities->arr_body + arr_offset3;
     }
 
-    glPrioritizeTextures((GLsizei) n,(const GLuint *) (ptr1),(const GLfloat *) (ptr3));
+    glPrioritizeTextures((GLsizei)n, (const GLuint *)(ptr1), (const GLfloat *)(ptr3));
 
     return 0;
 }
@@ -7503,7 +6089,7 @@ int org_mini_gl_GL_glIndexub(Runtime *runtime, Class *clazz) {
 
     s32 c = env->localvar_getInt(runtime, pos++);
 
-    glIndexub((GLubyte) c);
+    glIndexub((GLubyte)c);
 
     return 0;
 }
@@ -7520,7 +6106,7 @@ int org_mini_gl_GL_glIndexubv(Runtime *runtime, Class *clazz) {
         ptr0 = c->arr_body + arr_offset0;
     }
 
-    glIndexubv((const GLubyte *) (ptr0));
+    glIndexubv((const GLubyte *)(ptr0));
 
     return 0;
 }
@@ -7541,7 +6127,7 @@ int org_mini_gl_GL_glPushClientAttrib(Runtime *runtime, Class *clazz) {
 
     s32 mask = env->localvar_getInt(runtime, pos++);
 
-    glPushClientAttrib((GLbitfield) mask);
+    glPushClientAttrib((GLbitfield)mask);
 
     return 0;
 }
@@ -7563,7 +6149,7 @@ int org_mini_gl_GL_glDrawRangeElements(Runtime *runtime, Class *clazz) {
         ptr5 = indices->arr_body + arr_offset5;
     }
 
-    glDrawRangeElements((GLenum) mode,(GLuint) start,(GLuint) end,(GLsizei) count,(GLenum) type,(const void *) (ptr5));
+    glDrawRangeElements((GLenum)mode, (GLuint)start, (GLuint)end, (GLsizei)count, (GLenum)type, (const void *)(ptr5));
 
     return 0;
 }
@@ -7589,7 +6175,7 @@ int org_mini_gl_GL_glTexImage3D(Runtime *runtime, Class *clazz) {
         ptr9 = pixels->arr_body + arr_offset9;
     }
 
-    glTexImage3D((GLenum) target,(GLint) level,(GLint) internalformat,(GLsizei) width,(GLsizei) height,(GLsizei) depth,(GLint) border,(GLenum) format,(GLenum) type,(const void *) (ptr9));
+    glTexImage3D((GLenum)target, (GLint)level, (GLint)internalformat, (GLsizei)width, (GLsizei)height, (GLsizei)depth, (GLint)border, (GLenum)format, (GLenum)type, (const void *)(ptr9));
 
     return 0;
 }
@@ -7616,7 +6202,7 @@ int org_mini_gl_GL_glTexSubImage3D(Runtime *runtime, Class *clazz) {
         ptr10 = pixels->arr_body + arr_offset10;
     }
 
-    glTexSubImage3D((GLenum) target,(GLint) level,(GLint) xoffset,(GLint) yoffset,(GLint) zoffset,(GLsizei) width,(GLsizei) height,(GLsizei) depth,(GLenum) format,(GLenum) type,(const void *) (ptr10));
+    glTexSubImage3D((GLenum)target, (GLint)level, (GLint)xoffset, (GLint)yoffset, (GLint)zoffset, (GLsizei)width, (GLsizei)height, (GLsizei)depth, (GLenum)format, (GLenum)type, (const void *)(ptr10));
 
     return 0;
 }
@@ -7635,7 +6221,7 @@ int org_mini_gl_GL_glCopyTexSubImage3D(Runtime *runtime, Class *clazz) {
     s32 width = env->localvar_getInt(runtime, pos++);
     s32 height = env->localvar_getInt(runtime, pos++);
 
-    glCopyTexSubImage3D((GLenum) target,(GLint) level,(GLint) xoffset,(GLint) yoffset,(GLint) zoffset,(GLint) x,(GLint) y,(GLsizei) width,(GLsizei) height);
+    glCopyTexSubImage3D((GLenum)target, (GLint)level, (GLint)xoffset, (GLint)yoffset, (GLint)zoffset, (GLint)x, (GLint)y, (GLsizei)width, (GLsizei)height);
 
     return 0;
 }
@@ -7646,7 +6232,7 @@ int org_mini_gl_GL_glActiveTexture(Runtime *runtime, Class *clazz) {
 
     s32 texture = env->localvar_getInt(runtime, pos++);
 
-    glActiveTexture((GLenum) texture);
+    glActiveTexture((GLenum)texture);
 
     return 0;
 }
@@ -7658,7 +6244,7 @@ int org_mini_gl_GL_glSampleCoverage(Runtime *runtime, Class *clazz) {
     Int2Float value;value.i = env->localvar_getInt(runtime, pos++);
     s32 invert = env->localvar_getInt(runtime, pos++);
 
-    glSampleCoverage( (GLfloat) value.f,(GLboolean) invert);
+    glSampleCoverage((GLfloat)value.f, (GLboolean)invert);
 
     return 0;
 }
@@ -7683,7 +6269,7 @@ int org_mini_gl_GL_glCompressedTexImage3D(Runtime *runtime, Class *clazz) {
         ptr8 = data->arr_body + arr_offset8;
     }
 
-    glCompressedTexImage3D((GLenum) target,(GLint) level,(GLenum) internalformat,(GLsizei) width,(GLsizei) height,(GLsizei) depth,(GLint) border,(GLsizei) imageSize,(const void *) (ptr8));
+    glCompressedTexImage3D((GLenum)target, (GLint)level, (GLenum)internalformat, (GLsizei)width, (GLsizei)height, (GLsizei)depth, (GLint)border, (GLsizei)imageSize, (const void *)(ptr8));
 
     return 0;
 }
@@ -7707,7 +6293,7 @@ int org_mini_gl_GL_glCompressedTexImage2D(Runtime *runtime, Class *clazz) {
         ptr7 = data->arr_body + arr_offset7;
     }
 
-    glCompressedTexImage2D((GLenum) target,(GLint) level,(GLenum) internalformat,(GLsizei) width,(GLsizei) height,(GLint) border,(GLsizei) imageSize,(const void *) (ptr7));
+    glCompressedTexImage2D((GLenum)target, (GLint)level, (GLenum)internalformat, (GLsizei)width, (GLsizei)height, (GLint)border, (GLsizei)imageSize, (const void *)(ptr7));
 
     return 0;
 }
@@ -7730,7 +6316,7 @@ int org_mini_gl_GL_glCompressedTexImage1D(Runtime *runtime, Class *clazz) {
         ptr6 = data->arr_body + arr_offset6;
     }
 
-    glCompressedTexImage1D((GLenum) target,(GLint) level,(GLenum) internalformat,(GLsizei) width,(GLint) border,(GLsizei) imageSize,(const void *) (ptr6));
+    glCompressedTexImage1D((GLenum)target, (GLint)level, (GLenum)internalformat, (GLsizei)width, (GLint)border, (GLsizei)imageSize, (const void *)(ptr6));
 
     return 0;
 }
@@ -7757,7 +6343,7 @@ int org_mini_gl_GL_glCompressedTexSubImage3D(Runtime *runtime, Class *clazz) {
         ptr10 = data->arr_body + arr_offset10;
     }
 
-    glCompressedTexSubImage3D((GLenum) target,(GLint) level,(GLint) xoffset,(GLint) yoffset,(GLint) zoffset,(GLsizei) width,(GLsizei) height,(GLsizei) depth,(GLenum) format,(GLsizei) imageSize,(const void *) (ptr10));
+    glCompressedTexSubImage3D((GLenum)target, (GLint)level, (GLint)xoffset, (GLint)yoffset, (GLint)zoffset, (GLsizei)width, (GLsizei)height, (GLsizei)depth, (GLenum)format, (GLsizei)imageSize, (const void *)(ptr10));
 
     return 0;
 }
@@ -7782,7 +6368,7 @@ int org_mini_gl_GL_glCompressedTexSubImage2D(Runtime *runtime, Class *clazz) {
         ptr8 = data->arr_body + arr_offset8;
     }
 
-    glCompressedTexSubImage2D((GLenum) target,(GLint) level,(GLint) xoffset,(GLint) yoffset,(GLsizei) width,(GLsizei) height,(GLenum) format,(GLsizei) imageSize,(const void *) (ptr8));
+    glCompressedTexSubImage2D((GLenum)target, (GLint)level, (GLint)xoffset, (GLint)yoffset, (GLsizei)width, (GLsizei)height, (GLenum)format, (GLsizei)imageSize, (const void *)(ptr8));
 
     return 0;
 }
@@ -7805,7 +6391,7 @@ int org_mini_gl_GL_glCompressedTexSubImage1D(Runtime *runtime, Class *clazz) {
         ptr6 = data->arr_body + arr_offset6;
     }
 
-    glCompressedTexSubImage1D((GLenum) target,(GLint) level,(GLint) xoffset,(GLsizei) width,(GLenum) format,(GLsizei) imageSize,(const void *) (ptr6));
+    glCompressedTexSubImage1D((GLenum)target, (GLint)level, (GLint)xoffset, (GLsizei)width, (GLenum)format, (GLsizei)imageSize, (const void *)(ptr6));
 
     return 0;
 }
@@ -7824,7 +6410,7 @@ int org_mini_gl_GL_glGetCompressedTexImage(Runtime *runtime, Class *clazz) {
         ptr2 = img->arr_body + arr_offset2;
     }
 
-    glGetCompressedTexImage((GLenum) target,(GLint) level,(void *) (ptr2));
+    glGetCompressedTexImage((GLenum)target, (GLint)level, (void *)(ptr2));
 
     return 0;
 }
@@ -7835,7 +6421,7 @@ int org_mini_gl_GL_glClientActiveTexture(Runtime *runtime, Class *clazz) {
 
     s32 texture = env->localvar_getInt(runtime, pos++);
 
-    glClientActiveTexture((GLenum) texture);
+    glClientActiveTexture((GLenum)texture);
 
     return 0;
 }
@@ -7847,7 +6433,7 @@ int org_mini_gl_GL_glMultiTexCoord1d(Runtime *runtime, Class *clazz) {
     s32 target = env->localvar_getInt(runtime, pos++);
     Long2Double s;s.l = getParaLong(runtime, pos);pos += 2;
 
-    glMultiTexCoord1d((GLenum) target,(GLdouble) s.d);
+    glMultiTexCoord1d((GLenum)target, (GLdouble)s.d);
 
     return 0;
 }
@@ -7865,7 +6451,7 @@ int org_mini_gl_GL_glMultiTexCoord1dv(Runtime *runtime, Class *clazz) {
         ptr1 = v->arr_body + arr_offset1;
     }
 
-    glMultiTexCoord1dv((GLenum) target,(const GLdouble *) (ptr1));
+    glMultiTexCoord1dv((GLenum)target, (const GLdouble *)(ptr1));
 
     return 0;
 }
@@ -7877,7 +6463,7 @@ int org_mini_gl_GL_glMultiTexCoord1f(Runtime *runtime, Class *clazz) {
     s32 target = env->localvar_getInt(runtime, pos++);
     Int2Float s;s.i = env->localvar_getInt(runtime, pos++);
 
-    glMultiTexCoord1f((GLenum) target, (GLfloat) s.f);
+    glMultiTexCoord1f((GLenum)target, (GLfloat)s.f);
 
     return 0;
 }
@@ -7895,7 +6481,7 @@ int org_mini_gl_GL_glMultiTexCoord1fv(Runtime *runtime, Class *clazz) {
         ptr1 = v->arr_body + arr_offset1;
     }
 
-    glMultiTexCoord1fv((GLenum) target,(const GLfloat *) (ptr1));
+    glMultiTexCoord1fv((GLenum)target, (const GLfloat *)(ptr1));
 
     return 0;
 }
@@ -7907,7 +6493,7 @@ int org_mini_gl_GL_glMultiTexCoord1i(Runtime *runtime, Class *clazz) {
     s32 target = env->localvar_getInt(runtime, pos++);
     s32 s = env->localvar_getInt(runtime, pos++);
 
-    glMultiTexCoord1i((GLenum) target,(GLint) s);
+    glMultiTexCoord1i((GLenum)target, (GLint)s);
 
     return 0;
 }
@@ -7925,7 +6511,7 @@ int org_mini_gl_GL_glMultiTexCoord1iv(Runtime *runtime, Class *clazz) {
         ptr1 = v->arr_body + arr_offset1;
     }
 
-    glMultiTexCoord1iv((GLenum) target,(const GLint *) (ptr1));
+    glMultiTexCoord1iv((GLenum)target, (const GLint *)(ptr1));
 
     return 0;
 }
@@ -7937,7 +6523,7 @@ int org_mini_gl_GL_glMultiTexCoord1s(Runtime *runtime, Class *clazz) {
     s32 target = env->localvar_getInt(runtime, pos++);
     s32 s = env->localvar_getInt(runtime, pos++);
 
-    glMultiTexCoord1s((GLenum) target,(GLshort) s);
+    glMultiTexCoord1s((GLenum)target, (GLshort)s);
 
     return 0;
 }
@@ -7955,7 +6541,7 @@ int org_mini_gl_GL_glMultiTexCoord1sv(Runtime *runtime, Class *clazz) {
         ptr1 = v->arr_body + arr_offset1;
     }
 
-    glMultiTexCoord1sv((GLenum) target,(const GLshort *) (ptr1));
+    glMultiTexCoord1sv((GLenum)target, (const GLshort *)(ptr1));
 
     return 0;
 }
@@ -7968,7 +6554,7 @@ int org_mini_gl_GL_glMultiTexCoord2d(Runtime *runtime, Class *clazz) {
     Long2Double s;s.l = getParaLong(runtime, pos);pos += 2;
     Long2Double t;t.l = getParaLong(runtime, pos);pos += 2;
 
-    glMultiTexCoord2d((GLenum) target,(GLdouble) s.d,(GLdouble) t.d);
+    glMultiTexCoord2d((GLenum)target, (GLdouble)s.d, (GLdouble)t.d);
 
     return 0;
 }
@@ -7986,7 +6572,7 @@ int org_mini_gl_GL_glMultiTexCoord2dv(Runtime *runtime, Class *clazz) {
         ptr1 = v->arr_body + arr_offset1;
     }
 
-    glMultiTexCoord2dv((GLenum) target,(const GLdouble *) (ptr1));
+    glMultiTexCoord2dv((GLenum)target, (const GLdouble *)(ptr1));
 
     return 0;
 }
@@ -7999,7 +6585,7 @@ int org_mini_gl_GL_glMultiTexCoord2f(Runtime *runtime, Class *clazz) {
     Int2Float s;s.i = env->localvar_getInt(runtime, pos++);
     Int2Float t;t.i = env->localvar_getInt(runtime, pos++);
 
-    glMultiTexCoord2f((GLenum) target, (GLfloat) s.f, (GLfloat) t.f);
+    glMultiTexCoord2f((GLenum)target, (GLfloat)s.f, (GLfloat)t.f);
 
     return 0;
 }
@@ -8017,7 +6603,7 @@ int org_mini_gl_GL_glMultiTexCoord2fv(Runtime *runtime, Class *clazz) {
         ptr1 = v->arr_body + arr_offset1;
     }
 
-    glMultiTexCoord2fv((GLenum) target,(const GLfloat *) (ptr1));
+    glMultiTexCoord2fv((GLenum)target, (const GLfloat *)(ptr1));
 
     return 0;
 }
@@ -8030,7 +6616,7 @@ int org_mini_gl_GL_glMultiTexCoord2i(Runtime *runtime, Class *clazz) {
     s32 s = env->localvar_getInt(runtime, pos++);
     s32 t = env->localvar_getInt(runtime, pos++);
 
-    glMultiTexCoord2i((GLenum) target,(GLint) s,(GLint) t);
+    glMultiTexCoord2i((GLenum)target, (GLint)s, (GLint)t);
 
     return 0;
 }
@@ -8048,7 +6634,7 @@ int org_mini_gl_GL_glMultiTexCoord2iv(Runtime *runtime, Class *clazz) {
         ptr1 = v->arr_body + arr_offset1;
     }
 
-    glMultiTexCoord2iv((GLenum) target,(const GLint *) (ptr1));
+    glMultiTexCoord2iv((GLenum)target, (const GLint *)(ptr1));
 
     return 0;
 }
@@ -8061,7 +6647,7 @@ int org_mini_gl_GL_glMultiTexCoord2s(Runtime *runtime, Class *clazz) {
     s32 s = env->localvar_getInt(runtime, pos++);
     s32 t = env->localvar_getInt(runtime, pos++);
 
-    glMultiTexCoord2s((GLenum) target,(GLshort) s,(GLshort) t);
+    glMultiTexCoord2s((GLenum)target, (GLshort)s, (GLshort)t);
 
     return 0;
 }
@@ -8079,7 +6665,7 @@ int org_mini_gl_GL_glMultiTexCoord2sv(Runtime *runtime, Class *clazz) {
         ptr1 = v->arr_body + arr_offset1;
     }
 
-    glMultiTexCoord2sv((GLenum) target,(const GLshort *) (ptr1));
+    glMultiTexCoord2sv((GLenum)target, (const GLshort *)(ptr1));
 
     return 0;
 }
@@ -8093,7 +6679,7 @@ int org_mini_gl_GL_glMultiTexCoord3d(Runtime *runtime, Class *clazz) {
     Long2Double t;t.l = getParaLong(runtime, pos);pos += 2;
     Long2Double r;r.l = getParaLong(runtime, pos);pos += 2;
 
-    glMultiTexCoord3d((GLenum) target,(GLdouble) s.d,(GLdouble) t.d,(GLdouble) r.d);
+    glMultiTexCoord3d((GLenum)target, (GLdouble)s.d, (GLdouble)t.d, (GLdouble)r.d);
 
     return 0;
 }
@@ -8111,7 +6697,7 @@ int org_mini_gl_GL_glMultiTexCoord3dv(Runtime *runtime, Class *clazz) {
         ptr1 = v->arr_body + arr_offset1;
     }
 
-    glMultiTexCoord3dv((GLenum) target,(const GLdouble *) (ptr1));
+    glMultiTexCoord3dv((GLenum)target, (const GLdouble *)(ptr1));
 
     return 0;
 }
@@ -8125,7 +6711,7 @@ int org_mini_gl_GL_glMultiTexCoord3f(Runtime *runtime, Class *clazz) {
     Int2Float t;t.i = env->localvar_getInt(runtime, pos++);
     Int2Float r;r.i = env->localvar_getInt(runtime, pos++);
 
-    glMultiTexCoord3f((GLenum) target, (GLfloat) s.f, (GLfloat) t.f, (GLfloat) r.f);
+    glMultiTexCoord3f((GLenum)target, (GLfloat)s.f, (GLfloat)t.f, (GLfloat)r.f);
 
     return 0;
 }
@@ -8143,7 +6729,7 @@ int org_mini_gl_GL_glMultiTexCoord3fv(Runtime *runtime, Class *clazz) {
         ptr1 = v->arr_body + arr_offset1;
     }
 
-    glMultiTexCoord3fv((GLenum) target,(const GLfloat *) (ptr1));
+    glMultiTexCoord3fv((GLenum)target, (const GLfloat *)(ptr1));
 
     return 0;
 }
@@ -8157,7 +6743,7 @@ int org_mini_gl_GL_glMultiTexCoord3i(Runtime *runtime, Class *clazz) {
     s32 t = env->localvar_getInt(runtime, pos++);
     s32 r = env->localvar_getInt(runtime, pos++);
 
-    glMultiTexCoord3i((GLenum) target,(GLint) s,(GLint) t,(GLint) r);
+    glMultiTexCoord3i((GLenum)target, (GLint)s, (GLint)t, (GLint)r);
 
     return 0;
 }
@@ -8175,7 +6761,7 @@ int org_mini_gl_GL_glMultiTexCoord3iv(Runtime *runtime, Class *clazz) {
         ptr1 = v->arr_body + arr_offset1;
     }
 
-    glMultiTexCoord3iv((GLenum) target,(const GLint *) (ptr1));
+    glMultiTexCoord3iv((GLenum)target, (const GLint *)(ptr1));
 
     return 0;
 }
@@ -8189,7 +6775,7 @@ int org_mini_gl_GL_glMultiTexCoord3s(Runtime *runtime, Class *clazz) {
     s32 t = env->localvar_getInt(runtime, pos++);
     s32 r = env->localvar_getInt(runtime, pos++);
 
-    glMultiTexCoord3s((GLenum) target,(GLshort) s,(GLshort) t,(GLshort) r);
+    glMultiTexCoord3s((GLenum)target, (GLshort)s, (GLshort)t, (GLshort)r);
 
     return 0;
 }
@@ -8207,7 +6793,7 @@ int org_mini_gl_GL_glMultiTexCoord3sv(Runtime *runtime, Class *clazz) {
         ptr1 = v->arr_body + arr_offset1;
     }
 
-    glMultiTexCoord3sv((GLenum) target,(const GLshort *) (ptr1));
+    glMultiTexCoord3sv((GLenum)target, (const GLshort *)(ptr1));
 
     return 0;
 }
@@ -8222,7 +6808,7 @@ int org_mini_gl_GL_glMultiTexCoord4d(Runtime *runtime, Class *clazz) {
     Long2Double r;r.l = getParaLong(runtime, pos);pos += 2;
     Long2Double q;q.l = getParaLong(runtime, pos);pos += 2;
 
-    glMultiTexCoord4d((GLenum) target,(GLdouble) s.d,(GLdouble) t.d,(GLdouble) r.d,(GLdouble) q.d);
+    glMultiTexCoord4d((GLenum)target, (GLdouble)s.d, (GLdouble)t.d, (GLdouble)r.d, (GLdouble)q.d);
 
     return 0;
 }
@@ -8240,7 +6826,7 @@ int org_mini_gl_GL_glMultiTexCoord4dv(Runtime *runtime, Class *clazz) {
         ptr1 = v->arr_body + arr_offset1;
     }
 
-    glMultiTexCoord4dv((GLenum) target,(const GLdouble *) (ptr1));
+    glMultiTexCoord4dv((GLenum)target, (const GLdouble *)(ptr1));
 
     return 0;
 }
@@ -8255,7 +6841,7 @@ int org_mini_gl_GL_glMultiTexCoord4f(Runtime *runtime, Class *clazz) {
     Int2Float r;r.i = env->localvar_getInt(runtime, pos++);
     Int2Float q;q.i = env->localvar_getInt(runtime, pos++);
 
-    glMultiTexCoord4f((GLenum) target, (GLfloat) s.f, (GLfloat) t.f, (GLfloat) r.f, (GLfloat) q.f);
+    glMultiTexCoord4f((GLenum)target, (GLfloat)s.f, (GLfloat)t.f, (GLfloat)r.f, (GLfloat)q.f);
 
     return 0;
 }
@@ -8273,7 +6859,7 @@ int org_mini_gl_GL_glMultiTexCoord4fv(Runtime *runtime, Class *clazz) {
         ptr1 = v->arr_body + arr_offset1;
     }
 
-    glMultiTexCoord4fv((GLenum) target,(const GLfloat *) (ptr1));
+    glMultiTexCoord4fv((GLenum)target, (const GLfloat *)(ptr1));
 
     return 0;
 }
@@ -8288,7 +6874,7 @@ int org_mini_gl_GL_glMultiTexCoord4i(Runtime *runtime, Class *clazz) {
     s32 r = env->localvar_getInt(runtime, pos++);
     s32 q = env->localvar_getInt(runtime, pos++);
 
-    glMultiTexCoord4i((GLenum) target,(GLint) s,(GLint) t,(GLint) r,(GLint) q);
+    glMultiTexCoord4i((GLenum)target, (GLint)s, (GLint)t, (GLint)r, (GLint)q);
 
     return 0;
 }
@@ -8306,7 +6892,7 @@ int org_mini_gl_GL_glMultiTexCoord4iv(Runtime *runtime, Class *clazz) {
         ptr1 = v->arr_body + arr_offset1;
     }
 
-    glMultiTexCoord4iv((GLenum) target,(const GLint *) (ptr1));
+    glMultiTexCoord4iv((GLenum)target, (const GLint *)(ptr1));
 
     return 0;
 }
@@ -8321,7 +6907,7 @@ int org_mini_gl_GL_glMultiTexCoord4s(Runtime *runtime, Class *clazz) {
     s32 r = env->localvar_getInt(runtime, pos++);
     s32 q = env->localvar_getInt(runtime, pos++);
 
-    glMultiTexCoord4s((GLenum) target,(GLshort) s,(GLshort) t,(GLshort) r,(GLshort) q);
+    glMultiTexCoord4s((GLenum)target, (GLshort)s, (GLshort)t, (GLshort)r, (GLshort)q);
 
     return 0;
 }
@@ -8339,7 +6925,7 @@ int org_mini_gl_GL_glMultiTexCoord4sv(Runtime *runtime, Class *clazz) {
         ptr1 = v->arr_body + arr_offset1;
     }
 
-    glMultiTexCoord4sv((GLenum) target,(const GLshort *) (ptr1));
+    glMultiTexCoord4sv((GLenum)target, (const GLshort *)(ptr1));
 
     return 0;
 }
@@ -8356,7 +6942,7 @@ int org_mini_gl_GL_glLoadTransposeMatrixf(Runtime *runtime, Class *clazz) {
         ptr0 = m->arr_body + arr_offset0;
     }
 
-    glLoadTransposeMatrixf((const GLfloat *) (ptr0));
+    glLoadTransposeMatrixf((const GLfloat *)(ptr0));
 
     return 0;
 }
@@ -8373,7 +6959,7 @@ int org_mini_gl_GL_glLoadTransposeMatrixd(Runtime *runtime, Class *clazz) {
         ptr0 = m->arr_body + arr_offset0;
     }
 
-    glLoadTransposeMatrixd((const GLdouble *) (ptr0));
+    glLoadTransposeMatrixd((const GLdouble *)(ptr0));
 
     return 0;
 }
@@ -8390,7 +6976,7 @@ int org_mini_gl_GL_glMultTransposeMatrixf(Runtime *runtime, Class *clazz) {
         ptr0 = m->arr_body + arr_offset0;
     }
 
-    glMultTransposeMatrixf((const GLfloat *) (ptr0));
+    glMultTransposeMatrixf((const GLfloat *)(ptr0));
 
     return 0;
 }
@@ -8407,7 +6993,7 @@ int org_mini_gl_GL_glMultTransposeMatrixd(Runtime *runtime, Class *clazz) {
         ptr0 = m->arr_body + arr_offset0;
     }
 
-    glMultTransposeMatrixd((const GLdouble *) (ptr0));
+    glMultTransposeMatrixd((const GLdouble *)(ptr0));
 
     return 0;
 }
@@ -8421,7 +7007,7 @@ int org_mini_gl_GL_glBlendFuncSeparate(Runtime *runtime, Class *clazz) {
     s32 sfactorAlpha = env->localvar_getInt(runtime, pos++);
     s32 dfactorAlpha = env->localvar_getInt(runtime, pos++);
 
-    glBlendFuncSeparate((GLenum) sfactorRGB,(GLenum) dfactorRGB,(GLenum) sfactorAlpha,(GLenum) dfactorAlpha);
+    glBlendFuncSeparate((GLenum)sfactorRGB, (GLenum)dfactorRGB, (GLenum)sfactorAlpha, (GLenum)dfactorAlpha);
 
     return 0;
 }
@@ -8447,7 +7033,7 @@ int org_mini_gl_GL_glMultiDrawArrays(Runtime *runtime, Class *clazz) {
     }
     s32 drawcount = env->localvar_getInt(runtime, pos++);
 
-    glMultiDrawArrays((GLenum) mode,(const GLint *) (ptr1),(const GLsizei *) (ptr3),(GLsizei) drawcount);
+    glMultiDrawArrays((GLenum)mode, (const GLint *)(ptr1), (const GLsizei *)(ptr3), (GLsizei)drawcount);
 
     return 0;
 }
@@ -8474,7 +7060,7 @@ int org_mini_gl_GL_glMultiDrawElements(Runtime *runtime, Class *clazz) {
     }
     s32 drawcount = env->localvar_getInt(runtime, pos++);
 
-    glMultiDrawElements((GLenum) mode,(const GLsizei *) (ptr1),(GLenum) type,(const void *const*) (ptr4),(GLsizei) drawcount);
+    glMultiDrawElements((GLenum)mode, (const GLsizei *)(ptr1), (GLenum)type, (const void *const*)(ptr4), (GLsizei)drawcount);
 
     return 0;
 }
@@ -8486,7 +7072,7 @@ int org_mini_gl_GL_glPointParameterf(Runtime *runtime, Class *clazz) {
     s32 pname = env->localvar_getInt(runtime, pos++);
     Int2Float param;param.i = env->localvar_getInt(runtime, pos++);
 
-    glPointParameterf((GLenum) pname, (GLfloat) param.f);
+    glPointParameterf((GLenum)pname, (GLfloat)param.f);
 
     return 0;
 }
@@ -8504,7 +7090,7 @@ int org_mini_gl_GL_glPointParameterfv(Runtime *runtime, Class *clazz) {
         ptr1 = params->arr_body + arr_offset1;
     }
 
-    glPointParameterfv((GLenum) pname,(const GLfloat *) (ptr1));
+    glPointParameterfv((GLenum)pname, (const GLfloat *)(ptr1));
 
     return 0;
 }
@@ -8516,7 +7102,7 @@ int org_mini_gl_GL_glPointParameteri(Runtime *runtime, Class *clazz) {
     s32 pname = env->localvar_getInt(runtime, pos++);
     s32 param = env->localvar_getInt(runtime, pos++);
 
-    glPointParameteri((GLenum) pname,(GLint) param);
+    glPointParameteri((GLenum)pname, (GLint)param);
 
     return 0;
 }
@@ -8534,7 +7120,7 @@ int org_mini_gl_GL_glPointParameteriv(Runtime *runtime, Class *clazz) {
         ptr1 = params->arr_body + arr_offset1;
     }
 
-    glPointParameteriv((GLenum) pname,(const GLint *) (ptr1));
+    glPointParameteriv((GLenum)pname, (const GLint *)(ptr1));
 
     return 0;
 }
@@ -8545,7 +7131,7 @@ int org_mini_gl_GL_glFogCoordf(Runtime *runtime, Class *clazz) {
 
     Int2Float coord;coord.i = env->localvar_getInt(runtime, pos++);
 
-    glFogCoordf( (GLfloat) coord.f);
+    glFogCoordf((GLfloat)coord.f);
 
     return 0;
 }
@@ -8562,7 +7148,7 @@ int org_mini_gl_GL_glFogCoordfv(Runtime *runtime, Class *clazz) {
         ptr0 = coord->arr_body + arr_offset0;
     }
 
-    glFogCoordfv((const GLfloat *) (ptr0));
+    glFogCoordfv((const GLfloat *)(ptr0));
 
     return 0;
 }
@@ -8573,7 +7159,7 @@ int org_mini_gl_GL_glFogCoordd(Runtime *runtime, Class *clazz) {
 
     Long2Double coord;coord.l = getParaLong(runtime, pos);pos += 2;
 
-    glFogCoordd((GLdouble) coord.d);
+    glFogCoordd((GLdouble)coord.d);
 
     return 0;
 }
@@ -8590,7 +7176,7 @@ int org_mini_gl_GL_glFogCoorddv(Runtime *runtime, Class *clazz) {
         ptr0 = coord->arr_body + arr_offset0;
     }
 
-    glFogCoorddv((const GLdouble *) (ptr0));
+    glFogCoorddv((const GLdouble *)(ptr0));
 
     return 0;
 }
@@ -8609,7 +7195,7 @@ int org_mini_gl_GL_glFogCoordPointer(Runtime *runtime, Class *clazz) {
         ptr2 = pointer->arr_body + arr_offset2;
     }
 
-    glFogCoordPointer((GLenum) type,(GLsizei) stride,(const void *) (ptr2));
+    glFogCoordPointer((GLenum)type, (GLsizei)stride, (const void *)(ptr2));
 
     return 0;
 }
@@ -8622,7 +7208,7 @@ int org_mini_gl_GL_glSecondaryColor3b(Runtime *runtime, Class *clazz) {
     s32 green = env->localvar_getInt(runtime, pos++);
     s32 blue = env->localvar_getInt(runtime, pos++);
 
-    glSecondaryColor3b((GLbyte) red,(GLbyte) green,(GLbyte) blue);
+    glSecondaryColor3b((GLbyte)red, (GLbyte)green, (GLbyte)blue);
 
     return 0;
 }
@@ -8639,7 +7225,7 @@ int org_mini_gl_GL_glSecondaryColor3bv(Runtime *runtime, Class *clazz) {
         ptr0 = v->arr_body + arr_offset0;
     }
 
-    glSecondaryColor3bv((const GLbyte *) (ptr0));
+    glSecondaryColor3bv((const GLbyte *)(ptr0));
 
     return 0;
 }
@@ -8652,7 +7238,7 @@ int org_mini_gl_GL_glSecondaryColor3d(Runtime *runtime, Class *clazz) {
     Long2Double green;green.l = getParaLong(runtime, pos);pos += 2;
     Long2Double blue;blue.l = getParaLong(runtime, pos);pos += 2;
 
-    glSecondaryColor3d((GLdouble) red.d,(GLdouble) green.d,(GLdouble) blue.d);
+    glSecondaryColor3d((GLdouble)red.d, (GLdouble)green.d, (GLdouble)blue.d);
 
     return 0;
 }
@@ -8669,7 +7255,7 @@ int org_mini_gl_GL_glSecondaryColor3dv(Runtime *runtime, Class *clazz) {
         ptr0 = v->arr_body + arr_offset0;
     }
 
-    glSecondaryColor3dv((const GLdouble *) (ptr0));
+    glSecondaryColor3dv((const GLdouble *)(ptr0));
 
     return 0;
 }
@@ -8682,7 +7268,7 @@ int org_mini_gl_GL_glSecondaryColor3f(Runtime *runtime, Class *clazz) {
     Int2Float green;green.i = env->localvar_getInt(runtime, pos++);
     Int2Float blue;blue.i = env->localvar_getInt(runtime, pos++);
 
-    glSecondaryColor3f( (GLfloat) red.f, (GLfloat) green.f, (GLfloat) blue.f);
+    glSecondaryColor3f((GLfloat)red.f, (GLfloat)green.f, (GLfloat)blue.f);
 
     return 0;
 }
@@ -8699,7 +7285,7 @@ int org_mini_gl_GL_glSecondaryColor3fv(Runtime *runtime, Class *clazz) {
         ptr0 = v->arr_body + arr_offset0;
     }
 
-    glSecondaryColor3fv((const GLfloat *) (ptr0));
+    glSecondaryColor3fv((const GLfloat *)(ptr0));
 
     return 0;
 }
@@ -8712,7 +7298,7 @@ int org_mini_gl_GL_glSecondaryColor3i(Runtime *runtime, Class *clazz) {
     s32 green = env->localvar_getInt(runtime, pos++);
     s32 blue = env->localvar_getInt(runtime, pos++);
 
-    glSecondaryColor3i((GLint) red,(GLint) green,(GLint) blue);
+    glSecondaryColor3i((GLint)red, (GLint)green, (GLint)blue);
 
     return 0;
 }
@@ -8729,7 +7315,7 @@ int org_mini_gl_GL_glSecondaryColor3iv(Runtime *runtime, Class *clazz) {
         ptr0 = v->arr_body + arr_offset0;
     }
 
-    glSecondaryColor3iv((const GLint *) (ptr0));
+    glSecondaryColor3iv((const GLint *)(ptr0));
 
     return 0;
 }
@@ -8742,7 +7328,7 @@ int org_mini_gl_GL_glSecondaryColor3s(Runtime *runtime, Class *clazz) {
     s32 green = env->localvar_getInt(runtime, pos++);
     s32 blue = env->localvar_getInt(runtime, pos++);
 
-    glSecondaryColor3s((GLshort) red,(GLshort) green,(GLshort) blue);
+    glSecondaryColor3s((GLshort)red, (GLshort)green, (GLshort)blue);
 
     return 0;
 }
@@ -8759,7 +7345,7 @@ int org_mini_gl_GL_glSecondaryColor3sv(Runtime *runtime, Class *clazz) {
         ptr0 = v->arr_body + arr_offset0;
     }
 
-    glSecondaryColor3sv((const GLshort *) (ptr0));
+    glSecondaryColor3sv((const GLshort *)(ptr0));
 
     return 0;
 }
@@ -8772,7 +7358,7 @@ int org_mini_gl_GL_glSecondaryColor3ub(Runtime *runtime, Class *clazz) {
     s32 green = env->localvar_getInt(runtime, pos++);
     s32 blue = env->localvar_getInt(runtime, pos++);
 
-    glSecondaryColor3ub((GLubyte) red,(GLubyte) green,(GLubyte) blue);
+    glSecondaryColor3ub((GLubyte)red, (GLubyte)green, (GLubyte)blue);
 
     return 0;
 }
@@ -8789,7 +7375,7 @@ int org_mini_gl_GL_glSecondaryColor3ubv(Runtime *runtime, Class *clazz) {
         ptr0 = v->arr_body + arr_offset0;
     }
 
-    glSecondaryColor3ubv((const GLubyte *) (ptr0));
+    glSecondaryColor3ubv((const GLubyte *)(ptr0));
 
     return 0;
 }
@@ -8802,7 +7388,7 @@ int org_mini_gl_GL_glSecondaryColor3ui(Runtime *runtime, Class *clazz) {
     s32 green = env->localvar_getInt(runtime, pos++);
     s32 blue = env->localvar_getInt(runtime, pos++);
 
-    glSecondaryColor3ui((GLuint) red,(GLuint) green,(GLuint) blue);
+    glSecondaryColor3ui((GLuint)red, (GLuint)green, (GLuint)blue);
 
     return 0;
 }
@@ -8819,7 +7405,7 @@ int org_mini_gl_GL_glSecondaryColor3uiv(Runtime *runtime, Class *clazz) {
         ptr0 = v->arr_body + arr_offset0;
     }
 
-    glSecondaryColor3uiv((const GLuint *) (ptr0));
+    glSecondaryColor3uiv((const GLuint *)(ptr0));
 
     return 0;
 }
@@ -8832,7 +7418,7 @@ int org_mini_gl_GL_glSecondaryColor3us(Runtime *runtime, Class *clazz) {
     s32 green = env->localvar_getInt(runtime, pos++);
     s32 blue = env->localvar_getInt(runtime, pos++);
 
-    glSecondaryColor3us((GLushort) red,(GLushort) green,(GLushort) blue);
+    glSecondaryColor3us((GLushort)red, (GLushort)green, (GLushort)blue);
 
     return 0;
 }
@@ -8849,7 +7435,7 @@ int org_mini_gl_GL_glSecondaryColor3usv(Runtime *runtime, Class *clazz) {
         ptr0 = v->arr_body + arr_offset0;
     }
 
-    glSecondaryColor3usv((const GLushort *) (ptr0));
+    glSecondaryColor3usv((const GLushort *)(ptr0));
 
     return 0;
 }
@@ -8869,7 +7455,7 @@ int org_mini_gl_GL_glSecondaryColorPointer(Runtime *runtime, Class *clazz) {
         ptr3 = pointer->arr_body + arr_offset3;
     }
 
-    glSecondaryColorPointer((GLint) size,(GLenum) type,(GLsizei) stride,(const void *) (ptr3));
+    glSecondaryColorPointer((GLint)size, (GLenum)type, (GLsizei)stride, (const void *)(ptr3));
 
     return 0;
 }
@@ -8881,7 +7467,7 @@ int org_mini_gl_GL_glWindowPos2d(Runtime *runtime, Class *clazz) {
     Long2Double x;x.l = getParaLong(runtime, pos);pos += 2;
     Long2Double y;y.l = getParaLong(runtime, pos);pos += 2;
 
-    glWindowPos2d((GLdouble) x.d,(GLdouble) y.d);
+    glWindowPos2d((GLdouble)x.d, (GLdouble)y.d);
 
     return 0;
 }
@@ -8898,7 +7484,7 @@ int org_mini_gl_GL_glWindowPos2dv(Runtime *runtime, Class *clazz) {
         ptr0 = v->arr_body + arr_offset0;
     }
 
-    glWindowPos2dv((const GLdouble *) (ptr0));
+    glWindowPos2dv((const GLdouble *)(ptr0));
 
     return 0;
 }
@@ -8910,7 +7496,7 @@ int org_mini_gl_GL_glWindowPos2f(Runtime *runtime, Class *clazz) {
     Int2Float x;x.i = env->localvar_getInt(runtime, pos++);
     Int2Float y;y.i = env->localvar_getInt(runtime, pos++);
 
-    glWindowPos2f( (GLfloat) x.f, (GLfloat) y.f);
+    glWindowPos2f((GLfloat)x.f, (GLfloat)y.f);
 
     return 0;
 }
@@ -8927,7 +7513,7 @@ int org_mini_gl_GL_glWindowPos2fv(Runtime *runtime, Class *clazz) {
         ptr0 = v->arr_body + arr_offset0;
     }
 
-    glWindowPos2fv((const GLfloat *) (ptr0));
+    glWindowPos2fv((const GLfloat *)(ptr0));
 
     return 0;
 }
@@ -8939,7 +7525,7 @@ int org_mini_gl_GL_glWindowPos2i(Runtime *runtime, Class *clazz) {
     s32 x = env->localvar_getInt(runtime, pos++);
     s32 y = env->localvar_getInt(runtime, pos++);
 
-    glWindowPos2i((GLint) x,(GLint) y);
+    glWindowPos2i((GLint)x, (GLint)y);
 
     return 0;
 }
@@ -8956,7 +7542,7 @@ int org_mini_gl_GL_glWindowPos2iv(Runtime *runtime, Class *clazz) {
         ptr0 = v->arr_body + arr_offset0;
     }
 
-    glWindowPos2iv((const GLint *) (ptr0));
+    glWindowPos2iv((const GLint *)(ptr0));
 
     return 0;
 }
@@ -8968,7 +7554,7 @@ int org_mini_gl_GL_glWindowPos2s(Runtime *runtime, Class *clazz) {
     s32 x = env->localvar_getInt(runtime, pos++);
     s32 y = env->localvar_getInt(runtime, pos++);
 
-    glWindowPos2s((GLshort) x,(GLshort) y);
+    glWindowPos2s((GLshort)x, (GLshort)y);
 
     return 0;
 }
@@ -8985,7 +7571,7 @@ int org_mini_gl_GL_glWindowPos2sv(Runtime *runtime, Class *clazz) {
         ptr0 = v->arr_body + arr_offset0;
     }
 
-    glWindowPos2sv((const GLshort *) (ptr0));
+    glWindowPos2sv((const GLshort *)(ptr0));
 
     return 0;
 }
@@ -8998,7 +7584,7 @@ int org_mini_gl_GL_glWindowPos3d(Runtime *runtime, Class *clazz) {
     Long2Double y;y.l = getParaLong(runtime, pos);pos += 2;
     Long2Double z;z.l = getParaLong(runtime, pos);pos += 2;
 
-    glWindowPos3d((GLdouble) x.d,(GLdouble) y.d,(GLdouble) z.d);
+    glWindowPos3d((GLdouble)x.d, (GLdouble)y.d, (GLdouble)z.d);
 
     return 0;
 }
@@ -9015,7 +7601,7 @@ int org_mini_gl_GL_glWindowPos3dv(Runtime *runtime, Class *clazz) {
         ptr0 = v->arr_body + arr_offset0;
     }
 
-    glWindowPos3dv((const GLdouble *) (ptr0));
+    glWindowPos3dv((const GLdouble *)(ptr0));
 
     return 0;
 }
@@ -9028,7 +7614,7 @@ int org_mini_gl_GL_glWindowPos3f(Runtime *runtime, Class *clazz) {
     Int2Float y;y.i = env->localvar_getInt(runtime, pos++);
     Int2Float z;z.i = env->localvar_getInt(runtime, pos++);
 
-    glWindowPos3f( (GLfloat) x.f, (GLfloat) y.f, (GLfloat) z.f);
+    glWindowPos3f((GLfloat)x.f, (GLfloat)y.f, (GLfloat)z.f);
 
     return 0;
 }
@@ -9045,7 +7631,7 @@ int org_mini_gl_GL_glWindowPos3fv(Runtime *runtime, Class *clazz) {
         ptr0 = v->arr_body + arr_offset0;
     }
 
-    glWindowPos3fv((const GLfloat *) (ptr0));
+    glWindowPos3fv((const GLfloat *)(ptr0));
 
     return 0;
 }
@@ -9058,7 +7644,7 @@ int org_mini_gl_GL_glWindowPos3i(Runtime *runtime, Class *clazz) {
     s32 y = env->localvar_getInt(runtime, pos++);
     s32 z = env->localvar_getInt(runtime, pos++);
 
-    glWindowPos3i((GLint) x,(GLint) y,(GLint) z);
+    glWindowPos3i((GLint)x, (GLint)y, (GLint)z);
 
     return 0;
 }
@@ -9075,7 +7661,7 @@ int org_mini_gl_GL_glWindowPos3iv(Runtime *runtime, Class *clazz) {
         ptr0 = v->arr_body + arr_offset0;
     }
 
-    glWindowPos3iv((const GLint *) (ptr0));
+    glWindowPos3iv((const GLint *)(ptr0));
 
     return 0;
 }
@@ -9088,7 +7674,7 @@ int org_mini_gl_GL_glWindowPos3s(Runtime *runtime, Class *clazz) {
     s32 y = env->localvar_getInt(runtime, pos++);
     s32 z = env->localvar_getInt(runtime, pos++);
 
-    glWindowPos3s((GLshort) x,(GLshort) y,(GLshort) z);
+    glWindowPos3s((GLshort)x, (GLshort)y, (GLshort)z);
 
     return 0;
 }
@@ -9105,7 +7691,7 @@ int org_mini_gl_GL_glWindowPos3sv(Runtime *runtime, Class *clazz) {
         ptr0 = v->arr_body + arr_offset0;
     }
 
-    glWindowPos3sv((const GLshort *) (ptr0));
+    glWindowPos3sv((const GLshort *)(ptr0));
 
     return 0;
 }
@@ -9119,7 +7705,7 @@ int org_mini_gl_GL_glBlendColor(Runtime *runtime, Class *clazz) {
     Int2Float blue;blue.i = env->localvar_getInt(runtime, pos++);
     Int2Float alpha;alpha.i = env->localvar_getInt(runtime, pos++);
 
-    glBlendColor( (GLfloat) red.f, (GLfloat) green.f, (GLfloat) blue.f, (GLfloat) alpha.f);
+    glBlendColor((GLfloat)red.f, (GLfloat)green.f, (GLfloat)blue.f, (GLfloat)alpha.f);
 
     return 0;
 }
@@ -9130,7 +7716,7 @@ int org_mini_gl_GL_glBlendEquation(Runtime *runtime, Class *clazz) {
 
     s32 mode = env->localvar_getInt(runtime, pos++);
 
-    glBlendEquation((GLenum) mode);
+    glBlendEquation((GLenum)mode);
 
     return 0;
 }
@@ -9148,7 +7734,7 @@ int org_mini_gl_GL_glGenQueries(Runtime *runtime, Class *clazz) {
         ptr1 = ids->arr_body + arr_offset1;
     }
 
-    glGenQueries((GLsizei) n,(GLuint *) (ptr1));
+    glGenQueries((GLsizei)n, (GLuint *)(ptr1));
 
     return 0;
 }
@@ -9166,7 +7752,7 @@ int org_mini_gl_GL_glDeleteQueries(Runtime *runtime, Class *clazz) {
         ptr1 = ids->arr_body + arr_offset1;
     }
 
-    glDeleteQueries((GLsizei) n,(const GLuint *) (ptr1));
+    glDeleteQueries((GLsizei)n, (const GLuint *)(ptr1));
 
     return 0;
 }
@@ -9177,7 +7763,7 @@ int org_mini_gl_GL_glIsQuery(Runtime *runtime, Class *clazz) {
 
     s32 id = env->localvar_getInt(runtime, pos++);
 
-    s32 ret_value = (s32)glIsQuery((GLuint) id);
+    s32 ret_value = (s32)glIsQuery((GLuint)id);
     env->push_int(runtime->stack, ret_value);
     return 0;
 }
@@ -9189,7 +7775,7 @@ int org_mini_gl_GL_glBeginQuery(Runtime *runtime, Class *clazz) {
     s32 target = env->localvar_getInt(runtime, pos++);
     s32 id = env->localvar_getInt(runtime, pos++);
 
-    glBeginQuery((GLenum) target,(GLuint) id);
+    glBeginQuery((GLenum)target, (GLuint)id);
 
     return 0;
 }
@@ -9200,7 +7786,7 @@ int org_mini_gl_GL_glEndQuery(Runtime *runtime, Class *clazz) {
 
     s32 target = env->localvar_getInt(runtime, pos++);
 
-    glEndQuery((GLenum) target);
+    glEndQuery((GLenum)target);
 
     return 0;
 }
@@ -9219,7 +7805,7 @@ int org_mini_gl_GL_glGetQueryiv(Runtime *runtime, Class *clazz) {
         ptr2 = params->arr_body + arr_offset2;
     }
 
-    glGetQueryiv((GLenum) target,(GLenum) pname,(GLint *) (ptr2));
+    glGetQueryiv((GLenum)target, (GLenum)pname, (GLint *)(ptr2));
 
     return 0;
 }
@@ -9238,7 +7824,7 @@ int org_mini_gl_GL_glGetQueryObjectiv(Runtime *runtime, Class *clazz) {
         ptr2 = params->arr_body + arr_offset2;
     }
 
-    glGetQueryObjectiv((GLuint) id,(GLenum) pname,(GLint *) (ptr2));
+    glGetQueryObjectiv((GLuint)id, (GLenum)pname, (GLint *)(ptr2));
 
     return 0;
 }
@@ -9257,7 +7843,7 @@ int org_mini_gl_GL_glGetQueryObjectuiv(Runtime *runtime, Class *clazz) {
         ptr2 = params->arr_body + arr_offset2;
     }
 
-    glGetQueryObjectuiv((GLuint) id,(GLenum) pname,(GLuint *) (ptr2));
+    glGetQueryObjectuiv((GLuint)id, (GLenum)pname, (GLuint *)(ptr2));
 
     return 0;
 }
@@ -9269,7 +7855,7 @@ int org_mini_gl_GL_glBindBuffer(Runtime *runtime, Class *clazz) {
     s32 target = env->localvar_getInt(runtime, pos++);
     s32 buffer = env->localvar_getInt(runtime, pos++);
 
-    glBindBuffer((GLenum) target,(GLuint) buffer);
+    glBindBuffer((GLenum)target, (GLuint)buffer);
 
     return 0;
 }
@@ -9287,7 +7873,7 @@ int org_mini_gl_GL_glDeleteBuffers(Runtime *runtime, Class *clazz) {
         ptr1 = buffers->arr_body + arr_offset1;
     }
 
-    glDeleteBuffers((GLsizei) n,(const GLuint *) (ptr1));
+    glDeleteBuffers((GLsizei)n, (const GLuint *)(ptr1));
 
     return 0;
 }
@@ -9305,7 +7891,7 @@ int org_mini_gl_GL_glGenBuffers(Runtime *runtime, Class *clazz) {
         ptr1 = buffers->arr_body + arr_offset1;
     }
 
-    glGenBuffers((GLsizei) n,(GLuint *) (ptr1));
+    glGenBuffers((GLsizei)n, (GLuint *)(ptr1));
 
     return 0;
 }
@@ -9316,7 +7902,7 @@ int org_mini_gl_GL_glIsBuffer(Runtime *runtime, Class *clazz) {
 
     s32 buffer = env->localvar_getInt(runtime, pos++);
 
-    s32 ret_value = (s32)glIsBuffer((GLuint) buffer);
+    s32 ret_value = (s32)glIsBuffer((GLuint)buffer);
     env->push_int(runtime->stack, ret_value);
     return 0;
 }
@@ -9336,7 +7922,7 @@ int org_mini_gl_GL_glBufferData(Runtime *runtime, Class *clazz) {
     }
     s32 usage = env->localvar_getInt(runtime, pos++);
 
-    glBufferData((GLenum) target,(GLsizeiptr) size,(const void *) (ptr2),(GLenum) usage);
+    glBufferData((GLenum)target, (GLsizeiptr)size, (const void *)(ptr2), (GLenum)usage);
 
     return 0;
 }
@@ -9356,7 +7942,7 @@ int org_mini_gl_GL_glBufferSubData(Runtime *runtime, Class *clazz) {
         ptr3 = data->arr_body + arr_offset3;
     }
 
-    glBufferSubData((GLenum) target,(GLintptr) offset,(GLsizeiptr) size,(const void *) (ptr3));
+    glBufferSubData((GLenum)target, (GLintptr)offset, (GLsizeiptr)size, (const void *)(ptr3));
 
     return 0;
 }
@@ -9376,7 +7962,7 @@ int org_mini_gl_GL_glGetBufferSubData(Runtime *runtime, Class *clazz) {
         ptr3 = data->arr_body + arr_offset3;
     }
 
-    glGetBufferSubData((GLenum) target,(GLintptr) offset,(GLsizeiptr) size,(void *) (ptr3));
+    glGetBufferSubData((GLenum)target, (GLintptr)offset, (GLsizeiptr)size, (void *)(ptr3));
 
     return 0;
 }
@@ -9388,7 +7974,7 @@ int org_mini_gl_GL_glMapBuffer(Runtime *runtime, Class *clazz) {
     s32 target = env->localvar_getInt(runtime, pos++);
     s32 access = env->localvar_getInt(runtime, pos++);
 
-    __refer ptr = glMapBuffer((GLenum) target,(GLenum) access);
+    __refer ptr = glMapBuffer((GLenum)target, (GLenum)access);
 
     //Instance *barr = env->jarray_create(count, DATATYPE_LONG, NULL);
     env->push_ref(runtime->stack, NULL);
@@ -9402,7 +7988,7 @@ int org_mini_gl_GL_glUnmapBuffer(Runtime *runtime, Class *clazz) {
 
     s32 target = env->localvar_getInt(runtime, pos++);
 
-    s32 ret_value = (s32)glUnmapBuffer((GLenum) target);
+    s32 ret_value = (s32)glUnmapBuffer((GLenum)target);
     env->push_int(runtime->stack, ret_value);
     return 0;
 }
@@ -9421,7 +8007,7 @@ int org_mini_gl_GL_glGetBufferParameteriv(Runtime *runtime, Class *clazz) {
         ptr2 = params->arr_body + arr_offset2;
     }
 
-    glGetBufferParameteriv((GLenum) target,(GLenum) pname,(GLint *) (ptr2));
+    glGetBufferParameteriv((GLenum)target, (GLenum)pname, (GLint *)(ptr2));
 
     return 0;
 }
@@ -9440,7 +8026,7 @@ int org_mini_gl_GL_glGetBufferPointerv(Runtime *runtime, Class *clazz) {
         ptr2 = params->arr_body + arr_offset2;
     }
 
-    glGetBufferPointerv((GLenum) target,(GLenum) pname,(void **) (ptr2));
+    glGetBufferPointerv((GLenum)target, (GLenum)pname, (void **)(ptr2));
 
     return 0;
 }
@@ -9452,7 +8038,7 @@ int org_mini_gl_GL_glBlendEquationSeparate(Runtime *runtime, Class *clazz) {
     s32 modeRGB = env->localvar_getInt(runtime, pos++);
     s32 modeAlpha = env->localvar_getInt(runtime, pos++);
 
-    glBlendEquationSeparate((GLenum) modeRGB,(GLenum) modeAlpha);
+    glBlendEquationSeparate((GLenum)modeRGB, (GLenum)modeAlpha);
 
     return 0;
 }
@@ -9470,7 +8056,7 @@ int org_mini_gl_GL_glDrawBuffers(Runtime *runtime, Class *clazz) {
         ptr1 = bufs->arr_body + arr_offset1;
     }
 
-    glDrawBuffers((GLsizei) n,(const GLenum *) (ptr1));
+    glDrawBuffers((GLsizei)n, (const GLenum *)(ptr1));
 
     return 0;
 }
@@ -9484,7 +8070,7 @@ int org_mini_gl_GL_glStencilOpSeparate(Runtime *runtime, Class *clazz) {
     s32 dpfail = env->localvar_getInt(runtime, pos++);
     s32 dppass = env->localvar_getInt(runtime, pos++);
 
-    glStencilOpSeparate((GLenum) face,(GLenum) sfail,(GLenum) dpfail,(GLenum) dppass);
+    glStencilOpSeparate((GLenum)face, (GLenum)sfail, (GLenum)dpfail, (GLenum)dppass);
 
     return 0;
 }
@@ -9498,7 +8084,7 @@ int org_mini_gl_GL_glStencilFuncSeparate(Runtime *runtime, Class *clazz) {
     s32 ref = env->localvar_getInt(runtime, pos++);
     s32 mask = env->localvar_getInt(runtime, pos++);
 
-    glStencilFuncSeparate((GLenum) face,(GLenum) func,(GLint) ref,(GLuint) mask);
+    glStencilFuncSeparate((GLenum)face, (GLenum)func, (GLint)ref, (GLuint)mask);
 
     return 0;
 }
@@ -9510,7 +8096,7 @@ int org_mini_gl_GL_glStencilMaskSeparate(Runtime *runtime, Class *clazz) {
     s32 face = env->localvar_getInt(runtime, pos++);
     s32 mask = env->localvar_getInt(runtime, pos++);
 
-    glStencilMaskSeparate((GLenum) face,(GLuint) mask);
+    glStencilMaskSeparate((GLenum)face, (GLuint)mask);
 
     return 0;
 }
@@ -9522,7 +8108,7 @@ int org_mini_gl_GL_glAttachShader(Runtime *runtime, Class *clazz) {
     s32 program = env->localvar_getInt(runtime, pos++);
     s32 shader = env->localvar_getInt(runtime, pos++);
 
-    glAttachShader((GLuint) program,(GLuint) shader);
+    glAttachShader((GLuint)program, (GLuint)shader);
 
     return 0;
 }
@@ -9541,18 +8127,7 @@ int org_mini_gl_GL_glBindAttribLocation(Runtime *runtime, Class *clazz) {
         ptr2 = name->arr_body + arr_offset2;
     }
 
-    glBindAttribLocation((GLuint) program,(GLuint) index,(const GLchar *) (ptr2));
-
-    return 0;
-}
-
-int org_mini_gl_GL_glCompileShader(Runtime *runtime, Class *clazz) {
-    JniEnv *env = runtime->jnienv;
-    s32 pos = 0;
-
-    s32 shader = env->localvar_getInt(runtime, pos++);
-
-    glCompileShader((GLuint) shader);
+    glBindAttribLocation((GLuint)program, (GLuint)index, (const GLchar *)(ptr2));
 
     return 0;
 }
@@ -9573,7 +8148,7 @@ int org_mini_gl_GL_glCreateShader(Runtime *runtime, Class *clazz) {
 
     s32 type = env->localvar_getInt(runtime, pos++);
 
-    s32 ret_value = (s32)glCreateShader((GLenum) type);
+    s32 ret_value = (s32)glCreateShader((GLenum)type);
     env->push_int(runtime->stack, ret_value);
     return 0;
 }
@@ -9584,7 +8159,7 @@ int org_mini_gl_GL_glDeleteProgram(Runtime *runtime, Class *clazz) {
 
     s32 program = env->localvar_getInt(runtime, pos++);
 
-    glDeleteProgram((GLuint) program);
+    glDeleteProgram((GLuint)program);
 
     return 0;
 }
@@ -9595,7 +8170,7 @@ int org_mini_gl_GL_glDeleteShader(Runtime *runtime, Class *clazz) {
 
     s32 shader = env->localvar_getInt(runtime, pos++);
 
-    glDeleteShader((GLuint) shader);
+    glDeleteShader((GLuint)shader);
 
     return 0;
 }
@@ -9607,7 +8182,7 @@ int org_mini_gl_GL_glDetachShader(Runtime *runtime, Class *clazz) {
     s32 program = env->localvar_getInt(runtime, pos++);
     s32 shader = env->localvar_getInt(runtime, pos++);
 
-    glDetachShader((GLuint) program,(GLuint) shader);
+    glDetachShader((GLuint)program, (GLuint)shader);
 
     return 0;
 }
@@ -9618,7 +8193,7 @@ int org_mini_gl_GL_glDisableVertexAttribArray(Runtime *runtime, Class *clazz) {
 
     s32 index = env->localvar_getInt(runtime, pos++);
 
-    glDisableVertexAttribArray((GLuint) index);
+    glDisableVertexAttribArray((GLuint)index);
 
     return 0;
 }
@@ -9629,7 +8204,7 @@ int org_mini_gl_GL_glEnableVertexAttribArray(Runtime *runtime, Class *clazz) {
 
     s32 index = env->localvar_getInt(runtime, pos++);
 
-    glEnableVertexAttribArray((GLuint) index);
+    glEnableVertexAttribArray((GLuint)index);
 
     return 0;
 }
@@ -9670,7 +8245,7 @@ int org_mini_gl_GL_glGetActiveAttrib(Runtime *runtime, Class *clazz) {
         ptr9 = name->arr_body + arr_offset9;
     }
 
-    glGetActiveAttrib((GLuint) program,(GLuint) index,(GLsizei) bufSize,(GLsizei *) (ptr3),(GLint *) (ptr5),(GLenum *) (ptr7),(GLchar *) (ptr9));
+    glGetActiveAttrib((GLuint)program, (GLuint)index, (GLsizei)bufSize, (GLsizei *)(ptr3), (GLint *)(ptr5), (GLenum *)(ptr7), (GLchar *)(ptr9));
 
     return 0;
 }
@@ -9711,7 +8286,7 @@ int org_mini_gl_GL_glGetActiveUniform(Runtime *runtime, Class *clazz) {
         ptr9 = name->arr_body + arr_offset9;
     }
 
-    glGetActiveUniform((GLuint) program,(GLuint) index,(GLsizei) bufSize,(GLsizei *) (ptr3),(GLint *) (ptr5),(GLenum *) (ptr7),(GLchar *) (ptr9));
+    glGetActiveUniform((GLuint)program, (GLuint)index, (GLsizei)bufSize, (GLsizei *)(ptr3), (GLint *)(ptr5), (GLenum *)(ptr7), (GLchar *)(ptr9));
 
     return 0;
 }
@@ -9737,7 +8312,7 @@ int org_mini_gl_GL_glGetAttachedShaders(Runtime *runtime, Class *clazz) {
         ptr4 = shaders->arr_body + arr_offset4;
     }
 
-    glGetAttachedShaders((GLuint) program,(GLsizei) maxCount,(GLsizei *) (ptr2),(GLuint *) (ptr4));
+    glGetAttachedShaders((GLuint)program, (GLsizei)maxCount, (GLsizei *)(ptr2), (GLuint *)(ptr4));
 
     return 0;
 }
@@ -9755,7 +8330,7 @@ int org_mini_gl_GL_glGetAttribLocation(Runtime *runtime, Class *clazz) {
         ptr1 = name->arr_body + arr_offset1;
     }
 
-    s32 ret_value = (s32)glGetAttribLocation((GLuint) program,(const GLchar *) (ptr1));
+    s32 ret_value = (s32)glGetAttribLocation((GLuint)program, (const GLchar *)(ptr1));
     env->push_int(runtime->stack, ret_value);
     return 0;
 }
@@ -9774,7 +8349,7 @@ int org_mini_gl_GL_glGetProgramiv(Runtime *runtime, Class *clazz) {
         ptr2 = params->arr_body + arr_offset2;
     }
 
-    glGetProgramiv((GLuint) program,(GLenum) pname,(GLint *) (ptr2));
+    glGetProgramiv((GLuint)program, (GLenum)pname, (GLint *)(ptr2));
 
     return 0;
 }
@@ -9800,7 +8375,7 @@ int org_mini_gl_GL_glGetProgramInfoLog(Runtime *runtime, Class *clazz) {
         ptr4 = infoLog->arr_body + arr_offset4;
     }
 
-    glGetProgramInfoLog((GLuint) program,(GLsizei) bufSize,(GLsizei *) (ptr2),(GLchar *) (ptr4));
+    glGetProgramInfoLog((GLuint)program, (GLsizei)bufSize, (GLsizei *)(ptr2), (GLchar *)(ptr4));
 
     return 0;
 }
@@ -9819,7 +8394,7 @@ int org_mini_gl_GL_glGetShaderiv(Runtime *runtime, Class *clazz) {
         ptr2 = params->arr_body + arr_offset2;
     }
 
-    glGetShaderiv((GLuint) shader,(GLenum) pname,(GLint *) (ptr2));
+    glGetShaderiv((GLuint)shader, (GLenum)pname, (GLint *)(ptr2));
 
     return 0;
 }
@@ -9845,7 +8420,7 @@ int org_mini_gl_GL_glGetShaderInfoLog(Runtime *runtime, Class *clazz) {
         ptr4 = infoLog->arr_body + arr_offset4;
     }
 
-    glGetShaderInfoLog((GLuint) shader,(GLsizei) bufSize,(GLsizei *) (ptr2),(GLchar *) (ptr4));
+    glGetShaderInfoLog((GLuint)shader, (GLsizei)bufSize, (GLsizei *)(ptr2), (GLchar *)(ptr4));
 
     return 0;
 }
@@ -9871,7 +8446,7 @@ int org_mini_gl_GL_glGetShaderSource(Runtime *runtime, Class *clazz) {
         ptr4 = source->arr_body + arr_offset4;
     }
 
-    glGetShaderSource((GLuint) shader,(GLsizei) bufSize,(GLsizei *) (ptr2),(GLchar *) (ptr4));
+    glGetShaderSource((GLuint)shader, (GLsizei)bufSize, (GLsizei *)(ptr2), (GLchar *)(ptr4));
 
     return 0;
 }
@@ -9889,7 +8464,7 @@ int org_mini_gl_GL_glGetUniformLocation(Runtime *runtime, Class *clazz) {
         ptr1 = name->arr_body + arr_offset1;
     }
 
-    s32 ret_value = (s32)glGetUniformLocation((GLuint) program,(const GLchar *) (ptr1));
+    s32 ret_value = (s32)glGetUniformLocation((GLuint)program, (const GLchar *)(ptr1));
     env->push_int(runtime->stack, ret_value);
     return 0;
 }
@@ -9908,7 +8483,7 @@ int org_mini_gl_GL_glGetUniformfv(Runtime *runtime, Class *clazz) {
         ptr2 = params->arr_body + arr_offset2;
     }
 
-    glGetUniformfv((GLuint) program,(GLint) location,(GLfloat *) (ptr2));
+    glGetUniformfv((GLuint)program, (GLint)location, (GLfloat *)(ptr2));
 
     return 0;
 }
@@ -9927,7 +8502,7 @@ int org_mini_gl_GL_glGetUniformiv(Runtime *runtime, Class *clazz) {
         ptr2 = params->arr_body + arr_offset2;
     }
 
-    glGetUniformiv((GLuint) program,(GLint) location,(GLint *) (ptr2));
+    glGetUniformiv((GLuint)program, (GLint)location, (GLint *)(ptr2));
 
     return 0;
 }
@@ -9946,7 +8521,7 @@ int org_mini_gl_GL_glGetVertexAttribdv(Runtime *runtime, Class *clazz) {
         ptr2 = params->arr_body + arr_offset2;
     }
 
-    glGetVertexAttribdv((GLuint) index,(GLenum) pname,(GLdouble *) (ptr2));
+    glGetVertexAttribdv((GLuint)index, (GLenum)pname, (GLdouble *)(ptr2));
 
     return 0;
 }
@@ -9965,7 +8540,7 @@ int org_mini_gl_GL_glGetVertexAttribfv(Runtime *runtime, Class *clazz) {
         ptr2 = params->arr_body + arr_offset2;
     }
 
-    glGetVertexAttribfv((GLuint) index,(GLenum) pname,(GLfloat *) (ptr2));
+    glGetVertexAttribfv((GLuint)index, (GLenum)pname, (GLfloat *)(ptr2));
 
     return 0;
 }
@@ -9984,7 +8559,7 @@ int org_mini_gl_GL_glGetVertexAttribiv(Runtime *runtime, Class *clazz) {
         ptr2 = params->arr_body + arr_offset2;
     }
 
-    glGetVertexAttribiv((GLuint) index,(GLenum) pname,(GLint *) (ptr2));
+    glGetVertexAttribiv((GLuint)index, (GLenum)pname, (GLint *)(ptr2));
 
     return 0;
 }
@@ -10003,7 +8578,7 @@ int org_mini_gl_GL_glGetVertexAttribPointerv(Runtime *runtime, Class *clazz) {
         ptr2 = pointer->arr_body + arr_offset2;
     }
 
-    glGetVertexAttribPointerv((GLuint) index,(GLenum) pname,(void **) (ptr2));
+    glGetVertexAttribPointerv((GLuint)index, (GLenum)pname, (void **)(ptr2));
 
     return 0;
 }
@@ -10014,7 +8589,7 @@ int org_mini_gl_GL_glIsProgram(Runtime *runtime, Class *clazz) {
 
     s32 program = env->localvar_getInt(runtime, pos++);
 
-    s32 ret_value = (s32)glIsProgram((GLuint) program);
+    s32 ret_value = (s32)glIsProgram((GLuint)program);
     env->push_int(runtime->stack, ret_value);
     return 0;
 }
@@ -10025,7 +8600,7 @@ int org_mini_gl_GL_glIsShader(Runtime *runtime, Class *clazz) {
 
     s32 shader = env->localvar_getInt(runtime, pos++);
 
-    s32 ret_value = (s32)glIsShader((GLuint) shader);
+    s32 ret_value = (s32)glIsShader((GLuint)shader);
     env->push_int(runtime->stack, ret_value);
     return 0;
 }
@@ -10036,7 +8611,7 @@ int org_mini_gl_GL_glLinkProgram(Runtime *runtime, Class *clazz) {
 
     s32 program = env->localvar_getInt(runtime, pos++);
 
-    glLinkProgram((GLuint) program);
+    glLinkProgram((GLuint)program);
 
     return 0;
 }
@@ -10062,7 +8637,7 @@ int org_mini_gl_GL_glShaderSource(Runtime *runtime, Class *clazz) {
         ptr4 = length->arr_body + arr_offset4;
     }
 
-    glShaderSource((GLuint) shader,(GLsizei) count,(const GLchar *const*) (&ptr2),(const GLint *) (ptr4));
+    glShaderSource((GLuint)shader, (GLsizei)count, (const GLchar *const*)(ptr2), (const GLint *)(ptr4));
 
     return 0;
 }
@@ -10073,7 +8648,7 @@ int org_mini_gl_GL_glUseProgram(Runtime *runtime, Class *clazz) {
 
     s32 program = env->localvar_getInt(runtime, pos++);
 
-    glUseProgram((GLuint) program);
+    glUseProgram((GLuint)program);
 
     return 0;
 }
@@ -10085,7 +8660,7 @@ int org_mini_gl_GL_glUniform1f(Runtime *runtime, Class *clazz) {
     s32 location = env->localvar_getInt(runtime, pos++);
     Int2Float v0;v0.i = env->localvar_getInt(runtime, pos++);
 
-    glUniform1f((GLint) location, (GLfloat) v0.f);
+    glUniform1f((GLint)location, (GLfloat)v0.f);
 
     return 0;
 }
@@ -10098,7 +8673,7 @@ int org_mini_gl_GL_glUniform2f(Runtime *runtime, Class *clazz) {
     Int2Float v0;v0.i = env->localvar_getInt(runtime, pos++);
     Int2Float v1;v1.i = env->localvar_getInt(runtime, pos++);
 
-    glUniform2f((GLint) location, (GLfloat) v0.f, (GLfloat) v1.f);
+    glUniform2f((GLint)location, (GLfloat)v0.f, (GLfloat)v1.f);
 
     return 0;
 }
@@ -10112,7 +8687,7 @@ int org_mini_gl_GL_glUniform3f(Runtime *runtime, Class *clazz) {
     Int2Float v1;v1.i = env->localvar_getInt(runtime, pos++);
     Int2Float v2;v2.i = env->localvar_getInt(runtime, pos++);
 
-    glUniform3f((GLint) location, (GLfloat) v0.f, (GLfloat) v1.f, (GLfloat) v2.f);
+    glUniform3f((GLint)location, (GLfloat)v0.f, (GLfloat)v1.f, (GLfloat)v2.f);
 
     return 0;
 }
@@ -10127,7 +8702,7 @@ int org_mini_gl_GL_glUniform4f(Runtime *runtime, Class *clazz) {
     Int2Float v2;v2.i = env->localvar_getInt(runtime, pos++);
     Int2Float v3;v3.i = env->localvar_getInt(runtime, pos++);
 
-    glUniform4f((GLint) location, (GLfloat) v0.f, (GLfloat) v1.f, (GLfloat) v2.f, (GLfloat) v3.f);
+    glUniform4f((GLint)location, (GLfloat)v0.f, (GLfloat)v1.f, (GLfloat)v2.f, (GLfloat)v3.f);
 
     return 0;
 }
@@ -10139,7 +8714,7 @@ int org_mini_gl_GL_glUniform1i(Runtime *runtime, Class *clazz) {
     s32 location = env->localvar_getInt(runtime, pos++);
     s32 v0 = env->localvar_getInt(runtime, pos++);
 
-    glUniform1i((GLint) location,(GLint) v0);
+    glUniform1i((GLint)location, (GLint)v0);
 
     return 0;
 }
@@ -10152,7 +8727,7 @@ int org_mini_gl_GL_glUniform2i(Runtime *runtime, Class *clazz) {
     s32 v0 = env->localvar_getInt(runtime, pos++);
     s32 v1 = env->localvar_getInt(runtime, pos++);
 
-    glUniform2i((GLint) location,(GLint) v0,(GLint) v1);
+    glUniform2i((GLint)location, (GLint)v0, (GLint)v1);
 
     return 0;
 }
@@ -10166,7 +8741,7 @@ int org_mini_gl_GL_glUniform3i(Runtime *runtime, Class *clazz) {
     s32 v1 = env->localvar_getInt(runtime, pos++);
     s32 v2 = env->localvar_getInt(runtime, pos++);
 
-    glUniform3i((GLint) location,(GLint) v0,(GLint) v1,(GLint) v2);
+    glUniform3i((GLint)location, (GLint)v0, (GLint)v1, (GLint)v2);
 
     return 0;
 }
@@ -10181,7 +8756,7 @@ int org_mini_gl_GL_glUniform4i(Runtime *runtime, Class *clazz) {
     s32 v2 = env->localvar_getInt(runtime, pos++);
     s32 v3 = env->localvar_getInt(runtime, pos++);
 
-    glUniform4i((GLint) location,(GLint) v0,(GLint) v1,(GLint) v2,(GLint) v3);
+    glUniform4i((GLint)location, (GLint)v0, (GLint)v1, (GLint)v2, (GLint)v3);
 
     return 0;
 }
@@ -10200,7 +8775,7 @@ int org_mini_gl_GL_glUniform1fv(Runtime *runtime, Class *clazz) {
         ptr2 = value->arr_body + arr_offset2;
     }
 
-    glUniform1fv((GLint) location,(GLsizei) count,(const GLfloat *) (ptr2));
+    glUniform1fv((GLint)location, (GLsizei)count, (const GLfloat *)(ptr2));
 
     return 0;
 }
@@ -10219,7 +8794,7 @@ int org_mini_gl_GL_glUniform2fv(Runtime *runtime, Class *clazz) {
         ptr2 = value->arr_body + arr_offset2;
     }
 
-    glUniform2fv((GLint) location,(GLsizei) count,(const GLfloat *) (ptr2));
+    glUniform2fv((GLint)location, (GLsizei)count, (const GLfloat *)(ptr2));
 
     return 0;
 }
@@ -10238,7 +8813,7 @@ int org_mini_gl_GL_glUniform3fv(Runtime *runtime, Class *clazz) {
         ptr2 = value->arr_body + arr_offset2;
     }
 
-    glUniform3fv((GLint) location,(GLsizei) count,(const GLfloat *) (ptr2));
+    glUniform3fv((GLint)location, (GLsizei)count, (const GLfloat *)(ptr2));
 
     return 0;
 }
@@ -10257,7 +8832,7 @@ int org_mini_gl_GL_glUniform4fv(Runtime *runtime, Class *clazz) {
         ptr2 = value->arr_body + arr_offset2;
     }
 
-    glUniform4fv((GLint) location,(GLsizei) count,(const GLfloat *) (ptr2));
+    glUniform4fv((GLint)location, (GLsizei)count, (const GLfloat *)(ptr2));
 
     return 0;
 }
@@ -10276,7 +8851,7 @@ int org_mini_gl_GL_glUniform1iv(Runtime *runtime, Class *clazz) {
         ptr2 = value->arr_body + arr_offset2;
     }
 
-    glUniform1iv((GLint) location,(GLsizei) count,(const GLint *) (ptr2));
+    glUniform1iv((GLint)location, (GLsizei)count, (const GLint *)(ptr2));
 
     return 0;
 }
@@ -10295,7 +8870,7 @@ int org_mini_gl_GL_glUniform2iv(Runtime *runtime, Class *clazz) {
         ptr2 = value->arr_body + arr_offset2;
     }
 
-    glUniform2iv((GLint) location,(GLsizei) count,(const GLint *) (ptr2));
+    glUniform2iv((GLint)location, (GLsizei)count, (const GLint *)(ptr2));
 
     return 0;
 }
@@ -10314,7 +8889,7 @@ int org_mini_gl_GL_glUniform3iv(Runtime *runtime, Class *clazz) {
         ptr2 = value->arr_body + arr_offset2;
     }
 
-    glUniform3iv((GLint) location,(GLsizei) count,(const GLint *) (ptr2));
+    glUniform3iv((GLint)location, (GLsizei)count, (const GLint *)(ptr2));
 
     return 0;
 }
@@ -10333,7 +8908,7 @@ int org_mini_gl_GL_glUniform4iv(Runtime *runtime, Class *clazz) {
         ptr2 = value->arr_body + arr_offset2;
     }
 
-    glUniform4iv((GLint) location,(GLsizei) count,(const GLint *) (ptr2));
+    glUniform4iv((GLint)location, (GLsizei)count, (const GLint *)(ptr2));
 
     return 0;
 }
@@ -10353,7 +8928,7 @@ int org_mini_gl_GL_glUniformMatrix2fv(Runtime *runtime, Class *clazz) {
         ptr3 = value->arr_body + arr_offset3;
     }
 
-    glUniformMatrix2fv((GLint) location,(GLsizei) count,(GLboolean) transpose,(const GLfloat *) (ptr3));
+    glUniformMatrix2fv((GLint)location, (GLsizei)count, (GLboolean)transpose, (const GLfloat *)(ptr3));
 
     return 0;
 }
@@ -10373,7 +8948,7 @@ int org_mini_gl_GL_glUniformMatrix3fv(Runtime *runtime, Class *clazz) {
         ptr3 = value->arr_body + arr_offset3;
     }
 
-    glUniformMatrix3fv((GLint) location,(GLsizei) count,(GLboolean) transpose,(const GLfloat *) (ptr3));
+    glUniformMatrix3fv((GLint)location, (GLsizei)count, (GLboolean)transpose, (const GLfloat *)(ptr3));
 
     return 0;
 }
@@ -10393,7 +8968,7 @@ int org_mini_gl_GL_glUniformMatrix4fv(Runtime *runtime, Class *clazz) {
         ptr3 = value->arr_body + arr_offset3;
     }
 
-    glUniformMatrix4fv((GLint) location,(GLsizei) count,(GLboolean) transpose,(const GLfloat *) (ptr3));
+    glUniformMatrix4fv((GLint)location, (GLsizei)count, (GLboolean)transpose, (const GLfloat *)(ptr3));
 
     return 0;
 }
@@ -10404,7 +8979,7 @@ int org_mini_gl_GL_glValidateProgram(Runtime *runtime, Class *clazz) {
 
     s32 program = env->localvar_getInt(runtime, pos++);
 
-    glValidateProgram((GLuint) program);
+    glValidateProgram((GLuint)program);
 
     return 0;
 }
@@ -10416,7 +8991,7 @@ int org_mini_gl_GL_glVertexAttrib1d(Runtime *runtime, Class *clazz) {
     s32 index = env->localvar_getInt(runtime, pos++);
     Long2Double x;x.l = getParaLong(runtime, pos);pos += 2;
 
-    glVertexAttrib1d((GLuint) index,(GLdouble) x.d);
+    glVertexAttrib1d((GLuint)index, (GLdouble)x.d);
 
     return 0;
 }
@@ -10434,7 +9009,7 @@ int org_mini_gl_GL_glVertexAttrib1dv(Runtime *runtime, Class *clazz) {
         ptr1 = v->arr_body + arr_offset1;
     }
 
-    glVertexAttrib1dv((GLuint) index,(const GLdouble *) (ptr1));
+    glVertexAttrib1dv((GLuint)index, (const GLdouble *)(ptr1));
 
     return 0;
 }
@@ -10446,7 +9021,7 @@ int org_mini_gl_GL_glVertexAttrib1f(Runtime *runtime, Class *clazz) {
     s32 index = env->localvar_getInt(runtime, pos++);
     Int2Float x;x.i = env->localvar_getInt(runtime, pos++);
 
-    glVertexAttrib1f((GLuint) index, (GLfloat) x.f);
+    glVertexAttrib1f((GLuint)index, (GLfloat)x.f);
 
     return 0;
 }
@@ -10464,7 +9039,7 @@ int org_mini_gl_GL_glVertexAttrib1fv(Runtime *runtime, Class *clazz) {
         ptr1 = v->arr_body + arr_offset1;
     }
 
-    glVertexAttrib1fv((GLuint) index,(const GLfloat *) (ptr1));
+    glVertexAttrib1fv((GLuint)index, (const GLfloat *)(ptr1));
 
     return 0;
 }
@@ -10476,7 +9051,7 @@ int org_mini_gl_GL_glVertexAttrib1s(Runtime *runtime, Class *clazz) {
     s32 index = env->localvar_getInt(runtime, pos++);
     s32 x = env->localvar_getInt(runtime, pos++);
 
-    glVertexAttrib1s((GLuint) index,(GLshort) x);
+    glVertexAttrib1s((GLuint)index, (GLshort)x);
 
     return 0;
 }
@@ -10494,7 +9069,7 @@ int org_mini_gl_GL_glVertexAttrib1sv(Runtime *runtime, Class *clazz) {
         ptr1 = v->arr_body + arr_offset1;
     }
 
-    glVertexAttrib1sv((GLuint) index,(const GLshort *) (ptr1));
+    glVertexAttrib1sv((GLuint)index, (const GLshort *)(ptr1));
 
     return 0;
 }
@@ -10507,7 +9082,7 @@ int org_mini_gl_GL_glVertexAttrib2d(Runtime *runtime, Class *clazz) {
     Long2Double x;x.l = getParaLong(runtime, pos);pos += 2;
     Long2Double y;y.l = getParaLong(runtime, pos);pos += 2;
 
-    glVertexAttrib2d((GLuint) index,(GLdouble) x.d,(GLdouble) y.d);
+    glVertexAttrib2d((GLuint)index, (GLdouble)x.d, (GLdouble)y.d);
 
     return 0;
 }
@@ -10525,7 +9100,7 @@ int org_mini_gl_GL_glVertexAttrib2dv(Runtime *runtime, Class *clazz) {
         ptr1 = v->arr_body + arr_offset1;
     }
 
-    glVertexAttrib2dv((GLuint) index,(const GLdouble *) (ptr1));
+    glVertexAttrib2dv((GLuint)index, (const GLdouble *)(ptr1));
 
     return 0;
 }
@@ -10538,7 +9113,7 @@ int org_mini_gl_GL_glVertexAttrib2f(Runtime *runtime, Class *clazz) {
     Int2Float x;x.i = env->localvar_getInt(runtime, pos++);
     Int2Float y;y.i = env->localvar_getInt(runtime, pos++);
 
-    glVertexAttrib2f((GLuint) index, (GLfloat) x.f, (GLfloat) y.f);
+    glVertexAttrib2f((GLuint)index, (GLfloat)x.f, (GLfloat)y.f);
 
     return 0;
 }
@@ -10556,7 +9131,7 @@ int org_mini_gl_GL_glVertexAttrib2fv(Runtime *runtime, Class *clazz) {
         ptr1 = v->arr_body + arr_offset1;
     }
 
-    glVertexAttrib2fv((GLuint) index,(const GLfloat *) (ptr1));
+    glVertexAttrib2fv((GLuint)index, (const GLfloat *)(ptr1));
 
     return 0;
 }
@@ -10569,7 +9144,7 @@ int org_mini_gl_GL_glVertexAttrib2s(Runtime *runtime, Class *clazz) {
     s32 x = env->localvar_getInt(runtime, pos++);
     s32 y = env->localvar_getInt(runtime, pos++);
 
-    glVertexAttrib2s((GLuint) index,(GLshort) x,(GLshort) y);
+    glVertexAttrib2s((GLuint)index, (GLshort)x, (GLshort)y);
 
     return 0;
 }
@@ -10587,7 +9162,7 @@ int org_mini_gl_GL_glVertexAttrib2sv(Runtime *runtime, Class *clazz) {
         ptr1 = v->arr_body + arr_offset1;
     }
 
-    glVertexAttrib2sv((GLuint) index,(const GLshort *) (ptr1));
+    glVertexAttrib2sv((GLuint)index, (const GLshort *)(ptr1));
 
     return 0;
 }
@@ -10601,7 +9176,7 @@ int org_mini_gl_GL_glVertexAttrib3d(Runtime *runtime, Class *clazz) {
     Long2Double y;y.l = getParaLong(runtime, pos);pos += 2;
     Long2Double z;z.l = getParaLong(runtime, pos);pos += 2;
 
-    glVertexAttrib3d((GLuint) index,(GLdouble) x.d,(GLdouble) y.d,(GLdouble) z.d);
+    glVertexAttrib3d((GLuint)index, (GLdouble)x.d, (GLdouble)y.d, (GLdouble)z.d);
 
     return 0;
 }
@@ -10619,7 +9194,7 @@ int org_mini_gl_GL_glVertexAttrib3dv(Runtime *runtime, Class *clazz) {
         ptr1 = v->arr_body + arr_offset1;
     }
 
-    glVertexAttrib3dv((GLuint) index,(const GLdouble *) (ptr1));
+    glVertexAttrib3dv((GLuint)index, (const GLdouble *)(ptr1));
 
     return 0;
 }
@@ -10633,7 +9208,7 @@ int org_mini_gl_GL_glVertexAttrib3f(Runtime *runtime, Class *clazz) {
     Int2Float y;y.i = env->localvar_getInt(runtime, pos++);
     Int2Float z;z.i = env->localvar_getInt(runtime, pos++);
 
-    glVertexAttrib3f((GLuint) index, (GLfloat) x.f, (GLfloat) y.f, (GLfloat) z.f);
+    glVertexAttrib3f((GLuint)index, (GLfloat)x.f, (GLfloat)y.f, (GLfloat)z.f);
 
     return 0;
 }
@@ -10651,7 +9226,7 @@ int org_mini_gl_GL_glVertexAttrib3fv(Runtime *runtime, Class *clazz) {
         ptr1 = v->arr_body + arr_offset1;
     }
 
-    glVertexAttrib3fv((GLuint) index,(const GLfloat *) (ptr1));
+    glVertexAttrib3fv((GLuint)index, (const GLfloat *)(ptr1));
 
     return 0;
 }
@@ -10665,7 +9240,7 @@ int org_mini_gl_GL_glVertexAttrib3s(Runtime *runtime, Class *clazz) {
     s32 y = env->localvar_getInt(runtime, pos++);
     s32 z = env->localvar_getInt(runtime, pos++);
 
-    glVertexAttrib3s((GLuint) index,(GLshort) x,(GLshort) y,(GLshort) z);
+    glVertexAttrib3s((GLuint)index, (GLshort)x, (GLshort)y, (GLshort)z);
 
     return 0;
 }
@@ -10683,7 +9258,7 @@ int org_mini_gl_GL_glVertexAttrib3sv(Runtime *runtime, Class *clazz) {
         ptr1 = v->arr_body + arr_offset1;
     }
 
-    glVertexAttrib3sv((GLuint) index,(const GLshort *) (ptr1));
+    glVertexAttrib3sv((GLuint)index, (const GLshort *)(ptr1));
 
     return 0;
 }
@@ -10701,7 +9276,7 @@ int org_mini_gl_GL_glVertexAttrib4Nbv(Runtime *runtime, Class *clazz) {
         ptr1 = v->arr_body + arr_offset1;
     }
 
-    glVertexAttrib4Nbv((GLuint) index,(const GLbyte *) (ptr1));
+    glVertexAttrib4Nbv((GLuint)index, (const GLbyte *)(ptr1));
 
     return 0;
 }
@@ -10719,7 +9294,7 @@ int org_mini_gl_GL_glVertexAttrib4Niv(Runtime *runtime, Class *clazz) {
         ptr1 = v->arr_body + arr_offset1;
     }
 
-    glVertexAttrib4Niv((GLuint) index,(const GLint *) (ptr1));
+    glVertexAttrib4Niv((GLuint)index, (const GLint *)(ptr1));
 
     return 0;
 }
@@ -10737,7 +9312,7 @@ int org_mini_gl_GL_glVertexAttrib4Nsv(Runtime *runtime, Class *clazz) {
         ptr1 = v->arr_body + arr_offset1;
     }
 
-    glVertexAttrib4Nsv((GLuint) index,(const GLshort *) (ptr1));
+    glVertexAttrib4Nsv((GLuint)index, (const GLshort *)(ptr1));
 
     return 0;
 }
@@ -10752,7 +9327,7 @@ int org_mini_gl_GL_glVertexAttrib4Nub(Runtime *runtime, Class *clazz) {
     s32 z = env->localvar_getInt(runtime, pos++);
     s32 w = env->localvar_getInt(runtime, pos++);
 
-    glVertexAttrib4Nub((GLuint) index,(GLubyte) x,(GLubyte) y,(GLubyte) z,(GLubyte) w);
+    glVertexAttrib4Nub((GLuint)index, (GLubyte)x, (GLubyte)y, (GLubyte)z, (GLubyte)w);
 
     return 0;
 }
@@ -10770,7 +9345,7 @@ int org_mini_gl_GL_glVertexAttrib4Nubv(Runtime *runtime, Class *clazz) {
         ptr1 = v->arr_body + arr_offset1;
     }
 
-    glVertexAttrib4Nubv((GLuint) index,(const GLubyte *) (ptr1));
+    glVertexAttrib4Nubv((GLuint)index, (const GLubyte *)(ptr1));
 
     return 0;
 }
@@ -10788,7 +9363,7 @@ int org_mini_gl_GL_glVertexAttrib4Nuiv(Runtime *runtime, Class *clazz) {
         ptr1 = v->arr_body + arr_offset1;
     }
 
-    glVertexAttrib4Nuiv((GLuint) index,(const GLuint *) (ptr1));
+    glVertexAttrib4Nuiv((GLuint)index, (const GLuint *)(ptr1));
 
     return 0;
 }
@@ -10806,7 +9381,7 @@ int org_mini_gl_GL_glVertexAttrib4Nusv(Runtime *runtime, Class *clazz) {
         ptr1 = v->arr_body + arr_offset1;
     }
 
-    glVertexAttrib4Nusv((GLuint) index,(const GLushort *) (ptr1));
+    glVertexAttrib4Nusv((GLuint)index, (const GLushort *)(ptr1));
 
     return 0;
 }
@@ -10824,7 +9399,7 @@ int org_mini_gl_GL_glVertexAttrib4bv(Runtime *runtime, Class *clazz) {
         ptr1 = v->arr_body + arr_offset1;
     }
 
-    glVertexAttrib4bv((GLuint) index,(const GLbyte *) (ptr1));
+    glVertexAttrib4bv((GLuint)index, (const GLbyte *)(ptr1));
 
     return 0;
 }
@@ -10839,7 +9414,7 @@ int org_mini_gl_GL_glVertexAttrib4d(Runtime *runtime, Class *clazz) {
     Long2Double z;z.l = getParaLong(runtime, pos);pos += 2;
     Long2Double w;w.l = getParaLong(runtime, pos);pos += 2;
 
-    glVertexAttrib4d((GLuint) index,(GLdouble) x.d,(GLdouble) y.d,(GLdouble) z.d,(GLdouble) w.d);
+    glVertexAttrib4d((GLuint)index, (GLdouble)x.d, (GLdouble)y.d, (GLdouble)z.d, (GLdouble)w.d);
 
     return 0;
 }
@@ -10857,7 +9432,7 @@ int org_mini_gl_GL_glVertexAttrib4dv(Runtime *runtime, Class *clazz) {
         ptr1 = v->arr_body + arr_offset1;
     }
 
-    glVertexAttrib4dv((GLuint) index,(const GLdouble *) (ptr1));
+    glVertexAttrib4dv((GLuint)index, (const GLdouble *)(ptr1));
 
     return 0;
 }
@@ -10872,7 +9447,7 @@ int org_mini_gl_GL_glVertexAttrib4f(Runtime *runtime, Class *clazz) {
     Int2Float z;z.i = env->localvar_getInt(runtime, pos++);
     Int2Float w;w.i = env->localvar_getInt(runtime, pos++);
 
-    glVertexAttrib4f((GLuint) index, (GLfloat) x.f, (GLfloat) y.f, (GLfloat) z.f, (GLfloat) w.f);
+    glVertexAttrib4f((GLuint)index, (GLfloat)x.f, (GLfloat)y.f, (GLfloat)z.f, (GLfloat)w.f);
 
     return 0;
 }
@@ -10890,7 +9465,7 @@ int org_mini_gl_GL_glVertexAttrib4fv(Runtime *runtime, Class *clazz) {
         ptr1 = v->arr_body + arr_offset1;
     }
 
-    glVertexAttrib4fv((GLuint) index,(const GLfloat *) (ptr1));
+    glVertexAttrib4fv((GLuint)index, (const GLfloat *)(ptr1));
 
     return 0;
 }
@@ -10908,7 +9483,7 @@ int org_mini_gl_GL_glVertexAttrib4iv(Runtime *runtime, Class *clazz) {
         ptr1 = v->arr_body + arr_offset1;
     }
 
-    glVertexAttrib4iv((GLuint) index,(const GLint *) (ptr1));
+    glVertexAttrib4iv((GLuint)index, (const GLint *)(ptr1));
 
     return 0;
 }
@@ -10923,7 +9498,7 @@ int org_mini_gl_GL_glVertexAttrib4s(Runtime *runtime, Class *clazz) {
     s32 z = env->localvar_getInt(runtime, pos++);
     s32 w = env->localvar_getInt(runtime, pos++);
 
-    glVertexAttrib4s((GLuint) index,(GLshort) x,(GLshort) y,(GLshort) z,(GLshort) w);
+    glVertexAttrib4s((GLuint)index, (GLshort)x, (GLshort)y, (GLshort)z, (GLshort)w);
 
     return 0;
 }
@@ -10941,7 +9516,7 @@ int org_mini_gl_GL_glVertexAttrib4sv(Runtime *runtime, Class *clazz) {
         ptr1 = v->arr_body + arr_offset1;
     }
 
-    glVertexAttrib4sv((GLuint) index,(const GLshort *) (ptr1));
+    glVertexAttrib4sv((GLuint)index, (const GLshort *)(ptr1));
 
     return 0;
 }
@@ -10959,7 +9534,7 @@ int org_mini_gl_GL_glVertexAttrib4ubv(Runtime *runtime, Class *clazz) {
         ptr1 = v->arr_body + arr_offset1;
     }
 
-    glVertexAttrib4ubv((GLuint) index,(const GLubyte *) (ptr1));
+    glVertexAttrib4ubv((GLuint)index, (const GLubyte *)(ptr1));
 
     return 0;
 }
@@ -10977,7 +9552,7 @@ int org_mini_gl_GL_glVertexAttrib4uiv(Runtime *runtime, Class *clazz) {
         ptr1 = v->arr_body + arr_offset1;
     }
 
-    glVertexAttrib4uiv((GLuint) index,(const GLuint *) (ptr1));
+    glVertexAttrib4uiv((GLuint)index, (const GLuint *)(ptr1));
 
     return 0;
 }
@@ -10995,7 +9570,7 @@ int org_mini_gl_GL_glVertexAttrib4usv(Runtime *runtime, Class *clazz) {
         ptr1 = v->arr_body + arr_offset1;
     }
 
-    glVertexAttrib4usv((GLuint) index,(const GLushort *) (ptr1));
+    glVertexAttrib4usv((GLuint)index, (const GLushort *)(ptr1));
 
     return 0;
 }
@@ -11017,7 +9592,7 @@ int org_mini_gl_GL_glVertexAttribPointer(Runtime *runtime, Class *clazz) {
         ptr5 = pointer->arr_body + arr_offset5;
     }
 
-    glVertexAttribPointer((GLuint) index,(GLint) size,(GLenum) type,(GLboolean) normalized,(GLsizei) stride,(const void *) (ptr5));
+    glVertexAttribPointer((GLuint)index, (GLint)size, (GLenum)type, (GLboolean)normalized, (GLsizei)stride, (const void *)(ptr5));
 
     return 0;
 }
@@ -11037,7 +9612,7 @@ int org_mini_gl_GL_glUniformMatrix2x3fv(Runtime *runtime, Class *clazz) {
         ptr3 = value->arr_body + arr_offset3;
     }
 
-    glUniformMatrix2x3fv((GLint) location,(GLsizei) count,(GLboolean) transpose,(const GLfloat *) (ptr3));
+    glUniformMatrix2x3fv((GLint)location, (GLsizei)count, (GLboolean)transpose, (const GLfloat *)(ptr3));
 
     return 0;
 }
@@ -11057,7 +9632,7 @@ int org_mini_gl_GL_glUniformMatrix3x2fv(Runtime *runtime, Class *clazz) {
         ptr3 = value->arr_body + arr_offset3;
     }
 
-    glUniformMatrix3x2fv((GLint) location,(GLsizei) count,(GLboolean) transpose,(const GLfloat *) (ptr3));
+    glUniformMatrix3x2fv((GLint)location, (GLsizei)count, (GLboolean)transpose, (const GLfloat *)(ptr3));
 
     return 0;
 }
@@ -11077,7 +9652,7 @@ int org_mini_gl_GL_glUniformMatrix2x4fv(Runtime *runtime, Class *clazz) {
         ptr3 = value->arr_body + arr_offset3;
     }
 
-    glUniformMatrix2x4fv((GLint) location,(GLsizei) count,(GLboolean) transpose,(const GLfloat *) (ptr3));
+    glUniformMatrix2x4fv((GLint)location, (GLsizei)count, (GLboolean)transpose, (const GLfloat *)(ptr3));
 
     return 0;
 }
@@ -11097,7 +9672,7 @@ int org_mini_gl_GL_glUniformMatrix4x2fv(Runtime *runtime, Class *clazz) {
         ptr3 = value->arr_body + arr_offset3;
     }
 
-    glUniformMatrix4x2fv((GLint) location,(GLsizei) count,(GLboolean) transpose,(const GLfloat *) (ptr3));
+    glUniformMatrix4x2fv((GLint)location, (GLsizei)count, (GLboolean)transpose, (const GLfloat *)(ptr3));
 
     return 0;
 }
@@ -11117,7 +9692,7 @@ int org_mini_gl_GL_glUniformMatrix3x4fv(Runtime *runtime, Class *clazz) {
         ptr3 = value->arr_body + arr_offset3;
     }
 
-    glUniformMatrix3x4fv((GLint) location,(GLsizei) count,(GLboolean) transpose,(const GLfloat *) (ptr3));
+    glUniformMatrix3x4fv((GLint)location, (GLsizei)count, (GLboolean)transpose, (const GLfloat *)(ptr3));
 
     return 0;
 }
@@ -11137,7 +9712,7 @@ int org_mini_gl_GL_glUniformMatrix4x3fv(Runtime *runtime, Class *clazz) {
         ptr3 = value->arr_body + arr_offset3;
     }
 
-    glUniformMatrix4x3fv((GLint) location,(GLsizei) count,(GLboolean) transpose,(const GLfloat *) (ptr3));
+    glUniformMatrix4x3fv((GLint)location, (GLsizei)count, (GLboolean)transpose, (const GLfloat *)(ptr3));
 
     return 0;
 }
@@ -11152,7 +9727,7 @@ int org_mini_gl_GL_glColorMaski(Runtime *runtime, Class *clazz) {
     s32 b = env->localvar_getInt(runtime, pos++);
     s32 a = env->localvar_getInt(runtime, pos++);
 
-    glColorMaski((GLuint) index,(GLboolean) r,(GLboolean) g,(GLboolean) b,(GLboolean) a);
+    glColorMaski((GLuint)index, (GLboolean)r, (GLboolean)g, (GLboolean)b, (GLboolean)a);
 
     return 0;
 }
@@ -11171,7 +9746,7 @@ int org_mini_gl_GL_glGetBooleani_v(Runtime *runtime, Class *clazz) {
         ptr2 = data->arr_body + arr_offset2;
     }
 
-    glGetBooleani_v((GLenum) target,(GLuint) index,(GLboolean *) (ptr2));
+    glGetBooleani_v((GLenum)target, (GLuint)index, (GLboolean *)(ptr2));
 
     return 0;
 }
@@ -11190,7 +9765,7 @@ int org_mini_gl_GL_glGetIntegeri_v(Runtime *runtime, Class *clazz) {
         ptr2 = data->arr_body + arr_offset2;
     }
 
-    glGetIntegeri_v((GLenum) target,(GLuint) index,(GLint *) (ptr2));
+    glGetIntegeri_v((GLenum)target, (GLuint)index, (GLint *)(ptr2));
 
     return 0;
 }
@@ -11202,7 +9777,7 @@ int org_mini_gl_GL_glEnablei(Runtime *runtime, Class *clazz) {
     s32 target = env->localvar_getInt(runtime, pos++);
     s32 index = env->localvar_getInt(runtime, pos++);
 
-    glEnablei((GLenum) target,(GLuint) index);
+    glEnablei((GLenum)target, (GLuint)index);
 
     return 0;
 }
@@ -11214,7 +9789,7 @@ int org_mini_gl_GL_glDisablei(Runtime *runtime, Class *clazz) {
     s32 target = env->localvar_getInt(runtime, pos++);
     s32 index = env->localvar_getInt(runtime, pos++);
 
-    glDisablei((GLenum) target,(GLuint) index);
+    glDisablei((GLenum)target, (GLuint)index);
 
     return 0;
 }
@@ -11226,7 +9801,7 @@ int org_mini_gl_GL_glIsEnabledi(Runtime *runtime, Class *clazz) {
     s32 target = env->localvar_getInt(runtime, pos++);
     s32 index = env->localvar_getInt(runtime, pos++);
 
-    s32 ret_value = (s32)glIsEnabledi((GLenum) target,(GLuint) index);
+    s32 ret_value = (s32)glIsEnabledi((GLenum)target, (GLuint)index);
     env->push_int(runtime->stack, ret_value);
     return 0;
 }
@@ -11237,7 +9812,7 @@ int org_mini_gl_GL_glBeginTransformFeedback(Runtime *runtime, Class *clazz) {
 
     s32 primitiveMode = env->localvar_getInt(runtime, pos++);
 
-    glBeginTransformFeedback((GLenum) primitiveMode);
+    glBeginTransformFeedback((GLenum)primitiveMode);
 
     return 0;
 }
@@ -11262,7 +9837,7 @@ int org_mini_gl_GL_glBindBufferRange(Runtime *runtime, Class *clazz) {
     s64 offset = getParaLong(runtime, pos);pos += 2;
     s64 size = getParaLong(runtime, pos);pos += 2;
 
-    glBindBufferRange((GLenum) target,(GLuint) index,(GLuint) buffer,(GLintptr) offset,(GLsizeiptr) size);
+    glBindBufferRange((GLenum)target, (GLuint)index, (GLuint)buffer, (GLintptr)offset, (GLsizeiptr)size);
 
     return 0;
 }
@@ -11275,7 +9850,7 @@ int org_mini_gl_GL_glBindBufferBase(Runtime *runtime, Class *clazz) {
     s32 index = env->localvar_getInt(runtime, pos++);
     s32 buffer = env->localvar_getInt(runtime, pos++);
 
-    glBindBufferBase((GLenum) target,(GLuint) index,(GLuint) buffer);
+    glBindBufferBase((GLenum)target, (GLuint)index, (GLuint)buffer);
 
     return 0;
 }
@@ -11295,7 +9870,7 @@ int org_mini_gl_GL_glTransformFeedbackVaryings(Runtime *runtime, Class *clazz) {
     }
     s32 bufferMode = env->localvar_getInt(runtime, pos++);
 
-    glTransformFeedbackVaryings((GLuint) program,(GLsizei) count,(const GLchar *const*) (ptr2),(GLenum) bufferMode);
+    glTransformFeedbackVaryings((GLuint)program, (GLsizei)count, (const GLchar *const*)(ptr2), (GLenum)bufferMode);
 
     return 0;
 }
@@ -11336,7 +9911,7 @@ int org_mini_gl_GL_glGetTransformFeedbackVarying(Runtime *runtime, Class *clazz)
         ptr9 = name->arr_body + arr_offset9;
     }
 
-    glGetTransformFeedbackVarying((GLuint) program,(GLuint) index,(GLsizei) bufSize,(GLsizei *) (ptr3),(GLsizei *) (ptr5),(GLenum *) (ptr7),(GLchar *) (ptr9));
+    glGetTransformFeedbackVarying((GLuint)program, (GLuint)index, (GLsizei)bufSize, (GLsizei *)(ptr3), (GLsizei *)(ptr5), (GLenum *)(ptr7), (GLchar *)(ptr9));
 
     return 0;
 }
@@ -11348,7 +9923,7 @@ int org_mini_gl_GL_glClampColor(Runtime *runtime, Class *clazz) {
     s32 target = env->localvar_getInt(runtime, pos++);
     s32 clamp = env->localvar_getInt(runtime, pos++);
 
-    glClampColor((GLenum) target,(GLenum) clamp);
+    glClampColor((GLenum)target, (GLenum)clamp);
 
     return 0;
 }
@@ -11360,7 +9935,7 @@ int org_mini_gl_GL_glBeginConditionalRender(Runtime *runtime, Class *clazz) {
     s32 id = env->localvar_getInt(runtime, pos++);
     s32 mode = env->localvar_getInt(runtime, pos++);
 
-    glBeginConditionalRender((GLuint) id,(GLenum) mode);
+    glBeginConditionalRender((GLuint)id, (GLenum)mode);
 
     return 0;
 }
@@ -11391,7 +9966,7 @@ int org_mini_gl_GL_glVertexAttribIPointer(Runtime *runtime, Class *clazz) {
         ptr4 = pointer->arr_body + arr_offset4;
     }
 
-    glVertexAttribIPointer((GLuint) index,(GLint) size,(GLenum) type,(GLsizei) stride,(const void *) (ptr4));
+    glVertexAttribIPointer((GLuint)index, (GLint)size, (GLenum)type, (GLsizei)stride, (const void *)(ptr4));
 
     return 0;
 }
@@ -11410,7 +9985,7 @@ int org_mini_gl_GL_glGetVertexAttribIiv(Runtime *runtime, Class *clazz) {
         ptr2 = params->arr_body + arr_offset2;
     }
 
-    glGetVertexAttribIiv((GLuint) index,(GLenum) pname,(GLint *) (ptr2));
+    glGetVertexAttribIiv((GLuint)index, (GLenum)pname, (GLint *)(ptr2));
 
     return 0;
 }
@@ -11429,7 +10004,7 @@ int org_mini_gl_GL_glGetVertexAttribIuiv(Runtime *runtime, Class *clazz) {
         ptr2 = params->arr_body + arr_offset2;
     }
 
-    glGetVertexAttribIuiv((GLuint) index,(GLenum) pname,(GLuint *) (ptr2));
+    glGetVertexAttribIuiv((GLuint)index, (GLenum)pname, (GLuint *)(ptr2));
 
     return 0;
 }
@@ -11441,7 +10016,7 @@ int org_mini_gl_GL_glVertexAttribI1i(Runtime *runtime, Class *clazz) {
     s32 index = env->localvar_getInt(runtime, pos++);
     s32 x = env->localvar_getInt(runtime, pos++);
 
-    glVertexAttribI1i((GLuint) index,(GLint) x);
+    glVertexAttribI1i((GLuint)index, (GLint)x);
 
     return 0;
 }
@@ -11454,7 +10029,7 @@ int org_mini_gl_GL_glVertexAttribI2i(Runtime *runtime, Class *clazz) {
     s32 x = env->localvar_getInt(runtime, pos++);
     s32 y = env->localvar_getInt(runtime, pos++);
 
-    glVertexAttribI2i((GLuint) index,(GLint) x,(GLint) y);
+    glVertexAttribI2i((GLuint)index, (GLint)x, (GLint)y);
 
     return 0;
 }
@@ -11468,7 +10043,7 @@ int org_mini_gl_GL_glVertexAttribI3i(Runtime *runtime, Class *clazz) {
     s32 y = env->localvar_getInt(runtime, pos++);
     s32 z = env->localvar_getInt(runtime, pos++);
 
-    glVertexAttribI3i((GLuint) index,(GLint) x,(GLint) y,(GLint) z);
+    glVertexAttribI3i((GLuint)index, (GLint)x, (GLint)y, (GLint)z);
 
     return 0;
 }
@@ -11483,7 +10058,7 @@ int org_mini_gl_GL_glVertexAttribI4i(Runtime *runtime, Class *clazz) {
     s32 z = env->localvar_getInt(runtime, pos++);
     s32 w = env->localvar_getInt(runtime, pos++);
 
-    glVertexAttribI4i((GLuint) index,(GLint) x,(GLint) y,(GLint) z,(GLint) w);
+    glVertexAttribI4i((GLuint)index, (GLint)x, (GLint)y, (GLint)z, (GLint)w);
 
     return 0;
 }
@@ -11495,7 +10070,7 @@ int org_mini_gl_GL_glVertexAttribI1ui(Runtime *runtime, Class *clazz) {
     s32 index = env->localvar_getInt(runtime, pos++);
     s32 x = env->localvar_getInt(runtime, pos++);
 
-    glVertexAttribI1ui((GLuint) index,(GLuint) x);
+    glVertexAttribI1ui((GLuint)index, (GLuint)x);
 
     return 0;
 }
@@ -11508,7 +10083,7 @@ int org_mini_gl_GL_glVertexAttribI2ui(Runtime *runtime, Class *clazz) {
     s32 x = env->localvar_getInt(runtime, pos++);
     s32 y = env->localvar_getInt(runtime, pos++);
 
-    glVertexAttribI2ui((GLuint) index,(GLuint) x,(GLuint) y);
+    glVertexAttribI2ui((GLuint)index, (GLuint)x, (GLuint)y);
 
     return 0;
 }
@@ -11522,7 +10097,7 @@ int org_mini_gl_GL_glVertexAttribI3ui(Runtime *runtime, Class *clazz) {
     s32 y = env->localvar_getInt(runtime, pos++);
     s32 z = env->localvar_getInt(runtime, pos++);
 
-    glVertexAttribI3ui((GLuint) index,(GLuint) x,(GLuint) y,(GLuint) z);
+    glVertexAttribI3ui((GLuint)index, (GLuint)x, (GLuint)y, (GLuint)z);
 
     return 0;
 }
@@ -11537,7 +10112,7 @@ int org_mini_gl_GL_glVertexAttribI4ui(Runtime *runtime, Class *clazz) {
     s32 z = env->localvar_getInt(runtime, pos++);
     s32 w = env->localvar_getInt(runtime, pos++);
 
-    glVertexAttribI4ui((GLuint) index,(GLuint) x,(GLuint) y,(GLuint) z,(GLuint) w);
+    glVertexAttribI4ui((GLuint)index, (GLuint)x, (GLuint)y, (GLuint)z, (GLuint)w);
 
     return 0;
 }
@@ -11555,7 +10130,7 @@ int org_mini_gl_GL_glVertexAttribI1iv(Runtime *runtime, Class *clazz) {
         ptr1 = v->arr_body + arr_offset1;
     }
 
-    glVertexAttribI1iv((GLuint) index,(const GLint *) (ptr1));
+    glVertexAttribI1iv((GLuint)index, (const GLint *)(ptr1));
 
     return 0;
 }
@@ -11573,7 +10148,7 @@ int org_mini_gl_GL_glVertexAttribI2iv(Runtime *runtime, Class *clazz) {
         ptr1 = v->arr_body + arr_offset1;
     }
 
-    glVertexAttribI2iv((GLuint) index,(const GLint *) (ptr1));
+    glVertexAttribI2iv((GLuint)index, (const GLint *)(ptr1));
 
     return 0;
 }
@@ -11591,7 +10166,7 @@ int org_mini_gl_GL_glVertexAttribI3iv(Runtime *runtime, Class *clazz) {
         ptr1 = v->arr_body + arr_offset1;
     }
 
-    glVertexAttribI3iv((GLuint) index,(const GLint *) (ptr1));
+    glVertexAttribI3iv((GLuint)index, (const GLint *)(ptr1));
 
     return 0;
 }
@@ -11609,7 +10184,7 @@ int org_mini_gl_GL_glVertexAttribI4iv(Runtime *runtime, Class *clazz) {
         ptr1 = v->arr_body + arr_offset1;
     }
 
-    glVertexAttribI4iv((GLuint) index,(const GLint *) (ptr1));
+    glVertexAttribI4iv((GLuint)index, (const GLint *)(ptr1));
 
     return 0;
 }
@@ -11627,7 +10202,7 @@ int org_mini_gl_GL_glVertexAttribI1uiv(Runtime *runtime, Class *clazz) {
         ptr1 = v->arr_body + arr_offset1;
     }
 
-    glVertexAttribI1uiv((GLuint) index,(const GLuint *) (ptr1));
+    glVertexAttribI1uiv((GLuint)index, (const GLuint *)(ptr1));
 
     return 0;
 }
@@ -11645,7 +10220,7 @@ int org_mini_gl_GL_glVertexAttribI2uiv(Runtime *runtime, Class *clazz) {
         ptr1 = v->arr_body + arr_offset1;
     }
 
-    glVertexAttribI2uiv((GLuint) index,(const GLuint *) (ptr1));
+    glVertexAttribI2uiv((GLuint)index, (const GLuint *)(ptr1));
 
     return 0;
 }
@@ -11663,7 +10238,7 @@ int org_mini_gl_GL_glVertexAttribI3uiv(Runtime *runtime, Class *clazz) {
         ptr1 = v->arr_body + arr_offset1;
     }
 
-    glVertexAttribI3uiv((GLuint) index,(const GLuint *) (ptr1));
+    glVertexAttribI3uiv((GLuint)index, (const GLuint *)(ptr1));
 
     return 0;
 }
@@ -11681,7 +10256,7 @@ int org_mini_gl_GL_glVertexAttribI4uiv(Runtime *runtime, Class *clazz) {
         ptr1 = v->arr_body + arr_offset1;
     }
 
-    glVertexAttribI4uiv((GLuint) index,(const GLuint *) (ptr1));
+    glVertexAttribI4uiv((GLuint)index, (const GLuint *)(ptr1));
 
     return 0;
 }
@@ -11699,7 +10274,7 @@ int org_mini_gl_GL_glVertexAttribI4bv(Runtime *runtime, Class *clazz) {
         ptr1 = v->arr_body + arr_offset1;
     }
 
-    glVertexAttribI4bv((GLuint) index,(const GLbyte *) (ptr1));
+    glVertexAttribI4bv((GLuint)index, (const GLbyte *)(ptr1));
 
     return 0;
 }
@@ -11717,7 +10292,7 @@ int org_mini_gl_GL_glVertexAttribI4sv(Runtime *runtime, Class *clazz) {
         ptr1 = v->arr_body + arr_offset1;
     }
 
-    glVertexAttribI4sv((GLuint) index,(const GLshort *) (ptr1));
+    glVertexAttribI4sv((GLuint)index, (const GLshort *)(ptr1));
 
     return 0;
 }
@@ -11735,7 +10310,7 @@ int org_mini_gl_GL_glVertexAttribI4ubv(Runtime *runtime, Class *clazz) {
         ptr1 = v->arr_body + arr_offset1;
     }
 
-    glVertexAttribI4ubv((GLuint) index,(const GLubyte *) (ptr1));
+    glVertexAttribI4ubv((GLuint)index, (const GLubyte *)(ptr1));
 
     return 0;
 }
@@ -11753,7 +10328,7 @@ int org_mini_gl_GL_glVertexAttribI4usv(Runtime *runtime, Class *clazz) {
         ptr1 = v->arr_body + arr_offset1;
     }
 
-    glVertexAttribI4usv((GLuint) index,(const GLushort *) (ptr1));
+    glVertexAttribI4usv((GLuint)index, (const GLushort *)(ptr1));
 
     return 0;
 }
@@ -11772,7 +10347,7 @@ int org_mini_gl_GL_glGetUniformuiv(Runtime *runtime, Class *clazz) {
         ptr2 = params->arr_body + arr_offset2;
     }
 
-    glGetUniformuiv((GLuint) program,(GLint) location,(GLuint *) (ptr2));
+    glGetUniformuiv((GLuint)program, (GLint)location, (GLuint *)(ptr2));
 
     return 0;
 }
@@ -11791,7 +10366,7 @@ int org_mini_gl_GL_glBindFragDataLocation(Runtime *runtime, Class *clazz) {
         ptr2 = name->arr_body + arr_offset2;
     }
 
-    glBindFragDataLocation((GLuint) program,(GLuint) color,(const GLchar *) (ptr2));
+    glBindFragDataLocation((GLuint)program, (GLuint)color, (const GLchar *)(ptr2));
 
     return 0;
 }
@@ -11809,7 +10384,7 @@ int org_mini_gl_GL_glGetFragDataLocation(Runtime *runtime, Class *clazz) {
         ptr1 = name->arr_body + arr_offset1;
     }
 
-    s32 ret_value = (s32)glGetFragDataLocation((GLuint) program,(const GLchar *) (ptr1));
+    s32 ret_value = (s32)glGetFragDataLocation((GLuint)program, (const GLchar *)(ptr1));
     env->push_int(runtime->stack, ret_value);
     return 0;
 }
@@ -11821,7 +10396,7 @@ int org_mini_gl_GL_glUniform1ui(Runtime *runtime, Class *clazz) {
     s32 location = env->localvar_getInt(runtime, pos++);
     s32 v0 = env->localvar_getInt(runtime, pos++);
 
-    glUniform1ui((GLint) location,(GLuint) v0);
+    glUniform1ui((GLint)location, (GLuint)v0);
 
     return 0;
 }
@@ -11834,7 +10409,7 @@ int org_mini_gl_GL_glUniform2ui(Runtime *runtime, Class *clazz) {
     s32 v0 = env->localvar_getInt(runtime, pos++);
     s32 v1 = env->localvar_getInt(runtime, pos++);
 
-    glUniform2ui((GLint) location,(GLuint) v0,(GLuint) v1);
+    glUniform2ui((GLint)location, (GLuint)v0, (GLuint)v1);
 
     return 0;
 }
@@ -11848,7 +10423,7 @@ int org_mini_gl_GL_glUniform3ui(Runtime *runtime, Class *clazz) {
     s32 v1 = env->localvar_getInt(runtime, pos++);
     s32 v2 = env->localvar_getInt(runtime, pos++);
 
-    glUniform3ui((GLint) location,(GLuint) v0,(GLuint) v1,(GLuint) v2);
+    glUniform3ui((GLint)location, (GLuint)v0, (GLuint)v1, (GLuint)v2);
 
     return 0;
 }
@@ -11863,7 +10438,7 @@ int org_mini_gl_GL_glUniform4ui(Runtime *runtime, Class *clazz) {
     s32 v2 = env->localvar_getInt(runtime, pos++);
     s32 v3 = env->localvar_getInt(runtime, pos++);
 
-    glUniform4ui((GLint) location,(GLuint) v0,(GLuint) v1,(GLuint) v2,(GLuint) v3);
+    glUniform4ui((GLint)location, (GLuint)v0, (GLuint)v1, (GLuint)v2, (GLuint)v3);
 
     return 0;
 }
@@ -11882,7 +10457,7 @@ int org_mini_gl_GL_glUniform1uiv(Runtime *runtime, Class *clazz) {
         ptr2 = value->arr_body + arr_offset2;
     }
 
-    glUniform1uiv((GLint) location,(GLsizei) count,(const GLuint *) (ptr2));
+    glUniform1uiv((GLint)location, (GLsizei)count, (const GLuint *)(ptr2));
 
     return 0;
 }
@@ -11901,7 +10476,7 @@ int org_mini_gl_GL_glUniform2uiv(Runtime *runtime, Class *clazz) {
         ptr2 = value->arr_body + arr_offset2;
     }
 
-    glUniform2uiv((GLint) location,(GLsizei) count,(const GLuint *) (ptr2));
+    glUniform2uiv((GLint)location, (GLsizei)count, (const GLuint *)(ptr2));
 
     return 0;
 }
@@ -11920,7 +10495,7 @@ int org_mini_gl_GL_glUniform3uiv(Runtime *runtime, Class *clazz) {
         ptr2 = value->arr_body + arr_offset2;
     }
 
-    glUniform3uiv((GLint) location,(GLsizei) count,(const GLuint *) (ptr2));
+    glUniform3uiv((GLint)location, (GLsizei)count, (const GLuint *)(ptr2));
 
     return 0;
 }
@@ -11939,7 +10514,7 @@ int org_mini_gl_GL_glUniform4uiv(Runtime *runtime, Class *clazz) {
         ptr2 = value->arr_body + arr_offset2;
     }
 
-    glUniform4uiv((GLint) location,(GLsizei) count,(const GLuint *) (ptr2));
+    glUniform4uiv((GLint)location, (GLsizei)count, (const GLuint *)(ptr2));
 
     return 0;
 }
@@ -11958,7 +10533,7 @@ int org_mini_gl_GL_glTexParameterIiv(Runtime *runtime, Class *clazz) {
         ptr2 = params->arr_body + arr_offset2;
     }
 
-    glTexParameterIiv((GLenum) target,(GLenum) pname,(const GLint *) (ptr2));
+    glTexParameterIiv((GLenum)target, (GLenum)pname, (const GLint *)(ptr2));
 
     return 0;
 }
@@ -11977,7 +10552,7 @@ int org_mini_gl_GL_glTexParameterIuiv(Runtime *runtime, Class *clazz) {
         ptr2 = params->arr_body + arr_offset2;
     }
 
-    glTexParameterIuiv((GLenum) target,(GLenum) pname,(const GLuint *) (ptr2));
+    glTexParameterIuiv((GLenum)target, (GLenum)pname, (const GLuint *)(ptr2));
 
     return 0;
 }
@@ -11996,7 +10571,7 @@ int org_mini_gl_GL_glGetTexParameterIiv(Runtime *runtime, Class *clazz) {
         ptr2 = params->arr_body + arr_offset2;
     }
 
-    glGetTexParameterIiv((GLenum) target,(GLenum) pname,(GLint *) (ptr2));
+    glGetTexParameterIiv((GLenum)target, (GLenum)pname, (GLint *)(ptr2));
 
     return 0;
 }
@@ -12015,7 +10590,7 @@ int org_mini_gl_GL_glGetTexParameterIuiv(Runtime *runtime, Class *clazz) {
         ptr2 = params->arr_body + arr_offset2;
     }
 
-    glGetTexParameterIuiv((GLenum) target,(GLenum) pname,(GLuint *) (ptr2));
+    glGetTexParameterIuiv((GLenum)target, (GLenum)pname, (GLuint *)(ptr2));
 
     return 0;
 }
@@ -12034,7 +10609,7 @@ int org_mini_gl_GL_glClearBufferiv(Runtime *runtime, Class *clazz) {
         ptr2 = value->arr_body + arr_offset2;
     }
 
-    glClearBufferiv((GLenum) buffer,(GLint) drawbuffer,(const GLint *) (ptr2));
+    glClearBufferiv((GLenum)buffer, (GLint)drawbuffer, (const GLint *)(ptr2));
 
     return 0;
 }
@@ -12053,7 +10628,7 @@ int org_mini_gl_GL_glClearBufferuiv(Runtime *runtime, Class *clazz) {
         ptr2 = value->arr_body + arr_offset2;
     }
 
-    glClearBufferuiv((GLenum) buffer,(GLint) drawbuffer,(const GLuint *) (ptr2));
+    glClearBufferuiv((GLenum)buffer, (GLint)drawbuffer, (const GLuint *)(ptr2));
 
     return 0;
 }
@@ -12072,7 +10647,7 @@ int org_mini_gl_GL_glClearBufferfv(Runtime *runtime, Class *clazz) {
         ptr2 = value->arr_body + arr_offset2;
     }
 
-    glClearBufferfv((GLenum) buffer,(GLint) drawbuffer,(const GLfloat *) (ptr2));
+    glClearBufferfv((GLenum)buffer, (GLint)drawbuffer, (const GLfloat *)(ptr2));
 
     return 0;
 }
@@ -12086,7 +10661,7 @@ int org_mini_gl_GL_glClearBufferfi(Runtime *runtime, Class *clazz) {
     Int2Float depth;depth.i = env->localvar_getInt(runtime, pos++);
     s32 stencil = env->localvar_getInt(runtime, pos++);
 
-    glClearBufferfi((GLenum) buffer,(GLint) drawbuffer, (GLfloat) depth.f,(GLint) stencil);
+    glClearBufferfi((GLenum)buffer, (GLint)drawbuffer, (GLfloat)depth.f, (GLint)stencil);
 
     return 0;
 }
@@ -12098,7 +10673,7 @@ int org_mini_gl_GL_glGetStringi(Runtime *runtime, Class *clazz) {
     s32 name = env->localvar_getInt(runtime, pos++);
     s32 index = env->localvar_getInt(runtime, pos++);
 
-    glGetStringi((GLenum) name,(GLuint) index);
+    glGetStringi((GLenum)name, (GLuint)index);
 
     //Instance *barr = env->jarray_create(count, DATATYPE_LONG, NULL);
     env->push_ref(runtime->stack, NULL);
@@ -12112,7 +10687,7 @@ int org_mini_gl_GL_glIsRenderbuffer(Runtime *runtime, Class *clazz) {
 
     s32 renderbuffer = env->localvar_getInt(runtime, pos++);
 
-    s32 ret_value = (s32)glIsRenderbuffer((GLuint) renderbuffer);
+    s32 ret_value = (s32)glIsRenderbuffer((GLuint)renderbuffer);
     env->push_int(runtime->stack, ret_value);
     return 0;
 }
@@ -12124,7 +10699,7 @@ int org_mini_gl_GL_glBindRenderbuffer(Runtime *runtime, Class *clazz) {
     s32 target = env->localvar_getInt(runtime, pos++);
     s32 renderbuffer = env->localvar_getInt(runtime, pos++);
 
-    glBindRenderbuffer((GLenum) target,(GLuint) renderbuffer);
+    glBindRenderbuffer((GLenum)target, (GLuint)renderbuffer);
 
     return 0;
 }
@@ -12142,7 +10717,7 @@ int org_mini_gl_GL_glDeleteRenderbuffers(Runtime *runtime, Class *clazz) {
         ptr1 = renderbuffers->arr_body + arr_offset1;
     }
 
-    glDeleteRenderbuffers((GLsizei) n,(const GLuint *) (ptr1));
+    glDeleteRenderbuffers((GLsizei)n, (const GLuint *)(ptr1));
 
     return 0;
 }
@@ -12160,7 +10735,7 @@ int org_mini_gl_GL_glGenRenderbuffers(Runtime *runtime, Class *clazz) {
         ptr1 = renderbuffers->arr_body + arr_offset1;
     }
 
-    glGenRenderbuffers((GLsizei) n,(GLuint *) (ptr1));
+    glGenRenderbuffers((GLsizei)n, (GLuint *)(ptr1));
 
     return 0;
 }
@@ -12174,7 +10749,7 @@ int org_mini_gl_GL_glRenderbufferStorage(Runtime *runtime, Class *clazz) {
     s32 width = env->localvar_getInt(runtime, pos++);
     s32 height = env->localvar_getInt(runtime, pos++);
 
-    glRenderbufferStorage((GLenum) target,(GLenum) internalformat,(GLsizei) width,(GLsizei) height);
+    glRenderbufferStorage((GLenum)target, (GLenum)internalformat, (GLsizei)width, (GLsizei)height);
 
     return 0;
 }
@@ -12193,7 +10768,7 @@ int org_mini_gl_GL_glGetRenderbufferParameteriv(Runtime *runtime, Class *clazz) 
         ptr2 = params->arr_body + arr_offset2;
     }
 
-    glGetRenderbufferParameteriv((GLenum) target,(GLenum) pname,(GLint *) (ptr2));
+    glGetRenderbufferParameteriv((GLenum)target, (GLenum)pname, (GLint *)(ptr2));
 
     return 0;
 }
@@ -12204,7 +10779,7 @@ int org_mini_gl_GL_glIsFramebuffer(Runtime *runtime, Class *clazz) {
 
     s32 framebuffer = env->localvar_getInt(runtime, pos++);
 
-    s32 ret_value = (s32)glIsFramebuffer((GLuint) framebuffer);
+    s32 ret_value = (s32)glIsFramebuffer((GLuint)framebuffer);
     env->push_int(runtime->stack, ret_value);
     return 0;
 }
@@ -12216,7 +10791,7 @@ int org_mini_gl_GL_glBindFramebuffer(Runtime *runtime, Class *clazz) {
     s32 target = env->localvar_getInt(runtime, pos++);
     s32 framebuffer = env->localvar_getInt(runtime, pos++);
 
-    glBindFramebuffer((GLenum) target,(GLuint) framebuffer);
+    glBindFramebuffer((GLenum)target, (GLuint)framebuffer);
 
     return 0;
 }
@@ -12234,7 +10809,7 @@ int org_mini_gl_GL_glDeleteFramebuffers(Runtime *runtime, Class *clazz) {
         ptr1 = framebuffers->arr_body + arr_offset1;
     }
 
-    glDeleteFramebuffers((GLsizei) n,(const GLuint *) (ptr1));
+    glDeleteFramebuffers((GLsizei)n, (const GLuint *)(ptr1));
 
     return 0;
 }
@@ -12252,7 +10827,7 @@ int org_mini_gl_GL_glGenFramebuffers(Runtime *runtime, Class *clazz) {
         ptr1 = framebuffers->arr_body + arr_offset1;
     }
 
-    glGenFramebuffers((GLsizei) n,(GLuint *) (ptr1));
+    glGenFramebuffers((GLsizei)n, (GLuint *)(ptr1));
 
     return 0;
 }
@@ -12263,7 +10838,7 @@ int org_mini_gl_GL_glCheckFramebufferStatus(Runtime *runtime, Class *clazz) {
 
     s32 target = env->localvar_getInt(runtime, pos++);
 
-    s32 ret_value = (s32)glCheckFramebufferStatus((GLenum) target);
+    s32 ret_value = (s32)glCheckFramebufferStatus((GLenum)target);
     env->push_int(runtime->stack, ret_value);
     return 0;
 }
@@ -12278,7 +10853,7 @@ int org_mini_gl_GL_glFramebufferTexture1D(Runtime *runtime, Class *clazz) {
     s32 texture = env->localvar_getInt(runtime, pos++);
     s32 level = env->localvar_getInt(runtime, pos++);
 
-    glFramebufferTexture1D((GLenum) target,(GLenum) attachment,(GLenum) textarget,(GLuint) texture,(GLint) level);
+    glFramebufferTexture1D((GLenum)target, (GLenum)attachment, (GLenum)textarget, (GLuint)texture, (GLint)level);
 
     return 0;
 }
@@ -12293,7 +10868,7 @@ int org_mini_gl_GL_glFramebufferTexture2D(Runtime *runtime, Class *clazz) {
     s32 texture = env->localvar_getInt(runtime, pos++);
     s32 level = env->localvar_getInt(runtime, pos++);
 
-    glFramebufferTexture2D((GLenum) target,(GLenum) attachment,(GLenum) textarget,(GLuint) texture,(GLint) level);
+    glFramebufferTexture2D((GLenum)target, (GLenum)attachment, (GLenum)textarget, (GLuint)texture, (GLint)level);
 
     return 0;
 }
@@ -12309,7 +10884,7 @@ int org_mini_gl_GL_glFramebufferTexture3D(Runtime *runtime, Class *clazz) {
     s32 level = env->localvar_getInt(runtime, pos++);
     s32 zoffset = env->localvar_getInt(runtime, pos++);
 
-    glFramebufferTexture3D((GLenum) target,(GLenum) attachment,(GLenum) textarget,(GLuint) texture,(GLint) level,(GLint) zoffset);
+    glFramebufferTexture3D((GLenum)target, (GLenum)attachment, (GLenum)textarget, (GLuint)texture, (GLint)level, (GLint)zoffset);
 
     return 0;
 }
@@ -12323,7 +10898,7 @@ int org_mini_gl_GL_glFramebufferRenderbuffer(Runtime *runtime, Class *clazz) {
     s32 renderbuffertarget = env->localvar_getInt(runtime, pos++);
     s32 renderbuffer = env->localvar_getInt(runtime, pos++);
 
-    glFramebufferRenderbuffer((GLenum) target,(GLenum) attachment,(GLenum) renderbuffertarget,(GLuint) renderbuffer);
+    glFramebufferRenderbuffer((GLenum)target, (GLenum)attachment, (GLenum)renderbuffertarget, (GLuint)renderbuffer);
 
     return 0;
 }
@@ -12343,7 +10918,7 @@ int org_mini_gl_GL_glGetFramebufferAttachmentParameteriv(Runtime *runtime, Class
         ptr3 = params->arr_body + arr_offset3;
     }
 
-    glGetFramebufferAttachmentParameteriv((GLenum) target,(GLenum) attachment,(GLenum) pname,(GLint *) (ptr3));
+    glGetFramebufferAttachmentParameteriv((GLenum)target, (GLenum)attachment, (GLenum)pname, (GLint *)(ptr3));
 
     return 0;
 }
@@ -12354,7 +10929,7 @@ int org_mini_gl_GL_glGenerateMipmap(Runtime *runtime, Class *clazz) {
 
     s32 target = env->localvar_getInt(runtime, pos++);
 
-    glGenerateMipmap((GLenum) target);
+    glGenerateMipmap((GLenum)target);
 
     return 0;
 }
@@ -12374,7 +10949,7 @@ int org_mini_gl_GL_glBlitFramebuffer(Runtime *runtime, Class *clazz) {
     s32 mask = env->localvar_getInt(runtime, pos++);
     s32 filter = env->localvar_getInt(runtime, pos++);
 
-    glBlitFramebuffer((GLint) srcX0,(GLint) srcY0,(GLint) srcX1,(GLint) srcY1,(GLint) dstX0,(GLint) dstY0,(GLint) dstX1,(GLint) dstY1,(GLbitfield) mask,(GLenum) filter);
+    glBlitFramebuffer((GLint)srcX0, (GLint)srcY0, (GLint)srcX1, (GLint)srcY1, (GLint)dstX0, (GLint)dstY0, (GLint)dstX1, (GLint)dstY1, (GLbitfield)mask, (GLenum)filter);
 
     return 0;
 }
@@ -12389,7 +10964,7 @@ int org_mini_gl_GL_glRenderbufferStorageMultisample(Runtime *runtime, Class *cla
     s32 width = env->localvar_getInt(runtime, pos++);
     s32 height = env->localvar_getInt(runtime, pos++);
 
-    glRenderbufferStorageMultisample((GLenum) target,(GLsizei) samples,(GLenum) internalformat,(GLsizei) width,(GLsizei) height);
+    glRenderbufferStorageMultisample((GLenum)target, (GLsizei)samples, (GLenum)internalformat, (GLsizei)width, (GLsizei)height);
 
     return 0;
 }
@@ -12404,7 +10979,7 @@ int org_mini_gl_GL_glFramebufferTextureLayer(Runtime *runtime, Class *clazz) {
     s32 level = env->localvar_getInt(runtime, pos++);
     s32 layer = env->localvar_getInt(runtime, pos++);
 
-    glFramebufferTextureLayer((GLenum) target,(GLenum) attachment,(GLuint) texture,(GLint) level,(GLint) layer);
+    glFramebufferTextureLayer((GLenum)target, (GLenum)attachment, (GLuint)texture, (GLint)level, (GLint)layer);
 
     return 0;
 }
@@ -12418,7 +10993,7 @@ int org_mini_gl_GL_glMapBufferRange(Runtime *runtime, Class *clazz) {
     s64 length = getParaLong(runtime, pos);pos += 2;
     s32 access = env->localvar_getInt(runtime, pos++);
 
-    __refer ptr = glMapBufferRange((GLenum) target,(GLintptr) offset,(GLsizeiptr) length,(GLbitfield) access);
+    __refer ptr = glMapBufferRange((GLenum)target, (GLintptr)offset, (GLsizeiptr)length, (GLbitfield)access);
 
     //Instance *barr = env->jarray_create(count, DATATYPE_LONG, NULL);
     env->push_ref(runtime->stack, NULL);
@@ -12434,7 +11009,7 @@ int org_mini_gl_GL_glFlushMappedBufferRange(Runtime *runtime, Class *clazz) {
     s64 offset = getParaLong(runtime, pos);pos += 2;
     s64 length = getParaLong(runtime, pos);pos += 2;
 
-    glFlushMappedBufferRange((GLenum) target,(GLintptr) offset,(GLsizeiptr) length);
+    glFlushMappedBufferRange((GLenum)target, (GLintptr)offset, (GLsizeiptr)length);
 
     return 0;
 }
@@ -12445,7 +11020,7 @@ int org_mini_gl_GL_glBindVertexArray(Runtime *runtime, Class *clazz) {
 
     s32 array = env->localvar_getInt(runtime, pos++);
 
-    glBindVertexArray((GLuint) array);
+    glBindVertexArray((GLuint)array);
 
     return 0;
 }
@@ -12463,7 +11038,7 @@ int org_mini_gl_GL_glDeleteVertexArrays(Runtime *runtime, Class *clazz) {
         ptr1 = arrays->arr_body + arr_offset1;
     }
 
-    glDeleteVertexArrays((GLsizei) n,(const GLuint *) (ptr1));
+    glDeleteVertexArrays((GLsizei)n, (const GLuint *)(ptr1));
 
     return 0;
 }
@@ -12481,7 +11056,7 @@ int org_mini_gl_GL_glGenVertexArrays(Runtime *runtime, Class *clazz) {
         ptr1 = arrays->arr_body + arr_offset1;
     }
 
-    glGenVertexArrays((GLsizei) n,(GLuint *) (ptr1));
+    glGenVertexArrays((GLsizei)n, (GLuint *)(ptr1));
 
     return 0;
 }
@@ -12492,7 +11067,7 @@ int org_mini_gl_GL_glIsVertexArray(Runtime *runtime, Class *clazz) {
 
     s32 array = env->localvar_getInt(runtime, pos++);
 
-    s32 ret_value = (s32)glIsVertexArray((GLuint) array);
+    s32 ret_value = (s32)glIsVertexArray((GLuint)array);
     env->push_int(runtime->stack, ret_value);
     return 0;
 }
@@ -12506,7 +11081,7 @@ int org_mini_gl_GL_glDrawArraysInstanced(Runtime *runtime, Class *clazz) {
     s32 count = env->localvar_getInt(runtime, pos++);
     s32 instancecount = env->localvar_getInt(runtime, pos++);
 
-    glDrawArraysInstanced((GLenum) mode,(GLint) first,(GLsizei) count,(GLsizei) instancecount);
+    glDrawArraysInstanced((GLenum)mode, (GLint)first, (GLsizei)count, (GLsizei)instancecount);
 
     return 0;
 }
@@ -12527,7 +11102,7 @@ int org_mini_gl_GL_glDrawElementsInstanced(Runtime *runtime, Class *clazz) {
     }
     s32 instancecount = env->localvar_getInt(runtime, pos++);
 
-    glDrawElementsInstanced((GLenum) mode,(GLsizei) count,(GLenum) type,(const void *) (ptr3),(GLsizei) instancecount);
+    glDrawElementsInstanced((GLenum)mode, (GLsizei)count, (GLenum)type, (const void *)(ptr3), (GLsizei)instancecount);
 
     return 0;
 }
@@ -12540,7 +11115,7 @@ int org_mini_gl_GL_glTexBuffer(Runtime *runtime, Class *clazz) {
     s32 internalformat = env->localvar_getInt(runtime, pos++);
     s32 buffer = env->localvar_getInt(runtime, pos++);
 
-    glTexBuffer((GLenum) target,(GLenum) internalformat,(GLuint) buffer);
+    glTexBuffer((GLenum)target, (GLenum)internalformat, (GLuint)buffer);
 
     return 0;
 }
@@ -12551,7 +11126,7 @@ int org_mini_gl_GL_glPrimitiveRestartIndex(Runtime *runtime, Class *clazz) {
 
     s32 index = env->localvar_getInt(runtime, pos++);
 
-    glPrimitiveRestartIndex((GLuint) index);
+    glPrimitiveRestartIndex((GLuint)index);
 
     return 0;
 }
@@ -12566,7 +11141,7 @@ int org_mini_gl_GL_glCopyBufferSubData(Runtime *runtime, Class *clazz) {
     s64 writeOffset = getParaLong(runtime, pos);pos += 2;
     s64 size = getParaLong(runtime, pos);pos += 2;
 
-    glCopyBufferSubData((GLenum) readTarget,(GLenum) writeTarget,(GLintptr) readOffset,(GLintptr) writeOffset,(GLsizeiptr) size);
+    glCopyBufferSubData((GLenum)readTarget, (GLenum)writeTarget, (GLintptr)readOffset, (GLintptr)writeOffset, (GLsizeiptr)size);
 
     return 0;
 }
@@ -12592,7 +11167,7 @@ int org_mini_gl_GL_glGetUniformIndices(Runtime *runtime, Class *clazz) {
         ptr4 = uniformIndices->arr_body + arr_offset4;
     }
 
-    glGetUniformIndices((GLuint) program,(GLsizei) uniformCount,(const GLchar *const*) (ptr2),(GLuint *) (ptr4));
+    glGetUniformIndices((GLuint)program, (GLsizei)uniformCount, (const GLchar *const*)(ptr2), (GLuint *)(ptr4));
 
     return 0;
 }
@@ -12619,7 +11194,7 @@ int org_mini_gl_GL_glGetActiveUniformsiv(Runtime *runtime, Class *clazz) {
         ptr5 = params->arr_body + arr_offset5;
     }
 
-    glGetActiveUniformsiv((GLuint) program,(GLsizei) uniformCount,(const GLuint *) (ptr2),(GLenum) pname,(GLint *) (ptr5));
+    glGetActiveUniformsiv((GLuint)program, (GLsizei)uniformCount, (const GLuint *)(ptr2), (GLenum)pname, (GLint *)(ptr5));
 
     return 0;
 }
@@ -12646,7 +11221,7 @@ int org_mini_gl_GL_glGetActiveUniformName(Runtime *runtime, Class *clazz) {
         ptr5 = uniformName->arr_body + arr_offset5;
     }
 
-    glGetActiveUniformName((GLuint) program,(GLuint) uniformIndex,(GLsizei) bufSize,(GLsizei *) (ptr3),(GLchar *) (ptr5));
+    glGetActiveUniformName((GLuint)program, (GLuint)uniformIndex, (GLsizei)bufSize, (GLsizei *)(ptr3), (GLchar *)(ptr5));
 
     return 0;
 }
@@ -12664,7 +11239,7 @@ int org_mini_gl_GL_glGetUniformBlockIndex(Runtime *runtime, Class *clazz) {
         ptr1 = uniformBlockName->arr_body + arr_offset1;
     }
 
-    s32 ret_value = (s32)glGetUniformBlockIndex((GLuint) program,(const GLchar *) (ptr1));
+    s32 ret_value = (s32)glGetUniformBlockIndex((GLuint)program, (const GLchar *)(ptr1));
     env->push_int(runtime->stack, ret_value);
     return 0;
 }
@@ -12684,7 +11259,7 @@ int org_mini_gl_GL_glGetActiveUniformBlockiv(Runtime *runtime, Class *clazz) {
         ptr3 = params->arr_body + arr_offset3;
     }
 
-    glGetActiveUniformBlockiv((GLuint) program,(GLuint) uniformBlockIndex,(GLenum) pname,(GLint *) (ptr3));
+    glGetActiveUniformBlockiv((GLuint)program, (GLuint)uniformBlockIndex, (GLenum)pname, (GLint *)(ptr3));
 
     return 0;
 }
@@ -12711,7 +11286,7 @@ int org_mini_gl_GL_glGetActiveUniformBlockName(Runtime *runtime, Class *clazz) {
         ptr5 = uniformBlockName->arr_body + arr_offset5;
     }
 
-    glGetActiveUniformBlockName((GLuint) program,(GLuint) uniformBlockIndex,(GLsizei) bufSize,(GLsizei *) (ptr3),(GLchar *) (ptr5));
+    glGetActiveUniformBlockName((GLuint)program, (GLuint)uniformBlockIndex, (GLsizei)bufSize, (GLsizei *)(ptr3), (GLchar *)(ptr5));
 
     return 0;
 }
@@ -12724,7 +11299,7 @@ int org_mini_gl_GL_glUniformBlockBinding(Runtime *runtime, Class *clazz) {
     s32 uniformBlockIndex = env->localvar_getInt(runtime, pos++);
     s32 uniformBlockBinding = env->localvar_getInt(runtime, pos++);
 
-    glUniformBlockBinding((GLuint) program,(GLuint) uniformBlockIndex,(GLuint) uniformBlockBinding);
+    glUniformBlockBinding((GLuint)program, (GLuint)uniformBlockIndex, (GLuint)uniformBlockBinding);
 
     return 0;
 }
@@ -12745,7 +11320,7 @@ int org_mini_gl_GL_glDrawElementsBaseVertex(Runtime *runtime, Class *clazz) {
     }
     s32 basevertex = env->localvar_getInt(runtime, pos++);
 
-    glDrawElementsBaseVertex((GLenum) mode,(GLsizei) count,(GLenum) type,(const void *) (ptr3),(GLint) basevertex);
+    glDrawElementsBaseVertex((GLenum)mode, (GLsizei)count, (GLenum)type, (const void *)(ptr3), (GLint)basevertex);
 
     return 0;
 }
@@ -12768,7 +11343,7 @@ int org_mini_gl_GL_glDrawRangeElementsBaseVertex(Runtime *runtime, Class *clazz)
     }
     s32 basevertex = env->localvar_getInt(runtime, pos++);
 
-    glDrawRangeElementsBaseVertex((GLenum) mode,(GLuint) start,(GLuint) end,(GLsizei) count,(GLenum) type,(const void *) (ptr5),(GLint) basevertex);
+    glDrawRangeElementsBaseVertex((GLenum)mode, (GLuint)start, (GLuint)end, (GLsizei)count, (GLenum)type, (const void *)(ptr5), (GLint)basevertex);
 
     return 0;
 }
@@ -12790,7 +11365,7 @@ int org_mini_gl_GL_glDrawElementsInstancedBaseVertex(Runtime *runtime, Class *cl
     s32 instancecount = env->localvar_getInt(runtime, pos++);
     s32 basevertex = env->localvar_getInt(runtime, pos++);
 
-    glDrawElementsInstancedBaseVertex((GLenum) mode,(GLsizei) count,(GLenum) type,(const void *) (ptr3),(GLsizei) instancecount,(GLint) basevertex);
+    glDrawElementsInstancedBaseVertex((GLenum)mode, (GLsizei)count, (GLenum)type, (const void *)(ptr3), (GLsizei)instancecount, (GLint)basevertex);
 
     return 0;
 }
@@ -12824,7 +11399,7 @@ int org_mini_gl_GL_glMultiDrawElementsBaseVertex(Runtime *runtime, Class *clazz)
         ptr7 = basevertex->arr_body + arr_offset7;
     }
 
-    glMultiDrawElementsBaseVertex((GLenum) mode,(const GLsizei *) (ptr1),(GLenum) type,(const void *const*) (ptr4),(GLsizei) drawcount,(const GLint *) (ptr7));
+    glMultiDrawElementsBaseVertex((GLenum)mode, (const GLsizei *)(ptr1), (GLenum)type, (const void *const*)(ptr4), (GLsizei)drawcount, (const GLint *)(ptr7));
 
     return 0;
 }
@@ -12835,7 +11410,7 @@ int org_mini_gl_GL_glProvokingVertex(Runtime *runtime, Class *clazz) {
 
     s32 mode = env->localvar_getInt(runtime, pos++);
 
-    glProvokingVertex((GLenum) mode);
+    glProvokingVertex((GLenum)mode);
 
     return 0;
 }
@@ -12847,7 +11422,7 @@ int org_mini_gl_GL_glFenceSync(Runtime *runtime, Class *clazz) {
     s32 condition = env->localvar_getInt(runtime, pos++);
     s32 flags = env->localvar_getInt(runtime, pos++);
 
-    s64 ret_value = (s64)(intptr_t)glFenceSync((GLenum) condition,(GLbitfield) flags);
+    s64 ret_value = (s64)(intptr_t)glFenceSync((GLenum)condition, (GLbitfield)flags);
     env->push_long(runtime->stack, ret_value);
     return 0;
 }
@@ -12858,7 +11433,7 @@ int org_mini_gl_GL_glIsSync(Runtime *runtime, Class *clazz) {
 
     s64 sync = getParaLong(runtime, pos);pos += 2;
 
-    s32 ret_value = (s32)glIsSync((GLsync) sync);
+    s32 ret_value = (s32)glIsSync((GLsync)(intptr_t)sync);
     env->push_int(runtime->stack, ret_value);
     return 0;
 }
@@ -12869,7 +11444,7 @@ int org_mini_gl_GL_glDeleteSync(Runtime *runtime, Class *clazz) {
 
     s64 sync = getParaLong(runtime, pos);pos += 2;
 
-    glDeleteSync((GLsync) sync);
+    glDeleteSync((GLsync)(intptr_t)sync);
 
     return 0;
 }
@@ -12882,7 +11457,7 @@ int org_mini_gl_GL_glClientWaitSync(Runtime *runtime, Class *clazz) {
     s32 flags = env->localvar_getInt(runtime, pos++);
     s64 timeout = getParaLong(runtime, pos);pos += 2;
 
-    s32 ret_value = (s32)glClientWaitSync((GLsync) sync,(GLbitfield) flags,(GLuint64) timeout);
+    s32 ret_value = (s32)glClientWaitSync((GLsync)(intptr_t)sync, (GLbitfield)flags, (GLuint64)timeout);
     env->push_int(runtime->stack, ret_value);
     return 0;
 }
@@ -12895,7 +11470,7 @@ int org_mini_gl_GL_glWaitSync(Runtime *runtime, Class *clazz) {
     s32 flags = env->localvar_getInt(runtime, pos++);
     s64 timeout = getParaLong(runtime, pos);pos += 2;
 
-    glWaitSync((GLsync) sync,(GLbitfield) flags,(GLuint64) timeout);
+    glWaitSync((GLsync)(intptr_t)sync, (GLbitfield)flags, (GLuint64)timeout);
 
     return 0;
 }
@@ -12913,7 +11488,7 @@ int org_mini_gl_GL_glGetInteger64v(Runtime *runtime, Class *clazz) {
         ptr1 = data->arr_body + arr_offset1;
     }
 
-    glGetInteger64v((GLenum) pname,(GLint64 *) (ptr1));
+    glGetInteger64v((GLenum)pname, (GLint64 *)(ptr1));
 
     return 0;
 }
@@ -12940,7 +11515,7 @@ int org_mini_gl_GL_glGetSynciv(Runtime *runtime, Class *clazz) {
         ptr5 = values->arr_body + arr_offset5;
     }
 
-    glGetSynciv((GLsync) sync,(GLenum) pname,(GLsizei) bufSize,(GLsizei *) (ptr3),(GLint *) (ptr5));
+    glGetSynciv((GLsync)(intptr_t)sync, (GLenum)pname, (GLsizei)bufSize, (GLsizei *)(ptr3), (GLint *)(ptr5));
 
     return 0;
 }
@@ -12959,7 +11534,7 @@ int org_mini_gl_GL_glGetInteger64i_v(Runtime *runtime, Class *clazz) {
         ptr2 = data->arr_body + arr_offset2;
     }
 
-    glGetInteger64i_v((GLenum) target,(GLuint) index,(GLint64 *) (ptr2));
+    glGetInteger64i_v((GLenum)target, (GLuint)index, (GLint64 *)(ptr2));
 
     return 0;
 }
@@ -12978,7 +11553,7 @@ int org_mini_gl_GL_glGetBufferParameteri64v(Runtime *runtime, Class *clazz) {
         ptr2 = params->arr_body + arr_offset2;
     }
 
-    glGetBufferParameteri64v((GLenum) target,(GLenum) pname,(GLint64 *) (ptr2));
+    glGetBufferParameteri64v((GLenum)target, (GLenum)pname, (GLint64 *)(ptr2));
 
     return 0;
 }
@@ -12992,7 +11567,7 @@ int org_mini_gl_GL_glFramebufferTexture(Runtime *runtime, Class *clazz) {
     s32 texture = env->localvar_getInt(runtime, pos++);
     s32 level = env->localvar_getInt(runtime, pos++);
 
-    glFramebufferTexture((GLenum) target,(GLenum) attachment,(GLuint) texture,(GLint) level);
+    glFramebufferTexture((GLenum)target, (GLenum)attachment, (GLuint)texture, (GLint)level);
 
     return 0;
 }
@@ -13008,7 +11583,7 @@ int org_mini_gl_GL_glTexImage2DMultisample(Runtime *runtime, Class *clazz) {
     s32 height = env->localvar_getInt(runtime, pos++);
     s32 fixedsamplelocations = env->localvar_getInt(runtime, pos++);
 
-    glTexImage2DMultisample((GLenum) target,(GLsizei) samples,(GLenum) internalformat,(GLsizei) width,(GLsizei) height,(GLboolean) fixedsamplelocations);
+    glTexImage2DMultisample((GLenum)target, (GLsizei)samples, (GLenum)internalformat, (GLsizei)width, (GLsizei)height, (GLboolean)fixedsamplelocations);
 
     return 0;
 }
@@ -13025,7 +11600,7 @@ int org_mini_gl_GL_glTexImage3DMultisample(Runtime *runtime, Class *clazz) {
     s32 depth = env->localvar_getInt(runtime, pos++);
     s32 fixedsamplelocations = env->localvar_getInt(runtime, pos++);
 
-    glTexImage3DMultisample((GLenum) target,(GLsizei) samples,(GLenum) internalformat,(GLsizei) width,(GLsizei) height,(GLsizei) depth,(GLboolean) fixedsamplelocations);
+    glTexImage3DMultisample((GLenum)target, (GLsizei)samples, (GLenum)internalformat, (GLsizei)width, (GLsizei)height, (GLsizei)depth, (GLboolean)fixedsamplelocations);
 
     return 0;
 }
@@ -13044,7 +11619,7 @@ int org_mini_gl_GL_glGetMultisamplefv(Runtime *runtime, Class *clazz) {
         ptr2 = val->arr_body + arr_offset2;
     }
 
-    glGetMultisamplefv((GLenum) pname,(GLuint) index,(GLfloat *) (ptr2));
+    glGetMultisamplefv((GLenum)pname, (GLuint)index, (GLfloat *)(ptr2));
 
     return 0;
 }
@@ -13056,7 +11631,7 @@ int org_mini_gl_GL_glSampleMaski(Runtime *runtime, Class *clazz) {
     s32 maskNumber = env->localvar_getInt(runtime, pos++);
     s32 mask = env->localvar_getInt(runtime, pos++);
 
-    glSampleMaski((GLuint) maskNumber,(GLbitfield) mask);
+    glSampleMaski((GLuint)maskNumber, (GLbitfield)mask);
 
     return 0;
 }
@@ -13068,7 +11643,7 @@ int org_mini_gl_GL_glSampleCoverageARB(Runtime *runtime, Class *clazz) {
     Int2Float value;value.i = env->localvar_getInt(runtime, pos++);
     s32 invert = env->localvar_getInt(runtime, pos++);
 
-    glSampleCoverageARB( (GLfloat) value.f,(GLboolean) invert);
+    glSampleCoverageARB((GLfloat)value.f, (GLboolean)invert);
 
     return 0;
 }
@@ -13100,7 +11675,7 @@ int org_mini_gl_GL_glGetnTexImageARB(Runtime *runtime, Class *clazz) {
         ptr5 = img->arr_body + arr_offset5;
     }
 
-    glGetnTexImageARB((GLenum) target,(GLint) level,(GLenum) format,(GLenum) type,(GLsizei) bufSize,(void *) (ptr5));
+    glGetnTexImageARB((GLenum)target, (GLint)level, (GLenum)format, (GLenum)type, (GLsizei)bufSize, (void *)(ptr5));
 
     return 0;
 }
@@ -13124,7 +11699,7 @@ int org_mini_gl_GL_glReadnPixelsARB(Runtime *runtime, Class *clazz) {
         ptr7 = data->arr_body + arr_offset7;
     }
 
-    glReadnPixelsARB((GLint) x,(GLint) y,(GLsizei) width,(GLsizei) height,(GLenum) format,(GLenum) type,(GLsizei) bufSize,(void *) (ptr7));
+    glReadnPixelsARB((GLint)x, (GLint)y, (GLsizei)width, (GLsizei)height, (GLenum)format, (GLenum)type, (GLsizei)bufSize, (void *)(ptr7));
 
     return 0;
 }
@@ -13144,7 +11719,7 @@ int org_mini_gl_GL_glGetnCompressedTexImageARB(Runtime *runtime, Class *clazz) {
         ptr3 = img->arr_body + arr_offset3;
     }
 
-    glGetnCompressedTexImageARB((GLenum) target,(GLint) lod,(GLsizei) bufSize,(void *) (ptr3));
+    glGetnCompressedTexImageARB((GLenum)target, (GLint)lod, (GLsizei)bufSize, (void *)(ptr3));
 
     return 0;
 }
@@ -13164,7 +11739,7 @@ int org_mini_gl_GL_glGetnUniformfvARB(Runtime *runtime, Class *clazz) {
         ptr3 = params->arr_body + arr_offset3;
     }
 
-    glGetnUniformfvARB((GLuint) program,(GLint) location,(GLsizei) bufSize,(GLfloat *) (ptr3));
+    glGetnUniformfvARB((GLuint)program, (GLint)location, (GLsizei)bufSize, (GLfloat *)(ptr3));
 
     return 0;
 }
@@ -13184,7 +11759,7 @@ int org_mini_gl_GL_glGetnUniformivARB(Runtime *runtime, Class *clazz) {
         ptr3 = params->arr_body + arr_offset3;
     }
 
-    glGetnUniformivARB((GLuint) program,(GLint) location,(GLsizei) bufSize,(GLint *) (ptr3));
+    glGetnUniformivARB((GLuint)program, (GLint)location, (GLsizei)bufSize, (GLint *)(ptr3));
 
     return 0;
 }
@@ -13204,7 +11779,7 @@ int org_mini_gl_GL_glGetnUniformuivARB(Runtime *runtime, Class *clazz) {
         ptr3 = params->arr_body + arr_offset3;
     }
 
-    glGetnUniformuivARB((GLuint) program,(GLint) location,(GLsizei) bufSize,(GLuint *) (ptr3));
+    glGetnUniformuivARB((GLuint)program, (GLint)location, (GLsizei)bufSize, (GLuint *)(ptr3));
 
     return 0;
 }
@@ -13224,7 +11799,7 @@ int org_mini_gl_GL_glGetnUniformdvARB(Runtime *runtime, Class *clazz) {
         ptr3 = params->arr_body + arr_offset3;
     }
 
-    glGetnUniformdvARB((GLuint) program,(GLint) location,(GLsizei) bufSize,(GLdouble *) (ptr3));
+    glGetnUniformdvARB((GLuint)program, (GLint)location, (GLsizei)bufSize, (GLdouble *)(ptr3));
 
     return 0;
 }
@@ -13244,7 +11819,7 @@ int org_mini_gl_GL_glGetnMapdvARB(Runtime *runtime, Class *clazz) {
         ptr3 = v->arr_body + arr_offset3;
     }
 
-    glGetnMapdvARB((GLenum) target,(GLenum) query,(GLsizei) bufSize,(GLdouble *) (ptr3));
+    glGetnMapdvARB((GLenum)target, (GLenum)query, (GLsizei)bufSize, (GLdouble *)(ptr3));
 
     return 0;
 }
@@ -13264,7 +11839,7 @@ int org_mini_gl_GL_glGetnMapfvARB(Runtime *runtime, Class *clazz) {
         ptr3 = v->arr_body + arr_offset3;
     }
 
-    glGetnMapfvARB((GLenum) target,(GLenum) query,(GLsizei) bufSize,(GLfloat *) (ptr3));
+    glGetnMapfvARB((GLenum)target, (GLenum)query, (GLsizei)bufSize, (GLfloat *)(ptr3));
 
     return 0;
 }
@@ -13284,7 +11859,7 @@ int org_mini_gl_GL_glGetnMapivARB(Runtime *runtime, Class *clazz) {
         ptr3 = v->arr_body + arr_offset3;
     }
 
-    glGetnMapivARB((GLenum) target,(GLenum) query,(GLsizei) bufSize,(GLint *) (ptr3));
+    glGetnMapivARB((GLenum)target, (GLenum)query, (GLsizei)bufSize, (GLint *)(ptr3));
 
     return 0;
 }
@@ -13303,7 +11878,7 @@ int org_mini_gl_GL_glGetnPixelMapfvARB(Runtime *runtime, Class *clazz) {
         ptr2 = values->arr_body + arr_offset2;
     }
 
-    glGetnPixelMapfvARB((GLenum) map,(GLsizei) bufSize,(GLfloat *) (ptr2));
+    glGetnPixelMapfvARB((GLenum)map, (GLsizei)bufSize, (GLfloat *)(ptr2));
 
     return 0;
 }
@@ -13322,7 +11897,7 @@ int org_mini_gl_GL_glGetnPixelMapuivARB(Runtime *runtime, Class *clazz) {
         ptr2 = values->arr_body + arr_offset2;
     }
 
-    glGetnPixelMapuivARB((GLenum) map,(GLsizei) bufSize,(GLuint *) (ptr2));
+    glGetnPixelMapuivARB((GLenum)map, (GLsizei)bufSize, (GLuint *)(ptr2));
 
     return 0;
 }
@@ -13341,7 +11916,7 @@ int org_mini_gl_GL_glGetnPixelMapusvARB(Runtime *runtime, Class *clazz) {
         ptr2 = values->arr_body + arr_offset2;
     }
 
-    glGetnPixelMapusvARB((GLenum) map,(GLsizei) bufSize,(GLushort *) (ptr2));
+    glGetnPixelMapusvARB((GLenum)map, (GLsizei)bufSize, (GLushort *)(ptr2));
 
     return 0;
 }
@@ -13359,7 +11934,7 @@ int org_mini_gl_GL_glGetnPolygonStippleARB(Runtime *runtime, Class *clazz) {
         ptr1 = pattern->arr_body + arr_offset1;
     }
 
-    glGetnPolygonStippleARB((GLsizei) bufSize,(GLubyte *) (ptr1));
+    glGetnPolygonStippleARB((GLsizei)bufSize, (GLubyte *)(ptr1));
 
     return 0;
 }
@@ -13380,7 +11955,7 @@ int org_mini_gl_GL_glGetnColorTableARB(Runtime *runtime, Class *clazz) {
         ptr4 = table->arr_body + arr_offset4;
     }
 
-    glGetnColorTableARB((GLenum) target,(GLenum) format,(GLenum) type,(GLsizei) bufSize,(void *) (ptr4));
+    glGetnColorTableARB((GLenum)target, (GLenum)format, (GLenum)type, (GLsizei)bufSize, (void *)(ptr4));
 
     return 0;
 }
@@ -13401,7 +11976,7 @@ int org_mini_gl_GL_glGetnConvolutionFilterARB(Runtime *runtime, Class *clazz) {
         ptr4 = image->arr_body + arr_offset4;
     }
 
-    glGetnConvolutionFilterARB((GLenum) target,(GLenum) format,(GLenum) type,(GLsizei) bufSize,(void *) (ptr4));
+    glGetnConvolutionFilterARB((GLenum)target, (GLenum)format, (GLenum)type, (GLsizei)bufSize, (void *)(ptr4));
 
     return 0;
 }
@@ -13437,7 +12012,7 @@ int org_mini_gl_GL_glGetnSeparableFilterARB(Runtime *runtime, Class *clazz) {
         ptr9 = span->arr_body + arr_offset9;
     }
 
-    glGetnSeparableFilterARB((GLenum) target,(GLenum) format,(GLenum) type,(GLsizei) rowBufSize,(void *) (ptr4),(GLsizei) columnBufSize,(void *) (ptr7),(void *) (ptr9));
+    glGetnSeparableFilterARB((GLenum)target, (GLenum)format, (GLenum)type, (GLsizei)rowBufSize, (void *)(ptr4), (GLsizei)columnBufSize, (void *)(ptr7), (void *)(ptr9));
 
     return 0;
 }
@@ -13459,7 +12034,7 @@ int org_mini_gl_GL_glGetnHistogramARB(Runtime *runtime, Class *clazz) {
         ptr5 = values->arr_body + arr_offset5;
     }
 
-    glGetnHistogramARB((GLenum) target,(GLboolean) reset,(GLenum) format,(GLenum) type,(GLsizei) bufSize,(void *) (ptr5));
+    glGetnHistogramARB((GLenum)target, (GLboolean)reset, (GLenum)format, (GLenum)type, (GLsizei)bufSize, (void *)(ptr5));
 
     return 0;
 }
@@ -13481,7 +12056,7 @@ int org_mini_gl_GL_glGetnMinmaxARB(Runtime *runtime, Class *clazz) {
         ptr5 = values->arr_body + arr_offset5;
     }
 
-    glGetnMinmaxARB((GLenum) target,(GLboolean) reset,(GLenum) format,(GLenum) type,(GLsizei) bufSize,(void *) (ptr5));
+    glGetnMinmaxARB((GLenum)target, (GLboolean)reset, (GLenum)format, (GLenum)type, (GLsizei)bufSize, (void *)(ptr5));
 
     return 0;
 }
@@ -13503,7 +12078,7 @@ int org_mini_gl_GL_glDebugMessageControl(Runtime *runtime, Class *clazz) {
     }
     s32 enabled = env->localvar_getInt(runtime, pos++);
 
-    glDebugMessageControl((GLenum) source,(GLenum) type,(GLenum) severity,(GLsizei) count,(const GLuint *) (ptr4),(GLboolean) enabled);
+    glDebugMessageControl((GLenum)source, (GLenum)type, (GLenum)severity, (GLsizei)count, (const GLuint *)(ptr4), (GLboolean)enabled);
 
     return 0;
 }
@@ -13525,7 +12100,7 @@ int org_mini_gl_GL_glDebugMessageInsert(Runtime *runtime, Class *clazz) {
         ptr5 = buf->arr_body + arr_offset5;
     }
 
-    glDebugMessageInsert((GLenum) source,(GLenum) type,(GLuint) id,(GLenum) severity,(GLsizei) length,(const GLchar *) (ptr5));
+    glDebugMessageInsert((GLenum)source, (GLenum)type, (GLuint)id, (GLenum)severity, (GLsizei)length, (const GLchar *)(ptr5));
 
     return 0;
 }
@@ -13543,7 +12118,7 @@ int org_mini_gl_GL_glDebugMessageCallback(Runtime *runtime, Class *clazz) {
         ptr1 = userParam->arr_body + arr_offset1;
     }
 
-    glDebugMessageCallback((GLDEBUGPROC) callback,(const void *) (ptr1));
+    glDebugMessageCallback((GLDEBUGPROC)(intptr_t)callback, (const void *)(ptr1));
 
     return 0;
 }
@@ -13597,7 +12172,7 @@ int org_mini_gl_GL_glGetDebugMessageLog(Runtime *runtime, Class *clazz) {
         ptr12 = messageLog->arr_body + arr_offset12;
     }
 
-    s32 ret_value = (s32)glGetDebugMessageLog((GLuint) count,(GLsizei) bufSize,(GLenum *) (ptr2),(GLenum *) (ptr4),(GLuint *) (ptr6),(GLenum *) (ptr8),(GLsizei *) (ptr10),(GLchar *) (ptr12));
+    s32 ret_value = (s32)glGetDebugMessageLog((GLuint)count, (GLsizei)bufSize, (GLenum *)(ptr2), (GLenum *)(ptr4), (GLuint *)(ptr6), (GLenum *)(ptr8), (GLsizei *)(ptr10), (GLchar *)(ptr12));
     env->push_int(runtime->stack, ret_value);
     return 0;
 }
@@ -13617,7 +12192,7 @@ int org_mini_gl_GL_glPushDebugGroup(Runtime *runtime, Class *clazz) {
         ptr3 = message->arr_body + arr_offset3;
     }
 
-    glPushDebugGroup((GLenum) source,(GLuint) id,(GLsizei) length,(const GLchar *) (ptr3));
+    glPushDebugGroup((GLenum)source, (GLuint)id, (GLsizei)length, (const GLchar *)(ptr3));
 
     return 0;
 }
@@ -13647,7 +12222,7 @@ int org_mini_gl_GL_glObjectLabel(Runtime *runtime, Class *clazz) {
         ptr3 = label->arr_body + arr_offset3;
     }
 
-    glObjectLabel((GLenum) identifier,(GLuint) name,(GLsizei) length,(const GLchar *) (ptr3));
+    glObjectLabel((GLenum)identifier, (GLuint)name, (GLsizei)length, (const GLchar *)(ptr3));
 
     return 0;
 }
@@ -13674,7 +12249,7 @@ int org_mini_gl_GL_glGetObjectLabel(Runtime *runtime, Class *clazz) {
         ptr5 = label->arr_body + arr_offset5;
     }
 
-    glGetObjectLabel((GLenum) identifier,(GLuint) name,(GLsizei) bufSize,(GLsizei *) (ptr3),(GLchar *) (ptr5));
+    glGetObjectLabel((GLenum)identifier, (GLuint)name, (GLsizei)bufSize, (GLsizei *)(ptr3), (GLchar *)(ptr5));
 
     return 0;
 }
@@ -13699,7 +12274,7 @@ int org_mini_gl_GL_glObjectPtrLabel(Runtime *runtime, Class *clazz) {
         ptr3 = label->arr_body + arr_offset3;
     }
 
-    glObjectPtrLabel((const void *) (ptr0),(GLsizei) length,(const GLchar *) (ptr3));
+    glObjectPtrLabel((const void *)(ptr0), (GLsizei)length, (const GLchar *)(ptr3));
 
     return 0;
 }
@@ -13731,7 +12306,7 @@ int org_mini_gl_GL_glGetObjectPtrLabel(Runtime *runtime, Class *clazz) {
         ptr5 = label->arr_body + arr_offset5;
     }
 
-    glGetObjectPtrLabel((const void *) (ptr0),(GLsizei) bufSize,(GLsizei *) (ptr3),(GLchar *) (ptr5));
+    glGetObjectPtrLabel((const void *)(ptr0), (GLsizei)bufSize, (GLsizei *)(ptr3), (GLchar *)(ptr5));
 
     return 0;
 }
@@ -13753,7 +12328,7 @@ int org_mini_gl_GL_glDebugMessageControlKHR(Runtime *runtime, Class *clazz) {
     }
     s32 enabled = env->localvar_getInt(runtime, pos++);
 
-    glDebugMessageControlKHR((GLenum) source,(GLenum) type,(GLenum) severity,(GLsizei) count,(const GLuint *) (ptr4),(GLboolean) enabled);
+    glDebugMessageControlKHR((GLenum)source, (GLenum)type, (GLenum)severity, (GLsizei)count, (const GLuint *)(ptr4), (GLboolean)enabled);
 
     return 0;
 }
@@ -13775,7 +12350,7 @@ int org_mini_gl_GL_glDebugMessageInsertKHR(Runtime *runtime, Class *clazz) {
         ptr5 = buf->arr_body + arr_offset5;
     }
 
-    glDebugMessageInsertKHR((GLenum) source,(GLenum) type,(GLuint) id,(GLenum) severity,(GLsizei) length,(const GLchar *) (ptr5));
+    glDebugMessageInsertKHR((GLenum)source, (GLenum)type, (GLuint)id, (GLenum)severity, (GLsizei)length, (const GLchar *)(ptr5));
 
     return 0;
 }
@@ -13793,7 +12368,7 @@ int org_mini_gl_GL_glDebugMessageCallbackKHR(Runtime *runtime, Class *clazz) {
         ptr1 = userParam->arr_body + arr_offset1;
     }
 
-    glDebugMessageCallbackKHR((GLDEBUGPROCKHR) callback,(const void *) (ptr1));
+    glDebugMessageCallbackKHR((GLDEBUGPROCKHR)(intptr_t)callback, (const void *)(ptr1));
 
     return 0;
 }
@@ -13847,7 +12422,7 @@ int org_mini_gl_GL_glGetDebugMessageLogKHR(Runtime *runtime, Class *clazz) {
         ptr12 = messageLog->arr_body + arr_offset12;
     }
 
-    s32 ret_value = (s32)glGetDebugMessageLogKHR((GLuint) count,(GLsizei) bufSize,(GLenum *) (ptr2),(GLenum *) (ptr4),(GLuint *) (ptr6),(GLenum *) (ptr8),(GLsizei *) (ptr10),(GLchar *) (ptr12));
+    s32 ret_value = (s32)glGetDebugMessageLogKHR((GLuint)count, (GLsizei)bufSize, (GLenum *)(ptr2), (GLenum *)(ptr4), (GLuint *)(ptr6), (GLenum *)(ptr8), (GLsizei *)(ptr10), (GLchar *)(ptr12));
     env->push_int(runtime->stack, ret_value);
     return 0;
 }
@@ -13867,7 +12442,7 @@ int org_mini_gl_GL_glPushDebugGroupKHR(Runtime *runtime, Class *clazz) {
         ptr3 = message->arr_body + arr_offset3;
     }
 
-    glPushDebugGroupKHR((GLenum) source,(GLuint) id,(GLsizei) length,(const GLchar *) (ptr3));
+    glPushDebugGroupKHR((GLenum)source, (GLuint)id, (GLsizei)length, (const GLchar *)(ptr3));
 
     return 0;
 }
@@ -13897,7 +12472,7 @@ int org_mini_gl_GL_glObjectLabelKHR(Runtime *runtime, Class *clazz) {
         ptr3 = label->arr_body + arr_offset3;
     }
 
-    glObjectLabelKHR((GLenum) identifier,(GLuint) name,(GLsizei) length,(const GLchar *) (ptr3));
+    glObjectLabelKHR((GLenum)identifier, (GLuint)name, (GLsizei)length, (const GLchar *)(ptr3));
 
     return 0;
 }
@@ -13924,7 +12499,7 @@ int org_mini_gl_GL_glGetObjectLabelKHR(Runtime *runtime, Class *clazz) {
         ptr5 = label->arr_body + arr_offset5;
     }
 
-    glGetObjectLabelKHR((GLenum) identifier,(GLuint) name,(GLsizei) bufSize,(GLsizei *) (ptr3),(GLchar *) (ptr5));
+    glGetObjectLabelKHR((GLenum)identifier, (GLuint)name, (GLsizei)bufSize, (GLsizei *)(ptr3), (GLchar *)(ptr5));
 
     return 0;
 }
@@ -13949,7 +12524,7 @@ int org_mini_gl_GL_glObjectPtrLabelKHR(Runtime *runtime, Class *clazz) {
         ptr3 = label->arr_body + arr_offset3;
     }
 
-    glObjectPtrLabelKHR((const void *) (ptr0),(GLsizei) length,(const GLchar *) (ptr3));
+    glObjectPtrLabelKHR((const void *)(ptr0), (GLsizei)length, (const GLchar *)(ptr3));
 
     return 0;
 }
@@ -13981,7 +12556,7 @@ int org_mini_gl_GL_glGetObjectPtrLabelKHR(Runtime *runtime, Class *clazz) {
         ptr5 = label->arr_body + arr_offset5;
     }
 
-    glGetObjectPtrLabelKHR((const void *) (ptr0),(GLsizei) bufSize,(GLsizei *) (ptr3),(GLchar *) (ptr5));
+    glGetObjectPtrLabelKHR((const void *)(ptr0), (GLsizei)bufSize, (GLsizei *)(ptr3), (GLchar *)(ptr5));
 
     return 0;
 }
@@ -13999,10 +12574,11 @@ int org_mini_gl_GL_glGetPointervKHR(Runtime *runtime, Class *clazz) {
         ptr1 = params->arr_body + arr_offset1;
     }
 
-    glGetPointervKHR((GLenum) pname,(void **) (ptr1));
+    glGetPointervKHR((GLenum)pname, (void **)(ptr1));
 
     return 0;
 }
+
 
 
 
