@@ -20,10 +20,10 @@ import java.util.logging.Logger;
  *
  * @author gust
  */
-public class Build_GL_java {
+public class Build_glah_h_2_GL_java {
 
     public static void main(String[] args) {
-        Build_GL_java gt = new Build_GL_java();
+        Build_glah_h_2_GL_java gt = new Build_glah_h_2_GL_java();
         gt.buildC();
     }
 
@@ -245,7 +245,7 @@ public class Build_GL_java {
                 br.close();
                 bw.close();
             } catch (IOException ex) {
-                Logger.getLogger(Build_GL_java.class.getName()).log(Level.SEVERE, null, ex);
+                Logger.getLogger(Build_glah_h_2_GL_java.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
         System.out.println("success.");

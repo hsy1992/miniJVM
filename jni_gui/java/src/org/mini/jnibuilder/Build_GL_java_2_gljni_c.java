@@ -20,14 +20,14 @@ import java.util.logging.Logger;
  *
  * @author gust
  */
-public class Build_GL_jni_c {
+public class Build_GL_java_2_gljni_c {
 
     public static void main(String[] args) {
-        Build_GL_jni_c gt = new Build_GL_jni_c();
+        Build_GL_java_2_gljni_c gt = new Build_GL_java_2_gljni_c();
         gt.buildC();
     }
 
-    String[] path = {"src/org/mini/gl/GL.java", "org_mini_gl_GL_", "org/mini/gl/GL", "./output.c"};
+    String[] path = {"src/org/mini/gl/GL.java", "org_mini_gl_GL_", "org/mini/gl/GL", "./gljni.c"};
 
     String FUNC_BODY_TEMPLATE
             = //
@@ -256,13 +256,13 @@ public class Build_GL_jni_c {
                 bw.write(s + "\n");
             }
         } catch (Exception ex) {
-            Logger.getLogger(Build_GL_jni_c.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(Build_GL_java_2_gljni_c.class.getName()).log(Level.SEVERE, null, ex);
         } finally {
             try {
                 br.close();
                 bw.close();
             } catch (IOException ex) {
-                Logger.getLogger(Build_GL_jni_c.class.getName()).log(Level.SEVERE, null, ex);
+                Logger.getLogger(Build_GL_java_2_gljni_c.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
         System.out.println("success.");
