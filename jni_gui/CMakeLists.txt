@@ -9,7 +9,10 @@ include_directories(deps/include/)
 
 set(SOURCE_FILES
         glad.c
+        jni_glfw.h
         jni_glfw.c
+        graphics.c
+        graphics.h
         )
 find_package(OpenGL REQUIRED)
 add_executable(test_gui ${SOURCE_FILES})

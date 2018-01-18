@@ -972,6 +972,8 @@ struct _JNIENV {
 
     void (*jthread_block_exit)(Runtime *runtime);
 
+    Utf8String *(*utf8_create)();
+
     Utf8String *(*utf8_create_part_c)(char *str, int start, int len);
 
     char *(*utf8_cstr)(Utf8String *a1);

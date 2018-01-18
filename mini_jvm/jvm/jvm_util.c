@@ -1443,6 +1443,7 @@ void init_jni_func_table() {
     jnienv.localvar_getInt = localvar_getInt;
     jnienv.jthread_block_enter = jthread_block_enter;
     jnienv.jthread_block_exit = jthread_block_exit;
+    jnienv.utf8_create = utf8_create;
     jnienv.utf8_create_part_c = utf8_create_part_c;
     jnienv.utf8_cstr = utf8_cstr;
     jnienv.utf8_destory = utf8_destory;
