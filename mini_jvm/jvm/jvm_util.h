@@ -115,6 +115,8 @@ s32 getLineNumByIndex(CodeAttribute *ca, s32 offset);
 
 Instance *jstring_create(Utf8String *src, Runtime *runtime);
 
+Instance *jstring_create_cstr(c8 *cstr, Runtime *runtime);
+
 void jstring_set_count(Instance *jstr, s32 count);
 
 s32 jstring_get_count(Instance *jstr);

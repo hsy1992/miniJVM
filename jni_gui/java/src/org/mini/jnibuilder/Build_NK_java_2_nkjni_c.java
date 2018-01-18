@@ -28,7 +28,30 @@ public class Build_NK_java_2_nkjni_c {
         gt.buildC();
     }
 
-    String[] path = {"src/org/mini/nk/NK.java", "org_mini_nk_NK_", "org/mini/nk/NK", "./nkjni.c"};
+    String[] path = {"src/org/mini/nk/NK.java", "org_mini_nk_NK_", "org/mini/nk/NK", "../jni_nk.c"};
+
+    String C_BODY_HEADER
+            =//
+            "#include <stdio.h>\n"
+            + "#include <string.h>\n"
+            + "\n"
+            + "#include <glad/glad.h>\n"
+            + "#include <GLFW/glfw3.h>\n"
+            + "\n"
+            + "#define NK_IMPLEMENTATION\n"
+            + "#define NK_INCLUDE_FIXED_TYPES\n"
+            + "#define NK_INCLUDE_FONT_BAKING\n"
+            + "#define NK_INCLUDE_DEFAULT_FONT\n"
+            + "#define NK_INCLUDE_DEFAULT_ALLOCATOR\n"
+            + "#define NK_INCLUDE_VERTEX_BUFFER_OUTPUT\n"
+            + "#define NK_INCLUDE_STANDARD_VARARGS\n"
+            + "#include <nuklear.h>\n"
+            + "\n"
+            + "#define NK_GLFW_GL2_IMPLEMENTATION\n"
+            + "#include <nuklear_glfw_gl2.h>\n"
+            + "\n"
+            + "#include \"../mini_jvm/jvm/jvm.h\""
+            + "\n\n\n";
 
     String FUNC_BODY_TEMPLATE
             = //
@@ -67,6 +90,7 @@ public class Build_NK_java_2_nkjni_c {
             File ofile = new File(path[3]);
             bw = new BufferedWriter(new FileWriter(ofile));
             System.out.println("open output file:" + ofile.getAbsolutePath());
+            bw.write(C_BODY_HEADER);
             String line, whole;
             String header = "public static native";
             int lineNo = 0;
@@ -96,14 +120,13 @@ public class Build_NK_java_2_nkjni_c {
 
                     //process return 
                     String returnCode = "", pushCode = "", javaReturnCode = "", releaseMemCode = "";
-                    boolean nativeReturnIsPointer = nativeReurnType.lastIndexOf('*') == nativeReurnType.length();//最后一个是*号
-                    if (nativeReturnIsPointer) {
-                        nativeReurnType = nativeReurnType.substring(0, nativeReurnType.length() - 1);
-                    }
+                    boolean nativeReturnIsPointer = isPointer(nativeReurnType);//最后一个是*号
+
                     if (!VOID.equals(returnType)) {
                         if ("int".equals(returnType)) {
-                            returnCode = "s32 ret_value = (s32)";
-                            pushCode = "env->push_int(runtime->stack, ret_value);";
+                            returnCode = nativeReurnType + " _re_val = ";
+                            pushCode += "s32 ret_value = *((s32*)&_re_val);";
+                            pushCode += "env->push_int(runtime->stack, ret_value);";
                             javaReturnCode = "I";
                         } else if ("float".equals(returnType)) {
                             returnCode = "f64 ret_value = (f64)";
@@ -122,8 +145,9 @@ public class Build_NK_java_2_nkjni_c {
                             pushCode = "env->push_int(runtime->stack, ret_value);";
                             javaReturnCode = "Z";
                         } else if ("long".equals(returnType)) {
-                            returnCode = "s64 ret_value = (s64)(intptr_t)";
-                            pushCode = "env->push_long(runtime->stack, ret_value);";
+                            returnCode = nativeReurnType + " _re_val = ";
+                            pushCode += "s64 ret_value = *((s64*)&_re_val);";
+                            pushCode += "env->push_long(runtime->stack, ret_value);";
                             javaReturnCode = "J";
                         } else if ("double".equals(returnType)) {
                             returnCode = "f64 ret_value = (f64)";
@@ -135,15 +159,15 @@ public class Build_NK_java_2_nkjni_c {
                             } else {
                                 returnCode = "c8* _cstr = (c8*)&";
                             }
-                            pushCode = "if (cstr) {\n"
-                                    + "        Instance *jstr = createJavaString(runtime, _cstr);\n"
+                            pushCode = "if (_cstr) {\n"
+                                    + "        Instance *jstr = env->jstring_create_cstr(_cstr, runtime);\n"
                                     + "        env->push_ref(runtime->stack, jstr);\n"
                                     + "    } else {\n"
                                     + "        env->push_ref(runtime->stack, NULL);\n"
                                     + "    }";
                             javaReturnCode = "Ljava/lang/String;";
                         } else if (returnType.contains("[]")) {
-                            String cType = "", jvmType = "", jvmDesc="";
+                            String cType = "", jvmType = "", jvmDesc = "";
                             if ("long[]".equals(returnType)) {
                                 cType = "s64";
                                 jvmType = "DATATYPE_LONG";
@@ -154,25 +178,28 @@ public class Build_NK_java_2_nkjni_c {
                                 jvmDesc = "[I";
                             } else if ("float[]".equals(returnType)) {
                                 cType = "f32";
-                                jvmType = "DATATYPE_INT";
+                                jvmType = "DATATYPE_FLOAT";
                                 jvmDesc = "[F";
                             } else if ("byte[]".equals(returnType)) {
                                 cType = "c8";
-                                jvmType = "DATATYPE_LONG";
+                                jvmType = "DATATYPE_BYTE";
                                 jvmDesc = "[B";
                             } else {
                                 System.out.println(" " + lineNo + " return type:" + returnType + " in :" + whole);
                             }
-                            
+
                             //impl
+                            String entryType = nativeReurnType;//计算实体字节数，不能算指针大小
+                            returnCode = nativeReurnType + " _re_val = ";
                             if (nativeReturnIsPointer) {
-                                returnCode = cType + "* _ptr_re_val = (" + cType + "*)";
+                                pushCode += cType + "* _ptr_re_val = (" + cType + "*)re_val;\n";
+                                entryType = nativeReurnType.substring(0, nativeReurnType.length() - 1);
                             } else {
-                                returnCode = cType + "* _ptr_re_val = (" + cType + "*)&";
+                                pushCode += cType + "* _ptr_re_val = (" + cType + "*)&_re_val;\n";
                             }
-                            pushCode = "if (cstr) {\n"
-                                    + "        s32 bytes=sizeof(" + nativeReurnType + ")\n"
-                                    + "        s32 j_t_bytes=sizeof(" + cType + ")\n"
+                            pushCode += "    if (_ptr_re_val) {\n"
+                                    + "        s32 bytes=sizeof(" + entryType + ");\n"
+                                    + "        s32 j_t_bytes=sizeof(" + cType + ");\n"
                                     + "        Instance *_arr = env->jarray_create(bytes / j_t_bytes, " + jvmType + ", NULL);\n"
                                     + "        memcpy(_arr->arr_body, _ptr_re_val,bytes);\n"
                                     + "        env->push_ref(runtime->stack, _arr);\n"
@@ -208,82 +235,93 @@ public class Build_NK_java_2_nkjni_c {
 
                         //
                         nativeArgvCode += nativeArgvCode.length() > 0 ? ", " : "";
-                        nativeArgvs[nativei] = "(" + nativeArgvs[nativei] + ")";
-                        String[] POINTER_TYPE = {"(GLsync)", "(GLDEBUGPROC)", "(GLDEBUGPROCKHR)"};
-                        if (isTypes(POINTER_TYPE, nativeArgvs[nativei])) {
-                            nativeArgvs[nativei] += "(intptr_t)";
-                        }
-                        nativeArgvCode += nativeArgvs[nativei];
+                        String curArgvType = "(" + nativeArgvs[nativei] + ")";
+                        String curArgvName = "";
+
                         if ("int".equals(argvType)) {
                             varCode += "    s32 " + argvName + " = env->localvar_getInt(runtime, pos++);\n";
-                            nativeArgvCode += argvName;
+                            curArgvName = argvName;
                             javaArgvCode += "I";
+                            if(!isPointer(nativeArgvs[nativei])) {
+                                curArgvType = "*(" + nativeArgvs[nativei] + "*)&";
+                            }
                         } else if ("short".equals(argvType)) {
                             varCode += "    s32 " + argvName + " = env->localvar_getInt(runtime, pos++);\n";
-                            nativeArgvCode += argvName;
+                            curArgvName = argvName;
                             javaArgvCode += "S";
                         } else if ("byte".equals(argvType)) {
                             varCode += "    s32 " + argvName + " = env->localvar_getInt(runtime, pos++);\n";
-                            nativeArgvCode += argvName;
+                            curArgvName = argvName;
                             javaArgvCode += "B";
                         } else if ("boolean".equals(argvType)) {
                             varCode += "    s32 " + argvName + " = env->localvar_getInt(runtime, pos++);\n";
-                            nativeArgvCode += argvName;
+                            curArgvName = argvName;
                             javaArgvCode += "Z";
+                            
                         } else if ("long".equals(argvType)) {
-                            varCode += "    s64 " + argvName + " = getParaLong(runtime, pos);pos += 2;\n";
-                            nativeArgvCode += argvName;
+                            varCode += "    intptr_t " + argvName + " = env->localvar_getLong_2slot(runtime, pos);pos += 2;\n";
+                            if (isPointer(nativeArgvs[nativei])) {
+                                curArgvName = argvName;
+                            } else {
+                                curArgvType = "*(" + nativeArgvs[nativei] + "*)";
+                                curArgvName = "(((Instance*)" + argvName + ")->arr_body)";
+                            }
                             javaArgvCode += "J";
                         } else if ("float".equals(argvType)) {
                             varCode += "    Int2Float " + argvName + ";" + argvName + ".i = env->localvar_getInt(runtime, pos++);\n";
-                            nativeArgvCode += argvName + ".f";
+                            curArgvName = argvName + ".f";
                             javaArgvCode += "F";
                         } else if ("double".equals(argvType)) {
-                            varCode += "    Long2Double " + argvName + ";" + argvName + ".l = getParaLong(runtime, pos);pos += 2;\n";
-                            nativeArgvCode += argvName + ".d";
+                            varCode += "    Long2Double " + argvName + ";" + argvName + ".l = env->localvar_getLong_2slot(runtime, pos);pos += 2;\n";
+                            curArgvName = argvName + ".d";
                             javaArgvCode += "D";
                         } else if ("String".equals(argvType)) {
                             varCode += "    Instance *" + argvName + " = env->localvar_getRefer(runtime, pos++);\n";
                             varCode += "    __refer ptr_" + argvName + " = NULL;\n";
+                            varCode += "    Utf8String *u_" + argvName + ";\n";
                             varCode += "    if(" + argvName + "){\n";
-                            varCode += "        Utf8String *u_" + argvName + " = env->utf8_create();\n";
+                            varCode += "        u_" + argvName + " = env->utf8_create();\n";
                             varCode += "        env->jstring_2_utf8(" + argvName + ", u_" + argvName + ");\n";
                             varCode += "        ptr_" + argvName + " = env->utf8_cstr(u_" + argvName + ");\n";
                             varCode += "    }\n";
-                            nativeArgvCode += "(ptr_" + argvName + ")";
-                            releaseMemCode += "env->utf8_destory(source_utf8);";
+                            curArgvName = "(ptr_" + argvName + ")";
+                            releaseMemCode += "env->utf8_destory(u_" + argvName + ");";
                             javaArgvCode += "Ljava/lang/String;";
                         } else if (argvType.indexOf("[]") > 0 || "Object".equals(argvType)) {
                             varCode += "    Instance *" + argvName + " = env->localvar_getRefer(runtime, pos++);\n";
                             varCode += "    __refer ptr_" + argvName + " = NULL;\n";
                             varCode += "    if(" + argvName + "){\n";
-                            varCode += "        ptr" + argvName + " = " + argvName + "->arr_body" + ";\n";
+                            varCode += "        ptr_" + argvName + " = " + argvName + "->arr_body" + ";\n";
                             varCode += "    }\n";
-                            nativeArgvCode += "(ptr" + i + ")";
+                            if(!isPointer(nativeArgvs[nativei])) {
+                                curArgvType = "*(" + nativeArgvs[nativei] + "*)";
+                            }
+                            curArgvName = "(ptr_" + argvName + ")";
                             if (argvType.startsWith("int")) {
-                                javaArgvCode += "[II";
+                                javaArgvCode += "[I";
                             } else if (argvType.startsWith("short")) {
-                                javaArgvCode += "[SI";
+                                javaArgvCode += "[S";
                             } else if (argvType.startsWith("byte")) {
-                                javaArgvCode += "[BI";
+                                javaArgvCode += "[B";
                             } else if (argvType.startsWith("long")) {
-                                javaArgvCode += "[JI";
+                                javaArgvCode += "[J";
                             } else if (argvType.startsWith("float")) {
-                                javaArgvCode += "[FI";
+                                javaArgvCode += "[F";
                             } else if (argvType.startsWith("double")) {
-                                javaArgvCode += "[DI";
+                                javaArgvCode += "[D";
                             } else if (argvType.startsWith("String")) {
                                 javaArgvCode += "Ljava/lang/String;";
                             } else if (argvType.startsWith("Object")) {
                                 javaArgvCode += "Ljava/lang/Object;";
                             } else if (argvType.startsWith("boolean")) {
-                                javaArgvCode += "[ZI";
+                                javaArgvCode += "[Z";
                             } else {
                                 System.out.println(" " + lineNo + " array type:" + returnType + " in :" + whole);
                             }
                         } else {
                             System.out.println(" " + lineNo + " argv type:" + returnType + " in :" + whole);
                         }
+                        nativeArgvCode += curArgvType + curArgvName;
                     }
                     output = output.replace(GET_VAR, varCode);
                     output = output.replace(NATIVE_ARGV, nativeArgvCode);
@@ -295,9 +333,11 @@ public class Build_NK_java_2_nkjni_c {
                 }
             }
             bw.write("\n\n\n");
+            bw.write("static java_native_method method_nkclear_table[] = {");
             for (String s : funcTable) {
                 bw.write(s + "\n");
             }
+            bw.write("};");
         } catch (Exception ex) {
             Logger.getLogger(Build_NK_java_2_nkjni_c.class.getName()).log(Level.SEVERE, null, ex);
         } finally {
@@ -311,4 +351,7 @@ public class Build_NK_java_2_nkjni_c {
         System.out.println("success.");
     }
 
+    boolean isPointer(String nativeTypeStr) {
+        return nativeTypeStr.lastIndexOf('*') == nativeTypeStr.length() - 1;
+    }
 }

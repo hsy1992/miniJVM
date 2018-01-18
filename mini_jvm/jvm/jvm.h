@@ -246,12 +246,16 @@ extern __refer data_type_classes[DATATYPE_COUNT];
 extern s32 data_type_bytes[DATATYPE_COUNT];
 
 enum {
+    DATATYPE_BOOLEAN = 5,
     DATATYPE_JCHAR = 5,
+    DATATYPE_FLOAT = 6,
+    DATATYPE_DOUBLE = 7,
     DATATYPE_BYTE = 8,
+    DATATYPE_SHORT = 9,
+    DATATYPE_INT = 10,
+    DATATYPE_LONG = 11,
     DATATYPE_REFERENCE = 12,
     DATATYPE_ARRAY = 13,
-    DATATYPE_SHORT = 9,
-    DATATYPE_LONG = 11,
 };
 //访问标志
 enum {
@@ -874,6 +878,10 @@ __refer localvar_getRefer(Runtime *runtime, s32 index);
 
 s32 localvar_getInt(Runtime *runtime, s32 index);
 
+s64 localvar_getLong_2slot(Runtime *runtime, s32 index);
+
+void localvar_setLong_2slot(Runtime *runtime, s32 index, s64 val);
+
 //======================= other =============================
 void open_log(void);
 
@@ -968,6 +976,10 @@ struct _JNIENV {
 
     s32 (*localvar_getInt)(Runtime *runtime, s32 index);
 
+    s64 (*localvar_getLong_2slot)(Runtime *runtime, s32 index);
+
+    void (*localvar_setLong_2slot)(Runtime *runtime, s32 index, s64 val);
+
     void (*jthread_block_enter)(Runtime *runtime);
 
     void (*jthread_block_exit)(Runtime *runtime);
@@ -981,6 +993,8 @@ struct _JNIENV {
     void (*utf8_destory)(Utf8String *);
 
     Instance *(*jstring_create)(Utf8String *src, Runtime *runtime);
+
+    Instance *(*jstring_create_cstr)(c8 *cstr, Runtime *runtime);
 
     s32 (*jstring_2_utf8)(Instance *jstr, Utf8String *utf8);
 

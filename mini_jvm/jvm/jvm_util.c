@@ -1065,6 +1065,14 @@ Instance *jstring_create(Utf8String *src, Runtime *runtime) {
     return jstring;
 }
 
+Instance *jstring_create_cstr(c8 *cstr, Runtime *runtime) {
+    if (!cstr)return NULL;
+    Utf8String *ustr = utf8_create_part_c(cstr, 0, strlen(cstr));
+    Instance *jstr = jstring_create(ustr, runtime);
+    utf8_destory(ustr);
+    return jstr;
+}
+
 s32 jstring_get_count(Instance *jstr) {
     return getFieldInt(getInstanceFieldPtr(jstr, ins_field_offset.string_count));
 }
@@ -1441,6 +1449,8 @@ void init_jni_func_table() {
     jnienv.localvar_setInt = localvar_setInt;
     jnienv.localvar_getRefer = localvar_getRefer;
     jnienv.localvar_getInt = localvar_getInt;
+    jnienv.localvar_getLong_2slot = localvar_getLong_2slot;
+    jnienv.localvar_setLong_2slot = localvar_setLong_2slot;
     jnienv.jthread_block_enter = jthread_block_enter;
     jnienv.jthread_block_exit = jthread_block_exit;
     jnienv.utf8_create = utf8_create;
@@ -1449,6 +1459,7 @@ void init_jni_func_table() {
     jnienv.utf8_destory = utf8_destory;
     jnienv.jstring_2_utf8 = jstring_2_utf8;
     jnienv.jstring_create = jstring_create;
+    jnienv.jstring_create_cstr = jstring_create_cstr;
     jnienv.jvm_calloc = jvm_calloc;
     jnienv.jvm_malloc = jvm_malloc;
     jnienv.jvm_free = jvm_free;

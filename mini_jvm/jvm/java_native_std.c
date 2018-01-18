@@ -407,8 +407,8 @@ s32 java_lang_Math_atan2(Runtime *runtime, Class *clazz) {
     l2d.i2l.i1 = localvar_getInt(runtime, 0);
     l2d.i2l.i0 = localvar_getInt(runtime, 1);
     f64 y = (l2d.d);
-    l2d.i2l.i1 = localvar_getInt(runtime, 0);
-    l2d.i2l.i0 = localvar_getInt(runtime, 1);
+    l2d.i2l.i1 = localvar_getInt(runtime, 2);
+    l2d.i2l.i0 = localvar_getInt(runtime, 3);
     f64 x = (l2d.d);
 #if _JVM_DEBUG_BYTECODE_DETAIL > 5
     invoke_deepth(runtime);
@@ -424,8 +424,8 @@ s32 java_lang_Math_pow(Runtime *runtime, Class *clazz) {
     l2d.i2l.i1 = localvar_getInt(runtime, 0);
     l2d.i2l.i0 = localvar_getInt(runtime, 1);
     f64 a = (l2d.d);
-    l2d.i2l.i1 = localvar_getInt(runtime, 0);
-    l2d.i2l.i0 = localvar_getInt(runtime, 1);
+    l2d.i2l.i1 = localvar_getInt(runtime, 2);
+    l2d.i2l.i0 = localvar_getInt(runtime, 3);
     f64 b = (l2d.d);
 #if _JVM_DEBUG_BYTECODE_DETAIL > 5
     invoke_deepth(runtime);

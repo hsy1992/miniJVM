@@ -205,25 +205,6 @@ public class Build_nuklear_h_2_nk_java {
                                 arName = nargv.substring(arType.length()).trim();
                             }
 
-//                            if (nargv.charAt(nargv.length() - 1) != '*') {
-//
-//                                if (nargv.contains("(*")) { // CALLBACK:   float(*value_getter)(void* user, int index)
-//                                    arType = "void*";
-//                                    arName = nargv.substring(nargv.indexOf("(") + 2, nargv.indexOf(")"));
-//                                } else if (nargv.contains("*")) { // struct nk_context*arg
-//                                    int lastStar = nargv.lastIndexOf('*');
-//                                    arType = nargv.substring(0, lastStar + 1);
-//                                    arName = nargv.substring(lastStar + 1);
-//                                } else if (nargv.contains(" ")) {
-//                                    int lastStar = nargv.lastIndexOf(' ');
-//                                    arType = nargv.substring(0, lastStar);
-//                                    arName = nargv.substring(lastStar);
-//                                } else {
-//                                    arType = nargv;
-//                                }
-//                            } else {
-//                                arType = nargv;
-//                            }
                             arName = arName.trim();
                             arName = "p" + arName;
 

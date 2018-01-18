@@ -308,3 +308,17 @@ s32 localvar_getInt(Runtime *runtime, s32 index) {
 __refer localvar_getRefer(Runtime *runtime, s32 index) {
     return runtime->localvar[index].refer;
 }
+
+void localvar_setLong_2slot(Runtime *runtime, s32 index, s64 val) {
+    Long2Double l2d;
+    l2d.l = val;
+    runtime->localvar[index].integer = l2d.i2l.i1;
+    runtime->localvar[index + 1].integer = l2d.i2l.i0;
+}
+
+s64 localvar_getLong_2slot(Runtime *runtime, s32 index) {
+    Long2Double l2d;
+    l2d.i2l.i1 = runtime->localvar[index].integer;
+    l2d.i2l.i0 = runtime->localvar[index + 1].integer;
+    return l2d.l;
+}
