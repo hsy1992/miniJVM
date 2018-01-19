@@ -9,8 +9,9 @@ include_directories(deps/include/)
 
 set(SOURCE_FILES
         glad.c
-        jni_glfw.h
+        jni_gui.h
         jni_glfw.c
+        jni_gl.c
         jni_nk.c
         )
 find_package(OpenGL REQUIRED)

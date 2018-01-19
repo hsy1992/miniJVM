@@ -156,6 +156,8 @@ typedef struct _JavaThreadInfo JavaThreadInfo;
 typedef struct _Runtime Runtime;
 typedef struct _CodeAttribute CodeAttribute;
 typedef struct _JNIENV JniEnv;
+typedef struct _ReferArr CStringArr;
+typedef struct _ReferArr ReferArr;
 
 typedef s32 (*java_native_fun)(Runtime *runtime, Class *p);
 
@@ -913,6 +915,11 @@ typedef struct _JavaNativeLib {
 } JavaNativeLib;
 
 
+struct _ReferArr {
+    __refer *arr_body;
+    s32 arr_length;
+};
+
 s32 native_reg_lib(java_native_method *methods, s32 method_size);
 
 s32 native_remove_lib(JavaNativeLib *lib);
@@ -997,6 +1004,14 @@ struct _JNIENV {
     Instance *(*jstring_create_cstr)(c8 *cstr, Runtime *runtime);
 
     s32 (*jstring_2_utf8)(Instance *jstr, Utf8String *utf8);
+
+    CStringArr *(*cstringarr_create)(Instance *jstr_arr);
+
+    void (*cstringarr_destory)(CStringArr *cstr_arr);
+
+    ReferArr *(*referarr_create)(Instance *jobj_arr);
+
+    void (*referarr_destory)(CStringArr *ref_arr);
 
     Instance *(*jarray_create)(s32 count, s32 typeIdx, Utf8String *type);
 

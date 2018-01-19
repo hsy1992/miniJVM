@@ -1424,6 +1424,59 @@ void instance_release_from_thread(Instance *ref, Runtime *runtime) {
     }
 }
 
+CStringArr *cstringarr_create(Instance *jstr_arr) {
+    if (!jstr_arr)return NULL;
+    CStringArr *cstr_arr = jvm_calloc(sizeof(CStringArr));
+    cstr_arr->arr_length = jstr_arr->arr_length;
+    cstr_arr->arr_body = jvm_calloc(jstr_arr->arr_length * sizeof(__refer));
+    s32 i;
+    for (i = 0; i < cstr_arr->arr_length; i++) {
+        Long2Double l2d;
+        jarray_get_field(jstr_arr, i, &l2d);
+        Instance *jstr = l2d.r;
+        if (jstr) {
+            Utf8String *ustr = utf8_create();
+            jstring_2_utf8(jstr, ustr);
+            cstr_arr->arr_body[i] = jvm_calloc(ustr->length + 1);
+            memcpy(cstr_arr->arr_body[i], utf8_cstr(ustr), ustr->length);
+            utf8_destory(ustr);
+        }
+    }
+    return cstr_arr;
+}
+
+void cstringarr_destory(CStringArr *cstr_arr) {
+    s32 i;
+    for (i = 0; i < cstr_arr->arr_length; i++) {
+        jvm_free(cstr_arr->arr_body[i]);
+    }
+    jvm_free(cstr_arr->arr_body);
+    jvm_free(cstr_arr);
+}
+
+ReferArr *referarr_create(Instance *jobj_arr) {
+    if (!jobj_arr)return NULL;
+    CStringArr *ref_arr = jvm_calloc(sizeof(CStringArr));
+    ref_arr->arr_length = jobj_arr->arr_length;
+    ref_arr->arr_body = jvm_calloc(jobj_arr->arr_length * sizeof(__refer));
+    s32 i;
+    for (i = 0; i < ref_arr->arr_length; i++) {
+        Long2Double l2d;
+        jarray_get_field(jobj_arr, i, &l2d);
+        Instance *jstr = l2d.r;
+        if (jstr) {
+            ref_arr->arr_body[i] = jstr->arr_body;
+        }
+    }
+    return ref_arr;
+}
+
+void referarr_destory(CStringArr *ref_arr) {
+    s32 i;
+    jvm_free(ref_arr->arr_body);
+    jvm_free(ref_arr);
+}
+
 void init_jni_func_table() {
     jnienv.data_type_bytes = (s32 *) &data_type_bytes;
     jnienv.native_reg_lib = native_reg_lib;
@@ -1460,6 +1513,10 @@ void init_jni_func_table() {
     jnienv.jstring_2_utf8 = jstring_2_utf8;
     jnienv.jstring_create = jstring_create;
     jnienv.jstring_create_cstr = jstring_create_cstr;
+    jnienv.cstringarr_create = cstringarr_create;
+    jnienv.cstringarr_destory = cstringarr_destory;
+    jnienv.referarr_create = referarr_create;
+    jnienv.referarr_destory = referarr_destory;
     jnienv.jvm_calloc = jvm_calloc;
     jnienv.jvm_malloc = jvm_malloc;
     jnienv.jvm_free = jvm_free;

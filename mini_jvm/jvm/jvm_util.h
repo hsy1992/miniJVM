@@ -75,6 +75,12 @@ int jvm_printf(const char *, ...);
 
 void invoke_deepth(Runtime *runtime);
 
+s32 parseMethodPara(Utf8String *methodType, Utf8String *out);
+
+Instance *getInstanceInStack(Class *clazz, ConstantMethodRef *cmr, RuntimeStack *stack);
+
+void printDumpOfClasses(void);
+
 
 c8 *getInstanceFieldPtr(Instance *ins, FieldInfo *fi);
 
@@ -135,14 +141,13 @@ s32 jstring_equals(Instance *jstr1, Instance *jstr2);
 
 s32 jstring_2_utf8(Instance *jstr, Utf8String *utf8);
 
-s32 parseMethodPara(Utf8String *methodType, Utf8String *out);
+CStringArr *cstringarr_create(Instance *jstr_arr);
 
-Instance *getInstanceInStack(Class *clazz, ConstantMethodRef *cmr, RuntimeStack *stack);
+void cstringarr_destory(CStringArr *);
 
-void printDumpOfClasses(void);
+void referarr_destory(CStringArr *ref_arr);
 
-
-
+ReferArr *referarr_create(Instance *jobj_arr);
 ////======================= thread =============================
 
 struct _JavaThreadInfo {

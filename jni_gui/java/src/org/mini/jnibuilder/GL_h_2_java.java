@@ -15,19 +15,21 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import static org.mini.jnibuilder.Util.getType;
+import static org.mini.jnibuilder.Util.isTypes;
 
 /**
  *
  * @author gust
  */
-public class Build_glah_h_2_GL_java {
+public class GL_h_2_java {
 
     public static void main(String[] args) {
-        Build_glah_h_2_GL_java gt = new Build_glah_h_2_GL_java();
+        GL_h_2_java gt = new GL_h_2_java();
         gt.buildC();
     }
 
-    String[] path = {"src/org/mini/jnibuilder/glad.h", "src/org/mini/gl/GL.java"};
+    String[] path = {"res/glad.h", "src/org/mini/gl/GL.java"};
 
     String CLASS_TEMPLATE
             = //
@@ -35,7 +37,7 @@ public class Build_glah_h_2_GL_java {
             + "\n"
             + "public class GL {\n"
             + "${FIELDS}\n"
-            + "    public static native void init();\n"
+            + "    public static native void init();// //\n"
             + "${METHODS}\n"
             + "}\n\n";
     String FIELDS = "${FIELDS}";
@@ -46,31 +48,38 @@ public class Build_glah_h_2_GL_java {
     String FIELD_TYPE = "${FIELD_TYPE}";
     String FIELD_VALUE = "${FIELD_VALUE}";
 
-    String METHOD_DEC_TEMPLATE = "    public static native ${JAVA_RETURN} ${METHOD_NAME}(${JAVA_ARGV}); //${JAVA_COMMENT}";
+    String METHOD_DEC_TEMPLATE = "    public static native ${JAVA_RETURN} ${METHOD_NAME}(${JAVA_ARGV}); //${NATIVE_ARGV} //${NATIVE_RETURN}";
     String METHOD_NAME = "${METHOD_NAME}";
     String JAVA_ARGV = "${JAVA_ARGV}";
     String JAVA_RETURN = "${JAVA_RETURN}";
-    String JAVA_COMMENT = "${JAVA_COMMENT}";
 
     String GET_VAR = "${GET_VAR}";
+    //native
     //native
     String NATIVE_RETURN = "${NATIVE_RETURN}";
     String NATIVE_ARGV = "${NATIVE_ARGV}";
     String PUSH_RESULT = "${PUSH_RESULT}";
 
     static public String[] INT_TYPE = {"GLint", "GLuint", "GLenum", "GLbitfield", "GLboolean", "GLclampx", "GLsizei", "GLfixed",};
-    static public String[] ARR_INT_TYPE = {"GLint *", "GLuint *", "GLenum *", "GLbitfield *", "GLboolean *", "GLclampx *", "GLsizei *", "GLfixed *", "const GLint *", "const GLuint *", "const GLenum *", "const GLbitfield *", "const GLboolean *", "const GLclampx *", "const GLsizei *", "const GLfixed *",};
+    static public String[] ARR_INT_TYPE = {"GLint*", "GLuint*", "GLenum*", "GLbitfield*", "GLboolean*", "GLclampx*", "GLsizei*", "GLfixed*", "const GLint*", "const GLuint*", "const GLenum*", "const GLbitfield*", "const GLboolean*", "const GLclampx*", "const GLsizei*", "const GLfixed*",};
     static public String[] SHORT_TYPE = {"GLshort", "GLushort",};
-    static public String[] ARR_SHORT_TYPE = {"GLshort *", "const GLshort *", "GLushort *", "const GLushort *",};
+    static public String[] ARR_SHORT_TYPE = {"GLshort*", "const GLshort*", "GLushort*", "const GLushort*",};
     static public String[] BYTE_TYPE = {"GLbyte", "GLubyte", "GLchar", "GLcharARB",};
-    static public String[] ARR_BYTE_TYPE = {"GLbyte *", "const GLbyte *", "GLubyte *", "const GLubyte *", "GLchar *", "const GLchar *", "GLcharARB *", "const GLcharARB *", "const GLchar *const*"};
+    static public String[] ARR_BYTE_TYPE = {"GLbyte*", "const GLbyte*", "GLubyte*", "const GLubyte*",};
+    static public String[] STRING_TYPE = {"char*", "char*", "const char*", "const char*", "char const*", "char const*", "GLchar*", "const GLchar*", "GLcharARB*", "const GLcharARB*",};
+    static public String[] ARR_STRING_TYPE = {"char**", "char**", "const char**", "const char**", "char const**", "char const**", "const GLchar*const*",};
     static public String[] LONG_TYPE = {"GLint64", "GLuint64", "GLsync", "GLDEBUGPROC", "GLDEBUGPROCKHR", "GLsizeiptr", "GLintptr",};
-    static public String[] ARR_LONG_TYPE = {"GLint64 *", "const GLint64 *", "GLuint64 *", "const GLuint64 *", "GLsync *", "const GLsync *",};
+    static public String[] ARR_LONG_TYPE = {"GLint64*", "const GLint64*", "GLuint64*", "const GLuint64*", "GLsync*", "const GLsync*",};
     static public String[] FLOAT_TYPE = {"GLfloat", "GLclampf",};
-    static public String[] ARR_FLOAT_TYPE = {"GLfloat *", "const GLfloat *", "GLclampf *", "const GLclampf *",};
+    static public String[] ARR_FLOAT_TYPE = {"GLfloat*", "const GLfloat*", "GLclampf*", "const GLclampf*",};
     static public String[] DOUBLE_TYPE = {"GLdouble", "GLclampd",};
-    static public String[] ARR_DOUBLE_TYPE = {"GLdouble *", "const GLdouble *", "GLclampd *", "const GLclampd *",};
-    static public String[] OBJECT_TYPE = {"GLvoid *", "const GLvoid *", "GLsync *", "const void *const*", "void *", "const void *", "void **",};
+    static public String[] ARR_DOUBLE_TYPE = {"GLdouble*", "const GLdouble*", "GLclampd*", "const GLclampd*",};
+    static public String[] OBJECT_TYPE = {"GLvoid*", "const GLvoid*", "GLsync*", "void*", "const void*",};
+    static public String[] ARR_OBJECT_TYPE = {"GLvoid**", "const GLvoid**", "GLsync**", "const void*const*", "void**", "const void**", "void**",};
+    static public String[] VOID_TYPE = {"GLvoid", "void",};
+    static public String[] MULT_TYPE = {"...",};
+
+    static public String[][] TYPES_ALL = {INT_TYPE, ARR_INT_TYPE, SHORT_TYPE, ARR_SHORT_TYPE, BYTE_TYPE, ARR_BYTE_TYPE, STRING_TYPE, ARR_STRING_TYPE, LONG_TYPE, ARR_LONG_TYPE, FLOAT_TYPE, ARR_FLOAT_TYPE, DOUBLE_TYPE, ARR_DOUBLE_TYPE, OBJECT_TYPE, ARR_OBJECT_TYPE, VOID_TYPE, MULT_TYPE};
 
     void buildC() {
         BufferedReader br = null;
@@ -88,14 +97,24 @@ public class Build_glah_h_2_GL_java {
             System.out.println("open output file:" + ofile.getAbsolutePath());
             String line;
 
+            while ((line = br.readLine()) != null) {
+
+                line = line.replaceAll("/\\*.*\\*/", "");
+                line = line.replaceAll("//.*\n", "");
+                line = line.trim();
+                lines.add(line);
+            }
+
             //fields
             String nativeFieldHeader = "#define GL_";
-            while ((line = br.readLine()) != null) {
+            for (int i = 0, imax = lines.size(); i < imax; i++) {
+                lineNo = i;
+                line = lines.get(i);
 
                 line = line.trim();
                 lines.add(line);
                 if (line.startsWith(nativeFieldHeader)) {
-                    String output = FIELD_TEMPLATE;
+                    String fieldCode = FIELD_TEMPLATE;
                     String[] tmps = line.split(" ");
                     String typeCode = "int";
                     String value = tmps[2];
@@ -106,17 +125,14 @@ public class Build_glah_h_2_GL_java {
                         typeCode = "long";
                         tmps[2] += "L";
                     }
-                    output = output.replace(FIELD_TYPE, typeCode);
-                    output = output.replace(FIELD_NAME, tmps[1]);
-                    output = output.replace(FIELD_VALUE, tmps[2]);
-                    fields.append(output);
+                    fieldCode = fieldCode.replace(FIELD_TYPE, typeCode);
+                    fieldCode = fieldCode.replace(FIELD_NAME, tmps[1]);
+                    fieldCode = fieldCode.replace(FIELD_VALUE, tmps[2]);
+                    fields.append(fieldCode);
                     fields.append("\n");
                 }
             }
 
-            // typedef void * (APIENTRYP PFNGLMAPBUFFERPROC)(GLenum target, GLenum access);
-            // GLAPI PFNGLMAPBUFFERPROC glad_glMapBuffer;
-            // #define glMapBuffer glad_glMapBuffer
             //
             //methods
             String nativeMethodHeader = "#define gl";
@@ -129,7 +145,7 @@ public class Build_glah_h_2_GL_java {
                     String javaNameCode = tmps[1];
                     String javaReturnCode = "";
                     String javaArgvCode = "";
-                    String javaCommentCode = "";
+                    String nativeCommentCode = "";
 
                     //native func str
                     String mdef = lines.get(i - 2);
@@ -140,26 +156,24 @@ public class Build_glah_h_2_GL_java {
 
                     //GLuint shader, GLsizei count, const GLchar *const*string, const GLint *length
                     mdef = mdef.substring(mdef.lastIndexOf("(") + 1, mdef.lastIndexOf(")")).trim();
+                    mdef = mdef.replace(" *", "*");
+
                     if (mdef.length() > 0) {
                         String[] nArgvs = mdef.split(",");
                         for (int j = 0; j < nArgvs.length; j++) {
-                            String ar = nArgvs[j];
-                            int nameAt = 0;
-                            int starAt = ar.lastIndexOf("*");
-                            int spaceAt = ar.lastIndexOf(" ");
-                            if (spaceAt > starAt) {
-                                nameAt = spaceAt + 1;
-                            } else {
-                                nameAt = starAt + 1;
+                            String nargv = nArgvs[j].trim();
+                            String arType = getType(TYPES_ALL, nargv);
+                            String arName = "arg" + j;
+                            if (arType == null) {
+                                System.out.println("error argv type:" + nargv);
+                                continue;
                             }
-                            String arName = ar.substring(nameAt).trim();
-                            if (arName.equals("near")) {
-                                arName = "pnear";
+                            if (arType.length() != nargv.length()) {
+                                arName = nargv.substring(arType.length()).trim();
                             }
-                            if (arName.equals("far")) {
-                                arName = "pfar";
-                            }
-                            String arType = ar.substring(0, nameAt).trim();
+
+                            arName = arName.trim();
+                            arName = "p" + arName;
 
                             if (isTypes(INT_TYPE, arType)) {
                                 javaArgvCode += "int " + arName;
@@ -176,6 +190,11 @@ public class Build_glah_h_2_GL_java {
                             } else if (isTypes(ARR_BYTE_TYPE, arType)) {
                                 javaArgvCode += "byte[] " + arName;
                                 javaArgvCode += ", int offset_" + arName;
+                            } else if (isTypes(STRING_TYPE, arType)) {
+                                javaArgvCode += "String " + arName;
+                            } else if (isTypes(ARR_STRING_TYPE, arType)) {
+                                javaArgvCode += "String[] " + arName;
+                                //no necessary offset
                             } else if (isTypes(LONG_TYPE, arType)) {
                                 javaArgvCode += "long " + arName;
                             } else if (isTypes(ARR_LONG_TYPE, arType)) {
@@ -194,11 +213,17 @@ public class Build_glah_h_2_GL_java {
                             } else if (isTypes(OBJECT_TYPE, arType)) {
                                 javaArgvCode += "Object " + arName;
                                 javaArgvCode += ", int offset_" + arName;
+                            } else if (isTypes(ARR_OBJECT_TYPE, arType)) {
+                                javaArgvCode += "Object[] " + arName;
+                                //no necessary offset
+                            } else if (isTypes(MULT_TYPE, arType)) {
+                                javaArgvCode += "String" + arType + " " + arName;
+                            } else if (isTypes(VOID_TYPE, arType)) {
                             } else {
                                 System.out.println("java argv type:" + arType);
                             }
                             javaArgvCode += ", ";
-                            javaCommentCode += arType + ",";
+                            nativeCommentCode += arType + ",";
                         }
 
                         int lastS = javaArgvCode.lastIndexOf(",");
@@ -207,30 +232,44 @@ public class Build_glah_h_2_GL_java {
                         }
                     }
                     //
+                    mtype = mtype.replace(" *", "*");
                     if (isTypes(INT_TYPE, mtype)) {
                         javaReturnCode = "int";
+                    } else if (isTypes(ARR_INT_TYPE, mtype)) {
+                        javaReturnCode = "int[]";
                     } else if (isTypes(FLOAT_TYPE, mtype)) {
                         javaReturnCode = "float";
+                    } else if (isTypes(ARR_FLOAT_TYPE, mtype)) {
+                        javaReturnCode = "float[]";
                     } else if (isTypes(LONG_TYPE, mtype)) {
                         javaReturnCode = "long";
                     } else if (isTypes(ARR_BYTE_TYPE, mtype)) {
                         javaReturnCode = "byte[]";
+                    } else if (isTypes(STRING_TYPE, mtype)) {
+                        javaReturnCode = "String";
+                    } else if (isTypes(DOUBLE_TYPE, mtype)) {
+                        javaReturnCode = "double";
                     } else if (isTypes(ARR_LONG_TYPE, mtype)) {
                         javaReturnCode = "long[]";
                     } else if (isTypes(OBJECT_TYPE, mtype)) {
-                        javaReturnCode = "Object";
+                        javaReturnCode = "long";
                     } else if (mtype.equals("void")) {
                         javaReturnCode = "void";
                     } else {
+//                        javaReturnCode = "long";
                         System.out.println("java return :" + mtype);
                     }
+                    String nativeReturnCode = mtype;
                     //result
                     output = output.replace(METHOD_NAME, javaNameCode);
                     output = output.replace(JAVA_RETURN, javaReturnCode);
                     output = output.replace(JAVA_ARGV, javaArgvCode);
-                    output = output.replace(JAVA_COMMENT, javaCommentCode);
-                    methods.append(output);
-                    methods.append("\n");
+                    output = output.replace(NATIVE_ARGV, nativeCommentCode);
+                    output = output.replace(NATIVE_RETURN, nativeReturnCode);
+                    if (methods.indexOf(javaNameCode + "(") < 0) {
+                        methods.append(output);
+                        methods.append("\n");
+                    }
                 }
             }
 
@@ -245,18 +284,10 @@ public class Build_glah_h_2_GL_java {
                 br.close();
                 bw.close();
             } catch (IOException ex) {
-                Logger.getLogger(Build_glah_h_2_GL_java.class.getName()).log(Level.SEVERE, null, ex);
+                Logger.getLogger(NK_h_2_java.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
         System.out.println("success.");
     }
 
-    static public boolean isTypes(String[] types, String s) {
-        for (String t : types) {
-            if (t.equals(s)) {
-                return true;
-            }
-        }
-        return false;
-    }
 }

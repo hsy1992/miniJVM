@@ -133,8 +133,7 @@ public class Shader {
 
         glGenBuffers(NumBuffers, Buffers, 0);
         glBindBuffer(GL_ARRAY_BUFFER, Buffers[ArrayBuffer]);
-        GL.glBufferData(GL_ARRAY_BUFFER, (long)(vertices.length * 4),
-                vertices, 0, GL_STATIC_DRAW);
+        GL.glBufferData(GL_ARRAY_BUFFER, (long) (vertices.length * 4), vertices, 0, GL_STATIC_DRAW);
 
         int vertex_shader, fragment_shader, program;
         vertex_shader = glCreateShader(GL_VERTEX_SHADER);
@@ -145,7 +144,7 @@ public class Shader {
                 + " {  \n"
                 + "     gl_Position = vPosition;  \n"
                 + "} \000";
-        glShaderSource(vertex_shader, 1, s0.getBytes(), 0, null, 0);
+        glShaderSource(vertex_shader, 1, new String[]{s0}, null, 0);
         glCompileShader(vertex_shader);
 
         String s1 = "#version 330   \n"
@@ -156,7 +155,7 @@ public class Shader {
                 + "fColor = vec4(0.0, 0.0, 1.0, 1.0);  \n"
                 + "}  \000";
         fragment_shader = glCreateShader(GL_FRAGMENT_SHADER);
-        glShaderSource(fragment_shader, 1, s1.getBytes(), 0, null, 0);
+        glShaderSource(fragment_shader, 1, new String[]{s1}, null, 0);
         glCompileShader(fragment_shader);
 
         program = glCreateProgram();
