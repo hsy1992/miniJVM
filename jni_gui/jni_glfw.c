@@ -8,6 +8,7 @@
 #include "deps/include/linmath.h"
 
 #define STB_IMAGE_IMPLEMENTATION
+
 #include "deps/include/stb_image.h"
 
 #include "../mini_jvm/jvm/jvm.h"
@@ -641,7 +642,7 @@ int org_mini_glfw_utils_Gutil_mat4x4_look_at(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-static int image_load(const char *filename) {
+static int image_load(const char *filename, int *w, int *h, int *bytes) {
     int x, y, n;
     GLuint tex;
     unsigned char *data = stbi_load(filename, &x, &y, &n, 0);
@@ -655,6 +656,10 @@ static int image_load(const char *filename) {
     glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
     glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, x, y, 0, GL_RGBA, GL_UNSIGNED_BYTE, data);
     glGenerateMipmap(GL_TEXTURE_2D);
+//    printf("x=%d,y=%d,n=%d\n", x, y, n);
+    *w = x;
+    *h = y;
+    *bytes = n;
     stbi_image_free(data);
     return (int) tex;
 }
@@ -672,7 +677,22 @@ int org_mini_glfw_utils_Gutil_image_load(Runtime *runtime, Class *clazz) {
         ptr_pfilename = env->utf8_cstr(u_pfilename);
     }
 
-    s32 _re_val = image_load((const char *) (ptr_pfilename));
+    Instance *pwhd = env->localvar_getRefer(runtime, pos++);
+
+    s32 w, h, depth;
+    s32 _re_val = image_load((const char *) (ptr_pfilename), &w, &h, &depth);
+    if (pwhd && pwhd->arr_length >= 3) {
+        Long2Double l2d;
+        l2d.l = 0;
+        l2d.i2l.i1 = w;
+        env->jarray_set_field(pwhd, 0, &l2d);
+        l2d.l = 0;
+        l2d.i2l.i1 = h;
+        env->jarray_set_field(pwhd, 1, &l2d);
+        l2d.l = 0;
+        l2d.i2l.i1 = depth;
+        env->jarray_set_field(pwhd, 2, &l2d);
+    }
     env->push_int(runtime->stack, _re_val);
     env->utf8_destory(u_pfilename);
     return 0;
@@ -1067,7 +1087,7 @@ int org_mini_glfw_Glfw_glfwGetClipboardString(Runtime *runtime, Class *clazz) {
 
 static java_native_method method_glfw_table[] = {
         {"org/mini/glfw/utils/Gutil", "f2b",                        "([F[B)[B",                         org_mini_glfw_utils_Gutil_f2b},
-        {"org/mini/glfw/utils/Gutil", "image_load",                 "(Ljava/lang/String;)I",           org_mini_glfw_utils_Gutil_image_load},
+        {"org/mini/glfw/utils/Gutil", "image_load",                 "(Ljava/lang/String;[I)I",          org_mini_glfw_utils_Gutil_image_load},
         {"org/mini/glfw/utils/Gutil", "vec_add",                    "([F[F[F)[F",                       org_mini_glfw_utils_Gutil_vec_add},
         {"org/mini/glfw/utils/Gutil", "vec_sub",                    "([F[F[F)[F",                       org_mini_glfw_utils_Gutil_vec_sub},
         {"org/mini/glfw/utils/Gutil", "vec_scale",                  "([F[FF)[F",                        org_mini_glfw_utils_Gutil_vec_scale},

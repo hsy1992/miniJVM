@@ -19,15 +19,28 @@ public class GImage {
     byte[] nk_image;
     int id;
     Array refectArr;
+    int[] w_h_d = new int[3];
 
     public void loadImage(String filepath) {
-        id = Gutil.image_load(filepath);
+        id = Gutil.image_load(filepath, w_h_d);
         nk_image = NK.nk_image_id(id);
         refectArr = new Array(RefNative.obj2id(nk_image));
     }
 
     public byte[] getNkImage() {
         return nk_image;
+    }
+
+    public int getWidth() {
+        return w_h_d[0];
+    }
+
+    public int getHeight() {
+        return w_h_d[1];
+    }
+
+    public int getBitDepth() {
+        return w_h_d[2];
     }
 
     public long getDataPtr() {

@@ -29,6 +29,18 @@ import org.mini.gui.GImage;
  */
 public class GuiTest {
 
+    public static void main(String[] args) {
+        GuiTest gt = new GuiTest();
+        gt.t1();
+
+    }
+
+    void t1() {
+        GForm win = new GForm("test", 800, 600);
+        win.add(new GFrame("demo测试", 30, 30, 500, 400, new NkFormContents1()));
+        win.setCallBack(new MyCallBack());
+    }
+
     class NkFormContents1 implements GFrameContents {
 
         final int EASY = 0, MID = 1, HARD = 2;
@@ -76,29 +88,17 @@ public class GuiTest {
             GGraphics g = parent.getGraphics();
 
             g.setColor(0x80ff0000);
-            g.fillRect(100, 100, 100, 200);
+            g.fillRect(100, 200, 200, 100);
             g.setColor(0xff00ff00);
-            g.fillArc(150, 150, 50, 40, 0, 360);
-            g.drawLine(0, 0, 300, 400);
+            g.fillArc(350, 350, 50, 40, 0, 360);
+            g.drawLine(200, 200, 300, 400);
             g.drawArc(100, 100, 100, 200, 0, 360);
-            if(img==null){
-                img=new GImage();
+            if (img == null) {
+                img = new GImage();
                 img.loadImage("image4.png");
             }
-            g.drawImage(img, 0, 0, 0);
+            g.drawImage(img, 0, 150, 100, 100, 0);
         }
-
-    }
-
-    void t1() {
-        GForm win = new GForm("test", 800, 600);
-        win.add(new GFrame("demo", 30, 30, 300, 200, new NkFormContents1()));
-        win.setCallBack(new MyCallBack());
-    }
-
-    public static void main(String[] args) {
-        GuiTest gt = new GuiTest();
-        gt.t1();
 
     }
 

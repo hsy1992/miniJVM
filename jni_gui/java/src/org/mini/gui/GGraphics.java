@@ -112,12 +112,22 @@ public class GGraphics {
     }
 
     public void drawImage(GImage img, int x, int y, int anchor) {
+        drawImage(img, x, y, img.getWidth(), img.getHeight(), anchor);
+    }
+
+    public void drawImage(GImage img, int x, int y, int w, int h, int anchor) {
         if (brush == 0) {
             return;
         }
-        x += frame_bound[0] + translateX;
-        y += frame_bound[1] + translateY;
+        rect[0] = x + frame_bound[0] + translateX;
+        rect[1] = y + frame_bound[1] + translateY;
+        rect[2] = w;
+        rect[3] = h;
+        //System.out.println("w=" + w + "  ,h=" + h);
+        int color = curColor[0];
+        curColor[0] = 0xffffffff;
         NK.nk_draw_image(brush, rect, img.getDataPtr(), curColor);
+        curColor[0] = color;
     }
 
     public void drawRegion(GImage src, int x_src, int y_src, int width, int height, int transform, int x_dest, int y_dest, int anchor) {

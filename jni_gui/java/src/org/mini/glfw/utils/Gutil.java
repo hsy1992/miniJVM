@@ -29,9 +29,10 @@ public class Gutil {
      * load image return opengl GL_TEXTURE_2D id
      *
      * @param pfilename
+     * @param para_3slot  new int[3] for image w,h,bit depth
      * @return
      */
-    public static native int image_load(String pfilename); //const char*, //struct nk_image/*none_ptr*/ 
+    public static native int image_load(String pfilename, int[] para_3slot); //const char*, //struct nk_image/*none_ptr*/ 
 
     /**
      * vec and matrix
