@@ -5,15 +5,22 @@
  */
 package org.mini.gui;
 
+import static org.mini.gl.GL.GL_COLOR_BUFFER_BIT;
+import static org.mini.gl.GL.glClear;
 import org.mini.glfw.Glfw;
 import static org.mini.glfw.Glfw.GLFW_CONTEXT_VERSION_MAJOR;
 import static org.mini.glfw.Glfw.GLFW_CONTEXT_VERSION_MINOR;
+import static org.mini.glfw.Glfw.glfwPollEvents;
+import static org.mini.glfw.Glfw.glfwSwapBuffers;
+import static org.mini.glfw.Glfw.glfwSwapInterval;
+import static org.mini.glfw.Glfw.glfwTerminate;
 import static org.mini.glfw.Glfw.glfwWindowHint;
 import static org.mini.glfw.Glfw.glfwWindowShouldClose;
+import org.mini.nk.NK;
 import static org.mini.nk.NK.NK_GLFW3_INSTALL_CALLBACKS;
-import static org.mini.nk.NK.nk_glfw3_font_stash_begin;
-import static org.mini.nk.NK.nk_glfw3_font_stash_end;
 import static org.mini.nk.NK.nk_glfw3_init;
+import static org.mini.nk.NK.nk_glfw3_shutdown;
+import static org.mini.nk.NK.nk_true;
 
 /**
  *
@@ -25,7 +32,7 @@ public class GForm extends GContainer implements Runnable {
     String title;
     int width;
     int height;
-    long native_window_ptr;
+    long ctx;
 
     public GForm(String title, int width, int height) {
         this.title = title;
@@ -38,24 +45,38 @@ public class GForm extends GContainer implements Runnable {
 
     @Override
     public void run() {
-        Glfw.glfwInit();
+        if (!Glfw.glfwInit()) {
+            System.out.println("glfw init error.");
+            System.exit(1);
+        }
         glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 2);
         glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 0);
-        long glfwwin = Glfw.glfwCreateWindow(width, height, "hello glfw", 0, 0);
-        Glfw.glfwMakeContextCurrent(glfwwin);
-        native_window_ptr = nk_glfw3_init(glfwwin, NK_GLFW3_INSTALL_CALLBACKS);
+        long win = Glfw.glfwCreateWindow(width, height, "hello glfw", 0, 0);
+        if (win == 0) {
+            glfwTerminate();
+            System.exit(1);
+        }
+        Glfw.glfwMakeContextCurrent(win);
+        glfwSwapInterval(nk_true);
+        ctx = nk_glfw3_init(win, NK_GLFW3_INSTALL_CALLBACKS);
         long[] atlas = {0L};
-        nk_glfw3_font_stash_begin(atlas);
-        nk_glfw3_font_stash_end();
-        GToolkit.putForm(native_window_ptr, this);
-        while (!glfwWindowShouldClose(glfwwin)) {
+        NK.nk_glfw3_font_stash_begin(atlas);
+        System.out.println("atlas=" + atlas[0]);
+        NK.nk_glfw3_font_stash_end();
+        GToolkit.putForm(ctx, this);
+        while (!glfwWindowShouldClose(win)) {
             try {
-                update(native_window_ptr);
+                glfwPollEvents();
+                glClear(GL_COLOR_BUFFER_BIT);
+                update(ctx);
+                glfwSwapBuffers(win);
             } catch (Exception ex) {
             }
         }
-        GToolkit.removeForm(native_window_ptr);
-        native_window_ptr = 0;
+        nk_glfw3_shutdown();
+        glfwTerminate();
+        GToolkit.removeForm(ctx);
+        ctx = 0;
     }
 
 }

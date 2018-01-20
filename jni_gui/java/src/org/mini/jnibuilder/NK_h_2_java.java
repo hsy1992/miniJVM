@@ -64,26 +64,29 @@ public class NK_h_2_java {
     String NATIVE_RETURN = "${NATIVE_RETURN}";
     String NATIVE_ARGV = "${NATIVE_ARGV}";
 
-    static public String[] INT_TYPE = {"int", "int", "unsigned", "enum nk_glfw_init_state", "enum nk_style_colors", "enum nk_widget_layout_states", "enum nk_font_atlas_format", "enum nk_heading", "enum nk_style_cursor", "enum nk_popup_type", "enum nk_color_format", "enum nk_button_behavior", "enum nk_tree_type", "enum nk_show_states", "enum nk_keys", "enum nk_draw_list_stroke", "enum nk_buttons", "enum nk_anti_aliasing", "const enum nk_chart_type", "nk_glyph", "enum nk_chart_type", "const nk_glyph", "enum nk_buffer_allocation_type", "enum nk_symbol_type", "enum nk_collapse_states", "enum nk_layout_format", "nk_uint", "nk_size", "nk_hash", "nk_flags", "nk_rune", "unsigned int", "const unsigned int", "struct nk_color",};
-    static public String[] ARR_INT_TYPE = {"int*", "const int*", "nk_size*", "nk_flags*", "enum nk_collapse_states*", "nk_uint*", "const nk_uint*", "nk_scroll*", "nk_vec2i*", "nk_recti*", "unsigned int*", "const int*", "const struct nk_color*", "struct nk_color*",};
+    static public String[] INT_TYPE = {"int", "int", "unsigned", "enum nk_glfw_init_state", "enum nk_style_colors", "enum nk_widget_layout_states", "enum nk_font_atlas_format", "enum nk_heading", "enum nk_style_cursor", "enum nk_popup_type", "enum nk_color_format", "enum nk_button_behavior", "enum nk_tree_type", "enum nk_show_states", "enum nk_keys", "enum nk_draw_list_stroke", "enum nk_buttons", "enum nk_anti_aliasing", "const enum nk_chart_type", "enum nk_chart_type", "enum nk_buffer_allocation_type", "enum nk_symbol_type", "enum nk_collapse_states", "enum nk_layout_format", "nk_uint", "nk_hash", "nk_flags", "nk_rune", "unsigned int", "const unsigned int",};
+    static public String[] ARR_INT_TYPE = {"int*", "const int*", "nk_size*", "nk_flags*", "enum nk_collapse_states*", "nk_uint*", "const nk_uint*", "nk_scroll*", "unsigned int*", "const int*", "const struct nk_color*", "struct nk_color*", "struct nk_scroll*",};
     static public String[] SHORT_TYPE = {"short", "nk_short", "short", "nk_ushort", "unsigned short"};
-    static public String[] ARR_SHORT_TYPE = {"short*",};
+    static public String[] ARR_SHORT_TYPE = {"short*", "nk_vec2i*", "nk_recti*",};
     static public String[] BYTE_TYPE = {"nk_byte", "char", "nk_char"};
-    static public String[] ARR_BYTE_TYPE = {"nk_byte*", "const nk_byte*", "struct nk_font_config"};
+    static public String[] ARR_BYTE_TYPE = {"nk_byte*", "const nk_byte*", ""};
     static public String[] STRING_TYPE = {"char*", "char*", "const char*", "const char*", "char const*", "char const*",};
     static public String[] ARR_STRING_TYPE = {"char**", "char**", "const char**", "const char**", "char const**", "char const**",};
-    static public String[] LONG_TYPE = {"long", "nk_handle", "nk_ptr", "", "GLFWwindow*", "const struct nk_font_glyph*", "struct nk_window*", "struct nk_panel*", "struct nk_style_item", "struct nk_style_item*", "struct nk_image", "nk_plugin_filter", "struct nk_memory_status*", "nk_command_custom_callback", "struct nk_scroll*", "struct nk_list_view*", "struct nk_draw_null_texture*", "struct nk_font*", "const struct nk_allocator*", "const struct nk_image*", "struct nk_text_edit*", "const struct nk_text_edit*", "const struct nk_str*", "const nk_rune*", "nk_rune*", "struct nk_str*", "struct nk_cursor*", "const struct nk_cursor*", "const struct nk_font_config*", "const struct nk_style_button*", "const struct nk_draw_command*", "const struct nk_convert_config*", "struct nk_command_buffer*", "const struct nk_command*", "struct nk_command_buffer*", "struct nk_context*", "struct nk_context*", "const struct nk_context*", "const struct nk_context*", "struct nk_buffer*", "struct nk_buffer*", "const struct nk_buffer*", "const struct nk_input*", "const struct nk_input*", "struct nk_draw_list*", "struct nk_draw_list*", "const struct nk_draw_list*", "const struct nk_user_font*", "struct nk_allocator*", "struct nk_font_atlas*"};
-    static public String[] ARR_LONG_TYPE = {"nk_ptr*", "struct nk_font_atlas**"};
+    static public String[] LONG_TYPE = {""};
+    static public String[] ARR_LONG_TYPE = {""};
     static public String[] FLOAT_TYPE = {"float",};
-    static public String[] ARR_FLOAT_TYPE = {"float*", "struct nk_rect", "struct nk_rect*", "struct nk_vec2", "const float*", "nk_colorf*", "struct nk_vec2*", "const struct nk_vec2*", "nk_colorf*",};
+    static public String[] ARR_FLOAT_TYPE = {"float*", "struct nk_rect*", "const float*", "struct nk_colorf*", "struct nk_vec2*", "const struct nk_vec2*",};
     static public String[] DOUBLE_TYPE = {"double",};
     static public String[] ARR_DOUBLE_TYPE = {"double*",};
-    static public String[] OBJECT_TYPE = {"void*", "const void*",};
-    static public String[] ARR_OBJECT_TYPE = {"void**",};
+    static public String[] OBJECT_TYPE = {"void*", "const void*", "nk_ptr", "nk_size", "", "GLFWwindow*", "const struct nk_font_glyph*", "struct nk_window*", "struct nk_panel*", "struct nk_style_item*", "nk_plugin_filter", "struct nk_memory_status*", "nk_command_custom_callback", "struct nk_list_view*", "struct nk_draw_null_texture*", "struct nk_font*", "const struct nk_allocator*", "const struct nk_image*", "struct nk_text_edit*", "const struct nk_text_edit*", "const struct nk_str*", "const nk_rune*", "nk_rune*", "struct nk_str*", "struct nk_cursor*", "const struct nk_cursor*", "const struct nk_font_config*", "const struct nk_style_button*", "const struct nk_draw_command*", "const struct nk_convert_config*", "struct nk_command_buffer*", "const struct nk_command*", "struct nk_command_buffer*", "struct nk_context*", "struct nk_context*", "const struct nk_context*", "const struct nk_context*", "struct nk_buffer*", "struct nk_buffer*", "const struct nk_buffer*", "const struct nk_input*", "const struct nk_input*", "struct nk_draw_list*", "struct nk_draw_list*", "const struct nk_draw_list*", "const struct nk_user_font*", "struct nk_allocator*", "struct nk_font_atlas*"};
+    static public String[] ARR_OBJECT_TYPE = {"void**", "nk_ptr*", "struct nk_font_atlas**",};
     static public String[] VOID_TYPE = {"void"};
     static public String[] MULT_TYPE = {"..."};
+    static public String[] STRUCT_FLOAT_ARR_TYPE = {"struct nk_rect", "struct nk_vec2", "", "", "", "", "", "",};
+    static public String[] STRUCT_INT_ARR_TYPE = {"struct nk_rect", "struct nk_vec2", "struct nk_color", "", "", "", "", "", "",};
+    static public String[] STRUCT_BYTE_ARR_TYPE = {"nk_glyph", "const nk_glyph", "struct nk_font_config", "struct nk_image", "struct nk_color", "struct nk_style_item", "nk_handle", "", "", "", "", "", "",};
 
-    static public String[][] TYPES_ALL = {INT_TYPE, ARR_INT_TYPE, SHORT_TYPE, ARR_SHORT_TYPE, BYTE_TYPE, ARR_BYTE_TYPE, STRING_TYPE, ARR_STRING_TYPE, LONG_TYPE, ARR_LONG_TYPE, FLOAT_TYPE, ARR_FLOAT_TYPE, DOUBLE_TYPE, ARR_DOUBLE_TYPE, OBJECT_TYPE, VOID_TYPE, MULT_TYPE};
+    static public String[][] TYPES_ALL = {INT_TYPE, ARR_INT_TYPE, SHORT_TYPE, ARR_SHORT_TYPE, BYTE_TYPE, ARR_BYTE_TYPE, STRING_TYPE, ARR_STRING_TYPE, LONG_TYPE, ARR_LONG_TYPE, FLOAT_TYPE, ARR_FLOAT_TYPE, DOUBLE_TYPE, ARR_DOUBLE_TYPE, OBJECT_TYPE, ARR_OBJECT_TYPE, VOID_TYPE, MULT_TYPE, STRUCT_FLOAT_ARR_TYPE, STRUCT_INT_ARR_TYPE, STRUCT_BYTE_ARR_TYPE,};
 
     void buildC() {
         BufferedReader br = null;
@@ -241,10 +244,21 @@ public class NK_h_2_java {
                                 javaArgvCode += "double[] " + arName;
                             } else if (Util.isTypes(OBJECT_TYPE, arType)) {
                                 javaArgvCode += "long " + arName;
+                                arType += "/*ptr*/";
                             } else if (Util.isTypes(ARR_OBJECT_TYPE, arType)) {
-                                javaArgvCode += "Object[] " + arName;
+                                javaArgvCode += "long[] " + arName;
+                                arType += "/*ptr*/";
                             } else if (Util.isTypes(MULT_TYPE, arType)) {
                                 javaArgvCode += "String" + arType + " " + arName;
+                            } else if (Util.isTypes(STRUCT_FLOAT_ARR_TYPE, arType)) {
+                                javaArgvCode += "float[] " + arName;
+                                arType += "/*none_ptr*/";
+                            } else if (Util.isTypes(STRUCT_INT_ARR_TYPE, arType)) {
+                                javaArgvCode += "int[] " + arName;
+                                arType += "/*none_ptr*/";
+                            } else if (Util.isTypes(STRUCT_BYTE_ARR_TYPE, arType)) {
+                                javaArgvCode += "byte[] " + arName;
+                                arType += "/*none_ptr*/";
                             } else if (Util.isTypes(VOID_TYPE, arType)) {
                             } else {
                                 System.out.println("java argv type:" + arType);
@@ -260,6 +274,7 @@ public class NK_h_2_java {
                     }
                     //
                     mtype = mtype.replace(" *", "*");
+                    String nativeReturnCode = mtype;
                     if (Util.isTypes(INT_TYPE, mtype)) {
                         javaReturnCode = "int";
                     } else if (Util.isTypes(ARR_INT_TYPE, mtype)) {
@@ -273,20 +288,30 @@ public class NK_h_2_java {
                     } else if (Util.isTypes(ARR_BYTE_TYPE, mtype)) {
                         javaReturnCode = "byte[]";
                     } else if (Util.isTypes(STRING_TYPE, mtype)) {
-                        javaReturnCode = "String";
+                        javaReturnCode = "byte[]";
                     } else if (Util.isTypes(DOUBLE_TYPE, mtype)) {
                         javaReturnCode = "double";
                     } else if (Util.isTypes(ARR_LONG_TYPE, mtype)) {
                         javaReturnCode = "long[]";
                     } else if (Util.isTypes(OBJECT_TYPE, mtype)) {
-                        javaReturnCode = "long";
+                        javaReturnCode += "long ";
+                        nativeReturnCode += "/*ptr*/ ";
+                    } else if (Util.isTypes(STRUCT_FLOAT_ARR_TYPE, mtype)) {
+                        javaReturnCode += "float[] ";
+                        nativeReturnCode += "/*none_ptr*/ ";
+                    } else if (Util.isTypes(STRUCT_INT_ARR_TYPE, mtype)) {
+                        javaReturnCode += "int[] ";
+                        nativeReturnCode += "/*none_ptr*/ ";
+                    } else if (Util.isTypes(STRUCT_BYTE_ARR_TYPE, mtype)) {
+                        javaReturnCode += "byte[] ";
+                        nativeReturnCode += "/*none_ptr*/ ";
                     } else if (mtype.equals("void")) {
                         javaReturnCode = "void";
                     } else {
 //                        javaReturnCode = "long";
                         System.out.println("java return :" + mtype);
                     }
-                    String nativeReturnCode = mtype;
+
                     //result
                     output = output.replace(METHOD_NAME, javaNameCode);
                     output = output.replace(JAVA_RETURN, javaReturnCode);

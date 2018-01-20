@@ -9,7 +9,7 @@ package org.mini.gui;
  *
  * @author gust
  */
-public interface GWindowContents {
+public interface GFrameContents {
 
-    public abstract void updateContents(long win_ptr, GWindow parent);
+    public abstract void updateContents(long ctx, GFrame parent);
 }

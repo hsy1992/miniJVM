@@ -1463,10 +1463,7 @@ ReferArr *referarr_create(Instance *jobj_arr) {
     for (i = 0; i < ref_arr->arr_length; i++) {
         Long2Double l2d;
         jarray_get_field(jobj_arr, i, &l2d);
-        Instance *jstr = l2d.r;
-        if (jstr) {
-            ref_arr->arr_body[i] = jstr->arr_body;
-        }
+        ref_arr->arr_body[i] = l2d.r;
     }
     return ref_arr;
 }
@@ -1476,6 +1473,15 @@ void referarr_destory(CStringArr *ref_arr) {
     jvm_free(ref_arr->arr_body);
     jvm_free(ref_arr);
 }
+
+void referarr_2_jlongarr(ReferArr *ref_arr, Instance *jlong_arr) {
+    s32 i;
+    for (i = 0; i < ref_arr->arr_length && i < jlong_arr->arr_length; i++) {
+        Long2Double l2d;
+        l2d.r = ref_arr->arr_body[i];
+        jarray_set_field(jlong_arr, i, &l2d);
+    }
+};
 
 void init_jni_func_table() {
     jnienv.data_type_bytes = (s32 *) &data_type_bytes;
@@ -1517,6 +1523,7 @@ void init_jni_func_table() {
     jnienv.cstringarr_destory = cstringarr_destory;
     jnienv.referarr_create = referarr_create;
     jnienv.referarr_destory = referarr_destory;
+    jnienv.referarr_2_jlongarr = referarr_2_jlongarr;
     jnienv.jvm_calloc = jvm_calloc;
     jnienv.jvm_malloc = jvm_malloc;
     jnienv.jvm_free = jvm_free;

@@ -248,7 +248,7 @@ public class GL_java_2_c {
                             curArgvName = argvName;
                             javaArgvCode += "I";
                             if (!isPointer(nativeArgvs[nativei])) {
-                                curArgvType = "*(" + nativeArgvs[nativei] + "*)&";
+                                curArgvType = "(" + nativeArgvs[nativei] + ")";
                             }
                         } else if ("short".equals(argvType)) {
                             varCode += "    s32 " + argvName + " = env->localvar_getInt(runtime, pos++);\n";

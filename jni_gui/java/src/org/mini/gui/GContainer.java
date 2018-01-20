@@ -30,7 +30,7 @@ abstract public class GContainer extends GObject {
     }
 
     @Override
-    public boolean update(long win_ptr) {
+    public boolean update(long ctx) {
         synchronized (add_cache) {
             elements.addAll(add_cache);
             add_cache.clear();
@@ -42,7 +42,7 @@ abstract public class GContainer extends GObject {
         for (Iterator<GObject> it = elements.iterator(); it.hasNext();) {
             try {
                 GObject nko = it.next();
-                if (!nko.update(win_ptr)) {
+                if (!nko.update(ctx)) {
                     it.remove();
                 }
             } catch (Exception e) {

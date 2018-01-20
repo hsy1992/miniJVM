@@ -11,7 +11,7 @@ package org.mini.gui;
  */
 abstract public class GObject {
 
-    public boolean update(long win_ptr) {
+    public boolean update(long ctx) {
         return true;
     }
 }

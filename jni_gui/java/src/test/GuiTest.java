@@ -1,9 +1,8 @@
 package test;
 
-import org.mini.gui.GWindow;
+import org.mini.gui.GFrame;
 import org.mini.gui.GForm;
 import static org.mini.gui.GToolkit.getForm;
-import org.mini.gui.GWindowContents;
 import static org.mini.nk.NK.nk_button_label;
 import static org.mini.nk.NK.nk_false;
 import static org.mini.nk.NK.nk_layout_row_dynamic;
@@ -13,6 +12,7 @@ import static org.mini.nk.NK.nk_propertyi;
 import static org.mini.nk.NK.nk_true;
 import static org.mini.nk.NK.nk_window_find;
 import static org.mini.nk.NK.nk_window_show;
+import org.mini.gui.GFrameContents;
 
 /*
  * To change this license header, choose License Headers in Project Properties.
@@ -25,7 +25,7 @@ import static org.mini.nk.NK.nk_window_show;
  */
 public class GuiTest {
 
-    class NkFormContents1 implements GWindowContents {
+    class NkFormContents1 implements GFrameContents {
 
         final int EASY = 0, MID = 1, HARD = 2;
         int op = EASY;
@@ -33,40 +33,40 @@ public class GuiTest {
         String sub_form_name = "Notice";
 
         @Override
-        public void updateContents(long win_ptr, GWindow parent) {
+        public void updateContents(long ctx, GFrame parent) {
 
-            nk_layout_row_static(win_ptr, 30f, 80, 1);
-            if (nk_true==nk_button_label(win_ptr, "button")) {
+            nk_layout_row_static(ctx, 30f, 80, 1);
+            if (nk_true==nk_button_label(ctx, "button")) {
                 System.out.println("button pressed\n");
-                long notice = nk_window_find(win_ptr, sub_form_name);
+                long notice = nk_window_find(ctx, sub_form_name);
                 if (notice == 0) {
-                    GForm main = getForm(win_ptr);
+                    GForm main = getForm(ctx);
                     System.out.println("main window:" + main);
-                    main.add(new GWindow(sub_form_name, 100, 100, 300, 400, new GWindowContents() {
+                    main.add(new GFrame(sub_form_name, 100, 100, 300, 400, new GFrameContents() {
                         @Override
-                        public void updateContents(long win_ptr, GWindow parent) {
-                            nk_layout_row_static(win_ptr, 30, 80, 1);
-                            if (nk_true==nk_button_label(win_ptr, "Ok")) {
+                        public void updateContents(long ctx, GFrame parent) {
+                            nk_layout_row_static(ctx, 30, 80, 1);
+                            if (nk_true==nk_button_label(ctx, "Ok")) {
                                 System.out.println("Ok pressed\n");
                             }
                         }
                     }));
                 } else {
-                    nk_window_show(win_ptr, sub_form_name,1);
+                    nk_window_show(ctx, sub_form_name,1);
                 }
             }
-            nk_layout_row_dynamic(win_ptr, 30, 3);
-            if (nk_option_label(win_ptr, "easy", op == EASY?nk_true:nk_false)==nk_true) {
+            nk_layout_row_dynamic(ctx, 30, 3);
+            if (nk_option_label(ctx, "easy", op == EASY?nk_true:nk_false)==nk_true) {
                 op = EASY;
             }
-            if (nk_option_label(win_ptr, "mid", op == MID?nk_true:nk_false)==nk_true) {
+            if (nk_option_label(ctx, "mid", op == MID?nk_true:nk_false)==nk_true) {
                 op = MID;
             }
-            if (nk_option_label(win_ptr, "hard", op == HARD?nk_true:nk_false)==nk_true) {
+            if (nk_option_label(ctx, "hard", op == HARD?nk_true:nk_false)==nk_true) {
                 op = HARD;
             }
-            nk_layout_row_dynamic(win_ptr, 22, 1);
-            property = nk_propertyi(win_ptr, "Compression:", 0, property, 100, 10, 1);
+            nk_layout_row_dynamic(ctx, 22, 1);
+            property = nk_propertyi(ctx, "Compression:", 0, property, 100, 10, 1);
 
         }
 
@@ -74,7 +74,7 @@ public class GuiTest {
 
     void t1() {
         GForm win = new GForm("test", 800, 600);
-        win.add(new GWindow("demo", 30, 30, 300, 200, new NkFormContents1()));
+        win.add(new GFrame("demo", 30, 30, 300, 200, new NkFormContents1()));
         //NkForm win1 = new NkForm("t1", 500, 300);
     }
 

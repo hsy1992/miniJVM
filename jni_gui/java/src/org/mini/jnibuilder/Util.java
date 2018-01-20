@@ -12,7 +12,15 @@ package org.mini.jnibuilder;
 public class Util {
 
     public static boolean isPointer(String nativeTypeStr) {
-        return nativeTypeStr.lastIndexOf('*') == nativeTypeStr.length() - 1;
+        return nativeTypeStr.contains("/*ptr*/");
+    }
+
+    public static boolean isStruct(String nativeTypeStr) {
+        return nativeTypeStr.contains("/*none_ptr*/");
+    }
+
+    public static boolean isConstPointer(String nativeTypeStr) {
+        return nativeTypeStr.contains("const");
     }
 
     public static boolean isTypes(String[] types, String s) {

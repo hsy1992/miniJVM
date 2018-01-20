@@ -148,6 +148,9 @@ void cstringarr_destory(CStringArr *);
 void referarr_destory(CStringArr *ref_arr);
 
 ReferArr *referarr_create(Instance *jobj_arr);
+
+void referarr_2_jlongarr(ReferArr *ref_arr, Instance *jlong_arr);
+
 ////======================= thread =============================
 
 struct _JavaThreadInfo {
