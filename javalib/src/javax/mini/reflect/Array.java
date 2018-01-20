@@ -33,6 +33,14 @@ public class Array {
         data_ptr = new MemAccess(arr_addr);
         bytes = RConst.getBytes(type);
     }
+    
+    /**
+     * return data start memory address
+     * @return 
+     */
+    public long getDataPtr(){
+        return arr_addr;
+    }
 
     public long getVal(int firstIndex) throws IllegalAccessException {
 

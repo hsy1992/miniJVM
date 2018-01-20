@@ -26,6 +26,14 @@ public class Gutil {
     static public native byte[] f2b(float[] farr, byte[] barr);
 
     /**
+     * load image return opengl GL_TEXTURE_2D id
+     *
+     * @param pfilename
+     * @return
+     */
+    public static native int image_load(String pfilename); //const char*, //struct nk_image/*none_ptr*/ 
+
+    /**
      * vec and matrix
      */
     //vec2, vec3, vec4

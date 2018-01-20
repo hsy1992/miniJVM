@@ -759,13 +759,13 @@ s32 javax_mini_reflect_Array_mapArray(Runtime *runtime, Class *clazz) {
     if (ins && target) {
         c8 *ptr;
         //
-        ptr = getFieldPtr_byName_c(ins, JDWP_CLASS_RUNTIME, "length", "I");
+        ptr = getFieldPtr_byName_c(ins, JDWP_CLASS_ARRAY, "length", "I");
         if (ptr)setFieldInt(ptr, target->arr_length);
         //
-        ptr = getFieldPtr_byName_c(ins, JDWP_CLASS_RUNTIME, "arr_addr", "J");
+        ptr = getFieldPtr_byName_c(ins, JDWP_CLASS_ARRAY, "arr_addr", "J");
         if (ptr)setFieldLong(ptr, (u64) (intptr_t) target->arr_body);
         //
-        ptr = getFieldPtr_byName_c(ins, JDWP_CLASS_RUNTIME, "type", "B");
+        ptr = getFieldPtr_byName_c(ins, JDWP_CLASS_ARRAY, "type", "B");
         if (ptr)setFieldByte(ptr, (s8) utf8_char_at(target->mb.clazz->name, 1));
         //
 

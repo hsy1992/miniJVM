@@ -1,0 +1,170 @@
+/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
+package org.mini.gui;
+
+import org.mini.nk.NK;
+
+/**
+ *
+ * @author gust
+ */
+public class GGraphics {
+
+    long brush;
+    float[] frame_bound;
+
+    int[] curColor = new int[1];
+    float[] rect = new float[4];
+    float[] clip = new float[4];
+    int translateX, translateY;
+
+    public void setColor(int abgr) {
+        curColor[0] = abgr;
+    }
+
+    public void fillRect(int x, int y, int w, int h) {
+        if (brush == 0) {
+            return;
+        }
+        rect[0] = x + frame_bound[0] + translateX;
+        rect[1] = y + frame_bound[1] + translateY;
+        rect[2] = w;
+        rect[3] = h;
+        NK.nk_fill_rect(brush, rect, 1, curColor);
+    }
+
+    public void fillArc(int x, int y, int width, int height, int startAngle, int arcAngle) {
+        if (brush == 0) {
+            return;
+        }
+        x += frame_bound[0] + translateX;
+        y += frame_bound[1] + translateY;
+        NK.nk_fill_arc(brush, x, y, width, (float) startAngle / 360, (float) arcAngle / 360, curColor);
+    }
+
+    public void drawArc(int x, int y, int width, int height, int startAngle, int arcAngle) {
+        if (brush == 0) {
+            return;
+        }
+        rect[0] = x + frame_bound[0] + translateX;
+        rect[1] = y + frame_bound[1] + translateY;
+        rect[2] = width;
+        rect[3] = height;
+        NK.nk_stroke_circle(brush, rect, 1, curColor);
+    }
+
+    public void drawLine(int x1, int y1, int x2, int y2) {
+        if (brush == 0) {
+            return;
+        }
+        x1 += frame_bound[0] + translateX;;
+        y1 += frame_bound[1] + translateY;;
+        x2 += frame_bound[0] + translateX;;
+        y2 += frame_bound[1] + translateY;;
+        NK.nk_stroke_line(brush, x1, y1, x2, y2, 1, curColor);
+    }
+
+    public void drawString(String str, int x, int y, int anchor) {
+        if (brush == 0) {
+            return;
+        }
+        x += frame_bound[0] + translateX;
+        y += frame_bound[1] + translateY;
+    }
+
+    public void drawSubstring(String str, int offset, int len, int x, int y, int anchor) {
+        if (brush == 0) {
+            return;
+        }
+        x += frame_bound[0] + translateX;
+        y += frame_bound[1] + translateY;
+    }
+
+    public void drawChar(char character, int x, int y, int anchor) {
+        if (brush == 0) {
+            return;
+        }
+        x += frame_bound[0] + translateX;
+        y += frame_bound[1] + translateY;
+    }
+
+    public void drawChars(char[] data, int offset, int length, int x, int y, int anchor) {
+        if (brush == 0) {
+            return;
+        }
+        x += frame_bound[0] + translateX;
+        y += frame_bound[1] + translateY;
+    }
+
+    public void fillTriangle(int x1, int y1, int x2, int y2, int x3, int y3) {
+        if (brush == 0) {
+            return;
+        }
+        x1 += frame_bound[0] + translateX;
+        y1 += frame_bound[1] + translateY;
+        x2 += frame_bound[0] + translateX;
+        y2 += frame_bound[1] + translateY;
+        x3 += frame_bound[0] + translateX;
+        y3 += frame_bound[1] + translateY;
+    }
+
+    public void drawImage(GImage img, int x, int y, int anchor) {
+        if (brush == 0) {
+            return;
+        }
+        x += frame_bound[0] + translateX;
+        y += frame_bound[1] + translateY;
+        NK.nk_draw_image(brush, rect, img.getDataPtr(), curColor);
+    }
+
+    public void drawRegion(GImage src, int x_src, int y_src, int width, int height, int transform, int x_dest, int y_dest, int anchor) {
+        if (brush == 0) {
+            return;
+        }
+        x_src += frame_bound[0] + translateX;
+        y_src += frame_bound[1] + translateY;
+
+        x_dest += frame_bound[0] + translateX;
+        y_dest += frame_bound[1] + translateY;
+    }
+
+    public void drawRGB(int[] rgbData, int offset, int scanlength, int x, int y, int width, int height, boolean processAlpha) {
+        if (brush == 0) {
+            return;
+        }
+        x += frame_bound[0] + translateX;
+        y += frame_bound[1] + translateY;
+    }
+
+    public int getColor() {
+        return curColor[0];
+    }
+
+    public void copyArea(int x_src, int y_src, int width, int height, int x_dest, int y_dest, int anchor) {
+        if (brush == 0) {
+            return;
+        }
+        x_src += frame_bound[0] + translateX;
+        y_src += frame_bound[1] + translateY;
+
+        x_dest += frame_bound[0] + translateX;
+        y_dest += frame_bound[1] + translateY;
+    }
+
+    public void clipRect(int x, int y, int width, int height) {
+        if (brush == 0) {
+            return;
+        }
+        x += frame_bound[0] + translateX;
+        y += frame_bound[1] + translateY;
+    }
+
+    public void translate(int x, int y) {
+        translateX = x;
+        translateY = y;
+    }
+
+}

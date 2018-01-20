@@ -1639,17 +1639,8 @@ public class Glfw {
     /*
 		return glfwGetWindowParam((GLFWwindow*)window, param);
      */
-    /**
-     * Sets the {@link GlfwCallback} that will get invoked by various events.
-     * Replaces the single callback functions of GLFW
-     *
-     * @param callback the callback or null
-     */
-    public static void glfwSetCallback(long window, GlfwCallback callback) {
-        glfwSetCallbackJni(window, callback);
-    }
 
-    public static native void glfwSetCallbackJni(long window, GlfwCallback javaCallback);
+    public static native void glfwSetCallback(long window, GlfwCallback javaCallback);
 
     /*
 		if (callback) {

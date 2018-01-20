@@ -82,8 +82,8 @@ public class NK_h_2_java {
     static public String[] ARR_OBJECT_TYPE = {"void**", "nk_ptr*", "struct nk_font_atlas**",};
     static public String[] VOID_TYPE = {"void"};
     static public String[] MULT_TYPE = {"..."};
-    static public String[] STRUCT_FLOAT_ARR_TYPE = {"struct nk_rect", "struct nk_vec2", "", "", "", "", "", "",};
-    static public String[] STRUCT_INT_ARR_TYPE = {"struct nk_rect", "struct nk_vec2", "struct nk_color", "", "", "", "", "", "",};
+    static public String[] STRUCT_FLOAT_ARR_TYPE = {"struct nk_rect", "struct nk_vec2", "struct nk_colorf", "", "", "", "", "",};
+    static public String[] STRUCT_INT_ARR_TYPE = {"struct nk_vec2", "struct nk_color", "", "", "", "", "", "",};
     static public String[] STRUCT_BYTE_ARR_TYPE = {"nk_glyph", "const nk_glyph", "struct nk_font_config", "struct nk_image", "struct nk_color", "struct nk_style_item", "nk_handle", "", "", "", "", "", "",};
 
     static public String[][] TYPES_ALL = {INT_TYPE, ARR_INT_TYPE, SHORT_TYPE, ARR_SHORT_TYPE, BYTE_TYPE, ARR_BYTE_TYPE, STRING_TYPE, ARR_STRING_TYPE, LONG_TYPE, ARR_LONG_TYPE, FLOAT_TYPE, ARR_FLOAT_TYPE, DOUBLE_TYPE, ARR_DOUBLE_TYPE, OBJECT_TYPE, ARR_OBJECT_TYPE, VOID_TYPE, MULT_TYPE, STRUCT_FLOAT_ARR_TYPE, STRUCT_INT_ARR_TYPE, STRUCT_BYTE_ARR_TYPE,};
