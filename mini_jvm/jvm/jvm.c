@@ -205,7 +205,6 @@ s32 execute_jvm(c8 *p_classpath, c8 *p_mainclass, ArrayList *java_para) {
             localvar_dispose(runtime);
             localvar_init(runtime, main->para_count + 1);
             s32 count = java_para->length;
-            Long2Double l2d;
             Utf8String *ustr = utf8_create_c("[java/lang/String;");
             Instance *arr = jarray_create(count, 0, ustr);
             garbage_refer_hold(arr);
@@ -214,8 +213,7 @@ s32 execute_jvm(c8 *p_classpath, c8 *p_mainclass, ArrayList *java_para) {
             for (i = 0; i < count; i++) {
                 Utf8String *utfs = utf8_create_c(arraylist_get_value(java_para, i));
                 Instance *jstr = jstring_create(utfs, runtime);
-                l2d.r = jstr;
-                jarray_set_field(arr, i, &l2d);
+                jarray_set_field(arr, i, (intptr_t)jstr);
                 utf8_destory(utfs);
             }
             push_ref(runtime->stack, arr);

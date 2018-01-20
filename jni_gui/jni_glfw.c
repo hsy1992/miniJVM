@@ -91,10 +91,9 @@ static void _callback_drop(GLFWwindow *window, s32 count, const c8 **cstrs) {
         Instance *jstrs = env->jarray_create(count, 0, cls);
         env->utf8_destory(cls);
         s32 i;
-        Long2Double l2d;
         for (i = 0; i < count; i++) {
-            l2d.r = createJavaString(refers.runtime, (c8 *) cstrs[i]);
-            env->jarray_set_field(jstrs, i, &l2d);
+            s64 val = (intptr_t)createJavaString(refers.runtime, (c8 *) cstrs[i]);
+            env->jarray_set_field(jstrs, i, val);
         }
         env->push_ref(refers.runtime->stack, jstrs);
         env->execute_method(refers._callback_drop, refers.runtime, refers.glfw_callback->mb.clazz);
@@ -682,16 +681,12 @@ int org_mini_glfw_utils_Gutil_image_load(Runtime *runtime, Class *clazz) {
     s32 w, h, depth;
     s32 _re_val = image_load((const char *) (ptr_pfilename), &w, &h, &depth);
     if (pwhd && pwhd->arr_length >= 3) {
-        Long2Double l2d;
-        l2d.l = 0;
-        l2d.i2l.i1 = w;
-        env->jarray_set_field(pwhd, 0, &l2d);
-        l2d.l = 0;
-        l2d.i2l.i1 = h;
-        env->jarray_set_field(pwhd, 1, &l2d);
-        l2d.l = 0;
-        l2d.i2l.i1 = depth;
-        env->jarray_set_field(pwhd, 2, &l2d);
+        s64 val= w;
+        env->jarray_set_field(pwhd, 0, val);
+        val = h;
+        env->jarray_set_field(pwhd, 1, val);
+        val = depth;
+        env->jarray_set_field(pwhd, 2, val);
     }
     env->push_int(runtime->stack, _re_val);
     env->utf8_destory(u_pfilename);

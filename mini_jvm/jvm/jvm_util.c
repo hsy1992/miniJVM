@@ -854,11 +854,11 @@ Instance *jarray_multi_create(ArrayList *dim, Utf8String *pdesc, s32 deep) {
 #endif
     if (ch == '[') {
         int i;
-        Long2Double l2d;
+        s64 val;
         for (i = 0; i < len; i++) {
             Instance *elem = jarray_multi_create(dim, desc, deep + 1);
-            l2d.r = (__refer) elem;
-            jarray_set_field(arr, i, &l2d);
+            val = (intptr_t) elem;
+            jarray_set_field(arr, i, val);
         }
     }
     garbage_refer_release(arr);
@@ -868,53 +868,55 @@ Instance *jarray_multi_create(ArrayList *dim, Utf8String *pdesc, s32 deep) {
 }
 
 
-void jarray_set_field(Instance *arr, s32 index, Long2Double *l2d) {
+void jarray_set_field(Instance *arr, s32 index, s64 val) {
     s32 idx = arr->mb.arr_type_index;
     s32 bytes = data_type_bytes[idx];
     if (isDataReferByIndex(idx)) {
-        setFieldRefer(arr->arr_body + index * bytes, l2d->r);
+        setFieldRefer(arr->arr_body + index * bytes, (__refer)(intptr_t) val);
     } else {
         switch (bytes) {
             case 1:
-                setFieldByte(arr->arr_body + index * bytes, (s8) l2d->i2l.i1);
+                setFieldByte(arr->arr_body + index * bytes, (s8) val);
                 break;
             case 2:
-                setFieldShort(arr->arr_body + index * bytes, (s16) l2d->i2l.i1);
+                setFieldShort(arr->arr_body + index * bytes, (s16) val);
                 break;
             case 4:
-                setFieldInt(arr->arr_body + index * bytes, (s32) l2d->i2l.i1);
+                setFieldInt(arr->arr_body + index * bytes, (s32) val);
                 break;
             case 8:
-                setFieldLong(arr->arr_body + index * bytes, l2d->l);
+                setFieldLong(arr->arr_body + index * bytes, val);
                 break;
         }
     }
 }
 
-void jarray_get_field(Instance *arr, s32 index, Long2Double *l2d) {
+s64 jarray_get_field(Instance *arr, s32 index) {
     s32 idx = arr->mb.arr_type_index;
     s32 bytes = data_type_bytes[idx];
+    s64 val = 0;
     if (isDataReferByIndex(idx)) {
-        l2d->r = getFieldRefer(arr->arr_body + index * bytes);
+        val = (intptr_t) getFieldRefer(arr->arr_body + index * bytes);
     } else {
         switch (bytes) {
             case 1:
-                l2d->i2l.i1 = getFieldByte(arr->arr_body + index * bytes);
+                val = getFieldByte(arr->arr_body + index * bytes);
                 break;
             case 2:
-                l2d->i2l.i1 = getFieldShort(arr->arr_body + index * bytes);
                 if (idx == DATATYPE_JCHAR) {
-                    l2d->i2l.i1 = (u16) l2d->i2l.i1;
-                }
+                    val = (u16) getFieldShort(arr->arr_body + index * bytes);
+                } else
+                    val = getFieldShort(arr->arr_body + index * bytes);
                 break;
             case 4:
-                l2d->i2l.i1 = getFieldInt(arr->arr_body + index * bytes);
+                val = getFieldInt(arr->arr_body + index * bytes);
                 break;
             case 8:
-                l2d->l = getFieldLong(arr->arr_body + index * bytes);
+                val = getFieldLong(arr->arr_body + index * bytes);
                 break;
         }
     }
+    return val;
 }
 
 //===============================    实例化对象  ==================================
@@ -1024,12 +1026,12 @@ Instance *instance_copy(Instance *src) {
         dst->arr_body = jvm_malloc(size);
         if (isDataReferByIndex(src->mb.arr_type_index)) {
             s32 i;
-            Long2Double l2d;
+            s64 val;
             for (i = 0; i < dst->arr_length; i++) {
-                jarray_get_field(src, i, &l2d);
-                if (l2d.r) {
-                    l2d.r = instance_copy((Instance *) getFieldRefer(l2d.r));
-                    jarray_set_field(dst, i, &l2d);
+                val = jarray_get_field(src, i);
+                if (val) {
+                    val = (intptr_t)instance_copy((Instance *) getFieldRefer((__refer)(intptr_t) val));
+                    jarray_set_field(dst, i, val);
                 }
             }
         } else {
@@ -1431,9 +1433,8 @@ CStringArr *cstringarr_create(Instance *jstr_arr) {
     cstr_arr->arr_body = jvm_calloc(jstr_arr->arr_length * sizeof(__refer));
     s32 i;
     for (i = 0; i < cstr_arr->arr_length; i++) {
-        Long2Double l2d;
-        jarray_get_field(jstr_arr, i, &l2d);
-        Instance *jstr = l2d.r;
+        s64 val = jarray_get_field(jstr_arr, i);
+        Instance *jstr = (__refer)(intptr_t) val;
         if (jstr) {
             Utf8String *ustr = utf8_create();
             jstring_2_utf8(jstr, ustr);
@@ -1461,9 +1462,8 @@ ReferArr *referarr_create(Instance *jobj_arr) {
     ref_arr->arr_body = jvm_calloc(jobj_arr->arr_length * sizeof(__refer));
     s32 i;
     for (i = 0; i < ref_arr->arr_length; i++) {
-        Long2Double l2d;
-        jarray_get_field(jobj_arr, i, &l2d);
-        ref_arr->arr_body[i] = l2d.r;
+        s64 val = jarray_get_field(jobj_arr, i);
+        ref_arr->arr_body[i] = (__refer)(intptr_t) val;
     }
     return ref_arr;
 }
@@ -1477,9 +1477,8 @@ void referarr_destory(CStringArr *ref_arr) {
 void referarr_2_jlongarr(ReferArr *ref_arr, Instance *jlong_arr) {
     s32 i;
     for (i = 0; i < ref_arr->arr_length && i < jlong_arr->arr_length; i++) {
-        Long2Double l2d;
-        l2d.r = ref_arr->arr_body[i];
-        jarray_set_field(jlong_arr, i, &l2d);
+        __refer ref= ref_arr->arr_body[i];
+        jarray_set_field(jlong_arr, i, (intptr_t)ref);
     }
 };
 

@@ -27,8 +27,8 @@
       <file leaf-file-name="jni_nk.c" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/jni_nk.c">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="31566">
-              <caret line="10026" column="0" lean-forward="false" selection-start-line="10026" selection-start-column="0" selection-end-line="10026" selection-end-column="0" />
+            <state relative-caret-position="108">
+              <caret line="7951" column="44" lean-forward="false" selection-start-line="7951" selection-start-column="44" selection-end-line="7951" selection-end-column="44" />
               <folding />
             </state>
           </provider>
@@ -37,8 +37,8 @@
       <file leaf-file-name="jni_glfw.c" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/jni_glfw.c">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="336">
-              <caret line="661" column="5" lean-forward="false" selection-start-line="661" selection-start-column="5" selection-end-line="661" selection-end-column="5" />
+            <state relative-caret-position="170">
+              <caret line="686" column="44" lean-forward="false" selection-start-line="686" selection-start-column="44" selection-end-line="686" selection-end-column="44" />
               <folding>
                 <element signature="e#68#86#0" expanded="true" />
                 <element signature="e#249#284#0" expanded="true" />
@@ -212,12 +212,12 @@
       <updated>1516429084076</updated>
       <workItem from="1516429086806" duration="1075000" />
       <workItem from="1516430431560" duration="8404000" />
-      <workItem from="1516479482677" duration="5095000" />
+      <workItem from="1516479482677" duration="5341000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="14574000" />
+    <option name="totallyTimeSpent" value="14820000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="51" y="92" width="969" height="652" extended-state="0" />
@@ -225,7 +225,7 @@
     <layout>
       <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.3029001" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
-      <window_info id="Messages" active="true" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.225" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
+      <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.29038462" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="CMake" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32873276" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="true" content_ui="tabs" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
@@ -329,14 +329,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/jni_nk.c">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="31566">
-          <caret line="10026" column="0" lean-forward="false" selection-start-line="10026" selection-start-column="0" selection-end-line="10026" selection-end-column="0" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/deps/include/GLFW/glfw3.h">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="0">
@@ -345,10 +337,18 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/jni_nk.c">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="108">
+          <caret line="7951" column="44" lean-forward="false" selection-start-line="7951" selection-start-column="44" selection-end-line="7951" selection-end-column="44" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/jni_glfw.c">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="336">
-          <caret line="661" column="5" lean-forward="false" selection-start-line="661" selection-start-column="5" selection-end-line="661" selection-end-column="5" />
+        <state relative-caret-position="170">
+          <caret line="686" column="44" lean-forward="false" selection-start-line="686" selection-start-column="44" selection-end-line="686" selection-end-column="44" />
           <folding>
             <element signature="e#68#86#0" expanded="true" />
             <element signature="e#249#284#0" expanded="true" />

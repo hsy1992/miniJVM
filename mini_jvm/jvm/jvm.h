@@ -1017,9 +1017,9 @@ struct _JNIENV {
 
     Instance *(*jarray_create)(s32 count, s32 typeIdx, Utf8String *type);
 
-    void (*jarray_set_field)(Instance *arr, s32 index, Long2Double *l2d);
+    void (*jarray_set_field)(Instance *arr, s32 index, s64 val);
 
-    void (*jarray_get_field)(Instance *arr, s32 index, Long2Double *l2d);
+    s64 (*jarray_get_field)(Instance *arr, s32 index);
 
     void *(*jvm_calloc)(u32 size);
 

@@ -230,9 +230,9 @@ s32 jarray_destory(Instance *arr);
 
 Instance *jarray_multi_create(ArrayList *dim, Utf8String *desc, s32 deep);
 
-void jarray_set_field(Instance *arr, s32 index, Long2Double *l2d);
+void jarray_set_field(Instance *arr, s32 index, s64 val);
 
-void jarray_get_field(Instance *arr, s32 index, Long2Double *l2d);
+s64 jarray_get_field(Instance *arr, s32 index);
 
 Instance *exception_create(s32 exception_type, Runtime *runtime);
 

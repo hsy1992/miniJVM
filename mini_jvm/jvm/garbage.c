@@ -617,11 +617,9 @@ static inline void _jarray_mark_refer(Instance *arr) {
     if (arr && arr->mb.type == MEM_TYPE_ARR) {
         if (isDataReferByIndex(arr->mb.arr_type_index)) {
             s32 i;
-            Long2Double l2d;
             for (i = 0; i < arr->arr_length; i++) {//把所有引用去除，否则不会垃圾回收
-                l2d.l = 0;
-                jarray_get_field(arr, i, &l2d);
-                _garbage_mark_object(l2d.r);
+                s64 val = jarray_get_field(arr, i);
+                _garbage_mark_object((__refer)(intptr_t) val);
             }
         }
     }

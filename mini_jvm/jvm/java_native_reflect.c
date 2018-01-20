@@ -57,14 +57,13 @@ s32 javax_mini_reflect_vm_RefNative_getClasses(Runtime *runtime, Class *clazz) {
     Instance *jarr = jarray_create(size, 0, ustr);
     utf8_destory(ustr);
     s32 i = 0;
-    Long2Double l2d;
     HashtableIterator hti;
     hashtable_iterate(sys_classloader->classes, &hti);
 
     for (; hashtable_iter_has_more(&hti);) {
         Utf8String *k = hashtable_iter_next_key(&hti);
-        l2d.r = classes_get(k);
-        jarray_set_field(jarr, i, &l2d);
+        __refer r = classes_get(k);
+        jarray_set_field(jarr, i, (intptr_t) r);
         i++;
     }
     push_ref(runtime->stack, jarr);//先放入栈，再关联回收器，防止多线程回收
@@ -274,15 +273,15 @@ s32 javax_mini_reflect_MemAccess_readRefer0(Runtime *runtime, Class *clazz) {
 struct _list_getthread_para {
     s32 i;
     Instance *jarr;
-    Long2Double l2d;
+    s64 val;
 };
 
 void _list_iter_getthread(ArrayListValue value, void *para) {
     if (value) {
         Runtime *r = value;
         struct _list_getthread_para *p = para;
-        p->l2d.r = r->threadInfo->jthread;
-        jarray_set_field(p->jarr, p->i, &p->l2d);
+        p->val = (intptr_t) r->threadInfo->jthread;
+        jarray_set_field(p->jarr, p->i, p->val);
     }
 }
 
@@ -422,11 +421,10 @@ s32 javax_mini_reflect_vm_RefNative_getGarbageReferedObjs(Runtime *runtime, Clas
     Instance *jarr = jarray_create(size, 0, ustr);
     utf8_destory(ustr);
     s32 i = 0;
-    Long2Double l2d;
 
     for (i = 0; i < collector->runtime_refer_copy->length; i++) {
-        l2d.r = arraylist_get_value(collector->runtime_refer_copy, i);
-        jarray_set_field(jarr, i, &l2d);
+        __refer r = arraylist_get_value(collector->runtime_refer_copy, i);
+        jarray_set_field(jarr, i, (intptr_t) r);
     }
     push_ref(runtime->stack, jarr);//先放入栈，再关联回收器，防止多线程回收
 
@@ -487,8 +485,8 @@ s32 javax_mini_reflect_Reference_mapReference(Runtime *runtime, Class *clazz) {
                 Instance *jarr = jarray_create(target->fieldPool.field_used, DATATYPE_LONG, NULL);
                 setFieldRefer(ptr, jarr);
                 for (i = 0; i < target->fieldPool.field_used; i++) {
-                    l2d.l = (u64) (intptr_t) &target->fieldPool.field[i];
-                    jarray_set_field(jarr, i, &l2d);
+                    s64 val = (u64) (intptr_t) &target->fieldPool.field[i];
+                    jarray_set_field(jarr, i, val);
                 }
             }
         }
@@ -499,8 +497,8 @@ s32 javax_mini_reflect_Reference_mapReference(Runtime *runtime, Class *clazz) {
                 Instance *jarr = jarray_create(target->methodPool.method_used, DATATYPE_LONG, NULL);
                 setFieldRefer(ptr, jarr);
                 for (i = 0; i < target->methodPool.method_used; i++) {
-                    l2d.l = (u64) (intptr_t) &target->methodPool.method[i];
-                    jarray_set_field(jarr, i, &l2d);
+                    s64 val = (u64) (intptr_t) &target->methodPool.method[i];
+                    jarray_set_field(jarr, i, val);
                 }
             }
         }
@@ -512,8 +510,8 @@ s32 javax_mini_reflect_Reference_mapReference(Runtime *runtime, Class *clazz) {
                 setFieldRefer(ptr, jarr);
                 for (i = 0; i < target->interfacePool.clasz_used; i++) {
                     Class *cl = classes_load_get(target->interfacePool.clasz[i].name, runtime);
-                    l2d.l = (u64) (intptr_t) cl;
-                    jarray_set_field(jarr, i, &l2d);
+                    s64 val = (u64) (intptr_t) cl;
+                    jarray_set_field(jarr, i, val);
                 }
             }
         }
@@ -649,8 +647,8 @@ s32 javax_mini_reflect_Method_mapMethod(Runtime *runtime, Class *clazz) {
                     utf8_destory(ustr);
                     for (i = 0; i < att->converted_code->local_var_table_length; i++) {
                         LocalVarTable *lvt = &att->converted_code->local_var_table[i];
-                        l2d.r = localVarTable2java(methodInfo->_this_class, lvt, runtime);
-                        jarray_set_field(jarr, i, &l2d);
+                        s64 val = (intptr_t) localVarTable2java(methodInfo->_this_class, lvt, runtime);
+                        jarray_set_field(jarr, i, val);
 
                     }
                 }
@@ -678,19 +676,18 @@ s32 javax_mini_reflect_Method_invokeMethod(Runtime *runtime, Class *clazz) {
         }
         s32 i;
         for (i = 0; i < argsArr->arr_length; i++) {
-            Long2Double l2d;
-            jarray_get_field(argsArr, i, &l2d);
+            s64 val = jarray_get_field(argsArr, i);
             switch (utf8_char_at(methodInfo->paraType, i)) {
                 case '4': {
-                    push_int(runtime->stack, (s32) l2d.l);
+                    push_int(runtime->stack, (s32) val);
                     break;
                 }
                 case '8': {
-                    push_long(runtime->stack, l2d.l);
+                    push_long(runtime->stack, val);
                     break;
                 }
                 case 'R': {
-                    push_ref(runtime->stack, l2d.r);
+                    push_ref(runtime->stack, (__refer) (intptr_t) val);
                     break;
                 }
             }

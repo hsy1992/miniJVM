@@ -804,14 +804,13 @@ s32 org_mini_fs_InnerFile_listDir(Runtime *runtime, Class *clazz) {
             (void) closedir(dirp); //关闭目录
 
             s32 i;
-            Long2Double l2d;
             Utf8String *ustr = utf8_create_c(STR_INS_JAVA_LANG_STRING);
             Instance *jarr = jarray_create(files->length, 0, ustr);
             utf8_destory(ustr);
             for (i = 0; i < files->length; i++) {
-                l2d.r = arraylist_get_value(files, i);
-                garbage_refer_release(l2d.r);
-                jarray_set_field(jarr, i, &l2d);
+                __refer ref = arraylist_get_value(files, i);
+                garbage_refer_release(ref);
+                jarray_set_field(jarr, i, (intptr_t) ref);
             }
             push_ref(runtime->stack, jarr);
         } else {
