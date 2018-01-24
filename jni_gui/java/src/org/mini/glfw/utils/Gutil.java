@@ -5,6 +5,7 @@
  */
 package org.mini.glfw.utils;
 
+import java.io.UnsupportedEncodingException;
 import org.mini.gl.GL;
 import static org.mini.gl.GL.GL_LINES;
 import static org.mini.gl.GL.glBegin;
@@ -126,5 +127,17 @@ public class Gutil {
         GL.glVertex3f(0, 0, 0);
         GL.glVertex3f(0, 0, 1);
         glEnd();
+    }
+
+    public static byte[] toUtf8(String s) {
+        if (s == null) {
+            return null;
+        }
+        byte[] barr = null;
+        try {
+            barr = s.getBytes("utf-8");
+        } catch (UnsupportedEncodingException ex) {
+        }
+        return barr;
     }
 }

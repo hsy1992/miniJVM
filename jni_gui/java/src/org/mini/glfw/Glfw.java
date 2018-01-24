@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.mini.gl.GL;
+import org.mini.glfw.utils.Gutil;
 import org.mini.gui.GToolkit;
 
 public class Glfw {
@@ -1519,7 +1520,7 @@ public class Glfw {
 		glfwWindowHint(target, hint);
      */
     public static long glfwCreateWindow(int width, int height, String title, long monitor, long share) {
-        return glfwCreateWindowJni(width, height, title == null ? "MiniJvm\000".getBytes() : GToolkit.toUtf8(title+"\000"), monitor, share);
+        return glfwCreateWindowJni(width, height, title == null ? "MiniJvm\000".getBytes() : Gutil.toUtf8(title+"\000"), monitor, share);
     }
 
     private static native long glfwCreateWindowJni(int width, int height, byte[] title, long monitor, long share);

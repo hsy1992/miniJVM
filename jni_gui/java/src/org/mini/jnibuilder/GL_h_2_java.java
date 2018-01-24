@@ -194,11 +194,11 @@ public class GL_h_2_java {
                                 javaArgvCode += "byte " + arName;
                             } else if (isTypes(ARR_BYTE_TYPE, arType)) {
                                 javaArgvCode += "byte[] " + arName;
-                                javaArgvCode += ", int offset_" + arName;
+//                                javaArgvCode += ", int offset_" + arName;
                             } else if (isTypes(STRING_TYPE, arType)) {
-                                javaArgvCode += "String " + arName;
+                                javaArgvCode += "byte[] " + arName;
                             } else if (isTypes(ARR_STRING_TYPE, arType)) {
-                                javaArgvCode += "String[] " + arName;
+                                javaArgvCode += "byte[][] " + arName;
                                 //no necessary offset
                             } else if (isTypes(LONG_TYPE, arType)) {
                                 javaArgvCode += "long " + arName;

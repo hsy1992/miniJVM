@@ -3533,9 +3533,9 @@ int org_mini_nk_NK_nk_combo(Runtime *runtime, Class *clazz) {
     
     intptr_t parg0 = env->localvar_getLong_2slot(runtime, pos);pos += 2;
     Instance *pitems = env->localvar_getRefer(runtime, pos++);
-    __refer ptr_pitems = NULL;
+    CStringArr *ptr_pitems = NULL;
     if(pitems){
-        ptr_pitems = pitems->arr_body;
+        ptr_pitems = env->cstringarr_create(pitems);
     }
     s32 pcount = env->localvar_getInt(runtime, pos++);
     s32 pselected = env->localvar_getInt(runtime, pos++);
@@ -3546,9 +3546,9 @@ int org_mini_nk_NK_nk_combo(Runtime *runtime, Class *clazz) {
         ptr_psize = psize->arr_body;
     }
 
-    int _re_val = nk_combo((struct nk_context*/*ptr*/)(parg0), (const char**)(ptr_pitems), (int)pcount, (int)pselected, (int)pitem_height, *(struct nk_vec2/*none_ptr*/*)(ptr_psize));
+    int _re_val = nk_combo((struct nk_context*/*ptr*/)(parg0), (const char**)(ptr_pitems->arr_body), (int)pcount, (int)pselected, (int)pitem_height, *(struct nk_vec2/*none_ptr*/*)(ptr_psize));
     s32 ret_value = (s32)_re_val;env->push_int(runtime->stack, ret_value);
-    
+    env->cstringarr_destory(ptr_pitems);
     return 0;
 }
 
@@ -3631,9 +3631,9 @@ int org_mini_nk_NK_nk_combobox(Runtime *runtime, Class *clazz) {
     
     intptr_t parg0 = env->localvar_getLong_2slot(runtime, pos);pos += 2;
     Instance *pitems = env->localvar_getRefer(runtime, pos++);
-    __refer ptr_pitems = NULL;
+    CStringArr *ptr_pitems = NULL;
     if(pitems){
-        ptr_pitems = pitems->arr_body;
+        ptr_pitems = env->cstringarr_create(pitems);
     }
     s32 pcount = env->localvar_getInt(runtime, pos++);
     Instance *pselected = env->localvar_getRefer(runtime, pos++);
@@ -3648,9 +3648,9 @@ int org_mini_nk_NK_nk_combobox(Runtime *runtime, Class *clazz) {
         ptr_psize = psize->arr_body;
     }
 
-    nk_combobox((struct nk_context*/*ptr*/)(parg0), (const char**)(ptr_pitems), (int)pcount, (int*)(ptr_pselected), (int)pitem_height, *(struct nk_vec2/*none_ptr*/*)(ptr_psize));
+    nk_combobox((struct nk_context*/*ptr*/)(parg0), (const char**)(ptr_pitems->arr_body), (int)pcount, (int*)(ptr_pselected), (int)pitem_height, *(struct nk_vec2/*none_ptr*/*)(ptr_psize));
     
-    
+    env->cstringarr_destory(ptr_pitems);
     return 0;
 }
 
@@ -6679,14 +6679,14 @@ int org_mini_nk_NK_nk_strtoi(Runtime *runtime, Class *clazz) {
         ptr_pstr = pstr->arr_body;
     }
     Instance *pendptr = env->localvar_getRefer(runtime, pos++);
-    __refer ptr_pendptr = NULL;
+    CStringArr *ptr_pendptr = NULL;
     if(pendptr){
-        ptr_pendptr = pendptr->arr_body;
+        ptr_pendptr = env->cstringarr_create(pendptr);
     }
 
-    int _re_val = nk_strtoi((const char*)(ptr_pstr), (const char**)(ptr_pendptr));
+    int _re_val = nk_strtoi((const char*)(ptr_pstr), (const char**)(ptr_pendptr->arr_body));
     s32 ret_value = (s32)_re_val;env->push_int(runtime->stack, ret_value);
-    
+    env->cstringarr_destory(ptr_pendptr);
     return 0;
 }
 
@@ -6700,14 +6700,14 @@ int org_mini_nk_NK_nk_strtof(Runtime *runtime, Class *clazz) {
         ptr_pstr = pstr->arr_body;
     }
     Instance *pendptr = env->localvar_getRefer(runtime, pos++);
-    __refer ptr_pendptr = NULL;
+    CStringArr *ptr_pendptr = NULL;
     if(pendptr){
-        ptr_pendptr = pendptr->arr_body;
+        ptr_pendptr = env->cstringarr_create(pendptr);
     }
 
-    f32 ret_value = (f32)nk_strtof((const char*)(ptr_pstr), (const char**)(ptr_pendptr));
+    f32 ret_value = (f32)nk_strtof((const char*)(ptr_pstr), (const char**)(ptr_pendptr->arr_body));
     env->push_float(runtime->stack, ret_value);
-    
+    env->cstringarr_destory(ptr_pendptr);
     return 0;
 }
 
@@ -6721,14 +6721,14 @@ int org_mini_nk_NK_nk_strtod(Runtime *runtime, Class *clazz) {
         ptr_pstr = pstr->arr_body;
     }
     Instance *pendptr = env->localvar_getRefer(runtime, pos++);
-    __refer ptr_pendptr = NULL;
+    CStringArr *ptr_pendptr = NULL;
     if(pendptr){
-        ptr_pendptr = pendptr->arr_body;
+        ptr_pendptr = env->cstringarr_create(pendptr);
     }
 
-    f64 ret_value = (f64)nk_strtod((const char*)(ptr_pstr), (const char**)(ptr_pendptr));
+    f64 ret_value = (f64)nk_strtod((const char*)(ptr_pstr), (const char**)(ptr_pendptr->arr_body));
     env->push_double(runtime->stack, ret_value);
-    
+    env->cstringarr_destory(ptr_pendptr);
     return 0;
 }
 
@@ -9773,10 +9773,10 @@ static java_native_method method_nkclear_table[] = {
 {"org/mini/nk/NK",  "nk_label_wrap",  "(J[B)V",  org_mini_nk_NK_nk_label_wrap},
 {"org/mini/nk/NK",  "nk_label_colored_wrap",  "(J[B[I)V",  org_mini_nk_NK_nk_label_colored_wrap},
 {"org/mini/nk/NK",  "nk_image",  "(J[B)V",  org_mini_nk_NK_nk_image},
-{"org/mini/nk/NK",  "nk_labelf",  "(JI[B[Ljava/lang/String;)V",  org_mini_nk_NK_nk_labelf},
-{"org/mini/nk/NK",  "nk_labelf_colored",  "(JI[I[B[Ljava/lang/String;)V",  org_mini_nk_NK_nk_labelf_colored},
-{"org/mini/nk/NK",  "nk_labelf_wrap",  "(J[B[Ljava/lang/String;)V",  org_mini_nk_NK_nk_labelf_wrap},
-{"org/mini/nk/NK",  "nk_labelf_colored_wrap",  "(J[I[B[Ljava/lang/String;)V",  org_mini_nk_NK_nk_labelf_colored_wrap},
+{"org/mini/nk/NK",  "nk_labelf",  "(JI[B[[B)V",  org_mini_nk_NK_nk_labelf},
+{"org/mini/nk/NK",  "nk_labelf_colored",  "(JI[I[B[[B)V",  org_mini_nk_NK_nk_labelf_colored},
+{"org/mini/nk/NK",  "nk_labelf_wrap",  "(J[B[[B)V",  org_mini_nk_NK_nk_labelf_wrap},
+{"org/mini/nk/NK",  "nk_labelf_colored_wrap",  "(J[I[B[[B)V",  org_mini_nk_NK_nk_labelf_colored_wrap},
 {"org/mini/nk/NK",  "nk_value_bool",  "(J[BI)V",  org_mini_nk_NK_nk_value_bool},
 {"org/mini/nk/NK",  "nk_value_int",  "(J[BI)V",  org_mini_nk_NK_nk_value_int},
 {"org/mini/nk/NK",  "nk_value_uint",  "(J[BI)V",  org_mini_nk_NK_nk_value_uint},
@@ -9855,11 +9855,11 @@ static java_native_method method_nkclear_table[] = {
 {"org/mini/nk/NK",  "nk_popup_begin",  "(JI[BI[F)I",  org_mini_nk_NK_nk_popup_begin},
 {"org/mini/nk/NK",  "nk_popup_close",  "(J)V",  org_mini_nk_NK_nk_popup_close},
 {"org/mini/nk/NK",  "nk_popup_end",  "(J)V",  org_mini_nk_NK_nk_popup_end},
-{"org/mini/nk/NK",  "nk_combo",  "(J[BIII[F)I",  org_mini_nk_NK_nk_combo},
+{"org/mini/nk/NK",  "nk_combo",  "(J[[BIII[F)I",  org_mini_nk_NK_nk_combo},
 {"org/mini/nk/NK",  "nk_combo_separator",  "(J[BIIII[F)I",  org_mini_nk_NK_nk_combo_separator},
 {"org/mini/nk/NK",  "nk_combo_string",  "(J[BIII[F)I",  org_mini_nk_NK_nk_combo_string},
 {"org/mini/nk/NK",  "nk_combo_callback",  "(JJJIII[F)I",  org_mini_nk_NK_nk_combo_callback},
-{"org/mini/nk/NK",  "nk_combobox",  "(J[BI[II[F)V",  org_mini_nk_NK_nk_combobox},
+{"org/mini/nk/NK",  "nk_combobox",  "(J[[BI[II[F)V",  org_mini_nk_NK_nk_combobox},
 {"org/mini/nk/NK",  "nk_combobox_string",  "(J[B[III[F)V",  org_mini_nk_NK_nk_combobox_string},
 {"org/mini/nk/NK",  "nk_combobox_separator",  "(J[BI[III[F)V",  org_mini_nk_NK_nk_combobox_separator},
 {"org/mini/nk/NK",  "nk_combobox_callback",  "(JJJ[III[F)V",  org_mini_nk_NK_nk_combobox_callback},
@@ -9890,7 +9890,7 @@ static java_native_method method_nkclear_table[] = {
 {"org/mini/nk/NK",  "nk_contextual_close",  "(J)V",  org_mini_nk_NK_nk_contextual_close},
 {"org/mini/nk/NK",  "nk_contextual_end",  "(J)V",  org_mini_nk_NK_nk_contextual_end},
 {"org/mini/nk/NK",  "nk_tooltip",  "(J[B)V",  org_mini_nk_NK_nk_tooltip},
-{"org/mini/nk/NK",  "nk_tooltipf",  "(J[B[Ljava/lang/String;)V",  org_mini_nk_NK_nk_tooltipf},
+{"org/mini/nk/NK",  "nk_tooltipf",  "(J[B[[B)V",  org_mini_nk_NK_nk_tooltipf},
 {"org/mini/nk/NK",  "nk_tooltip_begin",  "(JF)I",  org_mini_nk_NK_nk_tooltip_begin},
 {"org/mini/nk/NK",  "nk_tooltip_end",  "(J)V",  org_mini_nk_NK_nk_tooltip_end},
 {"org/mini/nk/NK",  "nk_menubar_begin",  "(J)V",  org_mini_nk_NK_nk_menubar_begin},
@@ -10000,9 +10000,9 @@ static java_native_method method_nkclear_table[] = {
 {"org/mini/nk/NK",  "nk_strlen",  "([B)I",  org_mini_nk_NK_nk_strlen},
 {"org/mini/nk/NK",  "nk_stricmp",  "([B[B)I",  org_mini_nk_NK_nk_stricmp},
 {"org/mini/nk/NK",  "nk_stricmpn",  "([B[BI)I",  org_mini_nk_NK_nk_stricmpn},
-{"org/mini/nk/NK",  "nk_strtoi",  "([B[B)I",  org_mini_nk_NK_nk_strtoi},
-{"org/mini/nk/NK",  "nk_strtof",  "([B[B)D",  org_mini_nk_NK_nk_strtof},
-{"org/mini/nk/NK",  "nk_strtod",  "([B[B)F",  org_mini_nk_NK_nk_strtod},
+{"org/mini/nk/NK",  "nk_strtoi",  "([B[[B)I",  org_mini_nk_NK_nk_strtoi},
+{"org/mini/nk/NK",  "nk_strtof",  "([B[[B)D",  org_mini_nk_NK_nk_strtof},
+{"org/mini/nk/NK",  "nk_strtod",  "([B[[B)F",  org_mini_nk_NK_nk_strtod},
 {"org/mini/nk/NK",  "nk_strfilter",  "([B[B)I",  org_mini_nk_NK_nk_strfilter},
 {"org/mini/nk/NK",  "nk_strmatch_fuzzy_string",  "([B[B[I)I",  org_mini_nk_NK_nk_strmatch_fuzzy_string},
 {"org/mini/nk/NK",  "nk_strmatch_fuzzy_text",  "([BI[B[I)I",  org_mini_nk_NK_nk_strmatch_fuzzy_text},

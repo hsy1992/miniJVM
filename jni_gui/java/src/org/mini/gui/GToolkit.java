@@ -43,13 +43,4 @@ public class GToolkit {
         return reflect_arr.getDataPtr();
     }
     
-    public static byte[] toUtf8(String s) {
-        if(s==null)return null;
-        byte[] barr=null;
-        try {
-            barr=s.getBytes("utf-8");
-        } catch (UnsupportedEncodingException ex) {
-        }
-        return barr;
-    }
 }

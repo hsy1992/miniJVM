@@ -254,7 +254,7 @@ public class NK_h_2_java {
                                 javaArgvCode += "long[] " + arName;
                                 arType += "/*ptr*/";
                             } else if (Util.isTypes(MULT_TYPE, arType)) {
-                                javaArgvCode += "String" + arType + " " + arName;
+                                javaArgvCode += "byte[]" + arType + " " + arName;
                             } else if (Util.isTypes(STRUCT_FLOAT_ARR_TYPE, arType)) {
                                 javaArgvCode += "float[] " + arName;
                                 arType += "/*none_ptr*/";

@@ -3,6 +3,7 @@ package test;
 import java.io.UnsupportedEncodingException;
 import org.mini.glfw.Glfw;
 import org.mini.glfw.GlfwCallbackAdapter;
+import org.mini.glfw.utils.Gutil;
 import org.mini.gui.GFrame;
 import org.mini.gui.GForm;
 import static org.mini.gui.GToolkit.getForm;
@@ -18,7 +19,6 @@ import static org.mini.nk.NK.nk_window_show;
 import org.mini.gui.GFrameContents;
 import org.mini.gui.GGraphics;
 import org.mini.gui.GImage;
-import static org.mini.gui.GToolkit.toUtf8;
 
 /*
  * To change this license header, choose License Headers in Project Properties.
@@ -101,7 +101,7 @@ public class GuiTest {
                 op = HARD;
             }
             nk_layout_row_dynamic(ctx, 22, 1);
-            property = nk_propertyi(ctx, toUtf8("在哪里Compression:\000"), 0, property, 100, 10, 1);
+            property = nk_propertyi(ctx, Gutil.toUtf8("在哪里Compression:\000"), 0, property, 100, 10, 1);
 
             GGraphics g = parent.getGraphics();
 

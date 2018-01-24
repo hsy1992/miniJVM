@@ -5,7 +5,7 @@
  */
 package org.mini.gui;
 
-import static org.mini.gui.GToolkit.toUtf8;
+import org.mini.glfw.utils.Gutil;
 import org.mini.nk.NK;
 import static org.mini.nk.NK.NK_ANTI_ALIASING_ON;
 import static org.mini.nk.NK.NK_WINDOW_BORDER;
@@ -34,7 +34,7 @@ public class GFrame extends GObject {
     long ctx;
 
     public GFrame(String title, int left, int top, int width, int height, GFrameContents con) {
-        this.title = toUtf8(title + "\000");
+        this.title = Gutil.toUtf8(title + "\000");
         boundle = new float[]{left, top, width, height};
         winContents = con;
     }

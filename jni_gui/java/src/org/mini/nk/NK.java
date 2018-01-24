@@ -463,10 +463,10 @@ public class NK {
     public static native void nk_label_wrap(long parg0, byte[] parg1); //struct nk_context*/*ptr*/,const char*, //void
     public static native void nk_label_colored_wrap(long parg0, byte[] parg1, int[] parg2); //struct nk_context*/*ptr*/,const char*,struct nk_color/*none_ptr*/, //void
     public static native void nk_image(long parg0, byte[] parg1); //struct nk_context*/*ptr*/,struct nk_image/*none_ptr*/, //void
-    public static native void nk_labelf(long parg0, int parg1, byte[] parg2, String... parg3); //struct nk_context*/*ptr*/,nk_flags,const char*,..., //void
-    public static native void nk_labelf_colored(long parg0, int palign, int[] parg2, byte[] parg3, String... parg4); //struct nk_context*/*ptr*/,nk_flags,struct nk_color/*none_ptr*/,const char*,..., //void
-    public static native void nk_labelf_wrap(long parg0, byte[] parg1, String... parg2); //struct nk_context*/*ptr*/,const char*,..., //void
-    public static native void nk_labelf_colored_wrap(long parg0, int[] parg1, byte[] parg2, String... parg3); //struct nk_context*/*ptr*/,struct nk_color/*none_ptr*/,const char*,..., //void
+    public static native void nk_labelf(long parg0, int parg1, byte[] parg2, byte[]... parg3); //struct nk_context*/*ptr*/,nk_flags,const char*,..., //void
+    public static native void nk_labelf_colored(long parg0, int palign, int[] parg2, byte[] parg3, byte[]... parg4); //struct nk_context*/*ptr*/,nk_flags,struct nk_color/*none_ptr*/,const char*,..., //void
+    public static native void nk_labelf_wrap(long parg0, byte[] parg1, byte[]... parg2); //struct nk_context*/*ptr*/,const char*,..., //void
+    public static native void nk_labelf_colored_wrap(long parg0, int[] parg1, byte[] parg2, byte[]... parg3); //struct nk_context*/*ptr*/,struct nk_color/*none_ptr*/,const char*,..., //void
     public static native void nk_value_bool(long parg0, byte[] pprefix, int parg2); //struct nk_context*/*ptr*/,const char*,int, //void
     public static native void nk_value_int(long parg0, byte[] pprefix, int parg2); //struct nk_context*/*ptr*/,const char*,int, //void
     public static native void nk_value_uint(long parg0, byte[] pprefix, int parg2); //struct nk_context*/*ptr*/,const char*,unsigned int, //void
@@ -580,7 +580,7 @@ public class NK {
     public static native void nk_contextual_close(long parg0); //struct nk_context*/*ptr*/, //void
     public static native void nk_contextual_end(long parg0); //struct nk_context*/*ptr*/, //void
     public static native void nk_tooltip(long parg0, byte[] parg1); //struct nk_context*/*ptr*/,const char*, //void
-    public static native void nk_tooltipf(long parg0, byte[] parg1, String... parg2); //struct nk_context*/*ptr*/,const char*,..., //void
+    public static native void nk_tooltipf(long parg0, byte[] parg1, byte[]... parg2); //struct nk_context*/*ptr*/,const char*,..., //void
     public static native int nk_tooltip_begin(long parg0, float pwidth); //struct nk_context*/*ptr*/,float, //int
     public static native void nk_tooltip_end(long parg0); //struct nk_context*/*ptr*/, //void
     public static native void nk_menubar_begin(long parg0); //struct nk_context*/*ptr*/, //void

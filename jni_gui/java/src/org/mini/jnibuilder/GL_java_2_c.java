@@ -288,18 +288,18 @@ public class GL_java_2_c {
                             curArgvName = "(ptr_" + argvName + ")";
                             releaseMemCode += "env->utf8_destory(u_" + argvName + ");";
                             javaArgvCode += "Ljava/lang/String;";
-                        } else if ("String[]".equals(argvType) || "String...".equals(argvType)) {
+                        } else if ("byte[][]".equals(argvType) || "byte[]...".equals(argvType)) {
                             varCode += "    Instance *" + argvName + " = env->localvar_getRefer(runtime, pos++);\n";
                             varCode += "    CStringArr *ptr_" + argvName + " = NULL;\n";
                             varCode += "    if(" + argvName + "){\n";
                             varCode += "        ptr_" + argvName + " = env->cstringarr_create(" + argvName + ");\n";
                             varCode += "    }\n";
                             curArgvName = "(ptr_" + argvName + "->arr_body)";
-                            if ("String...".equals(argvType)) {
+                            if ("byte[]...".equals(argvType)) {
                                 curArgvType = "/*todo Despair for runtime parse unlimited para*/";
                             }
                             releaseMemCode += "env->cstringarr_destory(ptr_" + argvName + ");";
-                            javaArgvCode += "[Ljava/lang/String;";
+                            javaArgvCode += "[[B";
 
                         } else if ("Object[]".equals(argvType) || "Object...".equals(argvType)) {
                             varCode += "    Instance *" + argvName + " = env->localvar_getRefer(runtime, pos++);\n";
@@ -330,7 +330,7 @@ public class GL_java_2_c {
                             } else if (argvType.startsWith("short")) {
                                 javaArgvCode += "[SI";
                             } else if (argvType.startsWith("byte")) {
-                                javaArgvCode += "[BI";
+                                javaArgvCode += "[B";
                             } else if (argvType.startsWith("long")) {
                                 javaArgvCode += "[JI";
                             } else if (argvType.startsWith("float")) {

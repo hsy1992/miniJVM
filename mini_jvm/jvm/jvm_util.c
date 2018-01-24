@@ -1426,7 +1426,7 @@ void instance_release_from_thread(Instance *ref, Runtime *runtime) {
     }
 }
 
-CStringArr *cstringarr_create(Instance *jstr_arr) {
+CStringArr *cstringarr_create(Instance *jstr_arr) { //byte[][] to char**
     if (!jstr_arr)return NULL;
     CStringArr *cstr_arr = jvm_calloc(sizeof(CStringArr));
     cstr_arr->arr_length = jstr_arr->arr_length;
@@ -1434,23 +1434,15 @@ CStringArr *cstringarr_create(Instance *jstr_arr) {
     s32 i;
     for (i = 0; i < cstr_arr->arr_length; i++) {
         s64 val = jarray_get_field(jstr_arr, i);
-        Instance *jstr = (__refer)(intptr_t) val;
-        if (jstr) {
-            Utf8String *ustr = utf8_create();
-            jstring_2_utf8(jstr, ustr);
-            cstr_arr->arr_body[i] = jvm_calloc(ustr->length + 1);
-            memcpy(cstr_arr->arr_body[i], utf8_cstr(ustr), ustr->length);
-            utf8_destory(ustr);
+        Instance *jbyte_arr = (__refer)(intptr_t) val;
+        if (jbyte_arr) {
+            cstr_arr->arr_body[i] = jbyte_arr->arr_body;
         }
     }
     return cstr_arr;
 }
 
 void cstringarr_destory(CStringArr *cstr_arr) {
-    s32 i;
-    for (i = 0; i < cstr_arr->arr_length; i++) {
-        jvm_free(cstr_arr->arr_body[i]);
-    }
     jvm_free(cstr_arr->arr_body);
     jvm_free(cstr_arr);
 }
@@ -1469,7 +1461,6 @@ ReferArr *referarr_create(Instance *jobj_arr) {
 }
 
 void referarr_destory(CStringArr *ref_arr) {
-    s32 i;
     jvm_free(ref_arr->arr_body);
     jvm_free(ref_arr);
 }

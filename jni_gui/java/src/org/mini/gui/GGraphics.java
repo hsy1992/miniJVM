@@ -5,6 +5,7 @@
  */
 package org.mini.gui;
 
+import org.mini.glfw.utils.Gutil;
 import org.mini.nk.NK;
 
 /**
@@ -76,7 +77,7 @@ public class GGraphics {
         rect[1] = y + frame_bound[1] + translateY;
         rect[2] = 10000;
         rect[3] = 10000;
-        byte[] b = GToolkit.toUtf8(str + "\000");
+        byte[] b = Gutil.toUtf8(str + "\000");
         int blen = str.length();
         NK.nk_draw_text(brush, rect, b, blen, NK.nk_get_font_handle(font), new int[]{0x80808080}, curColor);
     }
@@ -88,7 +89,7 @@ public class GGraphics {
         x += frame_bound[0] + translateX;
         y += frame_bound[1] + translateY;
         str = str.substring(offset, len);
-        byte[] b = GToolkit.toUtf8(str + "\000");
+        byte[] b = Gutil.toUtf8(str + "\000");
         int blen = str.length();
         NK.nk_draw_text(brush, rect, b, blen, NK.nk_get_font_handle(font), new int[]{0xff808000}, curColor);
     }

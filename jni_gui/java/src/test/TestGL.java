@@ -147,7 +147,7 @@ public class TestGL {
 
         GL.glEnable(GL.GL_POLYGON_STIPPLE);
 
-        GL.glPolygonStipple(mask, 0);
+        GL.glPolygonStipple(mask);
 
         GL.glRectf(-0.5f, -0.5f, 0.0f, 0.0f);   // 在左下方绘制一个有镂空效果的正方形
 
