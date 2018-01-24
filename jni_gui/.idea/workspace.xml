@@ -80,8 +80,8 @@
       <file leaf-file-name="nuklear_jni_assist.h" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/deps/include/nuklear_jni_assist.h">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="349">
-              <caret line="43" column="0" lean-forward="true" selection-start-line="43" selection-start-column="0" selection-end-line="43" selection-end-column="0" />
+            <state relative-caret-position="311">
+              <caret line="41" column="22" lean-forward="false" selection-start-line="41" selection-start-column="22" selection-end-line="41" selection-end-column="22" />
               <folding />
             </state>
           </provider>
@@ -244,12 +244,12 @@
       <workItem from="1516429086806" duration="1075000" />
       <workItem from="1516430431560" duration="8404000" />
       <workItem from="1516479482677" duration="17515000" />
-      <workItem from="1516759330346" duration="1605000" />
+      <workItem from="1516759330346" duration="1886000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="28599000" />
+    <option name="totallyTimeSpent" value="28880000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="143" y="177" width="1196" height="857" extended-state="0" />
@@ -1257,8 +1257,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/deps/include/nuklear_jni_assist.h">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="349">
-          <caret line="43" column="0" lean-forward="true" selection-start-line="43" selection-start-column="0" selection-end-line="43" selection-end-column="0" />
+        <state relative-caret-position="311">
+          <caret line="41" column="22" lean-forward="false" selection-start-line="41" selection-start-column="22" selection-end-line="41" selection-end-column="22" />
           <folding />
         </state>
       </provider>

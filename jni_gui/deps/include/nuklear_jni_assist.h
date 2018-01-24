@@ -38,8 +38,9 @@ NK_API struct nk_font *nk_load_font(const char *file_path, float height) {
 
     struct nk_font_config conf = nk_font_config(0);
     conf.range = full_ranges;//nk_font_chinese_glyph_ranges();//&nk_font_japanese_glyph_ranges[0];
-    struct nk_font *genshin = nk_font_atlas_add_from_file(atlas, file_path, height, &conf);
+    struct nk_font *font = nk_font_atlas_add_from_file(atlas, file_path, height, &conf);
     nk_glfw3_font_stash_end();
+    return font;
 }
 
 #endif //JNI_GUI_NUKLEAR_JNI_ASSIST_H
