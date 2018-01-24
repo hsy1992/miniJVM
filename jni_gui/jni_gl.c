@@ -586,9 +586,9 @@ int org_mini_gl_GL_glGetString(Runtime *runtime, Class *clazz) {
     s32 pname = env->localvar_getInt(runtime, pos++);
 
     const GLubyte* _re_val = glGetString((GLenum)pname);
-    c8* _ptr_re_val = (c8*)_re_val;
+    c8* _ptr_re_val = (c8*)&_re_val;
     if (_ptr_re_val) {
-        s32 bytes = sizeof(const GLubyte);
+        s32 bytes = sizeof(const GLubyte*);
         s32 j_t_bytes = sizeof(c8);
         Instance *_arr = env->jarray_create(bytes / j_t_bytes, DATATYPE_BYTE, NULL);
         memcpy(_arr->arr_body, _ptr_re_val,bytes);
@@ -9961,9 +9961,9 @@ int org_mini_gl_GL_glGetStringi(Runtime *runtime, Class *clazz) {
     s32 pindex = env->localvar_getInt(runtime, pos++);
 
     const GLubyte* _re_val = glGetStringi((GLenum)pname, (GLuint)pindex);
-    c8* _ptr_re_val = (c8*)_re_val;
+    c8* _ptr_re_val = (c8*)&_re_val;
     if (_ptr_re_val) {
-        s32 bytes = sizeof(const GLubyte);
+        s32 bytes = sizeof(const GLubyte*);
         s32 j_t_bytes = sizeof(c8);
         Instance *_arr = env->jarray_create(bytes / j_t_bytes, DATATYPE_BYTE, NULL);
         memcpy(_arr->arr_body, _ptr_re_val,bytes);

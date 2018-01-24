@@ -35,7 +35,11 @@ public class NK_h_2_java {
         gt.buildC();
     }
 
-    String[] path = {"res/nuklear.h", "src/org/mini/nk/NK.java"};
+    String[] input_path = {
+        "../deps/include/nuklear.h",
+        "../deps/include/nuklear_glfw_gl2.h",
+        "../deps/include/nuklear_jni_assist.h",};
+    String[] output_path = {"src/org/mini/nk/NK.java"};
 
     String CLASS_TEMPLATE
             = //
@@ -78,13 +82,13 @@ public class NK_h_2_java {
     static public String[] ARR_FLOAT_TYPE = {"float*", "struct nk_rect*", "const float*", "struct nk_colorf*", "struct nk_vec2*", "const struct nk_vec2*",};
     static public String[] DOUBLE_TYPE = {"double",};
     static public String[] ARR_DOUBLE_TYPE = {"double*",};
-    static public String[] OBJECT_TYPE = {"void*", "const void*", "nk_ptr", "nk_size", "", "GLFWwindow*", "const struct nk_font_glyph*", "struct nk_window*", "struct nk_panel*", "struct nk_style_item*", "nk_plugin_filter", "struct nk_memory_status*", "nk_command_custom_callback", "struct nk_list_view*", "struct nk_draw_null_texture*", "struct nk_font*", "const struct nk_allocator*", "const struct nk_image*", "struct nk_text_edit*", "const struct nk_text_edit*", "const struct nk_str*", "const nk_rune*", "nk_rune*", "struct nk_str*", "struct nk_cursor*", "const struct nk_cursor*", "const struct nk_font_config*", "const struct nk_style_button*", "const struct nk_draw_command*", "const struct nk_convert_config*", "struct nk_command_buffer*", "const struct nk_command*", "struct nk_command_buffer*", "struct nk_context*", "struct nk_context*", "const struct nk_context*", "const struct nk_context*", "struct nk_buffer*", "struct nk_buffer*", "const struct nk_buffer*", "const struct nk_input*", "const struct nk_input*", "struct nk_draw_list*", "struct nk_draw_list*", "const struct nk_draw_list*", "const struct nk_user_font*", "struct nk_allocator*", "struct nk_font_atlas*"};
+    static public String[] OBJECT_TYPE = {"void*", "const void*", "nk_ptr", "nk_size","struct nk_font_config*", "struct nk_user_font*", "GLFWwindow*", "const struct nk_font_glyph*", "struct nk_window*", "struct nk_panel*", "struct nk_style_item*", "nk_plugin_filter", "struct nk_memory_status*", "nk_command_custom_callback", "struct nk_list_view*", "struct nk_draw_null_texture*", "struct nk_font*", "const struct nk_allocator*", "const struct nk_image*", "struct nk_text_edit*", "const struct nk_text_edit*", "const struct nk_str*", "const nk_rune*", "nk_rune*", "struct nk_str*", "struct nk_cursor*", "const struct nk_cursor*", "const struct nk_font_config*", "const struct nk_style_button*", "const struct nk_draw_command*", "const struct nk_convert_config*", "struct nk_command_buffer*", "const struct nk_command*", "struct nk_command_buffer*", "struct nk_context*", "struct nk_context*", "const struct nk_context*", "const struct nk_context*", "struct nk_buffer*", "struct nk_buffer*", "const struct nk_buffer*", "const struct nk_input*", "const struct nk_input*", "struct nk_draw_list*", "struct nk_draw_list*", "const struct nk_draw_list*", "const struct nk_user_font*", "struct nk_allocator*", "struct nk_font_atlas*"};
     static public String[] ARR_OBJECT_TYPE = {"void**", "nk_ptr*", "struct nk_font_atlas**",};
     static public String[] VOID_TYPE = {"void"};
     static public String[] MULT_TYPE = {"..."};
     static public String[] STRUCT_FLOAT_ARR_TYPE = {"struct nk_rect", "struct nk_vec2", "struct nk_colorf", "", "", "", "", "",};
     static public String[] STRUCT_INT_ARR_TYPE = {"struct nk_vec2", "struct nk_color", "", "", "", "", "", "",};
-    static public String[] STRUCT_BYTE_ARR_TYPE = {"nk_glyph", "const nk_glyph", "struct nk_font_config", "struct nk_image", "struct nk_color", "struct nk_style_item", "nk_handle", "", "", "", "", "", "",};
+    static public String[] STRUCT_BYTE_ARR_TYPE = {"nk_glyph", "const nk_glyph", "struct nk_font_config", "struct nk_image", "struct nk_color", "struct nk_style_item", "nk_handle", "struct nk_font_atlas", "", "", "", "", "",};
 
     static public String[][] TYPES_ALL = {INT_TYPE, ARR_INT_TYPE, SHORT_TYPE, ARR_SHORT_TYPE, BYTE_TYPE, ARR_BYTE_TYPE, STRING_TYPE, ARR_STRING_TYPE, LONG_TYPE, ARR_LONG_TYPE, FLOAT_TYPE, ARR_FLOAT_TYPE, DOUBLE_TYPE, ARR_DOUBLE_TYPE, OBJECT_TYPE, ARR_OBJECT_TYPE, VOID_TYPE, MULT_TYPE, STRUCT_FLOAT_ARR_TYPE, STRUCT_INT_ARR_TYPE, STRUCT_BYTE_ARR_TYPE,};
 
@@ -96,21 +100,26 @@ public class NK_h_2_java {
         List<String> lines = new ArrayList();
         int lineNo = 0;
         try {
-            File ifile = new File(path[0]);
-            br = new BufferedReader(new FileReader(ifile));
-            System.out.println("open input file:" + ifile.getAbsolutePath());
-            File ofile = new File(path[1]);
-            bw = new BufferedWriter(new FileWriter(ofile));
-            System.out.println("open output file:" + ofile.getAbsolutePath());
+
             String line;
 
-            while ((line = br.readLine()) != null) {
+            for (String filename : input_path) {
+                File ifile = new File(filename);
+                br = new BufferedReader(new FileReader(ifile));
+                System.out.println("open input file:" + ifile.getAbsolutePath());
+                while ((line = br.readLine()) != null) {
 
-                line = line.replaceAll("/\\*.*\\*/", "");
-                line = line.replaceAll("//.*\n", "");
-                line = line.trim();
-                lines.add(line);
+                    line = line.replaceAll("/\\*.*\\*/", "");
+                    line = line.replaceAll("//.*\n", "");
+                    line = line.trim();
+                    lines.add(line);
+                }
+                br.close();
             }
+
+            File ofile = new File(output_path[0]);
+            bw = new BufferedWriter(new FileWriter(ofile));
+            System.out.println("open output file:" + ofile.getAbsolutePath());
 
             //fields
             String enumHeader = "enum ", enumHeader1 = "{";
@@ -226,10 +235,6 @@ public class NK_h_2_java {
                                 javaArgvCode += "byte " + arName;
                             } else if (Util.isTypes(ARR_BYTE_TYPE, arType)) {
                                 javaArgvCode += "byte[] " + arName;
-                            } else if (Util.isTypes(STRING_TYPE, arType)) {
-                                javaArgvCode += "String " + arName;
-                            } else if (Util.isTypes(ARR_STRING_TYPE, arType)) {
-                                javaArgvCode += "String[] " + arName;
                             } else if (Util.isTypes(LONG_TYPE, arType)) {
                                 javaArgvCode += "long " + arName;
                             } else if (Util.isTypes(ARR_LONG_TYPE, arType)) {
@@ -259,6 +264,10 @@ public class NK_h_2_java {
                             } else if (Util.isTypes(STRUCT_BYTE_ARR_TYPE, arType)) {
                                 javaArgvCode += "byte[] " + arName;
                                 arType += "/*none_ptr*/";
+                            } else if (Util.isTypes(STRING_TYPE, arType)) {
+                                javaArgvCode += "byte[] " + arName;
+                            } else if (Util.isTypes(ARR_STRING_TYPE, arType)) {
+                                javaArgvCode += "byte[][] " + arName;
                             } else if (Util.isTypes(VOID_TYPE, arType)) {
                             } else {
                                 System.out.println("java argv type:" + arType);

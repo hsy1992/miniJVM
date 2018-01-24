@@ -32,9 +32,7 @@ public class NK_java_2_c {
 
     String[] path = {"src/org/mini/nk/NK.java", "org_mini_nk_NK_", "org/mini/nk/NK", "../jni_nk.c"};
 
-    String[] ignore_list = {"nk_set_user_data",
-        "nk_font_atlas_add_from_file",
-        "nk_draw_list_push_userdata",
+    String[] ignore_list = {"",
         "",};
 
     String C_BODY_HEADER
@@ -47,7 +45,9 @@ public class NK_java_2_c {
             + "\n"
             + "#define NK_IMPLEMENTATION\n"
             + "#define NK_INCLUDE_FIXED_TYPES\n"
+            + "#define NK_INCLUDE_STANDARD_IO\n"
             + "#define NK_INCLUDE_FONT_BAKING\n"
+            + "#define NK_INCLUDE_COMMAND_USERDATA\n"
             + "#define NK_INCLUDE_DEFAULT_FONT\n"
             + "#define NK_INCLUDE_DEFAULT_ALLOCATOR\n"
             + "#define NK_INCLUDE_VERTEX_BUFFER_OUTPUT\n"
@@ -56,6 +56,7 @@ public class NK_java_2_c {
             + "\n"
             + "#define NK_GLFW_GL2_IMPLEMENTATION\n"
             + "#include <nuklear_glfw_gl2.h>\n"
+            + "#include <nuklear_jni_assist.h>\n"
             + "\n"
             + "#include \"../mini_jvm/jvm/jvm.h\"\n"
             + "#include \"jni_gui.h\"\n"

@@ -14,6 +14,7 @@ import org.mini.nk.NK;
 public class GGraphics {
 
     long brush;
+    long font;
     float[] frame_bound;
 
     int[] curColor = new int[1];
@@ -71,8 +72,13 @@ public class GGraphics {
         if (brush == 0) {
             return;
         }
-        x += frame_bound[0] + translateX;
-        y += frame_bound[1] + translateY;
+        rect[0] = x + frame_bound[0] + translateX;
+        rect[1] = y + frame_bound[1] + translateY;
+        rect[2] = 10000;
+        rect[3] = 10000;
+        byte[] b = GToolkit.toUtf8(str + "\000");
+        int blen = str.length();
+        NK.nk_draw_text(brush, rect, b, blen, NK.nk_get_font_handle(font), new int[]{0xff000000}, curColor);
     }
 
     public void drawSubstring(String str, int offset, int len, int x, int y, int anchor) {
@@ -81,6 +87,10 @@ public class GGraphics {
         }
         x += frame_bound[0] + translateX;
         y += frame_bound[1] + translateY;
+        str = str.substring(offset, len);
+        byte[] b = GToolkit.toUtf8(str + "\000");
+        int blen = str.length();
+        NK.nk_draw_text(brush, rect, b, blen, NK.nk_get_font_handle(font), new int[]{0xff000000}, curColor);
     }
 
     public void drawChar(char character, int x, int y, int anchor) {
@@ -89,6 +99,7 @@ public class GGraphics {
         }
         x += frame_bound[0] + translateX;
         y += frame_bound[1] + translateY;
+
     }
 
     public void drawChars(char[] data, int offset, int length, int x, int y, int anchor) {

@@ -6,7 +6,9 @@
 
 #define NK_IMPLEMENTATION
 #define NK_INCLUDE_FIXED_TYPES
+#define NK_INCLUDE_STANDARD_IO
 #define NK_INCLUDE_FONT_BAKING
+#define NK_INCLUDE_COMMAND_USERDATA
 #define NK_INCLUDE_DEFAULT_FONT
 #define NK_INCLUDE_DEFAULT_ALLOCATOR
 #define NK_INCLUDE_VERTEX_BUFFER_OUTPUT
@@ -15,6 +17,7 @@
 
 #define NK_GLFW_GL2_IMPLEMENTATION
 #include <nuklear_glfw_gl2.h>
+#include <nuklear_jni_assist.h>
 
 #include "../mini_jvm/jvm/jvm.h"
 #include "jni_gui.h"
@@ -97,6 +100,23 @@ int org_mini_nk_NK_nk_free(Runtime *runtime, Class *clazz) {
     intptr_t parg0 = env->localvar_getLong_2slot(runtime, pos);pos += 2;
 
     nk_free((struct nk_context*/*ptr*/)(parg0));
+    
+    
+    return 0;
+}
+
+int org_mini_nk_NK_nk_set_user_data(Runtime *runtime, Class *clazz) {
+    JniEnv *env = runtime->jnienv;
+    s32 pos = 0;
+    
+    intptr_t parg0 = env->localvar_getLong_2slot(runtime, pos);pos += 2;
+    Instance *phandle = env->localvar_getRefer(runtime, pos++);
+    __refer ptr_phandle = NULL;
+    if(phandle){
+        ptr_phandle = phandle->arr_body;
+    }
+
+    nk_set_user_data((struct nk_context*/*ptr*/)(parg0), *(nk_handle/*none_ptr*/*)(ptr_phandle));
     
     
     return 0;
@@ -318,11 +338,8 @@ int org_mini_nk_NK_nk_begin(Runtime *runtime, Class *clazz) {
     intptr_t pctx = env->localvar_getLong_2slot(runtime, pos);pos += 2;
     Instance *ptitle = env->localvar_getRefer(runtime, pos++);
     __refer ptr_ptitle = NULL;
-    Utf8String *u_ptitle;
     if(ptitle){
-        u_ptitle = env->utf8_create();
-        env->jstring_2_utf8(ptitle, u_ptitle);
-        ptr_ptitle = env->utf8_cstr(u_ptitle);
+        ptr_ptitle = ptitle->arr_body;
     }
     Instance *pbounds = env->localvar_getRefer(runtime, pos++);
     __refer ptr_pbounds = NULL;
@@ -333,7 +350,7 @@ int org_mini_nk_NK_nk_begin(Runtime *runtime, Class *clazz) {
 
     int _re_val = nk_begin((struct nk_context*/*ptr*/)(pctx), (const char*)(ptr_ptitle), *(struct nk_rect/*none_ptr*/*)(ptr_pbounds), (nk_flags)pflags);
     s32 ret_value = (s32)_re_val;env->push_int(runtime->stack, ret_value);
-    env->utf8_destory(u_ptitle);
+    
     return 0;
 }
 
@@ -344,19 +361,13 @@ int org_mini_nk_NK_nk_begin_titled(Runtime *runtime, Class *clazz) {
     intptr_t pctx = env->localvar_getLong_2slot(runtime, pos);pos += 2;
     Instance *pname = env->localvar_getRefer(runtime, pos++);
     __refer ptr_pname = NULL;
-    Utf8String *u_pname;
     if(pname){
-        u_pname = env->utf8_create();
-        env->jstring_2_utf8(pname, u_pname);
-        ptr_pname = env->utf8_cstr(u_pname);
+        ptr_pname = pname->arr_body;
     }
     Instance *ptitle = env->localvar_getRefer(runtime, pos++);
     __refer ptr_ptitle = NULL;
-    Utf8String *u_ptitle;
     if(ptitle){
-        u_ptitle = env->utf8_create();
-        env->jstring_2_utf8(ptitle, u_ptitle);
-        ptr_ptitle = env->utf8_cstr(u_ptitle);
+        ptr_ptitle = ptitle->arr_body;
     }
     Instance *pbounds = env->localvar_getRefer(runtime, pos++);
     __refer ptr_pbounds = NULL;
@@ -367,7 +378,7 @@ int org_mini_nk_NK_nk_begin_titled(Runtime *runtime, Class *clazz) {
 
     int _re_val = nk_begin_titled((struct nk_context*/*ptr*/)(pctx), (const char*)(ptr_pname), (const char*)(ptr_ptitle), *(struct nk_rect/*none_ptr*/*)(ptr_pbounds), (nk_flags)pflags);
     s32 ret_value = (s32)_re_val;env->push_int(runtime->stack, ret_value);
-    env->utf8_destory(u_pname);env->utf8_destory(u_ptitle);
+    
     return 0;
 }
 
@@ -390,16 +401,13 @@ int org_mini_nk_NK_nk_window_find(Runtime *runtime, Class *clazz) {
     intptr_t pctx = env->localvar_getLong_2slot(runtime, pos);pos += 2;
     Instance *pname = env->localvar_getRefer(runtime, pos++);
     __refer ptr_pname = NULL;
-    Utf8String *u_pname;
     if(pname){
-        u_pname = env->utf8_create();
-        env->jstring_2_utf8(pname, u_pname);
-        ptr_pname = env->utf8_cstr(u_pname);
+        ptr_pname = pname->arr_body;
     }
 
     struct nk_window*/*ptr*/ _re_val = nk_window_find((struct nk_context*/*ptr*/)(pctx), (const char*)(ptr_pname));
     s64 ret_value = (s64)(intptr_t)_re_val;env->push_long(runtime->stack, ret_value);
-    env->utf8_destory(u_pname);
+    
     return 0;
 }
 
@@ -617,16 +625,13 @@ int org_mini_nk_NK_nk_window_is_collapsed(Runtime *runtime, Class *clazz) {
     intptr_t pctx = env->localvar_getLong_2slot(runtime, pos);pos += 2;
     Instance *pname = env->localvar_getRefer(runtime, pos++);
     __refer ptr_pname = NULL;
-    Utf8String *u_pname;
     if(pname){
-        u_pname = env->utf8_create();
-        env->jstring_2_utf8(pname, u_pname);
-        ptr_pname = env->utf8_cstr(u_pname);
+        ptr_pname = pname->arr_body;
     }
 
     int _re_val = nk_window_is_collapsed((struct nk_context*/*ptr*/)(pctx), (const char*)(ptr_pname));
     s32 ret_value = (s32)_re_val;env->push_int(runtime->stack, ret_value);
-    env->utf8_destory(u_pname);
+    
     return 0;
 }
 
@@ -637,16 +642,13 @@ int org_mini_nk_NK_nk_window_is_closed(Runtime *runtime, Class *clazz) {
     intptr_t parg0 = env->localvar_getLong_2slot(runtime, pos);pos += 2;
     Instance *parg1 = env->localvar_getRefer(runtime, pos++);
     __refer ptr_parg1 = NULL;
-    Utf8String *u_parg1;
     if(parg1){
-        u_parg1 = env->utf8_create();
-        env->jstring_2_utf8(parg1, u_parg1);
-        ptr_parg1 = env->utf8_cstr(u_parg1);
+        ptr_parg1 = parg1->arr_body;
     }
 
     int _re_val = nk_window_is_closed((struct nk_context*/*ptr*/)(parg0), (const char*)(ptr_parg1));
     s32 ret_value = (s32)_re_val;env->push_int(runtime->stack, ret_value);
-    env->utf8_destory(u_parg1);
+    
     return 0;
 }
 
@@ -657,16 +659,13 @@ int org_mini_nk_NK_nk_window_is_hidden(Runtime *runtime, Class *clazz) {
     intptr_t parg0 = env->localvar_getLong_2slot(runtime, pos);pos += 2;
     Instance *parg1 = env->localvar_getRefer(runtime, pos++);
     __refer ptr_parg1 = NULL;
-    Utf8String *u_parg1;
     if(parg1){
-        u_parg1 = env->utf8_create();
-        env->jstring_2_utf8(parg1, u_parg1);
-        ptr_parg1 = env->utf8_cstr(u_parg1);
+        ptr_parg1 = parg1->arr_body;
     }
 
     int _re_val = nk_window_is_hidden((struct nk_context*/*ptr*/)(parg0), (const char*)(ptr_parg1));
     s32 ret_value = (s32)_re_val;env->push_int(runtime->stack, ret_value);
-    env->utf8_destory(u_parg1);
+    
     return 0;
 }
 
@@ -677,16 +676,13 @@ int org_mini_nk_NK_nk_window_is_active(Runtime *runtime, Class *clazz) {
     intptr_t parg0 = env->localvar_getLong_2slot(runtime, pos);pos += 2;
     Instance *parg1 = env->localvar_getRefer(runtime, pos++);
     __refer ptr_parg1 = NULL;
-    Utf8String *u_parg1;
     if(parg1){
-        u_parg1 = env->utf8_create();
-        env->jstring_2_utf8(parg1, u_parg1);
-        ptr_parg1 = env->utf8_cstr(u_parg1);
+        ptr_parg1 = parg1->arr_body;
     }
 
     int _re_val = nk_window_is_active((struct nk_context*/*ptr*/)(parg0), (const char*)(ptr_parg1));
     s32 ret_value = (s32)_re_val;env->push_int(runtime->stack, ret_value);
-    env->utf8_destory(u_parg1);
+    
     return 0;
 }
 
@@ -733,11 +729,8 @@ int org_mini_nk_NK_nk_window_set_bounds(Runtime *runtime, Class *clazz) {
     intptr_t parg0 = env->localvar_getLong_2slot(runtime, pos);pos += 2;
     Instance *pname = env->localvar_getRefer(runtime, pos++);
     __refer ptr_pname = NULL;
-    Utf8String *u_pname;
     if(pname){
-        u_pname = env->utf8_create();
-        env->jstring_2_utf8(pname, u_pname);
-        ptr_pname = env->utf8_cstr(u_pname);
+        ptr_pname = pname->arr_body;
     }
     Instance *pbounds = env->localvar_getRefer(runtime, pos++);
     __refer ptr_pbounds = NULL;
@@ -747,7 +740,7 @@ int org_mini_nk_NK_nk_window_set_bounds(Runtime *runtime, Class *clazz) {
 
     nk_window_set_bounds((struct nk_context*/*ptr*/)(parg0), (const char*)(ptr_pname), *(struct nk_rect/*none_ptr*/*)(ptr_pbounds));
     
-    env->utf8_destory(u_pname);
+    
     return 0;
 }
 
@@ -758,11 +751,8 @@ int org_mini_nk_NK_nk_window_set_position(Runtime *runtime, Class *clazz) {
     intptr_t parg0 = env->localvar_getLong_2slot(runtime, pos);pos += 2;
     Instance *pname = env->localvar_getRefer(runtime, pos++);
     __refer ptr_pname = NULL;
-    Utf8String *u_pname;
     if(pname){
-        u_pname = env->utf8_create();
-        env->jstring_2_utf8(pname, u_pname);
-        ptr_pname = env->utf8_cstr(u_pname);
+        ptr_pname = pname->arr_body;
     }
     Instance *ppos = env->localvar_getRefer(runtime, pos++);
     __refer ptr_ppos = NULL;
@@ -772,7 +762,7 @@ int org_mini_nk_NK_nk_window_set_position(Runtime *runtime, Class *clazz) {
 
     nk_window_set_position((struct nk_context*/*ptr*/)(parg0), (const char*)(ptr_pname), *(struct nk_vec2/*none_ptr*/*)(ptr_ppos));
     
-    env->utf8_destory(u_pname);
+    
     return 0;
 }
 
@@ -783,11 +773,8 @@ int org_mini_nk_NK_nk_window_set_size(Runtime *runtime, Class *clazz) {
     intptr_t parg0 = env->localvar_getLong_2slot(runtime, pos);pos += 2;
     Instance *pname = env->localvar_getRefer(runtime, pos++);
     __refer ptr_pname = NULL;
-    Utf8String *u_pname;
     if(pname){
-        u_pname = env->utf8_create();
-        env->jstring_2_utf8(pname, u_pname);
-        ptr_pname = env->utf8_cstr(u_pname);
+        ptr_pname = pname->arr_body;
     }
     Instance *parg2 = env->localvar_getRefer(runtime, pos++);
     __refer ptr_parg2 = NULL;
@@ -797,7 +784,7 @@ int org_mini_nk_NK_nk_window_set_size(Runtime *runtime, Class *clazz) {
 
     nk_window_set_size((struct nk_context*/*ptr*/)(parg0), (const char*)(ptr_pname), *(struct nk_vec2/*none_ptr*/*)(ptr_parg2));
     
-    env->utf8_destory(u_pname);
+    
     return 0;
 }
 
@@ -808,16 +795,13 @@ int org_mini_nk_NK_nk_window_set_focus(Runtime *runtime, Class *clazz) {
     intptr_t parg0 = env->localvar_getLong_2slot(runtime, pos);pos += 2;
     Instance *pname = env->localvar_getRefer(runtime, pos++);
     __refer ptr_pname = NULL;
-    Utf8String *u_pname;
     if(pname){
-        u_pname = env->utf8_create();
-        env->jstring_2_utf8(pname, u_pname);
-        ptr_pname = env->utf8_cstr(u_pname);
+        ptr_pname = pname->arr_body;
     }
 
     nk_window_set_focus((struct nk_context*/*ptr*/)(parg0), (const char*)(ptr_pname));
     
-    env->utf8_destory(u_pname);
+    
     return 0;
 }
 
@@ -828,16 +812,13 @@ int org_mini_nk_NK_nk_window_close(Runtime *runtime, Class *clazz) {
     intptr_t pctx = env->localvar_getLong_2slot(runtime, pos);pos += 2;
     Instance *pname = env->localvar_getRefer(runtime, pos++);
     __refer ptr_pname = NULL;
-    Utf8String *u_pname;
     if(pname){
-        u_pname = env->utf8_create();
-        env->jstring_2_utf8(pname, u_pname);
-        ptr_pname = env->utf8_cstr(u_pname);
+        ptr_pname = pname->arr_body;
     }
 
     nk_window_close((struct nk_context*/*ptr*/)(pctx), (const char*)(ptr_pname));
     
-    env->utf8_destory(u_pname);
+    
     return 0;
 }
 
@@ -848,17 +829,14 @@ int org_mini_nk_NK_nk_window_collapse(Runtime *runtime, Class *clazz) {
     intptr_t parg0 = env->localvar_getLong_2slot(runtime, pos);pos += 2;
     Instance *pname = env->localvar_getRefer(runtime, pos++);
     __refer ptr_pname = NULL;
-    Utf8String *u_pname;
     if(pname){
-        u_pname = env->utf8_create();
-        env->jstring_2_utf8(pname, u_pname);
-        ptr_pname = env->utf8_cstr(u_pname);
+        ptr_pname = pname->arr_body;
     }
     s32 pstate = env->localvar_getInt(runtime, pos++);
 
     nk_window_collapse((struct nk_context*/*ptr*/)(parg0), (const char*)(ptr_pname), (enum nk_collapse_states)pstate);
     
-    env->utf8_destory(u_pname);
+    
     return 0;
 }
 
@@ -869,18 +847,15 @@ int org_mini_nk_NK_nk_window_collapse_if(Runtime *runtime, Class *clazz) {
     intptr_t parg0 = env->localvar_getLong_2slot(runtime, pos);pos += 2;
     Instance *pname = env->localvar_getRefer(runtime, pos++);
     __refer ptr_pname = NULL;
-    Utf8String *u_pname;
     if(pname){
-        u_pname = env->utf8_create();
-        env->jstring_2_utf8(pname, u_pname);
-        ptr_pname = env->utf8_cstr(u_pname);
+        ptr_pname = pname->arr_body;
     }
     s32 parg2 = env->localvar_getInt(runtime, pos++);
     s32 pcond = env->localvar_getInt(runtime, pos++);
 
     nk_window_collapse_if((struct nk_context*/*ptr*/)(parg0), (const char*)(ptr_pname), (enum nk_collapse_states)parg2, (int)pcond);
     
-    env->utf8_destory(u_pname);
+    
     return 0;
 }
 
@@ -891,17 +866,14 @@ int org_mini_nk_NK_nk_window_show(Runtime *runtime, Class *clazz) {
     intptr_t parg0 = env->localvar_getLong_2slot(runtime, pos);pos += 2;
     Instance *pname = env->localvar_getRefer(runtime, pos++);
     __refer ptr_pname = NULL;
-    Utf8String *u_pname;
     if(pname){
-        u_pname = env->utf8_create();
-        env->jstring_2_utf8(pname, u_pname);
-        ptr_pname = env->utf8_cstr(u_pname);
+        ptr_pname = pname->arr_body;
     }
     s32 parg2 = env->localvar_getInt(runtime, pos++);
 
     nk_window_show((struct nk_context*/*ptr*/)(parg0), (const char*)(ptr_pname), (enum nk_show_states)parg2);
     
-    env->utf8_destory(u_pname);
+    
     return 0;
 }
 
@@ -912,18 +884,15 @@ int org_mini_nk_NK_nk_window_show_if(Runtime *runtime, Class *clazz) {
     intptr_t parg0 = env->localvar_getLong_2slot(runtime, pos);pos += 2;
     Instance *pname = env->localvar_getRefer(runtime, pos++);
     __refer ptr_pname = NULL;
-    Utf8String *u_pname;
     if(pname){
-        u_pname = env->utf8_create();
-        env->jstring_2_utf8(pname, u_pname);
-        ptr_pname = env->utf8_cstr(u_pname);
+        ptr_pname = pname->arr_body;
     }
     s32 parg2 = env->localvar_getInt(runtime, pos++);
     s32 pcond = env->localvar_getInt(runtime, pos++);
 
     nk_window_show_if((struct nk_context*/*ptr*/)(parg0), (const char*)(ptr_pname), (enum nk_show_states)parg2, (int)pcond);
     
-    env->utf8_destory(u_pname);
+    
     return 0;
 }
 
@@ -1314,17 +1283,14 @@ int org_mini_nk_NK_nk_group_begin(Runtime *runtime, Class *clazz) {
     intptr_t parg0 = env->localvar_getLong_2slot(runtime, pos);pos += 2;
     Instance *ptitle = env->localvar_getRefer(runtime, pos++);
     __refer ptr_ptitle = NULL;
-    Utf8String *u_ptitle;
     if(ptitle){
-        u_ptitle = env->utf8_create();
-        env->jstring_2_utf8(ptitle, u_ptitle);
-        ptr_ptitle = env->utf8_cstr(u_ptitle);
+        ptr_ptitle = ptitle->arr_body;
     }
     s32 parg2 = env->localvar_getInt(runtime, pos++);
 
     int _re_val = nk_group_begin((struct nk_context*/*ptr*/)(parg0), (const char*)(ptr_ptitle), (nk_flags)parg2);
     s32 ret_value = (s32)_re_val;env->push_int(runtime->stack, ret_value);
-    env->utf8_destory(u_ptitle);
+    
     return 0;
 }
 
@@ -1345,17 +1311,14 @@ int org_mini_nk_NK_nk_group_scrolled_offset_begin(Runtime *runtime, Class *clazz
     }
     Instance *parg3 = env->localvar_getRefer(runtime, pos++);
     __refer ptr_parg3 = NULL;
-    Utf8String *u_parg3;
     if(parg3){
-        u_parg3 = env->utf8_create();
-        env->jstring_2_utf8(parg3, u_parg3);
-        ptr_parg3 = env->utf8_cstr(u_parg3);
+        ptr_parg3 = parg3->arr_body;
     }
     s32 parg4 = env->localvar_getInt(runtime, pos++);
 
     int _re_val = nk_group_scrolled_offset_begin((struct nk_context*/*ptr*/)(parg0), (nk_uint*)(ptr_px_offset), (nk_uint*)(ptr_py_offset), (const char*)(ptr_parg3), (nk_flags)parg4);
     s32 ret_value = (s32)_re_val;env->push_int(runtime->stack, ret_value);
-    env->utf8_destory(u_parg3);
+    
     return 0;
 }
 
@@ -1371,17 +1334,14 @@ int org_mini_nk_NK_nk_group_scrolled_begin(Runtime *runtime, Class *clazz) {
     }
     Instance *ptitle = env->localvar_getRefer(runtime, pos++);
     __refer ptr_ptitle = NULL;
-    Utf8String *u_ptitle;
     if(ptitle){
-        u_ptitle = env->utf8_create();
-        env->jstring_2_utf8(ptitle, u_ptitle);
-        ptr_ptitle = env->utf8_cstr(u_ptitle);
+        ptr_ptitle = ptitle->arr_body;
     }
     s32 parg3 = env->localvar_getInt(runtime, pos++);
 
     int _re_val = nk_group_scrolled_begin((struct nk_context*/*ptr*/)(parg0), (struct nk_scroll*)(ptr_parg1), (const char*)(ptr_ptitle), (nk_flags)parg3);
     s32 ret_value = (s32)_re_val;env->push_int(runtime->stack, ret_value);
-    env->utf8_destory(u_ptitle);
+    
     return 0;
 }
 
@@ -1417,11 +1377,8 @@ int org_mini_nk_NK_nk_list_view_begin(Runtime *runtime, Class *clazz) {
     intptr_t pout = env->localvar_getLong_2slot(runtime, pos);pos += 2;
     Instance *pid = env->localvar_getRefer(runtime, pos++);
     __refer ptr_pid = NULL;
-    Utf8String *u_pid;
     if(pid){
-        u_pid = env->utf8_create();
-        env->jstring_2_utf8(pid, u_pid);
-        ptr_pid = env->utf8_cstr(u_pid);
+        ptr_pid = pid->arr_body;
     }
     s32 parg3 = env->localvar_getInt(runtime, pos++);
     s32 prow_height = env->localvar_getInt(runtime, pos++);
@@ -1429,7 +1386,7 @@ int org_mini_nk_NK_nk_list_view_begin(Runtime *runtime, Class *clazz) {
 
     int _re_val = nk_list_view_begin((struct nk_context*/*ptr*/)(parg0), (struct nk_list_view*/*ptr*/)(pout), (const char*)(ptr_pid), (nk_flags)parg3, (int)prow_height, (int)prow_count);
     s32 ret_value = (s32)_re_val;env->push_int(runtime->stack, ret_value);
-    env->utf8_destory(u_pid);
+    
     return 0;
 }
 
@@ -1453,27 +1410,21 @@ int org_mini_nk_NK_nk_tree_push_hashed(Runtime *runtime, Class *clazz) {
     s32 parg1 = env->localvar_getInt(runtime, pos++);
     Instance *ptitle = env->localvar_getRefer(runtime, pos++);
     __refer ptr_ptitle = NULL;
-    Utf8String *u_ptitle;
     if(ptitle){
-        u_ptitle = env->utf8_create();
-        env->jstring_2_utf8(ptitle, u_ptitle);
-        ptr_ptitle = env->utf8_cstr(u_ptitle);
+        ptr_ptitle = ptitle->arr_body;
     }
     s32 pinitial_state = env->localvar_getInt(runtime, pos++);
     Instance *phash = env->localvar_getRefer(runtime, pos++);
     __refer ptr_phash = NULL;
-    Utf8String *u_phash;
     if(phash){
-        u_phash = env->utf8_create();
-        env->jstring_2_utf8(phash, u_phash);
-        ptr_phash = env->utf8_cstr(u_phash);
+        ptr_phash = phash->arr_body;
     }
     s32 plen = env->localvar_getInt(runtime, pos++);
     s32 pseed = env->localvar_getInt(runtime, pos++);
 
     int _re_val = nk_tree_push_hashed((struct nk_context*/*ptr*/)(parg0), (enum nk_tree_type)parg1, (const char*)(ptr_ptitle), (enum nk_collapse_states)pinitial_state, (const char*)(ptr_phash), (int)plen, (int)pseed);
     s32 ret_value = (s32)_re_val;env->push_int(runtime->stack, ret_value);
-    env->utf8_destory(u_ptitle);env->utf8_destory(u_phash);
+    
     return 0;
 }
 
@@ -1490,27 +1441,21 @@ int org_mini_nk_NK_nk_tree_image_push_hashed(Runtime *runtime, Class *clazz) {
     }
     Instance *ptitle = env->localvar_getRefer(runtime, pos++);
     __refer ptr_ptitle = NULL;
-    Utf8String *u_ptitle;
     if(ptitle){
-        u_ptitle = env->utf8_create();
-        env->jstring_2_utf8(ptitle, u_ptitle);
-        ptr_ptitle = env->utf8_cstr(u_ptitle);
+        ptr_ptitle = ptitle->arr_body;
     }
     s32 pinitial_state = env->localvar_getInt(runtime, pos++);
     Instance *phash = env->localvar_getRefer(runtime, pos++);
     __refer ptr_phash = NULL;
-    Utf8String *u_phash;
     if(phash){
-        u_phash = env->utf8_create();
-        env->jstring_2_utf8(phash, u_phash);
-        ptr_phash = env->utf8_cstr(u_phash);
+        ptr_phash = phash->arr_body;
     }
     s32 plen = env->localvar_getInt(runtime, pos++);
     s32 pseed = env->localvar_getInt(runtime, pos++);
 
     int _re_val = nk_tree_image_push_hashed((struct nk_context*/*ptr*/)(parg0), (enum nk_tree_type)parg1, *(struct nk_image/*none_ptr*/*)(ptr_parg2), (const char*)(ptr_ptitle), (enum nk_collapse_states)pinitial_state, (const char*)(ptr_phash), (int)plen, (int)pseed);
     s32 ret_value = (s32)_re_val;env->push_int(runtime->stack, ret_value);
-    env->utf8_destory(u_ptitle);env->utf8_destory(u_phash);
+    
     return 0;
 }
 
@@ -1534,11 +1479,8 @@ int org_mini_nk_NK_nk_tree_state_push(Runtime *runtime, Class *clazz) {
     s32 parg1 = env->localvar_getInt(runtime, pos++);
     Instance *ptitle = env->localvar_getRefer(runtime, pos++);
     __refer ptr_ptitle = NULL;
-    Utf8String *u_ptitle;
     if(ptitle){
-        u_ptitle = env->utf8_create();
-        env->jstring_2_utf8(ptitle, u_ptitle);
-        ptr_ptitle = env->utf8_cstr(u_ptitle);
+        ptr_ptitle = ptitle->arr_body;
     }
     Instance *pstate = env->localvar_getRefer(runtime, pos++);
     __refer ptr_pstate = NULL;
@@ -1548,7 +1490,7 @@ int org_mini_nk_NK_nk_tree_state_push(Runtime *runtime, Class *clazz) {
 
     int _re_val = nk_tree_state_push((struct nk_context*/*ptr*/)(parg0), (enum nk_tree_type)parg1, (const char*)(ptr_ptitle), (enum nk_collapse_states*)(ptr_pstate));
     s32 ret_value = (s32)_re_val;env->push_int(runtime->stack, ret_value);
-    env->utf8_destory(u_ptitle);
+    
     return 0;
 }
 
@@ -1565,11 +1507,8 @@ int org_mini_nk_NK_nk_tree_state_image_push(Runtime *runtime, Class *clazz) {
     }
     Instance *ptitle = env->localvar_getRefer(runtime, pos++);
     __refer ptr_ptitle = NULL;
-    Utf8String *u_ptitle;
     if(ptitle){
-        u_ptitle = env->utf8_create();
-        env->jstring_2_utf8(ptitle, u_ptitle);
-        ptr_ptitle = env->utf8_cstr(u_ptitle);
+        ptr_ptitle = ptitle->arr_body;
     }
     Instance *pstate = env->localvar_getRefer(runtime, pos++);
     __refer ptr_pstate = NULL;
@@ -1579,7 +1518,7 @@ int org_mini_nk_NK_nk_tree_state_image_push(Runtime *runtime, Class *clazz) {
 
     int _re_val = nk_tree_state_image_push((struct nk_context*/*ptr*/)(parg0), (enum nk_tree_type)parg1, *(struct nk_image/*none_ptr*/*)(ptr_parg2), (const char*)(ptr_ptitle), (enum nk_collapse_states*)(ptr_pstate));
     s32 ret_value = (s32)_re_val;env->push_int(runtime->stack, ret_value);
-    env->utf8_destory(u_ptitle);
+    
     return 0;
 }
 
@@ -1780,18 +1719,15 @@ int org_mini_nk_NK_nk_text(Runtime *runtime, Class *clazz) {
     intptr_t parg0 = env->localvar_getLong_2slot(runtime, pos);pos += 2;
     Instance *parg1 = env->localvar_getRefer(runtime, pos++);
     __refer ptr_parg1 = NULL;
-    Utf8String *u_parg1;
     if(parg1){
-        u_parg1 = env->utf8_create();
-        env->jstring_2_utf8(parg1, u_parg1);
-        ptr_parg1 = env->utf8_cstr(u_parg1);
+        ptr_parg1 = parg1->arr_body;
     }
     s32 parg2 = env->localvar_getInt(runtime, pos++);
     s32 parg3 = env->localvar_getInt(runtime, pos++);
 
     nk_text((struct nk_context*/*ptr*/)(parg0), (const char*)(ptr_parg1), (int)parg2, (nk_flags)parg3);
     
-    env->utf8_destory(u_parg1);
+    
     return 0;
 }
 
@@ -1802,11 +1738,8 @@ int org_mini_nk_NK_nk_text_colored(Runtime *runtime, Class *clazz) {
     intptr_t parg0 = env->localvar_getLong_2slot(runtime, pos);pos += 2;
     Instance *parg1 = env->localvar_getRefer(runtime, pos++);
     __refer ptr_parg1 = NULL;
-    Utf8String *u_parg1;
     if(parg1){
-        u_parg1 = env->utf8_create();
-        env->jstring_2_utf8(parg1, u_parg1);
-        ptr_parg1 = env->utf8_cstr(u_parg1);
+        ptr_parg1 = parg1->arr_body;
     }
     s32 parg2 = env->localvar_getInt(runtime, pos++);
     s32 parg3 = env->localvar_getInt(runtime, pos++);
@@ -1818,7 +1751,7 @@ int org_mini_nk_NK_nk_text_colored(Runtime *runtime, Class *clazz) {
 
     nk_text_colored((struct nk_context*/*ptr*/)(parg0), (const char*)(ptr_parg1), (int)parg2, (nk_flags)parg3, *(struct nk_color/*none_ptr*/*)(ptr_parg4));
     
-    env->utf8_destory(u_parg1);
+    
     return 0;
 }
 
@@ -1829,17 +1762,14 @@ int org_mini_nk_NK_nk_text_wrap(Runtime *runtime, Class *clazz) {
     intptr_t parg0 = env->localvar_getLong_2slot(runtime, pos);pos += 2;
     Instance *parg1 = env->localvar_getRefer(runtime, pos++);
     __refer ptr_parg1 = NULL;
-    Utf8String *u_parg1;
     if(parg1){
-        u_parg1 = env->utf8_create();
-        env->jstring_2_utf8(parg1, u_parg1);
-        ptr_parg1 = env->utf8_cstr(u_parg1);
+        ptr_parg1 = parg1->arr_body;
     }
     s32 parg2 = env->localvar_getInt(runtime, pos++);
 
     nk_text_wrap((struct nk_context*/*ptr*/)(parg0), (const char*)(ptr_parg1), (int)parg2);
     
-    env->utf8_destory(u_parg1);
+    
     return 0;
 }
 
@@ -1850,11 +1780,8 @@ int org_mini_nk_NK_nk_text_wrap_colored(Runtime *runtime, Class *clazz) {
     intptr_t parg0 = env->localvar_getLong_2slot(runtime, pos);pos += 2;
     Instance *parg1 = env->localvar_getRefer(runtime, pos++);
     __refer ptr_parg1 = NULL;
-    Utf8String *u_parg1;
     if(parg1){
-        u_parg1 = env->utf8_create();
-        env->jstring_2_utf8(parg1, u_parg1);
-        ptr_parg1 = env->utf8_cstr(u_parg1);
+        ptr_parg1 = parg1->arr_body;
     }
     s32 parg2 = env->localvar_getInt(runtime, pos++);
     Instance *parg3 = env->localvar_getRefer(runtime, pos++);
@@ -1865,7 +1792,7 @@ int org_mini_nk_NK_nk_text_wrap_colored(Runtime *runtime, Class *clazz) {
 
     nk_text_wrap_colored((struct nk_context*/*ptr*/)(parg0), (const char*)(ptr_parg1), (int)parg2, *(struct nk_color/*none_ptr*/*)(ptr_parg3));
     
-    env->utf8_destory(u_parg1);
+    
     return 0;
 }
 
@@ -1876,17 +1803,14 @@ int org_mini_nk_NK_nk_label(Runtime *runtime, Class *clazz) {
     intptr_t parg0 = env->localvar_getLong_2slot(runtime, pos);pos += 2;
     Instance *parg1 = env->localvar_getRefer(runtime, pos++);
     __refer ptr_parg1 = NULL;
-    Utf8String *u_parg1;
     if(parg1){
-        u_parg1 = env->utf8_create();
-        env->jstring_2_utf8(parg1, u_parg1);
-        ptr_parg1 = env->utf8_cstr(u_parg1);
+        ptr_parg1 = parg1->arr_body;
     }
     s32 palign = env->localvar_getInt(runtime, pos++);
 
     nk_label((struct nk_context*/*ptr*/)(parg0), (const char*)(ptr_parg1), (nk_flags)palign);
     
-    env->utf8_destory(u_parg1);
+    
     return 0;
 }
 
@@ -1897,11 +1821,8 @@ int org_mini_nk_NK_nk_label_colored(Runtime *runtime, Class *clazz) {
     intptr_t parg0 = env->localvar_getLong_2slot(runtime, pos);pos += 2;
     Instance *parg1 = env->localvar_getRefer(runtime, pos++);
     __refer ptr_parg1 = NULL;
-    Utf8String *u_parg1;
     if(parg1){
-        u_parg1 = env->utf8_create();
-        env->jstring_2_utf8(parg1, u_parg1);
-        ptr_parg1 = env->utf8_cstr(u_parg1);
+        ptr_parg1 = parg1->arr_body;
     }
     s32 palign = env->localvar_getInt(runtime, pos++);
     Instance *parg3 = env->localvar_getRefer(runtime, pos++);
@@ -1912,7 +1833,7 @@ int org_mini_nk_NK_nk_label_colored(Runtime *runtime, Class *clazz) {
 
     nk_label_colored((struct nk_context*/*ptr*/)(parg0), (const char*)(ptr_parg1), (nk_flags)palign, *(struct nk_color/*none_ptr*/*)(ptr_parg3));
     
-    env->utf8_destory(u_parg1);
+    
     return 0;
 }
 
@@ -1923,16 +1844,13 @@ int org_mini_nk_NK_nk_label_wrap(Runtime *runtime, Class *clazz) {
     intptr_t parg0 = env->localvar_getLong_2slot(runtime, pos);pos += 2;
     Instance *parg1 = env->localvar_getRefer(runtime, pos++);
     __refer ptr_parg1 = NULL;
-    Utf8String *u_parg1;
     if(parg1){
-        u_parg1 = env->utf8_create();
-        env->jstring_2_utf8(parg1, u_parg1);
-        ptr_parg1 = env->utf8_cstr(u_parg1);
+        ptr_parg1 = parg1->arr_body;
     }
 
     nk_label_wrap((struct nk_context*/*ptr*/)(parg0), (const char*)(ptr_parg1));
     
-    env->utf8_destory(u_parg1);
+    
     return 0;
 }
 
@@ -1943,11 +1861,8 @@ int org_mini_nk_NK_nk_label_colored_wrap(Runtime *runtime, Class *clazz) {
     intptr_t parg0 = env->localvar_getLong_2slot(runtime, pos);pos += 2;
     Instance *parg1 = env->localvar_getRefer(runtime, pos++);
     __refer ptr_parg1 = NULL;
-    Utf8String *u_parg1;
     if(parg1){
-        u_parg1 = env->utf8_create();
-        env->jstring_2_utf8(parg1, u_parg1);
-        ptr_parg1 = env->utf8_cstr(u_parg1);
+        ptr_parg1 = parg1->arr_body;
     }
     Instance *parg2 = env->localvar_getRefer(runtime, pos++);
     __refer ptr_parg2 = NULL;
@@ -1957,7 +1872,7 @@ int org_mini_nk_NK_nk_label_colored_wrap(Runtime *runtime, Class *clazz) {
 
     nk_label_colored_wrap((struct nk_context*/*ptr*/)(parg0), (const char*)(ptr_parg1), *(struct nk_color/*none_ptr*/*)(ptr_parg2));
     
-    env->utf8_destory(u_parg1);
+    
     return 0;
 }
 
@@ -1986,11 +1901,8 @@ int org_mini_nk_NK_nk_labelf(Runtime *runtime, Class *clazz) {
     s32 parg1 = env->localvar_getInt(runtime, pos++);
     Instance *parg2 = env->localvar_getRefer(runtime, pos++);
     __refer ptr_parg2 = NULL;
-    Utf8String *u_parg2;
     if(parg2){
-        u_parg2 = env->utf8_create();
-        env->jstring_2_utf8(parg2, u_parg2);
-        ptr_parg2 = env->utf8_cstr(u_parg2);
+        ptr_parg2 = parg2->arr_body;
     }
     Instance *parg3 = env->localvar_getRefer(runtime, pos++);
     CStringArr *ptr_parg3 = NULL;
@@ -2000,7 +1912,7 @@ int org_mini_nk_NK_nk_labelf(Runtime *runtime, Class *clazz) {
 
     nk_labelf((struct nk_context*/*ptr*/)(parg0), (nk_flags)parg1, (const char*)(ptr_parg2), /*todo Despair for runtime parse unlimited para*/(ptr_parg3->arr_body));
     
-    env->utf8_destory(u_parg2);env->cstringarr_destory(ptr_parg3);
+    env->cstringarr_destory(ptr_parg3);
     return 0;
 }
 
@@ -2017,11 +1929,8 @@ int org_mini_nk_NK_nk_labelf_colored(Runtime *runtime, Class *clazz) {
     }
     Instance *parg3 = env->localvar_getRefer(runtime, pos++);
     __refer ptr_parg3 = NULL;
-    Utf8String *u_parg3;
     if(parg3){
-        u_parg3 = env->utf8_create();
-        env->jstring_2_utf8(parg3, u_parg3);
-        ptr_parg3 = env->utf8_cstr(u_parg3);
+        ptr_parg3 = parg3->arr_body;
     }
     Instance *parg4 = env->localvar_getRefer(runtime, pos++);
     CStringArr *ptr_parg4 = NULL;
@@ -2031,7 +1940,7 @@ int org_mini_nk_NK_nk_labelf_colored(Runtime *runtime, Class *clazz) {
 
     nk_labelf_colored((struct nk_context*/*ptr*/)(parg0), (nk_flags)palign, *(struct nk_color/*none_ptr*/*)(ptr_parg2), (const char*)(ptr_parg3), /*todo Despair for runtime parse unlimited para*/(ptr_parg4->arr_body));
     
-    env->utf8_destory(u_parg3);env->cstringarr_destory(ptr_parg4);
+    env->cstringarr_destory(ptr_parg4);
     return 0;
 }
 
@@ -2042,11 +1951,8 @@ int org_mini_nk_NK_nk_labelf_wrap(Runtime *runtime, Class *clazz) {
     intptr_t parg0 = env->localvar_getLong_2slot(runtime, pos);pos += 2;
     Instance *parg1 = env->localvar_getRefer(runtime, pos++);
     __refer ptr_parg1 = NULL;
-    Utf8String *u_parg1;
     if(parg1){
-        u_parg1 = env->utf8_create();
-        env->jstring_2_utf8(parg1, u_parg1);
-        ptr_parg1 = env->utf8_cstr(u_parg1);
+        ptr_parg1 = parg1->arr_body;
     }
     Instance *parg2 = env->localvar_getRefer(runtime, pos++);
     CStringArr *ptr_parg2 = NULL;
@@ -2056,7 +1962,7 @@ int org_mini_nk_NK_nk_labelf_wrap(Runtime *runtime, Class *clazz) {
 
     nk_labelf_wrap((struct nk_context*/*ptr*/)(parg0), (const char*)(ptr_parg1), /*todo Despair for runtime parse unlimited para*/(ptr_parg2->arr_body));
     
-    env->utf8_destory(u_parg1);env->cstringarr_destory(ptr_parg2);
+    env->cstringarr_destory(ptr_parg2);
     return 0;
 }
 
@@ -2072,11 +1978,8 @@ int org_mini_nk_NK_nk_labelf_colored_wrap(Runtime *runtime, Class *clazz) {
     }
     Instance *parg2 = env->localvar_getRefer(runtime, pos++);
     __refer ptr_parg2 = NULL;
-    Utf8String *u_parg2;
     if(parg2){
-        u_parg2 = env->utf8_create();
-        env->jstring_2_utf8(parg2, u_parg2);
-        ptr_parg2 = env->utf8_cstr(u_parg2);
+        ptr_parg2 = parg2->arr_body;
     }
     Instance *parg3 = env->localvar_getRefer(runtime, pos++);
     CStringArr *ptr_parg3 = NULL;
@@ -2086,7 +1989,7 @@ int org_mini_nk_NK_nk_labelf_colored_wrap(Runtime *runtime, Class *clazz) {
 
     nk_labelf_colored_wrap((struct nk_context*/*ptr*/)(parg0), *(struct nk_color/*none_ptr*/*)(ptr_parg1), (const char*)(ptr_parg2), /*todo Despair for runtime parse unlimited para*/(ptr_parg3->arr_body));
     
-    env->utf8_destory(u_parg2);env->cstringarr_destory(ptr_parg3);
+    env->cstringarr_destory(ptr_parg3);
     return 0;
 }
 
@@ -2097,17 +2000,14 @@ int org_mini_nk_NK_nk_value_bool(Runtime *runtime, Class *clazz) {
     intptr_t parg0 = env->localvar_getLong_2slot(runtime, pos);pos += 2;
     Instance *pprefix = env->localvar_getRefer(runtime, pos++);
     __refer ptr_pprefix = NULL;
-    Utf8String *u_pprefix;
     if(pprefix){
-        u_pprefix = env->utf8_create();
-        env->jstring_2_utf8(pprefix, u_pprefix);
-        ptr_pprefix = env->utf8_cstr(u_pprefix);
+        ptr_pprefix = pprefix->arr_body;
     }
     s32 parg2 = env->localvar_getInt(runtime, pos++);
 
     nk_value_bool((struct nk_context*/*ptr*/)(parg0), (const char*)(ptr_pprefix), (int)parg2);
     
-    env->utf8_destory(u_pprefix);
+    
     return 0;
 }
 
@@ -2118,17 +2018,14 @@ int org_mini_nk_NK_nk_value_int(Runtime *runtime, Class *clazz) {
     intptr_t parg0 = env->localvar_getLong_2slot(runtime, pos);pos += 2;
     Instance *pprefix = env->localvar_getRefer(runtime, pos++);
     __refer ptr_pprefix = NULL;
-    Utf8String *u_pprefix;
     if(pprefix){
-        u_pprefix = env->utf8_create();
-        env->jstring_2_utf8(pprefix, u_pprefix);
-        ptr_pprefix = env->utf8_cstr(u_pprefix);
+        ptr_pprefix = pprefix->arr_body;
     }
     s32 parg2 = env->localvar_getInt(runtime, pos++);
 
     nk_value_int((struct nk_context*/*ptr*/)(parg0), (const char*)(ptr_pprefix), (int)parg2);
     
-    env->utf8_destory(u_pprefix);
+    
     return 0;
 }
 
@@ -2139,17 +2036,14 @@ int org_mini_nk_NK_nk_value_uint(Runtime *runtime, Class *clazz) {
     intptr_t parg0 = env->localvar_getLong_2slot(runtime, pos);pos += 2;
     Instance *pprefix = env->localvar_getRefer(runtime, pos++);
     __refer ptr_pprefix = NULL;
-    Utf8String *u_pprefix;
     if(pprefix){
-        u_pprefix = env->utf8_create();
-        env->jstring_2_utf8(pprefix, u_pprefix);
-        ptr_pprefix = env->utf8_cstr(u_pprefix);
+        ptr_pprefix = pprefix->arr_body;
     }
     s32 parg2 = env->localvar_getInt(runtime, pos++);
 
     nk_value_uint((struct nk_context*/*ptr*/)(parg0), (const char*)(ptr_pprefix), (unsigned int)parg2);
     
-    env->utf8_destory(u_pprefix);
+    
     return 0;
 }
 
@@ -2160,17 +2054,14 @@ int org_mini_nk_NK_nk_value_float(Runtime *runtime, Class *clazz) {
     intptr_t parg0 = env->localvar_getLong_2slot(runtime, pos);pos += 2;
     Instance *pprefix = env->localvar_getRefer(runtime, pos++);
     __refer ptr_pprefix = NULL;
-    Utf8String *u_pprefix;
     if(pprefix){
-        u_pprefix = env->utf8_create();
-        env->jstring_2_utf8(pprefix, u_pprefix);
-        ptr_pprefix = env->utf8_cstr(u_pprefix);
+        ptr_pprefix = pprefix->arr_body;
     }
     Int2Float parg2;parg2.i = env->localvar_getInt(runtime, pos++);
 
     nk_value_float((struct nk_context*/*ptr*/)(parg0), (const char*)(ptr_pprefix), (float)parg2.f);
     
-    env->utf8_destory(u_pprefix);
+    
     return 0;
 }
 
@@ -2181,11 +2072,8 @@ int org_mini_nk_NK_nk_value_color_byte(Runtime *runtime, Class *clazz) {
     intptr_t parg0 = env->localvar_getLong_2slot(runtime, pos);pos += 2;
     Instance *pprefix = env->localvar_getRefer(runtime, pos++);
     __refer ptr_pprefix = NULL;
-    Utf8String *u_pprefix;
     if(pprefix){
-        u_pprefix = env->utf8_create();
-        env->jstring_2_utf8(pprefix, u_pprefix);
-        ptr_pprefix = env->utf8_cstr(u_pprefix);
+        ptr_pprefix = pprefix->arr_body;
     }
     Instance *parg2 = env->localvar_getRefer(runtime, pos++);
     __refer ptr_parg2 = NULL;
@@ -2195,7 +2083,7 @@ int org_mini_nk_NK_nk_value_color_byte(Runtime *runtime, Class *clazz) {
 
     nk_value_color_byte((struct nk_context*/*ptr*/)(parg0), (const char*)(ptr_pprefix), *(struct nk_color/*none_ptr*/*)(ptr_parg2));
     
-    env->utf8_destory(u_pprefix);
+    
     return 0;
 }
 
@@ -2206,11 +2094,8 @@ int org_mini_nk_NK_nk_value_color_float(Runtime *runtime, Class *clazz) {
     intptr_t parg0 = env->localvar_getLong_2slot(runtime, pos);pos += 2;
     Instance *pprefix = env->localvar_getRefer(runtime, pos++);
     __refer ptr_pprefix = NULL;
-    Utf8String *u_pprefix;
     if(pprefix){
-        u_pprefix = env->utf8_create();
-        env->jstring_2_utf8(pprefix, u_pprefix);
-        ptr_pprefix = env->utf8_cstr(u_pprefix);
+        ptr_pprefix = pprefix->arr_body;
     }
     Instance *parg2 = env->localvar_getRefer(runtime, pos++);
     __refer ptr_parg2 = NULL;
@@ -2220,7 +2105,7 @@ int org_mini_nk_NK_nk_value_color_float(Runtime *runtime, Class *clazz) {
 
     nk_value_color_float((struct nk_context*/*ptr*/)(parg0), (const char*)(ptr_pprefix), *(struct nk_color/*none_ptr*/*)(ptr_parg2));
     
-    env->utf8_destory(u_pprefix);
+    
     return 0;
 }
 
@@ -2231,11 +2116,8 @@ int org_mini_nk_NK_nk_value_color_hex(Runtime *runtime, Class *clazz) {
     intptr_t parg0 = env->localvar_getLong_2slot(runtime, pos);pos += 2;
     Instance *pprefix = env->localvar_getRefer(runtime, pos++);
     __refer ptr_pprefix = NULL;
-    Utf8String *u_pprefix;
     if(pprefix){
-        u_pprefix = env->utf8_create();
-        env->jstring_2_utf8(pprefix, u_pprefix);
-        ptr_pprefix = env->utf8_cstr(u_pprefix);
+        ptr_pprefix = pprefix->arr_body;
     }
     Instance *parg2 = env->localvar_getRefer(runtime, pos++);
     __refer ptr_parg2 = NULL;
@@ -2245,7 +2127,7 @@ int org_mini_nk_NK_nk_value_color_hex(Runtime *runtime, Class *clazz) {
 
     nk_value_color_hex((struct nk_context*/*ptr*/)(parg0), (const char*)(ptr_pprefix), *(struct nk_color/*none_ptr*/*)(ptr_parg2));
     
-    env->utf8_destory(u_pprefix);
+    
     return 0;
 }
 
@@ -2256,17 +2138,14 @@ int org_mini_nk_NK_nk_button_text(Runtime *runtime, Class *clazz) {
     intptr_t parg0 = env->localvar_getLong_2slot(runtime, pos);pos += 2;
     Instance *ptitle = env->localvar_getRefer(runtime, pos++);
     __refer ptr_ptitle = NULL;
-    Utf8String *u_ptitle;
     if(ptitle){
-        u_ptitle = env->utf8_create();
-        env->jstring_2_utf8(ptitle, u_ptitle);
-        ptr_ptitle = env->utf8_cstr(u_ptitle);
+        ptr_ptitle = ptitle->arr_body;
     }
     s32 plen = env->localvar_getInt(runtime, pos++);
 
     int _re_val = nk_button_text((struct nk_context*/*ptr*/)(parg0), (const char*)(ptr_ptitle), (int)plen);
     s32 ret_value = (s32)_re_val;env->push_int(runtime->stack, ret_value);
-    env->utf8_destory(u_ptitle);
+    
     return 0;
 }
 
@@ -2277,16 +2156,13 @@ int org_mini_nk_NK_nk_button_label(Runtime *runtime, Class *clazz) {
     intptr_t parg0 = env->localvar_getLong_2slot(runtime, pos);pos += 2;
     Instance *ptitle = env->localvar_getRefer(runtime, pos++);
     __refer ptr_ptitle = NULL;
-    Utf8String *u_ptitle;
     if(ptitle){
-        u_ptitle = env->utf8_create();
-        env->jstring_2_utf8(ptitle, u_ptitle);
-        ptr_ptitle = env->utf8_cstr(u_ptitle);
+        ptr_ptitle = ptitle->arr_body;
     }
 
     int _re_val = nk_button_label((struct nk_context*/*ptr*/)(parg0), (const char*)(ptr_ptitle));
     s32 ret_value = (s32)_re_val;env->push_int(runtime->stack, ret_value);
-    env->utf8_destory(u_ptitle);
+    
     return 0;
 }
 
@@ -2345,17 +2221,14 @@ int org_mini_nk_NK_nk_button_symbol_label(Runtime *runtime, Class *clazz) {
     s32 parg1 = env->localvar_getInt(runtime, pos++);
     Instance *parg2 = env->localvar_getRefer(runtime, pos++);
     __refer ptr_parg2 = NULL;
-    Utf8String *u_parg2;
     if(parg2){
-        u_parg2 = env->utf8_create();
-        env->jstring_2_utf8(parg2, u_parg2);
-        ptr_parg2 = env->utf8_cstr(u_parg2);
+        ptr_parg2 = parg2->arr_body;
     }
     s32 ptext_alignment = env->localvar_getInt(runtime, pos++);
 
     int _re_val = nk_button_symbol_label((struct nk_context*/*ptr*/)(parg0), (enum nk_symbol_type)parg1, (const char*)(ptr_parg2), (nk_flags)ptext_alignment);
     s32 ret_value = (s32)_re_val;env->push_int(runtime->stack, ret_value);
-    env->utf8_destory(u_parg2);
+    
     return 0;
 }
 
@@ -2367,18 +2240,15 @@ int org_mini_nk_NK_nk_button_symbol_text(Runtime *runtime, Class *clazz) {
     s32 parg1 = env->localvar_getInt(runtime, pos++);
     Instance *parg2 = env->localvar_getRefer(runtime, pos++);
     __refer ptr_parg2 = NULL;
-    Utf8String *u_parg2;
     if(parg2){
-        u_parg2 = env->utf8_create();
-        env->jstring_2_utf8(parg2, u_parg2);
-        ptr_parg2 = env->utf8_cstr(u_parg2);
+        ptr_parg2 = parg2->arr_body;
     }
     s32 parg3 = env->localvar_getInt(runtime, pos++);
     s32 palignment = env->localvar_getInt(runtime, pos++);
 
     int _re_val = nk_button_symbol_text((struct nk_context*/*ptr*/)(parg0), (enum nk_symbol_type)parg1, (const char*)(ptr_parg2), (int)parg3, (nk_flags)palignment);
     s32 ret_value = (s32)_re_val;env->push_int(runtime->stack, ret_value);
-    env->utf8_destory(u_parg2);
+    
     return 0;
 }
 
@@ -2394,17 +2264,14 @@ int org_mini_nk_NK_nk_button_image_label(Runtime *runtime, Class *clazz) {
     }
     Instance *parg2 = env->localvar_getRefer(runtime, pos++);
     __refer ptr_parg2 = NULL;
-    Utf8String *u_parg2;
     if(parg2){
-        u_parg2 = env->utf8_create();
-        env->jstring_2_utf8(parg2, u_parg2);
-        ptr_parg2 = env->utf8_cstr(u_parg2);
+        ptr_parg2 = parg2->arr_body;
     }
     s32 ptext_alignment = env->localvar_getInt(runtime, pos++);
 
     int _re_val = nk_button_image_label((struct nk_context*/*ptr*/)(parg0), *(struct nk_image/*none_ptr*/*)(ptr_pimg), (const char*)(ptr_parg2), (nk_flags)ptext_alignment);
     s32 ret_value = (s32)_re_val;env->push_int(runtime->stack, ret_value);
-    env->utf8_destory(u_parg2);
+    
     return 0;
 }
 
@@ -2420,18 +2287,15 @@ int org_mini_nk_NK_nk_button_image_text(Runtime *runtime, Class *clazz) {
     }
     Instance *parg2 = env->localvar_getRefer(runtime, pos++);
     __refer ptr_parg2 = NULL;
-    Utf8String *u_parg2;
     if(parg2){
-        u_parg2 = env->utf8_create();
-        env->jstring_2_utf8(parg2, u_parg2);
-        ptr_parg2 = env->utf8_cstr(u_parg2);
+        ptr_parg2 = parg2->arr_body;
     }
     s32 parg3 = env->localvar_getInt(runtime, pos++);
     s32 palignment = env->localvar_getInt(runtime, pos++);
 
     int _re_val = nk_button_image_text((struct nk_context*/*ptr*/)(parg0), *(struct nk_image/*none_ptr*/*)(ptr_pimg), (const char*)(ptr_parg2), (int)parg3, (nk_flags)palignment);
     s32 ret_value = (s32)_re_val;env->push_int(runtime->stack, ret_value);
-    env->utf8_destory(u_parg2);
+    
     return 0;
 }
 
@@ -2443,17 +2307,14 @@ int org_mini_nk_NK_nk_button_text_styled(Runtime *runtime, Class *clazz) {
     intptr_t parg1 = env->localvar_getLong_2slot(runtime, pos);pos += 2;
     Instance *ptitle = env->localvar_getRefer(runtime, pos++);
     __refer ptr_ptitle = NULL;
-    Utf8String *u_ptitle;
     if(ptitle){
-        u_ptitle = env->utf8_create();
-        env->jstring_2_utf8(ptitle, u_ptitle);
-        ptr_ptitle = env->utf8_cstr(u_ptitle);
+        ptr_ptitle = ptitle->arr_body;
     }
     s32 plen = env->localvar_getInt(runtime, pos++);
 
     int _re_val = nk_button_text_styled((struct nk_context*/*ptr*/)(parg0), (const struct nk_style_button*/*ptr*/)(parg1), (const char*)(ptr_ptitle), (int)plen);
     s32 ret_value = (s32)_re_val;env->push_int(runtime->stack, ret_value);
-    env->utf8_destory(u_ptitle);
+    
     return 0;
 }
 
@@ -2465,16 +2326,13 @@ int org_mini_nk_NK_nk_button_label_styled(Runtime *runtime, Class *clazz) {
     intptr_t parg1 = env->localvar_getLong_2slot(runtime, pos);pos += 2;
     Instance *ptitle = env->localvar_getRefer(runtime, pos++);
     __refer ptr_ptitle = NULL;
-    Utf8String *u_ptitle;
     if(ptitle){
-        u_ptitle = env->utf8_create();
-        env->jstring_2_utf8(ptitle, u_ptitle);
-        ptr_ptitle = env->utf8_cstr(u_ptitle);
+        ptr_ptitle = ptitle->arr_body;
     }
 
     int _re_val = nk_button_label_styled((struct nk_context*/*ptr*/)(parg0), (const struct nk_style_button*/*ptr*/)(parg1), (const char*)(ptr_ptitle));
     s32 ret_value = (s32)_re_val;env->push_int(runtime->stack, ret_value);
-    env->utf8_destory(u_ptitle);
+    
     return 0;
 }
 
@@ -2519,18 +2377,15 @@ int org_mini_nk_NK_nk_button_symbol_text_styled(Runtime *runtime, Class *clazz) 
     s32 parg2 = env->localvar_getInt(runtime, pos++);
     Instance *parg3 = env->localvar_getRefer(runtime, pos++);
     __refer ptr_parg3 = NULL;
-    Utf8String *u_parg3;
     if(parg3){
-        u_parg3 = env->utf8_create();
-        env->jstring_2_utf8(parg3, u_parg3);
-        ptr_parg3 = env->utf8_cstr(u_parg3);
+        ptr_parg3 = parg3->arr_body;
     }
     s32 parg4 = env->localvar_getInt(runtime, pos++);
     s32 palignment = env->localvar_getInt(runtime, pos++);
 
     int _re_val = nk_button_symbol_text_styled((struct nk_context*/*ptr*/)(parg0), (const struct nk_style_button*/*ptr*/)(parg1), (enum nk_symbol_type)parg2, (const char*)(ptr_parg3), (int)parg4, (nk_flags)palignment);
     s32 ret_value = (s32)_re_val;env->push_int(runtime->stack, ret_value);
-    env->utf8_destory(u_parg3);
+    
     return 0;
 }
 
@@ -2543,17 +2398,14 @@ int org_mini_nk_NK_nk_button_symbol_label_styled(Runtime *runtime, Class *clazz)
     s32 psymbol = env->localvar_getInt(runtime, pos++);
     Instance *ptitle = env->localvar_getRefer(runtime, pos++);
     __refer ptr_ptitle = NULL;
-    Utf8String *u_ptitle;
     if(ptitle){
-        u_ptitle = env->utf8_create();
-        env->jstring_2_utf8(ptitle, u_ptitle);
-        ptr_ptitle = env->utf8_cstr(u_ptitle);
+        ptr_ptitle = ptitle->arr_body;
     }
     s32 palign = env->localvar_getInt(runtime, pos++);
 
     int _re_val = nk_button_symbol_label_styled((struct nk_context*/*ptr*/)(pctx), (const struct nk_style_button*/*ptr*/)(pstyle), (enum nk_symbol_type)psymbol, (const char*)(ptr_ptitle), (nk_flags)palign);
     s32 ret_value = (s32)_re_val;env->push_int(runtime->stack, ret_value);
-    env->utf8_destory(u_ptitle);
+    
     return 0;
 }
 
@@ -2570,17 +2422,14 @@ int org_mini_nk_NK_nk_button_image_label_styled(Runtime *runtime, Class *clazz) 
     }
     Instance *parg3 = env->localvar_getRefer(runtime, pos++);
     __refer ptr_parg3 = NULL;
-    Utf8String *u_parg3;
     if(parg3){
-        u_parg3 = env->utf8_create();
-        env->jstring_2_utf8(parg3, u_parg3);
-        ptr_parg3 = env->utf8_cstr(u_parg3);
+        ptr_parg3 = parg3->arr_body;
     }
     s32 ptext_alignment = env->localvar_getInt(runtime, pos++);
 
     int _re_val = nk_button_image_label_styled((struct nk_context*/*ptr*/)(parg0), (const struct nk_style_button*/*ptr*/)(parg1), *(struct nk_image/*none_ptr*/*)(ptr_pimg), (const char*)(ptr_parg3), (nk_flags)ptext_alignment);
     s32 ret_value = (s32)_re_val;env->push_int(runtime->stack, ret_value);
-    env->utf8_destory(u_parg3);
+    
     return 0;
 }
 
@@ -2597,18 +2446,15 @@ int org_mini_nk_NK_nk_button_image_text_styled(Runtime *runtime, Class *clazz) {
     }
     Instance *parg3 = env->localvar_getRefer(runtime, pos++);
     __refer ptr_parg3 = NULL;
-    Utf8String *u_parg3;
     if(parg3){
-        u_parg3 = env->utf8_create();
-        env->jstring_2_utf8(parg3, u_parg3);
-        ptr_parg3 = env->utf8_cstr(u_parg3);
+        ptr_parg3 = parg3->arr_body;
     }
     s32 parg4 = env->localvar_getInt(runtime, pos++);
     s32 palignment = env->localvar_getInt(runtime, pos++);
 
     int _re_val = nk_button_image_text_styled((struct nk_context*/*ptr*/)(parg0), (const struct nk_style_button*/*ptr*/)(parg1), *(struct nk_image/*none_ptr*/*)(ptr_pimg), (const char*)(ptr_parg3), (int)parg4, (nk_flags)palignment);
     s32 ret_value = (s32)_re_val;env->push_int(runtime->stack, ret_value);
-    env->utf8_destory(u_parg3);
+    
     return 0;
 }
 
@@ -2657,17 +2503,14 @@ int org_mini_nk_NK_nk_check_label(Runtime *runtime, Class *clazz) {
     intptr_t parg0 = env->localvar_getLong_2slot(runtime, pos);pos += 2;
     Instance *parg1 = env->localvar_getRefer(runtime, pos++);
     __refer ptr_parg1 = NULL;
-    Utf8String *u_parg1;
     if(parg1){
-        u_parg1 = env->utf8_create();
-        env->jstring_2_utf8(parg1, u_parg1);
-        ptr_parg1 = env->utf8_cstr(u_parg1);
+        ptr_parg1 = parg1->arr_body;
     }
     s32 pactive = env->localvar_getInt(runtime, pos++);
 
     int _re_val = nk_check_label((struct nk_context*/*ptr*/)(parg0), (const char*)(ptr_parg1), (int)pactive);
     s32 ret_value = (s32)_re_val;env->push_int(runtime->stack, ret_value);
-    env->utf8_destory(u_parg1);
+    
     return 0;
 }
 
@@ -2678,18 +2521,15 @@ int org_mini_nk_NK_nk_check_text(Runtime *runtime, Class *clazz) {
     intptr_t parg0 = env->localvar_getLong_2slot(runtime, pos);pos += 2;
     Instance *parg1 = env->localvar_getRefer(runtime, pos++);
     __refer ptr_parg1 = NULL;
-    Utf8String *u_parg1;
     if(parg1){
-        u_parg1 = env->utf8_create();
-        env->jstring_2_utf8(parg1, u_parg1);
-        ptr_parg1 = env->utf8_cstr(u_parg1);
+        ptr_parg1 = parg1->arr_body;
     }
     s32 parg2 = env->localvar_getInt(runtime, pos++);
     s32 pactive = env->localvar_getInt(runtime, pos++);
 
     int _re_val = nk_check_text((struct nk_context*/*ptr*/)(parg0), (const char*)(ptr_parg1), (int)parg2, (int)pactive);
     s32 ret_value = (s32)_re_val;env->push_int(runtime->stack, ret_value);
-    env->utf8_destory(u_parg1);
+    
     return 0;
 }
 
@@ -2700,18 +2540,15 @@ int org_mini_nk_NK_nk_check_flags_label(Runtime *runtime, Class *clazz) {
     intptr_t parg0 = env->localvar_getLong_2slot(runtime, pos);pos += 2;
     Instance *parg1 = env->localvar_getRefer(runtime, pos++);
     __refer ptr_parg1 = NULL;
-    Utf8String *u_parg1;
     if(parg1){
-        u_parg1 = env->utf8_create();
-        env->jstring_2_utf8(parg1, u_parg1);
-        ptr_parg1 = env->utf8_cstr(u_parg1);
+        ptr_parg1 = parg1->arr_body;
     }
     s32 pflags = env->localvar_getInt(runtime, pos++);
     s32 pvalue = env->localvar_getInt(runtime, pos++);
 
     unsigned _re_val = nk_check_flags_label((struct nk_context*/*ptr*/)(parg0), (const char*)(ptr_parg1), (unsigned int)pflags, (unsigned int)pvalue);
     s32 ret_value = (s32)_re_val;env->push_int(runtime->stack, ret_value);
-    env->utf8_destory(u_parg1);
+    
     return 0;
 }
 
@@ -2722,11 +2559,8 @@ int org_mini_nk_NK_nk_check_flags_text(Runtime *runtime, Class *clazz) {
     intptr_t parg0 = env->localvar_getLong_2slot(runtime, pos);pos += 2;
     Instance *parg1 = env->localvar_getRefer(runtime, pos++);
     __refer ptr_parg1 = NULL;
-    Utf8String *u_parg1;
     if(parg1){
-        u_parg1 = env->utf8_create();
-        env->jstring_2_utf8(parg1, u_parg1);
-        ptr_parg1 = env->utf8_cstr(u_parg1);
+        ptr_parg1 = parg1->arr_body;
     }
     s32 parg2 = env->localvar_getInt(runtime, pos++);
     s32 pflags = env->localvar_getInt(runtime, pos++);
@@ -2734,7 +2568,7 @@ int org_mini_nk_NK_nk_check_flags_text(Runtime *runtime, Class *clazz) {
 
     unsigned _re_val = nk_check_flags_text((struct nk_context*/*ptr*/)(parg0), (const char*)(ptr_parg1), (int)parg2, (unsigned int)pflags, (unsigned int)pvalue);
     s32 ret_value = (s32)_re_val;env->push_int(runtime->stack, ret_value);
-    env->utf8_destory(u_parg1);
+    
     return 0;
 }
 
@@ -2745,11 +2579,8 @@ int org_mini_nk_NK_nk_checkbox_label(Runtime *runtime, Class *clazz) {
     intptr_t parg0 = env->localvar_getLong_2slot(runtime, pos);pos += 2;
     Instance *parg1 = env->localvar_getRefer(runtime, pos++);
     __refer ptr_parg1 = NULL;
-    Utf8String *u_parg1;
     if(parg1){
-        u_parg1 = env->utf8_create();
-        env->jstring_2_utf8(parg1, u_parg1);
-        ptr_parg1 = env->utf8_cstr(u_parg1);
+        ptr_parg1 = parg1->arr_body;
     }
     Instance *pactive = env->localvar_getRefer(runtime, pos++);
     __refer ptr_pactive = NULL;
@@ -2759,7 +2590,7 @@ int org_mini_nk_NK_nk_checkbox_label(Runtime *runtime, Class *clazz) {
 
     int _re_val = nk_checkbox_label((struct nk_context*/*ptr*/)(parg0), (const char*)(ptr_parg1), (int*)(ptr_pactive));
     s32 ret_value = (s32)_re_val;env->push_int(runtime->stack, ret_value);
-    env->utf8_destory(u_parg1);
+    
     return 0;
 }
 
@@ -2770,11 +2601,8 @@ int org_mini_nk_NK_nk_checkbox_text(Runtime *runtime, Class *clazz) {
     intptr_t parg0 = env->localvar_getLong_2slot(runtime, pos);pos += 2;
     Instance *parg1 = env->localvar_getRefer(runtime, pos++);
     __refer ptr_parg1 = NULL;
-    Utf8String *u_parg1;
     if(parg1){
-        u_parg1 = env->utf8_create();
-        env->jstring_2_utf8(parg1, u_parg1);
-        ptr_parg1 = env->utf8_cstr(u_parg1);
+        ptr_parg1 = parg1->arr_body;
     }
     s32 parg2 = env->localvar_getInt(runtime, pos++);
     Instance *pactive = env->localvar_getRefer(runtime, pos++);
@@ -2785,7 +2613,7 @@ int org_mini_nk_NK_nk_checkbox_text(Runtime *runtime, Class *clazz) {
 
     int _re_val = nk_checkbox_text((struct nk_context*/*ptr*/)(parg0), (const char*)(ptr_parg1), (int)parg2, (int*)(ptr_pactive));
     s32 ret_value = (s32)_re_val;env->push_int(runtime->stack, ret_value);
-    env->utf8_destory(u_parg1);
+    
     return 0;
 }
 
@@ -2796,11 +2624,8 @@ int org_mini_nk_NK_nk_checkbox_flags_label(Runtime *runtime, Class *clazz) {
     intptr_t parg0 = env->localvar_getLong_2slot(runtime, pos);pos += 2;
     Instance *parg1 = env->localvar_getRefer(runtime, pos++);
     __refer ptr_parg1 = NULL;
-    Utf8String *u_parg1;
     if(parg1){
-        u_parg1 = env->utf8_create();
-        env->jstring_2_utf8(parg1, u_parg1);
-        ptr_parg1 = env->utf8_cstr(u_parg1);
+        ptr_parg1 = parg1->arr_body;
     }
     Instance *pflags = env->localvar_getRefer(runtime, pos++);
     __refer ptr_pflags = NULL;
@@ -2811,7 +2636,7 @@ int org_mini_nk_NK_nk_checkbox_flags_label(Runtime *runtime, Class *clazz) {
 
     int _re_val = nk_checkbox_flags_label((struct nk_context*/*ptr*/)(parg0), (const char*)(ptr_parg1), (unsigned int*)(ptr_pflags), (unsigned int)pvalue);
     s32 ret_value = (s32)_re_val;env->push_int(runtime->stack, ret_value);
-    env->utf8_destory(u_parg1);
+    
     return 0;
 }
 
@@ -2822,11 +2647,8 @@ int org_mini_nk_NK_nk_checkbox_flags_text(Runtime *runtime, Class *clazz) {
     intptr_t parg0 = env->localvar_getLong_2slot(runtime, pos);pos += 2;
     Instance *parg1 = env->localvar_getRefer(runtime, pos++);
     __refer ptr_parg1 = NULL;
-    Utf8String *u_parg1;
     if(parg1){
-        u_parg1 = env->utf8_create();
-        env->jstring_2_utf8(parg1, u_parg1);
-        ptr_parg1 = env->utf8_cstr(u_parg1);
+        ptr_parg1 = parg1->arr_body;
     }
     s32 parg2 = env->localvar_getInt(runtime, pos++);
     Instance *pflags = env->localvar_getRefer(runtime, pos++);
@@ -2838,7 +2660,7 @@ int org_mini_nk_NK_nk_checkbox_flags_text(Runtime *runtime, Class *clazz) {
 
     int _re_val = nk_checkbox_flags_text((struct nk_context*/*ptr*/)(parg0), (const char*)(ptr_parg1), (int)parg2, (unsigned int*)(ptr_pflags), (unsigned int)pvalue);
     s32 ret_value = (s32)_re_val;env->push_int(runtime->stack, ret_value);
-    env->utf8_destory(u_parg1);
+    
     return 0;
 }
 
@@ -2849,11 +2671,8 @@ int org_mini_nk_NK_nk_radio_label(Runtime *runtime, Class *clazz) {
     intptr_t parg0 = env->localvar_getLong_2slot(runtime, pos);pos += 2;
     Instance *parg1 = env->localvar_getRefer(runtime, pos++);
     __refer ptr_parg1 = NULL;
-    Utf8String *u_parg1;
     if(parg1){
-        u_parg1 = env->utf8_create();
-        env->jstring_2_utf8(parg1, u_parg1);
-        ptr_parg1 = env->utf8_cstr(u_parg1);
+        ptr_parg1 = parg1->arr_body;
     }
     Instance *pactive = env->localvar_getRefer(runtime, pos++);
     __refer ptr_pactive = NULL;
@@ -2863,7 +2682,7 @@ int org_mini_nk_NK_nk_radio_label(Runtime *runtime, Class *clazz) {
 
     int _re_val = nk_radio_label((struct nk_context*/*ptr*/)(parg0), (const char*)(ptr_parg1), (int*)(ptr_pactive));
     s32 ret_value = (s32)_re_val;env->push_int(runtime->stack, ret_value);
-    env->utf8_destory(u_parg1);
+    
     return 0;
 }
 
@@ -2874,11 +2693,8 @@ int org_mini_nk_NK_nk_radio_text(Runtime *runtime, Class *clazz) {
     intptr_t parg0 = env->localvar_getLong_2slot(runtime, pos);pos += 2;
     Instance *parg1 = env->localvar_getRefer(runtime, pos++);
     __refer ptr_parg1 = NULL;
-    Utf8String *u_parg1;
     if(parg1){
-        u_parg1 = env->utf8_create();
-        env->jstring_2_utf8(parg1, u_parg1);
-        ptr_parg1 = env->utf8_cstr(u_parg1);
+        ptr_parg1 = parg1->arr_body;
     }
     s32 parg2 = env->localvar_getInt(runtime, pos++);
     Instance *pactive = env->localvar_getRefer(runtime, pos++);
@@ -2889,7 +2705,7 @@ int org_mini_nk_NK_nk_radio_text(Runtime *runtime, Class *clazz) {
 
     int _re_val = nk_radio_text((struct nk_context*/*ptr*/)(parg0), (const char*)(ptr_parg1), (int)parg2, (int*)(ptr_pactive));
     s32 ret_value = (s32)_re_val;env->push_int(runtime->stack, ret_value);
-    env->utf8_destory(u_parg1);
+    
     return 0;
 }
 
@@ -2900,17 +2716,14 @@ int org_mini_nk_NK_nk_option_label(Runtime *runtime, Class *clazz) {
     intptr_t parg0 = env->localvar_getLong_2slot(runtime, pos);pos += 2;
     Instance *parg1 = env->localvar_getRefer(runtime, pos++);
     __refer ptr_parg1 = NULL;
-    Utf8String *u_parg1;
     if(parg1){
-        u_parg1 = env->utf8_create();
-        env->jstring_2_utf8(parg1, u_parg1);
-        ptr_parg1 = env->utf8_cstr(u_parg1);
+        ptr_parg1 = parg1->arr_body;
     }
     s32 pactive = env->localvar_getInt(runtime, pos++);
 
     int _re_val = nk_option_label((struct nk_context*/*ptr*/)(parg0), (const char*)(ptr_parg1), (int)pactive);
     s32 ret_value = (s32)_re_val;env->push_int(runtime->stack, ret_value);
-    env->utf8_destory(u_parg1);
+    
     return 0;
 }
 
@@ -2921,18 +2734,15 @@ int org_mini_nk_NK_nk_option_text(Runtime *runtime, Class *clazz) {
     intptr_t parg0 = env->localvar_getLong_2slot(runtime, pos);pos += 2;
     Instance *parg1 = env->localvar_getRefer(runtime, pos++);
     __refer ptr_parg1 = NULL;
-    Utf8String *u_parg1;
     if(parg1){
-        u_parg1 = env->utf8_create();
-        env->jstring_2_utf8(parg1, u_parg1);
-        ptr_parg1 = env->utf8_cstr(u_parg1);
+        ptr_parg1 = parg1->arr_body;
     }
     s32 parg2 = env->localvar_getInt(runtime, pos++);
     s32 pactive = env->localvar_getInt(runtime, pos++);
 
     int _re_val = nk_option_text((struct nk_context*/*ptr*/)(parg0), (const char*)(ptr_parg1), (int)parg2, (int)pactive);
     s32 ret_value = (s32)_re_val;env->push_int(runtime->stack, ret_value);
-    env->utf8_destory(u_parg1);
+    
     return 0;
 }
 
@@ -2943,11 +2753,8 @@ int org_mini_nk_NK_nk_selectable_label(Runtime *runtime, Class *clazz) {
     intptr_t parg0 = env->localvar_getLong_2slot(runtime, pos);pos += 2;
     Instance *parg1 = env->localvar_getRefer(runtime, pos++);
     __refer ptr_parg1 = NULL;
-    Utf8String *u_parg1;
     if(parg1){
-        u_parg1 = env->utf8_create();
-        env->jstring_2_utf8(parg1, u_parg1);
-        ptr_parg1 = env->utf8_cstr(u_parg1);
+        ptr_parg1 = parg1->arr_body;
     }
     s32 palign = env->localvar_getInt(runtime, pos++);
     Instance *pvalue = env->localvar_getRefer(runtime, pos++);
@@ -2958,7 +2765,7 @@ int org_mini_nk_NK_nk_selectable_label(Runtime *runtime, Class *clazz) {
 
     int _re_val = nk_selectable_label((struct nk_context*/*ptr*/)(parg0), (const char*)(ptr_parg1), (nk_flags)palign, (int*)(ptr_pvalue));
     s32 ret_value = (s32)_re_val;env->push_int(runtime->stack, ret_value);
-    env->utf8_destory(u_parg1);
+    
     return 0;
 }
 
@@ -2969,11 +2776,8 @@ int org_mini_nk_NK_nk_selectable_text(Runtime *runtime, Class *clazz) {
     intptr_t parg0 = env->localvar_getLong_2slot(runtime, pos);pos += 2;
     Instance *parg1 = env->localvar_getRefer(runtime, pos++);
     __refer ptr_parg1 = NULL;
-    Utf8String *u_parg1;
     if(parg1){
-        u_parg1 = env->utf8_create();
-        env->jstring_2_utf8(parg1, u_parg1);
-        ptr_parg1 = env->utf8_cstr(u_parg1);
+        ptr_parg1 = parg1->arr_body;
     }
     s32 parg2 = env->localvar_getInt(runtime, pos++);
     s32 palign = env->localvar_getInt(runtime, pos++);
@@ -2985,7 +2789,7 @@ int org_mini_nk_NK_nk_selectable_text(Runtime *runtime, Class *clazz) {
 
     int _re_val = nk_selectable_text((struct nk_context*/*ptr*/)(parg0), (const char*)(ptr_parg1), (int)parg2, (nk_flags)palign, (int*)(ptr_pvalue));
     s32 ret_value = (s32)_re_val;env->push_int(runtime->stack, ret_value);
-    env->utf8_destory(u_parg1);
+    
     return 0;
 }
 
@@ -3001,11 +2805,8 @@ int org_mini_nk_NK_nk_selectable_image_label(Runtime *runtime, Class *clazz) {
     }
     Instance *parg2 = env->localvar_getRefer(runtime, pos++);
     __refer ptr_parg2 = NULL;
-    Utf8String *u_parg2;
     if(parg2){
-        u_parg2 = env->utf8_create();
-        env->jstring_2_utf8(parg2, u_parg2);
-        ptr_parg2 = env->utf8_cstr(u_parg2);
+        ptr_parg2 = parg2->arr_body;
     }
     s32 palign = env->localvar_getInt(runtime, pos++);
     Instance *pvalue = env->localvar_getRefer(runtime, pos++);
@@ -3016,7 +2817,7 @@ int org_mini_nk_NK_nk_selectable_image_label(Runtime *runtime, Class *clazz) {
 
     int _re_val = nk_selectable_image_label((struct nk_context*/*ptr*/)(parg0), *(struct nk_image/*none_ptr*/*)(ptr_parg1), (const char*)(ptr_parg2), (nk_flags)palign, (int*)(ptr_pvalue));
     s32 ret_value = (s32)_re_val;env->push_int(runtime->stack, ret_value);
-    env->utf8_destory(u_parg2);
+    
     return 0;
 }
 
@@ -3032,11 +2833,8 @@ int org_mini_nk_NK_nk_selectable_image_text(Runtime *runtime, Class *clazz) {
     }
     Instance *parg2 = env->localvar_getRefer(runtime, pos++);
     __refer ptr_parg2 = NULL;
-    Utf8String *u_parg2;
     if(parg2){
-        u_parg2 = env->utf8_create();
-        env->jstring_2_utf8(parg2, u_parg2);
-        ptr_parg2 = env->utf8_cstr(u_parg2);
+        ptr_parg2 = parg2->arr_body;
     }
     s32 parg3 = env->localvar_getInt(runtime, pos++);
     s32 palign = env->localvar_getInt(runtime, pos++);
@@ -3048,7 +2846,7 @@ int org_mini_nk_NK_nk_selectable_image_text(Runtime *runtime, Class *clazz) {
 
     int _re_val = nk_selectable_image_text((struct nk_context*/*ptr*/)(parg0), *(struct nk_image/*none_ptr*/*)(ptr_parg1), (const char*)(ptr_parg2), (int)parg3, (nk_flags)palign, (int*)(ptr_pvalue));
     s32 ret_value = (s32)_re_val;env->push_int(runtime->stack, ret_value);
-    env->utf8_destory(u_parg2);
+    
     return 0;
 }
 
@@ -3059,18 +2857,15 @@ int org_mini_nk_NK_nk_select_label(Runtime *runtime, Class *clazz) {
     intptr_t parg0 = env->localvar_getLong_2slot(runtime, pos);pos += 2;
     Instance *parg1 = env->localvar_getRefer(runtime, pos++);
     __refer ptr_parg1 = NULL;
-    Utf8String *u_parg1;
     if(parg1){
-        u_parg1 = env->utf8_create();
-        env->jstring_2_utf8(parg1, u_parg1);
-        ptr_parg1 = env->utf8_cstr(u_parg1);
+        ptr_parg1 = parg1->arr_body;
     }
     s32 palign = env->localvar_getInt(runtime, pos++);
     s32 pvalue = env->localvar_getInt(runtime, pos++);
 
     int _re_val = nk_select_label((struct nk_context*/*ptr*/)(parg0), (const char*)(ptr_parg1), (nk_flags)palign, (int)pvalue);
     s32 ret_value = (s32)_re_val;env->push_int(runtime->stack, ret_value);
-    env->utf8_destory(u_parg1);
+    
     return 0;
 }
 
@@ -3081,11 +2876,8 @@ int org_mini_nk_NK_nk_select_text(Runtime *runtime, Class *clazz) {
     intptr_t parg0 = env->localvar_getLong_2slot(runtime, pos);pos += 2;
     Instance *parg1 = env->localvar_getRefer(runtime, pos++);
     __refer ptr_parg1 = NULL;
-    Utf8String *u_parg1;
     if(parg1){
-        u_parg1 = env->utf8_create();
-        env->jstring_2_utf8(parg1, u_parg1);
-        ptr_parg1 = env->utf8_cstr(u_parg1);
+        ptr_parg1 = parg1->arr_body;
     }
     s32 parg2 = env->localvar_getInt(runtime, pos++);
     s32 palign = env->localvar_getInt(runtime, pos++);
@@ -3093,7 +2885,7 @@ int org_mini_nk_NK_nk_select_text(Runtime *runtime, Class *clazz) {
 
     int _re_val = nk_select_text((struct nk_context*/*ptr*/)(parg0), (const char*)(ptr_parg1), (int)parg2, (nk_flags)palign, (int)pvalue);
     s32 ret_value = (s32)_re_val;env->push_int(runtime->stack, ret_value);
-    env->utf8_destory(u_parg1);
+    
     return 0;
 }
 
@@ -3109,18 +2901,15 @@ int org_mini_nk_NK_nk_select_image_label(Runtime *runtime, Class *clazz) {
     }
     Instance *parg2 = env->localvar_getRefer(runtime, pos++);
     __refer ptr_parg2 = NULL;
-    Utf8String *u_parg2;
     if(parg2){
-        u_parg2 = env->utf8_create();
-        env->jstring_2_utf8(parg2, u_parg2);
-        ptr_parg2 = env->utf8_cstr(u_parg2);
+        ptr_parg2 = parg2->arr_body;
     }
     s32 palign = env->localvar_getInt(runtime, pos++);
     s32 pvalue = env->localvar_getInt(runtime, pos++);
 
     int _re_val = nk_select_image_label((struct nk_context*/*ptr*/)(parg0), *(struct nk_image/*none_ptr*/*)(ptr_parg1), (const char*)(ptr_parg2), (nk_flags)palign, (int)pvalue);
     s32 ret_value = (s32)_re_val;env->push_int(runtime->stack, ret_value);
-    env->utf8_destory(u_parg2);
+    
     return 0;
 }
 
@@ -3136,11 +2925,8 @@ int org_mini_nk_NK_nk_select_image_text(Runtime *runtime, Class *clazz) {
     }
     Instance *parg2 = env->localvar_getRefer(runtime, pos++);
     __refer ptr_parg2 = NULL;
-    Utf8String *u_parg2;
     if(parg2){
-        u_parg2 = env->utf8_create();
-        env->jstring_2_utf8(parg2, u_parg2);
-        ptr_parg2 = env->utf8_cstr(u_parg2);
+        ptr_parg2 = parg2->arr_body;
     }
     s32 parg3 = env->localvar_getInt(runtime, pos++);
     s32 palign = env->localvar_getInt(runtime, pos++);
@@ -3148,7 +2934,7 @@ int org_mini_nk_NK_nk_select_image_text(Runtime *runtime, Class *clazz) {
 
     int _re_val = nk_select_image_text((struct nk_context*/*ptr*/)(parg0), *(struct nk_image/*none_ptr*/*)(ptr_parg1), (const char*)(ptr_parg2), (int)parg3, (nk_flags)palign, (int)pvalue);
     s32 ret_value = (s32)_re_val;env->push_int(runtime->stack, ret_value);
-    env->utf8_destory(u_parg2);
+    
     return 0;
 }
 
@@ -3310,11 +3096,8 @@ int org_mini_nk_NK_nk_property_int(Runtime *runtime, Class *clazz) {
     intptr_t parg0 = env->localvar_getLong_2slot(runtime, pos);pos += 2;
     Instance *pname = env->localvar_getRefer(runtime, pos++);
     __refer ptr_pname = NULL;
-    Utf8String *u_pname;
     if(pname){
-        u_pname = env->utf8_create();
-        env->jstring_2_utf8(pname, u_pname);
-        ptr_pname = env->utf8_cstr(u_pname);
+        ptr_pname = pname->arr_body;
     }
     s32 pmin = env->localvar_getInt(runtime, pos++);
     Instance *pval = env->localvar_getRefer(runtime, pos++);
@@ -3328,7 +3111,7 @@ int org_mini_nk_NK_nk_property_int(Runtime *runtime, Class *clazz) {
 
     nk_property_int((struct nk_context*/*ptr*/)(parg0), (const char*)(ptr_pname), (int)pmin, (int*)(ptr_pval), (int)pmax, (int)pstep, (float)pinc_per_pixel.f);
     
-    env->utf8_destory(u_pname);
+    
     return 0;
 }
 
@@ -3339,11 +3122,8 @@ int org_mini_nk_NK_nk_property_float(Runtime *runtime, Class *clazz) {
     intptr_t parg0 = env->localvar_getLong_2slot(runtime, pos);pos += 2;
     Instance *pname = env->localvar_getRefer(runtime, pos++);
     __refer ptr_pname = NULL;
-    Utf8String *u_pname;
     if(pname){
-        u_pname = env->utf8_create();
-        env->jstring_2_utf8(pname, u_pname);
-        ptr_pname = env->utf8_cstr(u_pname);
+        ptr_pname = pname->arr_body;
     }
     Int2Float pmin;pmin.i = env->localvar_getInt(runtime, pos++);
     Instance *pval = env->localvar_getRefer(runtime, pos++);
@@ -3357,7 +3137,7 @@ int org_mini_nk_NK_nk_property_float(Runtime *runtime, Class *clazz) {
 
     nk_property_float((struct nk_context*/*ptr*/)(parg0), (const char*)(ptr_pname), (float)pmin.f, (float*)(ptr_pval), (float)pmax.f, (float)pstep.f, (float)pinc_per_pixel.f);
     
-    env->utf8_destory(u_pname);
+    
     return 0;
 }
 
@@ -3368,11 +3148,8 @@ int org_mini_nk_NK_nk_property_double(Runtime *runtime, Class *clazz) {
     intptr_t parg0 = env->localvar_getLong_2slot(runtime, pos);pos += 2;
     Instance *pname = env->localvar_getRefer(runtime, pos++);
     __refer ptr_pname = NULL;
-    Utf8String *u_pname;
     if(pname){
-        u_pname = env->utf8_create();
-        env->jstring_2_utf8(pname, u_pname);
-        ptr_pname = env->utf8_cstr(u_pname);
+        ptr_pname = pname->arr_body;
     }
     Long2Double pmin;pmin.l = env->localvar_getLong_2slot(runtime, pos);pos += 2;
     Instance *pval = env->localvar_getRefer(runtime, pos++);
@@ -3386,7 +3163,7 @@ int org_mini_nk_NK_nk_property_double(Runtime *runtime, Class *clazz) {
 
     nk_property_double((struct nk_context*/*ptr*/)(parg0), (const char*)(ptr_pname), (double)pmin.d, (double*)(ptr_pval), (double)pmax.d, (double)pstep.d, (float)pinc_per_pixel.f);
     
-    env->utf8_destory(u_pname);
+    
     return 0;
 }
 
@@ -3397,11 +3174,8 @@ int org_mini_nk_NK_nk_propertyi(Runtime *runtime, Class *clazz) {
     intptr_t parg0 = env->localvar_getLong_2slot(runtime, pos);pos += 2;
     Instance *pname = env->localvar_getRefer(runtime, pos++);
     __refer ptr_pname = NULL;
-    Utf8String *u_pname;
     if(pname){
-        u_pname = env->utf8_create();
-        env->jstring_2_utf8(pname, u_pname);
-        ptr_pname = env->utf8_cstr(u_pname);
+        ptr_pname = pname->arr_body;
     }
     s32 pmin = env->localvar_getInt(runtime, pos++);
     s32 pval = env->localvar_getInt(runtime, pos++);
@@ -3411,7 +3185,7 @@ int org_mini_nk_NK_nk_propertyi(Runtime *runtime, Class *clazz) {
 
     int _re_val = nk_propertyi((struct nk_context*/*ptr*/)(parg0), (const char*)(ptr_pname), (int)pmin, (int)pval, (int)pmax, (int)pstep, (float)pinc_per_pixel.f);
     s32 ret_value = (s32)_re_val;env->push_int(runtime->stack, ret_value);
-    env->utf8_destory(u_pname);
+    
     return 0;
 }
 
@@ -3422,11 +3196,8 @@ int org_mini_nk_NK_nk_propertyf(Runtime *runtime, Class *clazz) {
     intptr_t parg0 = env->localvar_getLong_2slot(runtime, pos);pos += 2;
     Instance *pname = env->localvar_getRefer(runtime, pos++);
     __refer ptr_pname = NULL;
-    Utf8String *u_pname;
     if(pname){
-        u_pname = env->utf8_create();
-        env->jstring_2_utf8(pname, u_pname);
-        ptr_pname = env->utf8_cstr(u_pname);
+        ptr_pname = pname->arr_body;
     }
     Int2Float pmin;pmin.i = env->localvar_getInt(runtime, pos++);
     Int2Float pval;pval.i = env->localvar_getInt(runtime, pos++);
@@ -3436,7 +3207,7 @@ int org_mini_nk_NK_nk_propertyf(Runtime *runtime, Class *clazz) {
 
     f32 ret_value = (f32)nk_propertyf((struct nk_context*/*ptr*/)(parg0), (const char*)(ptr_pname), (float)pmin.f, (float)pval.f, (float)pmax.f, (float)pstep.f, (float)pinc_per_pixel.f);
     env->push_float(runtime->stack, ret_value);
-    env->utf8_destory(u_pname);
+    
     return 0;
 }
 
@@ -3447,11 +3218,8 @@ int org_mini_nk_NK_nk_propertyd(Runtime *runtime, Class *clazz) {
     intptr_t parg0 = env->localvar_getLong_2slot(runtime, pos);pos += 2;
     Instance *pname = env->localvar_getRefer(runtime, pos++);
     __refer ptr_pname = NULL;
-    Utf8String *u_pname;
     if(pname){
-        u_pname = env->utf8_create();
-        env->jstring_2_utf8(pname, u_pname);
-        ptr_pname = env->utf8_cstr(u_pname);
+        ptr_pname = pname->arr_body;
     }
     Long2Double pmin;pmin.l = env->localvar_getLong_2slot(runtime, pos);pos += 2;
     Long2Double pval;pval.l = env->localvar_getLong_2slot(runtime, pos);pos += 2;
@@ -3461,7 +3229,7 @@ int org_mini_nk_NK_nk_propertyd(Runtime *runtime, Class *clazz) {
 
     f64 ret_value = (f64)nk_propertyd((struct nk_context*/*ptr*/)(parg0), (const char*)(ptr_pname), (double)pmin.d, (double)pval.d, (double)pmax.d, (double)pstep.d, (float)pinc_per_pixel.f);
     env->push_double(runtime->stack, ret_value);
-    env->utf8_destory(u_pname);
+    
     return 0;
 }
 
@@ -3473,11 +3241,8 @@ int org_mini_nk_NK_nk_edit_string(Runtime *runtime, Class *clazz) {
     s32 parg1 = env->localvar_getInt(runtime, pos++);
     Instance *pbuffer = env->localvar_getRefer(runtime, pos++);
     __refer ptr_pbuffer = NULL;
-    Utf8String *u_pbuffer;
     if(pbuffer){
-        u_pbuffer = env->utf8_create();
-        env->jstring_2_utf8(pbuffer, u_pbuffer);
-        ptr_pbuffer = env->utf8_cstr(u_pbuffer);
+        ptr_pbuffer = pbuffer->arr_body;
     }
     Instance *plen = env->localvar_getRefer(runtime, pos++);
     __refer ptr_plen = NULL;
@@ -3489,7 +3254,7 @@ int org_mini_nk_NK_nk_edit_string(Runtime *runtime, Class *clazz) {
 
     nk_flags _re_val = nk_edit_string((struct nk_context*/*ptr*/)(parg0), (nk_flags)parg1, (char*)(ptr_pbuffer), (int*)(ptr_plen), (int)pmax, (nk_plugin_filter/*ptr*/)(parg5));
     s32 ret_value = (s32)_re_val;env->push_int(runtime->stack, ret_value);
-    env->utf8_destory(u_pbuffer);
+    
     return 0;
 }
 
@@ -3501,18 +3266,15 @@ int org_mini_nk_NK_nk_edit_string_zero_terminated(Runtime *runtime, Class *clazz
     s32 parg1 = env->localvar_getInt(runtime, pos++);
     Instance *pbuffer = env->localvar_getRefer(runtime, pos++);
     __refer ptr_pbuffer = NULL;
-    Utf8String *u_pbuffer;
     if(pbuffer){
-        u_pbuffer = env->utf8_create();
-        env->jstring_2_utf8(pbuffer, u_pbuffer);
-        ptr_pbuffer = env->utf8_cstr(u_pbuffer);
+        ptr_pbuffer = pbuffer->arr_body;
     }
     s32 pmax = env->localvar_getInt(runtime, pos++);
     intptr_t parg4 = env->localvar_getLong_2slot(runtime, pos);pos += 2;
 
     nk_flags _re_val = nk_edit_string_zero_terminated((struct nk_context*/*ptr*/)(parg0), (nk_flags)parg1, (char*)(ptr_pbuffer), (int)pmax, (nk_plugin_filter/*ptr*/)(parg4));
     s32 ret_value = (s32)_re_val;env->push_int(runtime->stack, ret_value);
-    env->utf8_destory(u_pbuffer);
+    
     return 0;
 }
 
@@ -3724,11 +3486,8 @@ int org_mini_nk_NK_nk_popup_begin(Runtime *runtime, Class *clazz) {
     s32 parg1 = env->localvar_getInt(runtime, pos++);
     Instance *parg2 = env->localvar_getRefer(runtime, pos++);
     __refer ptr_parg2 = NULL;
-    Utf8String *u_parg2;
     if(parg2){
-        u_parg2 = env->utf8_create();
-        env->jstring_2_utf8(parg2, u_parg2);
-        ptr_parg2 = env->utf8_cstr(u_parg2);
+        ptr_parg2 = parg2->arr_body;
     }
     s32 parg3 = env->localvar_getInt(runtime, pos++);
     Instance *pbounds = env->localvar_getRefer(runtime, pos++);
@@ -3739,7 +3498,7 @@ int org_mini_nk_NK_nk_popup_begin(Runtime *runtime, Class *clazz) {
 
     int _re_val = nk_popup_begin((struct nk_context*/*ptr*/)(parg0), (enum nk_popup_type)parg1, (const char*)(ptr_parg2), (nk_flags)parg3, *(struct nk_rect/*none_ptr*/*)(ptr_pbounds));
     s32 ret_value = (s32)_re_val;env->push_int(runtime->stack, ret_value);
-    env->utf8_destory(u_parg2);
+    
     return 0;
 }
 
@@ -3773,9 +3532,9 @@ int org_mini_nk_NK_nk_combo(Runtime *runtime, Class *clazz) {
     
     intptr_t parg0 = env->localvar_getLong_2slot(runtime, pos);pos += 2;
     Instance *pitems = env->localvar_getRefer(runtime, pos++);
-    CStringArr *ptr_pitems = NULL;
+    __refer ptr_pitems = NULL;
     if(pitems){
-        ptr_pitems = env->cstringarr_create(pitems);
+        ptr_pitems = pitems->arr_body;
     }
     s32 pcount = env->localvar_getInt(runtime, pos++);
     s32 pselected = env->localvar_getInt(runtime, pos++);
@@ -3786,9 +3545,9 @@ int org_mini_nk_NK_nk_combo(Runtime *runtime, Class *clazz) {
         ptr_psize = psize->arr_body;
     }
 
-    int _re_val = nk_combo((struct nk_context*/*ptr*/)(parg0), (const char**)(ptr_pitems->arr_body), (int)pcount, (int)pselected, (int)pitem_height, *(struct nk_vec2/*none_ptr*/*)(ptr_psize));
+    int _re_val = nk_combo((struct nk_context*/*ptr*/)(parg0), (const char**)(ptr_pitems), (int)pcount, (int)pselected, (int)pitem_height, *(struct nk_vec2/*none_ptr*/*)(ptr_psize));
     s32 ret_value = (s32)_re_val;env->push_int(runtime->stack, ret_value);
-    env->cstringarr_destory(ptr_pitems);
+    
     return 0;
 }
 
@@ -3799,11 +3558,8 @@ int org_mini_nk_NK_nk_combo_separator(Runtime *runtime, Class *clazz) {
     intptr_t parg0 = env->localvar_getLong_2slot(runtime, pos);pos += 2;
     Instance *pitems_separated_by_separator = env->localvar_getRefer(runtime, pos++);
     __refer ptr_pitems_separated_by_separator = NULL;
-    Utf8String *u_pitems_separated_by_separator;
     if(pitems_separated_by_separator){
-        u_pitems_separated_by_separator = env->utf8_create();
-        env->jstring_2_utf8(pitems_separated_by_separator, u_pitems_separated_by_separator);
-        ptr_pitems_separated_by_separator = env->utf8_cstr(u_pitems_separated_by_separator);
+        ptr_pitems_separated_by_separator = pitems_separated_by_separator->arr_body;
     }
     s32 pseparator = env->localvar_getInt(runtime, pos++);
     s32 pselected = env->localvar_getInt(runtime, pos++);
@@ -3817,7 +3573,7 @@ int org_mini_nk_NK_nk_combo_separator(Runtime *runtime, Class *clazz) {
 
     int _re_val = nk_combo_separator((struct nk_context*/*ptr*/)(parg0), (const char*)(ptr_pitems_separated_by_separator), (int)pseparator, (int)pselected, (int)pcount, (int)pitem_height, *(struct nk_vec2/*none_ptr*/*)(ptr_psize));
     s32 ret_value = (s32)_re_val;env->push_int(runtime->stack, ret_value);
-    env->utf8_destory(u_pitems_separated_by_separator);
+    
     return 0;
 }
 
@@ -3828,11 +3584,8 @@ int org_mini_nk_NK_nk_combo_string(Runtime *runtime, Class *clazz) {
     intptr_t parg0 = env->localvar_getLong_2slot(runtime, pos);pos += 2;
     Instance *pitems_separated_by_zeros = env->localvar_getRefer(runtime, pos++);
     __refer ptr_pitems_separated_by_zeros = NULL;
-    Utf8String *u_pitems_separated_by_zeros;
     if(pitems_separated_by_zeros){
-        u_pitems_separated_by_zeros = env->utf8_create();
-        env->jstring_2_utf8(pitems_separated_by_zeros, u_pitems_separated_by_zeros);
-        ptr_pitems_separated_by_zeros = env->utf8_cstr(u_pitems_separated_by_zeros);
+        ptr_pitems_separated_by_zeros = pitems_separated_by_zeros->arr_body;
     }
     s32 pselected = env->localvar_getInt(runtime, pos++);
     s32 pcount = env->localvar_getInt(runtime, pos++);
@@ -3845,7 +3598,7 @@ int org_mini_nk_NK_nk_combo_string(Runtime *runtime, Class *clazz) {
 
     int _re_val = nk_combo_string((struct nk_context*/*ptr*/)(parg0), (const char*)(ptr_pitems_separated_by_zeros), (int)pselected, (int)pcount, (int)pitem_height, *(struct nk_vec2/*none_ptr*/*)(ptr_psize));
     s32 ret_value = (s32)_re_val;env->push_int(runtime->stack, ret_value);
-    env->utf8_destory(u_pitems_separated_by_zeros);
+    
     return 0;
 }
 
@@ -3877,9 +3630,9 @@ int org_mini_nk_NK_nk_combobox(Runtime *runtime, Class *clazz) {
     
     intptr_t parg0 = env->localvar_getLong_2slot(runtime, pos);pos += 2;
     Instance *pitems = env->localvar_getRefer(runtime, pos++);
-    CStringArr *ptr_pitems = NULL;
+    __refer ptr_pitems = NULL;
     if(pitems){
-        ptr_pitems = env->cstringarr_create(pitems);
+        ptr_pitems = pitems->arr_body;
     }
     s32 pcount = env->localvar_getInt(runtime, pos++);
     Instance *pselected = env->localvar_getRefer(runtime, pos++);
@@ -3894,9 +3647,9 @@ int org_mini_nk_NK_nk_combobox(Runtime *runtime, Class *clazz) {
         ptr_psize = psize->arr_body;
     }
 
-    nk_combobox((struct nk_context*/*ptr*/)(parg0), (const char**)(ptr_pitems->arr_body), (int)pcount, (int*)(ptr_pselected), (int)pitem_height, *(struct nk_vec2/*none_ptr*/*)(ptr_psize));
+    nk_combobox((struct nk_context*/*ptr*/)(parg0), (const char**)(ptr_pitems), (int)pcount, (int*)(ptr_pselected), (int)pitem_height, *(struct nk_vec2/*none_ptr*/*)(ptr_psize));
     
-    env->cstringarr_destory(ptr_pitems);
+    
     return 0;
 }
 
@@ -3907,11 +3660,8 @@ int org_mini_nk_NK_nk_combobox_string(Runtime *runtime, Class *clazz) {
     intptr_t parg0 = env->localvar_getLong_2slot(runtime, pos);pos += 2;
     Instance *pitems_separated_by_zeros = env->localvar_getRefer(runtime, pos++);
     __refer ptr_pitems_separated_by_zeros = NULL;
-    Utf8String *u_pitems_separated_by_zeros;
     if(pitems_separated_by_zeros){
-        u_pitems_separated_by_zeros = env->utf8_create();
-        env->jstring_2_utf8(pitems_separated_by_zeros, u_pitems_separated_by_zeros);
-        ptr_pitems_separated_by_zeros = env->utf8_cstr(u_pitems_separated_by_zeros);
+        ptr_pitems_separated_by_zeros = pitems_separated_by_zeros->arr_body;
     }
     Instance *pselected = env->localvar_getRefer(runtime, pos++);
     __refer ptr_pselected = NULL;
@@ -3928,7 +3678,7 @@ int org_mini_nk_NK_nk_combobox_string(Runtime *runtime, Class *clazz) {
 
     nk_combobox_string((struct nk_context*/*ptr*/)(parg0), (const char*)(ptr_pitems_separated_by_zeros), (int*)(ptr_pselected), (int)pcount, (int)pitem_height, *(struct nk_vec2/*none_ptr*/*)(ptr_psize));
     
-    env->utf8_destory(u_pitems_separated_by_zeros);
+    
     return 0;
 }
 
@@ -3939,11 +3689,8 @@ int org_mini_nk_NK_nk_combobox_separator(Runtime *runtime, Class *clazz) {
     intptr_t parg0 = env->localvar_getLong_2slot(runtime, pos);pos += 2;
     Instance *pitems_separated_by_separator = env->localvar_getRefer(runtime, pos++);
     __refer ptr_pitems_separated_by_separator = NULL;
-    Utf8String *u_pitems_separated_by_separator;
     if(pitems_separated_by_separator){
-        u_pitems_separated_by_separator = env->utf8_create();
-        env->jstring_2_utf8(pitems_separated_by_separator, u_pitems_separated_by_separator);
-        ptr_pitems_separated_by_separator = env->utf8_cstr(u_pitems_separated_by_separator);
+        ptr_pitems_separated_by_separator = pitems_separated_by_separator->arr_body;
     }
     s32 pseparator = env->localvar_getInt(runtime, pos++);
     Instance *pselected = env->localvar_getRefer(runtime, pos++);
@@ -3961,7 +3708,7 @@ int org_mini_nk_NK_nk_combobox_separator(Runtime *runtime, Class *clazz) {
 
     nk_combobox_separator((struct nk_context*/*ptr*/)(parg0), (const char*)(ptr_pitems_separated_by_separator), (int)pseparator, (int*)(ptr_pselected), (int)pcount, (int)pitem_height, *(struct nk_vec2/*none_ptr*/*)(ptr_psize));
     
-    env->utf8_destory(u_pitems_separated_by_separator);
+    
     return 0;
 }
 
@@ -3998,11 +3745,8 @@ int org_mini_nk_NK_nk_combo_begin_text(Runtime *runtime, Class *clazz) {
     intptr_t parg0 = env->localvar_getLong_2slot(runtime, pos);pos += 2;
     Instance *pselected = env->localvar_getRefer(runtime, pos++);
     __refer ptr_pselected = NULL;
-    Utf8String *u_pselected;
     if(pselected){
-        u_pselected = env->utf8_create();
-        env->jstring_2_utf8(pselected, u_pselected);
-        ptr_pselected = env->utf8_cstr(u_pselected);
+        ptr_pselected = pselected->arr_body;
     }
     s32 parg2 = env->localvar_getInt(runtime, pos++);
     Instance *psize = env->localvar_getRefer(runtime, pos++);
@@ -4013,7 +3757,7 @@ int org_mini_nk_NK_nk_combo_begin_text(Runtime *runtime, Class *clazz) {
 
     int _re_val = nk_combo_begin_text((struct nk_context*/*ptr*/)(parg0), (const char*)(ptr_pselected), (int)parg2, *(struct nk_vec2/*none_ptr*/*)(ptr_psize));
     s32 ret_value = (s32)_re_val;env->push_int(runtime->stack, ret_value);
-    env->utf8_destory(u_pselected);
+    
     return 0;
 }
 
@@ -4024,11 +3768,8 @@ int org_mini_nk_NK_nk_combo_begin_label(Runtime *runtime, Class *clazz) {
     intptr_t parg0 = env->localvar_getLong_2slot(runtime, pos);pos += 2;
     Instance *pselected = env->localvar_getRefer(runtime, pos++);
     __refer ptr_pselected = NULL;
-    Utf8String *u_pselected;
     if(pselected){
-        u_pselected = env->utf8_create();
-        env->jstring_2_utf8(pselected, u_pselected);
-        ptr_pselected = env->utf8_cstr(u_pselected);
+        ptr_pselected = pselected->arr_body;
     }
     Instance *psize = env->localvar_getRefer(runtime, pos++);
     __refer ptr_psize = NULL;
@@ -4038,7 +3779,7 @@ int org_mini_nk_NK_nk_combo_begin_label(Runtime *runtime, Class *clazz) {
 
     int _re_val = nk_combo_begin_label((struct nk_context*/*ptr*/)(parg0), (const char*)(ptr_pselected), *(struct nk_vec2/*none_ptr*/*)(ptr_psize));
     s32 ret_value = (s32)_re_val;env->push_int(runtime->stack, ret_value);
-    env->utf8_destory(u_pselected);
+    
     return 0;
 }
 
@@ -4089,11 +3830,8 @@ int org_mini_nk_NK_nk_combo_begin_symbol_label(Runtime *runtime, Class *clazz) {
     intptr_t parg0 = env->localvar_getLong_2slot(runtime, pos);pos += 2;
     Instance *pselected = env->localvar_getRefer(runtime, pos++);
     __refer ptr_pselected = NULL;
-    Utf8String *u_pselected;
     if(pselected){
-        u_pselected = env->utf8_create();
-        env->jstring_2_utf8(pselected, u_pselected);
-        ptr_pselected = env->utf8_cstr(u_pselected);
+        ptr_pselected = pselected->arr_body;
     }
     s32 parg2 = env->localvar_getInt(runtime, pos++);
     Instance *psize = env->localvar_getRefer(runtime, pos++);
@@ -4104,7 +3842,7 @@ int org_mini_nk_NK_nk_combo_begin_symbol_label(Runtime *runtime, Class *clazz) {
 
     int _re_val = nk_combo_begin_symbol_label((struct nk_context*/*ptr*/)(parg0), (const char*)(ptr_pselected), (enum nk_symbol_type)parg2, *(struct nk_vec2/*none_ptr*/*)(ptr_psize));
     s32 ret_value = (s32)_re_val;env->push_int(runtime->stack, ret_value);
-    env->utf8_destory(u_pselected);
+    
     return 0;
 }
 
@@ -4115,11 +3853,8 @@ int org_mini_nk_NK_nk_combo_begin_symbol_text(Runtime *runtime, Class *clazz) {
     intptr_t parg0 = env->localvar_getLong_2slot(runtime, pos);pos += 2;
     Instance *pselected = env->localvar_getRefer(runtime, pos++);
     __refer ptr_pselected = NULL;
-    Utf8String *u_pselected;
     if(pselected){
-        u_pselected = env->utf8_create();
-        env->jstring_2_utf8(pselected, u_pselected);
-        ptr_pselected = env->utf8_cstr(u_pselected);
+        ptr_pselected = pselected->arr_body;
     }
     s32 parg2 = env->localvar_getInt(runtime, pos++);
     s32 parg3 = env->localvar_getInt(runtime, pos++);
@@ -4131,7 +3866,7 @@ int org_mini_nk_NK_nk_combo_begin_symbol_text(Runtime *runtime, Class *clazz) {
 
     int _re_val = nk_combo_begin_symbol_text((struct nk_context*/*ptr*/)(parg0), (const char*)(ptr_pselected), (int)parg2, (enum nk_symbol_type)parg3, *(struct nk_vec2/*none_ptr*/*)(ptr_psize));
     s32 ret_value = (s32)_re_val;env->push_int(runtime->stack, ret_value);
-    env->utf8_destory(u_pselected);
+    
     return 0;
 }
 
@@ -4164,11 +3899,8 @@ int org_mini_nk_NK_nk_combo_begin_image_label(Runtime *runtime, Class *clazz) {
     intptr_t parg0 = env->localvar_getLong_2slot(runtime, pos);pos += 2;
     Instance *pselected = env->localvar_getRefer(runtime, pos++);
     __refer ptr_pselected = NULL;
-    Utf8String *u_pselected;
     if(pselected){
-        u_pselected = env->utf8_create();
-        env->jstring_2_utf8(pselected, u_pselected);
-        ptr_pselected = env->utf8_cstr(u_pselected);
+        ptr_pselected = pselected->arr_body;
     }
     Instance *parg2 = env->localvar_getRefer(runtime, pos++);
     __refer ptr_parg2 = NULL;
@@ -4183,7 +3915,7 @@ int org_mini_nk_NK_nk_combo_begin_image_label(Runtime *runtime, Class *clazz) {
 
     int _re_val = nk_combo_begin_image_label((struct nk_context*/*ptr*/)(parg0), (const char*)(ptr_pselected), *(struct nk_image/*none_ptr*/*)(ptr_parg2), *(struct nk_vec2/*none_ptr*/*)(ptr_psize));
     s32 ret_value = (s32)_re_val;env->push_int(runtime->stack, ret_value);
-    env->utf8_destory(u_pselected);
+    
     return 0;
 }
 
@@ -4194,11 +3926,8 @@ int org_mini_nk_NK_nk_combo_begin_image_text(Runtime *runtime, Class *clazz) {
     intptr_t parg0 = env->localvar_getLong_2slot(runtime, pos);pos += 2;
     Instance *pselected = env->localvar_getRefer(runtime, pos++);
     __refer ptr_pselected = NULL;
-    Utf8String *u_pselected;
     if(pselected){
-        u_pselected = env->utf8_create();
-        env->jstring_2_utf8(pselected, u_pselected);
-        ptr_pselected = env->utf8_cstr(u_pselected);
+        ptr_pselected = pselected->arr_body;
     }
     s32 parg2 = env->localvar_getInt(runtime, pos++);
     Instance *parg3 = env->localvar_getRefer(runtime, pos++);
@@ -4214,7 +3943,7 @@ int org_mini_nk_NK_nk_combo_begin_image_text(Runtime *runtime, Class *clazz) {
 
     int _re_val = nk_combo_begin_image_text((struct nk_context*/*ptr*/)(parg0), (const char*)(ptr_pselected), (int)parg2, *(struct nk_image/*none_ptr*/*)(ptr_parg3), *(struct nk_vec2/*none_ptr*/*)(ptr_psize));
     s32 ret_value = (s32)_re_val;env->push_int(runtime->stack, ret_value);
-    env->utf8_destory(u_pselected);
+    
     return 0;
 }
 
@@ -4225,17 +3954,14 @@ int org_mini_nk_NK_nk_combo_item_label(Runtime *runtime, Class *clazz) {
     intptr_t parg0 = env->localvar_getLong_2slot(runtime, pos);pos += 2;
     Instance *parg1 = env->localvar_getRefer(runtime, pos++);
     __refer ptr_parg1 = NULL;
-    Utf8String *u_parg1;
     if(parg1){
-        u_parg1 = env->utf8_create();
-        env->jstring_2_utf8(parg1, u_parg1);
-        ptr_parg1 = env->utf8_cstr(u_parg1);
+        ptr_parg1 = parg1->arr_body;
     }
     s32 palignment = env->localvar_getInt(runtime, pos++);
 
     int _re_val = nk_combo_item_label((struct nk_context*/*ptr*/)(parg0), (const char*)(ptr_parg1), (nk_flags)palignment);
     s32 ret_value = (s32)_re_val;env->push_int(runtime->stack, ret_value);
-    env->utf8_destory(u_parg1);
+    
     return 0;
 }
 
@@ -4246,18 +3972,15 @@ int org_mini_nk_NK_nk_combo_item_text(Runtime *runtime, Class *clazz) {
     intptr_t parg0 = env->localvar_getLong_2slot(runtime, pos);pos += 2;
     Instance *parg1 = env->localvar_getRefer(runtime, pos++);
     __refer ptr_parg1 = NULL;
-    Utf8String *u_parg1;
     if(parg1){
-        u_parg1 = env->utf8_create();
-        env->jstring_2_utf8(parg1, u_parg1);
-        ptr_parg1 = env->utf8_cstr(u_parg1);
+        ptr_parg1 = parg1->arr_body;
     }
     s32 parg2 = env->localvar_getInt(runtime, pos++);
     s32 palignment = env->localvar_getInt(runtime, pos++);
 
     int _re_val = nk_combo_item_text((struct nk_context*/*ptr*/)(parg0), (const char*)(ptr_parg1), (int)parg2, (nk_flags)palignment);
     s32 ret_value = (s32)_re_val;env->push_int(runtime->stack, ret_value);
-    env->utf8_destory(u_parg1);
+    
     return 0;
 }
 
@@ -4273,17 +3996,14 @@ int org_mini_nk_NK_nk_combo_item_image_label(Runtime *runtime, Class *clazz) {
     }
     Instance *parg2 = env->localvar_getRefer(runtime, pos++);
     __refer ptr_parg2 = NULL;
-    Utf8String *u_parg2;
     if(parg2){
-        u_parg2 = env->utf8_create();
-        env->jstring_2_utf8(parg2, u_parg2);
-        ptr_parg2 = env->utf8_cstr(u_parg2);
+        ptr_parg2 = parg2->arr_body;
     }
     s32 palignment = env->localvar_getInt(runtime, pos++);
 
     int _re_val = nk_combo_item_image_label((struct nk_context*/*ptr*/)(parg0), *(struct nk_image/*none_ptr*/*)(ptr_parg1), (const char*)(ptr_parg2), (nk_flags)palignment);
     s32 ret_value = (s32)_re_val;env->push_int(runtime->stack, ret_value);
-    env->utf8_destory(u_parg2);
+    
     return 0;
 }
 
@@ -4299,18 +4019,15 @@ int org_mini_nk_NK_nk_combo_item_image_text(Runtime *runtime, Class *clazz) {
     }
     Instance *parg2 = env->localvar_getRefer(runtime, pos++);
     __refer ptr_parg2 = NULL;
-    Utf8String *u_parg2;
     if(parg2){
-        u_parg2 = env->utf8_create();
-        env->jstring_2_utf8(parg2, u_parg2);
-        ptr_parg2 = env->utf8_cstr(u_parg2);
+        ptr_parg2 = parg2->arr_body;
     }
     s32 parg3 = env->localvar_getInt(runtime, pos++);
     s32 palignment = env->localvar_getInt(runtime, pos++);
 
     int _re_val = nk_combo_item_image_text((struct nk_context*/*ptr*/)(parg0), *(struct nk_image/*none_ptr*/*)(ptr_parg1), (const char*)(ptr_parg2), (int)parg3, (nk_flags)palignment);
     s32 ret_value = (s32)_re_val;env->push_int(runtime->stack, ret_value);
-    env->utf8_destory(u_parg2);
+    
     return 0;
 }
 
@@ -4322,17 +4039,14 @@ int org_mini_nk_NK_nk_combo_item_symbol_label(Runtime *runtime, Class *clazz) {
     s32 parg1 = env->localvar_getInt(runtime, pos++);
     Instance *parg2 = env->localvar_getRefer(runtime, pos++);
     __refer ptr_parg2 = NULL;
-    Utf8String *u_parg2;
     if(parg2){
-        u_parg2 = env->utf8_create();
-        env->jstring_2_utf8(parg2, u_parg2);
-        ptr_parg2 = env->utf8_cstr(u_parg2);
+        ptr_parg2 = parg2->arr_body;
     }
     s32 palignment = env->localvar_getInt(runtime, pos++);
 
     int _re_val = nk_combo_item_symbol_label((struct nk_context*/*ptr*/)(parg0), (enum nk_symbol_type)parg1, (const char*)(ptr_parg2), (nk_flags)palignment);
     s32 ret_value = (s32)_re_val;env->push_int(runtime->stack, ret_value);
-    env->utf8_destory(u_parg2);
+    
     return 0;
 }
 
@@ -4344,18 +4058,15 @@ int org_mini_nk_NK_nk_combo_item_symbol_text(Runtime *runtime, Class *clazz) {
     s32 parg1 = env->localvar_getInt(runtime, pos++);
     Instance *parg2 = env->localvar_getRefer(runtime, pos++);
     __refer ptr_parg2 = NULL;
-    Utf8String *u_parg2;
     if(parg2){
-        u_parg2 = env->utf8_create();
-        env->jstring_2_utf8(parg2, u_parg2);
-        ptr_parg2 = env->utf8_cstr(u_parg2);
+        ptr_parg2 = parg2->arr_body;
     }
     s32 parg3 = env->localvar_getInt(runtime, pos++);
     s32 palignment = env->localvar_getInt(runtime, pos++);
 
     int _re_val = nk_combo_item_symbol_text((struct nk_context*/*ptr*/)(parg0), (enum nk_symbol_type)parg1, (const char*)(ptr_parg2), (int)parg3, (nk_flags)palignment);
     s32 ret_value = (s32)_re_val;env->push_int(runtime->stack, ret_value);
-    env->utf8_destory(u_parg2);
+    
     return 0;
 }
 
@@ -4413,18 +4124,15 @@ int org_mini_nk_NK_nk_contextual_item_text(Runtime *runtime, Class *clazz) {
     intptr_t parg0 = env->localvar_getLong_2slot(runtime, pos);pos += 2;
     Instance *parg1 = env->localvar_getRefer(runtime, pos++);
     __refer ptr_parg1 = NULL;
-    Utf8String *u_parg1;
     if(parg1){
-        u_parg1 = env->utf8_create();
-        env->jstring_2_utf8(parg1, u_parg1);
-        ptr_parg1 = env->utf8_cstr(u_parg1);
+        ptr_parg1 = parg1->arr_body;
     }
     s32 parg2 = env->localvar_getInt(runtime, pos++);
     s32 palign = env->localvar_getInt(runtime, pos++);
 
     int _re_val = nk_contextual_item_text((struct nk_context*/*ptr*/)(parg0), (const char*)(ptr_parg1), (int)parg2, (nk_flags)palign);
     s32 ret_value = (s32)_re_val;env->push_int(runtime->stack, ret_value);
-    env->utf8_destory(u_parg1);
+    
     return 0;
 }
 
@@ -4435,17 +4143,14 @@ int org_mini_nk_NK_nk_contextual_item_label(Runtime *runtime, Class *clazz) {
     intptr_t parg0 = env->localvar_getLong_2slot(runtime, pos);pos += 2;
     Instance *parg1 = env->localvar_getRefer(runtime, pos++);
     __refer ptr_parg1 = NULL;
-    Utf8String *u_parg1;
     if(parg1){
-        u_parg1 = env->utf8_create();
-        env->jstring_2_utf8(parg1, u_parg1);
-        ptr_parg1 = env->utf8_cstr(u_parg1);
+        ptr_parg1 = parg1->arr_body;
     }
     s32 palign = env->localvar_getInt(runtime, pos++);
 
     int _re_val = nk_contextual_item_label((struct nk_context*/*ptr*/)(parg0), (const char*)(ptr_parg1), (nk_flags)palign);
     s32 ret_value = (s32)_re_val;env->push_int(runtime->stack, ret_value);
-    env->utf8_destory(u_parg1);
+    
     return 0;
 }
 
@@ -4461,17 +4166,14 @@ int org_mini_nk_NK_nk_contextual_item_image_label(Runtime *runtime, Class *clazz
     }
     Instance *parg2 = env->localvar_getRefer(runtime, pos++);
     __refer ptr_parg2 = NULL;
-    Utf8String *u_parg2;
     if(parg2){
-        u_parg2 = env->utf8_create();
-        env->jstring_2_utf8(parg2, u_parg2);
-        ptr_parg2 = env->utf8_cstr(u_parg2);
+        ptr_parg2 = parg2->arr_body;
     }
     s32 palignment = env->localvar_getInt(runtime, pos++);
 
     int _re_val = nk_contextual_item_image_label((struct nk_context*/*ptr*/)(parg0), *(struct nk_image/*none_ptr*/*)(ptr_parg1), (const char*)(ptr_parg2), (nk_flags)palignment);
     s32 ret_value = (s32)_re_val;env->push_int(runtime->stack, ret_value);
-    env->utf8_destory(u_parg2);
+    
     return 0;
 }
 
@@ -4487,18 +4189,15 @@ int org_mini_nk_NK_nk_contextual_item_image_text(Runtime *runtime, Class *clazz)
     }
     Instance *parg2 = env->localvar_getRefer(runtime, pos++);
     __refer ptr_parg2 = NULL;
-    Utf8String *u_parg2;
     if(parg2){
-        u_parg2 = env->utf8_create();
-        env->jstring_2_utf8(parg2, u_parg2);
-        ptr_parg2 = env->utf8_cstr(u_parg2);
+        ptr_parg2 = parg2->arr_body;
     }
     s32 plen = env->localvar_getInt(runtime, pos++);
     s32 palignment = env->localvar_getInt(runtime, pos++);
 
     int _re_val = nk_contextual_item_image_text((struct nk_context*/*ptr*/)(parg0), *(struct nk_image/*none_ptr*/*)(ptr_parg1), (const char*)(ptr_parg2), (int)plen, (nk_flags)palignment);
     s32 ret_value = (s32)_re_val;env->push_int(runtime->stack, ret_value);
-    env->utf8_destory(u_parg2);
+    
     return 0;
 }
 
@@ -4510,17 +4209,14 @@ int org_mini_nk_NK_nk_contextual_item_symbol_label(Runtime *runtime, Class *claz
     s32 parg1 = env->localvar_getInt(runtime, pos++);
     Instance *parg2 = env->localvar_getRefer(runtime, pos++);
     __refer ptr_parg2 = NULL;
-    Utf8String *u_parg2;
     if(parg2){
-        u_parg2 = env->utf8_create();
-        env->jstring_2_utf8(parg2, u_parg2);
-        ptr_parg2 = env->utf8_cstr(u_parg2);
+        ptr_parg2 = parg2->arr_body;
     }
     s32 palignment = env->localvar_getInt(runtime, pos++);
 
     int _re_val = nk_contextual_item_symbol_label((struct nk_context*/*ptr*/)(parg0), (enum nk_symbol_type)parg1, (const char*)(ptr_parg2), (nk_flags)palignment);
     s32 ret_value = (s32)_re_val;env->push_int(runtime->stack, ret_value);
-    env->utf8_destory(u_parg2);
+    
     return 0;
 }
 
@@ -4532,18 +4228,15 @@ int org_mini_nk_NK_nk_contextual_item_symbol_text(Runtime *runtime, Class *clazz
     s32 parg1 = env->localvar_getInt(runtime, pos++);
     Instance *parg2 = env->localvar_getRefer(runtime, pos++);
     __refer ptr_parg2 = NULL;
-    Utf8String *u_parg2;
     if(parg2){
-        u_parg2 = env->utf8_create();
-        env->jstring_2_utf8(parg2, u_parg2);
-        ptr_parg2 = env->utf8_cstr(u_parg2);
+        ptr_parg2 = parg2->arr_body;
     }
     s32 parg3 = env->localvar_getInt(runtime, pos++);
     s32 palignment = env->localvar_getInt(runtime, pos++);
 
     int _re_val = nk_contextual_item_symbol_text((struct nk_context*/*ptr*/)(parg0), (enum nk_symbol_type)parg1, (const char*)(ptr_parg2), (int)parg3, (nk_flags)palignment);
     s32 ret_value = (s32)_re_val;env->push_int(runtime->stack, ret_value);
-    env->utf8_destory(u_parg2);
+    
     return 0;
 }
 
@@ -4578,16 +4271,13 @@ int org_mini_nk_NK_nk_tooltip(Runtime *runtime, Class *clazz) {
     intptr_t parg0 = env->localvar_getLong_2slot(runtime, pos);pos += 2;
     Instance *parg1 = env->localvar_getRefer(runtime, pos++);
     __refer ptr_parg1 = NULL;
-    Utf8String *u_parg1;
     if(parg1){
-        u_parg1 = env->utf8_create();
-        env->jstring_2_utf8(parg1, u_parg1);
-        ptr_parg1 = env->utf8_cstr(u_parg1);
+        ptr_parg1 = parg1->arr_body;
     }
 
     nk_tooltip((struct nk_context*/*ptr*/)(parg0), (const char*)(ptr_parg1));
     
-    env->utf8_destory(u_parg1);
+    
     return 0;
 }
 
@@ -4598,11 +4288,8 @@ int org_mini_nk_NK_nk_tooltipf(Runtime *runtime, Class *clazz) {
     intptr_t parg0 = env->localvar_getLong_2slot(runtime, pos);pos += 2;
     Instance *parg1 = env->localvar_getRefer(runtime, pos++);
     __refer ptr_parg1 = NULL;
-    Utf8String *u_parg1;
     if(parg1){
-        u_parg1 = env->utf8_create();
-        env->jstring_2_utf8(parg1, u_parg1);
-        ptr_parg1 = env->utf8_cstr(u_parg1);
+        ptr_parg1 = parg1->arr_body;
     }
     Instance *parg2 = env->localvar_getRefer(runtime, pos++);
     CStringArr *ptr_parg2 = NULL;
@@ -4612,7 +4299,7 @@ int org_mini_nk_NK_nk_tooltipf(Runtime *runtime, Class *clazz) {
 
     nk_tooltipf((struct nk_context*/*ptr*/)(parg0), (const char*)(ptr_parg1), /*todo Despair for runtime parse unlimited para*/(ptr_parg2->arr_body));
     
-    env->utf8_destory(u_parg1);env->cstringarr_destory(ptr_parg2);
+    env->cstringarr_destory(ptr_parg2);
     return 0;
 }
 
@@ -4672,11 +4359,8 @@ int org_mini_nk_NK_nk_menu_begin_text(Runtime *runtime, Class *clazz) {
     intptr_t parg0 = env->localvar_getLong_2slot(runtime, pos);pos += 2;
     Instance *ptitle = env->localvar_getRefer(runtime, pos++);
     __refer ptr_ptitle = NULL;
-    Utf8String *u_ptitle;
     if(ptitle){
-        u_ptitle = env->utf8_create();
-        env->jstring_2_utf8(ptitle, u_ptitle);
-        ptr_ptitle = env->utf8_cstr(u_ptitle);
+        ptr_ptitle = ptitle->arr_body;
     }
     s32 ptitle_len = env->localvar_getInt(runtime, pos++);
     s32 palign = env->localvar_getInt(runtime, pos++);
@@ -4688,7 +4372,7 @@ int org_mini_nk_NK_nk_menu_begin_text(Runtime *runtime, Class *clazz) {
 
     int _re_val = nk_menu_begin_text((struct nk_context*/*ptr*/)(parg0), (const char*)(ptr_ptitle), (int)ptitle_len, (nk_flags)palign, *(struct nk_vec2/*none_ptr*/*)(ptr_psize));
     s32 ret_value = (s32)_re_val;env->push_int(runtime->stack, ret_value);
-    env->utf8_destory(u_ptitle);
+    
     return 0;
 }
 
@@ -4699,11 +4383,8 @@ int org_mini_nk_NK_nk_menu_begin_label(Runtime *runtime, Class *clazz) {
     intptr_t parg0 = env->localvar_getLong_2slot(runtime, pos);pos += 2;
     Instance *parg1 = env->localvar_getRefer(runtime, pos++);
     __refer ptr_parg1 = NULL;
-    Utf8String *u_parg1;
     if(parg1){
-        u_parg1 = env->utf8_create();
-        env->jstring_2_utf8(parg1, u_parg1);
-        ptr_parg1 = env->utf8_cstr(u_parg1);
+        ptr_parg1 = parg1->arr_body;
     }
     s32 palign = env->localvar_getInt(runtime, pos++);
     Instance *psize = env->localvar_getRefer(runtime, pos++);
@@ -4714,7 +4395,7 @@ int org_mini_nk_NK_nk_menu_begin_label(Runtime *runtime, Class *clazz) {
 
     int _re_val = nk_menu_begin_label((struct nk_context*/*ptr*/)(parg0), (const char*)(ptr_parg1), (nk_flags)palign, *(struct nk_vec2/*none_ptr*/*)(ptr_psize));
     s32 ret_value = (s32)_re_val;env->push_int(runtime->stack, ret_value);
-    env->utf8_destory(u_parg1);
+    
     return 0;
 }
 
@@ -4725,11 +4406,8 @@ int org_mini_nk_NK_nk_menu_begin_image(Runtime *runtime, Class *clazz) {
     intptr_t parg0 = env->localvar_getLong_2slot(runtime, pos);pos += 2;
     Instance *parg1 = env->localvar_getRefer(runtime, pos++);
     __refer ptr_parg1 = NULL;
-    Utf8String *u_parg1;
     if(parg1){
-        u_parg1 = env->utf8_create();
-        env->jstring_2_utf8(parg1, u_parg1);
-        ptr_parg1 = env->utf8_cstr(u_parg1);
+        ptr_parg1 = parg1->arr_body;
     }
     Instance *parg2 = env->localvar_getRefer(runtime, pos++);
     __refer ptr_parg2 = NULL;
@@ -4744,7 +4422,7 @@ int org_mini_nk_NK_nk_menu_begin_image(Runtime *runtime, Class *clazz) {
 
     int _re_val = nk_menu_begin_image((struct nk_context*/*ptr*/)(parg0), (const char*)(ptr_parg1), *(struct nk_image/*none_ptr*/*)(ptr_parg2), *(struct nk_vec2/*none_ptr*/*)(ptr_psize));
     s32 ret_value = (s32)_re_val;env->push_int(runtime->stack, ret_value);
-    env->utf8_destory(u_parg1);
+    
     return 0;
 }
 
@@ -4755,11 +4433,8 @@ int org_mini_nk_NK_nk_menu_begin_image_text(Runtime *runtime, Class *clazz) {
     intptr_t parg0 = env->localvar_getLong_2slot(runtime, pos);pos += 2;
     Instance *parg1 = env->localvar_getRefer(runtime, pos++);
     __refer ptr_parg1 = NULL;
-    Utf8String *u_parg1;
     if(parg1){
-        u_parg1 = env->utf8_create();
-        env->jstring_2_utf8(parg1, u_parg1);
-        ptr_parg1 = env->utf8_cstr(u_parg1);
+        ptr_parg1 = parg1->arr_body;
     }
     s32 parg2 = env->localvar_getInt(runtime, pos++);
     s32 palign = env->localvar_getInt(runtime, pos++);
@@ -4776,7 +4451,7 @@ int org_mini_nk_NK_nk_menu_begin_image_text(Runtime *runtime, Class *clazz) {
 
     int _re_val = nk_menu_begin_image_text((struct nk_context*/*ptr*/)(parg0), (const char*)(ptr_parg1), (int)parg2, (nk_flags)palign, *(struct nk_image/*none_ptr*/*)(ptr_parg4), *(struct nk_vec2/*none_ptr*/*)(ptr_psize));
     s32 ret_value = (s32)_re_val;env->push_int(runtime->stack, ret_value);
-    env->utf8_destory(u_parg1);
+    
     return 0;
 }
 
@@ -4787,11 +4462,8 @@ int org_mini_nk_NK_nk_menu_begin_image_label(Runtime *runtime, Class *clazz) {
     intptr_t parg0 = env->localvar_getLong_2slot(runtime, pos);pos += 2;
     Instance *parg1 = env->localvar_getRefer(runtime, pos++);
     __refer ptr_parg1 = NULL;
-    Utf8String *u_parg1;
     if(parg1){
-        u_parg1 = env->utf8_create();
-        env->jstring_2_utf8(parg1, u_parg1);
-        ptr_parg1 = env->utf8_cstr(u_parg1);
+        ptr_parg1 = parg1->arr_body;
     }
     s32 palign = env->localvar_getInt(runtime, pos++);
     Instance *parg3 = env->localvar_getRefer(runtime, pos++);
@@ -4807,7 +4479,7 @@ int org_mini_nk_NK_nk_menu_begin_image_label(Runtime *runtime, Class *clazz) {
 
     int _re_val = nk_menu_begin_image_label((struct nk_context*/*ptr*/)(parg0), (const char*)(ptr_parg1), (nk_flags)palign, *(struct nk_image/*none_ptr*/*)(ptr_parg3), *(struct nk_vec2/*none_ptr*/*)(ptr_psize));
     s32 ret_value = (s32)_re_val;env->push_int(runtime->stack, ret_value);
-    env->utf8_destory(u_parg1);
+    
     return 0;
 }
 
@@ -4818,11 +4490,8 @@ int org_mini_nk_NK_nk_menu_begin_symbol(Runtime *runtime, Class *clazz) {
     intptr_t parg0 = env->localvar_getLong_2slot(runtime, pos);pos += 2;
     Instance *parg1 = env->localvar_getRefer(runtime, pos++);
     __refer ptr_parg1 = NULL;
-    Utf8String *u_parg1;
     if(parg1){
-        u_parg1 = env->utf8_create();
-        env->jstring_2_utf8(parg1, u_parg1);
-        ptr_parg1 = env->utf8_cstr(u_parg1);
+        ptr_parg1 = parg1->arr_body;
     }
     s32 parg2 = env->localvar_getInt(runtime, pos++);
     Instance *psize = env->localvar_getRefer(runtime, pos++);
@@ -4833,7 +4502,7 @@ int org_mini_nk_NK_nk_menu_begin_symbol(Runtime *runtime, Class *clazz) {
 
     int _re_val = nk_menu_begin_symbol((struct nk_context*/*ptr*/)(parg0), (const char*)(ptr_parg1), (enum nk_symbol_type)parg2, *(struct nk_vec2/*none_ptr*/*)(ptr_psize));
     s32 ret_value = (s32)_re_val;env->push_int(runtime->stack, ret_value);
-    env->utf8_destory(u_parg1);
+    
     return 0;
 }
 
@@ -4844,11 +4513,8 @@ int org_mini_nk_NK_nk_menu_begin_symbol_text(Runtime *runtime, Class *clazz) {
     intptr_t parg0 = env->localvar_getLong_2slot(runtime, pos);pos += 2;
     Instance *parg1 = env->localvar_getRefer(runtime, pos++);
     __refer ptr_parg1 = NULL;
-    Utf8String *u_parg1;
     if(parg1){
-        u_parg1 = env->utf8_create();
-        env->jstring_2_utf8(parg1, u_parg1);
-        ptr_parg1 = env->utf8_cstr(u_parg1);
+        ptr_parg1 = parg1->arr_body;
     }
     s32 parg2 = env->localvar_getInt(runtime, pos++);
     s32 palign = env->localvar_getInt(runtime, pos++);
@@ -4861,7 +4527,7 @@ int org_mini_nk_NK_nk_menu_begin_symbol_text(Runtime *runtime, Class *clazz) {
 
     int _re_val = nk_menu_begin_symbol_text((struct nk_context*/*ptr*/)(parg0), (const char*)(ptr_parg1), (int)parg2, (nk_flags)palign, (enum nk_symbol_type)parg4, *(struct nk_vec2/*none_ptr*/*)(ptr_psize));
     s32 ret_value = (s32)_re_val;env->push_int(runtime->stack, ret_value);
-    env->utf8_destory(u_parg1);
+    
     return 0;
 }
 
@@ -4872,11 +4538,8 @@ int org_mini_nk_NK_nk_menu_begin_symbol_label(Runtime *runtime, Class *clazz) {
     intptr_t parg0 = env->localvar_getLong_2slot(runtime, pos);pos += 2;
     Instance *parg1 = env->localvar_getRefer(runtime, pos++);
     __refer ptr_parg1 = NULL;
-    Utf8String *u_parg1;
     if(parg1){
-        u_parg1 = env->utf8_create();
-        env->jstring_2_utf8(parg1, u_parg1);
-        ptr_parg1 = env->utf8_cstr(u_parg1);
+        ptr_parg1 = parg1->arr_body;
     }
     s32 palign = env->localvar_getInt(runtime, pos++);
     s32 parg3 = env->localvar_getInt(runtime, pos++);
@@ -4888,7 +4551,7 @@ int org_mini_nk_NK_nk_menu_begin_symbol_label(Runtime *runtime, Class *clazz) {
 
     int _re_val = nk_menu_begin_symbol_label((struct nk_context*/*ptr*/)(parg0), (const char*)(ptr_parg1), (nk_flags)palign, (enum nk_symbol_type)parg3, *(struct nk_vec2/*none_ptr*/*)(ptr_psize));
     s32 ret_value = (s32)_re_val;env->push_int(runtime->stack, ret_value);
-    env->utf8_destory(u_parg1);
+    
     return 0;
 }
 
@@ -4899,18 +4562,15 @@ int org_mini_nk_NK_nk_menu_item_text(Runtime *runtime, Class *clazz) {
     intptr_t parg0 = env->localvar_getLong_2slot(runtime, pos);pos += 2;
     Instance *parg1 = env->localvar_getRefer(runtime, pos++);
     __refer ptr_parg1 = NULL;
-    Utf8String *u_parg1;
     if(parg1){
-        u_parg1 = env->utf8_create();
-        env->jstring_2_utf8(parg1, u_parg1);
-        ptr_parg1 = env->utf8_cstr(u_parg1);
+        ptr_parg1 = parg1->arr_body;
     }
     s32 parg2 = env->localvar_getInt(runtime, pos++);
     s32 palign = env->localvar_getInt(runtime, pos++);
 
     int _re_val = nk_menu_item_text((struct nk_context*/*ptr*/)(parg0), (const char*)(ptr_parg1), (int)parg2, (nk_flags)palign);
     s32 ret_value = (s32)_re_val;env->push_int(runtime->stack, ret_value);
-    env->utf8_destory(u_parg1);
+    
     return 0;
 }
 
@@ -4921,17 +4581,14 @@ int org_mini_nk_NK_nk_menu_item_label(Runtime *runtime, Class *clazz) {
     intptr_t parg0 = env->localvar_getLong_2slot(runtime, pos);pos += 2;
     Instance *parg1 = env->localvar_getRefer(runtime, pos++);
     __refer ptr_parg1 = NULL;
-    Utf8String *u_parg1;
     if(parg1){
-        u_parg1 = env->utf8_create();
-        env->jstring_2_utf8(parg1, u_parg1);
-        ptr_parg1 = env->utf8_cstr(u_parg1);
+        ptr_parg1 = parg1->arr_body;
     }
     s32 palignment = env->localvar_getInt(runtime, pos++);
 
     int _re_val = nk_menu_item_label((struct nk_context*/*ptr*/)(parg0), (const char*)(ptr_parg1), (nk_flags)palignment);
     s32 ret_value = (s32)_re_val;env->push_int(runtime->stack, ret_value);
-    env->utf8_destory(u_parg1);
+    
     return 0;
 }
 
@@ -4947,17 +4604,14 @@ int org_mini_nk_NK_nk_menu_item_image_label(Runtime *runtime, Class *clazz) {
     }
     Instance *parg2 = env->localvar_getRefer(runtime, pos++);
     __refer ptr_parg2 = NULL;
-    Utf8String *u_parg2;
     if(parg2){
-        u_parg2 = env->utf8_create();
-        env->jstring_2_utf8(parg2, u_parg2);
-        ptr_parg2 = env->utf8_cstr(u_parg2);
+        ptr_parg2 = parg2->arr_body;
     }
     s32 palignment = env->localvar_getInt(runtime, pos++);
 
     int _re_val = nk_menu_item_image_label((struct nk_context*/*ptr*/)(parg0), *(struct nk_image/*none_ptr*/*)(ptr_parg1), (const char*)(ptr_parg2), (nk_flags)palignment);
     s32 ret_value = (s32)_re_val;env->push_int(runtime->stack, ret_value);
-    env->utf8_destory(u_parg2);
+    
     return 0;
 }
 
@@ -4973,18 +4627,15 @@ int org_mini_nk_NK_nk_menu_item_image_text(Runtime *runtime, Class *clazz) {
     }
     Instance *parg2 = env->localvar_getRefer(runtime, pos++);
     __refer ptr_parg2 = NULL;
-    Utf8String *u_parg2;
     if(parg2){
-        u_parg2 = env->utf8_create();
-        env->jstring_2_utf8(parg2, u_parg2);
-        ptr_parg2 = env->utf8_cstr(u_parg2);
+        ptr_parg2 = parg2->arr_body;
     }
     s32 plen = env->localvar_getInt(runtime, pos++);
     s32 palignment = env->localvar_getInt(runtime, pos++);
 
     int _re_val = nk_menu_item_image_text((struct nk_context*/*ptr*/)(parg0), *(struct nk_image/*none_ptr*/*)(ptr_parg1), (const char*)(ptr_parg2), (int)plen, (nk_flags)palignment);
     s32 ret_value = (s32)_re_val;env->push_int(runtime->stack, ret_value);
-    env->utf8_destory(u_parg2);
+    
     return 0;
 }
 
@@ -4996,18 +4647,15 @@ int org_mini_nk_NK_nk_menu_item_symbol_text(Runtime *runtime, Class *clazz) {
     s32 parg1 = env->localvar_getInt(runtime, pos++);
     Instance *parg2 = env->localvar_getRefer(runtime, pos++);
     __refer ptr_parg2 = NULL;
-    Utf8String *u_parg2;
     if(parg2){
-        u_parg2 = env->utf8_create();
-        env->jstring_2_utf8(parg2, u_parg2);
-        ptr_parg2 = env->utf8_cstr(u_parg2);
+        ptr_parg2 = parg2->arr_body;
     }
     s32 parg3 = env->localvar_getInt(runtime, pos++);
     s32 palignment = env->localvar_getInt(runtime, pos++);
 
     int _re_val = nk_menu_item_symbol_text((struct nk_context*/*ptr*/)(parg0), (enum nk_symbol_type)parg1, (const char*)(ptr_parg2), (int)parg3, (nk_flags)palignment);
     s32 ret_value = (s32)_re_val;env->push_int(runtime->stack, ret_value);
-    env->utf8_destory(u_parg2);
+    
     return 0;
 }
 
@@ -5019,17 +4667,14 @@ int org_mini_nk_NK_nk_menu_item_symbol_label(Runtime *runtime, Class *clazz) {
     s32 parg1 = env->localvar_getInt(runtime, pos++);
     Instance *parg2 = env->localvar_getRefer(runtime, pos++);
     __refer ptr_parg2 = NULL;
-    Utf8String *u_parg2;
     if(parg2){
-        u_parg2 = env->utf8_create();
-        env->jstring_2_utf8(parg2, u_parg2);
-        ptr_parg2 = env->utf8_cstr(u_parg2);
+        ptr_parg2 = parg2->arr_body;
     }
     s32 palignment = env->localvar_getInt(runtime, pos++);
 
     int _re_val = nk_menu_item_symbol_label((struct nk_context*/*ptr*/)(parg0), (enum nk_symbol_type)parg1, (const char*)(ptr_parg2), (nk_flags)palignment);
     s32 ret_value = (s32)_re_val;env->push_int(runtime->stack, ret_value);
-    env->utf8_destory(u_parg2);
+    
     return 0;
 }
 
@@ -5494,11 +5139,8 @@ int org_mini_nk_NK_nk_rgb_hex(Runtime *runtime, Class *clazz) {
     
     Instance *prgb = env->localvar_getRefer(runtime, pos++);
     __refer ptr_prgb = NULL;
-    Utf8String *u_prgb;
     if(prgb){
-        u_prgb = env->utf8_create();
-        env->jstring_2_utf8(prgb, u_prgb);
-        ptr_prgb = env->utf8_cstr(u_prgb);
+        ptr_prgb = prgb->arr_body;
     }
 
     struct nk_color/*none_ptr*/ _re_val = nk_rgb_hex((const char*)(ptr_prgb));
@@ -5512,7 +5154,7 @@ int org_mini_nk_NK_nk_rgb_hex(Runtime *runtime, Class *clazz) {
     } else {
         env->push_ref(runtime->stack, NULL);
     }
-    env->utf8_destory(u_prgb);
+    
     return 0;
 }
 
@@ -5666,11 +5308,8 @@ int org_mini_nk_NK_nk_rgba_hex(Runtime *runtime, Class *clazz) {
     
     Instance *prgb = env->localvar_getRefer(runtime, pos++);
     __refer ptr_prgb = NULL;
-    Utf8String *u_prgb;
     if(prgb){
-        u_prgb = env->utf8_create();
-        env->jstring_2_utf8(prgb, u_prgb);
-        ptr_prgb = env->utf8_cstr(u_prgb);
+        ptr_prgb = prgb->arr_body;
     }
 
     struct nk_color/*none_ptr*/ _re_val = nk_rgba_hex((const char*)(ptr_prgb));
@@ -5684,7 +5323,7 @@ int org_mini_nk_NK_nk_rgba_hex(Runtime *runtime, Class *clazz) {
     } else {
         env->push_ref(runtime->stack, NULL);
     }
-    env->utf8_destory(u_prgb);
+    
     return 0;
 }
 
@@ -6068,11 +5707,8 @@ int org_mini_nk_NK_nk_color_hex_rgba(Runtime *runtime, Class *clazz) {
     
     Instance *poutput = env->localvar_getRefer(runtime, pos++);
     __refer ptr_poutput = NULL;
-    Utf8String *u_poutput;
     if(poutput){
-        u_poutput = env->utf8_create();
-        env->jstring_2_utf8(poutput, u_poutput);
-        ptr_poutput = env->utf8_cstr(u_poutput);
+        ptr_poutput = poutput->arr_body;
     }
     Instance *parg1 = env->localvar_getRefer(runtime, pos++);
     __refer ptr_parg1 = NULL;
@@ -6082,7 +5718,7 @@ int org_mini_nk_NK_nk_color_hex_rgba(Runtime *runtime, Class *clazz) {
 
     nk_color_hex_rgba((char*)(ptr_poutput), *(struct nk_color/*none_ptr*/*)(ptr_parg1));
     
-    env->utf8_destory(u_poutput);
+    
     return 0;
 }
 
@@ -6092,11 +5728,8 @@ int org_mini_nk_NK_nk_color_hex_rgb(Runtime *runtime, Class *clazz) {
     
     Instance *poutput = env->localvar_getRefer(runtime, pos++);
     __refer ptr_poutput = NULL;
-    Utf8String *u_poutput;
     if(poutput){
-        u_poutput = env->utf8_create();
-        env->jstring_2_utf8(poutput, u_poutput);
-        ptr_poutput = env->utf8_cstr(u_poutput);
+        ptr_poutput = poutput->arr_body;
     }
     Instance *parg1 = env->localvar_getRefer(runtime, pos++);
     __refer ptr_parg1 = NULL;
@@ -6106,7 +5739,7 @@ int org_mini_nk_NK_nk_color_hex_rgb(Runtime *runtime, Class *clazz) {
 
     nk_color_hex_rgb((char*)(ptr_poutput), *(struct nk_color/*none_ptr*/*)(ptr_parg1));
     
-    env->utf8_destory(u_poutput);
+    
     return 0;
 }
 
@@ -6982,16 +6615,13 @@ int org_mini_nk_NK_nk_strlen(Runtime *runtime, Class *clazz) {
     
     Instance *pstr = env->localvar_getRefer(runtime, pos++);
     __refer ptr_pstr = NULL;
-    Utf8String *u_pstr;
     if(pstr){
-        u_pstr = env->utf8_create();
-        env->jstring_2_utf8(pstr, u_pstr);
-        ptr_pstr = env->utf8_cstr(u_pstr);
+        ptr_pstr = pstr->arr_body;
     }
 
     int _re_val = nk_strlen((const char*)(ptr_pstr));
     s32 ret_value = (s32)_re_val;env->push_int(runtime->stack, ret_value);
-    env->utf8_destory(u_pstr);
+    
     return 0;
 }
 
@@ -7001,24 +6631,18 @@ int org_mini_nk_NK_nk_stricmp(Runtime *runtime, Class *clazz) {
     
     Instance *ps1 = env->localvar_getRefer(runtime, pos++);
     __refer ptr_ps1 = NULL;
-    Utf8String *u_ps1;
     if(ps1){
-        u_ps1 = env->utf8_create();
-        env->jstring_2_utf8(ps1, u_ps1);
-        ptr_ps1 = env->utf8_cstr(u_ps1);
+        ptr_ps1 = ps1->arr_body;
     }
     Instance *ps2 = env->localvar_getRefer(runtime, pos++);
     __refer ptr_ps2 = NULL;
-    Utf8String *u_ps2;
     if(ps2){
-        u_ps2 = env->utf8_create();
-        env->jstring_2_utf8(ps2, u_ps2);
-        ptr_ps2 = env->utf8_cstr(u_ps2);
+        ptr_ps2 = ps2->arr_body;
     }
 
     int _re_val = nk_stricmp((const char*)(ptr_ps1), (const char*)(ptr_ps2));
     s32 ret_value = (s32)_re_val;env->push_int(runtime->stack, ret_value);
-    env->utf8_destory(u_ps1);env->utf8_destory(u_ps2);
+    
     return 0;
 }
 
@@ -7028,25 +6652,19 @@ int org_mini_nk_NK_nk_stricmpn(Runtime *runtime, Class *clazz) {
     
     Instance *ps1 = env->localvar_getRefer(runtime, pos++);
     __refer ptr_ps1 = NULL;
-    Utf8String *u_ps1;
     if(ps1){
-        u_ps1 = env->utf8_create();
-        env->jstring_2_utf8(ps1, u_ps1);
-        ptr_ps1 = env->utf8_cstr(u_ps1);
+        ptr_ps1 = ps1->arr_body;
     }
     Instance *ps2 = env->localvar_getRefer(runtime, pos++);
     __refer ptr_ps2 = NULL;
-    Utf8String *u_ps2;
     if(ps2){
-        u_ps2 = env->utf8_create();
-        env->jstring_2_utf8(ps2, u_ps2);
-        ptr_ps2 = env->utf8_cstr(u_ps2);
+        ptr_ps2 = ps2->arr_body;
     }
     s32 pn = env->localvar_getInt(runtime, pos++);
 
     int _re_val = nk_stricmpn((const char*)(ptr_ps1), (const char*)(ptr_ps2), (int)pn);
     s32 ret_value = (s32)_re_val;env->push_int(runtime->stack, ret_value);
-    env->utf8_destory(u_ps1);env->utf8_destory(u_ps2);
+    
     return 0;
 }
 
@@ -7056,21 +6674,18 @@ int org_mini_nk_NK_nk_strtoi(Runtime *runtime, Class *clazz) {
     
     Instance *pstr = env->localvar_getRefer(runtime, pos++);
     __refer ptr_pstr = NULL;
-    Utf8String *u_pstr;
     if(pstr){
-        u_pstr = env->utf8_create();
-        env->jstring_2_utf8(pstr, u_pstr);
-        ptr_pstr = env->utf8_cstr(u_pstr);
+        ptr_pstr = pstr->arr_body;
     }
     Instance *pendptr = env->localvar_getRefer(runtime, pos++);
-    CStringArr *ptr_pendptr = NULL;
+    __refer ptr_pendptr = NULL;
     if(pendptr){
-        ptr_pendptr = env->cstringarr_create(pendptr);
+        ptr_pendptr = pendptr->arr_body;
     }
 
-    int _re_val = nk_strtoi((const char*)(ptr_pstr), (const char**)(ptr_pendptr->arr_body));
+    int _re_val = nk_strtoi((const char*)(ptr_pstr), (const char**)(ptr_pendptr));
     s32 ret_value = (s32)_re_val;env->push_int(runtime->stack, ret_value);
-    env->utf8_destory(u_pstr);env->cstringarr_destory(ptr_pendptr);
+    
     return 0;
 }
 
@@ -7080,21 +6695,18 @@ int org_mini_nk_NK_nk_strtof(Runtime *runtime, Class *clazz) {
     
     Instance *pstr = env->localvar_getRefer(runtime, pos++);
     __refer ptr_pstr = NULL;
-    Utf8String *u_pstr;
     if(pstr){
-        u_pstr = env->utf8_create();
-        env->jstring_2_utf8(pstr, u_pstr);
-        ptr_pstr = env->utf8_cstr(u_pstr);
+        ptr_pstr = pstr->arr_body;
     }
     Instance *pendptr = env->localvar_getRefer(runtime, pos++);
-    CStringArr *ptr_pendptr = NULL;
+    __refer ptr_pendptr = NULL;
     if(pendptr){
-        ptr_pendptr = env->cstringarr_create(pendptr);
+        ptr_pendptr = pendptr->arr_body;
     }
 
-    f32 ret_value = (f32)nk_strtof((const char*)(ptr_pstr), (const char**)(ptr_pendptr->arr_body));
+    f32 ret_value = (f32)nk_strtof((const char*)(ptr_pstr), (const char**)(ptr_pendptr));
     env->push_float(runtime->stack, ret_value);
-    env->utf8_destory(u_pstr);env->cstringarr_destory(ptr_pendptr);
+    
     return 0;
 }
 
@@ -7104,21 +6716,18 @@ int org_mini_nk_NK_nk_strtod(Runtime *runtime, Class *clazz) {
     
     Instance *pstr = env->localvar_getRefer(runtime, pos++);
     __refer ptr_pstr = NULL;
-    Utf8String *u_pstr;
     if(pstr){
-        u_pstr = env->utf8_create();
-        env->jstring_2_utf8(pstr, u_pstr);
-        ptr_pstr = env->utf8_cstr(u_pstr);
+        ptr_pstr = pstr->arr_body;
     }
     Instance *pendptr = env->localvar_getRefer(runtime, pos++);
-    CStringArr *ptr_pendptr = NULL;
+    __refer ptr_pendptr = NULL;
     if(pendptr){
-        ptr_pendptr = env->cstringarr_create(pendptr);
+        ptr_pendptr = pendptr->arr_body;
     }
 
-    f64 ret_value = (f64)nk_strtod((const char*)(ptr_pstr), (const char**)(ptr_pendptr->arr_body));
+    f64 ret_value = (f64)nk_strtod((const char*)(ptr_pstr), (const char**)(ptr_pendptr));
     env->push_double(runtime->stack, ret_value);
-    env->utf8_destory(u_pstr);env->cstringarr_destory(ptr_pendptr);
+    
     return 0;
 }
 
@@ -7128,24 +6737,18 @@ int org_mini_nk_NK_nk_strfilter(Runtime *runtime, Class *clazz) {
     
     Instance *ptext = env->localvar_getRefer(runtime, pos++);
     __refer ptr_ptext = NULL;
-    Utf8String *u_ptext;
     if(ptext){
-        u_ptext = env->utf8_create();
-        env->jstring_2_utf8(ptext, u_ptext);
-        ptr_ptext = env->utf8_cstr(u_ptext);
+        ptr_ptext = ptext->arr_body;
     }
     Instance *pregexp = env->localvar_getRefer(runtime, pos++);
     __refer ptr_pregexp = NULL;
-    Utf8String *u_pregexp;
     if(pregexp){
-        u_pregexp = env->utf8_create();
-        env->jstring_2_utf8(pregexp, u_pregexp);
-        ptr_pregexp = env->utf8_cstr(u_pregexp);
+        ptr_pregexp = pregexp->arr_body;
     }
 
     int _re_val = nk_strfilter((const char*)(ptr_ptext), (const char*)(ptr_pregexp));
     s32 ret_value = (s32)_re_val;env->push_int(runtime->stack, ret_value);
-    env->utf8_destory(u_ptext);env->utf8_destory(u_pregexp);
+    
     return 0;
 }
 
@@ -7155,19 +6758,13 @@ int org_mini_nk_NK_nk_strmatch_fuzzy_string(Runtime *runtime, Class *clazz) {
     
     Instance *pstr = env->localvar_getRefer(runtime, pos++);
     __refer ptr_pstr = NULL;
-    Utf8String *u_pstr;
     if(pstr){
-        u_pstr = env->utf8_create();
-        env->jstring_2_utf8(pstr, u_pstr);
-        ptr_pstr = env->utf8_cstr(u_pstr);
+        ptr_pstr = pstr->arr_body;
     }
     Instance *ppattern = env->localvar_getRefer(runtime, pos++);
     __refer ptr_ppattern = NULL;
-    Utf8String *u_ppattern;
     if(ppattern){
-        u_ppattern = env->utf8_create();
-        env->jstring_2_utf8(ppattern, u_ppattern);
-        ptr_ppattern = env->utf8_cstr(u_ppattern);
+        ptr_ppattern = ppattern->arr_body;
     }
     Instance *pout_score = env->localvar_getRefer(runtime, pos++);
     __refer ptr_pout_score = NULL;
@@ -7177,7 +6774,7 @@ int org_mini_nk_NK_nk_strmatch_fuzzy_string(Runtime *runtime, Class *clazz) {
 
     int _re_val = nk_strmatch_fuzzy_string((char const*)(ptr_pstr), (char const*)(ptr_ppattern), (int*)(ptr_pout_score));
     s32 ret_value = (s32)_re_val;env->push_int(runtime->stack, ret_value);
-    env->utf8_destory(u_pstr);env->utf8_destory(u_ppattern);
+    
     return 0;
 }
 
@@ -7187,20 +6784,14 @@ int org_mini_nk_NK_nk_strmatch_fuzzy_text(Runtime *runtime, Class *clazz) {
     
     Instance *ptxt = env->localvar_getRefer(runtime, pos++);
     __refer ptr_ptxt = NULL;
-    Utf8String *u_ptxt;
     if(ptxt){
-        u_ptxt = env->utf8_create();
-        env->jstring_2_utf8(ptxt, u_ptxt);
-        ptr_ptxt = env->utf8_cstr(u_ptxt);
+        ptr_ptxt = ptxt->arr_body;
     }
     s32 ptxt_len = env->localvar_getInt(runtime, pos++);
     Instance *ppattern = env->localvar_getRefer(runtime, pos++);
     __refer ptr_ppattern = NULL;
-    Utf8String *u_ppattern;
     if(ppattern){
-        u_ppattern = env->utf8_create();
-        env->jstring_2_utf8(ppattern, u_ppattern);
-        ptr_ppattern = env->utf8_cstr(u_ppattern);
+        ptr_ppattern = ppattern->arr_body;
     }
     Instance *pout_score = env->localvar_getRefer(runtime, pos++);
     __refer ptr_pout_score = NULL;
@@ -7210,7 +6801,7 @@ int org_mini_nk_NK_nk_strmatch_fuzzy_text(Runtime *runtime, Class *clazz) {
 
     int _re_val = nk_strmatch_fuzzy_text((const char*)(ptr_ptxt), (int)ptxt_len, (const char*)(ptr_ppattern), (int*)(ptr_pout_score));
     s32 ret_value = (s32)_re_val;env->push_int(runtime->stack, ret_value);
-    env->utf8_destory(u_ptxt);env->utf8_destory(u_ppattern);
+    
     return 0;
 }
 
@@ -7220,18 +6811,15 @@ int org_mini_nk_NK_nk_utf_decode(Runtime *runtime, Class *clazz) {
     
     Instance *parg0 = env->localvar_getRefer(runtime, pos++);
     __refer ptr_parg0 = NULL;
-    Utf8String *u_parg0;
     if(parg0){
-        u_parg0 = env->utf8_create();
-        env->jstring_2_utf8(parg0, u_parg0);
-        ptr_parg0 = env->utf8_cstr(u_parg0);
+        ptr_parg0 = parg0->arr_body;
     }
     intptr_t parg1 = env->localvar_getLong_2slot(runtime, pos);pos += 2;
     s32 parg2 = env->localvar_getInt(runtime, pos++);
 
     int _re_val = nk_utf_decode((const char*)(ptr_parg0), (nk_rune*/*ptr*/)(parg1), (int)parg2);
     s32 ret_value = (s32)_re_val;env->push_int(runtime->stack, ret_value);
-    env->utf8_destory(u_parg0);
+    
     return 0;
 }
 
@@ -7242,17 +6830,14 @@ int org_mini_nk_NK_nk_utf_encode(Runtime *runtime, Class *clazz) {
     s32 parg0 = env->localvar_getInt(runtime, pos++);
     Instance *parg1 = env->localvar_getRefer(runtime, pos++);
     __refer ptr_parg1 = NULL;
-    Utf8String *u_parg1;
     if(parg1){
-        u_parg1 = env->utf8_create();
-        env->jstring_2_utf8(parg1, u_parg1);
-        ptr_parg1 = env->utf8_cstr(u_parg1);
+        ptr_parg1 = parg1->arr_body;
     }
     s32 parg2 = env->localvar_getInt(runtime, pos++);
 
     int _re_val = nk_utf_encode((nk_rune)parg0, (char*)(ptr_parg1), (int)parg2);
     s32 ret_value = (s32)_re_val;env->push_int(runtime->stack, ret_value);
-    env->utf8_destory(u_parg1);
+    
     return 0;
 }
 
@@ -7262,17 +6847,14 @@ int org_mini_nk_NK_nk_utf_len(Runtime *runtime, Class *clazz) {
     
     Instance *parg0 = env->localvar_getRefer(runtime, pos++);
     __refer ptr_parg0 = NULL;
-    Utf8String *u_parg0;
     if(parg0){
-        u_parg0 = env->utf8_create();
-        env->jstring_2_utf8(parg0, u_parg0);
-        ptr_parg0 = env->utf8_cstr(u_parg0);
+        ptr_parg0 = parg0->arr_body;
     }
     s32 pbyte_len = env->localvar_getInt(runtime, pos++);
 
     int _re_val = nk_utf_len((const char*)(ptr_parg0), (int)pbyte_len);
     s32 ret_value = (s32)_re_val;env->push_int(runtime->stack, ret_value);
-    env->utf8_destory(u_parg0);
+    
     return 0;
 }
 
@@ -7282,11 +6864,8 @@ int org_mini_nk_NK_nk_utf_at(Runtime *runtime, Class *clazz) {
     
     Instance *pbuffer = env->localvar_getRefer(runtime, pos++);
     __refer ptr_pbuffer = NULL;
-    Utf8String *u_pbuffer;
     if(pbuffer){
-        u_pbuffer = env->utf8_create();
-        env->jstring_2_utf8(pbuffer, u_pbuffer);
-        ptr_pbuffer = env->utf8_cstr(u_pbuffer);
+        ptr_pbuffer = pbuffer->arr_body;
     }
     s32 plength = env->localvar_getInt(runtime, pos++);
     s32 pindex = env->localvar_getInt(runtime, pos++);
@@ -7308,7 +6887,7 @@ int org_mini_nk_NK_nk_utf_at(Runtime *runtime, Class *clazz) {
     } else {
         env->push_ref(runtime->stack, NULL);
     }
-    env->utf8_destory(u_pbuffer);
+    
     return 0;
 }
 
@@ -7471,6 +7050,25 @@ int org_mini_nk_NK_nk_font_atlas_add_from_memory(Runtime *runtime, Class *clazz)
     return 0;
 }
 
+int org_mini_nk_NK_nk_font_atlas_add_from_file(Runtime *runtime, Class *clazz) {
+    JniEnv *env = runtime->jnienv;
+    s32 pos = 0;
+    
+    intptr_t patlas = env->localvar_getLong_2slot(runtime, pos);pos += 2;
+    Instance *pfile_path = env->localvar_getRefer(runtime, pos++);
+    __refer ptr_pfile_path = NULL;
+    if(pfile_path){
+        ptr_pfile_path = pfile_path->arr_body;
+    }
+    Int2Float pheight;pheight.i = env->localvar_getInt(runtime, pos++);
+    intptr_t parg3 = env->localvar_getLong_2slot(runtime, pos);pos += 2;
+
+    struct nk_font*/*ptr*/ _re_val = nk_font_atlas_add_from_file((struct nk_font_atlas*/*ptr*/)(patlas), (const char*)(ptr_pfile_path), (float)pheight.f, (const struct nk_font_config*/*ptr*/)(parg3));
+    s64 ret_value = (s64)(intptr_t)_re_val;env->push_long(runtime->stack, ret_value);
+    
+    return 0;
+}
+
 int org_mini_nk_NK_nk_font_atlas_add_compressed(Runtime *runtime, Class *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
@@ -7494,18 +7092,15 @@ int org_mini_nk_NK_nk_font_atlas_add_compressed_base85(Runtime *runtime, Class *
     intptr_t parg0 = env->localvar_getLong_2slot(runtime, pos);pos += 2;
     Instance *pdata = env->localvar_getRefer(runtime, pos++);
     __refer ptr_pdata = NULL;
-    Utf8String *u_pdata;
     if(pdata){
-        u_pdata = env->utf8_create();
-        env->jstring_2_utf8(pdata, u_pdata);
-        ptr_pdata = env->utf8_cstr(u_pdata);
+        ptr_pdata = pdata->arr_body;
     }
     Int2Float pheight;pheight.i = env->localvar_getInt(runtime, pos++);
     intptr_t pconfig = env->localvar_getLong_2slot(runtime, pos);pos += 2;
 
     struct nk_font*/*ptr*/ _re_val = nk_font_atlas_add_compressed_base85((struct nk_font_atlas*/*ptr*/)(parg0), (const char*)(ptr_pdata), (float)pheight.f, (const struct nk_font_config*/*ptr*/)(pconfig));
     s64 ret_value = (s64)(intptr_t)_re_val;env->push_long(runtime->stack, ret_value);
-    env->utf8_destory(u_pdata);
+    
     return 0;
 }
 
@@ -7813,17 +7408,14 @@ int org_mini_nk_NK_nk_str_append_text_char(Runtime *runtime, Class *clazz) {
     intptr_t parg0 = env->localvar_getLong_2slot(runtime, pos);pos += 2;
     Instance *parg1 = env->localvar_getRefer(runtime, pos++);
     __refer ptr_parg1 = NULL;
-    Utf8String *u_parg1;
     if(parg1){
-        u_parg1 = env->utf8_create();
-        env->jstring_2_utf8(parg1, u_parg1);
-        ptr_parg1 = env->utf8_cstr(u_parg1);
+        ptr_parg1 = parg1->arr_body;
     }
     s32 parg2 = env->localvar_getInt(runtime, pos++);
 
     int _re_val = nk_str_append_text_char((struct nk_str*/*ptr*/)(parg0), (const char*)(ptr_parg1), (int)parg2);
     s32 ret_value = (s32)_re_val;env->push_int(runtime->stack, ret_value);
-    env->utf8_destory(u_parg1);
+    
     return 0;
 }
 
@@ -7834,16 +7426,13 @@ int org_mini_nk_NK_nk_str_append_str_char(Runtime *runtime, Class *clazz) {
     intptr_t parg0 = env->localvar_getLong_2slot(runtime, pos);pos += 2;
     Instance *parg1 = env->localvar_getRefer(runtime, pos++);
     __refer ptr_parg1 = NULL;
-    Utf8String *u_parg1;
     if(parg1){
-        u_parg1 = env->utf8_create();
-        env->jstring_2_utf8(parg1, u_parg1);
-        ptr_parg1 = env->utf8_cstr(u_parg1);
+        ptr_parg1 = parg1->arr_body;
     }
 
     int _re_val = nk_str_append_str_char((struct nk_str*/*ptr*/)(parg0), (const char*)(ptr_parg1));
     s32 ret_value = (s32)_re_val;env->push_int(runtime->stack, ret_value);
-    env->utf8_destory(u_parg1);
+    
     return 0;
 }
 
@@ -7854,17 +7443,14 @@ int org_mini_nk_NK_nk_str_append_text_utf8(Runtime *runtime, Class *clazz) {
     intptr_t parg0 = env->localvar_getLong_2slot(runtime, pos);pos += 2;
     Instance *parg1 = env->localvar_getRefer(runtime, pos++);
     __refer ptr_parg1 = NULL;
-    Utf8String *u_parg1;
     if(parg1){
-        u_parg1 = env->utf8_create();
-        env->jstring_2_utf8(parg1, u_parg1);
-        ptr_parg1 = env->utf8_cstr(u_parg1);
+        ptr_parg1 = parg1->arr_body;
     }
     s32 parg2 = env->localvar_getInt(runtime, pos++);
 
     int _re_val = nk_str_append_text_utf8((struct nk_str*/*ptr*/)(parg0), (const char*)(ptr_parg1), (int)parg2);
     s32 ret_value = (s32)_re_val;env->push_int(runtime->stack, ret_value);
-    env->utf8_destory(u_parg1);
+    
     return 0;
 }
 
@@ -7875,16 +7461,13 @@ int org_mini_nk_NK_nk_str_append_str_utf8(Runtime *runtime, Class *clazz) {
     intptr_t parg0 = env->localvar_getLong_2slot(runtime, pos);pos += 2;
     Instance *parg1 = env->localvar_getRefer(runtime, pos++);
     __refer ptr_parg1 = NULL;
-    Utf8String *u_parg1;
     if(parg1){
-        u_parg1 = env->utf8_create();
-        env->jstring_2_utf8(parg1, u_parg1);
-        ptr_parg1 = env->utf8_cstr(u_parg1);
+        ptr_parg1 = parg1->arr_body;
     }
 
     int _re_val = nk_str_append_str_utf8((struct nk_str*/*ptr*/)(parg0), (const char*)(ptr_parg1));
     s32 ret_value = (s32)_re_val;env->push_int(runtime->stack, ret_value);
-    env->utf8_destory(u_parg1);
+    
     return 0;
 }
 
@@ -7923,17 +7506,14 @@ int org_mini_nk_NK_nk_str_insert_at_char(Runtime *runtime, Class *clazz) {
     s32 ppos = env->localvar_getInt(runtime, pos++);
     Instance *parg2 = env->localvar_getRefer(runtime, pos++);
     __refer ptr_parg2 = NULL;
-    Utf8String *u_parg2;
     if(parg2){
-        u_parg2 = env->utf8_create();
-        env->jstring_2_utf8(parg2, u_parg2);
-        ptr_parg2 = env->utf8_cstr(u_parg2);
+        ptr_parg2 = parg2->arr_body;
     }
     s32 parg3 = env->localvar_getInt(runtime, pos++);
 
     int _re_val = nk_str_insert_at_char((struct nk_str*/*ptr*/)(parg0), (int)ppos, (const char*)(ptr_parg2), (int)parg3);
     s32 ret_value = (s32)_re_val;env->push_int(runtime->stack, ret_value);
-    env->utf8_destory(u_parg2);
+    
     return 0;
 }
 
@@ -7945,17 +7525,14 @@ int org_mini_nk_NK_nk_str_insert_at_rune(Runtime *runtime, Class *clazz) {
     s32 ppos = env->localvar_getInt(runtime, pos++);
     Instance *parg2 = env->localvar_getRefer(runtime, pos++);
     __refer ptr_parg2 = NULL;
-    Utf8String *u_parg2;
     if(parg2){
-        u_parg2 = env->utf8_create();
-        env->jstring_2_utf8(parg2, u_parg2);
-        ptr_parg2 = env->utf8_cstr(u_parg2);
+        ptr_parg2 = parg2->arr_body;
     }
     s32 parg3 = env->localvar_getInt(runtime, pos++);
 
     int _re_val = nk_str_insert_at_rune((struct nk_str*/*ptr*/)(parg0), (int)ppos, (const char*)(ptr_parg2), (int)parg3);
     s32 ret_value = (s32)_re_val;env->push_int(runtime->stack, ret_value);
-    env->utf8_destory(u_parg2);
+    
     return 0;
 }
 
@@ -7967,17 +7544,14 @@ int org_mini_nk_NK_nk_str_insert_text_char(Runtime *runtime, Class *clazz) {
     s32 ppos = env->localvar_getInt(runtime, pos++);
     Instance *parg2 = env->localvar_getRefer(runtime, pos++);
     __refer ptr_parg2 = NULL;
-    Utf8String *u_parg2;
     if(parg2){
-        u_parg2 = env->utf8_create();
-        env->jstring_2_utf8(parg2, u_parg2);
-        ptr_parg2 = env->utf8_cstr(u_parg2);
+        ptr_parg2 = parg2->arr_body;
     }
     s32 parg3 = env->localvar_getInt(runtime, pos++);
 
     int _re_val = nk_str_insert_text_char((struct nk_str*/*ptr*/)(parg0), (int)ppos, (const char*)(ptr_parg2), (int)parg3);
     s32 ret_value = (s32)_re_val;env->push_int(runtime->stack, ret_value);
-    env->utf8_destory(u_parg2);
+    
     return 0;
 }
 
@@ -7989,16 +7563,13 @@ int org_mini_nk_NK_nk_str_insert_str_char(Runtime *runtime, Class *clazz) {
     s32 ppos = env->localvar_getInt(runtime, pos++);
     Instance *parg2 = env->localvar_getRefer(runtime, pos++);
     __refer ptr_parg2 = NULL;
-    Utf8String *u_parg2;
     if(parg2){
-        u_parg2 = env->utf8_create();
-        env->jstring_2_utf8(parg2, u_parg2);
-        ptr_parg2 = env->utf8_cstr(u_parg2);
+        ptr_parg2 = parg2->arr_body;
     }
 
     int _re_val = nk_str_insert_str_char((struct nk_str*/*ptr*/)(parg0), (int)ppos, (const char*)(ptr_parg2));
     s32 ret_value = (s32)_re_val;env->push_int(runtime->stack, ret_value);
-    env->utf8_destory(u_parg2);
+    
     return 0;
 }
 
@@ -8010,17 +7581,14 @@ int org_mini_nk_NK_nk_str_insert_text_utf8(Runtime *runtime, Class *clazz) {
     s32 ppos = env->localvar_getInt(runtime, pos++);
     Instance *parg2 = env->localvar_getRefer(runtime, pos++);
     __refer ptr_parg2 = NULL;
-    Utf8String *u_parg2;
     if(parg2){
-        u_parg2 = env->utf8_create();
-        env->jstring_2_utf8(parg2, u_parg2);
-        ptr_parg2 = env->utf8_cstr(u_parg2);
+        ptr_parg2 = parg2->arr_body;
     }
     s32 parg3 = env->localvar_getInt(runtime, pos++);
 
     int _re_val = nk_str_insert_text_utf8((struct nk_str*/*ptr*/)(parg0), (int)ppos, (const char*)(ptr_parg2), (int)parg3);
     s32 ret_value = (s32)_re_val;env->push_int(runtime->stack, ret_value);
-    env->utf8_destory(u_parg2);
+    
     return 0;
 }
 
@@ -8032,16 +7600,13 @@ int org_mini_nk_NK_nk_str_insert_str_utf8(Runtime *runtime, Class *clazz) {
     s32 ppos = env->localvar_getInt(runtime, pos++);
     Instance *parg2 = env->localvar_getRefer(runtime, pos++);
     __refer ptr_parg2 = NULL;
-    Utf8String *u_parg2;
     if(parg2){
-        u_parg2 = env->utf8_create();
-        env->jstring_2_utf8(parg2, u_parg2);
-        ptr_parg2 = env->utf8_cstr(u_parg2);
+        ptr_parg2 = parg2->arr_body;
     }
 
     int _re_val = nk_str_insert_str_utf8((struct nk_str*/*ptr*/)(parg0), (int)ppos, (const char*)(ptr_parg2));
     s32 ret_value = (s32)_re_val;env->push_int(runtime->stack, ret_value);
-    env->utf8_destory(u_parg2);
+    
     return 0;
 }
 
@@ -8457,17 +8022,14 @@ int org_mini_nk_NK_nk_textedit_text(Runtime *runtime, Class *clazz) {
     intptr_t parg0 = env->localvar_getLong_2slot(runtime, pos);pos += 2;
     Instance *parg1 = env->localvar_getRefer(runtime, pos++);
     __refer ptr_parg1 = NULL;
-    Utf8String *u_parg1;
     if(parg1){
-        u_parg1 = env->utf8_create();
-        env->jstring_2_utf8(parg1, u_parg1);
-        ptr_parg1 = env->utf8_cstr(u_parg1);
+        ptr_parg1 = parg1->arr_body;
     }
     s32 ptotal_len = env->localvar_getInt(runtime, pos++);
 
     nk_textedit_text((struct nk_text_edit*/*ptr*/)(parg0), (const char*)(ptr_parg1), (int)ptotal_len);
     
-    env->utf8_destory(u_parg1);
+    
     return 0;
 }
 
@@ -8528,17 +8090,14 @@ int org_mini_nk_NK_nk_textedit_paste(Runtime *runtime, Class *clazz) {
     intptr_t parg0 = env->localvar_getLong_2slot(runtime, pos);pos += 2;
     Instance *parg1 = env->localvar_getRefer(runtime, pos++);
     __refer ptr_parg1 = NULL;
-    Utf8String *u_parg1;
     if(parg1){
-        u_parg1 = env->utf8_create();
-        env->jstring_2_utf8(parg1, u_parg1);
-        ptr_parg1 = env->utf8_cstr(u_parg1);
+        ptr_parg1 = parg1->arr_body;
     }
     s32 plen = env->localvar_getInt(runtime, pos++);
 
     int _re_val = nk_textedit_paste((struct nk_text_edit*/*ptr*/)(parg0), (char const*)(ptr_parg1), (int)plen);
     s32 ret_value = (s32)_re_val;env->push_int(runtime->stack, ret_value);
-    env->utf8_destory(u_parg1);
+    
     return 0;
 }
 
@@ -8941,11 +8500,8 @@ int org_mini_nk_NK_nk_draw_text(Runtime *runtime, Class *clazz) {
     }
     Instance *ptext = env->localvar_getRefer(runtime, pos++);
     __refer ptr_ptext = NULL;
-    Utf8String *u_ptext;
     if(ptext){
-        u_ptext = env->utf8_create();
-        env->jstring_2_utf8(ptext, u_ptext);
-        ptr_ptext = env->utf8_cstr(u_ptext);
+        ptr_ptext = ptext->arr_body;
     }
     s32 plen = env->localvar_getInt(runtime, pos++);
     intptr_t parg4 = env->localvar_getLong_2slot(runtime, pos);pos += 2;
@@ -8962,7 +8518,7 @@ int org_mini_nk_NK_nk_draw_text(Runtime *runtime, Class *clazz) {
 
     nk_draw_text((struct nk_command_buffer*/*ptr*/)(parg0), *(struct nk_rect/*none_ptr*/*)(ptr_parg1), (const char*)(ptr_ptext), (int)plen, (const struct nk_user_font*/*ptr*/)(parg4), *(struct nk_color/*none_ptr*/*)(ptr_parg5), *(struct nk_color/*none_ptr*/*)(ptr_parg6));
     
-    env->utf8_destory(u_ptext);
+    
     return 0;
 }
 
@@ -9834,11 +9390,8 @@ int org_mini_nk_NK_nk_draw_list_add_text(Runtime *runtime, Class *clazz) {
     }
     Instance *ptext = env->localvar_getRefer(runtime, pos++);
     __refer ptr_ptext = NULL;
-    Utf8String *u_ptext;
     if(ptext){
-        u_ptext = env->utf8_create();
-        env->jstring_2_utf8(ptext, u_ptext);
-        ptr_ptext = env->utf8_cstr(u_ptext);
+        ptr_ptext = ptext->arr_body;
     }
     s32 plen = env->localvar_getInt(runtime, pos++);
     Int2Float pfont_height;pfont_height.i = env->localvar_getInt(runtime, pos++);
@@ -9850,7 +9403,24 @@ int org_mini_nk_NK_nk_draw_list_add_text(Runtime *runtime, Class *clazz) {
 
     nk_draw_list_add_text((struct nk_draw_list*/*ptr*/)(parg0), (const struct nk_user_font*/*ptr*/)(parg1), *(struct nk_rect/*none_ptr*/*)(ptr_parg2), (const char*)(ptr_ptext), (int)plen, (float)pfont_height.f, *(struct nk_color/*none_ptr*/*)(ptr_parg6));
     
-    env->utf8_destory(u_ptext);
+    
+    return 0;
+}
+
+int org_mini_nk_NK_nk_draw_list_push_userdata(Runtime *runtime, Class *clazz) {
+    JniEnv *env = runtime->jnienv;
+    s32 pos = 0;
+    
+    intptr_t parg0 = env->localvar_getLong_2slot(runtime, pos);pos += 2;
+    Instance *puserdata = env->localvar_getRefer(runtime, pos++);
+    __refer ptr_puserdata = NULL;
+    if(puserdata){
+        ptr_puserdata = puserdata->arr_body;
+    }
+
+    nk_draw_list_push_userdata((struct nk_draw_list*/*ptr*/)(parg0), *(nk_handle/*none_ptr*/*)(ptr_puserdata));
+    
+    
     return 0;
 }
 
@@ -10025,6 +9595,68 @@ int org_mini_nk_NK_nk_gflw3_scroll_callback(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
+int org_mini_nk_NK_nk_get_font_handle(Runtime *runtime, Class *clazz) {
+    JniEnv *env = runtime->jnienv;
+    s32 pos = 0;
+    
+    intptr_t pfont = env->localvar_getLong_2slot(runtime, pos);pos += 2;
+
+    struct nk_user_font*/*ptr*/ _re_val = nk_get_font_handle((struct nk_font*/*ptr*/)(pfont));
+    s64 ret_value = (s64)(intptr_t)_re_val;env->push_long(runtime->stack, ret_value);
+    
+    return 0;
+}
+
+int org_mini_nk_NK_nk_create_font_atlas(Runtime *runtime, Class *clazz) {
+    JniEnv *env = runtime->jnienv;
+    s32 pos = 0;
+    
+
+    struct nk_font_atlas/*none_ptr*/ _re_val = nk_create_font_atlas();
+    c8* _ptr_re_val = (c8*)&_re_val;
+    s32 _struct_bytes = sizeof(_re_val);
+    if (_ptr_re_val) {
+        s32 _j_t_bytes = sizeof(c8);
+        Instance *_arr = env->jarray_create(_struct_bytes / _j_t_bytes, DATATYPE_BYTE, NULL);
+        memcpy(_arr->arr_body, _ptr_re_val,_struct_bytes);
+        env->push_ref(runtime->stack, _arr);
+    } else {
+        env->push_ref(runtime->stack, NULL);
+    }
+    
+    return 0;
+}
+
+int org_mini_nk_NK_nk_set_font_cfg_range(Runtime *runtime, Class *clazz) {
+    JniEnv *env = runtime->jnienv;
+    s32 pos = 0;
+    
+    intptr_t pfont_cfg = env->localvar_getLong_2slot(runtime, pos);pos += 2;
+    intptr_t prange = env->localvar_getLong_2slot(runtime, pos);pos += 2;
+
+    nk_set_font_cfg_range((struct nk_font_config*/*ptr*/)(pfont_cfg), (nk_rune*/*ptr*/)(prange));
+    
+    
+    return 0;
+}
+
+int org_mini_nk_NK_nk_load_font(Runtime *runtime, Class *clazz) {
+    JniEnv *env = runtime->jnienv;
+    s32 pos = 0;
+    
+    Instance *pfile_path = env->localvar_getRefer(runtime, pos++);
+    __refer ptr_pfile_path = NULL;
+    if(pfile_path){
+        ptr_pfile_path = pfile_path->arr_body;
+    }
+    Int2Float pheight;pheight.i = env->localvar_getInt(runtime, pos++);
+
+    struct nk_font*/*ptr*/ _re_val = nk_load_font((const char*)(ptr_pfile_path), (float)pheight.f);
+    s64 ret_value = (s64)(intptr_t)_re_val;env->push_long(runtime->stack, ret_value);
+    
+    return 0;
+}
+
 
 
 
@@ -10036,6 +9668,7 @@ static java_native_method method_nkclear_table[] = {
 {"org/mini/nk/NK",  "nk_init_custom",  "(JJJJ)I",  org_mini_nk_NK_nk_init_custom},
 {"org/mini/nk/NK",  "nk_clear",  "(J)V",  org_mini_nk_NK_nk_clear},
 {"org/mini/nk/NK",  "nk_free",  "(J)V",  org_mini_nk_NK_nk_free},
+{"org/mini/nk/NK",  "nk_set_user_data",  "(J[B)V",  org_mini_nk_NK_nk_set_user_data},
 {"org/mini/nk/NK",  "nk_input_begin",  "(J)V",  org_mini_nk_NK_nk_input_begin},
 {"org/mini/nk/NK",  "nk_input_motion",  "(JII)V",  org_mini_nk_NK_nk_input_motion},
 {"org/mini/nk/NK",  "nk_input_key",  "(JII)V",  org_mini_nk_NK_nk_input_key},
@@ -10051,10 +9684,10 @@ static java_native_method method_nkclear_table[] = {
 {"org/mini/nk/NK",  "nk__draw_begin",  "(JJ)J",  org_mini_nk_NK_nk__draw_begin},
 {"org/mini/nk/NK",  "nk__draw_end",  "(JJ)J",  org_mini_nk_NK_nk__draw_end},
 {"org/mini/nk/NK",  "nk__draw_next",  "(JJJ)J",  org_mini_nk_NK_nk__draw_next},
-{"org/mini/nk/NK",  "nk_begin",  "(JLjava/lang/String;[FI)I",  org_mini_nk_NK_nk_begin},
-{"org/mini/nk/NK",  "nk_begin_titled",  "(JLjava/lang/String;Ljava/lang/String;[FI)I",  org_mini_nk_NK_nk_begin_titled},
+{"org/mini/nk/NK",  "nk_begin",  "(J[B[FI)I",  org_mini_nk_NK_nk_begin},
+{"org/mini/nk/NK",  "nk_begin_titled",  "(J[B[B[FI)I",  org_mini_nk_NK_nk_begin_titled},
 {"org/mini/nk/NK",  "nk_end",  "(J)V",  org_mini_nk_NK_nk_end},
-{"org/mini/nk/NK",  "nk_window_find",  "(JLjava/lang/String;)J",  org_mini_nk_NK_nk_window_find},
+{"org/mini/nk/NK",  "nk_window_find",  "(J[B)J",  org_mini_nk_NK_nk_window_find},
 {"org/mini/nk/NK",  "nk_window_get_bounds",  "(J)[F",  org_mini_nk_NK_nk_window_get_bounds},
 {"org/mini/nk/NK",  "nk_window_get_position",  "(J)[F",  org_mini_nk_NK_nk_window_get_position},
 {"org/mini/nk/NK",  "nk_window_get_size",  "(J)[F",  org_mini_nk_NK_nk_window_get_size},
@@ -10067,22 +9700,22 @@ static java_native_method method_nkclear_table[] = {
 {"org/mini/nk/NK",  "nk_window_get_content_region_size",  "(J)[F",  org_mini_nk_NK_nk_window_get_content_region_size},
 {"org/mini/nk/NK",  "nk_window_get_canvas",  "(J)J",  org_mini_nk_NK_nk_window_get_canvas},
 {"org/mini/nk/NK",  "nk_window_has_focus",  "(J)I",  org_mini_nk_NK_nk_window_has_focus},
-{"org/mini/nk/NK",  "nk_window_is_collapsed",  "(JLjava/lang/String;)I",  org_mini_nk_NK_nk_window_is_collapsed},
-{"org/mini/nk/NK",  "nk_window_is_closed",  "(JLjava/lang/String;)I",  org_mini_nk_NK_nk_window_is_closed},
-{"org/mini/nk/NK",  "nk_window_is_hidden",  "(JLjava/lang/String;)I",  org_mini_nk_NK_nk_window_is_hidden},
-{"org/mini/nk/NK",  "nk_window_is_active",  "(JLjava/lang/String;)I",  org_mini_nk_NK_nk_window_is_active},
+{"org/mini/nk/NK",  "nk_window_is_collapsed",  "(J[B)I",  org_mini_nk_NK_nk_window_is_collapsed},
+{"org/mini/nk/NK",  "nk_window_is_closed",  "(J[B)I",  org_mini_nk_NK_nk_window_is_closed},
+{"org/mini/nk/NK",  "nk_window_is_hidden",  "(J[B)I",  org_mini_nk_NK_nk_window_is_hidden},
+{"org/mini/nk/NK",  "nk_window_is_active",  "(J[B)I",  org_mini_nk_NK_nk_window_is_active},
 {"org/mini/nk/NK",  "nk_window_is_hovered",  "(J)I",  org_mini_nk_NK_nk_window_is_hovered},
 {"org/mini/nk/NK",  "nk_window_is_any_hovered",  "(J)I",  org_mini_nk_NK_nk_window_is_any_hovered},
 {"org/mini/nk/NK",  "nk_item_is_any_active",  "(J)I",  org_mini_nk_NK_nk_item_is_any_active},
-{"org/mini/nk/NK",  "nk_window_set_bounds",  "(JLjava/lang/String;[F)V",  org_mini_nk_NK_nk_window_set_bounds},
-{"org/mini/nk/NK",  "nk_window_set_position",  "(JLjava/lang/String;[F)V",  org_mini_nk_NK_nk_window_set_position},
-{"org/mini/nk/NK",  "nk_window_set_size",  "(JLjava/lang/String;[F)V",  org_mini_nk_NK_nk_window_set_size},
-{"org/mini/nk/NK",  "nk_window_set_focus",  "(JLjava/lang/String;)V",  org_mini_nk_NK_nk_window_set_focus},
-{"org/mini/nk/NK",  "nk_window_close",  "(JLjava/lang/String;)V",  org_mini_nk_NK_nk_window_close},
-{"org/mini/nk/NK",  "nk_window_collapse",  "(JLjava/lang/String;I)V",  org_mini_nk_NK_nk_window_collapse},
-{"org/mini/nk/NK",  "nk_window_collapse_if",  "(JLjava/lang/String;II)V",  org_mini_nk_NK_nk_window_collapse_if},
-{"org/mini/nk/NK",  "nk_window_show",  "(JLjava/lang/String;I)V",  org_mini_nk_NK_nk_window_show},
-{"org/mini/nk/NK",  "nk_window_show_if",  "(JLjava/lang/String;II)V",  org_mini_nk_NK_nk_window_show_if},
+{"org/mini/nk/NK",  "nk_window_set_bounds",  "(J[B[F)V",  org_mini_nk_NK_nk_window_set_bounds},
+{"org/mini/nk/NK",  "nk_window_set_position",  "(J[B[F)V",  org_mini_nk_NK_nk_window_set_position},
+{"org/mini/nk/NK",  "nk_window_set_size",  "(J[B[F)V",  org_mini_nk_NK_nk_window_set_size},
+{"org/mini/nk/NK",  "nk_window_set_focus",  "(J[B)V",  org_mini_nk_NK_nk_window_set_focus},
+{"org/mini/nk/NK",  "nk_window_close",  "(J[B)V",  org_mini_nk_NK_nk_window_close},
+{"org/mini/nk/NK",  "nk_window_collapse",  "(J[BI)V",  org_mini_nk_NK_nk_window_collapse},
+{"org/mini/nk/NK",  "nk_window_collapse_if",  "(J[BII)V",  org_mini_nk_NK_nk_window_collapse_if},
+{"org/mini/nk/NK",  "nk_window_show",  "(J[BI)V",  org_mini_nk_NK_nk_window_show},
+{"org/mini/nk/NK",  "nk_window_show_if",  "(J[BII)V",  org_mini_nk_NK_nk_window_show_if},
 {"org/mini/nk/NK",  "nk_layout_set_min_row_height",  "(JF)V",  org_mini_nk_NK_nk_layout_set_min_row_height},
 {"org/mini/nk/NK",  "nk_layout_reset_min_row_height",  "(J)V",  org_mini_nk_NK_nk_layout_reset_min_row_height},
 {"org/mini/nk/NK",  "nk_layout_widget_bounds",  "(J)[F",  org_mini_nk_NK_nk_layout_widget_bounds},
@@ -10106,18 +9739,18 @@ static java_native_method method_nkclear_table[] = {
 {"org/mini/nk/NK",  "nk_layout_space_to_local",  "(J[F)[F",  org_mini_nk_NK_nk_layout_space_to_local},
 {"org/mini/nk/NK",  "nk_layout_space_rect_to_screen",  "(J[F)[F",  org_mini_nk_NK_nk_layout_space_rect_to_screen},
 {"org/mini/nk/NK",  "nk_layout_space_rect_to_local",  "(J[F)[F",  org_mini_nk_NK_nk_layout_space_rect_to_local},
-{"org/mini/nk/NK",  "nk_group_begin",  "(JLjava/lang/String;I)I",  org_mini_nk_NK_nk_group_begin},
-{"org/mini/nk/NK",  "nk_group_scrolled_offset_begin",  "(J[I[ILjava/lang/String;I)I",  org_mini_nk_NK_nk_group_scrolled_offset_begin},
-{"org/mini/nk/NK",  "nk_group_scrolled_begin",  "(J[ILjava/lang/String;I)I",  org_mini_nk_NK_nk_group_scrolled_begin},
+{"org/mini/nk/NK",  "nk_group_begin",  "(J[BI)I",  org_mini_nk_NK_nk_group_begin},
+{"org/mini/nk/NK",  "nk_group_scrolled_offset_begin",  "(J[I[I[BI)I",  org_mini_nk_NK_nk_group_scrolled_offset_begin},
+{"org/mini/nk/NK",  "nk_group_scrolled_begin",  "(J[I[BI)I",  org_mini_nk_NK_nk_group_scrolled_begin},
 {"org/mini/nk/NK",  "nk_group_scrolled_end",  "(J)V",  org_mini_nk_NK_nk_group_scrolled_end},
 {"org/mini/nk/NK",  "nk_group_end",  "(J)V",  org_mini_nk_NK_nk_group_end},
-{"org/mini/nk/NK",  "nk_list_view_begin",  "(JJLjava/lang/String;III)I",  org_mini_nk_NK_nk_list_view_begin},
+{"org/mini/nk/NK",  "nk_list_view_begin",  "(JJ[BIII)I",  org_mini_nk_NK_nk_list_view_begin},
 {"org/mini/nk/NK",  "nk_list_view_end",  "(J)V",  org_mini_nk_NK_nk_list_view_end},
-{"org/mini/nk/NK",  "nk_tree_push_hashed",  "(JILjava/lang/String;ILjava/lang/String;II)I",  org_mini_nk_NK_nk_tree_push_hashed},
-{"org/mini/nk/NK",  "nk_tree_image_push_hashed",  "(JI[BLjava/lang/String;ILjava/lang/String;II)I",  org_mini_nk_NK_nk_tree_image_push_hashed},
+{"org/mini/nk/NK",  "nk_tree_push_hashed",  "(JI[BI[BII)I",  org_mini_nk_NK_nk_tree_push_hashed},
+{"org/mini/nk/NK",  "nk_tree_image_push_hashed",  "(JI[B[BI[BII)I",  org_mini_nk_NK_nk_tree_image_push_hashed},
 {"org/mini/nk/NK",  "nk_tree_pop",  "(J)V",  org_mini_nk_NK_nk_tree_pop},
-{"org/mini/nk/NK",  "nk_tree_state_push",  "(JILjava/lang/String;[I)I",  org_mini_nk_NK_nk_tree_state_push},
-{"org/mini/nk/NK",  "nk_tree_state_image_push",  "(JI[BLjava/lang/String;[I)I",  org_mini_nk_NK_nk_tree_state_image_push},
+{"org/mini/nk/NK",  "nk_tree_state_push",  "(JI[B[I)I",  org_mini_nk_NK_nk_tree_state_push},
+{"org/mini/nk/NK",  "nk_tree_state_image_push",  "(JI[B[B[I)I",  org_mini_nk_NK_nk_tree_state_image_push},
 {"org/mini/nk/NK",  "nk_tree_state_pop",  "(J)V",  org_mini_nk_NK_nk_tree_state_pop},
 {"org/mini/nk/NK",  "nk_widget",  "([FJ)I",  org_mini_nk_NK_nk_widget},
 {"org/mini/nk/NK",  "nk_widget_fitting",  "([FJ[F)I",  org_mini_nk_NK_nk_widget_fitting},
@@ -10130,66 +9763,66 @@ static java_native_method method_nkclear_table[] = {
 {"org/mini/nk/NK",  "nk_widget_is_mouse_clicked",  "(JI)I",  org_mini_nk_NK_nk_widget_is_mouse_clicked},
 {"org/mini/nk/NK",  "nk_widget_has_mouse_click_down",  "(JII)I",  org_mini_nk_NK_nk_widget_has_mouse_click_down},
 {"org/mini/nk/NK",  "nk_spacing",  "(JI)V",  org_mini_nk_NK_nk_spacing},
-{"org/mini/nk/NK",  "nk_text",  "(JLjava/lang/String;II)V",  org_mini_nk_NK_nk_text},
-{"org/mini/nk/NK",  "nk_text_colored",  "(JLjava/lang/String;II[I)V",  org_mini_nk_NK_nk_text_colored},
-{"org/mini/nk/NK",  "nk_text_wrap",  "(JLjava/lang/String;I)V",  org_mini_nk_NK_nk_text_wrap},
-{"org/mini/nk/NK",  "nk_text_wrap_colored",  "(JLjava/lang/String;I[I)V",  org_mini_nk_NK_nk_text_wrap_colored},
-{"org/mini/nk/NK",  "nk_label",  "(JLjava/lang/String;I)V",  org_mini_nk_NK_nk_label},
-{"org/mini/nk/NK",  "nk_label_colored",  "(JLjava/lang/String;I[I)V",  org_mini_nk_NK_nk_label_colored},
-{"org/mini/nk/NK",  "nk_label_wrap",  "(JLjava/lang/String;)V",  org_mini_nk_NK_nk_label_wrap},
-{"org/mini/nk/NK",  "nk_label_colored_wrap",  "(JLjava/lang/String;[I)V",  org_mini_nk_NK_nk_label_colored_wrap},
+{"org/mini/nk/NK",  "nk_text",  "(J[BII)V",  org_mini_nk_NK_nk_text},
+{"org/mini/nk/NK",  "nk_text_colored",  "(J[BII[I)V",  org_mini_nk_NK_nk_text_colored},
+{"org/mini/nk/NK",  "nk_text_wrap",  "(J[BI)V",  org_mini_nk_NK_nk_text_wrap},
+{"org/mini/nk/NK",  "nk_text_wrap_colored",  "(J[BI[I)V",  org_mini_nk_NK_nk_text_wrap_colored},
+{"org/mini/nk/NK",  "nk_label",  "(J[BI)V",  org_mini_nk_NK_nk_label},
+{"org/mini/nk/NK",  "nk_label_colored",  "(J[BI[I)V",  org_mini_nk_NK_nk_label_colored},
+{"org/mini/nk/NK",  "nk_label_wrap",  "(J[B)V",  org_mini_nk_NK_nk_label_wrap},
+{"org/mini/nk/NK",  "nk_label_colored_wrap",  "(J[B[I)V",  org_mini_nk_NK_nk_label_colored_wrap},
 {"org/mini/nk/NK",  "nk_image",  "(J[B)V",  org_mini_nk_NK_nk_image},
-{"org/mini/nk/NK",  "nk_labelf",  "(JILjava/lang/String;[Ljava/lang/String;)V",  org_mini_nk_NK_nk_labelf},
-{"org/mini/nk/NK",  "nk_labelf_colored",  "(JI[ILjava/lang/String;[Ljava/lang/String;)V",  org_mini_nk_NK_nk_labelf_colored},
-{"org/mini/nk/NK",  "nk_labelf_wrap",  "(JLjava/lang/String;[Ljava/lang/String;)V",  org_mini_nk_NK_nk_labelf_wrap},
-{"org/mini/nk/NK",  "nk_labelf_colored_wrap",  "(J[ILjava/lang/String;[Ljava/lang/String;)V",  org_mini_nk_NK_nk_labelf_colored_wrap},
-{"org/mini/nk/NK",  "nk_value_bool",  "(JLjava/lang/String;I)V",  org_mini_nk_NK_nk_value_bool},
-{"org/mini/nk/NK",  "nk_value_int",  "(JLjava/lang/String;I)V",  org_mini_nk_NK_nk_value_int},
-{"org/mini/nk/NK",  "nk_value_uint",  "(JLjava/lang/String;I)V",  org_mini_nk_NK_nk_value_uint},
-{"org/mini/nk/NK",  "nk_value_float",  "(JLjava/lang/String;F)V",  org_mini_nk_NK_nk_value_float},
-{"org/mini/nk/NK",  "nk_value_color_byte",  "(JLjava/lang/String;[I)V",  org_mini_nk_NK_nk_value_color_byte},
-{"org/mini/nk/NK",  "nk_value_color_float",  "(JLjava/lang/String;[I)V",  org_mini_nk_NK_nk_value_color_float},
-{"org/mini/nk/NK",  "nk_value_color_hex",  "(JLjava/lang/String;[I)V",  org_mini_nk_NK_nk_value_color_hex},
-{"org/mini/nk/NK",  "nk_button_text",  "(JLjava/lang/String;I)I",  org_mini_nk_NK_nk_button_text},
-{"org/mini/nk/NK",  "nk_button_label",  "(JLjava/lang/String;)I",  org_mini_nk_NK_nk_button_label},
+{"org/mini/nk/NK",  "nk_labelf",  "(JI[B[Ljava/lang/String;)V",  org_mini_nk_NK_nk_labelf},
+{"org/mini/nk/NK",  "nk_labelf_colored",  "(JI[I[B[Ljava/lang/String;)V",  org_mini_nk_NK_nk_labelf_colored},
+{"org/mini/nk/NK",  "nk_labelf_wrap",  "(J[B[Ljava/lang/String;)V",  org_mini_nk_NK_nk_labelf_wrap},
+{"org/mini/nk/NK",  "nk_labelf_colored_wrap",  "(J[I[B[Ljava/lang/String;)V",  org_mini_nk_NK_nk_labelf_colored_wrap},
+{"org/mini/nk/NK",  "nk_value_bool",  "(J[BI)V",  org_mini_nk_NK_nk_value_bool},
+{"org/mini/nk/NK",  "nk_value_int",  "(J[BI)V",  org_mini_nk_NK_nk_value_int},
+{"org/mini/nk/NK",  "nk_value_uint",  "(J[BI)V",  org_mini_nk_NK_nk_value_uint},
+{"org/mini/nk/NK",  "nk_value_float",  "(J[BF)V",  org_mini_nk_NK_nk_value_float},
+{"org/mini/nk/NK",  "nk_value_color_byte",  "(J[B[I)V",  org_mini_nk_NK_nk_value_color_byte},
+{"org/mini/nk/NK",  "nk_value_color_float",  "(J[B[I)V",  org_mini_nk_NK_nk_value_color_float},
+{"org/mini/nk/NK",  "nk_value_color_hex",  "(J[B[I)V",  org_mini_nk_NK_nk_value_color_hex},
+{"org/mini/nk/NK",  "nk_button_text",  "(J[BI)I",  org_mini_nk_NK_nk_button_text},
+{"org/mini/nk/NK",  "nk_button_label",  "(J[B)I",  org_mini_nk_NK_nk_button_label},
 {"org/mini/nk/NK",  "nk_button_color",  "(J[I)I",  org_mini_nk_NK_nk_button_color},
 {"org/mini/nk/NK",  "nk_button_symbol",  "(JI)I",  org_mini_nk_NK_nk_button_symbol},
 {"org/mini/nk/NK",  "nk_button_image",  "(J[B)I",  org_mini_nk_NK_nk_button_image},
-{"org/mini/nk/NK",  "nk_button_symbol_label",  "(JILjava/lang/String;I)I",  org_mini_nk_NK_nk_button_symbol_label},
-{"org/mini/nk/NK",  "nk_button_symbol_text",  "(JILjava/lang/String;II)I",  org_mini_nk_NK_nk_button_symbol_text},
-{"org/mini/nk/NK",  "nk_button_image_label",  "(J[BLjava/lang/String;I)I",  org_mini_nk_NK_nk_button_image_label},
-{"org/mini/nk/NK",  "nk_button_image_text",  "(J[BLjava/lang/String;II)I",  org_mini_nk_NK_nk_button_image_text},
-{"org/mini/nk/NK",  "nk_button_text_styled",  "(JJLjava/lang/String;I)I",  org_mini_nk_NK_nk_button_text_styled},
-{"org/mini/nk/NK",  "nk_button_label_styled",  "(JJLjava/lang/String;)I",  org_mini_nk_NK_nk_button_label_styled},
+{"org/mini/nk/NK",  "nk_button_symbol_label",  "(JI[BI)I",  org_mini_nk_NK_nk_button_symbol_label},
+{"org/mini/nk/NK",  "nk_button_symbol_text",  "(JI[BII)I",  org_mini_nk_NK_nk_button_symbol_text},
+{"org/mini/nk/NK",  "nk_button_image_label",  "(J[B[BI)I",  org_mini_nk_NK_nk_button_image_label},
+{"org/mini/nk/NK",  "nk_button_image_text",  "(J[B[BII)I",  org_mini_nk_NK_nk_button_image_text},
+{"org/mini/nk/NK",  "nk_button_text_styled",  "(JJ[BI)I",  org_mini_nk_NK_nk_button_text_styled},
+{"org/mini/nk/NK",  "nk_button_label_styled",  "(JJ[B)I",  org_mini_nk_NK_nk_button_label_styled},
 {"org/mini/nk/NK",  "nk_button_symbol_styled",  "(JJI)I",  org_mini_nk_NK_nk_button_symbol_styled},
 {"org/mini/nk/NK",  "nk_button_image_styled",  "(JJ[B)I",  org_mini_nk_NK_nk_button_image_styled},
-{"org/mini/nk/NK",  "nk_button_symbol_text_styled",  "(JJILjava/lang/String;II)I",  org_mini_nk_NK_nk_button_symbol_text_styled},
-{"org/mini/nk/NK",  "nk_button_symbol_label_styled",  "(JJILjava/lang/String;I)I",  org_mini_nk_NK_nk_button_symbol_label_styled},
-{"org/mini/nk/NK",  "nk_button_image_label_styled",  "(JJ[BLjava/lang/String;I)I",  org_mini_nk_NK_nk_button_image_label_styled},
-{"org/mini/nk/NK",  "nk_button_image_text_styled",  "(JJ[BLjava/lang/String;II)I",  org_mini_nk_NK_nk_button_image_text_styled},
+{"org/mini/nk/NK",  "nk_button_symbol_text_styled",  "(JJI[BII)I",  org_mini_nk_NK_nk_button_symbol_text_styled},
+{"org/mini/nk/NK",  "nk_button_symbol_label_styled",  "(JJI[BI)I",  org_mini_nk_NK_nk_button_symbol_label_styled},
+{"org/mini/nk/NK",  "nk_button_image_label_styled",  "(JJ[B[BI)I",  org_mini_nk_NK_nk_button_image_label_styled},
+{"org/mini/nk/NK",  "nk_button_image_text_styled",  "(JJ[B[BII)I",  org_mini_nk_NK_nk_button_image_text_styled},
 {"org/mini/nk/NK",  "nk_button_set_behavior",  "(JI)V",  org_mini_nk_NK_nk_button_set_behavior},
 {"org/mini/nk/NK",  "nk_button_push_behavior",  "(JI)I",  org_mini_nk_NK_nk_button_push_behavior},
 {"org/mini/nk/NK",  "nk_button_pop_behavior",  "(J)I",  org_mini_nk_NK_nk_button_pop_behavior},
-{"org/mini/nk/NK",  "nk_check_label",  "(JLjava/lang/String;I)I",  org_mini_nk_NK_nk_check_label},
-{"org/mini/nk/NK",  "nk_check_text",  "(JLjava/lang/String;II)I",  org_mini_nk_NK_nk_check_text},
-{"org/mini/nk/NK",  "nk_check_flags_label",  "(JLjava/lang/String;II)I",  org_mini_nk_NK_nk_check_flags_label},
-{"org/mini/nk/NK",  "nk_check_flags_text",  "(JLjava/lang/String;III)I",  org_mini_nk_NK_nk_check_flags_text},
-{"org/mini/nk/NK",  "nk_checkbox_label",  "(JLjava/lang/String;[I)I",  org_mini_nk_NK_nk_checkbox_label},
-{"org/mini/nk/NK",  "nk_checkbox_text",  "(JLjava/lang/String;I[I)I",  org_mini_nk_NK_nk_checkbox_text},
-{"org/mini/nk/NK",  "nk_checkbox_flags_label",  "(JLjava/lang/String;[II)I",  org_mini_nk_NK_nk_checkbox_flags_label},
-{"org/mini/nk/NK",  "nk_checkbox_flags_text",  "(JLjava/lang/String;I[II)I",  org_mini_nk_NK_nk_checkbox_flags_text},
-{"org/mini/nk/NK",  "nk_radio_label",  "(JLjava/lang/String;[I)I",  org_mini_nk_NK_nk_radio_label},
-{"org/mini/nk/NK",  "nk_radio_text",  "(JLjava/lang/String;I[I)I",  org_mini_nk_NK_nk_radio_text},
-{"org/mini/nk/NK",  "nk_option_label",  "(JLjava/lang/String;I)I",  org_mini_nk_NK_nk_option_label},
-{"org/mini/nk/NK",  "nk_option_text",  "(JLjava/lang/String;II)I",  org_mini_nk_NK_nk_option_text},
-{"org/mini/nk/NK",  "nk_selectable_label",  "(JLjava/lang/String;I[I)I",  org_mini_nk_NK_nk_selectable_label},
-{"org/mini/nk/NK",  "nk_selectable_text",  "(JLjava/lang/String;II[I)I",  org_mini_nk_NK_nk_selectable_text},
-{"org/mini/nk/NK",  "nk_selectable_image_label",  "(J[BLjava/lang/String;I[I)I",  org_mini_nk_NK_nk_selectable_image_label},
-{"org/mini/nk/NK",  "nk_selectable_image_text",  "(J[BLjava/lang/String;II[I)I",  org_mini_nk_NK_nk_selectable_image_text},
-{"org/mini/nk/NK",  "nk_select_label",  "(JLjava/lang/String;II)I",  org_mini_nk_NK_nk_select_label},
-{"org/mini/nk/NK",  "nk_select_text",  "(JLjava/lang/String;III)I",  org_mini_nk_NK_nk_select_text},
-{"org/mini/nk/NK",  "nk_select_image_label",  "(J[BLjava/lang/String;II)I",  org_mini_nk_NK_nk_select_image_label},
-{"org/mini/nk/NK",  "nk_select_image_text",  "(J[BLjava/lang/String;III)I",  org_mini_nk_NK_nk_select_image_text},
+{"org/mini/nk/NK",  "nk_check_label",  "(J[BI)I",  org_mini_nk_NK_nk_check_label},
+{"org/mini/nk/NK",  "nk_check_text",  "(J[BII)I",  org_mini_nk_NK_nk_check_text},
+{"org/mini/nk/NK",  "nk_check_flags_label",  "(J[BII)I",  org_mini_nk_NK_nk_check_flags_label},
+{"org/mini/nk/NK",  "nk_check_flags_text",  "(J[BIII)I",  org_mini_nk_NK_nk_check_flags_text},
+{"org/mini/nk/NK",  "nk_checkbox_label",  "(J[B[I)I",  org_mini_nk_NK_nk_checkbox_label},
+{"org/mini/nk/NK",  "nk_checkbox_text",  "(J[BI[I)I",  org_mini_nk_NK_nk_checkbox_text},
+{"org/mini/nk/NK",  "nk_checkbox_flags_label",  "(J[B[II)I",  org_mini_nk_NK_nk_checkbox_flags_label},
+{"org/mini/nk/NK",  "nk_checkbox_flags_text",  "(J[BI[II)I",  org_mini_nk_NK_nk_checkbox_flags_text},
+{"org/mini/nk/NK",  "nk_radio_label",  "(J[B[I)I",  org_mini_nk_NK_nk_radio_label},
+{"org/mini/nk/NK",  "nk_radio_text",  "(J[BI[I)I",  org_mini_nk_NK_nk_radio_text},
+{"org/mini/nk/NK",  "nk_option_label",  "(J[BI)I",  org_mini_nk_NK_nk_option_label},
+{"org/mini/nk/NK",  "nk_option_text",  "(J[BII)I",  org_mini_nk_NK_nk_option_text},
+{"org/mini/nk/NK",  "nk_selectable_label",  "(J[BI[I)I",  org_mini_nk_NK_nk_selectable_label},
+{"org/mini/nk/NK",  "nk_selectable_text",  "(J[BII[I)I",  org_mini_nk_NK_nk_selectable_text},
+{"org/mini/nk/NK",  "nk_selectable_image_label",  "(J[B[BI[I)I",  org_mini_nk_NK_nk_selectable_image_label},
+{"org/mini/nk/NK",  "nk_selectable_image_text",  "(J[B[BII[I)I",  org_mini_nk_NK_nk_selectable_image_text},
+{"org/mini/nk/NK",  "nk_select_label",  "(J[BII)I",  org_mini_nk_NK_nk_select_label},
+{"org/mini/nk/NK",  "nk_select_text",  "(J[BIII)I",  org_mini_nk_NK_nk_select_text},
+{"org/mini/nk/NK",  "nk_select_image_label",  "(J[B[BII)I",  org_mini_nk_NK_nk_select_image_label},
+{"org/mini/nk/NK",  "nk_select_image_text",  "(J[B[BIII)I",  org_mini_nk_NK_nk_select_image_text},
 {"org/mini/nk/NK",  "nk_slide_float",  "(JFFFF)D",  org_mini_nk_NK_nk_slide_float},
 {"org/mini/nk/NK",  "nk_slide_int",  "(JIIII)I",  org_mini_nk_NK_nk_slide_int},
 {"org/mini/nk/NK",  "nk_slider_float",  "(JF[FFF)I",  org_mini_nk_NK_nk_slider_float},
@@ -10198,14 +9831,14 @@ static java_native_method method_nkclear_table[] = {
 {"org/mini/nk/NK",  "nk_prog",  "(JJJI)J",  org_mini_nk_NK_nk_prog},
 {"org/mini/nk/NK",  "nk_color_picker",  "(J[II)[I",  org_mini_nk_NK_nk_color_picker},
 {"org/mini/nk/NK",  "nk_color_pick",  "(J[II)I",  org_mini_nk_NK_nk_color_pick},
-{"org/mini/nk/NK",  "nk_property_int",  "(JLjava/lang/String;I[IIIF)V",  org_mini_nk_NK_nk_property_int},
-{"org/mini/nk/NK",  "nk_property_float",  "(JLjava/lang/String;F[FFFF)V",  org_mini_nk_NK_nk_property_float},
-{"org/mini/nk/NK",  "nk_property_double",  "(JLjava/lang/String;D[DDDF)V",  org_mini_nk_NK_nk_property_double},
-{"org/mini/nk/NK",  "nk_propertyi",  "(JLjava/lang/String;IIIIF)I",  org_mini_nk_NK_nk_propertyi},
-{"org/mini/nk/NK",  "nk_propertyf",  "(JLjava/lang/String;FFFFF)D",  org_mini_nk_NK_nk_propertyf},
-{"org/mini/nk/NK",  "nk_propertyd",  "(JLjava/lang/String;DDDDF)F",  org_mini_nk_NK_nk_propertyd},
-{"org/mini/nk/NK",  "nk_edit_string",  "(JILjava/lang/String;[IIJ)I",  org_mini_nk_NK_nk_edit_string},
-{"org/mini/nk/NK",  "nk_edit_string_zero_terminated",  "(JILjava/lang/String;IJ)I",  org_mini_nk_NK_nk_edit_string_zero_terminated},
+{"org/mini/nk/NK",  "nk_property_int",  "(J[BI[IIIF)V",  org_mini_nk_NK_nk_property_int},
+{"org/mini/nk/NK",  "nk_property_float",  "(J[BF[FFFF)V",  org_mini_nk_NK_nk_property_float},
+{"org/mini/nk/NK",  "nk_property_double",  "(J[BD[DDDF)V",  org_mini_nk_NK_nk_property_double},
+{"org/mini/nk/NK",  "nk_propertyi",  "(J[BIIIIF)I",  org_mini_nk_NK_nk_propertyi},
+{"org/mini/nk/NK",  "nk_propertyf",  "(J[BFFFFF)D",  org_mini_nk_NK_nk_propertyf},
+{"org/mini/nk/NK",  "nk_propertyd",  "(J[BDDDDF)F",  org_mini_nk_NK_nk_propertyd},
+{"org/mini/nk/NK",  "nk_edit_string",  "(JI[B[IIJ)I",  org_mini_nk_NK_nk_edit_string},
+{"org/mini/nk/NK",  "nk_edit_string_zero_terminated",  "(JI[BIJ)I",  org_mini_nk_NK_nk_edit_string_zero_terminated},
 {"org/mini/nk/NK",  "nk_edit_buffer",  "(JIJJ)I",  org_mini_nk_NK_nk_edit_buffer},
 {"org/mini/nk/NK",  "nk_edit_focus",  "(JI)V",  org_mini_nk_NK_nk_edit_focus},
 {"org/mini/nk/NK",  "nk_edit_unfocus",  "(J)V",  org_mini_nk_NK_nk_edit_unfocus},
@@ -10218,63 +9851,63 @@ static java_native_method method_nkclear_table[] = {
 {"org/mini/nk/NK",  "nk_chart_end",  "(J)V",  org_mini_nk_NK_nk_chart_end},
 {"org/mini/nk/NK",  "nk_plot",  "(JI[FII)V",  org_mini_nk_NK_nk_plot},
 {"org/mini/nk/NK",  "nk_plot_function",  "(JIJJII)V",  org_mini_nk_NK_nk_plot_function},
-{"org/mini/nk/NK",  "nk_popup_begin",  "(JILjava/lang/String;I[F)I",  org_mini_nk_NK_nk_popup_begin},
+{"org/mini/nk/NK",  "nk_popup_begin",  "(JI[BI[F)I",  org_mini_nk_NK_nk_popup_begin},
 {"org/mini/nk/NK",  "nk_popup_close",  "(J)V",  org_mini_nk_NK_nk_popup_close},
 {"org/mini/nk/NK",  "nk_popup_end",  "(J)V",  org_mini_nk_NK_nk_popup_end},
-{"org/mini/nk/NK",  "nk_combo",  "(J[Ljava/lang/String;III[F)I",  org_mini_nk_NK_nk_combo},
-{"org/mini/nk/NK",  "nk_combo_separator",  "(JLjava/lang/String;IIII[F)I",  org_mini_nk_NK_nk_combo_separator},
-{"org/mini/nk/NK",  "nk_combo_string",  "(JLjava/lang/String;III[F)I",  org_mini_nk_NK_nk_combo_string},
+{"org/mini/nk/NK",  "nk_combo",  "(J[BIII[F)I",  org_mini_nk_NK_nk_combo},
+{"org/mini/nk/NK",  "nk_combo_separator",  "(J[BIIII[F)I",  org_mini_nk_NK_nk_combo_separator},
+{"org/mini/nk/NK",  "nk_combo_string",  "(J[BIII[F)I",  org_mini_nk_NK_nk_combo_string},
 {"org/mini/nk/NK",  "nk_combo_callback",  "(JJJIII[F)I",  org_mini_nk_NK_nk_combo_callback},
-{"org/mini/nk/NK",  "nk_combobox",  "(J[Ljava/lang/String;I[II[F)V",  org_mini_nk_NK_nk_combobox},
-{"org/mini/nk/NK",  "nk_combobox_string",  "(JLjava/lang/String;[III[F)V",  org_mini_nk_NK_nk_combobox_string},
-{"org/mini/nk/NK",  "nk_combobox_separator",  "(JLjava/lang/String;I[III[F)V",  org_mini_nk_NK_nk_combobox_separator},
+{"org/mini/nk/NK",  "nk_combobox",  "(J[BI[II[F)V",  org_mini_nk_NK_nk_combobox},
+{"org/mini/nk/NK",  "nk_combobox_string",  "(J[B[III[F)V",  org_mini_nk_NK_nk_combobox_string},
+{"org/mini/nk/NK",  "nk_combobox_separator",  "(J[BI[III[F)V",  org_mini_nk_NK_nk_combobox_separator},
 {"org/mini/nk/NK",  "nk_combobox_callback",  "(JJJ[III[F)V",  org_mini_nk_NK_nk_combobox_callback},
-{"org/mini/nk/NK",  "nk_combo_begin_text",  "(JLjava/lang/String;I[F)I",  org_mini_nk_NK_nk_combo_begin_text},
-{"org/mini/nk/NK",  "nk_combo_begin_label",  "(JLjava/lang/String;[F)I",  org_mini_nk_NK_nk_combo_begin_label},
+{"org/mini/nk/NK",  "nk_combo_begin_text",  "(J[BI[F)I",  org_mini_nk_NK_nk_combo_begin_text},
+{"org/mini/nk/NK",  "nk_combo_begin_label",  "(J[B[F)I",  org_mini_nk_NK_nk_combo_begin_label},
 {"org/mini/nk/NK",  "nk_combo_begin_color",  "(J[I[F)I",  org_mini_nk_NK_nk_combo_begin_color},
 {"org/mini/nk/NK",  "nk_combo_begin_symbol",  "(JI[F)I",  org_mini_nk_NK_nk_combo_begin_symbol},
-{"org/mini/nk/NK",  "nk_combo_begin_symbol_label",  "(JLjava/lang/String;I[F)I",  org_mini_nk_NK_nk_combo_begin_symbol_label},
-{"org/mini/nk/NK",  "nk_combo_begin_symbol_text",  "(JLjava/lang/String;II[F)I",  org_mini_nk_NK_nk_combo_begin_symbol_text},
+{"org/mini/nk/NK",  "nk_combo_begin_symbol_label",  "(J[BI[F)I",  org_mini_nk_NK_nk_combo_begin_symbol_label},
+{"org/mini/nk/NK",  "nk_combo_begin_symbol_text",  "(J[BII[F)I",  org_mini_nk_NK_nk_combo_begin_symbol_text},
 {"org/mini/nk/NK",  "nk_combo_begin_image",  "(J[B[F)I",  org_mini_nk_NK_nk_combo_begin_image},
-{"org/mini/nk/NK",  "nk_combo_begin_image_label",  "(JLjava/lang/String;[B[F)I",  org_mini_nk_NK_nk_combo_begin_image_label},
-{"org/mini/nk/NK",  "nk_combo_begin_image_text",  "(JLjava/lang/String;I[B[F)I",  org_mini_nk_NK_nk_combo_begin_image_text},
-{"org/mini/nk/NK",  "nk_combo_item_label",  "(JLjava/lang/String;I)I",  org_mini_nk_NK_nk_combo_item_label},
-{"org/mini/nk/NK",  "nk_combo_item_text",  "(JLjava/lang/String;II)I",  org_mini_nk_NK_nk_combo_item_text},
-{"org/mini/nk/NK",  "nk_combo_item_image_label",  "(J[BLjava/lang/String;I)I",  org_mini_nk_NK_nk_combo_item_image_label},
-{"org/mini/nk/NK",  "nk_combo_item_image_text",  "(J[BLjava/lang/String;II)I",  org_mini_nk_NK_nk_combo_item_image_text},
-{"org/mini/nk/NK",  "nk_combo_item_symbol_label",  "(JILjava/lang/String;I)I",  org_mini_nk_NK_nk_combo_item_symbol_label},
-{"org/mini/nk/NK",  "nk_combo_item_symbol_text",  "(JILjava/lang/String;II)I",  org_mini_nk_NK_nk_combo_item_symbol_text},
+{"org/mini/nk/NK",  "nk_combo_begin_image_label",  "(J[B[B[F)I",  org_mini_nk_NK_nk_combo_begin_image_label},
+{"org/mini/nk/NK",  "nk_combo_begin_image_text",  "(J[BI[B[F)I",  org_mini_nk_NK_nk_combo_begin_image_text},
+{"org/mini/nk/NK",  "nk_combo_item_label",  "(J[BI)I",  org_mini_nk_NK_nk_combo_item_label},
+{"org/mini/nk/NK",  "nk_combo_item_text",  "(J[BII)I",  org_mini_nk_NK_nk_combo_item_text},
+{"org/mini/nk/NK",  "nk_combo_item_image_label",  "(J[B[BI)I",  org_mini_nk_NK_nk_combo_item_image_label},
+{"org/mini/nk/NK",  "nk_combo_item_image_text",  "(J[B[BII)I",  org_mini_nk_NK_nk_combo_item_image_text},
+{"org/mini/nk/NK",  "nk_combo_item_symbol_label",  "(JI[BI)I",  org_mini_nk_NK_nk_combo_item_symbol_label},
+{"org/mini/nk/NK",  "nk_combo_item_symbol_text",  "(JI[BII)I",  org_mini_nk_NK_nk_combo_item_symbol_text},
 {"org/mini/nk/NK",  "nk_combo_close",  "(J)V",  org_mini_nk_NK_nk_combo_close},
 {"org/mini/nk/NK",  "nk_combo_end",  "(J)V",  org_mini_nk_NK_nk_combo_end},
 {"org/mini/nk/NK",  "nk_contextual_begin",  "(JI[F[F)I",  org_mini_nk_NK_nk_contextual_begin},
-{"org/mini/nk/NK",  "nk_contextual_item_text",  "(JLjava/lang/String;II)I",  org_mini_nk_NK_nk_contextual_item_text},
-{"org/mini/nk/NK",  "nk_contextual_item_label",  "(JLjava/lang/String;I)I",  org_mini_nk_NK_nk_contextual_item_label},
-{"org/mini/nk/NK",  "nk_contextual_item_image_label",  "(J[BLjava/lang/String;I)I",  org_mini_nk_NK_nk_contextual_item_image_label},
-{"org/mini/nk/NK",  "nk_contextual_item_image_text",  "(J[BLjava/lang/String;II)I",  org_mini_nk_NK_nk_contextual_item_image_text},
-{"org/mini/nk/NK",  "nk_contextual_item_symbol_label",  "(JILjava/lang/String;I)I",  org_mini_nk_NK_nk_contextual_item_symbol_label},
-{"org/mini/nk/NK",  "nk_contextual_item_symbol_text",  "(JILjava/lang/String;II)I",  org_mini_nk_NK_nk_contextual_item_symbol_text},
+{"org/mini/nk/NK",  "nk_contextual_item_text",  "(J[BII)I",  org_mini_nk_NK_nk_contextual_item_text},
+{"org/mini/nk/NK",  "nk_contextual_item_label",  "(J[BI)I",  org_mini_nk_NK_nk_contextual_item_label},
+{"org/mini/nk/NK",  "nk_contextual_item_image_label",  "(J[B[BI)I",  org_mini_nk_NK_nk_contextual_item_image_label},
+{"org/mini/nk/NK",  "nk_contextual_item_image_text",  "(J[B[BII)I",  org_mini_nk_NK_nk_contextual_item_image_text},
+{"org/mini/nk/NK",  "nk_contextual_item_symbol_label",  "(JI[BI)I",  org_mini_nk_NK_nk_contextual_item_symbol_label},
+{"org/mini/nk/NK",  "nk_contextual_item_symbol_text",  "(JI[BII)I",  org_mini_nk_NK_nk_contextual_item_symbol_text},
 {"org/mini/nk/NK",  "nk_contextual_close",  "(J)V",  org_mini_nk_NK_nk_contextual_close},
 {"org/mini/nk/NK",  "nk_contextual_end",  "(J)V",  org_mini_nk_NK_nk_contextual_end},
-{"org/mini/nk/NK",  "nk_tooltip",  "(JLjava/lang/String;)V",  org_mini_nk_NK_nk_tooltip},
-{"org/mini/nk/NK",  "nk_tooltipf",  "(JLjava/lang/String;[Ljava/lang/String;)V",  org_mini_nk_NK_nk_tooltipf},
+{"org/mini/nk/NK",  "nk_tooltip",  "(J[B)V",  org_mini_nk_NK_nk_tooltip},
+{"org/mini/nk/NK",  "nk_tooltipf",  "(J[B[Ljava/lang/String;)V",  org_mini_nk_NK_nk_tooltipf},
 {"org/mini/nk/NK",  "nk_tooltip_begin",  "(JF)I",  org_mini_nk_NK_nk_tooltip_begin},
 {"org/mini/nk/NK",  "nk_tooltip_end",  "(J)V",  org_mini_nk_NK_nk_tooltip_end},
 {"org/mini/nk/NK",  "nk_menubar_begin",  "(J)V",  org_mini_nk_NK_nk_menubar_begin},
 {"org/mini/nk/NK",  "nk_menubar_end",  "(J)V",  org_mini_nk_NK_nk_menubar_end},
-{"org/mini/nk/NK",  "nk_menu_begin_text",  "(JLjava/lang/String;II[F)I",  org_mini_nk_NK_nk_menu_begin_text},
-{"org/mini/nk/NK",  "nk_menu_begin_label",  "(JLjava/lang/String;I[F)I",  org_mini_nk_NK_nk_menu_begin_label},
-{"org/mini/nk/NK",  "nk_menu_begin_image",  "(JLjava/lang/String;[B[F)I",  org_mini_nk_NK_nk_menu_begin_image},
-{"org/mini/nk/NK",  "nk_menu_begin_image_text",  "(JLjava/lang/String;II[B[F)I",  org_mini_nk_NK_nk_menu_begin_image_text},
-{"org/mini/nk/NK",  "nk_menu_begin_image_label",  "(JLjava/lang/String;I[B[F)I",  org_mini_nk_NK_nk_menu_begin_image_label},
-{"org/mini/nk/NK",  "nk_menu_begin_symbol",  "(JLjava/lang/String;I[F)I",  org_mini_nk_NK_nk_menu_begin_symbol},
-{"org/mini/nk/NK",  "nk_menu_begin_symbol_text",  "(JLjava/lang/String;III[F)I",  org_mini_nk_NK_nk_menu_begin_symbol_text},
-{"org/mini/nk/NK",  "nk_menu_begin_symbol_label",  "(JLjava/lang/String;II[F)I",  org_mini_nk_NK_nk_menu_begin_symbol_label},
-{"org/mini/nk/NK",  "nk_menu_item_text",  "(JLjava/lang/String;II)I",  org_mini_nk_NK_nk_menu_item_text},
-{"org/mini/nk/NK",  "nk_menu_item_label",  "(JLjava/lang/String;I)I",  org_mini_nk_NK_nk_menu_item_label},
-{"org/mini/nk/NK",  "nk_menu_item_image_label",  "(J[BLjava/lang/String;I)I",  org_mini_nk_NK_nk_menu_item_image_label},
-{"org/mini/nk/NK",  "nk_menu_item_image_text",  "(J[BLjava/lang/String;II)I",  org_mini_nk_NK_nk_menu_item_image_text},
-{"org/mini/nk/NK",  "nk_menu_item_symbol_text",  "(JILjava/lang/String;II)I",  org_mini_nk_NK_nk_menu_item_symbol_text},
-{"org/mini/nk/NK",  "nk_menu_item_symbol_label",  "(JILjava/lang/String;I)I",  org_mini_nk_NK_nk_menu_item_symbol_label},
+{"org/mini/nk/NK",  "nk_menu_begin_text",  "(J[BII[F)I",  org_mini_nk_NK_nk_menu_begin_text},
+{"org/mini/nk/NK",  "nk_menu_begin_label",  "(J[BI[F)I",  org_mini_nk_NK_nk_menu_begin_label},
+{"org/mini/nk/NK",  "nk_menu_begin_image",  "(J[B[B[F)I",  org_mini_nk_NK_nk_menu_begin_image},
+{"org/mini/nk/NK",  "nk_menu_begin_image_text",  "(J[BII[B[F)I",  org_mini_nk_NK_nk_menu_begin_image_text},
+{"org/mini/nk/NK",  "nk_menu_begin_image_label",  "(J[BI[B[F)I",  org_mini_nk_NK_nk_menu_begin_image_label},
+{"org/mini/nk/NK",  "nk_menu_begin_symbol",  "(J[BI[F)I",  org_mini_nk_NK_nk_menu_begin_symbol},
+{"org/mini/nk/NK",  "nk_menu_begin_symbol_text",  "(J[BIII[F)I",  org_mini_nk_NK_nk_menu_begin_symbol_text},
+{"org/mini/nk/NK",  "nk_menu_begin_symbol_label",  "(J[BII[F)I",  org_mini_nk_NK_nk_menu_begin_symbol_label},
+{"org/mini/nk/NK",  "nk_menu_item_text",  "(J[BII)I",  org_mini_nk_NK_nk_menu_item_text},
+{"org/mini/nk/NK",  "nk_menu_item_label",  "(J[BI)I",  org_mini_nk_NK_nk_menu_item_label},
+{"org/mini/nk/NK",  "nk_menu_item_image_label",  "(J[B[BI)I",  org_mini_nk_NK_nk_menu_item_image_label},
+{"org/mini/nk/NK",  "nk_menu_item_image_text",  "(J[B[BII)I",  org_mini_nk_NK_nk_menu_item_image_text},
+{"org/mini/nk/NK",  "nk_menu_item_symbol_text",  "(JI[BII)I",  org_mini_nk_NK_nk_menu_item_symbol_text},
+{"org/mini/nk/NK",  "nk_menu_item_symbol_label",  "(JI[BI)I",  org_mini_nk_NK_nk_menu_item_symbol_label},
 {"org/mini/nk/NK",  "nk_menu_close",  "(J)V",  org_mini_nk_NK_nk_menu_close},
 {"org/mini/nk/NK",  "nk_menu_end",  "(J)V",  org_mini_nk_NK_nk_menu_end},
 {"org/mini/nk/NK",  "nk_style_default",  "(J)V",  org_mini_nk_NK_nk_style_default},
@@ -10303,14 +9936,14 @@ static java_native_method method_nkclear_table[] = {
 {"org/mini/nk/NK",  "nk_rgb_bv",  "([B)[I",  org_mini_nk_NK_nk_rgb_bv},
 {"org/mini/nk/NK",  "nk_rgb_f",  "(FFF)[I",  org_mini_nk_NK_nk_rgb_f},
 {"org/mini/nk/NK",  "nk_rgb_fv",  "([F)[I",  org_mini_nk_NK_nk_rgb_fv},
-{"org/mini/nk/NK",  "nk_rgb_hex",  "(Ljava/lang/String;)[I",  org_mini_nk_NK_nk_rgb_hex},
+{"org/mini/nk/NK",  "nk_rgb_hex",  "([B)[I",  org_mini_nk_NK_nk_rgb_hex},
 {"org/mini/nk/NK",  "nk_rgba",  "(IIII)[I",  org_mini_nk_NK_nk_rgba},
 {"org/mini/nk/NK",  "nk_rgba_u32",  "(I)[I",  org_mini_nk_NK_nk_rgba_u32},
 {"org/mini/nk/NK",  "nk_rgba_iv",  "([I)[I",  org_mini_nk_NK_nk_rgba_iv},
 {"org/mini/nk/NK",  "nk_rgba_bv",  "([B)[I",  org_mini_nk_NK_nk_rgba_bv},
 {"org/mini/nk/NK",  "nk_rgba_f",  "(FFFF)[I",  org_mini_nk_NK_nk_rgba_f},
 {"org/mini/nk/NK",  "nk_rgba_fv",  "([F)[I",  org_mini_nk_NK_nk_rgba_fv},
-{"org/mini/nk/NK",  "nk_rgba_hex",  "(Ljava/lang/String;)[I",  org_mini_nk_NK_nk_rgba_hex},
+{"org/mini/nk/NK",  "nk_rgba_hex",  "([B)[I",  org_mini_nk_NK_nk_rgba_hex},
 {"org/mini/nk/NK",  "nk_hsv",  "(III)[I",  org_mini_nk_NK_nk_hsv},
 {"org/mini/nk/NK",  "nk_hsv_iv",  "([I)[I",  org_mini_nk_NK_nk_hsv_iv},
 {"org/mini/nk/NK",  "nk_hsv_bv",  "([B)[I",  org_mini_nk_NK_nk_hsv_bv},
@@ -10326,8 +9959,8 @@ static java_native_method method_nkclear_table[] = {
 {"org/mini/nk/NK",  "nk_color_d",  "([D[D[D[D[I)V",  org_mini_nk_NK_nk_color_d},
 {"org/mini/nk/NK",  "nk_color_dv",  "([D[I)V",  org_mini_nk_NK_nk_color_dv},
 {"org/mini/nk/NK",  "nk_color_u32",  "([I)I",  org_mini_nk_NK_nk_color_u32},
-{"org/mini/nk/NK",  "nk_color_hex_rgba",  "(Ljava/lang/String;[I)V",  org_mini_nk_NK_nk_color_hex_rgba},
-{"org/mini/nk/NK",  "nk_color_hex_rgb",  "(Ljava/lang/String;[I)V",  org_mini_nk_NK_nk_color_hex_rgb},
+{"org/mini/nk/NK",  "nk_color_hex_rgba",  "([B[I)V",  org_mini_nk_NK_nk_color_hex_rgba},
+{"org/mini/nk/NK",  "nk_color_hex_rgb",  "([B[I)V",  org_mini_nk_NK_nk_color_hex_rgb},
 {"org/mini/nk/NK",  "nk_color_hsv_i",  "([I[I[I[I)V",  org_mini_nk_NK_nk_color_hsv_i},
 {"org/mini/nk/NK",  "nk_color_hsv_b",  "([B[B[B[I)V",  org_mini_nk_NK_nk_color_hsv_b},
 {"org/mini/nk/NK",  "nk_color_hsv_iv",  "([I[I)V",  org_mini_nk_NK_nk_color_hsv_iv},
@@ -10363,19 +9996,19 @@ static java_native_method method_nkclear_table[] = {
 {"org/mini/nk/NK",  "nk_rectiv",  "([I)[F",  org_mini_nk_NK_nk_rectiv},
 {"org/mini/nk/NK",  "nk_rect_pos",  "([F)[F",  org_mini_nk_NK_nk_rect_pos},
 {"org/mini/nk/NK",  "nk_rect_size",  "([F)[F",  org_mini_nk_NK_nk_rect_size},
-{"org/mini/nk/NK",  "nk_strlen",  "(Ljava/lang/String;)I",  org_mini_nk_NK_nk_strlen},
-{"org/mini/nk/NK",  "nk_stricmp",  "(Ljava/lang/String;Ljava/lang/String;)I",  org_mini_nk_NK_nk_stricmp},
-{"org/mini/nk/NK",  "nk_stricmpn",  "(Ljava/lang/String;Ljava/lang/String;I)I",  org_mini_nk_NK_nk_stricmpn},
-{"org/mini/nk/NK",  "nk_strtoi",  "(Ljava/lang/String;[Ljava/lang/String;)I",  org_mini_nk_NK_nk_strtoi},
-{"org/mini/nk/NK",  "nk_strtof",  "(Ljava/lang/String;[Ljava/lang/String;)D",  org_mini_nk_NK_nk_strtof},
-{"org/mini/nk/NK",  "nk_strtod",  "(Ljava/lang/String;[Ljava/lang/String;)F",  org_mini_nk_NK_nk_strtod},
-{"org/mini/nk/NK",  "nk_strfilter",  "(Ljava/lang/String;Ljava/lang/String;)I",  org_mini_nk_NK_nk_strfilter},
-{"org/mini/nk/NK",  "nk_strmatch_fuzzy_string",  "(Ljava/lang/String;Ljava/lang/String;[I)I",  org_mini_nk_NK_nk_strmatch_fuzzy_string},
-{"org/mini/nk/NK",  "nk_strmatch_fuzzy_text",  "(Ljava/lang/String;ILjava/lang/String;[I)I",  org_mini_nk_NK_nk_strmatch_fuzzy_text},
-{"org/mini/nk/NK",  "nk_utf_decode",  "(Ljava/lang/String;JI)I",  org_mini_nk_NK_nk_utf_decode},
-{"org/mini/nk/NK",  "nk_utf_encode",  "(ILjava/lang/String;I)I",  org_mini_nk_NK_nk_utf_encode},
-{"org/mini/nk/NK",  "nk_utf_len",  "(Ljava/lang/String;I)I",  org_mini_nk_NK_nk_utf_len},
-{"org/mini/nk/NK",  "nk_utf_at",  "(Ljava/lang/String;IIJ[I)[B",  org_mini_nk_NK_nk_utf_at},
+{"org/mini/nk/NK",  "nk_strlen",  "([B)I",  org_mini_nk_NK_nk_strlen},
+{"org/mini/nk/NK",  "nk_stricmp",  "([B[B)I",  org_mini_nk_NK_nk_stricmp},
+{"org/mini/nk/NK",  "nk_stricmpn",  "([B[BI)I",  org_mini_nk_NK_nk_stricmpn},
+{"org/mini/nk/NK",  "nk_strtoi",  "([B[B)I",  org_mini_nk_NK_nk_strtoi},
+{"org/mini/nk/NK",  "nk_strtof",  "([B[B)D",  org_mini_nk_NK_nk_strtof},
+{"org/mini/nk/NK",  "nk_strtod",  "([B[B)F",  org_mini_nk_NK_nk_strtod},
+{"org/mini/nk/NK",  "nk_strfilter",  "([B[B)I",  org_mini_nk_NK_nk_strfilter},
+{"org/mini/nk/NK",  "nk_strmatch_fuzzy_string",  "([B[B[I)I",  org_mini_nk_NK_nk_strmatch_fuzzy_string},
+{"org/mini/nk/NK",  "nk_strmatch_fuzzy_text",  "([BI[B[I)I",  org_mini_nk_NK_nk_strmatch_fuzzy_text},
+{"org/mini/nk/NK",  "nk_utf_decode",  "([BJI)I",  org_mini_nk_NK_nk_utf_decode},
+{"org/mini/nk/NK",  "nk_utf_encode",  "(I[BI)I",  org_mini_nk_NK_nk_utf_encode},
+{"org/mini/nk/NK",  "nk_utf_len",  "([BI)I",  org_mini_nk_NK_nk_utf_len},
+{"org/mini/nk/NK",  "nk_utf_at",  "([BIIJ[I)[B",  org_mini_nk_NK_nk_utf_at},
 {"org/mini/nk/NK",  "nk_font_default_glyph_ranges",  "()J",  org_mini_nk_NK_nk_font_default_glyph_ranges},
 {"org/mini/nk/NK",  "nk_font_chinese_glyph_ranges",  "()J",  org_mini_nk_NK_nk_font_chinese_glyph_ranges},
 {"org/mini/nk/NK",  "nk_font_cyrillic_glyph_ranges",  "()J",  org_mini_nk_NK_nk_font_cyrillic_glyph_ranges},
@@ -10388,8 +10021,9 @@ static java_native_method method_nkclear_table[] = {
 {"org/mini/nk/NK",  "nk_font_atlas_add",  "(JJ)J",  org_mini_nk_NK_nk_font_atlas_add},
 {"org/mini/nk/NK",  "nk_font_atlas_add_default",  "(JFJ)J",  org_mini_nk_NK_nk_font_atlas_add_default},
 {"org/mini/nk/NK",  "nk_font_atlas_add_from_memory",  "(JJJFJ)J",  org_mini_nk_NK_nk_font_atlas_add_from_memory},
+{"org/mini/nk/NK",  "nk_font_atlas_add_from_file",  "(J[BFJ)J",  org_mini_nk_NK_nk_font_atlas_add_from_file},
 {"org/mini/nk/NK",  "nk_font_atlas_add_compressed",  "(JJJFJ)J",  org_mini_nk_NK_nk_font_atlas_add_compressed},
-{"org/mini/nk/NK",  "nk_font_atlas_add_compressed_base85",  "(JLjava/lang/String;FJ)J",  org_mini_nk_NK_nk_font_atlas_add_compressed_base85},
+{"org/mini/nk/NK",  "nk_font_atlas_add_compressed_base85",  "(J[BFJ)J",  org_mini_nk_NK_nk_font_atlas_add_compressed_base85},
 {"org/mini/nk/NK",  "nk_font_atlas_bake",  "(J[I[II)J",  org_mini_nk_NK_nk_font_atlas_bake},
 {"org/mini/nk/NK",  "nk_font_atlas_end",  "(J[BJ)V",  org_mini_nk_NK_nk_font_atlas_end},
 {"org/mini/nk/NK",  "nk_font_find_glyph",  "(JI)J",  org_mini_nk_NK_nk_font_find_glyph},
@@ -10412,18 +10046,18 @@ static java_native_method method_nkclear_table[] = {
 {"org/mini/nk/NK",  "nk_str_init_fixed",  "(JJJ)V",  org_mini_nk_NK_nk_str_init_fixed},
 {"org/mini/nk/NK",  "nk_str_clear",  "(J)V",  org_mini_nk_NK_nk_str_clear},
 {"org/mini/nk/NK",  "nk_str_free",  "(J)V",  org_mini_nk_NK_nk_str_free},
-{"org/mini/nk/NK",  "nk_str_append_text_char",  "(JLjava/lang/String;I)I",  org_mini_nk_NK_nk_str_append_text_char},
-{"org/mini/nk/NK",  "nk_str_append_str_char",  "(JLjava/lang/String;)I",  org_mini_nk_NK_nk_str_append_str_char},
-{"org/mini/nk/NK",  "nk_str_append_text_utf8",  "(JLjava/lang/String;I)I",  org_mini_nk_NK_nk_str_append_text_utf8},
-{"org/mini/nk/NK",  "nk_str_append_str_utf8",  "(JLjava/lang/String;)I",  org_mini_nk_NK_nk_str_append_str_utf8},
+{"org/mini/nk/NK",  "nk_str_append_text_char",  "(J[BI)I",  org_mini_nk_NK_nk_str_append_text_char},
+{"org/mini/nk/NK",  "nk_str_append_str_char",  "(J[B)I",  org_mini_nk_NK_nk_str_append_str_char},
+{"org/mini/nk/NK",  "nk_str_append_text_utf8",  "(J[BI)I",  org_mini_nk_NK_nk_str_append_text_utf8},
+{"org/mini/nk/NK",  "nk_str_append_str_utf8",  "(J[B)I",  org_mini_nk_NK_nk_str_append_str_utf8},
 {"org/mini/nk/NK",  "nk_str_append_text_runes",  "(JJI)I",  org_mini_nk_NK_nk_str_append_text_runes},
 {"org/mini/nk/NK",  "nk_str_append_str_runes",  "(JJ)I",  org_mini_nk_NK_nk_str_append_str_runes},
-{"org/mini/nk/NK",  "nk_str_insert_at_char",  "(JILjava/lang/String;I)I",  org_mini_nk_NK_nk_str_insert_at_char},
-{"org/mini/nk/NK",  "nk_str_insert_at_rune",  "(JILjava/lang/String;I)I",  org_mini_nk_NK_nk_str_insert_at_rune},
-{"org/mini/nk/NK",  "nk_str_insert_text_char",  "(JILjava/lang/String;I)I",  org_mini_nk_NK_nk_str_insert_text_char},
-{"org/mini/nk/NK",  "nk_str_insert_str_char",  "(JILjava/lang/String;)I",  org_mini_nk_NK_nk_str_insert_str_char},
-{"org/mini/nk/NK",  "nk_str_insert_text_utf8",  "(JILjava/lang/String;I)I",  org_mini_nk_NK_nk_str_insert_text_utf8},
-{"org/mini/nk/NK",  "nk_str_insert_str_utf8",  "(JILjava/lang/String;)I",  org_mini_nk_NK_nk_str_insert_str_utf8},
+{"org/mini/nk/NK",  "nk_str_insert_at_char",  "(JI[BI)I",  org_mini_nk_NK_nk_str_insert_at_char},
+{"org/mini/nk/NK",  "nk_str_insert_at_rune",  "(JI[BI)I",  org_mini_nk_NK_nk_str_insert_at_rune},
+{"org/mini/nk/NK",  "nk_str_insert_text_char",  "(JI[BI)I",  org_mini_nk_NK_nk_str_insert_text_char},
+{"org/mini/nk/NK",  "nk_str_insert_str_char",  "(JI[B)I",  org_mini_nk_NK_nk_str_insert_str_char},
+{"org/mini/nk/NK",  "nk_str_insert_text_utf8",  "(JI[BI)I",  org_mini_nk_NK_nk_str_insert_text_utf8},
+{"org/mini/nk/NK",  "nk_str_insert_str_utf8",  "(JI[B)I",  org_mini_nk_NK_nk_str_insert_str_utf8},
 {"org/mini/nk/NK",  "nk_str_insert_text_runes",  "(JIJI)I",  org_mini_nk_NK_nk_str_insert_text_runes},
 {"org/mini/nk/NK",  "nk_str_insert_str_runes",  "(JIJ)I",  org_mini_nk_NK_nk_str_insert_str_runes},
 {"org/mini/nk/NK",  "nk_str_remove_chars",  "(JI)V",  org_mini_nk_NK_nk_str_remove_chars},
@@ -10450,12 +10084,12 @@ static java_native_method method_nkclear_table[] = {
 {"org/mini/nk/NK",  "nk_textedit_init",  "(JJJ)V",  org_mini_nk_NK_nk_textedit_init},
 {"org/mini/nk/NK",  "nk_textedit_init_fixed",  "(JJJ)V",  org_mini_nk_NK_nk_textedit_init_fixed},
 {"org/mini/nk/NK",  "nk_textedit_free",  "(J)V",  org_mini_nk_NK_nk_textedit_free},
-{"org/mini/nk/NK",  "nk_textedit_text",  "(JLjava/lang/String;I)V",  org_mini_nk_NK_nk_textedit_text},
+{"org/mini/nk/NK",  "nk_textedit_text",  "(J[BI)V",  org_mini_nk_NK_nk_textedit_text},
 {"org/mini/nk/NK",  "nk_textedit_delete",  "(JII)V",  org_mini_nk_NK_nk_textedit_delete},
 {"org/mini/nk/NK",  "nk_textedit_delete_selection",  "(J)V",  org_mini_nk_NK_nk_textedit_delete_selection},
 {"org/mini/nk/NK",  "nk_textedit_select_all",  "(J)V",  org_mini_nk_NK_nk_textedit_select_all},
 {"org/mini/nk/NK",  "nk_textedit_cut",  "(J)I",  org_mini_nk_NK_nk_textedit_cut},
-{"org/mini/nk/NK",  "nk_textedit_paste",  "(JLjava/lang/String;I)I",  org_mini_nk_NK_nk_textedit_paste},
+{"org/mini/nk/NK",  "nk_textedit_paste",  "(J[BI)I",  org_mini_nk_NK_nk_textedit_paste},
 {"org/mini/nk/NK",  "nk_textedit_undo",  "(J)V",  org_mini_nk_NK_nk_textedit_undo},
 {"org/mini/nk/NK",  "nk_textedit_redo",  "(J)V",  org_mini_nk_NK_nk_textedit_redo},
 {"org/mini/nk/NK",  "nk_stroke_line",  "(JFFFFF[I)V",  org_mini_nk_NK_nk_stroke_line},
@@ -10473,7 +10107,7 @@ static java_native_method method_nkclear_table[] = {
 {"org/mini/nk/NK",  "nk_fill_triangle",  "(JFFFFFF[I)V",  org_mini_nk_NK_nk_fill_triangle},
 {"org/mini/nk/NK",  "nk_fill_polygon",  "(J[FI[I)V",  org_mini_nk_NK_nk_fill_polygon},
 {"org/mini/nk/NK",  "nk_draw_image",  "(J[FJ[I)V",  org_mini_nk_NK_nk_draw_image},
-{"org/mini/nk/NK",  "nk_draw_text",  "(J[FLjava/lang/String;IJ[I[I)V",  org_mini_nk_NK_nk_draw_text},
+{"org/mini/nk/NK",  "nk_draw_text",  "(J[F[BIJ[I[I)V",  org_mini_nk_NK_nk_draw_text},
 {"org/mini/nk/NK",  "nk_push_scissor",  "(J[F)V",  org_mini_nk_NK_nk_push_scissor},
 {"org/mini/nk/NK",  "nk_push_custom",  "(J[FJ[B)V",  org_mini_nk_NK_nk_push_custom},
 {"org/mini/nk/NK",  "nk_input_has_mouse_click",  "(JI)I",  org_mini_nk_NK_nk_input_has_mouse_click},
@@ -10517,7 +10151,8 @@ static java_native_method method_nkclear_table[] = {
 {"org/mini/nk/NK",  "nk_draw_list_fill_circle",  "(J[FF[II)V",  org_mini_nk_NK_nk_draw_list_fill_circle},
 {"org/mini/nk/NK",  "nk_draw_list_fill_poly_convex",  "(J[FI[II)V",  org_mini_nk_NK_nk_draw_list_fill_poly_convex},
 {"org/mini/nk/NK",  "nk_draw_list_add_image",  "(J[B[F[I)V",  org_mini_nk_NK_nk_draw_list_add_image},
-{"org/mini/nk/NK",  "nk_draw_list_add_text",  "(JJ[FLjava/lang/String;IF[I)V",  org_mini_nk_NK_nk_draw_list_add_text},
+{"org/mini/nk/NK",  "nk_draw_list_add_text",  "(JJ[F[BIF[I)V",  org_mini_nk_NK_nk_draw_list_add_text},
+{"org/mini/nk/NK",  "nk_draw_list_push_userdata",  "(J[B)V",  org_mini_nk_NK_nk_draw_list_push_userdata},
 {"org/mini/nk/NK",  "nk_style_item_image",  "([B)[B",  org_mini_nk_NK_nk_style_item_image},
 {"org/mini/nk/NK",  "nk_style_item_color",  "([I)[B",  org_mini_nk_NK_nk_style_item_color},
 {"org/mini/nk/NK",  "nk_style_item_hide",  "()[B",  org_mini_nk_NK_nk_style_item_hide},
@@ -10529,6 +10164,10 @@ static java_native_method method_nkclear_table[] = {
 {"org/mini/nk/NK",  "nk_glfw3_shutdown",  "()V",  org_mini_nk_NK_nk_glfw3_shutdown},
 {"org/mini/nk/NK",  "nk_glfw3_char_callback",  "(JI)V",  org_mini_nk_NK_nk_glfw3_char_callback},
 {"org/mini/nk/NK",  "nk_gflw3_scroll_callback",  "(JDD)V",  org_mini_nk_NK_nk_gflw3_scroll_callback},
+{"org/mini/nk/NK",  "nk_get_font_handle",  "(J)J",  org_mini_nk_NK_nk_get_font_handle},
+{"org/mini/nk/NK",  "nk_create_font_atlas",  "()[B",  org_mini_nk_NK_nk_create_font_atlas},
+{"org/mini/nk/NK",  "nk_set_font_cfg_range",  "(JJ)V",  org_mini_nk_NK_nk_set_font_cfg_range},
+{"org/mini/nk/NK",  "nk_load_font",  "([BF)J",  org_mini_nk_NK_nk_load_font},
 };
 
 s32 count_NkFuncTable() {

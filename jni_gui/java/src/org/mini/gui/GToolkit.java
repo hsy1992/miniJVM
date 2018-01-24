@@ -5,7 +5,12 @@
  */
 package org.mini.gui;
 
+import java.io.UnsupportedEncodingException;
 import java.util.Hashtable;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.mini.reflect.Array;
+import javax.mini.reflect.vm.RefNative;
 
 /**
  *
@@ -28,8 +33,23 @@ public class GToolkit {
     }
 
     /**
-     * =================================================================
-     * =================================================================
+     * 
+     * 返回数组数据区首地址
+     * @param array
+     * @return 
      */
-
+    public static long getArrayDataPtr(Object array) {
+        Array reflect_arr = new Array(RefNative.obj2id(array));
+        return reflect_arr.getDataPtr();
+    }
+    
+    public static byte[] toUtf8(String s) {
+        if(s==null)return null;
+        byte[] barr=null;
+        try {
+            barr=s.getBytes("utf-8");
+        } catch (UnsupportedEncodingException ex) {
+        }
+        return barr;
+    }
 }

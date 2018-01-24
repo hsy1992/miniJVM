@@ -28,8 +28,9 @@ public class GL_h_2_java {
         GL_h_2_java gt = new GL_h_2_java();
         gt.buildC();
     }
-
-    String[] path = {"res/glad.h", "src/org/mini/gl/GL.java"};
+    String[] input_path = {
+        "../deps/include/glad/glad.h",};
+    String[] output_path = {"src/org/mini/gl/GL.java"};
 
     String CLASS_TEMPLATE
             = //
@@ -89,21 +90,25 @@ public class GL_h_2_java {
         List<String> lines = new ArrayList();
         int lineNo = 0;
         try {
-            File ifile = new File(path[0]);
-            br = new BufferedReader(new FileReader(ifile));
-            System.out.println("open input file:" + ifile.getAbsolutePath());
-            File ofile = new File(path[1]);
-            bw = new BufferedWriter(new FileWriter(ofile));
-            System.out.println("open output file:" + ofile.getAbsolutePath());
+
             String line;
 
-            while ((line = br.readLine()) != null) {
+            for (String filename : input_path) {
+                File ifile = new File(filename);
+                br = new BufferedReader(new FileReader(ifile));
+                System.out.println("open input file:" + ifile.getAbsolutePath());
+                while ((line = br.readLine()) != null) {
 
-                line = line.replaceAll("/\\*.*\\*/", "");
-                line = line.replaceAll("//.*\n", "");
-                line = line.trim();
-                lines.add(line);
+                    line = line.replaceAll("/\\*.*\\*/", "");
+                    line = line.replaceAll("//.*\n", "");
+                    line = line.trim();
+                    lines.add(line);
+                }
+                br.close();
             }
+            File ofile = new File(output_path[0]);
+            bw = new BufferedWriter(new FileWriter(ofile));
+            System.out.println("open output file:" + ofile.getAbsolutePath());
 
             //fields
             String nativeFieldHeader = "#define GL_";

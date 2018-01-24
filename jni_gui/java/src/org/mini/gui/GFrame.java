@@ -5,6 +5,7 @@
  */
 package org.mini.gui;
 
+import static org.mini.gui.GToolkit.toUtf8;
 import org.mini.nk.NK;
 import static org.mini.nk.NK.NK_ANTI_ALIASING_ON;
 import static org.mini.nk.NK.NK_WINDOW_BORDER;
@@ -24,7 +25,7 @@ import static org.mini.nk.NK.nk_window_get_canvas;
  */
 public class GFrame extends GObject {
 
-    String title;
+    byte[] title;
 
     GFrameContents winContents;
     int background_rgba;
@@ -33,7 +34,7 @@ public class GFrame extends GObject {
     long ctx;
 
     public GFrame(String title, int left, int top, int width, int height, GFrameContents con) {
-        this.title = title;
+        this.title = toUtf8(title + "\000");
         boundle = new float[]{left, top, width, height};
         winContents = con;
     }
@@ -59,6 +60,7 @@ public class GFrame extends GObject {
                 | NK_WINDOW_MINIMIZABLE | NK_WINDOW_TITLE);
         if (ret != 0 && winContents != null) {
             g.frame_bound = NK.nk_window_get_bounds(ctx);
+            g.font = getForm(ctx).getFont();
             winContents.updateContents(ctx, this);
         }
         nk_end(ctx);

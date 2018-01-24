@@ -375,10 +375,10 @@ public class NK {
     public static native long  nk__draw_begin(long parg0, long parg1); //const struct nk_context*/*ptr*/,const struct nk_buffer*/*ptr*/, //const struct nk_draw_command*/*ptr*/ 
     public static native long  nk__draw_end(long parg0, long parg1); //const struct nk_context*/*ptr*/,const struct nk_buffer*/*ptr*/, //const struct nk_draw_command*/*ptr*/ 
     public static native long  nk__draw_next(long parg0, long parg1, long parg2); //const struct nk_draw_command*/*ptr*/,const struct nk_buffer*/*ptr*/,const struct nk_context*/*ptr*/, //const struct nk_draw_command*/*ptr*/ 
-    public static native int nk_begin(long pctx, String ptitle, float[] pbounds, int pflags); //struct nk_context*/*ptr*/,const char*,struct nk_rect/*none_ptr*/,nk_flags, //int
-    public static native int nk_begin_titled(long pctx, String pname, String ptitle, float[] pbounds, int pflags); //struct nk_context*/*ptr*/,const char*,const char*,struct nk_rect/*none_ptr*/,nk_flags, //int
+    public static native int nk_begin(long pctx, byte[] ptitle, float[] pbounds, int pflags); //struct nk_context*/*ptr*/,const char*,struct nk_rect/*none_ptr*/,nk_flags, //int
+    public static native int nk_begin_titled(long pctx, byte[] pname, byte[] ptitle, float[] pbounds, int pflags); //struct nk_context*/*ptr*/,const char*,const char*,struct nk_rect/*none_ptr*/,nk_flags, //int
     public static native void nk_end(long pctx); //struct nk_context*/*ptr*/, //void
-    public static native long  nk_window_find(long pctx, String pname); //struct nk_context*/*ptr*/,const char*, //struct nk_window*/*ptr*/ 
+    public static native long  nk_window_find(long pctx, byte[] pname); //struct nk_context*/*ptr*/,const char*, //struct nk_window*/*ptr*/ 
     public static native float[]  nk_window_get_bounds(long pctx); //const struct nk_context*/*ptr*/, //struct nk_rect/*none_ptr*/ 
     public static native float[]  nk_window_get_position(long pctx); //const struct nk_context*/*ptr*/, //struct nk_vec2/*none_ptr*/ 
     public static native float[]  nk_window_get_size(long parg0); //const struct nk_context*/*ptr*/, //struct nk_vec2/*none_ptr*/ 
@@ -391,22 +391,22 @@ public class NK {
     public static native float[]  nk_window_get_content_region_size(long parg0); //struct nk_context*/*ptr*/, //struct nk_vec2/*none_ptr*/ 
     public static native long  nk_window_get_canvas(long parg0); //struct nk_context*/*ptr*/, //struct nk_command_buffer*/*ptr*/ 
     public static native int nk_window_has_focus(long parg0); //const struct nk_context*/*ptr*/, //int
-    public static native int nk_window_is_collapsed(long pctx, String pname); //struct nk_context*/*ptr*/,const char*, //int
-    public static native int nk_window_is_closed(long parg0, String parg1); //struct nk_context*/*ptr*/,const char*, //int
-    public static native int nk_window_is_hidden(long parg0, String parg1); //struct nk_context*/*ptr*/,const char*, //int
-    public static native int nk_window_is_active(long parg0, String parg1); //struct nk_context*/*ptr*/,const char*, //int
+    public static native int nk_window_is_collapsed(long pctx, byte[] pname); //struct nk_context*/*ptr*/,const char*, //int
+    public static native int nk_window_is_closed(long parg0, byte[] parg1); //struct nk_context*/*ptr*/,const char*, //int
+    public static native int nk_window_is_hidden(long parg0, byte[] parg1); //struct nk_context*/*ptr*/,const char*, //int
+    public static native int nk_window_is_active(long parg0, byte[] parg1); //struct nk_context*/*ptr*/,const char*, //int
     public static native int nk_window_is_hovered(long parg0); //struct nk_context*/*ptr*/, //int
     public static native int nk_window_is_any_hovered(long parg0); //struct nk_context*/*ptr*/, //int
     public static native int nk_item_is_any_active(long parg0); //struct nk_context*/*ptr*/, //int
-    public static native void nk_window_set_bounds(long parg0, String pname, float[] pbounds); //struct nk_context*/*ptr*/,const char*,struct nk_rect/*none_ptr*/, //void
-    public static native void nk_window_set_position(long parg0, String pname, float[] ppos); //struct nk_context*/*ptr*/,const char*,struct nk_vec2/*none_ptr*/, //void
-    public static native void nk_window_set_size(long parg0, String pname, float[] parg2); //struct nk_context*/*ptr*/,const char*,struct nk_vec2/*none_ptr*/, //void
-    public static native void nk_window_set_focus(long parg0, String pname); //struct nk_context*/*ptr*/,const char*, //void
-    public static native void nk_window_close(long pctx, String pname); //struct nk_context*/*ptr*/,const char*, //void
-    public static native void nk_window_collapse(long parg0, String pname, int pstate); //struct nk_context*/*ptr*/,const char*,enum nk_collapse_states, //void
-    public static native void nk_window_collapse_if(long parg0, String pname, int parg2, int pcond); //struct nk_context*/*ptr*/,const char*,enum nk_collapse_states,int, //void
-    public static native void nk_window_show(long parg0, String pname, int parg2); //struct nk_context*/*ptr*/,const char*,enum nk_show_states, //void
-    public static native void nk_window_show_if(long parg0, String pname, int parg2, int pcond); //struct nk_context*/*ptr*/,const char*,enum nk_show_states,int, //void
+    public static native void nk_window_set_bounds(long parg0, byte[] pname, float[] pbounds); //struct nk_context*/*ptr*/,const char*,struct nk_rect/*none_ptr*/, //void
+    public static native void nk_window_set_position(long parg0, byte[] pname, float[] ppos); //struct nk_context*/*ptr*/,const char*,struct nk_vec2/*none_ptr*/, //void
+    public static native void nk_window_set_size(long parg0, byte[] pname, float[] parg2); //struct nk_context*/*ptr*/,const char*,struct nk_vec2/*none_ptr*/, //void
+    public static native void nk_window_set_focus(long parg0, byte[] pname); //struct nk_context*/*ptr*/,const char*, //void
+    public static native void nk_window_close(long pctx, byte[] pname); //struct nk_context*/*ptr*/,const char*, //void
+    public static native void nk_window_collapse(long parg0, byte[] pname, int pstate); //struct nk_context*/*ptr*/,const char*,enum nk_collapse_states, //void
+    public static native void nk_window_collapse_if(long parg0, byte[] pname, int parg2, int pcond); //struct nk_context*/*ptr*/,const char*,enum nk_collapse_states,int, //void
+    public static native void nk_window_show(long parg0, byte[] pname, int parg2); //struct nk_context*/*ptr*/,const char*,enum nk_show_states, //void
+    public static native void nk_window_show_if(long parg0, byte[] pname, int parg2, int pcond); //struct nk_context*/*ptr*/,const char*,enum nk_show_states,int, //void
     public static native void nk_layout_set_min_row_height(long parg0, float pheight); //struct nk_context*/*ptr*/,float, //void
     public static native void nk_layout_reset_min_row_height(long parg0); //struct nk_context*/*ptr*/, //void
     public static native float[]  nk_layout_widget_bounds(long parg0); //struct nk_context*/*ptr*/, //struct nk_rect/*none_ptr*/ 
@@ -430,18 +430,18 @@ public class NK {
     public static native float[]  nk_layout_space_to_local(long parg0, float[] parg1); //struct nk_context*/*ptr*/,struct nk_vec2/*none_ptr*/, //struct nk_vec2/*none_ptr*/ 
     public static native float[]  nk_layout_space_rect_to_screen(long parg0, float[] parg1); //struct nk_context*/*ptr*/,struct nk_rect/*none_ptr*/, //struct nk_rect/*none_ptr*/ 
     public static native float[]  nk_layout_space_rect_to_local(long parg0, float[] parg1); //struct nk_context*/*ptr*/,struct nk_rect/*none_ptr*/, //struct nk_rect/*none_ptr*/ 
-    public static native int nk_group_begin(long parg0, String ptitle, int parg2); //struct nk_context*/*ptr*/,const char*,nk_flags, //int
-    public static native int nk_group_scrolled_offset_begin(long parg0, int[] px_offset, int[] py_offset, String parg3, int parg4); //struct nk_context*/*ptr*/,nk_uint*,nk_uint*,const char*,nk_flags, //int
-    public static native int nk_group_scrolled_begin(long parg0, int[] parg1, String ptitle, int parg3); //struct nk_context*/*ptr*/,struct nk_scroll*,const char*,nk_flags, //int
+    public static native int nk_group_begin(long parg0, byte[] ptitle, int parg2); //struct nk_context*/*ptr*/,const char*,nk_flags, //int
+    public static native int nk_group_scrolled_offset_begin(long parg0, int[] px_offset, int[] py_offset, byte[] parg3, int parg4); //struct nk_context*/*ptr*/,nk_uint*,nk_uint*,const char*,nk_flags, //int
+    public static native int nk_group_scrolled_begin(long parg0, int[] parg1, byte[] ptitle, int parg3); //struct nk_context*/*ptr*/,struct nk_scroll*,const char*,nk_flags, //int
     public static native void nk_group_scrolled_end(long parg0); //struct nk_context*/*ptr*/, //void
     public static native void nk_group_end(long parg0); //struct nk_context*/*ptr*/, //void
-    public static native int nk_list_view_begin(long parg0, long pout, String pid, int parg3, int prow_height, int prow_count); //struct nk_context*/*ptr*/,struct nk_list_view*/*ptr*/,const char*,nk_flags,int,int, //int
+    public static native int nk_list_view_begin(long parg0, long pout, byte[] pid, int parg3, int prow_height, int prow_count); //struct nk_context*/*ptr*/,struct nk_list_view*/*ptr*/,const char*,nk_flags,int,int, //int
     public static native void nk_list_view_end(long parg0); //struct nk_list_view*/*ptr*/, //void
-    public static native int nk_tree_push_hashed(long parg0, int parg1, String ptitle, int pinitial_state, String phash, int plen, int pseed); //struct nk_context*/*ptr*/,enum nk_tree_type,const char*,enum nk_collapse_states,const char*,int,int, //int
-    public static native int nk_tree_image_push_hashed(long parg0, int parg1, byte[] parg2, String ptitle, int pinitial_state, String phash, int plen, int pseed); //struct nk_context*/*ptr*/,enum nk_tree_type,struct nk_image/*none_ptr*/,const char*,enum nk_collapse_states,const char*,int,int, //int
+    public static native int nk_tree_push_hashed(long parg0, int parg1, byte[] ptitle, int pinitial_state, byte[] phash, int plen, int pseed); //struct nk_context*/*ptr*/,enum nk_tree_type,const char*,enum nk_collapse_states,const char*,int,int, //int
+    public static native int nk_tree_image_push_hashed(long parg0, int parg1, byte[] parg2, byte[] ptitle, int pinitial_state, byte[] phash, int plen, int pseed); //struct nk_context*/*ptr*/,enum nk_tree_type,struct nk_image/*none_ptr*/,const char*,enum nk_collapse_states,const char*,int,int, //int
     public static native void nk_tree_pop(long parg0); //struct nk_context*/*ptr*/, //void
-    public static native int nk_tree_state_push(long parg0, int parg1, String ptitle, int[] pstate); //struct nk_context*/*ptr*/,enum nk_tree_type,const char*,enum nk_collapse_states*, //int
-    public static native int nk_tree_state_image_push(long parg0, int parg1, byte[] parg2, String ptitle, int[] pstate); //struct nk_context*/*ptr*/,enum nk_tree_type,struct nk_image/*none_ptr*/,const char*,enum nk_collapse_states*, //int
+    public static native int nk_tree_state_push(long parg0, int parg1, byte[] ptitle, int[] pstate); //struct nk_context*/*ptr*/,enum nk_tree_type,const char*,enum nk_collapse_states*, //int
+    public static native int nk_tree_state_image_push(long parg0, int parg1, byte[] parg2, byte[] ptitle, int[] pstate); //struct nk_context*/*ptr*/,enum nk_tree_type,struct nk_image/*none_ptr*/,const char*,enum nk_collapse_states*, //int
     public static native void nk_tree_state_pop(long parg0); //struct nk_context*/*ptr*/, //void
     public static native int nk_widget(float[] parg0, long parg1); //struct nk_rect*,const struct nk_context*/*ptr*/, //enum nk_widget_layout_states
     public static native int nk_widget_fitting(float[] parg0, long parg1, float[] parg2); //struct nk_rect*,struct nk_context*/*ptr*/,struct nk_vec2/*none_ptr*/, //enum nk_widget_layout_states
@@ -454,66 +454,66 @@ public class NK {
     public static native int nk_widget_is_mouse_clicked(long parg0, int parg1); //struct nk_context*/*ptr*/,enum nk_buttons, //int
     public static native int nk_widget_has_mouse_click_down(long parg0, int parg1, int pdown); //struct nk_context*/*ptr*/,enum nk_buttons,int, //int
     public static native void nk_spacing(long parg0, int pcols); //struct nk_context*/*ptr*/,int, //void
-    public static native void nk_text(long parg0, String parg1, int parg2, int parg3); //struct nk_context*/*ptr*/,const char*,int,nk_flags, //void
-    public static native void nk_text_colored(long parg0, String parg1, int parg2, int parg3, int[] parg4); //struct nk_context*/*ptr*/,const char*,int,nk_flags,struct nk_color/*none_ptr*/, //void
-    public static native void nk_text_wrap(long parg0, String parg1, int parg2); //struct nk_context*/*ptr*/,const char*,int, //void
-    public static native void nk_text_wrap_colored(long parg0, String parg1, int parg2, int[] parg3); //struct nk_context*/*ptr*/,const char*,int,struct nk_color/*none_ptr*/, //void
-    public static native void nk_label(long parg0, String parg1, int palign); //struct nk_context*/*ptr*/,const char*,nk_flags, //void
-    public static native void nk_label_colored(long parg0, String parg1, int palign, int[] parg3); //struct nk_context*/*ptr*/,const char*,nk_flags,struct nk_color/*none_ptr*/, //void
-    public static native void nk_label_wrap(long parg0, String parg1); //struct nk_context*/*ptr*/,const char*, //void
-    public static native void nk_label_colored_wrap(long parg0, String parg1, int[] parg2); //struct nk_context*/*ptr*/,const char*,struct nk_color/*none_ptr*/, //void
+    public static native void nk_text(long parg0, byte[] parg1, int parg2, int parg3); //struct nk_context*/*ptr*/,const char*,int,nk_flags, //void
+    public static native void nk_text_colored(long parg0, byte[] parg1, int parg2, int parg3, int[] parg4); //struct nk_context*/*ptr*/,const char*,int,nk_flags,struct nk_color/*none_ptr*/, //void
+    public static native void nk_text_wrap(long parg0, byte[] parg1, int parg2); //struct nk_context*/*ptr*/,const char*,int, //void
+    public static native void nk_text_wrap_colored(long parg0, byte[] parg1, int parg2, int[] parg3); //struct nk_context*/*ptr*/,const char*,int,struct nk_color/*none_ptr*/, //void
+    public static native void nk_label(long parg0, byte[] parg1, int palign); //struct nk_context*/*ptr*/,const char*,nk_flags, //void
+    public static native void nk_label_colored(long parg0, byte[] parg1, int palign, int[] parg3); //struct nk_context*/*ptr*/,const char*,nk_flags,struct nk_color/*none_ptr*/, //void
+    public static native void nk_label_wrap(long parg0, byte[] parg1); //struct nk_context*/*ptr*/,const char*, //void
+    public static native void nk_label_colored_wrap(long parg0, byte[] parg1, int[] parg2); //struct nk_context*/*ptr*/,const char*,struct nk_color/*none_ptr*/, //void
     public static native void nk_image(long parg0, byte[] parg1); //struct nk_context*/*ptr*/,struct nk_image/*none_ptr*/, //void
-    public static native void nk_labelf(long parg0, int parg1, String parg2, String... parg3); //struct nk_context*/*ptr*/,nk_flags,const char*,..., //void
-    public static native void nk_labelf_colored(long parg0, int palign, int[] parg2, String parg3, String... parg4); //struct nk_context*/*ptr*/,nk_flags,struct nk_color/*none_ptr*/,const char*,..., //void
-    public static native void nk_labelf_wrap(long parg0, String parg1, String... parg2); //struct nk_context*/*ptr*/,const char*,..., //void
-    public static native void nk_labelf_colored_wrap(long parg0, int[] parg1, String parg2, String... parg3); //struct nk_context*/*ptr*/,struct nk_color/*none_ptr*/,const char*,..., //void
-    public static native void nk_value_bool(long parg0, String pprefix, int parg2); //struct nk_context*/*ptr*/,const char*,int, //void
-    public static native void nk_value_int(long parg0, String pprefix, int parg2); //struct nk_context*/*ptr*/,const char*,int, //void
-    public static native void nk_value_uint(long parg0, String pprefix, int parg2); //struct nk_context*/*ptr*/,const char*,unsigned int, //void
-    public static native void nk_value_float(long parg0, String pprefix, float parg2); //struct nk_context*/*ptr*/,const char*,float, //void
-    public static native void nk_value_color_byte(long parg0, String pprefix, int[] parg2); //struct nk_context*/*ptr*/,const char*,struct nk_color/*none_ptr*/, //void
-    public static native void nk_value_color_float(long parg0, String pprefix, int[] parg2); //struct nk_context*/*ptr*/,const char*,struct nk_color/*none_ptr*/, //void
-    public static native void nk_value_color_hex(long parg0, String pprefix, int[] parg2); //struct nk_context*/*ptr*/,const char*,struct nk_color/*none_ptr*/, //void
-    public static native int nk_button_text(long parg0, String ptitle, int plen); //struct nk_context*/*ptr*/,const char*,int, //int
-    public static native int nk_button_label(long parg0, String ptitle); //struct nk_context*/*ptr*/,const char*, //int
+    public static native void nk_labelf(long parg0, int parg1, byte[] parg2, String... parg3); //struct nk_context*/*ptr*/,nk_flags,const char*,..., //void
+    public static native void nk_labelf_colored(long parg0, int palign, int[] parg2, byte[] parg3, String... parg4); //struct nk_context*/*ptr*/,nk_flags,struct nk_color/*none_ptr*/,const char*,..., //void
+    public static native void nk_labelf_wrap(long parg0, byte[] parg1, String... parg2); //struct nk_context*/*ptr*/,const char*,..., //void
+    public static native void nk_labelf_colored_wrap(long parg0, int[] parg1, byte[] parg2, String... parg3); //struct nk_context*/*ptr*/,struct nk_color/*none_ptr*/,const char*,..., //void
+    public static native void nk_value_bool(long parg0, byte[] pprefix, int parg2); //struct nk_context*/*ptr*/,const char*,int, //void
+    public static native void nk_value_int(long parg0, byte[] pprefix, int parg2); //struct nk_context*/*ptr*/,const char*,int, //void
+    public static native void nk_value_uint(long parg0, byte[] pprefix, int parg2); //struct nk_context*/*ptr*/,const char*,unsigned int, //void
+    public static native void nk_value_float(long parg0, byte[] pprefix, float parg2); //struct nk_context*/*ptr*/,const char*,float, //void
+    public static native void nk_value_color_byte(long parg0, byte[] pprefix, int[] parg2); //struct nk_context*/*ptr*/,const char*,struct nk_color/*none_ptr*/, //void
+    public static native void nk_value_color_float(long parg0, byte[] pprefix, int[] parg2); //struct nk_context*/*ptr*/,const char*,struct nk_color/*none_ptr*/, //void
+    public static native void nk_value_color_hex(long parg0, byte[] pprefix, int[] parg2); //struct nk_context*/*ptr*/,const char*,struct nk_color/*none_ptr*/, //void
+    public static native int nk_button_text(long parg0, byte[] ptitle, int plen); //struct nk_context*/*ptr*/,const char*,int, //int
+    public static native int nk_button_label(long parg0, byte[] ptitle); //struct nk_context*/*ptr*/,const char*, //int
     public static native int nk_button_color(long parg0, int[] parg1); //struct nk_context*/*ptr*/,struct nk_color/*none_ptr*/, //int
     public static native int nk_button_symbol(long parg0, int parg1); //struct nk_context*/*ptr*/,enum nk_symbol_type, //int
     public static native int nk_button_image(long parg0, byte[] pimg); //struct nk_context*/*ptr*/,struct nk_image/*none_ptr*/, //int
-    public static native int nk_button_symbol_label(long parg0, int parg1, String parg2, int ptext_alignment); //struct nk_context*/*ptr*/,enum nk_symbol_type,const char*,nk_flags, //int
-    public static native int nk_button_symbol_text(long parg0, int parg1, String parg2, int parg3, int palignment); //struct nk_context*/*ptr*/,enum nk_symbol_type,const char*,int,nk_flags, //int
-    public static native int nk_button_image_label(long parg0, byte[] pimg, String parg2, int ptext_alignment); //struct nk_context*/*ptr*/,struct nk_image/*none_ptr*/,const char*,nk_flags, //int
-    public static native int nk_button_image_text(long parg0, byte[] pimg, String parg2, int parg3, int palignment); //struct nk_context*/*ptr*/,struct nk_image/*none_ptr*/,const char*,int,nk_flags, //int
-    public static native int nk_button_text_styled(long parg0, long parg1, String ptitle, int plen); //struct nk_context*/*ptr*/,const struct nk_style_button*/*ptr*/,const char*,int, //int
-    public static native int nk_button_label_styled(long parg0, long parg1, String ptitle); //struct nk_context*/*ptr*/,const struct nk_style_button*/*ptr*/,const char*, //int
+    public static native int nk_button_symbol_label(long parg0, int parg1, byte[] parg2, int ptext_alignment); //struct nk_context*/*ptr*/,enum nk_symbol_type,const char*,nk_flags, //int
+    public static native int nk_button_symbol_text(long parg0, int parg1, byte[] parg2, int parg3, int palignment); //struct nk_context*/*ptr*/,enum nk_symbol_type,const char*,int,nk_flags, //int
+    public static native int nk_button_image_label(long parg0, byte[] pimg, byte[] parg2, int ptext_alignment); //struct nk_context*/*ptr*/,struct nk_image/*none_ptr*/,const char*,nk_flags, //int
+    public static native int nk_button_image_text(long parg0, byte[] pimg, byte[] parg2, int parg3, int palignment); //struct nk_context*/*ptr*/,struct nk_image/*none_ptr*/,const char*,int,nk_flags, //int
+    public static native int nk_button_text_styled(long parg0, long parg1, byte[] ptitle, int plen); //struct nk_context*/*ptr*/,const struct nk_style_button*/*ptr*/,const char*,int, //int
+    public static native int nk_button_label_styled(long parg0, long parg1, byte[] ptitle); //struct nk_context*/*ptr*/,const struct nk_style_button*/*ptr*/,const char*, //int
     public static native int nk_button_symbol_styled(long parg0, long parg1, int parg2); //struct nk_context*/*ptr*/,const struct nk_style_button*/*ptr*/,enum nk_symbol_type, //int
     public static native int nk_button_image_styled(long parg0, long parg1, byte[] pimg); //struct nk_context*/*ptr*/,const struct nk_style_button*/*ptr*/,struct nk_image/*none_ptr*/, //int
-    public static native int nk_button_symbol_text_styled(long parg0, long parg1, int parg2, String parg3, int parg4, int palignment); //struct nk_context*/*ptr*/,const struct nk_style_button*/*ptr*/,enum nk_symbol_type,const char*,int,nk_flags, //int
-    public static native int nk_button_symbol_label_styled(long pctx, long pstyle, int psymbol, String ptitle, int palign); //struct nk_context*/*ptr*/,const struct nk_style_button*/*ptr*/,enum nk_symbol_type,const char*,nk_flags, //int
-    public static native int nk_button_image_label_styled(long parg0, long parg1, byte[] pimg, String parg3, int ptext_alignment); //struct nk_context*/*ptr*/,const struct nk_style_button*/*ptr*/,struct nk_image/*none_ptr*/,const char*,nk_flags, //int
-    public static native int nk_button_image_text_styled(long parg0, long parg1, byte[] pimg, String parg3, int parg4, int palignment); //struct nk_context*/*ptr*/,const struct nk_style_button*/*ptr*/,struct nk_image/*none_ptr*/,const char*,int,nk_flags, //int
+    public static native int nk_button_symbol_text_styled(long parg0, long parg1, int parg2, byte[] parg3, int parg4, int palignment); //struct nk_context*/*ptr*/,const struct nk_style_button*/*ptr*/,enum nk_symbol_type,const char*,int,nk_flags, //int
+    public static native int nk_button_symbol_label_styled(long pctx, long pstyle, int psymbol, byte[] ptitle, int palign); //struct nk_context*/*ptr*/,const struct nk_style_button*/*ptr*/,enum nk_symbol_type,const char*,nk_flags, //int
+    public static native int nk_button_image_label_styled(long parg0, long parg1, byte[] pimg, byte[] parg3, int ptext_alignment); //struct nk_context*/*ptr*/,const struct nk_style_button*/*ptr*/,struct nk_image/*none_ptr*/,const char*,nk_flags, //int
+    public static native int nk_button_image_text_styled(long parg0, long parg1, byte[] pimg, byte[] parg3, int parg4, int palignment); //struct nk_context*/*ptr*/,const struct nk_style_button*/*ptr*/,struct nk_image/*none_ptr*/,const char*,int,nk_flags, //int
     public static native void nk_button_set_behavior(long parg0, int parg1); //struct nk_context*/*ptr*/,enum nk_button_behavior, //void
     public static native int nk_button_push_behavior(long parg0, int parg1); //struct nk_context*/*ptr*/,enum nk_button_behavior, //int
     public static native int nk_button_pop_behavior(long parg0); //struct nk_context*/*ptr*/, //int
-    public static native int nk_check_label(long parg0, String parg1, int pactive); //struct nk_context*/*ptr*/,const char*,int, //int
-    public static native int nk_check_text(long parg0, String parg1, int parg2, int pactive); //struct nk_context*/*ptr*/,const char*,int,int, //int
-    public static native int nk_check_flags_label(long parg0, String parg1, int pflags, int pvalue); //struct nk_context*/*ptr*/,const char*,unsigned int,unsigned int, //unsigned
-    public static native int nk_check_flags_text(long parg0, String parg1, int parg2, int pflags, int pvalue); //struct nk_context*/*ptr*/,const char*,int,unsigned int,unsigned int, //unsigned
-    public static native int nk_checkbox_label(long parg0, String parg1, int[] pactive); //struct nk_context*/*ptr*/,const char*,int*, //int
-    public static native int nk_checkbox_text(long parg0, String parg1, int parg2, int[] pactive); //struct nk_context*/*ptr*/,const char*,int,int*, //int
-    public static native int nk_checkbox_flags_label(long parg0, String parg1, int[] pflags, int pvalue); //struct nk_context*/*ptr*/,const char*,unsigned int*,unsigned int, //int
-    public static native int nk_checkbox_flags_text(long parg0, String parg1, int parg2, int[] pflags, int pvalue); //struct nk_context*/*ptr*/,const char*,int,unsigned int*,unsigned int, //int
-    public static native int nk_radio_label(long parg0, String parg1, int[] pactive); //struct nk_context*/*ptr*/,const char*,int*, //int
-    public static native int nk_radio_text(long parg0, String parg1, int parg2, int[] pactive); //struct nk_context*/*ptr*/,const char*,int,int*, //int
-    public static native int nk_option_label(long parg0, String parg1, int pactive); //struct nk_context*/*ptr*/,const char*,int, //int
-    public static native int nk_option_text(long parg0, String parg1, int parg2, int pactive); //struct nk_context*/*ptr*/,const char*,int,int, //int
-    public static native int nk_selectable_label(long parg0, String parg1, int palign, int[] pvalue); //struct nk_context*/*ptr*/,const char*,nk_flags,int*, //int
-    public static native int nk_selectable_text(long parg0, String parg1, int parg2, int palign, int[] pvalue); //struct nk_context*/*ptr*/,const char*,int,nk_flags,int*, //int
-    public static native int nk_selectable_image_label(long parg0, byte[] parg1, String parg2, int palign, int[] pvalue); //struct nk_context*/*ptr*/,struct nk_image/*none_ptr*/,const char*,nk_flags,int*, //int
-    public static native int nk_selectable_image_text(long parg0, byte[] parg1, String parg2, int parg3, int palign, int[] pvalue); //struct nk_context*/*ptr*/,struct nk_image/*none_ptr*/,const char*,int,nk_flags,int*, //int
-    public static native int nk_select_label(long parg0, String parg1, int palign, int pvalue); //struct nk_context*/*ptr*/,const char*,nk_flags,int, //int
-    public static native int nk_select_text(long parg0, String parg1, int parg2, int palign, int pvalue); //struct nk_context*/*ptr*/,const char*,int,nk_flags,int, //int
-    public static native int nk_select_image_label(long parg0, byte[] parg1, String parg2, int palign, int pvalue); //struct nk_context*/*ptr*/,struct nk_image/*none_ptr*/,const char*,nk_flags,int, //int
-    public static native int nk_select_image_text(long parg0, byte[] parg1, String parg2, int parg3, int palign, int pvalue); //struct nk_context*/*ptr*/,struct nk_image/*none_ptr*/,const char*,int,nk_flags,int, //int
+    public static native int nk_check_label(long parg0, byte[] parg1, int pactive); //struct nk_context*/*ptr*/,const char*,int, //int
+    public static native int nk_check_text(long parg0, byte[] parg1, int parg2, int pactive); //struct nk_context*/*ptr*/,const char*,int,int, //int
+    public static native int nk_check_flags_label(long parg0, byte[] parg1, int pflags, int pvalue); //struct nk_context*/*ptr*/,const char*,unsigned int,unsigned int, //unsigned
+    public static native int nk_check_flags_text(long parg0, byte[] parg1, int parg2, int pflags, int pvalue); //struct nk_context*/*ptr*/,const char*,int,unsigned int,unsigned int, //unsigned
+    public static native int nk_checkbox_label(long parg0, byte[] parg1, int[] pactive); //struct nk_context*/*ptr*/,const char*,int*, //int
+    public static native int nk_checkbox_text(long parg0, byte[] parg1, int parg2, int[] pactive); //struct nk_context*/*ptr*/,const char*,int,int*, //int
+    public static native int nk_checkbox_flags_label(long parg0, byte[] parg1, int[] pflags, int pvalue); //struct nk_context*/*ptr*/,const char*,unsigned int*,unsigned int, //int
+    public static native int nk_checkbox_flags_text(long parg0, byte[] parg1, int parg2, int[] pflags, int pvalue); //struct nk_context*/*ptr*/,const char*,int,unsigned int*,unsigned int, //int
+    public static native int nk_radio_label(long parg0, byte[] parg1, int[] pactive); //struct nk_context*/*ptr*/,const char*,int*, //int
+    public static native int nk_radio_text(long parg0, byte[] parg1, int parg2, int[] pactive); //struct nk_context*/*ptr*/,const char*,int,int*, //int
+    public static native int nk_option_label(long parg0, byte[] parg1, int pactive); //struct nk_context*/*ptr*/,const char*,int, //int
+    public static native int nk_option_text(long parg0, byte[] parg1, int parg2, int pactive); //struct nk_context*/*ptr*/,const char*,int,int, //int
+    public static native int nk_selectable_label(long parg0, byte[] parg1, int palign, int[] pvalue); //struct nk_context*/*ptr*/,const char*,nk_flags,int*, //int
+    public static native int nk_selectable_text(long parg0, byte[] parg1, int parg2, int palign, int[] pvalue); //struct nk_context*/*ptr*/,const char*,int,nk_flags,int*, //int
+    public static native int nk_selectable_image_label(long parg0, byte[] parg1, byte[] parg2, int palign, int[] pvalue); //struct nk_context*/*ptr*/,struct nk_image/*none_ptr*/,const char*,nk_flags,int*, //int
+    public static native int nk_selectable_image_text(long parg0, byte[] parg1, byte[] parg2, int parg3, int palign, int[] pvalue); //struct nk_context*/*ptr*/,struct nk_image/*none_ptr*/,const char*,int,nk_flags,int*, //int
+    public static native int nk_select_label(long parg0, byte[] parg1, int palign, int pvalue); //struct nk_context*/*ptr*/,const char*,nk_flags,int, //int
+    public static native int nk_select_text(long parg0, byte[] parg1, int parg2, int palign, int pvalue); //struct nk_context*/*ptr*/,const char*,int,nk_flags,int, //int
+    public static native int nk_select_image_label(long parg0, byte[] parg1, byte[] parg2, int palign, int pvalue); //struct nk_context*/*ptr*/,struct nk_image/*none_ptr*/,const char*,nk_flags,int, //int
+    public static native int nk_select_image_text(long parg0, byte[] parg1, byte[] parg2, int parg3, int palign, int pvalue); //struct nk_context*/*ptr*/,struct nk_image/*none_ptr*/,const char*,int,nk_flags,int, //int
     public static native float nk_slide_float(long parg0, float pmin, float pval, float pmax, float pstep); //struct nk_context*/*ptr*/,float,float,float,float, //float
     public static native int nk_slide_int(long parg0, int pmin, int pval, int pmax, int pstep); //struct nk_context*/*ptr*/,int,int,int,int, //int
     public static native int nk_slider_float(long parg0, float pmin, float[] pval, float pmax, float pstep); //struct nk_context*/*ptr*/,float,float*,float,float, //int
@@ -522,14 +522,14 @@ public class NK {
     public static native long  nk_prog(long parg0, long pcur, long pmax, int pmodifyable); //struct nk_context*/*ptr*/,nk_size/*ptr*/,nk_size/*ptr*/,int, //nk_size/*ptr*/ 
     public static native int[]  nk_color_picker(long parg0, int[] parg1, int parg2); //struct nk_context*/*ptr*/,struct nk_color/*none_ptr*/,enum nk_color_format, //struct nk_color/*none_ptr*/ 
     public static native int nk_color_pick(long parg0, int[] parg1, int parg2); //struct nk_context*/*ptr*/,struct nk_color*,enum nk_color_format, //int
-    public static native void nk_property_int(long parg0, String pname, int pmin, int[] pval, int pmax, int pstep, float pinc_per_pixel); //struct nk_context*/*ptr*/,const char*,int,int*,int,int,float, //void
-    public static native void nk_property_float(long parg0, String pname, float pmin, float[] pval, float pmax, float pstep, float pinc_per_pixel); //struct nk_context*/*ptr*/,const char*,float,float*,float,float,float, //void
-    public static native void nk_property_double(long parg0, String pname, double pmin, double[] pval, double pmax, double pstep, float pinc_per_pixel); //struct nk_context*/*ptr*/,const char*,double,double*,double,double,float, //void
-    public static native int nk_propertyi(long parg0, String pname, int pmin, int pval, int pmax, int pstep, float pinc_per_pixel); //struct nk_context*/*ptr*/,const char*,int,int,int,int,float, //int
-    public static native float nk_propertyf(long parg0, String pname, float pmin, float pval, float pmax, float pstep, float pinc_per_pixel); //struct nk_context*/*ptr*/,const char*,float,float,float,float,float, //float
-    public static native double nk_propertyd(long parg0, String pname, double pmin, double pval, double pmax, double pstep, float pinc_per_pixel); //struct nk_context*/*ptr*/,const char*,double,double,double,double,float, //double
-    public static native int nk_edit_string(long parg0, int parg1, String pbuffer, int[] plen, int pmax, long parg5); //struct nk_context*/*ptr*/,nk_flags,char*,int*,int,nk_plugin_filter/*ptr*/, //nk_flags
-    public static native int nk_edit_string_zero_terminated(long parg0, int parg1, String pbuffer, int pmax, long parg4); //struct nk_context*/*ptr*/,nk_flags,char*,int,nk_plugin_filter/*ptr*/, //nk_flags
+    public static native void nk_property_int(long parg0, byte[] pname, int pmin, int[] pval, int pmax, int pstep, float pinc_per_pixel); //struct nk_context*/*ptr*/,const char*,int,int*,int,int,float, //void
+    public static native void nk_property_float(long parg0, byte[] pname, float pmin, float[] pval, float pmax, float pstep, float pinc_per_pixel); //struct nk_context*/*ptr*/,const char*,float,float*,float,float,float, //void
+    public static native void nk_property_double(long parg0, byte[] pname, double pmin, double[] pval, double pmax, double pstep, float pinc_per_pixel); //struct nk_context*/*ptr*/,const char*,double,double*,double,double,float, //void
+    public static native int nk_propertyi(long parg0, byte[] pname, int pmin, int pval, int pmax, int pstep, float pinc_per_pixel); //struct nk_context*/*ptr*/,const char*,int,int,int,int,float, //int
+    public static native float nk_propertyf(long parg0, byte[] pname, float pmin, float pval, float pmax, float pstep, float pinc_per_pixel); //struct nk_context*/*ptr*/,const char*,float,float,float,float,float, //float
+    public static native double nk_propertyd(long parg0, byte[] pname, double pmin, double pval, double pmax, double pstep, float pinc_per_pixel); //struct nk_context*/*ptr*/,const char*,double,double,double,double,float, //double
+    public static native int nk_edit_string(long parg0, int parg1, byte[] pbuffer, int[] plen, int pmax, long parg5); //struct nk_context*/*ptr*/,nk_flags,char*,int*,int,nk_plugin_filter/*ptr*/, //nk_flags
+    public static native int nk_edit_string_zero_terminated(long parg0, int parg1, byte[] pbuffer, int pmax, long parg4); //struct nk_context*/*ptr*/,nk_flags,char*,int,nk_plugin_filter/*ptr*/, //nk_flags
     public static native int nk_edit_buffer(long parg0, int parg1, long parg2, long parg3); //struct nk_context*/*ptr*/,nk_flags,struct nk_text_edit*/*ptr*/,nk_plugin_filter/*ptr*/, //nk_flags
     public static native void nk_edit_focus(long parg0, int pflags); //struct nk_context*/*ptr*/,nk_flags, //void
     public static native void nk_edit_unfocus(long parg0); //struct nk_context*/*ptr*/, //void
@@ -542,63 +542,63 @@ public class NK {
     public static native void nk_chart_end(long parg0); //struct nk_context*/*ptr*/, //void
     public static native void nk_plot(long parg0, int parg1, float[] pvalues, int pcount, int poffset); //struct nk_context*/*ptr*/,enum nk_chart_type,const float*,int,int, //void
     public static native void nk_plot_function(long parg0, int parg1, long puserdata, long parg3, int pcount, int poffset); //struct nk_context*/*ptr*/,enum nk_chart_type,void*/*ptr*/,void*/*ptr*/,int,int, //void
-    public static native int nk_popup_begin(long parg0, int parg1, String parg2, int parg3, float[] pbounds); //struct nk_context*/*ptr*/,enum nk_popup_type,const char*,nk_flags,struct nk_rect/*none_ptr*/, //int
+    public static native int nk_popup_begin(long parg0, int parg1, byte[] parg2, int parg3, float[] pbounds); //struct nk_context*/*ptr*/,enum nk_popup_type,const char*,nk_flags,struct nk_rect/*none_ptr*/, //int
     public static native void nk_popup_close(long parg0); //struct nk_context*/*ptr*/, //void
     public static native void nk_popup_end(long parg0); //struct nk_context*/*ptr*/, //void
-    public static native int nk_combo(long parg0, String[] pitems, int pcount, int pselected, int pitem_height, float[] psize); //struct nk_context*/*ptr*/,const char**,int,int,int,struct nk_vec2/*none_ptr*/, //int
-    public static native int nk_combo_separator(long parg0, String pitems_separated_by_separator, int pseparator, int pselected, int pcount, int pitem_height, float[] psize); //struct nk_context*/*ptr*/,const char*,int,int,int,int,struct nk_vec2/*none_ptr*/, //int
-    public static native int nk_combo_string(long parg0, String pitems_separated_by_zeros, int pselected, int pcount, int pitem_height, float[] psize); //struct nk_context*/*ptr*/,const char*,int,int,int,struct nk_vec2/*none_ptr*/, //int
+    public static native int nk_combo(long parg0, byte[][] pitems, int pcount, int pselected, int pitem_height, float[] psize); //struct nk_context*/*ptr*/,const char**,int,int,int,struct nk_vec2/*none_ptr*/, //int
+    public static native int nk_combo_separator(long parg0, byte[] pitems_separated_by_separator, int pseparator, int pselected, int pcount, int pitem_height, float[] psize); //struct nk_context*/*ptr*/,const char*,int,int,int,int,struct nk_vec2/*none_ptr*/, //int
+    public static native int nk_combo_string(long parg0, byte[] pitems_separated_by_zeros, int pselected, int pcount, int pitem_height, float[] psize); //struct nk_context*/*ptr*/,const char*,int,int,int,struct nk_vec2/*none_ptr*/, //int
     public static native int nk_combo_callback(long parg0, long parg1, long puserdata, int pselected, int pcount, int pitem_height, float[] psize); //struct nk_context*/*ptr*/,void*/*ptr*/,void*/*ptr*/,int,int,int,struct nk_vec2/*none_ptr*/, //int
-    public static native void nk_combobox(long parg0, String[] pitems, int pcount, int[] pselected, int pitem_height, float[] psize); //struct nk_context*/*ptr*/,const char**,int,int*,int,struct nk_vec2/*none_ptr*/, //void
-    public static native void nk_combobox_string(long parg0, String pitems_separated_by_zeros, int[] pselected, int pcount, int pitem_height, float[] psize); //struct nk_context*/*ptr*/,const char*,int*,int,int,struct nk_vec2/*none_ptr*/, //void
-    public static native void nk_combobox_separator(long parg0, String pitems_separated_by_separator, int pseparator, int[] pselected, int pcount, int pitem_height, float[] psize); //struct nk_context*/*ptr*/,const char*,int,int*,int,int,struct nk_vec2/*none_ptr*/, //void
+    public static native void nk_combobox(long parg0, byte[][] pitems, int pcount, int[] pselected, int pitem_height, float[] psize); //struct nk_context*/*ptr*/,const char**,int,int*,int,struct nk_vec2/*none_ptr*/, //void
+    public static native void nk_combobox_string(long parg0, byte[] pitems_separated_by_zeros, int[] pselected, int pcount, int pitem_height, float[] psize); //struct nk_context*/*ptr*/,const char*,int*,int,int,struct nk_vec2/*none_ptr*/, //void
+    public static native void nk_combobox_separator(long parg0, byte[] pitems_separated_by_separator, int pseparator, int[] pselected, int pcount, int pitem_height, float[] psize); //struct nk_context*/*ptr*/,const char*,int,int*,int,int,struct nk_vec2/*none_ptr*/, //void
     public static native void nk_combobox_callback(long parg0, long parg1, long parg2, int[] pselected, int pcount, int pitem_height, float[] psize); //struct nk_context*/*ptr*/,void*/*ptr*/,void*/*ptr*/,int*,int,int,struct nk_vec2/*none_ptr*/, //void
-    public static native int nk_combo_begin_text(long parg0, String pselected, int parg2, float[] psize); //struct nk_context*/*ptr*/,const char*,int,struct nk_vec2/*none_ptr*/, //int
-    public static native int nk_combo_begin_label(long parg0, String pselected, float[] psize); //struct nk_context*/*ptr*/,const char*,struct nk_vec2/*none_ptr*/, //int
+    public static native int nk_combo_begin_text(long parg0, byte[] pselected, int parg2, float[] psize); //struct nk_context*/*ptr*/,const char*,int,struct nk_vec2/*none_ptr*/, //int
+    public static native int nk_combo_begin_label(long parg0, byte[] pselected, float[] psize); //struct nk_context*/*ptr*/,const char*,struct nk_vec2/*none_ptr*/, //int
     public static native int nk_combo_begin_color(long parg0, int[] pcolor, float[] psize); //struct nk_context*/*ptr*/,struct nk_color/*none_ptr*/,struct nk_vec2/*none_ptr*/, //int
     public static native int nk_combo_begin_symbol(long parg0, int parg1, float[] psize); //struct nk_context*/*ptr*/,enum nk_symbol_type,struct nk_vec2/*none_ptr*/, //int
-    public static native int nk_combo_begin_symbol_label(long parg0, String pselected, int parg2, float[] psize); //struct nk_context*/*ptr*/,const char*,enum nk_symbol_type,struct nk_vec2/*none_ptr*/, //int
-    public static native int nk_combo_begin_symbol_text(long parg0, String pselected, int parg2, int parg3, float[] psize); //struct nk_context*/*ptr*/,const char*,int,enum nk_symbol_type,struct nk_vec2/*none_ptr*/, //int
+    public static native int nk_combo_begin_symbol_label(long parg0, byte[] pselected, int parg2, float[] psize); //struct nk_context*/*ptr*/,const char*,enum nk_symbol_type,struct nk_vec2/*none_ptr*/, //int
+    public static native int nk_combo_begin_symbol_text(long parg0, byte[] pselected, int parg2, int parg3, float[] psize); //struct nk_context*/*ptr*/,const char*,int,enum nk_symbol_type,struct nk_vec2/*none_ptr*/, //int
     public static native int nk_combo_begin_image(long parg0, byte[] pimg, float[] psize); //struct nk_context*/*ptr*/,struct nk_image/*none_ptr*/,struct nk_vec2/*none_ptr*/, //int
-    public static native int nk_combo_begin_image_label(long parg0, String pselected, byte[] parg2, float[] psize); //struct nk_context*/*ptr*/,const char*,struct nk_image/*none_ptr*/,struct nk_vec2/*none_ptr*/, //int
-    public static native int nk_combo_begin_image_text(long parg0, String pselected, int parg2, byte[] parg3, float[] psize); //struct nk_context*/*ptr*/,const char*,int,struct nk_image/*none_ptr*/,struct nk_vec2/*none_ptr*/, //int
-    public static native int nk_combo_item_label(long parg0, String parg1, int palignment); //struct nk_context*/*ptr*/,const char*,nk_flags, //int
-    public static native int nk_combo_item_text(long parg0, String parg1, int parg2, int palignment); //struct nk_context*/*ptr*/,const char*,int,nk_flags, //int
-    public static native int nk_combo_item_image_label(long parg0, byte[] parg1, String parg2, int palignment); //struct nk_context*/*ptr*/,struct nk_image/*none_ptr*/,const char*,nk_flags, //int
-    public static native int nk_combo_item_image_text(long parg0, byte[] parg1, String parg2, int parg3, int palignment); //struct nk_context*/*ptr*/,struct nk_image/*none_ptr*/,const char*,int,nk_flags, //int
-    public static native int nk_combo_item_symbol_label(long parg0, int parg1, String parg2, int palignment); //struct nk_context*/*ptr*/,enum nk_symbol_type,const char*,nk_flags, //int
-    public static native int nk_combo_item_symbol_text(long parg0, int parg1, String parg2, int parg3, int palignment); //struct nk_context*/*ptr*/,enum nk_symbol_type,const char*,int,nk_flags, //int
+    public static native int nk_combo_begin_image_label(long parg0, byte[] pselected, byte[] parg2, float[] psize); //struct nk_context*/*ptr*/,const char*,struct nk_image/*none_ptr*/,struct nk_vec2/*none_ptr*/, //int
+    public static native int nk_combo_begin_image_text(long parg0, byte[] pselected, int parg2, byte[] parg3, float[] psize); //struct nk_context*/*ptr*/,const char*,int,struct nk_image/*none_ptr*/,struct nk_vec2/*none_ptr*/, //int
+    public static native int nk_combo_item_label(long parg0, byte[] parg1, int palignment); //struct nk_context*/*ptr*/,const char*,nk_flags, //int
+    public static native int nk_combo_item_text(long parg0, byte[] parg1, int parg2, int palignment); //struct nk_context*/*ptr*/,const char*,int,nk_flags, //int
+    public static native int nk_combo_item_image_label(long parg0, byte[] parg1, byte[] parg2, int palignment); //struct nk_context*/*ptr*/,struct nk_image/*none_ptr*/,const char*,nk_flags, //int
+    public static native int nk_combo_item_image_text(long parg0, byte[] parg1, byte[] parg2, int parg3, int palignment); //struct nk_context*/*ptr*/,struct nk_image/*none_ptr*/,const char*,int,nk_flags, //int
+    public static native int nk_combo_item_symbol_label(long parg0, int parg1, byte[] parg2, int palignment); //struct nk_context*/*ptr*/,enum nk_symbol_type,const char*,nk_flags, //int
+    public static native int nk_combo_item_symbol_text(long parg0, int parg1, byte[] parg2, int parg3, int palignment); //struct nk_context*/*ptr*/,enum nk_symbol_type,const char*,int,nk_flags, //int
     public static native void nk_combo_close(long parg0); //struct nk_context*/*ptr*/, //void
     public static native void nk_combo_end(long parg0); //struct nk_context*/*ptr*/, //void
     public static native int nk_contextual_begin(long parg0, int parg1, float[] parg2, float[] ptrigger_bounds); //struct nk_context*/*ptr*/,nk_flags,struct nk_vec2/*none_ptr*/,struct nk_rect/*none_ptr*/, //int
-    public static native int nk_contextual_item_text(long parg0, String parg1, int parg2, int palign); //struct nk_context*/*ptr*/,const char*,int,nk_flags, //int
-    public static native int nk_contextual_item_label(long parg0, String parg1, int palign); //struct nk_context*/*ptr*/,const char*,nk_flags, //int
-    public static native int nk_contextual_item_image_label(long parg0, byte[] parg1, String parg2, int palignment); //struct nk_context*/*ptr*/,struct nk_image/*none_ptr*/,const char*,nk_flags, //int
-    public static native int nk_contextual_item_image_text(long parg0, byte[] parg1, String parg2, int plen, int palignment); //struct nk_context*/*ptr*/,struct nk_image/*none_ptr*/,const char*,int,nk_flags, //int
-    public static native int nk_contextual_item_symbol_label(long parg0, int parg1, String parg2, int palignment); //struct nk_context*/*ptr*/,enum nk_symbol_type,const char*,nk_flags, //int
-    public static native int nk_contextual_item_symbol_text(long parg0, int parg1, String parg2, int parg3, int palignment); //struct nk_context*/*ptr*/,enum nk_symbol_type,const char*,int,nk_flags, //int
+    public static native int nk_contextual_item_text(long parg0, byte[] parg1, int parg2, int palign); //struct nk_context*/*ptr*/,const char*,int,nk_flags, //int
+    public static native int nk_contextual_item_label(long parg0, byte[] parg1, int palign); //struct nk_context*/*ptr*/,const char*,nk_flags, //int
+    public static native int nk_contextual_item_image_label(long parg0, byte[] parg1, byte[] parg2, int palignment); //struct nk_context*/*ptr*/,struct nk_image/*none_ptr*/,const char*,nk_flags, //int
+    public static native int nk_contextual_item_image_text(long parg0, byte[] parg1, byte[] parg2, int plen, int palignment); //struct nk_context*/*ptr*/,struct nk_image/*none_ptr*/,const char*,int,nk_flags, //int
+    public static native int nk_contextual_item_symbol_label(long parg0, int parg1, byte[] parg2, int palignment); //struct nk_context*/*ptr*/,enum nk_symbol_type,const char*,nk_flags, //int
+    public static native int nk_contextual_item_symbol_text(long parg0, int parg1, byte[] parg2, int parg3, int palignment); //struct nk_context*/*ptr*/,enum nk_symbol_type,const char*,int,nk_flags, //int
     public static native void nk_contextual_close(long parg0); //struct nk_context*/*ptr*/, //void
     public static native void nk_contextual_end(long parg0); //struct nk_context*/*ptr*/, //void
-    public static native void nk_tooltip(long parg0, String parg1); //struct nk_context*/*ptr*/,const char*, //void
-    public static native void nk_tooltipf(long parg0, String parg1, String... parg2); //struct nk_context*/*ptr*/,const char*,..., //void
+    public static native void nk_tooltip(long parg0, byte[] parg1); //struct nk_context*/*ptr*/,const char*, //void
+    public static native void nk_tooltipf(long parg0, byte[] parg1, String... parg2); //struct nk_context*/*ptr*/,const char*,..., //void
     public static native int nk_tooltip_begin(long parg0, float pwidth); //struct nk_context*/*ptr*/,float, //int
     public static native void nk_tooltip_end(long parg0); //struct nk_context*/*ptr*/, //void
     public static native void nk_menubar_begin(long parg0); //struct nk_context*/*ptr*/, //void
     public static native void nk_menubar_end(long parg0); //struct nk_context*/*ptr*/, //void
-    public static native int nk_menu_begin_text(long parg0, String ptitle, int ptitle_len, int palign, float[] psize); //struct nk_context*/*ptr*/,const char*,int,nk_flags,struct nk_vec2/*none_ptr*/, //int
-    public static native int nk_menu_begin_label(long parg0, String parg1, int palign, float[] psize); //struct nk_context*/*ptr*/,const char*,nk_flags,struct nk_vec2/*none_ptr*/, //int
-    public static native int nk_menu_begin_image(long parg0, String parg1, byte[] parg2, float[] psize); //struct nk_context*/*ptr*/,const char*,struct nk_image/*none_ptr*/,struct nk_vec2/*none_ptr*/, //int
-    public static native int nk_menu_begin_image_text(long parg0, String parg1, int parg2, int palign, byte[] parg4, float[] psize); //struct nk_context*/*ptr*/,const char*,int,nk_flags,struct nk_image/*none_ptr*/,struct nk_vec2/*none_ptr*/, //int
-    public static native int nk_menu_begin_image_label(long parg0, String parg1, int palign, byte[] parg3, float[] psize); //struct nk_context*/*ptr*/,const char*,nk_flags,struct nk_image/*none_ptr*/,struct nk_vec2/*none_ptr*/, //int
-    public static native int nk_menu_begin_symbol(long parg0, String parg1, int parg2, float[] psize); //struct nk_context*/*ptr*/,const char*,enum nk_symbol_type,struct nk_vec2/*none_ptr*/, //int
-    public static native int nk_menu_begin_symbol_text(long parg0, String parg1, int parg2, int palign, int parg4, float[] psize); //struct nk_context*/*ptr*/,const char*,int,nk_flags,enum nk_symbol_type,struct nk_vec2/*none_ptr*/, //int
-    public static native int nk_menu_begin_symbol_label(long parg0, String parg1, int palign, int parg3, float[] psize); //struct nk_context*/*ptr*/,const char*,nk_flags,enum nk_symbol_type,struct nk_vec2/*none_ptr*/, //int
-    public static native int nk_menu_item_text(long parg0, String parg1, int parg2, int palign); //struct nk_context*/*ptr*/,const char*,int,nk_flags, //int
-    public static native int nk_menu_item_label(long parg0, String parg1, int palignment); //struct nk_context*/*ptr*/,const char*,nk_flags, //int
-    public static native int nk_menu_item_image_label(long parg0, byte[] parg1, String parg2, int palignment); //struct nk_context*/*ptr*/,struct nk_image/*none_ptr*/,const char*,nk_flags, //int
-    public static native int nk_menu_item_image_text(long parg0, byte[] parg1, String parg2, int plen, int palignment); //struct nk_context*/*ptr*/,struct nk_image/*none_ptr*/,const char*,int,nk_flags, //int
-    public static native int nk_menu_item_symbol_text(long parg0, int parg1, String parg2, int parg3, int palignment); //struct nk_context*/*ptr*/,enum nk_symbol_type,const char*,int,nk_flags, //int
-    public static native int nk_menu_item_symbol_label(long parg0, int parg1, String parg2, int palignment); //struct nk_context*/*ptr*/,enum nk_symbol_type,const char*,nk_flags, //int
+    public static native int nk_menu_begin_text(long parg0, byte[] ptitle, int ptitle_len, int palign, float[] psize); //struct nk_context*/*ptr*/,const char*,int,nk_flags,struct nk_vec2/*none_ptr*/, //int
+    public static native int nk_menu_begin_label(long parg0, byte[] parg1, int palign, float[] psize); //struct nk_context*/*ptr*/,const char*,nk_flags,struct nk_vec2/*none_ptr*/, //int
+    public static native int nk_menu_begin_image(long parg0, byte[] parg1, byte[] parg2, float[] psize); //struct nk_context*/*ptr*/,const char*,struct nk_image/*none_ptr*/,struct nk_vec2/*none_ptr*/, //int
+    public static native int nk_menu_begin_image_text(long parg0, byte[] parg1, int parg2, int palign, byte[] parg4, float[] psize); //struct nk_context*/*ptr*/,const char*,int,nk_flags,struct nk_image/*none_ptr*/,struct nk_vec2/*none_ptr*/, //int
+    public static native int nk_menu_begin_image_label(long parg0, byte[] parg1, int palign, byte[] parg3, float[] psize); //struct nk_context*/*ptr*/,const char*,nk_flags,struct nk_image/*none_ptr*/,struct nk_vec2/*none_ptr*/, //int
+    public static native int nk_menu_begin_symbol(long parg0, byte[] parg1, int parg2, float[] psize); //struct nk_context*/*ptr*/,const char*,enum nk_symbol_type,struct nk_vec2/*none_ptr*/, //int
+    public static native int nk_menu_begin_symbol_text(long parg0, byte[] parg1, int parg2, int palign, int parg4, float[] psize); //struct nk_context*/*ptr*/,const char*,int,nk_flags,enum nk_symbol_type,struct nk_vec2/*none_ptr*/, //int
+    public static native int nk_menu_begin_symbol_label(long parg0, byte[] parg1, int palign, int parg3, float[] psize); //struct nk_context*/*ptr*/,const char*,nk_flags,enum nk_symbol_type,struct nk_vec2/*none_ptr*/, //int
+    public static native int nk_menu_item_text(long parg0, byte[] parg1, int parg2, int palign); //struct nk_context*/*ptr*/,const char*,int,nk_flags, //int
+    public static native int nk_menu_item_label(long parg0, byte[] parg1, int palignment); //struct nk_context*/*ptr*/,const char*,nk_flags, //int
+    public static native int nk_menu_item_image_label(long parg0, byte[] parg1, byte[] parg2, int palignment); //struct nk_context*/*ptr*/,struct nk_image/*none_ptr*/,const char*,nk_flags, //int
+    public static native int nk_menu_item_image_text(long parg0, byte[] parg1, byte[] parg2, int plen, int palignment); //struct nk_context*/*ptr*/,struct nk_image/*none_ptr*/,const char*,int,nk_flags, //int
+    public static native int nk_menu_item_symbol_text(long parg0, int parg1, byte[] parg2, int parg3, int palignment); //struct nk_context*/*ptr*/,enum nk_symbol_type,const char*,int,nk_flags, //int
+    public static native int nk_menu_item_symbol_label(long parg0, int parg1, byte[] parg2, int palignment); //struct nk_context*/*ptr*/,enum nk_symbol_type,const char*,nk_flags, //int
     public static native void nk_menu_close(long parg0); //struct nk_context*/*ptr*/, //void
     public static native void nk_menu_end(long parg0); //struct nk_context*/*ptr*/, //void
     public static native void nk_style_default(long parg0); //struct nk_context*/*ptr*/, //void
@@ -627,14 +627,14 @@ public class NK {
     public static native int[]  nk_rgb_bv(byte[] prgb); //const nk_byte*, //struct nk_color/*none_ptr*/ 
     public static native int[]  nk_rgb_f(float pr, float pg, float pb); //float,float,float, //struct nk_color/*none_ptr*/ 
     public static native int[]  nk_rgb_fv(float[] prgb); //const float*, //struct nk_color/*none_ptr*/ 
-    public static native int[]  nk_rgb_hex(String prgb); //const char*, //struct nk_color/*none_ptr*/ 
+    public static native int[]  nk_rgb_hex(byte[] prgb); //const char*, //struct nk_color/*none_ptr*/ 
     public static native int[]  nk_rgba(int pr, int pg, int pb, int pa); //int,int,int,int, //struct nk_color/*none_ptr*/ 
     public static native int[]  nk_rgba_u32(int parg0); //nk_uint, //struct nk_color/*none_ptr*/ 
     public static native int[]  nk_rgba_iv(int[] prgba); //const int*, //struct nk_color/*none_ptr*/ 
     public static native int[]  nk_rgba_bv(byte[] prgba); //const nk_byte*, //struct nk_color/*none_ptr*/ 
     public static native int[]  nk_rgba_f(float pr, float pg, float pb, float pa); //float,float,float,float, //struct nk_color/*none_ptr*/ 
     public static native int[]  nk_rgba_fv(float[] prgba); //const float*, //struct nk_color/*none_ptr*/ 
-    public static native int[]  nk_rgba_hex(String prgb); //const char*, //struct nk_color/*none_ptr*/ 
+    public static native int[]  nk_rgba_hex(byte[] prgb); //const char*, //struct nk_color/*none_ptr*/ 
     public static native int[]  nk_hsv(int ph, int ps, int pv); //int,int,int, //struct nk_color/*none_ptr*/ 
     public static native int[]  nk_hsv_iv(int[] phsv); //const int*, //struct nk_color/*none_ptr*/ 
     public static native int[]  nk_hsv_bv(byte[] phsv); //const nk_byte*, //struct nk_color/*none_ptr*/ 
@@ -650,8 +650,8 @@ public class NK {
     public static native void nk_color_d(double[] pr, double[] pg, double[] pb, double[] pa, int[] parg4); //double*,double*,double*,double*,struct nk_color/*none_ptr*/, //void
     public static native void nk_color_dv(double[] prgba_out, int[] parg1); //double*,struct nk_color/*none_ptr*/, //void
     public static native int nk_color_u32(int[] parg0); //struct nk_color/*none_ptr*/, //nk_uint
-    public static native void nk_color_hex_rgba(String poutput, int[] parg1); //char*,struct nk_color/*none_ptr*/, //void
-    public static native void nk_color_hex_rgb(String poutput, int[] parg1); //char*,struct nk_color/*none_ptr*/, //void
+    public static native void nk_color_hex_rgba(byte[] poutput, int[] parg1); //char*,struct nk_color/*none_ptr*/, //void
+    public static native void nk_color_hex_rgb(byte[] poutput, int[] parg1); //char*,struct nk_color/*none_ptr*/, //void
     public static native void nk_color_hsv_i(int[] pout_h, int[] pout_s, int[] pout_v, int[] parg3); //int*,int*,int*,struct nk_color/*none_ptr*/, //void
     public static native void nk_color_hsv_b(byte[] pout_h, byte[] pout_s, byte[] pout_v, int[] parg3); //nk_byte*,nk_byte*,nk_byte*,struct nk_color/*none_ptr*/, //void
     public static native void nk_color_hsv_iv(int[] phsv_out, int[] parg1); //int*,struct nk_color/*none_ptr*/, //void
@@ -687,19 +687,19 @@ public class NK {
     public static native float[]  nk_rectiv(int[] pxywh); //const int*, //struct nk_rect/*none_ptr*/ 
     public static native float[]  nk_rect_pos(float[] parg0); //struct nk_rect/*none_ptr*/, //struct nk_vec2/*none_ptr*/ 
     public static native float[]  nk_rect_size(float[] parg0); //struct nk_rect/*none_ptr*/, //struct nk_vec2/*none_ptr*/ 
-    public static native int nk_strlen(String pstr); //const char*, //int
-    public static native int nk_stricmp(String ps1, String ps2); //const char*,const char*, //int
-    public static native int nk_stricmpn(String ps1, String ps2, int pn); //const char*,const char*,int, //int
-    public static native int nk_strtoi(String pstr, String[] pendptr); //const char*,const char**, //int
-    public static native float nk_strtof(String pstr, String[] pendptr); //const char*,const char**, //float
-    public static native double nk_strtod(String pstr, String[] pendptr); //const char*,const char**, //double
-    public static native int nk_strfilter(String ptext, String pregexp); //const char*,const char*, //int
-    public static native int nk_strmatch_fuzzy_string(String pstr, String ppattern, int[] pout_score); //char const*,char const*,int*, //int
-    public static native int nk_strmatch_fuzzy_text(String ptxt, int ptxt_len, String ppattern, int[] pout_score); //const char*,int,const char*,int*, //int
-    public static native int nk_utf_decode(String parg0, long parg1, int parg2); //const char*,nk_rune*/*ptr*/,int, //int
-    public static native int nk_utf_encode(int parg0, String parg1, int parg2); //nk_rune,char*,int, //int
-    public static native int nk_utf_len(String parg0, int pbyte_len); //const char*,int, //int
-    public static native byte[] nk_utf_at(String pbuffer, int plength, int pindex, long punicode, int[] plen); //const char*,int,int,nk_rune*/*ptr*/,int*, //const char*
+    public static native int nk_strlen(byte[] pstr); //const char*, //int
+    public static native int nk_stricmp(byte[] ps1, byte[] ps2); //const char*,const char*, //int
+    public static native int nk_stricmpn(byte[] ps1, byte[] ps2, int pn); //const char*,const char*,int, //int
+    public static native int nk_strtoi(byte[] pstr, byte[][] pendptr); //const char*,const char**, //int
+    public static native float nk_strtof(byte[] pstr, byte[][] pendptr); //const char*,const char**, //float
+    public static native double nk_strtod(byte[] pstr, byte[][] pendptr); //const char*,const char**, //double
+    public static native int nk_strfilter(byte[] ptext, byte[] pregexp); //const char*,const char*, //int
+    public static native int nk_strmatch_fuzzy_string(byte[] pstr, byte[] ppattern, int[] pout_score); //char const*,char const*,int*, //int
+    public static native int nk_strmatch_fuzzy_text(byte[] ptxt, int ptxt_len, byte[] ppattern, int[] pout_score); //const char*,int,const char*,int*, //int
+    public static native int nk_utf_decode(byte[] parg0, long parg1, int parg2); //const char*,nk_rune*/*ptr*/,int, //int
+    public static native int nk_utf_encode(int parg0, byte[] parg1, int parg2); //nk_rune,char*,int, //int
+    public static native int nk_utf_len(byte[] parg0, int pbyte_len); //const char*,int, //int
+    public static native byte[] nk_utf_at(byte[] pbuffer, int plength, int pindex, long punicode, int[] plen); //const char*,int,int,nk_rune*/*ptr*/,int*, //const char*
     public static native long  nk_font_default_glyph_ranges(); //void, //const nk_rune*/*ptr*/ 
     public static native long  nk_font_chinese_glyph_ranges(); //void, //const nk_rune*/*ptr*/ 
     public static native long  nk_font_cyrillic_glyph_ranges(); //void, //const nk_rune*/*ptr*/ 
@@ -712,9 +712,9 @@ public class NK {
     public static native long  nk_font_atlas_add(long parg0, long parg1); //struct nk_font_atlas*/*ptr*/,const struct nk_font_config*/*ptr*/, //struct nk_font*/*ptr*/ 
     public static native long  nk_font_atlas_add_default(long parg0, float pheight, long parg2); //struct nk_font_atlas*/*ptr*/,float,const struct nk_font_config*/*ptr*/, //struct nk_font*/*ptr*/ 
     public static native long  nk_font_atlas_add_from_memory(long patlas, long pmemory, long psize, float pheight, long pconfig); //struct nk_font_atlas*/*ptr*/,void*/*ptr*/,nk_size/*ptr*/,float,const struct nk_font_config*/*ptr*/, //struct nk_font*/*ptr*/ 
-    public static native long  nk_font_atlas_add_from_file(long patlas, String pfile_path, float pheight, long parg3); //struct nk_font_atlas*/*ptr*/,const char*,float,const struct nk_font_config*/*ptr*/, //struct nk_font*/*ptr*/ 
+    public static native long  nk_font_atlas_add_from_file(long patlas, byte[] pfile_path, float pheight, long parg3); //struct nk_font_atlas*/*ptr*/,const char*,float,const struct nk_font_config*/*ptr*/, //struct nk_font*/*ptr*/ 
     public static native long  nk_font_atlas_add_compressed(long parg0, long pmemory, long psize, float pheight, long parg4); //struct nk_font_atlas*/*ptr*/,void*/*ptr*/,nk_size/*ptr*/,float,const struct nk_font_config*/*ptr*/, //struct nk_font*/*ptr*/ 
-    public static native long  nk_font_atlas_add_compressed_base85(long parg0, String pdata, float pheight, long pconfig); //struct nk_font_atlas*/*ptr*/,const char*,float,const struct nk_font_config*/*ptr*/, //struct nk_font*/*ptr*/ 
+    public static native long  nk_font_atlas_add_compressed_base85(long parg0, byte[] pdata, float pheight, long pconfig); //struct nk_font_atlas*/*ptr*/,const char*,float,const struct nk_font_config*/*ptr*/, //struct nk_font*/*ptr*/ 
     public static native long  nk_font_atlas_bake(long parg0, int[] pwidth, int[] pheight, int parg3); //struct nk_font_atlas*/*ptr*/,int*,int*,enum nk_font_atlas_format, //const void*/*ptr*/ 
     public static native void nk_font_atlas_end(long parg0, byte[] ptex, long parg2); //struct nk_font_atlas*/*ptr*/,nk_handle/*none_ptr*/,struct nk_draw_null_texture*/*ptr*/, //void
     public static native long  nk_font_find_glyph(long parg0, int punicode); //struct nk_font*/*ptr*/,nk_rune, //const struct nk_font_glyph*/*ptr*/ 
@@ -737,18 +737,18 @@ public class NK {
     public static native void nk_str_init_fixed(long parg0, long pmemory, long psize); //struct nk_str*/*ptr*/,void*/*ptr*/,nk_size/*ptr*/, //void
     public static native void nk_str_clear(long parg0); //struct nk_str*/*ptr*/, //void
     public static native void nk_str_free(long parg0); //struct nk_str*/*ptr*/, //void
-    public static native int nk_str_append_text_char(long parg0, String parg1, int parg2); //struct nk_str*/*ptr*/,const char*,int, //int
-    public static native int nk_str_append_str_char(long parg0, String parg1); //struct nk_str*/*ptr*/,const char*, //int
-    public static native int nk_str_append_text_utf8(long parg0, String parg1, int parg2); //struct nk_str*/*ptr*/,const char*,int, //int
-    public static native int nk_str_append_str_utf8(long parg0, String parg1); //struct nk_str*/*ptr*/,const char*, //int
+    public static native int nk_str_append_text_char(long parg0, byte[] parg1, int parg2); //struct nk_str*/*ptr*/,const char*,int, //int
+    public static native int nk_str_append_str_char(long parg0, byte[] parg1); //struct nk_str*/*ptr*/,const char*, //int
+    public static native int nk_str_append_text_utf8(long parg0, byte[] parg1, int parg2); //struct nk_str*/*ptr*/,const char*,int, //int
+    public static native int nk_str_append_str_utf8(long parg0, byte[] parg1); //struct nk_str*/*ptr*/,const char*, //int
     public static native int nk_str_append_text_runes(long parg0, long parg1, int parg2); //struct nk_str*/*ptr*/,const nk_rune*/*ptr*/,int, //int
     public static native int nk_str_append_str_runes(long parg0, long parg1); //struct nk_str*/*ptr*/,const nk_rune*/*ptr*/, //int
-    public static native int nk_str_insert_at_char(long parg0, int ppos, String parg2, int parg3); //struct nk_str*/*ptr*/,int,const char*,int, //int
-    public static native int nk_str_insert_at_rune(long parg0, int ppos, String parg2, int parg3); //struct nk_str*/*ptr*/,int,const char*,int, //int
-    public static native int nk_str_insert_text_char(long parg0, int ppos, String parg2, int parg3); //struct nk_str*/*ptr*/,int,const char*,int, //int
-    public static native int nk_str_insert_str_char(long parg0, int ppos, String parg2); //struct nk_str*/*ptr*/,int,const char*, //int
-    public static native int nk_str_insert_text_utf8(long parg0, int ppos, String parg2, int parg3); //struct nk_str*/*ptr*/,int,const char*,int, //int
-    public static native int nk_str_insert_str_utf8(long parg0, int ppos, String parg2); //struct nk_str*/*ptr*/,int,const char*, //int
+    public static native int nk_str_insert_at_char(long parg0, int ppos, byte[] parg2, int parg3); //struct nk_str*/*ptr*/,int,const char*,int, //int
+    public static native int nk_str_insert_at_rune(long parg0, int ppos, byte[] parg2, int parg3); //struct nk_str*/*ptr*/,int,const char*,int, //int
+    public static native int nk_str_insert_text_char(long parg0, int ppos, byte[] parg2, int parg3); //struct nk_str*/*ptr*/,int,const char*,int, //int
+    public static native int nk_str_insert_str_char(long parg0, int ppos, byte[] parg2); //struct nk_str*/*ptr*/,int,const char*, //int
+    public static native int nk_str_insert_text_utf8(long parg0, int ppos, byte[] parg2, int parg3); //struct nk_str*/*ptr*/,int,const char*,int, //int
+    public static native int nk_str_insert_str_utf8(long parg0, int ppos, byte[] parg2); //struct nk_str*/*ptr*/,int,const char*, //int
     public static native int nk_str_insert_text_runes(long parg0, int ppos, long parg2, int parg3); //struct nk_str*/*ptr*/,int,const nk_rune*/*ptr*/,int, //int
     public static native int nk_str_insert_str_runes(long parg0, int ppos, long parg2); //struct nk_str*/*ptr*/,int,const nk_rune*/*ptr*/, //int
     public static native void nk_str_remove_chars(long parg0, int plen); //struct nk_str*/*ptr*/,int, //void
@@ -775,12 +775,12 @@ public class NK {
     public static native void nk_textedit_init(long parg0, long parg1, long psize); //struct nk_text_edit*/*ptr*/,struct nk_allocator*/*ptr*/,nk_size/*ptr*/, //void
     public static native void nk_textedit_init_fixed(long parg0, long pmemory, long psize); //struct nk_text_edit*/*ptr*/,void*/*ptr*/,nk_size/*ptr*/, //void
     public static native void nk_textedit_free(long parg0); //struct nk_text_edit*/*ptr*/, //void
-    public static native void nk_textedit_text(long parg0, String parg1, int ptotal_len); //struct nk_text_edit*/*ptr*/,const char*,int, //void
+    public static native void nk_textedit_text(long parg0, byte[] parg1, int ptotal_len); //struct nk_text_edit*/*ptr*/,const char*,int, //void
     public static native void nk_textedit_delete(long parg0, int pwhere, int plen); //struct nk_text_edit*/*ptr*/,int,int, //void
     public static native void nk_textedit_delete_selection(long parg0); //struct nk_text_edit*/*ptr*/, //void
     public static native void nk_textedit_select_all(long parg0); //struct nk_text_edit*/*ptr*/, //void
     public static native int nk_textedit_cut(long parg0); //struct nk_text_edit*/*ptr*/, //int
-    public static native int nk_textedit_paste(long parg0, String parg1, int plen); //struct nk_text_edit*/*ptr*/,char const*,int, //int
+    public static native int nk_textedit_paste(long parg0, byte[] parg1, int plen); //struct nk_text_edit*/*ptr*/,char const*,int, //int
     public static native void nk_textedit_undo(long parg0); //struct nk_text_edit*/*ptr*/, //void
     public static native void nk_textedit_redo(long parg0); //struct nk_text_edit*/*ptr*/, //void
     public static native void nk_stroke_line(long pb, float px0, float py0, float px1, float py1, float pline_thickness, int[] parg6); //struct nk_command_buffer*/*ptr*/,float,float,float,float,float,struct nk_color/*none_ptr*/, //void
@@ -798,7 +798,7 @@ public class NK {
     public static native void nk_fill_triangle(long parg0, float px0, float py0, float px1, float py1, float px2, float py2, int[] parg7); //struct nk_command_buffer*/*ptr*/,float,float,float,float,float,float,struct nk_color/*none_ptr*/, //void
     public static native void nk_fill_polygon(long parg0, float[] parg1, int ppoint_count, int[] parg3); //struct nk_command_buffer*/*ptr*/,float*,int,struct nk_color/*none_ptr*/, //void
     public static native void nk_draw_image(long parg0, float[] parg1, long parg2, int[] parg3); //struct nk_command_buffer*/*ptr*/,struct nk_rect/*none_ptr*/,const struct nk_image*/*ptr*/,struct nk_color/*none_ptr*/, //void
-    public static native void nk_draw_text(long parg0, float[] parg1, String ptext, int plen, long parg4, int[] parg5, int[] parg6); //struct nk_command_buffer*/*ptr*/,struct nk_rect/*none_ptr*/,const char*,int,const struct nk_user_font*/*ptr*/,struct nk_color/*none_ptr*/,struct nk_color/*none_ptr*/, //void
+    public static native void nk_draw_text(long parg0, float[] parg1, byte[] ptext, int plen, long parg4, int[] parg5, int[] parg6); //struct nk_command_buffer*/*ptr*/,struct nk_rect/*none_ptr*/,const char*,int,const struct nk_user_font*/*ptr*/,struct nk_color/*none_ptr*/,struct nk_color/*none_ptr*/, //void
     public static native void nk_push_scissor(long parg0, float[] parg1); //struct nk_command_buffer*/*ptr*/,struct nk_rect/*none_ptr*/, //void
     public static native void nk_push_custom(long parg0, float[] parg1, long parg2, byte[] pusr); //struct nk_command_buffer*/*ptr*/,struct nk_rect/*none_ptr*/,nk_command_custom_callback/*ptr*/,nk_handle/*none_ptr*/, //void
     public static native int nk_input_has_mouse_click(long parg0, int parg1); //const struct nk_input*/*ptr*/,enum nk_buttons, //int
@@ -842,7 +842,7 @@ public class NK {
     public static native void nk_draw_list_fill_circle(long parg0, float[] pcenter, float pradius, int[] pcol, int psegs); //struct nk_draw_list*/*ptr*/,struct nk_vec2/*none_ptr*/,float,struct nk_color/*none_ptr*/,unsigned int, //void
     public static native void nk_draw_list_fill_poly_convex(long parg0, float[] ppoints, int pcount, int[] parg3, int parg4); //struct nk_draw_list*/*ptr*/,const struct nk_vec2*,const unsigned int,struct nk_color/*none_ptr*/,enum nk_anti_aliasing, //void
     public static native void nk_draw_list_add_image(long parg0, byte[] ptexture, float[] prect, int[] parg3); //struct nk_draw_list*/*ptr*/,struct nk_image/*none_ptr*/,struct nk_rect/*none_ptr*/,struct nk_color/*none_ptr*/, //void
-    public static native void nk_draw_list_add_text(long parg0, long parg1, float[] parg2, String ptext, int plen, float pfont_height, int[] parg6); //struct nk_draw_list*/*ptr*/,const struct nk_user_font*/*ptr*/,struct nk_rect/*none_ptr*/,const char*,int,float,struct nk_color/*none_ptr*/, //void
+    public static native void nk_draw_list_add_text(long parg0, long parg1, float[] parg2, byte[] ptext, int plen, float pfont_height, int[] parg6); //struct nk_draw_list*/*ptr*/,const struct nk_user_font*/*ptr*/,struct nk_rect/*none_ptr*/,const char*,int,float,struct nk_color/*none_ptr*/, //void
     public static native void nk_draw_list_push_userdata(long parg0, byte[] puserdata); //struct nk_draw_list*/*ptr*/,nk_handle/*none_ptr*/, //void
     public static native byte[]  nk_style_item_image(byte[] pimg); //struct nk_image/*none_ptr*/, //struct nk_style_item/*none_ptr*/ 
     public static native byte[]  nk_style_item_color(int[] parg0); //struct nk_color/*none_ptr*/, //struct nk_style_item/*none_ptr*/ 
@@ -855,6 +855,10 @@ public class NK {
     public static native void nk_glfw3_shutdown(); //void, //void
     public static native void nk_glfw3_char_callback(long pwin, int pcodepoint); //GLFWwindow*/*ptr*/,unsigned int, //void
     public static native void nk_gflw3_scroll_callback(long pwin, double pxoff, double pyoff); //GLFWwindow*/*ptr*/,double,double, //void
+    public static native long  nk_get_font_handle(long pfont); //struct nk_font*/*ptr*/, //struct nk_user_font*/*ptr*/ 
+    public static native byte[]  nk_create_font_atlas(); // //struct nk_font_atlas/*none_ptr*/ 
+    public static native void nk_set_font_cfg_range(long pfont_cfg, long prange); //struct nk_font_config*/*ptr*/,nk_rune*/*ptr*/, //void
+    public static native long  nk_load_font(byte[] pfile_path, float pheight); //const char*,float, //struct nk_font*/*ptr*/ 
 
 }
 

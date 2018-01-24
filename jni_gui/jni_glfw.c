@@ -20,20 +20,6 @@ GlobeRefer refers;
 
 /* ==============================   local tools  =================================*/
 
-s64 getParaLong(Runtime *runtime, s32 index) {
-    JniEnv *env = runtime->jnienv;
-    Long2Double l2d;
-    l2d.i2l.i1 = env->localvar_getInt(runtime, index);
-    l2d.i2l.i0 = env->localvar_getInt(runtime, index + 1);
-    return l2d.l;
-}
-
-c8 *jbytearr2c8arr(JniEnv *env, Instance *jbytearr) {
-    c8 *arr = env->jvm_malloc(jbytearr->arr_length + 1);
-    memcpy(arr, jbytearr->arr_body, jbytearr->arr_length);
-    arr[jbytearr->arr_length] = 0;
-    return arr;
-}
 
 Instance *createJavaString(Runtime *runtime, c8 *cstr) {
     JniEnv *env = runtime->jnienv;
@@ -92,7 +78,7 @@ static void _callback_drop(GLFWwindow *window, s32 count, const c8 **cstrs) {
         env->utf8_destory(cls);
         s32 i;
         for (i = 0; i < count; i++) {
-            s64 val = (intptr_t)createJavaString(refers.runtime, (c8 *) cstrs[i]);
+            s64 val = (intptr_t) createJavaString(refers.runtime, (c8 *) cstrs[i]);
             env->jarray_set_field(jstrs, i, val);
         }
         env->push_ref(refers.runtime->stack, jstrs);
@@ -681,7 +667,7 @@ int org_mini_glfw_utils_Gutil_image_load(Runtime *runtime, Class *clazz) {
     s32 w, h, depth;
     s32 _re_val = image_load((const char *) (ptr_pfilename), &w, &h, &depth);
     if (pwhd && pwhd->arr_length >= 3) {
-        s64 val= w;
+        s64 val = w;
         env->jarray_set_field(pwhd, 0, val);
         val = h;
         env->jarray_set_field(pwhd, 1, val);
@@ -698,7 +684,7 @@ int org_mini_glfw_utils_Gutil_image_load(Runtime *runtime, Class *clazz) {
 int org_mini_glfw_Glfw_glfwSetCallback(Runtime *runtime, Class *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
-    GLFWwindow *window = (__refer) (intptr_t) getParaLong(runtime, pos);
+    GLFWwindow *window = (__refer) (intptr_t) env->localvar_getLong_2slot(runtime, pos);
     pos += 2;
     refers.glfw_callback = env->localvar_getRefer(runtime, pos++);
 
@@ -878,7 +864,7 @@ int org_mini_glfw_Glfw_glfwSetTime(Runtime *runtime, Class *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     Long2Double t;
-    t.l = getParaLong(runtime, pos);
+    t.l = env->localvar_getLong_2slot(runtime, pos);
     pos += 2;
     glfwSetTime(t.d);
     return 0;
@@ -890,10 +876,10 @@ int org_mini_glfw_Glfw_glfwCreateWindowJni(Runtime *runtime, Class *clazz) {
     s32 width = env->localvar_getInt(runtime, pos++);
     s32 height = env->localvar_getInt(runtime, pos++);
     Instance *title_arr = env->localvar_getRefer(runtime, pos++);
-    c8 *title = jbytearr2c8arr(env, title_arr);
-    GLFWmonitor *monitor = (__refer) (intptr_t) getParaLong(runtime, pos);
+    c8 *title = title_arr->arr_body;
+    GLFWmonitor *monitor = (__refer) (intptr_t) env->localvar_getLong_2slot(runtime, pos);
     pos += 2;
-    GLFWwindow *share = (__refer) (intptr_t) getParaLong(runtime, pos);
+    GLFWwindow *share = (__refer) (intptr_t) env->localvar_getLong_2slot(runtime, pos);
     pos += 2;
 
     GLFWwindow *window = glfwCreateWindow(width, height, title, monitor, share);
@@ -910,7 +896,7 @@ int org_mini_glfw_Glfw_glfwCreateWindowJni(Runtime *runtime, Class *clazz) {
 int org_mini_glfw_Glfw_glfwDestroyWindow(Runtime *runtime, Class *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
-    GLFWwindow *window = (__refer) (intptr_t) getParaLong(runtime, pos);
+    GLFWwindow *window = (__refer) (intptr_t) env->localvar_getLong_2slot(runtime, pos);
     glfwDestroyWindow(window);
     return 0;
 }
@@ -918,7 +904,7 @@ int org_mini_glfw_Glfw_glfwDestroyWindow(Runtime *runtime, Class *clazz) {
 int org_mini_glfw_Glfw_glfwWindowShouldClose(Runtime *runtime, Class *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
-    GLFWwindow *window = (__refer) (intptr_t) getParaLong(runtime, pos);
+    GLFWwindow *window = (__refer) (intptr_t) env->localvar_getLong_2slot(runtime, pos);
     env->push_int(runtime->stack, GL_TRUE == glfwWindowShouldClose((GLFWwindow *) window));
     return 0;
 }
@@ -953,7 +939,7 @@ int org_mini_glfw_Glfw_glfwPollEvents(Runtime *runtime, Class *clazz) {
 int org_mini_glfw_Glfw_glfwSetWindowShouldClose(Runtime *runtime, Class *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
-    GLFWwindow *window = (__refer) (intptr_t) getParaLong(runtime, pos);
+    GLFWwindow *window = (__refer) (intptr_t) env->localvar_getLong_2slot(runtime, pos);
     pos += 2;
     s32 value = env->localvar_getInt(runtime, pos++);
     glfwSetWindowShouldClose(window, value);
@@ -963,7 +949,7 @@ int org_mini_glfw_Glfw_glfwSetWindowShouldClose(Runtime *runtime, Class *clazz) 
 int org_mini_glfw_Glfw_glfwMakeContextCurrentJni(Runtime *runtime, Class *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
-    GLFWwindow *window = (__refer) (intptr_t) getParaLong(runtime, pos);
+    GLFWwindow *window = (__refer) (intptr_t) env->localvar_getLong_2slot(runtime, pos);
     pos += 2;
     glfwMakeContextCurrent(window);
     gladLoadGLLoader((GLADloadproc) glfwGetProcAddress);
@@ -981,7 +967,7 @@ int org_mini_glfw_Glfw_glfwSwapInterval(Runtime *runtime, Class *clazz) {
 int org_mini_glfw_Glfw_glfwSwapBuffers(Runtime *runtime, Class *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
-    GLFWwindow *window = (__refer) (intptr_t) getParaLong(runtime, pos);
+    GLFWwindow *window = (__refer) (intptr_t) env->localvar_getLong_2slot(runtime, pos);
     pos += 2;
     glfwSwapBuffers(window);
     return 0;
@@ -990,7 +976,7 @@ int org_mini_glfw_Glfw_glfwSwapBuffers(Runtime *runtime, Class *clazz) {
 int org_mini_glfw_Glfw_glfwGetFramebufferSizeW(Runtime *runtime, Class *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
-    GLFWwindow *window = (__refer) (intptr_t) getParaLong(runtime, pos);
+    GLFWwindow *window = (__refer) (intptr_t) env->localvar_getLong_2slot(runtime, pos);
     s32 w, h;
     glfwGetFramebufferSize(window, &w, &h);
     env->push_int(runtime->stack, w);
@@ -1000,7 +986,7 @@ int org_mini_glfw_Glfw_glfwGetFramebufferSizeW(Runtime *runtime, Class *clazz) {
 int org_mini_glfw_Glfw_glfwGetFramebufferSizeH(Runtime *runtime, Class *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
-    GLFWwindow *window = (__refer) (intptr_t) getParaLong(runtime, pos);
+    GLFWwindow *window = (__refer) (intptr_t) env->localvar_getLong_2slot(runtime, pos);
     s32 w, h;
     glfwGetFramebufferSize(window, &w, &h);
     env->push_int(runtime->stack, h);
@@ -1010,7 +996,7 @@ int org_mini_glfw_Glfw_glfwGetFramebufferSizeH(Runtime *runtime, Class *clazz) {
 int org_mini_glfw_Glfw_glfwSetWindowAspectRatio(Runtime *runtime, Class *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
-    GLFWwindow *window = (__refer) (intptr_t) getParaLong(runtime, pos);
+    GLFWwindow *window = (__refer) (intptr_t) env->localvar_getLong_2slot(runtime, pos);
     pos += 2;
     s32 numer = env->localvar_getInt(runtime, pos++);
     s32 denom = env->localvar_getInt(runtime, pos++);
@@ -1021,7 +1007,7 @@ int org_mini_glfw_Glfw_glfwSetWindowAspectRatio(Runtime *runtime, Class *clazz) 
 int org_mini_glfw_Glfw_glfwGetClipboardString(Runtime *runtime, Class *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
-    GLFWwindow *window = (__refer) (intptr_t) getParaLong(runtime, pos);
+    GLFWwindow *window = (__refer) (intptr_t) env->localvar_getLong_2slot(runtime, pos);
     c8 *cstr = (c8 *) glfwGetClipboardString(window);
     if (cstr) {
         Utf8String *ustr = env->utf8_create_part_c(cstr, 0, strlen(cstr));

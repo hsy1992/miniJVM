@@ -5,6 +5,8 @@
  */
 package org.mini.gui;
 
+import javax.mini.reflect.Array;
+import javax.mini.reflect.vm.RefNative;
 import static org.mini.gl.GL.GL_COLOR_BUFFER_BIT;
 import static org.mini.gl.GL.glClear;
 import org.mini.glfw.Glfw;
@@ -21,7 +23,6 @@ import org.mini.nk.NK;
 import static org.mini.nk.NK.nk_glfw3_init;
 import static org.mini.nk.NK.nk_glfw3_shutdown;
 import static org.mini.nk.NK.nk_true;
-import static org.mini.nk.NK.nk_window_get_canvas;
 
 /**
  *
@@ -36,7 +37,12 @@ public class GForm extends GContainer implements Runnable {
     long win; //glfw win
     long ctx; //nk contex
     GlfwCallback callback;
-    
+    long font;
+
+    int[] unicode_range = {
+        0x0020, 0xFFFF,
+        0
+    };
 
     public GForm(String title, int width, int height) {
         this.title = title;
@@ -55,6 +61,9 @@ public class GForm extends GContainer implements Runnable {
         }
     }
 
+    public long getFont() {
+        return font;
+    }
 
     @Override
     public void run() {
@@ -65,7 +74,7 @@ public class GForm extends GContainer implements Runnable {
         }
         glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 2);
         glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 0);
-        win = Glfw.glfwCreateWindow(width, height, "hello glfw", 0, 0);
+        win = Glfw.glfwCreateWindow(width, height, title, 0, 0);
         if (win == 0) {
             glfwTerminate();
             System.exit(1);
@@ -76,12 +85,13 @@ public class GForm extends GContainer implements Runnable {
         if (callback != null) {
             Glfw.glfwSetCallback(win, callback);
         }
-        long[] atlas = {0L};
-        NK.nk_glfw3_font_stash_begin(atlas);
-        System.out.println("atlas=" + atlas[0]);
-        NK.nk_glfw3_font_stash_end();
-        GToolkit.putForm(ctx, this);
+        //字体
         
+        font = NK.nk_load_font("./wqymhei.ttc\000".getBytes(), 15);
+        
+        NK.nk_style_set_font(ctx, NK.nk_get_font_handle(font));
+        //
+        GToolkit.putForm(ctx, this);
 
         while (!glfwWindowShouldClose(win)) {
             try {
@@ -92,8 +102,11 @@ public class GForm extends GContainer implements Runnable {
             } catch (Exception ex) {
             }
         }
+        System.out.println("while exit");
         nk_glfw3_shutdown();
+        System.out.println("nk_glfw3_shutdown ok");
         glfwTerminate();
+        System.out.println("glfwTerminate ok");
         GToolkit.removeForm(ctx);
         ctx = 0;
     }
