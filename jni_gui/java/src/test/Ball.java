@@ -46,29 +46,6 @@ class Ball {
         return 1;
     }
 
-    float[] tmp0 = {0, 0, 0};
-    float[] tmp1 = {0, 0, 0};
-    float[] tmp2 = {0, 0, 0};
-
-    void drawSlice(float[] p1, float[] p2, float[] p3, float[] p4, int mode) {
-        switch (mode) {
-            case SOLID:
-                glBegin(GL_QUADS);
-                break;
-            case WIRE:
-                glBegin(GL_LINE_LOOP);
-                break;
-        }
-        vec_mul_cross(tmp2, vec_sub(tmp0, p2, p1), vec_sub(tmp1, p3, p2));
-        Gutil.vec_normal(tmp0, tmp2);
-        GL.glNormal3fv(tmp2, 0);
-        glVertex3f(p1[x], p1[y], p1[z]);
-        glVertex3f(p2[x], p2[y], p2[z]);
-        glVertex3f(p3[x], p3[y], p3[z]);
-        glVertex3f(p4[x], p4[y], p4[z]);
-        glEnd();
-    }
-
     final float[][] getPointMatrix(float radius, int slices) {
         int i, j;
         float a, b;
@@ -88,6 +65,31 @@ class Ball {
         return matrix;
     }
 
+    float[] tmp0 = {0, 0, 0};
+    float[] tmp1 = {0, 0, 0};
+    float[] tmp2 = {0, 0, 0};
+
+    void drawSlice(float[] p1, float[] p2, float[] p3, float[] p4, int mode) {
+        switch (mode) {
+            case SOLID:
+                glBegin(GL_QUADS);
+                break;
+            case WIRE:
+                glBegin(GL_LINE_LOOP);
+                break;
+        }
+        //vec_mul_cross(tmp2, vec_sub(tmp0, p3, p2), vec_sub(tmp1, p4, p3));
+        GL.glNormal3fv(p1, 0);
+        glVertex3f(p1[x], p1[y], p1[z]);
+        GL.glNormal3fv(p2, 0);
+        glVertex3f(p2[x], p2[y], p2[z]);
+        GL.glNormal3fv(p3, 0);
+        glVertex3f(p3[x], p3[y], p3[z]);
+        GL.glNormal3fv(p4, 0);
+        glVertex3f(p4[x], p4[y], p4[z]);
+        glEnd();
+    }
+
     public int draw() {
         int i = 0, j = 0;
         for (; i < h - 1; i++) {
@@ -98,4 +100,5 @@ class Ball {
         }
         return 1;
     }
+
 }

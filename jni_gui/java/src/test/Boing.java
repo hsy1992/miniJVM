@@ -422,7 +422,7 @@ public class Boing {
          */
         GL.glClearColor(0.55f, 0.55f, 0.55f, 0.f);
 
-        GL.glShadeModel(GL.GL_FLAT);
+        GL.glShadeModel(GL.GL_SMOOTH);
     }
 
     void display() {

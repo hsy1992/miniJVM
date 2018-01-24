@@ -148,10 +148,12 @@ public class Shader {
         glShaderSource(vertex_shader, 1, new byte[][]{Gutil.toUtf8(s0)}, null, 0);
         glCompileShader(vertex_shader);
         byte[] szLog = new byte[1024];
-        int[] logLen = {0};
-        GL.glGetShaderInfoLog(vertex_shader, szLog.length, logLen, 0, szLog);
-        System.out.println("Compile Shader fail error :" + new String(szLog, 0, logLen[0]) + "\n");
-        
+        int[] return_val = {0};
+        GL.glGetShaderiv(vertex_shader, GL.GL_COMPILE_STATUS, return_val, 0);
+        if (return_val[0] == GL_FALSE) {
+            GL.glGetShaderInfoLog(vertex_shader, szLog.length, return_val, 0, szLog);
+            System.out.println("Compile Shader fail error :" + new String(szLog, 0, return_val[0]) + "\n");
+        }
         String s1 = "#version 330   \n"
                 + "out vec4 fColor;  \n"
                 + "void  \n"
@@ -162,9 +164,11 @@ public class Shader {
         fragment_shader = glCreateShader(GL_FRAGMENT_SHADER);
         glShaderSource(fragment_shader, 1, new byte[][]{Gutil.toUtf8(s1)}, null, 0);
         glCompileShader(fragment_shader);
-         GL.glGetShaderInfoLog(vertex_shader, szLog.length, logLen, 0, szLog);
-        System.out.println("Compile Shader fail error :" + new String(szLog, 0, logLen[0]) + "\n");
-
+        GL.glGetShaderiv(fragment_shader, GL.GL_COMPILE_STATUS, return_val, 0);
+        if (return_val[0] == GL_FALSE) {
+            GL.glGetShaderInfoLog(fragment_shader, szLog.length, return_val, 0, szLog);
+            System.out.println("Compile Shader fail error :" + new String(szLog, 0, return_val[0]) + "\n");
+        }
         program = glCreateProgram();
         glAttachShader(program, vertex_shader);
         glAttachShader(program, fragment_shader);
