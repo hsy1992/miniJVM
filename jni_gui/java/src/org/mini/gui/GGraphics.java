@@ -78,7 +78,7 @@ public class GGraphics {
         rect[3] = 10000;
         byte[] b = GToolkit.toUtf8(str + "\000");
         int blen = str.length();
-        NK.nk_draw_text(brush, rect, b, blen, NK.nk_get_font_handle(font), new int[]{0xff000000}, curColor);
+        NK.nk_draw_text(brush, rect, b, blen, NK.nk_get_font_handle(font), new int[]{0x80808080}, curColor);
     }
 
     public void drawSubstring(String str, int offset, int len, int x, int y, int anchor) {
@@ -90,7 +90,7 @@ public class GGraphics {
         str = str.substring(offset, len);
         byte[] b = GToolkit.toUtf8(str + "\000");
         int blen = str.length();
-        NK.nk_draw_text(brush, rect, b, blen, NK.nk_get_font_handle(font), new int[]{0xff000000}, curColor);
+        NK.nk_draw_text(brush, rect, b, blen, NK.nk_get_font_handle(font), new int[]{0xff808000}, curColor);
     }
 
     public void drawChar(char character, int x, int y, int anchor) {
