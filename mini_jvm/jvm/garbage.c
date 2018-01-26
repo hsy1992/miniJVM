@@ -39,8 +39,8 @@ s32 _garbage_copy_refer_thread(Runtime *pruntime);
  *
  * 注册的对象包括 Class 类， Instance 对象实例（包括数组对象）
  *
- * 在垃圾回收时，由垃圾收集线程来收集，收集 collector->objs 中的对象，
- * 收集所有引用计数<=0的对象，直接销毁，释放内存
+ * 在垃圾回收时，由垃圾收集线程来收集，收集 collector->header 链表中的对象，
+ * 收集方法为： 当对象未被任一线程引用时，进行标记，直接销毁，释放内存
  *
  * 收集线程会暂停所有正在执行中的java线程 ，回收完之后，恢复线程执行
  *
@@ -49,12 +49,12 @@ s32 _garbage_copy_refer_thread(Runtime *pruntime);
  * collecting  step:
  *
  * 1. stop the world
- * 2. all reg/hold/release operation putin a cache comtainer after stop the world,
+ * 2. all reg/hold/release operation add to a temp linklist ,
  * 3. copy all runtime refer
- * 4. move cache to main objs comtainer
+ * 4. mark object when referenced by threads
  * 5. resume the world
- * 6. gc
- * 7. restore reg/hold/release opreation
+ * 6. release unmarked object memory
+ * 7. move temp linklist to main list
  *
  * @return errorcode
  */

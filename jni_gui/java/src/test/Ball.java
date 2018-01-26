@@ -8,9 +8,6 @@ import static org.mini.gl.GL.GL_QUADS;
 import static org.mini.gl.GL.glBegin;
 import static org.mini.gl.GL.glEnd;
 import static org.mini.gl.GL.glVertex3f;
-import org.mini.glfw.utils.Gutil;
-import static org.mini.glfw.utils.Gutil.vec_mul_cross;
-import static org.mini.glfw.utils.Gutil.vec_sub;
 
 class Ball {
 

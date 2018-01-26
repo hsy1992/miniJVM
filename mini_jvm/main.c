@@ -26,9 +26,6 @@ void _on_jvm_sig(int no) {
  *
  */
 int main(int argc, char **argv) {
-//    jvm_printf("void* size:%d\n", sizeof(void *));
-//    jvm_printf("long size:%d\n", sizeof(long));
-//    jvm_printf("intptr_t size:%d\n", sizeof(intptr_t));
     signal(SIGABRT, _on_jvm_sig);
     signal(SIGFPE, _on_jvm_sig);
     signal(SIGSEGV, _on_jvm_sig);
@@ -39,7 +36,7 @@ int main(int argc, char **argv) {
     ArrayList *java_para = arraylist_create(0);
     s32 ret;
     if (argc >
-        1) {//  mini_jvm   -Xmx1024M -cp ../../javalib/dist/minijvm_rt.jar;../../javalib_test/dist/minijvm_test.jar;./ test/Foo1 999
+        1) {//  mini_jvm   -Xmx16M -cp ../../javalib/dist/minijvm_rt.jar;../../javalib_test/dist/minijvm_test.jar;./ test/Foo1 999
         s32 i;
         for (i = 1; i < argc; i++) {
             if (strcmp(argv[i], "-cp") == 0 || strcmp(argv[i], "-classpath") == 0) {
@@ -48,6 +45,7 @@ int main(int argc, char **argv) {
             } else if (strcmp(argv[i], "-Xdebug") == 0) {
                 java_debug = 1;
             } else if (argv[i][0] == '-') {
+                jvm_printf("skiped argv: %s", argv[i]);
                 //other jvm para
             } else if (main_name == NULL) {
                 main_name = argv[i];
@@ -60,6 +58,9 @@ int main(int argc, char **argv) {
 //        classpath = "../../javalib/dist/minijvm_rt.jar;../../jni_gui/java/dist/gui_lib.jar;./";
 //        main_name = "test/Gears";
 //        main_name = "test/TestGL";
+//        main_name = "test/GuiTest";
+//        main_name = "test/Alpha";
+//        main_name = "test/Light";
 //        main_name = "test/Shader";
 //        main_name = "test/Boing";
 
