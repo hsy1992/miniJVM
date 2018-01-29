@@ -135,6 +135,10 @@ public class GL_java_2_c {
                             pushCode += "env->push_int(runtime->stack, ret_value);";
                             javaReturnCode = "I";
                         } else if ("float".equals(returnType)) {
+                            returnCode = "f32 ret_value = (f32)";
+                            pushCode = "env->push_float(runtime->stack, ret_value);";
+                            javaReturnCode = "F";
+                        } else if ("double".equals(returnType)) {
                             returnCode = "f64 ret_value = (f64)";
                             pushCode = "env->push_float(runtime->stack, ret_value);";
                             javaReturnCode = "D";

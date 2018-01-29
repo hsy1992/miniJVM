@@ -56,6 +56,11 @@ public class NK_java_2_c {
             + "#define NK_INCLUDE_STANDARD_VARARGS\n"
             + "#include <nuklear.h>\n"
             + "\n"
+            + "#define STB_TRUETYPE_IMPLEMENTATION\n"
+            + "#include <stb_truetype.h>\n"
+            + "#define STB_IMAGE_WRITE_IMPLEMENTATION\n"
+            + "#include <stb_image_write.h>\n"
+            + "\n"
             + "#define NK_GLFW_GL2_IMPLEMENTATION\n"
             + "#include <nuklear_glfw_gl2.h>\n"
             + "#include <nuklear_jni_assist.h>\n"
@@ -154,7 +159,11 @@ public class NK_java_2_c {
                         } else if ("float".equals(returnType)) {
                             returnCode = "f32 ret_value = (f32)";
                             pushCode = "env->push_float(runtime->stack, ret_value);";
-                            javaReturnCode = "D";
+                            javaReturnCode = "F";
+                        } else if ("double".equals(returnType)) {
+                            returnCode = "f64 ret_value = (f64)";
+                            pushCode = "env->push_double(runtime->stack, ret_value);";
+                            javaReturnCode = "F";
                         } else if ("byte".equals(returnType)) {
                             returnCode = "s8 ret_value = (s8)";
                             pushCode = "env->push_int(runtime->stack, ret_value);";

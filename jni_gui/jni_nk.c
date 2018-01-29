@@ -16,6 +16,11 @@
 #define NK_INCLUDE_STANDARD_VARARGS
 #include <nuklear.h>
 
+#define STB_TRUETYPE_IMPLEMENTATION
+#include <stb_truetype.h>
+#define STB_IMAGE_WRITE_IMPLEMENTATION
+#include <stb_image_write.h>
+
 #define NK_GLFW_GL2_IMPLEMENTATION
 #include <nuklear_glfw_gl2.h>
 #include <nuklear_jni_assist.h>
@@ -9641,7 +9646,7 @@ int org_mini_nk_NK_nk_set_font_cfg_range(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-int org_mini_nk_NK_nk_load_font(Runtime *runtime, Class *clazz) {
+int org_mini_nk_NK_nk_load_font_file(Runtime *runtime, Class *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -9652,8 +9657,256 @@ int org_mini_nk_NK_nk_load_font(Runtime *runtime, Class *clazz) {
     }
     Int2Float pheight;pheight.i = env->localvar_getInt(runtime, pos++);
 
-    struct nk_font*/*ptr*/ _re_val = nk_load_font((const char*)(ptr_pfile_path), (float)pheight.f);
+    struct nk_font*/*ptr*/ _re_val = nk_load_font_file((const char*)(ptr_pfile_path), (float)pheight.f);
     s64 ret_value = (s64)(intptr_t)_re_val;env->push_long(runtime->stack, ret_value);
+    
+    return 0;
+}
+
+int org_mini_nk_NK_nk_load_font_memory(Runtime *runtime, Class *clazz) {
+    JniEnv *env = runtime->jnienv;
+    s32 pos = 0;
+    
+    intptr_t pbytes = env->localvar_getLong_2slot(runtime, pos);pos += 2;
+    s32 psize = env->localvar_getInt(runtime, pos++);
+    Int2Float pheight;pheight.i = env->localvar_getInt(runtime, pos++);
+
+    struct nk_font*/*ptr*/ _re_val = nk_load_font_memory((void*/*ptr*/)(pbytes), (int)psize, (float)pheight.f);
+    s64 ret_value = (s64)(intptr_t)_re_val;env->push_long(runtime->stack, ret_value);
+    
+    return 0;
+}
+
+int org_mini_nk_NK_stbtt_InitFont(Runtime *runtime, Class *clazz) {
+    JniEnv *env = runtime->jnienv;
+    s32 pos = 0;
+    
+    intptr_t pinfo = env->localvar_getLong_2slot(runtime, pos);pos += 2;
+    Instance *pdata2 = env->localvar_getRefer(runtime, pos++);
+    __refer ptr_pdata2 = NULL;
+    if(pdata2){
+        ptr_pdata2 = pdata2->arr_body;
+    }
+    s32 pfontstart = env->localvar_getInt(runtime, pos++);
+
+    int _re_val = stbtt_InitFont((stbtt_fontinfo*/*ptr*/)(pinfo), (const unsigned char*)(ptr_pdata2), (int)pfontstart);
+    s32 ret_value = (s32)_re_val;env->push_int(runtime->stack, ret_value);
+    
+    return 0;
+}
+
+int org_mini_nk_NK_stbtt_ScaleForPixelHeight(Runtime *runtime, Class *clazz) {
+    JniEnv *env = runtime->jnienv;
+    s32 pos = 0;
+    
+    intptr_t pinfo = env->localvar_getLong_2slot(runtime, pos);pos += 2;
+    Int2Float ppixels;ppixels.i = env->localvar_getInt(runtime, pos++);
+
+    f32 ret_value = (f32)stbtt_ScaleForPixelHeight((const stbtt_fontinfo*/*ptr*/)(pinfo), (float)ppixels.f);
+    env->push_float(runtime->stack, ret_value);
+    
+    return 0;
+}
+
+int org_mini_nk_NK_stbtt_GetFontVMetrics(Runtime *runtime, Class *clazz) {
+    JniEnv *env = runtime->jnienv;
+    s32 pos = 0;
+    
+    intptr_t pinfo = env->localvar_getLong_2slot(runtime, pos);pos += 2;
+    Instance *pascent = env->localvar_getRefer(runtime, pos++);
+    __refer ptr_pascent = NULL;
+    if(pascent){
+        ptr_pascent = pascent->arr_body;
+    }
+    Instance *pdescent = env->localvar_getRefer(runtime, pos++);
+    __refer ptr_pdescent = NULL;
+    if(pdescent){
+        ptr_pdescent = pdescent->arr_body;
+    }
+    Instance *plineGap = env->localvar_getRefer(runtime, pos++);
+    __refer ptr_plineGap = NULL;
+    if(plineGap){
+        ptr_plineGap = plineGap->arr_body;
+    }
+
+    stbtt_GetFontVMetrics((const stbtt_fontinfo*/*ptr*/)(pinfo), (int*)(ptr_pascent), (int*)(ptr_pdescent), (int*)(ptr_plineGap));
+    
+    
+    return 0;
+}
+
+int org_mini_nk_NK_stbtt_GetCodepointBitmapBox(Runtime *runtime, Class *clazz) {
+    JniEnv *env = runtime->jnienv;
+    s32 pos = 0;
+    
+    intptr_t pfont = env->localvar_getLong_2slot(runtime, pos);pos += 2;
+    s32 pcodepoint = env->localvar_getInt(runtime, pos++);
+    Int2Float pscale_x;pscale_x.i = env->localvar_getInt(runtime, pos++);
+    Int2Float pscale_y;pscale_y.i = env->localvar_getInt(runtime, pos++);
+    Instance *pix0 = env->localvar_getRefer(runtime, pos++);
+    __refer ptr_pix0 = NULL;
+    if(pix0){
+        ptr_pix0 = pix0->arr_body;
+    }
+    Instance *piy0 = env->localvar_getRefer(runtime, pos++);
+    __refer ptr_piy0 = NULL;
+    if(piy0){
+        ptr_piy0 = piy0->arr_body;
+    }
+    Instance *pix1 = env->localvar_getRefer(runtime, pos++);
+    __refer ptr_pix1 = NULL;
+    if(pix1){
+        ptr_pix1 = pix1->arr_body;
+    }
+    Instance *piy1 = env->localvar_getRefer(runtime, pos++);
+    __refer ptr_piy1 = NULL;
+    if(piy1){
+        ptr_piy1 = piy1->arr_body;
+    }
+
+    stbtt_GetCodepointBitmapBox((const stbtt_fontinfo*/*ptr*/)(pfont), (int)pcodepoint, (float)pscale_x.f, (float)pscale_y.f, (int*)(ptr_pix0), (int*)(ptr_piy0), (int*)(ptr_pix1), (int*)(ptr_piy1));
+    
+    
+    return 0;
+}
+
+int org_mini_nk_NK_stbtt_MakeCodepointBitmap(Runtime *runtime, Class *clazz) {
+    JniEnv *env = runtime->jnienv;
+    s32 pos = 0;
+    
+    intptr_t pinfo = env->localvar_getLong_2slot(runtime, pos);pos += 2;
+    Instance *poutput = env->localvar_getRefer(runtime, pos++);
+    __refer ptr_poutput = NULL;
+    if(poutput){
+        ptr_poutput = poutput->arr_body;
+    }
+    s32 pout_w = env->localvar_getInt(runtime, pos++);
+    s32 pout_h = env->localvar_getInt(runtime, pos++);
+    s32 pout_stride = env->localvar_getInt(runtime, pos++);
+    Int2Float pscale_x;pscale_x.i = env->localvar_getInt(runtime, pos++);
+    Int2Float pscale_y;pscale_y.i = env->localvar_getInt(runtime, pos++);
+    s32 pcodepoint = env->localvar_getInt(runtime, pos++);
+
+    stbtt_MakeCodepointBitmap((const stbtt_fontinfo*/*ptr*/)(pinfo), (unsigned char*)(ptr_poutput), (int)pout_w, (int)pout_h, (int)pout_stride, (float)pscale_x.f, (float)pscale_y.f, (int)pcodepoint);
+    
+    
+    return 0;
+}
+
+int org_mini_nk_NK_stbtt_GetCodepointHMetrics(Runtime *runtime, Class *clazz) {
+    JniEnv *env = runtime->jnienv;
+    s32 pos = 0;
+    
+    intptr_t pinfo = env->localvar_getLong_2slot(runtime, pos);pos += 2;
+    s32 pcodepoint = env->localvar_getInt(runtime, pos++);
+    Instance *padvanceWidth = env->localvar_getRefer(runtime, pos++);
+    __refer ptr_padvanceWidth = NULL;
+    if(padvanceWidth){
+        ptr_padvanceWidth = padvanceWidth->arr_body;
+    }
+    Instance *pleftSideBearing = env->localvar_getRefer(runtime, pos++);
+    __refer ptr_pleftSideBearing = NULL;
+    if(pleftSideBearing){
+        ptr_pleftSideBearing = pleftSideBearing->arr_body;
+    }
+
+    stbtt_GetCodepointHMetrics((const stbtt_fontinfo*/*ptr*/)(pinfo), (int)pcodepoint, (int*)(ptr_padvanceWidth), (int*)(ptr_pleftSideBearing));
+    
+    
+    return 0;
+}
+
+int org_mini_nk_NK_stbtt_GetCodepointKernAdvance(Runtime *runtime, Class *clazz) {
+    JniEnv *env = runtime->jnienv;
+    s32 pos = 0;
+    
+    intptr_t pinfo = env->localvar_getLong_2slot(runtime, pos);pos += 2;
+    s32 pch1 = env->localvar_getInt(runtime, pos++);
+    s32 pch2 = env->localvar_getInt(runtime, pos++);
+
+    int _re_val = stbtt_GetCodepointKernAdvance((const stbtt_fontinfo*/*ptr*/)(pinfo), (int)pch1, (int)pch2);
+    s32 ret_value = (s32)_re_val;env->push_int(runtime->stack, ret_value);
+    
+    return 0;
+}
+
+int org_mini_nk_NK_stbtt_MakeFontInfo(Runtime *runtime, Class *clazz) {
+    JniEnv *env = runtime->jnienv;
+    s32 pos = 0;
+    
+
+    struct stbtt_fontinfo/*none_ptr*/ _re_val = stbtt_MakeFontInfo();
+    c8* _ptr_re_val = (c8*)&_re_val;
+    s32 _struct_bytes = sizeof(_re_val);
+    if (_ptr_re_val) {
+        s32 _j_t_bytes = sizeof(c8);
+        Instance *_arr = env->jarray_create(_struct_bytes / _j_t_bytes, DATATYPE_BYTE, NULL);
+        memcpy(_arr->arr_body, _ptr_re_val,_struct_bytes);
+        env->push_ref(runtime->stack, _arr);
+    } else {
+        env->push_ref(runtime->stack, NULL);
+    }
+    
+    return 0;
+}
+
+int org_mini_nk_NK_stbi_write_png(Runtime *runtime, Class *clazz) {
+    JniEnv *env = runtime->jnienv;
+    s32 pos = 0;
+    
+    Instance *pfilename = env->localvar_getRefer(runtime, pos++);
+    __refer ptr_pfilename = NULL;
+    if(pfilename){
+        ptr_pfilename = pfilename->arr_body;
+    }
+    s32 pw = env->localvar_getInt(runtime, pos++);
+    s32 ph = env->localvar_getInt(runtime, pos++);
+    s32 pcomp = env->localvar_getInt(runtime, pos++);
+    intptr_t pdata = env->localvar_getLong_2slot(runtime, pos);pos += 2;
+    s32 pstride_in_bytes = env->localvar_getInt(runtime, pos++);
+
+    int _re_val = stbi_write_png((char const*)(ptr_pfilename), (int)pw, (int)ph, (int)pcomp, (const void*/*ptr*/)(pdata), (int)pstride_in_bytes);
+    s32 ret_value = (s32)_re_val;env->push_int(runtime->stack, ret_value);
+    
+    return 0;
+}
+
+int org_mini_nk_NK_stbi_write_bmp(Runtime *runtime, Class *clazz) {
+    JniEnv *env = runtime->jnienv;
+    s32 pos = 0;
+    
+    Instance *pfilename = env->localvar_getRefer(runtime, pos++);
+    __refer ptr_pfilename = NULL;
+    if(pfilename){
+        ptr_pfilename = pfilename->arr_body;
+    }
+    s32 pw = env->localvar_getInt(runtime, pos++);
+    s32 ph = env->localvar_getInt(runtime, pos++);
+    s32 pcomp = env->localvar_getInt(runtime, pos++);
+    intptr_t pdata = env->localvar_getLong_2slot(runtime, pos);pos += 2;
+
+    int _re_val = stbi_write_bmp((char const*)(ptr_pfilename), (int)pw, (int)ph, (int)pcomp, (const void*/*ptr*/)(pdata));
+    s32 ret_value = (s32)_re_val;env->push_int(runtime->stack, ret_value);
+    
+    return 0;
+}
+
+int org_mini_nk_NK_stbi_write_tga(Runtime *runtime, Class *clazz) {
+    JniEnv *env = runtime->jnienv;
+    s32 pos = 0;
+    
+    Instance *pfilename = env->localvar_getRefer(runtime, pos++);
+    __refer ptr_pfilename = NULL;
+    if(pfilename){
+        ptr_pfilename = pfilename->arr_body;
+    }
+    s32 pw = env->localvar_getInt(runtime, pos++);
+    s32 ph = env->localvar_getInt(runtime, pos++);
+    s32 pcomp = env->localvar_getInt(runtime, pos++);
+    intptr_t pdata = env->localvar_getLong_2slot(runtime, pos);pos += 2;
+
+    int _re_val = stbi_write_tga((char const*)(ptr_pfilename), (int)pw, (int)ph, (int)pcomp, (const void*/*ptr*/)(pdata));
+    s32 ret_value = (s32)_re_val;env->push_int(runtime->stack, ret_value);
     
     return 0;
 }
@@ -9692,8 +9945,8 @@ static java_native_method method_nkclear_table[] = {
 {"org/mini/nk/NK",  "nk_window_get_bounds",  "(J)[F",  org_mini_nk_NK_nk_window_get_bounds},
 {"org/mini/nk/NK",  "nk_window_get_position",  "(J)[F",  org_mini_nk_NK_nk_window_get_position},
 {"org/mini/nk/NK",  "nk_window_get_size",  "(J)[F",  org_mini_nk_NK_nk_window_get_size},
-{"org/mini/nk/NK",  "nk_window_get_width",  "(J)D",  org_mini_nk_NK_nk_window_get_width},
-{"org/mini/nk/NK",  "nk_window_get_height",  "(J)D",  org_mini_nk_NK_nk_window_get_height},
+{"org/mini/nk/NK",  "nk_window_get_width",  "(J)F",  org_mini_nk_NK_nk_window_get_width},
+{"org/mini/nk/NK",  "nk_window_get_height",  "(J)F",  org_mini_nk_NK_nk_window_get_height},
 {"org/mini/nk/NK",  "nk_window_get_panel",  "(J)J",  org_mini_nk_NK_nk_window_get_panel},
 {"org/mini/nk/NK",  "nk_window_get_content_region",  "(J)[F",  org_mini_nk_NK_nk_window_get_content_region},
 {"org/mini/nk/NK",  "nk_window_get_content_region_min",  "(J)[F",  org_mini_nk_NK_nk_window_get_content_region_min},
@@ -9720,7 +9973,7 @@ static java_native_method method_nkclear_table[] = {
 {"org/mini/nk/NK",  "nk_layout_set_min_row_height",  "(JF)V",  org_mini_nk_NK_nk_layout_set_min_row_height},
 {"org/mini/nk/NK",  "nk_layout_reset_min_row_height",  "(J)V",  org_mini_nk_NK_nk_layout_reset_min_row_height},
 {"org/mini/nk/NK",  "nk_layout_widget_bounds",  "(J)[F",  org_mini_nk_NK_nk_layout_widget_bounds},
-{"org/mini/nk/NK",  "nk_layout_ratio_from_pixel",  "(JF)D",  org_mini_nk_NK_nk_layout_ratio_from_pixel},
+{"org/mini/nk/NK",  "nk_layout_ratio_from_pixel",  "(JF)F",  org_mini_nk_NK_nk_layout_ratio_from_pixel},
 {"org/mini/nk/NK",  "nk_layout_row_dynamic",  "(JFI)V",  org_mini_nk_NK_nk_layout_row_dynamic},
 {"org/mini/nk/NK",  "nk_layout_row_static",  "(JFII)V",  org_mini_nk_NK_nk_layout_row_static},
 {"org/mini/nk/NK",  "nk_layout_row_begin",  "(JIFI)V",  org_mini_nk_NK_nk_layout_row_begin},
@@ -9758,8 +10011,8 @@ static java_native_method method_nkclear_table[] = {
 {"org/mini/nk/NK",  "nk_widget_bounds",  "(J)[F",  org_mini_nk_NK_nk_widget_bounds},
 {"org/mini/nk/NK",  "nk_widget_position",  "(J)[F",  org_mini_nk_NK_nk_widget_position},
 {"org/mini/nk/NK",  "nk_widget_size",  "(J)[F",  org_mini_nk_NK_nk_widget_size},
-{"org/mini/nk/NK",  "nk_widget_width",  "(J)D",  org_mini_nk_NK_nk_widget_width},
-{"org/mini/nk/NK",  "nk_widget_height",  "(J)D",  org_mini_nk_NK_nk_widget_height},
+{"org/mini/nk/NK",  "nk_widget_width",  "(J)F",  org_mini_nk_NK_nk_widget_width},
+{"org/mini/nk/NK",  "nk_widget_height",  "(J)F",  org_mini_nk_NK_nk_widget_height},
 {"org/mini/nk/NK",  "nk_widget_is_hovered",  "(J)I",  org_mini_nk_NK_nk_widget_is_hovered},
 {"org/mini/nk/NK",  "nk_widget_is_mouse_clicked",  "(JI)I",  org_mini_nk_NK_nk_widget_is_mouse_clicked},
 {"org/mini/nk/NK",  "nk_widget_has_mouse_click_down",  "(JII)I",  org_mini_nk_NK_nk_widget_has_mouse_click_down},
@@ -9824,7 +10077,7 @@ static java_native_method method_nkclear_table[] = {
 {"org/mini/nk/NK",  "nk_select_text",  "(J[BIII)I",  org_mini_nk_NK_nk_select_text},
 {"org/mini/nk/NK",  "nk_select_image_label",  "(J[B[BII)I",  org_mini_nk_NK_nk_select_image_label},
 {"org/mini/nk/NK",  "nk_select_image_text",  "(J[B[BIII)I",  org_mini_nk_NK_nk_select_image_text},
-{"org/mini/nk/NK",  "nk_slide_float",  "(JFFFF)D",  org_mini_nk_NK_nk_slide_float},
+{"org/mini/nk/NK",  "nk_slide_float",  "(JFFFF)F",  org_mini_nk_NK_nk_slide_float},
 {"org/mini/nk/NK",  "nk_slide_int",  "(JIIII)I",  org_mini_nk_NK_nk_slide_int},
 {"org/mini/nk/NK",  "nk_slider_float",  "(JF[FFF)I",  org_mini_nk_NK_nk_slider_float},
 {"org/mini/nk/NK",  "nk_slider_int",  "(JI[III)I",  org_mini_nk_NK_nk_slider_int},
@@ -9836,7 +10089,7 @@ static java_native_method method_nkclear_table[] = {
 {"org/mini/nk/NK",  "nk_property_float",  "(J[BF[FFFF)V",  org_mini_nk_NK_nk_property_float},
 {"org/mini/nk/NK",  "nk_property_double",  "(J[BD[DDDF)V",  org_mini_nk_NK_nk_property_double},
 {"org/mini/nk/NK",  "nk_propertyi",  "(J[BIIIIF)I",  org_mini_nk_NK_nk_propertyi},
-{"org/mini/nk/NK",  "nk_propertyf",  "(J[BFFFFF)D",  org_mini_nk_NK_nk_propertyf},
+{"org/mini/nk/NK",  "nk_propertyf",  "(J[BFFFFF)F",  org_mini_nk_NK_nk_propertyf},
 {"org/mini/nk/NK",  "nk_propertyd",  "(J[BDDDDF)F",  org_mini_nk_NK_nk_propertyd},
 {"org/mini/nk/NK",  "nk_edit_string",  "(JI[B[IIJ)I",  org_mini_nk_NK_nk_edit_string},
 {"org/mini/nk/NK",  "nk_edit_string_zero_terminated",  "(JI[BIJ)I",  org_mini_nk_NK_nk_edit_string_zero_terminated},
@@ -10001,7 +10254,7 @@ static java_native_method method_nkclear_table[] = {
 {"org/mini/nk/NK",  "nk_stricmp",  "([B[B)I",  org_mini_nk_NK_nk_stricmp},
 {"org/mini/nk/NK",  "nk_stricmpn",  "([B[BI)I",  org_mini_nk_NK_nk_stricmpn},
 {"org/mini/nk/NK",  "nk_strtoi",  "([B[[B)I",  org_mini_nk_NK_nk_strtoi},
-{"org/mini/nk/NK",  "nk_strtof",  "([B[[B)D",  org_mini_nk_NK_nk_strtof},
+{"org/mini/nk/NK",  "nk_strtof",  "([B[[B)F",  org_mini_nk_NK_nk_strtof},
 {"org/mini/nk/NK",  "nk_strtod",  "([B[[B)F",  org_mini_nk_NK_nk_strtod},
 {"org/mini/nk/NK",  "nk_strfilter",  "([B[B)I",  org_mini_nk_NK_nk_strfilter},
 {"org/mini/nk/NK",  "nk_strmatch_fuzzy_string",  "([B[B[I)I",  org_mini_nk_NK_nk_strmatch_fuzzy_string},
@@ -10168,7 +10421,19 @@ static java_native_method method_nkclear_table[] = {
 {"org/mini/nk/NK",  "nk_get_font_handle",  "(J)J",  org_mini_nk_NK_nk_get_font_handle},
 {"org/mini/nk/NK",  "nk_create_font_atlas",  "()[B",  org_mini_nk_NK_nk_create_font_atlas},
 {"org/mini/nk/NK",  "nk_set_font_cfg_range",  "(JJ)V",  org_mini_nk_NK_nk_set_font_cfg_range},
-{"org/mini/nk/NK",  "nk_load_font",  "([BF)J",  org_mini_nk_NK_nk_load_font},
+{"org/mini/nk/NK",  "nk_load_font_file",  "([BF)J",  org_mini_nk_NK_nk_load_font_file},
+{"org/mini/nk/NK",  "nk_load_font_memory",  "(JIF)J",  org_mini_nk_NK_nk_load_font_memory},
+{"org/mini/nk/NK",  "stbtt_InitFont",  "(J[BI)I",  org_mini_nk_NK_stbtt_InitFont},
+{"org/mini/nk/NK",  "stbtt_ScaleForPixelHeight",  "(JF)F",  org_mini_nk_NK_stbtt_ScaleForPixelHeight},
+{"org/mini/nk/NK",  "stbtt_GetFontVMetrics",  "(J[I[I[I)V",  org_mini_nk_NK_stbtt_GetFontVMetrics},
+{"org/mini/nk/NK",  "stbtt_GetCodepointBitmapBox",  "(JIFF[I[I[I[I)V",  org_mini_nk_NK_stbtt_GetCodepointBitmapBox},
+{"org/mini/nk/NK",  "stbtt_MakeCodepointBitmap",  "(J[BIIIFFI)V",  org_mini_nk_NK_stbtt_MakeCodepointBitmap},
+{"org/mini/nk/NK",  "stbtt_GetCodepointHMetrics",  "(JI[I[I)V",  org_mini_nk_NK_stbtt_GetCodepointHMetrics},
+{"org/mini/nk/NK",  "stbtt_GetCodepointKernAdvance",  "(JII)I",  org_mini_nk_NK_stbtt_GetCodepointKernAdvance},
+{"org/mini/nk/NK",  "stbtt_MakeFontInfo",  "()[B",  org_mini_nk_NK_stbtt_MakeFontInfo},
+{"org/mini/nk/NK",  "stbi_write_png",  "([BIIIJI)I",  org_mini_nk_NK_stbi_write_png},
+{"org/mini/nk/NK",  "stbi_write_bmp",  "([BIIIJ)I",  org_mini_nk_NK_stbi_write_bmp},
+{"org/mini/nk/NK",  "stbi_write_tga",  "([BIIIJ)I",  org_mini_nk_NK_stbi_write_tga},
 };
 
 s32 count_NkFuncTable() {

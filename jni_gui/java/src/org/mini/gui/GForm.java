@@ -83,7 +83,7 @@ public class GForm extends GContainer implements Runnable {
         }
         //字体
 
-        font = NK.nk_load_font("./wqymhei.ttc\000".getBytes(), 15);
+        font = NK.nk_load_font_file("./wqymhei.ttc\000".getBytes(), 15);
 
         NK.nk_style_set_font(ctx, NK.nk_get_font_handle(font));
     }
