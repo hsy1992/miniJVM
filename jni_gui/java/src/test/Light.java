@@ -1,34 +1,37 @@
 package test;
 
+import static java.lang.Math.cos;
+import static java.lang.Math.sin;
 import org.mini.gl.GL;
 import static org.mini.gl.GL.GL_AMBIENT;
-import static org.mini.gl.GL.GL_AMBIENT_AND_DIFFUSE;
+import static org.mini.gl.GL.GL_BLEND;
 import static org.mini.gl.GL.GL_COLOR_BUFFER_BIT;
 import static org.mini.gl.GL.GL_DEPTH_BUFFER_BIT;
 import static org.mini.gl.GL.GL_DEPTH_TEST;
 import static org.mini.gl.GL.GL_DIFFUSE;
 import static org.mini.gl.GL.GL_EMISSION;
-import static org.mini.gl.GL.GL_FALSE;
 import static org.mini.gl.GL.GL_LIGHT0;
 import static org.mini.gl.GL.GL_LIGHTING;
+import static org.mini.gl.GL.GL_LINE_LOOP;
+import static org.mini.gl.GL.GL_LINE_SMOOTH;
 import static org.mini.gl.GL.GL_POSITION;
 import static org.mini.gl.GL.GL_SHININESS;
 import static org.mini.gl.GL.GL_SPECULAR;
-import static org.mini.gl.GL.GL_TRUE;
+import static org.mini.gl.GL.glBegin;
 import static org.mini.gl.GL.glClear;
-import static org.mini.gl.GL.glDepthMask;
+import static org.mini.gl.GL.glClearColor;
+import static org.mini.gl.GL.glDisable;
 import static org.mini.gl.GL.glEnable;
+import static org.mini.gl.GL.glEnd;
 import static org.mini.gl.GL.glLightfv;
 import static org.mini.gl.GL.glMaterialf;
 import static org.mini.gl.GL.glMaterialfv;
-import static org.mini.gl.GL.glPopMatrix;
 import static org.mini.gl.GL.glPushMatrix;
 import static org.mini.gl.GL.glRotatef;
 import static org.mini.gl.GL.glTranslatef;
 import org.mini.glfw.Glfw;
 import org.mini.glfw.GlfwCallbackAdapter;
 import org.mini.glfw.utils.Gutil;
-import static test.Gears.angle;
 
 /*
  * To change this license header, choose License Headers in Project Properties.
@@ -45,6 +48,54 @@ public class Light {
     long curWin;
     int mx, my;
     boolean rotate = true;
+
+    public static void main(String[] args) {
+        Light gt = new Light();
+        gt.t1();
+
+    }
+
+    int w, h;
+
+    void t1() {
+        Glfw.glfwInit();
+        long win = Glfw.glfwCreateWindow(500, 500, "hello glfw", 0, 0);
+        if (win != 0) {
+            Glfw.glfwSetCallback(win, new CallBack());
+            Glfw.glfwMakeContextCurrent(win);
+//            Glfw.glfwSwapInterval(1);
+
+            w = Glfw.glfwGetFramebufferSizeW(win);
+            h = Glfw.glfwGetFramebufferSizeH(win);
+            System.out.println("w=" + w + "  ,h=" + h);
+
+            setCamera();
+            long last = System.currentTimeMillis(), now;
+            int count = 0;
+            while (!Glfw.glfwWindowShouldClose(win)) {
+                int sleep = 100;
+
+                draw();
+                Gutil.drawCood();
+
+                Glfw.glfwPollEvents();
+                Glfw.glfwSwapBuffers(win);
+
+                try {
+                    Thread.sleep(sleep);
+                } catch (InterruptedException ex) {
+                }
+                count++;
+                now = System.currentTimeMillis();
+                if (now - last > 1000) {
+                    System.out.println("fps:" + count);
+                    last = now;
+                    count = 0;
+                }
+            }
+            Glfw.glfwTerminate();
+        }
+    }
 
     class CallBack extends GlfwCallbackAdapter {
 
@@ -112,57 +163,10 @@ public class Light {
         }
     }
 
-    int w, h;
-
-    void t1() {
-        Glfw.glfwInit();
-        long win = Glfw.glfwCreateWindow(500, 500, "hello glfw", 0, 0);
-        if (win != 0) {
-            Glfw.glfwSetCallback(win, new CallBack());
-            Glfw.glfwMakeContextCurrent(win);
-//            Glfw.glfwSwapInterval(1);
-
-            w = Glfw.glfwGetFramebufferSizeW(win);
-            h = Glfw.glfwGetFramebufferSizeH(win);
-            System.out.println("w=" + w + "  ,h=" + h);
-
-            long last = System.currentTimeMillis(), now;
-            int count = 0;
-            while (!Glfw.glfwWindowShouldClose(win)) {
-                int sleep = 100;
-
-                draw2();
-                GL.glLoadIdentity();
-                Gutil.drawCood();
-
-                Glfw.glfwPollEvents();
-                Glfw.glfwSwapBuffers(win);
-
-                try {
-                    Thread.sleep(sleep);
-                } catch (InterruptedException ex) {
-                }
-                count++;
-                now = System.currentTimeMillis();
-                if (now - last > 1000) {
-                    System.out.println("fps:" + count);
-                    last = now;
-                    count = 0;
-                }
-            }
-            Glfw.glfwTerminate();
-        }
-    }
-
-    public static void main(String[] args) {
-        Light gt = new Light();
-        gt.t1();
-
-    }
     //===========================================================
     //===========================================================
     //===========================================================
-
+    float earth_track_radius = 10;
     Ball red = new Ball(3f, 16, Ball.SOLID);
     Ball blue = new Ball(1f, 10, Ball.SOLID);
     Ball yellow = new Ball(0.5f, 10, Ball.SOLID);
@@ -172,20 +176,23 @@ public class Light {
     static float angle = 0.f;
     static float angley = 0.f;
 
-    void draw2() {
-        // 定义一些材质颜色
-
-        // 清除屏幕
-        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
+    void setCamera() {
         // 创建透视效果视图  
         GL.glMatrixMode(GL.GL_PROJECTION);//对投影矩阵操作  
         GL.glLoadIdentity();//将坐标原点移到中心  
         Gutil.gluPerspective(90.0f, 1.0f, 1.0f, 40.0f);//设置透视投影矩阵  
         GL.glMatrixMode(GL.GL_MODELVIEW);//对模型视景矩阵操作  
         GL.glLoadIdentity();
-        Gutil.gluLookAt(0.0, 5.0, -15.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0);//视点转换  
+        Gutil.gluLookAt(8.0, 8.0, 15.0, 0.0, 0.0, 0.0, 0.0, -1.0, 0.0);//视点转换  
+    }
 
+    void draw() {
+        // 定义一些材质颜色
+        // 清除屏幕
+        glPushMatrix();
+        // make sure we clear the framebuffer's content
+        glClearColor(0.1f, 0.1f, 0.1f, 1.0f);
+        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
         float da = 2;
         if (rotate) {
             angle += da;     //递增旋转角度计数器
@@ -233,7 +240,16 @@ public class Light {
             red.draw();
 //        glutSolidSphere(2.0, 40, 32);
         }
-
+        {
+            //轨道
+            GL.glLineWidth(5);
+            GL.glColor3f(1, 1, 1);
+            glBegin(GL_LINE_LOOP);
+            for (int i = 0; i < 360; i += 5) {
+                GL.glVertex3d(earth_track_radius * sin(Math.PI * i / 180), 0, earth_track_radius * cos(Math.PI * i / 180));
+            }
+            glEnd();
+        }
         // 定义地球的材质并绘制地球
         {
             float earth_mat_ambient[] = {0.0f, 0.0f, .5f, 1.0f};
@@ -249,7 +265,7 @@ public class Light {
             glMaterialf(GL.GL_FRONT, GL_SHININESS, earth_mat_shininess);
 
             glRotatef(angle, 0.0f, -1.0f, 0.0f);
-            glTranslatef(10.0f, 0.0f, 0.0f);
+            glTranslatef(earth_track_radius, 0.0f, 0.0f);
             blue.draw();
             // glutSolidSphere(2.0, 40, 32);
         }
@@ -273,7 +289,10 @@ public class Light {
             yellow.draw();
             // glutSolidSphere(2.0, 40, 32);
         }
-
+        glDisable(GL_LIGHT0);
+        glDisable(GL_LIGHTING);
+        glDisable(GL_DEPTH_TEST);
+        GL.glPopMatrix();
     }
 
 }

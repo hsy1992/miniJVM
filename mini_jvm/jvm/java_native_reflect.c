@@ -705,6 +705,8 @@ s32 javax_mini_reflect_Method_invokeMethod(Runtime *runtime, Class *clazz) {
                 v = pop_int(runtime->stack);
             }
             push_long(runtime->stack, v);
+        } else {
+            print_exception(runtime);
         }
     } else
         push_long(runtime->stack, 0);

@@ -7,7 +7,9 @@ package org.mini.glfw.utils;
 
 import java.io.UnsupportedEncodingException;
 import org.mini.gl.GL;
+import static org.mini.gl.GL.GL_MODELVIEW;
 import static org.mini.gl.GL.glBegin;
+import static org.mini.gl.GL.glMatrixMode;
 
 /**
  *
@@ -167,7 +169,7 @@ public class Gutil {
     }
 
     static public void drawCood() {
-//        GL.glPointSize(5.f);
+        GL.glPushMatrix();
         float len = 1000f;
         GL.glBegin(GL.GL_LINES);
         GL.glColor3f(1.f, 0, 0);
@@ -184,6 +186,7 @@ public class Gutil {
         GL.glVertex3f(0, 0, 0);
         GL.glVertex3f(0, 0, len);
         GL.glEnd();
+        GL.glPopMatrix();
     }
 
     public static byte[] toUtf8(String s) {

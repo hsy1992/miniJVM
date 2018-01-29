@@ -7,7 +7,6 @@ package org.mini.gui;
 
 import org.mini.glfw.utils.Gutil;
 import org.mini.nk.NK;
-import static org.mini.nk.NK.NK_ANTI_ALIASING_ON;
 import static org.mini.nk.NK.NK_WINDOW_BORDER;
 import static org.mini.nk.NK.NK_WINDOW_MINIMIZABLE;
 import static org.mini.nk.NK.NK_WINDOW_MOVABLE;
@@ -15,8 +14,6 @@ import static org.mini.nk.NK.NK_WINDOW_SCALABLE;
 import static org.mini.nk.NK.NK_WINDOW_TITLE;
 import static org.mini.nk.NK.nk_begin;
 import static org.mini.nk.NK.nk_end;
-import static org.mini.nk.NK.nk_glfw3_new_frame;
-import static org.mini.nk.NK.nk_glfw3_render;
 import static org.mini.nk.NK.nk_window_get_canvas;
 
 /**
@@ -25,18 +22,43 @@ import static org.mini.nk.NK.nk_window_get_canvas;
  */
 public class GFrame extends GObject {
 
-    byte[] title;
+    String title;
+    byte[] title_barr;
 
-    GFrameContents winContents;
+    GFrameContents frameContents;
     int background_rgba;
     float[] boundle;
     GGraphics g = new GGraphics();
     long ctx;
+    int frameMode = NK_WINDOW_BORDER | NK_WINDOW_MOVABLE | NK_WINDOW_SCALABLE
+            | NK_WINDOW_MINIMIZABLE | NK_WINDOW_TITLE;
 
     public GFrame(String title, int left, int top, int width, int height, GFrameContents con) {
-        this.title = Gutil.toUtf8(title + "\000");
+        setTitle(title);
         boundle = new float[]{left, top, width, height};
-        winContents = con;
+        frameContents = con;
+        frameContents.init(this);
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
+        this.title_barr = Gutil.toUtf8(title + "\000");
+    }
+
+    public String getTitle() {
+        return title;
+    }
+
+    public byte[] getTitleBytes() {
+        return title_barr;
+    }
+
+    public void setFrameMode(int mode) {
+        frameMode = mode;
+    }
+
+    public int getFrameMode() {
+        return frameMode;
     }
 
     public void setBackground(int rgba) {
@@ -55,16 +77,13 @@ public class GFrame extends GObject {
     @Override
     public boolean update(long ctx) {
         this.ctx = ctx;
-        nk_glfw3_new_frame();
-        int ret = nk_begin(ctx, title, boundle, NK_WINDOW_BORDER | NK_WINDOW_MOVABLE | NK_WINDOW_SCALABLE
-                | NK_WINDOW_MINIMIZABLE | NK_WINDOW_TITLE);
-        if (ret != 0 && winContents != null) {
+        int ret = nk_begin(ctx, title_barr, boundle, frameMode);
+        if (ret != 0 && frameContents != null) {
             g.frame_bound = NK.nk_window_get_bounds(ctx);
             g.font = getForm(ctx).getFont();
-            winContents.updateContents(ctx, this);
+            frameContents.updateContents(ctx, this);
         }
         nk_end(ctx);
-        nk_glfw3_render(NK_ANTI_ALIASING_ON);
         return true;
     }
 

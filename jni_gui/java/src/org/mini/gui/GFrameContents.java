@@ -10,6 +10,8 @@ package org.mini.gui;
  * @author gust
  */
 public interface GFrameContents {
+    
+    public void init(GFrame parent);
 
     public abstract void updateContents(long ctx, GFrame parent);
 }

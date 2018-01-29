@@ -5,10 +5,9 @@
  */
 package org.mini.gui;
 
-import javax.mini.reflect.Array;
-import javax.mini.reflect.vm.RefNative;
 import static org.mini.gl.GL.GL_COLOR_BUFFER_BIT;
 import static org.mini.gl.GL.glClear;
+import static org.mini.gl.GL.glViewport;
 import org.mini.glfw.Glfw;
 import static org.mini.glfw.Glfw.GLFW_CONTEXT_VERSION_MAJOR;
 import static org.mini.glfw.Glfw.GLFW_CONTEXT_VERSION_MINOR;
@@ -21,6 +20,8 @@ import static org.mini.glfw.Glfw.glfwWindowShouldClose;
 import org.mini.glfw.GlfwCallback;
 import org.mini.nk.NK;
 import static org.mini.nk.NK.nk_glfw3_init;
+import static org.mini.nk.NK.nk_glfw3_new_frame;
+import static org.mini.nk.NK.nk_glfw3_render;
 import static org.mini.nk.NK.nk_glfw3_shutdown;
 import static org.mini.nk.NK.nk_true;
 
@@ -30,7 +31,6 @@ import static org.mini.nk.NK.nk_true;
  */
 public class GForm extends GContainer implements Runnable {
 
-    Thread main;
     String title;
     int width;
     int height;
@@ -48,10 +48,6 @@ public class GForm extends GContainer implements Runnable {
         this.title = title;
         this.width = width;
         this.height = height;
-
-        main = new Thread(this);
-        main.start();
-
     }
 
     public void setCallBack(GlfwCallback callback) {
@@ -66,7 +62,7 @@ public class GForm extends GContainer implements Runnable {
     }
 
     @Override
-    public void run() {
+    public void init() {
 
         if (!Glfw.glfwInit()) {
             System.out.println("glfw init error.");
@@ -86,27 +82,38 @@ public class GForm extends GContainer implements Runnable {
             Glfw.glfwSetCallback(win, callback);
         }
         //字体
-        
+
         font = NK.nk_load_font("./wqymhei.ttc\000".getBytes(), 15);
-        
+
         NK.nk_style_set_font(ctx, NK.nk_get_font_handle(font));
+    }
+
+    @Override
+    public void run() {
+        if (ctx == 0) {
+            System.out.println("gl context not inited.");
+            return;
+        }
         //
         GToolkit.putForm(ctx, this);
 
         while (!glfwWindowShouldClose(win)) {
             try {
                 glfwPollEvents();
-                glClear(GL_COLOR_BUFFER_BIT);
+                nk_glfw3_new_frame();
+                //user define contents
                 update(ctx);
+                //clear
+                glClear(GL_COLOR_BUFFER_BIT);
+                //render
+                nk_glfw3_render(NK.NK_ANTI_ALIASING_ON);
                 glfwSwapBuffers(win);
             } catch (Exception ex) {
+                ex.printStackTrace();
             }
         }
-        System.out.println("while exit");
         nk_glfw3_shutdown();
-        System.out.println("nk_glfw3_shutdown ok");
         glfwTerminate();
-        System.out.println("glfwTerminate ok");
         GToolkit.removeForm(ctx);
         ctx = 0;
     }

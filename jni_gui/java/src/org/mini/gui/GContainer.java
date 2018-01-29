@@ -7,8 +7,10 @@ package org.mini.gui;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Set;
 
 /**
  *
@@ -16,29 +18,55 @@ import java.util.List;
  */
 abstract public class GContainer extends GObject {
 
-    List<GObject> elements = new ArrayList();
+    Set<GObject> elements = new HashSet();
 
     //异步添加删除form
-    final List<GObject> add_cache = Collections.synchronizedList(new ArrayList());
-    final List<GObject> remove_cache = Collections.synchronizedList(new ArrayList());
-    public synchronized void add(GObject nko) {
-        add_cache.add(nko);
+    final List<AddRemoveItem> cache = Collections.synchronizedList(new ArrayList());
+
+    class AddRemoveItem {
+
+        static final int ADD = 0;
+        static final int REMOVE = 1;
+        int operation;
+        GObject go;
+
+        AddRemoveItem(int op, GObject go) {
+            operation = op;
+            this.go = go;
+        }
     }
 
-    public synchronized void remove(GObject nko) {
-        remove_cache.remove(nko);
+    public void add(GObject nko) {
+        if (nko != null) {
+            cache.add(new AddRemoveItem(AddRemoveItem.ADD, nko));
+            nko.init();
+        }
+    }
+
+    public void remove(GObject nko) {
+        if (nko != null) {
+            cache.add(new AddRemoveItem(AddRemoveItem.REMOVE, nko));
+            nko.init();
+        }
+    }
+
+    public boolean isSon(GObject son) {
+        return elements.contains(son);
     }
 
     @Override
     public boolean update(long ctx) {
-        synchronized (add_cache) {
-            elements.addAll(add_cache);
-            add_cache.clear();
+        synchronized (cache) {
+            for (AddRemoveItem ari : cache) {
+                if (ari.operation == AddRemoveItem.ADD) {
+                    elements.add(ari.go);
+                } else {
+                    elements.remove(ari.go);
+                }
+            }
+            cache.clear();
         }
-        synchronized (remove_cache) {
-            elements.removeAll(remove_cache);
-            remove_cache.clear();
-        }
+
         for (Iterator<GObject> it = elements.iterator(); it.hasNext();) {
             try {
                 GObject nko = it.next();

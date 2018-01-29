@@ -3,19 +3,13 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package org.mini.gui;
+package org.mini.gl.warp;
 
 /**
  *
  * @author gust
  */
-abstract public class GObject {
+public interface GLFrameBufferPainter {
 
-    public void init() {
-
-    }
-
-    public boolean update(long ctx) {
-        return true;
-    }
+    public void paint();
 }

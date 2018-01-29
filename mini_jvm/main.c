@@ -55,10 +55,11 @@ int main(int argc, char **argv) {
         }
     } else {
         java_debug = 0;
-//        classpath = "../../javalib/dist/minijvm_rt.jar;../../jni_gui/java/dist/gui_lib.jar;./";
+        classpath = "../../javalib/dist/minijvm_rt.jar;../../jni_gui/java/dist/gui_lib.jar;./";
 //        main_name = "test/Gears";
 //        main_name = "test/TestGL";
-//        main_name = "test/GuiTest";
+        main_name = "test/GuiTest";
+//        main_name = "test/RenderTexure";
 //        main_name = "test/Alpha";
 //        main_name = "test/Light";
 //        main_name = "test/Shader";
@@ -68,8 +69,8 @@ int main(int argc, char **argv) {
 //        main_name = "test/JniTest";
 
 
-        classpath = "../../javalib/dist/minijvm_rt.jar;../../javalib_test/dist/minijvm_test.jar;./";
-        main_name = "test/Foo1";
+//        classpath = "../../javalib/dist/minijvm_rt.jar;../../javalib_test/dist/minijvm_test.jar;./";
+//        main_name = "test/Foo1";
 //        main_name = "test/Foo2";
 //        main_name = "test/TestFile";
 //        main_name = "test/HttpServer";

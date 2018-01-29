@@ -598,6 +598,14 @@ _find_exception_handler(Runtime *runtime, Instance *exception, CodeAttribute *ca
     return NULL;
 }
 
+static s32 filterClassName(Utf8String *clsName) {
+    if (utf8_indexof_c(clsName, "com/sun") < 0
+        && utf8_indexof_c(clsName, "java/") < 0
+        && utf8_indexof_c(clsName, "javax/") < 0) {
+        return 1;
+    }
+    return 0;
+}
 
 static void _printCodeAttribute(CodeAttribute *ca, Class *p) {
     s32 i = 0;
@@ -699,7 +707,7 @@ s32 execute_method(MethodInfo *method, Runtime *pruntime, Class *clazz) {
             if (method_sync)_synchronized_lock_method(method, runtime);
 
 #if _JVM_DEBUG_BYTECODE_DETAIL > 3
-            if (utf8_char_at(clazz->name, 3) != '/' && utf8_char_at(clazz->name, 4) != 's') {
+            if (filterClassName(clazz->name)) {
                 invoke_deepth(runtime->parent);
                 jvm_printf("%s.%s()  {\n", utf8_cstr(clazz->name), utf8_cstr(method->name));
             }
@@ -3641,7 +3649,7 @@ s32 execute_method(MethodInfo *method, Runtime *pruntime, Class *clazz) {
             if (method_sync)_synchronized_unlock_method(method, runtime);
             localvar_dispose(runtime);
 #if _JVM_DEBUG_BYTECODE_DETAIL > 3
-            if (utf8_char_at(clazz->name, 3) != '/' && utf8_char_at(clazz->name, 4) != 's') {//   that com/sun
+            if (filterClassName(clazz->name)) {
                 invoke_deepth(runtime->parent);
                 jvm_printf("}\n");
             } else {
@@ -3680,10 +3688,12 @@ s32 execute_method(MethodInfo *method, Runtime *pruntime, Class *clazz) {
             }
         }
 #if _JVM_DEBUG_BYTECODE_DETAIL > 3
-        invoke_deepth(runtime);
-        java_native_method *native = find_native_method(utf8_cstr(clazz->name), utf8_cstr(method->name),
-                                                        utf8_cstr(method->descriptor));
-        jvm_printf("%s.%s()  {\n", native->clzname, native->methodname);
+        if (filterClassName(clazz->name)) {
+            invoke_deepth(runtime);
+            java_native_method *native = find_native_method(utf8_cstr(clazz->name), utf8_cstr(method->name),
+                                                            utf8_cstr(method->descriptor));
+            jvm_printf("%s.%s()  {\n", native->clzname, native->methodname);
+        }
 #endif
         if (method->native_func) {
             if (method_sync)_synchronized_lock_method(method, runtime);
@@ -3692,8 +3702,10 @@ s32 execute_method(MethodInfo *method, Runtime *pruntime, Class *clazz) {
         }
         localvar_dispose(runtime);
 #if _JVM_DEBUG_BYTECODE_DETAIL > 3
-        invoke_deepth(runtime);
-        jvm_printf("}\n");
+        if (filterClassName(clazz->name)) {
+            invoke_deepth(runtime);
+            jvm_printf("}\n");
+        }
 #endif
 
     }

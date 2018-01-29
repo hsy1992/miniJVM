@@ -21,7 +21,15 @@ public class GImage {
     Array refectArr;
     int[] w_h_d = new int[3];
 
-    public void loadImage(String filepath) {
+    public GImage(int textureid, int w, int h) {
+        id = textureid;
+        w_h_d[0] = w;
+        w_h_d[1] = h;
+        nk_image = NK.nk_image_id(id);
+        refectArr = new Array(RefNative.obj2id(nk_image));
+    }
+
+    public GImage(String filepath) {
         id = Gutil.image_load(filepath, w_h_d);
         nk_image = NK.nk_image_id(id);
         refectArr = new Array(RefNative.obj2id(nk_image));

@@ -591,6 +591,7 @@ s32 jthread_dispose(Instance *jthread) {
 
 void *jtherad_run(void *para) {
     Instance *jthread = (Instance *) para;
+    jvm_printf("thread start %llx\n", (s64) (intptr_t) jthread);
 
     s32 ret = 0;
     Runtime *runtime = (Runtime *) jthread_get_stackframe_value(jthread);
@@ -611,9 +612,12 @@ void *jtherad_run(void *para) {
     runtime->threadInfo->thread_status = THREAD_STATUS_RUNNING;
     push_ref(runtime->stack, (__refer) jthread);
     ret = execute_method(method, runtime, method->_this_class);
+    if (ret != RUNTIME_STATUS_NORMAL) {
+        print_exception(runtime);
+    }
     runtime->threadInfo->thread_status = THREAD_STATUS_ZOMBIE;
     jthread_dispose(jthread);
-    //jvm_printf("thread over %llx\n", (s64) (intptr_t) jthread);
+    jvm_printf("thread over %llx\n", (s64) (intptr_t) jthread);
     return para;
 }
 
@@ -872,7 +876,7 @@ void jarray_set_field(Instance *arr, s32 index, s64 val) {
     s32 idx = arr->mb.arr_type_index;
     s32 bytes = data_type_bytes[idx];
     if (isDataReferByIndex(idx)) {
-        setFieldRefer(arr->arr_body + index * bytes, (__refer)(intptr_t) val);
+        setFieldRefer(arr->arr_body + index * bytes, (__refer) (intptr_t) val);
     } else {
         switch (bytes) {
             case 1:
@@ -948,7 +952,10 @@ void instance_init_methodtype(Instance *ins, Runtime *runtime, c8 *methodtype, R
                 push_entry(runtime->stack, &entry);
             }
         }
-        execute_method(mi, runtime, ins->mb.clazz);
+        s32 ret = execute_method(mi, runtime, ins->mb.clazz);
+        if (ret != RUNTIME_STATUS_NORMAL) {
+            print_exception(runtime);
+        }
         utf8_destory(methodName);
         utf8_destory(methodType);
     }
@@ -1030,7 +1037,7 @@ Instance *instance_copy(Instance *src) {
             for (i = 0; i < dst->arr_length; i++) {
                 val = jarray_get_field(src, i);
                 if (val) {
-                    val = (intptr_t)instance_copy((Instance *) getFieldRefer((__refer)(intptr_t) val));
+                    val = (intptr_t) instance_copy((Instance *) getFieldRefer((__refer) (intptr_t) val));
                     jarray_set_field(dst, i, val);
                 }
             }
@@ -1434,7 +1441,7 @@ CStringArr *cstringarr_create(Instance *jstr_arr) { //byte[][] to char**
     s32 i;
     for (i = 0; i < cstr_arr->arr_length; i++) {
         s64 val = jarray_get_field(jstr_arr, i);
-        Instance *jbyte_arr = (__refer)(intptr_t) val;
+        Instance *jbyte_arr = (__refer) (intptr_t) val;
         if (jbyte_arr) {
             cstr_arr->arr_body[i] = jbyte_arr->arr_body;
         }
@@ -1455,7 +1462,7 @@ ReferArr *referarr_create(Instance *jobj_arr) {
     s32 i;
     for (i = 0; i < ref_arr->arr_length; i++) {
         s64 val = jarray_get_field(jobj_arr, i);
-        ref_arr->arr_body[i] = (__refer)(intptr_t) val;
+        ref_arr->arr_body[i] = (__refer) (intptr_t) val;
     }
     return ref_arr;
 }
@@ -1468,8 +1475,8 @@ void referarr_destory(CStringArr *ref_arr) {
 void referarr_2_jlongarr(ReferArr *ref_arr, Instance *jlong_arr) {
     s32 i;
     for (i = 0; i < ref_arr->arr_length && i < jlong_arr->arr_length; i++) {
-        __refer ref= ref_arr->arr_body[i];
-        jarray_set_field(jlong_arr, i, (intptr_t)ref);
+        __refer ref = ref_arr->arr_body[i];
+        jarray_set_field(jlong_arr, i, (intptr_t) ref);
     }
 };
 
