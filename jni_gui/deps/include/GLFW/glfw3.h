@@ -814,6 +814,11 @@ extern "C" {
  *  [window attribute](@ref GLFW_TRANSPARENT_FRAMEBUFFER_attrib).
  */
 #define GLFW_TRANSPARENT_FRAMEBUFFER 0x0002000A
+/*! @brief Mouse cursor hover window attribute.
+ *
+ *  Mouse cursor hover [window attribute](@ref GLFW_HOVERED_attrib).
+ */
+#define GLFW_HOVERED                0x0002000B
 
 /*! @brief Framebuffer bit depth hint.
  *
@@ -1277,6 +1282,24 @@ typedef void (* GLFWwindowmaximizefun)(GLFWwindow*,int);
  *  @ingroup window
  */
 typedef void (* GLFWframebuffersizefun)(GLFWwindow*,int,int);
+
+/*! @brief The function signature for window content scale callbacks.
+ *
+ *  This is the function signature for window content scale callback
+ *  functions.
+ *
+ *  @param[in] window The window whose content scale changed.
+ *  @param[in] xscale The new x-axis content scale of the window.
+ *  @param[in] yscale The new y-axis content scale of the window.
+ *
+ *  @sa @ref window_scale
+ *  @sa @ref glfwSetWindowContentScaleCallback
+ *
+ *  @since Added in version 3.3.
+ *
+ *  @ingroup window
+ */
+typedef void (* GLFWwindowcontentscalefun)(GLFWwindow*,float,float);
 
 /*! @brief The function signature for mouse button callbacks.
  *
@@ -2436,10 +2459,6 @@ GLFWAPI void glfwWindowHintString(int hint, const char* value);
  *  @remark @wayland A full screen window will not attempt to change the mode,
  *  no matter what the requested size or refresh rate.
  *
- *  @remark @wayland The wl_shell protocol does not support window
- *  icons, the window will inherit the one defined in the application's
- *  desktop file, so this function emits @ref GLFW_PLATFORM_ERROR.
- *
  *  @remark @wayland Screensaver inhibition requires the idle-inhibit protocol
  *  to be implemented in the user's compositor.
  *
@@ -2583,9 +2602,9 @@ GLFWAPI void glfwSetWindowTitle(GLFWwindow* window, const char* title);
  *  [Bundle Programming Guide](https://developer.apple.com/library/mac/documentation/CoreFoundation/Conceptual/CFBundles/)
  *  in the Mac Developer Library.
  *
- *  @remark @wayland The wl_shell protocol does not support icons, the window
- *  will inherit the one defined in the application's desktop file, so this
- *  function emits @ref GLFW_PLATFORM_ERROR.
+ *  @remark @wayland There is no existing protocol to change an icon, the
+ *  window will thus inherit the one defined in the application's desktop file.
+ *  This function always emits @ref GLFW_PLATFORM_ERROR.
  *
  *  @thread_safety This function must only be called from the main thread.
  *
@@ -2913,6 +2932,7 @@ GLFWAPI void glfwGetWindowFrameSize(GLFWwindow* window, int* left, int* top, int
  *  @thread_safety This function must only be called from the main thread.
  *
  *  @sa @ref window_scale
+ *  @sa @ref glfwSetWindowContentScaleCallback
  *  @sa @ref glfwGetMonitorContentScale
  *
  *  @since Added in version 3.3.
@@ -2992,7 +3012,8 @@ GLFWAPI void glfwSetWindowOpacity(GLFWwindow* window, float opacity);
  *  GLFW_PLATFORM_ERROR.
  *
  *  @remark @wayland There is no concept of iconification in wl_shell, this
- *  function will always emit @ref GLFW_PLATFORM_ERROR.
+ *  function will emit @ref GLFW_PLATFORM_ERROR when using this deprecated
+ *  protocol.
  *
  *  @thread_safety This function must only be called from the main thread.
  *
@@ -3517,7 +3538,7 @@ GLFWAPI GLFWwindowfocusfun glfwSetWindowFocusCallback(GLFWwindow* window, GLFWwi
  *  @errors Possible errors include @ref GLFW_NOT_INITIALIZED.
  *
  *  @remark @wayland The wl_shell protocol has no concept of iconification,
- *  this callback will never be called.
+ *  this callback will never be called when using this deprecated protocol.
  *
  *  @thread_safety This function must only be called from the main thread.
  *
@@ -3574,6 +3595,30 @@ GLFWAPI GLFWwindowmaximizefun glfwSetWindowMaximizeCallback(GLFWwindow* window, 
  *  @ingroup window
  */
 GLFWAPI GLFWframebuffersizefun glfwSetFramebufferSizeCallback(GLFWwindow* window, GLFWframebuffersizefun cbfun);
+
+/*! @brief Sets the window content scale callback for the specified window.
+ *
+ *  This function sets the window content scale callback of the specified window,
+ *  which is called when the content scale of the specified window changes.
+ *
+ *  @param[in] window The window whose callback to set.
+ *  @param[in] cbfun The new callback, or `NULL` to remove the currently set
+ *  callback.
+ *  @return The previously set callback, or `NULL` if no callback was set or the
+ *  library had not been [initialized](@ref intro_init).
+ *
+ *  @errors Possible errors include @ref GLFW_NOT_INITIALIZED.
+ *
+ *  @thread_safety This function must only be called from the main thread.
+ *
+ *  @sa @ref window_scale
+ *  @sa @ref glfwGetWindowContentScale
+ *
+ *  @since Added in version 3.3.
+ *
+ *  @ingroup window
+ */
+GLFWAPI GLFWwindowcontentscalefun glfwSetWindowContentScaleCallback(GLFWwindow* window, GLFWwindowcontentscalefun cbfun);
 
 /*! @brief Processes all pending events.
  *
