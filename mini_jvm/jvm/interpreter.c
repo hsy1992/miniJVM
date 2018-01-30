@@ -742,6 +742,9 @@ s32 execute_method(MethodInfo *method, Runtime *pruntime, Class *clazz) {
 
                 u8 **opCode = &runtime->pc;
                 u8 cur_inst = runtime->pc[0];
+#ifdef __JVM_DEBUG__
+                s64 inst_pc = runtime->pc - ca->code;
+#endif
                 switch (cur_inst) {
                     case op_nop: {
 

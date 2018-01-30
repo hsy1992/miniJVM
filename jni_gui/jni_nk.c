@@ -9770,7 +9770,7 @@ int org_mini_nk_NK_stbtt_GetCodepointBitmapBox(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-int org_mini_nk_NK_stbtt_MakeCodepointBitmap(Runtime *runtime, Class *clazz) {
+int org_mini_nk_NK_stbtt_MakeCodepointBitmapOffset(Runtime *runtime, Class *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -9780,6 +9780,7 @@ int org_mini_nk_NK_stbtt_MakeCodepointBitmap(Runtime *runtime, Class *clazz) {
     if(poutput){
         ptr_poutput = poutput->arr_body;
     }
+    s32 poutput_offset = env->localvar_getInt(runtime, pos++);
     s32 pout_w = env->localvar_getInt(runtime, pos++);
     s32 pout_h = env->localvar_getInt(runtime, pos++);
     s32 pout_stride = env->localvar_getInt(runtime, pos++);
@@ -9787,7 +9788,7 @@ int org_mini_nk_NK_stbtt_MakeCodepointBitmap(Runtime *runtime, Class *clazz) {
     Int2Float pscale_y;pscale_y.i = env->localvar_getInt(runtime, pos++);
     s32 pcodepoint = env->localvar_getInt(runtime, pos++);
 
-    stbtt_MakeCodepointBitmap((const stbtt_fontinfo*/*ptr*/)(pinfo), (unsigned char*)(ptr_poutput), (int)pout_w, (int)pout_h, (int)pout_stride, (float)pscale_x.f, (float)pscale_y.f, (int)pcodepoint);
+    stbtt_MakeCodepointBitmapOffset((const stbtt_fontinfo*/*ptr*/)(pinfo), (unsigned char*)(ptr_poutput), (int)poutput_offset, (int)pout_w, (int)pout_h, (int)pout_stride, (float)pscale_x.f, (float)pscale_y.f, (int)pcodepoint);
     
     
     return 0;
@@ -10427,7 +10428,7 @@ static java_native_method method_nkclear_table[] = {
 {"org/mini/nk/NK",  "stbtt_ScaleForPixelHeight",  "(JF)F",  org_mini_nk_NK_stbtt_ScaleForPixelHeight},
 {"org/mini/nk/NK",  "stbtt_GetFontVMetrics",  "(J[I[I[I)V",  org_mini_nk_NK_stbtt_GetFontVMetrics},
 {"org/mini/nk/NK",  "stbtt_GetCodepointBitmapBox",  "(JIFF[I[I[I[I)V",  org_mini_nk_NK_stbtt_GetCodepointBitmapBox},
-{"org/mini/nk/NK",  "stbtt_MakeCodepointBitmap",  "(J[BIIIFFI)V",  org_mini_nk_NK_stbtt_MakeCodepointBitmap},
+{"org/mini/nk/NK",  "stbtt_MakeCodepointBitmapOffset",  "(J[BIIIIFFI)V",  org_mini_nk_NK_stbtt_MakeCodepointBitmapOffset},
 {"org/mini/nk/NK",  "stbtt_GetCodepointHMetrics",  "(JI[I[I)V",  org_mini_nk_NK_stbtt_GetCodepointHMetrics},
 {"org/mini/nk/NK",  "stbtt_GetCodepointKernAdvance",  "(JII)I",  org_mini_nk_NK_stbtt_GetCodepointKernAdvance},
 {"org/mini/nk/NK",  "stbtt_MakeFontInfo",  "()[B",  org_mini_nk_NK_stbtt_MakeFontInfo},

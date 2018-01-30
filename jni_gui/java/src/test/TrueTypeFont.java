@@ -32,11 +32,12 @@ public class TrueTypeFont {
         gt.t1();
 
     }
+    byte[] fontBuffer;
+    byte[] info;
 
     void t1() {
         /* load font file */
         int size;
-        byte[] fontBuffer;
 
         File fontFile = new File("./wqymhei.ttc");
         //    FILE* fontFile = fopen("../font/cmunrm.ttf", "rb");
@@ -47,15 +48,20 @@ public class TrueTypeFont {
         FileInputStream fis;
         try {
             fis = new FileInputStream(fontFile);
-            fis.read(fontBuffer, 0, size);
+            int read = 0;
+
+            while (read < size) {
+                read += fis.read(fontBuffer, read, size - read);
+            }
+            System.out.println("read=" + read);
             fis.close();
         } catch (IOException ex) {
             ex.printStackTrace();
         }
         /* prepare font */
-        byte[] info = NK.stbtt_MakeFontInfo();
+        info = NK.stbtt_MakeFontInfo();
         long infoPtr = GToolkit.getArrayDataPtr(info);
-        if (stbtt_InitFont(infoPtr, fontBuffer, 0) != 0) {
+        if (stbtt_InitFont(infoPtr, fontBuffer, 0) == 0) {
             System.out.println("failed\n");
         }
 
@@ -70,7 +76,7 @@ public class TrueTypeFont {
         long bitmapPtr = GToolkit.getArrayDataPtr(bitmap);
         /* calculate font scaling */
         float scale = stbtt_ScaleForPixelHeight(infoPtr, l_h);
-        byte[] word = "hello how are you?".getBytes();
+        String word = "hello h张ow are you?";
 
         int x = 0;
 
@@ -81,9 +87,9 @@ public class TrueTypeFont {
         descent[0] *= scale;
 
         int i;
-        for (i = 0; i < word.length; ++i) {
-            int ch = 24352;//word[i];
-            int nch = 24352;//word[i + 1];
+        for (i = 0; i < word.length(); ++i) {
+            int ch = word.charAt(i);//word[i];
+            int nch = i < word.length() - 1 ? word.charAt(i + 1) : 0;//word[i + 1];
             /* get bounding box for character (may be offset to account for chars that dip above or below the line */
             int[] c_x1 = {0}, c_y1 = {0}, c_x2 = {0}, c_y2 = {0};
             stbtt_GetCodepointBitmapBox(infoPtr, ch, scale, scale, c_x1, c_y1, c_x2, c_y2);
@@ -93,7 +99,7 @@ public class TrueTypeFont {
 
             /* render character (stride and offset is important here) */
             int byteOffset = x + (y * b_w);
-            NK.stbtt_MakeCodepointBitmap(infoPtr, bitmap, c_x2[0] - c_x1[0], c_y2[0] - c_y1[0], b_w, scale, scale, ch);
+            NK.stbtt_MakeCodepointBitmapOffset(infoPtr, bitmap, byteOffset, c_x2[0] - c_x1[0], c_y2[0] - c_y1[0], b_w, scale, scale, ch);
 
             /* how wide is this character */
             int[] ax = {0}, bx = {0};

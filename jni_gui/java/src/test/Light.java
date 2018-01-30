@@ -14,21 +14,30 @@ import static org.mini.gl.GL.GL_LIGHT0;
 import static org.mini.gl.GL.GL_LIGHTING;
 import static org.mini.gl.GL.GL_LINE_LOOP;
 import static org.mini.gl.GL.GL_LINE_SMOOTH;
+import static org.mini.gl.GL.GL_MODELVIEW;
+import static org.mini.gl.GL.GL_POLYGON;
 import static org.mini.gl.GL.GL_POSITION;
 import static org.mini.gl.GL.GL_SHININESS;
 import static org.mini.gl.GL.GL_SPECULAR;
+import static org.mini.gl.GL.GL_TEXTURE_2D;
 import static org.mini.gl.GL.glBegin;
+import static org.mini.gl.GL.glBindTexture;
 import static org.mini.gl.GL.glClear;
 import static org.mini.gl.GL.glClearColor;
+import static org.mini.gl.GL.glColor3f;
 import static org.mini.gl.GL.glDisable;
 import static org.mini.gl.GL.glEnable;
 import static org.mini.gl.GL.glEnd;
 import static org.mini.gl.GL.glLightfv;
+import static org.mini.gl.GL.glLoadIdentity;
 import static org.mini.gl.GL.glMaterialf;
 import static org.mini.gl.GL.glMaterialfv;
+import static org.mini.gl.GL.glMatrixMode;
 import static org.mini.gl.GL.glPushMatrix;
 import static org.mini.gl.GL.glRotatef;
+import static org.mini.gl.GL.glTexCoord2f;
 import static org.mini.gl.GL.glTranslatef;
+import static org.mini.gl.GL.glVertex3f;
 import org.mini.glfw.Glfw;
 import org.mini.glfw.GlfwCallbackAdapter;
 import org.mini.glfw.utils.Gutil;
@@ -69,7 +78,7 @@ public class Light {
             h = Glfw.glfwGetFramebufferSizeH(win);
             System.out.println("w=" + w + "  ,h=" + h);
 
-            setCamera();
+            init();
             long last = System.currentTimeMillis(), now;
             int count = 0;
             while (!Glfw.glfwWindowShouldClose(win)) {
@@ -175,6 +184,12 @@ public class Light {
     Cube cube = new Cube(0.1f, 0.1f, 0.1f);
     static float angle = 0.f;
     static float angley = 0.f;
+    int text;
+
+    void init() {
+
+        setCamera();
+    }
 
     void setCamera() {
         // 创建透视效果视图  
@@ -183,7 +198,7 @@ public class Light {
         Gutil.gluPerspective(90.0f, 1.0f, 1.0f, 40.0f);//设置透视投影矩阵  
         GL.glMatrixMode(GL.GL_MODELVIEW);//对模型视景矩阵操作  
         GL.glLoadIdentity();
-        Gutil.gluLookAt(8.0, 8.0, 15.0, 0.0, 0.0, 0.0, 0.0, -1.0, 0.0);//视点转换  
+        Gutil.gluLookAt(8.0, 8.0, 15.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0);//视点转换  
     }
 
     void draw() {
@@ -191,7 +206,7 @@ public class Light {
         // 清除屏幕
         glPushMatrix();
         // make sure we clear the framebuffer's content
-        glClearColor(0.1f, 0.1f, 0.1f, 1.0f);
+        glClearColor(0.2f, 0.2f, 0.2f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
         float da = 2;
         if (rotate) {
@@ -293,6 +308,43 @@ public class Light {
         glDisable(GL_LIGHTING);
         glDisable(GL_DEPTH_TEST);
         GL.glPopMatrix();
+        //
+        {
+            if (text == 0) {
+                text = Gutil.getDefaultFont().renderToTexture("张鹏Test", 20).getTexture();
+            }
+            glPushMatrix();
+            glRotatef(180, 1, 0, 0);
+            glTranslatef(10, 2, 0);
+            glEnable(GL_TEXTURE_2D);
+            glBindTexture(GL_TEXTURE_2D, text);
+            glBegin(GL.GL_QUADS);
+            glMatrixMode(GL_MODELVIEW);
+            glLoadIdentity();
+            float[] v1 = {
+                +4, +2, 0,
+                -4, +2, 0,
+                -4, -2, 0,
+                +4, -2, 0
+            };
+            glTexCoord2f(1, 1);
+            GL.glVertex3fv(v1, 0);
+
+            glTexCoord2f(0, 1);
+            GL.glVertex3fv(v1, 3);
+
+            glTexCoord2f(0, 0);
+            GL.glVertex3fv(v1, 6);
+
+            glTexCoord2f(1, 0);
+            GL.glVertex3fv(v1, 9);
+
+            glEnd();
+            glBindTexture(GL_TEXTURE_2D, 0); // 取消绑定，因为如果不取消，渲染到纹理的时候会使用纹理本身
+            glDisable(GL_TEXTURE_2D);
+            GL.glPopMatrix();
+        }
+
     }
 
 }

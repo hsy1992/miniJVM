@@ -80,7 +80,7 @@ public class GFrame extends GObject {
         int ret = nk_begin(ctx, title_barr, boundle, frameMode);
         if (ret != 0 && frameContents != null) {
             g.frame_bound = NK.nk_window_get_bounds(ctx);
-            g.font = getForm(ctx).getFont();
+            g.font = getForm(ctx).getNkFont();
             frameContents.updateContents(ctx, this);
         }
         nk_end(ctx);

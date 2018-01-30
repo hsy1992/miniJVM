@@ -15,7 +15,7 @@ NK_API struct nk_font *nk_load_font_file(const char *file_path, float height);
 
 NK_API struct nk_font *nk_load_font_memory(void *bytes, int size, float height);
 
-//stb_truetype dont delete it .
+//stb_truetype dont delete it .for generate jni
 /*
 NK_API int stbtt_InitFont(stbtt_fontinfo *info, const unsigned char *data2, int fontstart);
 
@@ -25,7 +25,7 @@ NK_API void stbtt_GetFontVMetrics(const stbtt_fontinfo *info, int *ascent, int *
 
 NK_API void stbtt_GetCodepointBitmapBox(const stbtt_fontinfo *font, int codepoint, float scale_x, float scale_y, int *ix0, int *iy0, int *ix1, int *iy1);
 
-NK_API void stbtt_MakeCodepointBitmap(const stbtt_fontinfo *info, unsigned char *output, int out_w, int out_h, int out_stride, float scale_x, float scale_y, int codepoint);
+NK_API void stbtt_MakeCodepointBitmapOffset(const stbtt_fontinfo *info, unsigned char *output, int output_offset, int out_w, int out_h, int out_stride, float scale_x, float scale_y, int codepoint);
 
 NK_API void stbtt_GetCodepointHMetrics(const stbtt_fontinfo *info, int codepoint, int *advanceWidth, int *leftSideBearing);
 
@@ -85,6 +85,13 @@ NK_API struct stbtt_fontinfo stbtt_MakeFontInfo() {
     stbtt_fontinfo info;
     memset(&info, 0, sizeof(stbtt_fontinfo));
     return info;
+}
+
+NK_API void
+stbtt_MakeCodepointBitmapOffset(const stbtt_fontinfo *info, unsigned char *output, int output_offset, int out_w,
+                                int out_h, int out_stride, float scale_x, float scale_y, int codepoint) {
+    stbtt_MakeCodepointBitmap(info, output + output_offset, out_w, out_h, out_stride, scale_x, scale_y,
+                                    codepoint);
 }
 
 #endif //JNI_GUI_NUKLEAR_JNI_ASSIST_H

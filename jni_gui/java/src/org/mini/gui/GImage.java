@@ -11,27 +11,28 @@ import org.mini.glfw.utils.Gutil;
 import org.mini.nk.NK;
 
 /**
+ * 装入图片文件或使用纹理图片生成一个GImage对象 load image or generate texture GImage
  *
  * @author gust
  */
 public class GImage {
 
     byte[] nk_image;
-    int id;
+    int texture;
     Array refectArr;
     int[] w_h_d = new int[3];
 
     public GImage(int textureid, int w, int h) {
-        id = textureid;
+        texture = textureid;
         w_h_d[0] = w;
         w_h_d[1] = h;
-        nk_image = NK.nk_image_id(id);
+        nk_image = NK.nk_image_id(texture);
         refectArr = new Array(RefNative.obj2id(nk_image));
     }
 
     public GImage(String filepath) {
-        id = Gutil.image_load(filepath, w_h_d);
-        nk_image = NK.nk_image_id(id);
+        texture = Gutil.image_load(filepath, w_h_d);
+        nk_image = NK.nk_image_id(texture);
         refectArr = new Array(RefNative.obj2id(nk_image));
     }
 
@@ -53,5 +54,9 @@ public class GImage {
 
     public long getDataPtr() {
         return refectArr.getDataPtr();
+    }
+
+    public int getTexture() {
+        return texture;
     }
 }

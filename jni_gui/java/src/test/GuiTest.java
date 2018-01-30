@@ -130,6 +130,10 @@ public class GuiTest {
 
             g.drawImage(img, 0, 150, 100, 100, 0);
             g.drawString("测试一下看看here is a text drawing test.", 100, 300, 0);
+
+            GImage img2 = GForm.getGFont().renderToTexture("张鹏gust zhang", 10);
+            g.drawImage(img2, 120, 150, 0);
+
         }
 
     }

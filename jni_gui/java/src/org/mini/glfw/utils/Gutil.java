@@ -7,15 +7,30 @@ package org.mini.glfw.utils;
 
 import java.io.UnsupportedEncodingException;
 import org.mini.gl.GL;
-import static org.mini.gl.GL.GL_MODELVIEW;
+import static org.mini.gl.GL.GL_CLAMP_TO_EDGE;
+import static org.mini.gl.GL.GL_LINEAR_MIPMAP_NEAREST;
+import static org.mini.gl.GL.GL_RGBA;
+import static org.mini.gl.GL.GL_RGBA8;
+import static org.mini.gl.GL.GL_TEXTURE_2D;
+import static org.mini.gl.GL.GL_TEXTURE_MAG_FILTER;
+import static org.mini.gl.GL.GL_TEXTURE_MIN_FILTER;
+import static org.mini.gl.GL.GL_TEXTURE_WRAP_S;
+import static org.mini.gl.GL.GL_TEXTURE_WRAP_T;
+import static org.mini.gl.GL.GL_UNSIGNED_BYTE;
 import static org.mini.gl.GL.glBegin;
-import static org.mini.gl.GL.glMatrixMode;
+import static org.mini.gl.GL.glBindTexture;
+import static org.mini.gl.GL.glGenTextures;
+import static org.mini.gl.GL.glGenerateMipmap;
+import static org.mini.gl.GL.glTexImage2D;
+import static org.mini.gl.GL.glTexParameterf;
 
 /**
  *
  * @author gust
  */
 public class Gutil {
+
+    static StbFont defaultFont;
 
     /**
      * fill farr into barr and return barr
@@ -201,4 +216,23 @@ public class Gutil {
         return barr;
     }
 
+    static public int genTexture2D(byte[] data, int w, int h, int gl_inner_format, int gl_format) {
+        int[] tex = {0};
+        glGenTextures(1, tex, 0);
+        glBindTexture(GL_TEXTURE_2D, tex[0]);
+        glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_NEAREST);
+        glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR_MIPMAP_NEAREST);
+        glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+        glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+        glTexImage2D(GL_TEXTURE_2D, 0, gl_inner_format, w, h, 0, gl_format, GL_UNSIGNED_BYTE, data, 0);
+        glGenerateMipmap(GL_TEXTURE_2D);
+        return tex[0];
+    }
+
+    static public StbFont getDefaultFont() {
+        if (defaultFont == null) {
+            defaultFont = new StbFont("./wqymhei.ttc");
+        }
+        return defaultFont;
+    }
 }

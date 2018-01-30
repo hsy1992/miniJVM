@@ -5,6 +5,11 @@ project(mini_jvm)
 #set(CMAKE_C_STANDARD 11)
 set(CMAKE_C_STANDARD 99)
 
+if (CMAKE_BUILD_TYPE MATCHES "Debug")
+    ADD_DEFINITIONS(-D_DEBUG -D__JVM_DEBUG__)
+    message("this is a debug compile")
+endif ()
+
 include_directories( )
 
 set(SOURCE_FILES

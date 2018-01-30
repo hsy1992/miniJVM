@@ -5,6 +5,7 @@
  */
 package org.mini.gui;
 
+import org.mini.glfw.utils.StbFont;
 import static org.mini.gl.GL.GL_COLOR_BUFFER_BIT;
 import static org.mini.gl.GL.glClear;
 import static org.mini.gl.GL.glViewport;
@@ -18,6 +19,7 @@ import static org.mini.glfw.Glfw.glfwTerminate;
 import static org.mini.glfw.Glfw.glfwWindowHint;
 import static org.mini.glfw.Glfw.glfwWindowShouldClose;
 import org.mini.glfw.GlfwCallback;
+import org.mini.glfw.utils.Gutil;
 import org.mini.nk.NK;
 import static org.mini.nk.NK.nk_glfw3_init;
 import static org.mini.nk.NK.nk_glfw3_new_frame;
@@ -37,7 +39,8 @@ public class GForm extends GContainer implements Runnable {
     long win; //glfw win
     long ctx; //nk contex
     GlfwCallback callback;
-    long font;
+    long nkfont;
+    static StbFont gfont;
 
     int[] unicode_range = {
         0x0020, 0xFFFF,
@@ -57,8 +60,16 @@ public class GForm extends GContainer implements Runnable {
         }
     }
 
-    public long getFont() {
-        return font;
+    static public void setGFont(StbFont pgfont) {
+        gfont = pgfont;
+    }
+
+    static public StbFont getGFont() {
+        return gfont;
+    }
+
+    public long getNkFont() {
+        return nkfont;
     }
 
     @Override
@@ -82,10 +93,14 @@ public class GForm extends GContainer implements Runnable {
             Glfw.glfwSetCallback(win, callback);
         }
         //字体
+        if (gfont == null) {
+            gfont = Gutil.getDefaultFont();
+        }
+//        font = NK.nk_load_font_file("./wqymhei.ttc\000".getBytes(), 15);
+        byte[] fontBuffer = gfont.getFontBytes();
+        nkfont = NK.nk_load_font_memory(GToolkit.getArrayDataPtr(fontBuffer), fontBuffer.length, 14);
 
-        font = NK.nk_load_font_file("./wqymhei.ttc\000".getBytes(), 15);
-
-        NK.nk_style_set_font(ctx, NK.nk_get_font_handle(font));
+        NK.nk_style_set_font(ctx, NK.nk_get_font_handle(nkfont));
     }
 
     @Override

@@ -153,6 +153,11 @@ public class InnerFile {
         }
 
         @Override
+        public int read(byte b[], int off, int len) throws IOException {
+            return readbuf(getFilePointer(), b, off, len);
+        }
+
+        @Override
         public void close() throws IOException {
             closeFile(getFilePointer());
             filePointer = 0;
@@ -175,6 +180,14 @@ public class InnerFile {
             int ret = write0(getFilePointer(), b);
             if (ret < 0) {
                 throw new IOException("write file error: " + path);
+            }
+        }
+
+        @Override
+        public void write(byte[] b, int offset, int len) {
+            int wrote = 0;
+            while (wrote < len) {
+                wrote += writebuf(getFilePointer(), b, offset + wrote, len - wrote);
             }
         }
 

@@ -132,6 +132,7 @@ int org_mini_gl_GL_glTexParameterfv(Runtime *runtime, Class *clazz) {
     int offset_pparams = env->localvar_getInt(runtime, pos++);
     __refer ptr_pparams = NULL;
     if(pparams){
+        offset_pparams *= env->data_type_bytes[pparams->mb.arr_type_index];
         ptr_pparams = pparams->arr_body + offset_pparams;
     }
 
@@ -165,6 +166,7 @@ int org_mini_gl_GL_glTexParameteriv(Runtime *runtime, Class *clazz) {
     int offset_pparams = env->localvar_getInt(runtime, pos++);
     __refer ptr_pparams = NULL;
     if(pparams){
+        offset_pparams *= env->data_type_bytes[pparams->mb.arr_type_index];
         ptr_pparams = pparams->arr_body + offset_pparams;
     }
 
@@ -189,6 +191,7 @@ int org_mini_gl_GL_glTexImage1D(Runtime *runtime, Class *clazz) {
     int offset_ppixels = env->localvar_getInt(runtime, pos++);
     __refer ptr_ppixels = NULL;
     if(ppixels){
+        offset_ppixels *= env->data_type_bytes[ppixels->mb.arr_type_index];
         ptr_ppixels = ppixels->arr_body + offset_ppixels;
     }
 
@@ -214,6 +217,7 @@ int org_mini_gl_GL_glTexImage2D(Runtime *runtime, Class *clazz) {
     int offset_ppixels = env->localvar_getInt(runtime, pos++);
     __refer ptr_ppixels = NULL;
     if(ppixels){
+        offset_ppixels *= env->data_type_bytes[ppixels->mb.arr_type_index];
         ptr_ppixels = ppixels->arr_body + offset_ppixels;
     }
 
@@ -488,6 +492,7 @@ int org_mini_gl_GL_glReadPixels(Runtime *runtime, Class *clazz) {
     int offset_ppixels = env->localvar_getInt(runtime, pos++);
     __refer ptr_ppixels = NULL;
     if(ppixels){
+        offset_ppixels *= env->data_type_bytes[ppixels->mb.arr_type_index];
         ptr_ppixels = ppixels->arr_body + offset_ppixels;
     }
 
@@ -506,6 +511,7 @@ int org_mini_gl_GL_glGetBooleanv(Runtime *runtime, Class *clazz) {
     int offset_pdata = env->localvar_getInt(runtime, pos++);
     __refer ptr_pdata = NULL;
     if(pdata){
+        offset_pdata *= env->data_type_bytes[pdata->mb.arr_type_index];
         ptr_pdata = pdata->arr_body + offset_pdata;
     }
 
@@ -524,6 +530,7 @@ int org_mini_gl_GL_glGetDoublev(Runtime *runtime, Class *clazz) {
     int offset_pdata = env->localvar_getInt(runtime, pos++);
     __refer ptr_pdata = NULL;
     if(pdata){
+        offset_pdata *= env->data_type_bytes[pdata->mb.arr_type_index];
         ptr_pdata = pdata->arr_body + offset_pdata;
     }
 
@@ -553,6 +560,7 @@ int org_mini_gl_GL_glGetFloatv(Runtime *runtime, Class *clazz) {
     int offset_pdata = env->localvar_getInt(runtime, pos++);
     __refer ptr_pdata = NULL;
     if(pdata){
+        offset_pdata *= env->data_type_bytes[pdata->mb.arr_type_index];
         ptr_pdata = pdata->arr_body + offset_pdata;
     }
 
@@ -571,6 +579,7 @@ int org_mini_gl_GL_glGetIntegerv(Runtime *runtime, Class *clazz) {
     int offset_pdata = env->localvar_getInt(runtime, pos++);
     __refer ptr_pdata = NULL;
     if(pdata){
+        offset_pdata *= env->data_type_bytes[pdata->mb.arr_type_index];
         ptr_pdata = pdata->arr_body + offset_pdata;
     }
 
@@ -613,6 +622,7 @@ int org_mini_gl_GL_glGetTexImage(Runtime *runtime, Class *clazz) {
     int offset_ppixels = env->localvar_getInt(runtime, pos++);
     __refer ptr_ppixels = NULL;
     if(ppixels){
+        offset_ppixels *= env->data_type_bytes[ppixels->mb.arr_type_index];
         ptr_ppixels = ppixels->arr_body + offset_ppixels;
     }
 
@@ -632,6 +642,7 @@ int org_mini_gl_GL_glGetTexParameterfv(Runtime *runtime, Class *clazz) {
     int offset_pparams = env->localvar_getInt(runtime, pos++);
     __refer ptr_pparams = NULL;
     if(pparams){
+        offset_pparams *= env->data_type_bytes[pparams->mb.arr_type_index];
         ptr_pparams = pparams->arr_body + offset_pparams;
     }
 
@@ -651,6 +662,7 @@ int org_mini_gl_GL_glGetTexParameteriv(Runtime *runtime, Class *clazz) {
     int offset_pparams = env->localvar_getInt(runtime, pos++);
     __refer ptr_pparams = NULL;
     if(pparams){
+        offset_pparams *= env->data_type_bytes[pparams->mb.arr_type_index];
         ptr_pparams = pparams->arr_body + offset_pparams;
     }
 
@@ -671,6 +683,7 @@ int org_mini_gl_GL_glGetTexLevelParameterfv(Runtime *runtime, Class *clazz) {
     int offset_pparams = env->localvar_getInt(runtime, pos++);
     __refer ptr_pparams = NULL;
     if(pparams){
+        offset_pparams *= env->data_type_bytes[pparams->mb.arr_type_index];
         ptr_pparams = pparams->arr_body + offset_pparams;
     }
 
@@ -691,6 +704,7 @@ int org_mini_gl_GL_glGetTexLevelParameteriv(Runtime *runtime, Class *clazz) {
     int offset_pparams = env->localvar_getInt(runtime, pos++);
     __refer ptr_pparams = NULL;
     if(pparams){
+        offset_pparams *= env->data_type_bytes[pparams->mb.arr_type_index];
         ptr_pparams = pparams->arr_body + offset_pparams;
     }
 
@@ -786,6 +800,7 @@ int org_mini_gl_GL_glCallLists(Runtime *runtime, Class *clazz) {
     int offset_plists = env->localvar_getInt(runtime, pos++);
     __refer ptr_plists = NULL;
     if(plists){
+        offset_plists *= env->data_type_bytes[plists->mb.arr_type_index];
         ptr_plists = plists->arr_body + offset_plists;
     }
 
@@ -858,6 +873,7 @@ int org_mini_gl_GL_glBitmap(Runtime *runtime, Class *clazz) {
     int offset_pbitmap = env->localvar_getInt(runtime, pos++);
     __refer ptr_pbitmap = NULL;
     if(pbitmap){
+        offset_pbitmap *= env->data_type_bytes[pbitmap->mb.arr_type_index];
         ptr_pbitmap = pbitmap->arr_body + offset_pbitmap;
     }
 
@@ -889,6 +905,7 @@ int org_mini_gl_GL_glColor3bv(Runtime *runtime, Class *clazz) {
     int offset_pv = env->localvar_getInt(runtime, pos++);
     __refer ptr_pv = NULL;
     if(pv){
+        offset_pv *= env->data_type_bytes[pv->mb.arr_type_index];
         ptr_pv = pv->arr_body + offset_pv;
     }
 
@@ -920,6 +937,7 @@ int org_mini_gl_GL_glColor3dv(Runtime *runtime, Class *clazz) {
     int offset_pv = env->localvar_getInt(runtime, pos++);
     __refer ptr_pv = NULL;
     if(pv){
+        offset_pv *= env->data_type_bytes[pv->mb.arr_type_index];
         ptr_pv = pv->arr_body + offset_pv;
     }
 
@@ -951,6 +969,7 @@ int org_mini_gl_GL_glColor3fv(Runtime *runtime, Class *clazz) {
     int offset_pv = env->localvar_getInt(runtime, pos++);
     __refer ptr_pv = NULL;
     if(pv){
+        offset_pv *= env->data_type_bytes[pv->mb.arr_type_index];
         ptr_pv = pv->arr_body + offset_pv;
     }
 
@@ -982,6 +1001,7 @@ int org_mini_gl_GL_glColor3iv(Runtime *runtime, Class *clazz) {
     int offset_pv = env->localvar_getInt(runtime, pos++);
     __refer ptr_pv = NULL;
     if(pv){
+        offset_pv *= env->data_type_bytes[pv->mb.arr_type_index];
         ptr_pv = pv->arr_body + offset_pv;
     }
 
@@ -1013,6 +1033,7 @@ int org_mini_gl_GL_glColor3sv(Runtime *runtime, Class *clazz) {
     int offset_pv = env->localvar_getInt(runtime, pos++);
     __refer ptr_pv = NULL;
     if(pv){
+        offset_pv *= env->data_type_bytes[pv->mb.arr_type_index];
         ptr_pv = pv->arr_body + offset_pv;
     }
 
@@ -1044,6 +1065,7 @@ int org_mini_gl_GL_glColor3ubv(Runtime *runtime, Class *clazz) {
     int offset_pv = env->localvar_getInt(runtime, pos++);
     __refer ptr_pv = NULL;
     if(pv){
+        offset_pv *= env->data_type_bytes[pv->mb.arr_type_index];
         ptr_pv = pv->arr_body + offset_pv;
     }
 
@@ -1075,6 +1097,7 @@ int org_mini_gl_GL_glColor3uiv(Runtime *runtime, Class *clazz) {
     int offset_pv = env->localvar_getInt(runtime, pos++);
     __refer ptr_pv = NULL;
     if(pv){
+        offset_pv *= env->data_type_bytes[pv->mb.arr_type_index];
         ptr_pv = pv->arr_body + offset_pv;
     }
 
@@ -1106,6 +1129,7 @@ int org_mini_gl_GL_glColor3usv(Runtime *runtime, Class *clazz) {
     int offset_pv = env->localvar_getInt(runtime, pos++);
     __refer ptr_pv = NULL;
     if(pv){
+        offset_pv *= env->data_type_bytes[pv->mb.arr_type_index];
         ptr_pv = pv->arr_body + offset_pv;
     }
 
@@ -1138,6 +1162,7 @@ int org_mini_gl_GL_glColor4bv(Runtime *runtime, Class *clazz) {
     int offset_pv = env->localvar_getInt(runtime, pos++);
     __refer ptr_pv = NULL;
     if(pv){
+        offset_pv *= env->data_type_bytes[pv->mb.arr_type_index];
         ptr_pv = pv->arr_body + offset_pv;
     }
 
@@ -1170,6 +1195,7 @@ int org_mini_gl_GL_glColor4dv(Runtime *runtime, Class *clazz) {
     int offset_pv = env->localvar_getInt(runtime, pos++);
     __refer ptr_pv = NULL;
     if(pv){
+        offset_pv *= env->data_type_bytes[pv->mb.arr_type_index];
         ptr_pv = pv->arr_body + offset_pv;
     }
 
@@ -1202,6 +1228,7 @@ int org_mini_gl_GL_glColor4fv(Runtime *runtime, Class *clazz) {
     int offset_pv = env->localvar_getInt(runtime, pos++);
     __refer ptr_pv = NULL;
     if(pv){
+        offset_pv *= env->data_type_bytes[pv->mb.arr_type_index];
         ptr_pv = pv->arr_body + offset_pv;
     }
 
@@ -1234,6 +1261,7 @@ int org_mini_gl_GL_glColor4iv(Runtime *runtime, Class *clazz) {
     int offset_pv = env->localvar_getInt(runtime, pos++);
     __refer ptr_pv = NULL;
     if(pv){
+        offset_pv *= env->data_type_bytes[pv->mb.arr_type_index];
         ptr_pv = pv->arr_body + offset_pv;
     }
 
@@ -1266,6 +1294,7 @@ int org_mini_gl_GL_glColor4sv(Runtime *runtime, Class *clazz) {
     int offset_pv = env->localvar_getInt(runtime, pos++);
     __refer ptr_pv = NULL;
     if(pv){
+        offset_pv *= env->data_type_bytes[pv->mb.arr_type_index];
         ptr_pv = pv->arr_body + offset_pv;
     }
 
@@ -1298,6 +1327,7 @@ int org_mini_gl_GL_glColor4ubv(Runtime *runtime, Class *clazz) {
     int offset_pv = env->localvar_getInt(runtime, pos++);
     __refer ptr_pv = NULL;
     if(pv){
+        offset_pv *= env->data_type_bytes[pv->mb.arr_type_index];
         ptr_pv = pv->arr_body + offset_pv;
     }
 
@@ -1330,6 +1360,7 @@ int org_mini_gl_GL_glColor4uiv(Runtime *runtime, Class *clazz) {
     int offset_pv = env->localvar_getInt(runtime, pos++);
     __refer ptr_pv = NULL;
     if(pv){
+        offset_pv *= env->data_type_bytes[pv->mb.arr_type_index];
         ptr_pv = pv->arr_body + offset_pv;
     }
 
@@ -1362,6 +1393,7 @@ int org_mini_gl_GL_glColor4usv(Runtime *runtime, Class *clazz) {
     int offset_pv = env->localvar_getInt(runtime, pos++);
     __refer ptr_pv = NULL;
     if(pv){
+        offset_pv *= env->data_type_bytes[pv->mb.arr_type_index];
         ptr_pv = pv->arr_body + offset_pv;
     }
 
@@ -1391,6 +1423,7 @@ int org_mini_gl_GL_glEdgeFlagv(Runtime *runtime, Class *clazz) {
     int offset_pflag = env->localvar_getInt(runtime, pos++);
     __refer ptr_pflag = NULL;
     if(pflag){
+        offset_pflag *= env->data_type_bytes[pflag->mb.arr_type_index];
         ptr_pflag = pflag->arr_body + offset_pflag;
     }
 
@@ -1431,6 +1464,7 @@ int org_mini_gl_GL_glIndexdv(Runtime *runtime, Class *clazz) {
     int offset_pc = env->localvar_getInt(runtime, pos++);
     __refer ptr_pc = NULL;
     if(pc){
+        offset_pc *= env->data_type_bytes[pc->mb.arr_type_index];
         ptr_pc = pc->arr_body + offset_pc;
     }
 
@@ -1460,6 +1494,7 @@ int org_mini_gl_GL_glIndexfv(Runtime *runtime, Class *clazz) {
     int offset_pc = env->localvar_getInt(runtime, pos++);
     __refer ptr_pc = NULL;
     if(pc){
+        offset_pc *= env->data_type_bytes[pc->mb.arr_type_index];
         ptr_pc = pc->arr_body + offset_pc;
     }
 
@@ -1489,6 +1524,7 @@ int org_mini_gl_GL_glIndexiv(Runtime *runtime, Class *clazz) {
     int offset_pc = env->localvar_getInt(runtime, pos++);
     __refer ptr_pc = NULL;
     if(pc){
+        offset_pc *= env->data_type_bytes[pc->mb.arr_type_index];
         ptr_pc = pc->arr_body + offset_pc;
     }
 
@@ -1518,6 +1554,7 @@ int org_mini_gl_GL_glIndexsv(Runtime *runtime, Class *clazz) {
     int offset_pc = env->localvar_getInt(runtime, pos++);
     __refer ptr_pc = NULL;
     if(pc){
+        offset_pc *= env->data_type_bytes[pc->mb.arr_type_index];
         ptr_pc = pc->arr_body + offset_pc;
     }
 
@@ -1549,6 +1586,7 @@ int org_mini_gl_GL_glNormal3bv(Runtime *runtime, Class *clazz) {
     int offset_pv = env->localvar_getInt(runtime, pos++);
     __refer ptr_pv = NULL;
     if(pv){
+        offset_pv *= env->data_type_bytes[pv->mb.arr_type_index];
         ptr_pv = pv->arr_body + offset_pv;
     }
 
@@ -1580,6 +1618,7 @@ int org_mini_gl_GL_glNormal3dv(Runtime *runtime, Class *clazz) {
     int offset_pv = env->localvar_getInt(runtime, pos++);
     __refer ptr_pv = NULL;
     if(pv){
+        offset_pv *= env->data_type_bytes[pv->mb.arr_type_index];
         ptr_pv = pv->arr_body + offset_pv;
     }
 
@@ -1611,6 +1650,7 @@ int org_mini_gl_GL_glNormal3fv(Runtime *runtime, Class *clazz) {
     int offset_pv = env->localvar_getInt(runtime, pos++);
     __refer ptr_pv = NULL;
     if(pv){
+        offset_pv *= env->data_type_bytes[pv->mb.arr_type_index];
         ptr_pv = pv->arr_body + offset_pv;
     }
 
@@ -1642,6 +1682,7 @@ int org_mini_gl_GL_glNormal3iv(Runtime *runtime, Class *clazz) {
     int offset_pv = env->localvar_getInt(runtime, pos++);
     __refer ptr_pv = NULL;
     if(pv){
+        offset_pv *= env->data_type_bytes[pv->mb.arr_type_index];
         ptr_pv = pv->arr_body + offset_pv;
     }
 
@@ -1673,6 +1714,7 @@ int org_mini_gl_GL_glNormal3sv(Runtime *runtime, Class *clazz) {
     int offset_pv = env->localvar_getInt(runtime, pos++);
     __refer ptr_pv = NULL;
     if(pv){
+        offset_pv *= env->data_type_bytes[pv->mb.arr_type_index];
         ptr_pv = pv->arr_body + offset_pv;
     }
 
@@ -1703,6 +1745,7 @@ int org_mini_gl_GL_glRasterPos2dv(Runtime *runtime, Class *clazz) {
     int offset_pv = env->localvar_getInt(runtime, pos++);
     __refer ptr_pv = NULL;
     if(pv){
+        offset_pv *= env->data_type_bytes[pv->mb.arr_type_index];
         ptr_pv = pv->arr_body + offset_pv;
     }
 
@@ -1733,6 +1776,7 @@ int org_mini_gl_GL_glRasterPos2fv(Runtime *runtime, Class *clazz) {
     int offset_pv = env->localvar_getInt(runtime, pos++);
     __refer ptr_pv = NULL;
     if(pv){
+        offset_pv *= env->data_type_bytes[pv->mb.arr_type_index];
         ptr_pv = pv->arr_body + offset_pv;
     }
 
@@ -1763,6 +1807,7 @@ int org_mini_gl_GL_glRasterPos2iv(Runtime *runtime, Class *clazz) {
     int offset_pv = env->localvar_getInt(runtime, pos++);
     __refer ptr_pv = NULL;
     if(pv){
+        offset_pv *= env->data_type_bytes[pv->mb.arr_type_index];
         ptr_pv = pv->arr_body + offset_pv;
     }
 
@@ -1793,6 +1838,7 @@ int org_mini_gl_GL_glRasterPos2sv(Runtime *runtime, Class *clazz) {
     int offset_pv = env->localvar_getInt(runtime, pos++);
     __refer ptr_pv = NULL;
     if(pv){
+        offset_pv *= env->data_type_bytes[pv->mb.arr_type_index];
         ptr_pv = pv->arr_body + offset_pv;
     }
 
@@ -1824,6 +1870,7 @@ int org_mini_gl_GL_glRasterPos3dv(Runtime *runtime, Class *clazz) {
     int offset_pv = env->localvar_getInt(runtime, pos++);
     __refer ptr_pv = NULL;
     if(pv){
+        offset_pv *= env->data_type_bytes[pv->mb.arr_type_index];
         ptr_pv = pv->arr_body + offset_pv;
     }
 
@@ -1855,6 +1902,7 @@ int org_mini_gl_GL_glRasterPos3fv(Runtime *runtime, Class *clazz) {
     int offset_pv = env->localvar_getInt(runtime, pos++);
     __refer ptr_pv = NULL;
     if(pv){
+        offset_pv *= env->data_type_bytes[pv->mb.arr_type_index];
         ptr_pv = pv->arr_body + offset_pv;
     }
 
@@ -1886,6 +1934,7 @@ int org_mini_gl_GL_glRasterPos3iv(Runtime *runtime, Class *clazz) {
     int offset_pv = env->localvar_getInt(runtime, pos++);
     __refer ptr_pv = NULL;
     if(pv){
+        offset_pv *= env->data_type_bytes[pv->mb.arr_type_index];
         ptr_pv = pv->arr_body + offset_pv;
     }
 
@@ -1917,6 +1966,7 @@ int org_mini_gl_GL_glRasterPos3sv(Runtime *runtime, Class *clazz) {
     int offset_pv = env->localvar_getInt(runtime, pos++);
     __refer ptr_pv = NULL;
     if(pv){
+        offset_pv *= env->data_type_bytes[pv->mb.arr_type_index];
         ptr_pv = pv->arr_body + offset_pv;
     }
 
@@ -1949,6 +1999,7 @@ int org_mini_gl_GL_glRasterPos4dv(Runtime *runtime, Class *clazz) {
     int offset_pv = env->localvar_getInt(runtime, pos++);
     __refer ptr_pv = NULL;
     if(pv){
+        offset_pv *= env->data_type_bytes[pv->mb.arr_type_index];
         ptr_pv = pv->arr_body + offset_pv;
     }
 
@@ -1981,6 +2032,7 @@ int org_mini_gl_GL_glRasterPos4fv(Runtime *runtime, Class *clazz) {
     int offset_pv = env->localvar_getInt(runtime, pos++);
     __refer ptr_pv = NULL;
     if(pv){
+        offset_pv *= env->data_type_bytes[pv->mb.arr_type_index];
         ptr_pv = pv->arr_body + offset_pv;
     }
 
@@ -2013,6 +2065,7 @@ int org_mini_gl_GL_glRasterPos4iv(Runtime *runtime, Class *clazz) {
     int offset_pv = env->localvar_getInt(runtime, pos++);
     __refer ptr_pv = NULL;
     if(pv){
+        offset_pv *= env->data_type_bytes[pv->mb.arr_type_index];
         ptr_pv = pv->arr_body + offset_pv;
     }
 
@@ -2045,6 +2098,7 @@ int org_mini_gl_GL_glRasterPos4sv(Runtime *runtime, Class *clazz) {
     int offset_pv = env->localvar_getInt(runtime, pos++);
     __refer ptr_pv = NULL;
     if(pv){
+        offset_pv *= env->data_type_bytes[pv->mb.arr_type_index];
         ptr_pv = pv->arr_body + offset_pv;
     }
 
@@ -2077,12 +2131,14 @@ int org_mini_gl_GL_glRectdv(Runtime *runtime, Class *clazz) {
     int offset_pv1 = env->localvar_getInt(runtime, pos++);
     __refer ptr_pv1 = NULL;
     if(pv1){
+        offset_pv1 *= env->data_type_bytes[pv1->mb.arr_type_index];
         ptr_pv1 = pv1->arr_body + offset_pv1;
     }
     Instance *pv2 = env->localvar_getRefer(runtime, pos++);
     int offset_pv2 = env->localvar_getInt(runtime, pos++);
     __refer ptr_pv2 = NULL;
     if(pv2){
+        offset_pv2 *= env->data_type_bytes[pv2->mb.arr_type_index];
         ptr_pv2 = pv2->arr_body + offset_pv2;
     }
 
@@ -2115,12 +2171,14 @@ int org_mini_gl_GL_glRectfv(Runtime *runtime, Class *clazz) {
     int offset_pv1 = env->localvar_getInt(runtime, pos++);
     __refer ptr_pv1 = NULL;
     if(pv1){
+        offset_pv1 *= env->data_type_bytes[pv1->mb.arr_type_index];
         ptr_pv1 = pv1->arr_body + offset_pv1;
     }
     Instance *pv2 = env->localvar_getRefer(runtime, pos++);
     int offset_pv2 = env->localvar_getInt(runtime, pos++);
     __refer ptr_pv2 = NULL;
     if(pv2){
+        offset_pv2 *= env->data_type_bytes[pv2->mb.arr_type_index];
         ptr_pv2 = pv2->arr_body + offset_pv2;
     }
 
@@ -2153,12 +2211,14 @@ int org_mini_gl_GL_glRectiv(Runtime *runtime, Class *clazz) {
     int offset_pv1 = env->localvar_getInt(runtime, pos++);
     __refer ptr_pv1 = NULL;
     if(pv1){
+        offset_pv1 *= env->data_type_bytes[pv1->mb.arr_type_index];
         ptr_pv1 = pv1->arr_body + offset_pv1;
     }
     Instance *pv2 = env->localvar_getRefer(runtime, pos++);
     int offset_pv2 = env->localvar_getInt(runtime, pos++);
     __refer ptr_pv2 = NULL;
     if(pv2){
+        offset_pv2 *= env->data_type_bytes[pv2->mb.arr_type_index];
         ptr_pv2 = pv2->arr_body + offset_pv2;
     }
 
@@ -2191,12 +2251,14 @@ int org_mini_gl_GL_glRectsv(Runtime *runtime, Class *clazz) {
     int offset_pv1 = env->localvar_getInt(runtime, pos++);
     __refer ptr_pv1 = NULL;
     if(pv1){
+        offset_pv1 *= env->data_type_bytes[pv1->mb.arr_type_index];
         ptr_pv1 = pv1->arr_body + offset_pv1;
     }
     Instance *pv2 = env->localvar_getRefer(runtime, pos++);
     int offset_pv2 = env->localvar_getInt(runtime, pos++);
     __refer ptr_pv2 = NULL;
     if(pv2){
+        offset_pv2 *= env->data_type_bytes[pv2->mb.arr_type_index];
         ptr_pv2 = pv2->arr_body + offset_pv2;
     }
 
@@ -2226,6 +2288,7 @@ int org_mini_gl_GL_glTexCoord1dv(Runtime *runtime, Class *clazz) {
     int offset_pv = env->localvar_getInt(runtime, pos++);
     __refer ptr_pv = NULL;
     if(pv){
+        offset_pv *= env->data_type_bytes[pv->mb.arr_type_index];
         ptr_pv = pv->arr_body + offset_pv;
     }
 
@@ -2255,6 +2318,7 @@ int org_mini_gl_GL_glTexCoord1fv(Runtime *runtime, Class *clazz) {
     int offset_pv = env->localvar_getInt(runtime, pos++);
     __refer ptr_pv = NULL;
     if(pv){
+        offset_pv *= env->data_type_bytes[pv->mb.arr_type_index];
         ptr_pv = pv->arr_body + offset_pv;
     }
 
@@ -2284,6 +2348,7 @@ int org_mini_gl_GL_glTexCoord1iv(Runtime *runtime, Class *clazz) {
     int offset_pv = env->localvar_getInt(runtime, pos++);
     __refer ptr_pv = NULL;
     if(pv){
+        offset_pv *= env->data_type_bytes[pv->mb.arr_type_index];
         ptr_pv = pv->arr_body + offset_pv;
     }
 
@@ -2313,6 +2378,7 @@ int org_mini_gl_GL_glTexCoord1sv(Runtime *runtime, Class *clazz) {
     int offset_pv = env->localvar_getInt(runtime, pos++);
     __refer ptr_pv = NULL;
     if(pv){
+        offset_pv *= env->data_type_bytes[pv->mb.arr_type_index];
         ptr_pv = pv->arr_body + offset_pv;
     }
 
@@ -2343,6 +2409,7 @@ int org_mini_gl_GL_glTexCoord2dv(Runtime *runtime, Class *clazz) {
     int offset_pv = env->localvar_getInt(runtime, pos++);
     __refer ptr_pv = NULL;
     if(pv){
+        offset_pv *= env->data_type_bytes[pv->mb.arr_type_index];
         ptr_pv = pv->arr_body + offset_pv;
     }
 
@@ -2373,6 +2440,7 @@ int org_mini_gl_GL_glTexCoord2fv(Runtime *runtime, Class *clazz) {
     int offset_pv = env->localvar_getInt(runtime, pos++);
     __refer ptr_pv = NULL;
     if(pv){
+        offset_pv *= env->data_type_bytes[pv->mb.arr_type_index];
         ptr_pv = pv->arr_body + offset_pv;
     }
 
@@ -2403,6 +2471,7 @@ int org_mini_gl_GL_glTexCoord2iv(Runtime *runtime, Class *clazz) {
     int offset_pv = env->localvar_getInt(runtime, pos++);
     __refer ptr_pv = NULL;
     if(pv){
+        offset_pv *= env->data_type_bytes[pv->mb.arr_type_index];
         ptr_pv = pv->arr_body + offset_pv;
     }
 
@@ -2433,6 +2502,7 @@ int org_mini_gl_GL_glTexCoord2sv(Runtime *runtime, Class *clazz) {
     int offset_pv = env->localvar_getInt(runtime, pos++);
     __refer ptr_pv = NULL;
     if(pv){
+        offset_pv *= env->data_type_bytes[pv->mb.arr_type_index];
         ptr_pv = pv->arr_body + offset_pv;
     }
 
@@ -2464,6 +2534,7 @@ int org_mini_gl_GL_glTexCoord3dv(Runtime *runtime, Class *clazz) {
     int offset_pv = env->localvar_getInt(runtime, pos++);
     __refer ptr_pv = NULL;
     if(pv){
+        offset_pv *= env->data_type_bytes[pv->mb.arr_type_index];
         ptr_pv = pv->arr_body + offset_pv;
     }
 
@@ -2495,6 +2566,7 @@ int org_mini_gl_GL_glTexCoord3fv(Runtime *runtime, Class *clazz) {
     int offset_pv = env->localvar_getInt(runtime, pos++);
     __refer ptr_pv = NULL;
     if(pv){
+        offset_pv *= env->data_type_bytes[pv->mb.arr_type_index];
         ptr_pv = pv->arr_body + offset_pv;
     }
 
@@ -2526,6 +2598,7 @@ int org_mini_gl_GL_glTexCoord3iv(Runtime *runtime, Class *clazz) {
     int offset_pv = env->localvar_getInt(runtime, pos++);
     __refer ptr_pv = NULL;
     if(pv){
+        offset_pv *= env->data_type_bytes[pv->mb.arr_type_index];
         ptr_pv = pv->arr_body + offset_pv;
     }
 
@@ -2557,6 +2630,7 @@ int org_mini_gl_GL_glTexCoord3sv(Runtime *runtime, Class *clazz) {
     int offset_pv = env->localvar_getInt(runtime, pos++);
     __refer ptr_pv = NULL;
     if(pv){
+        offset_pv *= env->data_type_bytes[pv->mb.arr_type_index];
         ptr_pv = pv->arr_body + offset_pv;
     }
 
@@ -2589,6 +2663,7 @@ int org_mini_gl_GL_glTexCoord4dv(Runtime *runtime, Class *clazz) {
     int offset_pv = env->localvar_getInt(runtime, pos++);
     __refer ptr_pv = NULL;
     if(pv){
+        offset_pv *= env->data_type_bytes[pv->mb.arr_type_index];
         ptr_pv = pv->arr_body + offset_pv;
     }
 
@@ -2621,6 +2696,7 @@ int org_mini_gl_GL_glTexCoord4fv(Runtime *runtime, Class *clazz) {
     int offset_pv = env->localvar_getInt(runtime, pos++);
     __refer ptr_pv = NULL;
     if(pv){
+        offset_pv *= env->data_type_bytes[pv->mb.arr_type_index];
         ptr_pv = pv->arr_body + offset_pv;
     }
 
@@ -2653,6 +2729,7 @@ int org_mini_gl_GL_glTexCoord4iv(Runtime *runtime, Class *clazz) {
     int offset_pv = env->localvar_getInt(runtime, pos++);
     __refer ptr_pv = NULL;
     if(pv){
+        offset_pv *= env->data_type_bytes[pv->mb.arr_type_index];
         ptr_pv = pv->arr_body + offset_pv;
     }
 
@@ -2685,6 +2762,7 @@ int org_mini_gl_GL_glTexCoord4sv(Runtime *runtime, Class *clazz) {
     int offset_pv = env->localvar_getInt(runtime, pos++);
     __refer ptr_pv = NULL;
     if(pv){
+        offset_pv *= env->data_type_bytes[pv->mb.arr_type_index];
         ptr_pv = pv->arr_body + offset_pv;
     }
 
@@ -2715,6 +2793,7 @@ int org_mini_gl_GL_glVertex2dv(Runtime *runtime, Class *clazz) {
     int offset_pv = env->localvar_getInt(runtime, pos++);
     __refer ptr_pv = NULL;
     if(pv){
+        offset_pv *= env->data_type_bytes[pv->mb.arr_type_index];
         ptr_pv = pv->arr_body + offset_pv;
     }
 
@@ -2745,6 +2824,7 @@ int org_mini_gl_GL_glVertex2fv(Runtime *runtime, Class *clazz) {
     int offset_pv = env->localvar_getInt(runtime, pos++);
     __refer ptr_pv = NULL;
     if(pv){
+        offset_pv *= env->data_type_bytes[pv->mb.arr_type_index];
         ptr_pv = pv->arr_body + offset_pv;
     }
 
@@ -2775,6 +2855,7 @@ int org_mini_gl_GL_glVertex2iv(Runtime *runtime, Class *clazz) {
     int offset_pv = env->localvar_getInt(runtime, pos++);
     __refer ptr_pv = NULL;
     if(pv){
+        offset_pv *= env->data_type_bytes[pv->mb.arr_type_index];
         ptr_pv = pv->arr_body + offset_pv;
     }
 
@@ -2805,6 +2886,7 @@ int org_mini_gl_GL_glVertex2sv(Runtime *runtime, Class *clazz) {
     int offset_pv = env->localvar_getInt(runtime, pos++);
     __refer ptr_pv = NULL;
     if(pv){
+        offset_pv *= env->data_type_bytes[pv->mb.arr_type_index];
         ptr_pv = pv->arr_body + offset_pv;
     }
 
@@ -2836,6 +2918,7 @@ int org_mini_gl_GL_glVertex3dv(Runtime *runtime, Class *clazz) {
     int offset_pv = env->localvar_getInt(runtime, pos++);
     __refer ptr_pv = NULL;
     if(pv){
+        offset_pv *= env->data_type_bytes[pv->mb.arr_type_index];
         ptr_pv = pv->arr_body + offset_pv;
     }
 
@@ -2867,6 +2950,7 @@ int org_mini_gl_GL_glVertex3fv(Runtime *runtime, Class *clazz) {
     int offset_pv = env->localvar_getInt(runtime, pos++);
     __refer ptr_pv = NULL;
     if(pv){
+        offset_pv *= env->data_type_bytes[pv->mb.arr_type_index];
         ptr_pv = pv->arr_body + offset_pv;
     }
 
@@ -2898,6 +2982,7 @@ int org_mini_gl_GL_glVertex3iv(Runtime *runtime, Class *clazz) {
     int offset_pv = env->localvar_getInt(runtime, pos++);
     __refer ptr_pv = NULL;
     if(pv){
+        offset_pv *= env->data_type_bytes[pv->mb.arr_type_index];
         ptr_pv = pv->arr_body + offset_pv;
     }
 
@@ -2929,6 +3014,7 @@ int org_mini_gl_GL_glVertex3sv(Runtime *runtime, Class *clazz) {
     int offset_pv = env->localvar_getInt(runtime, pos++);
     __refer ptr_pv = NULL;
     if(pv){
+        offset_pv *= env->data_type_bytes[pv->mb.arr_type_index];
         ptr_pv = pv->arr_body + offset_pv;
     }
 
@@ -2961,6 +3047,7 @@ int org_mini_gl_GL_glVertex4dv(Runtime *runtime, Class *clazz) {
     int offset_pv = env->localvar_getInt(runtime, pos++);
     __refer ptr_pv = NULL;
     if(pv){
+        offset_pv *= env->data_type_bytes[pv->mb.arr_type_index];
         ptr_pv = pv->arr_body + offset_pv;
     }
 
@@ -2993,6 +3080,7 @@ int org_mini_gl_GL_glVertex4fv(Runtime *runtime, Class *clazz) {
     int offset_pv = env->localvar_getInt(runtime, pos++);
     __refer ptr_pv = NULL;
     if(pv){
+        offset_pv *= env->data_type_bytes[pv->mb.arr_type_index];
         ptr_pv = pv->arr_body + offset_pv;
     }
 
@@ -3025,6 +3113,7 @@ int org_mini_gl_GL_glVertex4iv(Runtime *runtime, Class *clazz) {
     int offset_pv = env->localvar_getInt(runtime, pos++);
     __refer ptr_pv = NULL;
     if(pv){
+        offset_pv *= env->data_type_bytes[pv->mb.arr_type_index];
         ptr_pv = pv->arr_body + offset_pv;
     }
 
@@ -3057,6 +3146,7 @@ int org_mini_gl_GL_glVertex4sv(Runtime *runtime, Class *clazz) {
     int offset_pv = env->localvar_getInt(runtime, pos++);
     __refer ptr_pv = NULL;
     if(pv){
+        offset_pv *= env->data_type_bytes[pv->mb.arr_type_index];
         ptr_pv = pv->arr_body + offset_pv;
     }
 
@@ -3075,6 +3165,7 @@ int org_mini_gl_GL_glClipPlane(Runtime *runtime, Class *clazz) {
     int offset_pequation = env->localvar_getInt(runtime, pos++);
     __refer ptr_pequation = NULL;
     if(pequation){
+        offset_pequation *= env->data_type_bytes[pequation->mb.arr_type_index];
         ptr_pequation = pequation->arr_body + offset_pequation;
     }
 
@@ -3119,6 +3210,7 @@ int org_mini_gl_GL_glFogfv(Runtime *runtime, Class *clazz) {
     int offset_pparams = env->localvar_getInt(runtime, pos++);
     __refer ptr_pparams = NULL;
     if(pparams){
+        offset_pparams *= env->data_type_bytes[pparams->mb.arr_type_index];
         ptr_pparams = pparams->arr_body + offset_pparams;
     }
 
@@ -3150,6 +3242,7 @@ int org_mini_gl_GL_glFogiv(Runtime *runtime, Class *clazz) {
     int offset_pparams = env->localvar_getInt(runtime, pos++);
     __refer ptr_pparams = NULL;
     if(pparams){
+        offset_pparams *= env->data_type_bytes[pparams->mb.arr_type_index];
         ptr_pparams = pparams->arr_body + offset_pparams;
     }
 
@@ -3183,6 +3276,7 @@ int org_mini_gl_GL_glLightfv(Runtime *runtime, Class *clazz) {
     int offset_pparams = env->localvar_getInt(runtime, pos++);
     __refer ptr_pparams = NULL;
     if(pparams){
+        offset_pparams *= env->data_type_bytes[pparams->mb.arr_type_index];
         ptr_pparams = pparams->arr_body + offset_pparams;
     }
 
@@ -3216,6 +3310,7 @@ int org_mini_gl_GL_glLightiv(Runtime *runtime, Class *clazz) {
     int offset_pparams = env->localvar_getInt(runtime, pos++);
     __refer ptr_pparams = NULL;
     if(pparams){
+        offset_pparams *= env->data_type_bytes[pparams->mb.arr_type_index];
         ptr_pparams = pparams->arr_body + offset_pparams;
     }
 
@@ -3247,6 +3342,7 @@ int org_mini_gl_GL_glLightModelfv(Runtime *runtime, Class *clazz) {
     int offset_pparams = env->localvar_getInt(runtime, pos++);
     __refer ptr_pparams = NULL;
     if(pparams){
+        offset_pparams *= env->data_type_bytes[pparams->mb.arr_type_index];
         ptr_pparams = pparams->arr_body + offset_pparams;
     }
 
@@ -3278,6 +3374,7 @@ int org_mini_gl_GL_glLightModeliv(Runtime *runtime, Class *clazz) {
     int offset_pparams = env->localvar_getInt(runtime, pos++);
     __refer ptr_pparams = NULL;
     if(pparams){
+        offset_pparams *= env->data_type_bytes[pparams->mb.arr_type_index];
         ptr_pparams = pparams->arr_body + offset_pparams;
     }
 
@@ -3324,6 +3421,7 @@ int org_mini_gl_GL_glMaterialfv(Runtime *runtime, Class *clazz) {
     int offset_pparams = env->localvar_getInt(runtime, pos++);
     __refer ptr_pparams = NULL;
     if(pparams){
+        offset_pparams *= env->data_type_bytes[pparams->mb.arr_type_index];
         ptr_pparams = pparams->arr_body + offset_pparams;
     }
 
@@ -3357,6 +3455,7 @@ int org_mini_gl_GL_glMaterialiv(Runtime *runtime, Class *clazz) {
     int offset_pparams = env->localvar_getInt(runtime, pos++);
     __refer ptr_pparams = NULL;
     if(pparams){
+        offset_pparams *= env->data_type_bytes[pparams->mb.arr_type_index];
         ptr_pparams = pparams->arr_body + offset_pparams;
     }
 
@@ -3374,6 +3473,7 @@ int org_mini_gl_GL_glPolygonStipple(Runtime *runtime, Class *clazz) {
     int offset_pmask = env->localvar_getInt(runtime, pos++);
     __refer ptr_pmask = NULL;
     if(pmask){
+        offset_pmask *= env->data_type_bytes[pmask->mb.arr_type_index];
         ptr_pmask = pmask->arr_body + offset_pmask;
     }
 
@@ -3419,6 +3519,7 @@ int org_mini_gl_GL_glTexEnvfv(Runtime *runtime, Class *clazz) {
     int offset_pparams = env->localvar_getInt(runtime, pos++);
     __refer ptr_pparams = NULL;
     if(pparams){
+        offset_pparams *= env->data_type_bytes[pparams->mb.arr_type_index];
         ptr_pparams = pparams->arr_body + offset_pparams;
     }
 
@@ -3452,6 +3553,7 @@ int org_mini_gl_GL_glTexEnviv(Runtime *runtime, Class *clazz) {
     int offset_pparams = env->localvar_getInt(runtime, pos++);
     __refer ptr_pparams = NULL;
     if(pparams){
+        offset_pparams *= env->data_type_bytes[pparams->mb.arr_type_index];
         ptr_pparams = pparams->arr_body + offset_pparams;
     }
 
@@ -3485,6 +3587,7 @@ int org_mini_gl_GL_glTexGendv(Runtime *runtime, Class *clazz) {
     int offset_pparams = env->localvar_getInt(runtime, pos++);
     __refer ptr_pparams = NULL;
     if(pparams){
+        offset_pparams *= env->data_type_bytes[pparams->mb.arr_type_index];
         ptr_pparams = pparams->arr_body + offset_pparams;
     }
 
@@ -3518,6 +3621,7 @@ int org_mini_gl_GL_glTexGenfv(Runtime *runtime, Class *clazz) {
     int offset_pparams = env->localvar_getInt(runtime, pos++);
     __refer ptr_pparams = NULL;
     if(pparams){
+        offset_pparams *= env->data_type_bytes[pparams->mb.arr_type_index];
         ptr_pparams = pparams->arr_body + offset_pparams;
     }
 
@@ -3551,6 +3655,7 @@ int org_mini_gl_GL_glTexGeniv(Runtime *runtime, Class *clazz) {
     int offset_pparams = env->localvar_getInt(runtime, pos++);
     __refer ptr_pparams = NULL;
     if(pparams){
+        offset_pparams *= env->data_type_bytes[pparams->mb.arr_type_index];
         ptr_pparams = pparams->arr_body + offset_pparams;
     }
 
@@ -3570,6 +3675,7 @@ int org_mini_gl_GL_glFeedbackBuffer(Runtime *runtime, Class *clazz) {
     int offset_pbuffer = env->localvar_getInt(runtime, pos++);
     __refer ptr_pbuffer = NULL;
     if(pbuffer){
+        offset_pbuffer *= env->data_type_bytes[pbuffer->mb.arr_type_index];
         ptr_pbuffer = pbuffer->arr_body + offset_pbuffer;
     }
 
@@ -3588,6 +3694,7 @@ int org_mini_gl_GL_glSelectBuffer(Runtime *runtime, Class *clazz) {
     int offset_pbuffer = env->localvar_getInt(runtime, pos++);
     __refer ptr_pbuffer = NULL;
     if(pbuffer){
+        offset_pbuffer *= env->data_type_bytes[pbuffer->mb.arr_type_index];
         ptr_pbuffer = pbuffer->arr_body + offset_pbuffer;
     }
 
@@ -3755,6 +3862,7 @@ int org_mini_gl_GL_glMap1d(Runtime *runtime, Class *clazz) {
     int offset_ppoints = env->localvar_getInt(runtime, pos++);
     __refer ptr_ppoints = NULL;
     if(ppoints){
+        offset_ppoints *= env->data_type_bytes[ppoints->mb.arr_type_index];
         ptr_ppoints = ppoints->arr_body + offset_ppoints;
     }
 
@@ -3777,6 +3885,7 @@ int org_mini_gl_GL_glMap1f(Runtime *runtime, Class *clazz) {
     int offset_ppoints = env->localvar_getInt(runtime, pos++);
     __refer ptr_ppoints = NULL;
     if(ppoints){
+        offset_ppoints *= env->data_type_bytes[ppoints->mb.arr_type_index];
         ptr_ppoints = ppoints->arr_body + offset_ppoints;
     }
 
@@ -3803,6 +3912,7 @@ int org_mini_gl_GL_glMap2d(Runtime *runtime, Class *clazz) {
     int offset_ppoints = env->localvar_getInt(runtime, pos++);
     __refer ptr_ppoints = NULL;
     if(ppoints){
+        offset_ppoints *= env->data_type_bytes[ppoints->mb.arr_type_index];
         ptr_ppoints = ppoints->arr_body + offset_ppoints;
     }
 
@@ -3829,6 +3939,7 @@ int org_mini_gl_GL_glMap2f(Runtime *runtime, Class *clazz) {
     int offset_ppoints = env->localvar_getInt(runtime, pos++);
     __refer ptr_ppoints = NULL;
     if(ppoints){
+        offset_ppoints *= env->data_type_bytes[ppoints->mb.arr_type_index];
         ptr_ppoints = ppoints->arr_body + offset_ppoints;
     }
 
@@ -3920,6 +4031,7 @@ int org_mini_gl_GL_glEvalCoord1dv(Runtime *runtime, Class *clazz) {
     int offset_pu = env->localvar_getInt(runtime, pos++);
     __refer ptr_pu = NULL;
     if(pu){
+        offset_pu *= env->data_type_bytes[pu->mb.arr_type_index];
         ptr_pu = pu->arr_body + offset_pu;
     }
 
@@ -3949,6 +4061,7 @@ int org_mini_gl_GL_glEvalCoord1fv(Runtime *runtime, Class *clazz) {
     int offset_pu = env->localvar_getInt(runtime, pos++);
     __refer ptr_pu = NULL;
     if(pu){
+        offset_pu *= env->data_type_bytes[pu->mb.arr_type_index];
         ptr_pu = pu->arr_body + offset_pu;
     }
 
@@ -3979,6 +4092,7 @@ int org_mini_gl_GL_glEvalCoord2dv(Runtime *runtime, Class *clazz) {
     int offset_pu = env->localvar_getInt(runtime, pos++);
     __refer ptr_pu = NULL;
     if(pu){
+        offset_pu *= env->data_type_bytes[pu->mb.arr_type_index];
         ptr_pu = pu->arr_body + offset_pu;
     }
 
@@ -4009,6 +4123,7 @@ int org_mini_gl_GL_glEvalCoord2fv(Runtime *runtime, Class *clazz) {
     int offset_pu = env->localvar_getInt(runtime, pos++);
     __refer ptr_pu = NULL;
     if(pu){
+        offset_pu *= env->data_type_bytes[pu->mb.arr_type_index];
         ptr_pu = pu->arr_body + offset_pu;
     }
 
@@ -4135,6 +4250,7 @@ int org_mini_gl_GL_glPixelMapfv(Runtime *runtime, Class *clazz) {
     int offset_pvalues = env->localvar_getInt(runtime, pos++);
     __refer ptr_pvalues = NULL;
     if(pvalues){
+        offset_pvalues *= env->data_type_bytes[pvalues->mb.arr_type_index];
         ptr_pvalues = pvalues->arr_body + offset_pvalues;
     }
 
@@ -4154,6 +4270,7 @@ int org_mini_gl_GL_glPixelMapuiv(Runtime *runtime, Class *clazz) {
     int offset_pvalues = env->localvar_getInt(runtime, pos++);
     __refer ptr_pvalues = NULL;
     if(pvalues){
+        offset_pvalues *= env->data_type_bytes[pvalues->mb.arr_type_index];
         ptr_pvalues = pvalues->arr_body + offset_pvalues;
     }
 
@@ -4173,6 +4290,7 @@ int org_mini_gl_GL_glPixelMapusv(Runtime *runtime, Class *clazz) {
     int offset_pvalues = env->localvar_getInt(runtime, pos++);
     __refer ptr_pvalues = NULL;
     if(pvalues){
+        offset_pvalues *= env->data_type_bytes[pvalues->mb.arr_type_index];
         ptr_pvalues = pvalues->arr_body + offset_pvalues;
     }
 
@@ -4210,6 +4328,7 @@ int org_mini_gl_GL_glDrawPixels(Runtime *runtime, Class *clazz) {
     int offset_ppixels = env->localvar_getInt(runtime, pos++);
     __refer ptr_ppixels = NULL;
     if(ppixels){
+        offset_ppixels *= env->data_type_bytes[ppixels->mb.arr_type_index];
         ptr_ppixels = ppixels->arr_body + offset_ppixels;
     }
 
@@ -4228,6 +4347,7 @@ int org_mini_gl_GL_glGetClipPlane(Runtime *runtime, Class *clazz) {
     int offset_pequation = env->localvar_getInt(runtime, pos++);
     __refer ptr_pequation = NULL;
     if(pequation){
+        offset_pequation *= env->data_type_bytes[pequation->mb.arr_type_index];
         ptr_pequation = pequation->arr_body + offset_pequation;
     }
 
@@ -4247,6 +4367,7 @@ int org_mini_gl_GL_glGetLightfv(Runtime *runtime, Class *clazz) {
     int offset_pparams = env->localvar_getInt(runtime, pos++);
     __refer ptr_pparams = NULL;
     if(pparams){
+        offset_pparams *= env->data_type_bytes[pparams->mb.arr_type_index];
         ptr_pparams = pparams->arr_body + offset_pparams;
     }
 
@@ -4266,6 +4387,7 @@ int org_mini_gl_GL_glGetLightiv(Runtime *runtime, Class *clazz) {
     int offset_pparams = env->localvar_getInt(runtime, pos++);
     __refer ptr_pparams = NULL;
     if(pparams){
+        offset_pparams *= env->data_type_bytes[pparams->mb.arr_type_index];
         ptr_pparams = pparams->arr_body + offset_pparams;
     }
 
@@ -4285,6 +4407,7 @@ int org_mini_gl_GL_glGetMapdv(Runtime *runtime, Class *clazz) {
     int offset_pv = env->localvar_getInt(runtime, pos++);
     __refer ptr_pv = NULL;
     if(pv){
+        offset_pv *= env->data_type_bytes[pv->mb.arr_type_index];
         ptr_pv = pv->arr_body + offset_pv;
     }
 
@@ -4304,6 +4427,7 @@ int org_mini_gl_GL_glGetMapfv(Runtime *runtime, Class *clazz) {
     int offset_pv = env->localvar_getInt(runtime, pos++);
     __refer ptr_pv = NULL;
     if(pv){
+        offset_pv *= env->data_type_bytes[pv->mb.arr_type_index];
         ptr_pv = pv->arr_body + offset_pv;
     }
 
@@ -4323,6 +4447,7 @@ int org_mini_gl_GL_glGetMapiv(Runtime *runtime, Class *clazz) {
     int offset_pv = env->localvar_getInt(runtime, pos++);
     __refer ptr_pv = NULL;
     if(pv){
+        offset_pv *= env->data_type_bytes[pv->mb.arr_type_index];
         ptr_pv = pv->arr_body + offset_pv;
     }
 
@@ -4342,6 +4467,7 @@ int org_mini_gl_GL_glGetMaterialfv(Runtime *runtime, Class *clazz) {
     int offset_pparams = env->localvar_getInt(runtime, pos++);
     __refer ptr_pparams = NULL;
     if(pparams){
+        offset_pparams *= env->data_type_bytes[pparams->mb.arr_type_index];
         ptr_pparams = pparams->arr_body + offset_pparams;
     }
 
@@ -4361,6 +4487,7 @@ int org_mini_gl_GL_glGetMaterialiv(Runtime *runtime, Class *clazz) {
     int offset_pparams = env->localvar_getInt(runtime, pos++);
     __refer ptr_pparams = NULL;
     if(pparams){
+        offset_pparams *= env->data_type_bytes[pparams->mb.arr_type_index];
         ptr_pparams = pparams->arr_body + offset_pparams;
     }
 
@@ -4379,6 +4506,7 @@ int org_mini_gl_GL_glGetPixelMapfv(Runtime *runtime, Class *clazz) {
     int offset_pvalues = env->localvar_getInt(runtime, pos++);
     __refer ptr_pvalues = NULL;
     if(pvalues){
+        offset_pvalues *= env->data_type_bytes[pvalues->mb.arr_type_index];
         ptr_pvalues = pvalues->arr_body + offset_pvalues;
     }
 
@@ -4397,6 +4525,7 @@ int org_mini_gl_GL_glGetPixelMapuiv(Runtime *runtime, Class *clazz) {
     int offset_pvalues = env->localvar_getInt(runtime, pos++);
     __refer ptr_pvalues = NULL;
     if(pvalues){
+        offset_pvalues *= env->data_type_bytes[pvalues->mb.arr_type_index];
         ptr_pvalues = pvalues->arr_body + offset_pvalues;
     }
 
@@ -4415,6 +4544,7 @@ int org_mini_gl_GL_glGetPixelMapusv(Runtime *runtime, Class *clazz) {
     int offset_pvalues = env->localvar_getInt(runtime, pos++);
     __refer ptr_pvalues = NULL;
     if(pvalues){
+        offset_pvalues *= env->data_type_bytes[pvalues->mb.arr_type_index];
         ptr_pvalues = pvalues->arr_body + offset_pvalues;
     }
 
@@ -4432,6 +4562,7 @@ int org_mini_gl_GL_glGetPolygonStipple(Runtime *runtime, Class *clazz) {
     int offset_pmask = env->localvar_getInt(runtime, pos++);
     __refer ptr_pmask = NULL;
     if(pmask){
+        offset_pmask *= env->data_type_bytes[pmask->mb.arr_type_index];
         ptr_pmask = pmask->arr_body + offset_pmask;
     }
 
@@ -4451,6 +4582,7 @@ int org_mini_gl_GL_glGetTexEnvfv(Runtime *runtime, Class *clazz) {
     int offset_pparams = env->localvar_getInt(runtime, pos++);
     __refer ptr_pparams = NULL;
     if(pparams){
+        offset_pparams *= env->data_type_bytes[pparams->mb.arr_type_index];
         ptr_pparams = pparams->arr_body + offset_pparams;
     }
 
@@ -4470,6 +4602,7 @@ int org_mini_gl_GL_glGetTexEnviv(Runtime *runtime, Class *clazz) {
     int offset_pparams = env->localvar_getInt(runtime, pos++);
     __refer ptr_pparams = NULL;
     if(pparams){
+        offset_pparams *= env->data_type_bytes[pparams->mb.arr_type_index];
         ptr_pparams = pparams->arr_body + offset_pparams;
     }
 
@@ -4489,6 +4622,7 @@ int org_mini_gl_GL_glGetTexGendv(Runtime *runtime, Class *clazz) {
     int offset_pparams = env->localvar_getInt(runtime, pos++);
     __refer ptr_pparams = NULL;
     if(pparams){
+        offset_pparams *= env->data_type_bytes[pparams->mb.arr_type_index];
         ptr_pparams = pparams->arr_body + offset_pparams;
     }
 
@@ -4508,6 +4642,7 @@ int org_mini_gl_GL_glGetTexGenfv(Runtime *runtime, Class *clazz) {
     int offset_pparams = env->localvar_getInt(runtime, pos++);
     __refer ptr_pparams = NULL;
     if(pparams){
+        offset_pparams *= env->data_type_bytes[pparams->mb.arr_type_index];
         ptr_pparams = pparams->arr_body + offset_pparams;
     }
 
@@ -4527,6 +4662,7 @@ int org_mini_gl_GL_glGetTexGeniv(Runtime *runtime, Class *clazz) {
     int offset_pparams = env->localvar_getInt(runtime, pos++);
     __refer ptr_pparams = NULL;
     if(pparams){
+        offset_pparams *= env->data_type_bytes[pparams->mb.arr_type_index];
         ptr_pparams = pparams->arr_body + offset_pparams;
     }
 
@@ -4584,6 +4720,7 @@ int org_mini_gl_GL_glLoadMatrixf(Runtime *runtime, Class *clazz) {
     int offset_pm = env->localvar_getInt(runtime, pos++);
     __refer ptr_pm = NULL;
     if(pm){
+        offset_pm *= env->data_type_bytes[pm->mb.arr_type_index];
         ptr_pm = pm->arr_body + offset_pm;
     }
 
@@ -4601,6 +4738,7 @@ int org_mini_gl_GL_glLoadMatrixd(Runtime *runtime, Class *clazz) {
     int offset_pm = env->localvar_getInt(runtime, pos++);
     __refer ptr_pm = NULL;
     if(pm){
+        offset_pm *= env->data_type_bytes[pm->mb.arr_type_index];
         ptr_pm = pm->arr_body + offset_pm;
     }
 
@@ -4630,6 +4768,7 @@ int org_mini_gl_GL_glMultMatrixf(Runtime *runtime, Class *clazz) {
     int offset_pm = env->localvar_getInt(runtime, pos++);
     __refer ptr_pm = NULL;
     if(pm){
+        offset_pm *= env->data_type_bytes[pm->mb.arr_type_index];
         ptr_pm = pm->arr_body + offset_pm;
     }
 
@@ -4647,6 +4786,7 @@ int org_mini_gl_GL_glMultMatrixd(Runtime *runtime, Class *clazz) {
     int offset_pm = env->localvar_getInt(runtime, pos++);
     __refer ptr_pm = NULL;
     if(pm){
+        offset_pm *= env->data_type_bytes[pm->mb.arr_type_index];
         ptr_pm = pm->arr_body + offset_pm;
     }
 
@@ -4806,6 +4946,7 @@ int org_mini_gl_GL_glDrawElements(Runtime *runtime, Class *clazz) {
     int offset_pindices = env->localvar_getInt(runtime, pos++);
     __refer ptr_pindices = NULL;
     if(pindices){
+        offset_pindices *= env->data_type_bytes[pindices->mb.arr_type_index];
         ptr_pindices = pindices->arr_body + offset_pindices;
     }
 
@@ -4932,6 +5073,7 @@ int org_mini_gl_GL_glTexSubImage1D(Runtime *runtime, Class *clazz) {
     int offset_ppixels = env->localvar_getInt(runtime, pos++);
     __refer ptr_ppixels = NULL;
     if(ppixels){
+        offset_ppixels *= env->data_type_bytes[ppixels->mb.arr_type_index];
         ptr_ppixels = ppixels->arr_body + offset_ppixels;
     }
 
@@ -4957,6 +5099,7 @@ int org_mini_gl_GL_glTexSubImage2D(Runtime *runtime, Class *clazz) {
     int offset_ppixels = env->localvar_getInt(runtime, pos++);
     __refer ptr_ppixels = NULL;
     if(ppixels){
+        offset_ppixels *= env->data_type_bytes[ppixels->mb.arr_type_index];
         ptr_ppixels = ppixels->arr_body + offset_ppixels;
     }
 
@@ -4988,6 +5131,7 @@ int org_mini_gl_GL_glDeleteTextures(Runtime *runtime, Class *clazz) {
     int offset_ptextures = env->localvar_getInt(runtime, pos++);
     __refer ptr_ptextures = NULL;
     if(ptextures){
+        offset_ptextures *= env->data_type_bytes[ptextures->mb.arr_type_index];
         ptr_ptextures = ptextures->arr_body + offset_ptextures;
     }
 
@@ -5006,6 +5150,7 @@ int org_mini_gl_GL_glGenTextures(Runtime *runtime, Class *clazz) {
     int offset_ptextures = env->localvar_getInt(runtime, pos++);
     __refer ptr_ptextures = NULL;
     if(ptextures){
+        offset_ptextures *= env->data_type_bytes[ptextures->mb.arr_type_index];
         ptr_ptextures = ptextures->arr_body + offset_ptextures;
     }
 
@@ -5050,6 +5195,7 @@ int org_mini_gl_GL_glColorPointer(Runtime *runtime, Class *clazz) {
     int offset_ppointer = env->localvar_getInt(runtime, pos++);
     __refer ptr_ppointer = NULL;
     if(ppointer){
+        offset_ppointer *= env->data_type_bytes[ppointer->mb.arr_type_index];
         ptr_ppointer = ppointer->arr_body + offset_ppointer;
     }
 
@@ -5080,6 +5226,7 @@ int org_mini_gl_GL_glEdgeFlagPointer(Runtime *runtime, Class *clazz) {
     int offset_ppointer = env->localvar_getInt(runtime, pos++);
     __refer ptr_ppointer = NULL;
     if(ppointer){
+        offset_ppointer *= env->data_type_bytes[ppointer->mb.arr_type_index];
         ptr_ppointer = ppointer->arr_body + offset_ppointer;
     }
 
@@ -5111,6 +5258,7 @@ int org_mini_gl_GL_glIndexPointer(Runtime *runtime, Class *clazz) {
     int offset_ppointer = env->localvar_getInt(runtime, pos++);
     __refer ptr_ppointer = NULL;
     if(ppointer){
+        offset_ppointer *= env->data_type_bytes[ppointer->mb.arr_type_index];
         ptr_ppointer = ppointer->arr_body + offset_ppointer;
     }
 
@@ -5130,6 +5278,7 @@ int org_mini_gl_GL_glInterleavedArrays(Runtime *runtime, Class *clazz) {
     int offset_ppointer = env->localvar_getInt(runtime, pos++);
     __refer ptr_ppointer = NULL;
     if(ppointer){
+        offset_ppointer *= env->data_type_bytes[ppointer->mb.arr_type_index];
         ptr_ppointer = ppointer->arr_body + offset_ppointer;
     }
 
@@ -5149,6 +5298,7 @@ int org_mini_gl_GL_glNormalPointer(Runtime *runtime, Class *clazz) {
     int offset_ppointer = env->localvar_getInt(runtime, pos++);
     __refer ptr_ppointer = NULL;
     if(ppointer){
+        offset_ppointer *= env->data_type_bytes[ppointer->mb.arr_type_index];
         ptr_ppointer = ppointer->arr_body + offset_ppointer;
     }
 
@@ -5169,6 +5319,7 @@ int org_mini_gl_GL_glTexCoordPointer(Runtime *runtime, Class *clazz) {
     int offset_ppointer = env->localvar_getInt(runtime, pos++);
     __refer ptr_ppointer = NULL;
     if(ppointer){
+        offset_ppointer *= env->data_type_bytes[ppointer->mb.arr_type_index];
         ptr_ppointer = ppointer->arr_body + offset_ppointer;
     }
 
@@ -5189,6 +5340,7 @@ int org_mini_gl_GL_glVertexPointer(Runtime *runtime, Class *clazz) {
     int offset_ppointer = env->localvar_getInt(runtime, pos++);
     __refer ptr_ppointer = NULL;
     if(ppointer){
+        offset_ppointer *= env->data_type_bytes[ppointer->mb.arr_type_index];
         ptr_ppointer = ppointer->arr_body + offset_ppointer;
     }
 
@@ -5207,12 +5359,14 @@ int org_mini_gl_GL_glAreTexturesResident(Runtime *runtime, Class *clazz) {
     int offset_ptextures = env->localvar_getInt(runtime, pos++);
     __refer ptr_ptextures = NULL;
     if(ptextures){
+        offset_ptextures *= env->data_type_bytes[ptextures->mb.arr_type_index];
         ptr_ptextures = ptextures->arr_body + offset_ptextures;
     }
     Instance *presidences = env->localvar_getRefer(runtime, pos++);
     int offset_presidences = env->localvar_getInt(runtime, pos++);
     __refer ptr_presidences = NULL;
     if(presidences){
+        offset_presidences *= env->data_type_bytes[presidences->mb.arr_type_index];
         ptr_presidences = presidences->arr_body + offset_presidences;
     }
 
@@ -5231,12 +5385,14 @@ int org_mini_gl_GL_glPrioritizeTextures(Runtime *runtime, Class *clazz) {
     int offset_ptextures = env->localvar_getInt(runtime, pos++);
     __refer ptr_ptextures = NULL;
     if(ptextures){
+        offset_ptextures *= env->data_type_bytes[ptextures->mb.arr_type_index];
         ptr_ptextures = ptextures->arr_body + offset_ptextures;
     }
     Instance *ppriorities = env->localvar_getRefer(runtime, pos++);
     int offset_ppriorities = env->localvar_getInt(runtime, pos++);
     __refer ptr_ppriorities = NULL;
     if(ppriorities){
+        offset_ppriorities *= env->data_type_bytes[ppriorities->mb.arr_type_index];
         ptr_ppriorities = ppriorities->arr_body + offset_ppriorities;
     }
 
@@ -5266,6 +5422,7 @@ int org_mini_gl_GL_glIndexubv(Runtime *runtime, Class *clazz) {
     int offset_pc = env->localvar_getInt(runtime, pos++);
     __refer ptr_pc = NULL;
     if(pc){
+        offset_pc *= env->data_type_bytes[pc->mb.arr_type_index];
         ptr_pc = pc->arr_body + offset_pc;
     }
 
@@ -5311,6 +5468,7 @@ int org_mini_gl_GL_glDrawRangeElements(Runtime *runtime, Class *clazz) {
     int offset_pindices = env->localvar_getInt(runtime, pos++);
     __refer ptr_pindices = NULL;
     if(pindices){
+        offset_pindices *= env->data_type_bytes[pindices->mb.arr_type_index];
         ptr_pindices = pindices->arr_body + offset_pindices;
     }
 
@@ -5337,6 +5495,7 @@ int org_mini_gl_GL_glTexImage3D(Runtime *runtime, Class *clazz) {
     int offset_ppixels = env->localvar_getInt(runtime, pos++);
     __refer ptr_ppixels = NULL;
     if(ppixels){
+        offset_ppixels *= env->data_type_bytes[ppixels->mb.arr_type_index];
         ptr_ppixels = ppixels->arr_body + offset_ppixels;
     }
 
@@ -5364,6 +5523,7 @@ int org_mini_gl_GL_glTexSubImage3D(Runtime *runtime, Class *clazz) {
     int offset_ppixels = env->localvar_getInt(runtime, pos++);
     __refer ptr_ppixels = NULL;
     if(ppixels){
+        offset_ppixels *= env->data_type_bytes[ppixels->mb.arr_type_index];
         ptr_ppixels = ppixels->arr_body + offset_ppixels;
     }
 
@@ -5434,6 +5594,7 @@ int org_mini_gl_GL_glCompressedTexImage3D(Runtime *runtime, Class *clazz) {
     int offset_pdata = env->localvar_getInt(runtime, pos++);
     __refer ptr_pdata = NULL;
     if(pdata){
+        offset_pdata *= env->data_type_bytes[pdata->mb.arr_type_index];
         ptr_pdata = pdata->arr_body + offset_pdata;
     }
 
@@ -5458,6 +5619,7 @@ int org_mini_gl_GL_glCompressedTexImage2D(Runtime *runtime, Class *clazz) {
     int offset_pdata = env->localvar_getInt(runtime, pos++);
     __refer ptr_pdata = NULL;
     if(pdata){
+        offset_pdata *= env->data_type_bytes[pdata->mb.arr_type_index];
         ptr_pdata = pdata->arr_body + offset_pdata;
     }
 
@@ -5481,6 +5643,7 @@ int org_mini_gl_GL_glCompressedTexImage1D(Runtime *runtime, Class *clazz) {
     int offset_pdata = env->localvar_getInt(runtime, pos++);
     __refer ptr_pdata = NULL;
     if(pdata){
+        offset_pdata *= env->data_type_bytes[pdata->mb.arr_type_index];
         ptr_pdata = pdata->arr_body + offset_pdata;
     }
 
@@ -5508,6 +5671,7 @@ int org_mini_gl_GL_glCompressedTexSubImage3D(Runtime *runtime, Class *clazz) {
     int offset_pdata = env->localvar_getInt(runtime, pos++);
     __refer ptr_pdata = NULL;
     if(pdata){
+        offset_pdata *= env->data_type_bytes[pdata->mb.arr_type_index];
         ptr_pdata = pdata->arr_body + offset_pdata;
     }
 
@@ -5533,6 +5697,7 @@ int org_mini_gl_GL_glCompressedTexSubImage2D(Runtime *runtime, Class *clazz) {
     int offset_pdata = env->localvar_getInt(runtime, pos++);
     __refer ptr_pdata = NULL;
     if(pdata){
+        offset_pdata *= env->data_type_bytes[pdata->mb.arr_type_index];
         ptr_pdata = pdata->arr_body + offset_pdata;
     }
 
@@ -5556,6 +5721,7 @@ int org_mini_gl_GL_glCompressedTexSubImage1D(Runtime *runtime, Class *clazz) {
     int offset_pdata = env->localvar_getInt(runtime, pos++);
     __refer ptr_pdata = NULL;
     if(pdata){
+        offset_pdata *= env->data_type_bytes[pdata->mb.arr_type_index];
         ptr_pdata = pdata->arr_body + offset_pdata;
     }
 
@@ -5575,6 +5741,7 @@ int org_mini_gl_GL_glGetCompressedTexImage(Runtime *runtime, Class *clazz) {
     int offset_pimg = env->localvar_getInt(runtime, pos++);
     __refer ptr_pimg = NULL;
     if(pimg){
+        offset_pimg *= env->data_type_bytes[pimg->mb.arr_type_index];
         ptr_pimg = pimg->arr_body + offset_pimg;
     }
 
@@ -5618,6 +5785,7 @@ int org_mini_gl_GL_glMultiTexCoord1dv(Runtime *runtime, Class *clazz) {
     int offset_pv = env->localvar_getInt(runtime, pos++);
     __refer ptr_pv = NULL;
     if(pv){
+        offset_pv *= env->data_type_bytes[pv->mb.arr_type_index];
         ptr_pv = pv->arr_body + offset_pv;
     }
 
@@ -5649,6 +5817,7 @@ int org_mini_gl_GL_glMultiTexCoord1fv(Runtime *runtime, Class *clazz) {
     int offset_pv = env->localvar_getInt(runtime, pos++);
     __refer ptr_pv = NULL;
     if(pv){
+        offset_pv *= env->data_type_bytes[pv->mb.arr_type_index];
         ptr_pv = pv->arr_body + offset_pv;
     }
 
@@ -5680,6 +5849,7 @@ int org_mini_gl_GL_glMultiTexCoord1iv(Runtime *runtime, Class *clazz) {
     int offset_pv = env->localvar_getInt(runtime, pos++);
     __refer ptr_pv = NULL;
     if(pv){
+        offset_pv *= env->data_type_bytes[pv->mb.arr_type_index];
         ptr_pv = pv->arr_body + offset_pv;
     }
 
@@ -5711,6 +5881,7 @@ int org_mini_gl_GL_glMultiTexCoord1sv(Runtime *runtime, Class *clazz) {
     int offset_pv = env->localvar_getInt(runtime, pos++);
     __refer ptr_pv = NULL;
     if(pv){
+        offset_pv *= env->data_type_bytes[pv->mb.arr_type_index];
         ptr_pv = pv->arr_body + offset_pv;
     }
 
@@ -5743,6 +5914,7 @@ int org_mini_gl_GL_glMultiTexCoord2dv(Runtime *runtime, Class *clazz) {
     int offset_pv = env->localvar_getInt(runtime, pos++);
     __refer ptr_pv = NULL;
     if(pv){
+        offset_pv *= env->data_type_bytes[pv->mb.arr_type_index];
         ptr_pv = pv->arr_body + offset_pv;
     }
 
@@ -5775,6 +5947,7 @@ int org_mini_gl_GL_glMultiTexCoord2fv(Runtime *runtime, Class *clazz) {
     int offset_pv = env->localvar_getInt(runtime, pos++);
     __refer ptr_pv = NULL;
     if(pv){
+        offset_pv *= env->data_type_bytes[pv->mb.arr_type_index];
         ptr_pv = pv->arr_body + offset_pv;
     }
 
@@ -5807,6 +5980,7 @@ int org_mini_gl_GL_glMultiTexCoord2iv(Runtime *runtime, Class *clazz) {
     int offset_pv = env->localvar_getInt(runtime, pos++);
     __refer ptr_pv = NULL;
     if(pv){
+        offset_pv *= env->data_type_bytes[pv->mb.arr_type_index];
         ptr_pv = pv->arr_body + offset_pv;
     }
 
@@ -5839,6 +6013,7 @@ int org_mini_gl_GL_glMultiTexCoord2sv(Runtime *runtime, Class *clazz) {
     int offset_pv = env->localvar_getInt(runtime, pos++);
     __refer ptr_pv = NULL;
     if(pv){
+        offset_pv *= env->data_type_bytes[pv->mb.arr_type_index];
         ptr_pv = pv->arr_body + offset_pv;
     }
 
@@ -5872,6 +6047,7 @@ int org_mini_gl_GL_glMultiTexCoord3dv(Runtime *runtime, Class *clazz) {
     int offset_pv = env->localvar_getInt(runtime, pos++);
     __refer ptr_pv = NULL;
     if(pv){
+        offset_pv *= env->data_type_bytes[pv->mb.arr_type_index];
         ptr_pv = pv->arr_body + offset_pv;
     }
 
@@ -5905,6 +6081,7 @@ int org_mini_gl_GL_glMultiTexCoord3fv(Runtime *runtime, Class *clazz) {
     int offset_pv = env->localvar_getInt(runtime, pos++);
     __refer ptr_pv = NULL;
     if(pv){
+        offset_pv *= env->data_type_bytes[pv->mb.arr_type_index];
         ptr_pv = pv->arr_body + offset_pv;
     }
 
@@ -5938,6 +6115,7 @@ int org_mini_gl_GL_glMultiTexCoord3iv(Runtime *runtime, Class *clazz) {
     int offset_pv = env->localvar_getInt(runtime, pos++);
     __refer ptr_pv = NULL;
     if(pv){
+        offset_pv *= env->data_type_bytes[pv->mb.arr_type_index];
         ptr_pv = pv->arr_body + offset_pv;
     }
 
@@ -5971,6 +6149,7 @@ int org_mini_gl_GL_glMultiTexCoord3sv(Runtime *runtime, Class *clazz) {
     int offset_pv = env->localvar_getInt(runtime, pos++);
     __refer ptr_pv = NULL;
     if(pv){
+        offset_pv *= env->data_type_bytes[pv->mb.arr_type_index];
         ptr_pv = pv->arr_body + offset_pv;
     }
 
@@ -6005,6 +6184,7 @@ int org_mini_gl_GL_glMultiTexCoord4dv(Runtime *runtime, Class *clazz) {
     int offset_pv = env->localvar_getInt(runtime, pos++);
     __refer ptr_pv = NULL;
     if(pv){
+        offset_pv *= env->data_type_bytes[pv->mb.arr_type_index];
         ptr_pv = pv->arr_body + offset_pv;
     }
 
@@ -6039,6 +6219,7 @@ int org_mini_gl_GL_glMultiTexCoord4fv(Runtime *runtime, Class *clazz) {
     int offset_pv = env->localvar_getInt(runtime, pos++);
     __refer ptr_pv = NULL;
     if(pv){
+        offset_pv *= env->data_type_bytes[pv->mb.arr_type_index];
         ptr_pv = pv->arr_body + offset_pv;
     }
 
@@ -6073,6 +6254,7 @@ int org_mini_gl_GL_glMultiTexCoord4iv(Runtime *runtime, Class *clazz) {
     int offset_pv = env->localvar_getInt(runtime, pos++);
     __refer ptr_pv = NULL;
     if(pv){
+        offset_pv *= env->data_type_bytes[pv->mb.arr_type_index];
         ptr_pv = pv->arr_body + offset_pv;
     }
 
@@ -6107,6 +6289,7 @@ int org_mini_gl_GL_glMultiTexCoord4sv(Runtime *runtime, Class *clazz) {
     int offset_pv = env->localvar_getInt(runtime, pos++);
     __refer ptr_pv = NULL;
     if(pv){
+        offset_pv *= env->data_type_bytes[pv->mb.arr_type_index];
         ptr_pv = pv->arr_body + offset_pv;
     }
 
@@ -6124,6 +6307,7 @@ int org_mini_gl_GL_glLoadTransposeMatrixf(Runtime *runtime, Class *clazz) {
     int offset_pm = env->localvar_getInt(runtime, pos++);
     __refer ptr_pm = NULL;
     if(pm){
+        offset_pm *= env->data_type_bytes[pm->mb.arr_type_index];
         ptr_pm = pm->arr_body + offset_pm;
     }
 
@@ -6141,6 +6325,7 @@ int org_mini_gl_GL_glLoadTransposeMatrixd(Runtime *runtime, Class *clazz) {
     int offset_pm = env->localvar_getInt(runtime, pos++);
     __refer ptr_pm = NULL;
     if(pm){
+        offset_pm *= env->data_type_bytes[pm->mb.arr_type_index];
         ptr_pm = pm->arr_body + offset_pm;
     }
 
@@ -6158,6 +6343,7 @@ int org_mini_gl_GL_glMultTransposeMatrixf(Runtime *runtime, Class *clazz) {
     int offset_pm = env->localvar_getInt(runtime, pos++);
     __refer ptr_pm = NULL;
     if(pm){
+        offset_pm *= env->data_type_bytes[pm->mb.arr_type_index];
         ptr_pm = pm->arr_body + offset_pm;
     }
 
@@ -6175,6 +6361,7 @@ int org_mini_gl_GL_glMultTransposeMatrixd(Runtime *runtime, Class *clazz) {
     int offset_pm = env->localvar_getInt(runtime, pos++);
     __refer ptr_pm = NULL;
     if(pm){
+        offset_pm *= env->data_type_bytes[pm->mb.arr_type_index];
         ptr_pm = pm->arr_body + offset_pm;
     }
 
@@ -6208,12 +6395,14 @@ int org_mini_gl_GL_glMultiDrawArrays(Runtime *runtime, Class *clazz) {
     int offset_pfirst = env->localvar_getInt(runtime, pos++);
     __refer ptr_pfirst = NULL;
     if(pfirst){
+        offset_pfirst *= env->data_type_bytes[pfirst->mb.arr_type_index];
         ptr_pfirst = pfirst->arr_body + offset_pfirst;
     }
     Instance *pcount = env->localvar_getRefer(runtime, pos++);
     int offset_pcount = env->localvar_getInt(runtime, pos++);
     __refer ptr_pcount = NULL;
     if(pcount){
+        offset_pcount *= env->data_type_bytes[pcount->mb.arr_type_index];
         ptr_pcount = pcount->arr_body + offset_pcount;
     }
     s32 pdrawcount = env->localvar_getInt(runtime, pos++);
@@ -6233,6 +6422,7 @@ int org_mini_gl_GL_glMultiDrawElements(Runtime *runtime, Class *clazz) {
     int offset_pcount = env->localvar_getInt(runtime, pos++);
     __refer ptr_pcount = NULL;
     if(pcount){
+        offset_pcount *= env->data_type_bytes[pcount->mb.arr_type_index];
         ptr_pcount = pcount->arr_body + offset_pcount;
     }
     s32 ptype = env->localvar_getInt(runtime, pos++);
@@ -6271,6 +6461,7 @@ int org_mini_gl_GL_glPointParameterfv(Runtime *runtime, Class *clazz) {
     int offset_pparams = env->localvar_getInt(runtime, pos++);
     __refer ptr_pparams = NULL;
     if(pparams){
+        offset_pparams *= env->data_type_bytes[pparams->mb.arr_type_index];
         ptr_pparams = pparams->arr_body + offset_pparams;
     }
 
@@ -6302,6 +6493,7 @@ int org_mini_gl_GL_glPointParameteriv(Runtime *runtime, Class *clazz) {
     int offset_pparams = env->localvar_getInt(runtime, pos++);
     __refer ptr_pparams = NULL;
     if(pparams){
+        offset_pparams *= env->data_type_bytes[pparams->mb.arr_type_index];
         ptr_pparams = pparams->arr_body + offset_pparams;
     }
 
@@ -6331,6 +6523,7 @@ int org_mini_gl_GL_glFogCoordfv(Runtime *runtime, Class *clazz) {
     int offset_pcoord = env->localvar_getInt(runtime, pos++);
     __refer ptr_pcoord = NULL;
     if(pcoord){
+        offset_pcoord *= env->data_type_bytes[pcoord->mb.arr_type_index];
         ptr_pcoord = pcoord->arr_body + offset_pcoord;
     }
 
@@ -6360,6 +6553,7 @@ int org_mini_gl_GL_glFogCoorddv(Runtime *runtime, Class *clazz) {
     int offset_pcoord = env->localvar_getInt(runtime, pos++);
     __refer ptr_pcoord = NULL;
     if(pcoord){
+        offset_pcoord *= env->data_type_bytes[pcoord->mb.arr_type_index];
         ptr_pcoord = pcoord->arr_body + offset_pcoord;
     }
 
@@ -6379,6 +6573,7 @@ int org_mini_gl_GL_glFogCoordPointer(Runtime *runtime, Class *clazz) {
     int offset_ppointer = env->localvar_getInt(runtime, pos++);
     __refer ptr_ppointer = NULL;
     if(ppointer){
+        offset_ppointer *= env->data_type_bytes[ppointer->mb.arr_type_index];
         ptr_ppointer = ppointer->arr_body + offset_ppointer;
     }
 
@@ -6410,6 +6605,7 @@ int org_mini_gl_GL_glSecondaryColor3bv(Runtime *runtime, Class *clazz) {
     int offset_pv = env->localvar_getInt(runtime, pos++);
     __refer ptr_pv = NULL;
     if(pv){
+        offset_pv *= env->data_type_bytes[pv->mb.arr_type_index];
         ptr_pv = pv->arr_body + offset_pv;
     }
 
@@ -6441,6 +6637,7 @@ int org_mini_gl_GL_glSecondaryColor3dv(Runtime *runtime, Class *clazz) {
     int offset_pv = env->localvar_getInt(runtime, pos++);
     __refer ptr_pv = NULL;
     if(pv){
+        offset_pv *= env->data_type_bytes[pv->mb.arr_type_index];
         ptr_pv = pv->arr_body + offset_pv;
     }
 
@@ -6472,6 +6669,7 @@ int org_mini_gl_GL_glSecondaryColor3fv(Runtime *runtime, Class *clazz) {
     int offset_pv = env->localvar_getInt(runtime, pos++);
     __refer ptr_pv = NULL;
     if(pv){
+        offset_pv *= env->data_type_bytes[pv->mb.arr_type_index];
         ptr_pv = pv->arr_body + offset_pv;
     }
 
@@ -6503,6 +6701,7 @@ int org_mini_gl_GL_glSecondaryColor3iv(Runtime *runtime, Class *clazz) {
     int offset_pv = env->localvar_getInt(runtime, pos++);
     __refer ptr_pv = NULL;
     if(pv){
+        offset_pv *= env->data_type_bytes[pv->mb.arr_type_index];
         ptr_pv = pv->arr_body + offset_pv;
     }
 
@@ -6534,6 +6733,7 @@ int org_mini_gl_GL_glSecondaryColor3sv(Runtime *runtime, Class *clazz) {
     int offset_pv = env->localvar_getInt(runtime, pos++);
     __refer ptr_pv = NULL;
     if(pv){
+        offset_pv *= env->data_type_bytes[pv->mb.arr_type_index];
         ptr_pv = pv->arr_body + offset_pv;
     }
 
@@ -6565,6 +6765,7 @@ int org_mini_gl_GL_glSecondaryColor3ubv(Runtime *runtime, Class *clazz) {
     int offset_pv = env->localvar_getInt(runtime, pos++);
     __refer ptr_pv = NULL;
     if(pv){
+        offset_pv *= env->data_type_bytes[pv->mb.arr_type_index];
         ptr_pv = pv->arr_body + offset_pv;
     }
 
@@ -6596,6 +6797,7 @@ int org_mini_gl_GL_glSecondaryColor3uiv(Runtime *runtime, Class *clazz) {
     int offset_pv = env->localvar_getInt(runtime, pos++);
     __refer ptr_pv = NULL;
     if(pv){
+        offset_pv *= env->data_type_bytes[pv->mb.arr_type_index];
         ptr_pv = pv->arr_body + offset_pv;
     }
 
@@ -6627,6 +6829,7 @@ int org_mini_gl_GL_glSecondaryColor3usv(Runtime *runtime, Class *clazz) {
     int offset_pv = env->localvar_getInt(runtime, pos++);
     __refer ptr_pv = NULL;
     if(pv){
+        offset_pv *= env->data_type_bytes[pv->mb.arr_type_index];
         ptr_pv = pv->arr_body + offset_pv;
     }
 
@@ -6647,6 +6850,7 @@ int org_mini_gl_GL_glSecondaryColorPointer(Runtime *runtime, Class *clazz) {
     int offset_ppointer = env->localvar_getInt(runtime, pos++);
     __refer ptr_ppointer = NULL;
     if(ppointer){
+        offset_ppointer *= env->data_type_bytes[ppointer->mb.arr_type_index];
         ptr_ppointer = ppointer->arr_body + offset_ppointer;
     }
 
@@ -6677,6 +6881,7 @@ int org_mini_gl_GL_glWindowPos2dv(Runtime *runtime, Class *clazz) {
     int offset_pv = env->localvar_getInt(runtime, pos++);
     __refer ptr_pv = NULL;
     if(pv){
+        offset_pv *= env->data_type_bytes[pv->mb.arr_type_index];
         ptr_pv = pv->arr_body + offset_pv;
     }
 
@@ -6707,6 +6912,7 @@ int org_mini_gl_GL_glWindowPos2fv(Runtime *runtime, Class *clazz) {
     int offset_pv = env->localvar_getInt(runtime, pos++);
     __refer ptr_pv = NULL;
     if(pv){
+        offset_pv *= env->data_type_bytes[pv->mb.arr_type_index];
         ptr_pv = pv->arr_body + offset_pv;
     }
 
@@ -6737,6 +6943,7 @@ int org_mini_gl_GL_glWindowPos2iv(Runtime *runtime, Class *clazz) {
     int offset_pv = env->localvar_getInt(runtime, pos++);
     __refer ptr_pv = NULL;
     if(pv){
+        offset_pv *= env->data_type_bytes[pv->mb.arr_type_index];
         ptr_pv = pv->arr_body + offset_pv;
     }
 
@@ -6767,6 +6974,7 @@ int org_mini_gl_GL_glWindowPos2sv(Runtime *runtime, Class *clazz) {
     int offset_pv = env->localvar_getInt(runtime, pos++);
     __refer ptr_pv = NULL;
     if(pv){
+        offset_pv *= env->data_type_bytes[pv->mb.arr_type_index];
         ptr_pv = pv->arr_body + offset_pv;
     }
 
@@ -6798,6 +7006,7 @@ int org_mini_gl_GL_glWindowPos3dv(Runtime *runtime, Class *clazz) {
     int offset_pv = env->localvar_getInt(runtime, pos++);
     __refer ptr_pv = NULL;
     if(pv){
+        offset_pv *= env->data_type_bytes[pv->mb.arr_type_index];
         ptr_pv = pv->arr_body + offset_pv;
     }
 
@@ -6829,6 +7038,7 @@ int org_mini_gl_GL_glWindowPos3fv(Runtime *runtime, Class *clazz) {
     int offset_pv = env->localvar_getInt(runtime, pos++);
     __refer ptr_pv = NULL;
     if(pv){
+        offset_pv *= env->data_type_bytes[pv->mb.arr_type_index];
         ptr_pv = pv->arr_body + offset_pv;
     }
 
@@ -6860,6 +7070,7 @@ int org_mini_gl_GL_glWindowPos3iv(Runtime *runtime, Class *clazz) {
     int offset_pv = env->localvar_getInt(runtime, pos++);
     __refer ptr_pv = NULL;
     if(pv){
+        offset_pv *= env->data_type_bytes[pv->mb.arr_type_index];
         ptr_pv = pv->arr_body + offset_pv;
     }
 
@@ -6891,6 +7102,7 @@ int org_mini_gl_GL_glWindowPos3sv(Runtime *runtime, Class *clazz) {
     int offset_pv = env->localvar_getInt(runtime, pos++);
     __refer ptr_pv = NULL;
     if(pv){
+        offset_pv *= env->data_type_bytes[pv->mb.arr_type_index];
         ptr_pv = pv->arr_body + offset_pv;
     }
 
@@ -6936,6 +7148,7 @@ int org_mini_gl_GL_glGenQueries(Runtime *runtime, Class *clazz) {
     int offset_pids = env->localvar_getInt(runtime, pos++);
     __refer ptr_pids = NULL;
     if(pids){
+        offset_pids *= env->data_type_bytes[pids->mb.arr_type_index];
         ptr_pids = pids->arr_body + offset_pids;
     }
 
@@ -6954,6 +7167,7 @@ int org_mini_gl_GL_glDeleteQueries(Runtime *runtime, Class *clazz) {
     int offset_pids = env->localvar_getInt(runtime, pos++);
     __refer ptr_pids = NULL;
     if(pids){
+        offset_pids *= env->data_type_bytes[pids->mb.arr_type_index];
         ptr_pids = pids->arr_body + offset_pids;
     }
 
@@ -7010,6 +7224,7 @@ int org_mini_gl_GL_glGetQueryiv(Runtime *runtime, Class *clazz) {
     int offset_pparams = env->localvar_getInt(runtime, pos++);
     __refer ptr_pparams = NULL;
     if(pparams){
+        offset_pparams *= env->data_type_bytes[pparams->mb.arr_type_index];
         ptr_pparams = pparams->arr_body + offset_pparams;
     }
 
@@ -7029,6 +7244,7 @@ int org_mini_gl_GL_glGetQueryObjectiv(Runtime *runtime, Class *clazz) {
     int offset_pparams = env->localvar_getInt(runtime, pos++);
     __refer ptr_pparams = NULL;
     if(pparams){
+        offset_pparams *= env->data_type_bytes[pparams->mb.arr_type_index];
         ptr_pparams = pparams->arr_body + offset_pparams;
     }
 
@@ -7048,6 +7264,7 @@ int org_mini_gl_GL_glGetQueryObjectuiv(Runtime *runtime, Class *clazz) {
     int offset_pparams = env->localvar_getInt(runtime, pos++);
     __refer ptr_pparams = NULL;
     if(pparams){
+        offset_pparams *= env->data_type_bytes[pparams->mb.arr_type_index];
         ptr_pparams = pparams->arr_body + offset_pparams;
     }
 
@@ -7079,6 +7296,7 @@ int org_mini_gl_GL_glDeleteBuffers(Runtime *runtime, Class *clazz) {
     int offset_pbuffers = env->localvar_getInt(runtime, pos++);
     __refer ptr_pbuffers = NULL;
     if(pbuffers){
+        offset_pbuffers *= env->data_type_bytes[pbuffers->mb.arr_type_index];
         ptr_pbuffers = pbuffers->arr_body + offset_pbuffers;
     }
 
@@ -7097,6 +7315,7 @@ int org_mini_gl_GL_glGenBuffers(Runtime *runtime, Class *clazz) {
     int offset_pbuffers = env->localvar_getInt(runtime, pos++);
     __refer ptr_pbuffers = NULL;
     if(pbuffers){
+        offset_pbuffers *= env->data_type_bytes[pbuffers->mb.arr_type_index];
         ptr_pbuffers = pbuffers->arr_body + offset_pbuffers;
     }
 
@@ -7128,6 +7347,7 @@ int org_mini_gl_GL_glBufferData(Runtime *runtime, Class *clazz) {
     int offset_pdata = env->localvar_getInt(runtime, pos++);
     __refer ptr_pdata = NULL;
     if(pdata){
+        offset_pdata *= env->data_type_bytes[pdata->mb.arr_type_index];
         ptr_pdata = pdata->arr_body + offset_pdata;
     }
     s32 pusage = env->localvar_getInt(runtime, pos++);
@@ -7149,6 +7369,7 @@ int org_mini_gl_GL_glBufferSubData(Runtime *runtime, Class *clazz) {
     int offset_pdata = env->localvar_getInt(runtime, pos++);
     __refer ptr_pdata = NULL;
     if(pdata){
+        offset_pdata *= env->data_type_bytes[pdata->mb.arr_type_index];
         ptr_pdata = pdata->arr_body + offset_pdata;
     }
 
@@ -7169,6 +7390,7 @@ int org_mini_gl_GL_glGetBufferSubData(Runtime *runtime, Class *clazz) {
     int offset_pdata = env->localvar_getInt(runtime, pos++);
     __refer ptr_pdata = NULL;
     if(pdata){
+        offset_pdata *= env->data_type_bytes[pdata->mb.arr_type_index];
         ptr_pdata = pdata->arr_body + offset_pdata;
     }
 
@@ -7213,6 +7435,7 @@ int org_mini_gl_GL_glGetBufferParameteriv(Runtime *runtime, Class *clazz) {
     int offset_pparams = env->localvar_getInt(runtime, pos++);
     __refer ptr_pparams = NULL;
     if(pparams){
+        offset_pparams *= env->data_type_bytes[pparams->mb.arr_type_index];
         ptr_pparams = pparams->arr_body + offset_pparams;
     }
 
@@ -7262,6 +7485,7 @@ int org_mini_gl_GL_glDrawBuffers(Runtime *runtime, Class *clazz) {
     int offset_pbufs = env->localvar_getInt(runtime, pos++);
     __refer ptr_pbufs = NULL;
     if(pbufs){
+        offset_pbufs *= env->data_type_bytes[pbufs->mb.arr_type_index];
         ptr_pbufs = pbufs->arr_body + offset_pbufs;
     }
 
@@ -7337,6 +7561,7 @@ int org_mini_gl_GL_glBindAttribLocation(Runtime *runtime, Class *clazz) {
     int offset_pname = env->localvar_getInt(runtime, pos++);
     __refer ptr_pname = NULL;
     if(pname){
+        offset_pname *= env->data_type_bytes[pname->mb.arr_type_index];
         ptr_pname = pname->arr_body + offset_pname;
     }
 
@@ -7453,24 +7678,28 @@ int org_mini_gl_GL_glGetActiveAttrib(Runtime *runtime, Class *clazz) {
     int offset_plength = env->localvar_getInt(runtime, pos++);
     __refer ptr_plength = NULL;
     if(plength){
+        offset_plength *= env->data_type_bytes[plength->mb.arr_type_index];
         ptr_plength = plength->arr_body + offset_plength;
     }
     Instance *psize = env->localvar_getRefer(runtime, pos++);
     int offset_psize = env->localvar_getInt(runtime, pos++);
     __refer ptr_psize = NULL;
     if(psize){
+        offset_psize *= env->data_type_bytes[psize->mb.arr_type_index];
         ptr_psize = psize->arr_body + offset_psize;
     }
     Instance *ptype = env->localvar_getRefer(runtime, pos++);
     int offset_ptype = env->localvar_getInt(runtime, pos++);
     __refer ptr_ptype = NULL;
     if(ptype){
+        offset_ptype *= env->data_type_bytes[ptype->mb.arr_type_index];
         ptr_ptype = ptype->arr_body + offset_ptype;
     }
     Instance *pname = env->localvar_getRefer(runtime, pos++);
     int offset_pname = env->localvar_getInt(runtime, pos++);
     __refer ptr_pname = NULL;
     if(pname){
+        offset_pname *= env->data_type_bytes[pname->mb.arr_type_index];
         ptr_pname = pname->arr_body + offset_pname;
     }
 
@@ -7491,24 +7720,28 @@ int org_mini_gl_GL_glGetActiveUniform(Runtime *runtime, Class *clazz) {
     int offset_plength = env->localvar_getInt(runtime, pos++);
     __refer ptr_plength = NULL;
     if(plength){
+        offset_plength *= env->data_type_bytes[plength->mb.arr_type_index];
         ptr_plength = plength->arr_body + offset_plength;
     }
     Instance *psize = env->localvar_getRefer(runtime, pos++);
     int offset_psize = env->localvar_getInt(runtime, pos++);
     __refer ptr_psize = NULL;
     if(psize){
+        offset_psize *= env->data_type_bytes[psize->mb.arr_type_index];
         ptr_psize = psize->arr_body + offset_psize;
     }
     Instance *ptype = env->localvar_getRefer(runtime, pos++);
     int offset_ptype = env->localvar_getInt(runtime, pos++);
     __refer ptr_ptype = NULL;
     if(ptype){
+        offset_ptype *= env->data_type_bytes[ptype->mb.arr_type_index];
         ptr_ptype = ptype->arr_body + offset_ptype;
     }
     Instance *pname = env->localvar_getRefer(runtime, pos++);
     int offset_pname = env->localvar_getInt(runtime, pos++);
     __refer ptr_pname = NULL;
     if(pname){
+        offset_pname *= env->data_type_bytes[pname->mb.arr_type_index];
         ptr_pname = pname->arr_body + offset_pname;
     }
 
@@ -7528,12 +7761,14 @@ int org_mini_gl_GL_glGetAttachedShaders(Runtime *runtime, Class *clazz) {
     int offset_pcount = env->localvar_getInt(runtime, pos++);
     __refer ptr_pcount = NULL;
     if(pcount){
+        offset_pcount *= env->data_type_bytes[pcount->mb.arr_type_index];
         ptr_pcount = pcount->arr_body + offset_pcount;
     }
     Instance *pshaders = env->localvar_getRefer(runtime, pos++);
     int offset_pshaders = env->localvar_getInt(runtime, pos++);
     __refer ptr_pshaders = NULL;
     if(pshaders){
+        offset_pshaders *= env->data_type_bytes[pshaders->mb.arr_type_index];
         ptr_pshaders = pshaders->arr_body + offset_pshaders;
     }
 
@@ -7552,6 +7787,7 @@ int org_mini_gl_GL_glGetAttribLocation(Runtime *runtime, Class *clazz) {
     int offset_pname = env->localvar_getInt(runtime, pos++);
     __refer ptr_pname = NULL;
     if(pname){
+        offset_pname *= env->data_type_bytes[pname->mb.arr_type_index];
         ptr_pname = pname->arr_body + offset_pname;
     }
 
@@ -7571,6 +7807,7 @@ int org_mini_gl_GL_glGetProgramiv(Runtime *runtime, Class *clazz) {
     int offset_pparams = env->localvar_getInt(runtime, pos++);
     __refer ptr_pparams = NULL;
     if(pparams){
+        offset_pparams *= env->data_type_bytes[pparams->mb.arr_type_index];
         ptr_pparams = pparams->arr_body + offset_pparams;
     }
 
@@ -7590,12 +7827,14 @@ int org_mini_gl_GL_glGetProgramInfoLog(Runtime *runtime, Class *clazz) {
     int offset_plength = env->localvar_getInt(runtime, pos++);
     __refer ptr_plength = NULL;
     if(plength){
+        offset_plength *= env->data_type_bytes[plength->mb.arr_type_index];
         ptr_plength = plength->arr_body + offset_plength;
     }
     Instance *pinfoLog = env->localvar_getRefer(runtime, pos++);
     int offset_pinfoLog = env->localvar_getInt(runtime, pos++);
     __refer ptr_pinfoLog = NULL;
     if(pinfoLog){
+        offset_pinfoLog *= env->data_type_bytes[pinfoLog->mb.arr_type_index];
         ptr_pinfoLog = pinfoLog->arr_body + offset_pinfoLog;
     }
 
@@ -7615,6 +7854,7 @@ int org_mini_gl_GL_glGetShaderiv(Runtime *runtime, Class *clazz) {
     int offset_pparams = env->localvar_getInt(runtime, pos++);
     __refer ptr_pparams = NULL;
     if(pparams){
+        offset_pparams *= env->data_type_bytes[pparams->mb.arr_type_index];
         ptr_pparams = pparams->arr_body + offset_pparams;
     }
 
@@ -7634,12 +7874,14 @@ int org_mini_gl_GL_glGetShaderInfoLog(Runtime *runtime, Class *clazz) {
     int offset_plength = env->localvar_getInt(runtime, pos++);
     __refer ptr_plength = NULL;
     if(plength){
+        offset_plength *= env->data_type_bytes[plength->mb.arr_type_index];
         ptr_plength = plength->arr_body + offset_plength;
     }
     Instance *pinfoLog = env->localvar_getRefer(runtime, pos++);
     int offset_pinfoLog = env->localvar_getInt(runtime, pos++);
     __refer ptr_pinfoLog = NULL;
     if(pinfoLog){
+        offset_pinfoLog *= env->data_type_bytes[pinfoLog->mb.arr_type_index];
         ptr_pinfoLog = pinfoLog->arr_body + offset_pinfoLog;
     }
 
@@ -7659,12 +7901,14 @@ int org_mini_gl_GL_glGetShaderSource(Runtime *runtime, Class *clazz) {
     int offset_plength = env->localvar_getInt(runtime, pos++);
     __refer ptr_plength = NULL;
     if(plength){
+        offset_plength *= env->data_type_bytes[plength->mb.arr_type_index];
         ptr_plength = plength->arr_body + offset_plength;
     }
     Instance *psource = env->localvar_getRefer(runtime, pos++);
     int offset_psource = env->localvar_getInt(runtime, pos++);
     __refer ptr_psource = NULL;
     if(psource){
+        offset_psource *= env->data_type_bytes[psource->mb.arr_type_index];
         ptr_psource = psource->arr_body + offset_psource;
     }
 
@@ -7683,6 +7927,7 @@ int org_mini_gl_GL_glGetUniformLocation(Runtime *runtime, Class *clazz) {
     int offset_pname = env->localvar_getInt(runtime, pos++);
     __refer ptr_pname = NULL;
     if(pname){
+        offset_pname *= env->data_type_bytes[pname->mb.arr_type_index];
         ptr_pname = pname->arr_body + offset_pname;
     }
 
@@ -7702,6 +7947,7 @@ int org_mini_gl_GL_glGetUniformfv(Runtime *runtime, Class *clazz) {
     int offset_pparams = env->localvar_getInt(runtime, pos++);
     __refer ptr_pparams = NULL;
     if(pparams){
+        offset_pparams *= env->data_type_bytes[pparams->mb.arr_type_index];
         ptr_pparams = pparams->arr_body + offset_pparams;
     }
 
@@ -7721,6 +7967,7 @@ int org_mini_gl_GL_glGetUniformiv(Runtime *runtime, Class *clazz) {
     int offset_pparams = env->localvar_getInt(runtime, pos++);
     __refer ptr_pparams = NULL;
     if(pparams){
+        offset_pparams *= env->data_type_bytes[pparams->mb.arr_type_index];
         ptr_pparams = pparams->arr_body + offset_pparams;
     }
 
@@ -7740,6 +7987,7 @@ int org_mini_gl_GL_glGetVertexAttribdv(Runtime *runtime, Class *clazz) {
     int offset_pparams = env->localvar_getInt(runtime, pos++);
     __refer ptr_pparams = NULL;
     if(pparams){
+        offset_pparams *= env->data_type_bytes[pparams->mb.arr_type_index];
         ptr_pparams = pparams->arr_body + offset_pparams;
     }
 
@@ -7759,6 +8007,7 @@ int org_mini_gl_GL_glGetVertexAttribfv(Runtime *runtime, Class *clazz) {
     int offset_pparams = env->localvar_getInt(runtime, pos++);
     __refer ptr_pparams = NULL;
     if(pparams){
+        offset_pparams *= env->data_type_bytes[pparams->mb.arr_type_index];
         ptr_pparams = pparams->arr_body + offset_pparams;
     }
 
@@ -7778,6 +8027,7 @@ int org_mini_gl_GL_glGetVertexAttribiv(Runtime *runtime, Class *clazz) {
     int offset_pparams = env->localvar_getInt(runtime, pos++);
     __refer ptr_pparams = NULL;
     if(pparams){
+        offset_pparams *= env->data_type_bytes[pparams->mb.arr_type_index];
         ptr_pparams = pparams->arr_body + offset_pparams;
     }
 
@@ -7856,6 +8106,7 @@ int org_mini_gl_GL_glShaderSource(Runtime *runtime, Class *clazz) {
     int offset_plength = env->localvar_getInt(runtime, pos++);
     __refer ptr_plength = NULL;
     if(plength){
+        offset_plength *= env->data_type_bytes[plength->mb.arr_type_index];
         ptr_plength = plength->arr_body + offset_plength;
     }
 
@@ -8003,6 +8254,7 @@ int org_mini_gl_GL_glUniform1fv(Runtime *runtime, Class *clazz) {
     int offset_pvalue = env->localvar_getInt(runtime, pos++);
     __refer ptr_pvalue = NULL;
     if(pvalue){
+        offset_pvalue *= env->data_type_bytes[pvalue->mb.arr_type_index];
         ptr_pvalue = pvalue->arr_body + offset_pvalue;
     }
 
@@ -8022,6 +8274,7 @@ int org_mini_gl_GL_glUniform2fv(Runtime *runtime, Class *clazz) {
     int offset_pvalue = env->localvar_getInt(runtime, pos++);
     __refer ptr_pvalue = NULL;
     if(pvalue){
+        offset_pvalue *= env->data_type_bytes[pvalue->mb.arr_type_index];
         ptr_pvalue = pvalue->arr_body + offset_pvalue;
     }
 
@@ -8041,6 +8294,7 @@ int org_mini_gl_GL_glUniform3fv(Runtime *runtime, Class *clazz) {
     int offset_pvalue = env->localvar_getInt(runtime, pos++);
     __refer ptr_pvalue = NULL;
     if(pvalue){
+        offset_pvalue *= env->data_type_bytes[pvalue->mb.arr_type_index];
         ptr_pvalue = pvalue->arr_body + offset_pvalue;
     }
 
@@ -8060,6 +8314,7 @@ int org_mini_gl_GL_glUniform4fv(Runtime *runtime, Class *clazz) {
     int offset_pvalue = env->localvar_getInt(runtime, pos++);
     __refer ptr_pvalue = NULL;
     if(pvalue){
+        offset_pvalue *= env->data_type_bytes[pvalue->mb.arr_type_index];
         ptr_pvalue = pvalue->arr_body + offset_pvalue;
     }
 
@@ -8079,6 +8334,7 @@ int org_mini_gl_GL_glUniform1iv(Runtime *runtime, Class *clazz) {
     int offset_pvalue = env->localvar_getInt(runtime, pos++);
     __refer ptr_pvalue = NULL;
     if(pvalue){
+        offset_pvalue *= env->data_type_bytes[pvalue->mb.arr_type_index];
         ptr_pvalue = pvalue->arr_body + offset_pvalue;
     }
 
@@ -8098,6 +8354,7 @@ int org_mini_gl_GL_glUniform2iv(Runtime *runtime, Class *clazz) {
     int offset_pvalue = env->localvar_getInt(runtime, pos++);
     __refer ptr_pvalue = NULL;
     if(pvalue){
+        offset_pvalue *= env->data_type_bytes[pvalue->mb.arr_type_index];
         ptr_pvalue = pvalue->arr_body + offset_pvalue;
     }
 
@@ -8117,6 +8374,7 @@ int org_mini_gl_GL_glUniform3iv(Runtime *runtime, Class *clazz) {
     int offset_pvalue = env->localvar_getInt(runtime, pos++);
     __refer ptr_pvalue = NULL;
     if(pvalue){
+        offset_pvalue *= env->data_type_bytes[pvalue->mb.arr_type_index];
         ptr_pvalue = pvalue->arr_body + offset_pvalue;
     }
 
@@ -8136,6 +8394,7 @@ int org_mini_gl_GL_glUniform4iv(Runtime *runtime, Class *clazz) {
     int offset_pvalue = env->localvar_getInt(runtime, pos++);
     __refer ptr_pvalue = NULL;
     if(pvalue){
+        offset_pvalue *= env->data_type_bytes[pvalue->mb.arr_type_index];
         ptr_pvalue = pvalue->arr_body + offset_pvalue;
     }
 
@@ -8156,6 +8415,7 @@ int org_mini_gl_GL_glUniformMatrix2fv(Runtime *runtime, Class *clazz) {
     int offset_pvalue = env->localvar_getInt(runtime, pos++);
     __refer ptr_pvalue = NULL;
     if(pvalue){
+        offset_pvalue *= env->data_type_bytes[pvalue->mb.arr_type_index];
         ptr_pvalue = pvalue->arr_body + offset_pvalue;
     }
 
@@ -8176,6 +8436,7 @@ int org_mini_gl_GL_glUniformMatrix3fv(Runtime *runtime, Class *clazz) {
     int offset_pvalue = env->localvar_getInt(runtime, pos++);
     __refer ptr_pvalue = NULL;
     if(pvalue){
+        offset_pvalue *= env->data_type_bytes[pvalue->mb.arr_type_index];
         ptr_pvalue = pvalue->arr_body + offset_pvalue;
     }
 
@@ -8196,6 +8457,7 @@ int org_mini_gl_GL_glUniformMatrix4fv(Runtime *runtime, Class *clazz) {
     int offset_pvalue = env->localvar_getInt(runtime, pos++);
     __refer ptr_pvalue = NULL;
     if(pvalue){
+        offset_pvalue *= env->data_type_bytes[pvalue->mb.arr_type_index];
         ptr_pvalue = pvalue->arr_body + offset_pvalue;
     }
 
@@ -8239,6 +8501,7 @@ int org_mini_gl_GL_glVertexAttrib1dv(Runtime *runtime, Class *clazz) {
     int offset_pv = env->localvar_getInt(runtime, pos++);
     __refer ptr_pv = NULL;
     if(pv){
+        offset_pv *= env->data_type_bytes[pv->mb.arr_type_index];
         ptr_pv = pv->arr_body + offset_pv;
     }
 
@@ -8270,6 +8533,7 @@ int org_mini_gl_GL_glVertexAttrib1fv(Runtime *runtime, Class *clazz) {
     int offset_pv = env->localvar_getInt(runtime, pos++);
     __refer ptr_pv = NULL;
     if(pv){
+        offset_pv *= env->data_type_bytes[pv->mb.arr_type_index];
         ptr_pv = pv->arr_body + offset_pv;
     }
 
@@ -8301,6 +8565,7 @@ int org_mini_gl_GL_glVertexAttrib1sv(Runtime *runtime, Class *clazz) {
     int offset_pv = env->localvar_getInt(runtime, pos++);
     __refer ptr_pv = NULL;
     if(pv){
+        offset_pv *= env->data_type_bytes[pv->mb.arr_type_index];
         ptr_pv = pv->arr_body + offset_pv;
     }
 
@@ -8333,6 +8598,7 @@ int org_mini_gl_GL_glVertexAttrib2dv(Runtime *runtime, Class *clazz) {
     int offset_pv = env->localvar_getInt(runtime, pos++);
     __refer ptr_pv = NULL;
     if(pv){
+        offset_pv *= env->data_type_bytes[pv->mb.arr_type_index];
         ptr_pv = pv->arr_body + offset_pv;
     }
 
@@ -8365,6 +8631,7 @@ int org_mini_gl_GL_glVertexAttrib2fv(Runtime *runtime, Class *clazz) {
     int offset_pv = env->localvar_getInt(runtime, pos++);
     __refer ptr_pv = NULL;
     if(pv){
+        offset_pv *= env->data_type_bytes[pv->mb.arr_type_index];
         ptr_pv = pv->arr_body + offset_pv;
     }
 
@@ -8397,6 +8664,7 @@ int org_mini_gl_GL_glVertexAttrib2sv(Runtime *runtime, Class *clazz) {
     int offset_pv = env->localvar_getInt(runtime, pos++);
     __refer ptr_pv = NULL;
     if(pv){
+        offset_pv *= env->data_type_bytes[pv->mb.arr_type_index];
         ptr_pv = pv->arr_body + offset_pv;
     }
 
@@ -8430,6 +8698,7 @@ int org_mini_gl_GL_glVertexAttrib3dv(Runtime *runtime, Class *clazz) {
     int offset_pv = env->localvar_getInt(runtime, pos++);
     __refer ptr_pv = NULL;
     if(pv){
+        offset_pv *= env->data_type_bytes[pv->mb.arr_type_index];
         ptr_pv = pv->arr_body + offset_pv;
     }
 
@@ -8463,6 +8732,7 @@ int org_mini_gl_GL_glVertexAttrib3fv(Runtime *runtime, Class *clazz) {
     int offset_pv = env->localvar_getInt(runtime, pos++);
     __refer ptr_pv = NULL;
     if(pv){
+        offset_pv *= env->data_type_bytes[pv->mb.arr_type_index];
         ptr_pv = pv->arr_body + offset_pv;
     }
 
@@ -8496,6 +8766,7 @@ int org_mini_gl_GL_glVertexAttrib3sv(Runtime *runtime, Class *clazz) {
     int offset_pv = env->localvar_getInt(runtime, pos++);
     __refer ptr_pv = NULL;
     if(pv){
+        offset_pv *= env->data_type_bytes[pv->mb.arr_type_index];
         ptr_pv = pv->arr_body + offset_pv;
     }
 
@@ -8514,6 +8785,7 @@ int org_mini_gl_GL_glVertexAttrib4Nbv(Runtime *runtime, Class *clazz) {
     int offset_pv = env->localvar_getInt(runtime, pos++);
     __refer ptr_pv = NULL;
     if(pv){
+        offset_pv *= env->data_type_bytes[pv->mb.arr_type_index];
         ptr_pv = pv->arr_body + offset_pv;
     }
 
@@ -8532,6 +8804,7 @@ int org_mini_gl_GL_glVertexAttrib4Niv(Runtime *runtime, Class *clazz) {
     int offset_pv = env->localvar_getInt(runtime, pos++);
     __refer ptr_pv = NULL;
     if(pv){
+        offset_pv *= env->data_type_bytes[pv->mb.arr_type_index];
         ptr_pv = pv->arr_body + offset_pv;
     }
 
@@ -8550,6 +8823,7 @@ int org_mini_gl_GL_glVertexAttrib4Nsv(Runtime *runtime, Class *clazz) {
     int offset_pv = env->localvar_getInt(runtime, pos++);
     __refer ptr_pv = NULL;
     if(pv){
+        offset_pv *= env->data_type_bytes[pv->mb.arr_type_index];
         ptr_pv = pv->arr_body + offset_pv;
     }
 
@@ -8584,6 +8858,7 @@ int org_mini_gl_GL_glVertexAttrib4Nubv(Runtime *runtime, Class *clazz) {
     int offset_pv = env->localvar_getInt(runtime, pos++);
     __refer ptr_pv = NULL;
     if(pv){
+        offset_pv *= env->data_type_bytes[pv->mb.arr_type_index];
         ptr_pv = pv->arr_body + offset_pv;
     }
 
@@ -8602,6 +8877,7 @@ int org_mini_gl_GL_glVertexAttrib4Nuiv(Runtime *runtime, Class *clazz) {
     int offset_pv = env->localvar_getInt(runtime, pos++);
     __refer ptr_pv = NULL;
     if(pv){
+        offset_pv *= env->data_type_bytes[pv->mb.arr_type_index];
         ptr_pv = pv->arr_body + offset_pv;
     }
 
@@ -8620,6 +8896,7 @@ int org_mini_gl_GL_glVertexAttrib4Nusv(Runtime *runtime, Class *clazz) {
     int offset_pv = env->localvar_getInt(runtime, pos++);
     __refer ptr_pv = NULL;
     if(pv){
+        offset_pv *= env->data_type_bytes[pv->mb.arr_type_index];
         ptr_pv = pv->arr_body + offset_pv;
     }
 
@@ -8638,6 +8915,7 @@ int org_mini_gl_GL_glVertexAttrib4bv(Runtime *runtime, Class *clazz) {
     int offset_pv = env->localvar_getInt(runtime, pos++);
     __refer ptr_pv = NULL;
     if(pv){
+        offset_pv *= env->data_type_bytes[pv->mb.arr_type_index];
         ptr_pv = pv->arr_body + offset_pv;
     }
 
@@ -8672,6 +8950,7 @@ int org_mini_gl_GL_glVertexAttrib4dv(Runtime *runtime, Class *clazz) {
     int offset_pv = env->localvar_getInt(runtime, pos++);
     __refer ptr_pv = NULL;
     if(pv){
+        offset_pv *= env->data_type_bytes[pv->mb.arr_type_index];
         ptr_pv = pv->arr_body + offset_pv;
     }
 
@@ -8706,6 +8985,7 @@ int org_mini_gl_GL_glVertexAttrib4fv(Runtime *runtime, Class *clazz) {
     int offset_pv = env->localvar_getInt(runtime, pos++);
     __refer ptr_pv = NULL;
     if(pv){
+        offset_pv *= env->data_type_bytes[pv->mb.arr_type_index];
         ptr_pv = pv->arr_body + offset_pv;
     }
 
@@ -8724,6 +9004,7 @@ int org_mini_gl_GL_glVertexAttrib4iv(Runtime *runtime, Class *clazz) {
     int offset_pv = env->localvar_getInt(runtime, pos++);
     __refer ptr_pv = NULL;
     if(pv){
+        offset_pv *= env->data_type_bytes[pv->mb.arr_type_index];
         ptr_pv = pv->arr_body + offset_pv;
     }
 
@@ -8758,6 +9039,7 @@ int org_mini_gl_GL_glVertexAttrib4sv(Runtime *runtime, Class *clazz) {
     int offset_pv = env->localvar_getInt(runtime, pos++);
     __refer ptr_pv = NULL;
     if(pv){
+        offset_pv *= env->data_type_bytes[pv->mb.arr_type_index];
         ptr_pv = pv->arr_body + offset_pv;
     }
 
@@ -8776,6 +9058,7 @@ int org_mini_gl_GL_glVertexAttrib4ubv(Runtime *runtime, Class *clazz) {
     int offset_pv = env->localvar_getInt(runtime, pos++);
     __refer ptr_pv = NULL;
     if(pv){
+        offset_pv *= env->data_type_bytes[pv->mb.arr_type_index];
         ptr_pv = pv->arr_body + offset_pv;
     }
 
@@ -8794,6 +9077,7 @@ int org_mini_gl_GL_glVertexAttrib4uiv(Runtime *runtime, Class *clazz) {
     int offset_pv = env->localvar_getInt(runtime, pos++);
     __refer ptr_pv = NULL;
     if(pv){
+        offset_pv *= env->data_type_bytes[pv->mb.arr_type_index];
         ptr_pv = pv->arr_body + offset_pv;
     }
 
@@ -8812,6 +9096,7 @@ int org_mini_gl_GL_glVertexAttrib4usv(Runtime *runtime, Class *clazz) {
     int offset_pv = env->localvar_getInt(runtime, pos++);
     __refer ptr_pv = NULL;
     if(pv){
+        offset_pv *= env->data_type_bytes[pv->mb.arr_type_index];
         ptr_pv = pv->arr_body + offset_pv;
     }
 
@@ -8834,6 +9119,7 @@ int org_mini_gl_GL_glVertexAttribPointer(Runtime *runtime, Class *clazz) {
     int offset_ppointer = env->localvar_getInt(runtime, pos++);
     __refer ptr_ppointer = NULL;
     if(ppointer){
+        offset_ppointer *= env->data_type_bytes[ppointer->mb.arr_type_index];
         ptr_ppointer = ppointer->arr_body + offset_ppointer;
     }
 
@@ -8854,6 +9140,7 @@ int org_mini_gl_GL_glUniformMatrix2x3fv(Runtime *runtime, Class *clazz) {
     int offset_pvalue = env->localvar_getInt(runtime, pos++);
     __refer ptr_pvalue = NULL;
     if(pvalue){
+        offset_pvalue *= env->data_type_bytes[pvalue->mb.arr_type_index];
         ptr_pvalue = pvalue->arr_body + offset_pvalue;
     }
 
@@ -8874,6 +9161,7 @@ int org_mini_gl_GL_glUniformMatrix3x2fv(Runtime *runtime, Class *clazz) {
     int offset_pvalue = env->localvar_getInt(runtime, pos++);
     __refer ptr_pvalue = NULL;
     if(pvalue){
+        offset_pvalue *= env->data_type_bytes[pvalue->mb.arr_type_index];
         ptr_pvalue = pvalue->arr_body + offset_pvalue;
     }
 
@@ -8894,6 +9182,7 @@ int org_mini_gl_GL_glUniformMatrix2x4fv(Runtime *runtime, Class *clazz) {
     int offset_pvalue = env->localvar_getInt(runtime, pos++);
     __refer ptr_pvalue = NULL;
     if(pvalue){
+        offset_pvalue *= env->data_type_bytes[pvalue->mb.arr_type_index];
         ptr_pvalue = pvalue->arr_body + offset_pvalue;
     }
 
@@ -8914,6 +9203,7 @@ int org_mini_gl_GL_glUniformMatrix4x2fv(Runtime *runtime, Class *clazz) {
     int offset_pvalue = env->localvar_getInt(runtime, pos++);
     __refer ptr_pvalue = NULL;
     if(pvalue){
+        offset_pvalue *= env->data_type_bytes[pvalue->mb.arr_type_index];
         ptr_pvalue = pvalue->arr_body + offset_pvalue;
     }
 
@@ -8934,6 +9224,7 @@ int org_mini_gl_GL_glUniformMatrix3x4fv(Runtime *runtime, Class *clazz) {
     int offset_pvalue = env->localvar_getInt(runtime, pos++);
     __refer ptr_pvalue = NULL;
     if(pvalue){
+        offset_pvalue *= env->data_type_bytes[pvalue->mb.arr_type_index];
         ptr_pvalue = pvalue->arr_body + offset_pvalue;
     }
 
@@ -8954,6 +9245,7 @@ int org_mini_gl_GL_glUniformMatrix4x3fv(Runtime *runtime, Class *clazz) {
     int offset_pvalue = env->localvar_getInt(runtime, pos++);
     __refer ptr_pvalue = NULL;
     if(pvalue){
+        offset_pvalue *= env->data_type_bytes[pvalue->mb.arr_type_index];
         ptr_pvalue = pvalue->arr_body + offset_pvalue;
     }
 
@@ -8989,6 +9281,7 @@ int org_mini_gl_GL_glGetBooleani_v(Runtime *runtime, Class *clazz) {
     int offset_pdata = env->localvar_getInt(runtime, pos++);
     __refer ptr_pdata = NULL;
     if(pdata){
+        offset_pdata *= env->data_type_bytes[pdata->mb.arr_type_index];
         ptr_pdata = pdata->arr_body + offset_pdata;
     }
 
@@ -9008,6 +9301,7 @@ int org_mini_gl_GL_glGetIntegeri_v(Runtime *runtime, Class *clazz) {
     int offset_pdata = env->localvar_getInt(runtime, pos++);
     __refer ptr_pdata = NULL;
     if(pdata){
+        offset_pdata *= env->data_type_bytes[pdata->mb.arr_type_index];
         ptr_pdata = pdata->arr_body + offset_pdata;
     }
 
@@ -9139,24 +9433,28 @@ int org_mini_gl_GL_glGetTransformFeedbackVarying(Runtime *runtime, Class *clazz)
     int offset_plength = env->localvar_getInt(runtime, pos++);
     __refer ptr_plength = NULL;
     if(plength){
+        offset_plength *= env->data_type_bytes[plength->mb.arr_type_index];
         ptr_plength = plength->arr_body + offset_plength;
     }
     Instance *psize = env->localvar_getRefer(runtime, pos++);
     int offset_psize = env->localvar_getInt(runtime, pos++);
     __refer ptr_psize = NULL;
     if(psize){
+        offset_psize *= env->data_type_bytes[psize->mb.arr_type_index];
         ptr_psize = psize->arr_body + offset_psize;
     }
     Instance *ptype = env->localvar_getRefer(runtime, pos++);
     int offset_ptype = env->localvar_getInt(runtime, pos++);
     __refer ptr_ptype = NULL;
     if(ptype){
+        offset_ptype *= env->data_type_bytes[ptype->mb.arr_type_index];
         ptr_ptype = ptype->arr_body + offset_ptype;
     }
     Instance *pname = env->localvar_getRefer(runtime, pos++);
     int offset_pname = env->localvar_getInt(runtime, pos++);
     __refer ptr_pname = NULL;
     if(pname){
+        offset_pname *= env->data_type_bytes[pname->mb.arr_type_index];
         ptr_pname = pname->arr_body + offset_pname;
     }
 
@@ -9215,6 +9513,7 @@ int org_mini_gl_GL_glVertexAttribIPointer(Runtime *runtime, Class *clazz) {
     int offset_ppointer = env->localvar_getInt(runtime, pos++);
     __refer ptr_ppointer = NULL;
     if(ppointer){
+        offset_ppointer *= env->data_type_bytes[ppointer->mb.arr_type_index];
         ptr_ppointer = ppointer->arr_body + offset_ppointer;
     }
 
@@ -9234,6 +9533,7 @@ int org_mini_gl_GL_glGetVertexAttribIiv(Runtime *runtime, Class *clazz) {
     int offset_pparams = env->localvar_getInt(runtime, pos++);
     __refer ptr_pparams = NULL;
     if(pparams){
+        offset_pparams *= env->data_type_bytes[pparams->mb.arr_type_index];
         ptr_pparams = pparams->arr_body + offset_pparams;
     }
 
@@ -9253,6 +9553,7 @@ int org_mini_gl_GL_glGetVertexAttribIuiv(Runtime *runtime, Class *clazz) {
     int offset_pparams = env->localvar_getInt(runtime, pos++);
     __refer ptr_pparams = NULL;
     if(pparams){
+        offset_pparams *= env->data_type_bytes[pparams->mb.arr_type_index];
         ptr_pparams = pparams->arr_body + offset_pparams;
     }
 
@@ -9387,6 +9688,7 @@ int org_mini_gl_GL_glVertexAttribI1iv(Runtime *runtime, Class *clazz) {
     int offset_pv = env->localvar_getInt(runtime, pos++);
     __refer ptr_pv = NULL;
     if(pv){
+        offset_pv *= env->data_type_bytes[pv->mb.arr_type_index];
         ptr_pv = pv->arr_body + offset_pv;
     }
 
@@ -9405,6 +9707,7 @@ int org_mini_gl_GL_glVertexAttribI2iv(Runtime *runtime, Class *clazz) {
     int offset_pv = env->localvar_getInt(runtime, pos++);
     __refer ptr_pv = NULL;
     if(pv){
+        offset_pv *= env->data_type_bytes[pv->mb.arr_type_index];
         ptr_pv = pv->arr_body + offset_pv;
     }
 
@@ -9423,6 +9726,7 @@ int org_mini_gl_GL_glVertexAttribI3iv(Runtime *runtime, Class *clazz) {
     int offset_pv = env->localvar_getInt(runtime, pos++);
     __refer ptr_pv = NULL;
     if(pv){
+        offset_pv *= env->data_type_bytes[pv->mb.arr_type_index];
         ptr_pv = pv->arr_body + offset_pv;
     }
 
@@ -9441,6 +9745,7 @@ int org_mini_gl_GL_glVertexAttribI4iv(Runtime *runtime, Class *clazz) {
     int offset_pv = env->localvar_getInt(runtime, pos++);
     __refer ptr_pv = NULL;
     if(pv){
+        offset_pv *= env->data_type_bytes[pv->mb.arr_type_index];
         ptr_pv = pv->arr_body + offset_pv;
     }
 
@@ -9459,6 +9764,7 @@ int org_mini_gl_GL_glVertexAttribI1uiv(Runtime *runtime, Class *clazz) {
     int offset_pv = env->localvar_getInt(runtime, pos++);
     __refer ptr_pv = NULL;
     if(pv){
+        offset_pv *= env->data_type_bytes[pv->mb.arr_type_index];
         ptr_pv = pv->arr_body + offset_pv;
     }
 
@@ -9477,6 +9783,7 @@ int org_mini_gl_GL_glVertexAttribI2uiv(Runtime *runtime, Class *clazz) {
     int offset_pv = env->localvar_getInt(runtime, pos++);
     __refer ptr_pv = NULL;
     if(pv){
+        offset_pv *= env->data_type_bytes[pv->mb.arr_type_index];
         ptr_pv = pv->arr_body + offset_pv;
     }
 
@@ -9495,6 +9802,7 @@ int org_mini_gl_GL_glVertexAttribI3uiv(Runtime *runtime, Class *clazz) {
     int offset_pv = env->localvar_getInt(runtime, pos++);
     __refer ptr_pv = NULL;
     if(pv){
+        offset_pv *= env->data_type_bytes[pv->mb.arr_type_index];
         ptr_pv = pv->arr_body + offset_pv;
     }
 
@@ -9513,6 +9821,7 @@ int org_mini_gl_GL_glVertexAttribI4uiv(Runtime *runtime, Class *clazz) {
     int offset_pv = env->localvar_getInt(runtime, pos++);
     __refer ptr_pv = NULL;
     if(pv){
+        offset_pv *= env->data_type_bytes[pv->mb.arr_type_index];
         ptr_pv = pv->arr_body + offset_pv;
     }
 
@@ -9531,6 +9840,7 @@ int org_mini_gl_GL_glVertexAttribI4bv(Runtime *runtime, Class *clazz) {
     int offset_pv = env->localvar_getInt(runtime, pos++);
     __refer ptr_pv = NULL;
     if(pv){
+        offset_pv *= env->data_type_bytes[pv->mb.arr_type_index];
         ptr_pv = pv->arr_body + offset_pv;
     }
 
@@ -9549,6 +9859,7 @@ int org_mini_gl_GL_glVertexAttribI4sv(Runtime *runtime, Class *clazz) {
     int offset_pv = env->localvar_getInt(runtime, pos++);
     __refer ptr_pv = NULL;
     if(pv){
+        offset_pv *= env->data_type_bytes[pv->mb.arr_type_index];
         ptr_pv = pv->arr_body + offset_pv;
     }
 
@@ -9567,6 +9878,7 @@ int org_mini_gl_GL_glVertexAttribI4ubv(Runtime *runtime, Class *clazz) {
     int offset_pv = env->localvar_getInt(runtime, pos++);
     __refer ptr_pv = NULL;
     if(pv){
+        offset_pv *= env->data_type_bytes[pv->mb.arr_type_index];
         ptr_pv = pv->arr_body + offset_pv;
     }
 
@@ -9585,6 +9897,7 @@ int org_mini_gl_GL_glVertexAttribI4usv(Runtime *runtime, Class *clazz) {
     int offset_pv = env->localvar_getInt(runtime, pos++);
     __refer ptr_pv = NULL;
     if(pv){
+        offset_pv *= env->data_type_bytes[pv->mb.arr_type_index];
         ptr_pv = pv->arr_body + offset_pv;
     }
 
@@ -9604,6 +9917,7 @@ int org_mini_gl_GL_glGetUniformuiv(Runtime *runtime, Class *clazz) {
     int offset_pparams = env->localvar_getInt(runtime, pos++);
     __refer ptr_pparams = NULL;
     if(pparams){
+        offset_pparams *= env->data_type_bytes[pparams->mb.arr_type_index];
         ptr_pparams = pparams->arr_body + offset_pparams;
     }
 
@@ -9623,6 +9937,7 @@ int org_mini_gl_GL_glBindFragDataLocation(Runtime *runtime, Class *clazz) {
     int offset_pname = env->localvar_getInt(runtime, pos++);
     __refer ptr_pname = NULL;
     if(pname){
+        offset_pname *= env->data_type_bytes[pname->mb.arr_type_index];
         ptr_pname = pname->arr_body + offset_pname;
     }
 
@@ -9641,6 +9956,7 @@ int org_mini_gl_GL_glGetFragDataLocation(Runtime *runtime, Class *clazz) {
     int offset_pname = env->localvar_getInt(runtime, pos++);
     __refer ptr_pname = NULL;
     if(pname){
+        offset_pname *= env->data_type_bytes[pname->mb.arr_type_index];
         ptr_pname = pname->arr_body + offset_pname;
     }
 
@@ -9718,6 +10034,7 @@ int org_mini_gl_GL_glUniform1uiv(Runtime *runtime, Class *clazz) {
     int offset_pvalue = env->localvar_getInt(runtime, pos++);
     __refer ptr_pvalue = NULL;
     if(pvalue){
+        offset_pvalue *= env->data_type_bytes[pvalue->mb.arr_type_index];
         ptr_pvalue = pvalue->arr_body + offset_pvalue;
     }
 
@@ -9737,6 +10054,7 @@ int org_mini_gl_GL_glUniform2uiv(Runtime *runtime, Class *clazz) {
     int offset_pvalue = env->localvar_getInt(runtime, pos++);
     __refer ptr_pvalue = NULL;
     if(pvalue){
+        offset_pvalue *= env->data_type_bytes[pvalue->mb.arr_type_index];
         ptr_pvalue = pvalue->arr_body + offset_pvalue;
     }
 
@@ -9756,6 +10074,7 @@ int org_mini_gl_GL_glUniform3uiv(Runtime *runtime, Class *clazz) {
     int offset_pvalue = env->localvar_getInt(runtime, pos++);
     __refer ptr_pvalue = NULL;
     if(pvalue){
+        offset_pvalue *= env->data_type_bytes[pvalue->mb.arr_type_index];
         ptr_pvalue = pvalue->arr_body + offset_pvalue;
     }
 
@@ -9775,6 +10094,7 @@ int org_mini_gl_GL_glUniform4uiv(Runtime *runtime, Class *clazz) {
     int offset_pvalue = env->localvar_getInt(runtime, pos++);
     __refer ptr_pvalue = NULL;
     if(pvalue){
+        offset_pvalue *= env->data_type_bytes[pvalue->mb.arr_type_index];
         ptr_pvalue = pvalue->arr_body + offset_pvalue;
     }
 
@@ -9794,6 +10114,7 @@ int org_mini_gl_GL_glTexParameterIiv(Runtime *runtime, Class *clazz) {
     int offset_pparams = env->localvar_getInt(runtime, pos++);
     __refer ptr_pparams = NULL;
     if(pparams){
+        offset_pparams *= env->data_type_bytes[pparams->mb.arr_type_index];
         ptr_pparams = pparams->arr_body + offset_pparams;
     }
 
@@ -9813,6 +10134,7 @@ int org_mini_gl_GL_glTexParameterIuiv(Runtime *runtime, Class *clazz) {
     int offset_pparams = env->localvar_getInt(runtime, pos++);
     __refer ptr_pparams = NULL;
     if(pparams){
+        offset_pparams *= env->data_type_bytes[pparams->mb.arr_type_index];
         ptr_pparams = pparams->arr_body + offset_pparams;
     }
 
@@ -9832,6 +10154,7 @@ int org_mini_gl_GL_glGetTexParameterIiv(Runtime *runtime, Class *clazz) {
     int offset_pparams = env->localvar_getInt(runtime, pos++);
     __refer ptr_pparams = NULL;
     if(pparams){
+        offset_pparams *= env->data_type_bytes[pparams->mb.arr_type_index];
         ptr_pparams = pparams->arr_body + offset_pparams;
     }
 
@@ -9851,6 +10174,7 @@ int org_mini_gl_GL_glGetTexParameterIuiv(Runtime *runtime, Class *clazz) {
     int offset_pparams = env->localvar_getInt(runtime, pos++);
     __refer ptr_pparams = NULL;
     if(pparams){
+        offset_pparams *= env->data_type_bytes[pparams->mb.arr_type_index];
         ptr_pparams = pparams->arr_body + offset_pparams;
     }
 
@@ -9870,6 +10194,7 @@ int org_mini_gl_GL_glClearBufferiv(Runtime *runtime, Class *clazz) {
     int offset_pvalue = env->localvar_getInt(runtime, pos++);
     __refer ptr_pvalue = NULL;
     if(pvalue){
+        offset_pvalue *= env->data_type_bytes[pvalue->mb.arr_type_index];
         ptr_pvalue = pvalue->arr_body + offset_pvalue;
     }
 
@@ -9889,6 +10214,7 @@ int org_mini_gl_GL_glClearBufferuiv(Runtime *runtime, Class *clazz) {
     int offset_pvalue = env->localvar_getInt(runtime, pos++);
     __refer ptr_pvalue = NULL;
     if(pvalue){
+        offset_pvalue *= env->data_type_bytes[pvalue->mb.arr_type_index];
         ptr_pvalue = pvalue->arr_body + offset_pvalue;
     }
 
@@ -9908,6 +10234,7 @@ int org_mini_gl_GL_glClearBufferfv(Runtime *runtime, Class *clazz) {
     int offset_pvalue = env->localvar_getInt(runtime, pos++);
     __refer ptr_pvalue = NULL;
     if(pvalue){
+        offset_pvalue *= env->data_type_bytes[pvalue->mb.arr_type_index];
         ptr_pvalue = pvalue->arr_body + offset_pvalue;
     }
 
@@ -9988,6 +10315,7 @@ int org_mini_gl_GL_glDeleteRenderbuffers(Runtime *runtime, Class *clazz) {
     int offset_prenderbuffers = env->localvar_getInt(runtime, pos++);
     __refer ptr_prenderbuffers = NULL;
     if(prenderbuffers){
+        offset_prenderbuffers *= env->data_type_bytes[prenderbuffers->mb.arr_type_index];
         ptr_prenderbuffers = prenderbuffers->arr_body + offset_prenderbuffers;
     }
 
@@ -10006,6 +10334,7 @@ int org_mini_gl_GL_glGenRenderbuffers(Runtime *runtime, Class *clazz) {
     int offset_prenderbuffers = env->localvar_getInt(runtime, pos++);
     __refer ptr_prenderbuffers = NULL;
     if(prenderbuffers){
+        offset_prenderbuffers *= env->data_type_bytes[prenderbuffers->mb.arr_type_index];
         ptr_prenderbuffers = prenderbuffers->arr_body + offset_prenderbuffers;
     }
 
@@ -10040,6 +10369,7 @@ int org_mini_gl_GL_glGetRenderbufferParameteriv(Runtime *runtime, Class *clazz) 
     int offset_pparams = env->localvar_getInt(runtime, pos++);
     __refer ptr_pparams = NULL;
     if(pparams){
+        offset_pparams *= env->data_type_bytes[pparams->mb.arr_type_index];
         ptr_pparams = pparams->arr_body + offset_pparams;
     }
 
@@ -10083,6 +10413,7 @@ int org_mini_gl_GL_glDeleteFramebuffers(Runtime *runtime, Class *clazz) {
     int offset_pframebuffers = env->localvar_getInt(runtime, pos++);
     __refer ptr_pframebuffers = NULL;
     if(pframebuffers){
+        offset_pframebuffers *= env->data_type_bytes[pframebuffers->mb.arr_type_index];
         ptr_pframebuffers = pframebuffers->arr_body + offset_pframebuffers;
     }
 
@@ -10101,6 +10432,7 @@ int org_mini_gl_GL_glGenFramebuffers(Runtime *runtime, Class *clazz) {
     int offset_pframebuffers = env->localvar_getInt(runtime, pos++);
     __refer ptr_pframebuffers = NULL;
     if(pframebuffers){
+        offset_pframebuffers *= env->data_type_bytes[pframebuffers->mb.arr_type_index];
         ptr_pframebuffers = pframebuffers->arr_body + offset_pframebuffers;
     }
 
@@ -10197,6 +10529,7 @@ int org_mini_gl_GL_glGetFramebufferAttachmentParameteriv(Runtime *runtime, Class
     int offset_pparams = env->localvar_getInt(runtime, pos++);
     __refer ptr_pparams = NULL;
     if(pparams){
+        offset_pparams *= env->data_type_bytes[pparams->mb.arr_type_index];
         ptr_pparams = pparams->arr_body + offset_pparams;
     }
 
@@ -10321,6 +10654,7 @@ int org_mini_gl_GL_glDeleteVertexArrays(Runtime *runtime, Class *clazz) {
     int offset_parrays = env->localvar_getInt(runtime, pos++);
     __refer ptr_parrays = NULL;
     if(parrays){
+        offset_parrays *= env->data_type_bytes[parrays->mb.arr_type_index];
         ptr_parrays = parrays->arr_body + offset_parrays;
     }
 
@@ -10339,6 +10673,7 @@ int org_mini_gl_GL_glGenVertexArrays(Runtime *runtime, Class *clazz) {
     int offset_parrays = env->localvar_getInt(runtime, pos++);
     __refer ptr_parrays = NULL;
     if(parrays){
+        offset_parrays *= env->data_type_bytes[parrays->mb.arr_type_index];
         ptr_parrays = parrays->arr_body + offset_parrays;
     }
 
@@ -10386,6 +10721,7 @@ int org_mini_gl_GL_glDrawElementsInstanced(Runtime *runtime, Class *clazz) {
     int offset_pindices = env->localvar_getInt(runtime, pos++);
     __refer ptr_pindices = NULL;
     if(pindices){
+        offset_pindices *= env->data_type_bytes[pindices->mb.arr_type_index];
         ptr_pindices = pindices->arr_body + offset_pindices;
     }
     s32 pinstancecount = env->localvar_getInt(runtime, pos++);
@@ -10453,6 +10789,7 @@ int org_mini_gl_GL_glGetUniformIndices(Runtime *runtime, Class *clazz) {
     int offset_puniformIndices = env->localvar_getInt(runtime, pos++);
     __refer ptr_puniformIndices = NULL;
     if(puniformIndices){
+        offset_puniformIndices *= env->data_type_bytes[puniformIndices->mb.arr_type_index];
         ptr_puniformIndices = puniformIndices->arr_body + offset_puniformIndices;
     }
 
@@ -10472,6 +10809,7 @@ int org_mini_gl_GL_glGetActiveUniformsiv(Runtime *runtime, Class *clazz) {
     int offset_puniformIndices = env->localvar_getInt(runtime, pos++);
     __refer ptr_puniformIndices = NULL;
     if(puniformIndices){
+        offset_puniformIndices *= env->data_type_bytes[puniformIndices->mb.arr_type_index];
         ptr_puniformIndices = puniformIndices->arr_body + offset_puniformIndices;
     }
     s32 ppname = env->localvar_getInt(runtime, pos++);
@@ -10479,6 +10817,7 @@ int org_mini_gl_GL_glGetActiveUniformsiv(Runtime *runtime, Class *clazz) {
     int offset_pparams = env->localvar_getInt(runtime, pos++);
     __refer ptr_pparams = NULL;
     if(pparams){
+        offset_pparams *= env->data_type_bytes[pparams->mb.arr_type_index];
         ptr_pparams = pparams->arr_body + offset_pparams;
     }
 
@@ -10499,12 +10838,14 @@ int org_mini_gl_GL_glGetActiveUniformName(Runtime *runtime, Class *clazz) {
     int offset_plength = env->localvar_getInt(runtime, pos++);
     __refer ptr_plength = NULL;
     if(plength){
+        offset_plength *= env->data_type_bytes[plength->mb.arr_type_index];
         ptr_plength = plength->arr_body + offset_plength;
     }
     Instance *puniformName = env->localvar_getRefer(runtime, pos++);
     int offset_puniformName = env->localvar_getInt(runtime, pos++);
     __refer ptr_puniformName = NULL;
     if(puniformName){
+        offset_puniformName *= env->data_type_bytes[puniformName->mb.arr_type_index];
         ptr_puniformName = puniformName->arr_body + offset_puniformName;
     }
 
@@ -10523,6 +10864,7 @@ int org_mini_gl_GL_glGetUniformBlockIndex(Runtime *runtime, Class *clazz) {
     int offset_puniformBlockName = env->localvar_getInt(runtime, pos++);
     __refer ptr_puniformBlockName = NULL;
     if(puniformBlockName){
+        offset_puniformBlockName *= env->data_type_bytes[puniformBlockName->mb.arr_type_index];
         ptr_puniformBlockName = puniformBlockName->arr_body + offset_puniformBlockName;
     }
 
@@ -10543,6 +10885,7 @@ int org_mini_gl_GL_glGetActiveUniformBlockiv(Runtime *runtime, Class *clazz) {
     int offset_pparams = env->localvar_getInt(runtime, pos++);
     __refer ptr_pparams = NULL;
     if(pparams){
+        offset_pparams *= env->data_type_bytes[pparams->mb.arr_type_index];
         ptr_pparams = pparams->arr_body + offset_pparams;
     }
 
@@ -10563,12 +10906,14 @@ int org_mini_gl_GL_glGetActiveUniformBlockName(Runtime *runtime, Class *clazz) {
     int offset_plength = env->localvar_getInt(runtime, pos++);
     __refer ptr_plength = NULL;
     if(plength){
+        offset_plength *= env->data_type_bytes[plength->mb.arr_type_index];
         ptr_plength = plength->arr_body + offset_plength;
     }
     Instance *puniformBlockName = env->localvar_getRefer(runtime, pos++);
     int offset_puniformBlockName = env->localvar_getInt(runtime, pos++);
     __refer ptr_puniformBlockName = NULL;
     if(puniformBlockName){
+        offset_puniformBlockName *= env->data_type_bytes[puniformBlockName->mb.arr_type_index];
         ptr_puniformBlockName = puniformBlockName->arr_body + offset_puniformBlockName;
     }
 
@@ -10603,6 +10948,7 @@ int org_mini_gl_GL_glDrawElementsBaseVertex(Runtime *runtime, Class *clazz) {
     int offset_pindices = env->localvar_getInt(runtime, pos++);
     __refer ptr_pindices = NULL;
     if(pindices){
+        offset_pindices *= env->data_type_bytes[pindices->mb.arr_type_index];
         ptr_pindices = pindices->arr_body + offset_pindices;
     }
     s32 pbasevertex = env->localvar_getInt(runtime, pos++);
@@ -10626,6 +10972,7 @@ int org_mini_gl_GL_glDrawRangeElementsBaseVertex(Runtime *runtime, Class *clazz)
     int offset_pindices = env->localvar_getInt(runtime, pos++);
     __refer ptr_pindices = NULL;
     if(pindices){
+        offset_pindices *= env->data_type_bytes[pindices->mb.arr_type_index];
         ptr_pindices = pindices->arr_body + offset_pindices;
     }
     s32 pbasevertex = env->localvar_getInt(runtime, pos++);
@@ -10647,6 +10994,7 @@ int org_mini_gl_GL_glDrawElementsInstancedBaseVertex(Runtime *runtime, Class *cl
     int offset_pindices = env->localvar_getInt(runtime, pos++);
     __refer ptr_pindices = NULL;
     if(pindices){
+        offset_pindices *= env->data_type_bytes[pindices->mb.arr_type_index];
         ptr_pindices = pindices->arr_body + offset_pindices;
     }
     s32 pinstancecount = env->localvar_getInt(runtime, pos++);
@@ -10667,6 +11015,7 @@ int org_mini_gl_GL_glMultiDrawElementsBaseVertex(Runtime *runtime, Class *clazz)
     int offset_pcount = env->localvar_getInt(runtime, pos++);
     __refer ptr_pcount = NULL;
     if(pcount){
+        offset_pcount *= env->data_type_bytes[pcount->mb.arr_type_index];
         ptr_pcount = pcount->arr_body + offset_pcount;
     }
     s32 ptype = env->localvar_getInt(runtime, pos++);
@@ -10680,6 +11029,7 @@ int org_mini_gl_GL_glMultiDrawElementsBaseVertex(Runtime *runtime, Class *clazz)
     int offset_pbasevertex = env->localvar_getInt(runtime, pos++);
     __refer ptr_pbasevertex = NULL;
     if(pbasevertex){
+        offset_pbasevertex *= env->data_type_bytes[pbasevertex->mb.arr_type_index];
         ptr_pbasevertex = pbasevertex->arr_body + offset_pbasevertex;
     }
 
@@ -10775,6 +11125,7 @@ int org_mini_gl_GL_glGetInteger64v(Runtime *runtime, Class *clazz) {
     int offset_pdata = env->localvar_getInt(runtime, pos++);
     __refer ptr_pdata = NULL;
     if(pdata){
+        offset_pdata *= env->data_type_bytes[pdata->mb.arr_type_index];
         ptr_pdata = pdata->arr_body + offset_pdata;
     }
 
@@ -10795,12 +11146,14 @@ int org_mini_gl_GL_glGetSynciv(Runtime *runtime, Class *clazz) {
     int offset_plength = env->localvar_getInt(runtime, pos++);
     __refer ptr_plength = NULL;
     if(plength){
+        offset_plength *= env->data_type_bytes[plength->mb.arr_type_index];
         ptr_plength = plength->arr_body + offset_plength;
     }
     Instance *pvalues = env->localvar_getRefer(runtime, pos++);
     int offset_pvalues = env->localvar_getInt(runtime, pos++);
     __refer ptr_pvalues = NULL;
     if(pvalues){
+        offset_pvalues *= env->data_type_bytes[pvalues->mb.arr_type_index];
         ptr_pvalues = pvalues->arr_body + offset_pvalues;
     }
 
@@ -10820,6 +11173,7 @@ int org_mini_gl_GL_glGetInteger64i_v(Runtime *runtime, Class *clazz) {
     int offset_pdata = env->localvar_getInt(runtime, pos++);
     __refer ptr_pdata = NULL;
     if(pdata){
+        offset_pdata *= env->data_type_bytes[pdata->mb.arr_type_index];
         ptr_pdata = pdata->arr_body + offset_pdata;
     }
 
@@ -10839,6 +11193,7 @@ int org_mini_gl_GL_glGetBufferParameteri64v(Runtime *runtime, Class *clazz) {
     int offset_pparams = env->localvar_getInt(runtime, pos++);
     __refer ptr_pparams = NULL;
     if(pparams){
+        offset_pparams *= env->data_type_bytes[pparams->mb.arr_type_index];
         ptr_pparams = pparams->arr_body + offset_pparams;
     }
 
@@ -10908,6 +11263,7 @@ int org_mini_gl_GL_glGetMultisamplefv(Runtime *runtime, Class *clazz) {
     int offset_pval = env->localvar_getInt(runtime, pos++);
     __refer ptr_pval = NULL;
     if(pval){
+        offset_pval *= env->data_type_bytes[pval->mb.arr_type_index];
         ptr_pval = pval->arr_body + offset_pval;
     }
 
@@ -10967,6 +11323,7 @@ int org_mini_gl_GL_glGetnTexImageARB(Runtime *runtime, Class *clazz) {
     int offset_pimg = env->localvar_getInt(runtime, pos++);
     __refer ptr_pimg = NULL;
     if(pimg){
+        offset_pimg *= env->data_type_bytes[pimg->mb.arr_type_index];
         ptr_pimg = pimg->arr_body + offset_pimg;
     }
 
@@ -10991,6 +11348,7 @@ int org_mini_gl_GL_glReadnPixelsARB(Runtime *runtime, Class *clazz) {
     int offset_pdata = env->localvar_getInt(runtime, pos++);
     __refer ptr_pdata = NULL;
     if(pdata){
+        offset_pdata *= env->data_type_bytes[pdata->mb.arr_type_index];
         ptr_pdata = pdata->arr_body + offset_pdata;
     }
 
@@ -11011,6 +11369,7 @@ int org_mini_gl_GL_glGetnCompressedTexImageARB(Runtime *runtime, Class *clazz) {
     int offset_pimg = env->localvar_getInt(runtime, pos++);
     __refer ptr_pimg = NULL;
     if(pimg){
+        offset_pimg *= env->data_type_bytes[pimg->mb.arr_type_index];
         ptr_pimg = pimg->arr_body + offset_pimg;
     }
 
@@ -11031,6 +11390,7 @@ int org_mini_gl_GL_glGetnUniformfvARB(Runtime *runtime, Class *clazz) {
     int offset_pparams = env->localvar_getInt(runtime, pos++);
     __refer ptr_pparams = NULL;
     if(pparams){
+        offset_pparams *= env->data_type_bytes[pparams->mb.arr_type_index];
         ptr_pparams = pparams->arr_body + offset_pparams;
     }
 
@@ -11051,6 +11411,7 @@ int org_mini_gl_GL_glGetnUniformivARB(Runtime *runtime, Class *clazz) {
     int offset_pparams = env->localvar_getInt(runtime, pos++);
     __refer ptr_pparams = NULL;
     if(pparams){
+        offset_pparams *= env->data_type_bytes[pparams->mb.arr_type_index];
         ptr_pparams = pparams->arr_body + offset_pparams;
     }
 
@@ -11071,6 +11432,7 @@ int org_mini_gl_GL_glGetnUniformuivARB(Runtime *runtime, Class *clazz) {
     int offset_pparams = env->localvar_getInt(runtime, pos++);
     __refer ptr_pparams = NULL;
     if(pparams){
+        offset_pparams *= env->data_type_bytes[pparams->mb.arr_type_index];
         ptr_pparams = pparams->arr_body + offset_pparams;
     }
 
@@ -11091,6 +11453,7 @@ int org_mini_gl_GL_glGetnUniformdvARB(Runtime *runtime, Class *clazz) {
     int offset_pparams = env->localvar_getInt(runtime, pos++);
     __refer ptr_pparams = NULL;
     if(pparams){
+        offset_pparams *= env->data_type_bytes[pparams->mb.arr_type_index];
         ptr_pparams = pparams->arr_body + offset_pparams;
     }
 
@@ -11111,6 +11474,7 @@ int org_mini_gl_GL_glGetnMapdvARB(Runtime *runtime, Class *clazz) {
     int offset_pv = env->localvar_getInt(runtime, pos++);
     __refer ptr_pv = NULL;
     if(pv){
+        offset_pv *= env->data_type_bytes[pv->mb.arr_type_index];
         ptr_pv = pv->arr_body + offset_pv;
     }
 
@@ -11131,6 +11495,7 @@ int org_mini_gl_GL_glGetnMapfvARB(Runtime *runtime, Class *clazz) {
     int offset_pv = env->localvar_getInt(runtime, pos++);
     __refer ptr_pv = NULL;
     if(pv){
+        offset_pv *= env->data_type_bytes[pv->mb.arr_type_index];
         ptr_pv = pv->arr_body + offset_pv;
     }
 
@@ -11151,6 +11516,7 @@ int org_mini_gl_GL_glGetnMapivARB(Runtime *runtime, Class *clazz) {
     int offset_pv = env->localvar_getInt(runtime, pos++);
     __refer ptr_pv = NULL;
     if(pv){
+        offset_pv *= env->data_type_bytes[pv->mb.arr_type_index];
         ptr_pv = pv->arr_body + offset_pv;
     }
 
@@ -11170,6 +11536,7 @@ int org_mini_gl_GL_glGetnPixelMapfvARB(Runtime *runtime, Class *clazz) {
     int offset_pvalues = env->localvar_getInt(runtime, pos++);
     __refer ptr_pvalues = NULL;
     if(pvalues){
+        offset_pvalues *= env->data_type_bytes[pvalues->mb.arr_type_index];
         ptr_pvalues = pvalues->arr_body + offset_pvalues;
     }
 
@@ -11189,6 +11556,7 @@ int org_mini_gl_GL_glGetnPixelMapuivARB(Runtime *runtime, Class *clazz) {
     int offset_pvalues = env->localvar_getInt(runtime, pos++);
     __refer ptr_pvalues = NULL;
     if(pvalues){
+        offset_pvalues *= env->data_type_bytes[pvalues->mb.arr_type_index];
         ptr_pvalues = pvalues->arr_body + offset_pvalues;
     }
 
@@ -11208,6 +11576,7 @@ int org_mini_gl_GL_glGetnPixelMapusvARB(Runtime *runtime, Class *clazz) {
     int offset_pvalues = env->localvar_getInt(runtime, pos++);
     __refer ptr_pvalues = NULL;
     if(pvalues){
+        offset_pvalues *= env->data_type_bytes[pvalues->mb.arr_type_index];
         ptr_pvalues = pvalues->arr_body + offset_pvalues;
     }
 
@@ -11226,6 +11595,7 @@ int org_mini_gl_GL_glGetnPolygonStippleARB(Runtime *runtime, Class *clazz) {
     int offset_ppattern = env->localvar_getInt(runtime, pos++);
     __refer ptr_ppattern = NULL;
     if(ppattern){
+        offset_ppattern *= env->data_type_bytes[ppattern->mb.arr_type_index];
         ptr_ppattern = ppattern->arr_body + offset_ppattern;
     }
 
@@ -11247,6 +11617,7 @@ int org_mini_gl_GL_glGetnColorTableARB(Runtime *runtime, Class *clazz) {
     int offset_ptable = env->localvar_getInt(runtime, pos++);
     __refer ptr_ptable = NULL;
     if(ptable){
+        offset_ptable *= env->data_type_bytes[ptable->mb.arr_type_index];
         ptr_ptable = ptable->arr_body + offset_ptable;
     }
 
@@ -11268,6 +11639,7 @@ int org_mini_gl_GL_glGetnConvolutionFilterARB(Runtime *runtime, Class *clazz) {
     int offset_pimage = env->localvar_getInt(runtime, pos++);
     __refer ptr_pimage = NULL;
     if(pimage){
+        offset_pimage *= env->data_type_bytes[pimage->mb.arr_type_index];
         ptr_pimage = pimage->arr_body + offset_pimage;
     }
 
@@ -11289,6 +11661,7 @@ int org_mini_gl_GL_glGetnSeparableFilterARB(Runtime *runtime, Class *clazz) {
     int offset_prow = env->localvar_getInt(runtime, pos++);
     __refer ptr_prow = NULL;
     if(prow){
+        offset_prow *= env->data_type_bytes[prow->mb.arr_type_index];
         ptr_prow = prow->arr_body + offset_prow;
     }
     s32 pcolumnBufSize = env->localvar_getInt(runtime, pos++);
@@ -11296,12 +11669,14 @@ int org_mini_gl_GL_glGetnSeparableFilterARB(Runtime *runtime, Class *clazz) {
     int offset_pcolumn = env->localvar_getInt(runtime, pos++);
     __refer ptr_pcolumn = NULL;
     if(pcolumn){
+        offset_pcolumn *= env->data_type_bytes[pcolumn->mb.arr_type_index];
         ptr_pcolumn = pcolumn->arr_body + offset_pcolumn;
     }
     Instance *pspan = env->localvar_getRefer(runtime, pos++);
     int offset_pspan = env->localvar_getInt(runtime, pos++);
     __refer ptr_pspan = NULL;
     if(pspan){
+        offset_pspan *= env->data_type_bytes[pspan->mb.arr_type_index];
         ptr_pspan = pspan->arr_body + offset_pspan;
     }
 
@@ -11324,6 +11699,7 @@ int org_mini_gl_GL_glGetnHistogramARB(Runtime *runtime, Class *clazz) {
     int offset_pvalues = env->localvar_getInt(runtime, pos++);
     __refer ptr_pvalues = NULL;
     if(pvalues){
+        offset_pvalues *= env->data_type_bytes[pvalues->mb.arr_type_index];
         ptr_pvalues = pvalues->arr_body + offset_pvalues;
     }
 
@@ -11346,6 +11722,7 @@ int org_mini_gl_GL_glGetnMinmaxARB(Runtime *runtime, Class *clazz) {
     int offset_pvalues = env->localvar_getInt(runtime, pos++);
     __refer ptr_pvalues = NULL;
     if(pvalues){
+        offset_pvalues *= env->data_type_bytes[pvalues->mb.arr_type_index];
         ptr_pvalues = pvalues->arr_body + offset_pvalues;
     }
 
@@ -11367,6 +11744,7 @@ int org_mini_gl_GL_glDebugMessageControl(Runtime *runtime, Class *clazz) {
     int offset_pids = env->localvar_getInt(runtime, pos++);
     __refer ptr_pids = NULL;
     if(pids){
+        offset_pids *= env->data_type_bytes[pids->mb.arr_type_index];
         ptr_pids = pids->arr_body + offset_pids;
     }
     s32 penabled = env->localvar_getInt(runtime, pos++);
@@ -11390,6 +11768,7 @@ int org_mini_gl_GL_glDebugMessageInsert(Runtime *runtime, Class *clazz) {
     int offset_pbuf = env->localvar_getInt(runtime, pos++);
     __refer ptr_pbuf = NULL;
     if(pbuf){
+        offset_pbuf *= env->data_type_bytes[pbuf->mb.arr_type_index];
         ptr_pbuf = pbuf->arr_body + offset_pbuf;
     }
 
@@ -11408,6 +11787,7 @@ int org_mini_gl_GL_glDebugMessageCallback(Runtime *runtime, Class *clazz) {
     int offset_puserParam = env->localvar_getInt(runtime, pos++);
     __refer ptr_puserParam = NULL;
     if(puserParam){
+        offset_puserParam *= env->data_type_bytes[puserParam->mb.arr_type_index];
         ptr_puserParam = puserParam->arr_body + offset_puserParam;
     }
 
@@ -11427,36 +11807,42 @@ int org_mini_gl_GL_glGetDebugMessageLog(Runtime *runtime, Class *clazz) {
     int offset_psources = env->localvar_getInt(runtime, pos++);
     __refer ptr_psources = NULL;
     if(psources){
+        offset_psources *= env->data_type_bytes[psources->mb.arr_type_index];
         ptr_psources = psources->arr_body + offset_psources;
     }
     Instance *ptypes = env->localvar_getRefer(runtime, pos++);
     int offset_ptypes = env->localvar_getInt(runtime, pos++);
     __refer ptr_ptypes = NULL;
     if(ptypes){
+        offset_ptypes *= env->data_type_bytes[ptypes->mb.arr_type_index];
         ptr_ptypes = ptypes->arr_body + offset_ptypes;
     }
     Instance *pids = env->localvar_getRefer(runtime, pos++);
     int offset_pids = env->localvar_getInt(runtime, pos++);
     __refer ptr_pids = NULL;
     if(pids){
+        offset_pids *= env->data_type_bytes[pids->mb.arr_type_index];
         ptr_pids = pids->arr_body + offset_pids;
     }
     Instance *pseverities = env->localvar_getRefer(runtime, pos++);
     int offset_pseverities = env->localvar_getInt(runtime, pos++);
     __refer ptr_pseverities = NULL;
     if(pseverities){
+        offset_pseverities *= env->data_type_bytes[pseverities->mb.arr_type_index];
         ptr_pseverities = pseverities->arr_body + offset_pseverities;
     }
     Instance *plengths = env->localvar_getRefer(runtime, pos++);
     int offset_plengths = env->localvar_getInt(runtime, pos++);
     __refer ptr_plengths = NULL;
     if(plengths){
+        offset_plengths *= env->data_type_bytes[plengths->mb.arr_type_index];
         ptr_plengths = plengths->arr_body + offset_plengths;
     }
     Instance *pmessageLog = env->localvar_getRefer(runtime, pos++);
     int offset_pmessageLog = env->localvar_getInt(runtime, pos++);
     __refer ptr_pmessageLog = NULL;
     if(pmessageLog){
+        offset_pmessageLog *= env->data_type_bytes[pmessageLog->mb.arr_type_index];
         ptr_pmessageLog = pmessageLog->arr_body + offset_pmessageLog;
     }
 
@@ -11477,6 +11863,7 @@ int org_mini_gl_GL_glPushDebugGroup(Runtime *runtime, Class *clazz) {
     int offset_pmessage = env->localvar_getInt(runtime, pos++);
     __refer ptr_pmessage = NULL;
     if(pmessage){
+        offset_pmessage *= env->data_type_bytes[pmessage->mb.arr_type_index];
         ptr_pmessage = pmessage->arr_body + offset_pmessage;
     }
 
@@ -11508,6 +11895,7 @@ int org_mini_gl_GL_glObjectLabel(Runtime *runtime, Class *clazz) {
     int offset_plabel = env->localvar_getInt(runtime, pos++);
     __refer ptr_plabel = NULL;
     if(plabel){
+        offset_plabel *= env->data_type_bytes[plabel->mb.arr_type_index];
         ptr_plabel = plabel->arr_body + offset_plabel;
     }
 
@@ -11528,12 +11916,14 @@ int org_mini_gl_GL_glGetObjectLabel(Runtime *runtime, Class *clazz) {
     int offset_plength = env->localvar_getInt(runtime, pos++);
     __refer ptr_plength = NULL;
     if(plength){
+        offset_plength *= env->data_type_bytes[plength->mb.arr_type_index];
         ptr_plength = plength->arr_body + offset_plength;
     }
     Instance *plabel = env->localvar_getRefer(runtime, pos++);
     int offset_plabel = env->localvar_getInt(runtime, pos++);
     __refer ptr_plabel = NULL;
     if(plabel){
+        offset_plabel *= env->data_type_bytes[plabel->mb.arr_type_index];
         ptr_plabel = plabel->arr_body + offset_plabel;
     }
 
@@ -11551,6 +11941,7 @@ int org_mini_gl_GL_glObjectPtrLabel(Runtime *runtime, Class *clazz) {
     int offset_pptr = env->localvar_getInt(runtime, pos++);
     __refer ptr_pptr = NULL;
     if(pptr){
+        offset_pptr *= env->data_type_bytes[pptr->mb.arr_type_index];
         ptr_pptr = pptr->arr_body + offset_pptr;
     }
     s32 plength = env->localvar_getInt(runtime, pos++);
@@ -11558,6 +11949,7 @@ int org_mini_gl_GL_glObjectPtrLabel(Runtime *runtime, Class *clazz) {
     int offset_plabel = env->localvar_getInt(runtime, pos++);
     __refer ptr_plabel = NULL;
     if(plabel){
+        offset_plabel *= env->data_type_bytes[plabel->mb.arr_type_index];
         ptr_plabel = plabel->arr_body + offset_plabel;
     }
 
@@ -11575,6 +11967,7 @@ int org_mini_gl_GL_glGetObjectPtrLabel(Runtime *runtime, Class *clazz) {
     int offset_pptr = env->localvar_getInt(runtime, pos++);
     __refer ptr_pptr = NULL;
     if(pptr){
+        offset_pptr *= env->data_type_bytes[pptr->mb.arr_type_index];
         ptr_pptr = pptr->arr_body + offset_pptr;
     }
     s32 pbufSize = env->localvar_getInt(runtime, pos++);
@@ -11582,12 +11975,14 @@ int org_mini_gl_GL_glGetObjectPtrLabel(Runtime *runtime, Class *clazz) {
     int offset_plength = env->localvar_getInt(runtime, pos++);
     __refer ptr_plength = NULL;
     if(plength){
+        offset_plength *= env->data_type_bytes[plength->mb.arr_type_index];
         ptr_plength = plength->arr_body + offset_plength;
     }
     Instance *plabel = env->localvar_getRefer(runtime, pos++);
     int offset_plabel = env->localvar_getInt(runtime, pos++);
     __refer ptr_plabel = NULL;
     if(plabel){
+        offset_plabel *= env->data_type_bytes[plabel->mb.arr_type_index];
         ptr_plabel = plabel->arr_body + offset_plabel;
     }
 
@@ -11609,6 +12004,7 @@ int org_mini_gl_GL_glDebugMessageControlKHR(Runtime *runtime, Class *clazz) {
     int offset_pids = env->localvar_getInt(runtime, pos++);
     __refer ptr_pids = NULL;
     if(pids){
+        offset_pids *= env->data_type_bytes[pids->mb.arr_type_index];
         ptr_pids = pids->arr_body + offset_pids;
     }
     s32 penabled = env->localvar_getInt(runtime, pos++);
@@ -11632,6 +12028,7 @@ int org_mini_gl_GL_glDebugMessageInsertKHR(Runtime *runtime, Class *clazz) {
     int offset_pbuf = env->localvar_getInt(runtime, pos++);
     __refer ptr_pbuf = NULL;
     if(pbuf){
+        offset_pbuf *= env->data_type_bytes[pbuf->mb.arr_type_index];
         ptr_pbuf = pbuf->arr_body + offset_pbuf;
     }
 
@@ -11650,6 +12047,7 @@ int org_mini_gl_GL_glDebugMessageCallbackKHR(Runtime *runtime, Class *clazz) {
     int offset_puserParam = env->localvar_getInt(runtime, pos++);
     __refer ptr_puserParam = NULL;
     if(puserParam){
+        offset_puserParam *= env->data_type_bytes[puserParam->mb.arr_type_index];
         ptr_puserParam = puserParam->arr_body + offset_puserParam;
     }
 
@@ -11669,36 +12067,42 @@ int org_mini_gl_GL_glGetDebugMessageLogKHR(Runtime *runtime, Class *clazz) {
     int offset_psources = env->localvar_getInt(runtime, pos++);
     __refer ptr_psources = NULL;
     if(psources){
+        offset_psources *= env->data_type_bytes[psources->mb.arr_type_index];
         ptr_psources = psources->arr_body + offset_psources;
     }
     Instance *ptypes = env->localvar_getRefer(runtime, pos++);
     int offset_ptypes = env->localvar_getInt(runtime, pos++);
     __refer ptr_ptypes = NULL;
     if(ptypes){
+        offset_ptypes *= env->data_type_bytes[ptypes->mb.arr_type_index];
         ptr_ptypes = ptypes->arr_body + offset_ptypes;
     }
     Instance *pids = env->localvar_getRefer(runtime, pos++);
     int offset_pids = env->localvar_getInt(runtime, pos++);
     __refer ptr_pids = NULL;
     if(pids){
+        offset_pids *= env->data_type_bytes[pids->mb.arr_type_index];
         ptr_pids = pids->arr_body + offset_pids;
     }
     Instance *pseverities = env->localvar_getRefer(runtime, pos++);
     int offset_pseverities = env->localvar_getInt(runtime, pos++);
     __refer ptr_pseverities = NULL;
     if(pseverities){
+        offset_pseverities *= env->data_type_bytes[pseverities->mb.arr_type_index];
         ptr_pseverities = pseverities->arr_body + offset_pseverities;
     }
     Instance *plengths = env->localvar_getRefer(runtime, pos++);
     int offset_plengths = env->localvar_getInt(runtime, pos++);
     __refer ptr_plengths = NULL;
     if(plengths){
+        offset_plengths *= env->data_type_bytes[plengths->mb.arr_type_index];
         ptr_plengths = plengths->arr_body + offset_plengths;
     }
     Instance *pmessageLog = env->localvar_getRefer(runtime, pos++);
     int offset_pmessageLog = env->localvar_getInt(runtime, pos++);
     __refer ptr_pmessageLog = NULL;
     if(pmessageLog){
+        offset_pmessageLog *= env->data_type_bytes[pmessageLog->mb.arr_type_index];
         ptr_pmessageLog = pmessageLog->arr_body + offset_pmessageLog;
     }
 
@@ -11719,6 +12123,7 @@ int org_mini_gl_GL_glPushDebugGroupKHR(Runtime *runtime, Class *clazz) {
     int offset_pmessage = env->localvar_getInt(runtime, pos++);
     __refer ptr_pmessage = NULL;
     if(pmessage){
+        offset_pmessage *= env->data_type_bytes[pmessage->mb.arr_type_index];
         ptr_pmessage = pmessage->arr_body + offset_pmessage;
     }
 
@@ -11750,6 +12155,7 @@ int org_mini_gl_GL_glObjectLabelKHR(Runtime *runtime, Class *clazz) {
     int offset_plabel = env->localvar_getInt(runtime, pos++);
     __refer ptr_plabel = NULL;
     if(plabel){
+        offset_plabel *= env->data_type_bytes[plabel->mb.arr_type_index];
         ptr_plabel = plabel->arr_body + offset_plabel;
     }
 
@@ -11770,12 +12176,14 @@ int org_mini_gl_GL_glGetObjectLabelKHR(Runtime *runtime, Class *clazz) {
     int offset_plength = env->localvar_getInt(runtime, pos++);
     __refer ptr_plength = NULL;
     if(plength){
+        offset_plength *= env->data_type_bytes[plength->mb.arr_type_index];
         ptr_plength = plength->arr_body + offset_plength;
     }
     Instance *plabel = env->localvar_getRefer(runtime, pos++);
     int offset_plabel = env->localvar_getInt(runtime, pos++);
     __refer ptr_plabel = NULL;
     if(plabel){
+        offset_plabel *= env->data_type_bytes[plabel->mb.arr_type_index];
         ptr_plabel = plabel->arr_body + offset_plabel;
     }
 
@@ -11793,6 +12201,7 @@ int org_mini_gl_GL_glObjectPtrLabelKHR(Runtime *runtime, Class *clazz) {
     int offset_pptr = env->localvar_getInt(runtime, pos++);
     __refer ptr_pptr = NULL;
     if(pptr){
+        offset_pptr *= env->data_type_bytes[pptr->mb.arr_type_index];
         ptr_pptr = pptr->arr_body + offset_pptr;
     }
     s32 plength = env->localvar_getInt(runtime, pos++);
@@ -11800,6 +12209,7 @@ int org_mini_gl_GL_glObjectPtrLabelKHR(Runtime *runtime, Class *clazz) {
     int offset_plabel = env->localvar_getInt(runtime, pos++);
     __refer ptr_plabel = NULL;
     if(plabel){
+        offset_plabel *= env->data_type_bytes[plabel->mb.arr_type_index];
         ptr_plabel = plabel->arr_body + offset_plabel;
     }
 
@@ -11817,6 +12227,7 @@ int org_mini_gl_GL_glGetObjectPtrLabelKHR(Runtime *runtime, Class *clazz) {
     int offset_pptr = env->localvar_getInt(runtime, pos++);
     __refer ptr_pptr = NULL;
     if(pptr){
+        offset_pptr *= env->data_type_bytes[pptr->mb.arr_type_index];
         ptr_pptr = pptr->arr_body + offset_pptr;
     }
     s32 pbufSize = env->localvar_getInt(runtime, pos++);
@@ -11824,12 +12235,14 @@ int org_mini_gl_GL_glGetObjectPtrLabelKHR(Runtime *runtime, Class *clazz) {
     int offset_plength = env->localvar_getInt(runtime, pos++);
     __refer ptr_plength = NULL;
     if(plength){
+        offset_plength *= env->data_type_bytes[plength->mb.arr_type_index];
         ptr_plength = plength->arr_body + offset_plength;
     }
     Instance *plabel = env->localvar_getRefer(runtime, pos++);
     int offset_plabel = env->localvar_getInt(runtime, pos++);
     __refer ptr_plabel = NULL;
     if(plabel){
+        offset_plabel *= env->data_type_bytes[plabel->mb.arr_type_index];
         ptr_plabel = plabel->arr_body + offset_plabel;
     }
 

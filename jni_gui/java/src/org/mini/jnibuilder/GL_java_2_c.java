@@ -323,6 +323,7 @@ public class GL_java_2_c {
                             varCode += "    int offset_" + argvName + " = env->localvar_getInt(runtime, pos++);\n";
                             varCode += "    __refer ptr_" + argvName + " = NULL;\n";
                             varCode += "    if(" + argvName + "){\n";
+                            varCode += "        offset_" + argvName + " *= env->data_type_bytes[" + argvName + "->mb.arr_type_index];\n";
                             varCode += "        ptr_" + argvName + " = " + argvName + "->arr_body + offset_" + argvName + ";\n";
                             varCode += "    }\n";
                             if (!isPointer(nativeArgvs[nativei])) {
