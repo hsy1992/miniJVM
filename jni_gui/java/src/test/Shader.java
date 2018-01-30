@@ -8,6 +8,7 @@ import static org.mini.gl.GL.GL_FLOAT;
 import static org.mini.gl.GL.GL_FRAGMENT_SHADER;
 import static org.mini.gl.GL.GL_STATIC_DRAW;
 import static org.mini.gl.GL.GL_TRIANGLES;
+import static org.mini.gl.GL.GL_TRUE;
 import static org.mini.gl.GL.GL_VERTEX_SHADER;
 import static org.mini.gl.GL.glAttachShader;
 import static org.mini.gl.GL.glBindBuffer;
@@ -29,6 +30,9 @@ import static org.mini.glfw.Glfw.GLFW_CONTEXT_VERSION_MINOR;
 import static org.mini.glfw.Glfw.GLFW_KEY_ESCAPE;
 import static org.mini.glfw.Glfw.GLFW_MOUSE_BUTTON_2;
 import static org.mini.glfw.Glfw.GLFW_MOUSE_BUTTON_LEFT;
+import static org.mini.glfw.Glfw.GLFW_OPENGL_CORE_PROFILE;
+import static org.mini.glfw.Glfw.GLFW_OPENGL_FORWARD_COMPAT;
+import static org.mini.glfw.Glfw.GLFW_OPENGL_PROFILE;
 import static org.mini.glfw.Glfw.GLFW_PRESS;
 import static org.mini.glfw.Glfw.GLFW_TRUE;
 import static org.mini.glfw.Glfw.glfwCreateWindow;
@@ -117,6 +121,21 @@ public class Shader {
     int[] Buffers = new int[NumBuffers];
 
     int NumVertices = 6;
+    
+    byte[] s_v=Gutil.toUtf8("#version 330   \n"
+                + "layout(location = 0) in vec4 vPosition;  \n"
+                + "void  \n"
+                + "main()  \n"
+                + " {  \n"
+                + "     gl_Position = vPosition;  \n"
+                + "} \000");
+    byte[] s_f=Gutil.toUtf8("#version 330   \n"
+                + "out vec4 fColor;  \n"
+                + "void  \n"
+                + "main()  \n"
+                + "{  \n"
+                + "fColor = vec4(0.0, 0.0, 1.0, 1.0);  \n"
+                + "}  \000");
 
     void init() {
         glGenVertexArrays(NumVAOs, VAOs, 0);
@@ -138,14 +157,7 @@ public class Shader {
 
         int vertex_shader, fragment_shader, program;
         vertex_shader = glCreateShader(GL_VERTEX_SHADER);
-        String s0 = "#version 330   \n"
-                + "layout(location = 0) in vec4 vPosition;  \n"
-                + "void  \n"
-                + "main()  \n"
-                + " {  \n"
-                + "     gl_Position = vPosition;  \n"
-                + "} \000";
-        glShaderSource(vertex_shader, 1, new byte[][]{Gutil.toUtf8(s0)}, null, 0);
+        glShaderSource(vertex_shader, 1, new byte[][]{s_v}, null, 0);
         glCompileShader(vertex_shader);
         byte[] szLog = new byte[1024];
         int[] return_val = {0};
@@ -154,15 +166,8 @@ public class Shader {
             GL.glGetShaderInfoLog(vertex_shader, szLog.length, return_val, 0, szLog);
             System.out.println("Compile Shader fail error :" + new String(szLog, 0, return_val[0]) + "\n");
         }
-        String s1 = "#version 330   \n"
-                + "out vec4 fColor;  \n"
-                + "void  \n"
-                + "main()  \n"
-                + "{  \n"
-                + "fColor = vec4(0.0, 0.0, 1.0, 1.0);  \n"
-                + "}  \000";
         fragment_shader = glCreateShader(GL_FRAGMENT_SHADER);
-        glShaderSource(fragment_shader, 1, new byte[][]{Gutil.toUtf8(s1)}, null, 0);
+        glShaderSource(fragment_shader, 1, new byte[][]{s_f}, null, 0);
         glCompileShader(fragment_shader);
         GL.glGetShaderiv(fragment_shader, GL.GL_COMPILE_STATUS, return_val, 0);
         if (return_val[0] == GL_FALSE) {
@@ -206,6 +211,8 @@ public class Shader {
 
     void t1() {
         glfwInit();
+        glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
+        glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
         glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
         glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
 //        glfwWindowHint(GLFW_DEPTH_BITS, 16);

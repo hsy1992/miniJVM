@@ -126,7 +126,10 @@ public class GL_java_2_c {
 
                     //process return 
                     String returnCode = "", pushCode = "", javaReturnCode = "", releaseMemCode = "";
-                    boolean nativeReturnIsPointer = isPointer(nativeReurnType);//最后一个是*号
+                    if (nativeReurnType.length() == 0) {
+                        int debug = 1;
+                    }
+                    boolean nativeReturnIsPointer = nativeReurnType.charAt(nativeReurnType.length() - 1) == '*';//最后一个是*号
 
                     if (!VOID.equals(returnType)) {
                         if ("int".equals(returnType)) {
@@ -178,19 +181,20 @@ public class GL_java_2_c {
                             javaReturnCode = "Ljava/lang/String;";
                         } else if (returnType.contains("[]")) {
                             String cType = "", jvmType = "", jvmDesc = "";
-                            if ("long[]".equals(returnType)) {
-                                cType = "s64";
-                                jvmType = "DATATYPE_LONG";
-                                jvmDesc = "[J";
-                            } else if ("int[]".equals(returnType)) {
-                                cType = "s32";
-                                jvmType = "DATATYPE_INT";
-                                jvmDesc = "[I";
-                            } else if ("float[]".equals(returnType)) {
-                                cType = "f32";
-                                jvmType = "DATATYPE_FLOAT";
-                                jvmDesc = "[F";
-                            } else if ("byte[]".equals(returnType)) {
+//                            if ("long[]".equals(returnType)) {
+//                                cType = "s64";
+//                                jvmType = "DATATYPE_LONG";
+//                                jvmDesc = "[J";
+//                            } else if ("int[]".equals(returnType)) {
+//                                cType = "s32";
+//                                jvmType = "DATATYPE_INT";
+//                                jvmDesc = "[I";
+//                            } else if ("float[]".equals(returnType)) {
+//                                cType = "f32";
+//                                jvmType = "DATATYPE_FLOAT";
+//                                jvmDesc = "[F";
+//                            } else 
+                            if ("byte[]".equals(returnType)) {
                                 cType = "c8";
                                 jvmType = "DATATYPE_BYTE";
                                 jvmDesc = "[B";
@@ -208,7 +212,7 @@ public class GL_java_2_c {
                                 pushCode += cType + "* _ptr_re_val = (" + cType + "*)&_re_val;\n";
                             }
                             pushCode += "    if (_ptr_re_val) {\n"
-                                    + "        s32 bytes = sizeof(" + entryType + ");\n"
+                                    + "        s32 bytes = strlen(_ptr_re_val);\n"
                                     + "        s32 j_t_bytes = sizeof(" + cType + ");\n"
                                     + "        Instance *_arr = env->jarray_create(bytes / j_t_bytes, " + jvmType + ", NULL);\n"
                                     + "        memcpy(_arr->arr_body, _ptr_re_val,bytes);\n"

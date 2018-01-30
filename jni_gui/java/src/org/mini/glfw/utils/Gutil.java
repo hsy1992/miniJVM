@@ -9,18 +9,19 @@ import java.io.UnsupportedEncodingException;
 import org.mini.gl.GL;
 import static org.mini.gl.GL.GL_CLAMP_TO_EDGE;
 import static org.mini.gl.GL.GL_LINEAR_MIPMAP_NEAREST;
-import static org.mini.gl.GL.GL_RGBA;
-import static org.mini.gl.GL.GL_RGBA8;
+import static org.mini.gl.GL.GL_RENDERER;
 import static org.mini.gl.GL.GL_TEXTURE_2D;
 import static org.mini.gl.GL.GL_TEXTURE_MAG_FILTER;
 import static org.mini.gl.GL.GL_TEXTURE_MIN_FILTER;
 import static org.mini.gl.GL.GL_TEXTURE_WRAP_S;
 import static org.mini.gl.GL.GL_TEXTURE_WRAP_T;
 import static org.mini.gl.GL.GL_UNSIGNED_BYTE;
+import static org.mini.gl.GL.GL_VERSION;
 import static org.mini.gl.GL.glBegin;
 import static org.mini.gl.GL.glBindTexture;
 import static org.mini.gl.GL.glGenTextures;
 import static org.mini.gl.GL.glGenerateMipmap;
+import static org.mini.gl.GL.glGetString;
 import static org.mini.gl.GL.glTexImage2D;
 import static org.mini.gl.GL.glTexParameterf;
 
@@ -231,8 +232,23 @@ public class Gutil {
 
     static public StbFont getDefaultFont() {
         if (defaultFont == null) {
-            defaultFont = new StbFont("./wqymhei.ttc");
+            defaultFont = new StbFont("../../binary/res/wqymhei.ttc");
         }
         return defaultFont;
+    }
+
+    static public void printGlVersion() {
+        byte[] b;
+        String name = new String(glGetString(GL.GL_VENDOR)); //返回负责当前OpenGL实现厂商的名字
+        String biaoshifu = new String(glGetString(GL_RENDERER)); //返回一个渲染器标识符，通常是个硬件平台
+        String OpenGLVersion = new String(glGetString(GL_VERSION)); //返回当前OpenGL实现的版本号
+        b = glGetString(GL.GL_MAJOR_VERSION);
+        String majorVersion = b == null ? "" : new String(b);
+        b = glGetString(GL.GL_MINOR_VERSION);
+        String minorVersion = b == null ? "" : new String(b);
+        System.out.println("OpenGL vendor：" + name);
+        System.out.println("OpenGL renderer：" + biaoshifu);
+        System.out.println("OpenGL version：" + OpenGLVersion);
+        System.out.println("OpenGL version：" + majorVersion + "." + minorVersion);
     }
 }

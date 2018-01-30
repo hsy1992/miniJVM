@@ -61,6 +61,9 @@ import static org.mini.gl.GL.glTexParameteri;
 import static org.mini.gl.GL.glVertex3f;
 import static org.mini.gl.GL.glViewport;
 import org.mini.glfw.Glfw;
+import static org.mini.glfw.Glfw.GLFW_CONTEXT_VERSION_MAJOR;
+import static org.mini.glfw.Glfw.GLFW_CONTEXT_VERSION_MINOR;
+import static org.mini.glfw.Glfw.glfwWindowHint;
 import org.mini.glfw.GlfwCallbackAdapter;
 import org.mini.glfw.utils.Gutil;
 import static org.mini.glfw.utils.Gutil.gluLookAt;
@@ -82,10 +85,14 @@ public class RenderTexure {
 
     void t1() {
         Glfw.glfwInit();
+        
+//        glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
+//        glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 0);
         long win = Glfw.glfwCreateWindow(500, 500, "hello glfw", 0, 0);
         if (win != 0) {
             Glfw.glfwSetCallback(win, new CallBack());
             Glfw.glfwMakeContextCurrent(win);
+            Gutil.printGlVersion();
 //            Glfw.glfwSwapInterval(1);
 
             w = Glfw.glfwGetFramebufferSizeW(win);
@@ -256,7 +263,6 @@ public class RenderTexure {
         glBindRenderbuffer(GL_RENDERBUFFER, render_buffer[0]);
         glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH24_STENCIL8, TEXTURE_WIDTH, TEXTURE_HEIGHT);
         glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_STENCIL_ATTACHMENT, GL_RENDERBUFFER, render_buffer[0]); // now actually attach it
-
 
         int status = glCheckFramebufferStatus(GL_FRAMEBUFFER);
         if (status != GL_FRAMEBUFFER_COMPLETE) {

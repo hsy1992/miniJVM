@@ -1,14 +1,14 @@
 //
-//  call_c.c
-//  iostestTests
+//  invoke.c
+//  jvm_macos
 //
-//  Created by Gust on 2017/10/6.
-//  Copyright © 2017年 Gust. All rights reserved.
+//  Created by Gust on 2018/1/30.
+//  Copyright © 2018年 Gust. All rights reserved.
 //
 
-#include "../jvm/jvm.h"
-#include "../utils/arraylist.h"
-#include "iostestTests-Bridging-Header.h"
+#include "../../mini_jvm/jvm/jvm.h"
+#include "../../mini_jvm/utils/arraylist.h"
+#include "jvm_macos-Bridging-Header.h"
 
 int call_jvm(char* app_path) {
     s32 ret ;

@@ -16,7 +16,7 @@ set(SOURCE_FILES
         )
 add_executable(test_gui ${SOURCE_FILES})
 
-add_library(gui SHARED ${SOURCE_FILES})
+add_library(gui SHARED ${SOURCE_FILES} deps/include/glad/glad_jni_assist.h)
 
 
 #find_package(OpenGL REQUIRED)

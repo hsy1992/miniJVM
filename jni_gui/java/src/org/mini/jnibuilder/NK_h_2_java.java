@@ -37,7 +37,7 @@ public class NK_h_2_java {
 
     String[] input_path = {
         "../deps/include/nuklear.h",
-        "../deps/include/nuklear_glfw_gl2.h",
+        "../deps/include/nuklear_glfw_gl3.h",
         "../deps/include/nuklear_jni_assist.h",};
     String[] output_path = {"src/org/mini/nk/NK.java"};
 
@@ -74,7 +74,7 @@ public class NK_h_2_java {
     static public String[] ARR_SHORT_TYPE = {"short*", "nk_vec2i*", "nk_recti*",};
     static public String[] BYTE_TYPE = {"nk_byte", "char", "nk_char"};
     static public String[] ARR_BYTE_TYPE = {"nk_byte*", "const nk_byte*", ""};
-    static public String[] STRING_TYPE = {"char*", "char*", "const char*", "const char*", "char const*", "char const*", "unsigned char*", "const unsigned char*",};
+    static public String[] STRING_TYPE = {"char*", "char*", "const char*", "const char*", "char const*", "char const*", "unsigned char*", "const unsigned char*", "NK_PRINTF_FORMAT_STRING const char*", "",};
     static public String[] ARR_STRING_TYPE = {"char**", "char**", "const char**", "const char**", "char const**", "char const**",};
     static public String[] LONG_TYPE = {""};
     static public String[] ARR_LONG_TYPE = {""};
@@ -110,7 +110,8 @@ public class NK_h_2_java {
                 while ((line = br.readLine()) != null) {
 
                     line = line.replaceAll("/\\*.*\\*/", "");
-                    line = line.replaceAll("//.*\n", "");
+                    line = line.replaceAll("//.*", "");
+                    line = line.replaceAll("NK_PRINTF_VARARG_FUNC\\([0-9]\\)", "");
                     line = line.trim();
                     lines.add(line);
                 }

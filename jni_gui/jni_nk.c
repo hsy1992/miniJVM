@@ -21,8 +21,8 @@
 #define STB_IMAGE_WRITE_IMPLEMENTATION
 #include <stb_image_write.h>
 
-#define NK_GLFW_GL2_IMPLEMENTATION
-#include <nuklear_glfw_gl2.h>
+#define NK_GLFW_GL3_IMPLEMENTATION
+#include <nuklear_glfw_gl3.h>
 #include <nuklear_jni_assist.h>
 
 #include "../mini_jvm/jvm/jvm.h"
@@ -624,6 +624,18 @@ int org_mini_nk_NK_nk_window_has_focus(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
+int org_mini_nk_NK_nk_window_is_hovered(Runtime *runtime, Class *clazz) {
+    JniEnv *env = runtime->jnienv;
+    s32 pos = 0;
+    
+    intptr_t parg0 = env->localvar_getLong_2slot(runtime, pos);pos += 2;
+
+    int _re_val = nk_window_is_hovered((struct nk_context*/*ptr*/)(parg0));
+    s32 ret_value = (s32)_re_val;env->push_int(runtime->stack, ret_value);
+    
+    return 0;
+}
+
 int org_mini_nk_NK_nk_window_is_collapsed(Runtime *runtime, Class *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
@@ -687,18 +699,6 @@ int org_mini_nk_NK_nk_window_is_active(Runtime *runtime, Class *clazz) {
     }
 
     int _re_val = nk_window_is_active((struct nk_context*/*ptr*/)(parg0), (const char*)(ptr_parg1));
-    s32 ret_value = (s32)_re_val;env->push_int(runtime->stack, ret_value);
-    
-    return 0;
-}
-
-int org_mini_nk_NK_nk_window_is_hovered(Runtime *runtime, Class *clazz) {
-    JniEnv *env = runtime->jnienv;
-    s32 pos = 0;
-    
-    intptr_t parg0 = env->localvar_getLong_2slot(runtime, pos);pos += 2;
-
-    int _re_val = nk_window_is_hovered((struct nk_context*/*ptr*/)(parg0));
     s32 ret_value = (s32)_re_val;env->push_int(runtime->stack, ret_value);
     
     return 0;
@@ -1133,13 +1133,13 @@ int org_mini_nk_NK_nk_layout_space_push(Runtime *runtime, Class *clazz) {
     s32 pos = 0;
     
     intptr_t parg0 = env->localvar_getLong_2slot(runtime, pos);pos += 2;
-    Instance *parg1 = env->localvar_getRefer(runtime, pos++);
-    __refer ptr_parg1 = NULL;
-    if(parg1){
-        ptr_parg1 = parg1->arr_body;
+    Instance *pbounds = env->localvar_getRefer(runtime, pos++);
+    __refer ptr_pbounds = NULL;
+    if(pbounds){
+        ptr_pbounds = pbounds->arr_body;
     }
 
-    nk_layout_space_push((struct nk_context*/*ptr*/)(parg0), *(struct nk_rect/*none_ptr*/*)(ptr_parg1));
+    nk_layout_space_push((struct nk_context*/*ptr*/)(parg0), *(struct nk_rect/*none_ptr*/*)(ptr_pbounds));
     
     
     return 0;
@@ -1300,43 +1300,15 @@ int org_mini_nk_NK_nk_group_begin(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-int org_mini_nk_NK_nk_group_scrolled_offset_begin(Runtime *runtime, Class *clazz) {
+int org_mini_nk_NK_nk_group_begin_titled(Runtime *runtime, Class *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
     intptr_t parg0 = env->localvar_getLong_2slot(runtime, pos);pos += 2;
-    Instance *px_offset = env->localvar_getRefer(runtime, pos++);
-    __refer ptr_px_offset = NULL;
-    if(px_offset){
-        ptr_px_offset = px_offset->arr_body;
-    }
-    Instance *py_offset = env->localvar_getRefer(runtime, pos++);
-    __refer ptr_py_offset = NULL;
-    if(py_offset){
-        ptr_py_offset = py_offset->arr_body;
-    }
-    Instance *parg3 = env->localvar_getRefer(runtime, pos++);
-    __refer ptr_parg3 = NULL;
-    if(parg3){
-        ptr_parg3 = parg3->arr_body;
-    }
-    s32 parg4 = env->localvar_getInt(runtime, pos++);
-
-    int _re_val = nk_group_scrolled_offset_begin((struct nk_context*/*ptr*/)(parg0), (nk_uint*)(ptr_px_offset), (nk_uint*)(ptr_py_offset), (const char*)(ptr_parg3), (nk_flags)parg4);
-    s32 ret_value = (s32)_re_val;env->push_int(runtime->stack, ret_value);
-    
-    return 0;
-}
-
-int org_mini_nk_NK_nk_group_scrolled_begin(Runtime *runtime, Class *clazz) {
-    JniEnv *env = runtime->jnienv;
-    s32 pos = 0;
-    
-    intptr_t parg0 = env->localvar_getLong_2slot(runtime, pos);pos += 2;
-    Instance *parg1 = env->localvar_getRefer(runtime, pos++);
-    __refer ptr_parg1 = NULL;
-    if(parg1){
-        ptr_parg1 = parg1->arr_body;
+    Instance *pname = env->localvar_getRefer(runtime, pos++);
+    __refer ptr_pname = NULL;
+    if(pname){
+        ptr_pname = pname->arr_body;
     }
     Instance *ptitle = env->localvar_getRefer(runtime, pos++);
     __refer ptr_ptitle = NULL;
@@ -1345,20 +1317,8 @@ int org_mini_nk_NK_nk_group_scrolled_begin(Runtime *runtime, Class *clazz) {
     }
     s32 parg3 = env->localvar_getInt(runtime, pos++);
 
-    int _re_val = nk_group_scrolled_begin((struct nk_context*/*ptr*/)(parg0), (struct nk_scroll*)(ptr_parg1), (const char*)(ptr_ptitle), (nk_flags)parg3);
+    int _re_val = nk_group_begin_titled((struct nk_context*/*ptr*/)(parg0), (const char*)(ptr_pname), (const char*)(ptr_ptitle), (nk_flags)parg3);
     s32 ret_value = (s32)_re_val;env->push_int(runtime->stack, ret_value);
-    
-    return 0;
-}
-
-int org_mini_nk_NK_nk_group_scrolled_end(Runtime *runtime, Class *clazz) {
-    JniEnv *env = runtime->jnienv;
-    s32 pos = 0;
-    
-    intptr_t parg0 = env->localvar_getLong_2slot(runtime, pos);pos += 2;
-
-    nk_group_scrolled_end((struct nk_context*/*ptr*/)(parg0));
-    
     
     return 0;
 }
@@ -1375,34 +1335,64 @@ int org_mini_nk_NK_nk_group_end(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-int org_mini_nk_NK_nk_list_view_begin(Runtime *runtime, Class *clazz) {
+int org_mini_nk_NK_nk_group_scrolled_offset_begin(Runtime *runtime, Class *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
     intptr_t parg0 = env->localvar_getLong_2slot(runtime, pos);pos += 2;
-    intptr_t pout = env->localvar_getLong_2slot(runtime, pos);pos += 2;
-    Instance *pid = env->localvar_getRefer(runtime, pos++);
-    __refer ptr_pid = NULL;
-    if(pid){
-        ptr_pid = pid->arr_body;
+    Instance *px_offset = env->localvar_getRefer(runtime, pos++);
+    __refer ptr_px_offset = NULL;
+    if(px_offset){
+        ptr_px_offset = px_offset->arr_body;
     }
-    s32 parg3 = env->localvar_getInt(runtime, pos++);
-    s32 prow_height = env->localvar_getInt(runtime, pos++);
-    s32 prow_count = env->localvar_getInt(runtime, pos++);
+    Instance *py_offset = env->localvar_getRefer(runtime, pos++);
+    __refer ptr_py_offset = NULL;
+    if(py_offset){
+        ptr_py_offset = py_offset->arr_body;
+    }
+    Instance *ptitle = env->localvar_getRefer(runtime, pos++);
+    __refer ptr_ptitle = NULL;
+    if(ptitle){
+        ptr_ptitle = ptitle->arr_body;
+    }
+    s32 pflags = env->localvar_getInt(runtime, pos++);
 
-    int _re_val = nk_list_view_begin((struct nk_context*/*ptr*/)(parg0), (struct nk_list_view*/*ptr*/)(pout), (const char*)(ptr_pid), (nk_flags)parg3, (int)prow_height, (int)prow_count);
+    int _re_val = nk_group_scrolled_offset_begin((struct nk_context*/*ptr*/)(parg0), (nk_uint*)(ptr_px_offset), (nk_uint*)(ptr_py_offset), (const char*)(ptr_ptitle), (nk_flags)pflags);
     s32 ret_value = (s32)_re_val;env->push_int(runtime->stack, ret_value);
     
     return 0;
 }
 
-int org_mini_nk_NK_nk_list_view_end(Runtime *runtime, Class *clazz) {
+int org_mini_nk_NK_nk_group_scrolled_begin(Runtime *runtime, Class *clazz) {
+    JniEnv *env = runtime->jnienv;
+    s32 pos = 0;
+    
+    intptr_t parg0 = env->localvar_getLong_2slot(runtime, pos);pos += 2;
+    Instance *poff = env->localvar_getRefer(runtime, pos++);
+    __refer ptr_poff = NULL;
+    if(poff){
+        ptr_poff = poff->arr_body;
+    }
+    Instance *ptitle = env->localvar_getRefer(runtime, pos++);
+    __refer ptr_ptitle = NULL;
+    if(ptitle){
+        ptr_ptitle = ptitle->arr_body;
+    }
+    s32 parg3 = env->localvar_getInt(runtime, pos++);
+
+    int _re_val = nk_group_scrolled_begin((struct nk_context*/*ptr*/)(parg0), (struct nk_scroll*)(ptr_poff), (const char*)(ptr_ptitle), (nk_flags)parg3);
+    s32 ret_value = (s32)_re_val;env->push_int(runtime->stack, ret_value);
+    
+    return 0;
+}
+
+int org_mini_nk_NK_nk_group_scrolled_end(Runtime *runtime, Class *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
     intptr_t parg0 = env->localvar_getLong_2slot(runtime, pos);pos += 2;
 
-    nk_list_view_end((struct nk_list_view*/*ptr*/)(parg0));
+    nk_group_scrolled_end((struct nk_context*/*ptr*/)(parg0));
     
     
     return 0;
@@ -1535,6 +1525,39 @@ int org_mini_nk_NK_nk_tree_state_pop(Runtime *runtime, Class *clazz) {
     intptr_t parg0 = env->localvar_getLong_2slot(runtime, pos);pos += 2;
 
     nk_tree_state_pop((struct nk_context*/*ptr*/)(parg0));
+    
+    
+    return 0;
+}
+
+int org_mini_nk_NK_nk_list_view_begin(Runtime *runtime, Class *clazz) {
+    JniEnv *env = runtime->jnienv;
+    s32 pos = 0;
+    
+    intptr_t parg0 = env->localvar_getLong_2slot(runtime, pos);pos += 2;
+    intptr_t pout = env->localvar_getLong_2slot(runtime, pos);pos += 2;
+    Instance *pid = env->localvar_getRefer(runtime, pos++);
+    __refer ptr_pid = NULL;
+    if(pid){
+        ptr_pid = pid->arr_body;
+    }
+    s32 parg3 = env->localvar_getInt(runtime, pos++);
+    s32 prow_height = env->localvar_getInt(runtime, pos++);
+    s32 prow_count = env->localvar_getInt(runtime, pos++);
+
+    int _re_val = nk_list_view_begin((struct nk_context*/*ptr*/)(parg0), (struct nk_list_view*/*ptr*/)(pout), (const char*)(ptr_pid), (nk_flags)parg3, (int)prow_height, (int)prow_count);
+    s32 ret_value = (s32)_re_val;env->push_int(runtime->stack, ret_value);
+    
+    return 0;
+}
+
+int org_mini_nk_NK_nk_list_view_end(Runtime *runtime, Class *clazz) {
+    JniEnv *env = runtime->jnienv;
+    s32 pos = 0;
+    
+    intptr_t parg0 = env->localvar_getLong_2slot(runtime, pos);pos += 2;
+
+    nk_list_view_end((struct nk_list_view*/*ptr*/)(parg0));
     
     
     return 0;
@@ -1916,7 +1939,7 @@ int org_mini_nk_NK_nk_labelf(Runtime *runtime, Class *clazz) {
         ptr_parg3 = env->cstringarr_create(parg3);
     }
 
-    nk_labelf((struct nk_context*/*ptr*/)(parg0), (nk_flags)parg1, (const char*)(ptr_parg2), /*todo Despair for runtime parse unlimited para*/(ptr_parg3->arr_body));
+    nk_labelf((struct nk_context*/*ptr*/)(parg0), (nk_flags)parg1, (NK_PRINTF_FORMAT_STRING const char*)(ptr_parg2), /*todo Despair for runtime parse unlimited para*/(ptr_parg3->arr_body));
     
     env->cstringarr_destory(ptr_parg3);
     return 0;
@@ -1927,7 +1950,7 @@ int org_mini_nk_NK_nk_labelf_colored(Runtime *runtime, Class *clazz) {
     s32 pos = 0;
     
     intptr_t parg0 = env->localvar_getLong_2slot(runtime, pos);pos += 2;
-    s32 palign = env->localvar_getInt(runtime, pos++);
+    s32 parg1 = env->localvar_getInt(runtime, pos++);
     Instance *parg2 = env->localvar_getRefer(runtime, pos++);
     __refer ptr_parg2 = NULL;
     if(parg2){
@@ -1944,7 +1967,7 @@ int org_mini_nk_NK_nk_labelf_colored(Runtime *runtime, Class *clazz) {
         ptr_parg4 = env->cstringarr_create(parg4);
     }
 
-    nk_labelf_colored((struct nk_context*/*ptr*/)(parg0), (nk_flags)palign, *(struct nk_color/*none_ptr*/*)(ptr_parg2), (const char*)(ptr_parg3), /*todo Despair for runtime parse unlimited para*/(ptr_parg4->arr_body));
+    nk_labelf_colored((struct nk_context*/*ptr*/)(parg0), (nk_flags)parg1, *(struct nk_color/*none_ptr*/*)(ptr_parg2), (NK_PRINTF_FORMAT_STRING const char*)(ptr_parg3), /*todo Despair for runtime parse unlimited para*/(ptr_parg4->arr_body));
     
     env->cstringarr_destory(ptr_parg4);
     return 0;
@@ -1966,7 +1989,7 @@ int org_mini_nk_NK_nk_labelf_wrap(Runtime *runtime, Class *clazz) {
         ptr_parg2 = env->cstringarr_create(parg2);
     }
 
-    nk_labelf_wrap((struct nk_context*/*ptr*/)(parg0), (const char*)(ptr_parg1), /*todo Despair for runtime parse unlimited para*/(ptr_parg2->arr_body));
+    nk_labelf_wrap((struct nk_context*/*ptr*/)(parg0), (NK_PRINTF_FORMAT_STRING const char*)(ptr_parg1), /*todo Despair for runtime parse unlimited para*/(ptr_parg2->arr_body));
     
     env->cstringarr_destory(ptr_parg2);
     return 0;
@@ -1993,7 +2016,7 @@ int org_mini_nk_NK_nk_labelf_colored_wrap(Runtime *runtime, Class *clazz) {
         ptr_parg3 = env->cstringarr_create(parg3);
     }
 
-    nk_labelf_colored_wrap((struct nk_context*/*ptr*/)(parg0), *(struct nk_color/*none_ptr*/*)(ptr_parg1), (const char*)(ptr_parg2), /*todo Despair for runtime parse unlimited para*/(ptr_parg3->arr_body));
+    nk_labelf_colored_wrap((struct nk_context*/*ptr*/)(parg0), *(struct nk_color/*none_ptr*/*)(ptr_parg1), (NK_PRINTF_FORMAT_STRING const char*)(ptr_parg2), /*todo Despair for runtime parse unlimited para*/(ptr_parg3->arr_body));
     
     env->cstringarr_destory(ptr_parg3);
     return 0;
@@ -3062,12 +3085,12 @@ int org_mini_nk_NK_nk_color_picker(Runtime *runtime, Class *clazz) {
     }
     s32 parg2 = env->localvar_getInt(runtime, pos++);
 
-    struct nk_color/*none_ptr*/ _re_val = nk_color_picker((struct nk_context*/*ptr*/)(parg0), *(struct nk_color/*none_ptr*/*)(ptr_parg1), (enum nk_color_format)parg2);
-    s32* _ptr_re_val = (s32*)&_re_val;
+    struct nk_colorf/*none_ptr*/ _re_val = nk_color_picker((struct nk_context*/*ptr*/)(parg0), *(struct nk_colorf/*none_ptr*/*)(ptr_parg1), (enum nk_color_format)parg2);
+    f32* _ptr_re_val = (f32*)&_re_val;
     s32 _struct_bytes = sizeof(_re_val);
     if (_ptr_re_val) {
-        s32 _j_t_bytes = sizeof(s32);
-        Instance *_arr = env->jarray_create(_struct_bytes / _j_t_bytes, DATATYPE_INT, NULL);
+        s32 _j_t_bytes = sizeof(f32);
+        Instance *_arr = env->jarray_create(_struct_bytes / _j_t_bytes, DATATYPE_FLOAT, NULL);
         memcpy(_arr->arr_body, _ptr_re_val,_struct_bytes);
         env->push_ref(runtime->stack, _arr);
     } else {
@@ -3089,7 +3112,7 @@ int org_mini_nk_NK_nk_color_pick(Runtime *runtime, Class *clazz) {
     }
     s32 parg2 = env->localvar_getInt(runtime, pos++);
 
-    int _re_val = nk_color_pick((struct nk_context*/*ptr*/)(parg0), (struct nk_color*)(ptr_parg1), (enum nk_color_format)parg2);
+    int _re_val = nk_color_pick((struct nk_context*/*ptr*/)(parg0), (struct nk_colorf*)(ptr_parg1), (enum nk_color_format)parg2);
     s32 ret_value = (s32)_re_val;env->push_int(runtime->stack, ret_value);
     
     return 0;
@@ -5139,6 +5162,31 @@ int org_mini_nk_NK_nk_rgb_fv(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
+int org_mini_nk_NK_nk_rgb_cf(Runtime *runtime, Class *clazz) {
+    JniEnv *env = runtime->jnienv;
+    s32 pos = 0;
+    
+    Instance *pc = env->localvar_getRefer(runtime, pos++);
+    __refer ptr_pc = NULL;
+    if(pc){
+        ptr_pc = pc->arr_body;
+    }
+
+    struct nk_color/*none_ptr*/ _re_val = nk_rgb_cf(*(struct nk_colorf/*none_ptr*/*)(ptr_pc));
+    s32* _ptr_re_val = (s32*)&_re_val;
+    s32 _struct_bytes = sizeof(_re_val);
+    if (_ptr_re_val) {
+        s32 _j_t_bytes = sizeof(s32);
+        Instance *_arr = env->jarray_create(_struct_bytes / _j_t_bytes, DATATYPE_INT, NULL);
+        memcpy(_arr->arr_body, _ptr_re_val,_struct_bytes);
+        env->push_ref(runtime->stack, _arr);
+    } else {
+        env->push_ref(runtime->stack, NULL);
+    }
+    
+    return 0;
+}
+
 int org_mini_nk_NK_nk_rgb_hex(Runtime *runtime, Class *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
@@ -5308,6 +5356,31 @@ int org_mini_nk_NK_nk_rgba_fv(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
+int org_mini_nk_NK_nk_rgba_cf(Runtime *runtime, Class *clazz) {
+    JniEnv *env = runtime->jnienv;
+    s32 pos = 0;
+    
+    Instance *pc = env->localvar_getRefer(runtime, pos++);
+    __refer ptr_pc = NULL;
+    if(pc){
+        ptr_pc = pc->arr_body;
+    }
+
+    struct nk_color/*none_ptr*/ _re_val = nk_rgba_cf(*(struct nk_colorf/*none_ptr*/*)(ptr_pc));
+    s32* _ptr_re_val = (s32*)&_re_val;
+    s32 _struct_bytes = sizeof(_re_val);
+    if (_ptr_re_val) {
+        s32 _j_t_bytes = sizeof(s32);
+        Instance *_arr = env->jarray_create(_struct_bytes / _j_t_bytes, DATATYPE_INT, NULL);
+        memcpy(_arr->arr_body, _ptr_re_val,_struct_bytes);
+        env->push_ref(runtime->stack, _arr);
+    } else {
+        env->push_ref(runtime->stack, NULL);
+    }
+    
+    return 0;
+}
+
 int org_mini_nk_NK_nk_rgba_hex(Runtime *runtime, Class *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
@@ -5329,6 +5402,112 @@ int org_mini_nk_NK_nk_rgba_hex(Runtime *runtime, Class *clazz) {
     } else {
         env->push_ref(runtime->stack, NULL);
     }
+    
+    return 0;
+}
+
+int org_mini_nk_NK_nk_hsva_colorf(Runtime *runtime, Class *clazz) {
+    JniEnv *env = runtime->jnienv;
+    s32 pos = 0;
+    
+    Int2Float ph;ph.i = env->localvar_getInt(runtime, pos++);
+    Int2Float ps;ps.i = env->localvar_getInt(runtime, pos++);
+    Int2Float pv;pv.i = env->localvar_getInt(runtime, pos++);
+    Int2Float pa;pa.i = env->localvar_getInt(runtime, pos++);
+
+    struct nk_colorf/*none_ptr*/ _re_val = nk_hsva_colorf((float)ph.f, (float)ps.f, (float)pv.f, (float)pa.f);
+    f32* _ptr_re_val = (f32*)&_re_val;
+    s32 _struct_bytes = sizeof(_re_val);
+    if (_ptr_re_val) {
+        s32 _j_t_bytes = sizeof(f32);
+        Instance *_arr = env->jarray_create(_struct_bytes / _j_t_bytes, DATATYPE_FLOAT, NULL);
+        memcpy(_arr->arr_body, _ptr_re_val,_struct_bytes);
+        env->push_ref(runtime->stack, _arr);
+    } else {
+        env->push_ref(runtime->stack, NULL);
+    }
+    
+    return 0;
+}
+
+int org_mini_nk_NK_nk_hsva_colorfv(Runtime *runtime, Class *clazz) {
+    JniEnv *env = runtime->jnienv;
+    s32 pos = 0;
+    
+    Instance *pc = env->localvar_getRefer(runtime, pos++);
+    __refer ptr_pc = NULL;
+    if(pc){
+        ptr_pc = pc->arr_body;
+    }
+
+    struct nk_colorf/*none_ptr*/ _re_val = nk_hsva_colorfv((float*)(ptr_pc));
+    f32* _ptr_re_val = (f32*)&_re_val;
+    s32 _struct_bytes = sizeof(_re_val);
+    if (_ptr_re_val) {
+        s32 _j_t_bytes = sizeof(f32);
+        Instance *_arr = env->jarray_create(_struct_bytes / _j_t_bytes, DATATYPE_FLOAT, NULL);
+        memcpy(_arr->arr_body, _ptr_re_val,_struct_bytes);
+        env->push_ref(runtime->stack, _arr);
+    } else {
+        env->push_ref(runtime->stack, NULL);
+    }
+    
+    return 0;
+}
+
+int org_mini_nk_NK_nk_colorf_hsva_f(Runtime *runtime, Class *clazz) {
+    JniEnv *env = runtime->jnienv;
+    s32 pos = 0;
+    
+    Instance *pout_h = env->localvar_getRefer(runtime, pos++);
+    __refer ptr_pout_h = NULL;
+    if(pout_h){
+        ptr_pout_h = pout_h->arr_body;
+    }
+    Instance *pout_s = env->localvar_getRefer(runtime, pos++);
+    __refer ptr_pout_s = NULL;
+    if(pout_s){
+        ptr_pout_s = pout_s->arr_body;
+    }
+    Instance *pout_v = env->localvar_getRefer(runtime, pos++);
+    __refer ptr_pout_v = NULL;
+    if(pout_v){
+        ptr_pout_v = pout_v->arr_body;
+    }
+    Instance *pout_a = env->localvar_getRefer(runtime, pos++);
+    __refer ptr_pout_a = NULL;
+    if(pout_a){
+        ptr_pout_a = pout_a->arr_body;
+    }
+    Instance *pin = env->localvar_getRefer(runtime, pos++);
+    __refer ptr_pin = NULL;
+    if(pin){
+        ptr_pin = pin->arr_body;
+    }
+
+    nk_colorf_hsva_f((float*)(ptr_pout_h), (float*)(ptr_pout_s), (float*)(ptr_pout_v), (float*)(ptr_pout_a), *(struct nk_colorf/*none_ptr*/*)(ptr_pin));
+    
+    
+    return 0;
+}
+
+int org_mini_nk_NK_nk_colorf_hsva_fv(Runtime *runtime, Class *clazz) {
+    JniEnv *env = runtime->jnienv;
+    s32 pos = 0;
+    
+    Instance *phsva = env->localvar_getRefer(runtime, pos++);
+    __refer ptr_phsva = NULL;
+    if(phsva){
+        ptr_phsva = phsva->arr_body;
+    }
+    Instance *pin = env->localvar_getRefer(runtime, pos++);
+    __refer ptr_pin = NULL;
+    if(pin){
+        ptr_pin = pin->arr_body;
+    }
+
+    nk_colorf_hsva_fv((float*)(ptr_phsva), *(struct nk_colorf/*none_ptr*/*)(ptr_pin));
+    
     
     return 0;
 }
@@ -5630,6 +5809,31 @@ int org_mini_nk_NK_nk_color_fv(Runtime *runtime, Class *clazz) {
 
     nk_color_fv((float*)(ptr_prgba_out), *(struct nk_color/*none_ptr*/*)(ptr_parg1));
     
+    
+    return 0;
+}
+
+int org_mini_nk_NK_nk_color_cf(Runtime *runtime, Class *clazz) {
+    JniEnv *env = runtime->jnienv;
+    s32 pos = 0;
+    
+    Instance *parg0 = env->localvar_getRefer(runtime, pos++);
+    __refer ptr_parg0 = NULL;
+    if(parg0){
+        ptr_parg0 = parg0->arr_body;
+    }
+
+    struct nk_colorf/*none_ptr*/ _re_val = nk_color_cf(*(struct nk_color/*none_ptr*/*)(ptr_parg0));
+    f32* _ptr_re_val = (f32*)&_re_val;
+    s32 _struct_bytes = sizeof(_re_val);
+    if (_ptr_re_val) {
+        s32 _j_t_bytes = sizeof(f32);
+        Instance *_arr = env->jarray_create(_struct_bytes / _j_t_bytes, DATATYPE_FLOAT, NULL);
+        memcpy(_arr->arr_body, _ptr_re_val,_struct_bytes);
+        env->push_ref(runtime->stack, _arr);
+    } else {
+        env->push_ref(runtime->stack, NULL);
+    }
     
     return 0;
 }
@@ -9513,6 +9717,17 @@ int org_mini_nk_NK_nk_glfw3_init(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
+int org_mini_nk_NK_nk_glfw3_shutdown(Runtime *runtime, Class *clazz) {
+    JniEnv *env = runtime->jnienv;
+    s32 pos = 0;
+    
+
+    nk_glfw3_shutdown();
+    
+    
+    return 0;
+}
+
 int org_mini_nk_NK_nk_glfw3_font_stash_begin(Runtime *runtime, Class *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
@@ -9556,19 +9771,32 @@ int org_mini_nk_NK_nk_glfw3_render(Runtime *runtime, Class *clazz) {
     s32 pos = 0;
     
     s32 parg0 = env->localvar_getInt(runtime, pos++);
+    s32 pmax_vertex_buffer = env->localvar_getInt(runtime, pos++);
+    s32 pmax_element_buffer = env->localvar_getInt(runtime, pos++);
 
-    nk_glfw3_render((enum nk_anti_aliasing)parg0);
+    nk_glfw3_render((enum nk_anti_aliasing)parg0, (int)pmax_vertex_buffer, (int)pmax_element_buffer);
     
     
     return 0;
 }
 
-int org_mini_nk_NK_nk_glfw3_shutdown(Runtime *runtime, Class *clazz) {
+int org_mini_nk_NK_nk_glfw3_device_destroy(Runtime *runtime, Class *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
 
-    nk_glfw3_shutdown();
+    nk_glfw3_device_destroy();
+    
+    
+    return 0;
+}
+
+int org_mini_nk_NK_nk_glfw3_device_create(Runtime *runtime, Class *clazz) {
+    JniEnv *env = runtime->jnienv;
+    s32 pos = 0;
+    
+
+    nk_glfw3_device_create();
     
     
     return 0;
@@ -9596,6 +9824,21 @@ int org_mini_nk_NK_nk_gflw3_scroll_callback(Runtime *runtime, Class *clazz) {
     Long2Double pyoff;pyoff.l = env->localvar_getLong_2slot(runtime, pos);pos += 2;
 
     nk_gflw3_scroll_callback((GLFWwindow*/*ptr*/)(pwin), (double)pxoff.d, (double)pyoff.d);
+    
+    
+    return 0;
+}
+
+int org_mini_nk_NK_nk_glfw3_mouse_button_callback(Runtime *runtime, Class *clazz) {
+    JniEnv *env = runtime->jnienv;
+    s32 pos = 0;
+    
+    intptr_t pwin = env->localvar_getLong_2slot(runtime, pos);pos += 2;
+    s32 pbutton = env->localvar_getInt(runtime, pos++);
+    s32 paction = env->localvar_getInt(runtime, pos++);
+    s32 pmods = env->localvar_getInt(runtime, pos++);
+
+    nk_glfw3_mouse_button_callback((GLFWwindow*/*ptr*/)(pwin), (int)pbutton, (int)paction, (int)pmods);
     
     
     return 0;
@@ -9955,11 +10198,11 @@ static java_native_method method_nkclear_table[] = {
 {"org/mini/nk/NK",  "nk_window_get_content_region_size",  "(J)[F",  org_mini_nk_NK_nk_window_get_content_region_size},
 {"org/mini/nk/NK",  "nk_window_get_canvas",  "(J)J",  org_mini_nk_NK_nk_window_get_canvas},
 {"org/mini/nk/NK",  "nk_window_has_focus",  "(J)I",  org_mini_nk_NK_nk_window_has_focus},
+{"org/mini/nk/NK",  "nk_window_is_hovered",  "(J)I",  org_mini_nk_NK_nk_window_is_hovered},
 {"org/mini/nk/NK",  "nk_window_is_collapsed",  "(J[B)I",  org_mini_nk_NK_nk_window_is_collapsed},
 {"org/mini/nk/NK",  "nk_window_is_closed",  "(J[B)I",  org_mini_nk_NK_nk_window_is_closed},
 {"org/mini/nk/NK",  "nk_window_is_hidden",  "(J[B)I",  org_mini_nk_NK_nk_window_is_hidden},
 {"org/mini/nk/NK",  "nk_window_is_active",  "(J[B)I",  org_mini_nk_NK_nk_window_is_active},
-{"org/mini/nk/NK",  "nk_window_is_hovered",  "(J)I",  org_mini_nk_NK_nk_window_is_hovered},
 {"org/mini/nk/NK",  "nk_window_is_any_hovered",  "(J)I",  org_mini_nk_NK_nk_window_is_any_hovered},
 {"org/mini/nk/NK",  "nk_item_is_any_active",  "(J)I",  org_mini_nk_NK_nk_item_is_any_active},
 {"org/mini/nk/NK",  "nk_window_set_bounds",  "(J[B[F)V",  org_mini_nk_NK_nk_window_set_bounds},
@@ -9995,18 +10238,19 @@ static java_native_method method_nkclear_table[] = {
 {"org/mini/nk/NK",  "nk_layout_space_rect_to_screen",  "(J[F)[F",  org_mini_nk_NK_nk_layout_space_rect_to_screen},
 {"org/mini/nk/NK",  "nk_layout_space_rect_to_local",  "(J[F)[F",  org_mini_nk_NK_nk_layout_space_rect_to_local},
 {"org/mini/nk/NK",  "nk_group_begin",  "(J[BI)I",  org_mini_nk_NK_nk_group_begin},
+{"org/mini/nk/NK",  "nk_group_begin_titled",  "(J[B[BI)I",  org_mini_nk_NK_nk_group_begin_titled},
+{"org/mini/nk/NK",  "nk_group_end",  "(J)V",  org_mini_nk_NK_nk_group_end},
 {"org/mini/nk/NK",  "nk_group_scrolled_offset_begin",  "(J[I[I[BI)I",  org_mini_nk_NK_nk_group_scrolled_offset_begin},
 {"org/mini/nk/NK",  "nk_group_scrolled_begin",  "(J[I[BI)I",  org_mini_nk_NK_nk_group_scrolled_begin},
 {"org/mini/nk/NK",  "nk_group_scrolled_end",  "(J)V",  org_mini_nk_NK_nk_group_scrolled_end},
-{"org/mini/nk/NK",  "nk_group_end",  "(J)V",  org_mini_nk_NK_nk_group_end},
-{"org/mini/nk/NK",  "nk_list_view_begin",  "(JJ[BIII)I",  org_mini_nk_NK_nk_list_view_begin},
-{"org/mini/nk/NK",  "nk_list_view_end",  "(J)V",  org_mini_nk_NK_nk_list_view_end},
 {"org/mini/nk/NK",  "nk_tree_push_hashed",  "(JI[BI[BII)I",  org_mini_nk_NK_nk_tree_push_hashed},
 {"org/mini/nk/NK",  "nk_tree_image_push_hashed",  "(JI[B[BI[BII)I",  org_mini_nk_NK_nk_tree_image_push_hashed},
 {"org/mini/nk/NK",  "nk_tree_pop",  "(J)V",  org_mini_nk_NK_nk_tree_pop},
 {"org/mini/nk/NK",  "nk_tree_state_push",  "(JI[B[I)I",  org_mini_nk_NK_nk_tree_state_push},
 {"org/mini/nk/NK",  "nk_tree_state_image_push",  "(JI[B[B[I)I",  org_mini_nk_NK_nk_tree_state_image_push},
 {"org/mini/nk/NK",  "nk_tree_state_pop",  "(J)V",  org_mini_nk_NK_nk_tree_state_pop},
+{"org/mini/nk/NK",  "nk_list_view_begin",  "(JJ[BIII)I",  org_mini_nk_NK_nk_list_view_begin},
+{"org/mini/nk/NK",  "nk_list_view_end",  "(J)V",  org_mini_nk_NK_nk_list_view_end},
 {"org/mini/nk/NK",  "nk_widget",  "([FJ)I",  org_mini_nk_NK_nk_widget},
 {"org/mini/nk/NK",  "nk_widget_fitting",  "([FJ[F)I",  org_mini_nk_NK_nk_widget_fitting},
 {"org/mini/nk/NK",  "nk_widget_bounds",  "(J)[F",  org_mini_nk_NK_nk_widget_bounds},
@@ -10084,8 +10328,8 @@ static java_native_method method_nkclear_table[] = {
 {"org/mini/nk/NK",  "nk_slider_int",  "(JI[III)I",  org_mini_nk_NK_nk_slider_int},
 {"org/mini/nk/NK",  "nk_progress",  "(J[IJI)I",  org_mini_nk_NK_nk_progress},
 {"org/mini/nk/NK",  "nk_prog",  "(JJJI)J",  org_mini_nk_NK_nk_prog},
-{"org/mini/nk/NK",  "nk_color_picker",  "(J[II)[I",  org_mini_nk_NK_nk_color_picker},
-{"org/mini/nk/NK",  "nk_color_pick",  "(J[II)I",  org_mini_nk_NK_nk_color_pick},
+{"org/mini/nk/NK",  "nk_color_picker",  "(J[FI)[F",  org_mini_nk_NK_nk_color_picker},
+{"org/mini/nk/NK",  "nk_color_pick",  "(J[FI)I",  org_mini_nk_NK_nk_color_pick},
 {"org/mini/nk/NK",  "nk_property_int",  "(J[BI[IIIF)V",  org_mini_nk_NK_nk_property_int},
 {"org/mini/nk/NK",  "nk_property_float",  "(J[BF[FFFF)V",  org_mini_nk_NK_nk_property_float},
 {"org/mini/nk/NK",  "nk_property_double",  "(J[BD[DDDF)V",  org_mini_nk_NK_nk_property_double},
@@ -10191,6 +10435,7 @@ static java_native_method method_nkclear_table[] = {
 {"org/mini/nk/NK",  "nk_rgb_bv",  "([B)[I",  org_mini_nk_NK_nk_rgb_bv},
 {"org/mini/nk/NK",  "nk_rgb_f",  "(FFF)[I",  org_mini_nk_NK_nk_rgb_f},
 {"org/mini/nk/NK",  "nk_rgb_fv",  "([F)[I",  org_mini_nk_NK_nk_rgb_fv},
+{"org/mini/nk/NK",  "nk_rgb_cf",  "([F)[I",  org_mini_nk_NK_nk_rgb_cf},
 {"org/mini/nk/NK",  "nk_rgb_hex",  "([B)[I",  org_mini_nk_NK_nk_rgb_hex},
 {"org/mini/nk/NK",  "nk_rgba",  "(IIII)[I",  org_mini_nk_NK_nk_rgba},
 {"org/mini/nk/NK",  "nk_rgba_u32",  "(I)[I",  org_mini_nk_NK_nk_rgba_u32},
@@ -10198,7 +10443,12 @@ static java_native_method method_nkclear_table[] = {
 {"org/mini/nk/NK",  "nk_rgba_bv",  "([B)[I",  org_mini_nk_NK_nk_rgba_bv},
 {"org/mini/nk/NK",  "nk_rgba_f",  "(FFFF)[I",  org_mini_nk_NK_nk_rgba_f},
 {"org/mini/nk/NK",  "nk_rgba_fv",  "([F)[I",  org_mini_nk_NK_nk_rgba_fv},
+{"org/mini/nk/NK",  "nk_rgba_cf",  "([F)[I",  org_mini_nk_NK_nk_rgba_cf},
 {"org/mini/nk/NK",  "nk_rgba_hex",  "([B)[I",  org_mini_nk_NK_nk_rgba_hex},
+{"org/mini/nk/NK",  "nk_hsva_colorf",  "(FFFF)[F",  org_mini_nk_NK_nk_hsva_colorf},
+{"org/mini/nk/NK",  "nk_hsva_colorfv",  "([F)[F",  org_mini_nk_NK_nk_hsva_colorfv},
+{"org/mini/nk/NK",  "nk_colorf_hsva_f",  "([F[F[F[F[F)V",  org_mini_nk_NK_nk_colorf_hsva_f},
+{"org/mini/nk/NK",  "nk_colorf_hsva_fv",  "([F[F)V",  org_mini_nk_NK_nk_colorf_hsva_fv},
 {"org/mini/nk/NK",  "nk_hsv",  "(III)[I",  org_mini_nk_NK_nk_hsv},
 {"org/mini/nk/NK",  "nk_hsv_iv",  "([I)[I",  org_mini_nk_NK_nk_hsv_iv},
 {"org/mini/nk/NK",  "nk_hsv_bv",  "([B)[I",  org_mini_nk_NK_nk_hsv_bv},
@@ -10211,6 +10461,7 @@ static java_native_method method_nkclear_table[] = {
 {"org/mini/nk/NK",  "nk_hsva_fv",  "([F)[I",  org_mini_nk_NK_nk_hsva_fv},
 {"org/mini/nk/NK",  "nk_color_f",  "([F[F[F[F[I)V",  org_mini_nk_NK_nk_color_f},
 {"org/mini/nk/NK",  "nk_color_fv",  "([F[I)V",  org_mini_nk_NK_nk_color_fv},
+{"org/mini/nk/NK",  "nk_color_cf",  "([I)[F",  org_mini_nk_NK_nk_color_cf},
 {"org/mini/nk/NK",  "nk_color_d",  "([D[D[D[D[I)V",  org_mini_nk_NK_nk_color_d},
 {"org/mini/nk/NK",  "nk_color_dv",  "([D[I)V",  org_mini_nk_NK_nk_color_dv},
 {"org/mini/nk/NK",  "nk_color_u32",  "([I)I",  org_mini_nk_NK_nk_color_u32},
@@ -10412,13 +10663,16 @@ static java_native_method method_nkclear_table[] = {
 {"org/mini/nk/NK",  "nk_style_item_color",  "([I)[B",  org_mini_nk_NK_nk_style_item_color},
 {"org/mini/nk/NK",  "nk_style_item_hide",  "()[B",  org_mini_nk_NK_nk_style_item_hide},
 {"org/mini/nk/NK",  "nk_glfw3_init",  "(JI)J",  org_mini_nk_NK_nk_glfw3_init},
+{"org/mini/nk/NK",  "nk_glfw3_shutdown",  "()V",  org_mini_nk_NK_nk_glfw3_shutdown},
 {"org/mini/nk/NK",  "nk_glfw3_font_stash_begin",  "([J)V",  org_mini_nk_NK_nk_glfw3_font_stash_begin},
 {"org/mini/nk/NK",  "nk_glfw3_font_stash_end",  "()V",  org_mini_nk_NK_nk_glfw3_font_stash_end},
 {"org/mini/nk/NK",  "nk_glfw3_new_frame",  "()V",  org_mini_nk_NK_nk_glfw3_new_frame},
-{"org/mini/nk/NK",  "nk_glfw3_render",  "(I)V",  org_mini_nk_NK_nk_glfw3_render},
-{"org/mini/nk/NK",  "nk_glfw3_shutdown",  "()V",  org_mini_nk_NK_nk_glfw3_shutdown},
+{"org/mini/nk/NK",  "nk_glfw3_render",  "(III)V",  org_mini_nk_NK_nk_glfw3_render},
+{"org/mini/nk/NK",  "nk_glfw3_device_destroy",  "()V",  org_mini_nk_NK_nk_glfw3_device_destroy},
+{"org/mini/nk/NK",  "nk_glfw3_device_create",  "()V",  org_mini_nk_NK_nk_glfw3_device_create},
 {"org/mini/nk/NK",  "nk_glfw3_char_callback",  "(JI)V",  org_mini_nk_NK_nk_glfw3_char_callback},
 {"org/mini/nk/NK",  "nk_gflw3_scroll_callback",  "(JDD)V",  org_mini_nk_NK_nk_gflw3_scroll_callback},
+{"org/mini/nk/NK",  "nk_glfw3_mouse_button_callback",  "(JIII)V",  org_mini_nk_NK_nk_glfw3_mouse_button_callback},
 {"org/mini/nk/NK",  "nk_get_font_handle",  "(J)J",  org_mini_nk_NK_nk_get_font_handle},
 {"org/mini/nk/NK",  "nk_create_font_atlas",  "()[B",  org_mini_nk_NK_nk_create_font_atlas},
 {"org/mini/nk/NK",  "nk_set_font_cfg_range",  "(JJ)V",  org_mini_nk_NK_nk_set_font_cfg_range},

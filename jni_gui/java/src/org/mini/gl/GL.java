@@ -1342,7 +1342,7 @@ public class GL {
     public static final int GL_ARB_robustness = 1;
     public static final int GL_KHR_debug = 1;
 
-    public static native void init();// //
+    public static native void init();// //void
     public static native void glCullFace(int pmode); //GLenum, //void
     public static native void glFrontFace(int pmode); //GLenum, //void
     public static native void glHint(int ptarget, int pmode); //GLenum,GLenum, //void

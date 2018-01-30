@@ -3372,9 +3372,14 @@ s32 execute_method(MethodInfo *method, Runtime *pruntime, Class *clazz) {
                         jvm_printf("arraylength  [%llx].arr_body[%llx] len:%d  \n",
                                    (s64) (intptr_t) arr_ref, (s64) (intptr_t) arr_ref->arr_body, arr_ref->arr_length);
 #endif
-                        push_int(stack, arr_ref->arr_length);
-                        *opCode = *opCode + 1;
-
+                        if (arr_ref == NULL) {
+                            Instance *exception = exception_create(JVM_EXCEPTION_NULLPOINTER, runtime);
+                            push_ref(stack, (__refer) exception);
+                            i_r = RUNTIME_STATUS_EXCEPTION;
+                        } else {
+                            push_int(stack, arr_ref->arr_length);
+                            *opCode = *opCode + 1;
+                        }
                         break;
                     }
 

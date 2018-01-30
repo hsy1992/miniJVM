@@ -7,11 +7,17 @@ package org.mini.gui;
 
 import org.mini.glfw.utils.StbFont;
 import static org.mini.gl.GL.GL_COLOR_BUFFER_BIT;
+import static org.mini.gl.GL.GL_FALSE;
+import static org.mini.gl.GL.GL_TRUE;
 import static org.mini.gl.GL.glClear;
 import static org.mini.gl.GL.glViewport;
 import org.mini.glfw.Glfw;
 import static org.mini.glfw.Glfw.GLFW_CONTEXT_VERSION_MAJOR;
 import static org.mini.glfw.Glfw.GLFW_CONTEXT_VERSION_MINOR;
+import static org.mini.glfw.Glfw.GLFW_OPENGL_CORE_PROFILE;
+import static org.mini.glfw.Glfw.GLFW_OPENGL_FORWARD_COMPAT;
+import static org.mini.glfw.Glfw.GLFW_OPENGL_PROFILE;
+import static org.mini.glfw.Glfw.GLFW_RESIZABLE;
 import static org.mini.glfw.Glfw.glfwPollEvents;
 import static org.mini.glfw.Glfw.glfwSwapBuffers;
 import static org.mini.glfw.Glfw.glfwSwapInterval;
@@ -42,6 +48,8 @@ public class GForm extends GContainer implements Runnable {
     long nkfont;
     static StbFont gfont;
 
+    static int MAX_VERTEX_BUFFER = 512 * 1024;
+    static int MAX_ELEMENT_BUFFER = 128 * 1024;
     int[] unicode_range = {
         0x0020, 0xFFFF,
         0
@@ -79,8 +87,12 @@ public class GForm extends GContainer implements Runnable {
             System.out.println("glfw init error.");
             System.exit(1);
         }
-        glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 2);
-        glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 0);
+        glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
+        glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
+        glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
+        glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
+
+
         win = Glfw.glfwCreateWindow(width, height, title, 0, 0);
         if (win == 0) {
             glfwTerminate();
@@ -121,7 +133,7 @@ public class GForm extends GContainer implements Runnable {
                 //clear
                 glClear(GL_COLOR_BUFFER_BIT);
                 //render
-                nk_glfw3_render(NK.NK_ANTI_ALIASING_ON);
+                NK.nk_glfw3_render(NK.NK_ANTI_ALIASING_ON, MAX_VERTEX_BUFFER, MAX_ELEMENT_BUFFER);
                 glfwSwapBuffers(win);
             } catch (Exception ex) {
                 ex.printStackTrace();

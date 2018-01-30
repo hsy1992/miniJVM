@@ -1252,7 +1252,9 @@ public class Glfw {
 //        new SharedLibraryLoader().load("jglfw");
         System.setProperty("java.library.path", "../../jni_gui/cmake-build-debug/");
         System.loadLibrary("gui");
-        return glfwInitJni();
+        boolean b = glfwInitJni();
+        GL.init();
+        return b;
     }
 
     public static native boolean glfwInitJni();
@@ -1520,7 +1522,7 @@ public class Glfw {
 		glfwWindowHint(target, hint);
      */
     public static long glfwCreateWindow(int width, int height, String title, long monitor, long share) {
-        return glfwCreateWindowJni(width, height, title == null ? "MiniJvm\000".getBytes() : Gutil.toUtf8(title+"\000"), monitor, share);
+        return glfwCreateWindowJni(width, height, title == null ? "MiniJvm\000".getBytes() : Gutil.toUtf8(title + "\000"), monitor, share);
     }
 
     private static native long glfwCreateWindowJni(int width, int height, byte[] title, long monitor, long share);
@@ -1641,7 +1643,6 @@ public class Glfw {
     /*
 		return glfwGetWindowParam((GLFWwindow*)window, param);
      */
-
     public static native void glfwSetCallback(long window, GlfwCallback javaCallback);
 
     /*
