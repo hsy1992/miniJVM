@@ -888,7 +888,6 @@ int org_mini_glfw_Glfw_glfwCreateWindowJni(Runtime *runtime, Class *clazz) {
         glfwTerminate();
     }
     //
-    env->jvm_free(title);
     env->push_long(runtime->stack, (s64) (intptr_t) window);
     return 0;
 }
