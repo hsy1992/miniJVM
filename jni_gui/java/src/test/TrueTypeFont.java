@@ -8,13 +8,16 @@ package test;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
+import static org.mini.glfw.utils.Nutil.stbi_write_png;
+import static org.mini.glfw.utils.Nutil.stbtt_GetCodepointBitmapBox;
+import static org.mini.glfw.utils.Nutil.stbtt_GetCodepointHMetrics;
+import static org.mini.glfw.utils.Nutil.stbtt_GetCodepointKernAdvance;
+import static org.mini.glfw.utils.Nutil.stbtt_GetFontVMetrics;
+import static org.mini.glfw.utils.Nutil.stbtt_InitFont;
+import static org.mini.glfw.utils.Nutil.stbtt_MakeCodepointBitmapOffset;
+import static org.mini.glfw.utils.Nutil.stbtt_MakeFontInfo;
+import static org.mini.glfw.utils.Nutil.stbtt_ScaleForPixelHeight;
 import org.mini.gui.GToolkit;
-import org.mini.nk.NK;
-import static org.mini.nk.NK.stbtt_GetCodepointBitmapBox;
-import static org.mini.nk.NK.stbtt_GetCodepointHMetrics;
-import static org.mini.nk.NK.stbtt_GetCodepointKernAdvance;
-import static org.mini.nk.NK.stbtt_InitFont;
-import static org.mini.nk.NK.stbtt_ScaleForPixelHeight;
 
 /**
  *
@@ -59,7 +62,7 @@ public class TrueTypeFont {
             ex.printStackTrace();
         }
         /* prepare font */
-        info = NK.stbtt_MakeFontInfo();
+        info = stbtt_MakeFontInfo();
         long infoPtr = GToolkit.getArrayDataPtr(info);
         if (stbtt_InitFont(infoPtr, fontBuffer, 0) == 0) {
             System.out.println("failed\n");
@@ -81,7 +84,7 @@ public class TrueTypeFont {
         int x = 0;
 
         int[] ascent = {0}, descent = {0}, lineGap = {0};
-        NK.stbtt_GetFontVMetrics(infoPtr, ascent, descent, lineGap);
+        stbtt_GetFontVMetrics(infoPtr, ascent, descent, lineGap);
 
         ascent[0] *= scale;
         descent[0] *= scale;
@@ -99,7 +102,7 @@ public class TrueTypeFont {
 
             /* render character (stride and offset is important here) */
             int byteOffset = x + (y * b_w);
-            NK.stbtt_MakeCodepointBitmapOffset(infoPtr, bitmap, byteOffset, c_x2[0] - c_x1[0], c_y2[0] - c_y1[0], b_w, scale, scale, ch);
+            stbtt_MakeCodepointBitmapOffset(infoPtr, bitmap, byteOffset, c_x2[0] - c_x1[0], c_y2[0] - c_y1[0], b_w, scale, scale, ch);
 
             /* how wide is this character */
             int[] ax = {0}, bx = {0};
@@ -113,7 +116,7 @@ public class TrueTypeFont {
         }
 
         /* save out a 1 channel image */
-        NK.stbi_write_png("./out.png\000".getBytes(), b_w, b_h, 1, bitmapPtr, b_w);
+        stbi_write_png("./out.png\000".getBytes(), b_w, b_h, 1, bitmapPtr, b_w);
 
     }
 }

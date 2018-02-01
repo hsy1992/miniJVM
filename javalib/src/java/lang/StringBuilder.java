@@ -943,4 +943,11 @@ public class StringBuilder {
         return value;
     }
 
+    public int indexOf(String str) {
+        return toString().indexOf(str, 0);
+    }
+    
+    public int indexOf(String str, int fromIndex) {
+        return toString().indexOf(str, fromIndex);
+    }
 }

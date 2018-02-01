@@ -7,6 +7,10 @@
 
 //tag dont delete this line, builder will auto insert here
 
+
+
+#define NUTIL_API extern
+
 typedef struct _GlobeRefer GlobeRefer;
 extern GlobeRefer refers;
 
@@ -18,7 +22,15 @@ __refer ptr_GLFuncTable();
 
 s32 count_GLFuncTable();
 
-static void init(){}
+__refer ptr_GlfwFuncTable();
+
+s32 count_GlfwFuncTable();
+
+__refer ptr_NutilFuncTable();
+
+s32 count_NutilFuncTable();
+
+static void init() {}
 
 struct _GlobeRefer {
     JniEnv *env;
@@ -39,4 +51,14 @@ struct _GlobeRefer {
     MethodInfo *_callback_window_refresh;
     MethodInfo *_callback_framebuffer_size;
 };
+
+
+// dont delete the comment .for generate jni
+/*
+
+ */
+//implementation
+
+
+
 #endif //JNI_GUI_JNI_GLFW_H

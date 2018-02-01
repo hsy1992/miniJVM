@@ -113,7 +113,7 @@ public class GuiTest {
         @Override
         public void updateContents(long ctx, GFrame parent) {
             nk_layout_row_static(ctx, 30, 80, 1);
-            if (nk_true == nk_button_label(ctx, Gutil.toUtf8("Close"))) {
+            if (nk_true == nk_button_label(ctx, Gutil.toUtf8("Close\000"))) {
                 System.out.println("close pressed\n");
                 System.out.println(" show sub1 " + Integer.toHexString(parent.getFrameMode()));
                 nk_window_show(ctx, parent.getTitleBytes(), NK.NK_HIDDEN);
@@ -157,8 +157,8 @@ public class GuiTest {
             glfbRender = new GLFrameBufferPainter() {
                 @Override
                 public void paint() {
-                    light.setCamera();
-                    light.draw();
+//                    light.setCamera();
+//                    light.draw();
                 }
             };
             sub1 = new GFrame("子窗口", 100, 100, 300, 400, new NkFrameSub1());

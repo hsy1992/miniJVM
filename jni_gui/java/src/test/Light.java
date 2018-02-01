@@ -20,6 +20,7 @@ import static org.mini.gl.GL.GL_POSITION;
 import static org.mini.gl.GL.GL_SHININESS;
 import static org.mini.gl.GL.GL_SPECULAR;
 import static org.mini.gl.GL.GL_TEXTURE_2D;
+import static org.mini.gl.GL.GL_TRUE;
 import static org.mini.gl.GL.glBegin;
 import static org.mini.gl.GL.glBindTexture;
 import static org.mini.gl.GL.glClear;
@@ -39,6 +40,12 @@ import static org.mini.gl.GL.glTexCoord2f;
 import static org.mini.gl.GL.glTranslatef;
 import static org.mini.gl.GL.glVertex3f;
 import org.mini.glfw.Glfw;
+import static org.mini.glfw.Glfw.GLFW_CONTEXT_VERSION_MAJOR;
+import static org.mini.glfw.Glfw.GLFW_CONTEXT_VERSION_MINOR;
+import static org.mini.glfw.Glfw.GLFW_OPENGL_CORE_PROFILE;
+import static org.mini.glfw.Glfw.GLFW_OPENGL_FORWARD_COMPAT;
+import static org.mini.glfw.Glfw.GLFW_OPENGL_PROFILE;
+import static org.mini.glfw.Glfw.glfwWindowHint;
 import org.mini.glfw.GlfwCallbackAdapter;
 import org.mini.glfw.utils.Gutil;
 
@@ -68,6 +75,10 @@ public class Light {
 
     void t1() {
         Glfw.glfwInit();
+        glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
+        glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
+        glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
+        glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 1);
         long win = Glfw.glfwCreateWindow(500, 500, "hello glfw", 0, 0);
         if (win != 0) {
             Glfw.glfwSetCallback(win, new CallBack());

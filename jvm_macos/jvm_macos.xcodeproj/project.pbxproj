@@ -34,6 +34,7 @@
 		457249342020AFAA00349683 /* libc.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 457249332020AFAA00349683 /* libc.tbd */; };
 		457249362020AFB400349683 /* libpthread.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 457249352020AFB400349683 /* libpthread.tbd */; };
 		457249512020B3B500349683 /* dist in CopyFiles */ = {isa = PBXBuildFile; fileRef = 457249502020B38F00349683 /* dist */; };
+		457249992020B75700349683 /* dist in CopyFiles */ = {isa = PBXBuildFile; fileRef = 457249982020B74900349683 /* dist */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -43,6 +44,7 @@
 			dstPath = "";
 			dstSubfolderSpec = 16;
 			files = (
+				457249992020B75700349683 /* dist in CopyFiles */,
 				457249512020B3B500349683 /* dist in CopyFiles */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -96,6 +98,8 @@
 		457249332020AFAA00349683 /* libc.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libc.tbd; path = usr/lib/libc.tbd; sourceTree = SDKROOT; };
 		457249352020AFB400349683 /* libpthread.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libpthread.tbd; path = usr/lib/libpthread.tbd; sourceTree = SDKROOT; };
 		457249502020B38F00349683 /* dist */ = {isa = PBXFileReference; lastKnownFileType = folder; name = dist; path = ../javalib_test/dist; sourceTree = "<group>"; };
+		457249962020B71500349683 /* libgui.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libgui.dylib; path = "../jni_gui/cmake-build-debug/libgui.dylib"; sourceTree = "<group>"; };
+		457249982020B74900349683 /* dist */ = {isa = PBXFileReference; lastKnownFileType = folder; name = dist; path = ../jni_gui/java/dist; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -115,6 +119,7 @@
 			isa = PBXGroup;
 			children = (
 				457249502020B38F00349683 /* dist */,
+				457249982020B74900349683 /* dist */,
 				4572490F2020AD8000349683 /* utils */,
 				457248EF2020AD5300349683 /* jvm */,
 				457248E02020AAC600349683 /* jvm_macos */,
@@ -205,6 +210,7 @@
 		457249322020AFAA00349683 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				457249962020B71500349683 /* libgui.dylib */,
 				457249352020AFB400349683 /* libpthread.tbd */,
 				457249332020AFAA00349683 /* libc.tbd */,
 			);

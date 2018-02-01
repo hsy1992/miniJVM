@@ -9166,6 +9166,10 @@ nk_draw_list_alloc_elements(struct nk_draw_list *list, nk_size count)
     if (!ids) return 0;
     cmd = nk_draw_list_command_last(list);
     list->element_count += (unsigned int)count;
+    if(list->element_count>10000){
+        int debug=1;
+    }
+    printf("total: %d \n",list->element_count);
     cmd->elem_count += (unsigned int)count;
     return ids;
 }

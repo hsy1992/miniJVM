@@ -18,10 +18,13 @@ int call_jvm(char* app_path) {
     strcat(path,"/dist/lib/minijvm_rt.jar");
     strcat(path,";");
     strcat(path,app_path);
-    strcat(path,"/dist/minijvm_test.jar");
+    strcat(path,"/dist/gui_lib.jar");
     printf("classpath: %s\n",path);
+    java_debug=0;
     ArrayList * java_para=arraylist_create(0);
-    ret= execute_jvm(path, "test/Foo1", java_para);
+//    ret= execute_jvm(path, "test/Gears", java_para);
+//    ret= execute_jvm(path, "test/GuiTest", java_para);
+    ret= execute_jvm(path, "test/Light", java_para);
     arraylist_destory(java_para);
     return ret;
 }

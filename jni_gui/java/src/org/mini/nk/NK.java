@@ -871,17 +871,6 @@ public class NK {
     public static native void nk_set_font_cfg_range(long pfont_cfg, long prange); //struct nk_font_config*/*ptr*/,nk_rune*/*ptr*/, //void
     public static native long  nk_load_font_file(byte[] pfile_path, float pheight); //const char*,float, //struct nk_font*/*ptr*/ 
     public static native long  nk_load_font_memory(long pbytes, int psize, float pheight); //void*/*ptr*/,int,float, //struct nk_font*/*ptr*/ 
-    public static native int stbtt_InitFont(long pinfo, byte[] pdata2, int pfontstart); //stbtt_fontinfo*/*ptr*/,const unsigned char*,int, //int
-    public static native float stbtt_ScaleForPixelHeight(long pinfo, float ppixels); //const stbtt_fontinfo*/*ptr*/,float, //float
-    public static native void stbtt_GetFontVMetrics(long pinfo, int[] pascent, int[] pdescent, int[] plineGap); //const stbtt_fontinfo*/*ptr*/,int*,int*,int*, //void
-    public static native void stbtt_GetCodepointBitmapBox(long pfont, int pcodepoint, float pscale_x, float pscale_y, int[] pix0, int[] piy0, int[] pix1, int[] piy1); //const stbtt_fontinfo*/*ptr*/,int,float,float,int*,int*,int*,int*, //void
-    public static native void stbtt_MakeCodepointBitmapOffset(long pinfo, byte[] poutput, int poutput_offset, int pout_w, int pout_h, int pout_stride, float pscale_x, float pscale_y, int pcodepoint); //const stbtt_fontinfo*/*ptr*/,unsigned char*,int,int,int,int,float,float,int, //void
-    public static native void stbtt_GetCodepointHMetrics(long pinfo, int pcodepoint, int[] padvanceWidth, int[] pleftSideBearing); //const stbtt_fontinfo*/*ptr*/,int,int*,int*, //void
-    public static native int stbtt_GetCodepointKernAdvance(long pinfo, int pch1, int pch2); //const stbtt_fontinfo*/*ptr*/,int,int, //int
-    public static native byte[]  stbtt_MakeFontInfo(); // //struct stbtt_fontinfo/*none_ptr*/ 
-    public static native int stbi_write_png(byte[] pfilename, int pw, int ph, int pcomp, long pdata, int pstride_in_bytes); //char const*,int,int,int,const void*/*ptr*/,int, //int
-    public static native int stbi_write_bmp(byte[] pfilename, int pw, int ph, int pcomp, long pdata); //char const*,int,int,int,const void*/*ptr*/, //int
-    public static native int stbi_write_tga(byte[] pfilename, int pw, int ph, int pcomp, long pdata); //char const*,int,int,int,const void*/*ptr*/, //int
 
 }
 

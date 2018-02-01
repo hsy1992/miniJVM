@@ -4,6 +4,7 @@ project(jni_gui)
 
 #set(CMAKE_CXX_STANDARD 11)
 set(CMAKE_C_STANDARD 99)
+set(CMAKE_RUNTIME_OUTPUT_DIRECTORY /Users/Gust/Library/Developer/Xcode/DerivedData/jvm_macos-aztlknxrtoubcvefejqkudbbsjxo/Build/Products/Debug/)
 
 include_directories(deps/include/)
 
@@ -13,10 +14,12 @@ set(SOURCE_FILES
         jni_glfw.c
         jni_gl.c
         jni_nk.c
+        jni_gui.c
+        jni_nutil.c
         )
 add_executable(test_gui ${SOURCE_FILES})
 
-add_library(gui SHARED ${SOURCE_FILES} deps/include/glad/glad_jni_assist.h)
+add_library(gui SHARED ${SOURCE_FILES} )
 
 
 #find_package(OpenGL REQUIRED)
@@ -48,5 +51,7 @@ ELSEIF (MINGW)
     TARGET_LINK_LIBRARIES(test_gui ${MY_LIB})
     set(CMAKE_EXE_LINKER_FLAGS "-mwindows")
 ENDIF ()
+
+
 
 

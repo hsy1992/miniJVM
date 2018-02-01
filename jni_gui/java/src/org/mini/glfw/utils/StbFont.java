@@ -9,14 +9,16 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import org.mini.gl.GL;
+import static org.mini.glfw.utils.Nutil.stbtt_GetCodepointBitmapBox;
+import static org.mini.glfw.utils.Nutil.stbtt_GetCodepointHMetrics;
+import static org.mini.glfw.utils.Nutil.stbtt_GetCodepointKernAdvance;
+import static org.mini.glfw.utils.Nutil.stbtt_GetFontVMetrics;
+import static org.mini.glfw.utils.Nutil.stbtt_InitFont;
+import static org.mini.glfw.utils.Nutil.stbtt_MakeCodepointBitmapOffset;
+import static org.mini.glfw.utils.Nutil.stbtt_MakeFontInfo;
+import static org.mini.glfw.utils.Nutil.stbtt_ScaleForPixelHeight;
 import org.mini.gui.GImage;
 import org.mini.gui.GToolkit;
-import org.mini.nk.NK;
-import static org.mini.nk.NK.stbtt_GetCodepointBitmapBox;
-import static org.mini.nk.NK.stbtt_GetCodepointHMetrics;
-import static org.mini.nk.NK.stbtt_GetCodepointKernAdvance;
-import static org.mini.nk.NK.stbtt_InitFont;
-import static org.mini.nk.NK.stbtt_ScaleForPixelHeight;
 
 /**
  * warp stb_truetype.h - v0.6c - public domain ,
@@ -35,7 +37,9 @@ public class StbFont {
         int size;
 
         File fontFile = new File(fontPath);//"./wqymhei.ttc"
-        //    FILE* fontFile = fopen("../font/cmunrm.ttf", "rb");
+        if (!fontFile.exists()) {
+            fontFile = new File("./wqymhei.ttc");//
+        }
         size = (int) fontFile.length();
         /* how long is the file ? */
 
@@ -54,7 +58,7 @@ public class StbFont {
             ex.printStackTrace();
         }
         /* prepare font */
-        fontInfo = NK.stbtt_MakeFontInfo();
+        fontInfo = stbtt_MakeFontInfo();
         long infoPtr = GToolkit.getArrayDataPtr(fontInfo);
         if (stbtt_InitFont(infoPtr, fontBuffer, 0) == 0) {
             System.out.println("load font failed: " + fontPath);
@@ -81,7 +85,7 @@ public class StbFont {
         int x = 0;
 
         int[] ascent = {0}, descent = {0}, lineGap = {0};
-        NK.stbtt_GetFontVMetrics(infoPtr, ascent, descent, lineGap);
+        stbtt_GetFontVMetrics(infoPtr, ascent, descent, lineGap);
 
         ascent[0] *= scale;
         descent[0] *= scale;
@@ -132,7 +136,7 @@ public class StbFont {
         int x = 0;
 
         int[] ascent = {0}, descent = {0}, lineGap = {0};
-        NK.stbtt_GetFontVMetrics(infoPtr, ascent, descent, lineGap);
+        stbtt_GetFontVMetrics(infoPtr, ascent, descent, lineGap);
 
         ascent[0] *= scale;
         descent[0] *= scale;
@@ -148,10 +152,13 @@ public class StbFont {
 
             /* compute y (different characters have different heights */
             int y = ascent[0] + c_y1[0];
+            if (y < 0) {
+                y = 0;
+            }
 
             /* render character (stride and offset is important here) */
             int byteOffset = x + (y * pic_width);
-            NK.stbtt_MakeCodepointBitmapOffset(infoPtr, bitmap, byteOffset, c_x2[0] - c_x1[0], c_y2[0] - c_y1[0], pic_width, scale, scale, ch);
+            stbtt_MakeCodepointBitmapOffset(infoPtr, bitmap, byteOffset, c_x2[0] - c_x1[0], c_y2[0] - c_y1[0], pic_width, scale, scale, ch);
 
             /* how wide is this character */
             stbtt_GetCodepointHMetrics(infoPtr, ch, ax, bx);
