@@ -1594,7 +1594,7 @@ STBTT_DEF int stbtt_IsGlyphEmpty(const stbtt_fontinfo *info, int glyph_index)
    return numberOfContours == 0;
 }
 
-static int stbtt__close_shape1(stbtt_vertex *vertices, int num_vertices, int was_off, int start_off,
+static int stbtt__close_shape(stbtt_vertex *vertices, int num_vertices, int was_off, int start_off,
     stbtt_int32 sx, stbtt_int32 sy, stbtt_int32 scx, stbtt_int32 scy, stbtt_int32 cx, stbtt_int32 cy)
 {
    if (start_off) {
@@ -1704,7 +1704,7 @@ static int stbtt__GetGlyphShapeTT(const stbtt_fontinfo *info, int glyph_index, s
 
          if (next_move == i) {
             if (i != 0)
-               num_vertices = stbtt__close_shape1(vertices, num_vertices, was_off, start_off, sx,sy,scx,scy,cx,cy);
+               num_vertices = stbtt__close_shape(vertices, num_vertices, was_off, start_off, sx,sy,scx,scy,cx,cy);
 
             // now start the new one               
             start_off = !(flags & 1);
@@ -1747,7 +1747,7 @@ static int stbtt__GetGlyphShapeTT(const stbtt_fontinfo *info, int glyph_index, s
             }
          }
       }
-      num_vertices = stbtt__close_shape1(vertices, num_vertices, was_off, start_off, sx,sy,scx,scy,cx,cy);
+      num_vertices = stbtt__close_shape(vertices, num_vertices, was_off, start_off, sx,sy,scx,scy,cx,cy);
    } else if (numberOfContours == -1) {
       // Compound shapes.
       int more = 1;
