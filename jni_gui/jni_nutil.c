@@ -5,10 +5,20 @@
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
 
-#define STB_TRUETYPE_IMPLEMENTATION
+//#define STB_TRUETYPE_IMPLEMENTATION
 #include <stb_truetype.h>
 #define STB_IMAGE_WRITE_IMPLEMENTATION
 #include <stb_image_write.h>
+
+//#define STB_IMAGE_IMPLEMENTATION
+#include <stb_image.h>
+
+
+#include <nanovg/nanovg.h>
+#define NANOVG_GL3_IMPLEMENTATION
+#include <nanovg/nanovg_gl.h>
+
+
 
 
 #include "../mini_jvm/jvm/jvm.h"
@@ -252,6 +262,1864 @@ int org_mini_glfw_utils_Nutil_stbi_write_tga(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
+int org_mini_glfw_utils_Nutil_stbi_load(Runtime *runtime, Class *clazz) {
+    JniEnv *env = runtime->jnienv;
+    s32 pos = 0;
+    
+    Instance *pfilename = env->localvar_getRefer(runtime, pos++);
+    __refer ptr_pfilename = NULL;
+    if(pfilename){
+        ptr_pfilename = pfilename->arr_body;
+    }
+    Instance *px = env->localvar_getRefer(runtime, pos++);
+    __refer ptr_px = NULL;
+    if(px){
+        ptr_px = px->arr_body;
+    }
+    Instance *py = env->localvar_getRefer(runtime, pos++);
+    __refer ptr_py = NULL;
+    if(py){
+        ptr_py = py->arr_body;
+    }
+    Instance *pcomp = env->localvar_getRefer(runtime, pos++);
+    __refer ptr_pcomp = NULL;
+    if(pcomp){
+        ptr_pcomp = pcomp->arr_body;
+    }
+    s32 preq_comp = env->localvar_getInt(runtime, pos++);
+
+    stbi_uc*/*ptr*/ _re_val = stbi_load((char const*)(ptr_pfilename), (int*)(ptr_px), (int*)(ptr_py), (int*)(ptr_pcomp), (int)preq_comp);
+    s64 ret_value = (s64)(intptr_t)_re_val;env->push_long(runtime->stack, ret_value);
+    
+    return 0;
+}
+
+int org_mini_glfw_utils_Nutil_stbi_load_from_memory(Runtime *runtime, Class *clazz) {
+    JniEnv *env = runtime->jnienv;
+    s32 pos = 0;
+    
+    intptr_t pbuffer = env->localvar_getLong_2slot(runtime, pos);pos += 2;
+    s32 plen = env->localvar_getInt(runtime, pos++);
+    Instance *px = env->localvar_getRefer(runtime, pos++);
+    __refer ptr_px = NULL;
+    if(px){
+        ptr_px = px->arr_body;
+    }
+    Instance *py = env->localvar_getRefer(runtime, pos++);
+    __refer ptr_py = NULL;
+    if(py){
+        ptr_py = py->arr_body;
+    }
+    Instance *pcomp = env->localvar_getRefer(runtime, pos++);
+    __refer ptr_pcomp = NULL;
+    if(pcomp){
+        ptr_pcomp = pcomp->arr_body;
+    }
+    s32 preq_comp = env->localvar_getInt(runtime, pos++);
+
+    stbi_uc*/*ptr*/ _re_val = stbi_load_from_memory((stbi_uc const*/*ptr*/)(pbuffer), (int)plen, (int*)(ptr_px), (int*)(ptr_py), (int*)(ptr_pcomp), (int)preq_comp);
+    s64 ret_value = (s64)(intptr_t)_re_val;env->push_long(runtime->stack, ret_value);
+    
+    return 0;
+}
+
+int org_mini_glfw_utils_Nutil_stbi_image_free(Runtime *runtime, Class *clazz) {
+    JniEnv *env = runtime->jnienv;
+    s32 pos = 0;
+    
+    intptr_t pretval_from_stbi_load = env->localvar_getLong_2slot(runtime, pos);pos += 2;
+
+    stbi_image_free((void*/*ptr*/)(pretval_from_stbi_load));
+    
+    
+    return 0;
+}
+
+int org_mini_glfw_utils_Nutil_nvgBeginFrame(Runtime *runtime, Class *clazz) {
+    JniEnv *env = runtime->jnienv;
+    s32 pos = 0;
+    
+    intptr_t pctx = env->localvar_getLong_2slot(runtime, pos);pos += 2;
+    s32 pwindowWidth = env->localvar_getInt(runtime, pos++);
+    s32 pwindowHeight = env->localvar_getInt(runtime, pos++);
+    Int2Float pdevicePixelRatio;pdevicePixelRatio.i = env->localvar_getInt(runtime, pos++);
+
+    nvgBeginFrame((NVGcontext*/*ptr*/)(pctx), (int)pwindowWidth, (int)pwindowHeight, (float)pdevicePixelRatio.f);
+    
+    
+    return 0;
+}
+
+int org_mini_glfw_utils_Nutil_nvgCancelFrame(Runtime *runtime, Class *clazz) {
+    JniEnv *env = runtime->jnienv;
+    s32 pos = 0;
+    
+    intptr_t pctx = env->localvar_getLong_2slot(runtime, pos);pos += 2;
+
+    nvgCancelFrame((NVGcontext*/*ptr*/)(pctx));
+    
+    
+    return 0;
+}
+
+int org_mini_glfw_utils_Nutil_nvgEndFrame(Runtime *runtime, Class *clazz) {
+    JniEnv *env = runtime->jnienv;
+    s32 pos = 0;
+    
+    intptr_t pctx = env->localvar_getLong_2slot(runtime, pos);pos += 2;
+
+    nvgEndFrame((NVGcontext*/*ptr*/)(pctx));
+    
+    
+    return 0;
+}
+
+int org_mini_glfw_utils_Nutil_nvgGlobalCompositeOperation(Runtime *runtime, Class *clazz) {
+    JniEnv *env = runtime->jnienv;
+    s32 pos = 0;
+    
+    intptr_t pctx = env->localvar_getLong_2slot(runtime, pos);pos += 2;
+    s32 pop = env->localvar_getInt(runtime, pos++);
+
+    nvgGlobalCompositeOperation((NVGcontext*/*ptr*/)(pctx), (int)pop);
+    
+    
+    return 0;
+}
+
+int org_mini_glfw_utils_Nutil_nvgGlobalCompositeBlendFunc(Runtime *runtime, Class *clazz) {
+    JniEnv *env = runtime->jnienv;
+    s32 pos = 0;
+    
+    intptr_t pctx = env->localvar_getLong_2slot(runtime, pos);pos += 2;
+    s32 psfactor = env->localvar_getInt(runtime, pos++);
+    s32 pdfactor = env->localvar_getInt(runtime, pos++);
+
+    nvgGlobalCompositeBlendFunc((NVGcontext*/*ptr*/)(pctx), (int)psfactor, (int)pdfactor);
+    
+    
+    return 0;
+}
+
+int org_mini_glfw_utils_Nutil_nvgGlobalCompositeBlendFuncSeparate(Runtime *runtime, Class *clazz) {
+    JniEnv *env = runtime->jnienv;
+    s32 pos = 0;
+    
+    intptr_t pctx = env->localvar_getLong_2slot(runtime, pos);pos += 2;
+    s32 psrcRGB = env->localvar_getInt(runtime, pos++);
+    s32 pdstRGB = env->localvar_getInt(runtime, pos++);
+    s32 psrcAlpha = env->localvar_getInt(runtime, pos++);
+    s32 pdstAlpha = env->localvar_getInt(runtime, pos++);
+
+    nvgGlobalCompositeBlendFuncSeparate((NVGcontext*/*ptr*/)(pctx), (int)psrcRGB, (int)pdstRGB, (int)psrcAlpha, (int)pdstAlpha);
+    
+    
+    return 0;
+}
+
+int org_mini_glfw_utils_Nutil_nvgRGB(Runtime *runtime, Class *clazz) {
+    JniEnv *env = runtime->jnienv;
+    s32 pos = 0;
+    
+    s32 pr = env->localvar_getInt(runtime, pos++);
+    s32 pg = env->localvar_getInt(runtime, pos++);
+    s32 pb = env->localvar_getInt(runtime, pos++);
+
+    NVGcolor/*none_ptr*/ _re_val = nvgRGB((unsigned char)pr, (unsigned char)pg, (unsigned char)pb);
+    f32* _ptr_re_val = (f32*)&_re_val;
+    s32 _struct_bytes = sizeof(_re_val);
+    if (_ptr_re_val) {
+        s32 _j_t_bytes = sizeof(f32);
+        Instance *_arr = env->jarray_create(_struct_bytes / _j_t_bytes, DATATYPE_FLOAT, NULL);
+        memcpy(_arr->arr_body, _ptr_re_val,_struct_bytes);
+        env->push_ref(runtime->stack, _arr);
+    } else {
+        env->push_ref(runtime->stack, NULL);
+    }
+    
+    return 0;
+}
+
+int org_mini_glfw_utils_Nutil_nvgRGBf(Runtime *runtime, Class *clazz) {
+    JniEnv *env = runtime->jnienv;
+    s32 pos = 0;
+    
+    Int2Float pr;pr.i = env->localvar_getInt(runtime, pos++);
+    Int2Float pg;pg.i = env->localvar_getInt(runtime, pos++);
+    Int2Float pb;pb.i = env->localvar_getInt(runtime, pos++);
+
+    NVGcolor/*none_ptr*/ _re_val = nvgRGBf((float)pr.f, (float)pg.f, (float)pb.f);
+    f32* _ptr_re_val = (f32*)&_re_val;
+    s32 _struct_bytes = sizeof(_re_val);
+    if (_ptr_re_val) {
+        s32 _j_t_bytes = sizeof(f32);
+        Instance *_arr = env->jarray_create(_struct_bytes / _j_t_bytes, DATATYPE_FLOAT, NULL);
+        memcpy(_arr->arr_body, _ptr_re_val,_struct_bytes);
+        env->push_ref(runtime->stack, _arr);
+    } else {
+        env->push_ref(runtime->stack, NULL);
+    }
+    
+    return 0;
+}
+
+int org_mini_glfw_utils_Nutil_nvgRGBA(Runtime *runtime, Class *clazz) {
+    JniEnv *env = runtime->jnienv;
+    s32 pos = 0;
+    
+    s32 pr = env->localvar_getInt(runtime, pos++);
+    s32 pg = env->localvar_getInt(runtime, pos++);
+    s32 pb = env->localvar_getInt(runtime, pos++);
+    s32 pa = env->localvar_getInt(runtime, pos++);
+
+    NVGcolor/*none_ptr*/ _re_val = nvgRGBA((unsigned char)pr, (unsigned char)pg, (unsigned char)pb, (unsigned char)pa);
+    f32* _ptr_re_val = (f32*)&_re_val;
+    s32 _struct_bytes = sizeof(_re_val);
+    if (_ptr_re_val) {
+        s32 _j_t_bytes = sizeof(f32);
+        Instance *_arr = env->jarray_create(_struct_bytes / _j_t_bytes, DATATYPE_FLOAT, NULL);
+        memcpy(_arr->arr_body, _ptr_re_val,_struct_bytes);
+        env->push_ref(runtime->stack, _arr);
+    } else {
+        env->push_ref(runtime->stack, NULL);
+    }
+    
+    return 0;
+}
+
+int org_mini_glfw_utils_Nutil_nvgRGBAf(Runtime *runtime, Class *clazz) {
+    JniEnv *env = runtime->jnienv;
+    s32 pos = 0;
+    
+    Int2Float pr;pr.i = env->localvar_getInt(runtime, pos++);
+    Int2Float pg;pg.i = env->localvar_getInt(runtime, pos++);
+    Int2Float pb;pb.i = env->localvar_getInt(runtime, pos++);
+    Int2Float pa;pa.i = env->localvar_getInt(runtime, pos++);
+
+    NVGcolor/*none_ptr*/ _re_val = nvgRGBAf((float)pr.f, (float)pg.f, (float)pb.f, (float)pa.f);
+    f32* _ptr_re_val = (f32*)&_re_val;
+    s32 _struct_bytes = sizeof(_re_val);
+    if (_ptr_re_val) {
+        s32 _j_t_bytes = sizeof(f32);
+        Instance *_arr = env->jarray_create(_struct_bytes / _j_t_bytes, DATATYPE_FLOAT, NULL);
+        memcpy(_arr->arr_body, _ptr_re_val,_struct_bytes);
+        env->push_ref(runtime->stack, _arr);
+    } else {
+        env->push_ref(runtime->stack, NULL);
+    }
+    
+    return 0;
+}
+
+int org_mini_glfw_utils_Nutil_nvgLerpRGBA(Runtime *runtime, Class *clazz) {
+    JniEnv *env = runtime->jnienv;
+    s32 pos = 0;
+    
+    Instance *pc0 = env->localvar_getRefer(runtime, pos++);
+    __refer ptr_pc0 = NULL;
+    if(pc0){
+        ptr_pc0 = pc0->arr_body;
+    }
+    Instance *pc1 = env->localvar_getRefer(runtime, pos++);
+    __refer ptr_pc1 = NULL;
+    if(pc1){
+        ptr_pc1 = pc1->arr_body;
+    }
+    Int2Float pu;pu.i = env->localvar_getInt(runtime, pos++);
+
+    NVGcolor/*none_ptr*/ _re_val = nvgLerpRGBA(*(NVGcolor/*none_ptr*/*)(ptr_pc0), *(NVGcolor/*none_ptr*/*)(ptr_pc1), (float)pu.f);
+    f32* _ptr_re_val = (f32*)&_re_val;
+    s32 _struct_bytes = sizeof(_re_val);
+    if (_ptr_re_val) {
+        s32 _j_t_bytes = sizeof(f32);
+        Instance *_arr = env->jarray_create(_struct_bytes / _j_t_bytes, DATATYPE_FLOAT, NULL);
+        memcpy(_arr->arr_body, _ptr_re_val,_struct_bytes);
+        env->push_ref(runtime->stack, _arr);
+    } else {
+        env->push_ref(runtime->stack, NULL);
+    }
+    
+    return 0;
+}
+
+int org_mini_glfw_utils_Nutil_nvgTransRGBA(Runtime *runtime, Class *clazz) {
+    JniEnv *env = runtime->jnienv;
+    s32 pos = 0;
+    
+    Instance *pc0 = env->localvar_getRefer(runtime, pos++);
+    __refer ptr_pc0 = NULL;
+    if(pc0){
+        ptr_pc0 = pc0->arr_body;
+    }
+    s32 pa = env->localvar_getInt(runtime, pos++);
+
+    NVGcolor/*none_ptr*/ _re_val = nvgTransRGBA(*(NVGcolor/*none_ptr*/*)(ptr_pc0), (unsigned char)pa);
+    f32* _ptr_re_val = (f32*)&_re_val;
+    s32 _struct_bytes = sizeof(_re_val);
+    if (_ptr_re_val) {
+        s32 _j_t_bytes = sizeof(f32);
+        Instance *_arr = env->jarray_create(_struct_bytes / _j_t_bytes, DATATYPE_FLOAT, NULL);
+        memcpy(_arr->arr_body, _ptr_re_val,_struct_bytes);
+        env->push_ref(runtime->stack, _arr);
+    } else {
+        env->push_ref(runtime->stack, NULL);
+    }
+    
+    return 0;
+}
+
+int org_mini_glfw_utils_Nutil_nvgTransRGBAf(Runtime *runtime, Class *clazz) {
+    JniEnv *env = runtime->jnienv;
+    s32 pos = 0;
+    
+    Instance *pc0 = env->localvar_getRefer(runtime, pos++);
+    __refer ptr_pc0 = NULL;
+    if(pc0){
+        ptr_pc0 = pc0->arr_body;
+    }
+    Int2Float pa;pa.i = env->localvar_getInt(runtime, pos++);
+
+    NVGcolor/*none_ptr*/ _re_val = nvgTransRGBAf(*(NVGcolor/*none_ptr*/*)(ptr_pc0), (float)pa.f);
+    f32* _ptr_re_val = (f32*)&_re_val;
+    s32 _struct_bytes = sizeof(_re_val);
+    if (_ptr_re_val) {
+        s32 _j_t_bytes = sizeof(f32);
+        Instance *_arr = env->jarray_create(_struct_bytes / _j_t_bytes, DATATYPE_FLOAT, NULL);
+        memcpy(_arr->arr_body, _ptr_re_val,_struct_bytes);
+        env->push_ref(runtime->stack, _arr);
+    } else {
+        env->push_ref(runtime->stack, NULL);
+    }
+    
+    return 0;
+}
+
+int org_mini_glfw_utils_Nutil_nvgHSL(Runtime *runtime, Class *clazz) {
+    JniEnv *env = runtime->jnienv;
+    s32 pos = 0;
+    
+    Int2Float ph;ph.i = env->localvar_getInt(runtime, pos++);
+    Int2Float ps;ps.i = env->localvar_getInt(runtime, pos++);
+    Int2Float pl;pl.i = env->localvar_getInt(runtime, pos++);
+
+    NVGcolor/*none_ptr*/ _re_val = nvgHSL((float)ph.f, (float)ps.f, (float)pl.f);
+    f32* _ptr_re_val = (f32*)&_re_val;
+    s32 _struct_bytes = sizeof(_re_val);
+    if (_ptr_re_val) {
+        s32 _j_t_bytes = sizeof(f32);
+        Instance *_arr = env->jarray_create(_struct_bytes / _j_t_bytes, DATATYPE_FLOAT, NULL);
+        memcpy(_arr->arr_body, _ptr_re_val,_struct_bytes);
+        env->push_ref(runtime->stack, _arr);
+    } else {
+        env->push_ref(runtime->stack, NULL);
+    }
+    
+    return 0;
+}
+
+int org_mini_glfw_utils_Nutil_nvgHSLA(Runtime *runtime, Class *clazz) {
+    JniEnv *env = runtime->jnienv;
+    s32 pos = 0;
+    
+    Int2Float ph;ph.i = env->localvar_getInt(runtime, pos++);
+    Int2Float ps;ps.i = env->localvar_getInt(runtime, pos++);
+    Int2Float pl;pl.i = env->localvar_getInt(runtime, pos++);
+    s32 pa = env->localvar_getInt(runtime, pos++);
+
+    NVGcolor/*none_ptr*/ _re_val = nvgHSLA((float)ph.f, (float)ps.f, (float)pl.f, (unsigned char)pa);
+    f32* _ptr_re_val = (f32*)&_re_val;
+    s32 _struct_bytes = sizeof(_re_val);
+    if (_ptr_re_val) {
+        s32 _j_t_bytes = sizeof(f32);
+        Instance *_arr = env->jarray_create(_struct_bytes / _j_t_bytes, DATATYPE_FLOAT, NULL);
+        memcpy(_arr->arr_body, _ptr_re_val,_struct_bytes);
+        env->push_ref(runtime->stack, _arr);
+    } else {
+        env->push_ref(runtime->stack, NULL);
+    }
+    
+    return 0;
+}
+
+int org_mini_glfw_utils_Nutil_nvgSave(Runtime *runtime, Class *clazz) {
+    JniEnv *env = runtime->jnienv;
+    s32 pos = 0;
+    
+    intptr_t pctx = env->localvar_getLong_2slot(runtime, pos);pos += 2;
+
+    nvgSave((NVGcontext*/*ptr*/)(pctx));
+    
+    
+    return 0;
+}
+
+int org_mini_glfw_utils_Nutil_nvgRestore(Runtime *runtime, Class *clazz) {
+    JniEnv *env = runtime->jnienv;
+    s32 pos = 0;
+    
+    intptr_t pctx = env->localvar_getLong_2slot(runtime, pos);pos += 2;
+
+    nvgRestore((NVGcontext*/*ptr*/)(pctx));
+    
+    
+    return 0;
+}
+
+int org_mini_glfw_utils_Nutil_nvgReset(Runtime *runtime, Class *clazz) {
+    JniEnv *env = runtime->jnienv;
+    s32 pos = 0;
+    
+    intptr_t pctx = env->localvar_getLong_2slot(runtime, pos);pos += 2;
+
+    nvgReset((NVGcontext*/*ptr*/)(pctx));
+    
+    
+    return 0;
+}
+
+int org_mini_glfw_utils_Nutil_nvgShapeAntiAlias(Runtime *runtime, Class *clazz) {
+    JniEnv *env = runtime->jnienv;
+    s32 pos = 0;
+    
+    intptr_t pctx = env->localvar_getLong_2slot(runtime, pos);pos += 2;
+    s32 penabled = env->localvar_getInt(runtime, pos++);
+
+    nvgShapeAntiAlias((NVGcontext*/*ptr*/)(pctx), (int)penabled);
+    
+    
+    return 0;
+}
+
+int org_mini_glfw_utils_Nutil_nvgStrokeColor(Runtime *runtime, Class *clazz) {
+    JniEnv *env = runtime->jnienv;
+    s32 pos = 0;
+    
+    intptr_t pctx = env->localvar_getLong_2slot(runtime, pos);pos += 2;
+    Instance *pcolor = env->localvar_getRefer(runtime, pos++);
+    __refer ptr_pcolor = NULL;
+    if(pcolor){
+        ptr_pcolor = pcolor->arr_body;
+    }
+
+    nvgStrokeColor((NVGcontext*/*ptr*/)(pctx), *(NVGcolor/*none_ptr*/*)(ptr_pcolor));
+    
+    
+    return 0;
+}
+
+int org_mini_glfw_utils_Nutil_nvgStrokePaint(Runtime *runtime, Class *clazz) {
+    JniEnv *env = runtime->jnienv;
+    s32 pos = 0;
+    
+    intptr_t pctx = env->localvar_getLong_2slot(runtime, pos);pos += 2;
+    Instance *ppaint = env->localvar_getRefer(runtime, pos++);
+    __refer ptr_ppaint = NULL;
+    if(ppaint){
+        ptr_ppaint = ppaint->arr_body;
+    }
+
+    nvgStrokePaint((NVGcontext*/*ptr*/)(pctx), *(NVGpaint/*none_ptr*/*)(ptr_ppaint));
+    
+    
+    return 0;
+}
+
+int org_mini_glfw_utils_Nutil_nvgFillColor(Runtime *runtime, Class *clazz) {
+    JniEnv *env = runtime->jnienv;
+    s32 pos = 0;
+    
+    intptr_t pctx = env->localvar_getLong_2slot(runtime, pos);pos += 2;
+    Instance *pcolor = env->localvar_getRefer(runtime, pos++);
+    __refer ptr_pcolor = NULL;
+    if(pcolor){
+        ptr_pcolor = pcolor->arr_body;
+    }
+
+    nvgFillColor((NVGcontext*/*ptr*/)(pctx), *(NVGcolor/*none_ptr*/*)(ptr_pcolor));
+    
+    
+    return 0;
+}
+
+int org_mini_glfw_utils_Nutil_nvgFillPaint(Runtime *runtime, Class *clazz) {
+    JniEnv *env = runtime->jnienv;
+    s32 pos = 0;
+    
+    intptr_t pctx = env->localvar_getLong_2slot(runtime, pos);pos += 2;
+    Instance *ppaint = env->localvar_getRefer(runtime, pos++);
+    __refer ptr_ppaint = NULL;
+    if(ppaint){
+        ptr_ppaint = ppaint->arr_body;
+    }
+
+    nvgFillPaint((NVGcontext*/*ptr*/)(pctx), *(NVGpaint/*none_ptr*/*)(ptr_ppaint));
+    
+    
+    return 0;
+}
+
+int org_mini_glfw_utils_Nutil_nvgMiterLimit(Runtime *runtime, Class *clazz) {
+    JniEnv *env = runtime->jnienv;
+    s32 pos = 0;
+    
+    intptr_t pctx = env->localvar_getLong_2slot(runtime, pos);pos += 2;
+    Int2Float plimit;plimit.i = env->localvar_getInt(runtime, pos++);
+
+    nvgMiterLimit((NVGcontext*/*ptr*/)(pctx), (float)plimit.f);
+    
+    
+    return 0;
+}
+
+int org_mini_glfw_utils_Nutil_nvgStrokeWidth(Runtime *runtime, Class *clazz) {
+    JniEnv *env = runtime->jnienv;
+    s32 pos = 0;
+    
+    intptr_t pctx = env->localvar_getLong_2slot(runtime, pos);pos += 2;
+    Int2Float psize;psize.i = env->localvar_getInt(runtime, pos++);
+
+    nvgStrokeWidth((NVGcontext*/*ptr*/)(pctx), (float)psize.f);
+    
+    
+    return 0;
+}
+
+int org_mini_glfw_utils_Nutil_nvgLineCap(Runtime *runtime, Class *clazz) {
+    JniEnv *env = runtime->jnienv;
+    s32 pos = 0;
+    
+    intptr_t pctx = env->localvar_getLong_2slot(runtime, pos);pos += 2;
+    s32 pcap = env->localvar_getInt(runtime, pos++);
+
+    nvgLineCap((NVGcontext*/*ptr*/)(pctx), (int)pcap);
+    
+    
+    return 0;
+}
+
+int org_mini_glfw_utils_Nutil_nvgLineJoin(Runtime *runtime, Class *clazz) {
+    JniEnv *env = runtime->jnienv;
+    s32 pos = 0;
+    
+    intptr_t pctx = env->localvar_getLong_2slot(runtime, pos);pos += 2;
+    s32 pjoin = env->localvar_getInt(runtime, pos++);
+
+    nvgLineJoin((NVGcontext*/*ptr*/)(pctx), (int)pjoin);
+    
+    
+    return 0;
+}
+
+int org_mini_glfw_utils_Nutil_nvgGlobalAlpha(Runtime *runtime, Class *clazz) {
+    JniEnv *env = runtime->jnienv;
+    s32 pos = 0;
+    
+    intptr_t pctx = env->localvar_getLong_2slot(runtime, pos);pos += 2;
+    Int2Float palpha;palpha.i = env->localvar_getInt(runtime, pos++);
+
+    nvgGlobalAlpha((NVGcontext*/*ptr*/)(pctx), (float)palpha.f);
+    
+    
+    return 0;
+}
+
+int org_mini_glfw_utils_Nutil_nvgResetTransform(Runtime *runtime, Class *clazz) {
+    JniEnv *env = runtime->jnienv;
+    s32 pos = 0;
+    
+    intptr_t pctx = env->localvar_getLong_2slot(runtime, pos);pos += 2;
+
+    nvgResetTransform((NVGcontext*/*ptr*/)(pctx));
+    
+    
+    return 0;
+}
+
+int org_mini_glfw_utils_Nutil_nvgTransform(Runtime *runtime, Class *clazz) {
+    JniEnv *env = runtime->jnienv;
+    s32 pos = 0;
+    
+    intptr_t pctx = env->localvar_getLong_2slot(runtime, pos);pos += 2;
+    Int2Float pa;pa.i = env->localvar_getInt(runtime, pos++);
+    Int2Float pb;pb.i = env->localvar_getInt(runtime, pos++);
+    Int2Float pc;pc.i = env->localvar_getInt(runtime, pos++);
+    Int2Float pd;pd.i = env->localvar_getInt(runtime, pos++);
+    Int2Float pe;pe.i = env->localvar_getInt(runtime, pos++);
+    Int2Float pf;pf.i = env->localvar_getInt(runtime, pos++);
+
+    nvgTransform((NVGcontext*/*ptr*/)(pctx), (float)pa.f, (float)pb.f, (float)pc.f, (float)pd.f, (float)pe.f, (float)pf.f);
+    
+    
+    return 0;
+}
+
+int org_mini_glfw_utils_Nutil_nvgTranslate(Runtime *runtime, Class *clazz) {
+    JniEnv *env = runtime->jnienv;
+    s32 pos = 0;
+    
+    intptr_t pctx = env->localvar_getLong_2slot(runtime, pos);pos += 2;
+    Int2Float px;px.i = env->localvar_getInt(runtime, pos++);
+    Int2Float py;py.i = env->localvar_getInt(runtime, pos++);
+
+    nvgTranslate((NVGcontext*/*ptr*/)(pctx), (float)px.f, (float)py.f);
+    
+    
+    return 0;
+}
+
+int org_mini_glfw_utils_Nutil_nvgRotate(Runtime *runtime, Class *clazz) {
+    JniEnv *env = runtime->jnienv;
+    s32 pos = 0;
+    
+    intptr_t pctx = env->localvar_getLong_2slot(runtime, pos);pos += 2;
+    Int2Float pangle;pangle.i = env->localvar_getInt(runtime, pos++);
+
+    nvgRotate((NVGcontext*/*ptr*/)(pctx), (float)pangle.f);
+    
+    
+    return 0;
+}
+
+int org_mini_glfw_utils_Nutil_nvgSkewX(Runtime *runtime, Class *clazz) {
+    JniEnv *env = runtime->jnienv;
+    s32 pos = 0;
+    
+    intptr_t pctx = env->localvar_getLong_2slot(runtime, pos);pos += 2;
+    Int2Float pangle;pangle.i = env->localvar_getInt(runtime, pos++);
+
+    nvgSkewX((NVGcontext*/*ptr*/)(pctx), (float)pangle.f);
+    
+    
+    return 0;
+}
+
+int org_mini_glfw_utils_Nutil_nvgSkewY(Runtime *runtime, Class *clazz) {
+    JniEnv *env = runtime->jnienv;
+    s32 pos = 0;
+    
+    intptr_t pctx = env->localvar_getLong_2slot(runtime, pos);pos += 2;
+    Int2Float pangle;pangle.i = env->localvar_getInt(runtime, pos++);
+
+    nvgSkewY((NVGcontext*/*ptr*/)(pctx), (float)pangle.f);
+    
+    
+    return 0;
+}
+
+int org_mini_glfw_utils_Nutil_nvgScale(Runtime *runtime, Class *clazz) {
+    JniEnv *env = runtime->jnienv;
+    s32 pos = 0;
+    
+    intptr_t pctx = env->localvar_getLong_2slot(runtime, pos);pos += 2;
+    Int2Float px;px.i = env->localvar_getInt(runtime, pos++);
+    Int2Float py;py.i = env->localvar_getInt(runtime, pos++);
+
+    nvgScale((NVGcontext*/*ptr*/)(pctx), (float)px.f, (float)py.f);
+    
+    
+    return 0;
+}
+
+int org_mini_glfw_utils_Nutil_nvgCurrentTransform(Runtime *runtime, Class *clazz) {
+    JniEnv *env = runtime->jnienv;
+    s32 pos = 0;
+    
+    intptr_t pctx = env->localvar_getLong_2slot(runtime, pos);pos += 2;
+    Instance *pxform = env->localvar_getRefer(runtime, pos++);
+    __refer ptr_pxform = NULL;
+    if(pxform){
+        ptr_pxform = pxform->arr_body;
+    }
+
+    nvgCurrentTransform((NVGcontext*/*ptr*/)(pctx), (float*)(ptr_pxform));
+    
+    
+    return 0;
+}
+
+int org_mini_glfw_utils_Nutil_nvgTransformIdentity(Runtime *runtime, Class *clazz) {
+    JniEnv *env = runtime->jnienv;
+    s32 pos = 0;
+    
+    Instance *pdst = env->localvar_getRefer(runtime, pos++);
+    __refer ptr_pdst = NULL;
+    if(pdst){
+        ptr_pdst = pdst->arr_body;
+    }
+
+    nvgTransformIdentity((float*)(ptr_pdst));
+    
+    
+    return 0;
+}
+
+int org_mini_glfw_utils_Nutil_nvgTransformTranslate(Runtime *runtime, Class *clazz) {
+    JniEnv *env = runtime->jnienv;
+    s32 pos = 0;
+    
+    Instance *pdst = env->localvar_getRefer(runtime, pos++);
+    __refer ptr_pdst = NULL;
+    if(pdst){
+        ptr_pdst = pdst->arr_body;
+    }
+    Int2Float ptx;ptx.i = env->localvar_getInt(runtime, pos++);
+    Int2Float pty;pty.i = env->localvar_getInt(runtime, pos++);
+
+    nvgTransformTranslate((float*)(ptr_pdst), (float)ptx.f, (float)pty.f);
+    
+    
+    return 0;
+}
+
+int org_mini_glfw_utils_Nutil_nvgTransformScale(Runtime *runtime, Class *clazz) {
+    JniEnv *env = runtime->jnienv;
+    s32 pos = 0;
+    
+    Instance *pdst = env->localvar_getRefer(runtime, pos++);
+    __refer ptr_pdst = NULL;
+    if(pdst){
+        ptr_pdst = pdst->arr_body;
+    }
+    Int2Float psx;psx.i = env->localvar_getInt(runtime, pos++);
+    Int2Float psy;psy.i = env->localvar_getInt(runtime, pos++);
+
+    nvgTransformScale((float*)(ptr_pdst), (float)psx.f, (float)psy.f);
+    
+    
+    return 0;
+}
+
+int org_mini_glfw_utils_Nutil_nvgTransformRotate(Runtime *runtime, Class *clazz) {
+    JniEnv *env = runtime->jnienv;
+    s32 pos = 0;
+    
+    Instance *pdst = env->localvar_getRefer(runtime, pos++);
+    __refer ptr_pdst = NULL;
+    if(pdst){
+        ptr_pdst = pdst->arr_body;
+    }
+    Int2Float pa;pa.i = env->localvar_getInt(runtime, pos++);
+
+    nvgTransformRotate((float*)(ptr_pdst), (float)pa.f);
+    
+    
+    return 0;
+}
+
+int org_mini_glfw_utils_Nutil_nvgTransformSkewX(Runtime *runtime, Class *clazz) {
+    JniEnv *env = runtime->jnienv;
+    s32 pos = 0;
+    
+    Instance *pdst = env->localvar_getRefer(runtime, pos++);
+    __refer ptr_pdst = NULL;
+    if(pdst){
+        ptr_pdst = pdst->arr_body;
+    }
+    Int2Float pa;pa.i = env->localvar_getInt(runtime, pos++);
+
+    nvgTransformSkewX((float*)(ptr_pdst), (float)pa.f);
+    
+    
+    return 0;
+}
+
+int org_mini_glfw_utils_Nutil_nvgTransformSkewY(Runtime *runtime, Class *clazz) {
+    JniEnv *env = runtime->jnienv;
+    s32 pos = 0;
+    
+    Instance *pdst = env->localvar_getRefer(runtime, pos++);
+    __refer ptr_pdst = NULL;
+    if(pdst){
+        ptr_pdst = pdst->arr_body;
+    }
+    Int2Float pa;pa.i = env->localvar_getInt(runtime, pos++);
+
+    nvgTransformSkewY((float*)(ptr_pdst), (float)pa.f);
+    
+    
+    return 0;
+}
+
+int org_mini_glfw_utils_Nutil_nvgTransformMultiply(Runtime *runtime, Class *clazz) {
+    JniEnv *env = runtime->jnienv;
+    s32 pos = 0;
+    
+    Instance *pdst = env->localvar_getRefer(runtime, pos++);
+    __refer ptr_pdst = NULL;
+    if(pdst){
+        ptr_pdst = pdst->arr_body;
+    }
+    Instance *psrc = env->localvar_getRefer(runtime, pos++);
+    __refer ptr_psrc = NULL;
+    if(psrc){
+        ptr_psrc = psrc->arr_body;
+    }
+
+    nvgTransformMultiply((float*)(ptr_pdst), (const float*)(ptr_psrc));
+    
+    
+    return 0;
+}
+
+int org_mini_glfw_utils_Nutil_nvgTransformPremultiply(Runtime *runtime, Class *clazz) {
+    JniEnv *env = runtime->jnienv;
+    s32 pos = 0;
+    
+    Instance *pdst = env->localvar_getRefer(runtime, pos++);
+    __refer ptr_pdst = NULL;
+    if(pdst){
+        ptr_pdst = pdst->arr_body;
+    }
+    Instance *psrc = env->localvar_getRefer(runtime, pos++);
+    __refer ptr_psrc = NULL;
+    if(psrc){
+        ptr_psrc = psrc->arr_body;
+    }
+
+    nvgTransformPremultiply((float*)(ptr_pdst), (const float*)(ptr_psrc));
+    
+    
+    return 0;
+}
+
+int org_mini_glfw_utils_Nutil_nvgTransformInverse(Runtime *runtime, Class *clazz) {
+    JniEnv *env = runtime->jnienv;
+    s32 pos = 0;
+    
+    Instance *pdst = env->localvar_getRefer(runtime, pos++);
+    __refer ptr_pdst = NULL;
+    if(pdst){
+        ptr_pdst = pdst->arr_body;
+    }
+    Instance *psrc = env->localvar_getRefer(runtime, pos++);
+    __refer ptr_psrc = NULL;
+    if(psrc){
+        ptr_psrc = psrc->arr_body;
+    }
+
+    int _re_val = nvgTransformInverse((float*)(ptr_pdst), (const float*)(ptr_psrc));
+    s32 ret_value = (s32)_re_val;env->push_int(runtime->stack, ret_value);
+    
+    return 0;
+}
+
+int org_mini_glfw_utils_Nutil_nvgTransformPoint(Runtime *runtime, Class *clazz) {
+    JniEnv *env = runtime->jnienv;
+    s32 pos = 0;
+    
+    Instance *pdstx = env->localvar_getRefer(runtime, pos++);
+    __refer ptr_pdstx = NULL;
+    if(pdstx){
+        ptr_pdstx = pdstx->arr_body;
+    }
+    Instance *pdsty = env->localvar_getRefer(runtime, pos++);
+    __refer ptr_pdsty = NULL;
+    if(pdsty){
+        ptr_pdsty = pdsty->arr_body;
+    }
+    Instance *pxform = env->localvar_getRefer(runtime, pos++);
+    __refer ptr_pxform = NULL;
+    if(pxform){
+        ptr_pxform = pxform->arr_body;
+    }
+    Int2Float psrcx;psrcx.i = env->localvar_getInt(runtime, pos++);
+    Int2Float psrcy;psrcy.i = env->localvar_getInt(runtime, pos++);
+
+    nvgTransformPoint((float*)(ptr_pdstx), (float*)(ptr_pdsty), (const float*)(ptr_pxform), (float)psrcx.f, (float)psrcy.f);
+    
+    
+    return 0;
+}
+
+int org_mini_glfw_utils_Nutil_nvgDegToRad(Runtime *runtime, Class *clazz) {
+    JniEnv *env = runtime->jnienv;
+    s32 pos = 0;
+    
+    Int2Float pdeg;pdeg.i = env->localvar_getInt(runtime, pos++);
+
+    f32 ret_value = (f32)nvgDegToRad((float)pdeg.f);
+    env->push_float(runtime->stack, ret_value);
+    
+    return 0;
+}
+
+int org_mini_glfw_utils_Nutil_nvgRadToDeg(Runtime *runtime, Class *clazz) {
+    JniEnv *env = runtime->jnienv;
+    s32 pos = 0;
+    
+    Int2Float prad;prad.i = env->localvar_getInt(runtime, pos++);
+
+    f32 ret_value = (f32)nvgRadToDeg((float)prad.f);
+    env->push_float(runtime->stack, ret_value);
+    
+    return 0;
+}
+
+int org_mini_glfw_utils_Nutil_nvgCreateImage(Runtime *runtime, Class *clazz) {
+    JniEnv *env = runtime->jnienv;
+    s32 pos = 0;
+    
+    intptr_t pctx = env->localvar_getLong_2slot(runtime, pos);pos += 2;
+    Instance *pfilename = env->localvar_getRefer(runtime, pos++);
+    __refer ptr_pfilename = NULL;
+    if(pfilename){
+        ptr_pfilename = pfilename->arr_body;
+    }
+    s32 pimageFlags = env->localvar_getInt(runtime, pos++);
+
+    int _re_val = nvgCreateImage((NVGcontext*/*ptr*/)(pctx), (const char*)(ptr_pfilename), (int)pimageFlags);
+    s32 ret_value = (s32)_re_val;env->push_int(runtime->stack, ret_value);
+    
+    return 0;
+}
+
+int org_mini_glfw_utils_Nutil_nvgCreateImageMem(Runtime *runtime, Class *clazz) {
+    JniEnv *env = runtime->jnienv;
+    s32 pos = 0;
+    
+    intptr_t pctx = env->localvar_getLong_2slot(runtime, pos);pos += 2;
+    s32 pimageFlags = env->localvar_getInt(runtime, pos++);
+    Instance *pdata = env->localvar_getRefer(runtime, pos++);
+    __refer ptr_pdata = NULL;
+    if(pdata){
+        ptr_pdata = pdata->arr_body;
+    }
+    s32 pndata = env->localvar_getInt(runtime, pos++);
+
+    int _re_val = nvgCreateImageMem((NVGcontext*/*ptr*/)(pctx), (int)pimageFlags, (unsigned char*)(ptr_pdata), (int)pndata);
+    s32 ret_value = (s32)_re_val;env->push_int(runtime->stack, ret_value);
+    
+    return 0;
+}
+
+int org_mini_glfw_utils_Nutil_nvgCreateImageRGBA(Runtime *runtime, Class *clazz) {
+    JniEnv *env = runtime->jnienv;
+    s32 pos = 0;
+    
+    intptr_t pctx = env->localvar_getLong_2slot(runtime, pos);pos += 2;
+    s32 pw = env->localvar_getInt(runtime, pos++);
+    s32 ph = env->localvar_getInt(runtime, pos++);
+    s32 pimageFlags = env->localvar_getInt(runtime, pos++);
+    Instance *pdata = env->localvar_getRefer(runtime, pos++);
+    __refer ptr_pdata = NULL;
+    if(pdata){
+        ptr_pdata = pdata->arr_body;
+    }
+
+    int _re_val = nvgCreateImageRGBA((NVGcontext*/*ptr*/)(pctx), (int)pw, (int)ph, (int)pimageFlags, (const unsigned char*)(ptr_pdata));
+    s32 ret_value = (s32)_re_val;env->push_int(runtime->stack, ret_value);
+    
+    return 0;
+}
+
+int org_mini_glfw_utils_Nutil_nvgUpdateImage(Runtime *runtime, Class *clazz) {
+    JniEnv *env = runtime->jnienv;
+    s32 pos = 0;
+    
+    intptr_t pctx = env->localvar_getLong_2slot(runtime, pos);pos += 2;
+    s32 pimage = env->localvar_getInt(runtime, pos++);
+    Instance *pdata = env->localvar_getRefer(runtime, pos++);
+    __refer ptr_pdata = NULL;
+    if(pdata){
+        ptr_pdata = pdata->arr_body;
+    }
+
+    nvgUpdateImage((NVGcontext*/*ptr*/)(pctx), (int)pimage, (const unsigned char*)(ptr_pdata));
+    
+    
+    return 0;
+}
+
+int org_mini_glfw_utils_Nutil_nvgImageSize(Runtime *runtime, Class *clazz) {
+    JniEnv *env = runtime->jnienv;
+    s32 pos = 0;
+    
+    intptr_t pctx = env->localvar_getLong_2slot(runtime, pos);pos += 2;
+    s32 pimage = env->localvar_getInt(runtime, pos++);
+    Instance *pw = env->localvar_getRefer(runtime, pos++);
+    __refer ptr_pw = NULL;
+    if(pw){
+        ptr_pw = pw->arr_body;
+    }
+    Instance *ph = env->localvar_getRefer(runtime, pos++);
+    __refer ptr_ph = NULL;
+    if(ph){
+        ptr_ph = ph->arr_body;
+    }
+
+    nvgImageSize((NVGcontext*/*ptr*/)(pctx), (int)pimage, (int*)(ptr_pw), (int*)(ptr_ph));
+    
+    
+    return 0;
+}
+
+int org_mini_glfw_utils_Nutil_nvgDeleteImage(Runtime *runtime, Class *clazz) {
+    JniEnv *env = runtime->jnienv;
+    s32 pos = 0;
+    
+    intptr_t pctx = env->localvar_getLong_2slot(runtime, pos);pos += 2;
+    s32 pimage = env->localvar_getInt(runtime, pos++);
+
+    nvgDeleteImage((NVGcontext*/*ptr*/)(pctx), (int)pimage);
+    
+    
+    return 0;
+}
+
+int org_mini_glfw_utils_Nutil_nvgLinearGradient(Runtime *runtime, Class *clazz) {
+    JniEnv *env = runtime->jnienv;
+    s32 pos = 0;
+    
+    intptr_t pctx = env->localvar_getLong_2slot(runtime, pos);pos += 2;
+    Int2Float psx;psx.i = env->localvar_getInt(runtime, pos++);
+    Int2Float psy;psy.i = env->localvar_getInt(runtime, pos++);
+    Int2Float pex;pex.i = env->localvar_getInt(runtime, pos++);
+    Int2Float pey;pey.i = env->localvar_getInt(runtime, pos++);
+    Instance *picol = env->localvar_getRefer(runtime, pos++);
+    __refer ptr_picol = NULL;
+    if(picol){
+        ptr_picol = picol->arr_body;
+    }
+    Instance *pocol = env->localvar_getRefer(runtime, pos++);
+    __refer ptr_pocol = NULL;
+    if(pocol){
+        ptr_pocol = pocol->arr_body;
+    }
+
+    NVGpaint/*none_ptr*/ _re_val = nvgLinearGradient((NVGcontext*/*ptr*/)(pctx), (float)psx.f, (float)psy.f, (float)pex.f, (float)pey.f, *(NVGcolor/*none_ptr*/*)(ptr_picol), *(NVGcolor/*none_ptr*/*)(ptr_pocol));
+    c8* _ptr_re_val = (c8*)&_re_val;
+    s32 _struct_bytes = sizeof(_re_val);
+    if (_ptr_re_val) {
+        s32 _j_t_bytes = sizeof(c8);
+        Instance *_arr = env->jarray_create(_struct_bytes / _j_t_bytes, DATATYPE_BYTE, NULL);
+        memcpy(_arr->arr_body, _ptr_re_val,_struct_bytes);
+        env->push_ref(runtime->stack, _arr);
+    } else {
+        env->push_ref(runtime->stack, NULL);
+    }
+    
+    return 0;
+}
+
+int org_mini_glfw_utils_Nutil_nvgBoxGradient(Runtime *runtime, Class *clazz) {
+    JniEnv *env = runtime->jnienv;
+    s32 pos = 0;
+    
+    intptr_t pctx = env->localvar_getLong_2slot(runtime, pos);pos += 2;
+    Int2Float px;px.i = env->localvar_getInt(runtime, pos++);
+    Int2Float py;py.i = env->localvar_getInt(runtime, pos++);
+    Int2Float pw;pw.i = env->localvar_getInt(runtime, pos++);
+    Int2Float ph;ph.i = env->localvar_getInt(runtime, pos++);
+    Int2Float pr;pr.i = env->localvar_getInt(runtime, pos++);
+    Int2Float pf;pf.i = env->localvar_getInt(runtime, pos++);
+    Instance *picol = env->localvar_getRefer(runtime, pos++);
+    __refer ptr_picol = NULL;
+    if(picol){
+        ptr_picol = picol->arr_body;
+    }
+    Instance *pocol = env->localvar_getRefer(runtime, pos++);
+    __refer ptr_pocol = NULL;
+    if(pocol){
+        ptr_pocol = pocol->arr_body;
+    }
+
+    NVGpaint/*none_ptr*/ _re_val = nvgBoxGradient((NVGcontext*/*ptr*/)(pctx), (float)px.f, (float)py.f, (float)pw.f, (float)ph.f, (float)pr.f, (float)pf.f, *(NVGcolor/*none_ptr*/*)(ptr_picol), *(NVGcolor/*none_ptr*/*)(ptr_pocol));
+    c8* _ptr_re_val = (c8*)&_re_val;
+    s32 _struct_bytes = sizeof(_re_val);
+    if (_ptr_re_val) {
+        s32 _j_t_bytes = sizeof(c8);
+        Instance *_arr = env->jarray_create(_struct_bytes / _j_t_bytes, DATATYPE_BYTE, NULL);
+        memcpy(_arr->arr_body, _ptr_re_val,_struct_bytes);
+        env->push_ref(runtime->stack, _arr);
+    } else {
+        env->push_ref(runtime->stack, NULL);
+    }
+    
+    return 0;
+}
+
+int org_mini_glfw_utils_Nutil_nvgRadialGradient(Runtime *runtime, Class *clazz) {
+    JniEnv *env = runtime->jnienv;
+    s32 pos = 0;
+    
+    intptr_t pctx = env->localvar_getLong_2slot(runtime, pos);pos += 2;
+    Int2Float pcx;pcx.i = env->localvar_getInt(runtime, pos++);
+    Int2Float pcy;pcy.i = env->localvar_getInt(runtime, pos++);
+    Int2Float pinr;pinr.i = env->localvar_getInt(runtime, pos++);
+    Int2Float poutr;poutr.i = env->localvar_getInt(runtime, pos++);
+    Instance *picol = env->localvar_getRefer(runtime, pos++);
+    __refer ptr_picol = NULL;
+    if(picol){
+        ptr_picol = picol->arr_body;
+    }
+    Instance *pocol = env->localvar_getRefer(runtime, pos++);
+    __refer ptr_pocol = NULL;
+    if(pocol){
+        ptr_pocol = pocol->arr_body;
+    }
+
+    NVGpaint/*none_ptr*/ _re_val = nvgRadialGradient((NVGcontext*/*ptr*/)(pctx), (float)pcx.f, (float)pcy.f, (float)pinr.f, (float)poutr.f, *(NVGcolor/*none_ptr*/*)(ptr_picol), *(NVGcolor/*none_ptr*/*)(ptr_pocol));
+    c8* _ptr_re_val = (c8*)&_re_val;
+    s32 _struct_bytes = sizeof(_re_val);
+    if (_ptr_re_val) {
+        s32 _j_t_bytes = sizeof(c8);
+        Instance *_arr = env->jarray_create(_struct_bytes / _j_t_bytes, DATATYPE_BYTE, NULL);
+        memcpy(_arr->arr_body, _ptr_re_val,_struct_bytes);
+        env->push_ref(runtime->stack, _arr);
+    } else {
+        env->push_ref(runtime->stack, NULL);
+    }
+    
+    return 0;
+}
+
+int org_mini_glfw_utils_Nutil_nvgImagePattern(Runtime *runtime, Class *clazz) {
+    JniEnv *env = runtime->jnienv;
+    s32 pos = 0;
+    
+    intptr_t pctx = env->localvar_getLong_2slot(runtime, pos);pos += 2;
+    Int2Float pox;pox.i = env->localvar_getInt(runtime, pos++);
+    Int2Float poy;poy.i = env->localvar_getInt(runtime, pos++);
+    Int2Float pex;pex.i = env->localvar_getInt(runtime, pos++);
+    Int2Float pey;pey.i = env->localvar_getInt(runtime, pos++);
+    Int2Float pangle;pangle.i = env->localvar_getInt(runtime, pos++);
+    s32 pimage = env->localvar_getInt(runtime, pos++);
+    Int2Float palpha;palpha.i = env->localvar_getInt(runtime, pos++);
+
+    NVGpaint/*none_ptr*/ _re_val = nvgImagePattern((NVGcontext*/*ptr*/)(pctx), (float)pox.f, (float)poy.f, (float)pex.f, (float)pey.f, (float)pangle.f, (int)pimage, (float)palpha.f);
+    c8* _ptr_re_val = (c8*)&_re_val;
+    s32 _struct_bytes = sizeof(_re_val);
+    if (_ptr_re_val) {
+        s32 _j_t_bytes = sizeof(c8);
+        Instance *_arr = env->jarray_create(_struct_bytes / _j_t_bytes, DATATYPE_BYTE, NULL);
+        memcpy(_arr->arr_body, _ptr_re_val,_struct_bytes);
+        env->push_ref(runtime->stack, _arr);
+    } else {
+        env->push_ref(runtime->stack, NULL);
+    }
+    
+    return 0;
+}
+
+int org_mini_glfw_utils_Nutil_nvgScissor(Runtime *runtime, Class *clazz) {
+    JniEnv *env = runtime->jnienv;
+    s32 pos = 0;
+    
+    intptr_t pctx = env->localvar_getLong_2slot(runtime, pos);pos += 2;
+    Int2Float px;px.i = env->localvar_getInt(runtime, pos++);
+    Int2Float py;py.i = env->localvar_getInt(runtime, pos++);
+    Int2Float pw;pw.i = env->localvar_getInt(runtime, pos++);
+    Int2Float ph;ph.i = env->localvar_getInt(runtime, pos++);
+
+    nvgScissor((NVGcontext*/*ptr*/)(pctx), (float)px.f, (float)py.f, (float)pw.f, (float)ph.f);
+    
+    
+    return 0;
+}
+
+int org_mini_glfw_utils_Nutil_nvgIntersectScissor(Runtime *runtime, Class *clazz) {
+    JniEnv *env = runtime->jnienv;
+    s32 pos = 0;
+    
+    intptr_t pctx = env->localvar_getLong_2slot(runtime, pos);pos += 2;
+    Int2Float px;px.i = env->localvar_getInt(runtime, pos++);
+    Int2Float py;py.i = env->localvar_getInt(runtime, pos++);
+    Int2Float pw;pw.i = env->localvar_getInt(runtime, pos++);
+    Int2Float ph;ph.i = env->localvar_getInt(runtime, pos++);
+
+    nvgIntersectScissor((NVGcontext*/*ptr*/)(pctx), (float)px.f, (float)py.f, (float)pw.f, (float)ph.f);
+    
+    
+    return 0;
+}
+
+int org_mini_glfw_utils_Nutil_nvgResetScissor(Runtime *runtime, Class *clazz) {
+    JniEnv *env = runtime->jnienv;
+    s32 pos = 0;
+    
+    intptr_t pctx = env->localvar_getLong_2slot(runtime, pos);pos += 2;
+
+    nvgResetScissor((NVGcontext*/*ptr*/)(pctx));
+    
+    
+    return 0;
+}
+
+int org_mini_glfw_utils_Nutil_nvgBeginPath(Runtime *runtime, Class *clazz) {
+    JniEnv *env = runtime->jnienv;
+    s32 pos = 0;
+    
+    intptr_t pctx = env->localvar_getLong_2slot(runtime, pos);pos += 2;
+
+    nvgBeginPath((NVGcontext*/*ptr*/)(pctx));
+    
+    
+    return 0;
+}
+
+int org_mini_glfw_utils_Nutil_nvgMoveTo(Runtime *runtime, Class *clazz) {
+    JniEnv *env = runtime->jnienv;
+    s32 pos = 0;
+    
+    intptr_t pctx = env->localvar_getLong_2slot(runtime, pos);pos += 2;
+    Int2Float px;px.i = env->localvar_getInt(runtime, pos++);
+    Int2Float py;py.i = env->localvar_getInt(runtime, pos++);
+
+    nvgMoveTo((NVGcontext*/*ptr*/)(pctx), (float)px.f, (float)py.f);
+    
+    
+    return 0;
+}
+
+int org_mini_glfw_utils_Nutil_nvgLineTo(Runtime *runtime, Class *clazz) {
+    JniEnv *env = runtime->jnienv;
+    s32 pos = 0;
+    
+    intptr_t pctx = env->localvar_getLong_2slot(runtime, pos);pos += 2;
+    Int2Float px;px.i = env->localvar_getInt(runtime, pos++);
+    Int2Float py;py.i = env->localvar_getInt(runtime, pos++);
+
+    nvgLineTo((NVGcontext*/*ptr*/)(pctx), (float)px.f, (float)py.f);
+    
+    
+    return 0;
+}
+
+int org_mini_glfw_utils_Nutil_nvgBezierTo(Runtime *runtime, Class *clazz) {
+    JniEnv *env = runtime->jnienv;
+    s32 pos = 0;
+    
+    intptr_t pctx = env->localvar_getLong_2slot(runtime, pos);pos += 2;
+    Int2Float pc1x;pc1x.i = env->localvar_getInt(runtime, pos++);
+    Int2Float pc1y;pc1y.i = env->localvar_getInt(runtime, pos++);
+    Int2Float pc2x;pc2x.i = env->localvar_getInt(runtime, pos++);
+    Int2Float pc2y;pc2y.i = env->localvar_getInt(runtime, pos++);
+    Int2Float px;px.i = env->localvar_getInt(runtime, pos++);
+    Int2Float py;py.i = env->localvar_getInt(runtime, pos++);
+
+    nvgBezierTo((NVGcontext*/*ptr*/)(pctx), (float)pc1x.f, (float)pc1y.f, (float)pc2x.f, (float)pc2y.f, (float)px.f, (float)py.f);
+    
+    
+    return 0;
+}
+
+int org_mini_glfw_utils_Nutil_nvgQuadTo(Runtime *runtime, Class *clazz) {
+    JniEnv *env = runtime->jnienv;
+    s32 pos = 0;
+    
+    intptr_t pctx = env->localvar_getLong_2slot(runtime, pos);pos += 2;
+    Int2Float pcx;pcx.i = env->localvar_getInt(runtime, pos++);
+    Int2Float pcy;pcy.i = env->localvar_getInt(runtime, pos++);
+    Int2Float px;px.i = env->localvar_getInt(runtime, pos++);
+    Int2Float py;py.i = env->localvar_getInt(runtime, pos++);
+
+    nvgQuadTo((NVGcontext*/*ptr*/)(pctx), (float)pcx.f, (float)pcy.f, (float)px.f, (float)py.f);
+    
+    
+    return 0;
+}
+
+int org_mini_glfw_utils_Nutil_nvgArcTo(Runtime *runtime, Class *clazz) {
+    JniEnv *env = runtime->jnienv;
+    s32 pos = 0;
+    
+    intptr_t pctx = env->localvar_getLong_2slot(runtime, pos);pos += 2;
+    Int2Float px1;px1.i = env->localvar_getInt(runtime, pos++);
+    Int2Float py1;py1.i = env->localvar_getInt(runtime, pos++);
+    Int2Float px2;px2.i = env->localvar_getInt(runtime, pos++);
+    Int2Float py2;py2.i = env->localvar_getInt(runtime, pos++);
+    Int2Float pradius;pradius.i = env->localvar_getInt(runtime, pos++);
+
+    nvgArcTo((NVGcontext*/*ptr*/)(pctx), (float)px1.f, (float)py1.f, (float)px2.f, (float)py2.f, (float)pradius.f);
+    
+    
+    return 0;
+}
+
+int org_mini_glfw_utils_Nutil_nvgClosePath(Runtime *runtime, Class *clazz) {
+    JniEnv *env = runtime->jnienv;
+    s32 pos = 0;
+    
+    intptr_t pctx = env->localvar_getLong_2slot(runtime, pos);pos += 2;
+
+    nvgClosePath((NVGcontext*/*ptr*/)(pctx));
+    
+    
+    return 0;
+}
+
+int org_mini_glfw_utils_Nutil_nvgPathWinding(Runtime *runtime, Class *clazz) {
+    JniEnv *env = runtime->jnienv;
+    s32 pos = 0;
+    
+    intptr_t pctx = env->localvar_getLong_2slot(runtime, pos);pos += 2;
+    s32 pdir = env->localvar_getInt(runtime, pos++);
+
+    nvgPathWinding((NVGcontext*/*ptr*/)(pctx), (int)pdir);
+    
+    
+    return 0;
+}
+
+int org_mini_glfw_utils_Nutil_nvgArc(Runtime *runtime, Class *clazz) {
+    JniEnv *env = runtime->jnienv;
+    s32 pos = 0;
+    
+    intptr_t pctx = env->localvar_getLong_2slot(runtime, pos);pos += 2;
+    Int2Float pcx;pcx.i = env->localvar_getInt(runtime, pos++);
+    Int2Float pcy;pcy.i = env->localvar_getInt(runtime, pos++);
+    Int2Float pr;pr.i = env->localvar_getInt(runtime, pos++);
+    Int2Float pa0;pa0.i = env->localvar_getInt(runtime, pos++);
+    Int2Float pa1;pa1.i = env->localvar_getInt(runtime, pos++);
+    s32 pdir = env->localvar_getInt(runtime, pos++);
+
+    nvgArc((NVGcontext*/*ptr*/)(pctx), (float)pcx.f, (float)pcy.f, (float)pr.f, (float)pa0.f, (float)pa1.f, (int)pdir);
+    
+    
+    return 0;
+}
+
+int org_mini_glfw_utils_Nutil_nvgRect(Runtime *runtime, Class *clazz) {
+    JniEnv *env = runtime->jnienv;
+    s32 pos = 0;
+    
+    intptr_t pctx = env->localvar_getLong_2slot(runtime, pos);pos += 2;
+    Int2Float px;px.i = env->localvar_getInt(runtime, pos++);
+    Int2Float py;py.i = env->localvar_getInt(runtime, pos++);
+    Int2Float pw;pw.i = env->localvar_getInt(runtime, pos++);
+    Int2Float ph;ph.i = env->localvar_getInt(runtime, pos++);
+
+    nvgRect((NVGcontext*/*ptr*/)(pctx), (float)px.f, (float)py.f, (float)pw.f, (float)ph.f);
+    
+    
+    return 0;
+}
+
+int org_mini_glfw_utils_Nutil_nvgRoundedRect(Runtime *runtime, Class *clazz) {
+    JniEnv *env = runtime->jnienv;
+    s32 pos = 0;
+    
+    intptr_t pctx = env->localvar_getLong_2slot(runtime, pos);pos += 2;
+    Int2Float px;px.i = env->localvar_getInt(runtime, pos++);
+    Int2Float py;py.i = env->localvar_getInt(runtime, pos++);
+    Int2Float pw;pw.i = env->localvar_getInt(runtime, pos++);
+    Int2Float ph;ph.i = env->localvar_getInt(runtime, pos++);
+    Int2Float pr;pr.i = env->localvar_getInt(runtime, pos++);
+
+    nvgRoundedRect((NVGcontext*/*ptr*/)(pctx), (float)px.f, (float)py.f, (float)pw.f, (float)ph.f, (float)pr.f);
+    
+    
+    return 0;
+}
+
+int org_mini_glfw_utils_Nutil_nvgRoundedRectVarying(Runtime *runtime, Class *clazz) {
+    JniEnv *env = runtime->jnienv;
+    s32 pos = 0;
+    
+    intptr_t pctx = env->localvar_getLong_2slot(runtime, pos);pos += 2;
+    Int2Float px;px.i = env->localvar_getInt(runtime, pos++);
+    Int2Float py;py.i = env->localvar_getInt(runtime, pos++);
+    Int2Float pw;pw.i = env->localvar_getInt(runtime, pos++);
+    Int2Float ph;ph.i = env->localvar_getInt(runtime, pos++);
+    Int2Float pradTopLeft;pradTopLeft.i = env->localvar_getInt(runtime, pos++);
+    Int2Float pradTopRight;pradTopRight.i = env->localvar_getInt(runtime, pos++);
+    Int2Float pradBottomRight;pradBottomRight.i = env->localvar_getInt(runtime, pos++);
+    Int2Float pradBottomLeft;pradBottomLeft.i = env->localvar_getInt(runtime, pos++);
+
+    nvgRoundedRectVarying((NVGcontext*/*ptr*/)(pctx), (float)px.f, (float)py.f, (float)pw.f, (float)ph.f, (float)pradTopLeft.f, (float)pradTopRight.f, (float)pradBottomRight.f, (float)pradBottomLeft.f);
+    
+    
+    return 0;
+}
+
+int org_mini_glfw_utils_Nutil_nvgEllipse(Runtime *runtime, Class *clazz) {
+    JniEnv *env = runtime->jnienv;
+    s32 pos = 0;
+    
+    intptr_t pctx = env->localvar_getLong_2slot(runtime, pos);pos += 2;
+    Int2Float pcx;pcx.i = env->localvar_getInt(runtime, pos++);
+    Int2Float pcy;pcy.i = env->localvar_getInt(runtime, pos++);
+    Int2Float prx;prx.i = env->localvar_getInt(runtime, pos++);
+    Int2Float pry;pry.i = env->localvar_getInt(runtime, pos++);
+
+    nvgEllipse((NVGcontext*/*ptr*/)(pctx), (float)pcx.f, (float)pcy.f, (float)prx.f, (float)pry.f);
+    
+    
+    return 0;
+}
+
+int org_mini_glfw_utils_Nutil_nvgCircle(Runtime *runtime, Class *clazz) {
+    JniEnv *env = runtime->jnienv;
+    s32 pos = 0;
+    
+    intptr_t pctx = env->localvar_getLong_2slot(runtime, pos);pos += 2;
+    Int2Float pcx;pcx.i = env->localvar_getInt(runtime, pos++);
+    Int2Float pcy;pcy.i = env->localvar_getInt(runtime, pos++);
+    Int2Float pr;pr.i = env->localvar_getInt(runtime, pos++);
+
+    nvgCircle((NVGcontext*/*ptr*/)(pctx), (float)pcx.f, (float)pcy.f, (float)pr.f);
+    
+    
+    return 0;
+}
+
+int org_mini_glfw_utils_Nutil_nvgFill(Runtime *runtime, Class *clazz) {
+    JniEnv *env = runtime->jnienv;
+    s32 pos = 0;
+    
+    intptr_t pctx = env->localvar_getLong_2slot(runtime, pos);pos += 2;
+
+    nvgFill((NVGcontext*/*ptr*/)(pctx));
+    
+    
+    return 0;
+}
+
+int org_mini_glfw_utils_Nutil_nvgStroke(Runtime *runtime, Class *clazz) {
+    JniEnv *env = runtime->jnienv;
+    s32 pos = 0;
+    
+    intptr_t pctx = env->localvar_getLong_2slot(runtime, pos);pos += 2;
+
+    nvgStroke((NVGcontext*/*ptr*/)(pctx));
+    
+    
+    return 0;
+}
+
+int org_mini_glfw_utils_Nutil_nvgCreateFont(Runtime *runtime, Class *clazz) {
+    JniEnv *env = runtime->jnienv;
+    s32 pos = 0;
+    
+    intptr_t pctx = env->localvar_getLong_2slot(runtime, pos);pos += 2;
+    Instance *pname = env->localvar_getRefer(runtime, pos++);
+    __refer ptr_pname = NULL;
+    if(pname){
+        ptr_pname = pname->arr_body;
+    }
+    Instance *pfilename = env->localvar_getRefer(runtime, pos++);
+    __refer ptr_pfilename = NULL;
+    if(pfilename){
+        ptr_pfilename = pfilename->arr_body;
+    }
+
+    int _re_val = nvgCreateFont((NVGcontext*/*ptr*/)(pctx), (const char*)(ptr_pname), (const char*)(ptr_pfilename));
+    s32 ret_value = (s32)_re_val;env->push_int(runtime->stack, ret_value);
+    
+    return 0;
+}
+
+int org_mini_glfw_utils_Nutil_nvgCreateFontMem(Runtime *runtime, Class *clazz) {
+    JniEnv *env = runtime->jnienv;
+    s32 pos = 0;
+    
+    intptr_t pctx = env->localvar_getLong_2slot(runtime, pos);pos += 2;
+    Instance *pname = env->localvar_getRefer(runtime, pos++);
+    __refer ptr_pname = NULL;
+    if(pname){
+        ptr_pname = pname->arr_body;
+    }
+    Instance *pdata = env->localvar_getRefer(runtime, pos++);
+    __refer ptr_pdata = NULL;
+    if(pdata){
+        ptr_pdata = pdata->arr_body;
+    }
+    s32 pndata = env->localvar_getInt(runtime, pos++);
+    s32 pfreeData = env->localvar_getInt(runtime, pos++);
+
+    int _re_val = nvgCreateFontMem((NVGcontext*/*ptr*/)(pctx), (const char*)(ptr_pname), (unsigned char*)(ptr_pdata), (int)pndata, (int)pfreeData);
+    s32 ret_value = (s32)_re_val;env->push_int(runtime->stack, ret_value);
+    
+    return 0;
+}
+
+int org_mini_glfw_utils_Nutil_nvgFindFont(Runtime *runtime, Class *clazz) {
+    JniEnv *env = runtime->jnienv;
+    s32 pos = 0;
+    
+    intptr_t pctx = env->localvar_getLong_2slot(runtime, pos);pos += 2;
+    Instance *pname = env->localvar_getRefer(runtime, pos++);
+    __refer ptr_pname = NULL;
+    if(pname){
+        ptr_pname = pname->arr_body;
+    }
+
+    int _re_val = nvgFindFont((NVGcontext*/*ptr*/)(pctx), (const char*)(ptr_pname));
+    s32 ret_value = (s32)_re_val;env->push_int(runtime->stack, ret_value);
+    
+    return 0;
+}
+
+int org_mini_glfw_utils_Nutil_nvgAddFallbackFontId(Runtime *runtime, Class *clazz) {
+    JniEnv *env = runtime->jnienv;
+    s32 pos = 0;
+    
+    intptr_t pctx = env->localvar_getLong_2slot(runtime, pos);pos += 2;
+    s32 pbaseFont = env->localvar_getInt(runtime, pos++);
+    s32 pfallbackFont = env->localvar_getInt(runtime, pos++);
+
+    int _re_val = nvgAddFallbackFontId((NVGcontext*/*ptr*/)(pctx), (int)pbaseFont, (int)pfallbackFont);
+    s32 ret_value = (s32)_re_val;env->push_int(runtime->stack, ret_value);
+    
+    return 0;
+}
+
+int org_mini_glfw_utils_Nutil_nvgAddFallbackFont(Runtime *runtime, Class *clazz) {
+    JniEnv *env = runtime->jnienv;
+    s32 pos = 0;
+    
+    intptr_t pctx = env->localvar_getLong_2slot(runtime, pos);pos += 2;
+    Instance *pbaseFont = env->localvar_getRefer(runtime, pos++);
+    __refer ptr_pbaseFont = NULL;
+    if(pbaseFont){
+        ptr_pbaseFont = pbaseFont->arr_body;
+    }
+    Instance *pfallbackFont = env->localvar_getRefer(runtime, pos++);
+    __refer ptr_pfallbackFont = NULL;
+    if(pfallbackFont){
+        ptr_pfallbackFont = pfallbackFont->arr_body;
+    }
+
+    int _re_val = nvgAddFallbackFont((NVGcontext*/*ptr*/)(pctx), (const char*)(ptr_pbaseFont), (const char*)(ptr_pfallbackFont));
+    s32 ret_value = (s32)_re_val;env->push_int(runtime->stack, ret_value);
+    
+    return 0;
+}
+
+int org_mini_glfw_utils_Nutil_nvgFontSize(Runtime *runtime, Class *clazz) {
+    JniEnv *env = runtime->jnienv;
+    s32 pos = 0;
+    
+    intptr_t pctx = env->localvar_getLong_2slot(runtime, pos);pos += 2;
+    Int2Float psize;psize.i = env->localvar_getInt(runtime, pos++);
+
+    nvgFontSize((NVGcontext*/*ptr*/)(pctx), (float)psize.f);
+    
+    
+    return 0;
+}
+
+int org_mini_glfw_utils_Nutil_nvgFontBlur(Runtime *runtime, Class *clazz) {
+    JniEnv *env = runtime->jnienv;
+    s32 pos = 0;
+    
+    intptr_t pctx = env->localvar_getLong_2slot(runtime, pos);pos += 2;
+    Int2Float pblur;pblur.i = env->localvar_getInt(runtime, pos++);
+
+    nvgFontBlur((NVGcontext*/*ptr*/)(pctx), (float)pblur.f);
+    
+    
+    return 0;
+}
+
+int org_mini_glfw_utils_Nutil_nvgTextLetterSpacing(Runtime *runtime, Class *clazz) {
+    JniEnv *env = runtime->jnienv;
+    s32 pos = 0;
+    
+    intptr_t pctx = env->localvar_getLong_2slot(runtime, pos);pos += 2;
+    Int2Float pspacing;pspacing.i = env->localvar_getInt(runtime, pos++);
+
+    nvgTextLetterSpacing((NVGcontext*/*ptr*/)(pctx), (float)pspacing.f);
+    
+    
+    return 0;
+}
+
+int org_mini_glfw_utils_Nutil_nvgTextLineHeight(Runtime *runtime, Class *clazz) {
+    JniEnv *env = runtime->jnienv;
+    s32 pos = 0;
+    
+    intptr_t pctx = env->localvar_getLong_2slot(runtime, pos);pos += 2;
+    Int2Float plineHeight;plineHeight.i = env->localvar_getInt(runtime, pos++);
+
+    nvgTextLineHeight((NVGcontext*/*ptr*/)(pctx), (float)plineHeight.f);
+    
+    
+    return 0;
+}
+
+int org_mini_glfw_utils_Nutil_nvgTextAlign(Runtime *runtime, Class *clazz) {
+    JniEnv *env = runtime->jnienv;
+    s32 pos = 0;
+    
+    intptr_t pctx = env->localvar_getLong_2slot(runtime, pos);pos += 2;
+    s32 palign = env->localvar_getInt(runtime, pos++);
+
+    nvgTextAlign((NVGcontext*/*ptr*/)(pctx), (int)palign);
+    
+    
+    return 0;
+}
+
+int org_mini_glfw_utils_Nutil_nvgFontFaceId(Runtime *runtime, Class *clazz) {
+    JniEnv *env = runtime->jnienv;
+    s32 pos = 0;
+    
+    intptr_t pctx = env->localvar_getLong_2slot(runtime, pos);pos += 2;
+    s32 pfont = env->localvar_getInt(runtime, pos++);
+
+    nvgFontFaceId((NVGcontext*/*ptr*/)(pctx), (int)pfont);
+    
+    
+    return 0;
+}
+
+int org_mini_glfw_utils_Nutil_nvgFontFace(Runtime *runtime, Class *clazz) {
+    JniEnv *env = runtime->jnienv;
+    s32 pos = 0;
+    
+    intptr_t pctx = env->localvar_getLong_2slot(runtime, pos);pos += 2;
+    Instance *pfont = env->localvar_getRefer(runtime, pos++);
+    __refer ptr_pfont = NULL;
+    if(pfont){
+        ptr_pfont = pfont->arr_body;
+    }
+
+    nvgFontFace((NVGcontext*/*ptr*/)(pctx), (const char*)(ptr_pfont));
+    
+    
+    return 0;
+}
+
+int org_mini_glfw_utils_Nutil_nvgText(Runtime *runtime, Class *clazz) {
+    JniEnv *env = runtime->jnienv;
+    s32 pos = 0;
+    
+    intptr_t pctx = env->localvar_getLong_2slot(runtime, pos);pos += 2;
+    Int2Float px;px.i = env->localvar_getInt(runtime, pos++);
+    Int2Float py;py.i = env->localvar_getInt(runtime, pos++);
+    Instance *pstring = env->localvar_getRefer(runtime, pos++);
+    __refer ptr_pstring = NULL;
+    if(pstring){
+        ptr_pstring = pstring->arr_body;
+    }
+    Instance *pend = env->localvar_getRefer(runtime, pos++);
+    __refer ptr_pend = NULL;
+    if(pend){
+        ptr_pend = pend->arr_body;
+    }
+
+    f32 ret_value = (f32)nvgText((NVGcontext*/*ptr*/)(pctx), (float)px.f, (float)py.f, (const char*)(ptr_pstring), (const char*)(ptr_pend));
+    env->push_float(runtime->stack, ret_value);
+    
+    return 0;
+}
+
+int org_mini_glfw_utils_Nutil_nvgTextBox(Runtime *runtime, Class *clazz) {
+    JniEnv *env = runtime->jnienv;
+    s32 pos = 0;
+    
+    intptr_t pctx = env->localvar_getLong_2slot(runtime, pos);pos += 2;
+    Int2Float px;px.i = env->localvar_getInt(runtime, pos++);
+    Int2Float py;py.i = env->localvar_getInt(runtime, pos++);
+    Int2Float pbreakRowWidth;pbreakRowWidth.i = env->localvar_getInt(runtime, pos++);
+    Instance *pstring = env->localvar_getRefer(runtime, pos++);
+    __refer ptr_pstring = NULL;
+    if(pstring){
+        ptr_pstring = pstring->arr_body;
+    }
+    Instance *pend = env->localvar_getRefer(runtime, pos++);
+    __refer ptr_pend = NULL;
+    if(pend){
+        ptr_pend = pend->arr_body;
+    }
+
+    nvgTextBox((NVGcontext*/*ptr*/)(pctx), (float)px.f, (float)py.f, (float)pbreakRowWidth.f, (const char*)(ptr_pstring), (const char*)(ptr_pend));
+    
+    
+    return 0;
+}
+
+int org_mini_glfw_utils_Nutil_nvgTextBounds(Runtime *runtime, Class *clazz) {
+    JniEnv *env = runtime->jnienv;
+    s32 pos = 0;
+    
+    intptr_t pctx = env->localvar_getLong_2slot(runtime, pos);pos += 2;
+    Int2Float px;px.i = env->localvar_getInt(runtime, pos++);
+    Int2Float py;py.i = env->localvar_getInt(runtime, pos++);
+    Instance *pstring = env->localvar_getRefer(runtime, pos++);
+    __refer ptr_pstring = NULL;
+    if(pstring){
+        ptr_pstring = pstring->arr_body;
+    }
+    Instance *pend = env->localvar_getRefer(runtime, pos++);
+    __refer ptr_pend = NULL;
+    if(pend){
+        ptr_pend = pend->arr_body;
+    }
+    Instance *pbounds = env->localvar_getRefer(runtime, pos++);
+    __refer ptr_pbounds = NULL;
+    if(pbounds){
+        ptr_pbounds = pbounds->arr_body;
+    }
+
+    f32 ret_value = (f32)nvgTextBounds((NVGcontext*/*ptr*/)(pctx), (float)px.f, (float)py.f, (const char*)(ptr_pstring), (const char*)(ptr_pend), (float*)(ptr_pbounds));
+    env->push_float(runtime->stack, ret_value);
+    
+    return 0;
+}
+
+int org_mini_glfw_utils_Nutil_nvgTextBoxBounds(Runtime *runtime, Class *clazz) {
+    JniEnv *env = runtime->jnienv;
+    s32 pos = 0;
+    
+    intptr_t pctx = env->localvar_getLong_2slot(runtime, pos);pos += 2;
+    Int2Float px;px.i = env->localvar_getInt(runtime, pos++);
+    Int2Float py;py.i = env->localvar_getInt(runtime, pos++);
+    Int2Float pbreakRowWidth;pbreakRowWidth.i = env->localvar_getInt(runtime, pos++);
+    Instance *pstring = env->localvar_getRefer(runtime, pos++);
+    __refer ptr_pstring = NULL;
+    if(pstring){
+        ptr_pstring = pstring->arr_body;
+    }
+    Instance *pend = env->localvar_getRefer(runtime, pos++);
+    __refer ptr_pend = NULL;
+    if(pend){
+        ptr_pend = pend->arr_body;
+    }
+    Instance *pbounds = env->localvar_getRefer(runtime, pos++);
+    __refer ptr_pbounds = NULL;
+    if(pbounds){
+        ptr_pbounds = pbounds->arr_body;
+    }
+
+    nvgTextBoxBounds((NVGcontext*/*ptr*/)(pctx), (float)px.f, (float)py.f, (float)pbreakRowWidth.f, (const char*)(ptr_pstring), (const char*)(ptr_pend), (float*)(ptr_pbounds));
+    
+    
+    return 0;
+}
+
+int org_mini_glfw_utils_Nutil_nvgTextGlyphPositions(Runtime *runtime, Class *clazz) {
+    JniEnv *env = runtime->jnienv;
+    s32 pos = 0;
+    
+    intptr_t pctx = env->localvar_getLong_2slot(runtime, pos);pos += 2;
+    Int2Float px;px.i = env->localvar_getInt(runtime, pos++);
+    Int2Float py;py.i = env->localvar_getInt(runtime, pos++);
+    Instance *pstring = env->localvar_getRefer(runtime, pos++);
+    __refer ptr_pstring = NULL;
+    if(pstring){
+        ptr_pstring = pstring->arr_body;
+    }
+    Instance *pend = env->localvar_getRefer(runtime, pos++);
+    __refer ptr_pend = NULL;
+    if(pend){
+        ptr_pend = pend->arr_body;
+    }
+    intptr_t ppositions = env->localvar_getLong_2slot(runtime, pos);pos += 2;
+    s32 pmaxPositions = env->localvar_getInt(runtime, pos++);
+
+    int _re_val = nvgTextGlyphPositions((NVGcontext*/*ptr*/)(pctx), (float)px.f, (float)py.f, (const char*)(ptr_pstring), (const char*)(ptr_pend), (NVGglyphPosition*/*ptr*/)(ppositions), (int)pmaxPositions);
+    s32 ret_value = (s32)_re_val;env->push_int(runtime->stack, ret_value);
+    
+    return 0;
+}
+
+int org_mini_glfw_utils_Nutil_nvgTextMetrics(Runtime *runtime, Class *clazz) {
+    JniEnv *env = runtime->jnienv;
+    s32 pos = 0;
+    
+    intptr_t pctx = env->localvar_getLong_2slot(runtime, pos);pos += 2;
+    Instance *pascender = env->localvar_getRefer(runtime, pos++);
+    __refer ptr_pascender = NULL;
+    if(pascender){
+        ptr_pascender = pascender->arr_body;
+    }
+    Instance *pdescender = env->localvar_getRefer(runtime, pos++);
+    __refer ptr_pdescender = NULL;
+    if(pdescender){
+        ptr_pdescender = pdescender->arr_body;
+    }
+    Instance *plineh = env->localvar_getRefer(runtime, pos++);
+    __refer ptr_plineh = NULL;
+    if(plineh){
+        ptr_plineh = plineh->arr_body;
+    }
+
+    nvgTextMetrics((NVGcontext*/*ptr*/)(pctx), (float*)(ptr_pascender), (float*)(ptr_pdescender), (float*)(ptr_plineh));
+    
+    
+    return 0;
+}
+
+int org_mini_glfw_utils_Nutil_nvgTextBreakLines(Runtime *runtime, Class *clazz) {
+    JniEnv *env = runtime->jnienv;
+    s32 pos = 0;
+    
+    intptr_t pctx = env->localvar_getLong_2slot(runtime, pos);pos += 2;
+    Instance *pstring = env->localvar_getRefer(runtime, pos++);
+    __refer ptr_pstring = NULL;
+    if(pstring){
+        ptr_pstring = pstring->arr_body;
+    }
+    Instance *pend = env->localvar_getRefer(runtime, pos++);
+    __refer ptr_pend = NULL;
+    if(pend){
+        ptr_pend = pend->arr_body;
+    }
+    Int2Float pbreakRowWidth;pbreakRowWidth.i = env->localvar_getInt(runtime, pos++);
+    intptr_t prows = env->localvar_getLong_2slot(runtime, pos);pos += 2;
+    s32 pmaxRows = env->localvar_getInt(runtime, pos++);
+
+    int _re_val = nvgTextBreakLines((NVGcontext*/*ptr*/)(pctx), (const char*)(ptr_pstring), (const char*)(ptr_pend), (float)pbreakRowWidth.f, (NVGtextRow*/*ptr*/)(prows), (int)pmaxRows);
+    s32 ret_value = (s32)_re_val;env->push_int(runtime->stack, ret_value);
+    
+    return 0;
+}
+
+int org_mini_glfw_utils_Nutil_nvgCreateGL3(Runtime *runtime, Class *clazz) {
+    JniEnv *env = runtime->jnienv;
+    s32 pos = 0;
+    
+    s32 pflags = env->localvar_getInt(runtime, pos++);
+
+    NVGcontext*/*ptr*/ _re_val = nvgCreateGL3((int)pflags);
+    s64 ret_value = (s64)(intptr_t)_re_val;env->push_long(runtime->stack, ret_value);
+    
+    return 0;
+}
+
+int org_mini_glfw_utils_Nutil_nvgDeleteGL3(Runtime *runtime, Class *clazz) {
+    JniEnv *env = runtime->jnienv;
+    s32 pos = 0;
+    
+    intptr_t pctx = env->localvar_getLong_2slot(runtime, pos);pos += 2;
+
+    nvgDeleteGL3((NVGcontext*/*ptr*/)(pctx));
+    
+    
+    return 0;
+}
+
+int org_mini_glfw_utils_Nutil_nvglCreateImageFromHandleGL3(Runtime *runtime, Class *clazz) {
+    JniEnv *env = runtime->jnienv;
+    s32 pos = 0;
+    
+    intptr_t pctx = env->localvar_getLong_2slot(runtime, pos);pos += 2;
+    s32 ptextureId = env->localvar_getInt(runtime, pos++);
+    s32 pw = env->localvar_getInt(runtime, pos++);
+    s32 ph = env->localvar_getInt(runtime, pos++);
+    s32 pflags = env->localvar_getInt(runtime, pos++);
+
+    int _re_val = nvglCreateImageFromHandleGL3((NVGcontext*/*ptr*/)(pctx), (GLuint)ptextureId, (int)pw, (int)ph, (int)pflags);
+    s32 ret_value = (s32)_re_val;env->push_int(runtime->stack, ret_value);
+    
+    return 0;
+}
+
+int org_mini_glfw_utils_Nutil_nvglImageHandleGL3(Runtime *runtime, Class *clazz) {
+    JniEnv *env = runtime->jnienv;
+    s32 pos = 0;
+    
+    intptr_t pctx = env->localvar_getLong_2slot(runtime, pos);pos += 2;
+    s32 pimage = env->localvar_getInt(runtime, pos++);
+
+    GLuint _re_val = nvglImageHandleGL3((NVGcontext*/*ptr*/)(pctx), (int)pimage);
+    s32 ret_value = (s32)_re_val;env->push_int(runtime->stack, ret_value);
+    
+    return 0;
+}
+
 
 
 
@@ -268,6 +2136,109 @@ static java_native_method method_nutil_table[] = {
 {"org/mini/glfw/utils/Nutil",  "stbi_write_png",  "([BIIIJI)I",  org_mini_glfw_utils_Nutil_stbi_write_png},
 {"org/mini/glfw/utils/Nutil",  "stbi_write_bmp",  "([BIIIJ)I",  org_mini_glfw_utils_Nutil_stbi_write_bmp},
 {"org/mini/glfw/utils/Nutil",  "stbi_write_tga",  "([BIIIJ)I",  org_mini_glfw_utils_Nutil_stbi_write_tga},
+{"org/mini/glfw/utils/Nutil",  "stbi_load",  "([B[I[I[II)J",  org_mini_glfw_utils_Nutil_stbi_load},
+{"org/mini/glfw/utils/Nutil",  "stbi_load_from_memory",  "(JI[I[I[II)J",  org_mini_glfw_utils_Nutil_stbi_load_from_memory},
+{"org/mini/glfw/utils/Nutil",  "stbi_image_free",  "(J)V",  org_mini_glfw_utils_Nutil_stbi_image_free},
+{"org/mini/glfw/utils/Nutil",  "nvgBeginFrame",  "(JIIF)V",  org_mini_glfw_utils_Nutil_nvgBeginFrame},
+{"org/mini/glfw/utils/Nutil",  "nvgCancelFrame",  "(J)V",  org_mini_glfw_utils_Nutil_nvgCancelFrame},
+{"org/mini/glfw/utils/Nutil",  "nvgEndFrame",  "(J)V",  org_mini_glfw_utils_Nutil_nvgEndFrame},
+{"org/mini/glfw/utils/Nutil",  "nvgGlobalCompositeOperation",  "(JI)V",  org_mini_glfw_utils_Nutil_nvgGlobalCompositeOperation},
+{"org/mini/glfw/utils/Nutil",  "nvgGlobalCompositeBlendFunc",  "(JII)V",  org_mini_glfw_utils_Nutil_nvgGlobalCompositeBlendFunc},
+{"org/mini/glfw/utils/Nutil",  "nvgGlobalCompositeBlendFuncSeparate",  "(JIIII)V",  org_mini_glfw_utils_Nutil_nvgGlobalCompositeBlendFuncSeparate},
+{"org/mini/glfw/utils/Nutil",  "nvgRGB",  "(BBB)[F",  org_mini_glfw_utils_Nutil_nvgRGB},
+{"org/mini/glfw/utils/Nutil",  "nvgRGBf",  "(FFF)[F",  org_mini_glfw_utils_Nutil_nvgRGBf},
+{"org/mini/glfw/utils/Nutil",  "nvgRGBA",  "(BBBB)[F",  org_mini_glfw_utils_Nutil_nvgRGBA},
+{"org/mini/glfw/utils/Nutil",  "nvgRGBAf",  "(FFFF)[F",  org_mini_glfw_utils_Nutil_nvgRGBAf},
+{"org/mini/glfw/utils/Nutil",  "nvgLerpRGBA",  "([F[FF)[F",  org_mini_glfw_utils_Nutil_nvgLerpRGBA},
+{"org/mini/glfw/utils/Nutil",  "nvgTransRGBA",  "([FB)[F",  org_mini_glfw_utils_Nutil_nvgTransRGBA},
+{"org/mini/glfw/utils/Nutil",  "nvgTransRGBAf",  "([FF)[F",  org_mini_glfw_utils_Nutil_nvgTransRGBAf},
+{"org/mini/glfw/utils/Nutil",  "nvgHSL",  "(FFF)[F",  org_mini_glfw_utils_Nutil_nvgHSL},
+{"org/mini/glfw/utils/Nutil",  "nvgHSLA",  "(FFFB)[F",  org_mini_glfw_utils_Nutil_nvgHSLA},
+{"org/mini/glfw/utils/Nutil",  "nvgSave",  "(J)V",  org_mini_glfw_utils_Nutil_nvgSave},
+{"org/mini/glfw/utils/Nutil",  "nvgRestore",  "(J)V",  org_mini_glfw_utils_Nutil_nvgRestore},
+{"org/mini/glfw/utils/Nutil",  "nvgReset",  "(J)V",  org_mini_glfw_utils_Nutil_nvgReset},
+{"org/mini/glfw/utils/Nutil",  "nvgShapeAntiAlias",  "(JI)V",  org_mini_glfw_utils_Nutil_nvgShapeAntiAlias},
+{"org/mini/glfw/utils/Nutil",  "nvgStrokeColor",  "(J[F)V",  org_mini_glfw_utils_Nutil_nvgStrokeColor},
+{"org/mini/glfw/utils/Nutil",  "nvgStrokePaint",  "(J[B)V",  org_mini_glfw_utils_Nutil_nvgStrokePaint},
+{"org/mini/glfw/utils/Nutil",  "nvgFillColor",  "(J[F)V",  org_mini_glfw_utils_Nutil_nvgFillColor},
+{"org/mini/glfw/utils/Nutil",  "nvgFillPaint",  "(J[B)V",  org_mini_glfw_utils_Nutil_nvgFillPaint},
+{"org/mini/glfw/utils/Nutil",  "nvgMiterLimit",  "(JF)V",  org_mini_glfw_utils_Nutil_nvgMiterLimit},
+{"org/mini/glfw/utils/Nutil",  "nvgStrokeWidth",  "(JF)V",  org_mini_glfw_utils_Nutil_nvgStrokeWidth},
+{"org/mini/glfw/utils/Nutil",  "nvgLineCap",  "(JI)V",  org_mini_glfw_utils_Nutil_nvgLineCap},
+{"org/mini/glfw/utils/Nutil",  "nvgLineJoin",  "(JI)V",  org_mini_glfw_utils_Nutil_nvgLineJoin},
+{"org/mini/glfw/utils/Nutil",  "nvgGlobalAlpha",  "(JF)V",  org_mini_glfw_utils_Nutil_nvgGlobalAlpha},
+{"org/mini/glfw/utils/Nutil",  "nvgResetTransform",  "(J)V",  org_mini_glfw_utils_Nutil_nvgResetTransform},
+{"org/mini/glfw/utils/Nutil",  "nvgTransform",  "(JFFFFFF)V",  org_mini_glfw_utils_Nutil_nvgTransform},
+{"org/mini/glfw/utils/Nutil",  "nvgTranslate",  "(JFF)V",  org_mini_glfw_utils_Nutil_nvgTranslate},
+{"org/mini/glfw/utils/Nutil",  "nvgRotate",  "(JF)V",  org_mini_glfw_utils_Nutil_nvgRotate},
+{"org/mini/glfw/utils/Nutil",  "nvgSkewX",  "(JF)V",  org_mini_glfw_utils_Nutil_nvgSkewX},
+{"org/mini/glfw/utils/Nutil",  "nvgSkewY",  "(JF)V",  org_mini_glfw_utils_Nutil_nvgSkewY},
+{"org/mini/glfw/utils/Nutil",  "nvgScale",  "(JFF)V",  org_mini_glfw_utils_Nutil_nvgScale},
+{"org/mini/glfw/utils/Nutil",  "nvgCurrentTransform",  "(J[F)V",  org_mini_glfw_utils_Nutil_nvgCurrentTransform},
+{"org/mini/glfw/utils/Nutil",  "nvgTransformIdentity",  "([F)V",  org_mini_glfw_utils_Nutil_nvgTransformIdentity},
+{"org/mini/glfw/utils/Nutil",  "nvgTransformTranslate",  "([FFF)V",  org_mini_glfw_utils_Nutil_nvgTransformTranslate},
+{"org/mini/glfw/utils/Nutil",  "nvgTransformScale",  "([FFF)V",  org_mini_glfw_utils_Nutil_nvgTransformScale},
+{"org/mini/glfw/utils/Nutil",  "nvgTransformRotate",  "([FF)V",  org_mini_glfw_utils_Nutil_nvgTransformRotate},
+{"org/mini/glfw/utils/Nutil",  "nvgTransformSkewX",  "([FF)V",  org_mini_glfw_utils_Nutil_nvgTransformSkewX},
+{"org/mini/glfw/utils/Nutil",  "nvgTransformSkewY",  "([FF)V",  org_mini_glfw_utils_Nutil_nvgTransformSkewY},
+{"org/mini/glfw/utils/Nutil",  "nvgTransformMultiply",  "([F[F)V",  org_mini_glfw_utils_Nutil_nvgTransformMultiply},
+{"org/mini/glfw/utils/Nutil",  "nvgTransformPremultiply",  "([F[F)V",  org_mini_glfw_utils_Nutil_nvgTransformPremultiply},
+{"org/mini/glfw/utils/Nutil",  "nvgTransformInverse",  "([F[F)I",  org_mini_glfw_utils_Nutil_nvgTransformInverse},
+{"org/mini/glfw/utils/Nutil",  "nvgTransformPoint",  "([F[F[FFF)V",  org_mini_glfw_utils_Nutil_nvgTransformPoint},
+{"org/mini/glfw/utils/Nutil",  "nvgDegToRad",  "(F)F",  org_mini_glfw_utils_Nutil_nvgDegToRad},
+{"org/mini/glfw/utils/Nutil",  "nvgRadToDeg",  "(F)F",  org_mini_glfw_utils_Nutil_nvgRadToDeg},
+{"org/mini/glfw/utils/Nutil",  "nvgCreateImage",  "(J[BI)I",  org_mini_glfw_utils_Nutil_nvgCreateImage},
+{"org/mini/glfw/utils/Nutil",  "nvgCreateImageMem",  "(JI[BI)I",  org_mini_glfw_utils_Nutil_nvgCreateImageMem},
+{"org/mini/glfw/utils/Nutil",  "nvgCreateImageRGBA",  "(JIII[B)I",  org_mini_glfw_utils_Nutil_nvgCreateImageRGBA},
+{"org/mini/glfw/utils/Nutil",  "nvgUpdateImage",  "(JI[B)V",  org_mini_glfw_utils_Nutil_nvgUpdateImage},
+{"org/mini/glfw/utils/Nutil",  "nvgImageSize",  "(JI[I[I)V",  org_mini_glfw_utils_Nutil_nvgImageSize},
+{"org/mini/glfw/utils/Nutil",  "nvgDeleteImage",  "(JI)V",  org_mini_glfw_utils_Nutil_nvgDeleteImage},
+{"org/mini/glfw/utils/Nutil",  "nvgLinearGradient",  "(JFFFF[F[F)[B",  org_mini_glfw_utils_Nutil_nvgLinearGradient},
+{"org/mini/glfw/utils/Nutil",  "nvgBoxGradient",  "(JFFFFFF[F[F)[B",  org_mini_glfw_utils_Nutil_nvgBoxGradient},
+{"org/mini/glfw/utils/Nutil",  "nvgRadialGradient",  "(JFFFF[F[F)[B",  org_mini_glfw_utils_Nutil_nvgRadialGradient},
+{"org/mini/glfw/utils/Nutil",  "nvgImagePattern",  "(JFFFFFIF)[B",  org_mini_glfw_utils_Nutil_nvgImagePattern},
+{"org/mini/glfw/utils/Nutil",  "nvgScissor",  "(JFFFF)V",  org_mini_glfw_utils_Nutil_nvgScissor},
+{"org/mini/glfw/utils/Nutil",  "nvgIntersectScissor",  "(JFFFF)V",  org_mini_glfw_utils_Nutil_nvgIntersectScissor},
+{"org/mini/glfw/utils/Nutil",  "nvgResetScissor",  "(J)V",  org_mini_glfw_utils_Nutil_nvgResetScissor},
+{"org/mini/glfw/utils/Nutil",  "nvgBeginPath",  "(J)V",  org_mini_glfw_utils_Nutil_nvgBeginPath},
+{"org/mini/glfw/utils/Nutil",  "nvgMoveTo",  "(JFF)V",  org_mini_glfw_utils_Nutil_nvgMoveTo},
+{"org/mini/glfw/utils/Nutil",  "nvgLineTo",  "(JFF)V",  org_mini_glfw_utils_Nutil_nvgLineTo},
+{"org/mini/glfw/utils/Nutil",  "nvgBezierTo",  "(JFFFFFF)V",  org_mini_glfw_utils_Nutil_nvgBezierTo},
+{"org/mini/glfw/utils/Nutil",  "nvgQuadTo",  "(JFFFF)V",  org_mini_glfw_utils_Nutil_nvgQuadTo},
+{"org/mini/glfw/utils/Nutil",  "nvgArcTo",  "(JFFFFF)V",  org_mini_glfw_utils_Nutil_nvgArcTo},
+{"org/mini/glfw/utils/Nutil",  "nvgClosePath",  "(J)V",  org_mini_glfw_utils_Nutil_nvgClosePath},
+{"org/mini/glfw/utils/Nutil",  "nvgPathWinding",  "(JI)V",  org_mini_glfw_utils_Nutil_nvgPathWinding},
+{"org/mini/glfw/utils/Nutil",  "nvgArc",  "(JFFFFFI)V",  org_mini_glfw_utils_Nutil_nvgArc},
+{"org/mini/glfw/utils/Nutil",  "nvgRect",  "(JFFFF)V",  org_mini_glfw_utils_Nutil_nvgRect},
+{"org/mini/glfw/utils/Nutil",  "nvgRoundedRect",  "(JFFFFF)V",  org_mini_glfw_utils_Nutil_nvgRoundedRect},
+{"org/mini/glfw/utils/Nutil",  "nvgRoundedRectVarying",  "(JFFFFFFFF)V",  org_mini_glfw_utils_Nutil_nvgRoundedRectVarying},
+{"org/mini/glfw/utils/Nutil",  "nvgEllipse",  "(JFFFF)V",  org_mini_glfw_utils_Nutil_nvgEllipse},
+{"org/mini/glfw/utils/Nutil",  "nvgCircle",  "(JFFF)V",  org_mini_glfw_utils_Nutil_nvgCircle},
+{"org/mini/glfw/utils/Nutil",  "nvgFill",  "(J)V",  org_mini_glfw_utils_Nutil_nvgFill},
+{"org/mini/glfw/utils/Nutil",  "nvgStroke",  "(J)V",  org_mini_glfw_utils_Nutil_nvgStroke},
+{"org/mini/glfw/utils/Nutil",  "nvgCreateFont",  "(J[B[B)I",  org_mini_glfw_utils_Nutil_nvgCreateFont},
+{"org/mini/glfw/utils/Nutil",  "nvgCreateFontMem",  "(J[B[BII)I",  org_mini_glfw_utils_Nutil_nvgCreateFontMem},
+{"org/mini/glfw/utils/Nutil",  "nvgFindFont",  "(J[B)I",  org_mini_glfw_utils_Nutil_nvgFindFont},
+{"org/mini/glfw/utils/Nutil",  "nvgAddFallbackFontId",  "(JII)I",  org_mini_glfw_utils_Nutil_nvgAddFallbackFontId},
+{"org/mini/glfw/utils/Nutil",  "nvgAddFallbackFont",  "(J[B[B)I",  org_mini_glfw_utils_Nutil_nvgAddFallbackFont},
+{"org/mini/glfw/utils/Nutil",  "nvgFontSize",  "(JF)V",  org_mini_glfw_utils_Nutil_nvgFontSize},
+{"org/mini/glfw/utils/Nutil",  "nvgFontBlur",  "(JF)V",  org_mini_glfw_utils_Nutil_nvgFontBlur},
+{"org/mini/glfw/utils/Nutil",  "nvgTextLetterSpacing",  "(JF)V",  org_mini_glfw_utils_Nutil_nvgTextLetterSpacing},
+{"org/mini/glfw/utils/Nutil",  "nvgTextLineHeight",  "(JF)V",  org_mini_glfw_utils_Nutil_nvgTextLineHeight},
+{"org/mini/glfw/utils/Nutil",  "nvgTextAlign",  "(JI)V",  org_mini_glfw_utils_Nutil_nvgTextAlign},
+{"org/mini/glfw/utils/Nutil",  "nvgFontFaceId",  "(JI)V",  org_mini_glfw_utils_Nutil_nvgFontFaceId},
+{"org/mini/glfw/utils/Nutil",  "nvgFontFace",  "(J[B)V",  org_mini_glfw_utils_Nutil_nvgFontFace},
+{"org/mini/glfw/utils/Nutil",  "nvgText",  "(JFF[B[B)F",  org_mini_glfw_utils_Nutil_nvgText},
+{"org/mini/glfw/utils/Nutil",  "nvgTextBox",  "(JFFF[B[B)V",  org_mini_glfw_utils_Nutil_nvgTextBox},
+{"org/mini/glfw/utils/Nutil",  "nvgTextBounds",  "(JFF[B[B[F)F",  org_mini_glfw_utils_Nutil_nvgTextBounds},
+{"org/mini/glfw/utils/Nutil",  "nvgTextBoxBounds",  "(JFFF[B[B[F)V",  org_mini_glfw_utils_Nutil_nvgTextBoxBounds},
+{"org/mini/glfw/utils/Nutil",  "nvgTextGlyphPositions",  "(JFF[B[BJI)I",  org_mini_glfw_utils_Nutil_nvgTextGlyphPositions},
+{"org/mini/glfw/utils/Nutil",  "nvgTextMetrics",  "(J[F[F[F)V",  org_mini_glfw_utils_Nutil_nvgTextMetrics},
+{"org/mini/glfw/utils/Nutil",  "nvgTextBreakLines",  "(J[B[BFJI)I",  org_mini_glfw_utils_Nutil_nvgTextBreakLines},
+{"org/mini/glfw/utils/Nutil",  "nvgCreateGL3",  "(I)J",  org_mini_glfw_utils_Nutil_nvgCreateGL3},
+{"org/mini/glfw/utils/Nutil",  "nvgDeleteGL3",  "(J)V",  org_mini_glfw_utils_Nutil_nvgDeleteGL3},
+{"org/mini/glfw/utils/Nutil",  "nvglCreateImageFromHandleGL3",  "(JIIII)I",  org_mini_glfw_utils_Nutil_nvglCreateImageFromHandleGL3},
+{"org/mini/glfw/utils/Nutil",  "nvglImageHandleGL3",  "(JI)I",  org_mini_glfw_utils_Nutil_nvglImageHandleGL3},
 };
 
 s32 count_NutilFuncTable() {

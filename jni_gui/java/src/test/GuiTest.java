@@ -39,9 +39,9 @@ public class GuiTest {
     }
 
     void t1() {
-        GForm win = new GForm("test 窗口", 800, 600);
+        GForm win = new GForm("test"/*"test 窗口"*/, 800, 600);
         win.init();
-        win.add(new GFrame("demo测试", 30, 30, 500, 400, new NkFrameMain()));
+        win.add(new GFrame(/*"demo测试"*/"demo", 30, 30, 500, 400, new NkFrameMain()));
         win.setCallBack(new MyCallBack());
         win.run();
     }
@@ -114,25 +114,25 @@ public class GuiTest {
         public void updateContents(long ctx, GFrame parent) {
             nk_layout_row_static(ctx, 30, 80, 1);
             if (nk_true == nk_button_label(ctx, Gutil.toUtf8("Close\000"))) {
-                System.out.println("close pressed\n");
-                System.out.println(" show sub1 " + Integer.toHexString(parent.getFrameMode()));
+//                System.out.println("close pressed\n");
+//                System.out.println(" show sub1 " + Integer.toHexString(parent.getFrameMode()));
                 nk_window_show(ctx, parent.getTitleBytes(), NK.NK_HIDDEN);
             }
-            //canvas
-            GGraphics g = parent.getGraphics();
+//            //canvas
+//            GGraphics g = parent.getGraphics();
+//
+//            g.setColor(0x80ff0000);
+//            g.fillRect(100, 200, 200, 100);
+//            g.setColor(0xff00ff00);
+//            g.fillArc(150, 100, 50, 40, 0, 90);
+//            g.drawLine(200, 200, 300, 400);
+//            g.drawArc(100, 100, 30, 50, 0, 270);
+//
+//            g.drawImage(img, 0, 150, 100, 100, 0);
+//            g.drawString("测试一下看看here is a text drawing test.", 100, 300, 0);
 
-            g.setColor(0x80ff0000);
-            g.fillRect(100, 200, 200, 100);
-            g.setColor(0xff00ff00);
-            g.fillArc(350, 350, 50, 40, 0, 360);
-            g.drawLine(200, 200, 300, 400);
-            g.drawArc(100, 100, 100, 200, 0, 360);
-
-            g.drawImage(img, 0, 150, 100, 100, 0);
-            g.drawString("测试一下看看here is a text drawing test.", 100, 300, 0);
-
-            GImage img2 = GForm.getGFont().renderToTexture("张鹏gust zhang", 10);
-            g.drawImage(img2, 120, 150, 0);
+//            GImage img2 = GForm.getGFont().renderToTexture("张鹏gust zhang", 10);
+//            g.drawImage(img2, 120, 150, 0);
 
         }
 
@@ -161,7 +161,7 @@ public class GuiTest {
 //                    light.draw();
                 }
             };
-            sub1 = new GFrame("子窗口", 100, 100, 300, 400, new NkFrameSub1());
+            sub1 = new GFrame(/*"子窗口"*/"sub1", 100, 100, 300, 400, new NkFrameSub1());
             img1 = new GImage(glfb.getTexture(), glfb.getWidth(), glfb.getHeight());
         }
 
@@ -175,29 +175,29 @@ public class GuiTest {
                 if (notice == 0) {
                     GForm main = getForm(ctx);
                     main.add(sub1);
-                    System.out.println("add sub1");
+                    System.out.println("add sub1=======================");
                 } else {
                     nk_window_show(ctx, sub1.getTitleBytes(), NK.NK_SHOWN);
                     System.out.println("show sub1");
                 }
             }
-            nk_layout_row_dynamic(ctx, 30, 3);
-            if (nk_option_label(ctx, Gutil.toUtf8("easy\000"), op == EASY ? nk_true : nk_false) == nk_true) {
-                op = EASY;
-            }
-            if (nk_option_label(ctx, Gutil.toUtf8("mid\000"), op == MID ? nk_true : nk_false) == nk_true) {
-                op = MID;
-            }
-            if (nk_option_label(ctx, Gutil.toUtf8("hard\000"), op == HARD ? nk_true : nk_false) == nk_true) {
-                op = HARD;
-            }
-            nk_layout_row_dynamic(ctx, 22, 1);
-            property = nk_propertyi(ctx, Gutil.toUtf8("在哪里Compression:\000"), 0, property, 100, 10, 1);
+//            nk_layout_row_dynamic(ctx, 30, 3);
+//            if (nk_option_label(ctx, Gutil.toUtf8("easy\000"), op == EASY ? nk_true : nk_false) == nk_true) {
+//                op = EASY;
+//            }
+//            if (nk_option_label(ctx, Gutil.toUtf8("mid\000"), op == MID ? nk_true : nk_false) == nk_true) {
+//                op = MID;
+//            }
+//            if (nk_option_label(ctx, Gutil.toUtf8("hard\000"), op == HARD ? nk_true : nk_false) == nk_true) {
+//                op = HARD;
+//            }
+//            nk_layout_row_dynamic(ctx, 22, 1);
+//            property = nk_propertyi(ctx, Gutil.toUtf8("在哪里Compression:\000"), 0, property, 100, 10, 1);
 
             //draw 3d graphics
-            GGraphics g = parent.getGraphics();
-            glfb.render(glfbRender);
-            g.drawImage(img1, 0, 150, 200, 200, 0);
+//            GGraphics g = parent.getGraphics();
+//            glfb.render(glfbRender);
+//            g.drawImage(img1, 0, 150, 200, 200, 0);
             try {
                 Thread.sleep(50);
             } catch (InterruptedException ex) {

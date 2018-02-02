@@ -23,8 +23,8 @@ int call_jvm(char* app_path) {
     java_debug=0;
     ArrayList * java_para=arraylist_create(0);
 //    ret= execute_jvm(path, "test/Gears", java_para);
-//    ret= execute_jvm(path, "test/GuiTest", java_para);
-    ret= execute_jvm(path, "test/Light", java_para);
+    ret= execute_jvm(path, "test/GuiTest", java_para);
+//    ret= execute_jvm(path, "test/Light", java_para);
     arraylist_destory(java_para);
     return ret;
 }

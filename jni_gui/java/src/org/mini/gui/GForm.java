@@ -56,7 +56,7 @@ public class GForm extends GContainer implements Runnable {
     };
 
     public GForm(String title, int width, int height) {
-        this.title = title;
+        this.title = title + "\000";
         this.width = width;
         this.height = height;
     }
@@ -92,8 +92,7 @@ public class GForm extends GContainer implements Runnable {
         glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
         glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
 
-
-        win = Glfw.glfwCreateWindow(width, height, title, 0, 0);
+        win = Glfw.glfwCreateWindow(width, height, Gutil.toUtf8(title), 0, 0);
         if (win == 0) {
             glfwTerminate();
             System.exit(1);
@@ -101,17 +100,20 @@ public class GForm extends GContainer implements Runnable {
         Glfw.glfwMakeContextCurrent(win);
         glfwSwapInterval(nk_true);
         ctx = nk_glfw3_init(win, NK.NK_GLFW3_INSTALL_CALLBACKS);
-        if (callback != null) {
-            Glfw.glfwSetCallback(win, callback);
-        }
+//        if (callback != null) {
+//            Glfw.glfwSetCallback(win, callback);
+//        }
         //字体
+//        long[] atlas = {0};
+//        NK.nk_glfw3_font_stash_begin(atlas);
+//        NK.nk_glfw3_font_stash_end();
+
         if (gfont == null) {
             gfont = Gutil.getDefaultFont();
         }
 //        font = NK.nk_load_font_file("./wqymhei.ttc\000".getBytes(), 15);
         byte[] fontBuffer = gfont.getFontBytes();
         nkfont = NK.nk_load_font_memory(GToolkit.getArrayDataPtr(fontBuffer), fontBuffer.length, 14);
-
         NK.nk_style_set_font(ctx, NK.nk_get_font_handle(nkfont));
     }
 

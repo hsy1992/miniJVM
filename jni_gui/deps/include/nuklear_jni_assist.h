@@ -50,7 +50,7 @@ NK_API struct nk_font *nk_load_font_memory(void *bytes, int size, float height) 
     nk_glfw3_font_stash_begin(&atlas);
 
     struct nk_font *font = nk_font_atlas_add_from_memory(atlas, bytes, size, height, 0);
-    font->config->range = full_ranges;//nk_font_chinese_glyph_ranges();//&nk_font_japanese_glyph_ranges[0];
+    font->config->range = /*full_ranges;*/nk_font_chinese_glyph_ranges();//&nk_font_japanese_glyph_ranges[0];
     nk_glfw3_font_stash_end();
     return font;
 }

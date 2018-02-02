@@ -6,10 +6,13 @@
 package org.mini.glfw.utils;
 
 import java.io.UnsupportedEncodingException;
+import javax.mini.reflect.MemAccess;
 import org.mini.gl.GL;
 import static org.mini.gl.GL.GL_CLAMP_TO_EDGE;
 import static org.mini.gl.GL.GL_LINEAR_MIPMAP_NEAREST;
 import static org.mini.gl.GL.GL_RENDERER;
+import static org.mini.gl.GL.GL_RGBA;
+import static org.mini.gl.GL.GL_RGBA8;
 import static org.mini.gl.GL.GL_TEXTURE_2D;
 import static org.mini.gl.GL.GL_TEXTURE_MAG_FILTER;
 import static org.mini.gl.GL.GL_TEXTURE_MIN_FILTER;
@@ -24,6 +27,8 @@ import static org.mini.gl.GL.glGenerateMipmap;
 import static org.mini.gl.GL.glGetString;
 import static org.mini.gl.GL.glTexImage2D;
 import static org.mini.gl.GL.glTexParameterf;
+import static org.mini.glfw.utils.Nutil.stbi_image_free;
+import static org.mini.glfw.utils.Nutil.stbi_load;
 
 /**
  *
@@ -41,15 +46,6 @@ public class Gutil {
      * @return
      */
     static public native byte[] f2b(float[] farr, byte[] barr);
-
-    /**
-     * load image return opengl GL_TEXTURE_2D id
-     *
-     * @param pfilename
-     * @param para_3slot new int[3] for image w,h,bit depth
-     * @return
-     */
-    public static native int image_load(String pfilename, int[] para_3slot); //const char*, //struct nk_image/*none_ptr*/ 
 
     /**
      * vec and matrix
@@ -215,6 +211,44 @@ public class Gutil {
         } catch (UnsupportedEncodingException ex) {
         }
         return barr;
+    }
+
+    /**
+     * load image return opengl GL_TEXTURE_2D id
+     *
+     * @param filename
+     * @param w_h_d new int[3] for image w,h,bit depth
+     * @return
+     */
+    public static int image_load(String filename, int[] w_h_d) {
+        int[] x = {0}, y = {0}, n = {0};
+        int[] tex = {0};
+        byte[] b = toUtf8(filename + "\000");
+        long data = stbi_load(b, x, y, n, 0);
+        if (data == 0) {
+            System.out.println("ERROR: failed to load image: " + filename);
+            return -1;
+        }
+        w_h_d[0] = x[0];
+        w_h_d[1] = y[0];
+        w_h_d[2] = n[0];
+        MemAccess ma = new MemAccess(data);
+        byte[] d = new byte[x[0] * y[0] * n[0]];
+        for (int i = 0, imax = d.length; i < imax; i++) {
+            d[i] = ma.readByte(i);
+        }
+        glGenTextures(1, tex, 0);
+        glBindTexture(GL_TEXTURE_2D, tex[0]);
+        glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_NEAREST);
+        glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR_MIPMAP_NEAREST);
+        glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+        glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+        GL.glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, x[0], y[0], 0, GL_RGBA, GL_UNSIGNED_BYTE, d, 0);
+        glGenerateMipmap(GL_TEXTURE_2D);
+//    printf("x=%d,y=%d,n=%d\n", x, y, n);
+
+        stbi_image_free(data);
+        return tex[0];
     }
 
     static public int genTexture2D(byte[] data, int w, int h, int gl_inner_format, int gl_format) {

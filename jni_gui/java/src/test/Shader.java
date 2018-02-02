@@ -121,21 +121,64 @@ public class Shader {
     int[] Buffers = new int[NumBuffers];
 
     int NumVertices = 6;
-    
-    byte[] s_v=Gutil.toUtf8("#version 330   \n"
-                + "layout(location = 0) in vec4 vPosition;  \n"
-                + "void  \n"
-                + "main()  \n"
-                + " {  \n"
-                + "     gl_Position = vPosition;  \n"
-                + "} \000");
-    byte[] s_f=Gutil.toUtf8("#version 330   \n"
-                + "out vec4 fColor;  \n"
-                + "void  \n"
-                + "main()  \n"
-                + "{  \n"
-                + "fColor = vec4(0.0, 0.0, 1.0, 1.0);  \n"
-                + "}  \000");
+
+    byte[] s_v = Gutil.toUtf8(
+            "#version 330   \n"
+            + "attribute vec3 position;\n"
+            + "attribute vec2 texcoord;\n"
+            + "\n"
+            + "varying vec2 vTexcoord;\n"
+            + "\n"
+            + "void main()\n"
+            + "{\n"
+            + "    gl_Position = vec4(position, 1.0);\n"
+            + "    vTexcoord = texcoord;\n"
+            + "}"
+    );
+//            byte[] s_v = Gutil.toUtf8("#version 330   \n"
+//                + "layout(location = 0) in vec4 vPosition;  \n"
+//                + "void  \n"
+//                + "main()  \n"
+//                + " {  \n"
+//                + "     gl_Position = vPosition;  \n"
+//                + "} \000");
+    byte[] s_f = Gutil.toUtf8(
+            "#version 330   \n"
+            + "precision mediump float;\n"
+            + "\n"
+            + "uniform sampler2D image;\n"
+            + "\n"
+            + "varying vec2 vTexcoord;\n"
+            + "\n"
+            + "void main()\n"
+            + "{\n"
+            + "    float block = 150.0;\n"
+            + "    float delta = 1.0/block;\n"
+            + "    vec4 color = vec4(0.0);\n"
+            + "    \n"
+            + "    float factor[9];\n"
+            + "    factor[0] = 0.0947416; factor[1] = 0.118318; factor[2] = 0.0947416;\n"
+            + "    factor[3] = 0.118318; factor[4] = 0.147761; factor[5] = 0.118318;\n"
+            + "    factor[6] = 0.0947416; factor[7] = 0.118318; factor[8] = 0.0947416;\n"
+            + "    \n"
+            + "    for (int i = -1; i <= 1; i++) {\n"
+            + "        for (int j = -1; j <= 1; j++) {\n"
+            + "            float x = max(0.0, vTexcoord.x + float(i) * delta);\n"
+            + "            float y = max(0.0, vTexcoord.y + float(i) * delta);\n"
+            + "            color += texture2D(image, vec2(x, y)) * factor[(i+1)*3+(j+1)];\n"
+            + "        }\n"
+            + "    }\n"
+            + "    \n"
+            + "    gl_FragColor = vec4(vec3(color), 1.0);\n"
+            + "}"
+    );
+//            byte[] s_f = Gutil.toUtf8("#version 330   \n"
+//                + "out vec4 fColor;  \n"
+//                + "void  \n"
+//                + "main()  \n"
+//                + "{  \n"
+//                + "fColor = vec4(0.0, 0.0, 1.0, 1.0);  \n"
+//                + "}  \000");
 
     void init() {
         glGenVertexArrays(NumVAOs, VAOs, 0);
@@ -217,7 +260,7 @@ public class Shader {
         glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
 //        glfwWindowHint(GLFW_DEPTH_BITS, 16);
 //        glfwWindowHint(GLFW_TRANSPARENT_FRAMEBUFFER, GLFW_TRUE);
-        long win = glfwCreateWindow(640, 480, "hello glfw", 0, 0);
+        long win = glfwCreateWindow(640, 480, "hello glfw".getBytes(), 0, 0);
         if (win != 0) {
             glfwSetCallback(win, new CallBack());
             glfwMakeContextCurrent(win);

@@ -94,7 +94,7 @@ public class RenderTexure {
         glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
         glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
         glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
-        long win = Glfw.glfwCreateWindow(500, 500, "hello glfw", 0, 0);
+        long win = Glfw.glfwCreateWindow(500, 500, "hello glfw".getBytes(), 0, 0);
         if (win != 0) {
             Glfw.glfwSetCallback(win, new CallBack());
             Glfw.glfwMakeContextCurrent(win);

@@ -9,7 +9,8 @@ set(CMAKE_RUNTIME_OUTPUT_DIRECTORY /Users/Gust/Library/Developer/Xcode/DerivedDa
 include_directories(deps/include/)
 
 set(SOURCE_FILES
-        glad.c
+        deps/include/glad/glad.c
+        deps/include/nanovg/nanovg.c
         jni_gui.h
         jni_glfw.c
         jni_gl.c

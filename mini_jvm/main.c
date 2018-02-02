@@ -61,9 +61,10 @@ int main(int argc, char **argv) {
 //        main_name = "test/GuiTest";
 //        main_name = "test/RenderTexure";
 //        main_name = "test/Alpha";
-        main_name = "test/Light";
+//        main_name = "test/Light";
 //        main_name = "test/Shader";
 //        main_name = "test/Boing";
+        main_name = "test/TestNanovg";
 
 //        classpath = "../../javalib/dist/minijvm_rt.jar;../../jni_test/java/dist/jni_test.jar;./";
 //        main_name = "test/JniTest";

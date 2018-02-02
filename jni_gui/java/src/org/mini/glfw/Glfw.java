@@ -1521,11 +1521,8 @@ public class Glfw {
     /*
 		glfwWindowHint(target, hint);
      */
-    public static long glfwCreateWindow(int width, int height, String title, long monitor, long share) {
-        return glfwCreateWindowJni(width, height, title == null ? "MiniJvm\000".getBytes() : Gutil.toUtf8(title + "\000"), monitor, share);
-    }
 
-    private static native long glfwCreateWindowJni(int width, int height, byte[] title, long monitor, long share);
+    public static native long glfwCreateWindow(int width, int height, byte[] title, long monitor, long share);
 
     /*
 		GLFWwindow* window = glfwCreateWindow(width, height, title, (GLFWmonitor*)monitor, (GLFWwindow*)share);

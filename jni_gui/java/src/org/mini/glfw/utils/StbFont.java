@@ -38,6 +38,7 @@ public class StbFont {
 
         File fontFile = new File(fontPath);//"./wqymhei.ttc"
         if (!fontFile.exists()) {
+//            fontFile = new File("./Roboto-Light.ttf");//
             fontFile = new File("./wqymhei.ttc");//
         }
         size = (int) fontFile.length();

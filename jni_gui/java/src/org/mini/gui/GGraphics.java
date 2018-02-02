@@ -44,18 +44,18 @@ public class GGraphics {
         }
         x += frame_bound[0] + translateX;
         y += frame_bound[1] + translateY;
-        NK.nk_fill_arc(brush, x, y, width, (float) startAngle / 360, (float) arcAngle / 360, curColor);
+        NK.nk_fill_arc(brush, x, y, width, (float) (startAngle * Math.PI / 180), (float) (arcAngle * Math.PI / 180), curColor);
     }
+
+    int thickness = 1;
 
     public void drawArc(int x, int y, int width, int height, int startAngle, int arcAngle) {
         if (brush == 0) {
             return;
         }
-        rect[0] = x + frame_bound[0] + translateX;
-        rect[1] = y + frame_bound[1] + translateY;
-        rect[2] = width;
-        rect[3] = height;
-        NK.nk_stroke_circle(brush, rect, 1, curColor);
+        x += frame_bound[0] + translateX;
+        y += frame_bound[1] + translateY;
+        NK.nk_stroke_arc(brush, x, y, width, (float) (startAngle * Math.PI / 180), (float) (arcAngle * Math.PI / 180), thickness, curColor);
     }
 
     public void drawLine(int x1, int y1, int x2, int y2) {
@@ -66,7 +66,7 @@ public class GGraphics {
         y1 += frame_bound[1] + translateY;;
         x2 += frame_bound[0] + translateX;;
         y2 += frame_bound[1] + translateY;;
-        NK.nk_stroke_line(brush, x1, y1, x2, y2, 1, curColor);
+        NK.nk_stroke_line(brush, x1, y1, x2, y2, thickness, curColor);
     }
 
     public void drawString(String str, int x, int y, int anchor) {

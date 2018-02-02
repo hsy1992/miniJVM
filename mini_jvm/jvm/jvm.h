@@ -1036,6 +1036,8 @@ struct _JNIENV {
     s32 (*execute_method)(MethodInfo *method, Runtime *runtime, Class *clazz);
 
     MethodInfo *(*find_methodInfo_by_name)(Utf8String *clsName, Utf8String *methodName, Utf8String *methodType);
+
+    void (*print_exception)(Runtime *runtime);
 };
 
 

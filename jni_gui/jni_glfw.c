@@ -7,9 +7,9 @@
 #include "deps/include/GLFW/glfw3.h"
 #include "deps/include/linmath.h"
 
-#define STB_IMAGE_IMPLEMENTATION
+//#define STB_IMAGE_IMPLEMENTATION
 
-#include "deps/include/stb_image.h"
+//#include "deps/include/stb_image.h"
 
 #include "../mini_jvm/jvm/jvm.h"
 #include "jni_gui.h"
@@ -40,7 +40,10 @@ static void _callback_error(int error, const char *description) {
         env->push_ref(refers.runtime->stack, refers.glfw_callback);
         env->push_int(refers.runtime->stack, error);
         env->push_ref(refers.runtime->stack, jstr);
-        env->execute_method(refers._callback_error, refers.runtime, refers.glfw_callback->mb.clazz);
+        s32 ret = env->execute_method(refers._callback_error, refers.runtime, refers.glfw_callback->mb.clazz);
+        if (ret) {
+            env->print_exception(refers.runtime);
+        }
     }
 }
 
@@ -53,7 +56,10 @@ static void _callback_key(GLFWwindow *window, int key, int scancode, int action,
         env->push_int(refers.runtime->stack, scancode);
         env->push_int(refers.runtime->stack, action);
         env->push_int(refers.runtime->stack, mods);
-        env->execute_method(refers._callback_key, refers.runtime, refers.glfw_callback->mb.clazz);
+        s32 ret = env->execute_method(refers._callback_key, refers.runtime, refers.glfw_callback->mb.clazz);
+        if (ret) {
+            env->print_exception(refers.runtime);
+        }
     }
 }
 
@@ -63,7 +69,10 @@ static void _callback_character(GLFWwindow *window, u32 ch) {
         env->push_ref(refers.runtime->stack, refers.glfw_callback);
         env->push_long(refers.runtime->stack, (s64) (intptr_t) window);
         env->push_int(refers.runtime->stack, ch);
-        env->execute_method(refers._callback_character, refers.runtime, refers.glfw_callback->mb.clazz);
+        s32 ret = env->execute_method(refers._callback_character, refers.runtime, refers.glfw_callback->mb.clazz);
+        if (ret) {
+            env->print_exception(refers.runtime);
+        }
     }
 }
 
@@ -82,7 +91,10 @@ static void _callback_drop(GLFWwindow *window, s32 count, const c8 **cstrs) {
             env->jarray_set_field(jstrs, i, val);
         }
         env->push_ref(refers.runtime->stack, jstrs);
-        env->execute_method(refers._callback_drop, refers.runtime, refers.glfw_callback->mb.clazz);
+        s32 ret = env->execute_method(refers._callback_drop, refers.runtime, refers.glfw_callback->mb.clazz);
+        if (ret) {
+            env->print_exception(refers.runtime);
+        }
     }
 }
 
@@ -93,7 +105,10 @@ void _button_callback_mouse(GLFWwindow *window, int button, int action, int mods
         env->push_long(refers.runtime->stack, (s64) (intptr_t) window);
         env->push_int(refers.runtime->stack, button);
         env->push_int(refers.runtime->stack, action == GLFW_PRESS);
-        env->execute_method(refers._button_callback_mouse, refers.runtime, refers.glfw_callback->mb.clazz);
+        s32 ret = env->execute_method(refers._button_callback_mouse, refers.runtime, refers.glfw_callback->mb.clazz);
+        if (ret) {
+            env->print_exception(refers.runtime);
+        }
     }
 }
 
@@ -104,7 +119,10 @@ void _callback_cursor_pos(GLFWwindow *window, f64 x, f64 y) {
         env->push_long(refers.runtime->stack, (s64) (intptr_t) window);
         env->push_int(refers.runtime->stack, x);
         env->push_int(refers.runtime->stack, y);
-        env->execute_method(refers._callback_cursor_pos, refers.runtime, refers.glfw_callback->mb.clazz);
+        s32 ret = env->execute_method(refers._callback_cursor_pos, refers.runtime, refers.glfw_callback->mb.clazz);
+        if (ret) {
+            env->print_exception(refers.runtime);
+        }
     }
 }
 
@@ -114,7 +132,10 @@ void _callback_cursor_enter(GLFWwindow *window, s32 enter) {
         env->push_ref(refers.runtime->stack, refers.glfw_callback);
         env->push_long(refers.runtime->stack, (s64) (intptr_t) window);
         env->push_int(refers.runtime->stack, enter);
-        env->execute_method(refers._callback_cursor_enter, refers.runtime, refers.glfw_callback->mb.clazz);
+        s32 ret = env->execute_method(refers._callback_cursor_enter, refers.runtime, refers.glfw_callback->mb.clazz);
+        if (ret) {
+            env->print_exception(refers.runtime);
+        }
     }
 }
 
@@ -125,7 +146,10 @@ void _callback_window_size(GLFWwindow *window, s32 w, s32 h) {
         env->push_long(refers.runtime->stack, (s64) (intptr_t) window);
         env->push_int(refers.runtime->stack, w);
         env->push_int(refers.runtime->stack, h);
-        env->execute_method(refers._callback_window_size, refers.runtime, refers.glfw_callback->mb.clazz);
+        s32 ret = env->execute_method(refers._callback_window_size, refers.runtime, refers.glfw_callback->mb.clazz);
+        if (ret) {
+            env->print_exception(refers.runtime);
+        }
     }
 }
 
@@ -136,7 +160,10 @@ void _callback_window_pos(GLFWwindow *window, s32 w, s32 h) {
         env->push_long(refers.runtime->stack, (s64) (intptr_t) window);
         env->push_int(refers.runtime->stack, w);
         env->push_int(refers.runtime->stack, h);
-        env->execute_method(refers._callback_window_pos, refers.runtime, refers.glfw_callback->mb.clazz);
+        s32 ret = env->execute_method(refers._callback_window_pos, refers.runtime, refers.glfw_callback->mb.clazz);
+        if (ret) {
+            env->print_exception(refers.runtime);
+        }
     }
 }
 
@@ -145,8 +172,12 @@ void _callback_window_close(GLFWwindow *window) {
         JniEnv *env = refers.env;
         env->push_ref(refers.runtime->stack, refers.glfw_callback);
         env->push_long(refers.runtime->stack, (s64) (intptr_t) window);
-        env->execute_method(refers._callback_window_close, refers.runtime, refers.glfw_callback->mb.clazz);
-        env->pop_empty(refers.runtime->stack);
+        s32 ret = env->execute_method(refers._callback_window_close, refers.runtime, refers.glfw_callback->mb.clazz);
+        if (ret) {
+            env->print_exception(refers.runtime);
+        } else {
+            env->pop_empty(refers.runtime->stack);
+        }
     }
 }
 
@@ -156,7 +187,10 @@ void _callback_window_focus(GLFWwindow *window, s32 focus) {
         env->push_ref(refers.runtime->stack, refers.glfw_callback);
         env->push_long(refers.runtime->stack, (s64) (intptr_t) window);
         env->push_int(refers.runtime->stack, focus);
-        env->execute_method(refers._callback_window_focus, refers.runtime, refers.glfw_callback->mb.clazz);
+        s32 ret = env->execute_method(refers._callback_window_focus, refers.runtime, refers.glfw_callback->mb.clazz);
+        if (ret) {
+            env->print_exception(refers.runtime);
+        }
     }
 }
 
@@ -166,7 +200,10 @@ void _callback_window_iconify(GLFWwindow *window, s32 iconified) {
         env->push_ref(refers.runtime->stack, refers.glfw_callback);
         env->push_long(refers.runtime->stack, (s64) (intptr_t) window);
         env->push_int(refers.runtime->stack, iconified);
-        env->execute_method(refers._callback_window_iconify, refers.runtime, refers.glfw_callback->mb.clazz);
+        s32 ret = env->execute_method(refers._callback_window_iconify, refers.runtime, refers.glfw_callback->mb.clazz);
+        if (ret) {
+            env->print_exception(refers.runtime);
+        }
     }
 }
 
@@ -175,7 +212,10 @@ void _callback_window_refresh(GLFWwindow *window) {
         JniEnv *env = refers.env;
         env->push_ref(refers.runtime->stack, refers.glfw_callback);
         env->push_long(refers.runtime->stack, (s64) (intptr_t) window);
-        env->execute_method(refers._callback_window_refresh, refers.runtime, refers.glfw_callback->mb.clazz);
+        s32 ret = env->execute_method(refers._callback_window_refresh, refers.runtime, refers.glfw_callback->mb.clazz);
+        if (ret) {
+            env->print_exception(refers.runtime);
+        }
     }
 }
 
@@ -186,7 +226,11 @@ void _callback_framebuffer_size(GLFWwindow *window, s32 w, s32 h) {
         env->push_long(refers.runtime->stack, (s64) (intptr_t) window);
         env->push_int(refers.runtime->stack, w);
         env->push_int(refers.runtime->stack, h);
-        env->execute_method(refers._callback_framebuffer_size, refers.runtime, refers.glfw_callback->mb.clazz);
+        s32 ret = env->execute_method(refers._callback_framebuffer_size, refers.runtime,
+                                      refers.glfw_callback->mb.clazz);
+        if (ret) {
+            env->print_exception(refers.runtime);
+        }
     }
 }
 
@@ -627,58 +671,6 @@ int org_mini_glfw_utils_Gutil_mat4x4_look_at(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-static int image_load(const char *filename, int *w, int *h, int *bytes) {
-    int x, y, n;
-    GLuint tex;
-    unsigned char *data = stbi_load(filename, &x, &y, &n, 0);
-    if (!data) fprintf(stderr, "[SDL]: failed to load image: %s", filename);
-
-    glGenTextures(1, &tex);
-    glBindTexture(GL_TEXTURE_2D, tex);
-    glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_NEAREST);
-    glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR_MIPMAP_NEAREST);
-    glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
-    glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
-    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, x, y, 0, GL_RGBA, GL_UNSIGNED_BYTE, data);
-    glGenerateMipmap(GL_TEXTURE_2D);
-//    printf("x=%d,y=%d,n=%d\n", x, y, n);
-    *w = x;
-    *h = y;
-    *bytes = n;
-    stbi_image_free(data);
-    return (int) tex;
-}
-
-int org_mini_glfw_utils_Gutil_image_load(Runtime *runtime, Class *clazz) {
-    JniEnv *env = runtime->jnienv;
-    s32 pos = 0;
-
-    Instance *pfilename = env->localvar_getRefer(runtime, pos++);
-    __refer ptr_pfilename = NULL;
-    Utf8String *u_pfilename;
-    if (pfilename) {
-        u_pfilename = env->utf8_create();
-        env->jstring_2_utf8(pfilename, u_pfilename);
-        ptr_pfilename = env->utf8_cstr(u_pfilename);
-    }
-
-    Instance *pwhd = env->localvar_getRefer(runtime, pos++);
-
-    s32 w, h, depth;
-    s32 _re_val = image_load((const char *) (ptr_pfilename), &w, &h, &depth);
-    if (pwhd && pwhd->arr_length >= 3) {
-        s64 val = w;
-        env->jarray_set_field(pwhd, 0, val);
-        val = h;
-        env->jarray_set_field(pwhd, 1, val);
-        val = depth;
-        env->jarray_set_field(pwhd, 2, val);
-    }
-    env->push_int(runtime->stack, _re_val);
-    env->utf8_destory(u_pfilename);
-    return 0;
-}
-
 /* ==============================   jni glfw =================================*/
 
 int org_mini_glfw_Glfw_glfwSetCallback(Runtime *runtime, Class *clazz) {
@@ -870,7 +862,7 @@ int org_mini_glfw_Glfw_glfwSetTime(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-int org_mini_glfw_Glfw_glfwCreateWindowJni(Runtime *runtime, Class *clazz) {
+int org_mini_glfw_Glfw_glfwCreateWindow(Runtime *runtime, Class *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     s32 width = env->localvar_getInt(runtime, pos++);
@@ -1025,7 +1017,6 @@ int org_mini_glfw_Glfw_glfwGetClipboardString(Runtime *runtime, Class *clazz) {
 
 static java_native_method method_glfw_table[] = {
         {"org/mini/glfw/utils/Gutil", "f2b",                        "([F[B)[B",                         org_mini_glfw_utils_Gutil_f2b},
-        {"org/mini/glfw/utils/Gutil", "image_load",                 "(Ljava/lang/String;[I)I",          org_mini_glfw_utils_Gutil_image_load},
         {"org/mini/glfw/utils/Gutil", "vec_add",                    "([F[F[F)[F",                       org_mini_glfw_utils_Gutil_vec_add},
         {"org/mini/glfw/utils/Gutil", "vec_sub",                    "([F[F[F)[F",                       org_mini_glfw_utils_Gutil_vec_sub},
         {"org/mini/glfw/utils/Gutil", "vec_scale",                  "([F[FF)[F",                        org_mini_glfw_utils_Gutil_vec_scale},
@@ -1060,7 +1051,7 @@ static java_native_method method_glfw_table[] = {
         {"org/mini/glfw/utils/Gutil", "mat4x4_look_at",             "([F[F[F[F)[F",                     org_mini_glfw_utils_Gutil_mat4x4_look_at},
         {"org/mini/glfw/Glfw",        "glfwGetTime",                "()D",                              org_mini_glfw_Glfw_glfwGetTime},
         {"org/mini/glfw/Glfw",        "glfwSetTime",                "(D)V",                             org_mini_glfw_Glfw_glfwSetTime},
-        {"org/mini/glfw/Glfw",        "glfwCreateWindowJni",        "(II[BJJ)J",                        org_mini_glfw_Glfw_glfwCreateWindowJni},
+        {"org/mini/glfw/Glfw",        "glfwCreateWindow",           "(II[BJJ)J",                        org_mini_glfw_Glfw_glfwCreateWindow},
         {"org/mini/glfw/Glfw",        "glfwDestroyWindow",          "(J)V",                             org_mini_glfw_Glfw_glfwDestroyWindow},
         {"org/mini/glfw/Glfw",        "glfwWindowShouldClose",      "(J)Z",                             org_mini_glfw_Glfw_glfwWindowShouldClose},
         {"org/mini/glfw/Glfw",        "glfwSetCallback",            "(JLorg/mini/glfw/GlfwCallback;)V", org_mini_glfw_Glfw_glfwSetCallback},

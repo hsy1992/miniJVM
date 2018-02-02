@@ -27,6 +27,13 @@ NUTIL_API int stbi_write_bmp(char const *filename, int w, int h, int comp, const
 
 NUTIL_API int stbi_write_tga(char const *filename, int w, int h, int comp, const void *data);
 
+NUTIL_API stbi_uc *stbi_load(char const *filename, int *x, int *y, int *comp, int req_comp);
+
+NUTIL_API stbi_uc *stbi_load_from_memory(stbi_uc const *buffer, int len, int *x, int *y, int *comp, int req_comp);
+
+NUTIL_API void stbi_image_free(void *retval_from_stbi_load);
+
+//implementations
 
 NUTIL_API struct stbtt_fontinfo stbtt_MakeFontInfo() {
     stbtt_fontinfo info;

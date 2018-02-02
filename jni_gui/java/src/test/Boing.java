@@ -446,7 +446,7 @@ public class Boing {
 //        Glfw.glfwWindowHint(Glfw.GLFW_CONTEXT_VERSION_MINOR, 0);
 //        Glfw.glfwWindowHint(Glfw.GLFW_DEPTH_BITS, 16);
 //        Glfw.glfwWindowHint(Glfw.GLFW_TRANSPARENT_FRAMEBUFFER, Glfw.GLFW_TRUE);
-        long win = Glfw.glfwCreateWindow(400, 400, "hello glfw", 0, 0);
+        long win = Glfw.glfwCreateWindow(400, 400, "hello glfw".getBytes(), 0, 0);
         if (win != 0) {
             Glfw.glfwSetCallback(win, new CallBack());
             Glfw.glfwMakeContextCurrent(win);

@@ -1532,4 +1532,5 @@ void init_jni_func_table() {
     jnienv.jarray_get_field = jarray_get_field;
     jnienv.instance_hold_to_thread = instance_hold_to_thread;
     jnienv.instance_release_from_thread = instance_release_from_thread;
+    jnienv.print_exception = print_exception;
 }
