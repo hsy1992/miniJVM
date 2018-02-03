@@ -205,6 +205,12 @@ public class Gutil {
         if (s == null) {
             return null;
         }
+        int pos = s.lastIndexOf('\000');
+        if (pos >= 0 && pos == s.length() - 1) {
+
+        } else {
+            s += '\000';
+        }
         byte[] barr = null;
         try {
             barr = s.getBytes("utf-8");

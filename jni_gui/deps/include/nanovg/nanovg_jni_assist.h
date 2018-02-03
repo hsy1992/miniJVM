@@ -213,7 +213,11 @@ enum GLNVGshaderType {
 
 
 */
-
+NUTIL_API struct NVGtextRow nvgCreateNVGtextRow();
+NUTIL_API struct NVGtextRow nvgCreateNVGtextRow(){
+    struct NVGtextRow val;
+    return val;
+}
 
 
 #endif //JNI_GUI_NANOVG_JNI_ASSIST_H

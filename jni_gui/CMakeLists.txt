@@ -14,7 +14,7 @@ set(SOURCE_FILES
         jni_gui.h
         jni_glfw.c
         jni_gl.c
-        jni_nk.c
+#        jni_nk.c
         jni_gui.c
         jni_nutil.c
         )
