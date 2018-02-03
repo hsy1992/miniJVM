@@ -2,24 +2,18 @@ package test;
 
 import org.mini.gl.warp.GLFrameBuffer;
 import org.mini.gl.warp.GLFrameBufferPainter;
-import org.mini.glfw.Glfw;
-import org.mini.glfw.GlfwCallbackAdapter;
-import org.mini.glfw.utils.Gutil;
+import org.mini.gui.GButton;
+import org.mini.gui.GCheckBox;
+import org.mini.gui.GColorSelector;
+import org.mini.gui.GEditBox;
 import org.mini.gui.GFrame;
 import org.mini.gui.GForm;
-import static org.mini.gui.GToolkit.getForm;
-import static org.mini.nk.NK.nk_button_label;
-import static org.mini.nk.NK.nk_false;
-import static org.mini.nk.NK.nk_layout_row_dynamic;
-import static org.mini.nk.NK.nk_layout_row_static;
-import static org.mini.nk.NK.nk_option_label;
-import static org.mini.nk.NK.nk_propertyi;
-import static org.mini.nk.NK.nk_true;
-import static org.mini.nk.NK.nk_window_show;
 import org.mini.gui.GFrameContents;
-import org.mini.gui.GGraphics;
 import org.mini.gui.GImage;
-import org.mini.nk.NK;
+import org.mini.gui.GInputField;
+import org.mini.gui.GLabel;
+import org.mini.gui.GObject;
+import org.mini.gui.GSlider;
 
 /*
  * To change this license header, choose License Headers in Project Properties.
@@ -37,68 +31,15 @@ public class GuiTest {
         gt.t1();
 
     }
+    GForm win;
 
     void t1() {
-        GForm win = new GForm("test"/*"test 窗口"*/, 800, 600);
+        win = new GForm(/*"GuiTest"*/"test 窗口", 800, 600);
         win.init();
-        win.add(new GFrame(/*"demo测试"*/"demo", 30, 30, 500, 400, new NkFrameMain()));
-        win.setCallBack(new MyCallBack());
+        win.add(new GFrame("demo测试"/*"demo"*/, 30, 30, 500, 400, new NkFrameMain()));
+        GFrame sub1 = new GFrame(/*"子窗口"*/"sub1", 100, 100, 300, 400, new NkFrameSub1());
+        win.add(sub1);
         win.run();
-    }
-
-    class MyCallBack extends GlfwCallbackAdapter {
-
-        @Override
-        public void key(long window, int key, int scancode, int action, int mods) {
-            System.out.println("key:" + key + " action:" + action);
-            if (key == Glfw.GLFW_KEY_ESCAPE && action == Glfw.GLFW_PRESS) {
-                Glfw.glfwSetWindowShouldClose(window, Glfw.GLFW_TRUE);
-            }
-            if (key == Glfw.GLFW_KEY_V) {
-                if (mods == Glfw.GLFW_MOD_CONTROL) {
-
-                    String string = Glfw.glfwGetClipboardString(window);
-                    if (string != null) {
-                        System.out.println("Clipboard contains " + string);
-                    } else {
-                        System.out.println("Clipboard does not contain a string\n");
-                    }
-                }
-            }
-        }
-
-        @Override
-        public void mouseButton(long window, int button, boolean pressed) {
-            String bt = button == Glfw.GLFW_MOUSE_BUTTON_LEFT ? "LEFT" : button == Glfw.GLFW_MOUSE_BUTTON_2 ? "RIGHT" : "OTHER";
-            String press = pressed ? "pressed" : "released";
-//                System.out.println(bt + " " + mx + " " + my + "  " + press);
-        }
-
-        @Override
-        public void drop(long window, int count, String[] paths) {
-            for (int i = 0; i < count; i++) {
-                System.out.println(i + " " + paths[i]);
-            }
-        }
-
-        @Override
-        public void cursorPos(long window, int x, int y) {
-        }
-
-        @Override
-        public boolean windowClose(long window) {
-            System.out.println("byebye");
-            return true;
-        }
-
-        @Override
-        public void windowSize(long window, int width, int height) {
-            System.out.println("resize " + width + " " + height);
-        }
-
-        @Override
-        public void framebufferSize(long window, int x, int y) {
-        }
     }
 
     class NkFrameSub1 implements GFrameContents {
@@ -108,16 +49,12 @@ public class GuiTest {
         @Override
         public void init(GFrame parent) {
             img = new GImage("image4.png");
+            GColorSelector cs=new GColorSelector(0, 10, 30, 200, 200);
+            parent.add(cs);
         }
 
         @Override
         public void updateContents(long ctx, GFrame parent) {
-            nk_layout_row_static(ctx, 30, 80, 1);
-            if (nk_true == nk_button_label(ctx, Gutil.toUtf8("Close\000"))) {
-//                System.out.println("close pressed\n");
-//                System.out.println(" show sub1 " + Integer.toHexString(parent.getFrameMode()));
-                nk_window_show(ctx, parent.getTitleBytes(), NK.NK_HIDDEN);
-            }
 //            //canvas
 //            GGraphics g = parent.getGraphics();
 //
@@ -133,7 +70,6 @@ public class GuiTest {
 
 //            GImage img2 = GForm.getGFont().renderToTexture("张鹏gust zhang", 10);
 //            g.drawImage(img2, 120, 150, 0);
-
         }
 
     }
@@ -148,8 +84,6 @@ public class GuiTest {
         GLFrameBufferPainter glfbRender;
         GImage img1;
 
-        GFrame sub1;
-
         @Override
         public void init(GFrame parent) {
             light = new Light();
@@ -161,47 +95,47 @@ public class GuiTest {
 //                    light.draw();
                 }
             };
-            sub1 = new GFrame(/*"子窗口"*/"sub1", 100, 100, 300, 400, new NkFrameSub1());
+            int x = 10, y = 20;
+            GInputField gif = new GInputField("search", x, y, 280, 25);
+            parent.add(gif);
+            y += 15;
+            GLabel lb1 = new GLabel("Login", x, y, 280, 20);
+            parent.add(lb1);
+            y += 15;
+            GEditBox mail = new GEditBox("Email", x, y, 280, 28);
+            parent.add(mail);
+            y += 15;
+            GEditBox pwd = new GEditBox("Password", x, y, 280, 28);
+            parent.add(pwd);
+            y += 20;
+
+            GCheckBox cbox = new GCheckBox("Remember me", x, y, 140, 28);
+            parent.add(cbox);
+            GButton sig = new GButton("Sign in", x + 138, y, 140, 28);
+            sig.setBgColor(0, 96, 128, 255);
+            sig.setIcon(GObject.ICON_LOGIN);
+            parent.add(sig);
+            y += 35;
+            GLabel lb2 = new GLabel("Diameter", x, y, 280, 20);
+            parent.add(lb2);
+            y += 25;
+            //drawEditBoxNum(vg, "123.00", "px", x + 180, y, 100, 28);
+            GSlider sli = new GSlider(0.4f, x, y, 170, 28);
+            parent.add(sli);
+            y += 35;
+            GButton bt1 = new GButton("Delete删除", x, y, 160, 28);
+            bt1.setBgColor(128, 16, 8, 255);
+            bt1.setIcon(GObject.ICON_TRASH);
+            parent.add(bt1);
+            GButton bt2 = new GButton("Cancel", x + 170, y, 110, 28);
+            bt2.setBgColor(0, 0, 0, 0);
+            parent.add(bt2);
             img1 = new GImage(glfb.getTexture(), glfb.getWidth(), glfb.getHeight());
         }
 
         @Override
         public void updateContents(long ctx, GFrame parent) {
 
-            nk_layout_row_static(ctx, 30f, 80, 1);
-            if (nk_true == nk_button_label(ctx, Gutil.toUtf8("Canvas here\000"))) {
-                System.out.println("button pressed\n");
-                long notice = NK.nk_window_find(ctx, sub1.getTitleBytes());
-                if (notice == 0) {
-                    GForm main = getForm(ctx);
-                    main.add(sub1);
-                    System.out.println("add sub1=======================");
-                } else {
-                    nk_window_show(ctx, sub1.getTitleBytes(), NK.NK_SHOWN);
-                    System.out.println("show sub1");
-                }
-            }
-//            nk_layout_row_dynamic(ctx, 30, 3);
-//            if (nk_option_label(ctx, Gutil.toUtf8("easy\000"), op == EASY ? nk_true : nk_false) == nk_true) {
-//                op = EASY;
-//            }
-//            if (nk_option_label(ctx, Gutil.toUtf8("mid\000"), op == MID ? nk_true : nk_false) == nk_true) {
-//                op = MID;
-//            }
-//            if (nk_option_label(ctx, Gutil.toUtf8("hard\000"), op == HARD ? nk_true : nk_false) == nk_true) {
-//                op = HARD;
-//            }
-//            nk_layout_row_dynamic(ctx, 22, 1);
-//            property = nk_propertyi(ctx, Gutil.toUtf8("在哪里Compression:\000"), 0, property, 100, 10, 1);
-
-            //draw 3d graphics
-//            GGraphics g = parent.getGraphics();
-//            glfb.render(glfbRender);
-//            g.drawImage(img1, 0, 150, 200, 200, 0);
-            try {
-                Thread.sleep(50);
-            } catch (InterruptedException ex) {
-            }
         }
     }
 }

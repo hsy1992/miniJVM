@@ -5,11 +5,32 @@
  */
 package org.mini.gui;
 
+import static org.mini.gui.GToolkit.nvgRGBA;
+
 /**
  *
  * @author gust
  */
 abstract public class GObject {
+
+    public static char ICON_SEARCH = (char) 0x1F50D;
+    public static char ICON_CIRCLED_CROSS = 0x2716;
+    public static char ICON_CHEVRON_RIGHT = 0xE75E;
+    public static char ICON_CHECK = 0x2713;
+    public static char ICON_LOGIN = 0xE740;
+    public static char ICON_TRASH = 0xE729;
+    //
+    GObject parent;
+
+    //object position and width ,height
+    float[] boundle = new float[4];
+    static int LEFT = 0;
+    static int TOP = 1;
+    static int WIDTH = 2;
+    static int HEIGHT = 3;
+
+    float[] bgColor;
+    float[] color;
 
     public void init() {
 
@@ -17,5 +38,82 @@ abstract public class GObject {
 
     public boolean update(long ctx) {
         return true;
+    }
+
+    public void keyEvent(int key, int scanCode, int action, int mods) {
+    }
+
+    public void characterEvent(char character) {
+    }
+
+    public void mouseButtonEvent(int button, boolean pressed) {
+    }
+
+    public void cursorPosEvent(int x, int y) {
+    }
+
+    public void dropEvent(int count, String[] paths) {
+    }
+
+    public void scrollEvent(double scrollX, double scrollY) {
+    }
+
+    public static boolean isInBoundle(float[] bound, float x, float y) {
+        return x >= bound[LEFT] && x <= bound[LEFT] + bound[WIDTH]
+                && y >= bound[TOP] && y <= bound[TOP] + bound[HEIGHT];
+    }
+
+    public float[] getBoundle() {
+        return boundle;
+    }
+
+    public GObject getParent() {
+        return parent;
+    }
+
+    public void setParent(GObject p) {
+        parent = p;
+    }
+
+    public float getParentX() {
+        if (parent != null) {
+            return parent.getParentX() + boundle[LEFT];
+        }
+        return boundle[LEFT];
+    }
+
+    public float getParentY() {
+        if (parent != null) {
+            return parent.getParentY() + boundle[TOP];
+        }
+        return boundle[TOP];
+    }
+
+    /**
+     * @return the bgColor
+     */
+    public float[] getBgColor() {
+        return bgColor;
+    }
+
+    /**
+     * @param bgColor the bgColor to set
+     */
+    public void setBgColor(int r, int g, int b, int a) {
+        bgColor = nvgRGBA((byte) r, (byte) g, (byte) b, (byte) a);
+    }
+
+    /**
+     * @return the color
+     */
+    public float[] getColor() {
+        return color;
+    }
+
+    /**
+     * @param color the color to set
+     */
+    public void setColor(int r, int g, int b, int a) {
+        color = nvgRGBA((byte) r, (byte) g, (byte) b, (byte) a);
     }
 }

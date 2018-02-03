@@ -6,7 +6,6 @@
 package org.mini.gui;
 
 import org.mini.glfw.utils.Gutil;
-import org.mini.nk.NK;
 
 /**
  *
@@ -35,7 +34,7 @@ public class GGraphics {
         rect[1] = y + frame_bound[1] + translateY;
         rect[2] = w;
         rect[3] = h;
-        NK.nk_fill_rect(brush, rect, 1, curColor);
+//        NK.nk_fill_rect(brush, rect, 1, curColor);
     }
 
     public void fillArc(int x, int y, int width, int height, int startAngle, int arcAngle) {
@@ -44,7 +43,7 @@ public class GGraphics {
         }
         x += frame_bound[0] + translateX;
         y += frame_bound[1] + translateY;
-        NK.nk_fill_arc(brush, x, y, width, (float) (startAngle * Math.PI / 180), (float) (arcAngle * Math.PI / 180), curColor);
+//        NK.nk_fill_arc(brush, x, y, width, (float) (startAngle * Math.PI / 180), (float) (arcAngle * Math.PI / 180), curColor);
     }
 
     int thickness = 1;
@@ -55,7 +54,7 @@ public class GGraphics {
         }
         x += frame_bound[0] + translateX;
         y += frame_bound[1] + translateY;
-        NK.nk_stroke_arc(brush, x, y, width, (float) (startAngle * Math.PI / 180), (float) (arcAngle * Math.PI / 180), thickness, curColor);
+//        NK.nk_stroke_arc(brush, x, y, width, (float) (startAngle * Math.PI / 180), (float) (arcAngle * Math.PI / 180), thickness, curColor);
     }
 
     public void drawLine(int x1, int y1, int x2, int y2) {
@@ -66,7 +65,7 @@ public class GGraphics {
         y1 += frame_bound[1] + translateY;;
         x2 += frame_bound[0] + translateX;;
         y2 += frame_bound[1] + translateY;;
-        NK.nk_stroke_line(brush, x1, y1, x2, y2, thickness, curColor);
+//        NK.nk_stroke_line(brush, x1, y1, x2, y2, thickness, curColor);
     }
 
     public void drawString(String str, int x, int y, int anchor) {
@@ -79,7 +78,7 @@ public class GGraphics {
         rect[3] = 10000;
         byte[] b = Gutil.toUtf8(str + "\000");
         int blen = str.length();
-        NK.nk_draw_text(brush, rect, b, blen, NK.nk_get_font_handle(font), new int[]{0x80808080}, curColor);
+//        NK.nk_draw_text(brush, rect, b, blen, NK.nk_get_font_handle(font), new int[]{0x80808080}, curColor);
     }
 
     public void drawSubstring(String str, int offset, int len, int x, int y, int anchor) {
@@ -91,7 +90,7 @@ public class GGraphics {
         str = str.substring(offset, len);
         byte[] b = Gutil.toUtf8(str + "\000");
         int blen = str.length();
-        NK.nk_draw_text(brush, rect, b, blen, NK.nk_get_font_handle(font), new int[]{0xff808000}, curColor);
+//        NK.nk_draw_text(brush, rect, b, blen, NK.nk_get_font_handle(font), new int[]{0xff808000}, curColor);
     }
 
     public void drawChar(char character, int x, int y, int anchor) {
@@ -138,7 +137,7 @@ public class GGraphics {
         //System.out.println("w=" + w + "  ,h=" + h);
         int color = curColor[0];
         curColor[0] = 0xffffffff;
-        NK.nk_draw_image(brush, rect, img.getDataPtr(), curColor);
+//        NK.nk_draw_image(brush, rect, img.getDataPtr(), curColor);
         curColor[0] = color;
     }
 

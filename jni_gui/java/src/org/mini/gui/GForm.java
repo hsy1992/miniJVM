@@ -5,33 +5,44 @@
  */
 package org.mini.gui;
 
-import org.mini.glfw.utils.StbFont;
+import java.util.Iterator;
 import static org.mini.gl.GL.GL_COLOR_BUFFER_BIT;
-import static org.mini.gl.GL.GL_FALSE;
+import static org.mini.gl.GL.GL_DEPTH_BUFFER_BIT;
+import static org.mini.gl.GL.GL_STENCIL_BUFFER_BIT;
+import org.mini.glfw.utils.StbFont;
 import static org.mini.gl.GL.GL_TRUE;
 import static org.mini.gl.GL.glClear;
+import static org.mini.gl.GL.glClearColor;
 import static org.mini.gl.GL.glViewport;
 import org.mini.glfw.Glfw;
 import static org.mini.glfw.Glfw.GLFW_CONTEXT_VERSION_MAJOR;
 import static org.mini.glfw.Glfw.GLFW_CONTEXT_VERSION_MINOR;
+import static org.mini.glfw.Glfw.GLFW_KEY_ESCAPE;
 import static org.mini.glfw.Glfw.GLFW_OPENGL_CORE_PROFILE;
 import static org.mini.glfw.Glfw.GLFW_OPENGL_FORWARD_COMPAT;
 import static org.mini.glfw.Glfw.GLFW_OPENGL_PROFILE;
-import static org.mini.glfw.Glfw.GLFW_RESIZABLE;
+import static org.mini.glfw.Glfw.GLFW_PRESS;
+import static org.mini.glfw.Glfw.GLFW_TRUE;
+import static org.mini.glfw.Glfw.glfwGetFramebufferSizeH;
+import static org.mini.glfw.Glfw.glfwGetFramebufferSizeW;
+import static org.mini.glfw.Glfw.glfwGetTime;
 import static org.mini.glfw.Glfw.glfwPollEvents;
+import static org.mini.glfw.Glfw.glfwSetWindowShouldClose;
 import static org.mini.glfw.Glfw.glfwSwapBuffers;
 import static org.mini.glfw.Glfw.glfwSwapInterval;
 import static org.mini.glfw.Glfw.glfwTerminate;
 import static org.mini.glfw.Glfw.glfwWindowHint;
 import static org.mini.glfw.Glfw.glfwWindowShouldClose;
 import org.mini.glfw.GlfwCallback;
+import org.mini.glfw.GlfwCallbackAdapter;
 import org.mini.glfw.utils.Gutil;
-import org.mini.nk.NK;
-import static org.mini.nk.NK.nk_glfw3_init;
-import static org.mini.nk.NK.nk_glfw3_new_frame;
-import static org.mini.nk.NK.nk_glfw3_render;
-import static org.mini.nk.NK.nk_glfw3_shutdown;
-import static org.mini.nk.NK.nk_true;
+import org.mini.glfw.utils.Nutil;
+import static org.mini.glfw.utils.Nutil.NVG_ANTIALIAS;
+import static org.mini.glfw.utils.Nutil.NVG_DEBUG;
+import static org.mini.glfw.utils.Nutil.NVG_STENCIL_STROKES;
+import static org.mini.glfw.utils.Nutil.nvgBeginFrame;
+import static org.mini.glfw.utils.Nutil.nvgEndFrame;
+import static org.mini.gui.GObject.isInBoundle;
 
 /**
  *
@@ -43,22 +54,26 @@ public class GForm extends GContainer implements Runnable {
     int width;
     int height;
     long win; //glfw win
-    long ctx; //nk contex
+    long vg; //nk contex
     GlfwCallback callback;
     long nkfont;
     static StbFont gfont;
+    GObject focus;
 
-    static int MAX_VERTEX_BUFFER = 512 * 1024;
-    static int MAX_ELEMENT_BUFFER = 128 * 1024;
     int[] unicode_range = {
         0x0020, 0xFFFF,
         0
     };
+    //
+    double ct, prevt, dt;
+    boolean premult;
 
     public GForm(String title, int width, int height) {
-        this.title = title + "\000";
+        this.title = title;
         this.width = width;
         this.height = height;
+        boundle[WIDTH] = width;
+        boundle[HEIGHT] = height;
     }
 
     public void setCallBack(GlfwCallback callback) {
@@ -80,6 +95,14 @@ public class GForm extends GContainer implements Runnable {
         return nkfont;
     }
 
+    public GObject getFocus() {
+        return focus;
+    }
+
+    public void setFocus(GObject go) {
+        focus = go;
+    }
+
     @Override
     public void init() {
 
@@ -98,53 +121,173 @@ public class GForm extends GContainer implements Runnable {
             System.exit(1);
         }
         Glfw.glfwMakeContextCurrent(win);
-        glfwSwapInterval(nk_true);
-        ctx = nk_glfw3_init(win, NK.NK_GLFW3_INSTALL_CALLBACKS);
-//        if (callback != null) {
-//            Glfw.glfwSetCallback(win, callback);
-//        }
-        //字体
-//        long[] atlas = {0};
-//        NK.nk_glfw3_font_stash_begin(atlas);
-//        NK.nk_glfw3_font_stash_end();
+        glfwSwapInterval(1);
+        vg = Nutil.nvgCreateGL3(NVG_ANTIALIAS | NVG_STENCIL_STROKES | NVG_DEBUG);
+        if (vg == 0) {
+            System.out.println("Could not init nanovg.\n");
 
-        if (gfont == null) {
-            gfont = Gutil.getDefaultFont();
         }
-//        font = NK.nk_load_font_file("./wqymhei.ttc\000".getBytes(), 15);
-        byte[] fontBuffer = gfont.getFontBytes();
-        nkfont = NK.nk_load_font_memory(GToolkit.getArrayDataPtr(fontBuffer), fontBuffer.length, 14);
-        NK.nk_style_set_font(ctx, NK.nk_get_font_handle(nkfont));
+        GToolkit.loadFont(vg);
+        setCallBack(new FormCallBack());
     }
 
     @Override
     public void run() {
-        if (ctx == 0) {
+        if (vg == 0) {
             System.out.println("gl context not inited.");
             return;
         }
         //
-        GToolkit.putForm(ctx, this);
-
+        GToolkit.putForm(vg, this);
+        long last = System.currentTimeMillis(), now;
+        int count = 0;
         while (!glfwWindowShouldClose(win)) {
             try {
                 glfwPollEvents();
-                nk_glfw3_new_frame();
                 //user define contents
-                update(ctx);
-                //clear
-                glClear(GL_COLOR_BUFFER_BIT);
-                //render
-                NK.nk_glfw3_render(NK.NK_ANTI_ALIASING_ON, MAX_VERTEX_BUFFER, MAX_ELEMENT_BUFFER);
+                display(vg);
                 glfwSwapBuffers(win);
+                count++;
+                now = System.currentTimeMillis();
+                if (now - last > 1000) {
+                    System.out.println("fps:" + count);
+                    last = now;
+                    count = 0;
+                }
             } catch (Exception ex) {
                 ex.printStackTrace();
             }
         }
-        nk_glfw3_shutdown();
+        Nutil.nvgDeleteGL3(vg);
         glfwTerminate();
-        GToolkit.removeForm(ctx);
-        ctx = 0;
+        GToolkit.removeForm(vg);
+        vg = 0;
+    }
+
+    void display(long vg) {
+
+        float pxRatio;
+        int winWidth, winHeight;
+        int fbWidth, fbHeight;
+        winWidth = glfwGetFramebufferSizeW(win);
+        winHeight = glfwGetFramebufferSizeH(win);
+        fbWidth = glfwGetFramebufferSizeW(win);
+        fbHeight = glfwGetFramebufferSizeH(win);
+        // Calculate pixel ration for hi-dpi devices.
+        pxRatio = (float) fbWidth / (float) winWidth;
+
+        ct = glfwGetTime();
+        dt = ct - prevt;
+        prevt = ct;
+        // Update and render
+        glViewport(0, 0, fbWidth, fbHeight);
+        if (premult) {
+            glClearColor(0, 0, 0, 0);
+        } else {
+            glClearColor(0.3f, 0.3f, 0.32f, 1.0f);
+        }
+        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
+
+        nvgBeginFrame(vg, winWidth, winHeight, pxRatio);
+        update(vg);
+        changeFocus();
+        nvgEndFrame(vg);
+    }
+
+    void changeFocus() {
+        if (focus != null && elements.peek() != focus) {
+            elements.remove(focus);
+            elements.addFirst(focus);
+        }
+    }
+
+    void findSetFocus(int x, int y) {
+        for (Iterator<GObject> it = elements.iterator(); it.hasNext();) {
+            GObject nko = it.next();
+            if (isInBoundle(nko.getBoundle(), x, y)) {
+                focus = nko;
+                setFocus(nko);
+                break;
+            }
+        }
+    }
+
+    class FormCallBack extends GlfwCallbackAdapter {
+
+        int mouseX, mouseY;
+
+        @Override
+        public void key(long window, int key, int scancode, int action, int mods) {
+            System.out.println("key:" + key + " action:" + action);
+            if (key == GLFW_KEY_ESCAPE && action == GLFW_PRESS) {
+                glfwSetWindowShouldClose(window, GLFW_TRUE);
+            }
+            GForm.this.keyEvent(key, scancode, action, mods);
+        }
+
+        @Override
+        public void mouseButton(long window, int button, boolean pressed) {
+            if (window == win) {
+                switch (button) {
+                    case Glfw.GLFW_MOUSE_BUTTON_1: {//left
+                        if (pressed) {
+                            findSetFocus(mouseX, mouseY);
+                        } else {
+                        }
+                        break;
+                    }
+                    case Glfw.GLFW_MOUSE_BUTTON_2: {//right
+                        if (pressed) {
+                            findSetFocus(mouseX, mouseY);
+                        } else {
+                        }
+                        break;
+                    }
+                    case Glfw.GLFW_MOUSE_BUTTON_3: {//middle
+                        break;
+                    }
+                }
+                if (focus != null) {
+                    focus.mouseButtonEvent(button, pressed);
+                }
+                GForm.this.mouseButtonEvent(button, pressed);
+            }
+        }
+
+        @Override
+        public void scroll(long window, double scrollX, double scrollY) {
+            GForm.this.scrollEvent(scrollX, scrollY);
+        }
+
+        @Override
+        public void cursorPos(long window, int x, int y) {
+            win = window;
+            mouseX = x;
+            mouseY = y;
+            GForm.this.cursorPosEvent(x, y);
+        }
+
+        @Override
+        public boolean windowClose(long window) {
+            System.out.println("byebye");
+            return true;
+        }
+
+        @Override
+        public void windowSize(long window, int width, int height) {
+            System.out.println("resize " + width + " " + height);
+        }
+
+        @Override
+        public void framebufferSize(long window, int x, int y) {
+            boundle[WIDTH] = x;
+            boundle[HEIGHT] = y;
+        }
+
+        @Override
+        public void drop(long window, int count, String[] paths) {
+            GForm.this.dropEvent(count, paths);
+        }
     }
 
 }

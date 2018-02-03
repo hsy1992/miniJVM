@@ -8,7 +8,6 @@ package org.mini.gui;
 import javax.mini.reflect.Array;
 import javax.mini.reflect.vm.RefNative;
 import org.mini.glfw.utils.Gutil;
-import org.mini.nk.NK;
 
 /**
  * 装入图片文件或使用纹理图片生成一个GImage对象 load image or generate texture GImage
@@ -17,7 +16,6 @@ import org.mini.nk.NK;
  */
 public class GImage {
 
-    byte[] nk_image;
     int texture;
     Array refectArr;
     int[] w_h_d = new int[3];
@@ -26,19 +24,12 @@ public class GImage {
         texture = textureid;
         w_h_d[0] = w;
         w_h_d[1] = h;
-        nk_image = NK.nk_image_id(texture);
-        refectArr = new Array(RefNative.obj2id(nk_image));
     }
 
     public GImage(String filepath) {
         texture = Gutil.image_load(filepath, w_h_d);
-        nk_image = NK.nk_image_id(texture);
-        refectArr = new Array(RefNative.obj2id(nk_image));
     }
 
-    public byte[] getNkImage() {
-        return nk_image;
-    }
 
     public int getWidth() {
         return w_h_d[0];
