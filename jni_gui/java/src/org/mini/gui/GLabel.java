@@ -31,14 +31,20 @@ import static org.mini.gui.GToolkit.nvgRGBA;
 public class GLabel extends GObject {
 
     String text;
+    byte[] text_arr;
     char preicon;
 
     public GLabel(String text, int left, int top, int width, int height) {
-        this.text = text;
+        setText(text);
         boundle[LEFT] = left;
         boundle[TOP] = top;
         boundle[WIDTH] = width;
         boundle[HEIGHT] = height;
+    }
+
+    public void setText(String text) {
+        this.text = text;
+        text_arr = toUtf8(text);
     }
 
     public void setIcon(char icon) {
@@ -51,10 +57,10 @@ public class GLabel extends GObject {
      * @return
      */
     public boolean update(long vg) {
-        float x = boundle[LEFT] + getParentX();
-        float y = boundle[TOP] + getParentY();
-        float w = boundle[WIDTH];
-        float h = boundle[HEIGHT];
+        float x = getX();
+        float y = getY();
+        float w = getW();
+        float h = getH();
 
         //NVG_NOTUSED(w);
         nvgFontSize(vg, 18.0f);
@@ -62,7 +68,7 @@ public class GLabel extends GObject {
         nvgFillColor(vg, nvgRGBA(255, 255, 255, 128));
 
         nvgTextAlign(vg, NVG_ALIGN_LEFT | NVG_ALIGN_MIDDLE);
-        nvgText(vg, x, y + h * 0.5f, toUtf8(text), null);
+        nvgText(vg, x, y + h * 0.5f, text_arr, null);
         return true;
     }
 

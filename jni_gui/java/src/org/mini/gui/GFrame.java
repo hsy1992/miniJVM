@@ -88,6 +88,7 @@ public class GFrame extends GContainer {
         this.vg = vg;
         drawWindow(vg, title, boundle[0], boundle[1], boundle[2], boundle[3]);
         super.update(this.vg);
+        frameContents.updateContents(vg, this);
         return true;
     }
 
@@ -152,7 +153,7 @@ public class GFrame extends GContainer {
     boolean isMoveFrame;
 
     @Override
-    public void mouseButtonEvent(int button, boolean pressed) {
+    public void mouseButtonEvent(int button, boolean pressed, int x, int y) {
 
         switch (button) {
             case Glfw.GLFW_MOUSE_BUTTON_1: {//left
@@ -179,7 +180,7 @@ public class GFrame extends GContainer {
                 break;
             }
         }
-        super.mouseButtonEvent(button, pressed);
+        super.mouseButtonEvent(button, pressed, x, y);
     }
 
     @Override

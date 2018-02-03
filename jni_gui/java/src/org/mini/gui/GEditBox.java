@@ -29,15 +29,21 @@ import static org.mini.gui.GToolkit.nvgRGBA;
  */
 public class GEditBox extends GObject {
 
-    String text;
+    String hint;
+    byte[] hint_arr;
     char preicon;
 
-    public GEditBox(String text, int left, int top, int width, int height) {
-        this.text = text;
+    public GEditBox(String hint, int left, int top, int width, int height) {
+        setHint(hint);
         boundle[LEFT] = left;
         boundle[TOP] = top;
         boundle[WIDTH] = width;
         boundle[HEIGHT] = height;
+    }
+
+    public void setHint(String hint) {
+        this.hint = hint;
+        hint_arr = toUtf8(hint);
     }
 
     /**
@@ -46,16 +52,16 @@ public class GEditBox extends GObject {
      * @return
      */
     public boolean update(long vg) {
-        float x = boundle[LEFT] + getParentX();
-        float y = boundle[TOP] + getParentY();
-        float w = boundle[WIDTH];
-        float h = boundle[HEIGHT];
+        float x = getX();
+        float y = getY();
+        float w = getW();
+        float h = getH();
 
-        drawEditBox(vg, text, x, y, w, h);
+        drawEditBox(vg, x, y, w, h);
         return true;
     }
 
-    void drawEditBox(long vg, String text, float x, float y, float w, float h) {
+    void drawEditBox(long vg, float x, float y, float w, float h) {
 
         drawEditBoxBase(vg, x, y, w, h);
 
@@ -63,7 +69,7 @@ public class GEditBox extends GObject {
         nvgFontFace(vg, GToolkit.getFontWord());
         nvgFillColor(vg, nvgRGBA(255, 255, 255, 64));
         nvgTextAlign(vg, NVG_ALIGN_LEFT | NVG_ALIGN_MIDDLE);
-        nvgText(vg, x + h * 0.3f, y + h * 0.5f, toUtf8(text), null);
+        nvgText(vg, x + h * 0.3f, y + h * 0.5f, hint_arr, null);
     }
 
     public static void drawEditBoxBase(long vg, float x, float y, float w, float h) {

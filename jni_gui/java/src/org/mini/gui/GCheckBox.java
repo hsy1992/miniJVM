@@ -20,6 +20,7 @@ import static org.mini.glfw.utils.Nutil.nvgRoundedRect;
 import static org.mini.glfw.utils.Nutil.nvgText;
 import static org.mini.glfw.utils.Nutil.nvgTextAlign;
 import static org.mini.gui.GToolkit.nvgRGBA;
+import org.mini.gui.event.GActionListener;
 
 /**
  *
@@ -28,14 +29,34 @@ import static org.mini.gui.GToolkit.nvgRGBA;
 public class GCheckBox extends GObject {
 
     String text;
-    char preicon;
+    byte[] text_arr;
+    boolean checked;
 
-    public GCheckBox(String text, int left, int top, int width, int height) {
-        this.text = text;
+    public GCheckBox(String text, boolean checked, int left, int top, int width, int height) {
+        setText(text);
+        this.checked = checked;
         boundle[LEFT] = left;
         boundle[TOP] = top;
         boundle[WIDTH] = width;
         boundle[HEIGHT] = height;
+    }
+
+    public void setText(String text) {
+        this.text = text;
+        text_arr = toUtf8(text);
+    }
+
+    @Override
+    public void mouseButtonEvent(int button, boolean pressed, int x, int y) {
+        if (isInBoundle(boundle, x - parent.getX(), y - parent.getY())) {
+            if (pressed) {
+            } else {
+                checked = !checked;
+                if (stateListener != null) {
+                    stateListener.stateChange();
+                }
+            }
+        }
     }
 
     /**
@@ -44,10 +65,10 @@ public class GCheckBox extends GObject {
      * @return
      */
     public boolean update(long vg) {
-        float x = boundle[LEFT] + getParentX();
-        float y = boundle[TOP] + getParentY();
-        float w = boundle[WIDTH];
-        float h = boundle[HEIGHT];
+        float x = getX();
+        float y = getY();
+        float w = getW();
+        float h = getH();
 
         byte[] bg;
 
@@ -57,7 +78,7 @@ public class GCheckBox extends GObject {
         nvgFillColor(vg, nvgRGBA(255, 255, 255, 160));
 
         nvgTextAlign(vg, NVG_ALIGN_LEFT | NVG_ALIGN_MIDDLE);
-        nvgText(vg, x + 28, y + h * 0.5f, toUtf8(text), null);
+        nvgText(vg, x + 28, y + h * 0.5f, text_arr, null);
 
         bg = nvgBoxGradient(vg, x + 1, y + (int) (h * 0.5f) - 9 + 1, 18, 18, 3, 3, nvgRGBA(0, 0, 0, 32), nvgRGBA(0, 0, 0, 92));
         nvgBeginPath(vg);
@@ -69,8 +90,22 @@ public class GCheckBox extends GObject {
         nvgFontFace(vg, GToolkit.getFontIcon());
         nvgFillColor(vg, nvgRGBA(255, 255, 255, 128));
         nvgTextAlign(vg, NVG_ALIGN_CENTER | NVG_ALIGN_MIDDLE);
-        nvgText(vg, x + 9 + 2, y + h * 0.5f, toUtf8("" + ICON_CHECK), null);
+        nvgText(vg, x + 9 + 2, y + h * 0.5f, toUtf8("" + (checked ? ICON_CHECK : ICON_CHECK_NOT)), null);
         return true;
+    }
+
+    /**
+     * @return the checked
+     */
+    public boolean isChecked() {
+        return checked;
+    }
+
+    /**
+     * @param checked the checked to set
+     */
+    public void setChecked(boolean checked) {
+        this.checked = checked;
     }
 
 }

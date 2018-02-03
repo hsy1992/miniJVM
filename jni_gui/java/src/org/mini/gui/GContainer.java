@@ -103,11 +103,11 @@ abstract public class GContainer extends GObject {
     }
 
     @Override
-    public void mouseButtonEvent(int button, boolean pressed) {
+    public void mouseButtonEvent(int button, boolean pressed, int x, int y) {
         for (Iterator<GObject> it = elements.iterator(); it.hasNext();) {
             try {
                 GObject nko = it.next();
-                nko.mouseButtonEvent(button, pressed);
+                nko.mouseButtonEvent(button, pressed, x, y);
             } catch (Exception e) {
                 e.printStackTrace();
             }

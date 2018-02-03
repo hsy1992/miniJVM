@@ -64,10 +64,10 @@ public class GColorSelector extends GObject {
      * @return
      */
     public boolean update(long vg) {
-        float x = boundle[LEFT] + getParentX();
-        float y = boundle[TOP] + getParentY();
-        float w = boundle[WIDTH];
-        float h = boundle[HEIGHT];
+        float x = getX();
+        float y = getY();
+        float w = getW();
+        float h = getH();
 
         drawColorwheel(vg, x, y, w, h, pos);
         return true;

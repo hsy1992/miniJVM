@@ -28,28 +28,31 @@ import static org.mini.gui.GToolkit.nvgRGBA;
 public class GInputField extends GObject {
 
     String hint;
+    byte[] hint_arr;
 
     public GInputField(String hint, int left, int top, int width, int height) {
-        this.hint = hint;
+        setHint(hint);
         boundle[LEFT] = left;
         boundle[TOP] = top;
         boundle[WIDTH] = width;
         boundle[HEIGHT] = height;
     }
-
+    public void setHint(String hint){
+        this.hint = hint;
+        hint_arr= toUtf8(hint);
+    }
     /**
      *
      * @param vg
      * @return
      */
     public boolean update(long vg) {
-        float x = boundle[LEFT] + getParentX();
-        float y = boundle[TOP] + getParentY();
-        float w = boundle[WIDTH];
-        float h = boundle[HEIGHT];
+        float x = getX();
+        float y = getY();
+        float w = getW();
+        float h = getH();
 
         byte[] bg;
-        byte[] icon = new byte[8];
         float cornerRadius = h / 2 - 1;
 
         // Edit
@@ -74,7 +77,7 @@ public class GInputField extends GObject {
         nvgFillColor(vg, nvgRGBA(255, 255, 255, 32));
 
         nvgTextAlign(vg, NVG_ALIGN_LEFT | NVG_ALIGN_MIDDLE);
-        nvgText(vg, x + h * 1.05f, y + h * 0.5f, toUtf8(hint), null);
+        nvgText(vg, x + h * 1.05f, y + h * 0.5f, hint_arr, null);
 
         nvgFontSize(vg, h * 1.3f);
         nvgFontFace(vg, GToolkit.getFontIcon());

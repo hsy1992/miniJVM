@@ -39,6 +39,7 @@ public class GSlider extends GObject {
 
     String text;
     float pos;
+    boolean draged;
 
     public GSlider(float pos, int left, int top, int width, int height) {
         this.pos = pos;
@@ -48,16 +49,46 @@ public class GSlider extends GObject {
         boundle[HEIGHT] = height;
     }
 
+    @Override
+    public void mouseButtonEvent(int button, boolean pressed, int x, int y) {
+        int rx = (int) (x - parent.getX());
+        int ry = (int) (y - parent.getY());
+        if (isInBoundle(boundle, rx, ry)) {
+            if (pressed) {
+                draged = true;
+                pos = (rx - boundle[LEFT]) / boundle[WIDTH];
+            } else {
+                draged = false;
+                if (actionListener != null) {
+                    actionListener.action();
+                }
+            }
+        }
+    }
+
+    @Override
+    public void cursorPosEvent(int x, int y) {
+        int rx = (int) (x - parent.getX());
+        int ry = (int) (y - parent.getY());
+        if (isInBoundle(boundle, rx, ry)) {
+            if (draged) {
+                pos = (rx - boundle[LEFT]) / boundle[WIDTH];
+            }
+        } else {
+            draged = false;
+        }
+    }
+
     /**
      *
      * @param vg
      * @return
      */
     public boolean update(long vg) {
-        float x = boundle[LEFT] + getParentX();
-        float y = boundle[TOP] + getParentY();
-        float w = boundle[WIDTH];
-        float h = boundle[HEIGHT];
+        float x = getX();
+        float y = getY();
+        float w = getW();
+        float h = getH();
 
         drawSlider(vg, pos, x, y, w, h);
         return true;

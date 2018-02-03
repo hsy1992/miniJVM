@@ -14,6 +14,7 @@ import org.mini.gui.GInputField;
 import org.mini.gui.GLabel;
 import org.mini.gui.GObject;
 import org.mini.gui.GSlider;
+import org.mini.gui.event.GActionListener;
 
 /*
  * To change this license header, choose License Headers in Project Properties.
@@ -36,7 +37,7 @@ public class GuiTest {
     void t1() {
         win = new GForm(/*"GuiTest"*/"test 窗口", 800, 600);
         win.init();
-        win.add(new GFrame("demo测试"/*"demo"*/, 30, 30, 500, 400, new NkFrameMain()));
+        win.add(new GFrame("demo测试"/*"demo"*/, 50, 50, 300, 400, new NkFrameMain()));
         GFrame sub1 = new GFrame(/*"子窗口"*/"sub1", 100, 100, 300, 400, new NkFrameSub1());
         win.add(sub1);
         win.run();
@@ -49,12 +50,12 @@ public class GuiTest {
         @Override
         public void init(GFrame parent) {
             img = new GImage("image4.png");
-            GColorSelector cs=new GColorSelector(0, 10, 30, 200, 200);
+            GColorSelector cs = new GColorSelector(0, 10, 30, 200, 200);
             parent.add(cs);
         }
 
         @Override
-        public void updateContents(long ctx, GFrame parent) {
+        public void updateContents(long vg, GFrame parent) {
 //            //canvas
 //            GGraphics g = parent.getGraphics();
 //
@@ -95,21 +96,21 @@ public class GuiTest {
 //                    light.draw();
                 }
             };
-            int x = 10, y = 20;
+            int x = 10, y = 40;
             GInputField gif = new GInputField("search", x, y, 280, 25);
             parent.add(gif);
-            y += 15;
+            y += 30;
             GLabel lb1 = new GLabel("Login", x, y, 280, 20);
             parent.add(lb1);
-            y += 15;
+            y += 25;
             GEditBox mail = new GEditBox("Email", x, y, 280, 28);
             parent.add(mail);
-            y += 15;
+            y += 35;
             GEditBox pwd = new GEditBox("Password", x, y, 280, 28);
             parent.add(pwd);
-            y += 20;
+            y += 35;
 
-            GCheckBox cbox = new GCheckBox("Remember me", x, y, 140, 28);
+            GCheckBox cbox = new GCheckBox("Remember me", true, x, y, 140, 28);
             parent.add(cbox);
             GButton sig = new GButton("Sign in", x + 138, y, 140, 28);
             sig.setBgColor(0, 96, 128, 255);
@@ -131,11 +132,21 @@ public class GuiTest {
             bt2.setBgColor(0, 0, 0, 0);
             parent.add(bt2);
             img1 = new GImage(glfb.getTexture(), glfb.getWidth(), glfb.getHeight());
+
+            bt1.setActionListener(new GActionListener() {
+                @Override
+                public void action() {
+                    System.out.println("delete something");
+                }
+            });
         }
 
         @Override
-        public void updateContents(long ctx, GFrame parent) {
-
+        public void updateContents(long vg, GFrame parent) {
+            try {
+                Thread.sleep(30);
+            } catch (InterruptedException ex) {
+            }
         }
     }
 }

@@ -248,9 +248,10 @@ public class GForm extends GContainer implements Runnable {
                     }
                 }
                 if (focus != null) {
-                    focus.mouseButtonEvent(button, pressed);
+                    focus.mouseButtonEvent(button, pressed, mouseX, mouseY);
+                } else {
+                    GForm.this.mouseButtonEvent(button, pressed, mouseX, mouseY);
                 }
-                GForm.this.mouseButtonEvent(button, pressed);
             }
         }
 

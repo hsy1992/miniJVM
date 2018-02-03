@@ -31,18 +31,46 @@ import static org.mini.gui.GToolkit.nvgRGBA;
 public class GButton extends GObject {
 
     String text;
+    byte[] text_arr;
     char preicon;
+    boolean bt_pressed = false;
 
     public GButton(String text, int left, int top, int width, int height) {
-        this.text = text;
+        setText(text);
         boundle[LEFT] = left;
         boundle[TOP] = top;
         boundle[WIDTH] = width;
         boundle[HEIGHT] = height;
     }
 
+    public void setText(String text) {
+        this.text = text;
+        text_arr = toUtf8(text);
+    }
+
     public void setIcon(char icon) {
         preicon = icon;
+    }
+
+    @Override
+    public void mouseButtonEvent(int button, boolean pressed, int x, int y) {
+        if (isInBoundle(boundle, x - parent.getX(), y - parent.getY())) {
+            if (pressed) {
+                bt_pressed = true;
+            } else {
+                bt_pressed = false;
+                if (actionListener != null) {
+                    actionListener.action();
+                }
+            }
+        }
+    }
+
+    @Override
+    public void cursorPosEvent(int x, int y) {
+        if (!isInBoundle(boundle, x - parent.getX(), y - parent.getY())) {
+            bt_pressed = false;
+        }
     }
 
     /**
@@ -51,17 +79,22 @@ public class GButton extends GObject {
      * @return
      */
     public boolean update(long vg) {
-        float x = boundle[LEFT] + getParentX();
-        float y = boundle[TOP] + getParentY();
-        float w = boundle[WIDTH];
-        float h = boundle[HEIGHT];
+        float x = getX();
+        float y = getY();
+        float w = getW();
+        float h = getH();
 
         byte[] bg;
 
         float cornerRadius = 4.0f;
         float tw = 0, iw = 0;
-
-        bg = Nutil.nvgLinearGradient(vg, x, y, x, y + h, nvgRGBA(255, 255, 255, isBlack(bgColor) ? 16 : 32), nvgRGBA(0, 0, 0, isBlack(bgColor) ? 16 : 32));
+        float move = 0;
+        if (bt_pressed) {
+            move = 1;
+            bg = Nutil.nvgLinearGradient(vg, x, y + h, x, y, nvgRGBA(255, 255, 255, isBlack(bgColor) ? 16 : 32), nvgRGBA(0, 0, 0, isBlack(bgColor) ? 16 : 32));
+        } else {
+            bg = Nutil.nvgLinearGradient(vg, x, y, x, y + h, nvgRGBA(255, 255, 255, isBlack(bgColor) ? 16 : 32), nvgRGBA(0, 0, 0, isBlack(bgColor) ? 16 : 32));
+        }
         nvgBeginPath(vg);
         nvgRoundedRect(vg, x + 1, y + 1, w - 2, h - 2, cornerRadius - 1);
         if (!isBlack(bgColor)) {
@@ -78,7 +111,7 @@ public class GButton extends GObject {
 
         nvgFontSize(vg, 20.0f);
         nvgFontFace(vg, GToolkit.getFontWord());
-        tw = Nutil.nvgTextBounds(vg, 0, 0, toUtf8(text), null, null);
+        tw = Nutil.nvgTextBounds(vg, 0, 0, text_arr, null, null);
         if (preicon != 0) {
             nvgFontSize(vg, h * 1.3f);
             nvgFontFace(vg, GToolkit.getFontIcon());
@@ -91,16 +124,16 @@ public class GButton extends GObject {
             nvgFontFace(vg, GToolkit.getFontIcon());
             nvgFillColor(vg, nvgRGBA(255, 255, 255, 96));
             nvgTextAlign(vg, NVG_ALIGN_LEFT | NVG_ALIGN_MIDDLE);
-            nvgText(vg, x + w * 0.5f - tw * 0.5f - iw * 0.75f, y + h * 0.5f, toUtf8("" + preicon), null);
+            nvgText(vg, x + w * 0.5f - tw * 0.5f - iw * 0.75f, y + h * 0.5f + move, toUtf8("" + preicon), null);
         }
 
         nvgFontSize(vg, 20.0f);
         nvgFontFace(vg, GToolkit.getFontWord());
         nvgTextAlign(vg, NVG_ALIGN_LEFT | NVG_ALIGN_MIDDLE);
         nvgFillColor(vg, nvgRGBA(0, 0, 0, 160));
-        nvgText(vg, x + w * 0.5f - tw * 0.5f + iw * 0.25f, y + h * 0.5f - 1, toUtf8(text), null);
+        nvgText(vg, x + w * 0.5f - tw * 0.5f + iw * 0.25f, y + h * 0.5f + 1 + move, text_arr, null);
         nvgFillColor(vg, nvgRGBA(255, 255, 255, 160));
-        nvgText(vg, x + w * 0.5f - tw * 0.5f + iw * 0.25f, y + h * 0.5f, toUtf8(text), null);
+        nvgText(vg, x + w * 0.5f - tw * 0.5f + iw * 0.25f, y + h * 0.5f + move, text_arr, null);
         return true;
     }
 // Returns 1 if col.rgba is 0.0f,0.0f,0.0f,0.0f, 0 otherwise
