@@ -56,6 +56,7 @@ public class GSlider extends GObject {
         if (isInBoundle(boundle, rx, ry)) {
             if (pressed) {
                 draged = true;
+                parent.setFocus(this);
                 pos = (rx - boundle[LEFT]) / boundle[WIDTH];
             } else {
                 draged = false;

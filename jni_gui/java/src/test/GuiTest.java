@@ -37,8 +37,8 @@ public class GuiTest {
     void t1() {
         win = new GForm(/*"GuiTest"*/"test 窗口", 800, 600);
         win.init();
-        win.add(new GFrame("demo测试"/*"demo"*/, 50, 50, 300, 400, new NkFrameMain()));
-        GFrame sub1 = new GFrame(/*"子窗口"*/"sub1", 100, 100, 300, 400, new NkFrameSub1());
+        win.add(new GFrame("demo测试"/*"demo"*/, 50, 50, 300, 500, new NkFrameMain()));
+        GFrame sub1 = new GFrame(/*"子窗口"*/"sub1", 400, 50, 300, 400, new NkFrameSub1());
         win.add(sub1);
         win.run();
     }
@@ -97,18 +97,23 @@ public class GuiTest {
                 }
             };
             int x = 10, y = 40;
-            GInputField gif = new GInputField("search", x, y, 280, 25);
+            GInputField gif = new GInputField("", "search", x, y, 280, 25);
             parent.add(gif);
             y += 30;
             GLabel lb1 = new GLabel("Login", x, y, 280, 20);
             parent.add(lb1);
             y += 25;
-            GEditBox mail = new GEditBox("Email", x, y, 280, 28);
+            GEditBox mail = new GEditBox("", "Email", x, y, 280, 28);
+            mail.setSingleMode(true);
             parent.add(mail);
             y += 35;
-            GEditBox pwd = new GEditBox("Password", x, y, 280, 28);
+            GEditBox pwd = new GEditBox("", "Password", x, y, 280, 28);
+            pwd.setSingleMode(true);
             parent.add(pwd);
             y += 35;
+            GEditBox cont = new GEditBox("", "Contents", x, y, 280, 188);
+            parent.add(cont);
+            y += 195;
 
             GCheckBox cbox = new GCheckBox("Remember me", true, x, y, 140, 28);
             parent.add(cbox);

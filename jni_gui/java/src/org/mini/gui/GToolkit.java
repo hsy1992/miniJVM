@@ -6,23 +6,12 @@
 package org.mini.gui;
 
 import java.util.Hashtable;
-import javafx.scene.text.Font;
 import javax.mini.reflect.Array;
 import javax.mini.reflect.vm.RefNative;
 import static org.mini.glfw.utils.Gutil.toUtf8;
 import org.mini.glfw.utils.Nutil;
-import static org.mini.glfw.utils.Nutil.NVG_ANTIALIAS;
-import static org.mini.glfw.utils.Nutil.NVG_DEBUG;
-import static org.mini.glfw.utils.Nutil.NVG_STENCIL_STROKES;
 import static org.mini.glfw.utils.Nutil.nvgAddFallbackFontId;
-import static org.mini.glfw.utils.Nutil.nvgBeginPath;
-import static org.mini.glfw.utils.Nutil.nvgBoxGradient;
 import static org.mini.glfw.utils.Nutil.nvgCreateFont;
-import static org.mini.glfw.utils.Nutil.nvgFill;
-import static org.mini.glfw.utils.Nutil.nvgFillPaint;
-import static org.mini.glfw.utils.Nutil.nvgRoundedRect;
-import static org.mini.glfw.utils.Nutil.nvgStroke;
-import static org.mini.glfw.utils.Nutil.nvgStrokeColor;
 
 /**
  *
@@ -60,13 +49,13 @@ public class GToolkit {
         return Nutil.nvgRGBA((byte) r, (byte) g, (byte) b, (byte) a);
     }
 
-
     /**
      * 字体部分
      */
     static byte[] font_word = "word".getBytes(), font_icon = "icon".getBytes(), font_emoji = "emoji".getBytes();
     static int font_word_handle, font_icon_handle, font_emoji_handle;
     static boolean fontLoaded = false;
+    static byte[] FONT_GLYPH_TEMPLATE = toUtf8("正");
 
     public static void loadFont(long vg) {
         if (fontLoaded) {
@@ -101,5 +90,25 @@ public class GToolkit {
         return font_emoji;
     }
 
-   
+    public static float[] getFontBoundle(long vg) {
+        float[] bond = new float[4];
+        Nutil.nvgTextBounds(vg, 0, 0, FONT_GLYPH_TEMPLATE, null, bond);
+        bond[GObject.WIDTH] -= bond[GObject.LEFT];
+        bond[GObject.HEIGHT] -= bond[GObject.TOP];
+        bond[GObject.LEFT] = bond[GObject.TOP] = 0;
+        return bond;
+    }
+
+    /**
+     * 风格
+     */
+    static GStyle defaultStyle = new GDefaultStyle();
+
+    public static GStyle getStyle() {
+        return defaultStyle;
+    }
+
+    public static void setStyle(GStyle style) {
+        defaultStyle = style;
+    }
 }

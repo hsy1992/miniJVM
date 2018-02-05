@@ -132,7 +132,7 @@ public class GFrame extends GContainer {
         nvgStrokeColor(vg, nvgRGBA(0, 0, 0, 32));
         nvgStroke(vg);
 
-        nvgFontSize(vg, 18.0f);
+        nvgFontSize(vg, GToolkit.getStyle().getTitleFontSize());
         nvgFontFace(vg, GToolkit.getFontWord());
         nvgTextAlign(vg, NVG_ALIGN_CENTER | NVG_ALIGN_MIDDLE);
 
@@ -180,7 +180,11 @@ public class GFrame extends GContainer {
                 break;
             }
         }
-        super.mouseButtonEvent(button, pressed, x, y);
+        if (isInBoundle(boundle, x, y)) {
+            super.mouseButtonEvent(button, pressed, x, y);
+        } else {
+            setFocus(null);
+        }
     }
 
     @Override

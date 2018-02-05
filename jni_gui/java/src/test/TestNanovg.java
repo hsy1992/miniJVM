@@ -38,6 +38,7 @@ import static org.mini.glfw.utils.Nutil.NVG_ALIGN_CENTER;
 import static org.mini.glfw.utils.Nutil.NVG_ALIGN_LEFT;
 import static org.mini.glfw.utils.Nutil.NVG_ALIGN_MIDDLE;
 import static org.mini.glfw.utils.Nutil.NVG_ALIGN_RIGHT;
+import static org.mini.glfw.utils.Nutil.NVG_ALIGN_TOP;
 import static org.mini.glfw.utils.Nutil.NVG_ANTIALIAS;
 import static org.mini.glfw.utils.Nutil.NVG_BEVEL;
 import static org.mini.glfw.utils.Nutil.NVG_BUTT;
@@ -58,6 +59,8 @@ import static org.mini.glfw.utils.Nutil.nvgBoxGradient;
 import static org.mini.glfw.utils.Nutil.nvgCircle;
 import static org.mini.glfw.utils.Nutil.nvgClosePath;
 import static org.mini.glfw.utils.Nutil.nvgCreateFont;
+import static org.mini.glfw.utils.Nutil.nvgCreateNVGglyphPosition;
+import static org.mini.glfw.utils.Nutil.nvgCreateNVGtextRow;
 import static org.mini.glfw.utils.Nutil.nvgDegToRad;
 import static org.mini.glfw.utils.Nutil.nvgEllipse;
 import static org.mini.glfw.utils.Nutil.nvgEndFrame;
@@ -67,6 +70,7 @@ import static org.mini.glfw.utils.Nutil.nvgFillPaint;
 import static org.mini.glfw.utils.Nutil.nvgFontBlur;
 import static org.mini.glfw.utils.Nutil.nvgFontFace;
 import static org.mini.glfw.utils.Nutil.nvgFontSize;
+import static org.mini.glfw.utils.Nutil.nvgGlobalAlpha;
 import static org.mini.glfw.utils.Nutil.nvgHSLA;
 import static org.mini.glfw.utils.Nutil.nvgImagePattern;
 import static org.mini.glfw.utils.Nutil.nvgImageSize;
@@ -76,6 +80,7 @@ import static org.mini.glfw.utils.Nutil.nvgLineJoin;
 import static org.mini.glfw.utils.Nutil.nvgLineTo;
 import static org.mini.glfw.utils.Nutil.nvgLinearGradient;
 import static org.mini.glfw.utils.Nutil.nvgMoveTo;
+import static org.mini.glfw.utils.Nutil.nvgNVGglyphPosition_x;
 import static org.mini.glfw.utils.Nutil.nvgPathWinding;
 import static org.mini.glfw.utils.Nutil.nvgRadialGradient;
 import static org.mini.glfw.utils.Nutil.nvgRect;
@@ -91,7 +96,15 @@ import static org.mini.glfw.utils.Nutil.nvgStrokeColor;
 import static org.mini.glfw.utils.Nutil.nvgStrokeWidth;
 import static org.mini.glfw.utils.Nutil.nvgText;
 import static org.mini.glfw.utils.Nutil.nvgTextAlign;
+import static org.mini.glfw.utils.Nutil.nvgTextBounds;
+import static org.mini.glfw.utils.Nutil.nvgTextBox;
+import static org.mini.glfw.utils.Nutil.nvgTextBoxBounds;
+import static org.mini.glfw.utils.Nutil.nvgTextBreakLines;
+import static org.mini.glfw.utils.Nutil.nvgTextGlyphPositions;
+import static org.mini.glfw.utils.Nutil.nvgTextLineHeight;
+import static org.mini.glfw.utils.Nutil.nvgTextMetrics;
 import static org.mini.glfw.utils.Nutil.nvgTranslate;
+import org.mini.gui.GToolkit;
 
 /*
  * To change this license header, choose License Headers in Project Properties.
@@ -144,6 +157,10 @@ public class TestNanovg {
                     System.out.println("fps:" + count);
                     last = now;
                     count = 0;
+                }
+                try {
+                    Thread.sleep(30);
+                } catch (InterruptedException ex) {
                 }
             }
             glfwTerminate();
@@ -308,7 +325,6 @@ public class TestNanovg {
         }
         return false;
     }
-
 
     void drawWindow(long vg, String title, float x, float y, float w, float h) {
         float cornerRadius = 3.0f;
@@ -764,7 +780,8 @@ public class TestNanovg {
         nvgRestore(vg);
     }
 
-    void drawThumbnails(long vg, float x, float y, float w, float h, int[] images, int nimages, float t) {
+    void drawThumbnails(long vg, float x, float y, float w, float h, int[] images, float t) {
+        int nimages = images.length;
         float cornerRadius = 3.0f;
         byte[] shadowPaint, imgPaint, fadePaint;
         float ix, iy, iw, ih;
@@ -874,6 +891,9 @@ public class TestNanovg {
         nvgFill(vg);
 
         scrollh = (h / stackh) * (h - 8);
+        if (scrollh > h - 8) {
+            scrollh = h - 8;
+        }
         shadowPaint = nvgBoxGradient(vg, x + w - 12 - 1, y + 4 + (h - 8 - scrollh) * u - 1, 8, scrollh, 3, 4, nvgRGBA(220, 220, 220, 255), nvgRGBA(128, 128, 128, 255));
         nvgBeginPath(vg);
         nvgRoundedRect(vg, x + w - 12 + 1, y + 4 + 1 + (h - 8 - scrollh) * u, 8 - 2, scrollh - 2, 2);
@@ -1094,121 +1114,129 @@ public class TestNanovg {
 //		nvgDeleteImage(vg, data->images[i]);
 //}
 
-//void drawParagraph(long vg, float x, float y, float width, float height, float mx, float my)
-//{
-//	NVGtextRow rows[3];
-//	NVGglyphPosition glyphs[100];
-//	String text = "This is longer chunk of text.\n  \n  Would have used lorem ipsum but she    was busy jumping over the lazy dog with the fox and all the men who came to the aid of the party.🎉";
-//	String start;
-//	String end;
-//	int nrows, i, nglyphs, j, lnum = 0;
-//	float lineh;
-//	float caretx, px;
-//	float bounds[4];
-//	float a;
-//	float gx,gy;
-//	int gutter = 0;
-//	NVG_NOTUSED(height);
-//
-//	nvgSave(vg);
-//
-//	nvgFontSize(vg, 18.0f);
-//	nvgFontFace(vg, fontname);
-//	nvgTextAlign(vg, NVG_ALIGN_LEFT|NVG_ALIGN_TOP);
-//	nvgTextMetrics(vg, null, null, &lineh);
-//
-//	// The text break API can be used to fill a large buffer of rows,
-//	// or to iterate over the text just few lines (or just one) at a time.
-//	// The "next" variable of the last returned item tells where to continue.
-//	start = text;
-//	end = text + strlen(text);
-//	while ((nrows = nvgTextBreakLines(vg, start, end, width, rows, 3))) {
-//		for (i = 0; i < nrows; i++) {
-//			NVGtextRow* row = &rows[i];
-//			int hit = mx > x && mx < (x+width) && my >= y && my < (y+lineh);
-//
-//			nvgBeginPath(vg);
-//			nvgFillColor(vg, nvgRGBA(255,255,255,hit?64:16));
-//			nvgRect(vg, x, y, row->width, lineh);
-//			nvgFill(vg);
-//
-//			nvgFillColor(vg, nvgRGBA(255,255,255,255));
-//			nvgText(vg, x, y, row->start, row->end);
-//
-//			if (hit) {
-//				caretx = (mx < x+row->width/2) ? x : x+row->width;
-//				px = x;
-//				nglyphs = nvgTextGlyphPositions(vg, x, y, row->start, row->end, glyphs, 100);
-//				for (j = 0; j < nglyphs; j++) {
-//					float x0 = glyphs[j].x;
-//					float x1 = (j+1 < nglyphs) ? glyphs[j+1].x : x+row->width;
-//					float gx = x0 * 0.3f + x1 * 0.7f;
-//					if (mx >= px && mx < gx)
-//						caretx = glyphs[j].x;
-//					px = gx;
-//				}
-//				nvgBeginPath(vg);
-//				nvgFillColor(vg, nvgRGBA(255,192,0,255));
-//				nvgRect(vg, caretx, y, 1, lineh);
-//				nvgFill(vg);
-//
-//				gutter = lnum+1;
-//				gx = x - 10;
-//				gy = y + lineh/2;
-//			}
-//			lnum++;
-//			y += lineh;
-//		}
-//		// Keep going...
-//		start = rows[nrows-1].next;
-//	}
-//
-//	if (gutter) {
-//		char txt[16];
-//		snprintf(txt, sizeof(txt), "%d", gutter);
-//		nvgFontSize(vg, 13.0f);
-//		nvgTextAlign(vg, NVG_ALIGN_RIGHT|NVG_ALIGN_MIDDLE);
-//
-//		nvgTextBounds(vg, gx,gy, txt, null, bounds);
-//
-//		nvgBeginPath(vg);
-//		nvgFillColor(vg, nvgRGBA(255,192,0,255));
-//		nvgRoundedRect(vg, (int)bounds[0]-4,(int)bounds[1]-2, (int)(bounds[2]-bounds[0])+8, (int)(bounds[3]-bounds[1])+4, ((int)(bounds[3]-bounds[1])+4)/2-1);
-//		nvgFill(vg);
-//
-//		nvgFillColor(vg, nvgRGBA(32,32,32,255));
-//		nvgText(vg, gx,gy, txt, null);
-//	}
-//
-//	y += 20.0f;
-//
-//	nvgFontSize(vg, 13.0f);
-//	nvgTextAlign(vg, NVG_ALIGN_LEFT|NVG_ALIGN_TOP);
-//	nvgTextLineHeight(vg, 1.2f);
-//
-//	nvgTextBoxBounds(vg, x,y, 150, "Hover your mouse over the text to see calculated caret position.", null, bounds);
-//
-//	// Fade the tooltip out when close to it.
-//	gx = fabsf((mx - (bounds[0]+bounds[2])*0.5f) / (bounds[0] - bounds[2]));
-//	gy = fabsf((my - (bounds[1]+bounds[3])*0.5f) / (bounds[1] - bounds[3]));
-//	a = maxf(gx, gy) - 0.5f;
-//	a = clampf(a, 0, 1);
-//	nvgGlobalAlpha(vg, a);
-//
-//	nvgBeginPath(vg);
-//	nvgFillColor(vg, nvgRGBA(220,220,220,255));
-//	nvgRoundedRect(vg, bounds[0]-2,bounds[1]-2, (int)(bounds[2]-bounds[0])+4, (int)(bounds[3]-bounds[1])+4, 3);
-//	px = (int)((bounds[2]+bounds[0])/2);
-//	nvgMoveTo(vg, px,bounds[1] - 10);
-//	nvgLineTo(vg, px+7,bounds[1]+1);
-//	nvgLineTo(vg, px-7,bounds[1]+1);
-//	nvgFill(vg);
-//
-//	nvgFillColor(vg, nvgRGBA(0,0,0,220));
-//	nvgTextBox(vg, x,y, 150, "Hover your mouse over the text to see calculated caret position.", null);
-//
-//	nvgRestore(vg);
-//}
+    void drawParagraph(long vg, float x, float y, float width, float height, float mx, float my) {
+        long rows = nvgCreateNVGtextRow(3);
+        long glyphs = nvgCreateNVGglyphPosition(100);
+        String text = "This is longer chunk of text.\n  \n  Would have used lorem ipsum but she    was busy jumping over the lazy dog with the fox and all the men who came to the aid of the party.🎉";
+        int nrows, i, nglyphs, j, lnum = 0;
+        float[] lineh = {0};
+        float caretx, px;
+        float[] bounds = new float[4];
+        float a;
+        float gx = 0, gy = 0;
+        int gutter = 0;
+        //NVG_NOTUSED(height);
+
+        nvgSave(vg);
+
+        nvgFontSize(vg, 18.0f);
+        nvgFontFace(vg, fontname);
+        nvgTextAlign(vg, NVG_ALIGN_LEFT | NVG_ALIGN_TOP);
+        nvgTextMetrics(vg, null, null, lineh);
+
+        // The text break API can be used to fill a large buffer of rows,
+        // or to iterate over the text just few lines (or just one) at a time.
+        // The "next" variable of the last returned item tells where to continue.
+        byte[] text_arr = toUtf8(text);
+        byte[] start = new byte[text_arr.length];
+        System.arraycopy(text_arr, 0, start, 0, start.length);
+        while ((nrows = nvgTextBreakLines(vg, start, null, width, rows, 3)) != 0) {
+            for (i = 0; i < nrows; i++) {
+                boolean hit = mx > x && mx < (x + width) && my >= y && my < (y + lineh[0]);
+                float row_width = Nutil.nvgNVGtextRow_width(rows, i);
+                nvgBeginPath(vg);
+                nvgFillColor(vg, nvgRGBA(255, 255, 255, hit ? 64 : 16));
+                nvgRect(vg, x, y, row_width, lineh[0]);
+                nvgFill(vg);
+
+                long ptr = GToolkit.getArrayDataPtr(text_arr);
+                int starti = (int) (Nutil.nvgNVGtextRow_start(rows, i) - ptr);
+                int endi = (int) (Nutil.nvgNVGtextRow_end(rows, i) - ptr);
+                byte[] substr = new byte[endi - starti];
+                System.arraycopy(text_arr, starti, substr, 0, endi - starti);
+
+                nvgFillColor(vg, nvgRGBA(255, 255, 255, 255));
+                nvgText(vg, x, y, substr, null);
+
+                if (hit) {
+                    caretx = (mx < x + row_width / 2) ? x : x + row_width;
+                    px = x;
+                    nglyphs = nvgTextGlyphPositions(vg, x, y, substr, null, glyphs, 100);
+                    for (j = 0; j < nglyphs; j++) {
+                        float x0 = nvgNVGglyphPosition_x(glyphs, j);
+                        float x1 = (j + 1 < nglyphs) ? nvgNVGglyphPosition_x(glyphs, j + 1) : x + row_width;
+                        float gxx = x0 * 0.3f + x1 * 0.7f;
+                        if (mx >= px && mx < gxx) {
+                            caretx = nvgNVGglyphPosition_x(glyphs, j);
+                        }
+                        px = gxx;
+                    }
+                    nvgBeginPath(vg);
+                    nvgFillColor(vg, nvgRGBA(255, 192, 0, 255));
+                    nvgRect(vg, caretx, y, 1, lineh[0]);
+                    nvgFill(vg);
+
+                    gutter = lnum + 1;
+                    gx = x - 10;
+                    gy = y + lineh[0] / 2;
+                }
+                lnum++;
+                y += lineh[0];
+            }
+            // Keep going...
+            long ptr = GToolkit.getArrayDataPtr(text_arr);
+            long next = Nutil.nvgNVGtextRow_next(rows, nrows - 1);
+            int len = text_arr.length - (int) (next - ptr);
+            byte[] substr = new byte[len];
+            System.arraycopy(text_arr, (int) (next - ptr), substr, 0, len);
+        }
+        if (gutter != 0) {
+            String txt = "" + gutter;
+            byte[] txt_arr = toUtf8(txt);
+            nvgFontSize(vg, 13.0f);
+            nvgTextAlign(vg, NVG_ALIGN_RIGHT | NVG_ALIGN_MIDDLE);
+
+            nvgTextBounds(vg, gx, gy, txt_arr, null, bounds);
+
+            nvgBeginPath(vg);
+            nvgFillColor(vg, nvgRGBA(255, 192, 0, 255));
+            nvgRoundedRect(vg, (int) bounds[0] - 4, (int) bounds[1] - 2, (int) (bounds[2] - bounds[0]) + 8, (int) (bounds[3] - bounds[1]) + 4, ((int) (bounds[3] - bounds[1]) + 4) / 2 - 1);
+            nvgFill(vg);
+
+            nvgFillColor(vg, nvgRGBA(32, 32, 32, 255));
+            nvgText(vg, gx, gy, txt_arr, null);
+        }
+
+        y += 20.0f;
+
+        nvgFontSize(vg, 13.0f);
+        nvgTextAlign(vg, NVG_ALIGN_LEFT | NVG_ALIGN_TOP);
+        nvgTextLineHeight(vg, 1.2f);
+
+        nvgTextBoxBounds(vg, x, y, 150, toUtf8("Hover your mouse over the text to see calculated caret position."), null, bounds);
+
+        // Fade the tooltip out when close to it.
+        gx = Math.abs((mx - (bounds[0] + bounds[2]) * 0.5f) / (bounds[0] - bounds[2]));
+        gy = Math.abs((my - (bounds[1] + bounds[3]) * 0.5f) / (bounds[1] - bounds[3]));
+        a = maxf(gx, gy) - 0.5f;
+        a = clampf(a, 0, 1);
+        nvgGlobalAlpha(vg, a);
+
+        nvgBeginPath(vg);
+        nvgFillColor(vg, nvgRGBA(220, 220, 220, 255));
+        nvgRoundedRect(vg, bounds[0] - 2, bounds[1] - 2, (int) (bounds[2] - bounds[0]) + 4, (int) (bounds[3] - bounds[1]) + 4, 3);
+        px = (int) ((bounds[2] + bounds[0]) / 2);
+        nvgMoveTo(vg, px, bounds[1] - 10);
+        nvgLineTo(vg, px + 7, bounds[1] + 1);
+        nvgLineTo(vg, px - 7, bounds[1] + 1);
+        nvgFill(vg);
+
+        nvgFillColor(vg, nvgRGBA(0, 0, 0, 220));
+        nvgTextBox(vg, x, y, 150, toUtf8("Hover your mouse over the text to see calculated caret position."), null);
+
+        nvgRestore(vg);
+    }
+
     void drawWidths(long vg, float x, float y, float width) {
         int i;
 
@@ -1299,7 +1327,7 @@ public class TestNanovg {
         float x, y, popy;
 
         drawEyes(vg, width - 250, 50, 150, 100, mx, my, t);
-        //drawParagraph(vg, width - 450, 50, 150, 100, mx, my);
+        drawParagraph(vg, width - 450, 50, 150, 100, mx, my);
         drawGraph(vg, 0, height / 2, width, height / 2, t);
         drawColorwheel(vg, width - 300, height - 300, 250.0f, 250.0f, t);
 
@@ -1351,8 +1379,9 @@ public class TestNanovg {
         drawButton(vg, ICON_TRASH, "Delete", x, y, 160, 28, nvgRGBA(128, 16, 8, 255));
         drawButton(vg, 0, "Cancel", x + 170, y, 110, 28, nvgRGBA(0, 0, 0, 0));
 
+        int[] images = {0, 0, 0, 0, 0, 0};
         // Thumbnails box
-        //drawThumbnails(vg, 365, popy-30, 160, 300, data->images, 12, t);
+        drawThumbnails(vg, 365, popy - 30, 160, 300, images, t);
         nvgRestore(vg);
     }
 

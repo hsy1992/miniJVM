@@ -5,6 +5,8 @@
  */
 package org.mini.gui;
 
+import static org.mini.glfw.utils.Gutil.toUtf8;
+import org.mini.glfw.utils.Nutil;
 import static org.mini.gui.GToolkit.nvgRGBA;
 import org.mini.gui.event.GActionListener;
 import org.mini.gui.event.GStateListener;
@@ -15,6 +17,20 @@ import org.mini.gui.event.GStateListener;
  */
 abstract public class GObject {
 
+    /**
+     * @return the textFontSize
+     */
+    public float getTextFontSize() {
+        return textFontSize;
+    }
+
+    /**
+     * @param textFontSize the textFontSize to set
+     */
+    public void setTextFontSize(float textFontSize) {
+        this.textFontSize = textFontSize;
+    }
+
     public static char ICON_SEARCH = (char) 0x1F50D;
     public static char ICON_CIRCLED_CROSS = 0x2716;
     public static char ICON_CHEVRON_RIGHT = 0xE75E;
@@ -23,7 +39,7 @@ abstract public class GObject {
     public static char ICON_LOGIN = 0xE740;
     public static char ICON_TRASH = 0xE729;
     //
-    GObject parent;
+    GContainer parent;
 
     //object position and width ,height
     float[] boundle = new float[4];
@@ -37,6 +53,8 @@ abstract public class GObject {
 
     GActionListener actionListener;
     GStateListener stateListener;
+
+    float textFontSize = GToolkit.getStyle().getTextFontSize();
 
     public void init() {
 
@@ -77,7 +95,7 @@ abstract public class GObject {
         return parent;
     }
 
-    public void setParent(GObject p) {
+    public void setParent(GContainer p) {
         parent = p;
     }
 

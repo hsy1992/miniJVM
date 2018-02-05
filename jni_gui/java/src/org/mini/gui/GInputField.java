@@ -5,7 +5,9 @@
  */
 package org.mini.gui;
 
+import org.mini.glfw.Glfw;
 import static org.mini.glfw.utils.Gutil.toUtf8;
+import org.mini.glfw.utils.Nutil;
 import static org.mini.glfw.utils.Nutil.NVG_ALIGN_CENTER;
 import static org.mini.glfw.utils.Nutil.NVG_ALIGN_LEFT;
 import static org.mini.glfw.utils.Nutil.NVG_ALIGN_MIDDLE;
@@ -29,18 +31,82 @@ public class GInputField extends GObject {
 
     String hint;
     byte[] hint_arr;
+    String text;
+    byte[] text_arr;
+    float[] reset_boundle;
 
-    public GInputField(String hint, int left, int top, int width, int height) {
+    public GInputField(String text, String hint, int left, int top, int width, int height) {
         setHint(hint);
         boundle[LEFT] = left;
         boundle[TOP] = top;
         boundle[WIDTH] = width;
         boundle[HEIGHT] = height;
+        reset_boundle = new float[]{left + width - height, top, height, height};
     }
-    public void setHint(String hint){
+
+    public void setHint(String hint) {
         this.hint = hint;
-        hint_arr= toUtf8(hint);
+        hint_arr = toUtf8(hint);
     }
+
+    public void setText(String text) {
+        this.text = text;
+        text_arr = toUtf8(text);
+    }
+
+    public String getText() {
+        return text;
+    }
+
+    @Override
+    public void mouseButtonEvent(int button, boolean pressed, int x, int y) {
+        int rx = (int) (x - parent.getX());
+        int ry = (int) (y - parent.getY());
+        if (isInBoundle(boundle, rx, ry)) {
+            if (pressed) {
+                parent.setFocus(this);
+                if (isInBoundle(reset_boundle, rx, ry)) {
+                    setText("");
+                }
+            } else {
+                if (actionListener != null) {
+                    actionListener.action();
+                }
+            }
+        }
+    }
+
+    /**
+     *
+     * @param character
+     */
+    @Override
+    public void characterEvent(char character) {
+        if (parent.getFocus() != this) {
+            return;
+        }
+        if (text == null) {
+            text = "";
+        }
+        setText(text += character);
+    }
+
+    @Override
+    public void keyEvent(int key, int scanCode, int action, int mods) {
+        if (parent.getFocus() != this) {
+            return;
+        }
+        if (action == Glfw.GLFW_PRESS || action == Glfw.GLFW_REPEAT) {
+            if (key == Glfw.GLFW_KEY_BACKSPACE) {
+                String txt = getText();
+                if (txt != null && txt.length() > 0) {
+                    txt = txt.substring(0, txt.length() - 1);
+                    setText(txt);
+                }
+            }
+        }
+    }
+
     /**
      *
      * @param vg
@@ -62,23 +128,47 @@ public class GInputField extends GObject {
         nvgFillPaint(vg, bg);
         nvgFill(vg);
 
-        /*	nvgBeginPath(vg);
-	nvgRoundedRect(vg, x+0.5f,y+0.5f, w-1,h-1, cornerRadius-0.5f);
-	nvgStrokeColor(vg, nvgRGBA(0,0,0,48));
-	nvgStroke(vg);*/
+//        nvgBeginPath(vg);
+//        nvgRoundedRect(vg, x + 0.5f, y + 0.5f, w - 1, h - 1, cornerRadius - 0.5f);
+//        nvgStrokeColor(vg, nvgRGBA(0, 0, 0, 48));
+//        nvgStroke(vg);
         nvgFontSize(vg, h * 1.3f);
         nvgFontFace(vg, GToolkit.getFontIcon());
         nvgFillColor(vg, nvgRGBA(255, 255, 255, 64));
         nvgTextAlign(vg, NVG_ALIGN_CENTER | NVG_ALIGN_MIDDLE);
         nvgText(vg, x + h * 0.55f, y + h * 0.55f, toUtf8("" + ICON_SEARCH), null);
 
-        nvgFontSize(vg, 20.0f);
+        nvgFontSize(vg, textFontSize);
         nvgFontFace(vg, GToolkit.getFontWord());
-        nvgFillColor(vg, nvgRGBA(255, 255, 255, 32));
 
+        float[] standard = GToolkit.getFontBoundle(vg);
         nvgTextAlign(vg, NVG_ALIGN_LEFT | NVG_ALIGN_MIDDLE);
-        nvgText(vg, x + h * 1.05f, y + h * 0.5f, hint_arr, null);
-
+        float wordx = x + standard[WIDTH] * 2;
+        float wordy = y + h * 0.5f;
+        if (parent.getFocus() != this && (text == null || text.length() == 0)) {
+            if (hint_arr != null) {
+                nvgFillColor(vg, nvgRGBA(255, 255, 255, 64));
+                nvgText(vg, wordx, wordy, hint_arr, null);
+            }
+        } else {
+            float text_width = 0;
+            float txt_show_area_x = 0;
+            float txt_show_area_w = 0;
+            if (text_arr != null) {
+                text_width = Nutil.nvgTextBounds(vg, 0, 0, text_arr, null, null);
+                txt_show_area_w = w - standard[WIDTH] * 4.5f;
+                txt_show_area_x = wordx;
+                if (text_width > txt_show_area_w) {
+                    wordx -= text_width - txt_show_area_w;
+                }
+                nvgFillColor(vg, nvgRGBA(255, 255, 255, 160));
+                Nutil.nvgScissor(vg, txt_show_area_x, y, txt_show_area_w, h);
+                nvgText(vg, wordx, wordy, text_arr, null);
+                Nutil.nvgResetScissor(vg);
+            }
+            Nutil.nvgRect(vg, wordx + txt_show_area_w, wordy, 10, h);
+            nvgFillColor(vg, nvgRGBA(255, 255, 255, 200));
+        }
         nvgFontSize(vg, h * 1.3f);
         nvgFontFace(vg, GToolkit.getFontIcon());
         nvgFillColor(vg, nvgRGBA(255, 255, 255, 32));

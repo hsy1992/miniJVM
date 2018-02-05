@@ -567,6 +567,20 @@ static inline s32 _op_ldstore_impl(u8 **opCode, Runtime *runtime, RuntimeStack *
     return 0;
 }
 
+static inline s32 _check_arr_exception(Instance *arr, s32 index, Runtime *runtime) {
+    if (arr == NULL) {
+        Instance *exception = exception_create(JVM_EXCEPTION_NULLPOINTER, runtime);
+        push_ref(runtime->stack, (__refer) exception);
+        return RUNTIME_STATUS_EXCEPTION;
+    } else if (index >= arr->arr_length) {
+        Instance *exception = exception_create(JVM_EXCEPTION_ARRAYINDEXOUTOFBOUNDSEXCEPTION,
+                                               runtime);
+        push_ref(runtime->stack, (__refer) exception);
+        return RUNTIME_STATUS_EXCEPTION;
+    }
+    return 0;
+}
+
 s32 _op_notsupport(u8 **opCode, Runtime *runtime) {
     invoke_deepth(runtime);
     jvm_printf("not support instruct [%x]\n", opCode[0][0]);
@@ -1086,11 +1100,8 @@ s32 execute_method(MethodInfo *method, Runtime *pruntime, Class *clazz) {
                     case op_faload: {
                         s32 index = pop_int(stack);
                         Instance *arr = (Instance *) pop_ref(stack);
-                        if (arr == NULL) {
-                            Instance *exception = exception_create(JVM_EXCEPTION_NULLPOINTER, runtime);
-                            push_ref(stack, (__refer) exception);
-                            i_r = RUNTIME_STATUS_EXCEPTION;
-                        } else {
+                        i_r = _check_arr_exception(arr, index, runtime);
+                        if (!i_r) {
                             s32 s = *(s32 *) (arr->arr_body + (index << 2));
                             push_int(stack, s);
 
@@ -1108,11 +1119,8 @@ s32 execute_method(MethodInfo *method, Runtime *pruntime, Class *clazz) {
                     case op_daload: {
                         s32 index = pop_int(stack);
                         Instance *arr = (Instance *) pop_ref(stack);
-                        if (arr == NULL) {
-                            Instance *exception = exception_create(JVM_EXCEPTION_NULLPOINTER, runtime);
-                            push_ref(stack, (__refer) exception);
-                            i_r = RUNTIME_STATUS_EXCEPTION;
-                        } else {
+                        i_r = _check_arr_exception(arr, index, runtime);
+                        if (!i_r) {
                             s64 s = *(s64 *) (arr->arr_body + (index << 3));
                             push_long(stack, s);
 
@@ -1129,11 +1137,8 @@ s32 execute_method(MethodInfo *method, Runtime *pruntime, Class *clazz) {
                     case op_aaload: {
                         s32 index = pop_int(stack);
                         Instance *arr = (Instance *) pop_ref(stack);
-                        if (arr == NULL) {
-                            Instance *exception = exception_create(JVM_EXCEPTION_NULLPOINTER, runtime);
-                            push_ref(stack, (__refer) exception);
-                            i_r = RUNTIME_STATUS_EXCEPTION;
-                        } else {
+                        i_r = _check_arr_exception(arr, index, runtime);
+                        if (!i_r) {
                             __refer s = *(__refer *) (arr->arr_body + (index * sizeof(__refer)));
                             push_ref(stack, s);
 
@@ -1150,11 +1155,8 @@ s32 execute_method(MethodInfo *method, Runtime *pruntime, Class *clazz) {
                     case op_baload: {
                         s32 index = pop_int(stack);
                         Instance *arr = (Instance *) pop_ref(stack);
-                        if (arr == NULL) {
-                            Instance *exception = exception_create(JVM_EXCEPTION_NULLPOINTER, runtime);
-                            push_ref(stack, (__refer) exception);
-                            i_r = RUNTIME_STATUS_EXCEPTION;
-                        } else {
+                        i_r = _check_arr_exception(arr, index, runtime);
+                        if (!i_r) {
                             s32 s = *(s8 *) (arr->arr_body + (index));
                             push_int(stack, s);
 
@@ -1171,11 +1173,8 @@ s32 execute_method(MethodInfo *method, Runtime *pruntime, Class *clazz) {
                     case op_caload: {
                         s32 index = pop_int(stack);
                         Instance *arr = (Instance *) pop_ref(stack);
-                        if (arr == NULL) {
-                            Instance *exception = exception_create(JVM_EXCEPTION_NULLPOINTER, runtime);
-                            push_ref(stack, (__refer) exception);
-                            i_r = RUNTIME_STATUS_EXCEPTION;
-                        } else {
+                        i_r = _check_arr_exception(arr, index, runtime);
+                        if (!i_r) {
                             s32 s = *(u16 *) (arr->arr_body + (index << 1));
                             push_int(stack, s);
 
@@ -1192,11 +1191,8 @@ s32 execute_method(MethodInfo *method, Runtime *pruntime, Class *clazz) {
                     case op_saload: {
                         s32 index = pop_int(stack);
                         Instance *arr = (Instance *) pop_ref(stack);
-                        if (arr == NULL) {
-                            Instance *exception = exception_create(JVM_EXCEPTION_NULLPOINTER, runtime);
-                            push_ref(stack, (__refer) exception);
-                            i_r = RUNTIME_STATUS_EXCEPTION;
-                        } else {
+                        i_r = _check_arr_exception(arr, index, runtime);
+                        if (!i_r) {
                             s32 s = *(s16 *) (arr->arr_body + (index << 1));
                             push_int(stack, s);
 
@@ -1363,11 +1359,8 @@ s32 execute_method(MethodInfo *method, Runtime *pruntime, Class *clazz) {
                         s32 i = pop_int(stack);
                         s32 index = pop_int(stack);
                         Instance *jarr = (Instance *) pop_ref(stack);
-                        if (jarr == NULL) {
-                            Instance *exception = exception_create(JVM_EXCEPTION_NULLPOINTER, runtime);
-                            push_ref(runtime->stack, (__refer) exception);
-                            i_r = RUNTIME_STATUS_EXCEPTION;
-                        } else {
+                        i_r = _check_arr_exception(jarr, index, runtime);
+                        if (!i_r) {
                             *(s32 *) (jarr->arr_body + (index << 2)) = i;
 
 #if _JVM_DEBUG_BYTECODE_DETAIL > 5
@@ -1385,11 +1378,8 @@ s32 execute_method(MethodInfo *method, Runtime *pruntime, Class *clazz) {
                         s64 j = pop_long(stack);
                         s32 index = pop_int(stack);
                         Instance *jarr = (Instance *) pop_ref(stack);
-                        if (jarr == NULL) {
-                            Instance *exception = exception_create(JVM_EXCEPTION_NULLPOINTER, runtime);
-                            push_ref(runtime->stack, (__refer) exception);
-                            i_r = RUNTIME_STATUS_EXCEPTION;
-                        } else {
+                        i_r = _check_arr_exception(jarr, index, runtime);
+                        if (!i_r) {
                             *(s64 *) (jarr->arr_body + (index << 3)) = j;
 
 #if _JVM_DEBUG_BYTECODE_DETAIL > 5
@@ -1407,11 +1397,8 @@ s32 execute_method(MethodInfo *method, Runtime *pruntime, Class *clazz) {
                         __refer r = pop_ref(stack);
                         s32 index = pop_int(stack);
                         Instance *jarr = (Instance *) pop_ref(stack);
-                        if (jarr == NULL) {
-                            Instance *exception = exception_create(JVM_EXCEPTION_NULLPOINTER, runtime);
-                            push_ref(runtime->stack, (__refer) exception);
-                            i_r = RUNTIME_STATUS_EXCEPTION;
-                        } else {
+                        i_r = _check_arr_exception(jarr, index, runtime);
+                        if (!i_r) {
                             *(__refer *) (jarr->arr_body + (index * sizeof(__refer))) = r;
 
 #if _JVM_DEBUG_BYTECODE_DETAIL > 5
@@ -1428,11 +1415,8 @@ s32 execute_method(MethodInfo *method, Runtime *pruntime, Class *clazz) {
                         s32 i = pop_int(stack);
                         s32 index = pop_int(stack);
                         Instance *jarr = (Instance *) pop_ref(stack);
-                        if (jarr == NULL) {
-                            Instance *exception = exception_create(JVM_EXCEPTION_NULLPOINTER, runtime);
-                            push_ref(runtime->stack, (__refer) exception);
-                            i_r = RUNTIME_STATUS_EXCEPTION;
-                        } else {
+                        i_r = _check_arr_exception(jarr, index, runtime);
+                        if (!i_r) {
                             *(s8 *) (jarr->arr_body + (index)) = (s8) i;
 
 #if _JVM_DEBUG_BYTECODE_DETAIL > 5
@@ -1450,11 +1434,8 @@ s32 execute_method(MethodInfo *method, Runtime *pruntime, Class *clazz) {
                         s32 i = pop_int(stack);
                         s32 index = pop_int(stack);
                         Instance *jarr = (Instance *) pop_ref(stack);
-                        if (jarr == NULL) {
-                            Instance *exception = exception_create(JVM_EXCEPTION_NULLPOINTER, runtime);
-                            push_ref(runtime->stack, (__refer) exception);
-                            i_r = RUNTIME_STATUS_EXCEPTION;
-                        } else {
+                        i_r = _check_arr_exception(jarr, index, runtime);
+                        if (!i_r) {
                             *(u16 *) (jarr->arr_body + (index << 1)) = i;
 
 #if _JVM_DEBUG_BYTECODE_DETAIL > 5
@@ -1472,11 +1453,8 @@ s32 execute_method(MethodInfo *method, Runtime *pruntime, Class *clazz) {
                         s32 i = pop_int(stack);
                         s32 index = pop_int(stack);
                         Instance *jarr = (Instance *) pop_ref(stack);
-                        if (jarr == NULL) {
-                            Instance *exception = exception_create(JVM_EXCEPTION_NULLPOINTER, runtime);
-                            push_ref(runtime->stack, (__refer) exception);
-                            i_r = RUNTIME_STATUS_EXCEPTION;
-                        } else {
+                        i_r = _check_arr_exception(jarr, index, runtime);
+                        if (!i_r) {
                             *(s16 *) (jarr->arr_body + (index << 1)) = i;
 
 #if _JVM_DEBUG_BYTECODE_DETAIL > 5
@@ -3633,22 +3611,22 @@ s32 execute_method(MethodInfo *method, Runtime *pruntime, Class *clazz) {
                     push_ref(stack, ref);
 
                     Instance *ins = (Instance *) ref;
-#if _JVM_DEBUG_BYTECODE_DETAIL > 3
+//#if _JVM_DEBUG_BYTECODE_DETAIL > 3
                     s32 lineNum = getLineNumByIndex(ca, runtime->pc - ca->code);
                     printf("   at %s.%s(%s.java:%d)\n",
                            utf8_cstr(clazz->name), utf8_cstr(method->name),
                            utf8_cstr(clazz->name),
                            lineNum
                     );
-#endif
+//#endif
                     ExceptionTable *et = _find_exception_handler(runtime, ins, ca, (s32) (runtime->pc - ca->code), ref);
                     if (et == NULL) {
                         ret = RUNTIME_STATUS_EXCEPTION;
                         break;
                     } else {
-#if _JVM_DEBUG_BYTECODE_DETAIL > 3
+//#if _JVM_DEBUG_BYTECODE_DETAIL > 3
                         jvm_printf("Exception : %s\n", utf8_cstr(ins->mb.clazz->name));
-#endif
+//#endif
                         runtime->pc = (ca->code + et->handler_pc);
                         ret = RUNTIME_STATUS_NORMAL;
                     }

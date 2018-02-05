@@ -57,6 +57,7 @@ public class GButton extends GObject {
         if (isInBoundle(boundle, x - parent.getX(), y - parent.getY())) {
             if (pressed) {
                 bt_pressed = true;
+                parent.setFocus(this);
             } else {
                 bt_pressed = false;
                 if (actionListener != null) {
@@ -127,7 +128,7 @@ public class GButton extends GObject {
             nvgText(vg, x + w * 0.5f - tw * 0.5f - iw * 0.75f, y + h * 0.5f + move, toUtf8("" + preicon), null);
         }
 
-        nvgFontSize(vg, 20.0f);
+        nvgFontSize(vg, textFontSize);
         nvgFontFace(vg, GToolkit.getFontWord());
         nvgTextAlign(vg, NVG_ALIGN_LEFT | NVG_ALIGN_MIDDLE);
         nvgFillColor(vg, nvgRGBA(0, 0, 0, 160));

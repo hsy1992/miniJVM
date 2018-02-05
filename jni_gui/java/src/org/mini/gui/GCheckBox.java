@@ -52,6 +52,7 @@ public class GCheckBox extends GObject {
             if (pressed) {
             } else {
                 checked = !checked;
+                parent.setFocus(this);
                 if (stateListener != null) {
                     stateListener.stateChange();
                 }
@@ -73,7 +74,7 @@ public class GCheckBox extends GObject {
         byte[] bg;
 
         //NVG_NOTUSED(w);
-        nvgFontSize(vg, 18.0f);
+        nvgFontSize(vg, textFontSize);
         nvgFontFace(vg, GToolkit.getFontWord());
         nvgFillColor(vg, nvgRGBA(255, 255, 255, 160));
 

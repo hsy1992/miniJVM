@@ -58,7 +58,6 @@ public class GForm extends GContainer implements Runnable {
     GlfwCallback callback;
     long nkfont;
     static StbFont gfont;
-    GObject focus;
 
     int[] unicode_range = {
         0x0020, 0xFFFF,
@@ -95,13 +94,6 @@ public class GForm extends GContainer implements Runnable {
         return nkfont;
     }
 
-    public GObject getFocus() {
-        return focus;
-    }
-
-    public void setFocus(GObject go) {
-        focus = go;
-    }
 
     @Override
     public void init() {
@@ -223,6 +215,12 @@ public class GForm extends GContainer implements Runnable {
                 glfwSetWindowShouldClose(window, GLFW_TRUE);
             }
             GForm.this.keyEvent(key, scancode, action, mods);
+        }
+        
+        @Override
+        public void character(long window, char character){
+            System.out.println("event character:"+(int)character);
+            GForm.this.characterEvent(character);
         }
 
         @Override

@@ -6,20 +6,11 @@
 package org.mini.gui;
 
 import static org.mini.glfw.utils.Gutil.toUtf8;
-import org.mini.glfw.utils.Nutil;
-import static org.mini.glfw.utils.Nutil.NVG_ALIGN_CENTER;
 import static org.mini.glfw.utils.Nutil.NVG_ALIGN_LEFT;
 import static org.mini.glfw.utils.Nutil.NVG_ALIGN_MIDDLE;
-import static org.mini.glfw.utils.Nutil.nvgBeginPath;
-import static org.mini.glfw.utils.Nutil.nvgBoxGradient;
-import static org.mini.glfw.utils.Nutil.nvgFill;
 import static org.mini.glfw.utils.Nutil.nvgFillColor;
-import static org.mini.glfw.utils.Nutil.nvgFillPaint;
 import static org.mini.glfw.utils.Nutil.nvgFontFace;
 import static org.mini.glfw.utils.Nutil.nvgFontSize;
-import static org.mini.glfw.utils.Nutil.nvgRoundedRect;
-import static org.mini.glfw.utils.Nutil.nvgStroke;
-import static org.mini.glfw.utils.Nutil.nvgStrokeColor;
 import static org.mini.glfw.utils.Nutil.nvgText;
 import static org.mini.glfw.utils.Nutil.nvgTextAlign;
 import static org.mini.gui.GToolkit.nvgRGBA;
@@ -63,7 +54,7 @@ public class GLabel extends GObject {
         float h = getH();
 
         //NVG_NOTUSED(w);
-        nvgFontSize(vg, 18.0f);
+        nvgFontSize(vg, textFontSize);
         nvgFontFace(vg, GToolkit.getFontWord());
         nvgFillColor(vg, nvgRGBA(255, 255, 255, 128));
 

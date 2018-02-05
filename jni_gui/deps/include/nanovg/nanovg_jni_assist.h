@@ -212,12 +212,50 @@ enum GLNVGshaderType {
 };
 
 
+NUTIL_API struct NVGtextRow *nvgCreateNVGtextRow(int count);
+NUTIL_API float nvgNVGtextRow_width(struct NVGtextRow *ptr, int index);
+NUTIL_API void *nvgNVGtextRow_start(struct NVGtextRow *ptr, int index);
+NUTIL_API void *nvgNVGtextRow_end(struct NVGtextRow *ptr, int index);
+NUTIL_API void *nvgNVGtextRow_next(struct NVGtextRow *ptr, int index);
+NUTIL_API struct NVGglyphPosition *nvgCreateNVGglyphPosition(int count);
+NUTIL_API float nvgNVGglyphPosition_x(struct NVGglyphPosition *ptr, int count);
 */
-NUTIL_API struct NVGtextRow nvgCreateNVGtextRow();
-NUTIL_API struct NVGtextRow nvgCreateNVGtextRow(){
-    struct NVGtextRow val;
+
+
+static struct NVGtextRow *nvgCreateNVGtextRow(int count) {
+    struct NVGtextRow *val = calloc(sizeof(struct NVGtextRow), count);
     return val;
 }
 
+
+float nvgNVGtextRow_width(struct NVGtextRow *ptr, int index) {
+    return ptr[index].width;
+}
+
+
+void *nvgNVGtextRow_start(struct NVGtextRow *ptr, int index) {
+    return (void *) ptr[index].start;
+}
+
+
+void *nvgNVGtextRow_end(struct NVGtextRow *ptr, int index) {
+    return (void *) ptr[index].end;
+}
+
+
+void *nvgNVGtextRow_next(struct NVGtextRow *ptr, int index) {
+    return (void *) ptr[index].next;
+}
+
+
+struct NVGglyphPosition *nvgCreateNVGglyphPosition(int count) {
+    struct NVGglyphPosition *val = calloc(sizeof(struct NVGglyphPosition), count);
+    return val;
+}
+
+
+float nvgNVGglyphPosition_x(struct NVGglyphPosition *ptr, int index) {
+    return ptr[index].x;
+}
 
 #endif //JNI_GUI_NANOVG_JNI_ASSIST_H

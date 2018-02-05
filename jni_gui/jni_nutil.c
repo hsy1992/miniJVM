@@ -15,6 +15,7 @@
 
 
 #include <nanovg/nanovg.h>
+#include <nanovg/nanovg_jni_assist.h>
 #define NANOVG_GL3_IMPLEMENTATION
 #include <nanovg/nanovg_gl.h>
 
@@ -2120,6 +2121,95 @@ int org_mini_glfw_utils_Nutil_nvglImageHandleGL3(Runtime *runtime, Class *clazz)
     return 0;
 }
 
+int org_mini_glfw_utils_Nutil_nvgCreateNVGtextRow(Runtime *runtime, Class *clazz) {
+    JniEnv *env = runtime->jnienv;
+    s32 pos = 0;
+    
+    s32 pcount = env->localvar_getInt(runtime, pos++);
+
+    struct NVGtextRow*/*ptr*/ _re_val = nvgCreateNVGtextRow((int)pcount);
+    s64 ret_value = (s64)(intptr_t)_re_val;env->push_long(runtime->stack, ret_value);
+    
+    return 0;
+}
+
+int org_mini_glfw_utils_Nutil_nvgNVGtextRow_width(Runtime *runtime, Class *clazz) {
+    JniEnv *env = runtime->jnienv;
+    s32 pos = 0;
+    
+    intptr_t pptr = env->localvar_getLong_2slot(runtime, pos);pos += 2;
+    s32 pindex = env->localvar_getInt(runtime, pos++);
+
+    f32 ret_value = (f32)nvgNVGtextRow_width((struct NVGtextRow*/*ptr*/)(pptr), (int)pindex);
+    env->push_float(runtime->stack, ret_value);
+    
+    return 0;
+}
+
+int org_mini_glfw_utils_Nutil_nvgNVGtextRow_start(Runtime *runtime, Class *clazz) {
+    JniEnv *env = runtime->jnienv;
+    s32 pos = 0;
+    
+    intptr_t pptr = env->localvar_getLong_2slot(runtime, pos);pos += 2;
+    s32 pindex = env->localvar_getInt(runtime, pos++);
+
+    void*/*ptr*/ _re_val = nvgNVGtextRow_start((struct NVGtextRow*/*ptr*/)(pptr), (int)pindex);
+    s64 ret_value = (s64)(intptr_t)_re_val;env->push_long(runtime->stack, ret_value);
+    
+    return 0;
+}
+
+int org_mini_glfw_utils_Nutil_nvgNVGtextRow_end(Runtime *runtime, Class *clazz) {
+    JniEnv *env = runtime->jnienv;
+    s32 pos = 0;
+    
+    intptr_t pptr = env->localvar_getLong_2slot(runtime, pos);pos += 2;
+    s32 pindex = env->localvar_getInt(runtime, pos++);
+
+    void*/*ptr*/ _re_val = nvgNVGtextRow_end((struct NVGtextRow*/*ptr*/)(pptr), (int)pindex);
+    s64 ret_value = (s64)(intptr_t)_re_val;env->push_long(runtime->stack, ret_value);
+    
+    return 0;
+}
+
+int org_mini_glfw_utils_Nutil_nvgNVGtextRow_next(Runtime *runtime, Class *clazz) {
+    JniEnv *env = runtime->jnienv;
+    s32 pos = 0;
+    
+    intptr_t pptr = env->localvar_getLong_2slot(runtime, pos);pos += 2;
+    s32 pindex = env->localvar_getInt(runtime, pos++);
+
+    void*/*ptr*/ _re_val = nvgNVGtextRow_next((struct NVGtextRow*/*ptr*/)(pptr), (int)pindex);
+    s64 ret_value = (s64)(intptr_t)_re_val;env->push_long(runtime->stack, ret_value);
+    
+    return 0;
+}
+
+int org_mini_glfw_utils_Nutil_nvgCreateNVGglyphPosition(Runtime *runtime, Class *clazz) {
+    JniEnv *env = runtime->jnienv;
+    s32 pos = 0;
+    
+    s32 pcount = env->localvar_getInt(runtime, pos++);
+
+    struct NVGglyphPosition*/*ptr*/ _re_val = nvgCreateNVGglyphPosition((int)pcount);
+    s64 ret_value = (s64)(intptr_t)_re_val;env->push_long(runtime->stack, ret_value);
+    
+    return 0;
+}
+
+int org_mini_glfw_utils_Nutil_nvgNVGglyphPosition_x(Runtime *runtime, Class *clazz) {
+    JniEnv *env = runtime->jnienv;
+    s32 pos = 0;
+    
+    intptr_t pptr = env->localvar_getLong_2slot(runtime, pos);pos += 2;
+    s32 pcount = env->localvar_getInt(runtime, pos++);
+
+    f32 ret_value = (f32)nvgNVGglyphPosition_x((struct NVGglyphPosition*/*ptr*/)(pptr), (int)pcount);
+    env->push_float(runtime->stack, ret_value);
+    
+    return 0;
+}
+
 
 
 
@@ -2239,6 +2329,13 @@ static java_native_method method_nutil_table[] = {
 {"org/mini/glfw/utils/Nutil",  "nvgDeleteGL3",  "(J)V",  org_mini_glfw_utils_Nutil_nvgDeleteGL3},
 {"org/mini/glfw/utils/Nutil",  "nvglCreateImageFromHandleGL3",  "(JIIII)I",  org_mini_glfw_utils_Nutil_nvglCreateImageFromHandleGL3},
 {"org/mini/glfw/utils/Nutil",  "nvglImageHandleGL3",  "(JI)I",  org_mini_glfw_utils_Nutil_nvglImageHandleGL3},
+{"org/mini/glfw/utils/Nutil",  "nvgCreateNVGtextRow",  "(I)J",  org_mini_glfw_utils_Nutil_nvgCreateNVGtextRow},
+{"org/mini/glfw/utils/Nutil",  "nvgNVGtextRow_width",  "(JI)F",  org_mini_glfw_utils_Nutil_nvgNVGtextRow_width},
+{"org/mini/glfw/utils/Nutil",  "nvgNVGtextRow_start",  "(JI)J",  org_mini_glfw_utils_Nutil_nvgNVGtextRow_start},
+{"org/mini/glfw/utils/Nutil",  "nvgNVGtextRow_end",  "(JI)J",  org_mini_glfw_utils_Nutil_nvgNVGtextRow_end},
+{"org/mini/glfw/utils/Nutil",  "nvgNVGtextRow_next",  "(JI)J",  org_mini_glfw_utils_Nutil_nvgNVGtextRow_next},
+{"org/mini/glfw/utils/Nutil",  "nvgCreateNVGglyphPosition",  "(I)J",  org_mini_glfw_utils_Nutil_nvgCreateNVGglyphPosition},
+{"org/mini/glfw/utils/Nutil",  "nvgNVGglyphPosition_x",  "(JI)F",  org_mini_glfw_utils_Nutil_nvgNVGglyphPosition_x},
 };
 
 s32 count_NutilFuncTable() {

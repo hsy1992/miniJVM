@@ -177,6 +177,13 @@ public class Nutil {
     public static native void nvgDeleteGL3(long pctx); //NVGcontext*/*ptr*/, //void
     public static native int nvglCreateImageFromHandleGL3(long pctx, int ptextureId, int pw, int ph, int pflags); //NVGcontext*/*ptr*/,GLuint,int,int,int, //int
     public static native int nvglImageHandleGL3(long pctx, int pimage); //NVGcontext*/*ptr*/,int, //GLuint
+    public static native long  nvgCreateNVGtextRow(int pcount); //int, //struct NVGtextRow*/*ptr*/ 
+    public static native float nvgNVGtextRow_width(long pptr, int pindex); //struct NVGtextRow*/*ptr*/,int, //float
+    public static native long  nvgNVGtextRow_start(long pptr, int pindex); //struct NVGtextRow*/*ptr*/,int, //void*/*ptr*/ 
+    public static native long  nvgNVGtextRow_end(long pptr, int pindex); //struct NVGtextRow*/*ptr*/,int, //void*/*ptr*/ 
+    public static native long  nvgNVGtextRow_next(long pptr, int pindex); //struct NVGtextRow*/*ptr*/,int, //void*/*ptr*/ 
+    public static native long  nvgCreateNVGglyphPosition(int pcount); //int, //struct NVGglyphPosition*/*ptr*/ 
+    public static native float nvgNVGglyphPosition_x(long pptr, int pcount); //struct NVGglyphPosition*/*ptr*/,int, //float
 
 }
 

@@ -18,6 +18,7 @@ import java.util.Queue;
 abstract public class GContainer extends GObject {
 
     LinkedList<GObject> elements = new LinkedList();
+    GObject focus;
 
     //异步添加删除form
     final List<AddRemoveItem> cache = Collections.synchronizedList(new LinkedList());
@@ -33,6 +34,21 @@ abstract public class GContainer extends GObject {
             operation = op;
             this.go = go;
         }
+    }
+    
+    
+    /**
+     * @return the focus
+     */
+    public GObject getFocus() {
+        return focus;
+    }
+
+    /**
+     * @param focus the focus to set
+     */
+    public void setFocus(GObject focus) {
+        this.focus = focus;
     }
 
     public void add(GObject nko) {
