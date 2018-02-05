@@ -392,6 +392,10 @@ public final strictfp class Math {
         return (long) floor(a + 0.5d);
     }
 
+    public static int round(float a) {
+        return (int) floor(a + 0.5f);
+    }
+
     public static native double asin(double a);
 
     public static native double acos(double a);

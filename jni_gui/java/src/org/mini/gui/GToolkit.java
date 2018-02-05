@@ -11,7 +11,12 @@ import javax.mini.reflect.vm.RefNative;
 import static org.mini.glfw.utils.Gutil.toUtf8;
 import org.mini.glfw.utils.Nutil;
 import static org.mini.glfw.utils.Nutil.nvgAddFallbackFontId;
+import static org.mini.glfw.utils.Nutil.nvgBeginPath;
 import static org.mini.glfw.utils.Nutil.nvgCreateFont;
+import static org.mini.glfw.utils.Nutil.nvgFill;
+import static org.mini.glfw.utils.Nutil.nvgFillColor;
+import static org.mini.glfw.utils.Nutil.nvgRect;
+import static org.mini.glfw.utils.Nutil.nvgTextMetrics;
 
 /**
  *
@@ -110,5 +115,25 @@ public class GToolkit {
 
     public static void setStyle(GStyle style) {
         defaultStyle = style;
+    }
+    /**
+     * 光标
+     */
+    static boolean caretBlink = false;
+    static long caretLastBlink;
+    static long CARET_BLINK_PERIOD = 600;
+
+    public static void drawCaret(long vg, float x, float y, float w, float h) {
+        long curTime = System.currentTimeMillis();
+        if (curTime - caretLastBlink > CARET_BLINK_PERIOD) {
+            caretBlink = !caretBlink;
+            caretLastBlink = curTime;
+        }
+        if (caretBlink) {
+            nvgBeginPath(vg);
+            nvgFillColor(vg, nvgRGBA(255, 192, 0, 255));
+            nvgRect(vg, x, y, w, h);
+            nvgFill(vg);
+        }
     }
 }

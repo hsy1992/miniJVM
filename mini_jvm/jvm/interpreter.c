@@ -573,7 +573,7 @@ static inline s32 _check_arr_exception(Instance *arr, s32 index, Runtime *runtim
         push_ref(runtime->stack, (__refer) exception);
         return RUNTIME_STATUS_EXCEPTION;
     } else if (index >= arr->arr_length) {
-        Instance *exception = exception_create(JVM_EXCEPTION_ARRAYINDEXOUTOFBOUNDSEXCEPTION,
+        Instance *exception = exception_create(JVM_EXCEPTION_ARRAYINDEXOUTOFBOUNDS,
                                                runtime);
         push_ref(runtime->stack, (__refer) exception);
         return RUNTIME_STATUS_EXCEPTION;
@@ -3134,7 +3134,7 @@ s32 execute_method(MethodInfo *method, Runtime *pruntime, Class *clazz) {
                             if (method) {
                                 i_r = execute_method(method, runtime, method->_this_class);
                             } else {
-                                Instance *exception = exception_create_str(JVM_EXCEPTION_NOSUCHMETHODEXCEPTION, runtime,
+                                Instance *exception = exception_create_str(JVM_EXCEPTION_NOSUCHMETHOD, runtime,
                                                                            utf8_cstr(cmr->name));
                                 push_ref(runtime->stack, (__refer) exception);
                                 i_r = RUNTIME_STATUS_EXCEPTION;
@@ -3167,7 +3167,7 @@ s32 execute_method(MethodInfo *method, Runtime *pruntime, Class *clazz) {
                         if (method) {
                             i_r = execute_method(method, runtime, method->_this_class);
                         } else {
-                            Instance *exception = exception_create_str(JVM_EXCEPTION_NOSUCHMETHODEXCEPTION, runtime,
+                            Instance *exception = exception_create_str(JVM_EXCEPTION_NOSUCHMETHOD, runtime,
                                                                        utf8_cstr(method->name));
                             push_ref(runtime->stack, (__refer) exception);
                             i_r = RUNTIME_STATUS_EXCEPTION;
@@ -3203,7 +3203,7 @@ s32 execute_method(MethodInfo *method, Runtime *pruntime, Class *clazz) {
                         if (method) {
                             i_r = execute_method(method, runtime, method->_this_class);
                         } else {
-                            Instance *exception = exception_create_str(JVM_EXCEPTION_NOSUCHMETHODEXCEPTION, runtime,
+                            Instance *exception = exception_create_str(JVM_EXCEPTION_NOSUCHMETHOD, runtime,
                                                                        utf8_cstr(cmr->name));
                             push_ref(runtime->stack, (__refer) exception);
                             i_r = RUNTIME_STATUS_EXCEPTION;
@@ -3253,7 +3253,7 @@ s32 execute_method(MethodInfo *method, Runtime *pruntime, Class *clazz) {
                             if (method) {
                                 i_r = execute_method(method, runtime, method->_this_class);
                             } else {
-                                Instance *exception = exception_create_str(JVM_EXCEPTION_NOSUCHMETHODEXCEPTION, runtime,
+                                Instance *exception = exception_create_str(JVM_EXCEPTION_NOSUCHMETHOD, runtime,
                                                                            utf8_cstr(cmr->name));
                                 push_ref(runtime->stack, (__refer) exception);
                                 i_r = RUNTIME_STATUS_EXCEPTION;
@@ -3278,7 +3278,7 @@ s32 execute_method(MethodInfo *method, Runtime *pruntime, Class *clazz) {
                         if (method) {
                             i_r = execute_method(method, runtime, method->_this_class);
                         } else {
-                            Instance *exception = exception_create(JVM_EXCEPTION_NOSUCHMETHODEXCEPTION, runtime);
+                            Instance *exception = exception_create(JVM_EXCEPTION_NOSUCHMETHOD, runtime);
                             push_ref(runtime->stack, (__refer) exception);
                             i_r = RUNTIME_STATUS_EXCEPTION;
                         }
@@ -3407,7 +3407,7 @@ s32 execute_method(MethodInfo *method, Runtime *pruntime, Class *clazz) {
                             checkok = 1;
                         }
                         if (!checkok) {
-                            Instance *exception = exception_create(JVM_EXCEPTION_CLASSCASTEXCEPTION, runtime);
+                            Instance *exception = exception_create(JVM_EXCEPTION_CLASSCAST, runtime);
                             push_ref(stack, (__refer) exception);
                             i_r = RUNTIME_STATUS_EXCEPTION;
                         } else {
@@ -3628,6 +3628,7 @@ s32 execute_method(MethodInfo *method, Runtime *pruntime, Class *clazz) {
                         jvm_printf("Exception : %s\n", utf8_cstr(ins->mb.clazz->name));
 //#endif
                         runtime->pc = (ca->code + et->handler_pc);
+                        i_r = 0;
                         ret = RUNTIME_STATUS_NORMAL;
                     }
                 }
@@ -3665,7 +3666,7 @@ s32 execute_method(MethodInfo *method, Runtime *pruntime, Class *clazz) {
             java_native_method *native = find_native_method(utf8_cstr(clazz->name), utf8_cstr(method->name),
                                                             utf8_cstr(method->descriptor));
             if (!native) {
-                Instance *exception = exception_create_str(JVM_EXCEPTION_NOSUCHMETHODEXCEPTION, runtime,
+                Instance *exception = exception_create_str(JVM_EXCEPTION_NOSUCHMETHOD, runtime,
                                                            utf8_cstr(method->name));
                 push_ref(runtime->stack, (__refer) exception);
                 ret = RUNTIME_STATUS_EXCEPTION;
@@ -3685,6 +3686,9 @@ s32 execute_method(MethodInfo *method, Runtime *pruntime, Class *clazz) {
             if (method_sync)_synchronized_lock_method(method, runtime);
             ret = method->native_func(runtime, clazz);
             if (method_sync)_synchronized_unlock_method(method, runtime);
+        }
+        if (utf8_equals_c(method->name, "nvgTextGlyphPositionsJni")) {
+            int debug = 1;
         }
         localvar_dispose(runtime);
 #if _JVM_DEBUG_BYTECODE_DETAIL > 3

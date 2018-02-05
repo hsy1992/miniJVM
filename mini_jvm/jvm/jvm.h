@@ -172,12 +172,12 @@ enum {
     JVM_EXCEPTION_ARRITHMETIC,
     JVM_EXCEPTION_CLASSNOTFOUND,
     JVM_EXCEPTION_NULLPOINTER,
-    JVM_EXCEPTION_NOSUCHMETHODEXCEPTION,
+    JVM_EXCEPTION_NOSUCHMETHOD,
     JVM_EXCEPTION_IO,
     JVM_EXCEPTION_ILLEGALARGUMENT,
-    JVM_EXCEPTION_CLASSCASTEXCEPTION,
-    JVM_EXCEPTION_ARRAYINDEXOUTOFBOUNDSEXCEPTION,
-    JVM_EXCEPTION_INSTANTIATIONEXCEPTION,
+    JVM_EXCEPTION_CLASSCAST,
+    JVM_EXCEPTION_ARRAYINDEXOUTOFBOUNDS,
+    JVM_EXCEPTION_INSTANTIATION,
 };
 
 static char *exception_class_name[] = {
@@ -189,6 +189,7 @@ static char *exception_class_name[] = {
         "java.lang.ArithmeticException",
         "java.lang.ClassNotFoundException",
         "java.lang.NullPointerException",
+        "java.lang.IOException",
         "java.lang.NoSuchMethodException",
         "java.lang.IllegalArgumentException",
         "java.lang.ClassCastException",

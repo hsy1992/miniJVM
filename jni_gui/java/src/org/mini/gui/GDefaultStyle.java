@@ -13,7 +13,7 @@ public class GDefaultStyle implements GStyle {
 
     @Override
     public float getTextFontSize() {
-        return 15f;
+        return 18f;
     }
 
     @Override

@@ -1129,11 +1129,12 @@ public class TestNanovg {
 //}
 
     void drawParagraph(long vg, float x, float y, float width, float height, float mx, float my) {
-        long rows = nvgCreateNVGtextRow(3);
-        long glyphs = nvgCreateNVGglyphPosition(100);
-        String text = "This is longer chunk of text.\n  \n  Would have used lorem ipsum but she    was busy jumping over the lazy dog with the fox and all the men who came to the aid of the party.🎉";
+        int rowCount = 5;
+        int posCount = 100;
+        long rows = nvgCreateNVGtextRow(rowCount);
+        long glyphs = nvgCreateNVGglyphPosition(posCount);
+        String text = "单程票;（旅馆等的）单人房间;[复数]（高尔夫球一对一的）二人对抗赛;[常用复数][美国、加拿大英语]未婚（或单身）男子（或女子）\nThis is longer chunk of text.\n  \n  Would have used lorem ipsum but she    was busy jumping over the lazy dog with the fox and all the men who came to the aid of the party.🎉";
         int nrows, i, nglyphs, j, lnum = 0;
-        float[] lineh = {0};
         float caretx, px;
         float[] bounds = new float[4];
         float a;
@@ -1146,15 +1147,17 @@ public class TestNanovg {
         nvgFontSize(vg, 18.0f);
         nvgFontFace(vg, fontname);
         nvgTextAlign(vg, NVG_ALIGN_LEFT | NVG_ALIGN_TOP);
+        float[] lineh = {0};
         nvgTextMetrics(vg, null, null, lineh);
 
         // The text break API can be used to fill a large buffer of rows,
         // or to iterate over the text just few lines (or just one) at a time.
         // The "next" variable of the last returned item tells where to continue.
         byte[] text_arr = toUtf8(text);
+        long ptr = GToolkit.getArrayDataPtr(text_arr);
         int start = 0;
         int end = text_arr.length;
-        while ((nrows = nvgTextBreakLinesJni(vg, text_arr, start, end, width, rows, 3)) != 0) {
+        while ((nrows = nvgTextBreakLinesJni(vg, text_arr, start, end, width, rows, rowCount)) != 0) {
             for (i = 0; i < nrows; i++) {
                 boolean hit = mx > x && mx < (x + width) && my >= y && my < (y + lineh[0]);
                 float row_width = Nutil.nvgNVGtextRow_width(rows, i);
@@ -1163,7 +1166,6 @@ public class TestNanovg {
                 nvgRect(vg, x, y, row_width, lineh[0]);
                 nvgFill(vg);
 
-                long ptr = GToolkit.getArrayDataPtr(text_arr);
                 int starti = (int) (Nutil.nvgNVGtextRow_start(rows, i) - ptr);
                 int endi = (int) (Nutil.nvgNVGtextRow_end(rows, i) - ptr);
 
@@ -1173,7 +1175,7 @@ public class TestNanovg {
                 if (hit) {
                     caretx = (mx < x + row_width / 2) ? x : x + row_width;
                     px = x;
-                    nglyphs = nvgTextGlyphPositionsJni(vg, x, y, text_arr, starti, endi, glyphs, 100);
+                    nglyphs = nvgTextGlyphPositionsJni(vg, x, y, text_arr, starti, endi, glyphs, posCount);
                     for (j = 0; j < nglyphs; j++) {
                         float x0 = nvgNVGglyphPosition_x(glyphs, j);
                         float x1 = (j + 1 < nglyphs) ? nvgNVGglyphPosition_x(glyphs, j + 1) : x + row_width;
@@ -1196,17 +1198,16 @@ public class TestNanovg {
                 y += lineh[0];
             }
             // Keep going...
-            long ptr = GToolkit.getArrayDataPtr(text_arr);
+            
             long next = Nutil.nvgNVGtextRow_next(rows, nrows - 1);
             start = (int) (next - ptr);
         }
         if (gutter != 0) {
-            String txt = "" + gutter;
-            byte[] txt_arr = toUtf8(txt);
+            byte[] gutter_arr = toUtf8("" + gutter);
             nvgFontSize(vg, 13.0f);
             nvgTextAlign(vg, NVG_ALIGN_RIGHT | NVG_ALIGN_MIDDLE);
 
-            nvgTextBoundsJni(vg, gx, gy, txt_arr, 0, text_arr.length, bounds);
+            nvgTextBoundsJni(vg, gx, gy, gutter_arr, 0, gutter_arr.length, bounds);
 
             nvgBeginPath(vg);
             nvgFillColor(vg, nvgRGBA(255, 192, 0, 255));
@@ -1214,7 +1215,7 @@ public class TestNanovg {
             nvgFill(vg);
 
             nvgFillColor(vg, nvgRGBA(32, 32, 32, 255));
-            nvgTextJni(vg, gx, gy, txt_arr, 0, text_arr.length);
+            nvgTextJni(vg, gx, gy, gutter_arr, 0, gutter_arr.length);
         }
 
         y += 20.0f;
@@ -1243,10 +1244,10 @@ public class TestNanovg {
         nvgFill(vg);
 
         nvgFillColor(vg, nvgRGBA(0, 0, 0, 220));
-        byte[] b3 = toUtf8("Hover your mouse over the text to see calculated caret position.");
-        nvgTextBoxJni(vg, x, y, 150, b3, 0, b3.length);
+        nvgTextBoxJni(vg, x, y, 150, b2, 0, b2.length);
 
         nvgRestore(vg);
+        
         Nutil.nvgDeleteNVGtextRow(rows);
         Nutil.nvgDeleteNVGglyphPosition(glyphs);
     }

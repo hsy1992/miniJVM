@@ -5,7 +5,7 @@ import org.mini.gl.warp.GLFrameBufferPainter;
 import org.mini.gui.GButton;
 import org.mini.gui.GCheckBox;
 import org.mini.gui.GColorSelector;
-import org.mini.gui.GEditBox;
+import org.mini.gui.GTextBox;
 import org.mini.gui.GFrame;
 import org.mini.gui.GForm;
 import org.mini.gui.GFrameContents;
@@ -35,10 +35,10 @@ public class GuiTest {
     GForm win;
 
     void t1() {
-        win = new GForm(/*"GuiTest"*/"test 窗口", 800, 600);
+        win = new GForm(/*"GuiTest"*/"登录 窗口", 800, 600);
         win.init();
-        win.add(new GFrame("demo测试"/*"demo"*/, 50, 50, 300, 500, new NkFrameMain()));
-        GFrame sub1 = new GFrame(/*"子窗口"*/"sub1", 400, 50, 300, 400, new NkFrameSub1());
+        win.add(new GFrame("Github"/*"demo"*/, 50, 50, 300, 500, new NkFrameMain()));
+        GFrame sub1 = new GFrame(/*"子窗口"*/"颜色选择", 400, 50, 300, 400, new NkFrameSub1());
         win.add(sub1);
         win.run();
     }
@@ -103,15 +103,21 @@ public class GuiTest {
             GLabel lb1 = new GLabel("Login", x, y, 280, 20);
             parent.add(lb1);
             y += 25;
-            GEditBox mail = new GEditBox("", "Email", x, y, 280, 28);
+            GTextBox mail = new GTextBox("", "Email", x, y, 280, 28);
             mail.setSingleMode(true);
             parent.add(mail);
             y += 35;
-            GEditBox pwd = new GEditBox("", "Password", x, y, 280, 28);
+            GTextBox pwd = new GTextBox("", "Password", x, y, 280, 28);
             pwd.setSingleMode(true);
             parent.add(pwd);
             y += 35;
-            GEditBox cont = new GEditBox("", "Contents", x, y, 280, 188);
+            String conttxt = "This is longer chunk of text.\n  \n  Would have used lorem ipsum but she    was busy jumping over the lazy dog with the fox and all the men who came to the aid of the party.";
+            conttxt += "I test the program ,there are two window , one window left a button that open the other window, the other left a button for close self.\n"
+                    + "\n"
+                    + "the issue maybe related with font , if i use nuklear defult font , the bug nerver show , but i am using chinese font (google android system default font), the bug frequently occure. the app memory using about 180M with default font in macos, use chinese font it would be 460M, is that nuklear load all glyph? but it's not the cause of bug .\n"
+                    + "\n"
+                    + "i have a reference that using stb_truetype, follow code is a stbtt test case , the code using chinese font ,that var byteOffset is -64 , out of the allocated bitmap memory . but i 'm not sure there is a same issue, only a note.";
+            GTextBox cont = new GTextBox(conttxt, "Contents", x, y, 280, 188);
             parent.add(cont);
             y += 195;
 

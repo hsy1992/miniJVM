@@ -43,10 +43,10 @@ abstract public class GObject {
 
     //object position and width ,height
     float[] boundle = new float[4];
-    static int LEFT = 0;
-    static int TOP = 1;
-    static int WIDTH = 2;
-    static int HEIGHT = 3;
+    static final int LEFT = 0;
+    static final int TOP = 1;
+    static final int WIDTH = 2;
+    static final int HEIGHT = 3;
 
     float[] bgColor;
     float[] color;

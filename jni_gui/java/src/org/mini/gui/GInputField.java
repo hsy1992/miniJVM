@@ -18,9 +18,11 @@ import static org.mini.glfw.utils.Nutil.nvgFillColor;
 import static org.mini.glfw.utils.Nutil.nvgFillPaint;
 import static org.mini.glfw.utils.Nutil.nvgFontFace;
 import static org.mini.glfw.utils.Nutil.nvgFontSize;
+import static org.mini.glfw.utils.Nutil.nvgRect;
 import static org.mini.glfw.utils.Nutil.nvgRoundedRect;
 import static org.mini.glfw.utils.Nutil.nvgTextAlign;
 import static org.mini.glfw.utils.Nutil.nvgTextJni;
+import static org.mini.glfw.utils.Nutil.nvgTextMetrics;
 import static org.mini.gui.GToolkit.nvgRGBA;
 
 /**
@@ -37,6 +39,8 @@ public class GInputField extends GObject {
     //
     byte[] search_arr = toUtf8("" + ICON_SEARCH);
     byte[] reset_arr = toUtf8("" + ICON_CIRCLED_CROSS);
+    //
+    float[] lineh = {0};
 
     public GInputField(String text, String hint, int left, int top, int width, int height) {
         setHint(hint);
@@ -155,23 +159,26 @@ public class GInputField extends GObject {
                 nvgTextJni(vg, wordx, wordy, hint_arr, 0, hint_arr.length);
             }
         } else {
-            float text_width = 0;
-            float txt_show_area_x = 0;
-            float txt_show_area_w = 0;
+            float caret_x = wordx;
             if (text_arr != null) {
-                text_width = Nutil.nvgTextBoundsJni(vg, 0, 0, text_arr, 0, text_arr.length, null);
-                txt_show_area_w = w - standard[WIDTH] * 4.5f;
-                txt_show_area_x = wordx;
+                float text_width = Nutil.nvgTextBoundsJni(vg, 0, 0, text_arr, 0, text_arr.length, null);
+                float txt_show_area_w = w - standard[WIDTH] * 4.5f;
+                float txt_show_area_x = wordx;
                 if (text_width > txt_show_area_w) {
+                    caret_x = wordx + txt_show_area_w;
                     wordx -= text_width - txt_show_area_w;
+                } else {
+                    caret_x = wordx + text_width;
                 }
                 nvgFillColor(vg, nvgRGBA(255, 255, 255, 160));
                 Nutil.nvgScissor(vg, txt_show_area_x, y, txt_show_area_w, h);
                 nvgTextJni(vg, wordx, wordy, text_arr, 0, text_arr.length);
                 Nutil.nvgResetScissor(vg);
             }
-            Nutil.nvgRect(vg, wordx + txt_show_area_w, wordy, 10, h);
-            nvgFillColor(vg, nvgRGBA(255, 255, 255, 200));
+            if (parent.getFocus() == this) {
+                nvgTextMetrics(vg, null, null, lineh);
+                GToolkit.drawCaret(vg, caret_x, wordy - 0.5f * lineh[0], 1, lineh[0]);
+            }
         }
         nvgFontSize(vg, h * 1.3f);
         nvgFontFace(vg, GToolkit.getFontIcon());
