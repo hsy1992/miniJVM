@@ -6,6 +6,7 @@
 package org.mini.gui;
 
 import static org.mini.glfw.utils.Gutil.toUtf8;
+import org.mini.glfw.utils.Nutil;
 import static org.mini.glfw.utils.Nutil.NVG_ALIGN_CENTER;
 import static org.mini.glfw.utils.Nutil.NVG_ALIGN_LEFT;
 import static org.mini.glfw.utils.Nutil.NVG_ALIGN_MIDDLE;
@@ -17,10 +18,8 @@ import static org.mini.glfw.utils.Nutil.nvgFillPaint;
 import static org.mini.glfw.utils.Nutil.nvgFontFace;
 import static org.mini.glfw.utils.Nutil.nvgFontSize;
 import static org.mini.glfw.utils.Nutil.nvgRoundedRect;
-import static org.mini.glfw.utils.Nutil.nvgText;
 import static org.mini.glfw.utils.Nutil.nvgTextAlign;
 import static org.mini.gui.GToolkit.nvgRGBA;
-import org.mini.gui.event.GActionListener;
 
 /**
  *
@@ -79,7 +78,7 @@ public class GCheckBox extends GObject {
         nvgFillColor(vg, nvgRGBA(255, 255, 255, 160));
 
         nvgTextAlign(vg, NVG_ALIGN_LEFT | NVG_ALIGN_MIDDLE);
-        nvgText(vg, x + 28, y + h * 0.5f, text_arr, null);
+        Nutil.nvgTextJni(vg, x + 28, y + h * 0.5f, text_arr, 0, text_arr.length);
 
         bg = nvgBoxGradient(vg, x + 1, y + (int) (h * 0.5f) - 9 + 1, 18, 18, 3, 3, nvgRGBA(0, 0, 0, 32), nvgRGBA(0, 0, 0, 92));
         nvgBeginPath(vg);
@@ -91,7 +90,8 @@ public class GCheckBox extends GObject {
         nvgFontFace(vg, GToolkit.getFontIcon());
         nvgFillColor(vg, nvgRGBA(255, 255, 255, 128));
         nvgTextAlign(vg, NVG_ALIGN_CENTER | NVG_ALIGN_MIDDLE);
-        nvgText(vg, x + 9 + 2, y + h * 0.5f, toUtf8("" + (checked ? ICON_CHECK : ICON_CHECK_NOT)), null);
+        byte[] barr = toUtf8("" + (checked ? ICON_CHECK : ICON_CHECK_NOT));
+        Nutil.nvgTextJni(vg, x + 9 + 2, y + h * 0.5f, barr, 0, barr.length);
         return true;
     }
 

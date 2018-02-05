@@ -28,8 +28,8 @@ import static org.mini.glfw.utils.Nutil.nvgRoundedRect;
 import static org.mini.glfw.utils.Nutil.nvgSave;
 import static org.mini.glfw.utils.Nutil.nvgStroke;
 import static org.mini.glfw.utils.Nutil.nvgStrokeColor;
-import static org.mini.glfw.utils.Nutil.nvgText;
 import static org.mini.glfw.utils.Nutil.nvgTextAlign;
+import static org.mini.glfw.utils.Nutil.nvgTextJni;
 import static org.mini.gui.GToolkit.nvgRGBA;
 
 /**
@@ -39,6 +39,7 @@ import static org.mini.gui.GToolkit.nvgRGBA;
 public class GFrame extends GContainer {
 
     String title;
+    byte[] title_arr;
 
     GFrameContents frameContents;
     int background_rgba;
@@ -60,6 +61,7 @@ public class GFrame extends GContainer {
     }
 
     public void setTitle(String title) {
+        title_arr = toUtf8(title);
         this.title = title;
     }
 
@@ -138,11 +140,11 @@ public class GFrame extends GContainer {
 
         nvgFontBlur(vg, 2);
         nvgFillColor(vg, nvgRGBA(0, 0, 0, 128));
-        nvgText(vg, x + w / 2, y + 16 + 1, toUtf8(title), null);
+        nvgTextJni(vg, x + w / 2, y + 16 + 1, title_arr, 0, title_arr.length);
 
         nvgFontBlur(vg, 0);
         nvgFillColor(vg, nvgRGBA(220, 220, 220, 160));
-        nvgText(vg, x + w / 2, y + 16, toUtf8(title), null);
+        nvgTextJni(vg, x + w / 2, y + 16, title_arr, 0, title_arr.length);
 
         nvgRestore(vg);
     }

@@ -1882,140 +1882,6 @@ int org_mini_glfw_utils_Nutil_nvgFontFace(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-int org_mini_glfw_utils_Nutil_nvgText(Runtime *runtime, Class *clazz) {
-    JniEnv *env = runtime->jnienv;
-    s32 pos = 0;
-    
-    intptr_t pctx = env->localvar_getLong_2slot(runtime, pos);pos += 2;
-    Int2Float px;px.i = env->localvar_getInt(runtime, pos++);
-    Int2Float py;py.i = env->localvar_getInt(runtime, pos++);
-    Instance *pstring = env->localvar_getRefer(runtime, pos++);
-    __refer ptr_pstring = NULL;
-    if(pstring){
-        ptr_pstring = pstring->arr_body;
-    }
-    Instance *pend = env->localvar_getRefer(runtime, pos++);
-    __refer ptr_pend = NULL;
-    if(pend){
-        ptr_pend = pend->arr_body;
-    }
-
-    f32 ret_value = (f32)nvgText((NVGcontext*/*ptr*/)(pctx), (float)px.f, (float)py.f, (const char*)(ptr_pstring), (const char*)(ptr_pend));
-    env->push_float(runtime->stack, ret_value);
-    
-    return 0;
-}
-
-int org_mini_glfw_utils_Nutil_nvgTextBox(Runtime *runtime, Class *clazz) {
-    JniEnv *env = runtime->jnienv;
-    s32 pos = 0;
-    
-    intptr_t pctx = env->localvar_getLong_2slot(runtime, pos);pos += 2;
-    Int2Float px;px.i = env->localvar_getInt(runtime, pos++);
-    Int2Float py;py.i = env->localvar_getInt(runtime, pos++);
-    Int2Float pbreakRowWidth;pbreakRowWidth.i = env->localvar_getInt(runtime, pos++);
-    Instance *pstring = env->localvar_getRefer(runtime, pos++);
-    __refer ptr_pstring = NULL;
-    if(pstring){
-        ptr_pstring = pstring->arr_body;
-    }
-    Instance *pend = env->localvar_getRefer(runtime, pos++);
-    __refer ptr_pend = NULL;
-    if(pend){
-        ptr_pend = pend->arr_body;
-    }
-
-    nvgTextBox((NVGcontext*/*ptr*/)(pctx), (float)px.f, (float)py.f, (float)pbreakRowWidth.f, (const char*)(ptr_pstring), (const char*)(ptr_pend));
-    
-    
-    return 0;
-}
-
-int org_mini_glfw_utils_Nutil_nvgTextBounds(Runtime *runtime, Class *clazz) {
-    JniEnv *env = runtime->jnienv;
-    s32 pos = 0;
-    
-    intptr_t pctx = env->localvar_getLong_2slot(runtime, pos);pos += 2;
-    Int2Float px;px.i = env->localvar_getInt(runtime, pos++);
-    Int2Float py;py.i = env->localvar_getInt(runtime, pos++);
-    Instance *pstring = env->localvar_getRefer(runtime, pos++);
-    __refer ptr_pstring = NULL;
-    if(pstring){
-        ptr_pstring = pstring->arr_body;
-    }
-    Instance *pend = env->localvar_getRefer(runtime, pos++);
-    __refer ptr_pend = NULL;
-    if(pend){
-        ptr_pend = pend->arr_body;
-    }
-    Instance *pbounds = env->localvar_getRefer(runtime, pos++);
-    __refer ptr_pbounds = NULL;
-    if(pbounds){
-        ptr_pbounds = pbounds->arr_body;
-    }
-
-    f32 ret_value = (f32)nvgTextBounds((NVGcontext*/*ptr*/)(pctx), (float)px.f, (float)py.f, (const char*)(ptr_pstring), (const char*)(ptr_pend), (float*)(ptr_pbounds));
-    env->push_float(runtime->stack, ret_value);
-    
-    return 0;
-}
-
-int org_mini_glfw_utils_Nutil_nvgTextBoxBounds(Runtime *runtime, Class *clazz) {
-    JniEnv *env = runtime->jnienv;
-    s32 pos = 0;
-    
-    intptr_t pctx = env->localvar_getLong_2slot(runtime, pos);pos += 2;
-    Int2Float px;px.i = env->localvar_getInt(runtime, pos++);
-    Int2Float py;py.i = env->localvar_getInt(runtime, pos++);
-    Int2Float pbreakRowWidth;pbreakRowWidth.i = env->localvar_getInt(runtime, pos++);
-    Instance *pstring = env->localvar_getRefer(runtime, pos++);
-    __refer ptr_pstring = NULL;
-    if(pstring){
-        ptr_pstring = pstring->arr_body;
-    }
-    Instance *pend = env->localvar_getRefer(runtime, pos++);
-    __refer ptr_pend = NULL;
-    if(pend){
-        ptr_pend = pend->arr_body;
-    }
-    Instance *pbounds = env->localvar_getRefer(runtime, pos++);
-    __refer ptr_pbounds = NULL;
-    if(pbounds){
-        ptr_pbounds = pbounds->arr_body;
-    }
-
-    nvgTextBoxBounds((NVGcontext*/*ptr*/)(pctx), (float)px.f, (float)py.f, (float)pbreakRowWidth.f, (const char*)(ptr_pstring), (const char*)(ptr_pend), (float*)(ptr_pbounds));
-    
-    
-    return 0;
-}
-
-int org_mini_glfw_utils_Nutil_nvgTextGlyphPositions(Runtime *runtime, Class *clazz) {
-    JniEnv *env = runtime->jnienv;
-    s32 pos = 0;
-    
-    intptr_t pctx = env->localvar_getLong_2slot(runtime, pos);pos += 2;
-    Int2Float px;px.i = env->localvar_getInt(runtime, pos++);
-    Int2Float py;py.i = env->localvar_getInt(runtime, pos++);
-    Instance *pstring = env->localvar_getRefer(runtime, pos++);
-    __refer ptr_pstring = NULL;
-    if(pstring){
-        ptr_pstring = pstring->arr_body;
-    }
-    Instance *pend = env->localvar_getRefer(runtime, pos++);
-    __refer ptr_pend = NULL;
-    if(pend){
-        ptr_pend = pend->arr_body;
-    }
-    intptr_t ppositions = env->localvar_getLong_2slot(runtime, pos);pos += 2;
-    s32 pmaxPositions = env->localvar_getInt(runtime, pos++);
-
-    int _re_val = nvgTextGlyphPositions((NVGcontext*/*ptr*/)(pctx), (float)px.f, (float)py.f, (const char*)(ptr_pstring), (const char*)(ptr_pend), (NVGglyphPosition*/*ptr*/)(ppositions), (int)pmaxPositions);
-    s32 ret_value = (s32)_re_val;env->push_int(runtime->stack, ret_value);
-    
-    return 0;
-}
-
 int org_mini_glfw_utils_Nutil_nvgTextMetrics(Runtime *runtime, Class *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
@@ -2039,31 +1905,6 @@ int org_mini_glfw_utils_Nutil_nvgTextMetrics(Runtime *runtime, Class *clazz) {
 
     nvgTextMetrics((NVGcontext*/*ptr*/)(pctx), (float*)(ptr_pascender), (float*)(ptr_pdescender), (float*)(ptr_plineh));
     
-    
-    return 0;
-}
-
-int org_mini_glfw_utils_Nutil_nvgTextBreakLines(Runtime *runtime, Class *clazz) {
-    JniEnv *env = runtime->jnienv;
-    s32 pos = 0;
-    
-    intptr_t pctx = env->localvar_getLong_2slot(runtime, pos);pos += 2;
-    Instance *pstring = env->localvar_getRefer(runtime, pos++);
-    __refer ptr_pstring = NULL;
-    if(pstring){
-        ptr_pstring = pstring->arr_body;
-    }
-    Instance *pend = env->localvar_getRefer(runtime, pos++);
-    __refer ptr_pend = NULL;
-    if(pend){
-        ptr_pend = pend->arr_body;
-    }
-    Int2Float pbreakRowWidth;pbreakRowWidth.i = env->localvar_getInt(runtime, pos++);
-    intptr_t prows = env->localvar_getLong_2slot(runtime, pos);pos += 2;
-    s32 pmaxRows = env->localvar_getInt(runtime, pos++);
-
-    int _re_val = nvgTextBreakLines((NVGcontext*/*ptr*/)(pctx), (const char*)(ptr_pstring), (const char*)(ptr_pend), (float)pbreakRowWidth.f, (NVGtextRow*/*ptr*/)(prows), (int)pmaxRows);
-    s32 ret_value = (s32)_re_val;env->push_int(runtime->stack, ret_value);
     
     return 0;
 }
@@ -2133,6 +1974,18 @@ int org_mini_glfw_utils_Nutil_nvgCreateNVGtextRow(Runtime *runtime, Class *clazz
     return 0;
 }
 
+int org_mini_glfw_utils_Nutil_nvgDeleteNVGtextRow(Runtime *runtime, Class *clazz) {
+    JniEnv *env = runtime->jnienv;
+    s32 pos = 0;
+    
+    intptr_t pval = env->localvar_getLong_2slot(runtime, pos);pos += 2;
+
+    nvgDeleteNVGtextRow((struct NVGtextRow*/*ptr*/)(pval));
+    
+    
+    return 0;
+}
+
 int org_mini_glfw_utils_Nutil_nvgNVGtextRow_width(Runtime *runtime, Class *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
@@ -2197,6 +2050,18 @@ int org_mini_glfw_utils_Nutil_nvgCreateNVGglyphPosition(Runtime *runtime, Class 
     return 0;
 }
 
+int org_mini_glfw_utils_Nutil_nvgDeleteNVGglyphPosition(Runtime *runtime, Class *clazz) {
+    JniEnv *env = runtime->jnienv;
+    s32 pos = 0;
+    
+    intptr_t pval = env->localvar_getLong_2slot(runtime, pos);pos += 2;
+
+    nvgDeleteNVGglyphPosition((struct NVGglyphPosition*/*ptr*/)(pval));
+    
+    
+    return 0;
+}
+
 int org_mini_glfw_utils_Nutil_nvgNVGglyphPosition_x(Runtime *runtime, Class *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
@@ -2206,6 +2071,147 @@ int org_mini_glfw_utils_Nutil_nvgNVGglyphPosition_x(Runtime *runtime, Class *cla
 
     f32 ret_value = (f32)nvgNVGglyphPosition_x((struct NVGglyphPosition*/*ptr*/)(pptr), (int)pcount);
     env->push_float(runtime->stack, ret_value);
+    
+    return 0;
+}
+
+int org_mini_glfw_utils_Nutil_nvgTextJni(Runtime *runtime, Class *clazz) {
+    JniEnv *env = runtime->jnienv;
+    s32 pos = 0;
+    
+    intptr_t pctx = env->localvar_getLong_2slot(runtime, pos);pos += 2;
+    Int2Float px;px.i = env->localvar_getInt(runtime, pos++);
+    Int2Float py;py.i = env->localvar_getInt(runtime, pos++);
+    Instance *pstring = env->localvar_getRefer(runtime, pos++);
+    __refer ptr_pstring = NULL;
+    if(pstring){
+        ptr_pstring = pstring->arr_body;
+    }
+    s32 pstart = env->localvar_getInt(runtime, pos++);
+    s32 pend = env->localvar_getInt(runtime, pos++);
+
+    f32 ret_value = (f32)nvgTextJni((NVGcontext*/*ptr*/)(pctx), (float)px.f, (float)py.f, (const char*)(ptr_pstring), (int)pstart, (int)pend);
+    env->push_float(runtime->stack, ret_value);
+    
+    return 0;
+}
+
+int org_mini_glfw_utils_Nutil_nvgTextBoxJni(Runtime *runtime, Class *clazz) {
+    JniEnv *env = runtime->jnienv;
+    s32 pos = 0;
+    
+    intptr_t pctx = env->localvar_getLong_2slot(runtime, pos);pos += 2;
+    Int2Float px;px.i = env->localvar_getInt(runtime, pos++);
+    Int2Float py;py.i = env->localvar_getInt(runtime, pos++);
+    Int2Float pbreakRowWidth;pbreakRowWidth.i = env->localvar_getInt(runtime, pos++);
+    Instance *pstring = env->localvar_getRefer(runtime, pos++);
+    __refer ptr_pstring = NULL;
+    if(pstring){
+        ptr_pstring = pstring->arr_body;
+    }
+    s32 pstart = env->localvar_getInt(runtime, pos++);
+    s32 pend = env->localvar_getInt(runtime, pos++);
+
+    nvgTextBoxJni((NVGcontext*/*ptr*/)(pctx), (float)px.f, (float)py.f, (float)pbreakRowWidth.f, (const char*)(ptr_pstring), (int)pstart, (int)pend);
+    
+    
+    return 0;
+}
+
+int org_mini_glfw_utils_Nutil_nvgTextBoundsJni(Runtime *runtime, Class *clazz) {
+    JniEnv *env = runtime->jnienv;
+    s32 pos = 0;
+    
+    intptr_t pctx = env->localvar_getLong_2slot(runtime, pos);pos += 2;
+    Int2Float px;px.i = env->localvar_getInt(runtime, pos++);
+    Int2Float py;py.i = env->localvar_getInt(runtime, pos++);
+    Instance *pstring = env->localvar_getRefer(runtime, pos++);
+    __refer ptr_pstring = NULL;
+    if(pstring){
+        ptr_pstring = pstring->arr_body;
+    }
+    s32 pstart = env->localvar_getInt(runtime, pos++);
+    s32 pend = env->localvar_getInt(runtime, pos++);
+    Instance *pbounds = env->localvar_getRefer(runtime, pos++);
+    __refer ptr_pbounds = NULL;
+    if(pbounds){
+        ptr_pbounds = pbounds->arr_body;
+    }
+
+    f32 ret_value = (f32)nvgTextBoundsJni((NVGcontext*/*ptr*/)(pctx), (float)px.f, (float)py.f, (const char*)(ptr_pstring), (int)pstart, (int)pend, (float*)(ptr_pbounds));
+    env->push_float(runtime->stack, ret_value);
+    
+    return 0;
+}
+
+int org_mini_glfw_utils_Nutil_nvgTextBoxBoundsJni(Runtime *runtime, Class *clazz) {
+    JniEnv *env = runtime->jnienv;
+    s32 pos = 0;
+    
+    intptr_t pctx = env->localvar_getLong_2slot(runtime, pos);pos += 2;
+    Int2Float px;px.i = env->localvar_getInt(runtime, pos++);
+    Int2Float py;py.i = env->localvar_getInt(runtime, pos++);
+    Int2Float pbreakRowWidth;pbreakRowWidth.i = env->localvar_getInt(runtime, pos++);
+    Instance *pstring = env->localvar_getRefer(runtime, pos++);
+    __refer ptr_pstring = NULL;
+    if(pstring){
+        ptr_pstring = pstring->arr_body;
+    }
+    s32 pstart = env->localvar_getInt(runtime, pos++);
+    s32 pend = env->localvar_getInt(runtime, pos++);
+    Instance *pbounds = env->localvar_getRefer(runtime, pos++);
+    __refer ptr_pbounds = NULL;
+    if(pbounds){
+        ptr_pbounds = pbounds->arr_body;
+    }
+
+    nvgTextBoxBoundsJni((NVGcontext*/*ptr*/)(pctx), (float)px.f, (float)py.f, (float)pbreakRowWidth.f, (const char*)(ptr_pstring), (int)pstart, (int)pend, (float*)(ptr_pbounds));
+    
+    
+    return 0;
+}
+
+int org_mini_glfw_utils_Nutil_nvgTextBreakLinesJni(Runtime *runtime, Class *clazz) {
+    JniEnv *env = runtime->jnienv;
+    s32 pos = 0;
+    
+    intptr_t pctx = env->localvar_getLong_2slot(runtime, pos);pos += 2;
+    Instance *pstring = env->localvar_getRefer(runtime, pos++);
+    __refer ptr_pstring = NULL;
+    if(pstring){
+        ptr_pstring = pstring->arr_body;
+    }
+    s32 pstart = env->localvar_getInt(runtime, pos++);
+    s32 pend = env->localvar_getInt(runtime, pos++);
+    Int2Float pbreakRowWidth;pbreakRowWidth.i = env->localvar_getInt(runtime, pos++);
+    intptr_t prows = env->localvar_getLong_2slot(runtime, pos);pos += 2;
+    s32 pmaxRows = env->localvar_getInt(runtime, pos++);
+
+    int _re_val = nvgTextBreakLinesJni((NVGcontext*/*ptr*/)(pctx), (const char*)(ptr_pstring), (int)pstart, (int)pend, (float)pbreakRowWidth.f, (NVGtextRow*/*ptr*/)(prows), (int)pmaxRows);
+    s32 ret_value = (s32)_re_val;env->push_int(runtime->stack, ret_value);
+    
+    return 0;
+}
+
+int org_mini_glfw_utils_Nutil_nvgTextGlyphPositionsJni(Runtime *runtime, Class *clazz) {
+    JniEnv *env = runtime->jnienv;
+    s32 pos = 0;
+    
+    intptr_t pctx = env->localvar_getLong_2slot(runtime, pos);pos += 2;
+    Int2Float px;px.i = env->localvar_getInt(runtime, pos++);
+    Int2Float py;py.i = env->localvar_getInt(runtime, pos++);
+    Instance *pstring = env->localvar_getRefer(runtime, pos++);
+    __refer ptr_pstring = NULL;
+    if(pstring){
+        ptr_pstring = pstring->arr_body;
+    }
+    s32 pstart = env->localvar_getInt(runtime, pos++);
+    s32 pend = env->localvar_getInt(runtime, pos++);
+    intptr_t ppositions = env->localvar_getLong_2slot(runtime, pos);pos += 2;
+    s32 pmaxPositions = env->localvar_getInt(runtime, pos++);
+
+    int _re_val = nvgTextGlyphPositionsJni((NVGcontext*/*ptr*/)(pctx), (float)px.f, (float)py.f, (const char*)(ptr_pstring), (int)pstart, (int)pend, (NVGglyphPosition*/*ptr*/)(ppositions), (int)pmaxPositions);
+    s32 ret_value = (s32)_re_val;env->push_int(runtime->stack, ret_value);
     
     return 0;
 }
@@ -2318,24 +2324,26 @@ static java_native_method method_nutil_table[] = {
 {"org/mini/glfw/utils/Nutil",  "nvgTextAlign",  "(JI)V",  org_mini_glfw_utils_Nutil_nvgTextAlign},
 {"org/mini/glfw/utils/Nutil",  "nvgFontFaceId",  "(JI)V",  org_mini_glfw_utils_Nutil_nvgFontFaceId},
 {"org/mini/glfw/utils/Nutil",  "nvgFontFace",  "(J[B)V",  org_mini_glfw_utils_Nutil_nvgFontFace},
-{"org/mini/glfw/utils/Nutil",  "nvgText",  "(JFF[B[B)F",  org_mini_glfw_utils_Nutil_nvgText},
-{"org/mini/glfw/utils/Nutil",  "nvgTextBox",  "(JFFF[B[B)V",  org_mini_glfw_utils_Nutil_nvgTextBox},
-{"org/mini/glfw/utils/Nutil",  "nvgTextBounds",  "(JFF[B[B[F)F",  org_mini_glfw_utils_Nutil_nvgTextBounds},
-{"org/mini/glfw/utils/Nutil",  "nvgTextBoxBounds",  "(JFFF[B[B[F)V",  org_mini_glfw_utils_Nutil_nvgTextBoxBounds},
-{"org/mini/glfw/utils/Nutil",  "nvgTextGlyphPositions",  "(JFF[B[BJI)I",  org_mini_glfw_utils_Nutil_nvgTextGlyphPositions},
 {"org/mini/glfw/utils/Nutil",  "nvgTextMetrics",  "(J[F[F[F)V",  org_mini_glfw_utils_Nutil_nvgTextMetrics},
-{"org/mini/glfw/utils/Nutil",  "nvgTextBreakLines",  "(J[B[BFJI)I",  org_mini_glfw_utils_Nutil_nvgTextBreakLines},
 {"org/mini/glfw/utils/Nutil",  "nvgCreateGL3",  "(I)J",  org_mini_glfw_utils_Nutil_nvgCreateGL3},
 {"org/mini/glfw/utils/Nutil",  "nvgDeleteGL3",  "(J)V",  org_mini_glfw_utils_Nutil_nvgDeleteGL3},
 {"org/mini/glfw/utils/Nutil",  "nvglCreateImageFromHandleGL3",  "(JIIII)I",  org_mini_glfw_utils_Nutil_nvglCreateImageFromHandleGL3},
 {"org/mini/glfw/utils/Nutil",  "nvglImageHandleGL3",  "(JI)I",  org_mini_glfw_utils_Nutil_nvglImageHandleGL3},
 {"org/mini/glfw/utils/Nutil",  "nvgCreateNVGtextRow",  "(I)J",  org_mini_glfw_utils_Nutil_nvgCreateNVGtextRow},
+{"org/mini/glfw/utils/Nutil",  "nvgDeleteNVGtextRow",  "(J)V",  org_mini_glfw_utils_Nutil_nvgDeleteNVGtextRow},
 {"org/mini/glfw/utils/Nutil",  "nvgNVGtextRow_width",  "(JI)F",  org_mini_glfw_utils_Nutil_nvgNVGtextRow_width},
 {"org/mini/glfw/utils/Nutil",  "nvgNVGtextRow_start",  "(JI)J",  org_mini_glfw_utils_Nutil_nvgNVGtextRow_start},
 {"org/mini/glfw/utils/Nutil",  "nvgNVGtextRow_end",  "(JI)J",  org_mini_glfw_utils_Nutil_nvgNVGtextRow_end},
 {"org/mini/glfw/utils/Nutil",  "nvgNVGtextRow_next",  "(JI)J",  org_mini_glfw_utils_Nutil_nvgNVGtextRow_next},
 {"org/mini/glfw/utils/Nutil",  "nvgCreateNVGglyphPosition",  "(I)J",  org_mini_glfw_utils_Nutil_nvgCreateNVGglyphPosition},
+{"org/mini/glfw/utils/Nutil",  "nvgDeleteNVGglyphPosition",  "(J)V",  org_mini_glfw_utils_Nutil_nvgDeleteNVGglyphPosition},
 {"org/mini/glfw/utils/Nutil",  "nvgNVGglyphPosition_x",  "(JI)F",  org_mini_glfw_utils_Nutil_nvgNVGglyphPosition_x},
+{"org/mini/glfw/utils/Nutil",  "nvgTextJni",  "(JFF[BII)F",  org_mini_glfw_utils_Nutil_nvgTextJni},
+{"org/mini/glfw/utils/Nutil",  "nvgTextBoxJni",  "(JFFF[BII)V",  org_mini_glfw_utils_Nutil_nvgTextBoxJni},
+{"org/mini/glfw/utils/Nutil",  "nvgTextBoundsJni",  "(JFF[BII[F)F",  org_mini_glfw_utils_Nutil_nvgTextBoundsJni},
+{"org/mini/glfw/utils/Nutil",  "nvgTextBoxBoundsJni",  "(JFFF[BII[F)V",  org_mini_glfw_utils_Nutil_nvgTextBoxBoundsJni},
+{"org/mini/glfw/utils/Nutil",  "nvgTextBreakLinesJni",  "(J[BIIFJI)I",  org_mini_glfw_utils_Nutil_nvgTextBreakLinesJni},
+{"org/mini/glfw/utils/Nutil",  "nvgTextGlyphPositionsJni",  "(JFF[BIIJI)I",  org_mini_glfw_utils_Nutil_nvgTextGlyphPositionsJni},
 };
 
 s32 count_NutilFuncTable() {

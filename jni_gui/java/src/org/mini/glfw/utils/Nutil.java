@@ -166,24 +166,26 @@ public class Nutil {
     public static native void nvgTextAlign(long pctx, int palign); //NVGcontext*/*ptr*/,int, //void
     public static native void nvgFontFaceId(long pctx, int pfont); //NVGcontext*/*ptr*/,int, //void
     public static native void nvgFontFace(long pctx, byte[] pfont); //NVGcontext*/*ptr*/,const char*, //void
-    public static native float nvgText(long pctx, float px, float py, byte[] pstring, byte[] pend); //NVGcontext*/*ptr*/,float,float,const char*,const char*, //float
-    public static native void nvgTextBox(long pctx, float px, float py, float pbreakRowWidth, byte[] pstring, byte[] pend); //NVGcontext*/*ptr*/,float,float,float,const char*,const char*, //void
-    public static native float nvgTextBounds(long pctx, float px, float py, byte[] pstring, byte[] pend, float[] pbounds); //NVGcontext*/*ptr*/,float,float,const char*,const char*,float*, //float
-    public static native void nvgTextBoxBounds(long pctx, float px, float py, float pbreakRowWidth, byte[] pstring, byte[] pend, float[] pbounds); //NVGcontext*/*ptr*/,float,float,float,const char*,const char*,float*, //void
-    public static native int nvgTextGlyphPositions(long pctx, float px, float py, byte[] pstring, byte[] pend, long ppositions, int pmaxPositions); //NVGcontext*/*ptr*/,float,float,const char*,const char*,NVGglyphPosition*/*ptr*/,int, //int
     public static native void nvgTextMetrics(long pctx, float[] pascender, float[] pdescender, float[] plineh); //NVGcontext*/*ptr*/,float*,float*,float*, //void
-    public static native int nvgTextBreakLines(long pctx, byte[] pstring, byte[] pend, float pbreakRowWidth, long prows, int pmaxRows); //NVGcontext*/*ptr*/,const char*,const char*,float,NVGtextRow*/*ptr*/,int, //int
     public static native long  nvgCreateGL3(int pflags); //int, //NVGcontext*/*ptr*/ 
     public static native void nvgDeleteGL3(long pctx); //NVGcontext*/*ptr*/, //void
     public static native int nvglCreateImageFromHandleGL3(long pctx, int ptextureId, int pw, int ph, int pflags); //NVGcontext*/*ptr*/,GLuint,int,int,int, //int
     public static native int nvglImageHandleGL3(long pctx, int pimage); //NVGcontext*/*ptr*/,int, //GLuint
     public static native long  nvgCreateNVGtextRow(int pcount); //int, //struct NVGtextRow*/*ptr*/ 
+    public static native void nvgDeleteNVGtextRow(long pval); //struct NVGtextRow*/*ptr*/, //void
     public static native float nvgNVGtextRow_width(long pptr, int pindex); //struct NVGtextRow*/*ptr*/,int, //float
     public static native long  nvgNVGtextRow_start(long pptr, int pindex); //struct NVGtextRow*/*ptr*/,int, //void*/*ptr*/ 
     public static native long  nvgNVGtextRow_end(long pptr, int pindex); //struct NVGtextRow*/*ptr*/,int, //void*/*ptr*/ 
     public static native long  nvgNVGtextRow_next(long pptr, int pindex); //struct NVGtextRow*/*ptr*/,int, //void*/*ptr*/ 
     public static native long  nvgCreateNVGglyphPosition(int pcount); //int, //struct NVGglyphPosition*/*ptr*/ 
+    public static native void nvgDeleteNVGglyphPosition(long pval); //struct NVGglyphPosition*/*ptr*/, //void
     public static native float nvgNVGglyphPosition_x(long pptr, int pcount); //struct NVGglyphPosition*/*ptr*/,int, //float
+    public static native float nvgTextJni(long pctx, float px, float py, byte[] pstring, int pstart, int pend); //NVGcontext*/*ptr*/,float,float,const char*,int,int, //float
+    public static native void nvgTextBoxJni(long pctx, float px, float py, float pbreakRowWidth, byte[] pstring, int pstart, int pend); //NVGcontext*/*ptr*/,float,float,float,const char*,int,int, //void
+    public static native float nvgTextBoundsJni(long pctx, float px, float py, byte[] pstring, int pstart, int pend, float[] pbounds); //NVGcontext*/*ptr*/,float,float,const char*,int,int,float*, //float
+    public static native void nvgTextBoxBoundsJni(long pctx, float px, float py, float pbreakRowWidth, byte[] pstring, int pstart, int pend, float[] pbounds); //NVGcontext*/*ptr*/,float,float,float,const char*,int,int,float*, //void
+    public static native int nvgTextBreakLinesJni(long pctx, byte[] pstring, int pstart, int pend, float pbreakRowWidth, long prows, int pmaxRows); //NVGcontext*/*ptr*/,const char*,int,int,float,NVGtextRow*/*ptr*/,int, //int
+    public static native int nvgTextGlyphPositionsJni(long pctx, float px, float py, byte[] pstring, int pstart, int pend, long ppositions, int pmaxPositions); //NVGcontext*/*ptr*/,float,float,const char*,int,int,NVGglyphPosition*/*ptr*/,int, //int
 
 }
 

@@ -94,13 +94,13 @@ import static org.mini.glfw.utils.Nutil.nvgScissor;
 import static org.mini.glfw.utils.Nutil.nvgStroke;
 import static org.mini.glfw.utils.Nutil.nvgStrokeColor;
 import static org.mini.glfw.utils.Nutil.nvgStrokeWidth;
-import static org.mini.glfw.utils.Nutil.nvgText;
+import static org.mini.glfw.utils.Nutil.nvgTextJni;
 import static org.mini.glfw.utils.Nutil.nvgTextAlign;
-import static org.mini.glfw.utils.Nutil.nvgTextBounds;
-import static org.mini.glfw.utils.Nutil.nvgTextBox;
-import static org.mini.glfw.utils.Nutil.nvgTextBoxBounds;
-import static org.mini.glfw.utils.Nutil.nvgTextBreakLines;
-import static org.mini.glfw.utils.Nutil.nvgTextGlyphPositions;
+import static org.mini.glfw.utils.Nutil.nvgTextBoundsJni;
+import static org.mini.glfw.utils.Nutil.nvgTextBoxBoundsJni;
+import static org.mini.glfw.utils.Nutil.nvgTextBoxJni;
+import static org.mini.glfw.utils.Nutil.nvgTextBreakLinesJni;
+import static org.mini.glfw.utils.Nutil.nvgTextGlyphPositionsJni;
 import static org.mini.glfw.utils.Nutil.nvgTextLineHeight;
 import static org.mini.glfw.utils.Nutil.nvgTextMetrics;
 import static org.mini.glfw.utils.Nutil.nvgTranslate;
@@ -133,7 +133,7 @@ public class TestNanovg {
         glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
 //        glfwWindowHint(GLFW_DEPTH_BITS, 16);
 //        glfwWindowHint(GLFW_TRANSPARENT_FRAMEBUFFER, GLFW_TRUE);
-        win = glfwCreateWindow(640, 480, "TestNanovg".getBytes(), 0, 0);
+        win = glfwCreateWindow(1200, 600, "TestNanovg".getBytes(), 0, 0);
         if (win != 0) {
             glfwSetCallback(win, new CallBack());
             glfwMakeContextCurrent(win);
@@ -368,11 +368,12 @@ public class TestNanovg {
 
         nvgFontBlur(vg, 2);
         nvgFillColor(vg, nvgRGBA(0, 0, 0, 128));
-        nvgText(vg, x + w / 2, y + 16 + 1, toUtf8(title), null);
+        byte[] b1 = toUtf8(title);
+        nvgTextJni(vg, x + w / 2, y + 16 + 1, b1, 0, b1.length);
 
         nvgFontBlur(vg, 0);
         nvgFillColor(vg, nvgRGBA(220, 220, 220, 160));
-        nvgText(vg, x + w / 2, y + 16, toUtf8(title), null);
+        nvgTextJni(vg, x + w / 2, y + 16, b1, 0, b1.length);
 
         nvgRestore(vg);
     }
@@ -397,20 +398,23 @@ public class TestNanovg {
         nvgFontFace(vg, iconname);
         nvgFillColor(vg, nvgRGBA(255, 255, 255, 64));
         nvgTextAlign(vg, NVG_ALIGN_CENTER | NVG_ALIGN_MIDDLE);
-        nvgText(vg, x + h * 0.55f, y + h * 0.55f, cpToUTF8(ICON_SEARCH), null);
+        byte[] b1 = cpToUTF8(ICON_SEARCH);
+        nvgTextJni(vg, x + h * 0.55f, y + h * 0.55f, b1, 0, b1.length);
 
         nvgFontSize(vg, 20.0f);
         nvgFontFace(vg, fontname);
         nvgFillColor(vg, nvgRGBA(255, 255, 255, 32));
 
         nvgTextAlign(vg, NVG_ALIGN_LEFT | NVG_ALIGN_MIDDLE);
-        nvgText(vg, x + h * 1.05f, y + h * 0.5f, toUtf8(text), null);
+        byte[] b2 = toUtf8(text);
+        nvgTextJni(vg, x + h * 1.05f, y + h * 0.5f, b2, 0, b2.length);
 
         nvgFontSize(vg, h * 1.3f);
         nvgFontFace(vg, iconname);
         nvgFillColor(vg, nvgRGBA(255, 255, 255, 32));
         nvgTextAlign(vg, NVG_ALIGN_CENTER | NVG_ALIGN_MIDDLE);
-        nvgText(vg, x + w - h * 0.55f, y + h * 0.55f, cpToUTF8(ICON_CIRCLED_CROSS), null);
+        byte[] b3 = cpToUTF8(ICON_CIRCLED_CROSS);
+        nvgTextJni(vg, x + w - h * 0.55f, y + h * 0.55f, b3, 0, b3.length);
     }
 
     void drawDropDown(long vg, String text, float x, float y, float w, float h) {
@@ -433,13 +437,15 @@ public class TestNanovg {
         nvgFontFace(vg, fontname);
         nvgFillColor(vg, nvgRGBA(255, 255, 255, 160));
         nvgTextAlign(vg, NVG_ALIGN_LEFT | NVG_ALIGN_MIDDLE);
-        nvgText(vg, x + h * 0.3f, y + h * 0.5f, toUtf8(text), null);
+        byte[] b1 = toUtf8(text);
+        nvgTextJni(vg, x + h * 0.3f, y + h * 0.5f, b1, 0, b1.length);
 
         nvgFontSize(vg, h * 1.3f);
         nvgFontFace(vg, iconname);
         nvgFillColor(vg, nvgRGBA(255, 255, 255, 64));
         nvgTextAlign(vg, NVG_ALIGN_CENTER | NVG_ALIGN_MIDDLE);
-        nvgText(vg, x + w - h * 0.5f, y + h * 0.5f, cpToUTF8(ICON_CHEVRON_RIGHT), null);
+        byte[] b2 = cpToUTF8(ICON_CHEVRON_RIGHT);
+        nvgTextJni(vg, x + w - h * 0.5f, y + h * 0.5f, b2, 0, b2.length);
     }
 
     void drawLabel(long vg, String text, float x, float y, float w, float h) {
@@ -450,7 +456,8 @@ public class TestNanovg {
         nvgFillColor(vg, nvgRGBA(255, 255, 255, 128));
 
         nvgTextAlign(vg, NVG_ALIGN_LEFT | NVG_ALIGN_MIDDLE);
-        nvgText(vg, x, y + h * 0.5f, toUtf8(text), null);
+        byte[] b1 = toUtf8(text);
+        nvgTextJni(vg, x, y + h * 0.5f, b1, 0, b1.length);
     }
 
     void drawEditBoxBase(long vg, float x, float y, float w, float h) {
@@ -476,7 +483,8 @@ public class TestNanovg {
         nvgFontFace(vg, fontname);
         nvgFillColor(vg, nvgRGBA(255, 255, 255, 64));
         nvgTextAlign(vg, NVG_ALIGN_LEFT | NVG_ALIGN_MIDDLE);
-        nvgText(vg, x + h * 0.3f, y + h * 0.5f, toUtf8(text), null);
+        byte[] b1 = toUtf8(text);
+        nvgTextJni(vg, x + h * 0.3f, y + h * 0.5f, b1, 0, b1.length);
     }
 
     void drawEditBoxNum(long vg,
@@ -485,19 +493,21 @@ public class TestNanovg {
 
         drawEditBoxBase(vg, x, y, w, h);
 
-        uw = Nutil.nvgTextBounds(vg, 0f, 0f, toUtf8(units), null, null);
+        byte[] b1 = toUtf8(units);
+        uw = Nutil.nvgTextBoundsJni(vg, 0f, 0f, b1, 0, b1.length, null);
 
         nvgFontSize(vg, 18.0f);
         nvgFontFace(vg, fontname);
         nvgFillColor(vg, nvgRGBA(255, 255, 255, 64));
         nvgTextAlign(vg, NVG_ALIGN_RIGHT | NVG_ALIGN_MIDDLE);
-        nvgText(vg, x + w - h * 0.3f, y + h * 0.5f, toUtf8(units), null);
+        nvgTextJni(vg, x + w - h * 0.3f, y + h * 0.5f, b1, 0, b1.length);
 
         nvgFontSize(vg, 20.0f);
         nvgFontFace(vg, fontname);
         nvgFillColor(vg, nvgRGBA(255, 255, 255, 128));
         nvgTextAlign(vg, NVG_ALIGN_RIGHT | NVG_ALIGN_MIDDLE);
-        nvgText(vg, x + w - uw - h * 0.5f, y + h * 0.5f, toUtf8(text), null);
+        byte[] b2 = toUtf8(text);
+        nvgTextJni(vg, x + w - uw - h * 0.5f, y + h * 0.5f, b2, 0, b2.length);
     }
 
     void drawCheckBox(long vg, String text, float x, float y, float w, float h) {
@@ -509,7 +519,8 @@ public class TestNanovg {
         nvgFillColor(vg, nvgRGBA(255, 255, 255, 160));
 
         nvgTextAlign(vg, NVG_ALIGN_LEFT | NVG_ALIGN_MIDDLE);
-        nvgText(vg, x + 28, y + h * 0.5f, toUtf8(text), null);
+        byte[] b2 = toUtf8(text);
+        nvgTextJni(vg, x + 28, y + h * 0.5f, b2, 0, b2.length);
 
         bg = nvgBoxGradient(vg, x + 1, y + (int) (h * 0.5f) - 9 + 1, 18, 18, 3, 3, nvgRGBA(0, 0, 0, 32), nvgRGBA(0, 0, 0, 92));
         nvgBeginPath(vg);
@@ -521,7 +532,8 @@ public class TestNanovg {
         nvgFontFace(vg, iconname);
         nvgFillColor(vg, nvgRGBA(255, 255, 255, 128));
         nvgTextAlign(vg, NVG_ALIGN_CENTER | NVG_ALIGN_MIDDLE);
-        nvgText(vg, x + 9 + 2, y + h * 0.5f, cpToUTF8(ICON_CHECK), null);
+        byte[] b3 = cpToUTF8(ICON_CHECK);
+        nvgTextJni(vg, x + 9 + 2, y + h * 0.5f, b3, 0, b3.length);
     }
 
     void drawButton(long vg, int preicon, String text, float x, float y, float w, float h, float[] col) {
@@ -547,11 +559,13 @@ public class TestNanovg {
 
         nvgFontSize(vg, 20.0f);
         nvgFontFace(vg, fontname);
-        tw = Nutil.nvgTextBounds(vg, 0, 0, toUtf8(text), null, null);
+        byte[] b2 = toUtf8(text);
+        tw = Nutil.nvgTextBoundsJni(vg, 0, 0, b2, 0, b2.length, null);
+        byte[] b3 = cpToUTF8(preicon);
         if (preicon != 0) {
             nvgFontSize(vg, h * 1.3f);
             nvgFontFace(vg, iconname);
-            iw = Nutil.nvgTextBounds(vg, 0, 0, cpToUTF8(preicon), null, null);
+            iw = Nutil.nvgTextBoundsJni(vg, 0, 0, b3, 0, b3.length, null);
             iw += h * 0.15f;
         }
 
@@ -560,16 +574,16 @@ public class TestNanovg {
             nvgFontFace(vg, iconname);
             nvgFillColor(vg, nvgRGBA(255, 255, 255, 96));
             nvgTextAlign(vg, NVG_ALIGN_LEFT | NVG_ALIGN_MIDDLE);
-            nvgText(vg, x + w * 0.5f - tw * 0.5f - iw * 0.75f, y + h * 0.5f, cpToUTF8(preicon), null);
+            nvgTextJni(vg, x + w * 0.5f - tw * 0.5f - iw * 0.75f, y + h * 0.5f, b3, 0, b3.length);
         }
 
         nvgFontSize(vg, 20.0f);
         nvgFontFace(vg, fontname);
         nvgTextAlign(vg, NVG_ALIGN_LEFT | NVG_ALIGN_MIDDLE);
         nvgFillColor(vg, nvgRGBA(0, 0, 0, 160));
-        nvgText(vg, x + w * 0.5f - tw * 0.5f + iw * 0.25f, y + h * 0.5f - 1, toUtf8(text), null);
+        nvgTextJni(vg, x + w * 0.5f - tw * 0.5f + iw * 0.25f, y + h * 0.5f - 1, b2, 0, b2.length);
         nvgFillColor(vg, nvgRGBA(255, 255, 255, 160));
-        nvgText(vg, x + w * 0.5f - tw * 0.5f + iw * 0.25f, y + h * 0.5f, toUtf8(text), null);
+        nvgTextJni(vg, x + w * 0.5f - tw * 0.5f + iw * 0.25f, y + h * 0.5f, b2, 0, b2.length);
     }
 
     void drawSlider(long vg, float pos, float x, float y, float w, float h) {
@@ -1138,9 +1152,9 @@ public class TestNanovg {
         // or to iterate over the text just few lines (or just one) at a time.
         // The "next" variable of the last returned item tells where to continue.
         byte[] text_arr = toUtf8(text);
-        byte[] start = new byte[text_arr.length];
-        System.arraycopy(text_arr, 0, start, 0, start.length);
-        while ((nrows = nvgTextBreakLines(vg, start, null, width, rows, 3)) != 0) {
+        int start = 0;
+        int end = text_arr.length;
+        while ((nrows = nvgTextBreakLinesJni(vg, text_arr, start, end, width, rows, 3)) != 0) {
             for (i = 0; i < nrows; i++) {
                 boolean hit = mx > x && mx < (x + width) && my >= y && my < (y + lineh[0]);
                 float row_width = Nutil.nvgNVGtextRow_width(rows, i);
@@ -1152,16 +1166,14 @@ public class TestNanovg {
                 long ptr = GToolkit.getArrayDataPtr(text_arr);
                 int starti = (int) (Nutil.nvgNVGtextRow_start(rows, i) - ptr);
                 int endi = (int) (Nutil.nvgNVGtextRow_end(rows, i) - ptr);
-                byte[] substr = new byte[endi - starti];
-                System.arraycopy(text_arr, starti, substr, 0, endi - starti);
 
                 nvgFillColor(vg, nvgRGBA(255, 255, 255, 255));
-                nvgText(vg, x, y, substr, null);
+                nvgTextJni(vg, x, y, text_arr, starti, endi);
 
                 if (hit) {
                     caretx = (mx < x + row_width / 2) ? x : x + row_width;
                     px = x;
-                    nglyphs = nvgTextGlyphPositions(vg, x, y, substr, null, glyphs, 100);
+                    nglyphs = nvgTextGlyphPositionsJni(vg, x, y, text_arr, starti, endi, glyphs, 100);
                     for (j = 0; j < nglyphs; j++) {
                         float x0 = nvgNVGglyphPosition_x(glyphs, j);
                         float x1 = (j + 1 < nglyphs) ? nvgNVGglyphPosition_x(glyphs, j + 1) : x + row_width;
@@ -1186,9 +1198,7 @@ public class TestNanovg {
             // Keep going...
             long ptr = GToolkit.getArrayDataPtr(text_arr);
             long next = Nutil.nvgNVGtextRow_next(rows, nrows - 1);
-            int len = text_arr.length - (int) (next - ptr);
-            byte[] substr = new byte[len];
-            System.arraycopy(text_arr, (int) (next - ptr), substr, 0, len);
+            start = (int) (next - ptr);
         }
         if (gutter != 0) {
             String txt = "" + gutter;
@@ -1196,7 +1206,7 @@ public class TestNanovg {
             nvgFontSize(vg, 13.0f);
             nvgTextAlign(vg, NVG_ALIGN_RIGHT | NVG_ALIGN_MIDDLE);
 
-            nvgTextBounds(vg, gx, gy, txt_arr, null, bounds);
+            nvgTextBoundsJni(vg, gx, gy, txt_arr, 0, text_arr.length, bounds);
 
             nvgBeginPath(vg);
             nvgFillColor(vg, nvgRGBA(255, 192, 0, 255));
@@ -1204,7 +1214,7 @@ public class TestNanovg {
             nvgFill(vg);
 
             nvgFillColor(vg, nvgRGBA(32, 32, 32, 255));
-            nvgText(vg, gx, gy, txt_arr, null);
+            nvgTextJni(vg, gx, gy, txt_arr, 0, text_arr.length);
         }
 
         y += 20.0f;
@@ -1213,7 +1223,8 @@ public class TestNanovg {
         nvgTextAlign(vg, NVG_ALIGN_LEFT | NVG_ALIGN_TOP);
         nvgTextLineHeight(vg, 1.2f);
 
-        nvgTextBoxBounds(vg, x, y, 150, toUtf8("Hover your mouse over the text to see calculated caret position."), null, bounds);
+        byte[] b2 = toUtf8("Hover your mouse over the text to see calculated caret position.");
+        nvgTextBoxBoundsJni(vg, x, y, 150, b2, 0, b2.length, bounds);
 
         // Fade the tooltip out when close to it.
         gx = Math.abs((mx - (bounds[0] + bounds[2]) * 0.5f) / (bounds[0] - bounds[2]));
@@ -1232,9 +1243,12 @@ public class TestNanovg {
         nvgFill(vg);
 
         nvgFillColor(vg, nvgRGBA(0, 0, 0, 220));
-        nvgTextBox(vg, x, y, 150, toUtf8("Hover your mouse over the text to see calculated caret position."), null);
+        byte[] b3 = toUtf8("Hover your mouse over the text to see calculated caret position.");
+        nvgTextBoxJni(vg, x, y, 150, b3, 0, b3.length);
 
         nvgRestore(vg);
+        Nutil.nvgDeleteNVGtextRow(rows);
+        Nutil.nvgDeleteNVGglyphPosition(glyphs);
     }
 
     void drawWidths(long vg, float x, float y, float width) {

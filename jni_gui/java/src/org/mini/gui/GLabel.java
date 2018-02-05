@@ -11,8 +11,8 @@ import static org.mini.glfw.utils.Nutil.NVG_ALIGN_MIDDLE;
 import static org.mini.glfw.utils.Nutil.nvgFillColor;
 import static org.mini.glfw.utils.Nutil.nvgFontFace;
 import static org.mini.glfw.utils.Nutil.nvgFontSize;
-import static org.mini.glfw.utils.Nutil.nvgText;
 import static org.mini.glfw.utils.Nutil.nvgTextAlign;
+import static org.mini.glfw.utils.Nutil.nvgTextJni;
 import static org.mini.gui.GToolkit.nvgRGBA;
 
 /**
@@ -59,7 +59,7 @@ public class GLabel extends GObject {
         nvgFillColor(vg, nvgRGBA(255, 255, 255, 128));
 
         nvgTextAlign(vg, NVG_ALIGN_LEFT | NVG_ALIGN_MIDDLE);
-        nvgText(vg, x, y + h * 0.5f, text_arr, null);
+        nvgTextJni(vg, x, y + h * 0.5f, text_arr, 0,text_arr.length);
         return true;
     }
 

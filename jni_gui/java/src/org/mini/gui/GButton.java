@@ -7,11 +7,9 @@ package org.mini.gui;
 
 import static org.mini.glfw.utils.Gutil.toUtf8;
 import org.mini.glfw.utils.Nutil;
-import static org.mini.glfw.utils.Nutil.NVG_ALIGN_CENTER;
 import static org.mini.glfw.utils.Nutil.NVG_ALIGN_LEFT;
 import static org.mini.glfw.utils.Nutil.NVG_ALIGN_MIDDLE;
 import static org.mini.glfw.utils.Nutil.nvgBeginPath;
-import static org.mini.glfw.utils.Nutil.nvgBoxGradient;
 import static org.mini.glfw.utils.Nutil.nvgFill;
 import static org.mini.glfw.utils.Nutil.nvgFillColor;
 import static org.mini.glfw.utils.Nutil.nvgFillPaint;
@@ -20,8 +18,8 @@ import static org.mini.glfw.utils.Nutil.nvgFontSize;
 import static org.mini.glfw.utils.Nutil.nvgRoundedRect;
 import static org.mini.glfw.utils.Nutil.nvgStroke;
 import static org.mini.glfw.utils.Nutil.nvgStrokeColor;
-import static org.mini.glfw.utils.Nutil.nvgText;
 import static org.mini.glfw.utils.Nutil.nvgTextAlign;
+import static org.mini.glfw.utils.Nutil.nvgTextJni;
 import static org.mini.gui.GToolkit.nvgRGBA;
 
 /**
@@ -33,6 +31,7 @@ public class GButton extends GObject {
     String text;
     byte[] text_arr;
     char preicon;
+    byte[] preicon_arr;
     boolean bt_pressed = false;
 
     public GButton(String text, int left, int top, int width, int height) {
@@ -50,6 +49,7 @@ public class GButton extends GObject {
 
     public void setIcon(char icon) {
         preicon = icon;
+        preicon_arr = toUtf8("" + preicon);
     }
 
     @Override
@@ -112,11 +112,12 @@ public class GButton extends GObject {
 
         nvgFontSize(vg, 20.0f);
         nvgFontFace(vg, GToolkit.getFontWord());
-        tw = Nutil.nvgTextBounds(vg, 0, 0, text_arr, null, null);
+        tw = Nutil.nvgTextBoundsJni(vg, 0, 0, text_arr, 0, text_arr.length, null);
         if (preicon != 0) {
             nvgFontSize(vg, h * 1.3f);
             nvgFontFace(vg, GToolkit.getFontIcon());
-            iw = Nutil.nvgTextBounds(vg, 0, 0, toUtf8("" + preicon), null, null);
+
+            iw = Nutil.nvgTextBoundsJni(vg, 0, 0, preicon_arr, 0, preicon_arr.length, null);
             iw += h * 0.15f;
         }
 
@@ -125,16 +126,16 @@ public class GButton extends GObject {
             nvgFontFace(vg, GToolkit.getFontIcon());
             nvgFillColor(vg, nvgRGBA(255, 255, 255, 96));
             nvgTextAlign(vg, NVG_ALIGN_LEFT | NVG_ALIGN_MIDDLE);
-            nvgText(vg, x + w * 0.5f - tw * 0.5f - iw * 0.75f, y + h * 0.5f + move, toUtf8("" + preicon), null);
+            Nutil.nvgTextJni(vg, x + w * 0.5f - tw * 0.5f - iw * 0.75f, y + h * 0.5f + move, preicon_arr, 0, preicon_arr.length);
         }
 
         nvgFontSize(vg, textFontSize);
         nvgFontFace(vg, GToolkit.getFontWord());
         nvgTextAlign(vg, NVG_ALIGN_LEFT | NVG_ALIGN_MIDDLE);
         nvgFillColor(vg, nvgRGBA(0, 0, 0, 160));
-        nvgText(vg, x + w * 0.5f - tw * 0.5f + iw * 0.25f, y + h * 0.5f + 1 + move, text_arr, null);
+        nvgTextJni(vg, x + w * 0.5f - tw * 0.5f + iw * 0.25f, y + h * 0.5f + 1 + move, text_arr, 0, text_arr.length);
         nvgFillColor(vg, nvgRGBA(255, 255, 255, 160));
-        nvgText(vg, x + w * 0.5f - tw * 0.5f + iw * 0.25f, y + h * 0.5f + move, text_arr, null);
+        nvgTextJni(vg, x + w * 0.5f - tw * 0.5f + iw * 0.25f, y + h * 0.5f + move, text_arr, 0, text_arr.length);
         return true;
     }
 // Returns 1 if col.rgba is 0.0f,0.0f,0.0f,0.0f, 0 otherwise

@@ -157,13 +157,13 @@ NUTIL_API void nvgTextLineHeight(NVGcontext* ctx, float lineHeight);
 NUTIL_API void nvgTextAlign(NVGcontext* ctx, int align);
 NUTIL_API void nvgFontFaceId(NVGcontext* ctx, int font);
 NUTIL_API void nvgFontFace(NVGcontext* ctx, const char* font);
-NUTIL_API float nvgText(NVGcontext* ctx, float x, float y, const char* string, const char* end);
-NUTIL_API void nvgTextBox(NVGcontext* ctx, float x, float y, float breakRowWidth, const char* string, const char* end);
-NUTIL_API float nvgTextBounds(NVGcontext* ctx, float x, float y, const char* string, const char* end, float* bounds);
-NUTIL_API void nvgTextBoxBounds(NVGcontext* ctx, float x, float y, float breakRowWidth, const char* string, const char* end, float* bounds);
-NUTIL_API int nvgTextGlyphPositions(NVGcontext* ctx, float x, float y, const char* string, const char* end, NVGglyphPosition* positions, int maxPositions);
+//NUTIL_API float nvgText(NVGcontext* ctx, float x, float y, const char* string, const char* end);
+//NUTIL_API void nvgTextBox(NVGcontext* ctx, float x, float y, float breakRowWidth, const char* string, const char* end);
+//NUTIL_API float nvgTextBounds(NVGcontext* ctx, float x, float y, const char* string, const char* end, float* bounds);
+//NUTIL_API void nvgTextBoxBounds(NVGcontext* ctx, float x, float y, float breakRowWidth, const char* string, const char* end, float* bounds);
+//NUTIL_API int nvgTextGlyphPositions(NVGcontext* ctx, float x, float y, const char* string, const char* end, NVGglyphPosition* positions, int maxPositions);
 NUTIL_API void nvgTextMetrics(NVGcontext* ctx, float* ascender, float* descender, float* lineh);
-NUTIL_API int nvgTextBreakLines(NVGcontext* ctx, const char* string, const char* end, float breakRowWidth, NVGtextRow* rows, int maxRows);
+//NUTIL_API int nvgTextBreakLines(NVGcontext* ctx, const char* string, const char* end, float breakRowWidth, NVGtextRow* rows, int maxRows);
 
  //nanovg_gl.h
 enum NVGcreateFlags {
@@ -213,18 +213,58 @@ enum GLNVGshaderType {
 
 
 NUTIL_API struct NVGtextRow *nvgCreateNVGtextRow(int count);
+NUTIL_API void nvgDeleteNVGtextRow(struct NVGtextRow *val);
 NUTIL_API float nvgNVGtextRow_width(struct NVGtextRow *ptr, int index);
 NUTIL_API void *nvgNVGtextRow_start(struct NVGtextRow *ptr, int index);
 NUTIL_API void *nvgNVGtextRow_end(struct NVGtextRow *ptr, int index);
 NUTIL_API void *nvgNVGtextRow_next(struct NVGtextRow *ptr, int index);
 NUTIL_API struct NVGglyphPosition *nvgCreateNVGglyphPosition(int count);
+NUTIL_API void nvgDeleteNVGglyphPosition(struct NVGglyphPosition *val) ;
 NUTIL_API float nvgNVGglyphPosition_x(struct NVGglyphPosition *ptr, int count);
-*/
+NUTIL_API float nvgTextJni(NVGcontext* ctx, float x, float y, const char* string, int start, int end);
+NUTIL_API void nvgTextBoxJni(NVGcontext* ctx, float x, float y, float breakRowWidth, const char* string, int start, int end);
+NUTIL_API float nvgTextBoundsJni(NVGcontext* ctx, float x, float y, const char* string, int start, int end, float* bounds);
+NUTIL_API void nvgTextBoxBoundsJni(NVGcontext* ctx, float x, float y, float breakRowWidth, const char* string, int start, int end, float* bounds);
+NUTIL_API int nvgTextBreakLinesJni(NVGcontext* ctx, const char* string, int start, int end, float breakRowWidth, NVGtextRow* rows, int maxRows);
+NUTIL_API int nvgTextGlyphPositionsJni(NVGcontext* ctx, float x, float y, const char* string, int start,int end, NVGglyphPosition* positions, int maxPositions);
 
+
+*/
+float nvgTextJni(NVGcontext *ctx, float x, float y, const char *string, int start, int end) {
+    return nvgText(ctx, x, y, string + start, string + end);
+}
+
+void nvgTextBoxJni(NVGcontext *ctx, float x, float y, float breakRowWidth, const char *string, int start, int end) {
+    nvgTextBox(ctx, x, y, breakRowWidth, string + start, string + end);
+}
+
+float nvgTextBoundsJni(NVGcontext *ctx, float x, float y, const char *string, int start, int end, float *bounds) {
+    return nvgTextBounds(ctx, x, y, string + start, string + end, bounds);
+}
+
+void nvgTextBoxBoundsJni(NVGcontext *ctx, float x, float y, float breakRowWidth, const char *string, int start, int end,
+                         float *bounds) {
+    nvgTextBoxBounds(ctx, x, y, breakRowWidth, string + start, string + end, bounds);
+}
+
+
+int nvgTextBreakLinesJni(NVGcontext *ctx, const char *string, int start, int end, float breakRowWidth, NVGtextRow *rows,
+                         int maxRows) {
+    return nvgTextBreakLines(ctx, string + start, string + end, breakRowWidth, rows, maxRows);
+}
+
+int nvgTextGlyphPositionsJni(NVGcontext *ctx, float x, float y, const char *string, int start, int end,
+                             NVGglyphPosition *positions, int maxPositions) {
+    return nvgTextGlyphPositions(ctx, x, y, string + start, string + end, positions, maxPositions);
+}
 
 static struct NVGtextRow *nvgCreateNVGtextRow(int count) {
     struct NVGtextRow *val = calloc(sizeof(struct NVGtextRow), count);
     return val;
+}
+
+void nvgDeleteNVGtextRow(struct NVGtextRow *val) {
+    free(val);
 }
 
 
@@ -253,6 +293,9 @@ struct NVGglyphPosition *nvgCreateNVGglyphPosition(int count) {
     return val;
 }
 
+void nvgDeleteNVGglyphPosition(struct NVGglyphPosition *val) {
+    free(val);
+}
 
 float nvgNVGglyphPosition_x(struct NVGglyphPosition *ptr, int index) {
     return ptr[index].x;

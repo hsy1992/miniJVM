@@ -19,8 +19,8 @@ import static org.mini.glfw.utils.Nutil.nvgFillPaint;
 import static org.mini.glfw.utils.Nutil.nvgFontFace;
 import static org.mini.glfw.utils.Nutil.nvgFontSize;
 import static org.mini.glfw.utils.Nutil.nvgRoundedRect;
-import static org.mini.glfw.utils.Nutil.nvgText;
 import static org.mini.glfw.utils.Nutil.nvgTextAlign;
+import static org.mini.glfw.utils.Nutil.nvgTextJni;
 import static org.mini.gui.GToolkit.nvgRGBA;
 
 /**
@@ -34,6 +34,9 @@ public class GInputField extends GObject {
     String text;
     byte[] text_arr;
     float[] reset_boundle;
+    //
+    byte[] search_arr = toUtf8("" + ICON_SEARCH);
+    byte[] reset_arr = toUtf8("" + ICON_CIRCLED_CROSS);
 
     public GInputField(String text, String hint, int left, int top, int width, int height) {
         setHint(hint);
@@ -136,7 +139,8 @@ public class GInputField extends GObject {
         nvgFontFace(vg, GToolkit.getFontIcon());
         nvgFillColor(vg, nvgRGBA(255, 255, 255, 64));
         nvgTextAlign(vg, NVG_ALIGN_CENTER | NVG_ALIGN_MIDDLE);
-        nvgText(vg, x + h * 0.55f, y + h * 0.55f, toUtf8("" + ICON_SEARCH), null);
+
+        nvgTextJni(vg, x + h * 0.55f, y + h * 0.55f, search_arr, 0, search_arr.length);
 
         nvgFontSize(vg, textFontSize);
         nvgFontFace(vg, GToolkit.getFontWord());
@@ -148,14 +152,14 @@ public class GInputField extends GObject {
         if (parent.getFocus() != this && (text == null || text.length() == 0)) {
             if (hint_arr != null) {
                 nvgFillColor(vg, nvgRGBA(255, 255, 255, 64));
-                nvgText(vg, wordx, wordy, hint_arr, null);
+                nvgTextJni(vg, wordx, wordy, hint_arr, 0, hint_arr.length);
             }
         } else {
             float text_width = 0;
             float txt_show_area_x = 0;
             float txt_show_area_w = 0;
             if (text_arr != null) {
-                text_width = Nutil.nvgTextBounds(vg, 0, 0, text_arr, null, null);
+                text_width = Nutil.nvgTextBoundsJni(vg, 0, 0, text_arr, 0, text_arr.length, null);
                 txt_show_area_w = w - standard[WIDTH] * 4.5f;
                 txt_show_area_x = wordx;
                 if (text_width > txt_show_area_w) {
@@ -163,7 +167,7 @@ public class GInputField extends GObject {
                 }
                 nvgFillColor(vg, nvgRGBA(255, 255, 255, 160));
                 Nutil.nvgScissor(vg, txt_show_area_x, y, txt_show_area_w, h);
-                nvgText(vg, wordx, wordy, text_arr, null);
+                nvgTextJni(vg, wordx, wordy, text_arr, 0, text_arr.length);
                 Nutil.nvgResetScissor(vg);
             }
             Nutil.nvgRect(vg, wordx + txt_show_area_w, wordy, 10, h);
@@ -173,7 +177,7 @@ public class GInputField extends GObject {
         nvgFontFace(vg, GToolkit.getFontIcon());
         nvgFillColor(vg, nvgRGBA(255, 255, 255, 32));
         nvgTextAlign(vg, NVG_ALIGN_CENTER | NVG_ALIGN_MIDDLE);
-        nvgText(vg, x + w - h * 0.55f, y + h * 0.55f, toUtf8("" + ICON_CIRCLED_CROSS), null);
+        nvgTextJni(vg, x + w - h * 0.55f, y + h * 0.55f, reset_arr, 0, reset_arr.length);
         return true;
     }
 

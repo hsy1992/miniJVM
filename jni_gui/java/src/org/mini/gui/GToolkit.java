@@ -92,7 +92,7 @@ public class GToolkit {
 
     public static float[] getFontBoundle(long vg) {
         float[] bond = new float[4];
-        Nutil.nvgTextBounds(vg, 0, 0, FONT_GLYPH_TEMPLATE, null, bond);
+        Nutil.nvgTextBoundsJni(vg, 0, 0, FONT_GLYPH_TEMPLATE, 0, FONT_GLYPH_TEMPLATE.length, bond);
         bond[GObject.WIDTH] -= bond[GObject.LEFT];
         bond[GObject.HEIGHT] -= bond[GObject.TOP];
         bond[GObject.LEFT] = bond[GObject.TOP] = 0;

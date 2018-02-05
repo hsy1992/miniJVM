@@ -20,8 +20,8 @@ import static org.mini.glfw.utils.Nutil.nvgFontSize;
 import static org.mini.glfw.utils.Nutil.nvgRoundedRect;
 import static org.mini.glfw.utils.Nutil.nvgStroke;
 import static org.mini.glfw.utils.Nutil.nvgStrokeColor;
-import static org.mini.glfw.utils.Nutil.nvgText;
 import static org.mini.glfw.utils.Nutil.nvgTextAlign;
+import static org.mini.glfw.utils.Nutil.nvgTextJni;
 import static org.mini.gui.GObject.isInBoundle;
 import static org.mini.gui.GToolkit.nvgRGBA;
 
@@ -158,12 +158,12 @@ public class GEditBox extends GObject {
         }
         if ((getText() == null || getText().length() <= 0) && parent.getFocus() != this) {
             nvgFillColor(vg, nvgRGBA(255, 255, 255, 64));
-            nvgText(vg, dx, dy, hint_arr, null);
+            nvgTextJni(vg, dx, dy, hint_arr, 0, hint_arr.length);
         } else {
             nvgFillColor(vg, nvgRGBA(255, 255, 255, 160));
 
             float[] bond = new float[4];
-            Nutil.nvgTextBoxBounds(vg, text_area[LEFT], text_area[TOP], text_area[WIDTH], text_arr, null, bond);
+            Nutil.nvgTextBoxBoundsJni(vg, text_area[LEFT], text_area[TOP], text_area[WIDTH], text_arr, 0, text_arr.length, bond);
             bond[WIDTH] -= bond[LEFT];
             bond[HEIGHT] -= bond[TOP];
             bond[LEFT] = bond[TOP] = 0;
@@ -172,7 +172,7 @@ public class GEditBox extends GObject {
                 dy -= bond[HEIGHT] - text_area[HEIGHT];
             }
             Nutil.nvgScissor(vg, text_area[LEFT], text_area[TOP], text_area[WIDTH], text_area[HEIGHT]);
-            Nutil.nvgTextBox(vg, dx, dy, text_area[WIDTH], text_arr, null);
+            Nutil.nvgTextBoxJni(vg, dx, dy, text_area[WIDTH], text_arr, 0, text_arr.length);
             Nutil.nvgResetScissor(vg);
         }
     }
