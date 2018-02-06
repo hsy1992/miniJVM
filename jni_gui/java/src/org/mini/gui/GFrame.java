@@ -8,6 +8,7 @@ package org.mini.gui;
 import org.mini.glfw.Glfw;
 import static org.mini.glfw.utils.Gutil.toUtf8;
 import static org.mini.glfw.utils.Nutil.NVG_ALIGN_CENTER;
+import static org.mini.glfw.utils.Nutil.NVG_ALIGN_LEFT;
 import static org.mini.glfw.utils.Nutil.NVG_ALIGN_MIDDLE;
 import static org.mini.glfw.utils.Nutil.NVG_HOLE;
 import static org.mini.glfw.utils.Nutil.nvgBeginPath;
@@ -41,6 +42,9 @@ public class GFrame extends GContainer {
     String title;
     byte[] title_arr;
 
+    byte[] close_arr = {(byte) 0xe2, (byte) 0x9d, (byte) 0x8e, 0};
+    float[] close_boundle = new float[4];
+
     GFrameContents frameContents;
     int background_rgba;
 
@@ -48,6 +52,7 @@ public class GFrame extends GContainer {
     GGraphics g = new GGraphics();
     long vg;
     int frameMode;
+    boolean closable;
 
     public GFrame(String title, int left, int top, int width, int height, GFrameContents con) {
         setTitle(title);
@@ -81,6 +86,20 @@ public class GFrame extends GContainer {
         background_rgba = rgba;
     }
 
+    /**
+     * @return the closable
+     */
+    public boolean isClosable() {
+        return closable;
+    }
+
+    /**
+     * @param closable the closable to set
+     */
+    public void setClosable(boolean closable) {
+        this.closable = closable;
+    }
+
     public GForm getForm() {
         return (GForm) parent;
     }
@@ -105,7 +124,7 @@ public class GFrame extends GContainer {
         // Window
         nvgBeginPath(vg);
         nvgRoundedRect(vg, x, y, w, h, cornerRadius);
-        nvgFillColor(vg, nvgRGBA(28, 30, 34, 192));
+        nvgFillColor(vg, GToolkit.getStyle().getFrameBackground());
 //	nvgFillColor(vg, nvgRGBA(0,0,0,128));
         nvgFill(vg);
 
@@ -143,8 +162,20 @@ public class GFrame extends GContainer {
         nvgTextJni(vg, x + w / 2, y + 16 + 1, title_arr, 0, title_arr.length);
 
         nvgFontBlur(vg, 0);
-        nvgFillColor(vg, nvgRGBA(220, 220, 220, 160));
+        nvgFillColor(vg, GToolkit.getStyle().getFrameTitleColor());
         nvgTextJni(vg, x + w / 2, y + 16, title_arr, 0, title_arr.length);
+
+        if (closable) {
+            nvgFontSize(vg, GToolkit.getStyle().getIconFontSize());
+            nvgFontFace(vg, GToolkit.getFontIcon());
+            nvgFillColor(vg, nvgRGBA(192, 32, 32, 128));
+            nvgTextAlign(vg, NVG_ALIGN_LEFT | NVG_ALIGN_MIDDLE);
+            nvgTextJni(vg, x + 10, y + 16, close_arr, 0, close_arr.length);
+        }
+        close_boundle[LEFT] = x + 10;
+        close_boundle[TOP] = y + 6;
+        close_boundle[WIDTH] = 16;
+        close_boundle[HEIGHT] = 16;
 
         nvgRestore(vg);
     }
@@ -163,6 +194,9 @@ public class GFrame extends GContainer {
                     mouseDrag1 = true;
                     if (isInBoundle(title_boundle, mouseX, mouseY)) {
                         isMoveFrame = true;
+                    }
+                    if (closable && isInBoundle(close_boundle, x, y)) {
+                        parent.remove(this);
                     }
                 } else {
                     mouseDrag1 = false;

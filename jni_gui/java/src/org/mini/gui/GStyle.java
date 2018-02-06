@@ -14,4 +14,16 @@ public interface GStyle {
     float getTextFontSize();
 
     float getTitleFontSize();
+
+    float getIconFontSize();
+
+    float[] getTextFontColor();
+
+    float[] getHintFontColor();
+
+    float[] getEditBackground();
+
+    float[] getFrameBackground();
+
+    float[] getFrameTitleColor();
 }

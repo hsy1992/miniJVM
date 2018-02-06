@@ -7,7 +7,6 @@ package org.mini.gui;
 
 import static org.mini.glfw.utils.Gutil.toUtf8;
 import org.mini.glfw.utils.Nutil;
-import static org.mini.glfw.utils.Nutil.NVG_ALIGN_CENTER;
 import static org.mini.glfw.utils.Nutil.NVG_ALIGN_LEFT;
 import static org.mini.glfw.utils.Nutil.NVG_ALIGN_MIDDLE;
 import static org.mini.glfw.utils.Nutil.nvgBeginPath;
@@ -30,6 +29,7 @@ public class GCheckBox extends GObject {
     String text;
     byte[] text_arr;
     boolean checked;
+    byte[] preicon_arr = toUtf8("" + ICON_CHECK);
 
     public GCheckBox(String text, boolean checked, int left, int top, int width, int height) {
         setText(text);
@@ -40,7 +40,7 @@ public class GCheckBox extends GObject {
         boundle[HEIGHT] = height;
     }
 
-    public void setText(String text) {
+    public final void setText(String text) {
         this.text = text;
         text_arr = toUtf8(text);
     }
@@ -64,6 +64,7 @@ public class GCheckBox extends GObject {
      * @param vg
      * @return
      */
+    @Override
     public boolean update(long vg) {
         float x = getX();
         float y = getY();
@@ -72,10 +73,9 @@ public class GCheckBox extends GObject {
 
         byte[] bg;
 
-        //NVG_NOTUSED(w);
-        nvgFontSize(vg, textFontSize);
+        nvgFontSize(vg, GToolkit.getStyle().getTextFontSize());
         nvgFontFace(vg, GToolkit.getFontWord());
-        nvgFillColor(vg, nvgRGBA(255, 255, 255, 160));
+        nvgFillColor(vg, GToolkit.getStyle().getTextFontColor());
 
         nvgTextAlign(vg, NVG_ALIGN_LEFT | NVG_ALIGN_MIDDLE);
         Nutil.nvgTextJni(vg, x + 28, y + h * 0.5f, text_arr, 0, text_arr.length);
@@ -86,12 +86,12 @@ public class GCheckBox extends GObject {
         nvgFillPaint(vg, bg);
         nvgFill(vg);
 
-        nvgFontSize(vg, 40);
+        nvgFontSize(vg, GToolkit.getStyle().getIconFontSize());
         nvgFontFace(vg, GToolkit.getFontIcon());
-        nvgFillColor(vg, nvgRGBA(255, 255, 255, 128));
-        nvgTextAlign(vg, NVG_ALIGN_CENTER | NVG_ALIGN_MIDDLE);
-        byte[] barr = toUtf8("" + (checked ? ICON_CHECK : ICON_CHECK_NOT));
-        Nutil.nvgTextJni(vg, x + 9 + 2, y + h * 0.5f, barr, 0, barr.length);
+        nvgFillColor(vg, GToolkit.getStyle().getTextFontColor());
+        nvgTextAlign(vg, NVG_ALIGN_LEFT | NVG_ALIGN_MIDDLE);
+
+        Nutil.nvgTextJni(vg, x + 3, y + (int) (h * 0.5f), preicon_arr, 0, preicon_arr.length);
         return true;
     }
 

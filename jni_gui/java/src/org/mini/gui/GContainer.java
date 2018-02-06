@@ -61,8 +61,6 @@ abstract public class GContainer extends GObject {
     public void remove(GObject nko) {
         if (nko != null) {
             cache.add(new AddRemoveItem(AddRemoveItem.REMOVE, nko));
-            nko.init();
-            nko.setParent(null);
         }
     }
 
@@ -78,6 +76,7 @@ abstract public class GContainer extends GObject {
                     elements.add(ari.go);
                 } else {
                     elements.remove(ari.go);
+                    setFocus(null);
                 }
             }
             cache.clear();
@@ -161,6 +160,18 @@ abstract public class GContainer extends GObject {
             try {
                 GObject nko = it.next();
                 nko.scrollEvent(scrollX, scrollY, x, y);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    @Override
+    public void clickEvent(int button, int x, int y) {
+        for (Iterator<GObject> it = elements.iterator(); it.hasNext();) {
+            try {
+                GObject nko = it.next();
+                nko.clickEvent(button, x, y);
             } catch (Exception e) {
                 e.printStackTrace();
             }

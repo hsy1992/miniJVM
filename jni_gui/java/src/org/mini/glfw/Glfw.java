@@ -4,11 +4,22 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.mini.gl.GL;
-import org.mini.glfw.utils.Gutil;
-import org.mini.gui.GToolkit;
 
 public class Glfw {
 
+    static {
+        Glfw.loadLib();
+    }
+
+    static boolean loaded;
+
+    public static void loadLib() {
+        if (!loaded) {
+            System.setProperty("java.library.path", "../../jni_gui/cmake-build-debug/");
+            System.loadLibrary("gui");
+        }
+        loaded = true;
+    }
     /**
      * The major version number of the GLFW library. This is incremented when
      * the API is changed in non-compatible ways.
@@ -1250,8 +1261,6 @@ public class Glfw {
      */
     public static boolean glfwInit() {
 //        new SharedLibraryLoader().load("jglfw");
-        System.setProperty("java.library.path", "../../jni_gui/cmake-build-debug/");
-        System.loadLibrary("gui");
         boolean b = glfwInitJni();
         GL.init();
         return b;
@@ -1521,7 +1530,6 @@ public class Glfw {
     /*
 		glfwWindowHint(target, hint);
      */
-
     public static native long glfwCreateWindow(int width, int height, byte[] title, long monitor, long share);
 
     /*

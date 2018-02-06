@@ -139,14 +139,14 @@ public class GInputField extends GObject {
 //        nvgRoundedRect(vg, x + 0.5f, y + 0.5f, w - 1, h - 1, cornerRadius - 0.5f);
 //        nvgStrokeColor(vg, nvgRGBA(0, 0, 0, 48));
 //        nvgStroke(vg);
-        nvgFontSize(vg, h * 1.3f);
+        nvgFontSize(vg, GToolkit.getStyle().getIconFontSize());
         nvgFontFace(vg, GToolkit.getFontIcon());
-        nvgFillColor(vg, nvgRGBA(255, 255, 255, 64));
+        nvgFillColor(vg, GToolkit.getStyle().getHintFontColor());
         nvgTextAlign(vg, NVG_ALIGN_CENTER | NVG_ALIGN_MIDDLE);
 
         nvgTextJni(vg, x + h * 0.55f, y + h * 0.55f, search_arr, 0, search_arr.length);
 
-        nvgFontSize(vg, textFontSize);
+        nvgFontSize(vg, GToolkit.getStyle().getTextFontSize());
         nvgFontFace(vg, GToolkit.getFontWord());
 
         float[] standard = GToolkit.getFontBoundle(vg);
@@ -155,7 +155,7 @@ public class GInputField extends GObject {
         float wordy = y + h * 0.5f;
         if (parent.getFocus() != this && (text == null || text.length() == 0)) {
             if (hint_arr != null) {
-                nvgFillColor(vg, nvgRGBA(255, 255, 255, 64));
+                nvgFillColor(vg, GToolkit.getStyle().getHintFontColor());
                 nvgTextJni(vg, wordx, wordy, hint_arr, 0, hint_arr.length);
             }
         } else {
@@ -170,7 +170,7 @@ public class GInputField extends GObject {
                 } else {
                     caret_x = wordx + text_width;
                 }
-                nvgFillColor(vg, nvgRGBA(255, 255, 255, 160));
+                nvgFillColor(vg, GToolkit.getStyle().getTextFontColor());
                 Nutil.nvgScissor(vg, txt_show_area_x, y, txt_show_area_w, h);
                 nvgTextJni(vg, wordx, wordy, text_arr, 0, text_arr.length);
                 Nutil.nvgResetScissor(vg);
@@ -180,7 +180,7 @@ public class GInputField extends GObject {
                 GToolkit.drawCaret(vg, caret_x, wordy - 0.5f * lineh[0], 1, lineh[0]);
             }
         }
-        nvgFontSize(vg, h * 1.3f);
+        nvgFontSize(vg, GToolkit.getStyle().getIconFontSize());
         nvgFontFace(vg, GToolkit.getFontIcon());
         nvgFillColor(vg, nvgRGBA(255, 255, 255, 32));
         nvgTextAlign(vg, NVG_ALIGN_CENTER | NVG_ALIGN_MIDDLE);

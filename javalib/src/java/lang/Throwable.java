@@ -127,7 +127,8 @@ public class Throwable {
 
     public String getCodeStack() {
         StringBuilder stack = new StringBuilder();
-        stack.append(this.getClass().getName()).append(": ").append(getMessage()).append("\n");
+        String msg = getMessage();
+        stack.append(this.getClass().getName()).append(": ").append(msg == null ? "" : msg).append("\n");
         if (backtrace != null) {
             StackTraceElement sf = (StackTraceElement) backtrace;
             while (sf != null) {

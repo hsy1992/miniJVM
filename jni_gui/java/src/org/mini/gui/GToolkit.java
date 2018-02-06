@@ -8,6 +8,7 @@ package org.mini.gui;
 import java.util.Hashtable;
 import javax.mini.reflect.Array;
 import javax.mini.reflect.vm.RefNative;
+import org.mini.glfw.Glfw;
 import static org.mini.glfw.utils.Gutil.toUtf8;
 import org.mini.glfw.utils.Nutil;
 import static org.mini.glfw.utils.Nutil.nvgAddFallbackFontId;
@@ -16,13 +17,16 @@ import static org.mini.glfw.utils.Nutil.nvgCreateFont;
 import static org.mini.glfw.utils.Nutil.nvgFill;
 import static org.mini.glfw.utils.Nutil.nvgFillColor;
 import static org.mini.glfw.utils.Nutil.nvgRect;
-import static org.mini.glfw.utils.Nutil.nvgTextMetrics;
 
 /**
  *
  * @author gust
  */
 public class GToolkit {
+
+    static {
+        Glfw.loadLib();
+    }
 
     static Hashtable<Long, GForm> table = new Hashtable();
 
@@ -107,9 +111,12 @@ public class GToolkit {
     /**
      * 风格
      */
-    static GStyle defaultStyle = new GDefaultStyle();
+    static GStyle defaultStyle;
 
     public static GStyle getStyle() {
+        if(defaultStyle==null){
+            defaultStyle=new GDefaultStyle();
+        }
         return defaultStyle;
     }
 

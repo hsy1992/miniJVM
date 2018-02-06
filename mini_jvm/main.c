@@ -54,7 +54,7 @@ int main(int argc, char **argv) {
             }
         }
     } else {
-        java_debug = 1;
+        java_debug = 0;
         classpath = "../../javalib/dist/minijvm_rt.jar;../../jni_gui/java/dist/gui_lib.jar;./";
 //        main_name = "test/Gears";
 //        main_name = "test/TestGL";

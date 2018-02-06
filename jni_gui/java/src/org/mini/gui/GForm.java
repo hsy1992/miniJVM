@@ -6,6 +6,7 @@
 package org.mini.gui;
 
 import java.util.Iterator;
+import org.mini.gl.GL;
 import static org.mini.gl.GL.GL_COLOR_BUFFER_BIT;
 import static org.mini.gl.GL.GL_DEPTH_BUFFER_BIT;
 import static org.mini.gl.GL.GL_STENCIL_BUFFER_BIT;
@@ -43,6 +44,7 @@ import static org.mini.glfw.utils.Nutil.NVG_STENCIL_STROKES;
 import static org.mini.glfw.utils.Nutil.nvgBeginFrame;
 import static org.mini.glfw.utils.Nutil.nvgEndFrame;
 import static org.mini.gui.GObject.isInBoundle;
+import static org.mini.gui.GToolkit.defaultStyle;
 
 /**
  *
@@ -56,7 +58,6 @@ public class GForm extends GContainer implements Runnable {
     long win; //glfw win
     long vg; //nk contex
     GlfwCallback callback;
-    long nkfont;
     static StbFont gfont;
 
     int[] unicode_range = {
@@ -88,10 +89,6 @@ public class GForm extends GContainer implements Runnable {
 
     static public StbFont getGFont() {
         return gfont;
-    }
-
-    public long getNkFont() {
-        return nkfont;
     }
 
     @Override
@@ -205,11 +202,12 @@ public class GForm extends GContainer implements Runnable {
 
     class FormCallBack extends GlfwCallbackAdapter {
 
-        int mouseX, mouseY;
+        int mouseX, mouseY, button;
+        long mouseLastPressed;
+        int CLICK_PERIOD = 200;
 
         @Override
         public void key(long window, int key, int scancode, int action, int mods) {
-            System.out.println("key:" + key + " action:" + action);
             if (key == GLFW_KEY_ESCAPE && action == GLFW_PRESS) {
                 glfwSetWindowShouldClose(window, GLFW_TRUE);
             }
@@ -218,7 +216,6 @@ public class GForm extends GContainer implements Runnable {
 
         @Override
         public void character(long window, char character) {
-            System.out.println("event character:" + (int) character);
             GForm.this.characterEvent(character);
         }
 
@@ -244,11 +241,23 @@ public class GForm extends GContainer implements Runnable {
                         break;
                     }
                 }
-                if (focus != null) {
-                    focus.mouseButtonEvent(button, pressed, mouseX, mouseY);
-                } else {
-                    GForm.this.mouseButtonEvent(button, pressed, mouseX, mouseY);
+                //click event
+                long cur = System.currentTimeMillis();
+                if (pressed && cur - mouseLastPressed < CLICK_PERIOD && this.button == button) {
+                    if (focus != null) {
+                        focus.clickEvent(button, mouseX, mouseY);
+                    } else {
+                        GForm.this.clickEvent(button, mouseX, mouseY);
+                    }
+                } else { //press event
+                    if (focus != null) {
+                        focus.mouseButtonEvent(button, pressed, mouseX, mouseY);
+                    } else {
+                        GForm.this.mouseButtonEvent(button, pressed, mouseX, mouseY);
+                    }
                 }
+                this.button = button;
+                mouseLastPressed = cur;
             }
         }
 
@@ -267,13 +276,11 @@ public class GForm extends GContainer implements Runnable {
 
         @Override
         public boolean windowClose(long window) {
-            System.out.println("byebye");
             return true;
         }
 
         @Override
         public void windowSize(long window, int width, int height) {
-            System.out.println("resize " + width + " " + height);
         }
 
         @Override

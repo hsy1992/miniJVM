@@ -125,20 +125,22 @@ public class GTextBox extends GObject {
     }
 
     /**
-     * 返回光标当前所在的x,y坐标,及行号
+     * 返回光标当前所在的x,y坐标,及行号,数组下标
      *
      * @return
      */
     int[] getCaretPosFromArea() {
         if (area_detail != null) {
+            int i = 0;
             for (short[] detail : area_detail) {
                 if (detail != null) {
                     if (caretIndex >= detail[AREA_START] && caretIndex < detail[AREA_END]) {
                         int idx = caretIndex - detail[AREA_START] + AREA_DETAIL_ADD - 1;
                         int x = idx < detail[AREA_END] ? detail[idx] : detail[AREA_X] + +detail[AREA_W];
-                        return new int[]{x + (int) lineh[0] / 2, detail[AREA_Y] + (int) lineh[0] / 2, detail[AREA_ROW]};
+                        return new int[]{x + (int) lineh[0] / 2, detail[AREA_Y] + (int) lineh[0] / 2, detail[AREA_ROW], i};
                     }
                 }
+                i++;
             }
         }
         return null;
@@ -154,8 +156,8 @@ public class GTextBox extends GObject {
                 int caret = getCaretIndexFromArea(x, y);
                 if (caret >= 0) {
                     caretIndex = caret;
+                    resetSelect();
                     selectStart = caret;
-                    selectEnd = -1;
                     drag = true;
                 }
             } else {
@@ -167,7 +169,7 @@ public class GTextBox extends GObject {
         if (!pressed) {
             drag = false;
             if (selectEnd == -1 || selectStart == selectEnd) {
-                selectEnd = selectStart = -1;
+                resetSelect();
             }
         }
 
@@ -175,10 +177,37 @@ public class GTextBox extends GObject {
 
     @Override
     public void cursorPosEvent(int x, int y) {
-        if (drag) {
+        int rx = (int) (x - parent.getX());
+        int ry = (int) (y - parent.getY());
+        if (isInBoundle(boundle, rx, ry)) {
+            if (drag) {
+                int caret = getCaretIndexFromArea(x, y);
+                if (caret >= 0) {
+                    selectEnd = caret;
+                }
+            }
+        }
+    }
+
+    @Override
+    public void clickEvent(int button, int x, int y) {
+        int rx = (int) (x - parent.getX());
+        int ry = (int) (y - parent.getY());
+        if (isInBoundle(boundle, rx, ry)) {
             int caret = getCaretIndexFromArea(x, y);
             if (caret >= 0) {
-                selectEnd = caret;
+                int[] pos = getCaretPosFromArea();
+                //找光标附近的单词
+                if (pos != null) {
+                    int arrIndex = pos[3];
+                    short[] arr = area_detail[arrIndex];
+                    String s = textsb.substring(arr[AREA_START], arr[AREA_END]);
+                    int strIndex = caret - arr[AREA_START];
+                    int after = s.indexOf(' ', strIndex);
+                    int before = s.substring(0, strIndex).lastIndexOf(' ') + 1;
+                    selectStart = before < 0 ? arr[AREA_START] : arr[AREA_START] + before;
+                    selectEnd = after < 0 ? arr[AREA_END] : arr[AREA_START] + after;
+                }
             }
         }
     }
@@ -191,6 +220,10 @@ public class GTextBox extends GObject {
     public void characterEvent(char character) {
         if (parent.getFocus() != this) {
             return;
+        }
+        int[] selectFromTo = getSelected();
+        if (selectFromTo != null) {
+            delectSelect();
         }
         textsb.insert(caretIndex, character);
         caretIndex++;
@@ -232,6 +265,10 @@ public class GTextBox extends GObject {
                 case Glfw.GLFW_KEY_ENTER: {
                     String txt = getText();
                     if (txt != null && txt.length() > 0 && !singleMode) {
+                        int[] selectFromTo = getSelected();
+                        if (selectFromTo != null) {
+                            delectSelect();
+                        }
                         textsb.insert(caretIndex++, "\n");
                         text_arr = null;
                     }
@@ -294,6 +331,10 @@ public class GTextBox extends GObject {
         caretIndex = sarr[0];
         textsb.delete(sarr[0], sarr[1]);
         text_arr = null;
+        resetSelect();
+    }
+
+    void resetSelect() {
         selectStart = selectEnd = -1;
     }
 
@@ -325,10 +366,11 @@ public class GTextBox extends GObject {
 
     void drawTextBox(long vg, float x, float y, float w, float h) {
         drawTextBoxBase(vg, x, y, w, h);
-        nvgFontSize(vg, textFontSize);
+        nvgFontSize(vg, GToolkit.getStyle().getTextFontSize());
         nvgFontFace(vg, GToolkit.getFontWord());
         nvgTextAlign(vg, NVG_ALIGN_LEFT | NVG_ALIGN_TOP);
 
+        //字高
         nvgTextMetrics(vg, null, null, lineh);
         float lineH = lineh[0];
 
@@ -338,14 +380,13 @@ public class GTextBox extends GObject {
 
         if (singleMode) {
             dy += .5f * (text_area[HEIGHT] - lineH);
-        } else {
-            dy += .2f * lineH;
         }
+        //画文本或提示
         if ((getText() == null || getText().length() <= 0) && parent.getFocus() != this) {
-            nvgFillColor(vg, nvgRGBA(255, 255, 255, 64));
+            nvgFillColor(vg, GToolkit.getStyle().getHintFontColor());
             nvgTextJni(vg, dx, dy, hint_arr, 0, hint_arr.length);
         } else {//编辑中
-            if (text_arr == null) {
+            if (text_arr == null) {//文字被修改过
                 text_arr = toUtf8(textsb.toString());
                 showRows = Math.round(text_area[HEIGHT] / lineH);
                 area_detail = new short[showRows][];
@@ -426,7 +467,7 @@ public class GTextBox extends GObject {
                                 GToolkit.drawSelect(vg, drawSelX, dy, drawSelW, lineH);
                             }
                         }
-                        nvgFillColor(vg, nvgRGBA(255, 255, 255, 255));
+                        nvgFillColor(vg, GToolkit.getStyle().getTextFontColor());
                         nvgTextJni(vg, dx, dy, text_arr, starti, endi);
 
                         dy += lineH;
@@ -465,10 +506,10 @@ public class GTextBox extends GObject {
 //            dy += .5f * standard[HEIGHT];
 //        }
 //        if ((getText() == null || getText().length() <= 0) && parent.getFocus() != this) {
-//            nvgFillColor(vg, nvgRGBA(255, 255, 255, 64));
+//            nvgFillColor(vg, GToolkit.getStyle().getHintFontColor());
 //            nvgTextJni(vg, dx, dy, hint_arr, 0, hint_arr.length);
 //        } else {
-//            nvgFillColor(vg, nvgRGBA(255, 255, 255, 160));
+//            nvgFillColor(vg, getTextFontColor());
 //
 //            float[] bond = new float[4];
 //            Nutil.nvgTextBoxBoundsJni(vg, text_area[LEFT], text_area[TOP], text_area[WIDTH], text_arr, 0, text_arr.length, bond);
@@ -492,7 +533,7 @@ public class GTextBox extends GObject {
     public static void drawTextBoxBase(long vg, float x, float y, float w, float h) {
         byte[] bg;
         // Edit
-        bg = nvgBoxGradient(vg, x + 1, y + 1 + 1.5f, w - 2, h - 2, 3, 4, nvgRGBA(255, 255, 255, 32), nvgRGBA(32, 32, 32, 32));
+        bg = nvgBoxGradient(vg, x + 1, y + 1 + 1.5f, w - 2, h - 2, 3, 4, GToolkit.getStyle().getEditBackground(), nvgRGBA(32, 32, 32, 32));
         nvgBeginPath(vg);
         nvgRoundedRect(vg, x + 1, y + 1, w - 2, h - 2, 4 - 1);
         nvgFillPaint(vg, bg);

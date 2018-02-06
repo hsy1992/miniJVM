@@ -1,5 +1,6 @@
 package test;
 
+import java.util.Random;
 import org.mini.gl.warp.GLFrameBuffer;
 import org.mini.gl.warp.GLFrameBufferPainter;
 import org.mini.gui.GButton;
@@ -38,9 +39,7 @@ public class GuiTest {
         win = new GForm(/*"GuiTest"*/"登录 窗口", 800, 600);
         win.init();
         win.add(new GFrame("Github"/*"demo"*/, 50, 50, 300, 500, new NkFrameMain()));
-        GFrame sub1 = new GFrame(/*"子窗口"*/"颜色选择", 400, 50, 300, 400, new NkFrameSub1());
-        sub1.setVisable(false);
-        win.add(sub1);
+
         win.run();
     }
 
@@ -57,21 +56,6 @@ public class GuiTest {
 
         @Override
         public void updateContents(long vg, GFrame parent) {
-//            //canvas
-//            GGraphics g = parent.getGraphics();
-//
-//            g.setColor(0x80ff0000);
-//            g.fillRect(100, 200, 200, 100);
-//            g.setColor(0xff00ff00);
-//            g.fillArc(150, 100, 50, 40, 0, 90);
-//            g.drawLine(200, 200, 300, 400);
-//            g.drawArc(100, 100, 30, 50, 0, 270);
-//
-//            g.drawImage(img, 0, 150, 100, 100, 0);
-//            g.drawString("测试一下看看here is a text drawing test.", 100, 300, 0);
-
-//            GImage img2 = GForm.getGFont().renderToTexture("张鹏gust zhang", 10);
-//            g.drawImage(img2, 120, 150, 0);
         }
 
     }
@@ -128,6 +112,15 @@ public class GuiTest {
             sig.setBgColor(0, 96, 128, 255);
             sig.setIcon(GObject.ICON_LOGIN);
             parent.add(sig);
+            sig.setActionListener(new GActionListener() {
+                @Override
+                public void action() {
+                    Random ran = new Random();
+                    GFrame sub1 = new GFrame(/*"子窗口"*/"颜色选择", 400 + ran.nextInt(100), 50 + ran.nextInt(100), 300, 400, new NkFrameSub1());
+                    sub1.setClosable(true);
+                    win.add(sub1);
+                }
+            });
             y += 35;
             GLabel lb2 = new GLabel("Diameter", x, y, 280, 20);
             parent.add(lb2);

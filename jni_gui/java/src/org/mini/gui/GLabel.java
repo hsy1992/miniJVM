@@ -54,9 +54,9 @@ public class GLabel extends GObject {
         float h = getH();
 
         //NVG_NOTUSED(w);
-        nvgFontSize(vg, textFontSize);
+        nvgFontSize(vg,  GToolkit.getStyle().getTextFontSize());
         nvgFontFace(vg, GToolkit.getFontWord());
-        nvgFillColor(vg, nvgRGBA(255, 255, 255, 128));
+        nvgFillColor(vg, GToolkit.getStyle().getTextFontColor());
 
         nvgTextAlign(vg, NVG_ALIGN_LEFT | NVG_ALIGN_MIDDLE);
         nvgTextJni(vg, x, y + h * 0.5f, text_arr, 0,text_arr.length);

@@ -17,25 +17,10 @@ import org.mini.gui.event.GStateListener;
  */
 abstract public class GObject {
 
-    /**
-     * @return the textFontSize
-     */
-    public float getTextFontSize() {
-        return textFontSize;
-    }
-
-    /**
-     * @param textFontSize the textFontSize to set
-     */
-    public void setTextFontSize(float textFontSize) {
-        this.textFontSize = textFontSize;
-    }
-
     public static char ICON_SEARCH = (char) 0x1F50D;
     public static char ICON_CIRCLED_CROSS = 0x2716;
     public static char ICON_CHEVRON_RIGHT = 0xE75E;
     public static char ICON_CHECK = 0x2713;
-    public static char ICON_CHECK_NOT = 0x2714;
     public static char ICON_LOGIN = 0xE740;
     public static char ICON_TRASH = 0xE729;
     //
@@ -54,7 +39,6 @@ abstract public class GObject {
     GActionListener actionListener;
     GStateListener stateListener;
 
-    float textFontSize = GToolkit.getStyle().getTextFontSize();
 
     boolean visable = true;
 
@@ -73,6 +57,9 @@ abstract public class GObject {
     }
 
     public void mouseButtonEvent(int button, boolean pressed, int x, int y) {
+    }
+
+    public void clickEvent(int button, int x, int y) {
     }
 
     public void cursorPosEvent(int x, int y) {
