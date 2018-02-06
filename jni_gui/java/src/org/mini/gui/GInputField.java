@@ -37,7 +37,7 @@ public class GInputField extends GObject {
     byte[] text_arr;
     float[] reset_boundle;
     //
-    byte[] search_arr = toUtf8("" + ICON_SEARCH);
+    byte[] search_arr = {(byte) 0xe2, (byte) 0x8c, (byte) 0xa8, 0};
     byte[] reset_arr = toUtf8("" + ICON_CIRCLED_CROSS);
     //
     float[] lineh = {0};
@@ -143,13 +143,13 @@ public class GInputField extends GObject {
         nvgFontFace(vg, GToolkit.getFontIcon());
         nvgFillColor(vg, GToolkit.getStyle().getHintFontColor());
         nvgTextAlign(vg, NVG_ALIGN_CENTER | NVG_ALIGN_MIDDLE);
+        float[] standard = GToolkit.getFontBoundle(vg);
 
-        nvgTextJni(vg, x + h * 0.55f, y + h * 0.55f, search_arr, 0, search_arr.length);
+        nvgTextJni(vg, x + standard[WIDTH] * 1.5f, y + h * 0.55f, search_arr, 0, search_arr.length);
 
         nvgFontSize(vg, GToolkit.getStyle().getTextFontSize());
         nvgFontFace(vg, GToolkit.getFontWord());
 
-        float[] standard = GToolkit.getFontBoundle(vg);
         nvgTextAlign(vg, NVG_ALIGN_LEFT | NVG_ALIGN_MIDDLE);
         float wordx = x + standard[WIDTH] * 2;
         float wordy = y + h * 0.5f;
