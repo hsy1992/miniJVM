@@ -13,6 +13,7 @@ import org.mini.gui.GFrameContents;
 import org.mini.gui.GImage;
 import org.mini.gui.GInputField;
 import org.mini.gui.GLabel;
+import org.mini.gui.GList;
 import org.mini.gui.GObject;
 import org.mini.gui.GSlider;
 import org.mini.gui.event.GActionListener;
@@ -50,8 +51,11 @@ public class GuiTest {
         @Override
         public void init(GFrame parent) {
             img = new GImage("image4.png");
-            GColorSelector cs = new GColorSelector(0, 10, 30, 200, 200);
+            GColorSelector cs = new GColorSelector(0, 50, 30, 200, 200);
             parent.add(cs);
+            
+            GList list=new GList("Effect", 10, 250, 280, 30);
+            parent.add(list);
         }
 
         @Override

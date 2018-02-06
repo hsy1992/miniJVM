@@ -486,49 +486,6 @@ public class GTextBox extends GObject {
 
         }
     }
-//
-//    void drawTextBox1(long vg, float x, float y, float w, float h) {
-//
-//        drawTextBoxBase(vg, x, y, w, h);
-//
-//        nvgFontSize(vg, textFontSize);
-//        nvgFontFace(vg, GToolkit.getFontWord());
-//
-//        nvgTextAlign(vg, NVG_ALIGN_LEFT | NVG_ALIGN_MIDDLE);
-//        float[] standard = GToolkit.getFontBoundle(vg);
-//        float[] text_area = new float[]{x + 5f, y + 5f, w - 10f, h - 10f};
-//        float dx = text_area[LEFT];
-//        float dy = text_area[TOP];
-//
-//        if (singleMode) {
-//            dy += .5f * text_area[HEIGHT];
-//        } else {
-//            dy += .5f * standard[HEIGHT];
-//        }
-//        if ((getText() == null || getText().length() <= 0) && parent.getFocus() != this) {
-//            nvgFillColor(vg, GToolkit.getStyle().getHintFontColor());
-//            nvgTextJni(vg, dx, dy, hint_arr, 0, hint_arr.length);
-//        } else {
-//            nvgFillColor(vg, getTextFontColor());
-//
-//            float[] bond = new float[4];
-//            Nutil.nvgTextBoxBoundsJni(vg, text_area[LEFT], text_area[TOP], text_area[WIDTH], text_arr, 0, text_arr.length, bond);
-//            bond[WIDTH] -= bond[LEFT];
-//            bond[HEIGHT] -= bond[TOP];
-//            bond[LEFT] = bond[TOP] = 0;
-//
-//            if (bond[HEIGHT] > text_area[HEIGHT]) {
-//                dy -= bond[HEIGHT] - text_area[HEIGHT];
-//            }
-//            Nutil.nvgScissor(vg, text_area[LEFT], text_area[TOP], text_area[WIDTH], text_area[HEIGHT]);
-//            Nutil.nvgTextBoxJni(vg, dx, dy, text_area[WIDTH], text_arr, 0, text_arr.length);
-//            Nutil.nvgResetScissor(vg);
-//            if (parent.getFocus() == this) {
-//                nvgTextMetrics(vg, null, null, lineh);
-//                GToolkit.drawCaret(vg, dx, dy - .5f * lineh[0], 1, lineh[0]);
-//            }
-//        }
-//    }
 
     public static void drawTextBoxBase(long vg, float x, float y, float w, float h) {
         byte[] bg;
