@@ -3611,22 +3611,22 @@ s32 execute_method(MethodInfo *method, Runtime *pruntime, Class *clazz) {
                     push_ref(stack, ref);
 
                     Instance *ins = (Instance *) ref;
-//#if _JVM_DEBUG_BYTECODE_DETAIL > 3
+#if _JVM_DEBUG_BYTECODE_DETAIL > 3
                     s32 lineNum = getLineNumByIndex(ca, runtime->pc - ca->code);
                     printf("   at %s.%s(%s.java:%d)\n",
                            utf8_cstr(clazz->name), utf8_cstr(method->name),
                            utf8_cstr(clazz->name),
                            lineNum
                     );
-//#endif
+#endif
                     ExceptionTable *et = _find_exception_handler(runtime, ins, ca, (s32) (runtime->pc - ca->code), ref);
                     if (et == NULL) {
                         ret = RUNTIME_STATUS_EXCEPTION;
                         break;
                     } else {
-//#if _JVM_DEBUG_BYTECODE_DETAIL > 3
+#if _JVM_DEBUG_BYTECODE_DETAIL > 3
                         jvm_printf("Exception : %s\n", utf8_cstr(ins->mb.clazz->name));
-//#endif
+#endif
                         runtime->pc = (ca->code + et->handler_pc);
                         i_r = 0;
                         ret = RUNTIME_STATUS_NORMAL;
@@ -3687,9 +3687,9 @@ s32 execute_method(MethodInfo *method, Runtime *pruntime, Class *clazz) {
             ret = method->native_func(runtime, clazz);
             if (method_sync)_synchronized_unlock_method(method, runtime);
         }
-        if (utf8_equals_c(method->name, "nvgTextGlyphPositionsJni")) {
-            int debug = 1;
-        }
+//        if (utf8_equals_c(method->name, "nvgTextGlyphPositionsJni")) {
+//            int debug = 1;
+//        }
         localvar_dispose(runtime);
 #if _JVM_DEBUG_BYTECODE_DETAIL > 3
         if (filterClassName(clazz->name)) {

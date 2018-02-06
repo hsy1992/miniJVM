@@ -136,4 +136,11 @@ public class GToolkit {
             nvgFill(vg);
         }
     }
+
+    public static void drawSelect(long vg, float x, float y, float w, float h) {
+        nvgBeginPath(vg);
+        nvgFillColor(vg, nvgRGBA(128, 128, 255, 64));
+        nvgRect(vg, x, y, w, h);
+        nvgFill(vg);
+    }
 }

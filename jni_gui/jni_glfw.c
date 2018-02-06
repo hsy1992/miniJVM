@@ -112,6 +112,20 @@ void _button_callback_mouse(GLFWwindow *window, int button, int action, int mods
     }
 }
 
+void _callback_scroll(GLFWwindow *window, double scrollX, double scrollY) {
+    if (refers._scroll_callback) {
+        JniEnv *env = refers.env;
+        env->push_ref(refers.runtime->stack, refers.glfw_callback);
+        env->push_long(refers.runtime->stack, (s64) (intptr_t) window);
+        env->push_double(refers.runtime->stack, scrollX);
+        env->push_double(refers.runtime->stack, scrollY);
+        s32 ret = env->execute_method(refers._scroll_callback, refers.runtime, refers.glfw_callback->mb.clazz);
+        if (ret) {
+            env->print_exception(refers.runtime);
+        }
+    }
+}
+
 void _callback_cursor_pos(GLFWwindow *window, f64 x, f64 y) {
     if (refers._callback_cursor_pos) {
         JniEnv *env = refers.env;
@@ -689,6 +703,7 @@ int org_mini_glfw_Glfw_glfwSetCallback(Runtime *runtime, Class *clazz) {
     glfwSetCharCallback(window, _callback_character);
     glfwSetDropCallback(window, _callback_drop);
     glfwSetMouseButtonCallback(window, _button_callback_mouse);
+    glfwSetScrollCallback(window,_callback_scroll);
     glfwSetCursorPosCallback(window, _callback_cursor_pos);
     glfwSetCursorEnterCallback(window, _callback_cursor_enter);
     glfwSetWindowCloseCallback(window, _callback_window_close);
@@ -747,6 +762,15 @@ int org_mini_glfw_Glfw_glfwSetCallback(Runtime *runtime, Class *clazz) {
         Utf8String *name = env->utf8_create_part_c(name_s, 0, strlen(name_s));
         Utf8String *type = env->utf8_create_part_c(type_s, 0, strlen(type_s));
         refers._button_callback_mouse =
+                env->find_methodInfo_by_name(refers.glfw_callback->mb.clazz->name, name, type);
+        env->utf8_destory(name);
+        env->utf8_destory(type);
+    }{
+        name_s = "scroll";
+        type_s = "(JDD)V";
+        Utf8String *name = env->utf8_create_part_c(name_s, 0, strlen(name_s));
+        Utf8String *type = env->utf8_create_part_c(type_s, 0, strlen(type_s));
+        refers._scroll_callback =
                 env->find_methodInfo_by_name(refers.glfw_callback->mb.clazz->name, name, type);
         env->utf8_destory(name);
         env->utf8_destory(type);

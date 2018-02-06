@@ -39,6 +39,7 @@ public class GuiTest {
         win.init();
         win.add(new GFrame("Github"/*"demo"*/, 50, 50, 300, 500, new NkFrameMain()));
         GFrame sub1 = new GFrame(/*"子窗口"*/"颜色选择", 400, 50, 300, 400, new NkFrameSub1());
+        sub1.setVisable(false);
         win.add(sub1);
         win.run();
     }

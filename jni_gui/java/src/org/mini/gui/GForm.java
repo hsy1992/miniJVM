@@ -94,7 +94,6 @@ public class GForm extends GContainer implements Runnable {
         return nkfont;
     }
 
-
     @Override
     public void init() {
 
@@ -216,10 +215,10 @@ public class GForm extends GContainer implements Runnable {
             }
             GForm.this.keyEvent(key, scancode, action, mods);
         }
-        
+
         @Override
-        public void character(long window, char character){
-            System.out.println("event character:"+(int)character);
+        public void character(long window, char character) {
+            System.out.println("event character:" + (int) character);
             GForm.this.characterEvent(character);
         }
 
@@ -255,7 +254,7 @@ public class GForm extends GContainer implements Runnable {
 
         @Override
         public void scroll(long window, double scrollX, double scrollY) {
-            GForm.this.scrollEvent(scrollX, scrollY);
+            GForm.this.scrollEvent(scrollX, scrollY, mouseX, mouseY);
         }
 
         @Override

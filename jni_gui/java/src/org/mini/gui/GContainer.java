@@ -35,8 +35,7 @@ abstract public class GContainer extends GObject {
             this.go = go;
         }
     }
-    
-    
+
     /**
      * @return the focus
      */
@@ -86,8 +85,10 @@ abstract public class GContainer extends GObject {
         GObject[] arr = elements.toArray(new GObject[elements.size()]);
         for (int i = arr.length - 1; i >= 0; i--) {
             GObject nko = arr[i];
-            if (!nko.update(ctx)) {
-                elements.remove(nko);
+            if (nko.getVisable()) {
+                if (!nko.update(ctx)) {
+                    elements.remove(nko);
+                }
             }
         }
 
@@ -155,11 +156,11 @@ abstract public class GContainer extends GObject {
     }
 
     @Override
-    public void scrollEvent(double scrollX, double scrollY) {
+    public void scrollEvent(double scrollX, double scrollY, int x, int y) {
         for (Iterator<GObject> it = elements.iterator(); it.hasNext();) {
             try {
                 GObject nko = it.next();
-                nko.scrollEvent(scrollX, scrollY);
+                nko.scrollEvent(scrollX, scrollY, x, y);
             } catch (Exception e) {
                 e.printStackTrace();
             }

@@ -207,7 +207,8 @@ public class GFrame extends GContainer {
         super.cursorPosEvent(x, y);
     }
 
-    public void scrollEvent(double scrollX, double scrollY) {
-        super.scrollEvent(scrollX, scrollY);
+    @Override
+    public void scrollEvent(double scrollX, double scrollY, int x, int y) {
+        super.scrollEvent(scrollX, scrollY, x, y);
     }
 }

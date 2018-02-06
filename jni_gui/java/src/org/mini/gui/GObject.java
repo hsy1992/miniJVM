@@ -56,6 +56,8 @@ abstract public class GObject {
 
     float textFontSize = GToolkit.getStyle().getTextFontSize();
 
+    boolean visable = true;
+
     public void init() {
 
     }
@@ -79,7 +81,7 @@ abstract public class GObject {
     public void dropEvent(int count, String[] paths) {
     }
 
-    public void scrollEvent(double scrollX, double scrollY) {
+    public void scrollEvent(double scrollX, double scrollY, int x, int y) {
     }
 
     public static boolean isInBoundle(float[] bound, float x, float y) {
@@ -175,5 +177,13 @@ abstract public class GObject {
      */
     public void setStateListener(GStateListener stateListener) {
         this.stateListener = stateListener;
+    }
+
+    public void setVisable(boolean v) {
+        visable = v;
+    }
+
+    public boolean getVisable() {
+        return visable;
     }
 }

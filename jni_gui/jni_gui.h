@@ -41,6 +41,7 @@ struct _GlobeRefer {
     MethodInfo *_callback_character;
     MethodInfo *_callback_drop;
     MethodInfo *_button_callback_mouse;
+    MethodInfo *_scroll_callback;
     MethodInfo *_callback_cursor_pos;
     MethodInfo *_callback_cursor_enter;
     MethodInfo *_callback_window_close;

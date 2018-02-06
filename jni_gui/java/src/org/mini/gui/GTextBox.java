@@ -5,13 +5,10 @@
  */
 package org.mini.gui;
 
-import java.util.ArrayList;
-import java.util.List;
 import org.mini.glfw.Glfw;
 import static org.mini.glfw.utils.Gutil.toUtf8;
 import org.mini.glfw.utils.Nutil;
 import static org.mini.glfw.utils.Nutil.NVG_ALIGN_LEFT;
-import static org.mini.glfw.utils.Nutil.NVG_ALIGN_MIDDLE;
 import static org.mini.glfw.utils.Nutil.NVG_ALIGN_TOP;
 import static org.mini.glfw.utils.Nutil.nvgBeginPath;
 import static org.mini.glfw.utils.Nutil.nvgBoxGradient;
@@ -51,10 +48,14 @@ public class GTextBox extends GObject {
     //
     float[] lineh = {0};
     int caretIndex;//光标在字符串中的位置
+    boolean drag = false;
+    int selectStart = -1;//选取开始
+    int selectEnd = -1;//选取结束
     int totalRows;//字符串总行数，动态计算出
     int showRows;//可显示行数
     int topShowRow;//显示区域第一行的行号
     short[][] area_detail;
+    //
     static final int AREA_DETAIL_ADD = 7;//额外增加slot数量
     static final int AREA_START = 4;//字符串起点位置
     static final int AREA_END = 5;//字符终点位置
@@ -153,6 +154,9 @@ public class GTextBox extends GObject {
                 int caret = getCaretIndexFromArea(x, y);
                 if (caret >= 0) {
                     caretIndex = caret;
+                    selectStart = caret;
+                    selectEnd = -1;
+                    drag = true;
                 }
             } else {
                 if (actionListener != null) {
@@ -160,7 +164,23 @@ public class GTextBox extends GObject {
                 }
             }
         }
+        if (!pressed) {
+            drag = false;
+            if (selectEnd == -1 || selectStart == selectEnd) {
+                selectEnd = selectStart = -1;
+            }
+        }
 
+    }
+
+    @Override
+    public void cursorPosEvent(int x, int y) {
+        if (drag) {
+            int caret = getCaretIndexFromArea(x, y);
+            if (caret >= 0) {
+                selectEnd = caret;
+            }
+        }
     }
 
     /**
@@ -186,16 +206,26 @@ public class GTextBox extends GObject {
             switch (key) {
                 case Glfw.GLFW_KEY_BACKSPACE: {
                     if (textsb.length() > 0 && caretIndex > 0) {
-                        textsb.delete(caretIndex - 1, caretIndex);
-                        caretIndex--;
-                        text_arr = null;
+                        int[] selectFromTo = getSelected();
+                        if (selectFromTo != null) {
+                            delectSelect();
+                        } else {
+                            textsb.delete(caretIndex - 1, caretIndex);
+                            caretIndex--;
+                            text_arr = null;
+                        }
                     }
                     break;
                 }
                 case Glfw.GLFW_KEY_DELETE: {
                     if (textsb.length() > caretIndex) {
-                        textsb.delete(caretIndex, caretIndex + 1);
-                        text_arr = null;
+                        int[] selectFromTo = getSelected();
+                        if (selectFromTo != null) {
+                            delectSelect();
+                        } else {
+                            textsb.delete(caretIndex, caretIndex + 1);
+                            text_arr = null;
+                        }
                     }
                     break;
                 }
@@ -250,11 +280,39 @@ public class GTextBox extends GObject {
         }
     }
 
+    @Override
+    public void scrollEvent(double scrollX, double scrollY, int x, int y) {
+        int rx = (int) (x - parent.getX());
+        int ry = (int) (y - parent.getY());
+        if (isInBoundle(boundle, rx, ry)) {
+            topShowRow -= scrollY;
+        }
+    }
+
+    void delectSelect() {
+        int[] sarr = getSelected();
+        caretIndex = sarr[0];
+        textsb.delete(sarr[0], sarr[1]);
+        text_arr = null;
+        selectStart = selectEnd = -1;
+    }
+
+    int[] getSelected() {
+        int select1 = 0, select2 = 0;
+        if (selectStart != -1 && selectEnd != -1) {
+            select1 = selectStart > selectEnd ? selectEnd : selectStart;
+            select2 = selectStart < selectEnd ? selectEnd : selectStart;
+            return new int[]{select1, select2};
+        }
+        return null;
+    }
+
     /**
      *
      * @param vg
      * @return
      */
+    @Override
     public boolean update(long vg) {
         float x = getX();
         float y = getY();
@@ -300,7 +358,7 @@ public class GTextBox extends GObject {
             long rowDesc = nvgCreateNVGtextRow(rowCount);
             long glyphs = nvgCreateNVGglyphPosition(posCount);
             int nrows, i, nglyphs, j, lnum = 0;
-            float caretx = 0, px;
+            float caretx = 0;
 
             nvgSave(vg);
             Nutil.nvgScissor(vg, text_area[LEFT], text_area[TOP], text_area[WIDTH], text_area[HEIGHT]);
@@ -309,6 +367,8 @@ public class GTextBox extends GObject {
             } else if (topShowRow > totalRows - showRows) {
                 topShowRow = totalRows - showRows;
             }
+            int[] selectFromTo = getSelected();
+
             // The text break API can be used to fill a large buffer of rows,
             // or to iterate over the text just few lines (or just one) at a time.
             // The "next" variable of the last returned item tells where to continue.
@@ -319,19 +379,11 @@ public class GTextBox extends GObject {
                 for (i = 0; i < nrows; i++) {
                     if (lnum >= topShowRow && lnum < topShowRow + showRows) {
                         float row_width = Nutil.nvgNVGtextRow_width(rowDesc, i);
-//                    nvgBeginPath(vg);
-//                    nvgFillColor(vg, nvgRGBA(255, 255, 255, hit ? 64 : 16));
-//                    nvgRect(vg, dx, dy, row_width, lineH);
-//                    nvgFill(vg);
 
                         int starti = (int) (Nutil.nvgNVGtextRow_start(rowDesc, i) - ptr);
                         int endi = (int) (Nutil.nvgNVGtextRow_end(rowDesc, i) - ptr);
 
-                        nvgFillColor(vg, nvgRGBA(255, 255, 255, 255));
-                        nvgTextJni(vg, dx, dy, text_arr, starti, endi);
-
                         caretx = dx;
-                        px = dx;
                         nglyphs = nvgTextGlyphPositionsJni(vg, dx, dy, text_arr, starti, endi, glyphs, posCount);
                         int curRow = lnum - topShowRow;
                         if (area_detail.length < curRow) {
@@ -349,15 +401,34 @@ public class GTextBox extends GObject {
                             float x0 = nvgNVGglyphPosition_x(glyphs, j);
                             area_detail[curRow][AREA_DETAIL_ADD + j] = (short) x0;
                             float x1 = (j + 1 < nglyphs) ? nvgNVGglyphPosition_x(glyphs, j + 1) : dx + row_width;
-                            float gxx = x0 * 0.3f + x1 * 0.7f;
+                            //float gxx = x0 * 0.3f + x1 * 0.7f;
                             if (caretIndex == starti + j) {
                                 caretx = x0;
                                 if (parent.getFocus() == this) {
                                     GToolkit.drawCaret(vg, caretx, dy, 1, lineH);
                                 }
                             }
-                            px = gxx;
                         }
+
+                        if (selectFromTo != null) {
+                            float drawSelX = dx, drawSelW = row_width;
+                            if (selectFromTo[0] < endi && selectFromTo[0] > starti) {
+                                int pos = selectFromTo[0] - area_detail[curRow][AREA_START];
+                                drawSelX = nvgNVGglyphPosition_x(glyphs, pos);
+                            }
+                            if (selectFromTo[1] > starti && selectFromTo[1] < endi) {
+                                int pos = selectFromTo[1] - area_detail[curRow][AREA_START];
+                                drawSelW = nvgNVGglyphPosition_x(glyphs, pos) - drawSelX;
+                            }
+                            if (endi < selectFromTo[0] || starti > selectFromTo[1]) {
+
+                            } else {
+                                GToolkit.drawSelect(vg, drawSelX, dy, drawSelW, lineH);
+                            }
+                        }
+                        nvgFillColor(vg, nvgRGBA(255, 255, 255, 255));
+                        nvgTextJni(vg, dx, dy, text_arr, starti, endi);
+
                         dy += lineH;
                     }
                     lnum++;
