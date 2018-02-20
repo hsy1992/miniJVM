@@ -289,7 +289,7 @@ public class GL_h_2_java {
                 br.close();
                 bw.close();
             } catch (IOException ex) {
-                Logger.getLogger(NK_h_2_java.class.getName()).log(Level.SEVERE, null, ex);
+                ex.printStackTrace();
             }
         }
         System.out.println("success.");

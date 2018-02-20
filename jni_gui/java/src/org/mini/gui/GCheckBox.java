@@ -47,7 +47,9 @@ public class GCheckBox extends GObject {
 
     @Override
     public void mouseButtonEvent(int button, boolean pressed, int x, int y) {
-        if (isInBoundle(boundle, x - parent.getX(), y - parent.getY())) {
+        int rx = (int) (x - parent.getX());
+        int ry = (int) (y - parent.getY());
+        if (isInBoundle(boundle, rx, ry)) {
             if (pressed) {
             } else {
                 checked = !checked;
@@ -78,7 +80,7 @@ public class GCheckBox extends GObject {
         nvgFillColor(vg, GToolkit.getStyle().getTextFontColor());
 
         nvgTextAlign(vg, NVG_ALIGN_LEFT | NVG_ALIGN_MIDDLE);
-        Nutil.nvgTextJni(vg, x + 28, y + h * 0.5f, text_arr, 0, text_arr.length);
+        Nutil.nvgTextJni(vg, x + 25, y + h * 0.5f, text_arr, 0, text_arr.length);
 
         bg = nvgBoxGradient(vg, x + 1, y + (int) (h * 0.5f) - 9 + 1, 18, 18, 3, 3, nvgRGBA(0, 0, 0, 32), nvgRGBA(0, 0, 0, 92));
         nvgBeginPath(vg);
@@ -91,7 +93,9 @@ public class GCheckBox extends GObject {
         nvgFillColor(vg, GToolkit.getStyle().getTextFontColor());
         nvgTextAlign(vg, NVG_ALIGN_LEFT | NVG_ALIGN_MIDDLE);
 
-        Nutil.nvgTextJni(vg, x + 3, y + (int) (h * 0.5f), preicon_arr, 0, preicon_arr.length);
+        if (checked) {
+            Nutil.nvgTextJni(vg, x + 3, y + (int) (h * 0.5f), preicon_arr, 0, preicon_arr.length);
+        }
         return true;
     }
 

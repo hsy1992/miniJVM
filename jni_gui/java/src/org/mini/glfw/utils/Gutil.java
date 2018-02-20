@@ -229,7 +229,7 @@ public class Gutil {
     public static int image_load(String filename, int[] w_h_d) {
         int[] x = {0}, y = {0}, n = {0};
         int[] tex = {0};
-        byte[] b = toUtf8(filename + "\000");
+        byte[] b = toUtf8(filename);
         long data = stbi_load(b, x, y, n, 0);
         if (data == 0) {
             System.out.println("ERROR: failed to load image: " + filename);

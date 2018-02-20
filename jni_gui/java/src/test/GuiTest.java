@@ -3,6 +3,8 @@ package test;
 import java.util.Random;
 import org.mini.gl.warp.GLFrameBuffer;
 import org.mini.gl.warp.GLFrameBufferPainter;
+import static org.mini.glfw.utils.Gutil.toUtf8;
+import org.mini.glfw.utils.Nutil;
 import org.mini.gui.GButton;
 import org.mini.gui.GCheckBox;
 import org.mini.gui.GColorSelector;
@@ -47,21 +49,28 @@ public class GuiTest {
     class NkFrameSub1 implements GFrameContents {
 
         GImage img;
+        GList list;
 
         @Override
         public void init(GFrame parent) {
-            img = new GImage("image4.png");
+            img = new GImage("./image4.png");
             GColorSelector cs = new GColorSelector(0, 50, 30, 200, 200);
             parent.add(cs);
-            
-            GList list=new GList("Effect", 10, 250, 280, 30);
+
+            list = new GList("Effect", 10, 250, 280, 30);
             parent.add(list);
+
         }
 
         @Override
         public void updateContents(long vg, GFrame parent) {
-        }
+            if (list.getImages() == null) {
+                int i = Nutil.nvgCreateImage(vg, toUtf8("./image4.png"), 0);
+                list.setItems(new int[]{i, i, i, i, i, i, i, i, i, i},
+                        new String[]{"A", "A", "A", "A", "A", "A", "A", "A", "A", "A",});
 
+            }
+        }
     }
 
     class NkFrameMain implements GFrameContents {
@@ -130,7 +139,7 @@ public class GuiTest {
             parent.add(lb2);
             y += 25;
             //drawEditBoxNum(vg, "123.00", "px", x + 180, y, 100, 28);
-            GSlider sli = new GSlider(0.4f, x, y, 170, 28);
+            GSlider sli = new GSlider(0.4f, GSlider.HORIZONTAL, x, y, 170, 28);
             parent.add(sli);
             y += 35;
             GButton bt1 = new GButton("Delete删除", x, y, 160, 28);

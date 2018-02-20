@@ -380,13 +380,13 @@ public class GL_java_2_c {
             bw.write(FUNC_TABLE_FOOTER);
             bw.write(TOOL_FUNC);
         } catch (Exception ex) {
-            Logger.getLogger(NK_java_2_c.class.getName()).log(Level.SEVERE, null, ex);
+            ex.printStackTrace();
         } finally {
             try {
                 br.close();
                 bw.close();
             } catch (IOException ex) {
-                Logger.getLogger(NK_java_2_c.class.getName()).log(Level.SEVERE, null, ex);
+                ex.printStackTrace();
             }
         }
         System.out.println("success.");
