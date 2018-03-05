@@ -27,7 +27,7 @@ import static org.mini.gui.GToolkit.nvgRGBA;
  *
  * @author gust
  */
-public class GSlider extends GObject {
+public class GScrollBar extends GObject {
 
     String text;
     float pos;
@@ -35,13 +35,27 @@ public class GSlider extends GObject {
     public static final int HORIZONTAL = 0, VERTICAL = 1;
     int mode = HORIZONTAL;
 
-    public GSlider(float pos, int mode, int left, int top, int width, int height) {
+    public GScrollBar(float pos, int mode, int left, int top, int width, int height) {
         this.pos = pos;
         this.mode = mode;
         boundle[LEFT] = left;
         boundle[TOP] = top;
         boundle[WIDTH] = width;
         boundle[HEIGHT] = height;
+    }
+
+    public float getPos() {
+        return pos;
+    }
+
+    public void setPos(float p) {
+        pos = p;
+        if (pos > 1) {
+            pos = 1.f;
+        }
+        if (pos < 0) {
+            pos = 0.f;
+        }
     }
 
     @Override

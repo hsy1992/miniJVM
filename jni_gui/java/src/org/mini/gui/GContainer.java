@@ -68,6 +68,7 @@ abstract public class GContainer extends GObject {
         return elements.contains(son);
     }
 
+
     @Override
     public boolean update(long ctx) {
         synchronized (cache) {

@@ -45,39 +45,30 @@ import static org.mini.gui.GToolkit.nvgRGBA;
  */
 public class GList extends GContainer {
 
-    String text;
-    byte[] text_arr;
     char preicon;
     byte[] preicon_arr = toUtf8("" + ICON_CHEVRON_RIGHT);
     int[] images;
     String[] labels;
-    float t;
+    int curIndex;
     boolean pulldown;
     public static final int MODE_GRID = 1, MODE_LIST = 0;
     int mode = MODE_LIST;
+    GScrollBar scrollBar;
 
     float[] popBoundle;
-    float grid_image_size = 60;
-    float grid_item_heigh = 80;
-    float grid_rows = 3;
-    float grid_cols = 3;
+    float[] normalBoundle;
     float list_image_size = 28;
-    float list_item_heigh = 35;
+    float list_item_heigh = 40;
     float list_rows = 5;
     float list_cols = 1;
     float pad = 10;
 
-    public GList(String text, int left, int top, int width, int height) {
-        setText(text);
+    public GList(int left, int top, int width, int height) {
         boundle[LEFT] = left;
         boundle[TOP] = top;
         boundle[WIDTH] = width;
         boundle[HEIGHT] = height;
-    }
-
-    public final void setText(String text) {
-        this.text = text;
-        text_arr = toUtf8(text);
+        normalBoundle = boundle;
     }
 
     public void setIcon(char icon) {
@@ -100,26 +91,56 @@ public class GList extends GContainer {
         return labels;
     }
 
+    public int getSelectedIndex() {
+        return curIndex;
+    }
+
+    public void setSelectedIndex(int i) {
+        curIndex = i;
+    }
+
     @Override
     public void mouseButtonEvent(int button, boolean pressed, int x, int y) {
         int rx = (int) (x - parent.getX());
         int ry = (int) (y - parent.getY());
         if (isInBoundle(boundle, rx, ry)) {
             if (pressed) {
-                pulldown = !pulldown;
-                parent.setFocus(this);
+                boolean inScroll = false;
+                if (scrollBar != null) {
+                    inScroll = isInBoundle(scrollBar.boundle, x - getX(), y - getY());
+                }
+                if (!inScroll) {
+                    if (pulldown) {
+                        float stackh = (labels.length / list_cols) * (list_item_heigh) + pad;
+                        float pos = scrollBar.getPos() * (stackh - popBoundle[HEIGHT]) + (y - getY());
+                        curIndex = (int) (pos / stackh * labels.length);
+                    }
+                    pulldown = !pulldown;
+                    parent.setFocus(this);
+                }
             } else {
                 if (actionListener != null) {
                     stateListener.stateChange();
                 }
             }
-
         }
-//        if (slider != null && isInBoundle(slider.boundle, rx, ry)) {
-//            slider.mouseButtonEvent(button, pressed, x, y);
-//            System.out.println("in slider");
-//        }
         super.mouseButtonEvent(button, pressed, x, y);
+    }
+
+    @Override
+    public void scrollEvent(double scrollX, double scrollY, int x, int y) {
+        int rx = (int) (x - parent.getX());
+        int ry = (int) (y - parent.getY());
+        if (isInBoundle(boundle, rx, ry)) {
+//            curIndex += (scrollY > 0 ? -1 : 1);
+//            if (curIndex < 0) {
+//                curIndex = 0;
+//            }
+//            if (curIndex >= labels.length) {
+//                curIndex = labels.length - 1;
+//            }
+            scrollBar.setPos(scrollBar.getPos() + 1.f / labels.length * (scrollY > 0 ? -1.f : 1.f));
+        }
     }
 
     /**
@@ -128,60 +149,73 @@ public class GList extends GContainer {
      * @return
      */
     public boolean update(long vg) {
-        float x = getX();
-        float y = getY();
-        float w = getW();
-        float h = getH();
+        nvgFontSize(vg, GToolkit.getStyle().getTextFontSize());
 
-        drawDropDown(vg, x, y, w, h);
-//        int[] images = {0, 0, 0, 0, 0, 0};
-        if (pulldown) {
-            if (popBoundle == null && labels != null) {
-                popBoundle = new float[4];
-                float dropWindowH = labels.length * list_item_heigh;
+        nvgFontFace(vg, GToolkit.getFontWord());
+        nvgTextAlign(vg, NVG_ALIGN_LEFT | NVG_ALIGN_MIDDLE);
 
-                float dy = 0;
-                if (y > GToolkit.getForm(vg).getH() / 2) {//画在上方
-                    dy = -pad - dropWindowH;
-                    if (y + dy < 0) {
-                        dy = -y;
-                        dropWindowH = y - pad;
-                    }
-                } else {
-                    dy = h + pad;
-                    if (dy + dropWindowH > getFrame().GToolkit.getForm(vg).getH()) {
-                        dropWindowH = GToolkit.getForm(vg).getH() - y-dy;
-                    }
-                }
-                popBoundle[LEFT] = 0;
-                popBoundle[TOP] = dy;
-                popBoundle[WIDTH] = w;
-                popBoundle[HEIGHT] = dropWindowH;
+        if (pulldown && labels != null) {
+            popBoundle = new float[4];
 
-                GSlider slider = new GSlider(0, GSlider.VERTICAL, (int) (w - 22 + 1), (int) (dy - y + 4 + 1), 20, (int) (dropWindowH - 8));
-                slider.setParent(this);
-                add(slider);
+            float popH = labels.length * list_item_heigh;
+            if (labels.length > list_rows) {
+                popH = list_rows * list_item_heigh;
             }
-            if (mode == MODE_GRID) {
-                drawGrid(vg, x + popBoundle[LEFT], y + popBoundle[TOP], popBoundle[WIDTH], popBoundle[HEIGHT], images, t += 0.03);
+            float popY = 0;
+            if (popH > parent.getH()) {// small than frame height
+                popH = parent.getH();
+                popY = parent.getY();
             } else {
-                drawList(vg, x + popBoundle[LEFT], y + popBoundle[TOP], popBoundle[WIDTH], popBoundle[HEIGHT], images, labels, t += 0.03);
+                if (normalBoundle[TOP] + popH < parent.getH()) {
+                    popY = normalBoundle[TOP];
+                } else {
+                    popY = parent.getH() - popH;
+                }
             }
+
+            popBoundle[LEFT] = normalBoundle[LEFT];
+            popBoundle[TOP] = popY;
+            popBoundle[WIDTH] = normalBoundle[WIDTH];
+            popBoundle[HEIGHT] = popH;
+
+            boundle = popBoundle;
+            if (scrollBar == null) {
+                scrollBar = new GScrollBar(0, GScrollBar.VERTICAL,
+                        (int) (boundle[WIDTH] - 22 + 1),
+                        (int) (pad),
+                        20,
+                        (int) (boundle[HEIGHT] - pad * 2));
+                add(scrollBar);
+            }
+            drawPop(vg,
+                    getX(),
+                    getY(),
+                    getW(),
+                    getH(),
+                    images, labels);
             super.update(vg);
+        } else {
+            boundle = normalBoundle;
+            float x = getX();
+            float y = getY();
+            float w = getW();
+            float h = getH();
+            nvgScissor(vg, x, y, w, h);
+            drawNormal(vg, x, y, w, h);
         }
+
         return true;
     }
 
-    void drawDropDown(long vg, float x, float y, float w, float h) {
+    void drawNormal(long vg, float x, float y, float w, float h) {
         byte[] bg;
-
-        float cornerRadius = 4.0f;
 
         if (pulldown) {
             bg = nvgLinearGradient(vg, x, y + h, x, y, nvgRGBA(255, 255, 255, 16), nvgRGBA(0, 0, 0, 16));
         } else {
             bg = nvgLinearGradient(vg, x, y, x, y + h, nvgRGBA(255, 255, 255, 16), nvgRGBA(0, 0, 0, 16));
         }
+        float cornerRadius = 4.0f;
         nvgBeginPath(vg);
         nvgRoundedRect(vg, x + 1, y + 1, w - 2, h - 2, cornerRadius - 1);
         nvgFillPaint(vg, bg);
@@ -191,45 +225,38 @@ public class GList extends GContainer {
         nvgRoundedRect(vg, x + 0.5f, y + 0.5f, w - 1, h - 1, cornerRadius - 0.5f);
         nvgStrokeColor(vg, nvgRGBA(0, 0, 0, 48));
         nvgStroke(vg);
+        float thumb = h - pad;
+        drawImage(vg, x + pad, y + h * 0.5f - thumb / 2, thumb, thumb, curIndex);
 
-        nvgFontSize(vg, 20.0f);
-        nvgFontFace(vg, GToolkit.getFontWord());
-        nvgFillColor(vg, nvgRGBA(255, 255, 255, 160));
-        nvgTextAlign(vg, NVG_ALIGN_LEFT | NVG_ALIGN_MIDDLE);
-        byte[] b1 = toUtf8(text);
-        nvgTextJni(vg, x + h * 0.3f, y + h * 0.5f + (pulldown ? 1 : 0), b1, 0, b1.length);
+        drawText(vg, x + thumb + pad + pad, y + h / 2, thumb, thumb, curIndex);
 
-        nvgFontSize(vg, h * 1.3f);
+        nvgFontSize(vg, GToolkit.getStyle().getIconFontSize());
         nvgFontFace(vg, GToolkit.getFontIcon());
-        nvgFillColor(vg, nvgRGBA(255, 255, 255, 64));
-        nvgTextAlign(vg, NVG_ALIGN_CENTER | NVG_ALIGN_MIDDLE);
-        nvgTextJni(vg, x + w - h * 0.5f, y + h * 0.5f + (pulldown ? 1 : 0), preicon_arr, 0, preicon_arr.length);
+        nvgTextJni(vg, x + w - thumb, y + h * 0.5f, preicon_arr, 0, preicon_arr.length);
     }
 
-    void drawList(long vg, float x, float y, float w, float h, int[] images, String[] strs, float t) {
+    void drawPop(long vg, float x, float y, float w, float h, int[] images, String[] strs) {
         if (images == null) {
             images = new int[]{0};
             strs = new String[]{""};
         }
         int nimages = images.length;
         float cornerRadius = 3.0f;
-        byte[] shadowPaint, imgPaint, fadePaint;
-        float ix, iy, iw, ih;
-        float thumb = 60.0f;
-        float arry = 30.5f;
-        int[] imgw = {0}, imgh = {0};
-        float cols = list_cols;
-        float stackh = (nimages / cols) * (thumb + 10) + 10;
-        int i;
-        float u = (1 + (float) Math.cos(t * 0.5f)) * 0.5f;
-        float u2 = (1 - (float) Math.cos(t * 0.2f)) * 0.5f;
-        float scrollh, dv;
+        byte[] shadowPaint, fadePaint;
+        float thumb = list_item_heigh - pad;
+        float stackh = (nimages / list_cols) * (list_item_heigh) + pad;
 
         nvgSave(vg);
 //	nvgClearState(vg);
 
+        // Window
+        nvgBeginPath(vg);
+        nvgRoundedRect(vg, x, y, w, h, cornerRadius);
+        nvgFillColor(vg, GToolkit.getStyle().getFrameBackground());
+        nvgFill(vg);
+
         // Drop shadow
-        shadowPaint = Nutil.nvgBoxGradient(vg, x, y + 4, w, h, cornerRadius * 2, 20, nvgRGBA(0, 0, 0, 128), nvgRGBA(0, 0, 0, 0));
+        shadowPaint = nvgBoxGradient(vg, x, y + 2, w, h, cornerRadius * 2, 10, nvgRGBA(0, 0, 0, 128), nvgRGBA(0, 0, 0, 0));
         nvgBeginPath(vg);
         nvgRect(vg, x - 10, y - 10, w + 20, h + 30);
         nvgRoundedRect(vg, x, y, w, h, cornerRadius);
@@ -237,229 +264,87 @@ public class GList extends GContainer {
         nvgFillPaint(vg, shadowPaint);
         nvgFill(vg);
 
-        // Window
-        nvgBeginPath(vg);
-        nvgRoundedRect(vg, x, y, w, h, cornerRadius);
-//        nvgMoveTo(vg, x - 10, y + arry);
-//        nvgLineTo(vg, x + 1, y + arry - 11);
-//        nvgLineTo(vg, x + 1, y + arry + 11);
-        nvgFillColor(vg, nvgRGBA(200, 200, 200, 255));
-        nvgFill(vg);
-
         nvgSave(vg);
         nvgScissor(vg, x, y, w, h);
-        nvgTranslate(vg, 0, -(stackh - h) * u);
+        float th = -(stackh - h) * scrollBar.getPos();
+        nvgTranslate(vg, 0, th);
 
-        dv = 1.0f / (float) (nimages - 1);
-
-        for (i = 0; i < nimages; i++) {
-            float tx, ty, v, a;
+        for (int i = 0; i < nimages; i++) {
+            float tx, ty;
             tx = x + 10;
             ty = y + 10;
-            tx += (i % cols) * (thumb + 10);
-            ty += (i / cols) * (thumb + 10);
-            nvgImageSize(vg, images[i], imgw, imgh);
-            if (imgw[0] < imgh[0]) {
-                iw = thumb;
-                ih = iw * (float) imgh[0] / (float) imgw[0];
-                ix = 0;
-                iy = -(ih - thumb) * 0.5f;
-            } else {
-                ih = thumb;
-                iw = ih * (float) imgw[0] / (float) imgh[0];
-                ix = -(iw - thumb) * 0.5f;
-                iy = 0;
-            }
+            tx += (i % list_cols) * (thumb + 10);
+            ty += (i / list_cols) * (thumb + 10);
 
-            v = i * dv;
-            a = clampf((u2 - v) / dv, 0, 1);
+            drawImage(vg, tx, ty, thumb, thumb, i);
 
-            if (a < 1.0f) {
-                drawSpinner(vg, tx + thumb / 2, ty + thumb / 2, thumb * 0.25f, t);
-            }
-
-            imgPaint = nvgImagePattern(vg, tx + ix, ty + iy, iw, ih, 0.0f / 180.0f * (float) Math.PI, images[i], a);
-            nvgBeginPath(vg);
-            nvgRoundedRect(vg, tx, ty, thumb, thumb, 5);
-            nvgFillPaint(vg, imgPaint);
-            nvgFill(vg);
-
-            shadowPaint = nvgBoxGradient(vg, tx - 1, ty, thumb + 2, thumb + 2, 5, 3, nvgRGBA(0, 0, 0, 128), nvgRGBA(0, 0, 0, 0));
-            nvgBeginPath(vg);
-            nvgRect(vg, tx - 5, ty - 5, thumb + 10, thumb + 10);
-            nvgRoundedRect(vg, tx, ty, thumb, thumb, 6);
-            nvgPathWinding(vg, NVG_HOLE);
-            nvgFillPaint(vg, shadowPaint);
-            nvgFill(vg);
-
-            nvgBeginPath(vg);
-            nvgRoundedRect(vg, tx + 0.5f, ty + 0.5f, thumb - 1, thumb - 1, 4 - 0.5f);
-            nvgStrokeWidth(vg, 1.0f);
-            nvgStrokeColor(vg, nvgRGBA(255, 255, 255, 192));
-            nvgStroke(vg);
+            drawText(vg, tx + thumb + pad, ty + thumb / 2, thumb, thumb, i);
         }
         nvgRestore(vg);
 
         // Hide fades
-        fadePaint = nvgLinearGradient(vg, x, y, x, y + 6, nvgRGBA(200, 200, 200, 255), nvgRGBA(200, 200, 200, 0));
+        fadePaint = nvgLinearGradient(vg, x, y, x, y + 6, nvgRGBA(28, 30, 34, 192), nvgRGBA(28, 30, 34, 0));
         nvgBeginPath(vg);
         nvgRect(vg, x + 4, y, w - 8, 6);
         nvgFillPaint(vg, fadePaint);
         nvgFill(vg);
 
-        fadePaint = nvgLinearGradient(vg, x, y + h, x, y + h - 6, nvgRGBA(200, 200, 200, 255), nvgRGBA(200, 200, 200, 0));
+        fadePaint = nvgLinearGradient(vg, x, y + h, x, y + h - 6, nvgRGBA(28, 30, 34, 192), nvgRGBA(28, 30, 34, 0));
         nvgBeginPath(vg);
         nvgRect(vg, x + 4, y + h - 6, w - 8, 6);
         nvgFillPaint(vg, fadePaint);
         nvgFill(vg);
 
-//        // Scroll bar
-//        shadowPaint = nvgBoxGradient(vg, x + w - 12 + 1, y + 4 + 1, 8, h - 8, 3, 4, nvgRGBA(0, 0, 0, 32), nvgRGBA(0, 0, 0, 92));
-//        nvgBeginPath(vg);
-//        nvgRoundedRect(vg, x + w - 12, y + 4, 8, h - 8, 3);
-//        nvgFillPaint(vg, shadowPaint);
-////	nvgFillColor(vg, nvgRGBA(255,0,0,128));
-//        nvgFill(vg);
-//
-//        scrollh = (h / stackh) * (h - 8);
-//        if (scrollh > h - 8) {
-//            scrollh = h - 8;
-//        }
-//        shadowPaint = nvgBoxGradient(vg, x + w - 12 - 1, y + 4 + (h - 8 - scrollh) * u - 1, 8, scrollh, 3, 4, nvgRGBA(220, 220, 220, 255), nvgRGBA(128, 128, 128, 255));
-//        nvgBeginPath(vg);
-//        nvgRoundedRect(vg, x + w - 12 + 1, y + 4 + 1 + (h - 8 - scrollh) * u, 8 - 2, scrollh - 2, 2);
-//        nvgFillPaint(vg, shadowPaint);
-////	nvgFillColor(vg, nvgRGBA(0,0,0,128));
-//        nvgFill(vg);
         nvgRestore(vg);
     }
 
-    void drawGrid(long vg, float x, float y, float w, float h, int[] images, float t) {
-        if (images == null) {
-            images = new int[]{0};
-        }
-        int nimages = images.length;
-        float cornerRadius = 3.0f;
-        byte[] shadowPaint, imgPaint, fadePaint;
+    void drawText(long vg, float tx, float ty, float pw, float ph, int i) {
+        nvgFillColor(vg, GToolkit.getStyle().getTextFontColor());
+        //Nutil.nvgScissor(vg, x, y, w, h);
+        byte[] b = toUtf8(labels[i]);
+        Nutil.nvgTextJni(vg, tx, ty, b, 0, b.length);
+        //Nutil.nvgResetScissor(vg);
+    }
+
+    void drawImage(long vg, float px, float py, float pw, float ph, int i) {
+
+        byte[] shadowPaint, imgPaint;
         float ix, iy, iw, ih;
-        float thumb = 60.0f;
-        float arry = 30.5f;
+        float thumb = pw;
         int[] imgw = {0}, imgh = {0};
-        float cols = (mode == MODE_LIST) ? list_cols : grid_cols;
-        float stackh = (nimages / cols) * (thumb + 10) + 10;
-        int i;
-        float u = (1 + (float) Math.cos(t * 0.5f)) * 0.5f;
-        float u2 = (1 - (float) Math.cos(t * 0.2f)) * 0.5f;
-        float scrollh, dv;
 
-        nvgSave(vg);
-//	nvgClearState(vg);
+        nvgImageSize(vg, images[i], imgw, imgh);
+        if (imgw[0] < imgh[0]) {
+            iw = thumb;
+            ih = iw * (float) imgh[0] / (float) imgw[0];
+            ix = 0;
+            iy = -(ih - thumb) * 0.5f;
+        } else {
+            ih = thumb;
+            iw = ih * (float) imgw[0] / (float) imgh[0];
+            ix = -(iw - thumb) * 0.5f;
+            iy = 0;
+        }
 
-        // Drop shadow
-        shadowPaint = Nutil.nvgBoxGradient(vg, x, y + 4, w, h, cornerRadius * 2, 20, nvgRGBA(0, 0, 0, 128), nvgRGBA(0, 0, 0, 0));
+        imgPaint = nvgImagePattern(vg, px + ix, py + iy, iw, ih, 0.0f / 180.0f * (float) Math.PI, images[i], 0.8f);
         nvgBeginPath(vg);
-        nvgRect(vg, x - 10, y - 10, w + 20, h + 30);
-        nvgRoundedRect(vg, x, y, w, h, cornerRadius);
+        nvgRoundedRect(vg, px, py, thumb, thumb, 5);
+        nvgFillPaint(vg, imgPaint);
+        nvgFill(vg);
+
+        shadowPaint = nvgBoxGradient(vg, px - 1, py, thumb + 2, thumb + 2, 5, 3, nvgRGBA(0, 0, 0, 128), nvgRGBA(0, 0, 0, 0));
+        nvgBeginPath(vg);
+        nvgRect(vg, px - 5, py - 5, thumb + 10, thumb + 10);
+        nvgRoundedRect(vg, px, py, thumb, thumb, 6);
         nvgPathWinding(vg, NVG_HOLE);
         nvgFillPaint(vg, shadowPaint);
         nvgFill(vg);
 
-        // Window
         nvgBeginPath(vg);
-        nvgRoundedRect(vg, x, y, w, h, cornerRadius);
-//        nvgMoveTo(vg, x - 10, y + arry);
-//        nvgLineTo(vg, x + 1, y + arry - 11);
-//        nvgLineTo(vg, x + 1, y + arry + 11);
-        nvgFillColor(vg, nvgRGBA(200, 200, 200, 255));
-        nvgFill(vg);
-
-        nvgSave(vg);
-        nvgScissor(vg, x, y, w, h);
-        nvgTranslate(vg, 0, -(stackh - h) * u);
-
-        dv = 1.0f / (float) (nimages - 1);
-
-        for (i = 0; i < nimages; i++) {
-            float tx, ty, v, a;
-            tx = x + 10;
-            ty = y + 10;
-            tx += (i % cols) * (thumb + 10);
-            ty += (i / cols) * (thumb + 10);
-            nvgImageSize(vg, images[i], imgw, imgh);
-            if (imgw[0] < imgh[0]) {
-                iw = thumb;
-                ih = iw * (float) imgh[0] / (float) imgw[0];
-                ix = 0;
-                iy = -(ih - thumb) * 0.5f;
-            } else {
-                ih = thumb;
-                iw = ih * (float) imgw[0] / (float) imgh[0];
-                ix = -(iw - thumb) * 0.5f;
-                iy = 0;
-            }
-
-            v = i * dv;
-            a = clampf((u2 - v) / dv, 0, 1);
-
-            if (a < 1.0f) {
-                drawSpinner(vg, tx + thumb / 2, ty + thumb / 2, thumb * 0.25f, t);
-            }
-
-            imgPaint = nvgImagePattern(vg, tx + ix, ty + iy, iw, ih, 0.0f / 180.0f * (float) Math.PI, images[i], a);
-            nvgBeginPath(vg);
-            nvgRoundedRect(vg, tx, ty, thumb, thumb, 5);
-            nvgFillPaint(vg, imgPaint);
-            nvgFill(vg);
-
-            shadowPaint = nvgBoxGradient(vg, tx - 1, ty, thumb + 2, thumb + 2, 5, 3, nvgRGBA(0, 0, 0, 128), nvgRGBA(0, 0, 0, 0));
-            nvgBeginPath(vg);
-            nvgRect(vg, tx - 5, ty - 5, thumb + 10, thumb + 10);
-            nvgRoundedRect(vg, tx, ty, thumb, thumb, 6);
-            nvgPathWinding(vg, NVG_HOLE);
-            nvgFillPaint(vg, shadowPaint);
-            nvgFill(vg);
-
-            nvgBeginPath(vg);
-            nvgRoundedRect(vg, tx + 0.5f, ty + 0.5f, thumb - 1, thumb - 1, 4 - 0.5f);
-            nvgStrokeWidth(vg, 1.0f);
-            nvgStrokeColor(vg, nvgRGBA(255, 255, 255, 192));
-            nvgStroke(vg);
-        }
-        nvgRestore(vg);
-
-        // Hide fades
-        fadePaint = nvgLinearGradient(vg, x, y, x, y + 6, nvgRGBA(200, 200, 200, 255), nvgRGBA(200, 200, 200, 0));
-        nvgBeginPath(vg);
-        nvgRect(vg, x + 4, y, w - 8, 6);
-        nvgFillPaint(vg, fadePaint);
-        nvgFill(vg);
-
-        fadePaint = nvgLinearGradient(vg, x, y + h, x, y + h - 6, nvgRGBA(200, 200, 200, 255), nvgRGBA(200, 200, 200, 0));
-        nvgBeginPath(vg);
-        nvgRect(vg, x + 4, y + h - 6, w - 8, 6);
-        nvgFillPaint(vg, fadePaint);
-        nvgFill(vg);
-
-        // Scroll bar
-        shadowPaint = nvgBoxGradient(vg, x + w - 12 + 1, y + 4 + 1, 8, h - 8, 3, 4, nvgRGBA(0, 0, 0, 32), nvgRGBA(0, 0, 0, 92));
-        nvgBeginPath(vg);
-        nvgRoundedRect(vg, x + w - 12, y + 4, 8, h - 8, 3);
-        nvgFillPaint(vg, shadowPaint);
-//	nvgFillColor(vg, nvgRGBA(255,0,0,128));
-        nvgFill(vg);
-
-        scrollh = (h / stackh) * (h - 8);
-        if (scrollh > h - 8) {
-            scrollh = h - 8;
-        }
-        shadowPaint = nvgBoxGradient(vg, x + w - 12 - 1, y + 4 + (h - 8 - scrollh) * u - 1, 8, scrollh, 3, 4, nvgRGBA(220, 220, 220, 255), nvgRGBA(128, 128, 128, 255));
-        nvgBeginPath(vg);
-        nvgRoundedRect(vg, x + w - 12 + 1, y + 4 + 1 + (h - 8 - scrollh) * u, 8 - 2, scrollh - 2, 2);
-        nvgFillPaint(vg, shadowPaint);
-//	nvgFillColor(vg, nvgRGBA(0,0,0,128));
-        nvgFill(vg);
-
-        nvgRestore(vg);
+        nvgRoundedRect(vg, px + 0.5f, py + 0.5f, thumb - 1, thumb - 1, 4 - 0.5f);
+        nvgStrokeWidth(vg, 1.0f);
+        nvgStrokeColor(vg, nvgRGBA(255, 255, 255, 192));
+        nvgStroke(vg);
     }
 
     void drawSpinner(long vg, float cx, float cy, float r, float t) {

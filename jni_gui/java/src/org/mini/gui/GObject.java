@@ -5,8 +5,6 @@
  */
 package org.mini.gui;
 
-import static org.mini.glfw.utils.Gutil.toUtf8;
-import org.mini.glfw.utils.Nutil;
 import static org.mini.gui.GToolkit.nvgRGBA;
 import org.mini.gui.event.GActionListener;
 import org.mini.gui.event.GStateListener;

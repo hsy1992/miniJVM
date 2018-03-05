@@ -7,6 +7,7 @@ package org.mini.gui;
 
 import org.mini.glfw.Glfw;
 import static org.mini.glfw.utils.Gutil.toUtf8;
+import org.mini.glfw.utils.Nutil;
 import static org.mini.glfw.utils.Nutil.NVG_ALIGN_CENTER;
 import static org.mini.glfw.utils.Nutil.NVG_ALIGN_LEFT;
 import static org.mini.glfw.utils.Nutil.NVG_ALIGN_MIDDLE;
@@ -45,8 +46,9 @@ public class GFrame extends GContainer {
     byte[] close_arr = {(byte) 0xe2, (byte) 0x9d, (byte) 0x8e, 0};
     float[] close_boundle = new float[4];
 
-    GFrameContents frameContents;
     int background_rgba;
+    
+    GPanel panel =new GPanel();
 
     float[] title_boundle = new float[4];
     GGraphics g = new GGraphics();
@@ -54,15 +56,18 @@ public class GFrame extends GContainer {
     int frameMode;
     boolean closable;
 
-    public GFrame(String title, int left, int top, int width, int height, GFrameContents con) {
+    public GFrame(String title, int left, int top, int width, int height) {
         setTitle(title);
         boundle[LEFT] = left;
         boundle[TOP] = top;
         boundle[WIDTH] = width;
         boundle[HEIGHT] = height;
-        frameContents = con;
-        frameContents.init(this);
 
+        panel.boundle[LEFT] = 2;
+        panel.boundle[TOP] = 32;
+        panel.boundle[WIDTH] = width - 4;
+        panel.boundle[HEIGHT] = height - 34;
+        add(panel);
     }
 
     public void setTitle(String title) {
@@ -85,6 +90,10 @@ public class GFrame extends GContainer {
     public void setBackground(int rgba) {
         background_rgba = rgba;
     }
+    
+    public GPanel getPanel(){
+        return panel;
+    }
 
     /**
      * @return the closable
@@ -106,10 +115,10 @@ public class GFrame extends GContainer {
 
     @Override
     public boolean update(long vg) {
+        Nutil.nvgResetScissor(vg);
         this.vg = vg;
         drawWindow(vg, title, boundle[0], boundle[1], boundle[2], boundle[3]);
         super.update(this.vg);
-        frameContents.updateContents(vg, this);
         return true;
     }
 
@@ -125,7 +134,6 @@ public class GFrame extends GContainer {
         nvgBeginPath(vg);
         nvgRoundedRect(vg, x, y, w, h, cornerRadius);
         nvgFillColor(vg, GToolkit.getStyle().getFrameBackground());
-//	nvgFillColor(vg, nvgRGBA(0,0,0,128));
         nvgFill(vg);
 
         // Drop shadow
@@ -144,7 +152,12 @@ public class GFrame extends GContainer {
         title_boundle[TOP] = y + 1;
         title_boundle[WIDTH] = w - 2;
         title_boundle[HEIGHT] = 30;
-        nvgRoundedRect(vg, x + 1, y + 1, w - 2, 30, cornerRadius - 1);
+        nvgRoundedRect(vg,
+                title_boundle[LEFT],
+                title_boundle[TOP],
+                title_boundle[WIDTH],
+                title_boundle[HEIGHT],
+                cornerRadius - 1);
         nvgFillPaint(vg, headerPaint);
         nvgFill(vg);
         nvgBeginPath(vg);
@@ -176,6 +189,7 @@ public class GFrame extends GContainer {
         close_boundle[TOP] = y + 6;
         close_boundle[WIDTH] = 16;
         close_boundle[HEIGHT] = 16;
+
 
         nvgRestore(vg);
     }
@@ -219,7 +233,7 @@ public class GFrame extends GContainer {
         if (isInBoundle(boundle, x, y)) {
             super.mouseButtonEvent(button, pressed, x, y);
         } else {
-            setFocus(null);
+            panel.setFocus(null);
         }
     }
 

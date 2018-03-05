@@ -91,6 +91,10 @@ public class GForm extends GContainer implements Runnable {
         return gfont;
     }
 
+    public long getGLContext() {
+        return vg;
+    }
+
     @Override
     public void init() {
 
