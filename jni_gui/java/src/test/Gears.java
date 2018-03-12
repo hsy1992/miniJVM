@@ -343,8 +343,8 @@ public class Gears {
             Glfw.glfwMakeContextCurrent(win);
 //            Glfw.glfwSwapInterval(1);
 
-            int w = Glfw.glfwGetFramebufferSizeW(win);
-            int h = Glfw.glfwGetFramebufferSizeH(win);
+            int w = Glfw.glfwGetFramebufferWidth(win);
+            int h = Glfw.glfwGetFramebufferHeight(win);
             System.out.println("w=" + w + "  ,h=" + h);
             reshape(win, w, h);
 

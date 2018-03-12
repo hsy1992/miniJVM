@@ -24,8 +24,6 @@ import static org.mini.glfw.Glfw.GLFW_OPENGL_FORWARD_COMPAT;
 import static org.mini.glfw.Glfw.GLFW_OPENGL_PROFILE;
 import static org.mini.glfw.Glfw.GLFW_PRESS;
 import static org.mini.glfw.Glfw.GLFW_TRUE;
-import static org.mini.glfw.Glfw.glfwGetFramebufferSizeH;
-import static org.mini.glfw.Glfw.glfwGetFramebufferSizeW;
 import static org.mini.glfw.Glfw.glfwGetTime;
 import static org.mini.glfw.Glfw.glfwPollEvents;
 import static org.mini.glfw.Glfw.glfwSetWindowShouldClose;
@@ -45,6 +43,8 @@ import static org.mini.glfw.utils.Nutil.nvgBeginFrame;
 import static org.mini.glfw.utils.Nutil.nvgEndFrame;
 import static org.mini.gui.GObject.isInBoundle;
 import static org.mini.gui.GToolkit.defaultStyle;
+import static org.mini.glfw.Glfw.glfwGetFramebufferWidth;
+import static org.mini.glfw.Glfw.glfwGetFramebufferHeight;
 
 /**
  *
@@ -107,6 +107,7 @@ public class GForm extends GContainer implements Runnable {
         glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
         glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
         glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
+        //glfwWindowHint(Glfw.GLFW_COCOA_RETINA_FRAMEBUFFER, GL_TRUE);
 
         win = Glfw.glfwCreateWindow(width, height, Gutil.toUtf8(title), 0, 0);
         if (win == 0) {
@@ -163,10 +164,10 @@ public class GForm extends GContainer implements Runnable {
         float pxRatio;
         int winWidth, winHeight;
         int fbWidth, fbHeight;
-        winWidth = glfwGetFramebufferSizeW(win);
-        winHeight = glfwGetFramebufferSizeH(win);
-        fbWidth = glfwGetFramebufferSizeW(win);
-        fbHeight = glfwGetFramebufferSizeH(win);
+        winWidth = Glfw.glfwGetWindowWidth(win);
+        winHeight = Glfw.glfwGetWindowHeight(win);
+        fbWidth = glfwGetFramebufferWidth(win);
+        fbHeight = glfwGetFramebufferHeight(win);
         // Calculate pixel ration for hi-dpi devices.
         pxRatio = (float) fbWidth / (float) winWidth;
 

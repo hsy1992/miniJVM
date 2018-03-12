@@ -342,8 +342,8 @@ public class TestGL {
             Glfw.glfwMakeContextCurrent(win);
 //            Glfw.glfwSwapInterval(1);
 
-            w = Glfw.glfwGetFramebufferSizeW(win);
-            h = Glfw.glfwGetFramebufferSizeH(win);
+            w = Glfw.glfwGetFramebufferWidth(win);
+            h = Glfw.glfwGetFramebufferHeight(win);
             System.out.println("w=" + w + "  ,h=" + h);
 
             test = 0;

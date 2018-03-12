@@ -160,10 +160,8 @@ public class GTextBox extends GObject {
                     selectStart = caret;
                     drag = true;
                 }
-            } else {
-                if (actionListener != null) {
-                    actionListener.action();
-                }
+            } else if (actionListener != null) {
+                actionListener.action();
             }
         }
         if (!pressed) {
@@ -204,9 +202,11 @@ public class GTextBox extends GObject {
                     String s = textsb.substring(arr[AREA_START], arr[AREA_END]);
                     int strIndex = caret - arr[AREA_START];
                     int after = s.indexOf(' ', strIndex);
-                    int before = s.substring(0, strIndex).lastIndexOf(' ') + 1;
-                    selectStart = before < 0 ? arr[AREA_START] : arr[AREA_START] + before;
-                    selectEnd = after < 0 ? arr[AREA_END] : arr[AREA_START] + after;
+                    if (after >= 0) {
+                        int before = s.substring(0, strIndex).lastIndexOf(' ') + 1;
+                        selectStart = before < 0 ? arr[AREA_START] : arr[AREA_START] + before;
+                        selectEnd = after < 0 ? arr[AREA_END] : arr[AREA_START] + after;
+                    }
                 }
             }
         }

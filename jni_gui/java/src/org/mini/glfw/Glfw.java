@@ -1639,9 +1639,9 @@ public class Glfw {
      */
     public static native int glfwGetWindowParam(long window, int param);
 
-    public static native int glfwGetFramebufferSizeW(long window);
+    public static native int glfwGetFramebufferWidth(long window);
 
-    public static native int glfwGetFramebufferSizeH(long window);
+    public static native int glfwGetFramebufferHeight(long window);
 
     public static native void glfwSetWindowAspectRatio(long window, int numer, int denom);
 

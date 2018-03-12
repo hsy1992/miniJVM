@@ -19,8 +19,6 @@ import static org.mini.glfw.Glfw.GLFW_OPENGL_PROFILE;
 import static org.mini.glfw.Glfw.GLFW_PRESS;
 import static org.mini.glfw.Glfw.GLFW_TRUE;
 import static org.mini.glfw.Glfw.glfwCreateWindow;
-import static org.mini.glfw.Glfw.glfwGetFramebufferSizeH;
-import static org.mini.glfw.Glfw.glfwGetFramebufferSizeW;
 import static org.mini.glfw.Glfw.glfwGetTime;
 import static org.mini.glfw.Glfw.glfwInit;
 import static org.mini.glfw.Glfw.glfwMakeContextCurrent;
@@ -105,6 +103,8 @@ import static org.mini.glfw.utils.Nutil.nvgTextLineHeight;
 import static org.mini.glfw.utils.Nutil.nvgTextMetrics;
 import static org.mini.glfw.utils.Nutil.nvgTranslate;
 import org.mini.gui.GToolkit;
+import static org.mini.glfw.Glfw.glfwGetFramebufferWidth;
+import static org.mini.glfw.Glfw.glfwGetFramebufferHeight;
 
 /*
  * To change this license header, choose License Headers in Project Properties.
@@ -139,8 +139,8 @@ public class TestNanovg {
             glfwMakeContextCurrent(win);
             //glfwSwapInterval(1);
 
-            int w = glfwGetFramebufferSizeW(win);
-            int h = glfwGetFramebufferSizeH(win);
+            int w = glfwGetFramebufferWidth(win);
+            int h = glfwGetFramebufferHeight(win);
             System.out.println("w=" + w + "  ,h=" + h);
             init();
             long last = System.currentTimeMillis(), now;
@@ -261,10 +261,10 @@ public class TestNanovg {
         float pxRatio;
         int winWidth, winHeight;
         int fbWidth, fbHeight;
-        winWidth = glfwGetFramebufferSizeW(win);
-        winHeight = glfwGetFramebufferSizeH(win);
-        fbWidth = glfwGetFramebufferSizeW(win);
-        fbHeight = glfwGetFramebufferSizeH(win);
+        winWidth = glfwGetFramebufferWidth(win);
+        winHeight = glfwGetFramebufferHeight(win);
+        fbWidth = glfwGetFramebufferWidth(win);
+        fbHeight = glfwGetFramebufferHeight(win);
         // Calculate pixel ration for hi-dpi devices.
         pxRatio = (float) fbWidth / (float) winWidth;
 

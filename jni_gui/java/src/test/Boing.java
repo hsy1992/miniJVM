@@ -453,8 +453,8 @@ public class Boing {
             Glfw.glfwSetWindowAspectRatio(win, 1, 1);
 //            Glfw.glfwSwapInterval(1);
 
-            width = Glfw.glfwGetFramebufferSizeW(win);
-            height = Glfw.glfwGetFramebufferSizeH(win);
+            width = Glfw.glfwGetFramebufferWidth(win);
+            height = Glfw.glfwGetFramebufferHeight(win);
             System.out.println("w=" + width + "  ,h=" + height);
             reshape(win, width, height);
 

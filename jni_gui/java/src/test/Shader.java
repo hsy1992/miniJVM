@@ -36,8 +36,6 @@ import static org.mini.glfw.Glfw.GLFW_OPENGL_PROFILE;
 import static org.mini.glfw.Glfw.GLFW_PRESS;
 import static org.mini.glfw.Glfw.GLFW_TRUE;
 import static org.mini.glfw.Glfw.glfwCreateWindow;
-import static org.mini.glfw.Glfw.glfwGetFramebufferSizeH;
-import static org.mini.glfw.Glfw.glfwGetFramebufferSizeW;
 import static org.mini.glfw.Glfw.glfwInit;
 import static org.mini.glfw.Glfw.glfwMakeContextCurrent;
 import static org.mini.glfw.Glfw.glfwPollEvents;
@@ -49,6 +47,8 @@ import static org.mini.glfw.Glfw.glfwWindowHint;
 import static org.mini.glfw.Glfw.glfwWindowShouldClose;
 import org.mini.glfw.GlfwCallbackAdapter;
 import org.mini.glfw.utils.Gutil;
+import static org.mini.glfw.Glfw.glfwGetFramebufferWidth;
+import static org.mini.glfw.Glfw.glfwGetFramebufferHeight;
 
 /*
  * To change this license header, choose License Headers in Project Properties.
@@ -266,8 +266,8 @@ public class Shader {
             glfwMakeContextCurrent(win);
             //glfwSwapInterval(1);
 
-            int w = glfwGetFramebufferSizeW(win);
-            int h = glfwGetFramebufferSizeH(win);
+            int w = glfwGetFramebufferWidth(win);
+            int h = glfwGetFramebufferHeight(win);
             System.out.println("w=" + w + "  ,h=" + h);
             init();
             long last = System.currentTimeMillis(), now;

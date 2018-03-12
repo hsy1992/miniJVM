@@ -703,7 +703,7 @@ int org_mini_glfw_Glfw_glfwSetCallback(Runtime *runtime, Class *clazz) {
     glfwSetCharCallback(window, _callback_character);
     glfwSetDropCallback(window, _callback_drop);
     glfwSetMouseButtonCallback(window, _button_callback_mouse);
-    glfwSetScrollCallback(window,_callback_scroll);
+    glfwSetScrollCallback(window, _callback_scroll);
     glfwSetCursorPosCallback(window, _callback_cursor_pos);
     glfwSetCursorEnterCallback(window, _callback_cursor_enter);
     glfwSetWindowCloseCallback(window, _callback_window_close);
@@ -765,7 +765,8 @@ int org_mini_glfw_Glfw_glfwSetCallback(Runtime *runtime, Class *clazz) {
                 env->find_methodInfo_by_name(refers.glfw_callback->mb.clazz->name, name, type);
         env->utf8_destory(name);
         env->utf8_destory(type);
-    }{
+    }
+    {
         name_s = "scroll";
         type_s = "(JDD)V";
         Utf8String *name = env->utf8_create_part_c(name_s, 0, strlen(name_s));
@@ -989,7 +990,7 @@ int org_mini_glfw_Glfw_glfwSwapBuffers(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-int org_mini_glfw_Glfw_glfwGetFramebufferSizeW(Runtime *runtime, Class *clazz) {
+int org_mini_glfw_Glfw_glfwGetFramebufferWidth(Runtime *runtime, Class *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     GLFWwindow *window = (__refer) (intptr_t) env->localvar_getLong_2slot(runtime, pos);
@@ -999,12 +1000,32 @@ int org_mini_glfw_Glfw_glfwGetFramebufferSizeW(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-int org_mini_glfw_Glfw_glfwGetFramebufferSizeH(Runtime *runtime, Class *clazz) {
+int org_mini_glfw_Glfw_glfwGetFramebufferHeight(Runtime *runtime, Class *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     GLFWwindow *window = (__refer) (intptr_t) env->localvar_getLong_2slot(runtime, pos);
     s32 w, h;
     glfwGetFramebufferSize(window, &w, &h);
+    env->push_int(runtime->stack, h);
+    return 0;
+}
+
+int org_mini_glfw_Glfw_glfwGetWindowWidth(Runtime *runtime, Class *clazz) {
+    JniEnv *env = runtime->jnienv;
+    s32 pos = 0;
+    GLFWwindow *window = (__refer) (intptr_t) env->localvar_getLong_2slot(runtime, pos);
+    s32 w, h;
+    glfwGetWindowSize(window, &w, &h);
+    env->push_int(runtime->stack, w);
+    return 0;
+}
+
+int org_mini_glfw_Glfw_glfwGetWindowHeight(Runtime *runtime, Class *clazz) {
+    JniEnv *env = runtime->jnienv;
+    s32 pos = 0;
+    GLFWwindow *window = (__refer) (intptr_t) env->localvar_getLong_2slot(runtime, pos);
+    s32 w, h;
+    glfwGetWindowSize(window, &w, &h);
     env->push_int(runtime->stack, h);
     return 0;
 }
@@ -1087,8 +1108,10 @@ static java_native_method method_glfw_table[] = {
         {"org/mini/glfw/Glfw",        "glfwMakeContextCurrentJni",  "(J)V",                             org_mini_glfw_Glfw_glfwMakeContextCurrentJni},
         {"org/mini/glfw/Glfw",        "glfwSwapInterval",           "(I)V",                             org_mini_glfw_Glfw_glfwSwapInterval},
         {"org/mini/glfw/Glfw",        "glfwSwapBuffers",            "(J)V",                             org_mini_glfw_Glfw_glfwSwapBuffers},
-        {"org/mini/glfw/Glfw",        "glfwGetFramebufferSizeW",    "(J)I",                             org_mini_glfw_Glfw_glfwGetFramebufferSizeW},
-        {"org/mini/glfw/Glfw",        "glfwGetFramebufferSizeH",    "(J)I",                             org_mini_glfw_Glfw_glfwGetFramebufferSizeH},
+        {"org/mini/glfw/Glfw",        "glfwGetFramebufferWidth",    "(J)I",                             org_mini_glfw_Glfw_glfwGetFramebufferWidth},
+        {"org/mini/glfw/Glfw",        "glfwGetFramebufferHeight",   "(J)I",                             org_mini_glfw_Glfw_glfwGetFramebufferHeight},
+        {"org/mini/glfw/Glfw",        "glfwGetWindowWidth",         "(J)I",                             org_mini_glfw_Glfw_glfwGetWindowWidth},
+        {"org/mini/glfw/Glfw",        "glfwGetWindowHeight",        "(J)I",                             org_mini_glfw_Glfw_glfwGetWindowHeight},
         {"org/mini/glfw/Glfw",        "glfwSetWindowAspectRatio",   "(JII)V",                           org_mini_glfw_Glfw_glfwSetWindowAspectRatio},
         {"org/mini/glfw/Glfw",        "glfwGetClipboardString",     "(J)Ljava/lang/String;",            org_mini_glfw_Glfw_glfwGetClipboardString},
 
