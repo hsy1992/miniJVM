@@ -54,8 +54,8 @@ public class GCheckBox extends GObject {
             } else {
                 checked = !checked;
                 parent.setFocus(this);
-                if (stateListener != null) {
-                    stateListener.stateChange();
+                if (actionListener != null) {
+                    actionListener.action();
                 }
             }
         }

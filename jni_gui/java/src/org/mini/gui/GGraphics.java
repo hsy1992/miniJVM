@@ -6,6 +6,26 @@
 package org.mini.gui;
 
 import org.mini.glfw.utils.Gutil;
+import org.mini.glfw.utils.Nutil;
+import static org.mini.glfw.utils.Nutil.NVG_CW;
+import static org.mini.glfw.utils.Nutil.nvgArc;
+import static org.mini.glfw.utils.Nutil.nvgBeginPath;
+import static org.mini.glfw.utils.Nutil.nvgClosePath;
+import static org.mini.glfw.utils.Nutil.nvgFill;
+import static org.mini.glfw.utils.Nutil.nvgFillColor;
+import static org.mini.glfw.utils.Nutil.nvgFillPaint;
+import static org.mini.glfw.utils.Nutil.nvgFontFace;
+import static org.mini.glfw.utils.Nutil.nvgFontSize;
+import static org.mini.glfw.utils.Nutil.nvgImagePattern;
+import static org.mini.glfw.utils.Nutil.nvgLineTo;
+import static org.mini.glfw.utils.Nutil.nvgMoveTo;
+import static org.mini.glfw.utils.Nutil.nvgReset;
+import static org.mini.glfw.utils.Nutil.nvgRoundedRect;
+import static org.mini.glfw.utils.Nutil.nvgSave;
+import static org.mini.glfw.utils.Nutil.nvgStroke;
+import static org.mini.glfw.utils.Nutil.nvgStrokeColor;
+import static org.mini.glfw.utils.Nutil.nvgStrokeWidth;
+import static org.mini.gui.GToolkit.nvgRGBA;
 
 /**
  *
@@ -13,113 +33,163 @@ import org.mini.glfw.utils.Gutil;
  */
 public class GGraphics {
 
-    long brush;
+    public static final int LEFT = Nutil.NVG_ALIGN_LEFT;
+    public static final int HCENTER = Nutil.NVG_ALIGN_CENTER;
+    public static final int RIGHT = Nutil.NVG_ALIGN_RIGHT;
+    public static final int TOP = Nutil.NVG_ALIGN_TOP;
+    public static final int VCENTER = Nutil.NVG_ALIGN_MIDDLE;
+    public static final int BOTTOM = Nutil.NVG_ALIGN_BOTTOM;
+    public static final int BASELINE = Nutil.NVG_ALIGN_BASELINE;
+
+    GCanvas canvas;
+    long vg;
     long font;
-    float[] frame_bound;
 
-    int[] curColor = new int[1];
-    float[] rect = new float[4];
-    float[] clip = new float[4];
-    int translateX, translateY;
+    int curColor = 0;
+    byte r, g, b, a;
 
-    public void setColor(int abgr) {
-        curColor[0] = abgr;
+    GGraphics(GCanvas canvas, long context) {
+        this.canvas = canvas;
+        vg = context;
+    }
+
+    void save() {
+        nvgSave(vg);
+        nvgReset(vg);
+        nvgStrokeWidth(vg, 1.0f);
+        nvgFontSize(vg, GToolkit.getStyle().getTextFontSize());
+        nvgFontFace(vg, GToolkit.getFontWord());
+    }
+
+    void restore() {
+        nvgReset(vg);
+    }
+
+    public void setColor(int argb) {
+        curColor = argb;
+        a = (byte) (0xff & (argb >> 24));
+        r = (byte) (0xff & (argb >> 16));
+        g = (byte) (0xff & (argb >> 8));
+        b = (byte) (0xff & (argb >> 0));
     }
 
     public void fillRect(int x, int y, int w, int h) {
-        if (brush == 0) {
-            return;
-        }
-        rect[0] = x + frame_bound[0] + translateX;
-        rect[1] = y + frame_bound[1] + translateY;
-        rect[2] = w;
-        rect[3] = h;
-//        NK.nk_fill_rect(brush, rect, 1, curColor);
+
+        x += canvas.getX();
+        y += canvas.getY();
+
+        nvgBeginPath(vg);
+        nvgRoundedRect(vg, x, y, w, h, 0);
+        nvgFillColor(vg, nvgRGBA(r, g, b, a));
+        nvgFill(vg);
     }
 
     public void fillArc(int x, int y, int width, int height, int startAngle, int arcAngle) {
-        if (brush == 0) {
-            return;
-        }
-        x += frame_bound[0] + translateX;
-        y += frame_bound[1] + translateY;
-//        NK.nk_fill_arc(brush, x, y, width, (float) (startAngle * Math.PI / 180), (float) (arcAngle * Math.PI / 180), curColor);
+        x += canvas.getX();
+        y += canvas.getY();
+        nvgBeginPath(vg);
+        nvgFillColor(vg, nvgRGBA(r, g, b, a));
+        nvgArc(vg, x, y, width / 2, (float) (startAngle * Math.PI / 180), (float) (arcAngle * Math.PI / 180), NVG_CW);
+        nvgClosePath(vg);
+        nvgFill(vg);
     }
 
     int thickness = 1;
 
     public void drawArc(int x, int y, int width, int height, int startAngle, int arcAngle) {
-        if (brush == 0) {
-            return;
-        }
-        x += frame_bound[0] + translateX;
-        y += frame_bound[1] + translateY;
-//        NK.nk_stroke_arc(brush, x, y, width, (float) (startAngle * Math.PI / 180), (float) (arcAngle * Math.PI / 180), thickness, curColor);
+
+        x += canvas.getX();
+        y += canvas.getY();
+        nvgBeginPath(vg);
+        nvgArc(vg, x, y, width / 2, (float) (startAngle * Math.PI / 180), (float) (arcAngle * Math.PI / 180), NVG_CW);
+        nvgClosePath(vg);
+        nvgStroke(vg);
     }
 
     public void drawLine(int x1, int y1, int x2, int y2) {
-        if (brush == 0) {
-            return;
-        }
-        x1 += frame_bound[0] + translateX;;
-        y1 += frame_bound[1] + translateY;;
-        x2 += frame_bound[0] + translateX;;
-        y2 += frame_bound[1] + translateY;;
-//        NK.nk_stroke_line(brush, x1, y1, x2, y2, thickness, curColor);
+
+        x1 += canvas.getX();;
+        y1 += canvas.getY();;
+        x2 += canvas.getX();;
+        y2 += canvas.getY();;
+
+        nvgStrokeColor(vg, nvgRGBA(r, g, b, a));
+        nvgBeginPath(vg);
+        nvgMoveTo(vg, x1, y1);
+        nvgLineTo(vg, x2, y2);
+        nvgStroke(vg);
+    }
+
+    public void drawRect(int x1, int y1, int w, int h) {
+        x1 += canvas.getX();;
+        y1 += canvas.getY();;
+        nvgRoundedRect(vg, x1, y1, w, h, 0);
+        nvgStrokeColor(vg, nvgRGBA(r, g, b, a));
+        nvgStroke(vg);
     }
 
     public void drawString(String str, int x, int y, int anchor) {
-        if (brush == 0) {
-            return;
-        }
-        rect[0] = x + frame_bound[0] + translateX;
-        rect[1] = y + frame_bound[1] + translateY;
-        rect[2] = 10000;
-        rect[3] = 10000;
-        byte[] b = Gutil.toUtf8(str + "\000");
-        int blen = str.length();
-//        NK.nk_draw_text(brush, rect, b, blen, NK.nk_get_font_handle(font), new int[]{0x80808080}, curColor);
+        x += canvas.getX();;
+        y += canvas.getY();;
+        byte[] ba = Gutil.toUtf8(str + "\000");
+        nvgFillColor(vg, nvgRGBA(r, g, b, a));
+        Nutil.nvgTextJni(vg, x, y, ba, 0, ba.length);
     }
 
     public void drawSubstring(String str, int offset, int len, int x, int y, int anchor) {
-        if (brush == 0) {
-            return;
-        }
-        x += frame_bound[0] + translateX;
-        y += frame_bound[1] + translateY;
+
+        x += canvas.getX();
+        y += canvas.getY();
         str = str.substring(offset, len);
         byte[] b = Gutil.toUtf8(str + "\000");
-        int blen = str.length();
-//        NK.nk_draw_text(brush, rect, b, blen, NK.nk_get_font_handle(font), new int[]{0xff808000}, curColor);
+        Nutil.nvgTextJni(vg, x, y, b, 0, b.length);
     }
 
     public void drawChar(char character, int x, int y, int anchor) {
-        if (brush == 0) {
-            return;
-        }
-        x += frame_bound[0] + translateX;
-        y += frame_bound[1] + translateY;
-
+        x += canvas.getX();
+        y += canvas.getY();
+        byte[] b = Gutil.toUtf8(character + "\000");
+        Nutil.nvgTextJni(vg, x, y, b, 0, b.length);
     }
 
     public void drawChars(char[] data, int offset, int length, int x, int y, int anchor) {
-        if (brush == 0) {
-            return;
-        }
-        x += frame_bound[0] + translateX;
-        y += frame_bound[1] + translateY;
+        x += canvas.getX();
+        y += canvas.getY();
+        String s = new String(data, offset, length);
+        drawString(s, x, y, anchor);
     }
 
     public void fillTriangle(int x1, int y1, int x2, int y2, int x3, int y3) {
-        if (brush == 0) {
-            return;
-        }
-        x1 += frame_bound[0] + translateX;
-        y1 += frame_bound[1] + translateY;
-        x2 += frame_bound[0] + translateX;
-        y2 += frame_bound[1] + translateY;
-        x3 += frame_bound[0] + translateX;
-        y3 += frame_bound[1] + translateY;
+        x1 += canvas.getX();
+        y1 += canvas.getY();
+        x2 += canvas.getX();
+        y2 += canvas.getY();
+        x3 += canvas.getX();
+        y3 += canvas.getY();
+        nvgFillColor(vg, nvgRGBA(r, g, b, a));
+        nvgBeginPath(vg);
+        nvgMoveTo(vg, x1, y1);
+        nvgLineTo(vg, x2, y2);
+        nvgLineTo(vg, x3, y3);
+        nvgLineTo(vg, x1, y1);
+        nvgClosePath(vg);
+        nvgFill(vg);
+    }
+
+    public void drawTriangle(int x1, int y1, int x2, int y2, int x3, int y3) {
+        x1 += canvas.getX();
+        y1 += canvas.getY();
+        x2 += canvas.getX();
+        y2 += canvas.getY();
+        x3 += canvas.getX();
+        y3 += canvas.getY();
+        nvgStrokeColor(vg, nvgRGBA(r, g, b, a));
+        nvgBeginPath(vg);
+        nvgMoveTo(vg, x1, y1);
+        nvgLineTo(vg, x2, y2);
+        nvgLineTo(vg, x3, y3);
+        nvgLineTo(vg, x1, y1);
+        nvgStroke(vg);
     }
 
     public void drawImage(GImage img, int x, int y, int anchor) {
@@ -127,65 +197,48 @@ public class GGraphics {
     }
 
     public void drawImage(GImage img, int x, int y, int w, int h, int anchor) {
-        if (brush == 0) {
-            return;
-        }
-        rect[0] = x + frame_bound[0] + translateX;
-        rect[1] = y + frame_bound[1] + translateY;
-        rect[2] = w;
-        rect[3] = h;
-        //System.out.println("w=" + w + "  ,h=" + h);
-        int color = curColor[0];
-        curColor[0] = 0xffffffff;
-//        NK.nk_draw_image(brush, rect, img.getDataPtr(), curColor);
-        curColor[0] = color;
+
+        x += canvas.getX();
+        y += canvas.getY();
+
+        byte[] imgPaint = nvgImagePattern(vg, x, y, w, h, 0.0f / 180.0f * (float) Math.PI, img.getTexture(), 1f);
+        nvgBeginPath(vg);
+        nvgRoundedRect(vg, x, y, w, h, 0);
+        nvgFillPaint(vg, imgPaint);
+        nvgFill(vg);
     }
 
     public void drawRegion(GImage src, int x_src, int y_src, int width, int height, int transform, int x_dest, int y_dest, int anchor) {
-        if (brush == 0) {
-            return;
-        }
-        x_src += frame_bound[0] + translateX;
-        y_src += frame_bound[1] + translateY;
+        x_src += canvas.getX();
+        y_src += canvas.getY();
 
-        x_dest += frame_bound[0] + translateX;
-        y_dest += frame_bound[1] + translateY;
+        x_dest += canvas.getX();
+        y_dest += canvas.getY();
     }
 
     public void drawRGB(int[] rgbData, int offset, int scanlength, int x, int y, int width, int height, boolean processAlpha) {
-        if (brush == 0) {
-            return;
-        }
-        x += frame_bound[0] + translateX;
-        y += frame_bound[1] + translateY;
+        x += canvas.getX();
+        y += canvas.getY();
     }
 
     public int getColor() {
-        return curColor[0];
+        return curColor;
     }
 
     public void copyArea(int x_src, int y_src, int width, int height, int x_dest, int y_dest, int anchor) {
-        if (brush == 0) {
-            return;
-        }
-        x_src += frame_bound[0] + translateX;
-        y_src += frame_bound[1] + translateY;
+        x_src += canvas.getX();
+        y_src += canvas.getY();
 
-        x_dest += frame_bound[0] + translateX;
-        y_dest += frame_bound[1] + translateY;
+        x_dest += canvas.getX();
+        y_dest += canvas.getY();
     }
 
     public void clipRect(int x, int y, int width, int height) {
-        if (brush == 0) {
-            return;
-        }
-        x += frame_bound[0] + translateX;
-        y += frame_bound[1] + translateY;
+        Nutil.nvgScissor(vg, x, y, width, height);
     }
 
     public void translate(int x, int y) {
-        translateX = x;
-        translateY = y;
+        Nutil.nvgTranslate(vg, x, y);
     }
 
 }

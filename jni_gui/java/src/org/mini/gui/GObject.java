@@ -7,7 +7,6 @@ package org.mini.gui;
 
 import static org.mini.gui.GToolkit.nvgRGBA;
 import org.mini.gui.event.GActionListener;
-import org.mini.gui.event.GStateListener;
 
 /**
  *
@@ -35,7 +34,6 @@ abstract public class GObject {
     float[] color;
 
     GActionListener actionListener;
-    GStateListener stateListener;
 
 
     boolean visable = true;
@@ -148,20 +146,6 @@ abstract public class GObject {
      */
     public void setActionListener(GActionListener actionListener) {
         this.actionListener = actionListener;
-    }
-
-    /**
-     * @return the stateListener
-     */
-    public GStateListener getStateListener() {
-        return stateListener;
-    }
-
-    /**
-     * @param stateListener the stateListener to set
-     */
-    public void setStateListener(GStateListener stateListener) {
-        this.stateListener = stateListener;
     }
 
     public void setVisable(boolean v) {

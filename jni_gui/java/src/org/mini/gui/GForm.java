@@ -59,6 +59,7 @@ public class GForm extends GContainer implements Runnable {
     long vg; //nk contex
     GlfwCallback callback;
     static StbFont gfont;
+    float fps;
 
     int[] unicode_range = {
         0x0020, 0xFFFF,
@@ -142,7 +143,8 @@ public class GForm extends GContainer implements Runnable {
                 count++;
                 now = System.currentTimeMillis();
                 if (now - last > 1000) {
-                    System.out.println("fps:" + count);
+                    //System.out.println("fps:" + count);
+                    fps = count;
                     last = now;
                     count = 0;
                 }
@@ -297,6 +299,13 @@ public class GForm extends GContainer implements Runnable {
         public void drop(long window, int count, String[] paths) {
             GForm.this.dropEvent(count, paths);
         }
+    }
+
+    /**
+     * @return the fps
+     */
+    public float getFps() {
+        return fps;
     }
 
 }

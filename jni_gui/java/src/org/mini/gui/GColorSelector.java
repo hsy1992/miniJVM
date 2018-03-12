@@ -38,14 +38,62 @@ import static org.mini.gui.GToolkit.nvgRGBA;
 public class GColorSelector extends GObject {
 
     String text;
-    float pos;
+    float curAngel;
+    float oldAngel;
+    float centX;
+    float centY;
+    float r_big, r_small;
+    float selectX, selectY;
 
     public GColorSelector(float pos, int left, int top, int width, int height) {
-        this.pos = pos;
+        this.curAngel = pos;
         boundle[LEFT] = left;
         boundle[TOP] = top;
         boundle[WIDTH] = width;
         boundle[HEIGHT] = height;
+        centX = boundle[WIDTH] / 2;
+        centY = boundle[HEIGHT] / 2;
+
+    }
+
+    @Override
+    public void cursorPosEvent(int x, int y) {
+        int rx = (int) (x - parent.getX());
+        int ry = (int) (y - parent.getY());
+        if (isInBoundle(boundle, rx, ry)) {
+
+        }
+    }
+
+    @Override
+    public void mouseButtonEvent(int button, boolean pressed, int x, int y) {
+        int rx = (int) (x - parent.getX());
+        int ry = (int) (y - parent.getY());
+        if (isInBoundle(boundle, rx, ry)) {
+            if (!pressed) {
+                float offX = x - (getX() + centX);
+                float offY = y - (getY() + centY);
+                float r = (float) Math.sqrt(offX * offX + offY * offY);
+                if (r < r_small) {
+                    selectX = offX;
+                    selectY = offY;
+                } else if (r < r_big) {
+                    curAngel = (float) (Math.atan2(offY, offX));
+                    float angel = -oldAngel + curAngel;
+                    System.out.println("curA:" + curAngel + "    oldA:" + oldAngel + "    result:" + angel);
+                    oldAngel = curAngel;
+                    float oldX = selectX;
+                    float oldY = selectY;
+                    selectX = (float) (Math.cos(angel) * oldX - Math.sin(angel) * oldY);//(float) Math.cos(120.0f / 180.0f * Math.PI) * r * 0.3f;
+                    selectY = (float) (Math.sin(angel) * oldX + Math.cos(angel) * oldY);//(float) Math.sin(120.0f / 180.0f * Math.PI) * r * 0.4f;
+                }
+            } else {
+                if (actionListener != null) {
+                    actionListener.action();
+                }
+            }
+        }
+
     }
 
     /**
@@ -59,26 +107,24 @@ public class GColorSelector extends GObject {
         float w = getW();
         float h = getH();
 
-        drawColorwheel(vg, x, y, w, h, pos);
+        drawColorwheel(vg, x, y, w, h);
         return true;
     }
 
-    void drawColorwheel(long vg, float x, float y, float w, float h, float t) {
+    void drawColorwheel(long vg, float x, float y, float w, float h) {
         int i;
         float r0, r1, ax, ay, bx, by, cx, cy, aeps, r;
-        float hue = (float) Math.sin(t * 0.12f);
+        float hue = (float) Math.sin(curAngel * 0.166f);
         byte[] paint;
 
         nvgSave(vg);
 
-        /*	nvgBeginPath(vg);
-	nvgRect(vg, x,y,w,h);
-	nvgFillColor(vg, nvgRGBA(255,0,0,128));
-	nvgFill(vg);*/
         cx = x + w * 0.5f;
         cy = y + h * 0.5f;
         r1 = (w < h ? w : h) * 0.5f - 5.0f;
+        r_big = r1;
         r0 = r1 - 20.0f;
+        r_small = r0;
         aeps = 0.5f / r1;	// half a pixel arc length in radians (2pi cancels out).
 
         for (i = 0; i < 6; i++) {
@@ -145,8 +191,9 @@ public class GColorSelector extends GObject {
         nvgStroke(vg);
 
         // Select circle on triangle
-        ax = (float) Math.cos(120.0f / 180.0f * Math.PI) * r * 0.3f;
-        ay = (float) Math.sin(120.0f / 180.0f * Math.PI) * r * 0.4f;
+        float angel = -curAngel;
+        ax = (float) (Math.cos(angel) * selectX - Math.sin(angel) * selectY);//(float) Math.cos(120.0f / 180.0f * Math.PI) * r * 0.3f;
+        ay = (float) (Math.sin(angel) * selectX + Math.cos(angel) * selectY);//(float) Math.sin(120.0f / 180.0f * Math.PI) * r * 0.4f;
         nvgStrokeWidth(vg, 2.0f);
         nvgBeginPath(vg);
         nvgCircle(vg, ax, ay, 5);

@@ -75,10 +75,10 @@ public class Light {
 
     void t1() {
         Glfw.glfwInit();
-        glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
-        glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
-        glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
-        glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 1);
+//        glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
+//        glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
+//        glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
+//        glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 1);
         long win = Glfw.glfwCreateWindow(500, 500, "hello glfw".getBytes(), 0, 0);
         if (win != 0) {
             Glfw.glfwSetCallback(win, new CallBack());
@@ -322,7 +322,7 @@ public class Light {
         //
         {
             if (text == 0) {
-                text = Gutil.getDefaultFont().renderToTexture("张鹏Test", 20).getTexture();
+//                text = Gutil.getDefaultFont().renderToTexture("张鹏Test", 20).getTexture();
             }
             glPushMatrix();
             glRotatef(180, 1, 0, 0);

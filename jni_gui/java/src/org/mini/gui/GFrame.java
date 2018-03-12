@@ -51,7 +51,6 @@ public class GFrame extends GContainer {
     GPanel panel =new GPanel();
 
     float[] title_boundle = new float[4];
-    GGraphics g = new GGraphics();
     long vg;
     int frameMode;
     boolean closable;

@@ -6,11 +6,13 @@ import org.mini.gl.warp.GLFrameBufferPainter;
 import static org.mini.glfw.utils.Gutil.toUtf8;
 import org.mini.glfw.utils.Nutil;
 import org.mini.gui.GButton;
+import org.mini.gui.GCanvas;
 import org.mini.gui.GCheckBox;
 import org.mini.gui.GColorSelector;
 import org.mini.gui.GTextBox;
 import org.mini.gui.GFrame;
 import org.mini.gui.GForm;
+import org.mini.gui.GGraphics;
 import org.mini.gui.GImage;
 import org.mini.gui.GInputField;
 import org.mini.gui.GLabel;
@@ -52,20 +54,10 @@ public class GuiTest {
     int op = EASY;
     int property = 20;
     Light light;
-    GLFrameBuffer glfb;
-    GLFrameBufferPainter glfbRender;
-    GImage img1;
 
     public void init(GPanel parent, long vg) {
         light = new Light();
-        glfb = new GLFrameBuffer(300, 300);
-        glfbRender = new GLFrameBufferPainter() {
-            @Override
-            public void paint() {
-//                    light.setCamera();
-//                    light.draw();
-            }
-        };
+
         int x = 8, y = 10;
         GInputField gif = new GInputField("", "search", x, y, 280, 25);
         parent.add(gif);
@@ -123,7 +115,6 @@ public class GuiTest {
         GButton bt2 = new GButton("Cancel", x + 170, y, 110, 28);
         bt2.setBgColor(0, 0, 0, 0);
         parent.add(bt2);
-        img1 = new GImage(glfb.getTexture(), glfb.getWidth(), glfb.getHeight());
 
         bt1.setActionListener(new GActionListener() {
             @Override
@@ -133,33 +124,56 @@ public class GuiTest {
         });
     }
 
-    public void updateContents(long vg, GFrame parent) {
-        try {
-            Thread.sleep(30);
-        } catch (InterruptedException ex) {
-        }
-    }
-
     GImage img;
     GList list;
 
     public void init1(GPanel parent, long vg) {
         img = new GImage("./image4.png");
-//            GColorSelector cs = new GColorSelector(0, 50, 30, 200, 200);
-//            parent.add(cs);
 
-        list = new GList(10, 10, 280, 30);
+        int x = 10, y = 10;
+        list = new GList(x, y, 280, 30);
         parent.add(list);
         if (list.getImages() == null) {
             int i = Nutil.nvgCreateImage(vg, toUtf8("./image4.png"), 0);
             list.setItems(new int[]{i, i, i, i, i, i, i, i, i, i},
                     new String[]{"A", "B", "C", "D", "E", "F", "G", "H", "I", "J",});
-
         }
+        y += 40;
+        parent.add(new TestCanvas(x, y, 280, 150));
+        y += 160;
+        GColorSelector cs = new GColorSelector(0, x, y, 130, 130);
+        parent.add(cs);
+
     }
 
-    public void updateContents1(long vg, GFrame parent) {
+    class TestCanvas extends GCanvas {
 
+        GLFrameBuffer glfb;
+        GLFrameBufferPainter glfbRender;
+        GImage img3D;
+
+        public TestCanvas(int x, int y, int w, int h) {
+            super(x, y, w, h);
+            glfb = new GLFrameBuffer(300, 300);
+            glfbRender = new GLFrameBufferPainter() {
+                @Override
+                public void paint() {
+                    light.setCamera();
+                    light.draw();
+                }
+            };
+            img3D = new GImage(glfb.getTexture(), glfb.getWidth(), glfb.getHeight());
+        }
+
+        public void paint(GGraphics g) {
+            g.setColor(0xff000000);
+            g.fillRect(0, 0, (int) getW(), (int) getH());
+            g.setColor(0xff0000ff);
+            g.drawLine(0, 100, 100, 100);
+            g.drawString("this is a canvas", 0, 50, GGraphics.TOP | GGraphics.LEFT);
+//            glfb.render(glfbRender);
+//            g.drawImage(img3D, 0, 0, 100, 100, GGraphics.TOP | GGraphics.LEFT);
+        }
     }
 
 }

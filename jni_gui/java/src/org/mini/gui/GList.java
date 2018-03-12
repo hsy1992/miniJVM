@@ -114,13 +114,12 @@ public class GList extends GContainer {
                         float stackh = (labels.length / list_cols) * (list_item_heigh) + pad;
                         float pos = scrollBar.getPos() * (stackh - popBoundle[HEIGHT]) + (y - getY());
                         curIndex = (int) (pos / stackh * labels.length);
+                        if (actionListener != null) {
+                            actionListener.action();
+                        }
                     }
                     pulldown = !pulldown;
                     parent.setFocus(this);
-                }
-            } else {
-                if (actionListener != null) {
-                    stateListener.stateChange();
                 }
             }
         }
@@ -149,8 +148,11 @@ public class GList extends GContainer {
      * @return
      */
     public boolean update(long vg) {
-        nvgFontSize(vg, GToolkit.getStyle().getTextFontSize());
+        if (parent.getFocus() != this) {
+            pulldown = false;
+        }
 
+        nvgFontSize(vg, GToolkit.getStyle().getTextFontSize());
         nvgFontFace(vg, GToolkit.getFontWord());
         nvgTextAlign(vg, NVG_ALIGN_LEFT | NVG_ALIGN_MIDDLE);
 
@@ -250,9 +252,10 @@ public class GList extends GContainer {
 //	nvgClearState(vg);
 
         // Window
+//        GTextBox.drawTextBoxBase(vg, x, y, w, h);
         nvgBeginPath(vg);
         nvgRoundedRect(vg, x, y, w, h, cornerRadius);
-        nvgFillColor(vg, GToolkit.getStyle().getFrameBackground());
+        nvgFillColor(vg, nvgRGBA(60, 60, 60, 192));
         nvgFill(vg);
 
         // Drop shadow
@@ -283,13 +286,13 @@ public class GList extends GContainer {
         nvgRestore(vg);
 
         // Hide fades
-        fadePaint = nvgLinearGradient(vg, x, y, x, y + 6, nvgRGBA(28, 30, 34, 192), nvgRGBA(28, 30, 34, 0));
+        fadePaint = nvgLinearGradient(vg, x, y, x, y + 6, nvgRGBA(60, 60, 60, 255), nvgRGBA(255, 255, 255, 0));
         nvgBeginPath(vg);
         nvgRect(vg, x + 4, y, w - 8, 6);
         nvgFillPaint(vg, fadePaint);
         nvgFill(vg);
 
-        fadePaint = nvgLinearGradient(vg, x, y + h, x, y + h - 6, nvgRGBA(28, 30, 34, 192), nvgRGBA(28, 30, 34, 0));
+        fadePaint = nvgLinearGradient(vg, x, y + h, x, y + h - 6, nvgRGBA(60, 60, 60, 255), nvgRGBA(255, 255, 255, 0));
         nvgBeginPath(vg);
         nvgRect(vg, x + 4, y + h - 6, w - 8, 6);
         nvgFillPaint(vg, fadePaint);
