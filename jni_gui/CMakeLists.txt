@@ -43,7 +43,7 @@ IF (APPLE)
     MARK_AS_ADVANCED(MY_LIB COCOA_LIB IOKIT_LIB OPENGL_LIB COREFOUNDATION_LIB COREVIDEO_LIB)
     SET(EXTRA_LIBS ${MY_LIB} ${COCOA_LIB} ${IOKIT_LIB} ${OPENGL_LIB} ${COREFOUNDATION_LIB} ${COREVIDEO_LIB})
 
-    set(CMAKE_RUNTIME_OUTPUT_DIRECTORY /Users/Gust/Library/Developer/Xcode/DerivedData/jvm_macos-aztlknxrtoubcvefejqkudbbsjxo/Build/Products/Debug/)
+    #set(CMAKE_RUNTIME_OUTPUT_DIRECTORY /Users/Gust/Library/Developer/Xcode/DerivedData/jvm_macos-aztlknxrtoubcvefejqkudbbsjxo/Build/Products/Debug/)
     TARGET_LINK_LIBRARIES(gui ${EXTRA_LIBS})
     TARGET_LINK_LIBRARIES(test_gui ${EXTRA_LIBS})
 ELSEIF (LINUX)
