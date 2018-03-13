@@ -15,7 +15,7 @@ public class Glfw {
 
     public static void loadLib() {
         if (!loaded) {
-            System.setProperty("java.library.path", "./");
+            System.setProperty("java.library.path", ".");
             System.loadLibrary("gui");
         }
         loaded = true;
