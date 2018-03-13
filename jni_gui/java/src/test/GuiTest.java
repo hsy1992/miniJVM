@@ -5,6 +5,7 @@ import org.mini.gl.warp.GLFrameBuffer;
 import org.mini.gl.warp.GLFrameBufferPainter;
 import static org.mini.glfw.utils.Gutil.toUtf8;
 import org.mini.glfw.utils.Nutil;
+import static org.mini.glfw.utils.Nutil.nvgSave;
 import org.mini.gui.GButton;
 import org.mini.gui.GCanvas;
 import org.mini.gui.GCheckBox;
@@ -165,12 +166,21 @@ public class GuiTest {
             img3D = new GImage(glfb.getTexture(), glfb.getWidth(), glfb.getHeight());
         }
 
+        int pos = 0, delta = 1;
+
         public void paint(GGraphics g) {
             g.setColor(0xff000000);
             g.fillRect(0, 0, (int) getW(), (int) getH());
             g.setColor(0xff0000ff);
             g.drawLine(0, 100, 100, 100);
-            g.drawString("this is a canvas", 0, 50, GGraphics.TOP | GGraphics.LEFT);
+            pos += delta;
+            if (pos > 50) {
+                delta = -1;
+            }
+            if (pos < 0) {
+                delta = 1;
+            }
+            g.drawString("this is a canvas", pos, 50, GGraphics.TOP | GGraphics.LEFT);
 //            glfb.render(glfbRender);
 //            g.drawImage(img3D, 0, 0, 100, 100, GGraphics.TOP | GGraphics.LEFT);
         }
