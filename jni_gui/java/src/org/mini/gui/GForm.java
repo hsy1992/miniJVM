@@ -105,8 +105,8 @@ public class GForm extends GContainer implements Runnable {
         }
 //        glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 //        glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
-        glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
-        glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
+//        glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
+//        glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
         //glfwWindowHint(Glfw.GLFW_COCOA_RETINA_FRAMEBUFFER, GL_TRUE);
 
         win = Glfw.glfwCreateWindow(width, height, Gutil.toUtf8(title), 0, 0);
@@ -116,7 +116,7 @@ public class GForm extends GContainer implements Runnable {
         }
         Glfw.glfwMakeContextCurrent(win);
         glfwSwapInterval(1);
-        vg = Nutil.nvgCreateGL3(NVG_ANTIALIAS | NVG_STENCIL_STROKES | NVG_DEBUG);
+        vg = Nutil.nvgCreateGL2(NVG_ANTIALIAS | NVG_STENCIL_STROKES | NVG_DEBUG);
         if (vg == 0) {
             System.out.println("Could not init nanovg.\n");
 
@@ -153,7 +153,7 @@ public class GForm extends GContainer implements Runnable {
                 ex.printStackTrace();
             }
         }
-        Nutil.nvgDeleteGL3(vg);
+        Nutil.nvgDeleteGL2(vg);
         glfwTerminate();
         GToolkit.removeForm(vg);
         vg = 0;

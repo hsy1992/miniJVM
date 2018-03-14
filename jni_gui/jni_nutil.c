@@ -16,7 +16,7 @@
 
 #include <nanovg/nanovg.h>
 #include <nanovg/nanovg_jni_assist.h>
-#define NANOVG_GL3_IMPLEMENTATION
+#define NANOVG_GL2_IMPLEMENTATION
 #include <nanovg/nanovg_gl.h>
 
 
@@ -1909,31 +1909,31 @@ int org_mini_glfw_utils_Nutil_nvgTextMetrics(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-int org_mini_glfw_utils_Nutil_nvgCreateGL3(Runtime *runtime, Class *clazz) {
+int org_mini_glfw_utils_Nutil_nvgCreateGL2(Runtime *runtime, Class *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
     s32 pflags = env->localvar_getInt(runtime, pos++);
 
-    NVGcontext*/*ptr*/ _re_val = nvgCreateGL3((int)pflags);
+    NVGcontext*/*ptr*/ _re_val = nvgCreateGL2((int)pflags);
     s64 ret_value = (s64)(intptr_t)_re_val;env->push_long(runtime->stack, ret_value);
     
     return 0;
 }
 
-int org_mini_glfw_utils_Nutil_nvgDeleteGL3(Runtime *runtime, Class *clazz) {
+int org_mini_glfw_utils_Nutil_nvgDeleteGL2(Runtime *runtime, Class *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
     intptr_t pctx = env->localvar_getLong_2slot(runtime, pos);pos += 2;
 
-    nvgDeleteGL3((NVGcontext*/*ptr*/)(pctx));
+    nvgDeleteGL2((NVGcontext*/*ptr*/)(pctx));
     
     
     return 0;
 }
 
-int org_mini_glfw_utils_Nutil_nvglCreateImageFromHandleGL3(Runtime *runtime, Class *clazz) {
+int org_mini_glfw_utils_Nutil_nvglCreateImageFromHandleGL2(Runtime *runtime, Class *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -1943,20 +1943,20 @@ int org_mini_glfw_utils_Nutil_nvglCreateImageFromHandleGL3(Runtime *runtime, Cla
     s32 ph = env->localvar_getInt(runtime, pos++);
     s32 pflags = env->localvar_getInt(runtime, pos++);
 
-    int _re_val = nvglCreateImageFromHandleGL3((NVGcontext*/*ptr*/)(pctx), (GLuint)ptextureId, (int)pw, (int)ph, (int)pflags);
+    int _re_val = nvglCreateImageFromHandleGL2((NVGcontext*/*ptr*/)(pctx), (GLuint)ptextureId, (int)pw, (int)ph, (int)pflags);
     s32 ret_value = (s32)_re_val;env->push_int(runtime->stack, ret_value);
     
     return 0;
 }
 
-int org_mini_glfw_utils_Nutil_nvglImageHandleGL3(Runtime *runtime, Class *clazz) {
+int org_mini_glfw_utils_Nutil_nvglImageHandleGL2(Runtime *runtime, Class *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
     intptr_t pctx = env->localvar_getLong_2slot(runtime, pos);pos += 2;
     s32 pimage = env->localvar_getInt(runtime, pos++);
 
-    GLuint _re_val = nvglImageHandleGL3((NVGcontext*/*ptr*/)(pctx), (int)pimage);
+    GLuint _re_val = nvglImageHandleGL2((NVGcontext*/*ptr*/)(pctx), (int)pimage);
     s32 ret_value = (s32)_re_val;env->push_int(runtime->stack, ret_value);
     
     return 0;
@@ -2325,10 +2325,10 @@ static java_native_method method_nutil_table[] = {
 {"org/mini/glfw/utils/Nutil",  "nvgFontFaceId",  "(JI)V",  org_mini_glfw_utils_Nutil_nvgFontFaceId},
 {"org/mini/glfw/utils/Nutil",  "nvgFontFace",  "(J[B)V",  org_mini_glfw_utils_Nutil_nvgFontFace},
 {"org/mini/glfw/utils/Nutil",  "nvgTextMetrics",  "(J[F[F[F)V",  org_mini_glfw_utils_Nutil_nvgTextMetrics},
-{"org/mini/glfw/utils/Nutil",  "nvgCreateGL3",  "(I)J",  org_mini_glfw_utils_Nutil_nvgCreateGL3},
-{"org/mini/glfw/utils/Nutil",  "nvgDeleteGL3",  "(J)V",  org_mini_glfw_utils_Nutil_nvgDeleteGL3},
-{"org/mini/glfw/utils/Nutil",  "nvglCreateImageFromHandleGL3",  "(JIIII)I",  org_mini_glfw_utils_Nutil_nvglCreateImageFromHandleGL3},
-{"org/mini/glfw/utils/Nutil",  "nvglImageHandleGL3",  "(JI)I",  org_mini_glfw_utils_Nutil_nvglImageHandleGL3},
+{"org/mini/glfw/utils/Nutil",  "nvgCreateGL2",  "(I)J",  org_mini_glfw_utils_Nutil_nvgCreateGL2},
+{"org/mini/glfw/utils/Nutil",  "nvgDeleteGL2",  "(J)V",  org_mini_glfw_utils_Nutil_nvgDeleteGL2},
+{"org/mini/glfw/utils/Nutil",  "nvglCreateImageFromHandleGL2",  "(JIIII)I",  org_mini_glfw_utils_Nutil_nvglCreateImageFromHandleGL2},
+{"org/mini/glfw/utils/Nutil",  "nvglImageHandleGL2",  "(JI)I",  org_mini_glfw_utils_Nutil_nvglImageHandleGL2},
 {"org/mini/glfw/utils/Nutil",  "nvgCreateNVGtextRow",  "(I)J",  org_mini_glfw_utils_Nutil_nvgCreateNVGtextRow},
 {"org/mini/glfw/utils/Nutil",  "nvgDeleteNVGtextRow",  "(J)V",  org_mini_glfw_utils_Nutil_nvgDeleteNVGtextRow},
 {"org/mini/glfw/utils/Nutil",  "nvgNVGtextRow_width",  "(JI)F",  org_mini_glfw_utils_Nutil_nvgNVGtextRow_width},

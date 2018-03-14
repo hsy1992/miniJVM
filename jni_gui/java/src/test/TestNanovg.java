@@ -127,10 +127,10 @@ public class TestNanovg {
 
     void t1() {
         glfwInit();
-        glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
-        glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
-        glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
-        glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
+//        glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
+//        glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
+//        glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
+//        glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
 //        glfwWindowHint(GLFW_DEPTH_BITS, 16);
 //        glfwWindowHint(GLFW_TRANSPARENT_FRAMEBUFFER, GLFW_TRUE);
         win = glfwCreateWindow(1200, 600, "TestNanovg".getBytes(), 0, 0);
@@ -230,7 +230,7 @@ public class TestNanovg {
     static int ICON_TRASH = 0xE729;
 
     void init() {
-        vg = Nutil.nvgCreateGL3(NVG_ANTIALIAS | NVG_STENCIL_STROKES | NVG_DEBUG);
+        vg = Nutil.nvgCreateGL2(NVG_ANTIALIAS | NVG_STENCIL_STROKES | NVG_DEBUG);
         if (vg == 0) {
             System.out.println("Could not init nanovg.\n");
 
