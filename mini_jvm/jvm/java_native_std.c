@@ -414,7 +414,7 @@ s32 java_lang_Math_atan2(Runtime *runtime, Class *clazz) {
     invoke_deepth(runtime);
     jvm_printf("java_lang_Math_atan2 \n");
 #endif
-    push_double(stack, atan2(y,x));
+    push_double(stack, atan2(y, x));
     return 0;
 }
 
@@ -694,7 +694,7 @@ s32 java_lang_System_loadLibrary0(Runtime *runtime, Class *clazz) {
         if (val) {
             utf8_append(libname, val);
         }
-        const c8 *note1 = "lib not found:%s\n";
+        const c8 *note1 = "lib not found:%s, %s\n";
         const c8 *note2 = "register function not found:%s\n";
         const c8 *onload = "JNI_OnLoad";
         jni_fun f;
@@ -726,7 +726,7 @@ s32 java_lang_System_loadLibrary0(Runtime *runtime, Class *clazz) {
 #endif
         __refer lib = dlopen(utf8_cstr(libname), RTLD_LAZY);
         if (!lib) {
-            jvm_printf(note1, utf8_cstr(libname));
+            jvm_printf(note1, utf8_cstr(libname), dlerror());
         } else {
 
             f = dlsym(lib, onload);

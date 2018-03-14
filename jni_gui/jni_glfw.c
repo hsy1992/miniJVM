@@ -30,7 +30,9 @@ Instance *createJavaString(Runtime *runtime, c8 *cstr) {
 }
 
 /* ==============================   jni callback =================================*/
-
+static void _callback_error_before_init(int error, const char *description) {
+    fprintf(stderr, "GLFW Error: %s\n", description);
+}
 static void _callback_error(int error, const char *description) {
     if (refers._callback_error) {
         JniEnv *env = refers.env;
@@ -927,6 +929,7 @@ int org_mini_glfw_Glfw_glfwWindowShouldClose(Runtime *runtime, Class *clazz) {
 
 int org_mini_glfw_Glfw_glfwInitJni(Runtime *runtime, Class *clazz) {
     JniEnv *env = runtime->jnienv;
+    glfwSetErrorCallback(_callback_error_before_init);
     env->push_int(runtime->stack, glfwInit() == GLFW_TRUE);
 
     return 0;

@@ -103,8 +103,8 @@ public class GForm extends GContainer implements Runnable {
             System.out.println("glfw init error.");
             System.exit(1);
         }
-        glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
-        glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
+//        glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
+//        glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
         glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
         glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
         //glfwWindowHint(Glfw.GLFW_COCOA_RETINA_FRAMEBUFFER, GL_TRUE);
@@ -299,6 +299,10 @@ public class GForm extends GContainer implements Runnable {
         @Override
         public void drop(long window, int count, String[] paths) {
             GForm.this.dropEvent(count, paths);
+        }
+
+        public void error(int error, String description) {
+            System.out.println("error: " + error + " message: " + description);
         }
     }
 
