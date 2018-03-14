@@ -155,15 +155,15 @@ public class GuiTest {
 
         public TestCanvas(int x, int y, int w, int h) {
             super(x, y, w, h);
-            glfb = new GLFrameBuffer(300, 300);
-            glfbRender = new GLFrameBufferPainter() {
-                @Override
-                public void paint() {
-                    light.setCamera();
-                    light.draw();
-                }
-            };
-            img3D = new GImage(glfb.getTexture(), glfb.getWidth(), glfb.getHeight());
+//            glfb = new GLFrameBuffer(300, 300);
+//            glfbRender = new GLFrameBufferPainter() {
+//                @Override
+//                public void paint() {
+//                    light.setCamera();
+//                    light.draw();
+//                }
+//            };
+//            img3D = new GImage(glfb.getTexture(), glfb.getWidth(), glfb.getHeight());
         }
 
         int pos = 0, delta = 1;
