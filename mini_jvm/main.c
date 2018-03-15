@@ -35,8 +35,8 @@ int main(int argc, char **argv) {
     char *main_name = NULL;
     ArrayList *java_para = arraylist_create(0);
     s32 ret;
-    if (argc >
-        1) {//  mini_jvm   -Xmx16M -cp ../../javalib/dist/minijvm_rt.jar;../../javalib_test/dist/minijvm_test.jar;./ test/Foo1 999
+    //  mini_jvm   -Xmx16M -cp ../../binary/lib/minijvm_rt.jar;../../binary/lib/minijvm_test.jar;./ test/Foo1 999
+    if (argc > 1) {
         s32 i;
         for (i = 1; i < argc; i++) {
             if (strcmp(argv[i], "-cp") == 0 || strcmp(argv[i], "-classpath") == 0) {
@@ -55,7 +55,7 @@ int main(int argc, char **argv) {
         }
     } else {
         java_debug = 0;
-        classpath = "../../javalib/dist/minijvm_rt.jar;../../jni_gui/java/dist/gui_lib.jar;./";
+        classpath = "../../binary/lib/minijvm_rt.jar;../../binary/lib/gui_lib.jar;./";
 //        main_name = "test/Gears";
 //        main_name = "test/TestGL";
         main_name = "test/GuiTest";
@@ -66,11 +66,11 @@ int main(int argc, char **argv) {
 //        main_name = "test/Boing";
 //        main_name = "test/TestNanovg";
 
-//        classpath = "../../javalib/dist/minijvm_rt.jar;../../jni_test/java/dist/jni_test.jar;./";
+//        classpath = "../../binary/lib/minijvm_rt.jar;../../binary/lib/jni_test.jar;./";
 //        main_name = "test/JniTest";
 
 
-//        classpath = "../../javalib/dist/minijvm_rt.jar;../../javalib_test/dist/minijvm_test.jar;./";
+//        classpath = "../../binary/lib/minijvm_rt.jar;../../binary/lib/minijvm_test.jar;./";
 //        main_name = "test/Foo1";
 //        main_name = "test/Foo2";
 //        main_name = "test/TestFile";

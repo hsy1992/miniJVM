@@ -68,6 +68,7 @@ abstract public class FileSystemImpl extends org.mini.fs.FileSystem {
             path = parent + getSeparator() + path;    //   replace   "/tmp/abc/../a.txt" to "/tmp/a.txt"
         }
         path = removeParentTag(path);
+        path = normalize(path);
         return path;
     }
 

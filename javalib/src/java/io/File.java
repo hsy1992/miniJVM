@@ -173,7 +173,7 @@ public class File implements java.util.Comparable {
         if (pathname == null) {
             throw new NullPointerException();
         }
-        this.path = fs.normalize(pathname);
+        this.path = pathname;//fs.normalize(pathname);
         this.prefixLength = fs.prefixLength(this.path);
     }
 

@@ -61,7 +61,7 @@ public class GToolkit {
     /**
      * 字体部分
      */
-    static byte[] font_word = "word".getBytes(), font_icon = "icon".getBytes(), font_emoji = "emoji".getBytes();
+    static byte[] font_word = toUtf8("word"), font_icon = toUtf8("icon"), font_emoji = toUtf8("emoji");
     static int font_word_handle, font_icon_handle, font_emoji_handle;
     static boolean fontLoaded = false;
     static byte[] FONT_GLYPH_TEMPLATE = toUtf8("正");
@@ -70,17 +70,17 @@ public class GToolkit {
         if (fontLoaded) {
             return;
         }
-        font_word_handle = nvgCreateFont(vg, font_word, toUtf8("../../binary/res/wqymhei.ttc\000"));
+        font_word_handle = nvgCreateFont(vg, font_word, toUtf8(System.getProperty("word_font_path")));
         if (font_word_handle == -1) {
             System.out.println("Could not add font.\n");
         }
         nvgAddFallbackFontId(vg, font_word_handle, font_word_handle);
 
-        font_icon_handle = nvgCreateFont(vg, font_icon, toUtf8("../../binary/res/entypo.ttf\000"));
+        font_icon_handle = nvgCreateFont(vg, font_icon, toUtf8(System.getProperty("icon_font_path")));
         if (font_icon_handle == -1) {
             System.out.println("Could not add font.\n");
         }
-        font_emoji_handle = nvgCreateFont(vg, font_emoji, toUtf8("../../binary/res/NotoEmoji-Regular.ttf\000"));
+        font_emoji_handle = nvgCreateFont(vg, font_emoji, toUtf8(System.getProperty("emoji_font_path")));
         if (font_emoji_handle == -1) {
             System.out.println("Could not add font.\n");
         }

@@ -1,5 +1,8 @@
 package org.mini.glfw;
 
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileInputStream;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -15,8 +18,31 @@ public class Glfw {
 
     public static void loadLib() {
         if (!loaded) {
-            System.setProperty("java.library.path", ".");
+            try {
+                File file = new File("./gui.cfg");
+                if (file.exists()) {
+                    FileInputStream fr = new FileInputStream(file);
+                    int ch = 0;
+                    ByteArrayOutputStream baos = new ByteArrayOutputStream();
+                    while ((ch = fr.read()) != -1) {
+                        baos.write(ch);
+                    }
+                    String s = new String(baos.toByteArray(), "utf-8");
+                    s = s.replace('\r', '\n');
+                    String[] ss = s.split("\n");
+                    for (String ts : ss) {
+                        ts = ts.trim();
+                        int pos = ts.indexOf('=');
+                        if (pos > 0) {
+                            System.setProperty(ts.substring(0, pos), ts.substring(pos + 1));
+                        }
+                    }
+                }
+            } catch (Exception e) {
+            }
+            System.setProperty("java.library.path", System.getProperty("gui_dll_path"));
             System.loadLibrary("gui");
+
         }
         loaded = true;
     }

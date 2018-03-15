@@ -272,7 +272,7 @@ public class Gutil {
 
     static public StbFont getDefaultFont() {
         if (defaultFont == null) {
-            defaultFont = new StbFont("../../binary/res/wqymhei.ttc");
+            defaultFont = new StbFont(System.getProperty("word_font_path"));
         }
         return defaultFont;
     }

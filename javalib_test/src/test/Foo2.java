@@ -1,5 +1,7 @@
 package test;
 
+import java.io.File;
+
 class Foo2 {
 
     public void t0() {
@@ -163,7 +165,7 @@ class Foo2 {
 
     void t7() {
         for (int i = 0; i < 1000000; i++) {
-            T7class t7= new T7class();
+            T7class t7 = new T7class();
             new T7class();
             t7_1(t7);
         }
@@ -235,19 +237,35 @@ class Foo2 {
         System.out.println("arr print:" + a3[1][1][2]);
     }
 
+    void t12() {
+        String src = "a,,b,,c,d,,";
+        src = src.substring(2);
+        String splitor = ",,";
+        String[] result = src.split(splitor);
+        for (String s : result) {
+            System.out.println("|" + s + "|");
+        }
+    }
+
+    void t13() {
+        File f = new File("./");
+        System.out.println("path:" + f.getAbsolutePath());
+    }
+
     public static void main(String args[]) {
         Foo2 obj = new Foo2();
-        obj.t1();
-        obj.t2();
-        obj.t3();
-        obj.t4();
-        obj.t5();
-        obj.t6();
-        obj.t7();
-        obj.t8();
-        obj.t9();
-        obj.t10();
-        obj.t11();
-
+//        obj.t1();
+//        obj.t2();
+//        obj.t3();
+//        obj.t4();
+//        obj.t5();
+//        obj.t6();
+//        obj.t7();
+//        obj.t8();
+//        obj.t9();
+//        obj.t10();
+//        obj.t11();
+//        obj.t12();
+        obj.t13();
     }
 }

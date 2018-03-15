@@ -1346,4 +1346,50 @@ public final class String {
      */
     public native String intern();
 
+    public String[] split(String splitor) {
+        return split(splitor, 0);
+    }
+
+    public String[] split(String splitor, int limit) {
+        String[] result = new String[0];
+        int startAt = 0;
+        for (int i = 0; i < count;) {
+            char ch = value[offset + i];
+            boolean match = false;
+            if (ch == splitor.charAt(0)) {
+                match = true;
+                for (int j = 1; j < splitor.count; j++) {
+                    if (offset + i + j >= count || value[offset + i + j] != splitor.charAt(j)) {
+                        match = false;
+                        break;
+                    }
+                }
+            }
+            if (match) {
+                result = expandArr(result);
+                result[result.length - 1] = new String(value, startAt + offset, i - startAt);
+                i += splitor.count;
+                startAt = i;
+                if (limit > 0 && result.length >= limit) {
+                    return result;
+                }
+            } else {
+                i++;
+            }
+        }
+        String last = new String(value, startAt + offset, count - startAt);
+        result = expandArr(result);
+        result[result.length - 1] = last;
+        return result;
+    }
+
+    private String[] expandArr(String[] arr) {
+        if (arr == null) {
+            return new String[1];
+        } else {
+            String[] ss = new String[arr.length + 1];
+            System.arraycopy(arr, 0, ss, 0, arr.length);
+            return ss;
+        }
+    }
 }

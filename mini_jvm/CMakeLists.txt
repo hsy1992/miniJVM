@@ -10,7 +10,7 @@ if (CMAKE_BUILD_TYPE MATCHES "Debug")
     message("this is a debug compile")
 endif ()
 
-include_directories( )
+include_directories()
 
 set(SOURCE_FILES
         utils/d_type.h
@@ -58,11 +58,21 @@ set(SOURCE_FILES
 add_executable(mini_jvm ${SOURCE_FILES})
 
 #Set link library.
-TARGET_LINK_LIBRARIES(mini_jvm pthread m )
-if (CMAKE_SYSTEM_NAME MATCHES "Linux")
-    TARGET_LINK_LIBRARIES(mini_jvm  dl)
-endif ()
-if ( (CMAKE_SYSTEM_NAME MATCHES "Windows") OR (CMAKE_SYSTEM_NAME MATCHES "CYGWIN"))
-    TARGET_LINK_LIBRARIES(mini_jvm  ws2_32)
-endif ()
+TARGET_LINK_LIBRARIES(mini_jvm pthread m)
+
 MESSAGE(STATUS "platform: ${CMAKE_SYSTEM_NAME}")
+
+IF (APPLE)
+    SET(EXECUTABLE_OUTPUT_PATH ${PROJECT_SOURCE_DIR}/../binary/macos)
+ELSEIF (UNIX)
+    TARGET_LINK_LIBRARIES(mini_jvm dl)
+    SET(EXECUTABLE_OUTPUT_PATH ${PROJECT_SOURCE_DIR}/../binary/centos_x64)
+ELSEIF (MINGW)
+    TARGET_LINK_LIBRARIES(mini_jvm ws2_32)
+    IF (CMAKE_SIZEOF_VOID_P EQUAL 4)
+        SET(EXECUTABLE_OUTPUT_PATH ${PROJECT_SOURCE_DIR}/../binary/win32)
+    elseif (CMAKE_SIZEOF_VOID_P EQUAL 8)
+        SET(EXECUTABLE_OUTPUT_PATH ${PROJECT_SOURCE_DIR}/../binary/win_x64)
+    endif ()
+ENDIF ()
+
