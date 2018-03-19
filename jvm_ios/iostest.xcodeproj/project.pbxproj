@@ -8,7 +8,6 @@
 
 /* Begin PBXBuildFile section */
 		454C4AEF1FB6B89D008B9C1D /* invokec.c in Sources */ = {isa = PBXBuildFile; fileRef = 45C1245D1F872A9200BF3925 /* invokec.c */; };
-		457249532020B48D00349683 /* dist in Resources */ = {isa = PBXBuildFile; fileRef = 457249522020B48C00349683 /* dist */; };
 		457249682020B4AE00349683 /* garbage.c in Sources */ = {isa = PBXBuildFile; fileRef = 457249552020B4AE00349683 /* garbage.c */; };
 		457249692020B4AE00349683 /* runtime.c in Sources */ = {isa = PBXBuildFile; fileRef = 457249562020B4AE00349683 /* runtime.c */; };
 		4572496A2020B4AE00349683 /* jvm.c in Sources */ = {isa = PBXBuildFile; fileRef = 457249572020B4AE00349683 /* jvm.c */; };
@@ -40,6 +39,7 @@
 		45C1244F1F87232100BF3925 /* iostestUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45C1244E1F87232100BF3925 /* iostestUITests.swift */; };
 		45C124681F872E5E00BF3925 /* libpthread.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 45C124671F872E5E00BF3925 /* libpthread.tbd */; };
 		45C1246A1F872E7E00BF3925 /* libc.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 45C124691F872E7E00BF3925 /* libc.tbd */; };
+		45E457DC205FB83F0057F2C6 /* lib in Resources */ = {isa = PBXBuildFile; fileRef = 45E457DB205FB83F0057F2C6 /* lib */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -60,7 +60,6 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
-		457249522020B48C00349683 /* dist */ = {isa = PBXFileReference; lastKnownFileType = folder; name = dist; path = ../javalib_test/dist; sourceTree = "<group>"; };
 		457249552020B4AE00349683 /* garbage.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = garbage.c; sourceTree = "<group>"; };
 		457249562020B4AE00349683 /* runtime.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = runtime.c; sourceTree = "<group>"; };
 		457249572020B4AE00349683 /* jvm.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = jvm.c; sourceTree = "<group>"; };
@@ -117,6 +116,7 @@
 		45C1245D1F872A9200BF3925 /* invokec.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = invokec.c; sourceTree = "<group>"; };
 		45C124671F872E5E00BF3925 /* libpthread.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libpthread.tbd; path = usr/lib/libpthread.tbd; sourceTree = SDKROOT; };
 		45C124691F872E7E00BF3925 /* libc.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libc.tbd; path = usr/lib/libc.tbd; sourceTree = SDKROOT; };
+		45E457DB205FB83F0057F2C6 /* lib */ = {isa = PBXFileReference; lastKnownFileType = folder; name = lib; path = ../binary/lib; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -212,9 +212,9 @@
 		45C124221F87232100BF3925 = {
 			isa = PBXGroup;
 			children = (
+				45E457DB205FB83F0057F2C6 /* lib */,
 				457249742020B4BE00349683 /* utils */,
 				457249542020B4AE00349683 /* jvm */,
-				457249522020B48C00349683 /* dist */,
 				45C1245C1F872A9100BF3925 /* iostestTests-Bridging-Header.h */,
 				45C1245D1F872A9200BF3925 /* invokec.c */,
 				45C1242D1F87232100BF3925 /* iostest */,
@@ -383,9 +383,9 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				457249532020B48D00349683 /* dist in Resources */,
 				45C124391F87232100BF3925 /* LaunchScreen.storyboard in Resources */,
 				45C124361F87232100BF3925 /* Assets.xcassets in Resources */,
+				45E457DC205FB83F0057F2C6 /* lib in Resources */,
 				45C124341F87232100BF3925 /* Main.storyboard in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
