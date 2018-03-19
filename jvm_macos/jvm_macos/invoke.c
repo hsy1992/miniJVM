@@ -15,10 +15,10 @@ int call_jvm(char* app_path) {
     char path[512];
     memset(&path,0,512);
     strcat(path,app_path);
-    strcat(path,"/dist/lib/minijvm_rt.jar");
+    strcat(path,"/lib/minijvm_rt.jar");
     strcat(path,";");
     strcat(path,app_path);
-    strcat(path,"/dist/gui_lib.jar");
+    strcat(path,"/lib/gui_lib.jar");
     printf("classpath: %s\n",path);
     java_debug=0;
     ArrayList * java_para=arraylist_create(0);

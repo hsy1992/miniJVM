@@ -33,8 +33,10 @@
 		457249302020ADBA00349683 /* miniz_wrapper.c in Sources */ = {isa = PBXBuildFile; fileRef = 4572492D2020ADBA00349683 /* miniz_wrapper.c */; };
 		457249342020AFAA00349683 /* libc.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 457249332020AFAA00349683 /* libc.tbd */; };
 		457249362020AFB400349683 /* libpthread.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 457249352020AFB400349683 /* libpthread.tbd */; };
-		4572499C202310B300349683 /* dist in CopyFiles */ = {isa = PBXBuildFile; fileRef = 4572499B2023108500349683 /* dist */; };
-		4572499D202310C200349683 /* libgui.dylib in CopyFiles */ = {isa = PBXBuildFile; fileRef = 457249962020B71500349683 /* libgui.dylib */; };
+		45E457BC205FB06F0057F2C6 /* libgui.dylib in CopyFiles */ = {isa = PBXBuildFile; fileRef = 45E457BB205FB06F0057F2C6 /* libgui.dylib */; };
+		45E457D5205FB4A50057F2C6 /* lib in CopyFiles */ = {isa = PBXBuildFile; fileRef = 45E457D4205FB4720057F2C6 /* lib */; };
+		45E457D7205FB5030057F2C6 /* res in CopyFiles */ = {isa = PBXBuildFile; fileRef = 45E457D6205FB4F00057F2C6 /* res */; };
+		45E457DA205FB7170057F2C6 /* gui.cfg in CopyFiles */ = {isa = PBXBuildFile; fileRef = 45E457D9205FB6950057F2C6 /* gui.cfg */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -44,8 +46,10 @@
 			dstPath = "";
 			dstSubfolderSpec = 16;
 			files = (
-				4572499D202310C200349683 /* libgui.dylib in CopyFiles */,
-				4572499C202310B300349683 /* dist in CopyFiles */,
+				45E457DA205FB7170057F2C6 /* gui.cfg in CopyFiles */,
+				45E457D7205FB5030057F2C6 /* res in CopyFiles */,
+				45E457D5205FB4A50057F2C6 /* lib in CopyFiles */,
+				45E457BC205FB06F0057F2C6 /* libgui.dylib in CopyFiles */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -98,7 +102,10 @@
 		457249332020AFAA00349683 /* libc.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libc.tbd; path = usr/lib/libc.tbd; sourceTree = SDKROOT; };
 		457249352020AFB400349683 /* libpthread.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libpthread.tbd; path = usr/lib/libpthread.tbd; sourceTree = SDKROOT; };
 		457249962020B71500349683 /* libgui.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libgui.dylib; path = "../jni_gui/cmake-build-debug/libgui.dylib"; sourceTree = "<group>"; };
-		4572499B2023108500349683 /* dist */ = {isa = PBXFileReference; lastKnownFileType = folder; name = dist; path = ../jni_gui/java/dist; sourceTree = "<group>"; };
+		45E457BB205FB06F0057F2C6 /* libgui.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libgui.dylib; path = ../binary/macos/libgui.dylib; sourceTree = "<group>"; };
+		45E457D4205FB4720057F2C6 /* lib */ = {isa = PBXFileReference; lastKnownFileType = folder; name = lib; path = ../binary/lib; sourceTree = "<group>"; };
+		45E457D6205FB4F00057F2C6 /* res */ = {isa = PBXFileReference; lastKnownFileType = folder; name = res; path = ../binary/res; sourceTree = "<group>"; };
+		45E457D9205FB6950057F2C6 /* gui.cfg */ = {isa = PBXFileReference; lastKnownFileType = text; path = gui.cfg; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -117,7 +124,10 @@
 		457248D52020AAC600349683 = {
 			isa = PBXGroup;
 			children = (
-				4572499B2023108500349683 /* dist */,
+				45E457D9205FB6950057F2C6 /* gui.cfg */,
+				45E457D6205FB4F00057F2C6 /* res */,
+				45E457D4205FB4720057F2C6 /* lib */,
+				45E457BB205FB06F0057F2C6 /* libgui.dylib */,
 				4572490F2020AD8000349683 /* utils */,
 				457248EF2020AD5300349683 /* jvm */,
 				457248E02020AAC600349683 /* jvm_macos */,
