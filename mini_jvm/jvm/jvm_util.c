@@ -411,73 +411,112 @@ s32 sys_properties_load(ClassLoader *loader) {
     hashtable_register_free_functions(sys_prop,
                                       (HashtableKeyFreeFunc) utf8_destory,
                                       (HashtableValueFreeFunc) utf8_destory);
-    s32 i;
-    for (i = 0; i < loader->classpath->length; i++) {
-        Utf8String *path = arraylist_get_value(loader->classpath, i);
-        Utf8String *ustr = NULL;
-        if (isDir(path)) {
-            FILE *fp = 0;
-            Utf8String *filepath = utf8_create_copy(path);
-            utf8_append_c(filepath, "sys.properties");
-            fp = fopen(utf8_cstr(filepath), "rb");
-            utf8_destory(filepath);
-            if (fp == 0) {
-                continue;
-            }
-
-            ustr = utf8_create();
-            u8 buf[256];
-            while (1) {
-                u32 len = (u32) fread(buf, 1, 256, fp);
-                utf8_append_part_c(ustr, buf, 0, len);
-                if (feof(fp)) {
-                    break;
-                }
-            }
-            fclose(fp);
-        } else {//jar
-            ByteBuf *buf = bytebuf_create(16);
-            s32 ret = zip_loadfile(utf8_cstr(path), "sys.properties", buf);
-            if (ret == 0) {
-                ustr = utf8_create();
-                while (bytebuf_available(buf)) {
-                    c8 ch = (c8) bytebuf_read(buf);
-                    utf8_insert(ustr, ustr->length, ch);
-                }
-                bytebuf_destory(buf);
-            } else {
-                bytebuf_destory(buf);
-                continue;
-            }
+    Utf8String *ustr = NULL;
+    Utf8String *prop_name = utf8_create_c("sys.properties");
+    ByteBuf *buf = load_file_from_classpath(sys_classloader, prop_name);
+    if (buf) {
+        ustr = utf8_create();
+        while (bytebuf_available(buf)) {
+            c8 ch = (c8) bytebuf_read(buf);
+            utf8_insert(ustr, ustr->length, ch);
         }
-        //parse
-        if (ustr) {
-            utf8_replace_c(ustr, "\r\n", "\n");
-            utf8_replace_c(ustr, "\r", "\n");
-            Utf8String *line = utf8_create();
-            while (ustr->length > 0) {
-                s32 lineEndAt = utf8_indexof_c(ustr, "\n");
-                utf8_clear(line);
-                if (lineEndAt >= 0) {
-                    utf8_append_part(line, ustr, 0, lineEndAt);
-                    utf8_substring(ustr, lineEndAt + 1, ustr->length);
-                } else {
-                    utf8_append_part(line, ustr, 0, ustr->length);
-                    utf8_substring(ustr, ustr->length, ustr->length);
-                }
-                s32 eqAt = utf8_indexof_c(line, "=");
-                if (eqAt > 0) {
-                    Utf8String *key = utf8_create();
-                    Utf8String *val = utf8_create();
-                    utf8_append_part(key, line, 0, eqAt);
-                    utf8_append_part(val, line, eqAt + 1, line->length - (eqAt + 1));
-                    hashtable_put(sys_prop, key, val);
-                }
-            }
-            utf8_destory(line);
-            utf8_destory(ustr);
-        }
+        bytebuf_destory(buf);
     }
+    utf8_destory(prop_name);
+    //parse
+    if (ustr) {
+        utf8_replace_c(ustr, "\r\n", "\n");
+        utf8_replace_c(ustr, "\r", "\n");
+        Utf8String *line = utf8_create();
+        while (ustr->length > 0) {
+            s32 lineEndAt = utf8_indexof_c(ustr, "\n");
+            utf8_clear(line);
+            if (lineEndAt >= 0) {
+                utf8_append_part(line, ustr, 0, lineEndAt);
+                utf8_substring(ustr, lineEndAt + 1, ustr->length);
+            } else {
+                utf8_append_part(line, ustr, 0, ustr->length);
+                utf8_substring(ustr, ustr->length, ustr->length);
+            }
+            s32 eqAt = utf8_indexof_c(line, "=");
+            if (eqAt > 0) {
+                Utf8String *key = utf8_create();
+                Utf8String *val = utf8_create();
+                utf8_append_part(key, line, 0, eqAt);
+                utf8_append_part(val, line, eqAt + 1, line->length - (eqAt + 1));
+                hashtable_put(sys_prop, key, val);
+            }
+        }
+        utf8_destory(line);
+        utf8_destory(ustr);
+    }
+//    s32 i;
+//    for (i = 0; i < loader->classpath->length; i++) {
+//        Utf8String *path = arraylist_get_value(loader->classpath, i);
+//        Utf8String *ustr = NULL;
+//        if (isDir(path)) {
+//            FILE *fp = 0;
+//            Utf8String *filepath = utf8_create_copy(path);
+//            utf8_append_c(filepath, "sys.properties");
+//            fp = fopen(utf8_cstr(filepath), "rb");
+//            utf8_destory(filepath);
+//            if (fp == 0) {
+//                continue;
+//            }
+//
+//            ustr = utf8_create();
+//            u8 buf[256];
+//            while (1) {
+//                u32 len = (u32) fread(buf, 1, 256, fp);
+//                utf8_append_part_c(ustr, buf, 0, len);
+//                if (feof(fp)) {
+//                    break;
+//                }
+//            }
+//            fclose(fp);
+//        } else {//jar
+//            ByteBuf *buf = bytebuf_create(16);
+//            s32 ret = zip_loadfile(utf8_cstr(path), "sys.properties", buf);
+//            if (ret == 0) {
+//                ustr = utf8_create();
+//                while (bytebuf_available(buf)) {
+//                    c8 ch = (c8) bytebuf_read(buf);
+//                    utf8_insert(ustr, ustr->length, ch);
+//                }
+//                bytebuf_destory(buf);
+//            } else {
+//                bytebuf_destory(buf);
+//                continue;
+//            }
+//        }
+//        //parse
+//        if (ustr) {
+//            utf8_replace_c(ustr, "\r\n", "\n");
+//            utf8_replace_c(ustr, "\r", "\n");
+//            Utf8String *line = utf8_create();
+//            while (ustr->length > 0) {
+//                s32 lineEndAt = utf8_indexof_c(ustr, "\n");
+//                utf8_clear(line);
+//                if (lineEndAt >= 0) {
+//                    utf8_append_part(line, ustr, 0, lineEndAt);
+//                    utf8_substring(ustr, lineEndAt + 1, ustr->length);
+//                } else {
+//                    utf8_append_part(line, ustr, 0, ustr->length);
+//                    utf8_substring(ustr, ustr->length, ustr->length);
+//                }
+//                s32 eqAt = utf8_indexof_c(line, "=");
+//                if (eqAt > 0) {
+//                    Utf8String *key = utf8_create();
+//                    Utf8String *val = utf8_create();
+//                    utf8_append_part(key, line, 0, eqAt);
+//                    utf8_append_part(val, line, eqAt + 1, line->length - (eqAt + 1));
+//                    hashtable_put(sys_prop, key, val);
+//                }
+//            }
+//            utf8_destory(line);
+//            utf8_destory(ustr);
+//        }
+//    }
     return 0;
 }
 
@@ -1479,6 +1518,87 @@ void referarr_2_jlongarr(ReferArr *ref_arr, Instance *jlong_arr) {
         jarray_set_field(jlong_arr, i, (intptr_t) ref);
     }
 };
+
+
+/**
+ * load file less than 4G bytes
+ */
+s32 _loadFileContents(c8 *file, ByteBuf *buf) {
+
+    FILE *pFile;
+    long lSize;
+    char *buffer;
+    size_t result;
+
+    /* 若要一个byte不漏地读入整个文件，只能采用二进制方式打开 */
+    pFile = fopen(file, "rb");
+    if (pFile == NULL) {
+        //jvm_printf("File error");
+        return -1;
+    }
+
+    /* 获取文件大小 */
+    fseek(pFile, 0, SEEK_END);
+    lSize = ftell(pFile);
+    rewind(pFile);
+
+    /* 分配内存存储整个文件 */
+    buffer = jvm_malloc((u32) lSize);
+    if (buffer == NULL) {
+        //jvm_printf("Memory error");
+        return -1;
+    }
+
+    /* 将文件拷贝到buffer中 */
+    result = fread(buffer, 1, lSize, pFile);
+    if (result != lSize) {
+        //jvm_printf("Reading error");
+        return -1;
+    }
+    /* 现在整个文件已经在buffer中，可由标准输出打印内容 */
+    //printf("%s", buffer);
+
+    /* 结束演示，关闭文件并释放内存 */
+    fclose(pFile);
+    bytebuf_write_batch(buf, buffer, (s32) lSize);
+    jvm_free(buffer);
+
+    return 0;
+}
+
+
+ByteBuf *load_file_from_classpath(ClassLoader *loader, Utf8String *path) {
+    ByteBuf *bytebuf = NULL;
+    s32 i, iret;
+    for (i = 0; i < loader->classpath->length; i++) {
+        Utf8String *pClassPath = arraylist_get_value(loader->classpath, i);
+        if (isDir(pClassPath)) { //form file
+            Utf8String *filepath = utf8_create_copy(pClassPath);
+            utf8_pushback(filepath, '/');
+            utf8_append(filepath, path);
+
+            bytebuf = bytebuf_create(16);
+            iret = _loadFileContents(utf8_cstr(filepath), bytebuf);
+            utf8_destory(filepath);
+            //回收
+            if (iret != 0) {
+                bytebuf_destory(bytebuf);
+                bytebuf = NULL;
+            }
+        } else { //from jar
+            bytebuf = bytebuf_create(16);
+            iret = zip_loadfile(utf8_cstr(pClassPath), utf8_cstr(path), bytebuf);
+            //回收
+            if (iret != 0) {
+                bytebuf_destory(bytebuf);
+                bytebuf = NULL;
+            } else {
+                break;
+            }
+        }
+    }
+    return bytebuf;
+}
 
 void init_jni_func_table() {
     jnienv.data_type_bytes = (s32 *) &data_type_bytes;

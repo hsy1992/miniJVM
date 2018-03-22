@@ -40,6 +40,6 @@ public class WeakReference extends Reference {
         initializeWeakReference();
     }
 
-    private native void initializeWeakReference();
+    private void initializeWeakReference(){}
 }
 

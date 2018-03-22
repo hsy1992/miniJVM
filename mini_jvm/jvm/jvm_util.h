@@ -116,7 +116,9 @@ f32 getFieldFloat(c8 *ptr);
 
 s32 getLineNumByIndex(CodeAttribute *ca, s32 offset);
 
+s32 _loadFileContents(c8 *file, ByteBuf *buf);
 
+ByteBuf* load_file_from_classpath(ClassLoader *loader, Utf8String *path);
 ////======================= jstring =============================
 
 Instance *jstring_create(Utf8String *src, Runtime *runtime);

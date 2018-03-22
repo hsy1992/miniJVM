@@ -27,6 +27,38 @@ s32 com_sun_cldc_io_ConsoleOutputStream_write(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
+s32 com_sun_cldc_io_ConsoleInputStream_read(Runtime *runtime, Class *clazz) {
+    s16 ch = localvar_getInt(runtime, 1);
+#if _JVM_DEBUG_BYTECODE_DETAIL > 5
+    invoke_deepth(runtime);
+    jvm_printf("com_sun_cldc_io_ConsoleInputStream_read\n");
+#endif
+    push_int(runtime->stack, ch);
+    return 0;
+}
+
+s32 com_sun_cldc_io_ResourceInputStream_open(Runtime *runtime, Class *clazz) {
+    Instance *jstr = localvar_getRefer(runtime, 0);
+    Utf8String *path = utf8_create();
+    jstring_2_utf8(jstr, path);
+    ByteBuf *buf = load_file_from_classpath(sys_classloader, path);
+    if (buf) {
+        s32 _j_t_bytes = buf->wp;
+        Instance *_arr = jarray_create(_j_t_bytes, DATATYPE_BYTE, NULL);
+        bytebuf_read_batch(buf, _arr->arr_body, _j_t_bytes);
+        utf8_destory(path);
+        bytebuf_destory(buf);
+        push_ref(runtime->stack, _arr);
+    } else {
+        push_ref(runtime->stack, NULL);
+    }
+#if _JVM_DEBUG_BYTECODE_DETAIL > 5
+    invoke_deepth(runtime);
+    jvm_printf("com_sun_cldc_io_ConsoleInputStream_read\n");
+#endif
+    return 0;
+}
+
 s32 java_lang_Class_forName(Runtime *runtime, Class *clazz) {
     RuntimeStack *stack = runtime->stack;
     Instance *jstr = (Instance *) localvar_getRefer(runtime, 0);
@@ -1024,11 +1056,8 @@ s32 java_io_Throwable_buildStackElement(Runtime *runtime, Class *clazz) {
 
 static java_native_method method_table[] = {
         {"com/sun/cldc/io/ConsoleOutputStream", "write",             "(I)V",                                                     com_sun_cldc_io_ConsoleOutputStream_write},
-//        {"com/sun/cldc/io/ResourceInputStream", "open",       "",              com_sun_cldc_io_ResourceInputStream_open},
-//        {"com/sun/cldc/io/ResourceInputStream", "close",       "",             com_sun_cldc_io_ResourceInputStream_close},
-//        {"com/sun/cldc/io/ResourceInputStream", "size",       "",              com_sun_cldc_io_ResourceInputStream_size},
-//        {"com/sun/cldc/io/ResourceInputStream", "read",       "",              com_sun_cldc_io_ResourceInputStream_read},
-//        {"com/sun/cldc/io/ResourceInputStream", "readBytes",       "",         com_sun_cldc_io_ResourceInputStream_readBytes},
+        {"com/sun/cldc/io/ConsoleInputStream",  "read",              "()I",                                                      com_sun_cldc_io_ConsoleInputStream_read},
+        {"com/sun/cldc/io/ResourceInputStream", "open",              "(Ljava/lang/String;)[B",                                   com_sun_cldc_io_ResourceInputStream_open},
 //        {"com/sun/cldc/io/Waiter",              "waitForIO",       "",         com_sun_cldc_io_ResourceInputStream_waitForIO},
         {"java/lang/Class",                     "forName",           "(Ljava/lang/String;)Ljava/lang/Class;",                    java_lang_Class_forName},
         {"java/lang/Class",                     "newInstance",       "()Ljava/lang/Object;",                                     java_lang_Class_newInstance},

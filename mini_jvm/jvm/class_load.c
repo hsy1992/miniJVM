@@ -618,52 +618,6 @@ s32 _class_attribute_info_destory(Class *clazz) {
     return 0;
 }
 
-/**
- * load file less than 4G bytes
- */
-s32 _loadFileContents(c8 *file, ByteBuf *buf) {
-
-    FILE *pFile;
-    long lSize;
-    char *buffer;
-    size_t result;
-
-    /* 若要一个byte不漏地读入整个文件，只能采用二进制方式打开 */
-    pFile = fopen(file, "rb");
-    if (pFile == NULL) {
-        //jvm_printf("File error");
-        return -1;
-    }
-
-    /* 获取文件大小 */
-    fseek(pFile, 0, SEEK_END);
-    lSize = ftell(pFile);
-    rewind(pFile);
-
-    /* 分配内存存储整个文件 */
-    buffer = jvm_malloc((u32) lSize);
-    if (buffer == NULL) {
-        //jvm_printf("Memory error");
-        return -1;
-    }
-
-    /* 将文件拷贝到buffer中 */
-    result = fread(buffer, 1, lSize, pFile);
-    if (result != lSize) {
-        //jvm_printf("Reading error");
-        return -1;
-    }
-    /* 现在整个文件已经在buffer中，可由标准输出打印内容 */
-    //printf("%s", buffer);
-
-    /* 结束演示，关闭文件并释放内存 */
-    fclose(pFile);
-    bytebuf_write_batch(buf, buffer, (s32) lSize);
-    jvm_free(buffer);
-
-    return 0;
-}
-
 s32 _parse_constant_pool(Class *_this, ByteBuf *buf, s32 count) {
     u8 tag = 0;
     s32 i = 0;
@@ -1024,46 +978,48 @@ s32 load_class(ClassLoader *loader, Utf8String *pClassName) {
         ByteBuf *bytebuf = NULL;
         s32 i;
         utf8_append_c(clsName, ".class");
-        for (i = 0; i < loader->classpath->length; i++) {
-            Utf8String *pClassPath = arraylist_get_value(loader->classpath, i);
-            if (isDir(pClassPath)) { //form file
-                Utf8String *filepath = utf8_create_copy(pClassPath);
-                utf8_pushback(filepath, '/');
-                utf8_append(filepath, clsName);
-
-                bytebuf = bytebuf_create(16);
-                iret = _loadFileContents(utf8_cstr(filepath), bytebuf);
-                utf8_destory(filepath);
-                //回收
-                if (iret != 0) {
-                    bytebuf_destory(bytebuf);
-                    bytebuf = NULL;
-                }
-            } else { //from jar
-                bytebuf = bytebuf_create(16);
-                iret = zip_loadfile(utf8_cstr(pClassPath), utf8_cstr(clsName), bytebuf);
-                //回收
-                if (iret != 0) {
-                    bytebuf_destory(bytebuf);
-                    bytebuf = NULL;
-                }
-            }
-            if (bytebuf != NULL) {
-                tmpclazz = class_create();
-                iret = tmpclazz->_load_class_from_bytes(tmpclazz, bytebuf);//load file
-                bytebuf_destory(bytebuf);
-                if (iret == 0) {
-                    classes_put(tmpclazz);
+        bytebuf = load_file_from_classpath(loader, clsName);
+        if (bytebuf != NULL) {
+            tmpclazz = class_create();
+            iret = tmpclazz->_load_class_from_bytes(tmpclazz, bytebuf);//load file
+            bytebuf_destory(bytebuf);
+            if (iret == 0) {
+                classes_put(tmpclazz);
 #if _JVM_DEBUG_BYTECODE_DETAIL > 5
-                    jvm_printf("load class:  %s \n", utf8_cstr(clsName));
+                jvm_printf("load class:  %s \n", utf8_cstr(clsName));
 #endif
-                    load_related_class(loader, tmpclazz);
-                    break;
-                } else {
-                    class_destory(tmpclazz);
-                }
+                load_related_class(loader, tmpclazz);
+
+            } else {
+                class_destory(tmpclazz);
             }
         }
+//        for (i = 0; i < loader->classpath->length; i++) {
+//            Utf8String *pClassPath = arraylist_get_value(loader->classpath, i);
+//            if (isDir(pClassPath)) { //form file
+//                Utf8String *filepath = utf8_create_copy(pClassPath);
+//                utf8_pushback(filepath, '/');
+//                utf8_append(filepath, clsName);
+//
+//                bytebuf = bytebuf_create(16);
+//                iret = _loadFileContents(utf8_cstr(filepath), bytebuf);
+//                utf8_destory(filepath);
+//                //回收
+//                if (iret != 0) {
+//                    bytebuf_destory(bytebuf);
+//                    bytebuf = NULL;
+//                }
+//            } else { //from jar
+//                bytebuf = bytebuf_create(16);
+//                iret = zip_loadfile(utf8_cstr(pClassPath), utf8_cstr(clsName), bytebuf);
+//                //回收
+//                if (iret != 0) {
+//                    bytebuf_destory(bytebuf);
+//                    bytebuf = NULL;
+//                }
+//            }
+//
+//        }
     }
     if (!tmpclazz) {
         jvm_printf("class not found:  %s \n", utf8_cstr(clsName));
