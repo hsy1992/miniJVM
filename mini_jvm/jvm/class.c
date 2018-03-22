@@ -94,7 +94,7 @@ void class_clear_refer(Class *clazz) {
  * @param clazz class
  * @return ret
  */
-s32 class_prepar(Class *clazz) {
+s32 class_prepar(Class *clazz, Runtime *runtime) {
     if (clazz->status >= CLASS_STATUS_PREPARING)return 0;
     clazz->status = CLASS_STATUS_PREPARING;
     int i;
@@ -136,6 +136,7 @@ s32 class_prepar(Class *clazz) {
     clazz->field_static_len = static_len;
     clazz->field_static = jvm_calloc(clazz->field_static_len);
 
+
 //    if (utf8_equals_c(clazz->name, "com/sun/cldc/i18n/mini/ISO8859_1_Writer") == 0) {
 //        int debug = 1;
 //    }
@@ -143,7 +144,7 @@ s32 class_prepar(Class *clazz) {
     Class *superclass = getSuperClass(clazz);
     if (superclass) {
         if (superclass->status != CLASS_STATUS_PREPARED) {
-            class_prepar(superclass);
+            class_prepar(superclass, runtime);
         }
         clazz->field_instance_start = superclass->field_instance_len;
         clazz->field_instance_len = clazz->field_instance_start + instance_len;
@@ -153,6 +154,12 @@ s32 class_prepar(Class *clazz) {
         clazz->field_instance_start = 0;
         //实例变量区前面是继承的父类变量，后面是自己的变量
         clazz->field_instance_len = clazz->field_instance_start + instance_len;
+    }
+
+    //提前计算类成员的偏移量，提高执行速度
+    for (i = 0; i < clazz->fieldPool.field_used; i++) {
+        FieldInfo *fi = &clazz->fieldPool.field[i];
+        fi->offset_instance = fi->_this_class->field_instance_start + fi->offset;
     }
 
     //预计算字段在实例内存中的偏移，节约运行时时间
@@ -195,7 +202,7 @@ s32 class_prepar(Class *clazz) {
  */
 void class_clinit(Class *clazz, Runtime *runtime) {
     if (clazz->status < CLASS_STATUS_PREPARED) {
-        class_prepar(clazz);
+        class_prepar(clazz, runtime);
     }
     if (clazz->status >= CLASS_STATUS_CLINITING)return;
     clazz->status = CLASS_STATUS_CLINITING;
@@ -209,11 +216,7 @@ void class_clinit(Class *clazz, Runtime *runtime) {
             int debug = 1;
         }
     }
-    for (i = 0; i < clazz->fieldPool.field_used; i++) {
-        FieldInfo *fi = &clazz->fieldPool.field[i];
 
-        fi->offset_instance = fi->_this_class->field_instance_start + fi->offset;
-    }
     ArrayList *utf8list = clazz->constantPool.utf8CP;
     for (i = 0, len = utf8list->length; i < len; i++) {
         ConstantUTF8 *cutf = arraylist_get_value(utf8list, i);

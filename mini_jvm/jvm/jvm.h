@@ -702,7 +702,7 @@ s32 load_related_class(ClassLoader *loader, Class *clazz);
 
 s32 _LOAD_CLASS_FROM_BYTES(Class *_this, ByteBuf *buf);
 
-s32 class_prepar(Class *clazz);
+s32 class_prepar(Class *clazz, Runtime *runtime);
 
 void _class_link(Class *clazz);
 

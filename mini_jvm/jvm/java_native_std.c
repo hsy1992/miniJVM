@@ -28,7 +28,7 @@ s32 com_sun_cldc_io_ConsoleOutputStream_write(Runtime *runtime, Class *clazz) {
 }
 
 s32 com_sun_cldc_io_ConsoleInputStream_read(Runtime *runtime, Class *clazz) {
-    s16 ch = localvar_getInt(runtime, 1);
+    s32 ch = getchar();
 #if _JVM_DEBUG_BYTECODE_DETAIL > 5
     invoke_deepth(runtime);
     jvm_printf("com_sun_cldc_io_ConsoleInputStream_read\n");
@@ -461,7 +461,7 @@ s32 java_lang_Math_pow(Runtime *runtime, Class *clazz) {
     f64 b = (l2d.d);
 #if _JVM_DEBUG_BYTECODE_DETAIL > 5
     invoke_deepth(runtime);
-    jvm_printf("java_lang_Math_pow \n", );
+    jvm_printf("java_lang_Math_pow \n");
 #endif
     push_double(stack, pow(a, b));
     return 0;

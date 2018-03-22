@@ -177,7 +177,7 @@ s32 execute_jvm(c8 *p_classpath, c8 *p_mainclass, ArrayList *java_para) {
     for (; hashtable_iter_has_more(&hti);) {
         Utf8String *k = hashtable_iter_next_key(&hti);
         Class *clazz = hashtable_get(sys_classloader->classes, k);
-        if (clazz->status != CLASS_STATUS_PREPARED)class_prepar(clazz);
+        if (clazz->status != CLASS_STATUS_PREPARED)class_prepar(clazz,runtime);
     }
     hashtable_iterate(sys_classloader->classes, &hti);
     for (; hashtable_iter_has_more(&hti);) {

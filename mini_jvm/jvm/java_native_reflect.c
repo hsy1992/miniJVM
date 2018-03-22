@@ -587,7 +587,7 @@ s32 javax_mini_reflect_Method_mapMethod(Runtime *runtime, Class *clazz) {
     MethodInfo *methodInfo = (__refer) (intptr_t) l2d.l;
     if (ins && methodInfo) {
         c8 *ptr;
-        Long2Double l2d;
+
         //
         ptr = getFieldPtr_byName_c(ins, JDWP_CLASS_METHOD, "methodName", STR_INS_JAVA_LANG_STRING);
         if (ptr) {

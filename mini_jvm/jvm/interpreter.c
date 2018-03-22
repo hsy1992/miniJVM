@@ -402,7 +402,7 @@ static inline s32 _op_putfield_impl(u8 **opCode, Runtime *runtime, RuntimeStack 
             push_ref(stack, (__refer) exception);
             return RUNTIME_STATUS_EXCEPTION;
         }
-        ptr = &(ins->obj_fields[fi->offset_instance]);//getInstanceFieldPtr(ins, fi);//
+        ptr = &(ins->obj_fields[fi->offset_instance]);//&(ins->obj_fields[fi->offset+fi->_this_class->field_instance_start]);//getInstanceFieldPtr(ins, fi);//
     }
 #if _JVM_DEBUG_BYTECODE_DETAIL > 5
     invoke_deepth(runtime);
@@ -463,7 +463,7 @@ static inline s32 _op_getfield_impl(u8 **opCode, Runtime *runtime, RuntimeStack 
             push_ref(stack, (__refer) exception);
             return RUNTIME_STATUS_EXCEPTION;
         }
-        ptr = &(ins->obj_fields[fi->offset_instance]);//getInstanceFieldPtr(ins, fi);//&(ins->obj_fields[fi->offset_instance]);
+        ptr = &(ins->obj_fields[fi->offset_instance]);//&(ins->obj_fields[fi->offset+fi->_this_class->field_instance_start]);//getInstanceFieldPtr(ins, fi);//&(ins->obj_fields[fi->offset_instance]);
     }
     if (fi->isrefer) {
         push_ref(stack, getFieldRefer(ptr));
@@ -622,9 +622,7 @@ static s32 filterClassName(Utf8String *clsName) {
 }
 
 static void _printCodeAttribute(CodeAttribute *ca, Class *p) {
-    s32 i = 0;
-    s32 tmp = 0;
-    u8 opCode = 0;
+
     jvm_printf("attribute name : %s\n", utf8_cstr(get_utf8_string(p, ca->attribute_name_index)));
     jvm_printf("attribute arr_length: %d\n", ca->attribute_length);
 
@@ -3168,7 +3166,7 @@ s32 execute_method(MethodInfo *method, Runtime *pruntime, Class *clazz) {
                             i_r = execute_method(method, runtime, method->_this_class);
                         } else {
                             Instance *exception = exception_create_str(JVM_EXCEPTION_NOSUCHMETHOD, runtime,
-                                                                       utf8_cstr(method->name));
+                                                                       utf8_cstr(cmr->name));
                             push_ref(runtime->stack, (__refer) exception);
                             i_r = RUNTIME_STATUS_EXCEPTION;
                         }
@@ -3239,10 +3237,6 @@ s32 execute_method(MethodInfo *method, Runtime *pruntime, Class *clazz) {
                                     method = find_instance_methodInfo_by_name(ins, cmr->name, cmr->descriptor);
                                     pairlist_put(cmr->virtual_methods, ins->mb.clazz, method);//放入缓存，以便下次直接调用
                                 }
-//            if (cmr->virtual_methods->count > 3) {
-//                jvm_printf("virtual method:%s.%s %d\n", utf8_cstr(cmr->clsName), utf8_cstr(cmr->name),
-//                           cmr->virtual_methods->count);
-//            }
                             }
 
 #if _JVM_DEBUG_BYTECODE_DETAIL > 5

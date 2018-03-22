@@ -401,7 +401,7 @@ void printDumpOfClasses() {
 
 s32 isDir(Utf8String *path) {
     struct stat buf;
-    s32 ret = stat(utf8_cstr(path), &buf);
+    stat(utf8_cstr(path), &buf);
     s32 a = S_ISDIR(buf.st_mode);
     return a;
 }
@@ -742,7 +742,7 @@ s32 jthread_unlock(MemoryBlock *mb, Runtime *runtime) {
 
 s32 jthread_notify(MemoryBlock *mb, Runtime *runtime) {
     if (mb == NULL)return -1;
-    if (!mb->thread_lock) {
+    if (mb->thread_lock == NULL) {
         jthreadlock_create(mb);
     }
     pthread_cond_signal(&mb->thread_lock->thread_cond);
@@ -751,7 +751,7 @@ s32 jthread_notify(MemoryBlock *mb, Runtime *runtime) {
 
 s32 jthread_notifyAll(MemoryBlock *mb, Runtime *runtime) {
     if (mb == NULL)return -1;
-    if (!mb->thread_lock) {
+    if (mb->thread_lock == NULL) {
         jthreadlock_create(mb);
     }
     pthread_cond_broadcast(&mb->thread_lock->thread_cond);

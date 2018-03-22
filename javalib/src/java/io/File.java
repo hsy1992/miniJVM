@@ -634,7 +634,7 @@ public class File implements java.util.Comparable {
     public boolean createNewFile() throws IOException {
         return fs.createFileExclusively(path);
     }
-
+    
     /**
      * Deletes the file or directory denoted by this abstract pathname. If this
      * pathname denotes a directory, then the directory must be empty in order
