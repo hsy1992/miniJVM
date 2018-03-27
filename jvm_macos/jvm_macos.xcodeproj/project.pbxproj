@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		45516814206A62340026A296 /* tinycthread.c in Sources */ = {isa = PBXBuildFile; fileRef = 45516812206A62340026A296 /* tinycthread.c */; };
+		45516819206A627F0026A296 /* miniz_wrapper.c in Sources */ = {isa = PBXBuildFile; fileRef = 45516817206A627E0026A296 /* miniz_wrapper.c */; };
 		457248E22020AAC600349683 /* main.swift in Sources */ = {isa = PBXBuildFile; fileRef = 457248E12020AAC600349683 /* main.swift */; };
 		457248EB2020ABE200349683 /* invoke.c in Sources */ = {isa = PBXBuildFile; fileRef = 457248EA2020ABE200349683 /* invoke.c */; };
 		457249032020AD7300349683 /* global.c in Sources */ = {isa = PBXBuildFile; fileRef = 457248F02020AD7100349683 /* global.c */; };
@@ -30,7 +32,6 @@
 		457249292020AD9900349683 /* bytebuf.c in Sources */ = {isa = PBXBuildFile; fileRef = 4572491C2020AD9800349683 /* bytebuf.c */; };
 		4572492A2020AD9900349683 /* spinlock.c in Sources */ = {isa = PBXBuildFile; fileRef = 4572491D2020AD9800349683 /* spinlock.c */; };
 		4572492B2020AD9900349683 /* hashtable.c in Sources */ = {isa = PBXBuildFile; fileRef = 4572491F2020AD9900349683 /* hashtable.c */; };
-		457249302020ADBA00349683 /* miniz_wrapper.c in Sources */ = {isa = PBXBuildFile; fileRef = 4572492D2020ADBA00349683 /* miniz_wrapper.c */; };
 		457249342020AFAA00349683 /* libc.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 457249332020AFAA00349683 /* libc.tbd */; };
 		457249362020AFB400349683 /* libpthread.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 457249352020AFB400349683 /* libpthread.tbd */; };
 		45E457BC205FB06F0057F2C6 /* libgui.dylib in CopyFiles */ = {isa = PBXBuildFile; fileRef = 45E457BB205FB06F0057F2C6 /* libgui.dylib */; };
@@ -56,6 +57,10 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		45516812206A62340026A296 /* tinycthread.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = tinycthread.c; path = ../mini_jvm/utils/tinycthread.c; sourceTree = "<group>"; };
+		45516813206A62340026A296 /* tinycthread.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = tinycthread.h; path = ../mini_jvm/utils/tinycthread.h; sourceTree = "<group>"; };
+		45516817206A627E0026A296 /* miniz_wrapper.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = miniz_wrapper.c; path = ../mini_jvm/utils/miniz/miniz_wrapper.c; sourceTree = "<group>"; };
+		45516818206A627E0026A296 /* miniz_wrapper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = miniz_wrapper.h; path = ../mini_jvm/utils/miniz/miniz_wrapper.h; sourceTree = "<group>"; };
 		457248DE2020AAC600349683 /* jvm_macos */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = jvm_macos; sourceTree = BUILT_PRODUCTS_DIR; };
 		457248E12020AAC600349683 /* main.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = main.swift; sourceTree = "<group>"; };
 		457248E82020ABE100349683 /* jvm_macos-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "jvm_macos-Bridging-Header.h"; sourceTree = "<group>"; };
@@ -97,8 +102,6 @@
 		4572491F2020AD9900349683 /* hashtable.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = hashtable.c; path = ../mini_jvm/utils/hashtable.c; sourceTree = "<group>"; };
 		457249212020AD9900349683 /* linkedlist.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = linkedlist.h; path = ../mini_jvm/utils/linkedlist.h; sourceTree = "<group>"; };
 		457249222020AD9900349683 /* arraylist.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = arraylist.h; path = ../mini_jvm/utils/arraylist.h; sourceTree = "<group>"; };
-		4572492D2020ADBA00349683 /* miniz_wrapper.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = miniz_wrapper.c; path = ../../mini_jvm/utils/miniz/miniz_wrapper.c; sourceTree = "<group>"; };
-		4572492F2020ADBA00349683 /* miniz_wrapper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = miniz_wrapper.h; path = ../../mini_jvm/utils/miniz/miniz_wrapper.h; sourceTree = "<group>"; };
 		457249332020AFAA00349683 /* libc.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libc.tbd; path = usr/lib/libc.tbd; sourceTree = SDKROOT; };
 		457249352020AFB400349683 /* libpthread.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libpthread.tbd; path = usr/lib/libpthread.tbd; sourceTree = SDKROOT; };
 		457249962020B71500349683 /* libgui.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libgui.dylib; path = "../jni_gui/cmake-build-debug/libgui.dylib"; sourceTree = "<group>"; };
@@ -121,6 +124,15 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		45516816206A62610026A296 /* miniz */ = {
+			isa = PBXGroup;
+			children = (
+				45516817206A627E0026A296 /* miniz_wrapper.c */,
+				45516818206A627E0026A296 /* miniz_wrapper.h */,
+			);
+			name = miniz;
+			sourceTree = "<group>";
+		};
 		457248D52020AAC600349683 = {
 			isa = PBXGroup;
 			children = (
@@ -183,7 +195,9 @@
 		4572490F2020AD8000349683 /* utils */ = {
 			isa = PBXGroup;
 			children = (
-				4572492C2020ADAD00349683 /* miniz */,
+				45516816206A62610026A296 /* miniz */,
+				45516812206A62340026A296 /* tinycthread.c */,
+				45516813206A62340026A296 /* tinycthread.h */,
 				457249172020AD9800349683 /* arraylist.c */,
 				457249222020AD9900349683 /* arraylist.h */,
 				4572491C2020AD9800349683 /* bytebuf.c */,
@@ -204,15 +218,6 @@
 				4572491E2020AD9800349683 /* utf8_string.h */,
 			);
 			name = utils;
-			sourceTree = "<group>";
-		};
-		4572492C2020ADAD00349683 /* miniz */ = {
-			isa = PBXGroup;
-			children = (
-				4572492D2020ADBA00349683 /* miniz_wrapper.c */,
-				4572492F2020ADBA00349683 /* miniz_wrapper.h */,
-			);
-			path = miniz;
 			sourceTree = "<group>";
 		};
 		457249322020AFAA00349683 /* Frameworks */ = {
@@ -292,11 +297,13 @@
 				457249082020AD7300349683 /* java_native_io.c in Sources */,
 				457249272020AD9900349683 /* arraylist.c in Sources */,
 				457249062020AD7300349683 /* runtime.c in Sources */,
+				45516814206A62340026A296 /* tinycthread.c in Sources */,
 				457249252020AD9900349683 /* utf8_string.c in Sources */,
 				457249042020AD7300349683 /* java_native_std.c in Sources */,
 				457249262020AD9900349683 /* hashset.c in Sources */,
 				457249282020AD9900349683 /* d_utils.c in Sources */,
 				457249032020AD7300349683 /* global.c in Sources */,
+				45516819206A627F0026A296 /* miniz_wrapper.c in Sources */,
 				457248E22020AAC600349683 /* main.swift in Sources */,
 				457249092020AD7300349683 /* class_load.c in Sources */,
 				4572492A2020AD9900349683 /* spinlock.c in Sources */,
@@ -307,7 +314,6 @@
 				4572490C2020AD7300349683 /* jvm_util.c in Sources */,
 				457249072020AD7300349683 /* java_native_reflect.c in Sources */,
 				457249052020AD7300349683 /* garbage.c in Sources */,
-				457249302020ADBA00349683 /* miniz_wrapper.c in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

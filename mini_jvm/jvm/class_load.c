@@ -989,32 +989,7 @@ s32 load_class(ClassLoader *loader, Utf8String *pClassName) {
                 class_destory(tmpclazz);
             }
         }
-//        for (i = 0; i < loader->classpath->length; i++) {
-//            Utf8String *pClassPath = arraylist_get_value(loader->classpath, i);
-//            if (isDir(pClassPath)) { //form file
-//                Utf8String *filepath = utf8_create_copy(pClassPath);
-//                utf8_pushback(filepath, '/');
-//                utf8_append(filepath, clsName);
-//
-//                bytebuf = bytebuf_create(16);
-//                iret = _loadFileContents(utf8_cstr(filepath), bytebuf);
-//                utf8_destory(filepath);
-//                //回收
-//                if (iret != 0) {
-//                    bytebuf_destory(bytebuf);
-//                    bytebuf = NULL;
-//                }
-//            } else { //from jar
-//                bytebuf = bytebuf_create(16);
-//                iret = zip_loadfile(utf8_cstr(pClassPath), utf8_cstr(clsName), bytebuf);
-//                //回收
-//                if (iret != 0) {
-//                    bytebuf_destory(bytebuf);
-//                    bytebuf = NULL;
-//                }
-//            }
-//
-//        }
+
     }
     if (!tmpclazz) {
         jvm_printf("class not found:  %s \n", utf8_cstr(clsName));

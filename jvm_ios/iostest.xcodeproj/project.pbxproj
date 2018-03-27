@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		454C4AEF1FB6B89D008B9C1D /* invokec.c in Sources */ = {isa = PBXBuildFile; fileRef = 45C1245D1F872A9200BF3925 /* invokec.c */; };
+		4551681C206A77A10026A296 /* tinycthread.c in Sources */ = {isa = PBXBuildFile; fileRef = 4551681A206A77A10026A296 /* tinycthread.c */; };
 		457249682020B4AE00349683 /* garbage.c in Sources */ = {isa = PBXBuildFile; fileRef = 457249552020B4AE00349683 /* garbage.c */; };
 		457249692020B4AE00349683 /* runtime.c in Sources */ = {isa = PBXBuildFile; fileRef = 457249562020B4AE00349683 /* runtime.c */; };
 		4572496A2020B4AE00349683 /* jvm.c in Sources */ = {isa = PBXBuildFile; fileRef = 457249572020B4AE00349683 /* jvm.c */; };
@@ -60,6 +61,8 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		4551681A206A77A10026A296 /* tinycthread.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = tinycthread.c; sourceTree = "<group>"; };
+		4551681B206A77A10026A296 /* tinycthread.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = tinycthread.h; sourceTree = "<group>"; };
 		457249552020B4AE00349683 /* garbage.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = garbage.c; sourceTree = "<group>"; };
 		457249562020B4AE00349683 /* runtime.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = runtime.c; sourceTree = "<group>"; };
 		457249572020B4AE00349683 /* jvm.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = jvm.c; sourceTree = "<group>"; };
@@ -176,6 +179,8 @@
 		457249742020B4BE00349683 /* utils */ = {
 			isa = PBXGroup;
 			children = (
+				4551681A206A77A10026A296 /* tinycthread.c */,
+				4551681B206A77A10026A296 /* tinycthread.h */,
 				457249752020B4BE00349683 /* spinlock.h */,
 				457249762020B4BE00349683 /* bytebuf.h */,
 				457249772020B4BE00349683 /* hashtable.h */,
@@ -412,6 +417,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				4572496D2020B4AE00349683 /* java_native_std.c in Sources */,
+				4551681C206A77A10026A296 /* tinycthread.c in Sources */,
 				457249712020B4AE00349683 /* java_native_reflect.c in Sources */,
 				45C124311F87232100BF3925 /* ViewController.swift in Sources */,
 				4572498C2020B4BF00349683 /* pairlist.c in Sources */,
