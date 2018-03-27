@@ -6,37 +6,33 @@
 #include <stdarg.h>
 #include "../utils/d_type.h"
 #include "jvm.h"
-#include <pthread.h>
+
 #include <sys/stat.h>
-#include <sys/time.h>
 #include "../utils/miniz/miniz_wrapper.h"
 #include "jvm_util.h"
 #include "garbage.h"
 #include "java_native_reflect.h"
+#include "java_native_io.h"
 #include "jdwp.h"
 
 
-#ifdef __JVM_OS_MINGW__
 
-#include <pthread_time.h>
-
-#endif
 //==================================================================================
 
 void thread_lock_init(ThreadLock *lock) {
     if (lock) {
-        pthread_cond_init(&lock->thread_cond, NULL);
-        pthread_mutexattr_init(&lock->lock_attr);
-        pthread_mutexattr_settype(&lock->lock_attr, PTHREAD_MUTEX_RECURSIVE);
-        pthread_mutex_init(&lock->mutex_lock, &lock->lock_attr);
+        cnd_init(&lock->thread_cond);
+//        pthread_mutexattr_init(&lock->lock_attr);
+//        pthread_mutexattr_settype(&lock->lock_attr, PTHREAD_MUTEX_RECURSIVE);
+        mtx_init(&lock->mutex_lock, mtx_recursive);
     }
 }
 
 void thread_lock_dispose(ThreadLock *lock) {
     if (lock) {
-        pthread_cond_destroy(&lock->thread_cond);
-        pthread_mutexattr_destroy(&lock->lock_attr);
-        pthread_mutex_destroy(&lock->mutex_lock);
+        cnd_destroy(&lock->thread_cond);
+//        pthread_mutexattr_destroy(&lock->lock_attr);
+        mtx_destroy(&lock->mutex_lock);
     }
 }
 
@@ -399,12 +395,6 @@ void printDumpOfClasses() {
     }
 }
 
-s32 isDir(Utf8String *path) {
-    struct stat buf;
-    stat(utf8_cstr(path), &buf);
-    s32 a = S_ISDIR(buf.st_mode);
-    return a;
-}
 
 s32 sys_properties_load(ClassLoader *loader) {
     sys_prop = hashtable_create(UNICODE_STR_HASH_FUNC, UNICODE_STR_EQUALS_FUNC);
@@ -590,7 +580,7 @@ void invoke_deepth(Runtime *runtime) {
 #if __JVM_OS_MAC__ || __JVM_OS_CYGWIN__
     fprintf(stderr, "%llx", (s64) (intptr_t) pthread_self());
 #else
-    fprintf(stderr, "%llx", (s64) (intptr_t) pthread_self());
+    fprintf(stderr, "%llx", (s64) (intptr_t) thrd_current());
 #endif //
     for (i = 0; i < len; i++) {
         fprintf(stderr, "  ");
@@ -628,13 +618,13 @@ s32 jthread_dispose(Instance *jthread) {
     return 0;
 }
 
-void *jtherad_run(void *para) {
+s32 jtherad_run(void *para) {
     Instance *jthread = (Instance *) para;
     jvm_printf("thread start %llx\n", (s64) (intptr_t) jthread);
 
     s32 ret = 0;
     Runtime *runtime = (Runtime *) jthread_get_stackframe_value(jthread);
-    runtime->threadInfo->pthread = pthread_self();
+    runtime->threadInfo->pthread = thrd_current();
 
     Utf8String *methodName = utf8_create_c("run");
     Utf8String *methodType = utf8_create_c("()V");
@@ -657,17 +647,17 @@ void *jtherad_run(void *para) {
     runtime->threadInfo->thread_status = THREAD_STATUS_ZOMBIE;
     jthread_dispose(jthread);
     jvm_printf("thread over %llx\n", (s64) (intptr_t) jthread);
-    return para;
+    return ret;
 }
 
-pthread_t jthread_start(Instance *ins) {//
+thrd_t jthread_start(Instance *ins) {//
     jthread_init(ins);
-    pthread_t pt;
-    pthread_attr_t attr;
-    pthread_attr_init(&attr);
-    pthread_attr_setdetachstate(&attr, PTHREAD_CREATE_DETACHED);
-    pthread_create(&pt, &attr, jtherad_run, ins);
-    pthread_attr_destroy(&attr);
+    thrd_t pt;
+//    pthread_attr_t attr;
+//    pthread_attr_init(&attr);
+//    pthread_attr_setdetachstate(&attr, PTHREAD_CREATE_DETACHED);
+    thrd_create(&pt, jtherad_run, ins);
+//    pthread_attr_destroy(&attr);
     return pt;
 }
 
@@ -712,7 +702,7 @@ s32 jthread_lock(MemoryBlock *mb, Runtime *runtime) { //可能会重入，同一
     }
     ThreadLock *jtl = mb->thread_lock;
     //can pause when lock
-    while (pthread_mutex_trylock(&jtl->mutex_lock)) {
+    while (mtx_trylock(&jtl->mutex_lock) != thrd_success) {
         check_suspend_and_pause(runtime);
         jthread_yield(runtime);
     }
@@ -731,7 +721,7 @@ s32 jthread_unlock(MemoryBlock *mb, Runtime *runtime) {
         jthreadlock_create(mb);
     }
     ThreadLock *jtl = mb->thread_lock;
-    pthread_mutex_unlock(&jtl->mutex_lock);
+    mtx_unlock(&jtl->mutex_lock);
 #if _JVM_DEBUG_BYTECODE_DETAIL > 5
     invoke_deepth(runtime);
     jvm_printf("unlock: %llx   lock holder: %s, \n", (s64) (intptr_t) (runtime->threadInfo->jthread),
@@ -745,7 +735,7 @@ s32 jthread_notify(MemoryBlock *mb, Runtime *runtime) {
     if (mb->thread_lock == NULL) {
         jthreadlock_create(mb);
     }
-    pthread_cond_signal(&mb->thread_lock->thread_cond);
+    cnd_signal(&mb->thread_lock->thread_cond);
     return 0;
 }
 
@@ -754,12 +744,12 @@ s32 jthread_notifyAll(MemoryBlock *mb, Runtime *runtime) {
     if (mb->thread_lock == NULL) {
         jthreadlock_create(mb);
     }
-    pthread_cond_broadcast(&mb->thread_lock->thread_cond);
+    cnd_broadcast(&mb->thread_lock->thread_cond);
     return 0;
 }
 
 s32 jthread_yield(Runtime *runtime) {
-    sched_yield();
+    thrd_yield();
     return 0;
 }
 
@@ -793,7 +783,7 @@ s32 jthread_waitTime(MemoryBlock *mb, Runtime *runtime, s64 waitms) {
     t.tv_sec = waitms / 1000;
     t.tv_nsec = (waitms % 1000) * 1000000;
     runtime->threadInfo->thread_status = THREAD_STATUS_WAIT;
-    pthread_cond_timedwait(&mb->thread_lock->thread_cond, &mb->thread_lock->mutex_lock, &t);
+    cnd_timedwait(&mb->thread_lock->thread_cond, &mb->thread_lock->mutex_lock, &t);
     runtime->threadInfo->thread_status = THREAD_STATUS_RUNNING;
     check_suspend_and_pause(runtime);
     return 0;
@@ -1431,33 +1421,36 @@ void threadinfo_destory(JavaThreadInfo *threadInfo) {
 }
 
 s64 currentTimeMillis() {
-    struct timeval tv;
-    gettimeofday(&tv, NULL);
-    //clock_gettime(CLOCK_REALTIME, &t);
-    return ((s64) tv.tv_sec) * 1000 + tv.tv_usec / 1000;
+
+    struct timespec tv;
+    clock_gettime(CLOCK_REALTIME, &tv);
+    return ((s64) tv.tv_sec) * MILL_2_SEC_SCALE + tv.tv_nsec / NANO_2_MILLS_SCALE;
 }
 
 s64 nanoTime() {
-    struct timeval tv;
-    gettimeofday(&tv, NULL);
+
+    struct timespec tv;
+    clock_gettime(CLOCK_REALTIME, &tv);
+
     if (!NANO_START) {
-        NANO_START = ((s64) tv.tv_sec) * 1000000000;
+        NANO_START = ((s64) tv.tv_sec) * NANO_2_SEC_SCALE + tv.tv_nsec;
     }
-    s64 v = (((s64) tv.tv_sec) * 1000000 + tv.tv_usec) * 1000;
+    s64 v = ((s64) tv.tv_sec) * NANO_2_SEC_SCALE + tv.tv_nsec;
     return v - NANO_START;
 }
 
 s64 threadSleep(s64 ms) {
     //wait time
     struct timespec req;
-    req.tv_sec = ms / 1000;
-    req.tv_nsec = (ms % 1000) * 1000000;
+    clock_gettime(CLOCK_REALTIME, &req);
+    req.tv_sec += ms / MILL_2_SEC_SCALE;
+    req.tv_nsec += (ms % MILL_2_SEC_SCALE) * NANO_2_MILLS_SCALE;
     //if notify or notifyall ,the thread is active again, rem record remain wait time
     struct timespec rem;
     rem.tv_sec = 0;
     rem.tv_nsec = 0;
-    nanosleep(&req, &rem);
-    return (rem.tv_sec * 1000 + rem.tv_nsec / 1000000);
+    thrd_sleep(&req, &rem);
+    return (rem.tv_sec * MILL_2_SEC_SCALE + rem.tv_nsec / NANO_2_MILLS_SCALE);
 }
 
 void instance_hold_to_thread(Instance *ref, Runtime *runtime) {

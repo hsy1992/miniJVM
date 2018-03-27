@@ -1,6 +1,7 @@
 package test;
 
 import java.io.File;
+import java.io.IOException;
 
 class Foo2 {
 
@@ -252,6 +253,16 @@ class Foo2 {
         System.out.println("path:" + f.getAbsolutePath());
     }
 
+    void t14() {
+        try {
+            System.out.println(System.getProperty("file.separator"));
+            int a = System.in.read();
+            int b = System.in.read();
+            System.out.println(Integer.toHexString(a) + "," + Integer.toHexString(b));
+        } catch (IOException ex) {
+        }
+    }
+
     public static void main(String args[]) {
         Foo2 obj = new Foo2();
 //        obj.t1();
@@ -266,6 +277,7 @@ class Foo2 {
 //        obj.t10();
 //        obj.t11();
 //        obj.t12();
-        obj.t13();
+//        obj.t13();
+        obj.t14();
     }
 }

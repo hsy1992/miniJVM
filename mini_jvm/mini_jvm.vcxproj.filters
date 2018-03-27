@@ -1,0 +1,165 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="源文件">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="头文件">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h;hh;hpp;hxx;hm;inl;inc;xsd</Extensions>
+    </Filter>
+    <Filter Include="资源文件">
+      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
+    </Filter>
+    <Filter Include="头文件\jvm">
+      <UniqueIdentifier>{2dc0a898-ab6b-4115-93a2-d5a8cf521a96}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="源文件\jvm">
+      <UniqueIdentifier>{ee32af12-415f-44e9-aa16-1b864db794dc}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="头文件\utils">
+      <UniqueIdentifier>{a700f6bd-736e-4d67-9b39-f9e865fe8789}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="源文件\utils">
+      <UniqueIdentifier>{cb79318b-5774-4ff4-b435-b536e6836df0}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="main.c">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="jvm\class.c">
+      <Filter>源文件\jvm</Filter>
+    </ClCompile>
+    <ClCompile Include="jvm\class_load.c">
+      <Filter>源文件\jvm</Filter>
+    </ClCompile>
+    <ClCompile Include="jvm\garbage.c">
+      <Filter>源文件\jvm</Filter>
+    </ClCompile>
+    <ClCompile Include="jvm\global.c">
+      <Filter>源文件\jvm</Filter>
+    </ClCompile>
+    <ClCompile Include="jvm\interpreter.c">
+      <Filter>源文件\jvm</Filter>
+    </ClCompile>
+    <ClCompile Include="jvm\java_native_io.c">
+      <Filter>源文件\jvm</Filter>
+    </ClCompile>
+    <ClCompile Include="jvm\java_native_reflect.c">
+      <Filter>源文件\jvm</Filter>
+    </ClCompile>
+    <ClCompile Include="jvm\java_native_std.c">
+      <Filter>源文件\jvm</Filter>
+    </ClCompile>
+    <ClCompile Include="jvm\jdwp.c">
+      <Filter>源文件\jvm</Filter>
+    </ClCompile>
+    <ClCompile Include="jvm\jvm.c">
+      <Filter>源文件\jvm</Filter>
+    </ClCompile>
+    <ClCompile Include="jvm\jvm_util.c">
+      <Filter>源文件\jvm</Filter>
+    </ClCompile>
+    <ClCompile Include="jvm\runtime.c">
+      <Filter>源文件\jvm</Filter>
+    </ClCompile>
+    <ClCompile Include="utils\arraylist.c">
+      <Filter>源文件\utils</Filter>
+    </ClCompile>
+    <ClCompile Include="utils\bytebuf.c">
+      <Filter>源文件\utils</Filter>
+    </ClCompile>
+    <ClCompile Include="utils\d_utils.c">
+      <Filter>源文件\utils</Filter>
+    </ClCompile>
+    <ClCompile Include="utils\hashset.c">
+      <Filter>源文件\utils</Filter>
+    </ClCompile>
+    <ClCompile Include="utils\hashtable.c">
+      <Filter>源文件\utils</Filter>
+    </ClCompile>
+    <ClCompile Include="utils\linkedlist.c">
+      <Filter>源文件\utils</Filter>
+    </ClCompile>
+    <ClCompile Include="utils\pairlist.c">
+      <Filter>源文件\utils</Filter>
+    </ClCompile>
+    <ClCompile Include="utils\spinlock.c">
+      <Filter>源文件\utils</Filter>
+    </ClCompile>
+    <ClCompile Include="utils\utf8_string.c">
+      <Filter>源文件\utils</Filter>
+    </ClCompile>
+    <ClCompile Include="utils\miniz\miniz_wrapper.c">
+      <Filter>源文件\utils</Filter>
+    </ClCompile>
+    <ClCompile Include="utils\tinycthread.c">
+      <Filter>源文件\utils</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="jvm\garbage.h">
+      <Filter>头文件\jvm</Filter>
+    </ClInclude>
+    <ClInclude Include="jvm\java_native_io.h">
+      <Filter>头文件\jvm</Filter>
+    </ClInclude>
+    <ClInclude Include="jvm\java_native_reflect.h">
+      <Filter>头文件\jvm</Filter>
+    </ClInclude>
+    <ClInclude Include="jvm\java_native_std.h">
+      <Filter>头文件\jvm</Filter>
+    </ClInclude>
+    <ClInclude Include="jvm\jdwp.h">
+      <Filter>头文件\jvm</Filter>
+    </ClInclude>
+    <ClInclude Include="jvm\jvm.h">
+      <Filter>头文件\jvm</Filter>
+    </ClInclude>
+    <ClInclude Include="jvm\jvm_util.h">
+      <Filter>头文件\jvm</Filter>
+    </ClInclude>
+    <ClInclude Include="utils\arraylist.h">
+      <Filter>头文件\utils</Filter>
+    </ClInclude>
+    <ClInclude Include="utils\bytebuf.h">
+      <Filter>头文件\utils</Filter>
+    </ClInclude>
+    <ClInclude Include="utils\d_type.h">
+      <Filter>头文件\utils</Filter>
+    </ClInclude>
+    <ClInclude Include="utils\hashset.h">
+      <Filter>头文件\utils</Filter>
+    </ClInclude>
+    <ClInclude Include="utils\hashtable.h">
+      <Filter>头文件\utils</Filter>
+    </ClInclude>
+    <ClInclude Include="utils\linkedlist.h">
+      <Filter>头文件\utils</Filter>
+    </ClInclude>
+    <ClInclude Include="utils\pairlist.h">
+      <Filter>头文件\utils</Filter>
+    </ClInclude>
+    <ClInclude Include="utils\spinlock.h">
+      <Filter>头文件\utils</Filter>
+    </ClInclude>
+    <ClInclude Include="utils\utf8_string.h">
+      <Filter>头文件\utils</Filter>
+    </ClInclude>
+    <ClInclude Include="utils\miniz\miniz_wrapper.h">
+      <Filter>头文件\utils</Filter>
+    </ClInclude>
+    <ClInclude Include="utils\thread.h">
+      <Filter>头文件\utils</Filter>
+    </ClInclude>
+    <ClInclude Include="utils\tinycthread.h">
+      <Filter>头文件\utils</Filter>
+    </ClInclude>
+    <ClInclude Include="utils\dirent_win.h">
+      <Filter>头文件\utils</Filter>
+    </ClInclude>
+  </ItemGroup>
+</Project>

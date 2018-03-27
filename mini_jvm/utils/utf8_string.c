@@ -117,8 +117,8 @@ void utf8_append_s64(Utf8String *a1, s64 val, int radix) {
             }
             while (tv) {
                 s64 m = tv % radix;
-                if (m < 10)utf8_insert(a1, pos, '0' + m);
-                else utf8_insert(a1, pos, 'A' + (m - 10));
+                if (m < 10)utf8_insert(a1, pos, (utf8_char) ('0' + m));
+                else utf8_insert(a1, pos, (utf8_char) ('A' + (m - 10)));
                 tv = tv / radix;
             }
         }

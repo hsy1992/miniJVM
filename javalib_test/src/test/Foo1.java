@@ -165,7 +165,7 @@ public class Foo1 {
     }
 
     void t7() {
-        int MAX = 50000;
+        int MAX = 500000;
         int PRINT_COUNT = 10000;
         Thread t = new Thread(new Runnable() {
             List<String> list = new ArrayList();
@@ -396,7 +396,7 @@ public class Foo1 {
 //            f.t4();
 //            f.t5();
 //            f.t6();
-//            f.t7();
+            f.t7();
 //            f.t8();
 //            f.t9();
 //            f.t10();
@@ -409,7 +409,7 @@ public class Foo1 {
 //            f.t20();
 //            f.t21();
 //            f.t23();
-            f.t24();
+//            f.t24();
         }
     }
 

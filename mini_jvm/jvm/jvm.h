@@ -11,6 +11,9 @@
 #include <stdlib.h>
 #include <string.h>
 
+
+#include "../utils/tinycthread.h"
+
 #include "../utils/d_type.h"
 #include "../utils/hashtable.h"
 #include "../utils/utf8_string.h"

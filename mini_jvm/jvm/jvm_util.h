@@ -5,7 +5,7 @@
 #ifndef MINI_JVM_UTIL_H
 #define MINI_JVM_UTIL_H
 
-#include <pthread.h>
+
 #include "jvm.h"
 #include "../utils/hashset.h"
 #include "jdwp.h"
@@ -15,7 +15,9 @@
 extern "C" {
 #endif
 
-
+#define NANO_2_SEC_SCALE 1000000000
+#define NANO_2_MILLS_SCALE 1000000
+#define MILL_2_SEC_SCALE 1000
 static s64 NANO_START = 0;
 typedef unsigned short uni_char;
 
@@ -60,8 +62,6 @@ s64 currentTimeMillis(void);
 s64 nanoTime(void);
 
 s64 threadSleep(s64 ms);
-
-s32 isDir(Utf8String *path);
 
 s32 sys_properties_load(ClassLoader *loader);
 
@@ -165,15 +165,14 @@ struct _JavaThreadInfo {
     u8 volatile is_blocking;
     u8 un_use;
 
-    pthread_t pthread;
+    thrd_t pthread;
     //调试器相关字段
     JdwpStep jdwp_step;
 };
 
 struct _ThreadLock {
-    pthread_cond_t thread_cond;
-    pthread_mutexattr_t lock_attr;
-    pthread_mutex_t mutex_lock; //互斥锁
+    cnd_t thread_cond;
+    mtx_t mutex_lock; //互斥锁
 };
 
 s32 jthread_init(Instance *jthread);
@@ -182,9 +181,9 @@ s32 jthread_init_with_runtime(Instance *jthread, Runtime *runtime);
 
 s32 jthread_dispose(Instance *jthread);
 
-void *jtherad_run(void *para);
+s32 jtherad_run(void *para);
 
-pthread_t jthread_start(Instance *ins);
+thrd_t jthread_start(Instance *ins);
 
 __refer jthread_get_stackframe_value(Instance *ins);
 

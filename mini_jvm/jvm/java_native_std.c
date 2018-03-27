@@ -730,7 +730,7 @@ s32 java_lang_System_loadLibrary0(Runtime *runtime, Class *clazz) {
         const c8 *note2 = "register function not found:%s\n";
         const c8 *onload = "JNI_OnLoad";
         jni_fun f;
-#if defined(__JVM_OS_MINGW__) || defined(__JVM_OS_CYGWIN__)
+#if defined(__JVM_OS_MINGW__) || defined(__JVM_OS_CYGWIN__) || defined(__JVM_OS_VS__)
         utf8_append_c(libname, "/lib");
         utf8_append_c(libname, name_arr->arr_body);
         utf8_append_c(libname, ".dll");

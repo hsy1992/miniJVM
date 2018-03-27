@@ -6,7 +6,7 @@
 #define MINI_JVM_JDWP_H
 
 
-#include <pthread.h>
+
 #include "../utils/utf8_string.h"
 #include "../utils/arraylist.h"
 #include "jvm.h"
@@ -292,8 +292,8 @@ enum{
 };
 typedef struct _JdwpServer {
     Utf8String *ip;
-    pthread_t pt_listener;
-    pthread_t pt_dispacher;
+    thrd_t pt_listener;
+    thrd_t pt_dispacher;
     s32 srvsock;
     ArrayList *clients;
     ArrayList *events;

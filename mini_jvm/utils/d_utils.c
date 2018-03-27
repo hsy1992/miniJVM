@@ -21,15 +21,15 @@ s64 heap_size = 0;
  *
  */
 #ifndef __DEBUG
-inline void *jvm_calloc(u32 size) {
+void *jvm_calloc(u32 size) {
     return calloc(size, 1);
 }
 
-inline void *jvm_malloc(u32 size) {
+void *jvm_malloc(u32 size) {
     return malloc(size);
 }
 
-inline void jvm_free(void *ptr) {
+void jvm_free(void *ptr) {
     free(ptr);
 }
 

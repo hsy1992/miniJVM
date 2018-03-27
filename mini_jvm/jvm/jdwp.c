@@ -29,7 +29,7 @@ void jdwp_put_client(ArrayList *clients, JdwpClient *client) {
     arraylist_push_back(clients, client);
 }
 
-void *jdwp_thread_listener(void *para) {
+s32 jdwp_thread_listener(void *para) {
     JdwpServer *srv = (JdwpServer *) para;
     s32 srvsock = srv_bind(srv->ip, srv->port);
     srv->srvsock = srvsock;
@@ -47,10 +47,10 @@ void *jdwp_thread_listener(void *para) {
         jdwp_put_client(srv->clients, client);
     }
 
-    return NULL;
+    return 0;
 }
 
-void *jdwp_thread_dispacher(void *para) {
+s32 jdwp_thread_dispacher(void *para) {
     JdwpServer *srv = (JdwpServer *) para;
     Runtime *runtime = runtime_create(NULL);
     srv->runtime = runtime;
@@ -72,7 +72,7 @@ void *jdwp_thread_dispacher(void *para) {
     runtime_destory(runtime);
     srv->runtime = NULL;
 
-    return NULL;
+    return 0;
 }
 
 s32 jdwp_start_server() {
@@ -84,8 +84,8 @@ s32 jdwp_start_server() {
     jdwpserver.events = arraylist_create(0);
     jdwpserver.event_sets = hashtable_create(DEFAULT_HASH_FUNC, DEFAULT_HASH_EQUALS_FUNC);
 
-    pthread_create(&jdwpserver.pt_listener, NULL, jdwp_thread_listener, &jdwpserver);
-    pthread_create(&jdwpserver.pt_dispacher, NULL, jdwp_thread_dispacher, &jdwpserver);
+    thrd_create(&jdwpserver.pt_listener, jdwp_thread_listener, &jdwpserver);
+    thrd_create(&jdwpserver.pt_dispacher, jdwp_thread_dispacher, &jdwpserver);
     return 0;
 }
 
@@ -122,8 +122,8 @@ s32 jdwp_stop_server() {
 
     //
     utf8_destory(jdwpserver.ip);
-    pthread_detach(jdwpserver.pt_listener);
-    pthread_detach(jdwpserver.pt_dispacher);
+    thrd_detach(jdwpserver.pt_listener);
+    thrd_detach(jdwpserver.pt_dispacher);
     return 0;
 }
 
@@ -2076,7 +2076,7 @@ s32 jdwp_client_process(JdwpClient *client, Runtime *runtime) {
                 Instance *jthread = jdwppacket_read_refer(req);
                 Runtime *r = getRuntimeOfThread(jthread);
                 if (r) {
-                    pthread_cancel(r->threadInfo->pthread);//todo need release all lock
+                    thrd_detach(r->threadInfo->pthread);//todo need release all lock
                     jdwppacket_set_err(res, JDWP_ERROR_NONE);
                 } else {
                     jdwppacket_set_err(res, JDWP_ERROR_INVALID_THREAD);

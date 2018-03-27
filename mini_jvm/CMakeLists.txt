@@ -45,6 +45,8 @@ set(SOURCE_FILES
         jvm/class_load.c
         jvm/garbage.h
         main.c
+        utils/tinycthread.h
+        utils/tinycthread.c
         utils/linkedlist.c
         utils/linkedlist.h
         utils/spinlock.c
@@ -53,7 +55,7 @@ set(SOURCE_FILES
         utils/bytebuf.h
         utils/miniz/miniz_wrapper.c
         utils/miniz/miniz_wrapper.h
-        )
+        utils/dirent_win.h)
 
 add_executable(mini_jvm ${SOURCE_FILES})
 

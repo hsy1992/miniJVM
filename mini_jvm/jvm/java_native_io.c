@@ -19,18 +19,25 @@ extern "C" {
 
 
 #include <errno.h>
-#include <dirent.h>
 
 
-#if  __JVM_OS_MINGW__ || __JVM_OS_CYGWIN__
+#if  __JVM_OS_MINGW__ || __JVM_OS_CYGWIN__ || __JVM_OS_VS__
 #ifndef __WIN32__
 #define __WIN32__
 #endif
 #define socklen_t int
 
 #include <winsock2.h>
+
+#if __JVM_OS_VS__
+#include "../utils/dirent_win.h"
+#pragma comment(lib, "Ws2_32.lib")
+#else
+
+#include <dirent.h>
 #include <unistd.h>
 
+#endif
 
 #define SHUT_RDWR SD_BOTH
 #define SHUT_RD SD_RECEIVE
@@ -38,6 +45,7 @@ extern "C" {
 
 #else
 
+#include <dirent.h>
 #include <netdb.h>
 #include <fcntl.h>
 #include <sys/socket.h>
@@ -72,7 +80,7 @@ s32 sock_option(s32 sockfd, s32 opType, s32 opValue) {
     switch (opType) {
         case SOCK_OP_TYPE_NON_BLOCK: {//阻塞设置
 
-#if __JVM_OS_MINGW__ || __JVM_OS_CYGWIN__
+#if __JVM_OS_MINGW__ || __JVM_OS_CYGWIN__ || __JVM_OS_VS__
 #if __JVM_OS_CYGWIN__
             __ms_u_long ul = 1;
 //fix cygwin bug ,cygwin FIONBIO = 0x8008667E
@@ -240,7 +248,7 @@ s32 srv_bind(Utf8String *ip, u16 port) {
             }
 #if defined(__WIN32__)
             server_addr.sin_addr = *((struct in_addr *) host->h_addr);
-#elif __JVM_OS_MAC__ || __JVM_OS_LINUX__
+#elif __JVM_OS_MAC__ || __JVM_OS_LINUX__ || __JVM_OS_VS__
             //server_addr.sin_len = sizeof(struct sockaddr_in);
             server_addr.sin_addr = *((struct in_addr *) host->h_addr_list[0]);
 #endif
@@ -298,6 +306,12 @@ s32 sock_close(s32 listenfd) {
 
 //=================================  native  ====================================
 
+s32 isDir(Utf8String *path) {
+    struct stat buf;
+    stat(utf8_cstr(path), &buf);
+    s32 a = S_ISDIR(buf.st_mode);
+    return a;
+}
 
 
 s32 javax_mini_net_socket_Protocol_open0(Runtime *runtime, Class *clazz) {
@@ -879,7 +893,7 @@ s32 org_mini_fs_InnerFile_mkdir0(Runtime *runtime, Class *clazz) {
     Instance *path_arr = localvar_getRefer(runtime, 0);
     s32 ret = -1;
     if (path_arr) {
-#ifdef __JVM_OS_MINGW__
+#if __JVM_OS_MINGW__ || __JVM_OS_CYGWIN__ || __JVM_OS_VS__
         ret = mkdir(path_arr->arr_body);
 #else
         ret = mkdir(path_arr->arr_body, S_IRWXU | S_IRWXG | S_IROTH | S_IXOTH);
@@ -896,7 +910,7 @@ s32 org_mini_fs_InnerFile_mkdir0(Runtime *runtime, Class *clazz) {
 }
 
 s32 org_mini_fs_InnerFile_getOS(Runtime *runtime, Class *clazz) {
-#if defined(__JVM_OS_MINGW__)
+#if defined(__JVM_OS_MINGW__) || defined(__JVM_OS_CYGWIN__) || defined(__JVM_OS_VS__)
     push_int(runtime->stack, 1);
 #else
     push_int(runtime->stack, 0);

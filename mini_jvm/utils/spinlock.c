@@ -1,14 +1,21 @@
 //
 // Created by Gust on 2017/11/15 0015.
 //
-#include <sched.h>
+//#include <sched.h>
 #include "d_type.h"
+#include "tinycthread.h"
 #include "spinlock.h"
 //========================     spinlock     =========================
 
 
-int spin_init(spinlock_t *lock, int pshared) {
-    __asm__ __volatile__ ("":: : "memory");
+#if defined( __JVM_OS_VS__ )
+int __sync_bool_compare_and_swap(int *lock,int desired, int expected) {
+    return InterlockedCompareExchange(lock, expected, desired);
+}
+#endif
+
+int spin_init(spinlock_t volatile *lock, int pshared) {
+//    __asm__ __volatile__ ("":: : "memory");
     *lock = 0;
     return 0;
 }
@@ -26,7 +33,7 @@ inline int spin_lock_count(spinlock_t *lock, int count) {
                 return 0;
             }
         }
-        sched_yield();
+        thrd_yield();
     }
 }
 
@@ -41,8 +48,8 @@ int spin_trylock(spinlock_t *lock) {
     return 1;
 }
 
-int spin_unlock(spinlock_t *lock) {
-    __asm__ __volatile__ ("":: : "memory");
+int spin_unlock(spinlock_t volatile *lock) {
+    //__asm__ __volatile__ ("":: : "memory");
     *lock = 0;
     return 0;
 }

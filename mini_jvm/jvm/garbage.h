@@ -8,7 +8,7 @@
 #include "../utils/linkedlist.h"
 #include "jvm.h"
 #include "jvm_util.h"
-#include <pthread.h>
+
 
 #ifdef __cplusplus
 extern "C" {
@@ -28,7 +28,7 @@ struct _GcCollectorType {
     MemoryBlock *header, *tmp_header;
     s64 obj_count;
     //
-    pthread_t _garbage_thread;//垃圾回收线程
+    thrd_t _garbage_thread;//垃圾回收线程
     ThreadLock garbagelock;
 
     spinlock_t lock;
@@ -48,7 +48,7 @@ enum {
     GARBAGE_THREAD_DEAD,
 };
 
-void *_collect_thread_run(void *para);
+s32 _collect_thread_run(void *para);
 
 void garbage_thread_lock(void);
 

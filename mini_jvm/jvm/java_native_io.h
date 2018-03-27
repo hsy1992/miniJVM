@@ -37,6 +37,7 @@ s32 srv_accept(s32 listenfd);
 
 s32 sock_close(s32 listenfd);
 
+s32 isDir(Utf8String *path);
 
 #ifdef __cplusplus
 }

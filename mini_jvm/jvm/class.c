@@ -311,31 +311,31 @@ Class *getSuperClass(Class *clazz) {
 
 
 /* find UTF8 */
-inline ConstantUTF8 *find_constant_utf8(Class *clazz, s32 index) {
+ConstantUTF8 *find_constant_utf8(Class *clazz, s32 index) {
     return (ConstantUTF8 *) (clazz->constant_item_ptr[index]);
 }
 
 /* Find Class Reference */
-inline ConstantStringRef *find_constant_stringref(Class *clazz, s32 index) {
+ConstantStringRef *find_constant_stringref(Class *clazz, s32 index) {
     return (ConstantStringRef *) (clazz->constant_item_ptr[index]);
 }
 
 
 /* Find Class Reference */
-inline ConstantClassRef *find_constant_classref(Class *clazz, s32 index) {
+ConstantClassRef *find_constant_classref(Class *clazz, s32 index) {
     return (ConstantClassRef *) (clazz->constant_item_ptr[index]);
 }
 
-inline Class *getClassByConstantClassRef(Class *clazz, s32 index) {
+Class *getClassByConstantClassRef(Class *clazz, s32 index) {
     ConstantClassRef *ccr = find_constant_classref(clazz, index);
     return classes_get(ccr->name);
 }
 
-inline ConstantFieldRef *find_constant_fieldref(Class *clazz, s32 index) {
+ConstantFieldRef *find_constant_fieldref(Class *clazz, s32 index) {
     return (ConstantFieldRef *) (clazz->constant_item_ptr[index]);
 }
 
-inline ConstantItem *find_constant_item(Class *clazz, s32 index) {
+ConstantItem *find_constant_item(Class *clazz, s32 index) {
     return (ConstantItem *) (clazz->constant_item_ptr[index]);
 }
 
@@ -354,21 +354,21 @@ s32 find_constant_fieldref_index(Class *clazz, Utf8String *fieldName, Utf8String
 }
 
 /* Find Method Reference */
-inline ConstantMethodRef *find_constant_method_ref(Class *clazz, s32 index) {
+ConstantMethodRef *find_constant_method_ref(Class *clazz, s32 index) {
     return (ConstantMethodRef *) (clazz->constant_item_ptr[index]);
 }
 
-inline ConstantInterfaceMethodRef *find_constant_interface_method_ref(Class *clazz, s32 index) {
+ConstantInterfaceMethodRef *find_constant_interface_method_ref(Class *clazz, s32 index) {
     return (ConstantInterfaceMethodRef *) (clazz->constant_item_ptr[index]);
 }
 
 /* Find Name and Type Reference */
-inline ConstantNameAndType *find_constant_name_and_type(Class *clazz, s32 index) {
+ConstantNameAndType *find_constant_name_and_type(Class *clazz, s32 index) {
     return (ConstantNameAndType *) (clazz->constant_item_ptr[index]);
 }
 
 /* get integer from constant pool */
-inline s32 get_constant_integer(Class *clazz, s32 index) {
+s32 get_constant_integer(Class *clazz, s32 index) {
     return ((ConstantInteger *) (clazz->constant_item_ptr[index]))->value;
 }
 
@@ -378,17 +378,17 @@ s64 get_constant_long(Class *clazz, s32 index) {
 }
 
 /* get f32 from constant pool */
-inline f32 get_constant_float(Class *clazz, s32 index) {
+f32 get_constant_float(Class *clazz, s32 index) {
     return ((ConstantFloat *) (clazz->constant_item_ptr[index]))->value;
 }
 
 /* get f64 from constant pool */
-inline f64 get_double_from_constant_pool(Class *clazz, s32 index) {
+f64 get_double_from_constant_pool(Class *clazz, s32 index) {
     return ((ConstantDouble *) (clazz->constant_item_ptr[index]))->value;
 }
 
 
-inline Utf8String *get_utf8_string(Class *clazz, s32 index) {
+Utf8String *get_utf8_string(Class *clazz, s32 index) {
     return ((ConstantUTF8 *) (clazz->constant_item_ptr[index]))->utfstr;
 }
 

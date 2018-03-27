@@ -28,6 +28,9 @@
 #define __JVM_OS_LINUX__ 1
 #endif
 
+#if defined(_MSC_VER)
+#define __JVM_OS_VS__ 1
+#endif
 
 
 //compile

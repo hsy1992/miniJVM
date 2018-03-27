@@ -69,12 +69,8 @@ s32 garbage_collector_create() {
     collector->_garbage_thread_status = GARBAGE_THREAD_PAUSE;
     thread_lock_init(&collector->garbagelock);
 
-    pthread_attr_t attr;
-    pthread_attr_init(&attr);
-    pthread_attr_setdetachstate(&attr, PTHREAD_CREATE_DETACHED);
-    s32 rc = pthread_create(&collector->_garbage_thread, &attr, _collect_thread_run, NULL);
-    pthread_attr_destroy(&attr);
-    if (rc) {
+    s32 rc = thrd_create(&collector->_garbage_thread, _collect_thread_run, NULL);
+    if (!thrd_success) {
         jvm_printf("ERROR: garbage thread can't create is %d\n", rc);
     }
     return 0;
@@ -132,15 +128,15 @@ void _garbage_clear() {
 //===============================   inner  ====================================
 
 s32 garbage_thread_trylock() {
-    return pthread_mutex_trylock(&collector->garbagelock.mutex_lock);
+    return mtx_trylock(&collector->garbagelock.mutex_lock);
 }
 
 void garbage_thread_lock() {
-    pthread_mutex_lock(&collector->garbagelock.mutex_lock);
+    mtx_lock(&collector->garbagelock.mutex_lock);
 }
 
 void garbage_thread_unlock() {
-    pthread_mutex_unlock(&collector->garbagelock.mutex_lock);
+    mtx_unlock(&collector->garbagelock.mutex_lock);
 }
 
 void garbage_thread_pause() {
@@ -156,26 +152,26 @@ void garbage_thread_stop() {
 }
 
 void garbage_thread_wait() {
-    pthread_cond_wait(&collector->garbagelock.thread_cond, &collector->garbagelock.mutex_lock);
+    cnd_wait(&collector->garbagelock.thread_cond, &collector->garbagelock.mutex_lock);
 }
 
 void garbage_thread_timedwait(s64 ms) {
-    ms += currentTimeMillis();
     struct timespec t;
-    t.tv_sec = ms / 1000;
-    t.tv_nsec = (ms % 1000) * 1000000;
-    s32 ret = pthread_cond_timedwait(&collector->garbagelock.thread_cond, &collector->garbagelock.mutex_lock, &t);
+    clock_gettime(CLOCK_REALTIME, &t);
+    t.tv_sec += ms / 1000;
+    t.tv_nsec += (ms % 1000) * 1000000;
+    s32 ret = cnd_timedwait(&collector->garbagelock.thread_cond, &collector->garbagelock.mutex_lock, &t);
 //    if (ret == ETIMEDOUT) {
 //        s32 debug = 1;
 //    }
 }
 
 void garbage_thread_notify() {
-    pthread_cond_signal(&collector->garbagelock.thread_cond);
+    cnd_signal(&collector->garbagelock.thread_cond);
 }
 
 void garbage_thread_notifyall() {
-    pthread_cond_broadcast(&collector->garbagelock.thread_cond);
+    cnd_broadcast(&collector->garbagelock.thread_cond);
 }
 //=============================   debug ===================================
 
@@ -295,7 +291,7 @@ void _garbage_remove_out_holder(__refer ref) {
 }
 //==============================   thread_run() =====================================
 
-void *_collect_thread_run(void *para) {
+s32 _collect_thread_run(void *para) {
     s64 lastgc = currentTimeMillis();
     while (1) {
         threadSleep(10);
@@ -319,7 +315,7 @@ void *_collect_thread_run(void *para) {
 
     }
     collector->_garbage_thread_status = GARBAGE_THREAD_DEAD;
-    return NULL;
+    return 0;
 }
 
 
