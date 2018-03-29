@@ -22,7 +22,7 @@ import javax.mini.reflect.vm.RefNative;
  *
  * @author gust
  */
-public class Reference {
+public class ReflectClass {
 
     public static final byte CLASS = 1; //ReferenceType is a class.
     public static final byte INTERFACE = 2; //ReferenceType is an interface.
@@ -43,7 +43,7 @@ public class Reference {
     private Field[] fields;
     private Method[] methods;
 
-    public Reference(long classId) {
+    public ReflectClass(long classId) {
         this.classId = classId;
         mapReference(classId);
 

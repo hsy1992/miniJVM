@@ -12,5 +12,5 @@ package javax.mini.reflect;
 public class Instance {
 
     public long insId;
-    public Reference clazz;
+    public ReflectClass clazz;
 }

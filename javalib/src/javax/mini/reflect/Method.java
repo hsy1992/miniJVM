@@ -213,7 +213,7 @@ public class Method {
         paras = args.toArray(new String[args.size()]);
         paras_class = new Class[paras.length];
         for (int i = 0; i < paras.length; i++) {
-            paras_class[i] = Reference.getClassBySignature(paras[i]);
+            paras_class[i] = ReflectClass.getClassBySignature(paras[i]);
         }
     }
 
