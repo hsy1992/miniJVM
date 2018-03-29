@@ -70,7 +70,7 @@ s32 garbage_collector_create() {
     thread_lock_init(&collector->garbagelock);
 
     s32 rc = thrd_create(&collector->_garbage_thread, _collect_thread_run, NULL);
-    if (!thrd_success) {
+    if (rc !=thrd_success) {
         jvm_printf("ERROR: garbage thread can't create is %d\n", rc);
     }
     return 0;
