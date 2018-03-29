@@ -5,6 +5,9 @@
  */
 package java.lang;
 
+import java.io.IOException;
+import java.io.Writer;
+
 /**
  * The <code>Throwable</code> class is the superclass of all errors and
  * exceptions in the Java language. Only objects that are instances of this
@@ -124,7 +127,13 @@ public class Throwable {
         err.print(getCodeStack());
 
     }
+    public void printStackTrace(Writer writer) {
+        try {
+            writer.write(getCodeStack());
+        } catch (IOException ex) {
+        }
 
+    }
     public String getCodeStack() {
         StringBuilder stack = new StringBuilder();
         String msg = getMessage();
