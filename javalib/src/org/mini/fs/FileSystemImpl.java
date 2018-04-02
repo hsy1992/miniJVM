@@ -202,4 +202,13 @@ abstract public class FileSystemImpl extends org.mini.fs.FileSystem {
         return f.getAbsolutePath().hashCode();
     }
 
+    @Override
+    public File getTempDir() {
+        String s = InnerFile.getTmpDir();
+        if (s != null) {
+            File f = new File(s);
+            return f;
+        }
+        return null;
+    }
 }

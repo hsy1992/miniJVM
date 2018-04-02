@@ -11,6 +11,7 @@ package java.io;
 
 import org.mini.fs.FileSystem;
 import java.util.ArrayList;
+import java.util.Random;
 
 /**
  * An abstract representation of file and directory pathnames.
@@ -634,7 +635,35 @@ public class File implements java.util.Comparable {
     public boolean createNewFile() throws IOException {
         return fs.createFileExclusively(path);
     }
-    
+
+    public static File createTempFile(String prefix,
+            String suffix,
+            File directory)
+            throws IOException {
+        if (directory != null) {
+            if (directory.exists()) {
+                if (prefix == null) {
+                    prefix = "_m_jvm";
+                }
+                if (suffix == null) {
+                    suffix = ".tmp";
+                }
+                String body = Integer.toString(new Random().nextInt(Integer.MAX_VALUE));
+                String fn = directory.getPath() + File.separator + prefix + body + suffix;
+                File f = new File(fn);
+                f.createNewFile();
+                return f;
+            }
+        }
+        return null;
+    }
+
+    public static File createTempFile(String prefix,
+            String suffix)
+            throws IOException {
+        return createTempFile(prefix, suffix, fs.getTempDir());
+    }
+
     /**
      * Deletes the file or directory denoted by this abstract pathname. If this
      * pathname denotes a directory, then the directory must be empty in order

@@ -313,6 +313,18 @@ s32 isDir(Utf8String *path) {
     return a;
 }
 
+Utf8String *getTmpDir() {
+    Utf8String *tmps = utf8_create();
+#if __JVM_OS_MINGW__ || __JVM_OS_CYGWIN__ || __JVM_OS_VS__
+    c8 buf[128];
+    s32 len = GetTempPath(128, buf);
+    utf8_append_data(tmps, buf, len);
+#else
+    utf8_append_c(tmps, P_tmpdir);
+#endif
+    return tmps;
+}
+
 
 s32 javax_mini_net_socket_Protocol_open0(Runtime *runtime, Class *clazz) {
     RuntimeStack *stack = runtime->stack;
@@ -889,6 +901,21 @@ s32 org_mini_fs_InnerFile_rename0(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
+s32 org_mini_fs_InnerFile_getTmpDir(Runtime *runtime, Class *clazz) {
+    Utf8String *tdir = getTmpDir();
+    if (tdir) {
+        Instance *jstr = jstring_create(tdir, runtime);
+        push_ref(runtime->stack, jstr);
+    } else {
+        push_ref(runtime->stack, NULL);
+    }
+#if _JVM_DEBUG_BYTECODE_DETAIL > 5
+    invoke_deepth(runtime);
+    jvm_printf("org_mini_fs_InnerFile_rename0  \n");
+#endif
+    return 0;
+}
+
 s32 org_mini_fs_InnerFile_mkdir0(Runtime *runtime, Class *clazz) {
     Instance *path_arr = localvar_getRefer(runtime, 0);
     s32 ret = -1;
@@ -978,6 +1005,7 @@ static java_native_method method_net_table[] = {
         {"org/mini/fs/InnerFile",                         "getOS",           "()I",                              org_mini_fs_InnerFile_getOS},
         {"org/mini/fs/InnerFile",                         "delete0",         "([B)I",                            org_mini_fs_InnerFile_delete0},
         {"org/mini/fs/InnerFile",                         "rename0",         "([B[B)I",                          org_mini_fs_InnerFile_rename0},
+        {"org/mini/fs/InnerFile",                         "getTmpDir",       "()Ljava/lang/String;",             org_mini_fs_InnerFile_getTmpDir},
 
 };
 

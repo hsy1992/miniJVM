@@ -286,5 +286,8 @@ public class InnerFile {
     public static native int seek0(long fileHandle, long pos);
 
     public static native int setLength0(long fileHandle, long len);
+    
+    public static native String getTmpDir();
+    
 
 }

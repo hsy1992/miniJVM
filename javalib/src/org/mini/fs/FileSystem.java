@@ -197,4 +197,6 @@ public abstract class FileSystem {
      */
     public abstract int hashCode(File f);
 
+    
+    public abstract File getTempDir();
 }
