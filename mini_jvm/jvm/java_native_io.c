@@ -905,13 +905,14 @@ s32 org_mini_fs_InnerFile_getTmpDir(Runtime *runtime, Class *clazz) {
     Utf8String *tdir = getTmpDir();
     if (tdir) {
         Instance *jstr = jstring_create(tdir, runtime);
+        utf8_destory(tdir);
         push_ref(runtime->stack, jstr);
     } else {
         push_ref(runtime->stack, NULL);
     }
 #if _JVM_DEBUG_BYTECODE_DETAIL > 5
     invoke_deepth(runtime);
-    jvm_printf("org_mini_fs_InnerFile_rename0  \n");
+    jvm_printf("org_mini_fs_InnerFile_getTmpDir  \n");
 #endif
     return 0;
 }
