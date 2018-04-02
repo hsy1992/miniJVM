@@ -43,7 +43,7 @@ public class GL_java_2_c {
             + "#include \"deps/include/GLFW/glfw3.h\"\n"
             + "#include \"deps/include/linmath.h\"\n"
             + "\n"
-            + "#include \"../mini_jvm/jvm/jvm.h\"\n"
+            + "#include \"jvm.h\"\n"
             + "#include \"jni_gui.h\"\n"
             + "\n";
 

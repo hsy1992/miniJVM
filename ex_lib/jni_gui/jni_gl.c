@@ -5,7 +5,7 @@
 #include "deps/include/GLFW/glfw3.h"
 #include "deps/include/linmath.h"
 
-#include "../mini_jvm/jvm/jvm.h"
+#include "jvm.h"
 #include "jni_gui.h"
 
 int org_mini_gl_GL_init(Runtime *runtime, Class *clazz) {

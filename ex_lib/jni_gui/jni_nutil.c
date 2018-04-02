@@ -22,7 +22,7 @@
 
 
 
-#include "../mini_jvm/jvm/jvm.h"
+#include "jvm.h"
 #include "jni_gui.h"
 #include "stb_jni_assist.h"
 

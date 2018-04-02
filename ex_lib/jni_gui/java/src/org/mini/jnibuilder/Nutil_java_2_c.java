@@ -60,7 +60,7 @@ public class Nutil_java_2_c {
             + "\n"
             + "\n"
             + "\n"
-            + "#include \"../mini_jvm/jvm/jvm.h\"\n"
+            + "#include \"jvm.h\"\n"
             + "#include \"jni_gui.h\"\n"
             + "#include \"stb_jni_assist.h\"\n"
             + "\n\n\n";

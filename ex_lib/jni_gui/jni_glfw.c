@@ -11,7 +11,7 @@
 
 //#include "deps/include/stb_image.h"
 
-#include "../mini_jvm/jvm/jvm.h"
+#include "jvm.h"
 #include "jni_gui.h"
 
 

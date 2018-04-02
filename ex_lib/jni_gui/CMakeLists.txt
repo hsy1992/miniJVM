@@ -5,7 +5,7 @@ project(jni_gui)
 #set(CMAKE_CXX_STANDARD 11)
 set(CMAKE_C_STANDARD 99)
 
-include_directories(deps/include/)
+include_directories(deps/include/ ../../mini_jvm/jvm )
 
 set(SOURCE_FILES
         deps/include/glad/glad.c
