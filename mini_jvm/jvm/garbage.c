@@ -70,7 +70,7 @@ s32 garbage_collector_create() {
     thread_lock_init(&collector->garbagelock);
 
     s32 rc = thrd_create(&collector->_garbage_thread, _collect_thread_run, NULL);
-    if (rc !=thrd_success) {
+    if (rc != thrd_success) {
         jvm_printf("ERROR: garbage thread can't create is %d\n", rc);
     }
     return 0;
@@ -118,9 +118,14 @@ void _garbage_clear() {
     classloader_destory(array_classloader);
     array_classloader = NULL;
     while (garbage_collect());//collect classes
+
+    while (collector->free_list_header) {
+        MemoryBlock *mb = collector->free_list_header;
+        collector->free_list_header = mb->next;
+        jvm_free(mb);
+    }
     //
     jvm_printf("[INFO]objs size :%lld\n", collector->obj_count);
-
     //dump_refer();
 }
 
@@ -214,6 +219,31 @@ void _getMBName(void *memblock, Utf8String *name) {
     }
 }
 
+
+s32 _getMBSize(MemoryBlock *mb) {
+    s32 size = 0;
+    if (mb) {
+        switch (mb->type) {
+            case MEM_TYPE_CLASS: {
+                size = sizeof(Class) + ((Class *) mb)->field_static_len;
+                break;
+            }
+            case MEM_TYPE_INS: {
+                size = sizeof(Instance) + mb->clazz->field_instance_len;
+                break;
+            }
+            case MEM_TYPE_ARR: {
+                Instance *arr = (Instance *) mb;
+                size = sizeof(Instance) + data_type_bytes[mb->arr_type_index] * arr->arr_length;
+                break;
+            }
+            default:
+                jvm_printf("[ERROR] error memblock %llx.\n", (s64) (intptr_t) mb);
+        }
+    }
+
+    return size;
+}
 
 /**
  * 调试用，打印所有引用信息
@@ -327,7 +357,7 @@ s32 _collect_thread_run(void *para) {
  */
 s64 garbage_collect() {
     collector->isgc = 1;
-    s64 mem1 = heap_size;
+    s64 mem_total = 0, mem_reuse = 0;
     s64 del = 0;
     s64 time_startAt;
 
@@ -371,30 +401,37 @@ s64 garbage_collect() {
     time_startAt = currentTimeMillis();
     //
 
+    collector->flag_reuse = 1;//open reuse flag
+
     MemoryBlock *nextmb = collector->header;
     MemoryBlock *curmb, *prevmb = NULL;
     s64 iter = 0;
     while (nextmb) {
         iter++;
+        s32 ins_size = _getMBSize(nextmb);
+        mem_total += ins_size;
         curmb = nextmb;
         nextmb = curmb->next;
         if (curmb->garbage_mark != collector->flag_refer) {
+            mem_reuse += ins_size;
+            //
             _garbage_destory_memobj(curmb);
             if (prevmb)prevmb->next = nextmb;
             else collector->header = nextmb;
             del++;
-
         } else {
             prevmb = curmb;
         }
+        if (mem_total < MAX_HEAP_SIZE)collector->flag_reuse = 0;
     }
     spin_lock(&collector->lock);
     collector->obj_count -= del;
     spin_unlock(&collector->lock);
 
+    heap_size = mem_total - mem_reuse;
     s64 time_gc = currentTimeMillis() - time_startAt;
     jvm_printf("[INFO]gc obj: %lld->%lld   heap : %lld -> %lld  stop_world: %lld  gc:%lld\n",
-               obj_count, collector->obj_count, mem1, heap_size, time_stopWorld, time_gc);
+               obj_count, collector->obj_count, mem_total, heap_size, time_stopWorld, time_gc);
 
 
     collector->isgc = 0;
@@ -417,6 +454,7 @@ void _garbage_destory_memobj(MemoryBlock *mb) {
     utf8_destory(sus);
 #endif
     memoryblock_destory((Instance *) mb);
+
 }
 
 
@@ -615,7 +653,7 @@ static inline void _jarray_mark_refer(Instance *arr) {
             s32 i;
             for (i = 0; i < arr->arr_length; i++) {//把所有引用去除，否则不会垃圾回收
                 s64 val = jarray_get_field(arr, i);
-                _garbage_mark_object((__refer)(intptr_t) val);
+                _garbage_mark_object((__refer) (intptr_t) val);
             }
         }
     }
@@ -733,4 +771,32 @@ void garbage_refer_release(__refer ref) {
     if (ref) {
         _garbage_remove_out_holder(ref);
     }
+}
+
+
+Instance *get_instance_mb() {
+//    spin_lock(&collector->lock_reuse);
+//    if (collector->free_list_header) {
+//        MemoryBlock *mb = collector->free_list_header;
+//        collector->free_list_header = mb->next;
+//
+//        spin_unlock(&collector->lock_reuse);
+//        return (Instance *) mb;
+//    }
+//    spin_unlock(&collector->lock_reuse);
+    return jvm_calloc(sizeof(Instance));
+
+}
+
+void put_instance_mb(MemoryBlock *mb) {
+//    if (collector->flag_reuse) {
+//        spin_lock(&collector->lock_reuse);
+//        memset(mb, 0, sizeof(Instance));
+//        mb->next = collector->free_list_header;
+//        collector->free_list_header = mb;
+//        spin_unlock(&collector->lock_reuse);
+//        return;
+//    }
+    jvm_free(mb);
+
 }

@@ -253,7 +253,7 @@ extern __refer data_type_classes[DATATYPE_COUNT];
 extern s32 data_type_bytes[DATATYPE_COUNT];
 
 enum {
-    DATATYPE_BOOLEAN = 5,
+    DATATYPE_BOOLEAN = 4,
     DATATYPE_JCHAR = 5,
     DATATYPE_FLOAT = 6,
     DATATYPE_DOUBLE = 7,

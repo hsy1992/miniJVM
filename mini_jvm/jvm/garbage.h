@@ -28,6 +28,11 @@ struct _GcCollectorType {
     MemoryBlock *header, *tmp_header;
     s64 obj_count;
     //
+    MemoryBlock *free_list_header;
+    spinlock_t lock_reuse;
+    s32 volatile flag_reuse;//control reuse mode=1 if heap using less than  MAX_HEAP_SIZE
+
+    //
     thrd_t _garbage_thread;//垃圾回收线程
     ThreadLock garbagelock;
 
@@ -85,6 +90,10 @@ void garbage_refer_release(__refer ref);
 s32 garbage_refer_reg(__refer ref);
 
 void garbage_dump_runtime();
+
+Instance *get_instance_mb();
+
+void put_instance_mb(MemoryBlock *mb);
 
 #ifdef __cplusplus
 }
