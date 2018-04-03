@@ -119,11 +119,6 @@ void _garbage_clear() {
     array_classloader = NULL;
     while (garbage_collect());//collect classes
 
-    while (collector->free_list_header) {
-        MemoryBlock *mb = collector->free_list_header;
-        collector->free_list_header = mb->next;
-        jvm_free(mb);
-    }
     //
     jvm_printf("[INFO]objs size :%lld\n", collector->obj_count);
     //dump_refer();
@@ -401,7 +396,6 @@ s64 garbage_collect() {
     time_startAt = currentTimeMillis();
     //
 
-    collector->flag_reuse = 1;//open reuse flag
 
     MemoryBlock *nextmb = collector->header;
     MemoryBlock *curmb, *prevmb = NULL;
@@ -422,7 +416,6 @@ s64 garbage_collect() {
         } else {
             prevmb = curmb;
         }
-        if (mem_total < MAX_HEAP_SIZE)collector->flag_reuse = 0;
     }
     spin_lock(&collector->lock);
     collector->obj_count -= del;
@@ -773,30 +766,3 @@ void garbage_refer_release(__refer ref) {
     }
 }
 
-
-Instance *get_instance_mb() {
-//    spin_lock(&collector->lock_reuse);
-//    if (collector->free_list_header) {
-//        MemoryBlock *mb = collector->free_list_header;
-//        collector->free_list_header = mb->next;
-//
-//        spin_unlock(&collector->lock_reuse);
-//        return (Instance *) mb;
-//    }
-//    spin_unlock(&collector->lock_reuse);
-    return jvm_calloc(sizeof(Instance));
-
-}
-
-void put_instance_mb(MemoryBlock *mb) {
-//    if (collector->flag_reuse) {
-//        spin_lock(&collector->lock_reuse);
-//        memset(mb, 0, sizeof(Instance));
-//        mb->next = collector->free_list_header;
-//        collector->free_list_header = mb;
-//        spin_unlock(&collector->lock_reuse);
-//        return;
-//    }
-    jvm_free(mb);
-
-}

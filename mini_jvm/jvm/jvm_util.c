@@ -816,8 +816,7 @@ s32 check_suspend_and_pause(Runtime *runtime) {
 Instance *jarray_create_by_class(s32 count, Class *clazz) {
     s32 typeIdx = clazz->arr_type_index;
     s32 width = data_type_bytes[typeIdx];
-    //Instance *arr = jvm_calloc(sizeof(Instance));
-    Instance *arr = get_instance_mb();
+    Instance *arr = jvm_calloc(sizeof(Instance));
     arr->mb.type = MEM_TYPE_ARR;
     arr->mb.clazz = clazz;
     arr->mb.arr_type_index = typeIdx;
@@ -861,8 +860,7 @@ s32 jarray_destory(Instance *arr) {
             arr->arr_body = NULL;
         }
         arr->arr_length = -1;
-        //jvm_free(arr);
-        put_instance_mb((MemoryBlock *) arr);
+        jvm_free(arr);
     }
     return 0;
 }
@@ -956,12 +954,11 @@ s64 jarray_get_field(Instance *arr, s32 index) {
 
 //===============================    实例化对象  ==================================
 Instance *instance_create(Class *clazz) {
-//    Instance *ins = jvm_calloc(sizeof(Instance));
-    Instance *ins = get_instance_mb();
+    Instance *ins = jvm_calloc(sizeof(Instance) + clazz->field_instance_len);
     ins->mb.type = MEM_TYPE_INS;
     ins->mb.clazz = clazz;
 
-    ins->obj_fields = jvm_calloc(ins->mb.clazz->field_instance_len);
+    ins->obj_fields = (c8*)ins + sizeof(Instance);//jvm_calloc(clazz->field_instance_len);
     garbage_refer_reg(ins);
     return ins;
 }
@@ -1012,12 +1009,8 @@ void instance_clear_refer(Instance *ins) {
 }
 
 s32 instance_destory(Instance *ins) {
-
-//    instance_clear_refer(ins);
     jthreadlock_destory(&ins->mb);
-    jvm_free(ins->obj_fields);
-    //jvm_free(ins);
-    put_instance_mb((MemoryBlock*)ins);
+    jvm_free(ins);
 
     return 0;
 }
@@ -1031,8 +1024,7 @@ s32 instance_destory(Instance *ins) {
  * @return  instance
  */
 Instance *instance_copy(Instance *src) {
-//    Instance *dst = jvm_malloc(sizeof(Instance));
-    Instance *dst = get_instance_mb();
+    Instance *dst = jvm_malloc(sizeof(Instance));
     memcpy(dst, src, sizeof(Instance));
     dst->mb.thread_lock = NULL;
     dst->mb.garbage_reg = 0;
