@@ -958,7 +958,7 @@ Instance *instance_create(Class *clazz) {
     ins->mb.type = MEM_TYPE_INS;
     ins->mb.clazz = clazz;
 
-    ins->obj_fields = (c8*)ins + sizeof(Instance);//jvm_calloc(clazz->field_instance_len);
+    ins->obj_fields = (c8 *) ins + sizeof(Instance);//jvm_calloc(clazz->field_instance_len);
     garbage_refer_reg(ins);
     return ins;
 }
@@ -1024,7 +1024,7 @@ s32 instance_destory(Instance *ins) {
  * @return  instance
  */
 Instance *instance_copy(Instance *src) {
-    Instance *dst = jvm_malloc(sizeof(Instance));
+    Instance *dst = jvm_malloc(sizeof(Instance) + src->mb.clazz->field_instance_len);
     memcpy(dst, src, sizeof(Instance));
     dst->mb.thread_lock = NULL;
     dst->mb.garbage_reg = 0;
@@ -1033,7 +1033,7 @@ Instance *instance_copy(Instance *src) {
         Class *clazz = src->mb.clazz;
         s32 fileds_len = clazz->field_instance_len;
         if (fileds_len) {
-            dst->obj_fields = jvm_malloc(fileds_len);
+            dst->obj_fields = (c8 *) dst + sizeof(Instance);//jvm_malloc(fileds_len);
             memcpy(dst->obj_fields, src->obj_fields, fileds_len);
             s32 i, len;
             while (clazz) {
