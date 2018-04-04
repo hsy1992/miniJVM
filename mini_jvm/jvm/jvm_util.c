@@ -71,15 +71,15 @@ Class *classes_load_get(Utf8String *ustr, Runtime *runtime) {
         garbage_thread_lock();//slow lock
         cl = classes_get(ustr);
         if (!cl) {
-            load_class(sys_classloader, ustr);
+            load_class(sys_classloader, ustr,runtime);
         }
         cl = classes_get(ustr);
         garbage_thread_unlock();
         //if (java_debug)event_on_class_prepar(runtime, cl);
     }
-    if (cl) {
-        class_clinit(cl, runtime);
-    }
+//    if (cl) {
+//        class_clinit(cl, runtime);
+//    }
     return cl;
 }
 

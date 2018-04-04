@@ -165,26 +165,9 @@ s32 execute_jvm(c8 *p_classpath, c8 *p_mainclass, ArrayList *java_para) {
 
     //装入系统属性
     sys_properties_load(sys_classloader);
-//    //装入基础类
-    Utf8String *str_jstring = utf8_create_c(STR_CLASS_JAVA_LANG_STRING);
-    load_class(sys_classloader, str_jstring);
-    utf8_destory(str_jstring);
-    //装入主类
-    load_class(sys_classloader, str_mainClsName);
 
-    HashtableIterator hti;
-    hashtable_iterate(sys_classloader->classes, &hti);
-    for (; hashtable_iter_has_more(&hti);) {
-        Utf8String *k = hashtable_iter_next_key(&hti);
-        Class *clazz = hashtable_get(sys_classloader->classes, k);
-        if (clazz->status != CLASS_STATUS_PREPARED)class_prepar(clazz,runtime);
-    }
-    hashtable_iterate(sys_classloader->classes, &hti);
-    for (; hashtable_iter_has_more(&hti);) {
-        Utf8String *k = hashtable_iter_next_key(&hti);
-        Class *clazz = hashtable_get(sys_classloader->classes, k);
-        if (clazz->status != CLASS_STATUS_CLINITED)class_clinit(clazz, runtime);//初始化
-    }
+    //装入主类
+    load_class(sys_classloader, str_mainClsName, runtime);
 
     Class *clazz = classes_get(str_mainClsName);
 
@@ -213,7 +196,7 @@ s32 execute_jvm(c8 *p_classpath, c8 *p_mainclass, ArrayList *java_para) {
             for (i = 0; i < count; i++) {
                 Utf8String *utfs = utf8_create_c(arraylist_get_value(java_para, i));
                 Instance *jstr = jstring_create(utfs, runtime);
-                jarray_set_field(arr, i, (intptr_t)jstr);
+                jarray_set_field(arr, i, (intptr_t) jstr);
                 utf8_destory(utfs);
             }
             push_ref(runtime->stack, arr);

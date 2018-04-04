@@ -383,18 +383,16 @@ static inline s32 _op_putfield_impl(u8 **opCode, Runtime *runtime, RuntimeStack 
     s2c.c0 = opCode[0][2];
 
     u16 field_ref = s2c.s;
-    if (clazz->status < CLASS_STATUS_CLINITED) {
-        class_clinit(clazz, runtime);
-    }
+
     // check variable type to determain long/s32/f64/f32
-    FieldInfo *fi = find_constant_fieldref(clazz, field_ref)->fieldInfo;
+    FieldInfo *fi = ((ConstantFieldRef *) (clazz->constant_item_ptr[field_ref]))->fieldInfo;//find_constant_fieldref(clazz, field_ref)->fieldInfo;
 
     StackEntry entry;
     pop_entry(stack, &entry);
 
     c8 *ptr;
     if (isStatic) {
-        ptr = getStaticFieldPtr(fi);
+        ptr = &(fi->_this_class->field_static[fi->offset]);//getStaticFieldPtr(fi);
     } else {
         Instance *ins = (Instance *) pop_ref(stack);
         if (!ins) {
@@ -402,7 +400,7 @@ static inline s32 _op_putfield_impl(u8 **opCode, Runtime *runtime, RuntimeStack 
             push_ref(stack, (__refer) exception);
             return RUNTIME_STATUS_EXCEPTION;
         }
-        ptr = &(ins->obj_fields[fi->offset_instance]);//&(ins->obj_fields[fi->offset+fi->_this_class->field_instance_start]);//getInstanceFieldPtr(ins, fi);//
+        ptr = &(ins->obj_fields[fi->offset_instance]);//getInstanceFieldPtr(ins, fi);
     }
 #if _JVM_DEBUG_BYTECODE_DETAIL > 5
     invoke_deepth(runtime);
@@ -446,16 +444,13 @@ static inline s32 _op_getfield_impl(u8 **opCode, Runtime *runtime, RuntimeStack 
     s2c.c0 = opCode[0][2];
 
     u16 field_ref = s2c.s;
-    if (clazz->status < CLASS_STATUS_CLINITED) {
-        class_clinit(clazz, runtime);
-    }
 
     // check variable type to determine s64/s32/f64/f32
-    FieldInfo *fi = find_constant_fieldref(clazz, field_ref)->fieldInfo;
+    FieldInfo *fi = ((ConstantFieldRef *) (clazz->constant_item_ptr[field_ref]))->fieldInfo;//find_constant_fieldref(clazz, field_ref)->fieldInfo;
 
     c8 *ptr;
     if (isStatic) {
-        ptr = getStaticFieldPtr(fi);
+        ptr = &(fi->_this_class->field_static[fi->offset]);//getStaticFieldPtr(fi);
     } else {
         Instance *ins = (Instance *) pop_ref(stack);
         if (!ins) {
@@ -463,7 +458,7 @@ static inline s32 _op_getfield_impl(u8 **opCode, Runtime *runtime, RuntimeStack 
             push_ref(stack, (__refer) exception);
             return RUNTIME_STATUS_EXCEPTION;
         }
-        ptr = &(ins->obj_fields[fi->offset_instance]);//&(ins->obj_fields[fi->offset+fi->_this_class->field_instance_start]);//getInstanceFieldPtr(ins, fi);//&(ins->obj_fields[fi->offset_instance]);
+        ptr = &(ins->obj_fields[fi->offset_instance]);//getInstanceFieldPtr(ins, fi);
     }
     if (fi->isrefer) {
         push_ref(stack, getFieldRefer(ptr));
@@ -705,17 +700,21 @@ s32 execute_method(MethodInfo *method, Runtime *pruntime, Class *clazz) {
 
     runtime->method = method;
     runtime->clazz = clazz;
+    if (clazz->status < CLASS_STATUS_CLINITING) {
+        class_clinit(clazz, runtime);
+    }
     s32 method_sync = method->access_flags & ACC_SYNCHRONIZED;
 //    if (utf8_equals_c(method->name, "t24")) {
 //        s32 debug = 1;
 //    }
+    RuntimeStack *stack = runtime->stack;
 
     if (!(method->access_flags & ACC_NATIVE)) {
         CodeAttribute *ca = method->attributes[j].converted_code;
         if (ca) {
             localvar_init(runtime, ca->max_locals + 1);
             _stack2localvar(method, pruntime, runtime);
-            s32 stackSize = pruntime->stack->size;
+            s32 stackSize = stack->size;
             if (method_sync)_synchronized_lock_method(method, runtime);
 
 #if _JVM_DEBUG_BYTECODE_DETAIL > 3
@@ -726,8 +725,6 @@ s32 execute_method(MethodInfo *method, Runtime *pruntime, Class *clazz) {
 #endif
             runtime->pc = ca->code;
             runtime->ca = ca;
-            s32 i_r = 0;
-            RuntimeStack *stack = runtime->stack;
             do {
                 if (java_debug) {
                     //breakpoint
@@ -780,75 +777,75 @@ s32 execute_method(MethodInfo *method, Runtime *pruntime, Class *clazz) {
                         break;
                     }
                     case op_iconst_m1: {
-                        i_r = _op_iconst_n(opCode, runtime, -1);
+                        ret = _op_iconst_n(opCode, runtime, -1);
                         break;
                     }
 
 
                     case op_iconst_0: {
-                        i_r = _op_iconst_n(opCode, runtime, 0);
+                        ret = _op_iconst_n(opCode, runtime, 0);
                         break;
                     }
 
                     case op_iconst_1: {
-                        i_r = _op_iconst_n(opCode, runtime, 1);
+                        ret = _op_iconst_n(opCode, runtime, 1);
                         break;
                     }
 
                     case op_iconst_2: {
-                        i_r = _op_iconst_n(opCode, runtime, 2);
+                        ret = _op_iconst_n(opCode, runtime, 2);
                         break;
                     }
 
                     case op_iconst_3: {
-                        i_r = _op_iconst_n(opCode, runtime, 3);
+                        ret = _op_iconst_n(opCode, runtime, 3);
                         break;
                     }
 
                     case op_iconst_4: {
-                        i_r = _op_iconst_n(opCode, runtime, 4);
+                        ret = _op_iconst_n(opCode, runtime, 4);
                         break;
                     }
 
                     case op_iconst_5: {
-                        i_r = _op_iconst_n(opCode, runtime, 5);
+                        ret = _op_iconst_n(opCode, runtime, 5);
                         break;
                     }
 
                     case op_lconst_0: {
-                        i_r = _op_lconst_n(opCode, runtime, 0);
+                        ret = _op_lconst_n(opCode, runtime, 0);
                         break;
                     }
 
                     case op_lconst_1: {
-                        i_r = _op_lconst_n(opCode, runtime, 1);
+                        ret = _op_lconst_n(opCode, runtime, 1);
                         break;
                     }
 
 
                     case op_fconst_0: {
-                        i_r = _op_fconst_n(opCode, runtime, 0.0f);
+                        ret = _op_fconst_n(opCode, runtime, 0.0f);
                         break;
                     }
 
                     case op_fconst_1: {
-                        i_r = _op_fconst_n(opCode, runtime, 1.0f);
+                        ret = _op_fconst_n(opCode, runtime, 1.0f);
                         break;
                     }
 
                     case op_fconst_2: {
-                        i_r = _op_fconst_n(opCode, runtime, 2.0f);
+                        ret = _op_fconst_n(opCode, runtime, 2.0f);
                         break;
                     }
 
 
                     case op_dconst_0: {
-                        i_r = _op_dconst_n(opCode, runtime, 0.0f);
+                        ret = _op_dconst_n(opCode, runtime, 0.0f);
                         break;
                     }
 
                     case op_dconst_1: {
-                        i_r = _op_dconst_n(opCode, runtime, 1.0f);
+                        ret = _op_dconst_n(opCode, runtime, 1.0f);
                         break;
                     }
 
@@ -883,7 +880,7 @@ s32 execute_method(MethodInfo *method, Runtime *pruntime, Class *clazz) {
                     case op_ldc: {
                         s32 index = opCode[0][1];
                         *opCode = *opCode + 2;
-                        i_r = _op_ldc_impl(opCode, runtime, stack, index);
+                        ret = _op_ldc_impl(opCode, runtime, stack, index);
                         break;
                     }
 
@@ -892,7 +889,7 @@ s32 execute_method(MethodInfo *method, Runtime *pruntime, Class *clazz) {
                         s2c.c1 = opCode[0][1];
                         s2c.c0 = opCode[0][2];
                         s32 index = s2c.s;
-                        i_r = _op_ldc_impl(opCode, runtime, stack, index);
+                        ret = _op_ldc_impl(opCode, runtime, stack, index);
                         *opCode = *opCode + 3;
                         break;
                     }
@@ -994,103 +991,103 @@ s32 execute_method(MethodInfo *method, Runtime *pruntime, Class *clazz) {
                     }
 
                     case op_iload_0: {
-                        i_r = _op_ifload_n(opCode, runtime, 0);
+                        ret = _op_ifload_n(opCode, runtime, 0);
                         break;
                     }
 
                     case op_iload_1: {
-                        i_r = _op_ifload_n(opCode, runtime, 1);
+                        ret = _op_ifload_n(opCode, runtime, 1);
                         break;
                     }
 
                     case op_iload_2: {
-                        i_r = _op_ifload_n(opCode, runtime, 2);
+                        ret = _op_ifload_n(opCode, runtime, 2);
                         break;
                     }
 
                     case op_iload_3: {
-                        i_r = _op_ifload_n(opCode, runtime, 3);
+                        ret = _op_ifload_n(opCode, runtime, 3);
                         break;
                     }
 
                     case op_lload_0: {
-                        i_r = _op_lload_n(opCode, runtime, 0);
+                        ret = _op_lload_n(opCode, runtime, 0);
                         break;
                     }
 
                     case op_lload_1: {
-                        i_r = _op_lload_n(opCode, runtime, 1);
+                        ret = _op_lload_n(opCode, runtime, 1);
                         break;
                     }
 
                     case op_lload_2: {
-                        i_r = _op_lload_n(opCode, runtime, 2);
+                        ret = _op_lload_n(opCode, runtime, 2);
                         break;
                     }
 
                     case op_lload_3: {
-                        i_r = _op_lload_n(opCode, runtime, 3);
+                        ret = _op_lload_n(opCode, runtime, 3);
                         break;
                     }
 
                     case op_fload_0: {
-                        i_r = _op_ifload_n(opCode, runtime, 0);
+                        ret = _op_ifload_n(opCode, runtime, 0);
                         break;
                     }
 
                     case op_fload_1: {
-                        i_r = _op_ifload_n(opCode, runtime, 1);
+                        ret = _op_ifload_n(opCode, runtime, 1);
                         break;
                     }
 
                     case op_fload_2: {
-                        i_r = _op_ifload_n(opCode, runtime, 2);
+                        ret = _op_ifload_n(opCode, runtime, 2);
                         break;
                     }
 
                     case op_fload_3: {
-                        i_r = _op_ifload_n(opCode, runtime, 3);
+                        ret = _op_ifload_n(opCode, runtime, 3);
                         break;
                     }
 
 
                     case op_dload_0: {
-                        i_r = _op_lload_n(opCode, runtime, 0);
+                        ret = _op_lload_n(opCode, runtime, 0);
                         break;
                     }
 
                     case op_dload_1: {
-                        i_r = _op_lload_n(opCode, runtime, 1);
+                        ret = _op_lload_n(opCode, runtime, 1);
                         break;
                     }
 
                     case op_dload_2: {
-                        i_r = _op_lload_n(opCode, runtime, 2);
+                        ret = _op_lload_n(opCode, runtime, 2);
                         break;
                     }
 
                     case op_dload_3: {
-                        i_r = _op_lload_n(opCode, runtime, 3);
+                        ret = _op_lload_n(opCode, runtime, 3);
                         break;
                     }
 
                     case op_aload_0: {
-                        i_r = _op_aload_n(opCode, runtime, 0);
+                        ret = _op_aload_n(opCode, runtime, 0);
                         break;
                     }
 
                     case op_aload_1: {
-                        i_r = _op_aload_n(opCode, runtime, 1);
+                        ret = _op_aload_n(opCode, runtime, 1);
                         break;
                     }
 
                     case op_aload_2: {
-                        i_r = _op_aload_n(opCode, runtime, 2);
+                        ret = _op_aload_n(opCode, runtime, 2);
                         break;
                     }
 
                     case op_aload_3: {
-                        i_r = _op_aload_n(opCode, runtime, 3);
+                        ret = _op_aload_n(opCode, runtime, 3);
                         break;
                     }
 
@@ -1098,8 +1095,8 @@ s32 execute_method(MethodInfo *method, Runtime *pruntime, Class *clazz) {
                     case op_faload: {
                         s32 index = pop_int(stack);
                         Instance *arr = (Instance *) pop_ref(stack);
-                        i_r = _check_arr_exception(arr, index, runtime);
-                        if (!i_r) {
+                        ret = _check_arr_exception(arr, index, runtime);
+                        if (!ret) {
                             s32 s = *(s32 *) (arr->arr_body + (index << 2));
                             push_int(stack, s);
 
@@ -1117,8 +1114,8 @@ s32 execute_method(MethodInfo *method, Runtime *pruntime, Class *clazz) {
                     case op_daload: {
                         s32 index = pop_int(stack);
                         Instance *arr = (Instance *) pop_ref(stack);
-                        i_r = _check_arr_exception(arr, index, runtime);
-                        if (!i_r) {
+                        ret = _check_arr_exception(arr, index, runtime);
+                        if (!ret) {
                             s64 s = *(s64 *) (arr->arr_body + (index << 3));
                             push_long(stack, s);
 
@@ -1135,8 +1132,8 @@ s32 execute_method(MethodInfo *method, Runtime *pruntime, Class *clazz) {
                     case op_aaload: {
                         s32 index = pop_int(stack);
                         Instance *arr = (Instance *) pop_ref(stack);
-                        i_r = _check_arr_exception(arr, index, runtime);
-                        if (!i_r) {
+                        ret = _check_arr_exception(arr, index, runtime);
+                        if (!ret) {
                             __refer s = *(__refer *) (arr->arr_body + (index * sizeof(__refer)));
                             push_ref(stack, s);
 
@@ -1153,8 +1150,8 @@ s32 execute_method(MethodInfo *method, Runtime *pruntime, Class *clazz) {
                     case op_baload: {
                         s32 index = pop_int(stack);
                         Instance *arr = (Instance *) pop_ref(stack);
-                        i_r = _check_arr_exception(arr, index, runtime);
-                        if (!i_r) {
+                        ret = _check_arr_exception(arr, index, runtime);
+                        if (!ret) {
                             s32 s = *(s8 *) (arr->arr_body + (index));
                             push_int(stack, s);
 
@@ -1171,8 +1168,8 @@ s32 execute_method(MethodInfo *method, Runtime *pruntime, Class *clazz) {
                     case op_caload: {
                         s32 index = pop_int(stack);
                         Instance *arr = (Instance *) pop_ref(stack);
-                        i_r = _check_arr_exception(arr, index, runtime);
-                        if (!i_r) {
+                        ret = _check_arr_exception(arr, index, runtime);
+                        if (!ret) {
                             s32 s = *(u16 *) (arr->arr_body + (index << 1));
                             push_int(stack, s);
 
@@ -1189,8 +1186,8 @@ s32 execute_method(MethodInfo *method, Runtime *pruntime, Class *clazz) {
                     case op_saload: {
                         s32 index = pop_int(stack);
                         Instance *arr = (Instance *) pop_ref(stack);
-                        i_r = _check_arr_exception(arr, index, runtime);
-                        if (!i_r) {
+                        ret = _check_arr_exception(arr, index, runtime);
+                        if (!ret) {
                             s32 s = *(s16 *) (arr->arr_body + (index << 1));
                             push_int(stack, s);
 
@@ -1205,22 +1202,22 @@ s32 execute_method(MethodInfo *method, Runtime *pruntime, Class *clazz) {
                     }
 
                     case op_istore: {
-                        i_r = _op_ifstore_impl(opCode, runtime, stack);
+                        ret = _op_ifstore_impl(opCode, runtime, stack);
                         break;
                     }
 
                     case op_lstore: {
-                        i_r = _op_ldstore_impl(opCode, runtime, stack);
+                        ret = _op_ldstore_impl(opCode, runtime, stack);
                         break;
                     }
 
                     case op_fstore: {
-                        i_r = _op_ifstore_impl(opCode, runtime, stack);
+                        ret = _op_ifstore_impl(opCode, runtime, stack);
                         break;
                     }
 
                     case op_dstore: {
-                        i_r = _op_ldstore_impl(opCode, runtime, stack);
+                        ret = _op_ldstore_impl(opCode, runtime, stack);
                         break;
                     }
 
@@ -1250,105 +1247,105 @@ s32 execute_method(MethodInfo *method, Runtime *pruntime, Class *clazz) {
                     }
 
                     case op_istore_0: {
-                        i_r = _op_istore_n(opCode, runtime, stack, 0);
+                        ret = _op_istore_n(opCode, runtime, stack, 0);
                         break;
                     }
 
                     case op_istore_1: {
-                        i_r = _op_istore_n(opCode, runtime, stack, 1);
+                        ret = _op_istore_n(opCode, runtime, stack, 1);
                         break;
                     }
 
                     case op_istore_2: {
-                        i_r = _op_istore_n(opCode, runtime, stack, 2);
+                        ret = _op_istore_n(opCode, runtime, stack, 2);
                         break;
                     }
 
                     case op_istore_3: {
-                        i_r = _op_istore_n(opCode, runtime, stack, 3);
+                        ret = _op_istore_n(opCode, runtime, stack, 3);
                         break;
                     }
 
                     case op_lstore_0: {
-                        i_r = _op_lstore_n(opCode, runtime, stack, 0);
+                        ret = _op_lstore_n(opCode, runtime, stack, 0);
                         break;
                     }
 
                     case op_lstore_1: {
-                        i_r = _op_lstore_n(opCode, runtime, stack, 1);
+                        ret = _op_lstore_n(opCode, runtime, stack, 1);
                         break;
                     }
 
                     case op_lstore_2: {
-                        i_r = _op_lstore_n(opCode, runtime, stack, 2);
+                        ret = _op_lstore_n(opCode, runtime, stack, 2);
                         break;
                     }
 
                     case op_lstore_3: {
-                        i_r = _op_lstore_n(opCode, runtime, stack, 3);
+                        ret = _op_lstore_n(opCode, runtime, stack, 3);
                         break;
                     }
 
 
                     case op_fstore_0: {
-                        i_r = _op_istore_n(opCode, runtime, stack, 0);
+                        ret = _op_istore_n(opCode, runtime, stack, 0);
                         break;
                     }
 
                     case op_fstore_1: {
-                        i_r = _op_istore_n(opCode, runtime, stack, 1);
+                        ret = _op_istore_n(opCode, runtime, stack, 1);
                         break;
                     }
 
                     case op_fstore_2: {
-                        i_r = _op_istore_n(opCode, runtime, stack, 2);
+                        ret = _op_istore_n(opCode, runtime, stack, 2);
                         break;
                     }
 
                     case op_fstore_3: {
-                        i_r = _op_istore_n(opCode, runtime, stack, 3);
+                        ret = _op_istore_n(opCode, runtime, stack, 3);
                         break;
                     }
 
 
                     case op_dstore_0: {
-                        i_r = _op_lstore_n(opCode, runtime, stack, 0);
+                        ret = _op_lstore_n(opCode, runtime, stack, 0);
                         break;
                     }
 
                     case op_dstore_1: {
-                        i_r = _op_lstore_n(opCode, runtime, stack, 1);
+                        ret = _op_lstore_n(opCode, runtime, stack, 1);
                         break;
                     }
 
                     case op_dstore_2: {
-                        i_r = _op_lstore_n(opCode, runtime, stack, 2);
+                        ret = _op_lstore_n(opCode, runtime, stack, 2);
                         break;
                     }
 
                     case op_dstore_3: {
-                        i_r = _op_lstore_n(opCode, runtime, stack, 3);
+                        ret = _op_lstore_n(opCode, runtime, stack, 3);
                         break;
                     }
 
 
                     case op_astore_0: {
-                        i_r = _op_astore_n(opCode, runtime, stack, 0);
+                        ret = _op_astore_n(opCode, runtime, stack, 0);
                         break;
                     }
 
                     case op_astore_1: {
-                        i_r = _op_astore_n(opCode, runtime, stack, 1);
+                        ret = _op_astore_n(opCode, runtime, stack, 1);
                         break;
                     }
 
                     case op_astore_2: {
-                        i_r = _op_astore_n(opCode, runtime, stack, 2);
+                        ret = _op_astore_n(opCode, runtime, stack, 2);
                         break;
                     }
 
                     case op_astore_3: {
-                        i_r = _op_astore_n(opCode, runtime, stack, 3);
+                        ret = _op_astore_n(opCode, runtime, stack, 3);
                         break;
                     }
 
@@ -1357,8 +1354,8 @@ s32 execute_method(MethodInfo *method, Runtime *pruntime, Class *clazz) {
                         s32 i = pop_int(stack);
                         s32 index = pop_int(stack);
                         Instance *jarr = (Instance *) pop_ref(stack);
-                        i_r = _check_arr_exception(jarr, index, runtime);
-                        if (!i_r) {
+                        ret = _check_arr_exception(jarr, index, runtime);
+                        if (!ret) {
                             *(s32 *) (jarr->arr_body + (index << 2)) = i;
 
 #if _JVM_DEBUG_BYTECODE_DETAIL > 5
@@ -1376,8 +1373,8 @@ s32 execute_method(MethodInfo *method, Runtime *pruntime, Class *clazz) {
                         s64 j = pop_long(stack);
                         s32 index = pop_int(stack);
                         Instance *jarr = (Instance *) pop_ref(stack);
-                        i_r = _check_arr_exception(jarr, index, runtime);
-                        if (!i_r) {
+                        ret = _check_arr_exception(jarr, index, runtime);
+                        if (!ret) {
                             *(s64 *) (jarr->arr_body + (index << 3)) = j;
 
 #if _JVM_DEBUG_BYTECODE_DETAIL > 5
@@ -1395,8 +1392,8 @@ s32 execute_method(MethodInfo *method, Runtime *pruntime, Class *clazz) {
                         __refer r = pop_ref(stack);
                         s32 index = pop_int(stack);
                         Instance *jarr = (Instance *) pop_ref(stack);
-                        i_r = _check_arr_exception(jarr, index, runtime);
-                        if (!i_r) {
+                        ret = _check_arr_exception(jarr, index, runtime);
+                        if (!ret) {
                             *(__refer *) (jarr->arr_body + (index * sizeof(__refer))) = r;
 
 #if _JVM_DEBUG_BYTECODE_DETAIL > 5
@@ -1413,8 +1410,8 @@ s32 execute_method(MethodInfo *method, Runtime *pruntime, Class *clazz) {
                         s32 i = pop_int(stack);
                         s32 index = pop_int(stack);
                         Instance *jarr = (Instance *) pop_ref(stack);
-                        i_r = _check_arr_exception(jarr, index, runtime);
-                        if (!i_r) {
+                        ret = _check_arr_exception(jarr, index, runtime);
+                        if (!ret) {
                             *(s8 *) (jarr->arr_body + (index)) = (s8) i;
 
 #if _JVM_DEBUG_BYTECODE_DETAIL > 5
@@ -1432,8 +1429,8 @@ s32 execute_method(MethodInfo *method, Runtime *pruntime, Class *clazz) {
                         s32 i = pop_int(stack);
                         s32 index = pop_int(stack);
                         Instance *jarr = (Instance *) pop_ref(stack);
-                        i_r = _check_arr_exception(jarr, index, runtime);
-                        if (!i_r) {
+                        ret = _check_arr_exception(jarr, index, runtime);
+                        if (!ret) {
                             *(u16 *) (jarr->arr_body + (index << 1)) = i;
 
 #if _JVM_DEBUG_BYTECODE_DETAIL > 5
@@ -1451,8 +1448,8 @@ s32 execute_method(MethodInfo *method, Runtime *pruntime, Class *clazz) {
                         s32 i = pop_int(stack);
                         s32 index = pop_int(stack);
                         Instance *jarr = (Instance *) pop_ref(stack);
-                        i_r = _check_arr_exception(jarr, index, runtime);
-                        if (!i_r) {
+                        ret = _check_arr_exception(jarr, index, runtime);
+                        if (!ret) {
                             *(s16 *) (jarr->arr_body + (index << 1)) = i;
 
 #if _JVM_DEBUG_BYTECODE_DETAIL > 5
@@ -3045,7 +3042,7 @@ s32 execute_method(MethodInfo *method, Runtime *pruntime, Class *clazz) {
                                    entry_2_long(&entry));
 #endif
                         *opCode = *opCode + 1;
-                        i_r = RUNTIME_STATUS_RETURN;
+                        ret = RUNTIME_STATUS_RETURN;
                         break;
                     }
 
@@ -3055,28 +3052,28 @@ s32 execute_method(MethodInfo *method, Runtime *pruntime, Class *clazz) {
                         jvm_printf("return: \n");
 #endif
                         *opCode = *opCode + 1;
-                        i_r = RUNTIME_STATUS_RETURN;
+                        ret = RUNTIME_STATUS_RETURN;
                         break;
                     }
 
                     case op_getstatic: {
-                        i_r = _op_getfield_impl(opCode, runtime, stack, 1);
+                        ret = _op_getfield_impl(opCode, runtime, stack, 1);
                         break;
                     }
 
                     case op_putstatic: {
-                        i_r = _op_putfield_impl(opCode, runtime, stack, 1);
+                        ret = _op_putfield_impl(opCode, runtime, stack, 1);
                         break;
                     }
 
                     case op_getfield: {
-                        i_r = _op_getfield_impl(opCode, runtime, stack, 0);
+                        ret = _op_getfield_impl(opCode, runtime, stack, 0);
                         break;
                     }
 
 
                     case op_putfield: {
-                        i_r = _op_putfield_impl(opCode, runtime, stack, 0);
+                        ret = _op_putfield_impl(opCode, runtime, stack, 0);
                         break;
                     }
 
@@ -3097,7 +3094,7 @@ s32 execute_method(MethodInfo *method, Runtime *pruntime, Class *clazz) {
                         if (ins == NULL) {
                             Instance *exception = exception_create(JVM_EXCEPTION_NULLPOINTER, runtime);
                             push_ref(stack, (__refer) exception);
-                            i_r = RUNTIME_STATUS_EXCEPTION;
+                            ret = RUNTIME_STATUS_EXCEPTION;
                         } else {
                             MethodInfo *method = NULL;
 
@@ -3130,12 +3127,12 @@ s32 execute_method(MethodInfo *method, Runtime *pruntime, Class *clazz) {
 #endif
 
                             if (method) {
-                                i_r = execute_method(method, runtime, method->_this_class);
+                                ret = execute_method(method, runtime, method->_this_class);
                             } else {
                                 Instance *exception = exception_create_str(JVM_EXCEPTION_NOSUCHMETHOD, runtime,
                                                                            utf8_cstr(cmr->name));
-                                push_ref(runtime->stack, (__refer) exception);
-                                i_r = RUNTIME_STATUS_EXCEPTION;
+                                push_ref(stack, (__refer) exception);
+                                ret = RUNTIME_STATUS_EXCEPTION;
                             }
                         }
                         *opCode = *opCode + 3;
@@ -3163,12 +3160,12 @@ s32 execute_method(MethodInfo *method, Runtime *pruntime, Class *clazz) {
                                    utf8_cstr(method->name), utf8_cstr(method->descriptor));
 #endif
                         if (method) {
-                            i_r = execute_method(method, runtime, method->_this_class);
+                            ret = execute_method(method, runtime, method->_this_class);
                         } else {
                             Instance *exception = exception_create_str(JVM_EXCEPTION_NOSUCHMETHOD, runtime,
                                                                        utf8_cstr(cmr->name));
-                            push_ref(runtime->stack, (__refer) exception);
-                            i_r = RUNTIME_STATUS_EXCEPTION;
+                            push_ref(stack, (__refer) exception);
+                            ret = RUNTIME_STATUS_EXCEPTION;
                         }
 
                         *opCode = *opCode + 3;
@@ -3199,12 +3196,12 @@ s32 execute_method(MethodInfo *method, Runtime *pruntime, Class *clazz) {
                                    utf8_cstr(method->name), utf8_cstr(method->descriptor));
 #endif
                         if (method) {
-                            i_r = execute_method(method, runtime, method->_this_class);
+                            ret = execute_method(method, runtime, method->_this_class);
                         } else {
                             Instance *exception = exception_create_str(JVM_EXCEPTION_NOSUCHMETHOD, runtime,
                                                                        utf8_cstr(cmr->name));
-                            push_ref(runtime->stack, (__refer) exception);
-                            i_r = RUNTIME_STATUS_EXCEPTION;
+                            push_ref(stack, (__refer) exception);
+                            ret = RUNTIME_STATUS_EXCEPTION;
                         }
 
                         *opCode = *opCode + 3;
@@ -3226,7 +3223,7 @@ s32 execute_method(MethodInfo *method, Runtime *pruntime, Class *clazz) {
                         if (ins == NULL) {
                             Instance *exception = exception_create(JVM_EXCEPTION_NULLPOINTER, runtime);
                             push_ref(stack, (__refer) exception);
-                            i_r = RUNTIME_STATUS_EXCEPTION;
+                            ret = RUNTIME_STATUS_EXCEPTION;
                         } else {
                             MethodInfo *method = NULL;
                             if (ins->mb.type == MEM_TYPE_CLASS) {
@@ -3245,12 +3242,12 @@ s32 execute_method(MethodInfo *method, Runtime *pruntime, Class *clazz) {
                                        utf8_cstr(method->name), utf8_cstr(method->descriptor));
 #endif
                             if (method) {
-                                i_r = execute_method(method, runtime, method->_this_class);
+                                ret = execute_method(method, runtime, method->_this_class);
                             } else {
                                 Instance *exception = exception_create_str(JVM_EXCEPTION_NOSUCHMETHOD, runtime,
                                                                            utf8_cstr(cmr->name));
-                                push_ref(runtime->stack, (__refer) exception);
-                                i_r = RUNTIME_STATUS_EXCEPTION;
+                                push_ref(stack, (__refer) exception);
+                                ret = RUNTIME_STATUS_EXCEPTION;
                             }
                         }
                         *opCode = *opCode + 5;
@@ -3270,11 +3267,11 @@ s32 execute_method(MethodInfo *method, Runtime *pruntime, Class *clazz) {
                                    utf8_cstr(method->name), utf8_cstr(method->descriptor));
 #endif
                         if (method) {
-                            i_r = execute_method(method, runtime, method->_this_class);
+                            ret = execute_method(method, runtime, method->_this_class);
                         } else {
                             Instance *exception = exception_create(JVM_EXCEPTION_NOSUCHMETHOD, runtime);
-                            push_ref(runtime->stack, (__refer) exception);
-                            i_r = RUNTIME_STATUS_EXCEPTION;
+                            push_ref(stack, (__refer) exception);
+                            ret = RUNTIME_STATUS_EXCEPTION;
                         }
 
                         *opCode = *opCode + 3;
@@ -3319,7 +3316,7 @@ s32 execute_method(MethodInfo *method, Runtime *pruntime, Class *clazz) {
 
                         s32 count = pop_int(stack);
                         *opCode = *opCode + 2;
-                        i_r = _op_newarray_impl(runtime, stack, count, typeIdx, NULL);
+                        ret = _op_newarray_impl(runtime, stack, count, typeIdx, NULL);
                         break;
                     }
 
@@ -3331,7 +3328,7 @@ s32 execute_method(MethodInfo *method, Runtime *pruntime, Class *clazz) {
 
                         s32 count = pop_int(stack);
                         *opCode = *opCode + 3;
-                        i_r = _op_newarray_impl(runtime, stack, count, 0, get_utf8_string(runtime->clazz, s2c.s));
+                        ret = _op_newarray_impl(runtime, stack, count, 0, get_utf8_string(runtime->clazz, s2c.s));
                         break;
                     }
 
@@ -3347,7 +3344,7 @@ s32 execute_method(MethodInfo *method, Runtime *pruntime, Class *clazz) {
                         if (arr_ref == NULL) {
                             Instance *exception = exception_create(JVM_EXCEPTION_NULLPOINTER, runtime);
                             push_ref(stack, (__refer) exception);
-                            i_r = RUNTIME_STATUS_EXCEPTION;
+                            ret = RUNTIME_STATUS_EXCEPTION;
                         } else {
                             push_int(stack, arr_ref->arr_length);
                             *opCode = *opCode + 1;
@@ -3366,7 +3363,7 @@ s32 execute_method(MethodInfo *method, Runtime *pruntime, Class *clazz) {
                         jvm_printf("athrow  [%llx].exception throws  \n", (s64) (intptr_t) ins);
 #endif
                         //*opCode = *opCode + 1;
-                        i_r = RUNTIME_STATUS_EXCEPTION;
+                        ret = RUNTIME_STATUS_EXCEPTION;
                         break;
                     }
 
@@ -3403,10 +3400,10 @@ s32 execute_method(MethodInfo *method, Runtime *pruntime, Class *clazz) {
                         if (!checkok) {
                             Instance *exception = exception_create(JVM_EXCEPTION_CLASSCAST, runtime);
                             push_ref(stack, (__refer) exception);
-                            i_r = RUNTIME_STATUS_EXCEPTION;
+                            ret = RUNTIME_STATUS_EXCEPTION;
                         } else {
                             push_ref(stack, (__refer) ins);
-                            i_r = RUNTIME_STATUS_NORMAL;
+                            ret = RUNTIME_STATUS_NORMAL;
                         }
 #if _JVM_DEBUG_BYTECODE_DETAIL > 5
                         invoke_deepth(runtime);
@@ -3519,7 +3516,7 @@ s32 execute_method(MethodInfo *method, Runtime *pruntime, Class *clazz) {
                         } else {
                             Instance *exception = exception_create(JVM_EXCEPTION_NULLPOINTER, runtime);
                             push_ref(stack, (__refer) exception);
-                            i_r = RUNTIME_STATUS_EXCEPTION;
+                            ret = RUNTIME_STATUS_EXCEPTION;
                         }
                         *opCode = *opCode + 4;
                         break;
@@ -3596,8 +3593,11 @@ s32 execute_method(MethodInfo *method, Runtime *pruntime, Class *clazz) {
                                   (HashtableKey) (v + spent));
                 }
 #endif
-                if (i_r == RUNTIME_STATUS_RETURN) break;
-                else if (i_r == RUNTIME_STATUS_EXCEPTION) {
+                if (ret == RUNTIME_STATUS_RETURN) {
+                    ret = RUNTIME_STATUS_NORMAL;
+                    break;
+                }
+                else if (ret == RUNTIME_STATUS_EXCEPTION) {
                     __refer ref = pop_ref(stack);
                     //jvm_printf("stack size:%d , enter size:%d\n", stack->size, stackSize);
                     //restore stack enter method size, must pop for garbage
@@ -3615,14 +3615,12 @@ s32 execute_method(MethodInfo *method, Runtime *pruntime, Class *clazz) {
 #endif
                     ExceptionTable *et = _find_exception_handler(runtime, ins, ca, (s32) (runtime->pc - ca->code), ref);
                     if (et == NULL) {
-                        ret = RUNTIME_STATUS_EXCEPTION;
                         break;
                     } else {
 #if _JVM_DEBUG_BYTECODE_DETAIL > 3
                         jvm_printf("Exception : %s\n", utf8_cstr(ins->mb.clazz->name));
 #endif
                         runtime->pc = (ca->code + et->handler_pc);
-                        i_r = 0;
                         ret = RUNTIME_STATUS_NORMAL;
                     }
                 }
@@ -3638,14 +3636,14 @@ s32 execute_method(MethodInfo *method, Runtime *pruntime, Class *clazz) {
             }
             //jvm_printf("}  %s.%s  \n", utf8_cstr(clazz->name), utf8_cstr(method->name));
             Utf8String *ustr = method->descriptor;
-            //jvm_printf("stack size in:%d out:%d  topof stack:\n", stackSize, pruntime->stack->size);
+            //jvm_printf("stack size in:%d out:%d  topof stack:\n", stackSize, stack->size);
             if (ret != RUNTIME_STATUS_EXCEPTION) {
                 if (utf8_indexof_c(ustr, ")V") >= 0) {//无反回值
-                    if (pruntime->stack->size < stackSize) {
+                    if (stack->size < stackSize) {
                         exit(1);
                     }
                 } else {
-                    if (pruntime->stack->size < stackSize + 1) {
+                    if (stack->size < stackSize + 1) {
                         exit(1);
                     }
                 }
@@ -3662,7 +3660,7 @@ s32 execute_method(MethodInfo *method, Runtime *pruntime, Class *clazz) {
             if (!native) {
                 Instance *exception = exception_create_str(JVM_EXCEPTION_NOSUCHMETHOD, runtime,
                                                            utf8_cstr(method->name));
-                push_ref(runtime->stack, (__refer) exception);
+                push_ref(stack, (__refer) exception);
                 ret = RUNTIME_STATUS_EXCEPTION;
             } else {
                 method->native_func = native->func_pointer;

@@ -946,12 +946,12 @@ s32 _LOAD_CLASS_FROM_BYTES(Class *_this, ByteBuf *buf) {
 }
 
 
-s32 load_related_class(ClassLoader *loader, Class *clazz) {
+s32 load_related_class(ClassLoader *loader, Class *clazz, Runtime *runtime) {
     ConstantPool *p = &(clazz->constantPool);
     s32 i;
     for (i = 0; i < p->classRef->length; i++) {
         ConstantClassRef *ccr = (ConstantClassRef *) arraylist_get_value(p->classRef, i);
-        s32 ret = load_class(loader, find_constant_utf8(clazz, ccr->stringIndex)->utfstr);
+        s32 ret = load_class(loader, find_constant_utf8(clazz, ccr->stringIndex)->utfstr, runtime);
         if (ret != 0) {
             return ret;
         }
@@ -959,7 +959,7 @@ s32 load_related_class(ClassLoader *loader, Class *clazz) {
     return 0;
 }
 
-s32 load_class(ClassLoader *loader, Utf8String *pClassName) {
+s32 load_class(ClassLoader *loader, Utf8String *pClassName, Runtime *runtime) {
     if (!loader)return 0;
     s32 iret = 0;
     //
@@ -983,8 +983,9 @@ s32 load_class(ClassLoader *loader, Utf8String *pClassName) {
 #if _JVM_DEBUG_BYTECODE_DETAIL > 5
                 jvm_printf("load class:  %s \n", utf8_cstr(clsName));
 #endif
-                load_related_class(loader, tmpclazz);
+                load_related_class(loader, tmpclazz, runtime);
 
+                class_prepar(tmpclazz, runtime);
             } else {
                 class_destory(tmpclazz);
             }

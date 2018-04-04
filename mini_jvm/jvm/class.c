@@ -212,8 +212,8 @@ void class_clinit(Class *clazz, Runtime *runtime) {
         ConstantFieldRef *cfr = (ConstantFieldRef *) arraylist_get_value(clazz->constantPool.fieldRef, i);
         FieldInfo *fi = find_fieldInfo_by_fieldref(clazz, cfr->index, runtime);
         cfr->fieldInfo = fi;
-        if (cfr->fieldInfo == NULL) {
-            int debug = 1;
+        if (fi->_this_class->status < CLASS_STATUS_CLINITED) {
+            class_clinit(fi->_this_class, runtime);
         }
     }
 
@@ -237,7 +237,7 @@ void class_clinit(Class *clazz, Runtime *runtime) {
         //jvm_printf("%s,%s\n", utf8_cstr(p->methodRef[i].name), utf8_cstr(p->methodRef[i].descriptor));
         if (utf8_equals_c(p->method[i].name, "<clinit>") == 1) {
 #if _JVM_DEBUG_BYTECODE_DETAIL > 5
-            jvm_printf("%s <clinit>\n", utf8_cstr(clazz->name));
+            jvm_printf(" <clinit>  :%s\n", utf8_cstr(clazz->name));
 #endif
 
             s32 ret = execute_method(&(p->method[i]), runtime, clazz);

@@ -625,9 +625,9 @@ typedef struct _StackEntry {
 } StackEntry;
 
 typedef struct _StackFrame {
-    s32 max_size;
-    s32 size;
     StackEntry *store;
+    s32 size;
+    s32 max_size;
 } RuntimeStack;
 
 //解决引用类型可能为4字节或8字节的不同情况
@@ -699,9 +699,9 @@ void constant_list_destory(Class *clazz);
 
 s32 class_destory(Class *clazz);
 
-s32 load_class(ClassLoader *loader, Utf8String *pClassName);
+s32 load_class(ClassLoader *loader, Utf8String *pClassName, Runtime *runtime);
 
-s32 load_related_class(ClassLoader *loader, Class *clazz);
+s32 load_related_class(ClassLoader *loader, Class *clazz, Runtime *runtime);
 
 s32 _LOAD_CLASS_FROM_BYTES(Class *_this, ByteBuf *buf);
 

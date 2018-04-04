@@ -11,7 +11,7 @@ public class Sample {
     }
 
     // the script will be loaded as a resource 
-    private static final String DEFAULT_SCRIPT = "./hello.lua";
+    private static final String DEFAULT_SCRIPT = "../../binary/macos/hello.lua";
 
     protected void startApp() {
         // get the script as an app property
@@ -24,7 +24,9 @@ public class Sample {
         Globals globals = JmePlatform.standardGlobals();
         LuaValue chunk = globals.loadfile(script);
 //        globals.get("require").call(LuaValue.valueOf(script));
-        chunk.call( LuaValue.valueOf(script) );
+        long start = System.currentTimeMillis();
+        chunk.call(LuaValue.valueOf(script));
+        System.out.println("cost:" + (System.currentTimeMillis() - start));
     }
 
     protected void destroyApp(boolean arg0) {
