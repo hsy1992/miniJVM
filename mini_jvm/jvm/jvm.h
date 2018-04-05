@@ -701,7 +701,7 @@ s32 class_destory(Class *clazz);
 
 s32 load_class(ClassLoader *loader, Utf8String *pClassName, Runtime *runtime);
 
-s32 load_related_class(ClassLoader *loader, Class *clazz, Runtime *runtime);
+//s32 load_related_class(ClassLoader *loader, Class *clazz, Runtime *runtime);
 
 s32 _LOAD_CLASS_FROM_BYTES(Class *_this, ByteBuf *buf);
 
@@ -774,11 +774,13 @@ ConstantNameAndType *find_constant_name_and_type(Class *clazz, s32 index);
 
 ConstantItem *find_constant_item(Class *clazz, s32 index);
 
-MethodInfo *find_instance_methodInfo_by_name(Instance *ins, Utf8String *methodName, Utf8String *methodType);
+MethodInfo *
+find_instance_methodInfo_by_name(Instance *ins, Utf8String *methodName, Utf8String *methodType, Runtime *runtime);
 
-MethodInfo *find_methodInfo_by_methodref(Class *clazz, s32 method_ref);
+MethodInfo *find_methodInfo_by_methodref(Class *clazz, s32 method_ref, Runtime *runtime);
 
-MethodInfo *find_methodInfo_by_name(Utf8String *clsName, Utf8String *methodName, Utf8String *methodType);
+MethodInfo *
+find_methodInfo_by_name(Utf8String *clsName, Utf8String *methodName, Utf8String *methodType, Runtime *runtime);
 
 ConstantFieldRef *find_constant_fieldref(Class *clazz, s32 field_ref);
 
@@ -1040,7 +1042,7 @@ struct _JNIENV {
 
     s32 (*execute_method)(MethodInfo *method, Runtime *runtime, Class *clazz);
 
-    MethodInfo *(*find_methodInfo_by_name)(Utf8String *clsName, Utf8String *methodName, Utf8String *methodType);
+    MethodInfo *(*find_methodInfo_by_name)(Utf8String *clsName, Utf8String *methodName, Utf8String *methodType, Runtime *runtime);
 
     void (*print_exception)(Runtime *runtime);
 };

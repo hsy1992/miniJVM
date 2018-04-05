@@ -36,12 +36,16 @@ void print_exception(Runtime *runtime) {
     Utf8String *getStackFrame_name = utf8_create_c("getCodeStack");
     Utf8String *getStackFrame_type = utf8_create_c("()Ljava/lang/String;");
     MethodInfo *getStackFrame = find_methodInfo_by_name(ins->mb.clazz->name, getStackFrame_name,
-                                                        getStackFrame_type);
+                                                        getStackFrame_type, runtime);
     utf8_destory(getStackFrame_name);
     utf8_destory(getStackFrame_type);
     if (getStackFrame) {
         push_ref(runtime->stack, ins);
-        execute_method(getStackFrame, runtime, getStackFrame->_this_class);
+        s32 ret = execute_method(getStackFrame, runtime, getStackFrame->_this_class);
+        if (ret != RUNTIME_STATUS_NORMAL) {
+            ins = pop_ref(runtime->stack);
+            return;
+        }
         ins = (Instance *) pop_ref(runtime->stack);
         Utf8String *str = utf8_create();
         jstring_2_utf8(ins, str);
@@ -176,7 +180,7 @@ s32 execute_jvm(c8 *p_classpath, c8 *p_mainclass, ArrayList *java_para) {
         Utf8String *methodName = utf8_create_c("main");
         Utf8String *methodType = utf8_create_c("([Ljava/lang/String;)V");
 
-        MethodInfo *main = find_methodInfo_by_name(str_mainClsName, methodName, methodType);
+        MethodInfo *main = find_methodInfo_by_name(str_mainClsName, methodName, methodType, runtime);
         if (main) {
             main_thread_create(runtime);
 

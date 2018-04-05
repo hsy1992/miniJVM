@@ -946,18 +946,18 @@ s32 _LOAD_CLASS_FROM_BYTES(Class *_this, ByteBuf *buf) {
 }
 
 
-s32 load_related_class(ClassLoader *loader, Class *clazz, Runtime *runtime) {
-    ConstantPool *p = &(clazz->constantPool);
-    s32 i;
-    for (i = 0; i < p->classRef->length; i++) {
-        ConstantClassRef *ccr = (ConstantClassRef *) arraylist_get_value(p->classRef, i);
-        s32 ret = load_class(loader, find_constant_utf8(clazz, ccr->stringIndex)->utfstr, runtime);
-        if (ret != 0) {
-            return ret;
-        }
-    }
-    return 0;
-}
+//s32 load_related_class(ClassLoader *loader, Class *clazz, Runtime *runtime) {
+//    ConstantPool *p = &(clazz->constantPool);
+//    s32 i;
+//    for (i = 0; i < p->classRef->length; i++) {
+//        ConstantClassRef *ccr = (ConstantClassRef *) arraylist_get_value(p->classRef, i);
+//        s32 ret = load_class(loader, find_constant_utf8(clazz, ccr->stringIndex)->utfstr, runtime);
+//        if (ret != 0) {
+//            return ret;
+//        }
+//    }
+//    return 0;
+//}
 
 s32 load_class(ClassLoader *loader, Utf8String *pClassName, Runtime *runtime) {
     if (!loader)return 0;
@@ -983,7 +983,7 @@ s32 load_class(ClassLoader *loader, Utf8String *pClassName, Runtime *runtime) {
 #if _JVM_DEBUG_BYTECODE_DETAIL > 5
                 jvm_printf("load class:  %s \n", utf8_cstr(clsName));
 #endif
-                load_related_class(loader, tmpclazz, runtime);
+                //load_related_class(loader, tmpclazz, runtime);
 
                 class_prepar(tmpclazz, runtime);
             } else {

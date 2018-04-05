@@ -71,7 +71,7 @@ Class *classes_load_get(Utf8String *ustr, Runtime *runtime) {
         garbage_thread_lock();//slow lock
         cl = classes_get(ustr);
         if (!cl) {
-            load_class(sys_classloader, ustr,runtime);
+            load_class(sys_classloader, ustr, runtime);
         }
         cl = classes_get(ustr);
         garbage_thread_unlock();
@@ -629,7 +629,7 @@ s32 jtherad_run(void *para) {
     Utf8String *methodName = utf8_create_c("run");
     Utf8String *methodType = utf8_create_c("()V");
     MethodInfo *method = NULL;
-    method = find_instance_methodInfo_by_name(jthread, methodName, methodType);
+    method = find_instance_methodInfo_by_name(jthread, methodName, methodType, runtime);
     utf8_destory(methodName);
     utf8_destory(methodType);
 #if _JVM_DEBUG_BYTECODE_DETAIL > 5
@@ -954,11 +954,18 @@ s64 jarray_get_field(Instance *arr, s32 index) {
 
 //===============================    实例化对象  ==================================
 Instance *instance_create(Class *clazz) {
+//    if (utf8_equals_c(clazz->name, "java/lang/NullPointerException")) {
+//        int debug = 1;
+//    }
+
     Instance *ins = jvm_calloc(sizeof(Instance) + clazz->field_instance_len);
+//    Instance *ins = jvm_calloc(sizeof(Instance));
     ins->mb.type = MEM_TYPE_INS;
     ins->mb.clazz = clazz;
 
     ins->obj_fields = (c8 *) ins + sizeof(Instance);//jvm_calloc(clazz->field_instance_len);
+//    if(clazz->field_instance_len)ins->obj_fields = jvm_calloc(clazz->field_instance_len);
+
     garbage_refer_reg(ins);
     return ins;
 }
@@ -971,7 +978,7 @@ void instance_init_methodtype(Instance *ins, Runtime *runtime, c8 *methodtype, R
     if (ins) {
         Utf8String *methodName = utf8_create_c("<init>");
         Utf8String *methodType = utf8_create_c(methodtype);
-        MethodInfo *mi = find_methodInfo_by_name(ins->mb.clazz->name, methodName, methodType);
+        MethodInfo *mi = find_methodInfo_by_name(ins->mb.clazz->name, methodName, methodType, runtime);
         push_ref(runtime->stack, (__refer) ins);
         if (para) {
             s32 i;
@@ -1010,6 +1017,9 @@ void instance_clear_refer(Instance *ins) {
 
 s32 instance_destory(Instance *ins) {
     jthreadlock_destory(&ins->mb);
+//    if (ins->arr_body) {
+//        jvm_free(ins->arr_body);
+//    }
     jvm_free(ins);
 
     return 0;
@@ -1025,6 +1035,7 @@ s32 instance_destory(Instance *ins) {
  */
 Instance *instance_copy(Instance *src) {
     Instance *dst = jvm_malloc(sizeof(Instance) + src->mb.clazz->field_instance_len);
+//    Instance *dst = jvm_malloc(sizeof(Instance));
     memcpy(dst, src, sizeof(Instance));
     dst->mb.thread_lock = NULL;
     dst->mb.garbage_reg = 0;
@@ -1034,6 +1045,7 @@ Instance *instance_copy(Instance *src) {
         s32 fileds_len = clazz->field_instance_len;
         if (fileds_len) {
             dst->obj_fields = (c8 *) dst + sizeof(Instance);//jvm_malloc(fileds_len);
+//            dst->obj_fields = jvm_malloc(fileds_len);
             memcpy(dst->obj_fields, src->obj_fields, fileds_len);
             s32 i, len;
             while (clazz) {
