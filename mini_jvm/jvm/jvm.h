@@ -858,9 +858,8 @@ s64 entry_2_long_jni(StackEntry *entry);
 __refer entry_2_refer_jni(StackEntry *entry);
 
 
-
 /* push Integer */
-inline void push_int(RuntimeStack *stack, s32 value) {
+static inline void push_int(RuntimeStack *stack, s32 value) {
     StackEntry *ptr = &stack->store[stack->size++];
     ptr->lvalue = value;//clear 64bit
     ptr->type = STACK_ENTRY_INT;
@@ -868,26 +867,26 @@ inline void push_int(RuntimeStack *stack, s32 value) {
 
 
 /* pop Integer */
-inline s32 pop_int(RuntimeStack *stack) {
+static inline s32 pop_int(RuntimeStack *stack) {
     StackEntry *ptr = &stack->store[--stack->size];
     return (s32) ptr->lvalue;
 }
 
 /* push Double */
-inline void push_double(RuntimeStack *stack, f64 value) {
+static inline void push_double(RuntimeStack *stack, f64 value) {
     StackEntry *ptr = &stack->store[stack->size++];
     ptr->dvalue = value;
     ptr->type = STACK_ENTRY_DOUBLE;
 }
 
 /* pop Double */
-inline f64 pop_double(RuntimeStack *stack) {
+static inline f64 pop_double(RuntimeStack *stack) {
     StackEntry *ptr = &stack->store[--stack->size];
     return ptr->dvalue;
 }
 
 /* push Float */
-inline void push_float(RuntimeStack *stack, f32 value) {
+static inline void push_float(RuntimeStack *stack, f32 value) {
     StackEntry *ptr = &stack->store[stack->size++];
     ptr->lvalue = 0;//clear 64bit
     ptr->fvalue = value;
@@ -895,14 +894,14 @@ inline void push_float(RuntimeStack *stack, f32 value) {
 }
 
 /* pop Float */
-inline f32 pop_float(RuntimeStack *stack) {
+static inline f32 pop_float(RuntimeStack *stack) {
     StackEntry *ptr = &stack->store[--stack->size];
     return ptr->fvalue;
 }
 
 
 /* push Long */
-inline void push_long(RuntimeStack *stack, s64 value) {
+static inline void push_long(RuntimeStack *stack, s64 value) {
     StackEntry *ptr = &stack->store[stack->size++];
     ptr->type = STACK_ENTRY_LONG;
     ptr->lvalue = value;
@@ -910,60 +909,60 @@ inline void push_long(RuntimeStack *stack, s64 value) {
 }
 
 /* pop Long */
-inline s64 pop_long(RuntimeStack *stack) {
+static inline s64 pop_long(RuntimeStack *stack) {
     StackEntry *ptr = &stack->store[--stack->size];
     return ptr->lvalue;
 }
 
 /* push Ref */
-inline void push_ref(RuntimeStack *stack, __refer value) {
+static inline void push_ref(RuntimeStack *stack, __refer value) {
     StackEntry *ptr = &stack->store[stack->size++];
     ptr->lvalue = 0;//clear 64bit
     ptr->type = STACK_ENTRY_REF;
     ptr->rvalue = value;
 }
 
-inline __refer pop_ref(RuntimeStack *stack) {
+static inline __refer pop_ref(RuntimeStack *stack) {
     stack->size--;
     StackEntry *ptr = &stack->store[stack->size];
     return ptr->rvalue;
 }
 
 
-inline void push_entry(RuntimeStack *stack, StackEntry *entry) {
+static inline void push_entry(RuntimeStack *stack, StackEntry *entry) {
     StackEntry *ptr = &stack->store[stack->size++];
     ptr->type = entry->type;
     ptr->lvalue = entry->lvalue;
 }
 
 /* Pop Stack Entry */
-inline void pop_entry(RuntimeStack *stack, StackEntry *entry) {
+static inline void pop_entry(RuntimeStack *stack, StackEntry *entry) {
     StackEntry *ptr = &stack->store[--stack->size];
     entry->type = ptr->type;
     entry->lvalue = ptr->lvalue;
 
 }
 
-inline void pop_empty(RuntimeStack *stack) {
+static inline void pop_empty(RuntimeStack *stack) {
     stack->size--;
 }
 
 
-inline void peek_entry(RuntimeStack *stack, StackEntry *entry, int index) {
+static inline void peek_entry(RuntimeStack *stack, StackEntry *entry, int index) {
     memcpy(entry, &stack->store[index].lvalue, sizeof(StackEntry));
 }
 
 
 /* Entry to Int */
-inline s32 entry_2_int(StackEntry *entry) {
+static inline s32 entry_2_int(StackEntry *entry) {
     return entry->ivalue;
 }
 
-inline s64 entry_2_long(StackEntry *entry) {
+static inline s64 entry_2_long(StackEntry *entry) {
     return entry->lvalue;
 }
 
-inline __refer entry_2_refer(StackEntry *entry) {
+static inline __refer entry_2_refer(StackEntry *entry) {
     return entry->rvalue;
 }
 
@@ -993,27 +992,20 @@ s32 localvar_init(Runtime *runtime, s32 count);
 
 s32 localvar_dispose(Runtime *runtime);
 
-//void localvar_setRefer(Runtime *runtime, s32 index, __refer val);
-//
-//void localvar_setInt(Runtime *runtime, s32 index, s32 val);
-//
-//__refer localvar_getRefer(Runtime *runtime, s32 index);
-//
-//s32 localvar_getInt(Runtime *runtime, s32 index);
 
-inline void localvar_setInt(Runtime *runtime, s32 index, s32 val) {
+static inline void localvar_setInt(Runtime *runtime, s32 index, s32 val) {
     runtime->localvar[index].integer = val;
 }
 
-inline void localvar_setRefer(Runtime *runtime, s32 index, __refer val) {
+static inline void localvar_setRefer(Runtime *runtime, s32 index, __refer val) {
     runtime->localvar[index].refer = val;
 }
 
-inline s32 localvar_getInt(Runtime *runtime, s32 index) {
+static inline s32 localvar_getInt(Runtime *runtime, s32 index) {
     return runtime->localvar[index].integer;
 }
 
-inline __refer localvar_getRefer(Runtime *runtime, s32 index) {
+static inline __refer localvar_getRefer(Runtime *runtime, s32 index) {
     return runtime->localvar[index].refer;
 }
 
