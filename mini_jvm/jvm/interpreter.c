@@ -501,23 +501,6 @@ static inline s32 _op_getfield_impl(u8 **opCode, Runtime *runtime, RuntimeStack 
 
 }
 
-static inline s32 _op_newarray_impl(Runtime *runtime, RuntimeStack *stack, s32 count, s32 typeIdx, Utf8String *type) {
-    Instance *arr = jarray_create(count, typeIdx, type);
-
-#if _JVM_DEBUG_BYTECODE_DETAIL > 5
-    invoke_deepth(runtime);
-    jvm_printf("(a)newarray  [%llx] type:%c , count:%d  \n", (s64) (intptr_t) arr, getDataTypeTag(typeIdx), count);
-#endif
-    if (arr) {
-        push_ref(stack, (__refer) arr);
-    } else {
-        Instance *exception = exception_create(JVM_EXCEPTION_NULLPOINTER, runtime);
-        push_ref(stack, (__refer) exception);
-        return RUNTIME_STATUS_EXCEPTION;
-    }
-
-    return 0;
-}
 
 static inline s32 _op_ifstore_impl(u8 **opCode, Runtime *runtime, RuntimeStack *stack) {
     Short2Char s2c;
@@ -3090,7 +3073,7 @@ s32 execute_method(MethodInfo *method, Runtime *pruntime, Class *clazz) {
                         u16 object_ref = s2c.s;
 
                         //此cmr所描述的方法，对于不同的实例，有不同的method
-                        ConstantMethodRef *cmr = find_constant_method_ref(clazz,object_ref);
+                        ConstantMethodRef *cmr = find_constant_method_ref(clazz, object_ref);
 //                        if (utf8_equals_c(cmr->clsName, "java/lang/Class") &&
 //                            utf8_equals_c(cmr->name, "getName")) {
 //                            int debug = 1;
@@ -3305,7 +3288,21 @@ s32 execute_method(MethodInfo *method, Runtime *pruntime, Class *clazz) {
 
                         s32 count = pop_int(stack);
                         *opCode += 2;
-                        ret = _op_newarray_impl(runtime, stack, count, typeIdx, NULL);
+                        clazz = jarray_get_class_by_index(typeIdx);
+                        Instance *arr = jarray_create_by_class(count, clazz);
+
+#if _JVM_DEBUG_BYTECODE_DETAIL > 5
+                        invoke_deepth(runtime);
+jvm_printf("(a)newarray  [%llx] type:%c , count:%d  \n", (s64) (intptr_t) arr, getDataTypeTag(typeIdx), count);
+#endif
+                        if (arr) {
+                            push_ref(stack, (__refer) arr);
+                        } else {
+                            Instance *exception = exception_create(JVM_EXCEPTION_NULLPOINTER, runtime);
+                            push_ref(stack, (__refer) exception);
+                            ret = RUNTIME_STATUS_EXCEPTION;
+                        }
+
                         break;
                     }
 
@@ -3317,7 +3314,27 @@ s32 execute_method(MethodInfo *method, Runtime *pruntime, Class *clazz) {
 
                         s32 count = pop_int(stack);
                         *opCode += 3;
-                        ret = _op_newarray_impl(runtime, stack, count, 0, get_utf8_string(runtime->clazz, s2c.s));
+                        Class *arr_class = pairlist_get(clazz->arr_class_type, (__refer) (intptr_t) s2c.s);
+
+                        Instance *arr = NULL;
+                        if (!arr_class) {
+                            arr_class = jarray_get_class(get_utf8_string(runtime->clazz, s2c.s));
+                            pairlist_put(clazz->arr_class_type, (__refer) (intptr_t) s2c.s, arr_class);
+                        }
+                        arr = jarray_create_by_class(count, arr_class);
+
+#if _JVM_DEBUG_BYTECODE_DETAIL > 5
+                        invoke_deepth(runtime);
+jvm_printf("(a)newarray  [%llx] type:%c , count:%d  \n", (s64) (intptr_t) arr, getDataTypeTag(typeIdx), count);
+#endif
+                        if (arr) {
+                            push_ref(stack, (__refer) arr);
+                        } else {
+                            Instance *exception = exception_create(JVM_EXCEPTION_NULLPOINTER, runtime);
+                            push_ref(stack, (__refer) exception);
+                            ret = RUNTIME_STATUS_EXCEPTION;
+                        }
+
                         break;
                     }
 

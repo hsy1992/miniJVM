@@ -828,6 +828,19 @@ Instance *jarray_create_by_class(s32 count, Class *clazz) {
 Instance *jarray_create(s32 count, s32 typeIdx, Utf8String *type) {
     Class *clazz = NULL;
     if (type) {
+        clazz = jarray_get_class(type);
+    } else {
+        clazz = jarray_get_class_by_index(typeIdx);
+    }
+
+    Instance *arr = jarray_create_by_class(count, clazz);
+    garbage_refer_reg(arr);
+    return arr;
+}
+
+Class *jarray_get_class(Utf8String *type) {
+    Class *clazz = NULL;
+    if (type) {
         Utf8String *ustr = utf8_create_c("[");
         if (!isDataReferByTag(utf8_char_at(type, 0)))utf8_append_c(ustr, "L");
         utf8_append(ustr, type);
@@ -835,20 +848,20 @@ Instance *jarray_create(s32 count, s32 typeIdx, Utf8String *type) {
             utf8_append_c(ustr, ";");
         clazz = array_class_get(ustr);
         utf8_destory(ustr);
-    } else {
-        if (!data_type_classes[typeIdx]) {
-            Utf8String *ustr = utf8_create_c("[");
-            utf8_insert(ustr, ustr->length, getDataTypeTag(typeIdx));
-            data_type_classes[typeIdx] = array_class_get(ustr);
-            utf8_destory(ustr);
-        }
-        clazz = data_type_classes[typeIdx];
     }
+    return clazz;
+}
 
-    Instance *arr = jarray_create_by_class(count, clazz);
-
-    garbage_refer_reg(arr);
-    return arr;
+Class *jarray_get_class_by_index(s32 typeIdx) {
+    Class *clazz = NULL;
+    if (!data_type_classes[typeIdx]) {
+        Utf8String *ustr = utf8_create_c("[");
+        utf8_insert(ustr, ustr->length, getDataTypeTag(typeIdx));
+        data_type_classes[typeIdx] = array_class_get(ustr);
+        utf8_destory(ustr);
+    }
+    clazz = data_type_classes[typeIdx];
+    return clazz;
 }
 
 s32 jarray_destory(Instance *arr) {

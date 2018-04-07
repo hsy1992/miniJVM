@@ -680,8 +680,8 @@ struct _ClassType {
     MethodPool methodPool;
     AttributePool attributePool;
 
-
     //for array class
+    Pairlist*arr_class_type;//for object array create speedup,left is utf8 index of class, right is arr class
     s32 arr_type_index;
     s8 status;
 };

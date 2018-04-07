@@ -38,7 +38,7 @@ inline int spin_lock_count(spinlock_t *lock, int count) {
 }
 
 int spin_lock(spinlock_t *lock) {
-    return spin_lock_count(lock, 1000);
+    return spin_lock_count(lock, 100);
 }
 
 int spin_trylock(spinlock_t *lock) {

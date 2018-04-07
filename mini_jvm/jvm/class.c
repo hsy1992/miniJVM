@@ -23,12 +23,14 @@ Class *class_create() {
     //
     jthreadlock_create(&clazz->mb);
     constant_list_create(clazz);
+    clazz->arr_class_type = pairlist_create(16);
     return clazz;
 }
 
 s32 class_destory(Class *clazz) {
 
     _DESTORY_CLASS(clazz);
+    pairlist_destory(clazz->arr_class_type);
     jvm_free(clazz);
     return 0;
 }
@@ -111,7 +113,7 @@ s32 class_prepar(Class *clazz, Runtime *runtime) {
             Class *other = classes_load_get(clsName_u, runtime);
             clazz->superclass = other;
         } else {
-            jvm_printf("error get superclass , class: %s\n",utf8_cstr(clazz->name));
+            jvm_printf("error get superclass , class: %s\n", utf8_cstr(clazz->name));
         }
     }
 

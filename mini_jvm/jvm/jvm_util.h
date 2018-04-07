@@ -118,7 +118,7 @@ s32 getLineNumByIndex(CodeAttribute *ca, s32 offset);
 
 s32 _loadFileContents(c8 *file, ByteBuf *buf);
 
-ByteBuf* load_file_from_classpath(ClassLoader *loader, Utf8String *path);
+ByteBuf *load_file_from_classpath(ClassLoader *loader, Utf8String *path);
 ////======================= jstring =============================
 
 Instance *jstring_create(Utf8String *src, Runtime *runtime);
@@ -234,6 +234,10 @@ Instance *jarray_multi_create(ArrayList *dim, Utf8String *desc, s32 deep);
 void jarray_set_field(Instance *arr, s32 index, s64 val);
 
 s64 jarray_get_field(Instance *arr, s32 index);
+
+Class *jarray_get_class(Utf8String *type);
+
+Class *jarray_get_class_by_index(s32 typeIdx);
 
 Instance *exception_create(s32 exception_type, Runtime *runtime);
 
