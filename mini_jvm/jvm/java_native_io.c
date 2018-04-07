@@ -320,6 +320,11 @@ Utf8String *getTmpDir() {
     s32 len = GetTempPath(128, buf);
     utf8_append_data(tmps, buf, len);
 #else
+
+#ifndef P_tmpdir
+#define P_tmpdir "/tmp"
+#endif
+
     utf8_append_c(tmps, P_tmpdir);
 #endif
     return tmps;
