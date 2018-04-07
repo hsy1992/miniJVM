@@ -721,7 +721,7 @@ s32 _convert_to_code_attribute(CodeAttribute *ca, AttributeInfo *attr, Class *cl
         i2c.c0 = attr->info[info_p++];
         s32 attribute_lenth = (u32) i2c.i;
         //转行号表
-        if (utf8_equals_c(get_utf8_string(clazz, attribute_name_index), "LineNumberTable")) {
+        if (utf8_equals_c(class_get_utf8_string(clazz, attribute_name_index), "LineNumberTable")) {
             s2c.c1 = attr->info[info_p++];
             s2c.c0 = attr->info[info_p++];
             ca->line_number_table_length = (u16) s2c.s;
@@ -737,7 +737,7 @@ s32 _convert_to_code_attribute(CodeAttribute *ca, AttributeInfo *attr, Class *cl
                 //setFieldShort(ca->line_number_table[j].line_number, s2c.s);
                 ca->line_number_table[j].line_number = s2c.s;
             }
-        } else if (utf8_equals_c(get_utf8_string(clazz, attribute_name_index), "LocalVariableTable")) {
+        } else if (utf8_equals_c(class_get_utf8_string(clazz, attribute_name_index), "LocalVariableTable")) {
             s2c.c1 = attr->info[info_p++];
             s2c.c0 = attr->info[info_p++];
             ca->local_var_table_length = (u16) s2c.s;
@@ -772,7 +772,8 @@ s32 _convert_to_code_attribute(CodeAttribute *ca, AttributeInfo *attr, Class *cl
  * @param clazz class
  */
 void _class_link(Class *clazz) {
-    Utf8String *ustr = get_utf8_string(clazz, find_constant_classref(clazz, clazz->cff.this_class)->stringIndex);
+    Utf8String *ustr = class_get_utf8_string(clazz,
+                                             class_get_constant_classref(clazz, clazz->cff.this_class)->stringIndex);
     clazz->name = utf8_create_copy(ustr);
 //    if (utf8_equals_c(clazz->name, "javax/mini/eio/socket/PrivateOutputStream")) {
 //        int debug = 1;
@@ -780,19 +781,20 @@ void _class_link(Class *clazz) {
     s32 i;
     for (i = 0; i < clazz->interfacePool.clasz_used; i++) {
         ConstantClassRef *ptr = &clazz->interfacePool.clasz[i];
-        ptr->name = get_utf8_string(clazz, find_constant_classref(clazz, ptr->stringIndex)->stringIndex);
+        ptr->name = class_get_utf8_string(clazz, class_get_constant_classref(clazz, ptr->stringIndex)->stringIndex);
     }
     for (i = 0; i < clazz->fieldPool.field_used; i++) {
         FieldInfo *ptr = &clazz->fieldPool.field[i];
-        ptr->name = get_utf8_string(clazz, ptr->name_index);
-        ptr->descriptor = get_utf8_string(clazz, ptr->descriptor_index);
+        ptr->name = class_get_utf8_string(clazz, ptr->name_index);
+        ptr->descriptor = class_get_utf8_string(clazz, ptr->descriptor_index);
         ptr->datatype_idx = getDataTypeIndex(utf8_char_at(ptr->descriptor, 0));
         ptr->isrefer = isDataReferByIndex(ptr->datatype_idx);
+        ptr->datatype_bytes = data_type_bytes[ptr->datatype_idx];
     }
     for (i = 0; i < clazz->methodPool.method_used; i++) {
         MethodInfo *ptr = &clazz->methodPool.method[i];
-        ptr->name = get_utf8_string(clazz, ptr->name_index);
-        ptr->descriptor = get_utf8_string(clazz, ptr->descriptor_index);
+        ptr->name = class_get_utf8_string(clazz, ptr->name_index);
+        ptr->descriptor = class_get_utf8_string(clazz, ptr->descriptor_index);
         ptr->_this_class = clazz;
         if (!ptr->paraType) {//首次执行
             // eg:  (Ljava/lang/Object;IBLjava/lang/String;[[[ILjava/lang/Object;)Ljava/lang/String;Z
@@ -808,7 +810,7 @@ void _class_link(Class *clazz) {
 
         //转attribute为CdoeAttribute
         for (j = 0; j < ptr->attributes_count; j++) {
-            if (utf8_equals_c(get_utf8_string(clazz, ptr->attributes[j].attribute_name_index), "Code") == 1) {
+            if (utf8_equals_c(class_get_utf8_string(clazz, ptr->attributes[j].attribute_name_index), "Code") == 1) {
                 CodeAttribute *ca = jvm_calloc(sizeof(CodeAttribute));
                 _convert_to_code_attribute(ca, &ptr->attributes[j], clazz);
                 jvm_free(ptr->attributes[j].info);//无用删除
@@ -820,30 +822,31 @@ void _class_link(Class *clazz) {
     }
     for (i = 0; i < clazz->attributePool.attribute_used; i++) {
         AttributeInfo *ptr = &clazz->attributePool.attribute[i];
-        Utf8String *name = get_utf8_string(clazz, ptr->attribute_name_index);
+        Utf8String *name = class_get_utf8_string(clazz, ptr->attribute_name_index);
         if (utf8_equals_c(name, "SourceFile")) {
             Short2Char s2c;
             s2c.c1 = ptr->info[0];
             s2c.c0 = ptr->info[1];
-            clazz->source = get_utf8_string(clazz, s2c.s);
+            clazz->source = class_get_utf8_string(clazz, s2c.s);
         }
     }
 
     for (i = 0; i < clazz->constantPool.classRef->length; i++) {
         ConstantClassRef *ccr = (ConstantClassRef *) arraylist_get_value(clazz->constantPool.classRef, i);
-        ccr->name = get_utf8_string(clazz, ccr->stringIndex);
+        ccr->name = class_get_utf8_string(clazz, ccr->stringIndex);
     }
     for (i = 0; i < clazz->constantPool.interfaceRef->length; i++) {
         ConstantInterfaceMethodRef *cir = (ConstantInterfaceMethodRef *) arraylist_get_value(
                 clazz->constantPool.interfaceRef, i);
-        cir->name = get_utf8_string(clazz, find_constant_name_and_type(clazz, cir->nameAndTypeIndex)->nameIndex);
+        cir->name = class_get_utf8_string(clazz,
+                                          class_get_constant_name_and_type(clazz, cir->nameAndTypeIndex)->nameIndex);
     }
     for (i = 0; i < clazz->constantPool.methodRef->length; i++) {
         ConstantMethodRef *cmr = (ConstantMethodRef *) arraylist_get_value(clazz->constantPool.methodRef, i);
-        cmr->nameAndType = find_constant_name_and_type(clazz, cmr->nameAndTypeIndex);
-        cmr->name = get_utf8_string(clazz, cmr->nameAndType->nameIndex);
-        cmr->descriptor = get_utf8_string(clazz, cmr->nameAndType->typeIndex);
-        cmr->clsName = find_constant_classref(clazz, cmr->classIndex)->name;
+        cmr->nameAndType = class_get_constant_name_and_type(clazz, cmr->nameAndTypeIndex);
+        cmr->name = class_get_utf8_string(clazz, cmr->nameAndType->nameIndex);
+        cmr->descriptor = class_get_utf8_string(clazz, cmr->nameAndType->typeIndex);
+        cmr->clsName = class_get_constant_classref(clazz, cmr->classIndex)->name;
 //        if (utf8_equals_c(clazz->name, "java/lang/String")) {
 //            printf("%s,%s\n", utf8_cstr(cmr->name), utf8_cstr(cmr->clsName));
 //            int debug = 1;

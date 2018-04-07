@@ -1752,8 +1752,8 @@ s32 jdwp_client_process(JdwpClient *client, Runtime *runtime) {
                 for (i = 0; i < ca->local_var_table_length; i++) {
                     LocalVarTable *tab = &ca->local_var_table[i];
                     jdwppacket_write_long(res, tab->start_pc);
-                    jdwppacket_write_utf(res, get_utf8_string(ref, tab->name_index));
-                    jdwppacket_write_utf(res, get_utf8_string(ref, tab->descriptor_index));
+                    jdwppacket_write_utf(res, class_get_utf8_string(ref, tab->name_index));
+                    jdwppacket_write_utf(res, class_get_utf8_string(ref, tab->descriptor_index));
                     jdwppacket_write_int(res, tab->length);
                     jdwppacket_write_int(res, tab->index);
                 }

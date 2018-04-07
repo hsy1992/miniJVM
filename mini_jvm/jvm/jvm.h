@@ -565,8 +565,11 @@ struct _FieldInfo {
     Class *_this_class;
     u16 offset;//字段的偏移地址，静态字段存放在class中
     u16 offset_instance;
+    //
     u8 datatype_idx;
     u8 isrefer;
+    u8 datatype_bytes;
+    u8 unuse;
 };
 
 typedef struct _FieldPool {
@@ -760,19 +763,19 @@ Instance *instance_copy(Instance *src);
 //======================= bytecode =============================
 
 
-ConstantUTF8 *find_constant_utf8(Class *clazz, s32 index);
+ConstantUTF8 *class_get_constant_utf8(Class *clazz, s32 index);
 
-ConstantStringRef *find_constant_stringref(Class *clazz, s32 index);
+ConstantStringRef *class_get_constant_stringref(Class *clazz, s32 index);
 
-ConstantClassRef *find_constant_classref(Class *clazz, s32 index);
+ConstantClassRef *class_get_constant_classref(Class *clazz, s32 index);
 
-ConstantMethodRef *find_constant_method_ref(Class *clazz, s32 index);
+ConstantMethodRef *class_get_constant_method_ref(Class *clazz, s32 index);
 
-ConstantInterfaceMethodRef *find_constant_interface_method_ref(Class *clazz, s32 index);
+ConstantInterfaceMethodRef *class_get_constant_interface_method_ref(Class *clazz, s32 index);
 
-ConstantNameAndType *find_constant_name_and_type(Class *clazz, s32 index);
+ConstantNameAndType *class_get_constant_name_and_type(Class *clazz, s32 index);
 
-ConstantItem *find_constant_item(Class *clazz, s32 index);
+ConstantItem *class_get_constant_item(Class *clazz, s32 index);
 
 MethodInfo *
 find_instance_methodInfo_by_name(Instance *ins, Utf8String *methodName, Utf8String *methodType, Runtime *runtime);
@@ -782,7 +785,7 @@ MethodInfo *find_methodInfo_by_methodref(Class *clazz, s32 method_ref, Runtime *
 MethodInfo *
 find_methodInfo_by_name(Utf8String *clsName, Utf8String *methodName, Utf8String *methodType, Runtime *runtime);
 
-ConstantFieldRef *find_constant_fieldref(Class *clazz, s32 field_ref);
+ConstantFieldRef *class_get_constant_fieldref(Class *clazz, s32 field_ref);
 
 FieldInfo *find_fieldInfo_by_fieldref(Class *clazz, s32 field_ref, Runtime *runtime);
 
@@ -794,15 +797,15 @@ s32 find_constant_fieldref_index(Class *clazz, Utf8String *fieldName, Utf8String
 
 //
 
-s32 get_constant_integer(Class *clazz, s32 index);
+s32 class_get_constant_integer(Class *clazz, s32 index);
 
-s64 get_constant_long(Class *clazz, s32 index);
+s64 class_get_constant_long(Class *clazz, s32 index);
 
-Utf8String *get_utf8_string(Class *clazz, s32 index);
+Utf8String *class_get_utf8_string(Class *clazz, s32 index);
 
-f32 get_constant_float(Class *clazz, s32 index);
+f32 class_get_constant_float(Class *clazz, s32 index);
 
-f64 get_double_from_constant_pool(Class *clazz, s32 index);
+f64 class_get_double_from_constant_pool(Class *clazz, s32 index);
 
 Class *getClassByConstantClassRef(Class *clazz, s32 index);
 
