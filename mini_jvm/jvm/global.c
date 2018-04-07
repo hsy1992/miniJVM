@@ -47,6 +47,7 @@ u8 volatile java_debug = 0;
 
 
 #if _JVM_DEBUG_PROFILE
-Hashtable* instruct_profile;
+Hashtable* instruct_profile_sum;
+Hashtable* instruct_profile_count;
 #endif
 

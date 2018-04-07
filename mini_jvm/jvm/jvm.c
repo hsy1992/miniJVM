@@ -136,7 +136,8 @@ s32 execute_jvm(c8 *p_classpath, c8 *p_mainclass, ArrayList *java_para) {
 
 
 #if _JVM_DEBUG_PROFILE
-    instruct_profile = hashtable_create(DEFAULT_HASH_FUNC, DEFAULT_HASH_EQUALS_FUNC);
+    instruct_profile_sum = hashtable_create(DEFAULT_HASH_FUNC, DEFAULT_HASH_EQUALS_FUNC);
+    instruct_profile_count = hashtable_create(DEFAULT_HASH_FUNC, DEFAULT_HASH_EQUALS_FUNC);
 #endif
     //
     init_jni_func_table();
@@ -231,12 +232,19 @@ s32 execute_jvm(c8 *p_classpath, c8 *p_mainclass, ArrayList *java_para) {
             jvm_printf("spent %lld\n", (currentTimeMillis() - start));
 
 #if _JVM_DEBUG_PROFILE
-            hashtable_iterate(instruct_profile, &hti);
+            HashtableIterator hti;
+            hashtable_iterate(instruct_profile_sum, &hti);
             for (; hashtable_iter_has_more(&hti);) {
                 u8 instruct_code = (u8) (intptr_t) hashtable_iter_next_key(&hti);
-                HashtableValue sum_v = hashtable_get(instruct_profile, (HashtableKey) (intptr_t) instruct_code);
-                jvm_printf("%2x \t %lld\n", instruct_code, (s64) (intptr_t) sum_v);
+                s64 sum_v = (s64) (intptr_t) hashtable_get(instruct_profile_sum,
+                                                           (HashtableKey) (intptr_t) instruct_code);
+                s64 count_v = (s64) (intptr_t) hashtable_get(instruct_profile_count,
+                                                             (HashtableKey) (intptr_t) instruct_code);
+                jvm_printf("%2x \t |total|%lld|  count|%lld|  avg|%lld\n", instruct_code, sum_v, count_v,
+                           (s64) (sum_v / count_v));
             }
+            hashtable_destory(instruct_profile_sum);
+            hashtable_destory(instruct_profile_count);
 #endif
 
             main_thread_destory();

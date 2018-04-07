@@ -326,7 +326,8 @@ extern u8 volatile java_debug;
 extern s32 STACK_LENGHT;
 
 #if _JVM_DEBUG_PROFILE
-extern Hashtable *instruct_profile;
+extern Hashtable *instruct_profile_sum;
+extern Hashtable *instruct_profile_count;
 #endif
 
 //======================= MEM_OBJ =============================
@@ -684,7 +685,7 @@ struct _ClassType {
     AttributePool attributePool;
 
     //for array class
-    Pairlist*arr_class_type;//for object array create speedup,left is utf8 index of class, right is arr class
+    Pairlist *arr_class_type;//for object array create speedup,left is utf8 index of class, right is arr class
     s32 arr_type_index;
     s8 status;
 };
@@ -822,39 +823,149 @@ RuntimeStack *stack_create(s32 entry_size);
 
 void stack_destory(RuntimeStack *stack);
 
-void push_entry(RuntimeStack *stack, StackEntry *entry);
+void push_entry_jni(RuntimeStack *stack, StackEntry *entry);
 
-void push_int(RuntimeStack *stack, s32 value);
+void push_int_jni(RuntimeStack *stack, s32 value);
 
-void push_long(RuntimeStack *stack, s64 value);
+void push_long_jni(RuntimeStack *stack, s64 value);
 
-void push_double(RuntimeStack *stack, f64 value);
+void push_double_jni(RuntimeStack *stack, f64 value);
 
-void push_float(RuntimeStack *stack, f32 value);
+void push_float_jni(RuntimeStack *stack, f32 value);
 
-void push_ref(RuntimeStack *stack, __refer value);
+void push_ref_jni(RuntimeStack *stack, __refer value);
 
-__refer pop_ref(RuntimeStack *stack);
+__refer pop_ref_jni(RuntimeStack *stack);
 
-s32 pop_int(RuntimeStack *stack);
+s32 pop_int_jni(RuntimeStack *stack);
 
-s64 pop_long(RuntimeStack *stack);
+s64 pop_long_jni(RuntimeStack *stack);
 
-f64 pop_double(RuntimeStack *stack);
+f64 pop_double_jni(RuntimeStack *stack);
 
-f32 pop_float(RuntimeStack *stack);
+f32 pop_float_jni(RuntimeStack *stack);
 
-void pop_entry(RuntimeStack *stack, StackEntry *entry);
+void pop_entry_jni(RuntimeStack *stack, StackEntry *entry);
 
-void pop_empty(RuntimeStack *stack);
+void pop_empty_jni(RuntimeStack *stack);
 
-s32 entry_2_int(StackEntry *entry);
+s32 entry_2_int_jni(StackEntry *entry);
 
-void peek_entry(RuntimeStack *stack, StackEntry *entry, int index);
+void peek_entry_jni(RuntimeStack *stack, StackEntry *entry, int index);
 
-s64 entry_2_long(StackEntry *entry);
+s64 entry_2_long_jni(StackEntry *entry);
 
-__refer entry_2_refer(StackEntry *entry);
+__refer entry_2_refer_jni(StackEntry *entry);
+
+
+
+/* push Integer */
+inline void push_int(RuntimeStack *stack, s32 value) {
+    StackEntry *ptr = &stack->store[stack->size++];
+    ptr->lvalue = value;//clear 64bit
+    ptr->type = STACK_ENTRY_INT;
+}
+
+
+/* pop Integer */
+inline s32 pop_int(RuntimeStack *stack) {
+    StackEntry *ptr = &stack->store[--stack->size];
+    return (s32) ptr->lvalue;
+}
+
+/* push Double */
+inline void push_double(RuntimeStack *stack, f64 value) {
+    StackEntry *ptr = &stack->store[stack->size++];
+    ptr->dvalue = value;
+    ptr->type = STACK_ENTRY_DOUBLE;
+}
+
+/* pop Double */
+inline f64 pop_double(RuntimeStack *stack) {
+    StackEntry *ptr = &stack->store[--stack->size];
+    return ptr->dvalue;
+}
+
+/* push Float */
+inline void push_float(RuntimeStack *stack, f32 value) {
+    StackEntry *ptr = &stack->store[stack->size++];
+    ptr->lvalue = 0;//clear 64bit
+    ptr->fvalue = value;
+    ptr->type = STACK_ENTRY_FLOAT;
+}
+
+/* pop Float */
+inline f32 pop_float(RuntimeStack *stack) {
+    StackEntry *ptr = &stack->store[--stack->size];
+    return ptr->fvalue;
+}
+
+
+/* push Long */
+inline void push_long(RuntimeStack *stack, s64 value) {
+    StackEntry *ptr = &stack->store[stack->size++];
+    ptr->type = STACK_ENTRY_LONG;
+    ptr->lvalue = value;
+    //stack->size++;
+}
+
+/* pop Long */
+inline s64 pop_long(RuntimeStack *stack) {
+    StackEntry *ptr = &stack->store[--stack->size];
+    return ptr->lvalue;
+}
+
+/* push Ref */
+inline void push_ref(RuntimeStack *stack, __refer value) {
+    StackEntry *ptr = &stack->store[stack->size++];
+    ptr->lvalue = 0;//clear 64bit
+    ptr->type = STACK_ENTRY_REF;
+    ptr->rvalue = value;
+}
+
+inline __refer pop_ref(RuntimeStack *stack) {
+    stack->size--;
+    StackEntry *ptr = &stack->store[stack->size];
+    return ptr->rvalue;
+}
+
+
+inline void push_entry(RuntimeStack *stack, StackEntry *entry) {
+    StackEntry *ptr = &stack->store[stack->size++];
+    ptr->type = entry->type;
+    ptr->lvalue = entry->lvalue;
+}
+
+/* Pop Stack Entry */
+inline void pop_entry(RuntimeStack *stack, StackEntry *entry) {
+    StackEntry *ptr = &stack->store[--stack->size];
+    entry->type = ptr->type;
+    entry->lvalue = ptr->lvalue;
+
+}
+
+inline void pop_empty(RuntimeStack *stack) {
+    stack->size--;
+}
+
+
+inline void peek_entry(RuntimeStack *stack, StackEntry *entry, int index) {
+    memcpy(entry, &stack->store[index].lvalue, sizeof(StackEntry));
+}
+
+
+/* Entry to Int */
+inline s32 entry_2_int(StackEntry *entry) {
+    return entry->ivalue;
+}
+
+inline s64 entry_2_long(StackEntry *entry) {
+    return entry->lvalue;
+}
+
+inline __refer entry_2_refer(StackEntry *entry) {
+    return entry->rvalue;
+}
 
 s32 is_cat2(StackEntry *entry);
 
@@ -882,17 +993,41 @@ s32 localvar_init(Runtime *runtime, s32 count);
 
 s32 localvar_dispose(Runtime *runtime);
 
-void localvar_setRefer(Runtime *runtime, s32 index, __refer val);
+//void localvar_setRefer(Runtime *runtime, s32 index, __refer val);
+//
+//void localvar_setInt(Runtime *runtime, s32 index, s32 val);
+//
+//__refer localvar_getRefer(Runtime *runtime, s32 index);
+//
+//s32 localvar_getInt(Runtime *runtime, s32 index);
 
-void localvar_setInt(Runtime *runtime, s32 index, s32 val);
+inline void localvar_setInt(Runtime *runtime, s32 index, s32 val) {
+    runtime->localvar[index].integer = val;
+}
 
-__refer localvar_getRefer(Runtime *runtime, s32 index);
+inline void localvar_setRefer(Runtime *runtime, s32 index, __refer val) {
+    runtime->localvar[index].refer = val;
+}
 
-s32 localvar_getInt(Runtime *runtime, s32 index);
+inline s32 localvar_getInt(Runtime *runtime, s32 index) {
+    return runtime->localvar[index].integer;
+}
 
-s64 localvar_getLong_2slot(Runtime *runtime, s32 index);
+inline __refer localvar_getRefer(Runtime *runtime, s32 index) {
+    return runtime->localvar[index].refer;
+}
 
-void localvar_setLong_2slot(Runtime *runtime, s32 index, s64 val);
+void localvar_setInt_jni(Runtime *runtime, s32 index, s32 val);
+
+void localvar_setRefer_jni(Runtime *runtime, s32 index, __refer val);
+
+s32 localvar_getInt_jni(Runtime *runtime, s32 index);
+
+__refer localvar_getRefer_jni(Runtime *runtime, s32 index);
+
+s64 localvar_getLong_2slot_jni(Runtime *runtime, s32 index);
+
+void localvar_setLong_2slot_jni(Runtime *runtime, s32 index, s64 val);
 
 //======================= other =============================
 void open_log(void);
@@ -1045,7 +1180,8 @@ struct _JNIENV {
 
     s32 (*execute_method)(MethodInfo *method, Runtime *runtime, Class *clazz);
 
-    MethodInfo *(*find_methodInfo_by_name)(Utf8String *clsName, Utf8String *methodName, Utf8String *methodType, Runtime *runtime);
+    MethodInfo *
+    (*find_methodInfo_by_name)(Utf8String *clsName, Utf8String *methodName, Utf8String *methodType, Runtime *runtime);
 
     void (*print_exception)(Runtime *runtime);
 };
