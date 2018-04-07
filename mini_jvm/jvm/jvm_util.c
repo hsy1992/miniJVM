@@ -1017,7 +1017,7 @@ void instance_clear_refer(Instance *ins) {
         FieldPool *fp = &clazz->fieldPool;
         for (i = 0; i < fp->field_used; i++) {
             FieldInfo *fi = &fp->field[i];
-            if ((fi->access_flags & ACC_STATIC) == 0 && isDataReferByIndex(fi->datatype_idx)) {
+            if ((fi->access_flags & ACC_STATIC) == 0 && fi->isrefer) {
                 c8 *ptr = getInstanceFieldPtr(ins, fi);
                 if (ptr) {
                     setFieldRefer(ptr, NULL);
@@ -1065,7 +1065,7 @@ Instance *instance_copy(Instance *src) {
                 FieldPool *fp = &clazz->fieldPool;
                 for (i = 0, len = fp->field_used; i < len; i++) {
                     FieldInfo *fi = &fp->field[i];
-                    if ((fi->access_flags & ACC_STATIC) == 0 && isDataReferByIndex(fi->datatype_idx)) {
+                    if ((fi->access_flags & ACC_STATIC) == 0 && fi->isrefer) {
                         c8 *ptr = getInstanceFieldPtr(src, fi);
                         Instance *ins = (Instance *) getFieldRefer(ptr);
                         if (ins) {
@@ -1378,7 +1378,7 @@ c8 *getFieldPtr_byName(Instance *instance, Utf8String *clsName, Utf8String *fiel
     c8 *ptr = NULL;
     FieldInfo *fi = NULL;
     if (fieldIdx >= 0) {//不在常量表中
-        ConstantFieldRef *cfr = find_constant_fieldref(clazz, fieldIdx);
+        ConstantFieldRef *cfr = class_get_constant_fieldref(clazz, fieldIdx);
         fi = cfr->fieldInfo;;
     } else {//找字段信息field_info
         fi = find_fieldInfo_by_name(clsName, fieldName, fieldType);

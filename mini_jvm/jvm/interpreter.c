@@ -243,11 +243,11 @@ static inline s32 _op_ifload_n(u8 **opCode, Runtime *runtime, s32 i) {
 static inline s32 _op_ldc_impl(u8 **opCode, Runtime *runtime, RuntimeStack *stack, s32 index) {
     Class *clazz = runtime->clazz;
 
-    ConstantItem *item = find_constant_item(clazz, index);
+    ConstantItem *item = class_get_constant_item(clazz, index);
     switch (item->tag) {
         case CONSTANT_INTEGER:
         case CONSTANT_FLOAT: {
-            s32 v = get_constant_integer(clazz, index);
+            s32 v = class_get_constant_integer(clazz, index);
             push_int(stack, v);
 #if _JVM_DEBUG_BYTECODE_DETAIL > 5
             invoke_deepth(runtime);
@@ -256,7 +256,8 @@ static inline s32 _op_ldc_impl(u8 **opCode, Runtime *runtime, RuntimeStack *stac
             break;
         }
         case CONSTANT_STRING_REF: {
-            ConstantUTF8 *cutf = find_constant_utf8(clazz, find_constant_stringref(clazz, index)->stringIndex);
+            ConstantUTF8 *cutf = class_get_constant_utf8(clazz,
+                                                         class_get_constant_stringref(clazz, index)->stringIndex);
             Instance *jstr = instance_copy(cutf->jstr);
             push_ref(stack, (__refer) jstr);
 
@@ -268,7 +269,7 @@ static inline s32 _op_ldc_impl(u8 **opCode, Runtime *runtime, RuntimeStack *stac
             break;
         }
         case CONSTANT_CLASS: {
-            Class *cl = classes_load_get(find_constant_classref(clazz, index)->name, runtime);
+            Class *cl = classes_load_get(class_get_constant_classref(clazz, index)->name, runtime);
             push_ref(stack, cl);
             break;
         }
@@ -386,7 +387,7 @@ static inline s32 _op_putfield_impl(u8 **opCode, Runtime *runtime, RuntimeStack 
 
 
     // check variable type to determain long/s32/f64/f32
-    FieldInfo *fi = ((ConstantFieldRef *) (clazz->constant_item_ptr[field_ref]))->fieldInfo;//find_constant_fieldref(clazz, field_ref)->fieldInfo;
+    FieldInfo *fi = ((ConstantFieldRef *) (clazz->constant_item_ptr[field_ref]))->fieldInfo;//class_get_constant_fieldref(clazz, field_ref)->fieldInfo;
 
 //    if (utf8_equals_c(fi->name, "backtrace")) {
 //        int debug = 1;
@@ -416,25 +417,16 @@ static inline s32 _op_putfield_impl(u8 **opCode, Runtime *runtime, RuntimeStack 
     if (fi->isrefer) {//垃圾回收标识
         setFieldRefer(ptr, entry_2_refer(&entry));
     } else {
-        s32 data_bytes = data_type_bytes[fi->datatype_idx];
+        s32 data_bytes = fi->datatype_bytes;
         //非引用类型
-        switch (data_bytes) {
-            case 1: {
-                setFieldByte(ptr, entry_2_int(&entry));
-                break;
-            }
-            case 2: {
-                setFieldShort(ptr, entry_2_int(&entry));
-                break;
-            }
-            case 4: {
-                setFieldInt(ptr, entry_2_int(&entry));
-                break;
-            }
-            case 8: {
-                setFieldLong(ptr, entry_2_long(&entry));
-                break;
-            }
+        if (data_bytes == 4) {
+            setFieldInt(ptr, entry_2_int(&entry));
+        } else if (data_bytes == 8) {
+            setFieldLong(ptr, entry_2_long(&entry));
+        } else if (data_bytes == 1) {
+            setFieldByte(ptr, entry_2_int(&entry));
+        } else if (data_bytes == 2) {
+            setFieldShort(ptr, entry_2_int(&entry));
         }
     }
     *opCode += 3;
@@ -450,7 +442,7 @@ static inline s32 _op_getfield_impl(u8 **opCode, Runtime *runtime, RuntimeStack 
     u16 field_ref = s2c.s;
 
     // check variable type to determine s64/s32/f64/f32
-    FieldInfo *fi = ((ConstantFieldRef *) (clazz->constant_item_ptr[field_ref]))->fieldInfo;//find_constant_fieldref(clazz, field_ref)->fieldInfo;
+    FieldInfo *fi = ((ConstantFieldRef *) (clazz->constant_item_ptr[field_ref]))->fieldInfo;//class_get_constant_fieldref(clazz, field_ref)->fieldInfo;
 
     c8 *ptr;
     if (isStatic) {
@@ -467,24 +459,15 @@ static inline s32 _op_getfield_impl(u8 **opCode, Runtime *runtime, RuntimeStack 
     if (fi->isrefer) {
         push_ref(stack, getFieldRefer(ptr));
     } else {
-        s32 data_bytes = data_type_bytes[fi->datatype_idx];
-        switch (data_bytes) {
-            case 1: {
-                push_int(stack, getFieldByte(ptr));
-                break;
-            }
-            case 2: {
-                push_int(stack, getFieldShort(ptr));
-                break;
-            }
-            case 4: {
-                push_int(stack, getFieldInt(ptr));
-                break;
-            }
-            case 8: {
-                push_long(stack, getFieldLong(ptr));
-                break;
-            }
+        s32 data_bytes = fi->datatype_bytes;
+        if (data_bytes == 4) {
+            push_int(stack, getFieldInt(ptr));
+        } else if (data_bytes == 8) {
+            push_long(stack, getFieldLong(ptr));
+        } else if (data_bytes == 1) {
+            push_int(stack, getFieldByte(ptr));
+        } else if (data_bytes == 2) {
+            push_int(stack, getFieldShort(ptr));
         }
     }
 #if _JVM_DEBUG_BYTECODE_DETAIL > 5
@@ -585,7 +568,7 @@ _find_exception_handler(Runtime *runtime, Instance *exception, CodeAttribute *ca
             if (!(e + i)->catch_type) {
                 return e + i;
             }
-            ConstantClassRef *ccr = find_constant_classref(runtime->clazz, (e + i)->catch_type);
+            ConstantClassRef *ccr = class_get_constant_classref(runtime->clazz, (e + i)->catch_type);
             Class *catchClass = classes_load_get(ccr->name, runtime);
             if (instance_of(catchClass, exception))
                 return e + i;
@@ -605,7 +588,7 @@ static s32 filterClassName(Utf8String *clsName) {
 
 static void _printCodeAttribute(CodeAttribute *ca, Class *p) {
 
-    jvm_printf("attribute name : %s\n", utf8_cstr(get_utf8_string(p, ca->attribute_name_index)));
+    jvm_printf("attribute name : %s\n", utf8_cstr(class_get_utf8_string(p, ca->attribute_name_index)));
     jvm_printf("attribute arr_length: %d\n", ca->attribute_length);
 
     jvm_printf("max_stack: %d\n", ca->max_stack);
@@ -888,7 +871,7 @@ s32 execute_method(MethodInfo *method, Runtime *pruntime, Class *clazz) {
                         s2c.c0 = opCode[0][2];
 
                         s32 index = s2c.s;
-                        s64 value = get_constant_long(runtime->clazz, index);//long or double
+                        s64 value = class_get_constant_long(runtime->clazz, index);//long or double
 
                         push_long(stack, value);
 #if _JVM_DEBUG_BYTECODE_DETAIL > 5
@@ -3073,7 +3056,7 @@ s32 execute_method(MethodInfo *method, Runtime *pruntime, Class *clazz) {
                         u16 object_ref = s2c.s;
 
                         //此cmr所描述的方法，对于不同的实例，有不同的method
-                        ConstantMethodRef *cmr = find_constant_method_ref(clazz, object_ref);
+                        ConstantMethodRef *cmr = class_get_constant_method_ref(clazz, object_ref);
 //                        if (utf8_equals_c(cmr->clsName, "java/lang/Class") &&
 //                            utf8_equals_c(cmr->name, "getName")) {
 //                            int debug = 1;
@@ -3123,7 +3106,7 @@ s32 execute_method(MethodInfo *method, Runtime *pruntime, Class *clazz) {
                         s2c.c0 = opCode[0][2];
                         u16 object_ref = s2c.s;
 
-                        ConstantMethodRef *cmr = find_constant_method_ref(runtime->clazz, object_ref);
+                        ConstantMethodRef *cmr = class_get_constant_method_ref(runtime->clazz, object_ref);
                         MethodInfo *method = cmr->methodInfo;
                         if (!method) {
                             method = find_methodInfo_by_methodref(runtime->clazz, object_ref, runtime);
@@ -3154,7 +3137,7 @@ s32 execute_method(MethodInfo *method, Runtime *pruntime, Class *clazz) {
                         s2c.c1 = opCode[0][1];
                         s2c.c0 = opCode[0][2];
                         u16 object_ref = s2c.s;
-                        ConstantMethodRef *cmr = find_constant_method_ref(runtime->clazz, object_ref);
+                        ConstantMethodRef *cmr = class_get_constant_method_ref(runtime->clazz, object_ref);
                         if (!cmr->methodInfo)classes_load_get(cmr->clsName, runtime);
 
                         MethodInfo *method = cmr->methodInfo;
@@ -3190,7 +3173,7 @@ s32 execute_method(MethodInfo *method, Runtime *pruntime, Class *clazz) {
 
                         s32 paraCount = (u8) opCode[0][3];
 
-                        ConstantMethodRef *cmr = find_constant_method_ref(clazz, object_ref);
+                        ConstantMethodRef *cmr = class_get_constant_method_ref(clazz, object_ref);
                         Instance *ins = getInstanceInStack(clazz, cmr, stack);
                         if (ins == NULL) {
                             Instance *exception = exception_create(JVM_EXCEPTION_NULLPOINTER, runtime);
@@ -3232,7 +3215,7 @@ s32 execute_method(MethodInfo *method, Runtime *pruntime, Class *clazz) {
                         s2c.c0 = opCode[0][2];
                         u16 object_ref = s2c.s;
 
-                        MethodInfo *method = find_constant_method_ref(runtime->clazz, object_ref)->methodInfo;
+                        MethodInfo *method = class_get_constant_method_ref(runtime->clazz, object_ref)->methodInfo;
 #if _JVM_DEBUG_BYTECODE_DETAIL > 5
                         invoke_deepth(runtime);
                         jvm_printf("invokedynamic   | %s.%s%s \n", utf8_cstr(method->_this_class->name),
@@ -3260,9 +3243,9 @@ s32 execute_method(MethodInfo *method, Runtime *pruntime, Class *clazz) {
 
                         u16 object_ref = s2c.s;
 
-                        ConstantClassRef *ccf = find_constant_classref(clazz, object_ref);
+                        ConstantClassRef *ccf = class_get_constant_classref(clazz, object_ref);
                         if (!ccf->clazz) {
-                            Utf8String *clsName = get_utf8_string(clazz, ccf->stringIndex);
+                            Utf8String *clsName = class_get_utf8_string(clazz, ccf->stringIndex);
                             ccf->clazz = classes_load_get(clsName, runtime);
                         }
                         Class *other = ccf->clazz;
@@ -3318,7 +3301,7 @@ jvm_printf("(a)newarray  [%llx] type:%c , count:%d  \n", (s64) (intptr_t) arr, g
 
                         Instance *arr = NULL;
                         if (!arr_class) {
-                            arr_class = jarray_get_class(get_utf8_string(runtime->clazz, s2c.s));
+                            arr_class = jarray_get_class(class_get_utf8_string(runtime->clazz, s2c.s));
                             pairlist_put(clazz->arr_class_type, (__refer) (intptr_t) s2c.s, arr_class);
                         }
                         arr = jarray_create_by_class(count, arr_class);
@@ -3389,13 +3372,13 @@ jvm_printf("(a)newarray  [%llx] type:%c , count:%d  \n", (s64) (intptr_t) arr, g
                                     checkok = 1;
                                 }
                             } else if (ins->mb.type == MEM_TYPE_ARR) {
-                                Utf8String *utf = find_constant_classref(runtime->clazz, typeIdx)->name;
+                                Utf8String *utf = class_get_constant_classref(runtime->clazz, typeIdx)->name;
                                 u8 ch = utf8_char_at(utf, 1);
                                 if (getDataTypeIndex(ch) == ins->mb.clazz->arr_type_index) {
                                     checkok = 1;
                                 }
                             } else if (ins->mb.type == MEM_TYPE_CLASS) {
-                                Utf8String *utf = find_constant_classref(runtime->clazz, typeIdx)->name;
+                                Utf8String *utf = class_get_constant_classref(runtime->clazz, typeIdx)->name;
                                 if (utf8_equals_c(utf, STR_CLASS_JAVA_LANG_CLASS)) {
                                     checkok = 1;
                                 }
@@ -3501,7 +3484,7 @@ jvm_printf("(a)newarray  [%llx] type:%c , count:%d  \n", (s64) (intptr_t) arr, g
                         s2c.c1 = opCode[0][1];
                         s2c.c0 = opCode[0][2];
 
-                        Utf8String *desc = get_utf8_string(runtime->clazz, s2c.s);
+                        Utf8String *desc = class_get_utf8_string(runtime->clazz, s2c.s);
                         //array dim
                         s32 count = (u8) opCode[0][3];
                         ArrayList *dim = arraylist_create(count);

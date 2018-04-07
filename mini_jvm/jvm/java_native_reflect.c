@@ -558,13 +558,13 @@ Instance *localVarTable2java(Class *clazz, LocalVarTable *lvt, Runtime *runtime)
         //
         ptr = getFieldPtr_byName_c(ins, JDWP_CLASS_LOCALVARTABLE, "name", STR_INS_JAVA_LANG_STRING);
         if (ptr) {
-            Instance *name = jstring_create(get_utf8_string(clazz, lvt->name_index), runtime);
+            Instance *name = jstring_create(class_get_utf8_string(clazz, lvt->name_index), runtime);
             setFieldRefer(ptr, name);
         }
         //
         ptr = getFieldPtr_byName_c(ins, JDWP_CLASS_LOCALVARTABLE, "signature", STR_INS_JAVA_LANG_STRING);
         if (ptr) {
-            Instance *signature = jstring_create(get_utf8_string(clazz, lvt->descriptor_index), runtime);
+            Instance *signature = jstring_create(class_get_utf8_string(clazz, lvt->descriptor_index), runtime);
             setFieldRefer(ptr, signature);
         }
         //
