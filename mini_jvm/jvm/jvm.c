@@ -130,6 +130,13 @@ void classloader_release_classs_static_field(ClassLoader *class_loader) {
  * @return errcode
  */
 s32 execute_jvm(c8 *p_classpath, c8 *p_mainclass, ArrayList *java_para) {
+    if(!p_classpath){
+        p_classpath="./";
+    }
+    if(!p_mainclass){
+        jvm_printf("No main class .\n");
+        return 1;
+    }
     heap_size = 0;
     //
     open_log();

@@ -219,10 +219,6 @@ s32 _getMBSize(MemoryBlock *mb) {
     s32 size = 0;
     if (mb) {
         switch (mb->type) {
-            case MEM_TYPE_CLASS: {
-                size = sizeof(Class) + ((Class *) mb)->field_static_len;
-                break;
-            }
             case MEM_TYPE_INS: {
                 size = sizeof(Instance) + mb->clazz->field_instance_len;
                 break;
@@ -230,6 +226,10 @@ s32 _getMBSize(MemoryBlock *mb) {
             case MEM_TYPE_ARR: {
                 Instance *arr = (Instance *) mb;
                 size = sizeof(Instance) + data_type_bytes[mb->arr_type_index] * arr->arr_length;
+                break;
+            }
+            case MEM_TYPE_CLASS: {
+                size = sizeof(Class) + ((Class *) mb)->field_static_len;
                 break;
             }
             default:
@@ -352,7 +352,7 @@ s32 _collect_thread_run(void *para) {
  */
 s64 garbage_collect() {
     collector->isgc = 1;
-    s64 mem_total = 0, mem_reuse = 0;
+    s64 mem_total = heap_size, mem_free = 0;
     s64 del = 0;
     s64 time_startAt;
 
@@ -402,12 +402,10 @@ s64 garbage_collect() {
     s64 iter = 0;
     while (nextmb) {
         iter++;
-        s32 ins_size = _getMBSize(nextmb);
-        mem_total += ins_size;
         curmb = nextmb;
         nextmb = curmb->next;
         if (curmb->garbage_mark != collector->flag_refer) {
-            mem_reuse += ins_size;
+            mem_free += _getMBSize(nextmb);
             //
             _garbage_destory_memobj(curmb);
             if (prevmb)prevmb->next = nextmb;
@@ -421,7 +419,7 @@ s64 garbage_collect() {
     collector->obj_count -= del;
     spin_unlock(&collector->lock);
 
-    heap_size = mem_total - mem_reuse;
+    heap_size -= mem_free;
     s64 time_gc = currentTimeMillis() - time_startAt;
     jvm_printf("[INFO]gc obj: %lld->%lld   heap : %lld -> %lld  stop_world: %lld  gc:%lld\n",
                obj_count, collector->obj_count, mem_total, heap_size, time_stopWorld, time_gc);
@@ -741,6 +739,7 @@ s32 garbage_refer_reg(__refer ref) {
                 mb->next = collector->header;
                 collector->header = mb;
             }
+            heap_size += _getMBSize(mb);
 #if _JVM_DEBUG_GARBAGE_DUMP
             Utf8String *sus = utf8_create();
             _getMBName((MemoryBlock *) ref, sus);

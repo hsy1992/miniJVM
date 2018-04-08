@@ -60,8 +60,8 @@ Utf8String *utf8_create_part(Utf8String *str, int start, int len) {
 Utf8String *utf8_create_part_c(char *str, int start, int len) {
     Utf8String *uni_str = utf8_create();
     int i;
-    for (i = start; i < len; i++) {
-        utf8_pushback(uni_str, str[i]);
+    for (i = 0; i < len; i++) {
+        utf8_pushback(uni_str, str[start + i]);
     }
     return uni_str;
 }

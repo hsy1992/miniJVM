@@ -1027,7 +1027,7 @@ public final class String {
         if (src == null || dst == null || src.length() == 0) {
             return this;
         }
-        StringBuilder sb = new StringBuilder();
+        StringBuilder sb = new StringBuilder(count);
         for (int i = 0; i < count;) {
             int index = i + offset;
             char ch = value[index];
@@ -1043,7 +1043,7 @@ public final class String {
             }
             if (match) {
                 sb.append(dst);
-                i += src.length();
+                i += src.count;
             } else {
                 sb.append(ch);
                 i++;

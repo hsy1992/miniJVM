@@ -822,6 +822,7 @@ Instance *jarray_create_by_class(s32 count, Class *clazz) {
     arr->mb.arr_type_index = typeIdx;
     arr->arr_length = count;
     if (arr->arr_length)arr->arr_body = jvm_calloc(width * count);
+    garbage_refer_reg(arr);
     return arr;
 }
 
@@ -834,7 +835,7 @@ Instance *jarray_create(s32 count, s32 typeIdx, Utf8String *type) {
     }
 
     Instance *arr = jarray_create_by_class(count, clazz);
-    garbage_refer_reg(arr);
+
     return arr;
 }
 
