@@ -377,113 +377,6 @@ static inline s32 _op_lstore_n(u8 **opCode, Runtime *runtime, RuntimeStack *stac
     return 0;
 }
 
-static inline s32 _op_putfield_impl(u8 **opCode, Runtime *runtime, RuntimeStack *stack, s32 isStatic) {
-    Class *clazz = runtime->clazz;
-    Short2Char s2c;
-    s2c.c1 = opCode[0][1];
-    s2c.c0 = opCode[0][2];
-
-    u16 field_ref = s2c.s;
-
-
-    // check variable type to determain long/s32/f64/f32
-    FieldInfo *fi = class_get_constant_fieldref(clazz, field_ref)->fieldInfo;
-
-//    if (utf8_equals_c(fi->name, "backtrace")) {
-//        int debug = 1;
-//    }
-    StackEntry entry;
-    pop_entry(stack, &entry);
-
-    c8 *ptr;
-    if (isStatic) {
-        ptr = getStaticFieldPtr(fi);
-    } else {
-        Instance *ins = (Instance *) pop_ref(stack);
-        if (!ins) {
-            Instance *exception = exception_create(JVM_EXCEPTION_NULLPOINTER, runtime);
-            push_ref(stack, (__refer) exception);
-            return RUNTIME_STATUS_EXCEPTION;
-        }
-        ptr = getInstanceFieldPtr(ins, fi);
-    }
-#if _JVM_DEBUG_BYTECODE_DETAIL > 5
-    invoke_deepth(runtime);
-    jvm_printf("%s  save:%s.%s[%llx]=[%llx]  \n",
-               isStatic ? "putstatic" : "putfield", utf8_cstr(clazz->name), utf8_cstr(fi->name),
-               (s64) (intptr_t) ptr, entry_2_long(&entry));
-#endif
-
-    if (fi->isrefer) {//垃圾回收标识
-        setFieldRefer(ptr, entry_2_refer(&entry));
-    } else {
-        s32 data_bytes = fi->datatype_bytes;
-        //非引用类型
-        if (data_bytes == 4) {
-            setFieldInt(ptr, entry_2_int(&entry));
-        } else if (data_bytes == 8) {
-            setFieldLong(ptr, entry_2_long(&entry));
-        } else if (data_bytes == 1) {
-            setFieldByte(ptr, entry_2_int(&entry));
-        } else if (data_bytes == 2) {
-            setFieldShort(ptr, entry_2_int(&entry));
-        }
-    }
-    *opCode += 3;
-    return 0;
-}
-
-static inline s32 _op_getfield_impl(u8 **opCode, Runtime *runtime, RuntimeStack *stack, s32 isStatic) {
-    Class *clazz = runtime->clazz;
-    Short2Char s2c;
-    s2c.c1 = opCode[0][1];
-    s2c.c0 = opCode[0][2];
-
-    u16 field_ref = s2c.s;
-
-    // check variable type to determine s64/s32/f64/f32
-    FieldInfo *fi = class_get_constant_fieldref(clazz, field_ref)->fieldInfo;
-
-    c8 *ptr;
-    if (isStatic) {
-        ptr = getStaticFieldPtr(fi);
-    } else {
-        Instance *ins = (Instance *) pop_ref(stack);
-        if (!ins) {
-            Instance *exception = exception_create(JVM_EXCEPTION_NULLPOINTER, runtime);
-            push_ref(stack, (__refer) exception);
-            return RUNTIME_STATUS_EXCEPTION;
-        }
-        ptr = getInstanceFieldPtr(ins, fi);
-    }
-    if (fi->isrefer) {
-        push_ref(stack, getFieldRefer(ptr));
-    } else {
-        s32 data_bytes = fi->datatype_bytes;
-        if (data_bytes == 4) {
-            push_int(stack, getFieldInt(ptr));
-        } else if (data_bytes == 8) {
-            push_long(stack, getFieldLong(ptr));
-        } else if (data_bytes == 1) {
-            push_int(stack, getFieldByte(ptr));
-        } else if (data_bytes == 2) {
-            push_int(stack, getFieldShort(ptr));
-        }
-    }
-#if _JVM_DEBUG_BYTECODE_DETAIL > 5
-    invoke_deepth(runtime);
-    StackEntry entry;
-    peek_entry(stack, &entry, stack->size - 1);
-    s64 v = entry_2_long(&entry);
-    jvm_printf("%s: push %s.%s[%llx]\n",
-               isStatic ? "getstatic" : "getfield", utf8_cstr(clazz->name), utf8_cstr(fi->name),
-               (s64) (intptr_t) ptr, v);
-#endif
-    *opCode += 3;
-    return 0;
-
-}
-
 
 static inline s32 _op_ifstore_impl(u8 **opCode, Runtime *runtime, RuntimeStack *stack) {
     Short2Char s2c;
@@ -3027,36 +2920,176 @@ s32 execute_method(MethodInfo *method, Runtime *pruntime, Class *clazz) {
                     }
 
                     case op_getstatic: {
-                        ret = _op_getfield_impl(opCode, runtime, stack, 1);
+                        Short2Char s2c;
+                        s2c.c1 = opCode[0][1];
+                        s2c.c0 = opCode[0][2];
+
+                        FieldInfo *fi = class_get_constant_fieldref(clazz, s2c.s)->fieldInfo;
+                        c8 *ptr = getStaticFieldPtr(fi);
+
+                        if (fi->isrefer) {
+                            push_ref(stack, getFieldRefer(ptr));
+                        } else {
+                            // check variable type to determine s64/s32/f64/f32
+                            s32 data_bytes = fi->datatype_bytes;
+                            if (data_bytes == 4) {
+                                push_int(stack, getFieldInt(ptr));
+                            } else if (data_bytes == 8) {
+                                push_long(stack, getFieldLong(ptr));
+                            } else if (data_bytes == 1) {
+                                push_int(stack, getFieldByte(ptr));
+                            } else if (data_bytes == 2) {
+                                push_int(stack, getFieldShort(ptr));
+                            }
+                        }
+#if _JVM_DEBUG_BYTECODE_DETAIL > 5
+                        invoke_deepth(runtime);
+                        StackEntry entry;
+                        peek_entry(stack, &entry, stack->size - 1);
+                        s64 v = entry_2_long(&entry);
+                        jvm_printf("%s: push %s.%s[%llx]\n",
+                                   "getstatic", utf8_cstr(clazz->name), utf8_cstr(fi->name),
+                                   (s64) (intptr_t) ptr, v);
+#endif
+                        *opCode += 3;
                         break;
                     }
 
                     case op_putstatic: {
-                        ret = _op_putfield_impl(opCode, runtime, stack, 1);
+                        Short2Char s2c;
+                        s2c.c1 = opCode[0][1];
+                        s2c.c0 = opCode[0][2];
+
+                        FieldInfo *fi = class_get_constant_fieldref(clazz, s2c.s)->fieldInfo;
+
+                        c8 *ptr = getStaticFieldPtr(fi);
+
+#if _JVM_DEBUG_BYTECODE_DETAIL > 5
+                        StackEntry entry;
+                        peek_entry(stack, &entry, stack->size - 1);
+                        invoke_deepth(runtime);
+                        jvm_printf("%s  save:%s.%s[%llx]=[%llx]  \n",
+                                   "putstatic", utf8_cstr(clazz->name), utf8_cstr(fi->name),
+                                   (s64) (intptr_t) ptr, entry_2_long(&entry));
+#endif
+                        if (fi->isrefer) {//垃圾回收标识
+                            setFieldRefer(ptr, pop_ref(stack));
+                        } else {
+                            // check variable type to determain long/s32/f64/f32
+                            s32 data_bytes = fi->datatype_bytes;
+                            //非引用类型
+                            if (data_bytes == 4) {
+                                setFieldInt(ptr, pop_int(stack));
+                            } else if (data_bytes == 8) {
+                                setFieldLong(ptr, pop_long(stack));
+                            } else if (data_bytes == 1) {
+                                setFieldByte(ptr, pop_int(stack));
+                            } else if (data_bytes == 2) {
+                                setFieldShort(ptr, pop_int(stack));
+                            }
+                        }
+                        *opCode += 3;
                         break;
                     }
 
                     case op_getfield: {
-                        ret = _op_getfield_impl(opCode, runtime, stack, 0);
+                        Short2Char s2c;
+                        s2c.c1 = opCode[0][1];
+                        s2c.c0 = opCode[0][2];
+
+
+                        Instance *ins = (Instance *) pop_ref(stack);
+                        if (!ins) {
+                            Instance *exception = exception_create(JVM_EXCEPTION_NULLPOINTER, runtime);
+                            push_ref(stack, (__refer) exception);
+                            ret = RUNTIME_STATUS_EXCEPTION;
+                        } else {
+                            FieldInfo *fi = class_get_constant_fieldref(clazz, s2c.s)->fieldInfo;
+                            c8 *ptr = getInstanceFieldPtr(ins, fi);
+
+                            if (fi->isrefer) {
+                                push_ref(stack, getFieldRefer(ptr));
+                            } else {
+                                // check variable type to determine s64/s32/f64/f32
+                                s32 data_bytes = fi->datatype_bytes;
+                                if (data_bytes == 4) {
+                                    push_int(stack, getFieldInt(ptr));
+                                } else if (data_bytes == 8) {
+                                    push_long(stack, getFieldLong(ptr));
+                                } else if (data_bytes == 1) {
+                                    push_int(stack, getFieldByte(ptr));
+                                } else if (data_bytes == 2) {
+                                    push_int(stack, getFieldShort(ptr));
+                                }
+                            }
+#if _JVM_DEBUG_BYTECODE_DETAIL > 5
+                            invoke_deepth(runtime);
+                            StackEntry entry;
+                            peek_entry(stack, &entry, stack->size - 1);
+                            s64 v = entry_2_long(&entry);
+                            jvm_printf("%s: push %s.%s[%llx]\n",
+                                       "getfield", utf8_cstr(clazz->name), utf8_cstr(fi->name),
+                                       (s64) (intptr_t) ptr, v);
+#endif
+                        }
+                        *opCode += 3;
                         break;
                     }
 
 
                     case op_putfield: {
-                        ret = _op_putfield_impl(opCode, runtime, stack, 0);
+                        Short2Char s2c;
+                        s2c.c1 = opCode[0][1];
+                        s2c.c0 = opCode[0][2];
+
+                        StackEntry entry;
+                        pop_entry(stack, &entry);
+
+                        Instance *ins = (Instance *) pop_ref(stack);
+                        if (!ins) {
+                            Instance *exception = exception_create(JVM_EXCEPTION_NULLPOINTER, runtime);
+                            push_ref(stack, (__refer) exception);
+                            ret = RUNTIME_STATUS_EXCEPTION;
+                        } else {
+                            // check variable type to determain long/s32/f64/f32
+                            FieldInfo *fi = class_get_constant_fieldref(clazz, s2c.s)->fieldInfo;
+                            c8 *ptr = getInstanceFieldPtr(ins, fi);
+
+#if _JVM_DEBUG_BYTECODE_DETAIL > 5
+                            invoke_deepth(runtime);
+                            jvm_printf("%s  save:%s.%s[%llx]=[%llx]  \n",
+                                       "putfield", utf8_cstr(clazz->name), utf8_cstr(fi->name),
+                                       (s64) (intptr_t) ptr, entry_2_long(&entry));
+#endif
+
+                            if (fi->isrefer) {//垃圾回收标识
+                                setFieldRefer(ptr, entry_2_refer(&entry));
+                            } else {
+                                s32 data_bytes = fi->datatype_bytes;
+                                //非引用类型
+                                if (data_bytes == 4) {
+                                    setFieldInt(ptr, entry_2_int(&entry));
+                                } else if (data_bytes == 8) {
+                                    setFieldLong(ptr, entry_2_long(&entry));
+                                } else if (data_bytes == 1) {
+                                    setFieldByte(ptr, entry_2_int(&entry));
+                                } else if (data_bytes == 2) {
+                                    setFieldShort(ptr, entry_2_int(&entry));
+                                }
+                            }
+                        }
+                        *opCode += 3;
                         break;
                     }
-
 
                     case op_invokevirtual: {
                         Class *clazz = runtime->clazz;
                         Short2Char s2c;
                         s2c.c1 = opCode[0][1];
                         s2c.c0 = opCode[0][2];
-                        u16 object_ref = s2c.s;
 
                         //此cmr所描述的方法，对于不同的实例，有不同的method
-                        ConstantMethodRef *cmr = class_get_constant_method_ref(clazz, object_ref);
+                        ConstantMethodRef *cmr = class_get_constant_method_ref(clazz, s2c.s);
 //                        if (utf8_equals_c(cmr->clsName, "java/lang/Class") &&
 //                            utf8_equals_c(cmr->name, "getName")) {
 //                            int debug = 1;
@@ -3271,8 +3304,8 @@ s32 execute_method(MethodInfo *method, Runtime *pruntime, Class *clazz) {
 
                         s32 count = pop_int(stack);
                         *opCode += 2;
-                        clazz = jarray_get_class_by_index(typeIdx);
-                        Instance *arr = jarray_create_by_class(count, clazz);
+                        Class *cl = jarray_get_class_by_index(typeIdx);
+                        Instance *arr = jarray_create_by_class(count, cl);
 
 #if _JVM_DEBUG_BYTECODE_DETAIL > 5
                         invoke_deepth(runtime);
