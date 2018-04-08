@@ -313,34 +313,11 @@ Class *getSuperClass(Class *clazz) {
 //===============================    类数据访问  ==================================
 
 
-/* find UTF8 */
-ConstantUTF8 *class_get_constant_utf8(Class *clazz, s32 index) {
-    return (ConstantUTF8 *) (clazz->constant_item_ptr[index]);
-}
-
-/* Find Class Reference */
-ConstantStringRef *class_get_constant_stringref(Class *clazz, s32 index) {
-    return (ConstantStringRef *) (clazz->constant_item_ptr[index]);
-}
-
-
-/* Find Class Reference */
-ConstantClassRef *class_get_constant_classref(Class *clazz, s32 index) {
-    return (ConstantClassRef *) (clazz->constant_item_ptr[index]);
-}
-
 Class *getClassByConstantClassRef(Class *clazz, s32 index) {
     ConstantClassRef *ccr = class_get_constant_classref(clazz, index);
     return classes_get(ccr->name);
 }
 
-ConstantFieldRef *class_get_constant_fieldref(Class *clazz, s32 index) {
-    return (ConstantFieldRef *) (clazz->constant_item_ptr[index]);
-}
-
-ConstantItem *class_get_constant_item(Class *clazz, s32 index) {
-    return (ConstantItem *) (clazz->constant_item_ptr[index]);
-}
 
 s32 find_constant_fieldref_index(Class *clazz, Utf8String *fieldName, Utf8String *type) {
     s32 i = 0;
@@ -354,45 +331,6 @@ s32 find_constant_fieldref_index(Class *clazz, Utf8String *fieldName, Utf8String
         }
     }
     return -1;
-}
-
-/* Find Method Reference */
-ConstantMethodRef *class_get_constant_method_ref(Class *clazz, s32 index) {
-    return (ConstantMethodRef *) (clazz->constant_item_ptr[index]);
-}
-
-ConstantInterfaceMethodRef *class_get_constant_interface_method_ref(Class *clazz, s32 index) {
-    return (ConstantInterfaceMethodRef *) (clazz->constant_item_ptr[index]);
-}
-
-/* Find Name and Type Reference */
-ConstantNameAndType *class_get_constant_name_and_type(Class *clazz, s32 index) {
-    return (ConstantNameAndType *) (clazz->constant_item_ptr[index]);
-}
-
-/* get integer from constant pool */
-s32 class_get_constant_integer(Class *clazz, s32 index) {
-    return ((ConstantInteger *) (clazz->constant_item_ptr[index]))->value;
-}
-
-/* get long from constant pool */
-s64 class_get_constant_long(Class *clazz, s32 index) {
-    return ((ConstantLong *) (clazz->constant_item_ptr[index]))->value;
-}
-
-/* get f32 from constant pool */
-f32 class_get_constant_float(Class *clazz, s32 index) {
-    return ((ConstantFloat *) (clazz->constant_item_ptr[index]))->value;
-}
-
-/* get f64 from constant pool */
-f64 class_get_double_from_constant_pool(Class *clazz, s32 index) {
-    return ((ConstantDouble *) (clazz->constant_item_ptr[index]))->value;
-}
-
-
-Utf8String *class_get_utf8_string(Class *clazz, s32 index) {
-    return ((ConstantUTF8 *) (clazz->constant_item_ptr[index]))->utfstr;
 }
 
 
@@ -410,7 +348,8 @@ FieldInfo *find_fieldInfo_by_fieldref(Class *clazz, s32 field_ref, Runtime *runt
     FieldInfo *fi = NULL;
     ConstantFieldRef *cfr = class_get_constant_fieldref(clazz, field_ref);
     ConstantNameAndType *nat = class_get_constant_name_and_type(clazz, cfr->nameAndTypeIndex);
-    Utf8String *clsName = class_get_utf8_string(clazz, class_get_constant_classref(clazz, cfr->classIndex)->stringIndex);
+    Utf8String *clsName = class_get_utf8_string(clazz,
+                                                class_get_constant_classref(clazz, cfr->classIndex)->stringIndex);
     Utf8String *fieldName = class_get_utf8_string(clazz, nat->nameIndex);
     Utf8String *type = class_get_utf8_string(clazz, nat->typeIndex);
     Class *other = classes_load_get(clsName, runtime);

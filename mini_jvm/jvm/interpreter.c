@@ -387,7 +387,7 @@ static inline s32 _op_putfield_impl(u8 **opCode, Runtime *runtime, RuntimeStack 
 
 
     // check variable type to determain long/s32/f64/f32
-    FieldInfo *fi = ((ConstantFieldRef *) (clazz->constant_item_ptr[field_ref]))->fieldInfo;//class_get_constant_fieldref(clazz, field_ref)->fieldInfo;
+    FieldInfo *fi = class_get_constant_fieldref(clazz, field_ref)->fieldInfo;
 
 //    if (utf8_equals_c(fi->name, "backtrace")) {
 //        int debug = 1;
@@ -397,7 +397,7 @@ static inline s32 _op_putfield_impl(u8 **opCode, Runtime *runtime, RuntimeStack 
 
     c8 *ptr;
     if (isStatic) {
-        ptr = &(fi->_this_class->field_static[fi->offset]);//getStaticFieldPtr(fi);
+        ptr = getStaticFieldPtr(fi);
     } else {
         Instance *ins = (Instance *) pop_ref(stack);
         if (!ins) {
@@ -405,7 +405,7 @@ static inline s32 _op_putfield_impl(u8 **opCode, Runtime *runtime, RuntimeStack 
             push_ref(stack, (__refer) exception);
             return RUNTIME_STATUS_EXCEPTION;
         }
-        ptr = &(ins->obj_fields[fi->offset_instance]);//getInstanceFieldPtr(ins, fi);
+        ptr = getInstanceFieldPtr(ins, fi);
     }
 #if _JVM_DEBUG_BYTECODE_DETAIL > 5
     invoke_deepth(runtime);
@@ -442,11 +442,11 @@ static inline s32 _op_getfield_impl(u8 **opCode, Runtime *runtime, RuntimeStack 
     u16 field_ref = s2c.s;
 
     // check variable type to determine s64/s32/f64/f32
-    FieldInfo *fi = ((ConstantFieldRef *) (clazz->constant_item_ptr[field_ref]))->fieldInfo;//class_get_constant_fieldref(clazz, field_ref)->fieldInfo;
+    FieldInfo *fi = class_get_constant_fieldref(clazz, field_ref)->fieldInfo;
 
     c8 *ptr;
     if (isStatic) {
-        ptr = &(fi->_this_class->field_static[fi->offset]);//getStaticFieldPtr(fi);
+        ptr = getStaticFieldPtr(fi);
     } else {
         Instance *ins = (Instance *) pop_ref(stack);
         if (!ins) {
@@ -454,7 +454,7 @@ static inline s32 _op_getfield_impl(u8 **opCode, Runtime *runtime, RuntimeStack 
             push_ref(stack, (__refer) exception);
             return RUNTIME_STATUS_EXCEPTION;
         }
-        ptr = &(ins->obj_fields[fi->offset_instance]);//getInstanceFieldPtr(ins, fi);
+        ptr = getInstanceFieldPtr(ins, fi);
     }
     if (fi->isrefer) {
         push_ref(stack, getFieldRefer(ptr));
@@ -491,11 +491,11 @@ static inline s32 _op_ifstore_impl(u8 **opCode, Runtime *runtime, RuntimeStack *
         s2c.c1 = opCode[0][1];
         s2c.c0 = opCode[0][2];
         *opCode += 3;
+        runtime->wideMode = 0;
     } else {
         s2c.s = (u8) opCode[0][1];
         *opCode += 2;
     }
-    runtime->wideMode = 0;
 
     s32 value = pop_int(stack);
 #if _JVM_DEBUG_BYTECODE_DETAIL > 5
@@ -514,11 +514,11 @@ static inline s32 _op_ldstore_impl(u8 **opCode, Runtime *runtime, RuntimeStack *
         s2c.c1 = opCode[0][1];
         s2c.c0 = opCode[0][2];
         *opCode += 3;
+        runtime->wideMode = 0;
     } else {
         s2c.s = (u8) opCode[0][1];
         *opCode += 2;
     }
-    runtime->wideMode = 0;
 
     Long2Double l2d;
     l2d.l = pop_long(stack);
@@ -891,11 +891,11 @@ s32 execute_method(MethodInfo *method, Runtime *pruntime, Class *clazz) {
                             s2c.c1 = opCode[0][1];
                             s2c.c0 = opCode[0][2];
                             *opCode += 3;
+                            runtime->wideMode = 0;
                         } else {
                             s2c.s = (u8) opCode[0][1];
                             *opCode += 2;
                         }
-                        runtime->wideMode = 0;
 
                         s32 value = localvar_getInt(runtime, (u16) s2c.s);
 #if _JVM_DEBUG_BYTECODE_DETAIL > 5
@@ -915,11 +915,11 @@ s32 execute_method(MethodInfo *method, Runtime *pruntime, Class *clazz) {
                             s2c.c1 = opCode[0][1];
                             s2c.c0 = opCode[0][2];
                             *opCode += 3;
+                            runtime->wideMode = 0;
                         } else {
                             s2c.s = (u8) opCode[0][1];
                             *opCode += 2;
                         }
-                        runtime->wideMode = 0;
 
                         Long2Double l2d;
                         l2d.i2l.i1 = localvar_getInt(runtime, (u16) s2c.s);
@@ -944,11 +944,11 @@ s32 execute_method(MethodInfo *method, Runtime *pruntime, Class *clazz) {
                             s2c.c1 = opCode[0][1];
                             s2c.c0 = opCode[0][2];
                             *opCode += 3;
+                            runtime->wideMode = 0;
                         } else {
                             s2c.s = (u8) opCode[0][1];
                             *opCode += 2;
                         }
-                        runtime->wideMode = 0;
 
                         __refer value = localvar_getRefer(runtime, (u16) s2c.s);
 #if _JVM_DEBUG_BYTECODE_DETAIL > 5
@@ -1199,11 +1199,11 @@ s32 execute_method(MethodInfo *method, Runtime *pruntime, Class *clazz) {
                             s2c.c1 = opCode[0][1];
                             s2c.c0 = opCode[0][2];
                             *opCode += 3;
+                            runtime->wideMode = 0;
                         } else {
                             s2c.s = (u8) opCode[0][1];
                             *opCode += 2;
                         }
-                        runtime->wideMode = 0;
 
                         __refer value = pop_ref(stack);
 #if _JVM_DEBUG_BYTECODE_DETAIL > 5
@@ -2258,12 +2258,12 @@ s32 execute_method(MethodInfo *method, Runtime *pruntime, Class *clazz) {
                             s2c2.c1 = opCode[0][3];
                             s2c2.c0 = opCode[0][4];
                             *opCode += 5;
+                            runtime->wideMode = 0;
                         } else {
                             s2c1.s = (u8) opCode[0][1];
                             s2c2.s = (s8) opCode[0][2];
                             *opCode += 3;
                         }
-                        runtime->wideMode = 0;
 
                         s32 oldv = localvar_getInt(runtime, (u16) s2c1.s);
                         localvar_setInt(runtime, (u16) s2c1.s, oldv + s2c2.s);
@@ -2890,10 +2890,10 @@ s32 execute_method(MethodInfo *method, Runtime *pruntime, Class *clazz) {
                         if (runtime->wideMode) {
                             s2c.c1 = opCode[0][1];
                             s2c.c0 = opCode[0][2];
+                            runtime->wideMode = 0;
                         } else {
                             s2c.s = (u8) opCode[0][1];
                         }
-                        runtime->wideMode = 0;
 
                         __refer addr = localvar_getRefer(runtime, (u16) s2c.s);
 
@@ -3067,15 +3067,15 @@ s32 execute_method(MethodInfo *method, Runtime *pruntime, Class *clazz) {
                             push_ref(stack, (__refer) exception);
                             ret = RUNTIME_STATUS_EXCEPTION;
                         } else {
-                            MethodInfo *method = NULL;
+                            MethodInfo *m = NULL;
 
                             if (ins->mb.type == MEM_TYPE_CLASS || ins->mb.type == MEM_TYPE_ARR) {
-                                method = cmr->methodInfo;
+                                m = cmr->methodInfo;
                             } else {
-                                method = (MethodInfo *) pairlist_get(cmr->virtual_methods, ins->mb.clazz);
-                                if (method == NULL) {
-                                    method = find_instance_methodInfo_by_name(ins, cmr->name, cmr->descriptor, runtime);
-                                    pairlist_put(cmr->virtual_methods, ins->mb.clazz, method);//放入缓存，以便下次直接调用
+                                m = (MethodInfo *) pairlist_get(cmr->virtual_methods, ins->mb.clazz);
+                                if (m == NULL) {
+                                    m = find_instance_methodInfo_by_name(ins, cmr->name, cmr->descriptor, runtime);
+                                    pairlist_put(cmr->virtual_methods, ins->mb.clazz, m);//放入缓存，以便下次直接调用
                                 }
                             }
 
@@ -3086,8 +3086,8 @@ s32 execute_method(MethodInfo *method, Runtime *pruntime, Class *clazz) {
                                        utf8_cstr(method->name), utf8_cstr(method->descriptor));
 #endif
 
-                            if (method) {
-                                ret = execute_method(method, runtime, method->_this_class);
+                            if (m) {
+                                ret = execute_method(m, runtime, m->_this_class);
                             } else {
                                 Instance *exception = exception_create_str(JVM_EXCEPTION_NOSUCHMETHOD, runtime,
                                                                            utf8_cstr(cmr->name));
@@ -3107,18 +3107,18 @@ s32 execute_method(MethodInfo *method, Runtime *pruntime, Class *clazz) {
                         u16 object_ref = s2c.s;
 
                         ConstantMethodRef *cmr = class_get_constant_method_ref(runtime->clazz, object_ref);
-                        MethodInfo *method = cmr->methodInfo;
-                        if (!method) {
-                            method = find_methodInfo_by_methodref(runtime->clazz, object_ref, runtime);
-                            cmr->methodInfo = method;
+                        MethodInfo *m = cmr->methodInfo;
+                        if (!m) {
+                            m = find_methodInfo_by_methodref(runtime->clazz, object_ref, runtime);
+                            cmr->methodInfo = m;
                         }
 #if _JVM_DEBUG_BYTECODE_DETAIL > 5
                         invoke_deepth(runtime);
                         jvm_printf("invokespecial    %s.%s%s \n", utf8_cstr(method->_this_class->name),
                                    utf8_cstr(method->name), utf8_cstr(method->descriptor));
 #endif
-                        if (method) {
-                            ret = execute_method(method, runtime, method->_this_class);
+                        if (m) {
+                            ret = execute_method(m, runtime, m->_this_class);
                         } else {
                             Instance *exception = exception_create_str(JVM_EXCEPTION_NOSUCHMETHOD, runtime,
                                                                        utf8_cstr(cmr->name));
@@ -3140,18 +3140,18 @@ s32 execute_method(MethodInfo *method, Runtime *pruntime, Class *clazz) {
                         ConstantMethodRef *cmr = class_get_constant_method_ref(runtime->clazz, object_ref);
                         if (!cmr->methodInfo)classes_load_get(cmr->clsName, runtime);
 
-                        MethodInfo *method = cmr->methodInfo;
-                        if (!method) {
-                            method = find_methodInfo_by_methodref(runtime->clazz, object_ref, runtime);
-                            cmr->methodInfo = method;
+                        MethodInfo *m = cmr->methodInfo;
+                        if (!m) {
+                            m = find_methodInfo_by_methodref(runtime->clazz, object_ref, runtime);
+                            cmr->methodInfo = m;
                         }
 #if _JVM_DEBUG_BYTECODE_DETAIL > 5
                         invoke_deepth(runtime);
                         jvm_printf("invokestatic   | %s.%s%s \n", utf8_cstr(method->_this_class->name),
                                    utf8_cstr(method->name), utf8_cstr(method->descriptor));
 #endif
-                        if (method) {
-                            ret = execute_method(method, runtime, method->_this_class);
+                        if (m) {
+                            ret = execute_method(m, runtime, m->_this_class);
                         } else {
                             Instance *exception = exception_create_str(JVM_EXCEPTION_NOSUCHMETHOD, runtime,
                                                                        utf8_cstr(cmr->name));
@@ -3180,14 +3180,14 @@ s32 execute_method(MethodInfo *method, Runtime *pruntime, Class *clazz) {
                             push_ref(stack, (__refer) exception);
                             ret = RUNTIME_STATUS_EXCEPTION;
                         } else {
-                            MethodInfo *method = NULL;
+                            MethodInfo *m = NULL;
                             if (ins->mb.type == MEM_TYPE_CLASS) {
-                                method = cmr->methodInfo;
+                                m = cmr->methodInfo;
                             } else {
-                                method = (MethodInfo *) pairlist_get(cmr->virtual_methods, ins->mb.clazz);
-                                if (method == NULL) {
-                                    method = find_instance_methodInfo_by_name(ins, cmr->name, cmr->descriptor, runtime);
-                                    pairlist_put(cmr->virtual_methods, ins->mb.clazz, method);//放入缓存，以便下次直接调用
+                                m = (MethodInfo *) pairlist_get(cmr->virtual_methods, ins->mb.clazz);
+                                if (m == NULL) {
+                                    m = find_instance_methodInfo_by_name(ins, cmr->name, cmr->descriptor, runtime);
+                                    pairlist_put(cmr->virtual_methods, ins->mb.clazz, m);//放入缓存，以便下次直接调用
                                 }
                             }
 
@@ -3196,8 +3196,8 @@ s32 execute_method(MethodInfo *method, Runtime *pruntime, Class *clazz) {
                             jvm_printf("invokeinterface   | %s.%s%s \n", utf8_cstr(method->_this_class->name),
                                        utf8_cstr(method->name), utf8_cstr(method->descriptor));
 #endif
-                            if (method) {
-                                ret = execute_method(method, runtime, method->_this_class);
+                            if (m) {
+                                ret = execute_method(m, runtime, m->_this_class);
                             } else {
                                 Instance *exception = exception_create_str(JVM_EXCEPTION_NOSUCHMETHOD, runtime,
                                                                            utf8_cstr(cmr->name));
@@ -3215,14 +3215,14 @@ s32 execute_method(MethodInfo *method, Runtime *pruntime, Class *clazz) {
                         s2c.c0 = opCode[0][2];
                         u16 object_ref = s2c.s;
 
-                        MethodInfo *method = class_get_constant_method_ref(runtime->clazz, object_ref)->methodInfo;
+                        MethodInfo *m = class_get_constant_method_ref(runtime->clazz, object_ref)->methodInfo;
 #if _JVM_DEBUG_BYTECODE_DETAIL > 5
                         invoke_deepth(runtime);
                         jvm_printf("invokedynamic   | %s.%s%s \n", utf8_cstr(method->_this_class->name),
                                    utf8_cstr(method->name), utf8_cstr(method->descriptor));
 #endif
-                        if (method) {
-                            ret = execute_method(method, runtime, method->_this_class);
+                        if (m) {
+                            ret = execute_method(m, runtime, m->_this_class);
                         } else {
                             Instance *exception = exception_create(JVM_EXCEPTION_NOSUCHMETHOD, runtime);
                             push_ref(stack, (__refer) exception);

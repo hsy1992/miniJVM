@@ -82,37 +82,109 @@ Instance *getInstanceInStack(Class *clazz, ConstantMethodRef *cmr, RuntimeStack 
 void printDumpOfClasses(void);
 
 
-c8 *getInstanceFieldPtr(Instance *ins, FieldInfo *fi);
+//c8 *getInstanceFieldPtr(Instance *ins, FieldInfo *fi);
+//
+//c8 *getStaticFieldPtr(FieldInfo *fi);
+//
+//void setFieldInt(c8 *ptr, s32 v);
+//
+//void setFieldRefer(c8 *ptr, __refer v);
+//
+//void setFieldLong(c8 *ptr, s64 v);
+//
+//void setFieldShort(c8 *ptr, s16 v);
+//
+//void setFieldByte(c8 *ptr, s8 v);
+//
+//void setFieldDouble(c8 *ptr, f64 v);
+//
+//void setFieldFloat(c8 *ptr, f32 v);
+//
+//s64 getFieldLong(c8 *ptr);
+//
+//s8 getFieldByte(c8 *ptr);
+//
+//s16 getFieldShort(c8 *ptr);
+//
+//s32 getFieldInt(c8 *ptr);
+//
+//__refer getFieldRefer(c8 *ptr);
+//
+//f64 getFieldDouble(c8 *ptr);
+//
+//f32 getFieldFloat(c8 *ptr);
 
-c8 *getStaticFieldPtr(FieldInfo *fi);
+/**
+ * get instance field value address
+ * @param ins ins
+ * @param fi fi
+ * @return addr
+ */
+static inline c8 *getInstanceFieldPtr(Instance *ins, FieldInfo *fi) {
+    return &(ins->obj_fields[fi->offset_instance]);
+}
 
-void setFieldInt(c8 *ptr, s32 v);
+static inline c8 *getStaticFieldPtr(FieldInfo *fi) {
+    return &(fi->_this_class->field_static[fi->offset]);
+}
 
-void setFieldRefer(c8 *ptr, __refer v);
 
-void setFieldLong(c8 *ptr, s64 v);
+static inline void setFieldInt(c8 *ptr, s32 v) {
+    *((s32 *) ptr) = v;
+}
 
-void setFieldShort(c8 *ptr, s16 v);
+static inline void setFieldRefer(c8 *ptr, __refer v) {
+    *((__refer *) ptr) = v;
+}
 
-void setFieldByte(c8 *ptr, s8 v);
+static inline void setFieldLong(c8 *ptr, s64 v) {
+    *((s64 *) ptr) = v;
+}
 
-void setFieldDouble(c8 *ptr, f64 v);
+static inline void setFieldShort(c8 *ptr, s16 v) {
+    *((s16 *) ptr) = v;
+}
 
-void setFieldFloat(c8 *ptr, f32 v);
+static inline void setFieldByte(c8 *ptr, s8 v) {
+    *((s8 *) ptr) = v;
+}
 
-s64 getFieldLong(c8 *ptr);
+static inline void setFieldDouble(c8 *ptr, f64 v) {
+    *((f64 *) ptr) = v;
+}
 
-s8 getFieldByte(c8 *ptr);
+static inline void setFieldFloat(c8 *ptr, f32 v) {
+    *((f32 *) ptr) = v;
+}
 
-s16 getFieldShort(c8 *ptr);
+static inline s32 getFieldInt(c8 *ptr) {
+    return *((s32 *) ptr);
+}
 
-s32 getFieldInt(c8 *ptr);
+static inline __refer getFieldRefer(c8 *ptr) {
+    return *((__refer *) ptr);
+}
 
-__refer getFieldRefer(c8 *ptr);
+static inline s16 getFieldShort(c8 *ptr) {
+    return *((s16 *) ptr);
+}
 
-f64 getFieldDouble(c8 *ptr);
+static inline s8 getFieldByte(c8 *ptr) {
+    return *((s8 *) ptr);
+}
 
-f32 getFieldFloat(c8 *ptr);
+static inline s64 getFieldLong(c8 *ptr) {
+    return *((s64 *) ptr);
+}
+
+static inline f32 getFieldFloat(c8 *ptr) {
+    return *((f32 *) ptr);
+}
+
+
+static inline f64 getFieldDouble(c8 *ptr) {
+    return *((f64 *) ptr);
+}
 
 s32 getLineNumByIndex(CodeAttribute *ca, s32 offset);
 
