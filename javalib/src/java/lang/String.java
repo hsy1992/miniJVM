@@ -1020,37 +1020,44 @@ public final class String {
     }
 
     public String replaceAll(String src, String dst) {
-        return replace(src, dst);
+        char[] carr = replace0(src, dst);
+        return new String(carr);
     }
 
     public String replace(String src, String dst) {
-        if (src == null || dst == null || src.length() == 0) {
-            return this;
-        }
-        StringBuilder sb = new StringBuilder(count);
-        for (int i = 0; i < count;) {
-            int index = i + offset;
-            char ch = value[index];
-            boolean match = false;
-            if (ch == src.value[src.offset]) {
-                match = true;
-                for (int j = 1; j < src.count; j++) {
-                    if (value[index + j] != src.value[src.offset + j]) {
-                        match = false;
-                        break;
-                    }
-                }
-            }
-            if (match) {
-                sb.append(dst);
-                i += src.count;
-            } else {
-                sb.append(ch);
-                i++;
-            }
-        }
-        return sb.toString();
+        char[] carr = replace0(src, dst);
+        return new String(carr);
     }
+
+    native char[] replace0(String src, String dst);
+//    public String replace(String src, String dst) {
+//        if (src == null || dst == null || src.length() == 0) {
+//            return this;
+//        }
+//        StringBuilder sb = new StringBuilder(count);
+//        for (int i = 0; i < count;) {
+//            int index = i + offset;
+//            char ch = value[index];
+//            boolean match = false;
+//            if (ch == src.value[src.offset]) {
+//                match = true;
+//                for (int j = 1; j < src.count; j++) {
+//                    if (value[index + j] != src.value[src.offset + j]) {
+//                        match = false;
+//                        break;
+//                    }
+//                }
+//            }
+//            if (match) {
+//                sb.append(dst);
+//                i += src.count;
+//            } else {
+//                sb.append(ch);
+//                i++;
+//            }
+//        }
+//        return sb.toString();
+//    }
 
     /**
      * Converts all of the characters in this <code>String</code> to lower case.

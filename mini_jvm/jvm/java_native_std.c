@@ -571,6 +571,66 @@ s32 java_lang_Runtime_gc(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
+s32 java_lang_String_replace0(Runtime *runtime, Class *clazz) {
+    RuntimeStack *stack = runtime->stack;
+    Instance *base = (Instance *) localvar_getRefer(runtime, 0);
+    Instance *src = (Instance *) localvar_getRefer(runtime, 1);
+    Instance *dst = (Instance *) localvar_getRefer(runtime, 2);
+
+    s32 count = jstring_get_count(base);
+    s32 offset = jstring_get_offset(base);
+    u16 *value = (u16 *) jstring_get_value_array(base)->arr_body;
+
+    s32 src_count = jstring_get_count(src);
+    s32 dst_count = jstring_get_count(dst);
+    if (count == 0 || src == NULL || dst == NULL || src_count == 0 || dst_count == 0) {
+        Instance *jchar_arr = jarray_create(count, DATATYPE_JCHAR, NULL);
+        memcpy((c8 *) jchar_arr->arr_body, (c8 *) &value[offset], count * sizeof(u16));
+        push_ref(stack, jchar_arr);
+    } else {
+
+        s32 src_offset = jstring_get_offset(src);
+        u16 *src_value = (u16 *) jstring_get_value_array(src)->arr_body;
+        s32 dst_offset = jstring_get_offset(dst);
+        u16 *dst_value = (u16 *) jstring_get_value_array(dst)->arr_body;
+
+        ByteBuf *sb = bytebuf_create(count);
+        for (int i = 0; i < count;) {
+            int index = i + offset;
+            u16 ch = value[index];
+            s32 match = 0;
+            if (ch == src_value[src_offset]) {
+                match = 1;
+                for (int j = 1; j < src_count; j++) {
+                    if (value[index + j] != src_value[src_offset + j]) {
+                        match = 0;
+                        break;
+                    }
+                }
+            }
+            if (match) {
+                bytebuf_write_batch(sb, (c8 *) &dst_value[dst_offset], dst_count * sizeof(ch));
+                i += src_count;
+            } else {
+                bytebuf_write_batch(sb, (c8 *) &ch, sizeof(ch));
+                i++;
+            }
+        }
+        s32 jchar_count = sb->wp / 2;
+        Instance *jchar_arr = jarray_create(jchar_count, DATATYPE_JCHAR, NULL);
+        bytebuf_read_batch(sb, (c8 *) jchar_arr->arr_body, sb->wp);
+        bytebuf_destory(sb);
+        push_ref(stack, jchar_arr);
+    }
+
+
+#if _JVM_DEBUG_BYTECODE_DETAIL > 5
+    invoke_deepth(runtime);
+    jvm_printf("java_lang_String_replace0 \n");
+#endif
+    return 0;
+}
+
 s32 java_lang_String_charAt0(Runtime *runtime, Class *clazz) {
     RuntimeStack *stack = runtime->stack;
     Instance *jstr = (Instance *) localvar_getRefer(runtime, 0);
@@ -1095,6 +1155,7 @@ static java_native_method method_table[] = {
         {"java/lang/Runtime",                   "totalMemory",       "()J",                                                      java_lang_Runtime_totalMemory},
         {"java/lang/Runtime",                   "gc",                "()V",                                                      java_lang_Runtime_gc},
         {"java/lang/String",                    "charAt0",           "(I)C",                                                     java_lang_String_charAt0},
+        {"java/lang/String",                    "replace0",          "(Ljava/lang/String;Ljava/lang/String;)[C",                 java_lang_String_replace0},
         {"java/lang/String",                    "equals",            "(Ljava/lang/Object;)Z",                                    java_lang_String_equals},
         {"java/lang/String",                    "indexOf",           "(I)I",                                                     java_lang_String_indexOf},
         {"java/lang/String",                    "indexOf",           "(II)I",                                                    java_lang_String_indexOfFrom},
