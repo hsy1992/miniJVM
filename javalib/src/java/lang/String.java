@@ -1021,12 +1021,12 @@ public final class String {
 
     public String replaceAll(String src, String dst) {
         char[] carr = replace0(src, dst);
-        return new String(carr);
+        return new String(0, carr.length, carr);
     }
 
     public String replace(String src, String dst) {
         char[] carr = replace0(src, dst);
-        return new String(carr);
+        return new String(0, carr.length, carr);
     }
 
     native char[] replace0(String src, String dst);
