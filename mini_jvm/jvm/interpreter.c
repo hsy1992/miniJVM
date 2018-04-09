@@ -3607,21 +3607,7 @@ jvm_printf("(a)newarray  [%llx] type:%c , count:%d  \n", (s64) (intptr_t) arr, g
 #if _JVM_DEBUG_PROFILE
                 //time
                 s64 spent = nanoTime() - start_at;
-                HashtableValue h_s_v = hashtable_get(instruct_profile_sum, (HashtableKey) (intptr_t) instruct_code);
-                if (h_s_v == NULL) {
-                    hashtable_put(instruct_profile_sum, (HashtableKey) (intptr_t) instruct_code, (HashtableKey)(intptr_t) (spent));
-                } else {
-                    hashtable_put(instruct_profile_sum, (HashtableKey) (intptr_t) instruct_code,
-                                  (HashtableKey) (h_s_v + spent));
-                }
-                //count
-                HashtableValue h_c_v = hashtable_get(instruct_profile_count, (HashtableKey) (intptr_t) instruct_code);
-                if (h_c_v == NULL) {
-                    hashtable_put(instruct_profile_count, (HashtableKey) (intptr_t) instruct_code, (HashtableKey)(intptr_t) (1));
-                } else {
-                    hashtable_put(instruct_profile_count, (HashtableKey) (intptr_t) instruct_code,
-                                  (HashtableKey) (h_c_v + 1));
-                }
+                profile_put(instruct_code, spent, 1);
 #endif
                 if (ret == RUNTIME_STATUS_RETURN) {
                     ret = RUNTIME_STATUS_NORMAL;

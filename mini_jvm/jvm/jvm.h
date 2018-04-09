@@ -325,9 +325,22 @@ extern u8 volatile java_debug;
 
 extern s32 STACK_LENGHT;
 
+
+//==============profile============
 #if _JVM_DEBUG_PROFILE
-extern Hashtable *instruct_profile_sum;
-extern Hashtable *instruct_profile_count;
+extern Hashtable *profile_instructs;
+extern c8 *inst_name[];
+typedef struct _ProfileDetail {
+    s64 cost;
+    s32 count;
+} ProfileDetail;
+
+void profile_init();
+
+void profile_put(u8 instruct_code, s64 cost_add, s64 count_add);
+
+void profile_print();
+
 #endif
 
 //======================= MEM_OBJ =============================

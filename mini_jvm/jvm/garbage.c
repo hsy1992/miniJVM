@@ -417,9 +417,9 @@ s64 garbage_collect() {
     }
     spin_lock(&collector->lock);
     collector->obj_count -= del;
+    heap_size -= mem_free;
     spin_unlock(&collector->lock);
 
-    heap_size -= mem_free;
     s64 time_gc = currentTimeMillis() - time_startAt;
     jvm_printf("[INFO]gc obj: %lld->%lld   heap : %lld -> %lld  stop_world: %lld  gc:%lld\n",
                obj_count, collector->obj_count, mem_total, heap_size, time_stopWorld, time_gc);

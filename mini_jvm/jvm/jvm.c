@@ -56,6 +56,47 @@ void print_exception(Runtime *runtime) {
     }
 }
 
+#if _JVM_DEBUG_PROFILE
+
+void profile_item_destory(HashtableValue value) {
+    jvm_free(value);
+}
+
+void profile_init() {
+    profile_instructs = hashtable_create(DEFAULT_HASH_FUNC, DEFAULT_HASH_EQUALS_FUNC);
+    hashtable_register_free_functions(profile_instructs, NULL, profile_item_destory);
+}
+
+void profile_put(u8 instruct_code, s64 cost_add, s64 count_add) {
+    ProfileDetail *h_s_v = hashtable_get(profile_instructs, (HashtableKey) (intptr_t) instruct_code);
+    if (h_s_v == NULL) {
+        ProfileDetail *pd = jvm_calloc(sizeof(ProfileDetail));
+        pd->cost = cost_add;
+        pd->count = 1;
+        hashtable_put(profile_instructs, (HashtableKey) (intptr_t) instruct_code, (HashtableKey) pd);
+    } else {
+        spin_lock(&profile_instructs->spinlock);
+        h_s_v->cost += cost_add;
+        h_s_v->count += count_add;
+        spin_unlock(&profile_instructs->spinlock);
+    }
+};
+
+void profile_print() {
+    HashtableIterator hti;
+    hashtable_iterate(profile_instructs, &hti);
+    for (; hashtable_iter_has_more(&hti);) {
+        u8 instruct_code = (u8) (intptr_t) hashtable_iter_next_key(&hti);
+        ProfileDetail *pd = hashtable_get(profile_instructs,
+                                          (HashtableKey) (intptr_t) instruct_code);
+        jvm_printf("%s \t %2x \t total \t %lld \t count \t %lld \t avg \t %lld\n", inst_name[instruct_code],
+                   instruct_code, pd->cost, pd->count,
+                   (s64) (pd->cost / pd->count));
+    }
+    hashtable_destory(profile_instructs);
+}
+
+#endif
 
 ClassLoader *classloader_create(c8 *path) {
     ClassLoader *class_loader = jvm_calloc(sizeof(ClassLoader));
@@ -130,10 +171,10 @@ void classloader_release_classs_static_field(ClassLoader *class_loader) {
  * @return errcode
  */
 s32 execute_jvm(c8 *p_classpath, c8 *p_mainclass, ArrayList *java_para) {
-    if(!p_classpath){
-        p_classpath="./";
+    if (!p_classpath) {
+        p_classpath = "./";
     }
-    if(!p_mainclass){
+    if (!p_mainclass) {
         jvm_printf("No main class .\n");
         return 1;
     }
@@ -143,8 +184,7 @@ s32 execute_jvm(c8 *p_classpath, c8 *p_mainclass, ArrayList *java_para) {
 
 
 #if _JVM_DEBUG_PROFILE
-    instruct_profile_sum = hashtable_create(DEFAULT_HASH_FUNC, DEFAULT_HASH_EQUALS_FUNC);
-    instruct_profile_count = hashtable_create(DEFAULT_HASH_FUNC, DEFAULT_HASH_EQUALS_FUNC);
+    profile_init();
 #endif
     //
     init_jni_func_table();
@@ -239,19 +279,7 @@ s32 execute_jvm(c8 *p_classpath, c8 *p_mainclass, ArrayList *java_para) {
             jvm_printf("spent %lld\n", (currentTimeMillis() - start));
 
 #if _JVM_DEBUG_PROFILE
-            HashtableIterator hti;
-            hashtable_iterate(instruct_profile_sum, &hti);
-            for (; hashtable_iter_has_more(&hti);) {
-                u8 instruct_code = (u8) (intptr_t) hashtable_iter_next_key(&hti);
-                s64 sum_v = (s64) (intptr_t) hashtable_get(instruct_profile_sum,
-                                                           (HashtableKey) (intptr_t) instruct_code);
-                s64 count_v = (s64) (intptr_t) hashtable_get(instruct_profile_count,
-                                                             (HashtableKey) (intptr_t) instruct_code);
-                jvm_printf("%2x \t |total|%lld|  count|%lld|  avg|%lld\n", instruct_code, sum_v, count_v,
-                           (s64) (sum_v / count_v));
-            }
-            hashtable_destory(instruct_profile_sum);
-            hashtable_destory(instruct_profile_count);
+            profile_print();
 #endif
 
             main_thread_destory();
