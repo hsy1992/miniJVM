@@ -184,7 +184,7 @@ void _getMBName(void *memblock, Utf8String *name) {
         switch (mb->type) {
             case MEM_TYPE_CLASS: {
                 utf8_append_c(name, "C");
-                Class *clazz = collector->_garbage_thread_status == GARBAGE_THREAD_NORMAL ? (Class *) mb : NULL;
+                JClass *clazz = collector->_garbage_thread_status == GARBAGE_THREAD_NORMAL ? (JClass *) mb : NULL;
                 if (clazz)
                     utf8_append(name, clazz->name);
                 break;
@@ -192,7 +192,7 @@ void _getMBName(void *memblock, Utf8String *name) {
             case MEM_TYPE_INS: {
                 Instance *ins = (Instance *) mb;
                 utf8_append_c(name, "L");
-                Class *clazz = collector->_garbage_thread_status == GARBAGE_THREAD_NORMAL ? ins->mb.clazz : NULL;
+                JClass *clazz = collector->_garbage_thread_status == GARBAGE_THREAD_NORMAL ? ins->mb.clazz : NULL;
                 if (clazz)
                     utf8_append(name, clazz->name);
                 utf8_append_c(name, ";");
@@ -202,7 +202,7 @@ void _getMBName(void *memblock, Utf8String *name) {
                 Instance *arr = (Instance *) mb;
 
                 utf8_append_c(name, "Array{");
-                Class *clazz = collector->_garbage_thread_status == GARBAGE_THREAD_NORMAL ? arr->mb.clazz : NULL;
+                JClass *clazz = collector->_garbage_thread_status == GARBAGE_THREAD_NORMAL ? arr->mb.clazz : NULL;
                 if (clazz)
                     utf8_append(name, clazz->name);
                 utf8_append_c(name, "}");
@@ -229,7 +229,7 @@ s32 _getMBSize(MemoryBlock *mb) {
                 break;
             }
             case MEM_TYPE_CLASS: {
-                size = sizeof(Class) + ((Class *) mb)->field_static_len;
+                size = sizeof(JClass) + ((JClass *) mb)->field_static_len;
                 break;
             }
             default:
@@ -620,7 +620,7 @@ s32 _garbage_copy_refer_thread(Runtime *pruntime) {
 
 static inline void _instance_mark_refer(Instance *ins) {
     s32 i, len;
-    Class *clazz = ins->mb.clazz;
+    JClass *clazz = ins->mb.clazz;
     while (clazz) {
         FieldPool *fp = &clazz->fieldPool;
         for (i = 0, len = fp->field_used; i < len; i++) {
@@ -655,7 +655,7 @@ static inline void _jarray_mark_refer(Instance *arr) {
  * mark class static field is used
  * @param clazz class
  */
-static inline void _class_mark_refer(Class *clazz) {
+static inline void _class_mark_refer(JClass *clazz) {
     s32 i, len;
     if (clazz->field_static) {
         FieldPool *fp = &clazz->fieldPool;
@@ -691,7 +691,7 @@ void _garbage_mark_object(__refer ref) {
                     _jarray_mark_refer((Instance *) mb);
                     break;
                 case MEM_TYPE_CLASS:
-                    _class_mark_refer((Class *) mb);
+                    _class_mark_refer((JClass *) mb);
                     break;
             }
         }

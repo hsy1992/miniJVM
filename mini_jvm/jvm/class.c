@@ -12,8 +12,8 @@
 
 
 
-Class *class_create() {
-    Class *clazz = jvm_calloc(sizeof(Class));
+JClass *class_create() {
+    JClass *clazz = jvm_calloc(sizeof(JClass));
     clazz->mb.clazz = clazz;
     clazz->mb.type = MEM_TYPE_CLASS;
     clazz->field_instance_len = 0;
@@ -27,7 +27,7 @@ Class *class_create() {
     return clazz;
 }
 
-s32 class_destory(Class *clazz) {
+s32 class_destory(JClass *clazz) {
 
     _DESTORY_CLASS(clazz);
     pairlist_destory(clazz->arr_class_type);
@@ -35,7 +35,7 @@ s32 class_destory(Class *clazz) {
     return 0;
 }
 
-void constant_list_create(Class *clazz) {
+void constant_list_create(JClass *clazz) {
     clazz->constantPool.utf8CP = arraylist_create(0);
     clazz->constantPool.integerCP = arraylist_create(0);
     clazz->constantPool.floatCP = arraylist_create(0);
@@ -49,7 +49,7 @@ void constant_list_create(Class *clazz) {
     clazz->constantPool.name_and_type = arraylist_create(0);
 }
 
-void constant_list_destory(Class *clazz) {
+void constant_list_destory(JClass *clazz) {
     arraylist_destory(clazz->constantPool.utf8CP);
     arraylist_destory(clazz->constantPool.integerCP);
     arraylist_destory(clazz->constantPool.floatCP);
@@ -63,7 +63,7 @@ void constant_list_destory(Class *clazz) {
     arraylist_destory(clazz->constantPool.name_and_type);
 }
 
-void class_clear_refer(Class *clazz) {
+void class_clear_refer(JClass *clazz) {
     s32 i, len;
     if (clazz->field_static) {
         FieldPool *fp = &clazz->fieldPool;
@@ -96,7 +96,7 @@ void class_clear_refer(Class *clazz) {
  * @param clazz class
  * @return ret
  */
-s32 class_prepar(Class *clazz, Runtime *runtime) {
+s32 class_prepar(JClass *clazz, Runtime *runtime) {
     if (clazz->status >= CLASS_STATUS_PREPARING)return 0;
     clazz->status = CLASS_STATUS_PREPARING;
 
@@ -110,7 +110,7 @@ s32 class_prepar(Class *clazz, Runtime *runtime) {
         ConstantClassRef *ccf = class_get_constant_classref(clazz, superid);
         if (ccf) {
             Utf8String *clsName_u = class_get_utf8_string(clazz, ccf->stringIndex);
-            Class *other = classes_load_get(clsName_u, runtime);
+            JClass *other = classes_load_get(clsName_u, runtime);
             clazz->superclass = other;
         } else {
             jvm_printf("error get superclass , class: %s\n", utf8_cstr(clazz->name));
@@ -201,7 +201,7 @@ s32 class_prepar(Class *clazz, Runtime *runtime) {
  * @param clazz class
  * @param runtime  runtime
  */
-void class_clinit(Class *clazz, Runtime *runtime) {
+void class_clinit(JClass *clazz, Runtime *runtime) {
     if (clazz->status < CLASS_STATUS_PREPARED) {
         class_prepar(clazz, runtime);
     }
@@ -243,7 +243,7 @@ void class_clinit(Class *clazz, Runtime *runtime) {
 
 
     //优先初始化基类
-    Class *superclass = getSuperClass(clazz);
+    JClass *superclass = getSuperClass(clazz);
     if (superclass && superclass->status < CLASS_STATUS_CLINITED) {
         class_clinit(superclass, runtime);
     }
@@ -268,8 +268,8 @@ void class_clinit(Class *clazz, Runtime *runtime) {
 }
 //===============================    实例化相关  ==================================
 
-u8 instance_of(Class *clazz, Instance *ins) {
-    Class *ins_of_class = ins->mb.clazz;
+u8 instance_of(JClass *clazz, Instance *ins) {
+    JClass *ins_of_class = ins->mb.clazz;
     while (ins_of_class) {
         if (ins_of_class == clazz || isSonOfInterface(clazz, ins_of_class->mb.clazz)) {
             return 1;
@@ -280,11 +280,11 @@ u8 instance_of(Class *clazz, Instance *ins) {
     return 0;
 }
 
-u8 isSonOfInterface(Class *clazz, Class *son) {
+u8 isSonOfInterface(JClass *clazz, JClass *son) {
     s32 i;
     for (i = 0; i < son->interfacePool.clasz_used; i++) {
         ConstantClassRef *ccr = (son->interfacePool.clasz + i);
-        Class *other = classes_get(class_get_constant_utf8(son, ccr->stringIndex)->utfstr);
+        JClass *other = classes_get(class_get_constant_utf8(son, ccr->stringIndex)->utfstr);
         if (clazz == other) {
             return 1;
         } else {
@@ -295,7 +295,7 @@ u8 isSonOfInterface(Class *clazz, Class *son) {
     return 0;
 }
 
-u8 assignable_from(Class *clazzSon, Class *clazzSuper) {
+u8 assignable_from(JClass *clazzSon, JClass *clazzSuper) {
 
     while (clazzSuper) {
         if (clazzSon == clazzSuper) {
@@ -306,20 +306,20 @@ u8 assignable_from(Class *clazzSon, Class *clazzSuper) {
     return 0;
 }
 
-Class *getSuperClass(Class *clazz) {
+JClass *getSuperClass(JClass *clazz) {
     return clazz->superclass;
 }
 
 //===============================    类数据访问  ==================================
 
 
-Class *getClassByConstantClassRef(Class *clazz, s32 index) {
+JClass *getClassByConstantClassRef(JClass *clazz, s32 index) {
     ConstantClassRef *ccr = class_get_constant_classref(clazz, index);
     return classes_get(ccr->name);
 }
 
 
-s32 find_constant_fieldref_index(Class *clazz, Utf8String *fieldName, Utf8String *type) {
+s32 find_constant_fieldref_index(JClass *clazz, Utf8String *fieldName, Utf8String *type) {
     s32 i = 0;
     ArrayList *cp = clazz->constantPool.fieldRef;
     for (; i < cp->length; i++) {
@@ -344,7 +344,7 @@ s32 find_constant_fieldref_index(Class *clazz, Utf8String *fieldName, Utf8String
  * @param field_ref ref
  * @return fi
  */
-FieldInfo *find_fieldInfo_by_fieldref(Class *clazz, s32 field_ref, Runtime *runtime) {
+FieldInfo *find_fieldInfo_by_fieldref(JClass *clazz, s32 field_ref, Runtime *runtime) {
     FieldInfo *fi = NULL;
     ConstantFieldRef *cfr = class_get_constant_fieldref(clazz, field_ref);
     ConstantNameAndType *nat = class_get_constant_name_and_type(clazz, cfr->nameAndTypeIndex);
@@ -352,7 +352,7 @@ FieldInfo *find_fieldInfo_by_fieldref(Class *clazz, s32 field_ref, Runtime *runt
                                                 class_get_constant_classref(clazz, cfr->classIndex)->stringIndex);
     Utf8String *fieldName = class_get_utf8_string(clazz, nat->nameIndex);
     Utf8String *type = class_get_utf8_string(clazz, nat->typeIndex);
-    Class *other = classes_load_get(clsName, runtime);
+    JClass *other = classes_load_get(clsName, runtime);
 
     while (fi == NULL && other) {
         FieldPool *fp = &(other->fieldPool);
@@ -383,7 +383,7 @@ FieldInfo *find_fieldInfo_by_name_c(c8 *pclsName, c8 *pfieldName, c8 *pfieldType
 
 FieldInfo *find_fieldInfo_by_name(Utf8String *clsName, Utf8String *fieldName, Utf8String *fieldType) {
     FieldInfo *fi = NULL;
-    Class *other = classes_get(clsName);
+    JClass *other = classes_get(clsName);
 
     while (fi == NULL && other) {
         FieldPool *fp = &(other->fieldPool);
@@ -407,7 +407,7 @@ FieldInfo *find_fieldInfo_by_name(Utf8String *clsName, Utf8String *fieldName, Ut
 ConstantMethodRef *
 find_constant_methodref_by_name(Utf8String *clsName, Utf8String *methodName, Utf8String *methodType) {
     ConstantMethodRef *cmr = NULL;
-    Class *clazz = classes_get(clsName);
+    JClass *clazz = classes_get(clsName);
     ArrayList *mrarr = clazz->constantPool.methodRef;
     s32 i;
     for (i = 0; i < mrarr->length; i++) {
@@ -434,7 +434,7 @@ find_instance_methodInfo_by_name(Instance *ins, Utf8String *methodName, Utf8Stri
     return find_methodInfo_by_name(ins->mb.clazz->name, methodName, methodType, runtime);
 }
 
-MethodInfo *find_methodInfo_by_methodref(Class *clazz, s32 method_ref, Runtime *runtime) {
+MethodInfo *find_methodInfo_by_methodref(JClass *clazz, s32 method_ref, Runtime *runtime) {
     ConstantMethodRef *cmr = class_get_constant_method_ref(clazz, method_ref);
     Utf8String *clsName = cmr->clsName;
     Utf8String *methodName = cmr->name;
@@ -446,7 +446,7 @@ MethodInfo *find_methodInfo_by_methodref(Class *clazz, s32 method_ref, Runtime *
 MethodInfo *
 find_methodInfo_by_name(Utf8String *clsName, Utf8String *methodName, Utf8String *methodType, Runtime *runtime) {
     MethodInfo *mi = NULL;
-    Class *other = classes_load_get(clsName, runtime);
+    JClass *other = classes_load_get(clsName, runtime);
 
     while (mi == NULL && other) {
         MethodPool *fp = &(other->methodPool);

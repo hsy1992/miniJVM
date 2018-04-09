@@ -148,7 +148,7 @@ typedef union _Long2Double {
 #endif
 
 typedef struct _ClassLoader ClassLoader;
-typedef struct _ClassType Class;
+typedef struct _ClassType JClass;
 typedef struct _InstanceType Instance;
 typedef struct _FieldInfo FieldInfo;
 typedef struct _MethodInfo MethodInfo;
@@ -162,7 +162,7 @@ typedef struct _JNIENV JniEnv;
 typedef struct _ReferArr CStringArr;
 typedef struct _ReferArr ReferArr;
 
-typedef s32 (*java_native_fun)(Runtime *runtime, Class *p);
+typedef s32 (*java_native_fun)(Runtime *runtime, JClass *p);
 
 typedef struct _GcCollectorType GcCollector;
 
@@ -351,7 +351,7 @@ typedef struct _MemoryBlock {
     u8 volatile garbage_reg;
     u8 arr_type_index;
 
-    Class *clazz;
+    JClass *clazz;
     struct _MemoryBlock *next;
     ThreadLock *volatile thread_lock;
 } MemoryBlock;
@@ -440,7 +440,7 @@ typedef struct _ConstantClassRef {
 
     //
     Utf8String *name;
-    Class *clazz;
+    JClass *clazz;
 
 } ConstantClassRef;
 
@@ -576,7 +576,7 @@ struct _FieldInfo {
     //link
     Utf8String *name;
     Utf8String *descriptor;
-    Class *_this_class;
+    JClass *_this_class;
     u16 offset;//字段的偏移地址，静态字段存放在class中
     u16 offset_instance;
     //
@@ -604,7 +604,7 @@ struct _MethodInfo {
     Utf8String *paraType;
     Utf8String *returnType;
     s32 para_count;
-    Class *_this_class;
+    JClass *_this_class;
     java_native_fun native_func;
     Pairlist *breakpoint;
     s32 code_attr_idx;
@@ -656,7 +656,7 @@ typedef struct _LocalVarItem {
 
 struct _Runtime {
     MethodInfo *method;
-    Class *clazz;
+    JClass *clazz;
     u8 *pc;
     CodeAttribute *ca;//method bytecode
     JavaThreadInfo *threadInfo;
@@ -677,7 +677,7 @@ struct _Runtime {
  */
 struct _ClassType {
     MemoryBlock mb;
-    Class *superclass;
+    JClass *superclass;
     __refer *constant_item_ptr;//存放常量池项目地址
     //类变量及实例变量的参数
     s32 field_instance_start;//实例变量模板起始起址，继承自父类的变量放在前面
@@ -704,49 +704,49 @@ struct _ClassType {
 };
 
 
-s32 _DESTORY_CLASS(Class *clazz);
+s32 _DESTORY_CLASS(JClass *clazz);
 
-Class *class_create(void);
+JClass *class_create(void);
 
-Class *getSuperClass(Class *clazz);
+JClass *getSuperClass(JClass *clazz);
 
-void constant_list_create(Class *clazz);
+void constant_list_create(JClass *clazz);
 
-void constant_list_destory(Class *clazz);
+void constant_list_destory(JClass *clazz);
 
-s32 class_destory(Class *clazz);
+s32 class_destory(JClass *clazz);
 
 s32 load_class(ClassLoader *loader, Utf8String *pClassName, Runtime *runtime);
 
 //s32 load_related_class(ClassLoader *loader, Class *clazz, Runtime *runtime);
 
-s32 _LOAD_CLASS_FROM_BYTES(Class *_this, ByteBuf *buf);
+s32 _LOAD_CLASS_FROM_BYTES(JClass *_this, ByteBuf *buf);
 
-s32 class_prepar(Class *clazz, Runtime *runtime);
+s32 class_prepar(JClass *clazz, Runtime *runtime);
 
-void _class_link(Class *clazz);
+void _class_link(JClass *clazz);
 
-void class_clinit(Class *clazz, Runtime *runtime);
+void class_clinit(JClass *clazz, Runtime *runtime);
 
 void printClassFileFormat(ClassFileFormat *cff);
 
-s32 _class_method_info_destory(Class *clazz);
+s32 _class_method_info_destory(JClass *clazz);
 
-s32 _class_attribute_info_destory(Class *clazz);
+s32 _class_attribute_info_destory(JClass *clazz);
 
-s32 _class_interface_pool_destory(Class *clazz);
+s32 _class_interface_pool_destory(JClass *clazz);
 
-s32 _class_constant_pool_destory(Class *clazz);
+s32 _class_constant_pool_destory(JClass *clazz);
 
-s32 _class_field_info_destory(Class *clazz);
+s32 _class_field_info_destory(JClass *clazz);
 
-u8 instance_of(Class *clazz, Instance *ins);
+u8 instance_of(JClass *clazz, Instance *ins);
 
-u8 isSonOfInterface(Class *clazz, Class *son);
+u8 isSonOfInterface(JClass *clazz, JClass *son);
 
-u8 assignable_from(Class *clazzSon, Class *clazzSuper);
+u8 assignable_from(JClass *clazzSon, JClass *clazzSuper);
 
-void class_clear_refer(Class *clazz);
+void class_clear_refer(JClass *clazz);
 
 
 //======================= instance =============================
@@ -764,7 +764,7 @@ struct _InstanceType {
 };
 
 
-Instance *instance_create(Class *clazz);
+Instance *instance_create(JClass *clazz);
 
 void instance_init(Instance *ins, Runtime *runtime);
 
@@ -805,88 +805,88 @@ Instance *instance_copy(Instance *src);
 
 
 /* find UTF8 */
-static inline ConstantUTF8 *class_get_constant_utf8(Class *clazz, s32 index) {
+static inline ConstantUTF8 *class_get_constant_utf8(JClass *clazz, s32 index) {
     return (ConstantUTF8 *) (clazz->constant_item_ptr[index]);
 }
 
 /* Find Class Reference */
-static inline ConstantStringRef *class_get_constant_stringref(Class *clazz, s32 index) {
+static inline ConstantStringRef *class_get_constant_stringref(JClass *clazz, s32 index) {
     return (ConstantStringRef *) (clazz->constant_item_ptr[index]);
 }
 
 
 /* Find Class Reference */
-static inline ConstantClassRef *class_get_constant_classref(Class *clazz, s32 index) {
+static inline ConstantClassRef *class_get_constant_classref(JClass *clazz, s32 index) {
     return (ConstantClassRef *) (clazz->constant_item_ptr[index]);
 }
 
-static inline ConstantFieldRef *class_get_constant_fieldref(Class *clazz, s32 index) {
+static inline ConstantFieldRef *class_get_constant_fieldref(JClass *clazz, s32 index) {
     return (ConstantFieldRef *) (clazz->constant_item_ptr[index]);
 }
 
-static inline ConstantItem *class_get_constant_item(Class *clazz, s32 index) {
+static inline ConstantItem *class_get_constant_item(JClass *clazz, s32 index) {
     return (ConstantItem *) (clazz->constant_item_ptr[index]);
 }
 
 /* Find Method Reference */
-static inline ConstantMethodRef *class_get_constant_method_ref(Class *clazz, s32 index) {
+static inline ConstantMethodRef *class_get_constant_method_ref(JClass *clazz, s32 index) {
     return (ConstantMethodRef *) (clazz->constant_item_ptr[index]);
 }
 
-static inline ConstantInterfaceMethodRef *class_get_constant_interface_method_ref(Class *clazz, s32 index) {
+static inline ConstantInterfaceMethodRef *class_get_constant_interface_method_ref(JClass *clazz, s32 index) {
     return (ConstantInterfaceMethodRef *) (clazz->constant_item_ptr[index]);
 }
 
 /* Find Name and Type Reference */
-static inline ConstantNameAndType *class_get_constant_name_and_type(Class *clazz, s32 index) {
+static inline ConstantNameAndType *class_get_constant_name_and_type(JClass *clazz, s32 index) {
     return (ConstantNameAndType *) (clazz->constant_item_ptr[index]);
 }
 
 /* get integer from constant pool */
-static inline s32 class_get_constant_integer(Class *clazz, s32 index) {
+static inline s32 class_get_constant_integer(JClass *clazz, s32 index) {
     return ((ConstantInteger *) (clazz->constant_item_ptr[index]))->value;
 }
 
 /* get long from constant pool */
-static inline s64 class_get_constant_long(Class *clazz, s32 index) {
+static inline s64 class_get_constant_long(JClass *clazz, s32 index) {
     return ((ConstantLong *) (clazz->constant_item_ptr[index]))->value;
 }
 
 /* get f32 from constant pool */
-static inline f32 class_get_constant_float(Class *clazz, s32 index) {
+static inline f32 class_get_constant_float(JClass *clazz, s32 index) {
     return ((ConstantFloat *) (clazz->constant_item_ptr[index]))->value;
 }
 
 /* get f64 from constant pool */
-static inline f64 class_get_double_from_constant_pool(Class *clazz, s32 index) {
+static inline f64 class_get_double_from_constant_pool(JClass *clazz, s32 index) {
     return ((ConstantDouble *) (clazz->constant_item_ptr[index]))->value;
 }
 
-static inline Utf8String *class_get_utf8_string(Class *clazz, s32 index) {
+static inline Utf8String *class_get_utf8_string(JClass *clazz, s32 index) {
     return ((ConstantUTF8 *) (clazz->constant_item_ptr[index]))->utfstr;
 }
 
 MethodInfo *
 find_instance_methodInfo_by_name(Instance *ins, Utf8String *methodName, Utf8String *methodType, Runtime *runtime);
 
-MethodInfo *find_methodInfo_by_methodref(Class *clazz, s32 method_ref, Runtime *runtime);
+MethodInfo *find_methodInfo_by_methodref(JClass *clazz, s32 method_ref, Runtime *runtime);
 
 MethodInfo *
 find_methodInfo_by_name(Utf8String *clsName, Utf8String *methodName, Utf8String *methodType, Runtime *runtime);
 
 
-FieldInfo *find_fieldInfo_by_fieldref(Class *clazz, s32 field_ref, Runtime *runtime);
+FieldInfo *find_fieldInfo_by_fieldref(JClass *clazz, s32 field_ref, Runtime *runtime);
 
 FieldInfo *find_fieldInfo_by_name_c(c8 *pclsName, c8 *pfieldName, c8 *pfieldType);
 
 FieldInfo *find_fieldInfo_by_name(Utf8String *clsName, Utf8String *fieldName, Utf8String *fieldType);
 
-s32 find_constant_fieldref_index(Class *clazz, Utf8String *fieldName, Utf8String *type);
+s32 find_constant_fieldref_index(JClass *clazz, Utf8String *fieldName, Utf8String *type);
 
 //
 
 
-Class *getClassByConstantClassRef(Class *clazz, s32 index);
+JClass *getClassByConstantClassRef(JClass *clazz, s32 index);
 
 //======================= execute =============================
 
@@ -894,7 +894,7 @@ void print_exception(Runtime *runtime);
 
 s32 execute_jvm(c8 *p_classpath, c8 *mainclass, ArrayList *java_para);
 
-s32 execute_method(MethodInfo *method, Runtime *runtime, Class *clazz);
+s32 execute_method(MethodInfo *method, Runtime *runtime, JClass *clazz);
 
 //======================= stack =============================
 RuntimeStack *stack_create(s32 entry_size);
@@ -1120,7 +1120,7 @@ typedef struct _java_native_method {
 
 java_native_method *find_native_method(c8 *cls_name, c8 *method_name, c8 *method_type);
 
-s32 invoke_native_method(Runtime *runtime, Class *p,
+s32 invoke_native_method(Runtime *runtime, JClass *p,
                          c8 *cls_name, c8 *method_name, c8 *type);
 
 
@@ -1248,7 +1248,7 @@ struct _JNIENV {
 
     void (*instance_hold_to_thread)(Instance *ref, Runtime *runtime);
 
-    s32 (*execute_method)(MethodInfo *method, Runtime *runtime, Class *clazz);
+    s32 (*execute_method)(MethodInfo *method, Runtime *runtime, JClass *clazz);
 
     MethodInfo *
     (*find_methodInfo_by_name)(Utf8String *clsName, Utf8String *methodName, Utf8String *methodType, Runtime *runtime);

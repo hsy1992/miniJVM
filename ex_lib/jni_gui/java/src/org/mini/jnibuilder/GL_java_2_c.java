@@ -13,8 +13,6 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import static org.mini.jnibuilder.Util.isPointer;
 import static org.mini.jnibuilder.Util.isTypes;
 
@@ -61,7 +59,7 @@ public class GL_java_2_c {
 
     String FUNC_BODY_TEMPLATE
             = //
-            "int ${PKG_NAME}${METHOD_NAME}(Runtime *runtime, Class *clazz) {\n"
+            "int ${PKG_NAME}${METHOD_NAME}(Runtime *runtime, JClass *clazz) {\n"
             + "    JniEnv *env = runtime->jnienv;\n"
             + "    s32 pos = 0;\n"
             + "    \n${GET_VAR}\n"

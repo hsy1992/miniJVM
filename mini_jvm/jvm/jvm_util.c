@@ -37,31 +37,31 @@ void thread_lock_dispose(ThreadLock *lock) {
 }
 
 
-Class *classes_get_c(c8 *clsName) {
+JClass *classes_get_c(c8 *clsName) {
     Utf8String *ustr = utf8_create_c(clsName);
-    Class *clazz = classes_get(ustr);
+    JClass *clazz = classes_get(ustr);
     utf8_destory(ustr);
     return clazz;
 }
 
-Class *classes_get(Utf8String *clsName) {
-    Class *cl = NULL;
+JClass *classes_get(Utf8String *clsName) {
+    JClass *cl = NULL;
     if (clsName) {
         cl = hashtable_get(sys_classloader->classes, clsName);
     }
     return cl;
 }
 
-Class *classes_load_get_c(c8 *pclassName, Runtime *runtime) {
+JClass *classes_load_get_c(c8 *pclassName, Runtime *runtime) {
     Utf8String *ustr = utf8_create_c(pclassName);
-    Class *clazz = classes_load_get(ustr, runtime);
+    JClass *clazz = classes_load_get(ustr, runtime);
     utf8_destory(ustr);
     return clazz;
 }
 
-Class *classes_load_get(Utf8String *ustr, Runtime *runtime) {
+JClass *classes_load_get(Utf8String *ustr, Runtime *runtime) {
     if (!ustr)return NULL;
-    Class *cl;
+    JClass *cl;
     spin_lock(&sys_classloader->lock);//fast lock
     if (utf8_index_of(ustr, '.') >= 0)
         utf8_replace_c(ustr, ".", "/");
@@ -83,7 +83,7 @@ Class *classes_load_get(Utf8String *ustr, Runtime *runtime) {
     return cl;
 }
 
-s32 classes_put(Class *clazz) {
+s32 classes_put(JClass *clazz) {
     if (clazz) {
         hashtable_put(sys_classloader->classes, clazz->name, clazz);
         garbage_refer_hold(clazz);
@@ -93,9 +93,9 @@ s32 classes_put(Class *clazz) {
     return -1;
 }
 
-Class *array_class_get(Utf8String *desc) {
+JClass *array_class_get(Utf8String *desc) {
     if (desc && desc->length && utf8_char_at(desc, 0) == '[') {
-        Class *clazz = hashtable_get(array_classloader->classes, desc);
+        JClass *clazz = hashtable_get(array_classloader->classes, desc);
         if (!clazz) {
             garbage_thread_lock();
             clazz = hashtable_get(array_classloader->classes, desc);
@@ -327,7 +327,7 @@ s32 isDataReferByIndex(s32 index) {
  * @param stack stack
  * @return ins
  */
-Instance *getInstanceInStack(Class *clazz, ConstantMethodRef *cmr, RuntimeStack *stack) {
+Instance *getInstanceInStack(JClass *clazz, ConstantMethodRef *cmr, RuntimeStack *stack) {
 
     StackEntry entry;
     peek_entry(stack, &entry, stack->size - 1 - cmr->methodParaCount);
@@ -390,7 +390,7 @@ void printDumpOfClasses() {
     hashtable_iterate(sys_classloader->classes, &hti);
     for (; hashtable_iter_has_more(&hti);) {
         Utf8String *k = hashtable_iter_next_key(&hti);
-        Class *clazz = classes_get(k);
+        JClass *clazz = classes_get(k);
         jvm_printf("classes entry : hash( %x )%s,%d\n", k->hash, utf8_cstr(k), clazz);
     }
 }
@@ -813,7 +813,7 @@ s32 check_suspend_and_pause(Runtime *runtime) {
 }
 
 //===============================    实例化数组  ==================================
-Instance *jarray_create_by_class(s32 count, Class *clazz) {
+Instance *jarray_create_by_class(s32 count, JClass *clazz) {
     s32 typeIdx = clazz->arr_type_index;
     s32 width = data_type_bytes[typeIdx];
     Instance *arr = jvm_calloc(sizeof(Instance));
@@ -827,7 +827,7 @@ Instance *jarray_create_by_class(s32 count, Class *clazz) {
 }
 
 Instance *jarray_create(s32 count, s32 typeIdx, Utf8String *type) {
-    Class *clazz = NULL;
+    JClass *clazz = NULL;
     if (type) {
         clazz = jarray_get_class(type);
     } else {
@@ -839,8 +839,8 @@ Instance *jarray_create(s32 count, s32 typeIdx, Utf8String *type) {
     return arr;
 }
 
-Class *jarray_get_class(Utf8String *type) {
-    Class *clazz = NULL;
+JClass *jarray_get_class(Utf8String *type) {
+    JClass *clazz = NULL;
     if (type) {
         Utf8String *ustr = utf8_create_c("[");
         if (!isDataReferByTag(utf8_char_at(type, 0)))utf8_append_c(ustr, "L");
@@ -853,8 +853,8 @@ Class *jarray_get_class(Utf8String *type) {
     return clazz;
 }
 
-Class *jarray_get_class_by_index(s32 typeIdx) {
-    Class *clazz = NULL;
+JClass *jarray_get_class_by_index(s32 typeIdx) {
+    JClass *clazz = NULL;
     if (!data_type_classes[typeIdx]) {
         Utf8String *ustr = utf8_create_c("[");
         utf8_insert(ustr, ustr->length, getDataTypeTag(typeIdx));
@@ -892,7 +892,7 @@ Instance *jarray_multi_create(ArrayList *dim, Utf8String *pdesc, s32 deep) {
     }
     Utf8String *desc = utf8_create_copy(pdesc);
     c8 ch = utf8_char_at(desc, 1);
-    Class *clazz = array_class_get(desc);
+    JClass *clazz = array_class_get(desc);
     Instance *arr = jarray_create_by_class(len, clazz);
     garbage_refer_hold(arr);
     utf8_substring(desc, 1, desc->length);
@@ -967,7 +967,7 @@ s64 jarray_get_field(Instance *arr, s32 index) {
 }
 
 //===============================    实例化对象  ==================================
-Instance *instance_create(Class *clazz) {
+Instance *instance_create(JClass *clazz) {
 //    if (utf8_equals_c(clazz->name, "java/lang/NullPointerException")) {
 //        int debug = 1;
 //    }
@@ -1013,7 +1013,7 @@ void instance_init_methodtype(Instance *ins, Runtime *runtime, c8 *methodtype, R
 
 void instance_clear_refer(Instance *ins) {
     s32 i;
-    Class *clazz = ins->mb.clazz;
+    JClass *clazz = ins->mb.clazz;
     while (clazz) {
         FieldPool *fp = &clazz->fieldPool;
         for (i = 0; i < fp->field_used; i++) {
@@ -1055,7 +1055,7 @@ Instance *instance_copy(Instance *src) {
     dst->mb.garbage_reg = 0;
     dst->mb.garbage_mark = 0;
     if (src->mb.type == MEM_TYPE_INS) {
-        Class *clazz = src->mb.clazz;
+        JClass *clazz = src->mb.clazz;
         s32 fileds_len = clazz->field_instance_len;
         if (fileds_len) {
             dst->obj_fields = (c8 *) dst + sizeof(Instance);//jvm_malloc(fileds_len);
@@ -1104,7 +1104,7 @@ Instance *instance_copy(Instance *src) {
 Instance *jstring_create(Utf8String *src, Runtime *runtime) {
     if (!src)return NULL;
     Utf8String *clsName = utf8_create_c(STR_CLASS_JAVA_LANG_STRING);
-    Class *jstr_clazz = classes_load_get(clsName, runtime);
+    JClass *jstr_clazz = classes_load_get(clsName, runtime);
     Instance *jstring = instance_create(jstr_clazz);
     garbage_refer_hold(jstring);//hold for no gc
 
@@ -1247,7 +1247,7 @@ Instance *exception_create(s32 exception_type, Runtime *runtime) {
     jvm_printf("create exception : %s\n", exception_class_name[exception_type]);
 #endif
     Utf8String *clsName = utf8_create_c(exception_class_name[exception_type]);
-    Class *clazz = classes_load_get(clsName, runtime);
+    JClass *clazz = classes_load_get(clsName, runtime);
     utf8_destory(clsName);
 
     Instance *ins = instance_create(clazz);
@@ -1269,7 +1269,7 @@ Instance *exception_create_str(s32 exception_type, Runtime *runtime, c8 *errmsg)
     push_ref(para, jstr);
     garbage_refer_release(jstr);
     Utf8String *clsName = utf8_create_c(exception_class_name[exception_type]);
-    Class *clazz = classes_load_get(clsName, runtime);
+    JClass *clazz = classes_load_get(clsName, runtime);
     utf8_destory(clsName);
     Instance *ins = instance_create(clazz);
     garbage_refer_hold(ins);
@@ -1298,7 +1298,7 @@ c8 *getFieldPtr_byName_c(Instance *instance, c8 *pclassName, c8 *pfieldName, c8 
 
 
 c8 *getFieldPtr_byName(Instance *instance, Utf8String *clsName, Utf8String *fieldName, Utf8String *fieldType) {
-    Class *clazz = classes_get(clsName);
+    JClass *clazz = classes_get(clsName);
     //set value
     s32 fieldIdx = find_constant_fieldref_index(clazz, fieldName, fieldType);
     c8 *ptr = NULL;
@@ -1352,7 +1352,7 @@ void memoryblock_destory(__refer ref) {
     } else if (mb->type == MEM_TYPE_ARR) {
         jarray_destory((Instance *) mb);
     } else if (mb->type == MEM_TYPE_CLASS) {
-        class_destory((Class *) mb);
+        class_destory((JClass *) mb);
     }
 }
 

@@ -331,7 +331,7 @@ Utf8String *getTmpDir() {
 }
 
 
-s32 javax_mini_net_socket_Protocol_open0(Runtime *runtime, Class *clazz) {
+s32 javax_mini_net_socket_Protocol_open0(Runtime *runtime, JClass *clazz) {
     RuntimeStack *stack = runtime->stack;
     Instance *jbyte_arr = (Instance *) localvar_getRefer(runtime, 0);
     s32 port = localvar_getInt(runtime, 1);
@@ -350,7 +350,7 @@ s32 javax_mini_net_socket_Protocol_open0(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-s32 javax_mini_net_socket_Protocol_readBuf(Runtime *runtime, Class *clazz) {
+s32 javax_mini_net_socket_Protocol_readBuf(Runtime *runtime, JClass *clazz) {
     s32 sockfd = localvar_getInt(runtime, 0);
     Instance *jbyte_arr = (Instance *) localvar_getRefer(runtime, 1);
     s32 offset = localvar_getInt(runtime, 2);
@@ -367,7 +367,7 @@ s32 javax_mini_net_socket_Protocol_readBuf(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-s32 javax_mini_net_socket_Protocol_readByte(Runtime *runtime, Class *clazz) {
+s32 javax_mini_net_socket_Protocol_readByte(Runtime *runtime, JClass *clazz) {
     s32 sockfd = localvar_getInt(runtime, 0);
     c8 b = 0;
     jthread_block_enter(runtime);
@@ -388,7 +388,7 @@ s32 javax_mini_net_socket_Protocol_readByte(Runtime *runtime, Class *clazz) {
 }
 
 
-s32 javax_mini_net_socket_Protocol_writeBuf(Runtime *runtime, Class *clazz) {
+s32 javax_mini_net_socket_Protocol_writeBuf(Runtime *runtime, JClass *clazz) {
     s32 sockfd = localvar_getInt(runtime, 0);
     Instance *jbyte_arr = (Instance *) localvar_getRefer(runtime, 1);
     s32 offset = localvar_getInt(runtime, 2);
@@ -406,7 +406,7 @@ s32 javax_mini_net_socket_Protocol_writeBuf(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-s32 javax_mini_net_socket_Protocol_writeByte(Runtime *runtime, Class *clazz) {
+s32 javax_mini_net_socket_Protocol_writeByte(Runtime *runtime, JClass *clazz) {
     s32 sockfd = localvar_getInt(runtime, 0);
     s32 val = localvar_getInt(runtime, 1);
     c8 b = (u8) val;
@@ -421,7 +421,7 @@ s32 javax_mini_net_socket_Protocol_writeByte(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-s32 javax_mini_net_socket_Protocol_available0(Runtime *runtime, Class *clazz) {
+s32 javax_mini_net_socket_Protocol_available0(Runtime *runtime, JClass *clazz) {
 #if _JVM_DEBUG_BYTECODE_DETAIL > 5
     invoke_deepth(runtime);
     jvm_printf("javax_mini_net_socket_Protocol_available0  \n");
@@ -430,7 +430,7 @@ s32 javax_mini_net_socket_Protocol_available0(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-s32 javax_mini_net_socket_Protocol_close0(Runtime *runtime, Class *clazz) {
+s32 javax_mini_net_socket_Protocol_close0(Runtime *runtime, JClass *clazz) {
     s32 sockfd = localvar_getInt(runtime, 0);
     sock_close(sockfd);
 #if _JVM_DEBUG_BYTECODE_DETAIL > 5
@@ -440,7 +440,7 @@ s32 javax_mini_net_socket_Protocol_close0(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-s32 javax_mini_net_socket_Protocol_setOption0(Runtime *runtime, Class *clazz) {
+s32 javax_mini_net_socket_Protocol_setOption0(Runtime *runtime, JClass *clazz) {
     s32 sockfd = localvar_getInt(runtime, 0);
     s32 type = localvar_getInt(runtime, 1);
     s32 val = localvar_getInt(runtime, 2);
@@ -457,7 +457,7 @@ s32 javax_mini_net_socket_Protocol_setOption0(Runtime *runtime, Class *clazz) {
 }
 
 
-s32 javax_mini_net_serversocket_Protocol_open0(Runtime *runtime, Class *clazz) {
+s32 javax_mini_net_serversocket_Protocol_open0(Runtime *runtime, JClass *clazz) {
     Instance *jbyte_arr = localvar_getRefer(runtime, 0);
     s32 port = localvar_getInt(runtime, 1);
     Utf8String *ip = utf8_create_part_c(jbyte_arr->arr_body, 0, jbyte_arr->arr_length);
@@ -474,7 +474,7 @@ s32 javax_mini_net_serversocket_Protocol_open0(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-s32 javax_mini_net_serversocket_Protocol_listen0(Runtime *runtime, Class *clazz) {
+s32 javax_mini_net_serversocket_Protocol_listen0(Runtime *runtime, JClass *clazz) {
     s32 sockfd = localvar_getInt(runtime, 0);
     s32 ret = 0;
     if (sockfd) {
@@ -491,7 +491,7 @@ s32 javax_mini_net_serversocket_Protocol_listen0(Runtime *runtime, Class *clazz)
 }
 
 
-s32 javax_mini_net_serversocket_Protocol_accept0(Runtime *runtime, Class *clazz) {
+s32 javax_mini_net_serversocket_Protocol_accept0(Runtime *runtime, JClass *clazz) {
     s32 sockfd = localvar_getInt(runtime, 0);
     s32 ret = 0;
     if (sockfd) {
@@ -508,7 +508,7 @@ s32 javax_mini_net_serversocket_Protocol_accept0(Runtime *runtime, Class *clazz)
     return 0;
 }
 
-s32 javax_mini_net_serversocket_Protocol_close0(Runtime *runtime, Class *clazz) {
+s32 javax_mini_net_serversocket_Protocol_close0(Runtime *runtime, JClass *clazz) {
     s32 sockfd = localvar_getInt(runtime, 0);
     s32 ret = 0;
     if (sockfd) {
@@ -522,7 +522,7 @@ s32 javax_mini_net_serversocket_Protocol_close0(Runtime *runtime, Class *clazz) 
     return 0;
 }
 
-s32 javax_mini_net_serversocket_Protocol_registerCleanup(Runtime *runtime, Class *clazz) {
+s32 javax_mini_net_serversocket_Protocol_registerCleanup(Runtime *runtime, JClass *clazz) {
     s32 sockfd = localvar_getInt(runtime, 0);
     s32 ret = 0;
     if (sockfd) {
@@ -536,7 +536,7 @@ s32 javax_mini_net_serversocket_Protocol_registerCleanup(Runtime *runtime, Class
     return 0;
 }
 
-s32 javax_mini_net_serversocket_Protocol_finalize(Runtime *runtime, Class *clazz) {
+s32 javax_mini_net_serversocket_Protocol_finalize(Runtime *runtime, JClass *clazz) {
     s32 sockfd = localvar_getInt(runtime, 0);
     s32 ret = 0;
     if (sockfd) {
@@ -550,7 +550,7 @@ s32 javax_mini_net_serversocket_Protocol_finalize(Runtime *runtime, Class *clazz
     return 0;
 }
 
-s32 org_mini_fs_InnerFile_openFile(Runtime *runtime, Class *clazz) {
+s32 org_mini_fs_InnerFile_openFile(Runtime *runtime, JClass *clazz) {
     Instance *name_arr = localvar_getRefer(runtime, 0);
     Instance *mode_arr = localvar_getRefer(runtime, 1);
     if (name_arr) {
@@ -567,7 +567,7 @@ s32 org_mini_fs_InnerFile_openFile(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-s32 org_mini_fs_InnerFile_closeFile(Runtime *runtime, Class *clazz) {
+s32 org_mini_fs_InnerFile_closeFile(Runtime *runtime, JClass *clazz) {
     Long2Double l2d;
     l2d.i2l.i1 = localvar_getInt(runtime, 0);
     l2d.i2l.i0 = localvar_getInt(runtime, 1);
@@ -584,7 +584,7 @@ s32 org_mini_fs_InnerFile_closeFile(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-s32 org_mini_fs_InnerFile_read0(Runtime *runtime, Class *clazz) {
+s32 org_mini_fs_InnerFile_read0(Runtime *runtime, JClass *clazz) {
     Long2Double l2d;
     l2d.i2l.i1 = localvar_getInt(runtime, 0);
     l2d.i2l.i0 = localvar_getInt(runtime, 1);
@@ -608,7 +608,7 @@ s32 org_mini_fs_InnerFile_read0(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-s32 org_mini_fs_InnerFile_write0(Runtime *runtime, Class *clazz) {
+s32 org_mini_fs_InnerFile_write0(Runtime *runtime, JClass *clazz) {
     Long2Double l2d;
     l2d.i2l.i1 = localvar_getInt(runtime, 0);
     l2d.i2l.i0 = localvar_getInt(runtime, 1);
@@ -633,7 +633,7 @@ s32 org_mini_fs_InnerFile_write0(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-s32 org_mini_fs_InnerFile_readbuf(Runtime *runtime, Class *clazz) {
+s32 org_mini_fs_InnerFile_readbuf(Runtime *runtime, JClass *clazz) {
     s32 pos = 0;
     Long2Double l2d;
     l2d.i2l.i1 = localvar_getInt(runtime, pos++);
@@ -658,7 +658,7 @@ s32 org_mini_fs_InnerFile_readbuf(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-s32 org_mini_fs_InnerFile_writebuf(Runtime *runtime, Class *clazz) {
+s32 org_mini_fs_InnerFile_writebuf(Runtime *runtime, JClass *clazz) {
     s32 pos = 0;
     Long2Double l2d;
     l2d.i2l.i1 = localvar_getInt(runtime, pos++);
@@ -685,7 +685,7 @@ s32 org_mini_fs_InnerFile_writebuf(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-s32 org_mini_fs_InnerFile_seek0(Runtime *runtime, Class *clazz) {
+s32 org_mini_fs_InnerFile_seek0(Runtime *runtime, JClass *clazz) {
     s32 pos = 0;
     Long2Double l2d;
     l2d.i2l.i1 = localvar_getInt(runtime, pos++);
@@ -706,7 +706,7 @@ s32 org_mini_fs_InnerFile_seek0(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-s32 org_mini_fs_InnerFile_available0(Runtime *runtime, Class *clazz) {
+s32 org_mini_fs_InnerFile_available0(Runtime *runtime, JClass *clazz) {
     s32 pos = 0;
     Long2Double l2d;
     l2d.i2l.i1 = localvar_getInt(runtime, pos++);
@@ -727,7 +727,7 @@ s32 org_mini_fs_InnerFile_available0(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-s32 org_mini_fs_InnerFile_setLength0(Runtime *runtime, Class *clazz) {
+s32 org_mini_fs_InnerFile_setLength0(Runtime *runtime, JClass *clazz) {
     s32 pos = 0;
     Long2Double l2d;
     l2d.i2l.i1 = localvar_getInt(runtime, pos++);
@@ -751,7 +751,7 @@ s32 org_mini_fs_InnerFile_setLength0(Runtime *runtime, Class *clazz) {
 }
 
 
-s32 org_mini_fs_InnerFile_flush0(Runtime *runtime, Class *clazz) {
+s32 org_mini_fs_InnerFile_flush0(Runtime *runtime, JClass *clazz) {
     Long2Double l2d;
     l2d.i2l.i1 = localvar_getInt(runtime, 0);
     l2d.i2l.i0 = localvar_getInt(runtime, 1);
@@ -768,7 +768,7 @@ s32 org_mini_fs_InnerFile_flush0(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-s32 org_mini_fs_InnerFile_loadFS(Runtime *runtime, Class *clazz) {
+s32 org_mini_fs_InnerFile_loadFS(Runtime *runtime, JClass *clazz) {
     Instance *name_arr = localvar_getRefer(runtime, 0);
     Instance *fd = localvar_getRefer(runtime, 1);
     s32 ret = -1;
@@ -815,7 +815,7 @@ s32 org_mini_fs_InnerFile_loadFS(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-s32 org_mini_fs_InnerFile_listDir(Runtime *runtime, Class *clazz) {
+s32 org_mini_fs_InnerFile_listDir(Runtime *runtime, JClass *clazz) {
     Instance *name_arr = localvar_getRefer(runtime, 0);
     if (name_arr) {
         Utf8String *filepath = utf8_create_part_c(name_arr->arr_body, 0, name_arr->arr_length);
@@ -859,7 +859,7 @@ s32 org_mini_fs_InnerFile_listDir(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-s32 org_mini_fs_InnerFile_getcwd(Runtime *runtime, Class *clazz) {
+s32 org_mini_fs_InnerFile_getcwd(Runtime *runtime, JClass *clazz) {
     Instance *path_arr = localvar_getRefer(runtime, 0);
     if (path_arr) {
         __refer ret = getcwd(path_arr->arr_body, path_arr->arr_length);
@@ -874,7 +874,7 @@ s32 org_mini_fs_InnerFile_getcwd(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-s32 org_mini_fs_InnerFile_chmod(Runtime *runtime, Class *clazz) {
+s32 org_mini_fs_InnerFile_chmod(Runtime *runtime, JClass *clazz) {
     Instance *path_arr = localvar_getRefer(runtime, 0);
     s32 mode = localvar_getInt(runtime, 1);
     if (path_arr) {
@@ -890,7 +890,7 @@ s32 org_mini_fs_InnerFile_chmod(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-s32 org_mini_fs_InnerFile_rename0(Runtime *runtime, Class *clazz) {
+s32 org_mini_fs_InnerFile_rename0(Runtime *runtime, JClass *clazz) {
     Instance *old_arr = localvar_getRefer(runtime, 0);
     Instance *new_arr = localvar_getRefer(runtime, 1);
     if (old_arr && new_arr) {
@@ -906,7 +906,7 @@ s32 org_mini_fs_InnerFile_rename0(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-s32 org_mini_fs_InnerFile_getTmpDir(Runtime *runtime, Class *clazz) {
+s32 org_mini_fs_InnerFile_getTmpDir(Runtime *runtime, JClass *clazz) {
     Utf8String *tdir = getTmpDir();
     if (tdir) {
         Instance *jstr = jstring_create(tdir, runtime);
@@ -922,7 +922,7 @@ s32 org_mini_fs_InnerFile_getTmpDir(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-s32 org_mini_fs_InnerFile_mkdir0(Runtime *runtime, Class *clazz) {
+s32 org_mini_fs_InnerFile_mkdir0(Runtime *runtime, JClass *clazz) {
     Instance *path_arr = localvar_getRefer(runtime, 0);
     s32 ret = -1;
     if (path_arr) {
@@ -942,7 +942,7 @@ s32 org_mini_fs_InnerFile_mkdir0(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-s32 org_mini_fs_InnerFile_getOS(Runtime *runtime, Class *clazz) {
+s32 org_mini_fs_InnerFile_getOS(Runtime *runtime, JClass *clazz) {
 #if defined(__JVM_OS_MINGW__) || defined(__JVM_OS_CYGWIN__) || defined(__JVM_OS_VS__)
     push_int(runtime->stack, 1);
 #else
@@ -955,7 +955,7 @@ s32 org_mini_fs_InnerFile_getOS(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-s32 org_mini_fs_InnerFile_delete0(Runtime *runtime, Class *clazz) {
+s32 org_mini_fs_InnerFile_delete0(Runtime *runtime, JClass *clazz) {
     Instance *path_arr = localvar_getRefer(runtime, 0);
     s32 ret = -1;
     if (path_arr) {

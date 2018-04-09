@@ -8,7 +8,7 @@
 #include "jvm.h"
 #include "jni_gui.h"
 
-int org_mini_gl_GL_init(Runtime *runtime, Class *clazz) {
+int org_mini_gl_GL_init(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -19,7 +19,7 @@ int org_mini_gl_GL_init(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-int org_mini_gl_GL_glCullFace(Runtime *runtime, Class *clazz) {
+int org_mini_gl_GL_glCullFace(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -31,7 +31,7 @@ int org_mini_gl_GL_glCullFace(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-int org_mini_gl_GL_glFrontFace(Runtime *runtime, Class *clazz) {
+int org_mini_gl_GL_glFrontFace(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -43,7 +43,7 @@ int org_mini_gl_GL_glFrontFace(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-int org_mini_gl_GL_glHint(Runtime *runtime, Class *clazz) {
+int org_mini_gl_GL_glHint(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -56,7 +56,7 @@ int org_mini_gl_GL_glHint(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-int org_mini_gl_GL_glLineWidth(Runtime *runtime, Class *clazz) {
+int org_mini_gl_GL_glLineWidth(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -68,7 +68,7 @@ int org_mini_gl_GL_glLineWidth(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-int org_mini_gl_GL_glPointSize(Runtime *runtime, Class *clazz) {
+int org_mini_gl_GL_glPointSize(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -80,7 +80,7 @@ int org_mini_gl_GL_glPointSize(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-int org_mini_gl_GL_glPolygonMode(Runtime *runtime, Class *clazz) {
+int org_mini_gl_GL_glPolygonMode(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -93,7 +93,7 @@ int org_mini_gl_GL_glPolygonMode(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-int org_mini_gl_GL_glScissor(Runtime *runtime, Class *clazz) {
+int org_mini_gl_GL_glScissor(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -108,7 +108,7 @@ int org_mini_gl_GL_glScissor(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-int org_mini_gl_GL_glTexParameterf(Runtime *runtime, Class *clazz) {
+int org_mini_gl_GL_glTexParameterf(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -122,7 +122,7 @@ int org_mini_gl_GL_glTexParameterf(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-int org_mini_gl_GL_glTexParameterfv(Runtime *runtime, Class *clazz) {
+int org_mini_gl_GL_glTexParameterfv(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -142,7 +142,7 @@ int org_mini_gl_GL_glTexParameterfv(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-int org_mini_gl_GL_glTexParameteri(Runtime *runtime, Class *clazz) {
+int org_mini_gl_GL_glTexParameteri(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -156,7 +156,7 @@ int org_mini_gl_GL_glTexParameteri(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-int org_mini_gl_GL_glTexParameteriv(Runtime *runtime, Class *clazz) {
+int org_mini_gl_GL_glTexParameteriv(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -176,7 +176,7 @@ int org_mini_gl_GL_glTexParameteriv(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-int org_mini_gl_GL_glTexImage1D(Runtime *runtime, Class *clazz) {
+int org_mini_gl_GL_glTexImage1D(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -201,7 +201,7 @@ int org_mini_gl_GL_glTexImage1D(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-int org_mini_gl_GL_glTexImage2D(Runtime *runtime, Class *clazz) {
+int org_mini_gl_GL_glTexImage2D(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -227,7 +227,7 @@ int org_mini_gl_GL_glTexImage2D(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-int org_mini_gl_GL_glDrawBuffer(Runtime *runtime, Class *clazz) {
+int org_mini_gl_GL_glDrawBuffer(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -239,7 +239,7 @@ int org_mini_gl_GL_glDrawBuffer(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-int org_mini_gl_GL_glClear(Runtime *runtime, Class *clazz) {
+int org_mini_gl_GL_glClear(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -251,7 +251,7 @@ int org_mini_gl_GL_glClear(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-int org_mini_gl_GL_glClearColor(Runtime *runtime, Class *clazz) {
+int org_mini_gl_GL_glClearColor(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -266,7 +266,7 @@ int org_mini_gl_GL_glClearColor(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-int org_mini_gl_GL_glClearStencil(Runtime *runtime, Class *clazz) {
+int org_mini_gl_GL_glClearStencil(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -278,7 +278,7 @@ int org_mini_gl_GL_glClearStencil(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-int org_mini_gl_GL_glClearDepth(Runtime *runtime, Class *clazz) {
+int org_mini_gl_GL_glClearDepth(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -290,7 +290,7 @@ int org_mini_gl_GL_glClearDepth(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-int org_mini_gl_GL_glStencilMask(Runtime *runtime, Class *clazz) {
+int org_mini_gl_GL_glStencilMask(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -302,7 +302,7 @@ int org_mini_gl_GL_glStencilMask(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-int org_mini_gl_GL_glColorMask(Runtime *runtime, Class *clazz) {
+int org_mini_gl_GL_glColorMask(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -317,7 +317,7 @@ int org_mini_gl_GL_glColorMask(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-int org_mini_gl_GL_glDepthMask(Runtime *runtime, Class *clazz) {
+int org_mini_gl_GL_glDepthMask(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -329,7 +329,7 @@ int org_mini_gl_GL_glDepthMask(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-int org_mini_gl_GL_glDisable(Runtime *runtime, Class *clazz) {
+int org_mini_gl_GL_glDisable(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -341,7 +341,7 @@ int org_mini_gl_GL_glDisable(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-int org_mini_gl_GL_glEnable(Runtime *runtime, Class *clazz) {
+int org_mini_gl_GL_glEnable(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -353,7 +353,7 @@ int org_mini_gl_GL_glEnable(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-int org_mini_gl_GL_glFinish(Runtime *runtime, Class *clazz) {
+int org_mini_gl_GL_glFinish(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -364,7 +364,7 @@ int org_mini_gl_GL_glFinish(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-int org_mini_gl_GL_glFlush(Runtime *runtime, Class *clazz) {
+int org_mini_gl_GL_glFlush(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -375,7 +375,7 @@ int org_mini_gl_GL_glFlush(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-int org_mini_gl_GL_glBlendFunc(Runtime *runtime, Class *clazz) {
+int org_mini_gl_GL_glBlendFunc(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -388,7 +388,7 @@ int org_mini_gl_GL_glBlendFunc(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-int org_mini_gl_GL_glLogicOp(Runtime *runtime, Class *clazz) {
+int org_mini_gl_GL_glLogicOp(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -400,7 +400,7 @@ int org_mini_gl_GL_glLogicOp(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-int org_mini_gl_GL_glStencilFunc(Runtime *runtime, Class *clazz) {
+int org_mini_gl_GL_glStencilFunc(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -414,7 +414,7 @@ int org_mini_gl_GL_glStencilFunc(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-int org_mini_gl_GL_glStencilOp(Runtime *runtime, Class *clazz) {
+int org_mini_gl_GL_glStencilOp(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -428,7 +428,7 @@ int org_mini_gl_GL_glStencilOp(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-int org_mini_gl_GL_glDepthFunc(Runtime *runtime, Class *clazz) {
+int org_mini_gl_GL_glDepthFunc(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -440,7 +440,7 @@ int org_mini_gl_GL_glDepthFunc(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-int org_mini_gl_GL_glPixelStoref(Runtime *runtime, Class *clazz) {
+int org_mini_gl_GL_glPixelStoref(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -453,7 +453,7 @@ int org_mini_gl_GL_glPixelStoref(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-int org_mini_gl_GL_glPixelStorei(Runtime *runtime, Class *clazz) {
+int org_mini_gl_GL_glPixelStorei(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -466,7 +466,7 @@ int org_mini_gl_GL_glPixelStorei(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-int org_mini_gl_GL_glReadBuffer(Runtime *runtime, Class *clazz) {
+int org_mini_gl_GL_glReadBuffer(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -478,7 +478,7 @@ int org_mini_gl_GL_glReadBuffer(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-int org_mini_gl_GL_glReadPixels(Runtime *runtime, Class *clazz) {
+int org_mini_gl_GL_glReadPixels(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -502,7 +502,7 @@ int org_mini_gl_GL_glReadPixels(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-int org_mini_gl_GL_glGetBooleanv(Runtime *runtime, Class *clazz) {
+int org_mini_gl_GL_glGetBooleanv(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -521,7 +521,7 @@ int org_mini_gl_GL_glGetBooleanv(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-int org_mini_gl_GL_glGetDoublev(Runtime *runtime, Class *clazz) {
+int org_mini_gl_GL_glGetDoublev(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -540,7 +540,7 @@ int org_mini_gl_GL_glGetDoublev(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-int org_mini_gl_GL_glGetError(Runtime *runtime, Class *clazz) {
+int org_mini_gl_GL_glGetError(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -551,7 +551,7 @@ int org_mini_gl_GL_glGetError(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-int org_mini_gl_GL_glGetFloatv(Runtime *runtime, Class *clazz) {
+int org_mini_gl_GL_glGetFloatv(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -570,7 +570,7 @@ int org_mini_gl_GL_glGetFloatv(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-int org_mini_gl_GL_glGetIntegerv(Runtime *runtime, Class *clazz) {
+int org_mini_gl_GL_glGetIntegerv(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -589,7 +589,7 @@ int org_mini_gl_GL_glGetIntegerv(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-int org_mini_gl_GL_glGetString(Runtime *runtime, Class *clazz) {
+int org_mini_gl_GL_glGetString(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -610,7 +610,7 @@ int org_mini_gl_GL_glGetString(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-int org_mini_gl_GL_glGetTexImage(Runtime *runtime, Class *clazz) {
+int org_mini_gl_GL_glGetTexImage(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -632,7 +632,7 @@ int org_mini_gl_GL_glGetTexImage(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-int org_mini_gl_GL_glGetTexParameterfv(Runtime *runtime, Class *clazz) {
+int org_mini_gl_GL_glGetTexParameterfv(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -652,7 +652,7 @@ int org_mini_gl_GL_glGetTexParameterfv(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-int org_mini_gl_GL_glGetTexParameteriv(Runtime *runtime, Class *clazz) {
+int org_mini_gl_GL_glGetTexParameteriv(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -672,7 +672,7 @@ int org_mini_gl_GL_glGetTexParameteriv(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-int org_mini_gl_GL_glGetTexLevelParameterfv(Runtime *runtime, Class *clazz) {
+int org_mini_gl_GL_glGetTexLevelParameterfv(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -693,7 +693,7 @@ int org_mini_gl_GL_glGetTexLevelParameterfv(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-int org_mini_gl_GL_glGetTexLevelParameteriv(Runtime *runtime, Class *clazz) {
+int org_mini_gl_GL_glGetTexLevelParameteriv(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -714,7 +714,7 @@ int org_mini_gl_GL_glGetTexLevelParameteriv(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-int org_mini_gl_GL_glIsEnabled(Runtime *runtime, Class *clazz) {
+int org_mini_gl_GL_glIsEnabled(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -726,7 +726,7 @@ int org_mini_gl_GL_glIsEnabled(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-int org_mini_gl_GL_glDepthRange(Runtime *runtime, Class *clazz) {
+int org_mini_gl_GL_glDepthRange(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -739,7 +739,7 @@ int org_mini_gl_GL_glDepthRange(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-int org_mini_gl_GL_glViewport(Runtime *runtime, Class *clazz) {
+int org_mini_gl_GL_glViewport(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -754,7 +754,7 @@ int org_mini_gl_GL_glViewport(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-int org_mini_gl_GL_glNewList(Runtime *runtime, Class *clazz) {
+int org_mini_gl_GL_glNewList(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -767,7 +767,7 @@ int org_mini_gl_GL_glNewList(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-int org_mini_gl_GL_glEndList(Runtime *runtime, Class *clazz) {
+int org_mini_gl_GL_glEndList(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -778,7 +778,7 @@ int org_mini_gl_GL_glEndList(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-int org_mini_gl_GL_glCallList(Runtime *runtime, Class *clazz) {
+int org_mini_gl_GL_glCallList(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -790,7 +790,7 @@ int org_mini_gl_GL_glCallList(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-int org_mini_gl_GL_glCallLists(Runtime *runtime, Class *clazz) {
+int org_mini_gl_GL_glCallLists(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -810,7 +810,7 @@ int org_mini_gl_GL_glCallLists(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-int org_mini_gl_GL_glDeleteLists(Runtime *runtime, Class *clazz) {
+int org_mini_gl_GL_glDeleteLists(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -823,7 +823,7 @@ int org_mini_gl_GL_glDeleteLists(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-int org_mini_gl_GL_glGenLists(Runtime *runtime, Class *clazz) {
+int org_mini_gl_GL_glGenLists(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -835,7 +835,7 @@ int org_mini_gl_GL_glGenLists(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-int org_mini_gl_GL_glListBase(Runtime *runtime, Class *clazz) {
+int org_mini_gl_GL_glListBase(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -847,7 +847,7 @@ int org_mini_gl_GL_glListBase(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-int org_mini_gl_GL_glBegin(Runtime *runtime, Class *clazz) {
+int org_mini_gl_GL_glBegin(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -859,7 +859,7 @@ int org_mini_gl_GL_glBegin(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-int org_mini_gl_GL_glBitmap(Runtime *runtime, Class *clazz) {
+int org_mini_gl_GL_glBitmap(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -883,7 +883,7 @@ int org_mini_gl_GL_glBitmap(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-int org_mini_gl_GL_glColor3b(Runtime *runtime, Class *clazz) {
+int org_mini_gl_GL_glColor3b(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -897,7 +897,7 @@ int org_mini_gl_GL_glColor3b(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-int org_mini_gl_GL_glColor3bv(Runtime *runtime, Class *clazz) {
+int org_mini_gl_GL_glColor3bv(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -915,7 +915,7 @@ int org_mini_gl_GL_glColor3bv(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-int org_mini_gl_GL_glColor3d(Runtime *runtime, Class *clazz) {
+int org_mini_gl_GL_glColor3d(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -929,7 +929,7 @@ int org_mini_gl_GL_glColor3d(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-int org_mini_gl_GL_glColor3dv(Runtime *runtime, Class *clazz) {
+int org_mini_gl_GL_glColor3dv(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -947,7 +947,7 @@ int org_mini_gl_GL_glColor3dv(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-int org_mini_gl_GL_glColor3f(Runtime *runtime, Class *clazz) {
+int org_mini_gl_GL_glColor3f(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -961,7 +961,7 @@ int org_mini_gl_GL_glColor3f(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-int org_mini_gl_GL_glColor3fv(Runtime *runtime, Class *clazz) {
+int org_mini_gl_GL_glColor3fv(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -979,7 +979,7 @@ int org_mini_gl_GL_glColor3fv(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-int org_mini_gl_GL_glColor3i(Runtime *runtime, Class *clazz) {
+int org_mini_gl_GL_glColor3i(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -993,7 +993,7 @@ int org_mini_gl_GL_glColor3i(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-int org_mini_gl_GL_glColor3iv(Runtime *runtime, Class *clazz) {
+int org_mini_gl_GL_glColor3iv(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -1011,7 +1011,7 @@ int org_mini_gl_GL_glColor3iv(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-int org_mini_gl_GL_glColor3s(Runtime *runtime, Class *clazz) {
+int org_mini_gl_GL_glColor3s(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -1025,7 +1025,7 @@ int org_mini_gl_GL_glColor3s(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-int org_mini_gl_GL_glColor3sv(Runtime *runtime, Class *clazz) {
+int org_mini_gl_GL_glColor3sv(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -1043,7 +1043,7 @@ int org_mini_gl_GL_glColor3sv(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-int org_mini_gl_GL_glColor3ub(Runtime *runtime, Class *clazz) {
+int org_mini_gl_GL_glColor3ub(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -1057,7 +1057,7 @@ int org_mini_gl_GL_glColor3ub(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-int org_mini_gl_GL_glColor3ubv(Runtime *runtime, Class *clazz) {
+int org_mini_gl_GL_glColor3ubv(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -1075,7 +1075,7 @@ int org_mini_gl_GL_glColor3ubv(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-int org_mini_gl_GL_glColor3ui(Runtime *runtime, Class *clazz) {
+int org_mini_gl_GL_glColor3ui(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -1089,7 +1089,7 @@ int org_mini_gl_GL_glColor3ui(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-int org_mini_gl_GL_glColor3uiv(Runtime *runtime, Class *clazz) {
+int org_mini_gl_GL_glColor3uiv(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -1107,7 +1107,7 @@ int org_mini_gl_GL_glColor3uiv(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-int org_mini_gl_GL_glColor3us(Runtime *runtime, Class *clazz) {
+int org_mini_gl_GL_glColor3us(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -1121,7 +1121,7 @@ int org_mini_gl_GL_glColor3us(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-int org_mini_gl_GL_glColor3usv(Runtime *runtime, Class *clazz) {
+int org_mini_gl_GL_glColor3usv(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -1139,7 +1139,7 @@ int org_mini_gl_GL_glColor3usv(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-int org_mini_gl_GL_glColor4b(Runtime *runtime, Class *clazz) {
+int org_mini_gl_GL_glColor4b(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -1154,7 +1154,7 @@ int org_mini_gl_GL_glColor4b(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-int org_mini_gl_GL_glColor4bv(Runtime *runtime, Class *clazz) {
+int org_mini_gl_GL_glColor4bv(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -1172,7 +1172,7 @@ int org_mini_gl_GL_glColor4bv(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-int org_mini_gl_GL_glColor4d(Runtime *runtime, Class *clazz) {
+int org_mini_gl_GL_glColor4d(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -1187,7 +1187,7 @@ int org_mini_gl_GL_glColor4d(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-int org_mini_gl_GL_glColor4dv(Runtime *runtime, Class *clazz) {
+int org_mini_gl_GL_glColor4dv(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -1205,7 +1205,7 @@ int org_mini_gl_GL_glColor4dv(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-int org_mini_gl_GL_glColor4f(Runtime *runtime, Class *clazz) {
+int org_mini_gl_GL_glColor4f(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -1220,7 +1220,7 @@ int org_mini_gl_GL_glColor4f(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-int org_mini_gl_GL_glColor4fv(Runtime *runtime, Class *clazz) {
+int org_mini_gl_GL_glColor4fv(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -1238,7 +1238,7 @@ int org_mini_gl_GL_glColor4fv(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-int org_mini_gl_GL_glColor4i(Runtime *runtime, Class *clazz) {
+int org_mini_gl_GL_glColor4i(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -1253,7 +1253,7 @@ int org_mini_gl_GL_glColor4i(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-int org_mini_gl_GL_glColor4iv(Runtime *runtime, Class *clazz) {
+int org_mini_gl_GL_glColor4iv(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -1271,7 +1271,7 @@ int org_mini_gl_GL_glColor4iv(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-int org_mini_gl_GL_glColor4s(Runtime *runtime, Class *clazz) {
+int org_mini_gl_GL_glColor4s(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -1286,7 +1286,7 @@ int org_mini_gl_GL_glColor4s(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-int org_mini_gl_GL_glColor4sv(Runtime *runtime, Class *clazz) {
+int org_mini_gl_GL_glColor4sv(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -1304,7 +1304,7 @@ int org_mini_gl_GL_glColor4sv(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-int org_mini_gl_GL_glColor4ub(Runtime *runtime, Class *clazz) {
+int org_mini_gl_GL_glColor4ub(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -1319,7 +1319,7 @@ int org_mini_gl_GL_glColor4ub(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-int org_mini_gl_GL_glColor4ubv(Runtime *runtime, Class *clazz) {
+int org_mini_gl_GL_glColor4ubv(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -1337,7 +1337,7 @@ int org_mini_gl_GL_glColor4ubv(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-int org_mini_gl_GL_glColor4ui(Runtime *runtime, Class *clazz) {
+int org_mini_gl_GL_glColor4ui(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -1352,7 +1352,7 @@ int org_mini_gl_GL_glColor4ui(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-int org_mini_gl_GL_glColor4uiv(Runtime *runtime, Class *clazz) {
+int org_mini_gl_GL_glColor4uiv(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -1370,7 +1370,7 @@ int org_mini_gl_GL_glColor4uiv(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-int org_mini_gl_GL_glColor4us(Runtime *runtime, Class *clazz) {
+int org_mini_gl_GL_glColor4us(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -1385,7 +1385,7 @@ int org_mini_gl_GL_glColor4us(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-int org_mini_gl_GL_glColor4usv(Runtime *runtime, Class *clazz) {
+int org_mini_gl_GL_glColor4usv(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -1403,7 +1403,7 @@ int org_mini_gl_GL_glColor4usv(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-int org_mini_gl_GL_glEdgeFlag(Runtime *runtime, Class *clazz) {
+int org_mini_gl_GL_glEdgeFlag(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -1415,7 +1415,7 @@ int org_mini_gl_GL_glEdgeFlag(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-int org_mini_gl_GL_glEdgeFlagv(Runtime *runtime, Class *clazz) {
+int org_mini_gl_GL_glEdgeFlagv(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -1433,7 +1433,7 @@ int org_mini_gl_GL_glEdgeFlagv(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-int org_mini_gl_GL_glEnd(Runtime *runtime, Class *clazz) {
+int org_mini_gl_GL_glEnd(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -1444,7 +1444,7 @@ int org_mini_gl_GL_glEnd(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-int org_mini_gl_GL_glIndexd(Runtime *runtime, Class *clazz) {
+int org_mini_gl_GL_glIndexd(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -1456,7 +1456,7 @@ int org_mini_gl_GL_glIndexd(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-int org_mini_gl_GL_glIndexdv(Runtime *runtime, Class *clazz) {
+int org_mini_gl_GL_glIndexdv(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -1474,7 +1474,7 @@ int org_mini_gl_GL_glIndexdv(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-int org_mini_gl_GL_glIndexf(Runtime *runtime, Class *clazz) {
+int org_mini_gl_GL_glIndexf(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -1486,7 +1486,7 @@ int org_mini_gl_GL_glIndexf(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-int org_mini_gl_GL_glIndexfv(Runtime *runtime, Class *clazz) {
+int org_mini_gl_GL_glIndexfv(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -1504,7 +1504,7 @@ int org_mini_gl_GL_glIndexfv(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-int org_mini_gl_GL_glIndexi(Runtime *runtime, Class *clazz) {
+int org_mini_gl_GL_glIndexi(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -1516,7 +1516,7 @@ int org_mini_gl_GL_glIndexi(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-int org_mini_gl_GL_glIndexiv(Runtime *runtime, Class *clazz) {
+int org_mini_gl_GL_glIndexiv(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -1534,7 +1534,7 @@ int org_mini_gl_GL_glIndexiv(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-int org_mini_gl_GL_glIndexs(Runtime *runtime, Class *clazz) {
+int org_mini_gl_GL_glIndexs(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -1546,7 +1546,7 @@ int org_mini_gl_GL_glIndexs(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-int org_mini_gl_GL_glIndexsv(Runtime *runtime, Class *clazz) {
+int org_mini_gl_GL_glIndexsv(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -1564,7 +1564,7 @@ int org_mini_gl_GL_glIndexsv(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-int org_mini_gl_GL_glNormal3b(Runtime *runtime, Class *clazz) {
+int org_mini_gl_GL_glNormal3b(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -1578,7 +1578,7 @@ int org_mini_gl_GL_glNormal3b(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-int org_mini_gl_GL_glNormal3bv(Runtime *runtime, Class *clazz) {
+int org_mini_gl_GL_glNormal3bv(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -1596,7 +1596,7 @@ int org_mini_gl_GL_glNormal3bv(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-int org_mini_gl_GL_glNormal3d(Runtime *runtime, Class *clazz) {
+int org_mini_gl_GL_glNormal3d(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -1610,7 +1610,7 @@ int org_mini_gl_GL_glNormal3d(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-int org_mini_gl_GL_glNormal3dv(Runtime *runtime, Class *clazz) {
+int org_mini_gl_GL_glNormal3dv(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -1628,7 +1628,7 @@ int org_mini_gl_GL_glNormal3dv(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-int org_mini_gl_GL_glNormal3f(Runtime *runtime, Class *clazz) {
+int org_mini_gl_GL_glNormal3f(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -1642,7 +1642,7 @@ int org_mini_gl_GL_glNormal3f(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-int org_mini_gl_GL_glNormal3fv(Runtime *runtime, Class *clazz) {
+int org_mini_gl_GL_glNormal3fv(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -1660,7 +1660,7 @@ int org_mini_gl_GL_glNormal3fv(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-int org_mini_gl_GL_glNormal3i(Runtime *runtime, Class *clazz) {
+int org_mini_gl_GL_glNormal3i(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -1674,7 +1674,7 @@ int org_mini_gl_GL_glNormal3i(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-int org_mini_gl_GL_glNormal3iv(Runtime *runtime, Class *clazz) {
+int org_mini_gl_GL_glNormal3iv(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -1692,7 +1692,7 @@ int org_mini_gl_GL_glNormal3iv(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-int org_mini_gl_GL_glNormal3s(Runtime *runtime, Class *clazz) {
+int org_mini_gl_GL_glNormal3s(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -1706,7 +1706,7 @@ int org_mini_gl_GL_glNormal3s(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-int org_mini_gl_GL_glNormal3sv(Runtime *runtime, Class *clazz) {
+int org_mini_gl_GL_glNormal3sv(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -1724,7 +1724,7 @@ int org_mini_gl_GL_glNormal3sv(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-int org_mini_gl_GL_glRasterPos2d(Runtime *runtime, Class *clazz) {
+int org_mini_gl_GL_glRasterPos2d(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -1737,7 +1737,7 @@ int org_mini_gl_GL_glRasterPos2d(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-int org_mini_gl_GL_glRasterPos2dv(Runtime *runtime, Class *clazz) {
+int org_mini_gl_GL_glRasterPos2dv(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -1755,7 +1755,7 @@ int org_mini_gl_GL_glRasterPos2dv(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-int org_mini_gl_GL_glRasterPos2f(Runtime *runtime, Class *clazz) {
+int org_mini_gl_GL_glRasterPos2f(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -1768,7 +1768,7 @@ int org_mini_gl_GL_glRasterPos2f(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-int org_mini_gl_GL_glRasterPos2fv(Runtime *runtime, Class *clazz) {
+int org_mini_gl_GL_glRasterPos2fv(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -1786,7 +1786,7 @@ int org_mini_gl_GL_glRasterPos2fv(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-int org_mini_gl_GL_glRasterPos2i(Runtime *runtime, Class *clazz) {
+int org_mini_gl_GL_glRasterPos2i(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -1799,7 +1799,7 @@ int org_mini_gl_GL_glRasterPos2i(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-int org_mini_gl_GL_glRasterPos2iv(Runtime *runtime, Class *clazz) {
+int org_mini_gl_GL_glRasterPos2iv(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -1817,7 +1817,7 @@ int org_mini_gl_GL_glRasterPos2iv(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-int org_mini_gl_GL_glRasterPos2s(Runtime *runtime, Class *clazz) {
+int org_mini_gl_GL_glRasterPos2s(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -1830,7 +1830,7 @@ int org_mini_gl_GL_glRasterPos2s(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-int org_mini_gl_GL_glRasterPos2sv(Runtime *runtime, Class *clazz) {
+int org_mini_gl_GL_glRasterPos2sv(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -1848,7 +1848,7 @@ int org_mini_gl_GL_glRasterPos2sv(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-int org_mini_gl_GL_glRasterPos3d(Runtime *runtime, Class *clazz) {
+int org_mini_gl_GL_glRasterPos3d(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -1862,7 +1862,7 @@ int org_mini_gl_GL_glRasterPos3d(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-int org_mini_gl_GL_glRasterPos3dv(Runtime *runtime, Class *clazz) {
+int org_mini_gl_GL_glRasterPos3dv(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -1880,7 +1880,7 @@ int org_mini_gl_GL_glRasterPos3dv(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-int org_mini_gl_GL_glRasterPos3f(Runtime *runtime, Class *clazz) {
+int org_mini_gl_GL_glRasterPos3f(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -1894,7 +1894,7 @@ int org_mini_gl_GL_glRasterPos3f(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-int org_mini_gl_GL_glRasterPos3fv(Runtime *runtime, Class *clazz) {
+int org_mini_gl_GL_glRasterPos3fv(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -1912,7 +1912,7 @@ int org_mini_gl_GL_glRasterPos3fv(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-int org_mini_gl_GL_glRasterPos3i(Runtime *runtime, Class *clazz) {
+int org_mini_gl_GL_glRasterPos3i(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -1926,7 +1926,7 @@ int org_mini_gl_GL_glRasterPos3i(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-int org_mini_gl_GL_glRasterPos3iv(Runtime *runtime, Class *clazz) {
+int org_mini_gl_GL_glRasterPos3iv(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -1944,7 +1944,7 @@ int org_mini_gl_GL_glRasterPos3iv(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-int org_mini_gl_GL_glRasterPos3s(Runtime *runtime, Class *clazz) {
+int org_mini_gl_GL_glRasterPos3s(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -1958,7 +1958,7 @@ int org_mini_gl_GL_glRasterPos3s(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-int org_mini_gl_GL_glRasterPos3sv(Runtime *runtime, Class *clazz) {
+int org_mini_gl_GL_glRasterPos3sv(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -1976,7 +1976,7 @@ int org_mini_gl_GL_glRasterPos3sv(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-int org_mini_gl_GL_glRasterPos4d(Runtime *runtime, Class *clazz) {
+int org_mini_gl_GL_glRasterPos4d(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -1991,7 +1991,7 @@ int org_mini_gl_GL_glRasterPos4d(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-int org_mini_gl_GL_glRasterPos4dv(Runtime *runtime, Class *clazz) {
+int org_mini_gl_GL_glRasterPos4dv(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -2009,7 +2009,7 @@ int org_mini_gl_GL_glRasterPos4dv(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-int org_mini_gl_GL_glRasterPos4f(Runtime *runtime, Class *clazz) {
+int org_mini_gl_GL_glRasterPos4f(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -2024,7 +2024,7 @@ int org_mini_gl_GL_glRasterPos4f(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-int org_mini_gl_GL_glRasterPos4fv(Runtime *runtime, Class *clazz) {
+int org_mini_gl_GL_glRasterPos4fv(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -2042,7 +2042,7 @@ int org_mini_gl_GL_glRasterPos4fv(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-int org_mini_gl_GL_glRasterPos4i(Runtime *runtime, Class *clazz) {
+int org_mini_gl_GL_glRasterPos4i(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -2057,7 +2057,7 @@ int org_mini_gl_GL_glRasterPos4i(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-int org_mini_gl_GL_glRasterPos4iv(Runtime *runtime, Class *clazz) {
+int org_mini_gl_GL_glRasterPos4iv(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -2075,7 +2075,7 @@ int org_mini_gl_GL_glRasterPos4iv(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-int org_mini_gl_GL_glRasterPos4s(Runtime *runtime, Class *clazz) {
+int org_mini_gl_GL_glRasterPos4s(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -2090,7 +2090,7 @@ int org_mini_gl_GL_glRasterPos4s(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-int org_mini_gl_GL_glRasterPos4sv(Runtime *runtime, Class *clazz) {
+int org_mini_gl_GL_glRasterPos4sv(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -2108,7 +2108,7 @@ int org_mini_gl_GL_glRasterPos4sv(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-int org_mini_gl_GL_glRectd(Runtime *runtime, Class *clazz) {
+int org_mini_gl_GL_glRectd(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -2123,7 +2123,7 @@ int org_mini_gl_GL_glRectd(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-int org_mini_gl_GL_glRectdv(Runtime *runtime, Class *clazz) {
+int org_mini_gl_GL_glRectdv(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -2148,7 +2148,7 @@ int org_mini_gl_GL_glRectdv(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-int org_mini_gl_GL_glRectf(Runtime *runtime, Class *clazz) {
+int org_mini_gl_GL_glRectf(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -2163,7 +2163,7 @@ int org_mini_gl_GL_glRectf(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-int org_mini_gl_GL_glRectfv(Runtime *runtime, Class *clazz) {
+int org_mini_gl_GL_glRectfv(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -2188,7 +2188,7 @@ int org_mini_gl_GL_glRectfv(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-int org_mini_gl_GL_glRecti(Runtime *runtime, Class *clazz) {
+int org_mini_gl_GL_glRecti(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -2203,7 +2203,7 @@ int org_mini_gl_GL_glRecti(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-int org_mini_gl_GL_glRectiv(Runtime *runtime, Class *clazz) {
+int org_mini_gl_GL_glRectiv(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -2228,7 +2228,7 @@ int org_mini_gl_GL_glRectiv(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-int org_mini_gl_GL_glRects(Runtime *runtime, Class *clazz) {
+int org_mini_gl_GL_glRects(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -2243,7 +2243,7 @@ int org_mini_gl_GL_glRects(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-int org_mini_gl_GL_glRectsv(Runtime *runtime, Class *clazz) {
+int org_mini_gl_GL_glRectsv(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -2268,7 +2268,7 @@ int org_mini_gl_GL_glRectsv(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-int org_mini_gl_GL_glTexCoord1d(Runtime *runtime, Class *clazz) {
+int org_mini_gl_GL_glTexCoord1d(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -2280,7 +2280,7 @@ int org_mini_gl_GL_glTexCoord1d(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-int org_mini_gl_GL_glTexCoord1dv(Runtime *runtime, Class *clazz) {
+int org_mini_gl_GL_glTexCoord1dv(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -2298,7 +2298,7 @@ int org_mini_gl_GL_glTexCoord1dv(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-int org_mini_gl_GL_glTexCoord1f(Runtime *runtime, Class *clazz) {
+int org_mini_gl_GL_glTexCoord1f(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -2310,7 +2310,7 @@ int org_mini_gl_GL_glTexCoord1f(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-int org_mini_gl_GL_glTexCoord1fv(Runtime *runtime, Class *clazz) {
+int org_mini_gl_GL_glTexCoord1fv(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -2328,7 +2328,7 @@ int org_mini_gl_GL_glTexCoord1fv(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-int org_mini_gl_GL_glTexCoord1i(Runtime *runtime, Class *clazz) {
+int org_mini_gl_GL_glTexCoord1i(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -2340,7 +2340,7 @@ int org_mini_gl_GL_glTexCoord1i(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-int org_mini_gl_GL_glTexCoord1iv(Runtime *runtime, Class *clazz) {
+int org_mini_gl_GL_glTexCoord1iv(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -2358,7 +2358,7 @@ int org_mini_gl_GL_glTexCoord1iv(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-int org_mini_gl_GL_glTexCoord1s(Runtime *runtime, Class *clazz) {
+int org_mini_gl_GL_glTexCoord1s(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -2370,7 +2370,7 @@ int org_mini_gl_GL_glTexCoord1s(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-int org_mini_gl_GL_glTexCoord1sv(Runtime *runtime, Class *clazz) {
+int org_mini_gl_GL_glTexCoord1sv(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -2388,7 +2388,7 @@ int org_mini_gl_GL_glTexCoord1sv(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-int org_mini_gl_GL_glTexCoord2d(Runtime *runtime, Class *clazz) {
+int org_mini_gl_GL_glTexCoord2d(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -2401,7 +2401,7 @@ int org_mini_gl_GL_glTexCoord2d(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-int org_mini_gl_GL_glTexCoord2dv(Runtime *runtime, Class *clazz) {
+int org_mini_gl_GL_glTexCoord2dv(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -2419,7 +2419,7 @@ int org_mini_gl_GL_glTexCoord2dv(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-int org_mini_gl_GL_glTexCoord2f(Runtime *runtime, Class *clazz) {
+int org_mini_gl_GL_glTexCoord2f(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -2432,7 +2432,7 @@ int org_mini_gl_GL_glTexCoord2f(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-int org_mini_gl_GL_glTexCoord2fv(Runtime *runtime, Class *clazz) {
+int org_mini_gl_GL_glTexCoord2fv(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -2450,7 +2450,7 @@ int org_mini_gl_GL_glTexCoord2fv(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-int org_mini_gl_GL_glTexCoord2i(Runtime *runtime, Class *clazz) {
+int org_mini_gl_GL_glTexCoord2i(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -2463,7 +2463,7 @@ int org_mini_gl_GL_glTexCoord2i(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-int org_mini_gl_GL_glTexCoord2iv(Runtime *runtime, Class *clazz) {
+int org_mini_gl_GL_glTexCoord2iv(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -2481,7 +2481,7 @@ int org_mini_gl_GL_glTexCoord2iv(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-int org_mini_gl_GL_glTexCoord2s(Runtime *runtime, Class *clazz) {
+int org_mini_gl_GL_glTexCoord2s(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -2494,7 +2494,7 @@ int org_mini_gl_GL_glTexCoord2s(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-int org_mini_gl_GL_glTexCoord2sv(Runtime *runtime, Class *clazz) {
+int org_mini_gl_GL_glTexCoord2sv(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -2512,7 +2512,7 @@ int org_mini_gl_GL_glTexCoord2sv(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-int org_mini_gl_GL_glTexCoord3d(Runtime *runtime, Class *clazz) {
+int org_mini_gl_GL_glTexCoord3d(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -2526,7 +2526,7 @@ int org_mini_gl_GL_glTexCoord3d(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-int org_mini_gl_GL_glTexCoord3dv(Runtime *runtime, Class *clazz) {
+int org_mini_gl_GL_glTexCoord3dv(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -2544,7 +2544,7 @@ int org_mini_gl_GL_glTexCoord3dv(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-int org_mini_gl_GL_glTexCoord3f(Runtime *runtime, Class *clazz) {
+int org_mini_gl_GL_glTexCoord3f(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -2558,7 +2558,7 @@ int org_mini_gl_GL_glTexCoord3f(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-int org_mini_gl_GL_glTexCoord3fv(Runtime *runtime, Class *clazz) {
+int org_mini_gl_GL_glTexCoord3fv(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -2576,7 +2576,7 @@ int org_mini_gl_GL_glTexCoord3fv(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-int org_mini_gl_GL_glTexCoord3i(Runtime *runtime, Class *clazz) {
+int org_mini_gl_GL_glTexCoord3i(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -2590,7 +2590,7 @@ int org_mini_gl_GL_glTexCoord3i(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-int org_mini_gl_GL_glTexCoord3iv(Runtime *runtime, Class *clazz) {
+int org_mini_gl_GL_glTexCoord3iv(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -2608,7 +2608,7 @@ int org_mini_gl_GL_glTexCoord3iv(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-int org_mini_gl_GL_glTexCoord3s(Runtime *runtime, Class *clazz) {
+int org_mini_gl_GL_glTexCoord3s(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -2622,7 +2622,7 @@ int org_mini_gl_GL_glTexCoord3s(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-int org_mini_gl_GL_glTexCoord3sv(Runtime *runtime, Class *clazz) {
+int org_mini_gl_GL_glTexCoord3sv(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -2640,7 +2640,7 @@ int org_mini_gl_GL_glTexCoord3sv(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-int org_mini_gl_GL_glTexCoord4d(Runtime *runtime, Class *clazz) {
+int org_mini_gl_GL_glTexCoord4d(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -2655,7 +2655,7 @@ int org_mini_gl_GL_glTexCoord4d(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-int org_mini_gl_GL_glTexCoord4dv(Runtime *runtime, Class *clazz) {
+int org_mini_gl_GL_glTexCoord4dv(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -2673,7 +2673,7 @@ int org_mini_gl_GL_glTexCoord4dv(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-int org_mini_gl_GL_glTexCoord4f(Runtime *runtime, Class *clazz) {
+int org_mini_gl_GL_glTexCoord4f(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -2688,7 +2688,7 @@ int org_mini_gl_GL_glTexCoord4f(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-int org_mini_gl_GL_glTexCoord4fv(Runtime *runtime, Class *clazz) {
+int org_mini_gl_GL_glTexCoord4fv(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -2706,7 +2706,7 @@ int org_mini_gl_GL_glTexCoord4fv(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-int org_mini_gl_GL_glTexCoord4i(Runtime *runtime, Class *clazz) {
+int org_mini_gl_GL_glTexCoord4i(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -2721,7 +2721,7 @@ int org_mini_gl_GL_glTexCoord4i(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-int org_mini_gl_GL_glTexCoord4iv(Runtime *runtime, Class *clazz) {
+int org_mini_gl_GL_glTexCoord4iv(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -2739,7 +2739,7 @@ int org_mini_gl_GL_glTexCoord4iv(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-int org_mini_gl_GL_glTexCoord4s(Runtime *runtime, Class *clazz) {
+int org_mini_gl_GL_glTexCoord4s(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -2754,7 +2754,7 @@ int org_mini_gl_GL_glTexCoord4s(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-int org_mini_gl_GL_glTexCoord4sv(Runtime *runtime, Class *clazz) {
+int org_mini_gl_GL_glTexCoord4sv(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -2772,7 +2772,7 @@ int org_mini_gl_GL_glTexCoord4sv(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-int org_mini_gl_GL_glVertex2d(Runtime *runtime, Class *clazz) {
+int org_mini_gl_GL_glVertex2d(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -2785,7 +2785,7 @@ int org_mini_gl_GL_glVertex2d(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-int org_mini_gl_GL_glVertex2dv(Runtime *runtime, Class *clazz) {
+int org_mini_gl_GL_glVertex2dv(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -2803,7 +2803,7 @@ int org_mini_gl_GL_glVertex2dv(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-int org_mini_gl_GL_glVertex2f(Runtime *runtime, Class *clazz) {
+int org_mini_gl_GL_glVertex2f(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -2816,7 +2816,7 @@ int org_mini_gl_GL_glVertex2f(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-int org_mini_gl_GL_glVertex2fv(Runtime *runtime, Class *clazz) {
+int org_mini_gl_GL_glVertex2fv(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -2834,7 +2834,7 @@ int org_mini_gl_GL_glVertex2fv(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-int org_mini_gl_GL_glVertex2i(Runtime *runtime, Class *clazz) {
+int org_mini_gl_GL_glVertex2i(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -2847,7 +2847,7 @@ int org_mini_gl_GL_glVertex2i(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-int org_mini_gl_GL_glVertex2iv(Runtime *runtime, Class *clazz) {
+int org_mini_gl_GL_glVertex2iv(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -2865,7 +2865,7 @@ int org_mini_gl_GL_glVertex2iv(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-int org_mini_gl_GL_glVertex2s(Runtime *runtime, Class *clazz) {
+int org_mini_gl_GL_glVertex2s(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -2878,7 +2878,7 @@ int org_mini_gl_GL_glVertex2s(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-int org_mini_gl_GL_glVertex2sv(Runtime *runtime, Class *clazz) {
+int org_mini_gl_GL_glVertex2sv(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -2896,7 +2896,7 @@ int org_mini_gl_GL_glVertex2sv(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-int org_mini_gl_GL_glVertex3d(Runtime *runtime, Class *clazz) {
+int org_mini_gl_GL_glVertex3d(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -2910,7 +2910,7 @@ int org_mini_gl_GL_glVertex3d(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-int org_mini_gl_GL_glVertex3dv(Runtime *runtime, Class *clazz) {
+int org_mini_gl_GL_glVertex3dv(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -2928,7 +2928,7 @@ int org_mini_gl_GL_glVertex3dv(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-int org_mini_gl_GL_glVertex3f(Runtime *runtime, Class *clazz) {
+int org_mini_gl_GL_glVertex3f(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -2942,7 +2942,7 @@ int org_mini_gl_GL_glVertex3f(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-int org_mini_gl_GL_glVertex3fv(Runtime *runtime, Class *clazz) {
+int org_mini_gl_GL_glVertex3fv(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -2960,7 +2960,7 @@ int org_mini_gl_GL_glVertex3fv(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-int org_mini_gl_GL_glVertex3i(Runtime *runtime, Class *clazz) {
+int org_mini_gl_GL_glVertex3i(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -2974,7 +2974,7 @@ int org_mini_gl_GL_glVertex3i(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-int org_mini_gl_GL_glVertex3iv(Runtime *runtime, Class *clazz) {
+int org_mini_gl_GL_glVertex3iv(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -2992,7 +2992,7 @@ int org_mini_gl_GL_glVertex3iv(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-int org_mini_gl_GL_glVertex3s(Runtime *runtime, Class *clazz) {
+int org_mini_gl_GL_glVertex3s(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -3006,7 +3006,7 @@ int org_mini_gl_GL_glVertex3s(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-int org_mini_gl_GL_glVertex3sv(Runtime *runtime, Class *clazz) {
+int org_mini_gl_GL_glVertex3sv(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -3024,7 +3024,7 @@ int org_mini_gl_GL_glVertex3sv(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-int org_mini_gl_GL_glVertex4d(Runtime *runtime, Class *clazz) {
+int org_mini_gl_GL_glVertex4d(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -3039,7 +3039,7 @@ int org_mini_gl_GL_glVertex4d(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-int org_mini_gl_GL_glVertex4dv(Runtime *runtime, Class *clazz) {
+int org_mini_gl_GL_glVertex4dv(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -3057,7 +3057,7 @@ int org_mini_gl_GL_glVertex4dv(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-int org_mini_gl_GL_glVertex4f(Runtime *runtime, Class *clazz) {
+int org_mini_gl_GL_glVertex4f(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -3072,7 +3072,7 @@ int org_mini_gl_GL_glVertex4f(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-int org_mini_gl_GL_glVertex4fv(Runtime *runtime, Class *clazz) {
+int org_mini_gl_GL_glVertex4fv(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -3090,7 +3090,7 @@ int org_mini_gl_GL_glVertex4fv(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-int org_mini_gl_GL_glVertex4i(Runtime *runtime, Class *clazz) {
+int org_mini_gl_GL_glVertex4i(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -3105,7 +3105,7 @@ int org_mini_gl_GL_glVertex4i(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-int org_mini_gl_GL_glVertex4iv(Runtime *runtime, Class *clazz) {
+int org_mini_gl_GL_glVertex4iv(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -3123,7 +3123,7 @@ int org_mini_gl_GL_glVertex4iv(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-int org_mini_gl_GL_glVertex4s(Runtime *runtime, Class *clazz) {
+int org_mini_gl_GL_glVertex4s(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -3138,7 +3138,7 @@ int org_mini_gl_GL_glVertex4s(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-int org_mini_gl_GL_glVertex4sv(Runtime *runtime, Class *clazz) {
+int org_mini_gl_GL_glVertex4sv(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -3156,7 +3156,7 @@ int org_mini_gl_GL_glVertex4sv(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-int org_mini_gl_GL_glClipPlane(Runtime *runtime, Class *clazz) {
+int org_mini_gl_GL_glClipPlane(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -3175,7 +3175,7 @@ int org_mini_gl_GL_glClipPlane(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-int org_mini_gl_GL_glColorMaterial(Runtime *runtime, Class *clazz) {
+int org_mini_gl_GL_glColorMaterial(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -3188,7 +3188,7 @@ int org_mini_gl_GL_glColorMaterial(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-int org_mini_gl_GL_glFogf(Runtime *runtime, Class *clazz) {
+int org_mini_gl_GL_glFogf(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -3201,7 +3201,7 @@ int org_mini_gl_GL_glFogf(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-int org_mini_gl_GL_glFogfv(Runtime *runtime, Class *clazz) {
+int org_mini_gl_GL_glFogfv(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -3220,7 +3220,7 @@ int org_mini_gl_GL_glFogfv(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-int org_mini_gl_GL_glFogi(Runtime *runtime, Class *clazz) {
+int org_mini_gl_GL_glFogi(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -3233,7 +3233,7 @@ int org_mini_gl_GL_glFogi(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-int org_mini_gl_GL_glFogiv(Runtime *runtime, Class *clazz) {
+int org_mini_gl_GL_glFogiv(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -3252,7 +3252,7 @@ int org_mini_gl_GL_glFogiv(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-int org_mini_gl_GL_glLightf(Runtime *runtime, Class *clazz) {
+int org_mini_gl_GL_glLightf(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -3266,7 +3266,7 @@ int org_mini_gl_GL_glLightf(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-int org_mini_gl_GL_glLightfv(Runtime *runtime, Class *clazz) {
+int org_mini_gl_GL_glLightfv(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -3286,7 +3286,7 @@ int org_mini_gl_GL_glLightfv(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-int org_mini_gl_GL_glLighti(Runtime *runtime, Class *clazz) {
+int org_mini_gl_GL_glLighti(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -3300,7 +3300,7 @@ int org_mini_gl_GL_glLighti(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-int org_mini_gl_GL_glLightiv(Runtime *runtime, Class *clazz) {
+int org_mini_gl_GL_glLightiv(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -3320,7 +3320,7 @@ int org_mini_gl_GL_glLightiv(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-int org_mini_gl_GL_glLightModelf(Runtime *runtime, Class *clazz) {
+int org_mini_gl_GL_glLightModelf(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -3333,7 +3333,7 @@ int org_mini_gl_GL_glLightModelf(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-int org_mini_gl_GL_glLightModelfv(Runtime *runtime, Class *clazz) {
+int org_mini_gl_GL_glLightModelfv(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -3352,7 +3352,7 @@ int org_mini_gl_GL_glLightModelfv(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-int org_mini_gl_GL_glLightModeli(Runtime *runtime, Class *clazz) {
+int org_mini_gl_GL_glLightModeli(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -3365,7 +3365,7 @@ int org_mini_gl_GL_glLightModeli(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-int org_mini_gl_GL_glLightModeliv(Runtime *runtime, Class *clazz) {
+int org_mini_gl_GL_glLightModeliv(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -3384,7 +3384,7 @@ int org_mini_gl_GL_glLightModeliv(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-int org_mini_gl_GL_glLineStipple(Runtime *runtime, Class *clazz) {
+int org_mini_gl_GL_glLineStipple(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -3397,7 +3397,7 @@ int org_mini_gl_GL_glLineStipple(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-int org_mini_gl_GL_glMaterialf(Runtime *runtime, Class *clazz) {
+int org_mini_gl_GL_glMaterialf(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -3411,7 +3411,7 @@ int org_mini_gl_GL_glMaterialf(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-int org_mini_gl_GL_glMaterialfv(Runtime *runtime, Class *clazz) {
+int org_mini_gl_GL_glMaterialfv(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -3431,7 +3431,7 @@ int org_mini_gl_GL_glMaterialfv(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-int org_mini_gl_GL_glMateriali(Runtime *runtime, Class *clazz) {
+int org_mini_gl_GL_glMateriali(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -3445,7 +3445,7 @@ int org_mini_gl_GL_glMateriali(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-int org_mini_gl_GL_glMaterialiv(Runtime *runtime, Class *clazz) {
+int org_mini_gl_GL_glMaterialiv(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -3465,7 +3465,7 @@ int org_mini_gl_GL_glMaterialiv(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-int org_mini_gl_GL_glPolygonStipple(Runtime *runtime, Class *clazz) {
+int org_mini_gl_GL_glPolygonStipple(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -3483,7 +3483,7 @@ int org_mini_gl_GL_glPolygonStipple(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-int org_mini_gl_GL_glShadeModel(Runtime *runtime, Class *clazz) {
+int org_mini_gl_GL_glShadeModel(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -3495,7 +3495,7 @@ int org_mini_gl_GL_glShadeModel(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-int org_mini_gl_GL_glTexEnvf(Runtime *runtime, Class *clazz) {
+int org_mini_gl_GL_glTexEnvf(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -3509,7 +3509,7 @@ int org_mini_gl_GL_glTexEnvf(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-int org_mini_gl_GL_glTexEnvfv(Runtime *runtime, Class *clazz) {
+int org_mini_gl_GL_glTexEnvfv(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -3529,7 +3529,7 @@ int org_mini_gl_GL_glTexEnvfv(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-int org_mini_gl_GL_glTexEnvi(Runtime *runtime, Class *clazz) {
+int org_mini_gl_GL_glTexEnvi(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -3543,7 +3543,7 @@ int org_mini_gl_GL_glTexEnvi(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-int org_mini_gl_GL_glTexEnviv(Runtime *runtime, Class *clazz) {
+int org_mini_gl_GL_glTexEnviv(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -3563,7 +3563,7 @@ int org_mini_gl_GL_glTexEnviv(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-int org_mini_gl_GL_glTexGend(Runtime *runtime, Class *clazz) {
+int org_mini_gl_GL_glTexGend(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -3577,7 +3577,7 @@ int org_mini_gl_GL_glTexGend(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-int org_mini_gl_GL_glTexGendv(Runtime *runtime, Class *clazz) {
+int org_mini_gl_GL_glTexGendv(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -3597,7 +3597,7 @@ int org_mini_gl_GL_glTexGendv(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-int org_mini_gl_GL_glTexGenf(Runtime *runtime, Class *clazz) {
+int org_mini_gl_GL_glTexGenf(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -3611,7 +3611,7 @@ int org_mini_gl_GL_glTexGenf(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-int org_mini_gl_GL_glTexGenfv(Runtime *runtime, Class *clazz) {
+int org_mini_gl_GL_glTexGenfv(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -3631,7 +3631,7 @@ int org_mini_gl_GL_glTexGenfv(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-int org_mini_gl_GL_glTexGeni(Runtime *runtime, Class *clazz) {
+int org_mini_gl_GL_glTexGeni(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -3645,7 +3645,7 @@ int org_mini_gl_GL_glTexGeni(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-int org_mini_gl_GL_glTexGeniv(Runtime *runtime, Class *clazz) {
+int org_mini_gl_GL_glTexGeniv(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -3665,7 +3665,7 @@ int org_mini_gl_GL_glTexGeniv(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-int org_mini_gl_GL_glFeedbackBuffer(Runtime *runtime, Class *clazz) {
+int org_mini_gl_GL_glFeedbackBuffer(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -3685,7 +3685,7 @@ int org_mini_gl_GL_glFeedbackBuffer(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-int org_mini_gl_GL_glSelectBuffer(Runtime *runtime, Class *clazz) {
+int org_mini_gl_GL_glSelectBuffer(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -3704,7 +3704,7 @@ int org_mini_gl_GL_glSelectBuffer(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-int org_mini_gl_GL_glRenderMode(Runtime *runtime, Class *clazz) {
+int org_mini_gl_GL_glRenderMode(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -3716,7 +3716,7 @@ int org_mini_gl_GL_glRenderMode(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-int org_mini_gl_GL_glInitNames(Runtime *runtime, Class *clazz) {
+int org_mini_gl_GL_glInitNames(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -3727,7 +3727,7 @@ int org_mini_gl_GL_glInitNames(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-int org_mini_gl_GL_glLoadName(Runtime *runtime, Class *clazz) {
+int org_mini_gl_GL_glLoadName(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -3739,7 +3739,7 @@ int org_mini_gl_GL_glLoadName(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-int org_mini_gl_GL_glPassThrough(Runtime *runtime, Class *clazz) {
+int org_mini_gl_GL_glPassThrough(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -3751,7 +3751,7 @@ int org_mini_gl_GL_glPassThrough(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-int org_mini_gl_GL_glPopName(Runtime *runtime, Class *clazz) {
+int org_mini_gl_GL_glPopName(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -3762,7 +3762,7 @@ int org_mini_gl_GL_glPopName(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-int org_mini_gl_GL_glPushName(Runtime *runtime, Class *clazz) {
+int org_mini_gl_GL_glPushName(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -3774,7 +3774,7 @@ int org_mini_gl_GL_glPushName(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-int org_mini_gl_GL_glClearAccum(Runtime *runtime, Class *clazz) {
+int org_mini_gl_GL_glClearAccum(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -3789,7 +3789,7 @@ int org_mini_gl_GL_glClearAccum(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-int org_mini_gl_GL_glClearIndex(Runtime *runtime, Class *clazz) {
+int org_mini_gl_GL_glClearIndex(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -3801,7 +3801,7 @@ int org_mini_gl_GL_glClearIndex(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-int org_mini_gl_GL_glIndexMask(Runtime *runtime, Class *clazz) {
+int org_mini_gl_GL_glIndexMask(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -3813,7 +3813,7 @@ int org_mini_gl_GL_glIndexMask(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-int org_mini_gl_GL_glAccum(Runtime *runtime, Class *clazz) {
+int org_mini_gl_GL_glAccum(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -3826,7 +3826,7 @@ int org_mini_gl_GL_glAccum(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-int org_mini_gl_GL_glPopAttrib(Runtime *runtime, Class *clazz) {
+int org_mini_gl_GL_glPopAttrib(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -3837,7 +3837,7 @@ int org_mini_gl_GL_glPopAttrib(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-int org_mini_gl_GL_glPushAttrib(Runtime *runtime, Class *clazz) {
+int org_mini_gl_GL_glPushAttrib(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -3849,7 +3849,7 @@ int org_mini_gl_GL_glPushAttrib(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-int org_mini_gl_GL_glMap1d(Runtime *runtime, Class *clazz) {
+int org_mini_gl_GL_glMap1d(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -3872,7 +3872,7 @@ int org_mini_gl_GL_glMap1d(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-int org_mini_gl_GL_glMap1f(Runtime *runtime, Class *clazz) {
+int org_mini_gl_GL_glMap1f(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -3895,7 +3895,7 @@ int org_mini_gl_GL_glMap1f(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-int org_mini_gl_GL_glMap2d(Runtime *runtime, Class *clazz) {
+int org_mini_gl_GL_glMap2d(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -3922,7 +3922,7 @@ int org_mini_gl_GL_glMap2d(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-int org_mini_gl_GL_glMap2f(Runtime *runtime, Class *clazz) {
+int org_mini_gl_GL_glMap2f(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -3949,7 +3949,7 @@ int org_mini_gl_GL_glMap2f(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-int org_mini_gl_GL_glMapGrid1d(Runtime *runtime, Class *clazz) {
+int org_mini_gl_GL_glMapGrid1d(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -3963,7 +3963,7 @@ int org_mini_gl_GL_glMapGrid1d(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-int org_mini_gl_GL_glMapGrid1f(Runtime *runtime, Class *clazz) {
+int org_mini_gl_GL_glMapGrid1f(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -3977,7 +3977,7 @@ int org_mini_gl_GL_glMapGrid1f(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-int org_mini_gl_GL_glMapGrid2d(Runtime *runtime, Class *clazz) {
+int org_mini_gl_GL_glMapGrid2d(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -3994,7 +3994,7 @@ int org_mini_gl_GL_glMapGrid2d(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-int org_mini_gl_GL_glMapGrid2f(Runtime *runtime, Class *clazz) {
+int org_mini_gl_GL_glMapGrid2f(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -4011,7 +4011,7 @@ int org_mini_gl_GL_glMapGrid2f(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-int org_mini_gl_GL_glEvalCoord1d(Runtime *runtime, Class *clazz) {
+int org_mini_gl_GL_glEvalCoord1d(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -4023,7 +4023,7 @@ int org_mini_gl_GL_glEvalCoord1d(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-int org_mini_gl_GL_glEvalCoord1dv(Runtime *runtime, Class *clazz) {
+int org_mini_gl_GL_glEvalCoord1dv(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -4041,7 +4041,7 @@ int org_mini_gl_GL_glEvalCoord1dv(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-int org_mini_gl_GL_glEvalCoord1f(Runtime *runtime, Class *clazz) {
+int org_mini_gl_GL_glEvalCoord1f(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -4053,7 +4053,7 @@ int org_mini_gl_GL_glEvalCoord1f(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-int org_mini_gl_GL_glEvalCoord1fv(Runtime *runtime, Class *clazz) {
+int org_mini_gl_GL_glEvalCoord1fv(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -4071,7 +4071,7 @@ int org_mini_gl_GL_glEvalCoord1fv(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-int org_mini_gl_GL_glEvalCoord2d(Runtime *runtime, Class *clazz) {
+int org_mini_gl_GL_glEvalCoord2d(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -4084,7 +4084,7 @@ int org_mini_gl_GL_glEvalCoord2d(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-int org_mini_gl_GL_glEvalCoord2dv(Runtime *runtime, Class *clazz) {
+int org_mini_gl_GL_glEvalCoord2dv(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -4102,7 +4102,7 @@ int org_mini_gl_GL_glEvalCoord2dv(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-int org_mini_gl_GL_glEvalCoord2f(Runtime *runtime, Class *clazz) {
+int org_mini_gl_GL_glEvalCoord2f(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -4115,7 +4115,7 @@ int org_mini_gl_GL_glEvalCoord2f(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-int org_mini_gl_GL_glEvalCoord2fv(Runtime *runtime, Class *clazz) {
+int org_mini_gl_GL_glEvalCoord2fv(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -4133,7 +4133,7 @@ int org_mini_gl_GL_glEvalCoord2fv(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-int org_mini_gl_GL_glEvalMesh1(Runtime *runtime, Class *clazz) {
+int org_mini_gl_GL_glEvalMesh1(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -4147,7 +4147,7 @@ int org_mini_gl_GL_glEvalMesh1(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-int org_mini_gl_GL_glEvalPoint1(Runtime *runtime, Class *clazz) {
+int org_mini_gl_GL_glEvalPoint1(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -4159,7 +4159,7 @@ int org_mini_gl_GL_glEvalPoint1(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-int org_mini_gl_GL_glEvalMesh2(Runtime *runtime, Class *clazz) {
+int org_mini_gl_GL_glEvalMesh2(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -4175,7 +4175,7 @@ int org_mini_gl_GL_glEvalMesh2(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-int org_mini_gl_GL_glEvalPoint2(Runtime *runtime, Class *clazz) {
+int org_mini_gl_GL_glEvalPoint2(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -4188,7 +4188,7 @@ int org_mini_gl_GL_glEvalPoint2(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-int org_mini_gl_GL_glAlphaFunc(Runtime *runtime, Class *clazz) {
+int org_mini_gl_GL_glAlphaFunc(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -4201,7 +4201,7 @@ int org_mini_gl_GL_glAlphaFunc(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-int org_mini_gl_GL_glPixelZoom(Runtime *runtime, Class *clazz) {
+int org_mini_gl_GL_glPixelZoom(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -4214,7 +4214,7 @@ int org_mini_gl_GL_glPixelZoom(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-int org_mini_gl_GL_glPixelTransferf(Runtime *runtime, Class *clazz) {
+int org_mini_gl_GL_glPixelTransferf(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -4227,7 +4227,7 @@ int org_mini_gl_GL_glPixelTransferf(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-int org_mini_gl_GL_glPixelTransferi(Runtime *runtime, Class *clazz) {
+int org_mini_gl_GL_glPixelTransferi(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -4240,7 +4240,7 @@ int org_mini_gl_GL_glPixelTransferi(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-int org_mini_gl_GL_glPixelMapfv(Runtime *runtime, Class *clazz) {
+int org_mini_gl_GL_glPixelMapfv(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -4260,7 +4260,7 @@ int org_mini_gl_GL_glPixelMapfv(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-int org_mini_gl_GL_glPixelMapuiv(Runtime *runtime, Class *clazz) {
+int org_mini_gl_GL_glPixelMapuiv(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -4280,7 +4280,7 @@ int org_mini_gl_GL_glPixelMapuiv(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-int org_mini_gl_GL_glPixelMapusv(Runtime *runtime, Class *clazz) {
+int org_mini_gl_GL_glPixelMapusv(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -4300,7 +4300,7 @@ int org_mini_gl_GL_glPixelMapusv(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-int org_mini_gl_GL_glCopyPixels(Runtime *runtime, Class *clazz) {
+int org_mini_gl_GL_glCopyPixels(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -4316,7 +4316,7 @@ int org_mini_gl_GL_glCopyPixels(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-int org_mini_gl_GL_glDrawPixels(Runtime *runtime, Class *clazz) {
+int org_mini_gl_GL_glDrawPixels(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -4338,7 +4338,7 @@ int org_mini_gl_GL_glDrawPixels(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-int org_mini_gl_GL_glGetClipPlane(Runtime *runtime, Class *clazz) {
+int org_mini_gl_GL_glGetClipPlane(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -4357,7 +4357,7 @@ int org_mini_gl_GL_glGetClipPlane(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-int org_mini_gl_GL_glGetLightfv(Runtime *runtime, Class *clazz) {
+int org_mini_gl_GL_glGetLightfv(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -4377,7 +4377,7 @@ int org_mini_gl_GL_glGetLightfv(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-int org_mini_gl_GL_glGetLightiv(Runtime *runtime, Class *clazz) {
+int org_mini_gl_GL_glGetLightiv(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -4397,7 +4397,7 @@ int org_mini_gl_GL_glGetLightiv(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-int org_mini_gl_GL_glGetMapdv(Runtime *runtime, Class *clazz) {
+int org_mini_gl_GL_glGetMapdv(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -4417,7 +4417,7 @@ int org_mini_gl_GL_glGetMapdv(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-int org_mini_gl_GL_glGetMapfv(Runtime *runtime, Class *clazz) {
+int org_mini_gl_GL_glGetMapfv(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -4437,7 +4437,7 @@ int org_mini_gl_GL_glGetMapfv(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-int org_mini_gl_GL_glGetMapiv(Runtime *runtime, Class *clazz) {
+int org_mini_gl_GL_glGetMapiv(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -4457,7 +4457,7 @@ int org_mini_gl_GL_glGetMapiv(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-int org_mini_gl_GL_glGetMaterialfv(Runtime *runtime, Class *clazz) {
+int org_mini_gl_GL_glGetMaterialfv(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -4477,7 +4477,7 @@ int org_mini_gl_GL_glGetMaterialfv(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-int org_mini_gl_GL_glGetMaterialiv(Runtime *runtime, Class *clazz) {
+int org_mini_gl_GL_glGetMaterialiv(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -4497,7 +4497,7 @@ int org_mini_gl_GL_glGetMaterialiv(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-int org_mini_gl_GL_glGetPixelMapfv(Runtime *runtime, Class *clazz) {
+int org_mini_gl_GL_glGetPixelMapfv(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -4516,7 +4516,7 @@ int org_mini_gl_GL_glGetPixelMapfv(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-int org_mini_gl_GL_glGetPixelMapuiv(Runtime *runtime, Class *clazz) {
+int org_mini_gl_GL_glGetPixelMapuiv(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -4535,7 +4535,7 @@ int org_mini_gl_GL_glGetPixelMapuiv(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-int org_mini_gl_GL_glGetPixelMapusv(Runtime *runtime, Class *clazz) {
+int org_mini_gl_GL_glGetPixelMapusv(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -4554,7 +4554,7 @@ int org_mini_gl_GL_glGetPixelMapusv(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-int org_mini_gl_GL_glGetPolygonStipple(Runtime *runtime, Class *clazz) {
+int org_mini_gl_GL_glGetPolygonStipple(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -4572,7 +4572,7 @@ int org_mini_gl_GL_glGetPolygonStipple(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-int org_mini_gl_GL_glGetTexEnvfv(Runtime *runtime, Class *clazz) {
+int org_mini_gl_GL_glGetTexEnvfv(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -4592,7 +4592,7 @@ int org_mini_gl_GL_glGetTexEnvfv(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-int org_mini_gl_GL_glGetTexEnviv(Runtime *runtime, Class *clazz) {
+int org_mini_gl_GL_glGetTexEnviv(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -4612,7 +4612,7 @@ int org_mini_gl_GL_glGetTexEnviv(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-int org_mini_gl_GL_glGetTexGendv(Runtime *runtime, Class *clazz) {
+int org_mini_gl_GL_glGetTexGendv(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -4632,7 +4632,7 @@ int org_mini_gl_GL_glGetTexGendv(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-int org_mini_gl_GL_glGetTexGenfv(Runtime *runtime, Class *clazz) {
+int org_mini_gl_GL_glGetTexGenfv(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -4652,7 +4652,7 @@ int org_mini_gl_GL_glGetTexGenfv(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-int org_mini_gl_GL_glGetTexGeniv(Runtime *runtime, Class *clazz) {
+int org_mini_gl_GL_glGetTexGeniv(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -4672,7 +4672,7 @@ int org_mini_gl_GL_glGetTexGeniv(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-int org_mini_gl_GL_glIsList(Runtime *runtime, Class *clazz) {
+int org_mini_gl_GL_glIsList(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -4684,7 +4684,7 @@ int org_mini_gl_GL_glIsList(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-int org_mini_gl_GL_glFrustum(Runtime *runtime, Class *clazz) {
+int org_mini_gl_GL_glFrustum(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -4701,7 +4701,7 @@ int org_mini_gl_GL_glFrustum(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-int org_mini_gl_GL_glLoadIdentity(Runtime *runtime, Class *clazz) {
+int org_mini_gl_GL_glLoadIdentity(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -4712,7 +4712,7 @@ int org_mini_gl_GL_glLoadIdentity(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-int org_mini_gl_GL_glLoadMatrixf(Runtime *runtime, Class *clazz) {
+int org_mini_gl_GL_glLoadMatrixf(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -4730,7 +4730,7 @@ int org_mini_gl_GL_glLoadMatrixf(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-int org_mini_gl_GL_glLoadMatrixd(Runtime *runtime, Class *clazz) {
+int org_mini_gl_GL_glLoadMatrixd(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -4748,7 +4748,7 @@ int org_mini_gl_GL_glLoadMatrixd(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-int org_mini_gl_GL_glMatrixMode(Runtime *runtime, Class *clazz) {
+int org_mini_gl_GL_glMatrixMode(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -4760,7 +4760,7 @@ int org_mini_gl_GL_glMatrixMode(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-int org_mini_gl_GL_glMultMatrixf(Runtime *runtime, Class *clazz) {
+int org_mini_gl_GL_glMultMatrixf(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -4778,7 +4778,7 @@ int org_mini_gl_GL_glMultMatrixf(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-int org_mini_gl_GL_glMultMatrixd(Runtime *runtime, Class *clazz) {
+int org_mini_gl_GL_glMultMatrixd(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -4796,7 +4796,7 @@ int org_mini_gl_GL_glMultMatrixd(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-int org_mini_gl_GL_glOrtho(Runtime *runtime, Class *clazz) {
+int org_mini_gl_GL_glOrtho(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -4813,7 +4813,7 @@ int org_mini_gl_GL_glOrtho(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-int org_mini_gl_GL_glPopMatrix(Runtime *runtime, Class *clazz) {
+int org_mini_gl_GL_glPopMatrix(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -4824,7 +4824,7 @@ int org_mini_gl_GL_glPopMatrix(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-int org_mini_gl_GL_glPushMatrix(Runtime *runtime, Class *clazz) {
+int org_mini_gl_GL_glPushMatrix(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -4835,7 +4835,7 @@ int org_mini_gl_GL_glPushMatrix(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-int org_mini_gl_GL_glRotated(Runtime *runtime, Class *clazz) {
+int org_mini_gl_GL_glRotated(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -4850,7 +4850,7 @@ int org_mini_gl_GL_glRotated(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-int org_mini_gl_GL_glRotatef(Runtime *runtime, Class *clazz) {
+int org_mini_gl_GL_glRotatef(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -4865,7 +4865,7 @@ int org_mini_gl_GL_glRotatef(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-int org_mini_gl_GL_glScaled(Runtime *runtime, Class *clazz) {
+int org_mini_gl_GL_glScaled(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -4879,7 +4879,7 @@ int org_mini_gl_GL_glScaled(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-int org_mini_gl_GL_glScalef(Runtime *runtime, Class *clazz) {
+int org_mini_gl_GL_glScalef(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -4893,7 +4893,7 @@ int org_mini_gl_GL_glScalef(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-int org_mini_gl_GL_glTranslated(Runtime *runtime, Class *clazz) {
+int org_mini_gl_GL_glTranslated(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -4907,7 +4907,7 @@ int org_mini_gl_GL_glTranslated(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-int org_mini_gl_GL_glTranslatef(Runtime *runtime, Class *clazz) {
+int org_mini_gl_GL_glTranslatef(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -4921,7 +4921,7 @@ int org_mini_gl_GL_glTranslatef(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-int org_mini_gl_GL_glDrawArrays(Runtime *runtime, Class *clazz) {
+int org_mini_gl_GL_glDrawArrays(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -4935,7 +4935,7 @@ int org_mini_gl_GL_glDrawArrays(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-int org_mini_gl_GL_glDrawElements(Runtime *runtime, Class *clazz) {
+int org_mini_gl_GL_glDrawElements(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -4956,7 +4956,7 @@ int org_mini_gl_GL_glDrawElements(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-int org_mini_gl_GL_glGetPointerv(Runtime *runtime, Class *clazz) {
+int org_mini_gl_GL_glGetPointerv(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -4973,7 +4973,7 @@ int org_mini_gl_GL_glGetPointerv(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-int org_mini_gl_GL_glPolygonOffset(Runtime *runtime, Class *clazz) {
+int org_mini_gl_GL_glPolygonOffset(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -4986,7 +4986,7 @@ int org_mini_gl_GL_glPolygonOffset(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-int org_mini_gl_GL_glCopyTexImage1D(Runtime *runtime, Class *clazz) {
+int org_mini_gl_GL_glCopyTexImage1D(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -5004,7 +5004,7 @@ int org_mini_gl_GL_glCopyTexImage1D(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-int org_mini_gl_GL_glCopyTexImage2D(Runtime *runtime, Class *clazz) {
+int org_mini_gl_GL_glCopyTexImage2D(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -5023,7 +5023,7 @@ int org_mini_gl_GL_glCopyTexImage2D(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-int org_mini_gl_GL_glCopyTexSubImage1D(Runtime *runtime, Class *clazz) {
+int org_mini_gl_GL_glCopyTexSubImage1D(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -5040,7 +5040,7 @@ int org_mini_gl_GL_glCopyTexSubImage1D(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-int org_mini_gl_GL_glCopyTexSubImage2D(Runtime *runtime, Class *clazz) {
+int org_mini_gl_GL_glCopyTexSubImage2D(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -5059,7 +5059,7 @@ int org_mini_gl_GL_glCopyTexSubImage2D(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-int org_mini_gl_GL_glTexSubImage1D(Runtime *runtime, Class *clazz) {
+int org_mini_gl_GL_glTexSubImage1D(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -5083,7 +5083,7 @@ int org_mini_gl_GL_glTexSubImage1D(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-int org_mini_gl_GL_glTexSubImage2D(Runtime *runtime, Class *clazz) {
+int org_mini_gl_GL_glTexSubImage2D(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -5109,7 +5109,7 @@ int org_mini_gl_GL_glTexSubImage2D(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-int org_mini_gl_GL_glBindTexture(Runtime *runtime, Class *clazz) {
+int org_mini_gl_GL_glBindTexture(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -5122,7 +5122,7 @@ int org_mini_gl_GL_glBindTexture(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-int org_mini_gl_GL_glDeleteTextures(Runtime *runtime, Class *clazz) {
+int org_mini_gl_GL_glDeleteTextures(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -5141,7 +5141,7 @@ int org_mini_gl_GL_glDeleteTextures(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-int org_mini_gl_GL_glGenTextures(Runtime *runtime, Class *clazz) {
+int org_mini_gl_GL_glGenTextures(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -5160,7 +5160,7 @@ int org_mini_gl_GL_glGenTextures(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-int org_mini_gl_GL_glIsTexture(Runtime *runtime, Class *clazz) {
+int org_mini_gl_GL_glIsTexture(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -5172,7 +5172,7 @@ int org_mini_gl_GL_glIsTexture(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-int org_mini_gl_GL_glArrayElement(Runtime *runtime, Class *clazz) {
+int org_mini_gl_GL_glArrayElement(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -5184,7 +5184,7 @@ int org_mini_gl_GL_glArrayElement(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-int org_mini_gl_GL_glColorPointer(Runtime *runtime, Class *clazz) {
+int org_mini_gl_GL_glColorPointer(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -5205,7 +5205,7 @@ int org_mini_gl_GL_glColorPointer(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-int org_mini_gl_GL_glDisableClientState(Runtime *runtime, Class *clazz) {
+int org_mini_gl_GL_glDisableClientState(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -5217,7 +5217,7 @@ int org_mini_gl_GL_glDisableClientState(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-int org_mini_gl_GL_glEdgeFlagPointer(Runtime *runtime, Class *clazz) {
+int org_mini_gl_GL_glEdgeFlagPointer(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -5236,7 +5236,7 @@ int org_mini_gl_GL_glEdgeFlagPointer(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-int org_mini_gl_GL_glEnableClientState(Runtime *runtime, Class *clazz) {
+int org_mini_gl_GL_glEnableClientState(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -5248,7 +5248,7 @@ int org_mini_gl_GL_glEnableClientState(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-int org_mini_gl_GL_glIndexPointer(Runtime *runtime, Class *clazz) {
+int org_mini_gl_GL_glIndexPointer(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -5268,7 +5268,7 @@ int org_mini_gl_GL_glIndexPointer(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-int org_mini_gl_GL_glInterleavedArrays(Runtime *runtime, Class *clazz) {
+int org_mini_gl_GL_glInterleavedArrays(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -5288,7 +5288,7 @@ int org_mini_gl_GL_glInterleavedArrays(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-int org_mini_gl_GL_glNormalPointer(Runtime *runtime, Class *clazz) {
+int org_mini_gl_GL_glNormalPointer(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -5308,7 +5308,7 @@ int org_mini_gl_GL_glNormalPointer(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-int org_mini_gl_GL_glTexCoordPointer(Runtime *runtime, Class *clazz) {
+int org_mini_gl_GL_glTexCoordPointer(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -5329,7 +5329,7 @@ int org_mini_gl_GL_glTexCoordPointer(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-int org_mini_gl_GL_glVertexPointer(Runtime *runtime, Class *clazz) {
+int org_mini_gl_GL_glVertexPointer(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -5350,7 +5350,7 @@ int org_mini_gl_GL_glVertexPointer(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-int org_mini_gl_GL_glAreTexturesResident(Runtime *runtime, Class *clazz) {
+int org_mini_gl_GL_glAreTexturesResident(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -5376,7 +5376,7 @@ int org_mini_gl_GL_glAreTexturesResident(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-int org_mini_gl_GL_glPrioritizeTextures(Runtime *runtime, Class *clazz) {
+int org_mini_gl_GL_glPrioritizeTextures(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -5402,7 +5402,7 @@ int org_mini_gl_GL_glPrioritizeTextures(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-int org_mini_gl_GL_glIndexub(Runtime *runtime, Class *clazz) {
+int org_mini_gl_GL_glIndexub(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -5414,7 +5414,7 @@ int org_mini_gl_GL_glIndexub(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-int org_mini_gl_GL_glIndexubv(Runtime *runtime, Class *clazz) {
+int org_mini_gl_GL_glIndexubv(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -5432,7 +5432,7 @@ int org_mini_gl_GL_glIndexubv(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-int org_mini_gl_GL_glPopClientAttrib(Runtime *runtime, Class *clazz) {
+int org_mini_gl_GL_glPopClientAttrib(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -5443,7 +5443,7 @@ int org_mini_gl_GL_glPopClientAttrib(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-int org_mini_gl_GL_glPushClientAttrib(Runtime *runtime, Class *clazz) {
+int org_mini_gl_GL_glPushClientAttrib(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -5455,7 +5455,7 @@ int org_mini_gl_GL_glPushClientAttrib(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-int org_mini_gl_GL_glDrawRangeElements(Runtime *runtime, Class *clazz) {
+int org_mini_gl_GL_glDrawRangeElements(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -5478,7 +5478,7 @@ int org_mini_gl_GL_glDrawRangeElements(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-int org_mini_gl_GL_glTexImage3D(Runtime *runtime, Class *clazz) {
+int org_mini_gl_GL_glTexImage3D(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -5505,7 +5505,7 @@ int org_mini_gl_GL_glTexImage3D(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-int org_mini_gl_GL_glTexSubImage3D(Runtime *runtime, Class *clazz) {
+int org_mini_gl_GL_glTexSubImage3D(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -5533,7 +5533,7 @@ int org_mini_gl_GL_glTexSubImage3D(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-int org_mini_gl_GL_glCopyTexSubImage3D(Runtime *runtime, Class *clazz) {
+int org_mini_gl_GL_glCopyTexSubImage3D(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -5553,7 +5553,7 @@ int org_mini_gl_GL_glCopyTexSubImage3D(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-int org_mini_gl_GL_glActiveTexture(Runtime *runtime, Class *clazz) {
+int org_mini_gl_GL_glActiveTexture(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -5565,7 +5565,7 @@ int org_mini_gl_GL_glActiveTexture(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-int org_mini_gl_GL_glSampleCoverage(Runtime *runtime, Class *clazz) {
+int org_mini_gl_GL_glSampleCoverage(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -5578,7 +5578,7 @@ int org_mini_gl_GL_glSampleCoverage(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-int org_mini_gl_GL_glCompressedTexImage3D(Runtime *runtime, Class *clazz) {
+int org_mini_gl_GL_glCompressedTexImage3D(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -5604,7 +5604,7 @@ int org_mini_gl_GL_glCompressedTexImage3D(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-int org_mini_gl_GL_glCompressedTexImage2D(Runtime *runtime, Class *clazz) {
+int org_mini_gl_GL_glCompressedTexImage2D(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -5629,7 +5629,7 @@ int org_mini_gl_GL_glCompressedTexImage2D(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-int org_mini_gl_GL_glCompressedTexImage1D(Runtime *runtime, Class *clazz) {
+int org_mini_gl_GL_glCompressedTexImage1D(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -5653,7 +5653,7 @@ int org_mini_gl_GL_glCompressedTexImage1D(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-int org_mini_gl_GL_glCompressedTexSubImage3D(Runtime *runtime, Class *clazz) {
+int org_mini_gl_GL_glCompressedTexSubImage3D(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -5681,7 +5681,7 @@ int org_mini_gl_GL_glCompressedTexSubImage3D(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-int org_mini_gl_GL_glCompressedTexSubImage2D(Runtime *runtime, Class *clazz) {
+int org_mini_gl_GL_glCompressedTexSubImage2D(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -5707,7 +5707,7 @@ int org_mini_gl_GL_glCompressedTexSubImage2D(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-int org_mini_gl_GL_glCompressedTexSubImage1D(Runtime *runtime, Class *clazz) {
+int org_mini_gl_GL_glCompressedTexSubImage1D(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -5731,7 +5731,7 @@ int org_mini_gl_GL_glCompressedTexSubImage1D(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-int org_mini_gl_GL_glGetCompressedTexImage(Runtime *runtime, Class *clazz) {
+int org_mini_gl_GL_glGetCompressedTexImage(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -5751,7 +5751,7 @@ int org_mini_gl_GL_glGetCompressedTexImage(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-int org_mini_gl_GL_glClientActiveTexture(Runtime *runtime, Class *clazz) {
+int org_mini_gl_GL_glClientActiveTexture(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -5763,7 +5763,7 @@ int org_mini_gl_GL_glClientActiveTexture(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-int org_mini_gl_GL_glMultiTexCoord1d(Runtime *runtime, Class *clazz) {
+int org_mini_gl_GL_glMultiTexCoord1d(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -5776,7 +5776,7 @@ int org_mini_gl_GL_glMultiTexCoord1d(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-int org_mini_gl_GL_glMultiTexCoord1dv(Runtime *runtime, Class *clazz) {
+int org_mini_gl_GL_glMultiTexCoord1dv(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -5795,7 +5795,7 @@ int org_mini_gl_GL_glMultiTexCoord1dv(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-int org_mini_gl_GL_glMultiTexCoord1f(Runtime *runtime, Class *clazz) {
+int org_mini_gl_GL_glMultiTexCoord1f(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -5808,7 +5808,7 @@ int org_mini_gl_GL_glMultiTexCoord1f(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-int org_mini_gl_GL_glMultiTexCoord1fv(Runtime *runtime, Class *clazz) {
+int org_mini_gl_GL_glMultiTexCoord1fv(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -5827,7 +5827,7 @@ int org_mini_gl_GL_glMultiTexCoord1fv(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-int org_mini_gl_GL_glMultiTexCoord1i(Runtime *runtime, Class *clazz) {
+int org_mini_gl_GL_glMultiTexCoord1i(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -5840,7 +5840,7 @@ int org_mini_gl_GL_glMultiTexCoord1i(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-int org_mini_gl_GL_glMultiTexCoord1iv(Runtime *runtime, Class *clazz) {
+int org_mini_gl_GL_glMultiTexCoord1iv(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -5859,7 +5859,7 @@ int org_mini_gl_GL_glMultiTexCoord1iv(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-int org_mini_gl_GL_glMultiTexCoord1s(Runtime *runtime, Class *clazz) {
+int org_mini_gl_GL_glMultiTexCoord1s(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -5872,7 +5872,7 @@ int org_mini_gl_GL_glMultiTexCoord1s(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-int org_mini_gl_GL_glMultiTexCoord1sv(Runtime *runtime, Class *clazz) {
+int org_mini_gl_GL_glMultiTexCoord1sv(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -5891,7 +5891,7 @@ int org_mini_gl_GL_glMultiTexCoord1sv(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-int org_mini_gl_GL_glMultiTexCoord2d(Runtime *runtime, Class *clazz) {
+int org_mini_gl_GL_glMultiTexCoord2d(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -5905,7 +5905,7 @@ int org_mini_gl_GL_glMultiTexCoord2d(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-int org_mini_gl_GL_glMultiTexCoord2dv(Runtime *runtime, Class *clazz) {
+int org_mini_gl_GL_glMultiTexCoord2dv(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -5924,7 +5924,7 @@ int org_mini_gl_GL_glMultiTexCoord2dv(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-int org_mini_gl_GL_glMultiTexCoord2f(Runtime *runtime, Class *clazz) {
+int org_mini_gl_GL_glMultiTexCoord2f(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -5938,7 +5938,7 @@ int org_mini_gl_GL_glMultiTexCoord2f(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-int org_mini_gl_GL_glMultiTexCoord2fv(Runtime *runtime, Class *clazz) {
+int org_mini_gl_GL_glMultiTexCoord2fv(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -5957,7 +5957,7 @@ int org_mini_gl_GL_glMultiTexCoord2fv(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-int org_mini_gl_GL_glMultiTexCoord2i(Runtime *runtime, Class *clazz) {
+int org_mini_gl_GL_glMultiTexCoord2i(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -5971,7 +5971,7 @@ int org_mini_gl_GL_glMultiTexCoord2i(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-int org_mini_gl_GL_glMultiTexCoord2iv(Runtime *runtime, Class *clazz) {
+int org_mini_gl_GL_glMultiTexCoord2iv(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -5990,7 +5990,7 @@ int org_mini_gl_GL_glMultiTexCoord2iv(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-int org_mini_gl_GL_glMultiTexCoord2s(Runtime *runtime, Class *clazz) {
+int org_mini_gl_GL_glMultiTexCoord2s(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -6004,7 +6004,7 @@ int org_mini_gl_GL_glMultiTexCoord2s(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-int org_mini_gl_GL_glMultiTexCoord2sv(Runtime *runtime, Class *clazz) {
+int org_mini_gl_GL_glMultiTexCoord2sv(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -6023,7 +6023,7 @@ int org_mini_gl_GL_glMultiTexCoord2sv(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-int org_mini_gl_GL_glMultiTexCoord3d(Runtime *runtime, Class *clazz) {
+int org_mini_gl_GL_glMultiTexCoord3d(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -6038,7 +6038,7 @@ int org_mini_gl_GL_glMultiTexCoord3d(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-int org_mini_gl_GL_glMultiTexCoord3dv(Runtime *runtime, Class *clazz) {
+int org_mini_gl_GL_glMultiTexCoord3dv(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -6057,7 +6057,7 @@ int org_mini_gl_GL_glMultiTexCoord3dv(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-int org_mini_gl_GL_glMultiTexCoord3f(Runtime *runtime, Class *clazz) {
+int org_mini_gl_GL_glMultiTexCoord3f(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -6072,7 +6072,7 @@ int org_mini_gl_GL_glMultiTexCoord3f(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-int org_mini_gl_GL_glMultiTexCoord3fv(Runtime *runtime, Class *clazz) {
+int org_mini_gl_GL_glMultiTexCoord3fv(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -6091,7 +6091,7 @@ int org_mini_gl_GL_glMultiTexCoord3fv(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-int org_mini_gl_GL_glMultiTexCoord3i(Runtime *runtime, Class *clazz) {
+int org_mini_gl_GL_glMultiTexCoord3i(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -6106,7 +6106,7 @@ int org_mini_gl_GL_glMultiTexCoord3i(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-int org_mini_gl_GL_glMultiTexCoord3iv(Runtime *runtime, Class *clazz) {
+int org_mini_gl_GL_glMultiTexCoord3iv(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -6125,7 +6125,7 @@ int org_mini_gl_GL_glMultiTexCoord3iv(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-int org_mini_gl_GL_glMultiTexCoord3s(Runtime *runtime, Class *clazz) {
+int org_mini_gl_GL_glMultiTexCoord3s(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -6140,7 +6140,7 @@ int org_mini_gl_GL_glMultiTexCoord3s(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-int org_mini_gl_GL_glMultiTexCoord3sv(Runtime *runtime, Class *clazz) {
+int org_mini_gl_GL_glMultiTexCoord3sv(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -6159,7 +6159,7 @@ int org_mini_gl_GL_glMultiTexCoord3sv(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-int org_mini_gl_GL_glMultiTexCoord4d(Runtime *runtime, Class *clazz) {
+int org_mini_gl_GL_glMultiTexCoord4d(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -6175,7 +6175,7 @@ int org_mini_gl_GL_glMultiTexCoord4d(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-int org_mini_gl_GL_glMultiTexCoord4dv(Runtime *runtime, Class *clazz) {
+int org_mini_gl_GL_glMultiTexCoord4dv(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -6194,7 +6194,7 @@ int org_mini_gl_GL_glMultiTexCoord4dv(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-int org_mini_gl_GL_glMultiTexCoord4f(Runtime *runtime, Class *clazz) {
+int org_mini_gl_GL_glMultiTexCoord4f(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -6210,7 +6210,7 @@ int org_mini_gl_GL_glMultiTexCoord4f(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-int org_mini_gl_GL_glMultiTexCoord4fv(Runtime *runtime, Class *clazz) {
+int org_mini_gl_GL_glMultiTexCoord4fv(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -6229,7 +6229,7 @@ int org_mini_gl_GL_glMultiTexCoord4fv(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-int org_mini_gl_GL_glMultiTexCoord4i(Runtime *runtime, Class *clazz) {
+int org_mini_gl_GL_glMultiTexCoord4i(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -6245,7 +6245,7 @@ int org_mini_gl_GL_glMultiTexCoord4i(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-int org_mini_gl_GL_glMultiTexCoord4iv(Runtime *runtime, Class *clazz) {
+int org_mini_gl_GL_glMultiTexCoord4iv(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -6264,7 +6264,7 @@ int org_mini_gl_GL_glMultiTexCoord4iv(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-int org_mini_gl_GL_glMultiTexCoord4s(Runtime *runtime, Class *clazz) {
+int org_mini_gl_GL_glMultiTexCoord4s(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -6280,7 +6280,7 @@ int org_mini_gl_GL_glMultiTexCoord4s(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-int org_mini_gl_GL_glMultiTexCoord4sv(Runtime *runtime, Class *clazz) {
+int org_mini_gl_GL_glMultiTexCoord4sv(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -6299,7 +6299,7 @@ int org_mini_gl_GL_glMultiTexCoord4sv(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-int org_mini_gl_GL_glLoadTransposeMatrixf(Runtime *runtime, Class *clazz) {
+int org_mini_gl_GL_glLoadTransposeMatrixf(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -6317,7 +6317,7 @@ int org_mini_gl_GL_glLoadTransposeMatrixf(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-int org_mini_gl_GL_glLoadTransposeMatrixd(Runtime *runtime, Class *clazz) {
+int org_mini_gl_GL_glLoadTransposeMatrixd(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -6335,7 +6335,7 @@ int org_mini_gl_GL_glLoadTransposeMatrixd(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-int org_mini_gl_GL_glMultTransposeMatrixf(Runtime *runtime, Class *clazz) {
+int org_mini_gl_GL_glMultTransposeMatrixf(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -6353,7 +6353,7 @@ int org_mini_gl_GL_glMultTransposeMatrixf(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-int org_mini_gl_GL_glMultTransposeMatrixd(Runtime *runtime, Class *clazz) {
+int org_mini_gl_GL_glMultTransposeMatrixd(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -6371,7 +6371,7 @@ int org_mini_gl_GL_glMultTransposeMatrixd(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-int org_mini_gl_GL_glBlendFuncSeparate(Runtime *runtime, Class *clazz) {
+int org_mini_gl_GL_glBlendFuncSeparate(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -6386,7 +6386,7 @@ int org_mini_gl_GL_glBlendFuncSeparate(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-int org_mini_gl_GL_glMultiDrawArrays(Runtime *runtime, Class *clazz) {
+int org_mini_gl_GL_glMultiDrawArrays(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -6413,7 +6413,7 @@ int org_mini_gl_GL_glMultiDrawArrays(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-int org_mini_gl_GL_glMultiDrawElements(Runtime *runtime, Class *clazz) {
+int org_mini_gl_GL_glMultiDrawElements(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -6439,7 +6439,7 @@ int org_mini_gl_GL_glMultiDrawElements(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-int org_mini_gl_GL_glPointParameterf(Runtime *runtime, Class *clazz) {
+int org_mini_gl_GL_glPointParameterf(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -6452,7 +6452,7 @@ int org_mini_gl_GL_glPointParameterf(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-int org_mini_gl_GL_glPointParameterfv(Runtime *runtime, Class *clazz) {
+int org_mini_gl_GL_glPointParameterfv(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -6471,7 +6471,7 @@ int org_mini_gl_GL_glPointParameterfv(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-int org_mini_gl_GL_glPointParameteri(Runtime *runtime, Class *clazz) {
+int org_mini_gl_GL_glPointParameteri(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -6484,7 +6484,7 @@ int org_mini_gl_GL_glPointParameteri(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-int org_mini_gl_GL_glPointParameteriv(Runtime *runtime, Class *clazz) {
+int org_mini_gl_GL_glPointParameteriv(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -6503,7 +6503,7 @@ int org_mini_gl_GL_glPointParameteriv(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-int org_mini_gl_GL_glFogCoordf(Runtime *runtime, Class *clazz) {
+int org_mini_gl_GL_glFogCoordf(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -6515,7 +6515,7 @@ int org_mini_gl_GL_glFogCoordf(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-int org_mini_gl_GL_glFogCoordfv(Runtime *runtime, Class *clazz) {
+int org_mini_gl_GL_glFogCoordfv(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -6533,7 +6533,7 @@ int org_mini_gl_GL_glFogCoordfv(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-int org_mini_gl_GL_glFogCoordd(Runtime *runtime, Class *clazz) {
+int org_mini_gl_GL_glFogCoordd(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -6545,7 +6545,7 @@ int org_mini_gl_GL_glFogCoordd(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-int org_mini_gl_GL_glFogCoorddv(Runtime *runtime, Class *clazz) {
+int org_mini_gl_GL_glFogCoorddv(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -6563,7 +6563,7 @@ int org_mini_gl_GL_glFogCoorddv(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-int org_mini_gl_GL_glFogCoordPointer(Runtime *runtime, Class *clazz) {
+int org_mini_gl_GL_glFogCoordPointer(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -6583,7 +6583,7 @@ int org_mini_gl_GL_glFogCoordPointer(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-int org_mini_gl_GL_glSecondaryColor3b(Runtime *runtime, Class *clazz) {
+int org_mini_gl_GL_glSecondaryColor3b(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -6597,7 +6597,7 @@ int org_mini_gl_GL_glSecondaryColor3b(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-int org_mini_gl_GL_glSecondaryColor3bv(Runtime *runtime, Class *clazz) {
+int org_mini_gl_GL_glSecondaryColor3bv(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -6615,7 +6615,7 @@ int org_mini_gl_GL_glSecondaryColor3bv(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-int org_mini_gl_GL_glSecondaryColor3d(Runtime *runtime, Class *clazz) {
+int org_mini_gl_GL_glSecondaryColor3d(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -6629,7 +6629,7 @@ int org_mini_gl_GL_glSecondaryColor3d(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-int org_mini_gl_GL_glSecondaryColor3dv(Runtime *runtime, Class *clazz) {
+int org_mini_gl_GL_glSecondaryColor3dv(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -6647,7 +6647,7 @@ int org_mini_gl_GL_glSecondaryColor3dv(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-int org_mini_gl_GL_glSecondaryColor3f(Runtime *runtime, Class *clazz) {
+int org_mini_gl_GL_glSecondaryColor3f(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -6661,7 +6661,7 @@ int org_mini_gl_GL_glSecondaryColor3f(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-int org_mini_gl_GL_glSecondaryColor3fv(Runtime *runtime, Class *clazz) {
+int org_mini_gl_GL_glSecondaryColor3fv(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -6679,7 +6679,7 @@ int org_mini_gl_GL_glSecondaryColor3fv(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-int org_mini_gl_GL_glSecondaryColor3i(Runtime *runtime, Class *clazz) {
+int org_mini_gl_GL_glSecondaryColor3i(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -6693,7 +6693,7 @@ int org_mini_gl_GL_glSecondaryColor3i(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-int org_mini_gl_GL_glSecondaryColor3iv(Runtime *runtime, Class *clazz) {
+int org_mini_gl_GL_glSecondaryColor3iv(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -6711,7 +6711,7 @@ int org_mini_gl_GL_glSecondaryColor3iv(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-int org_mini_gl_GL_glSecondaryColor3s(Runtime *runtime, Class *clazz) {
+int org_mini_gl_GL_glSecondaryColor3s(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -6725,7 +6725,7 @@ int org_mini_gl_GL_glSecondaryColor3s(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-int org_mini_gl_GL_glSecondaryColor3sv(Runtime *runtime, Class *clazz) {
+int org_mini_gl_GL_glSecondaryColor3sv(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -6743,7 +6743,7 @@ int org_mini_gl_GL_glSecondaryColor3sv(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-int org_mini_gl_GL_glSecondaryColor3ub(Runtime *runtime, Class *clazz) {
+int org_mini_gl_GL_glSecondaryColor3ub(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -6757,7 +6757,7 @@ int org_mini_gl_GL_glSecondaryColor3ub(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-int org_mini_gl_GL_glSecondaryColor3ubv(Runtime *runtime, Class *clazz) {
+int org_mini_gl_GL_glSecondaryColor3ubv(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -6775,7 +6775,7 @@ int org_mini_gl_GL_glSecondaryColor3ubv(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-int org_mini_gl_GL_glSecondaryColor3ui(Runtime *runtime, Class *clazz) {
+int org_mini_gl_GL_glSecondaryColor3ui(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -6789,7 +6789,7 @@ int org_mini_gl_GL_glSecondaryColor3ui(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-int org_mini_gl_GL_glSecondaryColor3uiv(Runtime *runtime, Class *clazz) {
+int org_mini_gl_GL_glSecondaryColor3uiv(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -6807,7 +6807,7 @@ int org_mini_gl_GL_glSecondaryColor3uiv(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-int org_mini_gl_GL_glSecondaryColor3us(Runtime *runtime, Class *clazz) {
+int org_mini_gl_GL_glSecondaryColor3us(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -6821,7 +6821,7 @@ int org_mini_gl_GL_glSecondaryColor3us(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-int org_mini_gl_GL_glSecondaryColor3usv(Runtime *runtime, Class *clazz) {
+int org_mini_gl_GL_glSecondaryColor3usv(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -6839,7 +6839,7 @@ int org_mini_gl_GL_glSecondaryColor3usv(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-int org_mini_gl_GL_glSecondaryColorPointer(Runtime *runtime, Class *clazz) {
+int org_mini_gl_GL_glSecondaryColorPointer(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -6860,7 +6860,7 @@ int org_mini_gl_GL_glSecondaryColorPointer(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-int org_mini_gl_GL_glWindowPos2d(Runtime *runtime, Class *clazz) {
+int org_mini_gl_GL_glWindowPos2d(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -6873,7 +6873,7 @@ int org_mini_gl_GL_glWindowPos2d(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-int org_mini_gl_GL_glWindowPos2dv(Runtime *runtime, Class *clazz) {
+int org_mini_gl_GL_glWindowPos2dv(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -6891,7 +6891,7 @@ int org_mini_gl_GL_glWindowPos2dv(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-int org_mini_gl_GL_glWindowPos2f(Runtime *runtime, Class *clazz) {
+int org_mini_gl_GL_glWindowPos2f(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -6904,7 +6904,7 @@ int org_mini_gl_GL_glWindowPos2f(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-int org_mini_gl_GL_glWindowPos2fv(Runtime *runtime, Class *clazz) {
+int org_mini_gl_GL_glWindowPos2fv(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -6922,7 +6922,7 @@ int org_mini_gl_GL_glWindowPos2fv(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-int org_mini_gl_GL_glWindowPos2i(Runtime *runtime, Class *clazz) {
+int org_mini_gl_GL_glWindowPos2i(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -6935,7 +6935,7 @@ int org_mini_gl_GL_glWindowPos2i(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-int org_mini_gl_GL_glWindowPos2iv(Runtime *runtime, Class *clazz) {
+int org_mini_gl_GL_glWindowPos2iv(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -6953,7 +6953,7 @@ int org_mini_gl_GL_glWindowPos2iv(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-int org_mini_gl_GL_glWindowPos2s(Runtime *runtime, Class *clazz) {
+int org_mini_gl_GL_glWindowPos2s(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -6966,7 +6966,7 @@ int org_mini_gl_GL_glWindowPos2s(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-int org_mini_gl_GL_glWindowPos2sv(Runtime *runtime, Class *clazz) {
+int org_mini_gl_GL_glWindowPos2sv(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -6984,7 +6984,7 @@ int org_mini_gl_GL_glWindowPos2sv(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-int org_mini_gl_GL_glWindowPos3d(Runtime *runtime, Class *clazz) {
+int org_mini_gl_GL_glWindowPos3d(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -6998,7 +6998,7 @@ int org_mini_gl_GL_glWindowPos3d(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-int org_mini_gl_GL_glWindowPos3dv(Runtime *runtime, Class *clazz) {
+int org_mini_gl_GL_glWindowPos3dv(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -7016,7 +7016,7 @@ int org_mini_gl_GL_glWindowPos3dv(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-int org_mini_gl_GL_glWindowPos3f(Runtime *runtime, Class *clazz) {
+int org_mini_gl_GL_glWindowPos3f(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -7030,7 +7030,7 @@ int org_mini_gl_GL_glWindowPos3f(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-int org_mini_gl_GL_glWindowPos3fv(Runtime *runtime, Class *clazz) {
+int org_mini_gl_GL_glWindowPos3fv(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -7048,7 +7048,7 @@ int org_mini_gl_GL_glWindowPos3fv(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-int org_mini_gl_GL_glWindowPos3i(Runtime *runtime, Class *clazz) {
+int org_mini_gl_GL_glWindowPos3i(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -7062,7 +7062,7 @@ int org_mini_gl_GL_glWindowPos3i(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-int org_mini_gl_GL_glWindowPos3iv(Runtime *runtime, Class *clazz) {
+int org_mini_gl_GL_glWindowPos3iv(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -7080,7 +7080,7 @@ int org_mini_gl_GL_glWindowPos3iv(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-int org_mini_gl_GL_glWindowPos3s(Runtime *runtime, Class *clazz) {
+int org_mini_gl_GL_glWindowPos3s(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -7094,7 +7094,7 @@ int org_mini_gl_GL_glWindowPos3s(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-int org_mini_gl_GL_glWindowPos3sv(Runtime *runtime, Class *clazz) {
+int org_mini_gl_GL_glWindowPos3sv(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -7112,7 +7112,7 @@ int org_mini_gl_GL_glWindowPos3sv(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-int org_mini_gl_GL_glBlendColor(Runtime *runtime, Class *clazz) {
+int org_mini_gl_GL_glBlendColor(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -7127,7 +7127,7 @@ int org_mini_gl_GL_glBlendColor(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-int org_mini_gl_GL_glBlendEquation(Runtime *runtime, Class *clazz) {
+int org_mini_gl_GL_glBlendEquation(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -7139,7 +7139,7 @@ int org_mini_gl_GL_glBlendEquation(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-int org_mini_gl_GL_glGenQueries(Runtime *runtime, Class *clazz) {
+int org_mini_gl_GL_glGenQueries(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -7158,7 +7158,7 @@ int org_mini_gl_GL_glGenQueries(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-int org_mini_gl_GL_glDeleteQueries(Runtime *runtime, Class *clazz) {
+int org_mini_gl_GL_glDeleteQueries(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -7177,7 +7177,7 @@ int org_mini_gl_GL_glDeleteQueries(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-int org_mini_gl_GL_glIsQuery(Runtime *runtime, Class *clazz) {
+int org_mini_gl_GL_glIsQuery(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -7189,7 +7189,7 @@ int org_mini_gl_GL_glIsQuery(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-int org_mini_gl_GL_glBeginQuery(Runtime *runtime, Class *clazz) {
+int org_mini_gl_GL_glBeginQuery(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -7202,7 +7202,7 @@ int org_mini_gl_GL_glBeginQuery(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-int org_mini_gl_GL_glEndQuery(Runtime *runtime, Class *clazz) {
+int org_mini_gl_GL_glEndQuery(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -7214,7 +7214,7 @@ int org_mini_gl_GL_glEndQuery(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-int org_mini_gl_GL_glGetQueryiv(Runtime *runtime, Class *clazz) {
+int org_mini_gl_GL_glGetQueryiv(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -7234,7 +7234,7 @@ int org_mini_gl_GL_glGetQueryiv(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-int org_mini_gl_GL_glGetQueryObjectiv(Runtime *runtime, Class *clazz) {
+int org_mini_gl_GL_glGetQueryObjectiv(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -7254,7 +7254,7 @@ int org_mini_gl_GL_glGetQueryObjectiv(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-int org_mini_gl_GL_glGetQueryObjectuiv(Runtime *runtime, Class *clazz) {
+int org_mini_gl_GL_glGetQueryObjectuiv(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -7274,7 +7274,7 @@ int org_mini_gl_GL_glGetQueryObjectuiv(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-int org_mini_gl_GL_glBindBuffer(Runtime *runtime, Class *clazz) {
+int org_mini_gl_GL_glBindBuffer(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -7287,7 +7287,7 @@ int org_mini_gl_GL_glBindBuffer(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-int org_mini_gl_GL_glDeleteBuffers(Runtime *runtime, Class *clazz) {
+int org_mini_gl_GL_glDeleteBuffers(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -7306,7 +7306,7 @@ int org_mini_gl_GL_glDeleteBuffers(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-int org_mini_gl_GL_glGenBuffers(Runtime *runtime, Class *clazz) {
+int org_mini_gl_GL_glGenBuffers(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -7325,7 +7325,7 @@ int org_mini_gl_GL_glGenBuffers(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-int org_mini_gl_GL_glIsBuffer(Runtime *runtime, Class *clazz) {
+int org_mini_gl_GL_glIsBuffer(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -7337,7 +7337,7 @@ int org_mini_gl_GL_glIsBuffer(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-int org_mini_gl_GL_glBufferData(Runtime *runtime, Class *clazz) {
+int org_mini_gl_GL_glBufferData(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -7358,7 +7358,7 @@ int org_mini_gl_GL_glBufferData(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-int org_mini_gl_GL_glBufferSubData(Runtime *runtime, Class *clazz) {
+int org_mini_gl_GL_glBufferSubData(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -7379,7 +7379,7 @@ int org_mini_gl_GL_glBufferSubData(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-int org_mini_gl_GL_glGetBufferSubData(Runtime *runtime, Class *clazz) {
+int org_mini_gl_GL_glGetBufferSubData(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -7400,7 +7400,7 @@ int org_mini_gl_GL_glGetBufferSubData(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-int org_mini_gl_GL_glMapBuffer(Runtime *runtime, Class *clazz) {
+int org_mini_gl_GL_glMapBuffer(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -7413,7 +7413,7 @@ int org_mini_gl_GL_glMapBuffer(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-int org_mini_gl_GL_glUnmapBuffer(Runtime *runtime, Class *clazz) {
+int org_mini_gl_GL_glUnmapBuffer(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -7425,7 +7425,7 @@ int org_mini_gl_GL_glUnmapBuffer(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-int org_mini_gl_GL_glGetBufferParameteriv(Runtime *runtime, Class *clazz) {
+int org_mini_gl_GL_glGetBufferParameteriv(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -7445,7 +7445,7 @@ int org_mini_gl_GL_glGetBufferParameteriv(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-int org_mini_gl_GL_glGetBufferPointerv(Runtime *runtime, Class *clazz) {
+int org_mini_gl_GL_glGetBufferPointerv(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -7463,7 +7463,7 @@ int org_mini_gl_GL_glGetBufferPointerv(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-int org_mini_gl_GL_glBlendEquationSeparate(Runtime *runtime, Class *clazz) {
+int org_mini_gl_GL_glBlendEquationSeparate(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -7476,7 +7476,7 @@ int org_mini_gl_GL_glBlendEquationSeparate(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-int org_mini_gl_GL_glDrawBuffers(Runtime *runtime, Class *clazz) {
+int org_mini_gl_GL_glDrawBuffers(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -7495,7 +7495,7 @@ int org_mini_gl_GL_glDrawBuffers(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-int org_mini_gl_GL_glStencilOpSeparate(Runtime *runtime, Class *clazz) {
+int org_mini_gl_GL_glStencilOpSeparate(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -7510,7 +7510,7 @@ int org_mini_gl_GL_glStencilOpSeparate(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-int org_mini_gl_GL_glStencilFuncSeparate(Runtime *runtime, Class *clazz) {
+int org_mini_gl_GL_glStencilFuncSeparate(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -7525,7 +7525,7 @@ int org_mini_gl_GL_glStencilFuncSeparate(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-int org_mini_gl_GL_glStencilMaskSeparate(Runtime *runtime, Class *clazz) {
+int org_mini_gl_GL_glStencilMaskSeparate(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -7538,7 +7538,7 @@ int org_mini_gl_GL_glStencilMaskSeparate(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-int org_mini_gl_GL_glAttachShader(Runtime *runtime, Class *clazz) {
+int org_mini_gl_GL_glAttachShader(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -7551,7 +7551,7 @@ int org_mini_gl_GL_glAttachShader(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-int org_mini_gl_GL_glBindAttribLocation(Runtime *runtime, Class *clazz) {
+int org_mini_gl_GL_glBindAttribLocation(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -7571,7 +7571,7 @@ int org_mini_gl_GL_glBindAttribLocation(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-int org_mini_gl_GL_glCompileShader(Runtime *runtime, Class *clazz) {
+int org_mini_gl_GL_glCompileShader(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -7583,7 +7583,7 @@ int org_mini_gl_GL_glCompileShader(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-int org_mini_gl_GL_glCreateProgram(Runtime *runtime, Class *clazz) {
+int org_mini_gl_GL_glCreateProgram(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -7594,7 +7594,7 @@ int org_mini_gl_GL_glCreateProgram(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-int org_mini_gl_GL_glCreateShader(Runtime *runtime, Class *clazz) {
+int org_mini_gl_GL_glCreateShader(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -7606,7 +7606,7 @@ int org_mini_gl_GL_glCreateShader(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-int org_mini_gl_GL_glDeleteProgram(Runtime *runtime, Class *clazz) {
+int org_mini_gl_GL_glDeleteProgram(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -7618,7 +7618,7 @@ int org_mini_gl_GL_glDeleteProgram(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-int org_mini_gl_GL_glDeleteShader(Runtime *runtime, Class *clazz) {
+int org_mini_gl_GL_glDeleteShader(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -7630,7 +7630,7 @@ int org_mini_gl_GL_glDeleteShader(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-int org_mini_gl_GL_glDetachShader(Runtime *runtime, Class *clazz) {
+int org_mini_gl_GL_glDetachShader(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -7643,7 +7643,7 @@ int org_mini_gl_GL_glDetachShader(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-int org_mini_gl_GL_glDisableVertexAttribArray(Runtime *runtime, Class *clazz) {
+int org_mini_gl_GL_glDisableVertexAttribArray(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -7655,7 +7655,7 @@ int org_mini_gl_GL_glDisableVertexAttribArray(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-int org_mini_gl_GL_glEnableVertexAttribArray(Runtime *runtime, Class *clazz) {
+int org_mini_gl_GL_glEnableVertexAttribArray(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -7667,7 +7667,7 @@ int org_mini_gl_GL_glEnableVertexAttribArray(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-int org_mini_gl_GL_glGetActiveAttrib(Runtime *runtime, Class *clazz) {
+int org_mini_gl_GL_glGetActiveAttrib(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -7709,7 +7709,7 @@ int org_mini_gl_GL_glGetActiveAttrib(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-int org_mini_gl_GL_glGetActiveUniform(Runtime *runtime, Class *clazz) {
+int org_mini_gl_GL_glGetActiveUniform(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -7751,7 +7751,7 @@ int org_mini_gl_GL_glGetActiveUniform(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-int org_mini_gl_GL_glGetAttachedShaders(Runtime *runtime, Class *clazz) {
+int org_mini_gl_GL_glGetAttachedShaders(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -7778,7 +7778,7 @@ int org_mini_gl_GL_glGetAttachedShaders(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-int org_mini_gl_GL_glGetAttribLocation(Runtime *runtime, Class *clazz) {
+int org_mini_gl_GL_glGetAttribLocation(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -7797,7 +7797,7 @@ int org_mini_gl_GL_glGetAttribLocation(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-int org_mini_gl_GL_glGetProgramiv(Runtime *runtime, Class *clazz) {
+int org_mini_gl_GL_glGetProgramiv(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -7817,7 +7817,7 @@ int org_mini_gl_GL_glGetProgramiv(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-int org_mini_gl_GL_glGetProgramInfoLog(Runtime *runtime, Class *clazz) {
+int org_mini_gl_GL_glGetProgramInfoLog(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -7844,7 +7844,7 @@ int org_mini_gl_GL_glGetProgramInfoLog(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-int org_mini_gl_GL_glGetShaderiv(Runtime *runtime, Class *clazz) {
+int org_mini_gl_GL_glGetShaderiv(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -7864,7 +7864,7 @@ int org_mini_gl_GL_glGetShaderiv(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-int org_mini_gl_GL_glGetShaderInfoLog(Runtime *runtime, Class *clazz) {
+int org_mini_gl_GL_glGetShaderInfoLog(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -7891,7 +7891,7 @@ int org_mini_gl_GL_glGetShaderInfoLog(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-int org_mini_gl_GL_glGetShaderSource(Runtime *runtime, Class *clazz) {
+int org_mini_gl_GL_glGetShaderSource(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -7918,7 +7918,7 @@ int org_mini_gl_GL_glGetShaderSource(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-int org_mini_gl_GL_glGetUniformLocation(Runtime *runtime, Class *clazz) {
+int org_mini_gl_GL_glGetUniformLocation(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -7937,7 +7937,7 @@ int org_mini_gl_GL_glGetUniformLocation(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-int org_mini_gl_GL_glGetUniformfv(Runtime *runtime, Class *clazz) {
+int org_mini_gl_GL_glGetUniformfv(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -7957,7 +7957,7 @@ int org_mini_gl_GL_glGetUniformfv(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-int org_mini_gl_GL_glGetUniformiv(Runtime *runtime, Class *clazz) {
+int org_mini_gl_GL_glGetUniformiv(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -7977,7 +7977,7 @@ int org_mini_gl_GL_glGetUniformiv(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-int org_mini_gl_GL_glGetVertexAttribdv(Runtime *runtime, Class *clazz) {
+int org_mini_gl_GL_glGetVertexAttribdv(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -7997,7 +7997,7 @@ int org_mini_gl_GL_glGetVertexAttribdv(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-int org_mini_gl_GL_glGetVertexAttribfv(Runtime *runtime, Class *clazz) {
+int org_mini_gl_GL_glGetVertexAttribfv(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -8017,7 +8017,7 @@ int org_mini_gl_GL_glGetVertexAttribfv(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-int org_mini_gl_GL_glGetVertexAttribiv(Runtime *runtime, Class *clazz) {
+int org_mini_gl_GL_glGetVertexAttribiv(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -8037,7 +8037,7 @@ int org_mini_gl_GL_glGetVertexAttribiv(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-int org_mini_gl_GL_glGetVertexAttribPointerv(Runtime *runtime, Class *clazz) {
+int org_mini_gl_GL_glGetVertexAttribPointerv(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -8055,7 +8055,7 @@ int org_mini_gl_GL_glGetVertexAttribPointerv(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-int org_mini_gl_GL_glIsProgram(Runtime *runtime, Class *clazz) {
+int org_mini_gl_GL_glIsProgram(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -8067,7 +8067,7 @@ int org_mini_gl_GL_glIsProgram(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-int org_mini_gl_GL_glIsShader(Runtime *runtime, Class *clazz) {
+int org_mini_gl_GL_glIsShader(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -8079,7 +8079,7 @@ int org_mini_gl_GL_glIsShader(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-int org_mini_gl_GL_glLinkProgram(Runtime *runtime, Class *clazz) {
+int org_mini_gl_GL_glLinkProgram(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -8091,7 +8091,7 @@ int org_mini_gl_GL_glLinkProgram(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-int org_mini_gl_GL_glShaderSource(Runtime *runtime, Class *clazz) {
+int org_mini_gl_GL_glShaderSource(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -8116,7 +8116,7 @@ int org_mini_gl_GL_glShaderSource(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-int org_mini_gl_GL_glUseProgram(Runtime *runtime, Class *clazz) {
+int org_mini_gl_GL_glUseProgram(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -8128,7 +8128,7 @@ int org_mini_gl_GL_glUseProgram(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-int org_mini_gl_GL_glUniform1f(Runtime *runtime, Class *clazz) {
+int org_mini_gl_GL_glUniform1f(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -8141,7 +8141,7 @@ int org_mini_gl_GL_glUniform1f(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-int org_mini_gl_GL_glUniform2f(Runtime *runtime, Class *clazz) {
+int org_mini_gl_GL_glUniform2f(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -8155,7 +8155,7 @@ int org_mini_gl_GL_glUniform2f(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-int org_mini_gl_GL_glUniform3f(Runtime *runtime, Class *clazz) {
+int org_mini_gl_GL_glUniform3f(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -8170,7 +8170,7 @@ int org_mini_gl_GL_glUniform3f(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-int org_mini_gl_GL_glUniform4f(Runtime *runtime, Class *clazz) {
+int org_mini_gl_GL_glUniform4f(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -8186,7 +8186,7 @@ int org_mini_gl_GL_glUniform4f(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-int org_mini_gl_GL_glUniform1i(Runtime *runtime, Class *clazz) {
+int org_mini_gl_GL_glUniform1i(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -8199,7 +8199,7 @@ int org_mini_gl_GL_glUniform1i(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-int org_mini_gl_GL_glUniform2i(Runtime *runtime, Class *clazz) {
+int org_mini_gl_GL_glUniform2i(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -8213,7 +8213,7 @@ int org_mini_gl_GL_glUniform2i(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-int org_mini_gl_GL_glUniform3i(Runtime *runtime, Class *clazz) {
+int org_mini_gl_GL_glUniform3i(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -8228,7 +8228,7 @@ int org_mini_gl_GL_glUniform3i(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-int org_mini_gl_GL_glUniform4i(Runtime *runtime, Class *clazz) {
+int org_mini_gl_GL_glUniform4i(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -8244,7 +8244,7 @@ int org_mini_gl_GL_glUniform4i(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-int org_mini_gl_GL_glUniform1fv(Runtime *runtime, Class *clazz) {
+int org_mini_gl_GL_glUniform1fv(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -8264,7 +8264,7 @@ int org_mini_gl_GL_glUniform1fv(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-int org_mini_gl_GL_glUniform2fv(Runtime *runtime, Class *clazz) {
+int org_mini_gl_GL_glUniform2fv(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -8284,7 +8284,7 @@ int org_mini_gl_GL_glUniform2fv(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-int org_mini_gl_GL_glUniform3fv(Runtime *runtime, Class *clazz) {
+int org_mini_gl_GL_glUniform3fv(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -8304,7 +8304,7 @@ int org_mini_gl_GL_glUniform3fv(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-int org_mini_gl_GL_glUniform4fv(Runtime *runtime, Class *clazz) {
+int org_mini_gl_GL_glUniform4fv(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -8324,7 +8324,7 @@ int org_mini_gl_GL_glUniform4fv(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-int org_mini_gl_GL_glUniform1iv(Runtime *runtime, Class *clazz) {
+int org_mini_gl_GL_glUniform1iv(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -8344,7 +8344,7 @@ int org_mini_gl_GL_glUniform1iv(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-int org_mini_gl_GL_glUniform2iv(Runtime *runtime, Class *clazz) {
+int org_mini_gl_GL_glUniform2iv(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -8364,7 +8364,7 @@ int org_mini_gl_GL_glUniform2iv(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-int org_mini_gl_GL_glUniform3iv(Runtime *runtime, Class *clazz) {
+int org_mini_gl_GL_glUniform3iv(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -8384,7 +8384,7 @@ int org_mini_gl_GL_glUniform3iv(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-int org_mini_gl_GL_glUniform4iv(Runtime *runtime, Class *clazz) {
+int org_mini_gl_GL_glUniform4iv(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -8404,7 +8404,7 @@ int org_mini_gl_GL_glUniform4iv(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-int org_mini_gl_GL_glUniformMatrix2fv(Runtime *runtime, Class *clazz) {
+int org_mini_gl_GL_glUniformMatrix2fv(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -8425,7 +8425,7 @@ int org_mini_gl_GL_glUniformMatrix2fv(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-int org_mini_gl_GL_glUniformMatrix3fv(Runtime *runtime, Class *clazz) {
+int org_mini_gl_GL_glUniformMatrix3fv(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -8446,7 +8446,7 @@ int org_mini_gl_GL_glUniformMatrix3fv(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-int org_mini_gl_GL_glUniformMatrix4fv(Runtime *runtime, Class *clazz) {
+int org_mini_gl_GL_glUniformMatrix4fv(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -8467,7 +8467,7 @@ int org_mini_gl_GL_glUniformMatrix4fv(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-int org_mini_gl_GL_glValidateProgram(Runtime *runtime, Class *clazz) {
+int org_mini_gl_GL_glValidateProgram(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -8479,7 +8479,7 @@ int org_mini_gl_GL_glValidateProgram(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-int org_mini_gl_GL_glVertexAttrib1d(Runtime *runtime, Class *clazz) {
+int org_mini_gl_GL_glVertexAttrib1d(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -8492,7 +8492,7 @@ int org_mini_gl_GL_glVertexAttrib1d(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-int org_mini_gl_GL_glVertexAttrib1dv(Runtime *runtime, Class *clazz) {
+int org_mini_gl_GL_glVertexAttrib1dv(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -8511,7 +8511,7 @@ int org_mini_gl_GL_glVertexAttrib1dv(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-int org_mini_gl_GL_glVertexAttrib1f(Runtime *runtime, Class *clazz) {
+int org_mini_gl_GL_glVertexAttrib1f(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -8524,7 +8524,7 @@ int org_mini_gl_GL_glVertexAttrib1f(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-int org_mini_gl_GL_glVertexAttrib1fv(Runtime *runtime, Class *clazz) {
+int org_mini_gl_GL_glVertexAttrib1fv(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -8543,7 +8543,7 @@ int org_mini_gl_GL_glVertexAttrib1fv(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-int org_mini_gl_GL_glVertexAttrib1s(Runtime *runtime, Class *clazz) {
+int org_mini_gl_GL_glVertexAttrib1s(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -8556,7 +8556,7 @@ int org_mini_gl_GL_glVertexAttrib1s(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-int org_mini_gl_GL_glVertexAttrib1sv(Runtime *runtime, Class *clazz) {
+int org_mini_gl_GL_glVertexAttrib1sv(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -8575,7 +8575,7 @@ int org_mini_gl_GL_glVertexAttrib1sv(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-int org_mini_gl_GL_glVertexAttrib2d(Runtime *runtime, Class *clazz) {
+int org_mini_gl_GL_glVertexAttrib2d(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -8589,7 +8589,7 @@ int org_mini_gl_GL_glVertexAttrib2d(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-int org_mini_gl_GL_glVertexAttrib2dv(Runtime *runtime, Class *clazz) {
+int org_mini_gl_GL_glVertexAttrib2dv(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -8608,7 +8608,7 @@ int org_mini_gl_GL_glVertexAttrib2dv(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-int org_mini_gl_GL_glVertexAttrib2f(Runtime *runtime, Class *clazz) {
+int org_mini_gl_GL_glVertexAttrib2f(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -8622,7 +8622,7 @@ int org_mini_gl_GL_glVertexAttrib2f(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-int org_mini_gl_GL_glVertexAttrib2fv(Runtime *runtime, Class *clazz) {
+int org_mini_gl_GL_glVertexAttrib2fv(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -8641,7 +8641,7 @@ int org_mini_gl_GL_glVertexAttrib2fv(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-int org_mini_gl_GL_glVertexAttrib2s(Runtime *runtime, Class *clazz) {
+int org_mini_gl_GL_glVertexAttrib2s(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -8655,7 +8655,7 @@ int org_mini_gl_GL_glVertexAttrib2s(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-int org_mini_gl_GL_glVertexAttrib2sv(Runtime *runtime, Class *clazz) {
+int org_mini_gl_GL_glVertexAttrib2sv(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -8674,7 +8674,7 @@ int org_mini_gl_GL_glVertexAttrib2sv(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-int org_mini_gl_GL_glVertexAttrib3d(Runtime *runtime, Class *clazz) {
+int org_mini_gl_GL_glVertexAttrib3d(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -8689,7 +8689,7 @@ int org_mini_gl_GL_glVertexAttrib3d(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-int org_mini_gl_GL_glVertexAttrib3dv(Runtime *runtime, Class *clazz) {
+int org_mini_gl_GL_glVertexAttrib3dv(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -8708,7 +8708,7 @@ int org_mini_gl_GL_glVertexAttrib3dv(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-int org_mini_gl_GL_glVertexAttrib3f(Runtime *runtime, Class *clazz) {
+int org_mini_gl_GL_glVertexAttrib3f(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -8723,7 +8723,7 @@ int org_mini_gl_GL_glVertexAttrib3f(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-int org_mini_gl_GL_glVertexAttrib3fv(Runtime *runtime, Class *clazz) {
+int org_mini_gl_GL_glVertexAttrib3fv(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -8742,7 +8742,7 @@ int org_mini_gl_GL_glVertexAttrib3fv(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-int org_mini_gl_GL_glVertexAttrib3s(Runtime *runtime, Class *clazz) {
+int org_mini_gl_GL_glVertexAttrib3s(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -8757,7 +8757,7 @@ int org_mini_gl_GL_glVertexAttrib3s(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-int org_mini_gl_GL_glVertexAttrib3sv(Runtime *runtime, Class *clazz) {
+int org_mini_gl_GL_glVertexAttrib3sv(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -8776,7 +8776,7 @@ int org_mini_gl_GL_glVertexAttrib3sv(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-int org_mini_gl_GL_glVertexAttrib4Nbv(Runtime *runtime, Class *clazz) {
+int org_mini_gl_GL_glVertexAttrib4Nbv(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -8795,7 +8795,7 @@ int org_mini_gl_GL_glVertexAttrib4Nbv(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-int org_mini_gl_GL_glVertexAttrib4Niv(Runtime *runtime, Class *clazz) {
+int org_mini_gl_GL_glVertexAttrib4Niv(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -8814,7 +8814,7 @@ int org_mini_gl_GL_glVertexAttrib4Niv(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-int org_mini_gl_GL_glVertexAttrib4Nsv(Runtime *runtime, Class *clazz) {
+int org_mini_gl_GL_glVertexAttrib4Nsv(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -8833,7 +8833,7 @@ int org_mini_gl_GL_glVertexAttrib4Nsv(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-int org_mini_gl_GL_glVertexAttrib4Nub(Runtime *runtime, Class *clazz) {
+int org_mini_gl_GL_glVertexAttrib4Nub(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -8849,7 +8849,7 @@ int org_mini_gl_GL_glVertexAttrib4Nub(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-int org_mini_gl_GL_glVertexAttrib4Nubv(Runtime *runtime, Class *clazz) {
+int org_mini_gl_GL_glVertexAttrib4Nubv(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -8868,7 +8868,7 @@ int org_mini_gl_GL_glVertexAttrib4Nubv(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-int org_mini_gl_GL_glVertexAttrib4Nuiv(Runtime *runtime, Class *clazz) {
+int org_mini_gl_GL_glVertexAttrib4Nuiv(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -8887,7 +8887,7 @@ int org_mini_gl_GL_glVertexAttrib4Nuiv(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-int org_mini_gl_GL_glVertexAttrib4Nusv(Runtime *runtime, Class *clazz) {
+int org_mini_gl_GL_glVertexAttrib4Nusv(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -8906,7 +8906,7 @@ int org_mini_gl_GL_glVertexAttrib4Nusv(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-int org_mini_gl_GL_glVertexAttrib4bv(Runtime *runtime, Class *clazz) {
+int org_mini_gl_GL_glVertexAttrib4bv(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -8925,7 +8925,7 @@ int org_mini_gl_GL_glVertexAttrib4bv(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-int org_mini_gl_GL_glVertexAttrib4d(Runtime *runtime, Class *clazz) {
+int org_mini_gl_GL_glVertexAttrib4d(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -8941,7 +8941,7 @@ int org_mini_gl_GL_glVertexAttrib4d(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-int org_mini_gl_GL_glVertexAttrib4dv(Runtime *runtime, Class *clazz) {
+int org_mini_gl_GL_glVertexAttrib4dv(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -8960,7 +8960,7 @@ int org_mini_gl_GL_glVertexAttrib4dv(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-int org_mini_gl_GL_glVertexAttrib4f(Runtime *runtime, Class *clazz) {
+int org_mini_gl_GL_glVertexAttrib4f(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -8976,7 +8976,7 @@ int org_mini_gl_GL_glVertexAttrib4f(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-int org_mini_gl_GL_glVertexAttrib4fv(Runtime *runtime, Class *clazz) {
+int org_mini_gl_GL_glVertexAttrib4fv(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -8995,7 +8995,7 @@ int org_mini_gl_GL_glVertexAttrib4fv(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-int org_mini_gl_GL_glVertexAttrib4iv(Runtime *runtime, Class *clazz) {
+int org_mini_gl_GL_glVertexAttrib4iv(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -9014,7 +9014,7 @@ int org_mini_gl_GL_glVertexAttrib4iv(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-int org_mini_gl_GL_glVertexAttrib4s(Runtime *runtime, Class *clazz) {
+int org_mini_gl_GL_glVertexAttrib4s(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -9030,7 +9030,7 @@ int org_mini_gl_GL_glVertexAttrib4s(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-int org_mini_gl_GL_glVertexAttrib4sv(Runtime *runtime, Class *clazz) {
+int org_mini_gl_GL_glVertexAttrib4sv(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -9049,7 +9049,7 @@ int org_mini_gl_GL_glVertexAttrib4sv(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-int org_mini_gl_GL_glVertexAttrib4ubv(Runtime *runtime, Class *clazz) {
+int org_mini_gl_GL_glVertexAttrib4ubv(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -9068,7 +9068,7 @@ int org_mini_gl_GL_glVertexAttrib4ubv(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-int org_mini_gl_GL_glVertexAttrib4uiv(Runtime *runtime, Class *clazz) {
+int org_mini_gl_GL_glVertexAttrib4uiv(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -9087,7 +9087,7 @@ int org_mini_gl_GL_glVertexAttrib4uiv(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-int org_mini_gl_GL_glVertexAttrib4usv(Runtime *runtime, Class *clazz) {
+int org_mini_gl_GL_glVertexAttrib4usv(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -9106,7 +9106,7 @@ int org_mini_gl_GL_glVertexAttrib4usv(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-int org_mini_gl_GL_glVertexAttribPointer(Runtime *runtime, Class *clazz) {
+int org_mini_gl_GL_glVertexAttribPointer(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -9129,7 +9129,7 @@ int org_mini_gl_GL_glVertexAttribPointer(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-int org_mini_gl_GL_glUniformMatrix2x3fv(Runtime *runtime, Class *clazz) {
+int org_mini_gl_GL_glUniformMatrix2x3fv(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -9150,7 +9150,7 @@ int org_mini_gl_GL_glUniformMatrix2x3fv(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-int org_mini_gl_GL_glUniformMatrix3x2fv(Runtime *runtime, Class *clazz) {
+int org_mini_gl_GL_glUniformMatrix3x2fv(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -9171,7 +9171,7 @@ int org_mini_gl_GL_glUniformMatrix3x2fv(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-int org_mini_gl_GL_glUniformMatrix2x4fv(Runtime *runtime, Class *clazz) {
+int org_mini_gl_GL_glUniformMatrix2x4fv(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -9192,7 +9192,7 @@ int org_mini_gl_GL_glUniformMatrix2x4fv(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-int org_mini_gl_GL_glUniformMatrix4x2fv(Runtime *runtime, Class *clazz) {
+int org_mini_gl_GL_glUniformMatrix4x2fv(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -9213,7 +9213,7 @@ int org_mini_gl_GL_glUniformMatrix4x2fv(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-int org_mini_gl_GL_glUniformMatrix3x4fv(Runtime *runtime, Class *clazz) {
+int org_mini_gl_GL_glUniformMatrix3x4fv(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -9234,7 +9234,7 @@ int org_mini_gl_GL_glUniformMatrix3x4fv(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-int org_mini_gl_GL_glUniformMatrix4x3fv(Runtime *runtime, Class *clazz) {
+int org_mini_gl_GL_glUniformMatrix4x3fv(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -9255,7 +9255,7 @@ int org_mini_gl_GL_glUniformMatrix4x3fv(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-int org_mini_gl_GL_glColorMaski(Runtime *runtime, Class *clazz) {
+int org_mini_gl_GL_glColorMaski(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -9271,7 +9271,7 @@ int org_mini_gl_GL_glColorMaski(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-int org_mini_gl_GL_glGetBooleani_v(Runtime *runtime, Class *clazz) {
+int org_mini_gl_GL_glGetBooleani_v(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -9291,7 +9291,7 @@ int org_mini_gl_GL_glGetBooleani_v(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-int org_mini_gl_GL_glGetIntegeri_v(Runtime *runtime, Class *clazz) {
+int org_mini_gl_GL_glGetIntegeri_v(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -9311,7 +9311,7 @@ int org_mini_gl_GL_glGetIntegeri_v(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-int org_mini_gl_GL_glEnablei(Runtime *runtime, Class *clazz) {
+int org_mini_gl_GL_glEnablei(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -9324,7 +9324,7 @@ int org_mini_gl_GL_glEnablei(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-int org_mini_gl_GL_glDisablei(Runtime *runtime, Class *clazz) {
+int org_mini_gl_GL_glDisablei(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -9337,7 +9337,7 @@ int org_mini_gl_GL_glDisablei(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-int org_mini_gl_GL_glIsEnabledi(Runtime *runtime, Class *clazz) {
+int org_mini_gl_GL_glIsEnabledi(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -9350,7 +9350,7 @@ int org_mini_gl_GL_glIsEnabledi(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-int org_mini_gl_GL_glBeginTransformFeedback(Runtime *runtime, Class *clazz) {
+int org_mini_gl_GL_glBeginTransformFeedback(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -9362,7 +9362,7 @@ int org_mini_gl_GL_glBeginTransformFeedback(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-int org_mini_gl_GL_glEndTransformFeedback(Runtime *runtime, Class *clazz) {
+int org_mini_gl_GL_glEndTransformFeedback(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -9373,7 +9373,7 @@ int org_mini_gl_GL_glEndTransformFeedback(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-int org_mini_gl_GL_glBindBufferRange(Runtime *runtime, Class *clazz) {
+int org_mini_gl_GL_glBindBufferRange(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -9389,7 +9389,7 @@ int org_mini_gl_GL_glBindBufferRange(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-int org_mini_gl_GL_glBindBufferBase(Runtime *runtime, Class *clazz) {
+int org_mini_gl_GL_glBindBufferBase(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -9403,7 +9403,7 @@ int org_mini_gl_GL_glBindBufferBase(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-int org_mini_gl_GL_glTransformFeedbackVaryings(Runtime *runtime, Class *clazz) {
+int org_mini_gl_GL_glTransformFeedbackVaryings(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -9422,7 +9422,7 @@ int org_mini_gl_GL_glTransformFeedbackVaryings(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-int org_mini_gl_GL_glGetTransformFeedbackVarying(Runtime *runtime, Class *clazz) {
+int org_mini_gl_GL_glGetTransformFeedbackVarying(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -9464,7 +9464,7 @@ int org_mini_gl_GL_glGetTransformFeedbackVarying(Runtime *runtime, Class *clazz)
     return 0;
 }
 
-int org_mini_gl_GL_glClampColor(Runtime *runtime, Class *clazz) {
+int org_mini_gl_GL_glClampColor(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -9477,7 +9477,7 @@ int org_mini_gl_GL_glClampColor(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-int org_mini_gl_GL_glBeginConditionalRender(Runtime *runtime, Class *clazz) {
+int org_mini_gl_GL_glBeginConditionalRender(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -9490,7 +9490,7 @@ int org_mini_gl_GL_glBeginConditionalRender(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-int org_mini_gl_GL_glEndConditionalRender(Runtime *runtime, Class *clazz) {
+int org_mini_gl_GL_glEndConditionalRender(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -9501,7 +9501,7 @@ int org_mini_gl_GL_glEndConditionalRender(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-int org_mini_gl_GL_glVertexAttribIPointer(Runtime *runtime, Class *clazz) {
+int org_mini_gl_GL_glVertexAttribIPointer(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -9523,7 +9523,7 @@ int org_mini_gl_GL_glVertexAttribIPointer(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-int org_mini_gl_GL_glGetVertexAttribIiv(Runtime *runtime, Class *clazz) {
+int org_mini_gl_GL_glGetVertexAttribIiv(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -9543,7 +9543,7 @@ int org_mini_gl_GL_glGetVertexAttribIiv(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-int org_mini_gl_GL_glGetVertexAttribIuiv(Runtime *runtime, Class *clazz) {
+int org_mini_gl_GL_glGetVertexAttribIuiv(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -9563,7 +9563,7 @@ int org_mini_gl_GL_glGetVertexAttribIuiv(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-int org_mini_gl_GL_glVertexAttribI1i(Runtime *runtime, Class *clazz) {
+int org_mini_gl_GL_glVertexAttribI1i(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -9576,7 +9576,7 @@ int org_mini_gl_GL_glVertexAttribI1i(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-int org_mini_gl_GL_glVertexAttribI2i(Runtime *runtime, Class *clazz) {
+int org_mini_gl_GL_glVertexAttribI2i(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -9590,7 +9590,7 @@ int org_mini_gl_GL_glVertexAttribI2i(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-int org_mini_gl_GL_glVertexAttribI3i(Runtime *runtime, Class *clazz) {
+int org_mini_gl_GL_glVertexAttribI3i(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -9605,7 +9605,7 @@ int org_mini_gl_GL_glVertexAttribI3i(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-int org_mini_gl_GL_glVertexAttribI4i(Runtime *runtime, Class *clazz) {
+int org_mini_gl_GL_glVertexAttribI4i(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -9621,7 +9621,7 @@ int org_mini_gl_GL_glVertexAttribI4i(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-int org_mini_gl_GL_glVertexAttribI1ui(Runtime *runtime, Class *clazz) {
+int org_mini_gl_GL_glVertexAttribI1ui(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -9634,7 +9634,7 @@ int org_mini_gl_GL_glVertexAttribI1ui(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-int org_mini_gl_GL_glVertexAttribI2ui(Runtime *runtime, Class *clazz) {
+int org_mini_gl_GL_glVertexAttribI2ui(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -9648,7 +9648,7 @@ int org_mini_gl_GL_glVertexAttribI2ui(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-int org_mini_gl_GL_glVertexAttribI3ui(Runtime *runtime, Class *clazz) {
+int org_mini_gl_GL_glVertexAttribI3ui(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -9663,7 +9663,7 @@ int org_mini_gl_GL_glVertexAttribI3ui(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-int org_mini_gl_GL_glVertexAttribI4ui(Runtime *runtime, Class *clazz) {
+int org_mini_gl_GL_glVertexAttribI4ui(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -9679,7 +9679,7 @@ int org_mini_gl_GL_glVertexAttribI4ui(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-int org_mini_gl_GL_glVertexAttribI1iv(Runtime *runtime, Class *clazz) {
+int org_mini_gl_GL_glVertexAttribI1iv(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -9698,7 +9698,7 @@ int org_mini_gl_GL_glVertexAttribI1iv(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-int org_mini_gl_GL_glVertexAttribI2iv(Runtime *runtime, Class *clazz) {
+int org_mini_gl_GL_glVertexAttribI2iv(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -9717,7 +9717,7 @@ int org_mini_gl_GL_glVertexAttribI2iv(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-int org_mini_gl_GL_glVertexAttribI3iv(Runtime *runtime, Class *clazz) {
+int org_mini_gl_GL_glVertexAttribI3iv(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -9736,7 +9736,7 @@ int org_mini_gl_GL_glVertexAttribI3iv(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-int org_mini_gl_GL_glVertexAttribI4iv(Runtime *runtime, Class *clazz) {
+int org_mini_gl_GL_glVertexAttribI4iv(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -9755,7 +9755,7 @@ int org_mini_gl_GL_glVertexAttribI4iv(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-int org_mini_gl_GL_glVertexAttribI1uiv(Runtime *runtime, Class *clazz) {
+int org_mini_gl_GL_glVertexAttribI1uiv(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -9774,7 +9774,7 @@ int org_mini_gl_GL_glVertexAttribI1uiv(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-int org_mini_gl_GL_glVertexAttribI2uiv(Runtime *runtime, Class *clazz) {
+int org_mini_gl_GL_glVertexAttribI2uiv(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -9793,7 +9793,7 @@ int org_mini_gl_GL_glVertexAttribI2uiv(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-int org_mini_gl_GL_glVertexAttribI3uiv(Runtime *runtime, Class *clazz) {
+int org_mini_gl_GL_glVertexAttribI3uiv(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -9812,7 +9812,7 @@ int org_mini_gl_GL_glVertexAttribI3uiv(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-int org_mini_gl_GL_glVertexAttribI4uiv(Runtime *runtime, Class *clazz) {
+int org_mini_gl_GL_glVertexAttribI4uiv(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -9831,7 +9831,7 @@ int org_mini_gl_GL_glVertexAttribI4uiv(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-int org_mini_gl_GL_glVertexAttribI4bv(Runtime *runtime, Class *clazz) {
+int org_mini_gl_GL_glVertexAttribI4bv(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -9850,7 +9850,7 @@ int org_mini_gl_GL_glVertexAttribI4bv(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-int org_mini_gl_GL_glVertexAttribI4sv(Runtime *runtime, Class *clazz) {
+int org_mini_gl_GL_glVertexAttribI4sv(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -9869,7 +9869,7 @@ int org_mini_gl_GL_glVertexAttribI4sv(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-int org_mini_gl_GL_glVertexAttribI4ubv(Runtime *runtime, Class *clazz) {
+int org_mini_gl_GL_glVertexAttribI4ubv(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -9888,7 +9888,7 @@ int org_mini_gl_GL_glVertexAttribI4ubv(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-int org_mini_gl_GL_glVertexAttribI4usv(Runtime *runtime, Class *clazz) {
+int org_mini_gl_GL_glVertexAttribI4usv(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -9907,7 +9907,7 @@ int org_mini_gl_GL_glVertexAttribI4usv(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-int org_mini_gl_GL_glGetUniformuiv(Runtime *runtime, Class *clazz) {
+int org_mini_gl_GL_glGetUniformuiv(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -9927,7 +9927,7 @@ int org_mini_gl_GL_glGetUniformuiv(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-int org_mini_gl_GL_glBindFragDataLocation(Runtime *runtime, Class *clazz) {
+int org_mini_gl_GL_glBindFragDataLocation(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -9947,7 +9947,7 @@ int org_mini_gl_GL_glBindFragDataLocation(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-int org_mini_gl_GL_glGetFragDataLocation(Runtime *runtime, Class *clazz) {
+int org_mini_gl_GL_glGetFragDataLocation(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -9966,7 +9966,7 @@ int org_mini_gl_GL_glGetFragDataLocation(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-int org_mini_gl_GL_glUniform1ui(Runtime *runtime, Class *clazz) {
+int org_mini_gl_GL_glUniform1ui(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -9979,7 +9979,7 @@ int org_mini_gl_GL_glUniform1ui(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-int org_mini_gl_GL_glUniform2ui(Runtime *runtime, Class *clazz) {
+int org_mini_gl_GL_glUniform2ui(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -9993,7 +9993,7 @@ int org_mini_gl_GL_glUniform2ui(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-int org_mini_gl_GL_glUniform3ui(Runtime *runtime, Class *clazz) {
+int org_mini_gl_GL_glUniform3ui(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -10008,7 +10008,7 @@ int org_mini_gl_GL_glUniform3ui(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-int org_mini_gl_GL_glUniform4ui(Runtime *runtime, Class *clazz) {
+int org_mini_gl_GL_glUniform4ui(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -10024,7 +10024,7 @@ int org_mini_gl_GL_glUniform4ui(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-int org_mini_gl_GL_glUniform1uiv(Runtime *runtime, Class *clazz) {
+int org_mini_gl_GL_glUniform1uiv(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -10044,7 +10044,7 @@ int org_mini_gl_GL_glUniform1uiv(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-int org_mini_gl_GL_glUniform2uiv(Runtime *runtime, Class *clazz) {
+int org_mini_gl_GL_glUniform2uiv(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -10064,7 +10064,7 @@ int org_mini_gl_GL_glUniform2uiv(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-int org_mini_gl_GL_glUniform3uiv(Runtime *runtime, Class *clazz) {
+int org_mini_gl_GL_glUniform3uiv(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -10084,7 +10084,7 @@ int org_mini_gl_GL_glUniform3uiv(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-int org_mini_gl_GL_glUniform4uiv(Runtime *runtime, Class *clazz) {
+int org_mini_gl_GL_glUniform4uiv(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -10104,7 +10104,7 @@ int org_mini_gl_GL_glUniform4uiv(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-int org_mini_gl_GL_glTexParameterIiv(Runtime *runtime, Class *clazz) {
+int org_mini_gl_GL_glTexParameterIiv(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -10124,7 +10124,7 @@ int org_mini_gl_GL_glTexParameterIiv(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-int org_mini_gl_GL_glTexParameterIuiv(Runtime *runtime, Class *clazz) {
+int org_mini_gl_GL_glTexParameterIuiv(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -10144,7 +10144,7 @@ int org_mini_gl_GL_glTexParameterIuiv(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-int org_mini_gl_GL_glGetTexParameterIiv(Runtime *runtime, Class *clazz) {
+int org_mini_gl_GL_glGetTexParameterIiv(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -10164,7 +10164,7 @@ int org_mini_gl_GL_glGetTexParameterIiv(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-int org_mini_gl_GL_glGetTexParameterIuiv(Runtime *runtime, Class *clazz) {
+int org_mini_gl_GL_glGetTexParameterIuiv(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -10184,7 +10184,7 @@ int org_mini_gl_GL_glGetTexParameterIuiv(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-int org_mini_gl_GL_glClearBufferiv(Runtime *runtime, Class *clazz) {
+int org_mini_gl_GL_glClearBufferiv(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -10204,7 +10204,7 @@ int org_mini_gl_GL_glClearBufferiv(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-int org_mini_gl_GL_glClearBufferuiv(Runtime *runtime, Class *clazz) {
+int org_mini_gl_GL_glClearBufferuiv(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -10224,7 +10224,7 @@ int org_mini_gl_GL_glClearBufferuiv(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-int org_mini_gl_GL_glClearBufferfv(Runtime *runtime, Class *clazz) {
+int org_mini_gl_GL_glClearBufferfv(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -10244,7 +10244,7 @@ int org_mini_gl_GL_glClearBufferfv(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-int org_mini_gl_GL_glClearBufferfi(Runtime *runtime, Class *clazz) {
+int org_mini_gl_GL_glClearBufferfi(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -10259,7 +10259,7 @@ int org_mini_gl_GL_glClearBufferfi(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-int org_mini_gl_GL_glGetStringi(Runtime *runtime, Class *clazz) {
+int org_mini_gl_GL_glGetStringi(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -10281,7 +10281,7 @@ int org_mini_gl_GL_glGetStringi(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-int org_mini_gl_GL_glIsRenderbuffer(Runtime *runtime, Class *clazz) {
+int org_mini_gl_GL_glIsRenderbuffer(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -10293,7 +10293,7 @@ int org_mini_gl_GL_glIsRenderbuffer(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-int org_mini_gl_GL_glBindRenderbuffer(Runtime *runtime, Class *clazz) {
+int org_mini_gl_GL_glBindRenderbuffer(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -10306,7 +10306,7 @@ int org_mini_gl_GL_glBindRenderbuffer(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-int org_mini_gl_GL_glDeleteRenderbuffers(Runtime *runtime, Class *clazz) {
+int org_mini_gl_GL_glDeleteRenderbuffers(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -10325,7 +10325,7 @@ int org_mini_gl_GL_glDeleteRenderbuffers(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-int org_mini_gl_GL_glGenRenderbuffers(Runtime *runtime, Class *clazz) {
+int org_mini_gl_GL_glGenRenderbuffers(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -10344,7 +10344,7 @@ int org_mini_gl_GL_glGenRenderbuffers(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-int org_mini_gl_GL_glRenderbufferStorage(Runtime *runtime, Class *clazz) {
+int org_mini_gl_GL_glRenderbufferStorage(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -10359,7 +10359,7 @@ int org_mini_gl_GL_glRenderbufferStorage(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-int org_mini_gl_GL_glGetRenderbufferParameteriv(Runtime *runtime, Class *clazz) {
+int org_mini_gl_GL_glGetRenderbufferParameteriv(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -10379,7 +10379,7 @@ int org_mini_gl_GL_glGetRenderbufferParameteriv(Runtime *runtime, Class *clazz) 
     return 0;
 }
 
-int org_mini_gl_GL_glIsFramebuffer(Runtime *runtime, Class *clazz) {
+int org_mini_gl_GL_glIsFramebuffer(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -10391,7 +10391,7 @@ int org_mini_gl_GL_glIsFramebuffer(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-int org_mini_gl_GL_glBindFramebuffer(Runtime *runtime, Class *clazz) {
+int org_mini_gl_GL_glBindFramebuffer(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -10404,7 +10404,7 @@ int org_mini_gl_GL_glBindFramebuffer(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-int org_mini_gl_GL_glDeleteFramebuffers(Runtime *runtime, Class *clazz) {
+int org_mini_gl_GL_glDeleteFramebuffers(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -10423,7 +10423,7 @@ int org_mini_gl_GL_glDeleteFramebuffers(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-int org_mini_gl_GL_glGenFramebuffers(Runtime *runtime, Class *clazz) {
+int org_mini_gl_GL_glGenFramebuffers(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -10442,7 +10442,7 @@ int org_mini_gl_GL_glGenFramebuffers(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-int org_mini_gl_GL_glCheckFramebufferStatus(Runtime *runtime, Class *clazz) {
+int org_mini_gl_GL_glCheckFramebufferStatus(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -10454,7 +10454,7 @@ int org_mini_gl_GL_glCheckFramebufferStatus(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-int org_mini_gl_GL_glFramebufferTexture1D(Runtime *runtime, Class *clazz) {
+int org_mini_gl_GL_glFramebufferTexture1D(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -10470,7 +10470,7 @@ int org_mini_gl_GL_glFramebufferTexture1D(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-int org_mini_gl_GL_glFramebufferTexture2D(Runtime *runtime, Class *clazz) {
+int org_mini_gl_GL_glFramebufferTexture2D(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -10486,7 +10486,7 @@ int org_mini_gl_GL_glFramebufferTexture2D(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-int org_mini_gl_GL_glFramebufferTexture3D(Runtime *runtime, Class *clazz) {
+int org_mini_gl_GL_glFramebufferTexture3D(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -10503,7 +10503,7 @@ int org_mini_gl_GL_glFramebufferTexture3D(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-int org_mini_gl_GL_glFramebufferRenderbuffer(Runtime *runtime, Class *clazz) {
+int org_mini_gl_GL_glFramebufferRenderbuffer(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -10518,7 +10518,7 @@ int org_mini_gl_GL_glFramebufferRenderbuffer(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-int org_mini_gl_GL_glGetFramebufferAttachmentParameteriv(Runtime *runtime, Class *clazz) {
+int org_mini_gl_GL_glGetFramebufferAttachmentParameteriv(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -10539,7 +10539,7 @@ int org_mini_gl_GL_glGetFramebufferAttachmentParameteriv(Runtime *runtime, Class
     return 0;
 }
 
-int org_mini_gl_GL_glGenerateMipmap(Runtime *runtime, Class *clazz) {
+int org_mini_gl_GL_glGenerateMipmap(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -10551,7 +10551,7 @@ int org_mini_gl_GL_glGenerateMipmap(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-int org_mini_gl_GL_glBlitFramebuffer(Runtime *runtime, Class *clazz) {
+int org_mini_gl_GL_glBlitFramebuffer(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -10572,7 +10572,7 @@ int org_mini_gl_GL_glBlitFramebuffer(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-int org_mini_gl_GL_glRenderbufferStorageMultisample(Runtime *runtime, Class *clazz) {
+int org_mini_gl_GL_glRenderbufferStorageMultisample(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -10588,7 +10588,7 @@ int org_mini_gl_GL_glRenderbufferStorageMultisample(Runtime *runtime, Class *cla
     return 0;
 }
 
-int org_mini_gl_GL_glFramebufferTextureLayer(Runtime *runtime, Class *clazz) {
+int org_mini_gl_GL_glFramebufferTextureLayer(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -10604,7 +10604,7 @@ int org_mini_gl_GL_glFramebufferTextureLayer(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-int org_mini_gl_GL_glMapBufferRange(Runtime *runtime, Class *clazz) {
+int org_mini_gl_GL_glMapBufferRange(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -10619,7 +10619,7 @@ int org_mini_gl_GL_glMapBufferRange(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-int org_mini_gl_GL_glFlushMappedBufferRange(Runtime *runtime, Class *clazz) {
+int org_mini_gl_GL_glFlushMappedBufferRange(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -10633,7 +10633,7 @@ int org_mini_gl_GL_glFlushMappedBufferRange(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-int org_mini_gl_GL_glBindVertexArray(Runtime *runtime, Class *clazz) {
+int org_mini_gl_GL_glBindVertexArray(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -10645,7 +10645,7 @@ int org_mini_gl_GL_glBindVertexArray(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-int org_mini_gl_GL_glDeleteVertexArrays(Runtime *runtime, Class *clazz) {
+int org_mini_gl_GL_glDeleteVertexArrays(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -10664,7 +10664,7 @@ int org_mini_gl_GL_glDeleteVertexArrays(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-int org_mini_gl_GL_glGenVertexArrays(Runtime *runtime, Class *clazz) {
+int org_mini_gl_GL_glGenVertexArrays(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -10683,7 +10683,7 @@ int org_mini_gl_GL_glGenVertexArrays(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-int org_mini_gl_GL_glIsVertexArray(Runtime *runtime, Class *clazz) {
+int org_mini_gl_GL_glIsVertexArray(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -10695,7 +10695,7 @@ int org_mini_gl_GL_glIsVertexArray(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-int org_mini_gl_GL_glDrawArraysInstanced(Runtime *runtime, Class *clazz) {
+int org_mini_gl_GL_glDrawArraysInstanced(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -10710,7 +10710,7 @@ int org_mini_gl_GL_glDrawArraysInstanced(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-int org_mini_gl_GL_glDrawElementsInstanced(Runtime *runtime, Class *clazz) {
+int org_mini_gl_GL_glDrawElementsInstanced(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -10732,7 +10732,7 @@ int org_mini_gl_GL_glDrawElementsInstanced(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-int org_mini_gl_GL_glTexBuffer(Runtime *runtime, Class *clazz) {
+int org_mini_gl_GL_glTexBuffer(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -10746,7 +10746,7 @@ int org_mini_gl_GL_glTexBuffer(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-int org_mini_gl_GL_glPrimitiveRestartIndex(Runtime *runtime, Class *clazz) {
+int org_mini_gl_GL_glPrimitiveRestartIndex(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -10758,7 +10758,7 @@ int org_mini_gl_GL_glPrimitiveRestartIndex(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-int org_mini_gl_GL_glCopyBufferSubData(Runtime *runtime, Class *clazz) {
+int org_mini_gl_GL_glCopyBufferSubData(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -10774,7 +10774,7 @@ int org_mini_gl_GL_glCopyBufferSubData(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-int org_mini_gl_GL_glGetUniformIndices(Runtime *runtime, Class *clazz) {
+int org_mini_gl_GL_glGetUniformIndices(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -10799,7 +10799,7 @@ int org_mini_gl_GL_glGetUniformIndices(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-int org_mini_gl_GL_glGetActiveUniformsiv(Runtime *runtime, Class *clazz) {
+int org_mini_gl_GL_glGetActiveUniformsiv(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -10827,7 +10827,7 @@ int org_mini_gl_GL_glGetActiveUniformsiv(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-int org_mini_gl_GL_glGetActiveUniformName(Runtime *runtime, Class *clazz) {
+int org_mini_gl_GL_glGetActiveUniformName(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -10855,7 +10855,7 @@ int org_mini_gl_GL_glGetActiveUniformName(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-int org_mini_gl_GL_glGetUniformBlockIndex(Runtime *runtime, Class *clazz) {
+int org_mini_gl_GL_glGetUniformBlockIndex(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -10874,7 +10874,7 @@ int org_mini_gl_GL_glGetUniformBlockIndex(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-int org_mini_gl_GL_glGetActiveUniformBlockiv(Runtime *runtime, Class *clazz) {
+int org_mini_gl_GL_glGetActiveUniformBlockiv(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -10895,7 +10895,7 @@ int org_mini_gl_GL_glGetActiveUniformBlockiv(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-int org_mini_gl_GL_glGetActiveUniformBlockName(Runtime *runtime, Class *clazz) {
+int org_mini_gl_GL_glGetActiveUniformBlockName(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -10923,7 +10923,7 @@ int org_mini_gl_GL_glGetActiveUniformBlockName(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-int org_mini_gl_GL_glUniformBlockBinding(Runtime *runtime, Class *clazz) {
+int org_mini_gl_GL_glUniformBlockBinding(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -10937,7 +10937,7 @@ int org_mini_gl_GL_glUniformBlockBinding(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-int org_mini_gl_GL_glDrawElementsBaseVertex(Runtime *runtime, Class *clazz) {
+int org_mini_gl_GL_glDrawElementsBaseVertex(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -10959,7 +10959,7 @@ int org_mini_gl_GL_glDrawElementsBaseVertex(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-int org_mini_gl_GL_glDrawRangeElementsBaseVertex(Runtime *runtime, Class *clazz) {
+int org_mini_gl_GL_glDrawRangeElementsBaseVertex(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -10983,7 +10983,7 @@ int org_mini_gl_GL_glDrawRangeElementsBaseVertex(Runtime *runtime, Class *clazz)
     return 0;
 }
 
-int org_mini_gl_GL_glDrawElementsInstancedBaseVertex(Runtime *runtime, Class *clazz) {
+int org_mini_gl_GL_glDrawElementsInstancedBaseVertex(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -11006,7 +11006,7 @@ int org_mini_gl_GL_glDrawElementsInstancedBaseVertex(Runtime *runtime, Class *cl
     return 0;
 }
 
-int org_mini_gl_GL_glMultiDrawElementsBaseVertex(Runtime *runtime, Class *clazz) {
+int org_mini_gl_GL_glMultiDrawElementsBaseVertex(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -11039,7 +11039,7 @@ int org_mini_gl_GL_glMultiDrawElementsBaseVertex(Runtime *runtime, Class *clazz)
     return 0;
 }
 
-int org_mini_gl_GL_glProvokingVertex(Runtime *runtime, Class *clazz) {
+int org_mini_gl_GL_glProvokingVertex(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -11051,7 +11051,7 @@ int org_mini_gl_GL_glProvokingVertex(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-int org_mini_gl_GL_glFenceSync(Runtime *runtime, Class *clazz) {
+int org_mini_gl_GL_glFenceSync(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -11064,7 +11064,7 @@ int org_mini_gl_GL_glFenceSync(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-int org_mini_gl_GL_glIsSync(Runtime *runtime, Class *clazz) {
+int org_mini_gl_GL_glIsSync(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -11076,7 +11076,7 @@ int org_mini_gl_GL_glIsSync(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-int org_mini_gl_GL_glDeleteSync(Runtime *runtime, Class *clazz) {
+int org_mini_gl_GL_glDeleteSync(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -11088,7 +11088,7 @@ int org_mini_gl_GL_glDeleteSync(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-int org_mini_gl_GL_glClientWaitSync(Runtime *runtime, Class *clazz) {
+int org_mini_gl_GL_glClientWaitSync(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -11102,7 +11102,7 @@ int org_mini_gl_GL_glClientWaitSync(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-int org_mini_gl_GL_glWaitSync(Runtime *runtime, Class *clazz) {
+int org_mini_gl_GL_glWaitSync(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -11116,7 +11116,7 @@ int org_mini_gl_GL_glWaitSync(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-int org_mini_gl_GL_glGetInteger64v(Runtime *runtime, Class *clazz) {
+int org_mini_gl_GL_glGetInteger64v(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -11135,7 +11135,7 @@ int org_mini_gl_GL_glGetInteger64v(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-int org_mini_gl_GL_glGetSynciv(Runtime *runtime, Class *clazz) {
+int org_mini_gl_GL_glGetSynciv(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -11163,7 +11163,7 @@ int org_mini_gl_GL_glGetSynciv(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-int org_mini_gl_GL_glGetInteger64i_v(Runtime *runtime, Class *clazz) {
+int org_mini_gl_GL_glGetInteger64i_v(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -11183,7 +11183,7 @@ int org_mini_gl_GL_glGetInteger64i_v(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-int org_mini_gl_GL_glGetBufferParameteri64v(Runtime *runtime, Class *clazz) {
+int org_mini_gl_GL_glGetBufferParameteri64v(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -11203,7 +11203,7 @@ int org_mini_gl_GL_glGetBufferParameteri64v(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-int org_mini_gl_GL_glFramebufferTexture(Runtime *runtime, Class *clazz) {
+int org_mini_gl_GL_glFramebufferTexture(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -11218,7 +11218,7 @@ int org_mini_gl_GL_glFramebufferTexture(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-int org_mini_gl_GL_glTexImage2DMultisample(Runtime *runtime, Class *clazz) {
+int org_mini_gl_GL_glTexImage2DMultisample(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -11235,7 +11235,7 @@ int org_mini_gl_GL_glTexImage2DMultisample(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-int org_mini_gl_GL_glTexImage3DMultisample(Runtime *runtime, Class *clazz) {
+int org_mini_gl_GL_glTexImage3DMultisample(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -11253,7 +11253,7 @@ int org_mini_gl_GL_glTexImage3DMultisample(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-int org_mini_gl_GL_glGetMultisamplefv(Runtime *runtime, Class *clazz) {
+int org_mini_gl_GL_glGetMultisamplefv(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -11273,7 +11273,7 @@ int org_mini_gl_GL_glGetMultisamplefv(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-int org_mini_gl_GL_glSampleMaski(Runtime *runtime, Class *clazz) {
+int org_mini_gl_GL_glSampleMaski(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -11286,7 +11286,7 @@ int org_mini_gl_GL_glSampleMaski(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-int org_mini_gl_GL_glSampleCoverageARB(Runtime *runtime, Class *clazz) {
+int org_mini_gl_GL_glSampleCoverageARB(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -11299,7 +11299,7 @@ int org_mini_gl_GL_glSampleCoverageARB(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-int org_mini_gl_GL_glGetGraphicsResetStatusARB(Runtime *runtime, Class *clazz) {
+int org_mini_gl_GL_glGetGraphicsResetStatusARB(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -11310,7 +11310,7 @@ int org_mini_gl_GL_glGetGraphicsResetStatusARB(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-int org_mini_gl_GL_glGetnTexImageARB(Runtime *runtime, Class *clazz) {
+int org_mini_gl_GL_glGetnTexImageARB(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -11333,7 +11333,7 @@ int org_mini_gl_GL_glGetnTexImageARB(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-int org_mini_gl_GL_glReadnPixelsARB(Runtime *runtime, Class *clazz) {
+int org_mini_gl_GL_glReadnPixelsARB(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -11358,7 +11358,7 @@ int org_mini_gl_GL_glReadnPixelsARB(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-int org_mini_gl_GL_glGetnCompressedTexImageARB(Runtime *runtime, Class *clazz) {
+int org_mini_gl_GL_glGetnCompressedTexImageARB(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -11379,7 +11379,7 @@ int org_mini_gl_GL_glGetnCompressedTexImageARB(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-int org_mini_gl_GL_glGetnUniformfvARB(Runtime *runtime, Class *clazz) {
+int org_mini_gl_GL_glGetnUniformfvARB(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -11400,7 +11400,7 @@ int org_mini_gl_GL_glGetnUniformfvARB(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-int org_mini_gl_GL_glGetnUniformivARB(Runtime *runtime, Class *clazz) {
+int org_mini_gl_GL_glGetnUniformivARB(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -11421,7 +11421,7 @@ int org_mini_gl_GL_glGetnUniformivARB(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-int org_mini_gl_GL_glGetnUniformuivARB(Runtime *runtime, Class *clazz) {
+int org_mini_gl_GL_glGetnUniformuivARB(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -11442,7 +11442,7 @@ int org_mini_gl_GL_glGetnUniformuivARB(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-int org_mini_gl_GL_glGetnUniformdvARB(Runtime *runtime, Class *clazz) {
+int org_mini_gl_GL_glGetnUniformdvARB(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -11463,7 +11463,7 @@ int org_mini_gl_GL_glGetnUniformdvARB(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-int org_mini_gl_GL_glGetnMapdvARB(Runtime *runtime, Class *clazz) {
+int org_mini_gl_GL_glGetnMapdvARB(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -11484,7 +11484,7 @@ int org_mini_gl_GL_glGetnMapdvARB(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-int org_mini_gl_GL_glGetnMapfvARB(Runtime *runtime, Class *clazz) {
+int org_mini_gl_GL_glGetnMapfvARB(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -11505,7 +11505,7 @@ int org_mini_gl_GL_glGetnMapfvARB(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-int org_mini_gl_GL_glGetnMapivARB(Runtime *runtime, Class *clazz) {
+int org_mini_gl_GL_glGetnMapivARB(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -11526,7 +11526,7 @@ int org_mini_gl_GL_glGetnMapivARB(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-int org_mini_gl_GL_glGetnPixelMapfvARB(Runtime *runtime, Class *clazz) {
+int org_mini_gl_GL_glGetnPixelMapfvARB(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -11546,7 +11546,7 @@ int org_mini_gl_GL_glGetnPixelMapfvARB(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-int org_mini_gl_GL_glGetnPixelMapuivARB(Runtime *runtime, Class *clazz) {
+int org_mini_gl_GL_glGetnPixelMapuivARB(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -11566,7 +11566,7 @@ int org_mini_gl_GL_glGetnPixelMapuivARB(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-int org_mini_gl_GL_glGetnPixelMapusvARB(Runtime *runtime, Class *clazz) {
+int org_mini_gl_GL_glGetnPixelMapusvARB(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -11586,7 +11586,7 @@ int org_mini_gl_GL_glGetnPixelMapusvARB(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-int org_mini_gl_GL_glGetnPolygonStippleARB(Runtime *runtime, Class *clazz) {
+int org_mini_gl_GL_glGetnPolygonStippleARB(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -11605,7 +11605,7 @@ int org_mini_gl_GL_glGetnPolygonStippleARB(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-int org_mini_gl_GL_glGetnColorTableARB(Runtime *runtime, Class *clazz) {
+int org_mini_gl_GL_glGetnColorTableARB(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -11627,7 +11627,7 @@ int org_mini_gl_GL_glGetnColorTableARB(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-int org_mini_gl_GL_glGetnConvolutionFilterARB(Runtime *runtime, Class *clazz) {
+int org_mini_gl_GL_glGetnConvolutionFilterARB(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -11649,7 +11649,7 @@ int org_mini_gl_GL_glGetnConvolutionFilterARB(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-int org_mini_gl_GL_glGetnSeparableFilterARB(Runtime *runtime, Class *clazz) {
+int org_mini_gl_GL_glGetnSeparableFilterARB(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -11686,7 +11686,7 @@ int org_mini_gl_GL_glGetnSeparableFilterARB(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-int org_mini_gl_GL_glGetnHistogramARB(Runtime *runtime, Class *clazz) {
+int org_mini_gl_GL_glGetnHistogramARB(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -11709,7 +11709,7 @@ int org_mini_gl_GL_glGetnHistogramARB(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-int org_mini_gl_GL_glGetnMinmaxARB(Runtime *runtime, Class *clazz) {
+int org_mini_gl_GL_glGetnMinmaxARB(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -11732,7 +11732,7 @@ int org_mini_gl_GL_glGetnMinmaxARB(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-int org_mini_gl_GL_glDebugMessageControl(Runtime *runtime, Class *clazz) {
+int org_mini_gl_GL_glDebugMessageControl(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -11755,7 +11755,7 @@ int org_mini_gl_GL_glDebugMessageControl(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-int org_mini_gl_GL_glDebugMessageInsert(Runtime *runtime, Class *clazz) {
+int org_mini_gl_GL_glDebugMessageInsert(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -11778,7 +11778,7 @@ int org_mini_gl_GL_glDebugMessageInsert(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-int org_mini_gl_GL_glDebugMessageCallback(Runtime *runtime, Class *clazz) {
+int org_mini_gl_GL_glDebugMessageCallback(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -11797,7 +11797,7 @@ int org_mini_gl_GL_glDebugMessageCallback(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-int org_mini_gl_GL_glGetDebugMessageLog(Runtime *runtime, Class *clazz) {
+int org_mini_gl_GL_glGetDebugMessageLog(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -11852,7 +11852,7 @@ int org_mini_gl_GL_glGetDebugMessageLog(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-int org_mini_gl_GL_glPushDebugGroup(Runtime *runtime, Class *clazz) {
+int org_mini_gl_GL_glPushDebugGroup(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -11873,7 +11873,7 @@ int org_mini_gl_GL_glPushDebugGroup(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-int org_mini_gl_GL_glPopDebugGroup(Runtime *runtime, Class *clazz) {
+int org_mini_gl_GL_glPopDebugGroup(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -11884,7 +11884,7 @@ int org_mini_gl_GL_glPopDebugGroup(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-int org_mini_gl_GL_glObjectLabel(Runtime *runtime, Class *clazz) {
+int org_mini_gl_GL_glObjectLabel(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -11905,7 +11905,7 @@ int org_mini_gl_GL_glObjectLabel(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-int org_mini_gl_GL_glGetObjectLabel(Runtime *runtime, Class *clazz) {
+int org_mini_gl_GL_glGetObjectLabel(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -11933,7 +11933,7 @@ int org_mini_gl_GL_glGetObjectLabel(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-int org_mini_gl_GL_glObjectPtrLabel(Runtime *runtime, Class *clazz) {
+int org_mini_gl_GL_glObjectPtrLabel(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -11959,7 +11959,7 @@ int org_mini_gl_GL_glObjectPtrLabel(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-int org_mini_gl_GL_glGetObjectPtrLabel(Runtime *runtime, Class *clazz) {
+int org_mini_gl_GL_glGetObjectPtrLabel(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -11992,7 +11992,7 @@ int org_mini_gl_GL_glGetObjectPtrLabel(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-int org_mini_gl_GL_glDebugMessageControlKHR(Runtime *runtime, Class *clazz) {
+int org_mini_gl_GL_glDebugMessageControlKHR(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -12015,7 +12015,7 @@ int org_mini_gl_GL_glDebugMessageControlKHR(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-int org_mini_gl_GL_glDebugMessageInsertKHR(Runtime *runtime, Class *clazz) {
+int org_mini_gl_GL_glDebugMessageInsertKHR(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -12038,7 +12038,7 @@ int org_mini_gl_GL_glDebugMessageInsertKHR(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-int org_mini_gl_GL_glDebugMessageCallbackKHR(Runtime *runtime, Class *clazz) {
+int org_mini_gl_GL_glDebugMessageCallbackKHR(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -12057,7 +12057,7 @@ int org_mini_gl_GL_glDebugMessageCallbackKHR(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-int org_mini_gl_GL_glGetDebugMessageLogKHR(Runtime *runtime, Class *clazz) {
+int org_mini_gl_GL_glGetDebugMessageLogKHR(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -12112,7 +12112,7 @@ int org_mini_gl_GL_glGetDebugMessageLogKHR(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-int org_mini_gl_GL_glPushDebugGroupKHR(Runtime *runtime, Class *clazz) {
+int org_mini_gl_GL_glPushDebugGroupKHR(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -12133,7 +12133,7 @@ int org_mini_gl_GL_glPushDebugGroupKHR(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-int org_mini_gl_GL_glPopDebugGroupKHR(Runtime *runtime, Class *clazz) {
+int org_mini_gl_GL_glPopDebugGroupKHR(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -12144,7 +12144,7 @@ int org_mini_gl_GL_glPopDebugGroupKHR(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-int org_mini_gl_GL_glObjectLabelKHR(Runtime *runtime, Class *clazz) {
+int org_mini_gl_GL_glObjectLabelKHR(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -12165,7 +12165,7 @@ int org_mini_gl_GL_glObjectLabelKHR(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-int org_mini_gl_GL_glGetObjectLabelKHR(Runtime *runtime, Class *clazz) {
+int org_mini_gl_GL_glGetObjectLabelKHR(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -12193,7 +12193,7 @@ int org_mini_gl_GL_glGetObjectLabelKHR(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-int org_mini_gl_GL_glObjectPtrLabelKHR(Runtime *runtime, Class *clazz) {
+int org_mini_gl_GL_glObjectPtrLabelKHR(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -12219,7 +12219,7 @@ int org_mini_gl_GL_glObjectPtrLabelKHR(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-int org_mini_gl_GL_glGetObjectPtrLabelKHR(Runtime *runtime, Class *clazz) {
+int org_mini_gl_GL_glGetObjectPtrLabelKHR(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -12252,7 +12252,7 @@ int org_mini_gl_GL_glGetObjectPtrLabelKHR(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-int org_mini_gl_GL_glGetPointervKHR(Runtime *runtime, Class *clazz) {
+int org_mini_gl_GL_glGetPointervKHR(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     

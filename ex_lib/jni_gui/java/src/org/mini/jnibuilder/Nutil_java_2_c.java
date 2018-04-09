@@ -80,7 +80,7 @@ public class Nutil_java_2_c {
 
     String FUNC_BODY_TEMPLATE
             = //
-            "int ${PKG_NAME}${METHOD_NAME}(Runtime *runtime, Class *clazz) {\n"
+            "int ${PKG_NAME}${METHOD_NAME}(Runtime *runtime, JClass *clazz) {\n"
             + "    JniEnv *env = runtime->jnienv;\n"
             + "    s32 pos = 0;\n"
             + "    \n${GET_VAR}\n"

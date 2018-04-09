@@ -241,7 +241,7 @@ static inline s32 _op_ifload_n(u8 **opCode, Runtime *runtime, s32 i) {
 
 
 static inline s32 _op_ldc_impl(u8 **opCode, Runtime *runtime, RuntimeStack *stack, s32 index) {
-    Class *clazz = runtime->clazz;
+    JClass *clazz = runtime->clazz;
 
     ConstantItem *item = class_get_constant_item(clazz, index);
     switch (item->tag) {
@@ -269,7 +269,7 @@ static inline s32 _op_ldc_impl(u8 **opCode, Runtime *runtime, RuntimeStack *stac
             break;
         }
         case CONSTANT_CLASS: {
-            Class *cl = classes_load_get(class_get_constant_classref(clazz, index)->name, runtime);
+            JClass *cl = classes_load_get(class_get_constant_classref(clazz, index)->name, runtime);
             push_ref(stack, cl);
             break;
         }
@@ -462,7 +462,7 @@ _find_exception_handler(Runtime *runtime, Instance *exception, CodeAttribute *ca
                 return e + i;
             }
             ConstantClassRef *ccr = class_get_constant_classref(runtime->clazz, (e + i)->catch_type);
-            Class *catchClass = classes_load_get(ccr->name, runtime);
+            JClass *catchClass = classes_load_get(ccr->name, runtime);
             if (instance_of(catchClass, exception))
                 return e + i;
         }
@@ -479,7 +479,7 @@ static s32 filterClassName(Utf8String *clsName) {
     return 0;
 }
 
-static void _printCodeAttribute(CodeAttribute *ca, Class *p) {
+static void _printCodeAttribute(CodeAttribute *ca, JClass *p) {
 
     jvm_printf("attribute name : %s\n", utf8_cstr(class_get_utf8_string(p, ca->attribute_name_index)));
     jvm_printf("attribute arr_length: %d\n", ca->attribute_length);
@@ -556,7 +556,7 @@ s32 _synchronized_unlock_method(MethodInfo *method, Runtime *runtime) {
     return 0;
 }
 
-s32 execute_method(MethodInfo *method, Runtime *pruntime, Class *clazz) {
+s32 execute_method(MethodInfo *method, Runtime *pruntime, JClass *clazz) {
     s32 j = 0, ret = RUNTIME_STATUS_NORMAL;
 
     Runtime *runtime = runtime_create(pruntime);
@@ -3083,7 +3083,7 @@ s32 execute_method(MethodInfo *method, Runtime *pruntime, Class *clazz) {
                     }
 
                     case op_invokevirtual: {
-                        Class *clazz = runtime->clazz;
+                        JClass *clazz = runtime->clazz;
                         Short2Char s2c;
                         s2c.c1 = opCode[0][1];
                         s2c.c0 = opCode[0][2];
@@ -3198,7 +3198,7 @@ s32 execute_method(MethodInfo *method, Runtime *pruntime, Class *clazz) {
 
 
                     case op_invokeinterface: {
-                        Class *clazz = runtime->clazz;
+                        JClass *clazz = runtime->clazz;
                         Short2Char s2c;
                         s2c.c1 = opCode[0][1];
                         s2c.c0 = opCode[0][2];
@@ -3269,7 +3269,7 @@ s32 execute_method(MethodInfo *method, Runtime *pruntime, Class *clazz) {
 
                     case op_new: {
 
-                        Class *clazz = runtime->clazz;
+                        JClass *clazz = runtime->clazz;
                         Short2Char s2c;
                         s2c.c1 = opCode[0][1];
                         s2c.c0 = opCode[0][2];
@@ -3281,7 +3281,7 @@ s32 execute_method(MethodInfo *method, Runtime *pruntime, Class *clazz) {
                             Utf8String *clsName = class_get_utf8_string(clazz, ccf->stringIndex);
                             ccf->clazz = classes_load_get(clsName, runtime);
                         }
-                        Class *other = ccf->clazz;
+                        JClass *other = ccf->clazz;
                         Instance *ins = NULL;
                         if (other) {
                             ins = instance_create(other);
@@ -3304,7 +3304,7 @@ s32 execute_method(MethodInfo *method, Runtime *pruntime, Class *clazz) {
 
                         s32 count = pop_int(stack);
                         *opCode += 2;
-                        Class *cl = jarray_get_class_by_index(typeIdx);
+                        JClass *cl = jarray_get_class_by_index(typeIdx);
                         Instance *arr = jarray_create_by_class(count, cl);
 
 #if _JVM_DEBUG_BYTECODE_DETAIL > 5
@@ -3330,7 +3330,7 @@ jvm_printf("(a)newarray  [%llx] type:%c , count:%d  \n", (s64) (intptr_t) arr, g
 
                         s32 count = pop_int(stack);
                         *opCode += 3;
-                        Class *arr_class = pairlist_get(clazz->arr_class_type, (__refer) (intptr_t) s2c.s);
+                        JClass *arr_class = pairlist_get(clazz->arr_class_type, (__refer) (intptr_t) s2c.s);
 
                         Instance *arr = NULL;
                         if (!arr_class) {
@@ -3400,7 +3400,7 @@ jvm_printf("(a)newarray  [%llx] type:%c , count:%d  \n", (s64) (intptr_t) arr, g
                         s32 checkok = 0;
                         if (ins != NULL) {
                             if (ins->mb.type == MEM_TYPE_INS) {
-                                Class *cl = getClassByConstantClassRef(runtime->clazz, typeIdx);
+                                JClass *cl = getClassByConstantClassRef(runtime->clazz, typeIdx);
                                 if (instance_of(cl, ins)) {
                                     checkok = 1;
                                 }

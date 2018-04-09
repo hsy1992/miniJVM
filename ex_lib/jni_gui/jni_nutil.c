@@ -28,7 +28,7 @@
 
 
 
-int org_mini_glfw_utils_Nutil_stbtt_InitFont(Runtime *runtime, Class *clazz) {
+int org_mini_glfw_utils_Nutil_stbtt_InitFont(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -46,7 +46,7 @@ int org_mini_glfw_utils_Nutil_stbtt_InitFont(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-int org_mini_glfw_utils_Nutil_stbtt_ScaleForPixelHeight(Runtime *runtime, Class *clazz) {
+int org_mini_glfw_utils_Nutil_stbtt_ScaleForPixelHeight(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -59,7 +59,7 @@ int org_mini_glfw_utils_Nutil_stbtt_ScaleForPixelHeight(Runtime *runtime, Class 
     return 0;
 }
 
-int org_mini_glfw_utils_Nutil_stbtt_GetFontVMetrics(Runtime *runtime, Class *clazz) {
+int org_mini_glfw_utils_Nutil_stbtt_GetFontVMetrics(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -86,7 +86,7 @@ int org_mini_glfw_utils_Nutil_stbtt_GetFontVMetrics(Runtime *runtime, Class *cla
     return 0;
 }
 
-int org_mini_glfw_utils_Nutil_stbtt_GetCodepointBitmapBox(Runtime *runtime, Class *clazz) {
+int org_mini_glfw_utils_Nutil_stbtt_GetCodepointBitmapBox(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -121,7 +121,7 @@ int org_mini_glfw_utils_Nutil_stbtt_GetCodepointBitmapBox(Runtime *runtime, Clas
     return 0;
 }
 
-int org_mini_glfw_utils_Nutil_stbtt_MakeCodepointBitmapOffset(Runtime *runtime, Class *clazz) {
+int org_mini_glfw_utils_Nutil_stbtt_MakeCodepointBitmapOffset(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -145,7 +145,7 @@ int org_mini_glfw_utils_Nutil_stbtt_MakeCodepointBitmapOffset(Runtime *runtime, 
     return 0;
 }
 
-int org_mini_glfw_utils_Nutil_stbtt_GetCodepointHMetrics(Runtime *runtime, Class *clazz) {
+int org_mini_glfw_utils_Nutil_stbtt_GetCodepointHMetrics(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -168,7 +168,7 @@ int org_mini_glfw_utils_Nutil_stbtt_GetCodepointHMetrics(Runtime *runtime, Class
     return 0;
 }
 
-int org_mini_glfw_utils_Nutil_stbtt_GetCodepointKernAdvance(Runtime *runtime, Class *clazz) {
+int org_mini_glfw_utils_Nutil_stbtt_GetCodepointKernAdvance(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -182,7 +182,7 @@ int org_mini_glfw_utils_Nutil_stbtt_GetCodepointKernAdvance(Runtime *runtime, Cl
     return 0;
 }
 
-int org_mini_glfw_utils_Nutil_stbtt_MakeFontInfo(Runtime *runtime, Class *clazz) {
+int org_mini_glfw_utils_Nutil_stbtt_MakeFontInfo(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -202,7 +202,7 @@ int org_mini_glfw_utils_Nutil_stbtt_MakeFontInfo(Runtime *runtime, Class *clazz)
     return 0;
 }
 
-int org_mini_glfw_utils_Nutil_stbi_write_png(Runtime *runtime, Class *clazz) {
+int org_mini_glfw_utils_Nutil_stbi_write_png(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -223,7 +223,7 @@ int org_mini_glfw_utils_Nutil_stbi_write_png(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-int org_mini_glfw_utils_Nutil_stbi_write_bmp(Runtime *runtime, Class *clazz) {
+int org_mini_glfw_utils_Nutil_stbi_write_bmp(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -243,7 +243,7 @@ int org_mini_glfw_utils_Nutil_stbi_write_bmp(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-int org_mini_glfw_utils_Nutil_stbi_write_tga(Runtime *runtime, Class *clazz) {
+int org_mini_glfw_utils_Nutil_stbi_write_tga(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -263,7 +263,7 @@ int org_mini_glfw_utils_Nutil_stbi_write_tga(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-int org_mini_glfw_utils_Nutil_stbi_load(Runtime *runtime, Class *clazz) {
+int org_mini_glfw_utils_Nutil_stbi_load(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -295,7 +295,7 @@ int org_mini_glfw_utils_Nutil_stbi_load(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-int org_mini_glfw_utils_Nutil_stbi_load_from_memory(Runtime *runtime, Class *clazz) {
+int org_mini_glfw_utils_Nutil_stbi_load_from_memory(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -324,7 +324,7 @@ int org_mini_glfw_utils_Nutil_stbi_load_from_memory(Runtime *runtime, Class *cla
     return 0;
 }
 
-int org_mini_glfw_utils_Nutil_stbi_image_free(Runtime *runtime, Class *clazz) {
+int org_mini_glfw_utils_Nutil_stbi_image_free(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -336,7 +336,7 @@ int org_mini_glfw_utils_Nutil_stbi_image_free(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-int org_mini_glfw_utils_Nutil_nvgBeginFrame(Runtime *runtime, Class *clazz) {
+int org_mini_glfw_utils_Nutil_nvgBeginFrame(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -351,7 +351,7 @@ int org_mini_glfw_utils_Nutil_nvgBeginFrame(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-int org_mini_glfw_utils_Nutil_nvgCancelFrame(Runtime *runtime, Class *clazz) {
+int org_mini_glfw_utils_Nutil_nvgCancelFrame(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -363,7 +363,7 @@ int org_mini_glfw_utils_Nutil_nvgCancelFrame(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-int org_mini_glfw_utils_Nutil_nvgEndFrame(Runtime *runtime, Class *clazz) {
+int org_mini_glfw_utils_Nutil_nvgEndFrame(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -375,7 +375,7 @@ int org_mini_glfw_utils_Nutil_nvgEndFrame(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-int org_mini_glfw_utils_Nutil_nvgGlobalCompositeOperation(Runtime *runtime, Class *clazz) {
+int org_mini_glfw_utils_Nutil_nvgGlobalCompositeOperation(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -388,7 +388,7 @@ int org_mini_glfw_utils_Nutil_nvgGlobalCompositeOperation(Runtime *runtime, Clas
     return 0;
 }
 
-int org_mini_glfw_utils_Nutil_nvgGlobalCompositeBlendFunc(Runtime *runtime, Class *clazz) {
+int org_mini_glfw_utils_Nutil_nvgGlobalCompositeBlendFunc(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -402,7 +402,7 @@ int org_mini_glfw_utils_Nutil_nvgGlobalCompositeBlendFunc(Runtime *runtime, Clas
     return 0;
 }
 
-int org_mini_glfw_utils_Nutil_nvgGlobalCompositeBlendFuncSeparate(Runtime *runtime, Class *clazz) {
+int org_mini_glfw_utils_Nutil_nvgGlobalCompositeBlendFuncSeparate(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -418,7 +418,7 @@ int org_mini_glfw_utils_Nutil_nvgGlobalCompositeBlendFuncSeparate(Runtime *runti
     return 0;
 }
 
-int org_mini_glfw_utils_Nutil_nvgRGB(Runtime *runtime, Class *clazz) {
+int org_mini_glfw_utils_Nutil_nvgRGB(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -441,7 +441,7 @@ int org_mini_glfw_utils_Nutil_nvgRGB(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-int org_mini_glfw_utils_Nutil_nvgRGBf(Runtime *runtime, Class *clazz) {
+int org_mini_glfw_utils_Nutil_nvgRGBf(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -464,7 +464,7 @@ int org_mini_glfw_utils_Nutil_nvgRGBf(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-int org_mini_glfw_utils_Nutil_nvgRGBA(Runtime *runtime, Class *clazz) {
+int org_mini_glfw_utils_Nutil_nvgRGBA(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -488,7 +488,7 @@ int org_mini_glfw_utils_Nutil_nvgRGBA(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-int org_mini_glfw_utils_Nutil_nvgRGBAf(Runtime *runtime, Class *clazz) {
+int org_mini_glfw_utils_Nutil_nvgRGBAf(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -512,7 +512,7 @@ int org_mini_glfw_utils_Nutil_nvgRGBAf(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-int org_mini_glfw_utils_Nutil_nvgLerpRGBA(Runtime *runtime, Class *clazz) {
+int org_mini_glfw_utils_Nutil_nvgLerpRGBA(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -543,7 +543,7 @@ int org_mini_glfw_utils_Nutil_nvgLerpRGBA(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-int org_mini_glfw_utils_Nutil_nvgTransRGBA(Runtime *runtime, Class *clazz) {
+int org_mini_glfw_utils_Nutil_nvgTransRGBA(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -569,7 +569,7 @@ int org_mini_glfw_utils_Nutil_nvgTransRGBA(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-int org_mini_glfw_utils_Nutil_nvgTransRGBAf(Runtime *runtime, Class *clazz) {
+int org_mini_glfw_utils_Nutil_nvgTransRGBAf(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -595,7 +595,7 @@ int org_mini_glfw_utils_Nutil_nvgTransRGBAf(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-int org_mini_glfw_utils_Nutil_nvgHSL(Runtime *runtime, Class *clazz) {
+int org_mini_glfw_utils_Nutil_nvgHSL(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -618,7 +618,7 @@ int org_mini_glfw_utils_Nutil_nvgHSL(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-int org_mini_glfw_utils_Nutil_nvgHSLA(Runtime *runtime, Class *clazz) {
+int org_mini_glfw_utils_Nutil_nvgHSLA(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -642,7 +642,7 @@ int org_mini_glfw_utils_Nutil_nvgHSLA(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-int org_mini_glfw_utils_Nutil_nvgSave(Runtime *runtime, Class *clazz) {
+int org_mini_glfw_utils_Nutil_nvgSave(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -654,7 +654,7 @@ int org_mini_glfw_utils_Nutil_nvgSave(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-int org_mini_glfw_utils_Nutil_nvgRestore(Runtime *runtime, Class *clazz) {
+int org_mini_glfw_utils_Nutil_nvgRestore(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -666,7 +666,7 @@ int org_mini_glfw_utils_Nutil_nvgRestore(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-int org_mini_glfw_utils_Nutil_nvgReset(Runtime *runtime, Class *clazz) {
+int org_mini_glfw_utils_Nutil_nvgReset(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -678,7 +678,7 @@ int org_mini_glfw_utils_Nutil_nvgReset(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-int org_mini_glfw_utils_Nutil_nvgShapeAntiAlias(Runtime *runtime, Class *clazz) {
+int org_mini_glfw_utils_Nutil_nvgShapeAntiAlias(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -691,7 +691,7 @@ int org_mini_glfw_utils_Nutil_nvgShapeAntiAlias(Runtime *runtime, Class *clazz) 
     return 0;
 }
 
-int org_mini_glfw_utils_Nutil_nvgStrokeColor(Runtime *runtime, Class *clazz) {
+int org_mini_glfw_utils_Nutil_nvgStrokeColor(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -708,7 +708,7 @@ int org_mini_glfw_utils_Nutil_nvgStrokeColor(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-int org_mini_glfw_utils_Nutil_nvgStrokePaint(Runtime *runtime, Class *clazz) {
+int org_mini_glfw_utils_Nutil_nvgStrokePaint(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -725,7 +725,7 @@ int org_mini_glfw_utils_Nutil_nvgStrokePaint(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-int org_mini_glfw_utils_Nutil_nvgFillColor(Runtime *runtime, Class *clazz) {
+int org_mini_glfw_utils_Nutil_nvgFillColor(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -742,7 +742,7 @@ int org_mini_glfw_utils_Nutil_nvgFillColor(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-int org_mini_glfw_utils_Nutil_nvgFillPaint(Runtime *runtime, Class *clazz) {
+int org_mini_glfw_utils_Nutil_nvgFillPaint(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -759,7 +759,7 @@ int org_mini_glfw_utils_Nutil_nvgFillPaint(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-int org_mini_glfw_utils_Nutil_nvgMiterLimit(Runtime *runtime, Class *clazz) {
+int org_mini_glfw_utils_Nutil_nvgMiterLimit(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -772,7 +772,7 @@ int org_mini_glfw_utils_Nutil_nvgMiterLimit(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-int org_mini_glfw_utils_Nutil_nvgStrokeWidth(Runtime *runtime, Class *clazz) {
+int org_mini_glfw_utils_Nutil_nvgStrokeWidth(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -785,7 +785,7 @@ int org_mini_glfw_utils_Nutil_nvgStrokeWidth(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-int org_mini_glfw_utils_Nutil_nvgLineCap(Runtime *runtime, Class *clazz) {
+int org_mini_glfw_utils_Nutil_nvgLineCap(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -798,7 +798,7 @@ int org_mini_glfw_utils_Nutil_nvgLineCap(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-int org_mini_glfw_utils_Nutil_nvgLineJoin(Runtime *runtime, Class *clazz) {
+int org_mini_glfw_utils_Nutil_nvgLineJoin(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -811,7 +811,7 @@ int org_mini_glfw_utils_Nutil_nvgLineJoin(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-int org_mini_glfw_utils_Nutil_nvgGlobalAlpha(Runtime *runtime, Class *clazz) {
+int org_mini_glfw_utils_Nutil_nvgGlobalAlpha(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -824,7 +824,7 @@ int org_mini_glfw_utils_Nutil_nvgGlobalAlpha(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-int org_mini_glfw_utils_Nutil_nvgResetTransform(Runtime *runtime, Class *clazz) {
+int org_mini_glfw_utils_Nutil_nvgResetTransform(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -836,7 +836,7 @@ int org_mini_glfw_utils_Nutil_nvgResetTransform(Runtime *runtime, Class *clazz) 
     return 0;
 }
 
-int org_mini_glfw_utils_Nutil_nvgTransform(Runtime *runtime, Class *clazz) {
+int org_mini_glfw_utils_Nutil_nvgTransform(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -854,7 +854,7 @@ int org_mini_glfw_utils_Nutil_nvgTransform(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-int org_mini_glfw_utils_Nutil_nvgTranslate(Runtime *runtime, Class *clazz) {
+int org_mini_glfw_utils_Nutil_nvgTranslate(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -868,7 +868,7 @@ int org_mini_glfw_utils_Nutil_nvgTranslate(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-int org_mini_glfw_utils_Nutil_nvgRotate(Runtime *runtime, Class *clazz) {
+int org_mini_glfw_utils_Nutil_nvgRotate(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -881,7 +881,7 @@ int org_mini_glfw_utils_Nutil_nvgRotate(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-int org_mini_glfw_utils_Nutil_nvgSkewX(Runtime *runtime, Class *clazz) {
+int org_mini_glfw_utils_Nutil_nvgSkewX(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -894,7 +894,7 @@ int org_mini_glfw_utils_Nutil_nvgSkewX(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-int org_mini_glfw_utils_Nutil_nvgSkewY(Runtime *runtime, Class *clazz) {
+int org_mini_glfw_utils_Nutil_nvgSkewY(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -907,7 +907,7 @@ int org_mini_glfw_utils_Nutil_nvgSkewY(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-int org_mini_glfw_utils_Nutil_nvgScale(Runtime *runtime, Class *clazz) {
+int org_mini_glfw_utils_Nutil_nvgScale(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -921,7 +921,7 @@ int org_mini_glfw_utils_Nutil_nvgScale(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-int org_mini_glfw_utils_Nutil_nvgCurrentTransform(Runtime *runtime, Class *clazz) {
+int org_mini_glfw_utils_Nutil_nvgCurrentTransform(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -938,7 +938,7 @@ int org_mini_glfw_utils_Nutil_nvgCurrentTransform(Runtime *runtime, Class *clazz
     return 0;
 }
 
-int org_mini_glfw_utils_Nutil_nvgTransformIdentity(Runtime *runtime, Class *clazz) {
+int org_mini_glfw_utils_Nutil_nvgTransformIdentity(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -954,7 +954,7 @@ int org_mini_glfw_utils_Nutil_nvgTransformIdentity(Runtime *runtime, Class *claz
     return 0;
 }
 
-int org_mini_glfw_utils_Nutil_nvgTransformTranslate(Runtime *runtime, Class *clazz) {
+int org_mini_glfw_utils_Nutil_nvgTransformTranslate(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -972,7 +972,7 @@ int org_mini_glfw_utils_Nutil_nvgTransformTranslate(Runtime *runtime, Class *cla
     return 0;
 }
 
-int org_mini_glfw_utils_Nutil_nvgTransformScale(Runtime *runtime, Class *clazz) {
+int org_mini_glfw_utils_Nutil_nvgTransformScale(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -990,7 +990,7 @@ int org_mini_glfw_utils_Nutil_nvgTransformScale(Runtime *runtime, Class *clazz) 
     return 0;
 }
 
-int org_mini_glfw_utils_Nutil_nvgTransformRotate(Runtime *runtime, Class *clazz) {
+int org_mini_glfw_utils_Nutil_nvgTransformRotate(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -1007,7 +1007,7 @@ int org_mini_glfw_utils_Nutil_nvgTransformRotate(Runtime *runtime, Class *clazz)
     return 0;
 }
 
-int org_mini_glfw_utils_Nutil_nvgTransformSkewX(Runtime *runtime, Class *clazz) {
+int org_mini_glfw_utils_Nutil_nvgTransformSkewX(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -1024,7 +1024,7 @@ int org_mini_glfw_utils_Nutil_nvgTransformSkewX(Runtime *runtime, Class *clazz) 
     return 0;
 }
 
-int org_mini_glfw_utils_Nutil_nvgTransformSkewY(Runtime *runtime, Class *clazz) {
+int org_mini_glfw_utils_Nutil_nvgTransformSkewY(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -1041,7 +1041,7 @@ int org_mini_glfw_utils_Nutil_nvgTransformSkewY(Runtime *runtime, Class *clazz) 
     return 0;
 }
 
-int org_mini_glfw_utils_Nutil_nvgTransformMultiply(Runtime *runtime, Class *clazz) {
+int org_mini_glfw_utils_Nutil_nvgTransformMultiply(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -1062,7 +1062,7 @@ int org_mini_glfw_utils_Nutil_nvgTransformMultiply(Runtime *runtime, Class *claz
     return 0;
 }
 
-int org_mini_glfw_utils_Nutil_nvgTransformPremultiply(Runtime *runtime, Class *clazz) {
+int org_mini_glfw_utils_Nutil_nvgTransformPremultiply(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -1083,7 +1083,7 @@ int org_mini_glfw_utils_Nutil_nvgTransformPremultiply(Runtime *runtime, Class *c
     return 0;
 }
 
-int org_mini_glfw_utils_Nutil_nvgTransformInverse(Runtime *runtime, Class *clazz) {
+int org_mini_glfw_utils_Nutil_nvgTransformInverse(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -1104,7 +1104,7 @@ int org_mini_glfw_utils_Nutil_nvgTransformInverse(Runtime *runtime, Class *clazz
     return 0;
 }
 
-int org_mini_glfw_utils_Nutil_nvgTransformPoint(Runtime *runtime, Class *clazz) {
+int org_mini_glfw_utils_Nutil_nvgTransformPoint(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -1132,7 +1132,7 @@ int org_mini_glfw_utils_Nutil_nvgTransformPoint(Runtime *runtime, Class *clazz) 
     return 0;
 }
 
-int org_mini_glfw_utils_Nutil_nvgDegToRad(Runtime *runtime, Class *clazz) {
+int org_mini_glfw_utils_Nutil_nvgDegToRad(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -1144,7 +1144,7 @@ int org_mini_glfw_utils_Nutil_nvgDegToRad(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-int org_mini_glfw_utils_Nutil_nvgRadToDeg(Runtime *runtime, Class *clazz) {
+int org_mini_glfw_utils_Nutil_nvgRadToDeg(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -1156,7 +1156,7 @@ int org_mini_glfw_utils_Nutil_nvgRadToDeg(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-int org_mini_glfw_utils_Nutil_nvgCreateImage(Runtime *runtime, Class *clazz) {
+int org_mini_glfw_utils_Nutil_nvgCreateImage(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -1174,7 +1174,7 @@ int org_mini_glfw_utils_Nutil_nvgCreateImage(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-int org_mini_glfw_utils_Nutil_nvgCreateImageMem(Runtime *runtime, Class *clazz) {
+int org_mini_glfw_utils_Nutil_nvgCreateImageMem(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -1193,7 +1193,7 @@ int org_mini_glfw_utils_Nutil_nvgCreateImageMem(Runtime *runtime, Class *clazz) 
     return 0;
 }
 
-int org_mini_glfw_utils_Nutil_nvgCreateImageRGBA(Runtime *runtime, Class *clazz) {
+int org_mini_glfw_utils_Nutil_nvgCreateImageRGBA(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -1213,7 +1213,7 @@ int org_mini_glfw_utils_Nutil_nvgCreateImageRGBA(Runtime *runtime, Class *clazz)
     return 0;
 }
 
-int org_mini_glfw_utils_Nutil_nvgUpdateImage(Runtime *runtime, Class *clazz) {
+int org_mini_glfw_utils_Nutil_nvgUpdateImage(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -1231,7 +1231,7 @@ int org_mini_glfw_utils_Nutil_nvgUpdateImage(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-int org_mini_glfw_utils_Nutil_nvgImageSize(Runtime *runtime, Class *clazz) {
+int org_mini_glfw_utils_Nutil_nvgImageSize(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -1254,7 +1254,7 @@ int org_mini_glfw_utils_Nutil_nvgImageSize(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-int org_mini_glfw_utils_Nutil_nvgDeleteImage(Runtime *runtime, Class *clazz) {
+int org_mini_glfw_utils_Nutil_nvgDeleteImage(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -1267,7 +1267,7 @@ int org_mini_glfw_utils_Nutil_nvgDeleteImage(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-int org_mini_glfw_utils_Nutil_nvgLinearGradient(Runtime *runtime, Class *clazz) {
+int org_mini_glfw_utils_Nutil_nvgLinearGradient(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -1302,7 +1302,7 @@ int org_mini_glfw_utils_Nutil_nvgLinearGradient(Runtime *runtime, Class *clazz) 
     return 0;
 }
 
-int org_mini_glfw_utils_Nutil_nvgBoxGradient(Runtime *runtime, Class *clazz) {
+int org_mini_glfw_utils_Nutil_nvgBoxGradient(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -1339,7 +1339,7 @@ int org_mini_glfw_utils_Nutil_nvgBoxGradient(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-int org_mini_glfw_utils_Nutil_nvgRadialGradient(Runtime *runtime, Class *clazz) {
+int org_mini_glfw_utils_Nutil_nvgRadialGradient(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -1374,7 +1374,7 @@ int org_mini_glfw_utils_Nutil_nvgRadialGradient(Runtime *runtime, Class *clazz) 
     return 0;
 }
 
-int org_mini_glfw_utils_Nutil_nvgImagePattern(Runtime *runtime, Class *clazz) {
+int org_mini_glfw_utils_Nutil_nvgImagePattern(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -1402,7 +1402,7 @@ int org_mini_glfw_utils_Nutil_nvgImagePattern(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-int org_mini_glfw_utils_Nutil_nvgScissor(Runtime *runtime, Class *clazz) {
+int org_mini_glfw_utils_Nutil_nvgScissor(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -1418,7 +1418,7 @@ int org_mini_glfw_utils_Nutil_nvgScissor(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-int org_mini_glfw_utils_Nutil_nvgIntersectScissor(Runtime *runtime, Class *clazz) {
+int org_mini_glfw_utils_Nutil_nvgIntersectScissor(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -1434,7 +1434,7 @@ int org_mini_glfw_utils_Nutil_nvgIntersectScissor(Runtime *runtime, Class *clazz
     return 0;
 }
 
-int org_mini_glfw_utils_Nutil_nvgResetScissor(Runtime *runtime, Class *clazz) {
+int org_mini_glfw_utils_Nutil_nvgResetScissor(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -1446,7 +1446,7 @@ int org_mini_glfw_utils_Nutil_nvgResetScissor(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-int org_mini_glfw_utils_Nutil_nvgBeginPath(Runtime *runtime, Class *clazz) {
+int org_mini_glfw_utils_Nutil_nvgBeginPath(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -1458,7 +1458,7 @@ int org_mini_glfw_utils_Nutil_nvgBeginPath(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-int org_mini_glfw_utils_Nutil_nvgMoveTo(Runtime *runtime, Class *clazz) {
+int org_mini_glfw_utils_Nutil_nvgMoveTo(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -1472,7 +1472,7 @@ int org_mini_glfw_utils_Nutil_nvgMoveTo(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-int org_mini_glfw_utils_Nutil_nvgLineTo(Runtime *runtime, Class *clazz) {
+int org_mini_glfw_utils_Nutil_nvgLineTo(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -1486,7 +1486,7 @@ int org_mini_glfw_utils_Nutil_nvgLineTo(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-int org_mini_glfw_utils_Nutil_nvgBezierTo(Runtime *runtime, Class *clazz) {
+int org_mini_glfw_utils_Nutil_nvgBezierTo(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -1504,7 +1504,7 @@ int org_mini_glfw_utils_Nutil_nvgBezierTo(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-int org_mini_glfw_utils_Nutil_nvgQuadTo(Runtime *runtime, Class *clazz) {
+int org_mini_glfw_utils_Nutil_nvgQuadTo(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -1520,7 +1520,7 @@ int org_mini_glfw_utils_Nutil_nvgQuadTo(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-int org_mini_glfw_utils_Nutil_nvgArcTo(Runtime *runtime, Class *clazz) {
+int org_mini_glfw_utils_Nutil_nvgArcTo(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -1537,7 +1537,7 @@ int org_mini_glfw_utils_Nutil_nvgArcTo(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-int org_mini_glfw_utils_Nutil_nvgClosePath(Runtime *runtime, Class *clazz) {
+int org_mini_glfw_utils_Nutil_nvgClosePath(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -1549,7 +1549,7 @@ int org_mini_glfw_utils_Nutil_nvgClosePath(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-int org_mini_glfw_utils_Nutil_nvgPathWinding(Runtime *runtime, Class *clazz) {
+int org_mini_glfw_utils_Nutil_nvgPathWinding(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -1562,7 +1562,7 @@ int org_mini_glfw_utils_Nutil_nvgPathWinding(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-int org_mini_glfw_utils_Nutil_nvgArc(Runtime *runtime, Class *clazz) {
+int org_mini_glfw_utils_Nutil_nvgArc(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -1580,7 +1580,7 @@ int org_mini_glfw_utils_Nutil_nvgArc(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-int org_mini_glfw_utils_Nutil_nvgRect(Runtime *runtime, Class *clazz) {
+int org_mini_glfw_utils_Nutil_nvgRect(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -1596,7 +1596,7 @@ int org_mini_glfw_utils_Nutil_nvgRect(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-int org_mini_glfw_utils_Nutil_nvgRoundedRect(Runtime *runtime, Class *clazz) {
+int org_mini_glfw_utils_Nutil_nvgRoundedRect(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -1613,7 +1613,7 @@ int org_mini_glfw_utils_Nutil_nvgRoundedRect(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-int org_mini_glfw_utils_Nutil_nvgRoundedRectVarying(Runtime *runtime, Class *clazz) {
+int org_mini_glfw_utils_Nutil_nvgRoundedRectVarying(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -1633,7 +1633,7 @@ int org_mini_glfw_utils_Nutil_nvgRoundedRectVarying(Runtime *runtime, Class *cla
     return 0;
 }
 
-int org_mini_glfw_utils_Nutil_nvgEllipse(Runtime *runtime, Class *clazz) {
+int org_mini_glfw_utils_Nutil_nvgEllipse(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -1649,7 +1649,7 @@ int org_mini_glfw_utils_Nutil_nvgEllipse(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-int org_mini_glfw_utils_Nutil_nvgCircle(Runtime *runtime, Class *clazz) {
+int org_mini_glfw_utils_Nutil_nvgCircle(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -1664,7 +1664,7 @@ int org_mini_glfw_utils_Nutil_nvgCircle(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-int org_mini_glfw_utils_Nutil_nvgFill(Runtime *runtime, Class *clazz) {
+int org_mini_glfw_utils_Nutil_nvgFill(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -1676,7 +1676,7 @@ int org_mini_glfw_utils_Nutil_nvgFill(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-int org_mini_glfw_utils_Nutil_nvgStroke(Runtime *runtime, Class *clazz) {
+int org_mini_glfw_utils_Nutil_nvgStroke(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -1688,7 +1688,7 @@ int org_mini_glfw_utils_Nutil_nvgStroke(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-int org_mini_glfw_utils_Nutil_nvgCreateFont(Runtime *runtime, Class *clazz) {
+int org_mini_glfw_utils_Nutil_nvgCreateFont(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -1710,7 +1710,7 @@ int org_mini_glfw_utils_Nutil_nvgCreateFont(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-int org_mini_glfw_utils_Nutil_nvgCreateFontMem(Runtime *runtime, Class *clazz) {
+int org_mini_glfw_utils_Nutil_nvgCreateFontMem(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -1734,7 +1734,7 @@ int org_mini_glfw_utils_Nutil_nvgCreateFontMem(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-int org_mini_glfw_utils_Nutil_nvgFindFont(Runtime *runtime, Class *clazz) {
+int org_mini_glfw_utils_Nutil_nvgFindFont(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -1751,7 +1751,7 @@ int org_mini_glfw_utils_Nutil_nvgFindFont(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-int org_mini_glfw_utils_Nutil_nvgAddFallbackFontId(Runtime *runtime, Class *clazz) {
+int org_mini_glfw_utils_Nutil_nvgAddFallbackFontId(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -1765,7 +1765,7 @@ int org_mini_glfw_utils_Nutil_nvgAddFallbackFontId(Runtime *runtime, Class *claz
     return 0;
 }
 
-int org_mini_glfw_utils_Nutil_nvgAddFallbackFont(Runtime *runtime, Class *clazz) {
+int org_mini_glfw_utils_Nutil_nvgAddFallbackFont(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -1787,7 +1787,7 @@ int org_mini_glfw_utils_Nutil_nvgAddFallbackFont(Runtime *runtime, Class *clazz)
     return 0;
 }
 
-int org_mini_glfw_utils_Nutil_nvgFontSize(Runtime *runtime, Class *clazz) {
+int org_mini_glfw_utils_Nutil_nvgFontSize(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -1800,7 +1800,7 @@ int org_mini_glfw_utils_Nutil_nvgFontSize(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-int org_mini_glfw_utils_Nutil_nvgFontBlur(Runtime *runtime, Class *clazz) {
+int org_mini_glfw_utils_Nutil_nvgFontBlur(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -1813,7 +1813,7 @@ int org_mini_glfw_utils_Nutil_nvgFontBlur(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-int org_mini_glfw_utils_Nutil_nvgTextLetterSpacing(Runtime *runtime, Class *clazz) {
+int org_mini_glfw_utils_Nutil_nvgTextLetterSpacing(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -1826,7 +1826,7 @@ int org_mini_glfw_utils_Nutil_nvgTextLetterSpacing(Runtime *runtime, Class *claz
     return 0;
 }
 
-int org_mini_glfw_utils_Nutil_nvgTextLineHeight(Runtime *runtime, Class *clazz) {
+int org_mini_glfw_utils_Nutil_nvgTextLineHeight(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -1839,7 +1839,7 @@ int org_mini_glfw_utils_Nutil_nvgTextLineHeight(Runtime *runtime, Class *clazz) 
     return 0;
 }
 
-int org_mini_glfw_utils_Nutil_nvgTextAlign(Runtime *runtime, Class *clazz) {
+int org_mini_glfw_utils_Nutil_nvgTextAlign(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -1852,7 +1852,7 @@ int org_mini_glfw_utils_Nutil_nvgTextAlign(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-int org_mini_glfw_utils_Nutil_nvgFontFaceId(Runtime *runtime, Class *clazz) {
+int org_mini_glfw_utils_Nutil_nvgFontFaceId(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -1865,7 +1865,7 @@ int org_mini_glfw_utils_Nutil_nvgFontFaceId(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-int org_mini_glfw_utils_Nutil_nvgFontFace(Runtime *runtime, Class *clazz) {
+int org_mini_glfw_utils_Nutil_nvgFontFace(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -1882,7 +1882,7 @@ int org_mini_glfw_utils_Nutil_nvgFontFace(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-int org_mini_glfw_utils_Nutil_nvgTextMetrics(Runtime *runtime, Class *clazz) {
+int org_mini_glfw_utils_Nutil_nvgTextMetrics(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -1909,7 +1909,7 @@ int org_mini_glfw_utils_Nutil_nvgTextMetrics(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-int org_mini_glfw_utils_Nutil_nvgCreateGL2(Runtime *runtime, Class *clazz) {
+int org_mini_glfw_utils_Nutil_nvgCreateGL2(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -1921,7 +1921,7 @@ int org_mini_glfw_utils_Nutil_nvgCreateGL2(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-int org_mini_glfw_utils_Nutil_nvgDeleteGL2(Runtime *runtime, Class *clazz) {
+int org_mini_glfw_utils_Nutil_nvgDeleteGL2(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -1933,7 +1933,7 @@ int org_mini_glfw_utils_Nutil_nvgDeleteGL2(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-int org_mini_glfw_utils_Nutil_nvglCreateImageFromHandleGL2(Runtime *runtime, Class *clazz) {
+int org_mini_glfw_utils_Nutil_nvglCreateImageFromHandleGL2(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -1949,7 +1949,7 @@ int org_mini_glfw_utils_Nutil_nvglCreateImageFromHandleGL2(Runtime *runtime, Cla
     return 0;
 }
 
-int org_mini_glfw_utils_Nutil_nvglImageHandleGL2(Runtime *runtime, Class *clazz) {
+int org_mini_glfw_utils_Nutil_nvglImageHandleGL2(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -1962,7 +1962,7 @@ int org_mini_glfw_utils_Nutil_nvglImageHandleGL2(Runtime *runtime, Class *clazz)
     return 0;
 }
 
-int org_mini_glfw_utils_Nutil_nvgCreateNVGtextRow(Runtime *runtime, Class *clazz) {
+int org_mini_glfw_utils_Nutil_nvgCreateNVGtextRow(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -1974,7 +1974,7 @@ int org_mini_glfw_utils_Nutil_nvgCreateNVGtextRow(Runtime *runtime, Class *clazz
     return 0;
 }
 
-int org_mini_glfw_utils_Nutil_nvgDeleteNVGtextRow(Runtime *runtime, Class *clazz) {
+int org_mini_glfw_utils_Nutil_nvgDeleteNVGtextRow(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -1986,7 +1986,7 @@ int org_mini_glfw_utils_Nutil_nvgDeleteNVGtextRow(Runtime *runtime, Class *clazz
     return 0;
 }
 
-int org_mini_glfw_utils_Nutil_nvgNVGtextRow_width(Runtime *runtime, Class *clazz) {
+int org_mini_glfw_utils_Nutil_nvgNVGtextRow_width(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -1999,7 +1999,7 @@ int org_mini_glfw_utils_Nutil_nvgNVGtextRow_width(Runtime *runtime, Class *clazz
     return 0;
 }
 
-int org_mini_glfw_utils_Nutil_nvgNVGtextRow_start(Runtime *runtime, Class *clazz) {
+int org_mini_glfw_utils_Nutil_nvgNVGtextRow_start(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -2012,7 +2012,7 @@ int org_mini_glfw_utils_Nutil_nvgNVGtextRow_start(Runtime *runtime, Class *clazz
     return 0;
 }
 
-int org_mini_glfw_utils_Nutil_nvgNVGtextRow_end(Runtime *runtime, Class *clazz) {
+int org_mini_glfw_utils_Nutil_nvgNVGtextRow_end(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -2025,7 +2025,7 @@ int org_mini_glfw_utils_Nutil_nvgNVGtextRow_end(Runtime *runtime, Class *clazz) 
     return 0;
 }
 
-int org_mini_glfw_utils_Nutil_nvgNVGtextRow_next(Runtime *runtime, Class *clazz) {
+int org_mini_glfw_utils_Nutil_nvgNVGtextRow_next(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -2038,7 +2038,7 @@ int org_mini_glfw_utils_Nutil_nvgNVGtextRow_next(Runtime *runtime, Class *clazz)
     return 0;
 }
 
-int org_mini_glfw_utils_Nutil_nvgCreateNVGglyphPosition(Runtime *runtime, Class *clazz) {
+int org_mini_glfw_utils_Nutil_nvgCreateNVGglyphPosition(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -2050,7 +2050,7 @@ int org_mini_glfw_utils_Nutil_nvgCreateNVGglyphPosition(Runtime *runtime, Class 
     return 0;
 }
 
-int org_mini_glfw_utils_Nutil_nvgDeleteNVGglyphPosition(Runtime *runtime, Class *clazz) {
+int org_mini_glfw_utils_Nutil_nvgDeleteNVGglyphPosition(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -2062,7 +2062,7 @@ int org_mini_glfw_utils_Nutil_nvgDeleteNVGglyphPosition(Runtime *runtime, Class 
     return 0;
 }
 
-int org_mini_glfw_utils_Nutil_nvgNVGglyphPosition_x(Runtime *runtime, Class *clazz) {
+int org_mini_glfw_utils_Nutil_nvgNVGglyphPosition_x(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -2075,7 +2075,7 @@ int org_mini_glfw_utils_Nutil_nvgNVGglyphPosition_x(Runtime *runtime, Class *cla
     return 0;
 }
 
-int org_mini_glfw_utils_Nutil_nvgTextJni(Runtime *runtime, Class *clazz) {
+int org_mini_glfw_utils_Nutil_nvgTextJni(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -2096,7 +2096,7 @@ int org_mini_glfw_utils_Nutil_nvgTextJni(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-int org_mini_glfw_utils_Nutil_nvgTextBoxJni(Runtime *runtime, Class *clazz) {
+int org_mini_glfw_utils_Nutil_nvgTextBoxJni(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -2118,7 +2118,7 @@ int org_mini_glfw_utils_Nutil_nvgTextBoxJni(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-int org_mini_glfw_utils_Nutil_nvgTextBoundsJni(Runtime *runtime, Class *clazz) {
+int org_mini_glfw_utils_Nutil_nvgTextBoundsJni(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -2144,7 +2144,7 @@ int org_mini_glfw_utils_Nutil_nvgTextBoundsJni(Runtime *runtime, Class *clazz) {
     return 0;
 }
 
-int org_mini_glfw_utils_Nutil_nvgTextBoxBoundsJni(Runtime *runtime, Class *clazz) {
+int org_mini_glfw_utils_Nutil_nvgTextBoxBoundsJni(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -2171,7 +2171,7 @@ int org_mini_glfw_utils_Nutil_nvgTextBoxBoundsJni(Runtime *runtime, Class *clazz
     return 0;
 }
 
-int org_mini_glfw_utils_Nutil_nvgTextBreakLinesJni(Runtime *runtime, Class *clazz) {
+int org_mini_glfw_utils_Nutil_nvgTextBreakLinesJni(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -2193,7 +2193,7 @@ int org_mini_glfw_utils_Nutil_nvgTextBreakLinesJni(Runtime *runtime, Class *claz
     return 0;
 }
 
-int org_mini_glfw_utils_Nutil_nvgTextGlyphPositionsJni(Runtime *runtime, Class *clazz) {
+int org_mini_glfw_utils_Nutil_nvgTextGlyphPositionsJni(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     

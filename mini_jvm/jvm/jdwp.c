@@ -480,7 +480,7 @@ void nameToSignature(Utf8String *name) {
     utf8_append_c(name, ";");
 }
 
-u8 getClassStatus(Class *clazz) {
+u8 getClassStatus(JClass *clazz) {
 //    return JDWP_CLASS_STATUS_INITIALIZED;
     return clazz->status >= CLASS_STATUS_CLINITED ?
            JDWP_CLASS_STATUS_INITIALIZED | JDWP_CLASS_STATUS_PREPARED | JDWP_CLASS_STATUS_VERIFIED
@@ -502,7 +502,7 @@ CodeAttribute *getCodeAttribute(MethodInfo *method) {
 }
 
 
-s32 getClassType(Class *clazz) {
+s32 getClassType(JClass *clazz) {
     if (clazz->arr_type_index) {
         return JDWP_TYPETAG_ARRAY;
     } else if (clazz->cff.access_flags & ACC_INTERFACE) {
@@ -551,7 +551,7 @@ c8 getSimpleTag(u8 type) {
 c8 getInstanceOfClassTag(Instance *ins) {
     if (!ins)return JDWP_TAG_OBJECT;
     if (ins->mb.type == MEM_TYPE_CLASS)return JDWP_TAG_CLASS_OBJECT;
-    Class *clazz = ins->mb.clazz;
+    JClass *clazz = ins->mb.clazz;
     if (clazz->arr_type_index)return JDWP_TAG_ARRAY;
     if (utf8_equals_c(clazz->name, STR_CLASS_JAVA_LANG_THREAD))return JDWP_TAG_THREAD;
     if (utf8_equals_c(clazz->name, STR_CLASS_JAVA_LANG_STRING))return JDWP_TAG_STRING;
@@ -682,7 +682,7 @@ void writeArrayRegion(JdwpPacket *res, Instance *arr, s32 firstIndex, s32 length
     }
 }
 
-void getClassSignature(Class *clazz, Utf8String *ustr) {
+void getClassSignature(JClass *clazz, Utf8String *ustr) {
     if (clazz->arr_type_index) {
         utf8_append(ustr, clazz->name);
     } else {
@@ -804,7 +804,7 @@ void jdwp_post_events(JdwpClient *client) {
     }
 }
 
-void event_on_class_prepar(Runtime *runtime, Class *clazz) {
+void event_on_class_prepar(Runtime *runtime, JClass *clazz) {
     EventInfo *ei = jvm_calloc(sizeof(EventInfo));
     ei->eventKind = JDWP_EVENTKIND_CLASS_PREPARE;
     ei->thread = runtime->threadInfo->jthread;
@@ -815,7 +815,7 @@ void event_on_class_prepar(Runtime *runtime, Class *clazz) {
     jdwp_event_put(ei);
 }
 
-void event_on_class_unload(Runtime *runtime, Class *clazz) {
+void event_on_class_unload(Runtime *runtime, JClass *clazz) {
     EventInfo *ei = jvm_calloc(sizeof(EventInfo));
     ei->eventKind = JDWP_EVENTKIND_CLASS_UNLOAD;
     ei->signature = clazz->name;
@@ -858,7 +858,7 @@ void event_on_debug_step(Runtime *step_runtime) {
     jdwp_event_put(ei);
 }
 
-s32 jdwp_set_breakpoint(s32 setOrClear, Class *clazz, MethodInfo *methodInfo, s64 execIndex) {
+s32 jdwp_set_breakpoint(s32 setOrClear, JClass *clazz, MethodInfo *methodInfo, s64 execIndex) {
     if (!methodInfo->breakpoint) {
         methodInfo->breakpoint = pairlist_create(4);
     }
@@ -1291,7 +1291,7 @@ s32 jdwp_client_process(JdwpClient *client, Runtime *runtime) {
                 jdwppacket_set_err(res, JDWP_ERROR_NONE);
 
                 signatureToName(signature);
-                Class *cl = classes_load_get(signature, runtime);
+                JClass *cl = classes_load_get(signature, runtime);
                 if (!cl) {
                     cl = array_class_get(signature);
                 }
@@ -1317,7 +1317,7 @@ s32 jdwp_client_process(JdwpClient *client, Runtime *runtime) {
                 hashtable_iterate(sys_classloader->classes, &hti);
                 for (; hashtable_iter_has_more(&hti);) {
                     Utf8String *k = hashtable_iter_next_key(&hti);
-                    Class *cl = hashtable_get(sys_classloader->classes, k);
+                    JClass *cl = hashtable_get(sys_classloader->classes, k);
 
                     jdwppacket_write_byte(res, getClassType(cl));
                     jdwppacket_write_refer(res, cl);
@@ -1488,7 +1488,7 @@ s32 jdwp_client_process(JdwpClient *client, Runtime *runtime) {
                 hashtable_iterate(sys_classloader->classes, &hti);
                 for (; hashtable_iter_has_more(&hti);) {
                     Utf8String *k = hashtable_iter_next_key(&hti);
-                    Class *cl = hashtable_get(sys_classloader->classes, k);
+                    JClass *cl = hashtable_get(sys_classloader->classes, k);
 
                     jdwppacket_write_byte(res, getClassType(cl));
                     jdwppacket_write_refer(res, cl);
@@ -1507,7 +1507,7 @@ s32 jdwp_client_process(JdwpClient *client, Runtime *runtime) {
 //set 2
 
             case JDWP_CMD_ReferenceType_Signature: {//2.1
-                Class *ref = jdwppacket_read_refer(req);
+                JClass *ref = jdwppacket_read_refer(req);
                 jdwppacket_set_err(res, JDWP_ERROR_NONE);
 
                 Utf8String *str = utf8_create();
@@ -1519,7 +1519,7 @@ s32 jdwp_client_process(JdwpClient *client, Runtime *runtime) {
                 break;
             }
             case JDWP_CMD_ReferenceType_ClassLoader: {//2.2
-                Class *ref = jdwppacket_read_refer(req);
+                JClass *ref = jdwppacket_read_refer(req);
 
                 jdwppacket_set_err(res, JDWP_ERROR_NONE);
 
@@ -1528,7 +1528,7 @@ s32 jdwp_client_process(JdwpClient *client, Runtime *runtime) {
                 break;
             }
             case JDWP_CMD_ReferenceType_Modifiers: {//2.3
-                Class *ref = jdwppacket_read_refer(req);
+                JClass *ref = jdwppacket_read_refer(req);
                 jdwppacket_set_err(res, JDWP_ERROR_NONE);
 
                 jdwppacket_write_int(res, ref->cff.access_flags);
@@ -1536,7 +1536,7 @@ s32 jdwp_client_process(JdwpClient *client, Runtime *runtime) {
                 break;
             }
             case JDWP_CMD_ReferenceType_Fields: {//2.4
-                Class *ref = jdwppacket_read_refer(req);
+                JClass *ref = jdwppacket_read_refer(req);
                 jdwppacket_set_err(res, JDWP_ERROR_NONE);
                 s32 len = ref->fieldPool.field_used;
                 jdwppacket_write_int(res, len);
@@ -1552,7 +1552,7 @@ s32 jdwp_client_process(JdwpClient *client, Runtime *runtime) {
                 break;
             }
             case JDWP_CMD_ReferenceType_Methods: {//2.5
-                Class *ref = jdwppacket_read_refer(req);
+                JClass *ref = jdwppacket_read_refer(req);
                 jdwppacket_set_err(res, JDWP_ERROR_NONE);
                 s32 len = ref->methodPool.method_used;
                 jdwppacket_write_int(res, len);
@@ -1568,7 +1568,7 @@ s32 jdwp_client_process(JdwpClient *client, Runtime *runtime) {
                 break;
             }
             case JDWP_CMD_ReferenceType_GetValues: {//2.6
-                Class *ref = jdwppacket_read_refer(req);
+                JClass *ref = jdwppacket_read_refer(req);
                 s32 fields = jdwppacket_read_int(req);
                 jdwppacket_set_err(res, JDWP_ERROR_NONE);
                 jdwppacket_write_int(res, fields);
@@ -1585,7 +1585,7 @@ s32 jdwp_client_process(JdwpClient *client, Runtime *runtime) {
                 break;
             }
             case JDWP_CMD_ReferenceType_SourceFile: {//2.7
-                Class *ref = jdwppacket_read_refer(req);
+                JClass *ref = jdwppacket_read_refer(req);
 
                 jdwppacket_set_err(res, JDWP_ERROR_NONE);
 
@@ -1603,13 +1603,13 @@ s32 jdwp_client_process(JdwpClient *client, Runtime *runtime) {
                 break;
             }
             case JDWP_CMD_ReferenceType_Interfaces: {//2.10
-                Class *ref = jdwppacket_read_refer(req);
+                JClass *ref = jdwppacket_read_refer(req);
                 jdwppacket_set_err(res, JDWP_ERROR_NONE);
                 s32 len = ref->interfacePool.clasz_used;
                 jdwppacket_write_int(res, len);
                 s32 i;
                 for (i = 0; i < len; i++) {
-                    Class *cl = classes_load_get(ref->interfacePool.clasz[i].name, runtime);
+                    JClass *cl = classes_load_get(ref->interfacePool.clasz[i].name, runtime);
                     if (!cl) {
                         cl = array_class_get(ref->interfacePool.clasz[i].name);
                     }
@@ -1620,7 +1620,7 @@ s32 jdwp_client_process(JdwpClient *client, Runtime *runtime) {
                 break;
             }
             case JDWP_CMD_ReferenceType_ClassObject: {//2.11
-                Class *ref = jdwppacket_read_refer(req);
+                JClass *ref = jdwppacket_read_refer(req);
 
                 jdwppacket_set_err(res, JDWP_ERROR_NONE);
 
@@ -1635,7 +1635,7 @@ s32 jdwp_client_process(JdwpClient *client, Runtime *runtime) {
                 break;
             }
             case JDWP_CMD_ReferenceType_SignatureWithGeneric: {//2.13
-                Class *ref = jdwppacket_read_refer(req);
+                JClass *ref = jdwppacket_read_refer(req);
                 jdwppacket_set_err(res, JDWP_ERROR_NONE);
 
                 Utf8String *str = utf8_create();
@@ -1649,7 +1649,7 @@ s32 jdwp_client_process(JdwpClient *client, Runtime *runtime) {
                 break;
             }
             case JDWP_CMD_ReferenceType_FieldsWithGeneric: {//2.14
-                Class *ref = jdwppacket_read_refer(req);
+                JClass *ref = jdwppacket_read_refer(req);
                 jdwppacket_set_err(res, JDWP_ERROR_NONE);
                 s32 len = ref->fieldPool.field_used;
                 jdwppacket_write_int(res, len);
@@ -1667,7 +1667,7 @@ s32 jdwp_client_process(JdwpClient *client, Runtime *runtime) {
                 break;
             }
             case JDWP_CMD_ReferenceType_MethodsWithGeneric: {//2.15
-                Class *ref = jdwppacket_read_refer(req);
+                JClass *ref = jdwppacket_read_refer(req);
                 jdwppacket_set_err(res, JDWP_ERROR_NONE);
                 s32 len = ref->methodPool.method_used;
                 jdwppacket_write_int(res, len);
@@ -1688,7 +1688,7 @@ s32 jdwp_client_process(JdwpClient *client, Runtime *runtime) {
 
             case JDWP_CMD_ClassType_Superclass: {//3.1
                 __refer refType = jdwppacket_read_refer(req);
-                Class *ref = (Class *) (refType);
+                JClass *ref = (JClass *) (refType);
 
                 jdwppacket_set_err(res, JDWP_ERROR_NONE);
 
@@ -1720,7 +1720,7 @@ s32 jdwp_client_process(JdwpClient *client, Runtime *runtime) {
 
             case JDWP_CMD_Method_LineTable: {//6.1
                 __refer refType = jdwppacket_read_refer(req);
-                Class *ref = (Class *) (refType);
+                JClass *ref = (JClass *) (refType);
                 MethodInfo *method = jdwppacket_read_refer(req);
                 jdwppacket_set_err(res, JDWP_ERROR_NONE);
                 CodeAttribute *ca = getCodeAttribute(method);
@@ -1742,7 +1742,7 @@ s32 jdwp_client_process(JdwpClient *client, Runtime *runtime) {
             }
             case JDWP_CMD_Method_VariableTable: {//6.2
                 __refer refType = jdwppacket_read_refer(req);
-                Class *ref = (Class *) (refType);
+                JClass *ref = (JClass *) (refType);
                 MethodInfo *method = jdwppacket_read_refer(req);
                 CodeAttribute *ca = getCodeAttribute(method);
                 jdwppacket_set_err(res, JDWP_ERROR_NONE);
@@ -1778,7 +1778,7 @@ s32 jdwp_client_process(JdwpClient *client, Runtime *runtime) {
 
             case JDWP_CMD_ObjectReference_ReferenceType: {//9.1
                 Instance *obj = (Instance *) jdwppacket_read_refer(req);
-                Class *ref = obj->mb.clazz;
+                JClass *ref = obj->mb.clazz;
                 jdwppacket_set_err(res, JDWP_ERROR_NONE);
                 jdwppacket_write_byte(res, getClassType(ref));
                 if (obj->mb.type == MEM_TYPE_CLASS) {//类对象
@@ -1790,7 +1790,7 @@ s32 jdwp_client_process(JdwpClient *client, Runtime *runtime) {
             }
             case JDWP_CMD_ObjectReference_GetValues: {//9.2
                 Instance *obj = (Instance *) jdwppacket_read_refer(req);
-                Class *ref = obj->mb.clazz;
+                JClass *ref = obj->mb.clazz;
                 s32 fields = jdwppacket_read_int(req);
                 jdwppacket_set_err(res, JDWP_ERROR_NONE);
                 jdwppacket_write_int(res, fields);
@@ -1817,7 +1817,7 @@ s32 jdwp_client_process(JdwpClient *client, Runtime *runtime) {
             case JDWP_CMD_ObjectReference_InvokeMethod: {//9.6
                 Instance *object = jdwppacket_read_refer(req);
                 Instance *thread = jdwppacket_read_refer(req);
-                Class *clazz = jdwppacket_read_refer(req);
+                JClass *clazz = jdwppacket_read_refer(req);
                 MethodInfo *methodInfo = jdwppacket_read_refer(req);
                 s32 arguments = jdwppacket_read_int(req);
 
@@ -2296,7 +2296,7 @@ s32 jdwp_client_process(JdwpClient *client, Runtime *runtime) {
             }
 //set 17
             case JDWP_CMD_ClassObjectReference_ReflectedType: {//17.1
-                Class *classObject = jdwppacket_read_refer(req);
+                JClass *classObject = jdwppacket_read_refer(req);
 
                 jdwppacket_set_err(res, JDWP_ERROR_NONE);
 

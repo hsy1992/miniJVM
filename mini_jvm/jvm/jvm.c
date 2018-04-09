@@ -13,7 +13,7 @@
 
 void main_thread_create(Runtime *runtime) {
 
-    Class *thread_clazz = classes_load_get_c("java/lang/Thread", runtime);
+    JClass *thread_clazz = classes_load_get_c("java/lang/Thread", runtime);
     //为主线程创建Thread实例
     main_thread = instance_create(thread_clazz);
     runtime->threadInfo->jthread = main_thread;//Thread.init currentThread() need this
@@ -156,7 +156,7 @@ void classloader_release_classs_static_field(ClassLoader *class_loader) {
     hashtable_iterate(class_loader->classes, &hti);
     for (; hashtable_iter_has_more(&hti);) {
         HashtableValue v = hashtable_iter_next_value(&hti);
-        Class *clazz = (Class *) (v);
+        JClass *clazz = (JClass *) (v);
         class_clear_refer(clazz);
     }
 }
@@ -221,7 +221,7 @@ s32 execute_jvm(c8 *p_classpath, c8 *p_mainclass, ArrayList *java_para) {
     //装入主类
     load_class(sys_classloader, str_mainClsName, runtime);
 
-    Class *clazz = classes_get(str_mainClsName);
+    JClass *clazz = classes_get(str_mainClsName);
 
     s32 ret = 0;
     if (clazz) {

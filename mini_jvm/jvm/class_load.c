@@ -12,7 +12,7 @@
 #include "jvm_util.h"
 
 /* parse UTF-8 String */
-void *_parseCPString(Class *_this, ByteBuf *buf, s32 index) {
+void *_parseCPString(JClass *_this, ByteBuf *buf, s32 index) {
 
     ConstantUTF8 *ptr = jvm_calloc(sizeof(ConstantUTF8));
 
@@ -37,7 +37,7 @@ void *_parseCPString(Class *_this, ByteBuf *buf, s32 index) {
 }
 
 /* parse Integer */
-void *_parseCPInteger(Class *_this, ByteBuf *buf, s32 index) {
+void *_parseCPInteger(JClass *_this, ByteBuf *buf, s32 index) {
 
     ConstantInteger *ptr = jvm_calloc(sizeof(ConstantInteger));
 
@@ -57,7 +57,7 @@ void *_parseCPInteger(Class *_this, ByteBuf *buf, s32 index) {
 }
 
 /* parse Float */
-void *_parseCPFloat(Class *_this, ByteBuf *buf, s32 index) {
+void *_parseCPFloat(JClass *_this, ByteBuf *buf, s32 index) {
 
     ConstantFloat *ptr = jvm_calloc(sizeof(ConstantFloat));
 
@@ -78,7 +78,7 @@ void *_parseCPFloat(Class *_this, ByteBuf *buf, s32 index) {
 }
 
 /* parse LONG */
-void *_parseCPLong(Class *_this, ByteBuf *buf, s32 index) {
+void *_parseCPLong(JClass *_this, ByteBuf *buf, s32 index) {
 
     ConstantLong *ptr = jvm_calloc(sizeof(ConstantLong));
 
@@ -102,7 +102,7 @@ void *_parseCPLong(Class *_this, ByteBuf *buf, s32 index) {
 }
 
 /* parse Double */
-void *_parseCPDouble(Class *_this, ByteBuf *buf, s32 index) {
+void *_parseCPDouble(JClass *_this, ByteBuf *buf, s32 index) {
 
     ConstantDouble *ptr = jvm_calloc(sizeof(ConstantDouble));
 
@@ -126,7 +126,7 @@ void *_parseCPDouble(Class *_this, ByteBuf *buf, s32 index) {
 }
 
 /* parse Constant Pool Class */
-void *_parseCPClass(Class *_this, ByteBuf *buf, s32 index) {
+void *_parseCPClass(JClass *_this, ByteBuf *buf, s32 index) {
 
     ConstantClassRef *ptr = jvm_calloc(sizeof(ConstantClassRef));
 
@@ -144,7 +144,7 @@ void *_parseCPClass(Class *_this, ByteBuf *buf, s32 index) {
 }
 
 /* parse Constant Pool String Ref */
-void *_parseCPStringRef(Class *_this, ByteBuf *buf, s32 index) {
+void *_parseCPStringRef(JClass *_this, ByteBuf *buf, s32 index) {
 
     ConstantStringRef *ptr = jvm_calloc(sizeof(ConstantStringRef));
 
@@ -162,7 +162,7 @@ void *_parseCPStringRef(Class *_this, ByteBuf *buf, s32 index) {
 }
 
 /* parse Constant Pool Field */
-void *_parseCPField(Class *_this, ByteBuf *buf, s32 index) {
+void *_parseCPField(JClass *_this, ByteBuf *buf, s32 index) {
 
     ConstantFieldRef *ptr = jvm_calloc(sizeof(ConstantFieldRef));
 
@@ -185,7 +185,7 @@ void *_parseCPField(Class *_this, ByteBuf *buf, s32 index) {
 }
 
 /* parse Constant Pool Method */
-void *_parseCPMethod(Class *_this, ByteBuf *buf, s32 index) {
+void *_parseCPMethod(JClass *_this, ByteBuf *buf, s32 index) {
 
     ConstantMethodRef *ptr = jvm_calloc(sizeof(ConstantMethodRef));
     ptr->methodParaCount = -1;
@@ -209,7 +209,7 @@ void *_parseCPMethod(Class *_this, ByteBuf *buf, s32 index) {
 }
 
 /* parse Constant Pool Interface */
-void *_parseCPInterface(Class *_this, ByteBuf *buf, s32 index) {
+void *_parseCPInterface(JClass *_this, ByteBuf *buf, s32 index) {
 
     ConstantInterfaceMethodRef *ptr = jvm_calloc(sizeof(ConstantInterfaceMethodRef));
 
@@ -232,7 +232,7 @@ void *_parseCPInterface(Class *_this, ByteBuf *buf, s32 index) {
 }
 
 /* parse Constant Pool Interface */
-void *_parseCPNameAndType(Class *_this, ByteBuf *buf, s32 index) {
+void *_parseCPNameAndType(JClass *_this, ByteBuf *buf, s32 index) {
 
     ConstantNameAndType *ptr = jvm_calloc(sizeof(ConstantNameAndType));
 
@@ -259,7 +259,7 @@ void *_parseCPNameAndType(Class *_this, ByteBuf *buf, s32 index) {
 
 #endif //_JVM_DEBUG
 
-s32 _class_constant_pool_destory(Class *clazz) {
+s32 _class_constant_pool_destory(JClass *clazz) {
     int i;
     for (i = 0; i < clazz->constantPool.fieldRef->length; i++) {
         __refer ptr = arraylist_get_value(clazz->constantPool.fieldRef, i);
@@ -346,7 +346,7 @@ s32 _parseAttr(FieldInfo *ptr, ByteBuf *buf) {
 }
 
 /* parse Field Pool */
-s32 _parseFP(Class *_this, ByteBuf *buf) {
+s32 _parseFP(JClass *_this, ByteBuf *buf) {
 
     FieldInfo *ptr = &(_this->fieldPool.field[_this->fieldPool.field_used]);
 
@@ -388,7 +388,7 @@ s32 _parseFP(Class *_this, ByteBuf *buf) {
 }
 
 
-s32 _parse_field_pool(Class *_this, ByteBuf *buf, s32 count) {
+s32 _parse_field_pool(JClass *_this, ByteBuf *buf, s32 count) {
     s32 size = sizeof(FieldInfo) * count;
     _this->fieldPool.field = jvm_calloc(size);
 
@@ -399,7 +399,7 @@ s32 _parse_field_pool(Class *_this, ByteBuf *buf, s32 count) {
 }
 
 
-s32 _class_field_info_destory(Class *clazz) {
+s32 _class_field_info_destory(JClass *clazz) {
     s32 i, j;
     for (i = 0; i < clazz->fieldPool.field_used; i++) {
         FieldInfo *fi = &clazz->fieldPool.field[i];
@@ -418,7 +418,7 @@ s32 _class_field_info_destory(Class *clazz) {
 
 
 /* parse Interface Pool Class */
-s32 _parseIPClass(Class *_this, ByteBuf *buf, s32 index) {
+s32 _parseIPClass(JClass *_this, ByteBuf *buf, s32 index) {
 
     ConstantClassRef *ptr = &_this->interfacePool.clasz[_this->interfacePool.clasz_used];
 
@@ -436,7 +436,7 @@ s32 _parseIPClass(Class *_this, ByteBuf *buf, s32 index) {
 }
 
 
-s32 _parse_interface_pool(Class *_this, ByteBuf *buf, s32 count) {
+s32 _parse_interface_pool(JClass *_this, ByteBuf *buf, s32 count) {
 
     s32 size = sizeof(ConstantClassRef) * count;
     _this->interfacePool.clasz = jvm_calloc(size);
@@ -446,7 +446,7 @@ s32 _parse_interface_pool(Class *_this, ByteBuf *buf, s32 count) {
     return 0;
 }
 
-s32 _class_interface_pool_destory(Class *clazz) {
+s32 _class_interface_pool_destory(JClass *clazz) {
     if (clazz->interfacePool.clasz)jvm_free(clazz->interfacePool.clasz);
     clazz->interfacePool.clasz = NULL;
     return 0;
@@ -484,7 +484,7 @@ s32 _parseMethodAttr(MethodInfo *ptr, ByteBuf *buf) {
 
 
 /* parse Method Pool */
-s32 _parseMP(Class *_this, ByteBuf *buf) {
+s32 _parseMP(JClass *_this, ByteBuf *buf) {
 
     MethodInfo *ptr = &(_this->methodPool.method[_this->methodPool.method_used]);
 
@@ -522,7 +522,7 @@ s32 _parseMP(Class *_this, ByteBuf *buf) {
     return 0;
 }
 
-s32 _parse_method_pool(Class *_this, ByteBuf *buf, s32 count) {
+s32 _parse_method_pool(JClass *_this, ByteBuf *buf, s32 count) {
 
     s32 size = sizeof(MethodInfo) * count;
     _this->methodPool.method = jvm_calloc(size);
@@ -533,7 +533,7 @@ s32 _parse_method_pool(Class *_this, ByteBuf *buf, s32 count) {
 }
 
 
-s32 _class_method_info_destory(Class *clazz) {
+s32 _class_method_info_destory(JClass *clazz) {
     s32 i, j;
     for (i = 0; i < clazz->methodPool.method_used; i++) {
         MethodInfo *mi = &clazz->methodPool.method[i];
@@ -568,7 +568,7 @@ s32 _class_method_info_destory(Class *clazz) {
     return 0;
 }
 
-s32 _parse_attribute_pool(Class *_this, ByteBuf *buf, s32 count) {
+s32 _parse_attribute_pool(JClass *_this, ByteBuf *buf, s32 count) {
 
     s32 size = sizeof(AttributeInfo) * count;
     _this->attributePool.attribute = jvm_calloc(size);
@@ -600,7 +600,7 @@ s32 _parse_attribute_pool(Class *_this, ByteBuf *buf, s32 count) {
     return 0;
 }
 
-s32 _class_attribute_info_destory(Class *clazz) {
+s32 _class_attribute_info_destory(JClass *clazz) {
     s32 i;
     for (i = 0; i < clazz->attributePool.attribute_used; i++) {
         AttributeInfo *ptr = &(clazz->attributePool.attribute[i]);
@@ -613,7 +613,7 @@ s32 _class_attribute_info_destory(Class *clazz) {
     return 0;
 }
 
-s32 _parse_constant_pool(Class *_this, ByteBuf *buf, s32 count) {
+s32 _parse_constant_pool(JClass *_this, ByteBuf *buf, s32 count) {
     u8 tag = 0;
     s32 i = 0;
     u64 offset_start = 0;
@@ -675,7 +675,7 @@ s32 _parse_constant_pool(Class *_this, ByteBuf *buf, s32 count) {
 }
 
 
-s32 _convert_to_code_attribute(CodeAttribute *ca, AttributeInfo *attr, Class *clazz) {
+s32 _convert_to_code_attribute(CodeAttribute *ca, AttributeInfo *attr, JClass *clazz) {
     s32 info_p = 0;
 
     ca->attribute_name_index = attr->attribute_name_index;
@@ -771,7 +771,7 @@ s32 _convert_to_code_attribute(CodeAttribute *ca, AttributeInfo *attr, Class *cl
  * 把各个索引转为直接地址引用，加快处理速度
  * @param clazz class
  */
-void _class_link(Class *clazz) {
+void _class_link(JClass *clazz) {
     Utf8String *ustr = class_get_utf8_string(clazz,
                                              class_get_constant_classref(clazz, clazz->cff.this_class)->stringIndex);
     clazz->name = utf8_create_copy(ustr);
@@ -863,7 +863,7 @@ void _class_link(Class *clazz) {
 
 
 /* Parse Class File */
-s32 _LOAD_CLASS_FROM_BYTES(Class *_this, ByteBuf *buf) {
+s32 _LOAD_CLASS_FROM_BYTES(JClass *_this, ByteBuf *buf) {
     ClassFileFormat *cff = &(_this->cff);
 
     /* magic number */
@@ -968,7 +968,7 @@ s32 load_class(ClassLoader *loader, Utf8String *pClassName, Runtime *runtime) {
     //
     Utf8String *clsName = utf8_create_copy(pClassName);
     utf8_replace_c(clsName, ".", "/");
-    Class *tmpclazz = classes_get(clsName);
+    JClass *tmpclazz = classes_get(clsName);
     if (utf8_indexof_c(clsName, "[") == 0) {
         tmpclazz = array_class_get(clsName);
     }
@@ -1003,7 +1003,7 @@ s32 load_class(ClassLoader *loader, Utf8String *pClassName, Runtime *runtime) {
 }
 
 
-s32 _DESTORY_CLASS(Class *clazz) {
+s32 _DESTORY_CLASS(JClass *clazz) {
     //
     _class_method_info_destory(clazz);
     _class_interface_pool_destory(clazz);

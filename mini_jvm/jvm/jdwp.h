@@ -489,12 +489,12 @@ s32 jdwp_start_server(void);
 
 s32 jdwp_stop_server(void);
 
-s32 jdwp_set_breakpoint(s32 setOrClear, Class *clazz, MethodInfo *methodInfo, s64 execIndex);
+s32 jdwp_set_breakpoint(s32 setOrClear, JClass *clazz, MethodInfo *methodInfo, s64 execIndex);
 
 
 void event_on_breakpoint(Runtime *breakpoint_runtime);
 
-void event_on_class_prepar(Runtime *runtime, Class *clazz);
+void event_on_class_prepar(Runtime *runtime, JClass *clazz);
 
 void event_on_thread_death(Instance *jthread);
 

@@ -55,7 +55,7 @@ s32 isDataReferByIndex(s32 index);
 
 u8 getDataTypeTag(s32 index);
 
-Class *array_class_get(Utf8String *desc);
+JClass *array_class_get(Utf8String *desc);
 
 s64 currentTimeMillis(void);
 
@@ -77,7 +77,7 @@ void invoke_deepth(Runtime *runtime);
 
 s32 parseMethodPara(Utf8String *methodType, Utf8String *out);
 
-Instance *getInstanceInStack(Class *clazz, ConstantMethodRef *cmr, RuntimeStack *stack);
+Instance *getInstanceInStack(JClass *clazz, ConstantMethodRef *cmr, RuntimeStack *stack);
 
 void printDumpOfClasses(void);
 
@@ -295,7 +295,7 @@ void thread_lock_dispose(ThreadLock *lock);
 
 void thread_lock_init(ThreadLock *lock);
 
-Instance *jarray_create_by_class(s32 count, Class *clazz);
+Instance *jarray_create_by_class(s32 count, JClass *clazz);
 
 Instance *jarray_create(s32 count, s32 typeIdx, Utf8String *type);
 
@@ -307,9 +307,9 @@ void jarray_set_field(Instance *arr, s32 index, s64 val);
 
 s64 jarray_get_field(Instance *arr, s32 index);
 
-Class *jarray_get_class(Utf8String *type);
+JClass *jarray_get_class(Utf8String *type);
 
-Class *jarray_get_class_by_index(s32 typeIdx);
+JClass *jarray_get_class_by_index(s32 typeIdx);
 
 Instance *exception_create(s32 exception_type, Runtime *runtime);
 
@@ -319,15 +319,15 @@ c8 *getFieldPtr_byName_c(Instance *instance, c8 *pclassName, c8 *pfieldName, c8 
 
 c8 *getFieldPtr_byName(Instance *instance, Utf8String *clsName, Utf8String *fieldName, Utf8String *fieldType);
 
-Class *classes_get_c(c8 *clsName);
+JClass *classes_get_c(c8 *clsName);
 
-Class *classes_get(Utf8String *clsName);
+JClass *classes_get(Utf8String *clsName);
 
-Class *classes_load_get_c(c8 *pclassName, Runtime *runtime);
+JClass *classes_load_get_c(c8 *pclassName, Runtime *runtime);
 
-s32 classes_put(Class *clazz);
+s32 classes_put(JClass *clazz);
 
-Class *classes_load_get(Utf8String *pclassName, Runtime *runtime);
+JClass *classes_load_get(Utf8String *pclassName, Runtime *runtime);
 
 void threadlist_add(Runtime *r);
 
