@@ -324,7 +324,6 @@ Utf8String *getTmpDir() {
 #ifndef P_tmpdir
 #define P_tmpdir "/tmp"
 #endif
-
     utf8_append_c(tmps, P_tmpdir);
 #endif
     return tmps;
