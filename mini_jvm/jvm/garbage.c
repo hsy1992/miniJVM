@@ -333,7 +333,7 @@ s32 _collect_thread_run(void *para) {
         if (java_debug && jdwpserver.clients->length) {// less than 3 sec no gc
             continue;
         }
-        if (currentTimeMillis() - lastgc > GARBAGE_PERIOD_MS || heap_size > MAX_HEAP_SIZE) {
+        if (currentTimeMillis() - lastgc > GARBAGE_PERIOD_MS || heap_size > MAX_HEAP_SIZE * .8f) {
             garbage_collect();
             lastgc = currentTimeMillis();
         }
