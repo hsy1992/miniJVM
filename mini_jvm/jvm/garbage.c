@@ -405,7 +405,7 @@ s64 garbage_collect() {
         curmb = nextmb;
         nextmb = curmb->next;
         if (curmb->garbage_mark != collector->flag_refer) {
-            mem_free += _getMBSize(nextmb);
+            mem_free += _getMBSize(curmb);
             //
             _garbage_destory_memobj(curmb);
             if (prevmb)prevmb->next = nextmb;

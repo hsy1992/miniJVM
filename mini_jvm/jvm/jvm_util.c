@@ -86,8 +86,6 @@ JClass *classes_load_get(Utf8String *ustr, Runtime *runtime) {
 s32 classes_put(JClass *clazz) {
     if (clazz) {
         hashtable_put(sys_classloader->classes, clazz->name, clazz);
-        garbage_refer_hold(clazz);
-        garbage_refer_reg(clazz);
         return 0;
     }
     return -1;

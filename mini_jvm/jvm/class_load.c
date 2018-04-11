@@ -10,6 +10,7 @@
 #include "../utils/miniz/miniz_wrapper.h"
 #include "jvm.h"
 #include "jvm_util.h"
+#include "garbage.h"
 
 /* parse UTF-8 String */
 void *_parseCPString(JClass *_this, ByteBuf *buf, s32 index) {
@@ -771,7 +772,7 @@ s32 _convert_to_code_attribute(CodeAttribute *ca, AttributeInfo *attr, JClass *c
  * 把各个索引转为直接地址引用，加快处理速度
  * @param clazz class
  */
-void _class_link(JClass *clazz) {
+void _class_optimize(JClass *clazz) {
     Utf8String *ustr = class_get_utf8_string(clazz,
                                              class_get_constant_classref(clazz, clazz->cff.this_class)->stringIndex);
     clazz->name = utf8_create_copy(ustr);
@@ -942,25 +943,12 @@ s32 _LOAD_CLASS_FROM_BYTES(JClass *_this, ByteBuf *buf) {
 
     //fclose(fp);
 
-    _class_link(_this);
+    _class_optimize(_this);
 
     _this->status = CLASS_STATUS_LOADED;
     return 0;
 }
 
-
-//s32 load_related_class(ClassLoader *loader, Class *clazz, Runtime *runtime) {
-//    ConstantPool *p = &(clazz->constantPool);
-//    s32 i;
-//    for (i = 0; i < p->classRef->length; i++) {
-//        ConstantClassRef *ccr = (ConstantClassRef *) arraylist_get_value(p->classRef, i);
-//        s32 ret = load_class(loader, find_constant_utf8(clazz, ccr->stringIndex)->utfstr, runtime);
-//        if (ret != 0) {
-//            return ret;
-//        }
-//    }
-//    return 0;
-//}
 
 s32 load_class(ClassLoader *loader, Utf8String *pClassName, Runtime *runtime) {
     if (!loader)return 0;
@@ -983,12 +971,12 @@ s32 load_class(ClassLoader *loader, Utf8String *pClassName, Runtime *runtime) {
             bytebuf_destory(bytebuf);
             if (iret == 0) {
                 classes_put(tmpclazz);
+                class_prepar(tmpclazz, runtime);
+                garbage_refer_hold(tmpclazz);
+                garbage_refer_reg(tmpclazz);
 #if _JVM_DEBUG_BYTECODE_DETAIL > 5
                 jvm_printf("load class:  %s \n", utf8_cstr(clsName));
 #endif
-                //load_related_class(loader, tmpclazz, runtime);
-
-                class_prepar(tmpclazz, runtime);
             } else {
                 class_destory(tmpclazz);
             }

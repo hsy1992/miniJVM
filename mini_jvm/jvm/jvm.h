@@ -724,7 +724,7 @@ s32 _LOAD_CLASS_FROM_BYTES(JClass *_this, ByteBuf *buf);
 
 s32 class_prepar(JClass *clazz, Runtime *runtime);
 
-void _class_link(JClass *clazz);
+void _class_optimize(JClass *clazz);
 
 void class_clinit(JClass *clazz, Runtime *runtime);
 
