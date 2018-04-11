@@ -17,61 +17,90 @@
 extern "C" {
 #endif
 
+#include <string.h>   // NULL and possibly memcpy, memset
 
-#include <errno.h>
-
-
-#if  __JVM_OS_MINGW__ || __JVM_OS_CYGWIN__ || __JVM_OS_VS__
-#ifndef __WIN32__
-#define __WIN32__
-#endif
-#define socklen_t int
-
-#include <winsock2.h>
-
-#if __JVM_OS_VS__
-#include "../utils/dirent_win.h"
+#ifdef _WIN32
+#include <WinSock2.h>
+#include <Ws2tcpip.h>
+typedef int socklen_t;
 #pragma comment(lib, "Ws2_32.lib")
-#else
-
-#include <dirent.h>
-#include <unistd.h>
-
-#endif
-
 #define SHUT_RDWR SD_BOTH
 #define SHUT_RD SD_RECEIVE
 #define SHUT_WR SD_SEND
-
 #else
-
-#include <dirent.h>
-#include <netdb.h>
-#include <fcntl.h>
+#include <sys/types.h>
 #include <sys/socket.h>
+#include <sys/select.h>
 #include <unistd.h>
-
-#define closesocket close
-#endif
-
-#if __IPHONE_NA || __JVM_OS_MAC__
-
-#include <netdb.h>
-#include <fcntl.h>
-#include <sys/errno.h>
-#include <unistd.h>
+#include <netinet/in.h>
 #include <arpa/inet.h>
-
+#include <netdb.h>
+#define INVALID_SOCKET    -1
+#define SOCKET_ERROR      -1
+#define closesocket(fd)   close(fd)
 #endif
-#if __JVM_OS_LINUX__
-//#include <linux/in.h>
 
+#if __JVM_OS_VS__
+#include "../utils/dirent_win.h"
+#else
+#include <dirent.h>
 #include <unistd.h>
-#include <fcntl.h>
-#include <sys/errno.h>
-
-
 #endif
+
+#include <errno.h>
+
+//
+//#if  __JVM_OS_MINGW__ || __JVM_OS_CYGWIN__ || __JVM_OS_VS__
+//#ifndef __WIN32__
+//#define __WIN32__
+//#endif
+//#define socklen_t int
+//
+//#include <winsock2.h>
+//
+//#if __JVM_OS_VS__
+//#include "../utils/dirent_win.h"
+//#pragma comment(lib, "Ws2_32.lib")
+//#else
+//
+//#include <dirent.h>
+//#include <unistd.h>
+//
+//#endif
+//
+//#define SHUT_RDWR SD_BOTH
+//#define SHUT_RD SD_RECEIVE
+//#define SHUT_WR SD_SEND
+//
+//#else
+//
+//#include <dirent.h>
+//#include <netdb.h>
+//#include <fcntl.h>
+//#include <sys/socket.h>
+//#include <unistd.h>
+//
+//#define closesocket close
+//#endif
+//
+//#if __IPHONE_NA || __JVM_OS_MAC__
+//
+//#include <netdb.h>
+//#include <fcntl.h>
+//#include <sys/errno.h>
+//#include <unistd.h>
+//#include <arpa/inet.h>
+//
+//#endif
+//#if __JVM_OS_LINUX__
+////#include <linux/in.h>
+//
+//#include <unistd.h>
+//#include <fcntl.h>
+//#include <sys/errno.h>
+//
+//
+//#endif
 
 
 //=================================  socket  ====================================
