@@ -113,7 +113,7 @@ ClassLoader *classloader_create(c8 *path) {
         }
         c8 ch = utf8_char_at(g_classpath, i++);
         if (i == g_classpath->length) {
-            utf8_insert(tmp, tmp->length, ch);
+            if (ch != ';' && ch != ':')utf8_insert(tmp, tmp->length, ch);
             ch = ';';
         }
         if (ch == ';' || ch == ':') {
@@ -228,7 +228,8 @@ s32 execute_jvm(c8 *p_classpath, c8 *p_mainclass, ArrayList *java_para) {
         Utf8String *methodName = utf8_create_c("main");
         Utf8String *methodType = utf8_create_c("([Ljava/lang/String;)V");
 
-        MethodInfo *main = find_methodInfo_by_name(str_mainClsName, methodName, methodType, runtime);
+        MethodInfo *main = find_methodInfo_by_name(str_mainClsName, methodName, methodType,
+                                                   runtime);
         if (main) {
             main_thread_create(runtime);
 
@@ -257,7 +258,8 @@ s32 execute_jvm(c8 *p_classpath, c8 *p_mainclass, ArrayList *java_para) {
             garbage_thread_resume();
 
             s64 start = currentTimeMillis();
-            jvm_printf("\n\n\n\n\n\n================================= main start ================================\n");
+            jvm_printf(
+                    "\n\n\n\n\n\n================================= main start ================================\n");
             //调用主方法
             if (java_debug) {
                 jthread_suspend(runtime);
@@ -275,7 +277,8 @@ s32 execute_jvm(c8 *p_classpath, c8 *p_mainclass, ArrayList *java_para) {
                 threadSleep(100);
             }
             jthread_block_exit(runtime);
-            jvm_printf("================================= main  end  ================================\n");
+            jvm_printf(
+                    "================================= main  end  ================================\n");
             jvm_printf("spent %lld\n", (currentTimeMillis() - start));
 
 #if _JVM_DEBUG_PROFILE
