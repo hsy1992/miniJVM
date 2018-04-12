@@ -1,9 +1,11 @@
-cmake_minimum_required(VERSION 3.8)
-project(mini_jvm)
+cmake_minimum_required(VERSION 3.6)
+project(mini_jvm C)
 
 #set(CMAKE_CXX_STANDARD 11)
 #set(CMAKE_C_STANDARD 11)
 set(CMAKE_C_STANDARD 99)
+
+#option(MINI_JVM_BUILD_LIB "Build the mini_jvm library" OFF)
 
 if (CMAKE_BUILD_TYPE MATCHES "Debug")
     ADD_DEFINITIONS(-D_DEBUG -D__JVM_DEBUG__)
@@ -44,7 +46,6 @@ set(SOURCE_FILES
         jvm/java_native_io.h
         jvm/class_load.c
         jvm/garbage.h
-        main.c
         utils/tinycthread.h
         utils/tinycthread.c
         utils/linkedlist.c
@@ -57,24 +58,39 @@ set(SOURCE_FILES
         utils/miniz/miniz_wrapper.h
         utils/dirent_win.h)
 
-add_executable(mini_jvm ${SOURCE_FILES})
-
-#Set link library.
-TARGET_LINK_LIBRARIES(mini_jvm pthread m)
-
 MESSAGE(STATUS "platform: ${CMAKE_SYSTEM_NAME}")
 
-IF (APPLE)
-    SET(EXECUTABLE_OUTPUT_PATH ${PROJECT_SOURCE_DIR}/../binary/macos)
-ELSEIF (UNIX)
-    TARGET_LINK_LIBRARIES(mini_jvm dl)
-    SET(EXECUTABLE_OUTPUT_PATH ${PROJECT_SOURCE_DIR}/../binary/centos_x64)
-ELSEIF (MINGW)
-    TARGET_LINK_LIBRARIES(mini_jvm ws2_32)
-    IF (CMAKE_SIZEOF_VOID_P EQUAL 4)
-        SET(EXECUTABLE_OUTPUT_PATH ${PROJECT_SOURCE_DIR}/../binary/win32)
-    elseif (CMAKE_SIZEOF_VOID_P EQUAL 8)
-        SET(EXECUTABLE_OUTPUT_PATH ${PROJECT_SOURCE_DIR}/../binary/win_x64)
-    endif ()
-ENDIF ()
 
+#if (MINI_JVM_BUILD_LIB)
+    add_library(mini_jvm_lib SHARED ${SOURCE_FILES} )
+    TARGET_LINK_LIBRARIES(mini_jvm_lib pthread m)
+    #Set link library.
+    IF (APPLE)
+    ELSEIF (UNIX)
+        TARGET_LINK_LIBRARIES(mini_jvm_lib dl)
+    ELSEIF (MINGW)
+        TARGET_LINK_LIBRARIES(mini_jvm_lib ws2_32)
+        IF (CMAKE_SIZEOF_VOID_P EQUAL 4)
+        elseif (CMAKE_SIZEOF_VOID_P EQUAL 8)
+        endif ()
+    ENDIF ()
+#else ()
+
+    add_executable(mini_jvm ${SOURCE_FILES} main.c)
+    TARGET_LINK_LIBRARIES(mini_jvm pthread m)
+    #Set link library.
+    IF (APPLE)
+        SET(EXECUTABLE_OUTPUT_PATH ${PROJECT_SOURCE_DIR}/../binary/macos)
+    ELSEIF (UNIX)
+        TARGET_LINK_LIBRARIES(mini_jvm dl)
+        SET(EXECUTABLE_OUTPUT_PATH ${PROJECT_SOURCE_DIR}/../binary/centos_x64)
+    ELSEIF (MINGW)
+        TARGET_LINK_LIBRARIES(mini_jvm ws2_32)
+        IF (CMAKE_SIZEOF_VOID_P EQUAL 4)
+            SET(EXECUTABLE_OUTPUT_PATH ${PROJECT_SOURCE_DIR}/../binary/win32)
+        elseif (CMAKE_SIZEOF_VOID_P EQUAL 8)
+            SET(EXECUTABLE_OUTPUT_PATH ${PROJECT_SOURCE_DIR}/../binary/win_x64)
+        endif ()
+    ENDIF ()
+
+#endif ()

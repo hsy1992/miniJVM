@@ -1,0 +1,1421 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 46;
+	objects = {
+
+/* Begin PBXAggregateTarget section */
+		559783B64A3A48809FE5813A /* ALL_BUILD */ = {
+			isa = PBXAggregateTarget;
+			buildConfigurationList = AEF2D6D50C9B4B72A8F6C2B6 /* Build configuration list for PBXAggregateTarget "ALL_BUILD" */;
+			buildPhases = (
+				7385D4B49EC04EDE9D48661C /* CMake Rules */,
+			);
+			dependencies = (
+				A726A39DD34D40BA8D8A16DD /* PBXTargetDependency */,
+				C5B2BF32163543A8AA806749 /* PBXTargetDependency */,
+				40564D266DE4416A91AE1483 /* PBXTargetDependency */,
+				0240FC9FB36F46DC9353735F /* PBXTargetDependency */,
+			);
+			name = ALL_BUILD;
+			productName = ALL_BUILD;
+		};
+		BE6CC2E9E99F45FD8C8EE6BF /* ZERO_CHECK */ = {
+			isa = PBXAggregateTarget;
+			buildConfigurationList = AFB1A2CF0AA7498DA134E0CA /* Build configuration list for PBXAggregateTarget "ZERO_CHECK" */;
+			buildPhases = (
+				6CB36236B6A249C8BDF0B2C9 /* CMake Rules */,
+			);
+			dependencies = (
+			);
+			name = ZERO_CHECK;
+			productName = ZERO_CHECK;
+		};
+/* End PBXAggregateTarget section */
+
+/* Begin PBXBuildFile section */
+		13C98FA0C02B47B0B325B26B /* simple.frag in Resources */ = {isa = PBXBuildFile; fileRef = 8DB0B05394FF42B58783E426 /* simple.frag */; };
+		502F34189DBF4D599E232A05 /* main.c in Sources */ = {isa = PBXBuildFile; fileRef = 4EFA11DD76164A8FBD0F8889 /* main.c */; };
+		618969A9B5144406860C3A02 /* simple.frag in Resources */ = {isa = PBXBuildFile; fileRef = 2CB47508BC494ED39161B83D /* simple.frag */; };
+		641C126CD78746CDBCB6F629 /* texture.frag in Resources */ = {isa = PBXBuildFile; fileRef = 44900736664D4C5C8BA46327 /* texture.frag */; };
+		6A7BDC64196143CFABAF63A0 /* texture.vert in Resources */ = {isa = PBXBuildFile; fileRef = 1F30344A05AD4454849376D4 /* texture.vert */; };
+		8BFA56A197474FA9AEC59BF9 /* texture.frag in Resources */ = {isa = PBXBuildFile; fileRef = 0877217781A14150B50F4D3F /* texture.frag */; };
+		A88DEBC1FA764E5A9099F7AD /* glfm_platform_ios.m in Sources */ = {isa = PBXBuildFile; fileRef = 899520C600DE4702B84591F9 /* glfm_platform_ios.m */; };
+		C9DF48CF11BF4D929B8A32E5 /* texture.vert in Resources */ = {isa = PBXBuildFile; fileRef = 52AA742B42624BDCA7F0C7F3 /* texture.vert */; };
+		CA674819090C4180BCACA880 /* test_pattern.c in Sources */ = {isa = PBXBuildFile; fileRef = FE0C6B1497854F32890B2068 /* test_pattern.c */; };
+		CAC0FD85011A4C7FAB69A4D1 /* simple.vert in Resources */ = {isa = PBXBuildFile; fileRef = FA2CA919EE544866A220039D /* simple.vert */; };
+		E33C50BDE15A4BE899DA6CA1 /* simple.vert in Resources */ = {isa = PBXBuildFile; fileRef = 2FE1DFED5E064B98B0AA20FF /* simple.vert */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		0F8318871E444FEB8FC66F89 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = F70F68B1054645579939B07B /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 72141649492041A2AB27E5D6;
+			remoteInfo = glfm;
+		};
+		44F76C2B8C234F5B8EC1BD94 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = F70F68B1054645579939B07B /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = BE6CC2E9E99F45FD8C8EE6BF;
+			remoteInfo = ZERO_CHECK;
+		};
+		466E23C048C949B0AAB740DD /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = F70F68B1054645579939B07B /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = BE6CC2E9E99F45FD8C8EE6BF;
+			remoteInfo = ZERO_CHECK;
+		};
+		9E9181209F1A4E10A9EA64D6 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = F70F68B1054645579939B07B /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 3E74276CD42245799B942E81;
+			remoteInfo = glfm_example;
+		};
+		AD1CF53900294A9A87F74591 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = F70F68B1054645579939B07B /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 72141649492041A2AB27E5D6;
+			remoteInfo = glfm;
+		};
+		C5B033E4A0EF4A1B87E2EEEB /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = F70F68B1054645579939B07B /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 72141649492041A2AB27E5D6;
+			remoteInfo = glfm;
+		};
+		C92DFD730E9B40409B8DE82C /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = F70F68B1054645579939B07B /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = BE6CC2E9E99F45FD8C8EE6BF;
+			remoteInfo = ZERO_CHECK;
+		};
+		E80400DC1BE84BF0AE51EDA9 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = F70F68B1054645579939B07B /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = BE6CC2E9E99F45FD8C8EE6BF;
+			remoteInfo = ZERO_CHECK;
+		};
+		E85F697236D24AF0ACDC7B53 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = F70F68B1054645579939B07B /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 7A4CA3FE00A946AAA34C9FEA;
+			remoteInfo = glfm_test_pattern;
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXFileReference section */
+		0877217781A14150B50F4D3F /* texture.frag */ = {isa = PBXFileReference; explicitFileType = sourcecode; fileEncoding = 4; name = texture.frag; path = example/assets/texture.frag; sourceTree = SOURCE_ROOT; };
+		1D89A76A54E94A3988A7E7BF /* Info.plist */ = {isa = PBXFileReference; explicitFileType = sourcecode.text.plist; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = Info.plist; path = build/ios/example/CMakeFiles/glfm_example.dir/Info.plist; sourceTree = SOURCE_ROOT; };
+		1F30344A05AD4454849376D4 /* texture.vert */ = {isa = PBXFileReference; explicitFileType = sourcecode; fileEncoding = 4; name = texture.vert; path = example/assets/texture.vert; sourceTree = SOURCE_ROOT; };
+		2424F7607BFF4420A1F63587 /* file_compat.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.h; fileEncoding = 4; name = file_compat.h; path = example/src/file_compat.h; sourceTree = SOURCE_ROOT; };
+		274620A2DBF6434DB0B16451 /* CMakeLists.txt */ = {isa = PBXFileReference; explicitFileType = sourcecode.text; fileEncoding = 4; lastKnownFileType = text; name = CMakeLists.txt; path = example/CMakeLists.txt; sourceTree = SOURCE_ROOT; };
+		278E13213637437295E42DF8 /* Info.plist */ = {isa = PBXFileReference; explicitFileType = sourcecode.text.plist; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = Info.plist; path = build/ios/example/CMakeFiles/glfm_test_pattern.dir/Info.plist; sourceTree = SOURCE_ROOT; };
+		2C47FC2007B14ADDB3C843E1 /* CMakeLists.txt */ = {isa = PBXFileReference; explicitFileType = sourcecode.text; fileEncoding = 4; lastKnownFileType = text; path = CMakeLists.txt; sourceTree = SOURCE_ROOT; };
+		2CB47508BC494ED39161B83D /* simple.frag */ = {isa = PBXFileReference; explicitFileType = sourcecode; fileEncoding = 4; name = simple.frag; path = example/assets/simple.frag; sourceTree = SOURCE_ROOT; };
+		2FE1DFED5E064B98B0AA20FF /* simple.vert */ = {isa = PBXFileReference; explicitFileType = sourcecode; fileEncoding = 4; name = simple.vert; path = example/assets/simple.vert; sourceTree = SOURCE_ROOT; };
+		44900736664D4C5C8BA46327 /* texture.frag */ = {isa = PBXFileReference; explicitFileType = sourcecode; fileEncoding = 4; name = texture.frag; path = example/assets/texture.frag; sourceTree = SOURCE_ROOT; };
+		4E42B95B2C334C4390E6D01A /* glfm.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.h; fileEncoding = 4; name = glfm.h; path = include/glfm.h; sourceTree = SOURCE_ROOT; };
+		4EFA11DD76164A8FBD0F8889 /* main.c */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.c; fileEncoding = 4; name = main.c; path = example/src/main.c; sourceTree = SOURCE_ROOT; };
+		52AA742B42624BDCA7F0C7F3 /* texture.vert */ = {isa = PBXFileReference; explicitFileType = sourcecode; fileEncoding = 4; name = texture.vert; path = example/assets/texture.vert; sourceTree = SOURCE_ROOT; };
+		7F31B3A870A74680BDBBC629 /* glfm_platform.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.h; fileEncoding = 4; name = glfm_platform.h; path = src/glfm_platform.h; sourceTree = SOURCE_ROOT; };
+		899520C600DE4702B84591F9 /* glfm_platform_ios.m */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.objc; fileEncoding = 4; name = glfm_platform_ios.m; path = src/glfm_platform_ios.m; sourceTree = SOURCE_ROOT; };
+		8DB0B05394FF42B58783E426 /* simple.frag */ = {isa = PBXFileReference; explicitFileType = sourcecode; fileEncoding = 4; name = simple.frag; path = example/assets/simple.frag; sourceTree = SOURCE_ROOT; };
+		934E197BA60F4711BCCDC3E3 /* CMakeLists.txt */ = {isa = PBXFileReference; explicitFileType = sourcecode.text; fileEncoding = 4; lastKnownFileType = text; path = CMakeLists.txt; sourceTree = SOURCE_ROOT; };
+		A5E7BDFAE83C4AD48AE8DC3E /* glfm_test_pattern */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; name = glfm_test_pattern; path = glfm_test_pattern.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		CB53A794435344CFAC0437C3 /* CMakeLists.txt */ = {isa = PBXFileReference; explicitFileType = sourcecode.text; fileEncoding = 4; lastKnownFileType = text; name = CMakeLists.txt; path = example/CMakeLists.txt; sourceTree = SOURCE_ROOT; };
+		D3322CEE98824E6AA495AC99 /* CMakeLists.txt */ = {isa = PBXFileReference; explicitFileType = sourcecode.text; fileEncoding = 4; lastKnownFileType = text; path = CMakeLists.txt; sourceTree = SOURCE_ROOT; };
+		E6B251235363424D9AA39F5F /* file_compat.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.h; fileEncoding = 4; name = file_compat.h; path = example/src/file_compat.h; sourceTree = SOURCE_ROOT; };
+		EF114B3E5DA341868CCA52FF /* glfm_example.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; path = glfm_example.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		F8E94A9B1F124D348E714BA1 /* libglfm.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; path = libglfm.a; sourceTree = BUILT_PRODUCTS_DIR; };
+		FA2CA919EE544866A220039D /* simple.vert */ = {isa = PBXFileReference; explicitFileType = sourcecode; fileEncoding = 4; name = simple.vert; path = example/assets/simple.vert; sourceTree = SOURCE_ROOT; };
+		FE0C6B1497854F32890B2068 /* test_pattern.c */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.c; fileEncoding = 4; name = test_pattern.c; path = example/src/test_pattern.c; sourceTree = SOURCE_ROOT; };
+/* End PBXFileReference section */
+
+/* Begin PBXGroup section */
+		0766EBB052D346A5BCFFF4B7 /* src */ = {
+			isa = PBXGroup;
+			children = (
+				7F31B3A870A74680BDBBC629 /* glfm_platform.h */,
+				899520C600DE4702B84591F9 /* glfm_platform_ios.m */,
+			);
+			name = src;
+			sourceTree = "<group>";
+		};
+		09BAE2295AF6458599C55333 /* ZERO_CHECK */ = {
+			isa = PBXGroup;
+			children = (
+				1899423B65DD464890F7C175 /* CMake Rules */,
+				2C47FC2007B14ADDB3C843E1 /* CMakeLists.txt */,
+			);
+			name = ZERO_CHECK;
+			sourceTree = "<group>";
+		};
+		12DDCD5EF6A3477589689E88 /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+				1D89A76A54E94A3988A7E7BF /* Info.plist */,
+			);
+			name = Resources;
+			sourceTree = "<group>";
+		};
+		1899423B65DD464890F7C175 /* CMake Rules */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = "CMake Rules";
+			sourceTree = "<group>";
+		};
+		367A99040E594CC58CDEC602 /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+				278E13213637437295E42DF8 /* Info.plist */,
+			);
+			name = Resources;
+			sourceTree = "<group>";
+		};
+		3710BE9C6C6A4B1991180D28 /* ALL_BUILD */ = {
+			isa = PBXGroup;
+			children = (
+				37D878EF36C443F387D09450 /* CMake Rules */,
+				D3322CEE98824E6AA495AC99 /* CMakeLists.txt */,
+			);
+			name = ALL_BUILD;
+			sourceTree = "<group>";
+		};
+		37D878EF36C443F387D09450 /* CMake Rules */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = "CMake Rules";
+			sourceTree = "<group>";
+		};
+		4F86A692C5084E7882C02A89 /* src */ = {
+			isa = PBXGroup;
+			children = (
+				E6B251235363424D9AA39F5F /* file_compat.h */,
+				FE0C6B1497854F32890B2068 /* test_pattern.c */,
+			);
+			name = src;
+			sourceTree = "<group>";
+		};
+		5FAB2601A98945FCB794391A /* src */ = {
+			isa = PBXGroup;
+			children = (
+				2424F7607BFF4420A1F63587 /* file_compat.h */,
+				4EFA11DD76164A8FBD0F8889 /* main.c */,
+			);
+			name = src;
+			sourceTree = "<group>";
+		};
+		8D7B01024FA843C59B36F7E9 /* glfm_example */ = {
+			isa = PBXGroup;
+			children = (
+				5FAB2601A98945FCB794391A /* src */,
+				12DDCD5EF6A3477589689E88 /* Resources */,
+				274620A2DBF6434DB0B16451 /* CMakeLists.txt */,
+				8DB0B05394FF42B58783E426 /* simple.frag */,
+				2FE1DFED5E064B98B0AA20FF /* simple.vert */,
+				0877217781A14150B50F4D3F /* texture.frag */,
+				1F30344A05AD4454849376D4 /* texture.vert */,
+			);
+			name = glfm_example;
+			sourceTree = "<group>";
+		};
+		9550697FC7964B0E9E499428 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				F8E94A9B1F124D348E714BA1 /* libglfm.a */,
+				EF114B3E5DA341868CCA52FF /* glfm_example.app */,
+				A5E7BDFAE83C4AD48AE8DC3E /* glfm_test_pattern */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		A099DE10589241B1A7E1469F /* include */ = {
+			isa = PBXGroup;
+			children = (
+				4E42B95B2C334C4390E6D01A /* glfm.h */,
+			);
+			name = include;
+			sourceTree = "<group>";
+		};
+		C173E1F78B16405EBA2354CD /* glfm */ = {
+			isa = PBXGroup;
+			children = (
+				0766EBB052D346A5BCFFF4B7 /* src */,
+				A099DE10589241B1A7E1469F /* include */,
+				934E197BA60F4711BCCDC3E3 /* CMakeLists.txt */,
+			);
+			name = glfm;
+			sourceTree = "<group>";
+		};
+		C59D9CAA2E044139BDA71952 /* glfm_test_pattern */ = {
+			isa = PBXGroup;
+			children = (
+				4F86A692C5084E7882C02A89 /* src */,
+				367A99040E594CC58CDEC602 /* Resources */,
+				CB53A794435344CFAC0437C3 /* CMakeLists.txt */,
+				2CB47508BC494ED39161B83D /* simple.frag */,
+				FA2CA919EE544866A220039D /* simple.vert */,
+				44900736664D4C5C8BA46327 /* texture.frag */,
+				52AA742B42624BDCA7F0C7F3 /* texture.vert */,
+			);
+			name = glfm_test_pattern;
+			sourceTree = "<group>";
+		};
+		D0FBD25442F944ED9EE3D927 = {
+			isa = PBXGroup;
+			children = (
+				C173E1F78B16405EBA2354CD /* glfm */,
+				3710BE9C6C6A4B1991180D28 /* ALL_BUILD */,
+				09BAE2295AF6458599C55333 /* ZERO_CHECK */,
+				C59D9CAA2E044139BDA71952 /* glfm_test_pattern */,
+				8D7B01024FA843C59B36F7E9 /* glfm_example */,
+				9550697FC7964B0E9E499428 /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		3E74276CD42245799B942E81 /* glfm_example */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 35A8798D1F4042D79D46DD2D /* Build configuration list for PBXNativeTarget "glfm_example" */;
+			buildPhases = (
+				45270567167040BF8F28EB08 /* Resources */,
+				00EFB0F3AAE145169D6295FA /* Sources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				08E2D6E7B8E84AFEBE9E348F /* PBXTargetDependency */,
+				4776DD8C225F4F4986299202 /* PBXTargetDependency */,
+			);
+			name = glfm_example;
+			productName = glfm_example;
+			productReference = EF114B3E5DA341868CCA52FF /* glfm_example.app */;
+			productType = "com.apple.product-type.application";
+		};
+		72141649492041A2AB27E5D6 /* glfm */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = E7C73FC52B0F41CCA6FBE811 /* Build configuration list for PBXNativeTarget "glfm" */;
+			buildPhases = (
+				63749C00825544F1B4D0EB98 /* Sources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				1871337F90A94162BBB7D606 /* PBXTargetDependency */,
+			);
+			name = glfm;
+			productName = glfm;
+			productReference = F8E94A9B1F124D348E714BA1 /* libglfm.a */;
+			productType = "com.apple.product-type.library.static";
+		};
+		7A4CA3FE00A946AAA34C9FEA /* glfm_test_pattern */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 1C5286B187414CEEBEFE047D /* Build configuration list for PBXNativeTarget "glfm_test_pattern" */;
+			buildPhases = (
+				31C19332A23641B4A8DADE45 /* Resources */,
+				B5ED035F926E45E3B8529304 /* Sources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				AB026E5FFB54465485366742 /* PBXTargetDependency */,
+				52F992F59B76494D9DE90892 /* PBXTargetDependency */,
+			);
+			name = glfm_test_pattern;
+			productName = glfm_test_pattern;
+			productReference = A5E7BDFAE83C4AD48AE8DC3E /* glfm_test_pattern */;
+			productType = "com.apple.product-type.application";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		F70F68B1054645579939B07B /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				BuildIndependentTargetsInParallel = YES;
+				LastUpgradeCheck = 0930;
+				TargetAttributes = {
+					3E74276CD42245799B942E81 = {
+						DevelopmentTeam = M978JH97JT;
+					};
+				};
+			};
+			buildConfigurationList = 63106BE33CAF4E9A8DEC53C8 /* Build configuration list for PBXProject "GLFM" */;
+			compatibilityVersion = "Xcode 3.2";
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+			);
+			mainGroup = D0FBD25442F944ED9EE3D927;
+			projectDirPath = ../../;
+			projectRoot = "";
+			targets = (
+				559783B64A3A48809FE5813A /* ALL_BUILD */,
+				BE6CC2E9E99F45FD8C8EE6BF /* ZERO_CHECK */,
+				72141649492041A2AB27E5D6 /* glfm */,
+				3E74276CD42245799B942E81 /* glfm_example */,
+				7A4CA3FE00A946AAA34C9FEA /* glfm_test_pattern */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		31C19332A23641B4A8DADE45 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				618969A9B5144406860C3A02 /* simple.frag in Resources */,
+				CAC0FD85011A4C7FAB69A4D1 /* simple.vert in Resources */,
+				641C126CD78746CDBCB6F629 /* texture.frag in Resources */,
+				C9DF48CF11BF4D929B8A32E5 /* texture.vert in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		45270567167040BF8F28EB08 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				13C98FA0C02B47B0B325B26B /* simple.frag in Resources */,
+				E33C50BDE15A4BE899DA6CA1 /* simple.vert in Resources */,
+				8BFA56A197474FA9AEC59BF9 /* texture.frag in Resources */,
+				6A7BDC64196143CFABAF63A0 /* texture.vert in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXShellScriptBuildPhase section */
+		6CB36236B6A249C8BDF0B2C9 /* CMake Rules */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			name = "CMake Rules";
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "make -C /Users/Gust/Documents/c/glfm/build/ios -f /Users/Gust/Documents/c/glfm/build/ios/CMakeScripts/ZERO_CHECK_cmakeRulesBuildPhase.make$CONFIGURATION all";
+			showEnvVarsInLog = 0;
+		};
+		7385D4B49EC04EDE9D48661C /* CMake Rules */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			name = "CMake Rules";
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "make -C /Users/Gust/Documents/c/glfm/build/ios -f /Users/Gust/Documents/c/glfm/build/ios/CMakeScripts/ALL_BUILD_cmakeRulesBuildPhase.make$CONFIGURATION all";
+			showEnvVarsInLog = 0;
+		};
+/* End PBXShellScriptBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		00EFB0F3AAE145169D6295FA /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				502F34189DBF4D599E232A05 /* main.c in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		63749C00825544F1B4D0EB98 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				A88DEBC1FA764E5A9099F7AD /* glfm_platform_ios.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		B5ED035F926E45E3B8529304 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				CA674819090C4180BCACA880 /* test_pattern.c in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		0240FC9FB36F46DC9353735F /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 3E74276CD42245799B942E81 /* glfm_example */;
+			targetProxy = 9E9181209F1A4E10A9EA64D6 /* PBXContainerItemProxy */;
+		};
+		08E2D6E7B8E84AFEBE9E348F /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = BE6CC2E9E99F45FD8C8EE6BF /* ZERO_CHECK */;
+			targetProxy = 466E23C048C949B0AAB740DD /* PBXContainerItemProxy */;
+		};
+		1871337F90A94162BBB7D606 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = BE6CC2E9E99F45FD8C8EE6BF /* ZERO_CHECK */;
+			targetProxy = E80400DC1BE84BF0AE51EDA9 /* PBXContainerItemProxy */;
+		};
+		40564D266DE4416A91AE1483 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 7A4CA3FE00A946AAA34C9FEA /* glfm_test_pattern */;
+			targetProxy = E85F697236D24AF0ACDC7B53 /* PBXContainerItemProxy */;
+		};
+		4776DD8C225F4F4986299202 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 72141649492041A2AB27E5D6 /* glfm */;
+			targetProxy = AD1CF53900294A9A87F74591 /* PBXContainerItemProxy */;
+		};
+		52F992F59B76494D9DE90892 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 72141649492041A2AB27E5D6 /* glfm */;
+			targetProxy = C5B033E4A0EF4A1B87E2EEEB /* PBXContainerItemProxy */;
+		};
+		A726A39DD34D40BA8D8A16DD /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = BE6CC2E9E99F45FD8C8EE6BF /* ZERO_CHECK */;
+			targetProxy = 44F76C2B8C234F5B8EC1BD94 /* PBXContainerItemProxy */;
+		};
+		AB026E5FFB54465485366742 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = BE6CC2E9E99F45FD8C8EE6BF /* ZERO_CHECK */;
+			targetProxy = C92DFD730E9B40409B8DE82C /* PBXContainerItemProxy */;
+		};
+		C5B2BF32163543A8AA806749 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 72141649492041A2AB27E5D6 /* glfm */;
+			targetProxy = 0F8318871E444FEB8FC66F89 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
+/* Begin XCBuildConfiguration section */
+		0734242C1389464DBF64C795 /* MinSizeRel */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COMBINE_HIDPI_IMAGES = YES;
+				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
+				GCC_INLINES_ARE_PRIVATE_EXTERN = NO;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = "'CMAKE_INTDIR=\"$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)\"'";
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				INSTALL_PATH = "";
+				OTHER_LDFLAGS = " ";
+				OTHER_REZFLAGS = "";
+				PRODUCT_NAME = ALL_BUILD;
+				SECTORDER_FLAGS = "";
+				SYMROOT = /Users/Gust/Documents/c/glfm/build/ios;
+				USE_HEADERMAP = NO;
+				WARNING_CFLAGS = (
+					"-Wmost",
+					"-Wno-four-char-constants",
+					"-Wno-unknown-pragmas",
+					"$(inherited)",
+				);
+			};
+			name = MinSizeRel;
+		};
+		1DE8778137864E3A943E88BF /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COMBINE_HIDPI_IMAGES = YES;
+				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
+				GCC_INLINES_ARE_PRIVATE_EXTERN = NO;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = "'CMAKE_INTDIR=\"$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)\"'";
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				INSTALL_PATH = "";
+				OTHER_LDFLAGS = " ";
+				OTHER_REZFLAGS = "";
+				PRODUCT_NAME = ZERO_CHECK;
+				SECTORDER_FLAGS = "";
+				SYMROOT = /Users/Gust/Documents/c/glfm/build/ios;
+				USE_HEADERMAP = NO;
+				WARNING_CFLAGS = (
+					"-Wmost",
+					"-Wno-four-char-constants",
+					"-Wno-unknown-pragmas",
+					"$(inherited)",
+				);
+			};
+			name = Debug;
+		};
+		229F597007E3424295778B4A /* RelWithDebInfo */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COMBINE_HIDPI_IMAGES = YES;
+				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
+				GCC_INLINES_ARE_PRIVATE_EXTERN = NO;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = "'CMAKE_INTDIR=\"$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)\"'";
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				INSTALL_PATH = "";
+				OTHER_LDFLAGS = " ";
+				OTHER_REZFLAGS = "";
+				PRODUCT_NAME = ZERO_CHECK;
+				SECTORDER_FLAGS = "";
+				SYMROOT = /Users/Gust/Documents/c/glfm/build/ios;
+				USE_HEADERMAP = NO;
+				WARNING_CFLAGS = (
+					"-Wmost",
+					"-Wno-four-char-constants",
+					"-Wno-unknown-pragmas",
+					"$(inherited)",
+				);
+			};
+			name = RelWithDebInfo;
+		};
+		276B642BDCB8492787A24A06 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				COMBINE_HIDPI_IMAGES = NO;
+				DEVELOPMENT_TEAM = M978JH97JT;
+				EXECUTABLE_PREFIX = "";
+				EXECUTABLE_SUFFIX = "";
+				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
+				GCC_INLINES_ARE_PRIVATE_EXTERN = NO;
+				GCC_OPTIMIZATION_LEVEL = 3;
+				GCC_PREPROCESSOR_DEFINITIONS = "'CMAKE_INTDIR=\"$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)\"'";
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				HEADER_SEARCH_PATHS = /Users/Gust/Documents/c/glfm/include;
+				INFOPLIST_FILE = /Users/Gust/Documents/c/glfm/build/ios/example/CMakeFiles/glfm_example.dir/Info.plist;
+				INSTALL_PATH = "$(LOCAL_APPS_DIR)";
+				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
+				LIBRARY_SEARCH_PATHS = "";
+				OTHER_CFLAGS = "    -DNDEBUG  ";
+				OTHER_LDFLAGS = (
+					/Users/Gust/Documents/c/glfm/build/ios/GLFM.build/lib/Release/libglfm.a,
+					"-framework",
+					Foundation,
+					"-framework",
+					CoreGraphics,
+					"-framework",
+					UIKit,
+					"-framework",
+					OpenGLES,
+					"-framework",
+					QuartzCore,
+				);
+				OTHER_REZFLAGS = "";
+				PRODUCT_BUNDLE_IDENTIFIER = com.eglsgame.test.glfm;
+				PRODUCT_NAME = glfm_example;
+				SECTORDER_FLAGS = "";
+				SKIP_INSTALL = NO;
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator appletvos appletvsimulator";
+				SYMROOT = /Users/Gust/Documents/c/glfm/build/ios/example;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TVOS_DEPLOYMENT_TARGET = 9.0;
+				USE_HEADERMAP = YES;
+				WARNING_CFLAGS = (
+					"-Wmost",
+					"-Wno-four-char-constants",
+					"-Wno-unknown-pragmas",
+					"$(inherited)",
+				);
+			};
+			name = Release;
+		};
+		34412FEC95454549AC56AF5B /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = iphoneos;
+				SYMROOT = /Users/Gust/Documents/c/glfm/build/ios/build;
+			};
+			name = Release;
+		};
+		3C94511CCDD04C13A28EDFB5 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_ENABLE_OBJC_ARC = YES;
+				COMBINE_HIDPI_IMAGES = YES;
+				CONFIGURATION_BUILD_DIR = /Users/Gust/Documents/c/glfm/build/ios/GLFM.build/lib/Release;
+				EXECUTABLE_PREFIX = lib;
+				EXECUTABLE_SUFFIX = .a;
+				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
+				GCC_INLINES_ARE_PRIVATE_EXTERN = NO;
+				GCC_OPTIMIZATION_LEVEL = 3;
+				GCC_PREPROCESSOR_DEFINITIONS = "'CMAKE_INTDIR=\"$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)\"'";
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				HEADER_SEARCH_PATHS = (
+					/Users/Gust/Documents/c/glfm/include,
+					/Users/Gust/Documents/c/glfm/src,
+				);
+				INSTALL_PATH = "";
+				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
+				LIBRARY_STYLE = STATIC;
+				OTHER_CFLAGS = (
+					"-DNDEBUG",
+					"-Weverything",
+					"-Wwrite-strings",
+					"-Wno-padded",
+					"-Wno-covered-switch-default",
+					"-Wno-objc-interface-ivars",
+					"-Wno-objc-missing-property-synthesis",
+					"-Wno-direct-ivar-access",
+				);
+				OTHER_LIBTOOLFLAGS = " ";
+				OTHER_REZFLAGS = "";
+				PRODUCT_NAME = glfm;
+				SECTORDER_FLAGS = "";
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator appletvos appletvsimulator";
+				SYMROOT = /Users/Gust/Documents/c/glfm/build/ios;
+				TVOS_DEPLOYMENT_TARGET = 9.0;
+				USE_HEADERMAP = NO;
+				WARNING_CFLAGS = (
+					"-Wmost",
+					"-Wno-four-char-constants",
+					"-Wno-unknown-pragmas",
+					"$(inherited)",
+				);
+			};
+			name = Release;
+		};
+		49B10AE29F024BB19F31CBAF /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				COMBINE_HIDPI_IMAGES = NO;
+				DEVELOPMENT_TEAM = M978JH97JT;
+				EXECUTABLE_PREFIX = "";
+				EXECUTABLE_SUFFIX = "";
+				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
+				GCC_INLINES_ARE_PRIVATE_EXTERN = NO;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = "'CMAKE_INTDIR=\"$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)\"'";
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				HEADER_SEARCH_PATHS = /Users/Gust/Documents/c/glfm/include;
+				INFOPLIST_FILE = /Users/Gust/Documents/c/glfm/build/ios/example/CMakeFiles/glfm_example.dir/Info.plist;
+				INSTALL_PATH = "$(LOCAL_APPS_DIR)";
+				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
+				LIBRARY_SEARCH_PATHS = "";
+				OTHER_CFLAGS = "    ";
+				OTHER_LDFLAGS = (
+					/Users/Gust/Documents/c/glfm/build/ios/GLFM.build/lib/Debug/libglfm.a,
+					"-framework",
+					Foundation,
+					"-framework",
+					CoreGraphics,
+					"-framework",
+					UIKit,
+					"-framework",
+					OpenGLES,
+					"-framework",
+					QuartzCore,
+				);
+				OTHER_REZFLAGS = "";
+				PRODUCT_BUNDLE_IDENTIFIER = com.eglsgame.test.glfm;
+				PRODUCT_NAME = glfm_example;
+				SECTORDER_FLAGS = "";
+				SKIP_INSTALL = NO;
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator appletvos appletvsimulator";
+				SYMROOT = /Users/Gust/Documents/c/glfm/build/ios/example;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TVOS_DEPLOYMENT_TARGET = 9.0;
+				USE_HEADERMAP = YES;
+				WARNING_CFLAGS = (
+					"-Wmost",
+					"-Wno-four-char-constants",
+					"-Wno-unknown-pragmas",
+					"$(inherited)",
+				);
+			};
+			name = Debug;
+		};
+		56259B054F8347EE8E9CAA48 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = iphoneos;
+				SYMROOT = /Users/Gust/Documents/c/glfm/build/ios/build;
+			};
+			name = Debug;
+		};
+		58D5935E04DF4CABABC38914 /* MinSizeRel */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = iphoneos;
+				SYMROOT = /Users/Gust/Documents/c/glfm/build/ios/build;
+			};
+			name = MinSizeRel;
+		};
+		5BE2A016C0C0415DB51FDB6F /* MinSizeRel */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_ENABLE_OBJC_ARC = YES;
+				COMBINE_HIDPI_IMAGES = YES;
+				CONFIGURATION_BUILD_DIR = /Users/Gust/Documents/c/glfm/build/ios/GLFM.build/lib/MinSizeRel;
+				EXECUTABLE_PREFIX = lib;
+				EXECUTABLE_SUFFIX = .a;
+				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
+				GCC_INLINES_ARE_PRIVATE_EXTERN = NO;
+				GCC_OPTIMIZATION_LEVEL = s;
+				GCC_PREPROCESSOR_DEFINITIONS = "'CMAKE_INTDIR=\"$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)\"'";
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				HEADER_SEARCH_PATHS = (
+					/Users/Gust/Documents/c/glfm/include,
+					/Users/Gust/Documents/c/glfm/src,
+				);
+				INSTALL_PATH = "";
+				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
+				LIBRARY_STYLE = STATIC;
+				OTHER_CFLAGS = (
+					"-DNDEBUG",
+					"-Weverything",
+					"-Wwrite-strings",
+					"-Wno-padded",
+					"-Wno-covered-switch-default",
+					"-Wno-objc-interface-ivars",
+					"-Wno-objc-missing-property-synthesis",
+					"-Wno-direct-ivar-access",
+				);
+				OTHER_LIBTOOLFLAGS = " ";
+				OTHER_REZFLAGS = "";
+				PRODUCT_NAME = glfm;
+				SECTORDER_FLAGS = "";
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator appletvos appletvsimulator";
+				SYMROOT = /Users/Gust/Documents/c/glfm/build/ios;
+				TVOS_DEPLOYMENT_TARGET = 9.0;
+				USE_HEADERMAP = NO;
+				WARNING_CFLAGS = (
+					"-Wmost",
+					"-Wno-four-char-constants",
+					"-Wno-unknown-pragmas",
+					"$(inherited)",
+				);
+			};
+			name = MinSizeRel;
+		};
+		77FAE0BD252C4238B7517F33 /* RelWithDebInfo */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				COMBINE_HIDPI_IMAGES = NO;
+				EXECUTABLE_PREFIX = "";
+				EXECUTABLE_SUFFIX = "";
+				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
+				GCC_INLINES_ARE_PRIVATE_EXTERN = NO;
+				GCC_OPTIMIZATION_LEVEL = 2;
+				GCC_PREPROCESSOR_DEFINITIONS = "'CMAKE_INTDIR=\"$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)\"'";
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				HEADER_SEARCH_PATHS = /Users/Gust/Documents/c/glfm/include;
+				INFOPLIST_FILE = /Users/Gust/Documents/c/glfm/build/ios/example/CMakeFiles/glfm_test_pattern.dir/Info.plist;
+				INSTALL_PATH = "$(LOCAL_APPS_DIR)";
+				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
+				LIBRARY_SEARCH_PATHS = "";
+				OTHER_CFLAGS = (
+					"-DNDEBUG",
+					"'-std=gnu99'",
+				);
+				OTHER_LDFLAGS = (
+					/Users/Gust/Documents/c/glfm/build/ios/GLFM.build/lib/RelWithDebInfo/libglfm.a,
+					"-framework",
+					Foundation,
+					"-framework",
+					CoreGraphics,
+					"-framework",
+					UIKit,
+					"-framework",
+					OpenGLES,
+					"-framework",
+					QuartzCore,
+				);
+				OTHER_REZFLAGS = "";
+				PRODUCT_BUNDLE_IDENTIFIER = "com.brackeen.${PRODUCT_NAME:rfc1034identifier}";
+				PRODUCT_NAME = glfm_test_pattern;
+				SECTORDER_FLAGS = "";
+				SKIP_INSTALL = NO;
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator appletvos appletvsimulator";
+				SYMROOT = /Users/Gust/Documents/c/glfm/build/ios/example;
+				TARGETED_DEVICE_FAMILY = "1,2,3";
+				TVOS_DEPLOYMENT_TARGET = 9.0;
+				USE_HEADERMAP = YES;
+				WARNING_CFLAGS = (
+					"-Wmost",
+					"-Wno-four-char-constants",
+					"-Wno-unknown-pragmas",
+					"$(inherited)",
+				);
+			};
+			name = RelWithDebInfo;
+		};
+		78E7E7FC43DC457EA54992A3 /* RelWithDebInfo */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_ENABLE_OBJC_ARC = YES;
+				COMBINE_HIDPI_IMAGES = YES;
+				CONFIGURATION_BUILD_DIR = /Users/Gust/Documents/c/glfm/build/ios/GLFM.build/lib/RelWithDebInfo;
+				EXECUTABLE_PREFIX = lib;
+				EXECUTABLE_SUFFIX = .a;
+				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
+				GCC_INLINES_ARE_PRIVATE_EXTERN = NO;
+				GCC_OPTIMIZATION_LEVEL = 2;
+				GCC_PREPROCESSOR_DEFINITIONS = "'CMAKE_INTDIR=\"$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)\"'";
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				HEADER_SEARCH_PATHS = (
+					/Users/Gust/Documents/c/glfm/include,
+					/Users/Gust/Documents/c/glfm/src,
+				);
+				INSTALL_PATH = "";
+				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
+				LIBRARY_STYLE = STATIC;
+				OTHER_CFLAGS = (
+					"-DNDEBUG",
+					"-Weverything",
+					"-Wwrite-strings",
+					"-Wno-padded",
+					"-Wno-covered-switch-default",
+					"-Wno-objc-interface-ivars",
+					"-Wno-objc-missing-property-synthesis",
+					"-Wno-direct-ivar-access",
+				);
+				OTHER_LIBTOOLFLAGS = " ";
+				OTHER_REZFLAGS = "";
+				PRODUCT_NAME = glfm;
+				SECTORDER_FLAGS = "";
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator appletvos appletvsimulator";
+				SYMROOT = /Users/Gust/Documents/c/glfm/build/ios;
+				TVOS_DEPLOYMENT_TARGET = 9.0;
+				USE_HEADERMAP = NO;
+				WARNING_CFLAGS = (
+					"-Wmost",
+					"-Wno-four-char-constants",
+					"-Wno-unknown-pragmas",
+					"$(inherited)",
+				);
+			};
+			name = RelWithDebInfo;
+		};
+		83F3D8505F104491ADF060D6 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COMBINE_HIDPI_IMAGES = YES;
+				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
+				GCC_INLINES_ARE_PRIVATE_EXTERN = NO;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = "'CMAKE_INTDIR=\"$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)\"'";
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				INSTALL_PATH = "";
+				OTHER_LDFLAGS = " ";
+				OTHER_REZFLAGS = "";
+				PRODUCT_NAME = ZERO_CHECK;
+				SECTORDER_FLAGS = "";
+				SYMROOT = /Users/Gust/Documents/c/glfm/build/ios;
+				USE_HEADERMAP = NO;
+				WARNING_CFLAGS = (
+					"-Wmost",
+					"-Wno-four-char-constants",
+					"-Wno-unknown-pragmas",
+					"$(inherited)",
+				);
+			};
+			name = Release;
+		};
+		87249792B2F74DB2A00EDD86 /* MinSizeRel */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				COMBINE_HIDPI_IMAGES = NO;
+				DEVELOPMENT_TEAM = M978JH97JT;
+				EXECUTABLE_PREFIX = "";
+				EXECUTABLE_SUFFIX = "";
+				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
+				GCC_INLINES_ARE_PRIVATE_EXTERN = NO;
+				GCC_OPTIMIZATION_LEVEL = s;
+				GCC_PREPROCESSOR_DEFINITIONS = "'CMAKE_INTDIR=\"$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)\"'";
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				HEADER_SEARCH_PATHS = /Users/Gust/Documents/c/glfm/include;
+				INFOPLIST_FILE = /Users/Gust/Documents/c/glfm/build/ios/example/CMakeFiles/glfm_example.dir/Info.plist;
+				INSTALL_PATH = "$(LOCAL_APPS_DIR)";
+				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
+				LIBRARY_SEARCH_PATHS = "";
+				OTHER_CFLAGS = "    -DNDEBUG  ";
+				OTHER_LDFLAGS = (
+					/Users/Gust/Documents/c/glfm/build/ios/GLFM.build/lib/MinSizeRel/libglfm.a,
+					"-framework",
+					Foundation,
+					"-framework",
+					CoreGraphics,
+					"-framework",
+					UIKit,
+					"-framework",
+					OpenGLES,
+					"-framework",
+					QuartzCore,
+				);
+				OTHER_REZFLAGS = "";
+				PRODUCT_BUNDLE_IDENTIFIER = com.eglsgame.test.glfm;
+				PRODUCT_NAME = glfm_example;
+				SECTORDER_FLAGS = "";
+				SKIP_INSTALL = NO;
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator appletvos appletvsimulator";
+				SYMROOT = /Users/Gust/Documents/c/glfm/build/ios/example;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TVOS_DEPLOYMENT_TARGET = 9.0;
+				USE_HEADERMAP = YES;
+				WARNING_CFLAGS = (
+					"-Wmost",
+					"-Wno-four-char-constants",
+					"-Wno-unknown-pragmas",
+					"$(inherited)",
+				);
+			};
+			name = MinSizeRel;
+		};
+		8892C241B9D94D3DBE86F713 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COMBINE_HIDPI_IMAGES = YES;
+				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
+				GCC_INLINES_ARE_PRIVATE_EXTERN = NO;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = "'CMAKE_INTDIR=\"$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)\"'";
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				INSTALL_PATH = "";
+				OTHER_LDFLAGS = " ";
+				OTHER_REZFLAGS = "";
+				PRODUCT_NAME = ALL_BUILD;
+				SECTORDER_FLAGS = "";
+				SYMROOT = /Users/Gust/Documents/c/glfm/build/ios;
+				USE_HEADERMAP = NO;
+				WARNING_CFLAGS = (
+					"-Wmost",
+					"-Wno-four-char-constants",
+					"-Wno-unknown-pragmas",
+					"$(inherited)",
+				);
+			};
+			name = Release;
+		};
+		8B9FADD302E046499D717AB4 /* MinSizeRel */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COMBINE_HIDPI_IMAGES = YES;
+				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
+				GCC_INLINES_ARE_PRIVATE_EXTERN = NO;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = "'CMAKE_INTDIR=\"$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)\"'";
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				INSTALL_PATH = "";
+				OTHER_LDFLAGS = " ";
+				OTHER_REZFLAGS = "";
+				PRODUCT_NAME = ZERO_CHECK;
+				SECTORDER_FLAGS = "";
+				SYMROOT = /Users/Gust/Documents/c/glfm/build/ios;
+				USE_HEADERMAP = NO;
+				WARNING_CFLAGS = (
+					"-Wmost",
+					"-Wno-four-char-constants",
+					"-Wno-unknown-pragmas",
+					"$(inherited)",
+				);
+			};
+			name = MinSizeRel;
+		};
+		9CACC86FB3CD4FB5B891F7AD /* RelWithDebInfo */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				COMBINE_HIDPI_IMAGES = NO;
+				DEVELOPMENT_TEAM = M978JH97JT;
+				EXECUTABLE_PREFIX = "";
+				EXECUTABLE_SUFFIX = "";
+				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
+				GCC_INLINES_ARE_PRIVATE_EXTERN = NO;
+				GCC_OPTIMIZATION_LEVEL = 2;
+				GCC_PREPROCESSOR_DEFINITIONS = "'CMAKE_INTDIR=\"$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)\"'";
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				HEADER_SEARCH_PATHS = /Users/Gust/Documents/c/glfm/include;
+				INFOPLIST_FILE = /Users/Gust/Documents/c/glfm/build/ios/example/CMakeFiles/glfm_example.dir/Info.plist;
+				INSTALL_PATH = "$(LOCAL_APPS_DIR)";
+				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
+				LIBRARY_SEARCH_PATHS = "";
+				OTHER_CFLAGS = "       -DNDEBUG  ";
+				OTHER_LDFLAGS = (
+					/Users/Gust/Documents/c/glfm/build/ios/GLFM.build/lib/RelWithDebInfo/libglfm.a,
+					"-framework",
+					Foundation,
+					"-framework",
+					CoreGraphics,
+					"-framework",
+					UIKit,
+					"-framework",
+					OpenGLES,
+					"-framework",
+					QuartzCore,
+				);
+				OTHER_REZFLAGS = "";
+				PRODUCT_BUNDLE_IDENTIFIER = com.eglsgame.test.glfm;
+				PRODUCT_NAME = glfm_example;
+				SECTORDER_FLAGS = "";
+				SKIP_INSTALL = NO;
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator appletvos appletvsimulator";
+				SYMROOT = /Users/Gust/Documents/c/glfm/build/ios/example;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TVOS_DEPLOYMENT_TARGET = 9.0;
+				USE_HEADERMAP = YES;
+				WARNING_CFLAGS = (
+					"-Wmost",
+					"-Wno-four-char-constants",
+					"-Wno-unknown-pragmas",
+					"$(inherited)",
+				);
+			};
+			name = RelWithDebInfo;
+		};
+		AFE9BE234AF949C89809A8F9 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				COMBINE_HIDPI_IMAGES = NO;
+				EXECUTABLE_PREFIX = "";
+				EXECUTABLE_SUFFIX = "";
+				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
+				GCC_INLINES_ARE_PRIVATE_EXTERN = NO;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = "'CMAKE_INTDIR=\"$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)\"'";
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				HEADER_SEARCH_PATHS = /Users/Gust/Documents/c/glfm/include;
+				INFOPLIST_FILE = /Users/Gust/Documents/c/glfm/build/ios/example/CMakeFiles/glfm_test_pattern.dir/Info.plist;
+				INSTALL_PATH = "$(LOCAL_APPS_DIR)";
+				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
+				LIBRARY_SEARCH_PATHS = "";
+				OTHER_CFLAGS = "   '-std=gnu99'  ";
+				OTHER_LDFLAGS = (
+					/Users/Gust/Documents/c/glfm/build/ios/GLFM.build/lib/Debug/libglfm.a,
+					"-framework",
+					Foundation,
+					"-framework",
+					CoreGraphics,
+					"-framework",
+					UIKit,
+					"-framework",
+					OpenGLES,
+					"-framework",
+					QuartzCore,
+				);
+				OTHER_REZFLAGS = "";
+				PRODUCT_BUNDLE_IDENTIFIER = "com.brackeen.${PRODUCT_NAME:rfc1034identifier}";
+				PRODUCT_NAME = glfm_test_pattern;
+				SECTORDER_FLAGS = "";
+				SKIP_INSTALL = NO;
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator appletvos appletvsimulator";
+				SYMROOT = /Users/Gust/Documents/c/glfm/build/ios/example;
+				TARGETED_DEVICE_FAMILY = "1,2,3";
+				TVOS_DEPLOYMENT_TARGET = 9.0;
+				USE_HEADERMAP = YES;
+				WARNING_CFLAGS = (
+					"-Wmost",
+					"-Wno-four-char-constants",
+					"-Wno-unknown-pragmas",
+					"$(inherited)",
+				);
+			};
+			name = Debug;
+		};
+		B5930819BB524E3A8B253C50 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COMBINE_HIDPI_IMAGES = YES;
+				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
+				GCC_INLINES_ARE_PRIVATE_EXTERN = NO;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = "'CMAKE_INTDIR=\"$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)\"'";
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				INSTALL_PATH = "";
+				OTHER_LDFLAGS = " ";
+				OTHER_REZFLAGS = "";
+				PRODUCT_NAME = ALL_BUILD;
+				SECTORDER_FLAGS = "";
+				SYMROOT = /Users/Gust/Documents/c/glfm/build/ios;
+				USE_HEADERMAP = NO;
+				WARNING_CFLAGS = (
+					"-Wmost",
+					"-Wno-four-char-constants",
+					"-Wno-unknown-pragmas",
+					"$(inherited)",
+				);
+			};
+			name = Debug;
+		};
+		B75E0F690E3E41D09794AF9B /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				COMBINE_HIDPI_IMAGES = NO;
+				EXECUTABLE_PREFIX = "";
+				EXECUTABLE_SUFFIX = "";
+				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
+				GCC_INLINES_ARE_PRIVATE_EXTERN = NO;
+				GCC_OPTIMIZATION_LEVEL = 3;
+				GCC_PREPROCESSOR_DEFINITIONS = "'CMAKE_INTDIR=\"$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)\"'";
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				HEADER_SEARCH_PATHS = /Users/Gust/Documents/c/glfm/include;
+				INFOPLIST_FILE = /Users/Gust/Documents/c/glfm/build/ios/example/CMakeFiles/glfm_test_pattern.dir/Info.plist;
+				INSTALL_PATH = "$(LOCAL_APPS_DIR)";
+				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
+				LIBRARY_SEARCH_PATHS = "";
+				OTHER_CFLAGS = (
+					"-DNDEBUG",
+					"'-std=gnu99'",
+				);
+				OTHER_LDFLAGS = (
+					/Users/Gust/Documents/c/glfm/build/ios/GLFM.build/lib/Release/libglfm.a,
+					"-framework",
+					Foundation,
+					"-framework",
+					CoreGraphics,
+					"-framework",
+					UIKit,
+					"-framework",
+					OpenGLES,
+					"-framework",
+					QuartzCore,
+				);
+				OTHER_REZFLAGS = "";
+				PRODUCT_BUNDLE_IDENTIFIER = "com.brackeen.${PRODUCT_NAME:rfc1034identifier}";
+				PRODUCT_NAME = glfm_test_pattern;
+				SECTORDER_FLAGS = "";
+				SKIP_INSTALL = NO;
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator appletvos appletvsimulator";
+				SYMROOT = /Users/Gust/Documents/c/glfm/build/ios/example;
+				TARGETED_DEVICE_FAMILY = "1,2,3";
+				TVOS_DEPLOYMENT_TARGET = 9.0;
+				USE_HEADERMAP = YES;
+				WARNING_CFLAGS = (
+					"-Wmost",
+					"-Wno-four-char-constants",
+					"-Wno-unknown-pragmas",
+					"$(inherited)",
+				);
+			};
+			name = Release;
+		};
+		BE8A76173D8C48219FA4D758 /* RelWithDebInfo */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = iphoneos;
+				SYMROOT = /Users/Gust/Documents/c/glfm/build/ios/build;
+			};
+			name = RelWithDebInfo;
+		};
+		C24E09097959417ABEA6601B /* RelWithDebInfo */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COMBINE_HIDPI_IMAGES = YES;
+				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
+				GCC_INLINES_ARE_PRIVATE_EXTERN = NO;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = "'CMAKE_INTDIR=\"$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)\"'";
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				INSTALL_PATH = "";
+				OTHER_LDFLAGS = " ";
+				OTHER_REZFLAGS = "";
+				PRODUCT_NAME = ALL_BUILD;
+				SECTORDER_FLAGS = "";
+				SYMROOT = /Users/Gust/Documents/c/glfm/build/ios;
+				USE_HEADERMAP = NO;
+				WARNING_CFLAGS = (
+					"-Wmost",
+					"-Wno-four-char-constants",
+					"-Wno-unknown-pragmas",
+					"$(inherited)",
+				);
+			};
+			name = RelWithDebInfo;
+		};
+		CB747073FD7F49B1B4A621B7 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_ENABLE_OBJC_ARC = YES;
+				COMBINE_HIDPI_IMAGES = YES;
+				CONFIGURATION_BUILD_DIR = /Users/Gust/Documents/c/glfm/build/ios/GLFM.build/lib/Debug;
+				EXECUTABLE_PREFIX = lib;
+				EXECUTABLE_SUFFIX = .a;
+				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
+				GCC_INLINES_ARE_PRIVATE_EXTERN = NO;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = "'CMAKE_INTDIR=\"$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)\"'";
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				HEADER_SEARCH_PATHS = (
+					/Users/Gust/Documents/c/glfm/include,
+					/Users/Gust/Documents/c/glfm/src,
+				);
+				INSTALL_PATH = "";
+				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
+				LIBRARY_STYLE = STATIC;
+				OTHER_CFLAGS = (
+					"-Weverything",
+					"-Wwrite-strings",
+					"-Wno-padded",
+					"-Wno-covered-switch-default",
+					"-Wno-objc-interface-ivars",
+					"-Wno-objc-missing-property-synthesis",
+					"-Wno-direct-ivar-access",
+				);
+				OTHER_LIBTOOLFLAGS = " ";
+				OTHER_REZFLAGS = "";
+				PRODUCT_NAME = glfm;
+				SECTORDER_FLAGS = "";
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator appletvos appletvsimulator";
+				SYMROOT = /Users/Gust/Documents/c/glfm/build/ios;
+				TVOS_DEPLOYMENT_TARGET = 9.0;
+				USE_HEADERMAP = NO;
+				WARNING_CFLAGS = (
+					"-Wmost",
+					"-Wno-four-char-constants",
+					"-Wno-unknown-pragmas",
+					"$(inherited)",
+				);
+			};
+			name = Debug;
+		};
+		EF4A425FFDCB457690A345D8 /* MinSizeRel */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				COMBINE_HIDPI_IMAGES = NO;
+				EXECUTABLE_PREFIX = "";
+				EXECUTABLE_SUFFIX = "";
+				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
+				GCC_INLINES_ARE_PRIVATE_EXTERN = NO;
+				GCC_OPTIMIZATION_LEVEL = s;
+				GCC_PREPROCESSOR_DEFINITIONS = "'CMAKE_INTDIR=\"$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)\"'";
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				HEADER_SEARCH_PATHS = /Users/Gust/Documents/c/glfm/include;
+				INFOPLIST_FILE = /Users/Gust/Documents/c/glfm/build/ios/example/CMakeFiles/glfm_test_pattern.dir/Info.plist;
+				INSTALL_PATH = "$(LOCAL_APPS_DIR)";
+				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
+				LIBRARY_SEARCH_PATHS = "";
+				OTHER_CFLAGS = (
+					"-DNDEBUG",
+					"'-std=gnu99'",
+				);
+				OTHER_LDFLAGS = (
+					/Users/Gust/Documents/c/glfm/build/ios/GLFM.build/lib/MinSizeRel/libglfm.a,
+					"-framework",
+					Foundation,
+					"-framework",
+					CoreGraphics,
+					"-framework",
+					UIKit,
+					"-framework",
+					OpenGLES,
+					"-framework",
+					QuartzCore,
+				);
+				OTHER_REZFLAGS = "";
+				PRODUCT_BUNDLE_IDENTIFIER = "com.brackeen.${PRODUCT_NAME:rfc1034identifier}";
+				PRODUCT_NAME = glfm_test_pattern;
+				SECTORDER_FLAGS = "";
+				SKIP_INSTALL = NO;
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator appletvos appletvsimulator";
+				SYMROOT = /Users/Gust/Documents/c/glfm/build/ios/example;
+				TARGETED_DEVICE_FAMILY = "1,2,3";
+				TVOS_DEPLOYMENT_TARGET = 9.0;
+				USE_HEADERMAP = YES;
+				WARNING_CFLAGS = (
+					"-Wmost",
+					"-Wno-four-char-constants",
+					"-Wno-unknown-pragmas",
+					"$(inherited)",
+				);
+			};
+			name = MinSizeRel;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		1C5286B187414CEEBEFE047D /* Build configuration list for PBXNativeTarget "glfm_test_pattern" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				AFE9BE234AF949C89809A8F9 /* Debug */,
+				B75E0F690E3E41D09794AF9B /* Release */,
+				EF4A425FFDCB457690A345D8 /* MinSizeRel */,
+				77FAE0BD252C4238B7517F33 /* RelWithDebInfo */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+		35A8798D1F4042D79D46DD2D /* Build configuration list for PBXNativeTarget "glfm_example" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				49B10AE29F024BB19F31CBAF /* Debug */,
+				276B642BDCB8492787A24A06 /* Release */,
+				87249792B2F74DB2A00EDD86 /* MinSizeRel */,
+				9CACC86FB3CD4FB5B891F7AD /* RelWithDebInfo */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+		63106BE33CAF4E9A8DEC53C8 /* Build configuration list for PBXProject "GLFM" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				56259B054F8347EE8E9CAA48 /* Debug */,
+				34412FEC95454549AC56AF5B /* Release */,
+				58D5935E04DF4CABABC38914 /* MinSizeRel */,
+				BE8A76173D8C48219FA4D758 /* RelWithDebInfo */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+		AEF2D6D50C9B4B72A8F6C2B6 /* Build configuration list for PBXAggregateTarget "ALL_BUILD" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				B5930819BB524E3A8B253C50 /* Debug */,
+				8892C241B9D94D3DBE86F713 /* Release */,
+				0734242C1389464DBF64C795 /* MinSizeRel */,
+				C24E09097959417ABEA6601B /* RelWithDebInfo */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+		AFB1A2CF0AA7498DA134E0CA /* Build configuration list for PBXAggregateTarget "ZERO_CHECK" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				1DE8778137864E3A943E88BF /* Debug */,
+				83F3D8505F104491ADF060D6 /* Release */,
+				8B9FADD302E046499D717AB4 /* MinSizeRel */,
+				229F597007E3424295778B4A /* RelWithDebInfo */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+		E7C73FC52B0F41CCA6FBE811 /* Build configuration list for PBXNativeTarget "glfm" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				CB747073FD7F49B1B4A621B7 /* Debug */,
+				3C94511CCDD04C13A28EDFB5 /* Release */,
+				5BE2A016C0C0415DB51FDB6F /* MinSizeRel */,
+				78E7E7FC43DC457EA54992A3 /* RelWithDebInfo */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = F70F68B1054645579939B07B /* Project object */;
+}
