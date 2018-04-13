@@ -46,7 +46,6 @@ static bool onKey(GLFMDisplay *display, GLFMKey keyCode, GLFMKeyAction action, i
 
 int jvm_thrd_func(void *para);
 
-jobject getGlobalContext(JNIEnv *env);
 
 // Main entry point
 void glfmMain(GLFMDisplay *display) {

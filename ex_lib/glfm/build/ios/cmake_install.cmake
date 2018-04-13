@@ -1,4 +1,4 @@
-# Install script for directory: /Users/Gust/Documents/c/glfm
+# Install script for directory: /Users/Gust/Documents/c/mini_jvm/ex_lib/glfm
 
 # Set the install prefix
 if(NOT DEFINED CMAKE_INSTALL_PREFIX)
@@ -29,7 +29,7 @@ endif()
 
 if(NOT CMAKE_INSTALL_LOCAL_ONLY)
   # Include the install script for each subdirectory.
-  include("/Users/Gust/Documents/c/glfm/build/ios/example/cmake_install.cmake")
+  include("/Users/Gust/Documents/c/mini_jvm/ex_lib/glfm/build/ios/example/cmake_install.cmake")
 
 endif()
 
@@ -41,5 +41,5 @@ endif()
 
 string(REPLACE ";" "\n" CMAKE_INSTALL_MANIFEST_CONTENT
        "${CMAKE_INSTALL_MANIFEST_FILES}")
-file(WRITE "/Users/Gust/Documents/c/glfm/build/ios/${CMAKE_INSTALL_MANIFEST}"
+file(WRITE "/Users/Gust/Documents/c/mini_jvm/ex_lib/glfm/build/ios/${CMAKE_INSTALL_MANIFEST}"
      "${CMAKE_INSTALL_MANIFEST_CONTENT}")

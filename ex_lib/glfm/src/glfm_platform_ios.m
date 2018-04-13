@@ -973,4 +973,12 @@ bool glfmIsKeyboardVisible(GLFMDisplay *display) {
     }
 }
 
+const char* glfmGetResRoot(){
+    
+    NSString *resPath= [[[NSBundle mainBundle] resourcePath] stringByAppendingPathComponent:@""];
+    //printf("respath: %s\n\n",[resPath UTF8String]);
+    
+    return [resPath UTF8String];
+}
+
 #endif

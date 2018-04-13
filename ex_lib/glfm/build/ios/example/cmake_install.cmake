@@ -1,4 +1,4 @@
-# Install script for directory: /Users/Gust/Documents/c/glfm/example
+# Install script for directory: /Users/Gust/Documents/c/mini_jvm/ex_lib/glfm/example
 
 # Set the install prefix
 if(NOT DEFINED CMAKE_INSTALL_PREFIX)
