@@ -6,7 +6,7 @@ option(GLFM_BUILD_EXAMPLE "Build the GLFM example" ON)
 
 set(GLFM_HEADERS include/glfm.h)
 
-include_directories(gui/ gui/stb gui/other ../../mini_jvm/jvm)
+include_directories(include gui/ gui/stb gui/other ../../mini_jvm/jvm)
 
 set(NANOVG_SOURCE_FILES
 	gui/stb/stb_image_write.h

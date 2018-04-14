@@ -46,25 +46,30 @@ static bool onKey(GLFMDisplay *display, GLFMKey keyCode, GLFMKeyAction action, i
 
 int jvm_thrd_func(void *para);
 
+static thrd_t _jvm_thread;//jvm线程
+static GLFMDisplay *glfm_display;
 
 // Main entry point
 void glfmMain(GLFMDisplay *display) {
-    ExampleApp *app = calloc(1, sizeof(ExampleApp));
-
-    glfmSetDisplayConfig(display,
-                         GLFMRenderingAPIOpenGLES2,
-                         GLFMColorFormatRGBA8888,
-                         GLFMDepthFormatNone,
-                         GLFMStencilFormatNone,
-                         GLFMMultisampleNone);
-    glfmSetUserData(display, app);
-    glfmSetSurfaceCreatedFunc(display, onSurfaceCreated);
-    glfmSetSurfaceResizedFunc(display, onSurfaceCreated);
-    glfmSetSurfaceDestroyedFunc(display, onSurfaceDestroyed);
-    glfmSetMainLoopFunc(display, onFrame);
-    glfmSetTouchFunc(display, onTouch);
-    glfmSetKeyFunc(display, onKey);
-    thrd_create(&app->_jvm_thread, jvm_thrd_func, NULL);
+    glfm_display=display;
+    
+//    ExampleApp *app = calloc(1, sizeof(ExampleApp));
+//
+//    glfmSetDisplayConfig(display,
+//                         GLFMRenderingAPIOpenGLES2,
+//                         GLFMColorFormatRGBA8888,
+//                         GLFMDepthFormatNone,
+//                         GLFMStencilFormatNone,
+//                         GLFMMultisampleNone);
+//    glfmSetUserData(display, app);
+//    glfmSetSurfaceCreatedFunc(display, onSurfaceCreated);
+//    glfmSetSurfaceResizedFunc(display, onSurfaceCreated);
+//    glfmSetSurfaceDestroyedFunc(display, onSurfaceDestroyed);
+//    glfmSetMainLoopFunc(display, onFrame);
+//    glfmSetTouchFunc(display, onTouch);
+//    glfmSetKeyFunc(display, onKey);
+    
+    thrd_create(_jvm_thread, jvm_thrd_func, NULL);
 }
 
 int jvm_thrd_func(void *para) {
@@ -73,47 +78,27 @@ int jvm_thrd_func(void *para) {
     Utf8String *classpath = utf8_create();
     char *main_name = NULL;
     ArrayList *java_para = arraylist_create(0);
+    //add display para
+    Utf8String *dis_str=utf8_create();
+    utf8_append_s64(dis_str, (intptr_t)glfm_display, 16);
+    arraylist_push_back(java_para, utf8_cstr(dis_str));
 
     java_debug = 0;
 
     utf8_append_c(classpath, glfmGetResRoot());
     utf8_append_c(classpath, "/minijvm_rt.jar;");
 
-//    utf8_append_c(classpath, glfmGetResRoot());
-//    utf8_append_c(classpath, "/gui_lib.jar;");
-//        main_name = "test/Gears";
-//        main_name = "test/TestGL";
-//    main_name = "test/GuiTest";
-//        main_name = "test/RenderTexure";
-//        main_name = "test/Alpha";
-//        main_name = "test/Light";
-//        main_name = "test/Shader";
-//        main_name = "test/Boing";
-//        main_name = "test/TestNanovg";
-
-//    utf8_append_c(classpath, glfmGetResRoot());
-//    utf8_append_c(classpath, "/jni_test.jar;");
-//        main_name = "test/JniTest";
-//    utf8_append_c(classpath, glfmGetResRoot());
-//    utf8_append_c(classpath, "/luaj.jar;");
-//        main_name = "Sample";
-
 
     utf8_append_c(classpath, glfmGetResRoot());
-    utf8_append_c(classpath, "/minijvm_test.jar;");
-    main_name = "test/Foo1";
-//        main_name = "test/Foo2";
-//        main_name = "test/Foo3";
-//        main_name = "test/ExecuteSpeed";
-//        main_name = "test/TestFile";
-//        main_name = "test/HttpServer";
-//        main_name = "test/BpDeepTest";
-//        main_name = "test/ReflectTest";
+    utf8_append_c(classpath, "/glfm_gui.jar;");
+    main_name = "app/GlfmMain";
+
 
 
     ret = execute_jvm(utf8_cstr(classpath), main_name, java_para);
     arraylist_destory(java_para);
     utf8_destory(classpath);
+    utf8_destory(dis_str);
     LOG_DEBUG("mini_jvm execute success.");
     return ret;
 }
