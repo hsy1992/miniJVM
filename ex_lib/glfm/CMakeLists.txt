@@ -6,6 +6,29 @@ option(GLFM_BUILD_EXAMPLE "Build the GLFM example" ON)
 
 set(GLFM_HEADERS include/glfm.h)
 
+include_directories(gui/ gui/stb gui/other ../../mini_jvm/jvm)
+
+set(NANOVG_SOURCE_FILES
+	gui/stb/stb_image_write.h
+	gui/stb/stb_image.h
+	gui/stb/stb_truetype.h
+	gui/nanovg/fontstash.h
+	gui/nanovg/nanovg_gl.h
+	gui/nanovg/nanovg_gl_utils.h
+	gui/nanovg/nanovg.h
+	gui/nanovg/nanovg.c
+	gui/glad/glad.c
+	gui/glad/glad.h
+	gui/KHR/khrplatform.h
+	gui/other/linmath.h
+	gui/jni_gui.h
+	gui/jni_nanovg_assist.h
+	gui/jni_stb_assist.h
+	gui/jni_nanovg.c
+	gui/jni_gui.c
+	gui/jni_glfm.c
+)
+
 
 set(MINI_JVM_SOURCE_FILES
         ../../mini_jvm/utils/d_type.h
@@ -65,7 +88,7 @@ else() # Assume iOS
     set(GLFM_COMPILE_FLAGS "-Wno-objc-interface-ivars -Wno-objc-missing-property-synthesis -Wno-direct-ivar-access")
 endif()
 
-add_library(glfm ${GLFM_SRC} ${GLFM_HEADERS} ${MINI_JVM_SOURCE_FILES})
+add_library(glfm ${GLFM_SRC} ${GLFM_HEADERS} ${MINI_JVM_SOURCE_FILES} ${NANOVG_SOURCE_FILES})
 target_include_directories(glfm PUBLIC include)
 target_include_directories(glfm PRIVATE src)
 
