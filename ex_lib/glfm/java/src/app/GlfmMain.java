@@ -1,18 +1,19 @@
-package test;
+/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
+package app;
 
 import java.util.Random;
 import org.mini.gl.warp.GLFrameBuffer;
 import org.mini.gl.warp.GLFrameBufferPainter;
-import static org.mini.glfm.Gutil.toUtf8;
-import org.mini.glfw.utils.Nanovg;
-import static org.mini.glfw.utils.Nanovg.nvgSave;
 import org.mini.gui.GButton;
 import org.mini.gui.GCanvas;
 import org.mini.gui.GCheckBox;
 import org.mini.gui.GColorSelector;
-import org.mini.gui.GTextBox;
-import org.mini.gui.GFrame;
 import org.mini.gui.GForm;
+import org.mini.gui.GFrame;
 import org.mini.gui.GGraphics;
 import org.mini.gui.GImage;
 import org.mini.gui.GInputField;
@@ -21,43 +22,48 @@ import org.mini.gui.GList;
 import org.mini.gui.GObject;
 import org.mini.gui.GPanel;
 import org.mini.gui.GScrollBar;
+import org.mini.gui.GTextBox;
 import org.mini.gui.event.GActionListener;
+import static org.mini.nanovg.Gutil.toUtf8;
+import org.mini.nanovg.Nanovg;
 
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 /**
  *
  * @author gust
  */
-public class GuiTest {
+public class GlfmMain {
 
     public static void main(String[] args) {
-        GuiTest gt = new GuiTest();
-        gt.t1();
+        long display = 0;
+        if (args.length > 1) {
+            try {
+                display = Long.parseLong(args[0], 16);
+            } catch (Exception e) {
+                System.out.println("Need glfm display");
+            }
+        }
+        GlfmMain gt = new GlfmMain();
+        gt.t1(display);
 
     }
     GForm win;
 
-    void t1() {
-        win = new GForm(/*"GuiTest"*/"登录 窗口", 800, 600);
+    void t1(long display) {
+        win = new GForm(/*"GuiTest"*/"登录 窗口", 800, 600,display);
         win.init();
         long vg = win.getGLContext();
         GFrame gframe = new GFrame("Github"/*"demo"*/, 50, 50, 300, 500);
         init(gframe.getPanel(), vg);
         win.add(gframe);
-        win.run();
     }
 
     final int EASY = 0, MID = 1, HARD = 2;
     int op = EASY;
     int property = 20;
-    Light light;
+//    Light light;
 
     public void init(GPanel parent, long vg) {
-        light = new Light();
+//        light = new Light();
 
         int x = 8, y = 10;
         GInputField gif = new GInputField("", "search", x, y, 280, 25);

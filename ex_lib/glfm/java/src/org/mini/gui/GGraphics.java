@@ -5,7 +5,7 @@
  */
 package org.mini.gui;
 
-import org.mini.glfm.Gutil;
+import org.mini.nanovg.Gutil;
 import static org.mini.gui.GToolkit.nvgRGBA;
 import org.mini.nanovg.Nanovg;
 import static org.mini.nanovg.Nanovg.NVG_CW;

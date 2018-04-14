@@ -60,7 +60,7 @@ public class GScrollBar extends GObject {
     }
 
     @Override
-    public void mouseButtonEvent(int button, boolean pressed, int x, int y) {
+    public void touchEvent(int button, boolean pressed, int x, int y) {
         int rx = (int) (x - parent.getX());
         int ry = (int) (y - parent.getY());
         if (isInBoundle(boundle, rx, ry)) {

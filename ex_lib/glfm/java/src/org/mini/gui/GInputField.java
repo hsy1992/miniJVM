@@ -5,7 +5,7 @@
  */
 package org.mini.gui;
 
-import static org.mini.glfm.Gutil.toUtf8;
+import static org.mini.nanovg.Gutil.toUtf8;
 import static org.mini.gui.GToolkit.nvgRGBA;
 import org.mini.nanovg.Nanovg;
 import static org.mini.nanovg.Nanovg.NVG_ALIGN_CENTER;
@@ -66,7 +66,7 @@ public class GInputField extends GObject {
     }
 
     @Override
-    public void mouseButtonEvent(int button, boolean pressed, int x, int y) {
+    public void touchEvent(int button, boolean pressed, int x, int y) {
         int rx = (int) (x - parent.getX());
         int ry = (int) (y - parent.getY());
         if (isInBoundle(boundle, rx, ry)) {
@@ -88,30 +88,30 @@ public class GInputField extends GObject {
      * @param character
      */
     @Override
-    public void characterEvent(char character) {
-        if (parent.getFocus() != this) {
-            return;
-        }
-        if (text == null) {
-            text = "";
-        }
-        setText(text += character);
+    public void characterEvent(String str,int mods ) {
+//        if (parent.getFocus() != this) {
+//            return;
+//        }
+//        if (text == null) {
+//            text = "";
+//        }
+//        setText(text += character);
     }
 
     @Override
-    public void keyEvent(int key, int scanCode, int action, int mods) {
+    public void keyEvent(int key, int action, int mods) {
         if (parent.getFocus() != this) {
             return;
         }
-        if (action == Glfw.GLFW_PRESS || action == Glfw.GLFW_REPEAT) {
-            if (key == Glfw.GLFW_KEY_BACKSPACE) {
-                String txt = getText();
-                if (txt != null && txt.length() > 0) {
-                    txt = txt.substring(0, txt.length() - 1);
-                    setText(txt);
-                }
-            }
-        }
+//        if (action == Glfw.GLFW_PRESS || action == Glfw.GLFW_REPEAT) {
+//            if (key == Glfw.GLFW_KEY_BACKSPACE) {
+//                String txt = getText();
+//                if (txt != null && txt.length() > 0) {
+//                    txt = txt.substring(0, txt.length() - 1);
+//                    setText(txt);
+//                }
+//            }
+//        }
     }
 
     /**

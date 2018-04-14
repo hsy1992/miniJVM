@@ -8,7 +8,8 @@ package org.mini.gui;
 import java.util.Hashtable;
 import javax.mini.reflect.Array;
 import javax.mini.reflect.vm.RefNative;
-import static org.mini.glfm.Gutil.toUtf8;
+import org.mini.glfm.Glfm;
+import static org.mini.nanovg.Gutil.toUtf8;
 import org.mini.nanovg.Nanovg;
 import static org.mini.nanovg.Nanovg.nvgAddFallbackFontId;
 import static org.mini.nanovg.Nanovg.nvgBeginPath;
@@ -23,10 +24,6 @@ import static org.mini.nanovg.Nanovg.nvgRect;
  * @author gust
  */
 public class GToolkit {
-
-    static {
-        Glfw.loadLib();
-    }
 
     static Hashtable<Long, GForm> table = new Hashtable();
 

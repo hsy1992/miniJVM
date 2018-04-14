@@ -5,7 +5,7 @@
  */
 package org.mini.gui;
 
-import static org.mini.glfm.Gutil.toUtf8;
+import static org.mini.nanovg.Gutil.toUtf8;
 import static org.mini.gui.GToolkit.nvgRGBA;
 import org.mini.nanovg.Nanovg;
 import static org.mini.nanovg.Nanovg.NVG_ALIGN_LEFT;
@@ -146,7 +146,7 @@ public class GTextBox extends GObject {
     }
 
     @Override
-    public void mouseButtonEvent(int button, boolean pressed, int x, int y) {
+    public void touchEvent(int button, boolean pressed, int x, int y) {
         int rx = (int) (x - parent.getX());
         int ry = (int) (y - parent.getY());
         if (isInBoundle(boundle, rx, ry)) {
@@ -216,104 +216,104 @@ public class GTextBox extends GObject {
      * @param character
      */
     @Override
-    public void characterEvent(char character) {
-        if (parent.getFocus() != this) {
-            return;
-        }
-        int[] selectFromTo = getSelected();
-        if (selectFromTo != null) {
-            delectSelect();
-        }
-        textsb.insert(caretIndex, character);
-        caretIndex++;
-        text_arr = null;
+    public void characterEvent(String str,int mods) {
+//        if (parent.getFocus() != this) {
+//            return;
+//        }
+//        int[] selectFromTo = getSelected();
+//        if (selectFromTo != null) {
+//            delectSelect();
+//        }
+//        textsb.insert(caretIndex, character);
+//        caretIndex++;
+//        text_arr = null;
     }
 
     @Override
-    public void keyEvent(int key, int scanCode, int action, int mods) {
+    public void keyEvent(int key, int action, int mods) {
         if (parent.getFocus() != this) {
             return;
         }
-        if (action == Glfw.GLFW_PRESS || action == Glfw.GLFW_REPEAT) {
-            switch (key) {
-                case Glfw.GLFW_KEY_BACKSPACE: {
-                    if (textsb.length() > 0 && caretIndex > 0) {
-                        int[] selectFromTo = getSelected();
-                        if (selectFromTo != null) {
-                            delectSelect();
-                        } else {
-                            textsb.delete(caretIndex - 1, caretIndex);
-                            caretIndex--;
-                            text_arr = null;
-                        }
-                    }
-                    break;
-                }
-                case Glfw.GLFW_KEY_DELETE: {
-                    if (textsb.length() > caretIndex) {
-                        int[] selectFromTo = getSelected();
-                        if (selectFromTo != null) {
-                            delectSelect();
-                        } else {
-                            textsb.delete(caretIndex, caretIndex + 1);
-                            text_arr = null;
-                        }
-                    }
-                    break;
-                }
-                case Glfw.GLFW_KEY_ENTER: {
-                    String txt = getText();
-                    if (txt != null && txt.length() > 0 && !singleMode) {
-                        int[] selectFromTo = getSelected();
-                        if (selectFromTo != null) {
-                            delectSelect();
-                        }
-                        textsb.insert(caretIndex++, "\n");
-                        text_arr = null;
-                    }
-                    break;
-                }
-                case Glfw.GLFW_KEY_LEFT: {
-                    if (textsb.length() > 0 && caretIndex > 0) {
-                        caretIndex--;
-                    }
-                    break;
-                }
-                case Glfw.GLFW_KEY_RIGHT: {
-                    if (textsb.length() > caretIndex) {
-                        caretIndex++;
-                    }
-                    break;
-                }
-                case Glfw.GLFW_KEY_UP: {
-                    int[] pos = getCaretPosFromArea();
-                    if (topShowRow > 0 && (pos == null || pos[2] == topShowRow)) {
-                        topShowRow--;
-                    }
-                    if (pos != null) {
-                        int cart = getCaretIndexFromArea(pos[0], pos[1] - (int) lineh[0]);
-                        if (cart >= 0) {
-                            caretIndex = cart;
-                        }
-                    }
-                    break;
-                }
-                case Glfw.GLFW_KEY_DOWN: {
-                    int[] pos = getCaretPosFromArea();
-                    if (topShowRow < totalRows - showRows && (pos == null || pos[2] == topShowRow + showRows - 1)) {
-                        topShowRow++;
-                    }
-                    if (pos != null) {
-                        int cart = getCaretIndexFromArea(pos[0], pos[1] + (int) lineh[0]);
-                        if (cart >= 0) {
-                            caretIndex = cart;
-                        }
-
-                    }
-                    break;
-                }
-            }
-        }
+//        if (action == Glfw.GLFW_PRESS || action == Glfw.GLFW_REPEAT) {
+//            switch (key) {
+//                case Glfw.GLFW_KEY_BACKSPACE: {
+//                    if (textsb.length() > 0 && caretIndex > 0) {
+//                        int[] selectFromTo = getSelected();
+//                        if (selectFromTo != null) {
+//                            delectSelect();
+//                        } else {
+//                            textsb.delete(caretIndex - 1, caretIndex);
+//                            caretIndex--;
+//                            text_arr = null;
+//                        }
+//                    }
+//                    break;
+//                }
+//                case Glfw.GLFW_KEY_DELETE: {
+//                    if (textsb.length() > caretIndex) {
+//                        int[] selectFromTo = getSelected();
+//                        if (selectFromTo != null) {
+//                            delectSelect();
+//                        } else {
+//                            textsb.delete(caretIndex, caretIndex + 1);
+//                            text_arr = null;
+//                        }
+//                    }
+//                    break;
+//                }
+//                case Glfw.GLFW_KEY_ENTER: {
+//                    String txt = getText();
+//                    if (txt != null && txt.length() > 0 && !singleMode) {
+//                        int[] selectFromTo = getSelected();
+//                        if (selectFromTo != null) {
+//                            delectSelect();
+//                        }
+//                        textsb.insert(caretIndex++, "\n");
+//                        text_arr = null;
+//                    }
+//                    break;
+//                }
+//                case Glfw.GLFW_KEY_LEFT: {
+//                    if (textsb.length() > 0 && caretIndex > 0) {
+//                        caretIndex--;
+//                    }
+//                    break;
+//                }
+//                case Glfw.GLFW_KEY_RIGHT: {
+//                    if (textsb.length() > caretIndex) {
+//                        caretIndex++;
+//                    }
+//                    break;
+//                }
+//                case Glfw.GLFW_KEY_UP: {
+//                    int[] pos = getCaretPosFromArea();
+//                    if (topShowRow > 0 && (pos == null || pos[2] == topShowRow)) {
+//                        topShowRow--;
+//                    }
+//                    if (pos != null) {
+//                        int cart = getCaretIndexFromArea(pos[0], pos[1] - (int) lineh[0]);
+//                        if (cart >= 0) {
+//                            caretIndex = cart;
+//                        }
+//                    }
+//                    break;
+//                }
+//                case Glfw.GLFW_KEY_DOWN: {
+//                    int[] pos = getCaretPosFromArea();
+//                    if (topShowRow < totalRows - showRows && (pos == null || pos[2] == topShowRow + showRows - 1)) {
+//                        topShowRow++;
+//                    }
+//                    if (pos != null) {
+//                        int cart = getCaretIndexFromArea(pos[0], pos[1] + (int) lineh[0]);
+//                        if (cart >= 0) {
+//                            caretIndex = cart;
+//                        }
+//
+//                    }
+//                    break;
+//                }
+//            }
+//        }
     }
 
     @Override

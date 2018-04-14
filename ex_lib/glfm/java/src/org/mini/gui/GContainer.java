@@ -96,11 +96,11 @@ abstract public class GContainer extends GObject {
     }
 
     @Override
-    public void keyEvent(int key, int scanCode, int action, int mods) {
+    public void keyEvent(int key, int action, int mods) {
         for (Iterator<GObject> it = elements.iterator(); it.hasNext();) {
             try {
                 GObject nko = it.next();
-                nko.keyEvent(key, scanCode, action, mods);
+                nko.keyEvent(key, action, mods);
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -108,11 +108,11 @@ abstract public class GContainer extends GObject {
     }
 
     @Override
-    public void characterEvent(char character) {
+    public void characterEvent(String str,int mods) {
         for (Iterator<GObject> it = elements.iterator(); it.hasNext();) {
             try {
                 GObject nko = it.next();
-                nko.characterEvent(character);
+                nko.characterEvent(str,mods);
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -120,11 +120,11 @@ abstract public class GContainer extends GObject {
     }
 
     @Override
-    public void mouseButtonEvent(int button, boolean pressed, int x, int y) {
+    public void touchEvent(int button, boolean pressed, int x, int y) {
         for (Iterator<GObject> it = elements.iterator(); it.hasNext();) {
             try {
                 GObject nko = it.next();
-                nko.mouseButtonEvent(button, pressed, x, y);
+                nko.touchEvent(button, pressed, x, y);
             } catch (Exception e) {
                 e.printStackTrace();
             }

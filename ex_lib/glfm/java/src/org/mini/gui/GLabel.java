@@ -5,7 +5,7 @@
  */
 package org.mini.gui;
 
-import static org.mini.glfm.Gutil.toUtf8;
+import static org.mini.nanovg.Gutil.toUtf8;
 import org.mini.nanovg.Nanovg;
 import static org.mini.nanovg.Nanovg.NVG_ALIGN_LEFT;
 import static org.mini.nanovg.Nanovg.NVG_ALIGN_MIDDLE;

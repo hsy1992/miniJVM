@@ -46,13 +46,13 @@ abstract public class GObject {
         return true;
     }
 
-    public void keyEvent(int key, int scanCode, int action, int mods) {
+    public void keyEvent(int key, int action, int mods) {
     }
 
-    public void characterEvent(char character) {
+    public void characterEvent(String str, int modifiers) {
     }
 
-    public void mouseButtonEvent(int button, boolean pressed, int x, int y) {
+    public void touchEvent(int button, boolean pressed, int x, int y) {
     }
 
     public void clickEvent(int button, int x, int y) {
