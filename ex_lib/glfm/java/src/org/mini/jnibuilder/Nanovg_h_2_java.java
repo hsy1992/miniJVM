@@ -172,7 +172,7 @@ public class Nanovg_h_2_java {
 
             //
             //methods
-            String nativeMethodHeader = "Nanovg_API ", nativeHeader2 = ";", nativeHeader3 = "{";
+            String nativeMethodHeader = "NUTIL_API ", nativeHeader2 = ";", nativeHeader3 = "{";
             for (int i = 0, imax = lines.size(); i < imax; i++) {
                 lineNo = i;
                 line = lines.get(i);

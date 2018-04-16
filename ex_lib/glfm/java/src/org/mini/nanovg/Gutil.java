@@ -10,21 +10,16 @@ import javax.mini.reflect.MemAccess;
 import org.mini.gl.GL;
 import static org.mini.gl.GL.GL_CLAMP_TO_EDGE;
 import static org.mini.gl.GL.GL_LINEAR_MIPMAP_NEAREST;
-import static org.mini.gl.GL.GL_RENDERER;
 import static org.mini.gl.GL.GL_RGBA;
-import static org.mini.gl.GL.GL_RGBA8;
 import static org.mini.gl.GL.GL_TEXTURE_2D;
 import static org.mini.gl.GL.GL_TEXTURE_MAG_FILTER;
 import static org.mini.gl.GL.GL_TEXTURE_MIN_FILTER;
 import static org.mini.gl.GL.GL_TEXTURE_WRAP_S;
 import static org.mini.gl.GL.GL_TEXTURE_WRAP_T;
 import static org.mini.gl.GL.GL_UNSIGNED_BYTE;
-import static org.mini.gl.GL.GL_VERSION;
-import static org.mini.gl.GL.glBegin;
 import static org.mini.gl.GL.glBindTexture;
 import static org.mini.gl.GL.glGenTextures;
 import static org.mini.gl.GL.glGenerateMipmap;
-import static org.mini.gl.GL.glGetString;
 import static org.mini.gl.GL.glTexImage2D;
 import static org.mini.gl.GL.glTexParameterf;
 import static org.mini.nanovg.Nanovg.stbi_image_free;
@@ -128,11 +123,11 @@ public class Gutil {
 
         // 使用OpenGL函数，但是需要添加math.h头文件
         double rFov = fov * 3.14159265 / 180.0;
-        GL.glFrustum(-zNear * Math.tan(rFov / 2.0) * aspectRatio,
-                zNear * Math.tan(rFov / 2.0) * aspectRatio,
-                -zNear * Math.tan(rFov / 2.0),
-                zNear * Math.tan(rFov / 2.0),
-                zNear, zFar);
+//        GL.glFrustum(-zNear * Math.tan(rFov / 2.0) * aspectRatio,
+//                zNear * Math.tan(rFov / 2.0) * aspectRatio,
+//                -zNear * Math.tan(rFov / 2.0),
+//                zNear * Math.tan(rFov / 2.0),
+//                zNear, zFar);
     }
 
     static public void gluLookAt(double eX, double eY, double eZ, double cX, double cY,
@@ -170,35 +165,35 @@ public class Gutil {
             // 6. the angle between up on xy plane and y axis
             c = c + Math.PI;
         }
-        GL.glRotated(Math.toDegrees(c), 0, 0, 1);
-        // up in yz plane
-        GL.glRotated(Math.toDegrees(b), 1, 0, 0);
-        // center in negative z axis
-        GL.glRotated(Math.toDegrees(a), 0, 1, 0);
-        // center in yz plane
-        GL.glTranslated(-eX, -eY, -eZ);
-        // eye at the origin
+//        GL.glRotated(Math.toDegrees(c), 0, 0, 1);
+//        // up in yz plane
+//        GL.glRotated(Math.toDegrees(b), 1, 0, 0);
+//        // center in negative z axis
+//        GL.glRotated(Math.toDegrees(a), 0, 1, 0);
+//        // center in yz plane
+//        GL.glTranslated(-eX, -eY, -eZ);
+//        // eye at the origin
     }
 
     static public void drawCood() {
-        GL.glPushMatrix();
-        float len = 1000f;
-        GL.glBegin(GL.GL_LINES);
-        GL.glColor3f(1.f, 0, 0);
-        GL.glVertex3f(0, 0, 0);
-        GL.glVertex3f(len, 0, 0);
-        GL.glEnd();
-        glBegin(GL.GL_LINES);
-        GL.glColor3f(0, 1.f, 0);
-        GL.glVertex3f(0, 0, 0);
-        GL.glVertex3f(0, len, 0);
-        GL.glEnd();
-        glBegin(GL.GL_LINES);
-        GL.glColor3f(0, 0, 1.f);
-        GL.glVertex3f(0, 0, 0);
-        GL.glVertex3f(0, 0, len);
-        GL.glEnd();
-        GL.glPopMatrix();
+//        GL.glPushMatrix();
+//        float len = 1000f;
+//        GL.glBegin(GL.GL_LINES);
+//        GL.glColor3f(1.f, 0, 0);
+//        GL.glVertex3f(0, 0, 0);
+//        GL.glVertex3f(len, 0, 0);
+//        GL.glEnd();
+//        glBegin(GL.GL_LINES);
+//        GL.glColor3f(0, 1.f, 0);
+//        GL.glVertex3f(0, 0, 0);
+//        GL.glVertex3f(0, len, 0);
+//        GL.glEnd();
+//        glBegin(GL.GL_LINES);
+//        GL.glColor3f(0, 0, 1.f);
+//        GL.glVertex3f(0, 0, 0);
+//        GL.glVertex3f(0, 0, len);
+//        GL.glEnd();
+//        GL.glPopMatrix();
     }
 
     public static byte[] toUtf8(String s) {
@@ -249,7 +244,7 @@ public class Gutil {
         glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR_MIPMAP_NEAREST);
         glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
         glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
-        GL.glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, x[0], y[0], 0, GL_RGBA, GL_UNSIGNED_BYTE, d, 0);
+        GL.glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, x[0], y[0], 0, GL_RGBA, GL_UNSIGNED_BYTE, d, 0);
 //        glGenerateMipmap(GL_TEXTURE_2D);
 //    printf("x=%d,y=%d,n=%d\n", x, y, n);
 
@@ -278,17 +273,17 @@ public class Gutil {
     }
 
     static public void printGlVersion() {
-        byte[] b;
-        String name = new String(glGetString(GL.GL_VENDOR)); //返回负责当前OpenGL实现厂商的名字
-        String biaoshifu = new String(glGetString(GL_RENDERER)); //返回一个渲染器标识符，通常是个硬件平台
-        String OpenGLVersion = new String(glGetString(GL_VERSION)); //返回当前OpenGL实现的版本号
-        b = glGetString(GL.GL_MAJOR_VERSION);
-        String majorVersion = b == null ? "" : new String(b);
-        b = glGetString(GL.GL_MINOR_VERSION);
-        String minorVersion = b == null ? "" : new String(b);
-        System.out.println("OpenGL vendor：" + name);
-        System.out.println("OpenGL renderer：" + biaoshifu);
-        System.out.println("OpenGL version：" + OpenGLVersion);
-        System.out.println("OpenGL version：" + majorVersion + "." + minorVersion);
+//        byte[] b;
+//        String name = new String(glGetString(GL.GL_VENDOR)); //返回负责当前OpenGL实现厂商的名字
+//        String biaoshifu = new String(glGetString(GL_RENDERER)); //返回一个渲染器标识符，通常是个硬件平台
+//        String OpenGLVersion = new String(glGetString(GL_VERSION)); //返回当前OpenGL实现的版本号
+//        b = glGetString(GL.GL_MAJOR_VERSION);
+//        String majorVersion = b == null ? "" : new String(b);
+//        b = glGetString(GL.GL_MINOR_VERSION);
+//        String minorVersion = b == null ? "" : new String(b);
+//        System.out.println("OpenGL vendor：" + name);
+//        System.out.println("OpenGL renderer：" + biaoshifu);
+//        System.out.println("OpenGL version：" + OpenGLVersion);
+//        System.out.println("OpenGL version：" + majorVersion + "." + minorVersion);
     }
 }

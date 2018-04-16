@@ -2,8 +2,8 @@
 #include <stdio.h>
 #include <string.h>
 
-#include <glad/glad.h>
-
+//#include <glad/glad.h>
+#include <OpenGLES/ES2/gl.h>
 //#define STB_TRUETYPE_IMPLEMENTATION
 #include <stb/stb_truetype.h>
 #define STB_IMAGE_WRITE_IMPLEMENTATION
@@ -14,7 +14,7 @@
 
 
 #include <nanovg/nanovg.h>
-#include <nanovg_jni_assist.h>
+#include <jni_nanovg_assist.h>
 #define NANOVG_GLES2_IMPLEMENTATION
 #include <nanovg/nanovg_gl.h>
 
@@ -23,11 +23,11 @@
 
 #include "jvm.h"
 #include "jni_gui.h"
-#include "stb_jni_assist.h"
+#include "jni_stb_assist.h"
 
 
 
-int org_mini_nanovg_stbtt_InitFont(Runtime *runtime, JClass *clazz) {
+int org_mini_nanovg_Nanovg_stbtt_InitFont(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -45,7 +45,7 @@ int org_mini_nanovg_stbtt_InitFont(Runtime *runtime, JClass *clazz) {
     return 0;
 }
 
-int org_mini_nanovg_stbtt_ScaleForPixelHeight(Runtime *runtime, JClass *clazz) {
+int org_mini_nanovg_Nanovg_stbtt_ScaleForPixelHeight(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -58,7 +58,7 @@ int org_mini_nanovg_stbtt_ScaleForPixelHeight(Runtime *runtime, JClass *clazz) {
     return 0;
 }
 
-int org_mini_nanovg_stbtt_GetFontVMetrics(Runtime *runtime, JClass *clazz) {
+int org_mini_nanovg_Nanovg_stbtt_GetFontVMetrics(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -85,7 +85,7 @@ int org_mini_nanovg_stbtt_GetFontVMetrics(Runtime *runtime, JClass *clazz) {
     return 0;
 }
 
-int org_mini_nanovg_stbtt_GetCodepointBitmapBox(Runtime *runtime, JClass *clazz) {
+int org_mini_nanovg_Nanovg_stbtt_GetCodepointBitmapBox(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -120,7 +120,7 @@ int org_mini_nanovg_stbtt_GetCodepointBitmapBox(Runtime *runtime, JClass *clazz)
     return 0;
 }
 
-int org_mini_nanovg_stbtt_MakeCodepointBitmapOffset(Runtime *runtime, JClass *clazz) {
+int org_mini_nanovg_Nanovg_stbtt_MakeCodepointBitmapOffset(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -144,7 +144,7 @@ int org_mini_nanovg_stbtt_MakeCodepointBitmapOffset(Runtime *runtime, JClass *cl
     return 0;
 }
 
-int org_mini_nanovg_stbtt_GetCodepointHMetrics(Runtime *runtime, JClass *clazz) {
+int org_mini_nanovg_Nanovg_stbtt_GetCodepointHMetrics(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -167,7 +167,7 @@ int org_mini_nanovg_stbtt_GetCodepointHMetrics(Runtime *runtime, JClass *clazz) 
     return 0;
 }
 
-int org_mini_nanovg_stbtt_GetCodepointKernAdvance(Runtime *runtime, JClass *clazz) {
+int org_mini_nanovg_Nanovg_stbtt_GetCodepointKernAdvance(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -181,7 +181,7 @@ int org_mini_nanovg_stbtt_GetCodepointKernAdvance(Runtime *runtime, JClass *claz
     return 0;
 }
 
-int org_mini_nanovg_stbtt_MakeFontInfo(Runtime *runtime, JClass *clazz) {
+int org_mini_nanovg_Nanovg_stbtt_MakeFontInfo(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -201,7 +201,7 @@ int org_mini_nanovg_stbtt_MakeFontInfo(Runtime *runtime, JClass *clazz) {
     return 0;
 }
 
-int org_mini_nanovg_stbi_write_png(Runtime *runtime, JClass *clazz) {
+int org_mini_nanovg_Nanovg_stbi_write_png(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -222,7 +222,7 @@ int org_mini_nanovg_stbi_write_png(Runtime *runtime, JClass *clazz) {
     return 0;
 }
 
-int org_mini_nanovg_stbi_write_bmp(Runtime *runtime, JClass *clazz) {
+int org_mini_nanovg_Nanovg_stbi_write_bmp(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -242,7 +242,7 @@ int org_mini_nanovg_stbi_write_bmp(Runtime *runtime, JClass *clazz) {
     return 0;
 }
 
-int org_mini_nanovg_stbi_write_tga(Runtime *runtime, JClass *clazz) {
+int org_mini_nanovg_Nanovg_stbi_write_tga(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -262,7 +262,7 @@ int org_mini_nanovg_stbi_write_tga(Runtime *runtime, JClass *clazz) {
     return 0;
 }
 
-int org_mini_nanovg_stbi_load(Runtime *runtime, JClass *clazz) {
+int org_mini_nanovg_Nanovg_stbi_load(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -294,7 +294,7 @@ int org_mini_nanovg_stbi_load(Runtime *runtime, JClass *clazz) {
     return 0;
 }
 
-int org_mini_nanovg_stbi_load_from_memory(Runtime *runtime, JClass *clazz) {
+int org_mini_nanovg_Nanovg_stbi_load_from_memory(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -323,7 +323,7 @@ int org_mini_nanovg_stbi_load_from_memory(Runtime *runtime, JClass *clazz) {
     return 0;
 }
 
-int org_mini_nanovg_stbi_image_free(Runtime *runtime, JClass *clazz) {
+int org_mini_nanovg_Nanovg_stbi_image_free(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -335,7 +335,7 @@ int org_mini_nanovg_stbi_image_free(Runtime *runtime, JClass *clazz) {
     return 0;
 }
 
-int org_mini_nanovg_nvgBeginFrame(Runtime *runtime, JClass *clazz) {
+int org_mini_nanovg_Nanovg_nvgBeginFrame(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -350,7 +350,7 @@ int org_mini_nanovg_nvgBeginFrame(Runtime *runtime, JClass *clazz) {
     return 0;
 }
 
-int org_mini_nanovg_nvgCancelFrame(Runtime *runtime, JClass *clazz) {
+int org_mini_nanovg_Nanovg_nvgCancelFrame(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -362,7 +362,7 @@ int org_mini_nanovg_nvgCancelFrame(Runtime *runtime, JClass *clazz) {
     return 0;
 }
 
-int org_mini_nanovg_nvgEndFrame(Runtime *runtime, JClass *clazz) {
+int org_mini_nanovg_Nanovg_nvgEndFrame(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -374,7 +374,7 @@ int org_mini_nanovg_nvgEndFrame(Runtime *runtime, JClass *clazz) {
     return 0;
 }
 
-int org_mini_nanovg_nvgGlobalCompositeOperation(Runtime *runtime, JClass *clazz) {
+int org_mini_nanovg_Nanovg_nvgGlobalCompositeOperation(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -387,7 +387,7 @@ int org_mini_nanovg_nvgGlobalCompositeOperation(Runtime *runtime, JClass *clazz)
     return 0;
 }
 
-int org_mini_nanovg_nvgGlobalCompositeBlendFunc(Runtime *runtime, JClass *clazz) {
+int org_mini_nanovg_Nanovg_nvgGlobalCompositeBlendFunc(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -401,7 +401,7 @@ int org_mini_nanovg_nvgGlobalCompositeBlendFunc(Runtime *runtime, JClass *clazz)
     return 0;
 }
 
-int org_mini_nanovg_nvgGlobalCompositeBlendFuncSeparate(Runtime *runtime, JClass *clazz) {
+int org_mini_nanovg_Nanovg_nvgGlobalCompositeBlendFuncSeparate(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -417,7 +417,7 @@ int org_mini_nanovg_nvgGlobalCompositeBlendFuncSeparate(Runtime *runtime, JClass
     return 0;
 }
 
-int org_mini_nanovg_nvgRGB(Runtime *runtime, JClass *clazz) {
+int org_mini_nanovg_Nanovg_nvgRGB(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -440,7 +440,7 @@ int org_mini_nanovg_nvgRGB(Runtime *runtime, JClass *clazz) {
     return 0;
 }
 
-int org_mini_nanovg_nvgRGBf(Runtime *runtime, JClass *clazz) {
+int org_mini_nanovg_Nanovg_nvgRGBf(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -463,7 +463,7 @@ int org_mini_nanovg_nvgRGBf(Runtime *runtime, JClass *clazz) {
     return 0;
 }
 
-int org_mini_nanovg_nvgRGBA(Runtime *runtime, JClass *clazz) {
+int org_mini_nanovg_Nanovg_nvgRGBA(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -487,7 +487,7 @@ int org_mini_nanovg_nvgRGBA(Runtime *runtime, JClass *clazz) {
     return 0;
 }
 
-int org_mini_nanovg_nvgRGBAf(Runtime *runtime, JClass *clazz) {
+int org_mini_nanovg_Nanovg_nvgRGBAf(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -511,7 +511,7 @@ int org_mini_nanovg_nvgRGBAf(Runtime *runtime, JClass *clazz) {
     return 0;
 }
 
-int org_mini_nanovg_nvgLerpRGBA(Runtime *runtime, JClass *clazz) {
+int org_mini_nanovg_Nanovg_nvgLerpRGBA(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -542,7 +542,7 @@ int org_mini_nanovg_nvgLerpRGBA(Runtime *runtime, JClass *clazz) {
     return 0;
 }
 
-int org_mini_nanovg_nvgTransRGBA(Runtime *runtime, JClass *clazz) {
+int org_mini_nanovg_Nanovg_nvgTransRGBA(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -568,7 +568,7 @@ int org_mini_nanovg_nvgTransRGBA(Runtime *runtime, JClass *clazz) {
     return 0;
 }
 
-int org_mini_nanovg_nvgTransRGBAf(Runtime *runtime, JClass *clazz) {
+int org_mini_nanovg_Nanovg_nvgTransRGBAf(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -594,7 +594,7 @@ int org_mini_nanovg_nvgTransRGBAf(Runtime *runtime, JClass *clazz) {
     return 0;
 }
 
-int org_mini_nanovg_nvgHSL(Runtime *runtime, JClass *clazz) {
+int org_mini_nanovg_Nanovg_nvgHSL(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -617,7 +617,7 @@ int org_mini_nanovg_nvgHSL(Runtime *runtime, JClass *clazz) {
     return 0;
 }
 
-int org_mini_nanovg_nvgHSLA(Runtime *runtime, JClass *clazz) {
+int org_mini_nanovg_Nanovg_nvgHSLA(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -641,7 +641,7 @@ int org_mini_nanovg_nvgHSLA(Runtime *runtime, JClass *clazz) {
     return 0;
 }
 
-int org_mini_nanovg_nvgSave(Runtime *runtime, JClass *clazz) {
+int org_mini_nanovg_Nanovg_nvgSave(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -653,7 +653,7 @@ int org_mini_nanovg_nvgSave(Runtime *runtime, JClass *clazz) {
     return 0;
 }
 
-int org_mini_nanovg_nvgRestore(Runtime *runtime, JClass *clazz) {
+int org_mini_nanovg_Nanovg_nvgRestore(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -665,7 +665,7 @@ int org_mini_nanovg_nvgRestore(Runtime *runtime, JClass *clazz) {
     return 0;
 }
 
-int org_mini_nanovg_nvgReset(Runtime *runtime, JClass *clazz) {
+int org_mini_nanovg_Nanovg_nvgReset(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -677,7 +677,7 @@ int org_mini_nanovg_nvgReset(Runtime *runtime, JClass *clazz) {
     return 0;
 }
 
-int org_mini_nanovg_nvgShapeAntiAlias(Runtime *runtime, JClass *clazz) {
+int org_mini_nanovg_Nanovg_nvgShapeAntiAlias(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -690,7 +690,7 @@ int org_mini_nanovg_nvgShapeAntiAlias(Runtime *runtime, JClass *clazz) {
     return 0;
 }
 
-int org_mini_nanovg_nvgStrokeColor(Runtime *runtime, JClass *clazz) {
+int org_mini_nanovg_Nanovg_nvgStrokeColor(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -707,7 +707,7 @@ int org_mini_nanovg_nvgStrokeColor(Runtime *runtime, JClass *clazz) {
     return 0;
 }
 
-int org_mini_nanovg_nvgStrokePaint(Runtime *runtime, JClass *clazz) {
+int org_mini_nanovg_Nanovg_nvgStrokePaint(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -724,7 +724,7 @@ int org_mini_nanovg_nvgStrokePaint(Runtime *runtime, JClass *clazz) {
     return 0;
 }
 
-int org_mini_nanovg_nvgFillColor(Runtime *runtime, JClass *clazz) {
+int org_mini_nanovg_Nanovg_nvgFillColor(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -741,7 +741,7 @@ int org_mini_nanovg_nvgFillColor(Runtime *runtime, JClass *clazz) {
     return 0;
 }
 
-int org_mini_nanovg_nvgFillPaint(Runtime *runtime, JClass *clazz) {
+int org_mini_nanovg_Nanovg_nvgFillPaint(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -758,7 +758,7 @@ int org_mini_nanovg_nvgFillPaint(Runtime *runtime, JClass *clazz) {
     return 0;
 }
 
-int org_mini_nanovg_nvgMiterLimit(Runtime *runtime, JClass *clazz) {
+int org_mini_nanovg_Nanovg_nvgMiterLimit(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -771,7 +771,7 @@ int org_mini_nanovg_nvgMiterLimit(Runtime *runtime, JClass *clazz) {
     return 0;
 }
 
-int org_mini_nanovg_nvgStrokeWidth(Runtime *runtime, JClass *clazz) {
+int org_mini_nanovg_Nanovg_nvgStrokeWidth(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -784,7 +784,7 @@ int org_mini_nanovg_nvgStrokeWidth(Runtime *runtime, JClass *clazz) {
     return 0;
 }
 
-int org_mini_nanovg_nvgLineCap(Runtime *runtime, JClass *clazz) {
+int org_mini_nanovg_Nanovg_nvgLineCap(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -797,7 +797,7 @@ int org_mini_nanovg_nvgLineCap(Runtime *runtime, JClass *clazz) {
     return 0;
 }
 
-int org_mini_nanovg_nvgLineJoin(Runtime *runtime, JClass *clazz) {
+int org_mini_nanovg_Nanovg_nvgLineJoin(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -810,7 +810,7 @@ int org_mini_nanovg_nvgLineJoin(Runtime *runtime, JClass *clazz) {
     return 0;
 }
 
-int org_mini_nanovg_nvgGlobalAlpha(Runtime *runtime, JClass *clazz) {
+int org_mini_nanovg_Nanovg_nvgGlobalAlpha(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -823,7 +823,7 @@ int org_mini_nanovg_nvgGlobalAlpha(Runtime *runtime, JClass *clazz) {
     return 0;
 }
 
-int org_mini_nanovg_nvgResetTransform(Runtime *runtime, JClass *clazz) {
+int org_mini_nanovg_Nanovg_nvgResetTransform(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -835,7 +835,7 @@ int org_mini_nanovg_nvgResetTransform(Runtime *runtime, JClass *clazz) {
     return 0;
 }
 
-int org_mini_nanovg_nvgTransform(Runtime *runtime, JClass *clazz) {
+int org_mini_nanovg_Nanovg_nvgTransform(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -853,7 +853,7 @@ int org_mini_nanovg_nvgTransform(Runtime *runtime, JClass *clazz) {
     return 0;
 }
 
-int org_mini_nanovg_nvgTranslate(Runtime *runtime, JClass *clazz) {
+int org_mini_nanovg_Nanovg_nvgTranslate(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -867,7 +867,7 @@ int org_mini_nanovg_nvgTranslate(Runtime *runtime, JClass *clazz) {
     return 0;
 }
 
-int org_mini_nanovg_nvgRotate(Runtime *runtime, JClass *clazz) {
+int org_mini_nanovg_Nanovg_nvgRotate(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -880,7 +880,7 @@ int org_mini_nanovg_nvgRotate(Runtime *runtime, JClass *clazz) {
     return 0;
 }
 
-int org_mini_nanovg_nvgSkewX(Runtime *runtime, JClass *clazz) {
+int org_mini_nanovg_Nanovg_nvgSkewX(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -893,7 +893,7 @@ int org_mini_nanovg_nvgSkewX(Runtime *runtime, JClass *clazz) {
     return 0;
 }
 
-int org_mini_nanovg_nvgSkewY(Runtime *runtime, JClass *clazz) {
+int org_mini_nanovg_Nanovg_nvgSkewY(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -906,7 +906,7 @@ int org_mini_nanovg_nvgSkewY(Runtime *runtime, JClass *clazz) {
     return 0;
 }
 
-int org_mini_nanovg_nvgScale(Runtime *runtime, JClass *clazz) {
+int org_mini_nanovg_Nanovg_nvgScale(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -920,7 +920,7 @@ int org_mini_nanovg_nvgScale(Runtime *runtime, JClass *clazz) {
     return 0;
 }
 
-int org_mini_nanovg_nvgCurrentTransform(Runtime *runtime, JClass *clazz) {
+int org_mini_nanovg_Nanovg_nvgCurrentTransform(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -937,7 +937,7 @@ int org_mini_nanovg_nvgCurrentTransform(Runtime *runtime, JClass *clazz) {
     return 0;
 }
 
-int org_mini_nanovg_nvgTransformIdentity(Runtime *runtime, JClass *clazz) {
+int org_mini_nanovg_Nanovg_nvgTransformIdentity(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -953,7 +953,7 @@ int org_mini_nanovg_nvgTransformIdentity(Runtime *runtime, JClass *clazz) {
     return 0;
 }
 
-int org_mini_nanovg_nvgTransformTranslate(Runtime *runtime, JClass *clazz) {
+int org_mini_nanovg_Nanovg_nvgTransformTranslate(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -971,7 +971,7 @@ int org_mini_nanovg_nvgTransformTranslate(Runtime *runtime, JClass *clazz) {
     return 0;
 }
 
-int org_mini_nanovg_nvgTransformScale(Runtime *runtime, JClass *clazz) {
+int org_mini_nanovg_Nanovg_nvgTransformScale(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -989,7 +989,7 @@ int org_mini_nanovg_nvgTransformScale(Runtime *runtime, JClass *clazz) {
     return 0;
 }
 
-int org_mini_nanovg_nvgTransformRotate(Runtime *runtime, JClass *clazz) {
+int org_mini_nanovg_Nanovg_nvgTransformRotate(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -1006,7 +1006,7 @@ int org_mini_nanovg_nvgTransformRotate(Runtime *runtime, JClass *clazz) {
     return 0;
 }
 
-int org_mini_nanovg_nvgTransformSkewX(Runtime *runtime, JClass *clazz) {
+int org_mini_nanovg_Nanovg_nvgTransformSkewX(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -1023,7 +1023,7 @@ int org_mini_nanovg_nvgTransformSkewX(Runtime *runtime, JClass *clazz) {
     return 0;
 }
 
-int org_mini_nanovg_nvgTransformSkewY(Runtime *runtime, JClass *clazz) {
+int org_mini_nanovg_Nanovg_nvgTransformSkewY(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -1040,7 +1040,7 @@ int org_mini_nanovg_nvgTransformSkewY(Runtime *runtime, JClass *clazz) {
     return 0;
 }
 
-int org_mini_nanovg_nvgTransformMultiply(Runtime *runtime, JClass *clazz) {
+int org_mini_nanovg_Nanovg_nvgTransformMultiply(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -1061,7 +1061,7 @@ int org_mini_nanovg_nvgTransformMultiply(Runtime *runtime, JClass *clazz) {
     return 0;
 }
 
-int org_mini_nanovg_nvgTransformPremultiply(Runtime *runtime, JClass *clazz) {
+int org_mini_nanovg_Nanovg_nvgTransformPremultiply(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -1082,7 +1082,7 @@ int org_mini_nanovg_nvgTransformPremultiply(Runtime *runtime, JClass *clazz) {
     return 0;
 }
 
-int org_mini_nanovg_nvgTransformInverse(Runtime *runtime, JClass *clazz) {
+int org_mini_nanovg_Nanovg_nvgTransformInverse(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -1103,7 +1103,7 @@ int org_mini_nanovg_nvgTransformInverse(Runtime *runtime, JClass *clazz) {
     return 0;
 }
 
-int org_mini_nanovg_nvgTransformPoint(Runtime *runtime, JClass *clazz) {
+int org_mini_nanovg_Nanovg_nvgTransformPoint(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -1131,7 +1131,7 @@ int org_mini_nanovg_nvgTransformPoint(Runtime *runtime, JClass *clazz) {
     return 0;
 }
 
-int org_mini_nanovg_nvgDegToRad(Runtime *runtime, JClass *clazz) {
+int org_mini_nanovg_Nanovg_nvgDegToRad(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -1143,7 +1143,7 @@ int org_mini_nanovg_nvgDegToRad(Runtime *runtime, JClass *clazz) {
     return 0;
 }
 
-int org_mini_nanovg_nvgRadToDeg(Runtime *runtime, JClass *clazz) {
+int org_mini_nanovg_Nanovg_nvgRadToDeg(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -1155,7 +1155,7 @@ int org_mini_nanovg_nvgRadToDeg(Runtime *runtime, JClass *clazz) {
     return 0;
 }
 
-int org_mini_nanovg_nvgCreateImage(Runtime *runtime, JClass *clazz) {
+int org_mini_nanovg_Nanovg_nvgCreateImage(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -1173,7 +1173,7 @@ int org_mini_nanovg_nvgCreateImage(Runtime *runtime, JClass *clazz) {
     return 0;
 }
 
-int org_mini_nanovg_nvgCreateImageMem(Runtime *runtime, JClass *clazz) {
+int org_mini_nanovg_Nanovg_nvgCreateImageMem(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -1192,7 +1192,7 @@ int org_mini_nanovg_nvgCreateImageMem(Runtime *runtime, JClass *clazz) {
     return 0;
 }
 
-int org_mini_nanovg_nvgCreateImageRGBA(Runtime *runtime, JClass *clazz) {
+int org_mini_nanovg_Nanovg_nvgCreateImageRGBA(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -1212,7 +1212,7 @@ int org_mini_nanovg_nvgCreateImageRGBA(Runtime *runtime, JClass *clazz) {
     return 0;
 }
 
-int org_mini_nanovg_nvgUpdateImage(Runtime *runtime, JClass *clazz) {
+int org_mini_nanovg_Nanovg_nvgUpdateImage(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -1230,7 +1230,7 @@ int org_mini_nanovg_nvgUpdateImage(Runtime *runtime, JClass *clazz) {
     return 0;
 }
 
-int org_mini_nanovg_nvgImageSize(Runtime *runtime, JClass *clazz) {
+int org_mini_nanovg_Nanovg_nvgImageSize(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -1253,7 +1253,7 @@ int org_mini_nanovg_nvgImageSize(Runtime *runtime, JClass *clazz) {
     return 0;
 }
 
-int org_mini_nanovg_nvgDeleteImage(Runtime *runtime, JClass *clazz) {
+int org_mini_nanovg_Nanovg_nvgDeleteImage(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -1266,7 +1266,7 @@ int org_mini_nanovg_nvgDeleteImage(Runtime *runtime, JClass *clazz) {
     return 0;
 }
 
-int org_mini_nanovg_nvgLinearGradient(Runtime *runtime, JClass *clazz) {
+int org_mini_nanovg_Nanovg_nvgLinearGradient(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -1301,7 +1301,7 @@ int org_mini_nanovg_nvgLinearGradient(Runtime *runtime, JClass *clazz) {
     return 0;
 }
 
-int org_mini_nanovg_nvgBoxGradient(Runtime *runtime, JClass *clazz) {
+int org_mini_nanovg_Nanovg_nvgBoxGradient(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -1338,7 +1338,7 @@ int org_mini_nanovg_nvgBoxGradient(Runtime *runtime, JClass *clazz) {
     return 0;
 }
 
-int org_mini_nanovg_nvgRadialGradient(Runtime *runtime, JClass *clazz) {
+int org_mini_nanovg_Nanovg_nvgRadialGradient(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -1373,7 +1373,7 @@ int org_mini_nanovg_nvgRadialGradient(Runtime *runtime, JClass *clazz) {
     return 0;
 }
 
-int org_mini_nanovg_nvgImagePattern(Runtime *runtime, JClass *clazz) {
+int org_mini_nanovg_Nanovg_nvgImagePattern(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -1401,7 +1401,7 @@ int org_mini_nanovg_nvgImagePattern(Runtime *runtime, JClass *clazz) {
     return 0;
 }
 
-int org_mini_nanovg_nvgScissor(Runtime *runtime, JClass *clazz) {
+int org_mini_nanovg_Nanovg_nvgScissor(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -1417,7 +1417,7 @@ int org_mini_nanovg_nvgScissor(Runtime *runtime, JClass *clazz) {
     return 0;
 }
 
-int org_mini_nanovg_nvgIntersectScissor(Runtime *runtime, JClass *clazz) {
+int org_mini_nanovg_Nanovg_nvgIntersectScissor(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -1433,7 +1433,7 @@ int org_mini_nanovg_nvgIntersectScissor(Runtime *runtime, JClass *clazz) {
     return 0;
 }
 
-int org_mini_nanovg_nvgResetScissor(Runtime *runtime, JClass *clazz) {
+int org_mini_nanovg_Nanovg_nvgResetScissor(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -1445,7 +1445,7 @@ int org_mini_nanovg_nvgResetScissor(Runtime *runtime, JClass *clazz) {
     return 0;
 }
 
-int org_mini_nanovg_nvgBeginPath(Runtime *runtime, JClass *clazz) {
+int org_mini_nanovg_Nanovg_nvgBeginPath(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -1457,7 +1457,7 @@ int org_mini_nanovg_nvgBeginPath(Runtime *runtime, JClass *clazz) {
     return 0;
 }
 
-int org_mini_nanovg_nvgMoveTo(Runtime *runtime, JClass *clazz) {
+int org_mini_nanovg_Nanovg_nvgMoveTo(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -1471,7 +1471,7 @@ int org_mini_nanovg_nvgMoveTo(Runtime *runtime, JClass *clazz) {
     return 0;
 }
 
-int org_mini_nanovg_nvgLineTo(Runtime *runtime, JClass *clazz) {
+int org_mini_nanovg_Nanovg_nvgLineTo(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -1485,7 +1485,7 @@ int org_mini_nanovg_nvgLineTo(Runtime *runtime, JClass *clazz) {
     return 0;
 }
 
-int org_mini_nanovg_nvgBezierTo(Runtime *runtime, JClass *clazz) {
+int org_mini_nanovg_Nanovg_nvgBezierTo(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -1503,7 +1503,7 @@ int org_mini_nanovg_nvgBezierTo(Runtime *runtime, JClass *clazz) {
     return 0;
 }
 
-int org_mini_nanovg_nvgQuadTo(Runtime *runtime, JClass *clazz) {
+int org_mini_nanovg_Nanovg_nvgQuadTo(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -1519,7 +1519,7 @@ int org_mini_nanovg_nvgQuadTo(Runtime *runtime, JClass *clazz) {
     return 0;
 }
 
-int org_mini_nanovg_nvgArcTo(Runtime *runtime, JClass *clazz) {
+int org_mini_nanovg_Nanovg_nvgArcTo(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -1536,7 +1536,7 @@ int org_mini_nanovg_nvgArcTo(Runtime *runtime, JClass *clazz) {
     return 0;
 }
 
-int org_mini_nanovg_nvgClosePath(Runtime *runtime, JClass *clazz) {
+int org_mini_nanovg_Nanovg_nvgClosePath(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -1548,7 +1548,7 @@ int org_mini_nanovg_nvgClosePath(Runtime *runtime, JClass *clazz) {
     return 0;
 }
 
-int org_mini_nanovg_nvgPathWinding(Runtime *runtime, JClass *clazz) {
+int org_mini_nanovg_Nanovg_nvgPathWinding(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -1561,7 +1561,7 @@ int org_mini_nanovg_nvgPathWinding(Runtime *runtime, JClass *clazz) {
     return 0;
 }
 
-int org_mini_nanovg_nvgArc(Runtime *runtime, JClass *clazz) {
+int org_mini_nanovg_Nanovg_nvgArc(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -1579,7 +1579,7 @@ int org_mini_nanovg_nvgArc(Runtime *runtime, JClass *clazz) {
     return 0;
 }
 
-int org_mini_nanovg_nvgRect(Runtime *runtime, JClass *clazz) {
+int org_mini_nanovg_Nanovg_nvgRect(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -1595,7 +1595,7 @@ int org_mini_nanovg_nvgRect(Runtime *runtime, JClass *clazz) {
     return 0;
 }
 
-int org_mini_nanovg_nvgRoundedRect(Runtime *runtime, JClass *clazz) {
+int org_mini_nanovg_Nanovg_nvgRoundedRect(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -1612,7 +1612,7 @@ int org_mini_nanovg_nvgRoundedRect(Runtime *runtime, JClass *clazz) {
     return 0;
 }
 
-int org_mini_nanovg_nvgRoundedRectVarying(Runtime *runtime, JClass *clazz) {
+int org_mini_nanovg_Nanovg_nvgRoundedRectVarying(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -1632,7 +1632,7 @@ int org_mini_nanovg_nvgRoundedRectVarying(Runtime *runtime, JClass *clazz) {
     return 0;
 }
 
-int org_mini_nanovg_nvgEllipse(Runtime *runtime, JClass *clazz) {
+int org_mini_nanovg_Nanovg_nvgEllipse(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -1648,7 +1648,7 @@ int org_mini_nanovg_nvgEllipse(Runtime *runtime, JClass *clazz) {
     return 0;
 }
 
-int org_mini_nanovg_nvgCircle(Runtime *runtime, JClass *clazz) {
+int org_mini_nanovg_Nanovg_nvgCircle(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -1663,7 +1663,7 @@ int org_mini_nanovg_nvgCircle(Runtime *runtime, JClass *clazz) {
     return 0;
 }
 
-int org_mini_nanovg_nvgFill(Runtime *runtime, JClass *clazz) {
+int org_mini_nanovg_Nanovg_nvgFill(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -1675,7 +1675,7 @@ int org_mini_nanovg_nvgFill(Runtime *runtime, JClass *clazz) {
     return 0;
 }
 
-int org_mini_nanovg_nvgStroke(Runtime *runtime, JClass *clazz) {
+int org_mini_nanovg_Nanovg_nvgStroke(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -1687,7 +1687,7 @@ int org_mini_nanovg_nvgStroke(Runtime *runtime, JClass *clazz) {
     return 0;
 }
 
-int org_mini_nanovg_nvgCreateFont(Runtime *runtime, JClass *clazz) {
+int org_mini_nanovg_Nanovg_nvgCreateFont(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -1709,7 +1709,7 @@ int org_mini_nanovg_nvgCreateFont(Runtime *runtime, JClass *clazz) {
     return 0;
 }
 
-int org_mini_nanovg_nvgCreateFontMem(Runtime *runtime, JClass *clazz) {
+int org_mini_nanovg_Nanovg_nvgCreateFontMem(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -1733,7 +1733,7 @@ int org_mini_nanovg_nvgCreateFontMem(Runtime *runtime, JClass *clazz) {
     return 0;
 }
 
-int org_mini_nanovg_nvgFindFont(Runtime *runtime, JClass *clazz) {
+int org_mini_nanovg_Nanovg_nvgFindFont(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -1750,7 +1750,7 @@ int org_mini_nanovg_nvgFindFont(Runtime *runtime, JClass *clazz) {
     return 0;
 }
 
-int org_mini_nanovg_nvgAddFallbackFontId(Runtime *runtime, JClass *clazz) {
+int org_mini_nanovg_Nanovg_nvgAddFallbackFontId(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -1764,7 +1764,7 @@ int org_mini_nanovg_nvgAddFallbackFontId(Runtime *runtime, JClass *clazz) {
     return 0;
 }
 
-int org_mini_nanovg_nvgAddFallbackFont(Runtime *runtime, JClass *clazz) {
+int org_mini_nanovg_Nanovg_nvgAddFallbackFont(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -1786,7 +1786,7 @@ int org_mini_nanovg_nvgAddFallbackFont(Runtime *runtime, JClass *clazz) {
     return 0;
 }
 
-int org_mini_nanovg_nvgFontSize(Runtime *runtime, JClass *clazz) {
+int org_mini_nanovg_Nanovg_nvgFontSize(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -1799,7 +1799,7 @@ int org_mini_nanovg_nvgFontSize(Runtime *runtime, JClass *clazz) {
     return 0;
 }
 
-int org_mini_nanovg_nvgFontBlur(Runtime *runtime, JClass *clazz) {
+int org_mini_nanovg_Nanovg_nvgFontBlur(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -1812,7 +1812,7 @@ int org_mini_nanovg_nvgFontBlur(Runtime *runtime, JClass *clazz) {
     return 0;
 }
 
-int org_mini_nanovg_nvgTextLetterSpacing(Runtime *runtime, JClass *clazz) {
+int org_mini_nanovg_Nanovg_nvgTextLetterSpacing(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -1825,7 +1825,7 @@ int org_mini_nanovg_nvgTextLetterSpacing(Runtime *runtime, JClass *clazz) {
     return 0;
 }
 
-int org_mini_nanovg_nvgTextLineHeight(Runtime *runtime, JClass *clazz) {
+int org_mini_nanovg_Nanovg_nvgTextLineHeight(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -1838,7 +1838,7 @@ int org_mini_nanovg_nvgTextLineHeight(Runtime *runtime, JClass *clazz) {
     return 0;
 }
 
-int org_mini_nanovg_nvgTextAlign(Runtime *runtime, JClass *clazz) {
+int org_mini_nanovg_Nanovg_nvgTextAlign(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -1851,7 +1851,7 @@ int org_mini_nanovg_nvgTextAlign(Runtime *runtime, JClass *clazz) {
     return 0;
 }
 
-int org_mini_nanovg_nvgFontFaceId(Runtime *runtime, JClass *clazz) {
+int org_mini_nanovg_Nanovg_nvgFontFaceId(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -1864,7 +1864,7 @@ int org_mini_nanovg_nvgFontFaceId(Runtime *runtime, JClass *clazz) {
     return 0;
 }
 
-int org_mini_nanovg_nvgFontFace(Runtime *runtime, JClass *clazz) {
+int org_mini_nanovg_Nanovg_nvgFontFace(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -1881,7 +1881,7 @@ int org_mini_nanovg_nvgFontFace(Runtime *runtime, JClass *clazz) {
     return 0;
 }
 
-int org_mini_nanovg_nvgTextMetrics(Runtime *runtime, JClass *clazz) {
+int org_mini_nanovg_Nanovg_nvgTextMetrics(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -1908,7 +1908,7 @@ int org_mini_nanovg_nvgTextMetrics(Runtime *runtime, JClass *clazz) {
     return 0;
 }
 
-int org_mini_nanovg_nvgCreateGLES2(Runtime *runtime, JClass *clazz) {
+int org_mini_nanovg_Nanovg_nvgCreateGLES2(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -1920,7 +1920,7 @@ int org_mini_nanovg_nvgCreateGLES2(Runtime *runtime, JClass *clazz) {
     return 0;
 }
 
-int org_mini_nanovg_nvgDeleteGLES2(Runtime *runtime, JClass *clazz) {
+int org_mini_nanovg_Nanovg_nvgDeleteGLES2(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -1932,7 +1932,7 @@ int org_mini_nanovg_nvgDeleteGLES2(Runtime *runtime, JClass *clazz) {
     return 0;
 }
 
-int org_mini_nanovg_nvglCreateImageFromHandleGLES2(Runtime *runtime, JClass *clazz) {
+int org_mini_nanovg_Nanovg_nvglCreateImageFromHandleGLES2(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -1948,7 +1948,7 @@ int org_mini_nanovg_nvglCreateImageFromHandleGLES2(Runtime *runtime, JClass *cla
     return 0;
 }
 
-int org_mini_nanovg_nvglImageHandleGLES2(Runtime *runtime, JClass *clazz) {
+int org_mini_nanovg_Nanovg_nvglImageHandleGLES2(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -1961,7 +1961,7 @@ int org_mini_nanovg_nvglImageHandleGLES2(Runtime *runtime, JClass *clazz) {
     return 0;
 }
 
-int org_mini_nanovg_nvgCreateNVGtextRow(Runtime *runtime, JClass *clazz) {
+int org_mini_nanovg_Nanovg_nvgCreateNVGtextRow(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -1973,7 +1973,7 @@ int org_mini_nanovg_nvgCreateNVGtextRow(Runtime *runtime, JClass *clazz) {
     return 0;
 }
 
-int org_mini_nanovg_nvgDeleteNVGtextRow(Runtime *runtime, JClass *clazz) {
+int org_mini_nanovg_Nanovg_nvgDeleteNVGtextRow(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -1985,7 +1985,7 @@ int org_mini_nanovg_nvgDeleteNVGtextRow(Runtime *runtime, JClass *clazz) {
     return 0;
 }
 
-int org_mini_nanovg_nvgNVGtextRow_width(Runtime *runtime, JClass *clazz) {
+int org_mini_nanovg_Nanovg_nvgNVGtextRow_width(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -1998,7 +1998,7 @@ int org_mini_nanovg_nvgNVGtextRow_width(Runtime *runtime, JClass *clazz) {
     return 0;
 }
 
-int org_mini_nanovg_nvgNVGtextRow_start(Runtime *runtime, JClass *clazz) {
+int org_mini_nanovg_Nanovg_nvgNVGtextRow_start(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -2011,7 +2011,7 @@ int org_mini_nanovg_nvgNVGtextRow_start(Runtime *runtime, JClass *clazz) {
     return 0;
 }
 
-int org_mini_nanovg_nvgNVGtextRow_end(Runtime *runtime, JClass *clazz) {
+int org_mini_nanovg_Nanovg_nvgNVGtextRow_end(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -2024,7 +2024,7 @@ int org_mini_nanovg_nvgNVGtextRow_end(Runtime *runtime, JClass *clazz) {
     return 0;
 }
 
-int org_mini_nanovg_nvgNVGtextRow_next(Runtime *runtime, JClass *clazz) {
+int org_mini_nanovg_Nanovg_nvgNVGtextRow_next(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -2037,7 +2037,7 @@ int org_mini_nanovg_nvgNVGtextRow_next(Runtime *runtime, JClass *clazz) {
     return 0;
 }
 
-int org_mini_nanovg_nvgCreateNVGglyphPosition(Runtime *runtime, JClass *clazz) {
+int org_mini_nanovg_Nanovg_nvgCreateNVGglyphPosition(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -2049,7 +2049,7 @@ int org_mini_nanovg_nvgCreateNVGglyphPosition(Runtime *runtime, JClass *clazz) {
     return 0;
 }
 
-int org_mini_nanovg_nvgDeleteNVGglyphPosition(Runtime *runtime, JClass *clazz) {
+int org_mini_nanovg_Nanovg_nvgDeleteNVGglyphPosition(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -2061,7 +2061,7 @@ int org_mini_nanovg_nvgDeleteNVGglyphPosition(Runtime *runtime, JClass *clazz) {
     return 0;
 }
 
-int org_mini_nanovg_nvgNVGglyphPosition_x(Runtime *runtime, JClass *clazz) {
+int org_mini_nanovg_Nanovg_nvgNVGglyphPosition_x(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -2074,7 +2074,7 @@ int org_mini_nanovg_nvgNVGglyphPosition_x(Runtime *runtime, JClass *clazz) {
     return 0;
 }
 
-int org_mini_nanovg_nvgTextJni(Runtime *runtime, JClass *clazz) {
+int org_mini_nanovg_Nanovg_nvgTextJni(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -2095,7 +2095,7 @@ int org_mini_nanovg_nvgTextJni(Runtime *runtime, JClass *clazz) {
     return 0;
 }
 
-int org_mini_nanovg_nvgTextBoxJni(Runtime *runtime, JClass *clazz) {
+int org_mini_nanovg_Nanovg_nvgTextBoxJni(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -2117,7 +2117,7 @@ int org_mini_nanovg_nvgTextBoxJni(Runtime *runtime, JClass *clazz) {
     return 0;
 }
 
-int org_mini_nanovg_nvgTextBoundsJni(Runtime *runtime, JClass *clazz) {
+int org_mini_nanovg_Nanovg_nvgTextBoundsJni(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -2143,7 +2143,7 @@ int org_mini_nanovg_nvgTextBoundsJni(Runtime *runtime, JClass *clazz) {
     return 0;
 }
 
-int org_mini_nanovg_nvgTextBoxBoundsJni(Runtime *runtime, JClass *clazz) {
+int org_mini_nanovg_Nanovg_nvgTextBoxBoundsJni(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -2170,7 +2170,7 @@ int org_mini_nanovg_nvgTextBoxBoundsJni(Runtime *runtime, JClass *clazz) {
     return 0;
 }
 
-int org_mini_nanovg_nvgTextBreakLinesJni(Runtime *runtime, JClass *clazz) {
+int org_mini_nanovg_Nanovg_nvgTextBreakLinesJni(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -2192,7 +2192,7 @@ int org_mini_nanovg_nvgTextBreakLinesJni(Runtime *runtime, JClass *clazz) {
     return 0;
 }
 
-int org_mini_nanovg_nvgTextGlyphPositionsJni(Runtime *runtime, JClass *clazz) {
+int org_mini_nanovg_Nanovg_nvgTextGlyphPositionsJni(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
@@ -2220,129 +2220,129 @@ int org_mini_nanovg_nvgTextGlyphPositionsJni(Runtime *runtime, JClass *clazz) {
 
 static java_native_method method_nanovg_table[] = {
 
-{"org/mini/glfw/nanovg/Nanovg",  "stbtt_InitFont",  "(J[BI)I",  org_mini_nanovg_stbtt_InitFont},
-{"org/mini/glfw/nanovg/Nanovg",  "stbtt_ScaleForPixelHeight",  "(JF)F",  org_mini_nanovg_stbtt_ScaleForPixelHeight},
-{"org/mini/glfw/nanovg/Nanovg",  "stbtt_GetFontVMetrics",  "(J[I[I[I)V",  org_mini_nanovg_stbtt_GetFontVMetrics},
-{"org/mini/glfw/nanovg/Nanovg",  "stbtt_GetCodepointBitmapBox",  "(JIFF[I[I[I[I)V",  org_mini_nanovg_stbtt_GetCodepointBitmapBox},
-{"org/mini/glfw/nanovg/Nanovg",  "stbtt_MakeCodepointBitmapOffset",  "(J[BIIIIFFI)V",  org_mini_nanovg_stbtt_MakeCodepointBitmapOffset},
-{"org/mini/glfw/nanovg/Nanovg",  "stbtt_GetCodepointHMetrics",  "(JI[I[I)V",  org_mini_nanovg_stbtt_GetCodepointHMetrics},
-{"org/mini/glfw/nanovg/Nanovg",  "stbtt_GetCodepointKernAdvance",  "(JII)I",  org_mini_nanovg_stbtt_GetCodepointKernAdvance},
-{"org/mini/glfw/nanovg/Nanovg",  "stbtt_MakeFontInfo",  "()[B",  org_mini_nanovg_stbtt_MakeFontInfo},
-{"org/mini/glfw/nanovg/Nanovg",  "stbi_write_png",  "([BIIIJI)I",  org_mini_nanovg_stbi_write_png},
-{"org/mini/glfw/nanovg/Nanovg",  "stbi_write_bmp",  "([BIIIJ)I",  org_mini_nanovg_stbi_write_bmp},
-{"org/mini/glfw/nanovg/Nanovg",  "stbi_write_tga",  "([BIIIJ)I",  org_mini_nanovg_stbi_write_tga},
-{"org/mini/glfw/nanovg/Nanovg",  "stbi_load",  "([B[I[I[II)J",  org_mini_nanovg_stbi_load},
-{"org/mini/glfw/nanovg/Nanovg",  "stbi_load_from_memory",  "(JI[I[I[II)J",  org_mini_nanovg_stbi_load_from_memory},
-{"org/mini/glfw/nanovg/Nanovg",  "stbi_image_free",  "(J)V",  org_mini_nanovg_stbi_image_free},
-{"org/mini/glfw/nanovg/Nanovg",  "nvgBeginFrame",  "(JIIF)V",  org_mini_nanovg_nvgBeginFrame},
-{"org/mini/glfw/nanovg/Nanovg",  "nvgCancelFrame",  "(J)V",  org_mini_nanovg_nvgCancelFrame},
-{"org/mini/glfw/nanovg/Nanovg",  "nvgEndFrame",  "(J)V",  org_mini_nanovg_nvgEndFrame},
-{"org/mini/glfw/nanovg/Nanovg",  "nvgGlobalCompositeOperation",  "(JI)V",  org_mini_nanovg_nvgGlobalCompositeOperation},
-{"org/mini/glfw/nanovg/Nanovg",  "nvgGlobalCompositeBlendFunc",  "(JII)V",  org_mini_nanovg_nvgGlobalCompositeBlendFunc},
-{"org/mini/glfw/nanovg/Nanovg",  "nvgGlobalCompositeBlendFuncSeparate",  "(JIIII)V",  org_mini_nanovg_nvgGlobalCompositeBlendFuncSeparate},
-{"org/mini/glfw/nanovg/Nanovg",  "nvgRGB",  "(BBB)[F",  org_mini_nanovg_nvgRGB},
-{"org/mini/glfw/nanovg/Nanovg",  "nvgRGBf",  "(FFF)[F",  org_mini_nanovg_nvgRGBf},
-{"org/mini/glfw/nanovg/Nanovg",  "nvgRGBA",  "(BBBB)[F",  org_mini_nanovg_nvgRGBA},
-{"org/mini/glfw/nanovg/Nanovg",  "nvgRGBAf",  "(FFFF)[F",  org_mini_nanovg_nvgRGBAf},
-{"org/mini/glfw/nanovg/Nanovg",  "nvgLerpRGBA",  "([F[FF)[F",  org_mini_nanovg_nvgLerpRGBA},
-{"org/mini/glfw/nanovg/Nanovg",  "nvgTransRGBA",  "([FB)[F",  org_mini_nanovg_nvgTransRGBA},
-{"org/mini/glfw/nanovg/Nanovg",  "nvgTransRGBAf",  "([FF)[F",  org_mini_nanovg_nvgTransRGBAf},
-{"org/mini/glfw/nanovg/Nanovg",  "nvgHSL",  "(FFF)[F",  org_mini_nanovg_nvgHSL},
-{"org/mini/glfw/nanovg/Nanovg",  "nvgHSLA",  "(FFFB)[F",  org_mini_nanovg_nvgHSLA},
-{"org/mini/glfw/nanovg/Nanovg",  "nvgSave",  "(J)V",  org_mini_nanovg_nvgSave},
-{"org/mini/glfw/nanovg/Nanovg",  "nvgRestore",  "(J)V",  org_mini_nanovg_nvgRestore},
-{"org/mini/glfw/nanovg/Nanovg",  "nvgReset",  "(J)V",  org_mini_nanovg_nvgReset},
-{"org/mini/glfw/nanovg/Nanovg",  "nvgShapeAntiAlias",  "(JI)V",  org_mini_nanovg_nvgShapeAntiAlias},
-{"org/mini/glfw/nanovg/Nanovg",  "nvgStrokeColor",  "(J[F)V",  org_mini_nanovg_nvgStrokeColor},
-{"org/mini/glfw/nanovg/Nanovg",  "nvgStrokePaint",  "(J[B)V",  org_mini_nanovg_nvgStrokePaint},
-{"org/mini/glfw/nanovg/Nanovg",  "nvgFillColor",  "(J[F)V",  org_mini_nanovg_nvgFillColor},
-{"org/mini/glfw/nanovg/Nanovg",  "nvgFillPaint",  "(J[B)V",  org_mini_nanovg_nvgFillPaint},
-{"org/mini/glfw/nanovg/Nanovg",  "nvgMiterLimit",  "(JF)V",  org_mini_nanovg_nvgMiterLimit},
-{"org/mini/glfw/nanovg/Nanovg",  "nvgStrokeWidth",  "(JF)V",  org_mini_nanovg_nvgStrokeWidth},
-{"org/mini/glfw/nanovg/Nanovg",  "nvgLineCap",  "(JI)V",  org_mini_nanovg_nvgLineCap},
-{"org/mini/glfw/nanovg/Nanovg",  "nvgLineJoin",  "(JI)V",  org_mini_nanovg_nvgLineJoin},
-{"org/mini/glfw/nanovg/Nanovg",  "nvgGlobalAlpha",  "(JF)V",  org_mini_nanovg_nvgGlobalAlpha},
-{"org/mini/glfw/nanovg/Nanovg",  "nvgResetTransform",  "(J)V",  org_mini_nanovg_nvgResetTransform},
-{"org/mini/glfw/nanovg/Nanovg",  "nvgTransform",  "(JFFFFFF)V",  org_mini_nanovg_nvgTransform},
-{"org/mini/glfw/nanovg/Nanovg",  "nvgTranslate",  "(JFF)V",  org_mini_nanovg_nvgTranslate},
-{"org/mini/glfw/nanovg/Nanovg",  "nvgRotate",  "(JF)V",  org_mini_nanovg_nvgRotate},
-{"org/mini/glfw/nanovg/Nanovg",  "nvgSkewX",  "(JF)V",  org_mini_nanovg_nvgSkewX},
-{"org/mini/glfw/nanovg/Nanovg",  "nvgSkewY",  "(JF)V",  org_mini_nanovg_nvgSkewY},
-{"org/mini/glfw/nanovg/Nanovg",  "nvgScale",  "(JFF)V",  org_mini_nanovg_nvgScale},
-{"org/mini/glfw/nanovg/Nanovg",  "nvgCurrentTransform",  "(J[F)V",  org_mini_nanovg_nvgCurrentTransform},
-{"org/mini/glfw/nanovg/Nanovg",  "nvgTransformIdentity",  "([F)V",  org_mini_nanovg_nvgTransformIdentity},
-{"org/mini/glfw/nanovg/Nanovg",  "nvgTransformTranslate",  "([FFF)V",  org_mini_nanovg_nvgTransformTranslate},
-{"org/mini/glfw/nanovg/Nanovg",  "nvgTransformScale",  "([FFF)V",  org_mini_nanovg_nvgTransformScale},
-{"org/mini/glfw/nanovg/Nanovg",  "nvgTransformRotate",  "([FF)V",  org_mini_nanovg_nvgTransformRotate},
-{"org/mini/glfw/nanovg/Nanovg",  "nvgTransformSkewX",  "([FF)V",  org_mini_nanovg_nvgTransformSkewX},
-{"org/mini/glfw/nanovg/Nanovg",  "nvgTransformSkewY",  "([FF)V",  org_mini_nanovg_nvgTransformSkewY},
-{"org/mini/glfw/nanovg/Nanovg",  "nvgTransformMultiply",  "([F[F)V",  org_mini_nanovg_nvgTransformMultiply},
-{"org/mini/glfw/nanovg/Nanovg",  "nvgTransformPremultiply",  "([F[F)V",  org_mini_nanovg_nvgTransformPremultiply},
-{"org/mini/glfw/nanovg/Nanovg",  "nvgTransformInverse",  "([F[F)I",  org_mini_nanovg_nvgTransformInverse},
-{"org/mini/glfw/nanovg/Nanovg",  "nvgTransformPoint",  "([F[F[FFF)V",  org_mini_nanovg_nvgTransformPoint},
-{"org/mini/glfw/nanovg/Nanovg",  "nvgDegToRad",  "(F)F",  org_mini_nanovg_nvgDegToRad},
-{"org/mini/glfw/nanovg/Nanovg",  "nvgRadToDeg",  "(F)F",  org_mini_nanovg_nvgRadToDeg},
-{"org/mini/glfw/nanovg/Nanovg",  "nvgCreateImage",  "(J[BI)I",  org_mini_nanovg_nvgCreateImage},
-{"org/mini/glfw/nanovg/Nanovg",  "nvgCreateImageMem",  "(JI[BI)I",  org_mini_nanovg_nvgCreateImageMem},
-{"org/mini/glfw/nanovg/Nanovg",  "nvgCreateImageRGBA",  "(JIII[B)I",  org_mini_nanovg_nvgCreateImageRGBA},
-{"org/mini/glfw/nanovg/Nanovg",  "nvgUpdateImage",  "(JI[B)V",  org_mini_nanovg_nvgUpdateImage},
-{"org/mini/glfw/nanovg/Nanovg",  "nvgImageSize",  "(JI[I[I)V",  org_mini_nanovg_nvgImageSize},
-{"org/mini/glfw/nanovg/Nanovg",  "nvgDeleteImage",  "(JI)V",  org_mini_nanovg_nvgDeleteImage},
-{"org/mini/glfw/nanovg/Nanovg",  "nvgLinearGradient",  "(JFFFF[F[F)[B",  org_mini_nanovg_nvgLinearGradient},
-{"org/mini/glfw/nanovg/Nanovg",  "nvgBoxGradient",  "(JFFFFFF[F[F)[B",  org_mini_nanovg_nvgBoxGradient},
-{"org/mini/glfw/nanovg/Nanovg",  "nvgRadialGradient",  "(JFFFF[F[F)[B",  org_mini_nanovg_nvgRadialGradient},
-{"org/mini/glfw/nanovg/Nanovg",  "nvgImagePattern",  "(JFFFFFIF)[B",  org_mini_nanovg_nvgImagePattern},
-{"org/mini/glfw/nanovg/Nanovg",  "nvgScissor",  "(JFFFF)V",  org_mini_nanovg_nvgScissor},
-{"org/mini/glfw/nanovg/Nanovg",  "nvgIntersectScissor",  "(JFFFF)V",  org_mini_nanovg_nvgIntersectScissor},
-{"org/mini/glfw/nanovg/Nanovg",  "nvgResetScissor",  "(J)V",  org_mini_nanovg_nvgResetScissor},
-{"org/mini/glfw/nanovg/Nanovg",  "nvgBeginPath",  "(J)V",  org_mini_nanovg_nvgBeginPath},
-{"org/mini/glfw/nanovg/Nanovg",  "nvgMoveTo",  "(JFF)V",  org_mini_nanovg_nvgMoveTo},
-{"org/mini/glfw/nanovg/Nanovg",  "nvgLineTo",  "(JFF)V",  org_mini_nanovg_nvgLineTo},
-{"org/mini/glfw/nanovg/Nanovg",  "nvgBezierTo",  "(JFFFFFF)V",  org_mini_nanovg_nvgBezierTo},
-{"org/mini/glfw/nanovg/Nanovg",  "nvgQuadTo",  "(JFFFF)V",  org_mini_nanovg_nvgQuadTo},
-{"org/mini/glfw/nanovg/Nanovg",  "nvgArcTo",  "(JFFFFF)V",  org_mini_nanovg_nvgArcTo},
-{"org/mini/glfw/nanovg/Nanovg",  "nvgClosePath",  "(J)V",  org_mini_nanovg_nvgClosePath},
-{"org/mini/glfw/nanovg/Nanovg",  "nvgPathWinding",  "(JI)V",  org_mini_nanovg_nvgPathWinding},
-{"org/mini/glfw/nanovg/Nanovg",  "nvgArc",  "(JFFFFFI)V",  org_mini_nanovg_nvgArc},
-{"org/mini/glfw/nanovg/Nanovg",  "nvgRect",  "(JFFFF)V",  org_mini_nanovg_nvgRect},
-{"org/mini/glfw/nanovg/Nanovg",  "nvgRoundedRect",  "(JFFFFF)V",  org_mini_nanovg_nvgRoundedRect},
-{"org/mini/glfw/nanovg/Nanovg",  "nvgRoundedRectVarying",  "(JFFFFFFFF)V",  org_mini_nanovg_nvgRoundedRectVarying},
-{"org/mini/glfw/nanovg/Nanovg",  "nvgEllipse",  "(JFFFF)V",  org_mini_nanovg_nvgEllipse},
-{"org/mini/glfw/nanovg/Nanovg",  "nvgCircle",  "(JFFF)V",  org_mini_nanovg_nvgCircle},
-{"org/mini/glfw/nanovg/Nanovg",  "nvgFill",  "(J)V",  org_mini_nanovg_nvgFill},
-{"org/mini/glfw/nanovg/Nanovg",  "nvgStroke",  "(J)V",  org_mini_nanovg_nvgStroke},
-{"org/mini/glfw/nanovg/Nanovg",  "nvgCreateFont",  "(J[B[B)I",  org_mini_nanovg_nvgCreateFont},
-{"org/mini/glfw/nanovg/Nanovg",  "nvgCreateFontMem",  "(J[B[BII)I",  org_mini_nanovg_nvgCreateFontMem},
-{"org/mini/glfw/nanovg/Nanovg",  "nvgFindFont",  "(J[B)I",  org_mini_nanovg_nvgFindFont},
-{"org/mini/glfw/nanovg/Nanovg",  "nvgAddFallbackFontId",  "(JII)I",  org_mini_nanovg_nvgAddFallbackFontId},
-{"org/mini/glfw/nanovg/Nanovg",  "nvgAddFallbackFont",  "(J[B[B)I",  org_mini_nanovg_nvgAddFallbackFont},
-{"org/mini/glfw/nanovg/Nanovg",  "nvgFontSize",  "(JF)V",  org_mini_nanovg_nvgFontSize},
-{"org/mini/glfw/nanovg/Nanovg",  "nvgFontBlur",  "(JF)V",  org_mini_nanovg_nvgFontBlur},
-{"org/mini/glfw/nanovg/Nanovg",  "nvgTextLetterSpacing",  "(JF)V",  org_mini_nanovg_nvgTextLetterSpacing},
-{"org/mini/glfw/nanovg/Nanovg",  "nvgTextLineHeight",  "(JF)V",  org_mini_nanovg_nvgTextLineHeight},
-{"org/mini/glfw/nanovg/Nanovg",  "nvgTextAlign",  "(JI)V",  org_mini_nanovg_nvgTextAlign},
-{"org/mini/glfw/nanovg/Nanovg",  "nvgFontFaceId",  "(JI)V",  org_mini_nanovg_nvgFontFaceId},
-{"org/mini/glfw/nanovg/Nanovg",  "nvgFontFace",  "(J[B)V",  org_mini_nanovg_nvgFontFace},
-{"org/mini/glfw/nanovg/Nanovg",  "nvgTextMetrics",  "(J[F[F[F)V",  org_mini_nanovg_nvgTextMetrics},
-{"org/mini/glfw/nanovg/Nanovg",  "nvgCreateGLES2",  "(I)J",  org_mini_nanovg_nvgCreateGLES2},
-{"org/mini/glfw/nanovg/Nanovg",  "nvgDeleteGLES2",  "(J)V",  org_mini_nanovg_nvgDeleteGLES2},
-{"org/mini/glfw/nanovg/Nanovg",  "nvglCreateImageFromHandleGLES2",  "(JIIII)I",  org_mini_nanovg_nvglCreateImageFromHandleGLES2},
-{"org/mini/glfw/nanovg/Nanovg",  "nvglImageHandleGLES2",  "(JI)I",  org_mini_nanovg_nvglImageHandleGLES2},
-{"org/mini/glfw/nanovg/Nanovg",  "nvgCreateNVGtextRow",  "(I)J",  org_mini_nanovg_nvgCreateNVGtextRow},
-{"org/mini/glfw/nanovg/Nanovg",  "nvgDeleteNVGtextRow",  "(J)V",  org_mini_nanovg_nvgDeleteNVGtextRow},
-{"org/mini/glfw/nanovg/Nanovg",  "nvgNVGtextRow_width",  "(JI)F",  org_mini_nanovg_nvgNVGtextRow_width},
-{"org/mini/glfw/nanovg/Nanovg",  "nvgNVGtextRow_start",  "(JI)J",  org_mini_nanovg_nvgNVGtextRow_start},
-{"org/mini/glfw/nanovg/Nanovg",  "nvgNVGtextRow_end",  "(JI)J",  org_mini_nanovg_nvgNVGtextRow_end},
-{"org/mini/glfw/nanovg/Nanovg",  "nvgNVGtextRow_next",  "(JI)J",  org_mini_nanovg_nvgNVGtextRow_next},
-{"org/mini/glfw/nanovg/Nanovg",  "nvgCreateNVGglyphPosition",  "(I)J",  org_mini_nanovg_nvgCreateNVGglyphPosition},
-{"org/mini/glfw/nanovg/Nanovg",  "nvgDeleteNVGglyphPosition",  "(J)V",  org_mini_nanovg_nvgDeleteNVGglyphPosition},
-{"org/mini/glfw/nanovg/Nanovg",  "nvgNVGglyphPosition_x",  "(JI)F",  org_mini_nanovg_nvgNVGglyphPosition_x},
-{"org/mini/glfw/nanovg/Nanovg",  "nvgTextJni",  "(JFF[BII)F",  org_mini_nanovg_nvgTextJni},
-{"org/mini/glfw/nanovg/Nanovg",  "nvgTextBoxJni",  "(JFFF[BII)V",  org_mini_nanovg_nvgTextBoxJni},
-{"org/mini/glfw/nanovg/Nanovg",  "nvgTextBoundsJni",  "(JFF[BII[F)F",  org_mini_nanovg_nvgTextBoundsJni},
-{"org/mini/glfw/nanovg/Nanovg",  "nvgTextBoxBoundsJni",  "(JFFF[BII[F)V",  org_mini_nanovg_nvgTextBoxBoundsJni},
-{"org/mini/glfw/nanovg/Nanovg",  "nvgTextBreakLinesJni",  "(J[BIIFJI)I",  org_mini_nanovg_nvgTextBreakLinesJni},
-{"org/mini/glfw/nanovg/Nanovg",  "nvgTextGlyphPositionsJni",  "(JFF[BIIJI)I",  org_mini_nanovg_nvgTextGlyphPositionsJni},
+{"org/mini/nanovg/Nanovg",  "stbtt_InitFont",  "(J[BI)I",  org_mini_nanovg_Nanovg_stbtt_InitFont},
+{"org/mini/nanovg/Nanovg",  "stbtt_ScaleForPixelHeight",  "(JF)F",  org_mini_nanovg_Nanovg_stbtt_ScaleForPixelHeight},
+{"org/mini/nanovg/Nanovg",  "stbtt_GetFontVMetrics",  "(J[I[I[I)V",  org_mini_nanovg_Nanovg_stbtt_GetFontVMetrics},
+{"org/mini/nanovg/Nanovg",  "stbtt_GetCodepointBitmapBox",  "(JIFF[I[I[I[I)V",  org_mini_nanovg_Nanovg_stbtt_GetCodepointBitmapBox},
+{"org/mini/nanovg/Nanovg",  "stbtt_MakeCodepointBitmapOffset",  "(J[BIIIIFFI)V",  org_mini_nanovg_Nanovg_stbtt_MakeCodepointBitmapOffset},
+{"org/mini/nanovg/Nanovg",  "stbtt_GetCodepointHMetrics",  "(JI[I[I)V",  org_mini_nanovg_Nanovg_stbtt_GetCodepointHMetrics},
+{"org/mini/nanovg/Nanovg",  "stbtt_GetCodepointKernAdvance",  "(JII)I",  org_mini_nanovg_Nanovg_stbtt_GetCodepointKernAdvance},
+{"org/mini/nanovg/Nanovg",  "stbtt_MakeFontInfo",  "()[B",  org_mini_nanovg_Nanovg_stbtt_MakeFontInfo},
+{"org/mini/nanovg/Nanovg",  "stbi_write_png",  "([BIIIJI)I",  org_mini_nanovg_Nanovg_stbi_write_png},
+{"org/mini/nanovg/Nanovg",  "stbi_write_bmp",  "([BIIIJ)I",  org_mini_nanovg_Nanovg_stbi_write_bmp},
+{"org/mini/nanovg/Nanovg",  "stbi_write_tga",  "([BIIIJ)I",  org_mini_nanovg_Nanovg_stbi_write_tga},
+{"org/mini/nanovg/Nanovg",  "stbi_load",  "([B[I[I[II)J",  org_mini_nanovg_Nanovg_stbi_load},
+{"org/mini/nanovg/Nanovg",  "stbi_load_from_memory",  "(JI[I[I[II)J",  org_mini_nanovg_Nanovg_stbi_load_from_memory},
+{"org/mini/nanovg/Nanovg",  "stbi_image_free",  "(J)V",  org_mini_nanovg_Nanovg_stbi_image_free},
+{"org/mini/nanovg/Nanovg",  "nvgBeginFrame",  "(JIIF)V",  org_mini_nanovg_Nanovg_nvgBeginFrame},
+{"org/mini/nanovg/Nanovg",  "nvgCancelFrame",  "(J)V",  org_mini_nanovg_Nanovg_nvgCancelFrame},
+{"org/mini/nanovg/Nanovg",  "nvgEndFrame",  "(J)V",  org_mini_nanovg_Nanovg_nvgEndFrame},
+{"org/mini/nanovg/Nanovg",  "nvgGlobalCompositeOperation",  "(JI)V",  org_mini_nanovg_Nanovg_nvgGlobalCompositeOperation},
+{"org/mini/nanovg/Nanovg",  "nvgGlobalCompositeBlendFunc",  "(JII)V",  org_mini_nanovg_Nanovg_nvgGlobalCompositeBlendFunc},
+{"org/mini/nanovg/Nanovg",  "nvgGlobalCompositeBlendFuncSeparate",  "(JIIII)V",  org_mini_nanovg_Nanovg_nvgGlobalCompositeBlendFuncSeparate},
+{"org/mini/nanovg/Nanovg",  "nvgRGB",  "(BBB)[F",  org_mini_nanovg_Nanovg_nvgRGB},
+{"org/mini/nanovg/Nanovg",  "nvgRGBf",  "(FFF)[F",  org_mini_nanovg_Nanovg_nvgRGBf},
+{"org/mini/nanovg/Nanovg",  "nvgRGBA",  "(BBBB)[F",  org_mini_nanovg_Nanovg_nvgRGBA},
+{"org/mini/nanovg/Nanovg",  "nvgRGBAf",  "(FFFF)[F",  org_mini_nanovg_Nanovg_nvgRGBAf},
+{"org/mini/nanovg/Nanovg",  "nvgLerpRGBA",  "([F[FF)[F",  org_mini_nanovg_Nanovg_nvgLerpRGBA},
+{"org/mini/nanovg/Nanovg",  "nvgTransRGBA",  "([FB)[F",  org_mini_nanovg_Nanovg_nvgTransRGBA},
+{"org/mini/nanovg/Nanovg",  "nvgTransRGBAf",  "([FF)[F",  org_mini_nanovg_Nanovg_nvgTransRGBAf},
+{"org/mini/nanovg/Nanovg",  "nvgHSL",  "(FFF)[F",  org_mini_nanovg_Nanovg_nvgHSL},
+{"org/mini/nanovg/Nanovg",  "nvgHSLA",  "(FFFB)[F",  org_mini_nanovg_Nanovg_nvgHSLA},
+{"org/mini/nanovg/Nanovg",  "nvgSave",  "(J)V",  org_mini_nanovg_Nanovg_nvgSave},
+{"org/mini/nanovg/Nanovg",  "nvgRestore",  "(J)V",  org_mini_nanovg_Nanovg_nvgRestore},
+{"org/mini/nanovg/Nanovg",  "nvgReset",  "(J)V",  org_mini_nanovg_Nanovg_nvgReset},
+{"org/mini/nanovg/Nanovg",  "nvgShapeAntiAlias",  "(JI)V",  org_mini_nanovg_Nanovg_nvgShapeAntiAlias},
+{"org/mini/nanovg/Nanovg",  "nvgStrokeColor",  "(J[F)V",  org_mini_nanovg_Nanovg_nvgStrokeColor},
+{"org/mini/nanovg/Nanovg",  "nvgStrokePaint",  "(J[B)V",  org_mini_nanovg_Nanovg_nvgStrokePaint},
+{"org/mini/nanovg/Nanovg",  "nvgFillColor",  "(J[F)V",  org_mini_nanovg_Nanovg_nvgFillColor},
+{"org/mini/nanovg/Nanovg",  "nvgFillPaint",  "(J[B)V",  org_mini_nanovg_Nanovg_nvgFillPaint},
+{"org/mini/nanovg/Nanovg",  "nvgMiterLimit",  "(JF)V",  org_mini_nanovg_Nanovg_nvgMiterLimit},
+{"org/mini/nanovg/Nanovg",  "nvgStrokeWidth",  "(JF)V",  org_mini_nanovg_Nanovg_nvgStrokeWidth},
+{"org/mini/nanovg/Nanovg",  "nvgLineCap",  "(JI)V",  org_mini_nanovg_Nanovg_nvgLineCap},
+{"org/mini/nanovg/Nanovg",  "nvgLineJoin",  "(JI)V",  org_mini_nanovg_Nanovg_nvgLineJoin},
+{"org/mini/nanovg/Nanovg",  "nvgGlobalAlpha",  "(JF)V",  org_mini_nanovg_Nanovg_nvgGlobalAlpha},
+{"org/mini/nanovg/Nanovg",  "nvgResetTransform",  "(J)V",  org_mini_nanovg_Nanovg_nvgResetTransform},
+{"org/mini/nanovg/Nanovg",  "nvgTransform",  "(JFFFFFF)V",  org_mini_nanovg_Nanovg_nvgTransform},
+{"org/mini/nanovg/Nanovg",  "nvgTranslate",  "(JFF)V",  org_mini_nanovg_Nanovg_nvgTranslate},
+{"org/mini/nanovg/Nanovg",  "nvgRotate",  "(JF)V",  org_mini_nanovg_Nanovg_nvgRotate},
+{"org/mini/nanovg/Nanovg",  "nvgSkewX",  "(JF)V",  org_mini_nanovg_Nanovg_nvgSkewX},
+{"org/mini/nanovg/Nanovg",  "nvgSkewY",  "(JF)V",  org_mini_nanovg_Nanovg_nvgSkewY},
+{"org/mini/nanovg/Nanovg",  "nvgScale",  "(JFF)V",  org_mini_nanovg_Nanovg_nvgScale},
+{"org/mini/nanovg/Nanovg",  "nvgCurrentTransform",  "(J[F)V",  org_mini_nanovg_Nanovg_nvgCurrentTransform},
+{"org/mini/nanovg/Nanovg",  "nvgTransformIdentity",  "([F)V",  org_mini_nanovg_Nanovg_nvgTransformIdentity},
+{"org/mini/nanovg/Nanovg",  "nvgTransformTranslate",  "([FFF)V",  org_mini_nanovg_Nanovg_nvgTransformTranslate},
+{"org/mini/nanovg/Nanovg",  "nvgTransformScale",  "([FFF)V",  org_mini_nanovg_Nanovg_nvgTransformScale},
+{"org/mini/nanovg/Nanovg",  "nvgTransformRotate",  "([FF)V",  org_mini_nanovg_Nanovg_nvgTransformRotate},
+{"org/mini/nanovg/Nanovg",  "nvgTransformSkewX",  "([FF)V",  org_mini_nanovg_Nanovg_nvgTransformSkewX},
+{"org/mini/nanovg/Nanovg",  "nvgTransformSkewY",  "([FF)V",  org_mini_nanovg_Nanovg_nvgTransformSkewY},
+{"org/mini/nanovg/Nanovg",  "nvgTransformMultiply",  "([F[F)V",  org_mini_nanovg_Nanovg_nvgTransformMultiply},
+{"org/mini/nanovg/Nanovg",  "nvgTransformPremultiply",  "([F[F)V",  org_mini_nanovg_Nanovg_nvgTransformPremultiply},
+{"org/mini/nanovg/Nanovg",  "nvgTransformInverse",  "([F[F)I",  org_mini_nanovg_Nanovg_nvgTransformInverse},
+{"org/mini/nanovg/Nanovg",  "nvgTransformPoint",  "([F[F[FFF)V",  org_mini_nanovg_Nanovg_nvgTransformPoint},
+{"org/mini/nanovg/Nanovg",  "nvgDegToRad",  "(F)F",  org_mini_nanovg_Nanovg_nvgDegToRad},
+{"org/mini/nanovg/Nanovg",  "nvgRadToDeg",  "(F)F",  org_mini_nanovg_Nanovg_nvgRadToDeg},
+{"org/mini/nanovg/Nanovg",  "nvgCreateImage",  "(J[BI)I",  org_mini_nanovg_Nanovg_nvgCreateImage},
+{"org/mini/nanovg/Nanovg",  "nvgCreateImageMem",  "(JI[BI)I",  org_mini_nanovg_Nanovg_nvgCreateImageMem},
+{"org/mini/nanovg/Nanovg",  "nvgCreateImageRGBA",  "(JIII[B)I",  org_mini_nanovg_Nanovg_nvgCreateImageRGBA},
+{"org/mini/nanovg/Nanovg",  "nvgUpdateImage",  "(JI[B)V",  org_mini_nanovg_Nanovg_nvgUpdateImage},
+{"org/mini/nanovg/Nanovg",  "nvgImageSize",  "(JI[I[I)V",  org_mini_nanovg_Nanovg_nvgImageSize},
+{"org/mini/nanovg/Nanovg",  "nvgDeleteImage",  "(JI)V",  org_mini_nanovg_Nanovg_nvgDeleteImage},
+{"org/mini/nanovg/Nanovg",  "nvgLinearGradient",  "(JFFFF[F[F)[B",  org_mini_nanovg_Nanovg_nvgLinearGradient},
+{"org/mini/nanovg/Nanovg",  "nvgBoxGradient",  "(JFFFFFF[F[F)[B",  org_mini_nanovg_Nanovg_nvgBoxGradient},
+{"org/mini/nanovg/Nanovg",  "nvgRadialGradient",  "(JFFFF[F[F)[B",  org_mini_nanovg_Nanovg_nvgRadialGradient},
+{"org/mini/nanovg/Nanovg",  "nvgImagePattern",  "(JFFFFFIF)[B",  org_mini_nanovg_Nanovg_nvgImagePattern},
+{"org/mini/nanovg/Nanovg",  "nvgScissor",  "(JFFFF)V",  org_mini_nanovg_Nanovg_nvgScissor},
+{"org/mini/nanovg/Nanovg",  "nvgIntersectScissor",  "(JFFFF)V",  org_mini_nanovg_Nanovg_nvgIntersectScissor},
+{"org/mini/nanovg/Nanovg",  "nvgResetScissor",  "(J)V",  org_mini_nanovg_Nanovg_nvgResetScissor},
+{"org/mini/nanovg/Nanovg",  "nvgBeginPath",  "(J)V",  org_mini_nanovg_Nanovg_nvgBeginPath},
+{"org/mini/nanovg/Nanovg",  "nvgMoveTo",  "(JFF)V",  org_mini_nanovg_Nanovg_nvgMoveTo},
+{"org/mini/nanovg/Nanovg",  "nvgLineTo",  "(JFF)V",  org_mini_nanovg_Nanovg_nvgLineTo},
+{"org/mini/nanovg/Nanovg",  "nvgBezierTo",  "(JFFFFFF)V",  org_mini_nanovg_Nanovg_nvgBezierTo},
+{"org/mini/nanovg/Nanovg",  "nvgQuadTo",  "(JFFFF)V",  org_mini_nanovg_Nanovg_nvgQuadTo},
+{"org/mini/nanovg/Nanovg",  "nvgArcTo",  "(JFFFFF)V",  org_mini_nanovg_Nanovg_nvgArcTo},
+{"org/mini/nanovg/Nanovg",  "nvgClosePath",  "(J)V",  org_mini_nanovg_Nanovg_nvgClosePath},
+{"org/mini/nanovg/Nanovg",  "nvgPathWinding",  "(JI)V",  org_mini_nanovg_Nanovg_nvgPathWinding},
+{"org/mini/nanovg/Nanovg",  "nvgArc",  "(JFFFFFI)V",  org_mini_nanovg_Nanovg_nvgArc},
+{"org/mini/nanovg/Nanovg",  "nvgRect",  "(JFFFF)V",  org_mini_nanovg_Nanovg_nvgRect},
+{"org/mini/nanovg/Nanovg",  "nvgRoundedRect",  "(JFFFFF)V",  org_mini_nanovg_Nanovg_nvgRoundedRect},
+{"org/mini/nanovg/Nanovg",  "nvgRoundedRectVarying",  "(JFFFFFFFF)V",  org_mini_nanovg_Nanovg_nvgRoundedRectVarying},
+{"org/mini/nanovg/Nanovg",  "nvgEllipse",  "(JFFFF)V",  org_mini_nanovg_Nanovg_nvgEllipse},
+{"org/mini/nanovg/Nanovg",  "nvgCircle",  "(JFFF)V",  org_mini_nanovg_Nanovg_nvgCircle},
+{"org/mini/nanovg/Nanovg",  "nvgFill",  "(J)V",  org_mini_nanovg_Nanovg_nvgFill},
+{"org/mini/nanovg/Nanovg",  "nvgStroke",  "(J)V",  org_mini_nanovg_Nanovg_nvgStroke},
+{"org/mini/nanovg/Nanovg",  "nvgCreateFont",  "(J[B[B)I",  org_mini_nanovg_Nanovg_nvgCreateFont},
+{"org/mini/nanovg/Nanovg",  "nvgCreateFontMem",  "(J[B[BII)I",  org_mini_nanovg_Nanovg_nvgCreateFontMem},
+{"org/mini/nanovg/Nanovg",  "nvgFindFont",  "(J[B)I",  org_mini_nanovg_Nanovg_nvgFindFont},
+{"org/mini/nanovg/Nanovg",  "nvgAddFallbackFontId",  "(JII)I",  org_mini_nanovg_Nanovg_nvgAddFallbackFontId},
+{"org/mini/nanovg/Nanovg",  "nvgAddFallbackFont",  "(J[B[B)I",  org_mini_nanovg_Nanovg_nvgAddFallbackFont},
+{"org/mini/nanovg/Nanovg",  "nvgFontSize",  "(JF)V",  org_mini_nanovg_Nanovg_nvgFontSize},
+{"org/mini/nanovg/Nanovg",  "nvgFontBlur",  "(JF)V",  org_mini_nanovg_Nanovg_nvgFontBlur},
+{"org/mini/nanovg/Nanovg",  "nvgTextLetterSpacing",  "(JF)V",  org_mini_nanovg_Nanovg_nvgTextLetterSpacing},
+{"org/mini/nanovg/Nanovg",  "nvgTextLineHeight",  "(JF)V",  org_mini_nanovg_Nanovg_nvgTextLineHeight},
+{"org/mini/nanovg/Nanovg",  "nvgTextAlign",  "(JI)V",  org_mini_nanovg_Nanovg_nvgTextAlign},
+{"org/mini/nanovg/Nanovg",  "nvgFontFaceId",  "(JI)V",  org_mini_nanovg_Nanovg_nvgFontFaceId},
+{"org/mini/nanovg/Nanovg",  "nvgFontFace",  "(J[B)V",  org_mini_nanovg_Nanovg_nvgFontFace},
+{"org/mini/nanovg/Nanovg",  "nvgTextMetrics",  "(J[F[F[F)V",  org_mini_nanovg_Nanovg_nvgTextMetrics},
+{"org/mini/nanovg/Nanovg",  "nvgCreateGLES2",  "(I)J",  org_mini_nanovg_Nanovg_nvgCreateGLES2},
+{"org/mini/nanovg/Nanovg",  "nvgDeleteGLES2",  "(J)V",  org_mini_nanovg_Nanovg_nvgDeleteGLES2},
+{"org/mini/nanovg/Nanovg",  "nvglCreateImageFromHandleGLES2",  "(JIIII)I",  org_mini_nanovg_Nanovg_nvglCreateImageFromHandleGLES2},
+{"org/mini/nanovg/Nanovg",  "nvglImageHandleGLES2",  "(JI)I",  org_mini_nanovg_Nanovg_nvglImageHandleGLES2},
+{"org/mini/nanovg/Nanovg",  "nvgCreateNVGtextRow",  "(I)J",  org_mini_nanovg_Nanovg_nvgCreateNVGtextRow},
+{"org/mini/nanovg/Nanovg",  "nvgDeleteNVGtextRow",  "(J)V",  org_mini_nanovg_Nanovg_nvgDeleteNVGtextRow},
+{"org/mini/nanovg/Nanovg",  "nvgNVGtextRow_width",  "(JI)F",  org_mini_nanovg_Nanovg_nvgNVGtextRow_width},
+{"org/mini/nanovg/Nanovg",  "nvgNVGtextRow_start",  "(JI)J",  org_mini_nanovg_Nanovg_nvgNVGtextRow_start},
+{"org/mini/nanovg/Nanovg",  "nvgNVGtextRow_end",  "(JI)J",  org_mini_nanovg_Nanovg_nvgNVGtextRow_end},
+{"org/mini/nanovg/Nanovg",  "nvgNVGtextRow_next",  "(JI)J",  org_mini_nanovg_Nanovg_nvgNVGtextRow_next},
+{"org/mini/nanovg/Nanovg",  "nvgCreateNVGglyphPosition",  "(I)J",  org_mini_nanovg_Nanovg_nvgCreateNVGglyphPosition},
+{"org/mini/nanovg/Nanovg",  "nvgDeleteNVGglyphPosition",  "(J)V",  org_mini_nanovg_Nanovg_nvgDeleteNVGglyphPosition},
+{"org/mini/nanovg/Nanovg",  "nvgNVGglyphPosition_x",  "(JI)F",  org_mini_nanovg_Nanovg_nvgNVGglyphPosition_x},
+{"org/mini/nanovg/Nanovg",  "nvgTextJni",  "(JFF[BII)F",  org_mini_nanovg_Nanovg_nvgTextJni},
+{"org/mini/nanovg/Nanovg",  "nvgTextBoxJni",  "(JFFF[BII)V",  org_mini_nanovg_Nanovg_nvgTextBoxJni},
+{"org/mini/nanovg/Nanovg",  "nvgTextBoundsJni",  "(JFF[BII[F)F",  org_mini_nanovg_Nanovg_nvgTextBoundsJni},
+{"org/mini/nanovg/Nanovg",  "nvgTextBoxBoundsJni",  "(JFFF[BII[F)V",  org_mini_nanovg_Nanovg_nvgTextBoxBoundsJni},
+{"org/mini/nanovg/Nanovg",  "nvgTextBreakLinesJni",  "(J[BIIFJI)I",  org_mini_nanovg_Nanovg_nvgTextBreakLinesJni},
+{"org/mini/nanovg/Nanovg",  "nvgTextGlyphPositionsJni",  "(JFF[BIIJI)I",  org_mini_nanovg_Nanovg_nvgTextGlyphPositionsJni},
 };
 
 s32 count_NanovgFuncTable() {

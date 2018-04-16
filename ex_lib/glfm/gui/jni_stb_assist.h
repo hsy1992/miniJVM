@@ -1,7 +1,7 @@
 //
 // Created by Gust on 2018/2/1.
 //
-this header file for generate org.mini.nanovg.Nanovg.java , and Nanovg.java generate jni_nanovg.c
+//this header file for generate org.mini.nanovg.Nanovg.java , and Nanovg.java generate jni_nanovg.c
 
 #ifndef JNI_GUI_STB_JNI_ASSIST_H
 #define JNI_GUI_STB_JNI_ASSIST_H

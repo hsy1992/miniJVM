@@ -8,6 +8,12 @@ package app;
 import java.util.Random;
 import org.mini.gl.warp.GLFrameBuffer;
 import org.mini.gl.warp.GLFrameBufferPainter;
+import org.mini.glfm.Glfm;
+import static org.mini.glfm.Glfm.GLFMColorFormatRGBA8888;
+import static org.mini.glfm.Glfm.GLFMDepthFormatNone;
+import static org.mini.glfm.Glfm.GLFMMultisampleNone;
+import static org.mini.glfm.Glfm.GLFMRenderingAPIOpenGLES2;
+import static org.mini.glfm.Glfm.GLFMStencilFormatNone;
 import org.mini.gui.GButton;
 import org.mini.gui.GCanvas;
 import org.mini.gui.GCheckBox;
@@ -16,6 +22,7 @@ import org.mini.gui.GForm;
 import org.mini.gui.GFrame;
 import org.mini.gui.GGraphics;
 import org.mini.gui.GImage;
+import org.mini.gui.GInitExtension;
 import org.mini.gui.GInputField;
 import org.mini.gui.GLabel;
 import org.mini.gui.GList;
@@ -34,33 +41,38 @@ import org.mini.nanovg.Nanovg;
 public class GlfmMain {
 
     public static void main(String[] args) {
-        long display = 0;
-        if (args.length > 1) {
-            try {
-                display = Long.parseLong(args[0], 16);
-            } catch (Exception e) {
-                System.out.println("Need glfm display");
-            }
-        }
-        GlfmMain gt = new GlfmMain();
-        gt.t1(display);
-
     }
-    GForm win;
 
-    void t1(long display) {
-        win = new GForm(/*"GuiTest"*/"登录 窗口", 800, 600,display);
-        win.init();
-        long vg = win.getGLContext();
+    static public void glinit(long display) {
+
+        Glfm.glfmSetDisplayConfig(display,
+                GLFMRenderingAPIOpenGLES2,
+                GLFMColorFormatRGBA8888,
+                GLFMDepthFormatNone,
+                GLFMStencilFormatNone,
+                GLFMMultisampleNone);
+        GForm form;
+        form = new GForm(/*"GuiTest"*/"登录 窗口", 800, 600, display);
+        form.setExtinit(new MyInit(form));
+        form.setFps(10f);
+    }
+}
+
+class MyInit implements GInitExtension {
+
+    GForm form;
+
+    public MyInit(GForm gf) {
+        form = gf;
+    }
+
+    @Override
+    public void onInit(GObject owner) {
+        long vg = form.getNvContext();
         GFrame gframe = new GFrame("Github"/*"demo"*/, 50, 50, 300, 500);
         init(gframe.getPanel(), vg);
-        win.add(gframe);
+        form.add(gframe);
     }
-
-    final int EASY = 0, MID = 1, HARD = 2;
-    int op = EASY;
-    int property = 20;
-//    Light light;
 
     public void init(GPanel parent, long vg) {
 //        light = new Light();
@@ -104,7 +116,7 @@ public class GlfmMain {
                 GPanel panel = sub1.getPanel();
                 init1(panel, vg);
                 sub1.setClosable(true);
-                win.add(sub1);
+                form.add(sub1);
             }
         });
         y += 35;
@@ -191,5 +203,4 @@ public class GlfmMain {
 //            g.drawImage(img3D, 0, 0, 100, 100, GGraphics.TOP | GGraphics.LEFT);
         }
     }
-
 }

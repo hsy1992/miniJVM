@@ -5,6 +5,7 @@
  */
 package org.mini.gui;
 
+import org.mini.glfm.Glfm;
 import static org.mini.nanovg.Gutil.toUtf8;
 import static org.mini.gui.GToolkit.nvgRGBA;
 import org.mini.nanovg.Nanovg;
@@ -66,11 +67,11 @@ public class GInputField extends GObject {
     }
 
     @Override
-    public void touchEvent(int button, boolean pressed, int x, int y) {
+    public void touchEvent(int phase, int x, int y) {
         int rx = (int) (x - parent.getX());
         int ry = (int) (y - parent.getY());
         if (isInBoundle(boundle, rx, ry)) {
-            if (pressed) {
+            if (phase==Glfm.GLFMTouchPhaseEnded) {
                 parent.setFocus(this);
                 if (isInBoundle(reset_boundle, rx, ry)) {
                     setText("");

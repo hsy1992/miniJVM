@@ -4,6 +4,7 @@
 #include <string.h>
 #include "glfm.h"
 
+
 #define FILE_COMPAT_ANDROID_ACTIVITY glfmAndroidGetActivity()
 
 #include "file_compat.h"
@@ -46,8 +47,10 @@ static bool onKey(GLFMDisplay *display, GLFMKey keyCode, GLFMKeyAction action, i
 
 int jvm_thrd_func(void *para);
 
+extern void JNI_OnLoad(JniEnv *env);
 static thrd_t _jvm_thread;//jvm线程
 static GLFMDisplay *glfm_display;
+static Runtime *runtime;
 
 // Main entry point
 void glfmMain(GLFMDisplay *display) {
@@ -55,12 +58,12 @@ void glfmMain(GLFMDisplay *display) {
     
 //    ExampleApp *app = calloc(1, sizeof(ExampleApp));
 //
-//    glfmSetDisplayConfig(display,
-//                         GLFMRenderingAPIOpenGLES2,
-//                         GLFMColorFormatRGBA8888,
-//                         GLFMDepthFormatNone,
-//                         GLFMStencilFormatNone,
-//                         GLFMMultisampleNone);
+    glfmSetDisplayConfig(display,
+                         GLFMRenderingAPIOpenGLES2,
+                         GLFMColorFormatRGBA8888,
+                         GLFMDepthFormatNone,
+                         GLFMStencilFormatNone,
+                         GLFMMultisampleNone);
 //    glfmSetUserData(display, app);
 //    glfmSetSurfaceCreatedFunc(display, onSurfaceCreated);
 //    glfmSetSurfaceResizedFunc(display, onSurfaceCreated);
@@ -68,40 +71,52 @@ void glfmMain(GLFMDisplay *display) {
 //    glfmSetMainLoopFunc(display, onFrame);
 //    glfmSetTouchFunc(display, onTouch);
 //    glfmSetKeyFunc(display, onKey);
-    
-    thrd_create(_jvm_thread, jvm_thrd_func, NULL);
-}
-
-int jvm_thrd_func(void *para) {
-    s32 ret;
+    //gladLoadGLLoader((GLADloadproc) glfwGetProcAddress);
 
     Utf8String *classpath = utf8_create();
-    char *main_name = NULL;
-    ArrayList *java_para = arraylist_create(0);
-    //add display para
-    Utf8String *dis_str=utf8_create();
-    utf8_append_s64(dis_str, (intptr_t)glfm_display, 16);
-    arraylist_push_back(java_para, utf8_cstr(dis_str));
-
-    java_debug = 0;
-
     utf8_append_c(classpath, glfmGetResRoot());
     utf8_append_c(classpath, "/minijvm_rt.jar;");
-
-
     utf8_append_c(classpath, glfmGetResRoot());
     utf8_append_c(classpath, "/glfm_gui.jar;");
-    main_name = "app/GlfmMain";
+    jvm_printf("%s\n",utf8_cstr(classpath));
 
-
-
-    ret = execute_jvm(utf8_cstr(classpath), main_name, java_para);
-    arraylist_destory(java_para);
+    runtime=runtime_create(NULL);
+    jvm_init(utf8_cstr(classpath), JNI_OnLoad);
     utf8_destory(classpath);
-    utf8_destory(dis_str);
-    LOG_DEBUG("mini_jvm execute success.");
-    return ret;
+    c8* p_classname="app/GlfmMain";
+    c8* p_methodname="glinit";
+    c8* p_methodtype="(J)V";
+    push_long(runtime->stack,(intptr_t)display);
+    call_method_c(p_classname,p_methodname,p_methodtype,runtime);
+    //thrd_create(&_jvm_thread, jvm_thrd_func, NULL);
 }
+
+//int jvm_thrd_func(void *para) {
+//    s32 ret;
+//
+//  char *p_classname = NULL;
+//    ArrayList *java_para = arraylist_create(0);
+//    //add display para
+//    Utf8String *dis_str=utf8_create();
+//    utf8_append_s64(dis_str, (intptr_t)glfm_display, 16);
+//    arraylist_push_back(java_para, utf8_cstr(dis_str));
+//
+//    java_debug = 0;
+//
+//
+//
+//    p_classname = "app/GlfmMain";
+//    c8 *p_methodname = "main";
+//    c8 *p_methodtype = "([Ljava/lang/String;)V";
+//
+//
+//    ret = execute_jvm_main(p_classname,p_methodname, p_methodtype,java_para );
+////    ret = execute_jvm(utf8_cstr(classpath), main_name, java_para);
+//    arraylist_destory(java_para);
+//    utf8_destory(dis_str);
+//    LOG_DEBUG("mini_jvm execute success.");
+//    return ret;
+//}
 
 
 static bool onTouch(GLFMDisplay *display, int touch, GLFMTouchPhase phase, double x, double y) {

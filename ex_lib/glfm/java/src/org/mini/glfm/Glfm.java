@@ -11,46 +11,46 @@ package org.mini.glfm;
  */
 public class Glfm {
 
-    public static int //
+    public static final int //
             GLFMRenderingAPIOpenGLES2 = 0,
             GLFMRenderingAPIOpenGLES3 = 1,
             GLFMRenderingAPIOpenGLES31 = 2,
             GLFMRenderingAPIOpenGLES32 = 3;
-    public static int //
+    public static final int //
             GLFMColorFormatRGBA8888 = 0,
             GLFMColorFormatRGB565 = 1;
 
-    public static int //
+    public static final int //
             GLFMDepthFormatNone = 0,
             GLFMDepthFormat16 = 1,
             GLFMDepthFormat24 = 2;
 
-    public static int //
+    public static final int //
             GLFMStencilFormatNone = 0,
             GLFMStencilFormat8 = 1;
 
-    public static int //
+    public static final int //
             GLFMMultisampleNone = 0,
             GLFMMultisample4X = 1;
 
-    public static int //
+    public static final int //
             GLFMUserInterfaceChromeNavigation = 0,
             GLFMUserInterfaceChromeNavigationAndStatusBar = 1,
             GLFMUserInterfaceChromeFullscreen = 2;
 
-    public static int //
+    public static final int //
             GLFMUserInterfaceOrientationAny = 0,
             GLFMUserInterfaceOrientationPortrait = 1,
             GLFMUserInterfaceOrientationLandscape = 2;
 
-    public static int //
+    public static final int //
             GLFMTouchPhaseHover = 0,
             GLFMTouchPhaseBegan = 1,
             GLFMTouchPhaseMoved = 2,
             GLFMTouchPhaseEnded = 3,
             GLFMTouchPhaseCancelled = 4;
 
-    public static int //
+    public static final int //
             GLFMMouseCursorAuto = 0,
             GLFMMouseCursorNone = 1,
             GLFMMouseCursorDefault = 2,
@@ -58,7 +58,7 @@ public class Glfm {
             GLFMMouseCursorCrosshair = 4,
             GLFMMouseCursorText = 5;
 
-    public static int //
+    public static final int //
             GLFMKeyBackspace = 0x08,
             GLFMKeyTab = 0x09,
             GLFMKeyEnter = 0x0d,
@@ -73,7 +73,7 @@ public class Glfm {
             GLFMKeyNavSelect = 0x1002,
             GLFMKeyPlayPause = 0x2000;
 
-    public static int //
+    public static final int //
             GLFMKeyModifierShift = (1 << 0),
             GLFMKeyModifierCtrl = (1 << 1),
             GLFMKeyModifierAlt = (1 << 2),
@@ -84,7 +84,7 @@ public class Glfm {
             GLFMKeyActionRepeated = 1,
             GLFMKeyActionReleased = 2;
 
-    public static native void glfmSetCallback(long display, GlfmCallBack app);
+    public static native void glfmSetCallBack(long display, GlfmCallBack app);
 
     /// Init the display condifuration. Should only be called in glfmMain.
 /// If the device does not support the preferred rendering API, the next available rendering API is
@@ -135,5 +135,8 @@ public class Glfm {
     public static native void glfmSetKeyboardVisible(long display, boolean visible);
 
     public static native boolean glfmGetKeyboardVisible(long display);
+    
+    public static native String glfmGetResRoot();
+
 
 }

@@ -21,7 +21,7 @@ public class GlfmCallBackAdapter implements GlfmCallBack {
     }
 
     @Override
-    public void onKeyboardVisible(long display, boolean visible, double x, int y, double w, int h) {
+    public void onKeyboardVisible(long display, boolean visible, double x, double y, double w, double h) {
     }
 
     @Override

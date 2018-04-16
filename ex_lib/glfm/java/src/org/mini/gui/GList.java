@@ -5,6 +5,7 @@
  */
 package org.mini.gui;
 
+import org.mini.glfm.Glfm;
 import static org.mini.nanovg.Gutil.toUtf8;
 import static org.mini.gui.GToolkit.nvgRGBA;
 import org.mini.nanovg.Nanovg;
@@ -100,11 +101,11 @@ public class GList extends GContainer {
     }
 
     @Override
-    public void touchEvent(int button, boolean pressed, int x, int y) {
+    public void touchEvent(int phase, int x, int y) {
         int rx = (int) (x - parent.getX());
         int ry = (int) (y - parent.getY());
         if (isInBoundle(boundle, rx, ry)) {
-            if (pressed) {
+            if (phase==Glfm.GLFMTouchPhaseEnded) {
                 boolean inScroll = false;
                 if (scrollBar != null) {
                     inScroll = isInBoundle(scrollBar.boundle, x - getX(), y - getY());
@@ -123,7 +124,7 @@ public class GList extends GContainer {
                 }
             }
         }
-        super.touchEvent(button, pressed, x, y);
+        super.touchEvent( phase, x, y);
     }
 
     @Override

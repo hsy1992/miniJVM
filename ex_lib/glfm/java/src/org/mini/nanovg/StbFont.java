@@ -173,7 +173,7 @@ public class StbFont {
             x += kern * scale;
         }
         //NK.stbi_write_png("./out.png\000".getBytes(), pic_width, pic_height, 1, GToolkit.getArrayDataPtr(bitmap), pic_width);
-        int tex = Gutil.genTexture2D(bitmap, pic_width, pic_height, GL.GL_R8, GL.GL_RED);
+        int tex = Gutil.genTexture2D(bitmap, pic_width, pic_height, GL.GL_RGB565, GL.GL_RGB565);
         return new GImage(tex, pic_width, pic_height);
     }
 }

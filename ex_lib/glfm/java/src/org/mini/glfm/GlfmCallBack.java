@@ -22,7 +22,7 @@ public interface GlfmCallBack {
 
     public void onCharacter(long display, String str, int modifiers);
 
-    public void onKeyboardVisible(long display, boolean visible, double x, int y, double w, int h);
+    public void onKeyboardVisible(long display, boolean visible, double x, double y, double w, double h);
 
     public void onSurfaceError(long display, String description);
 

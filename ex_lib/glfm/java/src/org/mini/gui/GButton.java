@@ -5,6 +5,7 @@
  */
 package org.mini.gui;
 
+import org.mini.glfm.Glfm;
 import static org.mini.nanovg.Gutil.toUtf8;
 import static org.mini.gui.GToolkit.nvgRGBA;
 import org.mini.nanovg.Nanovg;
@@ -53,9 +54,9 @@ public class GButton extends GObject {
     }
 
     @Override
-    public void touchEvent(int button, boolean pressed, int x, int y) {
+    public void touchEvent(int phase, int x, int y) {
         if (isInBoundle(boundle, x - parent.getX(), y - parent.getY())) {
-            if (pressed) {
+            if (phase==Glfm.GLFMTouchPhaseEnded) {
                 bt_pressed = true;
                 parent.setFocus(this);
             } else {

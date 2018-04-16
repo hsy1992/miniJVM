@@ -6,6 +6,7 @@
 package org.mini.gui;
 
 import java.util.Iterator;
+import org.mini.gl.GL;
 import static org.mini.gl.GL.GL_COLOR_BUFFER_BIT;
 import static org.mini.gl.GL.GL_DEPTH_BUFFER_BIT;
 import static org.mini.gl.GL.GL_STENCIL_BUFFER_BIT;
@@ -14,11 +15,6 @@ import static org.mini.gl.GL.glClear;
 import static org.mini.gl.GL.glClearColor;
 import static org.mini.gl.GL.glViewport;
 import org.mini.glfm.Glfm;
-import static org.mini.glfm.Glfm.GLFMColorFormatRGBA8888;
-import static org.mini.glfm.Glfm.GLFMDepthFormatNone;
-import static org.mini.glfm.Glfm.GLFMMultisampleNone;
-import static org.mini.glfm.Glfm.GLFMRenderingAPIOpenGLES2;
-import static org.mini.glfm.Glfm.GLFMStencilFormatNone;
 import org.mini.glfm.GlfmCallBack;
 import org.mini.glfm.GlfmCallBackAdapter;
 import org.mini.nanovg.Nanovg;
@@ -32,7 +28,7 @@ import static org.mini.nanovg.Nanovg.nvgEndFrame;
  *
  * @author gust
  */
-public class GForm extends GContainer {
+public class GForm extends GPanel {
 
     String title;
     int width;
@@ -42,11 +38,8 @@ public class GForm extends GContainer {
     GlfmCallBack callback;
     static StbFont gfont;
     float fps;
+    float fpsExpect = 30;
 
-    int[] unicode_range = {
-        0x0020, 0xFFFF,
-        0
-    };
     //
     boolean premult;
 
@@ -57,12 +50,14 @@ public class GForm extends GContainer {
         boundle[WIDTH] = width;
         boundle[HEIGHT] = height;
         win = display;
+
+        setCallBack(new FormCallBack());
     }
 
     public void setCallBack(GlfmCallBack callback) {
         this.callback = callback;
         if (win != 0) {
-            Glfm.glfmSetCallback(win, callback);
+            Glfm.glfmSetCallBack(win, callback);
         }
     }
 
@@ -74,28 +69,29 @@ public class GForm extends GContainer {
         return gfont;
     }
 
-    public long getGLContext() {
+    public long getNvContext() {
         return vg;
     }
 
     @Override
     public void init() {
 
-        GToolkit.loadFont(vg);
-        Glfm.glfmSetDisplayConfig(win,
-                GLFMRenderingAPIOpenGLES2,
-                GLFMColorFormatRGBA8888,
-                GLFMDepthFormatNone,
-                GLFMStencilFormatNone,
-                GLFMMultisampleNone);
-
-        vg = Nanovg.nvgCreateGLES2(NVG_ANTIALIAS | NVG_STENCIL_STROKES | NVG_DEBUG);
+        if (0 == GL.gladLoadGLES2Loader()) {
+            System.out.println("glad something went wrong!\n");
+            System.exit(-1);
+        }
+        vg = Nanovg.nvgCreateGLES2(NVG_ANTIALIAS | NVG_STENCIL_STROKES /*| NVG_DEBUG*/);
         if (vg == 0) {
             System.out.println("Could not init nanovg.\n");
 
         }
-        setCallBack(new FormCallBack());
+        String respath = Glfm.glfmGetResRoot();
+        System.setProperty("word_font_path", respath + "/wqymhei.ttc");
+        System.setProperty("icon_font_path", respath + "/entypo.ttf");
+        System.setProperty("emoji_font_path", respath + "/NotoEmoji-Regular.ttf");
+        GToolkit.loadFont(vg);
 
+        extinit.onInit(this);
     }
 
 //    public void paint() {
@@ -135,12 +131,12 @@ public class GForm extends GContainer {
         float pxRatio;
         int winWidth, winHeight;
         int fbWidth, fbHeight;
-        winWidth = Glfm.glfmGetDisplayWidth(win);
-        winHeight = Glfm.glfmGetDisplayHeight(win);
+        fbWidth = Glfm.glfmGetDisplayWidth(win);
+        fbHeight = Glfm.glfmGetDisplayHeight(win);
         // Calculate pixel ration for hi-dpi devices.
         pxRatio = (float) Glfm.glfmGetDisplayScale(win);
-        fbWidth = (int) (winWidth * pxRatio);
-        fbHeight = (int) (winHeight * pxRatio);
+        winWidth = (int) (fbWidth / pxRatio);
+        winHeight = (int) (fbHeight / pxRatio);
 
         // Update and render
         glViewport(0, 0, fbWidth, fbHeight);
@@ -181,9 +177,27 @@ public class GForm extends GContainer {
         long mouseLastPressed;
         int CLICK_PERIOD = 200;
 
+        long now, last, count;
+
         @Override
         public void mainLoop(long display, double frameTime) {
-            display(vg);
+            try {
+                long cur = System.currentTimeMillis();
+                display(vg);
+                count++;
+                now = System.currentTimeMillis();
+                if (now - last > 1000) {
+                    //System.out.println("fps:" + count);
+                    fps = count;
+                    last = now;
+                    count = 0;
+                }
+                if (now - cur < 1000 / fpsExpect) {
+                    Thread.sleep((long) (1000 / fpsExpect - (now - cur)));
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         }
 
         @Override
@@ -202,47 +216,51 @@ public class GForm extends GContainer {
             GForm.this.characterEvent(str, modifiers);
         }
 
-//        @Override
-//        public boolean onTouch(long display, int touch, int phase, double x, double y) {
-//            if (display == win) {
-//                switch (button) {
-//                    case Glfw.GLFW_MOUSE_BUTTON_1: {//left
-//                        if (pressed) {
-//                            findSetFocus(mouseX, mouseY);
-//                        } else {
-//                        }
-//                        break;
-//                    }
-//                    case Glfw.GLFW_MOUSE_BUTTON_2: {//right
-//                        if (pressed) {
-//                            findSetFocus(mouseX, mouseY);
-//                        } else {
-//                        }
-//                        break;
-//                    }
-//                    case Glfw.GLFW_MOUSE_BUTTON_3: {//middle
-//                        break;
-//                    }
-//                }
-//                //click event
-//                long cur = System.currentTimeMillis();
-//                if (pressed && cur - mouseLastPressed < CLICK_PERIOD && this.button == button) {
-//                    if (focus != null) {
-//                        focus.clickEvent(button, mouseX, mouseY);
-//                    } else {
-//                        GForm.this.clickEvent(button, mouseX, mouseY);
-//                    }
-//                } else { //press event
-//                    if (focus != null) {
-//                        focus.touchEvent(button, pressed, mouseX, mouseY);
-//                    } else {
-//                        GForm.this.touchEvent(button, pressed, mouseX, mouseY);
-//                    }
-//                }
-//                this.button = button;
-//                mouseLastPressed = cur;
-//            }
-//        }
+        @Override
+        public boolean onTouch(long display, int touch, int phase, double x, double y) {
+            x /= Glfm.glfmGetDisplayScale(display);
+            y /= Glfm.glfmGetDisplayScale(display);
+            System.out.println("   touch=" + touch + "   phase=" + phase + "   x=" + x + "   y=" + y);
+            if (display == win) {
+                if (phase == Glfm.GLFMTouchPhaseHover) {
+                    return false;
+                }
+
+                switch (phase) {
+                    case Glfm.GLFMTouchPhaseBegan: {//
+                        findSetFocus(mouseX, mouseY);
+                        break;
+                    }
+                    case Glfm.GLFMTouchPhaseEnded: {//
+                        findSetFocus(mouseX, mouseY);
+                        break;
+                    }
+                    case Glfm.GLFMTouchPhaseHover: {//
+                        break;
+                    }
+                }
+                boolean pressed = phase == Glfm.GLFMTouchPhaseBegan;
+                //click event
+                long cur = System.currentTimeMillis();
+                if (pressed && cur - mouseLastPressed < CLICK_PERIOD && this.button == button) {
+                    if (focus != null) {
+                        focus.clickEvent(button, mouseX, mouseY);
+                    } else {
+                        GForm.this.clickEvent(button, mouseX, mouseY);
+                    }
+                } else //press event
+                {
+                    if (focus != null) {
+                        focus.touchEvent(phase, mouseX, mouseY);
+                    } else {
+                        GForm.this.touchEvent(phase, mouseX, mouseY);
+                    }
+                }
+                this.button = button;
+                mouseLastPressed = cur;
+            }
+            return true;
+        }
 //
 //        @Override
 //        public void scroll(long window, double scrollX, double scrollY) {
@@ -287,6 +305,10 @@ public class GForm extends GContainer {
      */
     public float getFps() {
         return fps;
+    }
+
+    public void setFps(float fps) {
+        fpsExpect = fps;
     }
 
 }

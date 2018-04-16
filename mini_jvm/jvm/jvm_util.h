@@ -247,9 +247,8 @@ struct _ThreadLock {
     mtx_t mutex_lock; //互斥锁
 };
 
-s32 jthread_init(Instance *jthread);
 
-s32 jthread_init_with_runtime(Instance *jthread, Runtime *runtime);
+s32 jthread_init(Instance *jthread, Runtime *runtime);
 
 s32 jthread_dispose(Instance *jthread);
 

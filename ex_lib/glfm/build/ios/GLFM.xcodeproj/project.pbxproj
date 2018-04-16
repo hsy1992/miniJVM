@@ -9,24 +9,24 @@
 /* Begin PBXAggregateTarget section */
 		230B3C17BFCE4FA497A051DB /* ALL_BUILD */ = {
 			isa = PBXAggregateTarget;
-			buildConfigurationList = 14A15AB3082F4A7F81B089CB /* Build configuration list for PBXAggregateTarget "ALL_BUILD" */;
+			buildConfigurationList = 2F135A582DF64EBFBE5504B0 /* Build configuration list for PBXAggregateTarget "ALL_BUILD" */;
 			buildPhases = (
-				2E917812D56A41E4971D79D1 /* CMake Rules */,
+				5069EC419A3C4E20AFCF1323 /* CMake Rules */,
 			);
 			dependencies = (
-				DF7C06388DDB433A92058C9F /* PBXTargetDependency */,
-				9882701E16CF46B398C8FD1F /* PBXTargetDependency */,
-				E28F830877474DD9AC03BB5F /* PBXTargetDependency */,
-				C413588AE7694C0086D310AA /* PBXTargetDependency */,
+				E99E22D0AD794207BF33DBE5 /* PBXTargetDependency */,
+				3F7934B4BA8E47F48B087597 /* PBXTargetDependency */,
+				C95FDC1B8C2C4479B32D4EF0 /* PBXTargetDependency */,
+				AAB16E8C8CC94CD6A062E774 /* PBXTargetDependency */,
 			);
 			name = ALL_BUILD;
 			productName = ALL_BUILD;
 		};
 		CCD89D233A254EA4A1C4AACC /* ZERO_CHECK */ = {
 			isa = PBXAggregateTarget;
-			buildConfigurationList = 32AB358F3EAF43F3AB0E8DAA /* Build configuration list for PBXAggregateTarget "ZERO_CHECK" */;
+			buildConfigurationList = B147577FF7AF407F983620EE /* Build configuration list for PBXAggregateTarget "ZERO_CHECK" */;
 			buildPhases = (
-				91A8CA8E51A6442DB2BB9983 /* CMake Rules */,
+				91800BADAC5D42C5A04BDDF7 /* CMake Rules */,
 			);
 			dependencies = (
 			);
@@ -36,181 +36,117 @@
 /* End PBXAggregateTarget section */
 
 /* Begin PBXBuildFile section */
-		05809CC13D57487F8F1DB863 /* /Users/Gust/Documents/c/mini_jvm/ex_lib/glfm/gui/stb/stb_image.h */ = {isa = PBXBuildFile; fileRef = EBCCC74B00FE4E65BCD7B795 /* /Users/Gust/Documents/c/mini_jvm/ex_lib/glfm/gui/stb/stb_image.h */; };
-		05C3763E45B047EB8980725A /* /Users/Gust/Documents/c/mini_jvm/ex_lib/glfm/gui/jni_gui.c */ = {isa = PBXBuildFile; fileRef = 728C3DD1AE4C4E5F80B5DCD3 /* /Users/Gust/Documents/c/mini_jvm/ex_lib/glfm/gui/jni_gui.c */; };
-		0E3D9B5E151A4F80A4FBBA69 /* /Users/Gust/Documents/c/mini_jvm/mini_jvm/jvm/garbage.h */ = {isa = PBXBuildFile; fileRef = C098E0789AE04E71A41FA473 /* /Users/Gust/Documents/c/mini_jvm/mini_jvm/jvm/garbage.h */; };
-		0E6814CFD71843A09B25B76B /* /Users/Gust/Documents/c/mini_jvm/ex_lib/glfm/CMakeLists.txt */ = {isa = PBXBuildFile; fileRef = 9EAB9D30EC9849649EA893DA /* /Users/Gust/Documents/c/mini_jvm/ex_lib/glfm/CMakeLists.txt */; };
-		11A601DC61A148F9B571689E /* /Users/Gust/Documents/c/mini_jvm/mini_jvm/utils/miniz/miniz_wrapper.c */ = {isa = PBXBuildFile; fileRef = 48E45BEBA40D4878B7A2BD7C /* /Users/Gust/Documents/c/mini_jvm/mini_jvm/utils/miniz/miniz_wrapper.c */; };
-		198FD5EB3F13408D84825F1F /* /Users/Gust/Documents/c/mini_jvm/ex_lib/glfm/include/glfm.h */ = {isa = PBXBuildFile; fileRef = 98A6F35F59144736A3C9D46A /* /Users/Gust/Documents/c/mini_jvm/ex_lib/glfm/include/glfm.h */; };
-		1ADAA397F76247A79C7B3FA1 /* /Users/Gust/Documents/c/mini_jvm/ex_lib/glfm/example/assets/minijvm_test.jar */ = {isa = PBXBuildFile; fileRef = A133898F226149FAB360DBD8 /* /Users/Gust/Documents/c/mini_jvm/ex_lib/glfm/example/assets/minijvm_test.jar */; };
-		1E21FC56EB764598832B57D8 /* /Users/Gust/Documents/c/mini_jvm/ex_lib/glfm/gui/other/linmath.h */ = {isa = PBXBuildFile; fileRef = 45805C6553DC49838AFEB8A6 /* /Users/Gust/Documents/c/mini_jvm/ex_lib/glfm/gui/other/linmath.h */; };
-		1F55735B1A494882870EA188 /* /Users/Gust/Documents/c/mini_jvm/ex_lib/glfm/example/src/test_pattern.c */ = {isa = PBXBuildFile; fileRef = FCF17575684C49FAB398A6C9 /* /Users/Gust/Documents/c/mini_jvm/ex_lib/glfm/example/src/test_pattern.c */; };
-		2016079B0D744638890C750C /* /Users/Gust/Documents/c/mini_jvm/mini_jvm/jvm/interpreter.c */ = {isa = PBXBuildFile; fileRef = 63263BF907B049EB9613B1BE /* /Users/Gust/Documents/c/mini_jvm/mini_jvm/jvm/interpreter.c */; };
-		22169D93BA4B451BAAC514E0 /* /Users/Gust/Documents/c/mini_jvm/ex_lib/glfm/example/assets/texture.vert */ = {isa = PBXBuildFile; fileRef = DD389EFBC99C4F7E964DAC4C /* /Users/Gust/Documents/c/mini_jvm/ex_lib/glfm/example/assets/texture.vert */; };
-		2233BCEFD0F64EBFBCCA9F1A /* /Users/Gust/Documents/c/mini_jvm/mini_jvm/jvm/garbage.c */ = {isa = PBXBuildFile; fileRef = CBAA333A81BF4F01B3559B06 /* /Users/Gust/Documents/c/mini_jvm/mini_jvm/jvm/garbage.c */; };
-		23DC3668B6B74368A9C7D21C /* /Users/Gust/Documents/c/mini_jvm/mini_jvm/jvm/java_native_std.c */ = {isa = PBXBuildFile; fileRef = 5E07141428EA45318C319F48 /* /Users/Gust/Documents/c/mini_jvm/mini_jvm/jvm/java_native_std.c */; };
-		259F3498850E44FAB6354451 /* /Users/Gust/Documents/c/mini_jvm/mini_jvm/jvm/jvm.c */ = {isa = PBXBuildFile; fileRef = 5F50DB15182E403C9853E8AF /* /Users/Gust/Documents/c/mini_jvm/mini_jvm/jvm/jvm.c */; };
-		299047D86B1145EC9EFE24E9 /* /Users/Gust/Documents/c/mini_jvm/mini_jvm/jvm/java_native_std.h */ = {isa = PBXBuildFile; fileRef = E1908015D25D4DCAA8F995AE /* /Users/Gust/Documents/c/mini_jvm/mini_jvm/jvm/java_native_std.h */; };
-		2B5F0961CC574D28B3FDE2B3 /* /Users/Gust/Documents/c/mini_jvm/ex_lib/glfm/example/assets/texture.frag */ = {isa = PBXBuildFile; fileRef = F5807DE3A31E4E1ABCA8D0C9 /* /Users/Gust/Documents/c/mini_jvm/ex_lib/glfm/example/assets/texture.frag */; };
-		2C04B2AE582440E18EFD8821 /* /Users/Gust/Documents/c/mini_jvm/mini_jvm/utils/arraylist.h */ = {isa = PBXBuildFile; fileRef = 368AC8BC48FD4F65A1A623CA /* /Users/Gust/Documents/c/mini_jvm/mini_jvm/utils/arraylist.h */; };
-		2FFB3308845848548B30F984 /* /Users/Gust/Documents/c/mini_jvm/ex_lib/glfm/example/assets/minijvm_rt.jar */ = {isa = PBXBuildFile; fileRef = F283C08F8F8E44B0BDB0C402 /* /Users/Gust/Documents/c/mini_jvm/ex_lib/glfm/example/assets/minijvm_rt.jar */; };
-		309AD9DD581C45AC8B85A355 /* /Users/Gust/Documents/c/mini_jvm/mini_jvm/utils/miniz/miniz_wrapper.h */ = {isa = PBXBuildFile; fileRef = 0A56F35A3EF44241AAC48CDE /* /Users/Gust/Documents/c/mini_jvm/mini_jvm/utils/miniz/miniz_wrapper.h */; };
-		357500CDB89D40E3B3FFB25A /* /Users/Gust/Documents/c/mini_jvm/mini_jvm/jvm/jdwp.c */ = {isa = PBXBuildFile; fileRef = 0E74028FE27E4F368C59FD86 /* /Users/Gust/Documents/c/mini_jvm/mini_jvm/jvm/jdwp.c */; };
-		3939E12F66634DB4B722F26E /* /Users/Gust/Documents/c/mini_jvm/ex_lib/glfm/gui/nanovg/nanovg_gl_utils.h */ = {isa = PBXBuildFile; fileRef = 61D410D0141648FB992A9E63 /* /Users/Gust/Documents/c/mini_jvm/ex_lib/glfm/gui/nanovg/nanovg_gl_utils.h */; };
-		3BFA0C7A43904579995A050D /* /Users/Gust/Documents/c/mini_jvm/ex_lib/glfm/gui/jni_gui.h */ = {isa = PBXBuildFile; fileRef = 026C430CB33B40719C1AE5CF /* /Users/Gust/Documents/c/mini_jvm/ex_lib/glfm/gui/jni_gui.h */; };
-		3C8D60BF7671454389E4BAFF /* /Users/Gust/Documents/c/mini_jvm/ex_lib/glfm/example/src/file_compat.h */ = {isa = PBXBuildFile; fileRef = 9F24791BD529440BB5E12485 /* /Users/Gust/Documents/c/mini_jvm/ex_lib/glfm/example/src/file_compat.h */; };
-		3CCB79121882427BA71EE3FD /* /Users/Gust/Documents/c/mini_jvm/mini_jvm/utils/linkedlist.c */ = {isa = PBXBuildFile; fileRef = 493595FD8C8247E0BC1DB69F /* /Users/Gust/Documents/c/mini_jvm/mini_jvm/utils/linkedlist.c */; };
-		46A134BA51214BE3A8E8C44E /* /Users/Gust/Documents/c/mini_jvm/mini_jvm/jvm/jdwp.h */ = {isa = PBXBuildFile; fileRef = 7E560B997AC54CACBCDA5230 /* /Users/Gust/Documents/c/mini_jvm/mini_jvm/jvm/jdwp.h */; };
-		471F8FC3CCF8484782B5E10E /* /Users/Gust/Documents/c/mini_jvm/ex_lib/glfm/gui/stb/stb_image_write.h */ = {isa = PBXBuildFile; fileRef = 568C62F57AE0466885E546C6 /* /Users/Gust/Documents/c/mini_jvm/ex_lib/glfm/gui/stb/stb_image_write.h */; };
-		50523F2CDCAD471C9BE694C6 /* /Users/Gust/Documents/c/mini_jvm/ex_lib/glfm/gui/nanovg/fontstash.h */ = {isa = PBXBuildFile; fileRef = F6B3894D3D064766BE9ADC15 /* /Users/Gust/Documents/c/mini_jvm/ex_lib/glfm/gui/nanovg/fontstash.h */; };
-		53B380534CB54A58B123FF9D /* /Users/Gust/Documents/c/mini_jvm/mini_jvm/jvm/jvm_util.c */ = {isa = PBXBuildFile; fileRef = A4BD8F16A107447C9A4E6695 /* /Users/Gust/Documents/c/mini_jvm/mini_jvm/jvm/jvm_util.c */; };
-		5DECFB59EA1B417A86DCCA13 /* /Users/Gust/Documents/c/mini_jvm/mini_jvm/utils/linkedlist.h */ = {isa = PBXBuildFile; fileRef = 7561D30FB21D4A8899F8CDF8 /* /Users/Gust/Documents/c/mini_jvm/mini_jvm/utils/linkedlist.h */; };
-		5F27EC015BE64C8AAF780CE1 /* /Users/Gust/Documents/c/mini_jvm/mini_jvm/utils/hashset.h */ = {isa = PBXBuildFile; fileRef = 34E0F21A177040D1BE693F73 /* /Users/Gust/Documents/c/mini_jvm/mini_jvm/utils/hashset.h */; };
-		640D323F78F44F15B3A46D4E /* /Users/Gust/Documents/c/mini_jvm/ex_lib/glfm/gui/stb/stb_truetype.h */ = {isa = PBXBuildFile; fileRef = 9002FDDD1B3443E9A8B45315 /* /Users/Gust/Documents/c/mini_jvm/ex_lib/glfm/gui/stb/stb_truetype.h */; };
-		6710F7C3BFE8452781BCC24F /* /Users/Gust/Documents/c/mini_jvm/ex_lib/glfm/example/assets/minijvm_test.jar */ = {isa = PBXBuildFile; fileRef = F31E5DC086434DC3912283E0 /* /Users/Gust/Documents/c/mini_jvm/ex_lib/glfm/example/assets/minijvm_test.jar */; };
-		68505C913210468F88D7E672 /* /Users/Gust/Documents/c/mini_jvm/mini_jvm/utils/utf8_string.h */ = {isa = PBXBuildFile; fileRef = 6F9A4EB1E67242B0A587080C /* /Users/Gust/Documents/c/mini_jvm/mini_jvm/utils/utf8_string.h */; };
-		691BA159B9864C4CB68110FF /* /Users/Gust/Documents/c/mini_jvm/ex_lib/glfm/example/src/file_compat.h */ = {isa = PBXBuildFile; fileRef = FE090DA7107348419384ACC8 /* /Users/Gust/Documents/c/mini_jvm/ex_lib/glfm/example/src/file_compat.h */; };
-		6A9B670E163048089C691B79 /* /Users/Gust/Documents/c/mini_jvm/mini_jvm/utils/tinycthread.h */ = {isa = PBXBuildFile; fileRef = 5F68966488954F3BACDDBA43 /* /Users/Gust/Documents/c/mini_jvm/mini_jvm/utils/tinycthread.h */; };
-		6F24779FDD9D4270B1374DB0 /* /Users/Gust/Documents/c/mini_jvm/mini_jvm/utils/arraylist.c */ = {isa = PBXBuildFile; fileRef = D84CEC1A08154A0694D76468 /* /Users/Gust/Documents/c/mini_jvm/mini_jvm/utils/arraylist.c */; };
-		726DDDEBFF744E09AACC7A89 /* /Users/Gust/Documents/c/mini_jvm/ex_lib/glfm/gui/jni_glfm.c */ = {isa = PBXBuildFile; fileRef = 4EE83A1299AF4E26A64AC747 /* /Users/Gust/Documents/c/mini_jvm/ex_lib/glfm/gui/jni_glfm.c */; };
-		766DF0A6A79848E0A38FBADE /* /Users/Gust/Documents/c/mini_jvm/ex_lib/glfm/gui/glad/glad.h */ = {isa = PBXBuildFile; fileRef = BD3C9BC7A99D49CDA714E4BC /* /Users/Gust/Documents/c/mini_jvm/ex_lib/glfm/gui/glad/glad.h */; };
-		798B2DA31FC14FB5918AC20A /* /Users/Gust/Documents/c/mini_jvm/ex_lib/glfm/example/assets/simple.frag */ = {isa = PBXBuildFile; fileRef = 25CB8C1C38AC42CEAAC211B6 /* /Users/Gust/Documents/c/mini_jvm/ex_lib/glfm/example/assets/simple.frag */; };
-		7C9FAC7B6CB74D1884B7EAD5 /* /Users/Gust/Documents/c/mini_jvm/ex_lib/glfm/gui/nanovg/nanovg.c */ = {isa = PBXBuildFile; fileRef = 6B0E1FBA224D4C2C8D1DD500 /* /Users/Gust/Documents/c/mini_jvm/ex_lib/glfm/gui/nanovg/nanovg.c */; };
-		7D7EBBA26A2D4C9A8268AA22 /* /Users/Gust/Documents/c/mini_jvm/mini_jvm/jvm/jvm.h */ = {isa = PBXBuildFile; fileRef = B6448F0D1D9C4E79A9D4FCEA /* /Users/Gust/Documents/c/mini_jvm/mini_jvm/jvm/jvm.h */; };
-		80BF9ACFDBFA4F7E8F7E077A /* /Users/Gust/Documents/c/mini_jvm/ex_lib/glfm/example/assets/minijvm_rt.jar */ = {isa = PBXBuildFile; fileRef = 868F7570175F4198A78D92C8 /* /Users/Gust/Documents/c/mini_jvm/ex_lib/glfm/example/assets/minijvm_rt.jar */; };
-		8292ED279F574FEF950B54D4 /* /Users/Gust/Documents/c/mini_jvm/ex_lib/glfm/example/assets/texture.frag */ = {isa = PBXBuildFile; fileRef = 9FA5DF5854804DAEBB4733D0 /* /Users/Gust/Documents/c/mini_jvm/ex_lib/glfm/example/assets/texture.frag */; };
-		8598E2E90BD7464FAE53E0B4 /* /Users/Gust/Documents/c/mini_jvm/ex_lib/glfm/example/assets/simple.frag */ = {isa = PBXBuildFile; fileRef = 3567AFDD26854478B39E203E /* /Users/Gust/Documents/c/mini_jvm/ex_lib/glfm/example/assets/simple.frag */; };
-		88C15B9C56B54BF69B8C7839 /* /Users/Gust/Documents/c/mini_jvm/ex_lib/glfm/src/glfm_platform.h */ = {isa = PBXBuildFile; fileRef = 33FF1B69275A4B89B4F68C8F /* /Users/Gust/Documents/c/mini_jvm/ex_lib/glfm/src/glfm_platform.h */; };
-		8AEB0431013C44B5A67CE1E0 /* /Users/Gust/Documents/c/mini_jvm/mini_jvm/jvm/runtime.c */ = {isa = PBXBuildFile; fileRef = 4EC44CE40131485E8A55D08B /* /Users/Gust/Documents/c/mini_jvm/mini_jvm/jvm/runtime.c */; };
-		8EE69DAB3151449BA776CF02 /* /Users/Gust/Documents/c/mini_jvm/mini_jvm/utils/spinlock.c */ = {isa = PBXBuildFile; fileRef = 247790C379A84B5D964E99EE /* /Users/Gust/Documents/c/mini_jvm/mini_jvm/utils/spinlock.c */; };
-		919A5E7D7AFA464FBEE4F54F /* /Users/Gust/Documents/c/mini_jvm/mini_jvm/utils/hashset.c */ = {isa = PBXBuildFile; fileRef = 0C3A09CC350C4856BF884D8F /* /Users/Gust/Documents/c/mini_jvm/mini_jvm/utils/hashset.c */; };
-		931ACD32CEDC4CB1B452A061 /* /Users/Gust/Documents/c/mini_jvm/mini_jvm/jvm/jvm_util.h */ = {isa = PBXBuildFile; fileRef = DEA61E2C2B87479C9586AC6D /* /Users/Gust/Documents/c/mini_jvm/mini_jvm/jvm/jvm_util.h */; };
-		936E48E68B4D493D880E2B80 /* /Users/Gust/Documents/c/mini_jvm/ex_lib/glfm/gui/jni_nanovg.c */ = {isa = PBXBuildFile; fileRef = 63430AF72DF744C1889884FF /* /Users/Gust/Documents/c/mini_jvm/ex_lib/glfm/gui/jni_nanovg.c */; };
-		948F28E1F9EB4E7AA1C1D528 /* /Users/Gust/Documents/c/mini_jvm/mini_jvm/jvm/java_native_reflect.h */ = {isa = PBXBuildFile; fileRef = E9118B9802FA4044AEFD3ACD /* /Users/Gust/Documents/c/mini_jvm/mini_jvm/jvm/java_native_reflect.h */; };
-		9634FE44DB0647F0957EEF02 /* /Users/Gust/Documents/c/mini_jvm/mini_jvm/jvm/java_native_io.c */ = {isa = PBXBuildFile; fileRef = B2E6DBF554F04C5A84479180 /* /Users/Gust/Documents/c/mini_jvm/mini_jvm/jvm/java_native_io.c */; };
-		97372F7EC6CD46B29BA9DC2C /* /Users/Gust/Documents/c/mini_jvm/mini_jvm/utils/tinycthread.c */ = {isa = PBXBuildFile; fileRef = 23E6EC05F6B94F3A8BA52212 /* /Users/Gust/Documents/c/mini_jvm/mini_jvm/utils/tinycthread.c */; };
-		9796E421E6974B73A522F4EE /* /Users/Gust/Documents/c/mini_jvm/mini_jvm/utils/d_utils.c */ = {isa = PBXBuildFile; fileRef = A41942BEF67148EDA21AFA30 /* /Users/Gust/Documents/c/mini_jvm/mini_jvm/utils/d_utils.c */; };
-		9E372573A5254413A10EA069 /* /Users/Gust/Documents/c/mini_jvm/mini_jvm/utils/pairlist.h */ = {isa = PBXBuildFile; fileRef = 76154FE5E06846DD99817C16 /* /Users/Gust/Documents/c/mini_jvm/mini_jvm/utils/pairlist.h */; };
-		A3FA9FF4852940D291873A64 /* /Users/Gust/Documents/c/mini_jvm/mini_jvm/jvm/class.c */ = {isa = PBXBuildFile; fileRef = D8B2788FA30B420BAED28704 /* /Users/Gust/Documents/c/mini_jvm/mini_jvm/jvm/class.c */; };
-		A562390E2BEE4E94A6C4606E /* /Users/Gust/Documents/c/mini_jvm/mini_jvm/utils/bytebuf.h */ = {isa = PBXBuildFile; fileRef = 036988B4E8CC4473AD5B6D9D /* /Users/Gust/Documents/c/mini_jvm/mini_jvm/utils/bytebuf.h */; };
-		AB85331744EA48F8A1B51F47 /* /Users/Gust/Documents/c/mini_jvm/mini_jvm/jvm/global.c */ = {isa = PBXBuildFile; fileRef = C84EC87145EE400394906259 /* /Users/Gust/Documents/c/mini_jvm/mini_jvm/jvm/global.c */; };
-		AD069E1A2E41417BB6E637D0 /* /Users/Gust/Documents/c/mini_jvm/ex_lib/glfm/gui/KHR/khrplatform.h */ = {isa = PBXBuildFile; fileRef = C91AF0C5959F4397A67FF47C /* /Users/Gust/Documents/c/mini_jvm/ex_lib/glfm/gui/KHR/khrplatform.h */; };
-		B4059E4967324625BDF10B8E /* /Users/Gust/Documents/c/mini_jvm/ex_lib/glfm/example/src/main.c */ = {isa = PBXBuildFile; fileRef = 157C1F75F24F464B9403F45D /* /Users/Gust/Documents/c/mini_jvm/ex_lib/glfm/example/src/main.c */; };
-		B490E077A7AA4744AD599520 /* /Users/Gust/Documents/c/mini_jvm/ex_lib/glfm/example/assets/texture.vert */ = {isa = PBXBuildFile; fileRef = F94AFBC54873431BBAFFD784 /* /Users/Gust/Documents/c/mini_jvm/ex_lib/glfm/example/assets/texture.vert */; };
-		B66992FA4FCD40D78965A70D /* /Users/Gust/Documents/c/mini_jvm/ex_lib/glfm/build/ios/example/CMakeFiles/glfm_test_pattern.dir/Info.plist */ = {isa = PBXBuildFile; fileRef = 68126747CEB54C408A3AA30B /* /Users/Gust/Documents/c/mini_jvm/ex_lib/glfm/build/ios/example/CMakeFiles/glfm_test_pattern.dir/Info.plist */; };
-		B684CCB8BD5F4073B98348DF /* /Users/Gust/Documents/c/mini_jvm/ex_lib/glfm/example/assets/simple.vert */ = {isa = PBXBuildFile; fileRef = A5B54678C9404D7CBB9811F4 /* /Users/Gust/Documents/c/mini_jvm/ex_lib/glfm/example/assets/simple.vert */; };
-		B7444D863453430D99504AE1 /* /Users/Gust/Documents/c/mini_jvm/mini_jvm/jvm/class_load.c */ = {isa = PBXBuildFile; fileRef = 9D3EDA1BF0514C29A70B1CF1 /* /Users/Gust/Documents/c/mini_jvm/mini_jvm/jvm/class_load.c */; };
-		BFFEFB1F70F94FEABA18DB98 /* /Users/Gust/Documents/c/mini_jvm/ex_lib/glfm/example/CMakeLists.txt */ = {isa = PBXBuildFile; fileRef = 8F19577DF9ED4B99B160B1FB /* /Users/Gust/Documents/c/mini_jvm/ex_lib/glfm/example/CMakeLists.txt */; };
-		C241D1993F79476AA0F36CF3 /* /Users/Gust/Documents/c/mini_jvm/ex_lib/glfm/gui/jni_stb_assist.h */ = {isa = PBXBuildFile; fileRef = 6CB0C3FD0C1F4682BF143168 /* /Users/Gust/Documents/c/mini_jvm/ex_lib/glfm/gui/jni_stb_assist.h */; };
-		C2FA13DAB066499F88D7490B /* /Users/Gust/Documents/c/mini_jvm/mini_jvm/jvm/java_native_io.h */ = {isa = PBXBuildFile; fileRef = 8E90128297EE4359B0BA5719 /* /Users/Gust/Documents/c/mini_jvm/mini_jvm/jvm/java_native_io.h */; };
-		C8B6815A78EA43009A3C4B46 /* /Users/Gust/Documents/c/mini_jvm/ex_lib/glfm/gui/nanovg/nanovg.h */ = {isa = PBXBuildFile; fileRef = 765EB247BD7245EB9F00F004 /* /Users/Gust/Documents/c/mini_jvm/ex_lib/glfm/gui/nanovg/nanovg.h */; };
-		C9B9A10E0B0B454BB056B89A /* /Users/Gust/Documents/c/mini_jvm/mini_jvm/utils/bytebuf.c */ = {isa = PBXBuildFile; fileRef = DD08950B6C59433ABEA428E2 /* /Users/Gust/Documents/c/mini_jvm/mini_jvm/utils/bytebuf.c */; };
-		CFAC4A8EE79E43FAB1A38A03 /* /Users/Gust/Documents/c/mini_jvm/ex_lib/glfm/example/CMakeLists.txt */ = {isa = PBXBuildFile; fileRef = BB2D4D55A87B4EF49B7853F8 /* /Users/Gust/Documents/c/mini_jvm/ex_lib/glfm/example/CMakeLists.txt */; };
-		D1DE24B3A9F242259C293DD9 /* /Users/Gust/Documents/c/mini_jvm/mini_jvm/utils/utf8_string.c */ = {isa = PBXBuildFile; fileRef = B2C66CB5D1034572B207C794 /* /Users/Gust/Documents/c/mini_jvm/mini_jvm/utils/utf8_string.c */; };
-		D39ADD91641F45ED97F958FB /* /Users/Gust/Documents/c/mini_jvm/mini_jvm/utils/pairlist.c */ = {isa = PBXBuildFile; fileRef = 839437E327D140FA9D92A6FF /* /Users/Gust/Documents/c/mini_jvm/mini_jvm/utils/pairlist.c */; };
-		D44C6AEC9288490DBD99BEA4 /* /Users/Gust/Documents/c/mini_jvm/mini_jvm/jvm/java_native_reflect.c */ = {isa = PBXBuildFile; fileRef = CB5D8032C28F4A20BCA5D2E4 /* /Users/Gust/Documents/c/mini_jvm/mini_jvm/jvm/java_native_reflect.c */; };
-		D7E41323649A421CA310824E /* /Users/Gust/Documents/c/mini_jvm/ex_lib/glfm/gui/nanovg/nanovg_gl.h */ = {isa = PBXBuildFile; fileRef = FA51BF9249114B83A37E1739 /* /Users/Gust/Documents/c/mini_jvm/ex_lib/glfm/gui/nanovg/nanovg_gl.h */; };
-		D7F201EBCAF84B7BBCC2AFF3 /* /Users/Gust/Documents/c/mini_jvm/ex_lib/glfm/gui/glad/glad.c */ = {isa = PBXBuildFile; fileRef = 7B1AB9C5983A432782E0BB4C /* /Users/Gust/Documents/c/mini_jvm/ex_lib/glfm/gui/glad/glad.c */; };
-		E4940402DE8E49B2B6479512 /* /Users/Gust/Documents/c/mini_jvm/mini_jvm/utils/hashtable.c */ = {isa = PBXBuildFile; fileRef = 9C046FD3D0234C1F91B5C89E /* /Users/Gust/Documents/c/mini_jvm/mini_jvm/utils/hashtable.c */; };
-		E5C03906DB6046849881D4C9 /* /Users/Gust/Documents/c/mini_jvm/ex_lib/glfm/gui/jni_nanovg_assist.h */ = {isa = PBXBuildFile; fileRef = 1685F1C23DA245FC876E4F02 /* /Users/Gust/Documents/c/mini_jvm/ex_lib/glfm/gui/jni_nanovg_assist.h */; };
-		E74C61EEB9674430811BAA7A /* /Users/Gust/Documents/c/mini_jvm/ex_lib/glfm/src/glfm_platform_ios.m */ = {isa = PBXBuildFile; fileRef = ACB1E478B25445B18F509BA0 /* /Users/Gust/Documents/c/mini_jvm/ex_lib/glfm/src/glfm_platform_ios.m */; };
-		EEC7F2D913F44EB4B68E8E11 /* /Users/Gust/Documents/c/mini_jvm/ex_lib/glfm/build/ios/example/CMakeFiles/glfm_example.dir/Info.plist */ = {isa = PBXBuildFile; fileRef = FF9F7FB738704634B835C3DC /* /Users/Gust/Documents/c/mini_jvm/ex_lib/glfm/build/ios/example/CMakeFiles/glfm_example.dir/Info.plist */; };
-		F6B9B39370D8491BAFA3A13B /* /Users/Gust/Documents/c/mini_jvm/mini_jvm/utils/spinlock.h */ = {isa = PBXBuildFile; fileRef = E31F99B20DF44E42A29CA356 /* /Users/Gust/Documents/c/mini_jvm/mini_jvm/utils/spinlock.h */; };
-		F8CFD132F8DD4F23903F90E1 /* /Users/Gust/Documents/c/mini_jvm/mini_jvm/utils/dirent_win.h */ = {isa = PBXBuildFile; fileRef = 0FE82D9BD35A4BDC9FBD8F9C /* /Users/Gust/Documents/c/mini_jvm/mini_jvm/utils/dirent_win.h */; };
-		F8F9E74ADA3D46D09D7338F4 /* /Users/Gust/Documents/c/mini_jvm/ex_lib/glfm/example/assets/simple.vert */ = {isa = PBXBuildFile; fileRef = 7079651A7DE843AFB82BCAF7 /* /Users/Gust/Documents/c/mini_jvm/ex_lib/glfm/example/assets/simple.vert */; };
-		FD8BA55270CD419198162FFF /* /Users/Gust/Documents/c/mini_jvm/mini_jvm/utils/d_type.h */ = {isa = PBXBuildFile; fileRef = 4195CCB1C95A4EE38E4CB169 /* /Users/Gust/Documents/c/mini_jvm/mini_jvm/utils/d_type.h */; };
-		FEB1B99C652345BCB7BDD0C2 /* /Users/Gust/Documents/c/mini_jvm/mini_jvm/utils/hashtable.h */ = {isa = PBXBuildFile; fileRef = A4DF9DC27D2B43F4B6B17909 /* /Users/Gust/Documents/c/mini_jvm/mini_jvm/utils/hashtable.h */; };
+		01746E4C6B4B4E65BB23F17A /* simple.frag in Resources */ = {isa = PBXBuildFile; fileRef = B5AD1A25B7CA43298DB1A05D /* simple.frag */; };
+		02709673ED86415D995B5291 /* arraylist.c in Sources */ = {isa = PBXBuildFile; fileRef = E79E6257716D4430B0BB6FD2 /* arraylist.c */; };
+		02FE74FEE557450287AB0A3F /* global.c in Sources */ = {isa = PBXBuildFile; fileRef = 039DBE431E1542B2A4339823 /* global.c */; };
+		07FD8DAAC81C4652BC8760E5 /* glfm_gui.jar in Resources */ = {isa = PBXBuildFile; fileRef = 792DC9D50C3341DCB648631D /* glfm_gui.jar */; };
+		0A291D93D79E4EC1984FB966 /* .DS_Store in Resources */ = {isa = PBXBuildFile; fileRef = 55B37A8CF6124EC1A3E86F31 /* .DS_Store */; };
+		0B62056728F145A7ADC7886D /* bytebuf.c in Sources */ = {isa = PBXBuildFile; fileRef = 5F1A40E0BC1A469C83AF7A85 /* bytebuf.c */; };
+		107D30CC63ED40ECB743CC5C /* hashtable.c in Sources */ = {isa = PBXBuildFile; fileRef = C8123E88337A47F09B7E845B /* hashtable.c */; };
+		132B8523FE914AEFADD9941A /* entypo.ttf in Resources */ = {isa = PBXBuildFile; fileRef = E6E33418FAF04395912CA7C6 /* entypo.ttf */; };
+		1349E093A19D4DDA9A3555E2 /* java_native_reflect.c in Sources */ = {isa = PBXBuildFile; fileRef = 9E9087A44B8449C2904AB610 /* java_native_reflect.c */; };
+		1B1C53BFCA3B470E838A114E /* simple.vert in Resources */ = {isa = PBXBuildFile; fileRef = DE43D7BB4C664D5A84FAAA4B /* simple.vert */; };
+		1DA73FF9D4134414BE16E50C /* linkedlist.c in Sources */ = {isa = PBXBuildFile; fileRef = 2550D366E32C40CB98759433 /* linkedlist.c */; };
+		298190A362E1463581BDEFC8 /* miniz_wrapper.c in Sources */ = {isa = PBXBuildFile; fileRef = 24109C6DF81C4469ACC72776 /* miniz_wrapper.c */; };
+		2AA403C2D2004CD8BE273EB1 /* NotoEmoji-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = C01B6319D4744B2FBF097C58 /* NotoEmoji-Regular.ttf */; };
+		2DD75AFD3D4249DD9CBB618B /* jvm_util.c in Sources */ = {isa = PBXBuildFile; fileRef = A2EA0100E0324FD3AEA15D3F /* jvm_util.c */; };
+		383492E7B11D4704B15D7692 /* texture.frag in Resources */ = {isa = PBXBuildFile; fileRef = BC68BE8C0F19426A86CACAE7 /* texture.frag */; };
+		3C49F3736955412381FA7FBF /* tinycthread.c in Sources */ = {isa = PBXBuildFile; fileRef = D033B029829D46AEBC840445 /* tinycthread.c */; };
+		3EE870466BA649D4A7BD3E13 /* simple.vert in Resources */ = {isa = PBXBuildFile; fileRef = C9897E60FBDC41D2BB67EBC8 /* simple.vert */; };
+		47AB58D7357442459B88EBA7 /* glfm_gui.jar in Resources */ = {isa = PBXBuildFile; fileRef = 687161C195DE49C3ACD2737C /* glfm_gui.jar */; };
+		4A472A02C6204908AFE03EBA /* hashset.c in Sources */ = {isa = PBXBuildFile; fileRef = 447C047121774F84AB719EA4 /* hashset.c */; };
+		4C72BEC71D4B4E8BA36259C3 /* test_pattern.c in Sources */ = {isa = PBXBuildFile; fileRef = C0AB20F4231844CDB3193D15 /* test_pattern.c */; };
+		4E64EB14AE634C25B50CC6CE /* interpreter.c in Sources */ = {isa = PBXBuildFile; fileRef = 15C4BC3413E4451B84C26239 /* interpreter.c */; };
+		4E6EBF4D731847BE80BFB97F /* utf8_string.c in Sources */ = {isa = PBXBuildFile; fileRef = 22834815EFF641528974895B /* utf8_string.c */; };
+		5638E0CF23D843BF8A5A4042 /* minijvm_rt.jar in Resources */ = {isa = PBXBuildFile; fileRef = 26C2F9CC79A34D288E2A83AF /* minijvm_rt.jar */; };
+		66F94F67B8F24DBEA328A0D9 /* class_load.c in Sources */ = {isa = PBXBuildFile; fileRef = 010B54C7157B448DB78E2AEB /* class_load.c */; };
+		6AFFFD29AD8246E8BD8B4165 /* texture.vert in Resources */ = {isa = PBXBuildFile; fileRef = 5865670BB7AF4D7887729307 /* texture.vert */; };
+		6D7E3913A68741069A53045B /* nanovg.c in Sources */ = {isa = PBXBuildFile; fileRef = 63DFF976D96B44208B4B11FF /* nanovg.c */; };
+		707E8DBCA75A4775A1518060 /* jni_gui.c in Sources */ = {isa = PBXBuildFile; fileRef = 7AC968C9D1B5424F8CEAC6CA /* jni_gui.c */; };
+		718E81DD974C48BE82C0967D /* jdwp.c in Sources */ = {isa = PBXBuildFile; fileRef = 389ABAB6718F4C6BB1C7AFD4 /* jdwp.c */; };
+		79D8881C7FB146BB83B4F5A3 /* main.c in Sources */ = {isa = PBXBuildFile; fileRef = 9FC46DB60A164D87A5F717DF /* main.c */; };
+		7D16DE752824476AB87411A7 /* NotoEmoji-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 935092B632404F2CBC24DAF5 /* NotoEmoji-Regular.ttf */; };
+		886B8B68889F40B7A0ECBC2A /* wqymhei.ttc in Resources */ = {isa = PBXBuildFile; fileRef = C3591DD7D65B42F5B963D880 /* wqymhei.ttc */; };
+		8A28CE5EBF724A8DBC919A9B /* jni_nanovg.c in Sources */ = {isa = PBXBuildFile; fileRef = B74B8845DF034B6BB9EC2035 /* jni_nanovg.c */; };
+		91A3A86BC80B469A83817C84 /* jni_gl.c in Sources */ = {isa = PBXBuildFile; fileRef = 517D7F5A5519449A95C18195 /* jni_gl.c */; };
+		99594C5FC0D242DCB0800010 /* glfm_platform_ios.m in Sources */ = {isa = PBXBuildFile; fileRef = 30C6A87580DD40CAA9352695 /* glfm_platform_ios.m */; };
+		9C7412B4C4C749D3AA570E27 /* class.c in Sources */ = {isa = PBXBuildFile; fileRef = 154DD37B63DC4F259B58BBEF /* class.c */; };
+		A14836E59DA24782A07F0673 /* wqymhei.ttc in Resources */ = {isa = PBXBuildFile; fileRef = C14801F25B8242D8B38EB9B2 /* wqymhei.ttc */; };
+		ADE3DDC6E71E40148904BD04 /* texture.frag in Resources */ = {isa = PBXBuildFile; fileRef = DDA1CADDEB01403E9D2C1356 /* texture.frag */; };
+		B5309FB7156746399B713256 /* java_native_io.c in Sources */ = {isa = PBXBuildFile; fileRef = B34372416A6843C99CA8C760 /* java_native_io.c */; };
+		B8116423558147C8B2A0ACAD /* jni_glfm.c in Sources */ = {isa = PBXBuildFile; fileRef = F8FF02185E194074982FEDAC /* jni_glfm.c */; };
+		BBBA31E3A7534DAF8E88AFD5 /* runtime.c in Sources */ = {isa = PBXBuildFile; fileRef = 00F0C1ADEF2D4963A4A116EB /* runtime.c */; };
+		BF48035500944704A3EDD709 /* spinlock.c in Sources */ = {isa = PBXBuildFile; fileRef = 9CAA06CD51A94CF0A17A797D /* spinlock.c */; };
+		C56C9E6D4862406DA9243AD3 /* minijvm_rt.jar in Resources */ = {isa = PBXBuildFile; fileRef = 4B73EB7627764272B7B7BA4A /* minijvm_rt.jar */; };
+		C9A261C11B4E4B7F92CDCC2D /* java_native_std.c in Sources */ = {isa = PBXBuildFile; fileRef = 6FC61A2D19CA44DE80FD198B /* java_native_std.c */; };
+		CF5B9A3C1EC0416DB04433E5 /* texture.vert in Resources */ = {isa = PBXBuildFile; fileRef = 39A2111BF49D42789D9F8AF8 /* texture.vert */; };
+		D67A380C1F094282BD8BA9F1 /* .DS_Store in Resources */ = {isa = PBXBuildFile; fileRef = 1AACD94B2DB44E27AABED871 /* .DS_Store */; };
+		E7766311FAD247E18CA54A92 /* garbage.c in Sources */ = {isa = PBXBuildFile; fileRef = 2770D80B83A9496AB5E6F442 /* garbage.c */; };
+		EC81A8E536014075BBC0EABA /* pairlist.c in Sources */ = {isa = PBXBuildFile; fileRef = D2CD0FC6122C49B495226E7A /* pairlist.c */; };
+		ED4B151AF7A34003A4EBCE27 /* d_utils.c in Sources */ = {isa = PBXBuildFile; fileRef = A71E1A933A064C77AA651D87 /* d_utils.c */; };
+		EE1245E63E094B17A2CBB7C4 /* simple.frag in Resources */ = {isa = PBXBuildFile; fileRef = 80F77A3537714D93A39F2B72 /* simple.frag */; };
+		F457551BCB754B9285A35DCE /* jvm.c in Sources */ = {isa = PBXBuildFile; fileRef = 52D2D1CA585248D292F838CF /* jvm.c */; };
+		F9F93E7C3C974D1C978B8E4A /* entypo.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 9C64C3AE6C6F4C14A8063F50 /* entypo.ttf */; };
 /* End PBXBuildFile section */
 
-/* Begin PBXBuildStyle section */
-		60E9DD335DB34588ADB9EA6C /* Debug */ = {
-			isa = PBXBuildStyle;
-			buildSettings = {
-				COPY_PHASE_STRIP = NO;
-			};
-			name = Debug;
-		};
-		837458D443E04CC3939693E6 /* Release */ = {
-			isa = PBXBuildStyle;
-			buildSettings = {
-				COPY_PHASE_STRIP = NO;
-			};
-			name = Release;
-		};
-		D8AE56BC714340809878A168 /* MinSizeRel */ = {
-			isa = PBXBuildStyle;
-			buildSettings = {
-				COPY_PHASE_STRIP = NO;
-			};
-			name = MinSizeRel;
-		};
-		DFA5E2563B044CA8A235B856 /* RelWithDebInfo */ = {
-			isa = PBXBuildStyle;
-			buildSettings = {
-				COPY_PHASE_STRIP = NO;
-			};
-			name = RelWithDebInfo;
-		};
-/* End PBXBuildStyle section */
-
 /* Begin PBXContainerItemProxy section */
-		5A94271CC5834DA5B92839F8 /* PBXContainerItemProxy */ = {
+		0DA572CD15A74FC2AEDD95EC /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 0521BB25692C43A688A876F7 /* Project object */;
 			proxyType = 1;
 			remoteGlobalIDString = 0C326D90454C4FDE86F6EEFC;
 			remoteInfo = glfm_example;
 		};
-		5B1D68E900AD44FEA216A7E0 /* PBXContainerItemProxy */ = {
+		44DB69618DCB46DB922E7F04 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 0521BB25692C43A688A876F7 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = CCD89D233A254EA4A1C4AACC;
+			remoteInfo = ZERO_CHECK;
+		};
+		4612B779ADED464EA3D685BC /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 0521BB25692C43A688A876F7 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = CCD89D233A254EA4A1C4AACC;
+			remoteInfo = ZERO_CHECK;
+		};
+		49A24BFDFB33494D830EB4D0 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 0521BB25692C43A688A876F7 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 0A3EBC4293A84F1684537D21;
+			remoteInfo = glfm;
+		};
+		5EF1F6C21F7943299B64C7E6 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 0521BB25692C43A688A876F7 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = CCD89D233A254EA4A1C4AACC;
+			remoteInfo = ZERO_CHECK;
+		};
+		7C395809969345749AB5A9FC /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 0521BB25692C43A688A876F7 /* Project object */;
 			proxyType = 1;
 			remoteGlobalIDString = 35A17888CF24475C8FDC310D;
 			remoteInfo = glfm_test_pattern;
 		};
-		5DB7C65C329841A8AF47C038 /* PBXContainerItemProxy */ = {
+		837B96E9B2BF4869AABA39B7 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 0521BB25692C43A688A876F7 /* Project object */;
 			proxyType = 1;
 			remoteGlobalIDString = CCD89D233A254EA4A1C4AACC;
 			remoteInfo = ZERO_CHECK;
 		};
-		892825E91B8E47D99FC65AAE /* PBXContainerItemProxy */ = {
+		C6671291D37841A3A89B328C /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 0521BB25692C43A688A876F7 /* Project object */;
 			proxyType = 1;
 			remoteGlobalIDString = 0A3EBC4293A84F1684537D21;
 			remoteInfo = glfm;
 		};
-		A04A425457BC4AFE94A7141C /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 0521BB25692C43A688A876F7 /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = CCD89D233A254EA4A1C4AACC;
-			remoteInfo = ZERO_CHECK;
-		};
-		A4869D7EC1E14174B5EFA4C4 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 0521BB25692C43A688A876F7 /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = CCD89D233A254EA4A1C4AACC;
-			remoteInfo = ZERO_CHECK;
-		};
-		B6B8A8D9DA5F4C578859795D /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 0521BB25692C43A688A876F7 /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = CCD89D233A254EA4A1C4AACC;
-			remoteInfo = ZERO_CHECK;
-		};
-		DF4B847CB8664EB79F5A024C /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 0521BB25692C43A688A876F7 /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = 0A3EBC4293A84F1684537D21;
-			remoteInfo = glfm;
-		};
-		EECCB027CDC14F3BB1076115 /* PBXContainerItemProxy */ = {
+		D4979EBFF9304E4D8973B528 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 0521BB25692C43A688A876F7 /* Project object */;
 			proxyType = 1;
@@ -220,319 +156,331 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
-		026C430CB33B40719C1AE5CF /* /Users/Gust/Documents/c/mini_jvm/ex_lib/glfm/gui/jni_gui.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.h; fileEncoding = 4; name = jni_gui.h; path = gui/jni_gui.h; sourceTree = SOURCE_ROOT; };
-		036988B4E8CC4473AD5B6D9D /* /Users/Gust/Documents/c/mini_jvm/mini_jvm/utils/bytebuf.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.h; fileEncoding = 4; name = bytebuf.h; path = ../../mini_jvm/utils/bytebuf.h; sourceTree = SOURCE_ROOT; };
-		0A56F35A3EF44241AAC48CDE /* /Users/Gust/Documents/c/mini_jvm/mini_jvm/utils/miniz/miniz_wrapper.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.h; fileEncoding = 4; name = miniz_wrapper.h; path = ../../mini_jvm/utils/miniz/miniz_wrapper.h; sourceTree = SOURCE_ROOT; };
-		0C3A09CC350C4856BF884D8F /* /Users/Gust/Documents/c/mini_jvm/mini_jvm/utils/hashset.c */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.c; fileEncoding = 4; name = hashset.c; path = ../../mini_jvm/utils/hashset.c; sourceTree = SOURCE_ROOT; };
-		0E74028FE27E4F368C59FD86 /* /Users/Gust/Documents/c/mini_jvm/mini_jvm/jvm/jdwp.c */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.c; fileEncoding = 4; name = jdwp.c; path = ../../mini_jvm/jvm/jdwp.c; sourceTree = SOURCE_ROOT; };
-		0FE82D9BD35A4BDC9FBD8F9C /* /Users/Gust/Documents/c/mini_jvm/mini_jvm/utils/dirent_win.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.h; fileEncoding = 4; name = dirent_win.h; path = ../../mini_jvm/utils/dirent_win.h; sourceTree = SOURCE_ROOT; };
-		157C1F75F24F464B9403F45D /* /Users/Gust/Documents/c/mini_jvm/ex_lib/glfm/example/src/main.c */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.c; fileEncoding = 4; name = main.c; path = example/src/main.c; sourceTree = SOURCE_ROOT; };
-		1685F1C23DA245FC876E4F02 /* /Users/Gust/Documents/c/mini_jvm/ex_lib/glfm/gui/jni_nanovg_assist.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.h; fileEncoding = 4; name = jni_nanovg_assist.h; path = gui/jni_nanovg_assist.h; sourceTree = SOURCE_ROOT; };
-		23E6EC05F6B94F3A8BA52212 /* /Users/Gust/Documents/c/mini_jvm/mini_jvm/utils/tinycthread.c */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.c; fileEncoding = 4; name = tinycthread.c; path = ../../mini_jvm/utils/tinycthread.c; sourceTree = SOURCE_ROOT; };
-		247790C379A84B5D964E99EE /* /Users/Gust/Documents/c/mini_jvm/mini_jvm/utils/spinlock.c */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.c; fileEncoding = 4; name = spinlock.c; path = ../../mini_jvm/utils/spinlock.c; sourceTree = SOURCE_ROOT; };
-		25CB8C1C38AC42CEAAC211B6 /* /Users/Gust/Documents/c/mini_jvm/ex_lib/glfm/example/assets/simple.frag */ = {isa = PBXFileReference; explicitFileType = sourcecode; fileEncoding = 4; name = simple.frag; path = example/assets/simple.frag; sourceTree = SOURCE_ROOT; };
-		33FF1B69275A4B89B4F68C8F /* /Users/Gust/Documents/c/mini_jvm/ex_lib/glfm/src/glfm_platform.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.h; fileEncoding = 4; name = glfm_platform.h; path = src/glfm_platform.h; sourceTree = SOURCE_ROOT; };
-		34A4D9938A0049879B48DC41 /* glfm */ = {isa = PBXFileReference; explicitFileType = archive.ar; path = libglfm.a; sourceTree = BUILT_PRODUCTS_DIR; };
-		34E0F21A177040D1BE693F73 /* /Users/Gust/Documents/c/mini_jvm/mini_jvm/utils/hashset.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.h; fileEncoding = 4; name = hashset.h; path = ../../mini_jvm/utils/hashset.h; sourceTree = SOURCE_ROOT; };
-		3567AFDD26854478B39E203E /* /Users/Gust/Documents/c/mini_jvm/ex_lib/glfm/example/assets/simple.frag */ = {isa = PBXFileReference; explicitFileType = sourcecode; fileEncoding = 4; name = simple.frag; path = example/assets/simple.frag; sourceTree = SOURCE_ROOT; };
-		368AC8BC48FD4F65A1A623CA /* /Users/Gust/Documents/c/mini_jvm/mini_jvm/utils/arraylist.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.h; fileEncoding = 4; name = arraylist.h; path = ../../mini_jvm/utils/arraylist.h; sourceTree = SOURCE_ROOT; };
-		4195CCB1C95A4EE38E4CB169 /* /Users/Gust/Documents/c/mini_jvm/mini_jvm/utils/d_type.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.h; fileEncoding = 4; name = d_type.h; path = ../../mini_jvm/utils/d_type.h; sourceTree = SOURCE_ROOT; };
-		45805C6553DC49838AFEB8A6 /* /Users/Gust/Documents/c/mini_jvm/ex_lib/glfm/gui/other/linmath.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.h; fileEncoding = 4; name = linmath.h; path = gui/other/linmath.h; sourceTree = SOURCE_ROOT; };
-		48E45BEBA40D4878B7A2BD7C /* /Users/Gust/Documents/c/mini_jvm/mini_jvm/utils/miniz/miniz_wrapper.c */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.c; fileEncoding = 4; name = miniz_wrapper.c; path = ../../mini_jvm/utils/miniz/miniz_wrapper.c; sourceTree = SOURCE_ROOT; };
-		493595FD8C8247E0BC1DB69F /* /Users/Gust/Documents/c/mini_jvm/mini_jvm/utils/linkedlist.c */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.c; fileEncoding = 4; name = linkedlist.c; path = ../../mini_jvm/utils/linkedlist.c; sourceTree = SOURCE_ROOT; };
-		4EC44CE40131485E8A55D08B /* /Users/Gust/Documents/c/mini_jvm/mini_jvm/jvm/runtime.c */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.c; fileEncoding = 4; name = runtime.c; path = ../../mini_jvm/jvm/runtime.c; sourceTree = SOURCE_ROOT; };
-		4EE83A1299AF4E26A64AC747 /* /Users/Gust/Documents/c/mini_jvm/ex_lib/glfm/gui/jni_glfm.c */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.c; fileEncoding = 4; name = jni_glfm.c; path = gui/jni_glfm.c; sourceTree = SOURCE_ROOT; };
-		568C62F57AE0466885E546C6 /* /Users/Gust/Documents/c/mini_jvm/ex_lib/glfm/gui/stb/stb_image_write.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.h; fileEncoding = 4; name = stb_image_write.h; path = gui/stb/stb_image_write.h; sourceTree = SOURCE_ROOT; };
-		5E07141428EA45318C319F48 /* /Users/Gust/Documents/c/mini_jvm/mini_jvm/jvm/java_native_std.c */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.c; fileEncoding = 4; name = java_native_std.c; path = ../../mini_jvm/jvm/java_native_std.c; sourceTree = SOURCE_ROOT; };
-		5F50DB15182E403C9853E8AF /* /Users/Gust/Documents/c/mini_jvm/mini_jvm/jvm/jvm.c */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.c; fileEncoding = 4; name = jvm.c; path = ../../mini_jvm/jvm/jvm.c; sourceTree = SOURCE_ROOT; };
-		5F68966488954F3BACDDBA43 /* /Users/Gust/Documents/c/mini_jvm/mini_jvm/utils/tinycthread.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.h; fileEncoding = 4; name = tinycthread.h; path = ../../mini_jvm/utils/tinycthread.h; sourceTree = SOURCE_ROOT; };
-		5F6F78056B234366A290CCB1 /* /Users/Gust/Documents/c/mini_jvm/ex_lib/glfm/CMakeLists.txt */ = {isa = PBXFileReference; explicitFileType = sourcecode.text; fileEncoding = 4; name = CMakeLists.txt; path = CMakeLists.txt; sourceTree = SOURCE_ROOT; };
-		61D410D0141648FB992A9E63 /* /Users/Gust/Documents/c/mini_jvm/ex_lib/glfm/gui/nanovg/nanovg_gl_utils.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.h; fileEncoding = 4; name = nanovg_gl_utils.h; path = gui/nanovg/nanovg_gl_utils.h; sourceTree = SOURCE_ROOT; };
-		63263BF907B049EB9613B1BE /* /Users/Gust/Documents/c/mini_jvm/mini_jvm/jvm/interpreter.c */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.c; fileEncoding = 4; name = interpreter.c; path = ../../mini_jvm/jvm/interpreter.c; sourceTree = SOURCE_ROOT; };
-		63430AF72DF744C1889884FF /* /Users/Gust/Documents/c/mini_jvm/ex_lib/glfm/gui/jni_nanovg.c */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.c; fileEncoding = 4; name = jni_nanovg.c; path = gui/jni_nanovg.c; sourceTree = SOURCE_ROOT; };
-		68126747CEB54C408A3AA30B /* /Users/Gust/Documents/c/mini_jvm/ex_lib/glfm/build/ios/example/CMakeFiles/glfm_test_pattern.dir/Info.plist */ = {isa = PBXFileReference; explicitFileType = sourcecode.text.plist; fileEncoding = 4; name = Info.plist; path = build/ios/example/CMakeFiles/glfm_test_pattern.dir/Info.plist; sourceTree = SOURCE_ROOT; };
-		6B0E1FBA224D4C2C8D1DD500 /* /Users/Gust/Documents/c/mini_jvm/ex_lib/glfm/gui/nanovg/nanovg.c */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.c; fileEncoding = 4; name = nanovg.c; path = gui/nanovg/nanovg.c; sourceTree = SOURCE_ROOT; };
-		6CB0C3FD0C1F4682BF143168 /* /Users/Gust/Documents/c/mini_jvm/ex_lib/glfm/gui/jni_stb_assist.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.h; fileEncoding = 4; name = jni_stb_assist.h; path = gui/jni_stb_assist.h; sourceTree = SOURCE_ROOT; };
-		6F9A4EB1E67242B0A587080C /* /Users/Gust/Documents/c/mini_jvm/mini_jvm/utils/utf8_string.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.h; fileEncoding = 4; name = utf8_string.h; path = ../../mini_jvm/utils/utf8_string.h; sourceTree = SOURCE_ROOT; };
-		7079651A7DE843AFB82BCAF7 /* /Users/Gust/Documents/c/mini_jvm/ex_lib/glfm/example/assets/simple.vert */ = {isa = PBXFileReference; explicitFileType = sourcecode; fileEncoding = 4; name = simple.vert; path = example/assets/simple.vert; sourceTree = SOURCE_ROOT; };
-		728C3DD1AE4C4E5F80B5DCD3 /* /Users/Gust/Documents/c/mini_jvm/ex_lib/glfm/gui/jni_gui.c */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.c; fileEncoding = 4; name = jni_gui.c; path = gui/jni_gui.c; sourceTree = SOURCE_ROOT; };
-		7561D30FB21D4A8899F8CDF8 /* /Users/Gust/Documents/c/mini_jvm/mini_jvm/utils/linkedlist.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.h; fileEncoding = 4; name = linkedlist.h; path = ../../mini_jvm/utils/linkedlist.h; sourceTree = SOURCE_ROOT; };
-		76154FE5E06846DD99817C16 /* /Users/Gust/Documents/c/mini_jvm/mini_jvm/utils/pairlist.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.h; fileEncoding = 4; name = pairlist.h; path = ../../mini_jvm/utils/pairlist.h; sourceTree = SOURCE_ROOT; };
-		765EB247BD7245EB9F00F004 /* /Users/Gust/Documents/c/mini_jvm/ex_lib/glfm/gui/nanovg/nanovg.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.h; fileEncoding = 4; name = nanovg.h; path = gui/nanovg/nanovg.h; sourceTree = SOURCE_ROOT; };
-		76954558B23D49ED985F4CDE /* glfm_example */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; path = glfm_example; sourceTree = BUILT_PRODUCTS_DIR; };
-		7B1AB9C5983A432782E0BB4C /* /Users/Gust/Documents/c/mini_jvm/ex_lib/glfm/gui/glad/glad.c */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.c; fileEncoding = 4; name = glad.c; path = gui/glad/glad.c; sourceTree = SOURCE_ROOT; };
-		7E560B997AC54CACBCDA5230 /* /Users/Gust/Documents/c/mini_jvm/mini_jvm/jvm/jdwp.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.h; fileEncoding = 4; name = jdwp.h; path = ../../mini_jvm/jvm/jdwp.h; sourceTree = SOURCE_ROOT; };
-		839437E327D140FA9D92A6FF /* /Users/Gust/Documents/c/mini_jvm/mini_jvm/utils/pairlist.c */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.c; fileEncoding = 4; name = pairlist.c; path = ../../mini_jvm/utils/pairlist.c; sourceTree = SOURCE_ROOT; };
-		868F7570175F4198A78D92C8 /* /Users/Gust/Documents/c/mini_jvm/ex_lib/glfm/example/assets/minijvm_rt.jar */ = {isa = PBXFileReference; explicitFileType = sourcecode; fileEncoding = 4; name = minijvm_rt.jar; path = example/assets/minijvm_rt.jar; sourceTree = SOURCE_ROOT; };
-		8E90128297EE4359B0BA5719 /* /Users/Gust/Documents/c/mini_jvm/mini_jvm/jvm/java_native_io.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.h; fileEncoding = 4; name = java_native_io.h; path = ../../mini_jvm/jvm/java_native_io.h; sourceTree = SOURCE_ROOT; };
-		8F19577DF9ED4B99B160B1FB /* /Users/Gust/Documents/c/mini_jvm/ex_lib/glfm/example/CMakeLists.txt */ = {isa = PBXFileReference; explicitFileType = sourcecode.text; fileEncoding = 4; name = CMakeLists.txt; path = example/CMakeLists.txt; sourceTree = SOURCE_ROOT; };
-		9002FDDD1B3443E9A8B45315 /* /Users/Gust/Documents/c/mini_jvm/ex_lib/glfm/gui/stb/stb_truetype.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.h; fileEncoding = 4; name = stb_truetype.h; path = gui/stb/stb_truetype.h; sourceTree = SOURCE_ROOT; };
-		916B8DAFE2A4448385891098 /* /Users/Gust/Documents/c/mini_jvm/ex_lib/glfm/CMakeLists.txt */ = {isa = PBXFileReference; explicitFileType = sourcecode.text; fileEncoding = 4; name = CMakeLists.txt; path = CMakeLists.txt; sourceTree = SOURCE_ROOT; };
-		98A6F35F59144736A3C9D46A /* /Users/Gust/Documents/c/mini_jvm/ex_lib/glfm/include/glfm.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.h; fileEncoding = 4; name = glfm.h; path = include/glfm.h; sourceTree = SOURCE_ROOT; };
-		9C046FD3D0234C1F91B5C89E /* /Users/Gust/Documents/c/mini_jvm/mini_jvm/utils/hashtable.c */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.c; fileEncoding = 4; name = hashtable.c; path = ../../mini_jvm/utils/hashtable.c; sourceTree = SOURCE_ROOT; };
-		9D3EDA1BF0514C29A70B1CF1 /* /Users/Gust/Documents/c/mini_jvm/mini_jvm/jvm/class_load.c */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.c; fileEncoding = 4; name = class_load.c; path = ../../mini_jvm/jvm/class_load.c; sourceTree = SOURCE_ROOT; };
-		9EAB9D30EC9849649EA893DA /* /Users/Gust/Documents/c/mini_jvm/ex_lib/glfm/CMakeLists.txt */ = {isa = PBXFileReference; explicitFileType = sourcecode.text; fileEncoding = 4; name = CMakeLists.txt; path = CMakeLists.txt; sourceTree = SOURCE_ROOT; };
-		9F24791BD529440BB5E12485 /* /Users/Gust/Documents/c/mini_jvm/ex_lib/glfm/example/src/file_compat.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.h; fileEncoding = 4; name = file_compat.h; path = example/src/file_compat.h; sourceTree = SOURCE_ROOT; };
-		9FA5DF5854804DAEBB4733D0 /* /Users/Gust/Documents/c/mini_jvm/ex_lib/glfm/example/assets/texture.frag */ = {isa = PBXFileReference; explicitFileType = sourcecode; fileEncoding = 4; name = texture.frag; path = example/assets/texture.frag; sourceTree = SOURCE_ROOT; };
-		A133898F226149FAB360DBD8 /* /Users/Gust/Documents/c/mini_jvm/ex_lib/glfm/example/assets/minijvm_test.jar */ = {isa = PBXFileReference; explicitFileType = sourcecode; fileEncoding = 4; name = minijvm_test.jar; path = example/assets/minijvm_test.jar; sourceTree = SOURCE_ROOT; };
-		A41942BEF67148EDA21AFA30 /* /Users/Gust/Documents/c/mini_jvm/mini_jvm/utils/d_utils.c */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.c; fileEncoding = 4; name = d_utils.c; path = ../../mini_jvm/utils/d_utils.c; sourceTree = SOURCE_ROOT; };
-		A4BD8F16A107447C9A4E6695 /* /Users/Gust/Documents/c/mini_jvm/mini_jvm/jvm/jvm_util.c */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.c; fileEncoding = 4; name = jvm_util.c; path = ../../mini_jvm/jvm/jvm_util.c; sourceTree = SOURCE_ROOT; };
-		A4DF9DC27D2B43F4B6B17909 /* /Users/Gust/Documents/c/mini_jvm/mini_jvm/utils/hashtable.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.h; fileEncoding = 4; name = hashtable.h; path = ../../mini_jvm/utils/hashtable.h; sourceTree = SOURCE_ROOT; };
-		A5B54678C9404D7CBB9811F4 /* /Users/Gust/Documents/c/mini_jvm/ex_lib/glfm/example/assets/simple.vert */ = {isa = PBXFileReference; explicitFileType = sourcecode; fileEncoding = 4; name = simple.vert; path = example/assets/simple.vert; sourceTree = SOURCE_ROOT; };
-		ACB1E478B25445B18F509BA0 /* /Users/Gust/Documents/c/mini_jvm/ex_lib/glfm/src/glfm_platform_ios.m */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.objc; fileEncoding = 4; name = glfm_platform_ios.m; path = src/glfm_platform_ios.m; sourceTree = SOURCE_ROOT; };
-		B2C66CB5D1034572B207C794 /* /Users/Gust/Documents/c/mini_jvm/mini_jvm/utils/utf8_string.c */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.c; fileEncoding = 4; name = utf8_string.c; path = ../../mini_jvm/utils/utf8_string.c; sourceTree = SOURCE_ROOT; };
-		B2E6DBF554F04C5A84479180 /* /Users/Gust/Documents/c/mini_jvm/mini_jvm/jvm/java_native_io.c */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.c; fileEncoding = 4; name = java_native_io.c; path = ../../mini_jvm/jvm/java_native_io.c; sourceTree = SOURCE_ROOT; };
-		B5729B7D8A4C434D8C55730C /* glfm_test_pattern */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; path = glfm_test_pattern; sourceTree = BUILT_PRODUCTS_DIR; };
-		B6448F0D1D9C4E79A9D4FCEA /* /Users/Gust/Documents/c/mini_jvm/mini_jvm/jvm/jvm.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.h; fileEncoding = 4; name = jvm.h; path = ../../mini_jvm/jvm/jvm.h; sourceTree = SOURCE_ROOT; };
-		BB2D4D55A87B4EF49B7853F8 /* /Users/Gust/Documents/c/mini_jvm/ex_lib/glfm/example/CMakeLists.txt */ = {isa = PBXFileReference; explicitFileType = sourcecode.text; fileEncoding = 4; name = CMakeLists.txt; path = example/CMakeLists.txt; sourceTree = SOURCE_ROOT; };
-		BD3C9BC7A99D49CDA714E4BC /* /Users/Gust/Documents/c/mini_jvm/ex_lib/glfm/gui/glad/glad.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.h; fileEncoding = 4; name = glad.h; path = gui/glad/glad.h; sourceTree = SOURCE_ROOT; };
-		C098E0789AE04E71A41FA473 /* /Users/Gust/Documents/c/mini_jvm/mini_jvm/jvm/garbage.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.h; fileEncoding = 4; name = garbage.h; path = ../../mini_jvm/jvm/garbage.h; sourceTree = SOURCE_ROOT; };
-		C84EC87145EE400394906259 /* /Users/Gust/Documents/c/mini_jvm/mini_jvm/jvm/global.c */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.c; fileEncoding = 4; name = global.c; path = ../../mini_jvm/jvm/global.c; sourceTree = SOURCE_ROOT; };
-		C91AF0C5959F4397A67FF47C /* /Users/Gust/Documents/c/mini_jvm/ex_lib/glfm/gui/KHR/khrplatform.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.h; fileEncoding = 4; name = khrplatform.h; path = gui/KHR/khrplatform.h; sourceTree = SOURCE_ROOT; };
-		CB5D8032C28F4A20BCA5D2E4 /* /Users/Gust/Documents/c/mini_jvm/mini_jvm/jvm/java_native_reflect.c */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.c; fileEncoding = 4; name = java_native_reflect.c; path = ../../mini_jvm/jvm/java_native_reflect.c; sourceTree = SOURCE_ROOT; };
-		CBAA333A81BF4F01B3559B06 /* /Users/Gust/Documents/c/mini_jvm/mini_jvm/jvm/garbage.c */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.c; fileEncoding = 4; name = garbage.c; path = ../../mini_jvm/jvm/garbage.c; sourceTree = SOURCE_ROOT; };
-		D84CEC1A08154A0694D76468 /* /Users/Gust/Documents/c/mini_jvm/mini_jvm/utils/arraylist.c */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.c; fileEncoding = 4; name = arraylist.c; path = ../../mini_jvm/utils/arraylist.c; sourceTree = SOURCE_ROOT; };
-		D8B2788FA30B420BAED28704 /* /Users/Gust/Documents/c/mini_jvm/mini_jvm/jvm/class.c */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.c; fileEncoding = 4; name = class.c; path = ../../mini_jvm/jvm/class.c; sourceTree = SOURCE_ROOT; };
-		DD08950B6C59433ABEA428E2 /* /Users/Gust/Documents/c/mini_jvm/mini_jvm/utils/bytebuf.c */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.c; fileEncoding = 4; name = bytebuf.c; path = ../../mini_jvm/utils/bytebuf.c; sourceTree = SOURCE_ROOT; };
-		DD389EFBC99C4F7E964DAC4C /* /Users/Gust/Documents/c/mini_jvm/ex_lib/glfm/example/assets/texture.vert */ = {isa = PBXFileReference; explicitFileType = sourcecode; fileEncoding = 4; name = texture.vert; path = example/assets/texture.vert; sourceTree = SOURCE_ROOT; };
-		DEA61E2C2B87479C9586AC6D /* /Users/Gust/Documents/c/mini_jvm/mini_jvm/jvm/jvm_util.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.h; fileEncoding = 4; name = jvm_util.h; path = ../../mini_jvm/jvm/jvm_util.h; sourceTree = SOURCE_ROOT; };
-		E1908015D25D4DCAA8F995AE /* /Users/Gust/Documents/c/mini_jvm/mini_jvm/jvm/java_native_std.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.h; fileEncoding = 4; name = java_native_std.h; path = ../../mini_jvm/jvm/java_native_std.h; sourceTree = SOURCE_ROOT; };
-		E31F99B20DF44E42A29CA356 /* /Users/Gust/Documents/c/mini_jvm/mini_jvm/utils/spinlock.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.h; fileEncoding = 4; name = spinlock.h; path = ../../mini_jvm/utils/spinlock.h; sourceTree = SOURCE_ROOT; };
-		E9118B9802FA4044AEFD3ACD /* /Users/Gust/Documents/c/mini_jvm/mini_jvm/jvm/java_native_reflect.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.h; fileEncoding = 4; name = java_native_reflect.h; path = ../../mini_jvm/jvm/java_native_reflect.h; sourceTree = SOURCE_ROOT; };
-		EBCCC74B00FE4E65BCD7B795 /* /Users/Gust/Documents/c/mini_jvm/ex_lib/glfm/gui/stb/stb_image.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.h; fileEncoding = 4; name = stb_image.h; path = gui/stb/stb_image.h; sourceTree = SOURCE_ROOT; };
-		F283C08F8F8E44B0BDB0C402 /* /Users/Gust/Documents/c/mini_jvm/ex_lib/glfm/example/assets/minijvm_rt.jar */ = {isa = PBXFileReference; explicitFileType = sourcecode; fileEncoding = 4; name = minijvm_rt.jar; path = example/assets/minijvm_rt.jar; sourceTree = SOURCE_ROOT; };
-		F31E5DC086434DC3912283E0 /* /Users/Gust/Documents/c/mini_jvm/ex_lib/glfm/example/assets/minijvm_test.jar */ = {isa = PBXFileReference; explicitFileType = sourcecode; fileEncoding = 4; name = minijvm_test.jar; path = example/assets/minijvm_test.jar; sourceTree = SOURCE_ROOT; };
-		F5807DE3A31E4E1ABCA8D0C9 /* /Users/Gust/Documents/c/mini_jvm/ex_lib/glfm/example/assets/texture.frag */ = {isa = PBXFileReference; explicitFileType = sourcecode; fileEncoding = 4; name = texture.frag; path = example/assets/texture.frag; sourceTree = SOURCE_ROOT; };
-		F6B3894D3D064766BE9ADC15 /* /Users/Gust/Documents/c/mini_jvm/ex_lib/glfm/gui/nanovg/fontstash.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.h; fileEncoding = 4; name = fontstash.h; path = gui/nanovg/fontstash.h; sourceTree = SOURCE_ROOT; };
-		F94AFBC54873431BBAFFD784 /* /Users/Gust/Documents/c/mini_jvm/ex_lib/glfm/example/assets/texture.vert */ = {isa = PBXFileReference; explicitFileType = sourcecode; fileEncoding = 4; name = texture.vert; path = example/assets/texture.vert; sourceTree = SOURCE_ROOT; };
-		FA51BF9249114B83A37E1739 /* /Users/Gust/Documents/c/mini_jvm/ex_lib/glfm/gui/nanovg/nanovg_gl.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.h; fileEncoding = 4; name = nanovg_gl.h; path = gui/nanovg/nanovg_gl.h; sourceTree = SOURCE_ROOT; };
-		FCF17575684C49FAB398A6C9 /* /Users/Gust/Documents/c/mini_jvm/ex_lib/glfm/example/src/test_pattern.c */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.c; fileEncoding = 4; name = test_pattern.c; path = example/src/test_pattern.c; sourceTree = SOURCE_ROOT; };
-		FE090DA7107348419384ACC8 /* /Users/Gust/Documents/c/mini_jvm/ex_lib/glfm/example/src/file_compat.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.h; fileEncoding = 4; name = file_compat.h; path = example/src/file_compat.h; sourceTree = SOURCE_ROOT; };
-		FF9F7FB738704634B835C3DC /* /Users/Gust/Documents/c/mini_jvm/ex_lib/glfm/build/ios/example/CMakeFiles/glfm_example.dir/Info.plist */ = {isa = PBXFileReference; explicitFileType = sourcecode.text.plist; fileEncoding = 4; name = Info.plist; path = build/ios/example/CMakeFiles/glfm_example.dir/Info.plist; sourceTree = SOURCE_ROOT; };
+		00F0C1ADEF2D4963A4A116EB /* runtime.c */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.c; fileEncoding = 4; name = runtime.c; path = ../../mini_jvm/jvm/runtime.c; sourceTree = SOURCE_ROOT; };
+		010B54C7157B448DB78E2AEB /* class_load.c */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.c; fileEncoding = 4; name = class_load.c; path = ../../mini_jvm/jvm/class_load.c; sourceTree = SOURCE_ROOT; };
+		039DBE431E1542B2A4339823 /* global.c */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.c; fileEncoding = 4; name = global.c; path = ../../mini_jvm/jvm/global.c; sourceTree = SOURCE_ROOT; };
+		154DD37B63DC4F259B58BBEF /* class.c */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.c; fileEncoding = 4; name = class.c; path = ../../mini_jvm/jvm/class.c; sourceTree = SOURCE_ROOT; };
+		15C4BC3413E4451B84C26239 /* interpreter.c */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.c; fileEncoding = 4; name = interpreter.c; path = ../../mini_jvm/jvm/interpreter.c; sourceTree = SOURCE_ROOT; };
+		1AACD94B2DB44E27AABED871 /* .DS_Store */ = {isa = PBXFileReference; explicitFileType = sourcecode; fileEncoding = 4; name = .DS_Store; path = example/assets/.DS_Store; sourceTree = SOURCE_ROOT; };
+		1C10A45D53CC4CB9B7C55337 /* CMakeLists.txt */ = {isa = PBXFileReference; explicitFileType = sourcecode.text; fileEncoding = 4; lastKnownFileType = text; path = CMakeLists.txt; sourceTree = SOURCE_ROOT; };
+		22834815EFF641528974895B /* utf8_string.c */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.c; fileEncoding = 4; name = utf8_string.c; path = ../../mini_jvm/utils/utf8_string.c; sourceTree = SOURCE_ROOT; };
+		24109C6DF81C4469ACC72776 /* miniz_wrapper.c */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.c; fileEncoding = 4; name = miniz_wrapper.c; path = ../../mini_jvm/utils/miniz/miniz_wrapper.c; sourceTree = SOURCE_ROOT; };
+		2550D366E32C40CB98759433 /* linkedlist.c */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.c; fileEncoding = 4; name = linkedlist.c; path = ../../mini_jvm/utils/linkedlist.c; sourceTree = SOURCE_ROOT; };
+		26C2F9CC79A34D288E2A83AF /* minijvm_rt.jar */ = {isa = PBXFileReference; explicitFileType = sourcecode; fileEncoding = 4; name = minijvm_rt.jar; path = example/assets/minijvm_rt.jar; sourceTree = SOURCE_ROOT; };
+		2770D80B83A9496AB5E6F442 /* garbage.c */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.c; fileEncoding = 4; name = garbage.c; path = ../../mini_jvm/jvm/garbage.c; sourceTree = SOURCE_ROOT; };
+		30C6A87580DD40CAA9352695 /* glfm_platform_ios.m */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.objc; fileEncoding = 4; name = glfm_platform_ios.m; path = src/glfm_platform_ios.m; sourceTree = SOURCE_ROOT; };
+		35A93E0B4680427DB0441B9F /* bytebuf.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.h; fileEncoding = 4; name = bytebuf.h; path = ../../mini_jvm/utils/bytebuf.h; sourceTree = SOURCE_ROOT; };
+		36247561B2424B26A5BBC420 /* jvm.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.h; fileEncoding = 4; name = jvm.h; path = ../../mini_jvm/jvm/jvm.h; sourceTree = SOURCE_ROOT; };
+		3827AD2C13CE43D3B7782E20 /* jni_gui.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.h; fileEncoding = 4; name = jni_gui.h; path = gui/jni_gui.h; sourceTree = SOURCE_ROOT; };
+		389ABAB6718F4C6BB1C7AFD4 /* jdwp.c */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.c; fileEncoding = 4; name = jdwp.c; path = ../../mini_jvm/jvm/jdwp.c; sourceTree = SOURCE_ROOT; };
+		39A2111BF49D42789D9F8AF8 /* texture.vert */ = {isa = PBXFileReference; explicitFileType = sourcecode; fileEncoding = 4; name = texture.vert; path = example/assets/texture.vert; sourceTree = SOURCE_ROOT; };
+		3D56137CE9BB4E8F9AE6A3F1 /* hashset.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.h; fileEncoding = 4; name = hashset.h; path = ../../mini_jvm/utils/hashset.h; sourceTree = SOURCE_ROOT; };
+		3F812850B6A74E3A9B39D2DD /* glfm_test_pattern.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; path = glfm_test_pattern.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		41A7BC044C904DC082EAE5C0 /* glfm_example.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; path = glfm_example.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		447C047121774F84AB719EA4 /* hashset.c */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.c; fileEncoding = 4; name = hashset.c; path = ../../mini_jvm/utils/hashset.c; sourceTree = SOURCE_ROOT; };
+		46AECB26041F40B284D1F312 /* Info.plist */ = {isa = PBXFileReference; explicitFileType = sourcecode.text.plist; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = Info.plist; path = build/ios/example/CMakeFiles/glfm_test_pattern.dir/Info.plist; sourceTree = SOURCE_ROOT; };
+		471E7DA376994496BA95CC33 /* nanovg.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.h; fileEncoding = 4; name = nanovg.h; path = gui/nanovg/nanovg.h; sourceTree = SOURCE_ROOT; };
+		4B73EB7627764272B7B7BA4A /* minijvm_rt.jar */ = {isa = PBXFileReference; explicitFileType = sourcecode; fileEncoding = 4; name = minijvm_rt.jar; path = example/assets/minijvm_rt.jar; sourceTree = SOURCE_ROOT; };
+		517D7F5A5519449A95C18195 /* jni_gl.c */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.c; fileEncoding = 4; name = jni_gl.c; path = gui/jni_gl.c; sourceTree = SOURCE_ROOT; };
+		51A6914B544F40E8B37093DB /* stb_image.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.h; fileEncoding = 4; name = stb_image.h; path = gui/stb/stb_image.h; sourceTree = SOURCE_ROOT; };
+		51AC2597C7934ADA837928EB /* jvm_util.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.h; fileEncoding = 4; name = jvm_util.h; path = ../../mini_jvm/jvm/jvm_util.h; sourceTree = SOURCE_ROOT; };
+		52D2D1CA585248D292F838CF /* jvm.c */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.c; fileEncoding = 4; name = jvm.c; path = ../../mini_jvm/jvm/jvm.c; sourceTree = SOURCE_ROOT; };
+		55100EC1AB3A440B8358AD19 /* spinlock.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.h; fileEncoding = 4; name = spinlock.h; path = ../../mini_jvm/utils/spinlock.h; sourceTree = SOURCE_ROOT; };
+		55B37A8CF6124EC1A3E86F31 /* .DS_Store */ = {isa = PBXFileReference; explicitFileType = sourcecode; fileEncoding = 4; name = .DS_Store; path = example/assets/.DS_Store; sourceTree = SOURCE_ROOT; };
+		5865670BB7AF4D7887729307 /* texture.vert */ = {isa = PBXFileReference; explicitFileType = sourcecode; fileEncoding = 4; name = texture.vert; path = example/assets/texture.vert; sourceTree = SOURCE_ROOT; };
+		58BC081BA56B42EC9225DF83 /* pairlist.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.h; fileEncoding = 4; name = pairlist.h; path = ../../mini_jvm/utils/pairlist.h; sourceTree = SOURCE_ROOT; };
+		5B948B34B8D04CAFB60C4800 /* jni_nanovg_assist.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.h; fileEncoding = 4; name = jni_nanovg_assist.h; path = gui/jni_nanovg_assist.h; sourceTree = SOURCE_ROOT; };
+		5F1A40E0BC1A469C83AF7A85 /* bytebuf.c */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.c; fileEncoding = 4; name = bytebuf.c; path = ../../mini_jvm/utils/bytebuf.c; sourceTree = SOURCE_ROOT; };
+		61C74D039E2645A989F7E120 /* garbage.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.h; fileEncoding = 4; name = garbage.h; path = ../../mini_jvm/jvm/garbage.h; sourceTree = SOURCE_ROOT; };
+		63DFF976D96B44208B4B11FF /* nanovg.c */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.c; fileEncoding = 4; name = nanovg.c; path = gui/nanovg/nanovg.c; sourceTree = SOURCE_ROOT; };
+		6724955B40284EF0A43C20E0 /* stb_image_write.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.h; fileEncoding = 4; name = stb_image_write.h; path = gui/stb/stb_image_write.h; sourceTree = SOURCE_ROOT; };
+		67EB85F1267845FBBF482C71 /* jni_stb_assist.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.h; fileEncoding = 4; name = jni_stb_assist.h; path = gui/jni_stb_assist.h; sourceTree = SOURCE_ROOT; };
+		687161C195DE49C3ACD2737C /* glfm_gui.jar */ = {isa = PBXFileReference; explicitFileType = sourcecode; fileEncoding = 4; name = glfm_gui.jar; path = example/assets/glfm_gui.jar; sourceTree = SOURCE_ROOT; };
+		6BF8FC479B8D4F06B69E1458 /* jdwp.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.h; fileEncoding = 4; name = jdwp.h; path = ../../mini_jvm/jvm/jdwp.h; sourceTree = SOURCE_ROOT; };
+		6FC61A2D19CA44DE80FD198B /* java_native_std.c */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.c; fileEncoding = 4; name = java_native_std.c; path = ../../mini_jvm/jvm/java_native_std.c; sourceTree = SOURCE_ROOT; };
+		792DC9D50C3341DCB648631D /* glfm_gui.jar */ = {isa = PBXFileReference; explicitFileType = sourcecode; fileEncoding = 4; name = glfm_gui.jar; path = example/assets/glfm_gui.jar; sourceTree = SOURCE_ROOT; };
+		7AC968C9D1B5424F8CEAC6CA /* jni_gui.c */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.c; fileEncoding = 4; name = jni_gui.c; path = gui/jni_gui.c; sourceTree = SOURCE_ROOT; };
+		80F77A3537714D93A39F2B72 /* simple.frag */ = {isa = PBXFileReference; explicitFileType = sourcecode; fileEncoding = 4; name = simple.frag; path = example/assets/simple.frag; sourceTree = SOURCE_ROOT; };
+		837EDF11EACA47EB85662EE1 /* linmath.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.h; fileEncoding = 4; name = linmath.h; path = gui/other/linmath.h; sourceTree = SOURCE_ROOT; };
+		8448D87BCEA548B08FFE89C0 /* Info.plist */ = {isa = PBXFileReference; explicitFileType = sourcecode.text.plist; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = Info.plist; path = build/ios/example/CMakeFiles/glfm_example.dir/Info.plist; sourceTree = SOURCE_ROOT; };
+		8F446CAB28A849519E073322 /* java_native_io.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.h; fileEncoding = 4; name = java_native_io.h; path = ../../mini_jvm/jvm/java_native_io.h; sourceTree = SOURCE_ROOT; };
+		935092B632404F2CBC24DAF5 /* NotoEmoji-Regular.ttf */ = {isa = PBXFileReference; explicitFileType = sourcecode; fileEncoding = 4; name = "NotoEmoji-Regular.ttf"; path = "example/assets/NotoEmoji-Regular.ttf"; sourceTree = SOURCE_ROOT; };
+		96065810B1D046DE8859F610 /* libglfm.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; path = libglfm.a; sourceTree = BUILT_PRODUCTS_DIR; };
+		9610206B9D4440E59F95BE34 /* fontstash.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.h; fileEncoding = 4; name = fontstash.h; path = gui/nanovg/fontstash.h; sourceTree = SOURCE_ROOT; };
+		9A9FA1713AE243C8AD5470F5 /* glfm_platform.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.h; fileEncoding = 4; name = glfm_platform.h; path = src/glfm_platform.h; sourceTree = SOURCE_ROOT; };
+		9C64C3AE6C6F4C14A8063F50 /* entypo.ttf */ = {isa = PBXFileReference; explicitFileType = sourcecode; fileEncoding = 4; name = entypo.ttf; path = example/assets/entypo.ttf; sourceTree = SOURCE_ROOT; };
+		9CAA06CD51A94CF0A17A797D /* spinlock.c */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.c; fileEncoding = 4; name = spinlock.c; path = ../../mini_jvm/utils/spinlock.c; sourceTree = SOURCE_ROOT; };
+		9DD72735F83E44459B29F107 /* tinycthread.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.h; fileEncoding = 4; name = tinycthread.h; path = ../../mini_jvm/utils/tinycthread.h; sourceTree = SOURCE_ROOT; };
+		9E9087A44B8449C2904AB610 /* java_native_reflect.c */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.c; fileEncoding = 4; name = java_native_reflect.c; path = ../../mini_jvm/jvm/java_native_reflect.c; sourceTree = SOURCE_ROOT; };
+		9F1BD76C6F6E4FA49A0AEECA /* file_compat.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.h; fileEncoding = 4; name = file_compat.h; path = example/src/file_compat.h; sourceTree = SOURCE_ROOT; };
+		9FC46DB60A164D87A5F717DF /* main.c */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.c; fileEncoding = 4; name = main.c; path = example/src/main.c; sourceTree = SOURCE_ROOT; };
+		A2EA0100E0324FD3AEA15D3F /* jvm_util.c */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.c; fileEncoding = 4; name = jvm_util.c; path = ../../mini_jvm/jvm/jvm_util.c; sourceTree = SOURCE_ROOT; };
+		A3C8E87E663A4BFB9274E4DD /* CMakeLists.txt */ = {isa = PBXFileReference; explicitFileType = sourcecode.text; fileEncoding = 4; lastKnownFileType = text; path = CMakeLists.txt; sourceTree = SOURCE_ROOT; };
+		A71E1A933A064C77AA651D87 /* d_utils.c */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.c; fileEncoding = 4; name = d_utils.c; path = ../../mini_jvm/utils/d_utils.c; sourceTree = SOURCE_ROOT; };
+		AA26F267074F4BEE891D16F2 /* nanovg_gl_utils.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.h; fileEncoding = 4; name = nanovg_gl_utils.h; path = gui/nanovg/nanovg_gl_utils.h; sourceTree = SOURCE_ROOT; };
+		AA2F15D36471481A98ADCF16 /* glfm.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.h; fileEncoding = 4; name = glfm.h; path = include/glfm.h; sourceTree = SOURCE_ROOT; };
+		B34372416A6843C99CA8C760 /* java_native_io.c */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.c; fileEncoding = 4; name = java_native_io.c; path = ../../mini_jvm/jvm/java_native_io.c; sourceTree = SOURCE_ROOT; };
+		B54DE14A98724F23B71EECE1 /* hashtable.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.h; fileEncoding = 4; name = hashtable.h; path = ../../mini_jvm/utils/hashtable.h; sourceTree = SOURCE_ROOT; };
+		B5AD1A25B7CA43298DB1A05D /* simple.frag */ = {isa = PBXFileReference; explicitFileType = sourcecode; fileEncoding = 4; name = simple.frag; path = example/assets/simple.frag; sourceTree = SOURCE_ROOT; };
+		B74B8845DF034B6BB9EC2035 /* jni_nanovg.c */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.c; fileEncoding = 4; name = jni_nanovg.c; path = gui/jni_nanovg.c; sourceTree = SOURCE_ROOT; };
+		B92D25F9F2B140209AB68CAC /* java_native_reflect.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.h; fileEncoding = 4; name = java_native_reflect.h; path = ../../mini_jvm/jvm/java_native_reflect.h; sourceTree = SOURCE_ROOT; };
+		BA373F5412464AD8A56ED8C0 /* d_type.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.h; fileEncoding = 4; name = d_type.h; path = ../../mini_jvm/utils/d_type.h; sourceTree = SOURCE_ROOT; };
+		BABF9E1C80FD4B559F225596 /* arraylist.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.h; fileEncoding = 4; name = arraylist.h; path = ../../mini_jvm/utils/arraylist.h; sourceTree = SOURCE_ROOT; };
+		BC01E3521F2C4162B0C99581 /* nanovg_gl.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.h; fileEncoding = 4; name = nanovg_gl.h; path = gui/nanovg/nanovg_gl.h; sourceTree = SOURCE_ROOT; };
+		BC68BE8C0F19426A86CACAE7 /* texture.frag */ = {isa = PBXFileReference; explicitFileType = sourcecode; fileEncoding = 4; name = texture.frag; path = example/assets/texture.frag; sourceTree = SOURCE_ROOT; };
+		C01B6319D4744B2FBF097C58 /* NotoEmoji-Regular.ttf */ = {isa = PBXFileReference; explicitFileType = sourcecode; fileEncoding = 4; name = "NotoEmoji-Regular.ttf"; path = "example/assets/NotoEmoji-Regular.ttf"; sourceTree = SOURCE_ROOT; };
+		C0AB20F4231844CDB3193D15 /* test_pattern.c */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.c; fileEncoding = 4; name = test_pattern.c; path = example/src/test_pattern.c; sourceTree = SOURCE_ROOT; };
+		C14801F25B8242D8B38EB9B2 /* wqymhei.ttc */ = {isa = PBXFileReference; explicitFileType = sourcecode; fileEncoding = 4; name = wqymhei.ttc; path = example/assets/wqymhei.ttc; sourceTree = SOURCE_ROOT; };
+		C2CAF72F7AE54B1DA49F029A /* stb_truetype.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.h; fileEncoding = 4; name = stb_truetype.h; path = gui/stb/stb_truetype.h; sourceTree = SOURCE_ROOT; };
+		C3591DD7D65B42F5B963D880 /* wqymhei.ttc */ = {isa = PBXFileReference; explicitFileType = sourcecode; fileEncoding = 4; name = wqymhei.ttc; path = example/assets/wqymhei.ttc; sourceTree = SOURCE_ROOT; };
+		C52BF79BE7DB41BF8D95BDC5 /* CMakeLists.txt */ = {isa = PBXFileReference; explicitFileType = sourcecode.text; fileEncoding = 4; lastKnownFileType = text; path = CMakeLists.txt; sourceTree = SOURCE_ROOT; };
+		C8123E88337A47F09B7E845B /* hashtable.c */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.c; fileEncoding = 4; name = hashtable.c; path = ../../mini_jvm/utils/hashtable.c; sourceTree = SOURCE_ROOT; };
+		C91BC814F1CF4B6F8401E073 /* dirent_win.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.h; fileEncoding = 4; name = dirent_win.h; path = ../../mini_jvm/utils/dirent_win.h; sourceTree = SOURCE_ROOT; };
+		C9897E60FBDC41D2BB67EBC8 /* simple.vert */ = {isa = PBXFileReference; explicitFileType = sourcecode; fileEncoding = 4; name = simple.vert; path = example/assets/simple.vert; sourceTree = SOURCE_ROOT; };
+		D033B029829D46AEBC840445 /* tinycthread.c */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.c; fileEncoding = 4; name = tinycthread.c; path = ../../mini_jvm/utils/tinycthread.c; sourceTree = SOURCE_ROOT; };
+		D2CD0FC6122C49B495226E7A /* pairlist.c */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.c; fileEncoding = 4; name = pairlist.c; path = ../../mini_jvm/utils/pairlist.c; sourceTree = SOURCE_ROOT; };
+		D4372267C686479D87168F4A /* linkedlist.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.h; fileEncoding = 4; name = linkedlist.h; path = ../../mini_jvm/utils/linkedlist.h; sourceTree = SOURCE_ROOT; };
+		D6E2762B5F6C40A597942820 /* java_native_std.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.h; fileEncoding = 4; name = java_native_std.h; path = ../../mini_jvm/jvm/java_native_std.h; sourceTree = SOURCE_ROOT; };
+		DDA1CADDEB01403E9D2C1356 /* texture.frag */ = {isa = PBXFileReference; explicitFileType = sourcecode; fileEncoding = 4; name = texture.frag; path = example/assets/texture.frag; sourceTree = SOURCE_ROOT; };
+		DE43D7BB4C664D5A84FAAA4B /* simple.vert */ = {isa = PBXFileReference; explicitFileType = sourcecode; fileEncoding = 4; name = simple.vert; path = example/assets/simple.vert; sourceTree = SOURCE_ROOT; };
+		DFEBF9FC81804035A8FE1657 /* CMakeLists.txt */ = {isa = PBXFileReference; explicitFileType = sourcecode.text; fileEncoding = 4; lastKnownFileType = text; name = CMakeLists.txt; path = example/CMakeLists.txt; sourceTree = SOURCE_ROOT; };
+		E6E33418FAF04395912CA7C6 /* entypo.ttf */ = {isa = PBXFileReference; explicitFileType = sourcecode; fileEncoding = 4; name = entypo.ttf; path = example/assets/entypo.ttf; sourceTree = SOURCE_ROOT; };
+		E79E6257716D4430B0BB6FD2 /* arraylist.c */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.c; fileEncoding = 4; name = arraylist.c; path = ../../mini_jvm/utils/arraylist.c; sourceTree = SOURCE_ROOT; };
+		EBF4401D5A104CC59E9E10D8 /* file_compat.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.h; fileEncoding = 4; name = file_compat.h; path = example/src/file_compat.h; sourceTree = SOURCE_ROOT; };
+		EE17ED4792A14F1BA2ED85F0 /* miniz_wrapper.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.h; fileEncoding = 4; name = miniz_wrapper.h; path = ../../mini_jvm/utils/miniz/miniz_wrapper.h; sourceTree = SOURCE_ROOT; };
+		F3AB3164D1D24E8194C82C72 /* utf8_string.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.h; fileEncoding = 4; name = utf8_string.h; path = ../../mini_jvm/utils/utf8_string.h; sourceTree = SOURCE_ROOT; };
+		F8FF02185E194074982FEDAC /* jni_glfm.c */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.c; fileEncoding = 4; name = jni_glfm.c; path = gui/jni_glfm.c; sourceTree = SOURCE_ROOT; };
+		FCBC15280B824AFBBC8C9F6D /* CMakeLists.txt */ = {isa = PBXFileReference; explicitFileType = sourcecode.text; fileEncoding = 4; lastKnownFileType = text; name = CMakeLists.txt; path = example/CMakeLists.txt; sourceTree = SOURCE_ROOT; };
 /* End PBXFileReference section */
 
 /* Begin PBXGroup section */
-		00AC4A088DA4470CB93DBBA2 /* include */ = {
+		3116E7BDB2C94378B439D400 /* ALL_BUILD */ = {
 			isa = PBXGroup;
 			children = (
-				98A6F35F59144736A3C9D46A /* /Users/Gust/Documents/c/mini_jvm/ex_lib/glfm/include/glfm.h */,
-			);
-			name = include;
-			sourceTree = "<group>";
-		};
-		05DBBC8EA6C941E8BFB6C418 /* glfm */ = {
-			isa = PBXGroup;
-			children = (
-				A67AE52AF0D4486F830C5EFD /* src */,
-				00AC4A088DA4470CB93DBBA2 /* include */,
-				CA027769453E4A779A8BCDC7 /* Header Files */,
-				E6E0A4060F0046F199986DA3 /* Source Files */,
-				9EAB9D30EC9849649EA893DA /* /Users/Gust/Documents/c/mini_jvm/ex_lib/glfm/CMakeLists.txt */,
-			);
-			name = glfm;
-			sourceTree = "<group>";
-		};
-		0AE6C314A34940B29FA47963 /* glfm_test_pattern */ = {
-			isa = PBXGroup;
-			children = (
-				5390495D5746499388AEA25B /* src */,
-				A1ED91EEB15448C1A78DC6FC /* Resources */,
-				8F19577DF9ED4B99B160B1FB /* /Users/Gust/Documents/c/mini_jvm/ex_lib/glfm/example/CMakeLists.txt */,
-				868F7570175F4198A78D92C8 /* /Users/Gust/Documents/c/mini_jvm/ex_lib/glfm/example/assets/minijvm_rt.jar */,
-				F31E5DC086434DC3912283E0 /* /Users/Gust/Documents/c/mini_jvm/ex_lib/glfm/example/assets/minijvm_test.jar */,
-				3567AFDD26854478B39E203E /* /Users/Gust/Documents/c/mini_jvm/ex_lib/glfm/example/assets/simple.frag */,
-				A5B54678C9404D7CBB9811F4 /* /Users/Gust/Documents/c/mini_jvm/ex_lib/glfm/example/assets/simple.vert */,
-				F5807DE3A31E4E1ABCA8D0C9 /* /Users/Gust/Documents/c/mini_jvm/ex_lib/glfm/example/assets/texture.frag */,
-				DD389EFBC99C4F7E964DAC4C /* /Users/Gust/Documents/c/mini_jvm/ex_lib/glfm/example/assets/texture.vert */,
-			);
-			name = glfm_test_pattern;
-			sourceTree = "<group>";
-		};
-		2A0763ABA1FF4E15BAD4D84D /* src */ = {
-			isa = PBXGroup;
-			children = (
-				9F24791BD529440BB5E12485 /* /Users/Gust/Documents/c/mini_jvm/ex_lib/glfm/example/src/file_compat.h */,
-				157C1F75F24F464B9403F45D /* /Users/Gust/Documents/c/mini_jvm/ex_lib/glfm/example/src/main.c */,
-			);
-			name = src;
-			sourceTree = "<group>";
-		};
-		3A26EA96AF9D44B59E777828 /* CMake Rules */ = {
-			isa = PBXGroup;
-			children = (
-			);
-			name = "CMake Rules";
-			sourceTree = "<group>";
-		};
-		470C29D781C5479D9463BD77 /* glfm_example */ = {
-			isa = PBXGroup;
-			children = (
-				2A0763ABA1FF4E15BAD4D84D /* src */,
-				945294341C97498FA1419CA6 /* Resources */,
-				BB2D4D55A87B4EF49B7853F8 /* /Users/Gust/Documents/c/mini_jvm/ex_lib/glfm/example/CMakeLists.txt */,
-				F283C08F8F8E44B0BDB0C402 /* /Users/Gust/Documents/c/mini_jvm/ex_lib/glfm/example/assets/minijvm_rt.jar */,
-				A133898F226149FAB360DBD8 /* /Users/Gust/Documents/c/mini_jvm/ex_lib/glfm/example/assets/minijvm_test.jar */,
-				25CB8C1C38AC42CEAAC211B6 /* /Users/Gust/Documents/c/mini_jvm/ex_lib/glfm/example/assets/simple.frag */,
-				7079651A7DE843AFB82BCAF7 /* /Users/Gust/Documents/c/mini_jvm/ex_lib/glfm/example/assets/simple.vert */,
-				9FA5DF5854804DAEBB4733D0 /* /Users/Gust/Documents/c/mini_jvm/ex_lib/glfm/example/assets/texture.frag */,
-				F94AFBC54873431BBAFFD784 /* /Users/Gust/Documents/c/mini_jvm/ex_lib/glfm/example/assets/texture.vert */,
-			);
-			name = glfm_example;
-			sourceTree = "<group>";
-		};
-		5390495D5746499388AEA25B /* src */ = {
-			isa = PBXGroup;
-			children = (
-				FE090DA7107348419384ACC8 /* /Users/Gust/Documents/c/mini_jvm/ex_lib/glfm/example/src/file_compat.h */,
-				FCF17575684C49FAB398A6C9 /* /Users/Gust/Documents/c/mini_jvm/ex_lib/glfm/example/src/test_pattern.c */,
-			);
-			name = src;
-			sourceTree = "<group>";
-		};
-		70741CA5B177403182F53EFF /* CMake Rules */ = {
-			isa = PBXGroup;
-			children = (
-			);
-			name = "CMake Rules";
-			sourceTree = "<group>";
-		};
-		945294341C97498FA1419CA6 /* Resources */ = {
-			isa = PBXGroup;
-			children = (
-				FF9F7FB738704634B835C3DC /* /Users/Gust/Documents/c/mini_jvm/ex_lib/glfm/build/ios/example/CMakeFiles/glfm_example.dir/Info.plist */,
-			);
-			name = Resources;
-			sourceTree = "<group>";
-		};
-		9972BA3A14D7490893AFC38F /* Products */ = {
-			isa = PBXGroup;
-			children = (
-				34A4D9938A0049879B48DC41 /* glfm */,
-				76954558B23D49ED985F4CDE /* glfm_example */,
-				B5729B7D8A4C434D8C55730C /* glfm_test_pattern */,
-			);
-			name = Products;
-			sourceTree = "<group>";
-		};
-		9C556524445B43B6866ED96B /* ALL_BUILD */ = {
-			isa = PBXGroup;
-			children = (
-				3A26EA96AF9D44B59E777828 /* CMake Rules */,
-				5F6F78056B234366A290CCB1 /* /Users/Gust/Documents/c/mini_jvm/ex_lib/glfm/CMakeLists.txt */,
+				E8FB0E2C589948D1B416F430 /* CMake Rules */,
+				1C10A45D53CC4CB9B7C55337 /* CMakeLists.txt */,
 			);
 			name = ALL_BUILD;
 			sourceTree = "<group>";
 		};
-		A1ED91EEB15448C1A78DC6FC /* Resources */ = {
+		39BE4B327F3E4AF8A7337C00 /* ZERO_CHECK */ = {
 			isa = PBXGroup;
 			children = (
-				68126747CEB54C408A3AA30B /* /Users/Gust/Documents/c/mini_jvm/ex_lib/glfm/build/ios/example/CMakeFiles/glfm_test_pattern.dir/Info.plist */,
-			);
-			name = Resources;
-			sourceTree = "<group>";
-		};
-		A67AE52AF0D4486F830C5EFD /* src */ = {
-			isa = PBXGroup;
-			children = (
-				33FF1B69275A4B89B4F68C8F /* /Users/Gust/Documents/c/mini_jvm/ex_lib/glfm/src/glfm_platform.h */,
-				ACB1E478B25445B18F509BA0 /* /Users/Gust/Documents/c/mini_jvm/ex_lib/glfm/src/glfm_platform_ios.m */,
-			);
-			name = src;
-			sourceTree = "<group>";
-		};
-		C4153F3E1A67483EB804BB54 = {
-			isa = PBXGroup;
-			children = (
-				05DBBC8EA6C941E8BFB6C418 /* glfm */,
-				9C556524445B43B6866ED96B /* ALL_BUILD */,
-				DF4F6529D45C4401B6C78082 /* ZERO_CHECK */,
-				0AE6C314A34940B29FA47963 /* glfm_test_pattern */,
-				470C29D781C5479D9463BD77 /* glfm_example */,
-				9972BA3A14D7490893AFC38F /* Products */,
-			);
-			sourceTree = "<group>";
-		};
-		CA027769453E4A779A8BCDC7 /* Header Files */ = {
-			isa = PBXGroup;
-			children = (
-				C91AF0C5959F4397A67FF47C /* /Users/Gust/Documents/c/mini_jvm/ex_lib/glfm/gui/KHR/khrplatform.h */,
-				BD3C9BC7A99D49CDA714E4BC /* /Users/Gust/Documents/c/mini_jvm/ex_lib/glfm/gui/glad/glad.h */,
-				026C430CB33B40719C1AE5CF /* /Users/Gust/Documents/c/mini_jvm/ex_lib/glfm/gui/jni_gui.h */,
-				1685F1C23DA245FC876E4F02 /* /Users/Gust/Documents/c/mini_jvm/ex_lib/glfm/gui/jni_nanovg_assist.h */,
-				6CB0C3FD0C1F4682BF143168 /* /Users/Gust/Documents/c/mini_jvm/ex_lib/glfm/gui/jni_stb_assist.h */,
-				F6B3894D3D064766BE9ADC15 /* /Users/Gust/Documents/c/mini_jvm/ex_lib/glfm/gui/nanovg/fontstash.h */,
-				765EB247BD7245EB9F00F004 /* /Users/Gust/Documents/c/mini_jvm/ex_lib/glfm/gui/nanovg/nanovg.h */,
-				FA51BF9249114B83A37E1739 /* /Users/Gust/Documents/c/mini_jvm/ex_lib/glfm/gui/nanovg/nanovg_gl.h */,
-				61D410D0141648FB992A9E63 /* /Users/Gust/Documents/c/mini_jvm/ex_lib/glfm/gui/nanovg/nanovg_gl_utils.h */,
-				45805C6553DC49838AFEB8A6 /* /Users/Gust/Documents/c/mini_jvm/ex_lib/glfm/gui/other/linmath.h */,
-				EBCCC74B00FE4E65BCD7B795 /* /Users/Gust/Documents/c/mini_jvm/ex_lib/glfm/gui/stb/stb_image.h */,
-				568C62F57AE0466885E546C6 /* /Users/Gust/Documents/c/mini_jvm/ex_lib/glfm/gui/stb/stb_image_write.h */,
-				9002FDDD1B3443E9A8B45315 /* /Users/Gust/Documents/c/mini_jvm/ex_lib/glfm/gui/stb/stb_truetype.h */,
-				C098E0789AE04E71A41FA473 /* /Users/Gust/Documents/c/mini_jvm/mini_jvm/jvm/garbage.h */,
-				8E90128297EE4359B0BA5719 /* /Users/Gust/Documents/c/mini_jvm/mini_jvm/jvm/java_native_io.h */,
-				E9118B9802FA4044AEFD3ACD /* /Users/Gust/Documents/c/mini_jvm/mini_jvm/jvm/java_native_reflect.h */,
-				E1908015D25D4DCAA8F995AE /* /Users/Gust/Documents/c/mini_jvm/mini_jvm/jvm/java_native_std.h */,
-				7E560B997AC54CACBCDA5230 /* /Users/Gust/Documents/c/mini_jvm/mini_jvm/jvm/jdwp.h */,
-				B6448F0D1D9C4E79A9D4FCEA /* /Users/Gust/Documents/c/mini_jvm/mini_jvm/jvm/jvm.h */,
-				DEA61E2C2B87479C9586AC6D /* /Users/Gust/Documents/c/mini_jvm/mini_jvm/jvm/jvm_util.h */,
-				368AC8BC48FD4F65A1A623CA /* /Users/Gust/Documents/c/mini_jvm/mini_jvm/utils/arraylist.h */,
-				036988B4E8CC4473AD5B6D9D /* /Users/Gust/Documents/c/mini_jvm/mini_jvm/utils/bytebuf.h */,
-				4195CCB1C95A4EE38E4CB169 /* /Users/Gust/Documents/c/mini_jvm/mini_jvm/utils/d_type.h */,
-				0FE82D9BD35A4BDC9FBD8F9C /* /Users/Gust/Documents/c/mini_jvm/mini_jvm/utils/dirent_win.h */,
-				34E0F21A177040D1BE693F73 /* /Users/Gust/Documents/c/mini_jvm/mini_jvm/utils/hashset.h */,
-				A4DF9DC27D2B43F4B6B17909 /* /Users/Gust/Documents/c/mini_jvm/mini_jvm/utils/hashtable.h */,
-				7561D30FB21D4A8899F8CDF8 /* /Users/Gust/Documents/c/mini_jvm/mini_jvm/utils/linkedlist.h */,
-				0A56F35A3EF44241AAC48CDE /* /Users/Gust/Documents/c/mini_jvm/mini_jvm/utils/miniz/miniz_wrapper.h */,
-				76154FE5E06846DD99817C16 /* /Users/Gust/Documents/c/mini_jvm/mini_jvm/utils/pairlist.h */,
-				E31F99B20DF44E42A29CA356 /* /Users/Gust/Documents/c/mini_jvm/mini_jvm/utils/spinlock.h */,
-				5F68966488954F3BACDDBA43 /* /Users/Gust/Documents/c/mini_jvm/mini_jvm/utils/tinycthread.h */,
-				6F9A4EB1E67242B0A587080C /* /Users/Gust/Documents/c/mini_jvm/mini_jvm/utils/utf8_string.h */,
-			);
-			name = "Header Files";
-			sourceTree = "<group>";
-		};
-		DF4F6529D45C4401B6C78082 /* ZERO_CHECK */ = {
-			isa = PBXGroup;
-			children = (
-				70741CA5B177403182F53EFF /* CMake Rules */,
-				916B8DAFE2A4448385891098 /* /Users/Gust/Documents/c/mini_jvm/ex_lib/glfm/CMakeLists.txt */,
+				AD7DF8F553654520AE8EF917 /* CMake Rules */,
+				C52BF79BE7DB41BF8D95BDC5 /* CMakeLists.txt */,
 			);
 			name = ZERO_CHECK;
 			sourceTree = "<group>";
 		};
-		E6E0A4060F0046F199986DA3 /* Source Files */ = {
+		42E6C8FDFA5D4306A6E0113E /* Header Files */ = {
 			isa = PBXGroup;
 			children = (
-				7B1AB9C5983A432782E0BB4C /* /Users/Gust/Documents/c/mini_jvm/ex_lib/glfm/gui/glad/glad.c */,
-				4EE83A1299AF4E26A64AC747 /* /Users/Gust/Documents/c/mini_jvm/ex_lib/glfm/gui/jni_glfm.c */,
-				728C3DD1AE4C4E5F80B5DCD3 /* /Users/Gust/Documents/c/mini_jvm/ex_lib/glfm/gui/jni_gui.c */,
-				63430AF72DF744C1889884FF /* /Users/Gust/Documents/c/mini_jvm/ex_lib/glfm/gui/jni_nanovg.c */,
-				6B0E1FBA224D4C2C8D1DD500 /* /Users/Gust/Documents/c/mini_jvm/ex_lib/glfm/gui/nanovg/nanovg.c */,
-				D8B2788FA30B420BAED28704 /* /Users/Gust/Documents/c/mini_jvm/mini_jvm/jvm/class.c */,
-				9D3EDA1BF0514C29A70B1CF1 /* /Users/Gust/Documents/c/mini_jvm/mini_jvm/jvm/class_load.c */,
-				CBAA333A81BF4F01B3559B06 /* /Users/Gust/Documents/c/mini_jvm/mini_jvm/jvm/garbage.c */,
-				C84EC87145EE400394906259 /* /Users/Gust/Documents/c/mini_jvm/mini_jvm/jvm/global.c */,
-				63263BF907B049EB9613B1BE /* /Users/Gust/Documents/c/mini_jvm/mini_jvm/jvm/interpreter.c */,
-				B2E6DBF554F04C5A84479180 /* /Users/Gust/Documents/c/mini_jvm/mini_jvm/jvm/java_native_io.c */,
-				CB5D8032C28F4A20BCA5D2E4 /* /Users/Gust/Documents/c/mini_jvm/mini_jvm/jvm/java_native_reflect.c */,
-				5E07141428EA45318C319F48 /* /Users/Gust/Documents/c/mini_jvm/mini_jvm/jvm/java_native_std.c */,
-				0E74028FE27E4F368C59FD86 /* /Users/Gust/Documents/c/mini_jvm/mini_jvm/jvm/jdwp.c */,
-				5F50DB15182E403C9853E8AF /* /Users/Gust/Documents/c/mini_jvm/mini_jvm/jvm/jvm.c */,
-				A4BD8F16A107447C9A4E6695 /* /Users/Gust/Documents/c/mini_jvm/mini_jvm/jvm/jvm_util.c */,
-				4EC44CE40131485E8A55D08B /* /Users/Gust/Documents/c/mini_jvm/mini_jvm/jvm/runtime.c */,
-				D84CEC1A08154A0694D76468 /* /Users/Gust/Documents/c/mini_jvm/mini_jvm/utils/arraylist.c */,
-				DD08950B6C59433ABEA428E2 /* /Users/Gust/Documents/c/mini_jvm/mini_jvm/utils/bytebuf.c */,
-				A41942BEF67148EDA21AFA30 /* /Users/Gust/Documents/c/mini_jvm/mini_jvm/utils/d_utils.c */,
-				0C3A09CC350C4856BF884D8F /* /Users/Gust/Documents/c/mini_jvm/mini_jvm/utils/hashset.c */,
-				9C046FD3D0234C1F91B5C89E /* /Users/Gust/Documents/c/mini_jvm/mini_jvm/utils/hashtable.c */,
-				493595FD8C8247E0BC1DB69F /* /Users/Gust/Documents/c/mini_jvm/mini_jvm/utils/linkedlist.c */,
-				48E45BEBA40D4878B7A2BD7C /* /Users/Gust/Documents/c/mini_jvm/mini_jvm/utils/miniz/miniz_wrapper.c */,
-				839437E327D140FA9D92A6FF /* /Users/Gust/Documents/c/mini_jvm/mini_jvm/utils/pairlist.c */,
-				247790C379A84B5D964E99EE /* /Users/Gust/Documents/c/mini_jvm/mini_jvm/utils/spinlock.c */,
-				23E6EC05F6B94F3A8BA52212 /* /Users/Gust/Documents/c/mini_jvm/mini_jvm/utils/tinycthread.c */,
-				B2C66CB5D1034572B207C794 /* /Users/Gust/Documents/c/mini_jvm/mini_jvm/utils/utf8_string.c */,
+				3827AD2C13CE43D3B7782E20 /* jni_gui.h */,
+				5B948B34B8D04CAFB60C4800 /* jni_nanovg_assist.h */,
+				67EB85F1267845FBBF482C71 /* jni_stb_assist.h */,
+				9610206B9D4440E59F95BE34 /* fontstash.h */,
+				471E7DA376994496BA95CC33 /* nanovg.h */,
+				BC01E3521F2C4162B0C99581 /* nanovg_gl.h */,
+				AA26F267074F4BEE891D16F2 /* nanovg_gl_utils.h */,
+				837EDF11EACA47EB85662EE1 /* linmath.h */,
+				51A6914B544F40E8B37093DB /* stb_image.h */,
+				6724955B40284EF0A43C20E0 /* stb_image_write.h */,
+				C2CAF72F7AE54B1DA49F029A /* stb_truetype.h */,
+				61C74D039E2645A989F7E120 /* garbage.h */,
+				8F446CAB28A849519E073322 /* java_native_io.h */,
+				B92D25F9F2B140209AB68CAC /* java_native_reflect.h */,
+				D6E2762B5F6C40A597942820 /* java_native_std.h */,
+				6BF8FC479B8D4F06B69E1458 /* jdwp.h */,
+				36247561B2424B26A5BBC420 /* jvm.h */,
+				51AC2597C7934ADA837928EB /* jvm_util.h */,
+				BABF9E1C80FD4B559F225596 /* arraylist.h */,
+				35A93E0B4680427DB0441B9F /* bytebuf.h */,
+				BA373F5412464AD8A56ED8C0 /* d_type.h */,
+				C91BC814F1CF4B6F8401E073 /* dirent_win.h */,
+				3D56137CE9BB4E8F9AE6A3F1 /* hashset.h */,
+				B54DE14A98724F23B71EECE1 /* hashtable.h */,
+				D4372267C686479D87168F4A /* linkedlist.h */,
+				EE17ED4792A14F1BA2ED85F0 /* miniz_wrapper.h */,
+				58BC081BA56B42EC9225DF83 /* pairlist.h */,
+				55100EC1AB3A440B8358AD19 /* spinlock.h */,
+				9DD72735F83E44459B29F107 /* tinycthread.h */,
+				F3AB3164D1D24E8194C82C72 /* utf8_string.h */,
+			);
+			name = "Header Files";
+			sourceTree = "<group>";
+		};
+		7C8C3A09FE724E4EAE7F7D35 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				96065810B1D046DE8859F610 /* libglfm.a */,
+				41A7BC044C904DC082EAE5C0 /* glfm_example.app */,
+				3F812850B6A74E3A9B39D2DD /* glfm_test_pattern.app */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		845A77C738BC4A42BA7A3A2B /* glfm_example */ = {
+			isa = PBXGroup;
+			children = (
+				9771DFC7971C47EE95CA1D69 /* src */,
+				D7636583F02C4EED9453569F /* Resources */,
+				DFEBF9FC81804035A8FE1657 /* CMakeLists.txt */,
+				55B37A8CF6124EC1A3E86F31 /* .DS_Store */,
+				C01B6319D4744B2FBF097C58 /* NotoEmoji-Regular.ttf */,
+				9C64C3AE6C6F4C14A8063F50 /* entypo.ttf */,
+				687161C195DE49C3ACD2737C /* glfm_gui.jar */,
+				26C2F9CC79A34D288E2A83AF /* minijvm_rt.jar */,
+				80F77A3537714D93A39F2B72 /* simple.frag */,
+				DE43D7BB4C664D5A84FAAA4B /* simple.vert */,
+				DDA1CADDEB01403E9D2C1356 /* texture.frag */,
+				5865670BB7AF4D7887729307 /* texture.vert */,
+				C14801F25B8242D8B38EB9B2 /* wqymhei.ttc */,
+			);
+			name = glfm_example;
+			sourceTree = "<group>";
+		};
+		930CC89184F349E897EDCFC9 /* Source Files */ = {
+			isa = PBXGroup;
+			children = (
+				517D7F5A5519449A95C18195 /* jni_gl.c */,
+				F8FF02185E194074982FEDAC /* jni_glfm.c */,
+				7AC968C9D1B5424F8CEAC6CA /* jni_gui.c */,
+				B74B8845DF034B6BB9EC2035 /* jni_nanovg.c */,
+				63DFF976D96B44208B4B11FF /* nanovg.c */,
+				154DD37B63DC4F259B58BBEF /* class.c */,
+				010B54C7157B448DB78E2AEB /* class_load.c */,
+				2770D80B83A9496AB5E6F442 /* garbage.c */,
+				039DBE431E1542B2A4339823 /* global.c */,
+				15C4BC3413E4451B84C26239 /* interpreter.c */,
+				B34372416A6843C99CA8C760 /* java_native_io.c */,
+				9E9087A44B8449C2904AB610 /* java_native_reflect.c */,
+				6FC61A2D19CA44DE80FD198B /* java_native_std.c */,
+				389ABAB6718F4C6BB1C7AFD4 /* jdwp.c */,
+				52D2D1CA585248D292F838CF /* jvm.c */,
+				A2EA0100E0324FD3AEA15D3F /* jvm_util.c */,
+				00F0C1ADEF2D4963A4A116EB /* runtime.c */,
+				E79E6257716D4430B0BB6FD2 /* arraylist.c */,
+				5F1A40E0BC1A469C83AF7A85 /* bytebuf.c */,
+				A71E1A933A064C77AA651D87 /* d_utils.c */,
+				447C047121774F84AB719EA4 /* hashset.c */,
+				C8123E88337A47F09B7E845B /* hashtable.c */,
+				2550D366E32C40CB98759433 /* linkedlist.c */,
+				24109C6DF81C4469ACC72776 /* miniz_wrapper.c */,
+				D2CD0FC6122C49B495226E7A /* pairlist.c */,
+				9CAA06CD51A94CF0A17A797D /* spinlock.c */,
+				D033B029829D46AEBC840445 /* tinycthread.c */,
+				22834815EFF641528974895B /* utf8_string.c */,
 			);
 			name = "Source Files";
+			sourceTree = "<group>";
+		};
+		9771DFC7971C47EE95CA1D69 /* src */ = {
+			isa = PBXGroup;
+			children = (
+				EBF4401D5A104CC59E9E10D8 /* file_compat.h */,
+				9FC46DB60A164D87A5F717DF /* main.c */,
+			);
+			name = src;
+			sourceTree = "<group>";
+		};
+		9DFE77D7CCCB4358BF053981 /* src */ = {
+			isa = PBXGroup;
+			children = (
+				9F1BD76C6F6E4FA49A0AEECA /* file_compat.h */,
+				C0AB20F4231844CDB3193D15 /* test_pattern.c */,
+			);
+			name = src;
+			sourceTree = "<group>";
+		};
+		A74436B4A5204FEBB0EE0D59 = {
+			isa = PBXGroup;
+			children = (
+				ED5CE6E42C894739ADAB7CC4 /* glfm */,
+				3116E7BDB2C94378B439D400 /* ALL_BUILD */,
+				39BE4B327F3E4AF8A7337C00 /* ZERO_CHECK */,
+				F7071AC104934DECBA2CB903 /* glfm_test_pattern */,
+				845A77C738BC4A42BA7A3A2B /* glfm_example */,
+				7C8C3A09FE724E4EAE7F7D35 /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		AD7DF8F553654520AE8EF917 /* CMake Rules */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = "CMake Rules";
+			sourceTree = "<group>";
+		};
+		BAA3DA721A2F4D92BFF5334F /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+				46AECB26041F40B284D1F312 /* Info.plist */,
+			);
+			name = Resources;
+			sourceTree = "<group>";
+		};
+		CECB7611F25F4741861018AA /* include */ = {
+			isa = PBXGroup;
+			children = (
+				AA2F15D36471481A98ADCF16 /* glfm.h */,
+			);
+			name = include;
+			sourceTree = "<group>";
+		};
+		D7636583F02C4EED9453569F /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+				8448D87BCEA548B08FFE89C0 /* Info.plist */,
+			);
+			name = Resources;
+			sourceTree = "<group>";
+		};
+		E48BCAEB1BDD440EBBBBBB33 /* src */ = {
+			isa = PBXGroup;
+			children = (
+				9A9FA1713AE243C8AD5470F5 /* glfm_platform.h */,
+				30C6A87580DD40CAA9352695 /* glfm_platform_ios.m */,
+			);
+			name = src;
+			sourceTree = "<group>";
+		};
+		E8FB0E2C589948D1B416F430 /* CMake Rules */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = "CMake Rules";
+			sourceTree = "<group>";
+		};
+		ED5CE6E42C894739ADAB7CC4 /* glfm */ = {
+			isa = PBXGroup;
+			children = (
+				E48BCAEB1BDD440EBBBBBB33 /* src */,
+				CECB7611F25F4741861018AA /* include */,
+				42E6C8FDFA5D4306A6E0113E /* Header Files */,
+				930CC89184F349E897EDCFC9 /* Source Files */,
+				A3C8E87E663A4BFB9274E4DD /* CMakeLists.txt */,
+			);
+			name = glfm;
+			sourceTree = "<group>";
+		};
+		F7071AC104934DECBA2CB903 /* glfm_test_pattern */ = {
+			isa = PBXGroup;
+			children = (
+				9DFE77D7CCCB4358BF053981 /* src */,
+				BAA3DA721A2F4D92BFF5334F /* Resources */,
+				FCBC15280B824AFBBC8C9F6D /* CMakeLists.txt */,
+				1AACD94B2DB44E27AABED871 /* .DS_Store */,
+				935092B632404F2CBC24DAF5 /* NotoEmoji-Regular.ttf */,
+				E6E33418FAF04395912CA7C6 /* entypo.ttf */,
+				792DC9D50C3341DCB648631D /* glfm_gui.jar */,
+				4B73EB7627764272B7B7BA4A /* minijvm_rt.jar */,
+				B5AD1A25B7CA43298DB1A05D /* simple.frag */,
+				C9897E60FBDC41D2BB67EBC8 /* simple.vert */,
+				BC68BE8C0F19426A86CACAE7 /* texture.frag */,
+				39A2111BF49D42789D9F8AF8 /* texture.vert */,
+				C3591DD7D65B42F5B963D880 /* wqymhei.ttc */,
+			);
+			name = glfm_test_pattern;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -540,54 +488,54 @@
 /* Begin PBXNativeTarget section */
 		0A3EBC4293A84F1684537D21 /* glfm */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 49D07C8932FA4D02A542C3D8 /* Build configuration list for PBXNativeTarget "glfm" */;
+			buildConfigurationList = D1031D37D9094306B1661288 /* Build configuration list for PBXNativeTarget "glfm" */;
 			buildPhases = (
-				74EDD97E48AC4B80884CA2BB /* Sources */,
+				ADC860D7B6E14371880B8A84 /* Sources */,
 			);
 			buildRules = (
 			);
 			dependencies = (
-				EE05E73360254C1188F3A803 /* PBXTargetDependency */,
+				6F74B6161DA741BEA82F0CFE /* PBXTargetDependency */,
 			);
 			name = glfm;
 			productName = glfm;
-			productReference = 34A4D9938A0049879B48DC41 /* glfm */;
+			productReference = 96065810B1D046DE8859F610 /* libglfm.a */;
 			productType = "com.apple.product-type.library.static";
 		};
 		0C326D90454C4FDE86F6EEFC /* glfm_example */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = F5BCFFB93E8243BCB40A25B0 /* Build configuration list for PBXNativeTarget "glfm_example" */;
+			buildConfigurationList = C859E0B2A62041B8BE3E7FAC /* Build configuration list for PBXNativeTarget "glfm_example" */;
 			buildPhases = (
-				1867865590E74D90AC6DF3DD /* Resources */,
-				FA58606CE4E341EFAF873047 /* Sources */,
+				CCEFEBE82E6C49169A69D32C /* Resources */,
+				03D637FE8FAA49EAA96F0624 /* Sources */,
 			);
 			buildRules = (
 			);
 			dependencies = (
-				0437DDC963584DFF9FE0A856 /* PBXTargetDependency */,
-				15C4E27AFAEF4970ABA3A239 /* PBXTargetDependency */,
+				A496AA301E174618832803D4 /* PBXTargetDependency */,
+				1281429AEEEA4FF69BB3DD9F /* PBXTargetDependency */,
 			);
 			name = glfm_example;
 			productName = glfm_example;
-			productReference = 76954558B23D49ED985F4CDE /* glfm_example */;
+			productReference = 41A7BC044C904DC082EAE5C0 /* glfm_example.app */;
 			productType = "com.apple.product-type.application";
 		};
 		35A17888CF24475C8FDC310D /* glfm_test_pattern */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = C5CAC8D94EE14D598B46F57C /* Build configuration list for PBXNativeTarget "glfm_test_pattern" */;
+			buildConfigurationList = 10CD64B3553C4C5983391ECF /* Build configuration list for PBXNativeTarget "glfm_test_pattern" */;
 			buildPhases = (
-				A63F71FFBAFF401CA7B5505A /* Resources */,
-				FDD7F14FCB3640AAB6A98449 /* Sources */,
+				547135A7921A4D899E94E216 /* Resources */,
+				03711BC1294440EAB0206201 /* Sources */,
 			);
 			buildRules = (
 			);
 			dependencies = (
-				428159DE78B74F8E8AD75F04 /* PBXTargetDependency */,
-				4A4B72B454024DAE97401F72 /* PBXTargetDependency */,
+				ED3F66499D8547A3B4F2790D /* PBXTargetDependency */,
+				C8637030723E42C5941CFDF2 /* PBXTargetDependency */,
 			);
 			name = glfm_test_pattern;
 			productName = glfm_test_pattern;
-			productReference = B5729B7D8A4C434D8C55730C /* glfm_test_pattern */;
+			productReference = 3F812850B6A74E3A9B39D2DD /* glfm_test_pattern.app */;
 			productType = "com.apple.product-type.application";
 		};
 /* End PBXNativeTarget section */
@@ -598,19 +546,20 @@
 			attributes = {
 				BuildIndependentTargetsInParallel = YES;
 				LastUpgradeCheck = 0930;
+				TargetAttributes = {
+					35A17888CF24475C8FDC310D = {
+						DevelopmentTeam = M978JH97JT;
+					};
+				};
 			};
-			buildConfigurationList = 91320BE9DFC046E3B5D15883 /* Build configuration list for PBXProject "GLFM" */;
-			buildSettings = {
-			};
-			buildStyles = (
-				60E9DD335DB34588ADB9EA6C /* Debug */,
-				837458D443E04CC3939693E6 /* Release */,
-				D8AE56BC714340809878A168 /* MinSizeRel */,
-				DFA5E2563B044CA8A235B856 /* RelWithDebInfo */,
-			);
+			buildConfigurationList = 0DFBD3905C0F4DD1842353C1 /* Build configuration list for PBXProject "GLFM" */;
 			compatibilityVersion = "Xcode 3.2";
+			developmentRegion = en;
 			hasScannedForEncodings = 0;
-			mainGroup = C4153F3E1A67483EB804BB54;
+			knownRegions = (
+				en,
+			);
+			mainGroup = A74436B4A5204FEBB0EE0D59;
 			projectDirPath = ../../;
 			projectRoot = "";
 			targets = (
@@ -623,23 +572,45 @@
 		};
 /* End PBXProject section */
 
-/* Begin PBXShellScriptBuildPhase section */
-		1DB01F6A2B5547CD9E6C7F8A = {
-			isa = PBXShellScriptBuildPhase;
+/* Begin PBXResourcesBuildPhase section */
+		547135A7921A4D899E94E216 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-			);
-			inputPaths = (
-			);
-			outputPaths = (
+				D67A380C1F094282BD8BA9F1 /* .DS_Store in Resources */,
+				7D16DE752824476AB87411A7 /* NotoEmoji-Regular.ttf in Resources */,
+				132B8523FE914AEFADD9941A /* entypo.ttf in Resources */,
+				07FD8DAAC81C4652BC8760E5 /* glfm_gui.jar in Resources */,
+				C56C9E6D4862406DA9243AD3 /* minijvm_rt.jar in Resources */,
+				01746E4C6B4B4E65BB23F17A /* simple.frag in Resources */,
+				3EE870466BA649D4A7BD3E13 /* simple.vert in Resources */,
+				383492E7B11D4704B15D7692 /* texture.frag in Resources */,
+				CF5B9A3C1EC0416DB04433E5 /* texture.vert in Resources */,
+				886B8B68889F40B7A0ECBC2A /* wqymhei.ttc in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "# shell script goes here
-exit 0";
-			showEnvVarsInLog = 0;
 		};
-		2E917812D56A41E4971D79D1 /* CMake Rules */ = {
+		CCEFEBE82E6C49169A69D32C /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				0A291D93D79E4EC1984FB966 /* .DS_Store in Resources */,
+				2AA403C2D2004CD8BE273EB1 /* NotoEmoji-Regular.ttf in Resources */,
+				F9F93E7C3C974D1C978B8E4A /* entypo.ttf in Resources */,
+				47AB58D7357442459B88EBA7 /* glfm_gui.jar in Resources */,
+				5638E0CF23D843BF8A5A4042 /* minijvm_rt.jar in Resources */,
+				EE1245E63E094B17A2CBB7C4 /* simple.frag in Resources */,
+				1B1C53BFCA3B470E838A114E /* simple.vert in Resources */,
+				ADE3DDC6E71E40148904BD04 /* texture.frag in Resources */,
+				6AFFFD29AD8246E8BD8B4165 /* texture.vert in Resources */,
+				A14836E59DA24782A07F0673 /* wqymhei.ttc in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXShellScriptBuildPhase section */
+		5069EC419A3C4E20AFCF1323 /* CMake Rules */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -650,22 +621,7 @@ exit 0";
 			shellScript = "make -C /Users/Gust/Documents/c/mini_jvm/ex_lib/glfm/build/ios -f /Users/Gust/Documents/c/mini_jvm/ex_lib/glfm/build/ios/CMakeScripts/ALL_BUILD_cmakeRulesBuildPhase.make$CONFIGURATION all";
 			showEnvVarsInLog = 0;
 		};
-		8F316250CDC04944AD9E2488 = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputPaths = (
-			);
-			outputPaths = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "# shell script goes here
-exit 0";
-			showEnvVarsInLog = 0;
-		};
-		91A8CA8E51A6442DB2BB9983 /* CMake Rules */ = {
+		91800BADAC5D42C5A04BDDF7 /* CMake Rules */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -678,541 +634,111 @@ exit 0";
 		};
 /* End PBXShellScriptBuildPhase section */
 
-/* Begin PBXResourcesBuildPhase section */
-		1867865590E74D90AC6DF3DD /* Resources */ = {
-			isa = PBXResourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				2FFB3308845848548B30F984 /* /Users/Gust/Documents/c/mini_jvm/ex_lib/glfm/example/assets/minijvm_rt.jar */,
-				1ADAA397F76247A79C7B3FA1 /* /Users/Gust/Documents/c/mini_jvm/ex_lib/glfm/example/assets/minijvm_test.jar */,
-				798B2DA31FC14FB5918AC20A /* /Users/Gust/Documents/c/mini_jvm/ex_lib/glfm/example/assets/simple.frag */,
-				F8F9E74ADA3D46D09D7338F4 /* /Users/Gust/Documents/c/mini_jvm/ex_lib/glfm/example/assets/simple.vert */,
-				8292ED279F574FEF950B54D4 /* /Users/Gust/Documents/c/mini_jvm/ex_lib/glfm/example/assets/texture.frag */,
-				B490E077A7AA4744AD599520 /* /Users/Gust/Documents/c/mini_jvm/ex_lib/glfm/example/assets/texture.vert */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		A63F71FFBAFF401CA7B5505A /* Resources */ = {
-			isa = PBXResourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				80BF9ACFDBFA4F7E8F7E077A /* /Users/Gust/Documents/c/mini_jvm/ex_lib/glfm/example/assets/minijvm_rt.jar */,
-				6710F7C3BFE8452781BCC24F /* /Users/Gust/Documents/c/mini_jvm/ex_lib/glfm/example/assets/minijvm_test.jar */,
-				8598E2E90BD7464FAE53E0B4 /* /Users/Gust/Documents/c/mini_jvm/ex_lib/glfm/example/assets/simple.frag */,
-				B684CCB8BD5F4073B98348DF /* /Users/Gust/Documents/c/mini_jvm/ex_lib/glfm/example/assets/simple.vert */,
-				2B5F0961CC574D28B3FDE2B3 /* /Users/Gust/Documents/c/mini_jvm/ex_lib/glfm/example/assets/texture.frag */,
-				22169D93BA4B451BAAC514E0 /* /Users/Gust/Documents/c/mini_jvm/ex_lib/glfm/example/assets/texture.vert */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-/* End PBXResourcesBuildPhase section */
-
 /* Begin PBXSourcesBuildPhase section */
-		74EDD97E48AC4B80884CA2BB /* Sources */ = {
+		03711BC1294440EAB0206201 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				D7F201EBCAF84B7BBCC2AFF3 /* /Users/Gust/Documents/c/mini_jvm/ex_lib/glfm/gui/glad/glad.c */,
-				726DDDEBFF744E09AACC7A89 /* /Users/Gust/Documents/c/mini_jvm/ex_lib/glfm/gui/jni_glfm.c */,
-				05C3763E45B047EB8980725A /* /Users/Gust/Documents/c/mini_jvm/ex_lib/glfm/gui/jni_gui.c */,
-				936E48E68B4D493D880E2B80 /* /Users/Gust/Documents/c/mini_jvm/ex_lib/glfm/gui/jni_nanovg.c */,
-				7C9FAC7B6CB74D1884B7EAD5 /* /Users/Gust/Documents/c/mini_jvm/ex_lib/glfm/gui/nanovg/nanovg.c */,
-				E74C61EEB9674430811BAA7A /* /Users/Gust/Documents/c/mini_jvm/ex_lib/glfm/src/glfm_platform_ios.m */,
-				A3FA9FF4852940D291873A64 /* /Users/Gust/Documents/c/mini_jvm/mini_jvm/jvm/class.c */,
-				B7444D863453430D99504AE1 /* /Users/Gust/Documents/c/mini_jvm/mini_jvm/jvm/class_load.c */,
-				2233BCEFD0F64EBFBCCA9F1A /* /Users/Gust/Documents/c/mini_jvm/mini_jvm/jvm/garbage.c */,
-				AB85331744EA48F8A1B51F47 /* /Users/Gust/Documents/c/mini_jvm/mini_jvm/jvm/global.c */,
-				2016079B0D744638890C750C /* /Users/Gust/Documents/c/mini_jvm/mini_jvm/jvm/interpreter.c */,
-				9634FE44DB0647F0957EEF02 /* /Users/Gust/Documents/c/mini_jvm/mini_jvm/jvm/java_native_io.c */,
-				D44C6AEC9288490DBD99BEA4 /* /Users/Gust/Documents/c/mini_jvm/mini_jvm/jvm/java_native_reflect.c */,
-				23DC3668B6B74368A9C7D21C /* /Users/Gust/Documents/c/mini_jvm/mini_jvm/jvm/java_native_std.c */,
-				357500CDB89D40E3B3FFB25A /* /Users/Gust/Documents/c/mini_jvm/mini_jvm/jvm/jdwp.c */,
-				259F3498850E44FAB6354451 /* /Users/Gust/Documents/c/mini_jvm/mini_jvm/jvm/jvm.c */,
-				53B380534CB54A58B123FF9D /* /Users/Gust/Documents/c/mini_jvm/mini_jvm/jvm/jvm_util.c */,
-				8AEB0431013C44B5A67CE1E0 /* /Users/Gust/Documents/c/mini_jvm/mini_jvm/jvm/runtime.c */,
-				6F24779FDD9D4270B1374DB0 /* /Users/Gust/Documents/c/mini_jvm/mini_jvm/utils/arraylist.c */,
-				C9B9A10E0B0B454BB056B89A /* /Users/Gust/Documents/c/mini_jvm/mini_jvm/utils/bytebuf.c */,
-				9796E421E6974B73A522F4EE /* /Users/Gust/Documents/c/mini_jvm/mini_jvm/utils/d_utils.c */,
-				919A5E7D7AFA464FBEE4F54F /* /Users/Gust/Documents/c/mini_jvm/mini_jvm/utils/hashset.c */,
-				E4940402DE8E49B2B6479512 /* /Users/Gust/Documents/c/mini_jvm/mini_jvm/utils/hashtable.c */,
-				3CCB79121882427BA71EE3FD /* /Users/Gust/Documents/c/mini_jvm/mini_jvm/utils/linkedlist.c */,
-				11A601DC61A148F9B571689E /* /Users/Gust/Documents/c/mini_jvm/mini_jvm/utils/miniz/miniz_wrapper.c */,
-				D39ADD91641F45ED97F958FB /* /Users/Gust/Documents/c/mini_jvm/mini_jvm/utils/pairlist.c */,
-				8EE69DAB3151449BA776CF02 /* /Users/Gust/Documents/c/mini_jvm/mini_jvm/utils/spinlock.c */,
-				97372F7EC6CD46B29BA9DC2C /* /Users/Gust/Documents/c/mini_jvm/mini_jvm/utils/tinycthread.c */,
-				D1DE24B3A9F242259C293DD9 /* /Users/Gust/Documents/c/mini_jvm/mini_jvm/utils/utf8_string.c */,
+				4C72BEC71D4B4E8BA36259C3 /* test_pattern.c in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		FA58606CE4E341EFAF873047 /* Sources */ = {
+		03D637FE8FAA49EAA96F0624 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				B4059E4967324625BDF10B8E /* /Users/Gust/Documents/c/mini_jvm/ex_lib/glfm/example/src/main.c */,
+				79D8881C7FB146BB83B4F5A3 /* main.c in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		FDD7F14FCB3640AAB6A98449 /* Sources */ = {
+		ADC860D7B6E14371880B8A84 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				1F55735B1A494882870EA188 /* /Users/Gust/Documents/c/mini_jvm/ex_lib/glfm/example/src/test_pattern.c */,
+				91A3A86BC80B469A83817C84 /* jni_gl.c in Sources */,
+				B8116423558147C8B2A0ACAD /* jni_glfm.c in Sources */,
+				707E8DBCA75A4775A1518060 /* jni_gui.c in Sources */,
+				8A28CE5EBF724A8DBC919A9B /* jni_nanovg.c in Sources */,
+				6D7E3913A68741069A53045B /* nanovg.c in Sources */,
+				99594C5FC0D242DCB0800010 /* glfm_platform_ios.m in Sources */,
+				9C7412B4C4C749D3AA570E27 /* class.c in Sources */,
+				66F94F67B8F24DBEA328A0D9 /* class_load.c in Sources */,
+				E7766311FAD247E18CA54A92 /* garbage.c in Sources */,
+				02FE74FEE557450287AB0A3F /* global.c in Sources */,
+				4E64EB14AE634C25B50CC6CE /* interpreter.c in Sources */,
+				B5309FB7156746399B713256 /* java_native_io.c in Sources */,
+				1349E093A19D4DDA9A3555E2 /* java_native_reflect.c in Sources */,
+				C9A261C11B4E4B7F92CDCC2D /* java_native_std.c in Sources */,
+				718E81DD974C48BE82C0967D /* jdwp.c in Sources */,
+				F457551BCB754B9285A35DCE /* jvm.c in Sources */,
+				2DD75AFD3D4249DD9CBB618B /* jvm_util.c in Sources */,
+				BBBA31E3A7534DAF8E88AFD5 /* runtime.c in Sources */,
+				02709673ED86415D995B5291 /* arraylist.c in Sources */,
+				0B62056728F145A7ADC7886D /* bytebuf.c in Sources */,
+				ED4B151AF7A34003A4EBCE27 /* d_utils.c in Sources */,
+				4A472A02C6204908AFE03EBA /* hashset.c in Sources */,
+				107D30CC63ED40ECB743CC5C /* hashtable.c in Sources */,
+				1DA73FF9D4134414BE16E50C /* linkedlist.c in Sources */,
+				298190A362E1463581BDEFC8 /* miniz_wrapper.c in Sources */,
+				EC81A8E536014075BBC0EABA /* pairlist.c in Sources */,
+				BF48035500944704A3EDD709 /* spinlock.c in Sources */,
+				3C49F3736955412381FA7FBF /* tinycthread.c in Sources */,
+				4E6EBF4D731847BE80BFB97F /* utf8_string.c in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
-		0437DDC963584DFF9FE0A856 /* PBXTargetDependency */ = {
+		1281429AEEEA4FF69BB3DD9F /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			target = CCD89D233A254EA4A1C4AACC /* ZERO_CHECK */;
-			targetProxy = A04A425457BC4AFE94A7141C /* PBXContainerItemProxy */;
+			targetProxy = 837B96E9B2BF4869AABA39B7 /* PBXContainerItemProxy */;
 		};
-		15C4E27AFAEF4970ABA3A239 /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			target = 0A3EBC4293A84F1684537D21 /* glfm */;
-			targetProxy = 892825E91B8E47D99FC65AAE /* PBXContainerItemProxy */;
-		};
-		428159DE78B74F8E8AD75F04 /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			target = CCD89D233A254EA4A1C4AACC /* ZERO_CHECK */;
-			targetProxy = A4869D7EC1E14174B5EFA4C4 /* PBXContainerItemProxy */;
-		};
-		4A4B72B454024DAE97401F72 /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			target = 0A3EBC4293A84F1684537D21 /* glfm */;
-			targetProxy = DF4B847CB8664EB79F5A024C /* PBXContainerItemProxy */;
-		};
-		9882701E16CF46B398C8FD1F /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			target = 0A3EBC4293A84F1684537D21 /* glfm */;
-			targetProxy = EECCB027CDC14F3BB1076115 /* PBXContainerItemProxy */;
-		};
-		C413588AE7694C0086D310AA /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			target = 0C326D90454C4FDE86F6EEFC /* glfm_example */;
-			targetProxy = 5A94271CC5834DA5B92839F8 /* PBXContainerItemProxy */;
-		};
-		DF7C06388DDB433A92058C9F /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			target = CCD89D233A254EA4A1C4AACC /* ZERO_CHECK */;
-			targetProxy = B6B8A8D9DA5F4C578859795D /* PBXContainerItemProxy */;
-		};
-		E28F830877474DD9AC03BB5F /* PBXTargetDependency */ = {
+		3F7934B4BA8E47F48B087597 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			target = 35A17888CF24475C8FDC310D /* glfm_test_pattern */;
-			targetProxy = 5B1D68E900AD44FEA216A7E0 /* PBXContainerItemProxy */;
+			targetProxy = 7C395809969345749AB5A9FC /* PBXContainerItemProxy */;
 		};
-		EE05E73360254C1188F3A803 /* PBXTargetDependency */ = {
+		6F74B6161DA741BEA82F0CFE /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			target = CCD89D233A254EA4A1C4AACC /* ZERO_CHECK */;
-			targetProxy = 5DB7C65C329841A8AF47C038 /* PBXContainerItemProxy */;
+			targetProxy = 44DB69618DCB46DB922E7F04 /* PBXContainerItemProxy */;
+		};
+		A496AA301E174618832803D4 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 0A3EBC4293A84F1684537D21 /* glfm */;
+			targetProxy = D4979EBFF9304E4D8973B528 /* PBXContainerItemProxy */;
+		};
+		AAB16E8C8CC94CD6A062E774 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = CCD89D233A254EA4A1C4AACC /* ZERO_CHECK */;
+			targetProxy = 4612B779ADED464EA3D685BC /* PBXContainerItemProxy */;
+		};
+		C8637030723E42C5941CFDF2 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = CCD89D233A254EA4A1C4AACC /* ZERO_CHECK */;
+			targetProxy = 5EF1F6C21F7943299B64C7E6 /* PBXContainerItemProxy */;
+		};
+		C95FDC1B8C2C4479B32D4EF0 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 0C326D90454C4FDE86F6EEFC /* glfm_example */;
+			targetProxy = 0DA572CD15A74FC2AEDD95EC /* PBXContainerItemProxy */;
+		};
+		E99E22D0AD794207BF33DBE5 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 0A3EBC4293A84F1684537D21 /* glfm */;
+			targetProxy = 49A24BFDFB33494D830EB4D0 /* PBXContainerItemProxy */;
+		};
+		ED3F66499D8547A3B4F2790D /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 0A3EBC4293A84F1684537D21 /* glfm */;
+			targetProxy = C6671291D37841A3A89B328C /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
 
 /* Begin XCBuildConfiguration section */
-		00D37A13574F4E479E1619C4 /* Release */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				CLANG_ENABLE_OBJC_ARC = YES;
-				COMBINE_HIDPI_IMAGES = YES;
-				CONFIGURATION_BUILD_DIR = /Users/Gust/Documents/c/mini_jvm/ex_lib/glfm/build/ios/GLFM.build/lib/Release;
-				EXECUTABLE_PREFIX = lib;
-				EXECUTABLE_SUFFIX = .a;
-				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
-				GCC_INLINES_ARE_PRIVATE_EXTERN = NO;
-				GCC_OPTIMIZATION_LEVEL = 3;
-				GCC_PREPROCESSOR_DEFINITIONS = ("'CMAKE_INTDIR=\"$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)\"'");
-				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
-				HEADER_SEARCH_PATHS = (/Users/Gust/Documents/c/mini_jvm/ex_lib/glfm/include,/Users/Gust/Documents/c/mini_jvm/ex_lib/glfm/gui,/Users/Gust/Documents/c/mini_jvm/ex_lib/glfm/gui/stb,/Users/Gust/Documents/c/mini_jvm/ex_lib/glfm/gui/other,/Users/Gust/Documents/c/mini_jvm/ex_lib/glfm/../../mini_jvm/jvm,/Users/Gust/Documents/c/mini_jvm/ex_lib/glfm/src);
-				INSTALL_PATH = "";
-				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
-				LIBRARY_STYLE = STATIC;
-				OTHER_CFLAGS = "    -DNDEBUG -Weverything -Wwrite-strings -Wno-padded -Wno-covered-switch-default -Wno-objc-interface-ivars -Wno-objc-missing-property-synthesis -Wno-direct-ivar-access  ";
-				OTHER_LIBTOOLFLAGS = " ";
-				OTHER_REZFLAGS = "";
-				PRODUCT_NAME = glfm;
-				SECTORDER_FLAGS = "";
-				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator appletvos appletvsimulator";
-				SYMROOT = /Users/Gust/Documents/c/mini_jvm/ex_lib/glfm/build/ios;
-				TVOS_DEPLOYMENT_TARGET = 9.0;
-				USE_HEADERMAP = NO;
-				WARNING_CFLAGS = ("-Wmost","-Wno-four-char-constants","-Wno-unknown-pragmas","$(inherited)");
-			};
-			name = Release;
-		};
-		03732EA62FCE47B3BC043A98 /* Debug */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				ONLY_ACTIVE_ARCH = YES;
-				SDKROOT = iphoneos;
-				SYMROOT = /Users/Gust/Documents/c/mini_jvm/ex_lib/glfm/build/ios/build;
-			};
-			name = Debug;
-		};
-		0655BABF5EA142CEA4FCC03C /* MinSizeRel */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				COMBINE_HIDPI_IMAGES = YES;
-				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
-				GCC_INLINES_ARE_PRIVATE_EXTERN = NO;
-				GCC_OPTIMIZATION_LEVEL = 0;
-				GCC_PREPROCESSOR_DEFINITIONS = ("'CMAKE_INTDIR=\"$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)\"'");
-				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
-				HEADER_SEARCH_PATHS = (/Users/Gust/Documents/c/mini_jvm/ex_lib/glfm/include,/Users/Gust/Documents/c/mini_jvm/ex_lib/glfm/gui,/Users/Gust/Documents/c/mini_jvm/ex_lib/glfm/gui/stb,/Users/Gust/Documents/c/mini_jvm/ex_lib/glfm/gui/other,/Users/Gust/Documents/c/mini_jvm/ex_lib/glfm/../../mini_jvm/jvm);
-				INSTALL_PATH = "";
-				OTHER_LDFLAGS = " ";
-				OTHER_REZFLAGS = "";
-				PRODUCT_NAME = ZERO_CHECK;
-				SECTORDER_FLAGS = "";
-				SYMROOT = /Users/Gust/Documents/c/mini_jvm/ex_lib/glfm/build/ios;
-				USE_HEADERMAP = NO;
-				WARNING_CFLAGS = ("-Wmost","-Wno-four-char-constants","-Wno-unknown-pragmas","$(inherited)");
-			};
-			name = MinSizeRel;
-		};
-		17018F54188648E09596C668 /* RelWithDebInfo */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				ONLY_ACTIVE_ARCH = YES;
-				SDKROOT = iphoneos;
-				SYMROOT = /Users/Gust/Documents/c/mini_jvm/ex_lib/glfm/build/ios/build;
-			};
-			name = RelWithDebInfo;
-		};
-		18C29E6218EC47A4AE09FB89 /* Debug */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				CLANG_ENABLE_OBJC_ARC = YES;
-				CODE_SIGN_IDENTITY = "iPhone Developer";
-				COMBINE_HIDPI_IMAGES = NO;
-				EXECUTABLE_PREFIX = "";
-				EXECUTABLE_SUFFIX = "";
-				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
-				GCC_INLINES_ARE_PRIVATE_EXTERN = NO;
-				GCC_OPTIMIZATION_LEVEL = 0;
-				GCC_PREPROCESSOR_DEFINITIONS = ("'CMAKE_INTDIR=\"$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)\"'");
-				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
-				HEADER_SEARCH_PATHS = (/Users/Gust/Documents/c/mini_jvm/ex_lib/glfm/include,/Users/Gust/Documents/c/mini_jvm/ex_lib/glfm/gui,/Users/Gust/Documents/c/mini_jvm/ex_lib/glfm/gui/stb,/Users/Gust/Documents/c/mini_jvm/ex_lib/glfm/gui/other,/Users/Gust/Documents/c/mini_jvm/ex_lib/glfm/../../mini_jvm/jvm);
-				INFOPLIST_FILE = /Users/Gust/Documents/c/mini_jvm/ex_lib/glfm/build/ios/example/CMakeFiles/glfm_test_pattern.dir/Info.plist;
-				INSTALL_PATH = "$(LOCAL_APPS_DIR)";
-				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
-				LIBRARY_SEARCH_PATHS = "";
-				OTHER_CFLAGS = "   '-std=gnu99'  ";
-				OTHER_LDFLAGS = "  /Users/Gust/Documents/c/mini_jvm/ex_lib/glfm/build/ios/GLFM.build/lib/Debug/libglfm.a -framework Foundation -framework CoreGraphics -framework UIKit -framework OpenGLES -framework QuartzCore";
-				OTHER_REZFLAGS = "";
-				PRODUCT_BUNDLE_IDENTIFIER = "com.brackeen.${PRODUCT_NAME:rfc1034identifier}";
-				PRODUCT_NAME = glfm_test_pattern;
-				SECTORDER_FLAGS = "";
-				SKIP_INSTALL = NO;
-				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator appletvos appletvsimulator";
-				SYMROOT = /Users/Gust/Documents/c/mini_jvm/ex_lib/glfm/build/ios/example;
-				TARGETED_DEVICE_FAMILY = "1,2,3";
-				TVOS_DEPLOYMENT_TARGET = 9.0;
-				USE_HEADERMAP = YES;
-				WARNING_CFLAGS = ("-Wmost","-Wno-four-char-constants","-Wno-unknown-pragmas","$(inherited)");
-			};
-			name = Debug;
-		};
-		2724222E8F0D41F4B3694816 /* Debug */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				CLANG_ENABLE_OBJC_ARC = YES;
-				COMBINE_HIDPI_IMAGES = YES;
-				CONFIGURATION_BUILD_DIR = /Users/Gust/Documents/c/mini_jvm/ex_lib/glfm/build/ios/GLFM.build/lib/Debug;
-				EXECUTABLE_PREFIX = lib;
-				EXECUTABLE_SUFFIX = .a;
-				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
-				GCC_INLINES_ARE_PRIVATE_EXTERN = NO;
-				GCC_OPTIMIZATION_LEVEL = 0;
-				GCC_PREPROCESSOR_DEFINITIONS = ("'CMAKE_INTDIR=\"$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)\"'");
-				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
-				HEADER_SEARCH_PATHS = (/Users/Gust/Documents/c/mini_jvm/ex_lib/glfm/include,/Users/Gust/Documents/c/mini_jvm/ex_lib/glfm/gui,/Users/Gust/Documents/c/mini_jvm/ex_lib/glfm/gui/stb,/Users/Gust/Documents/c/mini_jvm/ex_lib/glfm/gui/other,/Users/Gust/Documents/c/mini_jvm/ex_lib/glfm/../../mini_jvm/jvm,/Users/Gust/Documents/c/mini_jvm/ex_lib/glfm/src);
-				INSTALL_PATH = "";
-				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
-				LIBRARY_STYLE = STATIC;
-				OTHER_CFLAGS = "   -Weverything -Wwrite-strings -Wno-padded -Wno-covered-switch-default -Wno-objc-interface-ivars -Wno-objc-missing-property-synthesis -Wno-direct-ivar-access  ";
-				OTHER_LIBTOOLFLAGS = " ";
-				OTHER_REZFLAGS = "";
-				PRODUCT_NAME = glfm;
-				SECTORDER_FLAGS = "";
-				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator appletvos appletvsimulator";
-				SYMROOT = /Users/Gust/Documents/c/mini_jvm/ex_lib/glfm/build/ios;
-				TVOS_DEPLOYMENT_TARGET = 9.0;
-				USE_HEADERMAP = NO;
-				WARNING_CFLAGS = ("-Wmost","-Wno-four-char-constants","-Wno-unknown-pragmas","$(inherited)");
-			};
-			name = Debug;
-		};
-		34CD0DBCC2EA4187869DB994 /* Release */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				ONLY_ACTIVE_ARCH = YES;
-				SDKROOT = iphoneos;
-				SYMROOT = /Users/Gust/Documents/c/mini_jvm/ex_lib/glfm/build/ios/build;
-			};
-			name = Release;
-		};
-		3EE8E44FB848426BAB887C94 /* Release */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				COMBINE_HIDPI_IMAGES = YES;
-				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
-				GCC_INLINES_ARE_PRIVATE_EXTERN = NO;
-				GCC_OPTIMIZATION_LEVEL = 0;
-				GCC_PREPROCESSOR_DEFINITIONS = ("'CMAKE_INTDIR=\"$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)\"'");
-				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
-				HEADER_SEARCH_PATHS = (/Users/Gust/Documents/c/mini_jvm/ex_lib/glfm/include,/Users/Gust/Documents/c/mini_jvm/ex_lib/glfm/gui,/Users/Gust/Documents/c/mini_jvm/ex_lib/glfm/gui/stb,/Users/Gust/Documents/c/mini_jvm/ex_lib/glfm/gui/other,/Users/Gust/Documents/c/mini_jvm/ex_lib/glfm/../../mini_jvm/jvm);
-				INSTALL_PATH = "";
-				OTHER_LDFLAGS = " ";
-				OTHER_REZFLAGS = "";
-				PRODUCT_NAME = ALL_BUILD;
-				SECTORDER_FLAGS = "";
-				SYMROOT = /Users/Gust/Documents/c/mini_jvm/ex_lib/glfm/build/ios;
-				USE_HEADERMAP = NO;
-				WARNING_CFLAGS = ("-Wmost","-Wno-four-char-constants","-Wno-unknown-pragmas","$(inherited)");
-			};
-			name = Release;
-		};
-		57427B032925400D95035468 /* RelWithDebInfo */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				CLANG_ENABLE_OBJC_ARC = YES;
-				CODE_SIGN_IDENTITY = "iPhone Developer";
-				COMBINE_HIDPI_IMAGES = NO;
-				EXECUTABLE_PREFIX = "";
-				EXECUTABLE_SUFFIX = "";
-				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
-				GCC_INLINES_ARE_PRIVATE_EXTERN = NO;
-				GCC_OPTIMIZATION_LEVEL = 2;
-				GCC_PREPROCESSOR_DEFINITIONS = ("'CMAKE_INTDIR=\"$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)\"'");
-				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
-				HEADER_SEARCH_PATHS = (/Users/Gust/Documents/c/mini_jvm/ex_lib/glfm/include,/Users/Gust/Documents/c/mini_jvm/ex_lib/glfm/gui,/Users/Gust/Documents/c/mini_jvm/ex_lib/glfm/gui/stb,/Users/Gust/Documents/c/mini_jvm/ex_lib/glfm/gui/other,/Users/Gust/Documents/c/mini_jvm/ex_lib/glfm/../../mini_jvm/jvm);
-				INFOPLIST_FILE = /Users/Gust/Documents/c/mini_jvm/ex_lib/glfm/build/ios/example/CMakeFiles/glfm_test_pattern.dir/Info.plist;
-				INSTALL_PATH = "$(LOCAL_APPS_DIR)";
-				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
-				LIBRARY_SEARCH_PATHS = "";
-				OTHER_CFLAGS = "       -DNDEBUG '-std=gnu99'  ";
-				OTHER_LDFLAGS = "  /Users/Gust/Documents/c/mini_jvm/ex_lib/glfm/build/ios/GLFM.build/lib/RelWithDebInfo/libglfm.a -framework Foundation -framework CoreGraphics -framework UIKit -framework OpenGLES -framework QuartzCore";
-				OTHER_REZFLAGS = "";
-				PRODUCT_BUNDLE_IDENTIFIER = "com.brackeen.${PRODUCT_NAME:rfc1034identifier}";
-				PRODUCT_NAME = glfm_test_pattern;
-				SECTORDER_FLAGS = "";
-				SKIP_INSTALL = NO;
-				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator appletvos appletvsimulator";
-				SYMROOT = /Users/Gust/Documents/c/mini_jvm/ex_lib/glfm/build/ios/example;
-				TARGETED_DEVICE_FAMILY = "1,2,3";
-				TVOS_DEPLOYMENT_TARGET = 9.0;
-				USE_HEADERMAP = YES;
-				WARNING_CFLAGS = ("-Wmost","-Wno-four-char-constants","-Wno-unknown-pragmas","$(inherited)");
-			};
-			name = RelWithDebInfo;
-		};
-		64DB6A2542F642FE956BD134 /* MinSizeRel */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				CLANG_ENABLE_OBJC_ARC = YES;
-				COMBINE_HIDPI_IMAGES = YES;
-				CONFIGURATION_BUILD_DIR = /Users/Gust/Documents/c/mini_jvm/ex_lib/glfm/build/ios/GLFM.build/lib/MinSizeRel;
-				EXECUTABLE_PREFIX = lib;
-				EXECUTABLE_SUFFIX = .a;
-				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
-				GCC_INLINES_ARE_PRIVATE_EXTERN = NO;
-				GCC_OPTIMIZATION_LEVEL = s;
-				GCC_PREPROCESSOR_DEFINITIONS = ("'CMAKE_INTDIR=\"$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)\"'");
-				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
-				HEADER_SEARCH_PATHS = (/Users/Gust/Documents/c/mini_jvm/ex_lib/glfm/include,/Users/Gust/Documents/c/mini_jvm/ex_lib/glfm/gui,/Users/Gust/Documents/c/mini_jvm/ex_lib/glfm/gui/stb,/Users/Gust/Documents/c/mini_jvm/ex_lib/glfm/gui/other,/Users/Gust/Documents/c/mini_jvm/ex_lib/glfm/../../mini_jvm/jvm,/Users/Gust/Documents/c/mini_jvm/ex_lib/glfm/src);
-				INSTALL_PATH = "";
-				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
-				LIBRARY_STYLE = STATIC;
-				OTHER_CFLAGS = "    -DNDEBUG -Weverything -Wwrite-strings -Wno-padded -Wno-covered-switch-default -Wno-objc-interface-ivars -Wno-objc-missing-property-synthesis -Wno-direct-ivar-access  ";
-				OTHER_LIBTOOLFLAGS = " ";
-				OTHER_REZFLAGS = "";
-				PRODUCT_NAME = glfm;
-				SECTORDER_FLAGS = "";
-				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator appletvos appletvsimulator";
-				SYMROOT = /Users/Gust/Documents/c/mini_jvm/ex_lib/glfm/build/ios;
-				TVOS_DEPLOYMENT_TARGET = 9.0;
-				USE_HEADERMAP = NO;
-				WARNING_CFLAGS = ("-Wmost","-Wno-four-char-constants","-Wno-unknown-pragmas","$(inherited)");
-			};
-			name = MinSizeRel;
-		};
-		69139788195B45DA92EB0FF2 /* Debug */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				CLANG_ENABLE_OBJC_ARC = YES;
-				CODE_SIGN_IDENTITY = "iPhone Developer";
-				COMBINE_HIDPI_IMAGES = NO;
-				EXECUTABLE_PREFIX = "";
-				EXECUTABLE_SUFFIX = "";
-				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
-				GCC_INLINES_ARE_PRIVATE_EXTERN = NO;
-				GCC_OPTIMIZATION_LEVEL = 0;
-				GCC_PREPROCESSOR_DEFINITIONS = ("'CMAKE_INTDIR=\"$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)\"'");
-				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
-				HEADER_SEARCH_PATHS = (/Users/Gust/Documents/c/mini_jvm/ex_lib/glfm/include,/Users/Gust/Documents/c/mini_jvm/ex_lib/glfm/gui,/Users/Gust/Documents/c/mini_jvm/ex_lib/glfm/gui/stb,/Users/Gust/Documents/c/mini_jvm/ex_lib/glfm/gui/other,/Users/Gust/Documents/c/mini_jvm/ex_lib/glfm/../../mini_jvm/jvm);
-				INFOPLIST_FILE = /Users/Gust/Documents/c/mini_jvm/ex_lib/glfm/build/ios/example/CMakeFiles/glfm_example.dir/Info.plist;
-				INSTALL_PATH = "$(LOCAL_APPS_DIR)";
-				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
-				LIBRARY_SEARCH_PATHS = "";
-				OTHER_CFLAGS = "    ";
-				OTHER_LDFLAGS = "  /Users/Gust/Documents/c/mini_jvm/ex_lib/glfm/build/ios/GLFM.build/lib/Debug/libglfm.a -framework Foundation -framework CoreGraphics -framework UIKit -framework OpenGLES -framework QuartzCore";
-				OTHER_REZFLAGS = "";
-				PRODUCT_BUNDLE_IDENTIFIER = "com.brackeen.${PRODUCT_NAME:rfc1034identifier}";
-				PRODUCT_NAME = glfm_example;
-				SECTORDER_FLAGS = "";
-				SKIP_INSTALL = NO;
-				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator appletvos appletvsimulator";
-				SYMROOT = /Users/Gust/Documents/c/mini_jvm/ex_lib/glfm/build/ios/example;
-				TARGETED_DEVICE_FAMILY = "1,2,3";
-				TVOS_DEPLOYMENT_TARGET = 9.0;
-				USE_HEADERMAP = YES;
-				WARNING_CFLAGS = ("-Wmost","-Wno-four-char-constants","-Wno-unknown-pragmas","$(inherited)");
-			};
-			name = Debug;
-		};
-		7AAD16A0CE8D4706A71599D2 /* Debug */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				COMBINE_HIDPI_IMAGES = YES;
-				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
-				GCC_INLINES_ARE_PRIVATE_EXTERN = NO;
-				GCC_OPTIMIZATION_LEVEL = 0;
-				GCC_PREPROCESSOR_DEFINITIONS = ("'CMAKE_INTDIR=\"$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)\"'");
-				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
-				HEADER_SEARCH_PATHS = (/Users/Gust/Documents/c/mini_jvm/ex_lib/glfm/include,/Users/Gust/Documents/c/mini_jvm/ex_lib/glfm/gui,/Users/Gust/Documents/c/mini_jvm/ex_lib/glfm/gui/stb,/Users/Gust/Documents/c/mini_jvm/ex_lib/glfm/gui/other,/Users/Gust/Documents/c/mini_jvm/ex_lib/glfm/../../mini_jvm/jvm);
-				INSTALL_PATH = "";
-				OTHER_LDFLAGS = " ";
-				OTHER_REZFLAGS = "";
-				PRODUCT_NAME = ZERO_CHECK;
-				SECTORDER_FLAGS = "";
-				SYMROOT = /Users/Gust/Documents/c/mini_jvm/ex_lib/glfm/build/ios;
-				USE_HEADERMAP = NO;
-				WARNING_CFLAGS = ("-Wmost","-Wno-four-char-constants","-Wno-unknown-pragmas","$(inherited)");
-			};
-			name = Debug;
-		};
-		8445C3D5F07842E79B1D8B80 /* MinSizeRel */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				CLANG_ENABLE_OBJC_ARC = YES;
-				CODE_SIGN_IDENTITY = "iPhone Developer";
-				COMBINE_HIDPI_IMAGES = NO;
-				EXECUTABLE_PREFIX = "";
-				EXECUTABLE_SUFFIX = "";
-				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
-				GCC_INLINES_ARE_PRIVATE_EXTERN = NO;
-				GCC_OPTIMIZATION_LEVEL = s;
-				GCC_PREPROCESSOR_DEFINITIONS = ("'CMAKE_INTDIR=\"$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)\"'");
-				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
-				HEADER_SEARCH_PATHS = (/Users/Gust/Documents/c/mini_jvm/ex_lib/glfm/include,/Users/Gust/Documents/c/mini_jvm/ex_lib/glfm/gui,/Users/Gust/Documents/c/mini_jvm/ex_lib/glfm/gui/stb,/Users/Gust/Documents/c/mini_jvm/ex_lib/glfm/gui/other,/Users/Gust/Documents/c/mini_jvm/ex_lib/glfm/../../mini_jvm/jvm);
-				INFOPLIST_FILE = /Users/Gust/Documents/c/mini_jvm/ex_lib/glfm/build/ios/example/CMakeFiles/glfm_test_pattern.dir/Info.plist;
-				INSTALL_PATH = "$(LOCAL_APPS_DIR)";
-				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
-				LIBRARY_SEARCH_PATHS = "";
-				OTHER_CFLAGS = "    -DNDEBUG '-std=gnu99'  ";
-				OTHER_LDFLAGS = "  /Users/Gust/Documents/c/mini_jvm/ex_lib/glfm/build/ios/GLFM.build/lib/MinSizeRel/libglfm.a -framework Foundation -framework CoreGraphics -framework UIKit -framework OpenGLES -framework QuartzCore";
-				OTHER_REZFLAGS = "";
-				PRODUCT_BUNDLE_IDENTIFIER = "com.brackeen.${PRODUCT_NAME:rfc1034identifier}";
-				PRODUCT_NAME = glfm_test_pattern;
-				SECTORDER_FLAGS = "";
-				SKIP_INSTALL = NO;
-				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator appletvos appletvsimulator";
-				SYMROOT = /Users/Gust/Documents/c/mini_jvm/ex_lib/glfm/build/ios/example;
-				TARGETED_DEVICE_FAMILY = "1,2,3";
-				TVOS_DEPLOYMENT_TARGET = 9.0;
-				USE_HEADERMAP = YES;
-				WARNING_CFLAGS = ("-Wmost","-Wno-four-char-constants","-Wno-unknown-pragmas","$(inherited)");
-			};
-			name = MinSizeRel;
-		};
-		847E65910F8B4A0197906C69 /* MinSizeRel */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				ONLY_ACTIVE_ARCH = YES;
-				SDKROOT = iphoneos;
-				SYMROOT = /Users/Gust/Documents/c/mini_jvm/ex_lib/glfm/build/ios/build;
-			};
-			name = MinSizeRel;
-		};
-		849DB82332E04566B447C832 /* RelWithDebInfo */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				COMBINE_HIDPI_IMAGES = YES;
-				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
-				GCC_INLINES_ARE_PRIVATE_EXTERN = NO;
-				GCC_OPTIMIZATION_LEVEL = 0;
-				GCC_PREPROCESSOR_DEFINITIONS = ("'CMAKE_INTDIR=\"$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)\"'");
-				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
-				HEADER_SEARCH_PATHS = (/Users/Gust/Documents/c/mini_jvm/ex_lib/glfm/include,/Users/Gust/Documents/c/mini_jvm/ex_lib/glfm/gui,/Users/Gust/Documents/c/mini_jvm/ex_lib/glfm/gui/stb,/Users/Gust/Documents/c/mini_jvm/ex_lib/glfm/gui/other,/Users/Gust/Documents/c/mini_jvm/ex_lib/glfm/../../mini_jvm/jvm);
-				INSTALL_PATH = "";
-				OTHER_LDFLAGS = " ";
-				OTHER_REZFLAGS = "";
-				PRODUCT_NAME = ZERO_CHECK;
-				SECTORDER_FLAGS = "";
-				SYMROOT = /Users/Gust/Documents/c/mini_jvm/ex_lib/glfm/build/ios;
-				USE_HEADERMAP = NO;
-				WARNING_CFLAGS = ("-Wmost","-Wno-four-char-constants","-Wno-unknown-pragmas","$(inherited)");
-			};
-			name = RelWithDebInfo;
-		};
-		96963423CB7C41D18C3A6BFE /* Release */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				CLANG_ENABLE_OBJC_ARC = YES;
-				CODE_SIGN_IDENTITY = "iPhone Developer";
-				COMBINE_HIDPI_IMAGES = NO;
-				EXECUTABLE_PREFIX = "";
-				EXECUTABLE_SUFFIX = "";
-				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
-				GCC_INLINES_ARE_PRIVATE_EXTERN = NO;
-				GCC_OPTIMIZATION_LEVEL = 3;
-				GCC_PREPROCESSOR_DEFINITIONS = ("'CMAKE_INTDIR=\"$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)\"'");
-				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
-				HEADER_SEARCH_PATHS = (/Users/Gust/Documents/c/mini_jvm/ex_lib/glfm/include,/Users/Gust/Documents/c/mini_jvm/ex_lib/glfm/gui,/Users/Gust/Documents/c/mini_jvm/ex_lib/glfm/gui/stb,/Users/Gust/Documents/c/mini_jvm/ex_lib/glfm/gui/other,/Users/Gust/Documents/c/mini_jvm/ex_lib/glfm/../../mini_jvm/jvm);
-				INFOPLIST_FILE = /Users/Gust/Documents/c/mini_jvm/ex_lib/glfm/build/ios/example/CMakeFiles/glfm_test_pattern.dir/Info.plist;
-				INSTALL_PATH = "$(LOCAL_APPS_DIR)";
-				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
-				LIBRARY_SEARCH_PATHS = "";
-				OTHER_CFLAGS = "    -DNDEBUG '-std=gnu99'  ";
-				OTHER_LDFLAGS = "  /Users/Gust/Documents/c/mini_jvm/ex_lib/glfm/build/ios/GLFM.build/lib/Release/libglfm.a -framework Foundation -framework CoreGraphics -framework UIKit -framework OpenGLES -framework QuartzCore";
-				OTHER_REZFLAGS = "";
-				PRODUCT_BUNDLE_IDENTIFIER = "com.brackeen.${PRODUCT_NAME:rfc1034identifier}";
-				PRODUCT_NAME = glfm_test_pattern;
-				SECTORDER_FLAGS = "";
-				SKIP_INSTALL = NO;
-				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator appletvos appletvsimulator";
-				SYMROOT = /Users/Gust/Documents/c/mini_jvm/ex_lib/glfm/build/ios/example;
-				TARGETED_DEVICE_FAMILY = "1,2,3";
-				TVOS_DEPLOYMENT_TARGET = 9.0;
-				USE_HEADERMAP = YES;
-				WARNING_CFLAGS = ("-Wmost","-Wno-four-char-constants","-Wno-unknown-pragmas","$(inherited)");
-			};
-			name = Release;
-		};
-		9A3A11C76BF04428B6E5AC49 /* Debug */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				COMBINE_HIDPI_IMAGES = YES;
-				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
-				GCC_INLINES_ARE_PRIVATE_EXTERN = NO;
-				GCC_OPTIMIZATION_LEVEL = 0;
-				GCC_PREPROCESSOR_DEFINITIONS = ("'CMAKE_INTDIR=\"$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)\"'");
-				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
-				HEADER_SEARCH_PATHS = (/Users/Gust/Documents/c/mini_jvm/ex_lib/glfm/include,/Users/Gust/Documents/c/mini_jvm/ex_lib/glfm/gui,/Users/Gust/Documents/c/mini_jvm/ex_lib/glfm/gui/stb,/Users/Gust/Documents/c/mini_jvm/ex_lib/glfm/gui/other,/Users/Gust/Documents/c/mini_jvm/ex_lib/glfm/../../mini_jvm/jvm);
-				INSTALL_PATH = "";
-				OTHER_LDFLAGS = " ";
-				OTHER_REZFLAGS = "";
-				PRODUCT_NAME = ALL_BUILD;
-				SECTORDER_FLAGS = "";
-				SYMROOT = /Users/Gust/Documents/c/mini_jvm/ex_lib/glfm/build/ios;
-				USE_HEADERMAP = NO;
-				WARNING_CFLAGS = ("-Wmost","-Wno-four-char-constants","-Wno-unknown-pragmas","$(inherited)");
-			};
-			name = Debug;
-		};
-		A2DC035CFB8749CCBC57CB90 /* RelWithDebInfo */ = {
+		03D44D0870624B8692BDA03E /* RelWithDebInfo */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				CLANG_ENABLE_OBJC_ARC = YES;
@@ -1223,13 +749,29 @@ exit 0";
 				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
 				GCC_INLINES_ARE_PRIVATE_EXTERN = NO;
 				GCC_OPTIMIZATION_LEVEL = 2;
-				GCC_PREPROCESSOR_DEFINITIONS = ("'CMAKE_INTDIR=\"$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)\"'");
+				GCC_PREPROCESSOR_DEFINITIONS = "'CMAKE_INTDIR=\"$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)\"'";
 				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
-				HEADER_SEARCH_PATHS = (/Users/Gust/Documents/c/mini_jvm/ex_lib/glfm/include,/Users/Gust/Documents/c/mini_jvm/ex_lib/glfm/gui,/Users/Gust/Documents/c/mini_jvm/ex_lib/glfm/gui/stb,/Users/Gust/Documents/c/mini_jvm/ex_lib/glfm/gui/other,/Users/Gust/Documents/c/mini_jvm/ex_lib/glfm/../../mini_jvm/jvm,/Users/Gust/Documents/c/mini_jvm/ex_lib/glfm/src);
+				HEADER_SEARCH_PATHS = (
+					/Users/Gust/Documents/c/mini_jvm/ex_lib/glfm/include,
+					/Users/Gust/Documents/c/mini_jvm/ex_lib/glfm/gui,
+					/Users/Gust/Documents/c/mini_jvm/ex_lib/glfm/gui/stb,
+					/Users/Gust/Documents/c/mini_jvm/ex_lib/glfm/gui/other,
+					/Users/Gust/Documents/c/mini_jvm/ex_lib/glfm/../../mini_jvm/jvm,
+					/Users/Gust/Documents/c/mini_jvm/ex_lib/glfm/src,
+				);
 				INSTALL_PATH = "";
 				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				LIBRARY_STYLE = STATIC;
-				OTHER_CFLAGS = "       -DNDEBUG -Weverything -Wwrite-strings -Wno-padded -Wno-covered-switch-default -Wno-objc-interface-ivars -Wno-objc-missing-property-synthesis -Wno-direct-ivar-access  ";
+				OTHER_CFLAGS = (
+					"-DNDEBUG",
+					"-Weverything",
+					"-Wwrite-strings",
+					"-Wno-padded",
+					"-Wno-covered-switch-default",
+					"-Wno-objc-interface-ivars",
+					"-Wno-objc-missing-property-synthesis",
+					"-Wno-direct-ivar-access",
+				);
 				OTHER_LIBTOOLFLAGS = " ";
 				OTHER_REZFLAGS = "";
 				PRODUCT_NAME = glfm;
@@ -1238,20 +780,31 @@ exit 0";
 				SYMROOT = /Users/Gust/Documents/c/mini_jvm/ex_lib/glfm/build/ios;
 				TVOS_DEPLOYMENT_TARGET = 9.0;
 				USE_HEADERMAP = NO;
-				WARNING_CFLAGS = ("-Wmost","-Wno-four-char-constants","-Wno-unknown-pragmas","$(inherited)");
+				WARNING_CFLAGS = (
+					"-Wmost",
+					"-Wno-four-char-constants",
+					"-Wno-unknown-pragmas",
+					"$(inherited)",
+				);
 			};
 			name = RelWithDebInfo;
 		};
-		B3E86B96C4A94A1791B7623E /* Release */ = {
+		05EA8698A5D146E7BA940462 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				COMBINE_HIDPI_IMAGES = YES;
 				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
 				GCC_INLINES_ARE_PRIVATE_EXTERN = NO;
 				GCC_OPTIMIZATION_LEVEL = 0;
-				GCC_PREPROCESSOR_DEFINITIONS = ("'CMAKE_INTDIR=\"$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)\"'");
+				GCC_PREPROCESSOR_DEFINITIONS = "'CMAKE_INTDIR=\"$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)\"'";
 				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
-				HEADER_SEARCH_PATHS = (/Users/Gust/Documents/c/mini_jvm/ex_lib/glfm/include,/Users/Gust/Documents/c/mini_jvm/ex_lib/glfm/gui,/Users/Gust/Documents/c/mini_jvm/ex_lib/glfm/gui/stb,/Users/Gust/Documents/c/mini_jvm/ex_lib/glfm/gui/other,/Users/Gust/Documents/c/mini_jvm/ex_lib/glfm/../../mini_jvm/jvm);
+				HEADER_SEARCH_PATHS = (
+					/Users/Gust/Documents/c/mini_jvm/ex_lib/glfm/include,
+					/Users/Gust/Documents/c/mini_jvm/ex_lib/glfm/gui,
+					/Users/Gust/Documents/c/mini_jvm/ex_lib/glfm/gui/stb,
+					/Users/Gust/Documents/c/mini_jvm/ex_lib/glfm/gui/other,
+					/Users/Gust/Documents/c/mini_jvm/ex_lib/glfm/../../mini_jvm/jvm,
+				);
 				INSTALL_PATH = "";
 				OTHER_LDFLAGS = " ";
 				OTHER_REZFLAGS = "";
@@ -1259,33 +812,78 @@ exit 0";
 				SECTORDER_FLAGS = "";
 				SYMROOT = /Users/Gust/Documents/c/mini_jvm/ex_lib/glfm/build/ios;
 				USE_HEADERMAP = NO;
-				WARNING_CFLAGS = ("-Wmost","-Wno-four-char-constants","-Wno-unknown-pragmas","$(inherited)");
+				WARNING_CFLAGS = (
+					"-Wmost",
+					"-Wno-four-char-constants",
+					"-Wno-unknown-pragmas",
+					"$(inherited)",
+				);
+			};
+			name = Debug;
+		};
+		13A5234412464DEB81D38E82 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = iphoneos;
+				SYMROOT = /Users/Gust/Documents/c/mini_jvm/ex_lib/glfm/build/ios/build;
+			};
+			name = Debug;
+		};
+		200DB69A005E48F6B7BD7094 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = iphoneos;
+				SYMROOT = /Users/Gust/Documents/c/mini_jvm/ex_lib/glfm/build/ios/build;
 			};
 			name = Release;
 		};
-		C389A9AB22B145A98493CAB5 /* Release */ = {
+		389429F763E0465080685277 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				CLANG_ENABLE_OBJC_ARC = YES;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				COMBINE_HIDPI_IMAGES = NO;
+				DEVELOPMENT_TEAM = M978JH97JT;
 				EXECUTABLE_PREFIX = "";
 				EXECUTABLE_SUFFIX = "";
 				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
 				GCC_INLINES_ARE_PRIVATE_EXTERN = NO;
 				GCC_OPTIMIZATION_LEVEL = 3;
-				GCC_PREPROCESSOR_DEFINITIONS = ("'CMAKE_INTDIR=\"$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)\"'");
+				GCC_PREPROCESSOR_DEFINITIONS = "'CMAKE_INTDIR=\"$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)\"'";
 				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
-				HEADER_SEARCH_PATHS = (/Users/Gust/Documents/c/mini_jvm/ex_lib/glfm/include,/Users/Gust/Documents/c/mini_jvm/ex_lib/glfm/gui,/Users/Gust/Documents/c/mini_jvm/ex_lib/glfm/gui/stb,/Users/Gust/Documents/c/mini_jvm/ex_lib/glfm/gui/other,/Users/Gust/Documents/c/mini_jvm/ex_lib/glfm/../../mini_jvm/jvm);
-				INFOPLIST_FILE = /Users/Gust/Documents/c/mini_jvm/ex_lib/glfm/build/ios/example/CMakeFiles/glfm_example.dir/Info.plist;
+				HEADER_SEARCH_PATHS = (
+					/Users/Gust/Documents/c/mini_jvm/ex_lib/glfm/include,
+					/Users/Gust/Documents/c/mini_jvm/ex_lib/glfm/gui,
+					/Users/Gust/Documents/c/mini_jvm/ex_lib/glfm/gui/stb,
+					/Users/Gust/Documents/c/mini_jvm/ex_lib/glfm/gui/other,
+					/Users/Gust/Documents/c/mini_jvm/ex_lib/glfm/../../mini_jvm/jvm,
+				);
+				INFOPLIST_FILE = /Users/Gust/Documents/c/mini_jvm/ex_lib/glfm/build/ios/example/CMakeFiles/glfm_test_pattern.dir/Info.plist;
 				INSTALL_PATH = "$(LOCAL_APPS_DIR)";
 				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				LIBRARY_SEARCH_PATHS = "";
-				OTHER_CFLAGS = "    -DNDEBUG  ";
-				OTHER_LDFLAGS = "  /Users/Gust/Documents/c/mini_jvm/ex_lib/glfm/build/ios/GLFM.build/lib/Release/libglfm.a -framework Foundation -framework CoreGraphics -framework UIKit -framework OpenGLES -framework QuartzCore";
+				OTHER_CFLAGS = (
+					"-DNDEBUG",
+					"'-std=gnu99'",
+				);
+				OTHER_LDFLAGS = (
+					/Users/Gust/Documents/c/mini_jvm/ex_lib/glfm/build/ios/GLFM.build/lib/Release/libglfm.a,
+					"-framework",
+					Foundation,
+					"-framework",
+					CoreGraphics,
+					"-framework",
+					UIKit,
+					"-framework",
+					OpenGLES,
+					"-framework",
+					QuartzCore,
+				);
 				OTHER_REZFLAGS = "";
 				PRODUCT_BUNDLE_IDENTIFIER = "com.brackeen.${PRODUCT_NAME:rfc1034identifier}";
-				PRODUCT_NAME = glfm_example;
+				PRODUCT_NAME = glfm_test_pattern;
 				SECTORDER_FLAGS = "";
 				SKIP_INSTALL = NO;
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator appletvos appletvsimulator";
@@ -1293,66 +891,149 @@ exit 0";
 				TARGETED_DEVICE_FAMILY = "1,2,3";
 				TVOS_DEPLOYMENT_TARGET = 9.0;
 				USE_HEADERMAP = YES;
-				WARNING_CFLAGS = ("-Wmost","-Wno-four-char-constants","-Wno-unknown-pragmas","$(inherited)");
+				WARNING_CFLAGS = (
+					"-Wmost",
+					"-Wno-four-char-constants",
+					"-Wno-unknown-pragmas",
+					"$(inherited)",
+				);
 			};
 			name = Release;
 		};
-		E6933428FED24D9F8B92A915 /* MinSizeRel */ = {
+		4B00A2CF0D95494BA0BD8EAB /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				CLANG_ENABLE_OBJC_ARC = YES;
-				CODE_SIGN_IDENTITY = "iPhone Developer";
-				COMBINE_HIDPI_IMAGES = NO;
-				EXECUTABLE_PREFIX = "";
-				EXECUTABLE_SUFFIX = "";
-				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
+				COMBINE_HIDPI_IMAGES = YES;
+				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
 				GCC_INLINES_ARE_PRIVATE_EXTERN = NO;
-				GCC_OPTIMIZATION_LEVEL = s;
-				GCC_PREPROCESSOR_DEFINITIONS = ("'CMAKE_INTDIR=\"$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)\"'");
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = "'CMAKE_INTDIR=\"$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)\"'";
 				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
-				HEADER_SEARCH_PATHS = (/Users/Gust/Documents/c/mini_jvm/ex_lib/glfm/include,/Users/Gust/Documents/c/mini_jvm/ex_lib/glfm/gui,/Users/Gust/Documents/c/mini_jvm/ex_lib/glfm/gui/stb,/Users/Gust/Documents/c/mini_jvm/ex_lib/glfm/gui/other,/Users/Gust/Documents/c/mini_jvm/ex_lib/glfm/../../mini_jvm/jvm);
-				INFOPLIST_FILE = /Users/Gust/Documents/c/mini_jvm/ex_lib/glfm/build/ios/example/CMakeFiles/glfm_example.dir/Info.plist;
-				INSTALL_PATH = "$(LOCAL_APPS_DIR)";
-				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
-				LIBRARY_SEARCH_PATHS = "";
-				OTHER_CFLAGS = "    -DNDEBUG  ";
-				OTHER_LDFLAGS = "  /Users/Gust/Documents/c/mini_jvm/ex_lib/glfm/build/ios/GLFM.build/lib/MinSizeRel/libglfm.a -framework Foundation -framework CoreGraphics -framework UIKit -framework OpenGLES -framework QuartzCore";
+				HEADER_SEARCH_PATHS = (
+					/Users/Gust/Documents/c/mini_jvm/ex_lib/glfm/include,
+					/Users/Gust/Documents/c/mini_jvm/ex_lib/glfm/gui,
+					/Users/Gust/Documents/c/mini_jvm/ex_lib/glfm/gui/stb,
+					/Users/Gust/Documents/c/mini_jvm/ex_lib/glfm/gui/other,
+					/Users/Gust/Documents/c/mini_jvm/ex_lib/glfm/../../mini_jvm/jvm,
+				);
+				INSTALL_PATH = "";
+				OTHER_LDFLAGS = " ";
 				OTHER_REZFLAGS = "";
-				PRODUCT_BUNDLE_IDENTIFIER = "com.brackeen.${PRODUCT_NAME:rfc1034identifier}";
-				PRODUCT_NAME = glfm_example;
+				PRODUCT_NAME = ALL_BUILD;
 				SECTORDER_FLAGS = "";
-				SKIP_INSTALL = NO;
-				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator appletvos appletvsimulator";
-				SYMROOT = /Users/Gust/Documents/c/mini_jvm/ex_lib/glfm/build/ios/example;
-				TARGETED_DEVICE_FAMILY = "1,2,3";
-				TVOS_DEPLOYMENT_TARGET = 9.0;
-				USE_HEADERMAP = YES;
-				WARNING_CFLAGS = ("-Wmost","-Wno-four-char-constants","-Wno-unknown-pragmas","$(inherited)");
+				SYMROOT = /Users/Gust/Documents/c/mini_jvm/ex_lib/glfm/build/ios;
+				USE_HEADERMAP = NO;
+				WARNING_CFLAGS = (
+					"-Wmost",
+					"-Wno-four-char-constants",
+					"-Wno-unknown-pragmas",
+					"$(inherited)",
+				);
 			};
-			name = MinSizeRel;
+			name = Debug;
 		};
-		EA679C668FA74730B8A16849 /* RelWithDebInfo */ = {
+		4DD765099BC349EAA8E63844 /* RelWithDebInfo */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				CLANG_ENABLE_OBJC_ARC = YES;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				COMBINE_HIDPI_IMAGES = NO;
+				DEVELOPMENT_TEAM = M978JH97JT;
 				EXECUTABLE_PREFIX = "";
 				EXECUTABLE_SUFFIX = "";
 				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
 				GCC_INLINES_ARE_PRIVATE_EXTERN = NO;
 				GCC_OPTIMIZATION_LEVEL = 2;
-				GCC_PREPROCESSOR_DEFINITIONS = ("'CMAKE_INTDIR=\"$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)\"'");
+				GCC_PREPROCESSOR_DEFINITIONS = "'CMAKE_INTDIR=\"$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)\"'";
 				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
-				HEADER_SEARCH_PATHS = (/Users/Gust/Documents/c/mini_jvm/ex_lib/glfm/include,/Users/Gust/Documents/c/mini_jvm/ex_lib/glfm/gui,/Users/Gust/Documents/c/mini_jvm/ex_lib/glfm/gui/stb,/Users/Gust/Documents/c/mini_jvm/ex_lib/glfm/gui/other,/Users/Gust/Documents/c/mini_jvm/ex_lib/glfm/../../mini_jvm/jvm);
+				HEADER_SEARCH_PATHS = (
+					/Users/Gust/Documents/c/mini_jvm/ex_lib/glfm/include,
+					/Users/Gust/Documents/c/mini_jvm/ex_lib/glfm/gui,
+					/Users/Gust/Documents/c/mini_jvm/ex_lib/glfm/gui/stb,
+					/Users/Gust/Documents/c/mini_jvm/ex_lib/glfm/gui/other,
+					/Users/Gust/Documents/c/mini_jvm/ex_lib/glfm/../../mini_jvm/jvm,
+				);
+				INFOPLIST_FILE = /Users/Gust/Documents/c/mini_jvm/ex_lib/glfm/build/ios/example/CMakeFiles/glfm_test_pattern.dir/Info.plist;
+				INSTALL_PATH = "$(LOCAL_APPS_DIR)";
+				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
+				LIBRARY_SEARCH_PATHS = "";
+				OTHER_CFLAGS = (
+					"-DNDEBUG",
+					"'-std=gnu99'",
+				);
+				OTHER_LDFLAGS = (
+					/Users/Gust/Documents/c/mini_jvm/ex_lib/glfm/build/ios/GLFM.build/lib/RelWithDebInfo/libglfm.a,
+					"-framework",
+					Foundation,
+					"-framework",
+					CoreGraphics,
+					"-framework",
+					UIKit,
+					"-framework",
+					OpenGLES,
+					"-framework",
+					QuartzCore,
+				);
+				OTHER_REZFLAGS = "";
+				PRODUCT_BUNDLE_IDENTIFIER = "com.brackeen.${PRODUCT_NAME:rfc1034identifier}";
+				PRODUCT_NAME = glfm_test_pattern;
+				SECTORDER_FLAGS = "";
+				SKIP_INSTALL = NO;
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator appletvos appletvsimulator";
+				SYMROOT = /Users/Gust/Documents/c/mini_jvm/ex_lib/glfm/build/ios/example;
+				TARGETED_DEVICE_FAMILY = "1,2,3";
+				TVOS_DEPLOYMENT_TARGET = 9.0;
+				USE_HEADERMAP = YES;
+				WARNING_CFLAGS = (
+					"-Wmost",
+					"-Wno-four-char-constants",
+					"-Wno-unknown-pragmas",
+					"$(inherited)",
+				);
+			};
+			name = RelWithDebInfo;
+		};
+		4E632CDFA28747C5A70A8B71 /* RelWithDebInfo */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				COMBINE_HIDPI_IMAGES = NO;
+				DEVELOPMENT_TEAM = "";
+				EXECUTABLE_PREFIX = "";
+				EXECUTABLE_SUFFIX = "";
+				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
+				GCC_INLINES_ARE_PRIVATE_EXTERN = NO;
+				GCC_OPTIMIZATION_LEVEL = 2;
+				GCC_PREPROCESSOR_DEFINITIONS = "'CMAKE_INTDIR=\"$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)\"'";
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				HEADER_SEARCH_PATHS = (
+					/Users/Gust/Documents/c/mini_jvm/ex_lib/glfm/include,
+					/Users/Gust/Documents/c/mini_jvm/ex_lib/glfm/gui,
+					/Users/Gust/Documents/c/mini_jvm/ex_lib/glfm/gui/stb,
+					/Users/Gust/Documents/c/mini_jvm/ex_lib/glfm/gui/other,
+					/Users/Gust/Documents/c/mini_jvm/ex_lib/glfm/../../mini_jvm/jvm,
+				);
 				INFOPLIST_FILE = /Users/Gust/Documents/c/mini_jvm/ex_lib/glfm/build/ios/example/CMakeFiles/glfm_example.dir/Info.plist;
 				INSTALL_PATH = "$(LOCAL_APPS_DIR)";
 				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				LIBRARY_SEARCH_PATHS = "";
 				OTHER_CFLAGS = "       -DNDEBUG  ";
-				OTHER_LDFLAGS = "  /Users/Gust/Documents/c/mini_jvm/ex_lib/glfm/build/ios/GLFM.build/lib/RelWithDebInfo/libglfm.a -framework Foundation -framework CoreGraphics -framework UIKit -framework OpenGLES -framework QuartzCore";
+				OTHER_LDFLAGS = (
+					/Users/Gust/Documents/c/mini_jvm/ex_lib/glfm/build/ios/GLFM.build/lib/RelWithDebInfo/libglfm.a,
+					"-framework",
+					Foundation,
+					"-framework",
+					CoreGraphics,
+					"-framework",
+					UIKit,
+					"-framework",
+					OpenGLES,
+					"-framework",
+					QuartzCore,
+				);
 				OTHER_REZFLAGS = "";
-				PRODUCT_BUNDLE_IDENTIFIER = "com.brackeen.${PRODUCT_NAME:rfc1034identifier}";
+				PRODUCT_BUNDLE_IDENTIFIER = "com.eglsgame.glfm-example";
 				PRODUCT_NAME = glfm_example;
 				SECTORDER_FLAGS = "";
 				SKIP_INSTALL = NO;
@@ -1361,41 +1042,193 @@ exit 0";
 				TARGETED_DEVICE_FAMILY = "1,2,3";
 				TVOS_DEPLOYMENT_TARGET = 9.0;
 				USE_HEADERMAP = YES;
-				WARNING_CFLAGS = ("-Wmost","-Wno-four-char-constants","-Wno-unknown-pragmas","$(inherited)");
+				WARNING_CFLAGS = (
+					"-Wmost",
+					"-Wno-four-char-constants",
+					"-Wno-unknown-pragmas",
+					"$(inherited)",
+				);
 			};
 			name = RelWithDebInfo;
 		};
-		F4ED57E6AE6F4D1187BFEAF5 /* MinSizeRel */ = {
+		5B049485AF9142F2B18EEA70 /* MinSizeRel */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				COMBINE_HIDPI_IMAGES = YES;
-				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				COMBINE_HIDPI_IMAGES = NO;
+				DEVELOPMENT_TEAM = M978JH97JT;
+				EXECUTABLE_PREFIX = "";
+				EXECUTABLE_SUFFIX = "";
+				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
 				GCC_INLINES_ARE_PRIVATE_EXTERN = NO;
-				GCC_OPTIMIZATION_LEVEL = 0;
-				GCC_PREPROCESSOR_DEFINITIONS = ("'CMAKE_INTDIR=\"$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)\"'");
+				GCC_OPTIMIZATION_LEVEL = s;
+				GCC_PREPROCESSOR_DEFINITIONS = "'CMAKE_INTDIR=\"$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)\"'";
 				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
-				HEADER_SEARCH_PATHS = (/Users/Gust/Documents/c/mini_jvm/ex_lib/glfm/include,/Users/Gust/Documents/c/mini_jvm/ex_lib/glfm/gui,/Users/Gust/Documents/c/mini_jvm/ex_lib/glfm/gui/stb,/Users/Gust/Documents/c/mini_jvm/ex_lib/glfm/gui/other,/Users/Gust/Documents/c/mini_jvm/ex_lib/glfm/../../mini_jvm/jvm);
-				INSTALL_PATH = "";
-				OTHER_LDFLAGS = " ";
+				HEADER_SEARCH_PATHS = (
+					/Users/Gust/Documents/c/mini_jvm/ex_lib/glfm/include,
+					/Users/Gust/Documents/c/mini_jvm/ex_lib/glfm/gui,
+					/Users/Gust/Documents/c/mini_jvm/ex_lib/glfm/gui/stb,
+					/Users/Gust/Documents/c/mini_jvm/ex_lib/glfm/gui/other,
+					/Users/Gust/Documents/c/mini_jvm/ex_lib/glfm/../../mini_jvm/jvm,
+				);
+				INFOPLIST_FILE = /Users/Gust/Documents/c/mini_jvm/ex_lib/glfm/build/ios/example/CMakeFiles/glfm_test_pattern.dir/Info.plist;
+				INSTALL_PATH = "$(LOCAL_APPS_DIR)";
+				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
+				LIBRARY_SEARCH_PATHS = "";
+				OTHER_CFLAGS = (
+					"-DNDEBUG",
+					"'-std=gnu99'",
+				);
+				OTHER_LDFLAGS = (
+					/Users/Gust/Documents/c/mini_jvm/ex_lib/glfm/build/ios/GLFM.build/lib/MinSizeRel/libglfm.a,
+					"-framework",
+					Foundation,
+					"-framework",
+					CoreGraphics,
+					"-framework",
+					UIKit,
+					"-framework",
+					OpenGLES,
+					"-framework",
+					QuartzCore,
+				);
 				OTHER_REZFLAGS = "";
-				PRODUCT_NAME = ALL_BUILD;
+				PRODUCT_BUNDLE_IDENTIFIER = "com.brackeen.${PRODUCT_NAME:rfc1034identifier}";
+				PRODUCT_NAME = glfm_test_pattern;
 				SECTORDER_FLAGS = "";
-				SYMROOT = /Users/Gust/Documents/c/mini_jvm/ex_lib/glfm/build/ios;
-				USE_HEADERMAP = NO;
-				WARNING_CFLAGS = ("-Wmost","-Wno-four-char-constants","-Wno-unknown-pragmas","$(inherited)");
+				SKIP_INSTALL = NO;
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator appletvos appletvsimulator";
+				SYMROOT = /Users/Gust/Documents/c/mini_jvm/ex_lib/glfm/build/ios/example;
+				TARGETED_DEVICE_FAMILY = "1,2,3";
+				TVOS_DEPLOYMENT_TARGET = 9.0;
+				USE_HEADERMAP = YES;
+				WARNING_CFLAGS = (
+					"-Wmost",
+					"-Wno-four-char-constants",
+					"-Wno-unknown-pragmas",
+					"$(inherited)",
+				);
 			};
 			name = MinSizeRel;
 		};
-		FE54340E08AB4769B8DDC9D7 /* RelWithDebInfo */ = {
+		68D8FF007A5E49448C2B6E32 /* MinSizeRel */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_ENABLE_OBJC_ARC = YES;
+				COMBINE_HIDPI_IMAGES = YES;
+				CONFIGURATION_BUILD_DIR = /Users/Gust/Documents/c/mini_jvm/ex_lib/glfm/build/ios/GLFM.build/lib/MinSizeRel;
+				EXECUTABLE_PREFIX = lib;
+				EXECUTABLE_SUFFIX = .a;
+				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
+				GCC_INLINES_ARE_PRIVATE_EXTERN = NO;
+				GCC_OPTIMIZATION_LEVEL = s;
+				GCC_PREPROCESSOR_DEFINITIONS = "'CMAKE_INTDIR=\"$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)\"'";
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				HEADER_SEARCH_PATHS = (
+					/Users/Gust/Documents/c/mini_jvm/ex_lib/glfm/include,
+					/Users/Gust/Documents/c/mini_jvm/ex_lib/glfm/gui,
+					/Users/Gust/Documents/c/mini_jvm/ex_lib/glfm/gui/stb,
+					/Users/Gust/Documents/c/mini_jvm/ex_lib/glfm/gui/other,
+					/Users/Gust/Documents/c/mini_jvm/ex_lib/glfm/../../mini_jvm/jvm,
+					/Users/Gust/Documents/c/mini_jvm/ex_lib/glfm/src,
+				);
+				INSTALL_PATH = "";
+				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
+				LIBRARY_STYLE = STATIC;
+				OTHER_CFLAGS = (
+					"-DNDEBUG",
+					"-Weverything",
+					"-Wwrite-strings",
+					"-Wno-padded",
+					"-Wno-covered-switch-default",
+					"-Wno-objc-interface-ivars",
+					"-Wno-objc-missing-property-synthesis",
+					"-Wno-direct-ivar-access",
+				);
+				OTHER_LIBTOOLFLAGS = " ";
+				OTHER_REZFLAGS = "";
+				PRODUCT_NAME = glfm;
+				SECTORDER_FLAGS = "";
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator appletvos appletvsimulator";
+				SYMROOT = /Users/Gust/Documents/c/mini_jvm/ex_lib/glfm/build/ios;
+				TVOS_DEPLOYMENT_TARGET = 9.0;
+				USE_HEADERMAP = NO;
+				WARNING_CFLAGS = (
+					"-Wmost",
+					"-Wno-four-char-constants",
+					"-Wno-unknown-pragmas",
+					"$(inherited)",
+				);
+			};
+			name = MinSizeRel;
+		};
+		6D373665AF42450A86D6EAE9 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_ENABLE_OBJC_ARC = YES;
+				COMBINE_HIDPI_IMAGES = YES;
+				CONFIGURATION_BUILD_DIR = /Users/Gust/Documents/c/mini_jvm/ex_lib/glfm/build/ios/GLFM.build/lib/Debug;
+				EXECUTABLE_PREFIX = lib;
+				EXECUTABLE_SUFFIX = .a;
+				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
+				GCC_INLINES_ARE_PRIVATE_EXTERN = NO;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = "'CMAKE_INTDIR=\"$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)\"'";
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				HEADER_SEARCH_PATHS = (
+					/Users/Gust/Documents/c/mini_jvm/ex_lib/glfm/include,
+					/Users/Gust/Documents/c/mini_jvm/ex_lib/glfm/gui,
+					/Users/Gust/Documents/c/mini_jvm/ex_lib/glfm/gui/stb,
+					/Users/Gust/Documents/c/mini_jvm/ex_lib/glfm/gui/other,
+					/Users/Gust/Documents/c/mini_jvm/ex_lib/glfm/../../mini_jvm/jvm,
+					/Users/Gust/Documents/c/mini_jvm/ex_lib/glfm/src,
+				);
+				INSTALL_PATH = "";
+				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
+				LIBRARY_STYLE = STATIC;
+				OTHER_CFLAGS = (
+					"-Weverything",
+					"-Wwrite-strings",
+					"-Wno-padded",
+					"-Wno-covered-switch-default",
+					"-Wno-objc-interface-ivars",
+					"-Wno-objc-missing-property-synthesis",
+					"-Wno-direct-ivar-access",
+				);
+				OTHER_LIBTOOLFLAGS = " ";
+				OTHER_REZFLAGS = "";
+				PRODUCT_NAME = glfm;
+				SECTORDER_FLAGS = "";
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator appletvos appletvsimulator";
+				SYMROOT = /Users/Gust/Documents/c/mini_jvm/ex_lib/glfm/build/ios;
+				TVOS_DEPLOYMENT_TARGET = 9.0;
+				USE_HEADERMAP = NO;
+				WARNING_CFLAGS = (
+					"-Wmost",
+					"-Wno-four-char-constants",
+					"-Wno-unknown-pragmas",
+					"$(inherited)",
+				);
+			};
+			name = Debug;
+		};
+		6F69D0ED2468409FAB3F8211 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				COMBINE_HIDPI_IMAGES = YES;
 				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
 				GCC_INLINES_ARE_PRIVATE_EXTERN = NO;
 				GCC_OPTIMIZATION_LEVEL = 0;
-				GCC_PREPROCESSOR_DEFINITIONS = ("'CMAKE_INTDIR=\"$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)\"'");
+				GCC_PREPROCESSOR_DEFINITIONS = "'CMAKE_INTDIR=\"$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)\"'";
 				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
-				HEADER_SEARCH_PATHS = (/Users/Gust/Documents/c/mini_jvm/ex_lib/glfm/include,/Users/Gust/Documents/c/mini_jvm/ex_lib/glfm/gui,/Users/Gust/Documents/c/mini_jvm/ex_lib/glfm/gui/stb,/Users/Gust/Documents/c/mini_jvm/ex_lib/glfm/gui/other,/Users/Gust/Documents/c/mini_jvm/ex_lib/glfm/../../mini_jvm/jvm);
+				HEADER_SEARCH_PATHS = (
+					/Users/Gust/Documents/c/mini_jvm/ex_lib/glfm/include,
+					/Users/Gust/Documents/c/mini_jvm/ex_lib/glfm/gui,
+					/Users/Gust/Documents/c/mini_jvm/ex_lib/glfm/gui/stb,
+					/Users/Gust/Documents/c/mini_jvm/ex_lib/glfm/gui/other,
+					/Users/Gust/Documents/c/mini_jvm/ex_lib/glfm/../../mini_jvm/jvm,
+				);
 				INSTALL_PATH = "";
 				OTHER_LDFLAGS = " ";
 				OTHER_REZFLAGS = "";
@@ -1403,75 +1236,541 @@ exit 0";
 				SECTORDER_FLAGS = "";
 				SYMROOT = /Users/Gust/Documents/c/mini_jvm/ex_lib/glfm/build/ios;
 				USE_HEADERMAP = NO;
-				WARNING_CFLAGS = ("-Wmost","-Wno-four-char-constants","-Wno-unknown-pragmas","$(inherited)");
+				WARNING_CFLAGS = (
+					"-Wmost",
+					"-Wno-four-char-constants",
+					"-Wno-unknown-pragmas",
+					"$(inherited)",
+				);
+			};
+			name = Release;
+		};
+		767C964CA1C64AF7A15188BC /* MinSizeRel */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				COMBINE_HIDPI_IMAGES = NO;
+				DEVELOPMENT_TEAM = "";
+				EXECUTABLE_PREFIX = "";
+				EXECUTABLE_SUFFIX = "";
+				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
+				GCC_INLINES_ARE_PRIVATE_EXTERN = NO;
+				GCC_OPTIMIZATION_LEVEL = s;
+				GCC_PREPROCESSOR_DEFINITIONS = "'CMAKE_INTDIR=\"$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)\"'";
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				HEADER_SEARCH_PATHS = (
+					/Users/Gust/Documents/c/mini_jvm/ex_lib/glfm/include,
+					/Users/Gust/Documents/c/mini_jvm/ex_lib/glfm/gui,
+					/Users/Gust/Documents/c/mini_jvm/ex_lib/glfm/gui/stb,
+					/Users/Gust/Documents/c/mini_jvm/ex_lib/glfm/gui/other,
+					/Users/Gust/Documents/c/mini_jvm/ex_lib/glfm/../../mini_jvm/jvm,
+				);
+				INFOPLIST_FILE = /Users/Gust/Documents/c/mini_jvm/ex_lib/glfm/build/ios/example/CMakeFiles/glfm_example.dir/Info.plist;
+				INSTALL_PATH = "$(LOCAL_APPS_DIR)";
+				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
+				LIBRARY_SEARCH_PATHS = "";
+				OTHER_CFLAGS = "    -DNDEBUG  ";
+				OTHER_LDFLAGS = (
+					/Users/Gust/Documents/c/mini_jvm/ex_lib/glfm/build/ios/GLFM.build/lib/MinSizeRel/libglfm.a,
+					"-framework",
+					Foundation,
+					"-framework",
+					CoreGraphics,
+					"-framework",
+					UIKit,
+					"-framework",
+					OpenGLES,
+					"-framework",
+					QuartzCore,
+				);
+				OTHER_REZFLAGS = "";
+				PRODUCT_BUNDLE_IDENTIFIER = "com.eglsgame.glfm-example";
+				PRODUCT_NAME = glfm_example;
+				SECTORDER_FLAGS = "";
+				SKIP_INSTALL = NO;
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator appletvos appletvsimulator";
+				SYMROOT = /Users/Gust/Documents/c/mini_jvm/ex_lib/glfm/build/ios/example;
+				TARGETED_DEVICE_FAMILY = "1,2,3";
+				TVOS_DEPLOYMENT_TARGET = 9.0;
+				USE_HEADERMAP = YES;
+				WARNING_CFLAGS = (
+					"-Wmost",
+					"-Wno-four-char-constants",
+					"-Wno-unknown-pragmas",
+					"$(inherited)",
+				);
+			};
+			name = MinSizeRel;
+		};
+		7DC46C7AEBA34866BCB37156 /* RelWithDebInfo */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = iphoneos;
+				SYMROOT = /Users/Gust/Documents/c/mini_jvm/ex_lib/glfm/build/ios/build;
+			};
+			name = RelWithDebInfo;
+		};
+		8BEF5C097E264DBEB1AC3272 /* RelWithDebInfo */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COMBINE_HIDPI_IMAGES = YES;
+				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
+				GCC_INLINES_ARE_PRIVATE_EXTERN = NO;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = "'CMAKE_INTDIR=\"$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)\"'";
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				HEADER_SEARCH_PATHS = (
+					/Users/Gust/Documents/c/mini_jvm/ex_lib/glfm/include,
+					/Users/Gust/Documents/c/mini_jvm/ex_lib/glfm/gui,
+					/Users/Gust/Documents/c/mini_jvm/ex_lib/glfm/gui/stb,
+					/Users/Gust/Documents/c/mini_jvm/ex_lib/glfm/gui/other,
+					/Users/Gust/Documents/c/mini_jvm/ex_lib/glfm/../../mini_jvm/jvm,
+				);
+				INSTALL_PATH = "";
+				OTHER_LDFLAGS = " ";
+				OTHER_REZFLAGS = "";
+				PRODUCT_NAME = ZERO_CHECK;
+				SECTORDER_FLAGS = "";
+				SYMROOT = /Users/Gust/Documents/c/mini_jvm/ex_lib/glfm/build/ios;
+				USE_HEADERMAP = NO;
+				WARNING_CFLAGS = (
+					"-Wmost",
+					"-Wno-four-char-constants",
+					"-Wno-unknown-pragmas",
+					"$(inherited)",
+				);
+			};
+			name = RelWithDebInfo;
+		};
+		994725324A954A45A5D604DD /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				COMBINE_HIDPI_IMAGES = NO;
+				DEVELOPMENT_TEAM = "";
+				EXECUTABLE_PREFIX = "";
+				EXECUTABLE_SUFFIX = "";
+				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
+				GCC_INLINES_ARE_PRIVATE_EXTERN = NO;
+				GCC_OPTIMIZATION_LEVEL = 3;
+				GCC_PREPROCESSOR_DEFINITIONS = "'CMAKE_INTDIR=\"$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)\"'";
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				HEADER_SEARCH_PATHS = (
+					/Users/Gust/Documents/c/mini_jvm/ex_lib/glfm/include,
+					/Users/Gust/Documents/c/mini_jvm/ex_lib/glfm/gui,
+					/Users/Gust/Documents/c/mini_jvm/ex_lib/glfm/gui/stb,
+					/Users/Gust/Documents/c/mini_jvm/ex_lib/glfm/gui/other,
+					/Users/Gust/Documents/c/mini_jvm/ex_lib/glfm/../../mini_jvm/jvm,
+				);
+				INFOPLIST_FILE = /Users/Gust/Documents/c/mini_jvm/ex_lib/glfm/build/ios/example/CMakeFiles/glfm_example.dir/Info.plist;
+				INSTALL_PATH = "$(LOCAL_APPS_DIR)";
+				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
+				LIBRARY_SEARCH_PATHS = "";
+				OTHER_CFLAGS = "    -DNDEBUG  ";
+				OTHER_LDFLAGS = (
+					/Users/Gust/Documents/c/mini_jvm/ex_lib/glfm/build/ios/GLFM.build/lib/Release/libglfm.a,
+					"-framework",
+					Foundation,
+					"-framework",
+					CoreGraphics,
+					"-framework",
+					UIKit,
+					"-framework",
+					OpenGLES,
+					"-framework",
+					QuartzCore,
+				);
+				OTHER_REZFLAGS = "";
+				PRODUCT_BUNDLE_IDENTIFIER = "com.eglsgame.glfm-example";
+				PRODUCT_NAME = glfm_example;
+				SECTORDER_FLAGS = "";
+				SKIP_INSTALL = NO;
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator appletvos appletvsimulator";
+				SYMROOT = /Users/Gust/Documents/c/mini_jvm/ex_lib/glfm/build/ios/example;
+				TARGETED_DEVICE_FAMILY = "1,2,3";
+				TVOS_DEPLOYMENT_TARGET = 9.0;
+				USE_HEADERMAP = YES;
+				WARNING_CFLAGS = (
+					"-Wmost",
+					"-Wno-four-char-constants",
+					"-Wno-unknown-pragmas",
+					"$(inherited)",
+				);
+			};
+			name = Release;
+		};
+		9F15CF09005D4106A01DE77A /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				COMBINE_HIDPI_IMAGES = NO;
+				DEVELOPMENT_TEAM = M978JH97JT;
+				EXECUTABLE_PREFIX = "";
+				EXECUTABLE_SUFFIX = "";
+				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
+				GCC_INLINES_ARE_PRIVATE_EXTERN = NO;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = "'CMAKE_INTDIR=\"$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)\"'";
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				HEADER_SEARCH_PATHS = (
+					/Users/Gust/Documents/c/mini_jvm/ex_lib/glfm/include,
+					/Users/Gust/Documents/c/mini_jvm/ex_lib/glfm/gui,
+					/Users/Gust/Documents/c/mini_jvm/ex_lib/glfm/gui/stb,
+					/Users/Gust/Documents/c/mini_jvm/ex_lib/glfm/gui/other,
+					/Users/Gust/Documents/c/mini_jvm/ex_lib/glfm/../../mini_jvm/jvm,
+				);
+				INFOPLIST_FILE = /Users/Gust/Documents/c/mini_jvm/ex_lib/glfm/build/ios/example/CMakeFiles/glfm_test_pattern.dir/Info.plist;
+				INSTALL_PATH = "$(LOCAL_APPS_DIR)";
+				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
+				LIBRARY_SEARCH_PATHS = "";
+				OTHER_CFLAGS = "   '-std=gnu99'  ";
+				OTHER_LDFLAGS = (
+					/Users/Gust/Documents/c/mini_jvm/ex_lib/glfm/build/ios/GLFM.build/lib/Debug/libglfm.a,
+					"-framework",
+					Foundation,
+					"-framework",
+					CoreGraphics,
+					"-framework",
+					UIKit,
+					"-framework",
+					OpenGLES,
+					"-framework",
+					QuartzCore,
+				);
+				OTHER_REZFLAGS = "";
+				PRODUCT_BUNDLE_IDENTIFIER = "com.brackeen.${PRODUCT_NAME:rfc1034identifier}";
+				PRODUCT_NAME = glfm_test_pattern;
+				SECTORDER_FLAGS = "";
+				SKIP_INSTALL = NO;
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator appletvos appletvsimulator";
+				SYMROOT = /Users/Gust/Documents/c/mini_jvm/ex_lib/glfm/build/ios/example;
+				TARGETED_DEVICE_FAMILY = "1,2,3";
+				TVOS_DEPLOYMENT_TARGET = 9.0;
+				USE_HEADERMAP = YES;
+				WARNING_CFLAGS = (
+					"-Wmost",
+					"-Wno-four-char-constants",
+					"-Wno-unknown-pragmas",
+					"$(inherited)",
+				);
+			};
+			name = Debug;
+		};
+		AA0688E09B6449A0B6F73C19 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				COMBINE_HIDPI_IMAGES = NO;
+				DEVELOPMENT_TEAM = "";
+				EXECUTABLE_PREFIX = "";
+				EXECUTABLE_SUFFIX = "";
+				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
+				GCC_INLINES_ARE_PRIVATE_EXTERN = NO;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = "'CMAKE_INTDIR=\"$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)\"'";
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				HEADER_SEARCH_PATHS = (
+					/Users/Gust/Documents/c/mini_jvm/ex_lib/glfm/include,
+					/Users/Gust/Documents/c/mini_jvm/ex_lib/glfm/gui,
+					/Users/Gust/Documents/c/mini_jvm/ex_lib/glfm/gui/stb,
+					/Users/Gust/Documents/c/mini_jvm/ex_lib/glfm/gui/other,
+					/Users/Gust/Documents/c/mini_jvm/ex_lib/glfm/../../mini_jvm/jvm,
+				);
+				INFOPLIST_FILE = /Users/Gust/Documents/c/mini_jvm/ex_lib/glfm/build/ios/example/CMakeFiles/glfm_example.dir/Info.plist;
+				INSTALL_PATH = "$(LOCAL_APPS_DIR)";
+				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
+				LIBRARY_SEARCH_PATHS = "";
+				OTHER_CFLAGS = "    ";
+				OTHER_LDFLAGS = (
+					/Users/Gust/Documents/c/mini_jvm/ex_lib/glfm/build/ios/GLFM.build/lib/Debug/libglfm.a,
+					"-framework",
+					Foundation,
+					"-framework",
+					CoreGraphics,
+					"-framework",
+					UIKit,
+					"-framework",
+					OpenGLES,
+					"-framework",
+					QuartzCore,
+				);
+				OTHER_REZFLAGS = "";
+				PRODUCT_BUNDLE_IDENTIFIER = "com.eglsgame.glfm-example";
+				PRODUCT_NAME = glfm_example;
+				SECTORDER_FLAGS = "";
+				SKIP_INSTALL = NO;
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator appletvos appletvsimulator";
+				SYMROOT = /Users/Gust/Documents/c/mini_jvm/ex_lib/glfm/build/ios/example;
+				TARGETED_DEVICE_FAMILY = "1,2,3";
+				TVOS_DEPLOYMENT_TARGET = 9.0;
+				USE_HEADERMAP = YES;
+				WARNING_CFLAGS = (
+					"-Wmost",
+					"-Wno-four-char-constants",
+					"-Wno-unknown-pragmas",
+					"$(inherited)",
+				);
+			};
+			name = Debug;
+		};
+		BF40A53635E6452E94E88CF0 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COMBINE_HIDPI_IMAGES = YES;
+				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
+				GCC_INLINES_ARE_PRIVATE_EXTERN = NO;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = "'CMAKE_INTDIR=\"$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)\"'";
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				HEADER_SEARCH_PATHS = (
+					/Users/Gust/Documents/c/mini_jvm/ex_lib/glfm/include,
+					/Users/Gust/Documents/c/mini_jvm/ex_lib/glfm/gui,
+					/Users/Gust/Documents/c/mini_jvm/ex_lib/glfm/gui/stb,
+					/Users/Gust/Documents/c/mini_jvm/ex_lib/glfm/gui/other,
+					/Users/Gust/Documents/c/mini_jvm/ex_lib/glfm/../../mini_jvm/jvm,
+				);
+				INSTALL_PATH = "";
+				OTHER_LDFLAGS = " ";
+				OTHER_REZFLAGS = "";
+				PRODUCT_NAME = ZERO_CHECK;
+				SECTORDER_FLAGS = "";
+				SYMROOT = /Users/Gust/Documents/c/mini_jvm/ex_lib/glfm/build/ios;
+				USE_HEADERMAP = NO;
+				WARNING_CFLAGS = (
+					"-Wmost",
+					"-Wno-four-char-constants",
+					"-Wno-unknown-pragmas",
+					"$(inherited)",
+				);
+			};
+			name = Release;
+		};
+		BF8627F7325B4646BA892961 /* MinSizeRel */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COMBINE_HIDPI_IMAGES = YES;
+				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
+				GCC_INLINES_ARE_PRIVATE_EXTERN = NO;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = "'CMAKE_INTDIR=\"$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)\"'";
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				HEADER_SEARCH_PATHS = (
+					/Users/Gust/Documents/c/mini_jvm/ex_lib/glfm/include,
+					/Users/Gust/Documents/c/mini_jvm/ex_lib/glfm/gui,
+					/Users/Gust/Documents/c/mini_jvm/ex_lib/glfm/gui/stb,
+					/Users/Gust/Documents/c/mini_jvm/ex_lib/glfm/gui/other,
+					/Users/Gust/Documents/c/mini_jvm/ex_lib/glfm/../../mini_jvm/jvm,
+				);
+				INSTALL_PATH = "";
+				OTHER_LDFLAGS = " ";
+				OTHER_REZFLAGS = "";
+				PRODUCT_NAME = ZERO_CHECK;
+				SECTORDER_FLAGS = "";
+				SYMROOT = /Users/Gust/Documents/c/mini_jvm/ex_lib/glfm/build/ios;
+				USE_HEADERMAP = NO;
+				WARNING_CFLAGS = (
+					"-Wmost",
+					"-Wno-four-char-constants",
+					"-Wno-unknown-pragmas",
+					"$(inherited)",
+				);
+			};
+			name = MinSizeRel;
+		};
+		C0AA0A52392E4E1B9A069576 /* MinSizeRel */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = iphoneos;
+				SYMROOT = /Users/Gust/Documents/c/mini_jvm/ex_lib/glfm/build/ios/build;
+			};
+			name = MinSizeRel;
+		};
+		D03A9098108149C796C4F415 /* MinSizeRel */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COMBINE_HIDPI_IMAGES = YES;
+				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
+				GCC_INLINES_ARE_PRIVATE_EXTERN = NO;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = "'CMAKE_INTDIR=\"$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)\"'";
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				HEADER_SEARCH_PATHS = (
+					/Users/Gust/Documents/c/mini_jvm/ex_lib/glfm/include,
+					/Users/Gust/Documents/c/mini_jvm/ex_lib/glfm/gui,
+					/Users/Gust/Documents/c/mini_jvm/ex_lib/glfm/gui/stb,
+					/Users/Gust/Documents/c/mini_jvm/ex_lib/glfm/gui/other,
+					/Users/Gust/Documents/c/mini_jvm/ex_lib/glfm/../../mini_jvm/jvm,
+				);
+				INSTALL_PATH = "";
+				OTHER_LDFLAGS = " ";
+				OTHER_REZFLAGS = "";
+				PRODUCT_NAME = ALL_BUILD;
+				SECTORDER_FLAGS = "";
+				SYMROOT = /Users/Gust/Documents/c/mini_jvm/ex_lib/glfm/build/ios;
+				USE_HEADERMAP = NO;
+				WARNING_CFLAGS = (
+					"-Wmost",
+					"-Wno-four-char-constants",
+					"-Wno-unknown-pragmas",
+					"$(inherited)",
+				);
+			};
+			name = MinSizeRel;
+		};
+		D124D15B72C04F9CBC754105 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_ENABLE_OBJC_ARC = YES;
+				COMBINE_HIDPI_IMAGES = YES;
+				CONFIGURATION_BUILD_DIR = /Users/Gust/Documents/c/mini_jvm/ex_lib/glfm/build/ios/GLFM.build/lib/Release;
+				EXECUTABLE_PREFIX = lib;
+				EXECUTABLE_SUFFIX = .a;
+				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
+				GCC_INLINES_ARE_PRIVATE_EXTERN = NO;
+				GCC_OPTIMIZATION_LEVEL = 3;
+				GCC_PREPROCESSOR_DEFINITIONS = "'CMAKE_INTDIR=\"$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)\"'";
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				HEADER_SEARCH_PATHS = (
+					/Users/Gust/Documents/c/mini_jvm/ex_lib/glfm/include,
+					/Users/Gust/Documents/c/mini_jvm/ex_lib/glfm/gui,
+					/Users/Gust/Documents/c/mini_jvm/ex_lib/glfm/gui/stb,
+					/Users/Gust/Documents/c/mini_jvm/ex_lib/glfm/gui/other,
+					/Users/Gust/Documents/c/mini_jvm/ex_lib/glfm/../../mini_jvm/jvm,
+					/Users/Gust/Documents/c/mini_jvm/ex_lib/glfm/src,
+				);
+				INSTALL_PATH = "";
+				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
+				LIBRARY_STYLE = STATIC;
+				OTHER_CFLAGS = (
+					"-DNDEBUG",
+					"-Weverything",
+					"-Wwrite-strings",
+					"-Wno-padded",
+					"-Wno-covered-switch-default",
+					"-Wno-objc-interface-ivars",
+					"-Wno-objc-missing-property-synthesis",
+					"-Wno-direct-ivar-access",
+				);
+				OTHER_LIBTOOLFLAGS = " ";
+				OTHER_REZFLAGS = "";
+				PRODUCT_NAME = glfm;
+				SECTORDER_FLAGS = "";
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator appletvos appletvsimulator";
+				SYMROOT = /Users/Gust/Documents/c/mini_jvm/ex_lib/glfm/build/ios;
+				TVOS_DEPLOYMENT_TARGET = 9.0;
+				USE_HEADERMAP = NO;
+				WARNING_CFLAGS = (
+					"-Wmost",
+					"-Wno-four-char-constants",
+					"-Wno-unknown-pragmas",
+					"$(inherited)",
+				);
+			};
+			name = Release;
+		};
+		D473C2519D3A4D1A990C56DE /* RelWithDebInfo */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COMBINE_HIDPI_IMAGES = YES;
+				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
+				GCC_INLINES_ARE_PRIVATE_EXTERN = NO;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = "'CMAKE_INTDIR=\"$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)\"'";
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				HEADER_SEARCH_PATHS = (
+					/Users/Gust/Documents/c/mini_jvm/ex_lib/glfm/include,
+					/Users/Gust/Documents/c/mini_jvm/ex_lib/glfm/gui,
+					/Users/Gust/Documents/c/mini_jvm/ex_lib/glfm/gui/stb,
+					/Users/Gust/Documents/c/mini_jvm/ex_lib/glfm/gui/other,
+					/Users/Gust/Documents/c/mini_jvm/ex_lib/glfm/../../mini_jvm/jvm,
+				);
+				INSTALL_PATH = "";
+				OTHER_LDFLAGS = " ";
+				OTHER_REZFLAGS = "";
+				PRODUCT_NAME = ALL_BUILD;
+				SECTORDER_FLAGS = "";
+				SYMROOT = /Users/Gust/Documents/c/mini_jvm/ex_lib/glfm/build/ios;
+				USE_HEADERMAP = NO;
+				WARNING_CFLAGS = (
+					"-Wmost",
+					"-Wno-four-char-constants",
+					"-Wno-unknown-pragmas",
+					"$(inherited)",
+				);
 			};
 			name = RelWithDebInfo;
 		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		14A15AB3082F4A7F81B089CB /* Build configuration list for PBXAggregateTarget "ALL_BUILD" */ = {
+		0DFBD3905C0F4DD1842353C1 /* Build configuration list for PBXProject "GLFM" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
-				9A3A11C76BF04428B6E5AC49 /* Debug */,
-				3EE8E44FB848426BAB887C94 /* Release */,
-				F4ED57E6AE6F4D1187BFEAF5 /* MinSizeRel */,
-				FE54340E08AB4769B8DDC9D7 /* RelWithDebInfo */,
+				13A5234412464DEB81D38E82 /* Debug */,
+				200DB69A005E48F6B7BD7094 /* Release */,
+				C0AA0A52392E4E1B9A069576 /* MinSizeRel */,
+				7DC46C7AEBA34866BCB37156 /* RelWithDebInfo */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Debug;
 		};
-		32AB358F3EAF43F3AB0E8DAA /* Build configuration list for PBXAggregateTarget "ZERO_CHECK" */ = {
+		10CD64B3553C4C5983391ECF /* Build configuration list for PBXNativeTarget "glfm_test_pattern" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
-				7AAD16A0CE8D4706A71599D2 /* Debug */,
-				B3E86B96C4A94A1791B7623E /* Release */,
-				0655BABF5EA142CEA4FCC03C /* MinSizeRel */,
-				849DB82332E04566B447C832 /* RelWithDebInfo */,
+				9F15CF09005D4106A01DE77A /* Debug */,
+				389429F763E0465080685277 /* Release */,
+				5B049485AF9142F2B18EEA70 /* MinSizeRel */,
+				4DD765099BC349EAA8E63844 /* RelWithDebInfo */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Debug;
 		};
-		49D07C8932FA4D02A542C3D8 /* Build configuration list for PBXNativeTarget "glfm" */ = {
+		2F135A582DF64EBFBE5504B0 /* Build configuration list for PBXAggregateTarget "ALL_BUILD" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
-				2724222E8F0D41F4B3694816 /* Debug */,
-				00D37A13574F4E479E1619C4 /* Release */,
-				64DB6A2542F642FE956BD134 /* MinSizeRel */,
-				A2DC035CFB8749CCBC57CB90 /* RelWithDebInfo */,
+				4B00A2CF0D95494BA0BD8EAB /* Debug */,
+				6F69D0ED2468409FAB3F8211 /* Release */,
+				D03A9098108149C796C4F415 /* MinSizeRel */,
+				D473C2519D3A4D1A990C56DE /* RelWithDebInfo */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Debug;
 		};
-		91320BE9DFC046E3B5D15883 /* Build configuration list for PBXProject "GLFM" */ = {
+		B147577FF7AF407F983620EE /* Build configuration list for PBXAggregateTarget "ZERO_CHECK" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
-				03732EA62FCE47B3BC043A98 /* Debug */,
-				34CD0DBCC2EA4187869DB994 /* Release */,
-				847E65910F8B4A0197906C69 /* MinSizeRel */,
-				17018F54188648E09596C668 /* RelWithDebInfo */,
+				05EA8698A5D146E7BA940462 /* Debug */,
+				BF40A53635E6452E94E88CF0 /* Release */,
+				BF8627F7325B4646BA892961 /* MinSizeRel */,
+				8BEF5C097E264DBEB1AC3272 /* RelWithDebInfo */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Debug;
 		};
-		C5CAC8D94EE14D598B46F57C /* Build configuration list for PBXNativeTarget "glfm_test_pattern" */ = {
+		C859E0B2A62041B8BE3E7FAC /* Build configuration list for PBXNativeTarget "glfm_example" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
-				18C29E6218EC47A4AE09FB89 /* Debug */,
-				96963423CB7C41D18C3A6BFE /* Release */,
-				8445C3D5F07842E79B1D8B80 /* MinSizeRel */,
-				57427B032925400D95035468 /* RelWithDebInfo */,
+				AA0688E09B6449A0B6F73C19 /* Debug */,
+				994725324A954A45A5D604DD /* Release */,
+				767C964CA1C64AF7A15188BC /* MinSizeRel */,
+				4E632CDFA28747C5A70A8B71 /* RelWithDebInfo */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Debug;
 		};
-		F5BCFFB93E8243BCB40A25B0 /* Build configuration list for PBXNativeTarget "glfm_example" */ = {
+		D1031D37D9094306B1661288 /* Build configuration list for PBXNativeTarget "glfm" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
-				69139788195B45DA92EB0FF2 /* Debug */,
-				C389A9AB22B145A98493CAB5 /* Release */,
-				E6933428FED24D9F8B92A915 /* MinSizeRel */,
-				EA679C668FA74730B8A16849 /* RelWithDebInfo */,
+				6D373665AF42450A86D6EAE9 /* Debug */,
+				D124D15B72C04F9CBC754105 /* Release */,
+				68D8FF007A5E49448C2B6E32 /* MinSizeRel */,
+				03D44D0870624B8692BDA03E /* RelWithDebInfo */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Debug;

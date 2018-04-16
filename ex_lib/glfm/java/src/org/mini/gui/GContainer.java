@@ -68,7 +68,6 @@ abstract public class GContainer extends GObject {
         return elements.contains(son);
     }
 
-
     @Override
     public boolean update(long ctx) {
         synchronized (cache) {
@@ -108,11 +107,11 @@ abstract public class GContainer extends GObject {
     }
 
     @Override
-    public void characterEvent(String str,int mods) {
+    public void characterEvent(String str, int mods) {
         for (Iterator<GObject> it = elements.iterator(); it.hasNext();) {
             try {
                 GObject nko = it.next();
-                nko.characterEvent(str,mods);
+                nko.characterEvent(str, mods);
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -120,11 +119,11 @@ abstract public class GContainer extends GObject {
     }
 
     @Override
-    public void touchEvent(int button, boolean pressed, int x, int y) {
+    public void touchEvent(int phase, int x, int y) {
         for (Iterator<GObject> it = elements.iterator(); it.hasNext();) {
             try {
                 GObject nko = it.next();
-                nko.touchEvent(button, pressed, x, y);
+                nko.touchEvent(phase, x, y);
             } catch (Exception e) {
                 e.printStackTrace();
             }

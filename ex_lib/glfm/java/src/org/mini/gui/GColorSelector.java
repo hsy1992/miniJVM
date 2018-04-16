@@ -5,6 +5,7 @@
  */
 package org.mini.gui;
 
+import org.mini.glfm.Glfm;
 import static org.mini.gui.GToolkit.nvgRGBA;
 import static org.mini.nanovg.Nanovg.NVG_CCW;
 import static org.mini.nanovg.Nanovg.NVG_CW;
@@ -66,11 +67,11 @@ public class GColorSelector extends GObject {
     }
 
     @Override
-    public void touchEvent(int button, boolean pressed, int x, int y) {
+    public void touchEvent(int phase, int x, int y) {
         int rx = (int) (x - parent.getX());
         int ry = (int) (y - parent.getY());
         if (isInBoundle(boundle, rx, ry)) {
-            if (!pressed) {
+            if (phase!=Glfm.GLFMTouchPhaseEnded) {
                 float offX = x - (getX() + centX);
                 float offY = y - (getY() + centY);
                 float r = (float) Math.sqrt(offX * offX + offY * offY);

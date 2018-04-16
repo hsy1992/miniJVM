@@ -11,14 +11,12 @@ void JNI_OnLoad(JniEnv *env) {
     memset(&refers, 0, sizeof(GlobeRefer));
     refers.env = env;
     env->native_reg_lib(ptr_GlfmFuncTable(), count_GlfmFuncTable());
-//    env->native_reg_lib(ptr_NkFuncTable(), count_NkFuncTable());
     env->native_reg_lib(ptr_GLFuncTable(), count_GLFuncTable());
-    env->native_reg_lib(ptr_NutilFuncTable(), count_NanovgFuncTable());
+    env->native_reg_lib(ptr_NanovgFuncTable(), count_NanovgFuncTable());
 }
 
 void JNI_OnUnload(JniEnv *env) {
-    env->native_remove_lib(ptr_GlfwFuncTable());
-//    env->native_remove_lib(ptr_NkFuncTable());
+    env->native_remove_lib(ptr_GlfmFuncTable());
     env->native_remove_lib(ptr_GLFuncTable());
     env->native_remove_lib(ptr_NanovgFuncTable());
 }

@@ -3,7 +3,7 @@
 
 #include <stdio.h>
 #include <string.h>
-#include "glad/glad.h"
+//#include "glad/glad.h"
 #include "glfm.h"
 #include "linmath.h"
 
@@ -14,6 +14,7 @@
 #include "jvm.h"
 #include "jni_gui.h"
 
+extern const char *glfmGetResRoot();
 
 GlobeRefer refers;
 
@@ -34,11 +35,12 @@ static void _callback_error_before_init(int error, const char *description) {
     fprintf(stderr, "GLFW Error: %s\n", description);
 }
 
-static void _callback_surface_error(GLFMDisplay *window,const char *description) {
+static void _callback_surface_error(GLFMDisplay *window, const char *description) {
     if (refers._callback_surface_error) {
         JniEnv *env = refers.env;
         env->push_ref(refers.runtime->stack, refers.glfm_callback);
-        env->push_long(refers.runtime->stack, (s64) (intptr_t) window);
+        env->push_long(refers.runtime->stack, (s64)(intptr_t)
+        window);
         Instance *jstr = createJavaString(refers.runtime, description);
         env->push_ref(refers.runtime->stack, jstr);
         s32 ret = env->execute_method(refers._callback_surface_error, refers.runtime, refers.glfm_callback->mb.clazz);
@@ -52,7 +54,8 @@ static bool _callback_key(GLFMDisplay *window, GLFMKey key, GLFMKeyAction action
     if (refers._callback_key) {
         JniEnv *env = refers.env;
         env->push_ref(refers.runtime->stack, refers.glfm_callback);
-        env->push_long(refers.runtime->stack, (s64) (intptr_t) window);
+        env->push_long(refers.runtime->stack, (s64)(intptr_t)
+        window);
         env->push_int(refers.runtime->stack, key);
         env->push_int(refers.runtime->stack, action);
         env->push_int(refers.runtime->stack, mods);
@@ -70,8 +73,9 @@ static void _callback_character(GLFMDisplay *window, const char *utf8, int modif
     if (refers._callback_character) {
         JniEnv *env = refers.env;
         env->push_ref(refers.runtime->stack, refers.glfm_callback);
-        env->push_long(refers.runtime->stack, (s64) (intptr_t) window);
-        Instance *ins=createJavaString(refers.runtime, utf8);
+        env->push_long(refers.runtime->stack, (s64)(intptr_t)
+        window);
+        Instance *ins = createJavaString(refers.runtime, utf8);
         env->push_ref(refers.runtime->stack, ins);
         env->push_int(refers.runtime->stack, modifiers);
         s32 ret = env->execute_method(refers._callback_character, refers.runtime, refers.glfm_callback->mb.clazz);
@@ -85,7 +89,8 @@ static void _callback_mainloop(GLFMDisplay *window, f64 frameTime) {
     if (refers._callback_mainloop) {
         JniEnv *env = refers.env;
         env->push_ref(refers.runtime->stack, refers.glfm_callback);
-        env->push_long(refers.runtime->stack, (s64) (intptr_t) window);
+        env->push_long(refers.runtime->stack, (s64)(intptr_t)
+        window);
         env->push_double(refers.runtime->stack, frameTime);
 
         s32 ret = env->execute_method(refers._callback_mainloop, refers.runtime, refers.glfm_callback->mb.clazz);
@@ -99,7 +104,8 @@ void _callback_memory_warning(GLFMDisplay *window) {
     if (refers._callback_memory_warning) {
         JniEnv *env = refers.env;
         env->push_ref(refers.runtime->stack, refers.glfm_callback);
-        env->push_long(refers.runtime->stack, (s64) (intptr_t) window);
+        env->push_long(refers.runtime->stack, (s64)(intptr_t)
+        window);
 
         s32 ret = env->execute_method(refers._callback_memory_warning, refers.runtime, refers.glfm_callback->mb.clazz);
         if (ret) {
@@ -112,24 +118,27 @@ void _callback_keyboard_visible(GLFMDisplay *window, bool visible, f64 x, f64 y,
     if (refers._callback_keyboard_visible) {
         JniEnv *env = refers.env;
         env->push_ref(refers.runtime->stack, refers.glfm_callback);
-        env->push_long(refers.runtime->stack, (s64) (intptr_t) window);
+        env->push_long(refers.runtime->stack, (s64)(intptr_t)
+        window);
         env->push_int(refers.runtime->stack, visible);
         env->push_double(refers.runtime->stack, x);
         env->push_double(refers.runtime->stack, y);
         env->push_double(refers.runtime->stack, w);
         env->push_double(refers.runtime->stack, h);
-        s32 ret = env->execute_method(refers._callback_keyboard_visible, refers.runtime, refers.glfm_callback->mb.clazz);
+        s32 ret = env->execute_method(refers._callback_keyboard_visible, refers.runtime,
+                                      refers.glfm_callback->mb.clazz);
         if (ret) {
             env->print_exception(refers.runtime);
         }
     }
 }
 
-bool _callback_touch(GLFMDisplay *window,s32 touch,GLFMTouchPhase phase, f64 x, f64 y) {
+bool _callback_touch(GLFMDisplay *window, s32 touch, GLFMTouchPhase phase, f64 x, f64 y) {
     if (refers._callback_touch) {
         JniEnv *env = refers.env;
         env->push_ref(refers.runtime->stack, refers.glfm_callback);
-        env->push_long(refers.runtime->stack, (s64) (intptr_t) window);
+        env->push_long(refers.runtime->stack, (s64)(intptr_t)
+        window);
         env->push_int(refers.runtime->stack, touch);
         env->push_int(refers.runtime->stack, phase);
         env->push_double(refers.runtime->stack, x);
@@ -149,7 +158,8 @@ void _callback_surface_resized(GLFMDisplay *window, s32 w, s32 h) {
     if (refers._callback_surface_resized) {
         JniEnv *env = refers.env;
         env->push_ref(refers.runtime->stack, refers.glfm_callback);
-        env->push_long(refers.runtime->stack, (s64) (intptr_t) window);
+        env->push_long(refers.runtime->stack, (s64)(intptr_t)
+        window);
         env->push_int(refers.runtime->stack, w);
         env->push_int(refers.runtime->stack, h);
         s32 ret = env->execute_method(refers._callback_surface_resized, refers.runtime, refers.glfm_callback->mb.clazz);
@@ -163,8 +173,10 @@ void _callback_surface_destroyed(GLFMDisplay *window) {
     if (refers._callback_surface_destroyed) {
         JniEnv *env = refers.env;
         env->push_ref(refers.runtime->stack, refers.glfm_callback);
-        env->push_long(refers.runtime->stack, (s64) (intptr_t) window);
-        s32 ret = env->execute_method(refers._callback_surface_destroyed, refers.runtime, refers.glfm_callback->mb.clazz);
+        env->push_long(refers.runtime->stack, (s64)(intptr_t)
+        window);
+        s32 ret = env->execute_method(refers._callback_surface_destroyed, refers.runtime,
+                                      refers.glfm_callback->mb.clazz);
         if (ret) {
             env->print_exception(refers.runtime);
         }
@@ -175,7 +187,8 @@ void _callback_app_focus(GLFMDisplay *window, bool focus) {
     if (refers._callback_app_focus) {
         JniEnv *env = refers.env;
         env->push_ref(refers.runtime->stack, refers.glfm_callback);
-        env->push_long(refers.runtime->stack, (s64) (intptr_t) window);
+        env->push_long(refers.runtime->stack, (s64)(intptr_t)
+        window);
         env->push_int(refers.runtime->stack, focus);
         s32 ret = env->execute_method(refers._callback_app_focus, refers.runtime, refers.glfm_callback->mb.clazz);
         if (ret) {
@@ -188,7 +201,8 @@ void _callback_surface_created(GLFMDisplay *window, s32 w, s32 h) {
     if (refers._callback_surface_created) {
         JniEnv *env = refers.env;
         env->push_ref(refers.runtime->stack, refers.glfm_callback);
-        env->push_long(refers.runtime->stack, (s64) (intptr_t) window);
+        env->push_long(refers.runtime->stack, (s64)(intptr_t)
+        window);
         env->push_int(refers.runtime->stack, w);
         env->push_int(refers.runtime->stack, h);
         s32 ret = env->execute_method(refers._callback_surface_created, refers.runtime, refers.glfm_callback->mb.clazz);
@@ -198,19 +212,22 @@ void _callback_surface_created(GLFMDisplay *window, s32 w, s32 h) {
     }
 }
 
-
 /* ==============================   jni glfm =================================*/
 
 int org_mini_glfm_Glfm_glfmSetUserData(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
-    GLFMDisplay *window = (__refer) (intptr_t) env->localvar_getLong_2slot(runtime, pos);
+    GLFMDisplay *window = (__refer)(intptr_t)
+    env->localvar_getLong_2slot(runtime, pos);
     pos += 2;
     refers.glfm_callback = env->localvar_getRefer(runtime, pos++);
+    refers.runtime = runtime;
 
     //this object not refered by jvm , so needs to hold by jni manaul
     if (refers.glfm_callback) env->instance_release_from_thread(refers.glfm_callback, runtime);
-    env->instance_hold_to_thread(refers.glfm_callback, runtime);
+    //env->instance_hold_to_thread(refers.glfm_callback, runtime);
+    env->garbage_refer_hold(refers.glfm_callback);
+
 
     glfmSetMainLoopFunc(window, _callback_mainloop);
     glfmSetKeyFunc(window, _callback_key);
@@ -227,19 +244,8 @@ int org_mini_glfm_Glfm_glfmSetUserData(Runtime *runtime, JClass *clazz) {
 
     const c8 *name_s, *type_s;
     {
-
-        name_s = "onSurfaceError";
-        type_s = "(JLjava/lang/String;)V";
-        Utf8String *name = env->utf8_create_part_c(name_s, 0, strlen(name_s));
-        Utf8String *type = env->utf8_create_part_c(type_s, 0, strlen(type_s));
-        refers._callback_surface_error =
-                env->find_methodInfo_by_name(refers.glfm_callback->mb.clazz->name, name, type, runtime);
-        env->utf8_destory(name);
-        env->utf8_destory(type);
-    }
-    {
         name_s = "onKey";
-        type_s = "(JIII)B";
+        type_s = "(JIII)Z";
         Utf8String *name = env->utf8_create_part_c(name_s, 0, strlen(name_s));
         Utf8String *type = env->utf8_create_part_c(type_s, 0, strlen(type_s));
         refers._callback_key =
@@ -253,7 +259,17 @@ int org_mini_glfm_Glfm_glfmSetUserData(Runtime *runtime, JClass *clazz) {
         Utf8String *name = env->utf8_create_part_c(name_s, 0, strlen(name_s));
         Utf8String *type = env->utf8_create_part_c(type_s, 0, strlen(type_s));
         refers._callback_character =
-                env->find_methodInfo_by_name(refers.glfm_callback->mb.clazz->name, name, type, runtime);
+        env->find_methodInfo_by_name(refers.glfm_callback->mb.clazz->name, name, type, runtime);
+        env->utf8_destory(name);
+        env->utf8_destory(type);
+    }
+    {
+        name_s = "onKeyboardVisible";
+        type_s = "(JZDDDD)V";
+        Utf8String *name = env->utf8_create_part_c(name_s, 0, strlen(name_s));
+        Utf8String *type = env->utf8_create_part_c(type_s, 0, strlen(type_s));
+        refers._callback_keyboard_visible =
+        env->find_methodInfo_by_name(refers.glfm_callback->mb.clazz->name, name, type, runtime);
         env->utf8_destory(name);
         env->utf8_destory(type);
     }
@@ -277,19 +293,10 @@ int org_mini_glfm_Glfm_glfmSetUserData(Runtime *runtime, JClass *clazz) {
         env->utf8_destory(name);
         env->utf8_destory(type);
     }
-    {
-        name_s = "scroll";
-        type_s = "(JDD)V";
-        Utf8String *name = env->utf8_create_part_c(name_s, 0, strlen(name_s));
-        Utf8String *type = env->utf8_create_part_c(type_s, 0, strlen(type_s));
-        refers._callback_keyboard_visible =
-                env->find_methodInfo_by_name(refers.glfm_callback->mb.clazz->name, name, type, runtime);
-        env->utf8_destory(name);
-        env->utf8_destory(type);
-    }
+
     {
         name_s = "onTouch";
-        type_s = "(JIIDD)B";
+        type_s = "(JIIDD)Z";
         Utf8String *name = env->utf8_create_part_c(name_s, 0, strlen(name_s));
         Utf8String *type = env->utf8_create_part_c(type_s, 0, strlen(type_s));
         refers._callback_touch =
@@ -297,7 +304,28 @@ int org_mini_glfm_Glfm_glfmSetUserData(Runtime *runtime, JClass *clazz) {
         env->utf8_destory(name);
         env->utf8_destory(type);
     }
+    {
+        
+        name_s = "onSurfaceError";
+        type_s = "(JLjava/lang/String;)V";
+        Utf8String *name = env->utf8_create_part_c(name_s, 0, strlen(name_s));
+        Utf8String *type = env->utf8_create_part_c(type_s, 0, strlen(type_s));
+        refers._callback_surface_error =
+        env->find_methodInfo_by_name(refers.glfm_callback->mb.clazz->name, name, type, runtime);
+        env->utf8_destory(name);
+        env->utf8_destory(type);
+    }
 
+    {
+        name_s = "onSurfaceCreated";
+        type_s = "(JII)V";
+        Utf8String *name = env->utf8_create_part_c(name_s, 0, strlen(name_s));
+        Utf8String *type = env->utf8_create_part_c(type_s, 0, strlen(type_s));
+        refers._callback_surface_created =
+        env->find_methodInfo_by_name(refers.glfm_callback->mb.clazz->name, name, type, runtime);
+        env->utf8_destory(name);
+        env->utf8_destory(type);
+    }
 
     {
         name_s = "onSurfaceResize";
@@ -310,8 +338,8 @@ int org_mini_glfm_Glfm_glfmSetUserData(Runtime *runtime, JClass *clazz) {
         env->utf8_destory(type);
     }
     {
-        name_s = "onSurfaceResize";
-        type_s = "(JII)Z";
+        name_s = "onSurfaceDestroyed";
+        type_s = "(J)V";
         Utf8String *name = env->utf8_create_part_c(name_s, 0, strlen(name_s));
         Utf8String *type = env->utf8_create_part_c(type_s, 0, strlen(type_s));
         refers._callback_surface_destroyed =
@@ -330,16 +358,6 @@ int org_mini_glfm_Glfm_glfmSetUserData(Runtime *runtime, JClass *clazz) {
         env->utf8_destory(name);
         env->utf8_destory(type);
     }
-    {
-        name_s = "onSurfaceCreated";
-        type_s = "(JII)V";
-        Utf8String *name = env->utf8_create_part_c(name_s, 0, strlen(name_s));
-        Utf8String *type = env->utf8_create_part_c(type_s, 0, strlen(type_s));
-        refers._callback_surface_created =
-                env->find_methodInfo_by_name(refers.glfm_callback->mb.clazz->name, name, type, runtime);
-        env->utf8_destory(name);
-        env->utf8_destory(type);
-    }
 
     return 0;
 }
@@ -348,15 +366,16 @@ int org_mini_glfm_Glfm_glfmSetUserData(Runtime *runtime, JClass *clazz) {
 int org_mini_glfm_Glfm_glfmSetDisplayConfig(Runtime *runtime, JClass *clazz) {//
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
-    GLFMDisplay *window = (__refer) (intptr_t) env->localvar_getLong_2slot(runtime, pos);
-    pos+=2;
+    GLFMDisplay *window = (__refer)(intptr_t)
+    env->localvar_getLong_2slot(runtime, pos);
+    pos += 2;
     s32 preferredAPI = env->localvar_getInt(runtime, pos++);
     s32 colorFormat = env->localvar_getInt(runtime, pos++);
     s32 depthFormat = env->localvar_getInt(runtime, pos++);
     s32 stencilFormat = env->localvar_getInt(runtime, pos++);
     s32 multisample = env->localvar_getInt(runtime, pos++);
 
-    glfmSetDisplayConfig(window,preferredAPI,colorFormat,depthFormat,stencilFormat,multisample);
+    glfmSetDisplayConfig(window, preferredAPI, colorFormat, depthFormat, stencilFormat, multisample);
 
     return 0;
 }
@@ -364,10 +383,11 @@ int org_mini_glfm_Glfm_glfmSetDisplayConfig(Runtime *runtime, JClass *clazz) {//
 int org_mini_glfm_Glfm_glfmSetUserInterfaceOrientation(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
-    GLFMDisplay *window = (__refer) (intptr_t) env->localvar_getLong_2slot(runtime, pos);
-    pos+=2;
-    s32 allowedOrientations= env->localvar_getInt(runtime, pos++);
-    glfmSetUserInterfaceOrientation(window,allowedOrientations);
+    GLFMDisplay *window = (__refer)(intptr_t)
+    env->localvar_getLong_2slot(runtime, pos);
+    pos += 2;
+    s32 allowedOrientations = env->localvar_getInt(runtime, pos++);
+    glfmSetUserInterfaceOrientation(window, allowedOrientations);
     return 0;
 }
 
@@ -375,8 +395,9 @@ int org_mini_glfm_Glfm_glfmSetUserInterfaceOrientation(Runtime *runtime, JClass 
 int org_mini_glfm_Glfm_glfmGetUserInterfaceOrientation(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
-    GLFMDisplay *window = (__refer) (intptr_t) env->localvar_getLong_2slot(runtime, pos);
-    pos+=2;
+    GLFMDisplay *window = (__refer)(intptr_t)
+    env->localvar_getLong_2slot(runtime, pos);
+    pos += 2;
     env->push_ref(runtime->stack, glfmGetUserInterfaceOrientation(window));
     return 0;
 }
@@ -385,10 +406,11 @@ int org_mini_glfm_Glfm_glfmGetUserInterfaceOrientation(Runtime *runtime, JClass 
 int org_mini_glfm_Glfm_glfmSetMultitouchEnabled(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
-    GLFMDisplay *window = (__refer) (intptr_t) env->localvar_getLong_2slot(runtime, pos);
-    pos+=2;
-    s32 multitouchEnabled= env->localvar_getInt(runtime, pos++);
-    glfmSetMultitouchEnabled(window,multitouchEnabled);
+    GLFMDisplay *window = (__refer)(intptr_t)
+    env->localvar_getLong_2slot(runtime, pos);
+    pos += 2;
+    s32 multitouchEnabled = env->localvar_getInt(runtime, pos++);
+    glfmSetMultitouchEnabled(window, multitouchEnabled);
     return 0;
 }
 
@@ -396,8 +418,9 @@ int org_mini_glfm_Glfm_glfmSetMultitouchEnabled(Runtime *runtime, JClass *clazz)
 int org_mini_glfm_Glfm_glfmGetMultitouchEnabled(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
-    GLFMDisplay *window = (__refer) (intptr_t) env->localvar_getLong_2slot(runtime, pos);
-    pos+=2;
+    GLFMDisplay *window = (__refer)(intptr_t)
+    env->localvar_getLong_2slot(runtime, pos);
+    pos += 2;
     env->push_int(runtime->stack, glfmGetMultitouchEnabled(window));
     return 0;
 }
@@ -406,7 +429,8 @@ int org_mini_glfm_Glfm_glfmGetMultitouchEnabled(Runtime *runtime, JClass *clazz)
 int org_mini_glfm_Glfm_glfmGetDisplayWidth(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
-    GLFMDisplay *window = (__refer) (intptr_t) env->localvar_getLong_2slot(runtime, pos);
+    GLFMDisplay *window = (__refer)(intptr_t)
+    env->localvar_getLong_2slot(runtime, pos);
     s32 w, h;
     glfmGetDisplaySize(window, &w, &h);
     env->push_int(runtime->stack, w);
@@ -416,7 +440,8 @@ int org_mini_glfm_Glfm_glfmGetDisplayWidth(Runtime *runtime, JClass *clazz) {
 int org_mini_glfm_Glfm_glfmGetDisplayHeight(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
-    GLFMDisplay *window = (__refer) (intptr_t) env->localvar_getLong_2slot(runtime, pos);
+    GLFMDisplay *window = (__refer)(intptr_t)
+    env->localvar_getLong_2slot(runtime, pos);
     s32 w, h;
     glfmGetDisplaySize(window, &w, &h);
     env->push_int(runtime->stack, h);
@@ -426,7 +451,8 @@ int org_mini_glfm_Glfm_glfmGetDisplayHeight(Runtime *runtime, JClass *clazz) {
 int org_mini_glfm_Glfm_glfmGetDisplayScale(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
-    GLFMDisplay *window = (__refer) (intptr_t) env->localvar_getLong_2slot(runtime, pos);
+    GLFMDisplay *window = (__refer)(intptr_t)
+    env->localvar_getLong_2slot(runtime, pos);
     env->push_double(runtime->stack, glfmGetDisplayScale(window));
     return 0;
 }
@@ -434,10 +460,12 @@ int org_mini_glfm_Glfm_glfmGetDisplayScale(Runtime *runtime, JClass *clazz) {
 int org_mini_glfm_Glfm_glfmGetDisplayChromeInsets(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
-    GLFMDisplay *window = (__refer) (intptr_t) env->localvar_getLong_2slot(runtime, pos);
+    GLFMDisplay *window = (__refer)(intptr_t)
+    env->localvar_getLong_2slot(runtime, pos);
     Instance *r = env->localvar_getRefer(runtime, pos++);
-    if(r!=NULL&&r->arr_length>=4){
-        glfmGetDisplayChromeInsets(window,&((f64*)r->arr_body)[0],&((f64*)r->arr_body)[1],&((f64*)r->arr_body)[2],&((f64*)r->arr_body)[3]);
+    if (r != NULL && r->arr_length >= 4) {
+        glfmGetDisplayChromeInsets(window, &((f64 *) r->arr_body)[0], &((f64 *) r->arr_body)[1],
+                                   &((f64 *) r->arr_body)[2], &((f64 *) r->arr_body)[3]);
     }
     return 0;
 }
@@ -445,7 +473,8 @@ int org_mini_glfm_Glfm_glfmGetDisplayChromeInsets(Runtime *runtime, JClass *claz
 int org_mini_glfm_Glfm_glfmGetDisplayChrome(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
-    GLFMDisplay *window = (__refer) (intptr_t) env->localvar_getLong_2slot(runtime, pos);
+    GLFMDisplay *window = (__refer)(intptr_t)
+    env->localvar_getLong_2slot(runtime, pos);
     env->push_int(runtime->stack, glfmGetDisplayChrome(window));
     return 0;
 }
@@ -454,10 +483,11 @@ int org_mini_glfm_Glfm_glfmGetDisplayChrome(Runtime *runtime, JClass *clazz) {
 int org_mini_glfm_Glfm_glfmSetDisplayChrome(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
-    GLFMDisplay *window = (__refer) (intptr_t) env->localvar_getLong_2slot(runtime, pos);
-    pos+=2;
-    s32 uiChrome= env->localvar_getInt(runtime, pos++);
-    glfmSetDisplayChrome(window,uiChrome);
+    GLFMDisplay *window = (__refer)(intptr_t)
+    env->localvar_getLong_2slot(runtime, pos);
+    pos += 2;
+    s32 uiChrome = env->localvar_getInt(runtime, pos++);
+    glfmSetDisplayChrome(window, uiChrome);
     return 0;
 }
 
@@ -465,8 +495,9 @@ int org_mini_glfm_Glfm_glfmSetDisplayChrome(Runtime *runtime, JClass *clazz) {
 int org_mini_glfm_Glfm_glfmGetRenderingAPI(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
-    GLFMDisplay *window = (__refer) (intptr_t) env->localvar_getLong_2slot(runtime, pos);
-    pos+=2;
+    GLFMDisplay *window = (__refer)(intptr_t)
+    env->localvar_getLong_2slot(runtime, pos);
+    pos += 2;
     env->push_int(runtime->stack, glfmGetRenderingAPI(window));
     return 0;
 }
@@ -475,8 +506,9 @@ int org_mini_glfm_Glfm_glfmGetRenderingAPI(Runtime *runtime, JClass *clazz) {
 int org_mini_glfm_Glfm_glfmHasTouch(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
-    GLFMDisplay *window = (__refer) (intptr_t) env->localvar_getLong_2slot(runtime, pos);
-    pos+=2;
+    GLFMDisplay *window = (__refer)(intptr_t)
+    env->localvar_getLong_2slot(runtime, pos);
+    pos += 2;
     env->push_int(runtime->stack, glfmHasTouch(window));
     return 0;
 }
@@ -485,10 +517,11 @@ int org_mini_glfm_Glfm_glfmHasTouch(Runtime *runtime, JClass *clazz) {
 int org_mini_glfm_Glfm_glfmSetMouseCursor(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
-    GLFMDisplay *window = (__refer) (intptr_t) env->localvar_getLong_2slot(runtime, pos);
-    pos+=2;
-    s32 mouseCursor= env->localvar_getInt(runtime, pos++);
-    glfmSetMouseCursor(window,mouseCursor);
+    GLFMDisplay *window = (__refer)(intptr_t)
+    env->localvar_getLong_2slot(runtime, pos);
+    pos += 2;
+    s32 mouseCursor = env->localvar_getInt(runtime, pos++);
+    glfmSetMouseCursor(window, mouseCursor);
     return 0;
 }
 
@@ -497,8 +530,8 @@ int org_mini_glfm_Glfm_glfmExtensionSupported(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     Instance *ext = env->localvar_getRefer(runtime, pos++);
-    Utf8String *ustr=env->utf8_create();
-    env->jstring_2_utf8(ext,ustr);
+    Utf8String *ustr = env->utf8_create();
+    env->jstring_2_utf8(ext, ustr);
     env->push_int(runtime->stack, glfmExtensionSupported(env->utf8_cstr(ustr)));
     env->utf8_destory(ustr);
     return 0;
@@ -508,7 +541,8 @@ int org_mini_glfm_Glfm_glfmExtensionSupported(Runtime *runtime, JClass *clazz) {
 int org_mini_glfm_Glfm_glfmIsKeyboardVisible(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
-    GLFMDisplay *window = (__refer) (intptr_t) env->localvar_getLong_2slot(runtime, pos);
+    GLFMDisplay *window = (__refer)(intptr_t)
+    env->localvar_getLong_2slot(runtime, pos);
     env->push_int(runtime->stack, glfmIsKeyboardVisible(window));
     return 0;
 }
@@ -517,16 +551,22 @@ int org_mini_glfm_Glfm_glfmIsKeyboardVisible(Runtime *runtime, JClass *clazz) {
 int org_mini_glfm_Glfm_glfmSetKeyboardVisible(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
-    GLFMDisplay *window = (__refer) (intptr_t) env->localvar_getLong_2slot(runtime, pos);
-    pos+=2;
-    s32 visible= env->localvar_getInt(runtime, pos++);
-    glfmSetKeyboardVisible(window,visible);
+    GLFMDisplay *window = (__refer)(intptr_t)
+    env->localvar_getLong_2slot(runtime, pos);
+    pos += 2;
+    s32 visible = env->localvar_getInt(runtime, pos++);
+    glfmSetKeyboardVisible(window, visible);
     return 0;
 }
 
 
-
-
+int org_mini_glfm_Glfm_glfmGetResRoot(Runtime *runtime, JClass *clazz) {
+    JniEnv *env = runtime->jnienv;
+    s32 pos = 0;
+    Instance *jstr = createJavaString(runtime, glfmGetResRoot());
+    env->push_ref(runtime->stack, jstr);
+    return 0;
+}
 
 /* ==============================   jni utils =================================*/
 
@@ -969,57 +1009,58 @@ int org_mini_glfm_utils_Gutil_mat4x4_look_at(Runtime *runtime, JClass *clazz) {
 
 
 static java_native_method method_glfm_table[] = {
-        {"org/mini/glfm/utils/Gutil", "f2b",                        "([F[B)[B",                         org_mini_glfm_utils_Gutil_f2b},
-        {"org/mini/glfm/utils/Gutil", "vec_add",                    "([F[F[F)[F",                       org_mini_glfm_utils_Gutil_vec_add},
-        {"org/mini/glfm/utils/Gutil", "vec_sub",                    "([F[F[F)[F",                       org_mini_glfm_utils_Gutil_vec_sub},
-        {"org/mini/glfm/utils/Gutil", "vec_scale",                  "([F[FF)[F",                        org_mini_glfm_utils_Gutil_vec_scale},
-        {"org/mini/glfm/utils/Gutil", "vec_mul_inner",              "([F[F)[F",                         org_mini_glfm_utils_Gutil_vec_mul_inner},
-        {"org/mini/glfm/utils/Gutil", "vec_len",                    "([F)F",                            org_mini_glfm_utils_Gutil_vec_len},
-        {"org/mini/glfm/utils/Gutil", "vec_normal",                 "([F[F)[F",                         org_mini_glfm_utils_Gutil_vec_normal},
-        {"org/mini/glfm/utils/Gutil", "vec_mul_cross",              "([F[F[F)[F",                       org_mini_glfm_utils_Gutil_vec_mul_cross},
-        {"org/mini/glfm/utils/Gutil", "vec_reflect",                "([F[F[F)[F",                       org_mini_glfm_utils_Gutil_vec_reflect},
-        {"org/mini/glfm/utils/Gutil", "mat4x4_identity",            "([F)[F",                           org_mini_glfm_utils_Gutil_mat4x4_identity},
-        {"org/mini/glfm/utils/Gutil", "mat4x4_dup",                 "([F[F)[F",                         org_mini_glfm_utils_Gutil_mat4x4_dup},
-        {"org/mini/glfm/utils/Gutil", "mat4x4_row",                 "([F[FI)[F",                        org_mini_glfm_utils_Gutil_mat4x4_row},
-        {"org/mini/glfm/utils/Gutil", "mat4x4_col",                 "([F[FI)[F",                        org_mini_glfm_utils_Gutil_mat4x4_col},
-        {"org/mini/glfm/utils/Gutil", "mat4x4_transpose",           "([F[F)[F",                         org_mini_glfm_utils_Gutil_mat4x4_transpose},
-        {"org/mini/glfm/utils/Gutil", "mat4x4_add",                 "([F[F[F)[F",                       org_mini_glfm_utils_Gutil_mat4x4_add},
-        {"org/mini/glfm/utils/Gutil", "mat4x4_sub",                 "([F[F[F)[F",                       org_mini_glfm_utils_Gutil_mat4x4_sub},
-        {"org/mini/glfm/utils/Gutil", "mat4x4_mul",                 "([F[F[F)[F",                       org_mini_glfm_utils_Gutil_mat4x4_mul},
-        {"org/mini/glfm/utils/Gutil", "mat4x4_mul_vec4",            "([F[F[F)[F",                       org_mini_glfm_utils_Gutil_mat4x4_mul_vec4},
-        {"org/mini/glfm/utils/Gutil", "mat4x4_from_vec3_mul_outer", "([F[F[F)[F",                       org_mini_glfm_utils_Gutil_mat4x4_from_vec3_mul_outer},
-        {"org/mini/glfm/utils/Gutil", "mat4x4_translate",           "([FFFF)[F",                        org_mini_glfm_utils_Gutil_mat4x4_translate},
-        {"org/mini/glfm/utils/Gutil", "mat4x4_translate_in_place",  "([FFFF)[F",                        org_mini_glfm_utils_Gutil_mat4x4_translate_in_place},
-        {"org/mini/glfm/utils/Gutil", "mat4x4_scale",               "([F[FF)[F",                        org_mini_glfm_utils_Gutil_mat4x4_scale},
-        {"org/mini/glfm/utils/Gutil", "mat4x4_scale_aniso",         "([F[FFFF)[F",                      org_mini_glfm_utils_Gutil_mat4x4_scale_aniso},
-        {"org/mini/glfm/utils/Gutil", "mat4x4_rotate",              "([F[FFFFF)[F",                     org_mini_glfm_utils_Gutil_mat4x4_rotate},
-        {"org/mini/glfm/utils/Gutil", "mat4x4_rotateX",             "([F[FF)[F",                        org_mini_glfm_utils_Gutil_mat4x4_rotateX},
-        {"org/mini/glfm/utils/Gutil", "mat4x4_rotateY",             "([F[FF)[F",                        org_mini_glfm_utils_Gutil_mat4x4_rotateY},
-        {"org/mini/glfm/utils/Gutil", "mat4x4_rotateZ",             "([F[FF)[F",                        org_mini_glfm_utils_Gutil_mat4x4_rotateZ},
-        {"org/mini/glfm/utils/Gutil", "mat4x4_invert",              "([F[F)[F",                         org_mini_glfm_utils_Gutil_mat4x4_invert},
-        {"org/mini/glfm/utils/Gutil", "mat4x4_orthonormalize",      "([F[F)[F",                         org_mini_glfm_utils_Gutil_mat4x4_orthonormalize},
-        {"org/mini/glfm/utils/Gutil", "mat4x4_ortho",               "([FFFFFFF)[F",                     org_mini_glfm_utils_Gutil_mat4x4_ortho},
-        {"org/mini/glfm/utils/Gutil", "mat4x4_frustum",             "([FFFFFFF)[F",                     org_mini_glfm_utils_Gutil_mat4x4_frustum},
-        {"org/mini/glfm/utils/Gutil", "mat4x4_perspective",         "([FFFFF)[F",                       org_mini_glfm_utils_Gutil_mat4x4_perspective},
-        {"org/mini/glfm/utils/Gutil", "mat4x4_look_at",             "([F[F[F[F)[F",                     org_mini_glfm_utils_Gutil_mat4x4_look_at},
-        {"org/mini/glfm/Glfm",        "glfmSetUserData",            "(JLorg/mini/glfm/GlfmApp;)V", org_mini_glfm_Glfm_glfmSetUserData},
-        {"org/mini/glfm/Glfm",        "glfmSetDisplayConfig",           "(JIIIII)V",                        org_mini_glfm_Glfm_glfmSetDisplayConfig},
-        {"org/mini/glfm/Glfm",        "glfmSetUserInterfaceOrientation",                "(JI)V",                             org_mini_glfm_Glfm_glfmSetUserInterfaceOrientation},
-        {"org/mini/glfm/Glfm",        "glfmGetUserInterfaceOrientation",                "(J)I",                              org_mini_glfm_Glfm_glfmGetUserInterfaceOrientation},
-        {"org/mini/glfm/Glfm",        "glfmSetMultitouchEnabled",                "(JZ)V",                             org_mini_glfm_Glfm_glfmSetMultitouchEnabled},
-        {"org/mini/glfm/Glfm",        "glfmGetMultitouchEnabled",                "(J)Z",                              org_mini_glfm_Glfm_glfmGetMultitouchEnabled},
-        {"org/mini/glfm/Glfm",        "glfmGetDisplayWidth",      "(J)I",                             org_mini_glfm_Glfm_glfmGetDisplayWidth},
-        {"org/mini/glfm/Glfm",        "glfmGetDisplayHeight",                "(J)I",                              org_mini_glfm_Glfm_glfmGetDisplayHeight},
-        {"org/mini/glfm/Glfm",        "glfmGetDisplayScale",              "(J)D",                              org_mini_glfm_Glfm_glfmGetDisplayScale},
-        {"org/mini/glfm/Glfm",        "glfmGetDisplayChromeInsets",          "(J[D)V",                             org_mini_glfm_Glfm_glfmGetDisplayChromeInsets},
-        {"org/mini/glfm/Glfm",        "glfmGetDisplayChrome",             "(J)I",                            org_mini_glfm_Glfm_glfmGetDisplayChrome},
-        {"org/mini/glfm/Glfm",        "glfmSetDisplayChrome",             "(JI)V",                              org_mini_glfm_Glfm_glfmSetDisplayChrome},
-        {"org/mini/glfm/Glfm",        "glfmGetRenderingAPI",   "(J)I",                            org_mini_glfm_Glfm_glfmGetRenderingAPI},
-        {"org/mini/glfm/Glfm",        "glfmHasTouch",  "(J)Z",                             org_mini_glfm_Glfm_glfmHasTouch},
-        {"org/mini/glfm/Glfm",        "glfmSetMouseCursor",           "(JI)V",                             org_mini_glfm_Glfm_glfmSetMouseCursor},
-        {"org/mini/glfm/Glfm",        "glfmExtensionSupported",            "(Ljava/lang/String;)Z",                             org_mini_glfm_Glfm_glfmExtensionSupported},
-        {"org/mini/glfm/Glfm",        "glfmSetKeyboardVisible",   "(JZ)V",                             org_mini_glfm_Glfm_glfmSetKeyboardVisible},
-        {"org/mini/glfm/Glfm",        "glfmIsKeyboardVisible",    "(J)Z",                             org_mini_glfm_Glfm_glfmIsKeyboardVisible},
+        {"org/mini/glfm/utils/Gutil", "f2b",                             "([F[B)[B",                         org_mini_glfm_utils_Gutil_f2b},
+        {"org/mini/glfm/utils/Gutil", "vec_add",                         "([F[F[F)[F",                       org_mini_glfm_utils_Gutil_vec_add},
+        {"org/mini/glfm/utils/Gutil", "vec_sub",                         "([F[F[F)[F",                       org_mini_glfm_utils_Gutil_vec_sub},
+        {"org/mini/glfm/utils/Gutil", "vec_scale",                       "([F[FF)[F",                        org_mini_glfm_utils_Gutil_vec_scale},
+        {"org/mini/glfm/utils/Gutil", "vec_mul_inner",                   "([F[F)[F",                         org_mini_glfm_utils_Gutil_vec_mul_inner},
+        {"org/mini/glfm/utils/Gutil", "vec_len",                         "([F)F",                            org_mini_glfm_utils_Gutil_vec_len},
+        {"org/mini/glfm/utils/Gutil", "vec_normal",                      "([F[F)[F",                         org_mini_glfm_utils_Gutil_vec_normal},
+        {"org/mini/glfm/utils/Gutil", "vec_mul_cross",                   "([F[F[F)[F",                       org_mini_glfm_utils_Gutil_vec_mul_cross},
+        {"org/mini/glfm/utils/Gutil", "vec_reflect",                     "([F[F[F)[F",                       org_mini_glfm_utils_Gutil_vec_reflect},
+        {"org/mini/glfm/utils/Gutil", "mat4x4_identity",                 "([F)[F",                           org_mini_glfm_utils_Gutil_mat4x4_identity},
+        {"org/mini/glfm/utils/Gutil", "mat4x4_dup",                      "([F[F)[F",                         org_mini_glfm_utils_Gutil_mat4x4_dup},
+        {"org/mini/glfm/utils/Gutil", "mat4x4_row",                      "([F[FI)[F",                        org_mini_glfm_utils_Gutil_mat4x4_row},
+        {"org/mini/glfm/utils/Gutil", "mat4x4_col",                      "([F[FI)[F",                        org_mini_glfm_utils_Gutil_mat4x4_col},
+        {"org/mini/glfm/utils/Gutil", "mat4x4_transpose",                "([F[F)[F",                         org_mini_glfm_utils_Gutil_mat4x4_transpose},
+        {"org/mini/glfm/utils/Gutil", "mat4x4_add",                      "([F[F[F)[F",                       org_mini_glfm_utils_Gutil_mat4x4_add},
+        {"org/mini/glfm/utils/Gutil", "mat4x4_sub",                      "([F[F[F)[F",                       org_mini_glfm_utils_Gutil_mat4x4_sub},
+        {"org/mini/glfm/utils/Gutil", "mat4x4_mul",                      "([F[F[F)[F",                       org_mini_glfm_utils_Gutil_mat4x4_mul},
+        {"org/mini/glfm/utils/Gutil", "mat4x4_mul_vec4",                 "([F[F[F)[F",                       org_mini_glfm_utils_Gutil_mat4x4_mul_vec4},
+        {"org/mini/glfm/utils/Gutil", "mat4x4_from_vec3_mul_outer",      "([F[F[F)[F",                       org_mini_glfm_utils_Gutil_mat4x4_from_vec3_mul_outer},
+        {"org/mini/glfm/utils/Gutil", "mat4x4_translate",                "([FFFF)[F",                        org_mini_glfm_utils_Gutil_mat4x4_translate},
+        {"org/mini/glfm/utils/Gutil", "mat4x4_translate_in_place",       "([FFFF)[F",                        org_mini_glfm_utils_Gutil_mat4x4_translate_in_place},
+        {"org/mini/glfm/utils/Gutil", "mat4x4_scale",                    "([F[FF)[F",                        org_mini_glfm_utils_Gutil_mat4x4_scale},
+        {"org/mini/glfm/utils/Gutil", "mat4x4_scale_aniso",              "([F[FFFF)[F",                      org_mini_glfm_utils_Gutil_mat4x4_scale_aniso},
+        {"org/mini/glfm/utils/Gutil", "mat4x4_rotate",                   "([F[FFFFF)[F",                     org_mini_glfm_utils_Gutil_mat4x4_rotate},
+        {"org/mini/glfm/utils/Gutil", "mat4x4_rotateX",                  "([F[FF)[F",                        org_mini_glfm_utils_Gutil_mat4x4_rotateX},
+        {"org/mini/glfm/utils/Gutil", "mat4x4_rotateY",                  "([F[FF)[F",                        org_mini_glfm_utils_Gutil_mat4x4_rotateY},
+        {"org/mini/glfm/utils/Gutil", "mat4x4_rotateZ",                  "([F[FF)[F",                        org_mini_glfm_utils_Gutil_mat4x4_rotateZ},
+        {"org/mini/glfm/utils/Gutil", "mat4x4_invert",                   "([F[F)[F",                         org_mini_glfm_utils_Gutil_mat4x4_invert},
+        {"org/mini/glfm/utils/Gutil", "mat4x4_orthonormalize",           "([F[F)[F",                         org_mini_glfm_utils_Gutil_mat4x4_orthonormalize},
+        {"org/mini/glfm/utils/Gutil", "mat4x4_ortho",                    "([FFFFFFF)[F",                     org_mini_glfm_utils_Gutil_mat4x4_ortho},
+        {"org/mini/glfm/utils/Gutil", "mat4x4_frustum",                  "([FFFFFFF)[F",                     org_mini_glfm_utils_Gutil_mat4x4_frustum},
+        {"org/mini/glfm/utils/Gutil", "mat4x4_perspective",              "([FFFFF)[F",                       org_mini_glfm_utils_Gutil_mat4x4_perspective},
+        {"org/mini/glfm/utils/Gutil", "mat4x4_look_at",                  "([F[F[F[F)[F",                     org_mini_glfm_utils_Gutil_mat4x4_look_at},
+        {"org/mini/glfm/Glfm",        "glfmSetCallBack",                 "(JLorg/mini/glfm/GlfmCallBack;)V", org_mini_glfm_Glfm_glfmSetUserData},
+        {"org/mini/glfm/Glfm",        "glfmSetDisplayConfig",            "(JIIIII)V",                        org_mini_glfm_Glfm_glfmSetDisplayConfig},
+        {"org/mini/glfm/Glfm",        "glfmSetUserInterfaceOrientation", "(JI)V",                            org_mini_glfm_Glfm_glfmSetUserInterfaceOrientation},
+        {"org/mini/glfm/Glfm",        "glfmGetUserInterfaceOrientation", "(J)I",                             org_mini_glfm_Glfm_glfmGetUserInterfaceOrientation},
+        {"org/mini/glfm/Glfm",        "glfmSetMultitouchEnabled",        "(JZ)V",                            org_mini_glfm_Glfm_glfmSetMultitouchEnabled},
+        {"org/mini/glfm/Glfm",        "glfmGetMultitouchEnabled",        "(J)Z",                             org_mini_glfm_Glfm_glfmGetMultitouchEnabled},
+        {"org/mini/glfm/Glfm",        "glfmGetDisplayWidth",             "(J)I",                             org_mini_glfm_Glfm_glfmGetDisplayWidth},
+        {"org/mini/glfm/Glfm",        "glfmGetDisplayHeight",            "(J)I",                             org_mini_glfm_Glfm_glfmGetDisplayHeight},
+        {"org/mini/glfm/Glfm",        "glfmGetDisplayScale",             "(J)D",                             org_mini_glfm_Glfm_glfmGetDisplayScale},
+        {"org/mini/glfm/Glfm",        "glfmGetDisplayChromeInsets",      "(J[D)V",                           org_mini_glfm_Glfm_glfmGetDisplayChromeInsets},
+        {"org/mini/glfm/Glfm",        "glfmGetDisplayChrome",            "(J)I",                             org_mini_glfm_Glfm_glfmGetDisplayChrome},
+        {"org/mini/glfm/Glfm",        "glfmSetDisplayChrome",            "(JI)V",                            org_mini_glfm_Glfm_glfmSetDisplayChrome},
+        {"org/mini/glfm/Glfm",        "glfmGetRenderingAPI",             "(J)I",                             org_mini_glfm_Glfm_glfmGetRenderingAPI},
+        {"org/mini/glfm/Glfm",        "glfmHasTouch",                    "(J)Z",                             org_mini_glfm_Glfm_glfmHasTouch},
+        {"org/mini/glfm/Glfm",        "glfmSetMouseCursor",              "(JI)V",                            org_mini_glfm_Glfm_glfmSetMouseCursor},
+        {"org/mini/glfm/Glfm",        "glfmExtensionSupported",          "(Ljava/lang/String;)Z",            org_mini_glfm_Glfm_glfmExtensionSupported},
+        {"org/mini/glfm/Glfm",        "glfmSetKeyboardVisible",          "(JZ)V",                            org_mini_glfm_Glfm_glfmSetKeyboardVisible},
+        {"org/mini/glfm/Glfm",        "glfmIsKeyboardVisible",           "(J)Z",                             org_mini_glfm_Glfm_glfmIsKeyboardVisible},
+        {"org/mini/glfm/Glfm",        "glfmGetResRoot",                  "()Ljava/lang/String;",             org_mini_glfm_Glfm_glfmGetResRoot},
 
 };
 

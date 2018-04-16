@@ -17,8 +17,6 @@ GcCollector *collector;
 
 JniEnv jnienv;
 
-Instance *main_thread;//
-Runtime *main_runtime = NULL;
 
 c8 *data_type_str = "    ZCFDBSIJL[";
 __refer data_type_classes[DATATYPE_COUNT];
@@ -45,6 +43,7 @@ InstanceFieldInfo ins_field_offset;
 //
 u8 volatile java_debug = 0;
 
+s32 jvm_init_flag=0;
 
 #if _JVM_DEBUG_PROFILE
 Hashtable *profile_instructs;

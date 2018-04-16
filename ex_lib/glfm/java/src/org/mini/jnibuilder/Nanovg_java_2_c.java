@@ -30,7 +30,7 @@ public class Nanovg_java_2_c {
         gt.buildC();
     }
 
-    String[] path = {"src/org/mini/nanovg/Nanovg.java", "org_mini_nanovg_", "org/mini/glfw/nanovg/Nanovg", "../gui/jni_nanovg.c"};
+    String[] path = {"src/org/mini/nanovg/Nanovg.java", "org_mini_nanovg_Nanovg_", "org/mini/nanovg/Nanovg", "../gui/jni_nanovg.c"};
 
     String[] ignore_list = {"",
         "",};
@@ -52,7 +52,7 @@ public class Nanovg_java_2_c {
             + "#include <stb/stb_image.h>\n" + "\n"
             + "\n"
             + "#include <nanovg/nanovg.h>\n"
-            + "#include <nanovg_jni_assist.h>\n"
+            + "#include <jni_nanovg_assist.h>\n"
             + "#define NANOVG_GLES2_IMPLEMENTATION\n"
             + "#include <nanovg/nanovg_gl.h>\n"
             + "\n"
@@ -61,7 +61,7 @@ public class Nanovg_java_2_c {
             + "\n"
             + "#include \"jvm.h\"\n"
             + "#include \"jni_gui.h\"\n"
-            + "#include \"stb_jni_assist.h\"\n"
+            + "#include \"jni_stb_assist.h\"\n"
             + "\n\n\n";
 
     String TOOL_FUNC

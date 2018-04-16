@@ -588,19 +588,14 @@ void invoke_deepth(Runtime *runtime) {
 }
 
 //===============================    java 线程  ==================================
-s32 jthread_init(Instance *jthread) {
-    return jthread_init_with_runtime(jthread, NULL);
-}
 
-s32 jthread_init_with_runtime(Instance *jthread, Runtime *runtime) {
-    if (!runtime)runtime = runtime_create(NULL);
+s32 jthread_init(Instance *jthread, Runtime *runtime) {
     localvar_init(runtime, 1);
     jthread_set_stackframe_value(jthread, runtime);
     runtime->clazz = jthread->mb.clazz;
     runtime->threadInfo->jthread = jthread;
     runtime->threadInfo->thread_status = THREAD_STATUS_RUNNING;
     threadlist_add(runtime);
-
     return 0;
 }
 
@@ -610,8 +605,6 @@ s32 jthread_dispose(Instance *jthread) {
     if (java_debug)event_on_thread_death(runtime->threadInfo->jthread);
     //destory
     jthread_set_stackframe_value(jthread, NULL);
-    localvar_dispose(runtime);
-    runtime_destory(runtime);
 
     return 0;
 }
@@ -644,18 +637,17 @@ s32 jtherad_run(void *para) {
     }
     runtime->threadInfo->thread_status = THREAD_STATUS_ZOMBIE;
     jthread_dispose(jthread);
+    localvar_dispose(runtime);
+    runtime_destory(runtime);
     jvm_printf("thread over %llx\n", (s64) (intptr_t) jthread);
     return ret;
 }
 
 thrd_t jthread_start(Instance *ins) {//
-    jthread_init(ins);
+    Runtime *runtime = runtime_create(NULL);
+    jthread_init(ins, runtime);
     thrd_t pt;
-//    pthread_attr_t attr;
-//    pthread_attr_init(&attr);
-//    pthread_attr_setdetachstate(&attr, PTHREAD_CREATE_DETACHED);
     thrd_create(&pt, jtherad_run, ins);
-//    pthread_attr_destroy(&attr);
     return pt;
 }
 
@@ -1591,4 +1583,6 @@ void init_jni_func_table() {
     jnienv.instance_hold_to_thread = instance_hold_to_thread;
     jnienv.instance_release_from_thread = instance_release_from_thread;
     jnienv.print_exception = print_exception;
+    jnienv.garbage_refer_hold = garbage_refer_hold;
+    jnienv.garbage_refer_release = garbage_refer_release;
 }

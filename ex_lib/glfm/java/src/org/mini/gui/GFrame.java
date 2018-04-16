@@ -5,6 +5,7 @@
  */
 package org.mini.gui;
 
+import org.mini.glfm.Glfm;
 import static org.mini.nanovg.Gutil.toUtf8;
 import static org.mini.gui.GToolkit.nvgRGBA;
 import org.mini.nanovg.Nanovg;
@@ -33,7 +34,6 @@ import static org.mini.nanovg.Nanovg.nvgStrokeColor;
 import static org.mini.nanovg.Nanovg.nvgTextAlign;
 import static org.mini.nanovg.Nanovg.nvgTextJni;
 
-
 /**
  *
  * @author gust
@@ -47,8 +47,8 @@ public class GFrame extends GContainer {
     float[] close_boundle = new float[4];
 
     int background_rgba;
-    
-    GPanel panel =new GPanel();
+
+    GPanel panel = new GPanel();
 
     float[] title_boundle = new float[4];
     long vg;
@@ -89,8 +89,8 @@ public class GFrame extends GContainer {
     public void setBackground(int rgba) {
         background_rgba = rgba;
     }
-    
-    public GPanel getPanel(){
+
+    public GPanel getPanel() {
         return panel;
     }
 
@@ -189,48 +189,31 @@ public class GFrame extends GContainer {
         close_boundle[WIDTH] = 16;
         close_boundle[HEIGHT] = 16;
 
-
         nvgRestore(vg);
     }
 
     boolean mouseDrag1 = false;
-    boolean mouseDrag2 = false;
     int mouseX, mouseY;
     boolean isMoveFrame;
 
     @Override
-    public void touchEvent(int button, boolean pressed, int x, int y) {
+    public void touchEvent(int phase, int x, int y) {
 
-//        switch (button) {
-//            case Glfw.GLFW_MOUSE_BUTTON_1: {//left
-//                if (pressed) {
-//                    mouseDrag1 = true;
-//                    if (isInBoundle(title_boundle, mouseX, mouseY)) {
-//                        isMoveFrame = true;
-//                    }
-//                    if (closable && isInBoundle(close_boundle, x, y)) {
-//                        parent.remove(this);
-//                    }
-//                } else {
-//                    mouseDrag1 = false;
-//                    isMoveFrame = false;
-//                }
-//                break;
-//            }
-//            case Glfw.GLFW_MOUSE_BUTTON_2: {//right
-//                if (pressed) {
-//                    mouseDrag2 = true;
-//                } else {
-//                    mouseDrag2 = false;
-//                }
-//                break;
-//            }
-//            case Glfw.GLFW_MOUSE_BUTTON_3: {//middle
-//                break;
-//            }
-//        }
+        if (phase == Glfm.GLFMTouchPhaseEnded) {
+            mouseDrag1 = true;
+            if (isInBoundle(title_boundle, mouseX, mouseY)) {
+                isMoveFrame = true;
+            }
+            if (closable && isInBoundle(close_boundle, x, y)) {
+                parent.remove(this);
+            }
+        } else {
+            mouseDrag1 = false;
+            isMoveFrame = false;
+        }
+
         if (isInBoundle(boundle, x, y)) {
-            super.touchEvent(button, pressed, x, y);
+            super.touchEvent(phase, x, y);
         } else {
             panel.setFocus(null);
         }

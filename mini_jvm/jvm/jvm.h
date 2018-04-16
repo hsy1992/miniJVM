@@ -162,7 +162,11 @@ typedef struct _JNIENV JniEnv;
 typedef struct _ReferArr CStringArr;
 typedef struct _ReferArr ReferArr;
 
+
 typedef s32 (*java_native_fun)(Runtime *runtime, JClass *p);
+
+typedef void (*StaticLibRegFunc)(JniEnv *env);
+
 
 typedef struct _GcCollectorType GcCollector;
 
@@ -306,8 +310,7 @@ enum {
 };
 
 //======================= global var =============================
-extern Instance *main_thread;
-extern Runtime *main_runtime;
+extern s32 jvm_init_flag;
 
 extern ClassLoader *sys_classloader;
 extern ClassLoader *array_classloader;
@@ -364,6 +367,7 @@ struct _ClassLoader {
     spinlock_t lock;
 };
 
+void memoryblock_destory(__refer ref);
 
 void classloader_release_classs_static_field(ClassLoader *class_loader);
 
@@ -888,13 +892,6 @@ s32 find_constant_fieldref_index(JClass *clazz, Utf8String *fieldName, Utf8Strin
 
 JClass *getClassByConstantClassRef(JClass *clazz, s32 index);
 
-//======================= execute =============================
-
-void print_exception(Runtime *runtime);
-
-s32 execute_jvm(c8 *p_classpath, c8 *mainclass, ArrayList *java_para);
-
-s32 execute_method(MethodInfo *method, Runtime *runtime, JClass *clazz);
 
 //======================= stack =============================
 RuntimeStack *stack_create(s32 entry_size);
@@ -1100,17 +1097,31 @@ s64 localvar_getLong_2slot_jni(Runtime *runtime, s32 index);
 void localvar_setLong_2slot_jni(Runtime *runtime, s32 index, s64 val);
 
 //======================= other =============================
+//======================= execute =============================
+//
 void open_log(void);
 
 void close_log(void);
 
 c8 *getMajorVersionString(u16 major_number);
 
-void memoryblock_destory(__refer ref);
 
+void jvm_init(c8 *p_classpath, StaticLibRegFunc regFunc);
+
+void jvm_destroy();
+
+
+void print_exception(Runtime *runtime);
+
+s32 execute_jvm(c8 *p_classpath, c8 *mainclass, ArrayList *java_para);
+
+s32 call_method_main(c8 *p_mainclass, c8 *p_methodname, c8 *p_methodtype, ArrayList *java_para);
+
+s32 call_method_c(c8 *p_mainclass, c8 *p_methodname, c8 *p_methodtype, Runtime *runtime);
+
+s32 execute_method(MethodInfo *method, Runtime *runtime, JClass *clazz);
 
 //======================= jni =============================
-
 typedef struct _java_native_method {
     c8 *clzname;
     c8 *methodname;
@@ -1254,6 +1265,10 @@ struct _JNIENV {
     (*find_methodInfo_by_name)(Utf8String *clsName, Utf8String *methodName, Utf8String *methodType, Runtime *runtime);
 
     void (*print_exception)(Runtime *runtime);
+
+    void (*garbage_refer_hold)(__refer ref);
+
+    void (*garbage_refer_release)(__refer ref);
 };
 
 

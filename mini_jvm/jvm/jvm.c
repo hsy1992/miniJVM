@@ -11,23 +11,23 @@
 #include "java_native_std.h"
 #include "jdwp.h"
 
-void main_thread_create(Runtime *runtime) {
+void thread_boundle(Runtime *runtime) {
 
     JClass *thread_clazz = classes_load_get_c("java/lang/Thread", runtime);
     //为主线程创建Thread实例
-    main_thread = instance_create(thread_clazz);
-    runtime->threadInfo->jthread = main_thread;//Thread.init currentThread() need this
-    instance_init(main_thread, runtime);
-    jthread_init_with_runtime(main_thread, runtime);
+    Instance *t = instance_create(thread_clazz);
+    runtime->threadInfo->jthread = t;//Thread.init currentThread() need this
+    instance_init(t, runtime);
+    jthread_init(t, runtime);
 
 }
 
-void main_thread_destory() {
+void thread_unboundle(Runtime *runtime) {
 
-    main_runtime->threadInfo->is_suspend = 1;
+    runtime->threadInfo->is_suspend = 1;
+    Instance *t = runtime->threadInfo->jthread;
     //主线程实例被回收
-    jthread_dispose(main_thread);
-    main_thread = NULL;
+    jthread_dispose(t);
 }
 
 void print_exception(Runtime *runtime) {
@@ -161,23 +161,15 @@ void classloader_release_classs_static_field(ClassLoader *class_loader) {
     }
 }
 
-
-/**
- *  load classes and execute main class
- * @param p_classpath speicfy classpath split with ';' or ':' ,item is jar file or directory
- * @param p_mainclass class that contain public void main(String[] args) method
- * @param argc main class args count
- * @param argv main class args value
- * @return errcode
- */
-s32 execute_jvm(c8 *p_classpath, c8 *p_mainclass, ArrayList *java_para) {
+void jvm_init(c8 *p_classpath, StaticLibRegFunc regFunc) {
     if (!p_classpath) {
         p_classpath = "./";
     }
-    if (!p_mainclass) {
-        jvm_printf("No main class .\n");
-        return 1;
+    if (jvm_init_flag) {
+        return;
     }
+    jvm_init_flag = 1;
+
     heap_size = 0;
     //
     open_log();
@@ -191,6 +183,8 @@ s32 execute_jvm(c8 *p_classpath, c8 *p_mainclass, ArrayList *java_para) {
 
     //创建垃圾收集器
     garbage_collector_create();
+    //启动垃圾回收
+    garbage_thread_resume();
 
     memset(&data_type_classes, 0, DATATYPE_COUNT * sizeof(__refer));
 
@@ -201,22 +195,63 @@ s32 execute_jvm(c8 *p_classpath, c8 *p_mainclass, ArrayList *java_para) {
     memset(&ins_field_offset, 0, sizeof(InstanceFieldInfo));
     //创建线程容器
     thread_list = arraylist_create(0);
+
     //本地方法库
     native_libs = arraylist_create(0);
     reg_std_native_lib();
     reg_net_native_lib();
     reg_jdwp_native_lib();
+    if (regFunc)regFunc(&jnienv);//register static lib
 
+
+    //装入系统属性
+    sys_properties_load(sys_classloader);
+
+}
+
+void jvm_destroy() {
+    //
+    garbage_collector_destory();
+    //
+
+    arraylist_destory(thread_list);
+    native_lib_destory();
+    sys_properties_dispose();
+    close_log();
+    jvm_printf("jvm over %lld\n", heap_size);
+    jvm_init_flag = 0;
+}
+
+s32 execute_jvm(c8 *p_classpath, c8 *p_mainclass, ArrayList *java_para) {
+    jvm_init(p_classpath, NULL);
+
+    c8 *p_methodname = "main";
+    c8 *p_methodtype = "([Ljava/lang/String;)V";
+    s32 ret = call_method_main(p_mainclass, p_methodname, p_methodtype, java_para);
+
+    jvm_destroy();
+    return ret;
+}
+
+/**
+ *  load classes and execute main class
+ * @param p_classpath speicfy classpath split with ';' or ':' ,item is jar file or directory
+ * @param p_mainclass class that contain public void main(String[] args) method
+ * @param java_para main class args count
+ * @param java_para main class args value
+ * @return errcode
+ */
+s32 call_method_main(c8 *p_mainclass, c8 *p_methodname, c8 *p_methodtype, ArrayList *java_para) {
+    if (!p_mainclass) {
+        jvm_printf("No main class .\n");
+        return 1;
+    }
     //创建运行时栈
     Runtime *runtime = runtime_create(NULL);
-    main_runtime = runtime;
 
     //开始装载类
 
     Utf8String *str_mainClsName = utf8_create_c(p_mainclass);
-
-    //装入系统属性
-    sys_properties_load(sys_classloader);
 
     //装入主类
     load_class(sys_classloader, str_mainClsName, runtime);
@@ -225,21 +260,20 @@ s32 execute_jvm(c8 *p_classpath, c8 *p_mainclass, ArrayList *java_para) {
 
     s32 ret = 0;
     if (clazz) {
-        Utf8String *methodName = utf8_create_c("main");
-        Utf8String *methodType = utf8_create_c("([Ljava/lang/String;)V");
+        Utf8String *methodName = utf8_create_c(p_methodname);
+        Utf8String *methodType = utf8_create_c(p_methodtype);
 
-        MethodInfo *main = find_methodInfo_by_name(str_mainClsName, methodName, methodType,
-                                                   runtime);
-        if (main) {
-            main_thread_create(runtime);
+        MethodInfo *m = find_methodInfo_by_name(str_mainClsName, methodName, methodType,
+                                                runtime);
+        if (m) {
+            thread_boundle(runtime);
 
             //启动调试器
-            //startJdwp(runtime);
             jdwp_start_server();
 
             //准备参数
             localvar_dispose(runtime);
-            localvar_init(runtime, main->para_count + 1);
+            localvar_init(runtime, m->para_count + 1);
             s32 count = java_para->length;
             Utf8String *ustr = utf8_create_c("[java/lang/String;");
             Instance *arr = jarray_create(count, 0, ustr);
@@ -254,8 +288,7 @@ s32 execute_jvm(c8 *p_classpath, c8 *p_mainclass, ArrayList *java_para) {
             }
             push_ref(runtime->stack, arr);
             garbage_refer_release(arr);
-            //启动垃圾回收
-            garbage_thread_resume();
+
 
             s64 start = currentTimeMillis();
             jvm_printf(
@@ -267,7 +300,7 @@ s32 execute_jvm(c8 *p_classpath, c8 *p_mainclass, ArrayList *java_para) {
             }//jdwp 会启动调试器
             runtime->method = NULL;
             runtime->clazz = clazz;
-            ret = execute_method(main, runtime, clazz);
+            ret = execute_method(m, runtime, clazz);
             if (ret != RUNTIME_STATUS_NORMAL) {
                 print_exception(runtime);
             }
@@ -285,25 +318,90 @@ s32 execute_jvm(c8 *p_classpath, c8 *p_mainclass, ArrayList *java_para) {
             profile_print();
 #endif
 
-            main_thread_destory();
+            thread_unboundle(runtime);
             jdwp_stop_server();
         }
         utf8_destory(methodName);
         utf8_destory(methodType);
-    } else {
-        runtime_destory(main_runtime);
-        main_runtime = NULL;
     }
-    //
-    garbage_collector_destory();
-    //
-    utf8_destory(str_mainClsName);
-    arraylist_destory(thread_list);
-    native_lib_destory();
-    sys_properties_dispose();
-    close_log();
-    jvm_printf("over %lld\n", heap_size);
+    runtime_destory(runtime);
 
+
+    utf8_destory(str_mainClsName);
+    //
 
     return ret;
 }
+
+s32 call_method_c(c8 *p_mainclass, c8 *p_methodname, c8 *p_methodtype, Runtime *p_runtime) {
+    if (!p_mainclass) {
+        jvm_printf("No main class .\n");
+        return 1;
+    }
+
+    //创建运行时栈
+    Runtime *runtime = p_runtime;
+    if (!p_runtime) runtime = runtime_create(NULL);
+
+    //开始装载类
+
+    Utf8String *str_mainClsName = utf8_create_c(p_mainclass);
+
+    //装入主类
+    load_class(sys_classloader, str_mainClsName, runtime);
+
+    JClass *clazz = classes_get(str_mainClsName);
+
+    s32 ret = 0;
+    if (clazz) {
+        Utf8String *methodName = utf8_create_c(p_methodname);
+        Utf8String *methodType = utf8_create_c(p_methodtype);
+
+        MethodInfo *m = find_methodInfo_by_name(str_mainClsName, methodName, methodType,
+                                                runtime);
+        if (m) {
+            thread_boundle(runtime);
+
+            //准备参数
+            localvar_dispose(runtime);
+            localvar_init(runtime, m->para_count + 1);
+
+            //启动垃圾回收
+            garbage_thread_resume();
+
+            s64 start = currentTimeMillis();
+            //调用方法
+
+            runtime->method = NULL;
+            runtime->clazz = clazz;
+            ret = execute_method(m, runtime, clazz);
+            if (ret != RUNTIME_STATUS_NORMAL) {
+                print_exception(runtime);
+            }
+            jthread_block_enter(runtime);
+            while ((thread_list->length) > 1) {//wait for other thread over ,
+                check_suspend_and_pause(runtime);
+                threadSleep(100);
+            }
+            jthread_block_exit(runtime);
+            jvm_printf("spent %lld\n", (currentTimeMillis() - start));
+
+#if _JVM_DEBUG_PROFILE
+            profile_print();
+#endif
+
+            thread_unboundle(runtime);
+
+        }
+        utf8_destory(methodName);
+        utf8_destory(methodType);
+    }
+    localvar_dispose(runtime);
+    if (!p_runtime) runtime_destory(runtime);
+
+    utf8_destory(str_mainClsName);
+    //
+
+    return ret;
+}
+

@@ -38,7 +38,7 @@ abstract public class GObject {
 
     boolean visable = true;
 
-    public void init() {
+    protected void init() {
 
     }
 
@@ -52,7 +52,7 @@ abstract public class GObject {
     public void characterEvent(String str, int modifiers) {
     }
 
-    public void touchEvent(int button, boolean pressed, int x, int y) {
+    public void touchEvent(int phase, int x, int y) {
     }
 
     public void clickEvent(int button, int x, int y) {
