@@ -41,6 +41,10 @@ public class GForm extends GPanel {
     float fpsExpect = 30;
 
     //
+    float pxRatio;
+    int winWidth, winHeight;
+    int fbWidth, fbHeight;
+    //
     boolean premult;
 
     public GForm(String title, int width, int height, long display) {
@@ -73,6 +77,10 @@ public class GForm extends GPanel {
         return vg;
     }
 
+    public long getWinContext() {
+        return win;
+    }
+
     @Override
     public void init() {
 
@@ -91,52 +99,20 @@ public class GForm extends GPanel {
         System.setProperty("emoji_font_path", respath + "/NotoEmoji-Regular.ttf");
         GToolkit.loadFont(vg);
 
-        extinit.onInit(this);
-    }
-
-//    public void paint() {
-//        if (vg == 0) {
-//            System.out.println("gl context not inited.");
-//            return;
-//        }
-//        //
-//        GToolkit.putForm(vg, this);
-//        long last = System.currentTimeMillis(), now;
-//        int count = 0;
-//        while (!glfwWindowShouldClose(win)) {
-//            try {
-//                glfwPollEvents();
-//                //user define contents
-//                display(vg);
-//                glfwSwapBuffers(win);
-//                count++;
-//                now = System.currentTimeMillis();
-//                if (now - last > 1000) {
-//                    //System.out.println("fps:" + count);
-//                    fps = count;
-//                    last = now;
-//                    count = 0;
-//                }
-//            } catch (Exception ex) {
-//                ex.printStackTrace();
-//            }
-//        }
-//        Nanovg.nvgDeleteGL2(vg);
-//        glfwTerminate();
-//        GToolkit.removeForm(vg);
-//        vg = 0;
-//    }
-    void display(long vg) {
-
-        float pxRatio;
-        int winWidth, winHeight;
-        int fbWidth, fbHeight;
         fbWidth = Glfm.glfmGetDisplayWidth(win);
         fbHeight = Glfm.glfmGetDisplayHeight(win);
         // Calculate pixel ration for hi-dpi devices.
         pxRatio = (float) Glfm.glfmGetDisplayScale(win);
         winWidth = (int) (fbWidth / pxRatio);
         winHeight = (int) (fbHeight / pxRatio);
+        boundle[WIDTH] = width;
+        boundle[HEIGHT] = height;
+
+        extinit.onInit(this);
+        flush();
+    }
+
+    void display(long vg) {
 
         // Update and render
         glViewport(0, 0, fbWidth, fbHeight);
@@ -164,7 +140,6 @@ public class GForm extends GPanel {
         for (Iterator<GObject> it = elements.iterator(); it.hasNext();) {
             GObject nko = it.next();
             if (isInBoundle(nko.getBoundle(), x, y)) {
-                focus = nko;
                 setFocus(nko);
                 break;
             }
@@ -173,7 +148,7 @@ public class GForm extends GPanel {
 
     class FormCallBack extends GlfmCallBackAdapter {
 
-        int mouseX, mouseY, button;
+        int mouseX, mouseY, lastX, lastY;
         long mouseLastPressed;
         int CLICK_PERIOD = 200;
 
@@ -207,12 +182,14 @@ public class GForm extends GPanel {
 
         @Override
         public boolean onKey(long display, int keyCode, int action, int modifiers) {
+            System.out.println("keyCode  :" + keyCode + "   action=" + action + "   modifiers=" + modifiers);
             GForm.this.keyEvent(keyCode, action, modifiers);
             return true;
         }
 
         @Override
         public void onCharacter(long window, String str, int modifiers) {
+            System.out.println("onCharacter  :" + str + "   mod=" + modifiers);
             GForm.this.characterEvent(str, modifiers);
         }
 
@@ -220,11 +197,13 @@ public class GForm extends GPanel {
         public boolean onTouch(long display, int touch, int phase, double x, double y) {
             x /= Glfm.glfmGetDisplayScale(display);
             y /= Glfm.glfmGetDisplayScale(display);
-            System.out.println("   touch=" + touch + "   phase=" + phase + "   x=" + x + "   y=" + y);
+            lastX = mouseX;
+            lastY = mouseY;
+            mouseX = (int) x;
+            mouseY = (int) y;
+//            System.out.println("   touch=" + touch + "   phase=" + phase + "   x=" + x + "   y=" + y);
+//            System.out.println("display=" + display + "   win=" + win);
             if (display == win) {
-                if (phase == Glfm.GLFMTouchPhaseHover) {
-                    return false;
-                }
 
                 switch (phase) {
                     case Glfm.GLFMTouchPhaseBegan: {//
@@ -235,6 +214,10 @@ public class GForm extends GPanel {
                         findSetFocus(mouseX, mouseY);
                         break;
                     }
+                    case Glfm.GLFMTouchPhaseMoved: {//
+                        scrollEvent(mouseX - lastX, mouseY - lastY, mouseX, mouseY);
+                        break;
+                    }
                     case Glfm.GLFMTouchPhaseHover: {//
                         break;
                     }
@@ -242,30 +225,24 @@ public class GForm extends GPanel {
                 boolean pressed = phase == Glfm.GLFMTouchPhaseBegan;
                 //click event
                 long cur = System.currentTimeMillis();
-                if (pressed && cur - mouseLastPressed < CLICK_PERIOD && this.button == button) {
+                if (pressed && cur - mouseLastPressed < CLICK_PERIOD) {
                     if (focus != null) {
-                        focus.clickEvent(button, mouseX, mouseY);
+                        focus.clickEvent(mouseX, mouseY);
                     } else {
-                        GForm.this.clickEvent(button, mouseX, mouseY);
+                        GForm.this.clickEvent(mouseX, mouseY);
                     }
                 } else //press event
-                {
-                    if (focus != null) {
+                 if (focus != null) {
                         focus.touchEvent(phase, mouseX, mouseY);
                     } else {
                         GForm.this.touchEvent(phase, mouseX, mouseY);
                     }
-                }
-                this.button = button;
                 mouseLastPressed = cur;
             }
+            flush();
             return true;
         }
-//
-//        @Override
-//        public void scroll(long window, double scrollX, double scrollY) {
-//            GForm.this.scrollEvent(scrollX, scrollY, mouseX, mouseY);
-//        }
+
 //
 //        @Override
 //        public void cursorPos(long window, int x, int y) {
@@ -275,29 +252,20 @@ public class GForm extends GPanel {
 //            GForm.this.cursorPosEvent(x, y);
 //        }
 //
-//        @Override
-//        public boolean windowClose(long window) {
-//            return true;
-//        }
-//
-//        @Override
-//        public void windowSize(long window, int width, int height) {
-//        }
-//
-//        @Override
-//        public void framebufferSize(long window, int x, int y) {
-//            boundle[WIDTH] = x;
-//            boundle[HEIGHT] = y;
-//        }
-//
-//        @Override
-//        public void drop(long window, int count, String[] paths) {
-//            GForm.this.dropEvent(count, paths);
-//        }
-//
-//        public void error(int error, String description) {
-//            System.out.println("error: " + error + " message: " + description);
-//        }
+        @Override
+        public void onSurfaceDestroyed(long window) {
+
+        }
+
+        @Override
+        public void onSurfaceResize(long window, int width, int height) {
+            GForm.this.boundle[WIDTH] = width;
+            GForm.this.boundle[HEIGHT] = height;
+        }
+
+        public void onSurfaceError(long display, String description) {
+            System.out.println("error message: " + description);
+        }
     }
 
     /**

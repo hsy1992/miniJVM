@@ -212,6 +212,13 @@ Runtime *getLastSon(Runtime *top) {
     return NULL;
 }
 
+Runtime *getTopRuntime(Runtime *runtime){
+    if(runtime){
+        return runtime->threadInfo->top_runtime;
+    }
+    return NULL;
+}
+
 s64 getInstructPointer(Runtime *runtime) {
     if (runtime && runtime->method && runtime->ca) {
         return runtime->pc - runtime->ca->code;

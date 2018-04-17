@@ -48,6 +48,7 @@ static bool onKey(GLFMDisplay *display, GLFMKey keyCode, GLFMKeyAction action, i
 int jvm_thrd_func(void *para);
 
 extern void JNI_OnLoad(JniEnv *env);
+extern u8 volatile java_debug = 0;
 static thrd_t _jvm_thread;//jvm线程
 static GLFMDisplay *glfm_display;
 static Runtime *runtime;
@@ -56,39 +57,47 @@ static Runtime *runtime;
 void glfmMain(GLFMDisplay *display) {
     glfm_display=display;
     
-//    ExampleApp *app = calloc(1, sizeof(ExampleApp));
-//
+    ExampleApp *app = calloc(1, sizeof(ExampleApp));
+
     glfmSetDisplayConfig(display,
                          GLFMRenderingAPIOpenGLES2,
                          GLFMColorFormatRGBA8888,
                          GLFMDepthFormatNone,
                          GLFMStencilFormatNone,
                          GLFMMultisampleNone);
-//    glfmSetUserData(display, app);
-//    glfmSetSurfaceCreatedFunc(display, onSurfaceCreated);
-//    glfmSetSurfaceResizedFunc(display, onSurfaceCreated);
-//    glfmSetSurfaceDestroyedFunc(display, onSurfaceDestroyed);
-//    glfmSetMainLoopFunc(display, onFrame);
-//    glfmSetTouchFunc(display, onTouch);
-//    glfmSetKeyFunc(display, onKey);
-    //gladLoadGLLoader((GLADloadproc) glfwGetProcAddress);
+    glfmSetUserData(display, app);
+    glfmSetSurfaceCreatedFunc(display, onSurfaceCreated);
+    glfmSetSurfaceResizedFunc(display, onSurfaceCreated);
+    glfmSetSurfaceDestroyedFunc(display, onSurfaceDestroyed);
+    glfmSetMainLoopFunc(display, onFrame);
+    glfmSetTouchFunc(display, onTouch);
+    glfmSetKeyFunc(display, onKey);
 
-    Utf8String *classpath = utf8_create();
-    utf8_append_c(classpath, glfmGetResRoot());
-    utf8_append_c(classpath, "/minijvm_rt.jar;");
-    utf8_append_c(classpath, glfmGetResRoot());
-    utf8_append_c(classpath, "/glfm_gui.jar;");
-    jvm_printf("%s\n",utf8_cstr(classpath));
+//    java_debug=1;
+//
+//    Utf8String *classpath = utf8_create();
+//    utf8_append_c(classpath, glfmGetResRoot());
+//    utf8_append_c(classpath, "/minijvm_rt.jar;");
+//    utf8_append_c(classpath, glfmGetResRoot());
+//    utf8_append_c(classpath, "/glfm_gui.jar;");
+//    jvm_printf("%s\n",utf8_cstr(classpath));
+//
+//    jvm_init(utf8_cstr(classpath), JNI_OnLoad);
+//    runtime=runtime_create(NULL);
+//    thread_boundle(runtime);
+//
+//    utf8_destory(classpath);
+//    c8* p_classname="app/GlfmMain";
+//    c8* p_methodname="glinit";
+//    c8* p_methodtype="(J)V";
+//    push_long(runtime->stack,(intptr_t)display);
+//    call_method_c(p_classname,p_methodname,p_methodtype,runtime);
+}
 
-    runtime=runtime_create(NULL);
-    jvm_init(utf8_cstr(classpath), JNI_OnLoad);
-    utf8_destory(classpath);
-    c8* p_classname="app/GlfmMain";
-    c8* p_methodname="glinit";
-    c8* p_methodtype="(J)V";
-    push_long(runtime->stack,(intptr_t)display);
-    call_method_c(p_classname,p_methodname,p_methodtype,runtime);
-    //thrd_create(&_jvm_thread, jvm_thrd_func, NULL);
+void glfmDestroy(){
+    thread_unboundle(runtime);
+    jvm_destroy();
+    runtime_destory(runtime);
 }
 
 //int jvm_thrd_func(void *para) {
@@ -117,7 +126,7 @@ void glfmMain(GLFMDisplay *display) {
 //    LOG_DEBUG("mini_jvm execute success.");
 //    return ret;
 //}
-
+//
 
 static bool onTouch(GLFMDisplay *display, int touch, GLFMTouchPhase phase, double x, double y) {
     if (phase == GLFMTouchPhaseHover) {
@@ -281,4 +290,5 @@ static void onFrame(GLFMDisplay *display, double frameTime) {
 
     glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
     glDrawArrays(GL_TRIANGLES, 0, 3);
+    glfmSetKeyboardVisible(display, true);
 }

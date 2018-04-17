@@ -547,7 +547,7 @@
 				BuildIndependentTargetsInParallel = YES;
 				LastUpgradeCheck = 0930;
 				TargetAttributes = {
-					35A17888CF24475C8FDC310D = {
+					0C326D90454C4FDE86F6EEFC = {
 						DevelopmentTeam = M978JH97JT;
 					};
 				};
@@ -845,7 +845,7 @@
 				CLANG_ENABLE_OBJC_ARC = YES;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				COMBINE_HIDPI_IMAGES = NO;
-				DEVELOPMENT_TEAM = M978JH97JT;
+				DEVELOPMENT_TEAM = "";
 				EXECUTABLE_PREFIX = "";
 				EXECUTABLE_SUFFIX = "";
 				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
@@ -882,7 +882,7 @@
 					QuartzCore,
 				);
 				OTHER_REZFLAGS = "";
-				PRODUCT_BUNDLE_IDENTIFIER = "com.brackeen.${PRODUCT_NAME:rfc1034identifier}";
+				PRODUCT_BUNDLE_IDENTIFIER = "com.eglsgame.glfm-test-pattern";
 				PRODUCT_NAME = glfm_test_pattern;
 				SECTORDER_FLAGS = "";
 				SKIP_INSTALL = NO;
@@ -938,7 +938,7 @@
 				CLANG_ENABLE_OBJC_ARC = YES;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				COMBINE_HIDPI_IMAGES = NO;
-				DEVELOPMENT_TEAM = M978JH97JT;
+				DEVELOPMENT_TEAM = "";
 				EXECUTABLE_PREFIX = "";
 				EXECUTABLE_SUFFIX = "";
 				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
@@ -975,7 +975,7 @@
 					QuartzCore,
 				);
 				OTHER_REZFLAGS = "";
-				PRODUCT_BUNDLE_IDENTIFIER = "com.brackeen.${PRODUCT_NAME:rfc1034identifier}";
+				PRODUCT_BUNDLE_IDENTIFIER = "com.eglsgame.glfm-test-pattern";
 				PRODUCT_NAME = glfm_test_pattern;
 				SECTORDER_FLAGS = "";
 				SKIP_INSTALL = NO;
@@ -999,7 +999,7 @@
 				CLANG_ENABLE_OBJC_ARC = YES;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				COMBINE_HIDPI_IMAGES = NO;
-				DEVELOPMENT_TEAM = "";
+				DEVELOPMENT_TEAM = M978JH97JT;
 				EXECUTABLE_PREFIX = "";
 				EXECUTABLE_SUFFIX = "";
 				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
@@ -1057,7 +1057,7 @@
 				CLANG_ENABLE_OBJC_ARC = YES;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				COMBINE_HIDPI_IMAGES = NO;
-				DEVELOPMENT_TEAM = M978JH97JT;
+				DEVELOPMENT_TEAM = "";
 				EXECUTABLE_PREFIX = "";
 				EXECUTABLE_SUFFIX = "";
 				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
@@ -1094,7 +1094,7 @@
 					QuartzCore,
 				);
 				OTHER_REZFLAGS = "";
-				PRODUCT_BUNDLE_IDENTIFIER = "com.brackeen.${PRODUCT_NAME:rfc1034identifier}";
+				PRODUCT_BUNDLE_IDENTIFIER = "com.eglsgame.glfm-test-pattern";
 				PRODUCT_NAME = glfm_test_pattern;
 				SECTORDER_FLAGS = "";
 				SKIP_INSTALL = NO;
@@ -1251,7 +1251,7 @@
 				CLANG_ENABLE_OBJC_ARC = YES;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				COMBINE_HIDPI_IMAGES = NO;
-				DEVELOPMENT_TEAM = "";
+				DEVELOPMENT_TEAM = M978JH97JT;
 				EXECUTABLE_PREFIX = "";
 				EXECUTABLE_SUFFIX = "";
 				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
@@ -1350,7 +1350,7 @@
 				CLANG_ENABLE_OBJC_ARC = YES;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				COMBINE_HIDPI_IMAGES = NO;
-				DEVELOPMENT_TEAM = "";
+				DEVELOPMENT_TEAM = M978JH97JT;
 				EXECUTABLE_PREFIX = "";
 				EXECUTABLE_SUFFIX = "";
 				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
@@ -1408,7 +1408,7 @@
 				CLANG_ENABLE_OBJC_ARC = YES;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				COMBINE_HIDPI_IMAGES = NO;
-				DEVELOPMENT_TEAM = M978JH97JT;
+				DEVELOPMENT_TEAM = "";
 				EXECUTABLE_PREFIX = "";
 				EXECUTABLE_SUFFIX = "";
 				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
@@ -1442,7 +1442,7 @@
 					QuartzCore,
 				);
 				OTHER_REZFLAGS = "";
-				PRODUCT_BUNDLE_IDENTIFIER = "com.brackeen.${PRODUCT_NAME:rfc1034identifier}";
+				PRODUCT_BUNDLE_IDENTIFIER = "com.eglsgame.glfm-test-pattern";
 				PRODUCT_NAME = glfm_test_pattern;
 				SECTORDER_FLAGS = "";
 				SKIP_INSTALL = NO;
@@ -1466,7 +1466,7 @@
 				CLANG_ENABLE_OBJC_ARC = YES;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				COMBINE_HIDPI_IMAGES = NO;
-				DEVELOPMENT_TEAM = "";
+				DEVELOPMENT_TEAM = M978JH97JT;
 				EXECUTABLE_PREFIX = "";
 				EXECUTABLE_SUFFIX = "";
 				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;

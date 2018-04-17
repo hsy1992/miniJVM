@@ -221,7 +221,7 @@ int org_mini_glfm_Glfm_glfmSetUserData(Runtime *runtime, JClass *clazz) {
     env->localvar_getLong_2slot(runtime, pos);
     pos += 2;
     refers.glfm_callback = env->localvar_getRefer(runtime, pos++);
-    refers.runtime = runtime;
+    refers.runtime = getTopRuntime(runtime);
 
     //this object not refered by jvm , so needs to hold by jni manaul
     if (refers.glfm_callback) env->instance_release_from_thread(refers.glfm_callback, runtime);

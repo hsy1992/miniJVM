@@ -362,7 +362,7 @@ s32 call_method_c(c8 *p_mainclass, c8 *p_methodname, c8 *p_methodtype, Runtime *
         MethodInfo *m = find_methodInfo_by_name(str_mainClsName, methodName, methodType,
                                                 runtime);
         if (m) {
-            thread_boundle(runtime);
+
 
             //准备参数
             localvar_dispose(runtime);
@@ -392,7 +392,6 @@ s32 call_method_c(c8 *p_mainclass, c8 *p_methodname, c8 *p_methodtype, Runtime *
             profile_print();
 #endif
 
-            thread_unboundle(runtime);
 
         }
         utf8_destory(methodName);

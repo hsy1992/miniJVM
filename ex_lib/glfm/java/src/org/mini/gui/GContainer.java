@@ -46,8 +46,16 @@ abstract public class GContainer extends GObject {
     /**
      * @param focus the focus to set
      */
-    public void setFocus(GObject focus) {
-        this.focus = focus;
+    public void setFocus(GObject go) {
+        if (this.focus != go) {
+            if (focus != null) {
+                focus.onUnFocus();
+            }
+            this.focus = go;
+            if (focus != null) {
+                focus.onFocus();
+            }
+        }
     }
 
     public void add(GObject nko) {
@@ -131,30 +139,6 @@ abstract public class GContainer extends GObject {
     }
 
     @Override
-    public void cursorPosEvent(int x, int y) {
-        for (Iterator<GObject> it = elements.iterator(); it.hasNext();) {
-            try {
-                GObject nko = it.next();
-                nko.cursorPosEvent(x, y);
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        }
-    }
-
-    @Override
-    public void dropEvent(int count, String[] paths) {
-        for (Iterator<GObject> it = elements.iterator(); it.hasNext();) {
-            try {
-                GObject nko = it.next();
-                nko.dropEvent(count, paths);
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        }
-    }
-
-    @Override
     public void scrollEvent(double scrollX, double scrollY, int x, int y) {
         for (Iterator<GObject> it = elements.iterator(); it.hasNext();) {
             try {
@@ -167,11 +151,11 @@ abstract public class GContainer extends GObject {
     }
 
     @Override
-    public void clickEvent(int button, int x, int y) {
+    public void clickEvent(int x, int y) {
         for (Iterator<GObject> it = elements.iterator(); it.hasNext();) {
             try {
                 GObject nko = it.next();
-                nko.clickEvent(button, x, y);
+                nko.clickEvent(x, y);
             } catch (Exception e) {
                 e.printStackTrace();
             }

@@ -35,11 +35,16 @@ abstract public class GObject {
 
     GActionListener actionListener;
 
+    static boolean flush;
 
     boolean visable = true;
 
     protected void init() {
 
+    }
+
+    public void flush() {
+        flush = true;
     }
 
     public boolean update(long ctx) {
@@ -55,16 +60,18 @@ abstract public class GObject {
     public void touchEvent(int phase, int x, int y) {
     }
 
-    public void clickEvent(int button, int x, int y) {
-    }
-
-    public void cursorPosEvent(int x, int y) {
-    }
-
-    public void dropEvent(int count, String[] paths) {
+    public void clickEvent(int x, int y) {
     }
 
     public void scrollEvent(double scrollX, double scrollY, int x, int y) {
+    }
+
+    public void onFocus() {
+
+    }
+
+    public void onUnFocus() {
+
     }
 
     public static boolean isInBoundle(float[] bound, float x, float y) {
@@ -154,5 +161,15 @@ abstract public class GObject {
 
     public boolean getVisable() {
         return visable;
+    }
+
+    public GForm getForm() {
+        GObject go = this;
+        while ((go = go.parent) != null) {
+            if (go instanceof GForm) {
+                return (GForm) go;
+            }
+        }
+        return null;
     }
 }

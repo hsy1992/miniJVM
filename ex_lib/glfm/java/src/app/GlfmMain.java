@@ -6,6 +6,8 @@
 package app;
 
 import java.util.Random;
+import javax.cldc.io.Connector;
+import javax.mini.net.Socket;
 import org.mini.gl.warp.GLFrameBuffer;
 import org.mini.gl.warp.GLFrameBufferPainter;
 import org.mini.glfm.Glfm;
@@ -54,7 +56,28 @@ public class GlfmMain {
         GForm form;
         form = new GForm(/*"GuiTest"*/"登录 窗口", 800, 600, display);
         form.setExtinit(new MyInit(form));
-        form.setFps(10f);
+        form.setFps(30f);
+        //t13();
+    }
+
+    static void t13() {
+        try {
+            Socket conn = (Socket) Connector.open("socket://baidu.com:80");
+            conn.setOption(Socket.OP_TYPE_NON_BLOCK, Socket.OP_VAL_NON_BLOCK);
+            String request = "GET / HTTP/1.1\r\n\r\n";
+            conn.write(request.getBytes(), 0, request.length());
+            byte[] rcvbuf = new byte[256];
+            int len = 0;
+            while (len != -1) {
+                len = conn.read(rcvbuf, 0, 256);
+                for (int i = 0; i < len; i++) {
+                    System.out.print((char) rcvbuf[i]);
+                }
+                System.out.print("\n");
+            };
+        } catch (Exception e) {
+
+        }
     }
 }
 
@@ -112,7 +135,7 @@ class MyInit implements GInitExtension {
             @Override
             public void action() {
                 Random ran = new Random();
-                GFrame sub1 = new GFrame(/*"子窗口"*/"颜色选择", 400 + ran.nextInt(100), 50 + ran.nextInt(100), 300, 400);
+                GFrame sub1 = new GFrame(/*"子窗口"*/"颜色选择", 40 + ran.nextInt(100), 50 + ran.nextInt(100), 300, 400);
                 GPanel panel = sub1.getPanel();
                 init1(panel, vg);
                 sub1.setClosable(true);

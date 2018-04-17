@@ -24,7 +24,6 @@ import static org.mini.nanovg.Nanovg.nvgSave;
 import static org.mini.nanovg.Nanovg.nvgStroke;
 import static org.mini.nanovg.Nanovg.nvgStrokeColor;
 
-
 /**
  *
  * @author gust
@@ -65,29 +64,20 @@ public class GScrollBar extends GObject {
         int rx = (int) (x - parent.getX());
         int ry = (int) (y - parent.getY());
         if (isInBoundle(boundle, rx, ry)) {
-            if (phase==Glfm.GLFMTouchPhaseEnded) {
+            if (phase == Glfm.GLFMTouchPhaseBegan) {
                 draged = true;
                 parent.setFocus(this);
                 pos = mode == HORIZONTAL ? (rx - boundle[LEFT]) / boundle[WIDTH] : (ry - boundle[TOP]) / boundle[HEIGHT];
-            } else {
+            } else if (phase == Glfm.GLFMTouchPhaseEnded) {
                 draged = false;
                 if (actionListener != null) {
                     actionListener.action();
                 }
-            }
-        }
-    }
-
-    @Override
-    public void cursorPosEvent(int x, int y) {
-        int rx = (int) (x - parent.getX());
-        int ry = (int) (y - parent.getY());
-        if (isInBoundle(boundle, rx, ry)) {
-            if (draged) {
-                pos = mode == HORIZONTAL ? (rx - boundle[LEFT]) / boundle[WIDTH] : (ry - boundle[TOP]) / boundle[HEIGHT];
-            }
-        } else {
-            //draged = false;
+            } else if (isInBoundle(boundle, rx, ry)) {
+                if (draged) {
+                    pos = mode == HORIZONTAL ? (rx - boundle[LEFT]) / boundle[WIDTH] : (ry - boundle[TOP]) / boundle[HEIGHT];
+                }
+            } 
         }
     }
 

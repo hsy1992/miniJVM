@@ -32,7 +32,6 @@ import static org.mini.nanovg.Nanovg.nvgTextGlyphPositionsJni;
 import static org.mini.nanovg.Nanovg.nvgTextJni;
 import static org.mini.nanovg.Nanovg.nvgTextMetrics;
 
-
 /**
  *
  * @author gust
@@ -55,6 +54,7 @@ public class GTextBox extends GObject {
     int showRows;//可显示行数
     int topShowRow;//显示区域第一行的行号
     short[][] area_detail;
+    int scrollDelta;
     //
     static final int AREA_DETAIL_ADD = 7;//额外增加slot数量
     static final int AREA_START = 4;//字符串起点位置
@@ -151,20 +151,27 @@ public class GTextBox extends GObject {
         int rx = (int) (x - parent.getX());
         int ry = (int) (y - parent.getY());
         if (isInBoundle(boundle, rx, ry)) {
-            if (phase==Glfm.GLFMTouchPhaseEnded) {
+            if (phase == Glfm.GLFMTouchPhaseBegan) {
                 parent.setFocus(this);
                 int caret = getCaretIndexFromArea(x, y);
                 if (caret >= 0) {
                     caretIndex = caret;
                     resetSelect();
                     selectStart = caret;
-                    drag = true;
+                    //drag = true;//打开可以进行选择模式，但手机上滚动和选取不可同时使用
+                }
+            } else if (phase == Glfm.GLFMTouchPhaseMoved) {
+                if (drag) {
+                    int caret = getCaretIndexFromArea(x, y);
+                    if (caret >= 0) {
+                        selectEnd = caret;
+                    }
                 }
             } else if (actionListener != null) {
                 actionListener.action();
             }
         }
-        if (phase!=Glfm.GLFMTouchPhaseEnded) {
+        if (phase == Glfm.GLFMTouchPhaseEnded) {
             drag = false;
             if (selectEnd == -1 || selectStart == selectEnd) {
                 resetSelect();
@@ -174,21 +181,7 @@ public class GTextBox extends GObject {
     }
 
     @Override
-    public void cursorPosEvent(int x, int y) {
-        int rx = (int) (x - parent.getX());
-        int ry = (int) (y - parent.getY());
-        if (isInBoundle(boundle, rx, ry)) {
-            if (drag) {
-                int caret = getCaretIndexFromArea(x, y);
-                if (caret >= 0) {
-                    selectEnd = caret;
-                }
-            }
-        }
-    }
-
-    @Override
-    public void clickEvent(int button, int x, int y) {
+    public void clickEvent(int x, int y) {
         int rx = (int) (x - parent.getX());
         int ry = (int) (y - parent.getY());
         if (isInBoundle(boundle, rx, ry)) {
@@ -212,22 +205,33 @@ public class GTextBox extends GObject {
         }
     }
 
+    @Override
+    public void onFocus() {
+        Glfm.glfmSetKeyboardVisible(getForm().getWinContext(), true);
+    }
+
+    @Override
+    public void onUnFocus() {
+        Glfm.glfmSetKeyboardVisible(getForm().getWinContext(), false);
+    }
+
     /**
      *
      * @param character
      */
     @Override
-    public void characterEvent(String str,int mods) {
-//        if (parent.getFocus() != this) {
-//            return;
-//        }
-//        int[] selectFromTo = getSelected();
-//        if (selectFromTo != null) {
-//            delectSelect();
-//        }
-//        textsb.insert(caretIndex, character);
-//        caretIndex++;
-//        text_arr = null;
+    public void characterEvent(String str, int mods) {
+        if (parent.getFocus() != this) {
+            return;
+        }
+        int[] selectFromTo = getSelected();
+        if (selectFromTo != null) {
+            delectSelect();
+        }
+        char character = str.charAt(0);
+        textsb.insert(caretIndex, character);
+        caretIndex++;
+        text_arr = null;
     }
 
     @Override
@@ -235,22 +239,22 @@ public class GTextBox extends GObject {
         if (parent.getFocus() != this) {
             return;
         }
-//        if (action == Glfw.GLFW_PRESS || action == Glfw.GLFW_REPEAT) {
-//            switch (key) {
-//                case Glfw.GLFW_KEY_BACKSPACE: {
-//                    if (textsb.length() > 0 && caretIndex > 0) {
-//                        int[] selectFromTo = getSelected();
-//                        if (selectFromTo != null) {
-//                            delectSelect();
-//                        } else {
-//                            textsb.delete(caretIndex - 1, caretIndex);
-//                            caretIndex--;
-//                            text_arr = null;
-//                        }
-//                    }
-//                    break;
-//                }
-//                case Glfw.GLFW_KEY_DELETE: {
+        if (action == Glfm.GLFMKeyActionPressed || action == Glfm.GLFMKeyActionRepeated) {
+            switch (key) {
+                case Glfm.GLFMKeyBackspace: {
+                    if (textsb.length() > 0 && caretIndex > 0) {
+                        int[] selectFromTo = getSelected();
+                        if (selectFromTo != null) {
+                            delectSelect();
+                        } else {
+                            textsb.delete(caretIndex - 1, caretIndex);
+                            caretIndex--;
+                            text_arr = null;
+                        }
+                    }
+                    break;
+                }
+//                case Glfm.GLFMKeyDelete: {
 //                    if (textsb.length() > caretIndex) {
 //                        int[] selectFromTo = getSelected();
 //                        if (selectFromTo != null) {
@@ -262,59 +266,59 @@ public class GTextBox extends GObject {
 //                    }
 //                    break;
 //                }
-//                case Glfw.GLFW_KEY_ENTER: {
-//                    String txt = getText();
-//                    if (txt != null && txt.length() > 0 && !singleMode) {
-//                        int[] selectFromTo = getSelected();
-//                        if (selectFromTo != null) {
-//                            delectSelect();
-//                        }
-//                        textsb.insert(caretIndex++, "\n");
-//                        text_arr = null;
-//                    }
-//                    break;
-//                }
-//                case Glfw.GLFW_KEY_LEFT: {
-//                    if (textsb.length() > 0 && caretIndex > 0) {
-//                        caretIndex--;
-//                    }
-//                    break;
-//                }
-//                case Glfw.GLFW_KEY_RIGHT: {
-//                    if (textsb.length() > caretIndex) {
-//                        caretIndex++;
-//                    }
-//                    break;
-//                }
-//                case Glfw.GLFW_KEY_UP: {
-//                    int[] pos = getCaretPosFromArea();
-//                    if (topShowRow > 0 && (pos == null || pos[2] == topShowRow)) {
-//                        topShowRow--;
-//                    }
-//                    if (pos != null) {
-//                        int cart = getCaretIndexFromArea(pos[0], pos[1] - (int) lineh[0]);
-//                        if (cart >= 0) {
-//                            caretIndex = cart;
-//                        }
-//                    }
-//                    break;
-//                }
-//                case Glfw.GLFW_KEY_DOWN: {
-//                    int[] pos = getCaretPosFromArea();
-//                    if (topShowRow < totalRows - showRows && (pos == null || pos[2] == topShowRow + showRows - 1)) {
-//                        topShowRow++;
-//                    }
-//                    if (pos != null) {
-//                        int cart = getCaretIndexFromArea(pos[0], pos[1] + (int) lineh[0]);
-//                        if (cart >= 0) {
-//                            caretIndex = cart;
-//                        }
-//
-//                    }
-//                    break;
-//                }
-//            }
-//        }
+                case Glfm.GLFMKeyEnter: {
+                    String txt = getText();
+                    if (txt != null && txt.length() > 0 && !singleMode) {
+                        int[] selectFromTo = getSelected();
+                        if (selectFromTo != null) {
+                            delectSelect();
+                        }
+                        textsb.insert(caretIndex++, "\n");
+                        text_arr = null;
+                    }
+                    break;
+                }
+                case Glfm.GLFMKeyLeft: {
+                    if (textsb.length() > 0 && caretIndex > 0) {
+                        caretIndex--;
+                    }
+                    break;
+                }
+                case Glfm.GLFMKeyRight: {
+                    if (textsb.length() > caretIndex) {
+                        caretIndex++;
+                    }
+                    break;
+                }
+                case Glfm.GLFMKeyUp: {
+                    int[] pos = getCaretPosFromArea();
+                    if (topShowRow > 0 && (pos == null || pos[2] == topShowRow)) {
+                        topShowRow--;
+                    }
+                    if (pos != null) {
+                        int cart = getCaretIndexFromArea(pos[0], pos[1] - (int) lineh[0]);
+                        if (cart >= 0) {
+                            caretIndex = cart;
+                        }
+                    }
+                    break;
+                }
+                case Glfm.GLFMKeyDown: {
+                    int[] pos = getCaretPosFromArea();
+                    if (topShowRow < totalRows - showRows && (pos == null || pos[2] == topShowRow + showRows - 1)) {
+                        topShowRow++;
+                    }
+                    if (pos != null) {
+                        int cart = getCaretIndexFromArea(pos[0], pos[1] + (int) lineh[0]);
+                        if (cart >= 0) {
+                            caretIndex = cart;
+                        }
+
+                    }
+                    break;
+                }
+            }
+        }
     }
 
     @Override
@@ -322,7 +326,11 @@ public class GTextBox extends GObject {
         int rx = (int) (x - parent.getX());
         int ry = (int) (y - parent.getY());
         if (isInBoundle(boundle, rx, ry)) {
-            topShowRow -= scrollY;
+            scrollDelta += scrollY;
+            if (Math.abs(scrollDelta) > lineh[0]) {
+                topShowRow -= scrollDelta / lineh[0];
+                scrollDelta %= lineh[0];
+            }
         }
     }
 

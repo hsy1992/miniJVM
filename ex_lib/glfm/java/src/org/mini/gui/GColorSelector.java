@@ -57,21 +57,13 @@ public class GColorSelector extends GObject {
 
     }
 
-    @Override
-    public void cursorPosEvent(int x, int y) {
-        int rx = (int) (x - parent.getX());
-        int ry = (int) (y - parent.getY());
-        if (isInBoundle(boundle, rx, ry)) {
-
-        }
-    }
 
     @Override
     public void touchEvent(int phase, int x, int y) {
         int rx = (int) (x - parent.getX());
         int ry = (int) (y - parent.getY());
         if (isInBoundle(boundle, rx, ry)) {
-            if (phase!=Glfm.GLFMTouchPhaseEnded) {
+            if (phase!=Glfm.GLFMTouchPhaseBegan) {
                 float offX = x - (getX() + centX);
                 float offY = y - (getY() + centY);
                 float r = (float) Math.sqrt(offX * offX + offY * offY);
@@ -88,10 +80,12 @@ public class GColorSelector extends GObject {
                     selectX = (float) (Math.cos(angel) * oldX - Math.sin(angel) * oldY);//(float) Math.cos(120.0f / 180.0f * Math.PI) * r * 0.3f;
                     selectY = (float) (Math.sin(angel) * oldX + Math.cos(angel) * oldY);//(float) Math.sin(120.0f / 180.0f * Math.PI) * r * 0.4f;
                 }
-            } else {
+            } else if (phase!=Glfm.GLFMTouchPhaseEnded) {
                 if (actionListener != null) {
                     actionListener.action();
                 }
+            }else{
+                
             }
         }
 

@@ -12,13 +12,13 @@ package org.mini.glfm;
 public interface GlfmCallBack {
 
     //void onFrame(GLFMDisplay *display, double frameTime)
-    void mainLoop(long display, double frameTime);
+    public void mainLoop(long display, double frameTime);
 
     //bool onTouch(GLFMDisplay *display, int touch, GLFMTouchPhase phase, double x, double y)
-    boolean onTouch(long display, int touch, int phase, double x, double y);
+    public boolean onTouch(long display, int touch, int phase, double x, double y);
 
     //bool onKey(GLFMDisplay *display, GLFMKey keyCode, GLFMKeyAction action, int modifiers)
-    boolean onKey(long display, int keyCode, int action, int modifiers);
+    public boolean onKey(long display, int keyCode, int action, int modifiers);
 
     public void onCharacter(long display, String str, int modifiers);
 
@@ -27,12 +27,12 @@ public interface GlfmCallBack {
     public void onSurfaceError(long display, String description);
 
     //void onSurfaceCreated(GLFMDisplay *display, int width, int height)
-    void onSurfaceCreated(long display, int width, int height);
+    public void onSurfaceCreated(long display, int width, int height);
 
     public void onSurfaceResize(long display, int width, int height);
 
     //void onSurfaceDestroyed(GLFMDisplay *display);
-    void onSurfaceDestroyed(long display);
+    public void onSurfaceDestroyed(long display);
 
     public void onMemWarning(long display);
 

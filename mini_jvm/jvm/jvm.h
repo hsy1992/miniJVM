@@ -1057,6 +1057,8 @@ void runtime_destory(Runtime *runtime);
 
 Runtime *getLastSon(Runtime *top);
 
+Runtime *getTopRuntime(Runtime *runtime);
+
 s64 getInstructPointer(Runtime *runtime);
 
 void getRuntimeStack(Runtime *runtime, Utf8String *ustr);
@@ -1110,6 +1112,9 @@ void jvm_init(c8 *p_classpath, StaticLibRegFunc regFunc);
 
 void jvm_destroy();
 
+void thread_boundle(Runtime *runtime);
+
+void thread_unboundle(Runtime *runtime);
 
 void print_exception(Runtime *runtime);
 

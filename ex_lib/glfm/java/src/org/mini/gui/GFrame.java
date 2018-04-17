@@ -199,17 +199,37 @@ public class GFrame extends GContainer {
     @Override
     public void touchEvent(int phase, int x, int y) {
 
-        if (phase == Glfm.GLFMTouchPhaseEnded) {
-            mouseDrag1 = true;
-            if (isInBoundle(title_boundle, mouseX, mouseY)) {
-                isMoveFrame = true;
-            }
-            if (closable && isInBoundle(close_boundle, x, y)) {
-                parent.remove(this);
-            }
-        } else {
-            mouseDrag1 = false;
-            isMoveFrame = false;
+        switch (phase) {
+            case Glfm.GLFMTouchPhaseBegan:
+                mouseDrag1 = true;
+                if (isInBoundle(title_boundle, x, y)) {
+                    isMoveFrame = true;
+                }
+                if (closable && isInBoundle(close_boundle, x, y)) {
+                    parent.remove(this);
+                }
+                mouseX = x;
+                mouseY = y;
+                break;
+            case Glfm.GLFMTouchPhaseMoved:
+                if (isMoveFrame) {
+                    boundle[LEFT] += x - mouseX;
+                    boundle[TOP] += y - mouseY;
+                    if (boundle[TOP] < 0) {
+                        boundle[TOP] = 0;
+                    }
+                    GForm gform = getForm();
+                    if (boundle[TOP] + title_boundle[HEIGHT] > gform.boundle[TOP] + gform.boundle[HEIGHT]) {
+                        boundle[TOP] = gform.boundle[TOP] + gform.boundle[HEIGHT] - title_boundle[HEIGHT];
+                    }
+                }
+                mouseX = x;
+                mouseY = y;
+                break;
+            default:
+                mouseDrag1 = false;
+                isMoveFrame = false;
+                break;
         }
 
         if (isInBoundle(boundle, x, y)) {
@@ -219,23 +239,6 @@ public class GFrame extends GContainer {
         }
     }
 
-    @Override
-    public void cursorPosEvent(int x, int y) {
-        if (isMoveFrame) {
-            boundle[LEFT] += x - mouseX;
-            boundle[TOP] += y - mouseY;
-            if (boundle[TOP] < 0) {
-                boundle[TOP] = 0;
-            }
-            GForm gform = getForm();
-            if (boundle[TOP] + title_boundle[HEIGHT] > gform.boundle[TOP] + gform.boundle[HEIGHT]) {
-                boundle[TOP] = gform.boundle[TOP] + gform.boundle[HEIGHT] - title_boundle[HEIGHT];
-            }
-        }
-        mouseX = x;
-        mouseY = y;
-        super.cursorPosEvent(x, y);
-    }
 
     @Override
     public void scrollEvent(double scrollX, double scrollY, int x, int y) {

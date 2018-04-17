@@ -56,22 +56,17 @@ public class GButton extends GObject {
     @Override
     public void touchEvent(int phase, int x, int y) {
         if (isInBoundle(boundle, x - parent.getX(), y - parent.getY())) {
-            if (phase==Glfm.GLFMTouchPhaseEnded) {
+            if (phase == Glfm.GLFMTouchPhaseBegan) {
                 bt_pressed = true;
                 parent.setFocus(this);
-            } else {
+            } else if (phase == Glfm.GLFMTouchPhaseEnded) {
                 bt_pressed = false;
                 if (actionListener != null) {
                     actionListener.action();
                 }
+            } else if (!isInBoundle(boundle, x - parent.getX(), y - parent.getY())) {
+                bt_pressed = false;
             }
-        }
-    }
-
-    @Override
-    public void cursorPosEvent(int x, int y) {
-        if (!isInBoundle(boundle, x - parent.getX(), y - parent.getY())) {
-            bt_pressed = false;
         }
     }
 
@@ -111,7 +106,7 @@ public class GButton extends GObject {
         nvgStrokeColor(vg, nvgRGBA(0, 0, 0, 48));
         nvgStroke(vg);
 
-        nvgFontSize(vg,  GToolkit.getStyle().getTextFontSize());
+        nvgFontSize(vg, GToolkit.getStyle().getTextFontSize());
         nvgFontFace(vg, GToolkit.getFontWord());
         tw = Nanovg.nvgTextBoundsJni(vg, 0, 0, text_arr, 0, text_arr.length, null);
         if (preicon != 0) {
@@ -130,7 +125,7 @@ public class GButton extends GObject {
             Nanovg.nvgTextJni(vg, x + w * 0.5f - tw * 0.5f - iw * 0.5f, y + h * 0.5f + move, preicon_arr, 0, preicon_arr.length);
         }
 
-        nvgFontSize(vg,  GToolkit.getStyle().getTextFontSize());
+        nvgFontSize(vg, GToolkit.getStyle().getTextFontSize());
         nvgFontFace(vg, GToolkit.getFontWord());
         nvgTextAlign(vg, NVG_ALIGN_LEFT | NVG_ALIGN_MIDDLE);
         nvgFillColor(vg, nvgRGBA(0, 0, 0, 160));
