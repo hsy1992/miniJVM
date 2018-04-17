@@ -744,9 +744,9 @@ s32 _class_constant_pool_destory(JClass *clazz);
 
 s32 _class_field_info_destory(JClass *clazz);
 
-u8 instance_of(JClass *clazz, Instance *ins);
+u8 instance_of(JClass *clazz, Instance *ins, Runtime *runtime);
 
-u8 isSonOfInterface(JClass *clazz, JClass *son);
+u8 isSonOfInterface(JClass *clazz, JClass *son, Runtime *runtime);
 
 u8 assignable_from(JClass *clazzSon, JClass *clazzSuper);
 

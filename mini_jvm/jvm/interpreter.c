@@ -463,7 +463,7 @@ _find_exception_handler(Runtime *runtime, Instance *exception, CodeAttribute *ca
             }
             ConstantClassRef *ccr = class_get_constant_classref(runtime->clazz, (e + i)->catch_type);
             JClass *catchClass = classes_load_get(ccr->name, runtime);
-            if (instance_of(catchClass, exception))
+            if (instance_of(catchClass, exception, runtime))
                 return e + i;
         }
     }
@@ -3401,7 +3401,7 @@ jvm_printf("(a)newarray  [%llx] type:%c , count:%d  \n", (s64) (intptr_t) arr, g
                         if (ins != NULL) {
                             if (ins->mb.type == MEM_TYPE_INS) {
                                 JClass *cl = getClassByConstantClassRef(runtime->clazz, typeIdx);
-                                if (instance_of(cl, ins)) {
+                                if (instance_of(cl, ins, runtime)) {
                                     checkok = 1;
                                 }
                             } else if (ins->mb.type == MEM_TYPE_ARR) {
@@ -3449,7 +3449,7 @@ jvm_printf("(a)newarray  [%llx] type:%c , count:%d  \n", (s64) (intptr_t) arr, g
 
                         s32 checkok = 0;
                         if (ins->mb.type == MEM_TYPE_INS) {
-                            if (instance_of(getClassByConstantClassRef(runtime->clazz, typeIdx), ins)) {
+                            if (instance_of(getClassByConstantClassRef(runtime->clazz, typeIdx), ins, runtime)) {
                                 checkok = 1;
                             }
                         } else {

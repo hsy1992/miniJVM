@@ -206,10 +206,15 @@ void jvm_init(c8 *p_classpath, StaticLibRegFunc regFunc) {
 
     //装入系统属性
     sys_properties_load(sys_classloader);
+    //启动调试器
+    jdwp_start_server();
+    
 
 }
 
 void jvm_destroy() {
+    
+    jdwp_stop_server();
     //
     garbage_collector_destory();
     //
@@ -268,9 +273,6 @@ s32 call_method_main(c8 *p_mainclass, c8 *p_methodname, c8 *p_methodtype, ArrayL
         if (m) {
             thread_boundle(runtime);
 
-            //启动调试器
-            jdwp_start_server();
-
             //准备参数
             localvar_dispose(runtime);
             localvar_init(runtime, m->para_count + 1);
@@ -319,7 +321,7 @@ s32 call_method_main(c8 *p_mainclass, c8 *p_methodname, c8 *p_methodtype, ArrayL
 #endif
 
             thread_unboundle(runtime);
-            jdwp_stop_server();
+
         }
         utf8_destory(methodName);
         utf8_destory(methodType);

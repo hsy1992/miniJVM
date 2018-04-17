@@ -268,10 +268,10 @@ void class_clinit(JClass *clazz, Runtime *runtime) {
 }
 //===============================    实例化相关  ==================================
 
-u8 instance_of(JClass *clazz, Instance *ins) {
+u8 instance_of(JClass *clazz, Instance *ins,Runtime *runtime) {
     JClass *ins_of_class = ins->mb.clazz;
     while (ins_of_class) {
-        if (ins_of_class == clazz || isSonOfInterface(clazz, ins_of_class->mb.clazz)) {
+        if (ins_of_class == clazz || isSonOfInterface(clazz, ins_of_class->mb.clazz, runtime)) {
             return 1;
         }
         ins_of_class = getSuperClass(ins_of_class);
@@ -280,15 +280,15 @@ u8 instance_of(JClass *clazz, Instance *ins) {
     return 0;
 }
 
-u8 isSonOfInterface(JClass *clazz, JClass *son) {
+u8 isSonOfInterface(JClass *clazz, JClass *son, Runtime *runtime) {
     s32 i;
     for (i = 0; i < son->interfacePool.clasz_used; i++) {
         ConstantClassRef *ccr = (son->interfacePool.clasz + i);
-        JClass *other = classes_get(class_get_constant_utf8(son, ccr->stringIndex)->utfstr);
+        JClass *other = classes_load_get(class_get_constant_utf8(son, ccr->stringIndex)->utfstr, runtime);
         if (clazz == other) {
             return 1;
         } else {
-            u8 sure = isSonOfInterface(clazz, other);
+            u8 sure = isSonOfInterface(clazz, other, runtime);
             if (sure)return 1;
         }
     }
