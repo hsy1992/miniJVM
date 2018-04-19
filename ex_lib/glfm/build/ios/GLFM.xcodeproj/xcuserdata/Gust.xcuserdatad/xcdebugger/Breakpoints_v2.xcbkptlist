@@ -54,29 +54,13 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "gui/jni_glfm.c"
-            timestampString = "545657423.105049"
+            timestampString = "545836196.890588"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "39"
             endingLineNumber = "39"
             landmarkName = "_callback_surface_error"
             landmarkType = "9">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            shouldBeEnabled = "Yes"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "src/glfm_platform_ios.m"
-            timestampString = "545657423.106046"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "655"
-            endingLineNumber = "655"
-            landmarkName = "-keyboardFrameChanged:"
-            landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
    </Breakpoints>

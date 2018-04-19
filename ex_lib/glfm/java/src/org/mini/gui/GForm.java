@@ -88,7 +88,7 @@ public class GForm extends GPanel {
             System.out.println("glad something went wrong!\n");
             System.exit(-1);
         }
-        vg = Nanovg.nvgCreateGLES2(NVG_ANTIALIAS | NVG_STENCIL_STROKES /*| NVG_DEBUG*/);
+        vg = Nanovg.nvgCreateGLES2(NVG_ANTIALIAS | NVG_STENCIL_STROKES | NVG_DEBUG);
         if (vg == 0) {
             System.out.println("Could not init nanovg.\n");
 

@@ -92,7 +92,7 @@ class MyInit implements GInitExtension {
     @Override
     public void onInit(GObject owner) {
         long vg = form.getNvContext();
-        GFrame gframe = new GFrame("Github"/*"demo"*/, 50, 50, 300, 500);
+        GFrame gframe = new GFrame("测"/*"demo"*/, 50, 50, 300, 500);
         init(gframe.getPanel(), vg);
         form.add(gframe);
     }

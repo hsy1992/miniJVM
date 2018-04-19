@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<VariablesViewState
+   version = "1.0">
+   <ContextStates>
+      <ContextState
+         contextName = "glfmMain:main.c">
+      </ContextState>
+      <ContextState
+         contextName = "_callback_surface_created:jni_glfm.c">
+      </ContextState>
+      <ContextState
+         contextName = "_callback_mainloop:jni_glfm.c">
+      </ContextState>
+      <ContextState
+         contextName = "call_method_c:jvm.c">
+      </ContextState>
+      <ContextState
+         contextName = "-[GLFMViewController viewDidLoad]:glfm_platform_ios.m">
+      </ContextState>
+      <ContextState
+         contextName = "execute_method:interpreter.c">
+         <PersistentStrings>
+            <PersistentString
+               value = "clazz-&gt;name-&gt;data">
+            </PersistentString>
+            <PersistentString
+               value = "method-&gt;name-&gt;data">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "nvgCreateGLES2:nanovg_gl.h">
+      </ContextState>
+      <ContextState
+         contextName = "fons__allocFont:fontstash.h">
+      </ContextState>
+      <ContextState
+         contextName = "getRuntimeCurThread:jni_gui.c">
+      </ContextState>
+      <ContextState
+         contextName = "org_mini_nanovg_Nanovg_nvgTextJni:jni_nanovg.c">
+         <PersistentStrings>
+            <PersistentString
+               value = "(char*)ptr_pstring">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "jdwp_set_debug_step:jdwp.c">
+      </ContextState>
+      <ContextState
+         contextName = "org_mini_nanovg_Nanovg_nvgCreateFont:jni_nanovg.c">
+         <PersistentStrings>
+            <PersistentString
+               value = "(char*)ptr_pfilename">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "push_ref:jvm.h">
+      </ContextState>
+      <ContextState
+         contextName = "fons__tt_loadFont:fontstash.h">
+      </ContextState>
+   </ContextStates>
+</VariablesViewState>
