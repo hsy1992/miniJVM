@@ -2,7 +2,11 @@
 #include <stdio.h>
 #include <string.h>
 //#include "glad/glad.h"
+#if TARGET_OS_IOS
 #include <OpenGLES/ES2/gl.h>
+#else
+#include <GLES2/gl2.h>
+#endif
 //#include "GLFW/glfw3.h"
 #include "linmath.h"
 

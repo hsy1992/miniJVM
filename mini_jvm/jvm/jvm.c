@@ -212,7 +212,7 @@ void jvm_init(c8 *p_classpath, StaticLibRegFunc regFunc) {
 
 }
 
-void jvm_destroy() {
+void jvm_destroy(StaticLibRegFunc unRegFunc) {
     
     jdwp_stop_server();
     //
@@ -234,7 +234,7 @@ s32 execute_jvm(c8 *p_classpath, c8 *p_mainclass, ArrayList *java_para) {
     c8 *p_methodtype = "([Ljava/lang/String;)V";
     s32 ret = call_method_main(p_mainclass, p_methodname, p_methodtype, java_para);
 
-    jvm_destroy();
+    jvm_destroy(NULL);
     return ret;
 }
 

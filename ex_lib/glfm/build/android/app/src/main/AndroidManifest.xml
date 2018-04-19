@@ -11,7 +11,7 @@
         android:icon="@mipmap/ic_launcher"
         android:supportsRtl="true">
         <activity
-            android:name="android.app.NativeActivity"
+            android:name="org.minijvm.activity.JvmNativeActivity"
             android:configChanges="orientation|screenLayout|screenSize|keyboardHidden|keyboard">
             <meta-data
                 android:name="android.app.lib_name"

@@ -246,6 +246,8 @@ typedef void (*GLFMAppFocusFunc)(GLFMDisplay *display, bool focused);
 /// can be set.
 extern void glfmMain(GLFMDisplay *display);
 
+extern void glfmDestroy();
+
 /// Init the display condifuration. Should only be called in glfmMain.
 /// If the device does not support the preferred rendering API, the next available rendering API is
 /// chosen (OpenGL ES 3.0 if OpenGL ES 3.1 is not available, and OpenGL ES 2.0 if OpenGL ES 3.0 is

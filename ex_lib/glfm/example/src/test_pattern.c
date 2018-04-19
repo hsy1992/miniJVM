@@ -189,3 +189,4 @@ void glfmMain(GLFMDisplay *display) {
     glfmSetSurfaceDestroyedFunc(display, onSurfaceDestroyed);
     glfmSetMainLoopFunc(display, onFrame);
 }
+void glfmDestroy(){}

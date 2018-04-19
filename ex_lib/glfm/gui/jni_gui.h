@@ -27,11 +27,10 @@ __refer ptr_NanovgFuncTable();
 s32 count_NanovgFuncTable();
 
 
-
 struct _GlobeRefer {
     JniEnv *env;
-    Runtime *runtime;
     Instance *glfm_callback;
+
     MethodInfo *_callback_surface_error;
     MethodInfo *_callback_key;
     MethodInfo *_callback_character;
@@ -43,6 +42,18 @@ struct _GlobeRefer {
     MethodInfo *_callback_surface_resized;
     MethodInfo *_callback_app_focus;
     MethodInfo *_callback_surface_created;
+
+    Runtime *_runtime_surface_error;
+    Runtime *_runtime_key;
+    Runtime *_runtime_character;
+    Runtime *_runtime_mainloop;
+    Runtime *_runtime_memory_warning;
+    Runtime *_runtime_keyboard_visible;
+    Runtime *_runtime_touch;
+    Runtime *_runtime_surface_destroyed;
+    Runtime *_runtime_surface_resized;
+    Runtime *_runtime_app_focus;
+    Runtime *_runtime_surface_created;
 };
 
 

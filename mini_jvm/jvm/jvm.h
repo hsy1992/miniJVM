@@ -316,7 +316,7 @@ extern ClassLoader *sys_classloader;
 extern ClassLoader *array_classloader;
 
 extern ArrayList *obj_cache;
-
+extern u8 volatile java_debug;
 extern JniEnv jnienv;
 
 extern ArrayList *thread_list;
@@ -324,7 +324,7 @@ extern ArrayList *thread_list;
 extern ArrayList *native_libs;
 extern Hashtable *sys_prop;
 
-extern u8 volatile java_debug;
+extern u8 volatile c;
 
 extern s32 STACK_LENGHT;
 
@@ -837,7 +837,8 @@ static inline ConstantMethodRef *class_get_constant_method_ref(JClass *clazz, s3
     return (ConstantMethodRef *) (clazz->constant_item_ptr[index]);
 }
 
-static inline ConstantInterfaceMethodRef *class_get_constant_interface_method_ref(JClass *clazz, s32 index) {
+static inline ConstantInterfaceMethodRef *
+class_get_constant_interface_method_ref(JClass *clazz, s32 index) {
     return (ConstantInterfaceMethodRef *) (clazz->constant_item_ptr[index]);
 }
 
@@ -871,19 +872,22 @@ static inline Utf8String *class_get_utf8_string(JClass *clazz, s32 index) {
 }
 
 MethodInfo *
-find_instance_methodInfo_by_name(Instance *ins, Utf8String *methodName, Utf8String *methodType, Runtime *runtime);
+find_instance_methodInfo_by_name(Instance *ins, Utf8String *methodName, Utf8String *methodType,
+                                 Runtime *runtime);
 
 MethodInfo *find_methodInfo_by_methodref(JClass *clazz, s32 method_ref, Runtime *runtime);
 
 MethodInfo *
-find_methodInfo_by_name(Utf8String *clsName, Utf8String *methodName, Utf8String *methodType, Runtime *runtime);
+find_methodInfo_by_name(Utf8String *clsName, Utf8String *methodName, Utf8String *methodType,
+                        Runtime *runtime);
 
 
 FieldInfo *find_fieldInfo_by_fieldref(JClass *clazz, s32 field_ref, Runtime *runtime);
 
 FieldInfo *find_fieldInfo_by_name_c(c8 *pclsName, c8 *pfieldName, c8 *pfieldType);
 
-FieldInfo *find_fieldInfo_by_name(Utf8String *clsName, Utf8String *fieldName, Utf8String *fieldType);
+FieldInfo *
+find_fieldInfo_by_name(Utf8String *clsName, Utf8String *fieldName, Utf8String *fieldType);
 
 s32 find_constant_fieldref_index(JClass *clazz, Utf8String *fieldName, Utf8String *type);
 
@@ -1110,7 +1114,7 @@ c8 *getMajorVersionString(u16 major_number);
 
 void jvm_init(c8 *p_classpath, StaticLibRegFunc regFunc);
 
-void jvm_destroy();
+void jvm_destroy(StaticLibRegFunc unRegFunc);
 
 void thread_boundle(Runtime *runtime);
 
@@ -1267,7 +1271,8 @@ struct _JNIENV {
     s32 (*execute_method)(MethodInfo *method, Runtime *runtime, JClass *clazz);
 
     MethodInfo *
-    (*find_methodInfo_by_name)(Utf8String *clsName, Utf8String *methodName, Utf8String *methodType, Runtime *runtime);
+    (*find_methodInfo_by_name)(Utf8String *clsName, Utf8String *methodName, Utf8String *methodType,
+                               Runtime *runtime);
 
     void (*print_exception)(Runtime *runtime);
 

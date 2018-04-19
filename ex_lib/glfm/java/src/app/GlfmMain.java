@@ -97,7 +97,7 @@ class MyInit implements GInitExtension {
         form.add(gframe);
     }
 
-    public void init(GPanel parent, long vg) {
+    public void init(GPanel parent, final long vg) {
 //        light = new Light();
 
         int x = 8, y = 10;
@@ -115,7 +115,7 @@ class MyInit implements GInitExtension {
         pwd.setSingleMode(true);
         parent.add(pwd);
         y += 35;
-        String conttxt = "This is longer chunk of text.\n  \n  Would have used lorem ipsum but she    was busy jumping over the lazy dog with the fox and all the men who came to the aid of the party.";
+        String conttxt = "子窗口This is longer chunk of text.\n  \n  Would have used lorem ipsum but she    was busy jumping over the lazy dog with the fox and all the men who came to the aid of the party.";
         conttxt += "I test the program ,there are two window , one window left a button that open the other window, the other left a button for close self.\n"
                 + "\n"
                 + "the issue maybe related with font , if i use nuklear defult font , the bug nerver show , but i am using chinese font (google android system default font), the bug frequently occure. the app memory using about 180M with default font in macos, use chinese font it would be 460M, is that nuklear load all glyph? but it's not the cause of bug .\n"

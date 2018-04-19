@@ -23,7 +23,7 @@ android {
     }
 
     sourceSets.main {
-        assets.srcDirs = ["../../../example/assets", "../../../../../binary/lib/"]
+        assets.srcDirs = ["../../../example/assets"]
     }
     externalNativeBuild {
         cmake {

@@ -3,7 +3,11 @@
 #include <string.h>
 
 //#include <glad/glad.h>
+#if TARGET_OS_IOS
 #include <OpenGLES/ES2/gl.h>
+#else
+#include <GLES2/gl2.h>
+#endif
 //#define STB_TRUETYPE_IMPLEMENTATION
 #include <stb/stb_truetype.h>
 #define STB_IMAGE_WRITE_IMPLEMENTATION

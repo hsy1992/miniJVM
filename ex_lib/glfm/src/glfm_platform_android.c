@@ -908,6 +908,7 @@ static void _glfmOnAppCmd(struct android_app *app, int32_t cmd) {
         }
         case APP_CMD_TERM_WINDOW: {
             LOG_LIFECYCLE("APP_CMD_TERM_WINDOW");
+            glfmDestroy();
             _glfmEGLSurfaceDestroy(platformData);
             _glfmSetAnimating(platformData, false);
             break;
@@ -1462,6 +1463,20 @@ ANativeActivity *glfmAndroidGetActivity() {
     } else {
         return NULL;
     }
+}
+
+JNIEXPORT jboolean JNICALL
+Java_org_minijvm_activity_JvmNativeActivity_onStringInput(JNIEnv *env, jobject jobj, jstring s) {
+    int down = 0;
+    if (platformDataGlobal && platformDataGlobal->app) {
+        const char *rawString = (*env)->GetStringUTFChars(env, s, 0);
+        if (platformDataGlobal->display && platformDataGlobal->display->charFunc) {
+            platformDataGlobal->display->charFunc(platformDataGlobal->display, rawString, 0);
+            down = 1;
+        }
+        (*env)->ReleaseStringUTFChars(env, s, rawString);
+    }
+    return down;
 }
 
 #endif

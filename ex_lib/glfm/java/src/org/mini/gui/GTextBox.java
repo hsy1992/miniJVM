@@ -217,6 +217,8 @@ public class GTextBox extends GObject {
 
     /**
      *
+     * @param str
+     * @param mods
      * @param character
      */
     @Override
@@ -228,9 +230,11 @@ public class GTextBox extends GObject {
         if (selectFromTo != null) {
             delectSelect();
         }
-        char character = str.charAt(0);
-        textsb.insert(caretIndex, character);
-        caretIndex++;
+        for (int i = 0, imax = str.length(); i < imax; i++) {
+            char character = str.charAt(i);
+            textsb.insert(caretIndex, character);
+            caretIndex++;
+        }
         text_arr = null;
     }
 

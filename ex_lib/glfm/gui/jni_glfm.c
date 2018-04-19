@@ -37,33 +37,35 @@ static void _callback_error_before_init(int error, const char *description) {
 
 static void _callback_surface_error(GLFMDisplay *window, const char *description) {
     if (refers._callback_surface_error) {
+        Runtime *runtime=refers._runtime_surface_error;
         JniEnv *env = refers.env;
-        env->push_ref(refers.runtime->stack, refers.glfm_callback);
-        env->push_long(refers.runtime->stack, (s64)(intptr_t)
+        env->push_ref(runtime->stack, refers.glfm_callback);
+        env->push_long(runtime->stack, (s64)(intptr_t)
         window);
-        Instance *jstr = createJavaString(refers.runtime, description);
-        env->push_ref(refers.runtime->stack, jstr);
-        s32 ret = env->execute_method(refers._callback_surface_error, refers.runtime, refers.glfm_callback->mb.clazz);
+        Instance *jstr = createJavaString(runtime, description);
+        env->push_ref(runtime->stack, jstr);
+        s32 ret = env->execute_method(refers._callback_surface_error, runtime, refers.glfm_callback->mb.clazz);
         if (ret) {
-            env->print_exception(refers.runtime);
+            env->print_exception(runtime);
         }
     }
 }
 
 static bool _callback_key(GLFMDisplay *window, GLFMKey key, GLFMKeyAction action, int mods) {
     if (refers._callback_key) {
+        Runtime *runtime=refers._runtime_key;
         JniEnv *env = refers.env;
-        env->push_ref(refers.runtime->stack, refers.glfm_callback);
-        env->push_long(refers.runtime->stack, (s64)(intptr_t)
+        env->push_ref(runtime->stack, refers.glfm_callback);
+        env->push_long(runtime->stack, (s64)(intptr_t)
         window);
-        env->push_int(refers.runtime->stack, key);
-        env->push_int(refers.runtime->stack, action);
-        env->push_int(refers.runtime->stack, mods);
-        s32 ret = env->execute_method(refers._callback_key, refers.runtime, refers.glfm_callback->mb.clazz);
+        env->push_int(runtime->stack, key);
+        env->push_int(runtime->stack, action);
+        env->push_int(runtime->stack, mods);
+        s32 ret = env->execute_method(refers._callback_key, runtime, refers.glfm_callback->mb.clazz);
         if (ret) {
-            env->print_exception(refers.runtime);
+            env->print_exception(runtime);
         } else {
-            return env->pop_int(refers.runtime->stack);
+            return env->pop_int(runtime->stack);
         }
     }
     return false;
@@ -71,83 +73,89 @@ static bool _callback_key(GLFMDisplay *window, GLFMKey key, GLFMKeyAction action
 
 static void _callback_character(GLFMDisplay *window, const char *utf8, int modifiers) {
     if (refers._callback_character) {
+        Runtime *runtime=refers._runtime_character;
         JniEnv *env = refers.env;
-        env->push_ref(refers.runtime->stack, refers.glfm_callback);
-        env->push_long(refers.runtime->stack, (s64)(intptr_t)
+        env->push_ref(runtime->stack, refers.glfm_callback);
+        env->push_long(runtime->stack, (s64)(intptr_t)
         window);
-        Instance *ins = createJavaString(refers.runtime, utf8);
-        env->push_ref(refers.runtime->stack, ins);
-        env->push_int(refers.runtime->stack, modifiers);
-        s32 ret = env->execute_method(refers._callback_character, refers.runtime, refers.glfm_callback->mb.clazz);
+        s32 slen=strlen(utf8);
+        Instance *ins = createJavaString(runtime, utf8);
+        env->push_ref(runtime->stack, ins);
+        env->push_int(runtime->stack, modifiers);
+        s32 ret = env->execute_method(refers._callback_character, runtime, refers.glfm_callback->mb.clazz);
         if (ret) {
-            env->print_exception(refers.runtime);
+            env->print_exception(runtime);
         }
     }
 }
 
 static void _callback_mainloop(GLFMDisplay *window, f64 frameTime) {
     if (refers._callback_mainloop) {
+        Runtime *runtime=refers._runtime_mainloop;
         JniEnv *env = refers.env;
-        env->push_ref(refers.runtime->stack, refers.glfm_callback);
-        env->push_long(refers.runtime->stack, (s64)(intptr_t)
+        env->push_ref(runtime->stack, refers.glfm_callback);
+        env->push_long(runtime->stack, (s64)(intptr_t)
         window);
-        env->push_double(refers.runtime->stack, frameTime);
+        env->push_double(runtime->stack, frameTime);
 
-        s32 ret = env->execute_method(refers._callback_mainloop, refers.runtime, refers.glfm_callback->mb.clazz);
+        s32 ret = env->execute_method(refers._callback_mainloop, runtime, refers.glfm_callback->mb.clazz);
         if (ret) {
-            env->print_exception(refers.runtime);
+            env->print_exception(runtime);
         }
     }
 }
 
 void _callback_memory_warning(GLFMDisplay *window) {
     if (refers._callback_memory_warning) {
+        Runtime *runtime=refers._runtime_memory_warning;
         JniEnv *env = refers.env;
-        env->push_ref(refers.runtime->stack, refers.glfm_callback);
-        env->push_long(refers.runtime->stack, (s64)(intptr_t)
+        env->push_ref(runtime->stack, refers.glfm_callback);
+        env->push_long(runtime->stack, (s64)(intptr_t)
         window);
 
-        s32 ret = env->execute_method(refers._callback_memory_warning, refers.runtime, refers.glfm_callback->mb.clazz);
+        s32 ret = env->execute_method(refers._callback_memory_warning, runtime, refers.glfm_callback->mb.clazz);
         if (ret) {
-            env->print_exception(refers.runtime);
+            env->print_exception(runtime);
         }
     }
 }
 
 void _callback_keyboard_visible(GLFMDisplay *window, bool visible, f64 x, f64 y, f64 w, f64 h) {
     if (refers._callback_keyboard_visible) {
+        Runtime *runtime=refers._runtime_keyboard_visible;
         JniEnv *env = refers.env;
-        env->push_ref(refers.runtime->stack, refers.glfm_callback);
-        env->push_long(refers.runtime->stack, (s64)(intptr_t)
+        env->push_ref(runtime->stack, refers.glfm_callback);
+        env->push_long(runtime->stack, (s64)(intptr_t)
         window);
-        env->push_int(refers.runtime->stack, visible);
-        env->push_double(refers.runtime->stack, x);
-        env->push_double(refers.runtime->stack, y);
-        env->push_double(refers.runtime->stack, w);
-        env->push_double(refers.runtime->stack, h);
-        s32 ret = env->execute_method(refers._callback_keyboard_visible, refers.runtime,
+        env->push_int(runtime->stack, visible);
+        env->push_double(runtime->stack, x);
+        env->push_double(runtime->stack, y);
+        env->push_double(runtime->stack, w);
+        env->push_double(runtime->stack, h);
+        s32 ret = env->execute_method(refers._callback_keyboard_visible, runtime,
                                       refers.glfm_callback->mb.clazz);
         if (ret) {
-            env->print_exception(refers.runtime);
+            env->print_exception(runtime);
         }
     }
 }
 
 bool _callback_touch(GLFMDisplay *window, s32 touch, GLFMTouchPhase phase, f64 x, f64 y) {
     if (refers._callback_touch) {
+        Runtime *runtime=refers._runtime_touch;
         JniEnv *env = refers.env;
-        env->push_ref(refers.runtime->stack, refers.glfm_callback);
-        env->push_long(refers.runtime->stack, (s64)(intptr_t)
+        env->push_ref(runtime->stack, refers.glfm_callback);
+        env->push_long(runtime->stack, (s64)(intptr_t)
         window);
-        env->push_int(refers.runtime->stack, touch);
-        env->push_int(refers.runtime->stack, phase);
-        env->push_double(refers.runtime->stack, x);
-        env->push_double(refers.runtime->stack, y);
-        s32 ret = env->execute_method(refers._callback_touch, refers.runtime, refers.glfm_callback->mb.clazz);
+        env->push_int(runtime->stack, touch);
+        env->push_int(runtime->stack, phase);
+        env->push_double(runtime->stack, x);
+        env->push_double(runtime->stack, y);
+        s32 ret = env->execute_method(refers._callback_touch, runtime, refers.glfm_callback->mb.clazz);
         if (ret) {
-            env->print_exception(refers.runtime);
+            env->print_exception(runtime);
         } else {
-            return env->pop_int(refers.runtime->stack);
+            return env->pop_int(runtime->stack);
         }
     }
     return 0;
@@ -156,58 +164,62 @@ bool _callback_touch(GLFMDisplay *window, s32 touch, GLFMTouchPhase phase, f64 x
 
 void _callback_surface_resized(GLFMDisplay *window, s32 w, s32 h) {
     if (refers._callback_surface_resized) {
+        Runtime *runtime=refers._runtime_surface_resized;
         JniEnv *env = refers.env;
-        env->push_ref(refers.runtime->stack, refers.glfm_callback);
-        env->push_long(refers.runtime->stack, (s64)(intptr_t)
+        env->push_ref(runtime->stack, refers.glfm_callback);
+        env->push_long(runtime->stack, (s64)(intptr_t)
         window);
-        env->push_int(refers.runtime->stack, w);
-        env->push_int(refers.runtime->stack, h);
-        s32 ret = env->execute_method(refers._callback_surface_resized, refers.runtime, refers.glfm_callback->mb.clazz);
+        env->push_int(runtime->stack, w);
+        env->push_int(runtime->stack, h);
+        s32 ret = env->execute_method(refers._callback_surface_resized, runtime, refers.glfm_callback->mb.clazz);
         if (ret) {
-            env->print_exception(refers.runtime);
+            env->print_exception(runtime);
         }
     }
 }
 
 void _callback_surface_destroyed(GLFMDisplay *window) {
     if (refers._callback_surface_destroyed) {
+        Runtime *runtime=refers._runtime_surface_destroyed;
         JniEnv *env = refers.env;
-        env->push_ref(refers.runtime->stack, refers.glfm_callback);
-        env->push_long(refers.runtime->stack, (s64)(intptr_t)
+        env->push_ref(runtime->stack, refers.glfm_callback);
+        env->push_long(runtime->stack, (s64)(intptr_t)
         window);
-        s32 ret = env->execute_method(refers._callback_surface_destroyed, refers.runtime,
+        s32 ret = env->execute_method(refers._callback_surface_destroyed, runtime,
                                       refers.glfm_callback->mb.clazz);
         if (ret) {
-            env->print_exception(refers.runtime);
+            env->print_exception(runtime);
         }
     }
 }
 
 void _callback_app_focus(GLFMDisplay *window, bool focus) {
     if (refers._callback_app_focus) {
+        Runtime *runtime=refers._runtime_app_focus;
         JniEnv *env = refers.env;
-        env->push_ref(refers.runtime->stack, refers.glfm_callback);
-        env->push_long(refers.runtime->stack, (s64)(intptr_t)
+        env->push_ref(runtime->stack, refers.glfm_callback);
+        env->push_long(runtime->stack, (s64)(intptr_t)
         window);
-        env->push_int(refers.runtime->stack, focus);
-        s32 ret = env->execute_method(refers._callback_app_focus, refers.runtime, refers.glfm_callback->mb.clazz);
+        env->push_int(runtime->stack, focus);
+        s32 ret = env->execute_method(refers._callback_app_focus, runtime, refers.glfm_callback->mb.clazz);
         if (ret) {
-            env->print_exception(refers.runtime);
+            env->print_exception(runtime);
         }
     }
 }
 
 void _callback_surface_created(GLFMDisplay *window, s32 w, s32 h) {
     if (refers._callback_surface_created) {
+        Runtime *runtime=refers._runtime_surface_created;
         JniEnv *env = refers.env;
-        env->push_ref(refers.runtime->stack, refers.glfm_callback);
-        env->push_long(refers.runtime->stack, (s64)(intptr_t)
+        env->push_ref(runtime->stack, refers.glfm_callback);
+        env->push_long(runtime->stack, (s64)(intptr_t)
         window);
-        env->push_int(refers.runtime->stack, w);
-        env->push_int(refers.runtime->stack, h);
-        s32 ret = env->execute_method(refers._callback_surface_created, refers.runtime, refers.glfm_callback->mb.clazz);
+        env->push_int(runtime->stack, w);
+        env->push_int(runtime->stack, h);
+        s32 ret = env->execute_method(refers._callback_surface_created, runtime, refers.glfm_callback->mb.clazz);
         if (ret) {
-            env->print_exception(refers.runtime);
+            env->print_exception(runtime);
         }
     }
 }
@@ -221,7 +233,6 @@ int org_mini_glfm_Glfm_glfmSetUserData(Runtime *runtime, JClass *clazz) {
     env->localvar_getLong_2slot(runtime, pos);
     pos += 2;
     refers.glfm_callback = env->localvar_getRefer(runtime, pos++);
-    refers.runtime = getTopRuntime(runtime);
 
     //this object not refered by jvm , so needs to hold by jni manaul
     if (refers.glfm_callback) env->instance_release_from_thread(refers.glfm_callback, runtime);
