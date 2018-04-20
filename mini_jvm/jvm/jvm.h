@@ -1128,6 +1128,8 @@ s32 call_method_main(c8 *p_mainclass, c8 *p_methodname, c8 *p_methodtype, ArrayL
 
 s32 call_method_c(c8 *p_mainclass, c8 *p_methodname, c8 *p_methodtype, Runtime *runtime);
 
+s32 execute_method_impl(MethodInfo *method, Runtime *runtime, JClass *clazz);
+
 s32 execute_method(MethodInfo *method, Runtime *runtime, JClass *clazz);
 
 //======================= jni =============================

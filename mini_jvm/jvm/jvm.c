@@ -41,7 +41,7 @@ void print_exception(Runtime *runtime) {
     utf8_destory(getStackFrame_type);
     if (getStackFrame) {
         push_ref(runtime->stack, ins);
-        s32 ret = execute_method(getStackFrame, runtime, getStackFrame->_this_class);
+        s32 ret = execute_method_impl(getStackFrame, runtime, getStackFrame->_this_class);
         if (ret != RUNTIME_STATUS_NORMAL) {
             ins = pop_ref(runtime->stack);
             return;
@@ -208,12 +208,12 @@ void jvm_init(c8 *p_classpath, StaticLibRegFunc regFunc) {
     sys_properties_load(sys_classloader);
     //启动调试器
     jdwp_start_server();
-    
+
 
 }
 
 void jvm_destroy(StaticLibRegFunc unRegFunc) {
-    
+
     jdwp_stop_server();
     //
     garbage_collector_destory();
@@ -335,6 +335,14 @@ s32 call_method_main(c8 *p_mainclass, c8 *p_methodname, c8 *p_methodtype, ArrayL
     return ret;
 }
 
+/**
+ *
+ * @param p_mainclass
+ * @param p_methodname
+ * @param p_methodtype
+ * @param p_runtime
+ * @return
+ */
 s32 call_method_c(c8 *p_mainclass, c8 *p_methodname, c8 *p_methodtype, Runtime *p_runtime) {
     if (!p_mainclass) {
         jvm_printf("No main class .\n");
@@ -343,7 +351,9 @@ s32 call_method_c(c8 *p_mainclass, c8 *p_methodname, c8 *p_methodtype, Runtime *
 
     //创建运行时栈
     Runtime *runtime = p_runtime;
-    if (!p_runtime) runtime = runtime_create(NULL);
+    if (!p_runtime) {
+        runtime = runtime_create(NULL);
+    }
 
     //开始装载类
 
@@ -362,8 +372,6 @@ s32 call_method_c(c8 *p_mainclass, c8 *p_methodname, c8 *p_methodtype, Runtime *
         MethodInfo *m = find_methodInfo_by_name(str_mainClsName, methodName, methodType,
                                                 runtime);
         if (m) {
-
-
             //准备参数
             localvar_dispose(runtime);
             localvar_init(runtime, m->para_count + 1);
@@ -380,12 +388,8 @@ s32 call_method_c(c8 *p_mainclass, c8 *p_methodname, c8 *p_methodtype, Runtime *
             if (ret != RUNTIME_STATUS_NORMAL) {
                 print_exception(runtime);
             }
-            jthread_block_enter(runtime);
-            while ((thread_list->length) > 1) {//wait for other thread over ,
-                check_suspend_and_pause(runtime);
-                threadSleep(100);
-            }
-            jthread_block_exit(runtime);
+
+
             jvm_printf("spent %lld\n", (currentTimeMillis() - start));
 
 #if _JVM_DEBUG_PROFILE
@@ -398,7 +402,9 @@ s32 call_method_c(c8 *p_mainclass, c8 *p_methodname, c8 *p_methodtype, Runtime *
         utf8_destory(methodType);
     }
     localvar_dispose(runtime);
-    if (!p_runtime) runtime_destory(runtime);
+    if (!p_runtime) {
+        runtime_destory(runtime);
+    }
 
     utf8_destory(str_mainClsName);
     //
@@ -406,3 +412,9 @@ s32 call_method_c(c8 *p_mainclass, c8 *p_methodname, c8 *p_methodtype, Runtime *
     return ret;
 }
 
+s32 execute_method(MethodInfo *method, Runtime *runtime, JClass *clazz) {
+    jthread_block_exit(runtime);
+    s32 ret = execute_method_impl(method, runtime, clazz);
+    jthread_block_enter(runtime);
+    return ret;
+}

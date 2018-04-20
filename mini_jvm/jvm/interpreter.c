@@ -556,7 +556,7 @@ s32 _synchronized_unlock_method(MethodInfo *method, Runtime *runtime) {
     return 0;
 }
 
-s32 execute_method(MethodInfo *method, Runtime *pruntime, JClass *clazz) {
+s32 execute_method_impl(MethodInfo *method, Runtime *pruntime, JClass *clazz) {
     s32 j = 0, ret = RUNTIME_STATUS_NORMAL;
 
     Runtime *runtime = runtime_create(pruntime);
@@ -3120,7 +3120,7 @@ s32 execute_method(MethodInfo *method, Runtime *pruntime, JClass *clazz) {
 #endif
 
                             if (m) {
-                                ret = execute_method(m, runtime, m->_this_class);
+                                ret = execute_method_impl(m, runtime, m->_this_class);
                             } else {
                                 Instance *exception = exception_create_str(JVM_EXCEPTION_NOSUCHMETHOD, runtime,
                                                                            utf8_cstr(cmr->name));
@@ -3151,7 +3151,7 @@ s32 execute_method(MethodInfo *method, Runtime *pruntime, JClass *clazz) {
                                    utf8_cstr(method->name), utf8_cstr(method->descriptor));
 #endif
                         if (m) {
-                            ret = execute_method(m, runtime, m->_this_class);
+                            ret = execute_method_impl(m, runtime, m->_this_class);
                         } else {
                             Instance *exception = exception_create_str(JVM_EXCEPTION_NOSUCHMETHOD, runtime,
                                                                        utf8_cstr(cmr->name));
@@ -3184,7 +3184,7 @@ s32 execute_method(MethodInfo *method, Runtime *pruntime, JClass *clazz) {
                                    utf8_cstr(method->name), utf8_cstr(method->descriptor));
 #endif
                         if (m) {
-                            ret = execute_method(m, runtime, m->_this_class);
+                            ret = execute_method_impl(m, runtime, m->_this_class);
                         } else {
                             Instance *exception = exception_create_str(JVM_EXCEPTION_NOSUCHMETHOD, runtime,
                                                                        utf8_cstr(cmr->name));
@@ -3230,7 +3230,7 @@ s32 execute_method(MethodInfo *method, Runtime *pruntime, JClass *clazz) {
                                        utf8_cstr(method->name), utf8_cstr(method->descriptor));
 #endif
                             if (m) {
-                                ret = execute_method(m, runtime, m->_this_class);
+                                ret = execute_method_impl(m, runtime, m->_this_class);
                             } else {
                                 Instance *exception = exception_create_str(JVM_EXCEPTION_NOSUCHMETHOD, runtime,
                                                                            utf8_cstr(cmr->name));
@@ -3255,7 +3255,7 @@ s32 execute_method(MethodInfo *method, Runtime *pruntime, JClass *clazz) {
                                    utf8_cstr(method->name), utf8_cstr(method->descriptor));
 #endif
                         if (m) {
-                            ret = execute_method(m, runtime, m->_this_class);
+                            ret = execute_method_impl(m, runtime, m->_this_class);
                         } else {
                             Instance *exception = exception_create(JVM_EXCEPTION_NOSUCHMETHOD, runtime);
                             push_ref(stack, (__refer) exception);

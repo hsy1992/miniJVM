@@ -631,7 +631,7 @@ s32 jtherad_run(void *para) {
     if (java_debug)event_on_thread_start(runtime->threadInfo->jthread);
     runtime->threadInfo->thread_status = THREAD_STATUS_RUNNING;
     push_ref(runtime->stack, (__refer) jthread);
-    ret = execute_method(method, runtime, method->_this_class);
+    ret = execute_method_impl(method, runtime, method->_this_class);
     if (ret != RUNTIME_STATUS_NORMAL) {
         print_exception(runtime);
     }
@@ -992,7 +992,7 @@ void instance_init_methodtype(Instance *ins, Runtime *runtime, c8 *methodtype, R
                 push_entry(runtime->stack, &entry);
             }
         }
-        s32 ret = execute_method(mi, runtime, ins->mb.clazz);
+        s32 ret = execute_method_impl(mi, runtime, ins->mb.clazz);
         if (ret != RUNTIME_STATUS_NORMAL) {
             print_exception(runtime);
         }

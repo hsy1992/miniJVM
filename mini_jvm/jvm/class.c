@@ -256,7 +256,7 @@ void class_clinit(JClass *clazz, Runtime *runtime) {
             jvm_printf(" <clinit>  :%s\n", utf8_cstr(clazz->name));
 #endif
 
-            s32 ret = execute_method(&(p->method[i]), runtime, clazz);
+            s32 ret = execute_method_impl(&(p->method[i]), runtime, clazz);
             if (ret != RUNTIME_STATUS_NORMAL) {
                 print_exception(runtime);
             }

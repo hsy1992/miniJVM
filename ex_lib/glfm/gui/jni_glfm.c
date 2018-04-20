@@ -16,6 +16,7 @@
 
 extern const char *glfmGetResRoot();
 
+
 GlobeRefer refers;
 
 
@@ -37,13 +38,13 @@ static void _callback_error_before_init(int error, const char *description) {
 
 static void _callback_surface_error(GLFMDisplay *window, const char *description) {
     if (refers._callback_surface_error) {
-        Runtime *runtime=getRuntimeCurThread();
+        Runtime *runtime = getRuntimeCurThread();
         JniEnv *env = refers.env;
         env->push_ref(runtime->stack, refers.glfm_callback);
-        env->push_long(runtime->stack, (s64)(intptr_t)
-        window);
+        env->push_long(runtime->stack, (s64) (intptr_t) window);
         Instance *jstr = createJavaString(runtime, description);
         env->push_ref(runtime->stack, jstr);
+
         s32 ret = env->execute_method(refers._callback_surface_error, runtime, refers.glfm_callback->mb.clazz);
         if (ret) {
             env->print_exception(runtime);
@@ -53,14 +54,14 @@ static void _callback_surface_error(GLFMDisplay *window, const char *description
 
 static bool _callback_key(GLFMDisplay *window, GLFMKey key, GLFMKeyAction action, int mods) {
     if (refers._callback_key) {
-        Runtime *runtime=getRuntimeCurThread();
+        Runtime *runtime = getRuntimeCurThread();
         JniEnv *env = refers.env;
         env->push_ref(runtime->stack, refers.glfm_callback);
-        env->push_long(runtime->stack, (s64)(intptr_t)
-        window);
+        env->push_long(runtime->stack, (s64) (intptr_t) window);
         env->push_int(runtime->stack, key);
         env->push_int(runtime->stack, action);
         env->push_int(runtime->stack, mods);
+
         s32 ret = env->execute_method(refers._callback_key, runtime, refers.glfm_callback->mb.clazz);
         if (ret) {
             env->print_exception(runtime);
@@ -73,15 +74,14 @@ static bool _callback_key(GLFMDisplay *window, GLFMKey key, GLFMKeyAction action
 
 static void _callback_character(GLFMDisplay *window, const char *utf8, int modifiers) {
     if (refers._callback_character) {
-        Runtime *runtime=getRuntimeCurThread();
+        Runtime *runtime = getRuntimeCurThread();
         JniEnv *env = refers.env;
         env->push_ref(runtime->stack, refers.glfm_callback);
-        env->push_long(runtime->stack, (s64)(intptr_t)
-        window);
-        s32 slen=strlen(utf8);
+        env->push_long(runtime->stack, (s64) (intptr_t) window);
         Instance *ins = createJavaString(runtime, utf8);
         env->push_ref(runtime->stack, ins);
         env->push_int(runtime->stack, modifiers);
+
         s32 ret = env->execute_method(refers._callback_character, runtime, refers.glfm_callback->mb.clazz);
         if (ret) {
             env->print_exception(runtime);
@@ -91,11 +91,10 @@ static void _callback_character(GLFMDisplay *window, const char *utf8, int modif
 
 static void _callback_mainloop(GLFMDisplay *window, f64 frameTime) {
     if (refers._callback_mainloop) {
-        Runtime *runtime=getRuntimeCurThread();
+        Runtime *runtime = getRuntimeCurThread();
         JniEnv *env = refers.env;
         env->push_ref(runtime->stack, refers.glfm_callback);
-        env->push_long(runtime->stack, (s64)(intptr_t)
-        window);
+        env->push_long(runtime->stack, (s64) (intptr_t) window);
         env->push_double(runtime->stack, frameTime);
 
         s32 ret = env->execute_method(refers._callback_mainloop, runtime, refers.glfm_callback->mb.clazz);
@@ -107,12 +106,11 @@ static void _callback_mainloop(GLFMDisplay *window, f64 frameTime) {
 
 void _callback_memory_warning(GLFMDisplay *window) {
     if (refers._callback_memory_warning) {
-        Runtime *runtime=getRuntimeCurThread();
+        Runtime *runtime = getRuntimeCurThread();
         JniEnv *env = refers.env;
         env->push_ref(runtime->stack, refers.glfm_callback);
-        env->push_long(runtime->stack, (s64)(intptr_t)
-        window);
-
+        env->push_long(runtime->stack, (s64) (intptr_t)
+                window);
         s32 ret = env->execute_method(refers._callback_memory_warning, runtime, refers.glfm_callback->mb.clazz);
         if (ret) {
             env->print_exception(runtime);
@@ -122,18 +120,17 @@ void _callback_memory_warning(GLFMDisplay *window) {
 
 void _callback_keyboard_visible(GLFMDisplay *window, bool visible, f64 x, f64 y, f64 w, f64 h) {
     if (refers._callback_keyboard_visible) {
-        Runtime *runtime=getRuntimeCurThread();
+        Runtime *runtime = getRuntimeCurThread();
         JniEnv *env = refers.env;
         env->push_ref(runtime->stack, refers.glfm_callback);
-        env->push_long(runtime->stack, (s64)(intptr_t)
-        window);
+        env->push_long(runtime->stack, (s64) (intptr_t) window);
         env->push_int(runtime->stack, visible);
         env->push_double(runtime->stack, x);
         env->push_double(runtime->stack, y);
         env->push_double(runtime->stack, w);
         env->push_double(runtime->stack, h);
-        s32 ret = env->execute_method(refers._callback_keyboard_visible, runtime,
-                                      refers.glfm_callback->mb.clazz);
+
+        s32 ret = env->execute_method(refers._callback_keyboard_visible, runtime, refers.glfm_callback->mb.clazz);
         if (ret) {
             env->print_exception(runtime);
         }
@@ -142,15 +139,16 @@ void _callback_keyboard_visible(GLFMDisplay *window, bool visible, f64 x, f64 y,
 
 bool _callback_touch(GLFMDisplay *window, s32 touch, GLFMTouchPhase phase, f64 x, f64 y) {
     if (refers._callback_touch) {
-        Runtime *runtime=getRuntimeCurThread();
+        Runtime *runtime = getRuntimeCurThread();
         JniEnv *env = refers.env;
         env->push_ref(runtime->stack, refers.glfm_callback);
-        env->push_long(runtime->stack, (s64)(intptr_t)
-        window);
+        env->push_long(runtime->stack, (s64) (intptr_t)
+                window);
         env->push_int(runtime->stack, touch);
         env->push_int(runtime->stack, phase);
         env->push_double(runtime->stack, x);
         env->push_double(runtime->stack, y);
+
         s32 ret = env->execute_method(refers._callback_touch, runtime, refers.glfm_callback->mb.clazz);
         if (ret) {
             env->print_exception(runtime);
@@ -164,13 +162,13 @@ bool _callback_touch(GLFMDisplay *window, s32 touch, GLFMTouchPhase phase, f64 x
 
 void _callback_surface_resized(GLFMDisplay *window, s32 w, s32 h) {
     if (refers._callback_surface_resized) {
-        Runtime *runtime=getRuntimeCurThread();
+        Runtime *runtime = getRuntimeCurThread();
         JniEnv *env = refers.env;
         env->push_ref(runtime->stack, refers.glfm_callback);
-        env->push_long(runtime->stack, (s64)(intptr_t)
-        window);
+        env->push_long(runtime->stack, (s64) (intptr_t) window);
         env->push_int(runtime->stack, w);
         env->push_int(runtime->stack, h);
+
         s32 ret = env->execute_method(refers._callback_surface_resized, runtime, refers.glfm_callback->mb.clazz);
         if (ret) {
             env->print_exception(runtime);
@@ -180,13 +178,12 @@ void _callback_surface_resized(GLFMDisplay *window, s32 w, s32 h) {
 
 void _callback_surface_destroyed(GLFMDisplay *window) {
     if (refers._callback_surface_destroyed) {
-        Runtime *runtime=getRuntimeCurThread();
+        Runtime *runtime = getRuntimeCurThread();
         JniEnv *env = refers.env;
         env->push_ref(runtime->stack, refers.glfm_callback);
-        env->push_long(runtime->stack, (s64)(intptr_t)
-        window);
-        s32 ret = env->execute_method(refers._callback_surface_destroyed, runtime,
-                                      refers.glfm_callback->mb.clazz);
+        env->push_long(runtime->stack, (s64) (intptr_t) window);
+
+        s32 ret = env->execute_method(refers._callback_surface_destroyed, runtime, refers.glfm_callback->mb.clazz);
         if (ret) {
             env->print_exception(runtime);
         }
@@ -195,12 +192,12 @@ void _callback_surface_destroyed(GLFMDisplay *window) {
 
 void _callback_app_focus(GLFMDisplay *window, bool focus) {
     if (refers._callback_app_focus) {
-        Runtime *runtime=getRuntimeCurThread();
+        Runtime *runtime = getRuntimeCurThread();
         JniEnv *env = refers.env;
         env->push_ref(runtime->stack, refers.glfm_callback);
-        env->push_long(runtime->stack, (s64)(intptr_t)
-        window);
+        env->push_long(runtime->stack, (s64) (intptr_t) window);
         env->push_int(runtime->stack, focus);
+
         s32 ret = env->execute_method(refers._callback_app_focus, runtime, refers.glfm_callback->mb.clazz);
         if (ret) {
             env->print_exception(runtime);
@@ -210,13 +207,13 @@ void _callback_app_focus(GLFMDisplay *window, bool focus) {
 
 void _callback_surface_created(GLFMDisplay *window, s32 w, s32 h) {
     if (refers._callback_surface_created) {
-        Runtime *runtime=getRuntimeCurThread();
+        Runtime *runtime = getRuntimeCurThread();
         JniEnv *env = refers.env;
         env->push_ref(runtime->stack, refers.glfm_callback);
-        env->push_long(runtime->stack, (s64)(intptr_t)
-        window);
+        env->push_long(runtime->stack, (s64) (intptr_t) window);
         env->push_int(runtime->stack, w);
         env->push_int(runtime->stack, h);
+
         s32 ret = env->execute_method(refers._callback_surface_created, runtime, refers.glfm_callback->mb.clazz);
         if (ret) {
             env->print_exception(runtime);
@@ -229,8 +226,7 @@ void _callback_surface_created(GLFMDisplay *window, s32 w, s32 h) {
 int org_mini_glfm_Glfm_glfmSetUserData(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
-    GLFMDisplay *window = (__refer)(intptr_t)
-    env->localvar_getLong_2slot(runtime, pos);
+    GLFMDisplay *window = (__refer) (intptr_t) env->localvar_getLong_2slot(runtime, pos);
     pos += 2;
     refers.glfm_callback = env->localvar_getRefer(runtime, pos++);
 
@@ -260,7 +256,8 @@ int org_mini_glfm_Glfm_glfmSetUserData(Runtime *runtime, JClass *clazz) {
         Utf8String *name = env->utf8_create_part_c(name_s, 0, strlen(name_s));
         Utf8String *type = env->utf8_create_part_c(type_s, 0, strlen(type_s));
         refers._callback_key =
-                env->find_methodInfo_by_name(refers.glfm_callback->mb.clazz->name, name, type, runtime);
+                env->find_methodInfo_by_name(refers.glfm_callback->mb.clazz->name, name, type,
+                                             runtime);
         env->utf8_destory(name);
         env->utf8_destory(type);
     }
@@ -270,7 +267,8 @@ int org_mini_glfm_Glfm_glfmSetUserData(Runtime *runtime, JClass *clazz) {
         Utf8String *name = env->utf8_create_part_c(name_s, 0, strlen(name_s));
         Utf8String *type = env->utf8_create_part_c(type_s, 0, strlen(type_s));
         refers._callback_character =
-        env->find_methodInfo_by_name(refers.glfm_callback->mb.clazz->name, name, type, runtime);
+                env->find_methodInfo_by_name(refers.glfm_callback->mb.clazz->name, name, type,
+                                             runtime);
         env->utf8_destory(name);
         env->utf8_destory(type);
     }
@@ -280,7 +278,8 @@ int org_mini_glfm_Glfm_glfmSetUserData(Runtime *runtime, JClass *clazz) {
         Utf8String *name = env->utf8_create_part_c(name_s, 0, strlen(name_s));
         Utf8String *type = env->utf8_create_part_c(type_s, 0, strlen(type_s));
         refers._callback_keyboard_visible =
-        env->find_methodInfo_by_name(refers.glfm_callback->mb.clazz->name, name, type, runtime);
+                env->find_methodInfo_by_name(refers.glfm_callback->mb.clazz->name, name, type,
+                                             runtime);
         env->utf8_destory(name);
         env->utf8_destory(type);
     }
@@ -290,7 +289,8 @@ int org_mini_glfm_Glfm_glfmSetUserData(Runtime *runtime, JClass *clazz) {
         Utf8String *name = env->utf8_create_part_c(name_s, 0, strlen(name_s));
         Utf8String *type = env->utf8_create_part_c(type_s, 0, strlen(type_s));
         refers._callback_mainloop =
-                env->find_methodInfo_by_name(refers.glfm_callback->mb.clazz->name, name, type, runtime);
+                env->find_methodInfo_by_name(refers.glfm_callback->mb.clazz->name, name, type,
+                                             runtime);
         env->utf8_destory(name);
         env->utf8_destory(type);
     }
@@ -300,7 +300,8 @@ int org_mini_glfm_Glfm_glfmSetUserData(Runtime *runtime, JClass *clazz) {
         Utf8String *name = env->utf8_create_part_c(name_s, 0, strlen(name_s));
         Utf8String *type = env->utf8_create_part_c(type_s, 0, strlen(type_s));
         refers._callback_memory_warning =
-                env->find_methodInfo_by_name(refers.glfm_callback->mb.clazz->name, name, type, runtime);
+                env->find_methodInfo_by_name(refers.glfm_callback->mb.clazz->name, name, type,
+                                             runtime);
         env->utf8_destory(name);
         env->utf8_destory(type);
     }
@@ -311,18 +312,20 @@ int org_mini_glfm_Glfm_glfmSetUserData(Runtime *runtime, JClass *clazz) {
         Utf8String *name = env->utf8_create_part_c(name_s, 0, strlen(name_s));
         Utf8String *type = env->utf8_create_part_c(type_s, 0, strlen(type_s));
         refers._callback_touch =
-                env->find_methodInfo_by_name(refers.glfm_callback->mb.clazz->name, name, type, runtime);
+                env->find_methodInfo_by_name(refers.glfm_callback->mb.clazz->name, name, type,
+                                             runtime);
         env->utf8_destory(name);
         env->utf8_destory(type);
     }
     {
-        
+
         name_s = "onSurfaceError";
         type_s = "(JLjava/lang/String;)V";
         Utf8String *name = env->utf8_create_part_c(name_s, 0, strlen(name_s));
         Utf8String *type = env->utf8_create_part_c(type_s, 0, strlen(type_s));
         refers._callback_surface_error =
-        env->find_methodInfo_by_name(refers.glfm_callback->mb.clazz->name, name, type, runtime);
+                env->find_methodInfo_by_name(refers.glfm_callback->mb.clazz->name, name, type,
+                                             runtime);
         env->utf8_destory(name);
         env->utf8_destory(type);
     }
@@ -333,7 +336,8 @@ int org_mini_glfm_Glfm_glfmSetUserData(Runtime *runtime, JClass *clazz) {
         Utf8String *name = env->utf8_create_part_c(name_s, 0, strlen(name_s));
         Utf8String *type = env->utf8_create_part_c(type_s, 0, strlen(type_s));
         refers._callback_surface_created =
-        env->find_methodInfo_by_name(refers.glfm_callback->mb.clazz->name, name, type, runtime);
+                env->find_methodInfo_by_name(refers.glfm_callback->mb.clazz->name, name, type,
+                                             runtime);
         env->utf8_destory(name);
         env->utf8_destory(type);
     }
@@ -344,7 +348,8 @@ int org_mini_glfm_Glfm_glfmSetUserData(Runtime *runtime, JClass *clazz) {
         Utf8String *name = env->utf8_create_part_c(name_s, 0, strlen(name_s));
         Utf8String *type = env->utf8_create_part_c(type_s, 0, strlen(type_s));
         refers._callback_surface_resized =
-                env->find_methodInfo_by_name(refers.glfm_callback->mb.clazz->name, name, type, runtime);
+                env->find_methodInfo_by_name(refers.glfm_callback->mb.clazz->name, name, type,
+                                             runtime);
         env->utf8_destory(name);
         env->utf8_destory(type);
     }
@@ -354,7 +359,8 @@ int org_mini_glfm_Glfm_glfmSetUserData(Runtime *runtime, JClass *clazz) {
         Utf8String *name = env->utf8_create_part_c(name_s, 0, strlen(name_s));
         Utf8String *type = env->utf8_create_part_c(type_s, 0, strlen(type_s));
         refers._callback_surface_destroyed =
-                env->find_methodInfo_by_name(refers.glfm_callback->mb.clazz->name, name, type, runtime);
+                env->find_methodInfo_by_name(refers.glfm_callback->mb.clazz->name, name, type,
+                                             runtime);
         env->utf8_destory(name);
         env->utf8_destory(type);
     }
@@ -365,7 +371,8 @@ int org_mini_glfm_Glfm_glfmSetUserData(Runtime *runtime, JClass *clazz) {
         Utf8String *name = env->utf8_create_part_c(name_s, 0, strlen(name_s));
         Utf8String *type = env->utf8_create_part_c(type_s, 0, strlen(type_s));
         refers._callback_app_focus =
-                env->find_methodInfo_by_name(refers.glfm_callback->mb.clazz->name, name, type, runtime);
+                env->find_methodInfo_by_name(refers.glfm_callback->mb.clazz->name, name, type,
+                                             runtime);
         env->utf8_destory(name);
         env->utf8_destory(type);
     }
@@ -377,8 +384,8 @@ int org_mini_glfm_Glfm_glfmSetUserData(Runtime *runtime, JClass *clazz) {
 int org_mini_glfm_Glfm_glfmSetDisplayConfig(Runtime *runtime, JClass *clazz) {//
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
-    GLFMDisplay *window = (__refer)(intptr_t)
-    env->localvar_getLong_2slot(runtime, pos);
+    GLFMDisplay *window = (__refer) (intptr_t)
+            env->localvar_getLong_2slot(runtime, pos);
     pos += 2;
     s32 preferredAPI = env->localvar_getInt(runtime, pos++);
     s32 colorFormat = env->localvar_getInt(runtime, pos++);
@@ -386,7 +393,8 @@ int org_mini_glfm_Glfm_glfmSetDisplayConfig(Runtime *runtime, JClass *clazz) {//
     s32 stencilFormat = env->localvar_getInt(runtime, pos++);
     s32 multisample = env->localvar_getInt(runtime, pos++);
 
-    glfmSetDisplayConfig(window, preferredAPI, colorFormat, depthFormat, stencilFormat, multisample);
+    glfmSetDisplayConfig(window, preferredAPI, colorFormat, depthFormat, stencilFormat,
+                         multisample);
 
     return 0;
 }
@@ -394,8 +402,8 @@ int org_mini_glfm_Glfm_glfmSetDisplayConfig(Runtime *runtime, JClass *clazz) {//
 int org_mini_glfm_Glfm_glfmSetUserInterfaceOrientation(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
-    GLFMDisplay *window = (__refer)(intptr_t)
-    env->localvar_getLong_2slot(runtime, pos);
+    GLFMDisplay *window = (__refer) (intptr_t)
+            env->localvar_getLong_2slot(runtime, pos);
     pos += 2;
     s32 allowedOrientations = env->localvar_getInt(runtime, pos++);
     glfmSetUserInterfaceOrientation(window, allowedOrientations);
@@ -406,8 +414,8 @@ int org_mini_glfm_Glfm_glfmSetUserInterfaceOrientation(Runtime *runtime, JClass 
 int org_mini_glfm_Glfm_glfmGetUserInterfaceOrientation(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
-    GLFMDisplay *window = (__refer)(intptr_t)
-    env->localvar_getLong_2slot(runtime, pos);
+    GLFMDisplay *window = (__refer) (intptr_t)
+            env->localvar_getLong_2slot(runtime, pos);
     pos += 2;
     env->push_ref(runtime->stack, glfmGetUserInterfaceOrientation(window));
     return 0;
@@ -417,8 +425,8 @@ int org_mini_glfm_Glfm_glfmGetUserInterfaceOrientation(Runtime *runtime, JClass 
 int org_mini_glfm_Glfm_glfmSetMultitouchEnabled(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
-    GLFMDisplay *window = (__refer)(intptr_t)
-    env->localvar_getLong_2slot(runtime, pos);
+    GLFMDisplay *window = (__refer) (intptr_t)
+            env->localvar_getLong_2slot(runtime, pos);
     pos += 2;
     s32 multitouchEnabled = env->localvar_getInt(runtime, pos++);
     glfmSetMultitouchEnabled(window, multitouchEnabled);
@@ -429,8 +437,8 @@ int org_mini_glfm_Glfm_glfmSetMultitouchEnabled(Runtime *runtime, JClass *clazz)
 int org_mini_glfm_Glfm_glfmGetMultitouchEnabled(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
-    GLFMDisplay *window = (__refer)(intptr_t)
-    env->localvar_getLong_2slot(runtime, pos);
+    GLFMDisplay *window = (__refer) (intptr_t)
+            env->localvar_getLong_2slot(runtime, pos);
     pos += 2;
     env->push_int(runtime->stack, glfmGetMultitouchEnabled(window));
     return 0;
@@ -440,8 +448,8 @@ int org_mini_glfm_Glfm_glfmGetMultitouchEnabled(Runtime *runtime, JClass *clazz)
 int org_mini_glfm_Glfm_glfmGetDisplayWidth(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
-    GLFMDisplay *window = (__refer)(intptr_t)
-    env->localvar_getLong_2slot(runtime, pos);
+    GLFMDisplay *window = (__refer) (intptr_t)
+            env->localvar_getLong_2slot(runtime, pos);
     s32 w, h;
     glfmGetDisplaySize(window, &w, &h);
     env->push_int(runtime->stack, w);
@@ -451,8 +459,8 @@ int org_mini_glfm_Glfm_glfmGetDisplayWidth(Runtime *runtime, JClass *clazz) {
 int org_mini_glfm_Glfm_glfmGetDisplayHeight(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
-    GLFMDisplay *window = (__refer)(intptr_t)
-    env->localvar_getLong_2slot(runtime, pos);
+    GLFMDisplay *window = (__refer) (intptr_t)
+            env->localvar_getLong_2slot(runtime, pos);
     s32 w, h;
     glfmGetDisplaySize(window, &w, &h);
     env->push_int(runtime->stack, h);
@@ -462,8 +470,8 @@ int org_mini_glfm_Glfm_glfmGetDisplayHeight(Runtime *runtime, JClass *clazz) {
 int org_mini_glfm_Glfm_glfmGetDisplayScale(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
-    GLFMDisplay *window = (__refer)(intptr_t)
-    env->localvar_getLong_2slot(runtime, pos);
+    GLFMDisplay *window = (__refer) (intptr_t)
+            env->localvar_getLong_2slot(runtime, pos);
     env->push_double(runtime->stack, glfmGetDisplayScale(window));
     return 0;
 }
@@ -471,8 +479,8 @@ int org_mini_glfm_Glfm_glfmGetDisplayScale(Runtime *runtime, JClass *clazz) {
 int org_mini_glfm_Glfm_glfmGetDisplayChromeInsets(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
-    GLFMDisplay *window = (__refer)(intptr_t)
-    env->localvar_getLong_2slot(runtime, pos);
+    GLFMDisplay *window = (__refer) (intptr_t)
+            env->localvar_getLong_2slot(runtime, pos);
     Instance *r = env->localvar_getRefer(runtime, pos++);
     if (r != NULL && r->arr_length >= 4) {
         glfmGetDisplayChromeInsets(window, &((f64 *) r->arr_body)[0], &((f64 *) r->arr_body)[1],
@@ -484,8 +492,8 @@ int org_mini_glfm_Glfm_glfmGetDisplayChromeInsets(Runtime *runtime, JClass *claz
 int org_mini_glfm_Glfm_glfmGetDisplayChrome(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
-    GLFMDisplay *window = (__refer)(intptr_t)
-    env->localvar_getLong_2slot(runtime, pos);
+    GLFMDisplay *window = (__refer) (intptr_t)
+            env->localvar_getLong_2slot(runtime, pos);
     env->push_int(runtime->stack, glfmGetDisplayChrome(window));
     return 0;
 }
@@ -494,8 +502,8 @@ int org_mini_glfm_Glfm_glfmGetDisplayChrome(Runtime *runtime, JClass *clazz) {
 int org_mini_glfm_Glfm_glfmSetDisplayChrome(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
-    GLFMDisplay *window = (__refer)(intptr_t)
-    env->localvar_getLong_2slot(runtime, pos);
+    GLFMDisplay *window = (__refer) (intptr_t)
+            env->localvar_getLong_2slot(runtime, pos);
     pos += 2;
     s32 uiChrome = env->localvar_getInt(runtime, pos++);
     glfmSetDisplayChrome(window, uiChrome);
@@ -506,8 +514,8 @@ int org_mini_glfm_Glfm_glfmSetDisplayChrome(Runtime *runtime, JClass *clazz) {
 int org_mini_glfm_Glfm_glfmGetRenderingAPI(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
-    GLFMDisplay *window = (__refer)(intptr_t)
-    env->localvar_getLong_2slot(runtime, pos);
+    GLFMDisplay *window = (__refer) (intptr_t)
+            env->localvar_getLong_2slot(runtime, pos);
     pos += 2;
     env->push_int(runtime->stack, glfmGetRenderingAPI(window));
     return 0;
@@ -517,8 +525,8 @@ int org_mini_glfm_Glfm_glfmGetRenderingAPI(Runtime *runtime, JClass *clazz) {
 int org_mini_glfm_Glfm_glfmHasTouch(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
-    GLFMDisplay *window = (__refer)(intptr_t)
-    env->localvar_getLong_2slot(runtime, pos);
+    GLFMDisplay *window = (__refer) (intptr_t)
+            env->localvar_getLong_2slot(runtime, pos);
     pos += 2;
     env->push_int(runtime->stack, glfmHasTouch(window));
     return 0;
@@ -528,8 +536,8 @@ int org_mini_glfm_Glfm_glfmHasTouch(Runtime *runtime, JClass *clazz) {
 int org_mini_glfm_Glfm_glfmSetMouseCursor(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
-    GLFMDisplay *window = (__refer)(intptr_t)
-    env->localvar_getLong_2slot(runtime, pos);
+    GLFMDisplay *window = (__refer) (intptr_t)
+            env->localvar_getLong_2slot(runtime, pos);
     pos += 2;
     s32 mouseCursor = env->localvar_getInt(runtime, pos++);
     glfmSetMouseCursor(window, mouseCursor);
@@ -552,8 +560,8 @@ int org_mini_glfm_Glfm_glfmExtensionSupported(Runtime *runtime, JClass *clazz) {
 int org_mini_glfm_Glfm_glfmIsKeyboardVisible(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
-    GLFMDisplay *window = (__refer)(intptr_t)
-    env->localvar_getLong_2slot(runtime, pos);
+    GLFMDisplay *window = (__refer) (intptr_t)
+            env->localvar_getLong_2slot(runtime, pos);
     env->push_int(runtime->stack, glfmIsKeyboardVisible(window));
     return 0;
 }
@@ -562,8 +570,8 @@ int org_mini_glfm_Glfm_glfmIsKeyboardVisible(Runtime *runtime, JClass *clazz) {
 int org_mini_glfm_Glfm_glfmSetKeyboardVisible(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
-    GLFMDisplay *window = (__refer)(intptr_t)
-    env->localvar_getLong_2slot(runtime, pos);
+    GLFMDisplay *window = (__refer) (intptr_t)
+            env->localvar_getLong_2slot(runtime, pos);
     pos += 2;
     s32 visible = env->localvar_getInt(runtime, pos++);
     glfmSetKeyboardVisible(window, visible);
@@ -830,7 +838,8 @@ int org_mini_glfm_utils_Gutil_mat4x4_from_vec3_mul_outer(Runtime *runtime, JClas
     Instance *r = env->localvar_getRefer(runtime, pos++);
     Instance *m1 = env->localvar_getRefer(runtime, pos++);
     Instance *m2 = env->localvar_getRefer(runtime, pos++);
-    mat4x4_from_vec3_mul_outer((vec4 *) r->arr_body, (GLfloat *) m1->arr_body, (GLfloat *) m2->arr_body);
+    mat4x4_from_vec3_mul_outer((vec4 *) r->arr_body, (GLfloat *) m1->arr_body,
+                               (GLfloat *) m2->arr_body);
     env->push_ref(runtime->stack, r);
     return 0;
 }
