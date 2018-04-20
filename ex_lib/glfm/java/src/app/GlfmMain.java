@@ -95,6 +95,7 @@ class MyInit implements GInitExtension {
         GFrame gframe = new GFrame("测"/*"demo"*/, 50, 50, 300, 500);
         init(gframe.getPanel(), vg);
         form.add(gframe);
+        gframe.align(GGraphics.HCENTER|GGraphics.VCENTER);
     }
 
     public void init(GPanel parent, final long vg) {

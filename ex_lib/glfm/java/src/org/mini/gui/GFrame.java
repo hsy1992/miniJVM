@@ -112,6 +112,23 @@ public class GFrame extends GContainer {
         return (GForm) parent;
     }
 
+    public void align(int align_mod) {
+        if ((align_mod & GGraphics.LEFT) != 0) {
+            boundle[LEFT] = 0;
+        } else if ((align_mod & GGraphics.RIGHT) != 0) {
+            boundle[LEFT] = getForm().getDeviceWidth() - boundle[WIDTH];
+        } else if ((align_mod & GGraphics.HCENTER) != 0) {
+            boundle[LEFT] = (getForm().getDeviceWidth() - boundle[WIDTH]) / 2;
+        }
+        if ((align_mod & GGraphics.TOP) != 0) {
+            boundle[TOP] = 0;
+        } else if ((align_mod & GGraphics.BOTTOM) != 0) {
+            boundle[TOP] = getForm().getDeviceHeight() - boundle[HEIGHT];
+        } else if ((align_mod & GGraphics.HCENTER) != 0) {
+            boundle[TOP] = (getForm().getDeviceHeight() - boundle[HEIGHT]) / 2;
+        }
+    }
+
     @Override
     public boolean update(long vg) {
         Nanovg.nvgResetScissor(vg);
@@ -238,7 +255,6 @@ public class GFrame extends GContainer {
             panel.setFocus(null);
         }
     }
-
 
     @Override
     public void scrollEvent(double scrollX, double scrollY, int x, int y) {

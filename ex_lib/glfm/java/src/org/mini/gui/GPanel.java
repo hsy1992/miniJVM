@@ -12,7 +12,7 @@ package org.mini.gui;
 public class GPanel extends GContainer{
         GInitExtension extinit;
 
-    public void init() {
+    void init() {
         if(extinit!=null){
             extinit.onInit(this);
         }

@@ -81,8 +81,16 @@ public class GForm extends GPanel {
         return win;
     }
 
+    public int getDeviceWidth() {
+        return (int) winWidth;
+    }
+
+    public int getDeviceHeight() {
+        return (int) winHeight;
+    }
+
     @Override
-    public void init() {
+    void init() {
 
         if (0 == GL.gladLoadGLES2Loader()) {
             System.out.println("glad something went wrong!\n");

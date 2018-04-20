@@ -39,7 +39,7 @@ abstract public class GObject {
 
     boolean visable = true;
 
-    protected void init() {
+    void init() {
 
     }
 
