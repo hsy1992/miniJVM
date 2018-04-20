@@ -744,8 +744,9 @@ s32 org_mini_fs_InnerFile_available0(Runtime *runtime, JClass *clazz) {
 
     s32 cur = 0, end = 0;
     if (fd) {
-        cur = fseek(fd, (long) 0, SEEK_CUR);
-        end = fseek(fd, (long) 0, SEEK_END);
+        cur = ftell(fd);
+        fseek(fd, (long) 0, SEEK_END);
+        end = ftell(fd);
         fseek(fd, (long) cur, SEEK_SET);
     }
     push_int(runtime->stack, end - cur);
