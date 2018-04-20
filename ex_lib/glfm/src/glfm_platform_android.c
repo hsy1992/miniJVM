@@ -1041,6 +1041,9 @@ static int32_t _glfmOnInputEvent(struct android_app *app, AInputEvent *event) {
                     case AKEYCODE_BACK:
                         key = GLFMKeyNavBack;
                         break;
+                    case AKEYCODE_DEL:
+                        key = GLFMKeyBackspace;
+                        break;
                     case AKEYCODE_MENU:
                         key = GLFMKeyNavMenu;
                         break;
@@ -1174,9 +1177,7 @@ static int32_t _glfmOnInputEvent(struct android_app *app, AInputEvent *event) {
 jobject copyAssets(JNIEnv *env, jobject jassetMgr, char *cpath) {
     //java.lang.String[] files=mgr.list("");
     jstring path = (*env)->NewString(env, cpath, strlen(cpath));
-    jobjectArray stringArray = _glfmCallJavaMethodWithArgs(env, jassetMgr, "list",
-                                                           "(Ljava/lang/String;)[Ljava/lang/String;",
-                                                           Object, path);
+    jobjectArray stringArray = _glfmCallJavaMethodWithArgs(env, jassetMgr, "list", "(Ljava/lang/String;)[Ljava/lang/String;", Object, path);
     int stringCount = (*env)->GetArrayLength(env, stringArray);
 
     AAssetManager *mgr = glfmAndroidGetActivity()->assetManager;
@@ -1197,10 +1198,29 @@ jobject copyAssets(JNIEnv *env, jobject jassetMgr, char *cpath) {
         strcat(expath, assetpath);
 
         // Don't forget to call `ReleaseStringUTFChars` when you're done.
+        (*env)->ReleaseStringUTFChars(env, string, rawString);
 
-        if (access(expath, 0) == -1) {//file not exists
-            AAsset *asset = AAssetManager_open(mgr, assetpath, AASSET_MODE_UNKNOWN);
-            if (asset) {
+        int fsize = -1;
+        if (access(expath, F_OK) == 0) {
+            FILE *fp;
+            fp = fopen(expath, "r"); //C.zip in current directory, I use it as a test
+            if (fp) {
+                fseek(fp, 0, SEEK_END);
+                fsize = ftell(fp);
+                fclose(fp);
+            }
+//            int fd;
+//            struct stat buf;
+//            fd = fileno(fp);
+//            int ret = fstat(fd, &buf);
+//            if (ret == 0) {
+//                long modify_time = buf.st_mtime;
+//            }
+        }
+
+        AAsset *asset = AAssetManager_open(mgr, assetpath, AASSET_MODE_UNKNOWN);
+        if (asset) {
+            if (AAsset_getLength(asset) != fsize) {//TODO file size not equire , need md5 match
                 LOG_DEBUG("assets file =%s\n", assetpath);
 
                 char buf[BUFSIZ];
@@ -1209,15 +1229,16 @@ jobject copyAssets(JNIEnv *env, jobject jassetMgr, char *cpath) {
                 while ((nb_read = AAsset_read(asset, buf, BUFSIZ)) > 0)
                     fwrite(buf, nb_read, 1, outf);
                 fclose(outf);
-                AAsset_close(asset);
-            } else {
-                LOG_DEBUG("assets dir =%s\n", assetpath);
-                AAssetDir *assetDir = AAssetManager_openDir(mgr, assetpath);
-                mkdir(expath, S_IRWXU | S_IRWXG);
-                copyAssets(env, jassetMgr, assetpath);
-                AAssetDir_close(assetDir);
             }
+            AAsset_close(asset);
+        } else {
+            LOG_DEBUG("assets dir =%s\n", assetpath);
+            AAssetDir *assetDir = AAssetManager_openDir(mgr, assetpath);
+            mkdir(expath, S_IRWXU | S_IRWXG);
+            copyAssets(env, jassetMgr, assetpath);
+            AAssetDir_close(assetDir);
         }
+
     }
 }
 
@@ -1232,12 +1253,10 @@ static int copyFile2ExternData(struct android_app *app) {
 
     //String[] listFiles = context.getAssets().list(rootDirFullPath);
     JNIEnv *env = ((GLFMPlatformData *) app->userData)->jniEnv;
-    jobject context = _glfmCallJavaMethod(env, app->activity->clazz, "getApplicationContext",
-                                          "()Landroid/content/Context;", Object);
+    jobject context = _glfmCallJavaMethod(env, app->activity->clazz, "getApplicationContext", "()Landroid/content/Context;", Object);
 
     //android.content.res.AssetManager mgr=context.getAssets();
-    jobject amgr = _glfmCallJavaMethod(env, context, "getAssets",
-                                       "()Landroid/content/res/AssetManager;", Object);
+    jobject amgr = _glfmCallJavaMethod(env, context, "getAssets", "()Landroid/content/res/AssetManager;", Object);
     copyAssets(env, amgr, "");
     return 0;
 }
@@ -1292,6 +1311,7 @@ void android_main(struct android_app *app) {
         // This should call glfmInit()
         platformData->display = calloc(1, sizeof(GLFMDisplay));
         platformData->display->platformData = platformData;
+        copyFile2ExternData(app);
         glfmMain(platformData->display);
     }
 
@@ -1313,7 +1333,7 @@ void android_main(struct android_app *app) {
                                    AWINDOW_FLAG_FULLSCREEN);
     _glfmSetFullScreen(app, platformData->display->uiChrome);
 
-    copyFile2ExternData(app);
+
 
     // Run the main loop
     while (1) {

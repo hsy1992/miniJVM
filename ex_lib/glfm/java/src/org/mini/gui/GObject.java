@@ -172,4 +172,13 @@ abstract public class GObject {
         }
         return null;
     }
+    public GFrame getFrame() {
+        GObject go = this;
+        while ((go = go.parent) != null) {
+            if (go instanceof GFrame) {
+                return (GFrame) go;
+            }
+        }
+        return null;
+    }
 }
