@@ -251,15 +251,6 @@ public class GForm extends GPanel {
             return true;
         }
 
-//
-//        @Override
-//        public void cursorPos(long window, int x, int y) {
-//            win = window;
-//            mouseX = x;
-//            mouseY = y;
-//            GForm.this.cursorPosEvent(x, y);
-//        }
-//
         @Override
         public void onSurfaceDestroyed(long window) {
 

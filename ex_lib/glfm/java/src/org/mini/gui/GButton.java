@@ -60,10 +60,10 @@ public class GButton extends GObject {
                 bt_pressed = true;
                 parent.setFocus(this);
             } else if (phase == Glfm.GLFMTouchPhaseEnded) {
-                bt_pressed = false;
-                if (actionListener != null) {
+                if (actionListener != null && bt_pressed) {
                     actionListener.action();
                 }
+                bt_pressed = false;
             } else if (!isInBoundle(boundle, x - parent.getX(), y - parent.getY())) {
                 bt_pressed = false;
             }

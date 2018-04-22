@@ -132,6 +132,22 @@ void threadlist_add(Runtime *r) {
     arraylist_push_back(thread_list, r);
 }
 
+s32 threadlist_count_none_daemon() {
+    spin_lock(&thread_list->spinlock);
+    s32 count = 0;
+    s32 i;
+    for (i = 0; i < thread_list->length; i++) {
+        Runtime *r = (Runtime *) arraylist_get_value_unsafe(thread_list, i);
+        Instance *ins = r->threadInfo->jthread;
+        s32 daemon = jthread_get_daemon_value(ins);
+        if (!daemon) {
+            count++;
+        }
+    }
+    spin_unlock(&thread_list->spinlock);
+    return count;
+}
+
 /**
  * 把utf字符串转为 java unicode 双字节串
  * @param ustr in
@@ -666,6 +682,13 @@ void jthread_set_stackframe_value(Instance *ins, __refer val) {
     setFieldLong(ptr, (s64) (intptr_t) val);
 }
 
+s32 jthread_get_daemon_value(Instance *ins) {
+    c8 *ptr = getFieldPtr_byName_c(ins, STR_CLASS_JAVA_LANG_THREAD, "daemon", "Z");
+    if (ptr) {
+        return getFieldInt(ptr);
+    }
+    return 0;
+}
 
 void jthreadlock_create(MemoryBlock *mb) {
     garbage_thread_lock();

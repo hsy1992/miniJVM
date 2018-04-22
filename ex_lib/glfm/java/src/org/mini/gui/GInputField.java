@@ -83,6 +83,15 @@ public class GInputField extends GObject {
             }
         }
     }
+    @Override
+    public void onFocus() {
+        Glfm.glfmSetKeyboardVisible(getForm().getWinContext(), true);
+    }
+
+    @Override
+    public void onUnFocus() {
+        Glfm.glfmSetKeyboardVisible(getForm().getWinContext(), false);
+    }
 
     /**
      *

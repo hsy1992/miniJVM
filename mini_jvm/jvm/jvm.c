@@ -213,7 +213,9 @@ void jvm_init(c8 *p_classpath, StaticLibRegFunc regFunc) {
 }
 
 void jvm_destroy(StaticLibRegFunc unRegFunc) {
-
+    while (threadlist_count_none_daemon() > 0) {//wait for other thread over ,
+        threadSleep(100);
+    }
     jdwp_stop_server();
     //
     garbage_collector_destory();
@@ -306,12 +308,7 @@ s32 call_method_main(c8 *p_mainclass, c8 *p_methodname, c8 *p_methodtype, ArrayL
             if (ret != RUNTIME_STATUS_NORMAL) {
                 print_exception(runtime);
             }
-            jthread_block_enter(runtime);
-            while ((thread_list->length) > 1) {//wait for other thread over ,
-                check_suspend_and_pause(runtime);
-                threadSleep(100);
-            }
-            jthread_block_exit(runtime);
+
             jvm_printf(
                     "================================= main  end  ================================\n");
             jvm_printf("spent %lld\n", (currentTimeMillis() - start));

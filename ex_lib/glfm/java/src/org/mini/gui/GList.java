@@ -39,7 +39,6 @@ import static org.mini.nanovg.Nanovg.nvgTextAlign;
 import static org.mini.nanovg.Nanovg.nvgTextJni;
 import static org.mini.nanovg.Nanovg.nvgTranslate;
 
-
 /**
  *
  * @author gust
@@ -100,17 +99,22 @@ public class GList extends GContainer {
         curIndex = i;
     }
 
+    int startX, startY;
+
     @Override
     public void touchEvent(int phase, int x, int y) {
         int rx = (int) (x - parent.getX());
         int ry = (int) (y - parent.getY());
         if (isInBoundle(boundle, rx, ry)) {
-            if (phase==Glfm.GLFMTouchPhaseEnded) {
+            if (phase == Glfm.GLFMTouchPhaseBegan) {
+                startX = x;
+                startY = y;
+            } else if (phase == Glfm.GLFMTouchPhaseEnded) {
                 boolean inScroll = false;
                 if (scrollBar != null) {
                     inScroll = isInBoundle(scrollBar.boundle, x - getX(), y - getY());
                 }
-                if (!inScroll) {
+                if (!inScroll && startX == x && startY == y) {
                     if (pulldown) {
                         float stackh = (labels.length / list_cols) * (list_item_heigh) + pad;
                         float pos = scrollBar.getPos() * (stackh - popBoundle[HEIGHT]) + (y - getY());
@@ -124,7 +128,7 @@ public class GList extends GContainer {
                 }
             }
         }
-        super.touchEvent( phase, x, y);
+        super.touchEvent(phase, x, y);
     }
 
     @Override
@@ -139,7 +143,7 @@ public class GList extends GContainer {
 //            if (curIndex >= labels.length) {
 //                curIndex = labels.length - 1;
 //            }
-            scrollBar.setPos(scrollBar.getPos() + 1.f / labels.length * (scrollY > 0 ? -1.f : 1.f));
+            scrollBar.setPos(scrollBar.getPos() - 1.f / labels.length * (float)(scrollY /list_item_heigh));
         }
     }
 
@@ -168,12 +172,10 @@ public class GList extends GContainer {
             if (popH > parent.getH()) {// small than frame height
                 popH = parent.getH();
                 popY = parent.getY();
+            } else if (normalBoundle[TOP] + popH < parent.getH()) {
+                popY = normalBoundle[TOP];
             } else {
-                if (normalBoundle[TOP] + popH < parent.getH()) {
-                    popY = normalBoundle[TOP];
-                } else {
-                    popY = parent.getH() - popH;
-                }
+                popY = parent.getH() - popH;
             }
 
             popBoundle[LEFT] = normalBoundle[LEFT];

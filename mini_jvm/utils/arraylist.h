@@ -204,6 +204,8 @@ int arraylist_index_of(ArrayList *arraylist,
                        ArrayListValue data);
 
 
+ArrayListValue arraylist_get_value_unsafe(ArrayList *arraylist, int index);
+
 ArrayListValue arraylist_get_value(ArrayList *arraylist, int index);
 
 ArrayListValue arraylist_pop_back(ArrayList *arraylist);
@@ -211,7 +213,9 @@ ArrayListValue arraylist_pop_back(ArrayList *arraylist);
 ArrayListValue arraylist_pop_front(ArrayList *arraylist);
 
 int arraylist_push_back_unsafe(ArrayList *arraylist, ArrayListValue data);
+
 ArrayListValue arraylist_pop_back_unsafe(ArrayList *arraylist);
+
 /**
  * Remove all entries from an ArrayList.
  *

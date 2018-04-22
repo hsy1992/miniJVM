@@ -73,7 +73,7 @@ public class GTextBox extends GObject {
         boundle[WIDTH] = width;
         boundle[HEIGHT] = height;
     }
-
+    
     public void setHint(String hint) {
         this.hint = hint;
         hint_arr = toUtf8(hint);

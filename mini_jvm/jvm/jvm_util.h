@@ -258,6 +258,8 @@ thrd_t jthread_start(Instance *ins);
 
 __refer jthread_get_stackframe_value(Instance *ins);
 
+s32 jthread_get_daemon_value(Instance *ins);
+
 void jthread_set_stackframe_value(Instance *ins, void *val);
 
 __refer jthread_get_name_value(Instance *ins);
@@ -334,6 +336,7 @@ void threadlist_remove(Runtime *r);
 
 Runtime *threadlist_get(s32 i);
 
+s32 threadlist_count_none_daemon();
 
 void threadinfo_destory(JavaThreadInfo *threadInfo);
 

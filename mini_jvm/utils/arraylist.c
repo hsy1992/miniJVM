@@ -116,7 +116,7 @@ int _arraylist_insert_impl(ArrayList *arraylist, int index, ArrayListValue data)
         }
     }
     if (doit) {
-        if(arraylist->length - index>0) {
+        if (arraylist->length - index > 0) {
             memmove(&arraylist->data[index + 1],
                     &arraylist->data[index],
                     (arraylist->length - index) * sizeof(ArrayListValue));
@@ -236,12 +236,18 @@ int arraylist_index_of(ArrayList *arraylist,
     return index;
 }
 
+ArrayListValue arraylist_get_value_unsafe(ArrayList *arraylist, int index) {
+    ArrayListValue value = NULL;
+    if (index >= 0 && index < arraylist->length)
+        value = arraylist->data[index];
+    return value;
+}
+
 ArrayListValue arraylist_get_value(ArrayList *arraylist, int index) {
     ArrayListValue value = NULL;
     spin_lock(&arraylist->spinlock);
     {
-        if (index >= 0 && index < arraylist->length)
-            value = arraylist->data[index];
+        value = arraylist_get_value_unsafe(arraylist, index);
     }
     spin_unlock(&arraylist->spinlock);
     return value;
