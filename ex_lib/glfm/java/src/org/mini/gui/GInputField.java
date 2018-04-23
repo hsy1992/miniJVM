@@ -24,8 +24,6 @@ import static org.mini.nanovg.Nanovg.nvgTextAlign;
 import static org.mini.nanovg.Nanovg.nvgTextJni;
 import static org.mini.nanovg.Nanovg.nvgTextMetrics;
 
-
-
 /**
  *
  * @author gust
@@ -71,18 +69,17 @@ public class GInputField extends GObject {
         int rx = (int) (x - parent.getX());
         int ry = (int) (y - parent.getY());
         if (isInBoundle(boundle, rx, ry)) {
-            if (phase==Glfm.GLFMTouchPhaseEnded) {
+            if (phase == Glfm.GLFMTouchPhaseEnded) {
                 parent.setFocus(this);
                 if (isInBoundle(reset_boundle, rx, ry)) {
                     setText("");
                 }
-            } else {
-                if (actionListener != null) {
-                    actionListener.action();
-                }
+            } else if (actionListener != null) {
+                actionListener.action();
             }
         }
     }
+
     @Override
     public void onFocus() {
         Glfm.glfmSetKeyboardVisible(getForm().getWinContext(), true);
@@ -98,7 +95,7 @@ public class GInputField extends GObject {
      * @param character
      */
     @Override
-    public void characterEvent(String str,int mods ) {
+    public void characterEvent(String str, int mods) {
 //        if (parent.getFocus() != this) {
 //            return;
 //        }
@@ -187,7 +184,7 @@ public class GInputField extends GObject {
             }
             if (parent.getFocus() == this) {
                 nvgTextMetrics(vg, null, null, lineh);
-                GToolkit.drawCaret(vg, caret_x, wordy - 0.5f * lineh[0], 1, lineh[0]);
+                GToolkit.drawCaret(vg, caret_x, wordy - 0.5f * lineh[0], 1, lineh[0], false);
             }
         }
         nvgFontSize(vg, GToolkit.getStyle().getIconFontSize());

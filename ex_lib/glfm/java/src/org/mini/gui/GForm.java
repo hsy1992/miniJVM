@@ -6,6 +6,8 @@
 package org.mini.gui;
 
 import java.util.Iterator;
+import java.util.Timer;
+import java.util.TimerTask;
 import org.mini.gl.GL;
 import static org.mini.gl.GL.GL_COLOR_BUFFER_BIT;
 import static org.mini.gl.GL.GL_DEPTH_BUFFER_BIT;
@@ -46,6 +48,8 @@ public class GForm extends GPanel {
     int fbWidth, fbHeight;
     //
     boolean premult;
+
+    Timer timer = new Timer();//用于更新画面，UI系统采取按需刷新的原则
 
     public GForm(String title, int width, int height, long display) {
         this.title = title;
@@ -160,23 +164,28 @@ public class GForm extends GPanel {
         long mouseLastPressed;
         int CLICK_PERIOD = 200;
 
-        long now, last, count;
+        long last, count;
 
         @Override
         public void mainLoop(long display, double frameTime) {
+            long startAt, endAt, cost;
             try {
-                long cur = System.currentTimeMillis();
-                display(vg);
+                startAt = System.currentTimeMillis();
+                if (flush) {
+                    display(vg);
+                    flush = false;
+                }
                 count++;
-                now = System.currentTimeMillis();
-                if (now - last > 1000) {
+                endAt = System.currentTimeMillis();
+                cost = endAt - startAt;
+                if (cost > 1000) {
                     //System.out.println("fps:" + count);
                     fps = count;
-                    last = now;
+                    last = endAt;
                     count = 0;
                 }
-                if (now - cur < 1000 / fpsExpect) {
-                    Thread.sleep((long) (1000 / fpsExpect - (now - cur)));
+                if (cost < 1000 / fpsExpect) {
+                    Thread.sleep((long) (1000 / fpsExpect - cost));
                 }
             } catch (Exception e) {
                 e.printStackTrace();
@@ -186,12 +195,14 @@ public class GForm extends GPanel {
         @Override
         public void onSurfaceCreated(long display, int width, int height) {
             GForm.this.init();
+            flush();
         }
 
         @Override
         public boolean onKey(long display, int keyCode, int action, int modifiers) {
             System.out.println("keyCode  :" + keyCode + "   action=" + action + "   modifiers=" + modifiers);
             GForm.this.keyEvent(keyCode, action, modifiers);
+            flush();
             return true;
         }
 
@@ -199,6 +210,7 @@ public class GForm extends GPanel {
         public void onCharacter(long window, String str, int modifiers) {
             System.out.println("onCharacter  :" + str + "   mod=" + modifiers);
             GForm.this.characterEvent(str, modifiers);
+            flush();
         }
 
         @Override
@@ -260,11 +272,23 @@ public class GForm extends GPanel {
         public void onSurfaceResize(long window, int width, int height) {
             GForm.this.boundle[WIDTH] = width;
             GForm.this.boundle[HEIGHT] = height;
+            flush();
         }
 
         public void onSurfaceError(long display, String description) {
             System.out.println("error message: " + description);
+            flush();
         }
+    }
+
+    TimerTask tt_OnTouch = new TimerTask() {
+        public void run() {
+            flush = true;
+        }
+    };
+
+    void tt_setupOnTouch() {
+        timer.schedule(tt_OnTouch, 0L);//, (long) (1000 / fpsExpect));
     }
 
     /**

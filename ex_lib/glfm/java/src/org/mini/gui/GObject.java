@@ -5,6 +5,7 @@
  */
 package org.mini.gui;
 
+import java.util.Timer;
 import static org.mini.gui.GToolkit.nvgRGBA;
 import org.mini.gui.event.GActionListener;
 
@@ -45,6 +46,14 @@ abstract public class GObject {
 
     public void flush() {
         flush = true;
+    }
+
+    public Timer getTimer() {
+        GForm form = getForm();
+        if (form != null) {
+            return form.timer;
+        }
+        return null;
     }
 
     public boolean update(long ctx) {
@@ -172,6 +181,7 @@ abstract public class GObject {
         }
         return null;
     }
+
     public GFrame getFrame() {
         GObject go = this;
         while ((go = go.parent) != null) {

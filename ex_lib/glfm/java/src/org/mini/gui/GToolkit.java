@@ -18,7 +18,6 @@ import static org.mini.nanovg.Nanovg.nvgFill;
 import static org.mini.nanovg.Nanovg.nvgFillColor;
 import static org.mini.nanovg.Nanovg.nvgRect;
 
-
 /**
  *
  * @author gust
@@ -111,8 +110,8 @@ public class GToolkit {
     static GStyle defaultStyle;
 
     public static GStyle getStyle() {
-        if(defaultStyle==null){
-            defaultStyle=new GDefaultStyle();
+        if (defaultStyle == null) {
+            defaultStyle = new GDefaultStyle();
         }
         return defaultStyle;
     }
@@ -127,13 +126,22 @@ public class GToolkit {
     static long caretLastBlink;
     static long CARET_BLINK_PERIOD = 600;
 
-    public static void drawCaret(long vg, float x, float y, float w, float h) {
+    /**
+     * 画光标，是否闪烁，如果为false,则一常显，为了节能，所以大多时候blink为false
+     * @param vg
+     * @param x
+     * @param y
+     * @param w
+     * @param h
+     * @param blink 
+     */
+    public static void drawCaret(long vg, float x, float y, float w, float h, boolean blink) {
         long curTime = System.currentTimeMillis();
         if (curTime - caretLastBlink > CARET_BLINK_PERIOD) {
             caretBlink = !caretBlink;
             caretLastBlink = curTime;
         }
-        if (caretBlink) {
+        if (caretBlink || !blink) {
             nvgBeginPath(vg);
             nvgFillColor(vg, nvgRGBA(255, 192, 0, 255));
             nvgRect(vg, x, y, w, h);

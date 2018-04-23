@@ -73,7 +73,7 @@ public class GTextBox extends GObject {
         boundle[WIDTH] = width;
         boundle[HEIGHT] = height;
     }
-    
+
     public void setHint(String hint) {
         this.hint = hint;
         hint_arr = toUtf8(hint);
@@ -232,8 +232,10 @@ public class GTextBox extends GObject {
         }
         for (int i = 0, imax = str.length(); i < imax; i++) {
             char character = str.charAt(i);
-            textsb.insert(caretIndex, character);
-            caretIndex++;
+            if (character != '\n' && character != '\r' || !singleMode) {
+                textsb.insert(caretIndex, character);
+                caretIndex++;
+            }
         }
         text_arr = null;
     }
@@ -458,7 +460,7 @@ public class GTextBox extends GObject {
                             if (caretIndex == starti + j) {
                                 caretx = x0;
                                 if (parent.getFocus() == this) {
-                                    GToolkit.drawCaret(vg, caretx, dy, 1, lineH);
+                                    GToolkit.drawCaret(vg, caretx, dy, 1, lineH, false);
                                 }
                             }
                         }
