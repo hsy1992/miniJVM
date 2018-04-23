@@ -790,13 +790,18 @@ s32 jthread_waitTime(MemoryBlock *mb, Runtime *runtime, s64 waitms) {
     if (!mb->thread_lock) {
         jthreadlock_create(mb);
     }
-    waitms += currentTimeMillis();
-    struct timespec t;
-    //clock_gettime(CLOCK_REALTIME, &t);
-    t.tv_sec = waitms / 1000;
-    t.tv_nsec = (waitms % 1000) * 1000000;
+    
     runtime->threadInfo->thread_status = THREAD_STATUS_WAIT;
-    cnd_timedwait(&mb->thread_lock->thread_cond, &mb->thread_lock->mutex_lock, &t);
+    if(waitms){
+    waitms += currentTimeMillis();
+        struct timespec t;
+        //clock_gettime(CLOCK_REALTIME, &t);
+        t.tv_sec = waitms / 1000;
+        t.tv_nsec = (waitms % 1000) * 1000000;
+        cnd_timedwait(&mb->thread_lock->thread_cond, &mb->thread_lock->mutex_lock, &t);
+    }else{
+        cnd_wait(&mb->thread_lock->thread_cond, &mb->thread_lock->mutex_lock);
+    }
     runtime->threadInfo->thread_status = THREAD_STATUS_RUNNING;
     check_suspend_and_pause(runtime);
     return 0;

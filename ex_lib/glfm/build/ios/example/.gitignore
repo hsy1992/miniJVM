@@ -3,3 +3,6 @@ CMakeFiles
 CMakeScripts
 Debug-iphoneos
 Debug-iphonesimulator
+Release-iphoneos
+Release-iphonesimulator
+
