@@ -729,7 +729,7 @@ s32 java_lang_System_arraycopy(Runtime *runtime, JClass *clazz) {
         count *= bytes;
         dest_start *= bytes;
         if (src && dest && src->arr_body && dest->arr_body && count > 0)
-            memcpy(&(dest->arr_body[dest_start]), &(src->arr_body[src_start]), count);
+            memmove(&(dest->arr_body[dest_start]), &(src->arr_body[src_start]), count);
     }
 #if _JVM_DEBUG_BYTECODE_DETAIL > 5
     invoke_deepth(runtime);

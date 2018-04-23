@@ -790,16 +790,16 @@ s32 jthread_waitTime(MemoryBlock *mb, Runtime *runtime, s64 waitms) {
     if (!mb->thread_lock) {
         jthreadlock_create(mb);
     }
-    
+
     runtime->threadInfo->thread_status = THREAD_STATUS_WAIT;
-    if(waitms){
-    waitms += currentTimeMillis();
+    if (waitms) {
+        waitms += currentTimeMillis();
         struct timespec t;
         //clock_gettime(CLOCK_REALTIME, &t);
         t.tv_sec = waitms / 1000;
         t.tv_nsec = (waitms % 1000) * 1000000;
         cnd_timedwait(&mb->thread_lock->thread_cond, &mb->thread_lock->mutex_lock, &t);
-    }else{
+    } else {
         cnd_wait(&mb->thread_lock->thread_cond, &mb->thread_lock->mutex_lock);
     }
     runtime->threadInfo->thread_status = THREAD_STATUS_RUNNING;
@@ -1191,7 +1191,7 @@ s16 jstring_char_at(Instance *jstr, s32 index) {
 s32 jstring_index_of(Instance *jstr, uni_char ch, s32 startAt) {
     c8 *fieldPtr = jstring_get_value_ptr(jstr);
     Instance *ptr = (Instance *) getFieldRefer(fieldPtr);//char[]数组实例
-    if (ptr && ptr->arr_body) {
+    if (ptr && ptr->arr_body && startAt >= 0) {
         u16 *jchar_arr = (u16 *) ptr->arr_body;
         s32 count = jstring_get_count(jstr);
         s32 offset = jstring_get_offset(jstr);

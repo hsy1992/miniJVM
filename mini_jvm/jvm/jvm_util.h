@@ -82,6 +82,11 @@ Instance *getInstanceInStack(JClass *clazz, ConstantMethodRef *cmr, RuntimeStack
 void printDumpOfClasses(void);
 
 
+Instance *exception_create(s32 exception_type, Runtime *runtime);
+
+Instance *exception_create_str(s32 exception_type, Runtime *runtime, c8 *errmsg);
+
+
 //c8 *getInstanceFieldPtr(Instance *ins, FieldInfo *fi);
 //
 //c8 *getStaticFieldPtr(FieldInfo *fi);
@@ -312,9 +317,19 @@ JClass *jarray_get_class(Utf8String *type);
 
 JClass *jarray_get_class_by_index(s32 typeIdx);
 
-Instance *exception_create(s32 exception_type, Runtime *runtime);
-
-Instance *exception_create_str(s32 exception_type, Runtime *runtime, c8 *errmsg);
+static inline s32 jarray_check_exception(Instance *arr, s32 index, Runtime *runtime) {
+    if (arr == NULL) {
+        Instance *exception = exception_create(JVM_EXCEPTION_NULLPOINTER, runtime);
+        push_ref(runtime->stack, (__refer) exception);
+        return RUNTIME_STATUS_EXCEPTION;
+    } else if (index < 0 || index >= arr->arr_length) {
+        Instance *exception = exception_create(JVM_EXCEPTION_ARRAYINDEXOUTOFBOUNDS,
+                                               runtime);
+        push_ref(runtime->stack, (__refer) exception);
+        return RUNTIME_STATUS_EXCEPTION;
+    }
+    return RUNTIME_STATUS_NORMAL;
+}
 
 c8 *getFieldPtr_byName_c(Instance *instance, c8 *pclassName, c8 *pfieldName, c8 *pfieldType);
 

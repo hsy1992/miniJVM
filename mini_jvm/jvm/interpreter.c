@@ -425,20 +425,6 @@ static inline s32 _op_ldstore_impl(u8 **opCode, Runtime *runtime, RuntimeStack *
     return 0;
 }
 
-static inline s32 _check_arr_exception(Instance *arr, s32 index, Runtime *runtime) {
-    if (arr == NULL) {
-        Instance *exception = exception_create(JVM_EXCEPTION_NULLPOINTER, runtime);
-        push_ref(runtime->stack, (__refer) exception);
-        return RUNTIME_STATUS_EXCEPTION;
-    } else if (index < 0 || index >= arr->arr_length) {
-        Instance *exception = exception_create(JVM_EXCEPTION_ARRAYINDEXOUTOFBOUNDS,
-                                               runtime);
-        push_ref(runtime->stack, (__refer) exception);
-        return RUNTIME_STATUS_EXCEPTION;
-    }
-    return RUNTIME_STATUS_NORMAL;
-}
-
 s32 _op_notsupport(u8 **opCode, Runtime *runtime) {
     invoke_deepth(runtime);
     jvm_printf("not support instruct [%x]\n", opCode[0][0]);
@@ -958,7 +944,7 @@ s32 execute_method_impl(MethodInfo *method, Runtime *pruntime, JClass *clazz) {
                     case op_faload: {
                         s32 index = pop_int(stack);
                         Instance *arr = (Instance *) pop_ref(stack);
-                        ret = _check_arr_exception(arr, index, runtime);
+                        ret = jarray_check_exception(arr, index, runtime);
                         if (!ret) {
                             s32 s = *(s32 *) (arr->arr_body + (index << 2));
                             push_int(stack, s);
@@ -977,7 +963,7 @@ s32 execute_method_impl(MethodInfo *method, Runtime *pruntime, JClass *clazz) {
                     case op_daload: {
                         s32 index = pop_int(stack);
                         Instance *arr = (Instance *) pop_ref(stack);
-                        ret = _check_arr_exception(arr, index, runtime);
+                        ret = jarray_check_exception(arr, index, runtime);
                         if (!ret) {
                             s64 s = *(s64 *) (arr->arr_body + (index << 3));
                             push_long(stack, s);
@@ -995,7 +981,7 @@ s32 execute_method_impl(MethodInfo *method, Runtime *pruntime, JClass *clazz) {
                     case op_aaload: {
                         s32 index = pop_int(stack);
                         Instance *arr = (Instance *) pop_ref(stack);
-                        ret = _check_arr_exception(arr, index, runtime);
+                        ret = jarray_check_exception(arr, index, runtime);
                         if (!ret) {
                             __refer s = *(__refer *) (arr->arr_body + (index * sizeof(__refer)));
                             push_ref(stack, s);
@@ -1013,7 +999,7 @@ s32 execute_method_impl(MethodInfo *method, Runtime *pruntime, JClass *clazz) {
                     case op_baload: {
                         s32 index = pop_int(stack);
                         Instance *arr = (Instance *) pop_ref(stack);
-                        ret = _check_arr_exception(arr, index, runtime);
+                        ret = jarray_check_exception(arr, index, runtime);
                         if (!ret) {
                             s32 s = *(s8 *) (arr->arr_body + (index));
                             push_int(stack, s);
@@ -1031,7 +1017,7 @@ s32 execute_method_impl(MethodInfo *method, Runtime *pruntime, JClass *clazz) {
                     case op_caload: {
                         s32 index = pop_int(stack);
                         Instance *arr = (Instance *) pop_ref(stack);
-                        ret = _check_arr_exception(arr, index, runtime);
+                        ret = jarray_check_exception(arr, index, runtime);
                         if (!ret) {
                             s32 s = *(u16 *) (arr->arr_body + (index << 1));
                             push_int(stack, s);
@@ -1049,7 +1035,7 @@ s32 execute_method_impl(MethodInfo *method, Runtime *pruntime, JClass *clazz) {
                     case op_saload: {
                         s32 index = pop_int(stack);
                         Instance *arr = (Instance *) pop_ref(stack);
-                        ret = _check_arr_exception(arr, index, runtime);
+                        ret = jarray_check_exception(arr, index, runtime);
                         if (!ret) {
                             s32 s = *(s16 *) (arr->arr_body + (index << 1));
                             push_int(stack, s);
@@ -1217,7 +1203,7 @@ s32 execute_method_impl(MethodInfo *method, Runtime *pruntime, JClass *clazz) {
                         s32 i = pop_int(stack);
                         s32 index = pop_int(stack);
                         Instance *jarr = (Instance *) pop_ref(stack);
-                        ret = _check_arr_exception(jarr, index, runtime);
+                        ret = jarray_check_exception(jarr, index, runtime);
                         if (!ret) {
                             *(s32 *) (jarr->arr_body + (index << 2)) = i;
 
@@ -1236,7 +1222,7 @@ s32 execute_method_impl(MethodInfo *method, Runtime *pruntime, JClass *clazz) {
                         s64 j = pop_long(stack);
                         s32 index = pop_int(stack);
                         Instance *jarr = (Instance *) pop_ref(stack);
-                        ret = _check_arr_exception(jarr, index, runtime);
+                        ret = jarray_check_exception(jarr, index, runtime);
                         if (!ret) {
                             *(s64 *) (jarr->arr_body + (index << 3)) = j;
 
@@ -1255,7 +1241,7 @@ s32 execute_method_impl(MethodInfo *method, Runtime *pruntime, JClass *clazz) {
                         __refer r = pop_ref(stack);
                         s32 index = pop_int(stack);
                         Instance *jarr = (Instance *) pop_ref(stack);
-                        ret = _check_arr_exception(jarr, index, runtime);
+                        ret = jarray_check_exception(jarr, index, runtime);
                         if (!ret) {
                             *(__refer *) (jarr->arr_body + (index * sizeof(__refer))) = r;
 
@@ -1273,7 +1259,7 @@ s32 execute_method_impl(MethodInfo *method, Runtime *pruntime, JClass *clazz) {
                         s32 i = pop_int(stack);
                         s32 index = pop_int(stack);
                         Instance *jarr = (Instance *) pop_ref(stack);
-                        ret = _check_arr_exception(jarr, index, runtime);
+                        ret = jarray_check_exception(jarr, index, runtime);
                         if (!ret) {
                             *(s8 *) (jarr->arr_body + (index)) = (s8) i;
 
@@ -1292,7 +1278,7 @@ s32 execute_method_impl(MethodInfo *method, Runtime *pruntime, JClass *clazz) {
                         s32 i = pop_int(stack);
                         s32 index = pop_int(stack);
                         Instance *jarr = (Instance *) pop_ref(stack);
-                        ret = _check_arr_exception(jarr, index, runtime);
+                        ret = jarray_check_exception(jarr, index, runtime);
                         if (!ret) {
                             *(u16 *) (jarr->arr_body + (index << 1)) = i;
 
@@ -1311,7 +1297,7 @@ s32 execute_method_impl(MethodInfo *method, Runtime *pruntime, JClass *clazz) {
                         s32 i = pop_int(stack);
                         s32 index = pop_int(stack);
                         Instance *jarr = (Instance *) pop_ref(stack);
-                        ret = _check_arr_exception(jarr, index, runtime);
+                        ret = jarray_check_exception(jarr, index, runtime);
                         if (!ret) {
                             *(s16 *) (jarr->arr_body + (index << 1)) = i;
 
