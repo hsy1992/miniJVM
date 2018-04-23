@@ -163,13 +163,16 @@ s32 utf8_2_unicode(Utf8String *ustr, u16 *arr) {
         if (*pInput > 0x00 && *pInput <= 0x7F) //处理单字节UTF8字符（英文字母、数字）
         {
             *tmp = *pInput;
+            pInput++;
             tmp++;
             *tmp = 0; //小端法表示，在高地址填补0
+            tmp++;
         } else if (((*pInput) & 0xE0) == 0xC0) //处理双字节UTF8字符
         {
             char high = *pInput;
             pInput++;
             char low = *pInput;
+            pInput++;
 
             if ((low & 0xC0) != 0x80)  //检查是否为合法的UTF8字符表示
             {
@@ -179,6 +182,7 @@ s32 utf8_2_unicode(Utf8String *ustr, u16 *arr) {
             *tmp = (high << 6) + (low & 0x3F);
             tmp++;
             *tmp = (high >> 2) & 0x07;
+            tmp++;
         } else if (((*pInput) & 0xF0) == 0xE0) //处理三字节UTF8字符
         {
             char high = *pInput;
@@ -186,7 +190,7 @@ s32 utf8_2_unicode(Utf8String *ustr, u16 *arr) {
             char middle = *pInput;
             pInput++;
             char low = *pInput;
-
+            pInput++;
             if (((middle & 0xC0) != 0x80) || ((low & 0xC0) != 0x80)) {
                 return -1;
             }
@@ -194,13 +198,35 @@ s32 utf8_2_unicode(Utf8String *ustr, u16 *arr) {
             *tmp = (middle << 6) + (low & 0x7F);
             tmp++;
             *tmp = (high << 4) + ((middle >> 2) & 0x0F);
+            tmp++;
+        } else if (((*pInput) & 0xF8) == 0xF0) //处理四字节UTF8字符
+        {
+            Int2Float i2f;
+            i2f.c0 = *pInput;
+            pInput++;
+            i2f.c1 = *pInput;
+            pInput++;
+            i2f.c2 = *pInput;
+            pInput++;
+            i2f.c3 = *pInput;
+            pInput++;
+            if (((i2f.c1 & 0xC0) != 0x80) || ((i2f.c2 & 0xC0) != 0x80) || ((i2f.c3 & 0xC0) != 0x80)) {
+                return -1;
+            }
+            i2f.c0 = (c8) (i2f.c0 << 5) >> 5;
+            i2f.c1 = (c8) (i2f.c1 << 2) >> 2;
+            i2f.c2 = (c8) (i2f.c2 << 2) >> 2;
+            i2f.c3 = (c8) (i2f.c3 << 2) >> 2;
+            s32 code = i2f.c3 + (i2f.c2 << 6) + (i2f.c1 << 12) + (i2f.c0 << 18);
+            //jchar 两字节表示不下， 得使用双jchar,这里简易处理，替换成了空格
+            *tmp = ' ';
+            tmp++;
+            *tmp = 0;
+            tmp++;
         } else //对于其他字节数的UTF8字符不进行处理
         {
             return -1;
         }
-
-        pInput++;
-        tmp++;
         outputSize += 1;
     }
     return outputSize;
@@ -1132,10 +1158,11 @@ Instance *jstring_create(Utf8String *src, Runtime *runtime) {
     c8 *ptr = jstring_get_value_ptr(jstring);
     u16 *buf = jvm_calloc(src->length * data_type_bytes[DATATYPE_JCHAR]);
     s32 len = utf8_2_unicode(src, buf);
-    Instance *arr = jarray_create(len, DATATYPE_JCHAR, NULL);//u16 type is 5
-    setFieldRefer(ptr, (__refer) arr);//设置数组
-
-    memcpy(arr->arr_body, buf, len * data_type_bytes[DATATYPE_JCHAR]);
+    if (len >= 0) {//可能解析出错
+        Instance *arr = jarray_create(len, DATATYPE_JCHAR, NULL);//u16 type is 5
+        setFieldRefer(ptr, (__refer) arr);//设置数组
+        memcpy(arr->arr_body, buf, len * data_type_bytes[DATATYPE_JCHAR]);
+    }
     jvm_free(buf);
     jstring_set_count(jstring, len);//设置长度
     utf8_destory(clsName);
