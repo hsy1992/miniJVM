@@ -66,7 +66,7 @@ Runtime *getRuntimeCurThread(){
         thread_boundle(runtime);
         pairlist_put(refers.runtime_list, t,runtime);
     }
-    return runtime;
+    return getLastSon(runtime);//
 }
 /* ===============================================================
  *

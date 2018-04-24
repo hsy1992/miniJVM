@@ -116,6 +116,7 @@ class MyInit implements GInitExtension {
         pwd.setSingleMode(true);
         parent.add(pwd);
         y += 35;
+//        String conttxt = "  \n  \n ";
         String conttxt = "子窗口This is longer chunk of text.\n  \n  Would have used lorem ipsum but she    was busy jumping over the lazy dog with the fox and all the men who came to the aid of the party.";
         conttxt += "I test the program ,there are two window , one window left a button that open the other window, the other left a button for close self.\n"
                 + "\n"
