@@ -10,6 +10,7 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Queue;
+import org.mini.glfm.Glfm;
 
 /**
  *
@@ -81,7 +82,8 @@ abstract public class GContainer extends GObject {
         synchronized (cache) {
             for (AddRemoveItem ari : cache) {
                 if (ari.operation == AddRemoveItem.ADD) {
-                    elements.add(ari.go);
+                    elements.addFirst(ari.go);
+                    setFocus(ari.go);
                 } else {
                     elements.remove(ari.go);
                     setFocus(null);
@@ -89,6 +91,12 @@ abstract public class GContainer extends GObject {
             }
             cache.clear();
         }
+        //如果focus不是第一个，则移到第一个，这样遮挡关系才正确
+        if (focus != null && elements.peek() != focus) {
+            elements.remove(focus);
+            elements.addFirst(focus);
+        }
+        //更新所有UI组件
         GObject[] arr = elements.toArray(new GObject[elements.size()]);
         for (int i = arr.length - 1; i >= 0; i--) {
             GObject nko = arr[i];
@@ -98,7 +106,6 @@ abstract public class GContainer extends GObject {
                 }
             }
         }
-
         return true;
     }
 
@@ -131,10 +138,18 @@ abstract public class GContainer extends GObject {
         for (Iterator<GObject> it = elements.iterator(); it.hasNext();) {
             try {
                 GObject nko = it.next();
-                nko.touchEvent(phase, x, y);
+                if (phase == Glfm.GLFMTouchPhaseBegan) {
+                    if (isInBoundle(nko.getBoundle(), x - getX(), y - getY())) {
+                        setFocus(nko);
+                        break;
+                    }
+                }
             } catch (Exception e) {
                 e.printStackTrace();
             }
+        }
+        if (focus != null) {
+            focus.touchEvent(phase, x, y);
         }
     }
 

@@ -144,8 +144,8 @@ public class GFrame extends GContainer {
         byte[] headerPaint;
 
         nvgSave(vg);
+        Nanovg.nvgScissor(vg, x, y, w, h);
 //	nvgClearState(vg);
-
         // Window
         nvgBeginPath(vg);
         nvgRoundedRect(vg, x, y, w, h, cornerRadius);
@@ -206,6 +206,7 @@ public class GFrame extends GContainer {
         close_boundle[WIDTH] = 16;
         close_boundle[HEIGHT] = 16;
 
+        Nanovg.nvgResetScissor(vg);
         nvgRestore(vg);
     }
 

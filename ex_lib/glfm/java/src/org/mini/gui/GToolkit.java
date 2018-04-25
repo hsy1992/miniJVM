@@ -149,9 +149,9 @@ public class GToolkit {
         }
     }
 
-    public static void drawSelect(long vg, float x, float y, float w, float h) {
+    public static void drawRect(long vg, float x, float y, float w, float h,float[] color) {
         nvgBeginPath(vg);
-        nvgFillColor(vg, nvgRGBA(128, 128, 255, 64));
+        nvgFillColor(vg, color);
         nvgRect(vg, x, y, w, h);
         nvgFill(vg);
     }

@@ -58,7 +58,6 @@ public class GButton extends GObject {
         if (isInBoundle(boundle, x - parent.getX(), y - parent.getY())) {
             if (phase == Glfm.GLFMTouchPhaseBegan) {
                 bt_pressed = true;
-                parent.setFocus(this);
             } else if (phase == Glfm.GLFMTouchPhaseEnded) {
                 if (actionListener != null && bt_pressed) {
                     actionListener.action();

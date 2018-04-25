@@ -137,16 +137,10 @@ public class GForm extends GPanel {
 
         nvgBeginFrame(vg, winWidth, winHeight, pxRatio);
         update(vg);
-        changeFocus();
         nvgEndFrame(vg);
     }
 
-    void changeFocus() {
-        if (focus != null && elements.peek() != focus) {
-            elements.remove(focus);
-            elements.addFirst(focus);
-        }
-    }
+
 
     void findSetFocus(int x, int y) {
         for (Iterator<GObject> it = elements.iterator(); it.hasNext();) {
@@ -200,16 +194,25 @@ public class GForm extends GPanel {
 
         @Override
         public boolean onKey(long display, int keyCode, int action, int modifiers) {
-            System.out.println("keyCode  :" + keyCode + "   action=" + action + "   modifiers=" + modifiers);
-            GForm.this.keyEvent(keyCode, action, modifiers);
+            //System.out.println("keyCode  :" + keyCode + "   action=" + action + "   modifiers=" + modifiers);
+            if (focus != null) {
+                focus.keyEvent(keyCode, action, modifiers);
+            } else {
+                GForm.this.keyEvent(keyCode, action, modifiers);
+            }
             flush();
             return true;
         }
 
         @Override
         public void onCharacter(long window, String str, int modifiers) {
-            System.out.println("onCharacter  :" + str + "   mod=" + modifiers);
-            GForm.this.characterEvent(str, modifiers);
+            //System.out.println("onCharacter  :" + str + "   mod=" + modifiers);
+            if (focus != null) {
+                focus.characterEvent(str, modifiers);
+            } else {
+                GForm.this.characterEvent(str, modifiers);
+            }
+
             flush();
         }
 
@@ -227,37 +230,41 @@ public class GForm extends GPanel {
 
                 switch (phase) {
                     case Glfm.GLFMTouchPhaseBegan: {//
-                        findSetFocus(mouseX, mouseY);
+                        findSetFocus(mouseX, mouseY);//找到焦点组件
                         break;
                     }
                     case Glfm.GLFMTouchPhaseEnded: {//
-                        findSetFocus(mouseX, mouseY);
                         break;
                     }
                     case Glfm.GLFMTouchPhaseMoved: {//
-                        scrollEvent(mouseX - lastX, mouseY - lastY, mouseX, mouseY);
+                        if (focus != null) {
+                            focus.scrollEvent(mouseX - lastX, mouseY - lastY, mouseX, mouseY);
+                        } else {
+                            GForm.this.scrollEvent(mouseX - lastX, mouseY - lastY, mouseX, mouseY);
+                        }
                         break;
                     }
                     case Glfm.GLFMTouchPhaseHover: {//
                         break;
                     }
                 }
-                boolean pressed = phase == Glfm.GLFMTouchPhaseBegan;
-                //click event
                 long cur = System.currentTimeMillis();
-                if (pressed && cur - mouseLastPressed < CLICK_PERIOD) {
+                //双击
+                boolean doub_clicked = (phase == Glfm.GLFMTouchPhaseBegan) && cur - mouseLastPressed < CLICK_PERIOD;
+                mouseLastPressed = cur;
+
+                //click event
+                if (doub_clicked) {
                     if (focus != null) {
                         focus.clickEvent(mouseX, mouseY);
                     } else {
                         GForm.this.clickEvent(mouseX, mouseY);
                     }
-                } else //press event
-                 if (focus != null) {
-                        focus.touchEvent(phase, mouseX, mouseY);
-                    } else {
-                        GForm.this.touchEvent(phase, mouseX, mouseY);
-                    }
-                mouseLastPressed = cur;
+                } else if (focus != null) {//press event
+                    focus.touchEvent(phase, mouseX, mouseY);
+                } else {
+                    GForm.this.touchEvent(phase, mouseX, mouseY);
+                }
             }
             flush();
             return true;
@@ -276,7 +283,7 @@ public class GForm extends GPanel {
         }
 
         public void onSurfaceError(long display, String description) {
-            System.out.println("error message: " + description);
+            //System.out.println("error message: " + description);
             flush();
         }
     }

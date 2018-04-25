@@ -25,7 +25,7 @@ abstract public class GObject {
     GContainer parent;
 
     //object position and width ,height
-    float[] boundle = new float[4];
+    protected float[] boundle = new float[4];
     static final int LEFT = 0;
     static final int TOP = 1;
     static final int WIDTH = 2;

@@ -66,7 +66,6 @@ public class GScrollBar extends GObject {
         if (isInBoundle(boundle, rx, ry)) {
             if (phase == Glfm.GLFMTouchPhaseBegan) {
                 draged = true;
-                parent.setFocus(this);
                 pos = mode == HORIZONTAL ? (rx - boundle[LEFT]) / boundle[WIDTH] : (ry - boundle[TOP]) / boundle[HEIGHT];
             } else if (phase == Glfm.GLFMTouchPhaseEnded) {
                 draged = false;

@@ -5,30 +5,19 @@
  */
 package org.mini.gui;
 
-import java.io.UnsupportedEncodingException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import org.mini.glfm.Glfm;
 import static org.mini.nanovg.Gutil.toUtf8;
-import static org.mini.gui.GToolkit.nvgRGBA;
 import org.mini.nanovg.Nanovg;
 import static org.mini.nanovg.Nanovg.NVG_ALIGN_LEFT;
 import static org.mini.nanovg.Nanovg.NVG_ALIGN_TOP;
-import static org.mini.nanovg.Nanovg.nvgBeginPath;
-import static org.mini.nanovg.Nanovg.nvgBoxGradient;
 import static org.mini.nanovg.Nanovg.nvgCreateNVGglyphPosition;
 import static org.mini.nanovg.Nanovg.nvgCreateNVGtextRow;
-import static org.mini.nanovg.Nanovg.nvgFill;
 import static org.mini.nanovg.Nanovg.nvgFillColor;
-import static org.mini.nanovg.Nanovg.nvgFillPaint;
 import static org.mini.nanovg.Nanovg.nvgFontFace;
 import static org.mini.nanovg.Nanovg.nvgFontSize;
 import static org.mini.nanovg.Nanovg.nvgNVGglyphPosition_x;
 import static org.mini.nanovg.Nanovg.nvgRestore;
-import static org.mini.nanovg.Nanovg.nvgRoundedRect;
 import static org.mini.nanovg.Nanovg.nvgSave;
-import static org.mini.nanovg.Nanovg.nvgStroke;
-import static org.mini.nanovg.Nanovg.nvgStrokeColor;
 import static org.mini.nanovg.Nanovg.nvgTextAlign;
 import static org.mini.nanovg.Nanovg.nvgTextBreakLinesJni;
 import static org.mini.nanovg.Nanovg.nvgTextGlyphPositionsJni;
@@ -46,7 +35,6 @@ public class GTextBox extends GObject {
     StringBuilder textsb = new StringBuilder();
     byte[] text_arr;
     char preicon;
-    boolean singleMode;//single line mode
     //
     float[] lineh = {0};
     private int caretIndex;//光标在字符串中的位置
@@ -90,10 +78,6 @@ public class GTextBox extends GObject {
 
     public String getText() {
         return textsb.toString();
-    }
-
-    public void setSingleMode(boolean single) {
-        this.singleMode = single;
     }
 
     boolean isInArea(short[] bound, float x, float y) {
@@ -161,7 +145,6 @@ public class GTextBox extends GObject {
         int ry = (int) (y - parent.getY());
         if (isInBoundle(boundle, rx, ry)) {
             if (phase == Glfm.GLFMTouchPhaseBegan) {
-                parent.setFocus(this);
                 int caret = getCaretIndexFromArea(x, y);
                 if (caret >= 0) {
                     setCaretIndex(caret);
@@ -241,7 +224,7 @@ public class GTextBox extends GObject {
         }
         for (int i = 0, imax = str.length(); i < imax; i++) {
             char character = str.charAt(i);
-            if (character != '\n' && character != '\r' || !singleMode) {
+            if (character != '\n' && character != '\r') {
                 textsb.insert(caretIndex, character);
                 setCaretIndex(caretIndex + 1);
             }
@@ -283,7 +266,7 @@ public class GTextBox extends GObject {
 //                }
                 case Glfm.GLFMKeyEnter: {
                     String txt = getText();
-                    if (txt != null && txt.length() > 0 && !singleMode) {
+                    if (txt != null && txt.length() > 0) {
                         int[] selectFromTo = getSelected();
                         if (selectFromTo != null) {
                             delectSelect();
@@ -389,7 +372,7 @@ public class GTextBox extends GObject {
     }
 
     void drawTextBox(long vg, float x, float y, float w, float h) {
-        drawTextBoxBase(vg, x, y, w, h);
+        GToolkit.getStyle().drawEditBoxBase(vg, x, y, w, h);
         nvgFontSize(vg, GToolkit.getStyle().getTextFontSize());
         nvgFontFace(vg, GToolkit.getFontWord());
         nvgTextAlign(vg, NVG_ALIGN_LEFT | NVG_ALIGN_TOP);
@@ -402,9 +385,6 @@ public class GTextBox extends GObject {
         float dx = text_area[LEFT];
         float dy = text_area[TOP];
 
-        if (singleMode) {
-            dy += .5f * (text_area[HEIGHT] - lineH);
-        }
         //画文本或提示
         if ((getText() == null || getText().length() <= 0) && parent.getFocus() != this) {
             nvgFillColor(vg, GToolkit.getStyle().getHintFontColor());
@@ -424,133 +404,132 @@ public class GTextBox extends GObject {
             int rowCount = 10;
             long rowsHandle = nvgCreateNVGtextRow(rowCount);
             long glyphsHandle = nvgCreateNVGglyphPosition(posCount);
-            int nrows, i, jchar_count, area_row_index = 0;
+            int nrows, i, char_count, area_row_index = 0;
             float caretx = 0;
 
             nvgSave(vg);
             Nanovg.nvgScissor(vg, text_area[LEFT], text_area[TOP], text_area[WIDTH], text_area[HEIGHT]);
-            //编辑区中最顶端文本的行号
-            if (topShowRow < 0) {
-                topShowRow = 0;
-            } else if (topShowRow > totalRows - showRows) {
-                topShowRow = totalRows - showRows;
-            }
-
-            //取选取的起始和终止位置
-            int[] selectFromTo = getSelected();
-
-            // The text break API can be used to fill a large buffer of rows,
-            // or to iterate over the text just few lines (or just one) at a time.
-            // The "next" variable of the last returned item tells where to continue.
-            //取UTF8字符串的内存地址，供NATIVE API调用
-            long ptr = GToolkit.getArrayDataPtr(text_arr);
-            int start = 0;
-            int end = text_arr.length;
-
-            int char_at = 0;
-            int char_starti, char_endi;
-
-            //通过nvgTextBreakLinesJni进行断行
-            while ((nrows = nvgTextBreakLinesJni(vg, text_arr, start, end, text_area[WIDTH], rowsHandle, rowCount)) != 0) {
-
-                //循环绘制行
-                for (i = 0; i < nrows; i++) {
-                    if (area_row_index >= topShowRow && area_row_index < topShowRow + showRows) {
-                        //取得第i 行的行宽
-                        float row_width = Nanovg.nvgNVGtextRow_width(rowsHandle, i);
-
-                        //返回 i 行的起始和结束位置
-                        int byte_starti = (int) (Nanovg.nvgNVGtextRow_start(rowsHandle, i) - ptr);
-                        int byte_endi = (int) (Nanovg.nvgNVGtextRow_end(rowsHandle, i) - ptr);
-                        try {
-                            String preStrs = new String(text_arr, 0, byte_starti, "utf-8");
-                            char_at = preStrs.length();
-                        } catch (UnsupportedEncodingException ex) {
-                            ex.printStackTrace();
-                        }
-                        //从字节转成字符
-                        String curRowStrs = "";
-                        try {
-                            curRowStrs = new String(text_arr, byte_starti, byte_endi - byte_starti, "utf-8");
-                        } catch (UnsupportedEncodingException ex) {
-                            ex.printStackTrace();
-                        }
-                        char_starti = char_at;
-                        char_endi = char_at + curRowStrs.length() - 1;
-
-                        System.out.println(char_starti + "\t" + char_endi + "\t" + byte_starti + "\t" + byte_endi + "\t\"" + curRowStrs + "\"");
-
-                        caretx = dx;
-                        //取得i行的各个字符的具体位置，结果存入glyphs
-                        jchar_count = nvgTextGlyphPositionsJni(vg, dx, dy, text_arr, byte_starti, byte_endi, glyphsHandle, posCount);
-                        int curRow = area_row_index - topShowRow;
-
-                        //把这些信息存下来，用于在点击的时候找到点击了文本的哪个位置
-                        //前面存固定信息
-                        area_detail[curRow] = new short[AREA_DETAIL_ADD + jchar_count];
-                        area_detail[curRow][AREA_X] = (short) dx;
-                        area_detail[curRow][AREA_Y] = (short) dy;
-                        area_detail[curRow][AREA_W] = (short) text_area[WIDTH];
-                        area_detail[curRow][AREA_H] = (short) lineH;
-                        area_detail[curRow][AREA_START] = (short) char_starti;
-                        area_detail[curRow][AREA_END] = (short) char_endi;
-                        area_detail[curRow][AREA_ROW] = (short) area_row_index;
-                        //后面把每个char的位置存下来
-                        for (int j = 0; j < jchar_count; j++) {
-                            //取第 j 个字符的X座标
-                            float x0 = nvgNVGglyphPosition_x(glyphsHandle, j);
-                            area_detail[curRow][AREA_DETAIL_ADD + j] = (short) x0;
-                        }
-
-                        //计算下一行开始
-                        char_at = char_at + curRowStrs.length();
-
-                        if (parent.getFocus() == this) {
-                            boolean draw = false;
-                            if (caretIndex >= char_starti && caretIndex <= char_endi) {
-                                caretx = area_detail[curRow][AREA_DETAIL_ADD + (caretIndex - char_starti)];
-                                draw = true;
-                                if (caretIndex != 0 && caretIndex - char_starti == 0) {//光标移到行首时，只显示在上一行行尾
-                                    draw = false;
-                                }
-                            } else if (caretIndex == char_endi + 1) {
-                                caretx = dx + row_width;
-                                draw = true;
-                            } else if (jchar_count == 0) {
-                                caretx = dx;
-                                draw = true;
-                            }
-                            if (draw) {
-                                GToolkit.drawCaret(vg, caretx, dy, 1, lineH, false);
-                            }
-                        }
-
-                        if (selectFromTo != null) {
-                            float drawSelX = dx, drawSelW = row_width;
-                            if (selectFromTo[0] < byte_endi && selectFromTo[0] > byte_starti) {
-                                int pos = selectFromTo[0] - area_detail[curRow][AREA_START];
-                                drawSelX = nvgNVGglyphPosition_x(glyphsHandle, pos);
-                            }
-                            if (selectFromTo[1] > byte_starti && selectFromTo[1] < byte_endi) {
-                                int pos = selectFromTo[1] - area_detail[curRow][AREA_START];
-                                drawSelW = nvgNVGglyphPosition_x(glyphsHandle, pos) - drawSelX;
-                            }
-                            if (byte_endi < selectFromTo[0] || byte_starti > selectFromTo[1]) {
-
-                            } else {
-                                GToolkit.drawSelect(vg, drawSelX, dy, drawSelW, lineH);
-                            }
-                        }
-                        nvgFillColor(vg, GToolkit.getStyle().getTextFontColor());
-                        nvgTextJni(vg, dx, dy, text_arr, byte_starti, byte_endi);
-
-                        dy += lineH;
-                    }
-                    area_row_index++;
+            //需要恢复现场
+            try {
+                //编辑区中最顶端文本的行号
+                if (topShowRow < 0) {
+                    topShowRow = 0;
+                } else if (topShowRow > totalRows - showRows) {
+                    topShowRow = totalRows - showRows;
                 }
 
-                long next = Nanovg.nvgNVGtextRow_next(rowsHandle, nrows - 1);
-                start = (int) (next - ptr);
+                //取选取的起始和终止位置
+                int[] selectFromTo = getSelected();
+
+                // The text break API can be used to fill a large buffer of rows,
+                // or to iterate over the text just few lines (or just one) at a time.
+                // The "next" variable of the last returned item tells where to continue.
+                //取UTF8字符串的内存地址，供NATIVE API调用
+                long ptr = GToolkit.getArrayDataPtr(text_arr);
+                int start = 0;
+                int end = text_arr.length;
+
+                int char_at = 0;
+                int char_starti, char_endi;
+
+                //通过nvgTextBreakLinesJni进行断行
+                while ((nrows = nvgTextBreakLinesJni(vg, text_arr, start, end, text_area[WIDTH], rowsHandle, rowCount)) != 0) {
+
+                    //循环绘制行
+                    for (i = 0; i < nrows; i++) {
+                        if (area_row_index >= topShowRow && area_row_index < topShowRow + showRows) {
+                            //取得第i 行的行宽
+                            float row_width = Nanovg.nvgNVGtextRow_width(rowsHandle, i);
+
+                            //返回 i 行的起始和结束位置
+                            int byte_starti = (int) (Nanovg.nvgNVGtextRow_start(rowsHandle, i) - ptr);
+                            int byte_endi = (int) (Nanovg.nvgNVGtextRow_end(rowsHandle, i) - ptr);
+
+                            //取得本行之前字符串长度
+                            String preStrs = new String(text_arr, 0, byte_starti, "utf-8");
+                            char_at = preStrs.length();
+                            //把当前行从字节数组转成字符串
+                            String curRowStrs = "";
+                            curRowStrs = new String(text_arr, byte_starti, byte_endi - byte_starti, "utf-8");
+                            //计算字符串起止位置
+                            char_starti = char_at;
+                            char_endi = char_at + curRowStrs.length() - 1;
+
+                            //System.out.println(char_starti + "\t" + char_endi + "\t" + byte_starti + "\t" + byte_endi + "\t\"" + curRowStrs + "\"");
+                            caretx = dx;
+                            //取得i行的各个字符的具体位置，结果存入glyphs
+                            char_count = nvgTextGlyphPositionsJni(vg, dx, dy, text_arr, byte_starti, byte_endi, glyphsHandle, posCount);
+                            int curRow = area_row_index - topShowRow;
+
+                            //把这些信息存下来，用于在点击的时候找到点击了文本的哪个位置
+                            //前面存固定信息
+                            area_detail[curRow] = new short[AREA_DETAIL_ADD + char_count];
+                            area_detail[curRow][AREA_X] = (short) dx;
+                            area_detail[curRow][AREA_Y] = (short) dy;
+                            area_detail[curRow][AREA_W] = (short) text_area[WIDTH];
+                            area_detail[curRow][AREA_H] = (short) lineH;
+                            area_detail[curRow][AREA_START] = (short) char_starti;
+                            area_detail[curRow][AREA_END] = (short) char_endi;
+                            area_detail[curRow][AREA_ROW] = (short) area_row_index;
+                            //后面把每个char的位置存下来
+                            for (int j = 0; j < char_count; j++) {
+                                //取第 j 个字符的X座标
+                                float x0 = nvgNVGglyphPosition_x(glyphsHandle, j);
+                                area_detail[curRow][AREA_DETAIL_ADD + j] = (short) x0;
+                            }
+
+                            //计算下一行开始
+                            char_at = char_at + curRowStrs.length();
+
+                            if (parent.getFocus() == this) {
+                                boolean draw = false;
+                                if (caretIndex >= char_starti && caretIndex <= char_endi) {
+                                    caretx = area_detail[curRow][AREA_DETAIL_ADD + (caretIndex - char_starti)];
+                                    draw = true;
+                                    if (caretIndex != 0 && caretIndex - char_starti == 0) {//光标移到行首时，只显示在上一行行尾
+                                        draw = false;
+                                    }
+                                } else if (caretIndex == char_endi + 1) {
+                                    caretx = dx + row_width;
+                                    draw = true;
+                                } else if (char_count == 0) {
+                                    caretx = dx;
+                                    draw = true;
+                                }
+                                if (draw) {
+                                    GToolkit.drawCaret(vg, caretx, dy, 1, lineH, false);
+                                }
+                            }
+
+                            if (selectFromTo != null) {
+                                float drawSelX = dx, drawSelW = row_width;
+                                if (selectFromTo[0] < byte_endi && selectFromTo[0] > byte_starti) {
+                                    int pos = selectFromTo[0] - area_detail[curRow][AREA_START];
+                                    drawSelX = nvgNVGglyphPosition_x(glyphsHandle, pos);
+                                }
+                                if (selectFromTo[1] > byte_starti && selectFromTo[1] < byte_endi) {
+                                    int pos = selectFromTo[1] - area_detail[curRow][AREA_START];
+                                    drawSelW = nvgNVGglyphPosition_x(glyphsHandle, pos) - drawSelX;
+                                }
+                                if (byte_endi < selectFromTo[0] || byte_starti > selectFromTo[1]) {
+
+                                } else {
+                                    GToolkit.drawRect(vg, drawSelX, dy, drawSelW, lineH, GToolkit.getStyle().getSelectedColor());
+                                }
+                            }
+                            nvgFillColor(vg, GToolkit.getStyle().getTextFontColor());
+                            nvgTextJni(vg, dx, dy, text_arr, byte_starti, byte_endi);
+
+                            dy += lineH;
+                        }
+                        area_row_index++;
+                    }
+
+                    long next = Nanovg.nvgNVGtextRow_next(rowsHandle, nrows - 1);
+                    start = (int) (next - ptr);
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
             }
             Nanovg.nvgResetScissor(vg);
             nvgRestore(vg);
@@ -561,21 +540,20 @@ public class GTextBox extends GObject {
         }
     }
 
-    public static void drawTextBoxBase(long vg, float x, float y, float w, float h) {
-        byte[] bg;
-        // Edit
-        bg = nvgBoxGradient(vg, x + 1, y + 1 + 1.5f, w - 2, h - 2, 3, 4, GToolkit.getStyle().getEditBackground(), nvgRGBA(32, 32, 32, 32));
-        nvgBeginPath(vg);
-        nvgRoundedRect(vg, x + 1, y + 1, w - 2, h - 2, 4 - 1);
-        nvgFillPaint(vg, bg);
-        nvgFill(vg);
-
-        nvgBeginPath(vg);
-        nvgRoundedRect(vg, x + 0.5f, y + 0.5f, w - 1, h - 1, 4 - 0.5f);
-        nvgStrokeColor(vg, nvgRGBA(0, 0, 0, 48));
-        nvgStroke(vg);
-    }
-
+//    public static void drawTextBoxBase(long vg, float x, float y, float w, float h) {
+//        byte[] bg;
+//        // Edit
+//        bg = nvgBoxGradient(vg, x + 1, y + 1 + 1.5f, w - 2, h - 2, 3, 4, GToolkit.getStyle().getEditBackground(), nvgRGBA(32, 32, 32, 32));
+//        nvgBeginPath(vg);
+//        nvgRoundedRect(vg, x + 1, y + 1, w - 2, h - 2, 4 - 1);
+//        nvgFillPaint(vg, bg);
+//        nvgFill(vg);
+//
+//        nvgBeginPath(vg);
+//        nvgRoundedRect(vg, x + 0.5f, y + 0.5f, w - 1, h - 1, 4 - 0.5f);
+//        nvgStrokeColor(vg, nvgRGBA(0, 0, 0, 48));
+//        nvgStroke(vg);
+//    }
     /**
      * @param caretIndex the caretIndex to set
      */

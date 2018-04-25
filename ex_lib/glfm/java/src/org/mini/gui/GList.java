@@ -51,8 +51,8 @@ public class GList extends GContainer {
     String[] labels;
     int curIndex;
     boolean pulldown;
-    public static final int MODE_GRID = 1, MODE_LIST = 0;
-    int mode = MODE_LIST;
+    public static final int MODE_MULTI_LINE = 1, MODE_SINGLE_LINE = 0;
+    int mode = MODE_SINGLE_LINE;
     GScrollBar scrollBar;
 
     float[] popBoundle;
@@ -85,6 +85,14 @@ public class GList extends GContainer {
 
     public int[] getImages() {
         return images;
+    }
+
+    public void setMode(int m) {
+        this.mode = m;
+    }
+
+    public int getMode() {
+        return this.mode;
     }
 
     public String[] getLabels() {
@@ -124,7 +132,6 @@ public class GList extends GContainer {
                         }
                     }
                     pulldown = !pulldown;
-                    parent.setFocus(this);
                 }
             }
         }
@@ -135,7 +142,7 @@ public class GList extends GContainer {
     public void scrollEvent(double scrollX, double scrollY, int x, int y) {
         int rx = (int) (x - parent.getX());
         int ry = (int) (y - parent.getY());
-        if (isInBoundle(boundle, rx, ry)) {
+        if (isInBoundle(boundle, rx, ry) && scrollBar != null) {
 //            curIndex += (scrollY > 0 ? -1 : 1);
 //            if (curIndex < 0) {
 //                curIndex = 0;
@@ -143,7 +150,7 @@ public class GList extends GContainer {
 //            if (curIndex >= labels.length) {
 //                curIndex = labels.length - 1;
 //            }
-            scrollBar.setPos(scrollBar.getPos() - 1.f / labels.length * (float)(scrollY /list_item_heigh));
+            scrollBar.setPos(scrollBar.getPos() - 1.f / labels.length * (float) (scrollY / list_item_heigh));
         }
     }
 
@@ -156,6 +163,9 @@ public class GList extends GContainer {
         if (parent.getFocus() != this) {
             pulldown = false;
         }
+        if (mode == MODE_MULTI_LINE) {
+            pulldown = true;
+        }
 
         nvgFontSize(vg, GToolkit.getStyle().getTextFontSize());
         nvgFontFace(vg, GToolkit.getFontWord());
@@ -164,25 +174,32 @@ public class GList extends GContainer {
         if (pulldown && labels != null) {
             popBoundle = new float[4];
 
-            float popH = labels.length * list_item_heigh;
-            if (labels.length > list_rows) {
-                popH = list_rows * list_item_heigh;
-            }
-            float popY = 0;
-            if (popH > parent.getH()) {// small than frame height
-                popH = parent.getH();
-                popY = parent.getY();
-            } else if (normalBoundle[TOP] + popH < parent.getH()) {
-                popY = normalBoundle[TOP];
+            if (mode == MODE_MULTI_LINE) {
+                popBoundle[LEFT] = normalBoundle[LEFT];
+                popBoundle[TOP] = normalBoundle[TOP];
+                popBoundle[WIDTH] = normalBoundle[WIDTH];
+                popBoundle[HEIGHT] = normalBoundle[HEIGHT];
+                list_rows = popBoundle[HEIGHT] / list_item_heigh;
             } else {
-                popY = parent.getH() - popH;
+                float popH = labels.length * list_item_heigh;
+                if (labels.length > list_rows) {
+                    popH = list_rows * list_item_heigh;
+                }
+                float popY = 0;
+                if (popH > parent.getH()) {// small than frame height
+                    popH = parent.getH();
+                    popY = parent.getY();
+                } else if (normalBoundle[TOP] + popH < parent.getH()) {
+                    popY = normalBoundle[TOP];
+                } else {
+                    popY = parent.getH() - popH;
+                }
+
+                popBoundle[LEFT] = normalBoundle[LEFT];
+                popBoundle[TOP] = popY;
+                popBoundle[WIDTH] = normalBoundle[WIDTH];
+                popBoundle[HEIGHT] = popH;
             }
-
-            popBoundle[LEFT] = normalBoundle[LEFT];
-            popBoundle[TOP] = popY;
-            popBoundle[WIDTH] = normalBoundle[WIDTH];
-            popBoundle[HEIGHT] = popH;
-
             boundle = popBoundle;
             if (scrollBar == null) {
                 scrollBar = new GScrollBar(0, GScrollBar.VERTICAL,
@@ -255,11 +272,11 @@ public class GList extends GContainer {
 //	nvgClearState(vg);
 
         // Window
-//        GTextBox.drawTextBoxBase(vg, x, y, w, h);
-        nvgBeginPath(vg);
-        nvgRoundedRect(vg, x, y, w, h, cornerRadius);
-        nvgFillColor(vg, nvgRGBA(60, 60, 60, 192));
-        nvgFill(vg);
+        GToolkit.getStyle().drawEditBoxBase(vg, x, y, w, h);
+//        nvgBeginPath(vg);
+//        nvgRoundedRect(vg, x, y, w, h, cornerRadius);
+//        nvgFillColor(vg, nvgRGBA(60, 60, 60, 192));
+//        nvgFill(vg);
 
         // Drop shadow
         shadowPaint = nvgBoxGradient(vg, x, y + 2, w, h, cornerRadius * 2, 10, nvgRGBA(0, 0, 0, 128), nvgRGBA(0, 0, 0, 0));
@@ -277,10 +294,14 @@ public class GList extends GContainer {
 
         for (int i = 0; i < nimages; i++) {
             float tx, ty;
-            tx = x + 10;
-            ty = y + 10;
-            tx += (i % list_cols) * (thumb + 10);
-            ty += (i / list_cols) * (thumb + 10);
+            tx = x + pad;
+            ty = y + pad;
+            tx += (i % list_cols) * (thumb + pad);
+            ty += (i / list_cols) * (thumb + pad);
+
+            if (curIndex == i) {
+                GToolkit.drawRect(vg, tx, ty, w - (thumb + pad), list_item_heigh - pad, GToolkit.getStyle().getSelectedColor());
+            }
 
             drawImage(vg, tx, ty, thumb, thumb, i);
 

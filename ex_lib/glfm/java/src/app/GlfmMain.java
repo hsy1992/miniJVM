@@ -95,7 +95,7 @@ class MyInit implements GInitExtension {
         GFrame gframe = new GFrame("测"/*"demo"*/, 50, 50, 300, 500);
         init(gframe.getPanel(), vg);
         form.add(gframe);
-        gframe.align(GGraphics.HCENTER|GGraphics.VCENTER);
+        gframe.align(GGraphics.HCENTER | GGraphics.VCENTER);
     }
 
     public void init(GPanel parent, final long vg) {
@@ -103,17 +103,16 @@ class MyInit implements GInitExtension {
 
         int x = 8, y = 10;
         GInputField gif = new GInputField("", "search", x, y, 280, 25);
+        gif.setBoxStyle(GInputField.BOX_STYLE_SEARCH);
         parent.add(gif);
         y += 30;
         GLabel lb1 = new GLabel("Login", x, y, 280, 20);
         parent.add(lb1);
         y += 25;
-        GTextBox mail = new GTextBox("", "Email", x, y, 280, 28);
-        mail.setSingleMode(true);
+        GInputField mail = new GInputField("", "Email", x, y, 280, 28);
         parent.add(mail);
         y += 35;
-        GTextBox pwd = new GTextBox("", "Password", x, y, 280, 28);
-        pwd.setSingleMode(true);
+        GInputField pwd = new GInputField("", "Password", x, y, 280, 28);
         parent.add(pwd);
         y += 35;
 //        String conttxt = "  \n  \n ";
@@ -168,21 +167,27 @@ class MyInit implements GInitExtension {
         });
     }
 
-    GImage img;
-    GList list;
-
     public void init1(GPanel parent, long vg) {
-        img = new GImage("./image4.png");
+        GImage img = new GImage("./image4.png");
 
         int x = 10, y = 10;
-        list = new GList(x, y, 280, 30);
+        GList list = new GList(x, y, 280, 30);
         parent.add(list);
         if (list.getImages() == null) {
             int i = Nanovg.nvgCreateImage(vg, toUtf8("./image4.png"), 0);
             list.setItems(new int[]{i, i, i, i, i, i, i, i, i, i},
-                    new String[]{"A", "B", "C", "D", "E", "F", "G", "H", "I", "J",});
+                    new String[]{"One", "Two", "Three", "Four", "Five", "Six", "Seven", "Eight", "Nine", "Ten",});
         }
         y += 40;
+        list = new GList(x, y, 280, 100);
+        list.setMode(GList.MODE_MULTI_LINE);
+        parent.add(list);
+        if (list.getImages() == null) {
+            int i = Nanovg.nvgCreateImage(vg, toUtf8("./image4.png"), 0);
+            list.setItems(new int[]{i, i, i, i, i, i, i, i, i, i},
+                    new String[]{"One", "Two", "Three", "Four", "Five", "Six", "Seven", "Eight", "Nine", "Ten",});
+        }
+        y += 110;
         parent.add(new TestCanvas(x, y, 280, 150));
         y += 160;
         GColorSelector cs = new GColorSelector(0, x, y, 130, 130);

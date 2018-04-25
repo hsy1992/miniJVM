@@ -53,7 +53,6 @@ public class GCheckBox extends GObject {
         if (isInBoundle(boundle, rx, ry)) {
             if (phase== Glfm.GLFMTouchPhaseBegan) {
                 checked = !checked;
-                parent.setFocus(this);
                 if (actionListener != null) {
                     actionListener.action();
                 }
