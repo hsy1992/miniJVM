@@ -80,6 +80,7 @@ public class GButton extends GObject {
         float w = getW();
         float h = getH();
 
+        Nanovg.nvgScissor(vg, x, y, w, h);
         byte[] bg;
 
         float cornerRadius = 4.0f;

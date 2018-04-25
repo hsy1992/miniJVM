@@ -135,17 +135,19 @@ abstract public class GContainer extends GObject {
 
     @Override
     public void touchEvent(int phase, int x, int y) {
-        for (Iterator<GObject> it = elements.iterator(); it.hasNext();) {
-            try {
-                GObject nko = it.next();
-                if (phase == Glfm.GLFMTouchPhaseBegan) {
-                    if (isInBoundle(nko.getBoundle(), x - getX(), y - getY())) {
-                        setFocus(nko);
-                        break;
+        if (focus == null || !isInBoundle(focus.getBoundle(), x - getX(), y - getY())) {
+            for (Iterator<GObject> it = elements.iterator(); it.hasNext();) {
+                try {
+                    GObject nko = it.next();
+                    if (phase == Glfm.GLFMTouchPhaseBegan) {
+                        if (isInBoundle(nko.getBoundle(), x - getX(), y - getY())) {
+                            setFocus(nko);
+                            break;
+                        }
                     }
+                } catch (Exception e) {
+                    e.printStackTrace();
                 }
-            } catch (Exception e) {
-                e.printStackTrace();
             }
         }
         if (focus != null) {
@@ -155,12 +157,16 @@ abstract public class GContainer extends GObject {
 
     @Override
     public void scrollEvent(double scrollX, double scrollY, int x, int y) {
-        for (Iterator<GObject> it = elements.iterator(); it.hasNext();) {
-            try {
-                GObject nko = it.next();
-                nko.scrollEvent(scrollX, scrollY, x, y);
-            } catch (Exception e) {
-                e.printStackTrace();
+        if (focus != null) {
+            focus.scrollEvent(scrollX, scrollY, x, y);
+        } else {
+            for (Iterator<GObject> it = elements.iterator(); it.hasNext();) {
+                try {
+                    GObject nko = it.next();
+                    nko.scrollEvent(scrollX, scrollY, x, y);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
             }
         }
     }

@@ -366,7 +366,7 @@ public class GTextBox extends GObject {
         float y = getY();
         float w = getW();
         float h = getH();
-
+        Nanovg.nvgScissor(vg, x, y, w, h);
         drawTextBox(vg, x, y, w, h);
         return true;
     }
@@ -445,9 +445,12 @@ public class GTextBox extends GObject {
                             int byte_starti = (int) (Nanovg.nvgNVGtextRow_start(rowsHandle, i) - ptr);
                             int byte_endi = (int) (Nanovg.nvgNVGtextRow_end(rowsHandle, i) - ptr);
 
-                            //取得本行之前字符串长度
-                            String preStrs = new String(text_arr, 0, byte_starti, "utf-8");
-                            char_at = preStrs.length();
+                            if (char_at == 0) {
+                                //取得本行之前字符串长度
+                                String preStrs = new String(text_arr, 0, byte_starti, "utf-8");
+                                char_at = preStrs.length();
+
+                            }
                             //把当前行从字节数组转成字符串
                             String curRowStrs = "";
                             curRowStrs = new String(text_arr, byte_starti, byte_endi - byte_starti, "utf-8");
@@ -455,7 +458,14 @@ public class GTextBox extends GObject {
                             char_starti = char_at;
                             char_endi = char_at + curRowStrs.length() - 1;
 
-                            //System.out.println(char_starti + "\t" + char_endi + "\t" + byte_starti + "\t" + byte_endi + "\t\"" + curRowStrs + "\"");
+                            //取得本行之前字符串长度
+//                            String preStrs1 = new String(text_arr, 0, byte_starti, "utf-8");
+//                            int char_at1 = preStrs1.length();
+//                            System.out.println(char_at + "\t" + char_at1 + "\t" + char_starti + "\t" + char_endi + "\t" + byte_starti + "\t" + byte_endi + "\t\"" + curRowStrs + "\"");
+//                            if (char_at != char_at1) {
+//                                int debug = 1;
+//                            }
+
                             caretx = dx;
                             //取得i行的各个字符的具体位置，结果存入glyphs
                             char_count = nvgTextGlyphPositionsJni(vg, dx, dy, text_arr, byte_starti, byte_endi, glyphsHandle, posCount);

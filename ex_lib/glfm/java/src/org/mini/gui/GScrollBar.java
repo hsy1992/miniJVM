@@ -7,6 +7,7 @@ package org.mini.gui;
 
 import org.mini.glfm.Glfm;
 import static org.mini.gui.GToolkit.nvgRGBA;
+import org.mini.nanovg.Nanovg;
 import static org.mini.nanovg.Nanovg.NVG_HOLE;
 import static org.mini.nanovg.Nanovg.nvgBeginPath;
 import static org.mini.nanovg.Nanovg.nvgBoxGradient;
@@ -35,6 +36,7 @@ public class GScrollBar extends GObject {
     boolean draged;
     public static final int HORIZONTAL = 0, VERTICAL = 1;
     int mode = HORIZONTAL;
+    float radius = 8;
 
     public GScrollBar(float pos, int mode, int left, int top, int width, int height) {
         this.pos = pos;
@@ -76,7 +78,7 @@ public class GScrollBar extends GObject {
                 if (draged) {
                     pos = mode == HORIZONTAL ? (rx - boundle[LEFT]) / boundle[WIDTH] : (ry - boundle[TOP]) / boundle[HEIGHT];
                 }
-            } 
+            }
         }
     }
 
@@ -91,6 +93,8 @@ public class GScrollBar extends GObject {
         float w = getW();
         float h = getH();
 
+        Nanovg.nvgScissor(vg, x - radius, y - radius, w + radius * 2, h + radius * 2);
+
         if (mode == HORIZONTAL) {
             drawSliderH(vg, pos, x, y, w, h);
         } else {
@@ -102,7 +106,7 @@ public class GScrollBar extends GObject {
     void drawSliderH(long vg, float pos, float x, float y, float w, float h) {
         byte[] bg, knob;
         float cy = y + (int) (h * 0.5f);
-        float kr = 8;//(int) (h * 0.25f);
+        float kr = radius;//(int) (h * 0.25f);
 
         nvgSave(vg);
 //	nvgClearState(vg);
@@ -144,7 +148,7 @@ public class GScrollBar extends GObject {
         byte[] bg, knob;
 //        float cy = y + (int) (h * 0.5f);
         float cx = x + (int) (w * 0.5f);
-        float kr = 8;//(int) (w * 0.25f);
+        float kr = radius;//(int) (w * 0.25f);
 
         nvgSave(vg);
 //	nvgClearState(vg);

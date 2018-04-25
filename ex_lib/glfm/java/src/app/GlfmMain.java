@@ -179,7 +179,7 @@ class MyInit implements GInitExtension {
                     new String[]{"One", "Two", "Three", "Four", "Five", "Six", "Seven", "Eight", "Nine", "Ten",});
         }
         y += 40;
-        list = new GList(x, y, 280, 100);
+        list = new GList(x, y, 280, 140);
         list.setMode(GList.MODE_MULTI_LINE);
         parent.add(list);
         if (list.getImages() == null) {
@@ -187,11 +187,11 @@ class MyInit implements GInitExtension {
             list.setItems(new int[]{i, i, i, i, i, i, i, i, i, i},
                     new String[]{"One", "Two", "Three", "Four", "Five", "Six", "Seven", "Eight", "Nine", "Ten",});
         }
-        y += 110;
+        y += 150;
         parent.add(new TestCanvas(x, y, 280, 150));
         y += 160;
-        GColorSelector cs = new GColorSelector(0, x, y, 130, 130);
-        parent.add(cs);
+//        GColorSelector cs = new GColorSelector(0, x, y, 130, 130);
+//        parent.add(cs);
 
     }
 

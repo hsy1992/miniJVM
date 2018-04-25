@@ -257,8 +257,4 @@ public class GFrame extends GContainer {
         }
     }
 
-    @Override
-    public void scrollEvent(double scrollX, double scrollY, int x, int y) {
-        super.scrollEvent(scrollX, scrollY, x, y);
-    }
 }

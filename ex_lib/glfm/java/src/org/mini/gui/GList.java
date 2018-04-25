@@ -270,6 +270,7 @@ public class GList extends GContainer {
 
         nvgSave(vg);
 //	nvgClearState(vg);
+        nvgScissor(vg, x, y, w, h);
 
         // Window
         GToolkit.getStyle().drawEditBoxBase(vg, x, y, w, h);
@@ -278,17 +279,17 @@ public class GList extends GContainer {
 //        nvgFillColor(vg, nvgRGBA(60, 60, 60, 192));
 //        nvgFill(vg);
 
+
         // Drop shadow
-        shadowPaint = nvgBoxGradient(vg, x, y + 2, w, h, cornerRadius * 2, 10, nvgRGBA(0, 0, 0, 128), nvgRGBA(0, 0, 0, 0));
-        nvgBeginPath(vg);
-        nvgRect(vg, x - 10, y - 10, w + 20, h + 30);
-        nvgRoundedRect(vg, x, y, w, h, cornerRadius);
-        nvgPathWinding(vg, NVG_HOLE);
-        nvgFillPaint(vg, shadowPaint);
-        nvgFill(vg);
+//        shadowPaint = nvgBoxGradient(vg, x, y + 2, w, h, cornerRadius * 2, 10, nvgRGBA(0, 0, 0, 128), nvgRGBA(0, 0, 0, 0));
+//        nvgBeginPath(vg);
+//        nvgRect(vg, x - 10, y - 10, w + 20, h + 30);
+//        nvgRoundedRect(vg, x, y, w, h, cornerRadius);
+//        nvgPathWinding(vg, NVG_HOLE);
+//        nvgFillPaint(vg, shadowPaint);
+//        nvgFill(vg);
 
         nvgSave(vg);
-        nvgScissor(vg, x, y, w, h);
         float th = -(stackh - h) * scrollBar.getPos();
         nvgTranslate(vg, 0, th);
 
@@ -310,18 +311,17 @@ public class GList extends GContainer {
         nvgRestore(vg);
 
         // Hide fades
-        fadePaint = nvgLinearGradient(vg, x, y, x, y + 6, nvgRGBA(60, 60, 60, 255), nvgRGBA(255, 255, 255, 0));
+        fadePaint = nvgLinearGradient(vg, x, y, x, y + 6, nvgRGBA(30, 30, 30, 255), nvgRGBA(30, 30, 30, 0));
         nvgBeginPath(vg);
-        nvgRect(vg, x + 4, y, w - 8, 6);
+        nvgRect(vg, x + 2, y, w - 4, 6);
         nvgFillPaint(vg, fadePaint);
         nvgFill(vg);
 
-        fadePaint = nvgLinearGradient(vg, x, y + h, x, y + h - 6, nvgRGBA(60, 60, 60, 255), nvgRGBA(255, 255, 255, 0));
+        fadePaint = nvgLinearGradient(vg, x, y + h, x, y + h - 6, nvgRGBA(30, 30, 30, 255), nvgRGBA(30, 30, 30, 0));
         nvgBeginPath(vg);
-        nvgRect(vg, x + 4, y + h - 6, w - 8, 6);
+        nvgRect(vg, x + 2, y + h - 6, w - 4, 6);
         nvgFillPaint(vg, fadePaint);
         nvgFill(vg);
-
         nvgRestore(vg);
     }
 

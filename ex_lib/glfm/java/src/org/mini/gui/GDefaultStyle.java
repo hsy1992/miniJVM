@@ -63,7 +63,7 @@ public class GDefaultStyle implements GStyle {
         return hintFontColor;
     }
 
-    float[] editBackground = nvgRGBA(255, 255, 255, 16);
+    float[] editBackground = nvgRGBA(40, 40, 40, 192);
 
     @Override
     public float[] getEditBackground() {
@@ -78,7 +78,7 @@ public class GDefaultStyle implements GStyle {
     public void drawEditBoxBase(long vg, float x, float y, float w, float h) {
         byte[] bg;
         // Edit
-        bg = nvgBoxGradient(vg, x + 1, y + 1 + 1.5f, w - 2, h - 2, 3, 4, GToolkit.getStyle().getEditBackground(), nvgRGBA(32, 32, 32, 32));
+        bg = nvgBoxGradient(vg, x + 1, y + 1 + 1.5f, w - 2, h - 2, 3, 4, getEditBackground(), nvgRGBA(32, 32, 32, 192));
         nvgBeginPath(vg);
         nvgRoundedRect(vg, x + 1, y + 1, w - 2, h - 2, 4 - 1);
         nvgFillPaint(vg, bg);

@@ -51,7 +51,7 @@ public class GCheckBox extends GObject {
         int rx = (int) (x - parent.getX());
         int ry = (int) (y - parent.getY());
         if (isInBoundle(boundle, rx, ry)) {
-            if (phase== Glfm.GLFMTouchPhaseBegan) {
+            if (phase == Glfm.GLFMTouchPhaseBegan) {
                 checked = !checked;
                 if (actionListener != null) {
                     actionListener.action();
@@ -73,7 +73,8 @@ public class GCheckBox extends GObject {
         float h = getH();
 
         byte[] bg;
-
+        Nanovg.nvgScissor(vg, x, y, w, h);
+        
         nvgFontSize(vg, GToolkit.getStyle().getTextFontSize());
         nvgFontFace(vg, GToolkit.getFontWord());
         nvgFillColor(vg, GToolkit.getStyle().getTextFontColor());
