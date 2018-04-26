@@ -2,13 +2,8 @@
 #include <stdio.h>
 #include <string.h>
 
-#include "glfm.h"
-#if TARGET_OS_IOS
-    #include <OpenGLES/ES3/gl.h>
-    #include <OpenGLES/ES3/glext.h>
-#else
-    #include <GLES3/gl3.h>
-#endif
+#include "glad/glad.h"
+
 
 #include "linmath.h"
 

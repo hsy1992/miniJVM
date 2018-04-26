@@ -44,6 +44,7 @@ public class GL_java_2_c {
             + "    #include <OpenGLES/ES3/glext.h>\n"
             + "#else\n"
             + "    #include <GLES3/gl3.h>\n"
+            + "    #include <GLES3/gl3ext.h>\n"
             + "#endif\n"
             + "\n"
             + "#include \"linmath.h\"\n"

@@ -17,7 +17,7 @@ set(NANOVG_SOURCE_FILES
 	gui/nanovg/nanovg_gl_utils.h
 	gui/nanovg/nanovg.h
 	gui/nanovg/nanovg.c
-#	gui/glad/glad.c
+	gui/glad/glad.c
 #	gui/glad/glad.h
 #	gui/KHR/khrplatform.h
 	gui/other/linmath.h

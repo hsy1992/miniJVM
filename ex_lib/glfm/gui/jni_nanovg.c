@@ -2,7 +2,7 @@
 #include <stdio.h>
 #include <string.h>
 
-#include <glfm.h>
+#include <glad/glad.h>
 
 //#define STB_TRUETYPE_IMPLEMENTATION
 #include <stb/stb_truetype.h>

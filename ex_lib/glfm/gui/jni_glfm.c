@@ -3,7 +3,7 @@
 
 #include <stdio.h>
 #include <string.h>
-//#include "glad/glad.h"
+
 #include "glfm.h"
 #include "linmath.h"
 
@@ -16,6 +16,7 @@
 
 extern const char *glfmGetResRoot();
 
+extern int gladLoadGLES2Loader(void* fun) ;
 
 GlobeRefer refers;
 
@@ -206,6 +207,7 @@ void _callback_app_focus(GLFMDisplay *window, bool focus) {
 }
 
 void _callback_surface_created(GLFMDisplay *window, s32 w, s32 h) {
+    gladLoadGLES2Loader(glfmGetProcAddress);
     if (refers._callback_surface_created) {
         Runtime *runtime = getRuntimeCurThread();
         JniEnv *env = refers.env;
