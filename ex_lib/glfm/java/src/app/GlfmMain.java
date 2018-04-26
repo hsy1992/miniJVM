@@ -14,7 +14,7 @@ import org.mini.glfm.Glfm;
 import static org.mini.glfm.Glfm.GLFMColorFormatRGBA8888;
 import static org.mini.glfm.Glfm.GLFMDepthFormatNone;
 import static org.mini.glfm.Glfm.GLFMMultisampleNone;
-import static org.mini.glfm.Glfm.GLFMRenderingAPIOpenGLES2;
+import static org.mini.glfm.Glfm.GLFMRenderingAPIOpenGLES3;
 import static org.mini.glfm.Glfm.GLFMStencilFormatNone;
 import org.mini.gui.GButton;
 import org.mini.gui.GCanvas;
@@ -48,7 +48,7 @@ public class GlfmMain {
     static public void glinit(long display) {
 
         Glfm.glfmSetDisplayConfig(display,
-                GLFMRenderingAPIOpenGLES2,
+                GLFMRenderingAPIOpenGLES3,
                 GLFMColorFormatRGBA8888,
                 GLFMDepthFormatNone,
                 GLFMStencilFormatNone,
@@ -136,7 +136,7 @@ class MyInit implements GInitExtension {
             @Override
             public void action() {
                 Random ran = new Random();
-                GFrame sub1 = new GFrame(/*"子窗口"*/"颜色选择", 40 + ran.nextInt(100), 50 + ran.nextInt(100), 300, 400);
+                GFrame sub1 = new GFrame(/*"子窗口"*/"颜色选择", 40 + ran.nextInt(100), 50 + ran.nextInt(100), 300, 600);
                 GPanel panel = sub1.getPanel();
                 init1(panel, vg);
                 sub1.setClosable(true);
@@ -190,8 +190,8 @@ class MyInit implements GInitExtension {
         y += 150;
         parent.add(new TestCanvas(x, y, 280, 150));
         y += 160;
-//        GColorSelector cs = new GColorSelector(0, x, y, 130, 130);
-//        parent.add(cs);
+        GColorSelector cs = new GColorSelector(0, x, y, 130, 130);
+        parent.add(cs);
 
     }
 

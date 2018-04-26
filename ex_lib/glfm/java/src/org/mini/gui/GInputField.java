@@ -251,6 +251,9 @@ public class GInputField extends GObject {
         } else {
 
             long glyphsHandle = nvgCreateNVGglyphPosition(text_max);
+            if (parent.getFocus() == this) {
+                nvgTextMetrics(vg, null, null, lineh);
+            }
 
             try {
                 if (text_width > text_show_area_w) {
@@ -295,9 +298,6 @@ public class GInputField extends GObject {
             Nanovg.nvgScissor(vg, text_show_area_x, y, text_show_area_w, h);
             nvgTextJni(vg, wordx, wordy, text_arr, 0, text_arr.length);
             Nanovg.nvgResetScissor(vg);
-            if (parent.getFocus() == this) {
-                nvgTextMetrics(vg, null, null, lineh);
-            }
         }
         nvgFontSize(vg, GToolkit.getStyle().getIconFontSize());
         nvgFontFace(vg, GToolkit.getFontIcon());

@@ -45,17 +45,6 @@ struct _GlobeRefer {
     MethodInfo *_callback_surface_created;
 
     Pairlist *runtime_list;
-//    Runtime *_runtime_surface_error;
-//    Runtime *_runtime_key;
-//    Runtime *_runtime_character;
-//    Runtime *_runtime_mainloop;
-//    Runtime *_runtime_memory_warning;
-//    Runtime *_runtime_keyboard_visible;
-//    Runtime *_runtime_touch;
-//    Runtime *_runtime_surface_destroyed;
-//    Runtime *_runtime_surface_resized;
-//    Runtime *_runtime_app_focus;
-//    Runtime *_runtime_surface_created;
 };
 
 
