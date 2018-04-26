@@ -14,7 +14,7 @@ import org.mini.glfm.Glfm;
 import static org.mini.glfm.Glfm.GLFMColorFormatRGBA8888;
 import static org.mini.glfm.Glfm.GLFMDepthFormatNone;
 import static org.mini.glfm.Glfm.GLFMMultisampleNone;
-import static org.mini.glfm.Glfm.GLFMRenderingAPIOpenGLES3;
+import static org.mini.glfm.Glfm.GLFMRenderingAPIOpenGLES2;
 import static org.mini.glfm.Glfm.GLFMStencilFormatNone;
 import org.mini.gui.GButton;
 import org.mini.gui.GCanvas;
@@ -48,7 +48,7 @@ public class GlfmMain {
     static public void glinit(long display) {
 
         Glfm.glfmSetDisplayConfig(display,
-                GLFMRenderingAPIOpenGLES3,
+                GLFMRenderingAPIOpenGLES2,
                 GLFMColorFormatRGBA8888,
                 GLFMDepthFormatNone,
                 GLFMStencilFormatNone,
