@@ -311,13 +311,13 @@ public class GList extends GContainer {
         nvgRestore(vg);
 
         // Hide fades
-        fadePaint = nvgLinearGradient(vg, x, y, x, y + 6, nvgRGBA(30, 30, 30, 255), nvgRGBA(30, 30, 30, 0));
+        fadePaint = nvgLinearGradient(vg, x, y, x, y + 6, nvgRGBA(20, 20, 20, 192), nvgRGBA(30, 30, 30, 0));
         nvgBeginPath(vg);
         nvgRect(vg, x + 2, y, w - 4, 6);
         nvgFillPaint(vg, fadePaint);
         nvgFill(vg);
 
-        fadePaint = nvgLinearGradient(vg, x, y + h, x, y + h - 6, nvgRGBA(30, 30, 30, 255), nvgRGBA(30, 30, 30, 0));
+        fadePaint = nvgLinearGradient(vg, x, y + h, x, y + h - 6, nvgRGBA(20, 20, 20, 192), nvgRGBA(30, 30, 30, 0));
         nvgBeginPath(vg);
         nvgRect(vg, x + 2, y + h - 6, w - 4, 6);
         nvgFillPaint(vg, fadePaint);

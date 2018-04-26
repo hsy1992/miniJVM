@@ -42,7 +42,7 @@ public class Nanovg_java_2_c {
 
             + "#include <string.h>\n"
             + "\n"
-            + "#include <glad/glad.h>\n"
+            + "#include <glfm.h>\n"
             + "\n"
             + "//#define STB_TRUETYPE_IMPLEMENTATION\n"
             + "#include <stb/stb_truetype.h>\n"

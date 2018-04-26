@@ -63,7 +63,7 @@ public class GDefaultStyle implements GStyle {
         return hintFontColor;
     }
 
-    float[] editBackground = nvgRGBA(40, 40, 40, 192);
+    float[] editBackground = nvgRGBA(20, 20, 20, 192);
 
     @Override
     public float[] getEditBackground() {

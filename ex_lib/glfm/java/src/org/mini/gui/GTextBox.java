@@ -224,10 +224,8 @@ public class GTextBox extends GObject {
         }
         for (int i = 0, imax = str.length(); i < imax; i++) {
             char character = str.charAt(i);
-            if (character != '\n' && character != '\r') {
-                textsb.insert(caretIndex, character);
-                setCaretIndex(caretIndex + 1);
-            }
+            textsb.insert(caretIndex, character);
+            setCaretIndex(caretIndex + 1);
         }
         text_arr = null;
     }
@@ -465,7 +463,6 @@ public class GTextBox extends GObject {
 //                            if (char_at != char_at1) {
 //                                int debug = 1;
 //                            }
-
                             caretx = dx;
                             //取得i行的各个字符的具体位置，结果存入glyphs
                             char_count = nvgTextGlyphPositionsJni(vg, dx, dy, text_arr, byte_starti, byte_endi, glyphsHandle, posCount);
