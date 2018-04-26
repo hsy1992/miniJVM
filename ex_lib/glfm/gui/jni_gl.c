@@ -2,8 +2,7 @@
 #include <stdio.h>
 #include <string.h>
 
-#include "glad/glad.h"
-
+#include <glad/glad.h>
 
 #include "linmath.h"
 
