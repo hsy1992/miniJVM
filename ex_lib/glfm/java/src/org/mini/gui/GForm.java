@@ -8,7 +8,6 @@ package org.mini.gui;
 import java.util.Iterator;
 import java.util.Timer;
 import java.util.TimerTask;
-import org.mini.gl.GL;
 import static org.mini.gl.GL.GL_COLOR_BUFFER_BIT;
 import static org.mini.gl.GL.GL_DEPTH_BUFFER_BIT;
 import static org.mini.gl.GL.GL_STENCIL_BUFFER_BIT;
@@ -19,12 +18,19 @@ import static org.mini.gl.GL.glViewport;
 import org.mini.glfm.Glfm;
 import org.mini.glfm.GlfmCallBack;
 import org.mini.glfm.GlfmCallBackAdapter;
+import static org.mini.gui.GToolkit.nvgRGBA;
+import org.mini.nanovg.Gutil;
 import org.mini.nanovg.Nanovg;
+import static org.mini.nanovg.Nanovg.NVG_ALIGN_MIDDLE;
 import static org.mini.nanovg.Nanovg.NVG_ANTIALIAS;
 import static org.mini.nanovg.Nanovg.NVG_DEBUG;
 import static org.mini.nanovg.Nanovg.NVG_STENCIL_STROKES;
 import static org.mini.nanovg.Nanovg.nvgBeginFrame;
 import static org.mini.nanovg.Nanovg.nvgEndFrame;
+import static org.mini.nanovg.Nanovg.nvgFillColor;
+import static org.mini.nanovg.Nanovg.nvgFontFace;
+import static org.mini.nanovg.Nanovg.nvgFontSize;
+import static org.mini.nanovg.Nanovg.nvgTextAlign;
 
 /**
  *
@@ -64,9 +70,10 @@ public class GForm extends GPanel {
 
     public void setCallBack(GlfmCallBack callback) {
         this.callback = callback;
-        if (win != 0) {
-            Glfm.glfmSetCallBack(win, callback);
-        }
+    }
+
+    public GlfmCallBack getCallBack() {
+        return this.callback;
     }
 
     static public void setGFont(StbFont pgfont) {
@@ -132,11 +139,33 @@ public class GForm extends GPanel {
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
 
         nvgBeginFrame(vg, winWidth, winHeight, pxRatio);
+        drawDebugInfo(vg);
         update(vg);
         nvgEndFrame(vg);
     }
 
+    void drawDebugInfo(long vg) {
+        float font_size = 15;
+        nvgFontSize(vg, font_size);
+        nvgFontFace(vg, GToolkit.getFontWord());
+        nvgTextAlign(vg, Nanovg.NVG_ALIGN_LEFT | NVG_ALIGN_MIDDLE);
 
+        FormCallBack cb = (FormCallBack) callback;
+        float dx = 10, dy = 10;
+        byte[] b;
+        nvgFillColor(vg, nvgRGBA(255, 255, 255, 255));
+
+        b = Gutil.toUtf8("touch x:" + cb.mouseX);
+        Nanovg.nvgTextJni(vg, dx, dy, b, 0, b.length);
+        dy += font_size;
+        b = Gutil.toUtf8("touch y:" + cb.mouseY);
+        Nanovg.nvgTextJni(vg, dx, dy, b, 0, b.length);
+        dy += font_size;
+        if (focus != null) {
+            b = Gutil.toUtf8("focus x:" + focus.boundle[LEFT] + " y:" + focus.boundle[TOP] + " w:" + focus.boundle[WIDTH] + " h:" + focus.boundle[HEIGHT]);
+            Nanovg.nvgTextJni(vg, dx, dy, b, 0, b.length);
+        }
+    }
 
     void findSetFocus(int x, int y) {
         for (Iterator<GObject> it = elements.iterator(); it.hasNext();) {
@@ -152,7 +181,7 @@ public class GForm extends GPanel {
 
         int mouseX, mouseY, lastX, lastY;
         long mouseLastPressed;
-        int CLICK_PERIOD = 200;
+        int LONG_TOUCH_TIME = 1000;
 
         long last, count;
 
@@ -174,9 +203,9 @@ public class GForm extends GPanel {
                     last = endAt;
                     count = 0;
                 }
-                if (cost < 1000 / fpsExpect) {
-                    Thread.sleep((long) (1000 / fpsExpect - cost));
-                }
+//                if (cost < 1000 / fpsExpect) {
+//                    Thread.sleep((long) (1000 / fpsExpect - cost));
+//                }
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -220,7 +249,7 @@ public class GForm extends GPanel {
             lastY = mouseY;
             mouseX = (int) x;
             mouseY = (int) y;
-//            System.out.println("   touch=" + touch + "   phase=" + phase + "   x=" + x + "   y=" + y);
+            System.out.println("   touch=" + touch + "   phase=" + phase + "   x=" + x + "   y=" + y);
 //            System.out.println("display=" + display + "   win=" + win);
             if (display == win) {
 
@@ -246,17 +275,21 @@ public class GForm extends GPanel {
                 }
                 long cur = System.currentTimeMillis();
                 //双击
-                boolean doub_clicked = (phase == Glfm.GLFMTouchPhaseBegan) && cur - mouseLastPressed < CLICK_PERIOD;
-                mouseLastPressed = cur;
+                boolean long_touched = cur - mouseLastPressed > LONG_TOUCH_TIME;
+                if (phase == Glfm.GLFMTouchPhaseBegan) {
+                    mouseLastPressed = cur;
+                }
 
                 //click event
-                if (doub_clicked) {
+                if (long_touched) {
                     if (focus != null) {
-                        focus.clickEvent(mouseX, mouseY);
+                        focus.longTouchedEvent(mouseX, mouseY);
                     } else {
-                        GForm.this.clickEvent(mouseX, mouseY);
+                        GForm.this.longTouchedEvent(mouseX, mouseY);
                     }
-                } else if (focus != null) {//press event
+                    long_touched = false;
+                }
+                if (focus != null) {//press event
                     focus.touchEvent(phase, mouseX, mouseY);
                 } else {
                     GForm.this.touchEvent(phase, mouseX, mouseY);

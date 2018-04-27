@@ -5,11 +5,13 @@
  */
 package org.mini.gui.event;
 
+import org.mini.gui.GObject;
+
 /**
  *
  * @author gust
  */
 public interface GActionListener extends GListener {
 
-    void action();
+    void action(GObject gobj);
 }

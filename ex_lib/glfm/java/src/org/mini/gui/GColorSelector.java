@@ -81,7 +81,7 @@ public class GColorSelector extends GObject {
                 }
             } else if (phase != Glfm.GLFMTouchPhaseEnded) {
                 if (actionListener != null) {
-                    actionListener.action();
+                    actionListener.action(this);
                 }
             } else {
 

@@ -69,7 +69,7 @@ abstract public class GObject {
     public void touchEvent(int phase, int x, int y) {
     }
 
-    public void clickEvent(int x, int y) {
+    public void longTouchedEvent(int x, int y) {
     }
 
     public void scrollEvent(double scrollX, double scrollY, int x, int y) {

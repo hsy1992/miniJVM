@@ -128,7 +128,7 @@ public class GList extends GContainer {
                         float pos = scrollBar.getPos() * (stackh - popBoundle[HEIGHT]) + (y - getY());
                         curIndex = (int) (pos / stackh * labels.length);
                         if (actionListener != null) {
-                            actionListener.action();
+                            actionListener.action(this);
                         }
                     }
                     pulldown = !pulldown;

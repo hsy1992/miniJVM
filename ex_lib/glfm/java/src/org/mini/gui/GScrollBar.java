@@ -72,7 +72,7 @@ public class GScrollBar extends GObject {
             } else if (phase == Glfm.GLFMTouchPhaseEnded) {
                 draged = false;
                 if (actionListener != null) {
-                    actionListener.action();
+                    actionListener.action(this);
                 }
             } else if (isInBoundle(boundle, rx, ry)) {
                 if (draged) {

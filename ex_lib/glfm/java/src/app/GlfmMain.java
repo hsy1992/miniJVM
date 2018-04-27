@@ -28,6 +28,7 @@ import org.mini.gui.GInitExtension;
 import org.mini.gui.GInputField;
 import org.mini.gui.GLabel;
 import org.mini.gui.GList;
+import org.mini.gui.GMenu;
 import org.mini.gui.GObject;
 import org.mini.gui.GPanel;
 import org.mini.gui.GScrollBar;
@@ -57,6 +58,8 @@ public class GlfmMain {
         form = new GForm(/*"GuiTest"*/"登录 窗口", 800, 600, display);
         form.setExtinit(new MyInit(form));
         form.setFps(30f);
+
+        Glfm.glfmSetCallBack(display, form.getCallBack());
         //t13();
     }
 
@@ -84,6 +87,7 @@ public class GlfmMain {
 class MyInit implements GInitExtension {
 
     GForm form;
+    GMenu menu;
 
     public MyInit(GForm gf) {
         form = gf;
@@ -96,6 +100,15 @@ class MyInit implements GInitExtension {
         init(gframe.getPanel(), vg);
         form.add(gframe);
         gframe.align(GGraphics.HCENTER | GGraphics.VCENTER);
+
+        int menuH = 80;
+        GImage img = new GImage("./image4.png");
+        menu = new GMenu(0, form.getDeviceHeight() - menuH, form.getDeviceWidth(), menuH);
+        menu.addItem("Home", img);
+        menu.addItem("Search", img);
+        menu.addItem("New", img);
+        menu.addItem("My", img);
+        form.add(menu);
     }
 
     public void init(GPanel parent, final long vg) {
@@ -134,7 +147,7 @@ class MyInit implements GInitExtension {
         parent.add(sig);
         sig.setActionListener(new GActionListener() {
             @Override
-            public void action() {
+            public void action(GObject gobj) {
                 Random ran = new Random();
                 GFrame sub1 = new GFrame(/*"子窗口"*/"颜色选择", 40 + ran.nextInt(100), 50 + ran.nextInt(100), 300, 600);
                 GPanel panel = sub1.getPanel();
@@ -161,8 +174,12 @@ class MyInit implements GInitExtension {
 
         bt1.setActionListener(new GActionListener() {
             @Override
-            public void action() {
+            public void action(GObject gobj) {
                 System.out.println("delete something");
+                menu.setPos(menu.getX(), menu.getY() - 20);
+                if (menu.getY() < 0) {
+                    menu.setPos(menu.getX(), form.getDeviceHeight() - menu.getH());
+                }
             }
         });
     }

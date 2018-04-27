@@ -172,11 +172,11 @@ abstract public class GContainer extends GObject {
     }
 
     @Override
-    public void clickEvent(int x, int y) {
+    public void longTouchedEvent(int x, int y) {
         for (Iterator<GObject> it = elements.iterator(); it.hasNext();) {
             try {
                 GObject nko = it.next();
-                nko.clickEvent(x, y);
+                nko.longTouchedEvent(x, y);
             } catch (Exception e) {
                 e.printStackTrace();
             }

@@ -99,7 +99,7 @@ public class GInputField extends GObject {
                     setCaretIndex(getCaretIndex(x, y));
                 }
             } else if (actionListener != null) {
-                actionListener.action();
+                actionListener.action(this);
             }
         }
     }

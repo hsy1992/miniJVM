@@ -160,7 +160,7 @@ public class GTextBox extends GObject {
                     }
                 }
             } else if (actionListener != null) {
-                actionListener.action();
+                actionListener.action(this);
             }
         }
         if (phase == Glfm.GLFMTouchPhaseEnded) {
@@ -173,7 +173,7 @@ public class GTextBox extends GObject {
     }
 
     @Override
-    public void clickEvent(int x, int y) {
+    public void longTouchedEvent(int x, int y) {
         int rx = (int) (x - parent.getX());
         int ry = (int) (y - parent.getY());
         if (isInBoundle(boundle, rx, ry)) {
