@@ -9,7 +9,7 @@ package org.mini.gui;
  *
  * @author Gust
  */
-public interface GInitExtension {
+public interface GApplication {
 
-    void onInit(GObject owner);
+    GForm createdForm( GuiCallBack ccb);
 }

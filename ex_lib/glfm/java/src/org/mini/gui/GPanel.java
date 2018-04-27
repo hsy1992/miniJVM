@@ -10,19 +10,6 @@ package org.mini.gui;
  * @author gust
  */
 public class GPanel extends GContainer{
-        GInitExtension extinit;
 
-    void init() {
-        if(extinit!=null){
-            extinit.onInit(this);
-        }
-    }
-
-    /**
-     * @param extinit the extinit to set
-     */
-    public void setExtinit(GInitExtension extinit) {
-        this.extinit = extinit;
-    }
 
 }

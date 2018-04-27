@@ -24,7 +24,6 @@ import org.mini.gui.GForm;
 import org.mini.gui.GFrame;
 import org.mini.gui.GGraphics;
 import org.mini.gui.GImage;
-import org.mini.gui.GInitExtension;
 import org.mini.gui.GInputField;
 import org.mini.gui.GLabel;
 import org.mini.gui.GList;
@@ -33,15 +32,20 @@ import org.mini.gui.GObject;
 import org.mini.gui.GPanel;
 import org.mini.gui.GScrollBar;
 import org.mini.gui.GTextBox;
+import org.mini.gui.GuiCallBack;
 import org.mini.gui.event.GActionListener;
 import static org.mini.nanovg.Gutil.toUtf8;
 import org.mini.nanovg.Nanovg;
+import org.mini.gui.GApplication;
 
 /**
  *
  * @author gust
  */
-public class GlfmMain {
+public class GlfmMain implements GApplication {
+
+    GForm form;
+    GMenu menu;
 
     public static void main(String[] args) {
     }
@@ -54,13 +58,9 @@ public class GlfmMain {
                 GLFMDepthFormatNone,
                 GLFMStencilFormatNone,
                 GLFMMultisampleNone);
-        GForm form;
-        form = new GForm(/*"GuiTest"*/"登录 窗口", 800, 600, display);
-        form.setExtinit(new MyInit(form));
-        form.setFps(30f);
-
-        Glfm.glfmSetCallBack(display, form.getCallBack());
-        //t13();
+        GlfmMain app = new GlfmMain();
+        GuiCallBack ccb = new GuiCallBack(display,app);
+        Glfm.glfmSetCallBack(display, ccb);
     }
 
     static void t13() {
@@ -82,19 +82,12 @@ public class GlfmMain {
 
         }
     }
-}
-
-class MyInit implements GInitExtension {
-
-    GForm form;
-    GMenu menu;
-
-    public MyInit(GForm gf) {
-        form = gf;
-    }
 
     @Override
-    public void onInit(GObject owner) {
+    public GForm createdForm(GuiCallBack ccb) {
+        form = new GForm(/*"GuiTest"*/"登录 窗口", 800, 600, ccb);
+
+        form.setFps(30f);
         long vg = form.getNvContext();
         GFrame gframe = new GFrame("测"/*"demo"*/, 50, 50, 300, 500);
         init(gframe.getPanel(), vg);
@@ -109,6 +102,7 @@ class MyInit implements GInitExtension {
         menu.addItem("New", img);
         menu.addItem("My", img);
         form.add(menu);
+        return form;
     }
 
     public void init(GPanel parent, final long vg) {
@@ -192,8 +186,9 @@ class MyInit implements GInitExtension {
         parent.add(list);
         if (list.getImages() == null) {
             int i = Nanovg.nvgCreateImage(vg, toUtf8("./image4.png"), 0);
-            list.setItems(new int[]{i, i, i, i, i, i, i, i, i, i},
-                    new String[]{"One", "Two", "Three", "Four", "Five", "Six", "Seven", "Eight", "Nine", "Ten",});
+            list.setItems(new int[]{i, i, i},
+                    new String[]{"One", "Two", "Three",});
+
         }
         y += 40;
         list = new GList(x, y, 280, 140);
