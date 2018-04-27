@@ -74,6 +74,18 @@ abstract public class GObject {
 
     public void scrollEvent(double scrollX, double scrollY, int x, int y) {
     }
+    
+    /**
+     * 响应惯性事件,从P1到P2用了多长时间
+     * @param x1
+     * @param y1
+     * @param x2
+     * @param y2
+     * @param moveTime 
+     */
+    public void inertiaEvent(double x1,double y1,double x2,double y2, long moveTime){
+        
+    }
 
     public void onFocus() {
 

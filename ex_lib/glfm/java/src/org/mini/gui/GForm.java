@@ -182,8 +182,14 @@ public class GForm extends GPanel {
         int mouseX, mouseY, lastX, lastY;
         long mouseLastPressed;
         int LONG_TOUCH_TIME = 1000;
+        int INERTIA_MIN_DISTANCE = 40;//移动距离超过40单位时可以产生惯性
+        int INERTIA_MAX_MILLS = 300;//在300毫秒内的滑动可以产生惯性
 
         long last, count;
+        //
+        double moveStartX;
+        double moveStartY;
+        long moveStartAt;
 
         @Override
         public void mainLoop(long display, double frameTime) {
@@ -249,16 +255,32 @@ public class GForm extends GPanel {
             lastY = mouseY;
             mouseX = (int) x;
             mouseY = (int) y;
-            System.out.println("   touch=" + touch + "   phase=" + phase + "   x=" + x + "   y=" + y);
+//            System.out.println("   touch=" + touch + "   phase=" + phase + "   x=" + x + "   y=" + y);
 //            System.out.println("display=" + display + "   win=" + win);
             if (display == win) {
 
                 switch (phase) {
                     case Glfm.GLFMTouchPhaseBegan: {//
                         findSetFocus(mouseX, mouseY);//找到焦点组件
+
+                        //处理惯性
+                        moveStartX = x;
+                        moveStartY = y;
+                        moveStartAt = System.currentTimeMillis();
                         break;
                     }
                     case Glfm.GLFMTouchPhaseEnded: {//
+
+                        long cost = System.currentTimeMillis() - moveStartAt;
+                        if ((Math.abs(x - moveStartX) > INERTIA_MIN_DISTANCE || Math.abs(y - moveStartY) > INERTIA_MIN_DISTANCE)
+                                && cost < INERTIA_MAX_MILLS) {//在短时间内进行了滑动操作
+                            GForm.this.inertiaEvent(moveStartX, moveStartY, x, y, cost);
+                        }
+
+                        //处理惯性
+                        moveStartX = 0;
+                        moveStartY = 0;
+                        moveStartAt = 0;
                         break;
                     }
                     case Glfm.GLFMTouchPhaseMoved: {//

@@ -172,6 +172,23 @@ abstract public class GContainer extends GObject {
     }
 
     @Override
+    public void inertiaEvent(double x1, double y1, double x2, double y2, long moveTime) {
+
+        if (focus != null) {
+            focus.inertiaEvent(x1, y1, x2, y2, moveTime);
+        } else {
+            for (Iterator<GObject> it = elements.iterator(); it.hasNext();) {
+                try {
+                    GObject nko = it.next();
+                    nko.inertiaEvent(x1, y1, x2, y2, moveTime);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+    }
+
+    @Override
     public void longTouchedEvent(int x, int y) {
         for (Iterator<GObject> it = elements.iterator(); it.hasNext();) {
             try {

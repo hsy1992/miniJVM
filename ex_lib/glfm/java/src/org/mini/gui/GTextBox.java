@@ -5,6 +5,7 @@
  */
 package org.mini.gui;
 
+import java.util.TimerTask;
 import org.mini.glfm.Glfm;
 import static org.mini.nanovg.Gutil.toUtf8;
 import org.mini.nanovg.Nanovg;
@@ -44,9 +45,12 @@ public class GTextBox extends GObject {
     int selectEnd = -1;//选取结束
     int totalRows;//字符串总行数，动态计算出
     int showRows;//可显示行数
-    int topShowRow;//显示区域第一行的行号
+
     short[][] area_detail;
     int scrollDelta;
+    float scroll = 0;//0-1 区间,描述窗口滚动条件位置, 滚动符0-1分别对应文本顶部超出显示区域的高度百分比
+    float totalTextHeight;//字符串总高度
+    float showAreaHeight;//显示区域高度
     //
     static final int AREA_DETAIL_ADD = 7;//额外增加slot数量
     static final int AREA_START = 4;//字符串起点位置
@@ -151,6 +155,11 @@ public class GTextBox extends GObject {
                     resetSelect();
                     selectStart = caret;
                     //drag = true;//打开可以进行选择模式，但手机上滚动和选取不可同时使用
+                }
+                //
+                if (task != null) {
+                    task.cancel();
+                    task = null;
                 }
             } else if (phase == Glfm.GLFMTouchPhaseMoved) {
                 if (drag) {
@@ -289,9 +298,11 @@ public class GTextBox extends GObject {
                 }
                 case Glfm.GLFMKeyUp: {
                     int[] pos = getCaretPosFromArea();
-                    if (topShowRow > 0 && (pos == null || pos[2] == topShowRow)) {
-                        topShowRow--;
-                    }
+//                    if (topShowRow > 0 && (pos == null || pos[2] == topShowRow)) {
+//                        topShowRow--;
+//                    }
+                    setScroll(scroll - lineh[0] / (totalTextHeight - showAreaHeight));
+
                     if (pos != null) {
                         int cart = getCaretIndexFromArea(pos[0], pos[1] - (int) lineh[0]);
                         if (cart >= 0) {
@@ -302,9 +313,10 @@ public class GTextBox extends GObject {
                 }
                 case Glfm.GLFMKeyDown: {
                     int[] pos = getCaretPosFromArea();
-                    if (topShowRow < totalRows - showRows && (pos == null || pos[2] == topShowRow + showRows - 1)) {
-                        topShowRow++;
-                    }
+//                    if (topShowRow < totalRows - showRows && (pos == null || pos[2] == topShowRow + showRows - 1)) {
+//                        topShowRow++;
+//                    }
+                    setScroll(scroll + lineh[0] / (totalTextHeight - showAreaHeight));
                     if (pos != null) {
                         int cart = getCaretIndexFromArea(pos[0], pos[1] + (int) lineh[0]);
                         if (cart >= 0) {
@@ -318,16 +330,67 @@ public class GTextBox extends GObject {
         }
     }
 
+    float getOutOfShowAreaHeight() {
+        float dh = totalTextHeight - showAreaHeight;
+        return dh < 0 ? 0 : dh;
+    }
+
     @Override
     public void scrollEvent(double scrollX, double scrollY, int x, int y) {
         int rx = (int) (x - parent.getX());
         int ry = (int) (y - parent.getY());
         if (isInBoundle(boundle, rx, ry)) {
-            scrollDelta += scrollY;
-            if (Math.abs(scrollDelta) > lineh[0]) {
-                topShowRow -= scrollDelta / lineh[0];
-                scrollDelta %= lineh[0];
+            float dh = getOutOfShowAreaHeight();
+            if (dh > 0) {
+                setScroll(scroll - (float) scrollY / dh);
             }
+        }
+    }
+    //每多长时间进行一次惯性动作
+    long inertiaPeriod = 16;
+    //总共做多少次操作
+    long maxMoveCount = 120;
+    //惯性任务
+    TimerTask task;
+
+    @Override
+    public void inertiaEvent(double x1, double y1, double x2, double y2, final long moveTime) {
+        double dx = x2 - x1;
+        final double dy = y2 - y1;
+        scrollDelta = 0;
+        task = new TimerTask() {
+            //惯性速度
+            double speed = dy / (moveTime / inertiaPeriod);
+            //阴力
+            double resistance = -speed / maxMoveCount;
+            //
+            float count = 0;
+
+            @Override
+            public void run() {
+//                System.out.println("inertia " + speed);
+                speed += resistance;//速度和阴力抵消为0时,退出滑动
+
+                float dh = getOutOfShowAreaHeight();
+                if (dh > 0) {
+                    setScroll(scroll - (float) speed / dh);
+                }
+                flush();
+                if (count++ > maxMoveCount) {
+                    this.cancel();
+                }
+            }
+        };
+        getTimer().schedule(task, 0, inertiaPeriod);
+    }
+
+    void setScroll(float p) {
+        scroll = p;
+        if (scroll > 1) {
+            scroll = 1.f;
+        }
+        if (scroll < 0) {
+            scroll = 0.f;
         }
     }
 
@@ -388,33 +451,37 @@ public class GTextBox extends GObject {
             nvgFillColor(vg, GToolkit.getStyle().getHintFontColor());
             nvgTextJni(vg, dx, dy, hint_arr, 0, hint_arr.length);
         } else {//编辑中
+            int topShowRow = 0;//显示区域第一行的行号
+
             if (text_arr == null) {//文字被修改过
                 text_arr = toUtf8(textsb.toString());
-                showRows = Math.round(text_area[HEIGHT] / lineH);
+                showRows = Math.round(text_area[HEIGHT] / lineH) + 2;
+                showAreaHeight = text_area[HEIGHT];
 
                 //用于存放屏墓中各行的一些位置信息
                 area_detail = new short[showRows][];
                 float[] bond = new float[4];
-                Nanovg.nvgTextBoxBoundsJni(vg, dx, dy, text_area[WIDTH], text_arr, 0, text_arr.length, bond);
+                Nanovg.nvgTextBoxBoundsJni(vg, 0, 0, text_area[WIDTH], text_arr, 0, text_arr.length, bond);
                 totalRows = Math.round((bond[HEIGHT] - bond[TOP]) / lineH);
+                totalTextHeight = bond[HEIGHT];
             }
+            //
+            float dh = scroll * (totalTextHeight - showAreaHeight);
+            dh = dh < 0 ? 0 : dh;
+            dy -= dh;
+            topShowRow = (int) (dh / lineH) - 1;
+            //
             int posCount = 100;
             int rowCount = 10;
             long rowsHandle = nvgCreateNVGtextRow(rowCount);
             long glyphsHandle = nvgCreateNVGglyphPosition(posCount);
-            int nrows, i, char_count, area_row_index = 0;
+            int nrows, i, char_count;
             float caretx = 0;
 
             nvgSave(vg);
             Nanovg.nvgScissor(vg, text_area[LEFT], text_area[TOP], text_area[WIDTH], text_area[HEIGHT]);
             //需要恢复现场
             try {
-                //编辑区中最顶端文本的行号
-                if (topShowRow < 0) {
-                    topShowRow = 0;
-                } else if (topShowRow > totalRows - showRows) {
-                    topShowRow = totalRows - showRows;
-                }
 
                 //取选取的起始和终止位置
                 int[] selectFromTo = getSelected();
@@ -430,12 +497,15 @@ public class GTextBox extends GObject {
                 int char_at = 0;
                 int char_starti, char_endi;
 
+                int row_index = 0;
+
                 //通过nvgTextBreakLinesJni进行断行
                 while ((nrows = nvgTextBreakLinesJni(vg, text_arr, start, end, text_area[WIDTH], rowsHandle, rowCount)) != 0) {
 
                     //循环绘制行
                     for (i = 0; i < nrows; i++) {
-                        if (area_row_index >= topShowRow && area_row_index < topShowRow + showRows) {
+//                        if (area_row_index >= topShowRowLocal && area_row_index < topShowRowLocal + showRows) {
+                        if (dy + lineH >= text_area[TOP] && dy < text_area[TOP] + text_area[HEIGHT]) {
                             //取得第i 行的行宽
                             float row_width = Nanovg.nvgNVGtextRow_width(rowsHandle, i);
 
@@ -456,17 +526,11 @@ public class GTextBox extends GObject {
                             char_starti = char_at;
                             char_endi = char_at + curRowStrs.length() - 1;
 
-                            //取得本行之前字符串长度
-//                            String preStrs1 = new String(text_arr, 0, byte_starti, "utf-8");
-//                            int char_at1 = preStrs1.length();
-//                            System.out.println(char_at + "\t" + char_at1 + "\t" + char_starti + "\t" + char_endi + "\t" + byte_starti + "\t" + byte_endi + "\t\"" + curRowStrs + "\"");
-//                            if (char_at != char_at1) {
-//                                int debug = 1;
-//                            }
                             caretx = dx;
                             //取得i行的各个字符的具体位置，结果存入glyphs
                             char_count = nvgTextGlyphPositionsJni(vg, dx, dy, text_arr, byte_starti, byte_endi, glyphsHandle, posCount);
-                            int curRow = area_row_index - topShowRow;
+                            int curRow = row_index - topShowRow;
+
 
                             //把这些信息存下来，用于在点击的时候找到点击了文本的哪个位置
                             //前面存固定信息
@@ -477,7 +541,7 @@ public class GTextBox extends GObject {
                             area_detail[curRow][AREA_H] = (short) lineH;
                             area_detail[curRow][AREA_START] = (short) char_starti;
                             area_detail[curRow][AREA_END] = (short) char_endi;
-                            area_detail[curRow][AREA_ROW] = (short) area_row_index;
+                            area_detail[curRow][AREA_ROW] = (short) row_index;
                             //后面把每个char的位置存下来
                             for (int j = 0; j < char_count; j++) {
                                 //取第 j 个字符的X座标
@@ -527,9 +591,9 @@ public class GTextBox extends GObject {
                             nvgFillColor(vg, GToolkit.getStyle().getTextFontColor());
                             nvgTextJni(vg, dx, dy, text_arr, byte_starti, byte_endi);
 
-                            dy += lineH;
                         }
-                        area_row_index++;
+                        dy += lineH;
+                        row_index++;
                     }
 
                     long next = Nanovg.nvgNVGtextRow_next(rowsHandle, nrows - 1);

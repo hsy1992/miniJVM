@@ -5,6 +5,7 @@
  */
 package org.mini.gui;
 
+import java.util.TimerTask;
 import org.mini.glfm.Glfm;
 import static org.mini.nanovg.Gutil.toUtf8;
 import static org.mini.gui.GToolkit.nvgRGBA;
@@ -117,6 +118,10 @@ public class GList extends GContainer {
             if (phase == Glfm.GLFMTouchPhaseBegan) {
                 startX = x;
                 startY = y;
+                if (task != null) {
+                    task.cancel();
+                    task = null;
+                }
             } else if (phase == Glfm.GLFMTouchPhaseEnded) {
                 boolean inScroll = false;
                 if (scrollBar != null) {
@@ -143,15 +148,41 @@ public class GList extends GContainer {
         int rx = (int) (x - parent.getX());
         int ry = (int) (y - parent.getY());
         if (isInBoundle(boundle, rx, ry) && scrollBar != null) {
-//            curIndex += (scrollY > 0 ? -1 : 1);
-//            if (curIndex < 0) {
-//                curIndex = 0;
-//            }
-//            if (curIndex >= labels.length) {
-//                curIndex = labels.length - 1;
-//            }
             scrollBar.setPos(scrollBar.getPos() - 1.f / labels.length * (float) (scrollY / list_item_heigh));
         }
+    }
+
+    //每多长时间进行一次惯性动作
+    long inertiaPeriod = 16;
+    //总共做多少次操作
+    long maxMoveCount = 120;
+    //惯性任务
+    TimerTask task;
+
+    @Override
+    public void inertiaEvent(double x1, double y1, double x2, double y2, final long moveTime) {
+        double dx = x2 - x1;
+        final double dy = y2 - y1;
+        task = new TimerTask() {
+            //惯性速度
+            double speed = dy / (moveTime / inertiaPeriod);
+            //阴力
+            double resistance = -speed / maxMoveCount;
+            //
+            float count = 0;
+
+            @Override
+            public void run() {
+//                System.out.println("inertia " + speed);
+                speed += resistance;
+                scrollBar.setPos(scrollBar.getPos() - 1.f / labels.length * (float) (speed / list_item_heigh));
+                flush();
+                if (count++ > maxMoveCount) {
+                    this.cancel();
+                }
+            }
+        };
+        getTimer().schedule(task, 0, inertiaPeriod);
     }
 
     /**
@@ -279,7 +310,6 @@ public class GList extends GContainer {
 //        nvgFillColor(vg, nvgRGBA(60, 60, 60, 192));
 //        nvgFill(vg);
 
-
         // Drop shadow
 //        shadowPaint = nvgBoxGradient(vg, x, y + 2, w, h, cornerRadius * 2, 10, nvgRGBA(0, 0, 0, 128), nvgRGBA(0, 0, 0, 0));
 //        nvgBeginPath(vg);
@@ -288,7 +318,6 @@ public class GList extends GContainer {
 //        nvgPathWinding(vg, NVG_HOLE);
 //        nvgFillPaint(vg, shadowPaint);
 //        nvgFill(vg);
-
         nvgSave(vg);
         float th = -(stackh - h) * scrollBar.getPos();
         nvgTranslate(vg, 0, th);
