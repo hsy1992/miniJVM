@@ -360,6 +360,10 @@ const char* glfmGetResRoot();
     
 const char* glfmGetSaveRoot();
 
+const char *getClipBoardContent();
+
+void setClipBoardContent(const char *str);
+
 #if defined(GLFM_PLATFORM_ANDROID)
 
 #include <android/native_activity.h>

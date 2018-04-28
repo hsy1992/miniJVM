@@ -1177,7 +1177,9 @@ static int32_t _glfmOnInputEvent(struct android_app *app, AInputEvent *event) {
 jobject copyAssets(JNIEnv *env, jobject jassetMgr, char *cpath) {
     //java.lang.String[] files=mgr.list("");
     jstring path = (*env)->NewString(env, cpath, strlen(cpath));
-    jobjectArray stringArray = _glfmCallJavaMethodWithArgs(env, jassetMgr, "list", "(Ljava/lang/String;)[Ljava/lang/String;", Object, path);
+    jobjectArray stringArray = _glfmCallJavaMethodWithArgs(env, jassetMgr, "list",
+                                                           "(Ljava/lang/String;)[Ljava/lang/String;",
+                                                           Object, path);
     int stringCount = (*env)->GetArrayLength(env, stringArray);
 
     AAssetManager *mgr = glfmAndroidGetActivity()->assetManager;
@@ -1253,23 +1255,14 @@ static int copyFile2ExternData(struct android_app *app) {
 
     //String[] listFiles = context.getAssets().list(rootDirFullPath);
     JNIEnv *env = ((GLFMPlatformData *) app->userData)->jniEnv;
-    jobject context = _glfmCallJavaMethod(env, app->activity->clazz, "getApplicationContext", "()Landroid/content/Context;", Object);
+    jobject context = _glfmCallJavaMethod(env, app->activity->clazz, "getApplicationContext",
+                                          "()Landroid/content/Context;", Object);
 
     //android.content.res.AssetManager mgr=context.getAssets();
-    jobject amgr = _glfmCallJavaMethod(env, context, "getAssets", "()Landroid/content/res/AssetManager;", Object);
+    jobject amgr = _glfmCallJavaMethod(env, context, "getAssets",
+                                       "()Landroid/content/res/AssetManager;", Object);
     copyAssets(env, amgr, "");
     return 0;
-}
-
-const char *glfmGetResRoot() {
-    ANativeActivity *activity = glfmAndroidGetActivity();
-    const char *expath = activity->externalDataPath;
-    return expath;
-}
-
-const char *glfmGetSaveRoot() {
-    
-    return glfmGetResRoot();
 }
 
 // MARK: Main entry point
@@ -1502,6 +1495,43 @@ Java_org_minijvm_activity_JvmNativeActivity_onStringInput(JNIEnv *env, jobject j
         (*env)->ReleaseStringUTFChars(env, s, rawString);
     }
     return down;
+}
+
+
+const char *glfmGetResRoot() {
+    ANativeActivity *activity = glfmAndroidGetActivity();
+    const char *expath = activity->externalDataPath;
+    return expath;
+}
+
+const char *glfmGetSaveRoot() {
+
+    return glfmGetResRoot();
+}
+
+const char *getClipBoardContent() {
+    struct android_app *app=platformDataGlobal->app;
+    GLFMPlatformData *platformData = (GLFMPlatformData *) app->userData;
+    JNIEnv *jni = platformData->jniEnv;
+    if ((*jni)->ExceptionCheck(jni)) {
+        return false;
+    }
+    jstring jstr = _glfmCallJavaMethod(jni, app->activity->clazz, "getClipBoardContent",
+                                       "()Ljava/lang/String;", Object);
+    const char *rawString = (*jni)->GetStringUTFChars(jni, jstr, 0);
+    return rawString;
+}
+
+void setClipBoardContent(const char *str) {
+    struct android_app *app=platformDataGlobal->app;
+    GLFMPlatformData *platformData = (GLFMPlatformData *) app->userData;
+    JNIEnv *jni = platformData->jniEnv;
+    if ((*jni)->ExceptionCheck(jni)) {
+        return;
+    }
+    jstring jstr = (*jni)->NewString(jni, str, strlen(str));
+    _glfmCallJavaMethodWithArgs(jni, app->activity->clazz, "setClipBoardContent",
+                                "(Ljava/lang/String;)V", Void, jstr);
 }
 
 #endif
