@@ -38,6 +38,7 @@ import static org.mini.nanovg.Nanovg.nvgStrokeColor;
 import static org.mini.nanovg.Nanovg.nvgStrokeWidth;
 import static org.mini.nanovg.Nanovg.nvgTextAlign;
 import static org.mini.nanovg.Nanovg.nvgTextJni;
+import static org.mini.nanovg.Nanovg.nvgTextMetrics;
 import static org.mini.nanovg.Nanovg.nvgTranslate;
 
 /**
@@ -55,6 +56,7 @@ public class GList extends GContainer {
     public static final int MODE_MULTI_LINE = 1, MODE_SINGLE_LINE = 0;
     int mode = MODE_SINGLE_LINE;
     GScrollBar scrollBar;
+    float[] lineh = {0f};
 
     float[] popBoundle;
     float[] normalBoundle;
@@ -202,6 +204,8 @@ public class GList extends GContainer {
         nvgFontFace(vg, GToolkit.getFontWord());
         nvgTextAlign(vg, NVG_ALIGN_LEFT | NVG_ALIGN_MIDDLE);
 
+        nvgTextMetrics(vg, null, null, lineh);
+
         if (pulldown && labels != null) {
             popBoundle = new float[4];
 
@@ -253,8 +257,8 @@ public class GList extends GContainer {
             float y = getY();
             float w = getW();
             float h = getH();
-            nvgScissor(vg, x, y, w, h);
-            drawNormal(vg, x, y, w, h);
+            nvgScissor(vg, x, y, w, list_item_heigh);
+            drawNormal(vg, x, y, w, list_item_heigh);
         }
 
         return true;

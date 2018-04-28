@@ -42,7 +42,12 @@ public class GuiCallBack extends GlfmCallBackAdapter {
 
     public GuiCallBack(long display, GApplication ap) {
         this.display = display;
+        setApplication(ap);
+    }
+
+    public final void setApplication(GApplication ap) {
         this.app = ap;
+        gform = null;
     }
 
     public long getDisplay() {
@@ -68,8 +73,8 @@ public class GuiCallBack extends GlfmCallBackAdapter {
     public int getFrameBufferHeight() {
         return (int) fbHeight;
     }
-    
-    public float getDeviceRatio(){
+
+    public float getDeviceRatio() {
         return pxRatio;
     }
 
@@ -146,10 +151,11 @@ public class GuiCallBack extends GlfmCallBackAdapter {
 
     @Override
     public boolean onTouch(long display, int touch, int phase, double x, double y) {
-        if (gform == null) {
+        GForm form = this.gform;
+        if (form == null) {
             return true;
         }
-        GObject focus = gform.getFocus();
+        GObject focus = form.getFocus();
 
         x /= Glfm.glfmGetDisplayScale(display);
         y /= Glfm.glfmGetDisplayScale(display);
@@ -163,7 +169,7 @@ public class GuiCallBack extends GlfmCallBackAdapter {
 
             switch (phase) {
                 case Glfm.GLFMTouchPhaseBegan: {//
-                    gform.findSetFocus(mouseX, mouseY);//找到焦点组件
+                    form.findSetFocus(mouseX, mouseY);//找到焦点组件
 
                     //处理惯性
                     moveStartX = x;
@@ -176,7 +182,7 @@ public class GuiCallBack extends GlfmCallBackAdapter {
                     long cost = System.currentTimeMillis() - moveStartAt;
                     if ((Math.abs(x - moveStartX) > INERTIA_MIN_DISTANCE || Math.abs(y - moveStartY) > INERTIA_MIN_DISTANCE)
                             && cost < INERTIA_MAX_MILLS) {//在短时间内进行了滑动操作
-                        gform.inertiaEvent(moveStartX, moveStartY, x, y, cost);
+                        form.inertiaEvent(moveStartX, moveStartY, x, y, cost);
                     }
 
                     //处理惯性
@@ -189,7 +195,7 @@ public class GuiCallBack extends GlfmCallBackAdapter {
                     if (focus != null) {
                         focus.scrollEvent(mouseX - lastX, mouseY - lastY, mouseX, mouseY);
                     } else {
-                        gform.scrollEvent(mouseX - lastX, mouseY - lastY, mouseX, mouseY);
+                        form.scrollEvent(mouseX - lastX, mouseY - lastY, mouseX, mouseY);
                     }
                     break;
                 }
@@ -209,17 +215,17 @@ public class GuiCallBack extends GlfmCallBackAdapter {
                 if (focus != null) {
                     focus.longTouchedEvent(mouseX, mouseY);
                 } else {
-                    gform.longTouchedEvent(mouseX, mouseY);
+                    form.longTouchedEvent(mouseX, mouseY);
                 }
                 long_touched = false;
             }
             if (focus != null) {//press event
                 focus.touchEvent(phase, mouseX, mouseY);
             } else {
-                gform.touchEvent(phase, mouseX, mouseY);
+                form.touchEvent(phase, mouseX, mouseY);
             }
         }
-        gform.flush();
+        form.flush();
         return true;
     }
 

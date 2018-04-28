@@ -981,4 +981,35 @@ const char* glfmGetResRoot(){
     return [resPath UTF8String];
 }
 
+const char* glfmGetSaveRoot(){
+    
+    NSArray *paths = NSSearchPathForDirectoriesInDomains(NSCachesDirectory, NSUserDomainMask, YES);
+    NSString *cachesDir = [paths objectAtIndex:0];
+    
+    return [cachesDir UTF8String];
+}
+
+const char* getClipBoardContent() {
+    UIPasteboard* pBoard=[UIPasteboard generalPasteboard];
+    if(pBoard!=NULL) {
+        NSString* pNsStr=pBoard.string;
+        if(pNsStr!=NULL) {
+            return [pNsStr UTF8String];
+        } else {
+            return NULL;
+        }
+    } else {
+        return NULL;
+    }
+}
+
+void setClipBoardContent(const char *str){
+    if(!str)return;
+    
+    NSString *nstr= [[NSString alloc] initWithCString:(const char*)str
+                                             encoding:NSASCIIStringEncoding];
+    UIPasteboard *pasteboard = [UIPasteboard generalPasteboard];
+    pasteboard.string = nstr;
+}
+
 #endif

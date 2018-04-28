@@ -44,10 +44,19 @@ import org.mini.gui.GApplication;
  */
 public class GlfmMain implements GApplication {
 
+    private static GlfmMain app;
+
     GForm form;
     GMenu menu;
 
     public static void main(String[] args) {
+    }
+
+    static public GlfmMain getInstance() {
+        if (app == null) {
+            app = new GlfmMain();
+        }
+        return app;
     }
 
     static public void glinit(long display) {
@@ -58,9 +67,12 @@ public class GlfmMain implements GApplication {
                 GLFMDepthFormatNone,
                 GLFMStencilFormatNone,
                 GLFMMultisampleNone);
-        GlfmMain app = new GlfmMain();
-        GuiCallBack ccb = new GuiCallBack(display,app);
+        app = new GlfmMain();
+        GuiCallBack ccb = new GuiCallBack(display, app);
         Glfm.glfmSetCallBack(display, ccb);
+        
+        System.out.println("res path :"+Glfm.glfmGetResRoot());
+        System.out.println("save path :"+Glfm.glfmGetSaveRoot());
     }
 
     static void t13() {
@@ -85,12 +97,15 @@ public class GlfmMain implements GApplication {
 
     @Override
     public GForm createdForm(GuiCallBack ccb) {
+        if (form != null) {
+            return form;
+        }
         form = new GForm(/*"GuiTest"*/"登录 窗口", 800, 600, ccb);
 
         form.setFps(30f);
         long vg = form.getNvContext();
         GFrame gframe = new GFrame("测"/*"demo"*/, 50, 50, 300, 500);
-        init(gframe.getPanel(), vg);
+        init(gframe.getPanel(), vg, ccb);
         form.add(gframe);
         gframe.align(GGraphics.HCENTER | GGraphics.VCENTER);
 
@@ -105,7 +120,7 @@ public class GlfmMain implements GApplication {
         return form;
     }
 
-    public void init(GPanel parent, final long vg) {
+    public void init(GPanel parent, final long vg, final GuiCallBack ccb) {
 //        light = new Light();
 
         int x = 8, y = 10;
@@ -174,6 +189,13 @@ public class GlfmMain implements GApplication {
                 if (menu.getY() < 0) {
                     menu.setPos(menu.getX(), form.getDeviceHeight() - menu.getH());
                 }
+            }
+        });
+        bt2.setActionListener(new GActionListener() {
+            @Override
+            public void action(GObject gobj) {
+                System.out.println("switch app");
+                ccb.setApplication(GlfmApp2.getInstance());
             }
         });
     }

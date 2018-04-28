@@ -180,7 +180,7 @@ abstract public class GObject {
         visable = v;
     }
 
-    public boolean getVisable() {
+    public boolean isVisable() {
         return visable;
     }
 

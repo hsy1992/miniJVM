@@ -1267,6 +1267,11 @@ const char *glfmGetResRoot() {
     return expath;
 }
 
+const char *glfmGetSaveRoot() {
+    
+    return glfmGetResRoot();
+}
+
 // MARK: Main entry point
 
 void android_main(struct android_app *app) {

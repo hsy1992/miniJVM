@@ -86,7 +86,7 @@ public class Glfm {
 
     public static native void glfmSetCallBack(long display, GlfmCallBack app);
 
-    /// Init the display condifuration. Should only be called in glfmMain.
+/// Init the display condifuration. Should only be called in glfmMain.
 /// If the device does not support the preferred rendering API, the next available rendering API is
 /// chosen (OpenGL ES 3.0 if OpenGL ES 3.1 is not available, and OpenGL ES 2.0 if OpenGL ES 3.0 is
 /// not available). Call glfmGetRenderingAPI in the GLFMSurfaceCreatedFunc to see which rendering
@@ -135,8 +135,9 @@ public class Glfm {
     public static native void glfmSetKeyboardVisible(long display, boolean visible);
 
     public static native boolean glfmGetKeyboardVisible(long display);
-    
+
     public static native String glfmGetResRoot();
 
+    public static native String glfmGetSaveRoot();
 
 }

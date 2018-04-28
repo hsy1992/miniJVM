@@ -66,7 +66,7 @@ public class GFrame extends GContainer {
         panel.boundle[TOP] = 32;
         panel.boundle[WIDTH] = width - 4;
         panel.boundle[HEIGHT] = height - 34;
-        add(panel);
+        super.add(panel);
     }
 
     public void setTitle(String title) {
@@ -84,6 +84,14 @@ public class GFrame extends GContainer {
 
     public int getFrameMode() {
         return frameMode;
+    }
+
+    public void add(GObject nko) {
+        panel.add(nko);
+    }
+
+    public void remove(GObject nko) {
+        panel.remove(nko);
     }
 
     public void setBackground(int rgba) {

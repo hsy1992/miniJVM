@@ -5,11 +5,11 @@
  */
 package org.mini.gui;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Queue;
 import org.mini.glfm.Glfm;
 
 /**
@@ -20,6 +20,8 @@ abstract public class GContainer extends GObject {
 
     LinkedList<GObject> elements = new LinkedList();
     GObject focus;
+
+    int menuCount = 0;
 
     //异步添加删除form
     final List<AddRemoveItem> cache = Collections.synchronizedList(new LinkedList());
@@ -80,13 +82,23 @@ abstract public class GContainer extends GObject {
     @Override
     public boolean update(long ctx) {
         synchronized (cache) {
+            //菜单加在最前面,focus 在之后,其他组件再在其后
+
             for (AddRemoveItem ari : cache) {
                 if (ari.operation == AddRemoveItem.ADD) {
-                    elements.addFirst(ari.go);
                     setFocus(ari.go);
+                    if (ari.go instanceof GMenu) {
+                        menuCount++;
+                        elements.addFirst(ari.go);
+                    } else {
+                        elements.add(menuCount, ari.go);
+                    }
                 } else {
                     elements.remove(ari.go);
                     setFocus(null);
+                    if (ari.go instanceof GMenu) {
+                        menuCount--;
+                    }
                 }
             }
             cache.clear();
@@ -94,16 +106,14 @@ abstract public class GContainer extends GObject {
         //如果focus不是第一个，则移到第一个，这样遮挡关系才正确
         if (focus != null && elements.peek() != focus) {
             elements.remove(focus);
-            elements.addFirst(focus);
+            elements.add(menuCount, focus);
         }
         //更新所有UI组件
         GObject[] arr = elements.toArray(new GObject[elements.size()]);
         for (int i = arr.length - 1; i >= 0; i--) {
             GObject nko = arr[i];
-            if (nko.getVisable()) {
-                if (!nko.update(ctx)) {
-                    elements.remove(nko);
-                }
+            if (nko.isVisable()) {
+                nko.update(ctx);
             }
         }
         return true;

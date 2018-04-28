@@ -589,6 +589,14 @@ int org_mini_glfm_Glfm_glfmGetResRoot(Runtime *runtime, JClass *clazz) {
     return 0;
 }
 
+int org_mini_glfm_Glfm_glfmGetSaveRoot(Runtime *runtime, JClass *clazz) {
+    JniEnv *env = runtime->jnienv;
+    s32 pos = 0;
+    Instance *jstr = createJavaString(runtime, glfmGetSaveRoot());
+    env->push_ref(runtime->stack, jstr);
+    return 0;
+}
+
 /* ==============================   jni utils =================================*/
 
 int org_mini_glfm_utils_Gutil_f2b(Runtime *runtime, JClass *clazz) {
@@ -1082,7 +1090,8 @@ static java_native_method method_glfm_table[] = {
         {"org/mini/glfm/Glfm",        "glfmExtensionSupported",          "(Ljava/lang/String;)Z",            org_mini_glfm_Glfm_glfmExtensionSupported},
         {"org/mini/glfm/Glfm",        "glfmSetKeyboardVisible",          "(JZ)V",                            org_mini_glfm_Glfm_glfmSetKeyboardVisible},
         {"org/mini/glfm/Glfm",        "glfmIsKeyboardVisible",           "(J)Z",                             org_mini_glfm_Glfm_glfmIsKeyboardVisible},
-        {"org/mini/glfm/Glfm",        "glfmGetResRoot",                  "()Ljava/lang/String;",             org_mini_glfm_Glfm_glfmGetResRoot},
+    {"org/mini/glfm/Glfm",        "glfmGetResRoot",                  "()Ljava/lang/String;",             org_mini_glfm_Glfm_glfmGetResRoot},
+    {"org/mini/glfm/Glfm",        "glfmGetSaveRoot",                  "()Ljava/lang/String;",             org_mini_glfm_Glfm_glfmGetSaveRoot},
 
 };
 

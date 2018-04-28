@@ -357,6 +357,8 @@ void glfmSetKeyboardVisibilityChangedFunc(GLFMDisplay *display,
                                           GLFMKeyboardVisibilityChangedFunc visibilityChangedFunc);
 
 const char* glfmGetResRoot();
+    
+const char* glfmGetSaveRoot();
 
 #if defined(GLFM_PLATFORM_ANDROID)
 
