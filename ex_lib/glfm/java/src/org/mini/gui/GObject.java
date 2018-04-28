@@ -8,6 +8,7 @@ package org.mini.gui;
 import java.util.Timer;
 import static org.mini.gui.GToolkit.nvgRGBA;
 import org.mini.gui.event.GActionListener;
+import org.mini.gui.event.GFocusChangeListener;
 
 /**
  *
@@ -36,12 +37,17 @@ abstract public class GObject {
 
     GActionListener actionListener;
 
+    GFocusChangeListener focusListener;
+
     static boolean flush;
 
     boolean visable = true;
 
     void init() {
 
+    }
+    
+    void destory(){
     }
 
     public void flush() {
@@ -74,24 +80,17 @@ abstract public class GObject {
 
     public void scrollEvent(double scrollX, double scrollY, int x, int y) {
     }
-    
+
     /**
      * 响应惯性事件,从P1到P2用了多长时间
+     *
      * @param x1
      * @param y1
      * @param x2
      * @param y2
-     * @param moveTime 
+     * @param moveTime
      */
-    public void inertiaEvent(double x1,double y1,double x2,double y2, long moveTime){
-        
-    }
-
-    public void onFocus() {
-
-    }
-
-    public void onUnFocus() {
+    public void inertiaEvent(double x1, double y1, double x2, double y2, long moveTime) {
 
     }
 
@@ -104,7 +103,7 @@ abstract public class GObject {
         return boundle;
     }
 
-    public GObject getParent() {
+    public GContainer getParent() {
         return parent;
     }
 
@@ -202,5 +201,19 @@ abstract public class GObject {
             }
         }
         return null;
+    }
+
+    /**
+     * @return the focusListener
+     */
+    public GFocusChangeListener getFocusListener() {
+        return focusListener;
+    }
+
+    /**
+     * @param focusListener the focusListener to set
+     */
+    public void setFocusListener(GFocusChangeListener focusListener) {
+        this.focusListener = focusListener;
     }
 }

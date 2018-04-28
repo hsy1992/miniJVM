@@ -5,25 +5,18 @@
  */
 package org.mini.gui;
 
-import com.sun.javafx.tk.Toolkit;
 import org.mini.glfm.Glfm;
-import static org.mini.gui.GTextBox.AREA_DETAIL_ADD;
 import static org.mini.nanovg.Gutil.toUtf8;
 import static org.mini.gui.GToolkit.nvgRGBA;
 import org.mini.nanovg.Nanovg;
 import static org.mini.nanovg.Nanovg.NVG_ALIGN_CENTER;
 import static org.mini.nanovg.Nanovg.NVG_ALIGN_LEFT;
 import static org.mini.nanovg.Nanovg.NVG_ALIGN_MIDDLE;
-import static org.mini.nanovg.Nanovg.nvgBeginPath;
-import static org.mini.nanovg.Nanovg.nvgBoxGradient;
 import static org.mini.nanovg.Nanovg.nvgCreateNVGglyphPosition;
-import static org.mini.nanovg.Nanovg.nvgFill;
 import static org.mini.nanovg.Nanovg.nvgFillColor;
-import static org.mini.nanovg.Nanovg.nvgFillPaint;
 import static org.mini.nanovg.Nanovg.nvgFontFace;
 import static org.mini.nanovg.Nanovg.nvgFontSize;
 import static org.mini.nanovg.Nanovg.nvgNVGglyphPosition_x;
-import static org.mini.nanovg.Nanovg.nvgRoundedRect;
 import static org.mini.nanovg.Nanovg.nvgTextAlign;
 import static org.mini.nanovg.Nanovg.nvgTextGlyphPositionsJni;
 import static org.mini.nanovg.Nanovg.nvgTextJni;
@@ -33,13 +26,12 @@ import static org.mini.nanovg.Nanovg.nvgTextMetrics;
  *
  * @author gust
  */
-public class GInputField extends GObject {
+public class GTextField extends GTextObject {
 
     static public final int BOX_STYLE_EDIT = 0;
     static public final int BOX_STYLE_SEARCH = 1;
 
-    String hint;
-    byte[] hint_arr;
+
     StringBuilder textsb = new StringBuilder();
     byte[] text_arr;
     float[] reset_boundle;
@@ -56,7 +48,8 @@ public class GInputField extends GObject {
     int selectStart = -1;//选取开始
     int selectEnd = -1;//选取结束
 
-    public GInputField(String text, String hint, int left, int top, int width, int height) {
+    public GTextField(String text, String hint, int left, int top, int width, int height) {
+        setText(text);
         setHint(hint);
         boundle[LEFT] = left;
         boundle[TOP] = top;
@@ -65,10 +58,7 @@ public class GInputField extends GObject {
         reset_boundle = new float[]{left + width - height, top, height, height};
     }
 
-    public void setHint(String hint) {
-        this.hint = hint;
-        hint_arr = toUtf8(hint);
-    }
+
 
     public void setBoxStyle(int boxStyle) {
         this.boxStyle = boxStyle;
@@ -76,15 +66,6 @@ public class GInputField extends GObject {
 
     public void setMaxTextLength(int len) {
         text_max = len;
-    }
-
-    public void setText(String text) {
-        this.textsb.append(text);
-        text_arr = toUtf8(text);
-    }
-
-    public String getText() {
-        return textsb.toString();
     }
 
     @Override
@@ -116,16 +97,6 @@ public class GInputField extends GObject {
             }
         }
         return text_pos.length;
-    }
-
-    @Override
-    public void onFocus() {
-        Glfm.glfmSetKeyboardVisible(getForm().getWinContext(), true);
-    }
-
-    @Override
-    public void onUnFocus() {
-        Glfm.glfmSetKeyboardVisible(getForm().getWinContext(), false);
     }
 
     /**
@@ -212,7 +183,7 @@ public class GInputField extends GObject {
         float y = getY();
         float w = getW();
         float h = getH();
-        
+
         Nanovg.nvgScissor(vg, x, y, w, h);
 
         byte[] bg;

@@ -155,6 +155,7 @@ public class GForm extends GPanel {
 //                    Thread.sleep((long) (1000 / fpsExpect - cost));
 //                }
             } catch (Exception e) {
+                e.printStackTrace();
             }
         }
         flush = false;

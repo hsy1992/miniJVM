@@ -34,11 +34,12 @@ import static org.mini.nanovg.Nanovg.nvgTextMetrics;
  *
  * @author Gust
  */
-public class GMenu extends GPanel {
+public class GMenu extends GObject {
 
     int selectIndex;
     float[] lineh = new float[1];
     boolean touched = false;
+    List<GMenuItem> items = new ArrayList();
 
     class GMenuItem extends GObject {
 
@@ -50,7 +51,7 @@ public class GMenu extends GPanel {
             img = i;
         }
     }
-    List<GMenuItem> items = new ArrayList();
+    
 
     public GMenu(int left, int top, int width, int height) {
         boundle[LEFT] = left;
@@ -148,6 +149,7 @@ public class GMenu extends GPanel {
         Nanovg.nvgScissor(vg, x, y, w, h);
         //画底板
         byte[] bg;
+        float cornerRadius = 4.0f;
         float[] color = null;
         //System.out.println("draw==========="+touched);
         if (touched) {
@@ -158,13 +160,19 @@ public class GMenu extends GPanel {
             nvgFill(vg);
             //System.out.println("draw touched");
         }
-        bg = nvgLinearGradient(vg, x, y, x, y + h, nvgRGBA(255, 255, 255, 64), nvgRGBA(0, 0, 0, 64));
-        float cornerRadius = 4.0f;
+        nvgBeginPath(vg);
+        nvgRoundedRect(vg, x + 1f, y + 1f, w - 2, h - 2, cornerRadius - 0.5f);
+        nvgFillColor(vg, nvgRGBA(0, 0, 0, 255));
+        nvgFill(vg);
+
+        //渐变
+        bg = nvgLinearGradient(vg, x, y, x, y + h, nvgRGBA(255, 255, 255, 32), nvgRGBA(0, 0, 0, 32));
         nvgBeginPath(vg);
         nvgRoundedRect(vg, x + 1, y + 1, w - 2, h - 2, cornerRadius - 1);
         nvgFillPaint(vg, bg);
         nvgFill(vg);
 
+        //边框
         nvgBeginPath(vg);
         nvgRoundedRect(vg, x + 0.5f, y + 0.5f, w - 1, h - 1, cornerRadius - 0.5f);
         nvgStrokeColor(vg, nvgRGBA(0, 0, 0, 48));

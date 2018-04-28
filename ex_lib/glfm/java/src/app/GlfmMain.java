@@ -24,7 +24,7 @@ import org.mini.gui.GForm;
 import org.mini.gui.GFrame;
 import org.mini.gui.GGraphics;
 import org.mini.gui.GImage;
-import org.mini.gui.GInputField;
+import org.mini.gui.GTextField;
 import org.mini.gui.GLabel;
 import org.mini.gui.GList;
 import org.mini.gui.GMenu;
@@ -37,6 +37,7 @@ import org.mini.gui.event.GActionListener;
 import static org.mini.nanovg.Gutil.toUtf8;
 import org.mini.nanovg.Nanovg;
 import org.mini.gui.GApplication;
+import org.mini.gui.GLanguage;
 
 /**
  *
@@ -70,12 +71,12 @@ public class GlfmMain implements GApplication {
         app = new GlfmMain();
         GuiCallBack ccb = new GuiCallBack(display, app);
         Glfm.glfmSetCallBack(display, ccb);
-        
-        System.out.println("res path :"+Glfm.glfmGetResRoot());
-        System.out.println("save path :"+Glfm.glfmGetSaveRoot());
-        
+
+        System.out.println("res path :" + Glfm.glfmGetResRoot());
+        System.out.println("save path :" + Glfm.glfmGetSaveRoot());
+
         Glfm.glfmSetClipBoardContent("this is a clipboard test");
-        System.out.println("clipBoard:"+Glfm.glfmGetClipBoardContent());
+        System.out.println("clipBoard:" + Glfm.glfmGetClipBoardContent());
     }
 
     static void t13() {
@@ -103,6 +104,7 @@ public class GlfmMain implements GApplication {
         if (form != null) {
             return form;
         }
+        GLanguage.setCurLang(GLanguage.ID_CHN);
         form = new GForm(/*"GuiTest"*/"登录 窗口", 800, 600, ccb);
 
         form.setFps(30f);
@@ -127,17 +129,17 @@ public class GlfmMain implements GApplication {
 //        light = new Light();
 
         int x = 8, y = 10;
-        GInputField gif = new GInputField("", "search", x, y, 280, 25);
-        gif.setBoxStyle(GInputField.BOX_STYLE_SEARCH);
+        GTextField gif = new GTextField("", "search", x, y, 280, 25);
+        gif.setBoxStyle(GTextField.BOX_STYLE_SEARCH);
         parent.add(gif);
         y += 30;
         GLabel lb1 = new GLabel("Login", x, y, 280, 20);
         parent.add(lb1);
         y += 25;
-        GInputField mail = new GInputField("", "Email", x, y, 280, 28);
+        GTextField mail = new GTextField("", "Email", x, y, 280, 28);
         parent.add(mail);
         y += 35;
-        GInputField pwd = new GInputField("", "Password", x, y, 280, 28);
+        GTextField pwd = new GTextField("", "Password", x, y, 280, 28);
         parent.add(pwd);
         y += 35;
 //        String conttxt = "  \n  \n ";

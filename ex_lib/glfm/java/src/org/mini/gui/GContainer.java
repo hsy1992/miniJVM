@@ -52,11 +52,15 @@ abstract public class GContainer extends GObject {
     public void setFocus(GObject go) {
         if (this.focus != go) {
             if (focus != null) {
-                focus.onUnFocus();
+                if (focus.focusListener != null) {
+                    focus.focusListener.focusLost(focus);
+                }
             }
             this.focus = go;
             if (focus != null) {
-                focus.onFocus();
+                if (focus.focusListener != null) {
+                    focus.focusListener.focusGot(focus);
+                }
             }
         }
     }
@@ -71,6 +75,8 @@ abstract public class GContainer extends GObject {
 
     public void remove(GObject nko) {
         if (nko != null) {
+            nko.setParent(null);
+            nko.destory();
             cache.add(new AddRemoveItem(AddRemoveItem.REMOVE, nko));
         }
     }
@@ -94,6 +100,7 @@ abstract public class GContainer extends GObject {
                         elements.add(menuCount, ari.go);
                     }
                 } else {
+                    ari.go.destory();
                     elements.remove(ari.go);
                     setFocus(null);
                     if (ari.go instanceof GMenu) {
@@ -104,7 +111,7 @@ abstract public class GContainer extends GObject {
             cache.clear();
         }
         //如果focus不是第一个，则移到第一个，这样遮挡关系才正确
-        if (focus != null && elements.peek() != focus) {
+        if (focus != null && !(focus instanceof GMenu)) {
             elements.remove(focus);
             elements.add(menuCount, focus);
         }

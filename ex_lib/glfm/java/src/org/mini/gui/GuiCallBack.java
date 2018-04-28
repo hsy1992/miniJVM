@@ -163,13 +163,20 @@ public class GuiCallBack extends GlfmCallBackAdapter {
         lastY = mouseY;
         mouseX = (int) x;
         mouseY = (int) y;
-//            System.out.println("   touch=" + touch + "   phase=" + phase + "   x=" + x + "   y=" + y);
+
+        long cur = System.currentTimeMillis();
+        //
+        boolean long_touched = false;
+            System.out.println("   touch=" + touch + "   phase=" + phase + "   x=" + x + "   y=" + y);
 //            System.out.println("display=" + display + "   win=" + win);
         if (display == display) {
 
             switch (phase) {
                 case Glfm.GLFMTouchPhaseBegan: {//
                     form.findSetFocus(mouseX, mouseY);//找到焦点组件
+
+                    //
+                    mouseLastPressed = cur;
 
                     //处理惯性
                     moveStartX = x;
@@ -184,6 +191,8 @@ public class GuiCallBack extends GlfmCallBackAdapter {
                             && cost < INERTIA_MAX_MILLS) {//在短时间内进行了滑动操作
                         form.inertiaEvent(moveStartX, moveStartY, x, y, cost);
                     }
+                    //检测长按
+                    long_touched = cur - mouseLastPressed > LONG_TOUCH_TIME;
 
                     //处理惯性
                     moveStartX = 0;
@@ -197,17 +206,17 @@ public class GuiCallBack extends GlfmCallBackAdapter {
                     } else {
                         form.scrollEvent(mouseX - lastX, mouseY - lastY, mouseX, mouseY);
                     }
+                    //拖动重置长按
+                    mouseLastPressed = cur;
                     break;
                 }
                 case Glfm.GLFMTouchPhaseHover: {//
                     break;
                 }
             }
-            long cur = System.currentTimeMillis();
-            //双击
-            boolean long_touched = cur - mouseLastPressed > LONG_TOUCH_TIME;
+
             if (phase == Glfm.GLFMTouchPhaseBegan) {
-                mouseLastPressed = cur;
+
             }
 
             //click event

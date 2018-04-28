@@ -9,6 +9,8 @@ import java.util.Hashtable;
 import javax.mini.reflect.Array;
 import javax.mini.reflect.vm.RefNative;
 import org.mini.glfm.Glfm;
+import org.mini.gui.event.GActionListener;
+import org.mini.gui.event.GFocusChangeListener;
 import static org.mini.nanovg.Gutil.toUtf8;
 import org.mini.nanovg.Nanovg;
 import static org.mini.nanovg.Nanovg.nvgAddFallbackFontId;
@@ -128,12 +130,13 @@ public class GToolkit {
 
     /**
      * 画光标，是否闪烁，如果为false,则一常显，为了节能，所以大多时候blink为false
+     *
      * @param vg
      * @param x
      * @param y
      * @param w
      * @param h
-     * @param blink 
+     * @param blink
      */
     public static void drawCaret(long vg, float x, float y, float w, float h, boolean blink) {
         long curTime = System.currentTimeMillis();
@@ -149,10 +152,90 @@ public class GToolkit {
         }
     }
 
-    public static void drawRect(long vg, float x, float y, float w, float h,float[] color) {
+    public static void drawRect(long vg, float x, float y, float w, float h, float[] color) {
         nvgBeginPath(vg);
         nvgFillColor(vg, color);
         nvgRect(vg, x, y, w, h);
         nvgFill(vg);
+    }
+
+    /**
+     * 唤出基于form层的编辑菜单,选中菜单项后消失,失去焦点后消失
+     *
+     * @param focus
+     * @param x
+     * @param y
+     */
+    public static void callEditMenu(final GTextObject focus, float x, float y) {
+        float menuH = 40, menuW = 300;
+
+        float mx = x - menuW / 2;
+        if (mx < 10) {
+            mx = 10;
+        } else if (mx + menuW > focus.getForm().getDeviceWidth()) {
+            mx = focus.getForm().getDeviceWidth() - menuW;
+        }
+        float my = y - 10 - menuH / 2;
+        if (my < 20) {
+            my = y + 10;
+        } else if (my + menuH > focus.getForm().getDeviceHeight()) {
+            my = focus.getForm().getDeviceHeight() - menuH;
+        }
+        final GMenu menu = new GMenu((int) mx, (int) my, (int) menuW, (int) menuH);
+        menu.addItem(GLanguage.getString("Select"), null);
+        menu.addItem(GLanguage.getString("Copy"), null);
+        menu.addItem(GLanguage.getString("Paste"), null);
+        menu.addItem(GLanguage.getString("Cut"), null);
+        menu.addItem(GLanguage.getString("Select All"), null);
+        menu.setActionListener(new GActionListener() {
+            GTextObject go = focus;
+            GMenu m = menu;
+
+            @Override
+            public void action(GObject gobj) {
+                int si = m.getSelectIndex();
+                switch (si) {
+                    case 0: {
+                        go.doSelectText();
+                        break;
+                    }
+                    case 1: {
+                        go.doCopyClipBoard();
+                        break;
+                    }
+                    case 2: {
+                        go.doPasteClipBoard();
+                        break;
+                    }
+                    case 3: {
+                        go.doCut();
+                        break;
+                    }
+                    case 4: {
+                        go.doSelectAll();
+                        break;
+                    }
+                }
+                m.getForm().remove(m);
+            }
+        });
+
+        menu.setFocusListener(new GFocusChangeListener() {
+            GMenu m = menu;
+
+            @Override
+            public void focusGot(GObject go) {
+            }
+
+            @Override
+            public void focusLost(GObject go) {
+                if (m.getForm() != null) {
+                    m.getForm().remove(m);
+                }
+            }
+        });
+
+        focus.getForm().add(menu);
+        focus.getForm().setFocus(menu);
     }
 }

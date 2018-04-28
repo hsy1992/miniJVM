@@ -29,13 +29,9 @@ import static org.mini.nanovg.Nanovg.nvgTextMetrics;
  *
  * @author gust
  */
-public class GTextBox extends GObject {
+public class GTextBox extends GTextObject{
 
-    String hint;
-    byte[] hint_arr;
-    StringBuilder textsb = new StringBuilder();
-    byte[] text_arr;
-    char preicon;
+
     //
     float[] lineh = {0};
     private int caretIndex;//光标在字符串中的位置
@@ -70,19 +66,7 @@ public class GTextBox extends GObject {
         boundle[HEIGHT] = height;
     }
 
-    public void setHint(String hint) {
-        this.hint = hint;
-        hint_arr = toUtf8(hint);
-    }
 
-    public void setText(String text) {
-        this.textsb.setLength(0);
-        this.textsb.append(text);
-    }
-
-    public String getText() {
-        return textsb.toString();
-    }
 
     boolean isInArea(short[] bound, float x, float y) {
         return x >= bound[LEFT] && x <= bound[LEFT] + bound[WIDTH]
@@ -204,17 +188,9 @@ public class GTextBox extends GObject {
                 }
             }
         }
+        GToolkit.callEditMenu(this, x, y);
     }
 
-    @Override
-    public void onFocus() {
-        Glfm.glfmSetKeyboardVisible(getForm().getWinContext(), true);
-    }
-
-    @Override
-    public void onUnFocus() {
-        Glfm.glfmSetKeyboardVisible(getForm().getWinContext(), false);
-    }
 
     /**
      *
@@ -530,7 +506,6 @@ public class GTextBox extends GObject {
                             //取得i行的各个字符的具体位置，结果存入glyphs
                             char_count = nvgTextGlyphPositionsJni(vg, dx, dy, text_arr, byte_starti, byte_endi, glyphsHandle, posCount);
                             int curRow = row_index - topShowRow;
-
 
                             //把这些信息存下来，用于在点击的时候找到点击了文本的哪个位置
                             //前面存固定信息
