@@ -597,6 +597,25 @@ int org_mini_glfm_Glfm_glfmGetSaveRoot(Runtime *runtime, JClass *clazz) {
     return 0;
 }
 
+int org_mini_glfm_Glfm_glfmGetClipBoardContent(Runtime *runtime, JClass *clazz) {
+    JniEnv *env = runtime->jnienv;
+    s32 pos = 0;
+    Instance *jstr = createJavaString(runtime, getClipBoardContent());
+    env->push_ref(runtime->stack, jstr);
+    return 0;
+}
+
+int org_mini_glfm_Glfm_glfmSetClipBoardContent(Runtime *runtime, JClass *clazz) {
+    JniEnv *env = runtime->jnienv;
+    s32 pos = 0;
+    Instance *jstr = env->localvar_getRefer(runtime, 0);
+    Utf8String *ustr=utf8_create();
+    env->jstring_2_utf8(jstr,ustr);
+    setClipBoardContent(utf8_cstr(ustr));
+    utf8_destory(ustr);
+    return 0;
+}
+
 /* ==============================   jni utils =================================*/
 
 int org_mini_glfm_utils_Gutil_f2b(Runtime *runtime, JClass *clazz) {
@@ -1092,6 +1111,8 @@ static java_native_method method_glfm_table[] = {
         {"org/mini/glfm/Glfm",        "glfmIsKeyboardVisible",           "(J)Z",                             org_mini_glfm_Glfm_glfmIsKeyboardVisible},
     {"org/mini/glfm/Glfm",        "glfmGetResRoot",                  "()Ljava/lang/String;",             org_mini_glfm_Glfm_glfmGetResRoot},
     {"org/mini/glfm/Glfm",        "glfmGetSaveRoot",                  "()Ljava/lang/String;",             org_mini_glfm_Glfm_glfmGetSaveRoot},
+    {"org/mini/glfm/Glfm",        "glfmGetClipBoardContent",                  "()Ljava/lang/String;",             org_mini_glfm_Glfm_glfmGetClipBoardContent},
+    {"org/mini/glfm/Glfm",        "glfmSetClipBoardContent",                  "(Ljava/lang/String;)V",             org_mini_glfm_Glfm_glfmSetClipBoardContent},
 
 };
 

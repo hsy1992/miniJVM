@@ -139,5 +139,9 @@ public class Glfm {
     public static native String glfmGetResRoot();
 
     public static native String glfmGetSaveRoot();
+    
+    public static native String glfmGetClipBoardContent();
+    
+    public static native void glfmSetClipBoardContent(String str);
 
 }

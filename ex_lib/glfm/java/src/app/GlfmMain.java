@@ -73,6 +73,9 @@ public class GlfmMain implements GApplication {
         
         System.out.println("res path :"+Glfm.glfmGetResRoot());
         System.out.println("save path :"+Glfm.glfmGetSaveRoot());
+        
+        Glfm.glfmSetClipBoardContent("this is a clipboard test");
+        System.out.println("clipBoard:"+Glfm.glfmGetClipBoardContent());
     }
 
     static void t13() {
