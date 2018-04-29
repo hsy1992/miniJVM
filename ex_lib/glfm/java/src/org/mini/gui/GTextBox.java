@@ -29,8 +29,7 @@ import static org.mini.nanovg.Nanovg.nvgTextMetrics;
  *
  * @author gust
  */
-public class GTextBox extends GTextObject{
-
+public class GTextBox extends GTextObject {
 
     //
     float[] lineh = {0};
@@ -66,8 +65,6 @@ public class GTextBox extends GTextObject{
         boundle[HEIGHT] = height;
     }
 
-
-
     boolean isInArea(short[] bound, float x, float y) {
         return x >= bound[LEFT] && x <= bound[LEFT] + bound[WIDTH]
                 && y >= bound[TOP] && y <= bound[TOP] + bound[HEIGHT];
@@ -90,7 +87,11 @@ public class GTextBox extends GTextObject{
                             int x1 = (i + 1 < imax) ? detail[i + 1] : detail[AREA_X] + detail[AREA_W];
                             if (x >= x0 && x < x1) {
                                 if (x > detail[detail.length - 1]) {
-                                    return detail[AREA_START] + (i - AREA_DETAIL_ADD) + 1;
+                                    int cidx = detail[AREA_START] + (i - AREA_DETAIL_ADD) + 1;
+                                    if (cidx > textsb.length()) {//字符串結尾加了一個0,所以會多一個字符出來
+                                        cidx = textsb.length();
+                                    }
+                                    return cidx;
                                 } else {
                                     return detail[AREA_START] + (i - AREA_DETAIL_ADD);
                                 }
@@ -165,33 +166,6 @@ public class GTextBox extends GTextObject{
 
     }
 
-    @Override
-    public void longTouchedEvent(int x, int y) {
-        int rx = (int) (x - parent.getX());
-        int ry = (int) (y - parent.getY());
-        if (isInBoundle(boundle, rx, ry)) {
-            int caret = getCaretIndexFromArea(x, y);
-            if (caret >= 0) {
-                int[] pos = getCaretPosFromArea();
-                //找光标附近的单词
-                if (pos != null) {
-                    int arrIndex = pos[3];
-                    short[] arr = area_detail[arrIndex];
-                    String s = textsb.substring(arr[AREA_START], arr[AREA_END]);
-                    int strIndex = caret - arr[AREA_START];
-                    int after = s.indexOf(' ', strIndex);
-                    if (after >= 0) {
-                        int before = s.substring(0, strIndex).lastIndexOf(' ') + 1;
-                        selectStart = before < 0 ? arr[AREA_START] : arr[AREA_START] + before;
-                        selectEnd = after < 0 ? arr[AREA_END] : arr[AREA_START] + after;
-                    }
-                }
-            }
-        }
-        GToolkit.callEditMenu(this, x, y);
-    }
-
-
     /**
      *
      * @param str
@@ -205,14 +179,9 @@ public class GTextBox extends GTextObject{
         }
         int[] selectFromTo = getSelected();
         if (selectFromTo != null) {
-            delectSelect();
+            deleteSelectedText();
         }
-        for (int i = 0, imax = str.length(); i < imax; i++) {
-            char character = str.charAt(i);
-            textsb.insert(caretIndex, character);
-            setCaretIndex(caretIndex + 1);
-        }
-        text_arr = null;
+        insertTextAtCaret(str);
     }
 
     @Override
@@ -226,7 +195,7 @@ public class GTextBox extends GTextObject{
                     if (textsb.length() > 0 && caretIndex > 0) {
                         int[] selectFromTo = getSelected();
                         if (selectFromTo != null) {
-                            delectSelect();
+                            deleteSelectedText();
                         } else {
                             textsb.delete(caretIndex - 1, caretIndex);
                             setCaretIndex(caretIndex - 1);
@@ -252,7 +221,7 @@ public class GTextBox extends GTextObject{
                     if (txt != null && txt.length() > 0) {
                         int[] selectFromTo = getSelected();
                         if (selectFromTo != null) {
-                            delectSelect();
+                            deleteSelectedText();
                         }
                         setCaretIndex(caretIndex + 1);
                         textsb.insert(caretIndex, "\n");
@@ -370,8 +339,14 @@ public class GTextBox extends GTextObject{
         }
     }
 
-    void delectSelect() {
+
+
+    @Override
+    public void deleteSelectedText() {
         int[] sarr = getSelected();
+        if (sarr == null || sarr[0] == -1 || sarr[1] == -1) {
+            return;
+        }
         setCaretIndex(sarr[0]);
         textsb.delete(sarr[0], sarr[1]);
         text_arr = null;
@@ -390,6 +365,60 @@ public class GTextBox extends GTextObject{
             return new int[]{select1, select2};
         }
         return null;
+    }
+
+    @Override
+    public String getSelectedText() {
+        int[] sarr = getSelected();
+        if (sarr == null || sarr[0] == -1 || sarr[1] == -1) {
+            return null;
+        }
+        return textsb.substring(sarr[0], sarr[1]);
+    }
+
+    @Override
+    public void insertTextAtCaret(String str) {
+        for (int i = 0, imax = str.length(); i < imax; i++) {
+            char character = str.charAt(i);
+            textsb.insert(caretIndex, character);
+            setCaretIndex(caretIndex + 1);
+        }
+        text_arr = null;
+    }
+
+    @Override
+    public void doSelectText() {
+        if (caretIndex <= 0) {
+            caretIndex = 0;
+            selectStart = 0;
+        }
+        int txtLen = textsb.length();
+        if (caretIndex >= txtLen) {
+            caretIndex = txtLen;
+            selectEnd = txtLen;
+        }
+
+        for (int i = caretIndex - 1; i >= 0 && i < txtLen; i--) {
+            char ch = textsb.charAt(i);
+            if (ch > 128 || ch <= ' ' || i == 0) {
+                selectStart = i;
+                break;
+            }
+        }
+        for (int i = caretIndex + 1; i < txtLen; i++) {
+            char ch = textsb.charAt(i);
+            if (ch > 128 || ch <= ' ' || i == txtLen - 1) {
+                selectEnd = i;
+                break;
+            }
+        }
+
+    }
+
+    @Override
+    public void doSelectAll() {
+        selectStart = 0;
+        selectEnd = textsb.length();
     }
 
     /**
@@ -548,20 +577,27 @@ public class GTextBox extends GTextObject{
                             }
 
                             if (selectFromTo != null) {
+                                int sel_start = selectFromTo[0];
+                                int sel_end = selectFromTo[1];
                                 float drawSelX = dx, drawSelW = row_width;
-                                if (selectFromTo[0] < byte_endi && selectFromTo[0] > byte_starti) {
-                                    int pos = selectFromTo[0] - area_detail[curRow][AREA_START];
-                                    drawSelX = nvgNVGglyphPosition_x(glyphsHandle, pos);
+                                //本行只有选择起点
+                                if (sel_start > char_starti && sel_start < char_endi) {
+                                    int pos = sel_start - area_detail[curRow][AREA_START];
+                                    drawSelX = area_detail[curRow][AREA_DETAIL_ADD + pos];
                                 }
-                                if (selectFromTo[1] > byte_starti && selectFromTo[1] < byte_endi) {
+                                //本行有选择终点
+                                if (sel_end > char_starti && sel_end < char_endi) {
                                     int pos = selectFromTo[1] - area_detail[curRow][AREA_START];
-                                    drawSelW = nvgNVGglyphPosition_x(glyphsHandle, pos) - drawSelX;
+                                    drawSelW = area_detail[curRow][AREA_DETAIL_ADD + pos] - drawSelX;
                                 }
-                                if (byte_endi < selectFromTo[0] || byte_starti > selectFromTo[1]) {
 
+                                if (sel_start >= char_endi || sel_end < char_starti) {
+                                    //此行没有起点和终点
                                 } else {
+                                    //此行有起点或终点,或在起终点之间的整行
                                     GToolkit.drawRect(vg, drawSelX, dy, drawSelW, lineH, GToolkit.getStyle().getSelectedColor());
                                 }
+
                             }
                             nvgFillColor(vg, GToolkit.getStyle().getTextFontColor());
                             nvgTextJni(vg, dx, dy, text_arr, byte_starti, byte_endi);

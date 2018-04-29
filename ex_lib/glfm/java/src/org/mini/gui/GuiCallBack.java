@@ -25,7 +25,7 @@ public class GuiCallBack extends GlfmCallBackAdapter {
 
     int mouseX, mouseY, lastX, lastY;
     long mouseLastPressed;
-    int LONG_TOUCH_TIME = 1000;
+    int LONG_TOUCH_TIME = 600;
     int INERTIA_MIN_DISTANCE = 20;//移动距离超过40单位时可以产生惯性
     int INERTIA_MAX_MILLS = 300;//在300毫秒内的滑动可以产生惯性
 
@@ -167,14 +167,14 @@ public class GuiCallBack extends GlfmCallBackAdapter {
         long cur = System.currentTimeMillis();
         //
         boolean long_touched = false;
-            System.out.println("   touch=" + touch + "   phase=" + phase + "   x=" + x + "   y=" + y);
+        System.out.println("   touch=" + touch + "   phase=" + phase + "   x=" + x + "   y=" + y);
 //            System.out.println("display=" + display + "   win=" + win);
         if (display == display) {
 
             switch (phase) {
                 case Glfm.GLFMTouchPhaseBegan: {//
                     form.findSetFocus(mouseX, mouseY);//找到焦点组件
-
+                    focus = form.getFocus();
                     //
                     mouseLastPressed = cur;
 

@@ -100,10 +100,9 @@ abstract public class GContainer extends GObject {
                         elements.add(menuCount, ari.go);
                     }
                 } else {
-                    ari.go.destory();
-                    elements.remove(ari.go);
+                    boolean success = elements.remove(ari.go);
                     setFocus(null);
-                    if (ari.go instanceof GMenu) {
+                    if (success && ari.go instanceof GMenu) {
                         menuCount--;
                     }
                 }

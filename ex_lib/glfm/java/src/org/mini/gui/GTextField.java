@@ -31,7 +31,6 @@ public class GTextField extends GTextObject {
     static public final int BOX_STYLE_EDIT = 0;
     static public final int BOX_STYLE_SEARCH = 1;
 
-
     StringBuilder textsb = new StringBuilder();
     byte[] text_arr;
     float[] reset_boundle;
@@ -57,8 +56,6 @@ public class GTextField extends GTextObject {
         boundle[HEIGHT] = height;
         reset_boundle = new float[]{left + width - height, top, height, height};
     }
-
-
 
     public void setBoxStyle(int boxStyle) {
         this.boxStyle = boxStyle;
@@ -128,7 +125,7 @@ public class GTextField extends GTextObject {
                 if (textsb.length() > 0 && caretIndex > 0) {
                     int[] selectFromTo = getSelected();
                     if (selectFromTo != null) {
-                        delectSelect();
+                        deleteSelectedText();
                     } else {
                         textsb.delete(caretIndex - 1, caretIndex);
                         setCaretIndex(caretIndex - 1);
@@ -161,7 +158,8 @@ public class GTextField extends GTextObject {
         return null;
     }
 
-    void delectSelect() {
+    @Override
+    public void deleteSelectedText() {
         int[] sarr = getSelected();
         setCaretIndex(sarr[0]);
         textsb.delete(sarr[0], sarr[1]);
@@ -171,6 +169,35 @@ public class GTextField extends GTextObject {
 
     void resetSelect() {
         selectStart = selectEnd = -1;
+    }
+
+    @Override
+    public String getSelectedText() {
+        int[] sarr = getSelected();
+        if (sarr[0] == -1 || sarr[1] == -1) {
+            return null;
+        }
+        return textsb.substring(sarr[0], sarr[1]);
+    }
+
+    @Override
+    public void insertTextAtCaret(String str) {
+        for (int i = 0, imax = str.length(); i < imax; i++) {
+            char character = str.charAt(i);
+            textsb.insert(caretIndex, character);
+            setCaretIndex(caretIndex + 1);
+        }
+    }
+
+    @Override
+    public void doSelectText() {
+
+    }
+
+    @Override
+    public void doSelectAll() {
+        selectStart = 0;
+        selectEnd = textsb.length();
     }
 
     /**
