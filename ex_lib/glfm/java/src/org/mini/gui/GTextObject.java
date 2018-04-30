@@ -23,6 +23,8 @@ public abstract class GTextObject extends GObject implements GFocusChangeListene
 
     GMenu editMenu;
 
+    boolean selectMode = false;
+
     public void setHint(String hint) {
         this.hint = hint;
         hint_arr = toUtf8(hint);
@@ -96,7 +98,7 @@ public abstract class GTextObject extends GObject implements GFocusChangeListene
      * @param x
      * @param y
      */
-    public void callEditMenu(final GTextObject focus, float x, float y) {
+    void callEditMenu(final GTextObject focus, float x, float y) {
         float menuH = 40, menuW = 300;
 
         float mx = x - menuW / 2;
@@ -131,17 +133,17 @@ public abstract class GTextObject extends GObject implements GFocusChangeListene
                     }
                     case 1: {
                         go.doCopyClipBoard();
-                        m.getForm().remove(m);
+                        disposeEditMenu();
                         break;
                     }
                     case 2: {
                         go.doPasteClipBoard();
-                        m.getForm().remove(m);
+                        disposeEditMenu();
                         break;
                     }
                     case 3: {
                         go.doCut();
-                        m.getForm().remove(m);
+                        disposeEditMenu();
                         break;
                     }
                     case 4: {
@@ -153,23 +155,31 @@ public abstract class GTextObject extends GObject implements GFocusChangeListene
             }
         });
 
-        menu.setFocusListener(new GFocusChangeListener() {
-            GMenu m = menu;
-
-            @Override
-            public void focusGot(GObject go) {
-            }
-
-            @Override
-            public void focusLost(GObject go) {
-                if (m.getForm() != null) {
-                    m.getForm().remove(m);
-                }
-            }
-        });
-
+//        menu.setFocusListener(new GFocusChangeListener() {
+//            GMenu m = menu;
+//
+//            @Override
+//            public void focusGot(GObject go) {
+//            }
+//
+//            @Override
+//            public void focusLost(GObject go) {
+//                if (m.getForm() != null) {
+//                    m.getForm().remove(m);
+//                    editMenu = null;
+//                }
+//            }
+//        });
         focus.getForm().add(menu);
         focus.getForm().setFocus(menu);
+        disposeEditMenu();
         editMenu = menu;
+    }
+
+    void disposeEditMenu() {
+        if (editMenu != null) {
+            editMenu.getForm().remove(editMenu);
+        }
+        editMenu = null;
     }
 }

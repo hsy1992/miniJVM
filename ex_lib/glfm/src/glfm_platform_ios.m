@@ -1007,7 +1007,7 @@ void setClipBoardContent(const char *str){
     if(!str)return;
     
     NSString *nstr= [[NSString alloc] initWithCString:(const char*)str
-                                             encoding:NSASCIIStringEncoding];
+                                             encoding:NSUTF8StringEncoding];
     UIPasteboard *pasteboard = [UIPasteboard generalPasteboard];
     pasteboard.string = nstr;
 }

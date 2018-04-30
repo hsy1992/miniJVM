@@ -122,43 +122,41 @@ public class GForm extends GPanel {
     }
 
     void display(long vg) {
-        if (flush) {
-            long startAt, endAt, cost;
-            try {
-                startAt = System.currentTimeMillis();
 
-                // Update and render
-                glViewport(0, 0, fbWidth, fbHeight);
-                if (premult) {
-                    glClearColor(0, 0, 0, 0);
-                } else {
-                    glClearColor(0.3f, 0.3f, 0.32f, 1.0f);
-                }
-                glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
+        long startAt, endAt, cost;
+        try {
+            startAt = System.currentTimeMillis();
 
-                nvgBeginFrame(vg, winWidth, winHeight, pxRatio);
-                drawDebugInfo(vg);
-                update(vg);
-                nvgEndFrame(vg);
+            // Update and render
+            glViewport(0, 0, fbWidth, fbHeight);
+            if (premult) {
+                glClearColor(0, 0, 0, 0);
+            } else {
+                glClearColor(0.3f, 0.3f, 0.32f, 1.0f);
+            }
+            glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
 
-                //
-                count++;
-                endAt = System.currentTimeMillis();
-                cost = endAt - startAt;
-                if (cost > 1000) {
-                    //System.out.println("fps:" + count);
-                    fps = count;
-                    last = endAt;
-                    count = 0;
-                }
+            nvgBeginFrame(vg, winWidth, winHeight, pxRatio);
+            drawDebugInfo(vg);
+            update(vg);
+            nvgEndFrame(vg);
+
+            //
+            count++;
+            endAt = System.currentTimeMillis();
+            cost = endAt - startAt;
+            if (cost > 1000) {
+                //System.out.println("fps:" + count);
+                fps = count;
+                last = endAt;
+                count = 0;
+            }
 //                if (cost < 1000 / fpsExpect) {
 //                    Thread.sleep((long) (1000 / fpsExpect - cost));
 //                }
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
+        } catch (Exception e) {
+            e.printStackTrace();
         }
-        flush = false;
     }
 
     void drawDebugInfo(long vg) {

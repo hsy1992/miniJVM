@@ -35,9 +35,11 @@ public class GTextBox extends GTextObject {
     float[] lineh = {0};
     private int caretIndex;//光标在字符串中的位置
 
-    boolean drag = false;
     int selectStart = -1;//选取开始
     int selectEnd = -1;//选取结束
+    boolean adjustSelStart = true;//是修改选择起点还是终点
+    int selectModeCaretIndex;//如果点下和抬起在同一位置,取消选取状态
+
     int totalRows;//字符串总行数，动态计算出
     int showRows;//可显示行数
 
@@ -133,34 +135,52 @@ public class GTextBox extends GTextObject {
         int rx = (int) (x - parent.getX());
         int ry = (int) (y - parent.getY());
         if (isInBoundle(boundle, rx, ry)) {
-            if (phase == Glfm.GLFMTouchPhaseBegan) {
-                int caret = getCaretIndexFromArea(x, y);
-                if (caret >= 0) {
-                    setCaretIndex(caret);
-                    resetSelect();
-                    selectStart = caret;
-                    //drag = true;//打开可以进行选择模式，但手机上滚动和选取不可同时使用
-                }
-                //
-                if (task != null) {
-                    task.cancel();
-                    task = null;
-                }
-            } else if (phase == Glfm.GLFMTouchPhaseMoved) {
-                if (drag) {
+            switch (phase) {
+                case Glfm.GLFMTouchPhaseBegan: {
                     int caret = getCaretIndexFromArea(x, y);
-                    if (caret >= 0) {
-                        selectEnd = caret;
+                    selectModeCaretIndex = caret;
+                    if (selectMode) {
+                        if (Math.abs(caret - selectStart) < Math.abs(caret - selectEnd)) {
+                            adjustSelStart = true;
+                        } else {
+                            adjustSelStart = false;
+                        }
+                    } else if (caret >= 0) {
+                        setCaretIndex(caret);
+                        disposeEditMenu();
+                    }       //
+                    if (task != null) {
+                        task.cancel();
+                        task = null;
                     }
+                    break;
                 }
-            } else if (actionListener != null) {
-                actionListener.action(this);
-            }
-        }
-        if (phase == Glfm.GLFMTouchPhaseEnded) {
-            drag = false;
-            if (selectEnd == -1 || selectStart == selectEnd) {
-                resetSelect();
+                case Glfm.GLFMTouchPhaseEnded: {
+                    if (selectMode) {
+                        int caret = getCaretIndexFromArea(x, y);
+                        if (caret < selectStart || caret > selectEnd || selectStart == selectEnd || caret == selectModeCaretIndex) {
+                            selectMode = false;
+                            disposeEditMenu();
+                            resetSelect();
+                        }
+                    }
+                    break;
+                }
+                case Glfm.GLFMTouchPhaseMoved: {
+                    int caret = getCaretIndexFromArea(x, y);
+                    if (adjustSelStart) {
+                        if (caret < selectEnd) {
+                            selectStart = caret;
+
+                        }
+                    } else if (caret > selectStart) {
+                        selectEnd = caret;
+                        setCaretIndex(selectEnd);
+                    }
+                    break;
+                }
+                default:
+                    break;
             }
         }
 
@@ -174,9 +194,7 @@ public class GTextBox extends GTextObject {
      */
     @Override
     public void characterEvent(String str, int mods) {
-        if (parent.getFocus() != this) {
-            return;
-        }
+
         int[] selectFromTo = getSelected();
         if (selectFromTo != null) {
             deleteSelectedText();
@@ -186,9 +204,7 @@ public class GTextBox extends GTextObject {
 
     @Override
     public void keyEvent(int key, int action, int mods) {
-        if (parent.getFocus() != this) {
-            return;
-        }
+
         if (action == Glfm.GLFMKeyActionPressed || action == Glfm.GLFMKeyActionRepeated) {
             switch (key) {
                 case Glfm.GLFMKeyBackspace: {
@@ -282,6 +298,9 @@ public class GTextBox extends GTextObject {
 
     @Override
     public void scrollEvent(double scrollX, double scrollY, int x, int y) {
+        if (selectMode) {
+            return;
+        }
         int rx = (int) (x - parent.getX());
         int ry = (int) (y - parent.getY());
         if (isInBoundle(boundle, rx, ry)) {
@@ -339,8 +358,6 @@ public class GTextBox extends GTextObject {
         }
     }
 
-
-
     @Override
     public void deleteSelectedText() {
         int[] sarr = getSelected();
@@ -355,6 +372,7 @@ public class GTextBox extends GTextObject {
 
     void resetSelect() {
         selectStart = selectEnd = -1;
+        selectMode = false;
     }
 
     int[] getSelected() {
@@ -412,13 +430,15 @@ public class GTextBox extends GTextObject {
                 break;
             }
         }
-
+        setCaretIndex(selectEnd);
+        selectMode = true;
     }
 
     @Override
     public void doSelectAll() {
         selectStart = 0;
         selectEnd = textsb.length();
+        selectMode = true;
     }
 
     /**

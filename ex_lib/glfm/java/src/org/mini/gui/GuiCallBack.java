@@ -7,6 +7,7 @@ package org.mini.gui;
 
 import org.mini.glfm.Glfm;
 import org.mini.glfm.GlfmCallBackAdapter;
+import static org.mini.gui.GObject.flush;
 import org.mini.nanovg.Nanovg;
 import static org.mini.nanovg.Nanovg.NVG_ANTIALIAS;
 import static org.mini.nanovg.Nanovg.NVG_DEBUG;
@@ -104,8 +105,12 @@ public class GuiCallBack extends GlfmCallBackAdapter {
                 if (gform != null) {
                     gform.init();
                 }
-            } else {
-                gform.display(vg);
+            }
+            if (flush) {
+                if (gform != null) {
+                    gform.display(vg);
+                    flush = false;
+                }
             }
         } catch (Exception e) {
             e.printStackTrace();

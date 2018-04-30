@@ -6,6 +6,7 @@
 package org.mini.gui;
 
 import org.mini.glfm.Glfm;
+import static org.mini.gui.GTextBox.AREA_START;
 import static org.mini.nanovg.Gutil.toUtf8;
 import static org.mini.gui.GToolkit.nvgRGBA;
 import org.mini.nanovg.Nanovg;
@@ -74,10 +75,12 @@ public class GTextField extends GTextObject {
                 if (isInBoundle(reset_boundle, rx, ry)) {
                     textsb.setLength(0);
                 } else {
+                    if (selectMode) {
+                        resetSelect();
+                        disposeEditMenu();
+                    }
                     setCaretIndex(getCaretIndex(x, y));
                 }
-            } else if (actionListener != null) {
-                actionListener.action(this);
             }
         }
     }
@@ -102,9 +105,6 @@ public class GTextField extends GTextObject {
      */
     @Override
     public void characterEvent(String str, int mods) {
-        if (parent.getFocus() != this) {
-            return;
-        }
 
         for (int i = 0, imax = str.length(); i < imax; i++) {
             char character = str.charAt(i);
@@ -117,9 +117,7 @@ public class GTextField extends GTextObject {
 
     @Override
     public void keyEvent(int key, int action, int mods) {
-        if (parent.getFocus() != this) {
-            return;
-        }
+
         if (action == Glfm.GLFMKeyActionPressed || action == Glfm.GLFMKeyActionRepeated) {
             if (key == Glfm.GLFMKeyBackspace) {
                 if (textsb.length() > 0 && caretIndex > 0) {
@@ -169,6 +167,7 @@ public class GTextField extends GTextObject {
 
     void resetSelect() {
         selectStart = selectEnd = -1;
+        selectMode = false;
     }
 
     @Override
@@ -191,13 +190,15 @@ public class GTextField extends GTextObject {
 
     @Override
     public void doSelectText() {
-
+        doSelectAll();
+        selectMode = true;
     }
 
     @Override
     public void doSelectAll() {
         selectStart = 0;
         selectEnd = textsb.length();
+        selectMode = true;
     }
 
     /**
@@ -281,17 +282,11 @@ public class GTextField extends GTextObject {
             }
             Nanovg.nvgDeleteNVGglyphPosition(glyphsHandle);
 
-//            float caret_x = wordx;
-//            text_arr = toUtf8(textsb.toString());
-//            float text_width = Nanovg.nvgTextBoundsJni(vg, 0, 0, text_arr, 0, text_arr.length, null);
-//            float text_show_area_w = w - standard[WIDTH] * 4.5f;
-//            float text_show_area_x = wordx;
-//            if (text_width > txt_show_area_w) {
-//                caret_x = wordx + txt_show_area_w;
-//                wordx -= text_width - txt_show_area_w;
-//            } else {
-//                caret_x = wordx + text_width;
-//            }
+            if (selectStart != -1 && selectEnd != -1) {
+
+                GToolkit.drawRect(vg, wordx, wordy - lineh[0] / 2, text_show_area_w, lineh[0], GToolkit.getStyle().getSelectedColor());
+
+            }
             nvgFillColor(vg, GToolkit.getStyle().getTextFontColor());
             Nanovg.nvgScissor(vg, text_show_area_x, y, text_show_area_w, h);
             nvgTextJni(vg, wordx, wordy, text_arr, 0, text_arr.length);
