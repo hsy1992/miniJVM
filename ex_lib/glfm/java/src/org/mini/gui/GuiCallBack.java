@@ -197,7 +197,7 @@ public class GuiCallBack extends GlfmCallBackAdapter {
                         form.inertiaEvent(moveStartX, moveStartY, x, y, cost);
                     }
                     //检测长按
-                    long_touched = cur - mouseLastPressed > LONG_TOUCH_TIME;
+                    long_touched = cur - mouseLastPressed > LONG_TOUCH_TIME && x == moveStartX && y == moveStartY;
 
                     //处理惯性
                     moveStartX = 0;
@@ -211,8 +211,6 @@ public class GuiCallBack extends GlfmCallBackAdapter {
                     } else {
                         form.scrollEvent(mouseX - lastX, mouseY - lastY, mouseX, mouseY);
                     }
-                    //拖动重置长按
-                    mouseLastPressed = cur;
                     break;
                 }
                 case Glfm.GLFMTouchPhaseHover: {//

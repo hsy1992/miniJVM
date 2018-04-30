@@ -38,7 +38,7 @@ public class GTextBox extends GTextObject {
     int selectStart = -1;//选取开始
     int selectEnd = -1;//选取结束
     boolean adjustSelStart = true;//是修改选择起点还是终点
-    int selectModeCaretIndex;//如果点下和抬起在同一位置,取消选取状态
+    boolean selectAdjusted;//在选取状态下,如果点击了,但是没有修改位置,取消选取状态
 
     int totalRows;//字符串总行数，动态计算出
     int showRows;//可显示行数
@@ -65,6 +65,7 @@ public class GTextBox extends GTextObject {
         boundle[TOP] = top;
         boundle[WIDTH] = width;
         boundle[HEIGHT] = height;
+        setFocusListener(this);
     }
 
     boolean isInArea(short[] bound, float x, float y) {
@@ -138,8 +139,8 @@ public class GTextBox extends GTextObject {
             switch (phase) {
                 case Glfm.GLFMTouchPhaseBegan: {
                     int caret = getCaretIndexFromArea(x, y);
-                    selectModeCaretIndex = caret;
                     if (selectMode) {
+                        selectAdjusted = false;
                         if (Math.abs(caret - selectStart) < Math.abs(caret - selectEnd)) {
                             adjustSelStart = true;
                         } else {
@@ -157,25 +158,30 @@ public class GTextBox extends GTextObject {
                 }
                 case Glfm.GLFMTouchPhaseEnded: {
                     if (selectMode) {
-                        int caret = getCaretIndexFromArea(x, y);
-                        if (caret < selectStart || caret > selectEnd || selectStart == selectEnd || caret == selectModeCaretIndex) {
-                            selectMode = false;
-                            disposeEditMenu();
-                            resetSelect();
+                        if (selectStart != -1) {
+                            if (!selectAdjusted) {
+                                System.out.println("canceled:"+selectStart);
+                                selectMode = false;
+                                disposeEditMenu();
+                                resetSelect();
+                            }
                         }
                     }
                     break;
                 }
                 case Glfm.GLFMTouchPhaseMoved: {
-                    int caret = getCaretIndexFromArea(x, y);
-                    if (adjustSelStart) {
-                        if (caret < selectEnd) {
-                            selectStart = caret;
+                    if (selectMode) {
+                        int caret = getCaretIndexFromArea(x, y);
+                        if (adjustSelStart) {
+                            if (caret < selectEnd) {
+                                selectStart = caret;
 
+                            }
+                        } else if (caret > selectStart) {
+                            selectEnd = caret;
+                            setCaretIndex(selectEnd);
                         }
-                    } else if (caret > selectStart) {
-                        selectEnd = caret;
-                        setCaretIndex(selectEnd);
+                        selectAdjusted = true;
                     }
                     break;
                 }

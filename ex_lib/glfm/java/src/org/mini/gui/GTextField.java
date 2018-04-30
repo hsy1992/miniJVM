@@ -6,7 +6,6 @@
 package org.mini.gui;
 
 import org.mini.glfm.Glfm;
-import static org.mini.gui.GTextBox.AREA_START;
 import static org.mini.nanovg.Gutil.toUtf8;
 import static org.mini.gui.GToolkit.nvgRGBA;
 import org.mini.nanovg.Nanovg;
@@ -56,6 +55,7 @@ public class GTextField extends GTextObject {
         boundle[WIDTH] = width;
         boundle[HEIGHT] = height;
         reset_boundle = new float[]{left + width - height, top, height, height};
+        setFocusListener(this);
     }
 
     public void setBoxStyle(int boxStyle) {
@@ -74,6 +74,8 @@ public class GTextField extends GTextObject {
             if (phase == Glfm.GLFMTouchPhaseEnded) {
                 if (isInBoundle(reset_boundle, rx, ry)) {
                     textsb.setLength(0);
+                    resetSelect();
+                    disposeEditMenu();
                 } else {
                     if (selectMode) {
                         resetSelect();
@@ -160,6 +162,9 @@ public class GTextField extends GTextObject {
     @Override
     public void deleteSelectedText() {
         int[] sarr = getSelected();
+        if (sarr == null || sarr[0] == -1 || sarr[1] == -1) {
+            return;
+        }
         setCaretIndex(sarr[0]);
         textsb.delete(sarr[0], sarr[1]);
         text_arr = null;
@@ -175,7 +180,7 @@ public class GTextField extends GTextObject {
     @Override
     public String getSelectedText() {
         int[] sarr = getSelected();
-        if (sarr[0] == -1 || sarr[1] == -1) {
+        if (sarr == null || sarr[0] == -1 || sarr[1] == -1) {
             return null;
         }
         return textsb.substring(sarr[0], sarr[1]);

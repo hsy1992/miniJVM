@@ -11,11 +11,10 @@ import javax.mini.net.Socket;
 import org.mini.gl.warp.GLFrameBuffer;
 import org.mini.gl.warp.GLFrameBufferPainter;
 import org.mini.glfm.Glfm;
-import static org.mini.glfm.Glfm.GLFMColorFormatRGBA8888;
-import static org.mini.glfm.Glfm.GLFMDepthFormatNone;
+import static org.mini.glfm.Glfm.GLFMDepthFormat16;
 import static org.mini.glfm.Glfm.GLFMMultisampleNone;
 import static org.mini.glfm.Glfm.GLFMRenderingAPIOpenGLES2;
-import static org.mini.glfm.Glfm.GLFMStencilFormatNone;
+import static org.mini.glfm.Glfm.GLFMStencilFormat8;
 import org.mini.gui.GButton;
 import org.mini.gui.GCanvas;
 import org.mini.gui.GCheckBox;
@@ -64,9 +63,9 @@ public class GlfmMain implements GApplication {
 
         Glfm.glfmSetDisplayConfig(display,
                 GLFMRenderingAPIOpenGLES2,
-                GLFMColorFormatRGBA8888,
-                GLFMDepthFormatNone,
-                GLFMStencilFormatNone,
+                Glfm.GLFMColorFormatRGBA8888,
+                GLFMDepthFormat16,
+                GLFMStencilFormat8,
                 GLFMMultisampleNone);
         app = new GlfmMain();
         GuiCallBack ccb = new GuiCallBack(display, app);

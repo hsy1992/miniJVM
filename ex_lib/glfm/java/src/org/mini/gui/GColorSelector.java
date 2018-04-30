@@ -7,6 +7,7 @@ package org.mini.gui;
 
 import org.mini.glfm.Glfm;
 import static org.mini.gui.GToolkit.nvgRGBA;
+import org.mini.nanovg.Nanovg;
 import static org.mini.nanovg.Nanovg.NVG_CCW;
 import static org.mini.nanovg.Nanovg.NVG_CW;
 import static org.mini.nanovg.Nanovg.NVG_HOLE;
@@ -100,7 +101,7 @@ public class GColorSelector extends GObject {
         float y = getY();
         float w = getW();
         float h = getH();
-
+        Nanovg.nvgScissor(vg, x, y, w, h);
         drawColorwheel(vg, x, y, w, h);
         return true;
     }

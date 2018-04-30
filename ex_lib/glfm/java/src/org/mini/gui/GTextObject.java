@@ -72,6 +72,7 @@ public abstract class GTextObject extends GObject implements GFocusChangeListene
     }
 
     public void doPasteClipBoard() {
+        deleteSelectedText();
         String s = Glfm.glfmGetClipBoardContent();
         if (s != null) {
             insertTextAtCaret(s);
@@ -91,6 +92,7 @@ public abstract class GTextObject extends GObject implements GFocusChangeListene
     @Override
     public void longTouchedEvent(int x, int y) {
         callEditMenu(this, x, y);
+        System.out.println("long toucched");
     }
 
     /**
