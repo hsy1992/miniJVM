@@ -101,7 +101,8 @@ public class GTextField extends GTextObject {
 
     /**
      *
-     * @param character
+     * @param str
+     * @param mods
      */
     @Override
     public void characterEvent(String str, int mods) {
@@ -147,8 +148,8 @@ public class GTextField extends GTextObject {
     }
 
     int[] getSelected() {
-        int select1 = 0, select2 = 0;
         if (selectStart != -1 && selectEnd != -1) {
+            int select1, select2;
             select1 = selectStart > selectEnd ? selectEnd : selectStart;
             select2 = selectStart < selectEnd ? selectEnd : selectStart;
             return new int[]{select1, select2};
@@ -165,6 +166,7 @@ public class GTextField extends GTextObject {
         resetSelect();
     }
 
+    @Override
     void resetSelect() {
         selectStart = selectEnd = -1;
         selectMode = false;
@@ -206,6 +208,7 @@ public class GTextField extends GTextObject {
      * @param vg
      * @return
      */
+    @Override
     public boolean update(long vg) {
         float x = getX();
         float y = getY();
@@ -284,7 +287,7 @@ public class GTextField extends GTextObject {
 
             if (selectStart != -1 && selectEnd != -1) {
 
-                GToolkit.drawRect(vg, wordx, wordy - lineh[0] / 2, text_show_area_w, lineh[0], GToolkit.getStyle().getSelectedColor());
+                GToolkit.drawRect(vg, text_show_area_x, wordy - lineh[0] / 2, text_show_area_w, lineh[0], GToolkit.getStyle().getSelectedColor());
 
             }
             nvgFillColor(vg, GToolkit.getStyle().getTextFontColor());

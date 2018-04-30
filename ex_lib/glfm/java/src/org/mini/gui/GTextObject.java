@@ -48,6 +48,8 @@ public abstract class GTextObject extends GObject implements GFocusChangeListene
     abstract public void deleteSelectedText();
 
     abstract public void insertTextAtCaret(String str);
+    
+    abstract void resetSelect();
 
     public void doSelectText() {
 
@@ -181,5 +183,6 @@ public abstract class GTextObject extends GObject implements GFocusChangeListene
             editMenu.getForm().remove(editMenu);
         }
         editMenu = null;
+        resetSelect();
     }
 }

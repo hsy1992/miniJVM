@@ -370,9 +370,9 @@ public class GTextBox extends GTextObject {
         resetSelect();
     }
 
+    @Override
     void resetSelect() {
         selectStart = selectEnd = -1;
-        selectMode = false;
     }
 
     int[] getSelected() {
