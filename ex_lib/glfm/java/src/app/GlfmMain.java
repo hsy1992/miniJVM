@@ -108,7 +108,7 @@ public class GlfmMain implements GApplication {
 
         form.setFps(30f);
         long vg = form.getNvContext();
-        GFrame gframe = new GFrame("测"/*"demo"*/, 50, 50, 300, 500);
+        GFrame gframe = new GFrame("demo", 50, 50, 300, 500);
         init(gframe.getPanel(), vg, ccb);
         form.add(gframe);
         gframe.align(GGraphics.HCENTER | GGraphics.VCENTER);
@@ -216,7 +216,9 @@ public class GlfmMain implements GApplication {
                     new String[]{"One", "Two", "Three",});
 
         }
-        y += 40;
+        y += 50;
+        parent.add(new TestCanvas(x, y, 280, 150));
+        y += 160;
         list = new GList(x, y, 280, 140);
         list.setMode(GList.MODE_MULTI_LINE);
         parent.add(list);
@@ -226,8 +228,6 @@ public class GlfmMain implements GApplication {
                     new String[]{"One", "Two", "Three", "Four", "Five", "Six", "Seven", "Eight", "Nine", "Ten",});
         }
         y += 150;
-        parent.add(new TestCanvas(x, y, 280, 150));
-        y += 160;
         GColorSelector cs = new GColorSelector(0, x, y, 130, 130);
         parent.add(cs);
 
