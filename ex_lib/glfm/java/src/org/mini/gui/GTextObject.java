@@ -186,5 +186,6 @@ public abstract class GTextObject extends GObject implements GFocusChangeListene
         }
         editMenu = null;
         resetSelect();
+        selectMode=false;
     }
 }

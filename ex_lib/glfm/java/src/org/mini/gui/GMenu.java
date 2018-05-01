@@ -51,7 +51,6 @@ public class GMenu extends GObject {
             img = i;
         }
     }
-    
 
     public GMenu(int left, int top, int width, int height) {
         boundle[LEFT] = left;
@@ -152,18 +151,21 @@ public class GMenu extends GObject {
         float cornerRadius = 4.0f;
         float[] color = null;
         //System.out.println("draw==========="+touched);
-        if (touched) {
-            nvgFillColor(vg, nvgRGBA(0, 0, 0, 48));
-            GMenuItem mi = items.get(selectIndex);
-            nvgBeginPath(vg);
-            nvgRect(vg, mi.boundle[LEFT] + 1, mi.boundle[TOP] + 1, mi.boundle[WIDTH] - 2, mi.boundle[HEIGHT] - 2);
-            nvgFill(vg);
-            //System.out.println("draw touched");
-        }
+        //background
         nvgBeginPath(vg);
         nvgRoundedRect(vg, x + 1f, y + 1f, w - 2, h - 2, cornerRadius - 0.5f);
         nvgFillColor(vg, nvgRGBA(0, 0, 0, 255));
         nvgFill(vg);
+
+        //touched item background
+        if (touched) {
+            nvgFillColor(vg, nvgRGBA(255, 255, 255, 48));
+            GMenuItem mi = items.get(selectIndex);
+            nvgBeginPath(vg);
+            nvgRoundedRect(vg, mi.boundle[LEFT] + 1, mi.boundle[TOP] + 1, mi.boundle[WIDTH] - 2, mi.boundle[HEIGHT] - 2, cornerRadius - 0.5f);
+            nvgFill(vg);
+            //System.out.println("draw touched");
+        }
 
         //渐变
         bg = nvgLinearGradient(vg, x, y, x, y + h, nvgRGBA(255, 255, 255, 32), nvgRGBA(0, 0, 0, 32));
