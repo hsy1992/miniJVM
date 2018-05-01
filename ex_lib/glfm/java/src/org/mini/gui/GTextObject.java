@@ -87,6 +87,7 @@ public abstract class GTextObject extends GObject implements GFocusChangeListene
     @Override
     public void focusLost(GObject go) {
         Glfm.glfmSetKeyboardVisible(getForm().getWinContext(), false);
+        disposeEditMenu();
     }
 
     @Override
@@ -159,24 +160,9 @@ public abstract class GTextObject extends GObject implements GFocusChangeListene
             }
         });
 
-//        menu.setFocusListener(new GFocusChangeListener() {
-//            GMenu m = menu;
-//
-//            @Override
-//            public void focusGot(GObject go) {
-//            }
-//
-//            @Override
-//            public void focusLost(GObject go) {
-//                if (m.getForm() != null) {
-//                    m.getForm().remove(m);
-//                    editMenu = null;
-//                }
-//            }
-//        });
         focus.getForm().add(menu);
         focus.getForm().setFocus(menu);
-        disposeEditMenu();
+        
         editMenu = menu;
     }
 
