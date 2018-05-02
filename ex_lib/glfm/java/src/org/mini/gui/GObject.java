@@ -51,8 +51,8 @@ abstract public class GObject {
     }
 
     static synchronized public void flush() {
-        flush++;
-        flush++;//in android may flush before paint,so the menu not shown
+        flush = 1;
+        //in android may flush before paint,so the menu not shown
     }
 
     static synchronized public boolean flushReq() {

@@ -24,7 +24,7 @@ abstract public class GContainer extends GObject {
     int menuCount = 0;
 
     //异步添加删除form
-    final List<AddRemoveItem> cache = Collections.synchronizedList(new LinkedList());
+    final List<AddRemoveItem> cache = new LinkedList();
 
     class AddRemoveItem {
 
@@ -67,17 +67,21 @@ abstract public class GContainer extends GObject {
 
     public void add(GObject nko) {
         if (nko != null) {
-            cache.add(new AddRemoveItem(AddRemoveItem.ADD, nko));
-            nko.init();
-            nko.setParent(this);
+            synchronized (cache) {
+                cache.add(new AddRemoveItem(AddRemoveItem.ADD, nko));
+                nko.init();
+                nko.setParent(this);
+            }
         }
     }
 
     public void remove(GObject nko) {
         if (nko != null) {
-            nko.setParent(null);
-            nko.destory();
-            cache.add(new AddRemoveItem(AddRemoveItem.REMOVE, nko));
+            synchronized (cache) {
+                nko.setParent(null);
+                nko.destory();
+                cache.add(new AddRemoveItem(AddRemoveItem.REMOVE, nko));
+            }
         }
     }
 
@@ -129,14 +133,14 @@ abstract public class GContainer extends GObject {
     public void keyEvent(int key, int action, int mods) {
         if (focus != null) {
             focus.keyEvent(key, action, mods);
-        } 
+        }
     }
 
     @Override
     public void characterEvent(String str, int mods) {
         if (focus != null) {
             focus.characterEvent(str, mods);
-        } 
+        }
     }
 
     @Override
