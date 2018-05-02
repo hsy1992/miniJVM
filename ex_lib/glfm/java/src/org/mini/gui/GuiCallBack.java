@@ -27,6 +27,8 @@ public class GuiCallBack extends GlfmCallBackAdapter {
     int mouseX, mouseY, lastX, lastY;
     long mouseLastPressed;
     int LONG_TOUCH_TIME = 600;
+    int LONG_TOUCH_MAX_DISTANCE = 5;//移动距离超过40单位时可以产生惯性
+
     int INERTIA_MIN_DISTANCE = 20;//移动距离超过40单位时可以产生惯性
     int INERTIA_MAX_MILLS = 300;//在300毫秒内的滑动可以产生惯性
 
@@ -106,10 +108,9 @@ public class GuiCallBack extends GlfmCallBackAdapter {
                     gform.init();
                 }
             }
-            if (flush) {
+            if (GObject.flushReq()) {
                 if (gform != null) {
                     gform.display(vg);
-                    flush = false;
                 }
             }
         } catch (Exception e) {
@@ -197,7 +198,7 @@ public class GuiCallBack extends GlfmCallBackAdapter {
                         form.inertiaEvent(moveStartX, moveStartY, x, y, cost);
                     }
                     //检测长按
-                    long_touched = cur - mouseLastPressed > LONG_TOUCH_TIME && x == moveStartX && y == moveStartY;
+                    long_touched = cur - mouseLastPressed > LONG_TOUCH_TIME && Math.abs(x - moveStartX) < LONG_TOUCH_MAX_DISTANCE && Math.abs(y - moveStartY) < LONG_TOUCH_MAX_DISTANCE;
 
                     //处理惯性
                     moveStartX = 0;
@@ -237,7 +238,7 @@ public class GuiCallBack extends GlfmCallBackAdapter {
                 form.touchEvent(phase, mouseX, mouseY);
             }
         }
-        form.flush();
+        GObject.flush();
         return true;
     }
 

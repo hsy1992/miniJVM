@@ -118,6 +118,7 @@ public class GMenu extends GObject {
                     i++;
                 }
             } else if (phase == Glfm.GLFMTouchPhaseEnded) {
+                touched = false;
                 int i = 0;
                 for (GMenuItem item : items) {
                     if (isInBoundle(item.boundle, rx, ry)) {
@@ -128,7 +129,6 @@ public class GMenu extends GObject {
                     }
                     i++;
                 }
-                touched = false;
             }
         }
 

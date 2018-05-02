@@ -160,10 +160,8 @@ public class GTextBox extends GTextObject {
                     if (selectMode) {
                         if (selectStart != -1) {
                             if (!selectAdjusted) {
-                                System.out.println("canceled:"+selectStart);
-                                selectMode = false;
+                                //System.out.println("canceled:"+selectStart);
                                 disposeEditMenu();
-                                resetSelect();
                             }
                         }
                     }

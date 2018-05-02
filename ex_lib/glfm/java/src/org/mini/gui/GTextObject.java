@@ -21,7 +21,8 @@ public abstract class GTextObject extends GObject implements GFocusChangeListene
     StringBuilder textsb = new StringBuilder();
     byte[] text_arr;
 
-    GMenu editMenu;
+    private static GMenu editMenu;
+    private static GTextObject curEditObj;
 
     boolean selectMode = false;
 
@@ -48,7 +49,7 @@ public abstract class GTextObject extends GObject implements GFocusChangeListene
     abstract public void deleteSelectedText();
 
     abstract public void insertTextAtCaret(String str);
-    
+
     abstract void resetSelect();
 
     public void doSelectText() {
@@ -93,7 +94,8 @@ public abstract class GTextObject extends GObject implements GFocusChangeListene
     @Override
     public void longTouchedEvent(int x, int y) {
         callEditMenu(this, x, y);
-        System.out.println("long toucched");
+        //System.out.println("long toucched");
+        
     }
 
     /**
@@ -103,7 +105,7 @@ public abstract class GTextObject extends GObject implements GFocusChangeListene
      * @param x
      * @param y
      */
-    void callEditMenu(final GTextObject focus, float x, float y) {
+    static synchronized void callEditMenu(final GTextObject focus, float x, float y) {
         float menuH = 40, menuW = 300;
 
         float mx = x - menuW / 2;
@@ -118,60 +120,68 @@ public abstract class GTextObject extends GObject implements GFocusChangeListene
         } else if (my + menuH > focus.getForm().getDeviceHeight()) {
             my = focus.getForm().getDeviceHeight() - menuH;
         }
-        final GMenu menu = new GMenu((int) mx, (int) my, (int) menuW, (int) menuH);
-        menu.addItem(GLanguage.getString("Select"), null);
-        menu.addItem(GLanguage.getString("Copy"), null);
-        menu.addItem(GLanguage.getString("Paste"), null);
-        menu.addItem(GLanguage.getString("Cut"), null);
-        menu.addItem(GLanguage.getString("Select All"), null);
-        menu.setActionListener(new GActionListener() {
-            GTextObject go = focus;
-            GMenu m = menu;
+        curEditObj = focus;
 
-            @Override
-            public void action(GObject gobj) {
-                int si = m.getSelectIndex();
-                switch (si) {
-                    case 0: {
-                        go.doSelectText();
-                        break;
+        if (editMenu == null) {
+            final GMenu menu = new GMenu((int) mx, (int) my, (int) menuW, (int) menuH);
+            menu.addItem(GLanguage.getString("Select"), null);
+            menu.addItem(GLanguage.getString("Copy"), null);
+            menu.addItem(GLanguage.getString("Paste"), null);
+            menu.addItem(GLanguage.getString("Cut"), null);
+            menu.addItem(GLanguage.getString("Select All"), null);
+            menu.setActionListener(new GActionListener() {
+                GMenu m = menu;
+
+                @Override
+                public void action(GObject gobj) {
+                    int si = m.getSelectIndex();
+                    switch (si) {
+                        case 0: {
+                            curEditObj.doSelectText();
+                            break;
+                        }
+                        case 1: {
+                            curEditObj.doCopyClipBoard();
+                            disposeEditMenu();
+                            break;
+                        }
+                        case 2: {
+                            curEditObj.doPasteClipBoard();
+                            disposeEditMenu();
+                            break;
+                        }
+                        case 3: {
+                            curEditObj.doCut();
+                            disposeEditMenu();
+                            break;
+                        }
+                        case 4: {
+                            curEditObj.doSelectAll();
+                            break;
+                        }
                     }
-                    case 1: {
-                        go.doCopyClipBoard();
-                        disposeEditMenu();
-                        break;
-                    }
-                    case 2: {
-                        go.doPasteClipBoard();
-                        disposeEditMenu();
-                        break;
-                    }
-                    case 3: {
-                        go.doCut();
-                        disposeEditMenu();
-                        break;
-                    }
-                    case 4: {
-                        go.doSelectAll();
-                        break;
-                    }
+
                 }
+            });
 
-            }
-        });
+            editMenu = menu;
+        } else {
+            editMenu.setPos(mx, my);
+        }
 
-        focus.getForm().add(menu);
-        focus.getForm().setFocus(menu);
-        
-        editMenu = menu;
+        curEditObj.getForm().add(editMenu);
+
+        //System.out.println("edit menu show");
     }
 
-    void disposeEditMenu() {
-        if (editMenu != null) {
-            editMenu.getForm().remove(editMenu);
+    static synchronized void disposeEditMenu() {
+        if (editMenu != null && curEditObj != null) {
+            curEditObj.getForm().remove(editMenu);
+
+            curEditObj.resetSelect();
+            curEditObj.selectMode = false;
+            curEditObj = null;
         }
-        editMenu = null;
-        resetSelect();
-        selectMode=false;
+        //System.out.println("edit menu dispose");
     }
 }

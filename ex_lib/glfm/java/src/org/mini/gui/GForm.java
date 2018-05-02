@@ -17,14 +17,10 @@ import static org.mini.gl.GL.glClearColor;
 import static org.mini.gl.GL.glViewport;
 import org.mini.glfm.Glfm;
 import org.mini.glfm.GlfmCallBack;
-import org.mini.glfm.GlfmCallBackAdapter;
 import static org.mini.gui.GToolkit.nvgRGBA;
 import org.mini.nanovg.Gutil;
 import org.mini.nanovg.Nanovg;
 import static org.mini.nanovg.Nanovg.NVG_ALIGN_MIDDLE;
-import static org.mini.nanovg.Nanovg.NVG_ANTIALIAS;
-import static org.mini.nanovg.Nanovg.NVG_DEBUG;
-import static org.mini.nanovg.Nanovg.NVG_STENCIL_STROKES;
 import static org.mini.nanovg.Nanovg.nvgBeginFrame;
 import static org.mini.nanovg.Nanovg.nvgEndFrame;
 import static org.mini.nanovg.Nanovg.nvgFillColor;
@@ -166,7 +162,7 @@ public class GForm extends GPanel {
         nvgTextAlign(vg, Nanovg.NVG_ALIGN_LEFT | NVG_ALIGN_MIDDLE);
 
         GuiCallBack cb = (GuiCallBack) callback;
-        float dx = 10, dy = 10;
+        float dx = 10, dy = 40;
         byte[] b;
         nvgFillColor(vg, nvgRGBA(255, 255, 255, 255));
 
@@ -194,7 +190,7 @@ public class GForm extends GPanel {
 
     TimerTask tt_OnTouch = new TimerTask() {
         public void run() {
-            flush = true;
+            flush();
         }
     };
 

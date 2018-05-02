@@ -39,19 +39,28 @@ abstract public class GObject {
 
     GFocusChangeListener focusListener;
 
-    static boolean flush;
+    volatile static int flush;
 
     boolean visable = true;
 
     void init() {
 
     }
-    
-    void destory(){
+
+    void destory() {
     }
 
-    public void flush() {
-        flush = true;
+    static synchronized public void flush() {
+        flush++;
+        flush++;//in android may flush before paint,so the menu not shown
+    }
+
+    static synchronized public boolean flushReq() {
+        if (flush > 0) {
+            flush--;
+            return true;
+        }
+        return false;
     }
 
     public Timer getTimer() {
