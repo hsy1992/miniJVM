@@ -30,6 +30,7 @@
 #include <dlfcn.h>
 #include <unistd.h>
 #include <sys/stat.h>
+#include <asm/fcntl.h>
 
 #ifdef NDEBUG
 #define LOG_DEBUG(...) do { } while (0)
@@ -97,6 +98,65 @@ typedef struct {
 } GLFMPlatformData;
 
 static GLFMPlatformData *platformDataGlobal = NULL;
+
+//MARK: STD redirection
+
+struct StdRedirectFiles {
+    int pipes[2];
+    FILE *inputFile;
+    int STD_TYPE;
+} stdErr, stdOut;
+
+
+void initStdPipe(struct StdRedirectFiles *stdFiles) {
+    int lWriteFD = dup(stdFiles->STD_TYPE);//STDERR_FILENO
+
+    if (lWriteFD < 0) {
+        // WE failed to get our file descriptor
+        LOG_DEBUG("Unable to get STDERR file descriptor.");
+        return;
+    }
+
+
+    pipe(stdFiles->pipes);
+    dup2(stdFiles->pipes[1], stdFiles->STD_TYPE);//STDERR_FILENO
+    stdFiles->inputFile = fdopen(stdFiles->pipes[0], "r");
+
+    close(stdFiles->pipes[1]);
+
+    int fd = fileno(stdFiles->inputFile);
+    int flags = fcntl(fd, F_GETFL, 0);
+    flags |= O_NONBLOCK;
+    fcntl(fd, F_SETFL, flags);
+
+    if (NULL == stdFiles->inputFile) {
+        LOG_DEBUG("Unable to get read pipe for %d", stdFiles->STD_TYPE);
+        return;
+    }
+}
+
+void refreshStdPipe(struct StdRedirectFiles *stdFiles) {
+    char readBuffer[256];
+    memset(&readBuffer, 0, sizeof(readBuffer));
+    while (1) {
+        int len = fgets(readBuffer, sizeof(readBuffer), stdFiles->inputFile);
+
+        if (len != 0) {
+            __android_log_write(
+                    stdFiles->STD_TYPE == STDERR_FILENO ? ANDROID_LOG_ERROR : ANDROID_LOG_INFO,
+                    stdFiles->STD_TYPE == STDERR_FILENO ? "stderr" : "stdout",
+                    readBuffer);
+        } else {
+            break;
+        }
+
+    }
+}
+
+void closeStdPipe(struct StdRedirectFiles *stdFiles) {
+    close(stdFiles->pipes[0]);
+    fclose(stdFiles->inputFile);
+}
 
 // MARK: JNI code
 
@@ -1176,7 +1236,7 @@ static int32_t _glfmOnInputEvent(struct android_app *app, AInputEvent *event) {
  */
 jobject copyAssets(JNIEnv *env, jobject jassetMgr, char *cpath) {
     //java.lang.String[] files=mgr.list("");
-    jstring path = (*env)->NewString(env, cpath, strlen(cpath));
+    jstring path = (*env)->NewStringUTF(env, cpath);
     jobjectArray stringArray = _glfmCallJavaMethodWithArgs(env, jassetMgr, "list",
                                                            "(Ljava/lang/String;)[Ljava/lang/String;",
                                                            Object, path);
@@ -1276,6 +1336,15 @@ void android_main(struct android_app *app) {
 
     LOG_LIFECYCLE("android_main");
 
+#ifndef NDEBUG
+    memset(&stdErr, 0, sizeof(stdErr));
+    stdErr.STD_TYPE = STDERR_FILENO;
+    initStdPipe(&stdErr);
+    memset(&stdOut, 0, sizeof(stdOut));
+    stdOut.STD_TYPE = STDOUT_FILENO;
+    initStdPipe(&stdOut);
+#endif
+
     // Init platform data
     GLFMPlatformData *platformData;
     if (platformDataGlobal == NULL) {
@@ -1371,7 +1440,15 @@ void android_main(struct android_app *app) {
         if (platformData->animating && platformData->display) {
             _glfmDrawFrame(platformData);
         }
+#ifndef NDEBUG
+        refreshStdPipe(&stdOut);
+        refreshStdPipe(&stdErr);
+#endif
     }
+#ifndef NDEBUG
+    closeStdPipe(&stdOut);
+    closeStdPipe(&stdErr);
+#endif
 }
 
 // MARK: GLFM implementation
@@ -1510,11 +1587,13 @@ const char *glfmGetSaveRoot() {
 }
 
 const char *getClipBoardContent() {
-    struct android_app *app=platformDataGlobal->app;
+    struct android_app *app = platformDataGlobal->app;
     GLFMPlatformData *platformData = (GLFMPlatformData *) app->userData;
     JNIEnv *jni = platformData->jniEnv;
     if ((*jni)->ExceptionCheck(jni)) {
-        return false;
+        (*jni)->ExceptionDescribe(jni);
+        (*jni)->ExceptionClear(jni);
+        return NULL;
     }
     jstring jstr = _glfmCallJavaMethod(jni, app->activity->clazz, "getClipBoardContent",
                                        "()Ljava/lang/String;", Object);
@@ -1523,15 +1602,23 @@ const char *getClipBoardContent() {
 }
 
 void setClipBoardContent(const char *str) {
-    struct android_app *app=platformDataGlobal->app;
+    struct android_app *app = platformDataGlobal->app;
     GLFMPlatformData *platformData = (GLFMPlatformData *) app->userData;
     JNIEnv *jni = platformData->jniEnv;
     if ((*jni)->ExceptionCheck(jni)) {
+        (*jni)->ExceptionDescribe(jni);
+        (*jni)->ExceptionClear(jni);
         return;
     }
-    jstring jstr = (*jni)->NewString(jni, str, strlen(str));
+    jstring jstr = (*jni)->NewStringUTF(jni, str);
+    const char *rawString = (*jni)->GetStringUTFChars(jni, jstr, 0);
     _glfmCallJavaMethodWithArgs(jni, app->activity->clazz, "setClipBoardContent",
                                 "(Ljava/lang/String;)V", Void, jstr);
+    if ((*jni)->ExceptionCheck(jni)) {
+        (*jni)->ExceptionDescribe(jni);
+        (*jni)->ExceptionClear(jni);
+        return;
+    }
 }
 
 #endif

@@ -16,7 +16,7 @@
 
 extern const char *glfmGetResRoot();
 
-extern int gladLoadGLES2Loader(void* fun) ;
+extern int gladLoadGLES2Loader(void *fun);
 
 GlobeRefer refers;
 
@@ -25,6 +25,9 @@ GlobeRefer refers;
 
 
 Instance *createJavaString(Runtime *runtime, c8 *cstr) {
+    if (cstr == NULL) {
+        return NULL;
+    }
     JniEnv *env = runtime->jnienv;
     Utf8String *ustr = env->utf8_create_part_c(cstr, 0, strlen(cstr));
     Instance *jstr = env->jstring_create(ustr, runtime);
@@ -46,7 +49,8 @@ static void _callback_surface_error(GLFMDisplay *window, const char *description
         Instance *jstr = createJavaString(runtime, description);
         env->push_ref(runtime->stack, jstr);
 
-        s32 ret = env->execute_method(refers._callback_surface_error, runtime, refers.glfm_callback->mb.clazz);
+        s32 ret = env->execute_method(refers._callback_surface_error, runtime,
+                                      refers.glfm_callback->mb.clazz);
         if (ret) {
             env->print_exception(runtime);
         }
@@ -63,7 +67,8 @@ static bool _callback_key(GLFMDisplay *window, GLFMKey key, GLFMKeyAction action
         env->push_int(runtime->stack, action);
         env->push_int(runtime->stack, mods);
 
-        s32 ret = env->execute_method(refers._callback_key, runtime, refers.glfm_callback->mb.clazz);
+        s32 ret = env->execute_method(refers._callback_key, runtime,
+                                      refers.glfm_callback->mb.clazz);
         if (ret) {
             env->print_exception(runtime);
         } else {
@@ -83,7 +88,8 @@ static void _callback_character(GLFMDisplay *window, const char *utf8, int modif
         env->push_ref(runtime->stack, ins);
         env->push_int(runtime->stack, modifiers);
 
-        s32 ret = env->execute_method(refers._callback_character, runtime, refers.glfm_callback->mb.clazz);
+        s32 ret = env->execute_method(refers._callback_character, runtime,
+                                      refers.glfm_callback->mb.clazz);
         if (ret) {
             env->print_exception(runtime);
         }
@@ -98,7 +104,8 @@ static void _callback_mainloop(GLFMDisplay *window, f64 frameTime) {
         env->push_long(runtime->stack, (s64) (intptr_t) window);
         env->push_double(runtime->stack, frameTime);
 
-        s32 ret = env->execute_method(refers._callback_mainloop, runtime, refers.glfm_callback->mb.clazz);
+        s32 ret = env->execute_method(refers._callback_mainloop, runtime,
+                                      refers.glfm_callback->mb.clazz);
         if (ret) {
             env->print_exception(runtime);
         }
@@ -112,7 +119,8 @@ void _callback_memory_warning(GLFMDisplay *window) {
         env->push_ref(runtime->stack, refers.glfm_callback);
         env->push_long(runtime->stack, (s64) (intptr_t)
                 window);
-        s32 ret = env->execute_method(refers._callback_memory_warning, runtime, refers.glfm_callback->mb.clazz);
+        s32 ret = env->execute_method(refers._callback_memory_warning, runtime,
+                                      refers.glfm_callback->mb.clazz);
         if (ret) {
             env->print_exception(runtime);
         }
@@ -131,7 +139,8 @@ void _callback_keyboard_visible(GLFMDisplay *window, bool visible, f64 x, f64 y,
         env->push_double(runtime->stack, w);
         env->push_double(runtime->stack, h);
 
-        s32 ret = env->execute_method(refers._callback_keyboard_visible, runtime, refers.glfm_callback->mb.clazz);
+        s32 ret = env->execute_method(refers._callback_keyboard_visible, runtime,
+                                      refers.glfm_callback->mb.clazz);
         if (ret) {
             env->print_exception(runtime);
         }
@@ -150,7 +159,8 @@ bool _callback_touch(GLFMDisplay *window, s32 touch, GLFMTouchPhase phase, f64 x
         env->push_double(runtime->stack, x);
         env->push_double(runtime->stack, y);
 
-        s32 ret = env->execute_method(refers._callback_touch, runtime, refers.glfm_callback->mb.clazz);
+        s32 ret = env->execute_method(refers._callback_touch, runtime,
+                                      refers.glfm_callback->mb.clazz);
         if (ret) {
             env->print_exception(runtime);
         } else {
@@ -170,7 +180,8 @@ void _callback_surface_resized(GLFMDisplay *window, s32 w, s32 h) {
         env->push_int(runtime->stack, w);
         env->push_int(runtime->stack, h);
 
-        s32 ret = env->execute_method(refers._callback_surface_resized, runtime, refers.glfm_callback->mb.clazz);
+        s32 ret = env->execute_method(refers._callback_surface_resized, runtime,
+                                      refers.glfm_callback->mb.clazz);
         if (ret) {
             env->print_exception(runtime);
         }
@@ -184,7 +195,8 @@ void _callback_surface_destroyed(GLFMDisplay *window) {
         env->push_ref(runtime->stack, refers.glfm_callback);
         env->push_long(runtime->stack, (s64) (intptr_t) window);
 
-        s32 ret = env->execute_method(refers._callback_surface_destroyed, runtime, refers.glfm_callback->mb.clazz);
+        s32 ret = env->execute_method(refers._callback_surface_destroyed, runtime,
+                                      refers.glfm_callback->mb.clazz);
         if (ret) {
             env->print_exception(runtime);
         }
@@ -199,7 +211,8 @@ void _callback_app_focus(GLFMDisplay *window, bool focus) {
         env->push_long(runtime->stack, (s64) (intptr_t) window);
         env->push_int(runtime->stack, focus);
 
-        s32 ret = env->execute_method(refers._callback_app_focus, runtime, refers.glfm_callback->mb.clazz);
+        s32 ret = env->execute_method(refers._callback_app_focus, runtime,
+                                      refers.glfm_callback->mb.clazz);
         if (ret) {
             env->print_exception(runtime);
         }
@@ -216,7 +229,8 @@ void _callback_surface_created(GLFMDisplay *window, s32 w, s32 h) {
         env->push_int(runtime->stack, w);
         env->push_int(runtime->stack, h);
 
-        s32 ret = env->execute_method(refers._callback_surface_created, runtime, refers.glfm_callback->mb.clazz);
+        s32 ret = env->execute_method(refers._callback_surface_created, runtime,
+                                      refers.glfm_callback->mb.clazz);
         if (ret) {
             env->print_exception(runtime);
         }
@@ -609,8 +623,8 @@ int org_mini_glfm_Glfm_glfmSetClipBoardContent(Runtime *runtime, JClass *clazz) 
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     Instance *jstr = env->localvar_getRefer(runtime, 0);
-    Utf8String *ustr=utf8_create();
-    env->jstring_2_utf8(jstr,ustr);
+    Utf8String *ustr = utf8_create();
+    env->jstring_2_utf8(jstr, ustr);
     setClipBoardContent(utf8_cstr(ustr));
     utf8_destory(ustr);
     return 0;
@@ -1109,10 +1123,10 @@ static java_native_method method_glfm_table[] = {
         {"org/mini/glfm/Glfm",        "glfmExtensionSupported",          "(Ljava/lang/String;)Z",            org_mini_glfm_Glfm_glfmExtensionSupported},
         {"org/mini/glfm/Glfm",        "glfmSetKeyboardVisible",          "(JZ)V",                            org_mini_glfm_Glfm_glfmSetKeyboardVisible},
         {"org/mini/glfm/Glfm",        "glfmIsKeyboardVisible",           "(J)Z",                             org_mini_glfm_Glfm_glfmIsKeyboardVisible},
-    {"org/mini/glfm/Glfm",        "glfmGetResRoot",                  "()Ljava/lang/String;",             org_mini_glfm_Glfm_glfmGetResRoot},
-    {"org/mini/glfm/Glfm",        "glfmGetSaveRoot",                  "()Ljava/lang/String;",             org_mini_glfm_Glfm_glfmGetSaveRoot},
-    {"org/mini/glfm/Glfm",        "glfmGetClipBoardContent",                  "()Ljava/lang/String;",             org_mini_glfm_Glfm_glfmGetClipBoardContent},
-    {"org/mini/glfm/Glfm",        "glfmSetClipBoardContent",                  "(Ljava/lang/String;)V",             org_mini_glfm_Glfm_glfmSetClipBoardContent},
+        {"org/mini/glfm/Glfm",        "glfmGetResRoot",                  "()Ljava/lang/String;",             org_mini_glfm_Glfm_glfmGetResRoot},
+        {"org/mini/glfm/Glfm",        "glfmGetSaveRoot",                 "()Ljava/lang/String;",             org_mini_glfm_Glfm_glfmGetSaveRoot},
+        {"org/mini/glfm/Glfm",        "glfmGetClipBoardContent",         "()Ljava/lang/String;",             org_mini_glfm_Glfm_glfmGetClipBoardContent},
+        {"org/mini/glfm/Glfm",        "glfmSetClipBoardContent",         "(Ljava/lang/String;)V",            org_mini_glfm_Glfm_glfmSetClipBoardContent},
 
 };
 

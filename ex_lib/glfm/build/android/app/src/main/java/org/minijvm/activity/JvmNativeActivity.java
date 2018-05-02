@@ -1,6 +1,8 @@
 package org.minijvm.activity;
 
 import android.app.NativeActivity;
+import android.content.ClipData;
+import android.content.ClipboardManager;
 import android.content.Context;
 import android.os.Bundle;
 import android.util.Log;
@@ -16,7 +18,8 @@ public class JvmNativeActivity extends NativeActivity {
     static {
         System.loadLibrary("glfm_example");
     }
-
+    ClipboardManager mClipboardManager ;
+    InputMethodManager inputMethodManager;
     private final static String TAG = "JvmNativeActivity";
 
     // android:name="android.app.NativeActivity"
@@ -25,6 +28,8 @@ public class JvmNativeActivity extends NativeActivity {
 
         View v = getWindow().getDecorView();
         super.onCreate(savedInstanceState);
+        mClipboardManager = mClipboardManager =
+                (ClipboardManager) getSystemService(CLIPBOARD_SERVICE);
     }
 
     @Override
@@ -44,14 +49,25 @@ public class JvmNativeActivity extends NativeActivity {
     }
 
     public void showKeyboard() {
-        InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-        imm.showSoftInput(this.getWindow().getDecorView(), InputMethodManager.SHOW_FORCED);
+        inputMethodManager.showSoftInput(this.getWindow().getDecorView(), InputMethodManager.SHOW_FORCED);
     }
 
 
     public void hideKeyboard() {
-        InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-        imm.hideSoftInputFromWindow(this.getWindow().getDecorView().getWindowToken(), 0);
+        inputMethodManager.hideSoftInputFromWindow(this.getWindow().getDecorView().getWindowToken(), 0);
+    }
+
+    public void setClipBoardContent(String str) {
+        ClipData mClipData;
+        mClipData = ClipData.newPlainText("", str);
+        mClipboardManager.setPrimaryClip(mClipData);
+    }
+
+    public String getClipBoardContent() {
+        ClipData clipData = mClipboardManager.getPrimaryClip();
+        ClipData.Item item = clipData.getItemAt(0);
+        String text = item.getText().toString();
+        return text;
     }
 
     native boolean onStringInput(String str);
