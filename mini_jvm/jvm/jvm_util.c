@@ -1306,7 +1306,7 @@ Instance *exception_create(s32 exception_type, Runtime *runtime) {
 #if _JVM_DEBUG_BYTECODE_DETAIL > 5
     jvm_printf("create exception : %s\n", exception_class_name[exception_type]);
 #endif
-    Utf8String *clsName = utf8_create_c(exception_class_name[exception_type]);
+    Utf8String *clsName = utf8_create_c(STRS_CLASS_EXCEPTION[exception_type]);
     JClass *clazz = classes_load_get(clsName, runtime);
     utf8_destory(clsName);
 
@@ -1328,7 +1328,7 @@ Instance *exception_create_str(s32 exception_type, Runtime *runtime, c8 *errmsg)
     RuntimeStack *para = stack_create(1);
     push_ref(para, jstr);
     garbage_refer_release(jstr);
-    Utf8String *clsName = utf8_create_c(exception_class_name[exception_type]);
+    Utf8String *clsName = utf8_create_c(STRS_CLASS_EXCEPTION[exception_type]);
     JClass *clazz = classes_load_get(clsName, runtime);
     utf8_destory(clsName);
     Instance *ins = instance_create(clazz);

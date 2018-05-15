@@ -6,6 +6,46 @@
 #include "jvm_util.h"
 //======================= global var =============================
 
+char *STRS_CLASS_EXCEPTION[] = {
+        "java.io.OutOfMemoryError",
+        "java.io.VirtualMachineError",
+        "java.io.NoClassDefFoundError",
+        "java.io.EOFException",
+        "java.io.IOException",
+        "java.lang.FileNotFoundException",
+        "java.lang.ArithmeticException",
+        "java.lang.ClassNotFoundException",
+        "java.lang.NullPointerException",
+        "java.lang.NoSuchMethodException",
+        "java.lang.IllegalArgumentException",
+        "java.lang.ClassCastException",
+        "java.lang.ArrayIndexOutOfBoundsException",
+        "java.lang.InstantiationException",
+};
+
+c8 *STR_CLASS_JAVA_LANG_STRING = "java/lang/String";
+c8 *STR_CLASS_JAVA_LANG_OBJECT = "java/lang/Object";
+c8 *STR_CLASS_JAVA_LANG_THREAD = "java/lang/Thread";
+c8 *STR_CLASS_JAVA_LANG_CLASS = "java/lang/Class";
+c8 *STR_CLASS_JAVA_LANG_STACKTRACE = "java/lang/StackTraceElement";
+c8 *STR_CLASS_JAVA_LANG_THROWABLE = "java/lang/Throwable";
+
+c8 *STR_FIELD_STACKFRAME = "stackFrame";
+c8 *STR_FIELD_NAME = "name";
+c8 *STR_FIELD_VALUE = "value";
+c8 *STR_FIELD_COUNT = "count";
+c8 *STR_FIELD_OFFSET = "offset";
+
+c8 *STR_METHOD_CLINIT = "<clinit>";
+c8 *STR_METHOD_FINALIZE = "finalize";
+
+c8 *STR_INS_JAVA_LANG_STRING = "Ljava/lang/String;";
+c8 *STR_INS_JAVA_LANG_THREAD = "Ljava/lang/Thread;";
+c8 *STR_INS_JAVA_LANG_CLASS = "Ljava/lang/Class;";
+c8 *STR_INS_JAVA_LANG_OBJECT = "Ljava/lang/Object;";
+c8 *STR_INS_JAVA_LANG_STACKTRACEELEMENT = "Ljava/lang/StackTraceElement;";
+
+
 ClassLoader *sys_classloader;
 ClassLoader *array_classloader;
 
@@ -35,7 +75,7 @@ s32 data_type_bytes[DATATYPE_COUNT] = {0, 0, 0, 0,
 s32 STACK_LENGHT = 10240;
 s64 GARBAGE_PERIOD_MS = 30 * 1000;
 
-s64 MAX_HEAP_SIZE = 50 * 1024 * 1024;
+s64 MAX_HEAP_SIZE = 30 * 1024 * 1024;
 
 
 //
@@ -43,7 +83,7 @@ InstanceFieldInfo ins_field_offset;
 //
 u8 volatile java_debug = 0;
 
-s32 jvm_init_flag=0;
+s32 jvm_init_flag = 0;
 
 #if _JVM_DEBUG_PROFILE
 Hashtable *profile_instructs;

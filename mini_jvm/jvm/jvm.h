@@ -187,43 +187,29 @@ enum {
     JVM_EXCEPTION_INSTANTIATION,
 };
 
-static char *exception_class_name[] = {
-        "java.io.OutOfMemoryError",
-        "java.io.VirtualMachineError",
-        "java.io.NoClassDefFoundError",
-        "java.io.EOFException",
-        "java.io.IOException",
-        "java.lang.FileNotFoundException",
-        "java.lang.ArithmeticException",
-        "java.lang.ClassNotFoundException",
-        "java.lang.NullPointerException",
-        "java.lang.NoSuchMethodException",
-        "java.lang.IllegalArgumentException",
-        "java.lang.ClassCastException",
-        "java.lang.ArrayIndexOutOfBoundsException",
-        "java.lang.InstantiationException",
-};
+extern char *STRS_CLASS_EXCEPTION[];
 
-static c8 *STR_CLASS_JAVA_LANG_STRING = "java/lang/String";
-static c8 *STR_CLASS_JAVA_LANG_OBJECT = "java/lang/Object";
-static c8 *STR_CLASS_JAVA_LANG_THREAD = "java/lang/Thread";
-static c8 *STR_CLASS_JAVA_LANG_CLASS = "java/lang/Class";
-static c8 *STR_CLASS_JAVA_LANG_STACKTRACE = "java/lang/StackTraceElement";
-static c8 *STR_CLASS_JAVA_LANG_THROWABLE = "java/lang/Throwable";
-static c8 *STR_FIELD_STACKFRAME = "stackFrame";
-static c8 *STR_FIELD_NAME = "name";
-static c8 *STR_FIELD_VALUE = "value";
-static c8 *STR_FIELD_COUNT = "count";
-static c8 *STR_FIELD_OFFSET = "offset";
+extern c8 *STR_CLASS_JAVA_LANG_STRING;
+extern c8 *STR_CLASS_JAVA_LANG_OBJECT;
+extern c8 *STR_CLASS_JAVA_LANG_THREAD;
+extern c8 *STR_CLASS_JAVA_LANG_CLASS;
+extern c8 *STR_CLASS_JAVA_LANG_STACKTRACE;
+extern c8 *STR_CLASS_JAVA_LANG_THROWABLE;
 
-static c8 *STR_METHOD_CLINIT = "<clinit>";
-static c8 *STR_METHOD_FINALIZE = "finalize";
+extern c8 *STR_FIELD_STACKFRAME;
+extern c8 *STR_FIELD_NAME;
+extern c8 *STR_FIELD_VALUE;
+extern c8 *STR_FIELD_COUNT;
+extern c8 *STR_FIELD_OFFSET;
 
-static c8 *STR_INS_JAVA_LANG_STRING = "Ljava/lang/String;";
-static c8 *STR_INS_JAVA_LANG_THREAD = "Ljava/lang/Thread;";
-static c8 *STR_INS_JAVA_LANG_CLASS = "Ljava/lang/Class;";
-static c8 *STR_INS_JAVA_LANG_OBJECT = "Ljava/lang/Object;";
-static c8 *STR_INS_JAVA_LANG_STACKTRACEELEMENT = "Ljava/lang/StackTraceElement;";
+extern c8 *STR_METHOD_CLINIT;
+extern c8 *STR_METHOD_FINALIZE;
+
+extern c8 *STR_INS_JAVA_LANG_STRING;
+extern c8 *STR_INS_JAVA_LANG_THREAD;
+extern c8 *STR_INS_JAVA_LANG_CLASS;
+extern c8 *STR_INS_JAVA_LANG_OBJECT;
+extern c8 *STR_INS_JAVA_LANG_STACKTRACEELEMENT;
 
 enum {
     METHOD_INVOKE_DYNAMIC,
@@ -697,7 +683,7 @@ struct _ClassType {
     Utf8String *source;
 
     Utf8String *name;
-    MethodInfo* finalizeMethod;
+    MethodInfo *finalizeMethod;
     ClassFileFormat cff;
     ConstantPool constantPool;
     InterfacePool interfacePool;
