@@ -216,6 +216,9 @@ static c8 *STR_FIELD_VALUE = "value";
 static c8 *STR_FIELD_COUNT = "count";
 static c8 *STR_FIELD_OFFSET = "offset";
 
+static c8 *STR_METHOD_CLINIT = "<clinit>";
+static c8 *STR_METHOD_FINALIZE = "finalize";
+
 static c8 *STR_INS_JAVA_LANG_STRING = "Ljava/lang/String;";
 static c8 *STR_INS_JAVA_LANG_THREAD = "Ljava/lang/Thread;";
 static c8 *STR_INS_JAVA_LANG_CLASS = "Ljava/lang/Class;";
@@ -694,6 +697,7 @@ struct _ClassType {
     Utf8String *source;
 
     Utf8String *name;
+    MethodInfo* finalizeMethod;
     ClassFileFormat cff;
     ConstantPool constantPool;
     InterfacePool interfacePool;
@@ -774,9 +778,11 @@ void instance_init(Instance *ins, Runtime *runtime);
 
 void instance_init_methodtype(Instance *ins, Runtime *runtime, c8 *methodtype, RuntimeStack *para);
 
+void instance_finalize(Instance *ins, Runtime *runtime);
+
 s32 instance_destory(Instance *instance);
 
-Instance *instance_copy(Instance *src);
+Instance *instance_copy(Instance *src, s32 deep_copy);
 
 //======================= bytecode =============================
 

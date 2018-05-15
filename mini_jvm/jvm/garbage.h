@@ -28,6 +28,7 @@ struct _GcCollectorType {
     Hashset *objs_holder; //法外之地，防回收的持有器，放入其中的对象及其引用的其他对象不会被回收
     MemoryBlock *header, *tmp_header;
     s64 obj_count;
+    Runtime *runtime;
     //
 
     //

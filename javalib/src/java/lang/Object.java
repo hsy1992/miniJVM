@@ -355,8 +355,6 @@ public class Object {
         wait(0);
     }
 
-    Object clone(){
-        return new Object();
-    }
+    native Object clone();
 }
 

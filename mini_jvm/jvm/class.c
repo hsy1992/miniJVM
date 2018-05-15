@@ -251,7 +251,7 @@ void class_clinit(JClass *clazz, Runtime *runtime) {
     MethodPool *p = &(clazz->methodPool);
     for (i = 0; i < p->method_used; i++) {
         //jvm_printf("%s,%s\n", utf8_cstr(p->methodRef[i].name), utf8_cstr(p->methodRef[i].descriptor));
-        if (utf8_equals_c(p->method[i].name, "<clinit>") == 1) {
+        if (utf8_equals_c(p->method[i].name, STR_METHOD_CLINIT)) {
 #if _JVM_DEBUG_BYTECODE_DETAIL > 5
             jvm_printf(" <clinit>  :%s\n", utf8_cstr(clazz->name));
 #endif
@@ -260,7 +260,8 @@ void class_clinit(JClass *clazz, Runtime *runtime) {
             if (ret != RUNTIME_STATUS_NORMAL) {
                 print_exception(runtime);
             }
-            break;
+        } else if (utf8_equals_c(p->method[i].name, STR_METHOD_FINALIZE)) {
+            clazz->finalizeMethod = &(p->method[i]);
         }
     }
 
@@ -268,7 +269,7 @@ void class_clinit(JClass *clazz, Runtime *runtime) {
 }
 //===============================    实例化相关  ==================================
 
-u8 instance_of(JClass *clazz, Instance *ins,Runtime *runtime) {
+u8 instance_of(JClass *clazz, Instance *ins, Runtime *runtime) {
     JClass *ins_of_class = ins->mb.clazz;
     while (ins_of_class) {
         if (ins_of_class == clazz || isSonOfInterface(clazz, ins_of_class->mb.clazz, runtime)) {

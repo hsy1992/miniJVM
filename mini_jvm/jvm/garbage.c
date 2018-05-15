@@ -66,6 +66,8 @@ s32 garbage_collector_create() {
 
     collector->runtime_refer_copy = arraylist_create(256);
 
+    collector->runtime = runtime_create(NULL);
+
     collector->_garbage_thread_status = GARBAGE_THREAD_PAUSE;
     thread_lock_init(&collector->garbagelock);
 
@@ -92,6 +94,7 @@ void garbage_collector_destory() {
     arraylist_destory(collector->runtime_refer_copy);
 
     //
+    runtime_destory(collector->runtime);
     thread_lock_dispose(&collector->garbagelock);
     jvm_free(collector);
     collector = NULL;
@@ -399,6 +402,21 @@ s64 garbage_collect() {
 
     MemoryBlock *nextmb = collector->header;
     MemoryBlock *curmb, *prevmb = NULL;
+    //finalize
+    if (collector->_garbage_thread_status == GARBAGE_THREAD_NORMAL) {
+        while (nextmb) {
+            curmb = nextmb;
+            nextmb = curmb->next;
+            if (curmb->garbage_mark != collector->flag_refer && curmb->type == MEM_TYPE_INS) {
+                if (curmb->clazz->finalizeMethod) {
+                    instance_finalize((Instance *) curmb, collector->runtime);
+                }
+            }
+        }
+    }
+    //clear
+    nextmb = collector->header;
+    prevmb = NULL;
     s64 iter = 0;
     while (nextmb) {
         iter++;

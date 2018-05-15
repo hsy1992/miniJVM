@@ -478,6 +478,17 @@ s32 java_lang_Object_getClass(Runtime *runtime, JClass *clazz) {
     return 0;
 }
 
+s32 java_lang_Object_clone(Runtime *runtime, JClass *clazz) {
+    RuntimeStack *stack = runtime->stack;
+    Instance *ins = (Instance *) localvar_getRefer(runtime, 0);
+    push_ref(stack, (__refer) instance_copy(ins, 0));
+#if _JVM_DEBUG_BYTECODE_DETAIL > 5
+    invoke_deepth(runtime);
+    jvm_printf("java_lang_Object_getClass %d\n", ins);
+#endif
+    return 0;
+}
+
 s32 java_lang_Object_hashCode(Runtime *runtime, JClass *clazz) {
     RuntimeStack *stack = runtime->stack;
     Instance *ins = (Instance *) localvar_getRefer(runtime, 0);
@@ -1145,6 +1156,7 @@ static java_native_method method_table[] = {
         {"java/lang/Math",                      "log",               "(D)D",                                                     java_lang_Math_log},
         {"java/lang/Math",                      "atan2",             "(DD)D",                                                    java_lang_Math_atan2},
         {"java/lang/Math",                      "pow",               "(DD)D",                                                    java_lang_Math_pow},
+        {"java/lang/Object",                    "clone",             "()Ljava/lang/Object;",                                     java_lang_Object_clone},
         {"java/lang/Object",                    "getClass",          "()Ljava/lang/Class;",                                      java_lang_Object_getClass},
         {"java/lang/Object",                    "hashCode",          "()I",                                                      java_lang_Object_hashCode},
         {"java/lang/Object",                    "notify",            "()V",                                                      java_lang_Object_notify},

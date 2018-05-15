@@ -1055,6 +1055,19 @@ void instance_init_methodtype(Instance *ins, Runtime *runtime, c8 *methodtype, R
     }
 }
 
+void instance_finalize(Instance *ins, Runtime *runtime) {
+    if (ins) {
+        MethodInfo *mi = ins->mb.clazz->finalizeMethod;
+        if (mi) {
+            push_ref(runtime->stack, ins);
+            s32 ret = execute_method_impl(mi, runtime, ins->mb.clazz);
+            if (ret != RUNTIME_STATUS_NORMAL) {
+                print_exception(runtime);
+            }
+        }
+    }
+}
+
 void instance_clear_refer(Instance *ins) {
     s32 i;
     JClass *clazz = ins->mb.clazz;
@@ -1091,7 +1104,7 @@ s32 instance_destory(Instance *ins) {
  * @param src  source instance
  * @return  instance
  */
-Instance *instance_copy(Instance *src) {
+Instance *instance_copy(Instance *src, s32 deep_copy) {
     Instance *dst = jvm_malloc(sizeof(Instance) + src->mb.clazz->field_instance_len);
 //    Instance *dst = jvm_malloc(sizeof(Instance));
     memcpy(dst, src, sizeof(Instance));
@@ -1105,34 +1118,36 @@ Instance *instance_copy(Instance *src) {
             dst->obj_fields = (c8 *) dst + sizeof(Instance);//jvm_malloc(fileds_len);
 //            dst->obj_fields = jvm_malloc(fileds_len);
             memcpy(dst->obj_fields, src->obj_fields, fileds_len);
-            s32 i, len;
-            while (clazz) {
-                FieldPool *fp = &clazz->fieldPool;
-                for (i = 0, len = fp->field_used; i < len; i++) {
-                    FieldInfo *fi = &fp->field[i];
-                    if ((fi->access_flags & ACC_STATIC) == 0 && fi->isrefer) {
-                        c8 *ptr = getInstanceFieldPtr(src, fi);
-                        Instance *ins = (Instance *) getFieldRefer(ptr);
-                        if (ins) {
-                            Instance *new_ins = instance_copy(ins);
-                            ptr = getInstanceFieldPtr(dst, fi);
-                            setFieldRefer(ptr, new_ins);
+            if (deep_copy) {
+                s32 i, len;
+                while (clazz) {
+                    FieldPool *fp = &clazz->fieldPool;
+                    for (i = 0, len = fp->field_used; i < len; i++) {
+                        FieldInfo *fi = &fp->field[i];
+                        if ((fi->access_flags & ACC_STATIC) == 0 && fi->isrefer) {
+                            c8 *ptr = getInstanceFieldPtr(src, fi);
+                            Instance *ins = (Instance *) getFieldRefer(ptr);
+                            if (ins) {
+                                Instance *new_ins = instance_copy(ins, deep_copy);
+                                ptr = getInstanceFieldPtr(dst, fi);
+                                setFieldRefer(ptr, new_ins);
+                            }
                         }
                     }
+                    clazz = getSuperClass(clazz);
                 }
-                clazz = getSuperClass(clazz);
             }
         }
     } else if (src->mb.type == MEM_TYPE_ARR) {
         s32 size = src->arr_length * data_type_bytes[src->mb.arr_type_index];
         dst->arr_body = jvm_malloc(size);
-        if (isDataReferByIndex(src->mb.arr_type_index)) {
+        if (isDataReferByIndex(src->mb.arr_type_index) && deep_copy) {
             s32 i;
             s64 val;
             for (i = 0; i < dst->arr_length; i++) {
                 val = jarray_get_field(src, i);
                 if (val) {
-                    val = (intptr_t) instance_copy((Instance *) getFieldRefer((__refer) (intptr_t) val));
+                    val = (intptr_t) instance_copy((Instance *) getFieldRefer((__refer) (intptr_t) val), deep_copy);
                     jarray_set_field(dst, i, val);
                 }
             }

@@ -373,9 +373,6 @@ s32 call_method_c(c8 *p_mainclass, c8 *p_methodname, c8 *p_methodtype, Runtime *
             localvar_dispose(runtime);
             localvar_init(runtime, m->para_count + 1);
 
-            //启动垃圾回收
-            garbage_thread_resume();
-
             s64 start = currentTimeMillis();
             //调用方法
 
@@ -387,7 +384,7 @@ s32 call_method_c(c8 *p_mainclass, c8 *p_methodname, c8 *p_methodtype, Runtime *
             }
 
 
-            jvm_printf("spent %lld\n", (currentTimeMillis() - start));
+            jvm_printf("execute cost %lld\n", (currentTimeMillis() - start));
 
 #if _JVM_DEBUG_PROFILE
             profile_print();
