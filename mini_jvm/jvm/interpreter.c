@@ -497,16 +497,16 @@ void _stack2localvar(MethodInfo *method, Runtime *father, Runtime *son) {
                 localvar_setRefer(son, --i_local, pop_ref(father->stack));
                 break;
             }
+            case '4': {
+                localvar_setInt(son, --i_local, pop_int(father->stack));
+                break;
+            }
             case '8': {
                 //把双字类型拆成两个单元放入本地变量
                 Long2Double l2d;
                 l2d.l = pop_long(father->stack);
                 localvar_setInt(son, --i_local, l2d.i2l.i0);
                 localvar_setInt(son, --i_local, l2d.i2l.i1);
-                break;
-            }
-            case '4': {
-                localvar_setInt(son, --i_local, pop_int(father->stack));
                 break;
             }
         }
@@ -2918,14 +2918,31 @@ s32 execute_method_impl(MethodInfo *method, Runtime *pruntime, JClass *clazz) {
                         } else {
                             // check variable type to determine s64/s32/f64/f32
                             s32 data_bytes = fi->datatype_bytes;
-                            if (data_bytes == 4) {
-                                push_int(stack, getFieldInt(ptr));
-                            } else if (data_bytes == 8) {
-                                push_long(stack, getFieldLong(ptr));
-                            } else if (data_bytes == 1) {
-                                push_int(stack, getFieldByte(ptr));
-                            } else if (data_bytes == 2) {
-                                push_int(stack, getFieldShort(ptr));
+                            switch (data_bytes) {
+                                case 1: {
+                                    push_int(stack, getFieldByte(ptr));
+                                    break;
+                                }
+                                case 2: {
+                                    push_int(stack, getFieldShort(ptr));
+                                    break;
+                                }
+                                case 3: {
+                                    break;
+                                }
+                                case 4: {
+                                    push_int(stack, getFieldInt(ptr));
+                                    break;
+                                }
+                                case 5:
+                                case 6:
+                                case 7: {
+                                    break;
+                                }
+                                case 8: {
+                                    push_long(stack, getFieldLong(ptr));
+                                    break;
+                                }
                             }
                         }
 #if _JVM_DEBUG_BYTECODE_DETAIL > 5
@@ -2964,14 +2981,31 @@ s32 execute_method_impl(MethodInfo *method, Runtime *pruntime, JClass *clazz) {
                             // check variable type to determain long/s32/f64/f32
                             s32 data_bytes = fi->datatype_bytes;
                             //非引用类型
-                            if (data_bytes == 4) {
-                                setFieldInt(ptr, pop_int(stack));
-                            } else if (data_bytes == 8) {
-                                setFieldLong(ptr, pop_long(stack));
-                            } else if (data_bytes == 1) {
-                                setFieldByte(ptr, pop_int(stack));
-                            } else if (data_bytes == 2) {
-                                setFieldShort(ptr, pop_int(stack));
+                            switch (data_bytes) {
+                                case 1: {
+                                    setFieldByte(ptr, pop_int(stack));
+                                    break;
+                                }
+                                case 2: {
+                                    setFieldShort(ptr, pop_int(stack));
+                                    break;
+                                }
+                                case 3: {
+                                    break;
+                                }
+                                case 5:
+                                case 6:
+                                case 7: {
+                                    break;
+                                }
+                                case 4: {
+                                    setFieldInt(ptr, pop_int(stack));
+                                    break;
+                                }
+                                case 8: {
+                                    setFieldLong(ptr, pop_long(stack));
+                                    break;
+                                }
                             }
                         }
                         *opCode += 3;
@@ -2998,14 +3032,31 @@ s32 execute_method_impl(MethodInfo *method, Runtime *pruntime, JClass *clazz) {
                             } else {
                                 // check variable type to determine s64/s32/f64/f32
                                 s32 data_bytes = fi->datatype_bytes;
-                                if (data_bytes == 4) {
-                                    push_int(stack, getFieldInt(ptr));
-                                } else if (data_bytes == 8) {
-                                    push_long(stack, getFieldLong(ptr));
-                                } else if (data_bytes == 1) {
-                                    push_int(stack, getFieldByte(ptr));
-                                } else if (data_bytes == 2) {
-                                    push_int(stack, getFieldShort(ptr));
+                                switch (data_bytes) {
+                                    case 1: {
+                                        push_int(stack, getFieldByte(ptr));
+                                        break;
+                                    }
+                                    case 2: {
+                                        push_int(stack, getFieldShort(ptr));
+                                        break;
+                                    }
+                                    case 3: {
+                                        break;
+                                    }
+                                    case 4: {
+                                        push_int(stack, getFieldInt(ptr));
+                                        break;
+                                    }
+                                    case 5:
+                                    case 6:
+                                    case 7: {
+                                        break;
+                                    }
+                                    case 8: {
+                                        push_long(stack, getFieldLong(ptr));
+                                        break;
+                                    }
                                 }
                             }
 #if _JVM_DEBUG_BYTECODE_DETAIL > 5
@@ -3053,14 +3104,31 @@ s32 execute_method_impl(MethodInfo *method, Runtime *pruntime, JClass *clazz) {
                             } else {
                                 s32 data_bytes = fi->datatype_bytes;
                                 //非引用类型
-                                if (data_bytes == 4) {
-                                    setFieldInt(ptr, entry_2_int(&entry));
-                                } else if (data_bytes == 8) {
-                                    setFieldLong(ptr, entry_2_long(&entry));
-                                } else if (data_bytes == 1) {
-                                    setFieldByte(ptr, entry_2_int(&entry));
-                                } else if (data_bytes == 2) {
-                                    setFieldShort(ptr, entry_2_int(&entry));
+                                switch (data_bytes) {
+                                    case 1: {
+                                        setFieldByte(ptr, entry_2_int(&entry));
+                                        break;
+                                    }
+                                    case 2: {
+                                        setFieldShort(ptr, entry_2_int(&entry));
+                                        break;
+                                    }
+                                    case 3: {
+                                        break;
+                                    }
+                                    case 4: {
+                                        setFieldInt(ptr, entry_2_int(&entry));
+                                        break;
+                                    }
+                                    case 5:
+                                    case 6:
+                                    case 7: {
+                                        break;
+                                    }
+                                    case 8: {
+                                        setFieldLong(ptr, entry_2_long(&entry));
+                                        break;
+                                    }
                                 }
                             }
                         }
@@ -3614,7 +3682,8 @@ jvm_printf("(a)newarray  [%llx] type:%c , count:%d  \n", (s64) (intptr_t) arr, g
                            lineNum
                     );
 #endif
-                    ExceptionTable *et = _find_exception_handler(runtime, ins, ca, (s32) (runtime->pc - ca->code), ref);
+                    ExceptionTable *et = _find_exception_handler(runtime, ins, ca,
+                                                                 (s32) (runtime->pc - ca->code), ref);
                     if (et == NULL) {
                         break;
                     } else {

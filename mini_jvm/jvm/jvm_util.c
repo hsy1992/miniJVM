@@ -1255,8 +1255,8 @@ s32 jstring_equals(Instance *jstr1, Instance *jstr2) {
     } else if (!jstr2) {
         return 0;
     }
-    Instance *arr1 = jstring_get_value_array(jstr1);//取得 String[] value
-    Instance *arr2 = jstring_get_value_array(jstr2);//取得 String[] value
+    Instance *arr1 = jstring_get_value_array(jstr1);//取得 char[] value
+    Instance *arr2 = jstring_get_value_array(jstr2);//取得 char[] value
     s32 count1 = 0, offset1 = 0, count2 = 0, offset2 = 0;
     //0长度字符串可能value[] 是空值，也可能不是空值但count是0
     if (arr1) {
@@ -1273,9 +1273,6 @@ s32 jstring_equals(Instance *jstr1, Instance *jstr2) {
         return 1;
     }
     if (arr1 && arr2 && arr1->arr_body && arr2->arr_body) {
-        if (count1 != count2) {
-            return 0;
-        }
         u16 *jchar_arr1 = (u16 *) arr1->arr_body;
         u16 *jchar_arr2 = (u16 *) arr2->arr_body;
         s32 i;
