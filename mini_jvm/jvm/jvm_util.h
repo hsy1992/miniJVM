@@ -322,9 +322,8 @@ static inline s32 jarray_check_exception(Instance *arr, s32 index, Runtime *runt
         Instance *exception = exception_create(JVM_EXCEPTION_NULLPOINTER, runtime);
         push_ref(runtime->stack, (__refer) exception);
         return RUNTIME_STATUS_EXCEPTION;
-    } else if (index < 0 || index >= arr->arr_length) {
-        Instance *exception = exception_create(JVM_EXCEPTION_ARRAYINDEXOUTOFBOUNDS,
-                                               runtime);
+    } else if (index >= arr->arr_length || index < 0) {
+        Instance *exception = exception_create(JVM_EXCEPTION_ARRAYINDEXOUTOFBOUNDS, runtime);
         push_ref(runtime->stack, (__refer) exception);
         return RUNTIME_STATUS_EXCEPTION;
     }

@@ -305,15 +305,13 @@ extern ClassLoader *sys_classloader;
 extern ClassLoader *array_classloader;
 
 extern ArrayList *obj_cache;
-extern u8 volatile java_debug;
+extern u8 java_debug;
 extern JniEnv jnienv;
 
 extern ArrayList *thread_list;
 
 extern ArrayList *native_libs;
 extern Hashtable *sys_prop;
-
-extern u8 volatile c;
 
 extern s32 STACK_LENGHT;
 

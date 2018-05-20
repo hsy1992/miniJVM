@@ -258,8 +258,7 @@ static inline s32 _op_ldc_impl(u8 **opCode, Runtime *runtime, RuntimeStack *stac
         case CONSTANT_STRING_REF: {
             ConstantUTF8 *cutf = class_get_constant_utf8(clazz,
                                                          class_get_constant_stringref(clazz, index)->stringIndex);
-            Instance *jstr = instance_copy(cutf->jstr, 1);
-            push_ref(stack, (__refer) jstr);
+            push_ref(stack, (__refer) cutf->jstr);
 
 
 #if _JVM_DEBUG_BYTECODE_DETAIL > 5

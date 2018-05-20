@@ -81,7 +81,7 @@ s64 MAX_HEAP_SIZE = 30 * 1024 * 1024;
 //
 InstanceFieldInfo ins_field_offset;
 //
-u8 volatile java_debug = 0;
+u8 java_debug = 0;
 
 s32 jvm_init_flag = 0;
 
