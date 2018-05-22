@@ -711,7 +711,7 @@ void jthread_set_stackframe_value(Instance *ins, __refer val) {
 s32 jthread_get_daemon_value(Instance *ins) {
     c8 *ptr = getFieldPtr_byName_c(ins, STR_CLASS_JAVA_LANG_THREAD, "daemon", "Z");
     if (ptr) {
-        return getFieldInt(ptr);
+        return getFieldByte(ptr);
     }
     return 0;
 }
@@ -1012,7 +1012,8 @@ s64 jarray_get_field(Instance *arr, s32 index) {
 
 //===============================    实例化对象  ==================================
 Instance *instance_create(JClass *clazz) {
-//    if (utf8_equals_c(clazz->name, "java/lang/NullPointerException")) {
+//    if (utf8_equals_c(clazz->name, "java/lang/Thread")) {
+//        int s_=sizeof(Instance) + clazz->field_instance_len;
 //        int debug = 1;
 //    }
 

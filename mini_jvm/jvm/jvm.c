@@ -16,9 +16,11 @@ void thread_boundle(Runtime *runtime) {
     JClass *thread_clazz = classes_load_get_c("java/lang/Thread", runtime);
     //为主线程创建Thread实例
     Instance *t = instance_create(thread_clazz);
+    garbage_refer_hold(t);
     runtime->threadInfo->jthread = t;//Thread.init currentThread() need this
     instance_init(t, runtime);
     jthread_init(t, runtime);
+    garbage_refer_release(t);
 
 }
 
