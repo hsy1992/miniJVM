@@ -3718,6 +3718,8 @@ jvm_printf("(a)newarray  [%llx] type:%c , count:%d  \n", (s64) (intptr_t) arr, g
                 }
             }
 #endif
+        }else{
+            jvm_printf("method code attribute is null.");
         }
     } else {//本地方法
         localvar_init(runtime, method->para_count + 1);//可能有非静态本地方法调用，因此+1
