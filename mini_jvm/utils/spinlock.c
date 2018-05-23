@@ -51,7 +51,7 @@ int spin_trylock(volatile spinlock_t *lock) {
     return 1;
 }
 
-int spin_unlock(volatile spinlock_t volatile *lock) {
+int spin_unlock(volatile spinlock_t *lock) {
     //__asm__ __volatile__ ("":: : "memory");
     *lock = 0;
     return 0;
