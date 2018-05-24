@@ -4,6 +4,7 @@
 
 #include "jvm.h"
 #include "jvm_util.h"
+#include "garbage.h"
 //======================= global var =============================
 
 char *STRS_CLASS_EXCEPTION[] = {

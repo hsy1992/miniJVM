@@ -168,7 +168,7 @@ typedef s32 (*java_native_fun)(Runtime *runtime, JClass *p);
 typedef void (*StaticLibRegFunc)(JniEnv *env);
 
 
-typedef struct _GcCollectorType GcCollector;
+
 
 enum {
     JVM_ERROR_OUTOFMEMORY,

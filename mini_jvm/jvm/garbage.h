@@ -14,6 +14,7 @@
 extern "C" {
 #endif
 
+typedef struct _GcCollectorType GcCollector;
 
 //回收线程
 extern s64 GARBAGE_PERIOD_MS;//
