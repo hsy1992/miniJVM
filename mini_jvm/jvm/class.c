@@ -24,6 +24,8 @@ JClass *class_create() {
     jthreadlock_create(&clazz->mb);
     constant_list_create(clazz);
     clazz->arr_class_type = pairlist_create(16);
+    clazz->insFieldPtrIndex = arraylist_create(8);
+    clazz->staticFieldPtrIndex = arraylist_create(4);
     return clazz;
 }
 
@@ -31,6 +33,8 @@ s32 class_destory(JClass *clazz) {
 
     _DESTORY_CLASS(clazz);
     pairlist_destory(clazz->arr_class_type);
+    arraylist_destory(clazz->insFieldPtrIndex);
+    arraylist_destory(clazz->staticFieldPtrIndex);
     jvm_free(clazz);
     return 0;
 }

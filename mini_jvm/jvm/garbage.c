@@ -641,14 +641,13 @@ static inline void _instance_mark_refer(Instance *ins) {
     JClass *clazz = ins->mb.clazz;
     while (clazz) {
         FieldPool *fp = &clazz->fieldPool;
-        for (i = 0, len = fp->field_used; i < len; i++) {
-            FieldInfo *fi = &fp->field[i];
-            if ((fi->access_flags & ACC_STATIC) == 0 && isDataReferByIndex(fi->datatype_idx)) {
-                c8 *ptr = getInstanceFieldPtr(ins, fi);
-                if (ptr) {
-                    __refer ref = getFieldRefer(ptr);
-                    _garbage_mark_object(ref);
-                }
+        ArrayList *fiList = clazz->insFieldPtrIndex;
+        for (i = 0, len = fiList->length; i < len; i++) {
+            FieldInfo *fi = &fp->field[(s32) (intptr_t) arraylist_get_value(fiList, i)];
+            c8 *ptr = getInstanceFieldPtr(ins, fi);
+            if (ptr) {
+                __refer ref = getFieldRefer(ptr);
+                if (ref)_garbage_mark_object(ref);
             }
         }
         clazz = getSuperClass(clazz);
@@ -662,7 +661,7 @@ static inline void _jarray_mark_refer(Instance *arr) {
             s32 i;
             for (i = 0; i < arr->arr_length; i++) {//把所有引用去除，否则不会垃圾回收
                 s64 val = jarray_get_field(arr, i);
-                _garbage_mark_object((__refer) (intptr_t) val);
+                if (val)_garbage_mark_object((__refer) (intptr_t) val);
             }
         }
     }
@@ -677,14 +676,13 @@ static inline void _class_mark_refer(JClass *clazz) {
     s32 i, len;
     if (clazz->field_static) {
         FieldPool *fp = &clazz->fieldPool;
-        for (i = 0, len = fp->field_used; i < len; i++) {
-            FieldInfo *fi = &fp->field[i];
-            if ((fi->access_flags & ACC_STATIC) != 0 && isDataReferByIndex(fi->datatype_idx)) {
-                c8 *ptr = getStaticFieldPtr(fi);
-                if (ptr) {
-                    __refer ref = getFieldRefer(ptr);
-                    _garbage_mark_object(ref);
-                }
+        ArrayList *fiList = clazz->staticFieldPtrIndex;
+        for (i = 0, len = fiList->length; i < len; i++) {
+            FieldInfo *fi = &fp->field[(s32) (intptr_t) arraylist_get_value(fiList, i)];
+            c8 *ptr = getStaticFieldPtr(fi);
+            if (ptr) {
+                __refer ref = getFieldRefer(ptr);
+                _garbage_mark_object(ref);
             }
         }
     }

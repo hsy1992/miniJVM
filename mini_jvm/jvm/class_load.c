@@ -784,6 +784,7 @@ void _class_optimize(JClass *clazz) {
         ConstantClassRef *ptr = &clazz->interfacePool.clasz[i];
         ptr->name = class_get_utf8_string(clazz, class_get_constant_classref(clazz, ptr->stringIndex)->stringIndex);
     }
+
     for (i = 0; i < clazz->fieldPool.field_used; i++) {
         FieldInfo *ptr = &clazz->fieldPool.field[i];
         ptr->name = class_get_utf8_string(clazz, ptr->name_index);
@@ -791,6 +792,15 @@ void _class_optimize(JClass *clazz) {
         ptr->datatype_idx = getDataTypeIndex(utf8_char_at(ptr->descriptor, 0));
         ptr->isrefer = isDataReferByIndex(ptr->datatype_idx);
         ptr->datatype_bytes = data_type_bytes[ptr->datatype_idx];
+
+        //for gc iterator fast
+        if (isDataReferByIndex(ptr->datatype_idx)) {
+            if (ptr->access_flags & ACC_STATIC) {
+                arraylist_push_back_unsafe(clazz->staticFieldPtrIndex, (__refer)(intptr_t) i);
+            } else {
+                arraylist_push_back_unsafe(clazz->insFieldPtrIndex, (__refer)(intptr_t) i);
+            }
+        }
     }
     for (i = 0; i < clazz->methodPool.method_used; i++) {
         MethodInfo *ptr = &clazz->methodPool.method[i];

@@ -691,6 +691,8 @@ struct _ClassType {
 
     //for array class
     Pairlist *arr_class_type;//for object array create speedup,left is utf8 index of class, right is arr class
+    ArrayList *insFieldPtrIndex;//for optmize , save object pointer field index
+    ArrayList *staticFieldPtrIndex; //save static field index
     s32 arr_type_index;
     s8 status;
 };
