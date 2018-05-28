@@ -85,7 +85,8 @@ static void _callback_drop(GLFWwindow *window, s32 count, const c8 **cstrs) {
         env->push_ref(refers.runtime->stack, refers.glfw_callback);
         env->push_long(refers.runtime->stack, (s64) (intptr_t) window);
         env->push_int(refers.runtime->stack, count);
-        Utf8String *cls = env->utf8_create_part_c(STR_CLASS_JAVA_LANG_STRING, 0, strlen(STR_CLASS_JAVA_LANG_STRING));
+        c8 *STR_JAVA_LANG_STRING = "java/lang/String";
+        Utf8String *cls = env->utf8_create_part_c(STR_JAVA_LANG_STRING, 0, strlen(STR_JAVA_LANG_STRING));
         Instance *jstrs = env->jarray_create(count, 0, cls);
         env->utf8_destory(cls);
         s32 i;
@@ -254,8 +255,8 @@ void _callback_framebuffer_size(GLFWwindow *window, s32 w, s32 h) {
 int org_mini_glfw_utils_Gutil_f2b(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     int pos = 0;
-    Instance *farr = env->localvar_getRefer(runtime, pos++);
-    Instance *barr = env->localvar_getRefer(runtime, pos++);
+    Instance *farr = env->localvar_getRefer(runtime->localvar, pos++);
+    Instance *barr = env->localvar_getRefer(runtime->localvar, pos++);
     if (farr->arr_length == barr->arr_length * 4) {
         memcpy(barr->arr_body, farr->arr_body, barr->arr_length);
     }
@@ -275,9 +276,9 @@ void vec_add(Instance *ra, Instance *aa, Instance *ba) {
 int org_mini_glfw_utils_Gutil_vec_add(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     int pos = 0;
-    Instance *ra = env->localvar_getRefer(runtime, pos++);
-    Instance *aa = env->localvar_getRefer(runtime, pos++);
-    Instance *ba = env->localvar_getRefer(runtime, pos++);
+    Instance *ra = env->localvar_getRefer(runtime->localvar, pos++);
+    Instance *aa = env->localvar_getRefer(runtime->localvar, pos++);
+    Instance *ba = env->localvar_getRefer(runtime->localvar, pos++);
     vec_add(ra, aa, ba);
     env->push_ref(runtime->stack, ra);
     return 0;
@@ -295,9 +296,9 @@ void vec_sub(Instance *ra, Instance *aa, Instance *ba) {
 int org_mini_glfw_utils_Gutil_vec_sub(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     int pos = 0;
-    Instance *ra = env->localvar_getRefer(runtime, pos++);
-    Instance *aa = env->localvar_getRefer(runtime, pos++);
-    Instance *ba = env->localvar_getRefer(runtime, pos++);
+    Instance *ra = env->localvar_getRefer(runtime->localvar, pos++);
+    Instance *aa = env->localvar_getRefer(runtime->localvar, pos++);
+    Instance *ba = env->localvar_getRefer(runtime->localvar, pos++);
     vec_sub(ra, aa, ba);
     env->push_ref(runtime->stack, ra);
     return 0;
@@ -314,8 +315,8 @@ float vec_mul_inner(Instance *aa, Instance *ba) {
 int org_mini_glfw_utils_Gutil_vec_mul_inner(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     int pos = 0;
-    Instance *aa = env->localvar_getRefer(runtime, pos++);
-    Instance *ba = env->localvar_getRefer(runtime, pos++);
+    Instance *aa = env->localvar_getRefer(runtime->localvar, pos++);
+    Instance *ba = env->localvar_getRefer(runtime->localvar, pos++);
     float r = vec_mul_inner(aa, ba);
     env->push_float(runtime->stack, r);
     return 0;
@@ -332,10 +333,10 @@ void vec_scale(Instance *ra, Instance *aa, float f) {
 int org_mini_glfw_utils_Gutil_vec_scale(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     int pos = 0;
-    Instance *ra = env->localvar_getRefer(runtime, pos++);
-    Instance *aa = env->localvar_getRefer(runtime, pos++);
+    Instance *ra = env->localvar_getRefer(runtime->localvar, pos++);
+    Instance *aa = env->localvar_getRefer(runtime->localvar, pos++);
     Int2Float f;
-    f.i = env->localvar_getInt(runtime, pos++);
+    f.i = env->localvar_getInt(runtime->localvar, pos++);
     vec_scale(ra, aa, f.f);
     env->push_ref(runtime->stack, ra);
     return 0;
@@ -348,7 +349,7 @@ float vec_len(Instance *ra) {
 int org_mini_glfw_utils_Gutil_vec_len(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     int pos = 0;
-    Instance *ra = env->localvar_getRefer(runtime, pos++);
+    Instance *ra = env->localvar_getRefer(runtime->localvar, pos++);
     float f = vec_len(ra);
     env->push_float(runtime->stack, f);
     return 0;
@@ -357,8 +358,8 @@ int org_mini_glfw_utils_Gutil_vec_len(Runtime *runtime, JClass *clazz) {
 int org_mini_glfw_utils_Gutil_vec_normal(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     int pos = 0;
-    Instance *ra = env->localvar_getRefer(runtime, pos++);
-    Instance *aa = env->localvar_getRefer(runtime, pos++);
+    Instance *ra = env->localvar_getRefer(runtime->localvar, pos++);
+    Instance *aa = env->localvar_getRefer(runtime->localvar, pos++);
     float k = 1.f / vec_len(aa);
     vec_scale(ra, aa, k);
     env->push_ref(runtime->stack, ra);
@@ -368,9 +369,9 @@ int org_mini_glfw_utils_Gutil_vec_normal(Runtime *runtime, JClass *clazz) {
 int org_mini_glfw_utils_Gutil_vec_reflect(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     int pos = 0;
-    Instance *ra = env->localvar_getRefer(runtime, pos++);
-    Instance *aa = env->localvar_getRefer(runtime, pos++);
-    Instance *ba = env->localvar_getRefer(runtime, pos++);
+    Instance *ra = env->localvar_getRefer(runtime->localvar, pos++);
+    Instance *aa = env->localvar_getRefer(runtime->localvar, pos++);
+    Instance *ba = env->localvar_getRefer(runtime->localvar, pos++);
     GLfloat *r = (GLfloat *) ra->arr_body;
     GLfloat *a = (GLfloat *) aa->arr_body;
     GLfloat *b = (GLfloat *) ba->arr_body;
@@ -385,9 +386,9 @@ int org_mini_glfw_utils_Gutil_vec_reflect(Runtime *runtime, JClass *clazz) {
 int org_mini_glfw_utils_Gutil_vec_mul_cross(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     int pos = 0;
-    Instance *ra = env->localvar_getRefer(runtime, pos++);
-    Instance *aa = env->localvar_getRefer(runtime, pos++);
-    Instance *ba = env->localvar_getRefer(runtime, pos++);
+    Instance *ra = env->localvar_getRefer(runtime->localvar, pos++);
+    Instance *aa = env->localvar_getRefer(runtime->localvar, pos++);
+    Instance *ba = env->localvar_getRefer(runtime->localvar, pos++);
     GLfloat *r = (GLfloat *) ra->arr_body;
     GLfloat *a = (GLfloat *) aa->arr_body;
     GLfloat *b = (GLfloat *) ba->arr_body;
@@ -402,7 +403,7 @@ int org_mini_glfw_utils_Gutil_vec_mul_cross(Runtime *runtime, JClass *clazz) {
 int org_mini_glfw_utils_Gutil_mat4x4_identity(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     int pos = 0;
-    Instance *r = env->localvar_getRefer(runtime, pos++);
+    Instance *r = env->localvar_getRefer(runtime->localvar, pos++);
     mat4x4_identity((vec4 *) r->arr_body);
     env->push_ref(runtime->stack, r);
     return 0;
@@ -411,8 +412,8 @@ int org_mini_glfw_utils_Gutil_mat4x4_identity(Runtime *runtime, JClass *clazz) {
 int org_mini_glfw_utils_Gutil_mat4x4_dup(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     int pos = 0;
-    Instance *r = env->localvar_getRefer(runtime, pos++);
-    Instance *m1 = env->localvar_getRefer(runtime, pos++);
+    Instance *r = env->localvar_getRefer(runtime->localvar, pos++);
+    Instance *m1 = env->localvar_getRefer(runtime->localvar, pos++);
     mat4x4_dup((vec4 *) r->arr_body, (vec4 *) m1->arr_body);
     env->push_ref(runtime->stack, r);
     return 0;
@@ -421,9 +422,9 @@ int org_mini_glfw_utils_Gutil_mat4x4_dup(Runtime *runtime, JClass *clazz) {
 int org_mini_glfw_utils_Gutil_mat4x4_row(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     int pos = 0;
-    Instance *r = env->localvar_getRefer(runtime, pos++);
-    Instance *m1 = env->localvar_getRefer(runtime, pos++);
-    int row = env->localvar_getInt(runtime, pos++);
+    Instance *r = env->localvar_getRefer(runtime->localvar, pos++);
+    Instance *m1 = env->localvar_getRefer(runtime->localvar, pos++);
+    int row = env->localvar_getInt(runtime->localvar, pos++);
     mat4x4_row((GLfloat *) r->arr_body, (vec4 *) m1->arr_body, row);
     env->push_ref(runtime->stack, r);
     return 0;
@@ -432,9 +433,9 @@ int org_mini_glfw_utils_Gutil_mat4x4_row(Runtime *runtime, JClass *clazz) {
 int org_mini_glfw_utils_Gutil_mat4x4_col(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     int pos = 0;
-    Instance *r = env->localvar_getRefer(runtime, pos++);
-    Instance *m1 = env->localvar_getRefer(runtime, pos++);
-    int col = env->localvar_getInt(runtime, pos++);
+    Instance *r = env->localvar_getRefer(runtime->localvar, pos++);
+    Instance *m1 = env->localvar_getRefer(runtime->localvar, pos++);
+    int col = env->localvar_getInt(runtime->localvar, pos++);
     mat4x4_col((GLfloat *) r->arr_body, (vec4 *) m1->arr_body, col);
     env->push_ref(runtime->stack, r);
     return 0;
@@ -443,8 +444,8 @@ int org_mini_glfw_utils_Gutil_mat4x4_col(Runtime *runtime, JClass *clazz) {
 int org_mini_glfw_utils_Gutil_mat4x4_transpose(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     int pos = 0;
-    Instance *r = env->localvar_getRefer(runtime, pos++);
-    Instance *m1 = env->localvar_getRefer(runtime, pos++);
+    Instance *r = env->localvar_getRefer(runtime->localvar, pos++);
+    Instance *m1 = env->localvar_getRefer(runtime->localvar, pos++);
     mat4x4_transpose((vec4 *) r->arr_body, (vec4 *) m1->arr_body);
     env->push_ref(runtime->stack, r);
     return 0;
@@ -453,9 +454,9 @@ int org_mini_glfw_utils_Gutil_mat4x4_transpose(Runtime *runtime, JClass *clazz) 
 int org_mini_glfw_utils_Gutil_mat4x4_add(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     int pos = 0;
-    Instance *r = env->localvar_getRefer(runtime, pos++);
-    Instance *m1 = env->localvar_getRefer(runtime, pos++);
-    Instance *m2 = env->localvar_getRefer(runtime, pos++);
+    Instance *r = env->localvar_getRefer(runtime->localvar, pos++);
+    Instance *m1 = env->localvar_getRefer(runtime->localvar, pos++);
+    Instance *m2 = env->localvar_getRefer(runtime->localvar, pos++);
     mat4x4_add((vec4 *) r->arr_body, (vec4 *) m1->arr_body, (vec4 *) m2->arr_body);
     env->push_ref(runtime->stack, r);
     return 0;
@@ -464,9 +465,9 @@ int org_mini_glfw_utils_Gutil_mat4x4_add(Runtime *runtime, JClass *clazz) {
 int org_mini_glfw_utils_Gutil_mat4x4_sub(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     int pos = 0;
-    Instance *r = env->localvar_getRefer(runtime, pos++);
-    Instance *m1 = env->localvar_getRefer(runtime, pos++);
-    Instance *m2 = env->localvar_getRefer(runtime, pos++);
+    Instance *r = env->localvar_getRefer(runtime->localvar, pos++);
+    Instance *m1 = env->localvar_getRefer(runtime->localvar, pos++);
+    Instance *m2 = env->localvar_getRefer(runtime->localvar, pos++);
     mat4x4_sub((vec4 *) r->arr_body, (vec4 *) m1->arr_body, (vec4 *) m2->arr_body);
     env->push_ref(runtime->stack, r);
     return 0;
@@ -475,9 +476,9 @@ int org_mini_glfw_utils_Gutil_mat4x4_sub(Runtime *runtime, JClass *clazz) {
 int org_mini_glfw_utils_Gutil_mat4x4_mul(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     int pos = 0;
-    Instance *r = env->localvar_getRefer(runtime, pos++);
-    Instance *m1 = env->localvar_getRefer(runtime, pos++);
-    Instance *m2 = env->localvar_getRefer(runtime, pos++);
+    Instance *r = env->localvar_getRefer(runtime->localvar, pos++);
+    Instance *m1 = env->localvar_getRefer(runtime->localvar, pos++);
+    Instance *m2 = env->localvar_getRefer(runtime->localvar, pos++);
     mat4x4_mul((vec4 *) r->arr_body, (vec4 *) m1->arr_body, (vec4 *) m2->arr_body);
     env->push_ref(runtime->stack, r);
     return 0;
@@ -486,9 +487,9 @@ int org_mini_glfw_utils_Gutil_mat4x4_mul(Runtime *runtime, JClass *clazz) {
 int org_mini_glfw_utils_Gutil_mat4x4_mul_vec4(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     int pos = 0;
-    Instance *r = env->localvar_getRefer(runtime, pos++);
-    Instance *m1 = env->localvar_getRefer(runtime, pos++);
-    Instance *m2 = env->localvar_getRefer(runtime, pos++);
+    Instance *r = env->localvar_getRefer(runtime->localvar, pos++);
+    Instance *m1 = env->localvar_getRefer(runtime->localvar, pos++);
+    Instance *m2 = env->localvar_getRefer(runtime->localvar, pos++);
     mat4x4_mul_vec4((GLfloat *) r->arr_body, (vec4 *) m1->arr_body, (GLfloat *) m2->arr_body);
     env->push_ref(runtime->stack, r);
     return 0;
@@ -497,9 +498,9 @@ int org_mini_glfw_utils_Gutil_mat4x4_mul_vec4(Runtime *runtime, JClass *clazz) {
 int org_mini_glfw_utils_Gutil_mat4x4_from_vec3_mul_outer(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     int pos = 0;
-    Instance *r = env->localvar_getRefer(runtime, pos++);
-    Instance *m1 = env->localvar_getRefer(runtime, pos++);
-    Instance *m2 = env->localvar_getRefer(runtime, pos++);
+    Instance *r = env->localvar_getRefer(runtime->localvar, pos++);
+    Instance *m1 = env->localvar_getRefer(runtime->localvar, pos++);
+    Instance *m2 = env->localvar_getRefer(runtime->localvar, pos++);
     mat4x4_from_vec3_mul_outer((vec4 *) r->arr_body, (GLfloat *) m1->arr_body, (GLfloat *) m2->arr_body);
     env->push_ref(runtime->stack, r);
     return 0;
@@ -508,11 +509,11 @@ int org_mini_glfw_utils_Gutil_mat4x4_from_vec3_mul_outer(Runtime *runtime, JClas
 int org_mini_glfw_utils_Gutil_mat4x4_translate(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     int pos = 0;
-    Instance *r = env->localvar_getRefer(runtime, pos++);
+    Instance *r = env->localvar_getRefer(runtime->localvar, pos++);
     Int2Float x, y, z;
-    x.i = env->localvar_getInt(runtime, pos++);
-    y.i = env->localvar_getInt(runtime, pos++);
-    z.i = env->localvar_getInt(runtime, pos++);
+    x.i = env->localvar_getInt(runtime->localvar, pos++);
+    y.i = env->localvar_getInt(runtime->localvar, pos++);
+    z.i = env->localvar_getInt(runtime->localvar, pos++);
     mat4x4_translate((vec4 *) r->arr_body, x.f, y.f, z.f);
     env->push_ref(runtime->stack, r);
     return 0;
@@ -521,11 +522,11 @@ int org_mini_glfw_utils_Gutil_mat4x4_translate(Runtime *runtime, JClass *clazz) 
 int org_mini_glfw_utils_Gutil_mat4x4_translate_in_place(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     int pos = 0;
-    Instance *r = env->localvar_getRefer(runtime, pos++);
+    Instance *r = env->localvar_getRefer(runtime->localvar, pos++);
     Int2Float x, y, z;
-    x.i = env->localvar_getInt(runtime, pos++);
-    y.i = env->localvar_getInt(runtime, pos++);
-    z.i = env->localvar_getInt(runtime, pos++);
+    x.i = env->localvar_getInt(runtime->localvar, pos++);
+    y.i = env->localvar_getInt(runtime->localvar, pos++);
+    z.i = env->localvar_getInt(runtime->localvar, pos++);
     mat4x4_translate_in_place((vec4 *) r->arr_body, x.f, y.f, z.f);
     env->push_ref(runtime->stack, r);
     return 0;
@@ -534,10 +535,10 @@ int org_mini_glfw_utils_Gutil_mat4x4_translate_in_place(Runtime *runtime, JClass
 int org_mini_glfw_utils_Gutil_mat4x4_scale(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     int pos = 0;
-    Instance *r = env->localvar_getRefer(runtime, pos++);
-    Instance *m1 = env->localvar_getRefer(runtime, pos++);
+    Instance *r = env->localvar_getRefer(runtime->localvar, pos++);
+    Instance *m1 = env->localvar_getRefer(runtime->localvar, pos++);
     Int2Float f;
-    f.i = env->localvar_getInt(runtime, pos++);
+    f.i = env->localvar_getInt(runtime->localvar, pos++);
     mat4x4_scale((vec4 *) r->arr_body, (vec4 *) m1->arr_body, f.f);
     env->push_ref(runtime->stack, r);
     return 0;
@@ -546,12 +547,12 @@ int org_mini_glfw_utils_Gutil_mat4x4_scale(Runtime *runtime, JClass *clazz) {
 int org_mini_glfw_utils_Gutil_mat4x4_scale_aniso(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     int pos = 0;
-    Instance *r = env->localvar_getRefer(runtime, pos++);
-    Instance *m1 = env->localvar_getRefer(runtime, pos++);
+    Instance *r = env->localvar_getRefer(runtime->localvar, pos++);
+    Instance *m1 = env->localvar_getRefer(runtime->localvar, pos++);
     Int2Float x, y, z;
-    x.i = env->localvar_getInt(runtime, pos++);
-    y.i = env->localvar_getInt(runtime, pos++);
-    z.i = env->localvar_getInt(runtime, pos++);
+    x.i = env->localvar_getInt(runtime->localvar, pos++);
+    y.i = env->localvar_getInt(runtime->localvar, pos++);
+    z.i = env->localvar_getInt(runtime->localvar, pos++);
     mat4x4_scale_aniso((vec4 *) r->arr_body, (vec4 *) m1->arr_body, x.f, y.f, z.f);
     env->push_ref(runtime->stack, r);
     return 0;
@@ -560,13 +561,13 @@ int org_mini_glfw_utils_Gutil_mat4x4_scale_aniso(Runtime *runtime, JClass *clazz
 int org_mini_glfw_utils_Gutil_mat4x4_rotate(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     int pos = 0;
-    Instance *r = env->localvar_getRefer(runtime, pos++);
-    Instance *m1 = env->localvar_getRefer(runtime, pos++);
+    Instance *r = env->localvar_getRefer(runtime->localvar, pos++);
+    Instance *m1 = env->localvar_getRefer(runtime->localvar, pos++);
     Int2Float x, y, z, a;
-    x.i = env->localvar_getInt(runtime, pos++);
-    y.i = env->localvar_getInt(runtime, pos++);
-    z.i = env->localvar_getInt(runtime, pos++);
-    a.i = env->localvar_getInt(runtime, pos++);
+    x.i = env->localvar_getInt(runtime->localvar, pos++);
+    y.i = env->localvar_getInt(runtime->localvar, pos++);
+    z.i = env->localvar_getInt(runtime->localvar, pos++);
+    a.i = env->localvar_getInt(runtime->localvar, pos++);
     mat4x4_rotate((vec4 *) r->arr_body, (vec4 *) m1->arr_body, x.f, y.f, z.f, a.f);
     env->push_ref(runtime->stack, r);
     return 0;
@@ -575,10 +576,10 @@ int org_mini_glfw_utils_Gutil_mat4x4_rotate(Runtime *runtime, JClass *clazz) {
 int org_mini_glfw_utils_Gutil_mat4x4_rotateX(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     int pos = 0;
-    Instance *r = env->localvar_getRefer(runtime, pos++);
-    Instance *m1 = env->localvar_getRefer(runtime, pos++);
+    Instance *r = env->localvar_getRefer(runtime->localvar, pos++);
+    Instance *m1 = env->localvar_getRefer(runtime->localvar, pos++);
     Int2Float f;
-    f.i = env->localvar_getInt(runtime, pos++);
+    f.i = env->localvar_getInt(runtime->localvar, pos++);
     mat4x4_rotate_X((vec4 *) r->arr_body, (vec4 *) m1->arr_body, f.f);
     env->push_ref(runtime->stack, r);
     return 0;
@@ -587,10 +588,10 @@ int org_mini_glfw_utils_Gutil_mat4x4_rotateX(Runtime *runtime, JClass *clazz) {
 int org_mini_glfw_utils_Gutil_mat4x4_rotateY(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     int pos = 0;
-    Instance *r = env->localvar_getRefer(runtime, pos++);
-    Instance *m1 = env->localvar_getRefer(runtime, pos++);
+    Instance *r = env->localvar_getRefer(runtime->localvar, pos++);
+    Instance *m1 = env->localvar_getRefer(runtime->localvar, pos++);
     Int2Float f;
-    f.i = env->localvar_getInt(runtime, pos++);
+    f.i = env->localvar_getInt(runtime->localvar, pos++);
     mat4x4_rotate_Y((vec4 *) r->arr_body, (vec4 *) m1->arr_body, f.f);
     env->push_ref(runtime->stack, r);
     return 0;
@@ -599,10 +600,10 @@ int org_mini_glfw_utils_Gutil_mat4x4_rotateY(Runtime *runtime, JClass *clazz) {
 int org_mini_glfw_utils_Gutil_mat4x4_rotateZ(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     int pos = 0;
-    Instance *r = env->localvar_getRefer(runtime, pos++);
-    Instance *m1 = env->localvar_getRefer(runtime, pos++);
+    Instance *r = env->localvar_getRefer(runtime->localvar, pos++);
+    Instance *m1 = env->localvar_getRefer(runtime->localvar, pos++);
     Int2Float f;
-    f.i = env->localvar_getInt(runtime, pos++);
+    f.i = env->localvar_getInt(runtime->localvar, pos++);
     mat4x4_rotate_Z((vec4 *) r->arr_body, (vec4 *) m1->arr_body, f.f);
     env->push_ref(runtime->stack, r);
     return 0;
@@ -611,8 +612,8 @@ int org_mini_glfw_utils_Gutil_mat4x4_rotateZ(Runtime *runtime, JClass *clazz) {
 int org_mini_glfw_utils_Gutil_mat4x4_invert(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     int pos = 0;
-    Instance *r = env->localvar_getRefer(runtime, pos++);
-    Instance *m1 = env->localvar_getRefer(runtime, pos++);
+    Instance *r = env->localvar_getRefer(runtime->localvar, pos++);
+    Instance *m1 = env->localvar_getRefer(runtime->localvar, pos++);
     mat4x4_invert((vec4 *) r->arr_body, (vec4 *) m1->arr_body);
     env->push_ref(runtime->stack, r);
     return 0;
@@ -621,8 +622,8 @@ int org_mini_glfw_utils_Gutil_mat4x4_invert(Runtime *runtime, JClass *clazz) {
 int org_mini_glfw_utils_Gutil_mat4x4_orthonormalize(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     int pos = 0;
-    Instance *r = env->localvar_getRefer(runtime, pos++);
-    Instance *m1 = env->localvar_getRefer(runtime, pos++);
+    Instance *r = env->localvar_getRefer(runtime->localvar, pos++);
+    Instance *m1 = env->localvar_getRefer(runtime->localvar, pos++);
     mat4x4_orthonormalize((vec4 *) r->arr_body, (vec4 *) m1->arr_body);
     env->push_ref(runtime->stack, r);
     return 0;
@@ -631,14 +632,14 @@ int org_mini_glfw_utils_Gutil_mat4x4_orthonormalize(Runtime *runtime, JClass *cl
 int org_mini_glfw_utils_Gutil_mat4x4_ortho(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     int pos = 0;
-    Instance *ra = env->localvar_getRefer(runtime, pos++);
+    Instance *ra = env->localvar_getRefer(runtime->localvar, pos++);
     Int2Float l, r, b, t, n, f;
-    l.i = env->localvar_getInt(runtime, pos++);
-    r.i = env->localvar_getInt(runtime, pos++);
-    b.i = env->localvar_getInt(runtime, pos++);
-    t.i = env->localvar_getInt(runtime, pos++);
-    n.i = env->localvar_getInt(runtime, pos++);
-    f.i = env->localvar_getInt(runtime, pos++);
+    l.i = env->localvar_getInt(runtime->localvar, pos++);
+    r.i = env->localvar_getInt(runtime->localvar, pos++);
+    b.i = env->localvar_getInt(runtime->localvar, pos++);
+    t.i = env->localvar_getInt(runtime->localvar, pos++);
+    n.i = env->localvar_getInt(runtime->localvar, pos++);
+    f.i = env->localvar_getInt(runtime->localvar, pos++);
     mat4x4_ortho((vec4 *) ra->arr_body, l.f, r.f, b.f, t.f, n.f, f.f);
     env->push_ref(runtime->stack, ra);
     return 0;
@@ -647,14 +648,14 @@ int org_mini_glfw_utils_Gutil_mat4x4_ortho(Runtime *runtime, JClass *clazz) {
 int org_mini_glfw_utils_Gutil_mat4x4_frustum(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     int pos = 0;
-    Instance *ra = env->localvar_getRefer(runtime, pos++);
+    Instance *ra = env->localvar_getRefer(runtime->localvar, pos++);
     Int2Float l, r, b, t, n, f;
-    l.i = env->localvar_getInt(runtime, pos++);
-    r.i = env->localvar_getInt(runtime, pos++);
-    b.i = env->localvar_getInt(runtime, pos++);
-    t.i = env->localvar_getInt(runtime, pos++);
-    n.i = env->localvar_getInt(runtime, pos++);
-    f.i = env->localvar_getInt(runtime, pos++);
+    l.i = env->localvar_getInt(runtime->localvar, pos++);
+    r.i = env->localvar_getInt(runtime->localvar, pos++);
+    b.i = env->localvar_getInt(runtime->localvar, pos++);
+    t.i = env->localvar_getInt(runtime->localvar, pos++);
+    n.i = env->localvar_getInt(runtime->localvar, pos++);
+    f.i = env->localvar_getInt(runtime->localvar, pos++);
     mat4x4_frustum((vec4 *) ra->arr_body, l.f, r.f, b.f, t.f, n.f, f.f);
     env->push_ref(runtime->stack, ra);
     return 0;
@@ -663,12 +664,12 @@ int org_mini_glfw_utils_Gutil_mat4x4_frustum(Runtime *runtime, JClass *clazz) {
 int org_mini_glfw_utils_Gutil_mat4x4_perspective(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     int pos = 0;
-    Instance *r = env->localvar_getRefer(runtime, pos++);
+    Instance *r = env->localvar_getRefer(runtime->localvar, pos++);
     Int2Float y_fov, aspect, n, f;
-    y_fov.i = env->localvar_getInt(runtime, pos++);
-    aspect.i = env->localvar_getInt(runtime, pos++);
-    n.i = env->localvar_getInt(runtime, pos++);
-    f.i = env->localvar_getInt(runtime, pos++);
+    y_fov.i = env->localvar_getInt(runtime->localvar, pos++);
+    aspect.i = env->localvar_getInt(runtime->localvar, pos++);
+    n.i = env->localvar_getInt(runtime->localvar, pos++);
+    f.i = env->localvar_getInt(runtime->localvar, pos++);
     mat4x4_perspective((vec4 *) r->arr_body, y_fov.f, aspect.f, n.f, f.f);
     env->push_ref(runtime->stack, r);
     return 0;
@@ -677,10 +678,10 @@ int org_mini_glfw_utils_Gutil_mat4x4_perspective(Runtime *runtime, JClass *clazz
 int org_mini_glfw_utils_Gutil_mat4x4_look_at(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     int pos = 0;
-    Instance *r = env->localvar_getRefer(runtime, pos++);
-    Instance *vec3_eye = env->localvar_getRefer(runtime, pos++);
-    Instance *vec3_center = env->localvar_getRefer(runtime, pos++);
-    Instance *vec3_up = env->localvar_getRefer(runtime, pos++);
+    Instance *r = env->localvar_getRefer(runtime->localvar, pos++);
+    Instance *vec3_eye = env->localvar_getRefer(runtime->localvar, pos++);
+    Instance *vec3_center = env->localvar_getRefer(runtime->localvar, pos++);
+    Instance *vec3_up = env->localvar_getRefer(runtime->localvar, pos++);
     mat4x4_look_at((vec4 *) r->arr_body, (float *) vec3_eye->arr_body,
                    (float *) vec3_center->arr_body,
                    (float *) vec3_up->arr_body);
@@ -693,9 +694,9 @@ int org_mini_glfw_utils_Gutil_mat4x4_look_at(Runtime *runtime, JClass *clazz) {
 int org_mini_glfw_Glfw_glfwSetCallback(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
-    GLFWwindow *window = (__refer) (intptr_t) env->localvar_getLong_2slot(runtime, pos);
+    GLFWwindow *window = (__refer) (intptr_t) env->localvar_getLong_2slot(runtime->localvar, pos);
     pos += 2;
-    refers.glfw_callback = env->localvar_getRefer(runtime, pos++);
+    refers.glfw_callback = env->localvar_getRefer(runtime->localvar, pos++);
 
     //this object not refered by jvm , so needs to hold by jni manaul
     if (refers.glfw_callback) env->instance_release_from_thread(refers.glfw_callback, runtime);
@@ -875,7 +876,7 @@ int org_mini_glfw_Glfw_glfwSetCallback(Runtime *runtime, JClass *clazz) {
 int org_mini_glfw_Glfw_glfwGetTime(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
-    s32 list = env->localvar_getInt(runtime, pos++);
+    s32 list = env->localvar_getInt(runtime->localvar, pos++);
     env->push_double(runtime->stack, glfwGetTime());
     return 0;
 }
@@ -884,7 +885,7 @@ int org_mini_glfw_Glfw_glfwSetTime(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     Long2Double t;
-    t.l = env->localvar_getLong_2slot(runtime, pos);
+    t.l = env->localvar_getLong_2slot(runtime->localvar, pos);
     pos += 2;
     glfwSetTime(t.d);
     return 0;
@@ -893,13 +894,13 @@ int org_mini_glfw_Glfw_glfwSetTime(Runtime *runtime, JClass *clazz) {
 int org_mini_glfw_Glfw_glfwCreateWindow(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
-    s32 width = env->localvar_getInt(runtime, pos++);
-    s32 height = env->localvar_getInt(runtime, pos++);
-    Instance *title_arr = env->localvar_getRefer(runtime, pos++);
+    s32 width = env->localvar_getInt(runtime->localvar, pos++);
+    s32 height = env->localvar_getInt(runtime->localvar, pos++);
+    Instance *title_arr = env->localvar_getRefer(runtime->localvar, pos++);
     c8 *title = title_arr->arr_body;
-    GLFWmonitor *monitor = (__refer) (intptr_t) env->localvar_getLong_2slot(runtime, pos);
+    GLFWmonitor *monitor = (__refer) (intptr_t) env->localvar_getLong_2slot(runtime->localvar, pos);
     pos += 2;
-    GLFWwindow *share = (__refer) (intptr_t) env->localvar_getLong_2slot(runtime, pos);
+    GLFWwindow *share = (__refer) (intptr_t) env->localvar_getLong_2slot(runtime->localvar, pos);
     pos += 2;
 
     GLFWwindow *window = glfwCreateWindow(width, height, title, monitor, share);
@@ -915,7 +916,7 @@ int org_mini_glfw_Glfw_glfwCreateWindow(Runtime *runtime, JClass *clazz) {
 int org_mini_glfw_Glfw_glfwDestroyWindow(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
-    GLFWwindow *window = (__refer) (intptr_t) env->localvar_getLong_2slot(runtime, pos);
+    GLFWwindow *window = (__refer) (intptr_t) env->localvar_getLong_2slot(runtime->localvar, pos);
     glfwDestroyWindow(window);
     return 0;
 }
@@ -923,7 +924,7 @@ int org_mini_glfw_Glfw_glfwDestroyWindow(Runtime *runtime, JClass *clazz) {
 int org_mini_glfw_Glfw_glfwWindowShouldClose(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
-    GLFWwindow *window = (__refer) (intptr_t) env->localvar_getLong_2slot(runtime, pos);
+    GLFWwindow *window = (__refer) (intptr_t) env->localvar_getLong_2slot(runtime->localvar, pos);
     env->push_int(runtime->stack, GL_TRUE == glfwWindowShouldClose((GLFWwindow *) window));
     return 0;
 }
@@ -944,8 +945,8 @@ int org_mini_glfw_Glfw_glfwTerminate(Runtime *runtime, JClass *clazz) {
 int org_mini_glfw_Glfw_glfwWindowHint(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
-    s32 hint = env->localvar_getInt(runtime, pos++);
-    s32 value = env->localvar_getInt(runtime, pos++);
+    s32 hint = env->localvar_getInt(runtime->localvar, pos++);
+    s32 value = env->localvar_getInt(runtime->localvar, pos++);
     glfwWindowHint(hint, value);
     return 0;
 }
@@ -960,9 +961,9 @@ int org_mini_glfw_Glfw_glfwPollEvents(Runtime *runtime, JClass *clazz) {
 int org_mini_glfw_Glfw_glfwSetWindowShouldClose(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
-    GLFWwindow *window = (__refer) (intptr_t) env->localvar_getLong_2slot(runtime, pos);
+    GLFWwindow *window = (__refer) (intptr_t) env->localvar_getLong_2slot(runtime->localvar, pos);
     pos += 2;
-    s32 value = env->localvar_getInt(runtime, pos++);
+    s32 value = env->localvar_getInt(runtime->localvar, pos++);
     glfwSetWindowShouldClose(window, value);
     return 0;
 }
@@ -970,7 +971,7 @@ int org_mini_glfw_Glfw_glfwSetWindowShouldClose(Runtime *runtime, JClass *clazz)
 int org_mini_glfw_Glfw_glfwMakeContextCurrentJni(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
-    GLFWwindow *window = (__refer) (intptr_t) env->localvar_getLong_2slot(runtime, pos);
+    GLFWwindow *window = (__refer) (intptr_t) env->localvar_getLong_2slot(runtime->localvar, pos);
     pos += 2;
     glfwMakeContextCurrent(window);
     gladLoadGLLoader((GLADloadproc) glfwGetProcAddress);
@@ -980,7 +981,7 @@ int org_mini_glfw_Glfw_glfwMakeContextCurrentJni(Runtime *runtime, JClass *clazz
 int org_mini_glfw_Glfw_glfwSwapInterval(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
-    s32 interval = env->localvar_getInt(runtime, pos++);
+    s32 interval = env->localvar_getInt(runtime->localvar, pos++);
     glfwSwapInterval(interval);
     return 0;
 }
@@ -988,7 +989,7 @@ int org_mini_glfw_Glfw_glfwSwapInterval(Runtime *runtime, JClass *clazz) {
 int org_mini_glfw_Glfw_glfwSwapBuffers(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
-    GLFWwindow *window = (__refer) (intptr_t) env->localvar_getLong_2slot(runtime, pos);
+    GLFWwindow *window = (__refer) (intptr_t) env->localvar_getLong_2slot(runtime->localvar, pos);
     pos += 2;
     glfwSwapBuffers(window);
     return 0;
@@ -997,7 +998,7 @@ int org_mini_glfw_Glfw_glfwSwapBuffers(Runtime *runtime, JClass *clazz) {
 int org_mini_glfw_Glfw_glfwGetFramebufferWidth(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
-    GLFWwindow *window = (__refer) (intptr_t) env->localvar_getLong_2slot(runtime, pos);
+    GLFWwindow *window = (__refer) (intptr_t) env->localvar_getLong_2slot(runtime->localvar, pos);
     s32 w, h;
     glfwGetFramebufferSize(window, &w, &h);
     env->push_int(runtime->stack, w);
@@ -1007,7 +1008,7 @@ int org_mini_glfw_Glfw_glfwGetFramebufferWidth(Runtime *runtime, JClass *clazz) 
 int org_mini_glfw_Glfw_glfwGetFramebufferHeight(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
-    GLFWwindow *window = (__refer) (intptr_t) env->localvar_getLong_2slot(runtime, pos);
+    GLFWwindow *window = (__refer) (intptr_t) env->localvar_getLong_2slot(runtime->localvar, pos);
     s32 w, h;
     glfwGetFramebufferSize(window, &w, &h);
     env->push_int(runtime->stack, h);
@@ -1017,7 +1018,7 @@ int org_mini_glfw_Glfw_glfwGetFramebufferHeight(Runtime *runtime, JClass *clazz)
 int org_mini_glfw_Glfw_glfwGetWindowWidth(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
-    GLFWwindow *window = (__refer) (intptr_t) env->localvar_getLong_2slot(runtime, pos);
+    GLFWwindow *window = (__refer) (intptr_t) env->localvar_getLong_2slot(runtime->localvar, pos);
     s32 w, h;
     glfwGetWindowSize(window, &w, &h);
     env->push_int(runtime->stack, w);
@@ -1027,7 +1028,7 @@ int org_mini_glfw_Glfw_glfwGetWindowWidth(Runtime *runtime, JClass *clazz) {
 int org_mini_glfw_Glfw_glfwGetWindowHeight(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
-    GLFWwindow *window = (__refer) (intptr_t) env->localvar_getLong_2slot(runtime, pos);
+    GLFWwindow *window = (__refer) (intptr_t) env->localvar_getLong_2slot(runtime->localvar, pos);
     s32 w, h;
     glfwGetWindowSize(window, &w, &h);
     env->push_int(runtime->stack, h);
@@ -1037,10 +1038,10 @@ int org_mini_glfw_Glfw_glfwGetWindowHeight(Runtime *runtime, JClass *clazz) {
 int org_mini_glfw_Glfw_glfwSetWindowAspectRatio(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
-    GLFWwindow *window = (__refer) (intptr_t) env->localvar_getLong_2slot(runtime, pos);
+    GLFWwindow *window = (__refer) (intptr_t) env->localvar_getLong_2slot(runtime->localvar, pos);
     pos += 2;
-    s32 numer = env->localvar_getInt(runtime, pos++);
-    s32 denom = env->localvar_getInt(runtime, pos++);
+    s32 numer = env->localvar_getInt(runtime->localvar, pos++);
+    s32 denom = env->localvar_getInt(runtime->localvar, pos++);
     glfwSetWindowAspectRatio(window, numer, denom);
     return 0;
 }
@@ -1048,7 +1049,7 @@ int org_mini_glfw_Glfw_glfwSetWindowAspectRatio(Runtime *runtime, JClass *clazz)
 int org_mini_glfw_Glfw_glfwGetClipboardString(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
-    GLFWwindow *window = (__refer) (intptr_t) env->localvar_getLong_2slot(runtime, pos);
+    GLFWwindow *window = (__refer) (intptr_t) env->localvar_getLong_2slot(runtime->localvar, pos);
     c8 *cstr = (c8 *) glfwGetClipboardString(window);
     if (cstr) {
         Utf8String *ustr = env->utf8_create_part_c(cstr, 0, strlen(cstr));

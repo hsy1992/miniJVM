@@ -178,10 +178,10 @@ enum NVGcreateFlags {
 
 
 
-NUTIL_API NVGcontext* nvgCreateGL3(int flags);
-NUTIL_API void nvgDeleteGL3(NVGcontext* ctx);
-NUTIL_API int nvglCreateImageFromHandleGL3(NVGcontext* ctx, GLuint textureId, int w, int h, int flags);
-NUTIL_API GLuint nvglImageHandleGL3(NVGcontext* ctx, int image);
+NUTIL_API NVGcontext* nvgCreateGL2(int flags);
+NUTIL_API void nvgDeleteGL2(NVGcontext* ctx);
+NUTIL_API int nvglCreateImageFromHandleGL2(NVGcontext* ctx, GLuint textureId, int w, int h, int flags);
+NUTIL_API GLuint nvglImageHandleGL2(NVGcontext* ctx, int image);
 
 
  //nanovg_gl3.h

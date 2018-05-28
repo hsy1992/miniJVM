@@ -268,39 +268,39 @@ public class Nutil_java_2_c {
                         String curArgvName = "";
 
                         if ("int".equals(argvType)) {
-                            varCode += "    s32 " + argvName + " = env->localvar_getInt(runtime, pos++);\n";
+                            varCode += "    s32 " + argvName + " = env->localvar_getInt(runtime->localvar, pos++);\n";
                             curArgvName = argvName;
                             javaArgvCode += "I";
                         } else if ("short".equals(argvType)) {
-                            varCode += "    s32 " + argvName + " = env->localvar_getInt(runtime, pos++);\n";
+                            varCode += "    s32 " + argvName + " = env->localvar_getInt(runtime->localvar, pos++);\n";
                             curArgvName = argvName;
                             javaArgvCode += "S";
                         } else if ("byte".equals(argvType)) {
-                            varCode += "    s32 " + argvName + " = env->localvar_getInt(runtime, pos++);\n";
+                            varCode += "    s32 " + argvName + " = env->localvar_getInt(runtime->localvar, pos++);\n";
                             curArgvName = argvName;
                             javaArgvCode += "B";
                         } else if ("boolean".equals(argvType)) {
-                            varCode += "    s32 " + argvName + " = env->localvar_getInt(runtime, pos++);\n";
+                            varCode += "    s32 " + argvName + " = env->localvar_getInt(runtime->localvar, pos++);\n";
                             curArgvName = argvName;
                             javaArgvCode += "Z";
                         } else if ("long".equals(argvType)) {
                             if (isPointer(nativeArgvs[nativei])) {
-                                varCode += "    intptr_t " + argvName + " = env->localvar_getLong_2slot(runtime, pos);pos += 2;\n";
+                                varCode += "    intptr_t " + argvName + " = env->localvar_getLong_2slot(runtime->localvar, pos);pos += 2;\n";
                             } else {
-                                varCode += "    s64 " + argvName + " = env->localvar_getLong_2slot(runtime, pos);pos += 2;\n";
+                                varCode += "    s64 " + argvName + " = env->localvar_getLong_2slot(runtime->localvar, pos);pos += 2;\n";
                             }
                             curArgvName = "(" + argvName + ")";
                             javaArgvCode += "J";
                         } else if ("float".equals(argvType)) {
-                            varCode += "    Int2Float " + argvName + ";" + argvName + ".i = env->localvar_getInt(runtime, pos++);\n";
+                            varCode += "    Int2Float " + argvName + ";" + argvName + ".i = env->localvar_getInt(runtime->localvar, pos++);\n";
                             curArgvName = argvName + ".f";
                             javaArgvCode += "F";
                         } else if ("double".equals(argvType)) {
-                            varCode += "    Long2Double " + argvName + ";" + argvName + ".l = env->localvar_getLong_2slot(runtime, pos);pos += 2;\n";
+                            varCode += "    Long2Double " + argvName + ";" + argvName + ".l = env->localvar_getLong_2slot(runtime->localvar, pos);pos += 2;\n";
                             curArgvName = argvName + ".d";
                             javaArgvCode += "D";
                         } else if ("String".equals(argvType)) {
-                            varCode += "    Instance *" + argvName + " = env->localvar_getRefer(runtime, pos++);\n";
+                            varCode += "    Instance *" + argvName + " = env->localvar_getRefer(runtime->localvar, pos++);\n";
                             varCode += "    __refer ptr_" + argvName + " = NULL;\n";
                             varCode += "    Utf8String *u_" + argvName + ";\n";
                             varCode += "    if(" + argvName + "){\n";
@@ -312,7 +312,7 @@ public class Nutil_java_2_c {
                             releaseMemCode += "env->utf8_destory(u_" + argvName + ");";
                             javaArgvCode += "Ljava/lang/String;";
                         } else if ("byte[][]".equals(argvType) || "byte[]...".equals(argvType)) {
-                            varCode += "    Instance *" + argvName + " = env->localvar_getRefer(runtime, pos++);\n";
+                            varCode += "    Instance *" + argvName + " = env->localvar_getRefer(runtime->localvar, pos++);\n";
                             varCode += "    CStringArr *ptr_" + argvName + " = NULL;\n";
                             varCode += "    if(" + argvName + "){\n";
                             varCode += "        ptr_" + argvName + " = env->cstringarr_create(" + argvName + ");\n";
@@ -325,7 +325,7 @@ public class Nutil_java_2_c {
                             javaArgvCode += "[[B";
 
                         } else if ("long[]".equals(argvType) && isPointer(nativeArgvs[nativei])) {
-                            varCode += "    Instance *" + argvName + " = env->localvar_getRefer(runtime, pos++);\n";
+                            varCode += "    Instance *" + argvName + " = env->localvar_getRefer(runtime->localvar, pos++);\n";
                             varCode += "    ReferArr *ptr_" + argvName + " = NULL;\n";
                             varCode += "    if(" + argvName + "){\n";
                             varCode += "        ptr_" + argvName + " = env->referarr_create(" + argvName + ");\n";
@@ -343,7 +343,7 @@ public class Nutil_java_2_c {
                             javaArgvCode += "[J";
 
                         } else if (argvType.indexOf("[]") > 0) {
-                            varCode += "    Instance *" + argvName + " = env->localvar_getRefer(runtime, pos++);\n";
+                            varCode += "    Instance *" + argvName + " = env->localvar_getRefer(runtime->localvar, pos++);\n";
                             varCode += "    __refer ptr_" + argvName + " = NULL;\n";
                             varCode += "    if(" + argvName + "){\n";
                             varCode += "        ptr_" + argvName + " = " + argvName + "->arr_body" + ";\n";

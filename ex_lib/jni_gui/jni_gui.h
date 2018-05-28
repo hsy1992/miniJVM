@@ -14,9 +14,6 @@
 typedef struct _GlobeRefer GlobeRefer;
 extern GlobeRefer refers;
 
-//__refer ptr_NkFuncTable();
-//
-//s32 count_NkFuncTable();
 
 __refer ptr_GLFuncTable();
 
