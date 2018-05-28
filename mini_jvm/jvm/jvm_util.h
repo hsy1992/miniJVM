@@ -75,8 +75,6 @@ int jvm_printf(const char *, ...);
 
 void invoke_deepth(Runtime *runtime);
 
-s32 parseMethodPara(Utf8String *methodType, Utf8String *out);
-
 Instance *getInstanceInStack(JClass *clazz, ConstantMethodRef *cmr, RuntimeStack *stack);
 
 void printDumpOfClasses(void);

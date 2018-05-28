@@ -316,7 +316,7 @@ int utf8_equals_c(Utf8String *a1, char *a2) {
     return index;
 }
 
-utf8_char utf8_char_at(Utf8String *a1, int pos) {
+inline utf8_char utf8_char_at(Utf8String *a1, int pos) {
     return a1->data[pos];
 }
 

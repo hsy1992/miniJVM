@@ -161,7 +161,7 @@ int arraylist_push_back(ArrayList *arraylist, ArrayListValue data) {
     return r;
 }
 
-int arraylist_push_back_unsafe(ArrayList *arraylist, ArrayListValue data) {
+inline int arraylist_push_back_unsafe(ArrayList *arraylist, ArrayListValue data) {
     s32 r;
     r = _arraylist_insert_impl(arraylist, arraylist->length, data);
 
@@ -236,7 +236,7 @@ int arraylist_index_of(ArrayList *arraylist,
     return index;
 }
 
-ArrayListValue arraylist_get_value_unsafe(ArrayList *arraylist, int index) {
+inline ArrayListValue arraylist_get_value_unsafe(ArrayList *arraylist, int index) {
     ArrayListValue value = NULL;
     if (index >= 0 && index < arraylist->length)
         value = arraylist->data[index];
@@ -266,7 +266,7 @@ ArrayListValue arraylist_pop_front(ArrayList *arraylist) {
     return v;
 }
 
-ArrayListValue arraylist_pop_back_unsafe(ArrayList *arraylist) {
+inline ArrayListValue arraylist_pop_back_unsafe(ArrayList *arraylist) {
     ArrayListValue v = NULL;
     if (arraylist->length > 0) {
         v = arraylist->data[arraylist->length - 1];

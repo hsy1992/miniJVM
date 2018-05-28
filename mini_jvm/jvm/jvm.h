@@ -168,8 +168,6 @@ typedef s32 (*java_native_fun)(Runtime *runtime, JClass *p);
 typedef void (*StaticLibRegFunc)(JniEnv *env);
 
 
-
-
 enum {
     JVM_ERROR_OUTOFMEMORY,
     JVM_ERROR_VIRTUALMACHINE,
@@ -1043,8 +1041,6 @@ s32 is_cat1(StackEntry *entry);
 
 s32 is_ref(StackEntry *entry);
 
-void _stack2localvar(MethodInfo *method, Runtime *father, Runtime *son);
-
 
 //======================= localvar =============================
 Runtime *runtime_create(Runtime *parent);
@@ -1061,9 +1057,22 @@ void getRuntimeStack(Runtime *runtime, Utf8String *ustr);
 
 s32 getRuntimeDepth(Runtime *top);
 
-s32 localvar_init(Runtime *runtime, s32 count);
+static inline s32 localvar_init(Runtime *runtime, s32 count) {
+    if (count > runtime->localvar_max) {
+        jvm_free(runtime->localvar);
+        runtime->localvar = jvm_calloc(sizeof(LocalVarItem) * count);
+        runtime->localvar_max = count;
+    } else {
+        memset(runtime->localvar, 0, count * sizeof(LocalVarItem));
+    }
+    runtime->localvar_count = count;
+    return 0;
+}
 
-s32 localvar_dispose(Runtime *runtime);
+static inline s32 localvar_dispose(Runtime *runtime) {
+    runtime->localvar_count = 0;
+    return 0;
+}
 
 
 static inline void localvar_setInt(Runtime *runtime, s32 index, s32 val) {

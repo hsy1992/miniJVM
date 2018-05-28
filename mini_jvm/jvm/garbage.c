@@ -643,7 +643,7 @@ static inline void _instance_mark_refer(Instance *ins) {
         FieldPool *fp = &clazz->fieldPool;
         ArrayList *fiList = clazz->insFieldPtrIndex;
         for (i = 0, len = fiList->length; i < len; i++) {
-            FieldInfo *fi = &fp->field[(s32) (intptr_t) arraylist_get_value(fiList, i)];
+            FieldInfo *fi = &fp->field[(s32) (intptr_t) arraylist_get_value_unsafe(fiList, i)];
             c8 *ptr = getInstanceFieldPtr(ins, fi);
             if (ptr) {
                 __refer ref = getFieldRefer(ptr);
@@ -678,7 +678,7 @@ static inline void _class_mark_refer(JClass *clazz) {
         FieldPool *fp = &clazz->fieldPool;
         ArrayList *fiList = clazz->staticFieldPtrIndex;
         for (i = 0, len = fiList->length; i < len; i++) {
-            FieldInfo *fi = &fp->field[(s32) (intptr_t) arraylist_get_value(fiList, i)];
+            FieldInfo *fi = &fp->field[(s32) (intptr_t) arraylist_get_value_unsafe(fiList, i)];
             c8 *ptr = getStaticFieldPtr(fi);
             if (ptr) {
                 __refer ref = getFieldRefer(ptr);

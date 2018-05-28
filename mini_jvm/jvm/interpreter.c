@@ -481,7 +481,7 @@ static void _printCodeAttribute(CodeAttribute *ca, JClass *p) {
  * @param father  runtime of father
  * @param son     runtime of son
  */
-void _stack2localvar(MethodInfo *method, Runtime *father, Runtime *son) {
+static inline void _stack2localvar(MethodInfo *method, Runtime *father, Runtime *son) {
 
     Utf8String *paraType = method->paraType;
     s32 i;
@@ -511,8 +511,7 @@ void _stack2localvar(MethodInfo *method, Runtime *father, Runtime *son) {
         }
     }
     if (!(method->access_flags & ACC_STATIC)) {//非静态方法需要把局部变量位置0设为this
-        __refer _this = pop_ref(father->stack);
-        localvar_setRefer(son, --i_local, _this);
+        localvar_setRefer(son, --i_local, pop_ref(father->stack));
     }
 
 }

@@ -375,56 +375,6 @@ Instance *getInstanceInStack(JClass *clazz, ConstantMethodRef *cmr, RuntimeStack
     return ins;
 }
 
-s32 parseMethodPara(Utf8String *methodType, Utf8String *out) {
-    s32 count = 0;
-    Utf8String *para = utf8_create_copy(methodType);
-    utf8_substring(para, utf8_indexof_c(para, "(") + 1, utf8_last_indexof_c(para, ")"));
-    //从后往前拆分方法参数，从栈中弹出放入本地变量
-    int i = 0;
-    while (para->length > 0) {
-        c8 ch = utf8_char_at(para, 0);
-        switch (ch) {
-            case 'S':
-            case 'C':
-            case 'B':
-            case 'I':
-            case 'F':
-            case 'Z':
-                utf8_substring(para, 1, para->length);
-                utf8_append_c(out, "4");
-                count++;
-                break;
-            case 'D':
-            case 'J': {
-                utf8_substring(para, 1, para->length);
-                utf8_append_c(out, "8");
-                count += 2;
-                break;
-            }
-            case 'L':
-                utf8_substring(para, utf8_indexof_c(para, ";") + 1, para->length);
-                utf8_append_c(out, "R");
-                count += 1;
-                break;
-            case '[':
-                while (utf8_char_at(para, 1) == '[') {
-                    utf8_substring(para, 1, para->length);//去掉多维中的 [[[[LObject; 中的 [符
-                }
-                if (utf8_char_at(para, 1) == 'L') {
-                    utf8_substring(para, utf8_indexof_c(para, ";") + 1, para->length);
-                } else {
-                    utf8_substring(para, 2, para->length);
-                }
-                utf8_append_c(out, "R");
-                count += 1;
-                break;
-        }
-        i++;
-    }
-    utf8_destory(para);
-    return count;
-}
-
 void printDumpOfClasses() {
     HashtableIterator hti;
     hashtable_iterate(sys_classloader->classes, &hti);

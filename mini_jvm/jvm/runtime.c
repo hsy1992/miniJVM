@@ -245,22 +245,7 @@ void getRuntimeStack(Runtime *runtime, Utf8String *ustr) {
 //======================= localvar =============================
 
 
-s32 localvar_init(Runtime *runtime, s32 count) {
-    if (count > runtime->localvar_max) {
-        jvm_free(runtime->localvar);
-        runtime->localvar = jvm_calloc(sizeof(LocalVarItem) * count);
-        runtime->localvar_max = count;
-    } else {
-        memset(runtime->localvar, 0, count * sizeof(LocalVarItem));
-    }
-    runtime->localvar_count = count;
-    return 0;
-}
 
-s32 localvar_dispose(Runtime *runtime) {
-    runtime->localvar_count = 0;
-    return 0;
-}
 
 void localvar_setInt_jni(Runtime *runtime, s32 index, s32 val) {
     localvar_setInt(runtime, index, val);
