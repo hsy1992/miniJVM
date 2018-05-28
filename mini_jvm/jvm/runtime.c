@@ -247,32 +247,32 @@ void getRuntimeStack(Runtime *runtime, Utf8String *ustr) {
 
 
 
-void localvar_setInt_jni(Runtime *runtime, s32 index, s32 val) {
-    localvar_setInt(runtime, index, val);
+void localvar_setInt_jni(LocalVarItem *localvar, s32 index, s32 val) {
+    localvar_setInt(localvar, index, val);
 }
 
-void localvar_setRefer_jni(Runtime *runtime, s32 index, __refer val) {
-    localvar_setRefer(runtime, index, val);
+void localvar_setRefer_jni(LocalVarItem *localvar, s32 index, __refer val) {
+    localvar_setRefer(localvar, index, val);
 }
 
-s32 localvar_getInt_jni(Runtime *runtime, s32 index) {
-    return localvar_getInt(runtime, index);
+s32 localvar_getInt_jni(LocalVarItem *localvar, s32 index) {
+    return localvar_getInt(localvar, index);
 }
 
-__refer localvar_getRefer_jni(Runtime *runtime, s32 index) {
-    return localvar_getRefer(runtime, index);
+__refer localvar_getRefer_jni(LocalVarItem *localvar, s32 index) {
+    return localvar_getRefer(localvar, index);
 }
 
-void localvar_setLong_2slot_jni(Runtime *runtime, s32 index, s64 val) {
+void localvar_setLong_2slot_jni(LocalVarItem *localvar, s32 index, s64 val) {
     Long2Double l2d;
     l2d.l = val;
-    runtime->localvar[index].integer = l2d.i2l.i1;
-    runtime->localvar[index + 1].integer = l2d.i2l.i0;
+    localvar[index].integer = l2d.i2l.i1;
+    localvar[index + 1].integer = l2d.i2l.i0;
 }
 
-s64 localvar_getLong_2slot_jni(Runtime *runtime, s32 index) {
+s64 localvar_getLong_2slot_jni(LocalVarItem *localvar, s32 index) {
     Long2Double l2d;
-    l2d.i2l.i1 = runtime->localvar[index].integer;
-    l2d.i2l.i0 = runtime->localvar[index + 1].integer;
+    l2d.i2l.i1 = localvar[index].integer;
+    l2d.i2l.i0 = localvar[index + 1].integer;
     return l2d.l;
 }

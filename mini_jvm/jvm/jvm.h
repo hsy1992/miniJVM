@@ -1075,33 +1075,33 @@ static inline s32 localvar_dispose(Runtime *runtime) {
 }
 
 
-static inline void localvar_setInt(Runtime *runtime, s32 index, s32 val) {
-    runtime->localvar[index].integer = val;
+static inline void localvar_setInt(LocalVarItem *localvar, s32 index, s32 val) {
+    localvar[index].integer = val;
 }
 
-static inline void localvar_setRefer(Runtime *runtime, s32 index, __refer val) {
-    runtime->localvar[index].refer = val;
+static inline void localvar_setRefer(LocalVarItem *localvar, s32 index, __refer val) {
+    localvar[index].refer = val;
 }
 
-static inline s32 localvar_getInt(Runtime *runtime, s32 index) {
-    return runtime->localvar[index].integer;
+static inline s32 localvar_getInt(LocalVarItem *localvar, s32 index) {
+    return localvar[index].integer;
 }
 
-static inline __refer localvar_getRefer(Runtime *runtime, s32 index) {
-    return runtime->localvar[index].refer;
+static inline __refer localvar_getRefer(LocalVarItem *localvar, s32 index) {
+    return localvar[index].refer;
 }
 
-void localvar_setInt_jni(Runtime *runtime, s32 index, s32 val);
+void localvar_setInt_jni(LocalVarItem *localvar, s32 index, s32 val);
 
-void localvar_setRefer_jni(Runtime *runtime, s32 index, __refer val);
+void localvar_setRefer_jni(LocalVarItem *localvar, s32 index, __refer val);
 
-s32 localvar_getInt_jni(Runtime *runtime, s32 index);
+s32 localvar_getInt_jni(LocalVarItem *localvar, s32 index);
 
-__refer localvar_getRefer_jni(Runtime *runtime, s32 index);
+__refer localvar_getRefer_jni(LocalVarItem *localvar, s32 index);
 
-s64 localvar_getLong_2slot_jni(Runtime *runtime, s32 index);
+s64 localvar_getLong_2slot_jni(LocalVarItem *localvar, s32 index);
 
-void localvar_setLong_2slot_jni(Runtime *runtime, s32 index, s64 val);
+void localvar_setLong_2slot_jni(LocalVarItem *localvar, s32 index, s64 val);
 
 //======================= other =============================
 //======================= execute =============================
@@ -1213,17 +1213,17 @@ struct _JNIENV {
 
     __refer (*entry_2_refer)(StackEntry *entry);
 
-    void (*localvar_setRefer)(Runtime *runtime, s32 index, __refer val);
+    void (*localvar_setRefer)(LocalVarItem *localvar, s32 index, __refer val);
 
-    void (*localvar_setInt)(Runtime *runtime, s32 index, s32 val);
+    void (*localvar_setInt)(LocalVarItem *localvar, s32 index, s32 val);
 
-    __refer (*localvar_getRefer)(Runtime *runtime, s32 index);
+    __refer (*localvar_getRefer)(LocalVarItem *localvar, s32 index);
 
-    s32 (*localvar_getInt)(Runtime *runtime, s32 index);
+    s32 (*localvar_getInt)(LocalVarItem *localvar, s32 index);
 
-    s64 (*localvar_getLong_2slot)(Runtime *runtime, s32 index);
+    s64 (*localvar_getLong_2slot)(LocalVarItem *localvar, s32 index);
 
-    void (*localvar_setLong_2slot)(Runtime *runtime, s32 index, s64 val);
+    void (*localvar_setLong_2slot)(LocalVarItem *localvar, s32 index, s64 val);
 
     void (*jthread_block_enter)(Runtime *runtime);
 

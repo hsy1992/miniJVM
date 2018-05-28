@@ -26,7 +26,7 @@ s32 javax_mini_reflect_vm_RefNative_refIdSize(Runtime *runtime, JClass *clazz) {
 }
 
 s32 javax_mini_reflect_vm_RefNative_obj2id(Runtime *runtime, JClass *clazz) {
-    Instance *ins = (Instance *) localvar_getRefer(runtime, 0);
+    Instance *ins = (Instance *) localvar_getRefer(runtime->localvar, 0);
     Long2Double l2d;
     l2d.l = (u64) (intptr_t) ins;
     push_long(runtime->stack, l2d.l);
@@ -39,8 +39,8 @@ s32 javax_mini_reflect_vm_RefNative_obj2id(Runtime *runtime, JClass *clazz) {
 
 s32 javax_mini_reflect_vm_RefNative_id2obj(Runtime *runtime, JClass *clazz) {
     Long2Double l2d;
-    l2d.i2l.i1 = localvar_getInt(runtime, 0);
-    l2d.i2l.i0 = localvar_getInt(runtime, 1);
+    l2d.i2l.i1 = localvar_getInt(runtime->localvar, 0);
+    l2d.i2l.i0 = localvar_getInt(runtime->localvar, 1);
     __refer r = (__refer) (intptr_t) l2d.l;//这里不能直接转化，可能在外部发生了数据精度丢失，只能从低位强转
     push_ref(runtime->stack, r);
 
@@ -75,7 +75,7 @@ s32 javax_mini_reflect_vm_RefNative_getClasses(Runtime *runtime, JClass *clazz) 
 }
 
 s32 javax_mini_reflect_vm_RefNative_getClassByName(Runtime *runtime, JClass *clazz) {
-    Instance *jstr = (Instance *) localvar_getRefer(runtime, 0);
+    Instance *jstr = (Instance *) localvar_getRefer(runtime->localvar, 0);
     Utf8String *ustr = utf8_create();
     jstring_2_utf8(jstr, ustr);
     JClass *cl = classes_get(ustr);
@@ -91,29 +91,29 @@ s32 javax_mini_reflect_vm_RefNative_getClassByName(Runtime *runtime, JClass *cla
 s32 javax_mini_reflect_vm_RefNative_setLocalVal(Runtime *runtime, JClass *clazz) {
     int pos = 0;
     Long2Double l2d;
-    l2d.i2l.i1 = localvar_getInt(runtime, pos++);
-    l2d.i2l.i0 = localvar_getInt(runtime, pos++);
+    l2d.i2l.i1 = localvar_getInt(runtime->localvar, pos++);
+    l2d.i2l.i0 = localvar_getInt(runtime->localvar, pos++);
     Runtime *r = (Runtime *) (__refer) (intptr_t) l2d.l;
-    s32 slot = localvar_getInt(runtime, pos++);
-    u8 type = (u8) localvar_getInt(runtime, pos++);
+    s32 slot = localvar_getInt(runtime->localvar, pos++);
+    u8 type = (u8) localvar_getInt(runtime->localvar, pos++);
 
-    l2d.i2l.i1 = localvar_getInt(runtime, pos++);
-    l2d.i2l.i0 = localvar_getInt(runtime, pos++);
+    l2d.i2l.i1 = localvar_getInt(runtime->localvar, pos++);
+    l2d.i2l.i0 = localvar_getInt(runtime->localvar, pos++);
 
-    s32 bytes = localvar_getInt(runtime, pos++);
+    s32 bytes = localvar_getInt(runtime->localvar, pos++);
     if (slot < r->localvar_count) {
         switch (bytes) {
             case 'R':
-                localvar_setRefer(r, slot, (__refer) (intptr_t) l2d.l);
+                localvar_setRefer(r->localvar, slot, (__refer) (intptr_t) l2d.l);
                 break;
             case '8':
-                localvar_setInt(r, slot, l2d.i2l.i0);
-                localvar_setInt(r, slot + 1, l2d.i2l.i1);
+                localvar_setInt(r->localvar, slot, l2d.i2l.i0);
+                localvar_setInt(r->localvar, slot + 1, l2d.i2l.i1);
                 break;
             case '4':
             case '2':
             case '1':
-                localvar_setInt(r, slot, (s32) l2d.l);
+                localvar_setInt(r->localvar, slot, (s32) l2d.l);
                 break;
         }
         push_int(runtime->stack, 0);
@@ -126,11 +126,11 @@ s32 javax_mini_reflect_vm_RefNative_setLocalVal(Runtime *runtime, JClass *clazz)
 s32 javax_mini_reflect_vm_RefNative_getLocalVal(Runtime *runtime, JClass *clazz) {
     int pos = 0;
     Long2Double l2d;
-    l2d.i2l.i1 = localvar_getInt(runtime, pos++);
-    l2d.i2l.i0 = localvar_getInt(runtime, pos++);
+    l2d.i2l.i1 = localvar_getInt(runtime->localvar, pos++);
+    l2d.i2l.i0 = localvar_getInt(runtime->localvar, pos++);
     Runtime *r = (Runtime *) (__refer) (intptr_t) l2d.l;
-    s32 slot = localvar_getInt(runtime, pos++);
-    Instance *valuetype = localvar_getRefer(runtime, pos++);
+    s32 slot = localvar_getInt(runtime->localvar, pos++);
+    Instance *valuetype = localvar_getRefer(runtime->localvar, pos++);
 
     c8 *ptr = getFieldPtr_byName_c(valuetype, JDWP_CLASS_VALUETYPE, "bytes", "C");
     u16 bytes = (u16) getFieldShort(ptr);
@@ -138,16 +138,16 @@ s32 javax_mini_reflect_vm_RefNative_getLocalVal(Runtime *runtime, JClass *clazz)
     if (slot < r->localvar_count) {
         switch (bytes) {
             case 'R':
-                l2d.l = (s64) (intptr_t) localvar_getRefer(r, slot);
+                l2d.l = (s64) (intptr_t) localvar_getRefer(r->localvar, slot);
                 break;
             case '8':
-                l2d.i2l.i1 = localvar_getInt(r, slot);
-                l2d.i2l.i0 = localvar_getInt(r, slot + 1);
+                l2d.i2l.i1 = localvar_getInt(r->localvar, slot);
+                l2d.i2l.i0 = localvar_getInt(r->localvar, slot + 1);
                 break;
             case '4':
             case '2':
             case '1':
-                l2d.l = localvar_getInt(r, slot);
+                l2d.l = localvar_getInt(r->localvar, slot);
                 break;
         }
         setFieldLong(ptr, l2d.l);
@@ -161,13 +161,13 @@ s32 javax_mini_reflect_vm_RefNative_getLocalVal(Runtime *runtime, JClass *clazz)
 s32 javax_mini_reflect_vm_RefNative_getFieldVal(Runtime *runtime, JClass *clazz) {
     int pos = 0;
     Long2Double l2d;
-    l2d.i2l.i1 = localvar_getInt(runtime, pos++);
-    l2d.i2l.i0 = localvar_getInt(runtime, pos++);
+    l2d.i2l.i1 = localvar_getInt(runtime->localvar, pos++);
+    l2d.i2l.i0 = localvar_getInt(runtime->localvar, pos++);
     Instance *ins = (Instance *) (__refer) (intptr_t) l2d.l;
-    l2d.i2l.i1 = localvar_getInt(runtime, pos++);
-    l2d.i2l.i0 = localvar_getInt(runtime, pos++);
+    l2d.i2l.i1 = localvar_getInt(runtime->localvar, pos++);
+    l2d.i2l.i0 = localvar_getInt(runtime->localvar, pos++);
     FieldInfo *fi = (FieldInfo *) (__refer) (intptr_t) l2d.l;
-    Instance *valuetype = localvar_getRefer(runtime, pos++);
+    Instance *valuetype = localvar_getRefer(runtime->localvar, pos++);
 
     c8 *ptr = getFieldPtr_byName_c(valuetype, JDWP_CLASS_VALUETYPE, "bytes", "C");
     u16 bytes = (u16) getFieldShort(ptr);
@@ -202,10 +202,10 @@ s32 javax_mini_reflect_vm_RefNative_getFieldVal(Runtime *runtime, JClass *clazz)
 
 s32 javax_mini_reflect_MemAccess_readByte0(Runtime *runtime, JClass *clazz) {
     Long2Double l2d;
-    l2d.i2l.i1 = localvar_getInt(runtime, 0);
-    l2d.i2l.i0 = localvar_getInt(runtime, 1);
+    l2d.i2l.i1 = localvar_getInt(runtime->localvar, 0);
+    l2d.i2l.i0 = localvar_getInt(runtime->localvar, 1);
     __refer r = (__refer) (intptr_t) l2d.l;
-    s32 offset = localvar_getInt(runtime, 2);
+    s32 offset = localvar_getInt(runtime->localvar, 2);
     u8 val = getFieldByte(((c8 *) r) + offset);
     push_int(runtime->stack, val);
 #if _JVM_DEBUG_BYTECODE_DETAIL > 5
@@ -216,10 +216,10 @@ s32 javax_mini_reflect_MemAccess_readByte0(Runtime *runtime, JClass *clazz) {
 
 s32 javax_mini_reflect_MemAccess_readShort0(Runtime *runtime, JClass *clazz) {
     Long2Double l2d;
-    l2d.i2l.i1 = localvar_getInt(runtime, 0);
-    l2d.i2l.i0 = localvar_getInt(runtime, 1);
+    l2d.i2l.i1 = localvar_getInt(runtime->localvar, 0);
+    l2d.i2l.i0 = localvar_getInt(runtime->localvar, 1);
     __refer r = (__refer) (intptr_t) l2d.l;
-    s32 offset = localvar_getInt(runtime, 2);
+    s32 offset = localvar_getInt(runtime->localvar, 2);
     u16 val = getFieldShort(((c8 *) r) + offset);
     push_int(runtime->stack, val);
 #if _JVM_DEBUG_BYTECODE_DETAIL > 5
@@ -230,10 +230,10 @@ s32 javax_mini_reflect_MemAccess_readShort0(Runtime *runtime, JClass *clazz) {
 
 s32 javax_mini_reflect_MemAccess_readInt0(Runtime *runtime, JClass *clazz) {
     Long2Double l2d;
-    l2d.i2l.i1 = localvar_getInt(runtime, 0);
-    l2d.i2l.i0 = localvar_getInt(runtime, 1);
+    l2d.i2l.i1 = localvar_getInt(runtime->localvar, 0);
+    l2d.i2l.i0 = localvar_getInt(runtime->localvar, 1);
     __refer r = (__refer) (intptr_t) l2d.l;
-    s32 offset = localvar_getInt(runtime, 2);
+    s32 offset = localvar_getInt(runtime->localvar, 2);
     s32 val = getFieldInt(((c8 *) r) + offset);
     push_int(runtime->stack, val);
 #if _JVM_DEBUG_BYTECODE_DETAIL > 5
@@ -244,10 +244,10 @@ s32 javax_mini_reflect_MemAccess_readInt0(Runtime *runtime, JClass *clazz) {
 
 s32 javax_mini_reflect_MemAccess_readLong0(Runtime *runtime, JClass *clazz) {
     Long2Double l2d;
-    l2d.i2l.i1 = localvar_getInt(runtime, 0);
-    l2d.i2l.i0 = localvar_getInt(runtime, 1);
+    l2d.i2l.i1 = localvar_getInt(runtime->localvar, 0);
+    l2d.i2l.i0 = localvar_getInt(runtime->localvar, 1);
     __refer r = (__refer) (intptr_t) l2d.l;
-    s32 offset = localvar_getInt(runtime, 2);
+    s32 offset = localvar_getInt(runtime->localvar, 2);
     s64 val = getFieldLong(((c8 *) r) + offset);
     push_long(runtime->stack, val);
 #if _JVM_DEBUG_BYTECODE_DETAIL > 5
@@ -258,10 +258,10 @@ s32 javax_mini_reflect_MemAccess_readLong0(Runtime *runtime, JClass *clazz) {
 
 s32 javax_mini_reflect_MemAccess_readRefer0(Runtime *runtime, JClass *clazz) {
     Long2Double l2d;
-    l2d.i2l.i1 = localvar_getInt(runtime, 0);
-    l2d.i2l.i0 = localvar_getInt(runtime, 1);
+    l2d.i2l.i1 = localvar_getInt(runtime->localvar, 0);
+    l2d.i2l.i0 = localvar_getInt(runtime->localvar, 1);
     __refer r = (__refer) (intptr_t) l2d.l;
-    s32 offset = localvar_getInt(runtime, 2);
+    s32 offset = localvar_getInt(runtime->localvar, 2);
     __refer val = getFieldRefer(((c8 *) r) + offset);
     push_long(runtime->stack, (u64) (intptr_t) val);
 #if _JVM_DEBUG_BYTECODE_DETAIL > 5
@@ -312,7 +312,7 @@ s32 javax_mini_reflect_vm_RefNative_getThreads(Runtime *runtime, JClass *clazz) 
 }
 
 s32 javax_mini_reflect_vm_RefNative_getStatus(Runtime *runtime, JClass *clazz) {
-    Instance *thread = (Instance *) localvar_getRefer(runtime, 0);
+    Instance *thread = (Instance *) localvar_getRefer(runtime->localvar, 0);
     Runtime *trun = (Runtime *) jthread_get_stackframe_value(thread);//线程结束之后会清除掉runtime,因为其是一个栈变量，不可再用
     if (trun)
         push_int(runtime->stack, trun->threadInfo->thread_status);
@@ -325,7 +325,7 @@ s32 javax_mini_reflect_vm_RefNative_getStatus(Runtime *runtime, JClass *clazz) {
 }
 
 s32 javax_mini_reflect_vm_RefNative_suspendThread(Runtime *runtime, JClass *clazz) {
-    Instance *thread = (Instance *) localvar_getRefer(runtime, 0);
+    Instance *thread = (Instance *) localvar_getRefer(runtime->localvar, 0);
     Runtime *trun = (Runtime *) jthread_get_stackframe_value(thread);//线程结束之后会清除掉runtime,因为其是一个栈变量，不可再用
     if (trun) {
         jthread_suspend(trun);
@@ -339,7 +339,7 @@ s32 javax_mini_reflect_vm_RefNative_suspendThread(Runtime *runtime, JClass *claz
 }
 
 s32 javax_mini_reflect_vm_RefNative_resumeThread(Runtime *runtime, JClass *clazz) {
-    Instance *thread = (Instance *) localvar_getRefer(runtime, 0);
+    Instance *thread = (Instance *) localvar_getRefer(runtime->localvar, 0);
     Runtime *trun = (Runtime *) jthread_get_stackframe_value(thread);//线程结束之后会清除掉runtime,因为其是一个栈变量，不可再用
     if (trun) {
         if (trun->threadInfo->suspend_count > 0)trun->threadInfo->suspend_count--;
@@ -354,7 +354,7 @@ s32 javax_mini_reflect_vm_RefNative_resumeThread(Runtime *runtime, JClass *clazz
 
 
 s32 javax_mini_reflect_vm_RefNative_getSuspendCount(Runtime *runtime, JClass *clazz) {
-    Instance *thread = (Instance *) localvar_getRefer(runtime, 0);
+    Instance *thread = (Instance *) localvar_getRefer(runtime->localvar, 0);
     Runtime *trun = (Runtime *) jthread_get_stackframe_value(thread);//线程结束之后会清除掉runtime,因为其是一个栈变量，不可再用
     if (trun) {
         push_int(runtime->stack, trun->threadInfo->suspend_count);
@@ -367,7 +367,7 @@ s32 javax_mini_reflect_vm_RefNative_getSuspendCount(Runtime *runtime, JClass *cl
 }
 
 s32 javax_mini_reflect_vm_RefNative_getFrameCount(Runtime *runtime, JClass *clazz) {
-    Instance *thread = (Instance *) localvar_getRefer(runtime, 0);
+    Instance *thread = (Instance *) localvar_getRefer(runtime->localvar, 0);
     Runtime *trun = (Runtime *) jthread_get_stackframe_value(thread);//线程结束之后会清除掉runtime,因为其是一个栈变量，不可再用
     int i = 0;
     while (trun) {
@@ -380,10 +380,10 @@ s32 javax_mini_reflect_vm_RefNative_getFrameCount(Runtime *runtime, JClass *claz
 }
 
 s32 javax_mini_reflect_vm_RefNative_stopThread(Runtime *runtime, JClass *clazz) {
-    Instance *thread = (Instance *) localvar_getRefer(runtime, 0);
+    Instance *thread = (Instance *) localvar_getRefer(runtime->localvar, 0);
     Long2Double l2d;
-    l2d.i2l.i1 = localvar_getInt(runtime, 1);
-    l2d.i2l.i0 = localvar_getInt(runtime, 2);
+    l2d.i2l.i1 = localvar_getInt(runtime->localvar, 1);
+    l2d.i2l.i0 = localvar_getInt(runtime->localvar, 2);
     Instance *ins = (__refer) (intptr_t) l2d.l;
     Runtime *trun = (Runtime *) jthread_get_stackframe_value(thread);//线程结束之后会清除掉runtime,因为其是一个栈变量，不可再用
     if (trun) {
@@ -398,7 +398,7 @@ s32 javax_mini_reflect_vm_RefNative_stopThread(Runtime *runtime, JClass *clazz) 
 
 
 s32 javax_mini_reflect_vm_RefNative_getStackFrame(Runtime *runtime, JClass *clazz) {
-    Instance *thread = (Instance *) localvar_getRefer(runtime, 0);
+    Instance *thread = (Instance *) localvar_getRefer(runtime->localvar, 0);
     Runtime *trun = (Runtime *) jthread_get_stackframe_value(thread);//线程结束之后会清除掉runtime,因为其是一个栈变量，不可再用
     if (trun) {
         while (trun) {
@@ -446,10 +446,10 @@ s32 javax_mini_reflect_vm_RefNative_getGarbageStatus(Runtime *runtime, JClass *c
 
 s32 javax_mini_reflect_Reference_mapReference(Runtime *runtime, JClass *clazz) {
     int pos = 0;
-    Instance *ins = (Instance *) localvar_getRefer(runtime, pos++);
+    Instance *ins = (Instance *) localvar_getRefer(runtime->localvar, pos++);
     Long2Double l2d;
-    l2d.i2l.i1 = localvar_getInt(runtime, pos++);
-    l2d.i2l.i0 = localvar_getInt(runtime, pos++);
+    l2d.i2l.i1 = localvar_getInt(runtime->localvar, pos++);
+    l2d.i2l.i0 = localvar_getInt(runtime->localvar, pos++);
     JClass *target = (__refer) (intptr_t) l2d.l;
     if (target) {
         c8 *ptr;
@@ -521,10 +521,10 @@ s32 javax_mini_reflect_Reference_mapReference(Runtime *runtime, JClass *clazz) {
 
 s32 javax_mini_reflect_Field_mapField(Runtime *runtime, JClass *clazz) {
     int pos = 0;
-    Instance *ins = (Instance *) localvar_getRefer(runtime, pos++);
+    Instance *ins = (Instance *) localvar_getRefer(runtime->localvar, pos++);
     Long2Double l2d;
-    l2d.i2l.i1 = localvar_getInt(runtime, pos++);
-    l2d.i2l.i0 = localvar_getInt(runtime, pos++);
+    l2d.i2l.i1 = localvar_getInt(runtime->localvar, pos++);
+    l2d.i2l.i0 = localvar_getInt(runtime->localvar, pos++);
     FieldInfo *fieldInfo = (__refer) (intptr_t) l2d.l;
     if (ins && fieldInfo) {
         c8 *ptr;
@@ -580,10 +580,10 @@ Instance *localVarTable2java(JClass *clazz, LocalVarTable *lvt, Runtime *runtime
 
 s32 javax_mini_reflect_Method_mapMethod(Runtime *runtime, JClass *clazz) {
     int pos = 0;
-    Instance *ins = (Instance *) localvar_getRefer(runtime, pos++);
+    Instance *ins = (Instance *) localvar_getRefer(runtime->localvar, pos++);
     Long2Double l2d;
-    l2d.i2l.i1 = localvar_getInt(runtime, pos++);
-    l2d.i2l.i0 = localvar_getInt(runtime, pos++);
+    l2d.i2l.i1 = localvar_getInt(runtime->localvar, pos++);
+    l2d.i2l.i0 = localvar_getInt(runtime->localvar, pos++);
     MethodInfo *methodInfo = (__refer) (intptr_t) l2d.l;
     if (ins && methodInfo) {
         c8 *ptr;
@@ -662,13 +662,13 @@ s32 javax_mini_reflect_Method_mapMethod(Runtime *runtime, JClass *clazz) {
 
 s32 javax_mini_reflect_Method_invokeMethod(Runtime *runtime, JClass *clazz) {
     s32 pos = 0;
-    Instance *method_ins = (Instance *) localvar_getRefer(runtime, pos++);
+    Instance *method_ins = (Instance *) localvar_getRefer(runtime->localvar, pos++);
     Long2Double l2d;
-    l2d.i2l.i1 = localvar_getInt(runtime, pos++);
-    l2d.i2l.i0 = localvar_getInt(runtime, pos++);
+    l2d.i2l.i1 = localvar_getInt(runtime->localvar, pos++);
+    l2d.i2l.i0 = localvar_getInt(runtime->localvar, pos++);
     MethodInfo *methodInfo = (__refer) (intptr_t) l2d.l;
-    Instance *ins = (Instance *) localvar_getRefer(runtime, pos++);
-    Instance *argsArr = (Instance *) localvar_getRefer(runtime, pos++);
+    Instance *ins = (Instance *) localvar_getRefer(runtime->localvar, pos++);
+    Instance *argsArr = (Instance *) localvar_getRefer(runtime->localvar, pos++);
     s32 ret = 0;
     if (methodInfo) {
         if (!(methodInfo->access_flags & ACC_STATIC)) {
@@ -715,10 +715,10 @@ s32 javax_mini_reflect_Method_invokeMethod(Runtime *runtime, JClass *clazz) {
 
 s32 javax_mini_reflect_StackFrame_mapRuntime(Runtime *runtime, JClass *clazz) {
     int pos = 0;
-    Instance *ins = (Instance *) localvar_getRefer(runtime, pos++);
+    Instance *ins = (Instance *) localvar_getRefer(runtime->localvar, pos++);
     Long2Double l2d;
-    l2d.i2l.i1 = localvar_getInt(runtime, pos++);
-    l2d.i2l.i0 = localvar_getInt(runtime, pos++);
+    l2d.i2l.i1 = localvar_getInt(runtime->localvar, pos++);
+    l2d.i2l.i0 = localvar_getInt(runtime->localvar, pos++);
     Runtime *target = (__refer) (intptr_t) l2d.l;
     if (ins && target) {
         c8 *ptr;
@@ -742,7 +742,7 @@ s32 javax_mini_reflect_StackFrame_mapRuntime(Runtime *runtime, JClass *clazz) {
         //
         if (target->method && !(target->method->access_flags & ACC_STATIC)) {//top runtime method is null
             ptr = getFieldPtr_byName_c(ins, JDWP_CLASS_RUNTIME, "localThis", "J");
-            if (ptr)setFieldLong(ptr, (s64) (intptr_t) localvar_getRefer(target, 0));
+            if (ptr)setFieldLong(ptr, (s64) (intptr_t) localvar_getRefer(target->localvar, 0));
         }
     }
     return 0;
@@ -750,10 +750,10 @@ s32 javax_mini_reflect_StackFrame_mapRuntime(Runtime *runtime, JClass *clazz) {
 
 s32 javax_mini_reflect_Array_mapArray(Runtime *runtime, JClass *clazz) {
     int pos = 0;
-    Instance *ins = (Instance *) localvar_getRefer(runtime, pos++);
+    Instance *ins = (Instance *) localvar_getRefer(runtime->localvar, pos++);
     Long2Double l2d;
-    l2d.i2l.i1 = localvar_getInt(runtime, pos++);
-    l2d.i2l.i0 = localvar_getInt(runtime, pos++);
+    l2d.i2l.i1 = localvar_getInt(runtime->localvar, pos++);
+    l2d.i2l.i0 = localvar_getInt(runtime->localvar, pos++);
     Instance *target = (__refer) (intptr_t) l2d.l;
     if (ins && target) {
         c8 *ptr;

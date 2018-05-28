@@ -31,7 +31,6 @@ CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 #include "alloc-testing.h"
 #endif
 
-void arraylist_remove_range(ArrayList *arraylist, int index, int length);
 
 /**
  * Automatically resizing array
@@ -82,7 +81,7 @@ void arraylist_destory(ArrayList *arraylist) {
     }
 }
 
-static int arraylist_enlarge(ArrayList *arraylist) {
+static inline int arraylist_enlarge(ArrayList *arraylist) {
     ArrayListValue *data;
     int newsize;
 
@@ -104,7 +103,7 @@ static int arraylist_enlarge(ArrayList *arraylist) {
     }
 }
 
-int _arraylist_insert_impl(ArrayList *arraylist, int index, ArrayListValue data) {
+static inline int _arraylist_insert_impl(ArrayList *arraylist, int index, ArrayListValue data) {
 
     int doit = 1;
     if (index < 0 || index > arraylist->length) {
@@ -161,32 +160,14 @@ int arraylist_push_back(ArrayList *arraylist, ArrayListValue data) {
     return r;
 }
 
-inline int arraylist_push_back_unsafe(ArrayList *arraylist, ArrayListValue data) {
+int arraylist_push_back_unsafe(ArrayList *arraylist, ArrayListValue data) {
     s32 r;
     r = _arraylist_insert_impl(arraylist, arraylist->length, data);
 
     return r;
 }
 
-int arraylist_remove(ArrayList *arraylist, ArrayListValue data) {
-    int index = -1;
-    spin_lock(&arraylist->spinlock);
-    {
-        int i;
-        for (i = 0; i < arraylist->length; ++i) {
-            if (arraylist_compare_ptr(arraylist->data[i], data)) {
-                index = i;
-                break;
-            }
-        }
-        if (index >= 0)
-            arraylist_remove_range(arraylist, index, 1);
-    }
-    spin_unlock(&arraylist->spinlock);
-    return index;
-}
-
-void arraylist_remove_range(ArrayList *arraylist, int index, int length) {
+static inline void arraylist_remove_range(ArrayList *arraylist, int index, int length) {
     /* Check this is a valid range */
 
 
@@ -204,6 +185,25 @@ void arraylist_remove_range(ArrayList *arraylist, int index, int length) {
 
     arraylist->length -= length;
 
+}
+
+
+int arraylist_remove(ArrayList *arraylist, ArrayListValue data) {
+    int index = -1;
+    spin_lock(&arraylist->spinlock);
+    {
+        int i;
+        for (i = 0; i < arraylist->length; ++i) {
+            if (arraylist_compare_ptr(arraylist->data[i], data)) {
+                index = i;
+                break;
+            }
+        }
+        if (index >= 0)
+            arraylist_remove_range(arraylist, index, 1);
+    }
+    spin_unlock(&arraylist->spinlock);
+    return index;
 }
 
 int arraylist_compare_ptr(ArrayListValue a, ArrayListValue b) {
@@ -236,7 +236,7 @@ int arraylist_index_of(ArrayList *arraylist,
     return index;
 }
 
-inline ArrayListValue arraylist_get_value_unsafe(ArrayList *arraylist, int index) {
+ArrayListValue arraylist_get_value_unsafe(ArrayList *arraylist, int index) {
     ArrayListValue value = NULL;
     if (index >= 0 && index < arraylist->length)
         value = arraylist->data[index];
@@ -266,7 +266,7 @@ ArrayListValue arraylist_pop_front(ArrayList *arraylist) {
     return v;
 }
 
-inline ArrayListValue arraylist_pop_back_unsafe(ArrayList *arraylist) {
+ArrayListValue arraylist_pop_back_unsafe(ArrayList *arraylist) {
     ArrayListValue v = NULL;
     if (arraylist->length > 0) {
         v = arraylist->data[arraylist->length - 1];

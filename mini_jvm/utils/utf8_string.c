@@ -316,9 +316,7 @@ int utf8_equals_c(Utf8String *a1, char *a2) {
     return index;
 }
 
-inline utf8_char utf8_char_at(Utf8String *a1, int pos) {
-    return a1->data[pos];
-}
+
 
 int UNICODE_STR_EQUALS_FUNC(HashtableValue value1, HashtableValue value2) {
     return utf8_equals(value1, value2) == 1;

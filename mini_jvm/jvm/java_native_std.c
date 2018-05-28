@@ -18,7 +18,7 @@
 #endif
 
 s32 com_sun_cldc_io_ConsoleOutputStream_write(Runtime *runtime, JClass *clazz) {
-    s16 ch = localvar_getInt(runtime, 1);
+    s16 ch = localvar_getInt(runtime->localvar, 1);
     fprintf(stdout, "%c", ch);
 #if _JVM_DEBUG_BYTECODE_DETAIL > 5
     invoke_deepth(runtime);
@@ -38,7 +38,7 @@ s32 com_sun_cldc_io_ConsoleInputStream_read(Runtime *runtime, JClass *clazz) {
 }
 
 s32 com_sun_cldc_io_ResourceInputStream_open(Runtime *runtime, JClass *clazz) {
-    Instance *jstr = localvar_getRefer(runtime, 0);
+    Instance *jstr = localvar_getRefer(runtime->localvar, 0);
     Utf8String *path = utf8_create();
     jstring_2_utf8(jstr, path);
     ByteBuf *buf = load_file_from_classpath(sys_classloader, path);
@@ -61,7 +61,7 @@ s32 com_sun_cldc_io_ResourceInputStream_open(Runtime *runtime, JClass *clazz) {
 
 s32 java_lang_Class_forName(Runtime *runtime, JClass *clazz) {
     RuntimeStack *stack = runtime->stack;
-    Instance *jstr = (Instance *) localvar_getRefer(runtime, 0);
+    Instance *jstr = (Instance *) localvar_getRefer(runtime->localvar, 0);
     JClass *cl = NULL;
     s32 ret = RUNTIME_STATUS_NORMAL;
     if (jstr) {
@@ -90,7 +90,7 @@ s32 java_lang_Class_forName(Runtime *runtime, JClass *clazz) {
 
 s32 java_lang_Class_newInstance(Runtime *runtime, JClass *clazz) {
     RuntimeStack *stack = runtime->stack;
-    JClass *cl = (JClass *) localvar_getRefer(runtime, 0);
+    JClass *cl = (JClass *) localvar_getRefer(runtime->localvar, 0);
     Instance *ins = NULL;
     s32 ret = 0;
     if (cl) {
@@ -114,8 +114,8 @@ s32 java_lang_Class_newInstance(Runtime *runtime, JClass *clazz) {
 
 s32 java_lang_Class_isInstance(Runtime *runtime, JClass *clazz) {
     RuntimeStack *stack = runtime->stack;
-    JClass *cl = (JClass *) localvar_getRefer(runtime, 0);
-    Instance *ins = (Instance *) localvar_getRefer(runtime, 1);
+    JClass *cl = (JClass *) localvar_getRefer(runtime->localvar, 0);
+    Instance *ins = (Instance *) localvar_getRefer(runtime->localvar, 1);
     if (instance_of(cl, ins, runtime)) {
         push_int(stack, 1);
     } else {
@@ -130,8 +130,8 @@ s32 java_lang_Class_isInstance(Runtime *runtime, JClass *clazz) {
 
 s32 java_lang_Class_isAssignableFrom(Runtime *runtime, JClass *clazz) {
     RuntimeStack *stack = runtime->stack;
-    JClass *c0 = (JClass *) localvar_getRefer(runtime, 0);
-    JClass *c1 = (JClass *) localvar_getRefer(runtime, 1);
+    JClass *c0 = (JClass *) localvar_getRefer(runtime->localvar, 0);
+    JClass *c1 = (JClass *) localvar_getRefer(runtime->localvar, 1);
 
     if (assignable_from(c1, c0)) {
         push_int(stack, 1);
@@ -147,7 +147,7 @@ s32 java_lang_Class_isAssignableFrom(Runtime *runtime, JClass *clazz) {
 
 s32 java_lang_Class_isInterface(Runtime *runtime, JClass *clazz) {
     RuntimeStack *stack = runtime->stack;
-    JClass *c0 = (JClass *) localvar_getRefer(runtime, 0);
+    JClass *c0 = (JClass *) localvar_getRefer(runtime->localvar, 0);
 
     if (c0->cff.access_flags & ACC_INTERFACE) {//
         push_int(stack, 1);
@@ -163,7 +163,7 @@ s32 java_lang_Class_isInterface(Runtime *runtime, JClass *clazz) {
 
 s32 java_lang_Class_isArray(Runtime *runtime, JClass *clazz) {
     RuntimeStack *stack = runtime->stack;
-    JClass *cl = (JClass *) localvar_getRefer(runtime, 0);
+    JClass *cl = (JClass *) localvar_getRefer(runtime->localvar, 0);
     if (cl->arr_type_index) {
         push_int(stack, 1);
     } else {
@@ -178,7 +178,7 @@ s32 java_lang_Class_isArray(Runtime *runtime, JClass *clazz) {
 
 s32 java_lang_Class_getName(Runtime *runtime, JClass *clazz) {
     RuntimeStack *stack = runtime->stack;
-    JClass *cl = (JClass *) localvar_getRefer(runtime, 0);
+    JClass *cl = (JClass *) localvar_getRefer(runtime->localvar, 0);
     if (cl) {
         Instance *ins = jstring_create(cl->name, runtime);
         push_ref(stack, ins);
@@ -194,7 +194,7 @@ s32 java_lang_Class_getName(Runtime *runtime, JClass *clazz) {
 
 s32 java_lang_Class_getComponentType(Runtime *runtime, JClass *clazz) {
     RuntimeStack *stack = runtime->stack;
-    JClass *cl = (JClass *) localvar_getRefer(runtime, 0);
+    JClass *cl = (JClass *) localvar_getRefer(runtime->localvar, 0);
     if (cl->mb.type == MEM_TYPE_ARR) {
         //todo
     } else {
@@ -210,8 +210,8 @@ s32 java_lang_Class_getComponentType(Runtime *runtime, JClass *clazz) {
 s32 java_lang_Double_doubleToLongBits(Runtime *runtime, JClass *clazz) {
     RuntimeStack *stack = runtime->stack;
     Long2Double l2d;
-    l2d.i2l.i1 = localvar_getInt(runtime, 0);
-    l2d.i2l.i0 = localvar_getInt(runtime, 1);
+    l2d.i2l.i1 = localvar_getInt(runtime->localvar, 0);
+    l2d.i2l.i0 = localvar_getInt(runtime->localvar, 1);
 #if _JVM_DEBUG_BYTECODE_DETAIL > 5
     invoke_deepth(runtime);
     jvm_printf("java_lang_Double_doubleToLongBits %lf to %lld\n", l2d.d, l2d.l);
@@ -223,8 +223,8 @@ s32 java_lang_Double_doubleToLongBits(Runtime *runtime, JClass *clazz) {
 s32 java_lang_Double_longBitsToDouble(Runtime *runtime, JClass *clazz) {
     RuntimeStack *stack = runtime->stack;
     Long2Double l2d;
-    l2d.i2l.i1 = localvar_getInt(runtime, 0);
-    l2d.i2l.i0 = localvar_getInt(runtime, 1);
+    l2d.i2l.i1 = localvar_getInt(runtime->localvar, 0);
+    l2d.i2l.i0 = localvar_getInt(runtime->localvar, 1);
 #if _JVM_DEBUG_BYTECODE_DETAIL > 5
     invoke_deepth(runtime);
     jvm_printf("java_lang_Double_longBitsToDouble\n");
@@ -237,7 +237,7 @@ s32 java_lang_Double_longBitsToDouble(Runtime *runtime, JClass *clazz) {
 s32 java_lang_Float_intBitsToFloat(Runtime *runtime, JClass *clazz) {
     RuntimeStack *stack = runtime->stack;
     Int2Float i2f;
-    i2f.i = localvar_getInt(runtime, 0);
+    i2f.i = localvar_getInt(runtime->localvar, 0);
 
 #if _JVM_DEBUG_BYTECODE_DETAIL > 5
     invoke_deepth(runtime);
@@ -250,7 +250,7 @@ s32 java_lang_Float_intBitsToFloat(Runtime *runtime, JClass *clazz) {
 s32 java_lang_Float_floatToIntBits(Runtime *runtime, JClass *clazz) {
     RuntimeStack *stack = runtime->stack;
     Int2Float i2f;
-    i2f.i = localvar_getInt(runtime, 0);
+    i2f.i = localvar_getInt(runtime->localvar, 0);
 
 #if _JVM_DEBUG_BYTECODE_DETAIL > 5
     invoke_deepth(runtime);
@@ -263,8 +263,8 @@ s32 java_lang_Float_floatToIntBits(Runtime *runtime, JClass *clazz) {
 s32 java_lang_Math_exp(Runtime *runtime, JClass *clazz) {
     RuntimeStack *stack = runtime->stack;
     Long2Double l2d;
-    l2d.i2l.i1 = localvar_getInt(runtime, 0);
-    l2d.i2l.i0 = localvar_getInt(runtime, 1);
+    l2d.i2l.i1 = localvar_getInt(runtime->localvar, 0);
+    l2d.i2l.i0 = localvar_getInt(runtime->localvar, 1);
     f64 r = exp(l2d.d);
 #if _JVM_DEBUG_BYTECODE_DETAIL > 5
     invoke_deepth(runtime);
@@ -294,8 +294,8 @@ s32 java_lang_Math_random(Runtime *runtime, JClass *clazz) {
 s32 java_lang_Math_sin(Runtime *runtime, JClass *clazz) {
     RuntimeStack *stack = runtime->stack;
     Long2Double l2d;
-    l2d.i2l.i1 = localvar_getInt(runtime, 0);
-    l2d.i2l.i0 = localvar_getInt(runtime, 1);
+    l2d.i2l.i1 = localvar_getInt(runtime->localvar, 0);
+    l2d.i2l.i0 = localvar_getInt(runtime->localvar, 1);
     f64 r = sin(l2d.d);
 #if _JVM_DEBUG_BYTECODE_DETAIL > 5
     invoke_deepth(runtime);
@@ -309,8 +309,8 @@ s32 java_lang_Math_sin(Runtime *runtime, JClass *clazz) {
 s32 java_lang_Math_cos(Runtime *runtime, JClass *clazz) {
     RuntimeStack *stack = runtime->stack;
     Long2Double l2d;
-    l2d.i2l.i1 = localvar_getInt(runtime, 0);
-    l2d.i2l.i0 = localvar_getInt(runtime, 1);
+    l2d.i2l.i1 = localvar_getInt(runtime->localvar, 0);
+    l2d.i2l.i0 = localvar_getInt(runtime->localvar, 1);
     f64 r = cos(l2d.d);
 #if _JVM_DEBUG_BYTECODE_DETAIL > 5
     invoke_deepth(runtime);
@@ -323,8 +323,8 @@ s32 java_lang_Math_cos(Runtime *runtime, JClass *clazz) {
 s32 java_lang_Math_tan(Runtime *runtime, JClass *clazz) {
     RuntimeStack *stack = runtime->stack;
     Long2Double l2d;
-    l2d.i2l.i1 = localvar_getInt(runtime, 0);
-    l2d.i2l.i0 = localvar_getInt(runtime, 1);
+    l2d.i2l.i1 = localvar_getInt(runtime->localvar, 0);
+    l2d.i2l.i0 = localvar_getInt(runtime->localvar, 1);
     f64 r = tan(l2d.d);
 #if _JVM_DEBUG_BYTECODE_DETAIL > 5
     invoke_deepth(runtime);
@@ -337,8 +337,8 @@ s32 java_lang_Math_tan(Runtime *runtime, JClass *clazz) {
 s32 java_lang_Math_sqrt(Runtime *runtime, JClass *clazz) {
     RuntimeStack *stack = runtime->stack;
     Long2Double l2d;
-    l2d.i2l.i1 = localvar_getInt(runtime, 0);
-    l2d.i2l.i0 = localvar_getInt(runtime, 1);
+    l2d.i2l.i1 = localvar_getInt(runtime->localvar, 0);
+    l2d.i2l.i0 = localvar_getInt(runtime->localvar, 1);
     f64 r = sqrt(l2d.d);
 #if _JVM_DEBUG_BYTECODE_DETAIL > 5
     invoke_deepth(runtime);
@@ -351,8 +351,8 @@ s32 java_lang_Math_sqrt(Runtime *runtime, JClass *clazz) {
 s32 java_lang_Math_ceil(Runtime *runtime, JClass *clazz) {
     RuntimeStack *stack = runtime->stack;
     Long2Double l2d;
-    l2d.i2l.i1 = localvar_getInt(runtime, 0);
-    l2d.i2l.i0 = localvar_getInt(runtime, 1);
+    l2d.i2l.i1 = localvar_getInt(runtime->localvar, 0);
+    l2d.i2l.i0 = localvar_getInt(runtime->localvar, 1);
     f64 r = ceil(l2d.d);
 #if _JVM_DEBUG_BYTECODE_DETAIL > 5
     invoke_deepth(runtime);
@@ -366,8 +366,8 @@ s32 java_lang_Math_ceil(Runtime *runtime, JClass *clazz) {
 s32 java_lang_Math_floor(Runtime *runtime, JClass *clazz) {
     RuntimeStack *stack = runtime->stack;
     Long2Double l2d;
-    l2d.i2l.i1 = localvar_getInt(runtime, 0);
-    l2d.i2l.i0 = localvar_getInt(runtime, 1);
+    l2d.i2l.i1 = localvar_getInt(runtime->localvar, 0);
+    l2d.i2l.i0 = localvar_getInt(runtime->localvar, 1);
     f64 r = floor(l2d.d);
 #if _JVM_DEBUG_BYTECODE_DETAIL > 5
     invoke_deepth(runtime);
@@ -380,8 +380,8 @@ s32 java_lang_Math_floor(Runtime *runtime, JClass *clazz) {
 s32 java_lang_Math_asin(Runtime *runtime, JClass *clazz) {
     RuntimeStack *stack = runtime->stack;
     Long2Double l2d;
-    l2d.i2l.i1 = localvar_getInt(runtime, 0);
-    l2d.i2l.i0 = localvar_getInt(runtime, 1);
+    l2d.i2l.i1 = localvar_getInt(runtime->localvar, 0);
+    l2d.i2l.i0 = localvar_getInt(runtime->localvar, 1);
     f64 r = asin(l2d.d);
 #if _JVM_DEBUG_BYTECODE_DETAIL > 5
     invoke_deepth(runtime);
@@ -394,8 +394,8 @@ s32 java_lang_Math_asin(Runtime *runtime, JClass *clazz) {
 s32 java_lang_Math_acos(Runtime *runtime, JClass *clazz) {
     RuntimeStack *stack = runtime->stack;
     Long2Double l2d;
-    l2d.i2l.i1 = localvar_getInt(runtime, 0);
-    l2d.i2l.i0 = localvar_getInt(runtime, 1);
+    l2d.i2l.i1 = localvar_getInt(runtime->localvar, 0);
+    l2d.i2l.i0 = localvar_getInt(runtime->localvar, 1);
     f64 r = acos(l2d.d);
 #if _JVM_DEBUG_BYTECODE_DETAIL > 5
     invoke_deepth(runtime);
@@ -408,8 +408,8 @@ s32 java_lang_Math_acos(Runtime *runtime, JClass *clazz) {
 s32 java_lang_Math_atan(Runtime *runtime, JClass *clazz) {
     RuntimeStack *stack = runtime->stack;
     Long2Double l2d;
-    l2d.i2l.i1 = localvar_getInt(runtime, 0);
-    l2d.i2l.i0 = localvar_getInt(runtime, 1);
+    l2d.i2l.i1 = localvar_getInt(runtime->localvar, 0);
+    l2d.i2l.i0 = localvar_getInt(runtime->localvar, 1);
     f64 r = atan(l2d.d);
 #if _JVM_DEBUG_BYTECODE_DETAIL > 5
     invoke_deepth(runtime);
@@ -422,8 +422,8 @@ s32 java_lang_Math_atan(Runtime *runtime, JClass *clazz) {
 s32 java_lang_Math_log(Runtime *runtime, JClass *clazz) {
     RuntimeStack *stack = runtime->stack;
     Long2Double l2d;
-    l2d.i2l.i1 = localvar_getInt(runtime, 0);
-    l2d.i2l.i0 = localvar_getInt(runtime, 1);
+    l2d.i2l.i1 = localvar_getInt(runtime->localvar, 0);
+    l2d.i2l.i0 = localvar_getInt(runtime->localvar, 1);
     f64 r = log(l2d.d);
 #if _JVM_DEBUG_BYTECODE_DETAIL > 5
     invoke_deepth(runtime);
@@ -436,11 +436,11 @@ s32 java_lang_Math_log(Runtime *runtime, JClass *clazz) {
 s32 java_lang_Math_atan2(Runtime *runtime, JClass *clazz) {
     RuntimeStack *stack = runtime->stack;
     Long2Double l2d;
-    l2d.i2l.i1 = localvar_getInt(runtime, 0);
-    l2d.i2l.i0 = localvar_getInt(runtime, 1);
+    l2d.i2l.i1 = localvar_getInt(runtime->localvar, 0);
+    l2d.i2l.i0 = localvar_getInt(runtime->localvar, 1);
     f64 y = (l2d.d);
-    l2d.i2l.i1 = localvar_getInt(runtime, 2);
-    l2d.i2l.i0 = localvar_getInt(runtime, 3);
+    l2d.i2l.i1 = localvar_getInt(runtime->localvar, 2);
+    l2d.i2l.i0 = localvar_getInt(runtime->localvar, 3);
     f64 x = (l2d.d);
 #if _JVM_DEBUG_BYTECODE_DETAIL > 5
     invoke_deepth(runtime);
@@ -453,11 +453,11 @@ s32 java_lang_Math_atan2(Runtime *runtime, JClass *clazz) {
 s32 java_lang_Math_pow(Runtime *runtime, JClass *clazz) {
     RuntimeStack *stack = runtime->stack;
     Long2Double l2d;
-    l2d.i2l.i1 = localvar_getInt(runtime, 0);
-    l2d.i2l.i0 = localvar_getInt(runtime, 1);
+    l2d.i2l.i1 = localvar_getInt(runtime->localvar, 0);
+    l2d.i2l.i0 = localvar_getInt(runtime->localvar, 1);
     f64 a = (l2d.d);
-    l2d.i2l.i1 = localvar_getInt(runtime, 2);
-    l2d.i2l.i0 = localvar_getInt(runtime, 3);
+    l2d.i2l.i1 = localvar_getInt(runtime->localvar, 2);
+    l2d.i2l.i0 = localvar_getInt(runtime->localvar, 3);
     f64 b = (l2d.d);
 #if _JVM_DEBUG_BYTECODE_DETAIL > 5
     invoke_deepth(runtime);
@@ -469,7 +469,7 @@ s32 java_lang_Math_pow(Runtime *runtime, JClass *clazz) {
 
 s32 java_lang_Object_getClass(Runtime *runtime, JClass *clazz) {
     RuntimeStack *stack = runtime->stack;
-    Instance *ins = (Instance *) localvar_getRefer(runtime, 0);
+    Instance *ins = (Instance *) localvar_getRefer(runtime->localvar, 0);
     push_ref(stack, (__refer) ins->mb.clazz);
 #if _JVM_DEBUG_BYTECODE_DETAIL > 5
     invoke_deepth(runtime);
@@ -480,7 +480,7 @@ s32 java_lang_Object_getClass(Runtime *runtime, JClass *clazz) {
 
 s32 java_lang_Object_clone(Runtime *runtime, JClass *clazz) {
     RuntimeStack *stack = runtime->stack;
-    Instance *ins = (Instance *) localvar_getRefer(runtime, 0);
+    Instance *ins = (Instance *) localvar_getRefer(runtime->localvar, 0);
     push_ref(stack, (__refer) instance_copy(ins, 0));
 #if _JVM_DEBUG_BYTECODE_DETAIL > 5
     invoke_deepth(runtime);
@@ -491,7 +491,7 @@ s32 java_lang_Object_clone(Runtime *runtime, JClass *clazz) {
 
 s32 java_lang_Object_hashCode(Runtime *runtime, JClass *clazz) {
     RuntimeStack *stack = runtime->stack;
-    Instance *ins = (Instance *) localvar_getRefer(runtime, 0);
+    Instance *ins = (Instance *) localvar_getRefer(runtime->localvar, 0);
     push_int(stack, (s32) (intptr_t) ins);
 #if _JVM_DEBUG_BYTECODE_DETAIL > 5
     invoke_deepth(runtime);
@@ -502,7 +502,7 @@ s32 java_lang_Object_hashCode(Runtime *runtime, JClass *clazz) {
 
 s32 java_lang_Object_notify(Runtime *runtime, JClass *clazz) {
     RuntimeStack *stack = runtime->stack;
-    Instance *ins = (Instance *) localvar_getRefer(runtime, 0);
+    Instance *ins = (Instance *) localvar_getRefer(runtime->localvar, 0);
 
     jthread_notify(&ins->mb, runtime);
 #if _JVM_DEBUG_BYTECODE_DETAIL > 5
@@ -514,7 +514,7 @@ s32 java_lang_Object_notify(Runtime *runtime, JClass *clazz) {
 
 s32 java_lang_Object_notifyAll(Runtime *runtime, JClass *clazz) {
     RuntimeStack *stack = runtime->stack;
-    Instance *ins = (Instance *) localvar_getRefer(runtime, 0);
+    Instance *ins = (Instance *) localvar_getRefer(runtime->localvar, 0);
     jthread_notifyAll(&ins->mb, runtime);
 #if _JVM_DEBUG_BYTECODE_DETAIL > 5
     invoke_deepth(runtime);
@@ -525,10 +525,10 @@ s32 java_lang_Object_notifyAll(Runtime *runtime, JClass *clazz) {
 
 s32 java_lang_Object_wait(Runtime *runtime, JClass *clazz) {
     RuntimeStack *stack = runtime->stack;
-    Instance *ins = (Instance *) localvar_getRefer(runtime, 0);
+    Instance *ins = (Instance *) localvar_getRefer(runtime->localvar, 0);
     Long2Double l2d;
-    l2d.i2l.i1 = localvar_getInt(runtime, 1);
-    l2d.i2l.i0 = localvar_getInt(runtime, 2);
+    l2d.i2l.i1 = localvar_getInt(runtime->localvar, 1);
+    l2d.i2l.i0 = localvar_getInt(runtime->localvar, 2);
 #if _JVM_DEBUG_BYTECODE_DETAIL > 5
     invoke_deepth(runtime);
     jvm_printf("java_lang_Object_wait %llx  wait %lld\n", (s64) (intptr_t) ins, l2d.l);
@@ -540,7 +540,7 @@ s32 java_lang_Object_wait(Runtime *runtime, JClass *clazz) {
 
 s32 java_lang_Runtime_exitInternal(Runtime *runtime, JClass *clazz) {
     RuntimeStack *stack = runtime->stack;
-    s32 status = localvar_getInt(runtime, 1);
+    s32 status = localvar_getInt(runtime->localvar, 1);
     exit(status);
 #if _JVM_DEBUG_BYTECODE_DETAIL > 5
     invoke_deepth(runtime);
@@ -584,9 +584,9 @@ s32 java_lang_Runtime_gc(Runtime *runtime, JClass *clazz) {
 
 s32 java_lang_String_replace0(Runtime *runtime, JClass *clazz) {
     RuntimeStack *stack = runtime->stack;
-    Instance *base = (Instance *) localvar_getRefer(runtime, 0);
-    Instance *src = (Instance *) localvar_getRefer(runtime, 1);
-    Instance *dst = (Instance *) localvar_getRefer(runtime, 2);
+    Instance *base = (Instance *) localvar_getRefer(runtime->localvar, 0);
+    Instance *src = (Instance *) localvar_getRefer(runtime->localvar, 1);
+    Instance *dst = (Instance *) localvar_getRefer(runtime->localvar, 2);
 
     s32 count = jstring_get_count(base);
     s32 offset = jstring_get_offset(base);
@@ -644,8 +644,8 @@ s32 java_lang_String_replace0(Runtime *runtime, JClass *clazz) {
 
 s32 java_lang_String_charAt0(Runtime *runtime, JClass *clazz) {
     RuntimeStack *stack = runtime->stack;
-    Instance *jstr = (Instance *) localvar_getRefer(runtime, 0);
-    s32 index = localvar_getInt(runtime, 1);
+    Instance *jstr = (Instance *) localvar_getRefer(runtime->localvar, 0);
+    s32 index = localvar_getInt(runtime->localvar, 1);
     s16 ch = jstring_char_at(jstr, index);
 #if _JVM_DEBUG_BYTECODE_DETAIL > 5
     invoke_deepth(runtime);
@@ -657,8 +657,8 @@ s32 java_lang_String_charAt0(Runtime *runtime, JClass *clazz) {
 
 s32 java_lang_String_equals(Runtime *runtime, JClass *clazz) {
     RuntimeStack *stack = runtime->stack;
-    Instance *jstr1 = (Instance *) localvar_getRefer(runtime, 0);
-    Instance *jstr2 = (Instance *) localvar_getRefer(runtime, 1);
+    Instance *jstr1 = (Instance *) localvar_getRefer(runtime->localvar, 0);
+    Instance *jstr2 = (Instance *) localvar_getRefer(runtime->localvar, 1);
     s32 r = jstring_equals(jstr1, jstr2);
 #if _JVM_DEBUG_BYTECODE_DETAIL > 5
     invoke_deepth(runtime);
@@ -670,8 +670,8 @@ s32 java_lang_String_equals(Runtime *runtime, JClass *clazz) {
 
 s32 java_lang_String_indexOf(Runtime *runtime, JClass *clazz) {
     RuntimeStack *stack = runtime->stack;
-    Instance *jstr = (Instance *) localvar_getRefer(runtime, 0);
-    u16 ch = localvar_getInt(runtime, 1);
+    Instance *jstr = (Instance *) localvar_getRefer(runtime->localvar, 0);
+    u16 ch = localvar_getInt(runtime->localvar, 1);
     s32 r = jstring_index_of(jstr, ch, 0);
 #if _JVM_DEBUG_BYTECODE_DETAIL > 5
     invoke_deepth(runtime);
@@ -683,9 +683,9 @@ s32 java_lang_String_indexOf(Runtime *runtime, JClass *clazz) {
 
 s32 java_lang_String_indexOfFrom(Runtime *runtime, JClass *clazz) {
     RuntimeStack *stack = runtime->stack;
-    Instance *jstr = (Instance *) localvar_getRefer(runtime, 0);
-    u16 ch = localvar_getInt(runtime, 1);
-    s32 startAt = localvar_getInt(runtime, 2);
+    Instance *jstr = (Instance *) localvar_getRefer(runtime->localvar, 0);
+    u16 ch = localvar_getInt(runtime->localvar, 1);
+    s32 startAt = localvar_getInt(runtime->localvar, 2);
     s32 r = jstring_index_of(jstr, ch, startAt);
 #if _JVM_DEBUG_BYTECODE_DETAIL > 5
     invoke_deepth(runtime);
@@ -697,7 +697,7 @@ s32 java_lang_String_indexOfFrom(Runtime *runtime, JClass *clazz) {
 
 s32 java_lang_String_intern(Runtime *runtime, JClass *clazz) {
     RuntimeStack *stack = runtime->stack;
-    Instance *jstr = (Instance *) localvar_getRefer(runtime, 0);
+    Instance *jstr = (Instance *) localvar_getRefer(runtime->localvar, 0);
 
 #if _JVM_DEBUG_BYTECODE_DETAIL > 5
     invoke_deepth(runtime);
@@ -709,7 +709,7 @@ s32 java_lang_String_intern(Runtime *runtime, JClass *clazz) {
 
 s32 java_lang_StringBuffer_append(Runtime *runtime, JClass *clazz) {
     RuntimeStack *stack = runtime->stack;
-    Instance *jstr = (Instance *) localvar_getRefer(runtime, 0);
+    Instance *jstr = (Instance *) localvar_getRefer(runtime->localvar, 0);
 
 #if _JVM_DEBUG_BYTECODE_DETAIL > 5
     invoke_deepth(runtime);
@@ -723,11 +723,11 @@ s32 java_lang_StringBuffer_append(Runtime *runtime, JClass *clazz) {
 s32 java_lang_System_arraycopy(Runtime *runtime, JClass *clazz) {
     RuntimeStack *stack = runtime->stack;
 
-    s32 count = localvar_getInt(runtime, 4);
-    s32 dest_start = localvar_getInt(runtime, 3);
-    Instance *dest = (Instance *) localvar_getRefer(runtime, 2);
-    s32 src_start = localvar_getInt(runtime, 1);
-    Instance *src = (Instance *) localvar_getRefer(runtime, 0);
+    s32 count = localvar_getInt(runtime->localvar, 4);
+    s32 dest_start = localvar_getInt(runtime->localvar, 3);
+    Instance *dest = (Instance *) localvar_getRefer(runtime->localvar, 2);
+    s32 src_start = localvar_getInt(runtime->localvar, 1);
+    Instance *src = (Instance *) localvar_getRefer(runtime->localvar, 0);
     s32 ret = 0;
     if (src == NULL || dest == NULL) {
         Instance *exception = exception_create(JVM_EXCEPTION_NULLPOINTER, runtime);
@@ -755,8 +755,8 @@ s32 java_lang_System_doubleToString(Runtime *runtime, JClass *clazz) {
     RuntimeStack *stack = runtime->stack;
 
     Long2Double l2d;
-    l2d.i2l.i1 = localvar_getInt(runtime, 0);
-    l2d.i2l.i0 = localvar_getInt(runtime, 1);
+    l2d.i2l.i1 = localvar_getInt(runtime->localvar, 0);
+    l2d.i2l.i0 = localvar_getInt(runtime->localvar, 1);
     c8 buf[22];
     sprintf(buf, "%lf", l2d.d);
     Utf8String *str = utf8_create_c(buf);
@@ -789,7 +789,7 @@ s32 java_lang_System_currentTimeMillis(Runtime *runtime, JClass *clazz) {
 typedef void (*jni_fun)(__refer);
 
 s32 java_lang_System_loadLibrary0(Runtime *runtime, JClass *clazz) {
-    Instance *name_arr = localvar_getRefer(runtime, 0);
+    Instance *name_arr = localvar_getRefer(runtime->localvar, 0);
     if (name_arr && name_arr->arr_length) {
         Utf8String *lab = utf8_create_c("java.library.path");
         Utf8String *val = hashtable_get(sys_prop, lab);
@@ -869,7 +869,7 @@ s32 java_lang_System_nanotime(Runtime *runtime, JClass *clazz) {
 
 s32 java_lang_System_identityHashCode(Runtime *runtime, JClass *clazz) {
     RuntimeStack *stack = runtime->stack;
-    Instance *tmps = (Instance *) localvar_getRefer(runtime, 0);
+    Instance *tmps = (Instance *) localvar_getRefer(runtime->localvar, 0);
     push_ref(stack, (__refer) tmps);
 
 #if _JVM_DEBUG_BYTECODE_DETAIL > 5
@@ -883,7 +883,7 @@ s32 java_lang_System_identityHashCode(Runtime *runtime, JClass *clazz) {
 s32 java_lang_System_getProperty0(Runtime *runtime, JClass *clazz) {
     RuntimeStack *stack = runtime->stack;
 
-    Instance *jstr1 = (Instance *) localvar_getRefer(runtime, 0);
+    Instance *jstr1 = (Instance *) localvar_getRefer(runtime->localvar, 0);
     Utf8String *key = utf8_create();
     jstring_2_utf8(jstr1, key);
     Utf8String *val = (Utf8String *) hashtable_get(sys_prop, key);
@@ -905,10 +905,10 @@ s32 java_lang_System_getProperty0(Runtime *runtime, JClass *clazz) {
 s32 java_lang_System_setProperty0(Runtime *runtime, JClass *clazz) {
     RuntimeStack *stack = runtime->stack;
 
-    Instance *jstr1 = (Instance *) localvar_getRefer(runtime, 0);
+    Instance *jstr1 = (Instance *) localvar_getRefer(runtime->localvar, 0);
     Utf8String *key = utf8_create();
     jstring_2_utf8(jstr1, key);
-    Instance *jstr2 = (Instance *) localvar_getRefer(runtime, 1);
+    Instance *jstr2 = (Instance *) localvar_getRefer(runtime->localvar, 1);
     Utf8String *val = utf8_create();
     jstring_2_utf8(jstr2, val);
     Utf8String *old_val = (Utf8String *) hashtable_get(sys_prop, key);
@@ -950,8 +950,8 @@ s32 java_lang_Thread_yield(Runtime *runtime, JClass *clazz) {
 s32 java_lang_Thread_sleep(Runtime *runtime, JClass *clazz) {
     RuntimeStack *stack = runtime->stack;
     Long2Double l2d;
-    l2d.i2l.i1 = localvar_getInt(runtime, 0);
-    l2d.i2l.i0 = localvar_getInt(runtime, 1);
+    l2d.i2l.i1 = localvar_getInt(runtime->localvar, 0);
+    l2d.i2l.i0 = localvar_getInt(runtime->localvar, 1);
 #if _JVM_DEBUG_BYTECODE_DETAIL > 5
     invoke_deepth(runtime);
     jvm_printf("java_lang_Thread_sleep %lld\n", l2d.l);
@@ -962,7 +962,7 @@ s32 java_lang_Thread_sleep(Runtime *runtime, JClass *clazz) {
 
 s32 java_lang_Thread_start(Runtime *runtime, JClass *clazz) {
     RuntimeStack *stack = runtime->stack;
-    Instance *ins = (Instance *) localvar_getRefer(runtime, 0);
+    Instance *ins = (Instance *) localvar_getRefer(runtime->localvar, 0);
     jthread_start(ins);
 
 #if _JVM_DEBUG_BYTECODE_DETAIL > 5
@@ -975,7 +975,7 @@ s32 java_lang_Thread_start(Runtime *runtime, JClass *clazz) {
 
 s32 java_lang_Thread_isAlive(Runtime *runtime, JClass *clazz) {
     RuntimeStack *stack = runtime->stack;
-    Instance *ins = (Instance *) localvar_getRefer(runtime, 0);
+    Instance *ins = (Instance *) localvar_getRefer(runtime->localvar, 0);
     Runtime *rt = jthread_get_stackframe_value(ins);
     if (rt)
         push_int(stack, runtime->threadInfo->thread_status != THREAD_STATUS_ZOMBIE);
@@ -1004,7 +1004,7 @@ s32 java_lang_Thread_activeCount(Runtime *runtime, JClass *clazz) {
 
 s32 java_lang_Thread_setPriority0(Runtime *runtime, JClass *clazz) {
     RuntimeStack *stack = runtime->stack;
-    Instance *ins = (Instance *) localvar_getRefer(runtime, 0);
+    Instance *ins = (Instance *) localvar_getRefer(runtime->localvar, 0);
 
 #if _JVM_DEBUG_BYTECODE_DETAIL > 5
     invoke_deepth(runtime);
@@ -1017,7 +1017,7 @@ s32 java_lang_Thread_setPriority0(Runtime *runtime, JClass *clazz) {
 
 s32 java_lang_Thread_interrupt0(Runtime *runtime, JClass *clazz) {
     RuntimeStack *stack = runtime->stack;
-    Instance *ins = (Instance *) localvar_getRefer(runtime, 0);
+    Instance *ins = (Instance *) localvar_getRefer(runtime->localvar, 0);
 
 #if _JVM_DEBUG_BYTECODE_DETAIL > 5
     invoke_deepth(runtime);
@@ -1037,7 +1037,7 @@ s32 java_io_PrintStream_printImpl(Runtime *runtime, JClass *clazz) {
 #endif
 
     Instance *tmps = NULL;
-    tmps = (Instance *) localvar_getRefer(runtime, 0);
+    tmps = (Instance *) localvar_getRefer(runtime->localvar, 0);
     if (tmps) {
 
         c8 *fieldPtr = jstring_get_value_ptr(tmps);
@@ -1058,7 +1058,7 @@ s32 java_io_PrintStream_printImpl(Runtime *runtime, JClass *clazz) {
 
 s32 java_io_Throwable_printStackTrace0(Runtime *runtime, JClass *clazz) {
     RuntimeStack *stack = runtime->stack;
-    Instance *tmps = (Instance *) localvar_getRefer(runtime, 0);
+    Instance *tmps = (Instance *) localvar_getRefer(runtime->localvar, 0);
 #if _JVM_DEBUG_BYTECODE_DETAIL > 5
     invoke_deepth(runtime);
     jvm_printf("java_io_Throwable_printStackTrace0 %s \n", utf8_cstr(tmps->mb.clazz->name));
@@ -1115,7 +1115,7 @@ Instance *buildStackElement(Runtime *runtime, Runtime *target) {
 
 s32 java_io_Throwable_buildStackElement(Runtime *runtime, JClass *clazz) {
     RuntimeStack *stack = runtime->stack;
-    Instance *tmps = (Instance *) localvar_getRefer(runtime, 0);
+    Instance *tmps = (Instance *) localvar_getRefer(runtime->localvar, 0);
 #if _JVM_DEBUG_BYTECODE_DETAIL > 5
     invoke_deepth(runtime);
     jvm_printf("java_io_Throwable_buildStackElement %s \n", utf8_cstr(tmps->mb.clazz->name));

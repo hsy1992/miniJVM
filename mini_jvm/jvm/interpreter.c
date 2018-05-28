@@ -215,9 +215,9 @@ enum {
 /* 0xCA */ op_breakpoint,
 };
 
-static inline s32 _op_aload_n(u8 **opCode, Runtime *runtime, s32 i) {
-    __refer value = localvar_getRefer(runtime, i);
-    push_ref(runtime->stack, value);
+static inline s32 _op_aload_n(u8 **opCode, RuntimeStack *stack, LocalVarItem *localvar, Runtime *runtime, s32 i) {
+    __refer value = localvar_getRefer(localvar, i);
+    push_ref(stack, value);
 #if _JVM_DEBUG_BYTECODE_DETAIL > 5
     invoke_deepth(runtime);
     jvm_printf("aload_%d push localvar [%llx] into stack\n", i, (s64) (intptr_t) value);
@@ -227,21 +227,20 @@ static inline s32 _op_aload_n(u8 **opCode, Runtime *runtime, s32 i) {
 }
 
 
-static inline s32 _op_ifload_n(u8 **opCode, Runtime *runtime, s32 i) {
+static inline s32 _op_ifload_n(u8 **opCode, RuntimeStack *stack, LocalVarItem *localvar, Runtime *runtime, s32 i) {
     Int2Float i2f;
-    i2f.i = localvar_getInt(runtime, i);
+    i2f.i = localvar_getInt(localvar, i);
 #if _JVM_DEBUG_BYTECODE_DETAIL > 5
     invoke_deepth(runtime);
     jvm_printf("i(f)load_%d: push localvar(%d)= [%x]/%d/%f  \n", i, i, i2f.i, i2f.i, i2f.f);
 #endif
-    push_int(runtime->stack, i2f.i);
+    push_int(stack, i2f.i);
     *opCode += 1;
     return 0;
 }
 
 
-static inline s32 _op_ldc_impl(u8 **opCode, Runtime *runtime, RuntimeStack *stack, s32 index) {
-    JClass *clazz = runtime->clazz;
+static inline s32 _op_ldc_impl(u8 **opCode, RuntimeStack *stack, JClass *clazz, Runtime *runtime, s32 index) {
 
     ConstantItem *item = class_get_constant_item(clazz, index);
     switch (item->tag) {
@@ -263,7 +262,7 @@ static inline s32 _op_ldc_impl(u8 **opCode, Runtime *runtime, RuntimeStack *stac
 
 #if _JVM_DEBUG_BYTECODE_DETAIL > 5
             invoke_deepth(runtime);
-            jvm_printf("ldc: [%llx] =\"%s\"\n", (s64) (intptr_t) jstr, utf8_cstr(cutf->utfstr));
+            jvm_printf("ldc: [%llx] =\"%s\"\n", (s64) (intptr_t) cutf->jstr, utf8_cstr(cutf->utfstr));
 #endif
             break;
         }
@@ -281,8 +280,8 @@ static inline s32 _op_ldc_impl(u8 **opCode, Runtime *runtime, RuntimeStack *stac
     return 0;
 }
 
-static inline s32 _op_iconst_n(u8 **opCode, Runtime *runtime, s32 i) {
-    push_int(runtime->stack, i);
+static inline s32 _op_iconst_n(u8 **opCode, RuntimeStack *stack, Runtime *runtime, s32 i) {
+    push_int(stack, i);
 #if _JVM_DEBUG_BYTECODE_DETAIL > 5
     invoke_deepth(runtime);
     jvm_printf("iconst_%d: push %d into stack\n", i, i);
@@ -291,8 +290,8 @@ static inline s32 _op_iconst_n(u8 **opCode, Runtime *runtime, s32 i) {
     return 0;
 }
 
-static inline s32 _op_dconst_n(u8 **opCode, Runtime *runtime, f64 d) {
-    push_double(runtime->stack, d);
+static inline s32 _op_dconst_n(u8 **opCode, RuntimeStack *stack, Runtime *runtime, f64 d) {
+    push_double(stack, d);
 
 #if _JVM_DEBUG_BYTECODE_DETAIL > 5
     invoke_deepth(runtime);
@@ -302,8 +301,8 @@ static inline s32 _op_dconst_n(u8 **opCode, Runtime *runtime, f64 d) {
     return 0;
 }
 
-static inline s32 _op_fconst_n(u8 **opCode, Runtime *runtime, f32 f) {
-    push_float(runtime->stack, f);
+static inline s32 _op_fconst_n(u8 **opCode, RuntimeStack *stack, Runtime *runtime, f32 f) {
+    push_float(stack, f);
 
 #if _JVM_DEBUG_BYTECODE_DETAIL > 5
     invoke_deepth(runtime);
@@ -313,9 +312,9 @@ static inline s32 _op_fconst_n(u8 **opCode, Runtime *runtime, f32 f) {
     return 0;
 }
 
-static inline s32 _op_lconst_n(u8 **opCode, Runtime *runtime, s64 i) {
+static inline s32 _op_lconst_n(u8 **opCode, RuntimeStack *stack, Runtime *runtime, s64 i) {
 
-    push_long(runtime->stack, i);
+    push_long(stack, i);
 #if _JVM_DEBUG_BYTECODE_DETAIL > 5
     invoke_deepth(runtime);
     jvm_printf("lconst_%lld: push %lld into stack\n", i, i);
@@ -324,44 +323,44 @@ static inline s32 _op_lconst_n(u8 **opCode, Runtime *runtime, s64 i) {
     return 0;
 }
 
-static inline s32 _op_lload_n(u8 **opCode, Runtime *runtime, s32 index) {
+static inline s32 _op_ldoad_n(u8 **opCode, RuntimeStack *stack, LocalVarItem *localvar, Runtime *runtime, s32 index) {
     Long2Double l2d;
-    l2d.i2l.i1 = localvar_getInt(runtime, index);
-    l2d.i2l.i0 = localvar_getInt(runtime, index + 1);
+    l2d.i2l.i1 = localvar_getInt(localvar, index);
+    l2d.i2l.i0 = localvar_getInt(localvar, index + 1);
     s64 value = l2d.l;
 
 #if _JVM_DEBUG_BYTECODE_DETAIL > 5
     invoke_deepth(runtime);
     jvm_printf("l(d)load_%d: push localvar(%d)= [%llx]/%lld/%lf  \n", index, index, value, value, value);
 #endif
-    push_long(runtime->stack, value);
+    push_long(stack, value);
     *opCode += 1;
     return 0;
 }
 
-static inline s32 _op_istore_n(u8 **opCode, Runtime *runtime, RuntimeStack *stack, s32 i) {
+static inline s32 _op_istore_n(u8 **opCode, RuntimeStack *stack, LocalVarItem *localvar, Runtime *runtime, s32 i) {
     s32 value = pop_int(stack);
 #if _JVM_DEBUG_BYTECODE_DETAIL > 5
     invoke_deepth(runtime);
     jvm_printf("istore_%d: save %x/%d into localvar(%d)\n", i, value, value, i);
 #endif
-    localvar_setInt(runtime, i, value);
+    localvar_setInt(localvar, i, value);
     *opCode += 1;
     return 0;
 }
 
-static inline s32 _op_astore_n(u8 **opCode, Runtime *runtime, RuntimeStack *stack, s32 i) {
+static inline s32 _op_astore_n(u8 **opCode, RuntimeStack *stack, LocalVarItem *localvar, Runtime *runtime, s32 i) {
     __refer value = pop_ref(stack);
 #if _JVM_DEBUG_BYTECODE_DETAIL > 5
     invoke_deepth(runtime);
     jvm_printf("astore_%d:  [%llx]\n", i, (s64) (intptr_t) value);
 #endif
-    localvar_setRefer(runtime, i, value);
+    localvar_setRefer(localvar, i, value);
     *opCode += 1;
     return 0;
 }
 
-static inline s32 _op_lstore_n(u8 **opCode, Runtime *runtime, RuntimeStack *stack, s32 i) {
+static inline s32 _op_ldstore_n(u8 **opCode, RuntimeStack *stack, LocalVarItem *localvar, Runtime *runtime, s32 i) {
     Long2Double l2d;
     l2d.l = pop_long(stack);
 
@@ -370,14 +369,14 @@ static inline s32 _op_lstore_n(u8 **opCode, Runtime *runtime, RuntimeStack *stac
     invoke_deepth(runtime);
     jvm_printf("l(d)store_%d: save localvar(%d) [%llx]/%lld/%lf  \n", i, i, l2d.l, l2d.l, l2d.d);
 #endif
-    localvar_setInt(runtime, i, l2d.i2l.i1);
-    localvar_setInt(runtime, i + 1, l2d.i2l.i0);
+    localvar_setInt(localvar, i, l2d.i2l.i1);
+    localvar_setInt(localvar, i + 1, l2d.i2l.i0);
     *opCode += 1;
     return 0;
 }
 
 
-static inline s32 _op_ifstore_impl(u8 **opCode, Runtime *runtime, RuntimeStack *stack) {
+static inline s32 _op_ifstore_impl(u8 **opCode, RuntimeStack *stack, LocalVarItem *localvar, Runtime *runtime) {
     Short2Char s2c;
     if (runtime->wideMode) {
         s2c.c1 = opCode[0][1];
@@ -394,12 +393,12 @@ static inline s32 _op_ifstore_impl(u8 **opCode, Runtime *runtime, RuntimeStack *
     invoke_deepth(runtime);
     jvm_printf("i(f)store: save  localvar(%d) [%x]/%d \n", s2c.s, value, value);
 #endif
-    localvar_setInt(runtime, (u16) s2c.s, value);
+    localvar_setInt(localvar, (u16) s2c.s, value);
 
     return 0;
 }
 
-static inline s32 _op_ldstore_impl(u8 **opCode, Runtime *runtime, RuntimeStack *stack) {
+static inline s32 _op_ldstore_impl(u8 **opCode, RuntimeStack *stack, Runtime *runtime) {
 
     Short2Char s2c;
     if (runtime->wideMode) {
@@ -419,8 +418,8 @@ static inline s32 _op_ldstore_impl(u8 **opCode, Runtime *runtime, RuntimeStack *
     invoke_deepth(runtime);
     jvm_printf("l(d)store: save localvar(%d) %llx/%lld/%lf  \n", s2c.s, l2d.l, l2d.l, l2d.d);
 #endif
-    localvar_setInt(runtime, (u16) s2c.s, l2d.i2l.i1);
-    localvar_setInt(runtime, (u16) s2c.s + 1, l2d.i2l.i0);
+    localvar_setInt(runtime->localvar, (u16) s2c.s, l2d.i2l.i1);
+    localvar_setInt(runtime->localvar, (u16) s2c.s + 1, l2d.i2l.i0);
     return 0;
 }
 
@@ -487,31 +486,32 @@ static inline void _stack2localvar(MethodInfo *method, Runtime *father, Runtime 
     s32 i;
     s32 paraLen = paraType->length;
     s32 i_local = method->para_count;
+    LocalVarItem *localvar = son->localvar;
 
     for (i = 0; i < paraLen; i++) {
         char type = utf8_char_at(paraType, paraLen - 1 - i);
 
         switch (type) {
             case 'R': {
-                localvar_setRefer(son, --i_local, pop_ref(father->stack));
+                localvar_setRefer(localvar, --i_local, pop_ref(father->stack));
                 break;
             }
             case '4': {
-                localvar_setInt(son, --i_local, pop_int(father->stack));
+                localvar_setInt(localvar, --i_local, pop_int(father->stack));
                 break;
             }
             case '8': {
                 //把双字类型拆成两个单元放入本地变量
                 Long2Double l2d;
                 l2d.l = pop_long(father->stack);
-                localvar_setInt(son, --i_local, l2d.i2l.i0);
-                localvar_setInt(son, --i_local, l2d.i2l.i1);
+                localvar_setInt(localvar, --i_local, l2d.i2l.i0);
+                localvar_setInt(localvar, --i_local, l2d.i2l.i1);
                 break;
             }
         }
     }
     if (!(method->access_flags & ACC_STATIC)) {//非静态方法需要把局部变量位置0设为this
-        localvar_setRefer(son, --i_local, pop_ref(father->stack));
+        localvar_setRefer(localvar, --i_local, pop_ref(father->stack));
     }
 
 }
@@ -522,7 +522,7 @@ s32 _synchronized_lock_method(MethodInfo *method, Runtime *runtime) {
         if (method->access_flags & ACC_STATIC) {
             jthread_lock((MemoryBlock *) runtime->clazz, runtime);
         } else {
-            jthread_lock(&((Instance *) localvar_getRefer(runtime, 0))->mb, runtime);
+            jthread_lock(&((Instance *) localvar_getRefer(runtime->localvar, 0))->mb, runtime);
         }
     }
     return 0;
@@ -534,7 +534,7 @@ s32 _synchronized_unlock_method(MethodInfo *method, Runtime *runtime) {
         if (method->access_flags & ACC_STATIC) {
             jthread_unlock((MemoryBlock *) runtime->clazz, runtime);
         } else {
-            jthread_unlock(&((Instance *) localvar_getRefer(runtime, 0))->mb, runtime);
+            jthread_unlock(&((Instance *) localvar_getRefer(runtime->localvar, 0))->mb, runtime);
         }
     }
     return 0;
@@ -560,6 +560,7 @@ s32 execute_method_impl(MethodInfo *method, Runtime *pruntime, JClass *clazz) {
         CodeAttribute *ca = method->attributes[j].converted_code;
         if (ca) {
             localvar_init(runtime, ca->max_locals + 1);
+            LocalVarItem *localvar = runtime->localvar;
             _stack2localvar(method, pruntime, runtime);
             s32 stackSize = stack->size;
             if (method_sync)_synchronized_lock_method(method, runtime);
@@ -624,75 +625,75 @@ s32 execute_method_impl(MethodInfo *method, Runtime *pruntime, JClass *clazz) {
                         break;
                     }
                     case op_iconst_m1: {
-                        ret = _op_iconst_n(opCode, runtime, -1);
+                        ret = _op_iconst_n(opCode, stack, runtime, -1);
                         break;
                     }
 
 
                     case op_iconst_0: {
-                        ret = _op_iconst_n(opCode, runtime, 0);
+                        ret = _op_iconst_n(opCode, stack, runtime, 0);
                         break;
                     }
 
                     case op_iconst_1: {
-                        ret = _op_iconst_n(opCode, runtime, 1);
+                        ret = _op_iconst_n(opCode, stack, runtime, 1);
                         break;
                     }
 
                     case op_iconst_2: {
-                        ret = _op_iconst_n(opCode, runtime, 2);
+                        ret = _op_iconst_n(opCode, stack, runtime, 2);
                         break;
                     }
 
                     case op_iconst_3: {
-                        ret = _op_iconst_n(opCode, runtime, 3);
+                        ret = _op_iconst_n(opCode, stack, runtime, 3);
                         break;
                     }
 
                     case op_iconst_4: {
-                        ret = _op_iconst_n(opCode, runtime, 4);
+                        ret = _op_iconst_n(opCode, stack, runtime, 4);
                         break;
                     }
 
                     case op_iconst_5: {
-                        ret = _op_iconst_n(opCode, runtime, 5);
+                        ret = _op_iconst_n(opCode, stack, runtime, 5);
                         break;
                     }
 
                     case op_lconst_0: {
-                        ret = _op_lconst_n(opCode, runtime, 0);
+                        ret = _op_lconst_n(opCode, stack, runtime, 0);
                         break;
                     }
 
                     case op_lconst_1: {
-                        ret = _op_lconst_n(opCode, runtime, 1);
+                        ret = _op_lconst_n(opCode, stack, runtime, 1);
                         break;
                     }
 
 
                     case op_fconst_0: {
-                        ret = _op_fconst_n(opCode, runtime, 0.0f);
+                        ret = _op_fconst_n(opCode, stack, runtime, 0.0f);
                         break;
                     }
 
                     case op_fconst_1: {
-                        ret = _op_fconst_n(opCode, runtime, 1.0f);
+                        ret = _op_fconst_n(opCode, stack, runtime, 1.0f);
                         break;
                     }
 
                     case op_fconst_2: {
-                        ret = _op_fconst_n(opCode, runtime, 2.0f);
+                        ret = _op_fconst_n(opCode, stack, runtime, 2.0f);
                         break;
                     }
 
 
                     case op_dconst_0: {
-                        ret = _op_dconst_n(opCode, runtime, 0.0f);
+                        ret = _op_dconst_n(opCode, stack, runtime, 0.0f);
                         break;
                     }
 
                     case op_dconst_1: {
-                        ret = _op_dconst_n(opCode, runtime, 1.0f);
+                        ret = _op_dconst_n(opCode, stack, runtime, 1.0f);
                         break;
                     }
 
@@ -727,7 +728,7 @@ s32 execute_method_impl(MethodInfo *method, Runtime *pruntime, JClass *clazz) {
                     case op_ldc: {
                         s32 index = opCode[0][1];
                         *opCode += 2;
-                        ret = _op_ldc_impl(opCode, runtime, stack, index);
+                        ret = _op_ldc_impl(opCode, stack, clazz, runtime, index);
                         break;
                     }
 
@@ -736,7 +737,7 @@ s32 execute_method_impl(MethodInfo *method, Runtime *pruntime, JClass *clazz) {
                         s2c.c1 = opCode[0][1];
                         s2c.c0 = opCode[0][2];
                         s32 index = s2c.s;
-                        ret = _op_ldc_impl(opCode, runtime, stack, index);
+                        ret = _op_ldc_impl(opCode, stack, clazz, runtime, index);
                         *opCode += 3;
                         break;
                     }
@@ -774,7 +775,7 @@ s32 execute_method_impl(MethodInfo *method, Runtime *pruntime, JClass *clazz) {
                             *opCode += 2;
                         }
 
-                        s32 value = localvar_getInt(runtime, (u16) s2c.s);
+                        s32 value = localvar_getInt(localvar, (u16) s2c.s);
 #if _JVM_DEBUG_BYTECODE_DETAIL > 5
                         invoke_deepth(runtime);
                         jvm_printf("i(fa)load: push localvar(%d)= [%x]/%d  \n", s2c.s, value, value);
@@ -799,8 +800,8 @@ s32 execute_method_impl(MethodInfo *method, Runtime *pruntime, JClass *clazz) {
                         }
 
                         Long2Double l2d;
-                        l2d.i2l.i1 = localvar_getInt(runtime, (u16) s2c.s);
-                        l2d.i2l.i0 = localvar_getInt(runtime, (u16) s2c.s + 1);
+                        l2d.i2l.i1 = localvar_getInt(localvar, (u16) s2c.s);
+                        l2d.i2l.i0 = localvar_getInt(localvar, (u16) s2c.s + 1);
 #if _JVM_DEBUG_BYTECODE_DETAIL > 5
                         invoke_deepth(runtime);
                         jvm_printf("l(d)load: push localvar(%d) [%llx]/%lf into stack \n", s2c.s, l2d.l, l2d.d);
@@ -827,7 +828,7 @@ s32 execute_method_impl(MethodInfo *method, Runtime *pruntime, JClass *clazz) {
                             *opCode += 2;
                         }
 
-                        __refer value = localvar_getRefer(runtime, (u16) s2c.s);
+                        __refer value = localvar_getRefer(localvar, (u16) s2c.s);
 #if _JVM_DEBUG_BYTECODE_DETAIL > 5
                         invoke_deepth(runtime);
                         jvm_printf("i(fa)load: push localvar(%d)= [%llx]  \n", s2c.s, (s64) (intptr_t) value);
@@ -838,103 +839,103 @@ s32 execute_method_impl(MethodInfo *method, Runtime *pruntime, JClass *clazz) {
                     }
 
                     case op_iload_0: {
-                        ret = _op_ifload_n(opCode, runtime, 0);
+                        ret = _op_ifload_n(opCode, stack, localvar, runtime, 0);
                         break;
                     }
 
                     case op_iload_1: {
-                        ret = _op_ifload_n(opCode, runtime, 1);
+                        ret = _op_ifload_n(opCode, stack, localvar, runtime, 1);
                         break;
                     }
 
                     case op_iload_2: {
-                        ret = _op_ifload_n(opCode, runtime, 2);
+                        ret = _op_ifload_n(opCode, stack, localvar, runtime, 2);
                         break;
                     }
 
                     case op_iload_3: {
-                        ret = _op_ifload_n(opCode, runtime, 3);
+                        ret = _op_ifload_n(opCode, stack, localvar, runtime, 3);
                         break;
                     }
 
                     case op_lload_0: {
-                        ret = _op_lload_n(opCode, runtime, 0);
+                        ret = _op_ldoad_n(opCode, stack, localvar, runtime, 0);
                         break;
                     }
 
                     case op_lload_1: {
-                        ret = _op_lload_n(opCode, runtime, 1);
+                        ret = _op_ldoad_n(opCode, stack, localvar, runtime, 1);
                         break;
                     }
 
                     case op_lload_2: {
-                        ret = _op_lload_n(opCode, runtime, 2);
+                        ret = _op_ldoad_n(opCode, stack, localvar, runtime, 2);
                         break;
                     }
 
                     case op_lload_3: {
-                        ret = _op_lload_n(opCode, runtime, 3);
+                        ret = _op_ldoad_n(opCode, stack, localvar, runtime, 3);
                         break;
                     }
 
                     case op_fload_0: {
-                        ret = _op_ifload_n(opCode, runtime, 0);
+                        ret = _op_ifload_n(opCode, stack, localvar, runtime, 0);
                         break;
                     }
 
                     case op_fload_1: {
-                        ret = _op_ifload_n(opCode, runtime, 1);
+                        ret = _op_ifload_n(opCode, stack, localvar, runtime, 1);
                         break;
                     }
 
                     case op_fload_2: {
-                        ret = _op_ifload_n(opCode, runtime, 2);
+                        ret = _op_ifload_n(opCode, stack, localvar, runtime, 2);
                         break;
                     }
 
                     case op_fload_3: {
-                        ret = _op_ifload_n(opCode, runtime, 3);
+                        ret = _op_ifload_n(opCode, stack, localvar, runtime, 3);
                         break;
                     }
 
 
                     case op_dload_0: {
-                        ret = _op_lload_n(opCode, runtime, 0);
+                        ret = _op_ldoad_n(opCode, stack, localvar, runtime, 0);
                         break;
                     }
 
                     case op_dload_1: {
-                        ret = _op_lload_n(opCode, runtime, 1);
+                        ret = _op_ldoad_n(opCode, stack, localvar, runtime, 1);
                         break;
                     }
 
                     case op_dload_2: {
-                        ret = _op_lload_n(opCode, runtime, 2);
+                        ret = _op_ldoad_n(opCode, stack, localvar, runtime, 2);
                         break;
                     }
 
                     case op_dload_3: {
-                        ret = _op_lload_n(opCode, runtime, 3);
+                        ret = _op_ldoad_n(opCode, stack, localvar, runtime, 3);
                         break;
                     }
 
                     case op_aload_0: {
-                        ret = _op_aload_n(opCode, runtime, 0);
+                        ret = _op_aload_n(opCode, stack, localvar, runtime, 0);
                         break;
                     }
 
                     case op_aload_1: {
-                        ret = _op_aload_n(opCode, runtime, 1);
+                        ret = _op_aload_n(opCode, stack, localvar, runtime, 1);
                         break;
                     }
 
                     case op_aload_2: {
-                        ret = _op_aload_n(opCode, runtime, 2);
+                        ret = _op_aload_n(opCode, stack, localvar, runtime, 2);
                         break;
                     }
 
                     case op_aload_3: {
-                        ret = _op_aload_n(opCode, runtime, 3);
+                        ret = _op_aload_n(opCode, stack, localvar, runtime, 3);
                         break;
                     }
 
@@ -1049,22 +1050,22 @@ s32 execute_method_impl(MethodInfo *method, Runtime *pruntime, JClass *clazz) {
                     }
 
                     case op_istore: {
-                        ret = _op_ifstore_impl(opCode, runtime, stack);
+                        ret = _op_ifstore_impl(opCode, stack, localvar, runtime);
                         break;
                     }
 
                     case op_lstore: {
-                        ret = _op_ldstore_impl(opCode, runtime, stack);
+                        ret = _op_ldstore_impl(opCode, stack, runtime);
                         break;
                     }
 
                     case op_fstore: {
-                        ret = _op_ifstore_impl(opCode, runtime, stack);
+                        ret = _op_ifstore_impl(opCode, stack, localvar, runtime);
                         break;
                     }
 
                     case op_dstore: {
-                        ret = _op_ldstore_impl(opCode, runtime, stack);
+                        ret = _op_ldstore_impl(opCode, stack, runtime);
                         break;
                     }
 
@@ -1087,112 +1088,112 @@ s32 execute_method_impl(MethodInfo *method, Runtime *pruntime, JClass *clazz) {
                         invoke_deepth(runtime);
                         jvm_printf("i(fa)store: save  localvar(%d) [%llx] \n", s2c.s, (s64) (intptr_t) value);
 #endif
-                        localvar_setRefer(runtime, (u16) s2c.s, value);
+                        localvar_setRefer(localvar, (u16) s2c.s, value);
 
 
                         break;
                     }
 
                     case op_istore_0: {
-                        ret = _op_istore_n(opCode, runtime, stack, 0);
+                        ret = _op_istore_n(opCode, stack, localvar, runtime, 0);
                         break;
                     }
 
                     case op_istore_1: {
-                        ret = _op_istore_n(opCode, runtime, stack, 1);
+                        ret = _op_istore_n(opCode, stack, localvar, runtime, 1);
                         break;
                     }
 
                     case op_istore_2: {
-                        ret = _op_istore_n(opCode, runtime, stack, 2);
+                        ret = _op_istore_n(opCode, stack, localvar, runtime, 2);
                         break;
                     }
 
                     case op_istore_3: {
-                        ret = _op_istore_n(opCode, runtime, stack, 3);
+                        ret = _op_istore_n(opCode, stack, localvar, runtime, 3);
                         break;
                     }
 
                     case op_lstore_0: {
-                        ret = _op_lstore_n(opCode, runtime, stack, 0);
+                        ret = _op_ldstore_n(opCode, stack, localvar, runtime, 0);
                         break;
                     }
 
                     case op_lstore_1: {
-                        ret = _op_lstore_n(opCode, runtime, stack, 1);
+                        ret = _op_ldstore_n(opCode, stack, localvar, runtime, 1);
                         break;
                     }
 
                     case op_lstore_2: {
-                        ret = _op_lstore_n(opCode, runtime, stack, 2);
+                        ret = _op_ldstore_n(opCode, stack, localvar, runtime, 2);
                         break;
                     }
 
                     case op_lstore_3: {
-                        ret = _op_lstore_n(opCode, runtime, stack, 3);
+                        ret = _op_ldstore_n(opCode, stack, localvar, runtime, 3);
                         break;
                     }
 
 
                     case op_fstore_0: {
-                        ret = _op_istore_n(opCode, runtime, stack, 0);
+                        ret = _op_istore_n(opCode, stack, localvar, runtime, 0);
                         break;
                     }
 
                     case op_fstore_1: {
-                        ret = _op_istore_n(opCode, runtime, stack, 1);
+                        ret = _op_istore_n(opCode, stack, localvar, runtime, 1);
                         break;
                     }
 
                     case op_fstore_2: {
-                        ret = _op_istore_n(opCode, runtime, stack, 2);
+                        ret = _op_istore_n(opCode, stack, localvar, runtime, 2);
                         break;
                     }
 
                     case op_fstore_3: {
-                        ret = _op_istore_n(opCode, runtime, stack, 3);
+                        ret = _op_istore_n(opCode, stack, localvar, runtime, 3);
                         break;
                     }
 
 
                     case op_dstore_0: {
-                        ret = _op_lstore_n(opCode, runtime, stack, 0);
+                        ret = _op_ldstore_n(opCode, stack, localvar, runtime, 0);
                         break;
                     }
 
                     case op_dstore_1: {
-                        ret = _op_lstore_n(opCode, runtime, stack, 1);
+                        ret = _op_ldstore_n(opCode, stack, localvar, runtime, 1);
                         break;
                     }
 
                     case op_dstore_2: {
-                        ret = _op_lstore_n(opCode, runtime, stack, 2);
+                        ret = _op_ldstore_n(opCode, stack, localvar, runtime, 2);
                         break;
                     }
 
                     case op_dstore_3: {
-                        ret = _op_lstore_n(opCode, runtime, stack, 3);
+                        ret = _op_ldstore_n(opCode, stack, localvar, runtime, 3);
                         break;
                     }
 
 
                     case op_astore_0: {
-                        ret = _op_astore_n(opCode, runtime, stack, 0);
+                        ret = _op_astore_n(opCode, stack, localvar, runtime, 0);
                         break;
                     }
 
                     case op_astore_1: {
-                        ret = _op_astore_n(opCode, runtime, stack, 1);
+                        ret = _op_astore_n(opCode, stack, localvar, runtime, 1);
                         break;
                     }
 
                     case op_astore_2: {
-                        ret = _op_astore_n(opCode, runtime, stack, 2);
+                        ret = _op_astore_n(opCode, stack, localvar, runtime, 2);
                         break;
                     }
 
                     case op_astore_3: {
-                        ret = _op_astore_n(opCode, runtime, stack, 3);
+                        ret = _op_astore_n(opCode, stack, localvar, runtime, 3);
                         break;
                     }
 
@@ -2142,8 +2143,8 @@ s32 execute_method_impl(MethodInfo *method, Runtime *pruntime, JClass *clazz) {
                             *opCode += 3;
                         }
 
-                        s32 oldv = localvar_getInt(runtime, (u16) s2c1.s);
-                        localvar_setInt(runtime, (u16) s2c1.s, oldv + s2c2.s);
+                        s32 oldv = localvar_getInt(localvar, (u16) s2c1.s);
+                        localvar_setInt(localvar, (u16) s2c1.s, oldv + s2c2.s);
 #if _JVM_DEBUG_BYTECODE_DETAIL > 5
                         invoke_deepth(runtime);
                         jvm_printf("iinc: localvar(%d) = %d + %d\n", s2c1.s, oldv, s2c2.s);
@@ -2418,7 +2419,7 @@ s32 execute_method_impl(MethodInfo *method, Runtime *pruntime, JClass *clazz) {
 
 #if _JVM_DEBUG_BYTECODE_DETAIL > 5
                         invoke_deepth(runtime);
-                        jvm_printf("dcmpl: %f < %f = %d\n", value2, value1, result);
+                        jvm_printf("dcmpl: %lf < %lf = %d\n", value2, value1, result);
 #endif
                         push_int(stack, result);
 
@@ -2435,7 +2436,7 @@ s32 execute_method_impl(MethodInfo *method, Runtime *pruntime, JClass *clazz) {
 
 #if _JVM_DEBUG_BYTECODE_DETAIL > 5
                         invoke_deepth(runtime);
-                        jvm_printf("dcmpg: %f > %f = %d\n", value2, value1, result);
+                        jvm_printf("dcmpg: %lf > %lf = %d\n", value2, value1, result);
 #endif
                         push_int(stack, result);
 
@@ -2458,7 +2459,7 @@ s32 execute_method_impl(MethodInfo *method, Runtime *pruntime, JClass *clazz) {
                         }
 #if _JVM_DEBUG_BYTECODE_DETAIL > 5
                         invoke_deepth(runtime);
-                        jvm_printf("op_ifeq: %d/%llx != 0  then jump \n", (s32) (intptr_t) val);
+                        jvm_printf("op_ifeq: %d != 0  then jump \n", val);
 #endif
 
 
@@ -2478,7 +2479,7 @@ s32 execute_method_impl(MethodInfo *method, Runtime *pruntime, JClass *clazz) {
                         }
 #if _JVM_DEBUG_BYTECODE_DETAIL > 5
                         invoke_deepth(runtime);
-                        jvm_printf("op_ifne: %d/%llx != 0  then jump\n", (s32) (intptr_t) val);
+                        jvm_printf("op_ifne: %d != 0  then jump\n", val);
 #endif
 
 
@@ -2499,7 +2500,7 @@ s32 execute_method_impl(MethodInfo *method, Runtime *pruntime, JClass *clazz) {
                         }
 #if _JVM_DEBUG_BYTECODE_DETAIL > 5
                         invoke_deepth(runtime);
-                        jvm_printf("op_iflt: %d/%llx < 0  then jump  \n", (s32) (intptr_t) val);
+                        jvm_printf("op_iflt: %d < 0  then jump  \n", val);
 #endif
 
 
@@ -2519,7 +2520,7 @@ s32 execute_method_impl(MethodInfo *method, Runtime *pruntime, JClass *clazz) {
                         }
 #if _JVM_DEBUG_BYTECODE_DETAIL > 5
                         invoke_deepth(runtime);
-                        jvm_printf("op_ifge: %d/%llx >= 0  then jump \n", (s32) (intptr_t) val);
+                        jvm_printf("op_ifge: %d >= 0  then jump \n", val);
 #endif
 
 
@@ -2539,7 +2540,7 @@ s32 execute_method_impl(MethodInfo *method, Runtime *pruntime, JClass *clazz) {
                         }
 #if _JVM_DEBUG_BYTECODE_DETAIL > 5
                         invoke_deepth(runtime);
-                        jvm_printf("op_ifgt: %d/%llx > 0  then jump \n", (s32) (intptr_t) val);
+                        jvm_printf("op_ifgt: %d > 0  then jump \n", val);
 #endif
 
 
@@ -2559,7 +2560,7 @@ s32 execute_method_impl(MethodInfo *method, Runtime *pruntime, JClass *clazz) {
                         }
 #if _JVM_DEBUG_BYTECODE_DETAIL > 5
                         invoke_deepth(runtime);
-                        jvm_printf("op_ifle: %d/%llx <= 0  then jump \n", (s32) (intptr_t) val);
+                        jvm_printf("op_ifle: %d <= 0  then jump \n", val);
 #endif
 
 
@@ -2772,7 +2773,7 @@ s32 execute_method_impl(MethodInfo *method, Runtime *pruntime, JClass *clazz) {
                             s2c.s = (u8) opCode[0][1];
                         }
 
-                        __refer addr = localvar_getRefer(runtime, (u16) s2c.s);
+                        __refer addr = localvar_getRefer(localvar, (u16) s2c.s);
 
 #if _JVM_DEBUG_BYTECODE_DETAIL > 5
                         invoke_deepth(runtime);
@@ -3167,8 +3168,8 @@ s32 execute_method_impl(MethodInfo *method, Runtime *pruntime, JClass *clazz) {
 
 #if _JVM_DEBUG_BYTECODE_DETAIL > 5
                             invoke_deepth(runtime);
-                            jvm_printf("invokevirtual    %s.%s%s  \n", utf8_cstr(method->_this_class->name),
-                                       utf8_cstr(method->name), utf8_cstr(method->descriptor));
+                            jvm_printf("invokevirtual    %s.%s%s  \n", utf8_cstr(m->_this_class->name),
+                                       utf8_cstr(m->name), utf8_cstr(m->descriptor));
 #endif
 
                             if (m) {
@@ -3198,9 +3199,12 @@ s32 execute_method_impl(MethodInfo *method, Runtime *pruntime, JClass *clazz) {
                             cmr->methodInfo = m;
                         }
 #if _JVM_DEBUG_BYTECODE_DETAIL > 5
+                        if (utf8_equals_c(m->name, "dtoa") && utf8_equals_c(m->_this_class->name, "java/lang/FloatingDecimal")) {
+                            int debug = 1;
+                        }
                         invoke_deepth(runtime);
-                        jvm_printf("invokespecial    %s.%s%s \n", utf8_cstr(method->_this_class->name),
-                                   utf8_cstr(method->name), utf8_cstr(method->descriptor));
+                        jvm_printf("invokespecial    %s.%s%s \n", utf8_cstr(m->_this_class->name),
+                                   utf8_cstr(m->name), utf8_cstr(m->descriptor));
 #endif
                         if (m) {
                             ret = execute_method_impl(m, runtime, m->_this_class);
@@ -3232,8 +3236,8 @@ s32 execute_method_impl(MethodInfo *method, Runtime *pruntime, JClass *clazz) {
                         }
 #if _JVM_DEBUG_BYTECODE_DETAIL > 5
                         invoke_deepth(runtime);
-                        jvm_printf("invokestatic   | %s.%s%s \n", utf8_cstr(method->_this_class->name),
-                                   utf8_cstr(method->name), utf8_cstr(method->descriptor));
+                        jvm_printf("invokestatic   | %s.%s%s \n", utf8_cstr(m->_this_class->name),
+                                   utf8_cstr(m->name), utf8_cstr(m->descriptor));
 #endif
                         if (m) {
                             ret = execute_method_impl(m, runtime, m->_this_class);
@@ -3278,8 +3282,8 @@ s32 execute_method_impl(MethodInfo *method, Runtime *pruntime, JClass *clazz) {
 
 #if _JVM_DEBUG_BYTECODE_DETAIL > 5
                             invoke_deepth(runtime);
-                            jvm_printf("invokeinterface   | %s.%s%s \n", utf8_cstr(method->_this_class->name),
-                                       utf8_cstr(method->name), utf8_cstr(method->descriptor));
+                            jvm_printf("invokeinterface   | %s.%s%s \n", utf8_cstr(m->_this_class->name),
+                                       utf8_cstr(m->name), utf8_cstr(m->descriptor));
 #endif
                             if (m) {
                                 ret = execute_method_impl(m, runtime, m->_this_class);
@@ -3303,8 +3307,8 @@ s32 execute_method_impl(MethodInfo *method, Runtime *pruntime, JClass *clazz) {
                         MethodInfo *m = class_get_constant_method_ref(runtime->clazz, object_ref)->methodInfo;
 #if _JVM_DEBUG_BYTECODE_DETAIL > 5
                         invoke_deepth(runtime);
-                        jvm_printf("invokedynamic   | %s.%s%s \n", utf8_cstr(method->_this_class->name),
-                                   utf8_cstr(method->name), utf8_cstr(method->descriptor));
+                        jvm_printf("invokedynamic   | %s.%s%s \n", utf8_cstr(m->_this_class->name),
+                                   utf8_cstr(m->name), utf8_cstr(m->descriptor));
 #endif
                         if (m) {
                             ret = execute_method_impl(m, runtime, m->_this_class);
@@ -3361,7 +3365,7 @@ s32 execute_method_impl(MethodInfo *method, Runtime *pruntime, JClass *clazz) {
 
 #if _JVM_DEBUG_BYTECODE_DETAIL > 5
                         invoke_deepth(runtime);
-jvm_printf("(a)newarray  [%llx] type:%c , count:%d  \n", (s64) (intptr_t) arr, getDataTypeTag(typeIdx), count);
+                        jvm_printf("(a)newarray  [%llx] type:%c , count:%d  \n", (s64) (intptr_t) arr, getDataTypeTag(typeIdx), count);
 #endif
                         if (arr) {
                             push_ref(stack, (__refer) arr);
@@ -3393,7 +3397,7 @@ jvm_printf("(a)newarray  [%llx] type:%c , count:%d  \n", (s64) (intptr_t) arr, g
 
 #if _JVM_DEBUG_BYTECODE_DETAIL > 5
                         invoke_deepth(runtime);
-jvm_printf("(a)newarray  [%llx] type:%c , count:%d  \n", (s64) (intptr_t) arr, getDataTypeTag(typeIdx), count);
+                        jvm_printf("(a)newarray  [%llx] type:%c , count:%d  \n", (s64) (intptr_t) arr, getDataTypeTag(arr_class->arr_type_index), count);
 #endif
                         if (arr) {
                             push_ref(stack, (__refer) arr);
@@ -3482,7 +3486,7 @@ jvm_printf("(a)newarray  [%llx] type:%c , count:%d  \n", (s64) (intptr_t) arr, g
 #if _JVM_DEBUG_BYTECODE_DETAIL > 5
                         invoke_deepth(runtime);
                         jvm_printf("checkcast  [%llx] instancof %s is:%d \n", (s64) (intptr_t) ins,
-                                   utf8_cstr(find_constant_classref(runtime->clazz, typeIdx)->name),
+                                   utf8_cstr(class_get_constant_classref(runtime->clazz, typeIdx)->name),
                                    checkok);
 #endif
                         *opCode += 3;
@@ -3505,8 +3509,7 @@ jvm_printf("(a)newarray  [%llx] type:%c , count:%d  \n", (s64) (intptr_t) arr, g
                                 checkok = 1;
                             }
                         } else {
-                            if (utf8_equals(ins->mb.clazz->name,
-                                            getClassByConstantClassRef(runtime->clazz, typeIdx)->name)) {//
+                            if (utf8_equals(ins->mb.clazz->name, getClassByConstantClassRef(runtime->clazz, typeIdx)->name)) {//
                                 checkok = 1;
                             }
                         }
@@ -3514,8 +3517,7 @@ jvm_printf("(a)newarray  [%llx] type:%c , count:%d  \n", (s64) (intptr_t) arr, g
 
 #if _JVM_DEBUG_BYTECODE_DETAIL > 5
                         invoke_deepth(runtime);
-                        jvm_printf("instanceof  [%llx] instancof %s  \n", (s64) (intptr_t) ins,
-                                   utf8_cstr(find_constant_classref(runtime->clazz, typeIdx)->name));
+                        jvm_printf("instanceof  [%llx] instancof %s  \n", (s64) (intptr_t) ins, utf8_cstr(class_get_constant_classref(runtime->clazz, typeIdx)->name));
 #endif
                         *opCode += 3;
 
@@ -3528,8 +3530,7 @@ jvm_printf("(a)newarray  [%llx] type:%c , count:%d  \n", (s64) (intptr_t) arr, g
                         jthread_lock(&ins->mb, runtime);
 #if _JVM_DEBUG_BYTECODE_DETAIL > 5
                         invoke_deepth(runtime);
-                        jvm_printf("monitorenter  [%llx] %s  \n", (s64) (intptr_t) ins,
-                                   ins ? utf8_cstr(ins->mb.clazz->name) : "null");
+                        jvm_printf("monitorenter  [%llx] %s  \n", (s64) (intptr_t) ins, ins ? utf8_cstr(ins->mb.clazz->name) : "null");
 #endif
                         *opCode += 1;
 
@@ -3542,8 +3543,7 @@ jvm_printf("(a)newarray  [%llx] type:%c , count:%d  \n", (s64) (intptr_t) arr, g
                         jthread_unlock(&ins->mb, runtime);
 #if _JVM_DEBUG_BYTECODE_DETAIL > 5
                         invoke_deepth(runtime);
-                        jvm_printf("monitorexit  [%llx] %s  \n", (s64) (intptr_t) ins,
-                                   ins ? utf8_cstr(ins->mb.clazz->name) : "null");
+                        jvm_printf("monitorexit  [%llx] %s  \n", (s64) (intptr_t) ins, ins ? utf8_cstr(ins->mb.clazz->name) : "null");
 #endif
                         *opCode += 1;
 
@@ -3717,7 +3717,7 @@ jvm_printf("(a)newarray  [%llx] type:%c , count:%d  \n", (s64) (intptr_t) arr, g
                 }
             }
 #endif
-        }else{
+        } else {
             jvm_printf("method code attribute is null.");
         }
     } else {//本地方法

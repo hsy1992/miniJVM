@@ -558,17 +558,13 @@ void invoke_deepth(Runtime *runtime) {
     s32 len = i;
 
 #if _JVM_DEBUG_PRINT_FILE
-#ifdef _CYGWIN_CONFIG_H
-    fprintf(logfile, "%lx", (s64) (intptr_t) pthread_self());
-#else
-    fprintf(logfile, "%llx", (s64) (intptr_t) pthread_self());
-#endif //_CYGWIN_CONFIG_H
+    fprintf(logfile, "%llx", (s64) (intptr_t) thrd_current());
     for (i = 0; i < len; i++) {
         fprintf(logfile, "  ");
     }
 #else
 #if __JVM_OS_MAC__ || __JVM_OS_CYGWIN__
-    fprintf(stderr, "%llx", (s64) (intptr_t) pthread_self());
+    fprintf(stderr, "%llx", (s64) (intptr_t) thrd_current());
 #else
     fprintf(stderr, "%llx", (s64) (intptr_t) thrd_current());
 #endif //
@@ -1252,7 +1248,7 @@ s32 jstring_2_utf8(Instance *jstr, Utf8String *utf8) {
 
 Instance *exception_create(s32 exception_type, Runtime *runtime) {
 #if _JVM_DEBUG_BYTECODE_DETAIL > 5
-    jvm_printf("create exception : %s\n", exception_class_name[exception_type]);
+    jvm_printf("create exception : %s\n", STRS_CLASS_EXCEPTION[exception_type]);
 #endif
     Utf8String *clsName = utf8_create_c(STRS_CLASS_EXCEPTION[exception_type]);
     JClass *clazz = classes_load_get(clsName, runtime);
@@ -1267,7 +1263,7 @@ Instance *exception_create(s32 exception_type, Runtime *runtime) {
 
 Instance *exception_create_str(s32 exception_type, Runtime *runtime, c8 *errmsg) {
 #if _JVM_DEBUG_BYTECODE_DETAIL > 5
-    jvm_printf("create exception : %s\n", exception_class_name[exception_type]);
+    jvm_printf("create exception : %s\n", STRS_CLASS_EXCEPTION[exception_type]);
 #endif
     Utf8String *uerrmsg = utf8_create_c(errmsg);
     Instance *jstr = jstring_create(uerrmsg, runtime);

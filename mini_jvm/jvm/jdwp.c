@@ -2209,20 +2209,20 @@ s32 jdwp_client_process(JdwpClient *client, Runtime *runtime) {
                     if (slot < frame->localvar_count) {
                         switch (getSimpleTag(vt.type)) {
                             case 'R': {
-                                Instance *ins = localvar_getRefer(frame, slot);
+                                Instance *ins = localvar_getRefer(runtime->localvar, slot);
                                 vt.type = getInstanceOfClassTag(ins);
                                 vt.value = (s64) (intptr_t) ins;
                                 break;
                             }
                             case '8':
-                                l2d.i2l.i1 = localvar_getInt(frame, slot);
-                                l2d.i2l.i0 = localvar_getInt(frame, slot + 1);
+                                l2d.i2l.i1 = localvar_getInt(runtime->localvar, slot);
+                                l2d.i2l.i0 = localvar_getInt(runtime->localvar, slot + 1);
                                 vt.value = l2d.l;
                                 break;
                             case '4':
                             case '2':
                             case '1':
-                                vt.value = localvar_getInt(frame, slot);
+                                vt.value = localvar_getInt(runtime->localvar, slot);
                                 break;
                         }
                     }
@@ -2247,17 +2247,17 @@ s32 jdwp_client_process(JdwpClient *client, Runtime *runtime) {
                     if (slot < frame->localvar_count) {
                         switch (getSimpleTag(vt.type)) {
                             case 'R':
-                                localvar_setRefer(frame, slot, (__refer) (intptr_t) vt.value);
+                                localvar_setRefer(frame->localvar, slot, (__refer) (intptr_t) vt.value);
                                 break;
                             case '8':
                                 l2d.l = vt.value;
-                                localvar_setInt(frame, slot, l2d.i2l.i0);
-                                localvar_setInt(frame, slot + 1, l2d.i2l.i1);
+                                localvar_setInt(frame->localvar, slot, l2d.i2l.i0);
+                                localvar_setInt(frame->localvar, slot + 1, l2d.i2l.i1);
                                 break;
                             case '4':
                             case '2':
                             case '1':
-                                localvar_setInt(frame, slot, (s32) vt.value);
+                                localvar_setInt(frame->localvar, slot, (s32) vt.value);
                                 break;
                         }
                     }
@@ -2280,7 +2280,7 @@ s32 jdwp_client_process(JdwpClient *client, Runtime *runtime) {
                     vt.type = JDWP_TAG_OBJECT;
                     vt.value = 0;
                 } else {
-                    Instance *ins = localvar_getRefer(frame, 0);
+                    Instance *ins = localvar_getRefer(runtime->localvar, 0);
                     vt.type = getInstanceOfClassTag(ins);
                     vt.value = (s64) (intptr_t) ins;
                 }
