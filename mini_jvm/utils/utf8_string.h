@@ -92,7 +92,7 @@ int utf8_equals(Utf8String *a1, Utf8String *a2);
 int utf8_equals_c(Utf8String *a1, char *a2);
 
 //utf8_char utf8_char_at(Utf8String *a1, int pos);
-inline utf8_char utf8_char_at(Utf8String *a1, int pos) {
+static inline utf8_char utf8_char_at(Utf8String *a1, int pos) {
     return a1->data[pos];
 }
 

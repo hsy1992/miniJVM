@@ -199,10 +199,7 @@ int arraylist_compare_ptr(ArrayListValue a, ArrayListValue b);
  * @return               The index of the value if found, or -1 if not found.
  */
 
-int arraylist_index_of(ArrayList *arraylist,
-                       ArrayListEqualFunc equals,
-                       ArrayListValue data);
-
+int arraylist_index_of(ArrayList *arraylist, ArrayListEqualFunc equals, ArrayListValue data);
 
 ArrayListValue arraylist_get_value_unsafe(ArrayList *arraylist, int index);
 
