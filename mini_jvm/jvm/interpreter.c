@@ -516,7 +516,7 @@ static inline void _stack2localvar(MethodInfo *method, Runtime *father, Runtime 
 
 }
 
-s32 _synchronized_lock_method(MethodInfo *method, Runtime *runtime) {
+static inline s32 _synchronized_lock_method(MethodInfo *method, Runtime *runtime) {
     //synchronized process
     {
         if (method->access_flags & ACC_STATIC) {
@@ -528,7 +528,7 @@ s32 _synchronized_lock_method(MethodInfo *method, Runtime *runtime) {
     return 0;
 }
 
-s32 _synchronized_unlock_method(MethodInfo *method, Runtime *runtime) {
+static inline s32 _synchronized_unlock_method(MethodInfo *method, Runtime *runtime) {
     //synchronized process
     {
         if (method->access_flags & ACC_STATIC) {
@@ -3721,7 +3721,7 @@ s32 execute_method_impl(MethodInfo *method, Runtime *pruntime, JClass *clazz) {
             jvm_printf("method code attribute is null.");
         }
     } else {//本地方法
-        localvar_init(runtime, method->para_count + 1);//可能有非静态本地方法调用，因此+1
+        localvar_init(runtime, method->para_count);//可能有非静态本地方法调用，因此+1
         _stack2localvar(method, pruntime, runtime);
         //缓存调用本地方法
         if (!method->native_func) { //把本地方法找出来缓存

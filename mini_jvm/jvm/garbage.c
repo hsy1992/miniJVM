@@ -381,7 +381,6 @@ s64 garbage_collect() {
     //
 //    jvm_printf("garbage_copy_refer %lld\n", (currentTimeMillis() - time_startAt));
 //    time_startAt = currentTimeMillis();
-    s64 obj_count = (collector->obj_count);
     //real GC start
     //
     _garbage_change_flag();
@@ -768,15 +767,17 @@ void gc_move_refer_thread_2_gc(Runtime *runtime) {
         JavaThreadInfo *ti = runtime->threadInfo;
 
         if (ti->objs_header) {
+            //lock
             spin_lock(&collector->lock);
             ti->objs_tailer->next = collector->tmp_header;
             if (!collector->tmp_tailer) {
                 collector->tmp_tailer = ti->objs_tailer;
             }
             collector->tmp_header = ti->objs_header;
+            spin_unlock(&collector->lock);
+
             ti->objs_header = NULL;
             ti->objs_tailer = NULL;
-            spin_unlock(&collector->lock);
         }
     }
 }

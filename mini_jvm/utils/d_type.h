@@ -65,13 +65,22 @@ extern s64 heap_size;
 //======================= memory manage =============================
 
 
-void *jvm_calloc(u32 size);
+static inline void *jvm_calloc(u32 size) {
+    return calloc(size, 1);
+}
 
-void *jvm_malloc(u32 size);
+static inline void *jvm_malloc(u32 size) {
+    return malloc(size);
+}
 
-void jvm_free(void *ptr);
+static inline void jvm_free(void *ptr) {
+    free(ptr);
+}
 
-void *jvm_realloc(void *pPtr, u32 size);
+static inline void *jvm_realloc(void *pPtr, u32 size) {
+    return realloc(pPtr, size);
+
+}
 
 
 #ifdef __cplusplus
