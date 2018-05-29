@@ -2,8 +2,6 @@
 #ifndef PUP_JVM_H
 #define PUP_JVM_H
 
-#define HAVE_STRUCT_TIMESPEC
-#define _POSIX_C_SOURCE 200809L
 
 
 //

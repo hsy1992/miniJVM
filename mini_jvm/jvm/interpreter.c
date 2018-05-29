@@ -474,6 +474,22 @@ static void _printCodeAttribute(CodeAttribute *ca, JClass *p) {
 }
 
 /**
+ * 从栈中取得实例对象，中间穿插着调用参数
+ * @param cmr cmr
+ * @param stack stack
+ * @return ins
+ */
+static inline Instance *getInstanceInStack(JClass *clazz, ConstantMethodRef *cmr, RuntimeStack *stack) {
+
+//    StackEntry entry;
+//    peek_entry(stack, &entry, stack->size - 1 - cmr->methodParaCount);
+//    Instance *ins = (Instance *) entry_2_refer(&entry);
+//    return ins;
+
+    return stack->store[stack->size - 1 - cmr->methodParaCount].rvalue;
+}
+
+/**
  * 把堆栈中的方法调用参数存入方法本地变量
  * 调用方法前，父程序把函数参数推入堆栈，方法调用时，需要把堆栈中的参数存到本地变量
  * @param method  method

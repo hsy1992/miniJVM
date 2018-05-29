@@ -76,8 +76,6 @@ int jvm_printf(const char *, ...);
 
 void invoke_deepth(Runtime *runtime);
 
-Instance *getInstanceInStack(JClass *clazz, ConstantMethodRef *cmr, RuntimeStack *stack);
-
 void printDumpOfClasses(void);
 
 

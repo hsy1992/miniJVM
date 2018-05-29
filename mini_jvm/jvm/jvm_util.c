@@ -388,19 +388,7 @@ s32 isDataReferByIndex(s32 index) {
     return 0;
 }
 
-/**
- * 从栈中取得实例对象，中间穿插着调用参数
- * @param cmr cmr
- * @param stack stack
- * @return ins
- */
-Instance *getInstanceInStack(JClass *clazz, ConstantMethodRef *cmr, RuntimeStack *stack) {
 
-    StackEntry entry;
-    peek_entry(stack, &entry, stack->size - 1 - cmr->methodParaCount);
-    Instance *ins = (Instance *) entry_2_refer(&entry);
-    return ins;
-}
 
 void printDumpOfClasses() {
     HashtableIterator hti;
