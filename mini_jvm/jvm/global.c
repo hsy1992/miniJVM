@@ -60,7 +60,7 @@ JniEnv jnienv;
 
 
 c8 *data_type_str = "    ZCFDBSIJL[";
-__refer data_type_classes[DATATYPE_COUNT];
+
 s32 data_type_bytes[DATATYPE_COUNT] = {0, 0, 0, 0,
                                        sizeof(c8),
                                        sizeof(u16),
@@ -74,13 +74,13 @@ s32 data_type_bytes[DATATYPE_COUNT] = {0, 0, 0, 0,
                                        sizeof(__refer),
 };
 s32 STACK_LENGHT = 10240;
-s64 GARBAGE_PERIOD_MS = 30 * 1000;
+s64 GARBAGE_PERIOD_MS = 1 * 1000;
 
 s64 MAX_HEAP_SIZE = 30 * 1024 * 1024;
 
 
 //
-InstanceFieldInfo ins_field_offset;
+OptimizeCache jvm_runtime_cache;
 //
 u8 java_debug = 0;
 

@@ -28,6 +28,7 @@ typedef int socklen_t;
 #define SHUT_RD SD_RECEIVE
 #define SHUT_WR SD_SEND
 #else
+
 #include <sys/types.h>
 #include <sys/socket.h>
 #include <sys/select.h>
@@ -36,6 +37,7 @@ typedef int socklen_t;
 #include <arpa/inet.h>
 #include <netdb.h>
 #include <fcntl.h>
+
 #define INVALID_SOCKET    -1
 #define SOCKET_ERROR      -1
 #define closesocket(fd)   close(fd)
@@ -44,8 +46,10 @@ typedef int socklen_t;
 #if __JVM_OS_VS__
 #include "../utils/dirent_win.h"
 #else
+
 #include <dirent.h>
 #include <unistd.h>
+
 #endif
 
 #include <errno.h>
@@ -858,7 +862,7 @@ s32 org_mini_fs_InnerFile_listDir(Runtime *runtime, JClass *clazz) {
             while ((dp = readdir(dirp)) != NULL) { //通过目录指针读目录
                 Utf8String *ustr = utf8_create_c(dp->d_name);
                 Instance *jstr = jstring_create(ustr, runtime);
-                garbage_refer_hold(jstr);
+                gc_refer_hold(jstr);
                 utf8_destory(ustr);
                 arraylist_push_back(files, jstr);
             }
@@ -866,11 +870,11 @@ s32 org_mini_fs_InnerFile_listDir(Runtime *runtime, JClass *clazz) {
 
             s32 i;
             Utf8String *ustr = utf8_create_c(STR_INS_JAVA_LANG_STRING);
-            Instance *jarr = jarray_create(files->length, 0, ustr);
+            Instance *jarr = jarray_create_by_type_name(runtime, files->length, ustr);
             utf8_destory(ustr);
             for (i = 0; i < files->length; i++) {
                 __refer ref = arraylist_get_value(files, i);
-                garbage_refer_release(ref);
+                gc_refer_release(ref);
                 jarray_set_field(jarr, i, (intptr_t) ref);
             }
             push_ref(runtime->stack, jarr);

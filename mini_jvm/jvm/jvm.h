@@ -240,7 +240,7 @@ long  11
  */
 #define DATATYPE_COUNT 14
 extern c8 *data_type_str;
-extern __refer data_type_classes[DATATYPE_COUNT];
+
 extern s32 data_type_bytes[DATATYPE_COUNT];
 
 enum {
@@ -756,7 +756,7 @@ struct _InstanceType {
 };
 
 
-Instance *instance_create(JClass *clazz);
+Instance *instance_create(Runtime *runtime, JClass *clazz);
 
 void instance_init(Instance *ins, Runtime *runtime);
 
@@ -766,7 +766,7 @@ void instance_finalize(Instance *ins, Runtime *runtime);
 
 s32 instance_destory(Instance *instance);
 
-Instance *instance_copy(Instance *src, s32 deep_copy);
+Instance *instance_copy(Runtime *runtime, Instance *src, s32 deep_copy);
 
 //======================= bytecode =============================
 
@@ -1253,7 +1253,9 @@ struct _JNIENV {
 
     void (*referarr_2_jlongarr)(ReferArr *ref_arr, Instance *jlong_arr);
 
-    Instance *(*jarray_create)(s32 count, s32 typeIdx, Utf8String *type);
+    Instance *(*jarray_create_by_type_name)(Runtime *runtime, s32 count, Utf8String *type);
+
+    Instance *(*jarray_create_by_type_index)(Runtime *runtime, s32 count, s32 typeIdx);
 
     void (*jarray_set_field)(Instance *arr, s32 index, s64 val);
 
@@ -1273,9 +1275,7 @@ struct _JNIENV {
 
     s32 (*execute_method)(MethodInfo *method, Runtime *runtime, JClass *clazz);
 
-    MethodInfo *
-    (*find_methodInfo_by_name)(Utf8String *clsName, Utf8String *methodName, Utf8String *methodType,
-                               Runtime *runtime);
+    MethodInfo *(*find_methodInfo_by_name)(Utf8String *clsName, Utf8String *methodName, Utf8String *methodType, Runtime *runtime);
 
     void (*print_exception)(Runtime *runtime);
 

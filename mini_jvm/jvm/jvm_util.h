@@ -22,7 +22,7 @@ static s64 NANO_START = 0;
 typedef unsigned short uni_char;
 
 //======================= utils =============================
-typedef struct _InstanceFieldInfo {
+typedef struct _OptimizeCache {
     FieldInfo *string_offset;
     FieldInfo *string_count;
     FieldInfo *string_value;
@@ -36,8 +36,9 @@ typedef struct _InstanceFieldInfo {
     FieldInfo *stacktrace_lineNumber;
     FieldInfo *stacktrace_parent;
 
-} InstanceFieldInfo;
-extern InstanceFieldInfo ins_field_offset;
+    JClass *array_classes[DATATYPE_COUNT];
+} OptimizeCache;
+extern OptimizeCache jvm_runtime_cache;
 
 s32 utf8_2_unicode(Utf8String *ustr, u16 *arr);
 
@@ -55,7 +56,7 @@ s32 isDataReferByIndex(s32 index);
 
 u8 getDataTypeTag(s32 index);
 
-JClass *array_class_get(Utf8String *desc);
+JClass *array_class_get_by_name(Runtime *runtime, Utf8String *name);
 
 s64 currentTimeMillis(void);
 
@@ -234,6 +235,9 @@ struct _JavaThreadInfo {
     Instance *jthread;
     Runtime *top_runtime;
     ArrayList *instance_holder;//for jni hold java object
+    MemoryBlock *objs_header;//link to new instance, until garbage accept
+    MemoryBlock *objs_tailer;//link to new instance, until garbage accept
+
     s32 volatile suspend_count;//for jdwp suspend ,>0 suspend, ==0 resume
     u8 volatile thread_status;
     u8 volatile is_suspend;
@@ -299,21 +303,22 @@ void thread_lock_dispose(ThreadLock *lock);
 
 void thread_lock_init(ThreadLock *lock);
 
-Instance *jarray_create_by_class(s32 count, JClass *clazz);
+Instance *jarray_create_by_class(Runtime *runtime, s32 count, JClass *clazz);
 
-Instance *jarray_create(s32 count, s32 typeIdx, Utf8String *type);
+Instance *jarray_create_by_type_name(Runtime *runtime, s32 count, Utf8String *name);
+
+Instance *jarray_create_by_type_index(Runtime *runtime, s32 count, s32 typeIdx);
+
+JClass *array_class_get_by_index(Runtime *runtime, s32 typeIdx);
 
 s32 jarray_destory(Instance *arr);
 
-Instance *jarray_multi_create(ArrayList *dim, Utf8String *desc, s32 deep);
+Instance *jarray_multi_create(Runtime *runtime, ArrayList *dim, Utf8String *desc, s32 deep);
 
 void jarray_set_field(Instance *arr, s32 index, s64 val);
 
 s64 jarray_get_field(Instance *arr, s32 index);
 
-JClass *jarray_get_class(Utf8String *type);
-
-JClass *jarray_get_class_by_index(s32 typeIdx);
 
 static inline s32 jarray_check_exception(Instance *arr, s32 index, Runtime *runtime) {
     if (arr == NULL) {

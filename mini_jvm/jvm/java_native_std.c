@@ -44,7 +44,7 @@ s32 com_sun_cldc_io_ResourceInputStream_open(Runtime *runtime, JClass *clazz) {
     ByteBuf *buf = load_file_from_classpath(sys_classloader, path);
     if (buf) {
         s32 _j_t_bytes = buf->wp;
-        Instance *_arr = jarray_create(_j_t_bytes, DATATYPE_BYTE, NULL);
+        Instance *_arr = jarray_create_by_type_index(runtime, _j_t_bytes, DATATYPE_BYTE);
         bytebuf_read_batch(buf, _arr->arr_body, _j_t_bytes);
         utf8_destory(path);
         bytebuf_destory(buf);
@@ -94,7 +94,7 @@ s32 java_lang_Class_newInstance(Runtime *runtime, JClass *clazz) {
     Instance *ins = NULL;
     s32 ret = 0;
     if (cl) {
-        ins = instance_create(cl);
+        ins = instance_create(runtime, cl);
         instance_init(ins, runtime);
     }
     if (ins) {
@@ -481,7 +481,7 @@ s32 java_lang_Object_getClass(Runtime *runtime, JClass *clazz) {
 s32 java_lang_Object_clone(Runtime *runtime, JClass *clazz) {
     RuntimeStack *stack = runtime->stack;
     Instance *ins = (Instance *) localvar_getRefer(runtime->localvar, 0);
-    push_ref(stack, (__refer) instance_copy(ins, 0));
+    push_ref(stack, (__refer) instance_copy(runtime, ins, 0));
 #if _JVM_DEBUG_BYTECODE_DETAIL > 5
     invoke_deepth(runtime);
     jvm_printf("java_lang_Object_getClass %d\n", ins);
@@ -595,7 +595,7 @@ s32 java_lang_String_replace0(Runtime *runtime, JClass *clazz) {
     s32 src_count = jstring_get_count(src);
     s32 dst_count = jstring_get_count(dst);
     if (count == 0 || src == NULL || dst == NULL || src_count == 0 || dst_count == 0) {
-        Instance *jchar_arr = jarray_create(count, DATATYPE_JCHAR, NULL);
+        Instance *jchar_arr = jarray_create_by_type_index(runtime, count, DATATYPE_JCHAR);
         memcpy((c8 *) jchar_arr->arr_body, (c8 *) &value[offset], count * sizeof(u16));
         push_ref(stack, jchar_arr);
     } else {
@@ -628,7 +628,7 @@ s32 java_lang_String_replace0(Runtime *runtime, JClass *clazz) {
             }
         }
         s32 jchar_count = sb->wp / 2;
-        Instance *jchar_arr = jarray_create(jchar_count, DATATYPE_JCHAR, NULL);
+        Instance *jchar_arr = jarray_create_by_type_index(runtime, jchar_count, DATATYPE_JCHAR);
         bytebuf_read_batch(sb, (c8 *) jchar_arr->arr_body, sb->wp);
         bytebuf_destory(sb);
         push_ref(stack, jchar_arr);
@@ -1069,8 +1069,8 @@ s32 java_io_Throwable_printStackTrace0(Runtime *runtime, JClass *clazz) {
 Instance *buildStackElement(Runtime *runtime, Runtime *target) {
     JClass *clazz = classes_load_get_c(STR_CLASS_JAVA_LANG_STACKTRACE, target);
     if (clazz) {
-        Instance *ins = instance_create(clazz);
-        garbage_refer_hold(ins);
+        Instance *ins = instance_create(runtime, clazz);
+        gc_refer_hold(ins);
         instance_init(ins, runtime);
         c8 *ptr;
         //
@@ -1107,7 +1107,7 @@ Instance *buildStackElement(Runtime *runtime, Runtime *target) {
                 setFieldRefer(ptr, parent);
             }
         }
-        garbage_refer_release(ins);
+        gc_refer_release(ins);
         return ins;
     }
     return NULL;

@@ -27,7 +27,7 @@ extern s64 MAX_HEAP_SIZE;
 struct _GcCollectorType {
     //
     Hashset *objs_holder; //法外之地，防回收的持有器，放入其中的对象及其引用的其他对象不会被回收
-    MemoryBlock *header, *tmp_header;
+    MemoryBlock *header, *tmp_header, *tmp_tailer;
     s64 obj_count;
     Runtime *runtime;
     //
@@ -81,13 +81,15 @@ void garbage_collector_destory(void);
 
 s64 garbage_collect(void);
 
-MemoryBlock *garbage_is_alive(__refer obj);
+MemoryBlock *gc_is_alive(__refer obj);
 
-void garbage_refer_hold(__refer ref);
+void gc_refer_hold(__refer ref);
 
-void garbage_refer_release(__refer ref);
+void gc_refer_release(__refer ref);
 
-s32 garbage_refer_reg(__refer ref);
+void gc_refer_reg(Runtime *runtime, __refer ref);
+
+void gc_move_refer_thread_2_gc(Runtime *runtime);
 
 void garbage_dump_runtime();
 

@@ -848,9 +848,9 @@ void _class_optimize(JClass *clazz) {
         //for gc iterator fast
         if (isDataReferByIndex(ptr->datatype_idx)) {
             if (ptr->access_flags & ACC_STATIC) {
-                arraylist_push_back_unsafe(clazz->staticFieldPtrIndex, (__refer)(intptr_t) i);
+                arraylist_push_back_unsafe(clazz->staticFieldPtrIndex, (__refer) (intptr_t) i);
             } else {
-                arraylist_push_back_unsafe(clazz->insFieldPtrIndex, (__refer)(intptr_t) i);
+                arraylist_push_back_unsafe(clazz->insFieldPtrIndex, (__refer) (intptr_t) i);
             }
         }
     }
@@ -1020,7 +1020,7 @@ s32 load_class(ClassLoader *loader, Utf8String *pClassName, Runtime *runtime) {
     utf8_replace_c(clsName, ".", "/");
     JClass *tmpclazz = classes_get(clsName);
     if (utf8_indexof_c(clsName, "[") == 0) {
-        tmpclazz = array_class_get(clsName);
+        tmpclazz = array_class_get_by_name(runtime, clsName);
     }
     if (!tmpclazz) {
         ByteBuf *bytebuf = NULL;
@@ -1034,8 +1034,8 @@ s32 load_class(ClassLoader *loader, Utf8String *pClassName, Runtime *runtime) {
             if (iret == 0) {
                 classes_put(tmpclazz);
                 class_prepar(tmpclazz, runtime);
-                garbage_refer_hold(tmpclazz);
-                garbage_refer_reg(tmpclazz);
+                gc_refer_hold(tmpclazz);
+                gc_refer_reg(runtime, tmpclazz);
 #if _JVM_DEBUG_BYTECODE_DETAIL > 5
                 jvm_printf("load class:  %s \n", utf8_cstr(clsName));
 #endif

@@ -3340,7 +3340,7 @@ s32 execute_method_impl(MethodInfo *method, Runtime *pruntime, JClass *clazz) {
                         JClass *other = ccf->clazz;
                         Instance *ins = NULL;
                         if (other) {
-                            ins = instance_create(other);
+                            ins = instance_create(runtime, other);
                         }
                         push_ref(stack, (__refer) ins);
 
@@ -3360,8 +3360,7 @@ s32 execute_method_impl(MethodInfo *method, Runtime *pruntime, JClass *clazz) {
 
                         s32 count = pop_int(stack);
                         *opCode += 2;
-                        JClass *cl = jarray_get_class_by_index(typeIdx);
-                        Instance *arr = jarray_create_by_class(count, cl);
+                        Instance *arr = jarray_create_by_type_index(runtime, count, typeIdx);
 
 #if _JVM_DEBUG_BYTECODE_DETAIL > 5
                         invoke_deepth(runtime);
@@ -3389,11 +3388,12 @@ s32 execute_method_impl(MethodInfo *method, Runtime *pruntime, JClass *clazz) {
                         JClass *arr_class = pairlist_get(clazz->arr_class_type, (__refer) (intptr_t) s2c.s);
 
                         Instance *arr = NULL;
-                        if (!arr_class) {
-                            arr_class = jarray_get_class(class_get_utf8_string(runtime->clazz, s2c.s));
+                        if (!arr_class) {//cache to speed
+                            arr_class = array_class_get_by_name(runtime, class_get_utf8_string(runtime->clazz, s2c.s));
                             pairlist_put(clazz->arr_class_type, (__refer) (intptr_t) s2c.s, arr_class);
                         }
-                        arr = jarray_create_by_class(count, arr_class);
+                        arr = jarray_create_by_class(runtime, count, arr_class);
+
 
 #if _JVM_DEBUG_BYTECODE_DETAIL > 5
                         invoke_deepth(runtime);
@@ -3577,7 +3577,7 @@ s32 execute_method_impl(MethodInfo *method, Runtime *pruntime, JClass *clazz) {
                         for (i = 0; i < count; i++)
                             arraylist_push_back(dim, (ArrayListValue) (intptr_t) pop_int(stack));
 
-                        Instance *arr = jarray_multi_create(dim, desc, 0);
+                        Instance *arr = jarray_multi_create(runtime, dim, desc, 0);
                         arraylist_destory(dim);
 #if _JVM_DEBUG_BYTECODE_DETAIL > 5
                         invoke_deepth(runtime);

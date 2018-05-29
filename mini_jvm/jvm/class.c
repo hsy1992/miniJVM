@@ -89,7 +89,7 @@ void class_clear_refer(JClass *clazz) {
     ArrayList *utf8list = clazz->constantPool.utf8CP;
     for (i = 0, len = utf8list->length; i < len; i++) {
         ConstantUTF8 *cutf = arraylist_get_value(utf8list, i);
-        garbage_refer_release(cutf->jstr);
+        gc_refer_release(cutf->jstr);
     }
 }
 //===============================    初始化相关  ==================================
@@ -170,29 +170,29 @@ s32 class_prepar(JClass *clazz, Runtime *runtime) {
     if (utf8_equals_c(clazz->name, STR_CLASS_JAVA_LANG_STRING)) {
         FieldInfo *fi;
         fi = find_fieldInfo_by_name_c(STR_CLASS_JAVA_LANG_STRING, STR_FIELD_COUNT, "I");
-        ins_field_offset.string_count = fi;
+        jvm_runtime_cache.string_count = fi;
         fi = find_fieldInfo_by_name_c(STR_CLASS_JAVA_LANG_STRING, STR_FIELD_OFFSET, "I");
-        ins_field_offset.string_offset = fi;
+        jvm_runtime_cache.string_offset = fi;
         fi = find_fieldInfo_by_name_c(STR_CLASS_JAVA_LANG_STRING, STR_FIELD_VALUE, "[C");
-        ins_field_offset.string_value = fi;
+        jvm_runtime_cache.string_value = fi;
     } else if (utf8_equals_c(clazz->name, STR_CLASS_JAVA_LANG_THREAD)) {
         FieldInfo *fi;
         fi = find_fieldInfo_by_name_c(STR_CLASS_JAVA_LANG_THREAD, STR_FIELD_NAME, "[C");
-        ins_field_offset.thread_name = fi;
+        jvm_runtime_cache.thread_name = fi;
         fi = find_fieldInfo_by_name_c(STR_CLASS_JAVA_LANG_THREAD, STR_FIELD_STACKFRAME, "J");
-        ins_field_offset.thread_stackFrame = fi;
+        jvm_runtime_cache.thread_stackFrame = fi;
     } else if (utf8_equals_c(clazz->name, STR_CLASS_JAVA_LANG_STACKTRACE)) {
         FieldInfo *fi;
         fi = find_fieldInfo_by_name_c(STR_CLASS_JAVA_LANG_STACKTRACE, "declaringClass", STR_INS_JAVA_LANG_STRING);
-        ins_field_offset.stacktrace_declaringClass = fi;
+        jvm_runtime_cache.stacktrace_declaringClass = fi;
         fi = find_fieldInfo_by_name_c(STR_CLASS_JAVA_LANG_STACKTRACE, "methodName", STR_INS_JAVA_LANG_STRING);
-        ins_field_offset.stacktrace_methodName = fi;
+        jvm_runtime_cache.stacktrace_methodName = fi;
         fi = find_fieldInfo_by_name_c(STR_CLASS_JAVA_LANG_STACKTRACE, "fileName", STR_INS_JAVA_LANG_STRING);
-        ins_field_offset.stacktrace_fileName = fi;
+        jvm_runtime_cache.stacktrace_fileName = fi;
         fi = find_fieldInfo_by_name_c(STR_CLASS_JAVA_LANG_STACKTRACE, "lineNumber", "I");
-        ins_field_offset.stacktrace_lineNumber = fi;
+        jvm_runtime_cache.stacktrace_lineNumber = fi;
         fi = find_fieldInfo_by_name_c(STR_CLASS_JAVA_LANG_STACKTRACE, "parent", STR_INS_JAVA_LANG_STACKTRACEELEMENT);
-        ins_field_offset.stacktrace_parent = fi;
+        jvm_runtime_cache.stacktrace_parent = fi;
     }
 //    jvm_printf("prepared: %s\n", utf8_cstr(clazz->name));
 
@@ -241,7 +241,7 @@ void class_clinit(JClass *clazz, Runtime *runtime) {
     for (i = 0, len = utf8list->length; i < len; i++) {
         ConstantUTF8 *cutf = arraylist_get_value(utf8list, i);
         Instance *jstr = jstring_create(cutf->utfstr, runtime);
-        garbage_refer_hold(jstr);
+        gc_refer_hold(jstr);
         cutf->jstr = jstr;
     }
 

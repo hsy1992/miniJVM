@@ -15,12 +15,12 @@ void thread_boundle(Runtime *runtime) {
 
     JClass *thread_clazz = classes_load_get_c("java/lang/Thread", runtime);
     //为主线程创建Thread实例
-    Instance *t = instance_create(thread_clazz);
-    garbage_refer_hold(t);
+    Instance *t = instance_create(runtime, thread_clazz);
+    gc_refer_hold(t);
     runtime->threadInfo->jthread = t;//Thread.init currentThread() need this
     instance_init(t, runtime);
     jthread_init(t, runtime);
-    garbage_refer_release(t);
+    gc_refer_release(t);
 
 }
 
@@ -138,7 +138,7 @@ void classloader_destory(ClassLoader *class_loader) {
     hashtable_iterate(class_loader->classes, &hti);
     for (; hashtable_iter_has_more(&hti);) {
         HashtableValue v = hashtable_iter_next_value(&hti);
-        garbage_refer_release(v);
+        gc_refer_release(v);
     }
 
     hashtable_clear(class_loader->classes);
@@ -188,13 +188,11 @@ void jvm_init(c8 *p_classpath, StaticLibRegFunc regFunc) {
     //启动垃圾回收
     garbage_thread_resume();
 
-    memset(&data_type_classes, 0, DATATYPE_COUNT * sizeof(__refer));
-
     sys_classloader = classloader_create(p_classpath);
 
     array_classloader = classloader_create("");
 
-    memset(&ins_field_offset, 0, sizeof(InstanceFieldInfo));
+    memset(&jvm_runtime_cache, 0, sizeof(OptimizeCache));
     //创建线程容器
     thread_list = arraylist_create(0);
 
@@ -282,8 +280,8 @@ s32 call_method_main(c8 *p_mainclass, c8 *p_methodname, c8 *p_methodtype, ArrayL
             localvar_init(runtime, m->para_count + 1);
             s32 count = java_para->length;
             Utf8String *ustr = utf8_create_c("[java/lang/String;");
-            Instance *arr = jarray_create(count, 0, ustr);
-            garbage_refer_hold(arr);
+            Instance *arr = jarray_create_by_type_name(runtime, count, ustr);
+            gc_refer_hold(arr);
             utf8_destory(ustr);
             int i;
             for (i = 0; i < count; i++) {
@@ -293,7 +291,7 @@ s32 call_method_main(c8 *p_mainclass, c8 *p_methodname, c8 *p_methodtype, ArrayL
                 utf8_destory(utfs);
             }
             push_ref(runtime->stack, arr);
-            garbage_refer_release(arr);
+            gc_refer_release(arr);
 
 
             s64 start = currentTimeMillis();
