@@ -1028,14 +1028,13 @@ s32 load_class(ClassLoader *loader, Utf8String *pClassName, Runtime *runtime) {
         utf8_append_c(clsName, ".class");
         bytebuf = load_file_from_classpath(loader, clsName);
         if (bytebuf != NULL) {
-            tmpclazz = class_create();
+            tmpclazz = class_create(runtime);
             iret = tmpclazz->_load_class_from_bytes(tmpclazz, bytebuf);//load file
             bytebuf_destory(bytebuf);
             if (iret == 0) {
                 classes_put(tmpclazz);
                 class_prepar(tmpclazz, runtime);
                 gc_refer_hold(tmpclazz);
-                gc_refer_reg(runtime, tmpclazz);
 #if _JVM_DEBUG_BYTECODE_DETAIL > 5
                 jvm_printf("load class:  %s \n", utf8_cstr(clsName));
 #endif

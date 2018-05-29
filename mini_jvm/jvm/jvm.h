@@ -698,7 +698,7 @@ struct _ClassType {
 
 s32 _DESTORY_CLASS(JClass *clazz);
 
-JClass *class_create(void);
+JClass *class_create(Runtime *runtime);
 
 JClass *getSuperClass(JClass *clazz);
 

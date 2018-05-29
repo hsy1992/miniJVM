@@ -370,7 +370,7 @@ s64 garbage_collect() {
 //    jvm_printf("garbage_pause_the_world %lld\n", (currentTimeMillis() - time_startAt));
 //    time_startAt = currentTimeMillis();
     if (collector->tmp_header) {
-        collector->tmp_tailer = collector->header;//接起来
+        collector->tmp_tailer->next = collector->header;//接起来
         collector->header = collector->tmp_header;
         collector->tmp_header = NULL;
         collector->tmp_tailer = NULL;
@@ -780,33 +780,6 @@ void gc_move_refer_thread_2_gc(Runtime *runtime) {
         }
     }
 }
-
-//s32 garbage_refer_reg1(__refer ref) {
-//    if (ref) {
-//        MemoryBlock *mb = (MemoryBlock *) ref;
-//        spin_lock(&collector->lock);
-//        if (!mb->garbage_reg) {
-//            mb->garbage_reg = 1;
-//            collector->obj_count++;
-//            if (collector->isgc) {
-//                mb->next = collector->tmp_header;
-//                collector->tmp_header = mb;
-//            } else {
-//                mb->next = collector->header;
-//                collector->header = mb;
-//            }
-//            heap_size += _getMBSize(mb);
-//#if _JVM_DEBUG_GARBAGE_DUMP
-//            Utf8String *sus = utf8_create();
-//            _getMBName((MemoryBlock *) ref, sus);
-//            jvm_printf("R: %s[%llx]\n", utf8_cstr(sus), (s64) (intptr_t) ref);
-//            utf8_destory(sus);
-//#endif
-//        }
-//        spin_unlock(&collector->lock);
-//    }
-//    return 0;
-//}
 
 
 void gc_refer_hold(__refer ref) {

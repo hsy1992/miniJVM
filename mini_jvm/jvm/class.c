@@ -12,7 +12,7 @@
 
 
 
-JClass *class_create() {
+JClass *class_create(Runtime *runtime) {
     JClass *clazz = jvm_calloc(sizeof(JClass));
     clazz->mb.clazz = clazz;
     clazz->mb.type = MEM_TYPE_CLASS;
@@ -26,6 +26,7 @@ JClass *class_create() {
     clazz->arr_class_type = pairlist_create(16);
     clazz->insFieldPtrIndex = arraylist_create(8);
     clazz->staticFieldPtrIndex = arraylist_create(4);
+    gc_refer_reg(runtime, clazz);
     return clazz;
 }
 

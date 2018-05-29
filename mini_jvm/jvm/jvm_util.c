@@ -96,14 +96,14 @@ JClass *array_class_get(Runtime *runtime, Utf8String *desc) {
         JClass *clazz = hashtable_get(array_classloader->classes, desc);
         if (!clazz) {
             garbage_thread_lock();
-            clazz = hashtable_get(array_classloader->classes, desc);
+            clazz = hashtable_get(array_classloader->classes, desc);//maybe other thread created
             if (!clazz) {
-                clazz = class_create();
+                clazz = class_create(runtime);
                 clazz->arr_type_index = getDataTypeIndex(utf8_char_at(desc, 1));
                 clazz->name = utf8_create_copy(desc);
                 hashtable_put(array_classloader->classes, clazz->name, clazz);
                 gc_refer_hold(clazz);
-                gc_refer_reg(runtime, clazz);
+
 #if _JVM_DEBUG_BYTECODE_DETAIL > 5
                 jvm_printf("load class:  %s \n", utf8_cstr(desc));
 #endif
@@ -817,9 +817,9 @@ s32 jthread_sleep(Runtime *runtime, s64 ms) {
 
 s32 check_suspend_and_pause(Runtime *runtime) {
     if (runtime->threadInfo->suspend_count) {
+        gc_move_refer_thread_2_gc(runtime);
         runtime->threadInfo->is_suspend = 1;
         garbage_thread_lock();
-        gc_move_refer_thread_2_gc(runtime);
         garbage_thread_notifyall();
         while (runtime->threadInfo->suspend_count) {
             garbage_thread_timedwait(10);
