@@ -69,10 +69,10 @@ int main(int argc, char **argv) {
         }
     } else {
         java_debug = 0;
-        classpath = "../../binary/lib/minijvm_rt.jar;../../binary/lib/gui_lib.jar;./";
+//        classpath = "../../binary/lib/minijvm_rt.jar;../../binary/lib/gui_lib.jar;./";
 //        main_name = "test/Gears";
 //        main_name = "test/TestGL";
-        main_name = "test/GuiTest";
+//        main_name = "test/GuiTest";
 //        main_name = "test/RenderTexure";
 //        main_name = "test/Alpha";
 //        main_name = "test/Light";
@@ -82,8 +82,9 @@ int main(int argc, char **argv) {
 
 //        classpath = "../../binary/lib/minijvm_rt.jar;../../binary/lib/jni_test.jar;./";
 //        main_name = "test/JniTest";
-//        classpath = "../../binary/lib/minijvm_rt.jar;../../binary/lib/luaj.jar;./";
-//        main_name = "Sample";
+
+        classpath = "../../binary/lib/minijvm_rt.jar;../../binary/lib/luaj.jar;./";
+        main_name = "Sample";
 
 
         classpath = "../../binary/lib/minijvm_rt.jar;../../binary/lib/minijvm_test.jar;./";

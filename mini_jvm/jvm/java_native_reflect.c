@@ -605,7 +605,7 @@ s32 javax_mini_reflect_Method_mapMethod(Runtime *runtime, JClass *clazz) {
         if (ptr)setFieldShort(ptr, methodInfo->access_flags);
         //
         ptr = getFieldPtr_byName_c(ins, JDWP_CLASS_METHOD, "argCnt", "I");
-        if (ptr)setFieldInt(ptr, methodInfo->para_count);
+        if (ptr)setFieldInt(ptr, methodInfo->para_slots);
         //
         s32 i;
         AttributeInfo *att = NULL;

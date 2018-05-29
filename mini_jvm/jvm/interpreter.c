@@ -480,12 +480,14 @@ static void _printCodeAttribute(CodeAttribute *ca, JClass *p) {
  * @param father  runtime of father
  * @param son     runtime of son
  */
+
+
 static inline void _stack2localvar(MethodInfo *method, Runtime *father, Runtime *son) {
 
     Utf8String *paraType = method->paraType;
     s32 i;
     s32 paraLen = paraType->length;
-    s32 i_local = method->para_count;
+    s32 i_local = method->para_slots;
     LocalVarItem *localvar = son->localvar;
 
     for (i = 0; i < paraLen; i++) {
@@ -3721,7 +3723,7 @@ s32 execute_method_impl(MethodInfo *method, Runtime *pruntime, JClass *clazz) {
             jvm_printf("method code attribute is null.");
         }
     } else {//本地方法
-        localvar_init(runtime, method->para_count);//可能有非静态本地方法调用，因此+1
+        localvar_init(runtime, method->para_slots);//可能有非静态本地方法调用，因此+1
         _stack2localvar(method, pruntime, runtime);
         //缓存调用本地方法
         if (!method->native_func) { //把本地方法找出来缓存

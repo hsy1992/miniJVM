@@ -862,9 +862,12 @@ void _class_optimize(JClass *clazz) {
         if (!ptr->paraType) {//首次执行
             // eg:  (Ljava/lang/Object;IBLjava/lang/String;[[[ILjava/lang/Object;)Ljava/lang/String;Z
             ptr->paraType = utf8_create();
-            ptr->para_count = parseMethodPara(ptr->descriptor, ptr->paraType);
+            //parse method description return slots
+            ptr->para_slots = parseMethodPara(ptr->descriptor, ptr->paraType);
+            ptr->para_count_with_this = ptr->paraType->length;
             if (!(ptr->access_flags & ACC_STATIC)) {
-                ptr->para_count++;//add instance
+                ptr->para_slots++;//add this pointer
+                ptr->para_count_with_this++;
             }
             s32 pos = utf8_indexof_c(ptr->descriptor, ")") + 1;
             ptr->returnType = utf8_create_part(ptr->descriptor, pos, ptr->descriptor->length - pos);
@@ -879,7 +882,6 @@ void _class_optimize(JClass *clazz) {
                 jvm_free(ptr->attributes[j].info);//无用删除
                 ptr->attributes[j].info = NULL;
                 ptr->attributes[j].converted_code = ca;
-                ptr->code_attr_idx = j;
             }
         }
     }

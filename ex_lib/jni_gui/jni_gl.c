@@ -600,7 +600,7 @@ int org_mini_gl_GL_glGetString(Runtime *runtime, JClass *clazz) {
     if (_ptr_re_val) {
         s32 bytes = strlen(_ptr_re_val);
         s32 j_t_bytes = sizeof(c8);
-        Instance *_arr = env->jarray_create(bytes / j_t_bytes, DATATYPE_BYTE, NULL);
+        Instance *_arr = env->jarray_create_by_type_index(runtime, bytes / j_t_bytes, DATATYPE_BYTE);
         memcpy(_arr->arr_body, _ptr_re_val,bytes);
         env->push_ref(runtime->stack, _arr);
     } else {
@@ -10271,7 +10271,7 @@ int org_mini_gl_GL_glGetStringi(Runtime *runtime, JClass *clazz) {
     if (_ptr_re_val) {
         s32 bytes = strlen(_ptr_re_val);
         s32 j_t_bytes = sizeof(c8);
-        Instance *_arr = env->jarray_create(bytes / j_t_bytes, DATATYPE_BYTE, NULL);
+        Instance *_arr = env->jarray_create_by_type_index(runtime, bytes / j_t_bytes, DATATYPE_BYTE);
         memcpy(_arr->arr_body, _ptr_re_val,bytes);
         env->push_ref(runtime->stack, _arr);
     } else {

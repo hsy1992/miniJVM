@@ -25,6 +25,7 @@ function foo (x)
   return x
 end
 print(foo(10))
+print(os.clock())
 print("over")
 
 

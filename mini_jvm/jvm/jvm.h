@@ -580,6 +580,12 @@ typedef struct _FieldPool {
     s32 field_used;
 } FieldPool;
 
+typedef struct _MethodParaOffset{
+    s32 stackOffset;
+    s16 localOffset;
+    s16 byteCount;
+}MethodParaOffset;
+
 struct _MethodInfo {
     u16 access_flags;
     u16 name_index;
@@ -587,16 +593,18 @@ struct _MethodInfo {
     u16 attributes_count;
     AttributeInfo *attributes;
 
+    MethodParaOffset* paraOffset;
+
     //link
     Utf8String *name;
     Utf8String *descriptor;
     Utf8String *paraType;
     Utf8String *returnType;
-    s32 para_count;
     JClass *_this_class;
     java_native_fun native_func;
     Pairlist *breakpoint;
-    s32 code_attr_idx;
+    s16 para_slots;
+    s16 para_count_with_this;
 };
 
 typedef struct _MethodPool {
@@ -638,8 +646,8 @@ typedef struct _StackFrame {
 
 //解决引用类型可能为4字节或8字节的不同情况
 typedef struct _LocalVarItem {
-    s32 integer;
     __refer refer;
+    s32 integer;
 } LocalVarItem;
 
 

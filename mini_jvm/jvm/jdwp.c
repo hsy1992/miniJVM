@@ -1746,8 +1746,8 @@ s32 jdwp_client_process(JdwpClient *client, Runtime *runtime) {
                 MethodInfo *method = jdwppacket_read_refer(req);
                 CodeAttribute *ca = getCodeAttribute(method);
                 jdwppacket_set_err(res, JDWP_ERROR_NONE);
-                jdwppacket_write_int(res, method->para_count);
-                jdwppacket_write_int(res, ca->local_var_table_length);
+                jdwppacket_write_int(res, method->para_slots);  //slot count
+                jdwppacket_write_int(res, ca->local_var_table_length);// para count
                 s32 i;
                 for (i = 0; i < ca->local_var_table_length; i++) {
                     LocalVarTable *tab = &ca->local_var_table[i];
@@ -2209,20 +2209,20 @@ s32 jdwp_client_process(JdwpClient *client, Runtime *runtime) {
                     if (slot < frame->localvar_count) {
                         switch (getSimpleTag(vt.type)) {
                             case 'R': {
-                                Instance *ins = localvar_getRefer(runtime->localvar, slot);
+                                Instance *ins = localvar_getRefer(frame->localvar, slot);
                                 vt.type = getInstanceOfClassTag(ins);
                                 vt.value = (s64) (intptr_t) ins;
                                 break;
                             }
                             case '8':
-                                l2d.i2l.i1 = localvar_getInt(runtime->localvar, slot);
-                                l2d.i2l.i0 = localvar_getInt(runtime->localvar, slot + 1);
+                                l2d.i2l.i1 = localvar_getInt(frame->localvar, slot);
+                                l2d.i2l.i0 = localvar_getInt(frame->localvar, slot + 1);
                                 vt.value = l2d.l;
                                 break;
                             case '4':
                             case '2':
                             case '1':
-                                vt.value = localvar_getInt(runtime->localvar, slot);
+                                vt.value = localvar_getInt(frame->localvar, slot);
                                 break;
                         }
                     }
