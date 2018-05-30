@@ -484,6 +484,8 @@ s32 _garbage_pause_the_world(void) {
             if (_checkAndWaitThreadIsSuspend(runtime) == -1) {
                 return -1;
             }
+            gc_move_refer_thread_2_gc(runtime);
+            
 #if _JVM_DEBUG_GARBAGE_DUMP
             Utf8String *stack = utf8_create();
             getRuntimeStack(runtime, stack);
@@ -655,6 +657,9 @@ static inline void _instance_mark_refer(Instance *ins) {
 
 static inline void _jarray_mark_refer(Instance *arr) {
     if (arr && arr->mb.type == MEM_TYPE_ARR) {
+        if (utf8_equals_c(arr->mb.clazz->name, "[[D")) {
+            jvm_printf("check %llx\n", (s64) (intptr_t) arr);
+        }
         if (isDataReferByIndex(arr->mb.arr_type_index)) {
             s32 i;
             for (i = 0; i < arr->arr_length; i++) {//把所有引用去除，否则不会垃圾回收
