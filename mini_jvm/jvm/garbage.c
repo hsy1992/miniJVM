@@ -367,29 +367,32 @@ s64 garbage_collect() {
         _garbage_resume_the_world();
         return -1;
     }
-    jvm_printf("garbage_pause_the_world %lld\n", (currentTimeMillis() - time));
-    time = currentTimeMillis();
+//    jvm_printf("garbage_pause_the_world %lld\n", (currentTimeMillis() - time));
+//    time = currentTimeMillis();
     if (collector->tmp_header) {
         collector->tmp_tailer->next = collector->header;//接起来
         collector->header = collector->tmp_header;
         collector->tmp_header = NULL;
         collector->tmp_tailer = NULL;
     }
-    jvm_printf("garbage_move_cache %lld\n", (currentTimeMillis() - time));
-    time = currentTimeMillis();
+//    jvm_printf("garbage_move_cache %lld\n", (currentTimeMillis() - time));
+//    time = currentTimeMillis();
     _garbage_copy_refer();
     //
-    jvm_printf("garbage_copy_refer %lld\n", (currentTimeMillis() - time));
-    time = currentTimeMillis();
+//    jvm_printf("garbage_copy_refer %lld\n", (currentTimeMillis() - time));
+//    time = currentTimeMillis();
     //real GC start
     //
     _garbage_change_flag();
     _garbage_big_search();
-    jvm_printf("garbage_big_search %lld\n", (currentTimeMillis() - time));
-    time = currentTimeMillis();
+    //
+//    jvm_printf("garbage_big_search %lld\n", (currentTimeMillis() - time));
+//    time = currentTimeMillis();
+
     _garbage_resume_the_world();
     garbage_thread_unlock();
-    jvm_printf("garbage_resume_the_world %lld\n", (currentTimeMillis() - time));
+
+//    jvm_printf("garbage_resume_the_world %lld\n", (currentTimeMillis() - time));
 
     s64 time_stopWorld = currentTimeMillis() - start;
     time = currentTimeMillis();
@@ -410,8 +413,8 @@ s64 garbage_collect() {
             }
         }
     }
-    jvm_printf("garbage_finalize %lld\n", (currentTimeMillis() - time));
-    time = currentTimeMillis();
+//    jvm_printf("garbage_finalize %lld\n", (currentTimeMillis() - time));
+//    time = currentTimeMillis();
     //clear
     nextmb = collector->header;
     prevmb = NULL;
