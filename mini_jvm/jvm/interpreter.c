@@ -1000,7 +1000,7 @@ s32 execute_method_impl(MethodInfo *method, Runtime *pruntime, JClass *clazz) {
                         Instance *arr = (Instance *) pop_ref(stack);
                         ret = jarray_check_exception(arr, index, runtime);
                         if (!ret) {
-                            __refer s = *(__refer *) (arr->arr_body + (index * sizeof(__refer)));
+                            __refer s = *(((__refer *) arr->arr_body) + index);
                             push_ref(stack, s);
 
 #if _JVM_DEBUG_BYTECODE_DETAIL > 5
@@ -1018,7 +1018,7 @@ s32 execute_method_impl(MethodInfo *method, Runtime *pruntime, JClass *clazz) {
                         Instance *arr = (Instance *) pop_ref(stack);
                         ret = jarray_check_exception(arr, index, runtime);
                         if (!ret) {
-                            s32 s = *(s8 *) (arr->arr_body + (index));
+                            s32 s = *(((s8 *) arr->arr_body) + index);
                             push_int(stack, s);
 
 #if _JVM_DEBUG_BYTECODE_DETAIL > 5
@@ -1036,7 +1036,7 @@ s32 execute_method_impl(MethodInfo *method, Runtime *pruntime, JClass *clazz) {
                         Instance *arr = (Instance *) pop_ref(stack);
                         ret = jarray_check_exception(arr, index, runtime);
                         if (!ret) {
-                            s32 s = *(u16 *) (arr->arr_body + (index << 1));
+                            s32 s = *(((u16 *) arr->arr_body) + index);
                             push_int(stack, s);
 
 #if _JVM_DEBUG_BYTECODE_DETAIL > 5
@@ -1054,7 +1054,7 @@ s32 execute_method_impl(MethodInfo *method, Runtime *pruntime, JClass *clazz) {
                         Instance *arr = (Instance *) pop_ref(stack);
                         ret = jarray_check_exception(arr, index, runtime);
                         if (!ret) {
-                            s32 s = *(s16 *) (arr->arr_body + (index << 1));
+                            s32 s = *(((s16 *) arr->arr_body) + index);
                             push_int(stack, s);
 
 #if _JVM_DEBUG_BYTECODE_DETAIL > 5
@@ -1222,7 +1222,7 @@ s32 execute_method_impl(MethodInfo *method, Runtime *pruntime, JClass *clazz) {
                         Instance *jarr = (Instance *) pop_ref(stack);
                         ret = jarray_check_exception(jarr, index, runtime);
                         if (!ret) {
-                            *(s32 *) (jarr->arr_body + (index << 2)) = i;
+                            *(((s32 *) jarr->arr_body) + index) = i;
 
 #if _JVM_DEBUG_BYTECODE_DETAIL > 5
                             invoke_deepth(runtime);
@@ -1241,7 +1241,7 @@ s32 execute_method_impl(MethodInfo *method, Runtime *pruntime, JClass *clazz) {
                         Instance *jarr = (Instance *) pop_ref(stack);
                         ret = jarray_check_exception(jarr, index, runtime);
                         if (!ret) {
-                            *(s64 *) (jarr->arr_body + (index << 3)) = j;
+                            *(((s64 *) jarr->arr_body) + index) = j;
 
 #if _JVM_DEBUG_BYTECODE_DETAIL > 5
                             invoke_deepth(runtime);
@@ -1260,7 +1260,7 @@ s32 execute_method_impl(MethodInfo *method, Runtime *pruntime, JClass *clazz) {
                         Instance *jarr = (Instance *) pop_ref(stack);
                         ret = jarray_check_exception(jarr, index, runtime);
                         if (!ret) {
-                            *(__refer *) (jarr->arr_body + (index * sizeof(__refer))) = r;
+                            *(((__refer *) jarr->arr_body) + index) = r;
 
 #if _JVM_DEBUG_BYTECODE_DETAIL > 5
                             invoke_deepth(runtime);
@@ -1278,7 +1278,7 @@ s32 execute_method_impl(MethodInfo *method, Runtime *pruntime, JClass *clazz) {
                         Instance *jarr = (Instance *) pop_ref(stack);
                         ret = jarray_check_exception(jarr, index, runtime);
                         if (!ret) {
-                            *(s8 *) (jarr->arr_body + (index)) = (s8) i;
+                            *(((s8 *) jarr->arr_body) + index) = (s8) i;
 
 #if _JVM_DEBUG_BYTECODE_DETAIL > 5
                             invoke_deepth(runtime);
@@ -1297,7 +1297,7 @@ s32 execute_method_impl(MethodInfo *method, Runtime *pruntime, JClass *clazz) {
                         Instance *jarr = (Instance *) pop_ref(stack);
                         ret = jarray_check_exception(jarr, index, runtime);
                         if (!ret) {
-                            *(u16 *) (jarr->arr_body + (index << 1)) = i;
+                            *(((u16 *) jarr->arr_body) + index) = i;
 
 #if _JVM_DEBUG_BYTECODE_DETAIL > 5
                             invoke_deepth(runtime);
@@ -1316,7 +1316,7 @@ s32 execute_method_impl(MethodInfo *method, Runtime *pruntime, JClass *clazz) {
                         Instance *jarr = (Instance *) pop_ref(stack);
                         ret = jarray_check_exception(jarr, index, runtime);
                         if (!ret) {
-                            *(s16 *) (jarr->arr_body + (index << 1)) = i;
+                            *(((s16 *) jarr->arr_body) + index) = i;
 
 #if _JVM_DEBUG_BYTECODE_DETAIL > 5
                             invoke_deepth(runtime);
@@ -1633,8 +1633,7 @@ s32 execute_method_impl(MethodInfo *method, Runtime *pruntime, JClass *clazz) {
 
                         f64 value1 = pop_double(stack);
                         f64 value2 = pop_double(stack);
-                        f64 result = 0;
-                        result = value1 + value2;
+                        f64 result = value1 + value2;
 #if _JVM_DEBUG_BYTECODE_DETAIL > 5
                         invoke_deepth(runtime);
                         jvm_printf("dadd: %lf + %lf = %lf\n", value1, value2, result);
@@ -1649,8 +1648,7 @@ s32 execute_method_impl(MethodInfo *method, Runtime *pruntime, JClass *clazz) {
 
                         s32 value2 = pop_int(stack);
                         s32 value1 = pop_int(stack);
-                        s32 result = 0;
-                        result = value1 - value2;
+                        s32 result = value1 - value2;
 #if _JVM_DEBUG_BYTECODE_DETAIL > 5
                         invoke_deepth(runtime);
                         jvm_printf("isub : %d - %d = %d\n", value1, value2, result);
@@ -1715,8 +1713,7 @@ s32 execute_method_impl(MethodInfo *method, Runtime *pruntime, JClass *clazz) {
 
                         s32 value1 = pop_int(stack);
                         s32 value2 = pop_int(stack);
-                        s32 result = 0;
-                        result = value1 * value2;
+                        s32 result = value1 * value2;
 #if _JVM_DEBUG_BYTECODE_DETAIL > 5
                         invoke_deepth(runtime);
                         jvm_printf("imul: %d * %d = %d\n", value1, value2, result);
@@ -1747,8 +1744,7 @@ s32 execute_method_impl(MethodInfo *method, Runtime *pruntime, JClass *clazz) {
 
                         f32 value1 = pop_float(stack);
                         f32 value2 = pop_float(stack);
-                        f32 result = 0;
-                        result = value1 * value2;
+                        f32 result = value1 * value2;
 #if _JVM_DEBUG_BYTECODE_DETAIL > 5
                         invoke_deepth(runtime);
                         jvm_printf("fmul: %f * %f = %f\n", value1, value2, result);
@@ -1763,8 +1759,7 @@ s32 execute_method_impl(MethodInfo *method, Runtime *pruntime, JClass *clazz) {
 
                         f64 value1 = pop_double(stack);
                         f64 value2 = pop_double(stack);
-                        f64 result = 0;
-                        result = value1 * value2;
+                        f64 result = value1 * value2;
 #if _JVM_DEBUG_BYTECODE_DETAIL > 5
                         invoke_deepth(runtime);
                         jvm_printf("dmul: %lf * %lf = %lf\n", value1, value2, result);
@@ -1781,8 +1776,7 @@ s32 execute_method_impl(MethodInfo *method, Runtime *pruntime, JClass *clazz) {
 
                         s32 value2 = pop_int(stack);
                         s32 value1 = pop_int(stack);
-                        s32 result = 0;
-                        result = value1 / value2;
+                        s32 result = value1 / value2;
 #if _JVM_DEBUG_BYTECODE_DETAIL > 5
                         invoke_deepth(runtime);
                         jvm_printf("idiv: %d / %d = %d\n", value1, value2, result);
@@ -1845,8 +1839,7 @@ s32 execute_method_impl(MethodInfo *method, Runtime *pruntime, JClass *clazz) {
 
                         s32 value1 = pop_int(stack);
                         s32 value2 = pop_int(stack);
-                        s32 result = 0;
-                        result = value2 % value1;
+                        s32 result = value2 % value1;
 #if _JVM_DEBUG_BYTECODE_DETAIL > 5
                         invoke_deepth(runtime);
                         jvm_printf("irem: %d % %d = %d\n", value2, value1, result);
@@ -1877,8 +1870,7 @@ s32 execute_method_impl(MethodInfo *method, Runtime *pruntime, JClass *clazz) {
 
                         f32 value1 = pop_float(stack);
                         f32 value2 = pop_float(stack);
-                        f32 result = 0;
-                        result = value2 - ((int) (value2 / value1) * value1);
+                        f32 result = value2 - ((int) (value2 / value1) * value1);
 #if _JVM_DEBUG_BYTECODE_DETAIL > 5
                         invoke_deepth(runtime);
                         jvm_printf("frem: %f % %f = %f\n", value2, value1, result);
@@ -2259,8 +2251,7 @@ s32 execute_method_impl(MethodInfo *method, Runtime *pruntime, JClass *clazz) {
                     case op_f2i: {
 
                         f32 value1 = pop_float(stack);
-                        s32 result = 0;
-                        result = (s32) value1;
+                        s32 result = (s32) value1;
 #if _JVM_DEBUG_BYTECODE_DETAIL > 5
                         invoke_deepth(runtime);
                         jvm_printf("f2i: %d <-- %f\n", result, value1);
@@ -2274,8 +2265,7 @@ s32 execute_method_impl(MethodInfo *method, Runtime *pruntime, JClass *clazz) {
                     case op_f2l: {
 
                         f32 value1 = pop_float(stack);
-                        s64 result = 0;
-                        result = (s64) value1;
+                        s64 result = (s64) value1;
 #if _JVM_DEBUG_BYTECODE_DETAIL > 5
                         invoke_deepth(runtime);
                         jvm_printf("f2l: %lld <-- %f\n", result, value1);
@@ -2289,8 +2279,7 @@ s32 execute_method_impl(MethodInfo *method, Runtime *pruntime, JClass *clazz) {
                     case op_f2d: {
 
                         f32 value1 = pop_float(stack);
-                        f64 result = 0;
-                        result = value1;
+                        f64 result = value1;
 #if _JVM_DEBUG_BYTECODE_DETAIL > 5
                         invoke_deepth(runtime);
                         jvm_printf("f2d: %f <-- %f\n", result, value1);
@@ -2305,8 +2294,7 @@ s32 execute_method_impl(MethodInfo *method, Runtime *pruntime, JClass *clazz) {
                     case op_d2i: {
 
                         f64 value1 = pop_double(stack);
-                        s32 result = 0;
-                        result = (s32) value1;
+                        s32 result = (s32) value1;
 #if _JVM_DEBUG_BYTECODE_DETAIL > 5
                         invoke_deepth(runtime);
                         jvm_printf("d2i: %d <-- %lf\n", result, value1);
@@ -2320,8 +2308,7 @@ s32 execute_method_impl(MethodInfo *method, Runtime *pruntime, JClass *clazz) {
                     case op_d2l: {
 
                         f64 value1 = pop_double(stack);
-                        s64 result = 0;
-                        result = (s64) value1;
+                        s64 result = (s64) value1;
 #if _JVM_DEBUG_BYTECODE_DETAIL > 5
                         invoke_deepth(runtime);
                         jvm_printf("d2l: %lld <-- %lf\n", result, value1);
@@ -2335,8 +2322,7 @@ s32 execute_method_impl(MethodInfo *method, Runtime *pruntime, JClass *clazz) {
                     case op_d2f: {
 
                         f64 value1 = pop_double(stack);
-                        f32 result = 0;
-                        result = (f32) value1;
+                        f32 result = (f32) value1;
 #if _JVM_DEBUG_BYTECODE_DETAIL > 5
                         invoke_deepth(runtime);
                         jvm_printf("d2f: %f <-- %lf\n", result, value1);

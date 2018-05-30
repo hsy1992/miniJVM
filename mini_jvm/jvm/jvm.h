@@ -578,11 +578,11 @@ typedef struct _FieldPool {
     s32 field_used;
 } FieldPool;
 
-typedef struct _MethodParaOffset{
+typedef struct _MethodParaOffset {
     s32 stackOffset;
     s16 localOffset;
     s16 byteCount;
-}MethodParaOffset;
+} MethodParaOffset;
 
 struct _MethodInfo {
     u16 access_flags;
@@ -591,7 +591,7 @@ struct _MethodInfo {
     u16 attributes_count;
     AttributeInfo *attributes;
 
-    MethodParaOffset* paraOffset;
+    MethodParaOffset *paraOffset;
 
     //link
     Utf8String *name;
@@ -867,23 +867,19 @@ static inline Utf8String *class_get_utf8_string(JClass *clazz, s32 index) {
     return ((ConstantUTF8 *) (clazz->constant_item_ptr[index]))->utfstr;
 }
 
-MethodInfo *
-find_instance_methodInfo_by_name(Instance *ins, Utf8String *methodName, Utf8String *methodType,
-                                 Runtime *runtime);
+MethodInfo *find_instance_methodInfo_by_name(Instance *ins, Utf8String *methodName, Utf8String *methodType, Runtime *runtime);
 
 MethodInfo *find_methodInfo_by_methodref(JClass *clazz, s32 method_ref, Runtime *runtime);
 
-MethodInfo *
-find_methodInfo_by_name(Utf8String *clsName, Utf8String *methodName, Utf8String *methodType,
-                        Runtime *runtime);
+MethodInfo *find_methodInfo_by_name(Utf8String *clsName, Utf8String *methodName, Utf8String *methodType, Runtime *runtime);
 
+MethodInfo *find_methodInfo_by_name_c(c8 *pclsName, c8 *pmethodName, c8 *pmethodType, Runtime *runtime);
 
 FieldInfo *find_fieldInfo_by_fieldref(JClass *clazz, s32 field_ref, Runtime *runtime);
 
 FieldInfo *find_fieldInfo_by_name_c(c8 *pclsName, c8 *pfieldName, c8 *pfieldType);
 
-FieldInfo *
-find_fieldInfo_by_name(Utf8String *clsName, Utf8String *fieldName, Utf8String *fieldType);
+FieldInfo *find_fieldInfo_by_name(Utf8String *clsName, Utf8String *fieldName, Utf8String *fieldType);
 
 s32 find_constant_fieldref_index(JClass *clazz, Utf8String *fieldName, Utf8String *type);
 

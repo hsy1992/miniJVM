@@ -237,6 +237,8 @@ void class_clinit(JClass *clazz, Runtime *runtime) {
         }
     }
 
+    clazz->finalizeMethod = find_methodInfo_by_name_c(utf8_cstr(clazz->name), STR_METHOD_FINALIZE, "()V", runtime);
+
     // init javastring
     ArrayList *utf8list = clazz->constantPool.utf8CP;
     for (i = 0, len = utf8list->length; i < len; i++) {
@@ -265,8 +267,6 @@ void class_clinit(JClass *clazz, Runtime *runtime) {
             if (ret != RUNTIME_STATUS_NORMAL) {
                 print_exception(runtime);
             }
-        } else if (utf8_equals_c(p->method[i].name, STR_METHOD_FINALIZE)) {
-            clazz->finalizeMethod = &(p->method[i]);
         }
     }
 
@@ -434,8 +434,7 @@ find_constant_methodref_by_name(Utf8String *clsName, Utf8String *methodName, Utf
  * @param methodType type
  * @return mi
  */
-MethodInfo *
-find_instance_methodInfo_by_name(Instance *ins, Utf8String *methodName, Utf8String *methodType, Runtime *runtime) {
+MethodInfo *find_instance_methodInfo_by_name(Instance *ins, Utf8String *methodName, Utf8String *methodType, Runtime *runtime) {
     if (!ins)return NULL;
     return find_methodInfo_by_name(ins->mb.clazz->name, methodName, methodType, runtime);
 }
@@ -448,9 +447,18 @@ MethodInfo *find_methodInfo_by_methodref(JClass *clazz, s32 method_ref, Runtime 
     return find_methodInfo_by_name(clsName, methodName, methodType, runtime);
 }
 
+MethodInfo *find_methodInfo_by_name_c(c8 *pclsName, c8 *pmethodName, c8 *pmethodType, Runtime *runtime) {
+    Utf8String *clsName = utf8_create_c(pclsName);
+    Utf8String *methodName = utf8_create_c(pmethodName);
+    Utf8String *methodType = utf8_create_c(pmethodType);
+    MethodInfo *mi = find_methodInfo_by_name(clsName, methodName, methodType, runtime);
+    utf8_destory(clsName);
+    utf8_destory(methodName);
+    utf8_destory(methodType);
+    return mi;
+}
 
-MethodInfo *
-find_methodInfo_by_name(Utf8String *clsName, Utf8String *methodName, Utf8String *methodType, Runtime *runtime) {
+MethodInfo *find_methodInfo_by_name(Utf8String *clsName, Utf8String *methodName, Utf8String *methodType, Runtime *runtime) {
     MethodInfo *mi = NULL;
     JClass *other = classes_load_get(clsName, runtime);
 

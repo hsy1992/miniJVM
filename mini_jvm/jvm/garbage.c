@@ -403,8 +403,8 @@ s64 garbage_collect() {
         while (nextmb) {
             curmb = nextmb;
             nextmb = curmb->next;
-            if (curmb->garbage_mark != collector->flag_refer && curmb->type == MEM_TYPE_INS) {
-                if (curmb->clazz->finalizeMethod) {
+            if (curmb->clazz->finalizeMethod) {// there is a method called finalize
+                if (curmb->type == MEM_TYPE_INS && curmb->garbage_mark != collector->flag_refer) {
                     instance_finalize((Instance *) curmb, collector->runtime);
                 }
             }
