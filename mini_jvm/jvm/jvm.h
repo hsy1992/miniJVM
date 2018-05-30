@@ -159,6 +159,7 @@ typedef struct _CodeAttribute CodeAttribute;
 typedef struct _JNIENV JniEnv;
 typedef struct _ReferArr CStringArr;
 typedef struct _ReferArr ReferArr;
+typedef struct _StackFrame RuntimeStack;
 
 
 typedef s32 (*java_native_fun)(Runtime *runtime, JClass *p);
@@ -615,56 +616,7 @@ typedef struct _AttributePool {
     s32 attribute_used;
 } AttributePool;
 
-//======================= runtime =============================
 
-/* Stack Frame */
-#define STACK_ENTRY_NONE        0
-#define STACK_ENTRY_INT         1
-#define STACK_ENTRY_FLOAT       2
-#define STACK_ENTRY_LONG        4
-#define STACK_ENTRY_DOUBLE      8
-#define STACK_ENTRY_REF         16
-
-typedef struct _StackEntry {
-    union {
-        s64 lvalue;
-        f64 dvalue;
-        f32 fvalue;
-        s32 ivalue;
-        __refer rvalue;
-    };
-    s32 type;
-} StackEntry;
-
-typedef struct _StackFrame {
-    StackEntry *store;
-    s32 size;
-    s32 max_size;
-} RuntimeStack;
-
-//解决引用类型可能为4字节或8字节的不同情况
-typedef struct _LocalVarItem {
-    __refer refer;
-    s32 integer;
-} LocalVarItem;
-
-
-struct _Runtime {
-    MethodInfo *method;
-    JClass *clazz;
-    u8 *pc;
-    CodeAttribute *ca;//method bytecode
-    JavaThreadInfo *threadInfo;
-    Runtime *son;//sub method's runtime
-    Runtime *parent;//father method's runtime
-    RuntimeStack *stack;
-    LocalVarItem *localvar;
-    ArrayList *runtime_pool;// cache runtimes for performance
-    JniEnv *jnienv;
-    s16 localvar_count;
-    s16 localvar_max;
-    u8 wideMode;
-};
 //======================= class =============================
 
 /*
@@ -888,7 +840,60 @@ s32 find_constant_fieldref_index(JClass *clazz, Utf8String *fieldName, Utf8Strin
 
 JClass *getClassByConstantClassRef(JClass *clazz, s32 index);
 
+//======================= runtime =============================
 
+/* Stack Frame */
+#define STACK_ENTRY_NONE        0
+#define STACK_ENTRY_INT         1
+#define STACK_ENTRY_FLOAT       2
+#define STACK_ENTRY_LONG        4
+#define STACK_ENTRY_DOUBLE      8
+#define STACK_ENTRY_REF         16
+
+typedef struct _StackEntry {
+    union {
+        s64 lvalue;
+        f64 dvalue;
+        f32 fvalue;
+        s32 ivalue;
+        __refer rvalue;
+    };
+    s32 type;
+} StackEntry;
+
+struct _StackFrame {
+    StackEntry *store;
+    s32 size;
+    s32 max_size;
+} ;
+
+//解决引用类型可能为4字节或8字节的不同情况
+typedef struct _LocalVarItem {
+    __refer refer;
+    s32 integer;
+} LocalVarItem;
+
+
+struct _Runtime {
+
+    MethodInfo *method;
+    JClass *clazz;
+    u8 *pc;
+    CodeAttribute *ca;//method bytecode
+    JavaThreadInfo *threadInfo;
+    Runtime *son;//sub method's runtime
+    Runtime *parent;//father method's runtime
+    RuntimeStack *stack;
+    LocalVarItem *localvar;
+    //
+    Runtime *runtime_pool_header;// cache runtimes for performance
+    Runtime *next;  //for runtime pools linklist
+
+    JniEnv *jnienv;
+    s16 localvar_count;
+    s16 localvar_max;
+    u8 wideMode;
+};
 //======================= stack =============================
 RuntimeStack *stack_create(s32 entry_size);
 

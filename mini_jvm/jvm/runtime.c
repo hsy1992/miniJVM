@@ -110,7 +110,6 @@ void peek_entry_jni(RuntimeStack *stack, StackEntry *entry, int index) {
 }
 
 
-
 s32 is_ref(StackEntry *entry) {
     if (entry->type & STACK_ENTRY_REF)
         return 1;
@@ -129,50 +128,60 @@ enum {
  * @return runtime
  */
 Runtime *runtime_create(Runtime *parent) {
-    s32 is_top = parent == NULL;
+    Runtime *top_runtime = NULL;
+
     Runtime *runtime = NULL;
-    if (!is_top) {
-        runtime = arraylist_pop_back_unsafe(parent->threadInfo->top_runtime->runtime_pool);
+    if (parent) {
+        top_runtime = parent->threadInfo->top_runtime;
+    }
+
+    if(top_runtime){
+        runtime = top_runtime->runtime_pool_header;
+        if (runtime) {
+            top_runtime->runtime_pool_header = runtime->next;
+            runtime->next = NULL;
+        }
     }
     if (runtime == NULL) {
         runtime = jvm_calloc(sizeof(Runtime));
         runtime->localvar = jvm_calloc(RUNTIME_LOCALVAR_SIZE * sizeof(LocalVarItem));
         runtime->localvar_max = RUNTIME_LOCALVAR_SIZE;
         runtime->jnienv = &jnienv;
-        if(parent) {
+        if (parent) {
             runtime->stack = parent->stack;
             runtime->threadInfo = parent->threadInfo;
         }
     }
     //
-    if (!is_top) {
+    if (parent != NULL) {
         runtime->parent = parent;
         parent->son = runtime;
     } else {
         runtime->stack = stack_create(STACK_LENGHT);
         runtime->threadInfo = threadinfo_create();
         runtime->threadInfo->top_runtime = runtime;
-        runtime->runtime_pool = arraylist_create(RUNTIME_POOL_SIZE);
     }
     return runtime;
 }
 
 
 void runtime_destory(Runtime *runtime) {
-    s32 is_top = runtime->threadInfo->top_runtime == runtime;
-    if (!is_top) {
-        arraylist_push_back_unsafe(runtime->threadInfo->top_runtime->runtime_pool, runtime);
+    Runtime *top_runtime = runtime->threadInfo->top_runtime;
+    if (top_runtime!=runtime) {
+        runtime->next=top_runtime->runtime_pool_header;
+        top_runtime->runtime_pool_header=runtime;
     } else {
         stack_destory(runtime->stack);
         threadinfo_destory(runtime->threadInfo);
-        s32 i;
-        for (i = 0; i < runtime->runtime_pool->length; i++) {
-            Runtime *r = arraylist_get_value(runtime->runtime_pool, i);
+
+        Runtime *next=top_runtime->runtime_pool_header;
+        while(next) {
+            Runtime *r = next;
+            next=r->next;
             jvm_free(r->localvar);
             jvm_free(r);
         }
-        arraylist_destory(runtime->runtime_pool);
-        runtime->runtime_pool = NULL;
+        runtime->runtime_pool_header = NULL;
         jvm_free(runtime->localvar);
         jvm_free(runtime);
     }
@@ -196,8 +205,8 @@ Runtime *getLastSon(Runtime *top) {
     return NULL;
 }
 
-Runtime *getTopRuntime(Runtime *runtime){
-    if(runtime){
+Runtime *getTopRuntime(Runtime *runtime) {
+    if (runtime) {
         return runtime->threadInfo->top_runtime;
     }
     return NULL;
