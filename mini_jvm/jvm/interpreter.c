@@ -3508,7 +3508,8 @@ s32 execute_method_impl(MethodInfo *method, Runtime *pruntime, JClass *clazz) {
                         s32 typeIdx = s2c.s;
 
                         s32 checkok = 0;
-                        if (ins->mb.type == MEM_TYPE_INS) {
+                        if (ins == NULL) {
+                        } else if (ins->mb.type == MEM_TYPE_INS) {
                             if (instance_of(getClassByConstantClassRef(runtime->clazz, typeIdx), ins, runtime)) {
                                 checkok = 1;
                             }
