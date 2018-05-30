@@ -175,9 +175,6 @@ JClass *array_class_get_by_typetag(Runtime *runtime, Utf8String *tag) {
 JClass *array_class_get_by_name(Runtime *runtime, Utf8String *name) {
     JClass *clazz = NULL;
     if (name) {
-        if (utf8_equals_c(name, "D")) {
-            int debug = 1;
-        }
         Utf8String *ustr = utf8_create_c("[");
         if (!isData8ByteByTag(utf8_char_at(name, 0))) {  //not : L [
             if (!isDataReferByTag(utf8_char_at(name, 0)))utf8_append_c(ustr, "L");

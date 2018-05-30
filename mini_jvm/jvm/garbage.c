@@ -357,9 +357,9 @@ s64 garbage_collect() {
     collector->isgc = 1;
     s64 mem_total = 0, mem_free = 0;
     s64 del = 0;
-    s64 time_startAt;
+    s64 time, start;
 
-    time_startAt = currentTimeMillis();
+    start = time = currentTimeMillis();
     //prepar gc resource ,
     garbage_thread_lock();
 
@@ -367,32 +367,32 @@ s64 garbage_collect() {
         _garbage_resume_the_world();
         return -1;
     }
-//    jvm_printf("garbage_pause_the_world %lld\n", (currentTimeMillis() - time_startAt));
-//    time_startAt = currentTimeMillis();
+    jvm_printf("garbage_pause_the_world %lld\n", (currentTimeMillis() - time));
+    time = currentTimeMillis();
     if (collector->tmp_header) {
         collector->tmp_tailer->next = collector->header;//接起来
         collector->header = collector->tmp_header;
         collector->tmp_header = NULL;
         collector->tmp_tailer = NULL;
     }
-//    jvm_printf("garbage_move_cache %lld\n", (currentTimeMillis() - time_startAt));
-//    time_startAt = currentTimeMillis();
+    jvm_printf("garbage_move_cache %lld\n", (currentTimeMillis() - time));
+    time = currentTimeMillis();
     _garbage_copy_refer();
     //
-//    jvm_printf("garbage_copy_refer %lld\n", (currentTimeMillis() - time_startAt));
-//    time_startAt = currentTimeMillis();
+    jvm_printf("garbage_copy_refer %lld\n", (currentTimeMillis() - time));
+    time = currentTimeMillis();
     //real GC start
     //
     _garbage_change_flag();
     _garbage_big_search();
-//    jvm_printf("garbage_big_search %lld\n", (currentTimeMillis() - time_startAt));
-//    time_startAt = currentTimeMillis();
+    jvm_printf("garbage_big_search %lld\n", (currentTimeMillis() - time));
+    time = currentTimeMillis();
     _garbage_resume_the_world();
     garbage_thread_unlock();
+    jvm_printf("garbage_resume_the_world %lld\n", (currentTimeMillis() - time));
 
-//    jvm_printf("garbage_resume_the_world %lld\n", (currentTimeMillis() - time_startAt));
-    s64 time_stopWorld = currentTimeMillis() - time_startAt;
-    time_startAt = currentTimeMillis();
+    s64 time_stopWorld = currentTimeMillis() - start;
+    time = currentTimeMillis();
     //
 
 
@@ -410,6 +410,8 @@ s64 garbage_collect() {
             }
         }
     }
+    jvm_printf("garbage_finalize %lld\n", (currentTimeMillis() - time));
+    time = currentTimeMillis();
     //clear
     nextmb = collector->header;
     prevmb = NULL;
@@ -436,7 +438,7 @@ s64 garbage_collect() {
     heap_size = mem_total - mem_free;
     spin_unlock(&collector->lock);
 
-    s64 time_gc = currentTimeMillis() - time_startAt;
+    s64 time_gc = currentTimeMillis() - time;
     jvm_printf("[INFO]gc obj: %lld->%lld   heap : %lld -> %lld  stop_world: %lld  gc:%lld\n",
                iter, collector->obj_count, mem_total, heap_size, time_stopWorld, time_gc);
 
@@ -485,7 +487,7 @@ s32 _garbage_pause_the_world(void) {
                 return -1;
             }
             gc_move_refer_thread_2_gc(runtime);
-            
+
 #if _JVM_DEBUG_GARBAGE_DUMP
             Utf8String *stack = utf8_create();
             getRuntimeStack(runtime, stack);
@@ -657,9 +659,9 @@ static inline void _instance_mark_refer(Instance *ins) {
 
 static inline void _jarray_mark_refer(Instance *arr) {
     if (arr && arr->mb.type == MEM_TYPE_ARR) {
-        if (utf8_equals_c(arr->mb.clazz->name, "[[D")) {
-            jvm_printf("check %llx\n", (s64) (intptr_t) arr);
-        }
+//        if (utf8_equals_c(arr->mb.clazz->name, "[[D")) {
+//            jvm_printf("check %llx\n", (s64) (intptr_t) arr);
+//        }
         if (isDataReferByIndex(arr->mb.arr_type_index)) {
             s32 i;
             for (i = 0; i < arr->arr_length; i++) {//把所有引用去除，否则不会垃圾回收
