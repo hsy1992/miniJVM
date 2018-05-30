@@ -444,7 +444,7 @@ s32 javax_mini_reflect_vm_RefNative_getGarbageStatus(Runtime *runtime, JClass *c
     return 0;
 }
 
-s32 javax_mini_reflect_Reference_mapReference(Runtime *runtime, JClass *clazz) {
+s32 javax_mini_reflect_ReflectClass_mapReference(Runtime *runtime, JClass *clazz) {
     int pos = 0;
     Instance *ins = (Instance *) localvar_getRefer(runtime->localvar, pos++);
     Long2Double l2d;
@@ -795,7 +795,7 @@ static java_native_method method_jdwp_table[] = {
         {"javax/mini/reflect/MemAccess",    "readInt0",              "(JI)I",                                 javax_mini_reflect_MemAccess_readInt0},
         {"javax/mini/reflect/MemAccess",    "readLong0",             "(JI)J",                                 javax_mini_reflect_MemAccess_readLong0},
         {"javax/mini/reflect/MemAccess",    "readRefer0",            "(JI)J",                                 javax_mini_reflect_MemAccess_readRefer0},
-        {"javax/mini/reflect/Reference",    "mapReference",          "(J)V",                                  javax_mini_reflect_Reference_mapReference},
+        {"javax/mini/reflect/ReflectClass", "mapReference",          "(J)V",                                  javax_mini_reflect_ReflectClass_mapReference},
         {"javax/mini/reflect/Field",        "mapField",              "(J)V",                                  javax_mini_reflect_Field_mapField},
         {"javax/mini/reflect/Method",       "mapMethod",             "(J)V",                                  javax_mini_reflect_Method_mapMethod},
         {"javax/mini/reflect/Method",       "invokeMethod",          "(JLjava/lang/Object;[J)J",              javax_mini_reflect_Method_invokeMethod},
