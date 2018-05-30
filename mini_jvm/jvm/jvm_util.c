@@ -116,6 +116,15 @@ JClass *array_class_get(Runtime *runtime, Utf8String *desc) {
     return NULL;
 }
 
+/**
+ * array class get accepted name :
+ *
+ *    7                     -> [D
+ *
+ * @param runtime
+ * @param name
+ * @return
+ */
 JClass *array_class_get_by_index(Runtime *runtime, s32 typeIdx) {
     JClass *clazz = NULL;
     if (jvm_runtime_cache.array_classes[typeIdx] == NULL) {
@@ -129,16 +138,59 @@ JClass *array_class_get_by_index(Runtime *runtime, s32 typeIdx) {
     return clazz;
 }
 
+/**
+ * array class get accepted name :
+ *
+ *    D                     -> [D
+ *
+ * @param runtime
+ * @param name
+ * @return
+ */
+JClass *array_class_get_by_typetag(Runtime *runtime, Utf8String *tag) {
+    JClass *clazz = NULL;
+    if (tag) {
+
+        Utf8String *ustr = utf8_create_c("[");
+        utf8_append(ustr, tag);
+        clazz = array_class_get(runtime, ustr);
+        utf8_destory(ustr);
+
+    }
+    return clazz;
+}
+
+/**
+ * array class get accepted name :
+ *
+ *    [D                    -> [[D
+ *    java/lang/String      -> [Ljava/lang/String;
+ *    Ljava/lang/Float;     -> [Ljava/lang/Float;
+ *
+ *
+ * @param runtime
+ * @param name
+ * @return
+ */
 JClass *array_class_get_by_name(Runtime *runtime, Utf8String *name) {
     JClass *clazz = NULL;
     if (name) {
+        if (utf8_equals_c(name, "D")) {
+            int debug = 1;
+        }
         Utf8String *ustr = utf8_create_c("[");
-        if (!isDataReferByTag(utf8_char_at(name, 0)))utf8_append_c(ustr, "L");
-        utf8_append(ustr, name);
-        if (utf8_char_at(name, name->length - 1) != ';')
-            utf8_append_c(ustr, ";");
+        if (!isData8ByteByTag(utf8_char_at(name, 0))) {  //not : L [
+            if (!isDataReferByTag(utf8_char_at(name, 0)))utf8_append_c(ustr, "L");
+            utf8_append(ustr, name);
+            if (utf8_char_at(name, name->length - 1) != ';') {
+                utf8_append_c(ustr, ";");
+            }
+        } else {
+            utf8_append(ustr, name);
+        }
         clazz = array_class_get(runtime, ustr);
         utf8_destory(ustr);
+
     }
     return clazz;
 }
@@ -387,7 +439,6 @@ s32 isDataReferByIndex(s32 index) {
     }
     return 0;
 }
-
 
 
 void printDumpOfClasses() {
@@ -805,7 +856,6 @@ s32 jthread_sleep(Runtime *runtime, s64 ms) {
 
 s32 check_suspend_and_pause(Runtime *runtime) {
     if (runtime->threadInfo->suspend_count) {
-        gc_move_refer_thread_2_gc(runtime);
         runtime->threadInfo->is_suspend = 1;
         garbage_thread_lock();
         garbage_thread_notifyall();
@@ -847,6 +897,13 @@ Instance *jarray_create_by_type_name(Runtime *runtime, s32 count, Utf8String *na
     return arr;
 }
 
+Instance *jarray_create_by_type_typetag(Runtime *runtime, s32 count, Utf8String *tag) {
+    JClass *clazz = NULL;
+    clazz = array_class_get_by_typetag(runtime, tag);
+    Instance *arr = jarray_create_by_class(runtime, count, clazz);
+    return arr;
+}
+
 
 s32 jarray_destory(Instance *arr) {
     if (arr && arr->mb.type == MEM_TYPE_ARR) {
@@ -874,9 +931,14 @@ Instance *jarray_multi_create(Runtime *runtime, ArrayList *dim, Utf8String *pdes
         return NULL;
     }
     Utf8String *desc = utf8_create_copy(pdesc);
-    c8 ch = utf8_char_at(desc, 1);
-    Instance *arr = jarray_create_by_type_name(runtime, len, desc);
     utf8_substring(desc, 1, desc->length);
+    c8 ch = utf8_char_at(desc, 0);
+    Instance *arr;
+    if (isDataReferByTag(ch)) {
+        arr = jarray_create_by_type_name(runtime, len, desc);
+    } else {
+        arr = jarray_create_by_type_typetag(runtime, len, desc);
+    }
 #if _JVM_DEBUG_BYTECODE_DETAIL > 5
     jvm_printf("multi arr deep :%d  type(%c) arr[%x] size:%d\n", deep, ch, arr, len);
 #endif

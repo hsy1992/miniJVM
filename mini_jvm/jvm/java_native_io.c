@@ -869,7 +869,7 @@ s32 org_mini_fs_InnerFile_listDir(Runtime *runtime, JClass *clazz) {
             (void) closedir(dirp); //关闭目录
 
             s32 i;
-            Utf8String *ustr = utf8_create_c(STR_INS_JAVA_LANG_STRING);
+            Utf8String *ustr = utf8_create_c(STR_CLASS_JAVA_LANG_STRING);
             Instance *jarr = jarray_create_by_type_name(runtime, files->length, ustr);
             utf8_destory(ustr);
             for (i = 0; i < files->length; i++) {

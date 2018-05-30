@@ -109,19 +109,7 @@ void peek_entry_jni(RuntimeStack *stack, StackEntry *entry, int index) {
     peek_entry(stack, entry, index);
 }
 
-s32 is_cat1(StackEntry *entry) {
-    if (entry->type & STACK_ENTRY_INT || entry->type & STACK_ENTRY_FLOAT || entry->type & STACK_ENTRY_REF) {
-        return 1;
-    }
-    return 0;
-}
 
-s32 is_cat2(StackEntry *entry) {
-    if (entry->type & STACK_ENTRY_LONG || entry->type & STACK_ENTRY_DOUBLE) {
-        return 1;
-    }
-    return 0;
-}
 
 s32 is_ref(StackEntry *entry) {
     if (entry->type & STACK_ENTRY_REF)

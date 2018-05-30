@@ -53,7 +53,7 @@ s32 javax_mini_reflect_vm_RefNative_id2obj(Runtime *runtime, JClass *clazz) {
 s32 javax_mini_reflect_vm_RefNative_getClasses(Runtime *runtime, JClass *clazz) {
     s32 size = (s32) sys_classloader->classes->entries;
 
-    Utf8String *ustr = utf8_create_c(STR_INS_JAVA_LANG_CLASS);
+    Utf8String *ustr = utf8_create_c(STR_CLASS_JAVA_LANG_CLASS);
     Instance *jarr = jarray_create_by_type_name(runtime, size, ustr);
     utf8_destory(ustr);
     s32 i = 0;
@@ -287,7 +287,7 @@ void _list_iter_getthread(ArrayListValue value, void *para) {
 
 s32 javax_mini_reflect_vm_RefNative_getThreads(Runtime *runtime, JClass *clazz) {
 //    garbage_thread_lock();
-    Utf8String *ustr = utf8_create_c(STR_INS_JAVA_LANG_THREAD);
+    Utf8String *ustr = utf8_create_c(STR_CLASS_JAVA_LANG_THREAD);
     Instance *jarr = jarray_create_by_type_name(runtime, thread_list->length, ustr);
     utf8_destory(ustr);
 
@@ -417,7 +417,7 @@ s32 javax_mini_reflect_vm_RefNative_getStackFrame(Runtime *runtime, JClass *claz
 s32 javax_mini_reflect_vm_RefNative_getGarbageReferedObjs(Runtime *runtime, JClass *clazz) {
     s32 size = (s32) collector->runtime_refer_copy->length;
 
-    Utf8String *ustr = utf8_create_c(STR_INS_JAVA_LANG_OBJECT);
+    Utf8String *ustr = utf8_create_c(STR_CLASS_JAVA_LANG_OBJECT);
     Instance *jarr = jarray_create_by_type_name(runtime, size, ustr);
     utf8_destory(ustr);
     s32 i = 0;
@@ -636,7 +636,7 @@ s32 javax_mini_reflect_Method_mapMethod(Runtime *runtime, JClass *clazz) {
             }
             {
                 //
-                c8 *table_type = "[Ljavax/mini/reflect/LocalVarTable;";
+                c8 *table_type = "javax/mini/reflect/LocalVarTable";
                 ptr = getFieldPtr_byName_c(ins, JDWP_CLASS_METHOD, "localVarTable", table_type);
                 if (ptr) {
                     Utf8String *ustr = utf8_create_c(table_type);

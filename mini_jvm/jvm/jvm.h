@@ -1037,9 +1037,23 @@ static inline __refer entry_2_refer(StackEntry *entry) {
     return entry->rvalue;
 }
 
-s32 is_cat2(StackEntry *entry);
+//s32 is_cat2(StackEntry *entry);
+//
+//s32 is_cat1(StackEntry *entry);
 
-s32 is_cat1(StackEntry *entry);
+static inline s32 is_cat1(StackEntry *entry) {
+    if (entry->type & STACK_ENTRY_INT || entry->type & STACK_ENTRY_FLOAT || entry->type & STACK_ENTRY_REF) {
+        return 1;
+    }
+    return 0;
+}
+
+static inline s32 is_cat2(StackEntry *entry) {
+    if (entry->type & STACK_ENTRY_LONG || entry->type & STACK_ENTRY_DOUBLE) {
+        return 1;
+    }
+    return 0;
+}
 
 s32 is_ref(StackEntry *entry);
 

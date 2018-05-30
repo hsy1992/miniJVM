@@ -56,8 +56,6 @@ s32 isDataReferByIndex(s32 index);
 
 u8 getDataTypeTag(s32 index);
 
-JClass *array_class_get_by_name(Runtime *runtime, Utf8String *name);
-
 s64 currentTimeMillis(void);
 
 s64 nanoTime(void);
@@ -301,11 +299,18 @@ void thread_lock_dispose(ThreadLock *lock);
 
 void thread_lock_init(ThreadLock *lock);
 
+
+////======================= array =============================
+
 Instance *jarray_create_by_class(Runtime *runtime, s32 count, JClass *clazz);
 
 Instance *jarray_create_by_type_name(Runtime *runtime, s32 count, Utf8String *name);
 
 Instance *jarray_create_by_type_index(Runtime *runtime, s32 count, s32 typeIdx);
+
+JClass *array_class_get_by_name(Runtime *runtime, Utf8String *name);
+
+JClass *array_class_get_by_typetag(Runtime *runtime, Utf8String *tag);
 
 JClass *array_class_get_by_index(Runtime *runtime, s32 typeIdx);
 
