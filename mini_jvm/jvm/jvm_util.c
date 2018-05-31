@@ -957,20 +957,20 @@ void jarray_set_field(Instance *arr, s32 index, s64 val) {
     s32 idx = arr->mb.arr_type_index;
     s32 bytes = data_type_bytes[idx];
     if (isDataReferByIndex(idx)) {
-        setFieldRefer(arr->arr_body + index * bytes, (__refer) (intptr_t) val);
+        setFieldRefer((c8 *) ((__refer *) arr->arr_body + index), (__refer) (intptr_t) val);
     } else {
         switch (bytes) {
             case 1:
-                setFieldByte(arr->arr_body + index * bytes, (s8) val);
+                setFieldByte((c8 *) (arr->arr_body + index), (s8) val);
                 break;
             case 2:
-                setFieldShort(arr->arr_body + index * bytes, (s16) val);
+                setFieldShort((c8 *) ((s16 *) arr->arr_body + index), (s16) val);
                 break;
             case 4:
-                setFieldInt(arr->arr_body + index * bytes, (s32) val);
+                setFieldInt((c8 *) ((s32 *) arr->arr_body + index), (s32) val);
                 break;
             case 8:
-                setFieldLong(arr->arr_body + index * bytes, val);
+                setFieldLong((c8 *) ((s64 *) arr->arr_body + index), val);
                 break;
         }
     }
@@ -981,23 +981,23 @@ s64 jarray_get_field(Instance *arr, s32 index) {
     s32 bytes = data_type_bytes[idx];
     s64 val = 0;
     if (isDataReferByIndex(idx)) {
-        val = (intptr_t) getFieldRefer(arr->arr_body + index * bytes);
+        val = (intptr_t) getFieldRefer((c8 *) ((__refer *) arr->arr_body + index));
     } else {
         switch (bytes) {
             case 1:
-                val = getFieldByte(arr->arr_body + index * bytes);
+                val = getFieldByte(arr->arr_body + index);
                 break;
             case 2:
                 if (idx == DATATYPE_JCHAR) {
-                    val = (u16) getFieldShort(arr->arr_body + index * bytes);
+                    val = (u16) getFieldShort((c8 *) ((u16 *) arr->arr_body + index));
                 } else
-                    val = getFieldShort(arr->arr_body + index * bytes);
+                    val = getFieldShort((c8 *) ((s16 *) arr->arr_body + index));
                 break;
             case 4:
-                val = getFieldInt(arr->arr_body + index * bytes);
+                val = getFieldInt((c8 *) ((s32 *) arr->arr_body + index));
                 break;
             case 8:
-                val = getFieldLong(arr->arr_body + index * bytes);
+                val = getFieldLong((c8 *) ((s64 *) arr->arr_body + index));
                 break;
         }
     }
