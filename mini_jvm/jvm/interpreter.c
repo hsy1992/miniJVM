@@ -3198,10 +3198,7 @@ s32 execute_method_impl(MethodInfo *method, Runtime *pruntime, JClass *clazz) {
 
                         ConstantMethodRef *cmr = class_get_constant_method_ref(runtime->clazz, object_ref);
                         MethodInfo *m = cmr->methodInfo;
-                        if (!m) {
-                            m = find_methodInfo_by_methodref(runtime->clazz, object_ref, runtime);
-                            cmr->methodInfo = m;
-                        }
+
 #if _JVM_DEBUG_BYTECODE_DETAIL > 5
                         if (utf8_equals_c(m->name, "dtoa") && utf8_equals_c(m->_this_class->name, "java/lang/FloatingDecimal")) {
                             int debug = 1;
@@ -3213,8 +3210,7 @@ s32 execute_method_impl(MethodInfo *method, Runtime *pruntime, JClass *clazz) {
                         if (m) {
                             ret = execute_method_impl(m, runtime, m->_this_class);
                         } else {
-                            Instance *exception = exception_create_str(JVM_EXCEPTION_NOSUCHMETHOD, runtime,
-                                                                       utf8_cstr(cmr->name));
+                            Instance *exception = exception_create_str(JVM_EXCEPTION_NOSUCHMETHOD, runtime, utf8_cstr(cmr->name));
                             push_ref(stack, (__refer) exception);
                             ret = RUNTIME_STATUS_EXCEPTION;
                         }
@@ -3231,13 +3227,9 @@ s32 execute_method_impl(MethodInfo *method, Runtime *pruntime, JClass *clazz) {
                         s2c.c0 = opCode[0][2];
                         u16 object_ref = s2c.s;
                         ConstantMethodRef *cmr = class_get_constant_method_ref(runtime->clazz, object_ref);
-                        if (!cmr->methodInfo)classes_load_get(cmr->clsName, runtime);
 
                         MethodInfo *m = cmr->methodInfo;
-                        if (!m) {
-                            m = find_methodInfo_by_methodref(runtime->clazz, object_ref, runtime);
-                            cmr->methodInfo = m;
-                        }
+
 #if _JVM_DEBUG_BYTECODE_DETAIL > 5
                         invoke_deepth(runtime);
                         jvm_printf("invokestatic   | %s.%s%s \n", utf8_cstr(m->_this_class->name),
@@ -3246,8 +3238,7 @@ s32 execute_method_impl(MethodInfo *method, Runtime *pruntime, JClass *clazz) {
                         if (m) {
                             ret = execute_method_impl(m, runtime, m->_this_class);
                         } else {
-                            Instance *exception = exception_create_str(JVM_EXCEPTION_NOSUCHMETHOD, runtime,
-                                                                       utf8_cstr(cmr->name));
+                            Instance *exception = exception_create_str(JVM_EXCEPTION_NOSUCHMETHOD, runtime, utf8_cstr(cmr->name));
                             push_ref(stack, (__refer) exception);
                             ret = RUNTIME_STATUS_EXCEPTION;
                         }
@@ -3292,8 +3283,7 @@ s32 execute_method_impl(MethodInfo *method, Runtime *pruntime, JClass *clazz) {
                             if (m) {
                                 ret = execute_method_impl(m, runtime, m->_this_class);
                             } else {
-                                Instance *exception = exception_create_str(JVM_EXCEPTION_NOSUCHMETHOD, runtime,
-                                                                           utf8_cstr(cmr->name));
+                                Instance *exception = exception_create_str(JVM_EXCEPTION_NOSUCHMETHOD, runtime, utf8_cstr(cmr->name));
                                 push_ref(stack, (__refer) exception);
                                 ret = RUNTIME_STATUS_EXCEPTION;
                             }
