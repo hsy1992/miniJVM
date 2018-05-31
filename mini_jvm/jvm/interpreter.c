@@ -3567,7 +3567,11 @@ s32 execute_method_impl(MethodInfo *method, Runtime *pruntime, JClass *clazz) {
                         Utf8String *desc = class_get_utf8_string(runtime->clazz, s2c.s);
                         //array dim
                         s32 count = (u8) opCode[0][3];
+#ifdef __JVM_OS_VS__
+						s32 dim[32];
+#else
                         s32 dim[count];
+#endif
                         int i;
                         for (i = 0; i < count; i++)
                             dim[i] = pop_int(stack);
