@@ -316,7 +316,7 @@ JClass *array_class_get_by_index(Runtime *runtime, s32 typeIdx);
 
 s32 jarray_destory(Instance *arr);
 
-Instance *jarray_multi_create(Runtime *runtime, ArrayList *dim, Utf8String *desc, s32 deep);
+Instance *jarray_multi_create(Runtime *runtime, s32 *dim, s32 dim_size, Utf8String *desc, s32 deep);
 
 void jarray_set_field(Instance *arr, s32 index, s64 val);
 

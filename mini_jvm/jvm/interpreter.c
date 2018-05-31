@@ -3577,13 +3577,12 @@ s32 execute_method_impl(MethodInfo *method, Runtime *pruntime, JClass *clazz) {
                         Utf8String *desc = class_get_utf8_string(runtime->clazz, s2c.s);
                         //array dim
                         s32 count = (u8) opCode[0][3];
-                        ArrayList *dim = arraylist_create(count);
+                        s32 dim[count];
                         int i;
                         for (i = 0; i < count; i++)
-                            arraylist_push_back(dim, (ArrayListValue) (intptr_t) pop_int(stack));
+                            dim[i] = pop_int(stack);
 
-                        Instance *arr = jarray_multi_create(runtime, dim, desc, 0);
-                        arraylist_destory(dim);
+                        Instance *arr = jarray_multi_create(runtime, dim, count, desc, 0);
 #if _JVM_DEBUG_BYTECODE_DETAIL > 5
                         invoke_deepth(runtime);
                         jvm_printf("multianewarray  [%llx] type:%s , count:%d  \n", (s64) (intptr_t) arr,

@@ -922,8 +922,8 @@ s32 jarray_destory(Instance *arr) {
  * @param pdesc desc
  * @return ins
  */
-Instance *jarray_multi_create(Runtime *runtime, ArrayList *dim, Utf8String *pdesc, s32 deep) {
-    s32 len = (s32) (intptr_t) arraylist_get_value(dim, dim->length - 1 - deep);
+Instance *jarray_multi_create(Runtime *runtime, s32 *dim, s32 dim_size, Utf8String *pdesc, s32 deep) {
+    s32 len = dim[dim_size - 1 - deep];
     if (len == -1) {
         return NULL;
     }
@@ -943,7 +943,7 @@ Instance *jarray_multi_create(Runtime *runtime, ArrayList *dim, Utf8String *pdes
         int i;
         s64 val;
         for (i = 0; i < len; i++) {
-            Instance *elem = jarray_multi_create(runtime, dim, desc, deep + 1);
+            Instance *elem = jarray_multi_create(runtime, dim, dim_size, desc, deep + 1);
             val = (intptr_t) elem;
             jarray_set_field(arr, i, val);
         }

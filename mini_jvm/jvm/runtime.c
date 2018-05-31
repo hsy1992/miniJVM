@@ -135,7 +135,7 @@ Runtime *runtime_create(Runtime *parent) {
         top_runtime = parent->threadInfo->top_runtime;
     }
 
-    if(top_runtime){
+    if (top_runtime) {
         runtime = top_runtime->runtime_pool_header;
         if (runtime) {
             top_runtime->runtime_pool_header = runtime->next;
@@ -167,17 +167,17 @@ Runtime *runtime_create(Runtime *parent) {
 
 void runtime_destory(Runtime *runtime) {
     Runtime *top_runtime = runtime->threadInfo->top_runtime;
-    if (top_runtime!=runtime) {
-        runtime->next=top_runtime->runtime_pool_header;
-        top_runtime->runtime_pool_header=runtime;
+    if (top_runtime != runtime) {
+        runtime->next = top_runtime->runtime_pool_header;
+        top_runtime->runtime_pool_header = runtime;
     } else {
         stack_destory(runtime->stack);
         threadinfo_destory(runtime->threadInfo);
 
-        Runtime *next=top_runtime->runtime_pool_header;
-        while(next) {
+        Runtime *next = top_runtime->runtime_pool_header;
+        while (next) {
             Runtime *r = next;
-            next=r->next;
+            next = r->next;
             jvm_free(r->localvar);
             jvm_free(r);
         }
