@@ -115,7 +115,7 @@ s32 class_prepar(JClass *clazz, Runtime *runtime) {
         ConstantClassRef *ccf = class_get_constant_classref(clazz, superid);
         if (ccf) {
             Utf8String *clsName_u = class_get_utf8_string(clazz, ccf->stringIndex);
-            JClass *other = classes_load_get(clsName_u, runtime);
+            JClass *other = classes_load_get_without_clinit(clsName_u, runtime);
             clazz->superclass = other;
         } else {
             jvm_printf("error get superclass , class: %s\n", utf8_cstr(clazz->name));
@@ -207,70 +207,77 @@ s32 class_prepar(JClass *clazz, Runtime *runtime) {
  * @param runtime  runtime
  */
 void class_clinit(JClass *clazz, Runtime *runtime) {
+    garbage_thread_lock();
     if (clazz->status < CLASS_STATUS_PREPARED) {
         class_prepar(clazz, runtime);
     }
-    if (clazz->status >= CLASS_STATUS_CLINITING)return;
-    clazz->status = CLASS_STATUS_CLINITING;
+    if (clazz->status < CLASS_STATUS_CLINITING) {
+        clazz->status = CLASS_STATUS_CLINITING;
 
-    s32 i, len;
+        s32 i, len;
 
-    /**
-     * 把一些索引引用，转为内存对象引用，以此加快字节码执行速度
-     * 把ConstantMethodRef.index 指向具体的 MethodInfo ，可能在本类，可能在父类
-     * 把ConstantFieldRef.index 指向具体的 FieldInfo 内存
-     * @param clazz
-     */
-    for (i = 0; i < clazz->constantPool.methodRef->length; i++) {
-        ConstantMethodRef *cmr = (ConstantMethodRef *) arraylist_get_value(clazz->constantPool.methodRef, i);
-        cmr->methodInfo = find_methodInfo_by_methodref(clazz, cmr->index, runtime);
-        cmr->virtual_methods = pairlist_create(0);
-        //jvm_printf("%s.%s %llx\n", utf8_cstr(clazz->name), utf8_cstr(cmr->name), (s64) (intptr_t) cmr->virtual_methods);
-    }
-
-    for (i = 0; i < clazz->constantPool.fieldRef->length; i++) {
-        ConstantFieldRef *cfr = (ConstantFieldRef *) arraylist_get_value(clazz->constantPool.fieldRef, i);
-        FieldInfo *fi = find_fieldInfo_by_fieldref(clazz, cfr->index, runtime);
-        cfr->fieldInfo = fi;
-        if (fi->_this_class->status < CLASS_STATUS_CLINITED) {
-            class_clinit(fi->_this_class, runtime);
+        /**
+         * 把一些索引引用，转为内存对象引用，以此加快字节码执行速度
+         * 把ConstantMethodRef.index 指向具体的 MethodInfo ，可能在本类，可能在父类
+         * 把ConstantFieldRef.index 指向具体的 FieldInfo 内存
+         * @param clazz
+         */
+        for (i = 0; i < clazz->constantPool.methodRef->length; i++) {
+            ConstantMethodRef *cmr = (ConstantMethodRef *) arraylist_get_value(clazz->constantPool.methodRef, i);
+            cmr->methodInfo = find_methodInfo_by_methodref(clazz, cmr->index, runtime);
+            cmr->virtual_methods = pairlist_create(0);
+            //jvm_printf("%s.%s %llx\n", utf8_cstr(clazz->name), utf8_cstr(cmr->name), (s64) (intptr_t) cmr->virtual_methods);
         }
-    }
 
-    clazz->finalizeMethod = find_methodInfo_by_name_c(utf8_cstr(clazz->name), STR_METHOD_FINALIZE, "()V", runtime);
-
-    // init javastring
-    ArrayList *utf8list = clazz->constantPool.utf8CP;
-    for (i = 0, len = utf8list->length; i < len; i++) {
-        ConstantUTF8 *cutf = arraylist_get_value(utf8list, i);
-        Instance *jstr = jstring_create(cutf->utfstr, runtime);
-        gc_refer_hold(jstr);
-        cutf->jstr = jstr;
-    }
-
-
-    //优先初始化基类
-    JClass *superclass = getSuperClass(clazz);
-    if (superclass && superclass->status < CLASS_STATUS_CLINITED) {
-        class_clinit(superclass, runtime);
-    }
-
-    MethodPool *p = &(clazz->methodPool);
-    for (i = 0; i < p->method_used; i++) {
-        //jvm_printf("%s,%s\n", utf8_cstr(p->methodRef[i].name), utf8_cstr(p->methodRef[i].descriptor));
-        if (utf8_equals_c(p->method[i].name, STR_METHOD_CLINIT)) {
-#if _JVM_DEBUG_BYTECODE_DETAIL > 5
-            jvm_printf(" <clinit>  :%s\n", utf8_cstr(clazz->name));
-#endif
-
-            s32 ret = execute_method_impl(&(p->method[i]), runtime, clazz);
-            if (ret != RUNTIME_STATUS_NORMAL) {
-                print_exception(runtime);
+        for (i = 0; i < clazz->constantPool.fieldRef->length; i++) {
+            ConstantFieldRef *cfr = (ConstantFieldRef *) arraylist_get_value(clazz->constantPool.fieldRef, i);
+            FieldInfo *fi = find_fieldInfo_by_fieldref(clazz, cfr->index, runtime);
+            cfr->fieldInfo = fi;
+            if (!fi) {
+                jvm_printf("field not found %s.%d \n", utf8_cstr(clazz->name), (cfr->nameAndTypeIndex));
+            }
+            if (fi->_this_class->status < CLASS_STATUS_CLINITED) {
+                class_clinit(fi->_this_class, runtime);
             }
         }
-    }
 
-    clazz->status = CLASS_STATUS_CLINITED;
+        clazz->finalizeMethod = find_methodInfo_by_name_c(utf8_cstr(clazz->name), STR_METHOD_FINALIZE, "()V", runtime);
+
+        // init javastring
+        ArrayList *utf8list = clazz->constantPool.utf8CP;
+        for (i = 0, len = utf8list->length; i < len; i++) {
+            ConstantUTF8 *cutf = arraylist_get_value(utf8list, i);
+            Instance *jstr = jstring_create(cutf->utfstr, runtime);
+            gc_refer_hold(jstr);
+            cutf->jstr = jstr;
+        }
+
+
+        //优先初始化基类
+        JClass *superclass = getSuperClass(clazz);
+        if (superclass && superclass->status < CLASS_STATUS_CLINITED) {
+            class_clinit(superclass, runtime);
+        }
+
+        MethodPool *p = &(clazz->methodPool);
+        for (i = 0; i < p->method_used; i++) {
+            //jvm_printf("%s,%s\n", utf8_cstr(p->methodRef[i].name), utf8_cstr(p->methodRef[i].descriptor));
+            if (utf8_equals_c(p->method[i].name, STR_METHOD_CLINIT)) {
+#if _JVM_DEBUG_BYTECODE_DETAIL > 5
+                jvm_printf(" <clinit>  :%s\n", utf8_cstr(clazz->name));
+#endif
+
+                s32 ret = execute_method_impl(&(p->method[i]), runtime, clazz);
+                if (ret != RUNTIME_STATUS_NORMAL) {
+                    print_exception(runtime);
+                }
+                break;
+            }
+        }
+
+        clazz->status = CLASS_STATUS_CLINITED;
+    }
+    garbage_thread_unlock();
 }
 //===============================    实例化相关  ==================================
 
@@ -358,7 +365,7 @@ FieldInfo *find_fieldInfo_by_fieldref(JClass *clazz, s32 field_ref, Runtime *run
                                                 class_get_constant_classref(clazz, cfr->classIndex)->stringIndex);
     Utf8String *fieldName = class_get_utf8_string(clazz, nat->nameIndex);
     Utf8String *type = class_get_utf8_string(clazz, nat->typeIndex);
-    JClass *other = classes_load_get(clsName, runtime);
+    JClass *other = classes_load_get_without_clinit(clsName, runtime);
 
     while (fi == NULL && other) {
         FieldPool *fp = &(other->fieldPool);
@@ -460,7 +467,7 @@ MethodInfo *find_methodInfo_by_name_c(c8 *pclsName, c8 *pmethodName, c8 *pmethod
 
 MethodInfo *find_methodInfo_by_name(Utf8String *clsName, Utf8String *methodName, Utf8String *methodType, Runtime *runtime) {
     MethodInfo *mi = NULL;
-    JClass *other = classes_load_get(clsName, runtime);
+    JClass *other = classes_load_get_without_clinit(clsName, runtime);
 
     while (mi == NULL && other) {
         MethodPool *fp = &(other->methodPool);

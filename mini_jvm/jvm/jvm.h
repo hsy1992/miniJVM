@@ -886,8 +886,10 @@ struct _Runtime {
     RuntimeStack *stack;
     LocalVarItem *localvar;
     //
-    Runtime *runtime_pool_header;// cache runtimes for performance
-    Runtime *next;  //for runtime pools linklist
+    union {
+        Runtime *runtime_pool_header;// cache runtimes for performance
+        Runtime *next;  //for runtime pools linklist
+    };
 
     JniEnv *jnienv;
     s16 localvar_count;

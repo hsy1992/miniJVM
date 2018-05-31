@@ -52,14 +52,7 @@ JClass *classes_get(Utf8String *clsName) {
     return cl;
 }
 
-JClass *classes_load_get_c(c8 *pclassName, Runtime *runtime) {
-    Utf8String *ustr = utf8_create_c(pclassName);
-    JClass *clazz = classes_load_get(ustr, runtime);
-    utf8_destory(ustr);
-    return clazz;
-}
-
-JClass *classes_load_get(Utf8String *ustr, Runtime *runtime) {
+JClass *classes_load_get_without_clinit(Utf8String *ustr, Runtime *runtime) {
     if (!ustr)return NULL;
     JClass *cl;
     spin_lock(&sys_classloader->lock);//fast lock
@@ -77,9 +70,21 @@ JClass *classes_load_get(Utf8String *ustr, Runtime *runtime) {
         garbage_thread_unlock();
         //if (java_debug)event_on_class_prepar(runtime, cl);
     }
-//    if (cl) {
-//        class_clinit(cl, runtime);
-//    }
+    return cl;
+}
+
+JClass *classes_load_get_c(c8 *pclassName, Runtime *runtime) {
+    Utf8String *ustr = utf8_create_c(pclassName);
+    JClass *clazz = classes_load_get(ustr, runtime);
+    utf8_destory(ustr);
+    return clazz;
+}
+
+JClass *classes_load_get(Utf8String *ustr, Runtime *runtime) {
+    JClass *cl = classes_load_get_without_clinit(ustr, runtime);
+    if (cl) {
+        class_clinit(cl, runtime);
+    }
     return cl;
 }
 

@@ -565,7 +565,7 @@ s32 execute_method_impl(MethodInfo *method, Runtime *pruntime, JClass *clazz) {
 
     runtime->method = method;
     runtime->clazz = clazz;
-    if (clazz->status < CLASS_STATUS_CLINITING) {
+    while (clazz->status < CLASS_STATUS_CLINITING) {
         class_clinit(clazz, runtime);
     }
     s32 method_sync = method->access_flags & ACC_SYNCHRONIZED;

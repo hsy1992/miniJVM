@@ -344,6 +344,8 @@ JClass *classes_get_c(c8 *clsName);
 
 JClass *classes_get(Utf8String *clsName);
 
+JClass *classes_load_get_without_clinit(Utf8String *ustr, Runtime *runtime);
+
 JClass *classes_load_get_c(c8 *pclassName, Runtime *runtime);
 
 s32 classes_put(JClass *clazz);
