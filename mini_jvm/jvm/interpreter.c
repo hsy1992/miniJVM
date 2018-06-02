@@ -215,7 +215,7 @@ enum {
 /* 0xCA */ op_breakpoint,
 };
 
-static inline s32 _op_aload_n(u8 **opCode, RuntimeStack *stack, LocalVarItem *localvar, Runtime *runtime, s32 i) {
+static inline void _op_aload_n(u8 **opCode, RuntimeStack *stack, LocalVarItem *localvar, Runtime *runtime, s32 i) {
     __refer value = localvar_getRefer(localvar, i);
     push_ref(stack, value);
 #if _JVM_DEBUG_BYTECODE_DETAIL > 5
@@ -223,11 +223,10 @@ static inline s32 _op_aload_n(u8 **opCode, RuntimeStack *stack, LocalVarItem *lo
     jvm_printf("aload_%d push localvar [%llx] into stack\n", i, (s64) (intptr_t) value);
 #endif
     *opCode += 1;
-    return 0;
 }
 
 
-static inline s32 _op_ifload_n(u8 **opCode, RuntimeStack *stack, LocalVarItem *localvar, Runtime *runtime, s32 i) {
+static inline void _op_ifload_n(u8 **opCode, RuntimeStack *stack, LocalVarItem *localvar, Runtime *runtime, s32 i) {
     Int2Float i2f;
     i2f.i = localvar_getInt(localvar, i);
 #if _JVM_DEBUG_BYTECODE_DETAIL > 5
@@ -236,11 +235,10 @@ static inline s32 _op_ifload_n(u8 **opCode, RuntimeStack *stack, LocalVarItem *l
 #endif
     push_int(stack, i2f.i);
     *opCode += 1;
-    return 0;
 }
 
 
-static inline s32 _op_ldc_impl(u8 **opCode, RuntimeStack *stack, JClass *clazz, Runtime *runtime, s32 index) {
+static inline void _op_ldc_impl(u8 **opCode, RuntimeStack *stack, JClass *clazz, Runtime *runtime, s32 index) {
 
     ConstantItem *item = class_get_constant_item(clazz, index);
     switch (item->tag) {
@@ -255,8 +253,7 @@ static inline s32 _op_ldc_impl(u8 **opCode, RuntimeStack *stack, JClass *clazz, 
             break;
         }
         case CONSTANT_STRING_REF: {
-            ConstantUTF8 *cutf = class_get_constant_utf8(clazz,
-                                                         class_get_constant_stringref(clazz, index)->stringIndex);
+            ConstantUTF8 *cutf = class_get_constant_utf8(clazz, class_get_constant_stringref(clazz, index)->stringIndex);
             push_ref(stack, (__refer) cutf->jstr);
 
 
@@ -277,20 +274,18 @@ static inline s32 _op_ldc_impl(u8 **opCode, RuntimeStack *stack, JClass *clazz, 
         }
     }
 
-    return 0;
 }
 
-static inline s32 _op_iconst_n(u8 **opCode, RuntimeStack *stack, Runtime *runtime, s32 i) {
+static inline void _op_iconst_n(u8 **opCode, RuntimeStack *stack, Runtime *runtime, s32 i) {
     push_int(stack, i);
 #if _JVM_DEBUG_BYTECODE_DETAIL > 5
     invoke_deepth(runtime);
     jvm_printf("iconst_%d: push %d into stack\n", i, i);
 #endif
     *opCode += 1;
-    return 0;
 }
 
-static inline s32 _op_dconst_n(u8 **opCode, RuntimeStack *stack, Runtime *runtime, f64 d) {
+static inline void _op_dconst_n(u8 **opCode, RuntimeStack *stack, Runtime *runtime, f64 d) {
     push_double(stack, d);
 
 #if _JVM_DEBUG_BYTECODE_DETAIL > 5
@@ -298,10 +293,9 @@ static inline s32 _op_dconst_n(u8 **opCode, RuntimeStack *stack, Runtime *runtim
     jvm_printf("dconst_%d: push %lf into stack\n", (s32) (d), d);
 #endif
     *opCode += 1;
-    return 0;
 }
 
-static inline s32 _op_fconst_n(u8 **opCode, RuntimeStack *stack, Runtime *runtime, f32 f) {
+static inline void _op_fconst_n(u8 **opCode, RuntimeStack *stack, Runtime *runtime, f32 f) {
     push_float(stack, f);
 
 #if _JVM_DEBUG_BYTECODE_DETAIL > 5
@@ -309,10 +303,9 @@ static inline s32 _op_fconst_n(u8 **opCode, RuntimeStack *stack, Runtime *runtim
     jvm_printf("fconst_%f: push %f into stack\n", (s32) f, f);
 #endif
     *opCode += 1;
-    return 0;
 }
 
-static inline s32 _op_lconst_n(u8 **opCode, RuntimeStack *stack, Runtime *runtime, s64 i) {
+static inline void _op_lconst_n(u8 **opCode, RuntimeStack *stack, Runtime *runtime, s64 i) {
 
     push_long(stack, i);
 #if _JVM_DEBUG_BYTECODE_DETAIL > 5
@@ -320,10 +313,9 @@ static inline s32 _op_lconst_n(u8 **opCode, RuntimeStack *stack, Runtime *runtim
     jvm_printf("lconst_%lld: push %lld into stack\n", i, i);
 #endif
     *opCode += 1;
-    return 0;
 }
 
-static inline s32 _op_ldoad_n(u8 **opCode, RuntimeStack *stack, LocalVarItem *localvar, Runtime *runtime, s32 index) {
+static inline void _op_ldoad_n(u8 **opCode, RuntimeStack *stack, LocalVarItem *localvar, Runtime *runtime, s32 index) {
     Long2Double l2d;
     l2d.i2l.i1 = localvar_getInt(localvar, index);
     l2d.i2l.i0 = localvar_getInt(localvar, index + 1);
@@ -335,10 +327,9 @@ static inline s32 _op_ldoad_n(u8 **opCode, RuntimeStack *stack, LocalVarItem *lo
 #endif
     push_long(stack, value);
     *opCode += 1;
-    return 0;
 }
 
-static inline s32 _op_istore_n(u8 **opCode, RuntimeStack *stack, LocalVarItem *localvar, Runtime *runtime, s32 i) {
+static inline void _op_istore_n(u8 **opCode, RuntimeStack *stack, LocalVarItem *localvar, Runtime *runtime, s32 i) {
     s32 value = pop_int(stack);
 #if _JVM_DEBUG_BYTECODE_DETAIL > 5
     invoke_deepth(runtime);
@@ -346,10 +337,9 @@ static inline s32 _op_istore_n(u8 **opCode, RuntimeStack *stack, LocalVarItem *l
 #endif
     localvar_setInt(localvar, i, value);
     *opCode += 1;
-    return 0;
 }
 
-static inline s32 _op_astore_n(u8 **opCode, RuntimeStack *stack, LocalVarItem *localvar, Runtime *runtime, s32 i) {
+static inline void _op_astore_n(u8 **opCode, RuntimeStack *stack, LocalVarItem *localvar, Runtime *runtime, s32 i) {
     __refer value = pop_ref(stack);
 #if _JVM_DEBUG_BYTECODE_DETAIL > 5
     invoke_deepth(runtime);
@@ -357,10 +347,9 @@ static inline s32 _op_astore_n(u8 **opCode, RuntimeStack *stack, LocalVarItem *l
 #endif
     localvar_setRefer(localvar, i, value);
     *opCode += 1;
-    return 0;
 }
 
-static inline s32 _op_ldstore_n(u8 **opCode, RuntimeStack *stack, LocalVarItem *localvar, Runtime *runtime, s32 i) {
+static inline void _op_ldstore_n(u8 **opCode, RuntimeStack *stack, LocalVarItem *localvar, Runtime *runtime, s32 i) {
     Long2Double l2d;
     l2d.l = pop_long(stack);
 
@@ -372,11 +361,10 @@ static inline s32 _op_ldstore_n(u8 **opCode, RuntimeStack *stack, LocalVarItem *
     localvar_setInt(localvar, i, l2d.i2l.i1);
     localvar_setInt(localvar, i + 1, l2d.i2l.i0);
     *opCode += 1;
-    return 0;
 }
 
 
-static inline s32 _op_ifstore_impl(u8 **opCode, RuntimeStack *stack, LocalVarItem *localvar, Runtime *runtime) {
+static inline void _op_ifstore_impl(u8 **opCode, RuntimeStack *stack, LocalVarItem *localvar, Runtime *runtime) {
     Short2Char s2c;
     if (runtime->wideMode) {
         s2c.c1 = opCode[0][1];
@@ -395,10 +383,9 @@ static inline s32 _op_ifstore_impl(u8 **opCode, RuntimeStack *stack, LocalVarIte
 #endif
     localvar_setInt(localvar, (u16) s2c.s, value);
 
-    return 0;
 }
 
-static inline s32 _op_ldstore_impl(u8 **opCode, RuntimeStack *stack, Runtime *runtime) {
+static inline void _op_ldstore_impl(u8 **opCode, RuntimeStack *stack, Runtime *runtime) {
 
     Short2Char s2c;
     if (runtime->wideMode) {
@@ -420,14 +407,12 @@ static inline s32 _op_ldstore_impl(u8 **opCode, RuntimeStack *stack, Runtime *ru
 #endif
     localvar_setInt(runtime->localvar, (u16) s2c.s, l2d.i2l.i1);
     localvar_setInt(runtime->localvar, (u16) s2c.s + 1, l2d.i2l.i0);
-    return 0;
 }
 
-s32 _op_notsupport(u8 **opCode, Runtime *runtime) {
+void _op_notsupport(u8 **opCode, Runtime *runtime) {
     invoke_deepth(runtime);
     jvm_printf("not support instruct [%x]\n", opCode[0][0]);
     exit(-3);
-    return 0;
 }
 
 //----------------------------------  tool func  ------------------------------------------
@@ -534,7 +519,7 @@ static inline void _stack2localvar(MethodInfo *method, Runtime *father, Runtime 
 
 }
 
-static inline s32 _synchronized_lock_method(MethodInfo *method, Runtime *runtime) {
+static inline void _synchronized_lock_method(MethodInfo *method, Runtime *runtime) {
     //synchronized process
     {
         if (method->access_flags & ACC_STATIC) {
@@ -543,10 +528,9 @@ static inline s32 _synchronized_lock_method(MethodInfo *method, Runtime *runtime
             jthread_lock(&((Instance *) localvar_getRefer(runtime->localvar, 0))->mb, runtime);
         }
     }
-    return 0;
 }
 
-static inline s32 _synchronized_unlock_method(MethodInfo *method, Runtime *runtime) {
+static inline void _synchronized_unlock_method(MethodInfo *method, Runtime *runtime) {
     //synchronized process
     {
         if (method->access_flags & ACC_STATIC) {
@@ -555,7 +539,6 @@ static inline s32 _synchronized_unlock_method(MethodInfo *method, Runtime *runti
             jthread_unlock(&((Instance *) localvar_getRefer(runtime->localvar, 0))->mb, runtime);
         }
     }
-    return 0;
 }
 
 s32 execute_method_impl(MethodInfo *method, Runtime *pruntime, JClass *clazz) {
@@ -643,75 +626,75 @@ s32 execute_method_impl(MethodInfo *method, Runtime *pruntime, JClass *clazz) {
                         break;
                     }
                     case op_iconst_m1: {
-                        ret = _op_iconst_n(opCode, stack, runtime, -1);
+                        _op_iconst_n(opCode, stack, runtime, -1);
                         break;
                     }
 
 
                     case op_iconst_0: {
-                        ret = _op_iconst_n(opCode, stack, runtime, 0);
+                        _op_iconst_n(opCode, stack, runtime, 0);
                         break;
                     }
 
                     case op_iconst_1: {
-                        ret = _op_iconst_n(opCode, stack, runtime, 1);
+                        _op_iconst_n(opCode, stack, runtime, 1);
                         break;
                     }
 
                     case op_iconst_2: {
-                        ret = _op_iconst_n(opCode, stack, runtime, 2);
+                        _op_iconst_n(opCode, stack, runtime, 2);
                         break;
                     }
 
                     case op_iconst_3: {
-                        ret = _op_iconst_n(opCode, stack, runtime, 3);
+                        _op_iconst_n(opCode, stack, runtime, 3);
                         break;
                     }
 
                     case op_iconst_4: {
-                        ret = _op_iconst_n(opCode, stack, runtime, 4);
+                        _op_iconst_n(opCode, stack, runtime, 4);
                         break;
                     }
 
                     case op_iconst_5: {
-                        ret = _op_iconst_n(opCode, stack, runtime, 5);
+                        _op_iconst_n(opCode, stack, runtime, 5);
                         break;
                     }
 
                     case op_lconst_0: {
-                        ret = _op_lconst_n(opCode, stack, runtime, 0);
+                        _op_lconst_n(opCode, stack, runtime, 0);
                         break;
                     }
 
                     case op_lconst_1: {
-                        ret = _op_lconst_n(opCode, stack, runtime, 1);
+                        _op_lconst_n(opCode, stack, runtime, 1);
                         break;
                     }
 
 
                     case op_fconst_0: {
-                        ret = _op_fconst_n(opCode, stack, runtime, 0.0f);
+                        _op_fconst_n(opCode, stack, runtime, 0.0f);
                         break;
                     }
 
                     case op_fconst_1: {
-                        ret = _op_fconst_n(opCode, stack, runtime, 1.0f);
+                        _op_fconst_n(opCode, stack, runtime, 1.0f);
                         break;
                     }
 
                     case op_fconst_2: {
-                        ret = _op_fconst_n(opCode, stack, runtime, 2.0f);
+                        _op_fconst_n(opCode, stack, runtime, 2.0f);
                         break;
                     }
 
 
                     case op_dconst_0: {
-                        ret = _op_dconst_n(opCode, stack, runtime, 0.0f);
+                        _op_dconst_n(opCode, stack, runtime, 0.0f);
                         break;
                     }
 
                     case op_dconst_1: {
-                        ret = _op_dconst_n(opCode, stack, runtime, 1.0f);
+                        _op_dconst_n(opCode, stack, runtime, 1.0f);
                         break;
                     }
 
@@ -746,7 +729,7 @@ s32 execute_method_impl(MethodInfo *method, Runtime *pruntime, JClass *clazz) {
                     case op_ldc: {
                         s32 index = opCode[0][1];
                         *opCode += 2;
-                        ret = _op_ldc_impl(opCode, stack, clazz, runtime, index);
+                        _op_ldc_impl(opCode, stack, clazz, runtime, index);
                         break;
                     }
 
@@ -755,7 +738,7 @@ s32 execute_method_impl(MethodInfo *method, Runtime *pruntime, JClass *clazz) {
                         s2c.c1 = opCode[0][1];
                         s2c.c0 = opCode[0][2];
                         s32 index = s2c.s;
-                        ret = _op_ldc_impl(opCode, stack, clazz, runtime, index);
+                        _op_ldc_impl(opCode, stack, clazz, runtime, index);
                         *opCode += 3;
                         break;
                     }
@@ -857,103 +840,103 @@ s32 execute_method_impl(MethodInfo *method, Runtime *pruntime, JClass *clazz) {
                     }
 
                     case op_iload_0: {
-                        ret = _op_ifload_n(opCode, stack, localvar, runtime, 0);
+                        _op_ifload_n(opCode, stack, localvar, runtime, 0);
                         break;
                     }
 
                     case op_iload_1: {
-                        ret = _op_ifload_n(opCode, stack, localvar, runtime, 1);
+                        _op_ifload_n(opCode, stack, localvar, runtime, 1);
                         break;
                     }
 
                     case op_iload_2: {
-                        ret = _op_ifload_n(opCode, stack, localvar, runtime, 2);
+                        _op_ifload_n(opCode, stack, localvar, runtime, 2);
                         break;
                     }
 
                     case op_iload_3: {
-                        ret = _op_ifload_n(opCode, stack, localvar, runtime, 3);
+                        _op_ifload_n(opCode, stack, localvar, runtime, 3);
                         break;
                     }
 
                     case op_lload_0: {
-                        ret = _op_ldoad_n(opCode, stack, localvar, runtime, 0);
+                        _op_ldoad_n(opCode, stack, localvar, runtime, 0);
                         break;
                     }
 
                     case op_lload_1: {
-                        ret = _op_ldoad_n(opCode, stack, localvar, runtime, 1);
+                        _op_ldoad_n(opCode, stack, localvar, runtime, 1);
                         break;
                     }
 
                     case op_lload_2: {
-                        ret = _op_ldoad_n(opCode, stack, localvar, runtime, 2);
+                        _op_ldoad_n(opCode, stack, localvar, runtime, 2);
                         break;
                     }
 
                     case op_lload_3: {
-                        ret = _op_ldoad_n(opCode, stack, localvar, runtime, 3);
+                        _op_ldoad_n(opCode, stack, localvar, runtime, 3);
                         break;
                     }
 
                     case op_fload_0: {
-                        ret = _op_ifload_n(opCode, stack, localvar, runtime, 0);
+                        _op_ifload_n(opCode, stack, localvar, runtime, 0);
                         break;
                     }
 
                     case op_fload_1: {
-                        ret = _op_ifload_n(opCode, stack, localvar, runtime, 1);
+                        _op_ifload_n(opCode, stack, localvar, runtime, 1);
                         break;
                     }
 
                     case op_fload_2: {
-                        ret = _op_ifload_n(opCode, stack, localvar, runtime, 2);
+                        _op_ifload_n(opCode, stack, localvar, runtime, 2);
                         break;
                     }
 
                     case op_fload_3: {
-                        ret = _op_ifload_n(opCode, stack, localvar, runtime, 3);
+                        _op_ifload_n(opCode, stack, localvar, runtime, 3);
                         break;
                     }
 
 
                     case op_dload_0: {
-                        ret = _op_ldoad_n(opCode, stack, localvar, runtime, 0);
+                        _op_ldoad_n(opCode, stack, localvar, runtime, 0);
                         break;
                     }
 
                     case op_dload_1: {
-                        ret = _op_ldoad_n(opCode, stack, localvar, runtime, 1);
+                        _op_ldoad_n(opCode, stack, localvar, runtime, 1);
                         break;
                     }
 
                     case op_dload_2: {
-                        ret = _op_ldoad_n(opCode, stack, localvar, runtime, 2);
+                        _op_ldoad_n(opCode, stack, localvar, runtime, 2);
                         break;
                     }
 
                     case op_dload_3: {
-                        ret = _op_ldoad_n(opCode, stack, localvar, runtime, 3);
+                        _op_ldoad_n(opCode, stack, localvar, runtime, 3);
                         break;
                     }
 
                     case op_aload_0: {
-                        ret = _op_aload_n(opCode, stack, localvar, runtime, 0);
+                        _op_aload_n(opCode, stack, localvar, runtime, 0);
                         break;
                     }
 
                     case op_aload_1: {
-                        ret = _op_aload_n(opCode, stack, localvar, runtime, 1);
+                        _op_aload_n(opCode, stack, localvar, runtime, 1);
                         break;
                     }
 
                     case op_aload_2: {
-                        ret = _op_aload_n(opCode, stack, localvar, runtime, 2);
+                        _op_aload_n(opCode, stack, localvar, runtime, 2);
                         break;
                     }
 
                     case op_aload_3: {
-                        ret = _op_aload_n(opCode, stack, localvar, runtime, 3);
+                        _op_aload_n(opCode, stack, localvar, runtime, 3);
                         break;
                     }
 
@@ -1068,22 +1051,22 @@ s32 execute_method_impl(MethodInfo *method, Runtime *pruntime, JClass *clazz) {
                     }
 
                     case op_istore: {
-                        ret = _op_ifstore_impl(opCode, stack, localvar, runtime);
+                        _op_ifstore_impl(opCode, stack, localvar, runtime);
                         break;
                     }
 
                     case op_lstore: {
-                        ret = _op_ldstore_impl(opCode, stack, runtime);
+                        _op_ldstore_impl(opCode, stack, runtime);
                         break;
                     }
 
                     case op_fstore: {
-                        ret = _op_ifstore_impl(opCode, stack, localvar, runtime);
+                        _op_ifstore_impl(opCode, stack, localvar, runtime);
                         break;
                     }
 
                     case op_dstore: {
-                        ret = _op_ldstore_impl(opCode, stack, runtime);
+                        _op_ldstore_impl(opCode, stack, runtime);
                         break;
                     }
 
@@ -1113,105 +1096,105 @@ s32 execute_method_impl(MethodInfo *method, Runtime *pruntime, JClass *clazz) {
                     }
 
                     case op_istore_0: {
-                        ret = _op_istore_n(opCode, stack, localvar, runtime, 0);
+                        _op_istore_n(opCode, stack, localvar, runtime, 0);
                         break;
                     }
 
                     case op_istore_1: {
-                        ret = _op_istore_n(opCode, stack, localvar, runtime, 1);
+                        _op_istore_n(opCode, stack, localvar, runtime, 1);
                         break;
                     }
 
                     case op_istore_2: {
-                        ret = _op_istore_n(opCode, stack, localvar, runtime, 2);
+                        _op_istore_n(opCode, stack, localvar, runtime, 2);
                         break;
                     }
 
                     case op_istore_3: {
-                        ret = _op_istore_n(opCode, stack, localvar, runtime, 3);
+                        _op_istore_n(opCode, stack, localvar, runtime, 3);
                         break;
                     }
 
                     case op_lstore_0: {
-                        ret = _op_ldstore_n(opCode, stack, localvar, runtime, 0);
+                        _op_ldstore_n(opCode, stack, localvar, runtime, 0);
                         break;
                     }
 
                     case op_lstore_1: {
-                        ret = _op_ldstore_n(opCode, stack, localvar, runtime, 1);
+                        _op_ldstore_n(opCode, stack, localvar, runtime, 1);
                         break;
                     }
 
                     case op_lstore_2: {
-                        ret = _op_ldstore_n(opCode, stack, localvar, runtime, 2);
+                        _op_ldstore_n(opCode, stack, localvar, runtime, 2);
                         break;
                     }
 
                     case op_lstore_3: {
-                        ret = _op_ldstore_n(opCode, stack, localvar, runtime, 3);
+                        _op_ldstore_n(opCode, stack, localvar, runtime, 3);
                         break;
                     }
 
 
                     case op_fstore_0: {
-                        ret = _op_istore_n(opCode, stack, localvar, runtime, 0);
+                        _op_istore_n(opCode, stack, localvar, runtime, 0);
                         break;
                     }
 
                     case op_fstore_1: {
-                        ret = _op_istore_n(opCode, stack, localvar, runtime, 1);
+                        _op_istore_n(opCode, stack, localvar, runtime, 1);
                         break;
                     }
 
                     case op_fstore_2: {
-                        ret = _op_istore_n(opCode, stack, localvar, runtime, 2);
+                        _op_istore_n(opCode, stack, localvar, runtime, 2);
                         break;
                     }
 
                     case op_fstore_3: {
-                        ret = _op_istore_n(opCode, stack, localvar, runtime, 3);
+                        _op_istore_n(opCode, stack, localvar, runtime, 3);
                         break;
                     }
 
 
                     case op_dstore_0: {
-                        ret = _op_ldstore_n(opCode, stack, localvar, runtime, 0);
+                        _op_ldstore_n(opCode, stack, localvar, runtime, 0);
                         break;
                     }
 
                     case op_dstore_1: {
-                        ret = _op_ldstore_n(opCode, stack, localvar, runtime, 1);
+                        _op_ldstore_n(opCode, stack, localvar, runtime, 1);
                         break;
                     }
 
                     case op_dstore_2: {
-                        ret = _op_ldstore_n(opCode, stack, localvar, runtime, 2);
+                        _op_ldstore_n(opCode, stack, localvar, runtime, 2);
                         break;
                     }
 
                     case op_dstore_3: {
-                        ret = _op_ldstore_n(opCode, stack, localvar, runtime, 3);
+                        _op_ldstore_n(opCode, stack, localvar, runtime, 3);
                         break;
                     }
 
 
                     case op_astore_0: {
-                        ret = _op_astore_n(opCode, stack, localvar, runtime, 0);
+                        _op_astore_n(opCode, stack, localvar, runtime, 0);
                         break;
                     }
 
                     case op_astore_1: {
-                        ret = _op_astore_n(opCode, stack, localvar, runtime, 1);
+                        _op_astore_n(opCode, stack, localvar, runtime, 1);
                         break;
                     }
 
                     case op_astore_2: {
-                        ret = _op_astore_n(opCode, stack, localvar, runtime, 2);
+                        _op_astore_n(opCode, stack, localvar, runtime, 2);
                         break;
                     }
 
                     case op_astore_3: {
-                        ret = _op_astore_n(opCode, stack, localvar, runtime, 3);
+                        _op_astore_n(opCode, stack, localvar, runtime, 3);
                         break;
                     }
 
@@ -3568,7 +3551,7 @@ s32 execute_method_impl(MethodInfo *method, Runtime *pruntime, JClass *clazz) {
                         //array dim
                         s32 count = (u8) opCode[0][3];
 #ifdef __JVM_OS_VS__
-						s32 dim[32];
+                        s32 dim[32];
 #else
                         s32 dim[count];
 #endif
