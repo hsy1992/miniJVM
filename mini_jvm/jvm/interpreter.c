@@ -946,7 +946,7 @@ s32 execute_method_impl(MethodInfo *method, Runtime *pruntime, JClass *clazz) {
                         Instance *arr = (Instance *) pop_ref(stack);
                         ret = jarray_check_exception(arr, index, runtime);
                         if (!ret) {
-                            s32 s = *(s32 *) (arr->arr_body + (index << 2));
+                            s32 s = *((s32 *) (arr->arr_body) + index);
                             push_int(stack, s);
 
 #if _JVM_DEBUG_BYTECODE_DETAIL > 5
@@ -965,7 +965,7 @@ s32 execute_method_impl(MethodInfo *method, Runtime *pruntime, JClass *clazz) {
                         Instance *arr = (Instance *) pop_ref(stack);
                         ret = jarray_check_exception(arr, index, runtime);
                         if (!ret) {
-                            s64 s = *(s64 *) (arr->arr_body + (index << 3));
+                            s64 s = *(((s64 *) arr->arr_body) + index);
                             push_long(stack, s);
 
 #if _JVM_DEBUG_BYTECODE_DETAIL > 5
@@ -3743,6 +3743,5 @@ s32 execute_method_impl(MethodInfo *method, Runtime *pruntime, JClass *clazz) {
 
     }
     runtime_destory(runtime);
-    pruntime->son = NULL;
     return ret;
 }

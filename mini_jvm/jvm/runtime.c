@@ -118,7 +118,6 @@ s32 is_ref(StackEntry *entry) {
 
 //======================= runtime =============================
 enum {
-    RUNTIME_POOL_SIZE = 20,
     RUNTIME_LOCALVAR_SIZE = 10,
 };
 
