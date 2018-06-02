@@ -730,10 +730,10 @@ int org_mini_gl_GL_glDepthRange(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
-    Long2Double pnear;pnear.l = env->localvar_getLong_2slot(runtime->localvar, pos);pos += 2;
-    Long2Double pfar;pfar.l = env->localvar_getLong_2slot(runtime->localvar, pos);pos += 2;
+    Long2Double pn;pn.l = env->localvar_getLong_2slot(runtime->localvar, pos);pos += 2;
+    Long2Double pf;pf.l = env->localvar_getLong_2slot(runtime->localvar, pos);pos += 2;
 
-    glDepthRange((GLdouble)pnear.d, (GLdouble)pfar.d);
+    glDepthRange((GLdouble)pn.d, (GLdouble)pf.d);
     
     
     return 0;
@@ -870,7 +870,7 @@ int org_mini_gl_GL_glBitmap(Runtime *runtime, JClass *clazz) {
     Int2Float pxmove;pxmove.i = env->localvar_getInt(runtime->localvar, pos++);
     Int2Float pymove;pymove.i = env->localvar_getInt(runtime->localvar, pos++);
     Instance *pbitmap = env->localvar_getRefer(runtime->localvar, pos++);
-    int offset_pbitmap = env->localvar_getInt(runtime->localvar, pos++);
+    int offset_pbitmap = 0;
     __refer ptr_pbitmap = NULL;
     if(pbitmap){
         offset_pbitmap *= env->data_type_bytes[pbitmap->mb.arr_type_index];
@@ -902,7 +902,7 @@ int org_mini_gl_GL_glColor3bv(Runtime *runtime, JClass *clazz) {
     s32 pos = 0;
     
     Instance *pv = env->localvar_getRefer(runtime->localvar, pos++);
-    int offset_pv = env->localvar_getInt(runtime->localvar, pos++);
+    int offset_pv = 0;
     __refer ptr_pv = NULL;
     if(pv){
         offset_pv *= env->data_type_bytes[pv->mb.arr_type_index];
@@ -1062,7 +1062,7 @@ int org_mini_gl_GL_glColor3ubv(Runtime *runtime, JClass *clazz) {
     s32 pos = 0;
     
     Instance *pv = env->localvar_getRefer(runtime->localvar, pos++);
-    int offset_pv = env->localvar_getInt(runtime->localvar, pos++);
+    int offset_pv = 0;
     __refer ptr_pv = NULL;
     if(pv){
         offset_pv *= env->data_type_bytes[pv->mb.arr_type_index];
@@ -1159,7 +1159,7 @@ int org_mini_gl_GL_glColor4bv(Runtime *runtime, JClass *clazz) {
     s32 pos = 0;
     
     Instance *pv = env->localvar_getRefer(runtime->localvar, pos++);
-    int offset_pv = env->localvar_getInt(runtime->localvar, pos++);
+    int offset_pv = 0;
     __refer ptr_pv = NULL;
     if(pv){
         offset_pv *= env->data_type_bytes[pv->mb.arr_type_index];
@@ -1324,7 +1324,7 @@ int org_mini_gl_GL_glColor4ubv(Runtime *runtime, JClass *clazz) {
     s32 pos = 0;
     
     Instance *pv = env->localvar_getRefer(runtime->localvar, pos++);
-    int offset_pv = env->localvar_getInt(runtime->localvar, pos++);
+    int offset_pv = 0;
     __refer ptr_pv = NULL;
     if(pv){
         offset_pv *= env->data_type_bytes[pv->mb.arr_type_index];
@@ -1583,7 +1583,7 @@ int org_mini_gl_GL_glNormal3bv(Runtime *runtime, JClass *clazz) {
     s32 pos = 0;
     
     Instance *pv = env->localvar_getRefer(runtime->localvar, pos++);
-    int offset_pv = env->localvar_getInt(runtime->localvar, pos++);
+    int offset_pv = 0;
     __refer ptr_pv = NULL;
     if(pv){
         offset_pv *= env->data_type_bytes[pv->mb.arr_type_index];
@@ -3470,7 +3470,7 @@ int org_mini_gl_GL_glPolygonStipple(Runtime *runtime, JClass *clazz) {
     s32 pos = 0;
     
     Instance *pmask = env->localvar_getRefer(runtime->localvar, pos++);
-    int offset_pmask = env->localvar_getInt(runtime->localvar, pos++);
+    int offset_pmask = 0;
     __refer ptr_pmask = NULL;
     if(pmask){
         offset_pmask *= env->data_type_bytes[pmask->mb.arr_type_index];
@@ -4559,7 +4559,7 @@ int org_mini_gl_GL_glGetPolygonStipple(Runtime *runtime, JClass *clazz) {
     s32 pos = 0;
     
     Instance *pmask = env->localvar_getRefer(runtime->localvar, pos++);
-    int offset_pmask = env->localvar_getInt(runtime->localvar, pos++);
+    int offset_pmask = 0;
     __refer ptr_pmask = NULL;
     if(pmask){
         offset_pmask *= env->data_type_bytes[pmask->mb.arr_type_index];
@@ -5419,7 +5419,7 @@ int org_mini_gl_GL_glIndexubv(Runtime *runtime, JClass *clazz) {
     s32 pos = 0;
     
     Instance *pc = env->localvar_getRefer(runtime->localvar, pos++);
-    int offset_pc = env->localvar_getInt(runtime->localvar, pos++);
+    int offset_pc = 0;
     __refer ptr_pc = NULL;
     if(pc){
         offset_pc *= env->data_type_bytes[pc->mb.arr_type_index];
@@ -6602,7 +6602,7 @@ int org_mini_gl_GL_glSecondaryColor3bv(Runtime *runtime, JClass *clazz) {
     s32 pos = 0;
     
     Instance *pv = env->localvar_getRefer(runtime->localvar, pos++);
-    int offset_pv = env->localvar_getInt(runtime->localvar, pos++);
+    int offset_pv = 0;
     __refer ptr_pv = NULL;
     if(pv){
         offset_pv *= env->data_type_bytes[pv->mb.arr_type_index];
@@ -6762,7 +6762,7 @@ int org_mini_gl_GL_glSecondaryColor3ubv(Runtime *runtime, JClass *clazz) {
     s32 pos = 0;
     
     Instance *pv = env->localvar_getRefer(runtime->localvar, pos++);
-    int offset_pv = env->localvar_getInt(runtime->localvar, pos++);
+    int offset_pv = 0;
     __refer ptr_pv = NULL;
     if(pv){
         offset_pv *= env->data_type_bytes[pv->mb.arr_type_index];
@@ -7558,7 +7558,7 @@ int org_mini_gl_GL_glBindAttribLocation(Runtime *runtime, JClass *clazz) {
     s32 pprogram = env->localvar_getInt(runtime->localvar, pos++);
     s32 pindex = env->localvar_getInt(runtime->localvar, pos++);
     Instance *pname = env->localvar_getRefer(runtime->localvar, pos++);
-    int offset_pname = env->localvar_getInt(runtime->localvar, pos++);
+    int offset_pname = 0;
     __refer ptr_pname = NULL;
     if(pname){
         offset_pname *= env->data_type_bytes[pname->mb.arr_type_index];
@@ -7696,7 +7696,7 @@ int org_mini_gl_GL_glGetActiveAttrib(Runtime *runtime, JClass *clazz) {
         ptr_ptype = ptype->arr_body + offset_ptype;
     }
     Instance *pname = env->localvar_getRefer(runtime->localvar, pos++);
-    int offset_pname = env->localvar_getInt(runtime->localvar, pos++);
+    int offset_pname = 0;
     __refer ptr_pname = NULL;
     if(pname){
         offset_pname *= env->data_type_bytes[pname->mb.arr_type_index];
@@ -7738,7 +7738,7 @@ int org_mini_gl_GL_glGetActiveUniform(Runtime *runtime, JClass *clazz) {
         ptr_ptype = ptype->arr_body + offset_ptype;
     }
     Instance *pname = env->localvar_getRefer(runtime->localvar, pos++);
-    int offset_pname = env->localvar_getInt(runtime->localvar, pos++);
+    int offset_pname = 0;
     __refer ptr_pname = NULL;
     if(pname){
         offset_pname *= env->data_type_bytes[pname->mb.arr_type_index];
@@ -7784,7 +7784,7 @@ int org_mini_gl_GL_glGetAttribLocation(Runtime *runtime, JClass *clazz) {
     
     s32 pprogram = env->localvar_getInt(runtime->localvar, pos++);
     Instance *pname = env->localvar_getRefer(runtime->localvar, pos++);
-    int offset_pname = env->localvar_getInt(runtime->localvar, pos++);
+    int offset_pname = 0;
     __refer ptr_pname = NULL;
     if(pname){
         offset_pname *= env->data_type_bytes[pname->mb.arr_type_index];
@@ -7831,7 +7831,7 @@ int org_mini_gl_GL_glGetProgramInfoLog(Runtime *runtime, JClass *clazz) {
         ptr_plength = plength->arr_body + offset_plength;
     }
     Instance *pinfoLog = env->localvar_getRefer(runtime->localvar, pos++);
-    int offset_pinfoLog = env->localvar_getInt(runtime->localvar, pos++);
+    int offset_pinfoLog = 0;
     __refer ptr_pinfoLog = NULL;
     if(pinfoLog){
         offset_pinfoLog *= env->data_type_bytes[pinfoLog->mb.arr_type_index];
@@ -7878,7 +7878,7 @@ int org_mini_gl_GL_glGetShaderInfoLog(Runtime *runtime, JClass *clazz) {
         ptr_plength = plength->arr_body + offset_plength;
     }
     Instance *pinfoLog = env->localvar_getRefer(runtime->localvar, pos++);
-    int offset_pinfoLog = env->localvar_getInt(runtime->localvar, pos++);
+    int offset_pinfoLog = 0;
     __refer ptr_pinfoLog = NULL;
     if(pinfoLog){
         offset_pinfoLog *= env->data_type_bytes[pinfoLog->mb.arr_type_index];
@@ -7905,7 +7905,7 @@ int org_mini_gl_GL_glGetShaderSource(Runtime *runtime, JClass *clazz) {
         ptr_plength = plength->arr_body + offset_plength;
     }
     Instance *psource = env->localvar_getRefer(runtime->localvar, pos++);
-    int offset_psource = env->localvar_getInt(runtime->localvar, pos++);
+    int offset_psource = 0;
     __refer ptr_psource = NULL;
     if(psource){
         offset_psource *= env->data_type_bytes[psource->mb.arr_type_index];
@@ -7924,7 +7924,7 @@ int org_mini_gl_GL_glGetUniformLocation(Runtime *runtime, JClass *clazz) {
     
     s32 pprogram = env->localvar_getInt(runtime->localvar, pos++);
     Instance *pname = env->localvar_getRefer(runtime->localvar, pos++);
-    int offset_pname = env->localvar_getInt(runtime->localvar, pos++);
+    int offset_pname = 0;
     __refer ptr_pname = NULL;
     if(pname){
         offset_pname *= env->data_type_bytes[pname->mb.arr_type_index];
@@ -8782,7 +8782,7 @@ int org_mini_gl_GL_glVertexAttrib4Nbv(Runtime *runtime, JClass *clazz) {
     
     s32 pindex = env->localvar_getInt(runtime->localvar, pos++);
     Instance *pv = env->localvar_getRefer(runtime->localvar, pos++);
-    int offset_pv = env->localvar_getInt(runtime->localvar, pos++);
+    int offset_pv = 0;
     __refer ptr_pv = NULL;
     if(pv){
         offset_pv *= env->data_type_bytes[pv->mb.arr_type_index];
@@ -8855,7 +8855,7 @@ int org_mini_gl_GL_glVertexAttrib4Nubv(Runtime *runtime, JClass *clazz) {
     
     s32 pindex = env->localvar_getInt(runtime->localvar, pos++);
     Instance *pv = env->localvar_getRefer(runtime->localvar, pos++);
-    int offset_pv = env->localvar_getInt(runtime->localvar, pos++);
+    int offset_pv = 0;
     __refer ptr_pv = NULL;
     if(pv){
         offset_pv *= env->data_type_bytes[pv->mb.arr_type_index];
@@ -8912,7 +8912,7 @@ int org_mini_gl_GL_glVertexAttrib4bv(Runtime *runtime, JClass *clazz) {
     
     s32 pindex = env->localvar_getInt(runtime->localvar, pos++);
     Instance *pv = env->localvar_getRefer(runtime->localvar, pos++);
-    int offset_pv = env->localvar_getInt(runtime->localvar, pos++);
+    int offset_pv = 0;
     __refer ptr_pv = NULL;
     if(pv){
         offset_pv *= env->data_type_bytes[pv->mb.arr_type_index];
@@ -9055,7 +9055,7 @@ int org_mini_gl_GL_glVertexAttrib4ubv(Runtime *runtime, JClass *clazz) {
     
     s32 pindex = env->localvar_getInt(runtime->localvar, pos++);
     Instance *pv = env->localvar_getRefer(runtime->localvar, pos++);
-    int offset_pv = env->localvar_getInt(runtime->localvar, pos++);
+    int offset_pv = 0;
     __refer ptr_pv = NULL;
     if(pv){
         offset_pv *= env->data_type_bytes[pv->mb.arr_type_index];
@@ -9451,7 +9451,7 @@ int org_mini_gl_GL_glGetTransformFeedbackVarying(Runtime *runtime, JClass *clazz
         ptr_ptype = ptype->arr_body + offset_ptype;
     }
     Instance *pname = env->localvar_getRefer(runtime->localvar, pos++);
-    int offset_pname = env->localvar_getInt(runtime->localvar, pos++);
+    int offset_pname = 0;
     __refer ptr_pname = NULL;
     if(pname){
         offset_pname *= env->data_type_bytes[pname->mb.arr_type_index];
@@ -9837,7 +9837,7 @@ int org_mini_gl_GL_glVertexAttribI4bv(Runtime *runtime, JClass *clazz) {
     
     s32 pindex = env->localvar_getInt(runtime->localvar, pos++);
     Instance *pv = env->localvar_getRefer(runtime->localvar, pos++);
-    int offset_pv = env->localvar_getInt(runtime->localvar, pos++);
+    int offset_pv = 0;
     __refer ptr_pv = NULL;
     if(pv){
         offset_pv *= env->data_type_bytes[pv->mb.arr_type_index];
@@ -9875,7 +9875,7 @@ int org_mini_gl_GL_glVertexAttribI4ubv(Runtime *runtime, JClass *clazz) {
     
     s32 pindex = env->localvar_getInt(runtime->localvar, pos++);
     Instance *pv = env->localvar_getRefer(runtime->localvar, pos++);
-    int offset_pv = env->localvar_getInt(runtime->localvar, pos++);
+    int offset_pv = 0;
     __refer ptr_pv = NULL;
     if(pv){
         offset_pv *= env->data_type_bytes[pv->mb.arr_type_index];
@@ -9934,7 +9934,7 @@ int org_mini_gl_GL_glBindFragDataLocation(Runtime *runtime, JClass *clazz) {
     s32 pprogram = env->localvar_getInt(runtime->localvar, pos++);
     s32 pcolor = env->localvar_getInt(runtime->localvar, pos++);
     Instance *pname = env->localvar_getRefer(runtime->localvar, pos++);
-    int offset_pname = env->localvar_getInt(runtime->localvar, pos++);
+    int offset_pname = 0;
     __refer ptr_pname = NULL;
     if(pname){
         offset_pname *= env->data_type_bytes[pname->mb.arr_type_index];
@@ -9953,7 +9953,7 @@ int org_mini_gl_GL_glGetFragDataLocation(Runtime *runtime, JClass *clazz) {
     
     s32 pprogram = env->localvar_getInt(runtime->localvar, pos++);
     Instance *pname = env->localvar_getRefer(runtime->localvar, pos++);
-    int offset_pname = env->localvar_getInt(runtime->localvar, pos++);
+    int offset_pname = 0;
     __refer ptr_pname = NULL;
     if(pname){
         offset_pname *= env->data_type_bytes[pname->mb.arr_type_index];
@@ -10842,7 +10842,7 @@ int org_mini_gl_GL_glGetActiveUniformName(Runtime *runtime, JClass *clazz) {
         ptr_plength = plength->arr_body + offset_plength;
     }
     Instance *puniformName = env->localvar_getRefer(runtime->localvar, pos++);
-    int offset_puniformName = env->localvar_getInt(runtime->localvar, pos++);
+    int offset_puniformName = 0;
     __refer ptr_puniformName = NULL;
     if(puniformName){
         offset_puniformName *= env->data_type_bytes[puniformName->mb.arr_type_index];
@@ -10861,7 +10861,7 @@ int org_mini_gl_GL_glGetUniformBlockIndex(Runtime *runtime, JClass *clazz) {
     
     s32 pprogram = env->localvar_getInt(runtime->localvar, pos++);
     Instance *puniformBlockName = env->localvar_getRefer(runtime->localvar, pos++);
-    int offset_puniformBlockName = env->localvar_getInt(runtime->localvar, pos++);
+    int offset_puniformBlockName = 0;
     __refer ptr_puniformBlockName = NULL;
     if(puniformBlockName){
         offset_puniformBlockName *= env->data_type_bytes[puniformBlockName->mb.arr_type_index];
@@ -10910,7 +10910,7 @@ int org_mini_gl_GL_glGetActiveUniformBlockName(Runtime *runtime, JClass *clazz) 
         ptr_plength = plength->arr_body + offset_plength;
     }
     Instance *puniformBlockName = env->localvar_getRefer(runtime->localvar, pos++);
-    int offset_puniformBlockName = env->localvar_getInt(runtime->localvar, pos++);
+    int offset_puniformBlockName = 0;
     __refer ptr_puniformBlockName = NULL;
     if(puniformBlockName){
         offset_puniformBlockName *= env->data_type_bytes[puniformBlockName->mb.arr_type_index];
@@ -11286,986 +11286,992 @@ int org_mini_gl_GL_glSampleMaski(Runtime *runtime, JClass *clazz) {
     return 0;
 }
 
-int org_mini_gl_GL_glSampleCoverageARB(Runtime *runtime, JClass *clazz) {
+int org_mini_gl_GL_glBindFragDataLocationIndexed(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
-    Int2Float pvalue;pvalue.i = env->localvar_getInt(runtime->localvar, pos++);
-    s32 pinvert = env->localvar_getInt(runtime->localvar, pos++);
+    s32 pprogram = env->localvar_getInt(runtime->localvar, pos++);
+    s32 pcolorNumber = env->localvar_getInt(runtime->localvar, pos++);
+    s32 pindex = env->localvar_getInt(runtime->localvar, pos++);
+    Instance *pname = env->localvar_getRefer(runtime->localvar, pos++);
+    int offset_pname = 0;
+    __refer ptr_pname = NULL;
+    if(pname){
+        offset_pname *= env->data_type_bytes[pname->mb.arr_type_index];
+        ptr_pname = pname->arr_body + offset_pname;
+    }
 
-    glSampleCoverageARB((GLfloat)pvalue.f, (GLboolean)pinvert);
+    glBindFragDataLocationIndexed((GLuint)pprogram, (GLuint)pcolorNumber, (GLuint)pindex, (const GLchar*)(ptr_pname));
     
     
     return 0;
 }
 
-int org_mini_gl_GL_glGetGraphicsResetStatusARB(Runtime *runtime, JClass *clazz) {
+int org_mini_gl_GL_glGetFragDataIndex(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
+    s32 pprogram = env->localvar_getInt(runtime->localvar, pos++);
+    Instance *pname = env->localvar_getRefer(runtime->localvar, pos++);
+    int offset_pname = 0;
+    __refer ptr_pname = NULL;
+    if(pname){
+        offset_pname *= env->data_type_bytes[pname->mb.arr_type_index];
+        ptr_pname = pname->arr_body + offset_pname;
+    }
 
-    GLenum _re_val = glGetGraphicsResetStatusARB();
+    GLint _re_val = glGetFragDataIndex((GLuint)pprogram, (const GLchar*)(ptr_pname));
     s32 ret_value = *((s32*)&_re_val);env->push_int(runtime->stack, ret_value);
     
     return 0;
 }
 
-int org_mini_gl_GL_glGetnTexImageARB(Runtime *runtime, JClass *clazz) {
-    JniEnv *env = runtime->jnienv;
-    s32 pos = 0;
-    
-    s32 ptarget = env->localvar_getInt(runtime->localvar, pos++);
-    s32 plevel = env->localvar_getInt(runtime->localvar, pos++);
-    s32 pformat = env->localvar_getInt(runtime->localvar, pos++);
-    s32 ptype = env->localvar_getInt(runtime->localvar, pos++);
-    s32 pbufSize = env->localvar_getInt(runtime->localvar, pos++);
-    Instance *pimg = env->localvar_getRefer(runtime->localvar, pos++);
-    int offset_pimg = env->localvar_getInt(runtime->localvar, pos++);
-    __refer ptr_pimg = NULL;
-    if(pimg){
-        offset_pimg *= env->data_type_bytes[pimg->mb.arr_type_index];
-        ptr_pimg = pimg->arr_body + offset_pimg;
-    }
-
-    glGetnTexImageARB((GLenum)ptarget, (GLint)plevel, (GLenum)pformat, (GLenum)ptype, (GLsizei)pbufSize, (void*)(ptr_pimg));
-    
-    
-    return 0;
-}
-
-int org_mini_gl_GL_glReadnPixelsARB(Runtime *runtime, JClass *clazz) {
-    JniEnv *env = runtime->jnienv;
-    s32 pos = 0;
-    
-    s32 px = env->localvar_getInt(runtime->localvar, pos++);
-    s32 py = env->localvar_getInt(runtime->localvar, pos++);
-    s32 pwidth = env->localvar_getInt(runtime->localvar, pos++);
-    s32 pheight = env->localvar_getInt(runtime->localvar, pos++);
-    s32 pformat = env->localvar_getInt(runtime->localvar, pos++);
-    s32 ptype = env->localvar_getInt(runtime->localvar, pos++);
-    s32 pbufSize = env->localvar_getInt(runtime->localvar, pos++);
-    Instance *pdata = env->localvar_getRefer(runtime->localvar, pos++);
-    int offset_pdata = env->localvar_getInt(runtime->localvar, pos++);
-    __refer ptr_pdata = NULL;
-    if(pdata){
-        offset_pdata *= env->data_type_bytes[pdata->mb.arr_type_index];
-        ptr_pdata = pdata->arr_body + offset_pdata;
-    }
-
-    glReadnPixelsARB((GLint)px, (GLint)py, (GLsizei)pwidth, (GLsizei)pheight, (GLenum)pformat, (GLenum)ptype, (GLsizei)pbufSize, (void*)(ptr_pdata));
-    
-    
-    return 0;
-}
-
-int org_mini_gl_GL_glGetnCompressedTexImageARB(Runtime *runtime, JClass *clazz) {
-    JniEnv *env = runtime->jnienv;
-    s32 pos = 0;
-    
-    s32 ptarget = env->localvar_getInt(runtime->localvar, pos++);
-    s32 plod = env->localvar_getInt(runtime->localvar, pos++);
-    s32 pbufSize = env->localvar_getInt(runtime->localvar, pos++);
-    Instance *pimg = env->localvar_getRefer(runtime->localvar, pos++);
-    int offset_pimg = env->localvar_getInt(runtime->localvar, pos++);
-    __refer ptr_pimg = NULL;
-    if(pimg){
-        offset_pimg *= env->data_type_bytes[pimg->mb.arr_type_index];
-        ptr_pimg = pimg->arr_body + offset_pimg;
-    }
-
-    glGetnCompressedTexImageARB((GLenum)ptarget, (GLint)plod, (GLsizei)pbufSize, (void*)(ptr_pimg));
-    
-    
-    return 0;
-}
-
-int org_mini_gl_GL_glGetnUniformfvARB(Runtime *runtime, JClass *clazz) {
-    JniEnv *env = runtime->jnienv;
-    s32 pos = 0;
-    
-    s32 pprogram = env->localvar_getInt(runtime->localvar, pos++);
-    s32 plocation = env->localvar_getInt(runtime->localvar, pos++);
-    s32 pbufSize = env->localvar_getInt(runtime->localvar, pos++);
-    Instance *pparams = env->localvar_getRefer(runtime->localvar, pos++);
-    int offset_pparams = env->localvar_getInt(runtime->localvar, pos++);
-    __refer ptr_pparams = NULL;
-    if(pparams){
-        offset_pparams *= env->data_type_bytes[pparams->mb.arr_type_index];
-        ptr_pparams = pparams->arr_body + offset_pparams;
-    }
-
-    glGetnUniformfvARB((GLuint)pprogram, (GLint)plocation, (GLsizei)pbufSize, (GLfloat*)(ptr_pparams));
-    
-    
-    return 0;
-}
-
-int org_mini_gl_GL_glGetnUniformivARB(Runtime *runtime, JClass *clazz) {
-    JniEnv *env = runtime->jnienv;
-    s32 pos = 0;
-    
-    s32 pprogram = env->localvar_getInt(runtime->localvar, pos++);
-    s32 plocation = env->localvar_getInt(runtime->localvar, pos++);
-    s32 pbufSize = env->localvar_getInt(runtime->localvar, pos++);
-    Instance *pparams = env->localvar_getRefer(runtime->localvar, pos++);
-    int offset_pparams = env->localvar_getInt(runtime->localvar, pos++);
-    __refer ptr_pparams = NULL;
-    if(pparams){
-        offset_pparams *= env->data_type_bytes[pparams->mb.arr_type_index];
-        ptr_pparams = pparams->arr_body + offset_pparams;
-    }
-
-    glGetnUniformivARB((GLuint)pprogram, (GLint)plocation, (GLsizei)pbufSize, (GLint*)(ptr_pparams));
-    
-    
-    return 0;
-}
-
-int org_mini_gl_GL_glGetnUniformuivARB(Runtime *runtime, JClass *clazz) {
-    JniEnv *env = runtime->jnienv;
-    s32 pos = 0;
-    
-    s32 pprogram = env->localvar_getInt(runtime->localvar, pos++);
-    s32 plocation = env->localvar_getInt(runtime->localvar, pos++);
-    s32 pbufSize = env->localvar_getInt(runtime->localvar, pos++);
-    Instance *pparams = env->localvar_getRefer(runtime->localvar, pos++);
-    int offset_pparams = env->localvar_getInt(runtime->localvar, pos++);
-    __refer ptr_pparams = NULL;
-    if(pparams){
-        offset_pparams *= env->data_type_bytes[pparams->mb.arr_type_index];
-        ptr_pparams = pparams->arr_body + offset_pparams;
-    }
-
-    glGetnUniformuivARB((GLuint)pprogram, (GLint)plocation, (GLsizei)pbufSize, (GLuint*)(ptr_pparams));
-    
-    
-    return 0;
-}
-
-int org_mini_gl_GL_glGetnUniformdvARB(Runtime *runtime, JClass *clazz) {
-    JniEnv *env = runtime->jnienv;
-    s32 pos = 0;
-    
-    s32 pprogram = env->localvar_getInt(runtime->localvar, pos++);
-    s32 plocation = env->localvar_getInt(runtime->localvar, pos++);
-    s32 pbufSize = env->localvar_getInt(runtime->localvar, pos++);
-    Instance *pparams = env->localvar_getRefer(runtime->localvar, pos++);
-    int offset_pparams = env->localvar_getInt(runtime->localvar, pos++);
-    __refer ptr_pparams = NULL;
-    if(pparams){
-        offset_pparams *= env->data_type_bytes[pparams->mb.arr_type_index];
-        ptr_pparams = pparams->arr_body + offset_pparams;
-    }
-
-    glGetnUniformdvARB((GLuint)pprogram, (GLint)plocation, (GLsizei)pbufSize, (GLdouble*)(ptr_pparams));
-    
-    
-    return 0;
-}
-
-int org_mini_gl_GL_glGetnMapdvARB(Runtime *runtime, JClass *clazz) {
-    JniEnv *env = runtime->jnienv;
-    s32 pos = 0;
-    
-    s32 ptarget = env->localvar_getInt(runtime->localvar, pos++);
-    s32 pquery = env->localvar_getInt(runtime->localvar, pos++);
-    s32 pbufSize = env->localvar_getInt(runtime->localvar, pos++);
-    Instance *pv = env->localvar_getRefer(runtime->localvar, pos++);
-    int offset_pv = env->localvar_getInt(runtime->localvar, pos++);
-    __refer ptr_pv = NULL;
-    if(pv){
-        offset_pv *= env->data_type_bytes[pv->mb.arr_type_index];
-        ptr_pv = pv->arr_body + offset_pv;
-    }
-
-    glGetnMapdvARB((GLenum)ptarget, (GLenum)pquery, (GLsizei)pbufSize, (GLdouble*)(ptr_pv));
-    
-    
-    return 0;
-}
-
-int org_mini_gl_GL_glGetnMapfvARB(Runtime *runtime, JClass *clazz) {
-    JniEnv *env = runtime->jnienv;
-    s32 pos = 0;
-    
-    s32 ptarget = env->localvar_getInt(runtime->localvar, pos++);
-    s32 pquery = env->localvar_getInt(runtime->localvar, pos++);
-    s32 pbufSize = env->localvar_getInt(runtime->localvar, pos++);
-    Instance *pv = env->localvar_getRefer(runtime->localvar, pos++);
-    int offset_pv = env->localvar_getInt(runtime->localvar, pos++);
-    __refer ptr_pv = NULL;
-    if(pv){
-        offset_pv *= env->data_type_bytes[pv->mb.arr_type_index];
-        ptr_pv = pv->arr_body + offset_pv;
-    }
-
-    glGetnMapfvARB((GLenum)ptarget, (GLenum)pquery, (GLsizei)pbufSize, (GLfloat*)(ptr_pv));
-    
-    
-    return 0;
-}
-
-int org_mini_gl_GL_glGetnMapivARB(Runtime *runtime, JClass *clazz) {
-    JniEnv *env = runtime->jnienv;
-    s32 pos = 0;
-    
-    s32 ptarget = env->localvar_getInt(runtime->localvar, pos++);
-    s32 pquery = env->localvar_getInt(runtime->localvar, pos++);
-    s32 pbufSize = env->localvar_getInt(runtime->localvar, pos++);
-    Instance *pv = env->localvar_getRefer(runtime->localvar, pos++);
-    int offset_pv = env->localvar_getInt(runtime->localvar, pos++);
-    __refer ptr_pv = NULL;
-    if(pv){
-        offset_pv *= env->data_type_bytes[pv->mb.arr_type_index];
-        ptr_pv = pv->arr_body + offset_pv;
-    }
-
-    glGetnMapivARB((GLenum)ptarget, (GLenum)pquery, (GLsizei)pbufSize, (GLint*)(ptr_pv));
-    
-    
-    return 0;
-}
-
-int org_mini_gl_GL_glGetnPixelMapfvARB(Runtime *runtime, JClass *clazz) {
-    JniEnv *env = runtime->jnienv;
-    s32 pos = 0;
-    
-    s32 pmap = env->localvar_getInt(runtime->localvar, pos++);
-    s32 pbufSize = env->localvar_getInt(runtime->localvar, pos++);
-    Instance *pvalues = env->localvar_getRefer(runtime->localvar, pos++);
-    int offset_pvalues = env->localvar_getInt(runtime->localvar, pos++);
-    __refer ptr_pvalues = NULL;
-    if(pvalues){
-        offset_pvalues *= env->data_type_bytes[pvalues->mb.arr_type_index];
-        ptr_pvalues = pvalues->arr_body + offset_pvalues;
-    }
-
-    glGetnPixelMapfvARB((GLenum)pmap, (GLsizei)pbufSize, (GLfloat*)(ptr_pvalues));
-    
-    
-    return 0;
-}
-
-int org_mini_gl_GL_glGetnPixelMapuivARB(Runtime *runtime, JClass *clazz) {
-    JniEnv *env = runtime->jnienv;
-    s32 pos = 0;
-    
-    s32 pmap = env->localvar_getInt(runtime->localvar, pos++);
-    s32 pbufSize = env->localvar_getInt(runtime->localvar, pos++);
-    Instance *pvalues = env->localvar_getRefer(runtime->localvar, pos++);
-    int offset_pvalues = env->localvar_getInt(runtime->localvar, pos++);
-    __refer ptr_pvalues = NULL;
-    if(pvalues){
-        offset_pvalues *= env->data_type_bytes[pvalues->mb.arr_type_index];
-        ptr_pvalues = pvalues->arr_body + offset_pvalues;
-    }
-
-    glGetnPixelMapuivARB((GLenum)pmap, (GLsizei)pbufSize, (GLuint*)(ptr_pvalues));
-    
-    
-    return 0;
-}
-
-int org_mini_gl_GL_glGetnPixelMapusvARB(Runtime *runtime, JClass *clazz) {
-    JniEnv *env = runtime->jnienv;
-    s32 pos = 0;
-    
-    s32 pmap = env->localvar_getInt(runtime->localvar, pos++);
-    s32 pbufSize = env->localvar_getInt(runtime->localvar, pos++);
-    Instance *pvalues = env->localvar_getRefer(runtime->localvar, pos++);
-    int offset_pvalues = env->localvar_getInt(runtime->localvar, pos++);
-    __refer ptr_pvalues = NULL;
-    if(pvalues){
-        offset_pvalues *= env->data_type_bytes[pvalues->mb.arr_type_index];
-        ptr_pvalues = pvalues->arr_body + offset_pvalues;
-    }
-
-    glGetnPixelMapusvARB((GLenum)pmap, (GLsizei)pbufSize, (GLushort*)(ptr_pvalues));
-    
-    
-    return 0;
-}
-
-int org_mini_gl_GL_glGetnPolygonStippleARB(Runtime *runtime, JClass *clazz) {
-    JniEnv *env = runtime->jnienv;
-    s32 pos = 0;
-    
-    s32 pbufSize = env->localvar_getInt(runtime->localvar, pos++);
-    Instance *ppattern = env->localvar_getRefer(runtime->localvar, pos++);
-    int offset_ppattern = env->localvar_getInt(runtime->localvar, pos++);
-    __refer ptr_ppattern = NULL;
-    if(ppattern){
-        offset_ppattern *= env->data_type_bytes[ppattern->mb.arr_type_index];
-        ptr_ppattern = ppattern->arr_body + offset_ppattern;
-    }
-
-    glGetnPolygonStippleARB((GLsizei)pbufSize, (GLubyte*)(ptr_ppattern));
-    
-    
-    return 0;
-}
-
-int org_mini_gl_GL_glGetnColorTableARB(Runtime *runtime, JClass *clazz) {
-    JniEnv *env = runtime->jnienv;
-    s32 pos = 0;
-    
-    s32 ptarget = env->localvar_getInt(runtime->localvar, pos++);
-    s32 pformat = env->localvar_getInt(runtime->localvar, pos++);
-    s32 ptype = env->localvar_getInt(runtime->localvar, pos++);
-    s32 pbufSize = env->localvar_getInt(runtime->localvar, pos++);
-    Instance *ptable = env->localvar_getRefer(runtime->localvar, pos++);
-    int offset_ptable = env->localvar_getInt(runtime->localvar, pos++);
-    __refer ptr_ptable = NULL;
-    if(ptable){
-        offset_ptable *= env->data_type_bytes[ptable->mb.arr_type_index];
-        ptr_ptable = ptable->arr_body + offset_ptable;
-    }
-
-    glGetnColorTableARB((GLenum)ptarget, (GLenum)pformat, (GLenum)ptype, (GLsizei)pbufSize, (void*)(ptr_ptable));
-    
-    
-    return 0;
-}
-
-int org_mini_gl_GL_glGetnConvolutionFilterARB(Runtime *runtime, JClass *clazz) {
-    JniEnv *env = runtime->jnienv;
-    s32 pos = 0;
-    
-    s32 ptarget = env->localvar_getInt(runtime->localvar, pos++);
-    s32 pformat = env->localvar_getInt(runtime->localvar, pos++);
-    s32 ptype = env->localvar_getInt(runtime->localvar, pos++);
-    s32 pbufSize = env->localvar_getInt(runtime->localvar, pos++);
-    Instance *pimage = env->localvar_getRefer(runtime->localvar, pos++);
-    int offset_pimage = env->localvar_getInt(runtime->localvar, pos++);
-    __refer ptr_pimage = NULL;
-    if(pimage){
-        offset_pimage *= env->data_type_bytes[pimage->mb.arr_type_index];
-        ptr_pimage = pimage->arr_body + offset_pimage;
-    }
-
-    glGetnConvolutionFilterARB((GLenum)ptarget, (GLenum)pformat, (GLenum)ptype, (GLsizei)pbufSize, (void*)(ptr_pimage));
-    
-    
-    return 0;
-}
-
-int org_mini_gl_GL_glGetnSeparableFilterARB(Runtime *runtime, JClass *clazz) {
-    JniEnv *env = runtime->jnienv;
-    s32 pos = 0;
-    
-    s32 ptarget = env->localvar_getInt(runtime->localvar, pos++);
-    s32 pformat = env->localvar_getInt(runtime->localvar, pos++);
-    s32 ptype = env->localvar_getInt(runtime->localvar, pos++);
-    s32 prowBufSize = env->localvar_getInt(runtime->localvar, pos++);
-    Instance *prow = env->localvar_getRefer(runtime->localvar, pos++);
-    int offset_prow = env->localvar_getInt(runtime->localvar, pos++);
-    __refer ptr_prow = NULL;
-    if(prow){
-        offset_prow *= env->data_type_bytes[prow->mb.arr_type_index];
-        ptr_prow = prow->arr_body + offset_prow;
-    }
-    s32 pcolumnBufSize = env->localvar_getInt(runtime->localvar, pos++);
-    Instance *pcolumn = env->localvar_getRefer(runtime->localvar, pos++);
-    int offset_pcolumn = env->localvar_getInt(runtime->localvar, pos++);
-    __refer ptr_pcolumn = NULL;
-    if(pcolumn){
-        offset_pcolumn *= env->data_type_bytes[pcolumn->mb.arr_type_index];
-        ptr_pcolumn = pcolumn->arr_body + offset_pcolumn;
-    }
-    Instance *pspan = env->localvar_getRefer(runtime->localvar, pos++);
-    int offset_pspan = env->localvar_getInt(runtime->localvar, pos++);
-    __refer ptr_pspan = NULL;
-    if(pspan){
-        offset_pspan *= env->data_type_bytes[pspan->mb.arr_type_index];
-        ptr_pspan = pspan->arr_body + offset_pspan;
-    }
-
-    glGetnSeparableFilterARB((GLenum)ptarget, (GLenum)pformat, (GLenum)ptype, (GLsizei)prowBufSize, (void*)(ptr_prow), (GLsizei)pcolumnBufSize, (void*)(ptr_pcolumn), (void*)(ptr_pspan));
-    
-    
-    return 0;
-}
-
-int org_mini_gl_GL_glGetnHistogramARB(Runtime *runtime, JClass *clazz) {
-    JniEnv *env = runtime->jnienv;
-    s32 pos = 0;
-    
-    s32 ptarget = env->localvar_getInt(runtime->localvar, pos++);
-    s32 preset = env->localvar_getInt(runtime->localvar, pos++);
-    s32 pformat = env->localvar_getInt(runtime->localvar, pos++);
-    s32 ptype = env->localvar_getInt(runtime->localvar, pos++);
-    s32 pbufSize = env->localvar_getInt(runtime->localvar, pos++);
-    Instance *pvalues = env->localvar_getRefer(runtime->localvar, pos++);
-    int offset_pvalues = env->localvar_getInt(runtime->localvar, pos++);
-    __refer ptr_pvalues = NULL;
-    if(pvalues){
-        offset_pvalues *= env->data_type_bytes[pvalues->mb.arr_type_index];
-        ptr_pvalues = pvalues->arr_body + offset_pvalues;
-    }
-
-    glGetnHistogramARB((GLenum)ptarget, (GLboolean)preset, (GLenum)pformat, (GLenum)ptype, (GLsizei)pbufSize, (void*)(ptr_pvalues));
-    
-    
-    return 0;
-}
-
-int org_mini_gl_GL_glGetnMinmaxARB(Runtime *runtime, JClass *clazz) {
-    JniEnv *env = runtime->jnienv;
-    s32 pos = 0;
-    
-    s32 ptarget = env->localvar_getInt(runtime->localvar, pos++);
-    s32 preset = env->localvar_getInt(runtime->localvar, pos++);
-    s32 pformat = env->localvar_getInt(runtime->localvar, pos++);
-    s32 ptype = env->localvar_getInt(runtime->localvar, pos++);
-    s32 pbufSize = env->localvar_getInt(runtime->localvar, pos++);
-    Instance *pvalues = env->localvar_getRefer(runtime->localvar, pos++);
-    int offset_pvalues = env->localvar_getInt(runtime->localvar, pos++);
-    __refer ptr_pvalues = NULL;
-    if(pvalues){
-        offset_pvalues *= env->data_type_bytes[pvalues->mb.arr_type_index];
-        ptr_pvalues = pvalues->arr_body + offset_pvalues;
-    }
-
-    glGetnMinmaxARB((GLenum)ptarget, (GLboolean)preset, (GLenum)pformat, (GLenum)ptype, (GLsizei)pbufSize, (void*)(ptr_pvalues));
-    
-    
-    return 0;
-}
-
-int org_mini_gl_GL_glDebugMessageControl(Runtime *runtime, JClass *clazz) {
-    JniEnv *env = runtime->jnienv;
-    s32 pos = 0;
-    
-    s32 psource = env->localvar_getInt(runtime->localvar, pos++);
-    s32 ptype = env->localvar_getInt(runtime->localvar, pos++);
-    s32 pseverity = env->localvar_getInt(runtime->localvar, pos++);
-    s32 pcount = env->localvar_getInt(runtime->localvar, pos++);
-    Instance *pids = env->localvar_getRefer(runtime->localvar, pos++);
-    int offset_pids = env->localvar_getInt(runtime->localvar, pos++);
-    __refer ptr_pids = NULL;
-    if(pids){
-        offset_pids *= env->data_type_bytes[pids->mb.arr_type_index];
-        ptr_pids = pids->arr_body + offset_pids;
-    }
-    s32 penabled = env->localvar_getInt(runtime->localvar, pos++);
-
-    glDebugMessageControl((GLenum)psource, (GLenum)ptype, (GLenum)pseverity, (GLsizei)pcount, (const GLuint*)(ptr_pids), (GLboolean)penabled);
-    
-    
-    return 0;
-}
-
-int org_mini_gl_GL_glDebugMessageInsert(Runtime *runtime, JClass *clazz) {
-    JniEnv *env = runtime->jnienv;
-    s32 pos = 0;
-    
-    s32 psource = env->localvar_getInt(runtime->localvar, pos++);
-    s32 ptype = env->localvar_getInt(runtime->localvar, pos++);
-    s32 pid = env->localvar_getInt(runtime->localvar, pos++);
-    s32 pseverity = env->localvar_getInt(runtime->localvar, pos++);
-    s32 plength = env->localvar_getInt(runtime->localvar, pos++);
-    Instance *pbuf = env->localvar_getRefer(runtime->localvar, pos++);
-    int offset_pbuf = env->localvar_getInt(runtime->localvar, pos++);
-    __refer ptr_pbuf = NULL;
-    if(pbuf){
-        offset_pbuf *= env->data_type_bytes[pbuf->mb.arr_type_index];
-        ptr_pbuf = pbuf->arr_body + offset_pbuf;
-    }
-
-    glDebugMessageInsert((GLenum)psource, (GLenum)ptype, (GLuint)pid, (GLenum)pseverity, (GLsizei)plength, (const GLchar*)(ptr_pbuf));
-    
-    
-    return 0;
-}
-
-int org_mini_gl_GL_glDebugMessageCallback(Runtime *runtime, JClass *clazz) {
-    JniEnv *env = runtime->jnienv;
-    s32 pos = 0;
-    
-    intptr_t pcallback = env->localvar_getLong_2slot(runtime->localvar, pos);pos += 2;
-    Instance *puserParam = env->localvar_getRefer(runtime->localvar, pos++);
-    int offset_puserParam = env->localvar_getInt(runtime->localvar, pos++);
-    __refer ptr_puserParam = NULL;
-    if(puserParam){
-        offset_puserParam *= env->data_type_bytes[puserParam->mb.arr_type_index];
-        ptr_puserParam = puserParam->arr_body + offset_puserParam;
-    }
-
-    glDebugMessageCallback((GLDEBUGPROC)pcallback, (const void*)(ptr_puserParam));
-    
-    
-    return 0;
-}
-
-int org_mini_gl_GL_glGetDebugMessageLog(Runtime *runtime, JClass *clazz) {
+int org_mini_gl_GL_glGenSamplers(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
     s32 pcount = env->localvar_getInt(runtime->localvar, pos++);
-    s32 pbufSize = env->localvar_getInt(runtime->localvar, pos++);
-    Instance *psources = env->localvar_getRefer(runtime->localvar, pos++);
-    int offset_psources = env->localvar_getInt(runtime->localvar, pos++);
-    __refer ptr_psources = NULL;
-    if(psources){
-        offset_psources *= env->data_type_bytes[psources->mb.arr_type_index];
-        ptr_psources = psources->arr_body + offset_psources;
-    }
-    Instance *ptypes = env->localvar_getRefer(runtime->localvar, pos++);
-    int offset_ptypes = env->localvar_getInt(runtime->localvar, pos++);
-    __refer ptr_ptypes = NULL;
-    if(ptypes){
-        offset_ptypes *= env->data_type_bytes[ptypes->mb.arr_type_index];
-        ptr_ptypes = ptypes->arr_body + offset_ptypes;
-    }
-    Instance *pids = env->localvar_getRefer(runtime->localvar, pos++);
-    int offset_pids = env->localvar_getInt(runtime->localvar, pos++);
-    __refer ptr_pids = NULL;
-    if(pids){
-        offset_pids *= env->data_type_bytes[pids->mb.arr_type_index];
-        ptr_pids = pids->arr_body + offset_pids;
-    }
-    Instance *pseverities = env->localvar_getRefer(runtime->localvar, pos++);
-    int offset_pseverities = env->localvar_getInt(runtime->localvar, pos++);
-    __refer ptr_pseverities = NULL;
-    if(pseverities){
-        offset_pseverities *= env->data_type_bytes[pseverities->mb.arr_type_index];
-        ptr_pseverities = pseverities->arr_body + offset_pseverities;
-    }
-    Instance *plengths = env->localvar_getRefer(runtime->localvar, pos++);
-    int offset_plengths = env->localvar_getInt(runtime->localvar, pos++);
-    __refer ptr_plengths = NULL;
-    if(plengths){
-        offset_plengths *= env->data_type_bytes[plengths->mb.arr_type_index];
-        ptr_plengths = plengths->arr_body + offset_plengths;
-    }
-    Instance *pmessageLog = env->localvar_getRefer(runtime->localvar, pos++);
-    int offset_pmessageLog = env->localvar_getInt(runtime->localvar, pos++);
-    __refer ptr_pmessageLog = NULL;
-    if(pmessageLog){
-        offset_pmessageLog *= env->data_type_bytes[pmessageLog->mb.arr_type_index];
-        ptr_pmessageLog = pmessageLog->arr_body + offset_pmessageLog;
+    Instance *psamplers = env->localvar_getRefer(runtime->localvar, pos++);
+    int offset_psamplers = env->localvar_getInt(runtime->localvar, pos++);
+    __refer ptr_psamplers = NULL;
+    if(psamplers){
+        offset_psamplers *= env->data_type_bytes[psamplers->mb.arr_type_index];
+        ptr_psamplers = psamplers->arr_body + offset_psamplers;
     }
 
-    GLuint _re_val = glGetDebugMessageLog((GLuint)pcount, (GLsizei)pbufSize, (GLenum*)(ptr_psources), (GLenum*)(ptr_ptypes), (GLuint*)(ptr_pids), (GLenum*)(ptr_pseverities), (GLsizei*)(ptr_plengths), (GLchar*)(ptr_pmessageLog));
+    glGenSamplers((GLsizei)pcount, (GLuint*)(ptr_psamplers));
+    
+    
+    return 0;
+}
+
+int org_mini_gl_GL_glDeleteSamplers(Runtime *runtime, JClass *clazz) {
+    JniEnv *env = runtime->jnienv;
+    s32 pos = 0;
+    
+    s32 pcount = env->localvar_getInt(runtime->localvar, pos++);
+    Instance *psamplers = env->localvar_getRefer(runtime->localvar, pos++);
+    int offset_psamplers = env->localvar_getInt(runtime->localvar, pos++);
+    __refer ptr_psamplers = NULL;
+    if(psamplers){
+        offset_psamplers *= env->data_type_bytes[psamplers->mb.arr_type_index];
+        ptr_psamplers = psamplers->arr_body + offset_psamplers;
+    }
+
+    glDeleteSamplers((GLsizei)pcount, (const GLuint*)(ptr_psamplers));
+    
+    
+    return 0;
+}
+
+int org_mini_gl_GL_glIsSampler(Runtime *runtime, JClass *clazz) {
+    JniEnv *env = runtime->jnienv;
+    s32 pos = 0;
+    
+    s32 psampler = env->localvar_getInt(runtime->localvar, pos++);
+
+    GLboolean _re_val = glIsSampler((GLuint)psampler);
     s32 ret_value = *((s32*)&_re_val);env->push_int(runtime->stack, ret_value);
     
     return 0;
 }
 
-int org_mini_gl_GL_glPushDebugGroup(Runtime *runtime, JClass *clazz) {
+int org_mini_gl_GL_glBindSampler(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
-    s32 psource = env->localvar_getInt(runtime->localvar, pos++);
-    s32 pid = env->localvar_getInt(runtime->localvar, pos++);
-    s32 plength = env->localvar_getInt(runtime->localvar, pos++);
-    Instance *pmessage = env->localvar_getRefer(runtime->localvar, pos++);
-    int offset_pmessage = env->localvar_getInt(runtime->localvar, pos++);
-    __refer ptr_pmessage = NULL;
-    if(pmessage){
-        offset_pmessage *= env->data_type_bytes[pmessage->mb.arr_type_index];
-        ptr_pmessage = pmessage->arr_body + offset_pmessage;
-    }
+    s32 punit = env->localvar_getInt(runtime->localvar, pos++);
+    s32 psampler = env->localvar_getInt(runtime->localvar, pos++);
 
-    glPushDebugGroup((GLenum)psource, (GLuint)pid, (GLsizei)plength, (const GLchar*)(ptr_pmessage));
+    glBindSampler((GLuint)punit, (GLuint)psampler);
     
     
     return 0;
 }
 
-int org_mini_gl_GL_glPopDebugGroup(Runtime *runtime, JClass *clazz) {
+int org_mini_gl_GL_glSamplerParameteri(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
+    s32 psampler = env->localvar_getInt(runtime->localvar, pos++);
+    s32 ppname = env->localvar_getInt(runtime->localvar, pos++);
+    s32 pparam = env->localvar_getInt(runtime->localvar, pos++);
 
-    glPopDebugGroup();
+    glSamplerParameteri((GLuint)psampler, (GLenum)ppname, (GLint)pparam);
     
     
     return 0;
 }
 
-int org_mini_gl_GL_glObjectLabel(Runtime *runtime, JClass *clazz) {
+int org_mini_gl_GL_glSamplerParameteriv(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
-    s32 pidentifier = env->localvar_getInt(runtime->localvar, pos++);
-    s32 pname = env->localvar_getInt(runtime->localvar, pos++);
-    s32 plength = env->localvar_getInt(runtime->localvar, pos++);
-    Instance *plabel = env->localvar_getRefer(runtime->localvar, pos++);
-    int offset_plabel = env->localvar_getInt(runtime->localvar, pos++);
-    __refer ptr_plabel = NULL;
-    if(plabel){
-        offset_plabel *= env->data_type_bytes[plabel->mb.arr_type_index];
-        ptr_plabel = plabel->arr_body + offset_plabel;
+    s32 psampler = env->localvar_getInt(runtime->localvar, pos++);
+    s32 ppname = env->localvar_getInt(runtime->localvar, pos++);
+    Instance *pparam = env->localvar_getRefer(runtime->localvar, pos++);
+    int offset_pparam = env->localvar_getInt(runtime->localvar, pos++);
+    __refer ptr_pparam = NULL;
+    if(pparam){
+        offset_pparam *= env->data_type_bytes[pparam->mb.arr_type_index];
+        ptr_pparam = pparam->arr_body + offset_pparam;
     }
 
-    glObjectLabel((GLenum)pidentifier, (GLuint)pname, (GLsizei)plength, (const GLchar*)(ptr_plabel));
+    glSamplerParameteriv((GLuint)psampler, (GLenum)ppname, (const GLint*)(ptr_pparam));
     
     
     return 0;
 }
 
-int org_mini_gl_GL_glGetObjectLabel(Runtime *runtime, JClass *clazz) {
+int org_mini_gl_GL_glSamplerParameterf(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
-    s32 pidentifier = env->localvar_getInt(runtime->localvar, pos++);
-    s32 pname = env->localvar_getInt(runtime->localvar, pos++);
-    s32 pbufSize = env->localvar_getInt(runtime->localvar, pos++);
-    Instance *plength = env->localvar_getRefer(runtime->localvar, pos++);
-    int offset_plength = env->localvar_getInt(runtime->localvar, pos++);
-    __refer ptr_plength = NULL;
-    if(plength){
-        offset_plength *= env->data_type_bytes[plength->mb.arr_type_index];
-        ptr_plength = plength->arr_body + offset_plength;
-    }
-    Instance *plabel = env->localvar_getRefer(runtime->localvar, pos++);
-    int offset_plabel = env->localvar_getInt(runtime->localvar, pos++);
-    __refer ptr_plabel = NULL;
-    if(plabel){
-        offset_plabel *= env->data_type_bytes[plabel->mb.arr_type_index];
-        ptr_plabel = plabel->arr_body + offset_plabel;
-    }
+    s32 psampler = env->localvar_getInt(runtime->localvar, pos++);
+    s32 ppname = env->localvar_getInt(runtime->localvar, pos++);
+    Int2Float pparam;pparam.i = env->localvar_getInt(runtime->localvar, pos++);
 
-    glGetObjectLabel((GLenum)pidentifier, (GLuint)pname, (GLsizei)pbufSize, (GLsizei*)(ptr_plength), (GLchar*)(ptr_plabel));
+    glSamplerParameterf((GLuint)psampler, (GLenum)ppname, (GLfloat)pparam.f);
     
     
     return 0;
 }
 
-int org_mini_gl_GL_glObjectPtrLabel(Runtime *runtime, JClass *clazz) {
+int org_mini_gl_GL_glSamplerParameterfv(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
-    Instance *pptr = env->localvar_getRefer(runtime->localvar, pos++);
-    int offset_pptr = env->localvar_getInt(runtime->localvar, pos++);
-    __refer ptr_pptr = NULL;
-    if(pptr){
-        offset_pptr *= env->data_type_bytes[pptr->mb.arr_type_index];
-        ptr_pptr = pptr->arr_body + offset_pptr;
-    }
-    s32 plength = env->localvar_getInt(runtime->localvar, pos++);
-    Instance *plabel = env->localvar_getRefer(runtime->localvar, pos++);
-    int offset_plabel = env->localvar_getInt(runtime->localvar, pos++);
-    __refer ptr_plabel = NULL;
-    if(plabel){
-        offset_plabel *= env->data_type_bytes[plabel->mb.arr_type_index];
-        ptr_plabel = plabel->arr_body + offset_plabel;
+    s32 psampler = env->localvar_getInt(runtime->localvar, pos++);
+    s32 ppname = env->localvar_getInt(runtime->localvar, pos++);
+    Instance *pparam = env->localvar_getRefer(runtime->localvar, pos++);
+    int offset_pparam = env->localvar_getInt(runtime->localvar, pos++);
+    __refer ptr_pparam = NULL;
+    if(pparam){
+        offset_pparam *= env->data_type_bytes[pparam->mb.arr_type_index];
+        ptr_pparam = pparam->arr_body + offset_pparam;
     }
 
-    glObjectPtrLabel((const void*)(ptr_pptr), (GLsizei)plength, (const GLchar*)(ptr_plabel));
+    glSamplerParameterfv((GLuint)psampler, (GLenum)ppname, (const GLfloat*)(ptr_pparam));
     
     
     return 0;
 }
 
-int org_mini_gl_GL_glGetObjectPtrLabel(Runtime *runtime, JClass *clazz) {
+int org_mini_gl_GL_glSamplerParameterIiv(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
-    Instance *pptr = env->localvar_getRefer(runtime->localvar, pos++);
-    int offset_pptr = env->localvar_getInt(runtime->localvar, pos++);
-    __refer ptr_pptr = NULL;
-    if(pptr){
-        offset_pptr *= env->data_type_bytes[pptr->mb.arr_type_index];
-        ptr_pptr = pptr->arr_body + offset_pptr;
-    }
-    s32 pbufSize = env->localvar_getInt(runtime->localvar, pos++);
-    Instance *plength = env->localvar_getRefer(runtime->localvar, pos++);
-    int offset_plength = env->localvar_getInt(runtime->localvar, pos++);
-    __refer ptr_plength = NULL;
-    if(plength){
-        offset_plength *= env->data_type_bytes[plength->mb.arr_type_index];
-        ptr_plength = plength->arr_body + offset_plength;
-    }
-    Instance *plabel = env->localvar_getRefer(runtime->localvar, pos++);
-    int offset_plabel = env->localvar_getInt(runtime->localvar, pos++);
-    __refer ptr_plabel = NULL;
-    if(plabel){
-        offset_plabel *= env->data_type_bytes[plabel->mb.arr_type_index];
-        ptr_plabel = plabel->arr_body + offset_plabel;
+    s32 psampler = env->localvar_getInt(runtime->localvar, pos++);
+    s32 ppname = env->localvar_getInt(runtime->localvar, pos++);
+    Instance *pparam = env->localvar_getRefer(runtime->localvar, pos++);
+    int offset_pparam = env->localvar_getInt(runtime->localvar, pos++);
+    __refer ptr_pparam = NULL;
+    if(pparam){
+        offset_pparam *= env->data_type_bytes[pparam->mb.arr_type_index];
+        ptr_pparam = pparam->arr_body + offset_pparam;
     }
 
-    glGetObjectPtrLabel((const void*)(ptr_pptr), (GLsizei)pbufSize, (GLsizei*)(ptr_plength), (GLchar*)(ptr_plabel));
+    glSamplerParameterIiv((GLuint)psampler, (GLenum)ppname, (const GLint*)(ptr_pparam));
     
     
     return 0;
 }
 
-int org_mini_gl_GL_glDebugMessageControlKHR(Runtime *runtime, JClass *clazz) {
+int org_mini_gl_GL_glSamplerParameterIuiv(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
-    s32 psource = env->localvar_getInt(runtime->localvar, pos++);
-    s32 ptype = env->localvar_getInt(runtime->localvar, pos++);
-    s32 pseverity = env->localvar_getInt(runtime->localvar, pos++);
-    s32 pcount = env->localvar_getInt(runtime->localvar, pos++);
-    Instance *pids = env->localvar_getRefer(runtime->localvar, pos++);
-    int offset_pids = env->localvar_getInt(runtime->localvar, pos++);
-    __refer ptr_pids = NULL;
-    if(pids){
-        offset_pids *= env->data_type_bytes[pids->mb.arr_type_index];
-        ptr_pids = pids->arr_body + offset_pids;
+    s32 psampler = env->localvar_getInt(runtime->localvar, pos++);
+    s32 ppname = env->localvar_getInt(runtime->localvar, pos++);
+    Instance *pparam = env->localvar_getRefer(runtime->localvar, pos++);
+    int offset_pparam = env->localvar_getInt(runtime->localvar, pos++);
+    __refer ptr_pparam = NULL;
+    if(pparam){
+        offset_pparam *= env->data_type_bytes[pparam->mb.arr_type_index];
+        ptr_pparam = pparam->arr_body + offset_pparam;
     }
-    s32 penabled = env->localvar_getInt(runtime->localvar, pos++);
 
-    glDebugMessageControlKHR((GLenum)psource, (GLenum)ptype, (GLenum)pseverity, (GLsizei)pcount, (const GLuint*)(ptr_pids), (GLboolean)penabled);
+    glSamplerParameterIuiv((GLuint)psampler, (GLenum)ppname, (const GLuint*)(ptr_pparam));
     
     
     return 0;
 }
 
-int org_mini_gl_GL_glDebugMessageInsertKHR(Runtime *runtime, JClass *clazz) {
+int org_mini_gl_GL_glGetSamplerParameteriv(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
     
-    s32 psource = env->localvar_getInt(runtime->localvar, pos++);
-    s32 ptype = env->localvar_getInt(runtime->localvar, pos++);
-    s32 pid = env->localvar_getInt(runtime->localvar, pos++);
-    s32 pseverity = env->localvar_getInt(runtime->localvar, pos++);
-    s32 plength = env->localvar_getInt(runtime->localvar, pos++);
-    Instance *pbuf = env->localvar_getRefer(runtime->localvar, pos++);
-    int offset_pbuf = env->localvar_getInt(runtime->localvar, pos++);
-    __refer ptr_pbuf = NULL;
-    if(pbuf){
-        offset_pbuf *= env->data_type_bytes[pbuf->mb.arr_type_index];
-        ptr_pbuf = pbuf->arr_body + offset_pbuf;
-    }
-
-    glDebugMessageInsertKHR((GLenum)psource, (GLenum)ptype, (GLuint)pid, (GLenum)pseverity, (GLsizei)plength, (const GLchar*)(ptr_pbuf));
-    
-    
-    return 0;
-}
-
-int org_mini_gl_GL_glDebugMessageCallbackKHR(Runtime *runtime, JClass *clazz) {
-    JniEnv *env = runtime->jnienv;
-    s32 pos = 0;
-    
-    intptr_t pcallback = env->localvar_getLong_2slot(runtime->localvar, pos);pos += 2;
-    Instance *puserParam = env->localvar_getRefer(runtime->localvar, pos++);
-    int offset_puserParam = env->localvar_getInt(runtime->localvar, pos++);
-    __refer ptr_puserParam = NULL;
-    if(puserParam){
-        offset_puserParam *= env->data_type_bytes[puserParam->mb.arr_type_index];
-        ptr_puserParam = puserParam->arr_body + offset_puserParam;
-    }
-
-    glDebugMessageCallbackKHR((GLDEBUGPROCKHR)pcallback, (const void*)(ptr_puserParam));
-    
-    
-    return 0;
-}
-
-int org_mini_gl_GL_glGetDebugMessageLogKHR(Runtime *runtime, JClass *clazz) {
-    JniEnv *env = runtime->jnienv;
-    s32 pos = 0;
-    
-    s32 pcount = env->localvar_getInt(runtime->localvar, pos++);
-    s32 pbufSize = env->localvar_getInt(runtime->localvar, pos++);
-    Instance *psources = env->localvar_getRefer(runtime->localvar, pos++);
-    int offset_psources = env->localvar_getInt(runtime->localvar, pos++);
-    __refer ptr_psources = NULL;
-    if(psources){
-        offset_psources *= env->data_type_bytes[psources->mb.arr_type_index];
-        ptr_psources = psources->arr_body + offset_psources;
-    }
-    Instance *ptypes = env->localvar_getRefer(runtime->localvar, pos++);
-    int offset_ptypes = env->localvar_getInt(runtime->localvar, pos++);
-    __refer ptr_ptypes = NULL;
-    if(ptypes){
-        offset_ptypes *= env->data_type_bytes[ptypes->mb.arr_type_index];
-        ptr_ptypes = ptypes->arr_body + offset_ptypes;
-    }
-    Instance *pids = env->localvar_getRefer(runtime->localvar, pos++);
-    int offset_pids = env->localvar_getInt(runtime->localvar, pos++);
-    __refer ptr_pids = NULL;
-    if(pids){
-        offset_pids *= env->data_type_bytes[pids->mb.arr_type_index];
-        ptr_pids = pids->arr_body + offset_pids;
-    }
-    Instance *pseverities = env->localvar_getRefer(runtime->localvar, pos++);
-    int offset_pseverities = env->localvar_getInt(runtime->localvar, pos++);
-    __refer ptr_pseverities = NULL;
-    if(pseverities){
-        offset_pseverities *= env->data_type_bytes[pseverities->mb.arr_type_index];
-        ptr_pseverities = pseverities->arr_body + offset_pseverities;
-    }
-    Instance *plengths = env->localvar_getRefer(runtime->localvar, pos++);
-    int offset_plengths = env->localvar_getInt(runtime->localvar, pos++);
-    __refer ptr_plengths = NULL;
-    if(plengths){
-        offset_plengths *= env->data_type_bytes[plengths->mb.arr_type_index];
-        ptr_plengths = plengths->arr_body + offset_plengths;
-    }
-    Instance *pmessageLog = env->localvar_getRefer(runtime->localvar, pos++);
-    int offset_pmessageLog = env->localvar_getInt(runtime->localvar, pos++);
-    __refer ptr_pmessageLog = NULL;
-    if(pmessageLog){
-        offset_pmessageLog *= env->data_type_bytes[pmessageLog->mb.arr_type_index];
-        ptr_pmessageLog = pmessageLog->arr_body + offset_pmessageLog;
-    }
-
-    GLuint _re_val = glGetDebugMessageLogKHR((GLuint)pcount, (GLsizei)pbufSize, (GLenum*)(ptr_psources), (GLenum*)(ptr_ptypes), (GLuint*)(ptr_pids), (GLenum*)(ptr_pseverities), (GLsizei*)(ptr_plengths), (GLchar*)(ptr_pmessageLog));
-    s32 ret_value = *((s32*)&_re_val);env->push_int(runtime->stack, ret_value);
-    
-    return 0;
-}
-
-int org_mini_gl_GL_glPushDebugGroupKHR(Runtime *runtime, JClass *clazz) {
-    JniEnv *env = runtime->jnienv;
-    s32 pos = 0;
-    
-    s32 psource = env->localvar_getInt(runtime->localvar, pos++);
-    s32 pid = env->localvar_getInt(runtime->localvar, pos++);
-    s32 plength = env->localvar_getInt(runtime->localvar, pos++);
-    Instance *pmessage = env->localvar_getRefer(runtime->localvar, pos++);
-    int offset_pmessage = env->localvar_getInt(runtime->localvar, pos++);
-    __refer ptr_pmessage = NULL;
-    if(pmessage){
-        offset_pmessage *= env->data_type_bytes[pmessage->mb.arr_type_index];
-        ptr_pmessage = pmessage->arr_body + offset_pmessage;
-    }
-
-    glPushDebugGroupKHR((GLenum)psource, (GLuint)pid, (GLsizei)plength, (const GLchar*)(ptr_pmessage));
-    
-    
-    return 0;
-}
-
-int org_mini_gl_GL_glPopDebugGroupKHR(Runtime *runtime, JClass *clazz) {
-    JniEnv *env = runtime->jnienv;
-    s32 pos = 0;
-    
-
-    glPopDebugGroupKHR();
-    
-    
-    return 0;
-}
-
-int org_mini_gl_GL_glObjectLabelKHR(Runtime *runtime, JClass *clazz) {
-    JniEnv *env = runtime->jnienv;
-    s32 pos = 0;
-    
-    s32 pidentifier = env->localvar_getInt(runtime->localvar, pos++);
-    s32 pname = env->localvar_getInt(runtime->localvar, pos++);
-    s32 plength = env->localvar_getInt(runtime->localvar, pos++);
-    Instance *plabel = env->localvar_getRefer(runtime->localvar, pos++);
-    int offset_plabel = env->localvar_getInt(runtime->localvar, pos++);
-    __refer ptr_plabel = NULL;
-    if(plabel){
-        offset_plabel *= env->data_type_bytes[plabel->mb.arr_type_index];
-        ptr_plabel = plabel->arr_body + offset_plabel;
-    }
-
-    glObjectLabelKHR((GLenum)pidentifier, (GLuint)pname, (GLsizei)plength, (const GLchar*)(ptr_plabel));
-    
-    
-    return 0;
-}
-
-int org_mini_gl_GL_glGetObjectLabelKHR(Runtime *runtime, JClass *clazz) {
-    JniEnv *env = runtime->jnienv;
-    s32 pos = 0;
-    
-    s32 pidentifier = env->localvar_getInt(runtime->localvar, pos++);
-    s32 pname = env->localvar_getInt(runtime->localvar, pos++);
-    s32 pbufSize = env->localvar_getInt(runtime->localvar, pos++);
-    Instance *plength = env->localvar_getRefer(runtime->localvar, pos++);
-    int offset_plength = env->localvar_getInt(runtime->localvar, pos++);
-    __refer ptr_plength = NULL;
-    if(plength){
-        offset_plength *= env->data_type_bytes[plength->mb.arr_type_index];
-        ptr_plength = plength->arr_body + offset_plength;
-    }
-    Instance *plabel = env->localvar_getRefer(runtime->localvar, pos++);
-    int offset_plabel = env->localvar_getInt(runtime->localvar, pos++);
-    __refer ptr_plabel = NULL;
-    if(plabel){
-        offset_plabel *= env->data_type_bytes[plabel->mb.arr_type_index];
-        ptr_plabel = plabel->arr_body + offset_plabel;
-    }
-
-    glGetObjectLabelKHR((GLenum)pidentifier, (GLuint)pname, (GLsizei)pbufSize, (GLsizei*)(ptr_plength), (GLchar*)(ptr_plabel));
-    
-    
-    return 0;
-}
-
-int org_mini_gl_GL_glObjectPtrLabelKHR(Runtime *runtime, JClass *clazz) {
-    JniEnv *env = runtime->jnienv;
-    s32 pos = 0;
-    
-    Instance *pptr = env->localvar_getRefer(runtime->localvar, pos++);
-    int offset_pptr = env->localvar_getInt(runtime->localvar, pos++);
-    __refer ptr_pptr = NULL;
-    if(pptr){
-        offset_pptr *= env->data_type_bytes[pptr->mb.arr_type_index];
-        ptr_pptr = pptr->arr_body + offset_pptr;
-    }
-    s32 plength = env->localvar_getInt(runtime->localvar, pos++);
-    Instance *plabel = env->localvar_getRefer(runtime->localvar, pos++);
-    int offset_plabel = env->localvar_getInt(runtime->localvar, pos++);
-    __refer ptr_plabel = NULL;
-    if(plabel){
-        offset_plabel *= env->data_type_bytes[plabel->mb.arr_type_index];
-        ptr_plabel = plabel->arr_body + offset_plabel;
-    }
-
-    glObjectPtrLabelKHR((const void*)(ptr_pptr), (GLsizei)plength, (const GLchar*)(ptr_plabel));
-    
-    
-    return 0;
-}
-
-int org_mini_gl_GL_glGetObjectPtrLabelKHR(Runtime *runtime, JClass *clazz) {
-    JniEnv *env = runtime->jnienv;
-    s32 pos = 0;
-    
-    Instance *pptr = env->localvar_getRefer(runtime->localvar, pos++);
-    int offset_pptr = env->localvar_getInt(runtime->localvar, pos++);
-    __refer ptr_pptr = NULL;
-    if(pptr){
-        offset_pptr *= env->data_type_bytes[pptr->mb.arr_type_index];
-        ptr_pptr = pptr->arr_body + offset_pptr;
-    }
-    s32 pbufSize = env->localvar_getInt(runtime->localvar, pos++);
-    Instance *plength = env->localvar_getRefer(runtime->localvar, pos++);
-    int offset_plength = env->localvar_getInt(runtime->localvar, pos++);
-    __refer ptr_plength = NULL;
-    if(plength){
-        offset_plength *= env->data_type_bytes[plength->mb.arr_type_index];
-        ptr_plength = plength->arr_body + offset_plength;
-    }
-    Instance *plabel = env->localvar_getRefer(runtime->localvar, pos++);
-    int offset_plabel = env->localvar_getInt(runtime->localvar, pos++);
-    __refer ptr_plabel = NULL;
-    if(plabel){
-        offset_plabel *= env->data_type_bytes[plabel->mb.arr_type_index];
-        ptr_plabel = plabel->arr_body + offset_plabel;
-    }
-
-    glGetObjectPtrLabelKHR((const void*)(ptr_pptr), (GLsizei)pbufSize, (GLsizei*)(ptr_plength), (GLchar*)(ptr_plabel));
-    
-    
-    return 0;
-}
-
-int org_mini_gl_GL_glGetPointervKHR(Runtime *runtime, JClass *clazz) {
-    JniEnv *env = runtime->jnienv;
-    s32 pos = 0;
-    
+    s32 psampler = env->localvar_getInt(runtime->localvar, pos++);
     s32 ppname = env->localvar_getInt(runtime->localvar, pos++);
     Instance *pparams = env->localvar_getRefer(runtime->localvar, pos++);
-    ReferArr *ptr_pparams = NULL;
+    int offset_pparams = env->localvar_getInt(runtime->localvar, pos++);
+    __refer ptr_pparams = NULL;
     if(pparams){
-        ptr_pparams = env->referarr_create(pparams);
+        offset_pparams *= env->data_type_bytes[pparams->mb.arr_type_index];
+        ptr_pparams = pparams->arr_body + offset_pparams;
     }
 
-    glGetPointervKHR((GLenum)ppname, (void**)(ptr_pparams->arr_body));
+    glGetSamplerParameteriv((GLuint)psampler, (GLenum)ppname, (GLint*)(ptr_pparams));
     
-    env->referarr_destory(ptr_pparams);
+    
+    return 0;
+}
+
+int org_mini_gl_GL_glGetSamplerParameterIiv(Runtime *runtime, JClass *clazz) {
+    JniEnv *env = runtime->jnienv;
+    s32 pos = 0;
+    
+    s32 psampler = env->localvar_getInt(runtime->localvar, pos++);
+    s32 ppname = env->localvar_getInt(runtime->localvar, pos++);
+    Instance *pparams = env->localvar_getRefer(runtime->localvar, pos++);
+    int offset_pparams = env->localvar_getInt(runtime->localvar, pos++);
+    __refer ptr_pparams = NULL;
+    if(pparams){
+        offset_pparams *= env->data_type_bytes[pparams->mb.arr_type_index];
+        ptr_pparams = pparams->arr_body + offset_pparams;
+    }
+
+    glGetSamplerParameterIiv((GLuint)psampler, (GLenum)ppname, (GLint*)(ptr_pparams));
+    
+    
+    return 0;
+}
+
+int org_mini_gl_GL_glGetSamplerParameterfv(Runtime *runtime, JClass *clazz) {
+    JniEnv *env = runtime->jnienv;
+    s32 pos = 0;
+    
+    s32 psampler = env->localvar_getInt(runtime->localvar, pos++);
+    s32 ppname = env->localvar_getInt(runtime->localvar, pos++);
+    Instance *pparams = env->localvar_getRefer(runtime->localvar, pos++);
+    int offset_pparams = env->localvar_getInt(runtime->localvar, pos++);
+    __refer ptr_pparams = NULL;
+    if(pparams){
+        offset_pparams *= env->data_type_bytes[pparams->mb.arr_type_index];
+        ptr_pparams = pparams->arr_body + offset_pparams;
+    }
+
+    glGetSamplerParameterfv((GLuint)psampler, (GLenum)ppname, (GLfloat*)(ptr_pparams));
+    
+    
+    return 0;
+}
+
+int org_mini_gl_GL_glGetSamplerParameterIuiv(Runtime *runtime, JClass *clazz) {
+    JniEnv *env = runtime->jnienv;
+    s32 pos = 0;
+    
+    s32 psampler = env->localvar_getInt(runtime->localvar, pos++);
+    s32 ppname = env->localvar_getInt(runtime->localvar, pos++);
+    Instance *pparams = env->localvar_getRefer(runtime->localvar, pos++);
+    int offset_pparams = env->localvar_getInt(runtime->localvar, pos++);
+    __refer ptr_pparams = NULL;
+    if(pparams){
+        offset_pparams *= env->data_type_bytes[pparams->mb.arr_type_index];
+        ptr_pparams = pparams->arr_body + offset_pparams;
+    }
+
+    glGetSamplerParameterIuiv((GLuint)psampler, (GLenum)ppname, (GLuint*)(ptr_pparams));
+    
+    
+    return 0;
+}
+
+int org_mini_gl_GL_glQueryCounter(Runtime *runtime, JClass *clazz) {
+    JniEnv *env = runtime->jnienv;
+    s32 pos = 0;
+    
+    s32 pid = env->localvar_getInt(runtime->localvar, pos++);
+    s32 ptarget = env->localvar_getInt(runtime->localvar, pos++);
+
+    glQueryCounter((GLuint)pid, (GLenum)ptarget);
+    
+    
+    return 0;
+}
+
+int org_mini_gl_GL_glGetQueryObjecti64v(Runtime *runtime, JClass *clazz) {
+    JniEnv *env = runtime->jnienv;
+    s32 pos = 0;
+    
+    s32 pid = env->localvar_getInt(runtime->localvar, pos++);
+    s32 ppname = env->localvar_getInt(runtime->localvar, pos++);
+    Instance *pparams = env->localvar_getRefer(runtime->localvar, pos++);
+    int offset_pparams = env->localvar_getInt(runtime->localvar, pos++);
+    __refer ptr_pparams = NULL;
+    if(pparams){
+        offset_pparams *= env->data_type_bytes[pparams->mb.arr_type_index];
+        ptr_pparams = pparams->arr_body + offset_pparams;
+    }
+
+    glGetQueryObjecti64v((GLuint)pid, (GLenum)ppname, (GLint64*)(ptr_pparams));
+    
+    
+    return 0;
+}
+
+int org_mini_gl_GL_glGetQueryObjectui64v(Runtime *runtime, JClass *clazz) {
+    JniEnv *env = runtime->jnienv;
+    s32 pos = 0;
+    
+    s32 pid = env->localvar_getInt(runtime->localvar, pos++);
+    s32 ppname = env->localvar_getInt(runtime->localvar, pos++);
+    Instance *pparams = env->localvar_getRefer(runtime->localvar, pos++);
+    int offset_pparams = env->localvar_getInt(runtime->localvar, pos++);
+    __refer ptr_pparams = NULL;
+    if(pparams){
+        offset_pparams *= env->data_type_bytes[pparams->mb.arr_type_index];
+        ptr_pparams = pparams->arr_body + offset_pparams;
+    }
+
+    glGetQueryObjectui64v((GLuint)pid, (GLenum)ppname, (GLuint64*)(ptr_pparams));
+    
+    
+    return 0;
+}
+
+int org_mini_gl_GL_glVertexAttribDivisor(Runtime *runtime, JClass *clazz) {
+    JniEnv *env = runtime->jnienv;
+    s32 pos = 0;
+    
+    s32 pindex = env->localvar_getInt(runtime->localvar, pos++);
+    s32 pdivisor = env->localvar_getInt(runtime->localvar, pos++);
+
+    glVertexAttribDivisor((GLuint)pindex, (GLuint)pdivisor);
+    
+    
+    return 0;
+}
+
+int org_mini_gl_GL_glVertexAttribP1ui(Runtime *runtime, JClass *clazz) {
+    JniEnv *env = runtime->jnienv;
+    s32 pos = 0;
+    
+    s32 pindex = env->localvar_getInt(runtime->localvar, pos++);
+    s32 ptype = env->localvar_getInt(runtime->localvar, pos++);
+    s32 pnormalized = env->localvar_getInt(runtime->localvar, pos++);
+    s32 pvalue = env->localvar_getInt(runtime->localvar, pos++);
+
+    glVertexAttribP1ui((GLuint)pindex, (GLenum)ptype, (GLboolean)pnormalized, (GLuint)pvalue);
+    
+    
+    return 0;
+}
+
+int org_mini_gl_GL_glVertexAttribP1uiv(Runtime *runtime, JClass *clazz) {
+    JniEnv *env = runtime->jnienv;
+    s32 pos = 0;
+    
+    s32 pindex = env->localvar_getInt(runtime->localvar, pos++);
+    s32 ptype = env->localvar_getInt(runtime->localvar, pos++);
+    s32 pnormalized = env->localvar_getInt(runtime->localvar, pos++);
+    Instance *pvalue = env->localvar_getRefer(runtime->localvar, pos++);
+    int offset_pvalue = env->localvar_getInt(runtime->localvar, pos++);
+    __refer ptr_pvalue = NULL;
+    if(pvalue){
+        offset_pvalue *= env->data_type_bytes[pvalue->mb.arr_type_index];
+        ptr_pvalue = pvalue->arr_body + offset_pvalue;
+    }
+
+    glVertexAttribP1uiv((GLuint)pindex, (GLenum)ptype, (GLboolean)pnormalized, (const GLuint*)(ptr_pvalue));
+    
+    
+    return 0;
+}
+
+int org_mini_gl_GL_glVertexAttribP2ui(Runtime *runtime, JClass *clazz) {
+    JniEnv *env = runtime->jnienv;
+    s32 pos = 0;
+    
+    s32 pindex = env->localvar_getInt(runtime->localvar, pos++);
+    s32 ptype = env->localvar_getInt(runtime->localvar, pos++);
+    s32 pnormalized = env->localvar_getInt(runtime->localvar, pos++);
+    s32 pvalue = env->localvar_getInt(runtime->localvar, pos++);
+
+    glVertexAttribP2ui((GLuint)pindex, (GLenum)ptype, (GLboolean)pnormalized, (GLuint)pvalue);
+    
+    
+    return 0;
+}
+
+int org_mini_gl_GL_glVertexAttribP2uiv(Runtime *runtime, JClass *clazz) {
+    JniEnv *env = runtime->jnienv;
+    s32 pos = 0;
+    
+    s32 pindex = env->localvar_getInt(runtime->localvar, pos++);
+    s32 ptype = env->localvar_getInt(runtime->localvar, pos++);
+    s32 pnormalized = env->localvar_getInt(runtime->localvar, pos++);
+    Instance *pvalue = env->localvar_getRefer(runtime->localvar, pos++);
+    int offset_pvalue = env->localvar_getInt(runtime->localvar, pos++);
+    __refer ptr_pvalue = NULL;
+    if(pvalue){
+        offset_pvalue *= env->data_type_bytes[pvalue->mb.arr_type_index];
+        ptr_pvalue = pvalue->arr_body + offset_pvalue;
+    }
+
+    glVertexAttribP2uiv((GLuint)pindex, (GLenum)ptype, (GLboolean)pnormalized, (const GLuint*)(ptr_pvalue));
+    
+    
+    return 0;
+}
+
+int org_mini_gl_GL_glVertexAttribP3ui(Runtime *runtime, JClass *clazz) {
+    JniEnv *env = runtime->jnienv;
+    s32 pos = 0;
+    
+    s32 pindex = env->localvar_getInt(runtime->localvar, pos++);
+    s32 ptype = env->localvar_getInt(runtime->localvar, pos++);
+    s32 pnormalized = env->localvar_getInt(runtime->localvar, pos++);
+    s32 pvalue = env->localvar_getInt(runtime->localvar, pos++);
+
+    glVertexAttribP3ui((GLuint)pindex, (GLenum)ptype, (GLboolean)pnormalized, (GLuint)pvalue);
+    
+    
+    return 0;
+}
+
+int org_mini_gl_GL_glVertexAttribP3uiv(Runtime *runtime, JClass *clazz) {
+    JniEnv *env = runtime->jnienv;
+    s32 pos = 0;
+    
+    s32 pindex = env->localvar_getInt(runtime->localvar, pos++);
+    s32 ptype = env->localvar_getInt(runtime->localvar, pos++);
+    s32 pnormalized = env->localvar_getInt(runtime->localvar, pos++);
+    Instance *pvalue = env->localvar_getRefer(runtime->localvar, pos++);
+    int offset_pvalue = env->localvar_getInt(runtime->localvar, pos++);
+    __refer ptr_pvalue = NULL;
+    if(pvalue){
+        offset_pvalue *= env->data_type_bytes[pvalue->mb.arr_type_index];
+        ptr_pvalue = pvalue->arr_body + offset_pvalue;
+    }
+
+    glVertexAttribP3uiv((GLuint)pindex, (GLenum)ptype, (GLboolean)pnormalized, (const GLuint*)(ptr_pvalue));
+    
+    
+    return 0;
+}
+
+int org_mini_gl_GL_glVertexAttribP4ui(Runtime *runtime, JClass *clazz) {
+    JniEnv *env = runtime->jnienv;
+    s32 pos = 0;
+    
+    s32 pindex = env->localvar_getInt(runtime->localvar, pos++);
+    s32 ptype = env->localvar_getInt(runtime->localvar, pos++);
+    s32 pnormalized = env->localvar_getInt(runtime->localvar, pos++);
+    s32 pvalue = env->localvar_getInt(runtime->localvar, pos++);
+
+    glVertexAttribP4ui((GLuint)pindex, (GLenum)ptype, (GLboolean)pnormalized, (GLuint)pvalue);
+    
+    
+    return 0;
+}
+
+int org_mini_gl_GL_glVertexAttribP4uiv(Runtime *runtime, JClass *clazz) {
+    JniEnv *env = runtime->jnienv;
+    s32 pos = 0;
+    
+    s32 pindex = env->localvar_getInt(runtime->localvar, pos++);
+    s32 ptype = env->localvar_getInt(runtime->localvar, pos++);
+    s32 pnormalized = env->localvar_getInt(runtime->localvar, pos++);
+    Instance *pvalue = env->localvar_getRefer(runtime->localvar, pos++);
+    int offset_pvalue = env->localvar_getInt(runtime->localvar, pos++);
+    __refer ptr_pvalue = NULL;
+    if(pvalue){
+        offset_pvalue *= env->data_type_bytes[pvalue->mb.arr_type_index];
+        ptr_pvalue = pvalue->arr_body + offset_pvalue;
+    }
+
+    glVertexAttribP4uiv((GLuint)pindex, (GLenum)ptype, (GLboolean)pnormalized, (const GLuint*)(ptr_pvalue));
+    
+    
+    return 0;
+}
+
+int org_mini_gl_GL_glVertexP2ui(Runtime *runtime, JClass *clazz) {
+    JniEnv *env = runtime->jnienv;
+    s32 pos = 0;
+    
+    s32 ptype = env->localvar_getInt(runtime->localvar, pos++);
+    s32 pvalue = env->localvar_getInt(runtime->localvar, pos++);
+
+    glVertexP2ui((GLenum)ptype, (GLuint)pvalue);
+    
+    
+    return 0;
+}
+
+int org_mini_gl_GL_glVertexP2uiv(Runtime *runtime, JClass *clazz) {
+    JniEnv *env = runtime->jnienv;
+    s32 pos = 0;
+    
+    s32 ptype = env->localvar_getInt(runtime->localvar, pos++);
+    Instance *pvalue = env->localvar_getRefer(runtime->localvar, pos++);
+    int offset_pvalue = env->localvar_getInt(runtime->localvar, pos++);
+    __refer ptr_pvalue = NULL;
+    if(pvalue){
+        offset_pvalue *= env->data_type_bytes[pvalue->mb.arr_type_index];
+        ptr_pvalue = pvalue->arr_body + offset_pvalue;
+    }
+
+    glVertexP2uiv((GLenum)ptype, (const GLuint*)(ptr_pvalue));
+    
+    
+    return 0;
+}
+
+int org_mini_gl_GL_glVertexP3ui(Runtime *runtime, JClass *clazz) {
+    JniEnv *env = runtime->jnienv;
+    s32 pos = 0;
+    
+    s32 ptype = env->localvar_getInt(runtime->localvar, pos++);
+    s32 pvalue = env->localvar_getInt(runtime->localvar, pos++);
+
+    glVertexP3ui((GLenum)ptype, (GLuint)pvalue);
+    
+    
+    return 0;
+}
+
+int org_mini_gl_GL_glVertexP3uiv(Runtime *runtime, JClass *clazz) {
+    JniEnv *env = runtime->jnienv;
+    s32 pos = 0;
+    
+    s32 ptype = env->localvar_getInt(runtime->localvar, pos++);
+    Instance *pvalue = env->localvar_getRefer(runtime->localvar, pos++);
+    int offset_pvalue = env->localvar_getInt(runtime->localvar, pos++);
+    __refer ptr_pvalue = NULL;
+    if(pvalue){
+        offset_pvalue *= env->data_type_bytes[pvalue->mb.arr_type_index];
+        ptr_pvalue = pvalue->arr_body + offset_pvalue;
+    }
+
+    glVertexP3uiv((GLenum)ptype, (const GLuint*)(ptr_pvalue));
+    
+    
+    return 0;
+}
+
+int org_mini_gl_GL_glVertexP4ui(Runtime *runtime, JClass *clazz) {
+    JniEnv *env = runtime->jnienv;
+    s32 pos = 0;
+    
+    s32 ptype = env->localvar_getInt(runtime->localvar, pos++);
+    s32 pvalue = env->localvar_getInt(runtime->localvar, pos++);
+
+    glVertexP4ui((GLenum)ptype, (GLuint)pvalue);
+    
+    
+    return 0;
+}
+
+int org_mini_gl_GL_glVertexP4uiv(Runtime *runtime, JClass *clazz) {
+    JniEnv *env = runtime->jnienv;
+    s32 pos = 0;
+    
+    s32 ptype = env->localvar_getInt(runtime->localvar, pos++);
+    Instance *pvalue = env->localvar_getRefer(runtime->localvar, pos++);
+    int offset_pvalue = env->localvar_getInt(runtime->localvar, pos++);
+    __refer ptr_pvalue = NULL;
+    if(pvalue){
+        offset_pvalue *= env->data_type_bytes[pvalue->mb.arr_type_index];
+        ptr_pvalue = pvalue->arr_body + offset_pvalue;
+    }
+
+    glVertexP4uiv((GLenum)ptype, (const GLuint*)(ptr_pvalue));
+    
+    
+    return 0;
+}
+
+int org_mini_gl_GL_glTexCoordP1ui(Runtime *runtime, JClass *clazz) {
+    JniEnv *env = runtime->jnienv;
+    s32 pos = 0;
+    
+    s32 ptype = env->localvar_getInt(runtime->localvar, pos++);
+    s32 pcoords = env->localvar_getInt(runtime->localvar, pos++);
+
+    glTexCoordP1ui((GLenum)ptype, (GLuint)pcoords);
+    
+    
+    return 0;
+}
+
+int org_mini_gl_GL_glTexCoordP1uiv(Runtime *runtime, JClass *clazz) {
+    JniEnv *env = runtime->jnienv;
+    s32 pos = 0;
+    
+    s32 ptype = env->localvar_getInt(runtime->localvar, pos++);
+    Instance *pcoords = env->localvar_getRefer(runtime->localvar, pos++);
+    int offset_pcoords = env->localvar_getInt(runtime->localvar, pos++);
+    __refer ptr_pcoords = NULL;
+    if(pcoords){
+        offset_pcoords *= env->data_type_bytes[pcoords->mb.arr_type_index];
+        ptr_pcoords = pcoords->arr_body + offset_pcoords;
+    }
+
+    glTexCoordP1uiv((GLenum)ptype, (const GLuint*)(ptr_pcoords));
+    
+    
+    return 0;
+}
+
+int org_mini_gl_GL_glTexCoordP2ui(Runtime *runtime, JClass *clazz) {
+    JniEnv *env = runtime->jnienv;
+    s32 pos = 0;
+    
+    s32 ptype = env->localvar_getInt(runtime->localvar, pos++);
+    s32 pcoords = env->localvar_getInt(runtime->localvar, pos++);
+
+    glTexCoordP2ui((GLenum)ptype, (GLuint)pcoords);
+    
+    
+    return 0;
+}
+
+int org_mini_gl_GL_glTexCoordP2uiv(Runtime *runtime, JClass *clazz) {
+    JniEnv *env = runtime->jnienv;
+    s32 pos = 0;
+    
+    s32 ptype = env->localvar_getInt(runtime->localvar, pos++);
+    Instance *pcoords = env->localvar_getRefer(runtime->localvar, pos++);
+    int offset_pcoords = env->localvar_getInt(runtime->localvar, pos++);
+    __refer ptr_pcoords = NULL;
+    if(pcoords){
+        offset_pcoords *= env->data_type_bytes[pcoords->mb.arr_type_index];
+        ptr_pcoords = pcoords->arr_body + offset_pcoords;
+    }
+
+    glTexCoordP2uiv((GLenum)ptype, (const GLuint*)(ptr_pcoords));
+    
+    
+    return 0;
+}
+
+int org_mini_gl_GL_glTexCoordP3ui(Runtime *runtime, JClass *clazz) {
+    JniEnv *env = runtime->jnienv;
+    s32 pos = 0;
+    
+    s32 ptype = env->localvar_getInt(runtime->localvar, pos++);
+    s32 pcoords = env->localvar_getInt(runtime->localvar, pos++);
+
+    glTexCoordP3ui((GLenum)ptype, (GLuint)pcoords);
+    
+    
+    return 0;
+}
+
+int org_mini_gl_GL_glTexCoordP3uiv(Runtime *runtime, JClass *clazz) {
+    JniEnv *env = runtime->jnienv;
+    s32 pos = 0;
+    
+    s32 ptype = env->localvar_getInt(runtime->localvar, pos++);
+    Instance *pcoords = env->localvar_getRefer(runtime->localvar, pos++);
+    int offset_pcoords = env->localvar_getInt(runtime->localvar, pos++);
+    __refer ptr_pcoords = NULL;
+    if(pcoords){
+        offset_pcoords *= env->data_type_bytes[pcoords->mb.arr_type_index];
+        ptr_pcoords = pcoords->arr_body + offset_pcoords;
+    }
+
+    glTexCoordP3uiv((GLenum)ptype, (const GLuint*)(ptr_pcoords));
+    
+    
+    return 0;
+}
+
+int org_mini_gl_GL_glTexCoordP4ui(Runtime *runtime, JClass *clazz) {
+    JniEnv *env = runtime->jnienv;
+    s32 pos = 0;
+    
+    s32 ptype = env->localvar_getInt(runtime->localvar, pos++);
+    s32 pcoords = env->localvar_getInt(runtime->localvar, pos++);
+
+    glTexCoordP4ui((GLenum)ptype, (GLuint)pcoords);
+    
+    
+    return 0;
+}
+
+int org_mini_gl_GL_glTexCoordP4uiv(Runtime *runtime, JClass *clazz) {
+    JniEnv *env = runtime->jnienv;
+    s32 pos = 0;
+    
+    s32 ptype = env->localvar_getInt(runtime->localvar, pos++);
+    Instance *pcoords = env->localvar_getRefer(runtime->localvar, pos++);
+    int offset_pcoords = env->localvar_getInt(runtime->localvar, pos++);
+    __refer ptr_pcoords = NULL;
+    if(pcoords){
+        offset_pcoords *= env->data_type_bytes[pcoords->mb.arr_type_index];
+        ptr_pcoords = pcoords->arr_body + offset_pcoords;
+    }
+
+    glTexCoordP4uiv((GLenum)ptype, (const GLuint*)(ptr_pcoords));
+    
+    
+    return 0;
+}
+
+int org_mini_gl_GL_glMultiTexCoordP1ui(Runtime *runtime, JClass *clazz) {
+    JniEnv *env = runtime->jnienv;
+    s32 pos = 0;
+    
+    s32 ptexture = env->localvar_getInt(runtime->localvar, pos++);
+    s32 ptype = env->localvar_getInt(runtime->localvar, pos++);
+    s32 pcoords = env->localvar_getInt(runtime->localvar, pos++);
+
+    glMultiTexCoordP1ui((GLenum)ptexture, (GLenum)ptype, (GLuint)pcoords);
+    
+    
+    return 0;
+}
+
+int org_mini_gl_GL_glMultiTexCoordP1uiv(Runtime *runtime, JClass *clazz) {
+    JniEnv *env = runtime->jnienv;
+    s32 pos = 0;
+    
+    s32 ptexture = env->localvar_getInt(runtime->localvar, pos++);
+    s32 ptype = env->localvar_getInt(runtime->localvar, pos++);
+    Instance *pcoords = env->localvar_getRefer(runtime->localvar, pos++);
+    int offset_pcoords = env->localvar_getInt(runtime->localvar, pos++);
+    __refer ptr_pcoords = NULL;
+    if(pcoords){
+        offset_pcoords *= env->data_type_bytes[pcoords->mb.arr_type_index];
+        ptr_pcoords = pcoords->arr_body + offset_pcoords;
+    }
+
+    glMultiTexCoordP1uiv((GLenum)ptexture, (GLenum)ptype, (const GLuint*)(ptr_pcoords));
+    
+    
+    return 0;
+}
+
+int org_mini_gl_GL_glMultiTexCoordP2ui(Runtime *runtime, JClass *clazz) {
+    JniEnv *env = runtime->jnienv;
+    s32 pos = 0;
+    
+    s32 ptexture = env->localvar_getInt(runtime->localvar, pos++);
+    s32 ptype = env->localvar_getInt(runtime->localvar, pos++);
+    s32 pcoords = env->localvar_getInt(runtime->localvar, pos++);
+
+    glMultiTexCoordP2ui((GLenum)ptexture, (GLenum)ptype, (GLuint)pcoords);
+    
+    
+    return 0;
+}
+
+int org_mini_gl_GL_glMultiTexCoordP2uiv(Runtime *runtime, JClass *clazz) {
+    JniEnv *env = runtime->jnienv;
+    s32 pos = 0;
+    
+    s32 ptexture = env->localvar_getInt(runtime->localvar, pos++);
+    s32 ptype = env->localvar_getInt(runtime->localvar, pos++);
+    Instance *pcoords = env->localvar_getRefer(runtime->localvar, pos++);
+    int offset_pcoords = env->localvar_getInt(runtime->localvar, pos++);
+    __refer ptr_pcoords = NULL;
+    if(pcoords){
+        offset_pcoords *= env->data_type_bytes[pcoords->mb.arr_type_index];
+        ptr_pcoords = pcoords->arr_body + offset_pcoords;
+    }
+
+    glMultiTexCoordP2uiv((GLenum)ptexture, (GLenum)ptype, (const GLuint*)(ptr_pcoords));
+    
+    
+    return 0;
+}
+
+int org_mini_gl_GL_glMultiTexCoordP3ui(Runtime *runtime, JClass *clazz) {
+    JniEnv *env = runtime->jnienv;
+    s32 pos = 0;
+    
+    s32 ptexture = env->localvar_getInt(runtime->localvar, pos++);
+    s32 ptype = env->localvar_getInt(runtime->localvar, pos++);
+    s32 pcoords = env->localvar_getInt(runtime->localvar, pos++);
+
+    glMultiTexCoordP3ui((GLenum)ptexture, (GLenum)ptype, (GLuint)pcoords);
+    
+    
+    return 0;
+}
+
+int org_mini_gl_GL_glMultiTexCoordP3uiv(Runtime *runtime, JClass *clazz) {
+    JniEnv *env = runtime->jnienv;
+    s32 pos = 0;
+    
+    s32 ptexture = env->localvar_getInt(runtime->localvar, pos++);
+    s32 ptype = env->localvar_getInt(runtime->localvar, pos++);
+    Instance *pcoords = env->localvar_getRefer(runtime->localvar, pos++);
+    int offset_pcoords = env->localvar_getInt(runtime->localvar, pos++);
+    __refer ptr_pcoords = NULL;
+    if(pcoords){
+        offset_pcoords *= env->data_type_bytes[pcoords->mb.arr_type_index];
+        ptr_pcoords = pcoords->arr_body + offset_pcoords;
+    }
+
+    glMultiTexCoordP3uiv((GLenum)ptexture, (GLenum)ptype, (const GLuint*)(ptr_pcoords));
+    
+    
+    return 0;
+}
+
+int org_mini_gl_GL_glMultiTexCoordP4ui(Runtime *runtime, JClass *clazz) {
+    JniEnv *env = runtime->jnienv;
+    s32 pos = 0;
+    
+    s32 ptexture = env->localvar_getInt(runtime->localvar, pos++);
+    s32 ptype = env->localvar_getInt(runtime->localvar, pos++);
+    s32 pcoords = env->localvar_getInt(runtime->localvar, pos++);
+
+    glMultiTexCoordP4ui((GLenum)ptexture, (GLenum)ptype, (GLuint)pcoords);
+    
+    
+    return 0;
+}
+
+int org_mini_gl_GL_glMultiTexCoordP4uiv(Runtime *runtime, JClass *clazz) {
+    JniEnv *env = runtime->jnienv;
+    s32 pos = 0;
+    
+    s32 ptexture = env->localvar_getInt(runtime->localvar, pos++);
+    s32 ptype = env->localvar_getInt(runtime->localvar, pos++);
+    Instance *pcoords = env->localvar_getRefer(runtime->localvar, pos++);
+    int offset_pcoords = env->localvar_getInt(runtime->localvar, pos++);
+    __refer ptr_pcoords = NULL;
+    if(pcoords){
+        offset_pcoords *= env->data_type_bytes[pcoords->mb.arr_type_index];
+        ptr_pcoords = pcoords->arr_body + offset_pcoords;
+    }
+
+    glMultiTexCoordP4uiv((GLenum)ptexture, (GLenum)ptype, (const GLuint*)(ptr_pcoords));
+    
+    
+    return 0;
+}
+
+int org_mini_gl_GL_glNormalP3ui(Runtime *runtime, JClass *clazz) {
+    JniEnv *env = runtime->jnienv;
+    s32 pos = 0;
+    
+    s32 ptype = env->localvar_getInt(runtime->localvar, pos++);
+    s32 pcoords = env->localvar_getInt(runtime->localvar, pos++);
+
+    glNormalP3ui((GLenum)ptype, (GLuint)pcoords);
+    
+    
+    return 0;
+}
+
+int org_mini_gl_GL_glNormalP3uiv(Runtime *runtime, JClass *clazz) {
+    JniEnv *env = runtime->jnienv;
+    s32 pos = 0;
+    
+    s32 ptype = env->localvar_getInt(runtime->localvar, pos++);
+    Instance *pcoords = env->localvar_getRefer(runtime->localvar, pos++);
+    int offset_pcoords = env->localvar_getInt(runtime->localvar, pos++);
+    __refer ptr_pcoords = NULL;
+    if(pcoords){
+        offset_pcoords *= env->data_type_bytes[pcoords->mb.arr_type_index];
+        ptr_pcoords = pcoords->arr_body + offset_pcoords;
+    }
+
+    glNormalP3uiv((GLenum)ptype, (const GLuint*)(ptr_pcoords));
+    
+    
+    return 0;
+}
+
+int org_mini_gl_GL_glColorP3ui(Runtime *runtime, JClass *clazz) {
+    JniEnv *env = runtime->jnienv;
+    s32 pos = 0;
+    
+    s32 ptype = env->localvar_getInt(runtime->localvar, pos++);
+    s32 pcolor = env->localvar_getInt(runtime->localvar, pos++);
+
+    glColorP3ui((GLenum)ptype, (GLuint)pcolor);
+    
+    
+    return 0;
+}
+
+int org_mini_gl_GL_glColorP3uiv(Runtime *runtime, JClass *clazz) {
+    JniEnv *env = runtime->jnienv;
+    s32 pos = 0;
+    
+    s32 ptype = env->localvar_getInt(runtime->localvar, pos++);
+    Instance *pcolor = env->localvar_getRefer(runtime->localvar, pos++);
+    int offset_pcolor = env->localvar_getInt(runtime->localvar, pos++);
+    __refer ptr_pcolor = NULL;
+    if(pcolor){
+        offset_pcolor *= env->data_type_bytes[pcolor->mb.arr_type_index];
+        ptr_pcolor = pcolor->arr_body + offset_pcolor;
+    }
+
+    glColorP3uiv((GLenum)ptype, (const GLuint*)(ptr_pcolor));
+    
+    
+    return 0;
+}
+
+int org_mini_gl_GL_glColorP4ui(Runtime *runtime, JClass *clazz) {
+    JniEnv *env = runtime->jnienv;
+    s32 pos = 0;
+    
+    s32 ptype = env->localvar_getInt(runtime->localvar, pos++);
+    s32 pcolor = env->localvar_getInt(runtime->localvar, pos++);
+
+    glColorP4ui((GLenum)ptype, (GLuint)pcolor);
+    
+    
+    return 0;
+}
+
+int org_mini_gl_GL_glColorP4uiv(Runtime *runtime, JClass *clazz) {
+    JniEnv *env = runtime->jnienv;
+    s32 pos = 0;
+    
+    s32 ptype = env->localvar_getInt(runtime->localvar, pos++);
+    Instance *pcolor = env->localvar_getRefer(runtime->localvar, pos++);
+    int offset_pcolor = env->localvar_getInt(runtime->localvar, pos++);
+    __refer ptr_pcolor = NULL;
+    if(pcolor){
+        offset_pcolor *= env->data_type_bytes[pcolor->mb.arr_type_index];
+        ptr_pcolor = pcolor->arr_body + offset_pcolor;
+    }
+
+    glColorP4uiv((GLenum)ptype, (const GLuint*)(ptr_pcolor));
+    
+    
+    return 0;
+}
+
+int org_mini_gl_GL_glSecondaryColorP3ui(Runtime *runtime, JClass *clazz) {
+    JniEnv *env = runtime->jnienv;
+    s32 pos = 0;
+    
+    s32 ptype = env->localvar_getInt(runtime->localvar, pos++);
+    s32 pcolor = env->localvar_getInt(runtime->localvar, pos++);
+
+    glSecondaryColorP3ui((GLenum)ptype, (GLuint)pcolor);
+    
+    
+    return 0;
+}
+
+int org_mini_gl_GL_glSecondaryColorP3uiv(Runtime *runtime, JClass *clazz) {
+    JniEnv *env = runtime->jnienv;
+    s32 pos = 0;
+    
+    s32 ptype = env->localvar_getInt(runtime->localvar, pos++);
+    Instance *pcolor = env->localvar_getRefer(runtime->localvar, pos++);
+    int offset_pcolor = env->localvar_getInt(runtime->localvar, pos++);
+    __refer ptr_pcolor = NULL;
+    if(pcolor){
+        offset_pcolor *= env->data_type_bytes[pcolor->mb.arr_type_index];
+        ptr_pcolor = pcolor->arr_body + offset_pcolor;
+    }
+
+    glSecondaryColorP3uiv((GLenum)ptype, (const GLuint*)(ptr_pcolor));
+    
+    
     return 0;
 }
 
@@ -12941,48 +12947,64 @@ static java_native_method method_gl_table[] = {
 {"org/mini/gl/GL",  "glTexImage3DMultisample",  "(IIIIIII)V",  org_mini_gl_GL_glTexImage3DMultisample},
 {"org/mini/gl/GL",  "glGetMultisamplefv",  "(II[FI)V",  org_mini_gl_GL_glGetMultisamplefv},
 {"org/mini/gl/GL",  "glSampleMaski",  "(II)V",  org_mini_gl_GL_glSampleMaski},
-{"org/mini/gl/GL",  "glSampleCoverageARB",  "(FI)V",  org_mini_gl_GL_glSampleCoverageARB},
-{"org/mini/gl/GL",  "glGetGraphicsResetStatusARB",  "()I",  org_mini_gl_GL_glGetGraphicsResetStatusARB},
-{"org/mini/gl/GL",  "glGetnTexImageARB",  "(IIIIILjava/lang/Object;I)V",  org_mini_gl_GL_glGetnTexImageARB},
-{"org/mini/gl/GL",  "glReadnPixelsARB",  "(IIIIIIILjava/lang/Object;I)V",  org_mini_gl_GL_glReadnPixelsARB},
-{"org/mini/gl/GL",  "glGetnCompressedTexImageARB",  "(IIILjava/lang/Object;I)V",  org_mini_gl_GL_glGetnCompressedTexImageARB},
-{"org/mini/gl/GL",  "glGetnUniformfvARB",  "(III[FI)V",  org_mini_gl_GL_glGetnUniformfvARB},
-{"org/mini/gl/GL",  "glGetnUniformivARB",  "(III[II)V",  org_mini_gl_GL_glGetnUniformivARB},
-{"org/mini/gl/GL",  "glGetnUniformuivARB",  "(III[II)V",  org_mini_gl_GL_glGetnUniformuivARB},
-{"org/mini/gl/GL",  "glGetnUniformdvARB",  "(III[DI)V",  org_mini_gl_GL_glGetnUniformdvARB},
-{"org/mini/gl/GL",  "glGetnMapdvARB",  "(III[DI)V",  org_mini_gl_GL_glGetnMapdvARB},
-{"org/mini/gl/GL",  "glGetnMapfvARB",  "(III[FI)V",  org_mini_gl_GL_glGetnMapfvARB},
-{"org/mini/gl/GL",  "glGetnMapivARB",  "(III[II)V",  org_mini_gl_GL_glGetnMapivARB},
-{"org/mini/gl/GL",  "glGetnPixelMapfvARB",  "(II[FI)V",  org_mini_gl_GL_glGetnPixelMapfvARB},
-{"org/mini/gl/GL",  "glGetnPixelMapuivARB",  "(II[II)V",  org_mini_gl_GL_glGetnPixelMapuivARB},
-{"org/mini/gl/GL",  "glGetnPixelMapusvARB",  "(II[SI)V",  org_mini_gl_GL_glGetnPixelMapusvARB},
-{"org/mini/gl/GL",  "glGetnPolygonStippleARB",  "(I[B)V",  org_mini_gl_GL_glGetnPolygonStippleARB},
-{"org/mini/gl/GL",  "glGetnColorTableARB",  "(IIIILjava/lang/Object;I)V",  org_mini_gl_GL_glGetnColorTableARB},
-{"org/mini/gl/GL",  "glGetnConvolutionFilterARB",  "(IIIILjava/lang/Object;I)V",  org_mini_gl_GL_glGetnConvolutionFilterARB},
-{"org/mini/gl/GL",  "glGetnSeparableFilterARB",  "(IIIILjava/lang/Object;IILjava/lang/Object;ILjava/lang/Object;I)V",  org_mini_gl_GL_glGetnSeparableFilterARB},
-{"org/mini/gl/GL",  "glGetnHistogramARB",  "(IIIIILjava/lang/Object;I)V",  org_mini_gl_GL_glGetnHistogramARB},
-{"org/mini/gl/GL",  "glGetnMinmaxARB",  "(IIIIILjava/lang/Object;I)V",  org_mini_gl_GL_glGetnMinmaxARB},
-{"org/mini/gl/GL",  "glDebugMessageControl",  "(IIII[III)V",  org_mini_gl_GL_glDebugMessageControl},
-{"org/mini/gl/GL",  "glDebugMessageInsert",  "(IIIII[B)V",  org_mini_gl_GL_glDebugMessageInsert},
-{"org/mini/gl/GL",  "glDebugMessageCallback",  "(JLjava/lang/Object;I)V",  org_mini_gl_GL_glDebugMessageCallback},
-{"org/mini/gl/GL",  "glGetDebugMessageLog",  "(II[II[II[II[II[II[B)I",  org_mini_gl_GL_glGetDebugMessageLog},
-{"org/mini/gl/GL",  "glPushDebugGroup",  "(III[B)V",  org_mini_gl_GL_glPushDebugGroup},
-{"org/mini/gl/GL",  "glPopDebugGroup",  "()V",  org_mini_gl_GL_glPopDebugGroup},
-{"org/mini/gl/GL",  "glObjectLabel",  "(III[B)V",  org_mini_gl_GL_glObjectLabel},
-{"org/mini/gl/GL",  "glGetObjectLabel",  "(III[II[B)V",  org_mini_gl_GL_glGetObjectLabel},
-{"org/mini/gl/GL",  "glObjectPtrLabel",  "(Ljava/lang/Object;II[B)V",  org_mini_gl_GL_glObjectPtrLabel},
-{"org/mini/gl/GL",  "glGetObjectPtrLabel",  "(Ljava/lang/Object;II[II[B)V",  org_mini_gl_GL_glGetObjectPtrLabel},
-{"org/mini/gl/GL",  "glDebugMessageControlKHR",  "(IIII[III)V",  org_mini_gl_GL_glDebugMessageControlKHR},
-{"org/mini/gl/GL",  "glDebugMessageInsertKHR",  "(IIIII[B)V",  org_mini_gl_GL_glDebugMessageInsertKHR},
-{"org/mini/gl/GL",  "glDebugMessageCallbackKHR",  "(JLjava/lang/Object;I)V",  org_mini_gl_GL_glDebugMessageCallbackKHR},
-{"org/mini/gl/GL",  "glGetDebugMessageLogKHR",  "(II[II[II[II[II[II[B)I",  org_mini_gl_GL_glGetDebugMessageLogKHR},
-{"org/mini/gl/GL",  "glPushDebugGroupKHR",  "(III[B)V",  org_mini_gl_GL_glPushDebugGroupKHR},
-{"org/mini/gl/GL",  "glPopDebugGroupKHR",  "()V",  org_mini_gl_GL_glPopDebugGroupKHR},
-{"org/mini/gl/GL",  "glObjectLabelKHR",  "(III[B)V",  org_mini_gl_GL_glObjectLabelKHR},
-{"org/mini/gl/GL",  "glGetObjectLabelKHR",  "(III[II[B)V",  org_mini_gl_GL_glGetObjectLabelKHR},
-{"org/mini/gl/GL",  "glObjectPtrLabelKHR",  "(Ljava/lang/Object;II[B)V",  org_mini_gl_GL_glObjectPtrLabelKHR},
-{"org/mini/gl/GL",  "glGetObjectPtrLabelKHR",  "(Ljava/lang/Object;II[II[B)V",  org_mini_gl_GL_glGetObjectPtrLabelKHR},
-{"org/mini/gl/GL",  "glGetPointervKHR",  "(I[Ljava/lang/Object;)V",  org_mini_gl_GL_glGetPointervKHR},
+{"org/mini/gl/GL",  "glBindFragDataLocationIndexed",  "(III[B)V",  org_mini_gl_GL_glBindFragDataLocationIndexed},
+{"org/mini/gl/GL",  "glGetFragDataIndex",  "(I[B)I",  org_mini_gl_GL_glGetFragDataIndex},
+{"org/mini/gl/GL",  "glGenSamplers",  "(I[II)V",  org_mini_gl_GL_glGenSamplers},
+{"org/mini/gl/GL",  "glDeleteSamplers",  "(I[II)V",  org_mini_gl_GL_glDeleteSamplers},
+{"org/mini/gl/GL",  "glIsSampler",  "(I)I",  org_mini_gl_GL_glIsSampler},
+{"org/mini/gl/GL",  "glBindSampler",  "(II)V",  org_mini_gl_GL_glBindSampler},
+{"org/mini/gl/GL",  "glSamplerParameteri",  "(III)V",  org_mini_gl_GL_glSamplerParameteri},
+{"org/mini/gl/GL",  "glSamplerParameteriv",  "(II[II)V",  org_mini_gl_GL_glSamplerParameteriv},
+{"org/mini/gl/GL",  "glSamplerParameterf",  "(IIF)V",  org_mini_gl_GL_glSamplerParameterf},
+{"org/mini/gl/GL",  "glSamplerParameterfv",  "(II[FI)V",  org_mini_gl_GL_glSamplerParameterfv},
+{"org/mini/gl/GL",  "glSamplerParameterIiv",  "(II[II)V",  org_mini_gl_GL_glSamplerParameterIiv},
+{"org/mini/gl/GL",  "glSamplerParameterIuiv",  "(II[II)V",  org_mini_gl_GL_glSamplerParameterIuiv},
+{"org/mini/gl/GL",  "glGetSamplerParameteriv",  "(II[II)V",  org_mini_gl_GL_glGetSamplerParameteriv},
+{"org/mini/gl/GL",  "glGetSamplerParameterIiv",  "(II[II)V",  org_mini_gl_GL_glGetSamplerParameterIiv},
+{"org/mini/gl/GL",  "glGetSamplerParameterfv",  "(II[FI)V",  org_mini_gl_GL_glGetSamplerParameterfv},
+{"org/mini/gl/GL",  "glGetSamplerParameterIuiv",  "(II[II)V",  org_mini_gl_GL_glGetSamplerParameterIuiv},
+{"org/mini/gl/GL",  "glQueryCounter",  "(II)V",  org_mini_gl_GL_glQueryCounter},
+{"org/mini/gl/GL",  "glGetQueryObjecti64v",  "(II[JI)V",  org_mini_gl_GL_glGetQueryObjecti64v},
+{"org/mini/gl/GL",  "glGetQueryObjectui64v",  "(II[JI)V",  org_mini_gl_GL_glGetQueryObjectui64v},
+{"org/mini/gl/GL",  "glVertexAttribDivisor",  "(II)V",  org_mini_gl_GL_glVertexAttribDivisor},
+{"org/mini/gl/GL",  "glVertexAttribP1ui",  "(IIII)V",  org_mini_gl_GL_glVertexAttribP1ui},
+{"org/mini/gl/GL",  "glVertexAttribP1uiv",  "(III[II)V",  org_mini_gl_GL_glVertexAttribP1uiv},
+{"org/mini/gl/GL",  "glVertexAttribP2ui",  "(IIII)V",  org_mini_gl_GL_glVertexAttribP2ui},
+{"org/mini/gl/GL",  "glVertexAttribP2uiv",  "(III[II)V",  org_mini_gl_GL_glVertexAttribP2uiv},
+{"org/mini/gl/GL",  "glVertexAttribP3ui",  "(IIII)V",  org_mini_gl_GL_glVertexAttribP3ui},
+{"org/mini/gl/GL",  "glVertexAttribP3uiv",  "(III[II)V",  org_mini_gl_GL_glVertexAttribP3uiv},
+{"org/mini/gl/GL",  "glVertexAttribP4ui",  "(IIII)V",  org_mini_gl_GL_glVertexAttribP4ui},
+{"org/mini/gl/GL",  "glVertexAttribP4uiv",  "(III[II)V",  org_mini_gl_GL_glVertexAttribP4uiv},
+{"org/mini/gl/GL",  "glVertexP2ui",  "(II)V",  org_mini_gl_GL_glVertexP2ui},
+{"org/mini/gl/GL",  "glVertexP2uiv",  "(I[II)V",  org_mini_gl_GL_glVertexP2uiv},
+{"org/mini/gl/GL",  "glVertexP3ui",  "(II)V",  org_mini_gl_GL_glVertexP3ui},
+{"org/mini/gl/GL",  "glVertexP3uiv",  "(I[II)V",  org_mini_gl_GL_glVertexP3uiv},
+{"org/mini/gl/GL",  "glVertexP4ui",  "(II)V",  org_mini_gl_GL_glVertexP4ui},
+{"org/mini/gl/GL",  "glVertexP4uiv",  "(I[II)V",  org_mini_gl_GL_glVertexP4uiv},
+{"org/mini/gl/GL",  "glTexCoordP1ui",  "(II)V",  org_mini_gl_GL_glTexCoordP1ui},
+{"org/mini/gl/GL",  "glTexCoordP1uiv",  "(I[II)V",  org_mini_gl_GL_glTexCoordP1uiv},
+{"org/mini/gl/GL",  "glTexCoordP2ui",  "(II)V",  org_mini_gl_GL_glTexCoordP2ui},
+{"org/mini/gl/GL",  "glTexCoordP2uiv",  "(I[II)V",  org_mini_gl_GL_glTexCoordP2uiv},
+{"org/mini/gl/GL",  "glTexCoordP3ui",  "(II)V",  org_mini_gl_GL_glTexCoordP3ui},
+{"org/mini/gl/GL",  "glTexCoordP3uiv",  "(I[II)V",  org_mini_gl_GL_glTexCoordP3uiv},
+{"org/mini/gl/GL",  "glTexCoordP4ui",  "(II)V",  org_mini_gl_GL_glTexCoordP4ui},
+{"org/mini/gl/GL",  "glTexCoordP4uiv",  "(I[II)V",  org_mini_gl_GL_glTexCoordP4uiv},
+{"org/mini/gl/GL",  "glMultiTexCoordP1ui",  "(III)V",  org_mini_gl_GL_glMultiTexCoordP1ui},
+{"org/mini/gl/GL",  "glMultiTexCoordP1uiv",  "(II[II)V",  org_mini_gl_GL_glMultiTexCoordP1uiv},
+{"org/mini/gl/GL",  "glMultiTexCoordP2ui",  "(III)V",  org_mini_gl_GL_glMultiTexCoordP2ui},
+{"org/mini/gl/GL",  "glMultiTexCoordP2uiv",  "(II[II)V",  org_mini_gl_GL_glMultiTexCoordP2uiv},
+{"org/mini/gl/GL",  "glMultiTexCoordP3ui",  "(III)V",  org_mini_gl_GL_glMultiTexCoordP3ui},
+{"org/mini/gl/GL",  "glMultiTexCoordP3uiv",  "(II[II)V",  org_mini_gl_GL_glMultiTexCoordP3uiv},
+{"org/mini/gl/GL",  "glMultiTexCoordP4ui",  "(III)V",  org_mini_gl_GL_glMultiTexCoordP4ui},
+{"org/mini/gl/GL",  "glMultiTexCoordP4uiv",  "(II[II)V",  org_mini_gl_GL_glMultiTexCoordP4uiv},
+{"org/mini/gl/GL",  "glNormalP3ui",  "(II)V",  org_mini_gl_GL_glNormalP3ui},
+{"org/mini/gl/GL",  "glNormalP3uiv",  "(I[II)V",  org_mini_gl_GL_glNormalP3uiv},
+{"org/mini/gl/GL",  "glColorP3ui",  "(II)V",  org_mini_gl_GL_glColorP3ui},
+{"org/mini/gl/GL",  "glColorP3uiv",  "(I[II)V",  org_mini_gl_GL_glColorP3uiv},
+{"org/mini/gl/GL",  "glColorP4ui",  "(II)V",  org_mini_gl_GL_glColorP4ui},
+{"org/mini/gl/GL",  "glColorP4uiv",  "(I[II)V",  org_mini_gl_GL_glColorP4uiv},
+{"org/mini/gl/GL",  "glSecondaryColorP3ui",  "(II)V",  org_mini_gl_GL_glSecondaryColorP3ui},
+{"org/mini/gl/GL",  "glSecondaryColorP3uiv",  "(I[II)V",  org_mini_gl_GL_glSecondaryColorP3uiv},
 };
 
 s32 count_GLFuncTable() {

@@ -54,7 +54,7 @@ public class Nutil_java_2_c {
             + "\n"
             + "#include <nanovg/nanovg.h>\n"
             + "#include <nanovg/nanovg_jni_assist.h>\n"
-            + "#define NANOVG_GL2_IMPLEMENTATION\n"
+            + "#define NANOVG_GL3_IMPLEMENTATION\n"
             + "#include <nanovg/nanovg_gl.h>\n"
             + "\n"
             + "\n"

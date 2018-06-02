@@ -116,7 +116,7 @@ public class GForm extends GContainer implements Runnable {
         }
         Glfw.glfwMakeContextCurrent(win);
         glfwSwapInterval(1);
-        vg = Nutil.nvgCreateGL2(NVG_ANTIALIAS | NVG_STENCIL_STROKES | NVG_DEBUG);
+        vg = Nutil.nvgCreateGL3(NVG_ANTIALIAS | NVG_STENCIL_STROKES | NVG_DEBUG);
         if (vg == 0) {
             System.out.println("Could not init nanovg.\n");
 
@@ -153,7 +153,7 @@ public class GForm extends GContainer implements Runnable {
                 ex.printStackTrace();
             }
         }
-        Nutil.nvgDeleteGL2(vg);
+        Nutil.nvgDeleteGL3(vg);
         glfwTerminate();
         GToolkit.removeForm(vg);
         vg = 0;

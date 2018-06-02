@@ -321,8 +321,9 @@ public class GL_java_2_c {
                             javaArgvCode += "[Ljava/lang/Object;";
 
                         } else if (argvType.indexOf("[]") > 0 || argvType.indexOf("Object") >= 0) {
+                            boolean isByteArray = argvType.startsWith("byte");
                             varCode += "    Instance *" + argvName + " = env->localvar_getRefer(runtime->localvar, pos++);\n";
-                            varCode += "    int offset_" + argvName + " = env->localvar_getInt(runtime->localvar, pos++);\n";
+                            varCode += "    int offset_" + argvName + (isByteArray ? " = 0;\n" : " = env->localvar_getInt(runtime->localvar, pos++);\n");
                             varCode += "    __refer ptr_" + argvName + " = NULL;\n";
                             varCode += "    if(" + argvName + "){\n";
                             varCode += "        offset_" + argvName + " *= env->data_type_bytes[" + argvName + "->mb.arr_type_index];\n";

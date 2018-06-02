@@ -91,7 +91,7 @@ void profile_print() {
         u8 instruct_code = (u8) (intptr_t) hashtable_iter_next_key(&hti);
         ProfileDetail *pd = hashtable_get(profile_instructs,
                                           (HashtableKey) (intptr_t) instruct_code);
-        jvm_printf("%s \t %2x \t total \t %lld \t count \t %lld \t avg \t %lld\n", inst_name[instruct_code],
+        jvm_printf("%s \t %2x \t total \t %lld \t count \t %d \t avg \t %lld\n", inst_name[instruct_code],
                    instruct_code, pd->cost, pd->count,
                    (s64) (pd->cost / pd->count));
     }

@@ -82,7 +82,6 @@ public class GL {
     public static final int GL_BLEND_SRC = 0x0BE1;
     public static final int GL_BLEND = 0x0BE2;
     public static final int GL_LOGIC_OP_MODE = 0x0BF0;
-    public static final int GL_COLOR_LOGIC_OP = 0x0BF2;
     public static final int GL_DRAW_BUFFER = 0x0C01;
     public static final int GL_READ_BUFFER = 0x0C02;
     public static final int GL_SCISSOR_BOX = 0x0C10;
@@ -110,21 +109,9 @@ public class GL {
     public static final int GL_SUBPIXEL_BITS = 0x0D50;
     public static final int GL_TEXTURE_1D = 0x0DE0;
     public static final int GL_TEXTURE_2D = 0x0DE1;
-    public static final int GL_POLYGON_OFFSET_UNITS = 0x2A00;
-    public static final int GL_POLYGON_OFFSET_POINT = 0x2A01;
-    public static final int GL_POLYGON_OFFSET_LINE = 0x2A02;
-    public static final int GL_POLYGON_OFFSET_FILL = 0x8037;
-    public static final int GL_POLYGON_OFFSET_FACTOR = 0x8038;
-    public static final int GL_TEXTURE_BINDING_1D = 0x8068;
-    public static final int GL_TEXTURE_BINDING_2D = 0x8069;
     public static final int GL_TEXTURE_WIDTH = 0x1000;
     public static final int GL_TEXTURE_HEIGHT = 0x1001;
-    public static final int GL_TEXTURE_INTERNAL_FORMAT = 0x1003;
     public static final int GL_TEXTURE_BORDER_COLOR = 0x1004;
-    public static final int GL_TEXTURE_RED_SIZE = 0x805C;
-    public static final int GL_TEXTURE_GREEN_SIZE = 0x805D;
-    public static final int GL_TEXTURE_BLUE_SIZE = 0x805E;
-    public static final int GL_TEXTURE_ALPHA_SIZE = 0x805F;
     public static final int GL_DONT_CARE = 0x1100;
     public static final int GL_FASTEST = 0x1101;
     public static final int GL_NICEST = 0x1102;
@@ -135,7 +122,6 @@ public class GL {
     public static final int GL_INT = 0x1404;
     public static final int GL_UNSIGNED_INT = 0x1405;
     public static final int GL_FLOAT = 0x1406;
-    public static final int GL_DOUBLE = 0x140A;
     public static final int GL_STACK_OVERFLOW = 0x0503;
     public static final int GL_STACK_UNDERFLOW = 0x0504;
     public static final int GL_CLEAR = 0x1500;
@@ -187,23 +173,7 @@ public class GL {
     public static final int GL_TEXTURE_MIN_FILTER = 0x2801;
     public static final int GL_TEXTURE_WRAP_S = 0x2802;
     public static final int GL_TEXTURE_WRAP_T = 0x2803;
-    public static final int GL_PROXY_TEXTURE_1D = 0x8063;
-    public static final int GL_PROXY_TEXTURE_2D = 0x8064;
     public static final int GL_REPEAT = 0x2901;
-    public static final int GL_R3_G3_B2 = 0x2A10;
-    public static final int GL_RGB4 = 0x804F;
-    public static final int GL_RGB5 = 0x8050;
-    public static final int GL_RGB8 = 0x8051;
-    public static final int GL_RGB10 = 0x8052;
-    public static final int GL_RGB12 = 0x8053;
-    public static final int GL_RGB16 = 0x8054;
-    public static final int GL_RGBA2 = 0x8055;
-    public static final int GL_RGBA4 = 0x8056;
-    public static final int GL_RGB5_A1 = 0x8057;
-    public static final int GL_RGBA8 = 0x8058;
-    public static final int GL_RGB10_A2 = 0x8059;
-    public static final int GL_RGBA12 = 0x805A;
-    public static final int GL_RGBA16 = 0x805B;
     public static final int GL_CURRENT_BIT = 0x00000001;
     public static final int GL_POINT_BIT = 0x00000002;
     public static final int GL_LINE_BIT = 0x00000004;
@@ -222,9 +192,6 @@ public class GL {
     public static final int GL_TEXTURE_BIT = 0x00040000;
     public static final int GL_SCISSOR_BIT = 0x00080000;
     public static final long GL_ALL_ATTRIB_BITS = 0xFFFFFFFFL;
-    public static final int GL_CLIENT_PIXEL_STORE_BIT = 0x00000001;
-    public static final int GL_CLIENT_VERTEX_ARRAY_BIT = 0x00000002;
-    public static final long GL_CLIENT_ALL_ATTRIB_BITS = 0xFFFFFFFFL;
     public static final int GL_QUAD_STRIP = 0x0008;
     public static final int GL_POLYGON = 0x0009;
     public static final int GL_ACCUM = 0x0100;
@@ -264,14 +231,6 @@ public class GL {
     public static final int GL_PIXEL_MAP_G_TO_G = 0x0C77;
     public static final int GL_PIXEL_MAP_B_TO_B = 0x0C78;
     public static final int GL_PIXEL_MAP_A_TO_A = 0x0C79;
-    public static final int GL_VERTEX_ARRAY_POINTER = 0x808E;
-    public static final int GL_NORMAL_ARRAY_POINTER = 0x808F;
-    public static final int GL_COLOR_ARRAY_POINTER = 0x8090;
-    public static final int GL_INDEX_ARRAY_POINTER = 0x8091;
-    public static final int GL_TEXTURE_COORD_ARRAY_POINTER = 0x8092;
-    public static final int GL_EDGE_FLAG_ARRAY_POINTER = 0x8093;
-    public static final int GL_FEEDBACK_BUFFER_POINTER = 0x0DF0;
-    public static final int GL_SELECTION_BUFFER_POINTER = 0x0DF3;
     public static final int GL_CURRENT_COLOR = 0x0B00;
     public static final int GL_CURRENT_INDEX = 0x0B01;
     public static final int GL_CURRENT_NORMAL = 0x0B02;
@@ -317,11 +276,9 @@ public class GL {
     public static final int GL_PROJECTION_MATRIX = 0x0BA7;
     public static final int GL_TEXTURE_MATRIX = 0x0BA8;
     public static final int GL_ATTRIB_STACK_DEPTH = 0x0BB0;
-    public static final int GL_CLIENT_ATTRIB_STACK_DEPTH = 0x0BB1;
     public static final int GL_ALPHA_TEST = 0x0BC0;
     public static final int GL_ALPHA_TEST_FUNC = 0x0BC1;
     public static final int GL_ALPHA_TEST_REF = 0x0BC2;
-    public static final int GL_INDEX_LOGIC_OP = 0x0BF1;
     public static final int GL_LOGIC_OP = 0x0BF1;
     public static final int GL_AUX_BUFFERS = 0x0C00;
     public static final int GL_INDEX_CLEAR_VALUE = 0x0C20;
@@ -371,7 +328,6 @@ public class GL {
     public static final int GL_MAX_NAME_STACK_DEPTH = 0x0D37;
     public static final int GL_MAX_PROJECTION_STACK_DEPTH = 0x0D38;
     public static final int GL_MAX_TEXTURE_STACK_DEPTH = 0x0D39;
-    public static final int GL_MAX_CLIENT_ATTRIB_STACK_DEPTH = 0x0D3B;
     public static final int GL_INDEX_BITS = 0x0D51;
     public static final int GL_RED_BITS = 0x0D52;
     public static final int GL_GREEN_BITS = 0x0D53;
@@ -407,35 +363,8 @@ public class GL {
     public static final int GL_MAP1_GRID_SEGMENTS = 0x0DD1;
     public static final int GL_MAP2_GRID_DOMAIN = 0x0DD2;
     public static final int GL_MAP2_GRID_SEGMENTS = 0x0DD3;
-    public static final int GL_FEEDBACK_BUFFER_SIZE = 0x0DF1;
-    public static final int GL_FEEDBACK_BUFFER_TYPE = 0x0DF2;
-    public static final int GL_SELECTION_BUFFER_SIZE = 0x0DF4;
-    public static final int GL_VERTEX_ARRAY = 0x8074;
-    public static final int GL_NORMAL_ARRAY = 0x8075;
-    public static final int GL_COLOR_ARRAY = 0x8076;
-    public static final int GL_INDEX_ARRAY = 0x8077;
-    public static final int GL_TEXTURE_COORD_ARRAY = 0x8078;
-    public static final int GL_EDGE_FLAG_ARRAY = 0x8079;
-    public static final int GL_VERTEX_ARRAY_SIZE = 0x807A;
-    public static final int GL_VERTEX_ARRAY_TYPE = 0x807B;
-    public static final int GL_VERTEX_ARRAY_STRIDE = 0x807C;
-    public static final int GL_NORMAL_ARRAY_TYPE = 0x807E;
-    public static final int GL_NORMAL_ARRAY_STRIDE = 0x807F;
-    public static final int GL_COLOR_ARRAY_SIZE = 0x8081;
-    public static final int GL_COLOR_ARRAY_TYPE = 0x8082;
-    public static final int GL_COLOR_ARRAY_STRIDE = 0x8083;
-    public static final int GL_INDEX_ARRAY_TYPE = 0x8085;
-    public static final int GL_INDEX_ARRAY_STRIDE = 0x8086;
-    public static final int GL_TEXTURE_COORD_ARRAY_SIZE = 0x8088;
-    public static final int GL_TEXTURE_COORD_ARRAY_TYPE = 0x8089;
-    public static final int GL_TEXTURE_COORD_ARRAY_STRIDE = 0x808A;
-    public static final int GL_EDGE_FLAG_ARRAY_STRIDE = 0x808C;
     public static final int GL_TEXTURE_COMPONENTS = 0x1003;
     public static final int GL_TEXTURE_BORDER = 0x1005;
-    public static final int GL_TEXTURE_LUMINANCE_SIZE = 0x8060;
-    public static final int GL_TEXTURE_INTENSITY_SIZE = 0x8061;
-    public static final int GL_TEXTURE_PRIORITY = 0x8066;
-    public static final int GL_TEXTURE_RESIDENT = 0x8067;
     public static final int GL_AMBIENT = 0x1200;
     public static final int GL_DIFFUSE = 0x1201;
     public static final int GL_SPECULAR = 0x1202;
@@ -482,6 +411,91 @@ public class GL {
     public static final int GL_OBJECT_PLANE = 0x2501;
     public static final int GL_EYE_PLANE = 0x2502;
     public static final int GL_CLAMP = 0x2900;
+    public static final int GL_CLIP_PLANE0 = 0x3000;
+    public static final int GL_CLIP_PLANE1 = 0x3001;
+    public static final int GL_CLIP_PLANE2 = 0x3002;
+    public static final int GL_CLIP_PLANE3 = 0x3003;
+    public static final int GL_CLIP_PLANE4 = 0x3004;
+    public static final int GL_CLIP_PLANE5 = 0x3005;
+    public static final int GL_LIGHT0 = 0x4000;
+    public static final int GL_LIGHT1 = 0x4001;
+    public static final int GL_LIGHT2 = 0x4002;
+    public static final int GL_LIGHT3 = 0x4003;
+    public static final int GL_LIGHT4 = 0x4004;
+    public static final int GL_LIGHT5 = 0x4005;
+    public static final int GL_LIGHT6 = 0x4006;
+    public static final int GL_LIGHT7 = 0x4007;
+    public static final int GL_COLOR_LOGIC_OP = 0x0BF2;
+    public static final int GL_POLYGON_OFFSET_UNITS = 0x2A00;
+    public static final int GL_POLYGON_OFFSET_POINT = 0x2A01;
+    public static final int GL_POLYGON_OFFSET_LINE = 0x2A02;
+    public static final int GL_POLYGON_OFFSET_FILL = 0x8037;
+    public static final int GL_POLYGON_OFFSET_FACTOR = 0x8038;
+    public static final int GL_TEXTURE_BINDING_1D = 0x8068;
+    public static final int GL_TEXTURE_BINDING_2D = 0x8069;
+    public static final int GL_TEXTURE_INTERNAL_FORMAT = 0x1003;
+    public static final int GL_TEXTURE_RED_SIZE = 0x805C;
+    public static final int GL_TEXTURE_GREEN_SIZE = 0x805D;
+    public static final int GL_TEXTURE_BLUE_SIZE = 0x805E;
+    public static final int GL_TEXTURE_ALPHA_SIZE = 0x805F;
+    public static final int GL_DOUBLE = 0x140A;
+    public static final int GL_PROXY_TEXTURE_1D = 0x8063;
+    public static final int GL_PROXY_TEXTURE_2D = 0x8064;
+    public static final int GL_R3_G3_B2 = 0x2A10;
+    public static final int GL_RGB4 = 0x804F;
+    public static final int GL_RGB5 = 0x8050;
+    public static final int GL_RGB8 = 0x8051;
+    public static final int GL_RGB10 = 0x8052;
+    public static final int GL_RGB12 = 0x8053;
+    public static final int GL_RGB16 = 0x8054;
+    public static final int GL_RGBA2 = 0x8055;
+    public static final int GL_RGBA4 = 0x8056;
+    public static final int GL_RGB5_A1 = 0x8057;
+    public static final int GL_RGBA8 = 0x8058;
+    public static final int GL_RGB10_A2 = 0x8059;
+    public static final int GL_RGBA12 = 0x805A;
+    public static final int GL_RGBA16 = 0x805B;
+    public static final int GL_CLIENT_PIXEL_STORE_BIT = 0x00000001;
+    public static final int GL_CLIENT_VERTEX_ARRAY_BIT = 0x00000002;
+    public static final long GL_CLIENT_ALL_ATTRIB_BITS = 0xFFFFFFFFL;
+    public static final int GL_VERTEX_ARRAY_POINTER = 0x808E;
+    public static final int GL_NORMAL_ARRAY_POINTER = 0x808F;
+    public static final int GL_COLOR_ARRAY_POINTER = 0x8090;
+    public static final int GL_INDEX_ARRAY_POINTER = 0x8091;
+    public static final int GL_TEXTURE_COORD_ARRAY_POINTER = 0x8092;
+    public static final int GL_EDGE_FLAG_ARRAY_POINTER = 0x8093;
+    public static final int GL_FEEDBACK_BUFFER_POINTER = 0x0DF0;
+    public static final int GL_SELECTION_BUFFER_POINTER = 0x0DF3;
+    public static final int GL_CLIENT_ATTRIB_STACK_DEPTH = 0x0BB1;
+    public static final int GL_INDEX_LOGIC_OP = 0x0BF1;
+    public static final int GL_MAX_CLIENT_ATTRIB_STACK_DEPTH = 0x0D3B;
+    public static final int GL_FEEDBACK_BUFFER_SIZE = 0x0DF1;
+    public static final int GL_FEEDBACK_BUFFER_TYPE = 0x0DF2;
+    public static final int GL_SELECTION_BUFFER_SIZE = 0x0DF4;
+    public static final int GL_VERTEX_ARRAY = 0x8074;
+    public static final int GL_NORMAL_ARRAY = 0x8075;
+    public static final int GL_COLOR_ARRAY = 0x8076;
+    public static final int GL_INDEX_ARRAY = 0x8077;
+    public static final int GL_TEXTURE_COORD_ARRAY = 0x8078;
+    public static final int GL_EDGE_FLAG_ARRAY = 0x8079;
+    public static final int GL_VERTEX_ARRAY_SIZE = 0x807A;
+    public static final int GL_VERTEX_ARRAY_TYPE = 0x807B;
+    public static final int GL_VERTEX_ARRAY_STRIDE = 0x807C;
+    public static final int GL_NORMAL_ARRAY_TYPE = 0x807E;
+    public static final int GL_NORMAL_ARRAY_STRIDE = 0x807F;
+    public static final int GL_COLOR_ARRAY_SIZE = 0x8081;
+    public static final int GL_COLOR_ARRAY_TYPE = 0x8082;
+    public static final int GL_COLOR_ARRAY_STRIDE = 0x8083;
+    public static final int GL_INDEX_ARRAY_TYPE = 0x8085;
+    public static final int GL_INDEX_ARRAY_STRIDE = 0x8086;
+    public static final int GL_TEXTURE_COORD_ARRAY_SIZE = 0x8088;
+    public static final int GL_TEXTURE_COORD_ARRAY_TYPE = 0x8089;
+    public static final int GL_TEXTURE_COORD_ARRAY_STRIDE = 0x808A;
+    public static final int GL_EDGE_FLAG_ARRAY_STRIDE = 0x808C;
+    public static final int GL_TEXTURE_LUMINANCE_SIZE = 0x8060;
+    public static final int GL_TEXTURE_INTENSITY_SIZE = 0x8061;
+    public static final int GL_TEXTURE_PRIORITY = 0x8066;
+    public static final int GL_TEXTURE_RESIDENT = 0x8067;
     public static final int GL_ALPHA4 = 0x803B;
     public static final int GL_ALPHA8 = 0x803C;
     public static final int GL_ALPHA12 = 0x803D;
@@ -515,20 +529,6 @@ public class GL {
     public static final int GL_T2F_N3F_V3F = 0x2A2B;
     public static final int GL_T2F_C4F_N3F_V3F = 0x2A2C;
     public static final int GL_T4F_C4F_N3F_V4F = 0x2A2D;
-    public static final int GL_CLIP_PLANE0 = 0x3000;
-    public static final int GL_CLIP_PLANE1 = 0x3001;
-    public static final int GL_CLIP_PLANE2 = 0x3002;
-    public static final int GL_CLIP_PLANE3 = 0x3003;
-    public static final int GL_CLIP_PLANE4 = 0x3004;
-    public static final int GL_CLIP_PLANE5 = 0x3005;
-    public static final int GL_LIGHT0 = 0x4000;
-    public static final int GL_LIGHT1 = 0x4001;
-    public static final int GL_LIGHT2 = 0x4002;
-    public static final int GL_LIGHT3 = 0x4003;
-    public static final int GL_LIGHT4 = 0x4004;
-    public static final int GL_LIGHT5 = 0x4005;
-    public static final int GL_LIGHT6 = 0x4006;
-    public static final int GL_LIGHT7 = 0x4007;
     public static final int GL_UNSIGNED_BYTE_3_3_2 = 0x8032;
     public static final int GL_UNSIGNED_SHORT_4_4_4_4 = 0x8033;
     public static final int GL_UNSIGNED_SHORT_5_5_5_1 = 0x8034;
@@ -705,15 +705,17 @@ public class GL {
     public static final int GL_TEXTURE_FILTER_CONTROL = 0x8500;
     public static final int GL_DEPTH_TEXTURE_MODE = 0x884B;
     public static final int GL_COMPARE_R_TO_TEXTURE = 0x884E;
-    public static final int GL_FUNC_ADD = 0x8006;
-    public static final int GL_FUNC_SUBTRACT = 0x800A;
-    public static final int GL_FUNC_REVERSE_SUBTRACT = 0x800B;
-    public static final int GL_MIN = 0x8007;
-    public static final int GL_MAX = 0x8008;
+    public static final int GL_BLEND_COLOR = 0x8005;
+    public static final int GL_BLEND_EQUATION = 0x8009;
     public static final int GL_CONSTANT_COLOR = 0x8001;
     public static final int GL_ONE_MINUS_CONSTANT_COLOR = 0x8002;
     public static final int GL_CONSTANT_ALPHA = 0x8003;
     public static final int GL_ONE_MINUS_CONSTANT_ALPHA = 0x8004;
+    public static final int GL_FUNC_ADD = 0x8006;
+    public static final int GL_FUNC_REVERSE_SUBTRACT = 0x800B;
+    public static final int GL_FUNC_SUBTRACT = 0x800A;
+    public static final int GL_MIN = 0x8007;
+    public static final int GL_MAX = 0x8008;
     public static final int GL_BUFFER_SIZE = 0x8764;
     public static final int GL_BUFFER_USAGE = 0x8765;
     public static final int GL_QUERY_COUNTER_BITS = 0x8864;
@@ -1233,6 +1235,22 @@ public class GL {
     public static final int GL_MAX_COLOR_TEXTURE_SAMPLES = 0x910E;
     public static final int GL_MAX_DEPTH_TEXTURE_SAMPLES = 0x910F;
     public static final int GL_MAX_INTEGER_SAMPLES = 0x9110;
+    public static final int GL_VERTEX_ATTRIB_ARRAY_DIVISOR = 0x88FE;
+    public static final int GL_SRC1_COLOR = 0x88F9;
+    public static final int GL_ONE_MINUS_SRC1_COLOR = 0x88FA;
+    public static final int GL_ONE_MINUS_SRC1_ALPHA = 0x88FB;
+    public static final int GL_MAX_DUAL_SOURCE_DRAW_BUFFERS = 0x88FC;
+    public static final int GL_ANY_SAMPLES_PASSED = 0x8C2F;
+    public static final int GL_SAMPLER_BINDING = 0x8919;
+    public static final int GL_RGB10_A2UI = 0x906F;
+    public static final int GL_TEXTURE_SWIZZLE_R = 0x8E42;
+    public static final int GL_TEXTURE_SWIZZLE_G = 0x8E43;
+    public static final int GL_TEXTURE_SWIZZLE_B = 0x8E44;
+    public static final int GL_TEXTURE_SWIZZLE_A = 0x8E45;
+    public static final int GL_TEXTURE_SWIZZLE_RGBA = 0x8E46;
+    public static final int GL_TIME_ELAPSED = 0x88BF;
+    public static final int GL_TIMESTAMP = 0x8E28;
+    public static final int GL_INT_2_10_10_10_REV = 0x8D9F;
     public static final int GL_VERSION_1_0 = 1;
     public static final int GL_VERSION_1_1 = 1;
     public static final int GL_VERSION_1_2 = 1;
@@ -1244,103 +1262,7 @@ public class GL {
     public static final int GL_VERSION_3_0 = 1;
     public static final int GL_VERSION_3_1 = 1;
     public static final int GL_VERSION_3_2 = 1;
-    public static final int GL_MULTISAMPLE_ARB = 0x809D;
-    public static final int GL_SAMPLE_ALPHA_TO_COVERAGE_ARB = 0x809E;
-    public static final int GL_SAMPLE_ALPHA_TO_ONE_ARB = 0x809F;
-    public static final int GL_SAMPLE_COVERAGE_ARB = 0x80A0;
-    public static final int GL_SAMPLE_BUFFERS_ARB = 0x80A8;
-    public static final int GL_SAMPLES_ARB = 0x80A9;
-    public static final int GL_SAMPLE_COVERAGE_VALUE_ARB = 0x80AA;
-    public static final int GL_SAMPLE_COVERAGE_INVERT_ARB = 0x80AB;
-    public static final int GL_MULTISAMPLE_BIT_ARB = 0x20000000;
-    public static final int GL_CONTEXT_FLAG_ROBUST_ACCESS_BIT_ARB = 0x00000004;
-    public static final int GL_LOSE_CONTEXT_ON_RESET_ARB = 0x8252;
-    public static final int GL_GUILTY_CONTEXT_RESET_ARB = 0x8253;
-    public static final int GL_INNOCENT_CONTEXT_RESET_ARB = 0x8254;
-    public static final int GL_UNKNOWN_CONTEXT_RESET_ARB = 0x8255;
-    public static final int GL_RESET_NOTIFICATION_STRATEGY_ARB = 0x8256;
-    public static final int GL_NO_RESET_NOTIFICATION_ARB = 0x8261;
-    public static final int GL_DEBUG_OUTPUT_SYNCHRONOUS = 0x8242;
-    public static final int GL_DEBUG_NEXT_LOGGED_MESSAGE_LENGTH = 0x8243;
-    public static final int GL_DEBUG_CALLBACK_FUNCTION = 0x8244;
-    public static final int GL_DEBUG_CALLBACK_USER_PARAM = 0x8245;
-    public static final int GL_DEBUG_SOURCE_API = 0x8246;
-    public static final int GL_DEBUG_SOURCE_WINDOW_SYSTEM = 0x8247;
-    public static final int GL_DEBUG_SOURCE_SHADER_COMPILER = 0x8248;
-    public static final int GL_DEBUG_SOURCE_THIRD_PARTY = 0x8249;
-    public static final int GL_DEBUG_SOURCE_APPLICATION = 0x824A;
-    public static final int GL_DEBUG_SOURCE_OTHER = 0x824B;
-    public static final int GL_DEBUG_TYPE_ERROR = 0x824C;
-    public static final int GL_DEBUG_TYPE_DEPRECATED_BEHAVIOR = 0x824D;
-    public static final int GL_DEBUG_TYPE_UNDEFINED_BEHAVIOR = 0x824E;
-    public static final int GL_DEBUG_TYPE_PORTABILITY = 0x824F;
-    public static final int GL_DEBUG_TYPE_PERFORMANCE = 0x8250;
-    public static final int GL_DEBUG_TYPE_OTHER = 0x8251;
-    public static final int GL_DEBUG_TYPE_MARKER = 0x8268;
-    public static final int GL_DEBUG_TYPE_PUSH_GROUP = 0x8269;
-    public static final int GL_DEBUG_TYPE_POP_GROUP = 0x826A;
-    public static final int GL_DEBUG_SEVERITY_NOTIFICATION = 0x826B;
-    public static final int GL_MAX_DEBUG_GROUP_STACK_DEPTH = 0x826C;
-    public static final int GL_DEBUG_GROUP_STACK_DEPTH = 0x826D;
-    public static final int GL_BUFFER = 0x82E0;
-    public static final int GL_SHADER = 0x82E1;
-    public static final int GL_PROGRAM = 0x82E2;
-    public static final int GL_QUERY = 0x82E3;
-    public static final int GL_PROGRAM_PIPELINE = 0x82E4;
-    public static final int GL_SAMPLER = 0x82E6;
-    public static final int GL_MAX_LABEL_LENGTH = 0x82E8;
-    public static final int GL_MAX_DEBUG_MESSAGE_LENGTH = 0x9143;
-    public static final int GL_MAX_DEBUG_LOGGED_MESSAGES = 0x9144;
-    public static final int GL_DEBUG_LOGGED_MESSAGES = 0x9145;
-    public static final int GL_DEBUG_SEVERITY_HIGH = 0x9146;
-    public static final int GL_DEBUG_SEVERITY_MEDIUM = 0x9147;
-    public static final int GL_DEBUG_SEVERITY_LOW = 0x9148;
-    public static final int GL_DEBUG_OUTPUT = 0x92E0;
-    public static final int GL_CONTEXT_FLAG_DEBUG_BIT = 0x00000002;
-    public static final int GL_DEBUG_OUTPUT_SYNCHRONOUS_KHR = 0x8242;
-    public static final int GL_DEBUG_NEXT_LOGGED_MESSAGE_LENGTH_KHR = 0x8243;
-    public static final int GL_DEBUG_CALLBACK_FUNCTION_KHR = 0x8244;
-    public static final int GL_DEBUG_CALLBACK_USER_PARAM_KHR = 0x8245;
-    public static final int GL_DEBUG_SOURCE_API_KHR = 0x8246;
-    public static final int GL_DEBUG_SOURCE_WINDOW_SYSTEM_KHR = 0x8247;
-    public static final int GL_DEBUG_SOURCE_SHADER_COMPILER_KHR = 0x8248;
-    public static final int GL_DEBUG_SOURCE_THIRD_PARTY_KHR = 0x8249;
-    public static final int GL_DEBUG_SOURCE_APPLICATION_KHR = 0x824A;
-    public static final int GL_DEBUG_SOURCE_OTHER_KHR = 0x824B;
-    public static final int GL_DEBUG_TYPE_ERROR_KHR = 0x824C;
-    public static final int GL_DEBUG_TYPE_DEPRECATED_BEHAVIOR_KHR = 0x824D;
-    public static final int GL_DEBUG_TYPE_UNDEFINED_BEHAVIOR_KHR = 0x824E;
-    public static final int GL_DEBUG_TYPE_PORTABILITY_KHR = 0x824F;
-    public static final int GL_DEBUG_TYPE_PERFORMANCE_KHR = 0x8250;
-    public static final int GL_DEBUG_TYPE_OTHER_KHR = 0x8251;
-    public static final int GL_DEBUG_TYPE_MARKER_KHR = 0x8268;
-    public static final int GL_DEBUG_TYPE_PUSH_GROUP_KHR = 0x8269;
-    public static final int GL_DEBUG_TYPE_POP_GROUP_KHR = 0x826A;
-    public static final int GL_DEBUG_SEVERITY_NOTIFICATION_KHR = 0x826B;
-    public static final int GL_MAX_DEBUG_GROUP_STACK_DEPTH_KHR = 0x826C;
-    public static final int GL_DEBUG_GROUP_STACK_DEPTH_KHR = 0x826D;
-    public static final int GL_BUFFER_KHR = 0x82E0;
-    public static final int GL_SHADER_KHR = 0x82E1;
-    public static final int GL_PROGRAM_KHR = 0x82E2;
-    public static final int GL_VERTEX_ARRAY_KHR = 0x8074;
-    public static final int GL_QUERY_KHR = 0x82E3;
-    public static final int GL_PROGRAM_PIPELINE_KHR = 0x82E4;
-    public static final int GL_SAMPLER_KHR = 0x82E6;
-    public static final int GL_MAX_LABEL_LENGTH_KHR = 0x82E8;
-    public static final int GL_MAX_DEBUG_MESSAGE_LENGTH_KHR = 0x9143;
-    public static final int GL_MAX_DEBUG_LOGGED_MESSAGES_KHR = 0x9144;
-    public static final int GL_DEBUG_LOGGED_MESSAGES_KHR = 0x9145;
-    public static final int GL_DEBUG_SEVERITY_HIGH_KHR = 0x9146;
-    public static final int GL_DEBUG_SEVERITY_MEDIUM_KHR = 0x9147;
-    public static final int GL_DEBUG_SEVERITY_LOW_KHR = 0x9148;
-    public static final int GL_DEBUG_OUTPUT_KHR = 0x92E0;
-    public static final int GL_CONTEXT_FLAG_DEBUG_BIT_KHR = 0x00000002;
-    public static final int GL_STACK_OVERFLOW_KHR = 0x0503;
-    public static final int GL_STACK_UNDERFLOW_KHR = 0x0504;
-    public static final int GL_DISPLAY_LIST = 0x82E7;
-    public static final int GL_ARB_multisample = 1;
-    public static final int GL_ARB_robustness = 1;
-    public static final int GL_KHR_debug = 1;
+    public static final int GL_VERSION_3_3 = 1;
 
     public static native void init();// //void
     public static native void glCullFace(int pmode); //GLenum, //void
@@ -1366,8 +1288,8 @@ public class GL {
     public static native void glDepthMask(int pflag); //GLboolean, //void
     public static native void glDisable(int pcap); //GLenum, //void
     public static native void glEnable(int pcap); //GLenum, //void
-    public static native void glFinish(); // //void
-    public static native void glFlush(); // //void
+    public static native void glFinish(); //void, //void
+    public static native void glFlush(); //void, //void
     public static native void glBlendFunc(int psfactor, int pdfactor); //GLenum,GLenum, //void
     public static native void glLogicOp(int popcode); //GLenum, //void
     public static native void glStencilFunc(int pfunc, int pref, int pmask); //GLenum,GLint,GLuint, //void
@@ -1379,7 +1301,7 @@ public class GL {
     public static native void glReadPixels(int px, int py, int pwidth, int pheight, int pformat, int ptype, Object ppixels, int offset_ppixels); //GLint,GLint,GLsizei,GLsizei,GLenum,GLenum,void*, //void
     public static native void glGetBooleanv(int ppname, int[] pdata, int offset_pdata); //GLenum,GLboolean*, //void
     public static native void glGetDoublev(int ppname, double[] pdata, int offset_pdata); //GLenum,GLdouble*, //void
-    public static native int glGetError(); // //GLenum
+    public static native int glGetError(); //void, //GLenum
     public static native void glGetFloatv(int ppname, float[] pdata, int offset_pdata); //GLenum,GLfloat*, //void
     public static native void glGetIntegerv(int ppname, int[] pdata, int offset_pdata); //GLenum,GLint*, //void
     public static native byte[] glGetString(int pname); //GLenum, //const GLubyte*
@@ -1389,10 +1311,10 @@ public class GL {
     public static native void glGetTexLevelParameterfv(int ptarget, int plevel, int ppname, float[] pparams, int offset_pparams); //GLenum,GLint,GLenum,GLfloat*, //void
     public static native void glGetTexLevelParameteriv(int ptarget, int plevel, int ppname, int[] pparams, int offset_pparams); //GLenum,GLint,GLenum,GLint*, //void
     public static native int glIsEnabled(int pcap); //GLenum, //GLboolean
-    public static native void glDepthRange(double pnear, double pfar); //GLdouble,GLdouble, //void
+    public static native void glDepthRange(double pn, double pf); //GLdouble,GLdouble, //void
     public static native void glViewport(int px, int py, int pwidth, int pheight); //GLint,GLint,GLsizei,GLsizei, //void
     public static native void glNewList(int plist, int pmode); //GLuint,GLenum, //void
-    public static native void glEndList(); // //void
+    public static native void glEndList(); //void, //void
     public static native void glCallList(int plist); //GLuint, //void
     public static native void glCallLists(int pn, int ptype, Object plists, int offset_plists); //GLsizei,GLenum,const void*, //void
     public static native void glDeleteLists(int plist, int prange); //GLuint,GLsizei, //void
@@ -1434,7 +1356,7 @@ public class GL {
     public static native void glColor4usv(short[] pv, int offset_pv); //const GLushort*, //void
     public static native void glEdgeFlag(int pflag); //GLboolean, //void
     public static native void glEdgeFlagv(int[] pflag, int offset_pflag); //const GLboolean*, //void
-    public static native void glEnd(); // //void
+    public static native void glEnd(); //void, //void
     public static native void glIndexd(double pc); //GLdouble, //void
     public static native void glIndexdv(double[] pc, int offset_pc); //const GLdouble*, //void
     public static native void glIndexf(float pc); //GLfloat, //void
@@ -1575,16 +1497,16 @@ public class GL {
     public static native void glFeedbackBuffer(int psize, int ptype, float[] pbuffer, int offset_pbuffer); //GLsizei,GLenum,GLfloat*, //void
     public static native void glSelectBuffer(int psize, int[] pbuffer, int offset_pbuffer); //GLsizei,GLuint*, //void
     public static native int glRenderMode(int pmode); //GLenum, //GLint
-    public static native void glInitNames(); // //void
+    public static native void glInitNames(); //void, //void
     public static native void glLoadName(int pname); //GLuint, //void
     public static native void glPassThrough(float ptoken); //GLfloat, //void
-    public static native void glPopName(); // //void
+    public static native void glPopName(); //void, //void
     public static native void glPushName(int pname); //GLuint, //void
     public static native void glClearAccum(float pred, float pgreen, float pblue, float palpha); //GLfloat,GLfloat,GLfloat,GLfloat, //void
     public static native void glClearIndex(float pc); //GLfloat, //void
     public static native void glIndexMask(int pmask); //GLuint, //void
     public static native void glAccum(int pop, float pvalue); //GLenum,GLfloat, //void
-    public static native void glPopAttrib(); // //void
+    public static native void glPopAttrib(); //void, //void
     public static native void glPushAttrib(int pmask); //GLbitfield, //void
     public static native void glMap1d(int ptarget, double pu1, double pu2, int pstride, int porder, double[] ppoints, int offset_ppoints); //GLenum,GLdouble,GLdouble,GLint,GLint,const GLdouble*, //void
     public static native void glMap1f(int ptarget, float pu1, float pu2, int pstride, int porder, float[] ppoints, int offset_ppoints); //GLenum,GLfloat,GLfloat,GLint,GLint,const GLfloat*, //void
@@ -1634,15 +1556,15 @@ public class GL {
     public static native void glGetTexGeniv(int pcoord, int ppname, int[] pparams, int offset_pparams); //GLenum,GLenum,GLint*, //void
     public static native int glIsList(int plist); //GLuint, //GLboolean
     public static native void glFrustum(double pleft, double pright, double pbottom, double ptop, double pzNear, double pzFar); //GLdouble,GLdouble,GLdouble,GLdouble,GLdouble,GLdouble, //void
-    public static native void glLoadIdentity(); // //void
+    public static native void glLoadIdentity(); //void, //void
     public static native void glLoadMatrixf(float[] pm, int offset_pm); //const GLfloat*, //void
     public static native void glLoadMatrixd(double[] pm, int offset_pm); //const GLdouble*, //void
     public static native void glMatrixMode(int pmode); //GLenum, //void
     public static native void glMultMatrixf(float[] pm, int offset_pm); //const GLfloat*, //void
     public static native void glMultMatrixd(double[] pm, int offset_pm); //const GLdouble*, //void
     public static native void glOrtho(double pleft, double pright, double pbottom, double ptop, double pzNear, double pzFar); //GLdouble,GLdouble,GLdouble,GLdouble,GLdouble,GLdouble, //void
-    public static native void glPopMatrix(); // //void
-    public static native void glPushMatrix(); // //void
+    public static native void glPopMatrix(); //void, //void
+    public static native void glPushMatrix(); //void, //void
     public static native void glRotated(double pangle, double px, double py, double pz); //GLdouble,GLdouble,GLdouble,GLdouble, //void
     public static native void glRotatef(float pangle, float px, float py, float pz); //GLfloat,GLfloat,GLfloat,GLfloat, //void
     public static native void glScaled(double px, double py, double pz); //GLdouble,GLdouble,GLdouble, //void
@@ -1677,7 +1599,7 @@ public class GL {
     public static native void glPrioritizeTextures(int pn, int[] ptextures, int offset_ptextures, float[] ppriorities, int offset_ppriorities); //GLsizei,const GLuint*,const GLfloat*, //void
     public static native void glIndexub(byte pc); //GLubyte, //void
     public static native void glIndexubv(byte[] pc); //const GLubyte*, //void
-    public static native void glPopClientAttrib(); // //void
+    public static native void glPopClientAttrib(); //void, //void
     public static native void glPushClientAttrib(int pmask); //GLbitfield, //void
     public static native void glDrawRangeElements(int pmode, int pstart, int pend, int pcount, int ptype, Object pindices, int offset_pindices); //GLenum,GLuint,GLuint,GLsizei,GLenum,const void*, //void
     public static native void glTexImage3D(int ptarget, int plevel, int pinternalformat, int pwidth, int pheight, int pdepth, int pborder, int pformat, int ptype, Object ppixels, int offset_ppixels); //GLenum,GLint,GLint,GLsizei,GLsizei,GLsizei,GLint,GLenum,GLenum,const void*, //void
@@ -1803,7 +1725,7 @@ public class GL {
     public static native void glAttachShader(int pprogram, int pshader); //GLuint,GLuint, //void
     public static native void glBindAttribLocation(int pprogram, int pindex, byte[] pname); //GLuint,GLuint,const GLchar*, //void
     public static native void glCompileShader(int pshader); //GLuint, //void
-    public static native int glCreateProgram(); // //GLuint
+    public static native int glCreateProgram(); //void, //GLuint
     public static native int glCreateShader(int ptype); //GLenum, //GLuint
     public static native void glDeleteProgram(int pprogram); //GLuint, //void
     public static native void glDeleteShader(int pshader); //GLuint, //void
@@ -1901,14 +1823,14 @@ public class GL {
     public static native void glDisablei(int ptarget, int pindex); //GLenum,GLuint, //void
     public static native int glIsEnabledi(int ptarget, int pindex); //GLenum,GLuint, //GLboolean
     public static native void glBeginTransformFeedback(int pprimitiveMode); //GLenum, //void
-    public static native void glEndTransformFeedback(); // //void
+    public static native void glEndTransformFeedback(); //void, //void
     public static native void glBindBufferRange(int ptarget, int pindex, int pbuffer, long poffset, long psize); //GLenum,GLuint,GLuint,GLintptr,GLsizeiptr, //void
     public static native void glBindBufferBase(int ptarget, int pindex, int pbuffer); //GLenum,GLuint,GLuint, //void
     public static native void glTransformFeedbackVaryings(int pprogram, int pcount, byte[][] pvaryings, int pbufferMode); //GLuint,GLsizei,const GLchar*const*,GLenum, //void
     public static native void glGetTransformFeedbackVarying(int pprogram, int pindex, int pbufSize, int[] plength, int offset_plength, int[] psize, int offset_psize, int[] ptype, int offset_ptype, byte[] pname); //GLuint,GLuint,GLsizei,GLsizei*,GLsizei*,GLenum*,GLchar*, //void
     public static native void glClampColor(int ptarget, int pclamp); //GLenum,GLenum, //void
     public static native void glBeginConditionalRender(int pid, int pmode); //GLuint,GLenum, //void
-    public static native void glEndConditionalRender(); // //void
+    public static native void glEndConditionalRender(); //void, //void
     public static native void glVertexAttribIPointer(int pindex, int psize, int ptype, int pstride, Object ppointer, int offset_ppointer); //GLuint,GLint,GLenum,GLsizei,const void*, //void
     public static native void glGetVertexAttribIiv(int pindex, int ppname, int[] pparams, int offset_pparams); //GLuint,GLenum,GLint*, //void
     public static native void glGetVertexAttribIuiv(int pindex, int ppname, int[] pparams, int offset_pparams); //GLuint,GLenum,GLuint*, //void
@@ -2009,48 +1931,64 @@ public class GL {
     public static native void glTexImage3DMultisample(int ptarget, int psamples, int pinternalformat, int pwidth, int pheight, int pdepth, int pfixedsamplelocations); //GLenum,GLsizei,GLenum,GLsizei,GLsizei,GLsizei,GLboolean, //void
     public static native void glGetMultisamplefv(int ppname, int pindex, float[] pval, int offset_pval); //GLenum,GLuint,GLfloat*, //void
     public static native void glSampleMaski(int pmaskNumber, int pmask); //GLuint,GLbitfield, //void
-    public static native void glSampleCoverageARB(float pvalue, int pinvert); //GLfloat,GLboolean, //void
-    public static native int glGetGraphicsResetStatusARB(); // //GLenum
-    public static native void glGetnTexImageARB(int ptarget, int plevel, int pformat, int ptype, int pbufSize, Object pimg, int offset_pimg); //GLenum,GLint,GLenum,GLenum,GLsizei,void*, //void
-    public static native void glReadnPixelsARB(int px, int py, int pwidth, int pheight, int pformat, int ptype, int pbufSize, Object pdata, int offset_pdata); //GLint,GLint,GLsizei,GLsizei,GLenum,GLenum,GLsizei,void*, //void
-    public static native void glGetnCompressedTexImageARB(int ptarget, int plod, int pbufSize, Object pimg, int offset_pimg); //GLenum,GLint,GLsizei,void*, //void
-    public static native void glGetnUniformfvARB(int pprogram, int plocation, int pbufSize, float[] pparams, int offset_pparams); //GLuint,GLint,GLsizei,GLfloat*, //void
-    public static native void glGetnUniformivARB(int pprogram, int plocation, int pbufSize, int[] pparams, int offset_pparams); //GLuint,GLint,GLsizei,GLint*, //void
-    public static native void glGetnUniformuivARB(int pprogram, int plocation, int pbufSize, int[] pparams, int offset_pparams); //GLuint,GLint,GLsizei,GLuint*, //void
-    public static native void glGetnUniformdvARB(int pprogram, int plocation, int pbufSize, double[] pparams, int offset_pparams); //GLuint,GLint,GLsizei,GLdouble*, //void
-    public static native void glGetnMapdvARB(int ptarget, int pquery, int pbufSize, double[] pv, int offset_pv); //GLenum,GLenum,GLsizei,GLdouble*, //void
-    public static native void glGetnMapfvARB(int ptarget, int pquery, int pbufSize, float[] pv, int offset_pv); //GLenum,GLenum,GLsizei,GLfloat*, //void
-    public static native void glGetnMapivARB(int ptarget, int pquery, int pbufSize, int[] pv, int offset_pv); //GLenum,GLenum,GLsizei,GLint*, //void
-    public static native void glGetnPixelMapfvARB(int pmap, int pbufSize, float[] pvalues, int offset_pvalues); //GLenum,GLsizei,GLfloat*, //void
-    public static native void glGetnPixelMapuivARB(int pmap, int pbufSize, int[] pvalues, int offset_pvalues); //GLenum,GLsizei,GLuint*, //void
-    public static native void glGetnPixelMapusvARB(int pmap, int pbufSize, short[] pvalues, int offset_pvalues); //GLenum,GLsizei,GLushort*, //void
-    public static native void glGetnPolygonStippleARB(int pbufSize, byte[] ppattern); //GLsizei,GLubyte*, //void
-    public static native void glGetnColorTableARB(int ptarget, int pformat, int ptype, int pbufSize, Object ptable, int offset_ptable); //GLenum,GLenum,GLenum,GLsizei,void*, //void
-    public static native void glGetnConvolutionFilterARB(int ptarget, int pformat, int ptype, int pbufSize, Object pimage, int offset_pimage); //GLenum,GLenum,GLenum,GLsizei,void*, //void
-    public static native void glGetnSeparableFilterARB(int ptarget, int pformat, int ptype, int prowBufSize, Object prow, int offset_prow, int pcolumnBufSize, Object pcolumn, int offset_pcolumn, Object pspan, int offset_pspan); //GLenum,GLenum,GLenum,GLsizei,void*,GLsizei,void*,void*, //void
-    public static native void glGetnHistogramARB(int ptarget, int preset, int pformat, int ptype, int pbufSize, Object pvalues, int offset_pvalues); //GLenum,GLboolean,GLenum,GLenum,GLsizei,void*, //void
-    public static native void glGetnMinmaxARB(int ptarget, int preset, int pformat, int ptype, int pbufSize, Object pvalues, int offset_pvalues); //GLenum,GLboolean,GLenum,GLenum,GLsizei,void*, //void
-    public static native void glDebugMessageControl(int psource, int ptype, int pseverity, int pcount, int[] pids, int offset_pids, int penabled); //GLenum,GLenum,GLenum,GLsizei,const GLuint*,GLboolean, //void
-    public static native void glDebugMessageInsert(int psource, int ptype, int pid, int pseverity, int plength, byte[] pbuf); //GLenum,GLenum,GLuint,GLenum,GLsizei,const GLchar*, //void
-    public static native void glDebugMessageCallback(long pcallback, Object puserParam, int offset_puserParam); //GLDEBUGPROC,const void*, //void
-    public static native int glGetDebugMessageLog(int pcount, int pbufSize, int[] psources, int offset_psources, int[] ptypes, int offset_ptypes, int[] pids, int offset_pids, int[] pseverities, int offset_pseverities, int[] plengths, int offset_plengths, byte[] pmessageLog); //GLuint,GLsizei,GLenum*,GLenum*,GLuint*,GLenum*,GLsizei*,GLchar*, //GLuint
-    public static native void glPushDebugGroup(int psource, int pid, int plength, byte[] pmessage); //GLenum,GLuint,GLsizei,const GLchar*, //void
-    public static native void glPopDebugGroup(); // //void
-    public static native void glObjectLabel(int pidentifier, int pname, int plength, byte[] plabel); //GLenum,GLuint,GLsizei,const GLchar*, //void
-    public static native void glGetObjectLabel(int pidentifier, int pname, int pbufSize, int[] plength, int offset_plength, byte[] plabel); //GLenum,GLuint,GLsizei,GLsizei*,GLchar*, //void
-    public static native void glObjectPtrLabel(Object pptr, int offset_pptr, int plength, byte[] plabel); //const void*,GLsizei,const GLchar*, //void
-    public static native void glGetObjectPtrLabel(Object pptr, int offset_pptr, int pbufSize, int[] plength, int offset_plength, byte[] plabel); //const void*,GLsizei,GLsizei*,GLchar*, //void
-    public static native void glDebugMessageControlKHR(int psource, int ptype, int pseverity, int pcount, int[] pids, int offset_pids, int penabled); //GLenum,GLenum,GLenum,GLsizei,const GLuint*,GLboolean, //void
-    public static native void glDebugMessageInsertKHR(int psource, int ptype, int pid, int pseverity, int plength, byte[] pbuf); //GLenum,GLenum,GLuint,GLenum,GLsizei,const GLchar*, //void
-    public static native void glDebugMessageCallbackKHR(long pcallback, Object puserParam, int offset_puserParam); //GLDEBUGPROCKHR,const void*, //void
-    public static native int glGetDebugMessageLogKHR(int pcount, int pbufSize, int[] psources, int offset_psources, int[] ptypes, int offset_ptypes, int[] pids, int offset_pids, int[] pseverities, int offset_pseverities, int[] plengths, int offset_plengths, byte[] pmessageLog); //GLuint,GLsizei,GLenum*,GLenum*,GLuint*,GLenum*,GLsizei*,GLchar*, //GLuint
-    public static native void glPushDebugGroupKHR(int psource, int pid, int plength, byte[] pmessage); //GLenum,GLuint,GLsizei,const GLchar*, //void
-    public static native void glPopDebugGroupKHR(); // //void
-    public static native void glObjectLabelKHR(int pidentifier, int pname, int plength, byte[] plabel); //GLenum,GLuint,GLsizei,const GLchar*, //void
-    public static native void glGetObjectLabelKHR(int pidentifier, int pname, int pbufSize, int[] plength, int offset_plength, byte[] plabel); //GLenum,GLuint,GLsizei,GLsizei*,GLchar*, //void
-    public static native void glObjectPtrLabelKHR(Object pptr, int offset_pptr, int plength, byte[] plabel); //const void*,GLsizei,const GLchar*, //void
-    public static native void glGetObjectPtrLabelKHR(Object pptr, int offset_pptr, int pbufSize, int[] plength, int offset_plength, byte[] plabel); //const void*,GLsizei,GLsizei*,GLchar*, //void
-    public static native void glGetPointervKHR(int ppname, Object[] pparams); //GLenum,void**, //void
+    public static native void glBindFragDataLocationIndexed(int pprogram, int pcolorNumber, int pindex, byte[] pname); //GLuint,GLuint,GLuint,const GLchar*, //void
+    public static native int glGetFragDataIndex(int pprogram, byte[] pname); //GLuint,const GLchar*, //GLint
+    public static native void glGenSamplers(int pcount, int[] psamplers, int offset_psamplers); //GLsizei,GLuint*, //void
+    public static native void glDeleteSamplers(int pcount, int[] psamplers, int offset_psamplers); //GLsizei,const GLuint*, //void
+    public static native int glIsSampler(int psampler); //GLuint, //GLboolean
+    public static native void glBindSampler(int punit, int psampler); //GLuint,GLuint, //void
+    public static native void glSamplerParameteri(int psampler, int ppname, int pparam); //GLuint,GLenum,GLint, //void
+    public static native void glSamplerParameteriv(int psampler, int ppname, int[] pparam, int offset_pparam); //GLuint,GLenum,const GLint*, //void
+    public static native void glSamplerParameterf(int psampler, int ppname, float pparam); //GLuint,GLenum,GLfloat, //void
+    public static native void glSamplerParameterfv(int psampler, int ppname, float[] pparam, int offset_pparam); //GLuint,GLenum,const GLfloat*, //void
+    public static native void glSamplerParameterIiv(int psampler, int ppname, int[] pparam, int offset_pparam); //GLuint,GLenum,const GLint*, //void
+    public static native void glSamplerParameterIuiv(int psampler, int ppname, int[] pparam, int offset_pparam); //GLuint,GLenum,const GLuint*, //void
+    public static native void glGetSamplerParameteriv(int psampler, int ppname, int[] pparams, int offset_pparams); //GLuint,GLenum,GLint*, //void
+    public static native void glGetSamplerParameterIiv(int psampler, int ppname, int[] pparams, int offset_pparams); //GLuint,GLenum,GLint*, //void
+    public static native void glGetSamplerParameterfv(int psampler, int ppname, float[] pparams, int offset_pparams); //GLuint,GLenum,GLfloat*, //void
+    public static native void glGetSamplerParameterIuiv(int psampler, int ppname, int[] pparams, int offset_pparams); //GLuint,GLenum,GLuint*, //void
+    public static native void glQueryCounter(int pid, int ptarget); //GLuint,GLenum, //void
+    public static native void glGetQueryObjecti64v(int pid, int ppname, long[] pparams, int offset_pparams); //GLuint,GLenum,GLint64*, //void
+    public static native void glGetQueryObjectui64v(int pid, int ppname, long[] pparams, int offset_pparams); //GLuint,GLenum,GLuint64*, //void
+    public static native void glVertexAttribDivisor(int pindex, int pdivisor); //GLuint,GLuint, //void
+    public static native void glVertexAttribP1ui(int pindex, int ptype, int pnormalized, int pvalue); //GLuint,GLenum,GLboolean,GLuint, //void
+    public static native void glVertexAttribP1uiv(int pindex, int ptype, int pnormalized, int[] pvalue, int offset_pvalue); //GLuint,GLenum,GLboolean,const GLuint*, //void
+    public static native void glVertexAttribP2ui(int pindex, int ptype, int pnormalized, int pvalue); //GLuint,GLenum,GLboolean,GLuint, //void
+    public static native void glVertexAttribP2uiv(int pindex, int ptype, int pnormalized, int[] pvalue, int offset_pvalue); //GLuint,GLenum,GLboolean,const GLuint*, //void
+    public static native void glVertexAttribP3ui(int pindex, int ptype, int pnormalized, int pvalue); //GLuint,GLenum,GLboolean,GLuint, //void
+    public static native void glVertexAttribP3uiv(int pindex, int ptype, int pnormalized, int[] pvalue, int offset_pvalue); //GLuint,GLenum,GLboolean,const GLuint*, //void
+    public static native void glVertexAttribP4ui(int pindex, int ptype, int pnormalized, int pvalue); //GLuint,GLenum,GLboolean,GLuint, //void
+    public static native void glVertexAttribP4uiv(int pindex, int ptype, int pnormalized, int[] pvalue, int offset_pvalue); //GLuint,GLenum,GLboolean,const GLuint*, //void
+    public static native void glVertexP2ui(int ptype, int pvalue); //GLenum,GLuint, //void
+    public static native void glVertexP2uiv(int ptype, int[] pvalue, int offset_pvalue); //GLenum,const GLuint*, //void
+    public static native void glVertexP3ui(int ptype, int pvalue); //GLenum,GLuint, //void
+    public static native void glVertexP3uiv(int ptype, int[] pvalue, int offset_pvalue); //GLenum,const GLuint*, //void
+    public static native void glVertexP4ui(int ptype, int pvalue); //GLenum,GLuint, //void
+    public static native void glVertexP4uiv(int ptype, int[] pvalue, int offset_pvalue); //GLenum,const GLuint*, //void
+    public static native void glTexCoordP1ui(int ptype, int pcoords); //GLenum,GLuint, //void
+    public static native void glTexCoordP1uiv(int ptype, int[] pcoords, int offset_pcoords); //GLenum,const GLuint*, //void
+    public static native void glTexCoordP2ui(int ptype, int pcoords); //GLenum,GLuint, //void
+    public static native void glTexCoordP2uiv(int ptype, int[] pcoords, int offset_pcoords); //GLenum,const GLuint*, //void
+    public static native void glTexCoordP3ui(int ptype, int pcoords); //GLenum,GLuint, //void
+    public static native void glTexCoordP3uiv(int ptype, int[] pcoords, int offset_pcoords); //GLenum,const GLuint*, //void
+    public static native void glTexCoordP4ui(int ptype, int pcoords); //GLenum,GLuint, //void
+    public static native void glTexCoordP4uiv(int ptype, int[] pcoords, int offset_pcoords); //GLenum,const GLuint*, //void
+    public static native void glMultiTexCoordP1ui(int ptexture, int ptype, int pcoords); //GLenum,GLenum,GLuint, //void
+    public static native void glMultiTexCoordP1uiv(int ptexture, int ptype, int[] pcoords, int offset_pcoords); //GLenum,GLenum,const GLuint*, //void
+    public static native void glMultiTexCoordP2ui(int ptexture, int ptype, int pcoords); //GLenum,GLenum,GLuint, //void
+    public static native void glMultiTexCoordP2uiv(int ptexture, int ptype, int[] pcoords, int offset_pcoords); //GLenum,GLenum,const GLuint*, //void
+    public static native void glMultiTexCoordP3ui(int ptexture, int ptype, int pcoords); //GLenum,GLenum,GLuint, //void
+    public static native void glMultiTexCoordP3uiv(int ptexture, int ptype, int[] pcoords, int offset_pcoords); //GLenum,GLenum,const GLuint*, //void
+    public static native void glMultiTexCoordP4ui(int ptexture, int ptype, int pcoords); //GLenum,GLenum,GLuint, //void
+    public static native void glMultiTexCoordP4uiv(int ptexture, int ptype, int[] pcoords, int offset_pcoords); //GLenum,GLenum,const GLuint*, //void
+    public static native void glNormalP3ui(int ptype, int pcoords); //GLenum,GLuint, //void
+    public static native void glNormalP3uiv(int ptype, int[] pcoords, int offset_pcoords); //GLenum,const GLuint*, //void
+    public static native void glColorP3ui(int ptype, int pcolor); //GLenum,GLuint, //void
+    public static native void glColorP3uiv(int ptype, int[] pcolor, int offset_pcolor); //GLenum,const GLuint*, //void
+    public static native void glColorP4ui(int ptype, int pcolor); //GLenum,GLuint, //void
+    public static native void glColorP4uiv(int ptype, int[] pcolor, int offset_pcolor); //GLenum,const GLuint*, //void
+    public static native void glSecondaryColorP3ui(int ptype, int pcolor); //GLenum,GLuint, //void
+    public static native void glSecondaryColorP3uiv(int ptype, int[] pcolor, int offset_pcolor); //GLenum,const GLuint*, //void
 
 }
 

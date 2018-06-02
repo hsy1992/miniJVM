@@ -82,7 +82,7 @@ JClass *classes_load_get_c(c8 *pclassName, Runtime *runtime) {
 
 JClass *classes_load_get(Utf8String *ustr, Runtime *runtime) {
     JClass *cl = classes_load_get_without_clinit(ustr, runtime);
-    if (cl) {
+    if (cl && cl->status < CLASS_STATUS_CLINITED) {
         class_clinit(cl, runtime);
     }
     return cl;

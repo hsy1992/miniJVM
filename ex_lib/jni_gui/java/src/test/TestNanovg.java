@@ -10,6 +10,7 @@ import static org.mini.gl.GL.glClearColor;
 import static org.mini.gl.GL.glViewport;
 import static org.mini.glfw.Glfw.GLFW_CONTEXT_VERSION_MAJOR;
 import static org.mini.glfw.Glfw.GLFW_CONTEXT_VERSION_MINOR;
+import static org.mini.glfw.Glfw.GLFW_DEPTH_BITS;
 import static org.mini.glfw.Glfw.GLFW_KEY_ESCAPE;
 import static org.mini.glfw.Glfw.GLFW_MOUSE_BUTTON_2;
 import static org.mini.glfw.Glfw.GLFW_MOUSE_BUTTON_LEFT;
@@ -17,6 +18,7 @@ import static org.mini.glfw.Glfw.GLFW_OPENGL_CORE_PROFILE;
 import static org.mini.glfw.Glfw.GLFW_OPENGL_FORWARD_COMPAT;
 import static org.mini.glfw.Glfw.GLFW_OPENGL_PROFILE;
 import static org.mini.glfw.Glfw.GLFW_PRESS;
+import static org.mini.glfw.Glfw.GLFW_TRANSPARENT_FRAMEBUFFER;
 import static org.mini.glfw.Glfw.GLFW_TRUE;
 import static org.mini.glfw.Glfw.glfwCreateWindow;
 import static org.mini.glfw.Glfw.glfwGetTime;
@@ -127,12 +129,12 @@ public class TestNanovg {
 
     void t1() {
         glfwInit();
-//        glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
-//        glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
-//        glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
-//        glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
-//        glfwWindowHint(GLFW_DEPTH_BITS, 16);
-//        glfwWindowHint(GLFW_TRANSPARENT_FRAMEBUFFER, GLFW_TRUE);
+        glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
+        glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
+        glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
+        glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
+        glfwWindowHint(GLFW_DEPTH_BITS, 16);
+        glfwWindowHint(GLFW_TRANSPARENT_FRAMEBUFFER, GLFW_TRUE);
         win = glfwCreateWindow(1200, 600, "TestNanovg".getBytes(), 0, 0);
         if (win != 0) {
             glfwSetCallback(win, new CallBack());
@@ -230,7 +232,7 @@ public class TestNanovg {
     static int ICON_TRASH = 0xE729;
 
     void init() {
-        vg = Nutil.nvgCreateGL2(NVG_ANTIALIAS | NVG_STENCIL_STROKES | NVG_DEBUG);
+        vg = Nutil.nvgCreateGL3(NVG_ANTIALIAS | NVG_STENCIL_STROKES | NVG_DEBUG);
         if (vg == 0) {
             System.out.println("Could not init nanovg.\n");
 

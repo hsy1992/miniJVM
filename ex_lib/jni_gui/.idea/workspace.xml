@@ -26,11 +26,11 @@
   <component name="ExecutionTargetManager" SELECTED_TARGET="CMakeBuildProfile:Release" />
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file leaf-file-name="jni_glfw.c" pinned="false" current-in-tab="true">
+      <file leaf-file-name="jni_glfw.c" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/jni_glfw.c">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="252">
-              <caret line="208" column="18" lean-forward="true" selection-start-line="208" selection-start-column="18" selection-end-line="208" selection-end-column="18" />
+              <caret line="208" column="18" lean-forward="false" selection-start-line="208" selection-start-column="18" selection-end-line="208" selection-end-column="18" />
               <folding />
             </state>
           </provider>
@@ -56,26 +56,6 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="jni_gui.c" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/jni_gui.c">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="0">
-              <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="glad_jni_assist.h" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/deps/include/glad/glad_jni_assist.h">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="264">
-              <caret line="22" column="33" lean-forward="false" selection-start-line="22" selection-start-column="33" selection-end-line="22" selection-end-column="33" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
       <file leaf-file-name="jni_gui.h" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/jni_gui.h">
           <provider selected="true" editor-type-id="text-editor">
@@ -89,9 +69,39 @@
       <file leaf-file-name="jni_nutil.c" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/jni_nutil.c">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="4056">
-              <caret line="338" column="70" lean-forward="false" selection-start-line="338" selection-start-column="70" selection-end-line="338" selection-end-column="70" />
+            <state relative-caret-position="149">
+              <caret line="1919" column="4" lean-forward="false" selection-start-line="1919" selection-start-column="4" selection-end-line="1919" selection-end-column="4" />
               <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="glad.c" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/deps/include/glad/glad.c">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="-2471">
+              <caret line="15" column="29" lean-forward="false" selection-start-line="15" selection-start-column="29" selection-end-line="15" selection-end-column="29" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="glad.h" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/deps/include/glad/glad.h">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="252">
+              <caret line="21" column="17" lean-forward="false" selection-start-line="21" selection-start-column="17" selection-end-line="21" selection-end-column="17" />
+              <folding>
+                <element signature="e#551#635#0" expanded="true" />
+                <element signature="e#756#884#0" expanded="true" />
+                <element signature="e#1008#1020#0" expanded="true" />
+                <element signature="e#1189#1758#0" expanded="true" />
+                <element signature="e#1922#1941#0" expanded="true" />
+                <element signature="e#2348#3129#0" expanded="true" />
+                <element signature="e#3723#3756#0" expanded="true" />
+                <element signature="e#4124#4154#0" expanded="true" />
+                <element signature="e#4313#4345#0" expanded="true" />
+              </folding>
             </state>
           </provider>
         </entry>
@@ -99,8 +109,18 @@
       <file leaf-file-name="nanovg_jni_assist.h" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/deps/include/nanovg/nanovg_jni_assist.h">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="2172">
-              <caret line="181" column="45" lean-forward="false" selection-start-line="181" selection-start-column="45" selection-end-line="181" selection-end-column="45" />
+            <state relative-caret-position="130">
+              <caret line="172" column="55" lean-forward="false" selection-start-line="172" selection-start-column="55" selection-end-line="172" selection-end-column="55" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="jni_gl.c" pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/jni_gl.c">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="204">
+              <caret line="12890" column="72" lean-forward="false" selection-start-line="12890" selection-start-column="72" selection-end-line="12890" selection-end-column="72" />
               <folding />
             </state>
           </provider>
@@ -112,18 +132,6 @@
             <state relative-caret-position="0">
               <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
               <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="jni_gl.c" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/jni_gl.c">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="123132">
-              <caret line="10261" column="66" lean-forward="false" selection-start-line="10261" selection-start-column="66" selection-end-line="10261" selection-end-column="66" />
-              <folding>
-                <marker date="1527596254595" expanded="true" signature="400355:400607" ph="{...}" />
-              </folding>
             </state>
           </provider>
         </entry>
@@ -173,8 +181,8 @@
         <option value="$PROJECT_DIR$/deps/include/nuklear_glfw_gl3.h" />
         <option value="$PROJECT_DIR$/CMakeLists.txt" />
         <option value="$PROJECT_DIR$/jni_gui.h" />
-        <option value="$PROJECT_DIR$/deps/include/nanovg/nanovg_jni_assist.h" />
         <option value="$PROJECT_DIR$/jni_glfw.c" />
+        <option value="$PROJECT_DIR$/deps/include/nanovg/nanovg_jni_assist.h" />
       </list>
     </option>
   </component>
@@ -185,10 +193,11 @@
     <sorting>DEFINITION_ORDER</sorting>
   </component>
   <component name="OCFindUsagesOptions" text="true" ivars="false" properties="true" derivedClasses="false" />
-  <component name="ProjectFrameBounds">
+  <component name="ProjectFrameBounds" extendedState="6">
+    <option name="x" value="8" />
     <option name="y" value="23" />
-    <option name="width" value="1280" />
-    <option name="height" value="733" />
+    <option name="width" value="1247" />
+    <option name="height" value="732" />
   </component>
   <component name="ProjectLevelVcsManager">
     <ConfirmationsSetting value="1" id="Add" />
@@ -317,19 +326,20 @@
       <workItem from="1523936705013" duration="1122000" />
       <workItem from="1527507805458" duration="1283000" />
       <workItem from="1527600090294" duration="213000" />
+      <workItem from="1527857499825" duration="2806000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="52782000" />
+    <option name="totallyTimeSpent" value="55588000" />
   </component>
   <component name="ToolWindowManager">
-    <frame x="0" y="23" width="1280" height="733" extended-state="0" />
+    <frame x="0" y="23" width="1280" height="733" extended-state="6" />
     <editor active="true" />
     <layout>
       <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.24148852" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
-      <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.36461538" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
+      <window_info id="Messages" active="true" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.36461538" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="CMake" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32873276" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="true" content_ui="tabs" />
       <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
@@ -361,7 +371,6 @@
     <watches-manager />
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/jni_nk.c" />
     <entry file="file://$PROJECT_DIR$/CMakeLists.txt">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="760">
@@ -390,7 +399,15 @@
         <state relative-caret-position="28234">
           <caret line="1520" column="0" lean-forward="false" selection-start-line="1520" selection-start-column="0" selection-end-line="1522" selection-end-column="36" />
           <folding>
-            <element signature="e#1348#1916#0" expanded="false" />
+            <element signature="e#551#635#0" expanded="true" />
+            <element signature="e#756#884#0" expanded="true" />
+            <element signature="e#1008#1020#0" expanded="true" />
+            <element signature="e#1189#1758#0" expanded="true" />
+            <element signature="e#1922#1941#0" expanded="true" />
+            <element signature="e#2348#3129#0" expanded="true" />
+            <element signature="e#3723#3756#0" expanded="true" />
+            <element signature="e#4124#4154#0" expanded="true" />
+            <element signature="e#4313#4345#0" expanded="true" />
           </folding>
         </state>
       </provider>
@@ -400,9 +417,7 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="195263">
           <caret line="10277" column="44" lean-forward="false" selection-start-line="10277" selection-start-column="44" selection-end-line="10277" selection-end-column="44" />
-          <folding>
-            <marker date="1527596254595" expanded="true" signature="400355:400607" ph="{...}" />
-          </folding>
+          <folding />
         </state>
       </provider>
     </entry>
@@ -461,9 +476,7 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="315">
           <caret line="21" column="15" lean-forward="false" selection-start-line="21" selection-start-column="14" selection-end-line="21" selection-end-column="15" />
-          <folding>
-            <marker date="1527596254595" expanded="true" signature="400355:400607" ph="{...}" />
-          </folding>
+          <folding />
         </state>
       </provider>
     </entry>
@@ -527,16 +540,6 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/deps/include/nuklear_glfw_gl2.h" />
     <entry file="file://$PROJECT_DIR$/deps/include/nuklear.h" />
-    <entry file="file://$PROJECT_DIR$/deps/include/glad/glad.h">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="18240">
-          <caret line="1520" column="0" lean-forward="false" selection-start-line="1520" selection-start-column="0" selection-end-line="1522" selection-end-column="36" />
-          <folding>
-            <element signature="e#1348#1916#0" expanded="false" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/deps/include/nuklear_jni_assist.h" />
     <entry file="file://$PROJECT_DIR$/jni_nk.c" />
     <entry file="file://$PROJECT_DIR$/deps/include/nuklear_glfw_gl3.h" />
@@ -544,16 +547,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="108">
           <caret line="9" column="16" lean-forward="false" selection-start-line="9" selection-start-column="16" selection-end-line="9" selection-end-column="16" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/jni_gl.c">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="123132">
-          <caret line="10261" column="66" lean-forward="false" selection-start-line="10261" selection-start-column="66" selection-end-line="10261" selection-end-column="66" />
-          <folding>
-            <marker date="1527596254595" expanded="true" signature="400355:400607" ph="{...}" />
-          </folding>
         </state>
       </provider>
     </entry>
@@ -596,22 +589,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/jni_nutil.c">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="4056">
-          <caret line="338" column="70" lean-forward="false" selection-start-line="338" selection-start-column="70" selection-end-line="338" selection-end-column="70" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/deps/include/nanovg/nanovg_jni_assist.h">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="2172">
-          <caret line="181" column="45" lean-forward="false" selection-start-line="181" selection-start-column="45" selection-end-line="181" selection-end-column="45" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/../../mini_jvm/jvm/jvm.h">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="2268">
@@ -631,7 +608,57 @@
     <entry file="file://$PROJECT_DIR$/jni_glfw.c">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="252">
-          <caret line="208" column="18" lean-forward="true" selection-start-line="208" selection-start-column="18" selection-end-line="208" selection-end-column="18" />
+          <caret line="208" column="18" lean-forward="false" selection-start-line="208" selection-start-column="18" selection-end-line="208" selection-end-column="18" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/deps/include/nanovg/nanovg_jni_assist.h">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="130">
+          <caret line="172" column="55" lean-forward="false" selection-start-line="172" selection-start-column="55" selection-end-line="172" selection-end-column="55" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/jni_nutil.c">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="149">
+          <caret line="1919" column="4" lean-forward="false" selection-start-line="1919" selection-start-column="4" selection-end-line="1919" selection-end-column="4" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/deps/include/glad/glad.c">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-2471">
+          <caret line="15" column="29" lean-forward="false" selection-start-line="15" selection-start-column="29" selection-end-line="15" selection-end-column="29" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/deps/include/glad/glad.h">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="252">
+          <caret line="21" column="17" lean-forward="false" selection-start-line="21" selection-start-column="17" selection-end-line="21" selection-end-column="17" />
+          <folding>
+            <element signature="e#551#635#0" expanded="true" />
+            <element signature="e#756#884#0" expanded="true" />
+            <element signature="e#1008#1020#0" expanded="true" />
+            <element signature="e#1189#1758#0" expanded="true" />
+            <element signature="e#1922#1941#0" expanded="true" />
+            <element signature="e#2348#3129#0" expanded="true" />
+            <element signature="e#3723#3756#0" expanded="true" />
+            <element signature="e#4124#4154#0" expanded="true" />
+            <element signature="e#4313#4345#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/jni_gl.c">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="204">
+          <caret line="12890" column="72" lean-forward="false" selection-start-line="12890" selection-start-column="72" selection-end-line="12890" selection-end-column="72" />
           <folding />
         </state>
       </provider>
