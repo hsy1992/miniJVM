@@ -183,6 +183,8 @@ void jvm_init(c8 *p_classpath, StaticLibRegFunc regFunc) {
     //
     init_jni_func_table();
 
+    //创建线程容器
+    thread_list = arraylist_create(0);
     //创建垃圾收集器
     garbage_collector_create();
     //启动垃圾回收
@@ -193,8 +195,6 @@ void jvm_init(c8 *p_classpath, StaticLibRegFunc regFunc) {
     array_classloader = classloader_create("");
 
     memset(&jvm_runtime_cache, 0, sizeof(OptimizeCache));
-    //创建线程容器
-    thread_list = arraylist_create(0);
 
     //本地方法库
     native_libs = arraylist_create(0);

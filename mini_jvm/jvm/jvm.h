@@ -219,10 +219,10 @@ enum {
  * 内存中几个主要对象的类型，他们是不同的数据结构，但是每种类型的第一个字节都是用来标识此内存对象的类型
  */
 enum {
-    MEM_TYPE_NODEF, //0
-    MEM_TYPE_CLASS, //1
-    MEM_TYPE_INS,   //2
-    MEM_TYPE_ARR    //3
+    MEM_TYPE_NODEF = 0, //0
+    MEM_TYPE_CLASS = 1, //1
+    MEM_TYPE_INS = 2,   //2
+    MEM_TYPE_ARR = 4   //3
 };
 
 
@@ -1046,14 +1046,14 @@ static inline __refer entry_2_refer(StackEntry *entry) {
 //s32 is_cat1(StackEntry *entry);
 
 static inline s32 is_cat1(StackEntry *entry) {
-    if (entry->type & STACK_ENTRY_INT || entry->type & STACK_ENTRY_FLOAT || entry->type & STACK_ENTRY_REF) {
+    if (entry->type & (STACK_ENTRY_INT | STACK_ENTRY_FLOAT | STACK_ENTRY_REF)) {
         return 1;
     }
     return 0;
 }
 
 static inline s32 is_cat2(StackEntry *entry) {
-    if (entry->type & STACK_ENTRY_LONG || entry->type & STACK_ENTRY_DOUBLE) {
+    if (entry->type & (STACK_ENTRY_LONG | STACK_ENTRY_DOUBLE)) {
         return 1;
     }
     return 0;

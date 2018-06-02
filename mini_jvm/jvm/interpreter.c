@@ -560,7 +560,7 @@ s32 execute_method_impl(MethodInfo *method, Runtime *pruntime, JClass *clazz) {
     if (!(method->access_flags & ACC_NATIVE)) {
         CodeAttribute *ca = method->attributes[j].converted_code;
         if (ca) {
-            localvar_init(runtime, ca->max_locals + 1);
+            localvar_init(runtime, ca->max_locals);
             LocalVarItem *localvar = runtime->localvar;
             _stack2localvar(method, pruntime, runtime);
             s32 stackSize = stack->size;
@@ -1420,13 +1420,11 @@ s32 execute_method_impl(MethodInfo *method, Runtime *pruntime, JClass *clazz) {
 
                     case op_dup2: {
 
-                        StackEntry entry;
-                        peek_entry(stack, &entry, stack->size - 1);
-                        if (is_cat2(&entry)) {
-                            push_entry(stack, &entry);
+                        StackEntry entry1;
+                        peek_entry(stack, &entry1, stack->size - 1);
+                        if (is_cat2(&entry1)) {
+                            push_entry(stack, &entry1);
                         } else {
-                            StackEntry entry1;
-                            peek_entry(stack, &entry1, stack->size - 1);
                             StackEntry entry2;
                             peek_entry(stack, &entry2, stack->size - 2);
 
@@ -3141,7 +3139,7 @@ s32 execute_method_impl(MethodInfo *method, Runtime *pruntime, JClass *clazz) {
                         } else {
                             MethodInfo *m = NULL;
 
-                            if (ins->mb.type == MEM_TYPE_CLASS || ins->mb.type == MEM_TYPE_ARR) {
+                            if (ins->mb.type & (MEM_TYPE_CLASS | MEM_TYPE_ARR)) {
                                 m = cmr->methodInfo;
                             } else {
                                 m = (MethodInfo *) pairlist_get(cmr->virtual_methods, ins->mb.clazz);
@@ -3246,7 +3244,7 @@ s32 execute_method_impl(MethodInfo *method, Runtime *pruntime, JClass *clazz) {
                             ret = RUNTIME_STATUS_EXCEPTION;
                         } else {
                             MethodInfo *m = NULL;
-                            if (ins->mb.type == MEM_TYPE_CLASS) {
+                            if (ins->mb.type & MEM_TYPE_CLASS) {
                                 m = cmr->methodInfo;
                             } else {
                                 m = (MethodInfo *) pairlist_get(cmr->virtual_methods, ins->mb.clazz);
