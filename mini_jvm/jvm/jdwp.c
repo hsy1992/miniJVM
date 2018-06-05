@@ -2280,7 +2280,7 @@ s32 jdwp_client_process(JdwpClient *client, Runtime *runtime) {
                     vt.type = JDWP_TAG_OBJECT;
                     vt.value = 0;
                 } else {
-                    Instance *ins = localvar_getRefer(runtime->localvar, 0);
+                    Instance *ins = localvar_getRefer(frame->localvar, 0);
                     vt.type = getInstanceOfClassTag(ins);
                     vt.value = (s64) (intptr_t) ins;
                 }

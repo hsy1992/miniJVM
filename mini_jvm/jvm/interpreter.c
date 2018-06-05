@@ -3738,5 +3738,6 @@ s32 execute_method_impl(MethodInfo *method, Runtime *pruntime, JClass *clazz) {
 
     }
     runtime_destory(runtime);
+    pruntime->son = NULL;  //need for getLastSon()
     return ret;
 }
