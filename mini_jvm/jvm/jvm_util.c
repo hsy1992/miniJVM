@@ -875,12 +875,13 @@ s32 check_suspend_and_pause(Runtime *runtime) {
 Instance *jarray_create_by_class(Runtime *runtime, s32 count, JClass *clazz) {
     s32 typeIdx = clazz->arr_type_index;
     s32 width = data_type_bytes[typeIdx];
-    Instance *arr = jvm_calloc(sizeof(Instance));
+    Instance *arr = jvm_calloc(sizeof(Instance) + (width * count));
     arr->mb.type = MEM_TYPE_ARR;
     arr->mb.clazz = clazz;
     arr->mb.arr_type_index = typeIdx;
     arr->arr_length = count;
-    if (arr->arr_length)arr->arr_body = jvm_calloc(width * count);
+//    if (arr->arr_length)arr->arr_body = jvm_calloc(width * count);
+    if (arr->arr_length)arr->arr_body = (c8 *) (&arr[1]);
     gc_refer_reg(runtime, arr);
     return arr;
 }
@@ -911,10 +912,10 @@ s32 jarray_destory(Instance *arr) {
     if (arr && arr->mb.type == MEM_TYPE_ARR) {
         jthreadlock_destory(&arr->mb);
         arr->mb.thread_lock = NULL;
-        if (arr->arr_body) {
-            jvm_free(arr->arr_body);
-            arr->arr_body = NULL;
-        }
+//        if (arr->arr_body) {
+//            jvm_free(arr->arr_body);
+//            arr->arr_body = NULL;
+//        }
         arr->arr_length = -1;
         jvm_free(arr);
     }
@@ -1021,7 +1022,7 @@ Instance *instance_create(Runtime *runtime, JClass *clazz) {
     ins->mb.type = MEM_TYPE_INS;
     ins->mb.clazz = clazz;
 
-    ins->obj_fields = (c8 *) ins + sizeof(Instance);//jvm_calloc(clazz->field_instance_len);
+    ins->obj_fields = (c8 *) (&ins[1]);//jvm_calloc(clazz->field_instance_len);
 //    if(clazz->field_instance_len)ins->obj_fields = jvm_calloc(clazz->field_instance_len);
 
     gc_refer_reg(runtime, ins);
