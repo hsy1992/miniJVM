@@ -14,6 +14,8 @@
 // arm
 #define __JVM_BIG_ENDIAN__ 0
 
+#define MEM_ALLOC_LTALLOC
+
 
 #if defined(__MINGW_H) || defined(__MINGW32_MAJOR_VERSION)
 #define __JVM_OS_MINGW__ 1
@@ -64,6 +66,19 @@ extern s64 heap_size;
 
 //======================= memory manage =============================
 
+#ifdef MEM_ALLOC_LTALLOC
+
+void *jvm_calloc(u32 size);
+
+void *jvm_malloc(u32 size);
+
+void jvm_free(void *ptr);
+
+void *jvm_realloc(void *pPtr, u32 size);
+
+void jvm_squeeze(u32 padsz);
+
+#else
 
 static inline void *jvm_calloc(u32 size) {
     return calloc(size, 1);
@@ -82,6 +97,7 @@ static inline void *jvm_realloc(void *pPtr, u32 size) {
 
 }
 
+#endif
 
 #ifdef __cplusplus
 }

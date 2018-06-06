@@ -445,7 +445,9 @@ s64 garbage_collect() {
     jvm_printf("[INFO]gc obj: %lld->%lld   heap : %lld -> %lld  stop_world: %lld  gc:%lld\n",
                iter, collector->obj_count, mem_total, heap_size, time_stopWorld, time_gc);
 
-
+#ifdef MEM_ALLOC_LTALLOC
+    jvm_squeeze(0);
+#endif
     collector->isgc = 0;
     return del;
 }
