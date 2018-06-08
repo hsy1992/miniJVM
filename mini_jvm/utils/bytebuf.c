@@ -3,7 +3,9 @@
 //
 #include "memory.h"
 #include "bytebuf.h"
+
 ByteBuf *bytebuf_create(u32 size) {
+    if (!size)size = 256;
     if (size) {
         ByteBuf *bf = jvm_calloc(sizeof(ByteBuf));
         bf->buf = jvm_calloc(size);
@@ -99,7 +101,7 @@ void bytebuf_expand(ByteBuf *bf, u32 size) {
 //        int debug = 1;
 //    }
     void *p = jvm_realloc(bf->buf, size);
-    if(p) {
+    if (p) {
         bf->buf = p;
         bf->_alloc_size = size;
     }

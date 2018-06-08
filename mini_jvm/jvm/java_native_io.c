@@ -7,6 +7,7 @@
 #include "garbage.h"
 #include "java_native_io.h"
 #include "jvm_util.h"
+#include "../utils/miniz/miniz_wrapper.h"
 #include <sys/stat.h>
 #include <stdlib.h>
 #include <limits.h>
@@ -1012,6 +1013,48 @@ s32 org_mini_fs_InnerFile_delete0(Runtime *runtime, JClass *clazz) {
     return 0;
 }
 
+s32 javax_mini_zip_ZipFile_getEntry0(Runtime *runtime, JClass *clazz) {
+    Instance *zip_path_arr = localvar_getRefer(runtime->localvar, 0);
+    Instance *name_arr = localvar_getRefer(runtime->localvar, 1);
+    s32 ret = -1;
+    if (zip_path_arr && name_arr) {
+        ByteBuf *buf = bytebuf_create(0);
+        zip_loadfile(zip_path_arr->arr_body, name_arr->arr_body, buf);
+        if (buf->wp) {
+            Instance *arr = jarray_create_by_type_index(runtime, buf->wp, DATATYPE_BYTE);
+            memmove(arr->arr_body, buf->buf, buf->wp);
+            push_ref(runtime->stack, arr);
+            ret = 0;
+        }
+        bytebuf_destory(buf);
+    }
+    if (ret) {
+        push_ref(runtime->stack, NULL);
+    }
+#if _JVM_DEBUG_BYTECODE_DETAIL > 5
+    invoke_deepth(runtime);
+    jvm_printf("javax_mini_zip_ZipFile_getEntry0  \n");
+#endif
+    return 0;
+}
+
+s32 javax_mini_zip_ZipFile_putEntry0(Runtime *runtime, JClass *clazz) {
+    Instance *zip_path_arr = localvar_getRefer(runtime->localvar, 0);
+    Instance *name_arr = localvar_getRefer(runtime->localvar, 1);
+    Instance *content_arr = localvar_getRefer(runtime->localvar, 2);
+    s32 ret = -1;
+    if (zip_path_arr && name_arr && content_arr) {
+        zip_savefile_mem(zip_path_arr->arr_body, name_arr->arr_body, content_arr->arr_body, content_arr->arr_length);
+        ret = 0;
+    }
+    push_int(runtime->stack, ret);
+#if _JVM_DEBUG_BYTECODE_DETAIL > 5
+    invoke_deepth(runtime);
+    jvm_printf("javax_mini_zip_ZipFile_putEntry0  \n");
+#endif
+    return 0;
+}
+
 static java_native_method method_net_table[] = {
         {"javax/mini/net/protocol/socket/Protocol",       "open0",           "([BII)I",                          javax_mini_net_socket_Protocol_open0},
         {"javax/mini/net/protocol/socket/Protocol",       "readBuf",         "(I[BII)I",                         javax_mini_net_socket_Protocol_readBuf},
@@ -1046,6 +1089,8 @@ static java_native_method method_net_table[] = {
         {"org/mini/fs/InnerFile",                         "delete0",         "([B)I",                            org_mini_fs_InnerFile_delete0},
         {"org/mini/fs/InnerFile",                         "rename0",         "([B[B)I",                          org_mini_fs_InnerFile_rename0},
         {"org/mini/fs/InnerFile",                         "getTmpDir",       "()Ljava/lang/String;",             org_mini_fs_InnerFile_getTmpDir},
+        {"javax/mini/zip/Zip",                            "getEntry0",       "([B[B)[B",                         javax_mini_zip_ZipFile_getEntry0},
+        {"javax/mini/zip/Zip",                            "putEntry0",       "([B[B[B)I",                        javax_mini_zip_ZipFile_putEntry0},
 
 };
 

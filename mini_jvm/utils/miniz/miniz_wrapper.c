@@ -8,11 +8,11 @@ s32 zip_loadfile(char *jarpath, char *filename, ByteBuf *buf) {
     mz_zip_archive_file_stat file_stat = {0};
 
     int ret = 0;
-    if (mz_zip_reader_init_file(&zipArchive, jarpath, 0) == MZ_FALSE) {//"../../javalib/dist/mini_jvm_java.jar"
+    if (mz_zip_reader_init_file(&zipArchive, jarpath, 0) == MZ_FALSE) {//
         ret = -1;
     } else {
 
-        file_index = mz_zip_reader_locate_file(&zipArchive, filename, NULL, 0);//"java/lang/Object.class"
+        file_index = mz_zip_reader_locate_file(&zipArchive, filename, NULL, 0);//
         if (!mz_zip_reader_file_stat(&zipArchive, file_index, &file_stat)) {
             ret = -1;
         } else {
@@ -31,3 +31,35 @@ s32 zip_loadfile(char *jarpath, char *filename, ByteBuf *buf) {
     return ret;
 }
 
+
+s32 zip_savefile_mem(char *jarpath, char *filename, char *buf, int size) {
+    int file_index = 0;
+    mz_zip_archive zipArchive = {0};
+    mz_zip_archive_file_stat file_stat = {0};
+
+    int ret = 0;
+    if (mz_zip_reader_init_file(&zipArchive, jarpath, 0) == MZ_FALSE) {//
+        if (mz_zip_writer_init_file(&zipArchive, jarpath, 0) == MZ_FALSE) {//
+            ret = -1;
+        }
+    } else {
+        if (mz_zip_writer_init_from_reader(&zipArchive, jarpath) == MZ_FALSE) {//
+            ret = -1;
+        }
+    }
+    if (ret == 0) {
+        if (mz_zip_writer_add_mem(&zipArchive, filename, buf, size, 0) == MZ_FALSE) {//
+            ret = -1;
+        }
+        if (mz_zip_writer_finalize_archive(&zipArchive) == MZ_FALSE) {//
+            ret = -1;
+        }
+    }
+    mz_zip_writer_end(&zipArchive);
+    return ret;
+}
+
+
+s32 zip_savefile(char *jarpath, char *filename, ByteBuf *buf) {
+    return zip_savefile_mem(jarpath, filename, buf->buf, buf->wp);
+}

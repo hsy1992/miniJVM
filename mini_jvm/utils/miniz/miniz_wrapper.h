@@ -5,4 +5,8 @@
 
 s32 zip_loadfile(char *jarpath, char *filename, ByteBuf *buf);
 
+s32 zip_savefile(char *jarpath, char *filename, ByteBuf *buf);
+
+s32 zip_savefile_mem(char *jarpath, char *filename, char *buf, int size);
+
 #endif
