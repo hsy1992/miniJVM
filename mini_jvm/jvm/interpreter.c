@@ -385,7 +385,7 @@ static inline void _op_ifstore_impl(u8 **opCode, RuntimeStack *stack, LocalVarIt
 
 }
 
-static inline void _op_ldstore_impl(u8 **opCode, RuntimeStack *stack, Runtime *runtime) {
+static inline void _op_ldstore_impl(u8 **opCode, RuntimeStack *stack, LocalVarItem *localvar, Runtime *runtime) {
 
     Short2Char s2c;
     if (runtime->wideMode) {
@@ -405,8 +405,8 @@ static inline void _op_ldstore_impl(u8 **opCode, RuntimeStack *stack, Runtime *r
     invoke_deepth(runtime);
     jvm_printf("l(d)store: save localvar(%d) %llx/%lld/%lf  \n", s2c.s, l2d.l, l2d.l, l2d.d);
 #endif
-    localvar_setInt(runtime->localvar, (u16) s2c.s, l2d.i2l.i1);
-    localvar_setInt(runtime->localvar, (u16) s2c.s + 1, l2d.i2l.i0);
+    localvar_setInt(localvar, (u16) s2c.s, l2d.i2l.i1);
+    localvar_setInt(localvar, (u16) s2c.s + 1, l2d.i2l.i0);
 }
 
 void _op_notsupport(u8 **opCode, Runtime *runtime) {
@@ -483,30 +483,29 @@ static inline Instance *getInstanceInStack(JClass *clazz, ConstantMethodRef *cmr
  */
 
 
-static inline void _stack2localvar(MethodInfo *method, Runtime *father, Runtime *son) {
+static inline void _stack2localvar(MethodInfo *method, LocalVarItem *localvar, RuntimeStack *stack) {
 
     Utf8String *paraType = method->paraType;
     s32 i;
     s32 paraLen = paraType->length;
     s32 i_local = method->para_slots;
-    LocalVarItem *localvar = son->localvar;
 
     for (i = 0; i < paraLen; i++) {
         char type = utf8_char_at(paraType, paraLen - 1 - i);
 
         switch (type) {
             case 'R': {
-                localvar_setRefer(localvar, --i_local, pop_ref(father->stack));
+                localvar_setRefer(localvar, --i_local, pop_ref(stack));
                 break;
             }
             case '4': {
-                localvar_setInt(localvar, --i_local, pop_int(father->stack));
+                localvar_setInt(localvar, --i_local, pop_int(stack));
                 break;
             }
             case '8': {
                 //把双字类型拆成两个单元放入本地变量
                 Long2Double l2d;
-                l2d.l = pop_long(father->stack);
+                l2d.l = pop_long(stack);
                 localvar_setInt(localvar, --i_local, l2d.i2l.i0);
                 localvar_setInt(localvar, --i_local, l2d.i2l.i1);
                 break;
@@ -514,7 +513,7 @@ static inline void _stack2localvar(MethodInfo *method, Runtime *father, Runtime 
         }
     }
     if (!(method->access_flags & ACC_STATIC)) {//非静态方法需要把局部变量位置0设为this
-        localvar_setRefer(localvar, --i_local, pop_ref(father->stack));
+        localvar_setRefer(localvar, --i_local, pop_ref(stack));
     }
 
 }
@@ -562,7 +561,7 @@ s32 execute_method_impl(MethodInfo *method, Runtime *pruntime, JClass *clazz) {
         if (ca) {
             localvar_init(runtime, ca->max_locals);
             LocalVarItem *localvar = runtime->localvar;
-            _stack2localvar(method, pruntime, runtime);
+            _stack2localvar(method, localvar, stack);
             s32 stackSize = stack->size;
             if (method_sync)_synchronized_lock_method(method, runtime);
 
@@ -1056,7 +1055,7 @@ s32 execute_method_impl(MethodInfo *method, Runtime *pruntime, JClass *clazz) {
                     }
 
                     case op_lstore: {
-                        _op_ldstore_impl(opCode, stack, runtime);
+                        _op_ldstore_impl(opCode, stack, localvar, runtime);
                         break;
                     }
 
@@ -1066,7 +1065,7 @@ s32 execute_method_impl(MethodInfo *method, Runtime *pruntime, JClass *clazz) {
                     }
 
                     case op_dstore: {
-                        _op_ldstore_impl(opCode, stack, runtime);
+                        _op_ldstore_impl(opCode, stack, localvar, runtime);
                         break;
                     }
 
@@ -3698,7 +3697,7 @@ s32 execute_method_impl(MethodInfo *method, Runtime *pruntime, JClass *clazz) {
         }
     } else {//本地方法
         localvar_init(runtime, method->para_slots);//可能有非静态本地方法调用，因此+1
-        _stack2localvar(method, pruntime, runtime);
+        _stack2localvar(method, runtime->localvar, stack);
         //缓存调用本地方法
         if (!method->native_func) { //把本地方法找出来缓存
             java_native_method *native = find_native_method(utf8_cstr(clazz->name), utf8_cstr(method->name),

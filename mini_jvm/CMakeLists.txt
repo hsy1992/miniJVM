@@ -57,7 +57,8 @@ set(SOURCE_FILES
         utils/miniz/miniz_wrapper.c
         utils/miniz/miniz_wrapper.h
         utils/dirent_win.h
-        utils/ltalloc.cc
+        utils/ltalloc.c
+        utils/ltalloc.h
         )
 
 MESSAGE(STATUS "platform: ${CMAKE_SYSTEM_NAME}")

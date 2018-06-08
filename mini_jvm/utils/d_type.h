@@ -8,6 +8,7 @@
 #include "sys/types.h"
 #include "stdlib.h"
 #include "stdint.h"
+#include "ltalloc.h"
 
 // x86   x64 ...
 #define __JVM_LITTLE_ENDIAN__ 1
@@ -68,15 +69,25 @@ extern s64 heap_size;
 
 #ifdef MEM_ALLOC_LTALLOC
 
-void *jvm_calloc(u32 size);
+static inline void *jvm_calloc(u32 size) {
+    return ltcalloc(1, size);
+}
 
-void *jvm_malloc(u32 size);
+static inline void *jvm_malloc(u32 size) {
+    return ltmalloc(size);
+}
 
-void jvm_free(void *ptr);
+static inline void jvm_free(void *ptr) {
+    ltfree(ptr);
+}
 
-void *jvm_realloc(void *pPtr, u32 size);
+static inline void *jvm_realloc(void *pPtr, u32 size) {
+    return ltrealloc(pPtr, size);
+}
 
-void jvm_squeeze(u32 padsz);
+static inline void jvm_squeeze(u32 padsz) {
+    ltsqueeze(padsz);
+}
 
 #else
 
