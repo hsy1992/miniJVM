@@ -74,12 +74,14 @@ static const unsigned int MAX_BLOCK_SIZE = CHUNK_SIZE;//requesting memory of any
 #define __STDC_LIMIT_MACROS
 #include <stdint.h> //for SIZE_MAX
 #include <limits.h> //for UINT_MAX
+#include <sched.h> //for sched_yield
 #define alignas(a) __attribute__((aligned(a)))
 #define thread_local __thread
 #define NOINLINE __attribute__((noinline))
 #define CAS_LOCK(lock) __sync_lock_test_and_set(lock, 1)
 #define SPINLOCK_RELEASE(lock) __sync_lock_release(lock)
-#define PAUSE __asm__ __volatile__("pause" ::: "memory")
+//#define PAUSE __asm__ __volatile__("pause" ::: "memory")
+#define PAUSE sched_yield()
 #define BSR(r, v) r = CODE3264(__builtin_clz(v) ^ 31, __builtin_clzll(v) ^ 63)//x ^ 31 = 31 - x, but gcc does not optimize 31 - __builtin_clz(x) to bsr(x), but generates 31 - (bsr(x) ^ 31)
 
 #elif _MSC_VER
