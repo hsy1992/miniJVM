@@ -333,14 +333,15 @@ void profile_print();
 //======================= MEM_OBJ =============================
 
 typedef struct _MemoryBlock {
-    u8 type;//type of array or object runtime,class
-    u8 garbage_mark;
-    u8 volatile garbage_reg;
-    u8 arr_type_index;
 
     JClass *clazz;
     struct _MemoryBlock *next;
     ThreadLock *volatile thread_lock;
+
+    u8 type;//type of array or object runtime,class
+    u8 garbage_mark;
+    u8 garbage_reg;
+    u8 arr_type_index;
 } MemoryBlock;
 
 struct _ClassLoader {

@@ -169,6 +169,10 @@ static inline s16 getFieldShort(c8 *ptr) {
     return *((s16 *) ptr);
 }
 
+static inline u16 getFieldChar(c8 *ptr) {
+    return *((u16 *) ptr);
+}
+
 static inline s8 getFieldByte(c8 *ptr) {
     return *((s8 *) ptr);
 }

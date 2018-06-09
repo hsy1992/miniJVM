@@ -2907,7 +2907,8 @@ s32 execute_method_impl(MethodInfo *method, Runtime *pruntime, JClass *clazz) {
                                     break;
                                 }
                                 case 2: {
-                                    push_int(stack, getFieldShort(ptr));
+                                    if (fi->datatype_idx == DATATYPE_JCHAR)push_int(stack, getFieldChar(ptr));
+                                    else push_int(stack, getFieldShort(ptr));
                                     break;
                                 }
                                 case 3: {
@@ -3021,7 +3022,8 @@ s32 execute_method_impl(MethodInfo *method, Runtime *pruntime, JClass *clazz) {
                                         break;
                                     }
                                     case 2: {
-                                        push_int(stack, getFieldShort(ptr));
+                                        if (fi->datatype_idx == DATATYPE_JCHAR)push_int(stack, getFieldChar(ptr));
+                                        else push_int(stack, getFieldShort(ptr));
                                         break;
                                     }
                                     case 3: {
