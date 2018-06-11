@@ -2915,29 +2915,21 @@ s32 execute_method_impl(MethodInfo *method, Runtime *pruntime, JClass *clazz) {
                             // check variable type to determine s64/s32/f64/f32
                             s32 data_bytes = fi->datatype_bytes;
                             switch (data_bytes) {
+                                case 4: {
+                                    push_int(stack, getFieldInt(ptr));
+                                    break;
+                                }
                                 case 1: {
                                     push_int(stack, getFieldByte(ptr));
+                                    break;
+                                }
+                                case 8: {
+                                    push_long(stack, getFieldLong(ptr));
                                     break;
                                 }
                                 case 2: {
                                     if (fi->datatype_idx == DATATYPE_JCHAR)push_int(stack, getFieldChar(ptr));
                                     else push_int(stack, getFieldShort(ptr));
-                                    break;
-                                }
-                                case 3: {
-                                    break;
-                                }
-                                case 4: {
-                                    push_int(stack, getFieldInt(ptr));
-                                    break;
-                                }
-                                case 5:
-                                case 6:
-                                case 7: {
-                                    break;
-                                }
-                                case 8: {
-                                    push_long(stack, getFieldLong(ptr));
                                     break;
                                 }
                             }
@@ -2979,28 +2971,20 @@ s32 execute_method_impl(MethodInfo *method, Runtime *pruntime, JClass *clazz) {
                             s32 data_bytes = fi->datatype_bytes;
                             //非引用类型
                             switch (data_bytes) {
-                                case 1: {
-                                    setFieldByte(ptr, pop_int(stack));
-                                    break;
-                                }
-                                case 2: {
-                                    setFieldShort(ptr, pop_int(stack));
-                                    break;
-                                }
-                                case 3: {
-                                    break;
-                                }
-                                case 5:
-                                case 6:
-                                case 7: {
-                                    break;
-                                }
                                 case 4: {
                                     setFieldInt(ptr, pop_int(stack));
                                     break;
                                 }
+                                case 1: {
+                                    setFieldByte(ptr, pop_int(stack));
+                                    break;
+                                }
                                 case 8: {
                                     setFieldLong(ptr, pop_long(stack));
+                                    break;
+                                }
+                                case 2: {
+                                    setFieldShort(ptr, pop_int(stack));
                                     break;
                                 }
                             }
@@ -3030,29 +3014,21 @@ s32 execute_method_impl(MethodInfo *method, Runtime *pruntime, JClass *clazz) {
                                 // check variable type to determine s64/s32/f64/f32
                                 s32 data_bytes = fi->datatype_bytes;
                                 switch (data_bytes) {
+                                    case 4: {
+                                        push_int(stack, getFieldInt(ptr));
+                                        break;
+                                    }
                                     case 1: {
                                         push_int(stack, getFieldByte(ptr));
+                                        break;
+                                    }
+                                    case 8: {
+                                        push_long(stack, getFieldLong(ptr));
                                         break;
                                     }
                                     case 2: {
                                         if (fi->datatype_idx == DATATYPE_JCHAR)push_int(stack, getFieldChar(ptr));
                                         else push_int(stack, getFieldShort(ptr));
-                                        break;
-                                    }
-                                    case 3: {
-                                        break;
-                                    }
-                                    case 4: {
-                                        push_int(stack, getFieldInt(ptr));
-                                        break;
-                                    }
-                                    case 5:
-                                    case 6:
-                                    case 7: {
-                                        break;
-                                    }
-                                    case 8: {
-                                        push_long(stack, getFieldLong(ptr));
                                         break;
                                     }
                                 }
@@ -3103,28 +3079,20 @@ s32 execute_method_impl(MethodInfo *method, Runtime *pruntime, JClass *clazz) {
                                 s32 data_bytes = fi->datatype_bytes;
                                 //非引用类型
                                 switch (data_bytes) {
-                                    case 1: {
-                                        setFieldByte(ptr, entry_2_int(&entry));
-                                        break;
-                                    }
-                                    case 2: {
-                                        setFieldShort(ptr, entry_2_int(&entry));
-                                        break;
-                                    }
-                                    case 3: {
-                                        break;
-                                    }
                                     case 4: {
                                         setFieldInt(ptr, entry_2_int(&entry));
                                         break;
                                     }
-                                    case 5:
-                                    case 6:
-                                    case 7: {
+                                    case 1: {
+                                        setFieldByte(ptr, entry_2_int(&entry));
                                         break;
                                     }
                                     case 8: {
                                         setFieldLong(ptr, entry_2_long(&entry));
+                                        break;
+                                    }
+                                    case 2: {
+                                        setFieldShort(ptr, entry_2_int(&entry));
                                         break;
                                     }
                                 }
