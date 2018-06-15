@@ -17,8 +17,8 @@ void *_parseCPString(JClass *_this, ByteBuf *buf, s32 index) {
 
     ConstantUTF8 *ptr = jvm_calloc(sizeof(ConstantUTF8));
 
-    ptr->tag = CONSTANT_UTF8;
-    ptr->index = index;
+    ptr->item.tag = CONSTANT_UTF8;
+    ptr->item.index = index;
 
     //fread(short_tmp, 2, 1, fp);
     Short2Char s2c;
@@ -42,8 +42,8 @@ void *_parseCPInteger(JClass *_this, ByteBuf *buf, s32 index) {
 
     ConstantInteger *ptr = jvm_calloc(sizeof(ConstantInteger));
 
-    ptr->tag = CONSTANT_INTEGER;
-    ptr->index = index;
+    ptr->item.tag = CONSTANT_INTEGER;
+    ptr->item.index = index;
 
     //fread(tmp, 4, 1, fp);
     Int2Float i2c;
@@ -62,8 +62,8 @@ void *_parseCPFloat(JClass *_this, ByteBuf *buf, s32 index) {
 
     ConstantFloat *ptr = jvm_calloc(sizeof(ConstantFloat));
 
-    ptr->tag = CONSTANT_FLOAT;
-    ptr->index = index;
+    ptr->item.tag = CONSTANT_FLOAT;
+    ptr->item.index = index;
 
     //fread(tmp, 4, 1, fp);
     Int2Float i2c;
@@ -83,8 +83,8 @@ void *_parseCPLong(JClass *_this, ByteBuf *buf, s32 index) {
 
     ConstantLong *ptr = jvm_calloc(sizeof(ConstantLong));
 
-    ptr->tag = CONSTANT_LONG;
-    ptr->index = index;
+    ptr->item.tag = CONSTANT_LONG;
+    ptr->item.index = index;
 
     //fread(tmp, 8, 1, fp);
     Long2Double l2d;
@@ -107,8 +107,8 @@ void *_parseCPDouble(JClass *_this, ByteBuf *buf, s32 index) {
 
     ConstantDouble *ptr = jvm_calloc(sizeof(ConstantDouble));
 
-    ptr->tag = CONSTANT_DOUBLE;
-    ptr->index = index;
+    ptr->item.tag = CONSTANT_DOUBLE;
+    ptr->item.index = index;
 
     //fread(tmp, 8, 1, fp);
     Long2Double l2d;
@@ -131,8 +131,8 @@ void *_parseCPClass(JClass *_this, ByteBuf *buf, s32 index) {
 
     ConstantClassRef *ptr = jvm_calloc(sizeof(ConstantClassRef));
 
-    ptr->tag = CONSTANT_CLASS;
-    ptr->index = index;
+    ptr->item.tag = CONSTANT_CLASS;
+    ptr->item.index = index;
 
     //fread(short_tmp, 2, 1, fp);
     Short2Char s2c;
@@ -149,8 +149,8 @@ void *_parseCPStringRef(JClass *_this, ByteBuf *buf, s32 index) {
 
     ConstantStringRef *ptr = jvm_calloc(sizeof(ConstantStringRef));
 
-    ptr->tag = CONSTANT_STRING_REF;
-    ptr->index = index;
+    ptr->item.tag = CONSTANT_STRING_REF;
+    ptr->item.index = index;
 
     //fread(short_tmp, 2, 1, fp);
     Short2Char s2c;
@@ -167,8 +167,8 @@ void *_parseCPField(JClass *_this, ByteBuf *buf, s32 index) {
 
     ConstantFieldRef *ptr = jvm_calloc(sizeof(ConstantFieldRef));
 
-    ptr->tag = CONSTANT_FIELD_REF;
-    ptr->index = index;
+    ptr->item.tag = CONSTANT_FIELD_REF;
+    ptr->item.index = index;
 
     //fread(short_tmp, 2, 1, fp);
     Short2Char s2c;
@@ -191,8 +191,8 @@ void *_parseCPMethod(JClass *_this, ByteBuf *buf, s32 index) {
     ConstantMethodRef *ptr = jvm_calloc(sizeof(ConstantMethodRef));
     ptr->methodParaCount = -1;
 
-    ptr->tag = CONSTANT_METHOD_REF;
-    ptr->index = index;
+    ptr->item.tag = CONSTANT_METHOD_REF;
+    ptr->item.index = index;
 
     //fread(short_tmp, 2, 1, fp);
     Short2Char s2c;
@@ -214,8 +214,8 @@ void *_parseCPInterface(JClass *_this, ByteBuf *buf, s32 index) {
 
     ConstantInterfaceMethodRef *ptr = jvm_calloc(sizeof(ConstantInterfaceMethodRef));
 
-    ptr->tag = CONSTANT_INTERFACE_REF;
-    ptr->index = index;
+    ptr->item.tag = CONSTANT_INTERFACE_REF;
+    ptr->item.index = index;
 
     //fread(short_tmp, 2, 1, fp);
     Short2Char s2c;
@@ -237,8 +237,8 @@ void *_parseCPNameAndType(JClass *_this, ByteBuf *buf, s32 index) {
 
     ConstantNameAndType *ptr = jvm_calloc(sizeof(ConstantNameAndType));
 
-    ptr->tag = CONSTANT_NAME_AND_TYPE;
-    ptr->index = index;
+    ptr->item.tag = CONSTANT_NAME_AND_TYPE;
+    ptr->item.index = index;
 
     //fread(short_tmp, 2, 1, fp);
     Short2Char s2c;
@@ -423,8 +423,8 @@ s32 _parseIPClass(JClass *_this, ByteBuf *buf, s32 index) {
 
     ConstantClassRef *ptr = &_this->interfacePool.clasz[_this->interfacePool.clasz_used];
 
-    ptr->tag = CONSTANT_CLASS;
-    ptr->index = index;
+    ptr->item.tag = CONSTANT_CLASS;
+    ptr->item.index = index;
 
     //fread(short_tmp, 2, 1, fp);
     Short2Char s2c;

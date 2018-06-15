@@ -224,14 +224,14 @@ void class_clinit(JClass *clazz, Runtime *runtime) {
          */
         for (i = 0; i < clazz->constantPool.methodRef->length; i++) {
             ConstantMethodRef *cmr = (ConstantMethodRef *) arraylist_get_value(clazz->constantPool.methodRef, i);
-            cmr->methodInfo = find_methodInfo_by_methodref(clazz, cmr->index, runtime);
+            cmr->methodInfo = find_methodInfo_by_methodref(clazz, cmr->item.index, runtime);
             cmr->virtual_methods = pairlist_create(0);
             //jvm_printf("%s.%s %llx\n", utf8_cstr(clazz->name), utf8_cstr(cmr->name), (s64) (intptr_t) cmr->virtual_methods);
         }
 
         for (i = 0; i < clazz->constantPool.fieldRef->length; i++) {
             ConstantFieldRef *cfr = (ConstantFieldRef *) arraylist_get_value(clazz->constantPool.fieldRef, i);
-            FieldInfo *fi = find_fieldInfo_by_fieldref(clazz, cfr->index, runtime);
+            FieldInfo *fi = find_fieldInfo_by_fieldref(clazz, cfr->item.index, runtime);
             cfr->fieldInfo = fi;
             if (!fi) {
                 jvm_printf("field not found %s.%d \n", utf8_cstr(clazz->name), (cfr->nameAndTypeIndex));
@@ -340,7 +340,7 @@ s32 find_constant_fieldref_index(JClass *clazz, Utf8String *fieldName, Utf8Strin
         ConstantNameAndType *nat = class_get_constant_name_and_type(clazz, cfr->nameAndTypeIndex);
         if (utf8_equals(fieldName, class_get_utf8_string(clazz, nat->nameIndex)) == 1 &&
             utf8_equals(type, class_get_utf8_string(clazz, nat->typeIndex)) == 1) {
-            return cfr->index;
+            return cfr->item.index;
         }
     }
     return -1;

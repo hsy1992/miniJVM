@@ -586,6 +586,7 @@ s32 execute_method_impl(MethodInfo *method, Runtime *pruntime, JClass *clazz) {
             runtime->pc = ca->code;
             runtime->ca = ca;
             u8 *opCode = runtime->pc;
+            JavaThreadInfo *threadInfo = runtime->threadInfo;
 
             do {
                 if (java_debug) {
@@ -594,14 +595,14 @@ s32 execute_method_impl(MethodInfo *method, Runtime *pruntime, JClass *clazz) {
                         jdwp_check_breakpoint(runtime);
                     }
                     //debug step
-                    if (runtime->threadInfo->jdwp_step.active) {//单步状态
-                        runtime->threadInfo->jdwp_step.bytecode_count++;
+                    if (threadInfo->jdwp_step.active) {//单步状态
+                        threadInfo->jdwp_step.bytecode_count++;
                         jdwp_check_debug_step(runtime);
 
                     }
                 }
                 //process thread suspend
-                if (runtime->threadInfo->suspend_count)check_suspend_and_pause(runtime);
+                if (threadInfo->suspend_count)check_suspend_and_pause(runtime);
 
 #if _JVM_DEBUG_PROFILE
                 u8 instruct_code = runtime->pc[0];

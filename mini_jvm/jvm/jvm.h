@@ -384,13 +384,12 @@ typedef struct _ClassFileFormat {
 } ClassFileFormat;
 
 typedef struct _ConstantType {
-    s32 index;
-    u8 tag;
+    s16 index;
+    s16 tag;
 } ConstantItem;
 
 typedef struct _ConstantUTF8 {
-    s32 index;
-    u8 tag;
+    ConstantItem item;
     u16 string_size;
     //
     Utf8String *utfstr;
@@ -398,33 +397,28 @@ typedef struct _ConstantUTF8 {
 } ConstantUTF8;
 
 typedef struct _ConstantInteger {
-    s32 index;
-    u8 tag;
+    ConstantItem item;
     s32 value;
 } ConstantInteger;
 
 typedef struct _ConstantFloat {
-    s32 index;
-    u8 tag;
+    ConstantItem item;
     f32 value;
 
 } ConstantFloat;
 
 typedef struct _ConstantLong {
-    s32 index;
-    u8 tag;
+    ConstantItem item;
     s64 value;
 } ConstantLong;
 
 typedef struct _ConstantDouble {
-    s32 index;
-    u8 tag;
+    ConstantItem item;
     f64 value;
 } ConstantDouble;
 
 typedef struct _ConstantClassRef {
-    s32 index;
-    u8 tag;
+    ConstantItem item;
     u16 stringIndex;
 
     //
@@ -434,14 +428,12 @@ typedef struct _ConstantClassRef {
 } ConstantClassRef;
 
 typedef struct _ConstantStringRef {
-    s32 index;
-    u8 tag;
+    ConstantItem item;
     u16 stringIndex;
 } ConstantStringRef;
 
 typedef struct _ConstantFieldRef {
-    s32 index;
-    u8 tag;
+    ConstantItem item;
     u16 classIndex;
     u16 nameAndTypeIndex;
     //
@@ -449,8 +441,7 @@ typedef struct _ConstantFieldRef {
 } ConstantFieldRef;
 
 typedef struct _ConstantMethodRef {
-    s32 index;
-    u8 tag;
+    ConstantItem item;
     u16 classIndex;
     u16 nameAndTypeIndex;
     //
@@ -464,8 +455,7 @@ typedef struct _ConstantMethodRef {
 } ConstantMethodRef;
 
 typedef struct _ConstantInterfaceMethodRef {
-    s32 index;
-    u8 tag;
+    ConstantItem item;
     u16 classIndex;
     u16 nameAndTypeIndex;
 
@@ -475,8 +465,7 @@ typedef struct _ConstantInterfaceMethodRef {
 } ConstantInterfaceMethodRef;
 
 struct _ConstantNameAndType {
-    s32 index;
-    u8 tag;
+    ConstantItem item;
     u16 nameIndex;
     u16 typeIndex;
 };
