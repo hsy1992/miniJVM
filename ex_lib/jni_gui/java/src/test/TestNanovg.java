@@ -8,6 +8,7 @@ import static org.mini.gl.GL.GL_TRUE;
 import static org.mini.gl.GL.glClear;
 import static org.mini.gl.GL.glClearColor;
 import static org.mini.gl.GL.glViewport;
+import org.mini.glfw.Glfw;
 import static org.mini.glfw.Glfw.GLFW_CONTEXT_VERSION_MAJOR;
 import static org.mini.glfw.Glfw.GLFW_CONTEXT_VERSION_MINOR;
 import static org.mini.glfw.Glfw.GLFW_DEPTH_BITS;
@@ -263,8 +264,8 @@ public class TestNanovg {
         float pxRatio;
         int winWidth, winHeight;
         int fbWidth, fbHeight;
-        winWidth = glfwGetFramebufferWidth(win);
-        winHeight = glfwGetFramebufferHeight(win);
+        winWidth = Glfw.glfwGetWindowWidth(win);
+        winHeight = Glfw.glfwGetWindowHeight(win);
         fbWidth = glfwGetFramebufferWidth(win);
         fbHeight = glfwGetFramebufferHeight(win);
         // Calculate pixel ration for hi-dpi devices.
