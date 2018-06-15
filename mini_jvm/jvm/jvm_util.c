@@ -831,7 +831,7 @@ s32 jthread_waitTime(MemoryBlock *mb, Runtime *runtime, s64 waitms) {
     if (!mb->thread_lock) {
         jthreadlock_create(mb);
     }
-
+    jthread_block_enter(runtime);
     runtime->threadInfo->thread_status = THREAD_STATUS_WAIT;
     if (waitms) {
         waitms += currentTimeMillis();
@@ -844,15 +844,16 @@ s32 jthread_waitTime(MemoryBlock *mb, Runtime *runtime, s64 waitms) {
         cnd_wait(&mb->thread_lock->thread_cond, &mb->thread_lock->mutex_lock);
     }
     runtime->threadInfo->thread_status = THREAD_STATUS_RUNNING;
-    check_suspend_and_pause(runtime);
+    jthread_block_exit(runtime);
     return 0;
 }
 
 s32 jthread_sleep(Runtime *runtime, s64 ms) {
+    jthread_block_enter(runtime);
     runtime->threadInfo->thread_status = THREAD_STATUS_SLEEPING;
     threadSleep(ms);
     runtime->threadInfo->thread_status = THREAD_STATUS_RUNNING;
-    check_suspend_and_pause(runtime);
+    jthread_block_exit(runtime);
     return 0;
 }
 
