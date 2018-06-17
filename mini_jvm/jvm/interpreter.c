@@ -588,6 +588,8 @@ s32 execute_method_impl(MethodInfo *method, Runtime *pruntime, JClass *clazz) {
             JavaThreadInfo *threadInfo = runtime->threadInfo;
 
             do {
+                runtime->pc = opCode;
+                u8 cur_inst = *opCode;
                 if (java_debug) {
                     //breakpoint
                     if (method->breakpoint) {
@@ -610,8 +612,6 @@ s32 execute_method_impl(MethodInfo *method, Runtime *pruntime, JClass *clazz) {
 
 
 /* ==================================opcode start =============================*/
-                runtime->pc = opCode;
-                u8 cur_inst = *opCode;
 #ifdef __JVM_DEBUG__
                 s64 inst_pc = runtime->pc - ca->code;
 #endif
@@ -3639,7 +3639,7 @@ s32 execute_method_impl(MethodInfo *method, Runtime *pruntime, JClass *clazz) {
                     );
 #endif
                     ExceptionTable *et = _find_exception_handler(runtime, ins, ca,
-                                                                 (s32) (runtime->pc - ca->code), ref);
+                                                                 (s32) (opCode - ca->code), ref);
                     if (et == NULL) {
                         break;
                     } else {
