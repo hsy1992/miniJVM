@@ -583,9 +583,8 @@ s32 execute_method_impl(MethodInfo *method, Runtime *pruntime, JClass *clazz) {
                 jvm_printf("%s.%s()  {\n", utf8_cstr(clazz->name), utf8_cstr(method->name));
             }
 #endif
-            runtime->pc = ca->code;
+            u8 *opCode = ca->code;
             runtime->ca = ca;
-            u8 *opCode = runtime->pc;
             JavaThreadInfo *threadInfo = runtime->threadInfo;
 
             do {
@@ -611,7 +610,7 @@ s32 execute_method_impl(MethodInfo *method, Runtime *pruntime, JClass *clazz) {
 
 
 /* ==================================opcode start =============================*/
-
+                runtime->pc = opCode;
                 u8 cur_inst = *opCode;
 #ifdef __JVM_DEBUG__
                 s64 inst_pc = runtime->pc - ca->code;
@@ -3647,7 +3646,7 @@ s32 execute_method_impl(MethodInfo *method, Runtime *pruntime, JClass *clazz) {
 #if _JVM_DEBUG_BYTECODE_DETAIL > 3
                         jvm_printf("Exception : %s\n", utf8_cstr(ins->mb.clazz->name));
 #endif
-                        runtime->pc = (ca->code + et->handler_pc);
+                        opCode = (ca->code + et->handler_pc);
                         ret = RUNTIME_STATUS_NORMAL;
                     }
                 }
