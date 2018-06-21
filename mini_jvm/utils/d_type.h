@@ -15,7 +15,7 @@
 // arm
 #define __JVM_BIG_ENDIAN__ 0
 
-//#define MEM_ALLOC_LTALLOC
+#define MEM_ALLOC_LTALLOC
 
 
 #if defined(__MINGW_H) || defined(__MINGW32_MAJOR_VERSION)
