@@ -516,7 +516,6 @@ s32 java_lang_Object_wait(Runtime *runtime, JClass *clazz) {
     jvm_printf("java_lang_Object_wait %llx  wait %lld\n", (s64) (intptr_t) ins, l2d.l);
 #endif
     jthread_waitTime(&ins->mb, runtime, l2d.l);
-    garbage_thread_unlock();
     return 0;
 }
 
