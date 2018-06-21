@@ -414,6 +414,8 @@ s64 garbage_collect() {
             }
         }
     }
+    gc_move_refer_thread_2_gc(collector->runtime);// maybe someone new object in finalize...
+
 //    jvm_printf("garbage_finalize %lld\n", (currentTimeMillis() - time));
 //    time = currentTimeMillis();
     //clear
