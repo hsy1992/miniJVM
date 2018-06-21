@@ -949,7 +949,7 @@ static inline void push_double(RuntimeStack *stack, f64 value) {
     ptr->type = STACK_ENTRY_DOUBLE;
     ptr = &store[stack->size + 1];
     ptr->type = STACK_ENTRY_DOUBLE;
-    ptr->dvalue = value;
+//    ptr->dvalue = value;
     stack->size += 2;
 }
 
@@ -981,7 +981,7 @@ static inline void push_long(RuntimeStack *stack, s64 value) {
     ptr->type = STACK_ENTRY_LONG;
     ptr = &store[stack->size + 1];
     ptr->type = STACK_ENTRY_LONG;
-    ptr->lvalue = value;
+//    ptr->lvalue = value;
     stack->size += 2;
 }
 
