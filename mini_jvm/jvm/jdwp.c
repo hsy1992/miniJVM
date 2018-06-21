@@ -2206,7 +2206,7 @@ s32 jdwp_client_process(JdwpClient *client, Runtime *runtime) {
                     s32 slot = jdwppacket_read_int(req);
                     ValueType vt;
                     vt.type = jdwppacket_read_byte(req);
-                    if (slot < frame->localvar_count) {
+                    if (slot < frame->ca->max_locals) {
                         switch (getSimpleTag(vt.type)) {
                             case 'R': {
                                 Instance *ins = localvar_getRefer(frame->localvar, slot);
@@ -2219,6 +2219,7 @@ s32 jdwp_client_process(JdwpClient *client, Runtime *runtime) {
 //                                l2d.i2l.i1 = localvar_getInt(frame->localvar, slot);
 //                                l2d.i2l.i0 = localvar_getInt(frame->localvar, slot + 1);
                                 vt.value = l2d.l;
+                                i++;
                                 break;
                             case '4':
                             case '2':
@@ -2245,7 +2246,7 @@ s32 jdwp_client_process(JdwpClient *client, Runtime *runtime) {
                     s32 slot = jdwppacket_read_int(req);
                     ValueType vt;
                     readValueType(req, &vt);
-                    if (slot < frame->localvar_count) {
+                    if (slot < frame->ca->max_locals) {
                         switch (getSimpleTag(vt.type)) {
                             case 'R':
                                 localvar_setRefer(frame->localvar, slot, (__refer) (intptr_t) vt.value);
@@ -2255,6 +2256,7 @@ s32 jdwp_client_process(JdwpClient *client, Runtime *runtime) {
                                 localvar_setLong(frame->localvar, slot, l2d.l);
 //                                localvar_setInt(frame->localvar, slot, l2d.i2l.i0);
 //                                localvar_setInt(frame->localvar, slot + 1, l2d.i2l.i1);
+                                i++;
                                 break;
                             case '4':
                             case '2':

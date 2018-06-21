@@ -55,6 +55,8 @@ enum {
 
 s32 _collect_thread_run(void *para);
 
+s32 garbage_thread_trylock();
+
 void garbage_thread_lock(void);
 
 void garbage_thread_unlock(void);

@@ -208,6 +208,7 @@ s32 class_prepar(JClass *clazz, Runtime *runtime) {
  */
 void class_clinit(JClass *clazz, Runtime *runtime) {
     garbage_thread_lock();
+    runtime->threadInfo->no_pause++;
     if (clazz->status < CLASS_STATUS_PREPARED) {
         class_prepar(clazz, runtime);
     }
@@ -277,6 +278,7 @@ void class_clinit(JClass *clazz, Runtime *runtime) {
 
         clazz->status = CLASS_STATUS_CLINITED;
     }
+    runtime->threadInfo->no_pause--;
     garbage_thread_unlock();
 }
 //===============================    实例化相关  ==================================

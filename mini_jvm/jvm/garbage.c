@@ -334,9 +334,9 @@ s32 _collect_thread_run(void *para) {
         if (currentTimeMillis() - lastgc < 1000) {// less than custom sec no gc
             continue;
         }
-        if (java_debug && jdwpserver.clients->length) {// less than 3 sec no gc
-            continue;
-        }
+//        if (java_debug && jdwpserver.clients->length) {// less than 3 sec no gc
+//            continue;
+//        }
         if (currentTimeMillis() - lastgc > GARBAGE_PERIOD_MS || heap_size > MAX_HEAP_SIZE * .8f) {
             garbage_collect();
             lastgc = currentTimeMillis();
@@ -511,6 +511,7 @@ s32 _garbage_pause_the_world(void) {
             if (_checkAndWaitThreadIsSuspend(runtime) == -1) {
                 return -1;
             }
+            gc_move_refer_thread_2_gc(runtime);
         }
     }
     return 0;
@@ -733,6 +734,7 @@ MemoryBlock *gc_is_alive(__refer ref) {
         while (mb) {
             if (mb == ref) {
                 result = mb;
+                break;
             }
             mb = mb->next;
         }
@@ -742,8 +744,38 @@ MemoryBlock *gc_is_alive(__refer ref) {
         while (mb) {
             if (mb == ref) {
                 result = mb;
+                break;
             }
             mb = mb->next;
+        }
+    }
+    if (!result) {
+        s32 i;
+        for (i = 0; i < thread_list->length; i++) {
+            Runtime *runtime = threadlist_get(i);
+            MemoryBlock *mb = runtime->threadInfo->objs_header;
+            while (mb) {
+                if (mb == ref) {
+                    result = mb;
+                    break;
+                }
+                mb = mb->next;
+            }
+        }
+    }
+    if (!result) {
+        if (java_debug) {
+            Runtime *runtime = jdwpserver.runtime;
+            if (runtime) {
+                MemoryBlock *mb = runtime->threadInfo->objs_header;
+                while (mb) {
+                    if (mb == ref) {
+                        result = mb;
+                        break;
+                    }
+                    mb = mb->next;
+                }
+            }
         }
     }
     spin_unlock(&collector->lock);
@@ -766,6 +798,12 @@ void gc_refer_reg(Runtime *runtime, __refer ref) {
         if (!ti->objs_tailer) {
             ti->objs_tailer = ref;
         }
+#if _JVM_DEBUG_GARBAGE_DUMP
+        Utf8String *sus = utf8_create();
+        _getMBName(mb, sus);
+        jvm_printf("R: %s[%llx]\n", utf8_cstr(sus), (s64) (intptr_t) mb);
+        utf8_destory(sus);
+#endif
     }
 }
 
@@ -781,6 +819,17 @@ void gc_move_refer_thread_2_gc(Runtime *runtime) {
         if (ti->objs_header) {
             //lock
             spin_lock(&collector->lock);
+
+#if _JVM_DEBUG_GARBAGE_DUMP
+            MemoryBlock *mb = ti->objs_header;
+            while (mb) {
+                Utf8String *sus = utf8_create();
+                _getMBName(mb, sus);
+                jvm_printf("M: %s[%llx]\n", utf8_cstr(sus), (s64) (intptr_t) mb);
+                utf8_destory(sus);
+                mb = mb->next;
+            }
+#endif
             ti->objs_tailer->next = collector->tmp_header;
             if (!collector->tmp_tailer) {
                 collector->tmp_tailer = ti->objs_tailer;

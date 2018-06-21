@@ -858,14 +858,15 @@ s32 jthread_sleep(Runtime *runtime, s64 ms) {
 }
 
 s32 check_suspend_and_pause(Runtime *runtime) {
-    if (runtime->threadInfo->suspend_count) {
-        runtime->threadInfo->is_suspend = 1;
+    JavaThreadInfo *threadInfo = runtime->threadInfo;
+    if (threadInfo->suspend_count && !threadInfo->no_pause) {
+        threadInfo->is_suspend = 1;
         garbage_thread_lock();
         garbage_thread_notifyall();
-        while (runtime->threadInfo->suspend_count) {
+        while (threadInfo->suspend_count) {
             garbage_thread_timedwait(10);
         }
-        runtime->threadInfo->is_suspend = 0;
+        threadInfo->is_suspend = 0;
         //jvm_printf(".");
         garbage_thread_unlock();
     }
