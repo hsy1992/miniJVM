@@ -20,9 +20,11 @@ extern "C" {
 
 #include <string.h>   // NULL and possibly memcpy, memset
 
-#ifdef _WIN32
+#if __JVM_OS_VS__ || __JVM_OS_MINGW__ || __JVM_OS_CYGWIN__
+
 #include <WinSock2.h>
 #include <Ws2tcpip.h>
+
 typedef int socklen_t;
 #pragma comment(lib, "Ws2_32.lib")
 #define SHUT_RDWR SD_BOTH
@@ -54,59 +56,6 @@ typedef int socklen_t;
 #endif
 
 #include <errno.h>
-
-//
-//#if  __JVM_OS_MINGW__ || __JVM_OS_CYGWIN__ || __JVM_OS_VS__
-//#ifndef __WIN32__
-//#define __WIN32__
-//#endif
-//#define socklen_t int
-//
-//#include <winsock2.h>
-//
-//#if __JVM_OS_VS__
-//#include "../utils/dirent_win.h"
-//#pragma comment(lib, "Ws2_32.lib")
-//#else
-//
-//#include <dirent.h>
-//#include <unistd.h>
-//
-//#endif
-//
-//#define SHUT_RDWR SD_BOTH
-//#define SHUT_RD SD_RECEIVE
-//#define SHUT_WR SD_SEND
-//
-//#else
-//
-//#include <dirent.h>
-//#include <netdb.h>
-//#include <fcntl.h>
-//#include <sys/socket.h>
-//#include <unistd.h>
-//
-//#define closesocket close
-//#endif
-//
-//#if __IPHONE_NA || __JVM_OS_MAC__
-//
-//#include <netdb.h>
-//#include <fcntl.h>
-//#include <sys/errno.h>
-//#include <unistd.h>
-//#include <arpa/inet.h>
-//
-//#endif
-//#if __JVM_OS_LINUX__
-////#include <linux/in.h>
-//
-//#include <unistd.h>
-//#include <fcntl.h>
-//#include <sys/errno.h>
-//
-//
-//#endif
 
 
 //=================================  socket  ====================================
@@ -174,7 +123,7 @@ s32 sock_recv(s32 sockfd, c8 *buf, s32 count) {
         len = -1;
     } else if (len == -1) {//如果发生错误
         len = -1;
-#ifdef __WIN32__
+#if __JVM_OS_VS__ || __JVM_OS_MINGW__ || __JVM_OS_CYGWIN__
         if (WSAEWOULDBLOCK == WSAGetLastError()) {//但是如果是非阻塞端口，说明连接仍正常
             //jvm_printf("sc send error client time = %f ;\n", (f64)clock());
             len = 0;
@@ -195,7 +144,7 @@ s32 sock_send(s32 sockfd, c8 *buf, s32 count) {
     if (len == 0) {//如果是正常断开，返回-1
         len = -1;
     } else if (len == -1) {//如果发生错误
-#ifdef __WIN32__
+#if __JVM_OS_VS__ || __JVM_OS_MINGW__ || __JVM_OS_CYGWIN__
         if (WSAEWOULDBLOCK == WSAGetLastError()) {//但是如果是非阻塞端口，说明连接仍正常
             //jvm_printf("sc send error server time = %f ;\n", (f64)clock());
             len = 0;
@@ -213,7 +162,7 @@ s32 sock_send(s32 sockfd, c8 *buf, s32 count) {
 s32 sock_open(Utf8String *ip, s32 port) {
     s32 sockfd = -1;
 
-#ifdef __WIN32__
+#if __JVM_OS_VS__ || __JVM_OS_MINGW__ || __JVM_OS_CYGWIN__
     WSADATA wsaData;
     WSAStartup(MAKEWORD(1, 1), &wsaData);
 #endif  /*  WIN32  */
@@ -260,7 +209,7 @@ s32 srv_bind(Utf8String *ip, u16 port) {
 
     struct sockaddr_in server_addr;
     s32 listenfd = -1;
-#ifdef __WIN32__
+#if __JVM_OS_VS__ || __JVM_OS_MINGW__ || __JVM_OS_CYGWIN__
     WSADATA wsadata;
     if (WSAStartup(MAKEWORD(1, 1), &wsadata) == SOCKET_ERROR) {
         err("Error creating serversocket: %s\n", strerror(errno));
@@ -281,9 +230,9 @@ s32 srv_bind(Utf8String *ip, u16 port) {
             if ((host = gethostbyname(utf8_cstr(ip))) == NULL) { /* get the host info */
                 err("get host by name error: %s\n", strerror(errno));
             }
-#if defined(__WIN32__)
+#if __JVM_OS_VS__ || __JVM_OS_MINGW__ || __JVM_OS_CYGWIN__
             server_addr.sin_addr = *((struct in_addr *) host->h_addr);
-#elif __JVM_OS_MAC__ || __JVM_OS_LINUX__ || __JVM_OS_VS__
+#else
             //server_addr.sin_len = sizeof(struct sockaddr_in);
             server_addr.sin_addr = *((struct in_addr *) host->h_addr_list[0]);
 #endif
@@ -330,7 +279,7 @@ s32 sock_close(s32 listenfd) {
     if (listenfd) {
         shutdown(listenfd, SHUT_RDWR);
         closesocket(listenfd);
-#ifdef __WIN32__
+#if __JVM_OS_VS__ || __JVM_OS_MINGW__ || __JVM_OS_CYGWIN__
         WSACancelBlockingCall();
         WSACleanup();
 #endif
@@ -974,7 +923,7 @@ s32 org_mini_fs_InnerFile_mkdir0(Runtime *runtime, JClass *clazz) {
 }
 
 s32 org_mini_fs_InnerFile_getOS(Runtime *runtime, JClass *clazz) {
-#if defined(__JVM_OS_MINGW__) || defined(__JVM_OS_CYGWIN__) || defined(__JVM_OS_VS__)
+#if __JVM_OS_VS__ || __JVM_OS_MINGW__ || __JVM_OS_CYGWIN__
     push_int(runtime->stack, 1);
 #else
     push_int(runtime->stack, 0);
