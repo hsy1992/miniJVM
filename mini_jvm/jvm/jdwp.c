@@ -2215,7 +2215,7 @@ s32 jdwp_client_process(JdwpClient *client, Runtime *runtime) {
                                 break;
                             }
                             case '8':
-                                l2d.l = localvar_getLong(runtime->localvar, slot);
+                                l2d.l = localvar_getLong(frame->localvar, slot);
 //                                l2d.i2l.i1 = localvar_getInt(frame->localvar, slot);
 //                                l2d.i2l.i0 = localvar_getInt(frame->localvar, slot + 1);
                                 vt.value = l2d.l;
