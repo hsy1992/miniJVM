@@ -260,15 +260,9 @@ __refer localvar_getRefer_jni(LocalVarItem *localvar, s32 index) {
 }
 
 void localvar_setLong_2slot_jni(LocalVarItem *localvar, s32 index, s64 val) {
-    Long2Double l2d;
-    l2d.l = val;
-    localvar[index].integer = l2d.i2l.i1;
-    localvar[index + 1].integer = l2d.i2l.i0;
+    localvar_setLong(localvar, index, val);
 }
 
 s64 localvar_getLong_2slot_jni(LocalVarItem *localvar, s32 index) {
-    Long2Double l2d;
-    l2d.i2l.i1 = localvar[index].integer;
-    l2d.i2l.i0 = localvar[index + 1].integer;
-    return l2d.l;
+    return localvar_getLong(localvar, index);
 }

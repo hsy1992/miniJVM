@@ -232,7 +232,7 @@ static inline u8 *_op_ifload_n(u8 *opCode, RuntimeStack *stack, LocalVarItem *lo
     i2f.i = localvar_getInt(localvar, i);
 #if _JVM_DEBUG_BYTECODE_DETAIL > 5
     invoke_deepth(runtime);
-    jvm_printf("i(f)load_%d: push localvar(%d)= [%x]/%d/%f  \n", i, i, i2f.i, i2f.i, i2f.f);
+    jvm_printf("if_load_%d: push localvar(%d)= [%x]/%d/%f  \n", i, i, i2f.i, i2f.i, i2f.f);
 #endif
     push_int(stack, i2f.i);
     opCode += 1;
@@ -323,14 +323,11 @@ static inline u8 *_op_lconst_n(u8 *opCode, RuntimeStack *stack, Runtime *runtime
 }
 
 static inline u8 *_op_ldoad_n(u8 *opCode, RuntimeStack *stack, LocalVarItem *localvar, Runtime *runtime, s32 index) {
-    Long2Double l2d;
-    l2d.i2l.i1 = localvar_getInt(localvar, index);
-    l2d.i2l.i0 = localvar_getInt(localvar, index + 1);
-    s64 value = l2d.l;
+    s64 value = localvar_getLong(localvar, index);
 
 #if _JVM_DEBUG_BYTECODE_DETAIL > 5
     invoke_deepth(runtime);
-    jvm_printf("l(d)load_%d: push localvar(%d)= [%llx]/%lld/%lf  \n", index, index, value, value, value);
+    jvm_printf("ld_load_%d: push localvar(%d)= [%llx]/%lld/%lf  \n", index, index, value, value, value);
 #endif
     push_long(stack, value);
     opCode += 1;
@@ -368,8 +365,7 @@ static inline u8 *_op_ldstore_n(u8 *opCode, RuntimeStack *stack, LocalVarItem *l
     invoke_deepth(runtime);
     jvm_printf("l(d)store_%d: save localvar(%d) [%llx]/%lld/%lf  \n", i, i, l2d.l, l2d.l, l2d.d);
 #endif
-    localvar_setInt(localvar, i, l2d.i2l.i1);
-    localvar_setInt(localvar, i + 1, l2d.i2l.i0);
+    localvar_setLong(localvar, i, l2d.l);
     opCode += 1;
     return opCode;
 }
@@ -416,8 +412,7 @@ static inline u8 *_op_ldstore_impl(u8 *opCode, RuntimeStack *stack, LocalVarItem
     invoke_deepth(runtime);
     jvm_printf("l(d)store: save localvar(%d) %llx/%lld/%lf  \n", s2c.s, l2d.l, l2d.l, l2d.d);
 #endif
-    localvar_setInt(localvar, (u16) s2c.s, l2d.i2l.i1);
-    localvar_setInt(localvar, (u16) s2c.s + 1, l2d.i2l.i0);
+    localvar_setLong(localvar, (u16) s2c.s, l2d.l);
     return opCode;
 }
 
@@ -483,7 +478,7 @@ static inline Instance *getInstanceInStack(JClass *clazz, ConstantMethodRef *cmr
 //    Instance *ins = (Instance *) entry_2_refer(&entry);
 //    return ins;
 
-    return stack->store[stack->size - 1 - cmr->methodParaCount].rvalue;
+    return stack->store[stack->size - 1 - cmr->para_slots].rvalue;
 }
 
 /**
@@ -497,37 +492,15 @@ static inline Instance *getInstanceInStack(JClass *clazz, ConstantMethodRef *cmr
 
 static inline void _stack2localvar(MethodInfo *method, LocalVarItem *localvar, RuntimeStack *stack) {
 
-    Utf8String *paraType = method->paraType;
-    s32 i;
-    s32 paraLen = paraType->length;
     s32 i_local = method->para_slots;
-
-    for (i = 0; i < paraLen; i++) {
-        char type = utf8_char_at(paraType, paraLen - 1 - i);
-
-        switch (type) {
-            case 'R': {
-                localvar_setRefer(localvar, --i_local, pop_ref(stack));
-                break;
-            }
-            case '4': {
-                localvar_setInt(localvar, --i_local, pop_int(stack));
-                break;
-            }
-            case '8': {
-                //把双字类型拆成两个单元放入本地变量
-                Long2Double l2d;
-                l2d.l = pop_long(stack);
-                localvar_setInt(localvar, --i_local, l2d.i2l.i0);
-                localvar_setInt(localvar, --i_local, l2d.i2l.i1);
-                break;
-            }
-        }
+//    memcpy(localvar, &stack->store[stack->size - i_local], i_local * sizeof(StackEntry));
+    StackEntry *store = stack->store;
+    s32 i;
+    for (i = 0; i < i_local; i++) {
+        localvar[i].lvalue = store[stack->size - (i_local - i)].lvalue;
+        localvar[i].type = store[stack->size - (i_local - i)].type;
     }
-    if (!(method->access_flags & ACC_STATIC)) {//非静态方法需要把局部变量位置0设为this
-        localvar_setRefer(localvar, --i_local, pop_ref(stack));
-    }
-
+    stack->size -= i_local;
 }
 
 static inline void _synchronized_lock_method(MethodInfo *method, Runtime *runtime) {
@@ -577,12 +550,6 @@ s32 execute_method_impl(MethodInfo *method, Runtime *pruntime, JClass *clazz) {
             s32 stackSize = stack->size;
             if (method_sync)_synchronized_lock_method(method, runtime);
 
-#if _JVM_DEBUG_BYTECODE_DETAIL > 3
-            if (filterClassName(clazz->name)) {
-                invoke_deepth(runtime->parent);
-                jvm_printf("%s.%s()  {\n", utf8_cstr(clazz->name), utf8_cstr(method->name));
-            }
-#endif
             u8 *opCode = ca->code;
             runtime->ca = ca;
             JavaThreadInfo *threadInfo = runtime->threadInfo;
@@ -813,8 +780,7 @@ s32 execute_method_impl(MethodInfo *method, Runtime *pruntime, JClass *clazz) {
                         }
 
                         Long2Double l2d;
-                        l2d.i2l.i1 = localvar_getInt(localvar, (u16) s2c.s);
-                        l2d.i2l.i0 = localvar_getInt(localvar, (u16) s2c.s + 1);
+                        l2d.l = localvar_getLong(localvar, (u16) s2c.s);
 #if _JVM_DEBUG_BYTECODE_DETAIL > 5
                         invoke_deepth(runtime);
                         jvm_printf("l(d)load: push localvar(%d) [%llx]/%lf into stack \n", s2c.s, l2d.l, l2d.d);
@@ -963,7 +929,7 @@ s32 execute_method_impl(MethodInfo *method, Runtime *pruntime, JClass *clazz) {
 
 #if _JVM_DEBUG_BYTECODE_DETAIL > 5
                             invoke_deepth(runtime);
-                            jvm_printf("iaload push arr[%llx].(%d)=%x:%d:%lf into stack\n", (u64) (intptr_t) arr, index,
+                            jvm_printf("if_aload push arr[%llx].(%d)=%x:%d:%lf into stack\n", (u64) (intptr_t) arr, index,
                                        s, s, *(f32 *) &s);
 #endif
                         }
@@ -982,7 +948,7 @@ s32 execute_method_impl(MethodInfo *method, Runtime *pruntime, JClass *clazz) {
 
 #if _JVM_DEBUG_BYTECODE_DETAIL > 5
                             invoke_deepth(runtime);
-                            jvm_printf("daload push arr[%llx].(%d)=%llx:%lld:%lf into stack\n", (u64) (intptr_t) arr, index,
+                            jvm_printf("ld_aload push arr[%llx].(%d)=%llx:%lld:%lf into stack\n", (u64) (intptr_t) arr, index,
                                        s, s, *(f64 *) &s);
 #endif
                         }
@@ -1338,15 +1304,9 @@ s32 execute_method_impl(MethodInfo *method, Runtime *pruntime, JClass *clazz) {
 
                     case op_pop2: {
 
+                        pop_empty(stack);
+                        pop_empty(stack);
 
-                        StackEntry entry;
-                        peek_entry(stack, &entry, stack->size - 1);
-                        if (is_cat2(&entry)) {
-                            pop_entry(stack, &entry);
-                        } else {
-                            pop_entry(stack, &entry);
-                            pop_entry(stack, &entry);
-                        }
 #if _JVM_DEBUG_BYTECODE_DETAIL > 5
                         invoke_deepth(runtime);
                         jvm_printf("pop2\n");
@@ -1359,11 +1319,9 @@ s32 execute_method_impl(MethodInfo *method, Runtime *pruntime, JClass *clazz) {
 
                     case op_dup: {
 
-
                         StackEntry entry;
-                        pop_entry(stack, &entry);
+                        peek_entry(stack, &entry, stack->size - 1);
 
-                        push_entry(stack, &entry);
                         push_entry(stack, &entry);
 
 #if _JVM_DEBUG_BYTECODE_DETAIL > 5
@@ -1397,30 +1355,18 @@ s32 execute_method_impl(MethodInfo *method, Runtime *pruntime, JClass *clazz) {
 
                     case op_dup_x2: {
 
-                        StackEntry entry;
-                        peek_entry(stack, &entry, stack->size - 2);
-                        if (is_cat2(&entry)) {
-                            StackEntry entry1;
-                            pop_entry(stack, &entry1);
-                            StackEntry entry2;
-                            pop_entry(stack, &entry2);
+                        StackEntry entry1;
+                        pop_entry(stack, &entry1);
+                        StackEntry entry2;
+                        pop_entry(stack, &entry2);
+                        StackEntry entry3;
+                        pop_entry(stack, &entry3);
 
-                            push_entry(stack, &entry1);
-                            push_entry(stack, &entry2);
-                            push_entry(stack, &entry1);
-                        } else {
-                            StackEntry entry1;
-                            pop_entry(stack, &entry1);
-                            StackEntry entry2;
-                            pop_entry(stack, &entry2);
-                            StackEntry entry3;
-                            pop_entry(stack, &entry3);
+                        push_entry(stack, &entry1);
+                        push_entry(stack, &entry3);
+                        push_entry(stack, &entry2);
+                        push_entry(stack, &entry1);
 
-                            push_entry(stack, &entry1);
-                            push_entry(stack, &entry3);
-                            push_entry(stack, &entry2);
-                            push_entry(stack, &entry1);
-                        }
 #if _JVM_DEBUG_BYTECODE_DETAIL > 5
                         invoke_deepth(runtime);
                         jvm_printf("dup_x2 \n");
@@ -1434,15 +1380,12 @@ s32 execute_method_impl(MethodInfo *method, Runtime *pruntime, JClass *clazz) {
 
                         StackEntry entry1;
                         peek_entry(stack, &entry1, stack->size - 1);
-                        if (is_cat2(&entry1)) {
-                            push_entry(stack, &entry1);
-                        } else {
-                            StackEntry entry2;
-                            peek_entry(stack, &entry2, stack->size - 2);
+                        StackEntry entry2;
+                        peek_entry(stack, &entry2, stack->size - 2);
 
-                            push_entry(stack, &entry2);
-                            push_entry(stack, &entry1);
-                        }
+                        push_entry(stack, &entry2);
+                        push_entry(stack, &entry1);
+
 #if _JVM_DEBUG_BYTECODE_DETAIL > 5
                         invoke_deepth(runtime);
                         jvm_printf("op_dup2\n");
@@ -1455,31 +1398,19 @@ s32 execute_method_impl(MethodInfo *method, Runtime *pruntime, JClass *clazz) {
 
                     case op_dup2_x1: {
 
-                        StackEntry entry;
-                        peek_entry(stack, &entry, stack->size - 1);
-                        if (is_cat2(&entry)) {
-                            StackEntry entry1;
-                            pop_entry(stack, &entry1);
-                            StackEntry entry2;
-                            pop_entry(stack, &entry2);
+                        StackEntry entry1;
+                        pop_entry(stack, &entry1);
+                        StackEntry entry2;
+                        pop_entry(stack, &entry2);
+                        StackEntry entry3;
+                        pop_entry(stack, &entry3);
 
-                            push_entry(stack, &entry1);
-                            push_entry(stack, &entry2);
-                            push_entry(stack, &entry1);
-                        } else {
-                            StackEntry entry1;
-                            pop_entry(stack, &entry1);
-                            StackEntry entry2;
-                            pop_entry(stack, &entry2);
-                            StackEntry entry3;
-                            pop_entry(stack, &entry3);
+                        push_entry(stack, &entry2);
+                        push_entry(stack, &entry1);
+                        push_entry(stack, &entry3);
+                        push_entry(stack, &entry2);
+                        push_entry(stack, &entry1);
 
-                            push_entry(stack, &entry2);
-                            push_entry(stack, &entry1);
-                            push_entry(stack, &entry3);
-                            push_entry(stack, &entry2);
-                            push_entry(stack, &entry1);
-                        }
 #if _JVM_DEBUG_BYTECODE_DETAIL > 5
                         invoke_deepth(runtime);
                         jvm_printf("dup2_x1\n");
@@ -1490,56 +1421,21 @@ s32 execute_method_impl(MethodInfo *method, Runtime *pruntime, JClass *clazz) {
                     }
 
                     case op_dup2_x2: {
-
-
                         StackEntry entry1;
-                        peek_entry(stack, &entry1, stack->size - 1);
+                        pop_entry(stack, &entry1);
                         StackEntry entry2;
-                        peek_entry(stack, &entry1, stack->size - 2);
+                        pop_entry(stack, &entry2);
+                        StackEntry entry3;
+                        pop_entry(stack, &entry3);
+                        StackEntry entry4;
+                        pop_entry(stack, &entry4);
 
-                        //都是64位，不包括64位指针
-                        if (is_cat2(&entry1) && is_cat2(&entry2)) {
-                            pop_int(stack);
-                            pop_int(stack);
-                            push_entry(stack, &entry1);
-                            push_entry(stack, &entry2);
-                            push_entry(stack, &entry1);
-                        } else {
-                            StackEntry entry3;
-                            peek_entry(stack, &entry1, stack->size - 3);
-                            if (is_cat1(&entry1) && is_cat1(&entry2) && is_cat2(&entry3)) {
-                                pop_int(stack);
-                                pop_int(stack);
-                                pop_int(stack);
-                                push_entry(stack, &entry2);
-                                push_entry(stack, &entry1);
-                                push_entry(stack, &entry3);
-                                push_entry(stack, &entry2);
-                                push_entry(stack, &entry1);
-                            } else if (is_cat2(&entry1) && is_cat1(&entry2) && is_cat1(&entry3)) {
-                                pop_int(stack);
-                                pop_int(stack);
-                                pop_int(stack);
-                                push_entry(stack, &entry1);
-                                push_entry(stack, &entry3);
-                                push_entry(stack, &entry2);
-                                push_entry(stack, &entry1);
-                            } else {
-                                StackEntry entry4;
-                                peek_entry(stack, &entry1, stack->size - 4);
-                                pop_int(stack);
-                                pop_int(stack);
-                                pop_int(stack);
-                                pop_int(stack);
-
-                                push_entry(stack, &entry2);
-                                push_entry(stack, &entry1);
-                                push_entry(stack, &entry4);
-                                push_entry(stack, &entry3);
-                                push_entry(stack, &entry2);
-                                push_entry(stack, &entry1);
-                            }
-                        }
+                        push_entry(stack, &entry2);
+                        push_entry(stack, &entry1);
+                        push_entry(stack, &entry4);
+                        push_entry(stack, &entry3);
+                        push_entry(stack, &entry2);
+                        push_entry(stack, &entry1);
 
 #if _JVM_DEBUG_BYTECODE_DETAIL > 5
                         invoke_deepth(runtime);
@@ -1613,7 +1509,7 @@ s32 execute_method_impl(MethodInfo *method, Runtime *pruntime, JClass *clazz) {
 
 #if _JVM_DEBUG_BYTECODE_DETAIL > 5
                         invoke_deepth(runtime);
-                        jvm_printf("ddiv: %lf + %lf = %lf\n", value2, value1, result);
+                        jvm_printf("fadd: %lf + %lf = %lf\n", value2, value1, result);
 #endif
                         push_float(stack, result);
                         opCode += 1;
@@ -2883,8 +2779,7 @@ s32 execute_method_impl(MethodInfo *method, Runtime *pruntime, JClass *clazz) {
                         StackEntry entry;
                         peek_entry(stack, &entry, stack->size - 1);
                         invoke_deepth(runtime);
-                        jvm_printf("i(lfda)i=[%x]/%d/[%llx]\n", entry_2_int(&entry), entry_2_int(&entry),
-                                   entry_2_long(&entry));
+                        jvm_printf("ilfda_return=[%x]/%d/[%llx]\n", entry_2_int(&entry), entry_2_int(&entry), entry_2_long(&entry));
 #endif
                         opCode += 1;
                         ret = RUNTIME_STATUS_RETURN;
@@ -2939,9 +2834,7 @@ s32 execute_method_impl(MethodInfo *method, Runtime *pruntime, JClass *clazz) {
                         StackEntry entry;
                         peek_entry(stack, &entry, stack->size - 1);
                         s64 v = entry_2_long(&entry);
-                        jvm_printf("%s: push %s.%s[%llx]\n",
-                                   "getstatic", utf8_cstr(clazz->name), utf8_cstr(fi->name),
-                                   (s64) (intptr_t) ptr, v);
+                        jvm_printf("%s: push %s.%s[%llx]\n", "getstatic", utf8_cstr(clazz->name), utf8_cstr(fi->name), (s64) (intptr_t) ptr, v);
 #endif
                         opCode += 3;
                         break;
@@ -2960,9 +2853,7 @@ s32 execute_method_impl(MethodInfo *method, Runtime *pruntime, JClass *clazz) {
                         StackEntry entry;
                         peek_entry(stack, &entry, stack->size - 1);
                         invoke_deepth(runtime);
-                        jvm_printf("%s  save:%s.%s[%llx]=[%llx]  \n",
-                                   "putstatic", utf8_cstr(clazz->name), utf8_cstr(fi->name),
-                                   (s64) (intptr_t) ptr, entry_2_long(&entry));
+                        jvm_printf("%s  save:%s.%s[%llx]=[%llx]  \n", "putstatic", utf8_cstr(clazz->name), utf8_cstr(fi->name), (s64) (intptr_t) ptr, entry_2_long(&entry));
 #endif
                         if (fi->isrefer) {//垃圾回收标识
                             setFieldRefer(ptr, pop_ref(stack));
@@ -3038,9 +2929,7 @@ s32 execute_method_impl(MethodInfo *method, Runtime *pruntime, JClass *clazz) {
                             StackEntry entry;
                             peek_entry(stack, &entry, stack->size - 1);
                             s64 v = entry_2_long(&entry);
-                            jvm_printf("%s: push %s.%s[%llx]\n",
-                                       "getfield", utf8_cstr(clazz->name), utf8_cstr(fi->name),
-                                       (s64) (intptr_t) ptr, v);
+                            jvm_printf("%s: push %s.%s[%llx]\n", "getfield", utf8_cstr(clazz->name), utf8_cstr(fi->name), (s64) (intptr_t) ptr, v);
 #endif
                         }
                         opCode += 3;
@@ -3055,6 +2944,9 @@ s32 execute_method_impl(MethodInfo *method, Runtime *pruntime, JClass *clazz) {
 
                         StackEntry entry;
                         pop_entry(stack, &entry);
+                        if (entry.type & (STACK_ENTRY_LONG | STACK_ENTRY_DOUBLE)) {
+                            pop_entry(stack, &entry);
+                        }
 
                         Instance *ins = (Instance *) pop_ref(stack);
                         if (!ins) {
@@ -3067,10 +2959,11 @@ s32 execute_method_impl(MethodInfo *method, Runtime *pruntime, JClass *clazz) {
                             c8 *ptr = getInstanceFieldPtr(ins, fi);
 
 #if _JVM_DEBUG_BYTECODE_DETAIL > 5
+                            if (utf8_equals_c(fi->name, "count") && utf8_equals_c(fi->_this_class->name, "java/lang/StringBuilder")) {
+                                int debug = 1;
+                            }
                             invoke_deepth(runtime);
-                            jvm_printf("%s  save:%s.%s[%llx]=[%llx]  \n",
-                                       "putfield", utf8_cstr(clazz->name), utf8_cstr(fi->name),
-                                       (s64) (intptr_t) ptr, entry_2_long(&entry));
+                            jvm_printf("%s  save:%s.%s[%llx]=[%llx]  \n", "putfield", utf8_cstr(clazz->name), utf8_cstr(fi->name), (s64) (intptr_t) ptr, entry_2_long(&entry));
 #endif
 
                             if (fi->isrefer) {//垃圾回收标识
@@ -3109,10 +3002,7 @@ s32 execute_method_impl(MethodInfo *method, Runtime *pruntime, JClass *clazz) {
 
                         //此cmr所描述的方法，对于不同的实例，有不同的method
                         ConstantMethodRef *cmr = class_get_constant_method_ref(clazz, s2c.s);
-//                        if (utf8_equals_c(cmr->clsName, "java/lang/Class") &&
-//                            utf8_equals_c(cmr->name, "getName")) {
-//                            int debug = 1;
-//                        }
+
                         Instance *ins = getInstanceInStack(clazz, cmr, stack);
                         if (ins == NULL) {
                             Instance *exception = exception_create(JVM_EXCEPTION_NULLPOINTER, runtime);
@@ -3132,10 +3022,15 @@ s32 execute_method_impl(MethodInfo *method, Runtime *pruntime, JClass *clazz) {
                             }
 
 
-#if _JVM_DEBUG_BYTECODE_DETAIL > 5
+#if _JVM_DEBUG_BYTECODE_DETAIL > 3
+                            if (utf8_equals_c(cmr->clsName, "java/io/FileInputStream")
+                                && utf8_equals_c(cmr->name, "open")
+//                                && utf8_equals_c(cmr->descriptor, "(Ljava/lang/String;)Ljava/lang/StringBuilder;")
+                                    ) {
+                                int debug = 1;
+                            }
                             invoke_deepth(runtime);
-                            jvm_printf("invokevirtual    %s.%s%s  \n", utf8_cstr(m->_this_class->name),
-                                       utf8_cstr(m->name), utf8_cstr(m->descriptor));
+                            jvm_printf("invokevirtual    %s.%s%s  {\n", utf8_cstr(m->_this_class->name), utf8_cstr(m->name), utf8_cstr(m->descriptor));
 #endif
 
                             if (m) {
@@ -3146,6 +3041,11 @@ s32 execute_method_impl(MethodInfo *method, Runtime *pruntime, JClass *clazz) {
                                 push_ref(stack, (__refer) exception);
                                 ret = RUNTIME_STATUS_EXCEPTION;
                             }
+#if _JVM_DEBUG_BYTECODE_DETAIL > 3
+                            invoke_deepth(runtime);
+                            jvm_printf("}\n");
+#endif
+
                         }
                         opCode += 3;
                         break;
@@ -3161,13 +3061,15 @@ s32 execute_method_impl(MethodInfo *method, Runtime *pruntime, JClass *clazz) {
                         ConstantMethodRef *cmr = class_get_constant_method_ref(clazz, object_ref);
                         MethodInfo *m = cmr->methodInfo;
 
-#if _JVM_DEBUG_BYTECODE_DETAIL > 5
-                        if (utf8_equals_c(m->name, "dtoa") && utf8_equals_c(m->_this_class->name, "java/lang/FloatingDecimal")) {
+#if _JVM_DEBUG_BYTECODE_DETAIL > 3
+                        if (utf8_equals_c(cmr->clsName, "org/mini/fs/InnerFile")
+                            && utf8_equals_c(cmr->name, "<init>")
+//                                && utf8_equals_c(cmr->descriptor, "(Ljava/lang/String;)Ljava/lang/StringBuilder;")
+                                ) {
                             int debug = 1;
                         }
                         invoke_deepth(runtime);
-                        jvm_printf("invokespecial    %s.%s%s \n", utf8_cstr(m->_this_class->name),
-                                   utf8_cstr(m->name), utf8_cstr(m->descriptor));
+                        jvm_printf("invokespecial    %s.%s%s {\n", utf8_cstr(m->_this_class->name), utf8_cstr(m->name), utf8_cstr(m->descriptor));
 #endif
                         if (m) {
                             ret = execute_method_impl(m, runtime, m->_this_class);
@@ -3176,6 +3078,10 @@ s32 execute_method_impl(MethodInfo *method, Runtime *pruntime, JClass *clazz) {
                             push_ref(stack, (__refer) exception);
                             ret = RUNTIME_STATUS_EXCEPTION;
                         }
+#if _JVM_DEBUG_BYTECODE_DETAIL > 3
+                        invoke_deepth(runtime);
+                        jvm_printf("}\n");
+#endif
 
                         opCode += 3;
                         break;
@@ -3191,11 +3097,13 @@ s32 execute_method_impl(MethodInfo *method, Runtime *pruntime, JClass *clazz) {
                         ConstantMethodRef *cmr = class_get_constant_method_ref(clazz, object_ref);
 
                         MethodInfo *m = cmr->methodInfo;
+#if _JVM_DEBUG_BYTECODE_DETAIL > 3
+                        if (utf8_equals_c(cmr->name, "readbuf") && utf8_equals_c(cmr->clsName, "org/mini/fs/InnerFile")) {
+                            int debug = 1;
+                        }
 
-#if _JVM_DEBUG_BYTECODE_DETAIL > 5
                         invoke_deepth(runtime);
-                        jvm_printf("invokestatic   | %s.%s%s \n", utf8_cstr(m->_this_class->name),
-                                   utf8_cstr(m->name), utf8_cstr(m->descriptor));
+                        jvm_printf("invokestatic   | %s.%s%s {\n", utf8_cstr(m->_this_class->name), utf8_cstr(m->name), utf8_cstr(m->descriptor));
 #endif
                         if (m) {
                             ret = execute_method_impl(m, runtime, m->_this_class);
@@ -3204,6 +3112,10 @@ s32 execute_method_impl(MethodInfo *method, Runtime *pruntime, JClass *clazz) {
                             push_ref(stack, (__refer) exception);
                             ret = RUNTIME_STATUS_EXCEPTION;
                         }
+#if _JVM_DEBUG_BYTECODE_DETAIL > 3
+                        invoke_deepth(runtime);
+                        jvm_printf("}\n");
+#endif
 
                         opCode += 3;
                         break;
@@ -3236,9 +3148,9 @@ s32 execute_method_impl(MethodInfo *method, Runtime *pruntime, JClass *clazz) {
                                 }
                             }
 
-#if _JVM_DEBUG_BYTECODE_DETAIL > 5
+#if _JVM_DEBUG_BYTECODE_DETAIL > 3
                             invoke_deepth(runtime);
-                            jvm_printf("invokeinterface   | %s.%s%s \n", utf8_cstr(m->_this_class->name),
+                            jvm_printf("invokeinterface   | %s.%s%s {\n", utf8_cstr(m->_this_class->name),
                                        utf8_cstr(m->name), utf8_cstr(m->descriptor));
 #endif
                             if (m) {
@@ -3248,6 +3160,11 @@ s32 execute_method_impl(MethodInfo *method, Runtime *pruntime, JClass *clazz) {
                                 push_ref(stack, (__refer) exception);
                                 ret = RUNTIME_STATUS_EXCEPTION;
                             }
+#if _JVM_DEBUG_BYTECODE_DETAIL > 3
+                            invoke_deepth(runtime);
+                            jvm_printf("}\n");
+#endif
+
                         }
                         opCode += 5;
                         break;
@@ -3260,9 +3177,9 @@ s32 execute_method_impl(MethodInfo *method, Runtime *pruntime, JClass *clazz) {
                         u16 object_ref = s2c.s;
 
                         MethodInfo *m = class_get_constant_method_ref(clazz, object_ref)->methodInfo;
-#if _JVM_DEBUG_BYTECODE_DETAIL > 5
+#if _JVM_DEBUG_BYTECODE_DETAIL > 3
                         invoke_deepth(runtime);
-                        jvm_printf("invokedynamic   | %s.%s%s \n", utf8_cstr(m->_this_class->name),
+                        jvm_printf("invokedynamic   | %s.%s%s {\n", utf8_cstr(m->_this_class->name),
                                    utf8_cstr(m->name), utf8_cstr(m->descriptor));
 #endif
                         if (m) {
@@ -3272,6 +3189,10 @@ s32 execute_method_impl(MethodInfo *method, Runtime *pruntime, JClass *clazz) {
                             push_ref(stack, (__refer) exception);
                             ret = RUNTIME_STATUS_EXCEPTION;
                         }
+#if _JVM_DEBUG_BYTECODE_DETAIL > 3
+                        invoke_deepth(runtime);
+                        jvm_printf("}\n");
+#endif
 
                         opCode += 3;
                         break;
@@ -3654,15 +3575,10 @@ s32 execute_method_impl(MethodInfo *method, Runtime *pruntime, JClass *clazz) {
             if (method_sync)_synchronized_unlock_method(method, runtime);
             localvar_dispose(runtime);
 #if _JVM_DEBUG_BYTECODE_DETAIL > 3
-            if (filterClassName(clazz->name)) {
-                invoke_deepth(runtime->parent);
-                jvm_printf("}\n");
-            } else {
-                int debug = 1;
-            }
-            //jvm_printf("}  %s.%s  \n", utf8_cstr(clazz->name), utf8_cstr(method->name));
+
             Utf8String *ustr = method->descriptor;
-            //jvm_printf("stack size in:%d out:%d  topof stack:\n", stackSize, stack->size);
+            invoke_deepth(runtime);
+            jvm_printf("stack size in:%d out:%d  topof stack:\n", stackSize, stack->size);
             if (ret != RUNTIME_STATUS_EXCEPTION) {
                 if (utf8_indexof_c(ustr, ")V") >= 0) {//无反回值
                     if (stack->size < stackSize) {
@@ -3694,14 +3610,7 @@ s32 execute_method_impl(MethodInfo *method, Runtime *pruntime, JClass *clazz) {
                 method->native_func = native->func_pointer;
             }
         }
-#if _JVM_DEBUG_BYTECODE_DETAIL > 3
-        if (filterClassName(clazz->name)) {
-            invoke_deepth(runtime);
-            java_native_method *native = find_native_method(utf8_cstr(clazz->name), utf8_cstr(method->name),
-                                                            utf8_cstr(method->descriptor));
-            jvm_printf("%s.%s()  {\n", native->clzname, native->methodname);
-        }
-#endif
+
         if (method->native_func) {
             if (method_sync)_synchronized_lock_method(method, runtime);
             ret = method->native_func(runtime, clazz);
@@ -3711,12 +3620,6 @@ s32 execute_method_impl(MethodInfo *method, Runtime *pruntime, JClass *clazz) {
 //            int debug = 1;
 //        }
         localvar_dispose(runtime);
-#if _JVM_DEBUG_BYTECODE_DETAIL > 3
-        if (filterClassName(clazz->name)) {
-            invoke_deepth(runtime);
-            jvm_printf("}\n");
-        }
-#endif
 
     }
     runtime_destory(runtime);

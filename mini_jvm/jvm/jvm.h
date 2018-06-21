@@ -446,7 +446,7 @@ typedef struct _ConstantMethodRef {
     u16 nameAndTypeIndex;
     //
     MethodInfo *methodInfo;
-    s32 methodParaCount;
+    s32 para_slots;
     ConstantNameAndType *nameAndType;
     Utf8String *name;
     Utf8String *descriptor;
@@ -847,9 +847,10 @@ typedef struct _StackEntry {
         f32 fvalue;
         s32 ivalue;
         __refer rvalue;
+        Instance *ins;
     };
     s32 type;
-} StackEntry;
+} StackEntry, LocalVarItem;
 
 struct _StackFrame {
     StackEntry *store;
@@ -858,10 +859,10 @@ struct _StackFrame {
 };
 
 //解决引用类型可能为4字节或8字节的不同情况
-typedef struct _LocalVarItem {
-    __refer refer;
-    s32 integer;
-} LocalVarItem;
+//typedef struct _LocalVarItem {
+//    __refer refer;
+//    s32 integer;
+//} LocalVarItem;
 
 
 struct _Runtime {
@@ -942,14 +943,20 @@ static inline s32 pop_int(RuntimeStack *stack) {
 
 /* push Double */
 static inline void push_double(RuntimeStack *stack, f64 value) {
-    StackEntry *ptr = &stack->store[stack->size++];
+    StackEntry *store = stack->store;
+    StackEntry *ptr = &store[stack->size];
     ptr->dvalue = value;
     ptr->type = STACK_ENTRY_DOUBLE;
+    ptr = &store[stack->size + 1];
+    ptr->type = STACK_ENTRY_DOUBLE;
+    ptr->dvalue = value;
+    stack->size += 2;
 }
 
 /* pop Double */
 static inline f64 pop_double(RuntimeStack *stack) {
-    return stack->store[--stack->size].dvalue;
+    stack->size -= 2;
+    return stack->store[stack->size].dvalue;
 }
 
 /* push Float */
@@ -968,14 +975,20 @@ static inline f32 pop_float(RuntimeStack *stack) {
 
 /* push Long */
 static inline void push_long(RuntimeStack *stack, s64 value) {
-    StackEntry *ptr = &stack->store[stack->size++];
+    StackEntry *store = stack->store;
+    StackEntry *ptr = &store[stack->size];
+    ptr->lvalue = value;
+    ptr->type = STACK_ENTRY_LONG;
+    ptr = &store[stack->size + 1];
     ptr->type = STACK_ENTRY_LONG;
     ptr->lvalue = value;
+    stack->size += 2;
 }
 
 /* pop Long */
 static inline s64 pop_long(RuntimeStack *stack) {
-    return stack->store[--stack->size].lvalue;
+    stack->size -= 2;
+    return stack->store[stack->size].lvalue;
 }
 
 /* push Ref */
@@ -1086,19 +1099,30 @@ static inline s32 localvar_dispose(Runtime *runtime) {
 
 
 static inline void localvar_setInt(LocalVarItem *localvar, s32 index, s32 val) {
-    localvar[index].integer = val;
-}
-
-static inline void localvar_setRefer(LocalVarItem *localvar, s32 index, __refer val) {
-    localvar[index].refer = val;
+    localvar[index].ivalue = val;
+    localvar[index].type = STACK_ENTRY_INT;
 }
 
 static inline s32 localvar_getInt(LocalVarItem *localvar, s32 index) {
-    return localvar[index].integer;
+    return localvar[index].ivalue;
+}
+
+static inline void localvar_setLong(LocalVarItem *localvar, s32 index, s64 val) {
+    localvar[index].lvalue = val;
+    localvar[index].type = STACK_ENTRY_LONG;
+}
+
+static inline s64 localvar_getLong(LocalVarItem *localvar, s32 index) {
+    return localvar[index].lvalue;
+}
+
+static inline void localvar_setRefer(LocalVarItem *localvar, s32 index, __refer val) {
+    localvar[index].rvalue = val;
+    localvar[index].type = STACK_ENTRY_REF;
 }
 
 static inline __refer localvar_getRefer(LocalVarItem *localvar, s32 index) {
-    return localvar[index].refer;
+    return localvar[index].rvalue;
 }
 
 void localvar_setInt_jni(LocalVarItem *localvar, s32 index, s32 val);

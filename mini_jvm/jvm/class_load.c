@@ -189,7 +189,7 @@ void *_parseCPField(JClass *_this, ByteBuf *buf, s32 index) {
 void *_parseCPMethod(JClass *_this, ByteBuf *buf, s32 index) {
 
     ConstantMethodRef *ptr = jvm_calloc(sizeof(ConstantMethodRef));
-    ptr->methodParaCount = -1;
+    ptr->para_slots = -1;
 
     ptr->item.tag = CONSTANT_METHOD_REF;
     ptr->item.index = index;
@@ -916,10 +916,9 @@ void _class_optimize(JClass *clazz) {
 //            printf("%s,%s\n", utf8_cstr(cmr->name), utf8_cstr(cmr->clsName));
 //            int debug = 1;
 //        }
-        if (cmr->methodParaCount == -1) {
+        if (cmr->para_slots == -1) {
             Utf8String *tmps = utf8_create();
-            parseMethodPara(cmr->descriptor, tmps);
-            cmr->methodParaCount = tmps->length;
+            cmr->para_slots = parseMethodPara(cmr->descriptor, tmps);
             utf8_destory(tmps);
         }
     }

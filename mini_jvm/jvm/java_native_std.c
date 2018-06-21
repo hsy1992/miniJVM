@@ -210,8 +210,7 @@ s32 java_lang_Class_getComponentType(Runtime *runtime, JClass *clazz) {
 s32 java_lang_Double_doubleToLongBits(Runtime *runtime, JClass *clazz) {
     RuntimeStack *stack = runtime->stack;
     Long2Double l2d;
-    l2d.i2l.i1 = localvar_getInt(runtime->localvar, 0);
-    l2d.i2l.i0 = localvar_getInt(runtime->localvar, 1);
+    l2d.l = localvar_getLong(runtime->localvar, 0);
 #if _JVM_DEBUG_BYTECODE_DETAIL > 5
     invoke_deepth(runtime);
     jvm_printf("java_lang_Double_doubleToLongBits %lf to %lld\n", l2d.d, l2d.l);
@@ -223,8 +222,7 @@ s32 java_lang_Double_doubleToLongBits(Runtime *runtime, JClass *clazz) {
 s32 java_lang_Double_longBitsToDouble(Runtime *runtime, JClass *clazz) {
     RuntimeStack *stack = runtime->stack;
     Long2Double l2d;
-    l2d.i2l.i1 = localvar_getInt(runtime->localvar, 0);
-    l2d.i2l.i0 = localvar_getInt(runtime->localvar, 1);
+    l2d.l = localvar_getLong(runtime->localvar, 0);
 #if _JVM_DEBUG_BYTECODE_DETAIL > 5
     invoke_deepth(runtime);
     jvm_printf("java_lang_Double_longBitsToDouble\n");
@@ -263,8 +261,7 @@ s32 java_lang_Float_floatToIntBits(Runtime *runtime, JClass *clazz) {
 s32 java_lang_Math_exp(Runtime *runtime, JClass *clazz) {
     RuntimeStack *stack = runtime->stack;
     Long2Double l2d;
-    l2d.i2l.i1 = localvar_getInt(runtime->localvar, 0);
-    l2d.i2l.i0 = localvar_getInt(runtime->localvar, 1);
+    l2d.l = localvar_getLong(runtime->localvar, 0);
     f64 r = exp(l2d.d);
 #if _JVM_DEBUG_BYTECODE_DETAIL > 5
     invoke_deepth(runtime);
@@ -294,8 +291,7 @@ s32 java_lang_Math_random(Runtime *runtime, JClass *clazz) {
 s32 java_lang_Math_sin(Runtime *runtime, JClass *clazz) {
     RuntimeStack *stack = runtime->stack;
     Long2Double l2d;
-    l2d.i2l.i1 = localvar_getInt(runtime->localvar, 0);
-    l2d.i2l.i0 = localvar_getInt(runtime->localvar, 1);
+    l2d.l = localvar_getLong(runtime->localvar, 0);
     f64 r = sin(l2d.d);
 #if _JVM_DEBUG_BYTECODE_DETAIL > 5
     invoke_deepth(runtime);
@@ -309,8 +305,7 @@ s32 java_lang_Math_sin(Runtime *runtime, JClass *clazz) {
 s32 java_lang_Math_cos(Runtime *runtime, JClass *clazz) {
     RuntimeStack *stack = runtime->stack;
     Long2Double l2d;
-    l2d.i2l.i1 = localvar_getInt(runtime->localvar, 0);
-    l2d.i2l.i0 = localvar_getInt(runtime->localvar, 1);
+    l2d.l = localvar_getLong(runtime->localvar, 0);
     f64 r = cos(l2d.d);
 #if _JVM_DEBUG_BYTECODE_DETAIL > 5
     invoke_deepth(runtime);
@@ -323,8 +318,7 @@ s32 java_lang_Math_cos(Runtime *runtime, JClass *clazz) {
 s32 java_lang_Math_tan(Runtime *runtime, JClass *clazz) {
     RuntimeStack *stack = runtime->stack;
     Long2Double l2d;
-    l2d.i2l.i1 = localvar_getInt(runtime->localvar, 0);
-    l2d.i2l.i0 = localvar_getInt(runtime->localvar, 1);
+    l2d.l = localvar_getLong(runtime->localvar, 0);
     f64 r = tan(l2d.d);
 #if _JVM_DEBUG_BYTECODE_DETAIL > 5
     invoke_deepth(runtime);
@@ -337,8 +331,7 @@ s32 java_lang_Math_tan(Runtime *runtime, JClass *clazz) {
 s32 java_lang_Math_sqrt(Runtime *runtime, JClass *clazz) {
     RuntimeStack *stack = runtime->stack;
     Long2Double l2d;
-    l2d.i2l.i1 = localvar_getInt(runtime->localvar, 0);
-    l2d.i2l.i0 = localvar_getInt(runtime->localvar, 1);
+    l2d.l = localvar_getLong(runtime->localvar, 0);
     f64 r = sqrt(l2d.d);
 #if _JVM_DEBUG_BYTECODE_DETAIL > 5
     invoke_deepth(runtime);
@@ -351,8 +344,7 @@ s32 java_lang_Math_sqrt(Runtime *runtime, JClass *clazz) {
 s32 java_lang_Math_ceil(Runtime *runtime, JClass *clazz) {
     RuntimeStack *stack = runtime->stack;
     Long2Double l2d;
-    l2d.i2l.i1 = localvar_getInt(runtime->localvar, 0);
-    l2d.i2l.i0 = localvar_getInt(runtime->localvar, 1);
+    l2d.l = localvar_getLong(runtime->localvar, 0);
     f64 r = ceil(l2d.d);
 #if _JVM_DEBUG_BYTECODE_DETAIL > 5
     invoke_deepth(runtime);
@@ -366,8 +358,7 @@ s32 java_lang_Math_ceil(Runtime *runtime, JClass *clazz) {
 s32 java_lang_Math_floor(Runtime *runtime, JClass *clazz) {
     RuntimeStack *stack = runtime->stack;
     Long2Double l2d;
-    l2d.i2l.i1 = localvar_getInt(runtime->localvar, 0);
-    l2d.i2l.i0 = localvar_getInt(runtime->localvar, 1);
+    l2d.l = localvar_getLong(runtime->localvar, 0);
     f64 r = floor(l2d.d);
 #if _JVM_DEBUG_BYTECODE_DETAIL > 5
     invoke_deepth(runtime);
@@ -380,8 +371,7 @@ s32 java_lang_Math_floor(Runtime *runtime, JClass *clazz) {
 s32 java_lang_Math_asin(Runtime *runtime, JClass *clazz) {
     RuntimeStack *stack = runtime->stack;
     Long2Double l2d;
-    l2d.i2l.i1 = localvar_getInt(runtime->localvar, 0);
-    l2d.i2l.i0 = localvar_getInt(runtime->localvar, 1);
+    l2d.l = localvar_getLong(runtime->localvar, 0);
     f64 r = asin(l2d.d);
 #if _JVM_DEBUG_BYTECODE_DETAIL > 5
     invoke_deepth(runtime);
@@ -394,8 +384,7 @@ s32 java_lang_Math_asin(Runtime *runtime, JClass *clazz) {
 s32 java_lang_Math_acos(Runtime *runtime, JClass *clazz) {
     RuntimeStack *stack = runtime->stack;
     Long2Double l2d;
-    l2d.i2l.i1 = localvar_getInt(runtime->localvar, 0);
-    l2d.i2l.i0 = localvar_getInt(runtime->localvar, 1);
+    l2d.l = localvar_getLong(runtime->localvar, 0);
     f64 r = acos(l2d.d);
 #if _JVM_DEBUG_BYTECODE_DETAIL > 5
     invoke_deepth(runtime);
@@ -408,8 +397,7 @@ s32 java_lang_Math_acos(Runtime *runtime, JClass *clazz) {
 s32 java_lang_Math_atan(Runtime *runtime, JClass *clazz) {
     RuntimeStack *stack = runtime->stack;
     Long2Double l2d;
-    l2d.i2l.i1 = localvar_getInt(runtime->localvar, 0);
-    l2d.i2l.i0 = localvar_getInt(runtime->localvar, 1);
+    l2d.l = localvar_getLong(runtime->localvar, 0);
     f64 r = atan(l2d.d);
 #if _JVM_DEBUG_BYTECODE_DETAIL > 5
     invoke_deepth(runtime);
@@ -422,8 +410,7 @@ s32 java_lang_Math_atan(Runtime *runtime, JClass *clazz) {
 s32 java_lang_Math_log(Runtime *runtime, JClass *clazz) {
     RuntimeStack *stack = runtime->stack;
     Long2Double l2d;
-    l2d.i2l.i1 = localvar_getInt(runtime->localvar, 0);
-    l2d.i2l.i0 = localvar_getInt(runtime->localvar, 1);
+    l2d.l = localvar_getLong(runtime->localvar, 0);
     f64 r = log(l2d.d);
 #if _JVM_DEBUG_BYTECODE_DETAIL > 5
     invoke_deepth(runtime);
@@ -436,11 +423,9 @@ s32 java_lang_Math_log(Runtime *runtime, JClass *clazz) {
 s32 java_lang_Math_atan2(Runtime *runtime, JClass *clazz) {
     RuntimeStack *stack = runtime->stack;
     Long2Double l2d;
-    l2d.i2l.i1 = localvar_getInt(runtime->localvar, 0);
-    l2d.i2l.i0 = localvar_getInt(runtime->localvar, 1);
+    l2d.l = localvar_getLong(runtime->localvar, 0);
     f64 y = (l2d.d);
-    l2d.i2l.i1 = localvar_getInt(runtime->localvar, 2);
-    l2d.i2l.i0 = localvar_getInt(runtime->localvar, 3);
+    l2d.l = localvar_getLong(runtime->localvar, 2);
     f64 x = (l2d.d);
 #if _JVM_DEBUG_BYTECODE_DETAIL > 5
     invoke_deepth(runtime);
@@ -453,11 +438,9 @@ s32 java_lang_Math_atan2(Runtime *runtime, JClass *clazz) {
 s32 java_lang_Math_pow(Runtime *runtime, JClass *clazz) {
     RuntimeStack *stack = runtime->stack;
     Long2Double l2d;
-    l2d.i2l.i1 = localvar_getInt(runtime->localvar, 0);
-    l2d.i2l.i0 = localvar_getInt(runtime->localvar, 1);
+    l2d.l = localvar_getLong(runtime->localvar, 0);
     f64 a = (l2d.d);
-    l2d.i2l.i1 = localvar_getInt(runtime->localvar, 2);
-    l2d.i2l.i0 = localvar_getInt(runtime->localvar, 3);
+    l2d.l = localvar_getLong(runtime->localvar, 2);
     f64 b = (l2d.d);
 #if _JVM_DEBUG_BYTECODE_DETAIL > 5
     invoke_deepth(runtime);
@@ -527,8 +510,7 @@ s32 java_lang_Object_wait(Runtime *runtime, JClass *clazz) {
     RuntimeStack *stack = runtime->stack;
     Instance *ins = (Instance *) localvar_getRefer(runtime->localvar, 0);
     Long2Double l2d;
-    l2d.i2l.i1 = localvar_getInt(runtime->localvar, 1);
-    l2d.i2l.i0 = localvar_getInt(runtime->localvar, 2);
+    l2d.l = localvar_getLong(runtime->localvar, 1);
 #if _JVM_DEBUG_BYTECODE_DETAIL > 5
     invoke_deepth(runtime);
     jvm_printf("java_lang_Object_wait %llx  wait %lld\n", (s64) (intptr_t) ins, l2d.l);
@@ -755,8 +737,7 @@ s32 java_lang_System_doubleToString(Runtime *runtime, JClass *clazz) {
     RuntimeStack *stack = runtime->stack;
 
     Long2Double l2d;
-    l2d.i2l.i1 = localvar_getInt(runtime->localvar, 0);
-    l2d.i2l.i0 = localvar_getInt(runtime->localvar, 1);
+    l2d.l = localvar_getLong(runtime->localvar, 0);
     c8 buf[22];
     sprintf(buf, "%lf", l2d.d);
     Utf8String *str = utf8_create_c(buf);
@@ -948,10 +929,9 @@ s32 java_lang_Thread_yield(Runtime *runtime, JClass *clazz) {
 }
 
 s32 java_lang_Thread_sleep(Runtime *runtime, JClass *clazz) {
-    RuntimeStack *stack = runtime->stack;
+
     Long2Double l2d;
-    l2d.i2l.i1 = localvar_getInt(runtime->localvar, 0);
-    l2d.i2l.i0 = localvar_getInt(runtime->localvar, 1);
+    l2d.l = localvar_getLong(runtime->localvar, 0);
 #if _JVM_DEBUG_BYTECODE_DETAIL > 5
     invoke_deepth(runtime);
     jvm_printf("java_lang_Thread_sleep %lld\n", l2d.l);
@@ -961,7 +941,7 @@ s32 java_lang_Thread_sleep(Runtime *runtime, JClass *clazz) {
 }
 
 s32 java_lang_Thread_start(Runtime *runtime, JClass *clazz) {
-    RuntimeStack *stack = runtime->stack;
+
     Instance *ins = (Instance *) localvar_getRefer(runtime->localvar, 0);
     jthread_start(ins);
 

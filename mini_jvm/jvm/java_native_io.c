@@ -603,9 +603,8 @@ s32 org_mini_fs_InnerFile_openFile(Runtime *runtime, JClass *clazz) {
 
 s32 org_mini_fs_InnerFile_closeFile(Runtime *runtime, JClass *clazz) {
     Long2Double l2d;
-    l2d.i2l.i1 = localvar_getInt(runtime->localvar, 0);
-    l2d.i2l.i0 = localvar_getInt(runtime->localvar, 1);
-    __refer fd = (__refer) (intptr_t) l2d.l;
+    l2d.l = localvar_getLong(runtime->localvar, 0);
+    FILE *fd = (FILE *) (intptr_t) l2d.l;
     s32 ret = -1;
     if (fd) {
         ret = fclose(fd);
@@ -620,9 +619,8 @@ s32 org_mini_fs_InnerFile_closeFile(Runtime *runtime, JClass *clazz) {
 
 s32 org_mini_fs_InnerFile_read0(Runtime *runtime, JClass *clazz) {
     Long2Double l2d;
-    l2d.i2l.i1 = localvar_getInt(runtime->localvar, 0);
-    l2d.i2l.i0 = localvar_getInt(runtime->localvar, 1);
-    __refer fd = (__refer) (intptr_t) l2d.l;
+    l2d.l = localvar_getLong(runtime->localvar, 0);
+    FILE *fd = (FILE *) (intptr_t) l2d.l;
     s32 ret = -1;
     if (fd) {
         ret = fgetc(fd);
@@ -644,9 +642,8 @@ s32 org_mini_fs_InnerFile_read0(Runtime *runtime, JClass *clazz) {
 
 s32 org_mini_fs_InnerFile_write0(Runtime *runtime, JClass *clazz) {
     Long2Double l2d;
-    l2d.i2l.i1 = localvar_getInt(runtime->localvar, 0);
-    l2d.i2l.i0 = localvar_getInt(runtime->localvar, 1);
-    __refer fd = (__refer) (intptr_t) l2d.l;
+    l2d.l = localvar_getLong(runtime->localvar, 0);
+    FILE *fd = (FILE *) (intptr_t) l2d.l;
     u8 byte = (u8) localvar_getInt(runtime->localvar, 2);
     s32 ret = -1;
     if (fd) {
@@ -670,9 +667,9 @@ s32 org_mini_fs_InnerFile_write0(Runtime *runtime, JClass *clazz) {
 s32 org_mini_fs_InnerFile_readbuf(Runtime *runtime, JClass *clazz) {
     s32 pos = 0;
     Long2Double l2d;
-    l2d.i2l.i1 = localvar_getInt(runtime->localvar, pos++);
-    l2d.i2l.i0 = localvar_getInt(runtime->localvar, pos++);
-    __refer fd = (__refer) (intptr_t) l2d.l;
+    l2d.l = localvar_getLong(runtime->localvar, pos);
+    pos += 2;
+    FILE *fd = (FILE *) (intptr_t) l2d.l;
     Instance *bytes_arr = localvar_getRefer(runtime->localvar, pos++);
     s32 offset = localvar_getInt(runtime->localvar, pos++);
     s32 len = localvar_getInt(runtime->localvar, pos++);
@@ -695,9 +692,9 @@ s32 org_mini_fs_InnerFile_readbuf(Runtime *runtime, JClass *clazz) {
 s32 org_mini_fs_InnerFile_writebuf(Runtime *runtime, JClass *clazz) {
     s32 pos = 0;
     Long2Double l2d;
-    l2d.i2l.i1 = localvar_getInt(runtime->localvar, pos++);
-    l2d.i2l.i0 = localvar_getInt(runtime->localvar, pos++);
-    __refer fd = (__refer) (intptr_t) l2d.l;
+    l2d.l = localvar_getLong(runtime->localvar, pos);
+    pos += 2;
+    FILE *fd = (FILE *) (intptr_t) l2d.l;
     Instance *bytes_arr = localvar_getRefer(runtime->localvar, pos++);
     s32 offset = localvar_getInt(runtime->localvar, pos++);
     s32 len = localvar_getInt(runtime->localvar, pos++);
@@ -722,11 +719,11 @@ s32 org_mini_fs_InnerFile_writebuf(Runtime *runtime, JClass *clazz) {
 s32 org_mini_fs_InnerFile_seek0(Runtime *runtime, JClass *clazz) {
     s32 pos = 0;
     Long2Double l2d;
-    l2d.i2l.i1 = localvar_getInt(runtime->localvar, pos++);
-    l2d.i2l.i0 = localvar_getInt(runtime->localvar, pos++);
-    __refer fd = (__refer) (intptr_t) l2d.l;
-    l2d.i2l.i1 = localvar_getInt(runtime->localvar, pos++);
-    l2d.i2l.i0 = localvar_getInt(runtime->localvar, pos++);
+    l2d.l = localvar_getLong(runtime->localvar, pos);
+    pos += 2;
+    FILE *fd = (FILE *) (intptr_t) l2d.l;
+    l2d.l = localvar_getLong(runtime->localvar, pos);
+    pos += 2;
     s64 filepos = l2d.l;
     s32 ret = -1;
     if (fd) {
@@ -743,9 +740,9 @@ s32 org_mini_fs_InnerFile_seek0(Runtime *runtime, JClass *clazz) {
 s32 org_mini_fs_InnerFile_available0(Runtime *runtime, JClass *clazz) {
     s32 pos = 0;
     Long2Double l2d;
-    l2d.i2l.i1 = localvar_getInt(runtime->localvar, pos++);
-    l2d.i2l.i0 = localvar_getInt(runtime->localvar, pos++);
-    __refer fd = (__refer) (intptr_t) l2d.l;
+    l2d.l = localvar_getLong(runtime->localvar, pos);
+    pos += 2;
+    FILE *fd = (FILE *) (intptr_t) l2d.l;
 
     s32 cur = 0, end = 0;
     if (fd) {
@@ -765,11 +762,11 @@ s32 org_mini_fs_InnerFile_available0(Runtime *runtime, JClass *clazz) {
 s32 org_mini_fs_InnerFile_setLength0(Runtime *runtime, JClass *clazz) {
     s32 pos = 0;
     Long2Double l2d;
-    l2d.i2l.i1 = localvar_getInt(runtime->localvar, pos++);
-    l2d.i2l.i0 = localvar_getInt(runtime->localvar, pos++);
-    __refer fd = (__refer) (intptr_t) l2d.l;
-    l2d.i2l.i1 = localvar_getInt(runtime->localvar, pos++);
-    l2d.i2l.i0 = localvar_getInt(runtime->localvar, pos++);
+    l2d.l = localvar_getLong(runtime->localvar, pos);
+    pos += 2;
+    FILE *fd = (FILE *) (intptr_t) l2d.l;
+    l2d.l = localvar_getLong(runtime->localvar, pos);
+    pos += 2;
     s64 filelen = l2d.l;
     s32 ret = 0;
     if (fd) {
@@ -788,9 +785,8 @@ s32 org_mini_fs_InnerFile_setLength0(Runtime *runtime, JClass *clazz) {
 
 s32 org_mini_fs_InnerFile_flush0(Runtime *runtime, JClass *clazz) {
     Long2Double l2d;
-    l2d.i2l.i1 = localvar_getInt(runtime->localvar, 0);
-    l2d.i2l.i0 = localvar_getInt(runtime->localvar, 1);
-    __refer fd = (__refer) (intptr_t) l2d.l;
+    l2d.l = localvar_getLong(runtime->localvar, 0);
+    FILE *fd = (FILE *) (intptr_t) l2d.l;
     s32 ret = -1;
     if (fd) {
         ret = fflush(fd);
@@ -842,7 +838,7 @@ s32 org_mini_fs_InnerFile_loadFS(Runtime *runtime, JClass *clazz) {
         }
         utf8_destory(filepath);
     }
-    push_long(runtime->stack, ret);
+    push_int(runtime->stack, ret);
 #if _JVM_DEBUG_BYTECODE_DETAIL > 5
     invoke_deepth(runtime);
     jvm_printf("org_mini_fs_InnerFile_loadFD  \n");
