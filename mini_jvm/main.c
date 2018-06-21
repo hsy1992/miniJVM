@@ -69,7 +69,7 @@ int main(int argc, char **argv) {
         }
     } else {
         java_debug = 0;
-//        classpath = "../../binary/lib/minijvm_rt.jar;../../binary/lib/gui_lib.jar;./";
+        classpath = "../../binary/lib/minijvm_rt.jar;../../binary/lib/gui_lib.jar;./";
 //        main_name = "test/Gears";
 //        main_name = "test/TestGL";
 //        main_name = "test/GuiTest";
@@ -88,14 +88,19 @@ int main(int argc, char **argv) {
 
 
         classpath = "../../binary/lib/minijvm_rt.jar;../../binary/lib/minijvm_test.jar;./";
-        main_name = "test/Foo1";
+//        main_name = "test/Foo1";
 //        main_name = "test/Foo2";
 //        main_name = "test/Foo3";
+        main_name = "test/MultiThread";
 //        main_name = "test/ExecuteSpeed";
 //        main_name = "test/TestFile";
 //        main_name = "test/HttpServer";
 //        main_name = "test/BpDeepTest";
 //        main_name = "test/ReflectTest";
+
+//        classpath = "../../binary/lib/pup_vm_java.jar;./";
+//        main_name = "com/egls/test/Foo1";
+//        main_name = "com/egls/test/Foo2";
 
     }
     ret = execute_jvm(classpath, main_name, java_para);
