@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package javax.mini.reflect;
+package org.mini.reflect;
 
 /**
  * 反射一个数组实例，如

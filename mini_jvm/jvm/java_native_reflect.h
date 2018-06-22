@@ -13,13 +13,13 @@
 extern "C" {
 #endif
 
-static c8 *JDWP_CLASS_REFERENCE = "javax/mini/reflect/ReflectClass";
-static c8 *JDWP_CLASS_FIELD = "javax/mini/reflect/Field";
-static c8 *JDWP_CLASS_METHOD = "javax/mini/reflect/Method";
-static c8 *JDWP_CLASS_ARRAY = "javax/mini/reflect/Array";
-static c8 *JDWP_CLASS_RUNTIME = "javax/mini/reflect/StackFrame";
-static c8 *JDWP_CLASS_LOCALVARTABLE = "javax/mini/reflect/LocalVarTable";
-static c8 *JDWP_CLASS_VALUETYPE = "javax/mini/reflect/vm/ValueType";
+static c8 *JDWP_CLASS_REFERENCE = "org/mini/reflect/ReflectClass";
+static c8 *JDWP_CLASS_FIELD = "org/mini/reflect/Field";
+static c8 *JDWP_CLASS_METHOD = "org/mini/reflect/Method";
+static c8 *JDWP_CLASS_ARRAY = "org/mini/reflect/Array";
+static c8 *JDWP_CLASS_RUNTIME = "org/mini/reflect/StackFrame";
+static c8 *JDWP_CLASS_LOCALVARTABLE = "org/mini/reflect/LocalVarTable";
+static c8 *JDWP_CLASS_VALUETYPE = "org/mini/reflect/vm/ValueType";
 
 
 #ifdef __cplusplus

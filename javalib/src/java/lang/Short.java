@@ -23,6 +23,8 @@ public final class Short {
      * The maximum value a Short can have.
      */
     public static final short MAX_VALUE = 32767;
+    
+    public static final Class<Short>     TYPE = (Class<Short>) Class.getPrimitiveClass("short");
 
     /**
      * Assuming the specified String represents a short, returns that short's

@@ -3,9 +3,9 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package javax.mini.reflect;
+package org.mini.reflect;
 
-import javax.mini.reflect.vm.RefNative;
+import org.mini.reflect.vm.RefNative;
 
 /**
  *

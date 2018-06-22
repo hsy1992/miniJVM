@@ -51,6 +51,8 @@ public final class Float {
      * the value returned by <code>Float.intBitsToFloat(0x1)</code>.
      */
     public static final float MIN_VALUE = 1.40129846432481707e-45f;
+    
+    public static final Class<Float>     TYPE = (Class<Float>) Class.getPrimitiveClass("float");
 
     /**
      * Returns a String representation for the specified float value. The

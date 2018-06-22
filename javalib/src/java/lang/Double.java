@@ -51,6 +51,8 @@ public final class Double {
      * </pre></blockquote>
      */
     public static final double MAX_VALUE = 1.79769313486231570e+308;
+    
+    public static final Class<Double>     TYPE = (Class<Double>) Class.getPrimitiveClass("double");
 
     /**
      * The smallest positive value of type <code>double</code>. It is equal to

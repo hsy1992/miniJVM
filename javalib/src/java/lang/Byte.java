@@ -24,6 +24,8 @@ public final class Byte {
      * The maximum value a Byte can have.
      */
     public static final byte MAX_VALUE = 127;
+    
+    public static final Class<Byte>     TYPE = (Class<Byte>) Class.getPrimitiveClass("byte");
 
     /**
      * Assuming the specified String represents a byte, returns that byte's

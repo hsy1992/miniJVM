@@ -277,5 +277,11 @@ class Class<T> {
      * The user does not normally see this function.
      */
     private static void runCustomCode() {}
+    
+    /*
+     * Return the Virtual Machine's Class object for the named
+     * primitive type.
+     */
+    static native Class<?> getPrimitiveClass(String name);
 }
 

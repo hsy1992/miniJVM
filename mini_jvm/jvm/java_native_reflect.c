@@ -16,40 +16,40 @@ extern "C" {
 
 //========  native============================================================================
 
-s32 javax_mini_reflect_vm_RefNative_refIdSize(Runtime *runtime, JClass *clazz) {
+s32 org_mini_reflect_vm_RefNative_refIdSize(Runtime *runtime, JClass *clazz) {
     push_int(runtime->stack, sizeof(__refer));
 
 #if _JVM_DEBUG_BYTECODE_DETAIL > 5
-    jvm_printf("javax_mini_reflect_vm_RefNative_refIdSize\n");
+    jvm_printf("org_mini_reflect_vm_RefNative_refIdSize\n");
 #endif
     return 0;
 }
 
-s32 javax_mini_reflect_vm_RefNative_obj2id(Runtime *runtime, JClass *clazz) {
+s32 org_mini_reflect_vm_RefNative_obj2id(Runtime *runtime, JClass *clazz) {
     Instance *ins = (Instance *) localvar_getRefer(runtime->localvar, 0);
     Long2Double l2d;
     l2d.l = (u64) (intptr_t) ins;
     push_long(runtime->stack, l2d.l);
 
 #if _JVM_DEBUG_BYTECODE_DETAIL > 5
-    jvm_printf("javax_mini_reflect_vm_RefNative_obj2id\n");
+    jvm_printf("org_mini_reflect_vm_RefNative_obj2id\n");
 #endif
     return 0;
 }
 
-s32 javax_mini_reflect_vm_RefNative_id2obj(Runtime *runtime, JClass *clazz) {
+s32 org_mini_reflect_vm_RefNative_id2obj(Runtime *runtime, JClass *clazz) {
     Long2Double l2d;
     l2d.l = localvar_getLong(runtime->localvar, 0);
     __refer r = (__refer) (intptr_t) l2d.l;//这里不能直接转化，可能在外部发生了数据精度丢失，只能从低位强转
     push_ref(runtime->stack, r);
 
 #if _JVM_DEBUG_BYTECODE_DETAIL > 5
-    jvm_printf("javax_mini_jdwp_RefNative_id2obj\n");
+    jvm_printf("org_mini_jdwp_RefNative_id2obj\n");
 #endif
     return 0;
 }
 
-s32 javax_mini_reflect_vm_RefNative_getClasses(Runtime *runtime, JClass *clazz) {
+s32 org_mini_reflect_vm_RefNative_getClasses(Runtime *runtime, JClass *clazz) {
     s32 size = (s32) sys_classloader->classes->entries;
 
     Utf8String *ustr = utf8_create_c(STR_CLASS_JAVA_LANG_CLASS);
@@ -68,12 +68,12 @@ s32 javax_mini_reflect_vm_RefNative_getClasses(Runtime *runtime, JClass *clazz) 
     push_ref(runtime->stack, jarr);//先放入栈，再关联回收器，防止多线程回收
 
 #if _JVM_DEBUG_BYTECODE_DETAIL > 5
-    jvm_printf("javax_mini_reflect_vm_RefNative_getClasses\n");
+    jvm_printf("org_mini_reflect_vm_RefNative_getClasses\n");
 #endif
     return 0;
 }
 
-s32 javax_mini_reflect_vm_RefNative_getClassByName(Runtime *runtime, JClass *clazz) {
+s32 org_mini_reflect_vm_RefNative_getClassByName(Runtime *runtime, JClass *clazz) {
     Instance *jstr = (Instance *) localvar_getRefer(runtime->localvar, 0);
     Utf8String *ustr = utf8_create();
     jstring_2_utf8(jstr, ustr);
@@ -87,7 +87,7 @@ s32 javax_mini_reflect_vm_RefNative_getClassByName(Runtime *runtime, JClass *cla
 }
 
 
-s32 javax_mini_reflect_vm_RefNative_setLocalVal(Runtime *runtime, JClass *clazz) {
+s32 org_mini_reflect_vm_RefNative_setLocalVal(Runtime *runtime, JClass *clazz) {
     int pos = 0;
     Long2Double l2d;
     l2d.l = l2d.l = localvar_getLong(runtime->localvar, pos);
@@ -121,7 +121,7 @@ s32 javax_mini_reflect_vm_RefNative_setLocalVal(Runtime *runtime, JClass *clazz)
     return 0;
 }
 
-s32 javax_mini_reflect_vm_RefNative_getLocalVal(Runtime *runtime, JClass *clazz) {
+s32 org_mini_reflect_vm_RefNative_getLocalVal(Runtime *runtime, JClass *clazz) {
     int pos = 0;
     Long2Double l2d;
     l2d.l = l2d.l = localvar_getLong(runtime->localvar, pos);
@@ -157,7 +157,7 @@ s32 javax_mini_reflect_vm_RefNative_getLocalVal(Runtime *runtime, JClass *clazz)
     return 0;
 }
 
-s32 javax_mini_reflect_vm_RefNative_getFieldVal(Runtime *runtime, JClass *clazz) {
+s32 org_mini_reflect_vm_RefNative_getFieldVal(Runtime *runtime, JClass *clazz) {
     int pos = 0;
     Long2Double l2d;
     l2d.l = l2d.l = localvar_getLong(runtime->localvar, pos);
@@ -199,7 +199,7 @@ s32 javax_mini_reflect_vm_RefNative_getFieldVal(Runtime *runtime, JClass *clazz)
 }
 
 
-s32 javax_mini_reflect_MemAccess_readByte0(Runtime *runtime, JClass *clazz) {
+s32 org_mini_reflect_MemAccess_readByte0(Runtime *runtime, JClass *clazz) {
     Long2Double l2d;
     l2d.l = localvar_getLong(runtime->localvar, 0);
     __refer r = (__refer) (intptr_t) l2d.l;
@@ -207,12 +207,12 @@ s32 javax_mini_reflect_MemAccess_readByte0(Runtime *runtime, JClass *clazz) {
     u8 val = getFieldByte(((c8 *) r) + offset);
     push_int(runtime->stack, val);
 #if _JVM_DEBUG_BYTECODE_DETAIL > 5
-    jvm_printf("javax_mini_reflect_vm_MemObject_readByte0\n");
+    jvm_printf("org_mini_reflect_vm_MemObject_readByte0\n");
 #endif
     return 0;
 }
 
-s32 javax_mini_reflect_MemAccess_readShort0(Runtime *runtime, JClass *clazz) {
+s32 org_mini_reflect_MemAccess_readShort0(Runtime *runtime, JClass *clazz) {
     Long2Double l2d;
     l2d.l = localvar_getLong(runtime->localvar, 0);
     __refer r = (__refer) (intptr_t) l2d.l;
@@ -220,12 +220,12 @@ s32 javax_mini_reflect_MemAccess_readShort0(Runtime *runtime, JClass *clazz) {
     u16 val = getFieldShort(((c8 *) r) + offset);
     push_int(runtime->stack, val);
 #if _JVM_DEBUG_BYTECODE_DETAIL > 5
-    jvm_printf("javax_mini_reflect_vm_MemObject_readShort0\n");
+    jvm_printf("org_mini_reflect_vm_MemObject_readShort0\n");
 #endif
     return 0;
 }
 
-s32 javax_mini_reflect_MemAccess_readInt0(Runtime *runtime, JClass *clazz) {
+s32 org_mini_reflect_MemAccess_readInt0(Runtime *runtime, JClass *clazz) {
     Long2Double l2d;
     l2d.l = localvar_getLong(runtime->localvar, 0);
     __refer r = (__refer) (intptr_t) l2d.l;
@@ -233,12 +233,12 @@ s32 javax_mini_reflect_MemAccess_readInt0(Runtime *runtime, JClass *clazz) {
     s32 val = getFieldInt(((c8 *) r) + offset);
     push_int(runtime->stack, val);
 #if _JVM_DEBUG_BYTECODE_DETAIL > 5
-    jvm_printf("javax_mini_reflect_vm_MemObject_readInt0\n");
+    jvm_printf("org_mini_reflect_vm_MemObject_readInt0\n");
 #endif
     return 0;
 }
 
-s32 javax_mini_reflect_MemAccess_readLong0(Runtime *runtime, JClass *clazz) {
+s32 org_mini_reflect_MemAccess_readLong0(Runtime *runtime, JClass *clazz) {
     Long2Double l2d;
     l2d.l = localvar_getLong(runtime->localvar, 0);
     __refer r = (__refer) (intptr_t) l2d.l;
@@ -246,12 +246,12 @@ s32 javax_mini_reflect_MemAccess_readLong0(Runtime *runtime, JClass *clazz) {
     s64 val = getFieldLong(((c8 *) r) + offset);
     push_long(runtime->stack, val);
 #if _JVM_DEBUG_BYTECODE_DETAIL > 5
-    jvm_printf("javax_mini_reflect_vm_MemObject_readLong0\n");
+    jvm_printf("org_mini_reflect_vm_MemObject_readLong0\n");
 #endif
     return 0;
 }
 
-s32 javax_mini_reflect_MemAccess_readRefer0(Runtime *runtime, JClass *clazz) {
+s32 org_mini_reflect_MemAccess_readRefer0(Runtime *runtime, JClass *clazz) {
     Long2Double l2d;
     l2d.l = localvar_getLong(runtime->localvar, 0);
     __refer r = (__refer) (intptr_t) l2d.l;
@@ -259,7 +259,7 @@ s32 javax_mini_reflect_MemAccess_readRefer0(Runtime *runtime, JClass *clazz) {
     __refer val = getFieldRefer(((c8 *) r) + offset);
     push_long(runtime->stack, (u64) (intptr_t) val);
 #if _JVM_DEBUG_BYTECODE_DETAIL > 5
-    jvm_printf("javax_mini_reflect_vm_MemObject_readRefer0\n");
+    jvm_printf("org_mini_reflect_vm_MemObject_readRefer0\n");
 #endif
     return 0;
 }
@@ -279,7 +279,7 @@ void _list_iter_getthread(ArrayListValue value, void *para) {
     }
 }
 
-s32 javax_mini_reflect_vm_RefNative_getThreads(Runtime *runtime, JClass *clazz) {
+s32 org_mini_reflect_vm_RefNative_getThreads(Runtime *runtime, JClass *clazz) {
 //    garbage_thread_lock();
     Utf8String *ustr = utf8_create_c(STR_CLASS_JAVA_LANG_THREAD);
     Instance *jarr = jarray_create_by_type_name(runtime, thread_list->length, ustr);
@@ -300,12 +300,12 @@ s32 javax_mini_reflect_vm_RefNative_getThreads(Runtime *runtime, JClass *clazz) 
     push_ref(runtime->stack, jarr);//先放入栈，再关联回收器，防止多线程回收
 //    garbage_thread_unlock();
 #if _JVM_DEBUG_BYTECODE_DETAIL > 5
-    jvm_printf("javax_mini_reflect_vm_RefNative_getThreads\n");
+    jvm_printf("org_mini_reflect_vm_RefNative_getThreads\n");
 #endif
     return 0;
 }
 
-s32 javax_mini_reflect_vm_RefNative_getStatus(Runtime *runtime, JClass *clazz) {
+s32 org_mini_reflect_vm_RefNative_getStatus(Runtime *runtime, JClass *clazz) {
     Instance *thread = (Instance *) localvar_getRefer(runtime->localvar, 0);
     Runtime *trun = (Runtime *) jthread_get_stackframe_value(thread);//线程结束之后会清除掉runtime,因为其是一个栈变量，不可再用
     if (trun)
@@ -318,7 +318,7 @@ s32 javax_mini_reflect_vm_RefNative_getStatus(Runtime *runtime, JClass *clazz) {
     return 0;
 }
 
-s32 javax_mini_reflect_vm_RefNative_suspendThread(Runtime *runtime, JClass *clazz) {
+s32 org_mini_reflect_vm_RefNative_suspendThread(Runtime *runtime, JClass *clazz) {
     Instance *thread = (Instance *) localvar_getRefer(runtime->localvar, 0);
     Runtime *trun = (Runtime *) jthread_get_stackframe_value(thread);//线程结束之后会清除掉runtime,因为其是一个栈变量，不可再用
     if (trun) {
@@ -332,7 +332,7 @@ s32 javax_mini_reflect_vm_RefNative_suspendThread(Runtime *runtime, JClass *claz
     return 0;
 }
 
-s32 javax_mini_reflect_vm_RefNative_resumeThread(Runtime *runtime, JClass *clazz) {
+s32 org_mini_reflect_vm_RefNative_resumeThread(Runtime *runtime, JClass *clazz) {
     Instance *thread = (Instance *) localvar_getRefer(runtime->localvar, 0);
     Runtime *trun = (Runtime *) jthread_get_stackframe_value(thread);//线程结束之后会清除掉runtime,因为其是一个栈变量，不可再用
     if (trun) {
@@ -347,7 +347,7 @@ s32 javax_mini_reflect_vm_RefNative_resumeThread(Runtime *runtime, JClass *clazz
 }
 
 
-s32 javax_mini_reflect_vm_RefNative_getSuspendCount(Runtime *runtime, JClass *clazz) {
+s32 org_mini_reflect_vm_RefNative_getSuspendCount(Runtime *runtime, JClass *clazz) {
     Instance *thread = (Instance *) localvar_getRefer(runtime->localvar, 0);
     Runtime *trun = (Runtime *) jthread_get_stackframe_value(thread);//线程结束之后会清除掉runtime,因为其是一个栈变量，不可再用
     if (trun) {
@@ -360,7 +360,7 @@ s32 javax_mini_reflect_vm_RefNative_getSuspendCount(Runtime *runtime, JClass *cl
     return 0;
 }
 
-s32 javax_mini_reflect_vm_RefNative_getFrameCount(Runtime *runtime, JClass *clazz) {
+s32 org_mini_reflect_vm_RefNative_getFrameCount(Runtime *runtime, JClass *clazz) {
     Instance *thread = (Instance *) localvar_getRefer(runtime->localvar, 0);
     Runtime *trun = (Runtime *) jthread_get_stackframe_value(thread);//线程结束之后会清除掉runtime,因为其是一个栈变量，不可再用
     int i = 0;
@@ -373,7 +373,7 @@ s32 javax_mini_reflect_vm_RefNative_getFrameCount(Runtime *runtime, JClass *claz
     return 0;
 }
 
-s32 javax_mini_reflect_vm_RefNative_stopThread(Runtime *runtime, JClass *clazz) {
+s32 org_mini_reflect_vm_RefNative_stopThread(Runtime *runtime, JClass *clazz) {
     Instance *thread = (Instance *) localvar_getRefer(runtime->localvar, 0);
     Long2Double l2d;
     l2d.l = localvar_getLong(runtime->localvar, 1);
@@ -390,7 +390,7 @@ s32 javax_mini_reflect_vm_RefNative_stopThread(Runtime *runtime, JClass *clazz) 
 }
 
 
-s32 javax_mini_reflect_vm_RefNative_getStackFrame(Runtime *runtime, JClass *clazz) {
+s32 org_mini_reflect_vm_RefNative_getStackFrame(Runtime *runtime, JClass *clazz) {
     Instance *thread = (Instance *) localvar_getRefer(runtime->localvar, 0);
     Runtime *trun = (Runtime *) jthread_get_stackframe_value(thread);//线程结束之后会清除掉runtime,因为其是一个栈变量，不可再用
     if (trun) {
@@ -402,12 +402,12 @@ s32 javax_mini_reflect_vm_RefNative_getStackFrame(Runtime *runtime, JClass *claz
     } else
         push_long(runtime->stack, 0);
 #if _JVM_DEBUG_BYTECODE_DETAIL > 5
-    jvm_printf("javax_mini_reflect_vm_RefNative_getStackFrame %llx\n", (u64) (intptr_t) trun);
+    jvm_printf("org_mini_reflect_vm_RefNative_getStackFrame %llx\n", (u64) (intptr_t) trun);
 #endif
     return 0;
 }
 
-s32 javax_mini_reflect_vm_RefNative_getGarbageReferedObjs(Runtime *runtime, JClass *clazz) {
+s32 org_mini_reflect_vm_RefNative_getGarbageReferedObjs(Runtime *runtime, JClass *clazz) {
     s32 size = (s32) collector->runtime_refer_copy->length;
 
     Utf8String *ustr = utf8_create_c(STR_CLASS_JAVA_LANG_OBJECT);
@@ -422,22 +422,22 @@ s32 javax_mini_reflect_vm_RefNative_getGarbageReferedObjs(Runtime *runtime, JCla
     push_ref(runtime->stack, jarr);//先放入栈，再关联回收器，防止多线程回收
 
 #if _JVM_DEBUG_BYTECODE_DETAIL > 5
-    jvm_printf("javax_mini_reflect_vm_RefNative_getGarbageReferedObjs %llx\n", (u64) (intptr_t) jarr);
+    jvm_printf("org_mini_reflect_vm_RefNative_getGarbageReferedObjs %llx\n", (u64) (intptr_t) jarr);
 #endif
     return 0;
 }
 
-s32 javax_mini_reflect_vm_RefNative_getGarbageStatus(Runtime *runtime, JClass *clazz) {
+s32 org_mini_reflect_vm_RefNative_getGarbageStatus(Runtime *runtime, JClass *clazz) {
 
     push_int(runtime->stack, collector->_garbage_thread_status);//先放入栈，再关联回收器，防止多线程回收
 
 #if _JVM_DEBUG_BYTECODE_DETAIL > 5
-    jvm_printf("javax_mini_reflect_vm_RefNative_getGarbageStatus %d\n", collector->_garbage_thread_status);
+    jvm_printf("org_mini_reflect_vm_RefNative_getGarbageStatus %d\n", collector->_garbage_thread_status);
 #endif
     return 0;
 }
 
-s32 javax_mini_reflect_ReflectClass_mapReference(Runtime *runtime, JClass *clazz) {
+s32 org_mini_reflect_ReflectClass_mapReference(Runtime *runtime, JClass *clazz) {
     int pos = 0;
     Instance *ins = (Instance *) localvar_getRefer(runtime->localvar, pos++);
     Long2Double l2d;
@@ -512,7 +512,7 @@ s32 javax_mini_reflect_ReflectClass_mapReference(Runtime *runtime, JClass *clazz
     return 0;
 }
 
-s32 javax_mini_reflect_Field_mapField(Runtime *runtime, JClass *clazz) {
+s32 org_mini_reflect_Field_mapField(Runtime *runtime, JClass *clazz) {
     int pos = 0;
     Instance *ins = (Instance *) localvar_getRefer(runtime->localvar, pos++);
     Long2Double l2d;
@@ -571,7 +571,7 @@ Instance *localVarTable2java(JClass *clazz, LocalVarTable *lvt, Runtime *runtime
     return ins;
 }
 
-s32 javax_mini_reflect_Method_mapMethod(Runtime *runtime, JClass *clazz) {
+s32 org_mini_reflect_Method_mapMethod(Runtime *runtime, JClass *clazz) {
     int pos = 0;
     Instance *ins = (Instance *) localvar_getRefer(runtime->localvar, pos++);
     Long2Double l2d;
@@ -629,7 +629,7 @@ s32 javax_mini_reflect_Method_mapMethod(Runtime *runtime, JClass *clazz) {
             }
             {
                 //
-                c8 *table_type = "javax/mini/reflect/LocalVarTable";
+                c8 *table_type = "org/mini/reflect/LocalVarTable";
                 ptr = getFieldPtr_byName_c(ins, JDWP_CLASS_METHOD, "localVarTable", table_type);
                 if (ptr) {
                     Utf8String *ustr = utf8_create_c(table_type);
@@ -652,7 +652,7 @@ s32 javax_mini_reflect_Method_mapMethod(Runtime *runtime, JClass *clazz) {
 }
 
 
-s32 javax_mini_reflect_Method_invokeMethod(Runtime *runtime, JClass *clazz) {
+s32 org_mini_reflect_Method_invokeMethod(Runtime *runtime, JClass *clazz) {
     s32 pos = 0;
     Instance *method_ins = (Instance *) localvar_getRefer(runtime->localvar, pos++);
     Long2Double l2d;
@@ -705,7 +705,7 @@ s32 javax_mini_reflect_Method_invokeMethod(Runtime *runtime, JClass *clazz) {
     return ret;
 }
 
-s32 javax_mini_reflect_StackFrame_mapRuntime(Runtime *runtime, JClass *clazz) {
+s32 org_mini_reflect_StackFrame_mapRuntime(Runtime *runtime, JClass *clazz) {
     int pos = 0;
     Instance *ins = (Instance *) localvar_getRefer(runtime->localvar, pos++);
     Long2Double l2d;
@@ -740,7 +740,7 @@ s32 javax_mini_reflect_StackFrame_mapRuntime(Runtime *runtime, JClass *clazz) {
     return 0;
 }
 
-s32 javax_mini_reflect_Array_mapArray(Runtime *runtime, JClass *clazz) {
+s32 org_mini_reflect_Array_mapArray(Runtime *runtime, JClass *clazz) {
     int pos = 0;
     Instance *ins = (Instance *) localvar_getRefer(runtime->localvar, pos++);
     Long2Double l2d;
@@ -765,35 +765,35 @@ s32 javax_mini_reflect_Array_mapArray(Runtime *runtime, JClass *clazz) {
 }
 
 static java_native_method method_jdwp_table[] = {
-        {"javax/mini/reflect/vm/RefNative", "refIdSize",             "()I",                                   javax_mini_reflect_vm_RefNative_refIdSize},
-        {"javax/mini/reflect/vm/RefNative", "obj2id",                "(Ljava/lang/Object;)J",                 javax_mini_reflect_vm_RefNative_obj2id},
-        {"javax/mini/reflect/vm/RefNative", "id2obj",                "(J)Ljava/lang/Object;",                 javax_mini_reflect_vm_RefNative_id2obj},
-        {"javax/mini/reflect/vm/RefNative", "getClasses",            "()[Ljava/lang/Class;",                  javax_mini_reflect_vm_RefNative_getClasses},
-        {"javax/mini/reflect/vm/RefNative", "getClassByName",        "(Ljava/lang/String;)Ljava/lang/Class;", javax_mini_reflect_vm_RefNative_getClassByName},
-        {"javax/mini/reflect/vm/RefNative", "setLocalVal",           "(JIBJI)I",                              javax_mini_reflect_vm_RefNative_setLocalVal},
-        {"javax/mini/reflect/vm/RefNative", "getLocalVal",           "(JILjavax/mini/jdwp/type/ValueType;)I", javax_mini_reflect_vm_RefNative_getLocalVal},
-        {"javax/mini/reflect/vm/RefNative", "getFieldVal",           "(JJLjavax/mini/jdwp/type/ValueType;)I", javax_mini_reflect_vm_RefNative_getFieldVal},
-        {"javax/mini/reflect/vm/RefNative", "getThreads",            "()[Ljava/lang/Thread;",                 javax_mini_reflect_vm_RefNative_getThreads},
-        {"javax/mini/reflect/vm/RefNative", "getStatus",             "(Ljava/lang/Thread;)I",                 javax_mini_reflect_vm_RefNative_getStatus},
-        {"javax/mini/reflect/vm/RefNative", "suspendThread",         "(Ljava/lang/Thread;)I",                 javax_mini_reflect_vm_RefNative_suspendThread},
-        {"javax/mini/reflect/vm/RefNative", "resumeThread",          "(Ljava/lang/Thread;)I",                 javax_mini_reflect_vm_RefNative_resumeThread},
-        {"javax/mini/reflect/vm/RefNative", "getSuspendCount",       "(Ljava/lang/Thread;)I",                 javax_mini_reflect_vm_RefNative_getSuspendCount},
-        {"javax/mini/reflect/vm/RefNative", "getFrameCount",         "(Ljava/lang/Thread;)I",                 javax_mini_reflect_vm_RefNative_getFrameCount},
-        {"javax/mini/reflect/vm/RefNative", "stopThread",            "(Ljava/lang/Thread;J)I",                javax_mini_reflect_vm_RefNative_stopThread},
-        {"javax/mini/reflect/vm/RefNative", "getStackFrame",         "(Ljava/lang/Thread;)J",                 javax_mini_reflect_vm_RefNative_getStackFrame},
-        {"javax/mini/reflect/vm/RefNative", "getGarbageReferedObjs", "()[Ljava/lang/Object;",                 javax_mini_reflect_vm_RefNative_getGarbageReferedObjs},
-        {"javax/mini/reflect/vm/RefNative", "getGarbageStatus",      "()I",                                   javax_mini_reflect_vm_RefNative_getGarbageStatus},
-        {"javax/mini/reflect/MemAccess",    "readByte0",             "(JI)B",                                 javax_mini_reflect_MemAccess_readByte0},
-        {"javax/mini/reflect/MemAccess",    "readShort0",            "(JI)S",                                 javax_mini_reflect_MemAccess_readShort0},
-        {"javax/mini/reflect/MemAccess",    "readInt0",              "(JI)I",                                 javax_mini_reflect_MemAccess_readInt0},
-        {"javax/mini/reflect/MemAccess",    "readLong0",             "(JI)J",                                 javax_mini_reflect_MemAccess_readLong0},
-        {"javax/mini/reflect/MemAccess",    "readRefer0",            "(JI)J",                                 javax_mini_reflect_MemAccess_readRefer0},
-        {"javax/mini/reflect/ReflectClass", "mapReference",          "(J)V",                                  javax_mini_reflect_ReflectClass_mapReference},
-        {"javax/mini/reflect/Field",        "mapField",              "(J)V",                                  javax_mini_reflect_Field_mapField},
-        {"javax/mini/reflect/Method",       "mapMethod",             "(J)V",                                  javax_mini_reflect_Method_mapMethod},
-        {"javax/mini/reflect/Method",       "invokeMethod",          "(JLjava/lang/Object;[J)J",              javax_mini_reflect_Method_invokeMethod},
-        {"javax/mini/reflect/StackFrame",   "mapRuntime",            "(J)V",                                  javax_mini_reflect_StackFrame_mapRuntime},
-        {"javax/mini/reflect/Array",        "mapArray",              "(J)V",                                  javax_mini_reflect_Array_mapArray},
+        {"org/mini/reflect/vm/RefNative", "refIdSize",             "()I",                                   org_mini_reflect_vm_RefNative_refIdSize},
+        {"org/mini/reflect/vm/RefNative", "obj2id",                "(Ljava/lang/Object;)J",                 org_mini_reflect_vm_RefNative_obj2id},
+        {"org/mini/reflect/vm/RefNative", "id2obj",                "(J)Ljava/lang/Object;",                 org_mini_reflect_vm_RefNative_id2obj},
+        {"org/mini/reflect/vm/RefNative", "getClasses",            "()[Ljava/lang/Class;",                  org_mini_reflect_vm_RefNative_getClasses},
+        {"org/mini/reflect/vm/RefNative", "getClassByName",        "(Ljava/lang/String;)Ljava/lang/Class;", org_mini_reflect_vm_RefNative_getClassByName},
+        {"org/mini/reflect/vm/RefNative", "setLocalVal",           "(JIBJI)I",                              org_mini_reflect_vm_RefNative_setLocalVal},
+        {"org/mini/reflect/vm/RefNative", "getLocalVal",           "(JILorg/mini/jdwp/type/ValueType;)I", org_mini_reflect_vm_RefNative_getLocalVal},
+        {"org/mini/reflect/vm/RefNative", "getFieldVal",           "(JJLorg/mini/jdwp/type/ValueType;)I", org_mini_reflect_vm_RefNative_getFieldVal},
+        {"org/mini/reflect/vm/RefNative", "getThreads",            "()[Ljava/lang/Thread;",                 org_mini_reflect_vm_RefNative_getThreads},
+        {"org/mini/reflect/vm/RefNative", "getStatus",             "(Ljava/lang/Thread;)I",                 org_mini_reflect_vm_RefNative_getStatus},
+        {"org/mini/reflect/vm/RefNative", "suspendThread",         "(Ljava/lang/Thread;)I",                 org_mini_reflect_vm_RefNative_suspendThread},
+        {"org/mini/reflect/vm/RefNative", "resumeThread",          "(Ljava/lang/Thread;)I",                 org_mini_reflect_vm_RefNative_resumeThread},
+        {"org/mini/reflect/vm/RefNative", "getSuspendCount",       "(Ljava/lang/Thread;)I",                 org_mini_reflect_vm_RefNative_getSuspendCount},
+        {"org/mini/reflect/vm/RefNative", "getFrameCount",         "(Ljava/lang/Thread;)I",                 org_mini_reflect_vm_RefNative_getFrameCount},
+        {"org/mini/reflect/vm/RefNative", "stopThread",            "(Ljava/lang/Thread;J)I",                org_mini_reflect_vm_RefNative_stopThread},
+        {"org/mini/reflect/vm/RefNative", "getStackFrame",         "(Ljava/lang/Thread;)J",                 org_mini_reflect_vm_RefNative_getStackFrame},
+        {"org/mini/reflect/vm/RefNative", "getGarbageReferedObjs", "()[Ljava/lang/Object;",                 org_mini_reflect_vm_RefNative_getGarbageReferedObjs},
+        {"org/mini/reflect/vm/RefNative", "getGarbageStatus",      "()I",                                   org_mini_reflect_vm_RefNative_getGarbageStatus},
+        {"org/mini/reflect/MemAccess",    "readByte0",             "(JI)B",                                 org_mini_reflect_MemAccess_readByte0},
+        {"org/mini/reflect/MemAccess",    "readShort0",            "(JI)S",                                 org_mini_reflect_MemAccess_readShort0},
+        {"org/mini/reflect/MemAccess",    "readInt0",              "(JI)I",                                 org_mini_reflect_MemAccess_readInt0},
+        {"org/mini/reflect/MemAccess",    "readLong0",             "(JI)J",                                 org_mini_reflect_MemAccess_readLong0},
+        {"org/mini/reflect/MemAccess",    "readRefer0",            "(JI)J",                                 org_mini_reflect_MemAccess_readRefer0},
+        {"org/mini/reflect/ReflectClass", "mapReference",          "(J)V",                                  org_mini_reflect_ReflectClass_mapReference},
+        {"org/mini/reflect/Field",        "mapField",              "(J)V",                                  org_mini_reflect_Field_mapField},
+        {"org/mini/reflect/Method",       "mapMethod",             "(J)V",                                  org_mini_reflect_Method_mapMethod},
+        {"org/mini/reflect/Method",       "invokeMethod",          "(JLjava/lang/Object;[J)J",              org_mini_reflect_Method_invokeMethod},
+        {"org/mini/reflect/StackFrame",   "mapRuntime",            "(J)V",                                  org_mini_reflect_StackFrame_mapRuntime},
+        {"org/mini/reflect/Array",        "mapArray",              "(J)V",                                  org_mini_reflect_Array_mapArray},
 
 };
 

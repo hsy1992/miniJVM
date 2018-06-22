@@ -33,6 +33,8 @@ public final class Integer {
      * field is <tt>2147483647</tt>.
      */
     public static final int MAX_VALUE = 0x7fffffff;
+    
+    public static final Class<Integer>  TYPE = (Class<Integer>) Class.getPrimitiveClass("int");
 
     /**
      * All possible chars for representing a number as a String

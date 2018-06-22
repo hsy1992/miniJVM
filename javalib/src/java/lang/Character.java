@@ -76,6 +76,8 @@ public final class Character extends Object {
      * The value of the Character.
      */
     private char value;
+    
+    public static final Class<Character>     TYPE = (Class<Character>) Class.getPrimitiveClass("char");
 
     /**
      * Constructs a <code>Character</code> object and initializes it so that it

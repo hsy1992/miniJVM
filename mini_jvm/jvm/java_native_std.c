@@ -192,6 +192,35 @@ s32 java_lang_Class_getName(Runtime *runtime, JClass *clazz) {
     return 0;
 }
 
+s32 java_lang_Class_getPrimitiveClass(Runtime *runtime, JClass *clazz) {
+    RuntimeStack *stack = runtime->stack;
+    Instance *jstr = localvar_getRefer(runtime->localvar, 0);
+    if (jstr) {
+        Utf8String *ustr = utf8_create();
+        jstring_2_utf8(jstr, ustr);
+        JClass *cl = classes_get(ustr);
+        if (!cl) {
+            garbage_thread_lock();
+            cl = class_create(runtime);
+//            if (utf8_equals_c(ustr, "int")) {
+//            }
+            cl->name = ustr;
+            classes_put(cl);
+            garbage_thread_unlock();
+        } else {
+            utf8_destory(ustr);
+        }
+        push_ref(stack, cl);
+    } else {
+        push_ref(stack, NULL);
+    }
+#if _JVM_DEBUG_BYTECODE_DETAIL > 5
+    invoke_deepth(runtime);
+    jvm_printf("java_lang_Class_getPrimitiveClass\n");
+#endif
+    return 0;
+}
+
 s32 java_lang_Class_getComponentType(Runtime *runtime, JClass *clazz) {
     RuntimeStack *stack = runtime->stack;
     JClass *cl = (JClass *) localvar_getRefer(runtime->localvar, 0);
@@ -1116,6 +1145,7 @@ static java_native_method method_table[] = {
         {"java/lang/Class",                     "isInterface",       "()Z",                                                      java_lang_Class_isInterface},
         {"java/lang/Class",                     "isArray",           "()Z",                                                      java_lang_Class_isArray},
         {"java/lang/Class",                     "getName",           "()Ljava/lang/String;",                                     java_lang_Class_getName},
+        {"java/lang/Class",                     "getPrimitiveClass", "(Ljava/lang/String;)Ljava/lang/Class;",                    java_lang_Class_getPrimitiveClass},
         {"java/lang/Class",                     "getComponentType",  "()Ljava/lang/Class;",                                      java_lang_Class_getComponentType},
         {"java/lang/Double",                    "doubleToLongBits",  "(D)J",                                                     java_lang_Double_doubleToLongBits},
         {"java/lang/Double",                    "longBitsToDouble",  "(J)D",                                                     java_lang_Double_longBitsToDouble},

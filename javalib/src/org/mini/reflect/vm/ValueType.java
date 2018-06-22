@@ -4,9 +4,9 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package javax.mini.reflect.vm;
+package org.mini.reflect.vm;
 
-import javax.mini.reflect.RConst;
+import org.mini.reflect.RConst;
 
 /**
  *

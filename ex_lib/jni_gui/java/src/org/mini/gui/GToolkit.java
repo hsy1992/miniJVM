@@ -6,8 +6,8 @@
 package org.mini.gui;
 
 import java.util.Hashtable;
-import javax.mini.reflect.Array;
-import javax.mini.reflect.vm.RefNative;
+import org.mini.reflect.Array;
+import org.mini.reflect.vm.RefNative;
 import org.mini.glfw.Glfw;
 import static org.mini.glfw.utils.Gutil.toUtf8;
 import org.mini.glfw.utils.Nutil;

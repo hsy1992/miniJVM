@@ -31,6 +31,8 @@ public final class Long {
      * The largest value of type <code>long</code>.
      */
     public static final long MAX_VALUE = 0x7fffffffffffffffL;
+    
+    public static final Class<Byte>     TYPE = (Class<Byte>) Class.getPrimitiveClass("long");
 
     /**
      * Creates a string representation of the first argument in the radix

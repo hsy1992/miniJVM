@@ -3,11 +3,11 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package javax.mini.reflect;
+package org.mini.reflect;
 
 import java.util.ArrayList;
 import java.util.List;
-import javax.mini.reflect.vm.RefNative;
+import org.mini.reflect.vm.RefNative;
 
 /**
  * 类方法的反射，以mini jvm中的 MethofInfo的实例内存地址进行初始化 初始化中会把内存中的相应变量反射到Method实例中。  <code>

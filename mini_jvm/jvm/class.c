@@ -235,7 +235,8 @@ void class_clinit(JClass *clazz, Runtime *runtime) {
             FieldInfo *fi = find_fieldInfo_by_fieldref(clazz, cfr->item.index, runtime);
             cfr->fieldInfo = fi;
             if (!fi) {
-                jvm_printf("field not found %s.%d \n", utf8_cstr(clazz->name), (cfr->nameAndTypeIndex));
+                jvm_printf("field not found %s.%s \n", utf8_cstr(class_get_constant_classref(clazz,cfr->classIndex)->name)
+                        , utf8_cstr(class_get_constant_utf8(clazz, class_get_constant_name_and_type(clazz, cfr->nameAndTypeIndex)->nameIndex)->utfstr));
             }
             if (fi->_this_class->status < CLASS_STATUS_CLINITED) {
                 class_clinit(fi->_this_class, runtime);
