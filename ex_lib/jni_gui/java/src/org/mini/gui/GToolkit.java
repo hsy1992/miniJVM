@@ -6,7 +6,7 @@
 package org.mini.gui;
 
 import java.util.Hashtable;
-import org.mini.reflect.Array;
+import org.mini.reflect.ReflectArray;
 import org.mini.reflect.vm.RefNative;
 import org.mini.glfw.Glfw;
 import static org.mini.glfw.utils.Gutil.toUtf8;
@@ -50,7 +50,7 @@ public class GToolkit {
      * @return
      */
     public static long getArrayDataPtr(Object array) {
-        Array reflect_arr = new Array(RefNative.obj2id(array));
+        ReflectArray reflect_arr = new ReflectArray(RefNative.obj2id(array));
         return reflect_arr.getDataPtr();
     }
 

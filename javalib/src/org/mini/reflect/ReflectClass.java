@@ -40,8 +40,8 @@ public class ReflectClass {
     public long interfaces[];
     public long classObj;//类对象
 
-    private Field[] fields;
-    private Method[] methods;
+    private ReflectField[] fields;
+    private ReflectMethod[] methods;
 
     public ReflectClass(long classId) {
         this.classId = classId;
@@ -53,9 +53,9 @@ public class ReflectClass {
         if (fields != null) {
             return;
         }
-        fields = new Field[fieldIds.length];
+        fields = new ReflectField[fieldIds.length];
         for (int i = 0; i < fieldIds.length; i++) {
-            fields[i] = new Field(fieldIds[i]);
+            fields[i] = new ReflectField(fieldIds[i]);
         }
     }
 
@@ -63,21 +63,21 @@ public class ReflectClass {
         if (methods != null) {
             return;
         }
-        methods = new Method[methodIds.length];
+        methods = new ReflectMethod[methodIds.length];
         for (int i = 0; i < methodIds.length; i++) {
-            methods[i] = new Method(methodIds[i]);
+            methods[i] = new ReflectMethod(methodIds[i]);
         }
     }
 
-    public Method[] getMethods() {
+    public ReflectMethod[] getMethods() {
         loadMethods();
         return methods;
     }
 
-    public Method getMethod(String methodName, String methodSignature) {
+    public ReflectMethod getMethod(String methodName, String methodSignature) {
         loadMethods();
         for (int i = 0; i < methods.length; i++) {
-            Method m = methods[i];
+            ReflectMethod m = methods[i];
             if (m.methodName.equals(methodName) && m.signature.equals(methodSignature)) {
                 return methods[i];
             }
@@ -85,10 +85,10 @@ public class ReflectClass {
         return null;
     }
 
-    public Method getMethod(String methodName, Class<?>... parameterTypes) {
+    public ReflectMethod getMethod(String methodName, Class<?>... parameterTypes) {
         loadMethods();
         for (int i = 0; i < methods.length; i++) {
-            Method m = methods[i];
+            ReflectMethod m = methods[i];
             if (m.methodName.equals(methodName)) {
                 boolean found = true;
                 Class[] paras = m.getParameterTypes();
@@ -109,7 +109,7 @@ public class ReflectClass {
         return null;
     }
 
-    public Method getMethod(long methodId) {
+    public ReflectMethod getMethod(long methodId) {
         loadMethods();
         for (int i = 0; i < methodIds.length; i++) {
             if (methods[i].methodId == methodId) {
@@ -119,7 +119,23 @@ public class ReflectClass {
         return null;
     }
 
-    public Field getField(long fieldId) {
+    public ReflectField[] getFields() {
+        loadFields();
+        return fields;
+    }
+
+    public ReflectField getField(String name) {
+        loadFields();
+        for (int i = 0; i < fields.length; i++) {
+            ReflectField f = fields[i];
+            if (f.fieldName.equals(name)) {
+                return f;
+            }
+        }
+        return null;
+    }
+
+    public ReflectField getField(long fieldId) {
         loadFields();
         for (int i = 0; i < fieldIds.length; i++) {
             if (fields[i].fieldId == fieldId) {

@@ -16,7 +16,7 @@ package org.mini.reflect;
  * 
  * @author gust
  */
-public class Array {
+public class ReflectArray {
 
     //不可随意改动字段类型及名字，要和native一起改
     public long arrayId;
@@ -27,7 +27,7 @@ public class Array {
     //
     public MemAccess data_ptr;
 
-    public Array(long array) {
+    public ReflectArray(long array) {
         arrayId = array;
         mapArray(arrayId);
         data_ptr = new MemAccess(arr_addr);

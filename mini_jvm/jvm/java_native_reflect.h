@@ -14,9 +14,9 @@ extern "C" {
 #endif
 
 static c8 *JDWP_CLASS_REFERENCE = "org/mini/reflect/ReflectClass";
-static c8 *JDWP_CLASS_FIELD = "org/mini/reflect/Field";
-static c8 *JDWP_CLASS_METHOD = "org/mini/reflect/Method";
-static c8 *JDWP_CLASS_ARRAY = "org/mini/reflect/Array";
+static c8 *JDWP_CLASS_FIELD = "org/mini/reflect/ReflectField";
+static c8 *JDWP_CLASS_METHOD = "org/mini/reflect/ReflectMethod";
+static c8 *JDWP_CLASS_ARRAY = "org/mini/reflect/ReflectArray";
 static c8 *JDWP_CLASS_RUNTIME = "org/mini/reflect/StackFrame";
 static c8 *JDWP_CLASS_LOCALVARTABLE = "org/mini/reflect/LocalVarTable";
 static c8 *JDWP_CLASS_VALUETYPE = "org/mini/reflect/vm/ValueType";

@@ -36,7 +36,7 @@ import org.mini.reflect.vm.RefNative;
  *
  * @author gust
  */
-public class Method {
+public class ReflectMethod {
 
     //不可随意改动字段类型及名字，要和native一起改
     public long methodId;
@@ -55,7 +55,7 @@ public class Method {
     private String[] paras;//参数列表
     private Class[] paras_class;
 
-    public Method(long mid) {
+    public ReflectMethod(long mid) {
         if (mid == 0) {
             throw new IllegalArgumentException();
         }

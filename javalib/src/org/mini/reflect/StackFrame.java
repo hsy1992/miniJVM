@@ -31,7 +31,7 @@ public class StackFrame {
 
     public StackFrame son;
     public StackFrame parent;
-    public Method method;
+    public ReflectMethod method;
     public long[] localVariables;
     public long localThis;
 
@@ -44,7 +44,7 @@ public class StackFrame {
         this.son = son;
         mapRuntime(runtimeId);
         if (methodId != 0) {
-            method = new Method(methodId);
+            method = new ReflectMethod(methodId);
         }
         if (parentId != 0) {
             parent = new StackFrame(parentId, this);

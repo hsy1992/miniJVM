@@ -416,6 +416,28 @@ s32 getDataTypeIndex(c8 ch) {
     return 0;
 }
 
+c8 *getDataTypeFullName(c8 ch) {
+    switch (ch) {
+        case 'I':
+            return "int";
+        case 'C':
+            return "char";
+        case 'B':
+            return "byte";
+        case 'Z':
+            return "boolean";
+        case 'J':
+            return "long";
+        case 'F':
+            return "float";
+        case 'D':
+            return "double";
+        case 'S':
+            return "short";
+    }
+    return NULL;
+}
+
 
 u8 getDataTypeTag(s32 index) {
     return data_type_str[index];
@@ -1160,6 +1182,34 @@ Instance *instance_copy(Runtime *runtime, Instance *src, s32 deep_copy) {
     }
     gc_refer_reg(runtime, dst);
     return dst;
+}
+
+//===============================    实例化 java.lang.Class  ==================================
+Instance *insOfJavaLangClass_get(Runtime *runtime, JClass *clazz) {
+    JClass *java_lang_class = classes_load_get_c(STR_CLASS_JAVA_LANG_CLASS, runtime);
+    if (java_lang_class) {
+        if (clazz->ins_class) {
+            return clazz->ins_class;
+        } else {
+            Instance *ins = instance_create(runtime, java_lang_class);
+            gc_refer_hold(ins);
+            instance_init(ins, runtime);
+            gc_refer_reg(runtime, ins);
+            clazz->ins_class = ins;
+            insOfJavaLangClass_set_classHandle(ins, clazz);
+            return ins;
+        }
+    }
+    return NULL;
+}
+
+
+JClass *insOfJavaLangClass_get_classHandle(Instance *insOfJavaLangClass) {
+    return (JClass *) (intptr_t) getFieldLong(getInstanceFieldPtr(insOfJavaLangClass, jvm_runtime_cache.class_classHandle));
+}
+
+void insOfJavaLangClass_set_classHandle(Instance *insOfJavaLangClass, JClass *handle) {
+    setFieldLong(getInstanceFieldPtr(insOfJavaLangClass, jvm_runtime_cache.class_classHandle), (s64) (intptr_t) handle);
 }
 
 //===============================    实例化字符串  ==================================

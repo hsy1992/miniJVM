@@ -267,7 +267,10 @@ static inline u8 *_op_ldc_impl(u8 *opCode, RuntimeStack *stack, JClass *clazz, R
         }
         case CONSTANT_CLASS: {
             JClass *cl = classes_load_get(class_get_constant_classref(clazz, index)->name, runtime);
-            push_ref(stack, cl);
+            if (!cl->ins_class) {
+                cl->ins_class = insOfJavaLangClass_get(runtime, cl);
+            }
+            push_ref(stack, cl->ins_class);
             break;
         }
         default: {
@@ -536,7 +539,7 @@ s32 execute_method_impl(MethodInfo *method, Runtime *pruntime, JClass *clazz) {
         class_clinit(clazz, runtime);
     }
     s32 method_sync = method->access_flags & ACC_SYNCHRONIZED;
-//    if (utf8_equals_c(method->name, "t24")) {
+//    if (utf8_equals_c(method->name, "getMethod")) {
 //        s32 debug = 1;
 //    }
     RuntimeStack *stack = runtime->stack;

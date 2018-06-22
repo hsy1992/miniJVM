@@ -37,6 +37,8 @@ c8 *STR_FIELD_VALUE = "value";
 c8 *STR_FIELD_COUNT = "count";
 c8 *STR_FIELD_OFFSET = "offset";
 
+c8 *STR_FIELD_CLASSHANDLE = "classHandle";
+
 c8 *STR_METHOD_CLINIT = "<clinit>";
 c8 *STR_METHOD_FINALIZE = "finalize";
 

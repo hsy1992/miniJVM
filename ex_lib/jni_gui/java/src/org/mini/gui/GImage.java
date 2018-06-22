@@ -5,7 +5,7 @@
  */
 package org.mini.gui;
 
-import org.mini.reflect.Array;
+import org.mini.reflect.ReflectArray;
 import org.mini.reflect.vm.RefNative;
 import org.mini.glfw.utils.Gutil;
 
@@ -17,7 +17,7 @@ import org.mini.glfw.utils.Gutil;
 public class GImage {
 
     int texture;
-    Array refectArr;
+    ReflectArray refectArr;
     int[] w_h_d = new int[3];
 
     public GImage(int textureid, int w, int h) {

@@ -92,6 +92,8 @@ void class_clear_refer(JClass *clazz) {
         ConstantUTF8 *cutf = arraylist_get_value(utf8list, i);
         gc_refer_release(cutf->jstr);
     }
+    gc_refer_release(clazz->ins_class);
+    clazz->ins_class = NULL;
 }
 //===============================    初始化相关  ==================================
 
@@ -168,7 +170,12 @@ s32 class_prepar(JClass *clazz, Runtime *runtime) {
     }
 
     //预计算字段在实例内存中的偏移，节约运行时时间
-    if (utf8_equals_c(clazz->name, STR_CLASS_JAVA_LANG_STRING)) {
+    if (utf8_equals_c(clazz->name, STR_CLASS_JAVA_LANG_CLASS)) {
+        FieldInfo *fi;
+        fi = find_fieldInfo_by_name_c(STR_CLASS_JAVA_LANG_CLASS, STR_FIELD_CLASSHANDLE, "J");
+        jvm_runtime_cache.class_classHandle = fi;
+
+    } else if (utf8_equals_c(clazz->name, STR_CLASS_JAVA_LANG_STRING)) {
         FieldInfo *fi;
         fi = find_fieldInfo_by_name_c(STR_CLASS_JAVA_LANG_STRING, STR_FIELD_COUNT, "I");
         jvm_runtime_cache.string_count = fi;
@@ -235,8 +242,7 @@ void class_clinit(JClass *clazz, Runtime *runtime) {
             FieldInfo *fi = find_fieldInfo_by_fieldref(clazz, cfr->item.index, runtime);
             cfr->fieldInfo = fi;
             if (!fi) {
-                jvm_printf("field not found %s.%s \n", utf8_cstr(class_get_constant_classref(clazz,cfr->classIndex)->name)
-                        , utf8_cstr(class_get_constant_utf8(clazz, class_get_constant_name_and_type(clazz, cfr->nameAndTypeIndex)->nameIndex)->utfstr));
+                jvm_printf("field not found %s.%s \n", utf8_cstr(class_get_constant_classref(clazz, cfr->classIndex)->name), utf8_cstr(class_get_constant_utf8(clazz, class_get_constant_name_and_type(clazz, cfr->nameAndTypeIndex)->nameIndex)->utfstr));
             }
             if (fi->_this_class->status < CLASS_STATUS_CLINITED) {
                 class_clinit(fi->_this_class, runtime);

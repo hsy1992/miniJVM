@@ -30,6 +30,9 @@ typedef struct _OptimizeCache {
     FieldInfo *thread_name;
     FieldInfo *thread_stackFrame;
     //
+    FieldInfo *class_classHandle;
+
+    //
     FieldInfo *stacktrace_declaringClass;
     FieldInfo *stacktrace_methodName;
     FieldInfo *stacktrace_fileName;
@@ -47,6 +50,8 @@ int unicode_2_utf8(u16 *jchar_arr, Utf8String *ustr, s32 totalSize);
 void swap_endian_little_big(u8 *ptr, s32 size);
 
 s32 getDataTypeIndex(c8 ch);
+
+c8 *getDataTypeFullName(c8 ch);
 
 s32 isDataReferByTag(c8 c);
 
@@ -195,6 +200,16 @@ s32 getLineNumByIndex(CodeAttribute *ca, s32 offset);
 s32 _loadFileContents(c8 *file, ByteBuf *buf);
 
 ByteBuf *load_file_from_classpath(ClassLoader *loader, Utf8String *path);
+
+
+//===============================    实例化 java.lang.Class  ==================================
+
+Instance *insOfJavaLangClass_get(Runtime *runtime, JClass *clazz);
+
+void insOfJavaLangClass_set_classHandle(Instance *insOfJavaLangClass, JClass *handle);
+
+JClass *insOfJavaLangClass_get_classHandle(Instance *insOfJavaLangClass);
+
 ////======================= jstring =============================
 
 Instance *jstring_create(Utf8String *src, Runtime *runtime);

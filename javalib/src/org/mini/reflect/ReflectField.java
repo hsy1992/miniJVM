@@ -12,7 +12,7 @@ package org.mini.reflect;
  * 
  * @author gust
  */
-public class Field {
+public class ReflectField {
 
     //不可随意改动字段类型及名字，要和native一起改
     public long fieldId;
@@ -20,7 +20,7 @@ public class Field {
     public String signature;
     public short accessFlags;
 
-    public Field(long fid) {
+    public ReflectField(long fid) {
         this.fieldId = fid;
         mapField(fieldId);
     }

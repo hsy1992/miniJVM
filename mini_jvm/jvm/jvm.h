@@ -199,6 +199,8 @@ extern c8 *STR_FIELD_VALUE;
 extern c8 *STR_FIELD_COUNT;
 extern c8 *STR_FIELD_OFFSET;
 
+c8 *STR_FIELD_CLASSHANDLE;
+
 extern c8 *STR_METHOD_CLINIT;
 extern c8 *STR_METHOD_FINALIZE;
 
@@ -621,6 +623,10 @@ struct _ClassType {
     s32 field_instance_len; //非静态变量长度
     s32 field_static_len; //静态变量内存长度
     c8 *field_static; //静态变量内存地址
+
+    //
+    Instance *ins_class;
+
     //public:
     s32 (*_load_class_from_bytes)(struct _ClassType *_this, ByteBuf *buf);
 
