@@ -1,4 +1,4 @@
-#include "../bytebuf.h"
+#include "bytebuf.h"
 #include "miniz.c"
 
 

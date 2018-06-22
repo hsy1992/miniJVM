@@ -16,7 +16,7 @@ include_directories()
 
 set(SOURCE_FILES
         utils/d_type.h
-        utils/d_utils.c
+        utils/d_type.c
         utils/arraylist.c
         utils/arraylist.h
         utils/hashtable.c
@@ -24,7 +24,6 @@ set(SOURCE_FILES
         utils/utf8_string.c
         utils/utf8_string.h
         utils/pairlist.h
-        utils/pairlist.c
         utils/hashset.c
         utils/hashset.h
         jvm/jvm.h
@@ -50,12 +49,11 @@ set(SOURCE_FILES
         utils/tinycthread.c
         utils/linkedlist.c
         utils/linkedlist.h
-        utils/spinlock.c
         utils/spinlock.h
         utils/bytebuf.c
         utils/bytebuf.h
-        utils/miniz/miniz_wrapper.c
-        utils/miniz/miniz_wrapper.h
+        utils/miniz_wrapper.c
+        utils/miniz_wrapper.h
         utils/dirent_win.h
         utils/ltalloc.c
         utils/ltalloc.h
@@ -79,7 +77,7 @@ MESSAGE(STATUS "platform: ${CMAKE_SYSTEM_NAME}")
     ENDIF ()
 #else ()
 
-    add_executable(mini_jvm ${SOURCE_FILES} main.c)
+    add_executable(mini_jvm ${SOURCE_FILES} main.c )
     TARGET_LINK_LIBRARIES(mini_jvm pthread m)
     #Set link library.
     IF (APPLE)

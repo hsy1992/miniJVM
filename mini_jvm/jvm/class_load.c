@@ -7,7 +7,7 @@
 #include <string.h>
 #include <sys/stat.h>
 #include "../utils/bytebuf.h"
-#include "../utils/miniz/miniz_wrapper.h"
+#include "../utils/miniz_wrapper.h"
 #include "jvm.h"
 #include "jvm_util.h"
 #include "garbage.h"

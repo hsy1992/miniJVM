@@ -8,7 +8,7 @@
 #include "jvm.h"
 
 #include <sys/stat.h>
-#include "../utils/miniz/miniz_wrapper.h"
+#include "../utils/miniz_wrapper.h"
 #include "jvm_util.h"
 #include "garbage.h"
 #include "java_native_reflect.h"

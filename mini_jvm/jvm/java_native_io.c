@@ -7,7 +7,7 @@
 #include "garbage.h"
 #include "java_native_io.h"
 #include "jvm_util.h"
-#include "../utils/miniz/miniz_wrapper.h"
+#include "../utils/miniz_wrapper.h"
 #include <sys/stat.h>
 #include <stdlib.h>
 #include <limits.h>
