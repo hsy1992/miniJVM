@@ -28,7 +28,7 @@ import org.mini.reflect.vm.RefNative;
  * @author	Kenneth Russell
  * @author	Nakul Saraiya
  */
-public final class Constructor<T> {
+public final class Constructor<T> implements Member{
 
     Class<T> clazz;
     ReflectMethod refMethod;
@@ -54,8 +54,19 @@ public final class Constructor<T> {
         return (T) obj;
     }
 
+
     @Override
-    public boolean equals(Object o) {
-        return refMethod == o;
+    public Class getDeclaringClass() {
+        return clazz;
+    }
+
+    @Override
+    public int getModifiers() {
+        return refMethod.accessFlags;
+    }
+
+    @Override
+    public boolean isSynthetic() {
+        return false;
     }
 }

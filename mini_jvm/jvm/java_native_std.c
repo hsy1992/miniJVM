@@ -74,7 +74,7 @@ s32 java_lang_Class_forName(Runtime *runtime, JClass *clazz) {
             push_ref(stack, (__refer) exception);
             ret = RUNTIME_STATUS_EXCEPTION;
         } else {
-            Instance *ins = insOfJavaLangClass_get(runtime, cl);
+            Instance *ins = insOfJavaLangClass_create_get(runtime, cl);
             push_ref(stack, ins);
         }
         utf8_destory(ustr);
@@ -95,7 +95,7 @@ s32 java_lang_Class_newInstance(Runtime *runtime, JClass *clazz) {
     JClass *cl = insOfJavaLangClass_get_classHandle((Instance *) localvar_getRefer(runtime->localvar, 0));
     Instance *ins = NULL;
     s32 ret = 0;
-    if (cl && !cl->arr_type_index) {//class exists and not array class
+    if (cl && !cl->mb.arr_type_index) {//class exists and not array class
         ins = instance_create(runtime, cl);
         gc_refer_hold(ins);
         instance_init(ins, runtime);
@@ -168,7 +168,7 @@ s32 java_lang_Class_isInterface(Runtime *runtime, JClass *clazz) {
 s32 java_lang_Class_isArray(Runtime *runtime, JClass *clazz) {
     RuntimeStack *stack = runtime->stack;
     JClass *cl = insOfJavaLangClass_get_classHandle((Instance *) localvar_getRefer(runtime->localvar, 0));
-    if (cl->arr_type_index) {
+    if (cl->mb.arr_type_index) {
         push_int(stack, 1);
     } else {
         push_int(stack, 0);
@@ -205,21 +205,7 @@ s32 java_lang_Class_getPrimitiveClass(Runtime *runtime, JClass *clazz) {
     if (jstr) {
         Utf8String *ustr = utf8_create();
         jstring_2_utf8(jstr, ustr);
-        JClass *cl = classes_get(ustr);
-        if (!cl) {
-            garbage_thread_lock();
-            cl = class_create(runtime);
-//            if (utf8_equals_c(ustr, "int")) {
-//            }
-            cl->name = ustr;
-            classes_put(cl);
-            garbage_thread_unlock();
-        } else {
-            utf8_destory(ustr);
-        }
-        if (!cl->ins_class) {
-            cl->ins_class = insOfJavaLangClass_get(runtime, cl);
-        }
+        JClass *cl = primitive_class_create_get(runtime, ustr);
         push_ref(stack, cl->ins_class);
     } else {
         push_ref(stack, NULL);
@@ -511,7 +497,7 @@ s32 java_lang_Object_getClass(Runtime *runtime, JClass *clazz) {
     Instance *ins = (Instance *) localvar_getRefer(runtime->localvar, 0);
     JClass *cl = (__refer) ins->mb.clazz;
     if (!cl->ins_class) {
-        cl->ins_class = insOfJavaLangClass_get(runtime, cl);
+        cl->ins_class = insOfJavaLangClass_create_get(runtime, cl);
     }
     push_ref(stack, cl->ins_class);
 #if _JVM_DEBUG_BYTECODE_DETAIL > 5
@@ -775,7 +761,7 @@ s32 java_lang_System_arraycopy(Runtime *runtime, JClass *clazz) {
         push_ref(stack, (__refer) exception);
         ret = RUNTIME_STATUS_EXCEPTION;
     } else {
-        s32 bytes = data_type_bytes[src->mb.clazz->arr_type_index];
+        s32 bytes = data_type_bytes[src->mb.clazz->mb.arr_type_index];
         //根据元素宽
         src_start *= bytes;
         count *= bytes;

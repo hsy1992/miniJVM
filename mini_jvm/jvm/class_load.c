@@ -1021,7 +1021,7 @@ s32 load_class(ClassLoader *loader, Utf8String *pClassName, Runtime *runtime) {
     utf8_replace_c(clsName, ".", "/");
     JClass *tmpclazz = classes_get(clsName);
     if (utf8_indexof_c(clsName, "[") == 0) {
-        tmpclazz = array_class_get_by_name(runtime, clsName);
+        tmpclazz = array_class_create_get(runtime, clsName);
     }
     if (!tmpclazz) {
         ByteBuf *bytebuf = NULL;

@@ -268,7 +268,7 @@ static inline u8 *_op_ldc_impl(u8 *opCode, RuntimeStack *stack, JClass *clazz, R
         case CONSTANT_CLASS: {
             JClass *cl = classes_load_get(class_get_constant_classref(clazz, index)->name, runtime);
             if (!cl->ins_class) {
-                cl->ins_class = insOfJavaLangClass_get(runtime, cl);
+                cl->ins_class = insOfJavaLangClass_create_get(runtime, cl);
             }
             push_ref(stack, cl->ins_class);
             break;
@@ -3341,7 +3341,7 @@ s32 execute_method_impl(MethodInfo *method, Runtime *pruntime, JClass *clazz) {
                             } else if (ins->mb.type == MEM_TYPE_ARR) {
                                 Utf8String *utf = class_get_constant_classref(clazz, typeIdx)->name;
                                 u8 ch = utf8_char_at(utf, 1);
-                                if (getDataTypeIndex(ch) == ins->mb.clazz->arr_type_index) {
+                                if (getDataTypeIndex(ch) == ins->mb.clazz->mb.arr_type_index) {
                                     checkok = 1;
                                 }
                             } else if (ins->mb.type == MEM_TYPE_CLASS) {

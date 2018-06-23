@@ -29,7 +29,7 @@ import org.mini.reflect.ReflectMethod;
  * @author Kenneth Russell
  * @author Nakul Saraiya
  */
-public final class Method {
+public final class Method implements Member {
 
     Class clazz;
     ReflectMethod refMethod;
@@ -59,6 +59,24 @@ public final class Method {
 
     @Override
     public boolean equals(Object o) {
-        return refMethod == o;
+        if (o instanceof Method) {
+            return refMethod == ((Method) o).refMethod;
+        }
+        return false;
+    }
+
+    @Override
+    public Class getDeclaringClass() {
+        return clazz;
+    }
+
+    @Override
+    public int getModifiers() {
+        return refMethod.accessFlags;
+    }
+
+    @Override
+    public boolean isSynthetic() {
+        return false;
     }
 }

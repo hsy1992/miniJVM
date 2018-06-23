@@ -503,7 +503,7 @@ CodeAttribute *getCodeAttribute(MethodInfo *method) {
 
 
 s32 getClassType(JClass *clazz) {
-    if (clazz->arr_type_index) {
+    if (clazz->mb.arr_type_index) {
         return JDWP_TYPETAG_ARRAY;
     } else if (clazz->cff.access_flags & ACC_INTERFACE) {
         return JDWP_TYPETAG_INTERFACE;
@@ -552,7 +552,7 @@ c8 getInstanceOfClassTag(Instance *ins) {
     if (!ins)return JDWP_TAG_OBJECT;
     if (ins->mb.type == MEM_TYPE_CLASS)return JDWP_TAG_CLASS_OBJECT;
     JClass *clazz = ins->mb.clazz;
-    if (clazz->arr_type_index)return JDWP_TAG_ARRAY;
+    if (clazz->mb.arr_type_index)return JDWP_TAG_ARRAY;
     if (utf8_equals_c(clazz->name, STR_CLASS_JAVA_LANG_THREAD))return JDWP_TAG_THREAD;
     if (utf8_equals_c(clazz->name, STR_CLASS_JAVA_LANG_STRING))return JDWP_TAG_STRING;
     return JDWP_TAG_OBJECT;
@@ -683,7 +683,7 @@ void writeArrayRegion(JdwpPacket *res, Instance *arr, s32 firstIndex, s32 length
 }
 
 void getClassSignature(JClass *clazz, Utf8String *ustr) {
-    if (clazz->arr_type_index) {
+    if (clazz->mb.arr_type_index) {
         utf8_append(ustr, clazz->name);
     } else {
         utf8_append_c(ustr, "L");
@@ -1292,9 +1292,6 @@ s32 jdwp_client_process(JdwpClient *client, Runtime *runtime) {
 
                 signatureToName(signature);
                 JClass *cl = classes_load_get(signature, runtime);
-                if (!cl) {
-                    cl = array_class_get_by_name(runtime, signature);
-                }
                 if (cl == NULL) {
                     jdwppacket_write_int(res, 0);
                 } else {
@@ -1610,9 +1607,6 @@ s32 jdwp_client_process(JdwpClient *client, Runtime *runtime) {
                 s32 i;
                 for (i = 0; i < len; i++) {
                     JClass *cl = classes_load_get(ref->interfacePool.clasz[i].name, runtime);
-                    if (!cl) {
-                        cl = array_class_get_by_name(runtime, ref->interfacePool.clasz[i].name);
-                    }
                     jdwppacket_write_refer(res, cl);
                 }
                 //jvm_printf("ReferenceType_Interfaces:%s\n", utf8_cstr(ref->name));

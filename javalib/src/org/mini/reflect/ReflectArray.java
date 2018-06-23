@@ -113,4 +113,13 @@ public class ReflectArray {
     static native long getVal(long arrayId, int index);
 
     static native void setVal(long arrayId, int index, long val);
+
+    /*
+     * Private
+     */
+    public static native Object newArray(Class componentType, int length);
+
+    public static native Object multiNewArray(Class componentType,
+            int[] dimensions)
+            throws IllegalArgumentException;
 }

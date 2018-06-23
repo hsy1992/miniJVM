@@ -53,6 +53,8 @@ s32 getDataTypeIndex(c8 ch);
 
 c8 *getDataTypeFullName(c8 ch);
 
+u8 getDataTypeTagByName(Utf8String *name);
+
 s32 isDataReferByTag(c8 c);
 
 s32 isData8ByteByTag(c8 c);
@@ -204,7 +206,7 @@ ByteBuf *load_file_from_classpath(ClassLoader *loader, Utf8String *path);
 
 //===============================    实例化 java.lang.Class  ==================================
 
-Instance *insOfJavaLangClass_get(Runtime *runtime, JClass *clazz);
+Instance *insOfJavaLangClass_create_get(Runtime *runtime, JClass *clazz);
 
 void insOfJavaLangClass_set_classHandle(Instance *insOfJavaLangClass, JClass *handle);
 
@@ -332,6 +334,8 @@ JClass *array_class_get_by_name(Runtime *runtime, Utf8String *name);
 
 JClass *array_class_get_by_typetag(Runtime *runtime, Utf8String *tag);
 
+JClass *array_class_create_get(Runtime *runtime, Utf8String *desc);
+
 JClass *array_class_get_by_index(Runtime *runtime, s32 typeIdx);
 
 s32 jarray_destory(Instance *arr);
@@ -371,6 +375,8 @@ JClass *classes_load_get_c(c8 *pclassName, Runtime *runtime);
 s32 classes_put(JClass *clazz);
 
 JClass *classes_load_get(Utf8String *pclassName, Runtime *runtime);
+
+JClass *primitive_class_create_get(Runtime *runtime, Utf8String *ustr);
 
 void threadlist_add(Runtime *r);
 

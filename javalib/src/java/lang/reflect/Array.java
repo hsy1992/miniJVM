@@ -50,7 +50,7 @@ public final class Array {
      */
     public static Object newInstance(Class<?> componentType, int length)
             throws NegativeArraySizeException {
-        return newArray(componentType, length);
+        return ReflectArray.newArray(componentType, length);
     }
 
     /**
@@ -85,7 +85,7 @@ public final class Array {
      */
     public static Object newInstance(Class<?> componentType, int[] dimensions)
             throws IllegalArgumentException {
-        return multiNewArray(componentType, dimensions);
+        return ReflectArray.multiNewArray(componentType, dimensions);
     }
 
     /**
@@ -506,13 +506,6 @@ public final class Array {
         ra.setValObj(index, (Double) d);
     }
 
-    /*
-     * Private
-     */
-    private static native Object newArray(Class componentType, int length);
-
-    private static native Object multiNewArray(Class componentType,
-            int[] dimensions)
-            throws IllegalArgumentException;
+    
 
 }

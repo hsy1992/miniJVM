@@ -28,7 +28,7 @@ import org.mini.reflect.ReflectField;
  * @author Kenneth Russell
  * @author Nakul Saraiya
  */
-public final class Field {
+public final class Field implements Member {
 
     Class clazz;
     ReflectField refField;
@@ -44,7 +44,25 @@ public final class Field {
 
     @Override
     public boolean equals(Object o) {
-        return refField == o;
+        if (o instanceof Field) {
+            return refField == ((Field) o).refField;
+        }
+        return false;
+    }
+
+    @Override
+    public Class getDeclaringClass() {
+        return clazz;
+    }
+
+    @Override
+    public int getModifiers() {
+        return refField.accessFlags;
+    }
+
+    @Override
+    public boolean isSynthetic() {
+        return false;
     }
 
     /**

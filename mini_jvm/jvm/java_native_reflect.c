@@ -62,7 +62,7 @@ s32 org_mini_reflect_vm_RefNative_getClasses(Runtime *runtime, JClass *clazz) {
     for (; hashtable_iter_has_more(&hti);) {
         Utf8String *k = hashtable_iter_next_key(&hti);
         JClass *r = classes_get(k);
-        jarray_set_field(jarr, i, (intptr_t) insOfJavaLangClass_get(runtime, r));
+        jarray_set_field(jarr, i, (intptr_t) insOfJavaLangClass_create_get(runtime, r));
         i++;
     }
     push_ref(runtime->stack, jarr);//先放入栈，再关联回收器，防止多线程回收
@@ -78,12 +78,9 @@ s32 org_mini_reflect_vm_RefNative_getClassByName(Runtime *runtime, JClass *clazz
     Utf8String *ustr = utf8_create();
     jstring_2_utf8(jstr, ustr);
     utf8_replace_c(ustr, ".", "/");
-    JClass *cl = classes_get(ustr);
-    if (!cl) {
-        cl = array_class_get_by_name(runtime, ustr);
-    }
+    JClass *cl = classes_load_get(ustr,runtime);
     utf8_destory(ustr);
-    push_ref(runtime->stack, insOfJavaLangClass_get(runtime, cl));
+    push_ref(runtime->stack, insOfJavaLangClass_create_get(runtime, cl));
     return 0;
 }
 
@@ -93,7 +90,7 @@ s32 org_mini_reflect_vm_RefNative_newWithoutInit(Runtime *runtime, JClass *clazz
     JClass *cl = insOfJavaLangClass_get_classHandle((Instance *) localvar_getRefer(runtime->localvar, 0));
     Instance *ins = NULL;
     s32 ret = 0;
-    if (cl && !cl->arr_type_index) {//class exists and not array class
+    if (cl && !cl->mb.arr_type_index) {//class exists and not array class
         ins = instance_create(runtime, cl);
     }
     if (ins) {
@@ -110,7 +107,6 @@ s32 org_mini_reflect_vm_RefNative_newWithoutInit(Runtime *runtime, JClass *clazz
 #endif
     return ret;
 }
-
 
 
 s32 org_mini_reflect_vm_RefNative_setLocalVal(Runtime *runtime, JClass *clazz) {
@@ -283,6 +279,48 @@ s32 org_mini_reflect_ReflectArray_getVal(Runtime *runtime, JClass *clazz) {
     }
 #if _JVM_DEBUG_BYTECODE_DETAIL > 5
     jvm_printf("org_mini_reflect_ReflectArray_getVal\n");
+#endif
+    return 0;
+}
+
+
+s32 org_mini_reflect_ReflectArray_newArray(Runtime *runtime, JClass *clazz) {
+    s32 pos = 0;
+    JClass *cl = insOfJavaLangClass_get_classHandle((Instance *) localvar_getRefer(runtime->localvar, pos++));
+    s32 count = localvar_getInt(runtime->localvar, pos++);
+    Instance *arr = jarray_create_by_class(runtime, count, cl);
+
+    push_ref(runtime->stack, arr);
+#if _JVM_DEBUG_BYTECODE_DETAIL > 5
+    jvm_printf("org_mini_reflect_ReflectArray_newArray\n");
+#endif
+    return 0;
+}
+
+s32 org_mini_reflect_ReflectArray_multiNewArray(Runtime *runtime, JClass *clazz) {
+    s32 pos = 0;
+    JClass *cl = insOfJavaLangClass_get_classHandle((Instance *) localvar_getRefer(runtime->localvar, pos++));
+    Instance *dimarr = localvar_getRefer(runtime->localvar, pos++);
+    Utf8String *desc = utf8_create();
+    if (cl->primitive) {
+        utf8_insert(desc, 0, getDataTypeTagByName(cl->name));
+    } else if (cl->mb.arr_type_index) {
+        utf8_append(desc, cl->name);
+    } else {
+        utf8_append_c(desc, "L");
+        utf8_append(desc, cl->name);
+        utf8_append_c(desc, ";");
+    }
+    s32 i;
+    for (i = 0; i < dimarr->arr_length; i++) {
+        utf8_insert(desc, 0, '[');
+    }
+
+    Instance *arr = jarray_multi_create(runtime, (s32 *) dimarr->arr_body, dimarr->arr_length, desc, 0);
+
+    push_ref(runtime->stack, arr);
+#if _JVM_DEBUG_BYTECODE_DETAIL > 5
+    jvm_printf("org_mini_reflect_ReflectArray_multiNewArray\n");
 #endif
     return 0;
 }
@@ -809,34 +847,36 @@ s32 org_mini_reflect_ReflectArray_mapArray(Runtime *runtime, JClass *clazz) {
 }
 
 static java_native_method method_jdwp_table[] = {
-        {"org/mini/reflect/vm/RefNative",  "refIdSize",             "()I",                                   org_mini_reflect_vm_RefNative_refIdSize},
-        {"org/mini/reflect/vm/RefNative",  "obj2id",                "(Ljava/lang/Object;)J",                 org_mini_reflect_vm_RefNative_obj2id},
-        {"org/mini/reflect/vm/RefNative",  "id2obj",                "(J)Ljava/lang/Object;",                 org_mini_reflect_vm_RefNative_id2obj},
-        {"org/mini/reflect/vm/RefNative",  "getClasses",            "()[Ljava/lang/Class;",                  org_mini_reflect_vm_RefNative_getClasses},
-        {"org/mini/reflect/vm/RefNative",  "getClassByName",        "(Ljava/lang/String;)Ljava/lang/Class;", org_mini_reflect_vm_RefNative_getClassByName},
-        {"org/mini/reflect/vm/RefNative",  "newWithoutInit",        "(Ljava/lang/Class;)Ljava/lang/Object;", org_mini_reflect_vm_RefNative_newWithoutInit},
-        {"org/mini/reflect/vm/RefNative",  "setLocalVal",           "(JIBJI)I",                              org_mini_reflect_vm_RefNative_setLocalVal},
-        {"org/mini/reflect/vm/RefNative",  "getLocalVal",           "(JILorg/mini/jdwp/type/ValueType;)I",   org_mini_reflect_vm_RefNative_getLocalVal},
-        {"org/mini/reflect/vm/RefNative",  "getThreads",            "()[Ljava/lang/Thread;",                 org_mini_reflect_vm_RefNative_getThreads},
-        {"org/mini/reflect/vm/RefNative",  "getStatus",             "(Ljava/lang/Thread;)I",                 org_mini_reflect_vm_RefNative_getStatus},
-        {"org/mini/reflect/vm/RefNative",  "suspendThread",         "(Ljava/lang/Thread;)I",                 org_mini_reflect_vm_RefNative_suspendThread},
-        {"org/mini/reflect/vm/RefNative",  "resumeThread",          "(Ljava/lang/Thread;)I",                 org_mini_reflect_vm_RefNative_resumeThread},
-        {"org/mini/reflect/vm/RefNative",  "getSuspendCount",       "(Ljava/lang/Thread;)I",                 org_mini_reflect_vm_RefNative_getSuspendCount},
-        {"org/mini/reflect/vm/RefNative",  "getFrameCount",         "(Ljava/lang/Thread;)I",                 org_mini_reflect_vm_RefNative_getFrameCount},
-        {"org/mini/reflect/vm/RefNative",  "stopThread",            "(Ljava/lang/Thread;J)I",                org_mini_reflect_vm_RefNative_stopThread},
-        {"org/mini/reflect/vm/RefNative",  "getStackFrame",         "(Ljava/lang/Thread;)J",                 org_mini_reflect_vm_RefNative_getStackFrame},
-        {"org/mini/reflect/vm/RefNative",  "getGarbageReferedObjs", "()[Ljava/lang/Object;",                 org_mini_reflect_vm_RefNative_getGarbageReferedObjs},
-        {"org/mini/reflect/vm/RefNative",  "getGarbageStatus",      "()I",                                   org_mini_reflect_vm_RefNative_getGarbageStatus},
-        {"org/mini/reflect/ReflectClass",  "mapReference",          "(J)V",                                  org_mini_reflect_ReflectClass_mapReference},
-        {"org/mini/reflect/ReflectField",  "mapField",              "(J)V",                                  org_mini_reflect_ReflectField_mapField},
-        {"org/mini/reflect/ReflectField",  "getFieldVal",           "(JJ)J",                                 org_mini_reflect_ReflectField_getFieldVal},
-        {"org/mini/reflect/ReflectField",  "setFieldVal",           "(JJJ)V",                                org_mini_reflect_ReflectField_setFieldVal},
-        {"org/mini/reflect/ReflectMethod", "mapMethod",             "(J)V",                                  org_mini_reflect_ReflectMethod_mapMethod},
-        {"org/mini/reflect/ReflectMethod", "invokeMethod",          "(JLjava/lang/Object;[J)J",              org_mini_reflect_ReflectMethod_invokeMethod},
-        {"org/mini/reflect/StackFrame",    "mapRuntime",            "(J)V",                                  org_mini_reflect_StackFrame_mapRuntime},
-        {"org/mini/reflect/ReflectArray",  "mapArray",              "(J)V",                                  org_mini_reflect_ReflectArray_mapArray},
-        {"org/mini/reflect/ReflectArray",  "setVal",                "(JIJ)V",                                org_mini_reflect_ReflectArray_setVal},
-        {"org/mini/reflect/ReflectArray",  "getVal",                "(JI)J",                                 org_mini_reflect_ReflectArray_getVal},
+        {"org/mini/reflect/vm/RefNative",  "refIdSize",             "()I",                                     org_mini_reflect_vm_RefNative_refIdSize},
+        {"org/mini/reflect/vm/RefNative",  "obj2id",                "(Ljava/lang/Object;)J",                   org_mini_reflect_vm_RefNative_obj2id},
+        {"org/mini/reflect/vm/RefNative",  "id2obj",                "(J)Ljava/lang/Object;",                   org_mini_reflect_vm_RefNative_id2obj},
+        {"org/mini/reflect/vm/RefNative",  "getClasses",            "()[Ljava/lang/Class;",                    org_mini_reflect_vm_RefNative_getClasses},
+        {"org/mini/reflect/vm/RefNative",  "getClassByName",        "(Ljava/lang/String;)Ljava/lang/Class;",   org_mini_reflect_vm_RefNative_getClassByName},
+        {"org/mini/reflect/vm/RefNative",  "newWithoutInit",        "(Ljava/lang/Class;)Ljava/lang/Object;",   org_mini_reflect_vm_RefNative_newWithoutInit},
+        {"org/mini/reflect/vm/RefNative",  "setLocalVal",           "(JIBJI)I",                                org_mini_reflect_vm_RefNative_setLocalVal},
+        {"org/mini/reflect/vm/RefNative",  "getLocalVal",           "(JILorg/mini/jdwp/type/ValueType;)I",     org_mini_reflect_vm_RefNative_getLocalVal},
+        {"org/mini/reflect/vm/RefNative",  "getThreads",            "()[Ljava/lang/Thread;",                   org_mini_reflect_vm_RefNative_getThreads},
+        {"org/mini/reflect/vm/RefNative",  "getStatus",             "(Ljava/lang/Thread;)I",                   org_mini_reflect_vm_RefNative_getStatus},
+        {"org/mini/reflect/vm/RefNative",  "suspendThread",         "(Ljava/lang/Thread;)I",                   org_mini_reflect_vm_RefNative_suspendThread},
+        {"org/mini/reflect/vm/RefNative",  "resumeThread",          "(Ljava/lang/Thread;)I",                   org_mini_reflect_vm_RefNative_resumeThread},
+        {"org/mini/reflect/vm/RefNative",  "getSuspendCount",       "(Ljava/lang/Thread;)I",                   org_mini_reflect_vm_RefNative_getSuspendCount},
+        {"org/mini/reflect/vm/RefNative",  "getFrameCount",         "(Ljava/lang/Thread;)I",                   org_mini_reflect_vm_RefNative_getFrameCount},
+        {"org/mini/reflect/vm/RefNative",  "stopThread",            "(Ljava/lang/Thread;J)I",                  org_mini_reflect_vm_RefNative_stopThread},
+        {"org/mini/reflect/vm/RefNative",  "getStackFrame",         "(Ljava/lang/Thread;)J",                   org_mini_reflect_vm_RefNative_getStackFrame},
+        {"org/mini/reflect/vm/RefNative",  "getGarbageReferedObjs", "()[Ljava/lang/Object;",                   org_mini_reflect_vm_RefNative_getGarbageReferedObjs},
+        {"org/mini/reflect/vm/RefNative",  "getGarbageStatus",      "()I",                                     org_mini_reflect_vm_RefNative_getGarbageStatus},
+        {"org/mini/reflect/ReflectClass",  "mapReference",          "(J)V",                                    org_mini_reflect_ReflectClass_mapReference},
+        {"org/mini/reflect/ReflectField",  "mapField",              "(J)V",                                    org_mini_reflect_ReflectField_mapField},
+        {"org/mini/reflect/ReflectField",  "getFieldVal",           "(JJ)J",                                   org_mini_reflect_ReflectField_getFieldVal},
+        {"org/mini/reflect/ReflectField",  "setFieldVal",           "(JJJ)V",                                  org_mini_reflect_ReflectField_setFieldVal},
+        {"org/mini/reflect/ReflectMethod", "mapMethod",             "(J)V",                                    org_mini_reflect_ReflectMethod_mapMethod},
+        {"org/mini/reflect/ReflectMethod", "invokeMethod",          "(JLjava/lang/Object;[J)J",                org_mini_reflect_ReflectMethod_invokeMethod},
+        {"org/mini/reflect/StackFrame",    "mapRuntime",            "(J)V",                                    org_mini_reflect_StackFrame_mapRuntime},
+        {"org/mini/reflect/ReflectArray",  "mapArray",              "(J)V",                                    org_mini_reflect_ReflectArray_mapArray},
+        {"org/mini/reflect/ReflectArray",  "setVal",                "(JIJ)V",                                  org_mini_reflect_ReflectArray_setVal},
+        {"org/mini/reflect/ReflectArray",  "getVal",                "(JI)J",                                   org_mini_reflect_ReflectArray_getVal},
+        {"org/mini/reflect/ReflectArray",  "newArray",              "(Ljava/lang/Class;I)Ljava/lang/Object;",  org_mini_reflect_ReflectArray_newArray},
+        {"org/mini/reflect/ReflectArray",  "multiNewArray",         "(Ljava/lang/Class;[I)Ljava/lang/Object;", org_mini_reflect_ReflectArray_multiNewArray},
 
 };
 

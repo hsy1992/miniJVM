@@ -199,7 +199,7 @@ extern c8 *STR_FIELD_VALUE;
 extern c8 *STR_FIELD_COUNT;
 extern c8 *STR_FIELD_OFFSET;
 
-c8 *STR_FIELD_CLASSHANDLE;
+extern c8 *STR_FIELD_CLASSHANDLE;
 
 extern c8 *STR_METHOD_CLINIT;
 extern c8 *STR_METHOD_FINALIZE;
@@ -644,8 +644,8 @@ struct _ClassType {
     Pairlist *arr_class_type;//for object array create speedup,left is utf8 index of class, right is arr class
     ArrayList *insFieldPtrIndex;//for optmize , save object pointer field index
     ArrayList *staticFieldPtrIndex; //save static field index
-    s32 arr_type_index;
     s8 status;
+    u8 primitive;//primitive data type int/long/short/char/short/byte/float/double
 };
 
 
