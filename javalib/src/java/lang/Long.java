@@ -32,7 +32,7 @@ public final class Long {
      */
     public static final long MAX_VALUE = 0x7fffffffffffffffL;
     
-    public static final Class<Byte>     TYPE = (Class<Byte>) Class.getPrimitiveClass("long");
+    public static final Class<Long>     TYPE = (Class<Long>) Class.getPrimitiveClass("long");
 
     /**
      * Creates a string representation of the first argument in the radix

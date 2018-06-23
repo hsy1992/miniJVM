@@ -112,14 +112,11 @@ void _garbage_clear() {
 
     //release class static field
     classloader_release_classs_static_field(sys_classloader);
-    classloader_release_classs_static_field(array_classloader);
     while (garbage_collect());//collect classes
 
     //release classes
     classloader_destory(sys_classloader);
     sys_classloader = NULL;
-    classloader_destory(array_classloader);
-    array_classloader = NULL;
     while (garbage_collect());//collect classes
 
     //

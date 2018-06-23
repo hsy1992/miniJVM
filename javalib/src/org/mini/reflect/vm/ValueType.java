@@ -6,8 +6,6 @@
  */
 package org.mini.reflect.vm;
 
-import org.mini.reflect.RConst;
-
 /**
  *
  * @author gust

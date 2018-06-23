@@ -27,7 +27,7 @@ public class RefNative {
 
     public static native int getLocalVal(long frame, int slot, ValueType val);
 
-    public static native int getFieldVal(long objId, long fieldId, ValueType val);
+    public static native Object newWithoutInit(Class cl);
 
     //thread method
     static public native Thread[] getThreads();

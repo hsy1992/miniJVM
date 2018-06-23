@@ -192,8 +192,6 @@ void jvm_init(c8 *p_classpath, StaticLibRegFunc regFunc) {
 
     sys_classloader = classloader_create(p_classpath);
 
-    array_classloader = classloader_create("");
-
     memset(&jvm_runtime_cache, 0, sizeof(OptimizeCache));
 
     //本地方法库

@@ -7,6 +7,7 @@
 package java.lang.reflect;
 
 import org.mini.reflect.ReflectArray;
+import org.mini.reflect.vm.RefNative;
 
 /**
  * The <code>Array</code> class provides static methods to dynamically create
@@ -20,12 +21,6 @@ import org.mini.reflect.ReflectArray;
  * @author Nakul Saraiya
  */
 public final class Array {
-
-    ReflectArray refArray;
-
-    Array(ReflectArray refa) {
-        refArray = refa;
-    }
 
     /**
      * Constructor. Class Array is not instantiable.
@@ -89,7 +84,7 @@ public final class Array {
      * specified <code>dimensions</code> argument is negative.
      */
     public static Object newInstance(Class<?> componentType, int[] dimensions)
-            throws IllegalArgumentException, NegativeArraySizeException {
+            throws IllegalArgumentException {
         return multiNewArray(componentType, dimensions);
     }
 
@@ -101,8 +96,11 @@ public final class Array {
      * @exception IllegalArgumentException if the object argument is not an
      * array
      */
-    public static native int getLength(Object array)
-            throws IllegalArgumentException;
+    public static int getLength(Object array)
+            throws IllegalArgumentException {
+        ReflectArray ra = new ReflectArray(RefNative.obj2id(array));
+        return ra.length;
+    }
 
     /**
      * Returns the value of the indexed component in the specified array object.
@@ -120,8 +118,11 @@ public final class Array {
      * <code>index</code> argument is negative, or if it is greater than or
      * equal to the length of the specified array
      */
-    public static native Object get(Object array, int index)
-            throws IllegalArgumentException, ArrayIndexOutOfBoundsException;
+    public static Object get(Object array, int index)
+            throws IllegalArgumentException, ArrayIndexOutOfBoundsException {
+        ReflectArray ra = new ReflectArray(RefNative.obj2id(array));
+        return ra.getValObj(index);
+    }
 
     /**
      * Returns the value of the indexed component in the specified array object,
@@ -139,8 +140,11 @@ public final class Array {
      * equal to the length of the specified array
      * @see Array#get
      */
-    public static native boolean getBoolean(Object array, int index)
-            throws IllegalArgumentException, ArrayIndexOutOfBoundsException;
+    public static boolean getBoolean(Object array, int index)
+            throws IllegalArgumentException, ArrayIndexOutOfBoundsException {
+        ReflectArray ra = new ReflectArray(RefNative.obj2id(array));
+        return (Boolean) ra.getValObj(index);
+    }
 
     /**
      * Returns the value of the indexed component in the specified array object,
@@ -158,8 +162,11 @@ public final class Array {
      * equal to the length of the specified array
      * @see Array#get
      */
-    public static native byte getByte(Object array, int index)
-            throws IllegalArgumentException, ArrayIndexOutOfBoundsException;
+    public static byte getByte(Object array, int index)
+            throws IllegalArgumentException, ArrayIndexOutOfBoundsException {
+        ReflectArray ra = new ReflectArray(RefNative.obj2id(array));
+        return (Byte) ra.getValObj(index);
+    }
 
     /**
      * Returns the value of the indexed component in the specified array object,
@@ -177,8 +184,11 @@ public final class Array {
      * equal to the length of the specified array
      * @see Array#get
      */
-    public static native char getChar(Object array, int index)
-            throws IllegalArgumentException, ArrayIndexOutOfBoundsException;
+    public static char getChar(Object array, int index)
+            throws IllegalArgumentException, ArrayIndexOutOfBoundsException {
+        ReflectArray ra = new ReflectArray(RefNative.obj2id(array));
+        return (Character) ra.getValObj(index);
+    }
 
     /**
      * Returns the value of the indexed component in the specified array object,
@@ -196,8 +206,11 @@ public final class Array {
      * equal to the length of the specified array
      * @see Array#get
      */
-    public static native short getShort(Object array, int index)
-            throws IllegalArgumentException, ArrayIndexOutOfBoundsException;
+    public static short getShort(Object array, int index)
+            throws IllegalArgumentException, ArrayIndexOutOfBoundsException {
+        ReflectArray ra = new ReflectArray(RefNative.obj2id(array));
+        return (Short) ra.getValObj(index);
+    }
 
     /**
      * Returns the value of the indexed component in the specified array object,
@@ -215,8 +228,11 @@ public final class Array {
      * equal to the length of the specified array
      * @see Array#get
      */
-    public static native int getInt(Object array, int index)
-            throws IllegalArgumentException, ArrayIndexOutOfBoundsException;
+    public static int getInt(Object array, int index)
+            throws IllegalArgumentException, ArrayIndexOutOfBoundsException {
+        ReflectArray ra = new ReflectArray(RefNative.obj2id(array));
+        return (Integer) ra.getValObj(index);
+    }
 
     /**
      * Returns the value of the indexed component in the specified array object,
@@ -234,8 +250,11 @@ public final class Array {
      * equal to the length of the specified array
      * @see Array#get
      */
-    public static native long getLong(Object array, int index)
-            throws IllegalArgumentException, ArrayIndexOutOfBoundsException;
+    public static long getLong(Object array, int index)
+            throws IllegalArgumentException, ArrayIndexOutOfBoundsException {
+        ReflectArray ra = new ReflectArray(RefNative.obj2id(array));
+        return (Long) ra.getValObj(index);
+    }
 
     /**
      * Returns the value of the indexed component in the specified array object,
@@ -253,8 +272,11 @@ public final class Array {
      * equal to the length of the specified array
      * @see Array#get
      */
-    public static native float getFloat(Object array, int index)
-            throws IllegalArgumentException, ArrayIndexOutOfBoundsException;
+    public static float getFloat(Object array, int index)
+            throws IllegalArgumentException, ArrayIndexOutOfBoundsException {
+        ReflectArray ra = new ReflectArray(RefNative.obj2id(array));
+        return (Float) ra.getValObj(index);
+    }
 
     /**
      * Returns the value of the indexed component in the specified array object,
@@ -272,8 +294,11 @@ public final class Array {
      * equal to the length of the specified array
      * @see Array#get
      */
-    public static native double getDouble(Object array, int index)
-            throws IllegalArgumentException, ArrayIndexOutOfBoundsException;
+    public static double getDouble(Object array, int index)
+            throws IllegalArgumentException, ArrayIndexOutOfBoundsException {
+        ReflectArray ra = new ReflectArray(RefNative.obj2id(array));
+        return (Double) ra.getValObj(index);
+    }
 
     /**
      * Sets the value of the indexed component of the specified array object to
@@ -291,8 +316,11 @@ public final class Array {
      * <code>index</code> argument is negative, or if it is greater than or
      * equal to the length of the specified array
      */
-    public static native void set(Object array, int index, Object value)
-            throws IllegalArgumentException, ArrayIndexOutOfBoundsException;
+    public static void set(Object array, int index, Object value)
+            throws IllegalArgumentException, ArrayIndexOutOfBoundsException {
+        ReflectArray ra = new ReflectArray(RefNative.obj2id(array));
+        ra.setValObj(index, value);
+    }
 
     /**
      * Sets the value of the indexed component of the specified array object to
@@ -311,8 +339,11 @@ public final class Array {
      * equal to the length of the specified array
      * @see Array#set
      */
-    public static native void setBoolean(Object array, int index, boolean z)
-            throws IllegalArgumentException, ArrayIndexOutOfBoundsException;
+    public static void setBoolean(Object array, int index, boolean z)
+            throws IllegalArgumentException, ArrayIndexOutOfBoundsException {
+        ReflectArray ra = new ReflectArray(RefNative.obj2id(array));
+        ra.setValObj(index, (Boolean) z);
+    }
 
     /**
      * Sets the value of the indexed component of the specified array object to
@@ -331,8 +362,11 @@ public final class Array {
      * equal to the length of the specified array
      * @see Array#set
      */
-    public static native void setByte(Object array, int index, byte b)
-            throws IllegalArgumentException, ArrayIndexOutOfBoundsException;
+    public static void setByte(Object array, int index, byte b)
+            throws IllegalArgumentException, ArrayIndexOutOfBoundsException {
+        ReflectArray ra = new ReflectArray(RefNative.obj2id(array));
+        ra.setValObj(index, (Byte) b);
+    }
 
     /**
      * Sets the value of the indexed component of the specified array object to
@@ -351,8 +385,11 @@ public final class Array {
      * equal to the length of the specified array
      * @see Array#set
      */
-    public static native void setChar(Object array, int index, char c)
-            throws IllegalArgumentException, ArrayIndexOutOfBoundsException;
+    public static void setChar(Object array, int index, char c)
+            throws IllegalArgumentException, ArrayIndexOutOfBoundsException {
+        ReflectArray ra = new ReflectArray(RefNative.obj2id(array));
+        ra.setValObj(index, (Character) c);
+    }
 
     /**
      * Sets the value of the indexed component of the specified array object to
@@ -371,8 +408,11 @@ public final class Array {
      * equal to the length of the specified array
      * @see Array#set
      */
-    public static native void setShort(Object array, int index, short s)
-            throws IllegalArgumentException, ArrayIndexOutOfBoundsException;
+    public static void setShort(Object array, int index, short s)
+            throws IllegalArgumentException, ArrayIndexOutOfBoundsException {
+        ReflectArray ra = new ReflectArray(RefNative.obj2id(array));
+        ra.setValObj(index, (Short) s);
+    }
 
     /**
      * Sets the value of the indexed component of the specified array object to
@@ -391,8 +431,11 @@ public final class Array {
      * equal to the length of the specified array
      * @see Array#set
      */
-    public static native void setInt(Object array, int index, int i)
-            throws IllegalArgumentException, ArrayIndexOutOfBoundsException;
+    public static void setInt(Object array, int index, int i)
+            throws IllegalArgumentException, ArrayIndexOutOfBoundsException {
+        ReflectArray ra = new ReflectArray(RefNative.obj2id(array));
+        ra.setValObj(index, (Integer) i);
+    }
 
     /**
      * Sets the value of the indexed component of the specified array object to
@@ -411,8 +454,11 @@ public final class Array {
      * equal to the length of the specified array
      * @see Array#set
      */
-    public static native void setLong(Object array, int index, long l)
-            throws IllegalArgumentException, ArrayIndexOutOfBoundsException;
+    public static void setLong(Object array, int index, long l)
+            throws IllegalArgumentException, ArrayIndexOutOfBoundsException {
+        ReflectArray ra = new ReflectArray(RefNative.obj2id(array));
+        ra.setValObj(index, (Long) l);
+    }
 
     /**
      * Sets the value of the indexed component of the specified array object to
@@ -431,8 +477,11 @@ public final class Array {
      * equal to the length of the specified array
      * @see Array#set
      */
-    public static native void setFloat(Object array, int index, float f)
-            throws IllegalArgumentException, ArrayIndexOutOfBoundsException;
+    public static void setFloat(Object array, int index, float f)
+            throws IllegalArgumentException, ArrayIndexOutOfBoundsException {
+        ReflectArray ra = new ReflectArray(RefNative.obj2id(array));
+        ra.setValObj(index, (Float) f);
+    }
 
     /**
      * Sets the value of the indexed component of the specified array object to
@@ -451,17 +500,19 @@ public final class Array {
      * equal to the length of the specified array
      * @see Array#set
      */
-    public static native void setDouble(Object array, int index, double d)
-            throws IllegalArgumentException, ArrayIndexOutOfBoundsException;
+    public static void setDouble(Object array, int index, double d)
+            throws IllegalArgumentException, ArrayIndexOutOfBoundsException {
+        ReflectArray ra = new ReflectArray(RefNative.obj2id(array));
+        ra.setValObj(index, (Double) d);
+    }
 
     /*
      * Private
      */
-    private static native Object newArray(Class componentType, int length)
-            throws NegativeArraySizeException;
+    private static native Object newArray(Class componentType, int length);
 
     private static native Object multiNewArray(Class componentType,
             int[] dimensions)
-            throws IllegalArgumentException, NegativeArraySizeException;
+            throws IllegalArgumentException;
 
 }

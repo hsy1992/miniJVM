@@ -159,21 +159,21 @@ public class ReflectClass {
     static public Class getClassBySignature(String s) {
         switch (s.charAt(0)) {
             case 'S':
-                return RefNative.getClassByName("java/lang/Short");
+                return Short.TYPE;
             case 'C':
-                return RefNative.getClassByName("java/lang/Character");
+                return Character.TYPE;
             case 'B':
-                return RefNative.getClassByName("java/lang/Byte");
+                return Byte.TYPE;
             case 'I':
-                return RefNative.getClassByName("java/lang/Integer");
+                return Integer.TYPE;
             case 'F':
-                return RefNative.getClassByName("java/lang/Float");
+                return Float.TYPE;
             case 'Z':
-                return RefNative.getClassByName("java/lang/Boolean");
+                return Boolean.TYPE;
             case 'D':
-                return RefNative.getClassByName("java/lang/Double");
+                return Double.TYPE;
             case 'J':
-                return RefNative.getClassByName("java/lang/Long");
+                return Long.TYPE;
             case 'L':
                 s = s.substring(1, s.length() - 1);
                 return RefNative.getClassByName(s);

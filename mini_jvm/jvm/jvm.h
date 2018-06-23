@@ -301,7 +301,6 @@ enum {
 extern s32 jvm_init_flag;
 
 extern ClassLoader *sys_classloader;
-extern ClassLoader *array_classloader;
 
 extern ArrayList *obj_cache;
 extern u8 java_debug;

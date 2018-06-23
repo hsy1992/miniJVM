@@ -53,6 +53,10 @@ public final class Method {
         return refMethod.getParameterTypes();
     }
 
+    public Class<?> getReturnType() {
+        return refMethod.getReturnType();
+    }
+
     @Override
     public boolean equals(Object o) {
         return refMethod == o;

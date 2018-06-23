@@ -88,6 +88,31 @@ s32 org_mini_reflect_vm_RefNative_getClassByName(Runtime *runtime, JClass *clazz
 }
 
 
+s32 org_mini_reflect_vm_RefNative_newWithoutInit(Runtime *runtime, JClass *clazz) {
+    RuntimeStack *stack = runtime->stack;
+    JClass *cl = insOfJavaLangClass_get_classHandle((Instance *) localvar_getRefer(runtime->localvar, 0));
+    Instance *ins = NULL;
+    s32 ret = 0;
+    if (cl && !cl->arr_type_index) {//class exists and not array class
+        ins = instance_create(runtime, cl);
+    }
+    if (ins) {
+        push_ref(stack, (__refer) ins);
+
+    } else {
+        Instance *exception = exception_create(JVM_EXCEPTION_INSTANTIATION, runtime);
+        push_ref(stack, (__refer) exception);
+        ret = RUNTIME_STATUS_EXCEPTION;
+    }
+#if _JVM_DEBUG_BYTECODE_DETAIL > 5
+    invoke_deepth(runtime);
+    jvm_printf("org_mini_reflect_vm_RefNative_newWithoutInit  class:[%llx] ins:[%llx]\n", (s64) (intptr_t) cl, (s64) (intptr_t) ins);
+#endif
+    return ret;
+}
+
+
+
 s32 org_mini_reflect_vm_RefNative_setLocalVal(Runtime *runtime, JClass *clazz) {
     int pos = 0;
     Long2Double l2d;
@@ -158,7 +183,7 @@ s32 org_mini_reflect_vm_RefNative_getLocalVal(Runtime *runtime, JClass *clazz) {
     return 0;
 }
 
-s32 org_mini_reflect_vm_RefNative_getFieldVal(Runtime *runtime, JClass *clazz) {
+s32 org_mini_reflect_ReflectField_getFieldVal(Runtime *runtime, JClass *clazz) {
     int pos = 0;
     Long2Double l2d;
     l2d.l = l2d.l = localvar_getLong(runtime->localvar, pos);
@@ -167,15 +192,15 @@ s32 org_mini_reflect_vm_RefNative_getFieldVal(Runtime *runtime, JClass *clazz) {
     l2d.l = l2d.l = localvar_getLong(runtime->localvar, pos);
     pos += 2;
     FieldInfo *fi = (FieldInfo *) (__refer) (intptr_t) l2d.l;
-    Instance *valuetype = localvar_getRefer(runtime->localvar, pos++);
 
-    c8 *ptr = getFieldPtr_byName_c(valuetype, JDWP_CLASS_VALUETYPE, "bytes", "C");
-    u16 bytes = (u16) getFieldShort(ptr);
-    ptr = getFieldPtr_byName_c(valuetype, JDWP_CLASS_VALUETYPE, "value", "J");
     c8 *fptr;
-    fptr = getFieldPtr_byName(ins, fi->_this_class->name, fi->name, fi->descriptor);
+    if (fi->access_flags & ACC_STATIC) {
+        fptr = getStaticFieldPtr(fi);
+    } else {
+        fptr = getInstanceFieldPtr(ins, fi);
+    }
     s64 val = 0;
-    switch (bytes) {
+    switch (fi->datatype_bytes) {
         case 'R':
             val = (s64) (intptr_t) getFieldRefer(fptr);
 
@@ -187,80 +212,95 @@ s32 org_mini_reflect_vm_RefNative_getFieldVal(Runtime *runtime, JClass *clazz) {
             val = getFieldInt(fptr);
             break;
         case '2':
-            val = getFieldShort(fptr);
+            if (fi->datatype_idx == DATATYPE_JCHAR) {
+                val = getFieldChar(fptr);
+            } else {
+                val = getFieldShort(fptr);
+            }
             break;
         case '1':
             val = getFieldByte(fptr);
             break;
     }
-    setFieldLong(ptr, val);
-    push_int(runtime->stack, 0);
 
-    return 0;
-}
-
-
-s32 org_mini_reflect_MemAccess_readByte0(Runtime *runtime, JClass *clazz) {
-    Long2Double l2d;
-    l2d.l = localvar_getLong(runtime->localvar, 0);
-    __refer r = (__refer) (intptr_t) l2d.l;
-    s32 offset = localvar_getInt(runtime->localvar, 2);
-    u8 val = getFieldByte(((c8 *) r) + offset);
-    push_int(runtime->stack, val);
-#if _JVM_DEBUG_BYTECODE_DETAIL > 5
-    jvm_printf("org_mini_reflect_vm_MemObject_readByte0\n");
-#endif
-    return 0;
-}
-
-s32 org_mini_reflect_MemAccess_readShort0(Runtime *runtime, JClass *clazz) {
-    Long2Double l2d;
-    l2d.l = localvar_getLong(runtime->localvar, 0);
-    __refer r = (__refer) (intptr_t) l2d.l;
-    s32 offset = localvar_getInt(runtime->localvar, 2);
-    u16 val = getFieldShort(((c8 *) r) + offset);
-    push_int(runtime->stack, val);
-#if _JVM_DEBUG_BYTECODE_DETAIL > 5
-    jvm_printf("org_mini_reflect_vm_MemObject_readShort0\n");
-#endif
-    return 0;
-}
-
-s32 org_mini_reflect_MemAccess_readInt0(Runtime *runtime, JClass *clazz) {
-    Long2Double l2d;
-    l2d.l = localvar_getLong(runtime->localvar, 0);
-    __refer r = (__refer) (intptr_t) l2d.l;
-    s32 offset = localvar_getInt(runtime->localvar, 2);
-    s32 val = getFieldInt(((c8 *) r) + offset);
-    push_int(runtime->stack, val);
-#if _JVM_DEBUG_BYTECODE_DETAIL > 5
-    jvm_printf("org_mini_reflect_vm_MemObject_readInt0\n");
-#endif
-    return 0;
-}
-
-s32 org_mini_reflect_MemAccess_readLong0(Runtime *runtime, JClass *clazz) {
-    Long2Double l2d;
-    l2d.l = localvar_getLong(runtime->localvar, 0);
-    __refer r = (__refer) (intptr_t) l2d.l;
-    s32 offset = localvar_getInt(runtime->localvar, 2);
-    s64 val = getFieldLong(((c8 *) r) + offset);
     push_long(runtime->stack, val);
+
+    return 0;
+}
+
+s32 org_mini_reflect_ReflectField_setFieldVal(Runtime *runtime, JClass *clazz) {
+    int pos = 0;
+    Long2Double l2d;
+    l2d.l = l2d.l = localvar_getLong(runtime->localvar, pos);
+    pos += 2;
+    Instance *ins = (Instance *) (__refer) (intptr_t) l2d.l;
+    l2d.l = l2d.l = localvar_getLong(runtime->localvar, pos);
+    pos += 2;
+    FieldInfo *fi = (FieldInfo *) (__refer) (intptr_t) l2d.l;
+    s64 val = localvar_getLong(runtime->localvar, pos);
+
+    c8 *fptr;
+    if (fi->access_flags & ACC_STATIC) {
+        fptr = getStaticFieldPtr(fi);
+    } else {
+        fptr = getInstanceFieldPtr(ins, fi);
+    }
+    switch (fi->datatype_bytes) {
+        case 'R':
+            setFieldRefer(fptr, (__refer) (intptr_t) val);
+            break;
+        case '8':
+            setFieldLong(fptr, (s64) val);
+            break;
+        case '4':
+            setFieldInt(fptr, (s32) val);
+            break;
+        case '2':
+            setFieldShort(fptr, (s16) val);
+            break;
+        case '1':
+            setFieldByte(fptr, (s8) val);
+            break;
+    }
+
+    return 0;
+}
+
+
+s32 org_mini_reflect_ReflectArray_getVal(Runtime *runtime, JClass *clazz) {
+    s32 pos = 0;
+    Long2Double l2d;
+    l2d.l = localvar_getLong(runtime->localvar, pos);
+    pos += 2;
+    Instance *jarr = (__refer) (intptr_t) l2d.l;
+    s32 index = localvar_getInt(runtime->localvar, pos++);
+    s32 ret = jarray_check_exception(jarr, index, runtime);
+    if (!ret) {
+        s64 val = jarray_get_field(jarr, index);
+        push_long(runtime->stack, val);
+    } else {
+        push_long(runtime->stack, 0);
+    }
 #if _JVM_DEBUG_BYTECODE_DETAIL > 5
-    jvm_printf("org_mini_reflect_vm_MemObject_readLong0\n");
+    jvm_printf("org_mini_reflect_ReflectArray_getVal\n");
 #endif
     return 0;
 }
 
-s32 org_mini_reflect_MemAccess_readRefer0(Runtime *runtime, JClass *clazz) {
+
+s32 org_mini_reflect_ReflectArray_setVal(Runtime *runtime, JClass *clazz) {
+    s32 pos = 0;
     Long2Double l2d;
-    l2d.l = localvar_getLong(runtime->localvar, 0);
-    __refer r = (__refer) (intptr_t) l2d.l;
-    s32 offset = localvar_getInt(runtime->localvar, 2);
-    __refer val = getFieldRefer(((c8 *) r) + offset);
-    push_long(runtime->stack, (u64) (intptr_t) val);
+    l2d.l = localvar_getLong(runtime->localvar, pos);
+    pos += 2;
+    Instance *jarr = (__refer) (intptr_t) l2d.l;
+    s32 index = localvar_getInt(runtime->localvar, pos++);
+    s64 val = localvar_getLong(runtime->localvar, pos);
+    pos += 2;
+    s32 ret = jarray_check_exception(jarr, index, runtime);
+    if (!ret) jarray_set_field(jarr, index, val);
 #if _JVM_DEBUG_BYTECODE_DETAIL > 5
-    jvm_printf("org_mini_reflect_vm_MemObject_readRefer0\n");
+    jvm_printf("org_mini_reflect_ReflectArray_setVal\n");
 #endif
     return 0;
 }
@@ -537,6 +577,9 @@ s32 org_mini_reflect_ReflectField_mapField(Runtime *runtime, JClass *clazz) {
             Instance *signature = jstring_create(fieldInfo->descriptor, runtime);
             setFieldRefer(ptr, signature);
         }
+        //
+        ptr = getFieldPtr_byName_c(ins, JDWP_CLASS_ARRAY, "type", "B");
+        if (ptr)setFieldByte(ptr, (s8) utf8_char_at(fieldInfo->descriptor, 1));
     }
     return 0;
 }
@@ -771,9 +814,9 @@ static java_native_method method_jdwp_table[] = {
         {"org/mini/reflect/vm/RefNative",  "id2obj",                "(J)Ljava/lang/Object;",                 org_mini_reflect_vm_RefNative_id2obj},
         {"org/mini/reflect/vm/RefNative",  "getClasses",            "()[Ljava/lang/Class;",                  org_mini_reflect_vm_RefNative_getClasses},
         {"org/mini/reflect/vm/RefNative",  "getClassByName",        "(Ljava/lang/String;)Ljava/lang/Class;", org_mini_reflect_vm_RefNative_getClassByName},
+        {"org/mini/reflect/vm/RefNative",  "newWithoutInit",        "(Ljava/lang/Class;)Ljava/lang/Object;", org_mini_reflect_vm_RefNative_newWithoutInit},
         {"org/mini/reflect/vm/RefNative",  "setLocalVal",           "(JIBJI)I",                              org_mini_reflect_vm_RefNative_setLocalVal},
         {"org/mini/reflect/vm/RefNative",  "getLocalVal",           "(JILorg/mini/jdwp/type/ValueType;)I",   org_mini_reflect_vm_RefNative_getLocalVal},
-        {"org/mini/reflect/vm/RefNative",  "getFieldVal",           "(JJLorg/mini/jdwp/type/ValueType;)I",   org_mini_reflect_vm_RefNative_getFieldVal},
         {"org/mini/reflect/vm/RefNative",  "getThreads",            "()[Ljava/lang/Thread;",                 org_mini_reflect_vm_RefNative_getThreads},
         {"org/mini/reflect/vm/RefNative",  "getStatus",             "(Ljava/lang/Thread;)I",                 org_mini_reflect_vm_RefNative_getStatus},
         {"org/mini/reflect/vm/RefNative",  "suspendThread",         "(Ljava/lang/Thread;)I",                 org_mini_reflect_vm_RefNative_suspendThread},
@@ -784,17 +827,16 @@ static java_native_method method_jdwp_table[] = {
         {"org/mini/reflect/vm/RefNative",  "getStackFrame",         "(Ljava/lang/Thread;)J",                 org_mini_reflect_vm_RefNative_getStackFrame},
         {"org/mini/reflect/vm/RefNative",  "getGarbageReferedObjs", "()[Ljava/lang/Object;",                 org_mini_reflect_vm_RefNative_getGarbageReferedObjs},
         {"org/mini/reflect/vm/RefNative",  "getGarbageStatus",      "()I",                                   org_mini_reflect_vm_RefNative_getGarbageStatus},
-        {"org/mini/reflect/MemAccess",     "readByte0",             "(JI)B",                                 org_mini_reflect_MemAccess_readByte0},
-        {"org/mini/reflect/MemAccess",     "readShort0",            "(JI)S",                                 org_mini_reflect_MemAccess_readShort0},
-        {"org/mini/reflect/MemAccess",     "readInt0",              "(JI)I",                                 org_mini_reflect_MemAccess_readInt0},
-        {"org/mini/reflect/MemAccess",     "readLong0",             "(JI)J",                                 org_mini_reflect_MemAccess_readLong0},
-        {"org/mini/reflect/MemAccess",     "readRefer0",            "(JI)J",                                 org_mini_reflect_MemAccess_readRefer0},
         {"org/mini/reflect/ReflectClass",  "mapReference",          "(J)V",                                  org_mini_reflect_ReflectClass_mapReference},
         {"org/mini/reflect/ReflectField",  "mapField",              "(J)V",                                  org_mini_reflect_ReflectField_mapField},
+        {"org/mini/reflect/ReflectField",  "getFieldVal",           "(JJ)J",                                 org_mini_reflect_ReflectField_getFieldVal},
+        {"org/mini/reflect/ReflectField",  "setFieldVal",           "(JJJ)V",                                org_mini_reflect_ReflectField_setFieldVal},
         {"org/mini/reflect/ReflectMethod", "mapMethod",             "(J)V",                                  org_mini_reflect_ReflectMethod_mapMethod},
         {"org/mini/reflect/ReflectMethod", "invokeMethod",          "(JLjava/lang/Object;[J)J",              org_mini_reflect_ReflectMethod_invokeMethod},
         {"org/mini/reflect/StackFrame",    "mapRuntime",            "(J)V",                                  org_mini_reflect_StackFrame_mapRuntime},
         {"org/mini/reflect/ReflectArray",  "mapArray",              "(J)V",                                  org_mini_reflect_ReflectArray_mapArray},
+        {"org/mini/reflect/ReflectArray",  "setVal",                "(JIJ)V",                                org_mini_reflect_ReflectArray_setVal},
+        {"org/mini/reflect/ReflectArray",  "getVal",                "(JI)J",                                 org_mini_reflect_ReflectArray_getVal},
 
 };
 

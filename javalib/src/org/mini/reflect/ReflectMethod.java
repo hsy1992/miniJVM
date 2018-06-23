@@ -5,6 +5,7 @@
  */
 package org.mini.reflect;
 
+import org.mini.reflect.vm.RConst;
 import java.util.ArrayList;
 import java.util.List;
 import org.mini.reflect.vm.RefNative;
@@ -68,7 +69,8 @@ public class ReflectMethod {
     public Class[] getParameterTypes() {
         return paras_class;
     }
-        public String[] getParameterStrs() {
+
+    public String[] getParameterStrs() {
         return paras;
     }
 
@@ -92,16 +94,7 @@ public class ReflectMethod {
         Class[] pc = getParameterTypes();
         if (args.length != paras.length) {
             throw new IllegalArgumentException();
-        } else {
-            int i = 0;
-            for (Class p : pc) {
-                Class ps = args[i].getClass();
-                if (ps != p) {
-                    throw new IllegalArgumentException();
-                }
-                i++;
-            }
-        }
+        } 
         if ((accessFlags & RConst.ACC_PRIVATE) != 0) {
             throw new IllegalAccessException();
         }
@@ -215,6 +208,15 @@ public class ReflectMethod {
         for (int i = 0; i < paras.length; i++) {
             paras_class[i] = ReflectClass.getClassBySignature(paras[i]);
         }
+    }
+    
+    
+    public Class<?> getReturnType() {
+        String s=signature.substring(signature.indexOf(')')+1);
+        if(s.equals("V")){
+            return Void.TYPE;
+        }
+        return ReflectClass.getClassBySignature(s);
     }
 
     public String toString() {

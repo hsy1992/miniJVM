@@ -50,7 +50,6 @@ c8 *STR_INS_JAVA_LANG_STACKTRACEELEMENT = "Ljava/lang/StackTraceElement;";
 
 
 ClassLoader *sys_classloader;
-ClassLoader *array_classloader;
 
 ArrayList *native_libs;
 ArrayList *thread_list; //all thread

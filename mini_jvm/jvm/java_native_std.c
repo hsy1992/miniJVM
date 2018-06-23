@@ -95,9 +95,11 @@ s32 java_lang_Class_newInstance(Runtime *runtime, JClass *clazz) {
     JClass *cl = insOfJavaLangClass_get_classHandle((Instance *) localvar_getRefer(runtime->localvar, 0));
     Instance *ins = NULL;
     s32 ret = 0;
-    if (cl) {
+    if (cl && !cl->arr_type_index) {//class exists and not array class
         ins = instance_create(runtime, cl);
+        gc_refer_hold(ins);
         instance_init(ins, runtime);
+        gc_refer_release(ins);
     }
     if (ins) {
         push_ref(stack, (__refer) ins);

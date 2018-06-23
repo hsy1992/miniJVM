@@ -98,15 +98,15 @@ s32 classes_put(JClass *clazz) {
 
 JClass *array_class_get(Runtime *runtime, Utf8String *desc) {
     if (desc && desc->length && utf8_char_at(desc, 0) == '[') {
-        JClass *clazz = hashtable_get(array_classloader->classes, desc);
+        JClass *clazz = hashtable_get(sys_classloader->classes, desc);
         if (!clazz) {
             garbage_thread_lock();
-            clazz = hashtable_get(array_classloader->classes, desc);//maybe other thread created
+            clazz = hashtable_get(sys_classloader->classes, desc);//maybe other thread created
             if (!clazz) {
                 clazz = class_create(runtime);
                 clazz->arr_type_index = getDataTypeIndex(utf8_char_at(desc, 1));
                 clazz->name = utf8_create_copy(desc);
-                hashtable_put(array_classloader->classes, clazz->name, clazz);
+                hashtable_put(sys_classloader->classes, clazz->name, clazz);
                 gc_refer_hold(clazz);
 
 #if _JVM_DEBUG_BYTECODE_DETAIL > 5
@@ -1185,6 +1185,15 @@ Instance *instance_copy(Runtime *runtime, Instance *src, s32 deep_copy) {
 }
 
 //===============================    实例化 java.lang.Class  ==================================
+/**
+ *
+ * 每个java 类有一个 java.lang.Class 的实例, 用于承载对相关java类的操作
+ *
+ * @param runtime
+ * @param clazz
+ * @return
+ */
+
 Instance *insOfJavaLangClass_get(Runtime *runtime, JClass *clazz) {
     JClass *java_lang_class = classes_load_get_c(STR_CLASS_JAVA_LANG_CLASS, runtime);
     if (java_lang_class) {

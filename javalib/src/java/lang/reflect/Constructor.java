@@ -7,6 +7,7 @@
 package java.lang.reflect;
 
 import org.mini.reflect.ReflectMethod;
+import org.mini.reflect.vm.RefNative;
 
 /**
  * <code>Constructor</code> provides information about, and access to, a single
@@ -48,7 +49,9 @@ public final class Constructor<T> {
     public T newInstance(Object... initargs)
             throws InstantiationException, IllegalAccessException,
             IllegalArgumentException {
-        return (T) refMethod.invoke(clazz.newInstance(), initargs);
+        Object obj = RefNative.newWithoutInit(clazz);
+        refMethod.invoke(obj, initargs);
+        return (T) obj;
     }
 
     @Override

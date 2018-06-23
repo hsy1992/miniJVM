@@ -296,9 +296,13 @@ public final class Class<T> {
      *
      *
      */
-    long classHandle;//for Class body ,MUST NOT delete it and rename it, set it when JClass->ins_class init
+    long classHandle;//save JClass ptr ,MUST NOT delete it and rename it, set it when JClass->ins_class init
 
     ReflectClass refClass;
+
+    public long getClassHandler() {
+        return classHandle;
+    }
 
     public Method getMethod(String name, Class<?>... parameterTypes) {
         if (refClass == null) {
