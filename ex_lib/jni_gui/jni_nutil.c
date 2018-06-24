@@ -295,6 +295,18 @@ int org_mini_glfw_utils_Nutil_stbi_load(Runtime *runtime, JClass *clazz) {
     return 0;
 }
 
+int org_mini_glfw_utils_Nutil_access_mem(Runtime *runtime, JClass *clazz) {
+    JniEnv *env = runtime->jnienv;
+    s32 pos = 0;
+    
+    intptr_t pptr = env->localvar_getLong_2slot(runtime->localvar, pos);pos += 2;
+
+    s8 ret_value = (s8)access_mem((stbi_uc*/*ptr*/)(pptr));
+    env->push_int(runtime->stack, ret_value);
+    
+    return 0;
+}
+
 int org_mini_glfw_utils_Nutil_stbi_load_from_memory(Runtime *runtime, JClass *clazz) {
     JniEnv *env = runtime->jnienv;
     s32 pos = 0;
@@ -2233,6 +2245,7 @@ static java_native_method method_nutil_table[] = {
 {"org/mini/glfw/utils/Nutil",  "stbi_write_bmp",  "([BIIIJ)I",  org_mini_glfw_utils_Nutil_stbi_write_bmp},
 {"org/mini/glfw/utils/Nutil",  "stbi_write_tga",  "([BIIIJ)I",  org_mini_glfw_utils_Nutil_stbi_write_tga},
 {"org/mini/glfw/utils/Nutil",  "stbi_load",  "([B[I[I[II)J",  org_mini_glfw_utils_Nutil_stbi_load},
+{"org/mini/glfw/utils/Nutil",  "access_mem",  "(J)B",  org_mini_glfw_utils_Nutil_access_mem},
 {"org/mini/glfw/utils/Nutil",  "stbi_load_from_memory",  "(JI[I[I[II)J",  org_mini_glfw_utils_Nutil_stbi_load_from_memory},
 {"org/mini/glfw/utils/Nutil",  "stbi_image_free",  "(J)V",  org_mini_glfw_utils_Nutil_stbi_image_free},
 {"org/mini/glfw/utils/Nutil",  "nvgBeginFrame",  "(JIIF)V",  org_mini_glfw_utils_Nutil_nvgBeginFrame},

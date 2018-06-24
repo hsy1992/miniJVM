@@ -6,7 +6,6 @@
 package org.mini.glfw.utils;
 
 import java.io.UnsupportedEncodingException;
-import org.mini.reflect.MemAccess;
 import org.mini.gl.GL;
 import static org.mini.gl.GL.GL_CLAMP_TO_EDGE;
 import static org.mini.gl.GL.GL_LINEAR_MIPMAP_NEAREST;
@@ -27,6 +26,7 @@ import static org.mini.gl.GL.glGenerateMipmap;
 import static org.mini.gl.GL.glGetString;
 import static org.mini.gl.GL.glTexImage2D;
 import static org.mini.gl.GL.glTexParameterf;
+import static org.mini.glfw.utils.Nutil.access_mem;
 import static org.mini.glfw.utils.Nutil.stbi_image_free;
 import static org.mini.glfw.utils.Nutil.stbi_load;
 
@@ -238,10 +238,9 @@ public class Gutil {
         w_h_d[0] = x[0];
         w_h_d[1] = y[0];
         w_h_d[2] = n[0];
-        MemAccess ma = new MemAccess(data);
         byte[] d = new byte[x[0] * y[0] * n[0]];
         for (int i = 0, imax = d.length; i < imax; i++) {
-            d[i] = ma.readByte(i);
+            d[i] = access_mem(data + i);
         }
         glGenTextures(1, tex, 0);
         glBindTexture(GL_TEXTURE_2D, tex[0]);

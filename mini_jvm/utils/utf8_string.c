@@ -133,6 +133,7 @@ void utf8_upcase(Utf8String *a1) {
             a1->data[i] = a1->data[i] - ('a' - 'A');
         }
     }
+    a1->hash = 0;
 }
 
 s64 utf8_aton(Utf8String *sp, int n) {
@@ -179,98 +180,116 @@ char *utf8_cstr(Utf8String *a1) {
     return (char *) &(a1->data[0]);
 }
 
-int utf8_indexof(Utf8String *a1, Utf8String *a2) {
-    return utf8_indexof_pos(a1, a2, 0);
+//----------------------------    indexof     -----------------------------
+
+static inline int _utf8_indexof_pos_impl(Utf8String *a1, char *a2, int count2, int a1_pos) {
+
+    int i = 0;
+    for (i = a1_pos; i < a1->length; i++) {
+        utf8_char ch = a1->data[i];
+        if (ch == a2[0]) {
+            int match = 1; //标识
+            int j = 0;
+            for (j = 1; j < count2; j++) {
+                if (i + j >= a1->length)return -1; //超界
+
+                if (a2[j] != a1->data[i + j]) {//不匹配
+                    match = 0;
+                    break;
+                }
+            }
+            if (match)return i;
+        }
+    }
+    return -1;
 }
+
 
 int utf8_indexof_pos(Utf8String *a1, Utf8String *a2, int a1_pos) {
     if (a1 == NULL || a2 == NULL)return -1; //无法查找
     if (a1_pos >= a1->length || a1_pos < 0)return -1;
     if (a2->length == 0)return 0; //
-    int i = 0;
-    for (i = a1_pos; i < a1->length; i++) {
-        utf8_char ch = a1->data[i];
-        if (ch == a2->data[0]) {
-            int match = 1; //标识
-            int j = 0;
-            for (j = 1; j < a2->length; j++) {
-                if (i + j >= a1->length)return -1; //超界
-
-                if (a2->data[j] != a1->data[i + j]) {//不匹配
-                    match = 0;
-                    break;
-                }
-            }
-            if (match)return i;
-        }
-    }
-    return -1;
+    return _utf8_indexof_pos_impl(a1, (char *) a2->data, a2->length, a1_pos);
 }
 
-int utf8_last_indexof(Utf8String *a1, Utf8String *a2) {
-    if (a1 == NULL)return -1;
-    return utf8_last_indexof_pos(a1, a2, a1->length - 1);
+int utf8_indexof(Utf8String *a1, Utf8String *a2) {
+    return utf8_indexof_pos(a1, a2, 0);
 }
 
-int utf8_last_indexof_pos(Utf8String *a1, Utf8String *a2, int a1_rightpos) {
+int utf8_indexof_pos_c(Utf8String *a1, char *a2, int a1_pos) {
     if (a1 == NULL || a2 == NULL)return -1; //无法查找
-    if (a1_rightpos >= a1->length || a1_rightpos < 0)return -1;
-    if (a2->length == 0)return a1->length; //
-    int i = 0;
-    for (i = a1_rightpos; i > -1; i--) {
-        utf8_char ch = a1->data[i];
-        if (ch == a2->data[0]) {
-            int match = 1; //标识
-            int j = 1;
-            for (j = 1; j < a2->length; j++) {
-                if (i + j >= a1->length)return -1; //超界
-
-                if (a2->data[j] != a1->data[i + j]) {//不匹配
-                    match = 0;
-                    break;
-                }
-            }
-            if (match)return i;
-        }
-    }
-    return -1;
-}
-
-int utf8_last_indexof_pos_c(Utf8String *a1, char *a2, int a1_rightpos) {
-    Utf8String *ua2 = utf8_create_c(a2);
-    int index = utf8_last_indexof_pos(a1, ua2, a1_rightpos);
-    utf8_destory(ua2);
-    return index;
-}
-
-int utf8_last_indexof_c(Utf8String *a1, char *a2) {
-    Utf8String *ua2 = utf8_create_c(a2);
-    int index = utf8_last_indexof(a1, ua2);
-    utf8_destory(ua2);
-    return index;
+    if (a1_pos >= a1->length || a1_pos < 0)return -1;
+    int count2 = strlen(a2);
+    if (count2 == 0)return 0;
+    return _utf8_indexof_pos_impl(a1, a2, count2, a1_pos);
 }
 
 int utf8_indexof_c(Utf8String *a1, char *a2) {
     return utf8_indexof_pos_c(a1, a2, 0);
 }
 
-int utf8_indexof_pos_c(Utf8String *a1, char *a2, int a1_pos) {
-    Utf8String *ua2 = utf8_create_c(a2);
-    int index = utf8_indexof_pos(a1, ua2, a1_pos);
-    utf8_destory(ua2);
+
+static inline int _utf8_last_indexof_pos_impl(Utf8String *a1, char *a2, int count2, int a1_rightpos) {
+
+    int i = 0;
+    for (i = a1_rightpos; i > -1; i--) {
+        utf8_char ch = a1->data[i];
+        if (ch == a2[0]) {
+            int match = 1; //标识
+            int j = 1;
+            for (j = 1; j < count2; j++) {
+                if (i + j >= a1->length)return -1; //超界
+
+                if (a2[j] != a1->data[i + j]) {//不匹配
+                    match = 0;
+                    break;
+                }
+            }
+            if (match)return i;
+        }
+    }
+    return -1;
+}
+
+
+int utf8_last_indexof_pos(Utf8String *a1, Utf8String *a2, int a1_rightpos) {
+    if (a1 == NULL || a2 == NULL)return -1; //无法查找
+    if (a1_rightpos >= a1->length || a1_rightpos < 0)return -1;
+    if (a2->length == 0)return a1->length; //
+
+    return _utf8_last_indexof_pos_impl(a1, (char *) a2->data, a2->length, a1_rightpos);
+}
+
+int utf8_last_indexof(Utf8String *a1, Utf8String *a2) {
+    if (a1 == NULL || a2 == NULL)return -1; //无法查找
+    if (a2->length == 0)return a1->length; //
+    return utf8_last_indexof_pos(a1, a2, a1->length - 1);
+}
+
+int utf8_last_indexof_pos_c(Utf8String *a1, char *a2, int a1_rightpos) {
+    if (a1 == NULL || a2 == NULL)return -1; //无法查找
+    if (a1_rightpos >= a1->length || a1_rightpos < 0)return -1;
+    int count2 = strlen(a2);
+    if (count2 == 0)return a1->length; //
+    int index = _utf8_last_indexof_pos_impl(a1, a2, count2, a1_rightpos);
     return index;
 }
 
-void utf8_replace(Utf8String *a1, Utf8String *a2, Utf8String *a3) {
-    //printf("utf8_replace,%s,%s,%s\n", utf8_cstr(a1), utf8_cstr(a2), utf8_cstr(a3));
-    if (a1 == NULL || a2 == NULL || a3 == NULL)return;
-    if (a1->length == 0 || a2->length == 0)return;
+int utf8_last_indexof_c(Utf8String *a1, char *a2) {
+    if (a1 == NULL || a2 == NULL)return -1; //无法查找
+    int count2 = strlen(a2);
+    if (count2 == 0)return a1->length;
+    return utf8_last_indexof_pos_c(a1, a2, a1->length - 1);
+}
+
+
+static inline void _utf8_replace_impl(Utf8String *a1, char *a2, int count2, char *a3, int count3) {
     Utf8String *tmps = utf8_create();
     utf8_append(tmps, a1);
     utf8_clear(a1);
     int end = 0, start = 0, len = 0;
     for (;;) {
-        end = utf8_indexof_pos(tmps, a2, start);
+        end = utf8_indexof_pos_c(tmps, a2, start);
         //printf("find indexof :%d\n", end);
         if (end == -1) {
             utf8_append_part(a1, tmps, start, tmps->length - start);
@@ -278,44 +297,56 @@ void utf8_replace(Utf8String *a1, Utf8String *a2, Utf8String *a3) {
         }
         len = end - start;
         utf8_append_part(a1, tmps, start, len);
-        utf8_append(a1, a3);
-        start = end + a2->length;
+        utf8_append_data(a1, a3, count3);
+        start = end + count2;
     }
     utf8_destory(tmps);
 }
 
-void utf8_replace_c(Utf8String *a1, char *a2, char *a3) {
-    Utf8String *ua2 = utf8_create_c(a2);
-    Utf8String *ua3 = utf8_create_c(a3);
-    utf8_replace(a1, ua2, ua3);
-    utf8_destory(ua2);
-    utf8_destory(ua3);
+void utf8_replace(Utf8String *a1, Utf8String *a2, Utf8String *a3) {
+    if (a1 == NULL || a2 == NULL || a3 == NULL)return;
+    if (a1->length == 0 || a2->length == 0)return;
+    utf8_cstr(a2);
+    utf8_cstr(a3);
+    _utf8_replace_impl(a1, (char *) a2->data, a2->length, (char *) a3->data, a3->length);
 }
 
-int utf8_equals(Utf8String *a1, Utf8String *a2) {
+void utf8_replace_c(Utf8String *a1, char *a2, char *a3) {
+    if (a1 == NULL || a2 == NULL || a3 == NULL)return;
+    int count2 = strlen(a2);
+    int count3 = strlen(a3);
+    if (a1->length == 0 || count2 == 0)return;
+    _utf8_replace_impl(a1, a2, count2, a3, count3);
+}
+
+static inline int _utf8_equals_impl(utf8_char *a1, int count1, utf8_char *a2, int count2) {
     if (a1 == NULL && a2 == NULL)return 1;
     if (a1 == NULL || a2 == NULL)return 0;
-    if (a1->length != a2->length)return 0;
-    if (_utf8_hashCode(a1) != _utf8_hashCode(a2))return 0;
+    if (count1 != count2)return 0;
 
     int i = 0;
-    for (; i < a1->length && i < a2->length; i++) {
-        if (a1->data[i] > a2->data[i]) {
-            return 0;
-        } else if (a1->data[i] < a2->data[i]) {
+    for (; i < count1; i++) {
+        if (a1[i] != a2[i]) {
             return 0;
         }
     }
     return 1;
 }
 
-int utf8_equals_c(Utf8String *a1, char *a2) {
-    Utf8String *ua2 = utf8_create_c(a2);
-    int index = utf8_equals(a1, ua2);
-    utf8_destory(ua2);
-    return index;
+int utf8_equals(Utf8String *a1, Utf8String *a2) {
+    if (a1 && a2) {
+        if (_utf8_hashCode(a1) != _utf8_hashCode(a2))return 0;
+        return _utf8_equals_impl(a1->data, a1->length, a2->data, a2->length);
+    }
+    return 0;
 }
 
+int utf8_equals_c(Utf8String *a1, char *a2) {
+    if (a1 && a2) {
+        return _utf8_equals_impl(a1->data, a1->length, (utf8_char *) a2, strlen(a2));
+    }
+    return 0;
+}
 
 
 int UNICODE_STR_EQUALS_FUNC(HashtableValue value1, HashtableValue value2) {
