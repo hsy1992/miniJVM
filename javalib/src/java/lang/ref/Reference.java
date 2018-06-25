@@ -6,6 +6,9 @@
 
 package java.lang.ref;
 
+import java.util.LinkedList;
+import java.util.Queue;
+
 /**
  * Abstract base class for reference objects.  This class defines the
  * operations common to all reference objects. Because reference objects are
@@ -17,9 +20,11 @@ package java.lang.ref;
  * @since    JDK1.2, CLDC 1.1
  */
 
-public abstract class Reference {
+public abstract class Reference<T> {
+    ReferenceQueue<T> queue=new ReferenceQueue();
+    
 
-    private Object referent;   /* Treated specially by GC */
+    private T referent;   /* Treated specially by GC */
     private int    gcReserved; /* Treated specially by GC */
 
     /* -- Referent accessor and setters -- */
@@ -32,7 +37,7 @@ public abstract class Reference {
      * @return   The object to which this reference refers, or
      *           <code>null</code> if this reference object has been cleared
      */
-    public Object get() {
+    public T get() {
         return this.referent;
     }
 
@@ -45,8 +50,12 @@ public abstract class Reference {
 
     /* -- Constructors -- */
 
-    Reference(Object referent) {
+    Reference(T referent) {
         this.referent = referent;
+    }
+    
+    public Reference(T referent, ReferenceQueue<? super T> q) {
+	
     }
 
 }

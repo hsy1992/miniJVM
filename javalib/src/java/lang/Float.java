@@ -20,7 +20,7 @@ package java.lang;
  * @version 12/17/01 (CLDC 1.1)
  * @since JDK1.0, CLDC 1.1
  */
-public final class Float {
+public final class Float extends Number implements Comparable<Float> {
 
     /**
      * The positive infinity of type <code>float</code>. It is equal to the
@@ -537,4 +537,40 @@ public final class Float {
         return compareTo((Float)o);
     }
      */
+    public int compareTo(Float anotherFloat) {
+        return Float.compare(value, anotherFloat.value);
+    }
+
+    /**
+     * Compares the two specified <code>float</code> values. The sign
+     * of the integer value returned is the same as that of the
+     * integer that would be returned by the call:
+     * <pre>
+     *    new Float(f1).compareTo(new Float(f2))
+     * </pre>
+     *
+     * @param   f1        the first <code>float</code> to compare.
+     * @param   f2        the second <code>float</code> to compare.
+     * @return  the value <code>0</code> if <code>f1</code> is
+     *		numerically equal to <code>f2</code>; a value less than
+     *          <code>0</code> if <code>f1</code> is numerically less than
+     *		<code>f2</code>; and a value greater than <code>0</code>
+     *		if <code>f1</code> is numerically greater than
+     *		<code>f2</code>.
+     * @since 1.4 
+     */
+    public static int compare(float f1, float f2) {
+       if (f1 < f2)
+            return -1;		 // Neither val is NaN, thisVal is smaller
+        if (f1 > f2)
+            return 1;		 // Neither val is NaN, thisVal is larger
+
+        int thisBits = Float.floatToIntBits(f1);
+        int anotherBits = Float.floatToIntBits(f2);
+
+        return (thisBits == anotherBits ?  0 : // Values are equal
+                (thisBits < anotherBits ? -1 : // (-0.0, 0.0) or (!NaN, NaN)
+                 1));                          // (0.0, -0.0) or (NaN, !NaN)
+    }
+
 }

@@ -1000,6 +1000,70 @@ s32 javax_mini_zip_ZipFile_putEntry0(Runtime *runtime, JClass *clazz) {
     return 0;
 }
 
+s32 javax_mini_zip_ZipFile_fileCount0(Runtime *runtime, JClass *clazz) {
+    Instance *zip_path_arr = localvar_getRefer(runtime->localvar, 0);
+
+    s32 ret = 0;
+    if (zip_path_arr) {
+        ret = zip_filecount(zip_path_arr->arr_body);
+    }
+    push_int(runtime->stack, ret);
+#if _JVM_DEBUG_BYTECODE_DETAIL > 5
+    invoke_deepth(runtime);
+    jvm_printf("javax_mini_zip_ZipFile_fileCount0  \n");
+#endif
+    return 0;
+}
+
+s32 javax_mini_zip_ZipFile_listFiles0(Runtime *runtime, JClass *clazz) {
+    Instance *zip_path_arr = localvar_getRefer(runtime->localvar, 0);
+    s32 ret = -1;
+    if (zip_path_arr) {
+        ArrayList *list = zip_get_filenames(zip_path_arr->arr_body);
+        if (list) {
+            Utf8String *clustr=utf8_create_c(STR_CLASS_JAVA_LANG_STRING);
+            Instance *jarr = jarray_create_by_type_name(runtime, list->length, clustr);
+            utf8_destory(clustr);
+            gc_refer_hold(jarr);
+            s32 i;
+            for (i = 0; i < list->length; i++) {
+                Utf8String *ustr = arraylist_get_value_unsafe(list, i);
+                Instance *jstr = jstring_create(ustr, runtime);
+                jarray_set_field(jarr, i, (s64) (intptr_t) jstr);
+            }
+            zip_destory_filenames_list(list);
+            gc_refer_release(jarr);
+            push_ref(runtime->stack, jarr);
+            ret = 0;
+        }
+    }
+    if (ret == -1) {
+        push_ref(runtime->stack, NULL);
+    }
+#if _JVM_DEBUG_BYTECODE_DETAIL > 5
+    invoke_deepth(runtime);
+    jvm_printf("javax_mini_zip_ZipFile_listFiles0  \n");
+#endif
+    return 0;
+}
+
+s32 javax_mini_zip_ZipFile_isDirectory0(Runtime *runtime, JClass *clazz) {
+    Instance *zip_path_arr = localvar_getRefer(runtime->localvar, 0);
+    s32 index = localvar_getInt(runtime->localvar, 1);
+    s32 ret = 0;
+    if (zip_path_arr) {
+        ret = zip_is_directory(zip_path_arr->arr_body, index);
+    }
+    if (ret == -1) {
+        push_ref(runtime->stack, NULL);
+    }
+#if _JVM_DEBUG_BYTECODE_DETAIL > 5
+    invoke_deepth(runtime);
+    jvm_printf("javax_mini_zip_ZipFile_isDirectory0  \n");
+#endif
+    return 0;
+}
+
 static java_native_method method_net_table[] = {
         {"javax/mini/net/protocol/socket/Protocol",       "open0",           "([BII)I",                          javax_mini_net_socket_Protocol_open0},
         {"javax/mini/net/protocol/socket/Protocol",       "readBuf",         "(I[BII)I",                         javax_mini_net_socket_Protocol_readBuf},
@@ -1036,6 +1100,9 @@ static java_native_method method_net_table[] = {
         {"org/mini/fs/InnerFile",                         "getTmpDir",       "()Ljava/lang/String;",             org_mini_fs_InnerFile_getTmpDir},
         {"javax/mini/zip/Zip",                            "getEntry0",       "([B[B)[B",                         javax_mini_zip_ZipFile_getEntry0},
         {"javax/mini/zip/Zip",                            "putEntry0",       "([B[B[B)I",                        javax_mini_zip_ZipFile_putEntry0},
+        {"javax/mini/zip/Zip",                            "fileCount0",       "([B)I",                            javax_mini_zip_ZipFile_fileCount0},
+        {"javax/mini/zip/Zip",                            "listFiles0",       "([B)[Ljava/lang/String;",          javax_mini_zip_ZipFile_listFiles0},
+        {"javax/mini/zip/Zip",                            "isDirectory0",     "([BI)Z",                           javax_mini_zip_ZipFile_isDirectory0},
 
 };
 
