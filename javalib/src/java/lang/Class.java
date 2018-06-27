@@ -11,6 +11,7 @@ import java.lang.reflect.Method;
 import org.mini.reflect.ReflectClass;
 import org.mini.reflect.ReflectField;
 import org.mini.reflect.ReflectMethod;
+import org.mini.reflect.vm.RefNative;
 
 /**
  * Instances of the class <code>Class</code> represent classes and interfaces in
@@ -82,7 +83,7 @@ public final class Class<T> {
      * @exception Error if the function fails for any other reason.
      * @since JDK1.0
      */
-    public static native Class forName(String className)
+    public static native Class<?> forName(String className)
             throws ClassNotFoundException;
 
     /**
@@ -391,4 +392,30 @@ public final class Class<T> {
         return fs;
     }
 
+    public Class getComponentType() {
+        if (isArray()) {
+            String n = getName();
+            if ("[Z".equals(n)) {
+                return boolean.class;
+            } else if ("[B".equals(n)) {
+                return byte.class;
+            } else if ("[S".equals(n)) {
+                return short.class;
+            } else if ("[C".equals(n)) {
+                return char.class;
+            } else if ("[I".equals(n)) {
+                return int.class;
+            } else if ("[F".equals(n)) {
+                return float.class;
+            } else if ("[J".equals(n)) {
+                return long.class;
+            } else if ("[D".equals(n)) {
+                return double.class;
+            }
+            String objname = n.substring(n.indexOf("[L") + 2, n.length() - 1);
+            return RefNative.getClassByName(objname);
+        } else {
+            return null;
+        }
+    }
 }

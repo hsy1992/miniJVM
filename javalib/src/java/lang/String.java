@@ -7,6 +7,7 @@ package java.lang;
 
 import java.io.UnsupportedEncodingException;
 import com.sun.cldc.i18n.*;
+import java.util.regex.Pattern;
 
 /**
  * The <code>String</code> class represents character strings. All string
@@ -65,7 +66,7 @@ import com.sun.cldc.i18n.*;
  * @see java.lang.StringBuffer#append(java.lang.String)
  * @since JDK1.0, CLDC 1.0
  */
-public final class String {
+public final class String implements Comparable<String>, CharSequence {
 
     /**
      * The value is used for character storage.
@@ -1019,11 +1020,6 @@ public final class String {
         return this;
     }
 
-    public String replaceAll(String src, String dst) {
-        char[] carr = replace0(src, dst);
-        return new String(0, carr.length, carr);
-    }
-
     public String replace(String src, String dst) {
         char[] carr = replace0(src, dst);
         return new String(0, carr.length, carr);
@@ -1353,42 +1349,42 @@ public final class String {
      */
     public native String intern();
 
-    public String[] split(String splitor) {
-        return split(splitor, 0);
-    }
-
-    public String[] split(String splitor, int limit) {
-        String[] result = new String[0];
-        int startAt = 0;
-        for (int i = 0; i < count;) {
-            char ch = value[offset + i];
-            boolean match = false;
-            if (ch == splitor.charAt(0)) {
-                match = true;
-                for (int j = 1; j < splitor.count; j++) {
-                    if (offset + i + j >= count || value[offset + i + j] != splitor.charAt(j)) {
-                        match = false;
-                        break;
-                    }
-                }
-            }
-            if (match) {
-                result = expandArr(result);
-                result[result.length - 1] = new String(value, startAt + offset, i - startAt);
-                i += splitor.count;
-                startAt = i;
-                if (limit > 0 && result.length >= limit) {
-                    return result;
-                }
-            } else {
-                i++;
-            }
-        }
-        String last = new String(value, startAt + offset, count - startAt);
-        result = expandArr(result);
-        result[result.length - 1] = last;
-        return result;
-    }
+//    public String[] split(String splitor) {
+//        return split(splitor, 0);
+//    }
+//
+//    public String[] split(String splitor, int limit) {
+//        String[] result = new String[0];
+//        int startAt = 0;
+//        for (int i = 0; i < count;) {
+//            char ch = value[offset + i];
+//            boolean match = false;
+//            if (ch == splitor.charAt(0)) {
+//                match = true;
+//                for (int j = 1; j < splitor.count; j++) {
+//                    if (offset + i + j >= count || value[offset + i + j] != splitor.charAt(j)) {
+//                        match = false;
+//                        break;
+//                    }
+//                }
+//            }
+//            if (match) {
+//                result = expandArr(result);
+//                result[result.length - 1] = new String(value, startAt + offset, i - startAt);
+//                i += splitor.count;
+//                startAt = i;
+//                if (limit > 0 && result.length >= limit) {
+//                    return result;
+//                }
+//            } else {
+//                i++;
+//            }
+//        }
+//        String last = new String(value, startAt + offset, count - startAt);
+//        result = expandArr(result);
+//        result[result.length - 1] = last;
+//        return result;
+//    }
 
     private String[] expandArr(String[] arr) {
         if (arr == null) {
@@ -1399,4 +1395,29 @@ public final class String {
             return ss;
         }
     }
+
+    public String[] split(String regex) {
+        return split(regex, 0);
+    }
+
+    public String[] split(String regex, int limit) {
+        return Pattern.compile(regex).split(this, limit);
+    }
+    @Override
+    public CharSequence subSequence(int start, int end) {
+        return substring(start, end);
+    }
+
+    public boolean matches(String regex) {
+        return Pattern.matches(regex, this);
+    }
+
+    public String replaceFirst(String regex, String replacement) {
+        return Pattern.compile(regex).matcher(this).replaceFirst(replacement);
+    }
+
+    public String replaceAll(String regex, String replacement) {
+        return Pattern.compile(regex).matcher(this).replaceAll(replacement);
+    }
+
 }
