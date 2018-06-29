@@ -56,8 +56,11 @@ enum {
     CONSTANT_STRING_REF = 8,
     CONSTANT_FIELD_REF = 9,
     CONSTANT_METHOD_REF = 10,
-    CONSTANT_INTERFACE_REF = 11,
+    CONSTANT_INTERFACE_METHOD_REF = 11,
     CONSTANT_NAME_AND_TYPE = 12,
+    CONSTANT_METHOD_HANDLE = 15,
+    CONSTANT_METHOD_TYPE = 16,
+    CONSTANT_INVOKE_DYNAMIC = 18,
 };
 //=======================  typedef  =============================
 
@@ -151,7 +154,6 @@ typedef struct _InstanceType Instance;
 typedef struct _FieldInfo FieldInfo;
 typedef struct _MethodInfo MethodInfo;
 typedef struct _Instruction Instruction;
-typedef struct _ConstantNameAndType ConstantNameAndType;
 typedef struct _ThreadLock ThreadLock;
 typedef struct _JavaThreadInfo JavaThreadInfo;
 typedef struct _Runtime Runtime;
@@ -384,10 +386,20 @@ typedef struct _ClassFileFormat {
     /* attributes pool */
 } ClassFileFormat;
 
+
 typedef struct _ConstantType {
     s16 index;
     s16 tag;
 } ConstantItem;
+
+//====
+typedef struct _ConstantNameAndType {
+    ConstantItem item;
+    u16 nameIndex;
+    u16 typeIndex;
+} ConstantNameAndType;
+
+//====
 
 typedef struct _ConstantUTF8 {
     ConstantItem item;
@@ -453,53 +465,53 @@ typedef struct _ConstantMethodRef {
     Utf8String *descriptor;
     Utf8String *clsName;
     Pairlist *virtual_methods;
-} ConstantMethodRef;
+} ConstantMethodRef, ConstantInterfaceMethodRef;
 
-typedef struct _ConstantInterfaceMethodRef {
+//typedef struct _ConstantInterfaceMethodRef {
+//    ConstantItem item;
+//    u16 classIndex;
+//    u16 nameAndTypeIndex;
+//
+//    //
+//    Utf8String *name;
+//
+//} ConstantInterfaceMethodRef;
+
+typedef struct _ConstantMethodHandle {
     ConstantItem item;
-    u16 classIndex;
+    u8 reference_kind;
+    u16 reference_index;
+} ConstantMethodHandle;
+
+typedef struct _ConstantMethodType {
+    ConstantItem item;
+    u16 descriptor_index;
+} ConstantMethodType;
+
+typedef struct _ConstantInvokeDynamic {
+    ConstantItem item;
+    u16 bootstrap_method_attr_index;
     u16 nameAndTypeIndex;
+} ConstantInvokeDynamic;
 
-    //
-    Utf8String *name;
 
-} ConstantInterfaceMethodRef;
-
-struct _ConstantNameAndType {
-    ConstantItem item;
-    u16 nameIndex;
-    u16 typeIndex;
-};
+//============================================
 
 typedef struct _ConstantPool {
     ArrayList *utf8CP;
-
-    ArrayList *integerCP;
-
-    ArrayList *floatCP;
-
-    ArrayList *longCP;
-
-    ArrayList *doubleCP;
-
     ArrayList *classRef;
-
     ArrayList *stringRef;
-
     ArrayList *fieldRef;
-
     ArrayList *methodRef;
-
-    ArrayList *interfaceRef;
-
-    ArrayList *name_and_type;
-
+    ArrayList *interfaceMethodRef;
 } ConstantPool;
+//============================================
 
 typedef struct _InterfacePool {
     ConstantClassRef *clasz;
     s32 clasz_used;
 } InterfacePool;
+//============================================
 
 typedef struct _AttributeInfo {
     u16 attribute_name_index;
@@ -509,6 +521,7 @@ typedef struct _AttributeInfo {
     CodeAttribute *converted_code;
 } AttributeInfo;
 
+//============================================
 
 typedef struct _line_number {
     u16 start_pc;
@@ -546,6 +559,22 @@ struct _CodeAttribute {
 
 };
 
+//============================================
+
+typedef struct {
+    u16 bootstrap_method_ref;
+    u16 num_bootstrap_arguments;
+    u16 *bootstrap_arguments;
+} bootstrap_methods;
+
+struct BootstrapMethods_attribute {
+    u16 attribute_name_index;
+    u32 attribute_length;
+    u16 num_bootstrap_methods;
+    bootstrap_methods *bootstrap_methods;
+};
+//============================================
+
 struct _FieldInfo {
     u16 access_flags;
     u16 name_index;
@@ -569,6 +598,7 @@ typedef struct _FieldPool {
     FieldInfo *field;
     s32 field_used;
 } FieldPool;
+//============================================
 
 typedef struct _MethodParaOffset {
     s32 stackOffset;
@@ -596,11 +626,13 @@ struct _MethodInfo {
     s16 para_slots;
     s16 para_count_with_this;
 };
+//============================================
 
 typedef struct _MethodPool {
     MethodInfo *method;
     s32 method_used;
 } MethodPool;
+//============================================
 
 typedef struct _AttributePool {
     AttributeInfo *attribute;
@@ -617,6 +649,8 @@ struct _ClassType {
     MemoryBlock mb;
     JClass *superclass;
     __refer *constant_item_ptr;//存放常量池项目地址
+    s32 constant_item_count;//总数
+
     //类变量及实例变量的参数
     s32 field_instance_start;//实例变量模板起始起址，继承自父类的变量放在前面
     s32 field_instance_len; //非静态变量长度
@@ -624,7 +658,8 @@ struct _ClassType {
     c8 *field_static; //静态变量内存地址
 
     //
-    Instance *ins_class;
+    Instance *ins_class; //object of java.lang.Class
+    Instance *jClassLoader;// java classloader
 
     //public:
     s32 (*_load_class_from_bytes)(struct _ClassType *_this, ByteBuf *buf);
@@ -644,6 +679,8 @@ struct _ClassType {
     Pairlist *arr_class_type;//for object array create speedup,left is utf8 index of class, right is arr class
     ArrayList *insFieldPtrIndex;//for optmize , save object pointer field index
     ArrayList *staticFieldPtrIndex; //save static field index
+
+    //
     s8 status;
     u8 primitive;//primitive data type int/long/short/char/short/byte/float/double
 };
@@ -660,6 +697,8 @@ void constant_list_create(JClass *clazz);
 void constant_list_destory(JClass *clazz);
 
 s32 class_destory(JClass *clazz);
+
+JClass *resole_class(ByteBuf *bytebuf, Runtime *runtime);
 
 s32 load_class(ClassLoader *loader, Utf8String *pClassName, Runtime *runtime);
 

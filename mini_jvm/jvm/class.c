@@ -42,30 +42,20 @@ s32 class_destory(JClass *clazz) {
 
 void constant_list_create(JClass *clazz) {
     clazz->constantPool.utf8CP = arraylist_create(0);
-    clazz->constantPool.integerCP = arraylist_create(0);
-    clazz->constantPool.floatCP = arraylist_create(0);
-    clazz->constantPool.longCP = arraylist_create(0);
-    clazz->constantPool.doubleCP = arraylist_create(0);
     clazz->constantPool.classRef = arraylist_create(0);
     clazz->constantPool.stringRef = arraylist_create(0);
     clazz->constantPool.fieldRef = arraylist_create(0);
     clazz->constantPool.methodRef = arraylist_create(0);
-    clazz->constantPool.interfaceRef = arraylist_create(0);
-    clazz->constantPool.name_and_type = arraylist_create(0);
+    clazz->constantPool.interfaceMethodRef = arraylist_create(0);
 }
 
 void constant_list_destory(JClass *clazz) {
     arraylist_destory(clazz->constantPool.utf8CP);
-    arraylist_destory(clazz->constantPool.integerCP);
-    arraylist_destory(clazz->constantPool.floatCP);
-    arraylist_destory(clazz->constantPool.longCP);
-    arraylist_destory(clazz->constantPool.doubleCP);
     arraylist_destory(clazz->constantPool.classRef);
     arraylist_destory(clazz->constantPool.stringRef);
     arraylist_destory(clazz->constantPool.fieldRef);
     arraylist_destory(clazz->constantPool.methodRef);
-    arraylist_destory(clazz->constantPool.interfaceRef);
-    arraylist_destory(clazz->constantPool.name_and_type);
+    arraylist_destory(clazz->constantPool.interfaceMethodRef);
 }
 
 void class_clear_refer(JClass *clazz) {
@@ -237,6 +227,12 @@ void class_clinit(JClass *clazz, Runtime *runtime) {
             //jvm_printf("%s.%s %llx\n", utf8_cstr(clazz->name), utf8_cstr(cmr->name), (s64) (intptr_t) cmr->virtual_methods);
         }
 
+        for (i = 0; i < clazz->constantPool.interfaceMethodRef->length; i++) {
+            ConstantMethodRef *cmr = (ConstantMethodRef *) arraylist_get_value(clazz->constantPool.interfaceMethodRef, i);
+            cmr->methodInfo = find_methodInfo_by_methodref(clazz, cmr->item.index, runtime);
+            cmr->virtual_methods = pairlist_create(0);
+        }
+
         for (i = 0; i < clazz->constantPool.fieldRef->length; i++) {
             ConstantFieldRef *cfr = (ConstantFieldRef *) arraylist_get_value(clazz->constantPool.fieldRef, i);
             FieldInfo *fi = find_fieldInfo_by_fieldref(clazz, cfr->item.index, runtime);
@@ -251,10 +247,12 @@ void class_clinit(JClass *clazz, Runtime *runtime) {
 
         clazz->finalizeMethod = find_methodInfo_by_name_c(utf8_cstr(clazz->name), STR_METHOD_FINALIZE, "()V", runtime);
 
+
         // init javastring
-        ArrayList *utf8list = clazz->constantPool.utf8CP;
-        for (i = 0, len = utf8list->length; i < len; i++) {
-            ConstantUTF8 *cutf = arraylist_get_value(utf8list, i);
+        ArrayList *strlist = clazz->constantPool.stringRef;
+        for (i = 0, len = strlist->length; i < len; i++) {
+            ConstantStringRef *strRef = arraylist_get_value_unsafe(strlist, i);
+            ConstantUTF8 *cutf = class_get_constant_utf8(clazz, strRef->stringIndex);
             Instance *jstr = jstring_create(cutf->utfstr, runtime);
             gc_refer_hold(jstr);
             cutf->jstr = jstr;

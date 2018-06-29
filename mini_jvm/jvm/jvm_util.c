@@ -128,6 +128,7 @@ JClass *array_class_create_get(Runtime *runtime, Utf8String *desc) {
                 clazz = class_create(runtime);
                 clazz->mb.arr_type_index = getDataTypeIndex(utf8_char_at(desc, 1));
                 clazz->name = utf8_create_copy(desc);
+                clazz->superclass = classes_get_c(STR_CLASS_JAVA_LANG_OBJECT);
                 hashtable_put(sys_classloader->classes, clazz->name, clazz);
                 gc_refer_hold(clazz);
 
@@ -183,7 +184,7 @@ JClass *array_class_get_by_name(Runtime *runtime, Utf8String *name) {
     if (name) {
         Utf8String *ustr = utf8_create_c("[");
         if (!isDataReferByTag(utf8_char_at(name, 0))) {  //not : L [
-            if (!isDataReferByTag(utf8_char_at(name, 0))){
+            if (!isDataReferByTag(utf8_char_at(name, 0))) {
                 utf8_append_c(ustr, "L");
             }
             utf8_append(ustr, name);

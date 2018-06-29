@@ -190,8 +190,6 @@ void jvm_init(c8 *p_classpath, StaticLibRegFunc regFunc) {
     //启动垃圾回收
     garbage_thread_resume();
 
-    sys_classloader = classloader_create(p_classpath);
-
     memset(&jvm_runtime_cache, 0, sizeof(OptimizeCache));
 
     //本地方法库
@@ -201,6 +199,8 @@ void jvm_init(c8 *p_classpath, StaticLibRegFunc regFunc) {
     reg_jdwp_native_lib();
     if (regFunc)regFunc(&jnienv);//register static lib
 
+
+    sys_classloader = classloader_create(p_classpath);
 
     //装入系统属性
     sys_properties_load(sys_classloader);

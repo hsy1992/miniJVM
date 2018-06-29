@@ -3014,7 +3014,7 @@ s32 execute_method_impl(MethodInfo *method, Runtime *pruntime, JClass *clazz) {
                         } else {
                             MethodInfo *m = NULL;
 
-                            if (ins->mb.type & (MEM_TYPE_CLASS | MEM_TYPE_ARR)) {
+                            if (ins->mb.type & (MEM_TYPE_CLASS)) {
                                 m = cmr->methodInfo;
                             } else {
                                 m = (MethodInfo *) pairlist_get(cmr->virtual_methods, ins->mb.clazz);
@@ -3179,6 +3179,11 @@ s32 execute_method_impl(MethodInfo *method, Runtime *pruntime, JClass *clazz) {
                         s2c.c0 = opCode[2];
                         u16 object_ref = s2c.s;
 
+                        Instance *mhandle = pop_ref(stack);
+                        Instance *lookup = pop_ref(stack);
+                        Instance *jstr = pop_ref(stack);
+                        Instance *mtype = pop_ref(stack);
+
                         MethodInfo *m = class_get_constant_method_ref(clazz, object_ref)->methodInfo;
 #if _JVM_DEBUG_BYTECODE_DETAIL > 3
                         invoke_deepth(runtime);
@@ -3197,7 +3202,7 @@ s32 execute_method_impl(MethodInfo *method, Runtime *pruntime, JClass *clazz) {
                         jvm_printf("}\n");
 #endif
 
-                        opCode += 3;
+                        opCode += 5;
                         break;
                     }
 
@@ -3383,15 +3388,16 @@ s32 execute_method_impl(MethodInfo *method, Runtime *pruntime, JClass *clazz) {
 
                         s32 checkok = 0;
                         if (ins == NULL) {
-                        } else if (ins->mb.type == MEM_TYPE_INS) {
+                        } else if (ins->mb.type & (MEM_TYPE_INS | MEM_TYPE_ARR)) {
                             if (instance_of(getClassByConstantClassRef(clazz, typeIdx), ins, runtime)) {
                                 checkok = 1;
                             }
-                        } else {
-                            if (utf8_equals(ins->mb.clazz->name, getClassByConstantClassRef(clazz, typeIdx)->name)) {//
-                                checkok = 1;
-                            }
                         }
+//                        else {
+//                            if (utf8_equals(ins->mb.clazz->name, getClassByConstantClassRef(clazz, typeIdx)->name)) {//
+//                                checkok = 1;
+//                            }
+//                        }
                         push_int(stack, checkok);
 
 #if _JVM_DEBUG_BYTECODE_DETAIL > 5
