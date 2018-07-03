@@ -2805,6 +2805,11 @@ s32 execute_method_impl(MethodInfo *method, Runtime *pruntime, JClass *clazz) {
                         s2c.c0 = opCode[2];
 
                         FieldInfo *fi = class_get_constant_fieldref(clazz, s2c.s)->fieldInfo;
+                        if (!fi) {
+                            ConstantFieldRef *cfr = class_get_constant_fieldref(clazz, s2c.s);
+                            fi = find_fieldInfo_by_fieldref(clazz, cfr->item.index, runtime);
+                            cfr->fieldInfo = fi;
+                        }
                         c8 *ptr = getStaticFieldPtr(fi);
 
                         if (fi->isrefer) {
@@ -2849,6 +2854,11 @@ s32 execute_method_impl(MethodInfo *method, Runtime *pruntime, JClass *clazz) {
                         s2c.c0 = opCode[2];
 
                         FieldInfo *fi = class_get_constant_fieldref(clazz, s2c.s)->fieldInfo;
+                        if (!fi) {
+                            ConstantFieldRef *cfr = class_get_constant_fieldref(clazz, s2c.s);
+                            fi = find_fieldInfo_by_fieldref(clazz, cfr->item.index, runtime);
+                            cfr->fieldInfo = fi;
+                        }
 
                         c8 *ptr = getStaticFieldPtr(fi);
 
@@ -2900,6 +2910,11 @@ s32 execute_method_impl(MethodInfo *method, Runtime *pruntime, JClass *clazz) {
                             ret = RUNTIME_STATUS_EXCEPTION;
                         } else {
                             FieldInfo *fi = class_get_constant_fieldref(clazz, s2c.s)->fieldInfo;
+                            if (!fi) {
+                                ConstantFieldRef *cfr = class_get_constant_fieldref(clazz, s2c.s);
+                                fi = find_fieldInfo_by_fieldref(clazz, cfr->item.index, runtime);
+                                cfr->fieldInfo = fi;
+                            }
                             c8 *ptr = getInstanceFieldPtr(ins, fi);
 
                             if (fi->isrefer) {
@@ -2959,6 +2974,11 @@ s32 execute_method_impl(MethodInfo *method, Runtime *pruntime, JClass *clazz) {
                         } else {
                             // check variable type to determain long/s32/f64/f32
                             FieldInfo *fi = class_get_constant_fieldref(clazz, s2c.s)->fieldInfo;
+                            if (!fi) {
+                                ConstantFieldRef *cfr = class_get_constant_fieldref(clazz, s2c.s);
+                                fi = find_fieldInfo_by_fieldref(clazz, cfr->item.index, runtime);
+                                cfr->fieldInfo = fi;
+                            }
                             c8 *ptr = getInstanceFieldPtr(ins, fi);
 
 #if _JVM_DEBUG_BYTECODE_DETAIL > 5
@@ -3177,30 +3197,63 @@ s32 execute_method_impl(MethodInfo *method, Runtime *pruntime, JClass *clazz) {
                         Short2Char s2c;
                         s2c.c1 = opCode[1];
                         s2c.c0 = opCode[2];
-                        u16 object_ref = s2c.s;
+                        u16 id_index = s2c.s;
 
-                        Instance *mhandle = pop_ref(stack);
-                        Instance *lookup = pop_ref(stack);
-                        Instance *jstr = pop_ref(stack);
-                        Instance *mtype = pop_ref(stack);
+                        ConstantInvokeDynamic *cid = class_get_invoke_dynamic(clazz, id_index);
+                        BootstrapMethod *bootMethod = &clazz->bootstrapMethodAttr->bootstrap_methods[cid->bootstrap_method_attr_index];
+                        //Boot
 
-                        MethodInfo *m = class_get_constant_method_ref(clazz, object_ref)->methodInfo;
-#if _JVM_DEBUG_BYTECODE_DETAIL > 3
-                        invoke_deepth(runtime);
-                        jvm_printf("invokedynamic   | %s.%s%s {\n", utf8_cstr(m->_this_class->name),
-                                   utf8_cstr(m->name), utf8_cstr(m->descriptor));
-#endif
-                        if (m) {
-                            ret = execute_method_impl(m, runtime, m->_this_class);
-                        } else {
-                            Instance *exception = exception_create(JVM_EXCEPTION_NOSUCHMETHOD, runtime);
-                            push_ref(stack, (__refer) exception);
-                            ret = RUNTIME_STATUS_EXCEPTION;
+                        Utf8String *ustr = class_get_constant_utf8(clazz, class_get_constant_name_and_type(clazz, cid->nameAndTypeIndex)->nameIndex)->utfstr;
+                        s32 reference_kind = class_get_method_handle(clazz, bootMethod->bootstrap_method_ref)->reference_kind;
+                        MethodInfo *mi = find_methodInfo_by_methodref(clazz, class_get_method_handle(clazz, bootMethod->bootstrap_method_ref)->reference_index, runtime);
+                        s32 i;
+                        for (i = 0; i < bootMethod->num_bootstrap_arguments; i++) {
+                            ConstantItem *item = class_get_constant_item(clazz, bootMethod->bootstrap_arguments[i]);
+                            switch (item->tag) {
+                                case CONSTANT_METHOD_TYPE: {
+                                    ConstantMethodType *cmt = (ConstantMethodType *) item;
+                                    Utf8String *arg = class_get_constant_utf8(clazz, cmt->descriptor_index)->utfstr;
+                                    break;
+                                }
+                                case CONSTANT_STRING_REF: {
+                                    ConstantStringRef *csr = (ConstantStringRef *) item;
+                                    Utf8String *arg = class_get_constant_utf8(clazz, csr->stringIndex)->utfstr;
+                                    break;
+                                }
+                                case CONSTANT_METHOD_HANDLE: {
+                                    ConstantMethodHandle *cmh = (ConstantMethodHandle *) item;
+                                    MethodInfo *mip = find_methodInfo_by_methodref(clazz, cmh->reference_index, runtime);
+                                    int debug = 1;
+                                    break;
+                                }
+                                default:{
+                                    int debug =1;
+                                }
+                            }
+
                         }
-#if _JVM_DEBUG_BYTECODE_DETAIL > 3
-                        invoke_deepth(runtime);
-                        jvm_printf("}\n");
-#endif
+//                        Instance *mhandle = pop_ref(stack);
+//                        Instance *lookup = pop_ref(stack);
+//                        Instance *jstr = pop_ref(stack);
+//                        Instance *mtype = pop_ref(stack);
+
+//                        MethodInfo *m = class_get_constant_method_ref(clazz, object_ref)->methodInfo;
+//#if _JVM_DEBUG_BYTECODE_DETAIL > 3
+//                        invoke_deepth(runtime);
+//                        jvm_printf("invokedynamic   | %s.%s%s {\n", utf8_cstr(m->_this_class->name),
+//                                   utf8_cstr(m->name), utf8_cstr(m->descriptor));
+//#endif
+//                        if (m) {
+//                            ret = execute_method_impl(m, runtime, m->_this_class);
+//                        } else {
+//                            Instance *exception = exception_create(JVM_EXCEPTION_NOSUCHMETHOD, runtime);
+//                            push_ref(stack, (__refer) exception);
+//                            ret = RUNTIME_STATUS_EXCEPTION;
+//                        }
+//#if _JVM_DEBUG_BYTECODE_DETAIL > 3
+//                        invoke_deepth(runtime);
+//                        jvm_printf("}\n");
+//#endif
 
                         opCode += 5;
                         break;

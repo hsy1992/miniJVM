@@ -561,18 +561,16 @@ struct _CodeAttribute {
 
 //============================================
 
-typedef struct {
+typedef struct _BootstrapMethod{
     u16 bootstrap_method_ref;
     u16 num_bootstrap_arguments;
-    u16 *bootstrap_arguments;
-} bootstrap_methods;
+    u16 bootstrap_arguments[1];
+} BootstrapMethod;
 
-struct BootstrapMethods_attribute {
-    u16 attribute_name_index;
-    u32 attribute_length;
+typedef struct BootstrapMethods_attribute {
     u16 num_bootstrap_methods;
-    bootstrap_methods *bootstrap_methods;
-};
+    BootstrapMethod bootstrap_methods[1];
+}BootstrapMethodsAttr;
 //============================================
 
 struct _FieldInfo {
@@ -637,6 +635,7 @@ typedef struct _MethodPool {
 typedef struct _AttributePool {
     AttributeInfo *attribute;
     s32 attribute_used;
+
 } AttributePool;
 
 
@@ -664,8 +663,11 @@ struct _ClassType {
     //public:
     s32 (*_load_class_from_bytes)(struct _ClassType *_this, ByteBuf *buf);
 
+    //
     Utf8String *source;
+    BootstrapMethodsAttr *bootstrapMethodAttr;
 
+    //
     Utf8String *name;
     MethodInfo *finalizeMethod;
     ClassFileFormat cff;
@@ -851,6 +853,18 @@ static inline f64 class_get_double_from_constant_pool(JClass *clazz, s32 index) 
 
 static inline Utf8String *class_get_utf8_string(JClass *clazz, s32 index) {
     return ((ConstantUTF8 *) (clazz->constant_item_ptr[index]))->utfstr;
+}
+
+static inline ConstantMethodHandle *class_get_method_handle(JClass *clazz, s32 index) {
+    return (ConstantMethodHandle *) (clazz->constant_item_ptr[index]);
+}
+
+static inline ConstantMethodType *class_get_method_type(JClass *clazz, s32 index) {
+    return (ConstantMethodType *) (clazz->constant_item_ptr[index]);
+}
+
+static inline ConstantInvokeDynamic *class_get_invoke_dynamic(JClass *clazz, s32 index) {
+    return (ConstantInvokeDynamic *) (clazz->constant_item_ptr[index]);
 }
 
 MethodInfo *find_instance_methodInfo_by_name(Instance *ins, Utf8String *methodName, Utf8String *methodType, Runtime *runtime);

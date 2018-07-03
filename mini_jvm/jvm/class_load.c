@@ -268,7 +268,7 @@ void *_parseCPMethodHandle(JClass *_this, ByteBuf *buf, s32 index) {
 
     ConstantMethodHandle *ptr = jvm_calloc(sizeof(ConstantNameAndType));
 
-    ptr->item.tag = CONSTANT_NAME_AND_TYPE;
+    ptr->item.tag = CONSTANT_METHOD_HANDLE;
     ptr->item.index = index;
 
     ptr->reference_kind = (u8) bytebuf_read(buf);
@@ -286,7 +286,7 @@ void *_parseCPInvokeDynamic(JClass *_this, ByteBuf *buf, s32 index) {
 
     ConstantInvokeDynamic *ptr = jvm_calloc(sizeof(ConstantNameAndType));
 
-    ptr->item.tag = CONSTANT_NAME_AND_TYPE;
+    ptr->item.tag = CONSTANT_INVOKE_DYNAMIC;
     ptr->item.index = index;
 
     Short2Char s2c;
@@ -592,6 +592,7 @@ s32 _parse_attribute_pool(JClass *_this, ByteBuf *buf, s32 count) {
         i2c.c1 = (u8) bytebuf_read(buf);//integer_tmp[2];
         i2c.c0 = (u8) bytebuf_read(buf);//integer_tmp[3];
         ptr->attribute_length = i2c.i;
+
         //
         ptr->info = jvm_calloc(ptr->attribute_length);
         //fread(ptr->info, ptr->attribute_length, 1, fp);
@@ -777,6 +778,36 @@ s32 _convert_to_code_attribute(CodeAttribute *ca, AttributeInfo *attr, JClass *c
     return 0;
 }
 
+void _convert_2_bootstrap_methods(AttributeInfo *attr, JClass *clazz) {
+    BootstrapMethodsAttr *bms = (BootstrapMethodsAttr *) attr->info;
+    Short2Char s2c;
+    s2c.c0 = bms->num_bootstrap_methods >> 8;
+    s2c.c1 = bms->num_bootstrap_methods;
+    bms->num_bootstrap_methods = s2c.s;
+
+    s32 i;
+    for (i = 0; i < bms->num_bootstrap_methods; i++) {
+        BootstrapMethod *bm = &bms->bootstrap_methods[i];
+        s2c.c0 = bm->bootstrap_method_ref >> 8;
+        s2c.c1 = bm->bootstrap_method_ref;
+        bm->bootstrap_method_ref = s2c.s;
+
+        s2c.c0 = bm->num_bootstrap_arguments >> 8;
+        s2c.c1 = bm->num_bootstrap_arguments;
+        bm->num_bootstrap_arguments = s2c.s;
+
+        s32 j;
+        for (j = 0; j < bm->num_bootstrap_arguments; j++) {
+            s2c.c0 = bm->bootstrap_arguments[j] >> 8;
+            s2c.c1 = bm->bootstrap_arguments[j];
+            bm->bootstrap_arguments[j] = s2c.s;
+        }
+
+    }
+
+    clazz->bootstrapMethodAttr = bms;
+}
+
 
 s32 parseMethodPara(Utf8String *methodType, Utf8String *out) {
     s32 count = 0;
@@ -902,6 +933,8 @@ void _class_optimize(JClass *clazz) {
             s2c.c1 = ptr->info[0];
             s2c.c0 = ptr->info[1];
             clazz->source = class_get_utf8_string(clazz, s2c.s);
+        } else if (utf8_equals_c(name, "BootstrapMethods")) {
+            _convert_2_bootstrap_methods(ptr, clazz);
         }
     }
 

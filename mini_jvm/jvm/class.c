@@ -281,6 +281,12 @@ void class_clinit(JClass *clazz, Runtime *runtime) {
             }
         }
 
+
+//        for (i = 0; i < clazz->constantPool.classRef->length; i++) {
+//            ConstantClassRef *ccr = (ConstantClassRef *) arraylist_get_value(clazz->constantPool.classRef, i);
+//            classes_load_get(ccr->name, runtime);
+//        }
+
         clazz->status = CLASS_STATUS_CLINITED;
     }
     runtime->threadInfo->no_pause--;
