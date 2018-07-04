@@ -194,6 +194,9 @@ extern c8 *STR_CLASS_JAVA_LANG_THREAD;
 extern c8 *STR_CLASS_JAVA_LANG_CLASS;
 extern c8 *STR_CLASS_JAVA_LANG_STACKTRACE;
 extern c8 *STR_CLASS_JAVA_LANG_THROWABLE;
+extern c8 *STR_CLASS_JAVA_LANG_INVOKE_METHODTYPE;
+extern c8 *STR_CLASS_JAVA_LANG_INVOKE_METHODHANDLE;
+extern c8 *STR_CLASS_JAVA_LANG_INVOKE_METHODHANDLES_LOOKUP;
 
 extern c8 *STR_FIELD_STACKFRAME;
 extern c8 *STR_FIELD_NAME;
@@ -561,7 +564,7 @@ struct _CodeAttribute {
 
 //============================================
 
-typedef struct _BootstrapMethod{
+typedef struct _BootstrapMethod {
     u16 bootstrap_method_ref;
     u16 num_bootstrap_arguments;
     u16 bootstrap_arguments[1];
@@ -570,7 +573,7 @@ typedef struct _BootstrapMethod{
 typedef struct BootstrapMethods_attribute {
     u16 num_bootstrap_methods;
     BootstrapMethod bootstrap_methods[1];
-}BootstrapMethodsAttr;
+} BootstrapMethodsAttr;
 //============================================
 
 struct _FieldInfo {
@@ -886,7 +889,7 @@ s32 find_constant_fieldref_index(JClass *clazz, Utf8String *fieldName, Utf8Strin
 //
 
 
-JClass *getClassByConstantClassRef(JClass *clazz, s32 index);
+JClass *getClassByConstantClassRef(JClass *clazz, s32 index, Runtime *runtime);
 
 //======================= runtime =============================
 

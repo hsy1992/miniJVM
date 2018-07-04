@@ -1336,6 +1336,70 @@ Instance *exception_create_str(s32 exception_type, Runtime *runtime, c8 *errmsg)
     stack_destory(para);
     return ins;
 }
+//===============================    lambda  ==================================
+
+
+Instance *method_type_create(Runtime *runtime, Utf8String *desc) {
+    JClass *cl = classes_load_get_c(STR_CLASS_JAVA_LANG_INVOKE_METHODTYPE, runtime);
+    if (cl) {
+        Instance *mt = instance_create(runtime, cl);
+        gc_refer_hold(mt);
+        Instance *jstr_desc = jstring_create(desc, runtime);
+
+
+        RuntimeStack *para = stack_create(1);
+
+        push_ref(para, jstr_desc);
+        instance_init_methodtype(mt, runtime, "(Ljava/lang/String;)V", para);
+        stack_destory(para);
+        gc_refer_release(mt);
+        return mt;
+    }
+    return NULL;
+}
+
+Instance *method_handle_create(Runtime *runtime, MethodInfo *mi, s32 kind) {
+    JClass *cl = classes_load_get_c(STR_CLASS_JAVA_LANG_INVOKE_METHODHANDLE, runtime);
+    if (cl) {
+        Instance *mh = instance_create(runtime, cl);
+        gc_refer_hold(mh);
+        RuntimeStack *para = stack_create(4);
+        push_int(para, kind);
+        Instance *jstr_clsName = jstring_create(mi->_this_class->name, runtime);
+        gc_refer_hold(jstr_clsName);
+        push_ref(para, jstr_clsName);
+        Instance *jstr_methodName = jstring_create(mi->name, runtime);
+        push_ref(para, jstr_methodName);
+        gc_refer_hold(jstr_methodName);
+        Instance *jstr_methodDesc = jstring_create(mi->descriptor, runtime);
+        push_ref(para, jstr_methodDesc);
+        gc_refer_hold(jstr_methodDesc);
+        instance_init_methodtype(mh, runtime, "(ILjava/lang/String;Ljava/lang/String;Ljava/lang/String;)V", para);
+        stack_destory(para);
+        gc_refer_release(mh);
+        gc_refer_release(jstr_clsName);
+        gc_refer_release(jstr_methodName);
+        gc_refer_release(jstr_methodDesc);
+        return mh;
+    }
+    return NULL;
+}
+
+Instance *method_handles_lookup_create(Runtime *runtime, JClass *caller) {
+    JClass *cl = classes_load_get_c(STR_CLASS_JAVA_LANG_INVOKE_METHODHANDLES_LOOKUP, runtime);
+    if (cl) {
+        Instance *lookup = instance_create(runtime, cl);
+        gc_refer_hold(lookup);
+        RuntimeStack *para = stack_create(1);
+
+        push_ref(para, insOfJavaLangClass_create_get(runtime, caller));
+        instance_init_methodtype(lookup, runtime, "(Ljava/lang/Class;)V", para);
+        stack_destory(para);
+        gc_refer_release(lookup);
+        return lookup;
+    }
+    return NULL;
+}
 //===============================    实例操作  ==================================
 
 

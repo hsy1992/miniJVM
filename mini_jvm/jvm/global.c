@@ -28,6 +28,9 @@ c8 *STR_CLASS_JAVA_LANG_STRING = "java/lang/String";
 c8 *STR_CLASS_JAVA_LANG_OBJECT = "java/lang/Object";
 c8 *STR_CLASS_JAVA_LANG_THREAD = "java/lang/Thread";
 c8 *STR_CLASS_JAVA_LANG_CLASS = "java/lang/Class";
+c8 *STR_CLASS_JAVA_LANG_INVOKE_METHODTYPE = "java/lang/invoke/MethodType";
+c8 *STR_CLASS_JAVA_LANG_INVOKE_METHODHANDLE = "java/lang/invoke/MethodHandle";
+c8 *STR_CLASS_JAVA_LANG_INVOKE_METHODHANDLES_LOOKUP= "java/lang/invoke/MethodHandles$Lookup";
 c8 *STR_CLASS_JAVA_LANG_STACKTRACE = "java/lang/StackTraceElement";
 c8 *STR_CLASS_JAVA_LANG_THROWABLE = "java/lang/Throwable";
 

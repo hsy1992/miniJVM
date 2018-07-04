@@ -849,6 +849,28 @@ s32 org_mini_reflect_StackFrame_mapRuntime(Runtime *runtime, JClass *clazz) {
     return 0;
 }
 
+s32 org_mini_reflect_ReflectMethod_findMethod0(Runtime *runtime, JClass *clazz) {
+    s32 pos = 0;
+    Instance *jstr_clsName = (Instance *) localvar_getRefer(runtime->localvar, pos++);
+    Instance *jstr_methodName = (Instance *) localvar_getRefer(runtime->localvar, pos++);
+    Instance *jstr_methodDesc = (Instance *) localvar_getRefer(runtime->localvar, pos++);
+    Utf8String *ustr_clsName = utf8_create();
+    Utf8String *ustr_methodName = utf8_create();
+    Utf8String *ustr_methodDesc = utf8_create();
+
+    jstring_2_utf8(jstr_clsName, ustr_clsName);
+    jstring_2_utf8(jstr_methodName, ustr_methodName);
+    jstring_2_utf8(jstr_methodDesc, ustr_methodDesc);
+
+    MethodInfo *mi = find_methodInfo_by_name(ustr_clsName, ustr_methodName, ustr_methodDesc, runtime);
+
+    utf8_destory(ustr_clsName);
+    utf8_destory(ustr_methodName);
+    utf8_destory(ustr_methodDesc);
+    push_long(runtime->stack, (s64) (intptr_t) mi);
+    return 0;
+}
+
 s32 org_mini_reflect_ReflectArray_mapArray(Runtime *runtime, JClass *clazz) {
     int pos = 0;
     Instance *ins = (Instance *) localvar_getRefer(runtime->localvar, pos++);
@@ -899,6 +921,7 @@ static java_native_method method_jdwp_table[] = {
         {"org/mini/reflect/ReflectField",  "setFieldVal",           "(JJJ)V",                                                           org_mini_reflect_ReflectField_setFieldVal},
         {"org/mini/reflect/ReflectMethod", "mapMethod",             "(J)V",                                                             org_mini_reflect_ReflectMethod_mapMethod},
         {"org/mini/reflect/ReflectMethod", "invokeMethod",          "(JLjava/lang/Object;[J)J",                                         org_mini_reflect_ReflectMethod_invokeMethod},
+        {"org/mini/reflect/ReflectMethod", "findMethod0",           "(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)J",        org_mini_reflect_ReflectMethod_findMethod0},
         {"org/mini/reflect/StackFrame",    "mapRuntime",            "(J)V",                                                             org_mini_reflect_StackFrame_mapRuntime},
         {"org/mini/reflect/ReflectArray",  "mapArray",              "(J)V",                                                             org_mini_reflect_ReflectArray_mapArray},
         {"org/mini/reflect/ReflectArray",  "setVal",                "(JIJ)V",                                                           org_mini_reflect_ReflectArray_setVal},

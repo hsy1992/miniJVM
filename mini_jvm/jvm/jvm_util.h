@@ -88,6 +88,11 @@ Instance *exception_create(s32 exception_type, Runtime *runtime);
 
 Instance *exception_create_str(s32 exception_type, Runtime *runtime, c8 *errmsg);
 
+Instance *method_type_create(Runtime *runtime, Utf8String *desc);
+
+Instance *method_handle_create(Runtime *runtime, MethodInfo *mi, s32 kind);
+
+Instance *method_handles_lookup_create(Runtime *runtime, JClass *caller);
 
 //c8 *getInstanceFieldPtr(Instance *ins, FieldInfo *fi);
 //

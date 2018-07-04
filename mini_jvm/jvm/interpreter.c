@@ -3200,12 +3200,23 @@ s32 execute_method_impl(MethodInfo *method, Runtime *pruntime, JClass *clazz) {
                         u16 id_index = s2c.s;
 
                         ConstantInvokeDynamic *cid = class_get_invoke_dynamic(clazz, id_index);
-                        BootstrapMethod *bootMethod = &clazz->bootstrapMethodAttr->bootstrap_methods[cid->bootstrap_method_attr_index];
-                        //Boot
+                        BootstrapMethod *bootMethod = &clazz->bootstrapMethodAttr->bootstrap_methods[cid->bootstrap_method_attr_index];//Boot
 
-                        Utf8String *ustr = class_get_constant_utf8(clazz, class_get_constant_name_and_type(clazz, cid->nameAndTypeIndex)->nameIndex)->utfstr;
+                        Instance *lookup = method_handles_lookup_create(runtime, clazz);
+                        push_ref(stack, lookup);
+
+                        Utf8String *ustr_invokeName = class_get_constant_utf8(clazz, class_get_constant_name_and_type(clazz, cid->nameAndTypeIndex)->nameIndex)->utfstr;
+                        Instance *jstr_invokeName = jstring_create(ustr_invokeName, runtime);
+                        push_ref(stack, jstr_invokeName);
+
+                        Utf8String *ustr_invokeType = class_get_constant_utf8(clazz, class_get_constant_name_and_type(clazz, cid->nameAndTypeIndex)->typeIndex)->utfstr;
+                        Instance *mt_invokeType = method_type_create(runtime, ustr_invokeType);
+                        push_ref(stack, mt_invokeType);
+
                         s32 reference_kind = class_get_method_handle(clazz, bootMethod->bootstrap_method_ref)->reference_kind;
-                        MethodInfo *mi = find_methodInfo_by_methodref(clazz, class_get_method_handle(clazz, bootMethod->bootstrap_method_ref)->reference_index, runtime);
+                        MethodInfo *m = find_methodInfo_by_methodref(clazz, class_get_method_handle(clazz, bootMethod->bootstrap_method_ref)->reference_index, runtime);
+
+
                         s32 i;
                         for (i = 0; i < bootMethod->num_bootstrap_arguments; i++) {
                             ConstantItem *item = class_get_constant_item(clazz, bootMethod->bootstrap_arguments[i]);
@@ -3213,21 +3224,26 @@ s32 execute_method_impl(MethodInfo *method, Runtime *pruntime, JClass *clazz) {
                                 case CONSTANT_METHOD_TYPE: {
                                     ConstantMethodType *cmt = (ConstantMethodType *) item;
                                     Utf8String *arg = class_get_constant_utf8(clazz, cmt->descriptor_index)->utfstr;
+                                    Instance *mt = method_type_create(runtime, arg);
+                                    push_ref(stack, mt);
                                     break;
                                 }
                                 case CONSTANT_STRING_REF: {
                                     ConstantStringRef *csr = (ConstantStringRef *) item;
                                     Utf8String *arg = class_get_constant_utf8(clazz, csr->stringIndex)->utfstr;
+                                    Instance *spec = jstring_create(arg, runtime);
+                                    push_ref(stack, spec);
                                     break;
                                 }
                                 case CONSTANT_METHOD_HANDLE: {
                                     ConstantMethodHandle *cmh = (ConstantMethodHandle *) item;
                                     MethodInfo *mip = find_methodInfo_by_methodref(clazz, cmh->reference_index, runtime);
-                                    int debug = 1;
+                                    Instance *mh = method_handle_create(runtime, mip, cmh->reference_kind);
+                                    push_ref(stack, mh);
                                     break;
                                 }
-                                default:{
-                                    int debug =1;
+                                default: {
+                                    int debug = 1;
                                 }
                             }
 
@@ -3243,13 +3259,13 @@ s32 execute_method_impl(MethodInfo *method, Runtime *pruntime, JClass *clazz) {
 //                        jvm_printf("invokedynamic   | %s.%s%s {\n", utf8_cstr(m->_this_class->name),
 //                                   utf8_cstr(m->name), utf8_cstr(m->descriptor));
 //#endif
-//                        if (m) {
-//                            ret = execute_method_impl(m, runtime, m->_this_class);
-//                        } else {
-//                            Instance *exception = exception_create(JVM_EXCEPTION_NOSUCHMETHOD, runtime);
-//                            push_ref(stack, (__refer) exception);
-//                            ret = RUNTIME_STATUS_EXCEPTION;
-//                        }
+                        if (m) {
+                            ret = execute_method_impl(m, runtime, m->_this_class);
+                        } else {
+                            Instance *exception = exception_create(JVM_EXCEPTION_NOSUCHMETHOD, runtime);
+                            push_ref(stack, (__refer) exception);
+                            ret = RUNTIME_STATUS_EXCEPTION;
+                        }
 //#if _JVM_DEBUG_BYTECODE_DETAIL > 3
 //                        invoke_deepth(runtime);
 //                        jvm_printf("}\n");
@@ -3392,7 +3408,10 @@ s32 execute_method_impl(MethodInfo *method, Runtime *pruntime, JClass *clazz) {
                         s32 checkok = 0;
                         if (ins != NULL) {
                             if (ins->mb.type == MEM_TYPE_INS) {
-                                JClass *cl = getClassByConstantClassRef(clazz, typeIdx);
+                                JClass *cl = getClassByConstantClassRef(clazz, typeIdx, runtime);
+//                                if (utf8_equals_c(ins->mb.clazz->name, "org/mini/util/ConstantPool$Utf8PoolEntry")) {//
+//                                    int debug = 1;
+//                                }
                                 if (instance_of(cl, ins, runtime)) {
                                     checkok = 1;
                                 }
@@ -3442,7 +3461,7 @@ s32 execute_method_impl(MethodInfo *method, Runtime *pruntime, JClass *clazz) {
                         s32 checkok = 0;
                         if (ins == NULL) {
                         } else if (ins->mb.type & (MEM_TYPE_INS | MEM_TYPE_ARR)) {
-                            if (instance_of(getClassByConstantClassRef(clazz, typeIdx), ins, runtime)) {
+                            if (instance_of(getClassByConstantClassRef(clazz, typeIdx, runtime), ins, runtime)) {
                                 checkok = 1;
                             }
                         }

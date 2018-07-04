@@ -281,7 +281,7 @@ void class_clinit(JClass *clazz, Runtime *runtime) {
             }
         }
 
-
+        //MUST load all relative classes, because  instanceof maybe match ins to parent's parent, but it not in memory
 //        for (i = 0; i < clazz->constantPool.classRef->length; i++) {
 //            ConstantClassRef *ccr = (ConstantClassRef *) arraylist_get_value(clazz->constantPool.classRef, i);
 //            classes_load_get(ccr->name, runtime);
@@ -339,9 +339,9 @@ JClass *getSuperClass(JClass *clazz) {
 //===============================    类数据访问  ==================================
 
 
-JClass *getClassByConstantClassRef(JClass *clazz, s32 index) {
+JClass *getClassByConstantClassRef(JClass *clazz, s32 index, Runtime *runtime) {
     ConstantClassRef *ccr = class_get_constant_classref(clazz, index);
-    return classes_get(ccr->name);
+    return classes_load_get(ccr->name, runtime);
 }
 
 
