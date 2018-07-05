@@ -180,6 +180,21 @@ s32 java_lang_Class_isArray(Runtime *runtime, JClass *clazz) {
     return 0;
 }
 
+s32 java_lang_Class_isPrimitive(Runtime *runtime, JClass *clazz) {
+    RuntimeStack *stack = runtime->stack;
+    JClass *cl = insOfJavaLangClass_get_classHandle((Instance *) localvar_getRefer(runtime->localvar, 0));
+    if (cl->mb.clazz->primitive) {
+        push_int(stack, 1);
+    } else {
+        push_int(stack, 0);
+    }
+#if _JVM_DEBUG_BYTECODE_DETAIL > 5
+    invoke_deepth(runtime);
+    jvm_printf("java_lang_Class_isPrimitive\n");
+#endif
+    return 0;
+}
+
 s32 java_lang_Class_getName(Runtime *runtime, JClass *clazz) {
     RuntimeStack *stack = runtime->stack;
     JClass *cl = insOfJavaLangClass_get_classHandle((Instance *) localvar_getRefer(runtime->localvar, 0));
@@ -195,6 +210,23 @@ s32 java_lang_Class_getName(Runtime *runtime, JClass *clazz) {
 #if _JVM_DEBUG_BYTECODE_DETAIL > 5
     invoke_deepth(runtime);
     jvm_printf("java_lang_Class_getName\n");
+#endif
+    return 0;
+}
+
+s32 java_lang_Class_getSuperclass(Runtime *runtime, JClass *clazz) {
+    RuntimeStack *stack = runtime->stack;
+    JClass *cl = insOfJavaLangClass_get_classHandle((Instance *) localvar_getRefer(runtime->localvar, 0));
+    if (cl) {
+
+        JClass *scl = getSuperClass(cl);
+        push_ref(stack, insOfJavaLangClass_create_get(runtime, scl));
+    } else {
+        push_ref(stack, NULL);
+    }
+#if _JVM_DEBUG_BYTECODE_DETAIL > 5
+    invoke_deepth(runtime);
+    jvm_printf("java_lang_Class_getSuperclass\n");
 #endif
     return 0;
 }
@@ -1199,6 +1231,21 @@ s32 java_lang_System_getNativeProperties(Runtime *runtime, JClass *clazz) {
     return 0;
 }
 
+//s32 java_lang_invoke_CallSite_invokeExact(Runtime *runtime, JClass *clazz) {
+//    Instance *_this = localvar_getRefer(runtime->localvar, 0);
+//    Instance *jarr = localvar_getRefer(runtime->localvar, 1);
+//
+//
+//
+//    push_ref(runtime->stack, NULL);//先放入栈，
+//
+//#if _JVM_DEBUG_BYTECODE_DETAIL > 5
+//    invoke_deepth(runtime);
+//    jvm_printf("java_lang_invoke_CallSite_invokeExact \n");
+//#endif
+//    return 0;
+//}
+
 static java_native_method method_table[] = {
         {"com/sun/cldc/io/ConsoleOutputStream", "write",               "(I)V",                                                     com_sun_cldc_io_ConsoleOutputStream_write},
         {"com/sun/cldc/io/ConsoleInputStream",  "read",                "()I",                                                      com_sun_cldc_io_ConsoleInputStream_read},
@@ -1210,7 +1257,9 @@ static java_native_method method_table[] = {
         {"java/lang/Class",                     "isAssignableFrom",    "(Ljava/lang/Class;)Z",                                     java_lang_Class_isAssignableFrom},
         {"java/lang/Class",                     "isInterface",         "()Z",                                                      java_lang_Class_isInterface},
         {"java/lang/Class",                     "isArray",             "()Z",                                                      java_lang_Class_isArray},
+        {"java/lang/Class",                     "isPrimitive",         "()Z",                                                      java_lang_Class_isPrimitive},
         {"java/lang/Class",                     "getName",             "()Ljava/lang/String;",                                     java_lang_Class_getName},
+        {"java/lang/Class",                     "getSuperclass",       "()Ljava/lang/Class;",                                      java_lang_Class_getSuperclass},
         {"java/lang/Class",                     "getPrimitiveClass",   "(Ljava/lang/String;)Ljava/lang/Class;",                    java_lang_Class_getPrimitiveClass},
         {"java/lang/Class",                     "getComponentType",    "()Ljava/lang/Class;",                                      java_lang_Class_getComponentType},
         {"java/lang/Class",                     "getClassLoader0",     "()Ljava/lang/ClassLoader;",                                java_lang_Class_getClassLoader0},
@@ -1267,6 +1316,7 @@ static java_native_method method_table[] = {
         {"java/lang/Throwable",                 "printStackTrace0",    "",                                                         java_io_Throwable_printStackTrace0},
         {"java/lang/Throwable",                 "buildStackElement",   "()Ljava/lang/StackTraceElement;",                          java_io_Throwable_buildStackElement},
         {"java/io/PrintStream",                 "printImpl",           "(Ljava/lang/String;)V",                                    java_io_PrintStream_printImpl},
+//        {"java/lang/invoke/CallSite",           "invokeExact",         "([Ljava/lang/Object;)Ljava/lang/Object;",                  java_lang_invoke_CallSite_invokeExact},
         //avian jni
 
         {"java/lang/System",                    "getNativeProperties", "()[Ljava/lang/String;",                                    java_lang_System_getNativeProperties},

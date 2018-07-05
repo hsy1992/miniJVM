@@ -5,39 +5,20 @@
  */
 package org.mini.reflect;
 
+import java.lang.reflect.Method;
 import org.mini.reflect.vm.RConst;
 import java.util.ArrayList;
 import java.util.List;
 import org.mini.reflect.vm.RefNative;
 
 /**
- * 类方法的反射，以mini jvm中的 MethofInfo的实例内存地址进行初始化 初始化中会把内存中的相应变量反射到Method实例中。  <code>
- *      try {
- *          //same as: "abcd".indexOf("cd",1);
- *          String s = "abcd";
- *          Method m;
- *          Reference r = new Reference(RefNative.obj2id(java.lang.String.class));
- *          m = r.getMethod("indexOf", new Class[]{java.lang.String.class, java.lang.Integer.class});
- *          if (m != null) {
- *              Object result = m.invoke(s, new Object[]{"cd", 1});
- *              System.out.println("reflect invoke result:" + result);
- *          }
- *
- *          //same as: new Long(0x1010101020202020L).longValue();
- *          Long lo = new Long(0x1010101020202020L);
- *          r = new Reference(RefNative.obj2id(java.lang.Long.class));
- *          m = r.getMethod("longValue", new Class[]{});
- *          if (m != null) {
- *              Object result = m.invoke(lo, new Object[]{});
- *              System.out.println("reflect invoke result:" + Long.toString((Long) result, 16));
- *          }
- *      } catch (Exception ex) {
- *      }
- * </code>
+ * 类方法的反射，以mini jvm中的 MethofInfo的实例内存地址进行初始化 初始化中会把内存中的相应变量反射到ReflectMethod实例中。
  *
  * @author gust
  */
 public class ReflectMethod {
+
+    ReflectClass refClass;
 
     //不可随意改动字段类型及名字，要和native一起改
     public long methodId;
@@ -54,16 +35,18 @@ public class ReflectMethod {
     public LocalVarTable[] localVarTable;
 
     private String[] paras;//参数列表
-    private Class[] paras_class;
+    private Class<?>[] paras_class;
 
-    public ReflectMethod(long mid) {
+    public ReflectMethod(ReflectClass c, long mid) {
         if (mid == 0) {
             throw new IllegalArgumentException();
         }
+        refClass = c;
         //System.out.println("mid:" + mid);
         this.methodId = mid;
         mapMethod(methodId);
-        parseMethodPara();
+        paras = splitMethodPara(signature);
+        paras_class = getMethodPara(signature);
     }
 
     public Class[] getParameterTypes() {
@@ -94,7 +77,7 @@ public class ReflectMethod {
         Class[] pc = getParameterTypes();
         if (args.length != paras.length) {
             throw new IllegalArgumentException();
-        } 
+        }
         if ((accessFlags & RConst.ACC_PRIVATE) != 0) {
             throw new IllegalAccessException();
         }
@@ -131,7 +114,7 @@ public class ReflectMethod {
                     break;
             }
         }
-        long result = invokeMethod(methodId, obj, argslong);
+        long result = invokeMethod(methodId, obj, argslong);//todo result would be gc
         char rtype = signature.charAt(signature.indexOf(')') + 1);
         switch (rtype) {
             case 'S':
@@ -155,7 +138,7 @@ public class ReflectMethod {
         }
     }
 
-    private void parseMethodPara() {
+    public static String[] splitMethodPara(String signature) {
         String methodType = signature;
         List<String> args = new ArrayList();
         //System.out.println("methodType:" + methodType);
@@ -203,20 +186,50 @@ public class ReflectMethod {
             }
 
         }
-        paras = args.toArray(new String[args.size()]);
+        String[] paras = args.toArray(new String[args.size()]);
+        return paras;
+    }
+
+    public static Class<?>[] getMethodPara(String signature) {
+        String[] paras = splitMethodPara(signature);
+        Class<?>[] paras_class;
         paras_class = new Class[paras.length];
         for (int i = 0; i < paras.length; i++) {
             paras_class[i] = ReflectClass.getClassBySignature(paras[i]);
         }
+        return paras_class;
     }
-    
-    
+
     public Class<?> getReturnType() {
-        String s=signature.substring(signature.indexOf(')')+1);
-        if(s.equals("V")){
+        return getMethodReturnType(signature);
+    }
+
+    static public Class<?> getMethodReturnType(String signature) {
+        String s = signature.substring(signature.indexOf(')') + 1);
+        if (s.equals("V")) {
             return Void.TYPE;
         }
         return ReflectClass.getClassBySignature(s);
+    }
+
+    static public ReflectMethod findMethod(String className, String methodName, String methodSignature) {
+        long mid = findMethod0(className, methodName, methodSignature);
+        if (mid != 0) {
+            ReflectMethod rm = new ReflectMethod(null, mid);
+            return rm;
+        }
+        return null;
+    }
+
+    static public String getMethodSignature(Class<?>[] ptypes, Class<?> rtype) {
+        StringBuilder sb = new StringBuilder();
+        sb.append('(');
+        for (Class<?> c : ptypes) {
+            sb.append(ReflectClass.getSignatureByClass(c));
+        }
+        sb.append(')');
+        sb.append(ReflectClass.getSignatureByClass(rtype));
+        return sb.toString();
     }
 
     public String toString() {
@@ -232,4 +245,7 @@ public class ReflectMethod {
     final native void mapMethod(long mid);
 
     native long invokeMethod(long mid, Object ins, long[] args_long);
+
+    public static native long findMethod0(String className, String methodName, String methodSignature);
+
 }

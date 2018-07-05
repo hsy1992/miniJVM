@@ -7,6 +7,7 @@ package java.lang;
 
 import java.io.UnsupportedEncodingException;
 import com.sun.cldc.i18n.*;
+import java.util.Formatter;
 import java.util.regex.Pattern;
 
 /**
@@ -1386,15 +1387,6 @@ public final class String implements Comparable<String>, CharSequence {
 //        return result;
 //    }
 
-    private String[] expandArr(String[] arr) {
-        if (arr == null) {
-            return new String[1];
-        } else {
-            String[] ss = new String[arr.length + 1];
-            System.arraycopy(arr, 0, ss, 0, arr.length);
-            return ss;
-        }
-    }
 
     public String[] split(String regex) {
         return split(regex, 0);
@@ -1420,4 +1412,10 @@ public final class String implements Comparable<String>, CharSequence {
         return Pattern.compile(regex).matcher(this).replaceAll(replacement);
     }
 
+  public static String format(String fmt, Object... args) {
+    final Formatter formatter = new Formatter();
+    final String result = formatter.format(fmt, args).toString();
+    formatter.close();
+    return result;
+  }
 }

@@ -62,7 +62,7 @@ package java.lang;
  * @see java.lang.String
  * @since JDK1.0, CLDC 1.0
  */
-public class StringBuilder {
+public class StringBuilder implements Appendable{
 
     /**
      * The value is used for character storage.
@@ -963,5 +963,13 @@ public class StringBuilder {
         if (start > end)
             throw new StringIndexOutOfBoundsException(end - start);
         return new String(value, start, end - start);
+    }
+    
+    public StringBuilder append(CharSequence sequence) {
+        return append(sequence.toString());
+    }
+
+    public StringBuilder append(CharSequence sequence, int start, int end) {
+        return append(sequence.subSequence(start, end));
     }
 }

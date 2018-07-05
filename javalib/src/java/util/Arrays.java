@@ -8,6 +8,8 @@
 package java.util;
 
 import java.lang.reflect.Array;
+import java.util.function.Consumer;
+import java.util.function.UnaryOperator;
 
 
 
@@ -2347,50 +2349,95 @@ public class Arrays {
      * @serial include
      */
     private static class ArrayList<E> extends AbstractList<E>
-	implements RandomAccess
+        implements RandomAccess, java.io.Serializable
     {
         private static final long serialVersionUID = -2764017481108945198L;
-	private Object[] a;
+        private final E[] a;
 
-	ArrayList(E[] array) {
-            if (array==null)
-                throw new NullPointerException();
-	    a = array;
-	}
+        ArrayList(E[] array) {
+            a = Objects.requireNonNull(array);
+        }
 
-	public int size() {
-	    return a.length;
-	}
+        @Override
+        public int size() {
+            return a.length;
+        }
 
-	public Object[] toArray() {
-	    return (Object[])a.clone();
-	}
+        @Override
+        public Object[] toArray() {
+            return a.clone();
+        }
 
-	public E get(int index) {
-	    return (E)a[index];
-	}
+        @Override
+        @SuppressWarnings("unchecked")
+        public <T> T[] toArray(T[] a) {
+            int size = size();
+            if (a.length < size)
+                return Arrays.copyOf(this.a, size,
+                                     (Class<? extends T[]>) a.getClass());
+            System.arraycopy(this.a, 0, a, 0, size);
+            if (a.length > size)
+                a[size] = null;
+            return a;
+        }
 
-	public E set(int index, E element) {
-	    Object oldValue = a[index];
-	    a[index] = element;
-	    return (E)oldValue;
-	}
+        @Override
+        public E get(int index) {
+            return a[index];
+        }
 
+        @Override
+        public E set(int index, E element) {
+            E oldValue = a[index];
+            a[index] = element;
+            return oldValue;
+        }
+
+        @Override
         public int indexOf(Object o) {
-            if (o==null) {
-                for (int i=0; i<a.length; i++)
-                    if (a[i]==null)
+            E[] a = this.a;
+            if (o == null) {
+                for (int i = 0; i < a.length; i++)
+                    if (a[i] == null)
                         return i;
             } else {
-                for (int i=0; i<a.length; i++)
+                for (int i = 0; i < a.length; i++)
                     if (o.equals(a[i]))
                         return i;
             }
             return -1;
         }
 
+        @Override
         public boolean contains(Object o) {
             return indexOf(o) != -1;
+        }
+
+        @Override
+        public Spliterator<E> spliterator() {
+            return Spliterators.spliterator(a, Spliterator.ORDERED);
+        }
+
+        @Override
+        public void forEach(Consumer<? super E> action) {
+            Objects.requireNonNull(action);
+            for (E e : a) {
+                action.accept(e);
+            }
+        }
+
+        @Override
+        public void replaceAll(UnaryOperator<E> operator) {
+            Objects.requireNonNull(operator);
+            E[] a = this.a;
+            for (int i = 0; i < a.length; i++) {
+                a[i] = operator.apply(a[i]);
+            }
+        }
+
+        @Override
+        public void sort(Comparator<? super E> c) {
+            Arrays.sort(a, c);
         }
     }
 
@@ -2709,10 +2756,10 @@ public class Arrays {
  
         return result;
     }
- 
+    
     /**
      * Returns <tt>true</tt> if the two specified arrays are <i>deeply
-     * equal</i> to one another.  Unlike the @link{#equals{Object[],Object[])
+     * equal</i> to one another.  Unlike the {@link #equals(Object[],Object[])}
      * method, this method is appropriate for use with nested arrays of
      * arbitrary depth.
      *
@@ -2742,6 +2789,7 @@ public class Arrays {
      * @param a2 the other array to be tested for equality
      * @return <tt>true</tt> if the two arrays are equal
      * @see #equals(Object[],Object[])
+     * @see Objects#deepEquals(Object, Object)
      * @since 1.5
      */
     public static boolean deepEquals(Object[] a1, Object[] a2) {
@@ -2752,44 +2800,50 @@ public class Arrays {
         int length = a1.length;
         if (a2.length != length)
             return false;
- 
+
         for (int i = 0; i < length; i++) {
             Object e1 = a1[i];
             Object e2 = a2[i];
- 
+
             if (e1 == e2)
                 continue;
             if (e1 == null)
                 return false;
- 
+
             // Figure out whether the two elements are equal
-            boolean eq;
-            if (e1 instanceof Object[] && e2 instanceof Object[])
-                eq = deepEquals ((Object[]) e1, (Object[]) e2);
-            else if (e1 instanceof byte[] && e2 instanceof byte[])
-                eq = equals((byte[]) e1, (byte[]) e2);
-            else if (e1 instanceof short[] && e2 instanceof short[])
-                eq = equals((short[]) e1, (short[]) e2);
-            else if (e1 instanceof int[] && e2 instanceof int[])
-                eq = equals((int[]) e1, (int[]) e2);
-            else if (e1 instanceof long[] && e2 instanceof long[])
-                eq = equals((long[]) e1, (long[]) e2);
-            else if (e1 instanceof char[] && e2 instanceof char[])
-                eq = equals((char[]) e1, (char[]) e2);
-            else if (e1 instanceof float[] && e2 instanceof float[])
-                eq = equals((float[]) e1, (float[]) e2);
-            else if (e1 instanceof double[] && e2 instanceof double[])
-                eq = equals((double[]) e1, (double[]) e2);
-            else if (e1 instanceof boolean[] && e2 instanceof boolean[])
-                eq = equals((boolean[]) e1, (boolean[]) e2);
-            else
-                eq = e1.equals(e2);
- 
+            boolean eq = deepEquals0(e1, e2);
+
             if (!eq)
                 return false;
         }
         return true;
     }
+
+    static boolean deepEquals0(Object e1, Object e2) {
+        boolean eq;
+        if (e1 instanceof Object[] && e2 instanceof Object[])
+            eq = deepEquals ((Object[]) e1, (Object[]) e2);
+        else if (e1 instanceof byte[] && e2 instanceof byte[])
+            eq = equals((byte[]) e1, (byte[]) e2);
+        else if (e1 instanceof short[] && e2 instanceof short[])
+            eq = equals((short[]) e1, (short[]) e2);
+        else if (e1 instanceof int[] && e2 instanceof int[])
+            eq = equals((int[]) e1, (int[]) e2);
+        else if (e1 instanceof long[] && e2 instanceof long[])
+            eq = equals((long[]) e1, (long[]) e2);
+        else if (e1 instanceof char[] && e2 instanceof char[])
+            eq = equals((char[]) e1, (char[]) e2);
+        else if (e1 instanceof float[] && e2 instanceof float[])
+            eq = equals((float[]) e1, (float[]) e2);
+        else if (e1 instanceof double[] && e2 instanceof double[])
+            eq = equals((double[]) e1, (double[]) e2);
+        else if (e1 instanceof boolean[] && e2 instanceof boolean[])
+            eq = equals((boolean[]) e1, (boolean[]) e2);
+        else
+            eq = e1.equals(e2);
+        return eq;
+    }
+
  
     /**
      * Returns a string representation of the contents of the specified array.

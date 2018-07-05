@@ -55,7 +55,7 @@ public class ReflectClass {
         }
         fields = new ReflectField[fieldIds.length];
         for (int i = 0; i < fieldIds.length; i++) {
-            fields[i] = new ReflectField(fieldIds[i]);
+            fields[i] = new ReflectField(this, fieldIds[i]);
         }
     }
 
@@ -65,7 +65,7 @@ public class ReflectClass {
         }
         methods = new ReflectMethod[methodIds.length];
         for (int i = 0; i < methodIds.length; i++) {
-            methods[i] = new ReflectMethod(methodIds[i]);
+            methods[i] = new ReflectMethod(this, methodIds[i]);
         }
     }
 
@@ -156,6 +156,9 @@ public class ReflectClass {
         }
     }
 
+    static Class[] primitiveClass = {short.class, char.class, byte.class, int.class, float.class, boolean.class, double.class, long.class, void.class};
+    static String[] primitiveTag = {"S", "C", "B", "I", "F", "Z", "D", "J", "V"};
+
     static public Class getClassBySignature(String s) {
         switch (s.charAt(0)) {
             case 'S':
@@ -174,12 +177,31 @@ public class ReflectClass {
                 return Double.TYPE;
             case 'J':
                 return Long.TYPE;
+            case 'V':
+                return Void.TYPE;
             case 'L':
                 s = s.substring(1, s.length() - 1);
                 return RefNative.getClassByName(s);
             default:
                 return RefNative.getClassByName(s);
         }
+    }
+
+    static public String getSignatureByClass(Class c) {
+        if (c.isArray()) {
+            return "[" + getSignatureByClass(c.getComponentType());
+        } else if (c.isPrimitive()) {
+            int i = 0;
+            for (Class pc : primitiveClass) {
+                if (pc == c) {
+                    return primitiveTag[i];
+                }
+                i++;
+            }
+        } else {
+            return "L" + c.getName().replace('.', '/') + ";";
+        }
+        return null;
     }
 
     final native void mapReference(long classId);

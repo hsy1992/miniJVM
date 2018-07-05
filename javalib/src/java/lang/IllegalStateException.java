@@ -38,4 +38,14 @@ class IllegalStateException extends RuntimeException {
     public IllegalStateException(String s) {
 	super(s);
     }
+    
+    
+    public IllegalStateException(Throwable cause) {
+        super(cause);
+    }
+
+
+    public IllegalStateException(String message, Throwable cause) {
+        super(message, cause);
+    }
 }

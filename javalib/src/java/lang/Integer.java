@@ -555,20 +555,47 @@ public final class Integer extends Number implements Comparable<Integer> {
     }
 
 
+
+    private static class IntegerCache {
+        static final int low = -128;
+        static final int high;
+        static final Integer cache[];
+
+        static {
+            // high value may be configured by property
+            int h = 127;
+            
+            high = h;
+
+            cache = new Integer[(high - low) + 1];
+            int j = low;
+            for(int k = 0; k < cache.length; k++)
+                cache[k] = new Integer(j++);
+
+            // range [-128, 127] must be interned (JLS7 5.1.7)
+        }
+
+        private IntegerCache() {}
+    }
+
     /**
-     * Returns a <tt>Integer</tt> instance representing the specified
-     * <tt>int</tt> value.
-     * If a new <tt>Integer</tt> instance is not required, this method
-     * should generally be used in preference to the constructor
-     * {@link #Integer(int)}, as this method is likely to yield
-     * significantly better space and time performance by caching
-     * frequently requested values.
+     * Returns an {@code Integer} instance representing the specified
+     * {@code int} value.  If a new {@code Integer} instance is not
+     * required, this method should generally be used in preference to
+     * the constructor {@link #Integer(int)}, as this method is likely
+     * to yield significantly better space and time performance by
+     * caching frequently requested values.
      *
-     * @param  i an <code>int</code> value.
-     * @return a <tt>Integer</tt> instance representing <tt>i</tt>.
+     * This method will always cache values in the range -128 to 127,
+     * inclusive, and may cache other values outside of this range.
+     *
+     * @param  i an {@code int} value.
+     * @return an {@code Integer} instance representing {@code i}.
      * @since  1.5
      */
     public static Integer valueOf(int i) {
+        if (i >= IntegerCache.low && i <= IntegerCache.high)
+            return IntegerCache.cache[i + (-IntegerCache.low)];
         return new Integer(i);
     }
 

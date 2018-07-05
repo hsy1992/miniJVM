@@ -490,15 +490,7 @@ u8 getClassStatus(JClass *clazz) {
 }
 
 CodeAttribute *getCodeAttribute(MethodInfo *method) {
-    s32 i;
-    CodeAttribute *ca = NULL;
-    for (i = 0; i < method->attributes_count; i++) {
-        ca = method->attributes[i].converted_code;
-        if (ca) {
-            break;
-        }
-    }
-    return ca;
+    return method->converted_code;
 }
 
 
@@ -862,22 +854,20 @@ s32 jdwp_set_breakpoint(s32 setOrClear, JClass *clazz, MethodInfo *methodInfo, s
     if (!methodInfo->breakpoint) {
         methodInfo->breakpoint = pairlist_create(4);
     }
-    int i;
-    for (i = 0; i < methodInfo->attributes_count; i++) {
-        if (methodInfo->attributes[i].converted_code) {
-            if (setOrClear) {
-                pairlist_putl(methodInfo->breakpoint, (intptr_t) execIndex, 1);
-                return JDWP_ERROR_NONE;
-            } else {
-                pairlist_removel(methodInfo->breakpoint, (intptr_t) execIndex);
-                if (methodInfo->breakpoint->count == 0) {
-                    jvm_free(methodInfo->breakpoint);
-                    methodInfo->breakpoint = NULL;
-                }
-                return JDWP_ERROR_NONE;
+    if (methodInfo->converted_code) {
+        if (setOrClear) {
+            pairlist_putl(methodInfo->breakpoint, (intptr_t) execIndex, 1);
+            return JDWP_ERROR_NONE;
+        } else {
+            pairlist_removel(methodInfo->breakpoint, (intptr_t) execIndex);
+            if (methodInfo->breakpoint->count == 0) {
+                jvm_free(methodInfo->breakpoint);
+                methodInfo->breakpoint = NULL;
             }
+            return JDWP_ERROR_NONE;
         }
     }
+
     return JDWP_ERROR_INVALID_LOCATION;
 }
 

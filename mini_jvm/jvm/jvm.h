@@ -520,8 +520,7 @@ typedef struct _AttributeInfo {
     u16 attribute_name_index;
     s32 attribute_length;
     u8 *info;
-    //
-    CodeAttribute *converted_code;
+
 } AttributeInfo;
 
 //============================================
@@ -567,12 +566,12 @@ struct _CodeAttribute {
 typedef struct _BootstrapMethod {
     u16 bootstrap_method_ref;
     u16 num_bootstrap_arguments;
-    u16 bootstrap_arguments[1];
+    u16 *bootstrap_arguments;
 } BootstrapMethod;
 
 typedef struct BootstrapMethods_attribute {
     u16 num_bootstrap_methods;
-    BootstrapMethod bootstrap_methods[1];
+    BootstrapMethod *bootstrap_methods;
 } BootstrapMethodsAttr;
 //============================================
 
@@ -613,6 +612,8 @@ struct _MethodInfo {
     u16 descriptor_index;
     u16 attributes_count;
     AttributeInfo *attributes;
+    //
+    CodeAttribute *converted_code;
 
     MethodParaOffset *paraOffset;
 

@@ -38,5 +38,14 @@ class RuntimeException extends Exception {
     public RuntimeException(String s) {
         super(s);
     }
+    
+    public RuntimeException(Throwable cause) {
+        this.cause = cause;
+    }
+    
+    public RuntimeException(String message, Throwable cause) {
+        super(message, cause);
+    }
+
 }
 

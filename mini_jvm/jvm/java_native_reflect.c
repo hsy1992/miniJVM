@@ -518,17 +518,14 @@ s32 org_mini_reflect_vm_RefNative_getGarbageStatus(Runtime *runtime, JClass *cla
 
 s32 org_mini_reflect_vm_RefNative_defineClass(Runtime *runtime, JClass *clazz) {
     s32 pos = 0;
-    Instance *cloader = localvar_getRefer(runtime->localvar, pos);
-    pos += 2;
-    Instance *namejstr = localvar_getRefer(runtime->localvar, pos);
-    pos += 2;
-    Instance *bytesarr = localvar_getRefer(runtime->localvar, pos);
-    pos += 2;
+    Instance *cloader = localvar_getRefer(runtime->localvar, pos++);
+    Instance *namejstr = localvar_getRefer(runtime->localvar, pos++);
+    Instance *bytesarr = localvar_getRefer(runtime->localvar, pos++);
     s32 offset = localvar_getInt(runtime->localvar, pos++);
     s32 len = localvar_getInt(runtime->localvar, pos++);
 
     ByteBuf *bytebuf = bytebuf_create(len);
-    bytebuf_read_batch(bytebuf, bytesarr->arr_body + offset, len);
+    bytebuf_write_batch(bytebuf, bytesarr->arr_body + offset, len);
     JClass *cl = resole_class(bytebuf, runtime);
     cl->jClassLoader = cloader;
     bytebuf_destory(bytebuf);
@@ -536,6 +533,7 @@ s32 org_mini_reflect_vm_RefNative_defineClass(Runtime *runtime, JClass *clazz) {
     Instance *clIns = insOfJavaLangClass_create_get(runtime, cl);
 
     push_ref(runtime->stack, clIns);
+//    push_ref(runtime->stack, NULL);
 
 #if _JVM_DEBUG_BYTECODE_DETAIL > 5
     jvm_printf("org_mini_reflect_vm_RefNative_defineClass %d\n", collector->_garbage_thread_status);
@@ -710,30 +708,26 @@ s32 org_mini_reflect_ReflectMethod_mapMethod(Runtime *runtime, JClass *clazz) {
         if (ptr)setFieldInt(ptr, methodInfo->para_slots);
         //
         s32 i;
-        AttributeInfo *att = NULL;
-        for (i = 0; i < methodInfo->attributes_count; i++) {
-            if (methodInfo->attributes[i].converted_code) {
-                att = &methodInfo->attributes[i];
-            }
-        }
+
+        CodeAttribute *ca = methodInfo->converted_code;
         //
         ptr = getFieldPtr_byName_c(ins, JDWP_CLASS_METHOD, "codeStart", "J");
-        if (ptr)setFieldLong(ptr, att ? 0 : -1);
+        if (ptr)setFieldLong(ptr, ca ? 0 : -1);
         //
         ptr = getFieldPtr_byName_c(ins, JDWP_CLASS_METHOD, "codeEnd", "J");
-        if (ptr)setFieldLong(ptr, att ? att->converted_code->attribute_length : -1);
+        if (ptr)setFieldLong(ptr, ca ? ca->attribute_length : -1);
         //
         ptr = getFieldPtr_byName_c(ins, JDWP_CLASS_METHOD, "lines", "I");
-        if (ptr)setFieldInt(ptr, att ? att->converted_code->line_number_table_length : 0);
+        if (ptr)setFieldInt(ptr, ca ? ca->line_number_table_length : 0);
         //
-        if (att) {
+        if (ca) {
             {
                 ptr = getFieldPtr_byName_c(ins, JDWP_CLASS_METHOD, "lineNum", "[S");
                 if (ptr) {
-                    Instance *jarr = jarray_create_by_type_index(runtime, att->converted_code->line_number_table_length * 2, DATATYPE_SHORT);
+                    Instance *jarr = jarray_create_by_type_index(runtime, ca->line_number_table_length * 2, DATATYPE_SHORT);
                     setFieldRefer(ptr, jarr);
-                    memcpy(jarr->arr_body, att->converted_code->line_number_table,
-                           att->converted_code->line_number_table_length * 4);
+                    memcpy(jarr->arr_body, ca->line_number_table,
+                           ca->line_number_table_length * 4);
                 }
             }
             {
@@ -743,11 +737,11 @@ s32 org_mini_reflect_ReflectMethod_mapMethod(Runtime *runtime, JClass *clazz) {
                 if (ptr) {
                     Utf8String *ustr = utf8_create_c(table_type);
                     utf8_substring(ustr, 1, ustr->length);
-                    Instance *jarr = jarray_create_by_type_name(runtime, att->converted_code->local_var_table_length, ustr);
+                    Instance *jarr = jarray_create_by_type_name(runtime, ca->local_var_table_length, ustr);
                     setFieldRefer(ptr, jarr);
                     utf8_destory(ustr);
-                    for (i = 0; i < att->converted_code->local_var_table_length; i++) {
-                        LocalVarTable *lvt = &att->converted_code->local_var_table[i];
+                    for (i = 0; i < ca->local_var_table_length; i++) {
+                        LocalVarTable *lvt = &ca->local_var_table[i];
                         s64 val = (intptr_t) localVarTable2java(methodInfo->_this_class, lvt, runtime);
                         jarray_set_field(jarr, i, val);
 

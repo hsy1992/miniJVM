@@ -430,4 +430,7 @@ public final class Byte extends Number implements Comparable<Byte> {
     /** use serialVersionUID from JDK 1.1. for interoperability */
     private static final long serialVersionUID = -7183698231559129828L;
 
+    public static String toString(byte v, int radix) {
+        return Long.toString(v, radix);
+    }
 }

@@ -513,8 +513,9 @@ s32 _parseMP(JClass *_this, ByteBuf *buf) {
     s2c.c0 = (u8) bytebuf_read(buf);//short_tmp[1];
     ptr->attributes_count = s2c.s;
 
-    ptr->attributes = (AttributeInfo *) jvm_calloc(sizeof(AttributeInfo) * ptr->attributes_count);
-    memset(ptr->attributes, 0, sizeof(AttributeInfo) * ptr->attributes_count);
+    if (ptr->attributes_count) {
+        ptr->attributes = (AttributeInfo *) jvm_calloc(sizeof(AttributeInfo) * ptr->attributes_count);
+    }
     /* parse methodRef attributes */
     _parseMethodAttr(ptr, buf);
 
@@ -541,20 +542,21 @@ s32 _class_method_info_destory(JClass *clazz) {
             AttributeInfo *attr = &mi->attributes[j];
             if (attr->info)jvm_free(attr->info);//某些没有转
             attr->info = NULL;
-            if (attr->converted_code) {
-                CodeAttribute *ca = (CodeAttribute *) attr->converted_code;
-                jvm_free(ca->code);//info已被转换为converted_attribute
-                ca->code = NULL;
-                jvm_free(ca->exception_table);//info已被转换为converted_attribute
-                ca->exception_table = NULL;
-                jvm_free(ca->line_number_table);
-                ca->line_number_table = NULL;
-                if (ca->local_var_table)jvm_free(ca->local_var_table);
-                ca->local_var_table = NULL;
-                //
-                jvm_free(attr->converted_code);
-                attr->converted_code = NULL;
-            }
+
+        }
+        if (mi->converted_code) {
+            CodeAttribute *ca = (CodeAttribute *) mi->converted_code;
+            jvm_free(ca->code);//info已被转换为converted_attribute
+            ca->code = NULL;
+            jvm_free(ca->exception_table);//info已被转换为converted_attribute
+            ca->exception_table = NULL;
+            jvm_free(ca->line_number_table);
+            ca->line_number_table = NULL;
+            if (ca->local_var_table)jvm_free(ca->local_var_table);
+            ca->local_var_table = NULL;
+            //
+            jvm_free(mi->converted_code);
+            mi->converted_code = NULL;
         }
         if (mi->attributes)jvm_free(mi->attributes);
         mi->attributes = NULL;
@@ -779,33 +781,53 @@ s32 _convert_to_code_attribute(CodeAttribute *ca, AttributeInfo *attr, JClass *c
 }
 
 void _convert_2_bootstrap_methods(AttributeInfo *attr, JClass *clazz) {
-    BootstrapMethodsAttr *bms = (BootstrapMethodsAttr *) attr->info;
+    BootstrapMethodsAttr *bms = jvm_calloc(sizeof(BootstrapMethodsAttr));
+    s32 ptr = 0;
     Short2Char s2c;
-    s2c.c0 = bms->num_bootstrap_methods >> 8;
-    s2c.c1 = bms->num_bootstrap_methods;
+    s2c.c1 = attr->info[ptr++];
+    s2c.c0 = attr->info[ptr++];
     bms->num_bootstrap_methods = s2c.s;
+    bms->bootstrap_methods = jvm_calloc(sizeof(BootstrapMethod) * bms->num_bootstrap_methods);
 
     s32 i;
     for (i = 0; i < bms->num_bootstrap_methods; i++) {
         BootstrapMethod *bm = &bms->bootstrap_methods[i];
-        s2c.c0 = bm->bootstrap_method_ref >> 8;
-        s2c.c1 = bm->bootstrap_method_ref;
+        s2c.c1 = attr->info[ptr++];
+        s2c.c0 = attr->info[ptr++];
         bm->bootstrap_method_ref = s2c.s;
 
-        s2c.c0 = bm->num_bootstrap_arguments >> 8;
-        s2c.c1 = bm->num_bootstrap_arguments;
+        s2c.c1 = attr->info[ptr++];
+        s2c.c0 = attr->info[ptr++];
         bm->num_bootstrap_arguments = s2c.s;
-
+        bm->bootstrap_arguments = jvm_calloc(sizeof(u16) * bm->num_bootstrap_arguments);
         s32 j;
         for (j = 0; j < bm->num_bootstrap_arguments; j++) {
-            s2c.c0 = bm->bootstrap_arguments[j] >> 8;
-            s2c.c1 = bm->bootstrap_arguments[j];
+            s2c.c1 = attr->info[ptr++];
+            s2c.c0 = attr->info[ptr++];
             bm->bootstrap_arguments[j] = s2c.s;
         }
 
     }
-
+    jvm_free(attr->info);
+    attr->info = NULL;
     clazz->bootstrapMethodAttr = bms;
+}
+
+void _class_bootstrap_methods_destory(JClass *clazz) {
+    BootstrapMethodsAttr *bms = clazz->bootstrapMethodAttr;
+    if (!bms)return;
+
+    s32 i;
+    for (i = 0; i < bms->num_bootstrap_methods; i++) {
+        BootstrapMethod *bm = &bms->bootstrap_methods[i];
+
+        if (bm->bootstrap_arguments) {
+            jvm_free(bm->bootstrap_arguments);
+        }
+    }
+    jvm_free(bms->bootstrap_methods);
+    jvm_free(bms);
+    clazz->bootstrapMethodAttr = NULL;
 }
 
 
@@ -917,11 +939,15 @@ void _class_optimize(JClass *clazz) {
         //转attribute为CdoeAttribute
         for (j = 0; j < ptr->attributes_count; j++) {
             if (utf8_equals_c(class_get_utf8_string(clazz, ptr->attributes[j].attribute_name_index), "Code") == 1) {
+//                if (utf8_equals_c(clazz->name, "java/util/Arrays$ArrayList") && utf8_equals_c(ptr->name, "size")) {
+//                    int debug = 1;
+//                }
+
                 CodeAttribute *ca = jvm_calloc(sizeof(CodeAttribute));
                 _convert_to_code_attribute(ca, &ptr->attributes[j], clazz);
                 jvm_free(ptr->attributes[j].info);//无用删除
                 ptr->attributes[j].info = NULL;
-                ptr->attributes[j].converted_code = ca;
+                ptr->converted_code = ca;
             }
         }
     }
@@ -935,6 +961,7 @@ void _class_optimize(JClass *clazz) {
             clazz->source = class_get_utf8_string(clazz, s2c.s);
         } else if (utf8_equals_c(name, "BootstrapMethods")) {
             _convert_2_bootstrap_methods(ptr, clazz);
+
         }
     }
 
@@ -1066,7 +1093,7 @@ JClass *resole_class(ByteBuf *bytebuf, Runtime *runtime) {
     if (bytebuf != NULL) {
         tmpclazz = class_create(runtime);
         s32 iret = tmpclazz->_load_class_from_bytes(tmpclazz, bytebuf);//load file
-        bytebuf_destory(bytebuf);
+
         if (iret == 0) {
             classes_put(tmpclazz);
             class_prepar(tmpclazz, runtime);
@@ -1099,7 +1126,7 @@ s32 load_class(ClassLoader *loader, Utf8String *pClassName, Runtime *runtime) {
         bytebuf = load_file_from_classpath(loader, clsName);
         if (bytebuf != NULL) {
             tmpclazz = resole_class(bytebuf, runtime);
-
+            bytebuf_destory(bytebuf);
         }
 
     }
@@ -1114,6 +1141,7 @@ s32 load_class(ClassLoader *loader, Utf8String *pClassName, Runtime *runtime) {
 s32 _DESTORY_CLASS(JClass *clazz) {
     //
     _class_method_info_destory(clazz);
+    _class_bootstrap_methods_destory(clazz);
     _class_interface_pool_destory(clazz);
     _class_field_info_destory(clazz);
     _class_constant_pool_destory(clazz);

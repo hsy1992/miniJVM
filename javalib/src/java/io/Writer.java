@@ -19,7 +19,7 @@ package java.io;
  * @see     java.io.Reader
  */
 
-public abstract class Writer {
+public abstract class Writer implements Appendable{
 
     /**
      * Temporary buffer used to hold writes of strings and single characters
@@ -159,6 +159,30 @@ public abstract class Writer {
      * @exception  IOException  If an I/O error occurs
      */
     abstract public void close() throws IOException;
+
+    public Appendable append(final char c) throws IOException {
+        write((int) c);
+        return this;
+    }
+
+    public Appendable append(final CharSequence sequence) throws IOException {
+        return append(sequence, 0, sequence.length());
+    }
+
+    public Appendable append(CharSequence sequence, int start, int end)
+            throws IOException {
+        final int length = end - start;
+        if (sequence instanceof String) {
+            write((String) sequence, start, length);
+        } else {
+            final char[] charArray = new char[length];
+            for (int i = start; i < end; i++) {
+                charArray[i] = sequence.charAt(i);
+            }
+            write(charArray, 0, length);
+        }
+        return this;
+    }
 
 }
 

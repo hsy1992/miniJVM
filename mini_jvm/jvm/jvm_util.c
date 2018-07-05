@@ -93,6 +93,7 @@ JClass *classes_load_get(Utf8String *ustr, Runtime *runtime) {
 
 s32 classes_put(JClass *clazz) {
     if (clazz) {
+        //jvm_printf("sys_classloader %d : %s\n", sys_classloader->classes->entries, utf8_cstr(clazz->name));
         hashtable_put(sys_classloader->classes, clazz->name, clazz);
         return 0;
     }
@@ -129,7 +130,7 @@ JClass *array_class_create_get(Runtime *runtime, Utf8String *desc) {
                 clazz->mb.arr_type_index = getDataTypeIndex(utf8_char_at(desc, 1));
                 clazz->name = utf8_create_copy(desc);
                 clazz->superclass = classes_get_c(STR_CLASS_JAVA_LANG_OBJECT);
-                hashtable_put(sys_classloader->classes, clazz->name, clazz);
+                classes_put(clazz);
                 gc_refer_hold(clazz);
 
 #if _JVM_DEBUG_BYTECODE_DETAIL > 5
@@ -1142,7 +1143,6 @@ Instance *insOfJavaLangClass_create_get(Runtime *runtime, JClass *clazz) {
             Instance *ins = instance_create(runtime, java_lang_class);
             gc_refer_hold(ins);
             instance_init(ins, runtime);
-            gc_refer_reg(runtime, ins);
             clazz->ins_class = ins;
             insOfJavaLangClass_set_classHandle(ins, clazz);
             return ins;

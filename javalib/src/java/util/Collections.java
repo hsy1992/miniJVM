@@ -3508,4 +3508,28 @@ public class Collections {
             result |= c.add(e);
         return result;
     }
+    
+        /**
+     * Returns an enumeration over the specified collection.  This provides
+     * interoperability with legacy APIs that require an enumeration
+     * as input.
+     *
+     * @param  <T> the class of the objects in the collection
+     * @param c the collection for which an enumeration is to be returned.
+     * @return an enumeration over the specified collection.
+     * @see Enumeration
+     */
+    public static <T> Enumeration<T> enumeration(final Collection<T> c) {
+        return new Enumeration<T>() {
+            private final Iterator<T> i = c.iterator();
+
+            public boolean hasMoreElements() {
+                return i.hasNext();
+            }
+
+            public T nextElement() {
+                return i.next();
+            }
+        };
+    }
 }

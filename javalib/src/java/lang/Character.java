@@ -38,7 +38,7 @@ import com.sun.cldc.i18n.uclc.*;
  * DefaultCaseConverter.  Refer to the end of this file
  * for details.
  */
-public final class Character extends Object {
+public final class Character implements Comparable<Character> {
 
     /**
      * The minimum radix available for conversion to and from Strings.
@@ -76,8 +76,8 @@ public final class Character extends Object {
      * The value of the Character.
      */
     private char value;
-    
-    public static final Class<Character>     TYPE = (Class<Character>) Class.getPrimitiveClass("char");
+
+    public static final Class<Character> TYPE = (Class<Character>) Class.getPrimitiveClass("char");
 
     /**
      * Constructs a <code>Character</code> object and initializes it so that it
@@ -298,5 +298,13 @@ public final class Character extends Object {
 
     public static Character valueOf(char i) {
         return new Character(i);
+    }
+
+    public int compareTo(Character o) {
+        return value - o.value;
+    }
+
+    public static char[] toChars(int codePoint) {
+        return new char[]{(char) codePoint};
     }
 }

@@ -31,7 +31,7 @@ JClass *class_create(Runtime *runtime) {
 }
 
 s32 class_destory(JClass *clazz) {
-
+    //jvm_printf("class_destory   : %s\n", utf8_cstr(clazz->name));
     _DESTORY_CLASS(clazz);
     pairlist_destory(clazz->arr_class_type);
     arraylist_destory(clazz->insFieldPtrIndex);
@@ -67,7 +67,7 @@ void class_clear_refer(JClass *clazz) {
 //        if (utf8_equals_c(fi->name, "zones")) {
 //            s32 debug = 1;
 //        }
-            if ((fi->access_flags & ACC_STATIC) != 0 && isDataReferByIndex(fi->datatype_idx)) {
+            if ((fi->access_flags & ACC_STATIC) != 0 && fi->isrefer) {
                 c8 *ptr = getStaticFieldPtr(fi);
                 if (ptr) {
                     setFieldRefer(ptr, NULL);
@@ -484,17 +484,38 @@ MethodInfo *find_methodInfo_by_name(Utf8String *clsName, Utf8String *methodName,
 
     while (mi == NULL && other) {
         MethodPool *fp = &(other->methodPool);
-        s32 i = 0;
-        for (; i < fp->method_used; i++) {
+        s32 i;
+        for (i = 0; i < fp->method_used; i++) {
             MethodInfo *tmp = &fp->method[i];
             if (utf8_equals(methodName, tmp->name) == 1
                 && utf8_equals(methodType, tmp->descriptor) == 1) {
                 mi = tmp;
-                if (!mi->_this_class)
+                if (!mi->_this_class) {
                     mi->_this_class = other;
+                }
                 break;
             }
         }
+        //find interface default method implementation JDK8
+        if (mi == NULL) {
+            for (i = 0; i < other->interfacePool.clasz_used; i++) {
+                ConstantClassRef *ccr = (other->interfacePool.clasz + i);
+                Utf8String *icl_name = class_get_constant_utf8(other, ccr->stringIndex)->utfstr;
+                JClass *icl = classes_load_get_without_clinit(icl_name, runtime);
+//                if (utf8_equals_c(icl_name, "java/util/List")&&utf8_equals_c(methodName, "size")) {
+//                    int debug = 1;
+//                }
+                MethodInfo *imi = find_methodInfo_by_name(icl_name, methodName, methodType, runtime);
+                if (imi != NULL && imi->converted_code != NULL) {
+                    mi = imi;
+                    if (!mi->_this_class) {
+                        mi->_this_class = icl;
+                    }
+                    break;
+                }
+            }
+        }
+        //find superclass
         other = getSuperClass(other);
     }
 

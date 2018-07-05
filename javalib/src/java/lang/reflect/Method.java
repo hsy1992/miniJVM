@@ -7,6 +7,7 @@
 package java.lang.reflect;
 
 import org.mini.reflect.ReflectMethod;
+import org.mini.reflect.vm.RefNative;
 
 /**
  * A <code>Method</code> provides information about, and access to, a single
@@ -29,7 +30,7 @@ import org.mini.reflect.ReflectMethod;
  * @author Kenneth Russell
  * @author Nakul Saraiya
  */
-public final class Method implements Member {
+public class Method implements Member {
 
     Class clazz;
     ReflectMethod refMethod;
@@ -79,4 +80,20 @@ public final class Method implements Member {
     public boolean isSynthetic() {
         return false;
     }
+
+    static public Method findMethod(ClassLoader cloader, String className, String methodName, String methodSignature) {
+        Class c = RefNative.getClassByName(className);
+        if (c != null) {
+            ReflectMethod rm = ReflectMethod.findMethod(className, methodName, methodSignature);
+            if (rm != null) {
+                return new Method(c, rm);
+            }
+        }
+        return null;
+    }
+
+    public String getSignature() {
+        return refMethod.signature;
+    }
+
 }

@@ -529,7 +529,7 @@ static inline void _synchronized_unlock_method(MethodInfo *method, Runtime *runt
 }
 
 s32 execute_method_impl(MethodInfo *method, Runtime *pruntime, JClass *clazz) {
-    s32 j = 0, ret = RUNTIME_STATUS_NORMAL;
+    s32 ret = RUNTIME_STATUS_NORMAL;
 
     Runtime *runtime = runtime_create(pruntime);
 
@@ -545,7 +545,7 @@ s32 execute_method_impl(MethodInfo *method, Runtime *pruntime, JClass *clazz) {
     RuntimeStack *stack = runtime->stack;
 
     if (!(method->access_flags & ACC_NATIVE)) {
-        CodeAttribute *ca = method->attributes[j].converted_code;
+        CodeAttribute *ca = method->converted_code;
         if (ca) {
             localvar_init(runtime, ca->max_locals);
             LocalVarItem *localvar = runtime->localvar;
@@ -3160,6 +3160,12 @@ s32 execute_method_impl(MethodInfo *method, Runtime *pruntime, JClass *clazz) {
                             push_ref(stack, (__refer) exception);
                             ret = RUNTIME_STATUS_EXCEPTION;
                         } else {
+                            if (utf8_equals_c(cmr->name, "forEach") && utf8_equals_c(cmr->clsName, "java/util/List")) {
+                                int debug = 1;
+                            }
+                            if (utf8_equals_c(cmr->name, "hasNext") && utf8_equals_c(cmr->clsName, "java/util/Iterator")) {
+                                int debug = 1;
+                            }
                             MethodInfo *m = NULL;
                             if (ins->mb.type & MEM_TYPE_CLASS) {
                                 m = cmr->methodInfo;
@@ -3199,23 +3205,23 @@ s32 execute_method_impl(MethodInfo *method, Runtime *pruntime, JClass *clazz) {
                         s2c.c0 = opCode[2];
                         u16 id_index = s2c.s;
 
+                        //get bootMethod struct
                         ConstantInvokeDynamic *cid = class_get_invoke_dynamic(clazz, id_index);
                         BootstrapMethod *bootMethod = &clazz->bootstrapMethodAttr->bootstrap_methods[cid->bootstrap_method_attr_index];//Boot
 
+                        //parper bootMethod parameter
                         Instance *lookup = method_handles_lookup_create(runtime, clazz);
-                        push_ref(stack, lookup);
+                        push_ref(stack, lookup); //lookup
 
                         Utf8String *ustr_invokeName = class_get_constant_utf8(clazz, class_get_constant_name_and_type(clazz, cid->nameAndTypeIndex)->nameIndex)->utfstr;
                         Instance *jstr_invokeName = jstring_create(ustr_invokeName, runtime);
-                        push_ref(stack, jstr_invokeName);
+                        push_ref(stack, jstr_invokeName); //invokeName
 
                         Utf8String *ustr_invokeType = class_get_constant_utf8(clazz, class_get_constant_name_and_type(clazz, cid->nameAndTypeIndex)->typeIndex)->utfstr;
                         Instance *mt_invokeType = method_type_create(runtime, ustr_invokeType);
-                        push_ref(stack, mt_invokeType);
+                        push_ref(stack, mt_invokeType); //invokeMethodType
 
-                        s32 reference_kind = class_get_method_handle(clazz, bootMethod->bootstrap_method_ref)->reference_kind;
-                        MethodInfo *m = find_methodInfo_by_methodref(clazz, class_get_method_handle(clazz, bootMethod->bootstrap_method_ref)->reference_index, runtime);
-
+                        //other bootMethod parameter
 
                         s32 i;
                         for (i = 0; i < bootMethod->num_bootstrap_arguments; i++) {
@@ -3248,28 +3254,68 @@ s32 execute_method_impl(MethodInfo *method, Runtime *pruntime, JClass *clazz) {
                             }
 
                         }
-//                        Instance *mhandle = pop_ref(stack);
-//                        Instance *lookup = pop_ref(stack);
-//                        Instance *jstr = pop_ref(stack);
-//                        Instance *mtype = pop_ref(stack);
 
-//                        MethodInfo *m = class_get_constant_method_ref(clazz, object_ref)->methodInfo;
-//#if _JVM_DEBUG_BYTECODE_DETAIL > 3
-//                        invoke_deepth(runtime);
-//                        jvm_printf("invokedynamic   | %s.%s%s {\n", utf8_cstr(m->_this_class->name),
-//                                   utf8_cstr(m->name), utf8_cstr(m->descriptor));
-//#endif
-                        if (m) {
-                            ret = execute_method_impl(m, runtime, m->_this_class);
+                        //get bootmethod
+                        //s32 reference_kind = class_get_method_handle(clazz, bootMethod->bootstrap_method_ref)->reference_kind;
+                        MethodInfo *boot_m = find_methodInfo_by_methodref(clazz, class_get_method_handle(clazz, bootMethod->bootstrap_method_ref)->reference_index, runtime);
+
+#if _JVM_DEBUG_BYTECODE_DETAIL > 3
+                        invoke_deepth(runtime);
+                        jvm_printf("invokedynamic   | %s.%s%s {\n", utf8_cstr(m->_this_class->name),
+                                   utf8_cstr(m->name), utf8_cstr(m->descriptor));
+#endif
+                        if (boot_m) {
+                            /**
+                             * run boot method java.lang.invoke.LambdaMetafactory
+                             *
+                             * public static CallSite metafactory(MethodHandles.Lookup caller,
+                             *           String invokedName,
+                             *           MethodType invokedType,
+                             *           MethodType samMethodType,
+                             *           MethodHandle implMethod,
+                             *           MethodType instantiatedMethodType)
+                             *
+                             *
+                             *  to generate Lambda Class implementation interface
+                             *  and new a callsite
+                             */
+
+                            ret = execute_method_impl(boot_m, runtime, boot_m->_this_class);
+                            if (ret == RUNTIME_STATUS_NORMAL) {
+                                MethodInfo *finder = find_methodInfo_by_name_c("org/mini/reflect/vm/LambdaUtil", "getMethodInfoHandle", "(Ljava/lang/invoke/CallSite;)J", runtime);
+                                if (finder) {
+                                    //run finder to convert calsite to MethodInfo pointer
+                                    ret = execute_method_impl(finder, runtime, finder->_this_class);
+                                    if (ret == RUNTIME_STATUS_NORMAL) {
+                                        MethodInfo *make = (MethodInfo *) (intptr_t) pop_long(stack);
+                                        if (make) {
+                                            // run make to generate instance of Lambda Class
+                                            ret = execute_method_impl(make, runtime, make->_this_class);
+                                            if (ret == RUNTIME_STATUS_NORMAL) {
+                                                Instance *ins_of_interface = pop_ref(stack);
+                                                push_ref(stack, ins_of_interface);
+                                            }
+                                        } else {
+                                            Instance *exception = exception_create(JVM_EXCEPTION_NOSUCHMETHOD, runtime);
+                                            push_ref(stack, (__refer) exception);
+                                            ret = RUNTIME_STATUS_EXCEPTION;
+                                        }
+                                    }
+                                } else {
+                                    Instance *exception = exception_create(JVM_EXCEPTION_NOSUCHMETHOD, runtime);
+                                    push_ref(stack, (__refer) exception);
+                                    ret = RUNTIME_STATUS_EXCEPTION;
+                                }
+                            }
                         } else {
                             Instance *exception = exception_create(JVM_EXCEPTION_NOSUCHMETHOD, runtime);
                             push_ref(stack, (__refer) exception);
                             ret = RUNTIME_STATUS_EXCEPTION;
                         }
-//#if _JVM_DEBUG_BYTECODE_DETAIL > 3
-//                        invoke_deepth(runtime);
-//                        jvm_printf("}\n");
-//#endif
+#if _JVM_DEBUG_BYTECODE_DETAIL > 3
+                        invoke_deepth(runtime);
+                        jvm_printf("}\n");
+#endif
 
                         opCode += 5;
                         break;
