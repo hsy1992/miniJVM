@@ -567,6 +567,9 @@ typedef struct _BootstrapMethod {
     u16 bootstrap_method_ref;
     u16 num_bootstrap_arguments;
     u16 *bootstrap_arguments;
+
+    //cache
+    MethodInfo *make;
 } BootstrapMethod;
 
 typedef struct BootstrapMethods_attribute {
