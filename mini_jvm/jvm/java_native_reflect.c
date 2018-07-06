@@ -152,9 +152,9 @@ s32 org_mini_reflect_vm_RefNative_getLocalVal(Runtime *runtime, JClass *clazz) {
     s32 slot = localvar_getInt(runtime->localvar, pos++);
     Instance *valuetype = localvar_getRefer(runtime->localvar, pos++);
 
-    c8 *ptr = getFieldPtr_byName_c(valuetype, JDWP_CLASS_VALUETYPE, "bytes", "C");
+    c8 *ptr = getFieldPtr_byName_c(valuetype, JDWP_CLASS_VALUETYPE, "bytes", "C", runtime);
     u16 bytes = (u16) getFieldShort(ptr);
-    ptr = getFieldPtr_byName_c(valuetype, JDWP_CLASS_VALUETYPE, "value", "J");
+    ptr = getFieldPtr_byName_c(valuetype, JDWP_CLASS_VALUETYPE, "value", "J", runtime);
     if (slot < r->localvar_count) {
         switch (bytes) {
             case 'R':
@@ -415,7 +415,7 @@ s32 org_mini_reflect_vm_RefNative_resumeThread(Runtime *runtime, JClass *clazz) 
     Instance *thread = (Instance *) localvar_getRefer(runtime->localvar, 0);
     Runtime *trun = (Runtime *) jthread_get_stackframe_value(thread);//线程结束之后会清除掉runtime,因为其是一个栈变量，不可再用
     if (trun) {
-        if (trun->threadInfo->suspend_count > 0)trun->threadInfo->suspend_count--;
+        jthread_resume(trun);
         push_int(runtime->stack, 0);
     } else
         push_int(runtime->stack, 1);
@@ -550,26 +550,26 @@ s32 org_mini_reflect_ReflectClass_mapReference(Runtime *runtime, JClass *clazz) 
     JClass *target = (__refer) (intptr_t) l2d.l;
     if (target) {
         c8 *ptr;
-        ptr = getFieldPtr_byName_c(ins, JDWP_CLASS_REFERENCE, "className", STR_INS_JAVA_LANG_STRING);
+        ptr = getFieldPtr_byName_c(ins, JDWP_CLASS_REFERENCE, "className", STR_INS_JAVA_LANG_STRING, runtime);
         if (ptr) {
             Instance *clsName = jstring_create(target->name, runtime);
             setFieldRefer(ptr, clsName);
         }
         //
-        ptr = getFieldPtr_byName_c(ins, JDWP_CLASS_REFERENCE, "superclass", "J");
+        ptr = getFieldPtr_byName_c(ins, JDWP_CLASS_REFERENCE, "superclass", "J", runtime);
         if (ptr)
             setFieldLong(ptr, (s64) (intptr_t) getSuperClass(target));
         //
-        ptr = getFieldPtr_byName_c(ins, JDWP_CLASS_REFERENCE, "accessFlags", "S");
+        ptr = getFieldPtr_byName_c(ins, JDWP_CLASS_REFERENCE, "accessFlags", "S", runtime);
         if (ptr)setFieldShort(ptr, target->cff.access_flags);
         //
-        ptr = getFieldPtr_byName_c(ins, JDWP_CLASS_REFERENCE, "status", "I");
+        ptr = getFieldPtr_byName_c(ins, JDWP_CLASS_REFERENCE, "status", "I", runtime);
         //VERIFIED = 1;PREPARED = 2;INITIALIZED = 4;ERROR = 8;
         if (ptr)
             setFieldInt(ptr, target->status >= CLASS_STATUS_CLINITED ?
                              7 : (target->status >= CLASS_STATUS_PREPARED ? 3 : 1));
         //
-        ptr = getFieldPtr_byName_c(ins, JDWP_CLASS_REFERENCE, "source", STR_INS_JAVA_LANG_STRING);
+        ptr = getFieldPtr_byName_c(ins, JDWP_CLASS_REFERENCE, "source", STR_INS_JAVA_LANG_STRING, runtime);
         if (ptr) {
             Instance *source = jstring_create(target->source, runtime);
             setFieldRefer(ptr, source);
@@ -577,7 +577,7 @@ s32 org_mini_reflect_ReflectClass_mapReference(Runtime *runtime, JClass *clazz) 
         //
         s32 i;
         {
-            ptr = getFieldPtr_byName_c(ins, JDWP_CLASS_REFERENCE, "fieldIds", "[J");
+            ptr = getFieldPtr_byName_c(ins, JDWP_CLASS_REFERENCE, "fieldIds", "[J", runtime);
             if (ptr) {
                 Instance *jarr = jarray_create_by_type_index(runtime, target->fieldPool.field_used, DATATYPE_LONG);
                 setFieldRefer(ptr, jarr);
@@ -589,7 +589,7 @@ s32 org_mini_reflect_ReflectClass_mapReference(Runtime *runtime, JClass *clazz) 
         }
         //
         {
-            ptr = getFieldPtr_byName_c(ins, JDWP_CLASS_REFERENCE, "methodIds", "[J");
+            ptr = getFieldPtr_byName_c(ins, JDWP_CLASS_REFERENCE, "methodIds", "[J", runtime);
             if (ptr) {
                 Instance *jarr = jarray_create_by_type_index(runtime, target->methodPool.method_used, DATATYPE_LONG);
                 setFieldRefer(ptr, jarr);
@@ -601,7 +601,7 @@ s32 org_mini_reflect_ReflectClass_mapReference(Runtime *runtime, JClass *clazz) 
         }
         //
         {
-            ptr = getFieldPtr_byName_c(ins, JDWP_CLASS_REFERENCE, "interfaces", "[J");
+            ptr = getFieldPtr_byName_c(ins, JDWP_CLASS_REFERENCE, "interfaces", "[J", runtime);
             if (ptr) {
                 Instance *jarr = jarray_create_by_type_index(runtime, target->interfacePool.clasz_used, DATATYPE_LONG);
                 setFieldRefer(ptr, jarr);
@@ -626,22 +626,22 @@ s32 org_mini_reflect_ReflectField_mapField(Runtime *runtime, JClass *clazz) {
     if (ins && fieldInfo) {
         c8 *ptr;
         //
-        ptr = getFieldPtr_byName_c(ins, JDWP_CLASS_FIELD, "fieldName", STR_INS_JAVA_LANG_STRING);
+        ptr = getFieldPtr_byName_c(ins, JDWP_CLASS_FIELD, "fieldName", STR_INS_JAVA_LANG_STRING, runtime);
         if (ptr) {
             Instance *fieldName = jstring_create(fieldInfo->name, runtime);
             setFieldRefer(ptr, fieldName);
         }
         //
-        ptr = getFieldPtr_byName_c(ins, JDWP_CLASS_FIELD, "accessFlags", "S");
+        ptr = getFieldPtr_byName_c(ins, JDWP_CLASS_FIELD, "accessFlags", "S", runtime);
         if (ptr)setFieldShort(ptr, fieldInfo->access_flags);
         //
-        ptr = getFieldPtr_byName_c(ins, JDWP_CLASS_FIELD, "signature", STR_INS_JAVA_LANG_STRING);
+        ptr = getFieldPtr_byName_c(ins, JDWP_CLASS_FIELD, "signature", STR_INS_JAVA_LANG_STRING, runtime);
         if (ptr) {
             Instance *signature = jstring_create(fieldInfo->descriptor, runtime);
             setFieldRefer(ptr, signature);
         }
         //
-        ptr = getFieldPtr_byName_c(ins, JDWP_CLASS_ARRAY, "type", "B");
+        ptr = getFieldPtr_byName_c(ins, JDWP_CLASS_ARRAY, "type", "B", runtime);
         if (ptr)setFieldByte(ptr, (s8) utf8_char_at(fieldInfo->descriptor, 1));
     }
     return 0;
@@ -656,22 +656,22 @@ Instance *localVarTable2java(JClass *clazz, LocalVarTable *lvt, Runtime *runtime
     if (ins && lvt) {
         c8 *ptr;
         //
-        ptr = getFieldPtr_byName_c(ins, JDWP_CLASS_LOCALVARTABLE, "name", STR_INS_JAVA_LANG_STRING);
+        ptr = getFieldPtr_byName_c(ins, JDWP_CLASS_LOCALVARTABLE, "name", STR_INS_JAVA_LANG_STRING, runtime);
         if (ptr) {
             Instance *name = jstring_create(class_get_utf8_string(clazz, lvt->name_index), runtime);
             setFieldRefer(ptr, name);
         }
         //
-        ptr = getFieldPtr_byName_c(ins, JDWP_CLASS_LOCALVARTABLE, "signature", STR_INS_JAVA_LANG_STRING);
+        ptr = getFieldPtr_byName_c(ins, JDWP_CLASS_LOCALVARTABLE, "signature", STR_INS_JAVA_LANG_STRING, runtime);
         if (ptr) {
             Instance *signature = jstring_create(class_get_utf8_string(clazz, lvt->descriptor_index), runtime);
             setFieldRefer(ptr, signature);
         }
         //
-        ptr = getFieldPtr_byName_c(ins, JDWP_CLASS_LOCALVARTABLE, "codeIndex", "J");
+        ptr = getFieldPtr_byName_c(ins, JDWP_CLASS_LOCALVARTABLE, "codeIndex", "J", runtime);
         if (ptr)setFieldLong(ptr, lvt->start_pc);
         //
-        ptr = getFieldPtr_byName_c(ins, JDWP_CLASS_LOCALVARTABLE, "length", "I");
+        ptr = getFieldPtr_byName_c(ins, JDWP_CLASS_LOCALVARTABLE, "length", "I", runtime);
         if (ptr)setFieldInt(ptr, lvt->length);
     }
     gc_refer_release(ins);//release by manual
@@ -689,40 +689,40 @@ s32 org_mini_reflect_ReflectMethod_mapMethod(Runtime *runtime, JClass *clazz) {
         c8 *ptr;
 
         //
-        ptr = getFieldPtr_byName_c(ins, JDWP_CLASS_METHOD, "methodName", STR_INS_JAVA_LANG_STRING);
+        ptr = getFieldPtr_byName_c(ins, JDWP_CLASS_METHOD, "methodName", STR_INS_JAVA_LANG_STRING, runtime);
         if (ptr) {
             Instance *methodName = jstring_create(methodInfo->name, runtime);
             setFieldRefer(ptr, methodName);
         }
         //
-        ptr = getFieldPtr_byName_c(ins, JDWP_CLASS_METHOD, "signature", STR_INS_JAVA_LANG_STRING);
+        ptr = getFieldPtr_byName_c(ins, JDWP_CLASS_METHOD, "signature", STR_INS_JAVA_LANG_STRING, runtime);
         if (ptr) {
             Instance *signature = jstring_create(methodInfo->descriptor, runtime);
             setFieldRefer(ptr, signature);
         }
         //
-        ptr = getFieldPtr_byName_c(ins, JDWP_CLASS_METHOD, "accessFlags", "S");
+        ptr = getFieldPtr_byName_c(ins, JDWP_CLASS_METHOD, "accessFlags", "S", runtime);
         if (ptr)setFieldShort(ptr, methodInfo->access_flags);
         //
-        ptr = getFieldPtr_byName_c(ins, JDWP_CLASS_METHOD, "argCnt", "I");
+        ptr = getFieldPtr_byName_c(ins, JDWP_CLASS_METHOD, "argCnt", "I", runtime);
         if (ptr)setFieldInt(ptr, methodInfo->para_slots);
         //
         s32 i;
 
         CodeAttribute *ca = methodInfo->converted_code;
         //
-        ptr = getFieldPtr_byName_c(ins, JDWP_CLASS_METHOD, "codeStart", "J");
+        ptr = getFieldPtr_byName_c(ins, JDWP_CLASS_METHOD, "codeStart", "J", runtime);
         if (ptr)setFieldLong(ptr, ca ? 0 : -1);
         //
-        ptr = getFieldPtr_byName_c(ins, JDWP_CLASS_METHOD, "codeEnd", "J");
+        ptr = getFieldPtr_byName_c(ins, JDWP_CLASS_METHOD, "codeEnd", "J", runtime);
         if (ptr)setFieldLong(ptr, ca ? ca->attribute_length : -1);
         //
-        ptr = getFieldPtr_byName_c(ins, JDWP_CLASS_METHOD, "lines", "I");
+        ptr = getFieldPtr_byName_c(ins, JDWP_CLASS_METHOD, "lines", "I", runtime);
         if (ptr)setFieldInt(ptr, ca ? ca->line_number_table_length : 0);
         //
         if (ca) {
             {
-                ptr = getFieldPtr_byName_c(ins, JDWP_CLASS_METHOD, "lineNum", "[S");
+                ptr = getFieldPtr_byName_c(ins, JDWP_CLASS_METHOD, "lineNum", "[S", runtime);
                 if (ptr) {
                     Instance *jarr = jarray_create_by_type_index(runtime, ca->line_number_table_length * 2, DATATYPE_SHORT);
                     setFieldRefer(ptr, jarr);
@@ -733,7 +733,7 @@ s32 org_mini_reflect_ReflectMethod_mapMethod(Runtime *runtime, JClass *clazz) {
             {
                 //
                 c8 *table_type = "org/mini/reflect/LocalVarTable";
-                ptr = getFieldPtr_byName_c(ins, JDWP_CLASS_METHOD, "localVarTable", table_type);
+                ptr = getFieldPtr_byName_c(ins, JDWP_CLASS_METHOD, "localVarTable", table_type, runtime);
                 if (ptr) {
                     Utf8String *ustr = utf8_create_c(table_type);
                     utf8_substring(ustr, 1, ustr->length);
@@ -799,7 +799,7 @@ s32 org_mini_reflect_ReflectMethod_invokeMethod(Runtime *runtime, JClass *clazz)
             if (ch == 'V') {
             } else if (isDataReferByTag(ch)) {
                 __refer ov = pop_ref(runtime->stack);
-                c8 *ptr = getFieldPtr_byName_c(result, clsName, "ov", "java/lang/Object");
+                c8 *ptr = getFieldPtr_byName_c(result, clsName, "ov", "java/lang/Object", runtime);
                 setFieldRefer(ptr, ov);
             } else {
                 long nv;
@@ -808,7 +808,7 @@ s32 org_mini_reflect_ReflectMethod_invokeMethod(Runtime *runtime, JClass *clazz)
                 } else {
                     nv = pop_int(runtime->stack);
                 }
-                c8 *ptr = getFieldPtr_byName_c(result, clsName, "nv", "J");
+                c8 *ptr = getFieldPtr_byName_c(result, clsName, "nv", "J", runtime);
                 setFieldLong(ptr, nv);
             }
             gc_refer_release(result);
@@ -831,25 +831,25 @@ s32 org_mini_reflect_StackFrame_mapRuntime(Runtime *runtime, JClass *clazz) {
     if (ins && target) {
         c8 *ptr;
         //
-        ptr = getFieldPtr_byName_c(ins, JDWP_CLASS_RUNTIME, "classId", "J");
+        ptr = getFieldPtr_byName_c(ins, JDWP_CLASS_RUNTIME, "classId", "J", runtime);
         if (ptr)setFieldLong(ptr, (u64) (intptr_t) target->clazz);
         //
-        ptr = getFieldPtr_byName_c(ins, JDWP_CLASS_RUNTIME, "parentId", "J");
+        ptr = getFieldPtr_byName_c(ins, JDWP_CLASS_RUNTIME, "parentId", "J", runtime);
         if (ptr)
             if ((target->parent) && (target->parent->parent))
                 setFieldLong(ptr, (u64) (intptr_t) target->parent);
         //
-        ptr = getFieldPtr_byName_c(ins, JDWP_CLASS_RUNTIME, "pc", "J");
+        ptr = getFieldPtr_byName_c(ins, JDWP_CLASS_RUNTIME, "pc", "J", runtime);
         if (ptr)setFieldLong(ptr, (u64) (intptr_t) target->pc);
         //
-        ptr = getFieldPtr_byName_c(ins, JDWP_CLASS_RUNTIME, "byteCode", "J");
+        ptr = getFieldPtr_byName_c(ins, JDWP_CLASS_RUNTIME, "byteCode", "J", runtime);
         if (ptr)setFieldLong(ptr, target->ca ? (u64) (intptr_t) target->ca->code : 0);
         //
-        ptr = getFieldPtr_byName_c(ins, JDWP_CLASS_RUNTIME, "methodId", "J");
+        ptr = getFieldPtr_byName_c(ins, JDWP_CLASS_RUNTIME, "methodId", "J", runtime);
         if (ptr)setFieldLong(ptr, (u64) (intptr_t) target->method);
         //
         if (target->method && !(target->method->access_flags & ACC_STATIC)) {//top runtime method is null
-            ptr = getFieldPtr_byName_c(ins, JDWP_CLASS_RUNTIME, "localThis", "J");
+            ptr = getFieldPtr_byName_c(ins, JDWP_CLASS_RUNTIME, "localThis", "J", runtime);
             if (ptr)setFieldLong(ptr, (s64) (intptr_t) localvar_getRefer(target->localvar, 0));
         }
     }
@@ -888,13 +888,13 @@ s32 org_mini_reflect_ReflectArray_mapArray(Runtime *runtime, JClass *clazz) {
     if (ins && target) {
         c8 *ptr;
         //
-        ptr = getFieldPtr_byName_c(ins, JDWP_CLASS_ARRAY, "length", "I");
+        ptr = getFieldPtr_byName_c(ins, JDWP_CLASS_ARRAY, "length", "I", runtime);
         if (ptr)setFieldInt(ptr, target->arr_length);
         //
-        ptr = getFieldPtr_byName_c(ins, JDWP_CLASS_ARRAY, "arr_addr", "J");
+        ptr = getFieldPtr_byName_c(ins, JDWP_CLASS_ARRAY, "arr_addr", "J", runtime);
         if (ptr)setFieldLong(ptr, (u64) (intptr_t) target->arr_body);
         //
-        ptr = getFieldPtr_byName_c(ins, JDWP_CLASS_ARRAY, "type", "B");
+        ptr = getFieldPtr_byName_c(ins, JDWP_CLASS_ARRAY, "type", "B", runtime);
         if (ptr)setFieldByte(ptr, (s8) utf8_char_at(target->mb.clazz->name, 1));
         //
 

@@ -1145,25 +1145,25 @@ Instance *buildStackElement(Runtime *runtime, Runtime *target) {
         instance_init(ins, runtime);
         c8 *ptr;
         //
-        ptr = getFieldPtr_byName_c(ins, STR_CLASS_JAVA_LANG_STACKTRACE, "declaringClass", STR_INS_JAVA_LANG_STRING);
+        ptr = getFieldPtr_byName_c(ins, STR_CLASS_JAVA_LANG_STACKTRACE, "declaringClass", STR_INS_JAVA_LANG_STRING, runtime);
         if (ptr) {
             Instance *name = jstring_create(target->clazz->name, runtime);
             setFieldRefer(ptr, name);
         }
         //
-        ptr = getFieldPtr_byName_c(ins, STR_CLASS_JAVA_LANG_STACKTRACE, "methodName", STR_INS_JAVA_LANG_STRING);
+        ptr = getFieldPtr_byName_c(ins, STR_CLASS_JAVA_LANG_STACKTRACE, "methodName", STR_INS_JAVA_LANG_STRING, runtime);
         if (ptr) {
             Instance *name = jstring_create(target->method->name, runtime);
             setFieldRefer(ptr, name);
         }
         //
-        ptr = getFieldPtr_byName_c(ins, STR_CLASS_JAVA_LANG_STACKTRACE, "fileName", STR_INS_JAVA_LANG_STRING);
+        ptr = getFieldPtr_byName_c(ins, STR_CLASS_JAVA_LANG_STACKTRACE, "fileName", STR_INS_JAVA_LANG_STRING, runtime);
         if (ptr) {
             Instance *name = jstring_create(target->clazz->source, runtime);
             setFieldRefer(ptr, name);
         }
         //
-        ptr = getFieldPtr_byName_c(ins, STR_CLASS_JAVA_LANG_STACKTRACE, "lineNumber", "I");
+        ptr = getFieldPtr_byName_c(ins, STR_CLASS_JAVA_LANG_STACKTRACE, "lineNumber", "I", runtime);
         if (ptr) {
             if (target->method->access_flags & ACC_NATIVE) {
                 setFieldInt(ptr, -1);
@@ -1172,7 +1172,7 @@ Instance *buildStackElement(Runtime *runtime, Runtime *target) {
             }
         }
         if (target->parent && target->parent->parent) {
-            ptr = getFieldPtr_byName_c(ins, STR_CLASS_JAVA_LANG_STACKTRACE, "parent", "Ljava/lang/StackTraceElement;");
+            ptr = getFieldPtr_byName_c(ins, STR_CLASS_JAVA_LANG_STACKTRACE, "parent", "Ljava/lang/StackTraceElement;", runtime);
             if (ptr) {
                 Instance *parent = buildStackElement(runtime, target->parent);
                 setFieldRefer(ptr, parent);

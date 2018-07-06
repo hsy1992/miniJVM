@@ -6,7 +6,6 @@
 #define MINI_JVM_JDWP_H
 
 
-
 #include "../utils/utf8_string.h"
 #include "../utils/arraylist.h"
 #include "jvm.h"
@@ -286,9 +285,9 @@ typedef struct _JdwpPacket {
     u8 _4len;
 } JdwpPacket;
 
-enum{
-    JDWP_MODE_LISTEN=0x01,
-    JDWP_MODE_DISPATCH=0x02,
+enum {
+    JDWP_MODE_LISTEN = 0x01,
+    JDWP_MODE_DISPATCH = 0x02,
 };
 typedef struct _JdwpServer {
     Utf8String *ip;
@@ -326,7 +325,10 @@ typedef struct _Location {
 
 typedef struct _ValueType {
     c8 type;
-    s64 value;
+    union {
+        s64 value;
+        __refer ptr;
+    };
 } ValueType;
 
 typedef struct _EventSetMod {

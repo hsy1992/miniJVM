@@ -52,6 +52,8 @@ public class Locale {
   public static Locale getDefault() {
     return DEFAULT;
   }
+  
+  static public final Locale ROOT = DEFAULT;
 
   public final String toString() {
     boolean hasLanguage = language != "";

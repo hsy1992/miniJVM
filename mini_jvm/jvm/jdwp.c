@@ -1564,7 +1564,7 @@ s32 jdwp_client_process(JdwpClient *client, Runtime *runtime) {
                     FieldInfo *fi = jdwppacket_read_refer(req);
                     ValueType vt;
                     vt.type = getJdwpTag(fi->descriptor);
-                    c8 *ptr = getFieldPtr_byName(NULL, ref->name, fi->name, fi->descriptor);
+                    c8 *ptr = getFieldPtr_byName(NULL, ref->name, fi->name, fi->descriptor, runtime);
                     vt.value = getPtrValue(vt.type, ptr);
                     writeValueType(res, &vt);
                 }
@@ -1783,7 +1783,7 @@ s32 jdwp_client_process(JdwpClient *client, Runtime *runtime) {
                     FieldInfo *fi = jdwppacket_read_refer(req);
                     ValueType vt;
                     vt.type = getJdwpTag(fi->descriptor);
-                    c8 *ptr = getFieldPtr_byName(obj, obj->mb.clazz->name, fi->name, fi->descriptor);
+                    c8 *ptr = getFieldPtr_byName(obj, obj->mb.clazz->name, fi->name, fi->descriptor, runtime);
                     vt.value = getPtrValue(vt.type, ptr);
                     writeValueType(res, &vt);
                 }

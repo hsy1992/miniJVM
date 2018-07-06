@@ -60,6 +60,9 @@ public final class Double  extends Number implements Comparable<Double>{
      */
 //  public static final double MIN_VALUE = 4.94065645841246544e-324;
     public static final double MIN_VALUE = longBitsToDouble(1L);
+    
+    public static final int MAX_EXPONENT = 1023;
+    public static final int MIN_EXPONENT = -1022;
 
     /**
      * Creates a string representation of the <code>double</code> argument. All

@@ -639,5 +639,9 @@ public final class Class<T> {
             return this;//todo
         }
     }
+    
+    public boolean desiredAssertionStatus(){
+        return false;
+    }
 
 }

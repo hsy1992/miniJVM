@@ -288,7 +288,7 @@ thrd_t jthread_start(Instance *ins);
 
 __refer jthread_get_stackframe_value(Instance *ins);
 
-s32 jthread_get_daemon_value(Instance *ins);
+s32 jthread_get_daemon_value(Instance *ins, Runtime *runtime);
 
 void jthread_set_stackframe_value(Instance *ins, void *val);
 
@@ -365,9 +365,9 @@ static inline s32 jarray_check_exception(Instance *arr, s32 index, Runtime *runt
     return RUNTIME_STATUS_NORMAL;
 }
 
-c8 *getFieldPtr_byName_c(Instance *instance, c8 *pclassName, c8 *pfieldName, c8 *pfieldType);
+c8 *getFieldPtr_byName_c(Instance *instance, c8 *pclassName, c8 *pfieldName, c8 *pfieldType, Runtime *runtime);
 
-c8 *getFieldPtr_byName(Instance *instance, Utf8String *clsName, Utf8String *fieldName, Utf8String *fieldType);
+c8 *getFieldPtr_byName(Instance *instance, Utf8String *clsName, Utf8String *fieldName, Utf8String *fieldType, Runtime *runtime);
 
 JClass *classes_get_c(c8 *clsName);
 

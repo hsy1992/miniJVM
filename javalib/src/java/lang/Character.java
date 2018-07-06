@@ -72,6 +72,11 @@ public final class Character implements Comparable<Character> {
      */
     public static final char MAX_VALUE = '\uffff';
 
+    public static final char MIN_HIGH_SURROGATE = '\uD800';
+    public static final char MAX_HIGH_SURROGATE = '\uDBFF';
+    public static final char MIN_LOW_SURROGATE  = '\uDC00';
+    public static final char MAX_LOW_SURROGATE  = '\uDFFF';
+
     /**
      * The value of the Character.
      */
@@ -307,4 +312,9 @@ public final class Character implements Comparable<Character> {
     public static char[] toChars(int codePoint) {
         return new char[]{(char) codePoint};
     }
+
+    public static int charCount(int c) {
+        return 1;
+    }
+
 }

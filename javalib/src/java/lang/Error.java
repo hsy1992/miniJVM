@@ -20,22 +20,20 @@ package java.lang;
  * @version 12/17/01 (CLDC 1.1)
  * @since   JDK1.0, CLDC 1.0
  */
-public
-class Error extends Throwable {
-    /**
-     * Constructs an <code>Error</code> with no specified detail message.
-     */
-    public Error() {
-        super();
-    }
+public class Error extends Throwable {
+  public Error(String message, Throwable cause) {
+    super(message, cause);
+  }
 
-    /**
-     * Constructs an Error with the specified detail message.
-     *
-     * @param   s   the detail message.
-     */
-    public Error(String s) {
-        super(s);
-    }
+  public Error(String message) {
+    this(message, null);
+  }
+
+  public Error(Throwable cause) {
+    this(null, cause);
+  }
+
+  public Error() {
+    this(null, null);
+  }
 }
-

@@ -170,5 +170,9 @@ public abstract class TimeZone {
         getDefault();
         return defaultZone.getIDs();
     }
+    
+    public String getDisplayName() {
+        return getID();
+    }
 }
 

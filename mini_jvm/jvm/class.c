@@ -116,6 +116,9 @@ s32 class_prepar(JClass *clazz, Runtime *runtime) {
 
     int i;
 
+    if (utf8_equals_c(clazz->name, "espresso/parser/JavaParser")) {
+        int debug = 1;
+    }
 
     FieldInfo *f = clazz->fieldPool.field;
     //计算不同种类变量长度
@@ -137,9 +140,6 @@ s32 class_prepar(JClass *clazz, Runtime *runtime) {
     clazz->field_static = jvm_calloc(clazz->field_static_len);
 
 
-//    if (utf8_equals_c(clazz->name, "com/sun/cldc/i18n/mini/ISO8859_1_Writer") == 0) {
-//        int debug = 1;
-//    }
     //生成实例变量模板
     if (clazz->superclass) {
         clazz->field_instance_start = clazz->superclass->field_instance_len;
@@ -162,34 +162,34 @@ s32 class_prepar(JClass *clazz, Runtime *runtime) {
     //预计算字段在实例内存中的偏移，节约运行时时间
     if (utf8_equals_c(clazz->name, STR_CLASS_JAVA_LANG_CLASS)) {
         FieldInfo *fi;
-        fi = find_fieldInfo_by_name_c(STR_CLASS_JAVA_LANG_CLASS, STR_FIELD_CLASSHANDLE, "J");
+        fi = find_fieldInfo_by_name_c(STR_CLASS_JAVA_LANG_CLASS, STR_FIELD_CLASSHANDLE, "J", runtime);
         jvm_runtime_cache.class_classHandle = fi;
 
     } else if (utf8_equals_c(clazz->name, STR_CLASS_JAVA_LANG_STRING)) {
         FieldInfo *fi;
-        fi = find_fieldInfo_by_name_c(STR_CLASS_JAVA_LANG_STRING, STR_FIELD_COUNT, "I");
+        fi = find_fieldInfo_by_name_c(STR_CLASS_JAVA_LANG_STRING, STR_FIELD_COUNT, "I", runtime);
         jvm_runtime_cache.string_count = fi;
-        fi = find_fieldInfo_by_name_c(STR_CLASS_JAVA_LANG_STRING, STR_FIELD_OFFSET, "I");
+        fi = find_fieldInfo_by_name_c(STR_CLASS_JAVA_LANG_STRING, STR_FIELD_OFFSET, "I", runtime);
         jvm_runtime_cache.string_offset = fi;
-        fi = find_fieldInfo_by_name_c(STR_CLASS_JAVA_LANG_STRING, STR_FIELD_VALUE, "[C");
+        fi = find_fieldInfo_by_name_c(STR_CLASS_JAVA_LANG_STRING, STR_FIELD_VALUE, "[C", runtime);
         jvm_runtime_cache.string_value = fi;
     } else if (utf8_equals_c(clazz->name, STR_CLASS_JAVA_LANG_THREAD)) {
         FieldInfo *fi;
-        fi = find_fieldInfo_by_name_c(STR_CLASS_JAVA_LANG_THREAD, STR_FIELD_NAME, "[C");
+        fi = find_fieldInfo_by_name_c(STR_CLASS_JAVA_LANG_THREAD, STR_FIELD_NAME, "[C", runtime);
         jvm_runtime_cache.thread_name = fi;
-        fi = find_fieldInfo_by_name_c(STR_CLASS_JAVA_LANG_THREAD, STR_FIELD_STACKFRAME, "J");
+        fi = find_fieldInfo_by_name_c(STR_CLASS_JAVA_LANG_THREAD, STR_FIELD_STACKFRAME, "J", runtime);
         jvm_runtime_cache.thread_stackFrame = fi;
     } else if (utf8_equals_c(clazz->name, STR_CLASS_JAVA_LANG_STACKTRACE)) {
         FieldInfo *fi;
-        fi = find_fieldInfo_by_name_c(STR_CLASS_JAVA_LANG_STACKTRACE, "declaringClass", STR_INS_JAVA_LANG_STRING);
+        fi = find_fieldInfo_by_name_c(STR_CLASS_JAVA_LANG_STACKTRACE, "declaringClass", STR_INS_JAVA_LANG_STRING, runtime);
         jvm_runtime_cache.stacktrace_declaringClass = fi;
-        fi = find_fieldInfo_by_name_c(STR_CLASS_JAVA_LANG_STACKTRACE, "methodName", STR_INS_JAVA_LANG_STRING);
+        fi = find_fieldInfo_by_name_c(STR_CLASS_JAVA_LANG_STACKTRACE, "methodName", STR_INS_JAVA_LANG_STRING, runtime);
         jvm_runtime_cache.stacktrace_methodName = fi;
-        fi = find_fieldInfo_by_name_c(STR_CLASS_JAVA_LANG_STACKTRACE, "fileName", STR_INS_JAVA_LANG_STRING);
+        fi = find_fieldInfo_by_name_c(STR_CLASS_JAVA_LANG_STACKTRACE, "fileName", STR_INS_JAVA_LANG_STRING, runtime);
         jvm_runtime_cache.stacktrace_fileName = fi;
-        fi = find_fieldInfo_by_name_c(STR_CLASS_JAVA_LANG_STACKTRACE, "lineNumber", "I");
+        fi = find_fieldInfo_by_name_c(STR_CLASS_JAVA_LANG_STACKTRACE, "lineNumber", "I", runtime);
         jvm_runtime_cache.stacktrace_lineNumber = fi;
-        fi = find_fieldInfo_by_name_c(STR_CLASS_JAVA_LANG_STACKTRACE, "parent", STR_INS_JAVA_LANG_STACKTRACEELEMENT);
+        fi = find_fieldInfo_by_name_c(STR_CLASS_JAVA_LANG_STACKTRACE, "parent", STR_INS_JAVA_LANG_STACKTRACEELEMENT, runtime);
         jvm_runtime_cache.stacktrace_parent = fi;
     }
 //    jvm_printf("prepared: %s\n", utf8_cstr(clazz->name));
@@ -239,6 +239,7 @@ void class_clinit(JClass *clazz, Runtime *runtime) {
             cfr->fieldInfo = fi;
             if (!fi) {
                 jvm_printf("field not found %s.%s \n", utf8_cstr(class_get_constant_classref(clazz, cfr->classIndex)->name), utf8_cstr(class_get_constant_utf8(clazz, class_get_constant_name_and_type(clazz, cfr->nameAndTypeIndex)->nameIndex)->utfstr));
+                fi = find_fieldInfo_by_fieldref(clazz, cfr->item.index, runtime);
             }
             if (fi->_this_class->status < CLASS_STATUS_CLINITED) {
                 class_clinit(fi->_this_class, runtime);
@@ -345,21 +346,6 @@ JClass *getClassByConstantClassRef(JClass *clazz, s32 index, Runtime *runtime) {
 }
 
 
-s32 find_constant_fieldref_index(JClass *clazz, Utf8String *fieldName, Utf8String *type) {
-    s32 i = 0;
-    ArrayList *cp = clazz->constantPool.fieldRef;
-    for (; i < cp->length; i++) {
-        ConstantFieldRef *cfr = ((ConstantFieldRef *) arraylist_get_value(cp, i));
-        ConstantNameAndType *nat = class_get_constant_name_and_type(clazz, cfr->nameAndTypeIndex);
-        if (utf8_equals(fieldName, class_get_utf8_string(clazz, nat->nameIndex)) == 1 &&
-            utf8_equals(type, class_get_utf8_string(clazz, nat->typeIndex)) == 1) {
-            return cfr->item.index;
-        }
-    }
-    return -1;
-}
-
-
 /**
  * 取得类成员信息，成员信息存在以下几种情况
  * ConstantFieldRef中：
@@ -378,38 +364,26 @@ FieldInfo *find_fieldInfo_by_fieldref(JClass *clazz, s32 field_ref, Runtime *run
                                                 class_get_constant_classref(clazz, cfr->classIndex)->stringIndex);
     Utf8String *fieldName = class_get_utf8_string(clazz, nat->nameIndex);
     Utf8String *type = class_get_utf8_string(clazz, nat->typeIndex);
-    JClass *other = classes_load_get_without_clinit(clsName, runtime);
-
-    while (fi == NULL && other) {
-        FieldPool *fp = &(other->fieldPool);
-        s32 i = 0;
-        for (; i < fp->field_used; i++) {
-            if (utf8_equals(fieldName, fp->field[i].name) == 1
-                && utf8_equals(type, fp->field[i].descriptor) == 1) {
-                fi = &(other->fieldPool.field[i]);
-                break;
-            }
-        }
-        other = getSuperClass(other);
-    }
-
-    return fi;
+    return find_fieldInfo_by_name(clsName, fieldName, type, runtime);
 }
 
-FieldInfo *find_fieldInfo_by_name_c(c8 *pclsName, c8 *pfieldName, c8 *pfieldType) {
+FieldInfo *find_fieldInfo_by_name_c(c8 *pclsName, c8 *pfieldName, c8 *pfieldType, Runtime *runtime) {
     Utf8String *clsName = utf8_create_c(pclsName);
     Utf8String *fieldName = utf8_create_c(pfieldName);
     Utf8String *fieldType = utf8_create_c(pfieldType);
-    FieldInfo *fi = find_fieldInfo_by_name(clsName, fieldName, fieldType);
+    FieldInfo *fi = find_fieldInfo_by_name(clsName, fieldName, fieldType, runtime);
     utf8_destory(clsName);
     utf8_destory(fieldName);
     utf8_destory(fieldType);
     return fi;
 }
 
-FieldInfo *find_fieldInfo_by_name(Utf8String *clsName, Utf8String *fieldName, Utf8String *fieldType) {
+FieldInfo *find_fieldInfo_by_name(Utf8String *clsName, Utf8String *fieldName, Utf8String *fieldType, Runtime *runtime) {
     FieldInfo *fi = NULL;
-    JClass *other = classes_get(clsName);
+    JClass *other = classes_load_get_without_clinit(clsName, runtime);
+//    if (utf8_equals_c(clsName, "espresso/parser/JavaParser")&&utf8_equals_c(fieldName, "methodNode_d")) {
+//        int debug = 1;
+//    }
 
     while (fi == NULL && other) {
         FieldPool *fp = &(other->fieldPool);
@@ -423,29 +397,27 @@ FieldInfo *find_fieldInfo_by_name(Utf8String *clsName, Utf8String *fieldName, Ut
                 break;
             }
         }
+        //find interface default field
+        if (fi == NULL) {
+            for (i = 0; i < other->interfacePool.clasz_used; i++) {
+                ConstantClassRef *ccr = (other->interfacePool.clasz + i);
+                Utf8String *icl_name = class_get_constant_utf8(other, ccr->stringIndex)->utfstr;
+//                if (utf8_equals_c(icl_name, "java/util/List")&&utf8_equals_c(methodName, "size")) {
+//                    int debug = 1;
+//                }
+                FieldInfo *ifi = find_fieldInfo_by_name(icl_name, fieldName, fieldType, runtime);
+                if (ifi != NULL) {
+                    fi = ifi;
+                    break;
+                }
+            }
+        }
         other = getSuperClass(other);
     }
 
     return fi;
 }
 
-
-ConstantMethodRef *
-find_constant_methodref_by_name(Utf8String *clsName, Utf8String *methodName, Utf8String *methodType) {
-    ConstantMethodRef *cmr = NULL;
-    JClass *clazz = classes_get(clsName);
-    ArrayList *mrarr = clazz->constantPool.methodRef;
-    s32 i;
-    for (i = 0; i < mrarr->length; i++) {
-        cmr = arraylist_get_value(mrarr, i);
-        if (utf8_equals(methodName, cmr->methodInfo->name) == 1
-            && utf8_equals(methodType, cmr->methodInfo->descriptor) == 1
-                ) {
-            return cmr;
-        }
-    }
-    return NULL;
-}
 
 /**
  * 查找实例的方法， invokevirtual
@@ -508,9 +480,6 @@ MethodInfo *find_methodInfo_by_name(Utf8String *clsName, Utf8String *methodName,
                 MethodInfo *imi = find_methodInfo_by_name(icl_name, methodName, methodType, runtime);
                 if (imi != NULL && imi->converted_code != NULL) {
                     mi = imi;
-                    if (!mi->_this_class) {
-                        mi->_this_class = icl;
-                    }
                     break;
                 }
             }

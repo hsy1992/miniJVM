@@ -1418,4 +1418,10 @@ public final class String implements Comparable<String>, CharSequence {
     formatter.close();
     return result;
   }
+  
+  
+  public int codePointAt(int pos){
+      return charAt(pos);
+  }
+  
 }

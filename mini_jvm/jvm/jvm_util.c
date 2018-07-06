@@ -225,7 +225,7 @@ s32 threadlist_count_none_daemon() {
     for (i = 0; i < thread_list->length; i++) {
         Runtime *r = (Runtime *) arraylist_get_value_unsafe(thread_list, i);
         Instance *ins = r->threadInfo->jthread;
-        s32 daemon = jthread_get_daemon_value(ins);
+        s32 daemon = jthread_get_daemon_value(ins,r);
         if (!daemon) {
             count++;
         }
@@ -708,8 +708,8 @@ void jthread_set_stackframe_value(Instance *ins, __refer val) {
     setFieldLong(ptr, (s64) (intptr_t) val);
 }
 
-s32 jthread_get_daemon_value(Instance *ins) {
-    c8 *ptr = getFieldPtr_byName_c(ins, STR_CLASS_JAVA_LANG_THREAD, "daemon", "Z");
+s32 jthread_get_daemon_value(Instance *ins, Runtime *runtime) {
+    c8 *ptr = getFieldPtr_byName_c(ins, STR_CLASS_JAVA_LANG_THREAD, "daemon", "Z", runtime);
     if (ptr) {
         return getFieldByte(ptr);
     }
@@ -1404,14 +1404,14 @@ Instance *method_handles_lookup_create(Runtime *runtime, JClass *caller) {
 
 
 
-c8 *getFieldPtr_byName_c(Instance *instance, c8 *pclassName, c8 *pfieldName, c8 *pfieldType) {
+c8 *getFieldPtr_byName_c(Instance *instance, c8 *pclassName, c8 *pfieldName, c8 *pfieldType, Runtime *runtime) {
     Utf8String *clsName = utf8_create_c(pclassName);
     //Class *clazz = classes_get(clsName);
 
     //set value
     Utf8String *fieldName = utf8_create_c(pfieldName);
     Utf8String *fieldType = utf8_create_c(pfieldType);
-    c8 *ptr = getFieldPtr_byName(instance, clsName, fieldName, fieldType);
+    c8 *ptr = getFieldPtr_byName(instance, clsName, fieldName, fieldType, runtime);
     utf8_destory(clsName);
     utf8_destory(fieldName);
     utf8_destory(fieldType);
@@ -1419,18 +1419,11 @@ c8 *getFieldPtr_byName_c(Instance *instance, c8 *pclassName, c8 *pfieldName, c8 
 }
 
 
-c8 *getFieldPtr_byName(Instance *instance, Utf8String *clsName, Utf8String *fieldName, Utf8String *fieldType) {
-    JClass *clazz = classes_get(clsName);
-    //set value
-    s32 fieldIdx = find_constant_fieldref_index(clazz, fieldName, fieldType);
+c8 *getFieldPtr_byName(Instance *instance, Utf8String *clsName, Utf8String *fieldName, Utf8String *fieldType, Runtime *runtime) {
+
     c8 *ptr = NULL;
-    FieldInfo *fi = NULL;
-    if (fieldIdx >= 0) {//不在常量表中
-        ConstantFieldRef *cfr = class_get_constant_fieldref(clazz, fieldIdx);
-        fi = cfr->fieldInfo;;
-    } else {//找字段信息field_info
-        fi = find_fieldInfo_by_name(clsName, fieldName, fieldType);
-    }
+    FieldInfo *fi = find_fieldInfo_by_name(clsName, fieldName, fieldType, runtime);
+
     if (fi) {
         if (fi->access_flags & ACC_STATIC) {
             ptr = getStaticFieldPtr(fi);
