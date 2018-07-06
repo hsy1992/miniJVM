@@ -94,7 +94,7 @@ public class ReflectClass {
                 Class[] paras = m.getParameterTypes();
                 if (parameterTypes.length == paras.length) {
                     for (int j = 0; j < parameterTypes.length; j++) {
-                        if (paras[j] != parameterTypes[j]) {
+                        if (!paras[j].equals(parameterTypes[j])) {
                             found = false;
                         }
                     }

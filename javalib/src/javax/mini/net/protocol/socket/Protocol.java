@@ -30,7 +30,7 @@ import javax.cldc.io.StreamConnection;
 import javax.cldc.io.Connection;
 import java.io.*;
 import com.sun.cldc.io.*;
-import java.net.Socket;
+import javax.mini.net.Socket;
 
 /**
  * Connection to the J2ME socket API.

@@ -790,21 +790,34 @@ s32 org_mini_reflect_ReflectMethod_invokeMethod(Runtime *runtime, JClass *clazz)
         ret = execute_method_impl(methodInfo, runtime, methodInfo->_this_class);
         if (ret == RUNTIME_STATUS_NORMAL) {
             utf8_char ch = utf8_char_at(methodInfo->returnType, 0);
-            s64 v = 0;
+            c8 *clsName = "org/mini/reflect/DataWrap";
+            JClass *dwcl = classes_load_get_c(clsName, runtime);
+            Instance *result = instance_create(runtime, dwcl);
+            gc_refer_hold(result);
+            instance_init(result, runtime);
+
             if (ch == 'V') {
             } else if (isDataReferByTag(ch)) {
-                v = (s64) (intptr_t) pop_ref(runtime->stack);
-            } else if (isData8ByteByTag(ch)) {
-                v = pop_long(runtime->stack);
+                __refer ov = pop_ref(runtime->stack);
+                c8 *ptr = getFieldPtr_byName_c(result, clsName, "ov", "java/lang/Object");
+                setFieldRefer(ptr, ov);
             } else {
-                v = pop_int(runtime->stack);
+                long nv;
+                if (isData8ByteByTag(ch)) {
+                    nv = pop_long(runtime->stack);
+                } else {
+                    nv = pop_int(runtime->stack);
+                }
+                c8 *ptr = getFieldPtr_byName_c(result, clsName, "nv", "J");
+                setFieldLong(ptr, nv);
             }
-            push_long(runtime->stack, v);
+            gc_refer_release(result);
+            push_ref(runtime->stack, result);
         } else {
             print_exception(runtime);
         }
     } else
-        push_long(runtime->stack, 0);
+        push_ref(runtime->stack, NULL);
     return ret;
 }
 
@@ -914,7 +927,7 @@ static java_native_method method_jdwp_table[] = {
         {"org/mini/reflect/ReflectField",  "getFieldVal",           "(JJ)J",                                                            org_mini_reflect_ReflectField_getFieldVal},
         {"org/mini/reflect/ReflectField",  "setFieldVal",           "(JJJ)V",                                                           org_mini_reflect_ReflectField_setFieldVal},
         {"org/mini/reflect/ReflectMethod", "mapMethod",             "(J)V",                                                             org_mini_reflect_ReflectMethod_mapMethod},
-        {"org/mini/reflect/ReflectMethod", "invokeMethod",          "(JLjava/lang/Object;[J)J",                                         org_mini_reflect_ReflectMethod_invokeMethod},
+        {"org/mini/reflect/ReflectMethod", "invokeMethod",          "(JLjava/lang/Object;[J)Lorg/mini/reflect/DataWrap;",                                         org_mini_reflect_ReflectMethod_invokeMethod},
         {"org/mini/reflect/ReflectMethod", "findMethod0",           "(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)J",        org_mini_reflect_ReflectMethod_findMethod0},
         {"org/mini/reflect/StackFrame",    "mapRuntime",            "(J)V",                                                             org_mini_reflect_StackFrame_mapRuntime},
         {"org/mini/reflect/ReflectArray",  "mapArray",              "(J)V",                                                             org_mini_reflect_ReflectArray_mapArray},

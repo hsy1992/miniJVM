@@ -3,9 +3,9 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package java.net;
+package javax.mini.net;
 
-import java.net.Socket;
+import javax.mini.net.Socket;
 import java.io.IOException;
 import javax.cldc.io.Connection;
 

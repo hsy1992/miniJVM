@@ -7,7 +7,7 @@
  */
 package javax.mini.net.protocol.serversocket;
 
-import java.net.ServerSocket;
+import javax.mini.net.ServerSocket;
 import com.sun.cldc.io.ConnectionBaseInterface;
 import com.sun.cldc.io.Waiter;
 import java.io.IOException;
@@ -101,7 +101,7 @@ public class Protocol implements ConnectionBaseInterface, ServerSocket {
      * @exception IOException if an I/O error occurs when creating the input
      * stream
      */
-    synchronized public java.net.Socket accept()
+    synchronized public javax.mini.net.Socket accept()
             throws IOException {
 
         javax.mini.net.protocol.socket.Protocol con;
