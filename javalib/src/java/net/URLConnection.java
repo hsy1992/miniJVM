@@ -16,8 +16,9 @@ import java.io.OutputStream;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
+import javax.cldc.io.Connection;
 
-public abstract class URLConnection {
+public abstract class URLConnection implements Connection{
   protected final URL url;
   protected boolean doInput = true;
   protected boolean doOutput = false;

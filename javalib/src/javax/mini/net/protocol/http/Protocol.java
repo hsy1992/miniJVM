@@ -57,7 +57,6 @@ import static javax.mini.net.HttpConnection.GET;
 import static javax.mini.net.HttpConnection.HEAD;
 import static javax.mini.net.HttpConnection.POST;
 import javax.mini.net.HttpUrl;
-import javax.mini.net.Properties;
 
 /**
  * This class implements the necessary functionality for an HTTP connection.

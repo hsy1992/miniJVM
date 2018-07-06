@@ -114,27 +114,27 @@ public class ReflectMethod {
                     break;
             }
         }
-        long result = invokeMethod(methodId, obj, argslong);//todo result would be gc
+        DataWrap result = invokeMethod(methodId, obj, argslong);//todo result would be gc
         char rtype = signature.charAt(signature.indexOf(')') + 1);
         switch (rtype) {
             case 'S':
-                return ((short) result);
+                return ((short) result.nv);
             case 'C':
-                return ((char) result);
+                return ((char) result.nv);
             case 'B':
-                return ((byte) result);
+                return ((byte) result.nv);
             case 'I':
-                return ((int) result);
+                return ((int) result.nv);
             case 'F':
-                return Float.intBitsToFloat((int) result);
+                return Float.intBitsToFloat((int) result.nv);
             case 'Z':
-                return (result != 0);
+                return (result.nv != 0);
             case 'D':
-                return Double.longBitsToDouble((long) result);
+                return Double.longBitsToDouble((long) result.nv);
             case 'J':
-                return result;
+                return result.nv;
             default:
-                return RefNative.id2obj(result);
+                return result.ov;
         }
     }
 
@@ -244,7 +244,7 @@ public class ReflectMethod {
 
     final native void mapMethod(long mid);
 
-    native long invokeMethod(long mid, Object ins, long[] args_long);
+    native DataWrap invokeMethod(long mid, Object ins, long[] args_long);
 
     public static native long findMethod0(String className, String methodName, String methodSignature);
 
