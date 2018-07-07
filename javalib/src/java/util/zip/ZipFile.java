@@ -16,16 +16,19 @@ public class ZipFile {
     //打开供阅读的 ZIP 文件，由指定的 File 对象给出。 
     public ZipFile(File file) {
         zipFileName = file.getAbsolutePath();
+        entries();
     }
     //打开新的 ZipFile 以使用指定模式从指定 File 对象读取。 
 
     public ZipFile(File file, int mode) {
         zipFileName = file.getAbsolutePath();
+        entries();
     }
     //打开 ZIP 文件进行阅读。 
 
     public ZipFile(String name) {
         zipFileName = name;
+        entries();
     }
 
     //关闭 ZIP 文件。 

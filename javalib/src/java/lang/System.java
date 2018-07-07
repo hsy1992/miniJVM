@@ -197,10 +197,16 @@ public final class System {
         if (key.equals("")) {
             throw new IllegalArgumentException("key can't be empty");
         }
+        if (key.equals("java.class.path")) {
+            String cp = getClassPath();
+            return cp.replace(';', File.pathSeparatorChar);
+        }
         return getProperty0(key);
     }
 
     private native static String getProperty0(String key);
+
+    private native static String getClassPath();
 
     /**
      * Sets the system property indicated by the specified key.

@@ -260,6 +260,7 @@ struct _JavaThreadInfo {
     MemoryBlock *objs_header;//link to new instance, until garbage accept
     MemoryBlock *objs_tailer;//link to last instance, until garbage accept
 
+    spinlock_t lock;
     u16 volatile suspend_count;//for jdwp suspend ,>0 suspend, ==0 resume
     u16 volatile no_pause;  //can't pause when clinit
     u8 volatile thread_status;

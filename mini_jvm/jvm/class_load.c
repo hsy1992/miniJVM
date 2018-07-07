@@ -939,7 +939,7 @@ void _class_optimize(JClass *clazz) {
         //转attribute为CdoeAttribute
         for (j = 0; j < ptr->attributes_count; j++) {
             if (utf8_equals_c(class_get_utf8_string(clazz, ptr->attributes[j].attribute_name_index), "Code") == 1) {
-//                if (utf8_equals_c(clazz->name, "java/util/Arrays$ArrayList") && utf8_equals_c(ptr->name, "size")) {
+//                if (utf8_equals_c(clazz->name, "espresso/syntaxtree/ExpressionNode") && utf8_equals_c(ptr->name, "evaluateExp")) {
 //                    int debug = 1;
 //                }
 

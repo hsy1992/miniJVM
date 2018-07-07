@@ -793,7 +793,9 @@ s32 jthread_yield(Runtime *runtime) {
 }
 
 s32 jthread_suspend(Runtime *runtime) {
+    spin_lock(&runtime->threadInfo->lock);
     runtime->threadInfo->suspend_count++;
+    spin_unlock(&runtime->threadInfo->lock);
     return 0;
 }
 
@@ -807,7 +809,9 @@ void jthread_block_exit(Runtime *runtime) {
 }
 
 s32 jthread_resume(Runtime *runtime) {
+    spin_lock(&runtime->threadInfo->lock);
     if (runtime->threadInfo->suspend_count > 0)runtime->threadInfo->suspend_count--;
+    spin_unlock(&runtime->threadInfo->lock);
     return 0;
 }
 

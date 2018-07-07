@@ -436,7 +436,7 @@ _find_exception_handler(Runtime *runtime, Instance *exception, CodeAttribute *ca
     for (i = 0; i < ca->exception_table_length; i++) {
 
         if (offset >= (e + i)->start_pc
-            && offset < (e + i)->end_pc) {
+            && offset <= (e + i)->end_pc) {
             if (!(e + i)->catch_type) {
                 return e + i;
             }
@@ -3675,13 +3675,16 @@ s32 execute_method_impl(MethodInfo *method, Runtime *pruntime, JClass *clazz) {
                     ret = RUNTIME_STATUS_NORMAL;
                     break;
                 } else if (ret == RUNTIME_STATUS_EXCEPTION) {
-                    __refer ref = pop_ref(stack);
+                    Instance *ins = pop_ref(stack);
                     //jvm_printf("stack size:%d , enter size:%d\n", stack->size, stackSize);
                     //restore stack enter method size, must pop for garbage
                     while (stack->size > stackSize)pop_empty(stack);
-                    push_ref(stack, ref);
+                    push_ref(stack, ins);
 
-                    Instance *ins = (Instance *) ref;
+//                    if (utf8_equals_c(ins->mb.clazz->name, "espresso/util/NotConstant")) {
+//                        int debug = 1;
+//                    }
+
 #if _JVM_DEBUG_BYTECODE_DETAIL > 3
                     s32 lineNum = getLineNumByIndex(ca, runtime->pc - ca->code);
                     printf("   at %s.%s(%s.java:%d)\n",
@@ -3690,8 +3693,7 @@ s32 execute_method_impl(MethodInfo *method, Runtime *pruntime, JClass *clazz) {
                            lineNum
                     );
 #endif
-                    ExceptionTable *et = _find_exception_handler(runtime, ins, ca,
-                                                                 (s32) (opCode - ca->code), ref);
+                    ExceptionTable *et = _find_exception_handler(runtime, ins, ca, (s32) (opCode - ca->code), ins);
                     if (et == NULL) {
                         break;
                     } else {

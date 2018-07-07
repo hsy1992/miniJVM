@@ -288,7 +288,7 @@ s32 org_mini_reflect_ReflectArray_newArray(Runtime *runtime, JClass *clazz) {
     s32 pos = 0;
     JClass *cl = insOfJavaLangClass_get_classHandle((Instance *) localvar_getRefer(runtime->localvar, pos++));
     s32 count = localvar_getInt(runtime->localvar, pos++);
-    Instance *arr = jarray_create_by_class(runtime, count, cl);
+    Instance *arr = jarray_create_by_type_name(runtime, count, cl->name);
 
     push_ref(runtime->stack, arr);
 #if _JVM_DEBUG_BYTECODE_DETAIL > 5

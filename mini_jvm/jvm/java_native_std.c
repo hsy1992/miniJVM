@@ -999,6 +999,26 @@ s32 java_lang_System_setProperty0(Runtime *runtime, JClass *clazz) {
     return 0;
 }
 
+s32 java_lang_System_getClassPath(Runtime *runtime, JClass *clazz) {
+    RuntimeStack *stack = runtime->stack;
+
+    Utf8String *val = utf8_create();
+    s32 i;
+    for (i = 0; i < sys_classloader->classpath->length; i++) {
+        utf8_append(val, arraylist_get_value(sys_classloader->classpath, i));
+        utf8_append_c(val, ";");
+    }
+    Instance *jstr = jstring_create(val, runtime);
+    push_ref(stack, jstr);
+    utf8_destory(val);
+
+#if _JVM_DEBUG_BYTECODE_DETAIL > 5
+    invoke_deepth(runtime);
+    jvm_printf("java_lang_System_getProperty0 \n");
+#endif
+    return 0;
+}
+
 s32 java_lang_Thread_currentThread(Runtime *runtime, JClass *clazz) {
     RuntimeStack *stack = runtime->stack;
     push_ref(stack, (__refer) runtime->threadInfo->jthread);
@@ -1305,6 +1325,7 @@ static java_native_method method_table[] = {
         {"java/lang/System",                    "identityHashCode",    "(Ljava/lang/Object;)I",                                    java_lang_System_identityHashCode},
         {"java/lang/System",                    "getProperty0",        "(Ljava/lang/String;)Ljava/lang/String;",                   java_lang_System_getProperty0},
         {"java/lang/System",                    "setProperty0",        "(Ljava/lang/String;Ljava/lang/String;)Ljava/lang/String;", java_lang_System_setProperty0},
+        {"java/lang/System",                    "getClassPath",        "()Ljava/lang/String;",                                     java_lang_System_getClassPath},
         {"java/lang/Thread",                    "currentThread",       "()Ljava/lang/Thread;",                                     java_lang_Thread_currentThread},
         {"java/lang/Thread",                    "yield",               "()V",                                                      java_lang_Thread_yield},
         {"java/lang/Thread",                    "sleep",               "(J)V",                                                     java_lang_Thread_sleep},
