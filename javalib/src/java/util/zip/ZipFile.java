@@ -6,7 +6,7 @@ import java.io.InputStream;
 import java.util.Arrays;
 import java.util.Enumeration;
 import java.util.Vector;
-import javax.mini.zip.Zip;
+import org.mini.zip.Zip;
 
 public class ZipFile {
 

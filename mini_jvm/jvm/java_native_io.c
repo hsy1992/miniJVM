@@ -958,7 +958,7 @@ s32 org_mini_fs_InnerFile_delete0(Runtime *runtime, JClass *clazz) {
     return 0;
 }
 
-s32 javax_mini_zip_ZipFile_getEntry0(Runtime *runtime, JClass *clazz) {
+s32 org_mini_zip_ZipFile_getEntry0(Runtime *runtime, JClass *clazz) {
     Instance *zip_path_arr = localvar_getRefer(runtime->localvar, 0);
     Instance *name_arr = localvar_getRefer(runtime->localvar, 1);
     s32 ret = -1;
@@ -983,7 +983,7 @@ s32 javax_mini_zip_ZipFile_getEntry0(Runtime *runtime, JClass *clazz) {
     return 0;
 }
 
-s32 javax_mini_zip_ZipFile_putEntry0(Runtime *runtime, JClass *clazz) {
+s32 org_mini_zip_ZipFile_putEntry0(Runtime *runtime, JClass *clazz) {
     Instance *zip_path_arr = localvar_getRefer(runtime->localvar, 0);
     Instance *name_arr = localvar_getRefer(runtime->localvar, 1);
     Instance *content_arr = localvar_getRefer(runtime->localvar, 2);
@@ -1000,7 +1000,7 @@ s32 javax_mini_zip_ZipFile_putEntry0(Runtime *runtime, JClass *clazz) {
     return 0;
 }
 
-s32 javax_mini_zip_ZipFile_fileCount0(Runtime *runtime, JClass *clazz) {
+s32 org_mini_zip_ZipFile_fileCount0(Runtime *runtime, JClass *clazz) {
     Instance *zip_path_arr = localvar_getRefer(runtime->localvar, 0);
 
     s32 ret = 0;
@@ -1015,13 +1015,13 @@ s32 javax_mini_zip_ZipFile_fileCount0(Runtime *runtime, JClass *clazz) {
     return 0;
 }
 
-s32 javax_mini_zip_ZipFile_listFiles0(Runtime *runtime, JClass *clazz) {
+s32 org_mini_zip_ZipFile_listFiles0(Runtime *runtime, JClass *clazz) {
     Instance *zip_path_arr = localvar_getRefer(runtime->localvar, 0);
     s32 ret = -1;
     if (zip_path_arr) {
         ArrayList *list = zip_get_filenames(zip_path_arr->arr_body);
         if (list) {
-            Utf8String *clustr=utf8_create_c(STR_CLASS_JAVA_LANG_STRING);
+            Utf8String *clustr = utf8_create_c(STR_CLASS_JAVA_LANG_STRING);
             Instance *jarr = jarray_create_by_type_name(runtime, list->length, clustr);
             utf8_destory(clustr);
             gc_refer_hold(jarr);
@@ -1047,7 +1047,7 @@ s32 javax_mini_zip_ZipFile_listFiles0(Runtime *runtime, JClass *clazz) {
     return 0;
 }
 
-s32 javax_mini_zip_ZipFile_isDirectory0(Runtime *runtime, JClass *clazz) {
+s32 org_mini_zip_ZipFile_isDirectory0(Runtime *runtime, JClass *clazz) {
     Instance *zip_path_arr = localvar_getRefer(runtime->localvar, 0);
     s32 index = localvar_getInt(runtime->localvar, 1);
     s32 ret = 0;
@@ -1098,11 +1098,11 @@ static java_native_method method_net_table[] = {
         {"org/mini/fs/InnerFile",                         "delete0",         "([B)I",                            org_mini_fs_InnerFile_delete0},
         {"org/mini/fs/InnerFile",                         "rename0",         "([B[B)I",                          org_mini_fs_InnerFile_rename0},
         {"org/mini/fs/InnerFile",                         "getTmpDir",       "()Ljava/lang/String;",             org_mini_fs_InnerFile_getTmpDir},
-        {"javax/mini/zip/Zip",                            "getEntry0",       "([B[B)[B",                         javax_mini_zip_ZipFile_getEntry0},
-        {"javax/mini/zip/Zip",                            "putEntry0",       "([B[B[B)I",                        javax_mini_zip_ZipFile_putEntry0},
-        {"javax/mini/zip/Zip",                            "fileCount0",       "([B)I",                            javax_mini_zip_ZipFile_fileCount0},
-        {"javax/mini/zip/Zip",                            "listFiles0",       "([B)[Ljava/lang/String;",          javax_mini_zip_ZipFile_listFiles0},
-        {"javax/mini/zip/Zip",                            "isDirectory0",     "([BI)Z",                           javax_mini_zip_ZipFile_isDirectory0},
+        {"org/mini/zip/Zip",                              "getEntry0",       "([B[B)[B",                         org_mini_zip_ZipFile_getEntry0},
+        {"org/mini/zip/Zip",                              "putEntry0",       "([B[B[B)I",                        org_mini_zip_ZipFile_putEntry0},
+        {"org/mini/zip/Zip",                              "fileCount0",      "([B)I",                            org_mini_zip_ZipFile_fileCount0},
+        {"org/mini/zip/Zip",                              "listFiles0",      "([B)[Ljava/lang/String;",          org_mini_zip_ZipFile_listFiles0},
+        {"org/mini/zip/Zip",                              "isDirectory0",    "([BI)Z",                           org_mini_zip_ZipFile_isDirectory0},
 
 };
 

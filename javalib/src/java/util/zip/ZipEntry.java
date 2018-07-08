@@ -5,7 +5,7 @@
  */
 package java.util.zip;
 
-import javax.mini.zip.Zip;
+import org.mini.zip.Zip;
 
 /**
  *
