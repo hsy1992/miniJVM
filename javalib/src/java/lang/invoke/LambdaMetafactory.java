@@ -259,7 +259,7 @@ public class LambdaMetafactory {
         write2(out, localType.footprint() + 1); // max locals
         write4(out, 0); // length (we'll set the real value later)
 
-        write1(out, aload_0);
+        //write1(out, aload_0);
 
         Iterator<MethodType.Parameter> dst = implMethodHandle.type().parameters().iterator();
 
@@ -393,7 +393,7 @@ public class LambdaMetafactory {
             synchronized (LambdaMetafactory.class) {
                 number = nextNumber++;
             }
-            className = "Lambda-" + number;
+            className = "Lambda_" + number;
         }
 
         List<PoolEntry> pool = new ArrayList();
@@ -451,7 +451,7 @@ public class LambdaMetafactory {
             throw new RuntimeException(e);
         }
 //        try {
-//            FileOutputStream fos = new FileOutputStream("bridge.class");
+//            FileOutputStream fos = new FileOutputStream(className+".class");
 //            fos.write(out.toByteArray());
 //            fos.close();
 //        } catch (IOException iOException) {

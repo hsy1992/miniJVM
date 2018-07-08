@@ -3160,12 +3160,12 @@ s32 execute_method_impl(MethodInfo *method, Runtime *pruntime, JClass *clazz) {
                             push_ref(stack, (__refer) exception);
                             ret = RUNTIME_STATUS_EXCEPTION;
                         } else {
-                            if (utf8_equals_c(cmr->name, "forEach") && utf8_equals_c(cmr->clsName, "java/util/List")) {
-                                int debug = 1;
-                            }
-                            if (utf8_equals_c(cmr->name, "hasNext") && utf8_equals_c(cmr->clsName, "java/util/Iterator")) {
-                                int debug = 1;
-                            }
+//                            if (utf8_equals_c(cmr->name, "forEach") && utf8_equals_c(cmr->clsName, "java/util/List")) {
+//                                int debug = 1;
+//                            }
+//                            if (utf8_equals_c(cmr->name, "hasNext") && utf8_equals_c(cmr->clsName, "java/util/Iterator")) {
+//                                int debug = 1;
+//                            }
                             MethodInfo *m = NULL;
                             if (ins->mb.type & MEM_TYPE_CLASS) {
                                 m = cmr->methodInfo;
@@ -3302,8 +3302,8 @@ s32 execute_method_impl(MethodInfo *method, Runtime *pruntime, JClass *clazz) {
                         MethodInfo *m = bootMethod->make;
 #if _JVM_DEBUG_BYTECODE_DETAIL > 3
                         invoke_deepth(runtime);
-                            jvm_printf("invokedynamic   | %s.%s%s {\n", utf8_cstr(m->_this_class->name),
-                                       utf8_cstr(m->name), utf8_cstr(m->descriptor));
+                        jvm_printf("invokedynamic   | %s.%s%s {\n", utf8_cstr(m->_this_class->name),
+                                   utf8_cstr(m->name), utf8_cstr(m->descriptor));
 #endif
 
                         if (ret == RUNTIME_STATUS_NORMAL) {
@@ -3711,14 +3711,18 @@ s32 execute_method_impl(MethodInfo *method, Runtime *pruntime, JClass *clazz) {
 
             Utf8String *ustr = method->descriptor;
             invoke_deepth(runtime);
-            jvm_printf("stack size in:%d out:%d  topof stack:\n", stackSize, stack->size);
+            jvm_printf("stack size  %s.%s%s in:%d out:%d  \n", utf8_cstr(clazz->name), utf8_cstr(method->name), utf8_cstr(method->descriptor), stackSize, stack->size);
             if (ret != RUNTIME_STATUS_EXCEPTION) {
                 if (utf8_indexof_c(ustr, ")V") >= 0) {//无反回值
-                    if (stack->size < stackSize) {
+                    if (stack->size != stackSize) {
+                        exit(1);
+                    }
+                } else if (utf8_indexof_c(ustr, ")J") >= 0) {
+                    if (stack->size != stackSize + 2) {
                         exit(1);
                     }
                 } else {
-                    if (stack->size < stackSize + 1) {
+                    if (stack->size != stackSize + 1) {
                         exit(1);
                     }
                 }

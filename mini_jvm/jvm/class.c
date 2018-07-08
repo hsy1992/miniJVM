@@ -116,9 +116,9 @@ s32 class_prepar(JClass *clazz, Runtime *runtime) {
 
     int i;
 
-    if (utf8_equals_c(clazz->name, "espresso/parser/JavaParser")) {
-        int debug = 1;
-    }
+//    if (utf8_equals_c(clazz->name, "espresso/parser/JavaParser")) {
+//        int debug = 1;
+//    }
 
     FieldInfo *f = clazz->fieldPool.field;
     //计算不同种类变量长度

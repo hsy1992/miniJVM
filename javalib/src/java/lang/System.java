@@ -180,6 +180,14 @@ public final class System {
      */
     public static native int identityHashCode(Object x);
 
+    public static String getProperty(String key, String def) {
+        String v = getProperty(key);
+        if (v == null) {
+            v = def;
+        }
+
+        return v;
+    }
     /**
      * Gets the system property indicated by the specified key.
      *

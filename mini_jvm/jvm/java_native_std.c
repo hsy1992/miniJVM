@@ -195,7 +195,7 @@ s32 java_lang_Class_isPrimitive(Runtime *runtime, JClass *clazz) {
     return 0;
 }
 
-s32 java_lang_Class_getName(Runtime *runtime, JClass *clazz) {
+s32 java_lang_Class_getName0(Runtime *runtime, JClass *clazz) {
     RuntimeStack *stack = runtime->stack;
     JClass *cl = insOfJavaLangClass_get_classHandle((Instance *) localvar_getRefer(runtime->localvar, 0));
     if (cl) {
@@ -1278,7 +1278,7 @@ static java_native_method method_table[] = {
         {"java/lang/Class",                     "isInterface",         "()Z",                                                      java_lang_Class_isInterface},
         {"java/lang/Class",                     "isArray",             "()Z",                                                      java_lang_Class_isArray},
         {"java/lang/Class",                     "isPrimitive",         "()Z",                                                      java_lang_Class_isPrimitive},
-        {"java/lang/Class",                     "getName",             "()Ljava/lang/String;",                                     java_lang_Class_getName},
+        {"java/lang/Class",                     "getName0",             "()Ljava/lang/String;",                                     java_lang_Class_getName0},
         {"java/lang/Class",                     "getSuperclass",       "()Ljava/lang/Class;",                                      java_lang_Class_getSuperclass},
         {"java/lang/Class",                     "getPrimitiveClass",   "(Ljava/lang/String;)Ljava/lang/Class;",                    java_lang_Class_getPrimitiveClass},
         {"java/lang/Class",                     "getComponentType",    "()Ljava/lang/Class;",                                      java_lang_Class_getComponentType},

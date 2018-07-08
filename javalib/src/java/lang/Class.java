@@ -45,9 +45,11 @@ import org.mini.reflect.vm.RefNative;
  * @since JDK1.0, CLDC 1.0
  */
 public final class Class<T> {
-    private static final int ANNOTATION= 0x00002000;
-    private static final int ENUM      = 0x00004000;
+
+    private static final int ANNOTATION = 0x00002000;
+    private static final int ENUM = 0x00004000;
     private static final int SYNTHETIC = 0x00001000;
+
     /*
      * Constructor. Only the Java Virtual Machine creates Class
      * objects.
@@ -225,7 +227,16 @@ public final class Class<T> {
      * @return the fully qualified name of the class or interface represented by
      * this object.
      */
-    public native String getName();
+    String name;
+
+    public String getName() {
+        if (name == null) {
+            name = getName0();
+        }
+        return name;
+    }
+
+    public native String getName0();
 
     /**
      * Finds a resource with a given name in the application's JAR file. This
@@ -333,7 +344,7 @@ public final class Class<T> {
      * primitive type.
      */
     static native Class<?> getPrimitiveClass(String name);
-    
+
     public String getCanonicalName() {
         if (isPrimitive()) {
             return getName();
@@ -361,24 +372,24 @@ public final class Class<T> {
     }
 
     public native boolean isPrimitive();
-    
+
     public native Class<? super T> getSuperclass();
-    
+
     public boolean isEnum() {
         // An enum must both directly extend java.lang.Enum and have
         // the ENUM bit set; classes for specialized enum constants
         // don't do the former.
-        return (this.getModifiers() & ENUM) != 0 &&
-        this.getSuperclass() == java.lang.Enum.class;
+        return (this.getModifiers() & ENUM) != 0
+                && this.getSuperclass() == java.lang.Enum.class;
     }
+
     /**
-     * Returns the elements of this enum class or null if this
-     * Class object does not represent an enum type.
+     * Returns the elements of this enum class or null if this Class object does
+     * not represent an enum type.
      *
      * @return an array containing the values comprising the enum class
-     *     represented by this Class object in the order they're
-     *     declared, or null if this Class object does not
-     *     represent an enum type
+     * represented by this Class object in the order they're declared, or null
+     * if this Class object does not represent an enum type
      * @since 1.5
      */
     public T[] getEnumConstants() {
@@ -387,43 +398,47 @@ public final class Class<T> {
     }
 
     /**
-     * Returns the elements of this enum class or null if this
-     * Class object does not represent an enum type;
-     * identical to getEnumConstants except that the result is
-     * uncloned, cached, and shared by all callers.
+     * Returns the elements of this enum class or null if this Class object does
+     * not represent an enum type; identical to getEnumConstants except that the
+     * result is uncloned, cached, and shared by all callers.
      */
     T[] getEnumConstantsShared() {
         if (enumConstants == null) {
-            if (!isEnum()) return null;
+            if (!isEnum()) {
+                return null;
+            }
             try {
                 final Method values = getMethod("values");
-                T[] temporaryConstants = (T[])values.invoke(null);
+                T[] temporaryConstants = (T[]) values.invoke(null);
                 enumConstants = temporaryConstants;
-            }
-            // These can happen when users concoct enum-like classes
+            } // These can happen when users concoct enum-like classes
             // that don't comply with the enum spec.
-            catch (Exception ex) { return null; }
+            catch (Exception ex) {
+                return null;
+            }
         }
         return enumConstants;
     }
     private volatile transient T[] enumConstants = null;
 
     /**
-     * Returns a map from simple name to enum constant.  This package-private
+     * Returns a map from simple name to enum constant. This package-private
      * method is used internally by Enum to implement
      * {@code public static <T extends Enum<T>> T valueOf(Class<T>, String)}
-     * efficiently.  Note that the map is returned by this method is
-     * created lazily on first use.  Typically it won't ever get created.
+     * efficiently. Note that the map is returned by this method is created
+     * lazily on first use. Typically it won't ever get created.
      */
     Map<String, T> enumConstantDirectory() {
         if (enumConstantDirectory == null) {
             T[] universe = getEnumConstantsShared();
-            if (universe == null)
+            if (universe == null) {
                 throw new IllegalArgumentException(
-                    getName() + " is not an enum type");
+                        getName() + " is not an enum type");
+            }
             Map<String, T> m = new HashMap<>(2 * universe.length);
-            for (T constant : universe)
-                m.put(((Enum<?>)constant).name(), constant);
+            for (T constant : universe) {
+                m.put(((Enum<?>) constant).name(), constant);
+            }
             enumConstantDirectory = m;
         }
         return enumConstantDirectory;
@@ -443,8 +458,8 @@ public final class Class<T> {
     public long getClassHandler() {
         return classHandle;
     }
-    
-    public int getModifiers(){
+
+    public int getModifiers() {
         if (refClass == null) {
             refClass = new ReflectClass(classHandle);
         }
@@ -631,16 +646,16 @@ public final class Class<T> {
             return null;
         }
     }
-    
+
     public Class getDeclaringClass() {
-        if(isPrimitive()||isArray()){
+        if (isPrimitive() || isArray()) {
             return null;
-        }else{
+        } else {
             return this;//todo
         }
     }
-    
-    public boolean desiredAssertionStatus(){
+
+    public boolean desiredAssertionStatus() {
         return false;
     }
 
