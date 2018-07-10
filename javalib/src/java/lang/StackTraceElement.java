@@ -15,13 +15,17 @@ public class StackTraceElement {
     private String methodName;
     private String fileName;
     private int lineNumber;
-    
+
     StackTraceElement parent;
 
     /**
      * @return the declaringClass
      */
     public String getDeclaringClass() {
+        return declaringClass;
+    }
+
+    public String getClassName() {
         return declaringClass;
     }
 

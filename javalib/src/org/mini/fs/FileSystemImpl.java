@@ -36,15 +36,11 @@ abstract public class FileSystemImpl extends org.mini.fs.FileSystem {
         return isAbsolute(path);
     }
 
+    abstract String getRegexParentTag();
+
     private String removeParentTag(String path) {
-        String P = PARENT_DIR + getSeparator();
-        int index;
-        while ((index = path.indexOf(P)) > 0) {
-            String prev = path.substring(0, index - 1);
-            prev = prev.substring(0, prev.lastIndexOf(getSeparator()) + 1);
-            String back = path.substring(index + P.length());
-            path = prev + back;
-        }
+        path = path.replaceAll(getRegexParentTag(), "");
+
         return path;
     }
 
@@ -53,11 +49,11 @@ abstract public class FileSystemImpl extends org.mini.fs.FileSystem {
         String ds = "" + getSeparator() + getSeparator();   //remove all "//" to "/"
         String ss = "" + getSeparator();
         while (path.indexOf(ds) >= 0) {
-            path = path.replaceAll(ds, ss);
+            path = path.replace(ds, ss);
         }
-        path = path.replaceAll(PARENT_DIR + getSeparator(), "\uffff\uffff\uffff");
-        path = path.replaceAll(CUR_DIR + getSeparator(), "");  //remove all "./" to ""
-        path = path.replaceAll("\uffff\uffff\uffff", PARENT_DIR + getSeparator());
+        path = path.replace(PARENT_DIR + getSeparator(), "\uffff\uffff\uffff");
+        path = path.replace(CUR_DIR + getSeparator(), "");  //remove all "./" to ""
+        path = path.replace("\uffff\uffff\uffff", PARENT_DIR + getSeparator());
 
         return path;
     }

@@ -62,7 +62,7 @@ package java.lang;
  * @see java.lang.String
  * @since JDK1.0, CLDC 1.0
  */
-public class StringBuilder implements Appendable{
+public class StringBuilder implements Appendable {
 
     /**
      * The value is used for character storage.
@@ -84,7 +84,7 @@ public class StringBuilder implements Appendable{
      * capacity of 16 characters.
      */
     public StringBuilder() {
-        this(16);
+        this(64);
     }
 
     /**
@@ -110,7 +110,7 @@ public class StringBuilder implements Appendable{
      * @param str the initial contents of the buffer.
      */
     public StringBuilder(String str) {
-        this(str.length() + 16);
+        this(str.length() + 32);
         append(str);
     }
 
@@ -946,25 +946,28 @@ public class StringBuilder implements Appendable{
     public int indexOf(String str) {
         return toString().indexOf(str, 0);
     }
-    
+
     public int indexOf(String str, int fromIndex) {
         return toString().indexOf(str, fromIndex);
     }
-    
+
     public String substring(int start) {
         return substring(start, count);
     }
-    
+
     public String substring(int start, int end) {
-        if (start < 0)
+        if (start < 0) {
             throw new StringIndexOutOfBoundsException(start);
-        if (end > count)
+        }
+        if (end > count) {
             throw new StringIndexOutOfBoundsException(end);
-        if (start > end)
+        }
+        if (start > end) {
             throw new StringIndexOutOfBoundsException(end - start);
+        }
         return new String(value, start, end - start);
     }
-    
+
     public StringBuilder append(CharSequence sequence) {
         return append(sequence.toString());
     }
@@ -972,4 +975,9 @@ public class StringBuilder implements Appendable{
     public StringBuilder append(CharSequence sequence, int start, int end) {
         return append(sequence.subSequence(start, end));
     }
+
+    public StringBuilder appendCodePoint(int codePoint) {
+        return append((char) codePoint);
+    }
+
 }

@@ -275,9 +275,7 @@ public class ArrayList<E> extends AbstractList<E>
      * 	       in the correct order.
      */
     public Object[] toArray() {
-	Object[] result = new Object[size];
-	System.arraycopy(elementData, 0, result, 0, size);
-	return result;
+        return Arrays.copyOf(elementData, size);
     }
 
     /**
@@ -303,11 +301,9 @@ public class ArrayList<E> extends AbstractList<E>
      */
     public <T> T[] toArray(T[] a) {
         if (a.length < size)
-//            a = (Object[])java.lang.reflect.Array.newInstance(
-//                                a.getClass().getComponentType(), size);
-            a=(T[])new Object[size];
-
-	System.arraycopy(elementData, 0, a, 0, size);
+            // Make a new array of a's runtime type, but my contents:
+            return (T[]) Arrays.copyOf(elementData, size, a.getClass());
+        System.arraycopy(elementData, 0, a, 0, size);
         if (a.length > size)
             a[size] = null;
         return a;

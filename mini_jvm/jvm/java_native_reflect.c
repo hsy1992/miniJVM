@@ -799,7 +799,7 @@ s32 org_mini_reflect_ReflectMethod_invokeMethod(Runtime *runtime, JClass *clazz)
             if (ch == 'V') {
             } else if (isDataReferByTag(ch)) {
                 __refer ov = pop_ref(runtime->stack);
-                c8 *ptr = getFieldPtr_byName_c(result, clsName, "ov", "java/lang/Object", runtime);
+                c8 *ptr = getFieldPtr_byName_c(result, clsName, "ov", STR_INS_JAVA_LANG_OBJECT, runtime);
                 setFieldRefer(ptr, ov);
             } else {
                 long nv;

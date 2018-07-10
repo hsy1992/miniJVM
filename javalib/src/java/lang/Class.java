@@ -659,4 +659,11 @@ public final class Class<T> {
         return false;
     }
 
+    public T cast(Object obj) {
+        if (obj != null && !isInstance(obj)) {
+            throw new ClassCastException();
+        }
+        return (T) obj;
+    }
+
 }

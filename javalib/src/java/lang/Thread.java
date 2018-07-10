@@ -108,10 +108,10 @@ public class Thread implements Runnable {
     public final static int MAX_PRIORITY = 10;
 
     ThreadLocal.ThreadLocalMap threadLocals;
-    
+
     /* Whether or not the thread is a daemon thread. */
-    private boolean     daemon = false;
-    
+    private boolean daemon = false;
+
     /**
      * Returns a reference to the currently executing <code>Thread</code>
      * object.
@@ -293,7 +293,8 @@ public class Thread implements Runnable {
 
     /**
      * setup thread name
-     * @param tname 
+     *
+     * @param tname
      */
     public final void setName(String tname) {
         if (tname != null) {
@@ -320,22 +321,22 @@ public class Thread implements Runnable {
             wait(1000);
         }
     }
+
     /**
-     * Marks this thread as either a {@linkplain #isDaemon daemon} thread
-     * or a user thread. The Java Virtual Machine exits when the only
-     * threads running are all daemon threads.
+     * Marks this thread as either a {@linkplain #isDaemon daemon} thread or a
+     * user thread. The Java Virtual Machine exits when the only threads running
+     * are all daemon threads.
      *
-     * <p> This method must be invoked before the thread is started.
+     * <p>
+     * This method must be invoked before the thread is started.
      *
-     * @param  on
-     *         if {@code true}, marks this thread as a daemon thread
+     * @param on if {@code true}, marks this thread as a daemon thread
      *
-     * @throws  IllegalThreadStateException
-     *          if this thread is {@linkplain #isAlive alive}
+     * @throws IllegalThreadStateException if this thread is
+     * {@linkplain #isAlive alive}
      *
-     * @throws  SecurityException
-     *          if {@link #checkAccess} determines that the current
-     *          thread cannot modify this thread
+     * @throws SecurityException if {@link #checkAccess} determines that the
+     * current thread cannot modify this thread
      */
     public final void setDaemon(boolean on) {
         if (isAlive()) {
@@ -348,11 +349,15 @@ public class Thread implements Runnable {
      * Tests if this thread is a daemon thread.
      *
      * @return  <code>true</code> if this thread is a daemon thread;
-     *          <code>false</code> otherwise.
-     * @see     #setDaemon(boolean)
+     * <code>false</code> otherwise.
+     * @see #setDaemon(boolean)
      */
     public final boolean isDaemon() {
         return daemon;
+    }
+
+    public ClassLoader getContextClassLoader() {
+        return ClassLoader.getSystemClassLoader();
     }
 
     /**

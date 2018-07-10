@@ -7,10 +7,7 @@
 
 package java.util;
 
-import java.util.NoSuchElementException;
-import java.util.Enumeration;
-
-import java.util.Random;
+import java.lang.reflect.Array;
 
 /**
  * This class consists exclusively of static methods that operate on or return
@@ -1366,9 +1363,8 @@ public class Collections {
                 // could get his hands on raw (unwrapped) Entries from c.
 		Object[] arr =
 		    c.toArray(
-                             (T[])new Object[0]
-//			a.length==0 ? a :
-//			(T[])java.lang.reflect.Array.newInstance(a.getClass().getComponentType(), 0)
+			a.length==0 ? a :
+			(T[])java.lang.reflect.Array.newInstance(a.getClass().getComponentType(), 0)
                     );
 
                 for (int i=0; i<arr.length; i++)
@@ -2273,7 +2269,7 @@ public class Collections {
          */
         E[] zeroLengthElementArray() {
             if (zeroLengthElementArray == null)
-                zeroLengthElementArray = (E[]) new Object[0];//Array.newInstance(type, 0);
+                zeroLengthElementArray = (E[]) Array.newInstance(type, 0);
             return zeroLengthElementArray;
         }
     }
@@ -2611,12 +2607,12 @@ public class Collections {
          */
         private K[] zeroLengthKeyArray() {
             if (zeroLengthKeyArray == null)
-                zeroLengthKeyArray = (K[])new Object[0]; //Array.newInstance(keyType, 0);
+                zeroLengthKeyArray = (K[])Array.newInstance(keyType, 0);
             return zeroLengthKeyArray;
         }
         private V[] zeroLengthValueArray() {
             if (zeroLengthValueArray == null)
-                zeroLengthValueArray = (V[]) new Object[0];//Array.newInstance(valueType, 0);
+                zeroLengthValueArray = (V[]) Array.newInstance(valueType, 0);
             return zeroLengthValueArray;
         }
 
@@ -2703,8 +2699,8 @@ public class Collections {
                 // We don't pass a to s.toArray, to avoid window of
                 // vulnerability wherein an unscrupulous multithreaded client
                 // could get his hands on raw (unwrapped) Entries from s.
-                Object[] arr = s.toArray(a.length==0 ? a :(T[])new Object[0]
-//                   (T[])Array.newInstance(a.getClass().getComponentType(), 0)
+                Object[] arr = s.toArray(a.length==0 ? a :
+                   (T[])Array.newInstance(a.getClass().getComponentType(), 0)
                 );
 
                 for (int i=0; i<arr.length; i++)

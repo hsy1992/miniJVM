@@ -6,6 +6,8 @@
  */
 package java.lang.reflect;
 
+import java.lang.annotation.Annotation;
+import org.mini.reflect.ReflectClass;
 import org.mini.reflect.ReflectField;
 
 /**
@@ -28,7 +30,7 @@ import org.mini.reflect.ReflectField;
  * @author Kenneth Russell
  * @author Nakul Saraiya
  */
-public final class Field implements Member {
+public final class Field<T> extends AccessibleObject implements Member {
 
     Class clazz;
     ReflectField refField;
@@ -51,7 +53,7 @@ public final class Field implements Member {
     }
 
     @Override
-    public Class getDeclaringClass() {
+    public Class<T> getDeclaringClass() {
         return clazz;
     }
 
@@ -62,7 +64,30 @@ public final class Field implements Member {
 
     @Override
     public boolean isSynthetic() {
-        return false;
+        return (refField.accessFlags & Modifier.SYNTHETIC) != 0;
+    }
+
+    public Class<?> getType() {
+
+        return ReflectClass.getClassBySignature(refField.signature);
+    }
+
+    @Override
+    public <T extends Annotation> T getAnnotation(Class<T> class_) {
+
+        return null;
+    }
+
+    @Override
+    public Annotation[] getAnnotations() {
+
+        return new Annotation[0];
+
+    }
+
+    @Override
+    public Annotation[] getDeclaredAnnotations() {
+        return getAnnotations();
     }
 
     /**

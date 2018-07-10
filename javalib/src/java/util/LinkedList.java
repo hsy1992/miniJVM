@@ -721,9 +721,8 @@ public class LinkedList<E>
      */
     public <T> T[] toArray(T[] a) {
         if (a.length < size)
-//            a = (T[])java.lang.reflect.Array.newInstance(
-//                                a.getClass().getComponentType(), size);
-            a=(T[])new Object[size];
+            a = (T[])java.lang.reflect.Array.newInstance(
+                                a.getClass().getComponentType(), size);
         int i = 0;
 	Object[] result = a;
         for (Entry<E> e = header.next; e != header; e = e.next)

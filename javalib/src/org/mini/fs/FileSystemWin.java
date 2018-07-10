@@ -28,6 +28,10 @@ public class FileSystemWin extends FileSystemImpl {
         }
         return false;
     }
+    
+    public String getRegexParentTag(){
+        return "\\\\[^\\\\]+\\\\\\.\\.";
+    }
 
     @Override
     public char getSeparator() {

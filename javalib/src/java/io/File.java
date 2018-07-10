@@ -86,7 +86,7 @@ import java.util.Random;
  * @author unascribed
  * @since JDK1.0
  */
-public class File implements java.util.Comparable {
+public class File implements Comparable {
 
     /**
      * The FileSystem object representing the platform's local file system.

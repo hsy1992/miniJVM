@@ -6,6 +6,7 @@
  */
 package java.lang.reflect;
 
+import java.lang.annotation.Annotation;
 import org.mini.reflect.ReflectMethod;
 import org.mini.reflect.vm.RefNative;
 
@@ -30,7 +31,7 @@ import org.mini.reflect.vm.RefNative;
  * @author Kenneth Russell
  * @author Nakul Saraiya
  */
-public class Method implements Member {
+public class Method<T> extends AccessibleObject implements Member {
 
     Class clazz;
     ReflectMethod refMethod;
@@ -67,7 +68,7 @@ public class Method implements Member {
     }
 
     @Override
-    public Class getDeclaringClass() {
+    public Class<T> getDeclaringClass() {
         return clazz;
     }
 
@@ -78,7 +79,7 @@ public class Method implements Member {
 
     @Override
     public boolean isSynthetic() {
-        return false;
+        return (refMethod.accessFlags & Modifier.SYNTHETIC) != 0;
     }
 
     static public Method findMethod(ClassLoader cloader, String className, String methodName, String methodSignature) {
@@ -94,6 +95,24 @@ public class Method implements Member {
 
     public String getSignature() {
         return refMethod.signature;
+    }
+
+    @Override
+    public <T extends Annotation> T getAnnotation(Class<T> class_) {
+
+        return null;
+    }
+
+    @Override
+    public Annotation[] getAnnotations() {
+
+        return new Annotation[0];
+
+    }
+
+    @Override
+    public Annotation[] getDeclaredAnnotations() {
+        return getAnnotations();
     }
 
 }

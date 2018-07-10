@@ -257,6 +257,7 @@ s32 call_method_main(c8 *p_mainclass, c8 *p_methodname, c8 *p_methodtype, ArrayL
     //开始装载类
 
     Utf8String *str_mainClsName = utf8_create_c(p_mainclass);
+    utf8_replace_c(str_mainClsName, ".", "/");
 
     //装入主类
     load_class(sys_classloader, str_mainClsName, runtime);

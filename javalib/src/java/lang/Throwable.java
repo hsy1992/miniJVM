@@ -150,6 +150,27 @@ public class Throwable {
 
     }
 
+    public StackTraceElement[] getStackTrace() {
+
+        if (backtrace != null) {
+            int count = 0;
+            StackTraceElement sf = (StackTraceElement) backtrace;
+            while (sf != null) {
+                count++;
+                sf = sf.parent;
+            }
+            StackTraceElement[] arr = new StackTraceElement[count];
+            sf = (StackTraceElement) backtrace;
+            count = 0;
+            while (sf != null) {
+                arr[count++] = sf;
+                sf = sf.parent;
+            }
+            return arr;
+        }
+        return new StackTraceElement[0];
+    }
+
     public String getCodeStack() {
         StringBuilder stack = new StringBuilder();
         String msg = getMessage();

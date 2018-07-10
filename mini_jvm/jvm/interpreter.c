@@ -3459,7 +3459,7 @@ s32 execute_method_impl(MethodInfo *method, Runtime *pruntime, JClass *clazz) {
                         if (ins != NULL) {
                             if (ins->mb.type == MEM_TYPE_INS) {
                                 JClass *cl = getClassByConstantClassRef(clazz, typeIdx, runtime);
-//                                if (utf8_equals_c(ins->mb.clazz->name, "org/mini/util/ConstantPool$Utf8PoolEntry")) {//
+//                                if (utf8_equals_c(ins->mb.clazz->name, "java/lang/String")&&utf8_equals_c(cl->name,"java/lang/Comparable")) {//
 //                                    int debug = 1;
 //                                }
                                 if (instance_of(cl, ins, runtime)) {

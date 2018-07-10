@@ -43,6 +43,10 @@ public class Hashtable<K, V> implements Map<K, V> {
     public synchronized int size() {
         return map.size();
     }
+    
+    public synchronized boolean contains(Object value) {
+        return map.containsValue(value);
+    }
 
     public synchronized boolean containsKey(Object key) {
         return map.containsKey(key);

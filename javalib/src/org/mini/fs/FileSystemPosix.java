@@ -27,6 +27,10 @@ public class FileSystemPosix extends FileSystemImpl {
         }
         return false;
     }
+    
+    public String getRegexParentTag(){
+        return "/[^/]+/\\.\\.";
+    }
 
     @Override
     public char getSeparator() {

@@ -154,6 +154,25 @@ public final class String implements Comparable<String>, CharSequence {
         System.arraycopy(value, offset, this.value, 0, count);
     }
 
+    public String(int[] val, int offset, int count) {
+        if (offset < 0) {
+            throw new StringIndexOutOfBoundsException(offset);
+        }
+        if (count < 0) {
+            throw new StringIndexOutOfBoundsException(count);
+        }
+        // Note: offset or count might be near -1>>>1.
+        if (offset > value.length - count) {
+            throw new StringIndexOutOfBoundsException(offset + count);
+        }
+
+        this.value = new char[count];
+        this.count = count;
+        for (int i = 0; i < count; i++) {
+            value[i] = (char) val[offset + i];
+        }
+    }
+
     /**
      * Construct a new <code>String</code> by converting the specified subarray
      * of bytes using the specified character encoding. The length of the new
@@ -1386,8 +1405,6 @@ public final class String implements Comparable<String>, CharSequence {
 //        result[result.length - 1] = last;
 //        return result;
 //    }
-
-
     public String[] split(String regex) {
         return split(regex, 0);
     }
@@ -1395,6 +1412,7 @@ public final class String implements Comparable<String>, CharSequence {
     public String[] split(String regex, int limit) {
         return Pattern.compile(regex).split(this, limit);
     }
+
     @Override
     public CharSequence subSequence(int start, int end) {
         return substring(start, end);
@@ -1412,16 +1430,19 @@ public final class String implements Comparable<String>, CharSequence {
         return Pattern.compile(regex).matcher(this).replaceAll(replacement);
     }
 
-  public static String format(String fmt, Object... args) {
-    final Formatter formatter = new Formatter();
-    final String result = formatter.format(fmt, args).toString();
-    formatter.close();
-    return result;
-  }
-  
-  
-  public int codePointAt(int pos){
-      return charAt(pos);
-  }
-  
+    public static String format(String fmt, Object... args) {
+        final Formatter formatter = new Formatter();
+        final String result = formatter.format(fmt, args).toString();
+        formatter.close();
+        return result;
+    }
+
+    public int codePointAt(int pos) {
+        return charAt(pos);
+    }
+
+    public boolean isEmpty() {
+        return count == 0;
+    }
+
 }
