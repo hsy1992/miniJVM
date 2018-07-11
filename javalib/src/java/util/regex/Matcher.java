@@ -471,6 +471,7 @@ public class Matcher implements MatchResult {
         while (find()) {
             int start = start();
             sb.append(tc, index, start);
+            sb.append(replacement);
             index = end();
         }
         sb.append(tc, index, tc.length());
