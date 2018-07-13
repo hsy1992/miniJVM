@@ -571,7 +571,7 @@ s32 sys_properties_load(ClassLoader *loader) {
 #elif __JVM_OS_MINGW__ || __JVM_OS_CYGWIN__ || __JVM_OS_VS__
     sys_properties_set_c("os.name","Windows");
     sys_properties_set_c("path.separator",";");
-    sys_properties_set_c("file.separator","\");
+    sys_properties_set_c("file.separator","\\");
 #endif
 
 
