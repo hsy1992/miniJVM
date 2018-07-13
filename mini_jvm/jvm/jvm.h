@@ -18,6 +18,7 @@
 #include "../utils/arraylist.h"
 #include "../utils/pairlist.h"
 #include "../utils/bytebuf.h"
+#include "../utils/hashset.h"
 
 #ifdef __cplusplus
 extern "C" {
@@ -307,7 +308,6 @@ extern s32 jvm_init_flag;
 
 extern ClassLoader *sys_classloader;
 
-extern ArrayList *obj_cache;
 extern u8 java_debug;
 extern JniEnv jnienv;
 
@@ -353,6 +353,8 @@ typedef struct _MemoryBlock {
 struct _ClassLoader {
     ArrayList *classpath;
     Hashtable *classes;
+
+    Hashtable *table_jstring_const;
 
     //
     spinlock_t lock;

@@ -9,9 +9,7 @@
    details. */
 package java.util.logging;
 
-import java.lang.reflect.Method;
 import java.util.ArrayList;
-import java.util.List;
 
 public class Logger {
 
@@ -98,6 +96,9 @@ public class Logger {
     }
 
     public void log(Level level, String message, Object[] para, Throwable exception) {
+        if (!isLoggable(level)) {
+            return;
+        }
         String s = exception == null ? "" : exception.getCodeStack();
         System.out.println("[" + Level.class + "]" + (message == null ? "" : message) + "\n" + s);
     }
@@ -143,30 +144,21 @@ public class Logger {
     }
 
     public void logp(Level level, String sourceClass, String sourceMethod, String msg) {
-        if (!isLoggable(level)) {
-            return;
-        }
         log(level, sourceClass + "." + sourceMethod + "()\n" + msg, null, null);
     }
 
     public void logp(Level level, String sourceClass, String sourceMethod, String msg, Throwable thrown) {
-        if (!isLoggable(level)) {
-            return;
-        }
+
         log(level, sourceClass + "." + sourceMethod + "()\n" + msg, thrown);
     }
 
     public void logp(Level level, String sourceClass, String sourceMethod, String msg, Object para) {
-        if (!isLoggable(level)) {
-            return;
-        }
+
         log(level, sourceClass + "." + sourceMethod + "()\n" + msg + "\n" + para, null, null);
     }
 
     public void logp(Level level, String sourceClass, String sourceMethod, String msg, Object[] para) {
-        if (!isLoggable(level)) {
-            return;
-        }
+
         log(level, sourceClass + "." + sourceMethod + "()\n" + msg + "\n", para, null);
     }
 

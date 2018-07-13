@@ -225,7 +225,7 @@ s32 threadlist_count_none_daemon() {
     for (i = 0; i < thread_list->length; i++) {
         Runtime *r = (Runtime *) arraylist_get_value_unsafe(thread_list, i);
         Instance *ins = r->threadInfo->jthread;
-        s32 daemon = jthread_get_daemon_value(ins,r);
+        s32 daemon = jthread_get_daemon_value(ins, r);
         if (!daemon) {
             count++;
         }

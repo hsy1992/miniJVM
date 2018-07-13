@@ -8,6 +8,8 @@ package java.lang;
 import java.io.UnsupportedEncodingException;
 import com.sun.cldc.i18n.*;
 import java.util.Formatter;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.regex.Pattern;
 
 /**
@@ -83,6 +85,8 @@ public final class String implements Comparable<String>, CharSequence {
      * The count is the number of characters in the String.
      */
     private int count;
+
+    private static Map<String, String> internMap = new HashMap<>();
 
     /**
      * Initializes a newly created <code>String</code> object so that it
@@ -1367,7 +1371,25 @@ public final class String implements Comparable<String>, CharSequence {
      * guaranteed to be from a pool of unique strings.
      * @since CLDC 1.1
      */
-    public native String intern();
+    public String intern() {
+        String s = intern0();
+        if (s == null) {
+            s = internMap.get(this);
+        }
+        if (s == null) {
+            String is = new String(this);
+            internMap.put(is, is);
+            s = this;
+        }
+        return s;
+    }
+
+    /**
+     * find string in constant pool
+     *
+     * @return
+     */
+    public native String intern0();
 
 //    public String[] split(String splitor) {
 //        return split(splitor, 0);

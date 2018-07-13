@@ -768,15 +768,23 @@ s32 java_lang_String_indexOfFrom(Runtime *runtime, JClass *clazz) {
     return 0;
 }
 
-s32 java_lang_String_intern(Runtime *runtime, JClass *clazz) {
+s32 java_lang_String_intern0(Runtime *runtime, JClass *clazz) {
     RuntimeStack *stack = runtime->stack;
     Instance *jstr = (Instance *) localvar_getRefer(runtime->localvar, 0);
+    if (jstr) {
+        Utf8String *ustr = utf8_create();
+        jstring_2_utf8(jstr, ustr);
+        Instance *in_jstr = (Instance *) hashtable_get(sys_classloader->table_jstring_const, ustr);
+        push_ref(stack, (__refer) in_jstr);
+        utf8_destory(ustr);
+    } else {
+        push_ref(stack, NULL);
+    }
 
 #if _JVM_DEBUG_BYTECODE_DETAIL > 5
     invoke_deepth(runtime);
     jvm_printf("java_lang_String_intern \n");
 #endif
-    push_ref(stack, (__refer) jstr);
     return 0;
 }
 
@@ -1278,7 +1286,7 @@ static java_native_method method_table[] = {
         {"java/lang/Class",                     "isInterface",         "()Z",                                                      java_lang_Class_isInterface},
         {"java/lang/Class",                     "isArray",             "()Z",                                                      java_lang_Class_isArray},
         {"java/lang/Class",                     "isPrimitive",         "()Z",                                                      java_lang_Class_isPrimitive},
-        {"java/lang/Class",                     "getName0",             "()Ljava/lang/String;",                                     java_lang_Class_getName0},
+        {"java/lang/Class",                     "getName0",            "()Ljava/lang/String;",                                     java_lang_Class_getName0},
         {"java/lang/Class",                     "getSuperclass",       "()Ljava/lang/Class;",                                      java_lang_Class_getSuperclass},
         {"java/lang/Class",                     "getPrimitiveClass",   "(Ljava/lang/String;)Ljava/lang/Class;",                    java_lang_Class_getPrimitiveClass},
         {"java/lang/Class",                     "getComponentType",    "()Ljava/lang/Class;",                                      java_lang_Class_getComponentType},
@@ -1316,7 +1324,7 @@ static java_native_method method_table[] = {
         {"java/lang/String",                    "equals",              "(Ljava/lang/Object;)Z",                                    java_lang_String_equals},
         {"java/lang/String",                    "indexOf",             "(I)I",                                                     java_lang_String_indexOf},
         {"java/lang/String",                    "indexOf",             "(II)I",                                                    java_lang_String_indexOfFrom},
-        {"java/lang/String",                    "intern",              "()Ljava/lang/String;",                                     java_lang_String_intern},
+        {"java/lang/String",                    "intern0",              "()Ljava/lang/String;",                                     java_lang_String_intern0},
         {"java/lang/System",                    "arraycopy",           "(Ljava/lang/Object;ILjava/lang/Object;II)V",               java_lang_System_arraycopy},
         {"java/lang/System",                    "doubleToString",      "(D)Ljava/lang/String;",                                    java_lang_System_doubleToString},
         {"java/lang/System",                    "currentTimeMillis",   "()J",                                                      java_lang_System_currentTimeMillis},

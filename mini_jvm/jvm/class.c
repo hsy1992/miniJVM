@@ -254,8 +254,12 @@ void class_clinit(JClass *clazz, Runtime *runtime) {
         for (i = 0, len = strlist->length; i < len; i++) {
             ConstantStringRef *strRef = arraylist_get_value_unsafe(strlist, i);
             ConstantUTF8 *cutf = class_get_constant_utf8(clazz, strRef->stringIndex);
-            Instance *jstr = jstring_create(cutf->utfstr, runtime);
-            gc_refer_hold(jstr);
+            Instance *jstr = hashtable_get(sys_classloader->table_jstring_const, cutf->utfstr);
+            if (!jstr) {
+                jstr = jstring_create(cutf->utfstr, runtime);
+                hashtable_put(sys_classloader->table_jstring_const, cutf->utfstr, jstr);
+                gc_refer_hold(jstr);
+            }
             cutf->jstr = jstr;
         }
 

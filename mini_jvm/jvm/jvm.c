@@ -130,6 +130,9 @@ ClassLoader *classloader_create(c8 *path) {
     utf8_destory(g_classpath);
     //创建类容器
     class_loader->classes = hashtable_create(UNICODE_STR_HASH_FUNC, UNICODE_STR_EQUALS_FUNC);
+
+    //创建jstring 相关容器
+    class_loader->table_jstring_const = hashtable_create(UNICODE_STR_HASH_FUNC, UNICODE_STR_EQUALS_FUNC);
     return class_loader;
 }
 
@@ -148,6 +151,9 @@ void classloader_destory(ClassLoader *class_loader) {
     }
     arraylist_destory(class_loader->classpath);
     hashtable_destory(class_loader->classes);
+
+    hashtable_destory(class_loader->table_jstring_const);
+
     class_loader->classes = NULL;
     spin_destroy(&class_loader->lock);
     jvm_free(class_loader);
@@ -201,6 +207,8 @@ void jvm_init(c8 *p_classpath, StaticLibRegFunc regFunc) {
 
 
     sys_classloader = classloader_create(p_classpath);
+
+
 
     //装入系统属性
     sys_properties_load(sys_classloader);
