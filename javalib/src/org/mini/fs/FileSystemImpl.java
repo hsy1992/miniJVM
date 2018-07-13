@@ -207,4 +207,16 @@ abstract public class FileSystemImpl extends org.mini.fs.FileSystem {
         }
         return null;
     }
+    
+    
+    @Override
+    public char getSeparator() {
+        return System.getProperty("file.separator").charAt(0);
+    }
+
+    @Override
+    public char getPathSeparator() {
+        return System.getProperty("path.separator").charAt(0);
+    }
+
 }

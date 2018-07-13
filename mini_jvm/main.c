@@ -89,11 +89,11 @@ int main(int argc, char **argv) {
 
         classpath = "../lib/minijvm_rt.jar;../lib/minijvm_test.jar;./";
 //        main_name = "test/Foo1";
-        main_name = "test/Foo2";
+//        main_name = "test/Foo2";
 //        main_name = "test/Foo3";
 //        main_name = "test/MultiThread";
 //        main_name = "test/ExecuteSpeed";
-//        main_name = "test/TestFile";
+        main_name = "test/TestFile";
 //        main_name = "test/HttpServer";
 //        main_name = "test/BpDeepTest";
 //        main_name = "test/ReflectTest";
@@ -101,11 +101,9 @@ int main(int argc, char **argv) {
 
 
 
-        classpath = "../lib/minijvm_rt.jar;../lib/janino.jar;../lib/commons-compiler.jar;../lib/ant-1.7,1.jar";
-        main_name = "org.codehaus.janino.Compiler";
-        arraylist_push_back(java_para,"BpDeepTest.java");
-//        arraylist_push_back(java_para,"Hello.java");
-//        arraylist_push_back(java_para,"Foo1.java");
+//        classpath = "../lib/minijvm_rt.jar;../lib/janino.jar;../lib/commons-compiler.jar;../lib/ant-1.7,1.jar";
+//        main_name = "org.codehaus.janino.Compiler";
+//        arraylist_push_back(java_para,"../res/BpDeepTest.java");
 
 
 //        classpath = "../lib/pup_vm_java.jar;./";

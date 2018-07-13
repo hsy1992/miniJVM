@@ -508,6 +508,11 @@ void printDumpOfClasses() {
     }
 }
 
+void sys_properties_set_c(c8 *key, c8 *val) {
+    Utf8String *ukey = utf8_create_c(key);
+    Utf8String *uval = utf8_create_c(val);
+    hashtable_put(sys_prop, ukey, uval);
+}
 
 s32 sys_properties_load(ClassLoader *loader) {
     sys_prop = hashtable_create(UNICODE_STR_HASH_FUNC, UNICODE_STR_EQUALS_FUNC);
@@ -555,16 +560,21 @@ s32 sys_properties_load(ClassLoader *loader) {
     }
 
     //modify os para
-    Utf8String *key = utf8_create_c("os.name");
-    Utf8String *val = utf8_create();
 #if __JVM_OS_MAC__
-    utf8_append_c(val, "Mac");
-#elif __JVM_OS_MINGW__ || __JVM_OS_CYGWIN__ || __JVM_OS_VS__
-    utf8_append_c(val,"Windows");
+    sys_properties_set_c("os.name", "Mac");
+    sys_properties_set_c("path.separator", ":");
+    sys_properties_set_c("file.separator", "/");
 #elif __JVM_OS_LINUX__
-    utf8_append_c(val,"Linux");
+    sys_properties_set_c("os.name","Linux");
+    sys_properties_set_c("path.separator",":");
+    sys_properties_set_c("file.separator","/");
+#elif __JVM_OS_MINGW__ || __JVM_OS_CYGWIN__ || __JVM_OS_VS__
+    sys_properties_set_c("os.name","Windows");
+    sys_properties_set_c("path.separator",";");
+    sys_properties_set_c("file.separator","\");
 #endif
-    hashtable_put(sys_prop, key, val);
+
+
     return 0;
 }
 

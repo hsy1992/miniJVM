@@ -28,19 +28,9 @@ public class FileSystemWin extends FileSystemImpl {
         }
         return false;
     }
-    
-    public String getRegexParentTag(){
+
+    public String getRegexParentTag() {
         return "\\\\[^\\\\]+\\\\\\.\\.";
-    }
-
-    @Override
-    public char getSeparator() {
-        return '\\';
-    }
-
-    @Override
-    public char getPathSeparator() {
-        return ';';
     }
 
     @Override
