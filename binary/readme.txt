@@ -1,5 +1,6 @@
   It's the binary release here.
   
   mini_jvm only need 2 files :
-  mini_jvm.exe(win) mini_jvm(mac/linux) 
-  minijvm_rt.jar 
+  binary:  mini_jvm.exe or mini_jvm   
+  jar:     minijvm_rt.jar   
+  All other are not necessary files. 
