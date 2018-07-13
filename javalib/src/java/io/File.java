@@ -174,7 +174,7 @@ public class File implements Comparable {
         if (pathname == null) {
             throw new NullPointerException();
         }
-        this.path = pathname;//fs.normalize(pathname);
+        this.path = fs.normalize(pathname);
         this.prefixLength = fs.prefixLength(this.path);
     }
 
