@@ -11,9 +11,6 @@ package org.mini.fs;
 
 import java.io.File;
 import java.io.IOException;
-import org.mini.fs.FileSystemPosix;
-import org.mini.fs.FileSystemWin;
-import org.mini.fs.InnerFile;
 
 /**
  * Package-private abstract class for the local filesystem abstraction.
@@ -26,7 +23,11 @@ public abstract class FileSystem {
      */
 //    public static native FileSystem getFileSystem();
     public static FileSystem getFileSystem() {
-        return InnerFile.getOS() == 0 ? new FileSystemPosix() : new FileSystemWin();
+        String osname = System.getProperty("os.name");
+        if (osname == null) {
+            osname = "Linux";
+        }
+        return osname.contains("Windows") ? new FileSystemWin() : new FileSystemPosix();
     }
 
 
@@ -197,6 +198,5 @@ public abstract class FileSystem {
      */
     public abstract int hashCode(File f);
 
-    
     public abstract File getTempDir();
 }
