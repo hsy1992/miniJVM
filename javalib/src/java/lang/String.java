@@ -1467,4 +1467,8 @@ public final class String implements Comparable<String>, CharSequence {
         return count == 0;
     }
 
+    public boolean contains(CharSequence s) {
+        return indexOf(s.toString()) >= 0;
+    }
+
 }

@@ -553,6 +553,18 @@ s32 sys_properties_load(ClassLoader *loader) {
         utf8_destory(line);
         utf8_destory(ustr);
     }
+
+    //modify os para
+    Utf8String *key = utf8_create_c("os.name");
+    Utf8String *val = utf8_create();
+#if __JVM_OS_MAC__
+    utf8_append_c(val, "Mac");
+#elif __JVM_OS_MINGW__ || __JVM_OS_CYGWIN__ || __JVM_OS_VS__
+    utf8_append_c(val,"Windows");
+#elif __JVM_OS_LINUX__
+    utf8_append_c(val,"Linux");
+#endif
+    hashtable_put(sys_prop, key, val);
     return 0;
 }
 

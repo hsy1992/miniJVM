@@ -103,7 +103,10 @@ public class GForm extends GContainer implements Runnable {
             System.out.println("glfw init error.");
             System.exit(1);
         }
-        glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
+        String osname = System.getProperty("os.name");
+        if (osname != null && osname.contains("Mac")) {
+            glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
+        }
         glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
         glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
         glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
@@ -256,12 +259,11 @@ public class GForm extends GContainer implements Runnable {
                     } else {
                         GForm.this.clickEvent(button, mouseX, mouseY);
                     }
-                } else { //press event
-                    if (focus != null) {
-                        focus.mouseButtonEvent(button, pressed, mouseX, mouseY);
-                    } else {
-                        GForm.this.mouseButtonEvent(button, pressed, mouseX, mouseY);
-                    }
+                } else //press event
+                if (focus != null) {
+                    focus.mouseButtonEvent(button, pressed, mouseX, mouseY);
+                } else {
+                    GForm.this.mouseButtonEvent(button, pressed, mouseX, mouseY);
                 }
                 this.button = button;
                 mouseLastPressed = cur;
