@@ -1,6 +1,6 @@
 
-#ifndef PUP_JVM_H
-#define PUP_JVM_H
+#ifndef G_JVM_H
+#define G_JVM_H
 
 
 
