@@ -6,7 +6,7 @@
  * Use is subject to license terms.
  */
 
-package javax.mini.net;
+package javax.cldc.io;
 
 import java.util.Hashtable;
 

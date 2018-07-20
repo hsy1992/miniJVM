@@ -5,7 +5,7 @@
  * PROPRIETARY/CONFIDENTIAL
  * Use is subject to license terms.
  */
-package javax.mini.net.protocol.http;
+package org.mini.net.http;
 
 /**
  * A class representing a http connection. An http connection consists of stream
@@ -50,13 +50,13 @@ import java.io.DataOutputStream;
 import javax.cldc.io.ConnectionNotFoundException;
 import javax.cldc.io.Connector;
 import javax.cldc.io.StreamConnection;
-import javax.mini.net.ConnectionBaseAdapter;
-import javax.mini.net.DateParser;
-import javax.mini.net.HttpConnection;
-import static javax.mini.net.HttpConnection.GET;
-import static javax.mini.net.HttpConnection.HEAD;
-import static javax.mini.net.HttpConnection.POST;
-import javax.mini.net.HttpUrl;
+import javax.cldc.io.ConnectionBaseAdapter;
+import javax.cldc.io.DateParser;
+import javax.cldc.io.HttpConnection;
+import static javax.cldc.io.HttpConnection.GET;
+import static javax.cldc.io.HttpConnection.HEAD;
+import static javax.cldc.io.HttpConnection.POST;
+import javax.cldc.io.HttpUrl;
 
 /**
  * This class implements the necessary functionality for an HTTP connection.
@@ -1839,11 +1839,11 @@ public class Protocol extends ConnectionBaseAdapter
      * @exception IOException is thrown if the connection cannot be opened
      */
     protected StreamConnection connect() throws IOException {
-        javax.mini.net.protocol.socket.Protocol conn;
+        org.mini.net.socket.Protocol conn;
 
         verifyPermissionCheck();
 
-        conn = new javax.mini.net.protocol.socket.Protocol();
+        conn = new org.mini.net.socket.Protocol();
 
         if (http_proxy == null) {
             conn.openPrim("//" + hostAndPort, Connector.READ_WRITE, true);

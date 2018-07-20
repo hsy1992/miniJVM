@@ -356,5 +356,7 @@ public class Object {
     }
 
     protected native Object clone();
+    
+    protected void finalize() throws Throwable { }
 }
 

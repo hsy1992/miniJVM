@@ -31,18 +31,19 @@ void jdwp_put_client(ArrayList *clients, JdwpClient *client) {
 
 s32 jdwp_thread_listener(void *para) {
     JdwpServer *srv = (JdwpServer *) para;
-    s32 srvsock = srv_bind(srv->ip, srv->port);
+    s32 srvsock = sock_open();
+    sock_bind(srvsock, srv->ip, srv->port);
     srv->srvsock = srvsock;
-    srv_listen(srvsock);
+    sock_listen(srvsock);
     srv->mode |= JDWP_MODE_LISTEN;
 
     while (!srv->exit) {
-        s32 sockfd = srv_accept(srvsock);
+        s32 sockfd = sock_accept(srvsock);
         if (sockfd == -1) {
             srv->exit = 1;
             break;
         }
-        sock_option(sockfd, SOCK_OP_TYPE_NON_BLOCK, SOCK_OP_VAL_NON_BLOCK);
+        sock_option(sockfd, SOCK_OP_TYPE_NON_BLOCK, SOCK_OP_VAL_NON_BLOCK, 0);
         JdwpClient *client = jdwp_client_create(sockfd);
         jdwp_put_client(srv->clients, client);
     }
@@ -372,9 +373,11 @@ void jdwppacket_set_err(JdwpPacket *packet, u16 err) {
 
 s32 jdwp_read_fully(JdwpClient *client, c8 *buf, s32 need) {
     s32 got = 0, len = 0;
-    while ((len = sock_recv(client->sockfd, buf + got, need - got)) != -1) {
+    while (len != -1) {
         got += len;
         if (got == need)break;
+        len = sock_recv(client->sockfd, buf + got, need - got);
+        if (len == -2)len = 0;
     }
     if (len == -1)return len;
     return got;
@@ -382,9 +385,11 @@ s32 jdwp_read_fully(JdwpClient *client, c8 *buf, s32 need) {
 
 s32 jdwp_write_fully(JdwpClient *client, c8 *buf, s32 need) {
     s32 sent = 0, len = 0;
-    while ((len = sock_send(client->sockfd, buf + sent, need - sent)) != -1) {
+    while (len != -1) {
         sent += len;
         if (sent == need)break;
+        len = sock_send(client->sockfd, buf + sent, need - sent);
+        if (len == -2)len = 0;
     }
     if (len == -1)return len;
     return sent;
@@ -403,6 +408,7 @@ JdwpPacket *jdwp_readpacket(JdwpClient *client) {
                 s32 len = sock_recv(client->sockfd, client->rcvp->data + client->rcvp->_rcv_len,
                                     client->rcvp->_req_len - client->rcvp->_rcv_len);
                 if (len == -1)client->closed = 1;
+                if (len == -2)len = 0;
                 client->rcvp->_rcv_len += len;
                 if (client->rcvp->_rcv_len == client->rcvp->_req_len) {
                     client->rcvp->_4len = 0;
@@ -414,6 +420,7 @@ JdwpPacket *jdwp_readpacket(JdwpClient *client) {
                 s32 len = sock_recv(client->sockfd, client->rcvp->data + 4 + client->rcvp->_rcv_len,
                                     client->rcvp->_req_len - client->rcvp->_rcv_len);
                 if (len == -1)client->closed = 1;
+                if (len == -2)len = 0;
                 client->rcvp->_rcv_len += len;
                 if (client->rcvp->_rcv_len == client->rcvp->_req_len) {
                     JdwpPacket *p = client->rcvp;
@@ -1253,6 +1260,7 @@ s32 jdwp_client_process(JdwpClient *client, Runtime *runtime) {
     while ((req = jdwp_readpacket(client)) != NULL) {
 
         u16 cmd = jdwppacket_get_cmd_err(req);
+        //jvm_printf("jdwp receiv cmd: %x\n", cmd);
         JdwpPacket *res = jdwppacket_create();
         jdwppacket_set_flag(res, JDWP_PACKET_RESPONSE);
         jdwppacket_set_id(res, jdwppacket_get_id(req));

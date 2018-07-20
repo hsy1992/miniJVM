@@ -3,14 +3,16 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package javax.mini.net;
+package javax.cldc.io;
 
-import javax.mini.net.Socket;
 import java.io.IOException;
 import javax.cldc.io.Connection;
+import javax.cldc.io.NBSocket;
 
 /**
  *
+ * None block serversocket
+ * 
  * <pre>
  *
  *   void t12() {
@@ -70,7 +72,7 @@ import javax.cldc.io.Connection;
  *
  * @author gust
  */
-public interface ServerSocket extends Connection {
+public interface NBServerSocket extends Connection {
 
     /**
      * 开始监听
@@ -85,5 +87,5 @@ public interface ServerSocket extends Connection {
      * @return
      * @throws IOException
      */
-    Socket accept() throws IOException;
+    NBSocket accept() throws IOException;
 }

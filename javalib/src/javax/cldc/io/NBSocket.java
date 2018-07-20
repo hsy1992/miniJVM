@@ -3,14 +3,13 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package javax.mini.net;
+package javax.cldc.io;
 
 import java.io.IOException;
-import javax.cldc.io.Connection;
 
 /**
  * block and non block socket, setoption() to set it attribute  <code>
-*    void t13() {
+ *    void t13() {
  *        try {
  *            Socket conn = (Socket) Connector.open("socket://baidu.com:80");
  *            conn.setOption(Socket.OP_TYPE_NON_BLOCK, Socket.OP_VAL_NON_BLOCK);
@@ -33,17 +32,7 @@ import javax.cldc.io.Connection;
  *
  * @author gust
  */
-public interface Socket extends Connection {
-
-    static final byte OP_TYPE_NON_BLOCK = 0;
-    static final byte OP_TYPE_REUSEADDR = 1;
-    static final byte OP_TYPE_RCVBUF = 2;
-    static final byte OP_TYPE_SNDBUF = 3;
-
-    static final byte OP_VAL_NON_BLOCK = 1;
-    static final byte OP_VAL_BLOCK = 0;
-    static final byte OP_VAL_NON_REUSEADDR = 1;
-    static final byte OP_VAL_REUSEADDR = 0;
+public interface NBSocket extends StreamConnection {
 
     /**
      * 非阻塞写，返回写长度
@@ -74,6 +63,7 @@ public interface Socket extends Connection {
      *
      * @param type
      * @param val
+     * @param val2
      */
-    void setOption(int type, int val);
+    void setOption(int type, int val, int val2);
 }

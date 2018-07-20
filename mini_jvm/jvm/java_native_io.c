@@ -59,7 +59,7 @@ typedef int socklen_t;
 
 
 //=================================  socket  ====================================
-s32 sock_option(s32 sockfd, s32 opType, s32 opValue) {
+s32 sock_option(s32 sockfd, s32 opType, s32 opValue, s32 opValue2) {
     s32 ret = 0;
     switch (opType) {
         case SOCK_OP_TYPE_NON_BLOCK: {//阻塞设置
@@ -88,7 +88,7 @@ s32 sock_option(s32 sockfd, s32 opType, s32 opValue) {
                 s32 flags = fcntl(sockfd, F_GETFL, 0);
                 ret = fcntl(sockfd, F_SETFL, flags | O_NONBLOCK);
                 if (ret) {
-                    err("set socket non_block error.\n");
+                    //err("set socket non_block error.\n");
                     //printf("errno.%02d is: %s\n", errno, strerror(errno));
                 }
             } else {
@@ -103,13 +103,111 @@ s32 sock_option(s32 sockfd, s32 opType, s32 opValue) {
             break;
         }
         case SOCK_OP_TYPE_RCVBUF: {//缓冲区设置
-            int nRecvBuf = opValue;//设置为 opValue K
-            ret = setsockopt(sockfd, SOL_SOCKET, SO_RCVBUF, (const char *) &nRecvBuf, sizeof(int));
+            int nVal = opValue;//设置为 opValue K
+            ret = setsockopt(sockfd, SOL_SOCKET, SO_RCVBUF, (const char *) &nVal, sizeof(nVal));
             break;
         }
         case SOCK_OP_TYPE_SNDBUF: {//缓冲区设置
-            s32 nRecvBuf = opValue;//设置为 opValue K
-            ret = setsockopt(sockfd, SOL_SOCKET, SO_SNDBUF, (const char *) &nRecvBuf, sizeof(int));
+            s32 nVal = opValue;//设置为 opValue K
+            ret = setsockopt(sockfd, SOL_SOCKET, SO_SNDBUF, (const char *) &nVal, sizeof(nVal));
+            break;
+        }
+        case SOCK_OP_TYPE_TIMEOUT: {
+#if __JVM_OS_MINGW__ || __JVM_OS_CYGWIN__ || __JVM_OS_VS__
+            s32 nTime = opValue;
+            ret = setsockopt(sockfd, SOL_SOCKET, SO_RCVTIMEO, (const char *) &nTime, sizeof(nTime));
+#else
+            struct timeval timeout = {opValue / 1000, (opValue % 1000) * 1000};
+            ret = setsockopt(sockfd, SOL_SOCKET, SO_RCVTIMEO, &timeout, sizeof(timeout));
+#endif
+            break;
+        }
+        case SOCK_OP_TYPE_LINGER: {
+            struct {
+                u16 l_onoff;
+                u16 l_linger;
+            } m_sLinger;
+            //(在closesocket()调用,但是还有数据没发送完毕的时候容许逗留)
+            // 如果m_sLinger.l_onoff=0;则功能和2.)作用相同;
+            m_sLinger.l_onoff = opValue;
+            m_sLinger.l_linger = opValue2;//(容许逗留的时间为5秒)
+            ret = setsockopt(sockfd, SOL_SOCKET, SO_RCVTIMEO, (const char *) &m_sLinger, sizeof(m_sLinger));
+            break;
+        }
+        case SOCK_OP_TYPE_KEEPALIVE: {
+            s32 val = opValue;
+            ret = setsockopt(sockfd, SOL_SOCKET, SO_RCVTIMEO, (const char *) &val, sizeof(val));
+            break;
+        }
+    }
+    return ret;
+}
+
+s32 sock_get_option(s32 sockfd, s32 opType) {
+    s32 ret = 0;
+    socklen_t len;
+
+    switch (opType) {
+        case SOCK_OP_TYPE_NON_BLOCK: {//阻塞设置
+#if __JVM_OS_MINGW__ || __JVM_OS_CYGWIN__ || __JVM_OS_VS__
+            u_long flags = 1;
+            ret = NO_ERROR == ioctlsocket(socket, FIONBIO, &flags);
+#else
+            int flags;
+            if ((flags = fcntl(sockfd, F_GETFL, NULL)) < 0) {
+                ret = -1;
+            } else {
+                ret = (flags & O_NONBLOCK);
+            }
+#endif
+            break;
+        }
+        case SOCK_OP_TYPE_REUSEADDR: {//
+            len = sizeof(ret);
+            getsockopt(sockfd, SOL_SOCKET, SO_REUSEADDR, (void *) &ret, &len);
+
+            break;
+        }
+        case SOCK_OP_TYPE_RCVBUF: {
+            len = sizeof(ret);
+            getsockopt(sockfd, SOL_SOCKET, SO_RCVBUF, (void *) &ret, &len);
+            break;
+        }
+        case SOCK_OP_TYPE_SNDBUF: {//缓冲区设置
+            len = sizeof(ret);
+            getsockopt(sockfd, SOL_SOCKET, SO_SNDBUF, (void *) &ret, &len);
+            break;
+        }
+        case SOCK_OP_TYPE_TIMEOUT: {
+
+#if __JVM_OS_MINGW__ || __JVM_OS_CYGWIN__ || __JVM_OS_VS__
+            len = sizeof(ret);
+            getsockopt(sockfd, SOL_SOCKET, SO_RCVTIMEO, (void *) &ret, &len);
+#else
+            struct timeval timeout = {0, 0};
+            len = sizeof(timeout);
+            getsockopt(sockfd, SOL_SOCKET, SO_RCVTIMEO, &timeout, &len);
+            ret = timeout.tv_sec * 1000 + timeout.tv_usec / 1000;
+#endif
+            break;
+        }
+        case SOCK_OP_TYPE_LINGER: {
+            struct {
+                u16 l_onoff;
+                u16 l_linger;
+            } m_sLinger;
+            //(在closesocket()调用,但是还有数据没发送完毕的时候容许逗留)
+            // 如果m_sLinger.l_onoff=0;则功能和2.)作用相同;
+            m_sLinger.l_onoff = 0;
+            m_sLinger.l_linger = 0;//(容许逗留的时间为5秒)
+            len = sizeof(m_sLinger);
+            getsockopt(sockfd, SOL_SOCKET, SO_RCVTIMEO, (void *) &m_sLinger, &len);
+            ret = *((s32 *) &m_sLinger);
+            break;
+        }
+        case SOCK_OP_TYPE_KEEPALIVE: {
+            len = sizeof(ret);
+            getsockopt(sockfd, SOL_SOCKET, SO_RCVTIMEO, (void *) &ret, &len);
             break;
         }
     }
@@ -126,11 +224,11 @@ s32 sock_recv(s32 sockfd, c8 *buf, s32 count) {
 #if __JVM_OS_VS__ || __JVM_OS_MINGW__ || __JVM_OS_CYGWIN__
         if (WSAEWOULDBLOCK == WSAGetLastError()) {//但是如果是非阻塞端口，说明连接仍正常
             //jvm_printf("sc send error client time = %f ;\n", (f64)clock());
-            len = 0;
+            len = -2;
         }
 #else
         if (errno == EWOULDBLOCK || errno == EAGAIN) {
-            len = 0;
+            len = -2;
         }
 #endif
     }
@@ -147,11 +245,11 @@ s32 sock_send(s32 sockfd, c8 *buf, s32 count) {
 #if __JVM_OS_VS__ || __JVM_OS_MINGW__ || __JVM_OS_CYGWIN__
         if (WSAEWOULDBLOCK == WSAGetLastError()) {//但是如果是非阻塞端口，说明连接仍正常
             //jvm_printf("sc send error server time = %f ;\n", (f64)clock());
-            len = 0;
+            len = -2;
         }
 #else
         if (errno == EWOULDBLOCK || errno == EAGAIN) {
-            len = 0;
+            len = -2;
         }
 #endif
 
@@ -159,116 +257,107 @@ s32 sock_send(s32 sockfd, c8 *buf, s32 count) {
     return len;
 }
 
-s32 sock_open(Utf8String *ip, s32 port) {
+s32 sock_open() {
     s32 sockfd = -1;
 
 #if __JVM_OS_VS__ || __JVM_OS_MINGW__ || __JVM_OS_CYGWIN__
     WSADATA wsaData;
     WSAStartup(MAKEWORD(1, 1), &wsaData);
 #endif  /*  WIN32  */
-
-    struct hostent *host;
-    if ((host = gethostbyname(utf8_cstr(ip))) == NULL) { /* get the host info */
-        err("get host by name error: %s\n", strerror(errno));
-        sockfd = -1;
-    } else {
-
-        if ((sockfd = socket(AF_INET, SOCK_STREAM, IPPROTO_TCP)) == -1) {
-            err(strerror(errno));
-            err("socket init error: %s\n", strerror(errno));
-            sockfd = -1;
-        } else {
-            s32 x = 1;
-            if (setsockopt(sockfd, SOL_SOCKET, SO_REUSEADDR, (char *) &x, sizeof(x)) == -1) {
-                err("socket reuseaddr error: %s\n", strerror(errno));
-                sockfd = -1;
-            } else {
-                struct sockaddr_in sock_addr; /* connector's address information */
-                memset((char *) &sock_addr, 0, sizeof(sock_addr));
-                sock_addr.sin_family = AF_INET; /* host byte order */
-                sock_addr.sin_port = htons((u16) port); /* short, network byte order */
-#if __JVM_OS_MAC__ || __JVM_OS_LINUX__
-                sock_addr.sin_addr = *((struct in_addr *) host->h_addr_list[0]);
-#else
-                sock_addr.sin_addr = *((struct in_addr *) host->h_addr);
-#endif
-                memset(&(sock_addr.sin_zero), 0, sizeof((sock_addr.sin_zero))); /* zero the rest of the struct */
-                if (connect(sockfd, (struct sockaddr *) &sock_addr, sizeof(sock_addr)) == -1) {
-                    err("socket connect error: %s\n", strerror(errno));
-                    sockfd = -1;
-                }
-            }
-        }
+    if ((sockfd = socket(AF_INET, SOCK_STREAM, IPPROTO_TCP)) == -1) {
+        //err(strerror(errno));
+        //err("socket init error: %s\n", strerror(errno));
     }
     return sockfd;
 }
 
-//=================================  serversocket  ====================================
 
-s32 srv_bind(Utf8String *ip, u16 port) {
+s32 sock_connect(s32 sockfd, Utf8String *remote_ip, s32 remote_port) {
+    s32 ret = 0;
 
-    struct sockaddr_in server_addr;
-    s32 listenfd = -1;
-#if __JVM_OS_VS__ || __JVM_OS_MINGW__ || __JVM_OS_CYGWIN__
-    WSADATA wsadata;
-    if (WSAStartup(MAKEWORD(1, 1), &wsadata) == SOCKET_ERROR) {
-        err("Error creating serversocket: %s\n", strerror(errno));
-    }
-#endif
-
-    if ((listenfd = socket(AF_INET, SOCK_STREAM, 0)) < 0) {
-        err("Error opening serversocket: %s\n", strerror(errno));
-        listenfd = -1;
+    struct hostent *host;
+    if ((host = gethostbyname(utf8_cstr(remote_ip))) == NULL) { /* get the host info */
+        //err("get host by name error: %s\n", strerror(errno));
+        ret = -1;
     } else {
 
-        struct hostent *host;
 
-        memset((char *) &server_addr, 0, sizeof(server_addr));//清0
-        server_addr.sin_family = AF_INET;
-        server_addr.sin_port = htons(port);
-        if (ip->length) {//如果指定了ip
-            if ((host = gethostbyname(utf8_cstr(ip))) == NULL) { /* get the host info */
-                err("get host by name error: %s\n", strerror(errno));
-            }
-#if __JVM_OS_VS__ || __JVM_OS_MINGW__ || __JVM_OS_CYGWIN__
-            server_addr.sin_addr = *((struct in_addr *) host->h_addr);
-#else
-            //server_addr.sin_len = sizeof(struct sockaddr_in);
-            server_addr.sin_addr = *((struct in_addr *) host->h_addr_list[0]);
-#endif
+        s32 x = 1;
+        if (setsockopt(sockfd, SOL_SOCKET, SO_REUSEADDR, (char *) &x, sizeof(x)) == -1) {
+            //err("socket reuseaddr error: %s\n", strerror(errno));
+            ret = -1;
         } else {
-            server_addr.sin_addr.s_addr = htonl(INADDR_ANY);
-        }
-
-        s32 on = 1;
-        setsockopt(listenfd, SOL_SOCKET, SO_REUSEADDR, (char *) &on, sizeof(on));
-        if ((bind(listenfd, (struct sockaddr *) &server_addr, sizeof(server_addr))) < 0) {
-            err("Error binding serversocket: %s\n", strerror(errno));
-            closesocket(listenfd);
-            listenfd = -1;
+            struct sockaddr_in sock_addr; /* connector's address information */
+            memset((char *) &sock_addr, 0, sizeof(sock_addr));
+            sock_addr.sin_family = AF_INET; /* host byte order */
+            sock_addr.sin_port = htons((u16) remote_port); /* short, network byte order */
+#if __JVM_OS_MAC__ || __JVM_OS_LINUX__
+            sock_addr.sin_addr = *((struct in_addr *) host->h_addr_list[0]);
+#else
+            sock_addr.sin_addr = *((struct in_addr *) host->h_addr);
+#endif
+            memset(&(sock_addr.sin_zero), 0, sizeof((sock_addr.sin_zero))); /* zero the rest of the struct */
+            if (connect(sockfd, (struct sockaddr *) &sock_addr, sizeof(sock_addr)) == -1) {
+                //err("socket connect error: %s\n", strerror(errno));
+                ret = -1;
+            }
         }
     }
-    return listenfd;
+    return ret;
+}
+
+s32 sock_bind(s32 sockfd, Utf8String *local_ip, s32 local_port) {
+    s32 ret = 0;
+    struct sockaddr_in addr;
+
+    struct hostent *host;
+
+    memset((char *) &addr, 0, sizeof(addr));//清0
+    addr.sin_family = AF_INET;
+    addr.sin_port = htons(local_port);
+    if (local_ip->length) {//如果指定了ip
+        if ((host = gethostbyname(utf8_cstr(local_ip))) == NULL) { /* get the host info */
+            //err("get host by name error: %s\n", strerror(errno));
+            ret = -1;
+        }
+#if __JVM_OS_VS__ || __JVM_OS_MINGW__ || __JVM_OS_CYGWIN__
+        server_addr.sin_addr = *((struct in_addr *) host->h_addr);
+#else
+        //server_addr.sin_len = sizeof(struct sockaddr_in);
+        addr.sin_addr = *((struct in_addr *) host->h_addr_list[0]);
+#endif
+    } else {
+        addr.sin_addr.s_addr = htonl(INADDR_ANY);
+    }
+
+    s32 on = 1;
+    setsockopt(sockfd, SOL_SOCKET, SO_REUSEADDR, (char *) &on, sizeof(on));
+    if ((bind(sockfd, (struct sockaddr *) &addr, sizeof(addr))) < 0) {
+        //err("Error binding serversocket: %s\n", strerror(errno));
+        closesocket(sockfd);
+        ret = -1;
+    }
+    return ret;
 }
 
 
-s32 srv_listen(s32 listenfd) {
+s32 sock_listen(s32 listenfd) {
     u16 MAX_LISTEN = 64;
     if ((listen(listenfd, MAX_LISTEN)) < 0) {
-        err("Error listening on serversocket: %s\n", strerror(errno));
+        //err("Error listening on serversocket: %s\n", strerror(errno));
         return -1;
     }
     return 0;
 }
 
-s32 srv_accept(s32 listenfd) {
+s32 sock_accept(s32 listenfd) {
     struct sockaddr_in clt_addr;
     memset(&clt_addr, 0, sizeof(clt_addr)); //清0
     s32 clt_addr_length = sizeof(clt_addr);
     s32 clt_socket_fd = accept(listenfd, (struct sockaddr *) &clt_addr, (socklen_t *) &clt_addr_length);
     if (clt_socket_fd == -1) {
         if (errno != EINTR) {
-            err("Error accepting on serversocket: %s\n", strerror(errno));
+            //err("Error accepting on serversocket: %s\n", strerror(errno));
         }
     }
 
@@ -280,15 +369,35 @@ s32 sock_close(s32 listenfd) {
         shutdown(listenfd, SHUT_RDWR);
         closesocket(listenfd);
 #if __JVM_OS_VS__ || __JVM_OS_MINGW__ || __JVM_OS_CYGWIN__
-        WSACancelBlockingCall();
-        WSACleanup();
+        //can not cleanup , maybe other socket is alive
+//        WSACancelBlockingCall();
+//        WSACleanup();
 #endif
     }
     return 0;
 }
 
 
-//=================================  native  ====================================
+s32 host_2_ip4(Utf8String *hostname) {
+    s32 addr;
+
+#if __JVM_OS_VS__ || __JVM_OS_MINGW__ || __JVM_OS_CYGWIN__
+    WSADATA wsaData;
+    WSAStartup(MAKEWORD(1, 1), &wsaData);
+#endif  /*  WIN32  */
+    struct hostent *host;
+    if ((host = gethostbyname(utf8_cstr(hostname))) == NULL) { /* get the host info */
+        //err("get host by name error: %s\n", strerror(errno));
+        addr = -1;
+    }
+#if __JVM_OS_MAC__ || __JVM_OS_LINUX__
+    addr = ((struct in_addr *) host->h_addr_list[0])->s_addr;
+#else
+    addr = ((struct in_addr *) host->h_addr)->s_addr;
+#endif
+    return addr;
+}
+
 
 s32 isDir(Utf8String *path) {
     struct stat buf;
@@ -312,28 +421,63 @@ Utf8String *getTmpDir() {
 #endif
     return tmps;
 }
+//=================================  native  ====================================
 
 
-s32 javax_mini_net_socket_Protocol_open0(Runtime *runtime, JClass *clazz) {
+s32 org_mini_net_SocketNative_open0(Runtime *runtime, JClass *clazz) {
     RuntimeStack *stack = runtime->stack;
-    Instance *jbyte_arr = (Instance *) localvar_getRefer(runtime->localvar, 0);
-    s32 port = localvar_getInt(runtime->localvar, 1);
-    s32 mode = localvar_getInt(runtime->localvar, 2);
-    Utf8String *ip = utf8_create_part_c(jbyte_arr->arr_body, 0, jbyte_arr->arr_length);
+
 
     jthread_block_enter(runtime);
-    s32 sockfd = sock_open(ip, port);
+    s32 sockfd = sock_open();
     jthread_block_exit(runtime);
-    utf8_destory(ip);
 #if _JVM_DEBUG_BYTECODE_DETAIL > 5
     invoke_deepth(runtime);
-    jvm_printf("javax_mini_net_socket_Protocol_open0  \n");
+    jvm_printf("org_mini_net_SocketNative_open0  \n");
 #endif
     push_int(stack, sockfd);
     return 0;
 }
 
-s32 javax_mini_net_socket_Protocol_readBuf(Runtime *runtime, JClass *clazz) {
+s32 org_mini_net_SocketNative_bind0(Runtime *runtime, JClass *clazz) {
+    RuntimeStack *stack = runtime->stack;
+    s32 sockfd = localvar_getInt(runtime->localvar, 0);
+    Instance *jbyte_arr = (Instance *) localvar_getRefer(runtime->localvar, 1);
+    s32 port = localvar_getInt(runtime->localvar, 2);
+    Utf8String *ip = utf8_create_part_c(jbyte_arr->arr_body, 0, jbyte_arr->arr_length);
+
+    jthread_block_enter(runtime);
+    s32 ret = sock_bind(sockfd, ip, port);
+    jthread_block_exit(runtime);
+    utf8_destory(ip);
+#if _JVM_DEBUG_BYTECODE_DETAIL > 5
+    invoke_deepth(runtime);
+    jvm_printf("org_mini_net_SocketNative_open0  \n");
+#endif
+    push_int(stack, ret);
+    return 0;
+}
+
+s32 org_mini_net_SocketNative_connect0(Runtime *runtime, JClass *clazz) {
+    RuntimeStack *stack = runtime->stack;
+    s32 sockfd = localvar_getInt(runtime->localvar, 0);
+    Instance *jbyte_arr = (Instance *) localvar_getRefer(runtime->localvar, 1);
+    s32 port = localvar_getInt(runtime->localvar, 2);
+    Utf8String *ip = utf8_create_part_c(jbyte_arr->arr_body, 0, jbyte_arr->arr_length);
+
+    jthread_block_enter(runtime);
+    s32 ret = sock_connect(sockfd, ip, port);
+    jthread_block_exit(runtime);
+    utf8_destory(ip);
+#if _JVM_DEBUG_BYTECODE_DETAIL > 5
+    invoke_deepth(runtime);
+    jvm_printf("org_mini_net_SocketNative_open0  \n");
+#endif
+    push_int(stack, ret);
+    return 0;
+}
+
+s32 org_mini_net_SocketNative_readBuf(Runtime *runtime, JClass *clazz) {
     s32 sockfd = localvar_getInt(runtime->localvar, 0);
     Instance *jbyte_arr = (Instance *) localvar_getRefer(runtime->localvar, 1);
     s32 offset = localvar_getInt(runtime->localvar, 2);
@@ -345,19 +489,19 @@ s32 javax_mini_net_socket_Protocol_readBuf(Runtime *runtime, JClass *clazz) {
     push_int(runtime->stack, len);
 #if _JVM_DEBUG_BYTECODE_DETAIL > 5
     invoke_deepth(runtime);
-    jvm_printf("javax_mini_net_socket_Protocol_readBuf  \n");
+    jvm_printf("org_mini_net_SocketNative_readBuf  \n");
 #endif
     return 0;
 }
 
-s32 javax_mini_net_socket_Protocol_readByte(Runtime *runtime, JClass *clazz) {
+s32 org_mini_net_SocketNative_readByte(Runtime *runtime, JClass *clazz) {
     s32 sockfd = localvar_getInt(runtime->localvar, 0);
     c8 b = 0;
     jthread_block_enter(runtime);
     s32 len = sock_recv(sockfd, &b, 1);
     jthread_block_exit(runtime);
     if (len < 0) {
-        push_int(runtime->stack, -1);
+        push_int(runtime->stack, len);
     } else {
         push_int(runtime->stack, (u8) b);
 
@@ -365,13 +509,13 @@ s32 javax_mini_net_socket_Protocol_readByte(Runtime *runtime, JClass *clazz) {
 
 #if _JVM_DEBUG_BYTECODE_DETAIL > 5
     invoke_deepth(runtime);
-    jvm_printf("javax_mini_net_socket_Protocol_readByte  \n");
+    jvm_printf("org_mini_net_SocketNative_readByte  \n");
 #endif
     return 0;
 }
 
 
-s32 javax_mini_net_socket_Protocol_writeBuf(Runtime *runtime, JClass *clazz) {
+s32 org_mini_net_SocketNative_writeBuf(Runtime *runtime, JClass *clazz) {
     s32 sockfd = localvar_getInt(runtime->localvar, 0);
     Instance *jbyte_arr = (Instance *) localvar_getRefer(runtime->localvar, 1);
     s32 offset = localvar_getInt(runtime->localvar, 2);
@@ -384,12 +528,12 @@ s32 javax_mini_net_socket_Protocol_writeBuf(Runtime *runtime, JClass *clazz) {
     push_int(runtime->stack, len);
 #if _JVM_DEBUG_BYTECODE_DETAIL > 5
     invoke_deepth(runtime);
-    jvm_printf("javax_mini_net_socket_Protocol_writeBuf  \n");
+    jvm_printf("org_mini_net_SocketNative_writeBuf  \n");
 #endif
     return 0;
 }
 
-s32 javax_mini_net_socket_Protocol_writeByte(Runtime *runtime, JClass *clazz) {
+s32 org_mini_net_SocketNative_writeByte(Runtime *runtime, JClass *clazz) {
     s32 sockfd = localvar_getInt(runtime->localvar, 0);
     s32 val = localvar_getInt(runtime->localvar, 1);
     c8 b = (u8) val;
@@ -398,114 +542,102 @@ s32 javax_mini_net_socket_Protocol_writeByte(Runtime *runtime, JClass *clazz) {
     jthread_block_exit(runtime);
 #if _JVM_DEBUG_BYTECODE_DETAIL > 5
     invoke_deepth(runtime);
-    jvm_printf("javax_mini_net_socket_Protocol_writeByte  \n");
+    jvm_printf("org_mini_net_SocketNative_writeByte  \n");
 #endif
     push_int(runtime->stack, len);
     return 0;
 }
 
-s32 javax_mini_net_socket_Protocol_available0(Runtime *runtime, JClass *clazz) {
+s32 org_mini_net_SocketNative_available0(Runtime *runtime, JClass *clazz) {
 #if _JVM_DEBUG_BYTECODE_DETAIL > 5
     invoke_deepth(runtime);
-    jvm_printf("javax_mini_net_socket_Protocol_available0  \n");
+    jvm_printf("org_mini_net_SocketNative_available0  \n");
 #endif
     push_int(runtime->stack, 0);
     return 0;
 }
 
-s32 javax_mini_net_socket_Protocol_close0(Runtime *runtime, JClass *clazz) {
+s32 org_mini_net_SocketNative_close0(Runtime *runtime, JClass *clazz) {
     s32 sockfd = localvar_getInt(runtime->localvar, 0);
     sock_close(sockfd);
 #if _JVM_DEBUG_BYTECODE_DETAIL > 5
     invoke_deepth(runtime);
-    jvm_printf("javax_mini_net_socket_Protocol_close0  \n");
+    jvm_printf("org_mini_net_SocketNative_close0  \n");
 #endif
     return 0;
 }
 
-s32 javax_mini_net_socket_Protocol_setOption0(Runtime *runtime, JClass *clazz) {
+s32 org_mini_net_SocketNative_setOption0(Runtime *runtime, JClass *clazz) {
     s32 sockfd = localvar_getInt(runtime->localvar, 0);
     s32 type = localvar_getInt(runtime->localvar, 1);
     s32 val = localvar_getInt(runtime->localvar, 2);
+    s32 val2 = localvar_getInt(runtime->localvar, 3);
     s32 ret = 0;
     if (sockfd) {
-        ret = sock_option(sockfd, type, val);
+        ret = sock_option(sockfd, type, val, val2);
     }
     push_int(runtime->stack, ret);
 #if _JVM_DEBUG_BYTECODE_DETAIL > 5
     invoke_deepth(runtime);
-    jvm_printf("javax_mini_net_socket_Protocol_setOption0  \n");
+    jvm_printf("org_mini_net_SocketNative_setOption0  \n");
 #endif
     return 0;
 }
 
 
-s32 javax_mini_net_serversocket_Protocol_open0(Runtime *runtime, JClass *clazz) {
-    Instance *jbyte_arr = localvar_getRefer(runtime->localvar, 0);
-    s32 port = localvar_getInt(runtime->localvar, 1);
-    Utf8String *ip = utf8_create_part_c(jbyte_arr->arr_body, 0, jbyte_arr->arr_length);
-    s32 sockfd = 0;
-    jthread_block_enter(runtime);
-    sockfd = srv_bind(ip, port);
-    jthread_block_exit(runtime);
-    push_int(runtime->stack, sockfd);
-    utf8_destory(ip);
+s32 org_mini_net_SocketNative_getOption0(Runtime *runtime, JClass *clazz) {
+    s32 sockfd = localvar_getInt(runtime->localvar, 0);
+    s32 type = localvar_getInt(runtime->localvar, 1);
+
+    s32 ret = 0;
+    if (sockfd) {
+        ret = sock_get_option(sockfd, type);
+    }
+    push_int(runtime->stack, ret);
 #if _JVM_DEBUG_BYTECODE_DETAIL > 5
     invoke_deepth(runtime);
-    jvm_printf("javax_mini_net_serversocket_Protocol_open0  \n");
+    jvm_printf("org_mini_net_SocketNative_getOption0  \n");
 #endif
     return 0;
 }
 
-s32 javax_mini_net_serversocket_Protocol_listen0(Runtime *runtime, JClass *clazz) {
+
+s32 org_mini_net_SocketNative_listen0(Runtime *runtime, JClass *clazz) {
     s32 sockfd = localvar_getInt(runtime->localvar, 0);
     s32 ret = 0;
     if (sockfd) {
         jthread_block_enter(runtime);
-        ret = srv_listen(sockfd);
+        ret = sock_listen(sockfd);
         jthread_block_exit(runtime);
     }
     push_int(runtime->stack, ret);
 #if _JVM_DEBUG_BYTECODE_DETAIL > 5
     invoke_deepth(runtime);
-    jvm_printf("javax_mini_net_serversocket_Protocol_listen0  \n");
+    jvm_printf("org_mini_net_SocketNative_listen0  \n");
 #endif
     return 0;
 }
 
 
-s32 javax_mini_net_serversocket_Protocol_accept0(Runtime *runtime, JClass *clazz) {
+s32 org_mini_net_SocketNative_accept0(Runtime *runtime, JClass *clazz) {
     s32 sockfd = localvar_getInt(runtime->localvar, 0);
     s32 ret = 0;
     if (sockfd) {
 
         jthread_block_enter(runtime);
-        ret = srv_accept(sockfd);
+        ret = sock_accept(sockfd);
         jthread_block_exit(runtime);
     }
     push_int(runtime->stack, ret);
 #if _JVM_DEBUG_BYTECODE_DETAIL > 5
     invoke_deepth(runtime);
-    jvm_printf("javax_mini_net_serversocket_Protocol_accept0  \n");
+    jvm_printf("org_mini_net_SocketNative_accept0  \n");
 #endif
     return 0;
 }
 
-s32 javax_mini_net_serversocket_Protocol_close0(Runtime *runtime, JClass *clazz) {
-    s32 sockfd = localvar_getInt(runtime->localvar, 0);
-    s32 ret = 0;
-    if (sockfd) {
-        ret = sock_close(sockfd);
-    }
-    push_int(runtime->stack, ret);
-#if _JVM_DEBUG_BYTECODE_DETAIL > 5
-    invoke_deepth(runtime);
-    jvm_printf("javax_mini_net_serversocket_Protocol_close0  \n");
-#endif
-    return 0;
-}
 
-s32 javax_mini_net_serversocket_Protocol_registerCleanup(Runtime *runtime, JClass *clazz) {
+s32 org_mini_net_SocketNative_registerCleanup(Runtime *runtime, JClass *clazz) {
     s32 sockfd = localvar_getInt(runtime->localvar, 0);
     s32 ret = 0;
     if (sockfd) {
@@ -514,21 +646,68 @@ s32 javax_mini_net_serversocket_Protocol_registerCleanup(Runtime *runtime, JClas
 
 #if _JVM_DEBUG_BYTECODE_DETAIL > 5
     invoke_deepth(runtime);
-    jvm_printf("javax_mini_net_serversocket_Protocol_registerCleanup  \n");
+    jvm_printf("org_mini_net_SocketNative_registerCleanup  \n");
 #endif
     return 0;
 }
 
-s32 javax_mini_net_serversocket_Protocol_finalize(Runtime *runtime, JClass *clazz) {
+s32 org_mini_net_SocketNative_finalize(Runtime *runtime, JClass *clazz) {
     s32 sockfd = localvar_getInt(runtime->localvar, 0);
-    s32 ret = 0;
     if (sockfd) {
-
+        close(sockfd);
     }
 
 #if _JVM_DEBUG_BYTECODE_DETAIL > 5
     invoke_deepth(runtime);
-    jvm_printf("javax_mini_net_serversocket_Protocol_finalize  \n");
+    jvm_printf("org_mini_net_SocketNative_finalize  \n");
+#endif
+    return 0;
+}
+
+s32 org_mini_net_SocketNative_getSockAddr(Runtime *runtime, JClass *clazz) {
+    s32 sockfd = localvar_getInt(runtime->localvar, 0);
+    s32 mode = localvar_getInt(runtime->localvar, 1);
+    if (sockfd) {
+        struct sockaddr_in sock;
+        socklen_t slen = sizeof(sock);
+        if (mode == 0) {
+            getpeername(sockfd, (struct sockaddr *)&sock, &slen);
+        } else if (mode == 1) {
+            getsockname(sockfd, (struct sockaddr *)&sock, &slen);
+        }
+#if __JVM_OS_MAC__ || __JVM_OS_LINUX__
+#else
+#endif
+        char ipAddr[INET_ADDRSTRLEN];//保存点分十进制的地址
+        Utf8String *ustr = utf8_create();
+        inet_ntop(AF_INET, &sock.sin_addr, ipAddr, sizeof(ipAddr));
+        int port=ntohs(sock.sin_port);
+        utf8_append_c(ustr, ipAddr);
+        utf8_append_c(ustr, ":");
+        utf8_append_s64(ustr,port,10);
+        Instance *jstr = jstring_create(ustr, runtime);
+        push_ref(runtime->stack, jstr);
+    }
+
+#if _JVM_DEBUG_BYTECODE_DETAIL > 5
+    invoke_deepth(runtime);
+    jvm_printf("org_mini_net_SocketNative_getSockAddr  \n");
+#endif
+    return 0;
+}
+
+s32 org_mini_net_SocketNative_host2ip4(Runtime *runtime, JClass *clazz) {
+    s32 addr = -1;
+    Instance *jbyte_arr = (Instance *) localvar_getRefer(runtime->localvar, 0);
+    if (jbyte_arr) {
+        Utf8String *ip = utf8_create_part_c(jbyte_arr->arr_body, 0, jbyte_arr->arr_length);
+        addr = host_2_ip4(ip);
+        utf8_destory(ip);
+    }
+    push_int(runtime->stack, addr);
+#if _JVM_DEBUG_BYTECODE_DETAIL > 5
+    invoke_deepth(runtime);
+    jvm_printf("org_mini_net_SocketNative_host2ip4  \n");
 #endif
     return 0;
 }
@@ -978,7 +1157,7 @@ s32 org_mini_zip_ZipFile_getEntry0(Runtime *runtime, JClass *clazz) {
     }
 #if _JVM_DEBUG_BYTECODE_DETAIL > 5
     invoke_deepth(runtime);
-    jvm_printf("javax_mini_zip_ZipFile_getEntry0  \n");
+    jvm_printf("org_mini_zip_ZipFile_getEntry0  \n");
 #endif
     return 0;
 }
@@ -995,7 +1174,7 @@ s32 org_mini_zip_ZipFile_putEntry0(Runtime *runtime, JClass *clazz) {
     push_int(runtime->stack, ret);
 #if _JVM_DEBUG_BYTECODE_DETAIL > 5
     invoke_deepth(runtime);
-    jvm_printf("javax_mini_zip_ZipFile_putEntry0  \n");
+    jvm_printf("org_mini_zip_ZipFile_putEntry0  \n");
 #endif
     return 0;
 }
@@ -1010,7 +1189,7 @@ s32 org_mini_zip_ZipFile_fileCount0(Runtime *runtime, JClass *clazz) {
     push_int(runtime->stack, ret);
 #if _JVM_DEBUG_BYTECODE_DETAIL > 5
     invoke_deepth(runtime);
-    jvm_printf("javax_mini_zip_ZipFile_fileCount0  \n");
+    jvm_printf("org_mini_zip_ZipFile_fileCount0  \n");
 #endif
     return 0;
 }
@@ -1042,7 +1221,7 @@ s32 org_mini_zip_ZipFile_listFiles0(Runtime *runtime, JClass *clazz) {
     }
 #if _JVM_DEBUG_BYTECODE_DETAIL > 5
     invoke_deepth(runtime);
-    jvm_printf("javax_mini_zip_ZipFile_listFiles0  \n");
+    jvm_printf("org_mini_zip_ZipFile_listFiles0  \n");
 #endif
     return 0;
 }
@@ -1059,50 +1238,53 @@ s32 org_mini_zip_ZipFile_isDirectory0(Runtime *runtime, JClass *clazz) {
     }
 #if _JVM_DEBUG_BYTECODE_DETAIL > 5
     invoke_deepth(runtime);
-    jvm_printf("javax_mini_zip_ZipFile_isDirectory0  \n");
+    jvm_printf("org_mini_zip_ZipFile_isDirectory0  \n");
 #endif
     return 0;
 }
 
 static java_native_method method_net_table[] = {
-        {"javax/mini/net/protocol/socket/Protocol",       "open0",           "([BII)I",                          javax_mini_net_socket_Protocol_open0},
-        {"javax/mini/net/protocol/socket/Protocol",       "readBuf",         "(I[BII)I",                         javax_mini_net_socket_Protocol_readBuf},
-        {"javax/mini/net/protocol/socket/Protocol",       "readByte",        "(I)I",                             javax_mini_net_socket_Protocol_readByte},
-        {"javax/mini/net/protocol/socket/Protocol",       "writeBuf",        "(I[BII)I",                         javax_mini_net_socket_Protocol_writeBuf},
-        {"javax/mini/net/protocol/socket/Protocol",       "writeByte",       "(II)I",                            javax_mini_net_socket_Protocol_writeByte},
-        {"javax/mini/net/protocol/socket/Protocol",       "available0",      "(I)I",                             javax_mini_net_socket_Protocol_available0},
-        {"javax/mini/net/protocol/socket/Protocol",       "close0",          "(I)V",                             javax_mini_net_socket_Protocol_close0},
-        {"javax/mini/net/protocol/socket/Protocol",       "setOption0",      "(III)I",                           javax_mini_net_socket_Protocol_setOption0},
-        {"javax/mini/net/protocol/serversocket/Protocol", "accept0",         "(I)I",                             javax_mini_net_serversocket_Protocol_accept0},
-        {"javax/mini/net/protocol/serversocket/Protocol", "close0",          "(I)V",                             javax_mini_net_serversocket_Protocol_close0},
-        {"javax/mini/net/protocol/serversocket/Protocol", "listen0",         "(I)I",                             javax_mini_net_serversocket_Protocol_listen0},
-        {"javax/mini/net/protocol/serversocket/Protocol", "open0",           "([BI)I",                           javax_mini_net_serversocket_Protocol_open0},
-        {"javax/mini/net/protocol/serversocket/Protocol", "registerCleanup", "",                                 javax_mini_net_serversocket_Protocol_registerCleanup},
-        {"javax/mini/net/protocol/serversocket/Protocol", "finalize",        "",                                 javax_mini_net_serversocket_Protocol_finalize},
-        {"org/mini/fs/InnerFile",                         "openFile",        "([B[B)J",                          org_mini_fs_InnerFile_openFile},
-        {"org/mini/fs/InnerFile",                         "closeFile",       "(J)I",                             org_mini_fs_InnerFile_closeFile},
-        {"org/mini/fs/InnerFile",                         "read0",           "(J)I",                             org_mini_fs_InnerFile_read0},
-        {"org/mini/fs/InnerFile",                         "write0",          "(JI)I",                            org_mini_fs_InnerFile_write0},
-        {"org/mini/fs/InnerFile",                         "readbuf",         "(J[BII)I",                         org_mini_fs_InnerFile_readbuf},
-        {"org/mini/fs/InnerFile",                         "writebuf",        "(J[BII)I",                         org_mini_fs_InnerFile_writebuf},
-        {"org/mini/fs/InnerFile",                         "seek0",           "(JJ)I",                            org_mini_fs_InnerFile_seek0},
-        {"org/mini/fs/InnerFile",                         "available0",      "(J)I",                             org_mini_fs_InnerFile_available0},
-        {"org/mini/fs/InnerFile",                         "setLength0",      "(JJ)I",                            org_mini_fs_InnerFile_setLength0},
-        {"org/mini/fs/InnerFile",                         "flush0",          "(J)I",                             org_mini_fs_InnerFile_flush0},
-        {"org/mini/fs/InnerFile",                         "loadFS",          "([BLorg/mini/fs/InnerFileStat;)I", org_mini_fs_InnerFile_loadFS},
-        {"org/mini/fs/InnerFile",                         "listDir",         "([B)[Ljava/lang/String;",          org_mini_fs_InnerFile_listDir},
-        {"org/mini/fs/InnerFile",                         "getcwd",          "([B)I",                            org_mini_fs_InnerFile_getcwd},
-        {"org/mini/fs/InnerFile",                         "chmod",           "([BI)I",                           org_mini_fs_InnerFile_chmod},
-        {"org/mini/fs/InnerFile",                         "mkdir0",          "([B)I",                            org_mini_fs_InnerFile_mkdir0},
-        {"org/mini/fs/InnerFile",                         "getOS",           "()I",                              org_mini_fs_InnerFile_getOS},
-        {"org/mini/fs/InnerFile",                         "delete0",         "([B)I",                            org_mini_fs_InnerFile_delete0},
-        {"org/mini/fs/InnerFile",                         "rename0",         "([B[B)I",                          org_mini_fs_InnerFile_rename0},
-        {"org/mini/fs/InnerFile",                         "getTmpDir",       "()Ljava/lang/String;",             org_mini_fs_InnerFile_getTmpDir},
-        {"org/mini/zip/Zip",                              "getEntry0",       "([B[B)[B",                         org_mini_zip_ZipFile_getEntry0},
-        {"org/mini/zip/Zip",                              "putEntry0",       "([B[B[B)I",                        org_mini_zip_ZipFile_putEntry0},
-        {"org/mini/zip/Zip",                              "fileCount0",      "([B)I",                            org_mini_zip_ZipFile_fileCount0},
-        {"org/mini/zip/Zip",                              "listFiles0",      "([B)[Ljava/lang/String;",          org_mini_zip_ZipFile_listFiles0},
-        {"org/mini/zip/Zip",                              "isDirectory0",    "([BI)Z",                           org_mini_zip_ZipFile_isDirectory0},
+        {"org/mini/net/SocketNative", "open0",           "()I",                              org_mini_net_SocketNative_open0},
+        {"org/mini/net/SocketNative", "bind0",           "(I[BI)I",                          org_mini_net_SocketNative_bind0},
+        {"org/mini/net/SocketNative", "connect0",        "(I[BI)I",                          org_mini_net_SocketNative_connect0},
+        {"org/mini/net/SocketNative", "listen0",         "(I)I",                             org_mini_net_SocketNative_listen0},
+        {"org/mini/net/SocketNative", "accept0",         "(I)I",                             org_mini_net_SocketNative_accept0},
+        {"org/mini/net/SocketNative", "registerCleanup", "()V",                              org_mini_net_SocketNative_registerCleanup},
+        {"org/mini/net/SocketNative", "readBuf",         "(I[BII)I",                         org_mini_net_SocketNative_readBuf},
+        {"org/mini/net/SocketNative", "readByte",        "(I)I",                             org_mini_net_SocketNative_readByte},
+        {"org/mini/net/SocketNative", "writeBuf",        "(I[BII)I",                         org_mini_net_SocketNative_writeBuf},
+        {"org/mini/net/SocketNative", "writeByte",       "(II)I",                            org_mini_net_SocketNative_writeByte},
+        {"org/mini/net/SocketNative", "available0",      "(I)I",                             org_mini_net_SocketNative_available0},
+        {"org/mini/net/SocketNative", "close0",          "(I)V",                             org_mini_net_SocketNative_close0},
+        {"org/mini/net/SocketNative", "setOption0",      "(IIII)I",                          org_mini_net_SocketNative_setOption0},
+        {"org/mini/net/SocketNative", "getOption0",      "(II)I",                            org_mini_net_SocketNative_getOption0},
+        {"org/mini/net/SocketNative", "finalize",        "()V",                              org_mini_net_SocketNative_finalize},
+        {"org/mini/net/SocketNative", "getSockAddr",     "(II)Ljava/lang/String;",           org_mini_net_SocketNative_getSockAddr},
+        {"org/mini/net/SocketNative", "host2ip4",        "([B)I",                            org_mini_net_SocketNative_host2ip4},
+        {"org/mini/fs/InnerFile",     "openFile",        "([B[B)J",                          org_mini_fs_InnerFile_openFile},
+        {"org/mini/fs/InnerFile",     "closeFile",       "(J)I",                             org_mini_fs_InnerFile_closeFile},
+        {"org/mini/fs/InnerFile",     "read0",           "(J)I",                             org_mini_fs_InnerFile_read0},
+        {"org/mini/fs/InnerFile",     "write0",          "(JI)I",                            org_mini_fs_InnerFile_write0},
+        {"org/mini/fs/InnerFile",     "readbuf",         "(J[BII)I",                         org_mini_fs_InnerFile_readbuf},
+        {"org/mini/fs/InnerFile",     "writebuf",        "(J[BII)I",                         org_mini_fs_InnerFile_writebuf},
+        {"org/mini/fs/InnerFile",     "seek0",           "(JJ)I",                            org_mini_fs_InnerFile_seek0},
+        {"org/mini/fs/InnerFile",     "available0",      "(J)I",                             org_mini_fs_InnerFile_available0},
+        {"org/mini/fs/InnerFile",     "setLength0",      "(JJ)I",                            org_mini_fs_InnerFile_setLength0},
+        {"org/mini/fs/InnerFile",     "flush0",          "(J)I",                             org_mini_fs_InnerFile_flush0},
+        {"org/mini/fs/InnerFile",     "loadFS",          "([BLorg/mini/fs/InnerFileStat;)I", org_mini_fs_InnerFile_loadFS},
+        {"org/mini/fs/InnerFile",     "listDir",         "([B)[Ljava/lang/String;",          org_mini_fs_InnerFile_listDir},
+        {"org/mini/fs/InnerFile",     "getcwd",          "([B)I",                            org_mini_fs_InnerFile_getcwd},
+        {"org/mini/fs/InnerFile",     "chmod",           "([BI)I",                           org_mini_fs_InnerFile_chmod},
+        {"org/mini/fs/InnerFile",     "mkdir0",          "([B)I",                            org_mini_fs_InnerFile_mkdir0},
+        {"org/mini/fs/InnerFile",     "getOS",           "()I",                              org_mini_fs_InnerFile_getOS},
+        {"org/mini/fs/InnerFile",     "delete0",         "([B)I",                            org_mini_fs_InnerFile_delete0},
+        {"org/mini/fs/InnerFile",     "rename0",         "([B[B)I",                          org_mini_fs_InnerFile_rename0},
+        {"org/mini/fs/InnerFile",     "getTmpDir",       "()Ljava/lang/String;",             org_mini_fs_InnerFile_getTmpDir},
+        {"org/mini/zip/Zip",          "getEntry0",       "([B[B)[B",                         org_mini_zip_ZipFile_getEntry0},
+        {"org/mini/zip/Zip",          "putEntry0",       "([B[B[B)I",                        org_mini_zip_ZipFile_putEntry0},
+        {"org/mini/zip/Zip",          "fileCount0",      "([B)I",                            org_mini_zip_ZipFile_fileCount0},
+        {"org/mini/zip/Zip",          "listFiles0",      "([B)[Ljava/lang/String;",          org_mini_zip_ZipFile_listFiles0},
+        {"org/mini/zip/Zip",          "isDirectory0",    "([BI)Z",                           org_mini_zip_ZipFile_isDirectory0},
 
 };
 

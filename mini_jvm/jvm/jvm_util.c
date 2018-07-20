@@ -819,6 +819,8 @@ s32 jthread_yield(Runtime *runtime) {
 
 s32 jthread_suspend(Runtime *runtime) {
     spin_lock(&runtime->threadInfo->lock);
+//    MethodInfo *m = runtime->threadInfo->top_runtime->method;
+//    jvm_printf("suspend %lx ,%s\n", runtime->threadInfo->jthread, m ? utf8_cstr(m->name) : "");
     runtime->threadInfo->suspend_count++;
     spin_unlock(&runtime->threadInfo->lock);
     return 0;
@@ -835,6 +837,8 @@ void jthread_block_exit(Runtime *runtime) {
 
 s32 jthread_resume(Runtime *runtime) {
     spin_lock(&runtime->threadInfo->lock);
+//    MethodInfo *m = runtime->threadInfo->top_runtime->method;
+//    jvm_printf("resume %lx ,%s\n", runtime->threadInfo->jthread, m ? utf8_cstr(m->name) : "");
     if (runtime->threadInfo->suspend_count > 0)runtime->threadInfo->suspend_count--;
     spin_unlock(&runtime->threadInfo->lock);
     return 0;
@@ -1055,7 +1059,7 @@ void instance_finalize(Instance *ins, Runtime *runtime) {
         MethodInfo *mi = ins->mb.clazz->finalizeMethod;
         if (mi) {
             push_ref(runtime->stack, ins);
-            s32 ret = execute_method_impl(mi, runtime, ins->mb.clazz);
+            s32 ret = execute_method_impl(mi, runtime, mi->_this_class);
             if (ret != RUNTIME_STATUS_NORMAL) {
                 print_exception(runtime);
             }

@@ -12,6 +12,10 @@ package java.net;
 
 import java.io.IOException;
 import java.io.InputStream;
+import org.mini.urlhandler.FileHandler;
+import org.mini.urlhandler.HttpHandler;
+import org.mini.urlhandler.JarHandler;
+import org.mini.urlhandler.ResourceHandler;
 
 public final class URL {
   private final URLStreamHandler handler;
@@ -81,18 +85,17 @@ public final class URL {
   private static URLStreamHandler findHandler(String protocol)
     throws MalformedURLException
   {
-//    if ("http".equals(protocol) || "https".equals(protocol)) {
-//      return new avian.http.Handler();
-//    } else if ("avianvmresource".equals(protocol)) {
-//      return new avian.avianvmresource.Handler();
-//    } else if ("file".equals(protocol)) {
-//      return new avian.file.Handler();
-//    } else if ("jar".equals(protocol)) {
-//      return new avian.jar.Handler();
-//    } else {
-//      throw new MalformedURLException("unknown protocol: " + protocol);
-//    }
-      return null;
+    if ("http".equals(protocol) || "https".equals(protocol)) {
+      return new HttpHandler();
+    } else if ("avianvmresource".equals(protocol)) {
+      return new ResourceHandler();
+    } else if ("file".equals(protocol)) {
+      return new FileHandler();
+    } else if ("jar".equals(protocol)) {
+      return new JarHandler();
+    } else {
+      throw new MalformedURLException("unknown protocol: " + protocol);
+    }
   }
 
   public void set(String protocol, String host, int port, String file,

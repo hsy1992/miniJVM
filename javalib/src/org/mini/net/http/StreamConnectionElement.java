@@ -6,7 +6,7 @@
  * Use is subject to license terms.
  */
 
-package javax.mini.net.protocol.http;
+package org.mini.net.http;
 
 import java.io.IOException;
 import java.io.InputStream;

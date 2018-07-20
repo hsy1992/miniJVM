@@ -3265,7 +3265,7 @@ s32 execute_method_impl(MethodInfo *method, Runtime *pruntime, JClass *clazz) {
                                         break;
                                     }
                                     default: {
-                                        int debug = 1;
+                                        jvm_printf("invokedynamic para parse error.");
                                     }
                                 }
 

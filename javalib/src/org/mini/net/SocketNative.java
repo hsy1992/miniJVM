@@ -1,0 +1,56 @@
+/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
+package org.mini.net;
+
+/**
+ *
+ * @author Gust
+ */
+public class SocketNative {
+
+    public static final byte VAL_BLOCK = 0;
+    public static final byte SO_SNDBUF = 3;
+    public static final byte SO_KEEPALIVE = 4;
+    public static final byte VAL_REUSEADDR = 0;
+    public static final byte SO_RCVBUF = 2;
+    public static final byte SO_LINGER = 5;
+    public static final byte SO_BLOCK = 0;
+    public static final byte VAL_NON_BLOCK = 1;
+    public static final byte VAL_NON_REUSEADDR = 1;
+    public static final byte SO_REUSEADDR = 1;
+    public static final byte SO_TIMEOUT = 6;
+
+    public static native int open0();
+
+    public static native int bind0(int handle, byte hostname[], int port);
+
+    public static native int connect0(int handle, byte hostname[], int port);
+
+    public static native int listen0(int handle);
+
+    public static native int accept0(int handle);
+
+    public static native int readBuf(int handle, byte b[], int off, int len);
+
+    public static native int readByte(int handle);
+
+    public static native int writeBuf(int handle, byte b[], int off, int len);
+
+    public static native int writeByte(int handle, int b);
+
+    public static native int available0(int handle);
+
+    public static native void close0(int handle);
+
+    public static native int setOption0(int handle, int type, int val, int val2);
+
+    public static native int getOption0(int handle, int type);
+
+    public static native int host2ip4(byte[] hostname);
+
+    //mode=0 get peername , mode=1 getlocalname
+    public static native String getSockAddr(int handle, int mode);
+}

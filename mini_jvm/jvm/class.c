@@ -245,9 +245,13 @@ void class_clinit(JClass *clazz, Runtime *runtime) {
                 class_clinit(fi->_this_class, runtime);
             }
         }
-
+        //find finalize method, but not process java.lang.Object.finalize()
         clazz->finalizeMethod = find_methodInfo_by_name_c(utf8_cstr(clazz->name), STR_METHOD_FINALIZE, "()V", runtime);
-
+        if (clazz->finalizeMethod && utf8_equals_c(clazz->finalizeMethod->_this_class->name, STR_CLASS_JAVA_LANG_OBJECT)) {
+            clazz->finalizeMethod = NULL;
+        } else {
+            int debug = 1;
+        }
 
         // init javastring
         ArrayList *strlist = clazz->constantPool.stringRef;

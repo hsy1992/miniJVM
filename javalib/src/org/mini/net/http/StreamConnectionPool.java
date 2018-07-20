@@ -6,7 +6,7 @@
  * Use is subject to license terms.
  */
 
-package javax.mini.net.protocol.http;
+package org.mini.net.http;
 
 /**
  * A class representing a persistent connection pool that is used by the http

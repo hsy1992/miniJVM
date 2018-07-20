@@ -16,9 +16,8 @@ import java.io.OutputStream;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
-import javax.cldc.io.Connection;
 
-public abstract class URLConnection implements Connection{
+public abstract class URLConnection {
   protected final URL url;
   protected boolean doInput = true;
   protected boolean doOutput = false;
@@ -43,11 +42,11 @@ public abstract class URLConnection implements Connection{
   public abstract void connect() throws IOException;
 
   public InputStream getInputStream() throws IOException {
-    throw new RuntimeException();
+    throw new UnknownServiceException();
   }
 
   public OutputStream getOutputStream() throws IOException {
-    throw new RuntimeException();
+    throw new UnknownServiceException();
   }
 
   public boolean getDoInput() {

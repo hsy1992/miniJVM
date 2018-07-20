@@ -1,5 +1,5 @@
 
-
+#include <errno.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -10,6 +10,8 @@
 #include "jvm_util.h"
 #include "java_native_std.h"
 #include "jdwp.h"
+
+
 
 void thread_boundle(Runtime *runtime) {
 
@@ -169,7 +171,18 @@ void classloader_release_classs_static_field(ClassLoader *class_loader) {
     }
 }
 
+void _on_jvm_sig(int no) {
+
+    jvm_printf("jvm signo:%d  errno: %d , %s\n", no, errno, strerror(errno));
+}
+
 void jvm_init(c8 *p_classpath, StaticLibRegFunc regFunc) {
+    signal(SIGABRT, _on_jvm_sig);
+    signal(SIGFPE, _on_jvm_sig);
+    signal(SIGSEGV, _on_jvm_sig);
+    signal(SIGTERM, _on_jvm_sig);
+    signal(SIGPIPE, _on_jvm_sig);
+
     if (!p_classpath) {
         p_classpath = "./";
     }

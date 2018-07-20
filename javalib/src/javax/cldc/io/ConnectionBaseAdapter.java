@@ -1,4 +1,4 @@
-package javax.mini.net;
+package javax.cldc.io;
 
 
 import com.sun.cldc.io.ConnectionBaseInterface;

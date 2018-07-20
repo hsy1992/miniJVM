@@ -23,21 +23,23 @@
  * Clara, CA 95054 or visit www.sun.com if you need additional
  * information or have any questions.
  */
-package javax.mini.net.protocol.socket;
+package org.mini.net.socket;
 
 import javax.cldc.io.Connector;
-import javax.cldc.io.StreamConnection;
 import javax.cldc.io.Connection;
 import java.io.*;
 import com.sun.cldc.io.*;
-import javax.mini.net.Socket;
+import java.net.SocketTimeoutException;
+import javax.cldc.io.NBSocket;
+import static org.mini.fs.InnerFile.available0;
+import org.mini.net.SocketNative;
 
 /**
  * Connection to the J2ME socket API.
  *
  * @version 1.0 1/16/2000
  */
-public class Protocol implements ConnectionBaseInterface, StreamConnection, Socket {
+public class Protocol implements ConnectionBaseInterface, NBSocket {
 
     /**
      * Socket object used by native code
@@ -112,10 +114,14 @@ public class Protocol implements ConnectionBaseInterface, StreamConnection, Sock
         for (int n = 0; n < hostname.length(); n++) {
             cstring[n] = (byte) (hostname.charAt(n));
         }
-        if ((this.handle = open0(cstring, port, mode)) < 0) {
+        if ((this.handle = SocketNative.open0()) < 0) {
+
             int errorCode = this.handle & 0x7fffffff;
             throw new IOException( /* #ifdef VERBOSE_EXCEPTIONS */ /// skipped                       "connection failed: error = " + errorCode
                     /* #endif */);
+        }
+        if (SocketNative.connect0(handle, cstring, port) < 0) {
+            throw new IOException("Socket connect error");
         }
         opens++;
         copen = true;
@@ -213,7 +219,7 @@ public class Protocol implements ConnectionBaseInterface, StreamConnection, Sock
      */
     synchronized void realClose() throws IOException {
         if (--opens == 0) {
-            close0(this.handle);
+            SocketNative.close0(this.handle);
         }
     }
 
@@ -243,41 +249,38 @@ public class Protocol implements ConnectionBaseInterface, StreamConnection, Sock
     * This function will return an unsigned byte, or -1.
     * -1 means that EOF was reached.
      */
-    protected static native int open0(byte hostname[], int port, int mode);
-
-    protected static native int readBuf(int handle, byte b[], int off, int len);
-
-    protected static native int readByte(int handle);
-
-    protected static native int writeBuf(int handle, byte b[], int off, int len);
-
-    protected static native int writeByte(int handle, int b);
-
-    protected static native int available0(int handle);
-
-    protected static native void close0(int handle);
-
-    protected static native int setOption0(int handle, int type, int val);
-
     @Override
     public int write(byte[] b, int off, int len) throws IOException {
-        return writeBuf(handle, b, off, len);
+        int w = SocketNative.writeBuf(handle, b, off, len);
+        if (w == -2) {
+            w = 0;
+        }
+        return w;
     }
 
     @Override
     public int read(byte[] b, int off, int len) throws IOException {
-        return readBuf(handle, b, off, len);
+        int r = SocketNative.readBuf(handle, b, off, len);
+        if (r == -2) {
+            r = 0;
+        }
+        return r;
     }
 
 //    @Override
 //    public int available() throws IOException {
 //        return available0(handle);
 //    }
+    boolean nonBlock = false;
 
     @Override
-    public void setOption(int type, int val) {
-        setOption0(handle, type, val);
+    public void setOption(int type, int val, int val2) {
+        if (type == SocketNative.SO_BLOCK && val == SocketNative.VAL_NON_BLOCK) {
+            nonBlock = true;
+        }
+        SocketNative.setOption0(handle, type, val, val2);
     }
+
 }
 
 /**
@@ -335,9 +338,11 @@ class PrivateInputStream extends InputStream {
         if (eof) {
             return -1;
         }
-        res = Protocol.readByte(parent.handle);
+        res = SocketNative.readByte(parent.handle);
         if (res == -1) {
             eof = true;
+        } else if (res == -2) {
+            throw new SocketTimeoutException();
         }
         if (parent == null) {
             throw new InterruptedIOException();
@@ -377,7 +382,7 @@ class PrivateInputStream extends InputStream {
 
         int n = 0;
         while (n < len) {
-            int count = Protocol.readBuf(parent.handle, b, off + n, len - n);
+            int count = SocketNative.readBuf(parent.handle, b, off + n, len - n);
             if (count == -1) {
                 eof = true;
                 if (n == 0) {
@@ -406,7 +411,7 @@ class PrivateInputStream extends InputStream {
      */
     synchronized public int available() throws IOException {
         ensureOpen();
-        return Protocol.available0(parent.handle);
+        return available0(parent.handle);
     }
 
     /**
@@ -472,7 +477,12 @@ class PrivateOutputStream extends OutputStream {
     synchronized public void write(int b) throws IOException {
         ensureOpen();
         while (true) {
-            int res = Protocol.writeByte(parent.handle, b);
+            int res = SocketNative.writeByte(parent.handle, b);
+            if (res == -1) {
+                throw new IOException("socket write error");
+            } else if (res == -2) {
+                throw new SocketTimeoutException();
+            }
             if (res != 0) {
                 // IMPL_NOTE: should EOFException be thrown if write fails?
                 return;
@@ -507,7 +517,7 @@ class PrivateOutputStream extends OutputStream {
 
         int n = 0;
         while (true) {
-            n += Protocol.writeBuf(parent.handle, b, off + n, len - n);
+            n += SocketNative.writeBuf(parent.handle, b, off + n, len - n);
             if (n == len) {
                 break;
             }

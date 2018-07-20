@@ -5,15 +5,14 @@
  * PROPRIETARY/CONFIDENTIAL
  * Use is subject to license terms.
  */
-package javax.mini.net.protocol.serversocket;
+package org.mini.net.serversocket;
 
-import javax.mini.net.ServerSocket;
 import com.sun.cldc.io.ConnectionBaseInterface;
-import com.sun.cldc.io.Waiter;
 import java.io.IOException;
-import java.io.InterruptedIOException;
 import javax.cldc.io.Connection;
 import javax.cldc.io.Connector;
+import javax.cldc.io.NBServerSocket;
+import org.mini.net.SocketNative;
 
 
 /*
@@ -28,7 +27,7 @@ import javax.cldc.io.Connector;
  * @author Nik Shaylor
  * @version 1.0 10/08/99
  */
-public class Protocol implements ConnectionBaseInterface, ServerSocket {
+public class Protocol implements ConnectionBaseInterface, NBServerSocket {
 
     /**
      * Socket object used by native code, for now must be the first field.
@@ -69,10 +68,13 @@ public class Protocol implements ConnectionBaseInterface, ServerSocket {
         for (int n = 0; n < hostname.length(); n++) {
             cstring[n] = (byte) (hostname.charAt(n));
         }
-        if ((this.handle = open0(cstring, port)) < 0) {
+        if ((this.handle = SocketNative.open0()) < 0) {
             if (this.handle < 0);
             throw new IOException( /* #ifdef VERBOSE_EXCEPTIONS */ /// skipped                       "connection failed: error = " + errorCode
                     /* #endif */);
+        }
+        if(SocketNative.bind0(this.handle,cstring, port)<0){
+            throw new IOException("bind error");
         }
         this.connectionOpen = true;
         return this;
@@ -101,17 +103,17 @@ public class Protocol implements ConnectionBaseInterface, ServerSocket {
      * @exception IOException if an I/O error occurs when creating the input
      * stream
      */
-    synchronized public javax.mini.net.Socket accept()
+    synchronized public javax.cldc.io.NBSocket accept()
             throws IOException {
 
-        javax.mini.net.protocol.socket.Protocol con;
+        org.mini.net.socket.Protocol con;
 
         ensureOpen();
 
         while (true) {
-            int clt_handle = accept0(this.handle);
+            int clt_handle = SocketNative.accept0(this.handle);
             if (clt_handle >= 0) {
-                con = new javax.mini.net.protocol.socket.Protocol();
+                con = new org.mini.net.socket.Protocol();
                 con.open(clt_handle, Connector.READ_WRITE);
                 break;
             }else{
@@ -165,63 +167,16 @@ public class Protocol implements ConnectionBaseInterface, ServerSocket {
      */
     public void close() throws IOException {
         if (connectionOpen) {
-            close0(handle);
+            SocketNative.close0(handle);
             connectionOpen = false;
         }
     }
 
-    /**
-     * Opens a native socket and put its handle in the handle field.
-     * <p>
-     * Called by socket Protocol class after it parses a given URL and finds no
-     * host.
-     *
-     * @param port TCP port to listen for connections on
-     * @param storage name of current suite storage
-     *
-     * @exception IOException if some other kind of I/O error occurs or if
-     * reserved by another suite
-     */
-    static public native int open0(byte[] ip, int port) throws IOException;
 
-    /**
-     *
-     * @param handle
-     * @return
-     * @throws IOException
-     */
-    static private native int listen0(int handle) throws IOException;
-
-    /**
-     * Accepts a TCP connection socket handle to a client, accesses the handle
-     * field.
-     *
-     * @return TCP connection socket handle
-     *
-     * @exception IOException If some other kind of I/O error occurs.
-     */
-    static private native int accept0(int handle) throws IOException;
-
-    /**
-     * Closes the connection, accesses the handle field.
-     *
-     * @exception IOException if an I/O error occurs when closing the connection
-     */
-    static public native void close0(int handle) throws IOException;
-
-    /**
-     * Registers with the native cleanup code, accesses the handle field.
-     */
-    static private native void registerCleanup(int handle);
-
-    /**
-     * Native finalizer
-     */
-    static private native void finalize(int handle);
 
     @Override
     public void listen() throws IOException {
-        listen0(handle);
+        SocketNative.listen0(handle);
     }
 
 }

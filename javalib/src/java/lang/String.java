@@ -1044,8 +1044,8 @@ public final class String implements Comparable<String>, CharSequence {
         return this;
     }
 
-    public String replace(String src, String dst) {
-        char[] carr = replace0(src, dst);
+    public String replace(CharSequence target, CharSequence replacement) {
+        char[] carr = replace0(target.toString(), replacement.toString());
         return new String(0, carr.length, carr);
     }
 
