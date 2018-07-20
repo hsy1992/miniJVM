@@ -2072,7 +2072,7 @@ s32 execute_method_impl(MethodInfo *method, Runtime *pruntime, JClass *clazz) {
                     case op_i2f: {
 
                         s32 value = pop_int(stack);
-                        f32 result = value;
+                        f32 result = (f32)value;
 #if _JVM_DEBUG_BYTECODE_DETAIL > 5
                         invoke_deepth(runtime);
                         jvm_printf("i2f: %d --> %f\n", (s32) value, result);

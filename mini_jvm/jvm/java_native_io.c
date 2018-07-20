@@ -321,7 +321,7 @@ s32 sock_bind(s32 sockfd, Utf8String *local_ip, s32 local_port) {
             ret = -1;
         }
 #if __JVM_OS_VS__ || __JVM_OS_MINGW__ || __JVM_OS_CYGWIN__
-        server_addr.sin_addr = *((struct in_addr *) host->h_addr);
+		addr.sin_addr = *((struct in_addr *) host->h_addr);
 #else
         //server_addr.sin_len = sizeof(struct sockaddr_in);
         addr.sin_addr = *((struct in_addr *) host->h_addr_list[0]);
@@ -654,7 +654,7 @@ s32 org_mini_net_SocketNative_registerCleanup(Runtime *runtime, JClass *clazz) {
 s32 org_mini_net_SocketNative_finalize(Runtime *runtime, JClass *clazz) {
     s32 sockfd = localvar_getInt(runtime->localvar, 0);
     if (sockfd) {
-        close(sockfd);
+		close(sockfd);
     }
 
 #if _JVM_DEBUG_BYTECODE_DETAIL > 5
@@ -686,6 +686,7 @@ s32 org_mini_net_SocketNative_getSockAddr(Runtime *runtime, JClass *clazz) {
         utf8_append_c(ustr, ":");
         utf8_append_s64(ustr,port,10);
         Instance *jstr = jstring_create(ustr, runtime);
+		utf8_destory(ustr);
         push_ref(runtime->stack, jstr);
     }
 

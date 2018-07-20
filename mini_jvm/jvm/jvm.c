@@ -181,8 +181,9 @@ void jvm_init(c8 *p_classpath, StaticLibRegFunc regFunc) {
     signal(SIGFPE, _on_jvm_sig);
     signal(SIGSEGV, _on_jvm_sig);
     signal(SIGTERM, _on_jvm_sig);
+#ifdef SIGPIPE
     signal(SIGPIPE, _on_jvm_sig);
-
+#endif
     if (!p_classpath) {
         p_classpath = "./";
     }

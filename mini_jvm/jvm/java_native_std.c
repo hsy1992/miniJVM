@@ -255,7 +255,7 @@ s32 java_lang_Class_getComponentType(Runtime *runtime, JClass *clazz) {
     JClass *present = insOfJavaLangClass_get_classHandle(ins);
     s32 idx = utf8_last_indexof_c(present->name, "[");
     if (idx > 0) {
-        Utf8String *ustr = utf8_create_part(present->name, idx + 1, ustr->length - 1 - idx);
+        Utf8String *ustr = utf8_create_part(present->name, idx + 1, present->name->length - 1 - idx);
         c8 ch = utf8_index_of(ustr, 0);
         if (ch == 'L') {
             utf8_substring(ustr, 1, ustr->length - 2);
@@ -1227,7 +1227,7 @@ s32 java_io_Throwable_buildStackElement(Runtime *runtime, JClass *clazz) {
 //===================================    avian    ========================================
 
 s32 java_lang_System_getNativeProperties(Runtime *runtime, JClass *clazz) {
-    s32 size = sys_prop->entries;
+    s32 size =(s32) sys_prop->entries;
     Utf8String *ustr = utf8_create_c(STR_CLASS_JAVA_LANG_STRING);
     Instance *jarr = jarray_create_by_type_name(runtime, size, ustr);
     gc_refer_hold(jarr);
