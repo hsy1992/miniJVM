@@ -11,26 +11,20 @@
  * Created on 2017年7月19日, 下午3:14
  */
 #include <stdio.h>
-#include <errno.h>
+
 #include <signal.h>
 #include "jvm/jvm_util.h"
 #include "jvm/jvm.h"
 #include "jvm/garbage.h"
 
 
-void _on_jvm_sig(int no) {
 
-    jvm_printf("jvm signo:%d  errno: %d , %s\n", no, errno, strerror(errno));
-}
 
 /*
  *
  */
 int main(int argc, char **argv) {
-    signal(SIGABRT, _on_jvm_sig);
-    signal(SIGFPE, _on_jvm_sig);
-    signal(SIGSEGV, _on_jvm_sig);
-    signal(SIGTERM, _on_jvm_sig);
+
 
 
     char *classpath = NULL;
@@ -72,7 +66,7 @@ int main(int argc, char **argv) {
         classpath = "../lib/minijvm_rt.jar;../lib/gui_lib.jar;./";
 //        main_name = "test/Gears";
 //        main_name = "test/TestGL";
-        main_name = "test/GuiTest";
+//        main_name = "test/GuiTest";
 //        main_name = "test/RenderTexure";
 //        main_name = "test/Alpha";
 //        main_name = "test/Light";
@@ -83,25 +77,25 @@ int main(int argc, char **argv) {
 //        classpath = "../lib/minijvm_rt.jar;../lib/jni_test.jar;./";
 //        main_name = "test/JniTest";
 
-//        classpath = "../lib/minijvm_rt.jar;../lib/luaj.jar;./";
-//        main_name = "Sample";
+        classpath = "../lib/minijvm_rt.jar;../lib/luaj.jar;./";
+        main_name = "Sample";
 
 
-//        classpath = "../lib/minijvm_rt.jar;../lib/minijvm_test.jar;./";
+        classpath = "../lib/minijvm_rt.jar;../lib/minijvm_test.jar;./";
 //        main_name = "test/Foo1";
 //        main_name = "test/Foo2";
 //        main_name = "test/Foo3";
 //        main_name = "test/MultiThread";
 //        main_name = "test/ExecuteSpeed";
 //        main_name = "test/TestFile";
-//        main_name = "test/HttpServer";
+        main_name = "test/HttpServer";
 //        main_name = "test/BpDeepTest";
 //        main_name = "test/ReflectTest";
 //        main_name = "test/LambdaTest";
 
 
 
-//        classpath = "../lib/minijvm_rt.jar;../lib/janino.jar;../lib/commons-compiler.jar;../lib/ant-1.7,1.jar";
+//        classpath = "../lib/minijvm_rt.jar;../lib/janino.jar;../lib/commons-compiler.jar";
 //        main_name = "org.codehaus.janino.Compiler";
 //        arraylist_push_back(java_para,"../res/BpDeepTest.java");
 
