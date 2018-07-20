@@ -10,11 +10,12 @@
 package java.util.logging;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 
 public class Logger {
 
     private final String name;
-    private Level levelValue = null;
+    private Level levelValue = Level.INFO;
     private static final ArrayList<Handler> handlers;
     private static Logger rootLogger;
     private Logger parent;
@@ -99,8 +100,9 @@ public class Logger {
         if (!isLoggable(level)) {
             return;
         }
+        String spara = Arrays.toString(para);
         String s = exception == null ? "" : exception.getCodeStack();
-        System.out.println("[" + Level.class + "]" + (message == null ? "" : message) + "\n" + s);
+        System.out.println("[" + level + "]" + (message == null ? "" : message) + "|" + spara + "|" + s);
     }
 
     private static String replaceParameters(String message, Object... params) {
