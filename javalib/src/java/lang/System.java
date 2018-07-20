@@ -188,6 +188,7 @@ public final class System {
 
         return v;
     }
+
     /**
      * Gets the system property indicated by the specified key.
      *
@@ -208,6 +209,16 @@ public final class System {
         if (key.equals("java.class.path")) {
             String cp = getClassPath();
             return cp.replace(';', File.pathSeparatorChar);
+        }
+
+        if (key.equals("sun.boot.class.path")) {
+            String cp = getClassPath();
+            String[] strs = cp.split(";");
+            for (String s : strs) {
+                if (s.endsWith("minijvm_rt.jar")) {
+                    return s;
+                }
+            }
         }
         return getProperty0(key);
     }
