@@ -253,6 +253,19 @@ void referarr_2_jlongarr(ReferArr *ref_arr, Instance *jlong_arr);
 
 ////======================= thread =============================
 
+
+void threadlist_add(Runtime *r);
+
+void threadlist_remove(Runtime *r);
+
+Runtime *threadlist_get(s32 i);
+
+s32 threadlist_count_none_daemon();
+
+void threadinfo_destory(JavaThreadInfo *threadInfo);
+
+JavaThreadInfo *threadinfo_create(void);
+
 struct _JavaThreadInfo {
     Instance *jthread;
     Runtime *top_runtime;
@@ -328,6 +341,71 @@ void thread_lock_dispose(ThreadLock *lock);
 void thread_lock_init(ThreadLock *lock);
 
 
+/**
+ * runtime 的创建和销毁会极大影响性能，因此对其进行缓存
+ * @param parent runtime of parent
+ * @return runtime
+ */
+static inline Runtime *runtime_create_inl(Runtime *parent) {
+    Runtime *top_runtime = NULL;
+
+    Runtime *runtime = NULL;
+    if (parent) {
+        top_runtime = parent->threadInfo->top_runtime;
+    }
+
+    if (top_runtime) {
+        runtime = top_runtime->runtime_pool_header;
+        if (runtime) {
+            top_runtime->runtime_pool_header = runtime->next;
+            runtime->next = NULL;
+        }
+    }
+    if (runtime == NULL) {
+        runtime = jvm_calloc(sizeof(Runtime));
+        runtime->localvar = jvm_calloc(RUNTIME_LOCALVAR_SIZE * sizeof(LocalVarItem));
+        runtime->localvar_max = RUNTIME_LOCALVAR_SIZE;
+        runtime->jnienv = &jnienv;
+        if (parent) {
+            runtime->stack = parent->stack;
+            runtime->threadInfo = parent->threadInfo;
+        }
+    }
+    //
+    if (parent != NULL) {
+        runtime->parent = parent;
+        parent->son = runtime;
+    } else {
+        runtime->stack = stack_create(STACK_LENGHT);
+        runtime->threadInfo = threadinfo_create();
+        runtime->threadInfo->top_runtime = runtime;
+    }
+    return runtime;
+}
+
+
+static inline void runtime_destory_inl(Runtime *runtime) {
+    Runtime *top_runtime = runtime->threadInfo->top_runtime;
+    if (top_runtime != runtime) {
+        runtime->next = top_runtime->runtime_pool_header;
+        top_runtime->runtime_pool_header = runtime;
+    } else {
+        stack_destory(runtime->stack);
+        threadinfo_destory(runtime->threadInfo);
+
+        Runtime *next = top_runtime->runtime_pool_header;
+        while (next) {
+            Runtime *r = next;
+            next = r->next;
+            jvm_free(r->localvar);
+            jvm_free(r);
+        }
+        runtime->runtime_pool_header = NULL;
+        jvm_free(runtime->localvar);
+        jvm_free(runtime);
+    }
+}
+
 ////======================= array =============================
 
 Instance *jarray_create_by_class(Runtime *runtime, s32 count, JClass *clazz);
@@ -384,17 +462,6 @@ JClass *classes_load_get(Utf8String *pclassName, Runtime *runtime);
 
 JClass *primitive_class_create_get(Runtime *runtime, Utf8String *ustr);
 
-void threadlist_add(Runtime *r);
-
-void threadlist_remove(Runtime *r);
-
-Runtime *threadlist_get(s32 i);
-
-s32 threadlist_count_none_daemon();
-
-void threadinfo_destory(JavaThreadInfo *threadInfo);
-
-JavaThreadInfo *threadinfo_create(void);
 
 #ifdef __cplusplus
 }

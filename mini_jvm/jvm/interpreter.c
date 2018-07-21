@@ -240,7 +240,7 @@ static inline u8 *_op_ifload_n(u8 *opCode, RuntimeStack *stack, LocalVarItem *lo
 }
 
 
-static inline u8 *_op_ldc_impl(u8 *opCode, RuntimeStack *stack, JClass *clazz, Runtime *runtime, s32 index) {
+static inline void _op_ldc_impl(RuntimeStack *stack, JClass *clazz, Runtime *runtime, s32 index) {
 
     ConstantItem *item = class_get_constant_item(clazz, index);
     switch (item->tag) {
@@ -278,8 +278,6 @@ static inline u8 *_op_ldc_impl(u8 *opCode, RuntimeStack *stack, JClass *clazz, R
             jvm_printf("ldc: something not implemention \n");
         }
     }
-
-    return opCode;
 }
 
 static inline u8 *_op_iconst_n(u8 *opCode, RuntimeStack *stack, Runtime *runtime, s32 i) {
@@ -531,7 +529,7 @@ static inline void _synchronized_unlock_method(MethodInfo *method, Runtime *runt
 s32 execute_method_impl(MethodInfo *method, Runtime *pruntime, JClass *clazz) {
     s32 ret = RUNTIME_STATUS_NORMAL;
 
-    Runtime *runtime = runtime_create(pruntime);
+    Runtime *runtime = runtime_create_inl(pruntime);
 
     runtime->method = method;
     runtime->clazz = clazz;
@@ -711,7 +709,7 @@ s32 execute_method_impl(MethodInfo *method, Runtime *pruntime, JClass *clazz) {
                     case op_ldc: {
                         s32 index = opCode[1];
                         opCode += 2;
-                        _op_ldc_impl(opCode, stack, clazz, runtime, index);
+                        _op_ldc_impl(stack, clazz, runtime, index);
                         break;
                     }
 
@@ -720,8 +718,8 @@ s32 execute_method_impl(MethodInfo *method, Runtime *pruntime, JClass *clazz) {
                         s2c.c1 = opCode[1];
                         s2c.c0 = opCode[2];
                         s32 index = s2c.s;
-                        _op_ldc_impl(opCode, stack, clazz, runtime, index);
                         opCode += 3;
+                        _op_ldc_impl(stack, clazz, runtime, index);
                         break;
                     }
 
@@ -2812,6 +2810,9 @@ s32 execute_method_impl(MethodInfo *method, Runtime *pruntime, JClass *clazz) {
                         }
                         c8 *ptr = getStaticFieldPtr(fi);
 
+                        if(fi->isvolatile){
+                            barrier();
+                        }
                         if (fi->isrefer) {
                             push_ref(stack, getFieldRefer(ptr));
                         } else {
@@ -2868,6 +2869,7 @@ s32 execute_method_impl(MethodInfo *method, Runtime *pruntime, JClass *clazz) {
                         invoke_deepth(runtime);
                         jvm_printf("%s  save:%s.%s[%llx]=[%llx]  \n", "putstatic", utf8_cstr(clazz->name), utf8_cstr(fi->name), (s64) (intptr_t) ptr, entry_2_long(&entry));
 #endif
+
                         if (fi->isrefer) {//垃圾回收标识
                             setFieldRefer(ptr, pop_ref(stack));
                         } else {
@@ -2893,6 +2895,7 @@ s32 execute_method_impl(MethodInfo *method, Runtime *pruntime, JClass *clazz) {
                                 }
                             }
                         }
+
                         opCode += 3;
                         break;
                     }
@@ -2917,6 +2920,9 @@ s32 execute_method_impl(MethodInfo *method, Runtime *pruntime, JClass *clazz) {
                             }
                             c8 *ptr = getInstanceFieldPtr(ins, fi);
 
+                            if(fi->isvolatile){
+                                barrier();
+                            }
                             if (fi->isrefer) {
                                 push_ref(stack, getFieldRefer(ptr));
                             } else {
@@ -3759,7 +3765,7 @@ s32 execute_method_impl(MethodInfo *method, Runtime *pruntime, JClass *clazz) {
         localvar_dispose(runtime);
 
     }
-    runtime_destory(runtime);
+    runtime_destory_inl(runtime);
     pruntime->son = NULL;  //need for getLastSon()
     return ret;
 }

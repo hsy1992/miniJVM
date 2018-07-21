@@ -12,7 +12,6 @@
 #include "jdwp.h"
 
 
-
 void thread_boundle(Runtime *runtime) {
 
     JClass *thread_clazz = classes_load_get_c("java/lang/Thread", runtime);
@@ -316,8 +315,7 @@ s32 call_method_main(c8 *p_mainclass, c8 *p_methodname, c8 *p_methodtype, ArrayL
 
 
             s64 start = currentTimeMillis();
-            jvm_printf(
-                    "\n\n\n\n\n\n================================= main start ================================\n");
+            jvm_printf("\n================================= main start ================================\n");
             //调用主方法
             if (java_debug) {
                 jthread_suspend(runtime);
@@ -330,8 +328,7 @@ s32 call_method_main(c8 *p_mainclass, c8 *p_methodname, c8 *p_methodtype, ArrayL
                 print_exception(runtime);
             }
 
-            jvm_printf(
-                    "================================= main  end  ================================\n");
+            jvm_printf("================================= main  end  ================================\n");
             jvm_printf("spent %lld\n", (currentTimeMillis() - start));
 
 #if _JVM_DEBUG_PROFILE

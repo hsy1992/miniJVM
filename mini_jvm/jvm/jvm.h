@@ -32,7 +32,7 @@ extern "C" {
 #define _JVM_DEBUG_GARBAGE_DUMP 0
 #define _JVM_DEBUG_PROFILE 0
 
-
+#define barrier() __asm__ __volatile__("": : :"memory")
 /*
  *  TAG
  *  1 UTF-8 String
@@ -596,7 +596,7 @@ struct _FieldInfo {
     u8 datatype_idx;
     u8 isrefer;
     u8 datatype_bytes;
-    u8 unuse;
+    u8 isvolatile;
 };
 
 typedef struct _FieldPool {
@@ -1131,6 +1131,10 @@ s32 is_ref(StackEntry *entry);
 
 
 //======================= localvar =============================
+enum {
+    RUNTIME_LOCALVAR_SIZE = 10,
+};
+
 Runtime *runtime_create(Runtime *parent);
 
 void runtime_destory(Runtime *runtime);
@@ -1189,6 +1193,7 @@ static inline void localvar_setRefer(LocalVarItem *localvar, s32 index, __refer 
 static inline __refer localvar_getRefer(LocalVarItem *localvar, s32 index) {
     return localvar[index].rvalue;
 }
+
 
 void localvar_setInt_jni(LocalVarItem *localvar, s32 index, s32 val);
 

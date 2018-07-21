@@ -906,6 +906,7 @@ void _class_optimize(JClass *clazz) {
         ptr->datatype_idx = getDataTypeIndex(utf8_char_at(ptr->descriptor, 0));
         ptr->isrefer = isDataReferByIndex(ptr->datatype_idx);
         ptr->datatype_bytes = data_type_bytes[ptr->datatype_idx];
+        ptr->isvolatile = ptr->access_flags & ACC_VOLATILE;
 
         //for gc iterator fast
         if (isDataReferByIndex(ptr->datatype_idx)) {
