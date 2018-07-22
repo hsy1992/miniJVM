@@ -25,6 +25,7 @@ char *STRS_CLASS_EXCEPTION[] = {
 };
 
 c8 *STR_CLASS_JAVA_LANG_STRING = "java/lang/String";
+c8 *STR_CLASS_JAVA_LANG_STRINGBUILDER = "java/lang/StringBuilder";
 c8 *STR_CLASS_JAVA_LANG_OBJECT = "java/lang/Object";
 c8 *STR_CLASS_JAVA_LANG_THREAD = "java/lang/Thread";
 c8 *STR_CLASS_JAVA_LANG_CLASS = "java/lang/Class";

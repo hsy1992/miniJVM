@@ -27,6 +27,9 @@ typedef struct _OptimizeCache {
     FieldInfo *string_count;
     FieldInfo *string_value;
     //
+    FieldInfo *stringbuilder_value;
+    FieldInfo *stringbuilder_count;
+    //
     FieldInfo *thread_name;
     FieldInfo *thread_stackFrame;
     //

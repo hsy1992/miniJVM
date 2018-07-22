@@ -2070,7 +2070,7 @@ s32 execute_method_impl(MethodInfo *method, Runtime *pruntime, JClass *clazz) {
                     case op_i2f: {
 
                         s32 value = pop_int(stack);
-                        f32 result = (f32)value;
+                        f32 result = (f32) value;
 #if _JVM_DEBUG_BYTECODE_DETAIL > 5
                         invoke_deepth(runtime);
                         jvm_printf("i2f: %d --> %f\n", (s32) value, result);
@@ -2810,7 +2810,7 @@ s32 execute_method_impl(MethodInfo *method, Runtime *pruntime, JClass *clazz) {
                         }
                         c8 *ptr = getStaticFieldPtr(fi);
 
-                        if(fi->isvolatile){
+                        if (fi->isvolatile) {
                             barrier();
                         }
                         if (fi->isrefer) {
@@ -2920,7 +2920,7 @@ s32 execute_method_impl(MethodInfo *method, Runtime *pruntime, JClass *clazz) {
                             }
                             c8 *ptr = getInstanceFieldPtr(ins, fi);
 
-                            if(fi->isvolatile){
+                            if (fi->isvolatile) {
                                 barrier();
                             }
                             if (fi->isrefer) {

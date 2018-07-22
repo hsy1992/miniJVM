@@ -788,15 +788,42 @@ s32 java_lang_String_intern0(Runtime *runtime, JClass *clazz) {
     return 0;
 }
 
-s32 java_lang_StringBuffer_append(Runtime *runtime, JClass *clazz) {
+s32 java_lang_StringBuilder_append(Runtime *runtime, JClass *clazz) {
     RuntimeStack *stack = runtime->stack;
-    Instance *jstr = (Instance *) localvar_getRefer(runtime->localvar, 0);
+    Instance *jbuilder = (Instance *) localvar_getRefer(runtime->localvar, 0);
+    Instance *jstr = (Instance *) localvar_getRefer(runtime->localvar, 1);
+
+    if (jstr) {
+        s32 scount = getFieldInt(getInstanceFieldPtr(jstr, jvm_runtime_cache.string_count));
+        if (scount) {
+            c8 *ptr_bvalue = getInstanceFieldPtr(jbuilder, jvm_runtime_cache.stringbuilder_value);
+            Instance *bvalue = getFieldRefer(ptr_bvalue);
+            c8 *ptr_bcount = getInstanceFieldPtr(jbuilder, jvm_runtime_cache.stringbuilder_count);
+            s32 bcount = getFieldInt(ptr_bcount);
+
+            s32 soffset = getFieldInt(getInstanceFieldPtr(jstr, jvm_runtime_cache.string_offset));
+            Instance *svalue = getFieldRefer(getInstanceFieldPtr(jstr, jvm_runtime_cache.string_value));
+            s32 bytes = data_type_bytes[DATATYPE_JCHAR];
+            if (bvalue->arr_length - bcount < scount) {//need expand stringbuilder
+                s32 n_count = bcount + scount + 1;
+                n_count = n_count > bcount * 2 ? n_count : bcount * 2;
+                Instance *b_new_v = jarray_create_by_type_index(runtime, n_count, DATATYPE_JCHAR);
+                memcpy(b_new_v->arr_body, bvalue->arr_body, bcount * bytes);
+                setFieldRefer(ptr_bvalue, b_new_v);
+                bvalue = b_new_v;
+            }
+            c8 *b_body = bvalue->arr_body + (bcount * bytes);
+            c8 *s_body = svalue->arr_body + (soffset * bytes);
+            memcpy(b_body, s_body, scount * bytes);
+            setFieldInt(ptr_bcount, bcount + scount);
+        }
+    }
 
 #if _JVM_DEBUG_BYTECODE_DETAIL > 5
     invoke_deepth(runtime);
-    jvm_printf("java_lang_StringBuffer_append \n");
+    jvm_printf("java_lang_StringBuilder_append \n");
 #endif
-    push_ref(stack, (__refer) jstr);
+    push_ref(stack, jbuilder);
     return 0;
 }
 
@@ -1227,7 +1254,7 @@ s32 java_io_Throwable_buildStackElement(Runtime *runtime, JClass *clazz) {
 //===================================    avian    ========================================
 
 s32 java_lang_System_getNativeProperties(Runtime *runtime, JClass *clazz) {
-    s32 size =(s32) sys_prop->entries;
+    s32 size = (s32) sys_prop->entries;
     Utf8String *ustr = utf8_create_c(STR_CLASS_JAVA_LANG_STRING);
     Instance *jarr = jarray_create_by_type_name(runtime, size, ustr);
     gc_refer_hold(jarr);
@@ -1324,7 +1351,8 @@ static java_native_method method_table[] = {
         {"java/lang/String",                    "equals",              "(Ljava/lang/Object;)Z",                                    java_lang_String_equals},
         {"java/lang/String",                    "indexOf",             "(I)I",                                                     java_lang_String_indexOf},
         {"java/lang/String",                    "indexOf",             "(II)I",                                                    java_lang_String_indexOfFrom},
-        {"java/lang/String",                    "intern0",              "()Ljava/lang/String;",                                     java_lang_String_intern0},
+        {"java/lang/String",                    "intern0",             "()Ljava/lang/String;",                                     java_lang_String_intern0},
+        {"java/lang/StringBuilder",             "append",              "(Ljava/lang/String;)Ljava/lang/StringBuilder;",            java_lang_StringBuilder_append},
         {"java/lang/System",                    "arraycopy",           "(Ljava/lang/Object;ILjava/lang/Object;II)V",               java_lang_System_arraycopy},
         {"java/lang/System",                    "doubleToString",      "(D)Ljava/lang/String;",                                    java_lang_System_doubleToString},
         {"java/lang/System",                    "currentTimeMillis",   "()J",                                                      java_lang_System_currentTimeMillis},

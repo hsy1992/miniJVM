@@ -164,7 +164,6 @@ s32 class_prepar(JClass *clazz, Runtime *runtime) {
         FieldInfo *fi;
         fi = find_fieldInfo_by_name_c(STR_CLASS_JAVA_LANG_CLASS, STR_FIELD_CLASSHANDLE, "J", runtime);
         jvm_runtime_cache.class_classHandle = fi;
-
     } else if (utf8_equals_c(clazz->name, STR_CLASS_JAVA_LANG_STRING)) {
         FieldInfo *fi;
         fi = find_fieldInfo_by_name_c(STR_CLASS_JAVA_LANG_STRING, STR_FIELD_COUNT, "I", runtime);
@@ -173,6 +172,12 @@ s32 class_prepar(JClass *clazz, Runtime *runtime) {
         jvm_runtime_cache.string_offset = fi;
         fi = find_fieldInfo_by_name_c(STR_CLASS_JAVA_LANG_STRING, STR_FIELD_VALUE, "[C", runtime);
         jvm_runtime_cache.string_value = fi;
+    } else if (utf8_equals_c(clazz->name, STR_CLASS_JAVA_LANG_STRINGBUILDER)) {
+        FieldInfo *fi;
+        fi = find_fieldInfo_by_name_c(STR_CLASS_JAVA_LANG_STRINGBUILDER, STR_FIELD_COUNT, "I", runtime);
+        jvm_runtime_cache.stringbuilder_count = fi;
+        fi = find_fieldInfo_by_name_c(STR_CLASS_JAVA_LANG_STRINGBUILDER, STR_FIELD_VALUE, "[C", runtime);
+        jvm_runtime_cache.stringbuilder_value = fi;
     } else if (utf8_equals_c(clazz->name, STR_CLASS_JAVA_LANG_THREAD)) {
         FieldInfo *fi;
         fi = find_fieldInfo_by_name_c(STR_CLASS_JAVA_LANG_THREAD, STR_FIELD_NAME, "[C", runtime);
