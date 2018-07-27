@@ -32,7 +32,13 @@ extern "C" {
 #define _JVM_DEBUG_GARBAGE_DUMP 0
 #define _JVM_DEBUG_PROFILE 0
 
+#if __JVM_OS_VS__ || __JVM_OS_MINGW__ || __JVM_OS_CYGWIN__
+#define barrier() MemoryBarrier()
+#else
 #define barrier() __asm__ __volatile__("": : :"memory")
+#endif
+
+
 /*
  *  TAG
  *  1 UTF-8 String
