@@ -6,33 +6,33 @@
 package org.mini.gui;
 
 import org.mini.glfw.Glfw;
-import static org.mini.glfw.utils.Gutil.toUtf8;
-import org.mini.glfw.utils.Nutil;
-import static org.mini.glfw.utils.Nutil.NVG_ALIGN_CENTER;
-import static org.mini.glfw.utils.Nutil.NVG_ALIGN_LEFT;
-import static org.mini.glfw.utils.Nutil.NVG_ALIGN_MIDDLE;
-import static org.mini.glfw.utils.Nutil.NVG_HOLE;
-import static org.mini.glfw.utils.Nutil.nvgBeginPath;
-import static org.mini.glfw.utils.Nutil.nvgBoxGradient;
-import static org.mini.glfw.utils.Nutil.nvgFill;
-import static org.mini.glfw.utils.Nutil.nvgFillColor;
-import static org.mini.glfw.utils.Nutil.nvgFillPaint;
-import static org.mini.glfw.utils.Nutil.nvgFontBlur;
-import static org.mini.glfw.utils.Nutil.nvgFontFace;
-import static org.mini.glfw.utils.Nutil.nvgFontSize;
-import static org.mini.glfw.utils.Nutil.nvgLineTo;
-import static org.mini.glfw.utils.Nutil.nvgLinearGradient;
-import static org.mini.glfw.utils.Nutil.nvgMoveTo;
-import static org.mini.glfw.utils.Nutil.nvgPathWinding;
-import static org.mini.glfw.utils.Nutil.nvgRect;
-import static org.mini.glfw.utils.Nutil.nvgRestore;
-import static org.mini.glfw.utils.Nutil.nvgRoundedRect;
-import static org.mini.glfw.utils.Nutil.nvgSave;
-import static org.mini.glfw.utils.Nutil.nvgStroke;
-import static org.mini.glfw.utils.Nutil.nvgStrokeColor;
-import static org.mini.glfw.utils.Nutil.nvgTextAlign;
-import static org.mini.glfw.utils.Nutil.nvgTextJni;
+import static org.mini.nanovg.Gutil.toUtf8;
 import static org.mini.gui.GToolkit.nvgRGBA;
+import static org.mini.nanovg.Nanovg.NVG_ALIGN_CENTER;
+import static org.mini.nanovg.Nanovg.NVG_ALIGN_LEFT;
+import static org.mini.nanovg.Nanovg.NVG_ALIGN_MIDDLE;
+import static org.mini.nanovg.Nanovg.NVG_HOLE;
+import static org.mini.nanovg.Nanovg.nvgBeginPath;
+import static org.mini.nanovg.Nanovg.nvgBoxGradient;
+import static org.mini.nanovg.Nanovg.nvgFill;
+import static org.mini.nanovg.Nanovg.nvgFillColor;
+import static org.mini.nanovg.Nanovg.nvgFillPaint;
+import static org.mini.nanovg.Nanovg.nvgFontBlur;
+import static org.mini.nanovg.Nanovg.nvgFontFace;
+import static org.mini.nanovg.Nanovg.nvgFontSize;
+import static org.mini.nanovg.Nanovg.nvgLineTo;
+import static org.mini.nanovg.Nanovg.nvgLinearGradient;
+import static org.mini.nanovg.Nanovg.nvgMoveTo;
+import static org.mini.nanovg.Nanovg.nvgPathWinding;
+import static org.mini.nanovg.Nanovg.nvgRect;
+import static org.mini.nanovg.Nanovg.nvgResetScissor;
+import static org.mini.nanovg.Nanovg.nvgRestore;
+import static org.mini.nanovg.Nanovg.nvgRoundedRect;
+import static org.mini.nanovg.Nanovg.nvgSave;
+import static org.mini.nanovg.Nanovg.nvgStroke;
+import static org.mini.nanovg.Nanovg.nvgStrokeColor;
+import static org.mini.nanovg.Nanovg.nvgTextAlign;
+import static org.mini.nanovg.Nanovg.nvgTextJni;
 
 /**
  *
@@ -114,7 +114,7 @@ public class GFrame extends GContainer {
 
     @Override
     public boolean update(long vg) {
-        Nutil.nvgResetScissor(vg);
+        nvgResetScissor(vg);
         this.vg = vg;
         drawWindow(vg, title, boundle[0], boundle[1], boundle[2], boundle[3]);
         super.update(this.vg);

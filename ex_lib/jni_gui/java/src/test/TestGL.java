@@ -31,9 +31,9 @@ import static org.mini.gl.GL.glMatrixMode;
 import static org.mini.gl.GL.glTranslatef;
 import org.mini.glfw.Glfw;
 import org.mini.glfw.GlfwCallbackAdapter;
-import org.mini.glfw.utils.Gutil;
-import static org.mini.glfw.utils.Gutil.vec_mul_cross;
-import static org.mini.glfw.utils.Gutil.vec_sub;
+import org.mini.nanovg.Gutil;
+import static org.mini.nanovg.Gutil.vec_mul_cross;
+import static org.mini.nanovg.Gutil.vec_sub;
 
 /*
  * To change this license header, choose License Headers in Project Properties.

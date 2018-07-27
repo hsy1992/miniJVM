@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package org.mini.glfw.utils;
+package org.mini.nanovg;
 
 import java.io.UnsupportedEncodingException;
 import org.mini.gl.GL;
@@ -26,9 +26,9 @@ import static org.mini.gl.GL.glGenerateMipmap;
 import static org.mini.gl.GL.glGetString;
 import static org.mini.gl.GL.glTexImage2D;
 import static org.mini.gl.GL.glTexParameterf;
-import static org.mini.glfw.utils.Nutil.access_mem;
-import static org.mini.glfw.utils.Nutil.stbi_image_free;
-import static org.mini.glfw.utils.Nutil.stbi_load;
+import static org.mini.nanovg.Nanovg.access_mem;
+import static org.mini.nanovg.Nanovg.stbi_image_free;
+import static org.mini.nanovg.Nanovg.stbi_load;
 
 /**
  *

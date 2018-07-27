@@ -8,25 +8,21 @@ package org.mini.gui;
 import java.util.Hashtable;
 import org.mini.reflect.ReflectArray;
 import org.mini.reflect.vm.RefNative;
-import org.mini.glfw.Glfw;
-import static org.mini.glfw.utils.Gutil.toUtf8;
-import org.mini.glfw.utils.Nutil;
-import static org.mini.glfw.utils.Nutil.nvgAddFallbackFontId;
-import static org.mini.glfw.utils.Nutil.nvgBeginPath;
-import static org.mini.glfw.utils.Nutil.nvgCreateFont;
-import static org.mini.glfw.utils.Nutil.nvgFill;
-import static org.mini.glfw.utils.Nutil.nvgFillColor;
-import static org.mini.glfw.utils.Nutil.nvgRect;
+import static org.mini.nanovg.Gutil.toUtf8;
+import org.mini.nanovg.Nanovg;
+import static org.mini.nanovg.Nanovg.nvgAddFallbackFontId;
+import static org.mini.nanovg.Nanovg.nvgBeginPath;
+import static org.mini.nanovg.Nanovg.nvgCreateFont;
+import static org.mini.nanovg.Nanovg.nvgFill;
+import static org.mini.nanovg.Nanovg.nvgFillColor;
+import static org.mini.nanovg.Nanovg.nvgRect;
+import static org.mini.nanovg.Nanovg.nvgTextBoundsJni;
 
 /**
  *
  * @author gust
  */
 public class GToolkit {
-
-    static {
-        Glfw.loadLib();
-    }
 
     static Hashtable<Long, GForm> table = new Hashtable();
 
@@ -55,7 +51,7 @@ public class GToolkit {
     }
 
     public static float[] nvgRGBA(int r, int g, int b, int a) {
-        return Nutil.nvgRGBA((byte) r, (byte) g, (byte) b, (byte) a);
+        return Nanovg.nvgRGBA((byte) r, (byte) g, (byte) b, (byte) a);
     }
 
     /**
@@ -101,7 +97,7 @@ public class GToolkit {
 
     public static float[] getFontBoundle(long vg) {
         float[] bond = new float[4];
-        Nutil.nvgTextBoundsJni(vg, 0, 0, FONT_GLYPH_TEMPLATE, 0, FONT_GLYPH_TEMPLATE.length, bond);
+        nvgTextBoundsJni(vg, 0, 0, FONT_GLYPH_TEMPLATE, 0, FONT_GLYPH_TEMPLATE.length, bond);
         bond[GObject.WIDTH] -= bond[GObject.LEFT];
         bond[GObject.HEIGHT] -= bond[GObject.TOP];
         bond[GObject.LEFT] = bond[GObject.TOP] = 0;
@@ -114,8 +110,8 @@ public class GToolkit {
     static GStyle defaultStyle;
 
     public static GStyle getStyle() {
-        if(defaultStyle==null){
-            defaultStyle=new GDefaultStyle();
+        if (defaultStyle == null) {
+            defaultStyle = new GDefaultStyle();
         }
         return defaultStyle;
     }
@@ -130,13 +126,23 @@ public class GToolkit {
     static long caretLastBlink;
     static long CARET_BLINK_PERIOD = 600;
 
-    public static void drawCaret(long vg, float x, float y, float w, float h) {
+    /**
+     * 画光标，是否闪烁，如果为false,则一常显，为了节能，所以大多时候blink为false
+     *
+     * @param vg
+     * @param x
+     * @param y
+     * @param w
+     * @param h
+     * @param blink
+     */
+    public static void drawCaret(long vg, float x, float y, float w, float h, boolean blink) {
         long curTime = System.currentTimeMillis();
         if (curTime - caretLastBlink > CARET_BLINK_PERIOD) {
             caretBlink = !caretBlink;
             caretLastBlink = curTime;
         }
-        if (caretBlink) {
+        if (caretBlink || !blink) {
             nvgBeginPath(vg);
             nvgFillColor(vg, nvgRGBA(255, 192, 0, 255));
             nvgRect(vg, x, y, w, h);
@@ -144,10 +150,11 @@ public class GToolkit {
         }
     }
 
-    public static void drawSelect(long vg, float x, float y, float w, float h) {
+    public static void drawRect(long vg, float x, float y, float w, float h, float[] color) {
         nvgBeginPath(vg);
-        nvgFillColor(vg, nvgRGBA(128, 128, 255, 64));
+        nvgFillColor(vg, color);
         nvgRect(vg, x, y, w, h);
         nvgFill(vg);
     }
+
 }

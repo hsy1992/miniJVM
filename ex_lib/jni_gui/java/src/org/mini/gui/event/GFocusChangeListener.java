@@ -9,9 +9,11 @@ import org.mini.gui.GObject;
 
 /**
  *
- * @author gust
+ * @author Gust
  */
-public interface GActionListener extends GListener {
+public interface GFocusChangeListener {
 
-    void action(GObject go);
+    public void focusGot(GObject go);
+
+    public void focusLost(GObject go);
 }

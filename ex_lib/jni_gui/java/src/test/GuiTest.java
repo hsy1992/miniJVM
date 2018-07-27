@@ -3,9 +3,7 @@ package test;
 import java.util.Random;
 import org.mini.gl.warp.GLFrameBuffer;
 import org.mini.gl.warp.GLFrameBufferPainter;
-import static org.mini.glfw.utils.Gutil.toUtf8;
-import org.mini.glfw.utils.Nutil;
-import static org.mini.glfw.utils.Nutil.nvgSave;
+import static org.mini.nanovg.Gutil.toUtf8;
 import org.mini.gui.GButton;
 import org.mini.gui.GCanvas;
 import org.mini.gui.GCheckBox;
@@ -15,13 +13,14 @@ import org.mini.gui.GFrame;
 import org.mini.gui.GForm;
 import org.mini.gui.GGraphics;
 import org.mini.gui.GImage;
-import org.mini.gui.GInputField;
+import org.mini.gui.GTextField;
 import org.mini.gui.GLabel;
 import org.mini.gui.GList;
 import org.mini.gui.GObject;
 import org.mini.gui.GPanel;
 import org.mini.gui.GScrollBar;
 import org.mini.gui.event.GActionListener;
+import static org.mini.nanovg.Nanovg.nvgCreateImage;
 
 /*
  * To change this license header, choose License Headers in Project Properties.
@@ -60,18 +59,16 @@ public class GuiTest {
         light = new Light();
 
         int x = 8, y = 10;
-        GInputField gif = new GInputField("", "search", x, y, 280, 25);
+        GTextField gif = new GTextField("", "search", x, y, 280, 25);
         parent.add(gif);
         y += 30;
         GLabel lb1 = new GLabel("Login", x, y, 280, 20);
         parent.add(lb1);
         y += 25;
-        GTextBox mail = new GTextBox("", "Email", x, y, 280, 28);
-        mail.setSingleMode(true);
+        GTextField mail = new GTextField("", "Email", x, y, 280, 28);
         parent.add(mail);
         y += 35;
-        GTextBox pwd = new GTextBox("", "Password", x, y, 280, 28);
-        pwd.setSingleMode(true);
+        GTextField pwd = new GTextField("", "Password", x, y, 280, 28);
         parent.add(pwd);
         y += 35;
         String conttxt = "This is longer chunk of text.\n  \n  Would have used lorem ipsum but she    was busy jumping over the lazy dog with the fox and all the men who came to the aid of the party.";
@@ -92,7 +89,7 @@ public class GuiTest {
         parent.add(sig);
         sig.setActionListener(new GActionListener() {
             @Override
-            public void action() {
+            public void action(GObject go) {
                 Random ran = new Random();
                 GFrame sub1 = new GFrame(/*"子窗口"*/"颜色选择", 400 + ran.nextInt(100), 50 + ran.nextInt(100), 300, 400);
                 GPanel panel = sub1.getPanel();
@@ -119,7 +116,7 @@ public class GuiTest {
 
         bt1.setActionListener(new GActionListener() {
             @Override
-            public void action() {
+            public void action(GObject go) {
                 System.out.println("delete something");
             }
         });
@@ -135,7 +132,7 @@ public class GuiTest {
         list = new GList(x, y, 280, 30);
         parent.add(list);
         if (list.getImages() == null) {
-            int i = Nutil.nvgCreateImage(vg, toUtf8("./image4.png"), 0);
+            int i = nvgCreateImage(vg, toUtf8("./image4.png"), 0);
             list.setItems(new int[]{i, i, i, i, i, i, i, i, i, i},
                     new String[]{"A", "B", "C", "D", "E", "F", "G", "H", "I", "J",});
         }

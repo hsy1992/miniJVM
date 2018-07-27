@@ -5,27 +5,36 @@
  */
 package org.mini.gui;
 
-import org.mini.glfw.utils.Gutil;
-import org.mini.glfw.utils.Nutil;
-import static org.mini.glfw.utils.Nutil.NVG_CW;
-import static org.mini.glfw.utils.Nutil.nvgArc;
-import static org.mini.glfw.utils.Nutil.nvgBeginPath;
-import static org.mini.glfw.utils.Nutil.nvgClosePath;
-import static org.mini.glfw.utils.Nutil.nvgFill;
-import static org.mini.glfw.utils.Nutil.nvgFillColor;
-import static org.mini.glfw.utils.Nutil.nvgFillPaint;
-import static org.mini.glfw.utils.Nutil.nvgFontFace;
-import static org.mini.glfw.utils.Nutil.nvgFontSize;
-import static org.mini.glfw.utils.Nutil.nvgImagePattern;
-import static org.mini.glfw.utils.Nutil.nvgLineTo;
-import static org.mini.glfw.utils.Nutil.nvgMoveTo;
-import static org.mini.glfw.utils.Nutil.nvgReset;
-import static org.mini.glfw.utils.Nutil.nvgRoundedRect;
-import static org.mini.glfw.utils.Nutil.nvgSave;
-import static org.mini.glfw.utils.Nutil.nvgStroke;
-import static org.mini.glfw.utils.Nutil.nvgStrokeColor;
-import static org.mini.glfw.utils.Nutil.nvgStrokeWidth;
+import org.mini.nanovg.Gutil;
 import static org.mini.gui.GToolkit.nvgRGBA;
+import static org.mini.nanovg.Nanovg.NVG_ALIGN_BASELINE;
+import static org.mini.nanovg.Nanovg.NVG_ALIGN_BOTTOM;
+import static org.mini.nanovg.Nanovg.NVG_ALIGN_CENTER;
+import static org.mini.nanovg.Nanovg.NVG_ALIGN_LEFT;
+import static org.mini.nanovg.Nanovg.NVG_ALIGN_MIDDLE;
+import static org.mini.nanovg.Nanovg.NVG_ALIGN_RIGHT;
+import static org.mini.nanovg.Nanovg.NVG_ALIGN_TOP;
+import static org.mini.nanovg.Nanovg.NVG_CW;
+import static org.mini.nanovg.Nanovg.nvgArc;
+import static org.mini.nanovg.Nanovg.nvgBeginPath;
+import static org.mini.nanovg.Nanovg.nvgClosePath;
+import static org.mini.nanovg.Nanovg.nvgFill;
+import static org.mini.nanovg.Nanovg.nvgFillColor;
+import static org.mini.nanovg.Nanovg.nvgFillPaint;
+import static org.mini.nanovg.Nanovg.nvgFontFace;
+import static org.mini.nanovg.Nanovg.nvgFontSize;
+import static org.mini.nanovg.Nanovg.nvgImagePattern;
+import static org.mini.nanovg.Nanovg.nvgLineTo;
+import static org.mini.nanovg.Nanovg.nvgMoveTo;
+import static org.mini.nanovg.Nanovg.nvgReset;
+import static org.mini.nanovg.Nanovg.nvgRoundedRect;
+import static org.mini.nanovg.Nanovg.nvgSave;
+import static org.mini.nanovg.Nanovg.nvgScissor;
+import static org.mini.nanovg.Nanovg.nvgStroke;
+import static org.mini.nanovg.Nanovg.nvgStrokeColor;
+import static org.mini.nanovg.Nanovg.nvgStrokeWidth;
+import static org.mini.nanovg.Nanovg.nvgTextJni;
+import static org.mini.nanovg.Nanovg.nvgTranslate;
 
 /**
  *
@@ -33,13 +42,13 @@ import static org.mini.gui.GToolkit.nvgRGBA;
  */
 public class GGraphics {
 
-    public static final int LEFT = Nutil.NVG_ALIGN_LEFT;
-    public static final int HCENTER = Nutil.NVG_ALIGN_CENTER;
-    public static final int RIGHT = Nutil.NVG_ALIGN_RIGHT;
-    public static final int TOP = Nutil.NVG_ALIGN_TOP;
-    public static final int VCENTER = Nutil.NVG_ALIGN_MIDDLE;
-    public static final int BOTTOM = Nutil.NVG_ALIGN_BOTTOM;
-    public static final int BASELINE = Nutil.NVG_ALIGN_BASELINE;
+    public static final int LEFT = NVG_ALIGN_LEFT;
+    public static final int HCENTER = NVG_ALIGN_CENTER;
+    public static final int RIGHT = NVG_ALIGN_RIGHT;
+    public static final int TOP = NVG_ALIGN_TOP;
+    public static final int VCENTER = NVG_ALIGN_MIDDLE;
+    public static final int BOTTOM = NVG_ALIGN_BOTTOM;
+    public static final int BASELINE = NVG_ALIGN_BASELINE;
 
     GCanvas canvas;
     long vg;
@@ -133,7 +142,7 @@ public class GGraphics {
         y += canvas.getY();;
         byte[] ba = Gutil.toUtf8(str + "\000");
         nvgFillColor(vg, nvgRGBA(r, g, b, a));
-        Nutil.nvgTextJni(vg, x, y, ba, 0, ba.length);
+        nvgTextJni(vg, x, y, ba, 0, ba.length);
     }
 
     public void drawSubstring(String str, int offset, int len, int x, int y, int anchor) {
@@ -142,14 +151,14 @@ public class GGraphics {
         y += canvas.getY();
         str = str.substring(offset, len);
         byte[] b = Gutil.toUtf8(str + "\000");
-        Nutil.nvgTextJni(vg, x, y, b, 0, b.length);
+        nvgTextJni(vg, x, y, b, 0, b.length);
     }
 
     public void drawChar(char character, int x, int y, int anchor) {
         x += canvas.getX();
         y += canvas.getY();
         byte[] b = Gutil.toUtf8(character + "\000");
-        Nutil.nvgTextJni(vg, x, y, b, 0, b.length);
+        nvgTextJni(vg, x, y, b, 0, b.length);
     }
 
     public void drawChars(char[] data, int offset, int length, int x, int y, int anchor) {
@@ -234,11 +243,11 @@ public class GGraphics {
     }
 
     public void clipRect(int x, int y, int width, int height) {
-        Nutil.nvgScissor(vg, x, y, width, height);
+        nvgScissor(vg, x, y, width, height);
     }
 
     public void translate(int x, int y) {
-        Nutil.nvgTranslate(vg, x, y);
+        nvgTranslate(vg, x, y);
     }
 
 }

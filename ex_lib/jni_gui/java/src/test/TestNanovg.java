@@ -33,81 +33,87 @@ import static org.mini.glfw.Glfw.glfwTerminate;
 import static org.mini.glfw.Glfw.glfwWindowHint;
 import static org.mini.glfw.Glfw.glfwWindowShouldClose;
 import org.mini.glfw.GlfwCallbackAdapter;
-import static org.mini.glfw.utils.Gutil.toUtf8;
-import org.mini.glfw.utils.Nutil;
-import static org.mini.glfw.utils.Nutil.NVG_ALIGN_CENTER;
-import static org.mini.glfw.utils.Nutil.NVG_ALIGN_LEFT;
-import static org.mini.glfw.utils.Nutil.NVG_ALIGN_MIDDLE;
-import static org.mini.glfw.utils.Nutil.NVG_ALIGN_RIGHT;
-import static org.mini.glfw.utils.Nutil.NVG_ALIGN_TOP;
-import static org.mini.glfw.utils.Nutil.NVG_ANTIALIAS;
-import static org.mini.glfw.utils.Nutil.NVG_BEVEL;
-import static org.mini.glfw.utils.Nutil.NVG_BUTT;
-import static org.mini.glfw.utils.Nutil.NVG_CCW;
-import static org.mini.glfw.utils.Nutil.NVG_CW;
-import static org.mini.glfw.utils.Nutil.NVG_DEBUG;
-import static org.mini.glfw.utils.Nutil.NVG_HOLE;
-import static org.mini.glfw.utils.Nutil.NVG_MITER;
-import static org.mini.glfw.utils.Nutil.NVG_ROUND;
-import static org.mini.glfw.utils.Nutil.NVG_SQUARE;
-import static org.mini.glfw.utils.Nutil.NVG_STENCIL_STROKES;
-import static org.mini.glfw.utils.Nutil.nvgAddFallbackFontId;
-import static org.mini.glfw.utils.Nutil.nvgArc;
-import static org.mini.glfw.utils.Nutil.nvgBeginFrame;
-import static org.mini.glfw.utils.Nutil.nvgBeginPath;
-import static org.mini.glfw.utils.Nutil.nvgBezierTo;
-import static org.mini.glfw.utils.Nutil.nvgBoxGradient;
-import static org.mini.glfw.utils.Nutil.nvgCircle;
-import static org.mini.glfw.utils.Nutil.nvgClosePath;
-import static org.mini.glfw.utils.Nutil.nvgCreateFont;
-import static org.mini.glfw.utils.Nutil.nvgCreateNVGglyphPosition;
-import static org.mini.glfw.utils.Nutil.nvgCreateNVGtextRow;
-import static org.mini.glfw.utils.Nutil.nvgDegToRad;
-import static org.mini.glfw.utils.Nutil.nvgEllipse;
-import static org.mini.glfw.utils.Nutil.nvgEndFrame;
-import static org.mini.glfw.utils.Nutil.nvgFill;
-import static org.mini.glfw.utils.Nutil.nvgFillColor;
-import static org.mini.glfw.utils.Nutil.nvgFillPaint;
-import static org.mini.glfw.utils.Nutil.nvgFontBlur;
-import static org.mini.glfw.utils.Nutil.nvgFontFace;
-import static org.mini.glfw.utils.Nutil.nvgFontSize;
-import static org.mini.glfw.utils.Nutil.nvgGlobalAlpha;
-import static org.mini.glfw.utils.Nutil.nvgHSLA;
-import static org.mini.glfw.utils.Nutil.nvgImagePattern;
-import static org.mini.glfw.utils.Nutil.nvgImageSize;
-import static org.mini.glfw.utils.Nutil.nvgIntersectScissor;
-import static org.mini.glfw.utils.Nutil.nvgLineCap;
-import static org.mini.glfw.utils.Nutil.nvgLineJoin;
-import static org.mini.glfw.utils.Nutil.nvgLineTo;
-import static org.mini.glfw.utils.Nutil.nvgLinearGradient;
-import static org.mini.glfw.utils.Nutil.nvgMoveTo;
-import static org.mini.glfw.utils.Nutil.nvgNVGglyphPosition_x;
-import static org.mini.glfw.utils.Nutil.nvgPathWinding;
-import static org.mini.glfw.utils.Nutil.nvgRadialGradient;
-import static org.mini.glfw.utils.Nutil.nvgRect;
-import static org.mini.glfw.utils.Nutil.nvgResetScissor;
-import static org.mini.glfw.utils.Nutil.nvgRestore;
-import static org.mini.glfw.utils.Nutil.nvgRotate;
-import static org.mini.glfw.utils.Nutil.nvgRoundedRect;
-import static org.mini.glfw.utils.Nutil.nvgSave;
-import static org.mini.glfw.utils.Nutil.nvgScale;
-import static org.mini.glfw.utils.Nutil.nvgScissor;
-import static org.mini.glfw.utils.Nutil.nvgStroke;
-import static org.mini.glfw.utils.Nutil.nvgStrokeColor;
-import static org.mini.glfw.utils.Nutil.nvgStrokeWidth;
-import static org.mini.glfw.utils.Nutil.nvgTextJni;
-import static org.mini.glfw.utils.Nutil.nvgTextAlign;
-import static org.mini.glfw.utils.Nutil.nvgTextBoundsJni;
-import static org.mini.glfw.utils.Nutil.nvgTextBoxBoundsJni;
-import static org.mini.glfw.utils.Nutil.nvgTextBoxJni;
-import static org.mini.glfw.utils.Nutil.nvgTextBreakLinesJni;
-import static org.mini.glfw.utils.Nutil.nvgTextGlyphPositionsJni;
-import static org.mini.glfw.utils.Nutil.nvgTextLineHeight;
-import static org.mini.glfw.utils.Nutil.nvgTextMetrics;
-import static org.mini.glfw.utils.Nutil.nvgTranslate;
+import static org.mini.nanovg.Gutil.toUtf8;
 import org.mini.gui.GToolkit;
 import static org.mini.glfw.Glfw.glfwGetFramebufferWidth;
 import static org.mini.glfw.Glfw.glfwGetFramebufferHeight;
+import static org.mini.nanovg.Nanovg.NVG_ALIGN_CENTER;
+import static org.mini.nanovg.Nanovg.NVG_ALIGN_LEFT;
+import static org.mini.nanovg.Nanovg.NVG_ALIGN_MIDDLE;
+import static org.mini.nanovg.Nanovg.NVG_ALIGN_RIGHT;
+import static org.mini.nanovg.Nanovg.NVG_ALIGN_TOP;
+import static org.mini.nanovg.Nanovg.NVG_ANTIALIAS;
+import static org.mini.nanovg.Nanovg.NVG_BEVEL;
+import static org.mini.nanovg.Nanovg.NVG_BUTT;
+import static org.mini.nanovg.Nanovg.NVG_CCW;
+import static org.mini.nanovg.Nanovg.NVG_CW;
+import static org.mini.nanovg.Nanovg.NVG_DEBUG;
+import static org.mini.nanovg.Nanovg.NVG_HOLE;
+import static org.mini.nanovg.Nanovg.NVG_MITER;
+import static org.mini.nanovg.Nanovg.NVG_ROUND;
+import static org.mini.nanovg.Nanovg.NVG_SQUARE;
+import static org.mini.nanovg.Nanovg.NVG_STENCIL_STROKES;
+import static org.mini.nanovg.Nanovg.nvgAddFallbackFontId;
+import static org.mini.nanovg.Nanovg.nvgArc;
+import static org.mini.nanovg.Nanovg.nvgBeginFrame;
+import static org.mini.nanovg.Nanovg.nvgBeginPath;
+import static org.mini.nanovg.Nanovg.nvgBezierTo;
+import static org.mini.nanovg.Nanovg.nvgBoxGradient;
+import static org.mini.nanovg.Nanovg.nvgCircle;
+import static org.mini.nanovg.Nanovg.nvgClosePath;
+import static org.mini.nanovg.Nanovg.nvgCreateFont;
+import static org.mini.nanovg.Nanovg.nvgCreateGL3;
+import static org.mini.nanovg.Nanovg.nvgCreateNVGglyphPosition;
+import static org.mini.nanovg.Nanovg.nvgCreateNVGtextRow;
+import static org.mini.nanovg.Nanovg.nvgDegToRad;
+import static org.mini.nanovg.Nanovg.nvgDeleteNVGglyphPosition;
+import static org.mini.nanovg.Nanovg.nvgDeleteNVGtextRow;
+import static org.mini.nanovg.Nanovg.nvgEllipse;
+import static org.mini.nanovg.Nanovg.nvgEndFrame;
+import static org.mini.nanovg.Nanovg.nvgFill;
+import static org.mini.nanovg.Nanovg.nvgFillColor;
+import static org.mini.nanovg.Nanovg.nvgFillPaint;
+import static org.mini.nanovg.Nanovg.nvgFontBlur;
+import static org.mini.nanovg.Nanovg.nvgFontFace;
+import static org.mini.nanovg.Nanovg.nvgFontSize;
+import static org.mini.nanovg.Nanovg.nvgGlobalAlpha;
+import static org.mini.nanovg.Nanovg.nvgHSLA;
+import static org.mini.nanovg.Nanovg.nvgImagePattern;
+import static org.mini.nanovg.Nanovg.nvgImageSize;
+import static org.mini.nanovg.Nanovg.nvgIntersectScissor;
+import static org.mini.nanovg.Nanovg.nvgLineCap;
+import static org.mini.nanovg.Nanovg.nvgLineJoin;
+import static org.mini.nanovg.Nanovg.nvgLineTo;
+import static org.mini.nanovg.Nanovg.nvgLinearGradient;
+import static org.mini.nanovg.Nanovg.nvgMoveTo;
+import static org.mini.nanovg.Nanovg.nvgNVGglyphPosition_x;
+import static org.mini.nanovg.Nanovg.nvgNVGtextRow_end;
+import static org.mini.nanovg.Nanovg.nvgNVGtextRow_next;
+import static org.mini.nanovg.Nanovg.nvgNVGtextRow_start;
+import static org.mini.nanovg.Nanovg.nvgNVGtextRow_width;
+import static org.mini.nanovg.Nanovg.nvgPathWinding;
+import static org.mini.nanovg.Nanovg.nvgRadialGradient;
+import static org.mini.nanovg.Nanovg.nvgRect;
+import static org.mini.nanovg.Nanovg.nvgResetScissor;
+import static org.mini.nanovg.Nanovg.nvgRestore;
+import static org.mini.nanovg.Nanovg.nvgRotate;
+import static org.mini.nanovg.Nanovg.nvgRoundedRect;
+import static org.mini.nanovg.Nanovg.nvgSave;
+import static org.mini.nanovg.Nanovg.nvgScale;
+import static org.mini.nanovg.Nanovg.nvgScissor;
+import static org.mini.nanovg.Nanovg.nvgStroke;
+import static org.mini.nanovg.Nanovg.nvgStrokeColor;
+import static org.mini.nanovg.Nanovg.nvgStrokeWidth;
+import static org.mini.nanovg.Nanovg.nvgTextAlign;
+import static org.mini.nanovg.Nanovg.nvgTextBoundsJni;
+import static org.mini.nanovg.Nanovg.nvgTextBoxBoundsJni;
+import static org.mini.nanovg.Nanovg.nvgTextBoxJni;
+import static org.mini.nanovg.Nanovg.nvgTextBreakLinesJni;
+import static org.mini.nanovg.Nanovg.nvgTextGlyphPositionsJni;
+import static org.mini.nanovg.Nanovg.nvgTextJni;
+import static org.mini.nanovg.Nanovg.nvgTextLineHeight;
+import static org.mini.nanovg.Nanovg.nvgTextMetrics;
+import static org.mini.nanovg.Nanovg.nvgTranslate;
 
 /*
  * To change this license header, choose License Headers in Project Properties.
@@ -233,7 +239,7 @@ public class TestNanovg {
     static int ICON_TRASH = 0xE729;
 
     void init() {
-        vg = Nutil.nvgCreateGL3(NVG_ANTIALIAS | NVG_STENCIL_STROKES | NVG_DEBUG);
+        vg = nvgCreateGL3(NVG_ANTIALIAS | NVG_STENCIL_STROKES | NVG_DEBUG);
         if (vg == 0) {
             System.out.println("Could not init nanovg.\n");
 
@@ -295,7 +301,7 @@ public class TestNanovg {
     float NVG_PI = 3.1415926f;
 
     float[] nvgRGBA(int r, int g, int b, int a) {
-        return Nutil.nvgRGBA((byte) r, (byte) g, (byte) b, (byte) a);
+        return nvgRGBA((byte) r, (byte) g, (byte) b, (byte) a);
     }
 
     float cosf(float v) {
@@ -497,7 +503,7 @@ public class TestNanovg {
         drawEditBoxBase(vg, x, y, w, h);
 
         byte[] b1 = toUtf8(units);
-        uw = Nutil.nvgTextBoundsJni(vg, 0f, 0f, b1, 0, b1.length, null);
+        uw = nvgTextBoundsJni(vg, 0f, 0f, b1, 0, b1.length, null);
 
         nvgFontSize(vg, 18.0f);
         nvgFontFace(vg, fontname);
@@ -545,7 +551,7 @@ public class TestNanovg {
         float cornerRadius = 4.0f;
         float tw = 0, iw = 0;
 
-        bg = Nutil.nvgLinearGradient(vg, x, y, x, y + h, nvgRGBA(255, 255, 255, isBlack(col) ? 16 : 32), nvgRGBA(0, 0, 0, isBlack(col) ? 16 : 32));
+        bg = nvgLinearGradient(vg, x, y, x, y + h, nvgRGBA(255, 255, 255, isBlack(col) ? 16 : 32), nvgRGBA(0, 0, 0, isBlack(col) ? 16 : 32));
         nvgBeginPath(vg);
         nvgRoundedRect(vg, x + 1, y + 1, w - 2, h - 2, cornerRadius - 1);
         if (!isBlack(col)) {
@@ -563,12 +569,12 @@ public class TestNanovg {
         nvgFontSize(vg, 20.0f);
         nvgFontFace(vg, fontname);
         byte[] b2 = toUtf8(text);
-        tw = Nutil.nvgTextBoundsJni(vg, 0, 0, b2, 0, b2.length, null);
+        tw = nvgTextBoundsJni(vg, 0, 0, b2, 0, b2.length, null);
         byte[] b3 = cpToUTF8(preicon);
         if (preicon != 0) {
             nvgFontSize(vg, h * 1.3f);
             nvgFontFace(vg, iconname);
-            iw = Nutil.nvgTextBoundsJni(vg, 0, 0, b3, 0, b3.length, null);
+            iw = nvgTextBoundsJni(vg, 0, 0, b3, 0, b3.length, null);
             iw += h * 0.15f;
         }
 
@@ -815,7 +821,7 @@ public class TestNanovg {
 //	nvgClearState(vg);
 
         // Drop shadow
-        shadowPaint = Nutil.nvgBoxGradient(vg, x, y + 4, w, h, cornerRadius * 2, 20, nvgRGBA(0, 0, 0, 128), nvgRGBA(0, 0, 0, 0));
+        shadowPaint = nvgBoxGradient(vg, x, y + 4, w, h, cornerRadius * 2, 20, nvgRGBA(0, 0, 0, 128), nvgRGBA(0, 0, 0, 0));
         nvgBeginPath(vg);
         nvgRect(vg, x - 10, y - 10, w + 20, h + 30);
         nvgRoundedRect(vg, x, y, w, h, cornerRadius);
@@ -1163,14 +1169,14 @@ public class TestNanovg {
         while ((nrows = nvgTextBreakLinesJni(vg, text_arr, start, end, width, rows, rowCount)) != 0) {
             for (i = 0; i < nrows; i++) {
                 boolean hit = mx > x && mx < (x + width) && my >= y && my < (y + lineh[0]);
-                float row_width = Nutil.nvgNVGtextRow_width(rows, i);
+                float row_width = nvgNVGtextRow_width(rows, i);
                 nvgBeginPath(vg);
                 nvgFillColor(vg, nvgRGBA(255, 255, 255, hit ? 64 : 16));
                 nvgRect(vg, x, y, row_width, lineh[0]);
                 nvgFill(vg);
 
-                int starti = (int) (Nutil.nvgNVGtextRow_start(rows, i) - ptr);
-                int endi = (int) (Nutil.nvgNVGtextRow_end(rows, i) - ptr);
+                int starti = (int) (nvgNVGtextRow_start(rows, i) - ptr);
+                int endi = (int) (nvgNVGtextRow_end(rows, i) - ptr);
 
                 nvgFillColor(vg, nvgRGBA(255, 255, 255, 255));
                 nvgTextJni(vg, x, y, text_arr, starti, endi);
@@ -1202,7 +1208,7 @@ public class TestNanovg {
             }
             // Keep going...
             
-            long next = Nutil.nvgNVGtextRow_next(rows, nrows - 1);
+            long next = nvgNVGtextRow_next(rows, nrows - 1);
             start = (int) (next - ptr);
         }
         if (gutter != 0) {
@@ -1251,8 +1257,8 @@ public class TestNanovg {
 
         nvgRestore(vg);
         
-        Nutil.nvgDeleteNVGtextRow(rows);
-        Nutil.nvgDeleteNVGglyphPosition(glyphs);
+        nvgDeleteNVGtextRow(rows);
+        nvgDeleteNVGglyphPosition(glyphs);
     }
 
     void drawWidths(long vg, float x, float y, float width) {

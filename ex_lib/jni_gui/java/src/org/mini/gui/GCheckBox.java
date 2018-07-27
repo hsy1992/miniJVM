@@ -5,20 +5,20 @@
  */
 package org.mini.gui;
 
-import static org.mini.glfw.utils.Gutil.toUtf8;
-import org.mini.glfw.utils.Nutil;
-import static org.mini.glfw.utils.Nutil.NVG_ALIGN_LEFT;
-import static org.mini.glfw.utils.Nutil.NVG_ALIGN_MIDDLE;
-import static org.mini.glfw.utils.Nutil.nvgBeginPath;
-import static org.mini.glfw.utils.Nutil.nvgBoxGradient;
-import static org.mini.glfw.utils.Nutil.nvgFill;
-import static org.mini.glfw.utils.Nutil.nvgFillColor;
-import static org.mini.glfw.utils.Nutil.nvgFillPaint;
-import static org.mini.glfw.utils.Nutil.nvgFontFace;
-import static org.mini.glfw.utils.Nutil.nvgFontSize;
-import static org.mini.glfw.utils.Nutil.nvgRoundedRect;
-import static org.mini.glfw.utils.Nutil.nvgTextAlign;
+import static org.mini.nanovg.Gutil.toUtf8;
 import static org.mini.gui.GToolkit.nvgRGBA;
+import static org.mini.nanovg.Nanovg.NVG_ALIGN_LEFT;
+import static org.mini.nanovg.Nanovg.NVG_ALIGN_MIDDLE;
+import static org.mini.nanovg.Nanovg.nvgBeginPath;
+import static org.mini.nanovg.Nanovg.nvgBoxGradient;
+import static org.mini.nanovg.Nanovg.nvgFill;
+import static org.mini.nanovg.Nanovg.nvgFillColor;
+import static org.mini.nanovg.Nanovg.nvgFillPaint;
+import static org.mini.nanovg.Nanovg.nvgFontFace;
+import static org.mini.nanovg.Nanovg.nvgFontSize;
+import static org.mini.nanovg.Nanovg.nvgRoundedRect;
+import static org.mini.nanovg.Nanovg.nvgTextAlign;
+import static org.mini.nanovg.Nanovg.nvgTextJni;
 
 /**
  *
@@ -55,7 +55,7 @@ public class GCheckBox extends GObject {
                 checked = !checked;
                 parent.setFocus(this);
                 if (actionListener != null) {
-                    actionListener.action();
+                    actionListener.action(this);
                 }
             }
         }
@@ -80,7 +80,7 @@ public class GCheckBox extends GObject {
         nvgFillColor(vg, GToolkit.getStyle().getTextFontColor());
 
         nvgTextAlign(vg, NVG_ALIGN_LEFT | NVG_ALIGN_MIDDLE);
-        Nutil.nvgTextJni(vg, x + 25, y + h * 0.5f, text_arr, 0, text_arr.length);
+        nvgTextJni(vg, x + 25, y + h * 0.5f, text_arr, 0, text_arr.length);
 
         bg = nvgBoxGradient(vg, x + 1, y + (int) (h * 0.5f) - 9 + 1, 18, 18, 3, 3, nvgRGBA(0, 0, 0, 32), nvgRGBA(0, 0, 0, 92));
         nvgBeginPath(vg);
@@ -94,7 +94,7 @@ public class GCheckBox extends GObject {
         nvgTextAlign(vg, NVG_ALIGN_LEFT | NVG_ALIGN_MIDDLE);
 
         if (checked) {
-            Nutil.nvgTextJni(vg, x + 3, y + (int) (h * 0.5f), preicon_arr, 0, preicon_arr.length);
+            nvgTextJni(vg, x + 3, y + (int) (h * 0.5f), preicon_arr, 0, preicon_arr.length);
         }
         return true;
     }

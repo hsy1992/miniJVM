@@ -20,10 +20,19 @@ public interface GStyle {
     float[] getTextFontColor();
 
     float[] getHintFontColor();
+    
+    float[] getSelectedColor();
 
     float[] getEditBackground();
 
     float[] getFrameBackground();
 
     float[] getFrameTitleColor();
+
+    float getIconFontWidth();
+
+    void drawEditBoxBase(long vg, float x, float y, float w, float h);
+
+    void drawFieldBoxBase(long vg, float x, float y, float w, float h);
 }
+

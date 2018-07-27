@@ -47,7 +47,7 @@ import static org.mini.glfw.Glfw.GLFW_OPENGL_FORWARD_COMPAT;
 import static org.mini.glfw.Glfw.GLFW_OPENGL_PROFILE;
 import static org.mini.glfw.Glfw.glfwWindowHint;
 import org.mini.glfw.GlfwCallbackAdapter;
-import org.mini.glfw.utils.Gutil;
+import org.mini.nanovg.Gutil;
 
 /*
  * To change this license header, choose License Headers in Project Properties.

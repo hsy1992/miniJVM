@@ -5,8 +5,10 @@
  */
 package org.mini.gui;
 
+import java.util.Timer;
 import static org.mini.gui.GToolkit.nvgRGBA;
 import org.mini.gui.event.GActionListener;
+import org.mini.gui.event.GFocusChangeListener;
 
 /**
  *
@@ -35,11 +37,37 @@ abstract public class GObject {
 
     GActionListener actionListener;
 
+    GFocusChangeListener focusListener;
+    
+    volatile static int flush;    
 
     boolean visable = true;
 
     public void init() {
 
+    }
+
+    void destory() {
+    }
+    static synchronized public void flush() {
+        flush = 3;
+        //in android may flush before paint,so the menu not shown
+    }
+
+    static synchronized public boolean flushReq() {
+        if (flush > 0) {
+            flush--;
+            return true;
+        }
+        return false;
+    }
+
+    public Timer getTimer() {
+        GForm form = getForm();
+        if (form != null) {
+            return form.timer;
+        }
+        return null;
     }
 
     public boolean update(long ctx) {
@@ -152,7 +180,31 @@ abstract public class GObject {
         visable = v;
     }
 
-    public boolean getVisable() {
+    public boolean isVisable() {
         return visable;
+    }
+
+    public GForm getForm() {
+        GObject go = this;
+        while ((go = go.parent) != null) {
+            if (go instanceof GForm) {
+                return (GForm) go;
+            }
+        }
+        return null;
+    }
+
+    /**
+     * @return the focusListener
+     */
+    public GFocusChangeListener getFocusListener() {
+        return focusListener;
+    }
+
+    /**
+     * @param focusListener the focusListener to set
+     */
+    public void setFocusListener(GFocusChangeListener focusListener) {
+        this.focusListener = focusListener;
     }
 }

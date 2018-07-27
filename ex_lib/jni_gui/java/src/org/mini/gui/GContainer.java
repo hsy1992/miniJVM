@@ -20,6 +20,8 @@ abstract public class GContainer extends GObject {
     LinkedList<GObject> elements = new LinkedList();
     GObject focus;
 
+    int menuCount = 0;
+
     //异步添加删除form
     final List<AddRemoveItem> cache = Collections.synchronizedList(new LinkedList());
 
@@ -46,21 +48,39 @@ abstract public class GContainer extends GObject {
     /**
      * @param focus the focus to set
      */
-    public void setFocus(GObject focus) {
-        this.focus = focus;
+    public void setFocus(GObject go) {
+        if (this.focus != go) {
+            if (focus != null) {
+                if (focus.focusListener != null) {
+                    focus.focusListener.focusLost(focus);
+                }
+            }
+            this.focus = go;
+            if (focus != null) {
+                if (focus.focusListener != null) {
+                    focus.focusListener.focusGot(focus);
+                }
+            }
+        }
     }
 
     public void add(GObject nko) {
         if (nko != null) {
-            cache.add(new AddRemoveItem(AddRemoveItem.ADD, nko));
-            nko.init();
-            nko.setParent(this);
+            synchronized (cache) {
+                cache.add(new AddRemoveItem(AddRemoveItem.ADD, nko));
+                nko.init();
+                nko.setParent(this);
+            }
         }
     }
 
     public void remove(GObject nko) {
         if (nko != null) {
-            cache.add(new AddRemoveItem(AddRemoveItem.REMOVE, nko));
+            synchronized (cache) {
+                nko.setParent(null);
+                nko.destory();
+                cache.add(new AddRemoveItem(AddRemoveItem.REMOVE, nko));
+            }
         }
     }
 
@@ -68,114 +88,109 @@ abstract public class GContainer extends GObject {
         return elements.contains(son);
     }
 
-
     @Override
     public boolean update(long ctx) {
         synchronized (cache) {
+            //菜单加在最前面,focus 在之后,其他组件再在其后
+
             for (AddRemoveItem ari : cache) {
                 if (ari.operation == AddRemoveItem.ADD) {
-                    elements.add(ari.go);
+                    setFocus(ari.go);
+                    if (ari.go instanceof GMenu) {
+                        menuCount++;
+                        elements.addFirst(ari.go);
+                    } else {
+                        elements.add(menuCount, ari.go);
+                    }
                 } else {
-                    elements.remove(ari.go);
+                    boolean success = elements.remove(ari.go);
                     setFocus(null);
+                    if (success && ari.go instanceof GMenu) {
+                        menuCount--;
+                    }
                 }
             }
             cache.clear();
         }
+        //如果focus不是第一个，则移到第一个，这样遮挡关系才正确
+        if (focus != null && !(focus instanceof GMenu)) {
+            elements.remove(focus);
+            elements.add(menuCount, focus);
+        }
+        //更新所有UI组件
         GObject[] arr = elements.toArray(new GObject[elements.size()]);
         for (int i = arr.length - 1; i >= 0; i--) {
             GObject nko = arr[i];
-            if (nko.getVisable()) {
-                if (!nko.update(ctx)) {
-                    elements.remove(nko);
-                }
+            if (nko.isVisable()) {
+                nko.update(ctx);
             }
         }
-
         return true;
     }
 
     @Override
     public void keyEvent(int key, int scanCode, int action, int mods) {
-        for (Iterator<GObject> it = elements.iterator(); it.hasNext();) {
-            try {
-                GObject nko = it.next();
-                nko.keyEvent(key, scanCode, action, mods);
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
+        if (focus != null) {
+            focus.keyEvent(key, scanCode, action, mods);
         }
     }
 
     @Override
     public void characterEvent(char character) {
-        for (Iterator<GObject> it = elements.iterator(); it.hasNext();) {
-            try {
-                GObject nko = it.next();
-                nko.characterEvent(character);
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
+        if (focus != null) {
+            focus.characterEvent(character);
         }
     }
 
     @Override
     public void mouseButtonEvent(int button, boolean pressed, int x, int y) {
-        for (Iterator<GObject> it = elements.iterator(); it.hasNext();) {
-            try {
-                GObject nko = it.next();
-                nko.mouseButtonEvent(button, pressed, x, y);
-            } catch (Exception e) {
-                e.printStackTrace();
+        if (focus == null || !isInBoundle(focus.getBoundle(), x - getX(), y - getY())) {
+            for (Iterator<GObject> it = elements.iterator(); it.hasNext();) {
+                try {
+                    GObject nko = it.next();
+                    if (pressed) {
+                        if (isInBoundle(nko.getBoundle(), x - getX(), y - getY())) {
+                            setFocus(nko);
+                            break;
+                        }
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
             }
         }
+        if (focus != null) {
+            focus.mouseButtonEvent(button, pressed, x, y);
+        }
+
     }
 
     @Override
     public void cursorPosEvent(int x, int y) {
-        for (Iterator<GObject> it = elements.iterator(); it.hasNext();) {
-            try {
-                GObject nko = it.next();
-                nko.cursorPosEvent(x, y);
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
+        if (focus != null) {
+            focus.cursorPosEvent(x, y);
         }
+
     }
 
     @Override
     public void dropEvent(int count, String[] paths) {
-        for (Iterator<GObject> it = elements.iterator(); it.hasNext();) {
-            try {
-                GObject nko = it.next();
-                nko.dropEvent(count, paths);
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
+        if (focus != null) {
+            focus.dropEvent(count, paths);
         }
     }
 
     @Override
     public void scrollEvent(double scrollX, double scrollY, int x, int y) {
-        for (Iterator<GObject> it = elements.iterator(); it.hasNext();) {
-            try {
-                GObject nko = it.next();
-                nko.scrollEvent(scrollX, scrollY, x, y);
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
+        if (focus != null) {
+            focus.scrollEvent(scrollX, scrollY, x, y);
         }
     }
 
     @Override
     public void clickEvent(int button, int x, int y) {
-        for (Iterator<GObject> it = elements.iterator(); it.hasNext();) {
-            try {
-                GObject nko = it.next();
-                nko.clickEvent(button, x, y);
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
+        if (focus != null) {
+            focus.clickEvent(button, x, y);
         }
     }
 }

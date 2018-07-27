@@ -6,11 +6,11 @@
 package org.mini.gui;
 
 import java.util.Iterator;
-import org.mini.gl.GL;
+import java.util.Timer;
 import static org.mini.gl.GL.GL_COLOR_BUFFER_BIT;
 import static org.mini.gl.GL.GL_DEPTH_BUFFER_BIT;
 import static org.mini.gl.GL.GL_STENCIL_BUFFER_BIT;
-import org.mini.glfw.utils.StbFont;
+import org.mini.nanovg.StbFont;
 import static org.mini.gl.GL.GL_TRUE;
 import static org.mini.gl.GL.glClear;
 import static org.mini.gl.GL.glClearColor;
@@ -34,17 +34,17 @@ import static org.mini.glfw.Glfw.glfwWindowHint;
 import static org.mini.glfw.Glfw.glfwWindowShouldClose;
 import org.mini.glfw.GlfwCallback;
 import org.mini.glfw.GlfwCallbackAdapter;
-import org.mini.glfw.utils.Gutil;
-import org.mini.glfw.utils.Nutil;
-import static org.mini.glfw.utils.Nutil.NVG_ANTIALIAS;
-import static org.mini.glfw.utils.Nutil.NVG_DEBUG;
-import static org.mini.glfw.utils.Nutil.NVG_STENCIL_STROKES;
-import static org.mini.glfw.utils.Nutil.nvgBeginFrame;
-import static org.mini.glfw.utils.Nutil.nvgEndFrame;
+import org.mini.nanovg.Gutil;
 import static org.mini.gui.GObject.isInBoundle;
-import static org.mini.gui.GToolkit.defaultStyle;
 import static org.mini.glfw.Glfw.glfwGetFramebufferWidth;
 import static org.mini.glfw.Glfw.glfwGetFramebufferHeight;
+import static org.mini.nanovg.Nanovg.NVG_ANTIALIAS;
+import static org.mini.nanovg.Nanovg.NVG_DEBUG;
+import static org.mini.nanovg.Nanovg.NVG_STENCIL_STROKES;
+import static org.mini.nanovg.Nanovg.nvgBeginFrame;
+import static org.mini.nanovg.Nanovg.nvgCreateGL3;
+import static org.mini.nanovg.Nanovg.nvgDeleteGL3;
+import static org.mini.nanovg.Nanovg.nvgEndFrame;
 
 /**
  *
@@ -61,13 +61,16 @@ public class GForm extends GContainer implements Runnable {
     static StbFont gfont;
     float fps;
 
+    float pxRatio;
+    int fbWidth, fbHeight;
+
     int[] unicode_range = {
         0x0020, 0xFFFF,
         0
     };
     //
-    double ct, prevt, dt;
-    boolean premult;
+
+    Timer timer = new Timer();//用于更新画面，UI系统采取按需刷新的原则
 
     public GForm(String title, int width, int height) {
         this.title = title;
@@ -96,6 +99,14 @@ public class GForm extends GContainer implements Runnable {
         return vg;
     }
 
+    public int getDeviceWidth() {
+        return (int) width;
+    }
+
+    public int getDeviceHeight() {
+        return (int) height;
+    }
+
     @Override
     public void init() {
 
@@ -119,13 +130,21 @@ public class GForm extends GContainer implements Runnable {
         }
         Glfw.glfwMakeContextCurrent(win);
         glfwSwapInterval(1);
-        vg = Nutil.nvgCreateGL3(NVG_ANTIALIAS | NVG_STENCIL_STROKES | NVG_DEBUG);
+        vg = nvgCreateGL3(NVG_ANTIALIAS | NVG_STENCIL_STROKES | NVG_DEBUG);
         if (vg == 0) {
             System.out.println("Could not init nanovg.\n");
 
         }
         GToolkit.loadFont(vg);
         setCallBack(new FormCallBack());
+
+        width = Glfw.glfwGetWindowWidth(win);
+        height = Glfw.glfwGetWindowHeight(win);
+        fbWidth = glfwGetFramebufferWidth(win);
+        fbHeight = glfwGetFramebufferHeight(win);
+        // Calculate pixel ration for hi-dpi devices.
+        pxRatio = (float) fbWidth / (float) width;
+
     }
 
     @Override
@@ -142,8 +161,10 @@ public class GForm extends GContainer implements Runnable {
             try {
                 glfwPollEvents();
                 //user define contents
+//                if (GObject.flushReq()) {
                 display(vg);
                 glfwSwapBuffers(win);
+//                }
                 count++;
                 now = System.currentTimeMillis();
                 if (now - last > 1000) {
@@ -156,7 +177,7 @@ public class GForm extends GContainer implements Runnable {
                 ex.printStackTrace();
             }
         }
-        Nutil.nvgDeleteGL3(vg);
+        nvgDeleteGL3(vg);
         glfwTerminate();
         GToolkit.removeForm(vg);
         vg = 0;
@@ -164,29 +185,12 @@ public class GForm extends GContainer implements Runnable {
 
     void display(long vg) {
 
-        float pxRatio;
-        int winWidth, winHeight;
-        int fbWidth, fbHeight;
-        winWidth = Glfw.glfwGetWindowWidth(win);
-        winHeight = Glfw.glfwGetWindowHeight(win);
-        fbWidth = glfwGetFramebufferWidth(win);
-        fbHeight = glfwGetFramebufferHeight(win);
-        // Calculate pixel ration for hi-dpi devices.
-        pxRatio = (float) fbWidth / (float) winWidth;
-
-        ct = glfwGetTime();
-        dt = ct - prevt;
-        prevt = ct;
         // Update and render
         glViewport(0, 0, fbWidth, fbHeight);
-        if (premult) {
-            glClearColor(0, 0, 0, 0);
-        } else {
-            glClearColor(0.3f, 0.3f, 0.32f, 1.0f);
-        }
+        glClearColor(0.3f, 0.3f, 0.32f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
 
-        nvgBeginFrame(vg, winWidth, winHeight, pxRatio);
+        nvgBeginFrame(vg, width, height, pxRatio);
         update(vg);
         changeFocus();
         nvgEndFrame(vg);
@@ -222,11 +226,13 @@ public class GForm extends GContainer implements Runnable {
                 glfwSetWindowShouldClose(window, GLFW_TRUE);
             }
             GForm.this.keyEvent(key, scancode, action, mods);
+            GForm.this.flush();
         }
 
         @Override
         public void character(long window, char character) {
             GForm.this.characterEvent(character);
+            GForm.this.flush();
         }
 
         @Override
@@ -260,21 +266,21 @@ public class GForm extends GContainer implements Runnable {
                         GForm.this.clickEvent(button, mouseX, mouseY);
                     }
                 } else //press event
-                {
-                    if (focus != null) {
+                 if (focus != null) {
                         focus.mouseButtonEvent(button, pressed, mouseX, mouseY);
                     } else {
                         GForm.this.mouseButtonEvent(button, pressed, mouseX, mouseY);
                     }
-                }
                 this.button = button;
                 mouseLastPressed = cur;
             }
+            GForm.this.flush();
         }
 
         @Override
         public void scroll(long window, double scrollX, double scrollY) {
             GForm.this.scrollEvent(scrollX, scrollY, mouseX, mouseY);
+            GForm.this.flush();
         }
 
         @Override
@@ -283,30 +289,36 @@ public class GForm extends GContainer implements Runnable {
             mouseX = x;
             mouseY = y;
             GForm.this.cursorPosEvent(x, y);
+            GForm.this.flush();
         }
 
         @Override
         public boolean windowClose(long window) {
+            GForm.this.flush();
             return true;
         }
 
         @Override
         public void windowSize(long window, int width, int height) {
+            GForm.this.flush();
         }
 
         @Override
         public void framebufferSize(long window, int x, int y) {
             boundle[WIDTH] = x;
             boundle[HEIGHT] = y;
+            GForm.this.flush();
         }
 
         @Override
         public void drop(long window, int count, String[] paths) {
             GForm.this.dropEvent(count, paths);
+            GForm.this.flush();
         }
 
         public void error(int error, String description) {
             System.out.println("error: " + error + " message: " + description);
+            GForm.this.flush();
         }
     }
 

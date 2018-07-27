@@ -69,9 +69,9 @@ import static org.mini.glfw.Glfw.GLFW_OPENGL_FORWARD_COMPAT;
 import static org.mini.glfw.Glfw.GLFW_OPENGL_PROFILE;
 import static org.mini.glfw.Glfw.glfwWindowHint;
 import org.mini.glfw.GlfwCallbackAdapter;
-import org.mini.glfw.utils.Gutil;
-import static org.mini.glfw.utils.Gutil.gluLookAt;
-import static org.mini.glfw.utils.Gutil.gluPerspective;
+import org.mini.nanovg.Gutil;
+import static org.mini.nanovg.Gutil.gluLookAt;
+import static org.mini.nanovg.Gutil.gluPerspective;
 
 /**
  *

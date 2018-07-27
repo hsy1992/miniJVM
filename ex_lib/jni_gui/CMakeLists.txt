@@ -15,7 +15,7 @@ set(SOURCE_FILES
         jni_gl.c
         #        jni_nk.c
         jni_gui.c
-        jni_nutil.c
+        jni_nanovg.c
         )
 add_executable(test_gui ${SOURCE_FILES})
 

@@ -5,39 +5,37 @@
  */
 package org.mini.gui;
 
-import static org.mini.glfw.utils.Gutil.toUtf8;
-import org.mini.glfw.utils.Nutil;
-import static org.mini.glfw.utils.Nutil.NVG_ALIGN_CENTER;
-import static org.mini.glfw.utils.Nutil.NVG_ALIGN_LEFT;
-import static org.mini.glfw.utils.Nutil.NVG_ALIGN_MIDDLE;
-import static org.mini.glfw.utils.Nutil.NVG_CCW;
-import static org.mini.glfw.utils.Nutil.NVG_CW;
-import static org.mini.glfw.utils.Nutil.NVG_HOLE;
-import static org.mini.glfw.utils.Nutil.nvgArc;
-import static org.mini.glfw.utils.Nutil.nvgBeginPath;
-import static org.mini.glfw.utils.Nutil.nvgBoxGradient;
-import static org.mini.glfw.utils.Nutil.nvgClosePath;
-import static org.mini.glfw.utils.Nutil.nvgFill;
-import static org.mini.glfw.utils.Nutil.nvgFillColor;
-import static org.mini.glfw.utils.Nutil.nvgFillPaint;
-import static org.mini.glfw.utils.Nutil.nvgFontFace;
-import static org.mini.glfw.utils.Nutil.nvgFontSize;
-import static org.mini.glfw.utils.Nutil.nvgImagePattern;
-import static org.mini.glfw.utils.Nutil.nvgImageSize;
-import static org.mini.glfw.utils.Nutil.nvgLinearGradient;
-import static org.mini.glfw.utils.Nutil.nvgPathWinding;
-import static org.mini.glfw.utils.Nutil.nvgRect;
-import static org.mini.glfw.utils.Nutil.nvgRestore;
-import static org.mini.glfw.utils.Nutil.nvgRoundedRect;
-import static org.mini.glfw.utils.Nutil.nvgSave;
-import static org.mini.glfw.utils.Nutil.nvgScissor;
-import static org.mini.glfw.utils.Nutil.nvgStroke;
-import static org.mini.glfw.utils.Nutil.nvgStrokeColor;
-import static org.mini.glfw.utils.Nutil.nvgStrokeWidth;
-import static org.mini.glfw.utils.Nutil.nvgTextAlign;
-import static org.mini.glfw.utils.Nutil.nvgTextJni;
-import static org.mini.glfw.utils.Nutil.nvgTranslate;
+import static org.mini.nanovg.Gutil.toUtf8;
 import static org.mini.gui.GToolkit.nvgRGBA;
+import static org.mini.nanovg.Nanovg.NVG_ALIGN_LEFT;
+import static org.mini.nanovg.Nanovg.NVG_ALIGN_MIDDLE;
+import static org.mini.nanovg.Nanovg.NVG_CCW;
+import static org.mini.nanovg.Nanovg.NVG_CW;
+import static org.mini.nanovg.Nanovg.NVG_HOLE;
+import static org.mini.nanovg.Nanovg.nvgArc;
+import static org.mini.nanovg.Nanovg.nvgBeginPath;
+import static org.mini.nanovg.Nanovg.nvgBoxGradient;
+import static org.mini.nanovg.Nanovg.nvgClosePath;
+import static org.mini.nanovg.Nanovg.nvgFill;
+import static org.mini.nanovg.Nanovg.nvgFillColor;
+import static org.mini.nanovg.Nanovg.nvgFillPaint;
+import static org.mini.nanovg.Nanovg.nvgFontFace;
+import static org.mini.nanovg.Nanovg.nvgFontSize;
+import static org.mini.nanovg.Nanovg.nvgImagePattern;
+import static org.mini.nanovg.Nanovg.nvgImageSize;
+import static org.mini.nanovg.Nanovg.nvgLinearGradient;
+import static org.mini.nanovg.Nanovg.nvgPathWinding;
+import static org.mini.nanovg.Nanovg.nvgRect;
+import static org.mini.nanovg.Nanovg.nvgRestore;
+import static org.mini.nanovg.Nanovg.nvgRoundedRect;
+import static org.mini.nanovg.Nanovg.nvgSave;
+import static org.mini.nanovg.Nanovg.nvgScissor;
+import static org.mini.nanovg.Nanovg.nvgStroke;
+import static org.mini.nanovg.Nanovg.nvgStrokeColor;
+import static org.mini.nanovg.Nanovg.nvgStrokeWidth;
+import static org.mini.nanovg.Nanovg.nvgTextAlign;
+import static org.mini.nanovg.Nanovg.nvgTextJni;
+import static org.mini.nanovg.Nanovg.nvgTranslate;
 
 /**
  *
@@ -115,7 +113,7 @@ public class GList extends GContainer {
                         float pos = scrollBar.getPos() * (stackh - popBoundle[HEIGHT]) + (y - getY());
                         curIndex = (int) (pos / stackh * labels.length);
                         if (actionListener != null) {
-                            actionListener.action();
+                            actionListener.action(this);
                         }
                     }
                     pulldown = !pulldown;
@@ -303,10 +301,10 @@ public class GList extends GContainer {
 
     void drawText(long vg, float tx, float ty, float pw, float ph, int i) {
         nvgFillColor(vg, GToolkit.getStyle().getTextFontColor());
-        //Nutil.nvgScissor(vg, x, y, w, h);
+        //nvgScissor(vg, x, y, w, h);
         byte[] b = toUtf8(labels[i]);
-        Nutil.nvgTextJni(vg, tx, ty, b, 0, b.length);
-        //Nutil.nvgResetScissor(vg);
+        nvgTextJni(vg, tx, ty, b, 0, b.length);
+        //nvgResetScissor(vg);
     }
 
     void drawImage(long vg, float px, float py, float pw, float ph, int i) {

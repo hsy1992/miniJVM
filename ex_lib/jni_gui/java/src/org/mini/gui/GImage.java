@@ -7,7 +7,7 @@ package org.mini.gui;
 
 import org.mini.reflect.ReflectArray;
 import org.mini.reflect.vm.RefNative;
-import org.mini.glfw.utils.Gutil;
+import org.mini.nanovg.Gutil;
 
 /**
  * 装入图片文件或使用纹理图片生成一个GImage对象 load image or generate texture GImage

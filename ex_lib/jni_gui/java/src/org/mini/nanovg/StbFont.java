@@ -3,22 +3,22 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package org.mini.glfw.utils;
+package org.mini.nanovg;
 
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import org.mini.gl.GL;
-import static org.mini.glfw.utils.Nutil.stbtt_GetCodepointBitmapBox;
-import static org.mini.glfw.utils.Nutil.stbtt_GetCodepointHMetrics;
-import static org.mini.glfw.utils.Nutil.stbtt_GetCodepointKernAdvance;
-import static org.mini.glfw.utils.Nutil.stbtt_GetFontVMetrics;
-import static org.mini.glfw.utils.Nutil.stbtt_InitFont;
-import static org.mini.glfw.utils.Nutil.stbtt_MakeCodepointBitmapOffset;
-import static org.mini.glfw.utils.Nutil.stbtt_MakeFontInfo;
-import static org.mini.glfw.utils.Nutil.stbtt_ScaleForPixelHeight;
 import org.mini.gui.GImage;
 import org.mini.gui.GToolkit;
+import static org.mini.nanovg.Nanovg.stbtt_GetCodepointBitmapBox;
+import static org.mini.nanovg.Nanovg.stbtt_GetCodepointHMetrics;
+import static org.mini.nanovg.Nanovg.stbtt_GetCodepointKernAdvance;
+import static org.mini.nanovg.Nanovg.stbtt_GetFontVMetrics;
+import static org.mini.nanovg.Nanovg.stbtt_InitFont;
+import static org.mini.nanovg.Nanovg.stbtt_MakeCodepointBitmapOffset;
+import static org.mini.nanovg.Nanovg.stbtt_MakeFontInfo;
+import static org.mini.nanovg.Nanovg.stbtt_ScaleForPixelHeight;
 
 /**
  * warp stb_truetype.h - v0.6c - public domain ,

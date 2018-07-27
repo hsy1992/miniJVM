@@ -5,23 +5,23 @@
  */
 package org.mini.gui;
 
-import static org.mini.glfw.utils.Nutil.NVG_HOLE;
-import static org.mini.glfw.utils.Nutil.nvgBeginPath;
-import static org.mini.glfw.utils.Nutil.nvgBoxGradient;
-import static org.mini.glfw.utils.Nutil.nvgCircle;
-import static org.mini.glfw.utils.Nutil.nvgFill;
-import static org.mini.glfw.utils.Nutil.nvgFillColor;
-import static org.mini.glfw.utils.Nutil.nvgFillPaint;
-import static org.mini.glfw.utils.Nutil.nvgLinearGradient;
-import static org.mini.glfw.utils.Nutil.nvgPathWinding;
-import static org.mini.glfw.utils.Nutil.nvgRadialGradient;
-import static org.mini.glfw.utils.Nutil.nvgRect;
-import static org.mini.glfw.utils.Nutil.nvgRestore;
-import static org.mini.glfw.utils.Nutil.nvgRoundedRect;
-import static org.mini.glfw.utils.Nutil.nvgSave;
-import static org.mini.glfw.utils.Nutil.nvgStroke;
-import static org.mini.glfw.utils.Nutil.nvgStrokeColor;
 import static org.mini.gui.GToolkit.nvgRGBA;
+import static org.mini.nanovg.Nanovg.NVG_HOLE;
+import static org.mini.nanovg.Nanovg.nvgBeginPath;
+import static org.mini.nanovg.Nanovg.nvgBoxGradient;
+import static org.mini.nanovg.Nanovg.nvgCircle;
+import static org.mini.nanovg.Nanovg.nvgFill;
+import static org.mini.nanovg.Nanovg.nvgFillColor;
+import static org.mini.nanovg.Nanovg.nvgFillPaint;
+import static org.mini.nanovg.Nanovg.nvgLinearGradient;
+import static org.mini.nanovg.Nanovg.nvgPathWinding;
+import static org.mini.nanovg.Nanovg.nvgRadialGradient;
+import static org.mini.nanovg.Nanovg.nvgRect;
+import static org.mini.nanovg.Nanovg.nvgRestore;
+import static org.mini.nanovg.Nanovg.nvgRoundedRect;
+import static org.mini.nanovg.Nanovg.nvgSave;
+import static org.mini.nanovg.Nanovg.nvgStroke;
+import static org.mini.nanovg.Nanovg.nvgStrokeColor;
 
 /**
  *
@@ -70,7 +70,7 @@ public class GScrollBar extends GObject {
             } else {
                 draged = false;
                 if (actionListener != null) {
-                    actionListener.action();
+                    actionListener.action(this);
                 }
             }
         }

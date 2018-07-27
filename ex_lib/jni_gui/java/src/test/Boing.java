@@ -5,7 +5,7 @@ import java.util.Random;
 import org.mini.gl.GL;
 import org.mini.glfw.Glfw;
 import org.mini.glfw.GlfwCallbackAdapter;
-import org.mini.glfw.utils.Gutil;
+import org.mini.nanovg.Gutil;
 
 /*
  * To change this license header, choose License Headers in Project Properties.
