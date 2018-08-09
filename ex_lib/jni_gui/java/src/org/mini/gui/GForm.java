@@ -7,6 +7,7 @@ package org.mini.gui;
 
 import java.util.Iterator;
 import java.util.Timer;
+import java.util.TimerTask;
 import static org.mini.gl.GL.GL_COLOR_BUFFER_BIT;
 import static org.mini.gl.GL.GL_DEPTH_BUFFER_BIT;
 import static org.mini.gl.GL.GL_STENCIL_BUFFER_BIT;
@@ -18,26 +19,23 @@ import static org.mini.gl.GL.glViewport;
 import org.mini.glfw.Glfw;
 import static org.mini.glfw.Glfw.GLFW_CONTEXT_VERSION_MAJOR;
 import static org.mini.glfw.Glfw.GLFW_CONTEXT_VERSION_MINOR;
-import static org.mini.glfw.Glfw.GLFW_KEY_ESCAPE;
 import static org.mini.glfw.Glfw.GLFW_OPENGL_CORE_PROFILE;
 import static org.mini.glfw.Glfw.GLFW_OPENGL_FORWARD_COMPAT;
 import static org.mini.glfw.Glfw.GLFW_OPENGL_PROFILE;
-import static org.mini.glfw.Glfw.GLFW_PRESS;
-import static org.mini.glfw.Glfw.GLFW_TRUE;
-import static org.mini.glfw.Glfw.glfwGetTime;
 import static org.mini.glfw.Glfw.glfwPollEvents;
-import static org.mini.glfw.Glfw.glfwSetWindowShouldClose;
 import static org.mini.glfw.Glfw.glfwSwapBuffers;
 import static org.mini.glfw.Glfw.glfwSwapInterval;
 import static org.mini.glfw.Glfw.glfwTerminate;
 import static org.mini.glfw.Glfw.glfwWindowHint;
 import static org.mini.glfw.Glfw.glfwWindowShouldClose;
-import org.mini.glfw.GlfwCallback;
-import org.mini.glfw.GlfwCallbackAdapter;
 import org.mini.nanovg.Gutil;
-import static org.mini.gui.GObject.isInBoundle;
 import static org.mini.glfw.Glfw.glfwGetFramebufferWidth;
 import static org.mini.glfw.Glfw.glfwGetFramebufferHeight;
+import static org.mini.gui.GObject.LEFT;
+import static org.mini.gui.GObject.flush;
+import static org.mini.gui.GToolkit.nvgRGBA;
+import org.mini.nanovg.Nanovg;
+import static org.mini.nanovg.Nanovg.NVG_ALIGN_MIDDLE;
 import static org.mini.nanovg.Nanovg.NVG_ANTIALIAS;
 import static org.mini.nanovg.Nanovg.NVG_DEBUG;
 import static org.mini.nanovg.Nanovg.NVG_STENCIL_STROKES;
@@ -45,21 +43,26 @@ import static org.mini.nanovg.Nanovg.nvgBeginFrame;
 import static org.mini.nanovg.Nanovg.nvgCreateGL3;
 import static org.mini.nanovg.Nanovg.nvgDeleteGL3;
 import static org.mini.nanovg.Nanovg.nvgEndFrame;
+import static org.mini.nanovg.Nanovg.nvgFillColor;
+import static org.mini.nanovg.Nanovg.nvgFontFace;
+import static org.mini.nanovg.Nanovg.nvgFontSize;
+import static org.mini.nanovg.Nanovg.nvgTextAlign;
 
 /**
  *
  * @author gust
  */
-public class GForm extends GContainer implements Runnable {
+public class GForm extends GPanel implements Runnable {
 
     String title;
     int width;
     int height;
     long win; //glfw win
     long vg; //nk contex
-    GlfwCallback callback;
+    GuiCallBack callback;
     static StbFont gfont;
     float fps;
+    float fpsExpect = 30;
 
     float pxRatio;
     int fbWidth, fbHeight;
@@ -70,21 +73,23 @@ public class GForm extends GContainer implements Runnable {
     };
     //
 
-    Timer timer = new Timer();//用于更新画面，UI系统采取按需刷新的原则
+    Timer timer = new Timer(true);//用于更新画面，UI系统采取按需刷新的原则
 
-    public GForm(String title, int width, int height) {
+    public GForm(String title, int width, int height, GuiCallBack ccb) {
         this.title = title;
         this.width = width;
         this.height = height;
         boundle[WIDTH] = width;
         boundle[HEIGHT] = height;
+        //set inner jpanel
+        super.setLocation(0, 0);
+        super.setSize(width, height);
+
+        callback = ccb;
     }
 
-    public void setCallBack(GlfwCallback callback) {
-        this.callback = callback;
-        if (win != 0) {
-            Glfw.glfwSetCallback(win, callback);
-        }
+    public GuiCallBack getCallBack() {
+        return this.callback;
     }
 
     static public void setGFont(StbFont pgfont) {
@@ -105,6 +110,14 @@ public class GForm extends GContainer implements Runnable {
 
     public int getDeviceHeight() {
         return (int) height;
+    }
+
+    public long getNvContext() {
+        return vg;
+    }
+
+    public long getWinContext() {
+        return win;
     }
 
     @Override
@@ -136,7 +149,10 @@ public class GForm extends GContainer implements Runnable {
 
         }
         GToolkit.loadFont(vg);
-        setCallBack(new FormCallBack());
+
+        callback.setWindowHandle(win);
+        callback.setForm(this);
+        Glfw.glfwSetCallback(win, callback);
 
         width = Glfw.glfwGetWindowWidth(win);
         height = Glfw.glfwGetWindowHeight(win);
@@ -157,14 +173,17 @@ public class GForm extends GContainer implements Runnable {
         GToolkit.putForm(vg, this);
         long last = System.currentTimeMillis(), now;
         int count = 0;
+
+        long startAt, endAt, cost;
         while (!glfwWindowShouldClose(win)) {
             try {
+                startAt = System.currentTimeMillis();
                 glfwPollEvents();
                 //user define contents
-//                if (GObject.flushReq()) {
-                display(vg);
-                glfwSwapBuffers(win);
-//                }
+                if (GObject.flushReq()) {
+                    display(vg);
+                    glfwSwapBuffers(win);
+                }
                 count++;
                 now = System.currentTimeMillis();
                 if (now - last > 1000) {
@@ -172,6 +191,12 @@ public class GForm extends GContainer implements Runnable {
                     fps = count;
                     last = now;
                     count = 0;
+                }
+
+                endAt = System.currentTimeMillis();
+                cost = endAt - startAt;
+                if (cost < 1000 / fpsExpect) {
+                    Thread.sleep((long) (1000 / fpsExpect - cost));
                 }
             } catch (Exception ex) {
                 ex.printStackTrace();
@@ -191,9 +216,34 @@ public class GForm extends GContainer implements Runnable {
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
 
         nvgBeginFrame(vg, width, height, pxRatio);
+        Nanovg.nvgResetScissor(vg);
+        Nanovg.nvgScissor(vg, 0, 0, width, height);
         update(vg);
         changeFocus();
         nvgEndFrame(vg);
+    }
+
+    void drawDebugInfo(long vg) {
+        float font_size = 15;
+        nvgFontSize(vg, font_size);
+        nvgFontFace(vg, GToolkit.getFontWord());
+        nvgTextAlign(vg, Nanovg.NVG_ALIGN_LEFT | NVG_ALIGN_MIDDLE);
+
+        GuiCallBack cb = (GuiCallBack) callback;
+        float dx = 10, dy = 40;
+        byte[] b;
+        nvgFillColor(vg, nvgRGBA(255, 255, 255, 255));
+
+        b = Gutil.toUtf8("touch x:" + cb.mouseX);
+        Nanovg.nvgTextJni(vg, dx, dy, b, 0, b.length);
+        dy += font_size;
+        b = Gutil.toUtf8("touch y:" + cb.mouseY);
+        Nanovg.nvgTextJni(vg, dx, dy, b, 0, b.length);
+        dy += font_size;
+        if (focus != null) {
+            b = Gutil.toUtf8("focus x:" + focus.boundle[LEFT] + " y:" + focus.boundle[TOP] + " w:" + focus.boundle[WIDTH] + " h:" + focus.boundle[HEIGHT]);
+            Nanovg.nvgTextJni(vg, dx, dy, b, 0, b.length);
+        }
     }
 
     void changeFocus() {
@@ -206,7 +256,7 @@ public class GForm extends GContainer implements Runnable {
     void findSetFocus(int x, int y) {
         for (Iterator<GObject> it = elements.iterator(); it.hasNext();) {
             GObject nko = it.next();
-            if (isInBoundle(nko.getBoundle(), x, y)) {
+            if (nko.isInArea(x, y)) {
                 focus = nko;
                 setFocus(nko);
                 break;
@@ -214,112 +264,14 @@ public class GForm extends GContainer implements Runnable {
         }
     }
 
-    class FormCallBack extends GlfwCallbackAdapter {
-
-        int mouseX, mouseY, button;
-        long mouseLastPressed;
-        int CLICK_PERIOD = 200;
-
-        @Override
-        public void key(long window, int key, int scancode, int action, int mods) {
-            if (key == GLFW_KEY_ESCAPE && action == GLFW_PRESS) {
-                glfwSetWindowShouldClose(window, GLFW_TRUE);
-            }
-            GForm.this.keyEvent(key, scancode, action, mods);
-            GForm.this.flush();
+    TimerTask tt_OnTouch = new TimerTask() {
+        public void run() {
+            flush();
         }
+    };
 
-        @Override
-        public void character(long window, char character) {
-            GForm.this.characterEvent(character);
-            GForm.this.flush();
-        }
-
-        @Override
-        public void mouseButton(long window, int button, boolean pressed) {
-            if (window == win) {
-                switch (button) {
-                    case Glfw.GLFW_MOUSE_BUTTON_1: {//left
-                        if (pressed) {
-                            findSetFocus(mouseX, mouseY);
-                        } else {
-                        }
-                        break;
-                    }
-                    case Glfw.GLFW_MOUSE_BUTTON_2: {//right
-                        if (pressed) {
-                            findSetFocus(mouseX, mouseY);
-                        } else {
-                        }
-                        break;
-                    }
-                    case Glfw.GLFW_MOUSE_BUTTON_3: {//middle
-                        break;
-                    }
-                }
-                //click event
-                long cur = System.currentTimeMillis();
-                if (pressed && cur - mouseLastPressed < CLICK_PERIOD && this.button == button) {
-                    if (focus != null) {
-                        focus.clickEvent(button, mouseX, mouseY);
-                    } else {
-                        GForm.this.clickEvent(button, mouseX, mouseY);
-                    }
-                } else //press event
-                 if (focus != null) {
-                        focus.mouseButtonEvent(button, pressed, mouseX, mouseY);
-                    } else {
-                        GForm.this.mouseButtonEvent(button, pressed, mouseX, mouseY);
-                    }
-                this.button = button;
-                mouseLastPressed = cur;
-            }
-            GForm.this.flush();
-        }
-
-        @Override
-        public void scroll(long window, double scrollX, double scrollY) {
-            GForm.this.scrollEvent(scrollX, scrollY, mouseX, mouseY);
-            GForm.this.flush();
-        }
-
-        @Override
-        public void cursorPos(long window, int x, int y) {
-            win = window;
-            mouseX = x;
-            mouseY = y;
-            GForm.this.cursorPosEvent(x, y);
-            GForm.this.flush();
-        }
-
-        @Override
-        public boolean windowClose(long window) {
-            GForm.this.flush();
-            return true;
-        }
-
-        @Override
-        public void windowSize(long window, int width, int height) {
-            GForm.this.flush();
-        }
-
-        @Override
-        public void framebufferSize(long window, int x, int y) {
-            boundle[WIDTH] = x;
-            boundle[HEIGHT] = y;
-            GForm.this.flush();
-        }
-
-        @Override
-        public void drop(long window, int count, String[] paths) {
-            GForm.this.dropEvent(count, paths);
-            GForm.this.flush();
-        }
-
-        public void error(int error, String description) {
-            System.out.println("error: " + error + " message: " + description);
-            GForm.this.flush();
-        }
+    void tt_setupOnTouch() {
+        timer.schedule(tt_OnTouch, 0L);//, (long) (1000 / fpsExpect));
     }
 
     /**
@@ -327,6 +279,10 @@ public class GForm extends GContainer implements Runnable {
      */
     public float getFps() {
         return fps;
+    }
+
+    public void setFps(float fps) {
+        fpsExpect = fps;
     }
 
 }

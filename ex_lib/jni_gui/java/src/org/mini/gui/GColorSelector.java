@@ -5,6 +5,8 @@
  */
 package org.mini.gui;
 
+import org.mini.glfm.Glfm;
+import static org.mini.gui.GObject.isInBoundle;
 import static org.mini.gui.GToolkit.nvgRGBA;
 import static org.mini.nanovg.Nanovg.NVG_CCW;
 import static org.mini.nanovg.Nanovg.NVG_CW;
@@ -26,6 +28,7 @@ import static org.mini.nanovg.Nanovg.nvgRect;
 import static org.mini.nanovg.Nanovg.nvgRestore;
 import static org.mini.nanovg.Nanovg.nvgRotate;
 import static org.mini.nanovg.Nanovg.nvgSave;
+import static org.mini.nanovg.Nanovg.nvgScissor;
 import static org.mini.nanovg.Nanovg.nvgStroke;
 import static org.mini.nanovg.Nanovg.nvgStrokeColor;
 import static org.mini.nanovg.Nanovg.nvgStrokeWidth;
@@ -47,12 +50,10 @@ public class GColorSelector extends GObject {
 
     public GColorSelector(float pos, int left, int top, int width, int height) {
         this.curAngel = pos;
-        boundle[LEFT] = left;
-        boundle[TOP] = top;
-        boundle[WIDTH] = width;
-        boundle[HEIGHT] = height;
-        centX = boundle[WIDTH] / 2;
-        centY = boundle[HEIGHT] / 2;
+        setLocation(left, top);
+        setSize(width, height);
+        centX = width / 2;
+        centY = height / 2;
 
     }
 
@@ -60,7 +61,7 @@ public class GColorSelector extends GObject {
     public void cursorPosEvent(int x, int y) {
         int rx = (int) (x - parent.getX());
         int ry = (int) (y - parent.getY());
-        if (isInBoundle(boundle, rx, ry)) {
+        if (isInArea(x, y)) {
 
         }
     }
@@ -69,7 +70,7 @@ public class GColorSelector extends GObject {
     public void mouseButtonEvent(int button, boolean pressed, int x, int y) {
         int rx = (int) (x - parent.getX());
         int ry = (int) (y - parent.getY());
-        if (isInBoundle(boundle, rx, ry)) {
+        if (isInArea(x, y)) {
             if (!pressed) {
                 float offX = x - (getX() + centX);
                 float offY = y - (getY() + centY);
@@ -87,10 +88,41 @@ public class GColorSelector extends GObject {
                     selectX = (float) (Math.cos(angel) * oldX - Math.sin(angel) * oldY);//(float) Math.cos(120.0f / 180.0f * Math.PI) * r * 0.3f;
                     selectY = (float) (Math.sin(angel) * oldX + Math.cos(angel) * oldY);//(float) Math.sin(120.0f / 180.0f * Math.PI) * r * 0.4f;
                 }
-            } else {
+            } else if (actionListener != null) {
+                actionListener.action(this);
+            }
+        }
+
+    }
+
+    @Override
+    public void touchEvent(int phase, int x, int y) {
+        int rx = (int) (x - parent.getX());
+        int ry = (int) (y - parent.getY());
+        if (isInBoundle(boundle, rx, ry)) {
+            if (phase != Glfm.GLFMTouchPhaseBegan) {
+                float offX = x - (getX() + centX);
+                float offY = y - (getY() + centY);
+                float r = (float) Math.sqrt(offX * offX + offY * offY);
+                if (r < r_small) {
+                    selectX = offX;
+                    selectY = offY;
+                } else if (r < r_big) {
+                    curAngel = (float) (Math.atan2(offY, offX));
+                    float angel = -oldAngel + curAngel;
+                    System.out.println("curA:" + curAngel + "    oldA:" + oldAngel + "    result:" + angel);
+                    oldAngel = curAngel;
+                    float oldX = selectX;
+                    float oldY = selectY;
+                    selectX = (float) (Math.cos(angel) * oldX - Math.sin(angel) * oldY);//(float) Math.cos(120.0f / 180.0f * Math.PI) * r * 0.3f;
+                    selectY = (float) (Math.sin(angel) * oldX + Math.cos(angel) * oldY);//(float) Math.sin(120.0f / 180.0f * Math.PI) * r * 0.4f;
+                }
+            } else if (phase != Glfm.GLFMTouchPhaseEnded) {
                 if (actionListener != null) {
                     actionListener.action(this);
                 }
+            } else {
+
             }
         }
 
@@ -117,8 +149,6 @@ public class GColorSelector extends GObject {
         float hue = (float) Math.sin(curAngel * 0.166f);
         byte[] paint;
 
-        nvgSave(vg);
-
         cx = x + w * 0.5f;
         cy = y + h * 0.5f;
         r1 = (w < h ? w : h) * 0.5f - 5.0f;
@@ -144,72 +174,74 @@ public class GColorSelector extends GObject {
         }
 
         nvgBeginPath(vg);
-        nvgCircle(vg, cx, cy, r0 - 0.5f);
-        nvgCircle(vg, cx, cy, r1 + 0.5f);
-        nvgStrokeColor(vg, nvgRGBA(0, 0, 0, 64));
-        nvgStrokeWidth(vg, 1.0f);
+        {
+            nvgCircle(vg, cx, cy, r0 - 0.5f);
+            nvgCircle(vg, cx, cy, r1 + 0.5f);
+            nvgStrokeColor(vg, nvgRGBA(0, 0, 0, 64));
+            nvgStrokeWidth(vg, 1.0f);
+        }
         nvgStroke(vg);
 
         // Selector
         nvgSave(vg);
-        nvgTranslate(vg, cx, cy);
-        nvgRotate(vg, (float) (hue * Math.PI * 2));
+        {
+            nvgTranslate(vg, cx, cy);
+            nvgRotate(vg, (float) (hue * Math.PI * 2));
 
-        // Marker on
-        nvgStrokeWidth(vg, 2.0f);
-        nvgBeginPath(vg);
-        nvgRect(vg, r0 - 1, -3, r1 - r0 + 2, 6);
-        nvgStrokeColor(vg, nvgRGBA(255, 255, 255, 192));
-        nvgStroke(vg);
+            // Marker on
+            nvgStrokeWidth(vg, 2.0f);
+            nvgBeginPath(vg);
+            nvgRect(vg, r0 - 1, -3, r1 - r0 + 2, 6);
+            nvgStrokeColor(vg, nvgRGBA(255, 255, 255, 192));
+            nvgStroke(vg);
 
-        paint = nvgBoxGradient(vg, r0 - 3, -5, r1 - r0 + 6, 10, 2, 4, nvgRGBA(0, 0, 0, 128), nvgRGBA(0, 0, 0, 0));
-        nvgBeginPath(vg);
-        nvgRect(vg, r0 - 2 - 10, -4 - 10, r1 - r0 + 4 + 20, 8 + 20);
-        nvgRect(vg, r0 - 2, -4, r1 - r0 + 4, 8);
-        nvgPathWinding(vg, NVG_HOLE);
-        nvgFillPaint(vg, paint);
-        nvgFill(vg);
+            paint = nvgBoxGradient(vg, r0 - 3, -5, r1 - r0 + 6, 10, 2, 4, nvgRGBA(0, 0, 0, 128), nvgRGBA(0, 0, 0, 0));
+            nvgBeginPath(vg);
+            nvgRect(vg, r0 - 2 - 10, -4 - 10, r1 - r0 + 4 + 20, 8 + 20);
+            nvgRect(vg, r0 - 2, -4, r1 - r0 + 4, 8);
+            nvgPathWinding(vg, NVG_HOLE);
+            nvgFillPaint(vg, paint);
+            nvgFill(vg);
 
-        // Center triangle
-        r = r0 - 6;
-        ax = (float) Math.cos(120.0f / 180.0f * Math.PI) * r;
-        ay = (float) Math.sin(120.0f / 180.0f * Math.PI) * r;
-        bx = (float) Math.cos(-120.0f / 180.0f * Math.PI) * r;
-        by = (float) Math.sin(-120.0f / 180.0f * Math.PI) * r;
-        nvgBeginPath(vg);
-        nvgMoveTo(vg, r, 0);
-        nvgLineTo(vg, ax, ay);
-        nvgLineTo(vg, bx, by);
-        nvgClosePath(vg);
-        paint = nvgLinearGradient(vg, r, 0, ax, ay, nvgHSLA(hue, 1.0f, 0.5f, (byte) 255), nvgRGBA(255, 255, 255, 255));
-        nvgFillPaint(vg, paint);
-        nvgFill(vg);
-        paint = nvgLinearGradient(vg, (r + ax) * 0.5f, (0 + ay) * 0.5f, bx, by, nvgRGBA(0, 0, 0, 0), nvgRGBA(0, 0, 0, 255));
-        nvgFillPaint(vg, paint);
-        nvgFill(vg);
-        nvgStrokeColor(vg, nvgRGBA(0, 0, 0, 64));
-        nvgStroke(vg);
+            // Center triangle
+            r = r0 - 6;
+            ax = (float) Math.cos(120.0f / 180.0f * Math.PI) * r;
+            ay = (float) Math.sin(120.0f / 180.0f * Math.PI) * r;
+            bx = (float) Math.cos(-120.0f / 180.0f * Math.PI) * r;
+            by = (float) Math.sin(-120.0f / 180.0f * Math.PI) * r;
+            nvgBeginPath(vg);
+            nvgMoveTo(vg, r, 0);
+            nvgLineTo(vg, ax, ay);
+            nvgLineTo(vg, bx, by);
+            nvgClosePath(vg);
+            paint = nvgLinearGradient(vg, r, 0, ax, ay, nvgHSLA(hue, 1.0f, 0.5f, (byte) 255), nvgRGBA(255, 255, 255, 255));
+            nvgFillPaint(vg, paint);
+            nvgFill(vg);
+            paint = nvgLinearGradient(vg, (r + ax) * 0.5f, (0 + ay) * 0.5f, bx, by, nvgRGBA(0, 0, 0, 0), nvgRGBA(0, 0, 0, 255));
+            nvgFillPaint(vg, paint);
+            nvgFill(vg);
+            nvgStrokeColor(vg, nvgRGBA(0, 0, 0, 64));
+            nvgStroke(vg);
 
-        // Select circle on triangle
-        float angel = -curAngel;
-        ax = (float) (Math.cos(angel) * selectX - Math.sin(angel) * selectY);//(float) Math.cos(120.0f / 180.0f * Math.PI) * r * 0.3f;
-        ay = (float) (Math.sin(angel) * selectX + Math.cos(angel) * selectY);//(float) Math.sin(120.0f / 180.0f * Math.PI) * r * 0.4f;
-        nvgStrokeWidth(vg, 2.0f);
-        nvgBeginPath(vg);
-        nvgCircle(vg, ax, ay, 5);
-        nvgStrokeColor(vg, nvgRGBA(255, 255, 255, 192));
-        nvgStroke(vg);
+            // Select circle on triangle
+            float angel = -curAngel;
+            ax = (float) (Math.cos(angel) * selectX - Math.sin(angel) * selectY);//(float) Math.cos(120.0f / 180.0f * Math.PI) * r * 0.3f;
+            ay = (float) (Math.sin(angel) * selectX + Math.cos(angel) * selectY);//(float) Math.sin(120.0f / 180.0f * Math.PI) * r * 0.4f;
+            nvgStrokeWidth(vg, 2.0f);
+            nvgBeginPath(vg);
+            nvgCircle(vg, ax, ay, 5);
+            nvgStrokeColor(vg, nvgRGBA(255, 255, 255, 192));
+            nvgStroke(vg);
 
-        paint = nvgRadialGradient(vg, ax, ay, 7, 9, nvgRGBA(0, 0, 0, 64), nvgRGBA(0, 0, 0, 0));
-        nvgBeginPath(vg);
-        nvgRect(vg, ax - 20, ay - 20, 40, 40);
-        nvgCircle(vg, ax, ay, 7);
-        nvgPathWinding(vg, NVG_HOLE);
-        nvgFillPaint(vg, paint);
-        nvgFill(vg);
-
+            paint = nvgRadialGradient(vg, ax, ay, 7, 9, nvgRGBA(0, 0, 0, 64), nvgRGBA(0, 0, 0, 0));
+            nvgBeginPath(vg);
+            nvgRect(vg, ax - 20, ay - 20, 40, 40);
+            nvgCircle(vg, ax, ay, 7);
+            nvgPathWinding(vg, NVG_HOLE);
+            nvgFillPaint(vg, paint);
+            nvgFill(vg);
+        }
         nvgRestore(vg);
 
-        nvgRestore(vg);
     }
 }

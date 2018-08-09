@@ -5,29 +5,22 @@
  */
 package org.mini.gui;
 
+import java.util.TimerTask;
+import org.mini.glfm.Glfm;
 import org.mini.glfw.Glfw;
-import static org.mini.nanovg.Gutil.toUtf8;
 import static org.mini.gui.GObject.isInBoundle;
-import static org.mini.gui.GToolkit.nvgRGBA;
+import static org.mini.nanovg.Gutil.toUtf8;
 import org.mini.nanovg.Nanovg;
 import static org.mini.nanovg.Nanovg.NVG_ALIGN_LEFT;
 import static org.mini.nanovg.Nanovg.NVG_ALIGN_TOP;
-import static org.mini.nanovg.Nanovg.nvgBeginPath;
-import static org.mini.nanovg.Nanovg.nvgBoxGradient;
 import static org.mini.nanovg.Nanovg.nvgCreateNVGglyphPosition;
 import static org.mini.nanovg.Nanovg.nvgCreateNVGtextRow;
-import static org.mini.nanovg.Nanovg.nvgFill;
 import static org.mini.nanovg.Nanovg.nvgFillColor;
-import static org.mini.nanovg.Nanovg.nvgFillPaint;
 import static org.mini.nanovg.Nanovg.nvgFontFace;
 import static org.mini.nanovg.Nanovg.nvgFontSize;
 import static org.mini.nanovg.Nanovg.nvgNVGglyphPosition_x;
 import static org.mini.nanovg.Nanovg.nvgRestore;
-import static org.mini.nanovg.Nanovg.nvgRoundedRect;
 import static org.mini.nanovg.Nanovg.nvgSave;
-import static org.mini.nanovg.Nanovg.nvgScissor;
-import static org.mini.nanovg.Nanovg.nvgStroke;
-import static org.mini.nanovg.Nanovg.nvgStrokeColor;
 import static org.mini.nanovg.Nanovg.nvgTextAlign;
 import static org.mini.nanovg.Nanovg.nvgTextBreakLinesJni;
 import static org.mini.nanovg.Nanovg.nvgTextGlyphPositionsJni;
@@ -73,10 +66,8 @@ public class GTextBox extends GTextObject {
     public GTextBox(String text, String hint, int left, int top, int width, int height) {
         setText(text);
         setHint(hint);
-        boundle[LEFT] = left;
-        boundle[TOP] = top;
-        boundle[WIDTH] = width;
-        boundle[HEIGHT] = height;
+        setLocation(left, top);
+        setSize(width, height);
         setFocusListener(this);
     }
 
@@ -147,7 +138,7 @@ public class GTextBox extends GTextObject {
     public void mouseButtonEvent(int button, boolean pressed, int x, int y) {
         int rx = (int) (x - parent.getX());
         int ry = (int) (y - parent.getY());
-        if (isInBoundle(boundle, rx, ry)) {
+        if (isInArea(x, y)) {
             if (button == Glfw.GLFW_MOUSE_BUTTON_1) {
                 if (pressed) {
                     int caret = getCaretIndexFromArea(x, y);
@@ -179,7 +170,7 @@ public class GTextBox extends GTextObject {
     public void clickEvent(int button, int x, int y) {
         int rx = (int) (x - parent.getX());
         int ry = (int) (y - parent.getY());
-        if (isInBoundle(boundle, rx, ry)) {
+        if (isInArea(x, y)) {
             int caret = getCaretIndexFromArea(x, y);
             if (caret >= 0) {
                 setCaretIndex(caret);
@@ -194,7 +185,7 @@ public class GTextBox extends GTextObject {
     public void cursorPosEvent(int x, int y) {
         int rx = (int) (x - parent.getX());
         int ry = (int) (y - parent.getY());
-        if (isInBoundle(boundle, rx, ry)) {
+        if (isInArea(x, y)) {
             if (drag) {
                 int caret = getCaretIndexFromArea(x, y);
                 if (caret >= 0) {
@@ -314,10 +305,216 @@ public class GTextBox extends GTextObject {
     }
 
     @Override
-    public void scrollEvent(double scrollX, double scrollY, int x, int y) {
+    public void touchEvent(int phase, int x, int y) {
         int rx = (int) (x - parent.getX());
         int ry = (int) (y - parent.getY());
         if (isInBoundle(boundle, rx, ry)) {
+            switch (phase) {
+                case Glfm.GLFMTouchPhaseBegan: {
+                    int caret = getCaretIndexFromArea(x, y);
+                    if (selectMode) {
+                        selectAdjusted = false;
+                        if (Math.abs(caret - selectStart) < Math.abs(caret - selectEnd)) {
+                            adjustSelStart = true;
+                        } else {
+                            adjustSelStart = false;
+                        }
+                    } else if (caret >= 0) {
+                        setCaretIndex(caret);
+                        disposeEditMenu();
+                    }       //
+                    if (task != null) {
+                        task.cancel();
+                        task = null;
+                    }
+                    break;
+                }
+                case Glfm.GLFMTouchPhaseEnded: {
+                    if (selectMode) {
+                        if (selectStart != -1) {
+                            if (!selectAdjusted) {
+                                //System.out.println("canceled:"+selectStart);
+                                disposeEditMenu();
+                            }
+                        }
+                    }
+                    break;
+                }
+                case Glfm.GLFMTouchPhaseMoved: {
+                    if (selectMode) {
+                        int caret = getCaretIndexFromArea(x, y);
+                        if (adjustSelStart) {
+                            if (caret < selectEnd) {
+                                selectStart = caret;
+
+                            }
+                        } else if (caret > selectStart) {
+                            selectEnd = caret;
+                            setCaretIndex(selectEnd);
+                        }
+                        selectAdjusted = true;
+                    }
+                    break;
+                }
+                default:
+                    break;
+            }
+        }
+
+    }
+
+    /**
+     *
+     * @param str
+     * @param mods
+     * @param character
+     */
+    @Override
+    public void characterEvent(String str, int mods) {
+
+        int[] selectFromTo = getSelected();
+        if (selectFromTo != null) {
+            deleteSelectedText();
+        }
+        insertTextAtCaret(str);
+    }
+
+    @Override
+    public void keyEvent(int key, int action, int mods) {
+
+        if (action == Glfm.GLFMKeyActionPressed || action == Glfm.GLFMKeyActionRepeated) {
+            switch (key) {
+                case Glfm.GLFMKeyBackspace: {
+                    if (textsb.length() > 0 && caretIndex > 0) {
+                        int[] selectFromTo = getSelected();
+                        if (selectFromTo != null) {
+                            deleteSelectedText();
+                        } else {
+                            textsb.delete(caretIndex - 1, caretIndex);
+                            setCaretIndex(caretIndex - 1);
+                            text_arr = null;
+                        }
+                    }
+                    break;
+                }
+//                case Glfm.GLFMKeyDelete: {
+//                    if (textsb.length() > caretIndex) {
+//                        int[] selectFromTo = getSelected();
+//                        if (selectFromTo != null) {
+//                            delectSelect();
+//                        } else {
+//                            textsb.delete(caretIndex, caretIndex + 1);
+//                            text_arr = null;
+//                        }
+//                    }
+//                    break;
+//                }
+                case Glfm.GLFMKeyEnter: {
+                    String txt = getText();
+                    if (txt != null && txt.length() > 0) {
+                        int[] selectFromTo = getSelected();
+                        if (selectFromTo != null) {
+                            deleteSelectedText();
+                        }
+                        setCaretIndex(caretIndex + 1);
+                        textsb.insert(caretIndex, "\n");
+                        text_arr = null;
+                    }
+                    break;
+                }
+                case Glfm.GLFMKeyLeft: {
+                    if (textsb.length() > 0 && caretIndex > 0) {
+                        setCaretIndex(caretIndex - 1);
+                    }
+                    break;
+                }
+                case Glfm.GLFMKeyRight: {
+                    if (textsb.length() > caretIndex) {
+                        setCaretIndex(caretIndex + 1);
+                    }
+                    break;
+                }
+                case Glfm.GLFMKeyUp: {
+                    int[] pos = getCaretPosFromArea();
+//                    if (topShowRow > 0 && (pos == null || pos[2] == topShowRow)) {
+//                        topShowRow--;
+//                    }
+                    setScroll(scroll - lineh[0] / (totalTextHeight - showAreaHeight));
+
+                    if (pos != null) {
+                        int cart = getCaretIndexFromArea(pos[0], pos[1] - (int) lineh[0]);
+                        if (cart >= 0) {
+                            setCaretIndex(cart);
+                        }
+                    }
+                    break;
+                }
+                case Glfm.GLFMKeyDown: {
+                    int[] pos = getCaretPosFromArea();
+//                    if (topShowRow < totalRows - showRows && (pos == null || pos[2] == topShowRow + showRows - 1)) {
+//                        topShowRow++;
+//                    }
+                    setScroll(scroll + lineh[0] / (totalTextHeight - showAreaHeight));
+                    if (pos != null) {
+                        int cart = getCaretIndexFromArea(pos[0], pos[1] + (int) lineh[0]);
+                        if (cart >= 0) {
+                            setCaretIndex(cart);
+                        }
+
+                    }
+                    break;
+                }
+            }
+        }
+    }
+
+    //每多长时间进行一次惯性动作
+    long inertiaPeriod = 16;
+    //总共做多少次操作
+    long maxMoveCount = 120;
+    //惯性任务
+    TimerTask task;
+
+    @Override
+    public void inertiaEvent(double x1, double y1, double x2, double y2, final long moveTime) {
+        double dx = x2 - x1;
+        final double dy = y2 - y1;
+        scrollDelta = 0;
+        task = new TimerTask() {
+            //惯性速度
+            double speed = dy / (moveTime / inertiaPeriod);
+            //阴力
+            double resistance = -speed / maxMoveCount;
+            //
+            float count = 0;
+
+            @Override
+            public void run() {
+//                System.out.println("inertia " + speed);
+                speed += resistance;//速度和阴力抵消为0时,退出滑动
+
+                float dh = getOutOfShowAreaHeight();
+                if (dh > 0) {
+                    setScroll(scroll - (float) speed / dh);
+                }
+                flush();
+                if (count++ > maxMoveCount) {
+                    try {
+                        this.cancel();
+                    } catch (Exception e) {
+                    }
+                }
+            }
+        };
+        getTimer().schedule(task, 0, inertiaPeriod);
+    }
+
+    @Override
+    public void scrollEvent(double scrollX, double scrollY, int x, int y) {
+        if (selectMode) {
+            return;
+        }
+        if (isInArea(x, y)) {
             float dh = getOutOfShowAreaHeight();
             if (dh > 0) {
                 setScroll(scroll - (float) scrollY / dh);
@@ -443,7 +640,6 @@ public class GTextBox extends GTextObject {
         float y = getY();
         float w = getW();
         float h = getH();
-        nvgScissor(vg, x, y, w, h);
         drawTextBox(vg, x, y, w, h);
         return true;
     }
@@ -496,6 +692,7 @@ public class GTextBox extends GTextObject {
 
             nvgSave(vg);
             Nanovg.nvgScissor(vg, text_area[LEFT], text_area[TOP], text_area[WIDTH], text_area[HEIGHT]);
+            Nanovg.nvgIntersectScissor(vg, parent.getX(), parent.getY(), parent.getViewW(), parent.getViewH());
             //需要恢复现场
             try {
 
@@ -627,28 +824,12 @@ public class GTextBox extends GTextObject {
             } catch (Exception e) {
                 e.printStackTrace();
             }
-            Nanovg.nvgResetScissor(vg);
             nvgRestore(vg);
 
             Nanovg.nvgDeleteNVGtextRow(rowsHandle);
             Nanovg.nvgDeleteNVGglyphPosition(glyphsHandle);
 
         }
-    }
-
-    public static void drawTextBoxBase(long vg, float x, float y, float w, float h) {
-        byte[] bg;
-        // Edit
-        bg = nvgBoxGradient(vg, x + 1, y + 1 + 1.5f, w - 2, h - 2, 3, 4, GToolkit.getStyle().getEditBackground(), nvgRGBA(32, 32, 32, 32));
-        nvgBeginPath(vg);
-        nvgRoundedRect(vg, x + 1, y + 1, w - 2, h - 2, 4 - 1);
-        nvgFillPaint(vg, bg);
-        nvgFill(vg);
-
-        nvgBeginPath(vg);
-        nvgRoundedRect(vg, x + 0.5f, y + 0.5f, w - 1, h - 1, 4 - 0.5f);
-        nvgStrokeColor(vg, nvgRGBA(0, 0, 0, 48));
-        nvgStroke(vg);
     }
 
 }

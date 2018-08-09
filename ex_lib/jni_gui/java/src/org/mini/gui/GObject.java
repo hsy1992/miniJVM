@@ -38,10 +38,12 @@ abstract public class GObject {
     GActionListener actionListener;
 
     GFocusChangeListener focusListener;
-    
-    volatile static int flush;    
+
+    volatile static int flush;
 
     boolean visable = true;
+
+    boolean fixedLocation;
 
     public void init() {
 
@@ -49,9 +51,18 @@ abstract public class GObject {
 
     void destory() {
     }
+
     static synchronized public void flush() {
         flush = 3;
         //in android may flush before paint,so the menu not shown
+    }
+
+    public void setFixed(boolean fixed) {
+        fixedLocation = fixed;
+    }
+
+    public boolean getFixed() {
+        return fixedLocation;
     }
 
     static synchronized public boolean flushReq() {
@@ -92,12 +103,44 @@ abstract public class GObject {
     public void dropEvent(int count, String[] paths) {
     }
 
+    public void longTouchedEvent(int x, int y) {
+    }
+
+    public void keyEvent(int key, int action, int mods) {
+    }
+
+    public void characterEvent(String str, int modifiers) {
+    }
+
+    public void touchEvent(int phase, int x, int y) {
+    }
+
     public void scrollEvent(double scrollX, double scrollY, int x, int y) {
+    }
+
+    /**
+     * 响应惯性事件,从P1到P2用了多长时间
+     *
+     * @param x1
+     * @param y1
+     * @param x2
+     * @param y2
+     * @param moveTime
+     */
+    public void inertiaEvent(double x1, double y1, double x2, double y2, long moveTime) {
+
     }
 
     public static boolean isInBoundle(float[] bound, float x, float y) {
         return x >= bound[LEFT] && x <= bound[LEFT] + bound[WIDTH]
                 && y >= bound[TOP] && y <= bound[TOP] + bound[HEIGHT];
+    }
+
+    public boolean isInArea(float x, float y) {
+        float absx = getX();
+        float absy = getY();
+        return x >= absx && x <= absx + boundle[WIDTH]
+                && y >= absy && y <= absy + boundle[HEIGHT];
     }
 
     public float[] getBoundle() {
@@ -112,15 +155,25 @@ abstract public class GObject {
         parent = p;
     }
 
+    public void setLocation(float x, float y) {
+        boundle[LEFT] = x;
+        boundle[TOP] = y;
+    }
+
+    public void setSize(float w, float h) {
+        boundle[WIDTH] = w;
+        boundle[HEIGHT] = h;
+    }
+
     public float getX() {
-        if (parent != null) {
+        if (parent != null && !fixedLocation) {
             return parent.getX() + boundle[LEFT];
         }
         return boundle[LEFT];
     }
 
     public float getY() {
-        if (parent != null) {
+        if (parent != null && !fixedLocation) {
             return parent.getY() + boundle[TOP];
         }
         return boundle[TOP];
@@ -131,6 +184,22 @@ abstract public class GObject {
     }
 
     public float getH() {
+        return boundle[HEIGHT];
+    }
+
+    public float getViewX() {
+        return getX();
+    }
+
+    public float getViewY() {
+        return getY();
+    }
+
+    public float getViewW() {
+        return boundle[WIDTH];
+    }
+
+    public float getViewH() {
         return boundle[HEIGHT];
     }
 
@@ -189,6 +258,16 @@ abstract public class GObject {
         while ((go = go.parent) != null) {
             if (go instanceof GForm) {
                 return (GForm) go;
+            }
+        }
+        return null;
+    }
+
+    public GFrame getFrame() {
+        GObject go = this;
+        while ((go = go.parent) != null) {
+            if (go instanceof GFrame) {
+                return (GFrame) go;
             }
         }
         return null;

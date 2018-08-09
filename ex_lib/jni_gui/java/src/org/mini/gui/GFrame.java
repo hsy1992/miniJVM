@@ -5,7 +5,10 @@
  */
 package org.mini.gui;
 
+import org.mini.glfm.Glfm;
 import org.mini.glfw.Glfw;
+import static org.mini.gui.GObject.LEFT;
+import static org.mini.gui.GObject.isInBoundle;
 import static org.mini.nanovg.Gutil.toUtf8;
 import static org.mini.gui.GToolkit.nvgRGBA;
 import static org.mini.nanovg.Nanovg.NVG_ALIGN_CENTER;
@@ -25,7 +28,6 @@ import static org.mini.nanovg.Nanovg.nvgLinearGradient;
 import static org.mini.nanovg.Nanovg.nvgMoveTo;
 import static org.mini.nanovg.Nanovg.nvgPathWinding;
 import static org.mini.nanovg.Nanovg.nvgRect;
-import static org.mini.nanovg.Nanovg.nvgResetScissor;
 import static org.mini.nanovg.Nanovg.nvgRestore;
 import static org.mini.nanovg.Nanovg.nvgRoundedRect;
 import static org.mini.nanovg.Nanovg.nvgSave;
@@ -47,25 +49,21 @@ public class GFrame extends GContainer {
     float[] close_boundle = new float[4];
 
     int background_rgba;
-    
-    GPanel panel =new GPanel();
+
+    GPanel panel = new GPanel();
 
     float[] title_boundle = new float[4];
     long vg;
     int frameMode;
-    boolean closable;
+    boolean closable = true;
 
     public GFrame(String title, int left, int top, int width, int height) {
         setTitle(title);
-        boundle[LEFT] = left;
-        boundle[TOP] = top;
-        boundle[WIDTH] = width;
-        boundle[HEIGHT] = height;
+        setLocation(left, top);
+        setSize(width, height);
 
-        panel.boundle[LEFT] = 2;
-        panel.boundle[TOP] = 32;
-        panel.boundle[WIDTH] = width - 4;
-        panel.boundle[HEIGHT] = height - 34;
+        panel.setLocation(2, 32);
+        panel.setSize(width - 4, height - 34);
         add(panel);
     }
 
@@ -89,8 +87,8 @@ public class GFrame extends GContainer {
     public void setBackground(int rgba) {
         background_rgba = rgba;
     }
-    
-    public GPanel getPanel(){
+
+    public GPanel getPanel() {
         return panel;
     }
 
@@ -112,11 +110,35 @@ public class GFrame extends GContainer {
         return (GForm) parent;
     }
 
+    public void align(int align_mod) {
+        if (getForm() == null) {
+            System.out.println("warning: added to form can be set align");
+            return;
+        }
+        if ((align_mod & GGraphics.LEFT) != 0) {
+            boundle[LEFT] = 0;
+        } else if ((align_mod & GGraphics.RIGHT) != 0) {
+            boundle[LEFT] = getForm().getDeviceWidth() - boundle[WIDTH];
+        } else if ((align_mod & GGraphics.HCENTER) != 0) {
+            boundle[LEFT] = (getForm().getDeviceWidth() - boundle[WIDTH]) / 2;
+        }
+        if ((align_mod & GGraphics.TOP) != 0) {
+            boundle[TOP] = 0;
+        } else if ((align_mod & GGraphics.BOTTOM) != 0) {
+            boundle[TOP] = getForm().getDeviceHeight() - boundle[HEIGHT];
+        } else if ((align_mod & GGraphics.HCENTER) != 0) {
+            boundle[TOP] = (getForm().getDeviceHeight() - boundle[HEIGHT]) / 2;
+        }
+    }
+
     @Override
     public boolean update(long vg) {
-        nvgResetScissor(vg);
         this.vg = vg;
-        drawWindow(vg, title, boundle[0], boundle[1], boundle[2], boundle[3]);
+        float x = getX();
+        float y = getY();
+        float w = getW();
+        float h = getH();
+        drawWindow(vg, title, x, y, w, h);
         super.update(this.vg);
         return true;
     }
@@ -189,7 +211,6 @@ public class GFrame extends GContainer {
         close_boundle[WIDTH] = 16;
         close_boundle[HEIGHT] = 16;
 
-
         nvgRestore(vg);
     }
 
@@ -239,14 +260,14 @@ public class GFrame extends GContainer {
     @Override
     public void cursorPosEvent(int x, int y) {
         if (isMoveFrame) {
-            boundle[LEFT] += x - mouseX;
-            boundle[TOP] += y - mouseY;
-            if (boundle[TOP] < 0) {
-                boundle[TOP] = 0;
-            }
-            GForm gform = getForm();
-            if (boundle[TOP] + title_boundle[HEIGHT] > gform.boundle[TOP] + gform.boundle[HEIGHT]) {
-                boundle[TOP] = gform.boundle[TOP] + gform.boundle[HEIGHT] - title_boundle[HEIGHT];
+            float tx = boundle[LEFT];
+            tx += x - mouseX;
+            float ty = boundle[TOP];
+            ty += y - mouseY;
+            boundle[LEFT] = tx;
+            boundle[TOP] = ty;
+            if (parent != null) {
+                parent.reBoundle();
             }
         }
         mouseX = x;
@@ -256,6 +277,52 @@ public class GFrame extends GContainer {
 
     @Override
     public void scrollEvent(double scrollX, double scrollY, int x, int y) {
-        super.scrollEvent(scrollX, scrollY, x, y);
+        panel.scrollEvent(scrollX, scrollY, x, y);
+    }
+
+    @Override
+    public void touchEvent(int phase, int x, int y) {
+
+        switch (phase) {
+            case Glfm.GLFMTouchPhaseBegan:
+                mouseDrag1 = true;
+                if (isInBoundle(title_boundle, x, y)) {
+                    isMoveFrame = true;
+                }
+                if (closable && isInBoundle(close_boundle, x, y)) {
+                    parent.remove(this);
+                }
+                mouseX = x;
+                mouseY = y;
+                break;
+            case Glfm.GLFMTouchPhaseMoved:
+                if (isMoveFrame) {
+                    boundle[LEFT] += x - mouseX;
+                    boundle[TOP] += y - mouseY;
+                    if (boundle[TOP] < 0) {
+                        boundle[TOP] = 0;
+                    }
+                    GForm gform = getForm();
+                    if (boundle[TOP] + title_boundle[HEIGHT] > gform.boundle[TOP] + gform.boundle[HEIGHT]) {
+                        boundle[TOP] = gform.boundle[TOP] + gform.boundle[HEIGHT] - title_boundle[HEIGHT];
+                    }
+                    if (parent != null) {
+                        parent.reBoundle();
+                    }
+                }
+                mouseX = x;
+                mouseY = y;
+                break;
+            default:
+                mouseDrag1 = false;
+                isMoveFrame = false;
+                break;
+        }
+
+        if (isInBoundle(boundle, x, y)) {
+            super.touchEvent(phase, x, y);
+        } else {
+            panel.setFocus(null);
+        }
     }
 }

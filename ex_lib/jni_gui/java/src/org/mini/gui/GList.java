@@ -5,8 +5,11 @@
  */
 package org.mini.gui;
 
+import java.util.TimerTask;
+import org.mini.glfm.Glfm;
 import static org.mini.nanovg.Gutil.toUtf8;
 import static org.mini.gui.GToolkit.nvgRGBA;
+import org.mini.nanovg.Nanovg;
 import static org.mini.nanovg.Nanovg.NVG_ALIGN_LEFT;
 import static org.mini.nanovg.Nanovg.NVG_ALIGN_MIDDLE;
 import static org.mini.nanovg.Nanovg.NVG_CCW;
@@ -35,6 +38,7 @@ import static org.mini.nanovg.Nanovg.nvgStrokeColor;
 import static org.mini.nanovg.Nanovg.nvgStrokeWidth;
 import static org.mini.nanovg.Nanovg.nvgTextAlign;
 import static org.mini.nanovg.Nanovg.nvgTextJni;
+import static org.mini.nanovg.Nanovg.nvgTextMetrics;
 import static org.mini.nanovg.Nanovg.nvgTranslate;
 
 /**
@@ -49,9 +53,10 @@ public class GList extends GContainer {
     String[] labels;
     int curIndex;
     boolean pulldown;
-    public static final int MODE_GRID = 1, MODE_LIST = 0;
-    int mode = MODE_LIST;
+    public static final int MODE_MULTI_LINE = 1, MODE_SINGLE_LINE = 0;
+    int mode = MODE_SINGLE_LINE;
     GScrollBar scrollBar;
+    float[] lineh = {0f};
 
     float[] popBoundle;
     float[] normalBoundle;
@@ -62,10 +67,8 @@ public class GList extends GContainer {
     float pad = 10;
 
     public GList(int left, int top, int width, int height) {
-        boundle[LEFT] = left;
-        boundle[TOP] = top;
-        boundle[WIDTH] = width;
-        boundle[HEIGHT] = height;
+        setLocation(left, top);
+        setSize(width, height);
         normalBoundle = boundle;
     }
 
@@ -85,6 +88,14 @@ public class GList extends GContainer {
         return images;
     }
 
+    public void setMode(int m) {
+        this.mode = m;
+    }
+
+    public int getMode() {
+        return this.mode;
+    }
+
     public String[] getLabels() {
         return labels;
     }
@@ -101,11 +112,11 @@ public class GList extends GContainer {
     public void mouseButtonEvent(int button, boolean pressed, int x, int y) {
         int rx = (int) (x - parent.getX());
         int ry = (int) (y - parent.getY());
-        if (isInBoundle(boundle, rx, ry)) {
+        if (isInArea(x, y)) {
             if (pressed) {
                 boolean inScroll = false;
                 if (scrollBar != null) {
-                    inScroll = isInBoundle(scrollBar.boundle, x - getX(), y - getY());
+                    inScroll = scrollBar.isInArea(x, y);
                 }
                 if (!inScroll) {
                     if (pulldown) {
@@ -124,20 +135,84 @@ public class GList extends GContainer {
         super.mouseButtonEvent(button, pressed, x, y);
     }
 
+    int startX, startY;
+
+    @Override
+    public void touchEvent(int phase, int x, int y) {
+        int rx = (int) (x - parent.getX());
+        int ry = (int) (y - parent.getY());
+        if (isInBoundle(boundle, rx, ry)) {
+            if (phase == Glfm.GLFMTouchPhaseBegan) {
+                startX = x;
+                startY = y;
+                if (task != null) {
+                    task.cancel();
+                    task = null;
+                }
+            } else if (phase == Glfm.GLFMTouchPhaseEnded) {
+                boolean inScroll = false;
+                if (scrollBar != null) {
+                    inScroll = isInBoundle(scrollBar.boundle, x - getX(), y - getY());
+                }
+                if (!inScroll && startX == x && startY == y) {
+                    if (pulldown) {
+                        float stackh = (labels.length / list_cols) * (list_item_heigh) + pad;
+                        float pos = scrollBar.getPos() * (stackh - popBoundle[HEIGHT]) + (y - getY());
+                        curIndex = (int) (pos / stackh * labels.length);
+                        if (actionListener != null) {
+                            actionListener.action(this);
+                        }
+                    }
+                    pulldown = !pulldown;
+                }
+            }
+        }
+        super.touchEvent(phase, x, y);
+    }
+
     @Override
     public void scrollEvent(double scrollX, double scrollY, int x, int y) {
         int rx = (int) (x - parent.getX());
         int ry = (int) (y - parent.getY());
-        if (isInBoundle(boundle, rx, ry)) {
-//            curIndex += (scrollY > 0 ? -1 : 1);
-//            if (curIndex < 0) {
-//                curIndex = 0;
-//            }
-//            if (curIndex >= labels.length) {
-//                curIndex = labels.length - 1;
-//            }
-            scrollBar.setPos(scrollBar.getPos() + 1.f / labels.length * (scrollY > 0 ? -1.f : 1.f));
+        if (isInBoundle(boundle, rx, ry) && scrollBar != null) {
+            scrollBar.setPos(scrollBar.getPos() - 1.f / labels.length * (float) (scrollY / list_item_heigh));
         }
+    }
+
+    //每多长时间进行一次惯性动作
+    long inertiaPeriod = 16;
+    //总共做多少次操作
+    long maxMoveCount = 120;
+    //惯性任务
+    TimerTask task;
+
+    @Override
+    public void inertiaEvent(double x1, double y1, double x2, double y2, final long moveTime) {
+        double dx = x2 - x1;
+        final double dy = y2 - y1;
+        task = new TimerTask() {
+            //惯性速度
+            double speed = dy / (moveTime / inertiaPeriod);
+            //阴力
+            double resistance = -speed / maxMoveCount;
+            //
+            float count = 0;
+
+            @Override
+            public void run() {
+//                System.out.println("inertia " + speed);
+                speed += resistance;
+                scrollBar.setPos(scrollBar.getPos() - 1.f / labels.length * (float) (speed / list_item_heigh));
+                flush();
+                if (count++ > maxMoveCount) {
+                    try {
+                        this.cancel();
+                    } catch (Exception e) {
+                    }
+                }
+            }
+        };
+        getTimer().schedule(task, 0, inertiaPeriod);
     }
 
     /**
@@ -149,35 +224,45 @@ public class GList extends GContainer {
         if (parent.getFocus() != this) {
             pulldown = false;
         }
+        if (mode == MODE_MULTI_LINE) {
+            pulldown = true;
+        }
 
         nvgFontSize(vg, GToolkit.getStyle().getTextFontSize());
         nvgFontFace(vg, GToolkit.getFontWord());
         nvgTextAlign(vg, NVG_ALIGN_LEFT | NVG_ALIGN_MIDDLE);
 
+        nvgTextMetrics(vg, null, null, lineh);
+
         if (pulldown && labels != null) {
             popBoundle = new float[4];
 
-            float popH = labels.length * list_item_heigh;
-            if (labels.length > list_rows) {
-                popH = list_rows * list_item_heigh;
-            }
-            float popY = 0;
-            if (popH > parent.getH()) {// small than frame height
-                popH = parent.getH();
-                popY = parent.getY();
+            if (mode == MODE_MULTI_LINE) {
+                popBoundle[LEFT] = normalBoundle[LEFT];
+                popBoundle[TOP] = normalBoundle[TOP];
+                popBoundle[WIDTH] = normalBoundle[WIDTH];
+                popBoundle[HEIGHT] = normalBoundle[HEIGHT];
+                list_rows = popBoundle[HEIGHT] / list_item_heigh;
             } else {
-                if (normalBoundle[TOP] + popH < parent.getH()) {
+                float popH = labels.length * list_item_heigh;
+                if (labels.length > list_rows) {
+                    popH = list_rows * list_item_heigh;
+                }
+                float popY = 0;
+                if (popH > parent.getH()) {// small than frame height
+                    popH = parent.getH();
+                    popY = parent.getY();
+                } else if (normalBoundle[TOP] + popH < parent.getH()) {
                     popY = normalBoundle[TOP];
                 } else {
                     popY = parent.getH() - popH;
                 }
+
+                popBoundle[LEFT] = normalBoundle[LEFT];
+                popBoundle[TOP] = popY;
+                popBoundle[WIDTH] = normalBoundle[WIDTH];
+                popBoundle[HEIGHT] = popH;
             }
-
-            popBoundle[LEFT] = normalBoundle[LEFT];
-            popBoundle[TOP] = popY;
-            popBoundle[WIDTH] = normalBoundle[WIDTH];
-            popBoundle[HEIGHT] = popH;
-
             boundle = popBoundle;
             if (scrollBar == null) {
                 scrollBar = new GScrollBar(0, GScrollBar.VERTICAL,
@@ -200,8 +285,8 @@ public class GList extends GContainer {
             float y = getY();
             float w = getW();
             float h = getH();
-            nvgScissor(vg, x, y, w, h);
-            drawNormal(vg, x, y, w, h);
+            nvgScissor(vg, x, y, w, list_item_heigh);
+            drawNormal(vg, x, y, w, list_item_heigh);
         }
 
         return true;
@@ -248,34 +333,37 @@ public class GList extends GContainer {
 
         nvgSave(vg);
 //	nvgClearState(vg);
+        nvgScissor(vg, x, y, w, h);
 
         // Window
-//        GTextBox.drawTextBoxBase(vg, x, y, w, h);
-        nvgBeginPath(vg);
-        nvgRoundedRect(vg, x, y, w, h, cornerRadius);
-        nvgFillColor(vg, nvgRGBA(60, 60, 60, 192));
-        nvgFill(vg);
+        GToolkit.getStyle().drawEditBoxBase(vg, x, y, w, h);
+//        nvgBeginPath(vg);
+//        nvgRoundedRect(vg, x, y, w, h, cornerRadius);
+//        nvgFillColor(vg, nvgRGBA(60, 60, 60, 192));
+//        nvgFill(vg);
 
         // Drop shadow
-        shadowPaint = nvgBoxGradient(vg, x, y + 2, w, h, cornerRadius * 2, 10, nvgRGBA(0, 0, 0, 128), nvgRGBA(0, 0, 0, 0));
-        nvgBeginPath(vg);
-        nvgRect(vg, x - 10, y - 10, w + 20, h + 30);
-        nvgRoundedRect(vg, x, y, w, h, cornerRadius);
-        nvgPathWinding(vg, NVG_HOLE);
-        nvgFillPaint(vg, shadowPaint);
-        nvgFill(vg);
-
+//        shadowPaint = nvgBoxGradient(vg, x, y + 2, w, h, cornerRadius * 2, 10, nvgRGBA(0, 0, 0, 128), nvgRGBA(0, 0, 0, 0));
+//        nvgBeginPath(vg);
+//        nvgRect(vg, x - 10, y - 10, w + 20, h + 30);
+//        nvgRoundedRect(vg, x, y, w, h, cornerRadius);
+//        nvgPathWinding(vg, NVG_HOLE);
+//        nvgFillPaint(vg, shadowPaint);
+//        nvgFill(vg);
         nvgSave(vg);
-        nvgScissor(vg, x, y, w, h);
         float th = -(stackh - h) * scrollBar.getPos();
         nvgTranslate(vg, 0, th);
 
         for (int i = 0; i < nimages; i++) {
             float tx, ty;
-            tx = x + 10;
-            ty = y + 10;
-            tx += (i % list_cols) * (thumb + 10);
-            ty += (i / list_cols) * (thumb + 10);
+            tx = x + pad;
+            ty = y + pad;
+            tx += (i % list_cols) * (thumb + pad);
+            ty += (i / list_cols) * (thumb + pad);
+
+            if (curIndex == i) {
+                GToolkit.drawRect(vg, tx, ty, w - (thumb + pad), list_item_heigh - pad, GToolkit.getStyle().getSelectedColor());
+            }
 
             drawImage(vg, tx, ty, thumb, thumb, i);
 
@@ -284,27 +372,26 @@ public class GList extends GContainer {
         nvgRestore(vg);
 
         // Hide fades
-        fadePaint = nvgLinearGradient(vg, x, y, x, y + 6, nvgRGBA(60, 60, 60, 255), nvgRGBA(255, 255, 255, 0));
+        fadePaint = nvgLinearGradient(vg, x, y, x, y + 6, nvgRGBA(20, 20, 20, 192), nvgRGBA(30, 30, 30, 0));
         nvgBeginPath(vg);
-        nvgRect(vg, x + 4, y, w - 8, 6);
+        nvgRect(vg, x + 2, y, w - 4, 6);
         nvgFillPaint(vg, fadePaint);
         nvgFill(vg);
 
-        fadePaint = nvgLinearGradient(vg, x, y + h, x, y + h - 6, nvgRGBA(60, 60, 60, 255), nvgRGBA(255, 255, 255, 0));
+        fadePaint = nvgLinearGradient(vg, x, y + h, x, y + h - 6, nvgRGBA(20, 20, 20, 192), nvgRGBA(30, 30, 30, 0));
         nvgBeginPath(vg);
-        nvgRect(vg, x + 4, y + h - 6, w - 8, 6);
+        nvgRect(vg, x + 2, y + h - 6, w - 4, 6);
         nvgFillPaint(vg, fadePaint);
         nvgFill(vg);
-
         nvgRestore(vg);
     }
 
     void drawText(long vg, float tx, float ty, float pw, float ph, int i) {
         nvgFillColor(vg, GToolkit.getStyle().getTextFontColor());
-        //nvgScissor(vg, x, y, w, h);
+        //Nanovg.nvgScissor(vg, x, y, w, h);
         byte[] b = toUtf8(labels[i]);
-        nvgTextJni(vg, tx, ty, b, 0, b.length);
-        //nvgResetScissor(vg);
+        Nanovg.nvgTextJni(vg, tx, ty, b, 0, b.length);
+        //Nanovg.nvgResetScissor(vg);
     }
 
     void drawImage(long vg, float px, float py, float pw, float ph, int i) {

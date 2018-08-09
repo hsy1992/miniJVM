@@ -19,6 +19,7 @@ import org.mini.gui.GList;
 import org.mini.gui.GObject;
 import org.mini.gui.GPanel;
 import org.mini.gui.GScrollBar;
+import org.mini.gui.GuiCallBack;
 import org.mini.gui.event.GActionListener;
 import static org.mini.nanovg.Nanovg.nvgCreateImage;
 
@@ -39,9 +40,11 @@ public class GuiTest {
 
     }
     GForm win;
+    GuiCallBack ccb;
 
     void t1() {
-        win = new GForm(/*"GuiTest"*/"登录 窗口", 800, 600);
+        ccb = new GuiCallBack();
+        win = new GForm(/*"GuiTest"*/"登录 窗口", 800, 600, ccb);
         win.init();
         long vg = win.getGLContext();
         GFrame gframe = new GFrame("Github"/*"demo"*/, 50, 50, 300, 500);
@@ -113,6 +116,19 @@ public class GuiTest {
         GButton bt2 = new GButton("Cancel", x + 170, y, 110, 28);
         bt2.setBgColor(0, 0, 0, 0);
         parent.add(bt2);
+        y += 35;
+        GButton bt3 = new GButton("Test", x + 170, y, 110, 28);
+        bt3.setBgColor(0, 0, 0, 0);
+        parent.add(bt3);
+
+        GButton bt4 = new GButton("Test", x + 170, -10, 110, 28);
+        bt4.setBgColor(0, 0, 0, 0);
+        parent.add(bt4);
+
+        y += 35;
+        GButton bt5 = new GButton("Test", x + 170, y, 110, 28);
+        bt5.setBgColor(0, 0, 0, 0);
+        parent.add(bt5);
 
         bt1.setActionListener(new GActionListener() {
             @Override

@@ -5,8 +5,11 @@
  */
 package org.mini.gui;
 
+import org.mini.glfm.Glfm;
+import static org.mini.gui.GObject.isInBoundle;
 import static org.mini.nanovg.Gutil.toUtf8;
 import static org.mini.gui.GToolkit.nvgRGBA;
+import org.mini.nanovg.Nanovg;
 import static org.mini.nanovg.Nanovg.NVG_ALIGN_LEFT;
 import static org.mini.nanovg.Nanovg.NVG_ALIGN_MIDDLE;
 import static org.mini.nanovg.Nanovg.nvgBeginPath;
@@ -17,6 +20,8 @@ import static org.mini.nanovg.Nanovg.nvgFillPaint;
 import static org.mini.nanovg.Nanovg.nvgFontFace;
 import static org.mini.nanovg.Nanovg.nvgFontSize;
 import static org.mini.nanovg.Nanovg.nvgRoundedRect;
+import static org.mini.nanovg.Nanovg.nvgSave;
+import static org.mini.nanovg.Nanovg.nvgScissor;
 import static org.mini.nanovg.Nanovg.nvgTextAlign;
 import static org.mini.nanovg.Nanovg.nvgTextJni;
 
@@ -34,10 +39,8 @@ public class GCheckBox extends GObject {
     public GCheckBox(String text, boolean checked, int left, int top, int width, int height) {
         setText(text);
         this.checked = checked;
-        boundle[LEFT] = left;
-        boundle[TOP] = top;
-        boundle[WIDTH] = width;
-        boundle[HEIGHT] = height;
+        setLocation(left, top);
+        setSize(width, height);
     }
 
     public final void setText(String text) {
@@ -49,11 +52,25 @@ public class GCheckBox extends GObject {
     public void mouseButtonEvent(int button, boolean pressed, int x, int y) {
         int rx = (int) (x - parent.getX());
         int ry = (int) (y - parent.getY());
-        if (isInBoundle(boundle, rx, ry)) {
+        if (isInArea(x, y)) {
             if (pressed) {
             } else {
                 checked = !checked;
                 parent.setFocus(this);
+                if (actionListener != null) {
+                    actionListener.action(this);
+                }
+            }
+        }
+    }
+
+    @Override
+    public void touchEvent(int phase, int x, int y) {
+        int rx = (int) (x - parent.getX());
+        int ry = (int) (y - parent.getY());
+        if (isInBoundle(boundle, rx, ry)) {
+            if (phase == Glfm.GLFMTouchPhaseBegan) {
+                checked = !checked;
                 if (actionListener != null) {
                     actionListener.action(this);
                 }

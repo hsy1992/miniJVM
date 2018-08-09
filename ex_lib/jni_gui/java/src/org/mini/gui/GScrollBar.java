@@ -5,6 +5,9 @@
  */
 package org.mini.gui;
 
+import org.mini.glfm.Glfm;
+import static org.mini.gui.GObject.LEFT;
+import static org.mini.gui.GObject.isInBoundle;
 import static org.mini.gui.GToolkit.nvgRGBA;
 import static org.mini.nanovg.Nanovg.NVG_HOLE;
 import static org.mini.nanovg.Nanovg.nvgBeginPath;
@@ -34,14 +37,13 @@ public class GScrollBar extends GObject {
     boolean draged;
     public static final int HORIZONTAL = 0, VERTICAL = 1;
     int mode = HORIZONTAL;
+    float radius = 8;
 
     public GScrollBar(float pos, int mode, int left, int top, int width, int height) {
         this.pos = pos;
         this.mode = mode;
-        boundle[LEFT] = left;
-        boundle[TOP] = top;
-        boundle[WIDTH] = width;
-        boundle[HEIGHT] = height;
+        setLocation(left, top);
+        setSize(width, height);
     }
 
     public float getPos() {
@@ -62,7 +64,7 @@ public class GScrollBar extends GObject {
     public void mouseButtonEvent(int button, boolean pressed, int x, int y) {
         int rx = (int) (x - parent.getX());
         int ry = (int) (y - parent.getY());
-        if (isInBoundle(boundle, rx, ry)) {
+        if (isInArea(x, y)) {
             if (pressed) {
                 draged = true;
                 parent.setFocus(this);
@@ -80,12 +82,33 @@ public class GScrollBar extends GObject {
     public void cursorPosEvent(int x, int y) {
         int rx = (int) (x - parent.getX());
         int ry = (int) (y - parent.getY());
-        if (isInBoundle(boundle, rx, ry)) {
+        if (isInArea(x, y)) {
             if (draged) {
                 pos = mode == HORIZONTAL ? (rx - boundle[LEFT]) / boundle[WIDTH] : (ry - boundle[TOP]) / boundle[HEIGHT];
             }
         } else {
             //draged = false;
+        }
+    }
+
+    @Override
+    public void touchEvent(int phase, int x, int y) {
+        int rx = (int) (x - parent.getX());
+        int ry = (int) (y - parent.getY());
+        if (isInBoundle(boundle, rx, ry)) {
+            if (phase == Glfm.GLFMTouchPhaseBegan) {
+                draged = true;
+                pos = mode == HORIZONTAL ? (rx - boundle[LEFT]) / boundle[WIDTH] : (ry - boundle[TOP]) / boundle[HEIGHT];
+            } else if (phase == Glfm.GLFMTouchPhaseEnded) {
+                draged = false;
+                if (actionListener != null) {
+                    actionListener.action(this);
+                }
+            } else if (isInBoundle(boundle, rx, ry)) {
+                if (draged) {
+                    pos = mode == HORIZONTAL ? (rx - boundle[LEFT]) / boundle[WIDTH] : (ry - boundle[TOP]) / boundle[HEIGHT];
+                }
+            }
         }
     }
 
@@ -111,7 +134,7 @@ public class GScrollBar extends GObject {
     void drawSliderH(long vg, float pos, float x, float y, float w, float h) {
         byte[] bg, knob;
         float cy = y + (int) (h * 0.5f);
-        float kr = 8;//(int) (h * 0.25f);
+        float kr = radius;//(int) (h * 0.25f);
 
         nvgSave(vg);
 //	nvgClearState(vg);
@@ -153,7 +176,7 @@ public class GScrollBar extends GObject {
         byte[] bg, knob;
 //        float cy = y + (int) (h * 0.5f);
         float cx = x + (int) (w * 0.5f);
-        float kr = 8;//(int) (w * 0.25f);
+        float kr = radius;//(int) (w * 0.25f);
 
         nvgSave(vg);
 //	nvgClearState(vg);
