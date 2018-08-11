@@ -1062,6 +1062,18 @@ int org_mini_glfw_Glfw_glfwGetClipboardString(Runtime *runtime, JClass *clazz) {
     return 0;
 }
 
+int org_mini_glfw_Glfw_glfwSetClipboardString(Runtime *runtime, JClass *clazz) {
+    JniEnv *env = runtime->jnienv;
+    s32 pos = 0;
+    GLFWwindow *window = (__refer) (intptr_t) env->localvar_getLong_2slot(runtime->localvar, pos);
+    pos += 2;
+    Instance *jstr = env->localvar_getRefer(runtime->localvar, pos++);
+    Utf8String *ustr = env->utf8_create();
+    env->jstring_2_utf8(jstr, ustr);
+    glfwSetClipboardString(window, env->utf8_cstr(ustr));
+    return 0;
+}
+
 /* ==============================   jni gl =================================*/
 
 
@@ -1119,6 +1131,7 @@ static java_native_method method_glfw_table[] = {
         {"org/mini/glfw/Glfw",        "glfwGetWindowHeight",        "(J)I",                             org_mini_glfw_Glfw_glfwGetWindowHeight},
         {"org/mini/glfw/Glfw",        "glfwSetWindowAspectRatio",   "(JII)V",                           org_mini_glfw_Glfw_glfwSetWindowAspectRatio},
         {"org/mini/glfw/Glfw",        "glfwGetClipboardString",     "(J)Ljava/lang/String;",            org_mini_glfw_Glfw_glfwGetClipboardString},
+        {"org/mini/glfw/Glfw",        "glfwSetClipboardString",     "(JLjava/lang/String;)V",          org_mini_glfw_Glfw_glfwSetClipboardString},
 
 };
 

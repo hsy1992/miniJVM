@@ -85,7 +85,7 @@ public class Glfm {
             GLFMKeyActionReleased = 2;
 
     public static String glfmGetClipBoardContent() {
-        return "";
+        return null;
     }
 
     public static void glfmSetClipBoardContent(String str) {

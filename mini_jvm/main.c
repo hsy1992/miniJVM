@@ -62,7 +62,7 @@ int main(int argc, char **argv) {
             }
         }
     } else {
-        java_debug = 1;
+        java_debug = 0;
         classpath = "../../binary/lib/minijvm_rt.jar;../../binary/lib/glfw_gui.jar;./";
 //        main_name = "test/Gears";
 //        main_name = "test/TestGL";
