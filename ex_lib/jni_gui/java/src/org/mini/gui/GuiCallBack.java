@@ -27,6 +27,9 @@ public class GuiCallBack extends GlfwCallbackAdapter {
     long mouseLastPressed;
     int CLICK_PERIOD = 200;
 
+    boolean drag;
+    int hoverX, hoverY;//mouse 
+
     public void setWindowHandle(long h) {
         win = h;
     }
@@ -66,14 +69,22 @@ public class GuiCallBack extends GlfwCallbackAdapter {
                 case Glfw.GLFW_MOUSE_BUTTON_1: {//left
                     if (pressed) {
                         gform.focus = gform.findFocus(mouseX, mouseY);
+                        drag = true;
+                        hoverX = mouseX;
+                        hoverY = mouseY;
                     } else {
+                        drag = false;
                     }
                     break;
                 }
                 case Glfw.GLFW_MOUSE_BUTTON_2: {//right
                     if (pressed) {
                         gform.focus = gform.findFocus(mouseX, mouseY);
+                        drag = true;
+                        hoverX = mouseX;
+                        hoverY = mouseY;
                     } else {
+                        drag = false;
                     }
                     break;
                 }
@@ -90,11 +101,13 @@ public class GuiCallBack extends GlfwCallbackAdapter {
                     gform.clickEvent(button, mouseX, mouseY);
                 }
             } else //press event
-             if (gform.focus != null) {
+            {
+                if (gform.focus != null) {
                     gform.focus.mouseButtonEvent(button, pressed, mouseX, mouseY);
                 } else {
                     gform.mouseButtonEvent(button, pressed, mouseX, mouseY);
                 }
+            }
             this.button = button;
             mouseLastPressed = cur;
         }
@@ -106,7 +119,7 @@ public class GuiCallBack extends GlfwCallbackAdapter {
         if (gform == null) {
             return;
         }
-        gform.scrollEvent(scrollX, scrollY, mouseX, mouseY);
+        gform.scrollEvent((float) scrollX, (float) scrollY, mouseX, mouseY);
         gform.flush();
     }
 
@@ -119,6 +132,11 @@ public class GuiCallBack extends GlfwCallbackAdapter {
             mouseX = x;
             mouseY = y;
             gform.cursorPosEvent(x, y);
+            if (drag) {
+                gform.dragEvent(x - hoverX, y - hoverY, x, y);
+                hoverX = mouseX;
+                hoverY = mouseY;
+            }
             gform.flush();
         }
     }

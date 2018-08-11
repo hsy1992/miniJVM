@@ -47,6 +47,9 @@ import static org.mini.nanovg.Nanovg.nvgFillColor;
 import static org.mini.nanovg.Nanovg.nvgFontFace;
 import static org.mini.nanovg.Nanovg.nvgFontSize;
 import static org.mini.nanovg.Nanovg.nvgTextAlign;
+import static org.mini.gui.GObject.flush;
+import static org.mini.gui.GObject.flush;
+import static org.mini.gui.GObject.flush;
 
 /**
  *
@@ -250,17 +253,6 @@ public class GForm extends GPanel implements Runnable {
         if (focus != null && elements.peek() != focus) {
             elements.remove(focus);
             elements.addFirst(focus);
-        }
-    }
-
-    void findSetFocus(int x, int y) {
-        for (Iterator<GObject> it = elements.iterator(); it.hasNext();) {
-            GObject nko = it.next();
-            if (nko.isInArea(x, y)) {
-                focus = nko;
-                setFocus(nko);
-                break;
-            }
         }
     }
 
