@@ -140,14 +140,16 @@ abstract public class GContainer extends GObject {
             } else {
                 boolean success = elements.remove(ari.go);
                 if (success) {
-                    setFocus(null);
+                    if (getFocus() == ari.go) {
+                        setFocus(null);
+                    }
                     onRemove(ari.go);
                 }
             }
         }
         cacheBack.clear();
         //如果focus不是第一个，则移到第一个，这样遮挡关系才正确
-        if (focus != null  && !(this instanceof GMenu)) {
+        if (focus != null && !(this instanceof GMenu)) {
             elements.remove(focus);
             elements.add(menuCount, focus);
         }
