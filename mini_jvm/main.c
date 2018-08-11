@@ -62,11 +62,11 @@ int main(int argc, char **argv) {
             }
         }
     } else {
-        java_debug = 0;
-        classpath = "../../binary/lib/minijvm_rt.jar;../../binary/lib/gui_lib.jar;./";
+        java_debug = 1;
+        classpath = "../../binary/lib/minijvm_rt.jar;../../binary/lib/glfw_gui.jar;./";
 //        main_name = "test/Gears";
 //        main_name = "test/TestGL";
-//        main_name = "test/GuiTest";
+        main_name = "test/GuiTest";
 //        main_name = "test/RenderTexure";
 //        main_name = "test/Alpha";
 //        main_name = "test/Light";
@@ -77,11 +77,11 @@ int main(int argc, char **argv) {
 //        classpath = "../../binary/lib/minijvm_rt.jar;../../binary/lib/jni_test.jar;./";
 //        main_name = "test/JniTest";
 
-        classpath = "../../binary/lib/minijvm_rt.jar;../../binary/lib/luaj.jar;./";
-        main_name = "Sample";
+//        classpath = "../../binary/lib/minijvm_rt.jar;../../binary/lib/luaj.jar;./";
+//        main_name = "Sample";
 
 
-        classpath = "../../binary/lib/minijvm_rt.jar;../../binary/lib/minijvm_test.jar;./";
+//        classpath = "../../binary/lib/minijvm_rt.jar;../../binary/lib/minijvm_test.jar;./";
 //        main_name = "test/Foo1";
 //        main_name = "test/Foo2";
 //        main_name = "test/Foo3";
@@ -91,7 +91,7 @@ int main(int argc, char **argv) {
         //main_name = "test/HttpServer";
 //        main_name = "test/BpDeepTest";
 //        main_name = "test/ReflectTest";
-        main_name = "test/LambdaTest";
+//        main_name = "test/LambdaTest";
 
 
 
