@@ -308,6 +308,7 @@ enum {
     RUNTIME_STATUS_RETURN,
     RUNTIME_STATUS_EXCEPTION,
     RUNTIME_STATUS_ERROR,
+    RUNTIME_STATUS_INTERRUPT,
 };
 
 //======================= global var =============================
@@ -948,6 +949,7 @@ struct _Runtime {
     Runtime *parent;//father method's runtime
     RuntimeStack *stack;
     LocalVarItem *localvar;
+    MemoryBlock *curThreadLock;//if thread is locked ,the filed save the lock
     //
     union {
         Runtime *runtime_pool_header;// cache runtimes for performance

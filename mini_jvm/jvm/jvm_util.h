@@ -282,7 +282,7 @@ struct _JavaThreadInfo {
     u8 volatile thread_status;
     u8 volatile is_suspend;
     u8 volatile is_blocking;
-    u8 unuse;
+    u8 is_interrupt;
 
     thrd_t pthread;
     //调试器相关字段

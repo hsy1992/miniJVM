@@ -699,7 +699,7 @@ s32 jtherad_run(void *para) {
     runtime->threadInfo->thread_status = THREAD_STATUS_RUNNING;
     push_ref(runtime->stack, (__refer) jthread);
     ret = execute_method_impl(method, runtime, method->_this_class);
-    if (ret != RUNTIME_STATUS_NORMAL) {
+    if (ret != RUNTIME_STATUS_NORMAL && ret != RUNTIME_STATUS_INTERRUPT) {
         print_exception(runtime);
     }
     runtime->threadInfo->thread_status = THREAD_STATUS_ZOMBIE;
@@ -850,6 +850,7 @@ s32 jthread_waitTime(MemoryBlock *mb, Runtime *runtime, s64 waitms) {
         jthreadlock_create(mb);
     }
     jthread_block_enter(runtime);
+    runtime->curThreadLock = mb;
     runtime->threadInfo->thread_status = THREAD_STATUS_WAIT;
     if (waitms) {
         waitms += currentTimeMillis();
@@ -862,6 +863,7 @@ s32 jthread_waitTime(MemoryBlock *mb, Runtime *runtime, s64 waitms) {
         cnd_wait(&mb->thread_lock->thread_cond, &mb->thread_lock->mutex_lock);
     }
     runtime->threadInfo->thread_status = THREAD_STATUS_RUNNING;
+    runtime->curThreadLock = NULL;
     jthread_block_exit(runtime);
     return 0;
 }

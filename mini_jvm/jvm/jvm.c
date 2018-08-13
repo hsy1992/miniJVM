@@ -233,7 +233,19 @@ void jvm_init(c8 *p_classpath, StaticLibRegFunc regFunc) {
 
 void jvm_destroy(StaticLibRegFunc unRegFunc) {
     while (threadlist_count_none_daemon() > 0) {//wait for other thread over ,
-        threadSleep(100);
+        threadSleep(20);
+    }
+    //waiting for daemon thread terminate
+    s32 i;
+    while (thread_list->length) {
+        for (i = 0; i < thread_list->length; i++) {
+            Runtime *r = threadlist_get(i);
+            r->threadInfo->suspend_count = 1;
+            r->threadInfo->no_pause = 1;
+            r->threadInfo->is_interrupt = 1;
+            jthread_notify(r->curThreadLock, r);
+        }
+        threadSleep(20);
     }
     jdwp_stop_server();
     //

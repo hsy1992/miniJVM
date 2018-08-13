@@ -81,7 +81,8 @@ int main(int argc, char **argv) {
 //        main_name = "Sample";
 
 
-//        classpath = "../../binary/lib/minijvm_rt.jar;../../binary/lib/minijvm_test.jar;./";
+        classpath = "../../binary/lib/minijvm_rt.jar;../../binary/lib/minijvm_test.jar;./";
+        main_name = "test/Hello";
 //        main_name = "test/Foo1";
 //        main_name = "test/Foo2";
 //        main_name = "test/Foo3";
