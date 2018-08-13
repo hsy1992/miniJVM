@@ -2,17 +2,6 @@
 <project-private xmlns="http://www.netbeans.org/ns/project-private/1">
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
-        <group>
-            <file>file:/Users/Gust/Documents/GitHub/mini_jvm/ex_lib/jni_gui/java/src/org/mini/gui/GContainer.java</file>
-            <file>file:/Users/Gust/Documents/GitHub/mini_jvm/ex_lib/jni_gui/java/src/org/mini/gui/GMenuItem.java</file>
-            <file>file:/Users/Gust/Documents/GitHub/mini_jvm/ex_lib/jni_gui/java/src/org/mini/gui/GTextBox.java</file>
-            <file>file:/Users/Gust/Documents/GitHub/mini_jvm/ex_lib/jni_gui/java/src/org/mini/gui/GScrollBar.java</file>
-            <file>file:/Users/Gust/Documents/GitHub/mini_jvm/ex_lib/jni_gui/java/src/org/mini/gui/GPanel.java</file>
-            <file>file:/Users/Gust/Documents/GitHub/mini_jvm/ex_lib/jni_gui/java/src/org/mini/gui/GFrame.java</file>
-            <file>file:/Users/Gust/Documents/GitHub/mini_jvm/ex_lib/jni_gui/java/src/org/mini/gui/GObject.java</file>
-            <file>file:/Users/Gust/Documents/GitHub/mini_jvm/ex_lib/jni_gui/java/src/org/mini/gui/GList.java</file>
-            <file>file:/Users/Gust/Documents/GitHub/mini_jvm/ex_lib/jni_gui/java/src/org/mini/gui/GForm.java</file>
-            <file>file:/Users/Gust/Documents/GitHub/mini_jvm/ex_lib/jni_gui/java/src/org/mini/gui/GuiCallBack.java</file>
-        </group>
+        <group/>
     </open-files>
 </project-private>
