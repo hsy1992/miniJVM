@@ -243,7 +243,9 @@ void jvm_destroy(StaticLibRegFunc unRegFunc) {
             r->threadInfo->suspend_count = 1;
             r->threadInfo->no_pause = 1;
             r->threadInfo->is_interrupt = 1;
-            jthread_notify(r->curThreadLock, r);
+            jthread_lock(r->threadInfo->curThreadLock, r);
+            jthread_notify(r->threadInfo->curThreadLock, r);
+            jthread_unlock(r->threadInfo->curThreadLock, r);
         }
         threadSleep(20);
     }

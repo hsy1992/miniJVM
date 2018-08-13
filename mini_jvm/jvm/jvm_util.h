@@ -275,8 +275,8 @@ struct _JavaThreadInfo {
     ArrayList *instance_holder;//for jni hold java object
     MemoryBlock *objs_header;//link to new instance, until garbage accept
     MemoryBlock *objs_tailer;//link to last instance, until garbage accept
+    MemoryBlock *curThreadLock;//if thread is locked ,the filed save the lock
 
-    spinlock_t lock;
     u16 volatile suspend_count;//for jdwp suspend ,>0 suspend, ==0 resume
     u16 volatile no_pause;  //can't pause when clinit
     u8 volatile thread_status;
@@ -284,6 +284,8 @@ struct _JavaThreadInfo {
     u8 volatile is_blocking;
     u8 is_interrupt;
 
+
+    spinlock_t lock;
     thrd_t pthread;
     //调试器相关字段
     JdwpStep jdwp_step;
