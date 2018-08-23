@@ -70,7 +70,7 @@ s32 garbage_collector_create() {
 
     collector->_garbage_thread_status = GARBAGE_THREAD_PAUSE;
     thread_lock_init(&collector->garbagelock);
-
+    //开始 GC 线程
     s32 rc = thrd_create(&collector->_garbage_thread, _collect_thread_run, NULL);
     if (rc != thrd_success) {
         jvm_printf("ERROR: garbage thread can't create is %d\n", rc);
@@ -317,6 +317,7 @@ void _garbage_remove_out_holder(__refer ref) {
 }
 //==============================   thread_run() =====================================
 
+// GC 线程
 s32 _collect_thread_run(void *para) {
     s64 lastgc = currentTimeMillis();
     while (1) {
@@ -328,13 +329,18 @@ s32 _collect_thread_run(void *para) {
         if (collector->_garbage_thread_status == GARBAGE_THREAD_PAUSE) {
             continue;
         }
+
+        //至少间隔 1S 才做一次 GC
         if (currentTimeMillis() - lastgc < 1000) {// less than custom sec no gc
             continue;
         }
 //        if (java_debug && jdwpserver.clients->length) {// less than 3 sec no gc
 //            continue;
 //        }
+
+        //当堆占用超过 80% 才做 GC
         if (currentTimeMillis() - lastgc > GARBAGE_PERIOD_MS || heap_size > MAX_HEAP_SIZE * .8f) {
+            //真正 GC
             garbage_collect();
             lastgc = currentTimeMillis();
         }
@@ -359,8 +365,10 @@ s64 garbage_collect() {
 
     start = time = currentTimeMillis();
     //prepar gc resource ,
+    //GC 同步锁
     garbage_thread_lock();
 
+    //Stop the world 暂停所有线程
     if (_garbage_pause_the_world() != 0) {
         _garbage_resume_the_world();
         return -1;
@@ -375,18 +383,21 @@ s64 garbage_collect() {
     }
 //    jvm_printf("garbage_move_cache %lld\n", (currentTimeMillis() - time));
 //    time = currentTimeMillis();
+    //拷贝所有引用到 GC 链表中
     _garbage_copy_refer();
     //
 //    jvm_printf("garbage_copy_refer %lld\n", (currentTimeMillis() - time));
 //    time = currentTimeMillis();
     //real GC start
-    //
+    //开始 GC，设置 FLAG
     _garbage_change_flag();
+    //开始递归搜索已经拷贝的根引用
     _garbage_big_search();
     //
 //    jvm_printf("garbage_big_search %lld\n", (currentTimeMillis() - time));
 //    time = currentTimeMillis();
 
+    //java 线程恢复运行，这时候已经标记了那些对象需要回收了，所以不再需要暂停线程
     _garbage_resume_the_world();
     garbage_thread_unlock();
 
@@ -396,7 +407,7 @@ s64 garbage_collect() {
     time = currentTimeMillis();
     //
 
-
+    //处理 finalize 方法
     MemoryBlock *nextmb = collector->header;
     MemoryBlock *curmb, *prevmb = NULL;
     //finalize
@@ -406,16 +417,20 @@ s64 garbage_collect() {
             nextmb = curmb->next;
             if (curmb->clazz->finalizeMethod) {// there is a method called finalize
                 if (curmb->type == MEM_TYPE_INS && curmb->garbage_mark != collector->flag_refer) {
+                    //这里回去调用每个对象的 finalize 方法
                     instance_finalize((Instance *) curmb, collector->runtime);
                 }
             }
         }
     }
+
+    //在 finalize 创建的对象，实在 gc 线程创建的对象，理论上没有用，需要被 GC
     gc_move_refer_thread_2_gc(collector->runtime);// maybe someone new object in finalize...
 
 //    jvm_printf("garbage_finalize %lld\n", (currentTimeMillis() - time));
 //    time = currentTimeMillis();
     //clear
+    //开始释放垃圾对象的内存
     nextmb = collector->header;
     prevmb = NULL;
     s64 iter = 0;
@@ -427,7 +442,7 @@ s64 garbage_collect() {
         mem_total += size;
         if (curmb->garbage_mark != collector->flag_refer) {
             mem_free += size;
-            //
+            //释放对象内存
             _garbage_destory_memobj(curmb);
             if (prevmb)prevmb->next = nextmb;
             else collector->header = nextmb;
@@ -436,6 +451,8 @@ s64 garbage_collect() {
             prevmb = curmb;
         }
     }
+
+    //更新堆大小
     spin_lock(&collector->lock);
     collector->obj_count = iter - del;
     heap_size = mem_total - mem_free;
@@ -479,6 +496,7 @@ void _list_iter_thread_pause(ArrayListValue value, void *para) {
     jthread_suspend((Runtime *) value);
 }
 
+//暂停所有 java 线程
 s32 _garbage_pause_the_world(void) {
     s32 i;
     //jvm_printf("thread size:%d\n", thread_list->length);
@@ -516,6 +534,7 @@ s32 _garbage_pause_the_world(void) {
     return 0;
 }
 
+//恢复所有线程
 s32 _garbage_resume_the_world() {
     s32 i;
     for (i = 0; i < thread_list->length; i++) {
@@ -562,12 +581,13 @@ s32 _checkAndWaitThreadIsSuspend(Runtime *runtime) {
  * @return ret
  */
 s32 _garbage_big_search() {
+    //遍历递归标记刚刚拷贝线程中的根引用
     s32 i, len;
     for (i = 0, len = collector->runtime_refer_copy->length; i < len; i++) {
         __refer r = arraylist_get_value(collector->runtime_refer_copy, i);
         _garbage_mark_object(r);
     }
-
+    //遍历标记常量池
     HashsetIterator hi;
     hashset_iterate(collector->objs_holder, &hi);
     while (hashset_iter_has_more(&hi)) {
@@ -583,8 +603,11 @@ void _garbage_copy_refer() {
     arraylist_clear(collector->runtime_refer_copy);
     s32 i;
     //jvm_printf("thread set size:%d\n", thread_list->length);
+    // 遍历所有线程的 Runtime，取出其中的引用
     for (i = 0; i < thread_list->length; i++) {
+        // 根 Runtime，相当于根栈帧
         Runtime *runtime = threadlist_get(i);
+        // 开始拷贝引用
         _garbage_copy_refer_thread(runtime);
     }
 //    arraylist_iter_safe(thread_list, _list_iter_iter_copy, NULL);
@@ -606,14 +629,24 @@ void _garbage_copy_refer() {
  * @return how many marked
  */
 
-
+//可达性算法
+//可注意到几个 GC Root
+/**
+ * 1.线程运行栈，类似寄存器所持有的引用，每个线程各持有一个
+ * 2.该线程引用的其他实例的引用，是 Filed Get 操作带来的
+ * 3.方法运行栈帧中的本地变量持有的引用
+ **/
 s32 _garbage_copy_refer_thread(Runtime *pruntime) {
     arraylist_push_back(collector->runtime_refer_copy, pruntime->threadInfo->jthread);
 
     s32 i, imax;
+    //栈中元素(局部变量等)
     StackEntry entry;
     Runtime *runtime = pruntime;
+    //该 JVM 是基于栈的，非基于寄存器，所以每个线程会持有一个运行栈来模拟 CPU CORE 的寄存器
+    //取出根运行栈
     RuntimeStack *stack = runtime->stack;
+    //遍历拷贝运行栈中的所有的引用，即寄存器的引用
     for (i = 0; i < stack->size; i++) {
         peek_entry(stack, &entry, i);
         if (is_ref(&entry)) {
@@ -623,11 +656,13 @@ s32 _garbage_copy_refer_thread(Runtime *pruntime) {
             }
         }
     }
+    //遍历拷贝该线程引用的所有实例，类似 field get
     ArrayList *holder = runtime->threadInfo->instance_holder;
     for (i = 0, imax = holder->length; i < imax; i++) {
         __refer ref = arraylist_get_value(holder, i);
         arraylist_push_back(collector->runtime_refer_copy, ref);
     }
+    // 遍历拷贝每个栈帧中的本地变量，即本地变量对实例的引用
     while (runtime) {
         for (i = 0; i < runtime->localvar_count; i++) {
             LocalVarItem *item = &runtime->localvar[i];
@@ -642,18 +677,22 @@ s32 _garbage_copy_refer_thread(Runtime *pruntime) {
     return 0;
 }
 
-
+//inline 方法方式栈溢出，因为对象引用关系复杂，层级可能非常深
 static inline void _instance_mark_refer(Instance *ins) {
     s32 i, len;
     JClass *clazz = ins->mb.clazz;
+    //遍历该对象的所有父类型，找出所有 Field
     while (clazz) {
         FieldPool *fp = &clazz->fieldPool;
         ArrayList *fiList = clazz->insFieldPtrIndex;
         for (i = 0, len = fiList->length; i < len; i++) {
             FieldInfo *fi = &fp->field[(s32) (intptr_t) arraylist_get_value_unsafe(fiList, i)];
             c8 *ptr = getInstanceFieldPtr(ins, fi);
+            //如果该 Field 不为空
             if (ptr) {
+                //取出该 Field 的引用
                 __refer ref = getFieldRefer(ptr);
+                //如果引用存在，则标记该引用可达，不会在接下来被回收
                 if (ref)_garbage_mark_object(ref);
             }
         }
@@ -661,7 +700,7 @@ static inline void _instance_mark_refer(Instance *ins) {
     }
 }
 
-
+//数组对象
 static inline void _jarray_mark_refer(Instance *arr) {
     if (arr && arr->mb.type == MEM_TYPE_ARR) {
 //        if (utf8_equals_c(arr->mb.clazz->name, "[[D")) {
@@ -669,6 +708,7 @@ static inline void _jarray_mark_refer(Instance *arr) {
 //        }
         if (isDataReferByIndex(arr->mb.arr_type_index)) {
             s32 i;
+            //遍历标记数组的每一个元素
             for (i = 0; i < arr->arr_length; i++) {//把所有引用去除，否则不会垃圾回收
                 s64 val = jarray_get_field(arr, i);
                 if (val)_garbage_mark_object((__refer) (intptr_t) val);
@@ -678,12 +718,14 @@ static inline void _jarray_mark_refer(Instance *arr) {
     return;
 }
 
+//类对象
 /**
  * mark class static field is used
  * @param clazz class
  */
 static inline void _class_mark_refer(JClass *clazz) {
     s32 i, len;
+    //类对象需要一同标记类中的静态变量，即常量池
     if (clazz->field_static) {
         FieldPool *fp = &clazz->fieldPool;
         ArrayList *fiList = clazz->staticFieldPtrIndex;
@@ -703,7 +745,12 @@ static inline void _class_mark_refer(JClass *clazz) {
  * 递归标注obj所有的子孙
  * @param ref addr
  */
-
+//3种对象
+/**
+ *1.普通对象
+ *2.数组对象
+ *3.类对象 
+ **/
 void _garbage_mark_object(__refer ref) {
     if (ref) {
         MemoryBlock *mb = (MemoryBlock *) ref;
@@ -711,12 +758,15 @@ void _garbage_mark_object(__refer ref) {
             mb->garbage_mark = collector->flag_refer;
             switch (mb->type) {
                 case MEM_TYPE_INS:
+                    //普通对象
                     _instance_mark_refer((Instance *) mb);
                     break;
                 case MEM_TYPE_ARR:
+                    //数组对象
                     _jarray_mark_refer((Instance *) mb);
                     break;
                 case MEM_TYPE_CLASS:
+                    //类对象
                     _class_mark_refer((JClass *) mb);
                     break;
             }

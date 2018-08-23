@@ -25,7 +25,7 @@ extern s64 MAX_HEAP_SIZE;
 
 //每个线程一个回收站，线程多了就是灾难
 struct _GcCollectorType {
-    //
+    //常量池
     Hashset *objs_holder; //法外之地，防回收的持有器，放入其中的对象及其引用的其他对象不会被回收
     MemoryBlock *header, *tmp_header, *tmp_tailer;
     s64 obj_count;
