@@ -1093,6 +1093,7 @@ JClass *resole_class(ByteBuf *bytebuf, Runtime *runtime) {
     JClass *tmpclazz = NULL;
     if (bytebuf != NULL) {
         tmpclazz = class_create(runtime);
+        // 解析字节码
         s32 iret = tmpclazz->_load_class_from_bytes(tmpclazz, bytebuf);//load file
 
         if (iret == 0) {
@@ -1115,6 +1116,7 @@ s32 load_class(ClassLoader *loader, Utf8String *pClassName, Runtime *runtime) {
     s32 iret = 0;
     //
     Utf8String *clsName = utf8_create_copy(pClassName);
+    // byte code 中都为 /.../...
     utf8_replace_c(clsName, ".", "/");
     JClass *tmpclazz = classes_get(clsName);
     if (utf8_indexof_c(clsName, "[") == 0) {
@@ -1124,8 +1126,10 @@ s32 load_class(ClassLoader *loader, Utf8String *pClassName, Runtime *runtime) {
         ByteBuf *bytebuf = NULL;
 
         utf8_append_c(clsName, ".class");
+        // 读字节码到内存中
         bytebuf = load_file_from_classpath(loader, clsName);
         if (bytebuf != NULL) {
+            // 解析字节码 -> JClass
             tmpclazz = resole_class(bytebuf, runtime);
             bytebuf_destory(bytebuf);
         }

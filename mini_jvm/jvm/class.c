@@ -20,8 +20,9 @@ JClass *class_create(Runtime *runtime) {
     clazz->field_static = NULL;
     clazz->status = CLASS_STATUS_RAW;
     clazz->_load_class_from_bytes = _LOAD_CLASS_FROM_BYTES;
-    //
+    // java 线程锁创建
     jthreadlock_create(&clazz->mb);
+    // 常量链表
     constant_list_create(clazz);
     clazz->arr_class_type = pairlist_create(16);
     clazz->insFieldPtrIndex = arraylist_create(8);

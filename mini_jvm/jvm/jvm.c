@@ -102,7 +102,9 @@ void profile_print() {
 #endif
 
 ClassLoader *classloader_create(c8 *path) {
+    // 分派内存
     ClassLoader *class_loader = jvm_calloc(sizeof(ClassLoader));
+    // 类加载同步锁
     spin_init(&class_loader->lock, 0);
 
     //split classpath
