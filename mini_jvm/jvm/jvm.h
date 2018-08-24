@@ -53,6 +53,7 @@ extern "C" {
  *  11 Interface methodRef garbage_refer
  *  12 Name and type descriptor
  * */
+//常量类型
 enum {
     CONSTANT_UTF8 = 1,
     CONSTANT_INTEGER = 3,
@@ -168,6 +169,7 @@ typedef struct _CodeAttribute CodeAttribute;
 typedef struct _JNIENV JniEnv;
 typedef struct _ReferArr CStringArr;
 typedef struct _ReferArr ReferArr;
+//线程运行栈
 typedef struct _StackFrame RuntimeStack;
 
 
@@ -256,7 +258,7 @@ long  11
 extern c8 *data_type_str;
 
 extern s32 data_type_bytes[DATATYPE_COUNT];
-
+//基本类型 + 引用类型
 enum {
     DATATYPE_BOOLEAN = 4,
     DATATYPE_JCHAR = 5,
@@ -377,24 +379,51 @@ void classloader_destory(ClassLoader *class_loader);
 
 //======================= class file =============================
 
-
+//定义 class 文件头结构
+/**
+类型	名称	数量
+u4	magic(魔术)	1
+u2	minor_version(次版本号)	1
+u2	major_version(主版本号)	1
+u2	constant_pool_count(常量个数)	1 
+cp_info	constant_pool(常量池表)	constant_pool_count-1
+u2	access_flags(类的访问控制权限)	1
+u2	this_class(类名)	1
+u2	super_class(父类名)	1
+u2	interfaces_count(接口个数)	1
+u2	interfaces(接口名)	interfaces_count
+u2	fields_count(域个数)	1
+field_info	fields(域的表)	fields_count
+u2 	methods_count(方法的个数)	1
+method_info	methods(方法表)	methods_count
+u2	attributes_count(附加属性的个数)	1
+attribute_info	attributes(附加属性的表)	attributes_count
+ **/
 /* Java Class File */
 typedef struct _ClassFileFormat {
+    //魔数
     u8 magic_number[4];
     u16 minor_version;
     u16 major_version;
+    //常量数量
     u16 constant_pool_count;
     /* constant pool */
+    //访问标志 private 这些
     u16 access_flags;
+    //本类类名 index
     u16 this_class;
+    //父类类名 index
     u16 super_class;
-
+    //接口数量
     u16 interface_count;
     /* interfaceRef pool */
+    //类成员变量数量
     u16 fields_count;
     /* obj_fields pool */
+    //方法数量
     u16 methods_count;
     /* methodRef pool */
+    //字段附加属性的个数
     u16 attributes_count;
     /* attributes pool */
 } ClassFileFormat;
