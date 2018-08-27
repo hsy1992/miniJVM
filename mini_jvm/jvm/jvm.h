@@ -71,7 +71,7 @@ enum {
     CONSTANT_INVOKE_DYNAMIC = 18,
 };
 //=======================  typedef  =============================
-
+//大小端 byte -> 目标类型
 #if __JVM_LITTLE_ENDIAN__
 typedef union _Short2Char {
     s16 s;
@@ -969,21 +969,30 @@ struct _StackFrame {
 
 struct _Runtime {
 
+    //方法结构体
     MethodInfo *method;
+    //类结构体
     JClass *clazz;
+    //pc 指针
     u8 *pc;
+    //方法字节码
     CodeAttribute *ca;//method bytecode
+    //当前线程信息
     JavaThreadInfo *threadInfo;
+    //子方法 runtime，类似栈
     Runtime *son;//sub method's runtime
+    //父方法 runtime
     Runtime *parent;//father method's runtime
+    //JVM 运行栈，用于基于栈实现的解释器
     RuntimeStack *stack;
+    //方法本地变量
     LocalVarItem *localvar;
-    //
+    //Runtime 缓存
     union {
         Runtime *runtime_pool_header;// cache runtimes for performance
         Runtime *next;  //for runtime pools linklist
     };
-
+    //JNI 结构体
     JniEnv *jnienv;
     s16 localvar_count;
     s16 localvar_max;
@@ -995,6 +1004,7 @@ RuntimeStack *stack_create(s32 entry_size);
 
 void stack_destory(RuntimeStack *stack);
 
+//======================= native stack =============================
 void push_entry_jni(RuntimeStack *stack, StackEntry *entry);
 
 void push_int_jni(RuntimeStack *stack, s32 value);
@@ -1029,7 +1039,10 @@ s64 entry_2_long_jni(StackEntry *entry);
 
 __refer entry_2_refer_jni(StackEntry *entry);
 
+//======================= native stack =============================
 
+
+//======================= java stack =============================
 /* push Integer */
 static inline void push_int(RuntimeStack *stack, s32 value) {
     StackEntry *ptr = &stack->store[stack->size++];
@@ -1165,6 +1178,8 @@ static inline s32 is_cat2(StackEntry *entry) {
 }
 
 s32 is_ref(StackEntry *entry);
+
+//======================= java stack =============================
 
 
 //======================= localvar =============================

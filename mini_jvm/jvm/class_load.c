@@ -889,10 +889,14 @@ s32 parseMethodPara(Utf8String *methodType, Utf8String *out) {
 void _class_optimize(JClass *clazz) {
     Utf8String *ustr = class_get_utf8_string(clazz,
                                              class_get_constant_classref(clazz, clazz->cff.this_class)->stringIndex);
+
+    //根据类名 index 找到类名                                         
     clazz->name = utf8_create_copy(ustr);
 //    if (utf8_equals_c(clazz->name, "javax/mini/eio/socket/PrivateOutputStream")) {
 //        int debug = 1;
 //    }
+
+    //根据接口名 index 找到接口名    
     s32 i;
     for (i = 0; i < clazz->interfacePool.clasz_used; i++) {
         ConstantClassRef *ptr = &clazz->interfacePool.clasz[i];
@@ -1002,15 +1006,17 @@ void _class_optimize(JClass *clazz) {
 
 }
 
-
+//解析 Class 字节码
 /* Parse Class File */
 s32 _LOAD_CLASS_FROM_BYTES(JClass *_this, ByteBuf *buf) {
     ClassFileFormat *cff = &(_this->cff);
 
+    //读魔数
     /* magic number */
     bytebuf_read_batch(buf, (c8 *) &cff->magic_number, 4);
 //    fread(cff->magic_number, 4, 1, fp);
 
+    //读取版本
     /* minor_version */
     //fread(short_tmp, 2, 1, fp);
     Short2Char s2c;
@@ -1024,6 +1030,7 @@ s32 _LOAD_CLASS_FROM_BYTES(JClass *_this, ByteBuf *buf) {
     s2c.c0 = (c8) bytebuf_read(buf);
     cff->major_version = s2c.s;
 
+    //常量池
     /* constant pool */
     //fread(short_tmp, 2, 1, fp);
     s2c.c1 = (c8) bytebuf_read(buf);
@@ -1089,9 +1096,11 @@ s32 _LOAD_CLASS_FROM_BYTES(JClass *_this, ByteBuf *buf) {
     return 0;
 }
 
+//解析类
 JClass *resole_class(ByteBuf *bytebuf, Runtime *runtime) {
     JClass *tmpclazz = NULL;
     if (bytebuf != NULL) {
+        //分配内存
         tmpclazz = class_create(runtime);
         // 解析字节码
         s32 iret = tmpclazz->_load_class_from_bytes(tmpclazz, bytebuf);//load file
@@ -1111,17 +1120,22 @@ JClass *resole_class(ByteBuf *bytebuf, Runtime *runtime) {
     return tmpclazz;
 }
 
+//类加载
 s32 load_class(ClassLoader *loader, Utf8String *pClassName, Runtime *runtime) {
     if (!loader)return 0;
     s32 iret = 0;
-    //
+    //class name
     Utf8String *clsName = utf8_create_copy(pClassName);
     // byte code 中都为 /.../...
     utf8_replace_c(clsName, ".", "/");
+    //先从缓存中读取
     JClass *tmpclazz = classes_get(clsName);
+    //如果是数组类型
     if (utf8_indexof_c(clsName, "[") == 0) {
+        //先从缓存中读
         tmpclazz = array_class_create_get(runtime, clsName);
     }
+    //如果缓存空，开始真正 load class
     if (!tmpclazz) {
         ByteBuf *bytebuf = NULL;
 

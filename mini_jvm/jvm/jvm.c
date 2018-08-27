@@ -33,6 +33,7 @@ void thread_unboundle(Runtime *runtime) {
     jthread_dispose(t);
 }
 
+//打印异常
 void print_exception(Runtime *runtime) {
     __refer ref = pop_ref(runtime->stack);
     Instance *ins = (Instance *) ref;
@@ -108,6 +109,7 @@ ClassLoader *classloader_create(c8 *path) {
     spin_init(&class_loader->lock, 0);
 
     //split classpath
+    //解析 classpath 参数，分割存储
     class_loader->classpath = arraylist_create(0);
     Utf8String *g_classpath = utf8_create_c(path);
     Utf8String *tmp = NULL;
@@ -201,7 +203,7 @@ void jvm_init(c8 *p_classpath, StaticLibRegFunc regFunc) {
 #if _JVM_DEBUG_PROFILE
     profile_init();
 #endif
-    //
+    //初始化 JNIENV native 方法
     init_jni_func_table();
 
     //创建线程容器
@@ -215,12 +217,15 @@ void jvm_init(c8 *p_classpath, StaticLibRegFunc regFunc) {
 
     //本地方法库
     native_libs = arraylist_create(0);
+    //std libc
     reg_std_native_lib();
+    //net lib
     reg_net_native_lib();
+    //debug lib
     reg_jdwp_native_lib();
     if (regFunc)regFunc(&jnienv);//register static lib
 
-
+    //创建系统类加载器
     sys_classloader = classloader_create(p_classpath);
 
 
@@ -265,10 +270,14 @@ void jvm_destroy(StaticLibRegFunc unRegFunc) {
 }
 
 s32 execute_jvm(c8 *p_classpath, c8 *p_mainclass, ArrayList *java_para) {
+
+    //初始化
     jvm_init(p_classpath, NULL);
 
+    //拼装 Main 方法的签名
     c8 *p_methodname = "main";
     c8 *p_methodtype = "([Ljava/lang/String;)V";
+    //call main
     s32 ret = call_method_main(p_mainclass, p_methodname, p_methodtype, java_para);
 
     jvm_destroy(NULL);
@@ -309,13 +318,17 @@ s32 call_method_main(c8 *p_mainclass, c8 *p_methodname, c8 *p_methodtype, ArrayL
         MethodInfo *m = find_methodInfo_by_name(str_mainClsName, methodName, methodType,
                                                 runtime);
         if (m) {
+
+            //绑定主线程
             thread_boundle(runtime);
 
             //准备参数
             localvar_dispose(runtime);
+            //方法参数初始化
             localvar_init(runtime, m->para_slots);
             s32 count = java_para->length;
             Utf8String *ustr = utf8_create_c(STR_CLASS_JAVA_LANG_STRING);
+            //Main 方法 String[] args 参数初始化
             Instance *arr = jarray_create_by_type_name(runtime, count, ustr);
             gc_refer_hold(arr);
             utf8_destory(ustr);
@@ -326,6 +339,7 @@ s32 call_method_main(c8 *p_mainclass, c8 *p_methodname, c8 *p_methodtype, ArrayL
                 jarray_set_field(arr, i, (intptr_t) jstr);
                 utf8_destory(utfs);
             }
+            //参数入栈
             push_ref(runtime->stack, arr);
             gc_refer_release(arr);
 
@@ -339,6 +353,7 @@ s32 call_method_main(c8 *p_mainclass, c8 *p_methodname, c8 *p_methodtype, ArrayL
             }//jdwp 会启动调试器
             runtime->method = NULL;
             runtime->clazz = clazz;
+            //执行
             ret = execute_method(m, runtime, clazz);
             if (ret != RUNTIME_STATUS_NORMAL) {
                 print_exception(runtime);

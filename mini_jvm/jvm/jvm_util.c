@@ -44,6 +44,7 @@ JClass *classes_get_c(c8 *clsName) {
     return clazz;
 }
 
+//读取缓存
 JClass *classes_get(Utf8String *clsName) {
     JClass *cl = NULL;
     if (clsName) {
@@ -1690,6 +1691,7 @@ ByteBuf *load_file_from_classpath(ClassLoader *loader, Utf8String *path) {
     return bytebuf;
 }
 
+//初始化必要的 native 方法表（JNIENV）
 void init_jni_func_table() {
     jnienv.data_type_bytes = (s32 *) &data_type_bytes;
     jnienv.native_reg_lib = native_reg_lib;
