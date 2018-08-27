@@ -903,6 +903,7 @@ void _class_optimize(JClass *clazz) {
         ptr->name = class_get_utf8_string(clazz, class_get_constant_classref(clazz, ptr->stringIndex)->stringIndex);
     }
 
+    //根据 Field index 找到 Field 名和 类型信息等    
     for (i = 0; i < clazz->fieldPool.field_used; i++) {
         FieldInfo *ptr = &clazz->fieldPool.field[i];
         ptr->name = class_get_utf8_string(clazz, ptr->name_index);
@@ -912,6 +913,7 @@ void _class_optimize(JClass *clazz) {
         ptr->datatype_bytes = data_type_bytes[ptr->datatype_idx];
         ptr->isvolatile = ptr->access_flags & ACC_VOLATILE;
 
+        //类成员加到 List
         //for gc iterator fast
         if (isDataReferByIndex(ptr->datatype_idx)) {
             if (ptr->access_flags & ACC_STATIC) {
@@ -921,6 +923,8 @@ void _class_optimize(JClass *clazz) {
             }
         }
     }
+
+    //根据 方法 index 找到方法名 和 签名信息等   
     for (i = 0; i < clazz->methodPool.method_used; i++) {
         MethodInfo *ptr = &clazz->methodPool.method[i];
         ptr->name = class_get_utf8_string(clazz, ptr->name_index);
@@ -941,6 +945,7 @@ void _class_optimize(JClass *clazz) {
         }
         s32 j;
 
+        //解析参数表达式
         //转attribute为CdoeAttribute
         for (j = 0; j < ptr->attributes_count; j++) {
             if (utf8_equals_c(class_get_utf8_string(clazz, ptr->attributes[j].attribute_name_index), "Code") == 1) {
@@ -970,11 +975,13 @@ void _class_optimize(JClass *clazz) {
         }
     }
 
+    //解析类型引用
     for (i = 0; i < clazz->constantPool.classRef->length; i++) {
         ConstantClassRef *ccr = (ConstantClassRef *) arraylist_get_value(clazz->constantPool.classRef, i);
         ccr->name = class_get_utf8_string(clazz, ccr->stringIndex);
     }
 
+    //解析方法引用
     for (i = 0; i < clazz->constantPool.methodRef->length; i++) {
         ConstantMethodRef *cmr = (ConstantMethodRef *) arraylist_get_value(clazz->constantPool.methodRef, i);
         cmr->nameAndType = class_get_constant_name_and_type(clazz, cmr->nameAndTypeIndex);
@@ -991,6 +998,8 @@ void _class_optimize(JClass *clazz) {
             utf8_destory(tmps);
         }
     }
+
+    //解析接口方法
     for (i = 0; i < clazz->constantPool.interfaceMethodRef->length; i++) {
         ConstantMethodRef *cmr = (ConstantMethodRef *) arraylist_get_value(clazz->constantPool.methodRef, i);
         cmr->nameAndType = class_get_constant_name_and_type(clazz, cmr->nameAndTypeIndex);
@@ -1106,7 +1115,9 @@ JClass *resole_class(ByteBuf *bytebuf, Runtime *runtime) {
         s32 iret = tmpclazz->_load_class_from_bytes(tmpclazz, bytebuf);//load file
 
         if (iret == 0) {
+            //放到缓存中
             classes_put(tmpclazz);
+            //准备工作，初始化调用静态块等
             class_prepar(tmpclazz, runtime);
             gc_refer_hold(tmpclazz);
 #if _JVM_DEBUG_BYTECODE_DETAIL > 5

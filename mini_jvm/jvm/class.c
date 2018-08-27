@@ -102,7 +102,7 @@ s32 class_prepar(JClass *clazz, Runtime *runtime) {
 //        int debug = 1;
 //    }
 
-
+    //加载并保存父类指针
     s32 superid = clazz->cff.super_class;
     if (superid && !clazz->superclass) {
         ConstantClassRef *ccf = class_get_constant_classref(clazz, superid);
@@ -121,6 +121,7 @@ s32 class_prepar(JClass *clazz, Runtime *runtime) {
 //        int debug = 1;
 //    }
 
+    //准备成员变量所需要的空间，其实也是类的对象实例化所需要的内存空间
     FieldInfo *f = clazz->fieldPool.field;
     //计算不同种类变量长度
     s32 static_len = 0;
@@ -138,6 +139,7 @@ s32 class_prepar(JClass *clazz, Runtime *runtime) {
     }
     //静态变量分配
     clazz->field_static_len = static_len;
+    //分配静态变量的内存空间
     clazz->field_static = jvm_calloc(clazz->field_static_len);
 
 
@@ -251,6 +253,8 @@ void class_clinit(JClass *clazz, Runtime *runtime) {
                 class_clinit(fi->_this_class, runtime);
             }
         }
+
+        //发现 finalize()
         //find finalize method, but not process java.lang.Object.finalize()
         clazz->finalizeMethod = find_methodInfo_by_name_c(utf8_cstr(clazz->name), STR_METHOD_FINALIZE, "()V", runtime);
         if (clazz->finalizeMethod && utf8_equals_c(clazz->finalizeMethod->_this_class->name, STR_CLASS_JAVA_LANG_OBJECT)) {
@@ -259,6 +263,7 @@ void class_clinit(JClass *clazz, Runtime *runtime) {
             int debug = 1;
         }
 
+        //初始化类常量中的 String 对象
         // init javastring
         ArrayList *strlist = clazz->constantPool.stringRef;
         for (i = 0, len = strlist->length; i < len; i++) {
@@ -280,6 +285,7 @@ void class_clinit(JClass *clazz, Runtime *runtime) {
             class_clinit(superclass, runtime);
         }
 
+        //调用类初始化方法,即静态块
         MethodPool *p = &(clazz->methodPool);
         for (i = 0; i < p->method_used; i++) {
             //jvm_printf("%s,%s\n", utf8_cstr(p->methodRef[i].name), utf8_cstr(p->methodRef[i].descriptor));
