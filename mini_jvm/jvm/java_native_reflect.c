@@ -13,9 +13,9 @@
 extern "C" {
 #endif
 
-
+//得到结果放到方法栈中返回
 //========  native============================================================================
-
+//得到对象 id 长度
 s32 org_mini_reflect_vm_RefNative_refIdSize(Runtime *runtime, JClass *clazz) {
     push_int(runtime->stack, sizeof(__refer));
 
@@ -25,6 +25,7 @@ s32 org_mini_reflect_vm_RefNative_refIdSize(Runtime *runtime, JClass *clazz) {
     return 0;
 }
 
+//java 对象 -> 地址 id
 s32 org_mini_reflect_vm_RefNative_obj2id(Runtime *runtime, JClass *clazz) {
     Instance *ins = (Instance *) localvar_getRefer(runtime->localvar, 0);
     Long2Double l2d;
@@ -37,6 +38,7 @@ s32 org_mini_reflect_vm_RefNative_obj2id(Runtime *runtime, JClass *clazz) {
     return 0;
 }
 
+//地址 id -> java 对象
 s32 org_mini_reflect_vm_RefNative_id2obj(Runtime *runtime, JClass *clazz) {
     Long2Double l2d;
     l2d.l = localvar_getLong(runtime->localvar, 0);
@@ -49,7 +51,10 @@ s32 org_mini_reflect_vm_RefNative_id2obj(Runtime *runtime, JClass *clazz) {
     return 0;
 }
 
+//获得所有类
 s32 org_mini_reflect_vm_RefNative_getClasses(Runtime *runtime, JClass *clazz) {
+
+    //系统 ClassLoader 加载的所有类
     s32 size = (s32) sys_classloader->classes->entries;
 
     Utf8String *ustr = utf8_create_c(STR_CLASS_JAVA_LANG_CLASS);
@@ -62,6 +67,7 @@ s32 org_mini_reflect_vm_RefNative_getClasses(Runtime *runtime, JClass *clazz) {
     for (; hashtable_iter_has_more(&hti);) {
         Utf8String *k = hashtable_iter_next_key(&hti);
         JClass *r = classes_get(k);
+        //填充 java 数组
         jarray_set_field(jarr, i, (intptr_t) insOfJavaLangClass_create_get(runtime, r));
         i++;
     }
@@ -73,18 +79,24 @@ s32 org_mini_reflect_vm_RefNative_getClasses(Runtime *runtime, JClass *clazz) {
     return 0;
 }
 
+//根据类名查找类
 s32 org_mini_reflect_vm_RefNative_getClassByName(Runtime *runtime, JClass *clazz) {
+    //从栈中获取要查的类名 java string
     Instance *jstr = (Instance *) localvar_getRefer(runtime->localvar, 0);
+    //java string -> utf-8 string
     Utf8String *ustr = utf8_create();
     jstring_2_utf8(jstr, ustr);
+    //替换分隔符
     utf8_replace_c(ustr, ".", "/");
+    //获取或者加载
     JClass *cl = classes_load_get(ustr, runtime);
     utf8_destory(ustr);
+    //放回 java 运行栈，返回
     push_ref(runtime->stack, insOfJavaLangClass_create_get(runtime, cl));
     return 0;
 }
 
-
+//newInstance
 s32 org_mini_reflect_vm_RefNative_newWithoutInit(Runtime *runtime, JClass *clazz) {
     RuntimeStack *stack = runtime->stack;
     JClass *cl = insOfJavaLangClass_get_classHandle((Instance *) localvar_getRefer(runtime->localvar, 0));
