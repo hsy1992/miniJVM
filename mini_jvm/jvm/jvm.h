@@ -428,13 +428,14 @@ typedef struct _ClassFileFormat {
     /* attributes pool */
 } ClassFileFormat;
 
-
+//基本常量类型
 typedef struct _ConstantType {
     s16 index;
     s16 tag;
 } ConstantItem;
 
 //====
+//常量名字和类型
 typedef struct _ConstantNameAndType {
     ConstantItem item;
     u16 nameIndex;
@@ -442,7 +443,7 @@ typedef struct _ConstantNameAndType {
 } ConstantNameAndType;
 
 //====
-
+//UTF-8 字符串常量
 typedef struct _ConstantUTF8 {
     ConstantItem item;
     u16 string_size;
@@ -451,6 +452,7 @@ typedef struct _ConstantUTF8 {
     Instance *jstr;
 } ConstantUTF8;
 
+//Int 常量
 typedef struct _ConstantInteger {
     ConstantItem item;
     s32 value;
@@ -472,6 +474,7 @@ typedef struct _ConstantDouble {
     f64 value;
 } ConstantDouble;
 
+//类引用常量，类全限定名
 typedef struct _ConstantClassRef {
     ConstantItem item;
     u16 stringIndex;
@@ -482,11 +485,13 @@ typedef struct _ConstantClassRef {
 
 } ConstantClassRef;
 
+//String 引用常量
 typedef struct _ConstantStringRef {
     ConstantItem item;
     u16 stringIndex;
 } ConstantStringRef;
 
+//Field 引用常量
 typedef struct _ConstantFieldRef {
     ConstantItem item;
     u16 classIndex;
@@ -495,17 +500,20 @@ typedef struct _ConstantFieldRef {
     FieldInfo *fieldInfo;
 } ConstantFieldRef;
 
+//方法常量，包含信息较多
 typedef struct _ConstantMethodRef {
     ConstantItem item;
+    //类 index
     u16 classIndex;
     u16 nameAndTypeIndex;
-    //
+    //方法结构体
     MethodInfo *methodInfo;
     s32 para_slots;
     ConstantNameAndType *nameAndType;
     Utf8String *name;
     Utf8String *descriptor;
     Utf8String *clsName;
+    //虚方法列表
     Pairlist *virtual_methods;
 } ConstantMethodRef, ConstantInterfaceMethodRef;
 
@@ -519,12 +527,14 @@ typedef struct _ConstantMethodRef {
 //
 //} ConstantInterfaceMethodRef;
 
+//方法引用常量
 typedef struct _ConstantMethodHandle {
     ConstantItem item;
     u8 reference_kind;
     u16 reference_index;
 } ConstantMethodHandle;
 
+//方法类型
 typedef struct _ConstantMethodType {
     ConstantItem item;
     u16 descriptor_index;
@@ -538,7 +548,7 @@ typedef struct _ConstantInvokeDynamic {
 
 
 //============================================
-
+//常量池结构体
 typedef struct _ConstantPool {
     ArrayList *utf8CP;
     ArrayList *classRef;
@@ -549,12 +559,14 @@ typedef struct _ConstantPool {
 } ConstantPool;
 //============================================
 
+//接口池
 typedef struct _InterfacePool {
     ConstantClassRef *clasz;
     s32 clasz_used;
 } InterfacePool;
 //============================================
 
+//属性
 typedef struct _AttributeInfo {
     u16 attribute_name_index;
     s32 attribute_length;
@@ -564,11 +576,13 @@ typedef struct _AttributeInfo {
 
 //============================================
 
+//行号
 typedef struct _line_number {
     u16 start_pc;
     u16 line_number;
 } LineNumberTable;
 
+//异常表
 typedef struct _ExceptionTable {
     u16 start_pc;
     u16 end_pc;
@@ -576,6 +590,7 @@ typedef struct _ExceptionTable {
     u16 catch_type;
 } ExceptionTable;
 
+//本地变量表，决定方法栈大小
 typedef struct _LocalVarTable {
     u16 start_pc;
     u16 length;
@@ -584,24 +599,103 @@ typedef struct _LocalVarTable {
     u16 index;
 } LocalVarTable;
 
+
+
+//代码段
+/** Oracle 的文档
+1.attribute_name_index
+The value of the attribute_name_index item must be a valid index into the constant_pool table. The constant_pool entry at that index must be a CONSTANT_Utf8_info structure (§4.4.7) representing the string "Code".
+
+2.attribute_length
+The value of the attribute_length item indicates the length of the attribute, excluding the initial six bytes.
+
+3.max_stack
+The value of the max_stack item gives the maximum depth of the operand stack of this method (§2.6.2) at any point during execution of the method.
+
+4.max_locals
+The value of the max_locals item gives the number of local variables in the local variable array allocated upon invocation of this method (§2.6.1), including the local variables used to pass parameters to the method on its invocation.
+
+The greatest local variable index for a value of type long or double is max_locals - 2. The greatest local variable index for a value of any other type is max_locals - 1.
+
+5.code_length
+The value of the code_length item gives the number of bytes in the code array for this method.
+
+The value of code_length must be greater than zero (as the code array must not be empty) and less than 65536.
+
+6.code[]
+The code array gives the actual bytes of Java Virtual Machine code that implement the method.
+
+When the code array is read into memory on a byte-addressable machine, if the first byte of the array is aligned on a 4-byte boundary, the tableswitch and lookupswitch 32-bit offsets will be 4-byte aligned. (Refer to the descriptions of those instructions for more information on the consequences of code array alignment.)
+
+The detailed constraints on the contents of the code array are extensive and are given in a separate section (§4.9).
+
+6.exception_table_length
+The value of the exception_table_length item gives the number of entries in the exception_table table.
+
+7.exception_table[]
+Each entry in the exception_table array describes one exception handler in the code array. The order of the handlers in the exception_table array is significant (§2.10).
+
+Each exception_table entry contains the following four items:
+
+8.start_pc, end_pc
+代表方法作用域
+The values of the two items start_pc and end_pc indicate the ranges in the code array at which the exception handler is active. The value of start_pc must be a valid index into the code array of the opcode of an instruction. The value of end_pc either must be a valid index into the code array of the opcode of an instruction or must be equal to code_length, the length of the code array. The value of start_pc must be less than the value of end_pc.
+
+The start_pc is inclusive and end_pc is exclusive; that is, the exception handler must be active while the program counter is within the interval [start_pc, end_pc).
+
+The fact that end_pc is exclusive is a historical mistake in the design of the Java Virtual Machine: if the Java Virtual Machine code for a method is exactly 65535 bytes long and ends with an instruction that is 1 byte long, then that instruction cannot be protected by an exception handler. A compiler writer can work around this bug by limiting the maximum size of the generated Java Virtual Machine code for any method, instance initialization method, or static initializer (the size of any code array) to 65534 bytes.
+
+9.handler_pc
+The value of the handler_pc item indicates the start of the exception handler. The value of the item must be a valid index into the code array and must be the index of the opcode of an instruction.
+
+10.catch_type
+If the value of the catch_type item is nonzero, it must be a valid index into the constant_pool table. The constant_pool entry at that index must be a CONSTANT_Class_info structure (§4.4.1) representing a class of exceptions that this exception handler is designated to catch. The exception handler will be called only if the thrown exception is an instance of the given class or one of its subclasses.
+
+The verifier checks that the class is Throwable or a subclass of Throwable (§4.9.2).
+
+If the value of the catch_type item is zero, this exception handler is called for all exceptions.
+
+This is used to implement finally (§3.13).
+
+11.attributes_count
+The value of the attributes_count item indicates the number of attributes of the Code attribute.
+
+12.attributes[]
+Each value of the attributes table must be an attribute_info structure (§4.7).
+
+A Code attribute can have any number of optional attributes associated with it.
+
+The attributes defined by this specification as appearing in the attributes table of a Code attribute are listed in Table 4.7-C.
+
+The rules concerning attributes defined to appear in the attributes table of a Code attribute are given in §4.7.
+
+The rules concerning non-predefined attributes in the attributes table of a Code attribute are given in §4.7.1.
+ **/
 struct _CodeAttribute {
     u16 attribute_name_index;
     s32 attribute_length;
+    //方法所需要的最大栈大小
     u16 max_stack;
+    //方法所有的最大本地变量
     u16 max_locals;
+    //code 长度
     s32 code_length;
-    u8 *code; // [code_length];
+    //code 数组
+    u8 *code; // [code_length]; -> 相当于 code[code_lenth],每行 code 占 4 字节
+    //异常表长度
     u16 exception_table_length;
-    ExceptionTable *exception_table; //[exception_table_length];
+    ExceptionTable *exception_table; //[exception_table_length]; -> 相当于 exception_table[exception_table_length],每行 code 占 8 字节
+    //行号
     u16 line_number_table_length;
     LineNumberTable *line_number_table;
+    //本地变量，结构同上
     u16 local_var_table_length;
     LocalVarTable *local_var_table;
 
 };
 
 //============================================
-
+//invoke dynamic 所调用的方法，一般用于 lambada 表达式
 typedef struct _BootstrapMethod {
     u16 bootstrap_method_ref;
     u16 num_bootstrap_arguments;
@@ -617,25 +711,33 @@ typedef struct BootstrapMethods_attribute {
 } BootstrapMethodsAttr;
 //============================================
 
+//Field
 struct _FieldInfo {
     u16 access_flags;
     u16 name_index;
     u16 descriptor_index;
     u16 attributes_count;
+    //属性
     AttributeInfo *attributes;
     //link
     Utf8String *name;
     Utf8String *descriptor;
+    //所在类
     JClass *_this_class;
-    u16 offset;//字段的偏移地址，静态字段存放在class中
+    //字段的偏移地址，静态字段存放在class中
+    u16 offset;
+    //非静态字段在 Instancce 中的偏移
     u16 offset_instance;
-    //
+    //数据类型
     u8 datatype_idx;
+    //是否是引用
     u8 isrefer;
     u8 datatype_bytes;
+    //是否是原子的
     u8 isvolatile;
 };
 
+//
 typedef struct _FieldPool {
     FieldInfo *field;
     s32 field_used;
@@ -656,7 +758,7 @@ struct _MethodInfo {
     AttributeInfo *attributes;
     //
     CodeAttribute *converted_code;
-
+    //方法参数的各种偏移
     MethodParaOffset *paraOffset;
 
     //link
@@ -678,6 +780,7 @@ typedef struct _MethodPool {
 } MethodPool;
 //============================================
 
+//属性池
 typedef struct _AttributePool {
     AttributeInfo *attribute;
     s32 attribute_used;
@@ -702,7 +805,7 @@ struct _ClassType {
     s32 field_static_len; //静态变量内存长度
     c8 *field_static; //静态变量内存地址
 
-    //
+    //Class 和 ClassLoader 的实例，随 class 的结构体生灭
     Instance *ins_class; //object of java.lang.Class
     Instance *jClassLoader;// java classloader
 
@@ -717,19 +820,25 @@ struct _ClassType {
     Utf8String *name;
     MethodInfo *finalizeMethod;
     ClassFileFormat cff;
+    //常量池
     ConstantPool constantPool;
+    //接口
     InterfacePool interfacePool;
+    //成员变量
     FieldPool fieldPool;
+    //方法
     MethodPool methodPool;
+    //属性
     AttributePool attributePool;
 
-    //for array class
+    //for array class 这些都是为了加速数组类型的
     Pairlist *arr_class_type;//for object array create speedup,left is utf8 index of class, right is arr class
     ArrayList *insFieldPtrIndex;//for optmize , save object pointer field index
     ArrayList *staticFieldPtrIndex; //save static field index
 
     //
     s8 status;
+    //基础类型的包装类
     u8 primitive;//primitive data type int/long/short/char/short/byte/float/double
 };
 

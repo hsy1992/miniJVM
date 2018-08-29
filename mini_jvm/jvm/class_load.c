@@ -311,6 +311,7 @@ s32 _class_constant_pool_destory(JClass *clazz) {
     return 0;
 }
 
+
 s32 _parseAttr(FieldInfo *ptr, ByteBuf *buf) {
     s32 i;
     AttributeInfo *tmp = 0;
@@ -616,12 +617,13 @@ s32 _class_attribute_info_destory(JClass *clazz) {
     return 0;
 }
 
+//常量池解析
 s32 _parse_constant_pool(JClass *_this, ByteBuf *buf, s32 count) {
     u8 tag = 0;
     s32 i = 0;
     u64 offset_start = 0;
     u64 offset_end = 0;
-    _this->constant_item_ptr = jvm_calloc(count * sizeof(void *));
+    _this->constant_item_ptr = jvm_calloc(count * sizeof(void *));//测量该平台指针长度
     _this->constant_item_count = count;
     for (i = 1; i < count; i++) {
         //fread(&tag, 1, 1, fp);
@@ -687,7 +689,7 @@ s32 _parse_constant_pool(JClass *_this, ByteBuf *buf, s32 count) {
     return 0;
 }
 
-
+//变量初始化表达式
 s32 _convert_to_code_attribute(CodeAttribute *ca, AttributeInfo *attr, JClass *clazz) {
     s32 info_p = 0;
 
@@ -711,6 +713,9 @@ s32 _convert_to_code_attribute(CodeAttribute *ca, AttributeInfo *attr, JClass *c
     info_p += ca->code_length;
     s2c.c1 = attr->info[info_p++];
     s2c.c0 = attr->info[info_p++];
+
+
+    //处理异常表
     ca->exception_table_length = s2c.s;
     s32 bytelen = sizeof(ExceptionTable) * ca->exception_table_length;
     ca->exception_table = jvm_calloc(bytelen);
@@ -830,7 +835,7 @@ void _class_bootstrap_methods_destory(JClass *clazz) {
     clazz->bootstrapMethodAttr = NULL;
 }
 
-
+//解析方法参数列表
 s32 parseMethodPara(Utf8String *methodType, Utf8String *out) {
     s32 count = 0;
     Utf8String *para = utf8_create_copy(methodType);
