@@ -120,7 +120,7 @@ s32 org_mini_reflect_vm_RefNative_newWithoutInit(Runtime *runtime, JClass *clazz
     return ret;
 }
 
-
+//设置本地变量
 s32 org_mini_reflect_vm_RefNative_setLocalVal(Runtime *runtime, JClass *clazz) {
     int pos = 0;
     Long2Double l2d;
@@ -136,9 +136,11 @@ s32 org_mini_reflect_vm_RefNative_setLocalVal(Runtime *runtime, JClass *clazz) {
     s32 bytes = localvar_getInt(runtime->localvar, pos++);
     if (slot < r->localvar_count) {
         switch (bytes) {
+            //引用类型
             case 'R':
                 localvar_setRefer(r->localvar, slot, (__refer) (intptr_t) l2d.l);
                 break;
+            //8 字节类型
             case '8':
                 localvar_setLong(r->localvar, slot, l2d.l);
                 break;
