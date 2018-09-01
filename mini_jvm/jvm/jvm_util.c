@@ -1021,25 +1021,28 @@ s64 jarray_get_field(Instance *arr, s32 index) {
 
 //===============================    实例化对象  ==================================
 Instance *instance_create(Runtime *runtime, JClass *clazz) {
-
+    //很简单，分配目标类中的成员变量所占内存大小的内存空间 + Instance 结构体本身所占空间 就可以了。
     Instance *ins = jvm_calloc(sizeof(Instance) + clazz->field_instance_len);
     ins->mb.type = MEM_TYPE_INS;
     ins->mb.clazz = clazz;
-
+    //指向成员变量内存开始的地址
     ins->obj_fields = (c8 *) (&ins[1]);//jvm_calloc(clazz->field_instance_len);
 
     gc_refer_reg(runtime, ins);
     return ins;
 }
 
+//调用默认无参构造函数 及 初始化成员变量值
 void instance_init(Instance *ins, Runtime *runtime) {
     instance_init_methodtype(ins, runtime, "()V", NULL);
 }
 
 void instance_init_methodtype(Instance *ins, Runtime *runtime, c8 *methodtype, RuntimeStack *para) {
     if (ins) {
+        //构造构造函数签名
         Utf8String *methodName = utf8_create_c("<init>");
         Utf8String *methodType = utf8_create_c(methodtype);
+        //找到函数
         MethodInfo *mi = find_methodInfo_by_name(ins->mb.clazz->name, methodName, methodType, runtime);
         push_ref(runtime->stack, (__refer) ins);
         if (para) {
@@ -1050,6 +1053,7 @@ void instance_init_methodtype(Instance *ins, Runtime *runtime, c8 *methodtype, R
                 push_entry(runtime->stack, &entry);
             }
         }
+        //执行
         s32 ret = execute_method_impl(mi, runtime, ins->mb.clazz);
         if (ret != RUNTIME_STATUS_NORMAL) {
             print_exception(runtime);
@@ -1059,6 +1063,7 @@ void instance_init_methodtype(Instance *ins, Runtime *runtime, c8 *methodtype, R
     }
 }
 
+//调用 finalize
 void instance_finalize(Instance *ins, Runtime *runtime) {
     if (ins) {
         MethodInfo *mi = ins->mb.clazz->finalizeMethod;

@@ -270,8 +270,11 @@ void threadinfo_destory(JavaThreadInfo *threadInfo);
 JavaThreadInfo *threadinfo_create(void);
 
 struct _JavaThreadInfo {
+    //Java Thread 的对象
     Instance *jthread;
+    //根 Runtime
     Runtime *top_runtime;
+    //该线程持有的对象引用
     ArrayList *instance_holder;//for jni hold java object
     MemoryBlock *objs_header;//link to new instance, until garbage accept
     MemoryBlock *objs_tailer;//link to last instance, until garbage accept
@@ -376,11 +379,12 @@ static inline Runtime *runtime_create_inl(Runtime *parent) {
             runtime->threadInfo = parent->threadInfo;
         }
     }
-    //
+    //如果是子方法
     if (parent != NULL) {
         runtime->parent = parent;
         parent->son = runtime;
     } else {
+        //如果是根方法，所谓根方法，就是线程的第一个方法
         runtime->stack = stack_create(STACK_LENGHT);
         runtime->threadInfo = threadinfo_create();
         runtime->threadInfo->top_runtime = runtime;

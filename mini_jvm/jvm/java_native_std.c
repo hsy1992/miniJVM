@@ -90,18 +90,24 @@ s32 java_lang_Class_forName(Runtime *runtime, JClass *clazz) {
     return ret;
 }
 
+//new 
 s32 java_lang_Class_newInstance(Runtime *runtime, JClass *clazz) {
     RuntimeStack *stack = runtime->stack;
+    //从 java 栈中取出 Class，这是真正的 Class，方法参数那个是无效的
     JClass *cl = insOfJavaLangClass_get_classHandle((Instance *) localvar_getRefer(runtime->localvar, 0));
     Instance *ins = NULL;
     s32 ret = 0;
     if (cl && !cl->mb.arr_type_index) {//class exists and not array class
+        //分配对象内存
         ins = instance_create(runtime, cl);
         gc_refer_hold(ins);
+        //初始化对象，调用构造函数等
         instance_init(ins, runtime);
         gc_refer_release(ins);
     }
     if (ins) {
+
+        //推入 java 栈返回
         push_ref(stack, (__refer) ins);
 
     } else {
