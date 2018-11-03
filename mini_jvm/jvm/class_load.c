@@ -1060,50 +1060,60 @@ s32 _LOAD_CLASS_FROM_BYTES(JClass *_this, ByteBuf *buf) {
 
     /* this class */
     //fread(short_tmp, 2, 1, fp);
+    //解析外部类
     s2c.c1 = (c8) bytebuf_read(buf);
     s2c.c0 = (c8) bytebuf_read(buf);
     cff->this_class = s2c.s;
 
     /* super class */
     //fread(short_tmp, 2, 1, fp);
+    //解析父类
     s2c.c1 = (c8) bytebuf_read(buf);
     s2c.c0 = (c8) bytebuf_read(buf);
     cff->super_class = s2c.s;
 
     /* interfaceRef count */
     //fread(short_tmp, 2, 1, fp);
+    //获取接口个数
     s2c.c1 = (c8) bytebuf_read(buf);
     s2c.c0 = (c8) bytebuf_read(buf);
     cff->interface_count = s2c.s;
+
+    //解析接口限定名
     /* interfaceRef pool table */
     _parse_interface_pool(_this, buf, cff->interface_count);
 
     /* fieldRef count */
     //fread(short_tmp, 2, 1, fp);
+    //获取 Feild 个数
     s2c.c1 = (c8) bytebuf_read(buf);
     s2c.c0 = (c8) bytebuf_read(buf);
     cff->fields_count = s2c.s;
 
     /* fieldRef pool table */
+    //解析 Field
     _parse_field_pool(_this, buf, cff->fields_count);
     /* methodRef count */
     //fread(short_tmp, 2, 1, fp);
+    //获取方法个数
     s2c.c1 = (c8) bytebuf_read(buf);
     s2c.c0 = (c8) bytebuf_read(buf);
     cff->methods_count = s2c.s;
 
     /* methodRef pool table */
+    //解析方法
     _parse_method_pool(_this, buf, cff->methods_count);
 
     //attribute
     //fread(short_tmp, 2, 1, fp);
+    //解析类属性
     s2c.c1 = (c8) bytebuf_read(buf);
     s2c.c0 = (c8) bytebuf_read(buf);
     cff->attributes_count = s2c.s;
     _parse_attribute_pool(_this, buf, cff->attributes_count);
 
     //fclose(fp);
-
+    //优化
     _class_optimize(_this);
 
     _this->status = CLASS_STATUS_LOADED;
@@ -1124,6 +1134,7 @@ JClass *resole_class(ByteBuf *bytebuf, Runtime *runtime) {
             classes_put(tmpclazz);
             //准备工作，初始化调用静态块等
             class_prepar(tmpclazz, runtime);
+            //将 Class 对象添加到常量池(这里指的是不会被 GC 的地方)
             gc_refer_hold(tmpclazz);
 #if _JVM_DEBUG_BYTECODE_DETAIL > 5
             jvm_printf("load class:  %s \n", utf8_cstr(clsName));

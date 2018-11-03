@@ -347,7 +347,7 @@ void profile_print();
 #endif
 
 //======================= MEM_OBJ =============================
-
+//内存块的头部描述，每个可分配的内存块都在头部有此结构体，以描述内存块的类型和状态
 typedef struct _MemoryBlock {
 
     JClass *clazz;
@@ -361,12 +361,13 @@ typedef struct _MemoryBlock {
 } MemoryBlock;
 
 struct _ClassLoader {
+     //类路径集合
     ArrayList *classpath;
+    //所有加载的类
     Hashtable *classes;
-
+    //String 对象常量池，根据设定，所有 stream 常量统一存在加载他的 ClassLoader 中
     Hashtable *table_jstring_const;
-
-    //
+    //同步锁
     spinlock_t lock;
 };
 
@@ -500,7 +501,7 @@ typedef struct _ConstantFieldRef {
     FieldInfo *fieldInfo;
 } ConstantFieldRef;
 
-//方法常量，包含信息较多
+//方法引用 常量，包含信息较多
 typedef struct _ConstantMethodRef {
     ConstantItem item;
     //类 index
@@ -510,6 +511,7 @@ typedef struct _ConstantMethodRef {
     MethodInfo *methodInfo;
     s32 para_slots;
     ConstantNameAndType *nameAndType;
+    //方法签名信息
     Utf8String *name;
     Utf8String *descriptor;
     Utf8String *clsName;
@@ -527,7 +529,7 @@ typedef struct _ConstantMethodRef {
 //
 //} ConstantInterfaceMethodRef;
 
-//方法引用常量
+//方法句柄常量
 typedef struct _ConstantMethodHandle {
     ConstantItem item;
     u8 reference_kind;
@@ -571,7 +573,6 @@ typedef struct _AttributeInfo {
     u16 attribute_name_index;
     s32 attribute_length;
     u8 *info;
-
 } AttributeInfo;
 
 //============================================
@@ -584,9 +585,12 @@ typedef struct _line_number {
 
 //异常表
 typedef struct _ExceptionTable {
+    //异常开始结束的 PC 指针
     u16 start_pc;
     u16 end_pc;
+    //异常处理函数开始的 PC 指针
     u16 handler_pc;
+    //异常捕获的类型
     u16 catch_type;
 } ExceptionTable;
 
@@ -691,7 +695,6 @@ struct _CodeAttribute {
     //本地变量，结构同上
     u16 local_var_table_length;
     LocalVarTable *local_var_table;
-
 };
 
 //============================================
@@ -752,22 +755,31 @@ typedef struct _MethodParaOffset {
 
 struct _MethodInfo {
     u16 access_flags;
+    //方法名在常量池中的 index
     u16 name_index;
+    //方法描述在常量池中的 index
     u16 descriptor_index;
+    //属性数量
     u16 attributes_count;
+    //属性链表
     AttributeInfo *attributes;
-    //
+    //方法属性
     CodeAttribute *converted_code;
     //方法参数的各种偏移
     MethodParaOffset *paraOffset;
 
     //link
+    //在常量池中取值的结果
     Utf8String *name;
     Utf8String *descriptor;
     Utf8String *paraType;
+    //返回值类型
     Utf8String *returnType;
+    //方法所在类
     JClass *_this_class;
+    //如果是 native 方法，则其对应的指针
     java_native_fun native_func;
+    //断点
     Pairlist *breakpoint;
     s16 para_slots;
     s16 para_count_with_this;
@@ -794,8 +806,9 @@ typedef struct _AttributePool {
  Gust 20170719 add Class define
  */
 struct _ClassType {
+    //内存块描述头部
     MemoryBlock mb;
-    JClass *superclass;
+    JClass *superclass;//父类
     __refer *constant_item_ptr;//存放常量池项目地址
     s32 constant_item_count;//总数
 
@@ -812,12 +825,13 @@ struct _ClassType {
     //public:
     s32 (*_load_class_from_bytes)(struct _ClassType *_this, ByteBuf *buf);
 
-    //
+    //源文件名
     Utf8String *source;
     BootstrapMethodsAttr *bootstrapMethodAttr;
 
-    //
+    //类名
     Utf8String *name;
+    //finaliz 方法
     MethodInfo *finalizeMethod;
     ClassFileFormat cff;
     //常量池
