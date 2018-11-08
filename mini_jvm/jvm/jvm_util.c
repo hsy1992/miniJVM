@@ -898,13 +898,18 @@ s32 check_suspend_and_pause(Runtime *runtime) {
 
 //===============================    实例化数组  ==================================
 Instance *jarray_create_by_class(Runtime *runtime, s32 count, JClass *clazz) {
+    //类型的 index
     s32 typeIdx = clazz->mb.arr_type_index;
+    //取得对应类型所占内存大小
     s32 width = data_type_bytes[typeIdx];
+    //为数组对象分配内存，大小为 元素大小 * 长度
     Instance *arr = jvm_calloc(sizeof(Instance) + (width * count));
+    //配置 memblock 属性
     arr->mb.type = MEM_TYPE_ARR;
     arr->mb.clazz = clazz;
     arr->mb.arr_type_index = typeIdx;
     arr->arr_length = count;
+    //指向数组体
     if (arr->arr_length)arr->arr_body = (c8 *) (&arr[1]);
     gc_refer_reg(runtime, arr);
     return arr;
@@ -947,13 +952,17 @@ Instance *jarray_multi_create(Runtime *runtime, s32 *dim, s32 dim_size, Utf8Stri
         return NULL;
     }
     JClass *cl = array_class_create_get(runtime, pdesc);
-    Instance *arr = jarray_create_by_class(runtime, len, cl);
-    Utf8String *desc = utf8_create_part(pdesc, 1, pdesc->length - 1);
 
+    //获取或者创建普通数组
+    Instance *arr = jarray_create_by_class(runtime, len, cl);
+    //维度 - 1
+    Utf8String *desc = utf8_create_part(pdesc, 1, pdesc->length - 1);
+    
     c8 ch = utf8_char_at(desc, 0);
 #if _JVM_DEBUG_BYTECODE_DETAIL > 5
     jvm_printf("multi arr deep :%d  type(%c) arr[%x] size:%d\n", deep, ch, arr, len);
 #endif
+    //如果还有维度，则继续递归
     if (ch == '[') {
         int i;
         s64 val;
@@ -1183,10 +1192,15 @@ Instance *insOfJavaLangClass_create_get(Runtime *runtime, JClass *clazz) {
         if (clazz->ins_class) {
             return clazz->ins_class;
         } else {
+            //New Class 对象
             Instance *ins = instance_create(runtime, java_lang_class);
+            //加入 GC_Holder 防止被 GC
             gc_refer_hold(ins);
+            //调用默认无参构造函数 及 初始化成员变量值
             instance_init(ins, runtime);
+            //在 JClass 结构体中保存 Class 对象的指针
             clazz->ins_class = ins;
+            //在 Class 对象中保存 JClass 结构体的指针
             insOfJavaLangClass_set_classHandle(ins, clazz);
             return ins;
         }
@@ -1216,8 +1230,10 @@ Instance *jstring_create(Utf8String *src, Runtime *runtime) {
 
     c8 *ptr = jstring_get_value_ptr(jstring);
     u16 *buf = jvm_calloc(src->length * data_type_bytes[DATATYPE_JCHAR]);
+    //UTF-8 -> Unicode
     s32 len = utf8_2_unicode(src, buf);
     if (len >= 0) {//可能解析出错
+        //填充 String 中的 char 数组
         Instance *arr = jarray_create_by_type_index(runtime, len, DATATYPE_JCHAR);//u16 type is 5
         setFieldRefer(ptr, (__refer) arr);//设置数组
         memcpy(arr->arr_body, buf, len * data_type_bytes[DATATYPE_JCHAR]);
@@ -1341,7 +1357,7 @@ s32 jstring_2_utf8(Instance *jstr, Utf8String *utf8) {
     }
     return 0;
 }
-//===============================    例外  ==================================
+//===============================    New 异常  ==================================
 
 Instance *exception_create(s32 exception_type, Runtime *runtime) {
 #if _JVM_DEBUG_BYTECODE_DETAIL > 5
@@ -1362,18 +1378,22 @@ Instance *exception_create_str(s32 exception_type, Runtime *runtime, c8 *errmsg)
 #if _JVM_DEBUG_BYTECODE_DETAIL > 5
     jvm_printf("create exception : %s\n", STRS_CLASS_EXCEPTION[exception_type]);
 #endif
+    //New String 对象用作异常提示
     Utf8String *uerrmsg = utf8_create_c(errmsg);
     Instance *jstr = jstring_create(uerrmsg, runtime);
     gc_refer_hold(jstr);
     utf8_destory(uerrmsg);
+    //String 入参数栈
     RuntimeStack *para = stack_create(1);
     push_ref(para, jstr);
     gc_refer_release(jstr);
+    //New 异常对象
     Utf8String *clsName = utf8_create_c(STRS_CLASS_EXCEPTION[exception_type]);
     JClass *clazz = classes_load_get(clsName, runtime);
     utf8_destory(clsName);
     Instance *ins = instance_create(runtime, clazz);
     gc_refer_hold(ins);
+    //调用异常对象的带 String 参数的构造方法，传入 Msg
     instance_init_methodtype(ins, runtime, "(Ljava/lang/String;)V", para);
     gc_refer_release(ins);
     stack_destory(para);
@@ -1381,18 +1401,17 @@ Instance *exception_create_str(s32 exception_type, Runtime *runtime, c8 *errmsg)
 }
 //===============================    lambda  ==================================
 
-
+//MethodType 包含一个 String 类型的方法描述
 Instance *method_type_create(Runtime *runtime, Utf8String *desc) {
     JClass *cl = classes_load_get_c(STR_CLASS_JAVA_LANG_INVOKE_METHODTYPE, runtime);
     if (cl) {
         Instance *mt = instance_create(runtime, cl);
         gc_refer_hold(mt);
         Instance *jstr_desc = jstring_create(desc, runtime);
-
-
         RuntimeStack *para = stack_create(1);
-
+        //String 参数入栈
         push_ref(para, jstr_desc);
+        //调用构造方法
         instance_init_methodtype(mt, runtime, "(Ljava/lang/String;)V", para);
         stack_destory(para);
         gc_refer_release(mt);
@@ -1400,20 +1419,24 @@ Instance *method_type_create(Runtime *runtime, Utf8String *desc) {
     }
     return NULL;
 }
-
+//handler 较为复杂，包含了具体的方法信息，有4个参数
 Instance *method_handle_create(Runtime *runtime, MethodInfo *mi, s32 kind) {
     JClass *cl = classes_load_get_c(STR_CLASS_JAVA_LANG_INVOKE_METHODHANDLE, runtime);
     if (cl) {
         Instance *mh = instance_create(runtime, cl);
         gc_refer_hold(mh);
         RuntimeStack *para = stack_create(4);
+        //类型
         push_int(para, kind);
+        //当前类名
         Instance *jstr_clsName = jstring_create(mi->_this_class->name, runtime);
         gc_refer_hold(jstr_clsName);
         push_ref(para, jstr_clsName);
+        //lambda 方法名
         Instance *jstr_methodName = jstring_create(mi->name, runtime);
         push_ref(para, jstr_methodName);
         gc_refer_hold(jstr_methodName);
+        //方法的描述
         Instance *jstr_methodDesc = jstring_create(mi->descriptor, runtime);
         push_ref(para, jstr_methodDesc);
         gc_refer_hold(jstr_methodDesc);
@@ -1427,7 +1450,7 @@ Instance *method_handle_create(Runtime *runtime, MethodInfo *mi, s32 kind) {
     }
     return NULL;
 }
-
+//Lookup 包含 lambda 表达式方法所在的类
 Instance *method_handles_lookup_create(Runtime *runtime, JClass *caller) {
     JClass *cl = classes_load_get_c(STR_CLASS_JAVA_LANG_INVOKE_METHODHANDLES_LOOKUP, runtime);
     if (cl) {

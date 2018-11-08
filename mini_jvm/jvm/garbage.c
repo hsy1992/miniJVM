@@ -62,12 +62,11 @@ s32 _garbage_copy_refer_thread(Runtime *pruntime);
 
 s32 garbage_collector_create() {
     collector = jvm_calloc(sizeof(GcCollector));
+    //创建 holder，在 holder 中的对象不会被 gc
     collector->objs_holder = hashset_create();
-
+    //创建引用拷贝的容器
     collector->runtime_refer_copy = arraylist_create(256);
-
     collector->runtime = runtime_create(NULL);
-
     collector->_garbage_thread_status = GARBAGE_THREAD_PAUSE;
     thread_lock_init(&collector->garbagelock);
     //开始 GC 线程
@@ -321,15 +320,14 @@ void _garbage_remove_out_holder(__refer ref) {
 s32 _collect_thread_run(void *para) {
     s64 lastgc = currentTimeMillis();
     while (1) {
+        //10ms 检查一次
         threadSleep(10);
-
         if (collector->_garbage_thread_status == GARBAGE_THREAD_STOP) {
             break;
         }
         if (collector->_garbage_thread_status == GARBAGE_THREAD_PAUSE) {
             continue;
         }
-
         //至少间隔 1S 才做一次 GC
         if (currentTimeMillis() - lastgc < 1000) {// less than custom sec no gc
             continue;
@@ -337,7 +335,6 @@ s32 _collect_thread_run(void *para) {
 //        if (java_debug && jdwpserver.clients->length) {// less than 3 sec no gc
 //            continue;
 //        }
-
         //当堆占用超过 80% 才做 GC
         if (currentTimeMillis() - lastgc > GARBAGE_PERIOD_MS || heap_size > MAX_HEAP_SIZE * .8f) {
             //真正 GC
@@ -424,7 +421,7 @@ s64 garbage_collect() {
         }
     }
 
-    //在 finalize 创建的对象，实在 gc 线程创建的对象，理论上没有用，需要被 GC
+    //在 finalize 创建的对象，是在 gc 线程创建的对象。。。也需要被注册
     gc_move_refer_thread_2_gc(collector->runtime);// maybe someone new object in finalize...
 
 //    jvm_printf("garbage_finalize %lld\n", (currentTimeMillis() - time));
@@ -592,10 +589,8 @@ s32 _garbage_big_search() {
     hashset_iterate(collector->objs_holder, &hi);
     while (hashset_iter_has_more(&hi)) {
         HashsetKey k = hashset_iter_next_key(&hi);
-
         _garbage_mark_object(k);
     }
-
     return 0;
 }
 
@@ -632,15 +627,14 @@ void _garbage_copy_refer() {
 //可达性算法
 //可注意到几个 GC Root
 /**
- * 1.线程运行栈，类似寄存器所持有的引用，每个线程各持有一个
- * 2.该线程引用的其他实例的引用，是 Filed Get 操作带来的
+ * 1.线程运行栈，类似寄存器所持有的引用，每个线程各持有一个，线程运行栈，类似寄存器所持有的引用，每个线程各持有一个，可能持有的是某个 Field 的引用
+ * 2.该线程引用的其他实例的引用
  * 3.方法运行栈帧中的本地变量持有的引用
  **/
 s32 _garbage_copy_refer_thread(Runtime *pruntime) {
     arraylist_push_back(collector->runtime_refer_copy, pruntime->threadInfo->jthread);
 
     s32 i, imax;
-    //栈中元素(局部变量等)
     StackEntry entry;
     Runtime *runtime = pruntime;
     //该 JVM 是基于栈的，非基于寄存器，所以每个线程会持有一个运行栈来模拟 CPU CORE 的寄存器
@@ -656,7 +650,7 @@ s32 _garbage_copy_refer_thread(Runtime *pruntime) {
             }
         }
     }
-    //遍历拷贝该线程引用的所有实例，类似 field get
+    //遍历拷贝该线程在 JNI 中引用的所有实例
     ArrayList *holder = runtime->threadInfo->instance_holder;
     for (i = 0, imax = holder->length; i < imax; i++) {
         __refer ref = arraylist_get_value(holder, i);
@@ -681,7 +675,7 @@ s32 _garbage_copy_refer_thread(Runtime *pruntime) {
 static inline void _instance_mark_refer(Instance *ins) {
     s32 i, len;
     JClass *clazz = ins->mb.clazz;
-    //遍历该对象的所有父类型，找出所有 Field
+    //遍历该对象和所有父类型，找出所有 Field
     while (clazz) {
         FieldPool *fp = &clazz->fieldPool;
         ArrayList *fiList = clazz->insFieldPtrIndex;

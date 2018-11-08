@@ -15,12 +15,14 @@
 /* parse UTF-8 String */
 void *_parseCPString(JClass *_this, ByteBuf *buf, s32 index) {
 
+    //UTF-8 String 对象
     ConstantUTF8 *ptr = jvm_calloc(sizeof(ConstantUTF8));
 
     ptr->item.tag = CONSTANT_UTF8;
     ptr->item.index = index;
 
     //fread(short_tmp, 2, 1, fp);
+    //读取字符串的长度
     Short2Char s2c;
     s2c.c1 = (c8) bytebuf_read(buf);//short_tmp[0];
     s2c.c0 = (c8) bytebuf_read(buf);//short_tmp[1];
@@ -28,11 +30,13 @@ void *_parseCPString(JClass *_this, ByteBuf *buf, s32 index) {
 
     ptr->utfstr = utf8_create();
     s32 i = 0;
+    //一个个读取字符拼接成串
     for (; i < ptr->string_size; i++) {
         u8 ch = (u8) bytebuf_read(buf);//0;
         //fread(&ch, 1, 1, fp);
         utf8_append_part_c(ptr->utfstr, &ch, 0, 1);
     }
+    //塞到类中的常量池中
     arraylist_push_back(_this->constantPool.utf8CP, ptr);
     return ptr;
 }
@@ -862,6 +866,7 @@ s32 parseMethodPara(Utf8String *methodType, Utf8String *out) {
                 count += 2;
                 break;
             }
+            //引用类型
             case 'L':
                 utf8_substring(para, utf8_indexof_c(para, ";") + 1, para->length);
                 utf8_append_c(out, "R");
@@ -950,7 +955,6 @@ void _class_optimize(JClass *clazz) {
         }
         s32 j;
 
-        //解析参数表达式
         //转attribute为CdoeAttribute
         for (j = 0; j < ptr->attributes_count; j++) {
             if (utf8_equals_c(class_get_utf8_string(clazz, ptr->attributes[j].attribute_name_index), "Code") == 1) {

@@ -349,12 +349,13 @@ void profile_print();
 //======================= MEM_OBJ =============================
 //内存块的头部描述，每个可分配的内存块都在头部有此结构体，以描述内存块的类型和状态
 typedef struct _MemoryBlock {
-
+    //对象对应的类
     JClass *clazz;
     struct _MemoryBlock *next;
     ThreadLock *volatile thread_lock;
-
+    //类型，是引用对象还是 JClass 还是其他类型
     u8 type;//type of array or object runtime,class
+    //GC 标志
     u8 garbage_mark;
     u8 garbage_reg;
     u8 arr_type_index;
@@ -909,13 +910,14 @@ void class_clear_refer(JClass *clazz);
 
 struct _InstanceType {
     MemoryBlock mb;
-    //
+    //类型二选一
     union {
+        //成员变量内存开始的地址
         c8 *obj_fields; //object fieldRef body
         c8 *arr_body;//array body
     };
+    //数组长度
     s32 arr_length;
-
 };
 
 
