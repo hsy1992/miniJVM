@@ -488,6 +488,7 @@ MethodInfo *find_methodInfo_by_name(Utf8String *clsName, Utf8String *methodName,
                 break;
             }
         }
+        //JDK 8接口中有 default 方法，所以 JDK8 的实现要兼顾接口
         //find interface default method implementation JDK8
         if (mi == NULL) {
             for (i = 0; i < other->interfacePool.clasz_used; i++) {

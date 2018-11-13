@@ -755,6 +755,7 @@ s32 execute_method_impl(MethodInfo *method, Runtime *pruntime, JClass *clazz) {
 
     s32 ret = RUNTIME_STATUS_NORMAL;
 
+    //准备方法栈
     Runtime *runtime = runtime_create_inl(pruntime);
 
     runtime->method = method;
@@ -766,21 +767,28 @@ s32 execute_method_impl(MethodInfo *method, Runtime *pruntime, JClass *clazz) {
     //    if (utf8_equals_c(method->name, "getMethod")) {
     //        s32 debug = 1;
     //    }
+    //操作数栈
     RuntimeStack *stack = runtime->stack;
 
     if (!(method->access_flags & ACC_NATIVE)) {
+        //拿出 Code
         CodeAttribute *ca = method->converted_code;
         if (ca) {
+            //初始化本地变量
             localvar_init(runtime, ca->max_locals);
             LocalVarItem *localvar = runtime->localvar;
+            //方法参数进入本地变量
             _stack2localvar(method, localvar, stack);
             s32 stackSize = stack->size;
+
+            //如果方法是同步的，加锁
             if (method_sync)_synchronized_lock_method(method, runtime);
 
             u8 *opCode = ca->code;
             runtime->ca = ca;
             JavaThreadInfo *threadInfo = runtime->threadInfo;
-
+            
+            //调试相关
             do {
                 runtime->pc = opCode;
                 u8 cur_inst = *opCode;
@@ -927,8 +935,9 @@ s32 execute_method_impl(MethodInfo *method, Runtime *pruntime, JClass *clazz) {
 
                     label_bipush:
                     case op_bipush: {
-
+                        //此行 code 的第二个元素就是常量操作数
                         s32 value = (s8) opCode[1];
+                        //常量入栈
                         push_int(stack, value);
 #if _JVM_DEBUG_BYTECODE_DETAIL > 5
                         invoke_deepth(runtime);
@@ -2906,11 +2915,14 @@ s32 execute_method_impl(MethodInfo *method, Runtime *pruntime, JClass *clazz) {
                         __refer v2 = pop_ref(stack);
                         __refer v1 = pop_ref(stack);
                         if (v1 == v2) {
+                            //如果相等，从操作数中取出要跳转的地址
                             Short2Char s2c;
                             s2c.c1 = opCode[1];
                             s2c.c0 = opCode[2];
+                            //opCode + 偏移跳转
                             opCode += s2c.s;
                         } else {
+                            //否则往下执行
                             opCode += 3;
                         }
 #if _JVM_DEBUG_BYTECODE_DETAIL > 5
@@ -3232,33 +3244,44 @@ s32 execute_method_impl(MethodInfo *method, Runtime *pruntime, JClass *clazz) {
 
                     label_getfield:
                     case op_getfield: {
+
+                        //从 Code 中获取 Field 的 Index
                         Short2Char s2c;
                         s2c.c1 = opCode[1];
                         s2c.c0 = opCode[2];
 
-
+                        //Field 所在的对象
                         Instance *ins = (Instance *) pop_ref(stack);
                         if (!ins) {
+                            //如果对象为空，则抛出空指针异常
                             Instance *exception = exception_create(JVM_EXCEPTION_NULLPOINTER, runtime);
                             push_ref(stack, (__refer) exception);
                             ret = RUNTIME_STATUS_EXCEPTION;
                         } else {
+                            //先从前面加载的缓存中获取目标 Field 的信息
                             FieldInfo *fi = class_get_constant_fieldref(clazz, s2c.s)->fieldInfo;
                             if (!fi) {
+                                //如果是空，那么该段应该没有加载过，先获取引用常量，然后通过引用常量找到真正的 Field
                                 ConstantFieldRef *cfr = class_get_constant_fieldref(clazz, s2c.s);
                                 fi = find_fieldInfo_by_fieldref(clazz, cfr->item.index, runtime);
                                 cfr->fieldInfo = fi;
                             }
+
+                            //从目标对象中获取 Field 值的指针
                             c8 *ptr = getInstanceFieldPtr(ins, fi);
 
+                            //如果该 Field 是原子的
                             if (fi->isvolatile) {
+                                //那么设置内存屏障，强制从内存中读取
                                 barrier();
                             }
                             if (fi->isrefer) {
+                                //如果是引用类型
                                 push_ref(stack, getFieldRefer(ptr));
                             } else {
                                 // check variable type to determine s64/s32/f64/f32
                                 s32 data_bytes = fi->datatype_bytes;
+                                //基本类型，只要关注大小
                                 switch (data_bytes) {
                                     case 4: {
                                         push_int(stack, getFieldInt(ptr));
@@ -3364,7 +3387,7 @@ s32 execute_method_impl(MethodInfo *method, Runtime *pruntime, JClass *clazz) {
 
                         //此cmr所描述的方法，对于不同的实例，有不同的method
                         ConstantMethodRef *cmr = class_get_constant_method_ref(clazz, s2c.s);
-
+                        //取得目标实例
                         Instance *ins = getInstanceInStack(clazz, cmr, stack);
                         if (ins == NULL) {
                             Instance *exception = exception_create(JVM_EXCEPTION_NULLPOINTER, runtime);
@@ -3374,10 +3397,13 @@ s32 execute_method_impl(MethodInfo *method, Runtime *pruntime, JClass *clazz) {
                             MethodInfo *m = NULL;
 
                             if (ins->mb.type & (MEM_TYPE_CLASS)) {
+                                //如果实例是个类，那么就是调用类的静态方法
                                 m = cmr->methodInfo;
                             } else {
+                                //先从缓存中查找，key 为方法引用和目标实现类型    
                                 m = (MethodInfo *) pairlist_get(cmr->virtual_methods, ins->mb.clazz);
                                 if (m == NULL) {
+                                    //无命中，则开始遍历父类搜索
                                     m = find_instance_methodInfo_by_name(ins, cmr->name, cmr->descriptor, runtime);
                                     pairlist_put(cmr->virtual_methods, ins->mb.clazz, m);//放入缓存，以便下次直接调用
                                 }
@@ -3396,8 +3422,10 @@ s32 execute_method_impl(MethodInfo *method, Runtime *pruntime, JClass *clazz) {
 #endif
 
                             if (m) {
+                                //执行匹配到的实现方法
                                 ret = execute_method_impl(m, runtime, m->_this_class);
                             } else {
+                                //没找到合适的方法，则抛出 NoSuchMethodException
                                 Instance *exception = exception_create_str(JVM_EXCEPTION_NOSUCHMETHOD, runtime,
                                                                            utf8_cstr(cmr->name));
                                 push_ref(stack, (__refer) exception);
@@ -3542,13 +3570,19 @@ s32 execute_method_impl(MethodInfo *method, Runtime *pruntime, JClass *clazz) {
 
                     label_invokedynamic:
                     case op_invokedynamic: {
+
+                        //index
                         Short2Char s2c;
                         s2c.c1 = opCode[1];
                         s2c.c0 = opCode[2];
                         u16 id_index = s2c.s;
 
                         //get bootMethod struct
+
+                        //根据 index 得到 ConstantInvokeDynamic 常量
                         ConstantInvokeDynamic *cid = class_get_invoke_dynamic(clazz, id_index);
+
+                        //bootstrap_method_attr_index -> BootstrapMethod
                         BootstrapMethod *bootMethod = &clazz->bootstrapMethodAttr->bootstrap_methods[cid->bootstrap_method_attr_index];//Boot
 
                         if (bootMethod->make == NULL) {
@@ -3566,7 +3600,8 @@ s32 execute_method_impl(MethodInfo *method, Runtime *pruntime, JClass *clazz) {
                             *  to generate Lambda Class implementation specify interface
                             *  and new a callsite
                             */
-
+                            
+                            //准备调用 metafactory() 方法的前3个参数，lookup，invokeName，invokeMethodType
                             //parper bootMethod parameter
                             Instance *lookup = method_handles_lookup_create(runtime, clazz);
                             push_ref(stack, lookup); //lookup
@@ -3580,7 +3615,7 @@ s32 execute_method_impl(MethodInfo *method, Runtime *pruntime, JClass *clazz) {
                             push_ref(stack, mt_invokeType); //invokeMethodType
 
                             //other bootMethod parameter
-
+                            //根据 BootstrapMethod.num_bootstrap_arguments 遍历取出各个类型的参数
                             s32 i;
                             for (i = 0; i < bootMethod->num_bootstrap_arguments; i++) {
                                 ConstantItem *item = class_get_constant_item(clazz, bootMethod->bootstrap_arguments[i]);
@@ -3615,14 +3650,17 @@ s32 execute_method_impl(MethodInfo *method, Runtime *pruntime, JClass *clazz) {
 
                             //get bootmethod
                             //s32 reference_kind = class_get_method_handle(clazz, bootMethod->bootstrap_method_ref)->reference_kind;
+                            //bootstrap_method_ref -> ConstantMethodHandle -> metafactory() 的 MethodInfo
                             MethodInfo *boot_m = find_methodInfo_by_methodref(clazz, class_get_method_handle(clazz, bootMethod->bootstrap_method_ref)->reference_index, runtime);
 
                             if (boot_m) {
-
+                                //执行 metafactory() 得到 CallSite
                                 ret = execute_method_impl(boot_m, runtime, boot_m->_this_class);
                                 if (ret == RUNTIME_STATUS_NORMAL) {
+                                    //调用虚拟机内部方法 org/mini/reflect/vm/LambdaUtil.getMethodInfoHandle(CallSite) 得到 finder 方法的地址
                                     MethodInfo *finder = find_methodInfo_by_name_c("org/mini/reflect/vm/LambdaUtil", "getMethodInfoHandle", "(Ljava/lang/invoke/CallSite;)J", runtime);
                                     if (finder) {
+                                        //调用 finder 方法将 calsite.target(MethodHandle) 转换成 MethodInfo * pointer，这才是真正要调用方法的指针，并且存到 bootMethod->make 缓存中
                                         //run finder to convert calsite.target(MethodHandle) to MethodInfo * pointer
                                         ret = execute_method_impl(finder, runtime, finder->_this_class);
                                         if (ret == RUNTIME_STATUS_NORMAL) {
@@ -3651,6 +3689,7 @@ s32 execute_method_impl(MethodInfo *method, Runtime *pruntime, JClass *clazz) {
                         if (ret == RUNTIME_STATUS_NORMAL) {
                             if (m) {
                                 // run make to generate instance of Lambda Class
+                                //真正执行 lambda 表达式所指向的方法
                                 ret = execute_method_impl(m, runtime, m->_this_class);
                             } else {
                                 Instance *exception = exception_create(JVM_EXCEPTION_NOSUCHMETHOD, runtime);
@@ -3670,18 +3709,23 @@ s32 execute_method_impl(MethodInfo *method, Runtime *pruntime, JClass *clazz) {
 
                     label_new:
                     case op_new: {
+
+                        //Class 引用 index
                         Short2Char s2c;
                         s2c.c1 = opCode[1];
                         s2c.c0 = opCode[2];
 
                         u16 object_ref = s2c.s;
 
+                        //Class 引用常量
                         ConstantClassRef *ccf = class_get_constant_classref(clazz, object_ref);
+                        //获取类并加载初始化
                         if (!ccf->clazz) {
                             Utf8String *clsName = class_get_utf8_string(clazz, ccf->stringIndex);
                             ccf->clazz = classes_load_get(clsName, runtime);
                         }
                         JClass *other = ccf->clazz;
+                        //创建实例
                         Instance *ins = NULL;
                         if (other) {
                             ins = instance_create(runtime, other);
