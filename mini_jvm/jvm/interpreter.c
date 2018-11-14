@@ -442,6 +442,7 @@ _find_exception_handler(Runtime *runtime, Instance *exception, CodeAttribute *ca
             }
             ConstantClassRef *ccr = class_get_constant_classref(runtime->clazz, (e + i)->catch_type);
             JClass *catchClass = classes_load_get(ccr->name, runtime);
+            //catch 类型和抛出类型对比
             if (instance_of(catchClass, exception, runtime))
                 return e + i;
         }
@@ -4067,6 +4068,7 @@ s32 execute_method_impl(MethodInfo *method, Runtime *pruntime, JClass *clazz) {
                 } else if (ret == RUNTIME_STATUS_INTERRUPT) {
                     break;
                 } else if (ret == RUNTIME_STATUS_EXCEPTION) {
+                    //取出目标异常对象
                     Instance *ins = pop_ref(stack);
                     //jvm_printf("stack size:%d , enter size:%d\n", stack->size, stackSize);
                     //restore stack enter method size, must pop for garbage
@@ -4085,6 +4087,7 @@ s32 execute_method_impl(MethodInfo *method, Runtime *pruntime, JClass *clazz) {
                         lineNum
                     );
 #endif
+                    //从异常向量表中找到合适的异常 Handler，即对应的 catch 分支
                     ExceptionTable *et = _find_exception_handler(runtime, ins, ca, (s32) (opCode - ca->code), ins);
                     if (et == NULL) {
                         break;
@@ -4092,6 +4095,7 @@ s32 execute_method_impl(MethodInfo *method, Runtime *pruntime, JClass *clazz) {
 #if _JVM_DEBUG_BYTECODE_DETAIL > 3
                         jvm_printf("Exception : %s\n", utf8_cstr(ins->mb.clazz->name));
 #endif
+                        //跳转到合适的分支
                         opCode = (ca->code + et->handler_pc);
                         ret = RUNTIME_STATUS_NORMAL;
                     }

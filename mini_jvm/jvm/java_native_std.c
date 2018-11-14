@@ -1198,6 +1198,7 @@ s32 java_io_Throwable_printStackTrace0(Runtime *runtime, JClass *clazz) {
     return 0;
 }
 
+//生成堆栈元素对象 StackTraceElement
 Instance *buildStackElement(Runtime *runtime, Runtime *target) {
     JClass *clazz = classes_load_get_c(STR_CLASS_JAVA_LANG_STACKTRACE, target);
     if (clazz) {
@@ -1205,25 +1206,25 @@ Instance *buildStackElement(Runtime *runtime, Runtime *target) {
         gc_refer_hold(ins);
         instance_init(ins, runtime);
         c8 *ptr;
-        //
+        //方法所在类
         ptr = getFieldPtr_byName_c(ins, STR_CLASS_JAVA_LANG_STACKTRACE, "declaringClass", STR_INS_JAVA_LANG_STRING, runtime);
         if (ptr) {
             Instance *name = jstring_create(target->clazz->name, runtime);
             setFieldRefer(ptr, name);
         }
-        //
+        //调用的方法名
         ptr = getFieldPtr_byName_c(ins, STR_CLASS_JAVA_LANG_STACKTRACE, "methodName", STR_INS_JAVA_LANG_STRING, runtime);
         if (ptr) {
             Instance *name = jstring_create(target->method->name, runtime);
             setFieldRefer(ptr, name);
         }
-        //
+        //java 源文件名
         ptr = getFieldPtr_byName_c(ins, STR_CLASS_JAVA_LANG_STACKTRACE, "fileName", STR_INS_JAVA_LANG_STRING, runtime);
         if (ptr) {
             Instance *name = jstring_create(target->clazz->source, runtime);
             setFieldRefer(ptr, name);
         }
-        //
+        //代码所在行号
         ptr = getFieldPtr_byName_c(ins, STR_CLASS_JAVA_LANG_STACKTRACE, "lineNumber", "I", runtime);
         if (ptr) {
             if (target->method->access_flags & ACC_NATIVE) {
@@ -1232,6 +1233,7 @@ Instance *buildStackElement(Runtime *runtime, Runtime *target) {
                 setFieldInt(ptr, getLineNumByIndex(target->ca, (s32) (target->pc - target->ca->code)));
             }
         }
+        //递归，如果还有父方法栈则递归生成父方法栈信息
         if (target->parent && target->parent->parent) {
             ptr = getFieldPtr_byName_c(ins, STR_CLASS_JAVA_LANG_STACKTRACE, "parent", "Ljava/lang/StackTraceElement;", runtime);
             if (ptr) {
