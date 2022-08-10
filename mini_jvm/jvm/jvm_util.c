@@ -56,6 +56,7 @@ JClass *classes_get(Utf8String *clsName) {
 JClass *classes_load_get_without_clinit(Utf8String *ustr, Runtime *runtime) {
     if (!ustr)return NULL;
     JClass *cl;
+    //锁
     spin_lock(&sys_classloader->lock);//fast lock
     if (utf8_index_of(ustr, '.') >= 0)
         utf8_replace_c(ustr, ".", "/");
@@ -77,6 +78,7 @@ JClass *classes_load_get_without_clinit(Utf8String *ustr, Runtime *runtime) {
     return cl;
 }
 
+//根据包名 runtime 获取JClass
 JClass *classes_load_get_c(c8 *pclassName, Runtime *runtime) {
     Utf8String *ustr = utf8_create_c(pclassName);
     JClass *clazz = classes_load_get(ustr, runtime);
@@ -1687,7 +1689,7 @@ s32 _loadFileContents(c8 *file, ByteBuf *buf) {
     return 0;
 }
 
-
+//根据path读字节码到内存中
 ByteBuf *load_file_from_classpath(ClassLoader *loader, Utf8String *path) {
     ByteBuf *bytebuf = NULL;
     s32 i, iret;
@@ -1699,6 +1701,7 @@ ByteBuf *load_file_from_classpath(ClassLoader *loader, Utf8String *path) {
             utf8_append(filepath, path);
 
             bytebuf = bytebuf_create(16);
+            //加载文件到 bytebuf
             iret = _loadFileContents(utf8_cstr(filepath), bytebuf);
             utf8_destory(filepath);
             //回收

@@ -11,7 +11,7 @@
 #include "java_native_std.h"
 #include "jdwp.h"
 
-
+//绑定线程
 void thread_boundle(Runtime *runtime) {
 
     JClass *thread_clazz = classes_load_get_c("java/lang/Thread", runtime);
@@ -179,6 +179,7 @@ void _on_jvm_sig(int no) {
     jvm_printf("jvm signo:%d  errno: %d , %s\n", no, errno, strerror(errno));
 }
 
+//jvm 初始化 p_classpath 路径 
 void jvm_init(c8 *p_classpath, StaticLibRegFunc regFunc) {
     signal(SIGABRT, _on_jvm_sig);
     signal(SIGFPE, _on_jvm_sig);
@@ -269,6 +270,7 @@ void jvm_destroy(StaticLibRegFunc unRegFunc) {
     jvm_init_flag = 0;
 }
 
+//执行jvm
 s32 execute_jvm(c8 *p_classpath, c8 *p_mainclass, ArrayList *java_para) {
 
     //初始化
@@ -278,6 +280,7 @@ s32 execute_jvm(c8 *p_classpath, c8 *p_mainclass, ArrayList *java_para) {
     c8 *p_methodname = "main";
     c8 *p_methodtype = "([Ljava/lang/String;)V";
     //call main
+    //调用main 方法
     s32 ret = call_method_main(p_mainclass, p_methodname, p_methodtype, java_para);
 
     jvm_destroy(NULL);
@@ -308,13 +311,14 @@ s32 call_method_main(c8 *p_mainclass, c8 *p_methodname, c8 *p_methodtype, ArrayL
     //装入主类
     load_class(sys_classloader, str_mainClsName, runtime);
 
+    //读取 main class
     JClass *clazz = classes_get(str_mainClsName);
 
     s32 ret = 0;
     if (clazz) {
         Utf8String *methodName = utf8_create_c(p_methodname);
         Utf8String *methodType = utf8_create_c(p_methodtype);
-
+        //找到main方法
         MethodInfo *m = find_methodInfo_by_name(str_mainClsName, methodName, methodType,
                                                 runtime);
         if (m) {
@@ -326,6 +330,7 @@ s32 call_method_main(c8 *p_mainclass, c8 *p_methodname, c8 *p_methodtype, ArrayL
             localvar_dispose(runtime);
             //方法参数初始化
             localvar_init(runtime, m->para_slots);
+            //参数数量
             s32 count = java_para->length;
             Utf8String *ustr = utf8_create_c(STR_CLASS_JAVA_LANG_STRING);
             //Main 方法 String[] args 参数初始化
@@ -339,7 +344,7 @@ s32 call_method_main(c8 *p_mainclass, c8 *p_methodname, c8 *p_methodtype, ArrayL
                 jarray_set_field(arr, i, (intptr_t) jstr);
                 utf8_destory(utfs);
             }
-            //参数入栈
+            //参数入栈 runtime->stack 设置 arr
             push_ref(runtime->stack, arr);
             gc_refer_release(arr);
 

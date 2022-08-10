@@ -14,6 +14,7 @@
 extern "C" {
 #endif
 
+//GC控制
 typedef struct _GcCollectorType GcCollector;
 
 //回收线程

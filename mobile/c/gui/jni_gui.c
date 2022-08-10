@@ -36,6 +36,7 @@ void JNI_OnUnload_mini(JniEnv *env) {
     
 }
 
+//获取当前线程
 Runtime *getRuntimeCurThread(){
     thrd_t t=thrd_current();
     Runtime *runtime=pairlist_get(refers.runtime_list, t);

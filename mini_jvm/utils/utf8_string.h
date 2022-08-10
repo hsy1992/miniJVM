@@ -24,10 +24,12 @@ extern "C" {
  */
 typedef unsigned char utf8_char;
 
+//utf8 字符串
 typedef struct _utf8_string {
     utf8_char *data;
-
+    //长度
     int length;
+    //分配
     int _alloced;
     unsigned long hash;
 } Utf8String;

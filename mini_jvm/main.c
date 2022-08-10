@@ -21,7 +21,7 @@
 
 
 /*
- *
+ * main函数
  */
 int main(int argc, char **argv) {
 
@@ -41,6 +41,7 @@ int main(int argc, char **argv) {
             } else if (strcmp(argv[i], "-Xdebug") == 0) {
                 java_debug = 1;
             } else if (argv[i][0] == '-') {
+                //xmx
                 if (argv[i][1] == 'X' && argv[i][2] == 'm' && argv[i][3] == 'x') {//"-Xmx1G"
                     s32 alen = strlen(argv[i]);
                     s32 mb = 1;
@@ -56,6 +57,7 @@ int main(int argc, char **argv) {
                     jvm_printf("skiped argv: %s", argv[i]);
                 //other jvm para
             } else if (main_name == NULL) {
+                //main 函数
                 main_name = argv[i];
             } else {
                 arraylist_push_back(java_para, argv[i]);
@@ -106,6 +108,7 @@ int main(int argc, char **argv) {
 //        main_name = "com/egls/test/Foo2";
 
     }
+    // 执行jvm
     ret = execute_jvm(classpath, main_name, java_para);
     arraylist_destory(java_para);
 	//getchar();

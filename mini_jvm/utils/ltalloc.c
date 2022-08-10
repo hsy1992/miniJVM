@@ -947,6 +947,7 @@ void operator delete[](void* p, const std::nothrow_t&) throw() {ltfree(p);}
 #include <string.h>
 void *ltcalloc(size_t elems, size_t size) {
 	size *= elems;
+	//将内存中的内容全部设置为指定的值
 	return memset( ltmalloc( size ), 0, size );
 }
 void *ltmemalign( size_t align, size_t size ) {

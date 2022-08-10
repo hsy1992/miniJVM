@@ -24,7 +24,7 @@
 extern "C" {
 #endif
 
-
+//JVM 基础定义信息
 //=======================  micro define  =============================
 //_JVM_DEBUG   06 print all bytecode
 #define _JVM_DEBUG_BYTECODE_DETAIL 0
@@ -156,6 +156,7 @@ typedef union _Long2Double {
 } Long2Double;
 #endif
 
+//定义JAVA结构
 typedef struct _ClassLoader ClassLoader;
 typedef struct _ClassType JClass;
 typedef struct _InstanceType Instance;
@@ -351,6 +352,7 @@ void profile_print();
 typedef struct _MemoryBlock {
     //对象对应的类
     JClass *clazz;
+    //下个内存块得指针
     struct _MemoryBlock *next;
     ThreadLock *volatile thread_lock;
     //类型，是引用对象还是 JClass 还是其他类型
@@ -361,6 +363,7 @@ typedef struct _MemoryBlock {
     u8 arr_type_index;
 } MemoryBlock;
 
+//类加载器
 struct _ClassLoader {
      //类路径集合
     ArrayList *classpath;
@@ -460,17 +463,20 @@ typedef struct _ConstantInteger {
     s32 value;
 } ConstantInteger;
 
+//Float 常量
 typedef struct _ConstantFloat {
     ConstantItem item;
     f32 value;
 
 } ConstantFloat;
 
+//Long 常量
 typedef struct _ConstantLong {
     ConstantItem item;
     s64 value;
 } ConstantLong;
 
+//Double 常量
 typedef struct _ConstantDouble {
     ConstantItem item;
     f64 value;
@@ -715,7 +721,7 @@ typedef struct BootstrapMethods_attribute {
 } BootstrapMethodsAttr;
 //============================================
 
-//Field
+//Field 字段信息
 struct _FieldInfo {
     u16 access_flags;
     u16 name_index;
@@ -741,7 +747,7 @@ struct _FieldInfo {
     u8 isvolatile;
 };
 
-//
+//字段池
 typedef struct _FieldPool {
     FieldInfo *field;
     s32 field_used;
@@ -754,6 +760,7 @@ typedef struct _MethodParaOffset {
     s16 byteCount;
 } MethodParaOffset;
 
+//方法信息结构体
 struct _MethodInfo {
     u16 access_flags;
     //方法名在常量池中的 index
@@ -806,6 +813,7 @@ typedef struct _AttributePool {
 /*
  Gust 20170719 add Class define
  */
+ //java class 类型
 struct _ClassType {
     //内存块描述头部
     MemoryBlock mb;
@@ -907,7 +915,7 @@ void class_clear_refer(JClass *clazz);
 
 //======================= instance =============================
 
-
+// 实例对象
 struct _InstanceType {
     MemoryBlock mb;
     //类型二选一
@@ -1090,7 +1098,7 @@ struct _StackFrame {
 //    __refer refer;
 //    s32 integer;
 //} LocalVarItem;
-
+//Runtime 结构体
 
 struct _Runtime {
 
@@ -1415,6 +1423,7 @@ s32 execute_method_impl(MethodInfo *method, Runtime *runtime, JClass *clazz);
 s32 execute_method(MethodInfo *method, Runtime *runtime, JClass *clazz);
 
 //======================= jni =============================
+//jni 相关
 typedef struct _java_native_method {
     c8 *clzname;
     c8 *methodname;
@@ -1422,8 +1431,10 @@ typedef struct _java_native_method {
     java_native_fun func_pointer;
 } java_native_method;
 
+//查找native 方法
 java_native_method *find_native_method(c8 *cls_name, c8 *method_name, c8 *method_type);
 
+//调用native 方法
 s32 invoke_native_method(Runtime *runtime, JClass *p,
                          c8 *cls_name, c8 *method_name, c8 *type);
 
@@ -1453,6 +1464,7 @@ void reg_jdwp_native_lib(void);
 
 void init_jni_func_table();
 
+//jni 环境
 struct _JNIENV {
     s32 *data_type_bytes;
 

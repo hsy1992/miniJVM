@@ -9,6 +9,7 @@ Utf8String *utf8_create() {
     int length = 32;
     Utf8String *uni_str;
 
+    //分配内存
     uni_str = (Utf8String *) jvm_calloc(sizeof(Utf8String));
 
     if (uni_str == NULL) {
@@ -25,6 +26,7 @@ Utf8String *utf8_create() {
     uni_str->data = jvm_calloc(length * sizeof(utf8_char));
 
     if (uni_str->data == NULL) {
+        //创建失败释放内存
         jvm_free(uni_str);
         return NULL;
     }

@@ -1,7 +1,7 @@
 #include "miniz.c"
 #include "miniz_wrapper.h"
 
-
+//jar 包中读取
 s32 zip_loadfile(char *jarpath, char *filename, ByteBuf *buf) {
     int file_index = 0;
     mz_zip_archive zipArchive = {0};
